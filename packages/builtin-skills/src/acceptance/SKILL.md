@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.0
+version: 0.4.2
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -25,19 +25,35 @@ marks it `uncertain` and holds the delivery.
 author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
 ```
 
-## Independent tester review
+## Independent acceptance review (first round only)
 
 The primary checks the environment, writes the plan, executes cases, inspects
-evidence, repairs failures, and publishes. Use one tester agent at two points:
-review requirement coverage before execution, then independently inspect the
-completed evidence before declaring acceptance complete. Reuse the tester when
-the host supports it; do not delegate execution or require per-case approval.
+evidence, repairs failures, and publishes. Use one `acceptance-checker` agent at two points
+in the first acceptance round: give at most two feedback responses on the plan and cases
+before execution, then perform exactly one quick report/evidence check against
+the agreed criteria before publishing. A second plan check is optional, only
+to check the primary's revisions; there is no third plan-feedback response.
+Count the two stages separately. After
+either stage's limit, the primary owns remaining corrections and verification.
+The acceptance-checker **is** the plan gate — never ask the user to approve a
+plan; ask the user only for a user-owned prerequisite or a product decision
+that changes the plan. In both stages, the primary supplies an explicit file
+list and the relevant diff text or prepared diff artifact paths. The acceptance-checker
+limits code reading to these materials; it must not run `git diff` or discover
+its own scope. This does not restrict inspection of the plan, report, or evidence.
+During evidence review, use it only to identify the updates and the agreed
+cases whose evidence needs checking; the core task is checking the report
+against the plan and artifacts. Do not reopen requirements, expand into code
+review, or investigate implementation details. Return contradictions to the
+primary for explanation or repair. Follow-up rounds have no acceptance-checker: the primary
+re-runs, inspects, and publishes itself. Do not delegate execution or require
+per-case approval.
 
-Read [tester-review.md](references/tester-review.md) for the input/output contract,
-review boundaries, and repair follow-up. Tester review supplements the primary's
-own checks and any configured verifier; it does not replace either. If delegation
-or required media inspection is unavailable, disclose the missing review and
-unverified claims rather than claiming independent acceptance.
+Read [acceptance-checker.md](references/acceptance-checker.md) for the input/output
+contract, review boundaries, and follow-up rules. Acceptance review supplements the
+primary's own checks and any configured verifier; it does not replace either.
+If delegation or required media inspection is unavailable, disclose the missing
+review and unverified claims rather than claiming independent acceptance.
 
 ## Read the project layer first
 
@@ -46,7 +62,7 @@ Before touching an environment, check for `.agents/acceptance/`:
 | File                     | What it owns                                                 |
 | ------------------------ | ------------------------------------------------------------ |
 | `PROJECT.md`             | Start/stop commands, ports, services, auth, surfaces, probes |
-| `PROCESS.md`             | The run process: approval gate, execution rules, teardown    |
+| `PROCESS.md`             | The run process: plan gate, execution rules, teardown        |
 | `common-mistakes.md`     | Project living log — what earlier rounds got wrong here      |
 | `probe-mock-patterns.md` | Project living log — how to force state on this product      |
 
@@ -99,6 +115,84 @@ Prerequisites: `lh` is authed (`lh acceptance run list --json` returns `[]` or
 data; an auth error means stop and surface it), and only the UI driver the
 selected surface needs is installed — probe before adding dependencies, and never
 substitute a private agent plugin.
+
+## Optional user-journey flows
+
+Before authoring checks, identify the independently reviewable user tasks in the
+requirement. Use those tasks as business groups, not the PR title or test surface.
+For example, reassignment, scheduled continuation, and failure recovery can be
+separate groups when the delivery covers all three; do not impose these groups
+on unrelated work. Each check should have an outcome the user can accept or
+reject independently. Keep shared entry/accessibility checks separate and avoid
+repeating their expectations across business checks.
+
+When acceptance depends on a sequence of user states, publish its graph during
+planning, before implementation or verification begins. Keep the checklist paths
+above for independent checks;
+a graph is optional and does not replace evidence or human review.
+
+For flow-based plans, **each flow's title is its checks' default checklist category**.
+Publish independent user journeys as separate flows in the same acceptance/run;
+use subflows for actual composed journeys. An umbrella flow containing checks
+for several independent tasks collapses them into one checklist group. Edges
+must describe real user transitions, not artificial links added to make unrelated
+checks reachable. Start at the user entry and follow the journey through outcomes
+and recovery; UUIDs identify nodes and must not encode business order. Read back
+the published plan and inspect its groups and reading order before execution.
+
+For an existing acceptance that only needs different checklist groups, use
+`lh acceptance regroup <acceptanceId> --file groups.json`. Read the acceptance
+bundle first; write `{ expectedVersion, groups: [{ title, checkItemIds }] }`,
+using the exact union `checks[].id` values and
+`acceptance.metadata.checkGrouping.version` (0 when absent). The groups replace
+the current presentation grouping; an empty list restores plan categories.
+Unassigned checks keep their plan category. This preserves check IDs, numbering,
+evidence and review history without creating a round. It does not change flow
+transitions or verification conditions. Do not move execution nodes or start a
+new round just to reorganize the checklist; those operations have different
+execution semantics.
+
+1. Use the named acceptance (or create one with `lh acceptance create --help`).
+   Write a JSON file with `definition: { title, entryNodeId, nodes, edges }`.
+   Give nodes and edges stable UUIDs. Each node has `id` and exactly one of
+   `criterionId` (existing check asset), `check: { id, title, definition }`
+   (a check asset with steps, fixtures, preconditions and expected outcome), or
+   `subFlowId` (another flow in this acceptance). Edges have `id`, `sourceNodeId`,
+   `targetNodeId`, `trigger`, `required`, and optional `condition`. Every node must
+   be reachable from the entry. Publish child flows before referencing them.
+2. `lh acceptance flow publish <acceptanceId> --file flow.json` saves the
+   definition and returns `flowId`. To edit it, include that `flowId` and the
+   current `expectedHash` in the file. `lh acceptance flow view <acceptanceId>`
+   reads definitions, snapshots and results. Publishing does not execute checks.
+3. `lh acceptance flow plan <acceptanceId> --flow <flowId>` creates a draft round
+   with a frozen graph and plan. Add `--run <verifyRunId>` to attach another flow
+   to the same open round. Read `lh acceptance run get <verifyRunId> --json` for
+   the actual plan IDs: each branch and subflow invocation has its own
+   `checkItemId`; never substitute the reusable asset ID.
+4. Share the acceptance link so the user can inspect the proposed nodes, branches
+   and expected outcomes before implementation. Read and address any actionable
+   feedback. Preparing a plan neither executes checks nor approves delivery;
+   there is no separate flow-confirmation action. Continue within the user's
+   authorized scope, or pause if the user explicitly asked to review before work.
+   For requested changes, publish the revised definition and prepare a new draft
+   round in the same acceptance.
+5. Implement the work and exercise the real product, then use
+   `lh acceptance flow record <acceptanceId> --file result.json`, containing
+   `verifyRunId`, `checkItemId`, `verdict` (`passed`, `failed`, `uncertain`, or
+   `blocked`) and `observation`. Record only what was observed. Use the returned
+   result ID to attach required artifacts through `lh acceptance run evidence`
+   (inspect its `--help`), following the same evidence rules as checklist checks.
+6. After all required checks are recorded and passed, run
+   `lh acceptance flow complete <acceptanceId> --run <verifyRunId>`. Completion
+   settles verification; it does not accept the delivery on the user's behalf.
+   Read back the round and verify evidence coverage before handing it over.
+
+To rerun the exact old graph, prepare a plan with `--from-run <sourceVerifyRunId>` and
+omit `--run` for a fresh round. This preserves the old definition and starts
+without results. Each replay starts as an unexecuted draft. Accepted or closed
+acceptances must be explicitly reopened
+before starting. Edges describe business transitions; they do not automatically
+schedule execution. Continue to read `lh acceptance feedback <acceptanceId> --actionable` before repairs and publish new rounds into the same acceptance.
 
 ## HARD RULE — programmatic gates are NEVER acceptance checks
 
@@ -174,8 +268,29 @@ needed.
   into `interaction-trace.jsonl`; optional, never hand-written —
   [interaction-cost.md](references/interaction-cost.md).
 
+**Every file submission MUST include a non-empty, reviewer-facing description**
+(`--desc` for CLI submissions; `description` for tools and ingest entries).
+Identify what the file contains and what it demonstrates for this criterion.
+A filename, path, artifact id, or generic label such as "evidence" is not a
+sufficient description. This also applies when a text file is stored inline.
+
 Shared rules for every artifact — media types, provenance, file vs inline,
 safety — are in [evidence.md](references/evidence.md).
+
+## Keep checklist explanations brief
+
+Write each check's `observation` and inline explanation in the user's language,
+usually 1–3 short sentences: what was done, what happened, and any limitation
+needed to judge that outcome. Do not paste the execution report into the check.
+Omit repeated titles, verdict labels, SHA/port/ID headers, environment boilerplate,
+and round-history explanations. Put shared setup and revision details once in
+the round report; keep commands, traces, raw output, and detailed reasoning in
+separate evidence attachments. Briefly disclose a limitation in the check when
+it changes the verdict; concision must not hide missing verification.
+
+Example: “转派后，新 Agent 收到原对话上下文并创建了独立话题。刷新后消息仍保留。”
+For a failure, name the unmet outcome directly, without recounting the debugging
+process. Keep required evidence complete; shorten its presentation, not the work.
 
 ## Final handoff (mandatory)
 
@@ -208,8 +323,8 @@ simctl io` over host-window capture. Rounds land under `.acceptances/`, which
 
 ## Reference map
 
-For both tester handoffs and review output, read
-[tester-review.md](references/tester-review.md).
+For both acceptance-checker handoffs and review output, read
+[acceptance-checker.md](references/acceptance-checker.md).
 
 | Need                                           | Reference                                                                                                                                                                               |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

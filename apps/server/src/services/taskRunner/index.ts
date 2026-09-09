@@ -101,7 +101,11 @@ export class TaskRunnerService {
         // fallback must stay ephemeral — persisting it would silently replace
         // the member assignment on the first run.
         if (!task.assigneeUserId) {
-          await this.taskModel.update(task.id, { assigneeAgentId: inboxAgent.id });
+          // Goes through the logging path like every other assignee write: the
+          // chip visibly flips from unassigned to the inbox agent, so the feed
+          // has to be able to say who did it. No actor — nobody asked for this
+          // one, the runner needed an agent to execute with.
+          await this.taskModel.updateWithLog(task.id, { assigneeAgentId: inboxAgent.id }, {});
         }
         task.assigneeAgentId = inboxAgent.id;
       }

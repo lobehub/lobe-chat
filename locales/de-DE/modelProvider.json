@@ -349,6 +349,8 @@
   "sortModal.success": "Sortierung erfolgreich aktualisiert",
   "sortModal.title": "Benutzerdefinierte Reihenfolge",
   "sortModal.update": "Aktualisieren",
+  "unsloth.checker.guidance": "Bei Netzwerkfehlern im Browser überprüfen Sie, ob Studio diese Seite über CORS zulässt. Bei Authentifizierungsfehlern geben Sie einen gültigen Studio-API-Schlüssel ein; schlüsselloser Terminalzugriff gewährt keinen Browserzugriff.",
+  "unsloth.checker.setupGuide": "Unsloth-Verbindungs-Einrichtungsanleitung",
   "updateAiProvider.confirmDelete": "Diesen KI-Anbieter löschen?",
   "updateAiProvider.confirmDeleteDescription": "Nach dem Löschen kann der KI-Anbieter nicht wiederhergestellt werden.",
   "updateAiProvider.deleteSuccess": "Löschen erfolgreich",

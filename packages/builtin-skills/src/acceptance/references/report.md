@@ -111,8 +111,10 @@ supersedes? }`.
    plausible-but-wrong nested shape parses as JSON, is dropped on ingest, and
    the round publishes green with its evidence silently degraded. Read every
    ingest warning as a failed publish.
-   Before execution, send the draft for [plan review](tester-review.md#1-plan-review)
-   and save the agreed plan and requirement mapping after resolving material gaps.
+   Before executing the **first round only**, send the draft for
+   [acceptance-checker plan review](acceptance-checker.md) and save the agreed plan and
+   requirement mapping after resolving material gaps. In follow-up rounds the
+   primary carries the agreed plan forward and inspects it itself.
 2. **Collect evidence into `assets/` as you test.** Screenshots must be
    **visually verified with the Read tool before being cited** — never cite an
    image you haven't looked at. For metrics, time series, model or benchmark
@@ -126,16 +128,27 @@ supersedes? }`.
    (`{ id, name, category, surface, status, observation, evidence }`), reusing
    the plan item's `id`. `status`: `pass` / `fail` / `blocked` (couldn't run —
    a blocked case is not a pass).
+   Keep `observation` brief and reviewer-facing; follow
+   [checklist explanation guidance](../SKILL.md#keep-checklist-explanations-brief).
+   Detailed reasoning and execution records belong in evidence attachments.
 4. **Set `title` and `summary.verdict`** (`pass` / `fail` / `partial`) — without
    them the run lists as "未命名验证" with a permanent amber "?" glyph. Write the
    one-paragraph verdict into `summary.conclusion`.
 5. **`report.md` is the narrative tail only** — this-round notes, follow-ups,
    score. Do NOT repeat the scope block or a case table; those double up on the
    page. Write it in the language the user is conversing in.
-6. **Review, then publish:** hand the completed plan, report, and original evidence
-   to the tester using [tester-review.md](tester-review.md). Resolve findings and
-   record review limitations in the narrative tail before declaring a pass.
-   The primary publishes; the tester does not operate the product or upload results.
+6. **Review, then publish:** hand the completed plan, report, original evidence,
+   and an explicit file list with relevant diff text or prepared diff artifact
+   paths (including in-round repairs, base and tested revision, and affected case IDs)
+   to the acceptance-checker for a quick evidence review using [acceptance-checker.md](acceptance-checker.md)
+   (first round only, one quick check with no checker re-review after fixes;
+   the diff helps identify updates and affected agreed cases.
+   The acceptance-checker limits code reading to the supplied materials and must not run `git diff` or
+   expand the file list. It checks the report and artifacts, without reopening requirements
+   or expanding into code review. State repairs and affected cases in plain language). Resolve
+   findings and record review limitations in the narrative tail before declaring
+   a pass. The primary publishes; the acceptance-checker does not operate the product or
+   upload results.
 
    ```bash
    lh acceptance run ingest "$REPORT_DIR" --source agent-testing --json
@@ -156,6 +169,12 @@ supersedes? }`.
 
 ## result.json schema
 
+Every `cases[].evidence` file entry must use `{ "path": "...", "description": "..." }`.
+Describe the file's contents and relevance to the criterion, following the
+[shared description requirements](evidence.md#file-versus-inline-content).
+Do not copy the legacy bare-path form: ingestion accepts it for compatibility,
+but its filename fallback does not satisfy the description requirement.
+
 ```json
 {
   "cases": [
@@ -166,7 +185,12 @@ supersedes? }`.
       "surface": "cli",
       "status": "pass",
       "observation": "root returned 3 nested children, depth 2",
-      "evidence": ["assets/task-tree.txt"]
+      "evidence": [
+        {
+          "path": "assets/task-tree.txt",
+          "description": "Task tree command output showing the root and its 3 nested children at depth 2."
+        }
+      ]
     },
     {
       "id": "2",
@@ -175,7 +199,12 @@ supersedes? }`.
       "surface": "cli",
       "status": "pass",
       "observation": "average precision improved from 0.742 to 0.796",
-      "evidence": ["assets/evaluation.json"],
+      "evidence": [
+        {
+          "path": "assets/evaluation.json",
+          "description": "Evaluation results comparing baseline and candidate average precision, including the observed change from 0.742 to 0.796."
+        }
+      ],
       "datasets": [
         {
           "id": "model-metrics",
@@ -325,8 +354,10 @@ measured delta on each side:
 ```json
 "evidence": [
   { "path": "assets/before.png",
+    "description": "Topic row before the change, showing the original 11px text size.",
     "comparison": { "id": "topic-row", "role": "before", "layout": "horizontal", "label": "before: 11px" } },
   { "path": "assets/after.png",
+    "description": "The same topic row after the change, showing the updated 12px text size.",
     "comparison": { "id": "topic-row", "role": "after", "layout": "horizontal", "label": "after: 12px" } }
 ]
 ```

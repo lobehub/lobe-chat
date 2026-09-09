@@ -12,6 +12,7 @@ import {
   agentSignalReviewManifest,
   agentSignalSkillManagementManifest,
 } from '@lobechat/builtin-tool-agent-signal';
+import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { BriefManifest } from '@lobechat/builtin-tool-brief';
 import { BrowserManifest } from '@lobechat/builtin-tool-browser';
 import { CalculatorManifest } from '@lobechat/builtin-tool-calculator/manifest';
@@ -350,6 +351,13 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
     hidden: true,
     identifier: BrowserManifest.identifier,
     manifest: BrowserManifest,
+    type: 'builtin',
+  },
+  {
+    discoverable: isDesktop,
+    hidden: true,
+    identifier: AuvManifest.identifier,
+    manifest: AuvManifest,
     type: 'builtin',
   },
   {

@@ -292,19 +292,18 @@ export default class LocalFileCtr extends ControllerModule {
     success: boolean;
   }> {
     const resolvedTarget = expandTilde(targetPath) ?? targetPath;
-    const folderPath = isDirectory ? resolvedTarget : path.dirname(resolvedTarget);
-    logger.debug('Attempting to open folder:', {
-      folderPath,
-      isDirectory,
-      targetPath: resolvedTarget,
-    });
+    logger.debug('Attempting to open folder:', { isDirectory, targetPath: resolvedTarget });
 
     try {
-      await shell.openPath(folderPath);
-      logger.debug('Folder opened successfully:', { folderPath });
+      if (isDirectory) {
+        await shell.openPath(resolvedTarget);
+      } else {
+        shell.showItemInFolder(resolvedTarget);
+      }
+      logger.debug('Folder opened successfully:', { targetPath: resolvedTarget });
       return { success: true };
     } catch (error) {
-      logger.error(`Failed to open folder ${folderPath}:`, error);
+      logger.error(`Failed to open folder for ${resolvedTarget}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }

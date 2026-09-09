@@ -318,6 +318,26 @@ describe('AgentRuntimeService.executeStep - early exit on terminal state', () =>
     );
   });
 
+  it('restores the persisted model runtime snapshot into runtime executors', async () => {
+    vi.mocked(createRuntimeExecutors).mockClear();
+    const service = new AgentRuntimeService({} as any, 'user-1', { queueService: null });
+    const modelRuntimeConfig = {
+      mediaCapabilities: { audio: false, video: false, vision: true },
+      model: 'custom-vision-model',
+      provider: 'custom-provider',
+    };
+
+    await (service as any).createAgentRuntime({
+      metadata: { agentConfig: {}, modelRuntimeConfig, userId: 'user-1' },
+      operationId: 'op-model-runtime-snapshot',
+      stepIndex: 0,
+    });
+
+    expect(createRuntimeExecutors).toHaveBeenCalledWith(
+      expect.objectContaining({ modelRuntimeConfig }),
+    );
+  });
+
   it('disables early final visible output end for custom multi-step agents', async () => {
     vi.mocked(createRuntimeExecutors).mockClear();
     const service = new AgentRuntimeService({} as any, 'user-1', {

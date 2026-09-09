@@ -48,8 +48,11 @@ export const goalRouter = router({
     .input(
       idInput.extend({
         kind: z.enum([
+          'contains',
+          'answers',
           'decomposes',
           'depends_on',
+          'derived_from',
           'investigates',
           'produces',
           'supports',
@@ -80,7 +83,9 @@ export const goalRouter = router({
     .input(
       idInput.extend({
         description: z.string().optional(),
-        kind: z.enum(['problem', 'task', 'finding', 'decision']),
+        kind: z.enum(['problem', 'experiment', 'task', 'finding', 'decision']),
+        scopeId: z.string().uuid().optional(),
+        questionId: z.string().uuid().optional(),
         priority: z.number().int().optional(),
         status: z
           .enum(['proposed', 'active', 'waiting', 'resolved', 'rejected', 'retired'])
@@ -122,6 +127,12 @@ export const goalRouter = router({
               .optional(),
             // Bounds mirror `resolveMaxConcurrentTasks`, so a rejected value and
             // a clamped one cannot disagree about what the cap may be.
+            exploration: z
+              .object({
+                instruction: z.string().min(1).max(8000),
+                maxExperiments: z.number().int().min(1).max(200),
+              })
+              .optional(),
             maxConcurrentTasks: z.number().int().min(1).max(10).nullable().optional(),
             recovery: z
               .object({
@@ -379,6 +390,39 @@ export const goalRouter = router({
     }
   }),
 
+  /**
+   * Start every unfinished Task node over (cancel stale runs, back to
+   * `backlog`), optionally under a different agent, and kick the coordinator
+   * so the goal begins moving without a second gesture.
+   */
+  restart: goalWriteProcedure
+    .input(idInput.extend({ agentId: z.string().min(1).optional() }))
+    .mutation(async ({ ctx, input: { id, agentId } }) => {
+      try {
+        // `agent:update` says the member may change goals; it does not say
+        // whose. Without this any member could restart a colleague's visible
+        // goal — cancel its live runs and reset its tasks.
+        const goal = await ctx.goalModel.findById(id);
+        if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+
+        const data = await ctx.goalService.restart(id, { agentId });
+        await scheduleGoalAdvance({
+          goalId: id,
+          trigger: 'restart',
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId ?? undefined,
+        });
+        return {
+          data,
+          message: `Restarted ${data.restartedTaskIds.length} task(s)`,
+          success: true,
+        };
+      } catch (error) {
+        mapGoalError(error, 'restart');
+      }
+    }),
+
   /** Rebind which persisted verify criteria gate this goal's terminal acceptance. */
   setAcceptanceCriteria: goalWriteProcedure
     .input(idInput.extend({ criteriaIds: z.array(z.string()) }))
@@ -391,11 +435,40 @@ export const goalRouter = router({
       }
     }),
 
+  /**
+   * Hand the goal to a different responsible agent. Unfinished Tasks follow by
+   * default (`goalOnly` keeps them); Tasks mid-run switch on their next attempt.
+   */
+  setAgent: goalWriteProcedure
+    .input(idInput.extend({ agentId: z.string().min(1), goalOnly: z.boolean().optional() }))
+    .mutation(async ({ ctx, input: { id, agentId, goalOnly } }) => {
+      try {
+        // Same ownership rule as restart/delete: visibility is not
+        // manageability, so only the goal's owner may hand it to a new agent.
+        const goal = await ctx.goalModel.findById(id);
+        if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+
+        const data = await ctx.goalService.setAgent(id, agentId, { goalOnly });
+        const reassigned = data.reassignedTaskIds.length;
+        return {
+          data,
+          message: reassigned
+            ? `Goal agent updated; ${reassigned} task(s) reassigned`
+            : 'Goal agent updated',
+          success: true,
+        };
+      } catch (error) {
+        mapGoalError(error, 'setAgent');
+      }
+    }),
+
   setBudget: goalWriteProcedure
     .input(
       idInput.extend({
         /** ISO-8601 calendar-time budget; null clears the deadline. */
         deadline: z.string().datetime().nullable().optional(),
+        maxExperiments: z.number().int().min(1).max(200).optional(),
         maxRounds: z.number().int().positive().nullable().optional(),
         maxTotalCost: z.number().positive().nullable().optional(),
       }),

@@ -81,6 +81,15 @@ export interface AgentState {
    * Used as fallback when call_llm instruction doesn't specify model/provider
    */
   modelRuntimeConfig?: {
+    /**
+     * Immutable operation snapshot shared by tool discovery and context processing.
+     * Optional for operations created before this snapshot was introduced.
+     */
+    mediaCapabilities?: {
+      audio?: boolean;
+      video?: boolean;
+      vision?: boolean;
+    };
     model: string;
     provider: string;
     /**

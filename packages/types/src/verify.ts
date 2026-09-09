@@ -1,3 +1,4 @@
+import type { VerifyCheckDefinition } from './acceptanceFlow';
 /**
  * Verify (delivery checker) domain types — the shared vocabulary, frozen-item
  * shape, Toulmin narrative, and rubric run-policy config. Kept here (not in the
@@ -157,9 +158,17 @@ export interface AcceptanceGroupFeedback {
 /** One group-scoped feedback entry as stored on a round's decision detail. */
 export type VerifyRunGroupFeedbackEntry = Omit<AcceptanceGroupFeedback, 'roundIndex'>;
 
+/** A presentation group of stable acceptance-union check IDs, independent of execution flows. */
+export interface AcceptanceCheckGroup {
+  checkItemIds: string[];
+  title: string;
+}
+
 /** Generic acceptance extension bag for cross-subject state we have not modeled yet. */
 export interface AcceptanceMetadata {
   [key: string]: unknown;
+  /** Current checklist organization; frozen plans, results and reviews keep their original IDs. */
+  checkGrouping?: { groups: AcceptanceCheckGroup[]; version: number };
   /** User-set display-title override for the acceptance (sidebar rename). */
   title?: string;
 }
@@ -706,6 +715,7 @@ export interface VerifyCheckItem {
    * checks without one fall back to surface grouping.
    */
   category?: string;
+  definition?: VerifyCheckDefinition;
   /** One-sentence summary of what this check verifies. */
   description?: string;
   /** The document holding the detailed judging instruction / rule body, if any. */
@@ -718,8 +728,14 @@ export interface VerifyCheckItem {
   onFail: VerifyOnFailStrategy;
   /** Whether failing this item blocks delivery (snapshot may override the source default). */
   required: boolean;
+  resourceSnapshot?: {
+    documentContent?: string;
+    fixtures: { fixtureId: string; content?: string; fileHash?: string; url?: string }[];
+  };
   /** Provenance: the criterion this item was instantiated from, or null when agent-generated. */
   sourceCriterionId?: string | null;
+  /** Immutable reusable flow definition instantiated for this verification round. */
+  sourceFlowNode?: { flowId: string; nodeId: string; incomingEdgeId?: string };
   /** Provenance: the rubric (group) this item came in through, or null. */
   sourceRubricId?: string | null;
   /**

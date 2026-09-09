@@ -165,7 +165,7 @@ The feature barrel may export the **full** assembler for in-app use. Light hosts
 
 ```bash
 # example: light host must not import a write atom
-WORKBENCH_TRACE_MODULE=features/Acceptance/Viewer/AcceptanceDecision bun run build:rr
+WORKBENCH_TRACE_MODULE=features/Acceptance/Viewer/Review/AcceptanceDecision bun run build:rr
 ```
 
 If the light assembler appears on the importer chain, a static import still exists — usually a barrel, a leftover flag, or actions left on the page.

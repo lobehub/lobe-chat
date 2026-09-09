@@ -170,6 +170,12 @@ export default {
     'Repeated content policy rejections detected. Please revise your prompt before retrying.',
   'response.ProviderImageContentModerationWarning':
     'Repeated image safety rejections detected. Similar prompts may temporarily pause image generation.',
+  'response.ProviderImageContentModerationCooldown':
+    'Image generation is temporarily paused due to repeated safety rejections. Try again later with safer prompts.',
+  'response.ProviderImageContentModerationCooldownUntil':
+    'Image generation is temporarily paused due to repeated safety rejections and is expected to resume at {{time}}. Revise your prompt before retrying.',
+  'response.ProviderImageContentModerationCooldownExpired':
+    'This generation was paused due to content safety restrictions. Its waiting period has ended. Revise your prompt and try again.',
   'response.DeviceGatewayNotConfigured':
     "Couldn't reach a run device for this agent. Connect a device, or configure the device gateway on the server, then try again.",
   'response.RemoteServerOffline':

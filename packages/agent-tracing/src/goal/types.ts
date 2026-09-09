@@ -21,6 +21,7 @@ export type GoalAdvanceTrigger =
   | 'settle'
   | 'sweep'
   | 'resume'
+  | 'restart'
   | 'budget'
   | 'manual'
   /** A measurement landed — the goal moves on observation, not only on work. */
@@ -38,6 +39,7 @@ export type GoalTickBranch =
   | 'no_frontier'
   /** The graph has no tasks yet — decompose the goal into explorable directions first. */
   | 'plan_decomposition'
+  | 'explore_graph'
   /** Every task node finished; the goal-level acceptance contract is next. */
   | 'terminal_acceptance'
   /**
@@ -73,6 +75,17 @@ export type GoalTickOutcome =
 
 export interface GoalTraceGoal {
   agentId?: string | null;
+  exploration?: {
+    instruction: string;
+    maxExperiments: number;
+    checkpoint?: {
+      token: string;
+      snapshot: string;
+      expiresAt: string;
+      readyForAcceptance?: boolean;
+      reviewedNodeIds?: string[];
+    };
+  };
   id: string;
   maxRounds?: number | null;
   maxTotalCost?: number | null;

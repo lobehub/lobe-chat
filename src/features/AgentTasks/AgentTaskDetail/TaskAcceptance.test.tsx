@@ -118,13 +118,13 @@ vi.mock('@/features/Acceptance/Viewer/AcceptanceScope', () => ({
   ),
 }));
 
-vi.mock('@/features/Acceptance/Viewer/AcceptanceCheckInventory', () => ({
+vi.mock('@/features/Acceptance/Viewer/Checks/AcceptanceCheckInventory', () => ({
   default: ({ toolbar }: { toolbar?: ReactNode }) => (
     <div data-testid="acceptance-check-inventory">{toolbar}</div>
   ),
 }));
 
-vi.mock('@/features/Acceptance/Viewer/AcceptanceDecision', () => ({
+vi.mock('@/features/Acceptance/Viewer/Review/AcceptanceDecision', () => ({
   default: () => <div data-testid="acceptance-decision" />,
 }));
 
