@@ -1,10 +1,10 @@
 'use client';
 
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
-import { Flexbox, TextArea } from '@lobehub/ui';
+import { Flexbox, Icon, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
-import { Trash2, ZoomIn, ZoomOut } from 'lucide-react';
+import { Crosshair, Trash2, ZoomIn, ZoomOut } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -106,6 +106,30 @@ const styles = createStaticStyles(({ css }) => ({
     flex: none;
     padding-block-start: 12px;
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+  `,
+  /** The region caption on a phone: a link, not a button-shaped box. The tap
+      target comes from padding around a compact line, so a list of regions
+      does not turn into a column of 44px slabs. */
+  regionJump: css`
+    cursor: pointer;
+
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    align-self: flex-start;
+
+    padding-block: 7px;
+    padding-inline: 2px;
+    border: none;
+
+    font-size: 13px;
+    color: ${cssVar.colorLink};
+
+    background: none;
+
+    &:active {
+      opacity: 0.6;
+    }
   `,
   regionIndex: css`
     flex: none;
@@ -477,16 +501,21 @@ export const CheckRejectModalContent = memo<CheckRejectModalProps>(
     };
 
     const annotationInputs = (md ? activeAnnotations : annotations).map((annotation, index) => (
-      <Flexbox gap={8} key={annotation.key}>
+      <Flexbox gap={4} key={annotation.key}>
         {!md && (
-          <Button
-            style={{ alignSelf: 'flex-start', minHeight: 44 }}
-            type={'text'}
+          // A caption that jumps back to its box on the image. It reads as a
+          // link — crosshair, link colour, hugging the note it labels — because
+          // a full-height text Button looked like an inert boxed heading and
+          // ate a 44px band per region.
+          <button
+            className={styles.regionJump}
+            type={'button'}
             onClick={() => {
               selectEvidence(evidence.findIndex((item) => item.id === annotation.evidenceId));
               advance('edit-region');
             }}
           >
+            <Icon icon={Crosshair} size={13} />
             {translate('acceptance.review.regionImage', {
               image: evidence.findIndex((item) => item.id === annotation.evidenceId) + 1,
               region:
@@ -494,7 +523,7 @@ export const CheckRejectModalContent = memo<CheckRejectModalProps>(
                   .filter((item) => item.evidenceId === annotation.evidenceId)
                   .findIndex((item) => item.key === annotation.key) + 1,
             })}
-          </Button>
+          </button>
         )}
         <Flexbox horizontal align={'flex-start'} gap={8}>
           <span

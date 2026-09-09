@@ -663,9 +663,25 @@ export const AcceptanceCheckRow = memo<{
                 </Flexbox>
               ))}
 
-            {/* How this check got here comes BEFORE the verdict buttons: the
-              rounds it already went through are context for the decision, not
-              an appendix to one the reviewer has already made. */}
+            {/* Circling the evidence belongs WITH the evidence, above the
+              history — it is another way of looking at what was delivered,
+              not a verdict. The rounds this check already went through then
+              sit between that and the verdict buttons: context for the
+              decision, never an appendix to one already made. */}
+            {detailMode && reviewable && !activeReview && hasAnnotatableEvidence(check) && (
+              <Button
+                outdent
+                icon={<Icon icon={Images} />}
+                style={{ alignSelf: 'flex-start' }}
+                type={'text'}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openReject();
+                }}
+              >
+                {t('acceptance.review.annotate')}
+              </Button>
+            )}
             {hasHistory && (
               <span
                 className={styles.historyToggle}
@@ -696,20 +712,6 @@ export const AcceptanceCheckRow = memo<{
               !activeReview &&
               (detailMode ? (
                 <Flexbox gap={10} style={{ marginBlockStart: 6 }}>
-                  {hasAnnotatableEvidence(check) && (
-                    <Button
-                      outdent
-                      icon={<Icon icon={Images} />}
-                      style={{ alignSelf: 'flex-start' }}
-                      type={'text'}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        openReject();
-                      }}
-                    >
-                      {t('acceptance.review.annotate')}
-                    </Button>
-                  )}
                   <TextArea
                     autoSize={{ maxRows: 8, minRows: 3 }}
                     placeholder={t('acceptance.review.detailPlaceholder')}

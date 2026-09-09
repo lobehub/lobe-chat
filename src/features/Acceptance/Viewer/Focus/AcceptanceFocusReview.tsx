@@ -164,12 +164,15 @@ const AcceptanceFocusReview = ({
   return (
     <div className={styles.layout}>
       <Flexbox className={styles.outline}>
+        {/* A phone nav bar is one 44px line, not a stack of 44px minimums —
+            padding on the row plus a 44px minimum on each control made the
+            header twice as tall as the content it introduces. */}
         <Flexbox
           align={md ? undefined : 'center'}
           flex={'none'}
           gap={md ? 10 : 0}
           horizontal={!md}
-          paddingBlock={8}
+          paddingBlock={md ? 8 : 0}
           paddingInline={4}
         >
           <Button
@@ -179,8 +182,8 @@ const AcceptanceFocusReview = ({
             type={'text'}
             style={{
               alignSelf: 'flex-start',
-              minHeight: md ? undefined : 44,
-              minWidth: md ? undefined : 44,
+              minHeight: md ? undefined : 40,
+              minWidth: md ? undefined : 40,
             }}
             onClick={onBack}
           >
@@ -190,7 +193,8 @@ const AcceptanceFocusReview = ({
             <Button
               aria-expanded={outlineOpen}
               icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
-              style={{ height: 'auto', minHeight: 44, textAlign: 'start', whiteSpace: 'normal' }}
+              size={'small'}
+              style={{ minHeight: 40, textAlign: 'start' }}
               type={'text'}
               onClick={() => setOutlineOpen((open) => !open)}
             >
