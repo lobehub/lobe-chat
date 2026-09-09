@@ -10,6 +10,12 @@ import {
 } from './trashListUtils';
 
 describe('trashListUtils', () => {
+  it('does not mislabel a failed restore request as a trashed parent', () => {
+    expect(getRestoreFeedback({ failed: [{ code: 'restoreFailed' }], restored: [] })).toEqual({
+      key: 'trash.restore.failed.restoreFailed',
+      level: 'error',
+    });
+  });
   it('blocks emptying until the server count succeeds', () => {
     expect(
       getEmptyTrashActionState({

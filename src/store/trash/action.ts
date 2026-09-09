@@ -146,8 +146,19 @@ export const trashSlice: TrashSlice = (set, get) => {
       const outcome: RestoreOutcome = { failed: [], restored: [] };
       await withLoading(ids, context, async () => {
         const trashService = await getTrashService();
-        for (const batch of mutationBatches(ids)) {
-          const batchOutcome = await trashService.restore(batch);
+        const batches = mutationBatches(ids);
+        for (const [index, batch] of batches.entries()) {
+          let batchOutcome: RestoreOutcome;
+          try {
+            batchOutcome = await trashService.restore(batch);
+          } catch (error) {
+            if (outcome.restored.length === 0) throw error;
+            console.error('[trash:restoreBatch]', error);
+            for (const id of batches.slice(index).flat()) {
+              outcome.failed.push({ code: 'restoreFailed', id });
+            }
+            break;
+          }
           outcome.failed.push(...batchOutcome.failed);
           outcome.restored.push(...batchOutcome.restored);
           const gone = new Set(batchOutcome.restored.map((item) => item.id));

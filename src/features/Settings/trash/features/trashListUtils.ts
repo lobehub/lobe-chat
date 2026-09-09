@@ -2,6 +2,7 @@ import type {
   ResourceTrashCountByType,
   ResourceTrashItem,
   ResourceTrashType,
+  TrashRestoreErrorCode,
 } from '@lobechat/types';
 
 export interface TrashActionFeedback {
@@ -10,6 +11,7 @@ export interface TrashActionFeedback {
     | 'trash.purge.successCount'
     | 'trash.restore.failed.notFound'
     | 'trash.restore.failed.parentTrashed'
+    | 'trash.restore.failed.restoreFailed'
     | 'trash.restore.partial'
     | 'trash.restore.successCount';
   level: 'error' | 'success' | 'warning';
@@ -44,7 +46,7 @@ export const getVisibleTrashTypes = (
   orderedTypes.filter((type) => type === activeType || Boolean(countByType[type]));
 
 export const getRestoreFeedback = (outcome: {
-  failed: { code: 'notFound' | 'parentTrashed' }[];
+  failed: { code: TrashRestoreErrorCode }[];
   restored: unknown[];
 }): TrashActionFeedback => {
   if (outcome.failed.length > 0 && outcome.restored.length > 0) {
@@ -56,10 +58,7 @@ export const getRestoreFeedback = (outcome: {
   }
   if (outcome.failed[0]) {
     return {
-      key:
-        outcome.failed[0].code === 'notFound'
-          ? 'trash.restore.failed.notFound'
-          : 'trash.restore.failed.parentTrashed',
+      key: `trash.restore.failed.${outcome.failed[0].code}`,
       level: 'error',
     };
   }

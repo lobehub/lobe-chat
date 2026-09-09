@@ -1706,6 +1706,7 @@
   "trash.purgeConfirm.title": "彻底删除",
   "trash.restore.failed.notFound": "该项目已不存在。",
   "trash.restore.failed.parentTrashed": "它所属的容器也在回收站中，请先恢复该容器。",
+  "trash.restore.failed.restoreFailed": "无法确认恢复结果，请刷新回收站后重试。",
   "trash.restore.partial": "已恢复 {{restored}} 项，另有 {{failed}} 项恢复失败。",
   "trash.restore.success": "已恢复",
   "trash.restore.successCount": "已恢复 {{count}} 项",

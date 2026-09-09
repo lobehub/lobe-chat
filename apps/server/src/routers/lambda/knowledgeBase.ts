@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import { businessFileTransferStorageCheck } from '@/business/server/lambda-routers/file';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
@@ -29,6 +28,7 @@ import {
   filterRestrictedKnowledgeBases,
   getUseLevelKnowledgeBaseIds,
 } from './_helpers/knowledgeBaseAccess';
+import { scopedResourceProcedure } from './_helpers/scopedResourceProcedure';
 
 /**
  * Presentation metadata only. Deliberately NOT `insertKnowledgeBasesSchema.partial()`:
@@ -86,7 +86,7 @@ const assertKnowledgeItemsAccessible = async (
   await assertContentsNotInRestrictedKnowledgeBase(ctx, uniqueIds);
 };
 
-const knowledgeBaseProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
+const knowledgeBaseProcedure = scopedResourceProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;
 

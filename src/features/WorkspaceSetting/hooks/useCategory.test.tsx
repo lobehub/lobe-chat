@@ -2,6 +2,7 @@ import { cleanup, renderHook } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { initServerConfigStore, Provider } from '@/store/serverConfig/store';
 import { useUserStore } from '@/store/user';
 import { WorkspaceSettingsTabs } from '@/types/workspaceSettings';
@@ -100,7 +101,10 @@ describe('workspace settings useCategory', () => {
       (group) => group.key === WorkspaceSettingsGroupKey.System,
     );
 
-    expect(systemGroup?.items.map((item) => item.key)).toEqual([WorkspaceSettingsTabs.Trash, WorkspaceSettingsTabs.About]);
+    expect(systemGroup?.items.map((item) => item.key)).toEqual([
+      WorkspaceSettingsTabs.Trash,
+      WorkspaceSettingsTabs.About,
+    ]);
     expect(result.current.map((group) => group.key).slice(-2)).toEqual([
       WorkspaceSettingsGroupKey.System,
       WorkspaceSettingsGroupKey.Developer,
@@ -113,7 +117,13 @@ describe('workspace settings useCategory', () => {
     mocks.canViewBilling = false;
     const { result } = renderHook(() => useWorkspaceSettingCategory(), {
       wrapper: ({ children }) => (
-        <Provider createStore={() => initServerConfigStore({ featureFlags: { hideDocs: true } })}>
+        <Provider
+          createStore={() =>
+            initServerConfigStore({
+              featureFlags: { ...mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS), hideDocs: true },
+            })
+          }
+        >
           {children}
         </Provider>
       ),

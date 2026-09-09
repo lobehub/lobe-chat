@@ -1756,6 +1756,8 @@ When I am ___, I need ___
     'Permanently delete {{count}} selected item(s)? This cannot be undone.',
   'trash.purgeConfirm.title': 'Delete forever',
   'trash.restore.failed.notFound': 'This item no longer exists.',
+  'trash.restore.failed.restoreFailed':
+    'Could not confirm the restore. Refresh the trash and try again.',
   'trash.restore.failed.parentTrashed':
     'Restore the container it belongs to first — that item is also in the trash.',
   'trash.restore.partial': 'Restored {{restored}} item(s); {{failed}} could not be restored.',

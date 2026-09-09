@@ -54,6 +54,41 @@ describe('TrashAction', () => {
   });
 
   describe('restore', () => {
+    it('preserves completed batches and refreshes restored resources after a later request fails', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      const ids = Array.from({ length: 401 }, (_, index) => `trash_${index}`);
+      const restored = ids.slice(0, 200).map((id) => buildItem({ id }));
+      vi.spyOn(trashService, 'restore')
+        .mockResolvedValueOnce({ failed: [], restored })
+        .mockRejectedValueOnce(new Error('request failed'));
+
+      const outcome = await useTrashStore.getState().restore(ids, personalContext);
+
+      expect(outcome.restored).toEqual(restored);
+      expect(outcome.failed).toEqual(ids.slice(200).map((id) => ({ code: 'restoreFailed', id })));
+      expect(trashService.restore).toHaveBeenCalledTimes(2);
+      expect(useTrashStore.getState().loadingIds).toEqual([]);
+      expect(
+        vi
+          .mocked(mutateTrash)
+          .mock.calls.some(
+            ([key]) =>
+              typeof key === 'function' && (key as (key: unknown) => boolean)(['file:list']),
+          ),
+      ).toBe(true);
+    });
+
+    it('propagates a first-batch request error without removing rows', async () => {
+      vi.spyOn(trashService, 'restore').mockRejectedValue(new Error('request failed'));
+
+      await expect(useTrashStore.getState().restore(['trash_1'], personalContext)).rejects.toThrow(
+        'request failed',
+      );
+
+      expect(getPersonalItems().map((item) => item.id)).toEqual(['trash_1', 'trash_2']);
+      expect(useTrashStore.getState().loadingIds).toEqual([]);
+    });
+
     it('drops restored rows, keeps blocked ones, and revalidates the lists a restore touches', async () => {
       vi.spyOn(trashService, 'restore').mockResolvedValue({
         failed: [{ code: 'parentTrashed', id: 'trash_2' }],

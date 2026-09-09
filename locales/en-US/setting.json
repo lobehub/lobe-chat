@@ -1706,6 +1706,7 @@
   "trash.purgeConfirm.title": "Delete forever",
   "trash.restore.failed.notFound": "This item no longer exists.",
   "trash.restore.failed.parentTrashed": "Restore the container it belongs to first — that item is also in the trash.",
+  "trash.restore.failed.restoreFailed": "Could not confirm the restore. Refresh the trash and try again.",
   "trash.restore.partial": "Restored {{restored}} item(s); {{failed}} could not be restored.",
   "trash.restore.success": "Restored",
   "trash.restore.successCount": "Restored {{count}} item(s)",

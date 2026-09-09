@@ -103,5 +103,7 @@ export const TRASH_RESTORE_ERROR_CODES = [
   'notFound',
   /** A parent of the row is itself in the trash — restore that root first. */
   'parentTrashed',
+  /** A request failed; refresh the trash before retrying the remaining items. */
+  'restoreFailed',
 ] as const;
 export type TrashRestoreErrorCode = (typeof TRASH_RESTORE_ERROR_CODES)[number];

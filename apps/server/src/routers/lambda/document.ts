@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { businessFileTransferStorageCheck } from '@/business/server/lambda-routers/file';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { FREE_DOCUMENT_HISTORY_WINDOW_DAYS } from '@/const/documentHistory';
 import { ChunkModel } from '@/database/models/chunk';
 import { DOCUMENT_TRANSFER_FOREIGN_ROWS, DocumentModel } from '@/database/models/document';
@@ -30,6 +29,7 @@ import {
   assertContentsNotInRestrictedKnowledgeBase,
   getRestrictedKnowledgeBasePolicy,
 } from './_helpers/knowledgeBaseAccess';
+import { scopedResourceProcedure } from './_helpers/scopedResourceProcedure';
 import {
   compareDocumentHistoryItemsInputSchema,
   getDocumentHistoryItemInputSchema,
@@ -70,7 +70,7 @@ const getFreeDocumentHistorySince = () => {
   return new Date(now - FREE_DOCUMENT_HISTORY_WINDOW_DAYS * 24 * 60 * 60 * 1000);
 };
 
-const documentProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
+const documentProcedure = scopedResourceProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;
 

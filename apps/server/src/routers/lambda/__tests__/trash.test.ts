@@ -27,7 +27,11 @@ vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async () => {
         }
         return opts.next();
       }),
-    wsCompatProcedure: mod.trpc.procedure,
+    wsCompatProcedure: mod.trpc.procedure.use(async (opts: any) =>
+      opts.ctx.workspaceId === 'unavailable-workspace'
+        ? opts.next({ ctx: { workspaceId: undefined } })
+        : opts.next(),
+    ),
   };
 });
 
@@ -65,6 +69,24 @@ describe('trashRouter workspace resource permissions', () => {
     mocks.service.restore.mockResolvedValue({ failed: [], restored: [] });
     mocks.service.emptyTrash.mockResolvedValue({ scheduled: 0 });
     mocks.service.purge.mockResolvedValue({ failed: [], purged: 0, purgedIds: [] });
+  });
+
+  it('rejects a requested workspace that resolved to personal mode before reading or mutating trash', async () => {
+    const scopedCaller = trashRouter.createCaller({
+      userId: 'owner',
+      workspaceId: 'unavailable-workspace',
+    });
+
+    await expect(scopedCaller.list()).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(scopedCaller.countByType()).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(scopedCaller.emptyTrash()).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(scopedCaller.restore({ ids: ['personal-trash'] })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+    await expect(scopedCaller.purge({ ids: ['personal-trash'] })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+    expect(TrashService).not.toHaveBeenCalled();
   });
 
   it('keeps Viewer restore read-only even for a public resource', async () => {

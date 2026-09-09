@@ -18,7 +18,6 @@ import {
 } from '@/business/server/lambda-routers/file';
 import { checkFileStorageUsage } from '@/business/server/trpc-middlewares/lambda';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { serverDBEnv } from '@/config/db';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
@@ -50,6 +49,7 @@ import {
   assertKnowledgeBaseBrowsable,
   getRestrictedKnowledgeBasePolicy,
 } from './_helpers/knowledgeBaseAccess';
+import { scopedResourceProcedure } from './_helpers/scopedResourceProcedure';
 
 const fileTransferEntityTypeSchema = z.enum(['document', 'file', 'folder']);
 const deleteKnowledgeItemsByQuerySchema = QueryFileListSchema.extend({
@@ -195,7 +195,7 @@ const isStoredObjectAvailable = async (fileService: FileService, url: string): P
   }
 };
 
-const fileProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
+const fileProcedure = scopedResourceProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;
 

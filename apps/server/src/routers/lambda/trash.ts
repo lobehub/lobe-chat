@@ -4,16 +4,15 @@ import { RESOURCE_TRASH_TYPES } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import {
-  requireWorkspaceRoleWhenScoped,
-  wsCompatProcedure,
-} from '@/business/server/trpc-middlewares/workspaceAuth';
+import { requireWorkspaceRoleWhenScoped } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { TrashService } from '@/server/services/trash';
 import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermission';
 
-const trashProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
+import { scopedResourceProcedure } from './_helpers/scopedResourceProcedure';
+
+const trashProcedure = scopedResourceProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;
   return opts.next({
