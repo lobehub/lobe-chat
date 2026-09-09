@@ -116,7 +116,8 @@ describe('grouped acceptance canvas', () => {
     expect(collapsed.nodes.some((node) => node.id === 'send/a')).toBe(false);
     expect(collapsed.nodes.some((node) => node.id === 'switch/a')).toBe(true);
     const focused = build(views, new Set(['send']), 'send');
-    expect(focused.nodes.map((node) => node.id)).toEqual(['send', 'send/a', 'send/b']);
+    expect(focused.nodes.map((node) => node.id)).toEqual(['send/a', 'send/b']);
+    expect(focused.nodes.every((node) => !node.parentId)).toBe(true);
     expect(focused.checks.has('switch/a')).toBe(false);
     expect(collapsed.checks.has('send/a')).toBe(false);
     expect(build(views).nodes).toHaveLength(6);
@@ -191,9 +192,8 @@ describe('grouped acceptance canvas', () => {
     expect(graph.nodes.find((n) => n.id === 'root/g2')?.data.state).toBeUndefined();
     expect(graph.nodes.find((n) => n.id === 'root/two')?.data.state).toBeUndefined();
     expect(graph.edges[0]).toMatchObject({ source: 'root/g1', target: 'root/g2' });
-    expect(build([parent], new Set(), 'root/g2').nodes.map((n) => n.id)).toEqual([
-      'root/g2',
-      'root/two',
-    ]);
+    const drilled = build([parent], new Set(), 'root/g2');
+    expect(drilled.nodes.map((n) => n.id)).toEqual(['root/two']);
+    expect(drilled.nodes[0].parentId).toBeUndefined();
   });
 });
