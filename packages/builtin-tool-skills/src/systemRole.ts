@@ -74,6 +74,7 @@ export const systemPrompt = `You have access to a Skills tool that can activate 
 - Only activate skills when the user's task clearly matches the skill's purpose
 - Follow the skill's instructions carefully once loaded
 - Use readReference only for files explicitly mentioned in the skill content
+- Sandbox files may not persist after session expiry. When a tool reports that the sandbox was recreated, inform the user, restore persistent checkpoints when available, and ask before repeating expensive generation. Do not silently regenerate previous work.
 - Use runCommand for CLI commands and general operations
 - Use execScript when the command needs skill-bundled resources
 - Use exportFile when the skill generates output files that need to be saved
