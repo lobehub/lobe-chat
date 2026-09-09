@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
+import { createStaticStyles, useResponsive } from 'antd-style';
 import { useState } from 'react';
 
 import { useAcceptanceScope } from './AcceptanceScope';
@@ -40,7 +40,6 @@ const styles = createStaticStyles(({ css }) => ({
   headerBand: css`
     flex: none;
     padding-block: 20px 0;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
   `,
 }));
 interface AcceptancePageProps {
@@ -48,8 +47,9 @@ interface AcceptancePageProps {
 }
 
 /**
- * The record's own body: an identity band that ends in the full-width rule,
- * then whichever face of the delivery the tabs select.
+ * The record's own body: an identity band that ends in the tabs, then whichever
+ * face of the delivery the tabs select. The tabs' own active underline is the
+ * only separator; a full-width rule under them read as a stray line.
  */
 export const AcceptanceOverview = ({
   onDraftToComposer,

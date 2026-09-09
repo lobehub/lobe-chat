@@ -17,8 +17,8 @@ interface AcceptanceTabsProps {
 
 /**
  * The delivery's two faces: the checks a person judges, and the artefacts the
- * rounds produced. They sit above the full-width rule so the rule reads as the
- * boundary between "what this delivery is" and "what you are looking at".
+ * rounds produced. They close the identity band; the active tab's underline is
+ * the boundary between "what this delivery is" and "what you are looking at".
  */
 const AcceptanceTabs = ({
   active,
