@@ -92,16 +92,9 @@ export function FlowOutline({
             size={18}
             style={{ color: flowStateColor(data.state), flex: 'none' }}
           />
-          <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
-            <Text strong={group} style={{ overflowWrap: 'anywhere' }}>
-              {data.title}
-            </Text>
-            {!group && (
-              <Text fontSize={13} style={{ overflowWrap: 'anywhere' }} type="secondary">
-                {String(data.expected ?? '')}
-              </Text>
-            )}
-          </Flexbox>
+          <Text strong={group} style={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere' }}>
+            {data.title}
+          </Text>
           {group ? (
             <Text fontSize={12} type="secondary">
               {data.passed}/{data.total}
