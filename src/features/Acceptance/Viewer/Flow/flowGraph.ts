@@ -128,7 +128,8 @@ export function buildFlowGraph(
     if (stacked) for (const node of siblings) depths.set(node.id, 0);
     const parts = orderedSiblings.map((node) => {
       const id = graphId(view, node.id);
-      if (!node.subFlowId) return { node, id, width: 260, height: 116 };
+      // Two title lines, two expected lines and the footer; the card clamps to this box.
+      if (!node.subFlowId) return { node, id, width: 260, height: 132 };
       const child = collapsed.has(id) ? undefined : layout(view, node.id, id);
       return { node, id, child, width: child?.width ?? 320, height: child?.height ?? 96 };
     });
