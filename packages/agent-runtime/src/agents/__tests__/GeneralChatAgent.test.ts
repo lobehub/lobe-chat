@@ -300,12 +300,12 @@ describe('GeneralChatAgent', () => {
       });
     });
 
-    // Regression for when the LLM emits tool_calls whose names
-    // can't be resolved (e.g. `activateTools` instead of
-    // `lobe-activator____activateTools`), the agent used to silently finish
-    // with "completed without tool calls". Surface the unresolved names so
-    // dashboards can spot the regression.
-    it('should report unresolvable tool_calls in reasonDetail', async () => {
+    // Regression: when the LLM emits tool_calls whose names can't be resolved
+    // (e.g. `activateTools` instead of `lobe-activator____activateTools`), the
+    // agent used to finish with "completed without tool calls", writing an
+    // empty assistant message while the requested work never ran. Reject the
+    // calls instead so the model can retry with a real name.
+    it('should reject unresolvable tool_calls so the model can retry', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
         operationId: 'test-session',
@@ -321,7 +321,11 @@ describe('GeneralChatAgent', () => {
           content: '',
           tool_calls: [
             { id: 't1', type: 'function', function: { name: 'activateTools', arguments: '{}' } },
-            { id: 't2', type: 'function', function: { name: 'activateSkill', arguments: '{}' } },
+            {
+              id: 't2',
+              type: 'function',
+              function: { name: 'lobe-skills____activateSkill', arguments: '{"a":1}' },
+            },
           ],
         },
       });
@@ -329,10 +333,115 @@ describe('GeneralChatAgent', () => {
       const result = await agent.runner(context, state);
 
       expect(result).toEqual({
-        type: 'finish',
-        reason: 'completed',
-        reasonDetail: 'LLM returned 2 unresolvable tool_calls: activateTools, activateSkill',
+        type: 'resolve_blocked_tools',
+        payload: {
+          blockedContent:
+            'Tool call rejected: that tool name does not exist. Copy a name exactly as declared in the tools schema and call it again.',
+          blockedReason: 'tool_name_unresolved',
+          parentMessageId: 'msg-1',
+          toolsCalling: [
+            {
+              apiName: 'activateTools',
+              arguments: '{}',
+              id: 't1',
+              identifier: 'activateTools',
+              type: 'builtin',
+            },
+            {
+              apiName: 'activateSkill',
+              arguments: '{"a":1}',
+              id: 't2',
+              identifier: 'lobe-skills',
+              type: 'builtin',
+            },
+          ],
+        },
       });
+    });
+
+    it('should fail the operation once the unresolvable-tool feedback budget is spent', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const rejection = {
+        content:
+          'Tool call rejected: that tool name does not exist. Copy a name exactly as declared in the tools schema and call it again.',
+        role: 'tool' as const,
+      };
+      const state = createMockState({
+        messages: [
+          { ...rejection, id: 'tool-1', tool_call_id: 't0' },
+          { ...rejection, id: 'tool-2', tool_call_id: 't1' },
+        ] as AgentState['messages'],
+      });
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [],
+        parentMessageId: 'msg-1',
+        result: {
+          content: '',
+          tool_calls: [
+            { id: 't2', type: 'function', function: { name: 'activateTools', arguments: '{}' } },
+          ],
+        },
+      });
+
+      await expect(agent.runner(context, state)).rejects.toThrow(
+        'LLM returned 1 unresolvable tool_calls: activateTools',
+      );
+    });
+
+    it('should finish instead of retrying unresolvable tool_calls past max steps', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [],
+        parentMessageId: 'msg-1',
+        result: {
+          content: '',
+          tool_calls: [
+            { id: 't1', type: 'function', function: { name: 'activateTools', arguments: '{}' } },
+          ],
+        },
+      });
+
+      const result = await agent.runner(context, createMockState({ forceFinish: true }));
+
+      expect(result).toEqual({
+        type: 'finish',
+        reason: 'max_steps_completed',
+        reasonDetail: 'LLM returned 1 unresolvable tool_calls after max steps: activateTools',
+      });
+    });
+
+    it('should fail when unresolvable tool_calls carry no name to reject', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [],
+        parentMessageId: 'msg-1',
+        result: {
+          content: '',
+          tool_calls: [{ id: 't1', type: 'function', function: { name: '', arguments: '{}' } }],
+        },
+      });
+
+      await expect(agent.runner(context, createMockState())).rejects.toThrow(
+        'LLM returned 1 unresolvable tool_calls: unnamed',
+      );
     });
 
     it('should return call_tool for single tool that does not need intervention', async () => {
