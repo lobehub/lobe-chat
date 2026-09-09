@@ -51,6 +51,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   header: css`
     cursor: pointer;
   `,
+  image: css`
+    border-radius: ${cssVar.borderRadiusLG};
+  `,
+  imageList: css`
+    flex-wrap: wrap;
+  `,
   lineCount: css`
     color: ${cssVar.colorTextQuaternary};
   `,
@@ -103,6 +109,28 @@ const ReadFileView = memo<ReadFileState>(
     const { t } = useTranslation('tool');
     const { openFile, openFolder, displayRelativePath } = useToolRenderCapabilities();
     const filename = filenameProp || path.split('/').pop() || path;
+
+    // Reading an image is best shown as the image itself: no card, no header, no path.
+    if (images && images.length > 0) {
+      return (
+        <PreviewGroup>
+          <Flexbox horizontal align={'flex-start'} className={styles.imageList} gap={8}>
+            {images.map((image, index) => (
+              <Image
+                alt={filename || image.mediaType || ''}
+                className={styles.image}
+                key={image.url || index}
+                maxHeight={600}
+                objectFit={'contain'}
+                src={image.url}
+                variant={'borderless'}
+              />
+            ))}
+          </Flexbox>
+        </PreviewGroup>
+      );
+    }
+
     const isHtml = isHtmlFile({ fileName: filename, fileType, path });
 
     const handleOpenFile = openFile
@@ -200,20 +228,7 @@ const ReadFileView = memo<ReadFileState>(
           className={styles.previewBox}
           style={{ height: isHtml ? 240 : undefined, maxHeight: 240 }}
         >
-          {images && images.length > 0 ? (
-            <PreviewGroup>
-              <Flexbox horizontal gap={8} style={{ flexWrap: 'wrap', padding: 8 }}>
-                {images.map((image, index) => (
-                  <Image
-                    alt={filename || image.mediaType || ''}
-                    key={image.url || index}
-                    src={image.url}
-                    style={{ borderRadius: 8, maxHeight: 224, objectFit: 'contain' }}
-                  />
-                ))}
-              </Flexbox>
-            </PreviewGroup>
-          ) : isHtml ? (
+          {isHtml ? (
             <InlineHtmlPreview content={content} />
           ) : fileType === 'md' ? (
             <Markdown style={{ overflow: 'auto' }}>{content}</Markdown>
