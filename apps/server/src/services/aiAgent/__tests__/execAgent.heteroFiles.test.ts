@@ -16,6 +16,7 @@ const {
   mockGetHeterogeneousResumeSessionId,
   mockMessageCreate,
   mockMessageQuery,
+  mockMessageUpdate,
   mockResolveAttachmentsByFileIds,
   mockSpawnHeteroSandbox,
   mockIngestAttachment,
@@ -33,6 +34,7 @@ const {
   mockIngestAttachment: vi.fn(),
   mockMessageCreate: vi.fn(),
   mockMessageQuery: vi.fn(),
+  mockMessageUpdate: vi.fn().mockResolvedValue({}),
   mockPublishAgentRuntimeEnd: vi.fn().mockResolvedValue('end-event-id'),
   mockPublishAgentRuntimeInit: vi.fn().mockResolvedValue('init-event-id'),
   mockResolveAttachmentsByFileIds: vi.fn(),
@@ -87,7 +89,7 @@ vi.mock('@/database/models/message', () => ({
     getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
     getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
     query: mockMessageQuery,
-    update: vi.fn().mockResolvedValue({}),
+    update: mockMessageUpdate,
   })),
 }));
 
