@@ -408,20 +408,27 @@ export function sharedRendererPlugins(options: SharedRendererOptions) {
     viteNodeModuleStub(),
     vitePlatformResolve(options.platform),
 
-    // GlobalProvider/Editor.tsx reaches @lobehub/editor's provider by file path
-    // (the export map has no provider-only entry) so the editor runtime stays
-    // off the first screen. In dev that path is served raw while the editors
-    // use the prebundled @lobehub/editor/react, which would create a second
-    // EditorContext; point the dev import back at the bundle.
-    isDev &&
-      ({
-        enforce: 'pre',
-        name: 'lobe-dev-editor-provider',
-        resolveId(source, importer) {
-          if (!source.includes('@lobehub/editor/es/react/EditorProvider')) return null;
-          return this.resolve('@lobehub/editor/react', importer, { skipSelf: true });
-        },
-      } satisfies Plugin),
+    // GlobalProvider/Editor.tsx imports @lobehub/editor's provider module
+    // directly (the export map has no provider-only entry) so the editor
+    // runtime stays off the first screen. The subpath is unresolvable on its
+    // own, and node_modules may sit above the repo (business overlay builds),
+    // so derive it from the resolved package entry. In dev the editors use the
+    // prebundled @lobehub/editor/react and a raw second copy would create a
+    // second EditorContext; point dev at the bundle instead.
+    {
+      enforce: 'pre',
+      name: 'lobe-editor-provider',
+      async resolveId(source, importer) {
+        if (!source.includes('@lobehub/editor/es/react/EditorProvider')) return null;
+
+        const entry = await this.resolve('@lobehub/editor/react', importer, { skipSelf: true });
+        if (!entry || process.env.NODE_ENV !== 'production') return entry;
+
+        const provider = entry.id.replace(/es[/\\]react\.js$/, 'es/react/EditorProvider/index.js');
+
+        return provider === entry.id ? entry : provider;
+      },
+    } satisfies Plugin,
 
     isDev && {
       name: 'lobe-dev-strip-manifest',

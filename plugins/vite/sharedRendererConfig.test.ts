@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   __testing,
@@ -18,6 +18,45 @@ describe('sharedRendererPlugins', () => {
   it('keeps the icon barrel transform out of the Electron renderer', () => {
     expect(getPluginNames('desktop')).not.toContain('lobe-icon-named-export-proxy');
     expect(getPluginNames('web')).toContain('lobe-icon-named-export-proxy');
+  });
+});
+
+describe('lobe-editor-provider', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  const resolveProvider = async (entryId: string) => {
+    vi.stubEnv('NODE_ENV', 'production');
+
+    const plugin = sharedRendererPlugins({ platform: 'web' })
+      .flat(Number.POSITIVE_INFINITY)
+      .find(
+        (
+          item,
+        ): item is { name: string; resolveId: (source: string, importer: string) => unknown } =>
+          Boolean(item) &&
+          typeof item === 'object' &&
+          (item as any).name === 'lobe-editor-provider',
+      );
+
+    return plugin!.resolveId.call(
+      { resolve: async () => ({ id: entryId }) },
+      '@lobehub/editor/es/react/EditorProvider',
+      '/repo/src/layout/GlobalProvider/Editor.tsx',
+    );
+  };
+
+  it('resolves the provider next to the package entry, wherever node_modules lives', async () => {
+    await expect(
+      resolveProvider('/overlay/node_modules/@lobehub/editor/es/react.js'),
+    ).resolves.toBe('/overlay/node_modules/@lobehub/editor/es/react/EditorProvider/index.js');
+  });
+
+  it('falls back to the package entry when it is prebundled', async () => {
+    await expect(resolveProvider('/repo/node_modules/.vite/deps/editor.js')).resolves.toEqual({
+      id: '/repo/node_modules/.vite/deps/editor.js',
+    });
   });
 });
 
