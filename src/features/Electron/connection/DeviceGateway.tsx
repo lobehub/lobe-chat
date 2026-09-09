@@ -7,7 +7,10 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
-import { getScopedConnectionCount } from '@/features/DeviceManager/connectionCount';
+import {
+  getScopedConnectionCount,
+  getWorkspaceConnectionState,
+} from '@/features/DeviceManager/connectionCount';
 import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useElectronStore } from '@/store/electron';
@@ -66,7 +69,11 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
   useFetchGatewayStatus();
   useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
   const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
-  const { data: devices, isLoading: isDeviceListLoading } = useDeviceList();
+  const {
+    data: devices,
+    error: deviceListError,
+    isLoading: isDeviceListLoading,
+  } = useDeviceList();
 
   useWatchBroadcast('gatewayConnectionStatusChanged', ({ status }) => {
     setGatewayConnectionStatus(status);
@@ -96,14 +103,21 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
     workspaceScoped ? 'workspace' : 'personal',
     workspaceScoped ? undefined : gatewayDeviceInfo?.deviceId,
   );
-  const scopeConnected = workspaceScoped ? !!connectionCount : isConnected;
+  const workspaceConnectionState = getWorkspaceConnectionState(
+    devices,
+    isDeviceListLoading,
+    deviceListError,
+  );
+  const scopeConnected = workspaceScoped ? workspaceConnectionState === 'connected' : isConnected;
   const connectionHint =
-    workspaceScoped && isDeviceListLoading
-      ? t('gateway.statusConnecting')
-      : workspaceScoped
-        ? connectionCount
-          ? t('gateway.workspaceStatusConnections', { count: connectionCount })
-          : t('gateway.workspaceStatusDisconnected')
+    workspaceScoped
+      ? workspaceConnectionState === 'unavailable'
+        ? t('gateway.workspaceStatusUnavailable')
+        : workspaceConnectionState === 'connecting'
+          ? t('gateway.statusConnecting')
+          : workspaceConnectionState === 'connected'
+            ? t('gateway.workspaceStatusConnections', { count: connectionCount })
+            : t('gateway.workspaceStatusDisconnected')
         : isConnecting
           ? t('gateway.statusConnecting')
           : isConnected && connectionCount
@@ -122,7 +136,7 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
             title={t('gateway.manageDevices')}
             onClick={() => {
               setOpen(false);
-              navigate('/settings/devices', { escape: true });
+              navigate('/settings/devices');
             }}
           />
           {!workspaceScoped && (

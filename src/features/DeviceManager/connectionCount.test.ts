@@ -1,7 +1,7 @@
 import type { DeviceListItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { getScopedConnectionCount } from './connectionCount';
+import { getScopedConnectionCount, getWorkspaceConnectionState } from './connectionCount';
 
 const device = (
   deviceId: string,
@@ -43,5 +43,30 @@ describe('getScopedConnectionCount', () => {
         'workspace',
       ),
     ).toBe(3);
+  });
+});
+
+describe('getWorkspaceConnectionState', () => {
+  /** @example A failed first request does not claim that every workspace device is offline. */
+  it('reports unavailable when the device list fails without cached data', () => {
+    // ROOT CAUSE:
+    //
+    // The Electron title bar previously converted an undefined device list into a zero count after
+    // an SWR error, presenting an unverified result as "No workspace device connection is online".
+    // The unavailable state now preserves the distinction between a failed lookup and an empty list.
+    expect(getWorkspaceConnectionState(undefined, false, new Error('network unavailable'))).toBe(
+      'unavailable',
+    );
+  });
+
+  /** @example Cached presence remains useful when a background revalidation request fails. */
+  it('uses cached device presence during a revalidation error', () => {
+    expect(
+      getWorkspaceConnectionState(
+        [device('workspace-device', 'workspace', 1)],
+        false,
+        new Error('revalidation failed'),
+      ),
+    ).toBe('connected');
   });
 });
