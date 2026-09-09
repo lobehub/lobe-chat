@@ -67,7 +67,7 @@ overrides:
   's3rver>fast-xml-parser': 3.21.1
   stylelint-config-clean-order: 7.0.0
   typescript: 6.0.3
-  vitest: 3.2.6
+  vitest: 4.1.11
 
 patchedDependencies:
   '@upstash/qstash': patches/@upstash__qstash.patch

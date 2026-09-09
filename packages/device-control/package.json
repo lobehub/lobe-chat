@@ -24,6 +24,6 @@
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
-    "vitest": "3.2.6"
+    "vitest": "4.1.11"
   }
 }
