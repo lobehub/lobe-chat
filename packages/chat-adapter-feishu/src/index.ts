@@ -9,6 +9,7 @@ export {
 export { LarkApiClient } from './api';
 export { decryptLarkEvent } from './crypto';
 export { LarkFormatConverter } from './format-converter';
+export { supportedFeishuEmojiTypes, toFeishuEmojiType } from './reactionEmoji';
 export type {
   LarkAdapterConfig,
   LarkEventHeader,

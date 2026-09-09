@@ -249,6 +249,14 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 
+      # pnpm 12 writes broken relative symlinks for workspace members outside the desktop
+      # workspace root (../../packages/*). Installing the root workspace relinks them so
+      # tsgo can resolve sibling packages from source.
+      - name: Relink root workspace members
+        run: pnpm install --ignore-scripts
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+
       - name: Typecheck Desktop
         run: pnpm type-check
         working-directory: apps/desktop
@@ -357,7 +365,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
-
 
         ports:
           - 5432:5432

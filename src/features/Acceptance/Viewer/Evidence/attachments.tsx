@@ -4,7 +4,7 @@ import type { AcceptanceAttachment } from '@lobechat/types';
 import { Flexbox, Icon, Image } from '@lobehub/ui';
 import { Button, toast } from '@lobehub/ui/base-ui';
 import { Upload } from 'antd';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
 import { ImagePlus, Loader2, X } from 'lucide-react';
 import { type ClipboardEvent, memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -224,6 +224,8 @@ interface AttachmentUploadButtonProps {
 /** The "attach screenshot" trigger — a picker button that hands files back for upload. */
 export const AttachmentUploadButton = memo<AttachmentUploadButtonProps>(({ disabled, onFiles }) => {
   const { t } = useTranslation('verify');
+  // A 44px target is for thumbs; on a pointer device it towers over the field above it.
+  const { md = true } = useResponsive();
   return (
     <Upload
       multiple
@@ -240,7 +242,7 @@ export const AttachmentUploadButton = memo<AttachmentUploadButtonProps>(({ disab
       <Button
         disabled={disabled}
         icon={<Icon icon={ImagePlus} />}
-        style={{ minHeight: 44, alignSelf: 'flex-start' }}
+        style={{ alignSelf: 'flex-start', minHeight: md ? undefined : 44 }}
         type={'text'}
       >
         {t('acceptance.review.attach')}

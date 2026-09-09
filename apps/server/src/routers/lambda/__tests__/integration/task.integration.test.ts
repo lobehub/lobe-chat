@@ -1089,7 +1089,7 @@ describe('Task Router Integration', () => {
       expect(mockInterruptTask).not.toHaveBeenCalled();
     });
 
-    it('should skip cancellation when interrupt fails', async () => {
+    it('rejects the status change and retains running work when interrupt fails', async () => {
       const task = await caller.create({
         assigneeAgentId: testAgentId,
         instruction: 'Test interrupt failure',
@@ -1100,13 +1100,12 @@ describe('Task Router Integration', () => {
       // Make interruptTask fail
       mockInterruptTask.mockRejectedValueOnce(new Error('network error'));
 
-      // Transition task from running → paused
-      await caller.updateStatus({ id: task.data.id, status: 'paused' });
-
-      // The topic should still be running because interrupt failed
-      // so re-running should hit CONFLICT
-      await caller.updateStatus({ id: task.data.id, status: 'backlog' });
-      await expect(caller.run({ id: task.data.id })).rejects.toThrow(/already has a running topic/);
+      await expect(caller.updateStatus({ id: task.data.id, status: 'paused' })).rejects.toThrow(
+        'Failed to update status',
+      );
+      expect((await caller.find({ id: task.data.id })).data.status).toBe('running');
+      const runningTopics = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runningTopics.some((topic) => topic.status === 'running')).toBe(true);
     });
   });
 

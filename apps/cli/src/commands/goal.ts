@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import type {
   GoalEdgeKind,
   GoalGraphDecision,
@@ -163,9 +165,47 @@ function printTick(result: GoalTickResult) {
 
 export function registerGoalCommand(program: Command) {
   const goal = program.command('goal').description('Run long-horizon Goal Graphs');
+  goal
+    .command('plan <id>')
+    .description('Atomically submit the current main Agent plan')
+    .requiredOption(
+      '--file <path>',
+      'JSON plan: action tasks/verify/retry/escalate, reason and action fields',
+    )
+    .requiredOption('--token <token>', 'Current server-issued planning turn token')
+    .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
+    .option('--json', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: { file: string; token: string; operation?: string; json?: boolean },
+      ) => {
+        const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
+        if (!operationId) throw new Error('Current manager operation ID required');
+        const client = await getTrpcClient();
+        const injectedJwt = process.env.LOBEHUB_JWT;
+        const isOperationToken =
+          injectedJwt &&
+          JSON.parse(Buffer.from(injectedJwt.split('.')[1], 'base64url').toString()).purpose ===
+            'hetero-operation';
+        const endpoint = isOperationToken
+          ? client.goal.submitOperationPlan
+          : client.goal.submitPlan;
+        const result = await endpoint.mutate({
+          id,
+          token: options.token,
+          operationId,
+          plan: JSON.parse(await readFile(options.file, 'utf8')),
+        });
+        if (options.json) outputJson(result.data);
+        else
+          console.log('Plan recorded; the coordinator will continue after this Agent turn exits.');
+      },
+    );
 
   goal
     .command('create <title>')
+    .option('--max-manager-turns <n>', 'Enable CLI manager planning with this turn limit')
     .description('Create a standalone goal and seed its graph')
     .option('-r, --requirement <text>', 'Acceptance requirement')
     .option(
@@ -177,6 +217,11 @@ export function registerGoalCommand(program: Command) {
     .option('--project <id>', 'Project ID')
     .option('--explore <instruction>', 'Explore alternatives using completed experiment results')
     .option('--max-experiments <n>', 'Maximum experiment nodes (requires --explore, default 10)')
+    .option('--supervise', 'Enable bounded recovery supervision in an independent topic')
+    .option(
+      '--max-supervision-incidents <n>',
+      'Maximum supervised interruptions (default 10, maximum 100)',
+    )
     .option('--max-rounds <n>', 'Maximum goal rounds')
     .option('--max-cost <usd>', 'Maximum total cost in USD')
     .option('--max-attempts-per-task <n>', 'Attempts per Task before opening a decision gate')
@@ -198,18 +243,32 @@ export function registerGoalCommand(program: Command) {
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
       const result = await client.goal.create.mutate({
-        agentId: options.agent,
+        agentId: options.agent ?? process.env.LOBEHUB_AGENT_ID,
+        createdByAgentId: process.env.LOBEHUB_AGENT_ID,
         config:
+          options.maxManagerTurns ||
           options.explore ||
+          options.supervise ||
           options.maxAttemptsPerTask ||
           options.maxStepsPerRun ||
           options.operationLeaseTimeoutMs ||
           options.maxConcurrentTasks
             ? {
+                manager: options.maxManagerTurns
+                  ? { maxTurns: Number(options.maxManagerTurns) }
+                  : undefined,
                 exploration: options.explore
                   ? {
                       instruction: options.explore,
                       maxExperiments: Number(options.maxExperiments ?? 10),
+                    }
+                  : undefined,
+                supervision: options.supervise
+                  ? {
+                      enabled: true,
+                      maxIncidents: options.maxSupervisionIncidents
+                        ? Number.parseInt(options.maxSupervisionIncidents, 10)
+                        : undefined,
                     }
                   : undefined,
                 maxConcurrentTasks: options.maxConcurrentTasks
@@ -293,6 +352,14 @@ export function registerGoalCommand(program: Command) {
     .description('Show the Goal Graph')
     .option('--json [fields]', 'Output JSON')
     .action(show);
+
+  goal
+    .command('supervision <id>')
+    .description('Inspect recovery incidents, diagnostic topic and effective recovery rate')
+    .action(async (id: string) => {
+      const result = await (await getTrpcClient()).goal.supervision.query({ id });
+      outputJson(result.data);
+    });
 
   goal
     .command('tick <id>')

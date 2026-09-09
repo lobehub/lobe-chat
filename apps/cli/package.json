@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/cli",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "type": "module",
   "bin": {
     "lh": "./dist/index.js",
@@ -67,11 +67,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.13",
-      "antd": "6.3.5"
-    }
   }
 }

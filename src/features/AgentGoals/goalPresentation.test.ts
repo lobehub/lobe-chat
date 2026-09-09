@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatSpan, formatUsd, goalStatusKey, summarizeGoalBudget } from './goalPresentation';
+import {
+  formatSpan,
+  formatUsd,
+  goalManagerConversation,
+  goalStatusKey,
+  summarizeGoalBudget,
+} from './goalPresentation';
 
 describe('goalStatusKey', () => {
   it('maps every lifecycle state to a list-vocabulary key', () => {
@@ -64,5 +70,28 @@ describe('summarizeGoalBudget', () => {
       kind: 'cost',
       spent: 0,
     });
+  });
+});
+
+describe('goalManagerConversation', () => {
+  it('does not offer a empty conversation before the first planning run', () => {
+    expect(goalManagerConversation(undefined)).toBeUndefined();
+    expect(goalManagerConversation({ manager: { agentId: 'creator' } })).toBeUndefined();
+  });
+
+  it('keeps the creator conversation available after a planning turn is consumed', () => {
+    expect(
+      goalManagerConversation({
+        manager: { agentId: 'creator' },
+        managerState: {
+          consumed: true,
+          snapshot: 'snapshot',
+          startedAt: '2026-09-09T00:00:00Z',
+          token: 'token',
+          topicId: 'persistent-topic',
+          turns: 6,
+        },
+      }),
+    ).toEqual({ agentId: 'creator', topicId: 'persistent-topic' });
   });
 });

@@ -77,6 +77,10 @@ Use `bun run check [changed-files...]`.
 - Lint autofixes files: review the emitted diff. Tests use the nearest owning Vitest config. `--type` checks the full repo. Never run `bun run test`, which runs the full suite.
 - For a manual package test, run from the owning package: `cd packages/database && bunx vitest run --silent='passed-only' '[file-path]'`.
 
+### Acceptance
+
+Finishing a feature or fix means proving it on the real product, not only passing the gates above. Before a PR is opened or marked ready, run the `acceptance` skill: drive the change on the surface it reaches (CLI / Web / Electron), capture visually confirmed evidence, and publish a round with `lh acceptance run ingest`. Put the published `https://app.lobehub.com/acceptance/<id>` link in the PR body. Tests, lint, and type-check are gates, never acceptance checks; a change without a published round is not done. Skip only for pure refactors or tooling changes with no user-visible outcome, and say so explicitly in the PR.
+
 ### i18n
 
 - Add keys to a namespace file under `packages/locales/src/default/` (e.g. `agent.ts`, `auth.ts`)

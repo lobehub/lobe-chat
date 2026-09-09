@@ -48,6 +48,8 @@ import {
   GoalInterventions,
   GoalManifest,
   GoalRenders,
+  GoalSupervisorInspectors,
+  GoalSupervisorManifest,
 } from '@lobechat/builtin-tool-goal/client';
 import {
   GroupAgentBuilderInspectors,
@@ -291,6 +293,7 @@ export const registerBuiltinToolSurfaces = (): void => {
       BuiltinInspector
     >,
     [GoalManifest.identifier]: GoalInspectors as Record<string, BuiltinInspector>,
+    [GoalSupervisorManifest.identifier]: GoalSupervisorInspectors,
     [ImageGenerationManifest.identifier]: ImageGenerationInspectors as Record<
       string,
       BuiltinInspector

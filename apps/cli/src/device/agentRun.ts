@@ -6,6 +6,8 @@ import {
 } from '@lobechat/heterogeneous-agents/protocol';
 import { resolveHeteroSpawnCwd } from '@lobechat/heterogeneous-agents/workingDirectory';
 
+import { registerAgentRun } from './agentRunRegistry';
+
 export interface SpawnHeteroAgentRunParams {
   agentType: string;
   /** Resolved `lh hetero exec` wrapper args. */
@@ -147,6 +149,7 @@ export function spawnHeteroAgentRun(
     });
 
     child.once('spawn', () => {
+      registerAgentRun(operationId, child);
       // Only safe to write stdin once the process actually started.
       try {
         child.stdin?.write(stdinPayload);

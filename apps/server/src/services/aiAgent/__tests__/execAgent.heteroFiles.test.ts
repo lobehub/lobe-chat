@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
+import { AgentOperationModel } from '@/database/models/agentOperation';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
 
 import { AiAgentService } from '../index';
@@ -11,6 +12,7 @@ const {
   mockCreateOperationMetadata,
   mockDispatchAgentRun,
   mockExecuteToolCall,
+  mockInterruptOperation,
   mockGetHeterogeneousResumeSessionId,
   mockMessageCreate,
   mockMessageQuery,
@@ -26,6 +28,7 @@ const {
   mockDeviceFindWorkspaceDeviceById: vi.fn(),
   mockDispatchAgentRun: vi.fn().mockResolvedValue({ success: true }),
   mockExecuteToolCall: vi.fn().mockResolvedValue({ success: true }),
+  mockInterruptOperation: vi.fn().mockResolvedValue(true),
   mockGetHeterogeneousResumeSessionId: vi.fn().mockResolvedValue(undefined),
   mockIngestAttachment: vi.fn(),
   mockMessageCreate: vi.fn(),
@@ -130,6 +133,7 @@ const topicMock = {
   appendRunningOperationChild: vi.fn().mockResolvedValue(true),
   create: vi.fn().mockResolvedValue({ id: 'topic-1', metadata: undefined }),
   findById: vi.fn().mockResolvedValue(undefined),
+  settleRunningOperation: vi.fn().mockResolvedValue({ status: 'settled' }),
   releaseTaskCallbackReservation: vi.fn().mockResolvedValue(undefined),
   tryReserveTaskCallback: vi.fn().mockResolvedValue(true),
   updateMetadata: vi.fn().mockResolvedValue(undefined),
@@ -186,7 +190,7 @@ vi.mock('@/server/services/agentRuntime', () => ({
       operationId: 'op-123',
       success: true,
     }),
-    interruptOperation: vi.fn().mockResolvedValue(true),
+    interruptOperation: mockInterruptOperation,
   })),
 }));
 
@@ -220,6 +224,7 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.spyOn(AgentOperationModel.prototype, 'settleRunning').mockResolvedValue(true);
     recordStartSpy = vi.spyOn(CompletionLifecycle.prototype, 'recordStart').mockResolvedValue(true);
     topicMock.appendRunningOperationChild.mockResolvedValue(true);
     topicMock.create.mockResolvedValue({ id: 'topic-1', metadata: undefined });
@@ -340,6 +345,22 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     ).rejects.toThrow('Replaced heterogeneous agent process did not confirm termination');
 
     expect(topicMock.tryReserveTaskCallback).not.toHaveBeenCalled();
+  });
+
+  it('persists the triggering message identity for durable CLI-run adoption', async () => {
+    mockMessageCreate.mockImplementation(async (_message, id) => ({
+      id: id ?? 'generated-message',
+    }));
+    await service.execAgent({
+      agentId: 'agent-1',
+      clientIds: { userMessageId: 'msg-manager-turn' },
+      prompt: 'Inspect the Goal',
+    });
+    expect(recordStartSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        appContext: expect.objectContaining({ sourceMessageId: 'msg-manager-turn' }),
+      }),
+    );
   });
 
   it('should attach fileIds to the user message (SPA gateway device/sandbox mode)', async () => {
@@ -680,6 +701,30 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       expect.objectContaining({ assistantMessageId: 'msg-1', deviceId: 'device-1' }),
     );
     expect(dispatchParams.args).toEqual(['--model', 'opus', '--effort', 'high']);
+  });
+
+  it('persists CLI-device routing so a stop request reaches the dispatched writer', async () => {
+    heteroAgentConfig.agencyConfig = {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { type: 'kimi-code', model: 'kimi-code/k3' },
+    } as any;
+    await service.execAgent({ agentId: 'agent-1', prompt: 'Run cancellable work' });
+    const seed = topicMock.updateMetadata.mock.calls
+      .map((call) => call[1])
+      .find((patch) => patch?.runningOperation?.operationId);
+    expect(seed.runningOperation).toMatchObject({ deviceId: 'device-1', deviceUserId: userId });
+    topicMock.findById.mockResolvedValue({ metadata: seed });
+    mockExecuteToolCall.mockResolvedValueOnce({ success: true, state: { exited: true } });
+    await service.interruptTask({
+      operationId: seed.runningOperation.operationId,
+      topicId: 'topic-1',
+    });
+    expect(mockExecuteToolCall).toHaveBeenCalledWith(
+      expect.objectContaining({ deviceId: 'device-1', userId }),
+      expect.objectContaining({ apiName: 'cancelHeteroTask' }),
+      10_000,
+    );
   });
 
   it('dispatches CodeBuddy to a bound device with its model and effort args', async () => {
@@ -1550,6 +1595,36 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       expect(result.deviceCancellationConfirmed).toBe(true);
     });
 
+    it('settles a confirmed device exit without native runtime state', async () => {
+      // Local CLI operations have a durable row but no native AgentRuntime state.
+      // Before: interruptOperation(false) stranded the stopped Task as running.
+      mockInterruptOperation.mockResolvedValueOnce(false);
+      mockExecuteToolCall.mockResolvedValueOnce({ success: true, state: { exited: true } });
+      topicMock.findById.mockResolvedValue({
+        metadata: {
+          runningOperation: {
+            deviceId: 'author-desktop',
+            heteroType: 'kimi-code',
+            operationId: 'operation-local',
+          },
+        },
+      });
+      const result = await service.interruptTask({
+        operationId: 'operation-local',
+        topicId: 'topic-1',
+      });
+      expect(result).toMatchObject({ success: true, deviceCancellationConfirmed: true });
+      expect(AgentOperationModel.prototype.settleRunning).toHaveBeenCalledWith(
+        'operation-local',
+        'interrupted',
+      );
+      expect(topicMock.settleRunningOperation).toHaveBeenCalledWith(
+        'topic-1',
+        'operation-local',
+        'active',
+      );
+    });
+
     /**
      * @example A device response with `exited: false` remains an unsafe cancellation result.
      */
@@ -1582,8 +1657,9 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       expect(result).toMatchObject({
         deviceCancellationConfirmed: false,
         operationId: 'operation-codex',
-        success: true,
+        success: false,
       });
+      expect(mockInterruptOperation).not.toHaveBeenCalled();
     });
 
     it('cancels a remote child operation without touching the supervisor device', async () => {

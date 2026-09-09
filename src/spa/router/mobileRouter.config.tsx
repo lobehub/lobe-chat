@@ -466,6 +466,64 @@ export const mobileRoutes: RouteObject[] = [
                 ),
                 path: 'general',
               },
+              // Account-level tabs mirrored inside the workspace (see the
+              // desktop router); the pages are the personal settings pages.
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/profile'),
+                  'Mobile > Workspace > Settings > Profile',
+                ),
+                path: 'profile',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/appearance'),
+                  'Mobile > Workspace > Settings > Appearance',
+                ),
+                path: 'appearance',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/hotkey'),
+                  'Mobile > Workspace > Settings > Hotkey',
+                ),
+                path: 'hotkey',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
+                  'Mobile > Workspace > Settings > Messenger',
+                ),
+                path: 'messenger',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
+                  'Mobile > Workspace > Settings > Messenger > Platform',
+                ),
+                path: 'messenger/:sub',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/advanced'),
+                  'Mobile > Workspace > Settings > Advanced',
+                ),
+                path: 'advanced',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/labs'),
+                  'Mobile > Workspace > Settings > Labs',
+                ),
+                path: 'labs',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/about'),
+                  'Mobile > Workspace > Settings > About',
+                ),
+                path: 'about',
+              },
               {
                 element: dynamicElement(
                   () => import('@/routes/(main)/[workspaceSlug]/settings/members'),

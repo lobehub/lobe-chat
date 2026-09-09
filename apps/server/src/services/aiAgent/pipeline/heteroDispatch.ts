@@ -267,6 +267,7 @@ export const dispatchHeteroAgent = async (
     deps.workspaceId,
   ).recordStart({
     agentId: persistAgentId,
+    appContext: { ...appContext, sourceMessageId: userMessageId },
     chatGroupId: appContext?.groupId ?? null,
     maxSteps,
     metadata: {
@@ -455,6 +456,25 @@ export const dispatchHeteroAgent = async (
     ? deps.userId
     : (agentConfig.userId ?? deps.userId);
 
+  // Resolve CLI-device routing before persisting the marker. Cancellation
+  // must address the same device even though local CLI agents use a different
+  // dispatch transport from notify-based platform agents.
+  const deviceHeteroPlan = !isRemoteHetero
+    ? resolveExecutionPlan({
+        agencyConfig: agentConfig.agencyConfig,
+        canUseDevice,
+        isHetero: true,
+        clientExecutionAvailable: false,
+        requestedDeviceId,
+        sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
+        trigger: requestTrigger,
+      })
+    : undefined;
+  const cliDeviceId = deviceHeteroPlan?.kind === 'device' ? deviceHeteroPlan.deviceId : undefined;
+  const cliDeviceWorkspaceId = cliDeviceId
+    ? await deps.resolveDeviceWorkspaceId(cliDeviceId)
+    : undefined;
+
   // Register the run's lifecycle hooks so the hetero terminal path fires
   // onComplete/onError through the same `hookDispatcher` the normal LLM
   // runtime uses — driving the task lifecycle (onTopicComplete) and IM bot
@@ -477,7 +497,13 @@ export const dispatchHeteroAgent = async (
           deviceUserId: remoteDeviceUserId,
           deviceWorkspaceId: remoteDeviceWorkspaceId,
         }
-      : {}),
+      : cliDeviceId
+        ? {
+            deviceId: cliDeviceId,
+            deviceUserId: deps.userId,
+            deviceWorkspaceId: cliDeviceWorkspaceId,
+          }
+        : {}),
     operationId,
     orchestrationRole: appContext?.orchestrationRole,
     scope: appContext?.scope ?? undefined,
@@ -774,15 +800,7 @@ export const dispatchHeteroAgent = async (
       log('execAgent: failed to init stream for local hetero: %O', err);
     }
 
-    const heteroPlan = resolveExecutionPlan({
-      agencyConfig: agentConfig.agencyConfig,
-      canUseDevice,
-      isHetero: true,
-      clientExecutionAvailable: false,
-      requestedDeviceId,
-      sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
-      trigger: requestTrigger,
-    });
+    const heteroPlan = deviceHeteroPlan!;
 
     if (heteroPlan.kind !== 'sandbox') {
       const dispatchDeviceId = heteroPlan.kind === 'device' ? heteroPlan.deviceId : undefined;
@@ -823,7 +841,7 @@ export const dispatchHeteroAgent = async (
       const boundDevice =
         (await deviceModelForCwd.findByDeviceId(dispatchDeviceId)) ??
         (await deviceModelForCwd.findWorkspaceDeviceById(dispatchDeviceId));
-      const dispatchWorkspaceId = await deps.resolveDeviceWorkspaceId(dispatchDeviceId);
+      const dispatchWorkspaceId = cliDeviceWorkspaceId;
       // Resolve via the shared precedence helper so dispatch, workspace-init,
       // and the new-topic backfill below all agree on the cwd.
       const deviceCwdConfig = resolveDeviceWorkingDirectoryConfig({

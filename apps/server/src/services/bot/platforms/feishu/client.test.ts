@@ -1,15 +1,34 @@
+import type * as FeishuAdapterModule from '@lobechat/chat-adapter-feishu';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockCreateLarkAdapter = vi.hoisted(() => vi.fn());
 const mockDownloadMediaFromRawMessage = vi.hoisted(() => vi.fn());
 const mockGetTenantAccessToken = vi.hoisted(() => vi.fn().mockResolvedValue('tok'));
+const mockAddReaction = vi.hoisted(() => vi.fn());
+const mockRemoveReaction = vi.hoisted(() => vi.fn());
 
-vi.mock('@lobechat/chat-adapter-feishu', () => ({
+vi.mock('@lobechat/chat-adapter-feishu', async (importOriginal) => ({
+  // Keep the real `decodeLarkThreadId` — the messenger decodes the threadId
+  // before it ever touches the API, so stubbing it would test nothing.
+  ...(await importOriginal<typeof FeishuAdapterModule>()),
   createLarkAdapter: mockCreateLarkAdapter,
   downloadMediaFromRawMessage: mockDownloadMediaFromRawMessage,
   LarkApiClient: vi.fn().mockImplementation(() => ({
+    addReaction: mockAddReaction,
     getTenantAccessToken: mockGetTenantAccessToken,
+    removeReaction: mockRemoveReaction,
   })),
+}));
+
+// Keep `./reactionTracker` real — the key layout and the read-before-write
+// ordering are exactly what the stacking fix depends on.
+const reactionStore = vi.hoisted(() => new Map<string, string>());
+vi.mock('@/server/modules/AgentRuntime/redis', () => ({
+  getAgentRuntimeRedisClient: () => ({
+    del: async (key: string) => reactionStore.delete(key),
+    get: async (key: string) => reactionStore.get(key) ?? null,
+    set: async (key: string, value: string) => reactionStore.set(key, value),
+  }),
 }));
 
 vi.mock('@/server/services/gateway/runtimeStatus', () => ({
@@ -194,5 +213,150 @@ describe('FeishuWebhookClient.extractFiles', () => {
     expect(result).toEqual([
       { buffer, mimeType: 'image/jpeg', name: 'image.jpg', size: undefined },
     ]);
+  });
+});
+
+describe('Feishu messenger reactions', () => {
+  const messenger = (platform: 'feishu' | 'lark' = 'lark') =>
+    new FeishuClientFactory()
+      .createClient(
+        {
+          applicationId: 'cli_test_app',
+          credentials: { appSecret: 'sec', encryptKey: 'enc' },
+          platform,
+          settings: {},
+        },
+        {},
+      )
+      .getMessenger(`${platform}:group:oc_chat_1`);
+
+  beforeEach(async () => {
+    reactionStore.clear();
+    mockAddReaction.mockReset().mockResolvedValue({ reactionId: 'rct_1' });
+    mockRemoveReaction.mockReset().mockResolvedValue(undefined);
+    // The suite above ends on `vi.restoreAllMocks()`, which strips the module
+    // factory's constructor implementation — re-establish it here rather than
+    // depending on describe ordering.
+    const { LarkApiClient } = await import('@lobechat/chat-adapter-feishu');
+    vi.mocked(LarkApiClient).mockImplementation(
+      () =>
+        ({
+          addReaction: mockAddReaction,
+          getTenantAccessToken: mockGetTenantAccessToken,
+          removeReaction: mockRemoveReaction,
+        }) as any,
+    );
+  });
+
+  it('sends the named emoji_type Feishu accepts, not the bridge unicode', async () => {
+    // '\u{1F440}' straight through is what returns `231001 reaction type is invalid`.
+    await messenger().replaceReaction!('om_1', null, '\u{1F440}');
+
+    expect(mockAddReaction).toHaveBeenCalledWith('om_1', 'OK');
+  });
+
+  it('removes the previous reaction on a step swap instead of stacking a second one', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_received' });
+    await m.replaceReaction!('om_1', null, '\u{1F440}');
+
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_thinking' });
+    await m.replaceReaction!('om_1', '\u{1F440}', '\u{1F914}');
+
+    // Add first, then drop the old one — the user always sees one reaction.
+    expect(mockAddReaction).toHaveBeenLastCalledWith('om_1', 'THINKING');
+    expect(mockRemoveReaction).toHaveBeenCalledWith('om_1', 'rct_received');
+  });
+
+  it('clears the last reaction when the run finishes', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
+    await m.replaceReaction!('om_1', null, '\u{26A1}');
+
+    await m.replaceReaction!('om_1', '\u{26A1}', null);
+
+    expect(mockRemoveReaction).toHaveBeenCalledWith('om_1', 'rct_working');
+    // …and the pointer is gone, so a later clear can't double-delete.
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('skips the swap when both emoji map to the same emoji_type', async () => {
+    // '\u{1F44C}' and '\u{1F440}' both resolve to OK — re-placing it would swap a
+    // live reaction for an identical one.
+    await messenger().replaceReaction!('om_1', '\u{1F44C}', '\u{1F440}');
+
+    expect(mockAddReaction).not.toHaveBeenCalled();
+    expect(mockRemoveReaction).not.toHaveBeenCalled();
+  });
+
+  it('retries a transient failure of the final clear in place', async () => {
+    // Nothing upstream retries the clear (the bridge and the queue callback
+    // both drop their reaction state afterwards), so the messenger must.
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
+    await m.replaceReaction!('om_1', null, '\u{26A1}');
+
+    mockRemoveReaction.mockRejectedValueOnce(new Error('network'));
+    await m.replaceReaction!('om_1', '\u{26A1}', null);
+
+    expect(mockRemoveReaction).toHaveBeenCalledTimes(2);
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('keeps the id when the final clear keeps failing, so a later cleanup can still use it', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
+    await m.replaceReaction!('om_1', null, '\u{26A1}');
+
+    // Forgetting the id BEFORE the delete succeeds would leave the reaction
+    // visible with nothing left to delete it by.
+    mockRemoveReaction
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{26A1}', null)).rejects.toThrow('could not remove');
+    expect([...reactionStore.values()]).toEqual([JSON.stringify(['rct_working'])]);
+
+    await m.removeReaction!('om_1', '\u{26A1}');
+    expect(mockRemoveReaction).toHaveBeenLastCalledWith('om_1', 'rct_working');
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('keeps the previous id when a swap adds fine but cannot remove it, and clears both later', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_received' });
+    await m.replaceReaction!('om_1', null, '\u{1F440}');
+
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_thinking' });
+    mockRemoveReaction
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{1F440}', '\u{1F914}')).rejects.toThrow(
+      'could not remove',
+    );
+    // Both ids survive: the one that could not be removed and the one just placed.
+    expect([...reactionStore.values()]).toEqual([JSON.stringify(['rct_received', 'rct_thinking'])]);
+
+    mockRemoveReaction.mockClear();
+    await m.replaceReaction!('om_1', '\u{1F914}', null);
+    expect(mockRemoveReaction.mock.calls.map(([, id]) => id)).toEqual([
+      'rct_received',
+      'rct_thinking',
+    ]);
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('keeps the stale pointer when the add fails, so the next swap retries cleanup', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_received' });
+    await m.replaceReaction!('om_1', null, '\u{1F440}');
+
+    mockAddReaction.mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{1F440}', '\u{1F914}')).rejects.toThrow('network');
+
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_thinking' });
+    await m.replaceReaction!('om_1', '\u{1F440}', '\u{1F914}');
+    expect(mockRemoveReaction).toHaveBeenCalledWith('om_1', 'rct_received');
   });
 });

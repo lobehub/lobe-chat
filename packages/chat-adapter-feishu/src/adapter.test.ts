@@ -924,3 +924,54 @@ describe('downloadMediaFromRawMessage', () => {
     expect(warn).toHaveBeenCalled();
   });
 });
+
+describe('LarkAdapter.fetchMessages', () => {
+  const makeAdapter = () => {
+    const adapter = new LarkAdapter({ appId: 'a', appSecret: 's', platform: 'lark' });
+    adapter.initialize({
+      getLogger: () => ({ debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() }),
+      getUserName: () => 'TestBot',
+      processMessage: vi.fn(),
+    } as any);
+    return adapter;
+  };
+  const page = (...ids: string[]) => ({
+    hasMore: false,
+    items: ids.map((id, index) =>
+      makeLarkMessage({ create_time: String(1_700_000_000_000 + index), message_id: id }),
+    ),
+  });
+  const threadId = 'lark:oc_test_chat';
+
+  it('fetches the NEWEST page for the default backward direction, oldest-first within it', async () => {
+    // Feishu's own default is ascending, i.e. the chat's oldest messages —
+    // the opposite of what `direction: 'backward'` promises.
+    const adapter = makeAdapter();
+    const listMessages = vi
+      .spyOn((adapter as any).api, 'listMessages')
+      .mockResolvedValue(page('om_newest', 'om_middle', 'om_oldest'));
+
+    const result = await adapter.fetchMessages(threadId, { limit: 3 });
+
+    expect(listMessages).toHaveBeenCalledWith(
+      'oc_test_chat',
+      expect.objectContaining({ sortType: 'ByCreateTimeDesc' }),
+    );
+    expect(result.messages.map((m) => m.id)).toEqual(['om_oldest', 'om_middle', 'om_newest']);
+  });
+
+  it('maps forward onto ascending order and keeps the page as returned', async () => {
+    const adapter = makeAdapter();
+    const listMessages = vi
+      .spyOn((adapter as any).api, 'listMessages')
+      .mockResolvedValue(page('om_1', 'om_2'));
+
+    const result = await adapter.fetchMessages(threadId, { direction: 'forward' });
+
+    expect(listMessages).toHaveBeenCalledWith(
+      'oc_test_chat',
+      expect.objectContaining({ sortType: 'ByCreateTimeAsc' }),
+    );
+    expect(result.messages.map((m) => m.id)).toEqual(['om_1', 'om_2']);
+  });
+});
