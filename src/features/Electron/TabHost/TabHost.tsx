@@ -155,7 +155,14 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
   }, [closeSplitView, isPreferenceInit, splitView, splitViewEnabled]);
 
   const liveIds = useMemo(
-    () => resolveLiveTabIds(tabs, activeTabId, MAX_LIVE_TAB_ROUTERS, visibleTabIds),
+    () =>
+      resolveLiveTabIds(
+        // Persisted tabs are cold until first shown; only retain already-created routers.
+        tabs.filter((tab) => visibleTabIds.includes(tab.id) || getTabRouter(tab.id)),
+        activeTabId,
+        MAX_LIVE_TAB_ROUTERS,
+        visibleTabIds,
+      ),
     [tabs, activeTabId, visibleTabIds],
   );
 

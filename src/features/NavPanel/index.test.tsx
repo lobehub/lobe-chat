@@ -1,11 +1,17 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import NavPanel from './index';
 import { NavPanelPortal } from './NavPanelPortal';
-import { clearNavPanelRegistry } from './registry';
+import {
+  clearNavPanelRegistry,
+  registerNavPanelContent,
+  unregisterNavPanelContent,
+} from './registry';
 import NavPanelShell from './Shell';
+
+const panelRender = vi.fn();
 
 let pathname = '/lobe-team/settings/general';
 
@@ -37,11 +43,14 @@ vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
 }));
 
 vi.mock('./components/NavPanelDraggable', () => ({
-  NavPanelDraggable: ({ activeContent }: NavPanelDraggableMockProps) => (
-    <div data-nav-key={activeContent.key} data-testid="nav-panel">
-      {activeContent.node}
-    </div>
-  ),
+  NavPanelDraggable: ({ activeContent }: NavPanelDraggableMockProps) => {
+    panelRender();
+    return (
+      <div data-nav-key={activeContent.key} data-testid="nav-panel">
+        {activeContent.node}
+      </div>
+    );
+  },
 }));
 
 vi.mock('@/features/HomeSidebar/Content', () => ({
@@ -53,6 +62,27 @@ describe('NavPanel', () => {
     pathname = '/lobe-team/settings/general';
     clearNavPanelRegistry();
   });
+
+  it.each([false, true])(
+    'ignores unrelated registrations with active content present: %s',
+    (registered) => {
+      pathname = '/tasks';
+      const owner = Symbol('home');
+      if (registered) registerNavPanelContent('home', owner, <div>Original</div>);
+      render(<NavPanel />);
+      const before = panelRender.mock.calls.length;
+      const otherOwner = Symbol('discover');
+
+      act(() => registerNavPanelContent('discover', otherOwner, <div>Discover</div>));
+      act(() => unregisterNavPanelContent('discover', otherOwner));
+      expect(panelRender).toHaveBeenCalledTimes(before);
+
+      act(() => registerNavPanelContent('home', owner, <div>Updated</div>));
+      expect(screen.getByText('Updated')).toBeInTheDocument();
+      act(() => unregisterNavPanelContent('home', owner));
+      expect(screen.getByTestId('nav-sidebar-skeleton')).toBeInTheDocument();
+    },
+  );
 
   it('selects the route-owned entry instead of a concurrently registered Home entry', async () => {
     render(
