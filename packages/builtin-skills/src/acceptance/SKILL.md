@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.2
+version: 0.4.3
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -309,7 +309,7 @@ chat reply.
 Write the link as a plain-text line, never inside a fenced or inline code block — the
 chat client only linkifies plain text, and a code block makes it unclickable:
 
-Acceptance: <https://app.lobehub.com/acceptance/><acceptanceId>
+Acceptance: <https://app.lobehub.com/acceptance/ACCEPTANCE_ID> (the placeholder is the id ingest printed; it stays inside the URL)
 Coverage: 2/2 criteria, all required evidence uploaded
 
 ## Portability rules

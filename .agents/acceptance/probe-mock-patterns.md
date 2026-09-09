@@ -61,7 +61,6 @@ drive / probe / capture / publish. Skip a row only when its surface AND runtime 
 | P37 | any           | gateway         | env            | QStash / s3rver on fixed ports may belong to a sibling session; read the start log before stopping anything                                    |
 | P38 | web           | any             | fixture        | Call the real load-more store action when the fixture is too short for the observer                                                            |
 | P39 | web, electron | any             | fixture        | Replace the react-query `mutationFn` with a rejection via HMR so no network call ever fires                                                    |
-| P40 | web           | any             | drive          | Acceptance flow canvas through the production debug proxy: anonymous shared link, one uninterrupted script, canvas controls for clipped groups |
 | P40 | web, electron | any             | drive          | Remount the DevDock panel after a reload; pre-seed `LOBE_DEV_DOCK_UI` to land on it                                                            |
 | P41 | web           | client          | fixture, drive | openai speaks `/v1/responses`; the model must be in `enabledAiModels`; set approval `auto-run`                                                 |
 | P42 | web           | hetero          | fixture, drive | In-page IPC mock feeding stream-json through the real `ClaudeCodeAdapter`, no Electron needed                                                  |
@@ -102,6 +101,7 @@ drive / probe / capture / publish. Skip a row only when its surface AND runtime 
 | P77 | web, cli      | gateway         | probe          | Read `llm_generation_tracing.prompt_version` after one call; restart the server if stale                                                       |
 | P78 | web, cli      | gateway         | env            | `SSRF_ALLOW_PRIVATE_IP_ADDRESS=1` so the server can read local s3rver URLs                                                                     |
 | P79 | web, cli      | client, gateway | env            | Local SearXNG with `SEARCH_PROVIDERS=searxng`; the on-disk search1api keys are dead                                                            |
+| P82 | web           | any             | drive          | Acceptance flow canvas through the production debug proxy: anonymous shared link, one uninterrupted script, canvas controls for clipped groups |
 
 ## Choose the least invasive mechanism
 
@@ -1376,7 +1376,7 @@ tool → assistant(text) rows. Capture mid-turn by polling the top-level `[data-
 not `body.innerText`, and key turn-2 captures on the store/DOM state you assert rather than a
 fixed sleep.
 
-#### P40 · Acceptance flow canvas through the production debug proxy: anonymous shared link, one uninterrupted script, canvas controls for clipped groups
+#### P82 · Acceptance flow canvas through the production debug proxy: anonymous shared link, one uninterrupted script, canvas controls for clipped groups
 
 **applies-to:** surface=web · runtime=any · phase=drive
 
