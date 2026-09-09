@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   __testing,
@@ -21,14 +21,8 @@ describe('sharedRendererPlugins', () => {
   });
 });
 
-describe('lobe-editor-provider', () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
-  const resolveProvider = async (entryId: string) => {
-    vi.stubEnv('NODE_ENV', 'production');
-
+describe('lobe-dev-editor-provider', () => {
+  it('sends the provider entry back to the one prebundled editor bundle', async () => {
     const plugin = sharedRendererPlugins({ platform: 'web' })
       .flat(Number.POSITIVE_INFINITY)
       .find(
@@ -37,26 +31,20 @@ describe('lobe-editor-provider', () => {
         ): item is { name: string; resolveId: (source: string, importer: string) => unknown } =>
           Boolean(item) &&
           typeof item === 'object' &&
-          (item as any).name === 'lobe-editor-provider',
+          (item as { name?: string }).name === 'lobe-dev-editor-provider',
       );
 
-    return plugin!.resolveId.call(
-      { resolve: async () => ({ id: entryId }) },
-      '@lobehub/editor/es/react/EditorProvider',
-      '/repo/src/layout/GlobalProvider/Editor.tsx',
-    );
-  };
+    const resolve = async (source: string) =>
+      plugin!.resolveId.call(
+        { resolve: async (id: string) => ({ id }) },
+        source,
+        '/repo/src/layout/GlobalProvider/Editor.tsx',
+      );
 
-  it('resolves the provider next to the package entry, wherever node_modules lives', async () => {
-    await expect(
-      resolveProvider('/overlay/node_modules/@lobehub/editor/es/react.js'),
-    ).resolves.toBe('/overlay/node_modules/@lobehub/editor/es/react/EditorProvider/index.js');
-  });
-
-  it('falls back to the package entry when it is prebundled', async () => {
-    await expect(resolveProvider('/repo/node_modules/.vite/deps/editor.js')).resolves.toEqual({
-      id: '/repo/node_modules/.vite/deps/editor.js',
+    await expect(resolve('@lobehub/editor/react/EditorProvider')).resolves.toEqual({
+      id: '@lobehub/editor/react',
     });
+    await expect(resolve('@lobehub/editor/react')).resolves.toBeNull();
   });
 });
 
