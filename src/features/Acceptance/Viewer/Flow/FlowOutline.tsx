@@ -24,8 +24,8 @@ const styles = createStaticStyles(({ css }) => ({
   item: css`
     width: 100%;
     height: auto;
-    min-height: 44px;
-    padding-block: 10px;
+    min-height: 36px;
+    padding-block: 6px;
     padding-inline: 12px;
 
     text-align: start;
@@ -36,8 +36,8 @@ const styles = createStaticStyles(({ css }) => ({
 
     width: 100%;
     height: auto;
-    min-height: 36px;
-    padding-block: 6px;
+    min-height: 32px;
+    padding-block: 4px;
     padding-inline: 12px;
 
     color: ${cssVar.colorTextSecondary};
@@ -131,10 +131,10 @@ export function FlowOutline({
   // A single continuation stays at the same level; a fork indents each path under its branch.
   const renderSequence = (step: OutlineStep): React.ReactNode[] => {
     const out: React.ReactNode[] = [
-      <Flexbox gap={4} key={step.node.id}>
+      <Flexbox gap={2} key={step.node.id}>
         {renderItem(step.node)}
         {step.node.type === 'flowGroup' && !step.node.data.collapsed && (
-          <Flexbox className={styles.nested} gap={12}>
+          <Flexbox className={styles.nested} gap={2}>
             {step.members.flatMap(renderSequence)}
           </Flexbox>
         )}
@@ -151,9 +151,9 @@ export function FlowOutline({
       if (expanded.length === 1) out.push(label, ...steps);
       else
         out.push(
-          <Flexbox gap={4} key={`branch:${branch.edge.id}`}>
+          <Flexbox gap={2} key={`branch:${branch.edge.id}`}>
             {label}
-            <Flexbox className={styles.nested} gap={4}>
+            <Flexbox className={styles.nested} gap={2}>
               {steps}
             </Flexbox>
           </Flexbox>,
@@ -161,5 +161,5 @@ export function FlowOutline({
     }
     return out;
   };
-  return <Flexbox gap={24}>{buildOutlineTree(nodes, edges).flatMap(renderSequence)}</Flexbox>;
+  return <Flexbox gap={2}>{buildOutlineTree(nodes, edges).flatMap(renderSequence)}</Flexbox>;
 }
