@@ -113,7 +113,9 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
       </ScrollArea>
       <Flexbox style={{ paddingBlock: '8px 4px', paddingInline: 16 }}>
         <Checkbox checked={force} onChange={handleForceChange}>
-          {t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' })}
+          <Text fontSize={12}>
+            {t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' })}
+          </Text>
         </Checkbox>
       </Flexbox>
       <Flexbox
