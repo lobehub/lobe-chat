@@ -1,8 +1,8 @@
 import { ARTIFACT_TAG } from '@lobechat/const';
 import { escapeXmlAttr } from '@lobechat/prompts';
 
+import { WORKSPACE_HTML_ARTIFACT_INLINE_MAX_BYTES } from './limits';
 import { hostedPath, packWorkspaceHtmlDocument } from './packWorkspaceHtmlDocument';
-import { WORKSPACE_HTML_ARTIFACT_INLINE_MAX_BYTES } from './readWorkspaceAsset';
 import type {
   WorkspaceHtmlArtifactFile,
   WorkspaceHtmlArtifactPublishInput,

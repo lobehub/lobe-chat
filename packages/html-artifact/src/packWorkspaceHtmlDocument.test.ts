@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { WORKSPACE_HTML_ARTIFACT_INLINE_MAX_BYTES } from './limits';
 import { packWorkspaceHtmlDocument } from './packWorkspaceHtmlDocument';
-import { WORKSPACE_HTML_ARTIFACT_INLINE_MAX_BYTES } from './readWorkspaceAsset';
 
 describe('packWorkspaceHtmlDocument', () => {
   it('inlines small local css and images as data uris and leaves remotes', () => {

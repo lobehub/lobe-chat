@@ -2773,6 +2773,8 @@ export default {
   'workingPanel.localFile.publish.success': 'Published',
   'workingPanel.localFile.publish.tooLarge': 'This page is too large to publish ({{size}} bytes).',
   'workingPanel.localFile.publish.tooMany': 'This page references too many local files to publish.',
+  'workingPanel.localFile.publish.unsupported':
+    'These file types cannot be published and will be skipped: {{list}}',
   'workingPanel.localFile.publish.unresolvedLocals':
     'This page still points at local files that were not packed, so those assets would break after publish.',
   'workingPanel.localFile.publish.version': 'Publish this version',

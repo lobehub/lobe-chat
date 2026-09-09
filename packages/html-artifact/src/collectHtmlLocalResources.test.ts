@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { extractHtmlTitle } from '@/components/HtmlPreview/htmlTagScanner';
-
 import { collectJsResourceHrefs, collectLocalResourceRefs } from './collectHtmlLocalResources';
+import { extractHtmlTitle } from './htmlTagScanner';
 import {
   createWorkspaceHtmlArtifactIdentifier,
   isPathInsideWorkspace,

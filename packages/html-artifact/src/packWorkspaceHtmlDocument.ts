@@ -11,7 +11,7 @@ import {
 import {
   resolveWorkspaceAssetContentType,
   WORKSPACE_HTML_ARTIFACT_INLINE_MAX_BYTES,
-} from './readWorkspaceAsset';
+} from './limits';
 import type { WorkspaceHtmlArtifactFile } from './workspaceHtmlArtifact';
 import { resolveLocalResourceHref, toWorkspaceRelativePath } from './workspaceHtmlPath';
 

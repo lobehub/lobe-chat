@@ -1,19 +1,15 @@
-import { toast } from '@lobehub/ui/base-ui';
-import { t } from 'i18next';
-
 import {
   type GatheredWorkspaceHtmlArtifact,
   gatherWorkspaceHtmlArtifact,
-} from './gatherWorkspaceHtmlArtifact';
-import {
   type PackedWorkspaceHtmlSite,
   packWorkspaceHtmlDocument,
-} from './packWorkspaceHtmlDocument';
+  type WorkspaceHtmlArtifactPublisher,
+  type WorkspaceHtmlArtifactPublishResult,
+} from '@lobechat/html-artifact';
+import { toast } from '@lobehub/ui/base-ui';
+import { t } from 'i18next';
+
 import { readWorkspaceAsset } from './readWorkspaceAsset';
-import type {
-  WorkspaceHtmlArtifactPublisher,
-  WorkspaceHtmlArtifactPublishResult,
-} from './workspaceHtmlArtifact';
 
 export interface ReadyWorkspaceHtmlPublishPlan {
   gathered: GatheredWorkspaceHtmlArtifact;

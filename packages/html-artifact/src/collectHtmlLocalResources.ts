@@ -1,6 +1,5 @@
-import { findAttribute, findOpeningTag, findTagEnd } from '@/components/HtmlPreview/htmlTagScanner';
-
-import { getFileExtension } from './Body.helpers';
+import { getFileExtension } from './fileExtension';
+import { findAttribute, findOpeningTag, findTagEnd } from './htmlTagScanner';
 import { parentDirectory, resolveLocalResourceHref } from './workspaceHtmlPath';
 
 const ALLOWED_ASSET_EXTENSIONS = new Set([

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { gatherWorkspaceHtmlArtifact } from './gatherWorkspaceHtmlArtifact';
-import type { ReadWorkspaceAssetResult } from './readWorkspaceAsset';
+import type { ReadWorkspaceAssetResult } from './limits';
 
 const textAsset = (text: string, contentType = 'text/plain'): ReadWorkspaceAssetResult => ({
   bytes: new TextEncoder().encode(text),
@@ -263,5 +263,23 @@ describe('gatherWorkspaceHtmlArtifact', () => {
       '//cdn.example.com/hero.png',
       'https://cdn.example.com/bg.png',
     ]);
+  });
+  it('reports allowlist-rejected references from the html and from nested stylesheets', async () => {
+    const css = '@font-face { src: url("../fonts/brand.fontkit"); }';
+    const files = new Map<string, ReadWorkspaceAssetResult>([
+      ['/project/pages/app.css', textAsset(css, 'text/css')],
+    ]);
+
+    const result = await gatherWorkspaceHtmlArtifact({
+      htmlContent:
+        '<link rel="stylesheet" href="app.css"><link rel="manifest" href="./site.webmanifest">',
+      htmlFilePath: '/project/pages/index.html',
+      readAsset: async (absolutePath) =>
+        files.get(absolutePath) ?? { ok: false, reason: 'missing' },
+      workingDirectory: '/project',
+    });
+
+    expect(result.unsupported).toEqual(['./site.webmanifest', '../fonts/brand.fontkit']);
+    expect(result.missing).toEqual([]);
   });
 });
