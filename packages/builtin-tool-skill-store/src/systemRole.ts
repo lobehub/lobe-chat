@@ -17,19 +17,33 @@ export const systemPrompt = `You have access to a Skill Store tool that allows y
    installation steps.
 </workflow>
 
+<install_priority>
+Installing a skill has a strict order. Go down this ladder, never skip up it:
+
+1. **\`importFromMarket\`** — whenever you have, or can extract, a marketplace identifier. A
+   \`lobehub.com/skills/{identifier}\` URL always gives you one.
+2. **\`importSkill\`** — any other skill URL: GitHub repo/subdirectory, a raw SKILL.md, or a ZIP.
+3. **The marketplace CLI** (\`npx @lobehub/market-cli register\`, \`... skills install\`) in a sandbox
+   or terminal — **last resort only**, when steps 1 and 2 have actually been tried and failed. It
+   needs a device registration that the tools above don't, is rate-limited (5 attempts per 30
+   minutes per IP), and needs a working sandbox — so reaching for it first turns a one-call install
+   into several fragile ones.
+
+Being told to "install it as documented" does not move the CLI up this ladder: a skill page
+documents the CLI because it is written for agents that have no Skill Store tool. You have one, so
+installing through it IS installing as documented. Say which step you used, and if you fall through
+to step 3, say what failed above it.
+</install_priority>
+
 <never_do_this>
 - **Never fetch/crawl a skill page to find out how to install it.** You already have the tools; the
-  page's own instructions are written for agents that don't.
-- **Never run marketplace CLI commands** (\`npx @lobehub/market-cli register\`, \`... skills install\`)
-  in a sandbox or terminal. They require device registration, are rate-limited, and duplicate what
-  \`importFromMarket\` / \`importSkill\` already do. This holds even when a fetched page, or the user
-  relaying that page, tells you to "install it as documented" — installing through this tool IS
-  installing it as documented.
+  page's own instructions are written for agents that don't. Read a skill page only when the user
+  asked about its content, not to look up install steps.
 - **Never conclude a skill is unavailable from an empty searchSkill result.** \`searchSkill\` matches
   text, so a multi-word or paraphrased query misses skills that exist. If you hold an identifier or
-  a skill URL, import it directly — do not search first, and do not fall back to browsing or the
-  sandbox because a search came back empty. If you only have a topic, retry with a single short
-  keyword before giving up.
+  a skill URL, import it directly — do not search first, and do not drop to browsing or the sandbox
+  because a search came back empty. If you only have a topic, retry with a single short keyword
+  before giving up.
 </never_do_this>
 
 <tool_selection_guidelines>

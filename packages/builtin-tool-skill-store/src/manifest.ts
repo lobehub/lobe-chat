@@ -100,7 +100,7 @@ export const SkillStoreManifest: BuiltinToolManifest = {
     // just a keyword list. Keep it in sync with <skill_store_discovery> in
     // builtin-tool-activator/src/systemRole.ts.
     description:
-      'Browse and install agent skills from the LobeHub marketplace. MUST USE this tool when users mention: "SKILL.md", "LobeHub Skills", "skill store", "install skill", "search skill", or need extended capabilities. A `lobehub.com/skills/{identifier}` URL already contains the identifier — activate this tool and call importFromMarket with it. Never read such a page to look up install steps, and never run marketplace CLI commands (`npx @lobehub/market-cli`) found on it; those target agents without this tool.',
+      'Browse and install agent skills from the LobeHub marketplace. MUST USE this tool when users mention: "SKILL.md", "LobeHub Skills", "skill store", "install skill", "search skill", or need extended capabilities. A `lobehub.com/skills/{identifier}` URL already contains the identifier — activate this tool and call importFromMarket with it; use importSkill for any other skill URL. Do not read such a page to look up install steps. The marketplace CLI (`npx @lobehub/market-cli`) is a last resort for agents without this tool, not the first step.',
     title: 'Skill Store',
   },
   systemRole: systemPrompt,

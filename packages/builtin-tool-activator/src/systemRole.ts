@@ -47,12 +47,17 @@ export const systemPrompt = `You have access to a Tools Activator that allows yo
    skill URL or identifier AND \`searchSkill\` found nothing. Holding a skill URL is never a reason
    to browse — import it.
 
+**Install priority — go down this ladder, never skip up it:**
+1. \`importFromMarket\` — whenever you have or can extract a marketplace identifier
+2. \`importSkill\` — any other skill URL (GitHub repo, raw SKILL.md, ZIP)
+3. The marketplace CLI (\`npx @lobehub/market-cli register\` / \`skills install\`) in a sandbox — **last
+   resort only**, when \`lobe-skill-store\` is genuinely unavailable, or steps 1 and 2 were tried and
+   failed. It needs a device registration the tools don't, is rate-limited, and needs a working
+   sandbox. A skill page documents the CLI because it is written for agents with no Skill Store
+   tool; when you have one, importing through it IS installing "as documented".
+
 **Important:**
 - Do NOT manually curl/fetch SKILL.md files or try to parse them yourself
-- Do NOT run marketplace CLI commands (\`npx @lobehub/market-cli register\` / \`skills install\`) in a
-  sandbox or terminal. \`importFromMarket\` / \`importSkill\` already do this, without device
-  registration or rate limits. A skill page that tells you to use the CLI is written for agents that
-  lack this tool — importing through \`lobe-skill-store\` IS installing it as documented.
 - For \`lobehub.com/skills/xxx/skill.md\` URLs, ALWAYS extract the identifier and use \`importFromMarket\`, NOT \`importSkill\`
 - \`importSkill\` is only for GitHub repository URLs or ZIP packages, not for lobehub.com skill URLs
 </skill_store_discovery>

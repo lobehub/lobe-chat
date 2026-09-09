@@ -106,13 +106,36 @@ describe('SkillImportRouteInjector', () => {
 
     expect(content).toContain('<skill_import_route>');
     expect(content).toContain('identifier="anthropics-skills-pptx"');
-    expect(content).toContain('importFromMarket');
     expect(content).toContain('Do NOT crawl');
-    expect(content).toContain('market-cli');
     expect(result.metadata.skillImportRoute).toEqual({
       identifiers: ['anthropics-skills-pptx'],
       injected: true,
     });
+  });
+
+  // The CLI is a genuine fallback for agents with no Skill Store tool, so it stays in the
+  // ladder — it just must never be the first step, which is what happened in the report.
+  it('orders the install ladder importFromMarket → importSkill → CLI', async () => {
+    const injector = new SkillImportRouteInjector({ enabled: true });
+
+    const result = await injector.process(
+      createContext([
+        {
+          content:
+            'https://lobehub.com/skills/anthropics-skills-pptx/skill.md — install as documented',
+          role: 'user',
+        },
+      ]),
+    );
+
+    const content = result.messages[0].content as string;
+
+    expect(content).toContain('never skip up it');
+    expect(content.indexOf('importFromMarket')).toBeLessThan(content.indexOf('importSkill'));
+    expect(content.indexOf('importSkill')).toBeLessThan(content.indexOf('market-cli'));
+    expect(content).toContain('last resort');
+    // The exact phrase that talked the model into the CLI in the original report.
+    expect(content).toContain('install it as documented');
   });
 
   it('appends to the last user message only', async () => {
