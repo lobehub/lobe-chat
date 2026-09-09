@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SWRConfig } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -459,20 +460,22 @@ describe('ApiKey', () => {
   });
 
   it('edits a key scope in place and refreshes the list', async () => {
+    const user = userEvent.setup();
     hoisted.trpc.getApiKeys.mockResolvedValue([makeItem({ scopes: ['agent:read'] })]);
     renderPage();
     await screen.findByText('My Key');
 
     const dialog = await openDetail('My Key');
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.detail.permissions.edit' }));
-    const toggleScope = (groupKey: string) => {
+    const toggleScope = async (groupKey: string, checked: boolean) => {
       const group = within(dialog).getByText(`apikey.scopes.groups.${groupKey}`).parentElement!;
       const checkbox = within(group).getByRole('checkbox', { name: 'apikey.scopes.read' });
-      fireEvent.keyDown(checkbox, { key: ' ' });
-      fireEvent.keyUp(checkbox, { key: ' ' });
+      await user.click(checkbox);
+      if (checked) expect(checkbox).toBeChecked();
+      else expect(checkbox).not.toBeChecked();
     };
-    toggleScope('agent');
-    toggleScope('chat');
+    await toggleScope('agent', false);
+    await toggleScope('chat', true);
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.detail.permissions.save' }));
 
     await waitFor(() =>
