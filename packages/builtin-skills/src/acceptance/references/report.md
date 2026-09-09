@@ -128,6 +128,9 @@ supersedes? }`.
    (`{ id, name, category, surface, status, observation, evidence }`), reusing
    the plan item's `id`. `status`: `pass` / `fail` / `blocked` (couldn't run —
    a blocked case is not a pass).
+   Keep `observation` brief and reviewer-facing; follow
+   [checklist explanation guidance](../SKILL.md#keep-checklist-explanations-brief).
+   Detailed reasoning and execution records belong in evidence attachments.
 4. **Set `title` and `summary.verdict`** (`pass` / `fail` / `partial`) — without
    them the run lists as "未命名验证" with a permanent amber "?" glyph. Write the
    one-paragraph verdict into `summary.conclusion`.
