@@ -223,8 +223,9 @@ const InternalEditor = memo<InternalEditorProps>(
     }, [editor]);
 
     // Opt-in (comment editors): keep the caret out of the root node around
-    // block images by pushing an empty paragraph next to the image instead of
-    // showing Lexical's horizontal root-level caret (LOBE-13882).
+    // block images by pushing an empty paragraph next to the image. Otherwise
+    // pasting an image into a Documents body leaves a horizontal root-level
+    // caret that then snaps back to vertical.
     useEffect(() => {
       if (!editor || !blockImageCaretGuard) return;
       const unregister = registerBlockDecoratorCaretGuard(editor);

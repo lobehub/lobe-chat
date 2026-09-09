@@ -614,8 +614,9 @@ describe('sortTreeItems', () => {
     toTreeItem({ createdAt, fileType: 'custom/document', id, name });
 
   it('puts a just-created page first instead of dropping it into the A-Z list', () => {
-    // LOBE-13814: creating a page inside a folder full of "<name> 周报 — 2026-Wxx"
-    // rows landed the new "Untitled" between "TC" and "xiaojie".
+    // A newly created page must sort first rather than falling into the A-Z
+    // list: inside a folder full of "<name> 周报 — 2026-Wxx" rows the new
+    // "Untitled" used to land between "TC" and "xiaojie".
     const rows = [
       doc('report-tc', 'TC 周报 — 2026-W35', '2026-08-28T02:00:00.000Z'),
       doc('untitled', 'Untitled', '2026-09-04T15:31:00.000Z'),
