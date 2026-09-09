@@ -21,7 +21,6 @@ describe('SkillDetail localization helpers', () => {
     (translations, title) => {
       const result = getLocalizedBuiltinSkillDetail(
         {
-          content: AuvManifest.meta.readme ?? '',
           description: AuvManifest.meta.description ?? '',
           identifier: AuvManifest.identifier,
           name: AuvManifest.meta.title,
