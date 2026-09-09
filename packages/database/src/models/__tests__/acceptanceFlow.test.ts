@@ -113,14 +113,56 @@ describe('check assets and round snapshots', () => {
     expect(round.flowSnapshots?.[0].nodes.map((node) => node.id)).toEqual(ids);
     expect(round.plan?.map((item) => item.title)).toEqual([
       titles[0],
-      titles[0],
       titles[1],
       titles[2],
-      titles[2],
+      titles[0],
       titles[3],
+      titles[2],
+    ]);
+    expect(round.plan?.map((item) => item.sourceFlowNode?.incomingEdgeId)).toEqual([
+      undefined,
+      journey.edges[0].id,
+      journey.edges[1].id,
+      journey.edges[3].id,
+      journey.edges[2].id,
+      journey.edges[4].id,
     ]);
     expect(round.plan?.map((item) => item.index)).toEqual([0, 1, 2, 3, 4, 5]);
     const replay = await model.start(acceptanceId, flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).plan).toEqual(round.plan);
+  });
+
+  it('keeps expanded subflow checks together at each traversed occurrence', async () => {
+    const child = await model.publish(acceptanceId, definition);
+    const a = randomUUID();
+    const b = randomUUID();
+    const forward = randomUUID();
+    const back = randomUUID();
+    const parent = await model.publish(acceptanceId, {
+      title: 'Retry journey',
+      entryNodeId: a,
+      nodes: [
+        { id: a, subFlowId: child.flowId },
+        { id: b, subFlowId: child.flowId },
+      ],
+      edges: [
+        { id: forward, sourceNodeId: a, targetNodeId: b, trigger: 'Continue', required: true },
+        { id: back, sourceNodeId: b, targetNodeId: a, trigger: 'Retry', required: true },
+      ],
+    });
+    const run = await model.start(acceptanceId, parent.flowId);
+    const round = await roundPlan(run.id);
+    const childRun = await model.start(acceptanceId, child.flowId);
+    const childPlan = (await roundPlan(childRun.id)).plan!;
+    const expectedIds = [`${a}/entry/`, `${b}/${forward}/`, `${a}/${back}/`].flatMap((prefix) =>
+      childPlan.map((item) => prefix + item.id),
+    );
+    expect(round.plan).toHaveLength(expectedIds.length);
+    expect(round.plan!.map((item) => item.id.slice(0, item.id.lastIndexOf(':')))).toEqual(
+      expectedIds,
+    );
+    expect(round.plan!.map((item) => item.index)).toEqual(expectedIds.map((_, index) => index));
+    const replay = await model.start(acceptanceId, parent.flowId, undefined, run.id);
     expect((await roundPlan(replay.id)).plan).toEqual(round.plan);
   });
 
