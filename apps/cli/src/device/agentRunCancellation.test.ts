@@ -7,16 +7,29 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { executeToolCall } from '../tools';
 import { spawnHeteroAgentRun } from './agentRun';
 
-const { spawnMock } = vi.hoisted(() => ({ spawnMock: vi.fn() }));
+const { getTaskMock, removeTaskMock, saveTaskMock, spawnMock } = vi.hoisted(() => ({
+  getTaskMock: vi.fn(),
+  removeTaskMock: vi.fn(),
+  saveTaskMock: vi.fn(),
+  spawnMock: vi.fn(),
+}));
 vi.mock('node:child_process', async (original) => ({
   ...(await original<typeof ChildProcessModule>()),
   spawn: spawnMock,
+}));
+vi.mock('../daemon/taskRegistry', () => ({
+  getTask: getTaskMock,
+  removeTask: removeTaskMock,
+  saveTask: saveTaskMock,
 }));
 
 const children: EventEmitter[] = [];
 afterEach(() => {
   for (const child of children.splice(0)) child.emit('close', 0, null);
   vi.useRealTimers();
+  getTaskMock.mockReset();
+  removeTaskMock.mockReset();
+  saveTaskMock.mockReset();
   spawnMock.mockReset();
 });
 
