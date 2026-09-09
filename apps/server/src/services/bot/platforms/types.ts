@@ -267,6 +267,19 @@ export interface PlatformClient {
   extractChatId: (platformThreadId: string) => string;
 
   /**
+   * The `channelId` that `readMessages` needs to read THIS conversation's
+   * history, injected into the model's prompt as the current conversation.
+   *
+   * Omit it when `extractChatId` already identifies the conversation exactly
+   * (Feishu `oc_…`, Discord channel-or-thread id, Telegram chat id). Implement
+   * it — returning `undefined` — when the platform's history read cannot be
+   * scoped to what `platformThreadId` denotes: a Slack reply thread decodes to
+   * its parent channel, and `conversations.history` on that channel would read
+   * unrelated channel traffic while claiming to be the current conversation.
+   */
+  extractConversationId?: (platformThreadId: string) => string | undefined;
+
+  /**
    * Resolve attachments on an inbound `Message` into `AttachmentSource[]` for
    * ingestion by the bridge. Each platform owns its own attachment quirks
    * here: data-source priority, type-only metadata inference, quoted-message
@@ -317,9 +330,9 @@ export interface PlatformClient {
   /** Get a messenger for a specific thread (outbound messaging). */
   getMessenger: (platformThreadId: string) => PlatformMessenger;
 
-  readonly id: string;
-
   // --- Runtime Operations ---
+
+  readonly id: string;
 
   /**
    * Whether this conversation contains only the operator and this bot, so every

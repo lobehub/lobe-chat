@@ -3,6 +3,8 @@ import debug from 'debug';
 
 import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis';
 
+import { createBoundedMemoryCache } from './boundedMemoryCache';
+
 const log = debug('bot-platform:feishu:chat-composition');
 
 /**
@@ -43,31 +45,11 @@ const buildKey = (applicationId: string, chatId: string): string =>
 /**
  * Process-local fallback for deployments without agent-runtime Redis, so the
  * verdict is still cached instead of costing one blocking Feishu request per
- * inbound message (including chatter the bot goes on to ignore). Bounded so an
- * app subscribed to many chats can't grow it without limit; entries expire on
- * the same TTLs as Redis.
+ * inbound message (including chatter the bot goes on to ignore). Entries
+ * expire on the same TTLs as Redis.
  */
 const MEMORY_CACHE_MAX_ENTRIES = 1000;
-const memoryCache = new Map<string, { expiresAt: number; solo: boolean }>();
-
-const readMemoryCache = (key: string): boolean | undefined => {
-  const entry = memoryCache.get(key);
-  if (!entry) return undefined;
-  if (entry.expiresAt <= Date.now()) {
-    memoryCache.delete(key);
-    return undefined;
-  }
-  return entry.solo;
-};
-
-const writeMemoryCache = (key: string, solo: boolean, ttlSeconds: number): void => {
-  // Map iterates in insertion order, so the first key is the oldest write.
-  if (memoryCache.size >= MEMORY_CACHE_MAX_ENTRIES) {
-    const oldest = memoryCache.keys().next().value;
-    if (oldest !== undefined) memoryCache.delete(oldest);
-  }
-  memoryCache.set(key, { expiresAt: Date.now() + ttlSeconds * 1000, solo });
-};
+const memoryCache = createBoundedMemoryCache<boolean>(MEMORY_CACHE_MAX_ENTRIES);
 
 /** Test hook: the memory cache is module state and would leak across cases. */
 export const clearChatCompositionMemoryCache = (): void => memoryCache.clear();
@@ -97,7 +79,7 @@ export async function isSoloBotChat(
       log('isSoloBotChat: cache read failed: %O', error);
     }
   } else {
-    const cached = readMemoryCache(key);
+    const cached = memoryCache.get(key);
     if (cached !== undefined) return cached;
   }
 
@@ -129,7 +111,7 @@ export async function isSoloBotChat(
       log('isSoloBotChat: cache write failed: %O', error);
     }
   } else {
-    writeMemoryCache(key, solo, ttlSeconds);
+    memoryCache.set(key, solo, ttlSeconds);
   }
   return solo;
 }

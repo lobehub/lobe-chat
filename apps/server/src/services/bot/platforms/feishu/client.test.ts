@@ -289,19 +289,61 @@ describe('Feishu messenger reactions', () => {
     expect(mockRemoveReaction).not.toHaveBeenCalled();
   });
 
-  it('keeps the pointer when the final clear fails remotely, so it can be retried', async () => {
+  it('retries a transient failure of the final clear in place', async () => {
+    // Nothing upstream retries the clear (the bridge and the queue callback
+    // both drop their reaction state afterwards), so the messenger must.
     const m = messenger();
     mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
     await m.replaceReaction!('om_1', null, '\u{26A1}');
 
-    // Forgetting the id BEFORE the delete would leave the reaction visible
-    // with nothing left to delete it by.
     mockRemoveReaction.mockRejectedValueOnce(new Error('network'));
-    await expect(m.replaceReaction!('om_1', '\u{26A1}', null)).rejects.toThrow('network');
-    expect([...reactionStore.keys()]).toHaveLength(1);
-
     await m.replaceReaction!('om_1', '\u{26A1}', null);
+
+    expect(mockRemoveReaction).toHaveBeenCalledTimes(2);
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('keeps the id when the final clear keeps failing, so a later cleanup can still use it', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
+    await m.replaceReaction!('om_1', null, '\u{26A1}');
+
+    // Forgetting the id BEFORE the delete succeeds would leave the reaction
+    // visible with nothing left to delete it by.
+    mockRemoveReaction
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{26A1}', null)).rejects.toThrow('could not remove');
+    expect([...reactionStore.values()]).toEqual([JSON.stringify(['rct_working'])]);
+
+    await m.removeReaction!('om_1', '\u{26A1}');
     expect(mockRemoveReaction).toHaveBeenLastCalledWith('om_1', 'rct_working');
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
+  it('keeps the previous id when a swap adds fine but cannot remove it, and clears both later', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_received' });
+    await m.replaceReaction!('om_1', null, '\u{1F440}');
+
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_thinking' });
+    mockRemoveReaction
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'))
+      .mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{1F440}', '\u{1F914}')).rejects.toThrow(
+      'could not remove',
+    );
+    // Both ids survive: the one that could not be removed and the one just placed.
+    expect([...reactionStore.values()]).toEqual([JSON.stringify(['rct_received', 'rct_thinking'])]);
+
+    mockRemoveReaction.mockClear();
+    await m.replaceReaction!('om_1', '\u{1F914}', null);
+    expect(mockRemoveReaction.mock.calls.map(([, id]) => id)).toEqual([
+      'rct_received',
+      'rct_thinking',
+    ]);
     expect([...reactionStore.keys()]).toHaveLength(0);
   });
 

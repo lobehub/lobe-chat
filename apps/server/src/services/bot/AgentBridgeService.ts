@@ -154,7 +154,10 @@ interface DiscordChannelContext {
  * `PlatformClient.extractChatId` is the decoder each platform already uses for
  * its own outbound calls, so what it returns is by construction what that
  * platform's message service accepts as `channelId` — Feishu/Lark `oc_…`,
- * Discord channel-or-thread id, Slack channel id, Telegram chat id.
+ * Discord channel-or-thread id, Telegram chat id. A platform whose history
+ * read cannot be scoped that precisely (a Slack reply thread decodes to its
+ * parent channel) overrides `extractConversationId` and returns undefined, and
+ * the block is omitted rather than pointing the model at the wrong history.
  *
  * Returns undefined when we have no bot context or no client (e.g. a run that
  * didn't originate from an IM thread) — the prompt block is then simply omitted.
@@ -165,7 +168,9 @@ function resolveCurrentChannel(
 ): { id: string; platformId: string } | undefined {
   if (!botContext?.platformThreadId || !client) return undefined;
   try {
-    const id = client.extractChatId(botContext.platformThreadId);
+    const id = client.extractConversationId
+      ? client.extractConversationId(botContext.platformThreadId)
+      : client.extractChatId(botContext.platformThreadId);
     if (!id) return undefined;
     return { id, platformId: botContext.platform };
   } catch (error) {

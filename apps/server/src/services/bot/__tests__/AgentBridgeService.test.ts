@@ -231,6 +231,25 @@ describe('AgentBridgeService', () => {
       );
     });
 
+    it('prefers extractConversationId, so a platform can decline for an unscopable thread', async () => {
+      // Slack: `slack:C1:1700.1` is a reply thread, but readMessages can only
+      // read the channel — advertising `C1` as "this conversation" would be a lie.
+      const service = new AgentBridgeService(FAKE_DB, USER_ID);
+      const client = createClient() as any;
+      client.extractChatId.mockReturnValue('C1');
+      client.extractConversationId = vi.fn().mockReturnValue(undefined);
+      mockGetPlatform.mockReturnValue({ id: 'slack', name: 'Slack', supportsMessageEdit: true });
+
+      await service.handleMention(createThread(), createMessage(), {
+        agentId: 'agent-1',
+        botContext: { platform: 'slack', platformThreadId: 'slack:C1:1700.1' } as any,
+        client,
+      });
+
+      expect(client.extractConversationId).toHaveBeenCalledWith('slack:C1:1700.1');
+      expect(mockExecAgent.mock.calls[0][0].botPlatformContext.currentChannel).toBeUndefined();
+    });
+
     it('omits currentChannel when the platform client cannot decode the threadId', async () => {
       const service = new AgentBridgeService(FAKE_DB, USER_ID);
       const thread = createThread();
