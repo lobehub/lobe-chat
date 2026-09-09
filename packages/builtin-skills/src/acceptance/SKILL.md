@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.1
+version: 0.4.2
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -118,9 +118,39 @@ substitute a private agent plugin.
 
 ## Optional user-journey flows
 
+Before authoring checks, identify the independently reviewable user tasks in the
+requirement. Use those tasks as business groups, not the PR title or test surface.
+For example, reassignment, scheduled continuation, and failure recovery can be
+separate groups when the delivery covers all three; do not impose these groups
+on unrelated work. Each check should have an outcome the user can accept or
+reject independently. Keep shared entry/accessibility checks separate and avoid
+repeating their expectations across business checks.
+
 When acceptance depends on a sequence of user states, publish its graph during
-planning, before implementation or verification begins. Keep the checklist paths above for independent checks;
+planning, before implementation or verification begins. Keep the checklist paths
+above for independent checks;
 a graph is optional and does not replace evidence or human review.
+
+For flow-based plans, **each flow's title is its checks' default checklist category**.
+Publish independent user journeys as separate flows in the same acceptance/run;
+use subflows for actual composed journeys. An umbrella flow containing checks
+for several independent tasks collapses them into one checklist group. Edges
+must describe real user transitions, not artificial links added to make unrelated
+checks reachable. Start at the user entry and follow the journey through outcomes
+and recovery; UUIDs identify nodes and must not encode business order. Read back
+the published plan and inspect its groups and reading order before execution.
+
+For an existing acceptance that only needs different checklist groups, use
+`lh acceptance regroup <acceptanceId> --file groups.json`. Read the acceptance
+bundle first; write `{ expectedVersion, groups: [{ title, checkItemIds }] }`,
+using the exact union `checks[].id` values and
+`acceptance.metadata.checkGrouping.version` (0 when absent). The groups replace
+the current presentation grouping; an empty list restores plan categories.
+Unassigned checks keep their plan category. This preserves check IDs, numbering,
+evidence and review history without creating a round. It does not change flow
+transitions or verification conditions. Do not move execution nodes or start a
+new round just to reorganize the checklist; those operations have different
+execution semantics.
 
 1. Use the named acceptance (or create one with `lh acceptance create --help`).
    Write a JSON file with `definition: { title, entryNodeId, nodes, edges }`.

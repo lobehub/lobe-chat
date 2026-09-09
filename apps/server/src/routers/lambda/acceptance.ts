@@ -203,6 +203,25 @@ const applyAcceptanceStatus = async (
 };
 
 export const acceptanceRouter = router({
+  regroupChecks: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        expectedVersion: z.number().int().nonnegative(),
+        groups: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1).max(200),
+              checkItemIds: z.array(z.string().min(1)).min(1).max(1000),
+            }),
+          )
+          .max(100),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { service } = await resolveAcceptanceForWrite(ctx, input.id);
+      return service.regroupChecks(input.id, input.groups, input.expectedVersion);
+    }),
   publishFlow: acceptanceWriteProcedure
     .input(
       z.object({
@@ -547,6 +566,7 @@ export const acceptanceRouter = router({
 
       const checks = buildAcceptanceCheckUnion(
         runs.map((run) => ({ results: resultsByRun.get(run.id) ?? [], run })),
+        acceptance.metadata?.checkGrouping?.groups,
       );
 
       // Enrich the evidence backing every executed timeline step — the final
