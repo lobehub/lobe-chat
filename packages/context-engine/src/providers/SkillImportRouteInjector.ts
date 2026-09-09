@@ -37,7 +37,22 @@ export interface SkillImportRoute {
 const URL_PATTERN = /https?:\/\/[^\s<>"'`)\]}]+/g;
 
 /** Trailing sentence punctuation that a URL regex over prose picks up by accident. */
-const TRAILING_PUNCTUATION = /[!,.:;?、。，：；？]+$/;
+const TRAILING_PUNCTUATION = new Set('!,.:;?、。，：；？');
+
+/**
+ * Drop trailing sentence punctuation from a matched URL.
+ *
+ * Deliberately a backward scan rather than a `/[...]+$/` replace: that shape has no start
+ * anchor, so the engine retries from every offset and costs O(n^2) on a URL ending in a long
+ * punctuation run followed by one other character — reachable, since `!` and `.` are both
+ * inside `URL_PATTERN`'s character class and the text is user input.
+ */
+const stripTrailingPunctuation = (url: string): string => {
+  let end = url.length;
+  while (end > 0 && TRAILING_PUNCTUATION.has(url[end - 1])) end--;
+
+  return url.slice(0, end);
+};
 
 /**
  * LobeHub marketplace skill page, capturing its identifier:
@@ -106,7 +121,7 @@ export const extractSkillImportRoutes = (text: string): SkillImportRoute[] => {
   const seen = new Set<string>();
 
   for (const match of text.matchAll(URL_PATTERN)) {
-    const url = match[0].replace(TRAILING_PUNCTUATION, '');
+    const url = stripTrailingPunctuation(match[0]);
     if (seen.has(url)) continue;
 
     const route = classify(url, hasInstallIntent);

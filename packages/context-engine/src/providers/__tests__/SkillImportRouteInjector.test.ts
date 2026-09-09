@@ -141,6 +141,18 @@ describe('extractSkillImportRoutes', () => {
       );
     });
 
+    // Regression for the CodeQL polynomial-ReDoS finding: stripping the trailing punctuation
+    // with `/[...]+$/` retried from every offset, so a long punctuation run followed by one
+    // more character cost O(n^2). `!` and `.` both sit inside URL_PATTERN's class, so this
+    // shape is reachable from message text. A quadratic implementation blows the timeout here.
+    it('handles a URL with a long trailing punctuation run in linear time', () => {
+      const text = `https://example.com/${'!'.repeat(200_000)}a`;
+
+      const started = Date.now();
+      expect(extractSkillImportRoutes(text)).toEqual([]);
+      expect(Date.now() - started).toBeLessThan(1000);
+    });
+
     it('deduplicates repeated URLs', () => {
       expect(
         extractSkillImportRoutes(
