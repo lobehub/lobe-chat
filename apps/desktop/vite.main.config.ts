@@ -24,7 +24,7 @@ export default defineConfig(async (env) => {
   const isDev = mode === 'development';
   const updateChannel = process.env.UPDATE_CHANNEL;
   const isCloudDesktop = isCloudDesktopBuild();
-  const mainHash = resolveMainHash();
+  const mainHash = await resolveMainHash();
   const externalNavigationHosts =
     process.env.DESKTOP_EXTERNAL_NAVIGATION_HOSTS ?? (isCloudDesktop ? 'stripe.com' : '');
 
