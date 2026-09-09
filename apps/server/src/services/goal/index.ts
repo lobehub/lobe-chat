@@ -201,14 +201,7 @@ export class GoalService {
     // is gated on exactly these checks (not an AI re-derivation of the prose).
     const creatorAgentId = input.createdByAgentId ?? input.agentId;
     const { manager: managerOptions, ...options } = input.config ?? {};
-    const managed =
-      managerOptions !== undefined ||
-      Boolean(
-        creatorAgentId &&
-        !options.exploration &&
-        !options.supervision?.enabled &&
-        !input.tasks?.length,
-      );
+    const managed = managerOptions !== undefined;
     let config: GoalConfig | undefined = input.config ? options : undefined;
     if (managed) {
       if (!creatorAgentId) {
@@ -729,7 +722,9 @@ export class GoalService {
   delete = async (goalId: string) => {
     let graph = await this.graphModel.getGraph(goalId);
     const managed = !!graph?.goal.config?.manager;
-    if (managed) {
+    const supervised =
+      !!graph?.goal.config?.supervision?.enabled || !!graph?.goal.config?.supervisorState;
+    if (managed || supervised) {
       // Fence new claims before cancellation, then read the latest claimed turn.
       await this.db.transaction(async (db) => {
         const model = new GoalModel(db, this.userId, this.workspaceId);
@@ -745,7 +740,12 @@ export class GoalService {
         }
       });
       graph = await this.graphModel.getGraph(goalId);
-      if (graph) await new GoalManagerService(this.db, this.userId, this.workspaceId).stop(graph);
+      if (graph) {
+        if (managed)
+          await new GoalManagerService(this.db, this.userId, this.workspaceId).stop(graph);
+        if (supervised)
+          await new GoalSupervisorService(this.db, this.userId, this.workspaceId).stop(graph);
+      }
     }
     const taskIds = graph?.nodes.flatMap((node) => (node.taskId ? [node.taskId] : [])) ?? [];
 
@@ -773,7 +773,7 @@ export class GoalService {
         .catch((error) => console.error('[GoalService.delete] failed to pause task:', error));
     }
 
-    if (managed) {
+    if (managed || supervised) {
       return this.db.transaction(async (db) => {
         const model = new GoalModel(db, this.userId, this.workspaceId);
         const current = await model.lockById(goalId);
@@ -781,7 +781,9 @@ export class GoalService {
           current &&
           (current.status !== 'paused' ||
             current.config?.managerState?.token !== graph?.goal.config?.managerState?.token ||
-            current.config?.managerState?.turns !== graph?.goal.config?.managerState?.turns)
+            current.config?.managerState?.turns !== graph?.goal.config?.managerState?.turns ||
+            current.config?.supervisorState?.revision !==
+              graph?.goal.config?.supervisorState?.revision)
         ) {
           throw new TRPCError({
             code: 'CONFLICT',

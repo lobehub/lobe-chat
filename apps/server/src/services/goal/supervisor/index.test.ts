@@ -145,6 +145,65 @@ const diagnose = async (goalId: string, action = 'retry') => {
 };
 
 describe('Goal Supervisor integration', () => {
+  it.each([true, false])(
+    'requires confirmed supervisor cancellation before deletion: %s',
+    async (confirmed) => {
+      const { goalId } = await failedGoal();
+      await service().tick(goalId);
+      const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
+      const operationId = state.incidents[0].supervisorOperationId!;
+      const interrupt = vi
+        .spyOn(AiAgentService.prototype, 'interruptTask')
+        .mockImplementation(async () => {
+          expect((await goalModel.findById(goalId))!.status).toBe('paused');
+          return { success: true, deviceCancellationConfirmed: confirmed };
+        });
+      if (confirmed) {
+        await service().delete(goalId);
+        expect(await goalModel.findById(goalId)).toBeUndefined();
+      } else {
+        await expect(service().delete(goalId)).rejects.toThrow('exit was not confirmed');
+        expect(await goalModel.findById(goalId)).toBeDefined();
+      }
+      expect(interrupt).toHaveBeenCalledWith({ operationId, topicId: state.topicId });
+    },
+  );
+
+  it('retains the Goal when supervisor dispatch has no durable operation yet', async () => {
+    const { goalId } = await failedGoal();
+    vi.mocked(AiAgentService.prototype.execAgent).mockRejectedValueOnce(new Error('dispatch lost'));
+    await service().tick(goalId);
+    await expect(service().delete(goalId)).rejects.toThrow('dispatch is unconfirmed');
+    expect(await goalModel.findById(goalId)).toBeDefined();
+  });
+
+  it('adopts a supervisor operation whose dispatch response was lost before deleting', async () => {
+    const { goalId } = await failedGoal();
+    const dispatch = vi.mocked(AiAgentService.prototype.execAgent).getMockImplementation()!;
+    vi.mocked(AiAgentService.prototype.execAgent).mockImplementationOnce(async (params) => {
+      await dispatch(params);
+      throw new Error('response lost');
+    });
+    await service().tick(goalId);
+    const interrupt = vi
+      .spyOn(AiAgentService.prototype, 'interruptTask')
+      .mockResolvedValue({ success: true });
+    await service().delete(goalId);
+    expect(interrupt).toHaveBeenCalledTimes(1);
+    expect(await goalModel.findById(goalId)).toBeUndefined();
+  });
+
+  it('retains a Goal resumed during supervisor cancellation', async () => {
+    const { goalId } = await failedGoal();
+    await service().tick(goalId);
+    vi.spyOn(AiAgentService.prototype, 'interruptTask').mockImplementation(async () => {
+      await goalModel.updateStatus(goalId, 'running');
+      return { success: true };
+    });
+    await expect(service().delete(goalId)).rejects.toThrow('changed during cancellation');
+    expect(await goalModel.findById(goalId)).toBeDefined();
+  });
+
   it('requires scoped inspections, rejects unrelated callers, and records one idempotent action', async () => {
     const { goalId } = await failedGoal();
     await service().tick(goalId);

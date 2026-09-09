@@ -6,12 +6,16 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { GoalModel } from '@/database/models/goal';
-import { router } from '@/libs/trpc/lambda';
+import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { advanceGoal } from '@/server/services/goal/advanceGoal';
 import { GoalManagerService, goalPlanSchema } from '@/server/services/goal/manager';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
+import {
+  HeteroOperationPrincipalError,
+  resolveActiveHeteroOperationPrincipal,
+} from '@/server/services/heterogeneousAgent/operationPrincipal';
 
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
 
@@ -45,6 +49,52 @@ function mapGoalError(error: unknown, operation: string): never {
 }
 
 export const goalRouter = router({
+  // A plan is an operation result; the turn token further restricts ingestion to its Goal.
+  submitOperationPlan: heteroAuthedProcedure
+    .use(serverDatabase)
+    .input(
+      idInput.extend({
+        token: z.string().min(1),
+        operationId: z.string().min(1),
+        plan: goalPlanSchema,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.heteroAuthKind !== 'operation' || !ctx.heteroOperation) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'An operation-bound token is required',
+        });
+      }
+      let principal;
+      try {
+        principal = await resolveActiveHeteroOperationPrincipal({
+          capability: 'hetero:ingest',
+          claims: ctx.heteroOperation,
+          db: ctx.serverDB,
+          operationId: input.operationId,
+        });
+      } catch (error) {
+        if (!(error instanceof HeteroOperationPrincipalError)) throw error;
+        throw new TRPCError({
+          cause: error,
+          code:
+            error.status === 401 ? 'UNAUTHORIZED' : error.status === 409 ? 'CONFLICT' : 'FORBIDDEN',
+          message: error.message,
+        });
+      }
+      const data = await new GoalManagerService(
+        ctx.serverDB,
+        principal.userId,
+        principal.workspaceId,
+      ).submit(input.id, input.token, input.operationId, input.plan);
+      await scheduleGoalAdvance({
+        goalId: input.id,
+        userId: principal.userId,
+        workspaceId: principal.workspaceId,
+      });
+      return { data, success: true };
+    }),
   submitPlan: goalWriteProcedure
     .input(
       idInput.extend({

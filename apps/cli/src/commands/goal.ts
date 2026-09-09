@@ -183,7 +183,15 @@ export function registerGoalCommand(program: Command) {
         const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
         if (!operationId) throw new Error('Current manager operation ID required');
         const client = await getTrpcClient();
-        const result = await client.goal.submitPlan.mutate({
+        const injectedJwt = process.env.LOBEHUB_JWT;
+        const isOperationToken =
+          injectedJwt &&
+          JSON.parse(Buffer.from(injectedJwt.split('.')[1], 'base64url').toString()).purpose ===
+            'hetero-operation';
+        const endpoint = isOperationToken
+          ? client.goal.submitOperationPlan
+          : client.goal.submitPlan;
+        const result = await endpoint.mutate({
           id,
           token: options.token,
           operationId,
@@ -197,7 +205,7 @@ export function registerGoalCommand(program: Command) {
 
   goal
     .command('create <title>')
-    .option('--max-manager-turns <n>', 'Maximum management turns (default 12)')
+    .option('--max-manager-turns <n>', 'Enable CLI manager planning with this turn limit')
     .description('Create a standalone goal and seed its graph')
     .option('-r, --requirement <text>', 'Acceptance requirement')
     .option(

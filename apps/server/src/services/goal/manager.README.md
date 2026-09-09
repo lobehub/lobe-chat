@@ -6,16 +6,14 @@ The main Agent must have a working shell and an authenticated `lh` CLI in its
 execution environment (for example a configured device Kimi/Codex Agent). Its
 normal Agent configuration selects the runtime; dispatch uses the same
 `execAgent` service as `lh agent run`. There is no exclusive supervisor tool set.
-An Agent-created, unseeded Goal automatically uses its creating Agent as the
-main Agent. The application tool supplies `createdByAgentId`; the CLI inherits
+Manager mode is explicit: pass `--max-manager-turns` through the CLI or
+`config.manager` through the API after ensuring the Agent has a working CLI.
+The application tool supplies `createdByAgentId`; the CLI inherits
 `LOBEHUB_AGENT_ID`. A person creating a Goal uses the selected `--agent` instead.
-No separate `--manager` identity is accepted. Planning options such as
-`--max-manager-turns` only tune this same Agent's loop. The server persists the
-resolved identity for later turns in the management Topic; it does not create
-another Agent. Task assignees can differ, and changing them does not replace
-the creating main Agent. Explicit seed/exploration/legacy supervision paths
-retain their existing planning behavior. Without any creating or selected
-Agent, the existing coordinator planner remains available.
+No separate manager identity is accepted. Without explicit planning options,
+ordinary unseeded goals keep the coordinator planner. Seed/exploration/legacy
+supervision paths retain their existing planning behavior. Task assignees can
+differ, and changing them does not replace the configured main Agent.
 
 The main Agent reads `lh goal show`, `lh task view`, `lh topic view`, and document
 commands. It submits a JSON file through `lh goal plan <goal-id> --token <turn> --file plan.json`. The runtime supplies `LOBEHUB_OPERATION_ID`. Plan actions:
@@ -55,9 +53,9 @@ but coordinator dispatch still waits for that terminal operation.
 
 Manager turns are capped separately (default 12, maximum 100); recorded manager
 cost/tokens are included in detailed Goal spend. External subscription execution
-can be unmetered, so a zero recorded cost is not proof of zero spend. The CLI uses
-its existing authenticated user scope: turn binding protects the plan endpoint,
-not the whole account or the operating system. Prompt instructions are not a
+can be unmetered, so a zero recorded cost is not proof of zero spend. The CLI sends operation-token plan submissions to a dedicated ingestion endpoint,
+which checks the live operation principal and then the Goal turn binding. Normal
+user credentials retain the existing scoped endpoint. Prompt instructions are not a
 shell sandbox. Do not install a broad personal credential in an untrusted runtime.
 
 Legacy `--supervise` Goals retain their existing behavior and cancellation fixes.

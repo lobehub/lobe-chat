@@ -7,6 +7,7 @@ import type {
   GoalTickResult,
   TaskItem,
 } from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
@@ -29,6 +30,37 @@ export class GoalSupervisorService {
     private readonly userId: string,
     private readonly workspaceId?: string,
   ) {}
+
+  stop = async (graph: GoalGraphSnapshot) => {
+    const state = graph.goal.config?.supervisorState;
+    if (!state) return;
+    const operations = new AgentOperationModel(this.db, this.userId, this.workspaceId);
+    for (const incident of state.incidents) {
+      const operation = incident.supervisorOperationId
+        ? await operations.findById(incident.supervisorOperationId)
+        : await operations.findByTopicSourceMessage(
+            state.topicId,
+            `msg_goal_supervisor_${incident.id}`,
+          );
+      if (!operation) {
+        if (incident.status !== 'diagnosing') continue;
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'Supervisor dispatch is unconfirmed; Goal was not deleted',
+        });
+      }
+      if (['done', 'error', 'interrupted'].includes(operation.status)) continue;
+      const result = await new AiAgentService(this.db, this.userId, {
+        workspaceId: this.workspaceId,
+      }).interruptTask({ operationId: operation.id, topicId: state.topicId });
+      if (!result.success || result.deviceCancellationConfirmed === false) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'Supervisor exit was not confirmed; Goal was not deleted',
+        });
+      }
+    }
+  };
 
   /** Runs are capped by maxIncidents, so the bounded query covers the whole diagnostic ledger. */
   usage = async (state?: GoalSupervisionState) => {

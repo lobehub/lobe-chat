@@ -21,11 +21,20 @@ import {
   topics,
   users,
 } from '@/database/schemas';
+import { goalRouter } from '@/server/routers/lambda/goal';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { GoalService } from './index';
 import { GoalManagerService } from './manager';
 import * as scheduler from './scheduler';
+
+vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => db }));
+vi.mock('@/libs/oidc-provider/access-control', () => ({ assertOIDCUserActive: async () => {} }));
+vi.mock('@/database/models/rbac', () => ({
+  RbacModel: class {
+    hasAnyPermission = async () => true;
+  },
+}));
 
 const db = await getTestDB();
 const userId = 'cli-manager-test-user';
@@ -100,13 +109,92 @@ async function start(maxTurns = 4) {
   return { id: graph.goal.id, state, op: op! };
 }
 
+function operationCaller(operationId: string, overrides: Record<string, unknown> = {}) {
+  return goalRouter.createCaller({
+    oidcAuth: {
+      payload: {},
+      aud: 'urn:lobehub:hetero-operation',
+      capabilities: ['hetero:ingest'],
+      exp: Math.floor(Date.now() / 1000) + 3600,
+      iat: Math.floor(Date.now() / 1000),
+      iss: 'urn:lobehub:internal',
+      jti: 'plan-test',
+      operation_id: operationId,
+      purpose: 'hetero-operation',
+      sub: userId,
+      ...overrides,
+    },
+  });
+}
+
 describe('CLI main Agent planning', () => {
-  it('automatically dispatches the creator instead of the default Task assignee', async () => {
+  it('accepts a plan through the operation-authenticated router and persists its receipt', async () => {
+    const { id, state, op } = await start();
+    const caller = operationCaller(op.id);
+    await expect(
+      caller.submitOperationPlan({ id, operationId: op.id, token: state.token, plan: taskPlan }),
+    ).resolves.toMatchObject({ success: true });
+    expect((await model().findById(id))!.config!.managerState!.submitted).toEqual({
+      action: taskPlan.action,
+      reason: taskPlan.reason,
+    });
+    expect((await service().graph(id)).nodes.some((node) => node.title === 'Audit')).toBe(true);
+    await expect(caller.delete({ id })).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
+  });
+
+  it.each([
+    { operation_id: 'other' },
+    { capabilities: ['hetero:finish'] },
+    { sub: 'other-user' },
+    { workspace_id: 'other-workspace' },
+  ])('rejects a plan outside the operation token scope: %j', async (claims) => {
+    const { id, state, op } = await start();
+    await expect(
+      operationCaller(op.id, claims).submitOperationPlan({
+        id,
+        operationId: op.id,
+        token: state.token,
+        plan: taskPlan,
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    expect((await model().findById(id))!.config!.managerState!.submitted).toBeUndefined();
+  });
+
+  it('rejects unrelated Goal turns and terminal operation tokens', async () => {
+    const { id, state, op } = await start();
+    const other = await start();
+    const caller = operationCaller(op.id);
+    await expect(
+      caller.submitOperationPlan({
+        id: other.id,
+        operationId: op.id,
+        token: other.state.token,
+        plan: taskPlan,
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await ops().recordCompletion(op.id, { status: 'done', completionReason: 'done' });
+    await expect(
+      caller.submitOperationPlan({ id, operationId: op.id, token: state.token, plan: taskPlan }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+  });
+
+  it('rejects legacy operation tokens without a bound identity', async () => {
+    const { id, state, op } = await start();
+    const caller = goalRouter.createCaller({
+      oidcAuth: { payload: {}, sub: userId, purpose: 'hetero-operation' },
+    });
+    await expect(
+      caller.submitOperationPlan({ id, operationId: op.id, token: state.token, plan: taskPlan }),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
+  });
+
+  it('explicitly dispatches the creator instead of the default Task assignee', async () => {
     await db.insert(agents).values({ id: 'task-worker', userId });
     const graph = await service().create({
       agentId: 'task-worker',
       createdByAgentId: agentId,
       title: 'Creator-managed goal',
+      config: { manager: {} },
     });
     expect(graph.goal.config?.manager?.agentId).toBe(agentId);
     expect((await service().tick(graph.goal.id)).outcome).toBe('waiting_external');
@@ -122,10 +210,23 @@ describe('CLI main Agent planning', () => {
   });
 
   it('uses the selected Agent for a user-created goal without attributing authorship to it', async () => {
-    const graph = await service().create({ agentId, title: 'Selected agent' });
+    const graph = await service().create({
+      agentId,
+      title: 'Selected agent',
+      config: { manager: {} },
+    });
     expect(graph.goal.config?.manager?.agentId).toBe(agentId);
     expect(graph.events.every((event) => event.actorType === 'user')).toBe(true);
   });
+
+  it.each([undefined, { recovery: { maxAttemptsPerTask: 3 } }])(
+    'keeps coordinator planning for an ordinary selected agent: %j',
+    async (config) => {
+      const graph = await service().create({ agentId, title: 'Chat agent goal', config });
+      expect(graph.goal.config?.manager).toBeUndefined();
+      expect(graph.goal.config?.managerState).toBeUndefined();
+    },
+  );
 
   it('cannot select a different manager through a legacy config object', async () => {
     const config = { manager: { agentId: 'unrelated-agent', maxTurns: 5 } };
@@ -314,6 +415,7 @@ describe('CLI main Agent planning', () => {
     async (limits) => {
       const graph = await service().create({
         title: 'No budget',
+        config: { manager: {} },
         createdByAgentId: agentId,
       });
       await db.update(goals).set(limits).where(eq(goals.id, graph.goal.id));

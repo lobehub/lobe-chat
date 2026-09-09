@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SWRConfig } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -465,7 +466,7 @@ describe('ApiKey', () => {
 
     const dialog = await openDetail('My Key');
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.detail.permissions.edit' }));
-    const toggleScope = (groupKey: string) => {
+    const toggleScope = async (groupKey: string) => {
       const group = within(dialog).getByText(`apikey.scopes.groups.${groupKey}`).parentElement!;
       const checkbox = within(group).getByRole('checkbox', { name: 'apikey.scopes.read' });
       // base-ui >= 1.8 ignores synthetic Space keyDown/keyUp and a bare click
@@ -473,8 +474,8 @@ describe('ApiKey', () => {
       // <label> is what toggles it, and is what a real pointer hits anyway.
       fireEvent.click(checkbox.closest('label')!);
     };
-    toggleScope('agent');
-    toggleScope('chat');
+    await toggleScope('agent');
+    await toggleScope('chat');
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.detail.permissions.save' }));
 
     await waitFor(() =>

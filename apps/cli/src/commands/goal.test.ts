@@ -8,11 +8,17 @@ const { mockClient } = vi.hoisted(() => ({
   mockClient: {
     goal: {
       create: { mutate: vi.fn() },
+      submitPlan: { mutate: vi.fn() },
+      submitOperationPlan: { mutate: vi.fn() },
       graph: { query: vi.fn() },
       supervision: { query: vi.fn() },
       tick: { mutate: vi.fn() },
     },
   },
+}));
+
+vi.mock('node:fs/promises', () => ({
+  readFile: async () => JSON.stringify({ action: 'verify', reason: 'Ready' }),
 }));
 
 vi.mock('../api/client', () => ({ getTrpcClient: vi.fn().mockResolvedValue(mockClient) }));
@@ -37,6 +43,57 @@ const waitingResult = {
   outcome: 'waiting_external',
   taskId: 'task-1',
 };
+
+describe('goal plan authentication', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.mocked(console.log).mockRestore();
+  });
+
+  it.each(['hetero-operation', 'cli-sandbox', undefined])(
+    'routes %s credentials to the appropriate plan endpoint',
+    async (purpose) => {
+      vi.clearAllMocks();
+      vi.stubEnv(
+        'LOBEHUB_JWT',
+        purpose
+          ? `header.${Buffer.from(JSON.stringify({ purpose })).toString('base64url')}.signature`
+          : undefined,
+      );
+      vi.spyOn(console, 'log').mockImplementation(() => {});
+      mockClient.goal.submitPlan.mutate.mockResolvedValue({ data: {} });
+      mockClient.goal.submitOperationPlan.mutate.mockResolvedValue({ data: {} });
+      await createProgram().parseAsync([
+        'node',
+        'test',
+        'goal',
+        'plan',
+        'goal-1',
+        '--file',
+        'plan.json',
+        '--token',
+        'turn-1',
+        '--operation',
+        'op-1',
+      ]);
+      const selected =
+        purpose === 'hetero-operation'
+          ? mockClient.goal.submitOperationPlan
+          : mockClient.goal.submitPlan;
+      const other =
+        purpose === 'hetero-operation'
+          ? mockClient.goal.submitPlan
+          : mockClient.goal.submitOperationPlan;
+      expect(selected.mutate).toHaveBeenCalledWith({
+        id: 'goal-1',
+        operationId: 'op-1',
+        token: 'turn-1',
+        plan: { action: 'verify', reason: 'Ready' },
+      });
+      expect(other.mutate).not.toHaveBeenCalled();
+    },
+  );
+});
 
 describe('goal run command', () => {
   beforeEach(() => {
