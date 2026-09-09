@@ -29,7 +29,51 @@ LobeHub supports two connection modes for Lark bots:
 - **WebSocket (Recommended)** — Persistent connection using Lark's official long-lived client. Events are delivered in real time; no public webhook URL is required, so this works out of the box even without a publicly reachable server. This is the default mode for new bots.
 - **Webhook** — HTTP callbacks to an Event Subscription URL. Use this mode if you prefer a stateless callback setup or your app already has an Event Subscription URL configured on the Lark Open Platform.
 
-> **Note:** Both modes require the message event to be added on the Lark Open Platform. Only **Webhook mode** needs an **Event Subscription URL**; **WebSocket mode** uses the long-connection subscription method.
+> **Note:** Both modes require a message event subscription. Quick creation presets permissions and events; manually created apps need these configured separately. Only **Webhook mode** needs an **Event Subscription URL**; **WebSocket mode** uses the long-connection subscription method.
+
+## Quick Create a Lark Agent App (Recommended)
+
+For a new bot, use the agent app shortcut on the Lark Open Platform. It presets permissions and events for an agent app. This creates the Lark app; you still choose the agent it connects to in LobeHub.
+
+<Steps>
+  ### Open Quick Creation
+
+  Sign in to the [Lark Open Platform](https://open.larksuite.com/app). At the top of the app list, find **Built for agents. Ready to connect.** and click **Create**.
+
+  ![Lark Open Platform agent app banner with the Create button](https://app.lobehub.com/f/file_K4lzvmTvEGzC)
+
+  ### Choose an Avatar and Name
+
+  On **Create a Lark app for your agent**, select an **Avatar** and enter a **Name**, such as "Lobehub Weekly Helper". Click **Create** and wait for the automatic configuration to finish.
+
+  ![Lark agent app creation form with an avatar and the name Lobehub Weekly Helper](https://app.lobehub.com/f/file_jLeQSs2pttJE)
+
+  ### Copy App Credentials
+
+  On the **App created** page, copy **App ID** and **App Secret**. Keep the App Secret private: do not send it to a group chat or include it in a public screenshot.
+
+  ![Lark App created page showing App ID with App Secret hidden](https://app.lobehub.com/f/file_eqe0bqUESiln)
+
+  ### Connect to LobeHub
+
+  Open the agent you want to connect in LobeHub, then go to **Settings** → **Channels** → **Lark**. Enter the **App ID** and **App Secret** you copied. Keep the default **WebSocket** connection mode under **Advanced Settings** and click **Save Configuration**.
+
+  WebSocket mode does not need an Event Subscription URL, Verification Token, or Encrypt Key. You do not need to add existing preset permissions or events again. If a tool later reports a missing permission, grant the corresponding permission as prompted.
+
+  ### Open the App and Test
+
+  Follow the Lark page prompts to confirm the app is published and available. Complete administrator approval first if your organization requires it. Click **Open App** and send the bot a message to confirm that your LobeHub agent replies.
+
+  If it does not reply, check that the bot capability is enabled, the event subscription uses a long connection, `im.message.receive_v1` is included, and the channel configuration has been saved in LobeHub. See Troubleshooting below for further checks.
+</Steps>
+
+The screenshots show the international Lark interface at open.larksuite.com with an example app named "Lobehub Weekly Helper". Use your own app name.
+
+Once connected, you do not need to repeat the manual creation steps below. Continue with **Step 7: Set Your Platform Identity** and **Access Policies**. If quick creation is unavailable, you are configuring an existing app, or you choose Webhook mode, use the manual setup below.
+
+## Manual Setup (Alternative)
+
+The following steps cover creating an enterprise app from scratch. For an existing app, start at the step you need to complete or change. For a quick-created app, check only missing configuration; do not create the app again.
 
 ## Step 1: Create a Lark App
 

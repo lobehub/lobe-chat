@@ -26,7 +26,51 @@ LobeHub 支持两种 Lark 机器人连接模式：
 - **WebSocket（推荐）** — 使用 Lark 官方的长连接客户端建立持久连接。事件实时推送，无需配置公网可访问的 Webhook 地址，即使没有公网服务器也能开箱即用。这是新机器人的默认模式。
 - **Webhook** — 基于事件订阅 URL 的 HTTP 回调。如果您倾向于无状态的回调方式，或应用已在 Lark 开放平台配置了事件订阅 URL，可使用此模式。
 
-> **注意：** 两种模式都需要在 Lark 开放平台添加消息接收事件。只有 **Webhook 模式**需要配置 **Event Subscription URL**；**WebSocket 模式**需要将订阅方式设为长连接。
+> **注意：** 两种模式都需要订阅消息接收事件。快捷创建会预置权限与事件，手动创建的应用则需要自行配置。只有 **Webhook 模式**需要配置 **Event Subscription URL**；**WebSocket 模式**使用长连接订阅。
+
+## 快捷创建 Lark 智能体应用（推荐）
+
+新建机器人时，可以使用 Lark 开放平台的智能体应用快捷入口，自动预置权限与事件。这里创建的是 Lark 应用，仍需在 LobeHub 中选择要连接的智能体。
+
+<Steps>
+  ### 打开快捷创建入口
+
+  登录 [Lark 开放平台](https://open.larksuite.com/app)，在应用列表顶部找到 **Built for agents. Ready to connect.**，点击 **Create**。
+
+  ![Lark 开放平台顶部智能体应用入口与 Create 按钮](https://app.lobehub.com/f/file_K4lzvmTvEGzC)
+
+  ### 选择头像和名称
+
+  在 **Create a Lark app for your agent** 页面选择 **Avatar**（头像），填写 **Name**（名称），例如「Lobehub Weekly Helper」。点击 **Create**，等待自动配置完成。
+
+  ![Lark 智能体应用创建表单，已选择头像并填写 Lobehub Weekly Helper](https://app.lobehub.com/f/file_jLeQSs2pttJE)
+
+  ### 复制应用凭证
+
+  在 **App created** 页面复制 **App ID** 和 **App Secret**。请妥善保管 App Secret，不要发送到群聊或出现在公开截图中。
+
+  ![Lark 创建成功页面，展示 App ID，App Secret 已隐藏](https://app.lobehub.com/f/file_eqe0bqUESiln)
+
+  ### 连接到 LobeHub
+
+  在 LobeHub 中打开要连接的智能体，进入 **设置** → **渠道** → **Lark**，填入刚才复制的 **App ID** 和 **App Secret**。在 **高级设置** 中保留默认的 **WebSocket** 连接模式，点击 **保存配置**。
+
+  WebSocket 模式无需填写事件订阅 URL、Verification Token 或 Encrypt Key，也无需重复添加已有的预置权限与事件。如果后续使用工具时提示缺少权限，再按提示补充对应权限。
+
+  ### 打开应用并测试
+
+  根据 Lark 页面提示确认应用已发布并可用；如果企业要求管理员审批，请先完成审批。点击 **Open App**，向机器人发送消息，确认 LobeHub 智能体能够回复。
+
+  如果没有回复，请检查机器人功能是否已启用、事件订阅是否使用长连接、是否包含 `im.message.receive_v1`，以及 LobeHub 中的渠道配置是否已保存。更多检查项见下方「故障排除」。
+</Steps>
+
+截图来自 open.larksuite.com 的 Lark 国际版英文界面，以「Lobehub Weekly Helper」为例，你可以使用自己的应用名称。
+
+连接成功后，无需重复执行下方的手动创建流程，可继续查看「第七步：设置平台身份」和「访问策略」。如果没有快捷入口、需要配置已有应用，或选择 Webhook 模式，请参考下方手动配置。
+
+## 手动配置（备用方式）
+
+以下步骤从创建企业应用开始。已有应用可直接跳到需要补充或修改的步骤；快捷创建的应用只需检查缺失配置，不要重复创建。
 
 ## 第一步：创建 Lark 应用
 
