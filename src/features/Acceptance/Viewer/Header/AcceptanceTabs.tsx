@@ -2,10 +2,21 @@
 
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Tabs, Tag } from '@lobehub/ui/base-ui';
+import { createStaticStyles } from 'antd-style';
 import { ListChecks, Paperclip, Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export type AcceptanceTabKey = 'checks' | 'resources' | 'flow';
+
+const styles = createStaticStyles(({ css }) => ({
+  // The square variant underlines its whole list; the band below already draws
+  // the full-width rule, so the list's own line would sit on top of it.
+  list: css`
+    && {
+      box-shadow: none;
+    }
+  `,
+}));
 
 interface AcceptanceTabsProps {
   active: AcceptanceTabKey;
@@ -47,6 +58,7 @@ const AcceptanceTabs = ({
   return (
     <Tabs
       activeKey={active}
+      classNames={{ list: styles.list }}
       style={{ minWidth: 0, overflowX: 'auto' }}
       variant={'square'}
       items={tabs
