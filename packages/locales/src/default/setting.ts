@@ -1,4 +1,18 @@
 export default {
+  'marketSubmission.entry': 'Submit to Market for review',
+  'marketSubmission.title': 'Submit agent for review',
+  'marketSubmission.submit': 'Submit for review',
+  'marketSubmission.confirm':
+    'Submit the current snapshot of “{{name}}” to Market? Its profile, prompt, model settings and enabled tool identifiers will be uploaded and become public after approval. Do not include secrets or private information. Conversations, files and credentials are not included. If you own its Market listing, a new version will be submitted; otherwise a separate listing will be created.',
+  'marketSubmission.required': 'Add an agent name and prompt before submitting for review.',
+  'marketSubmission.success': 'Submitted for review. It will appear in Market after approval.',
+  'marketSubmission.failed': 'Could not submit for review. Please try again.',
+  'marketSubmission.linkFailed':
+    'Submitted, but could not save the Market link locally ({{identifier}}). Keep this identifier and avoid resubmitting as a new agent.',
+  'marketPublish.status.published': 'Published',
+  'marketPublish.status.unpublished': 'Unpublished',
+  'marketPublish.status.archived': 'Archived',
+  'marketPublish.status.deprecated': 'Deprecated',
   'completionSound.title': 'In-app completion sound',
   'completionSound.enabled': 'Play completion sound',
   'completionSound.desc':

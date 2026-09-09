@@ -12,6 +12,7 @@ import {
   Settings2Icon,
   Share2Icon,
   Trash,
+  UploadCloud,
   UserRound,
   UsersIcon,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import { useBusinessAgentImportMenuItem } from '@/business/client/hooks/useBusin
 import { useHasActiveWorkspace } from '@/business/client/hooks/useHasActiveWorkspace';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import AgentBreadcrumb from '@/features/AgentBreadcrumb';
+import { useAgentMarketSubmission } from '@/features/AgentMarketSubmission/useAgentMarketSubmission';
 import AgentProfileTabs, { AGENT_PROFILE_TABS_CENTER_STYLE } from '@/features/AgentProfileTabs';
 import { useAgentShareSupported } from '@/features/AgentShareSettings/useAgentShareSupported';
 import NavHeader from '@/features/NavHeader';
@@ -253,6 +255,19 @@ const Header = memo(() => {
   const { visible: shareVisible } = useAgentShareSupported(activeAgentId);
   const canShareAgent = shareVisible === true && canConfigure;
 
+  const showMarketSubmission = !!config && !isBuiltinAgent && !isHeterogeneous;
+  const canSubmitToMarket = showMarketSubmission && canManage && !lockedByOther && !lockPending;
+  const marketSubmission = useAgentMarketSubmission({
+    agentId: activeAgentId,
+    canSubmit: canSubmitToMarket,
+    getPrompt: () => ({
+      editorData: editor
+        ? (editor.getDocument('json') as LobeAgentConfig['editorData'])
+        : config?.editorData,
+      systemRole: editor ? (editor.getDocument('markdown') as unknown as string) : systemRole,
+    }),
+  });
+
   // Share settings are a sibling tab of the profile group, not a popup — the
   // shortcut just jumps to that tab.
   const handleOpenShare = useCallback(() => {
@@ -294,6 +309,15 @@ const Header = memo(() => {
           }
         : null,
       { type: 'divider' as const },
+      showMarketSubmission
+        ? {
+            disabled: !canSubmitToMarket || marketSubmission.isSubmitting,
+            icon: <Icon icon={UploadCloud} />,
+            key: 'submit-to-market',
+            label: t('marketSubmission.entry'),
+            onClick: marketSubmission.open,
+          }
+        : null,
       {
         children: [
           {
@@ -355,12 +379,16 @@ const Header = memo(() => {
     authorName,
     canConfigure,
     canManage,
+    canSubmitToMarket,
     createdAt,
     dateLocale,
     handleExportMarkdown,
     handleDelete,
     isInbox,
+    marketSubmission.isSubmitting,
+    marketSubmission.open,
     navigate,
+    showMarketSubmission,
     showPermissionPageEntry,
     t,
     importMenuItem,
@@ -376,8 +404,8 @@ const Header = memo(() => {
         <Flexbox horizontal align={'center'} gap={8}>
           {/* No section title — the Segmented beside it names the current tab. */}
           {activeAgentId && <AgentBreadcrumb agentId={activeAgentId} />}
-          <AgentStatusTag />
-          <AgentVersionReviewTag />
+          <AgentStatusTag key={`status-${activeAgentId}-${marketSubmission.revision}`} />
+          <AgentVersionReviewTag key={`review-${activeAgentId}-${marketSubmission.revision}`} />
           <AgentForkTag />
           <AccessLevelTag
             resourceId={showPermissionsEntry ? (activeAgentId ?? undefined) : undefined}
