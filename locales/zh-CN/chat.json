@@ -966,6 +966,8 @@
   "heteroAgent.executionTarget.noneDesc": "不启用任何设备",
   "heteroAgent.executionTarget.offline": "离线",
   "heteroAgent.executionTarget.online": "在线",
+  "heteroAgent.executionTarget.onlineConnections_one": "在线 · {{count}} 个连接",
+  "heteroAgent.executionTarget.onlineConnections_other": "在线 · {{count}} 个连接",
   "heteroAgent.executionTarget.personalGroup": "私人设备",
   "heteroAgent.executionTarget.reconnect": "重新连接",
   "heteroAgent.executionTarget.reconnectFailed": "无法重新连接此设备。请确认桌面端正在运行，然后重试。",

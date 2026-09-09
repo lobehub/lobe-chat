@@ -648,6 +648,8 @@ export default {
   'heteroAgent.executionTarget.noneDesc': 'No device enabled',
   'heteroAgent.executionTarget.offline': 'Offline',
   'heteroAgent.executionTarget.online': 'Online',
+  'heteroAgent.executionTarget.onlineConnections_one': 'Online · {{count}} connection',
+  'heteroAgent.executionTarget.onlineConnections_other': 'Online · {{count}} connections',
   'heteroAgent.executionTarget.reconnect': 'Reconnect',
   'heteroAgent.executionTarget.reconnectFailed':
     'Could not reconnect this device. Make sure the desktop app is running, then try again.',

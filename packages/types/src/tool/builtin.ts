@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { z } from 'zod';
 
+import { type DeviceUnavailableErrorData } from '../device';
 import { type RuntimeStepContext } from '../stepContext';
 import { type HumanInterventionConfig, type HumanInterventionPolicy } from './intervention';
 import { HumanInterventionConfigSchema, HumanInterventionPolicySchema } from './intervention';
@@ -488,6 +489,8 @@ export interface BuiltinServerRuntimeOutput {
    */
   deferred?: boolean;
   error?: any;
+  /** Structured unavailable-device context preserved through the runtime error envelope. */
+  errorData?: DeviceUnavailableErrorData;
   state?: any;
   success: boolean;
 }

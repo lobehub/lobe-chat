@@ -1,0 +1,47 @@
+import type { DeviceListItem } from '@lobechat/types';
+import { describe, expect, it } from 'vitest';
+
+import { getScopedConnectionCount } from './connectionCount';
+
+const device = (
+  deviceId: string,
+  scope: DeviceListItem['scope'],
+  connectionCount: number,
+): DeviceListItem =>
+  ({
+    channels: Array.from({ length: connectionCount }, (_, index) => ({
+      channel: null,
+      connectedAt: `2026-09-09T00:00:0${index}.000Z`,
+      hostname: null,
+      platform: null,
+    })),
+    deviceId,
+    scope,
+  }) as DeviceListItem;
+
+describe('getScopedConnectionCount', () => {
+  /** @example Personal presence cannot make an offline workspace device appear connected. */
+  it('keeps personal and workspace connection counts independent', () => {
+    // ROOT CAUSE:
+    //
+    // The Electron title bar previously showed its personal socket while a workspace target had
+    // no live connection, making DEVICE_NOT_FOUND look contradictory. Counts now follow scope.
+    const devices = [
+      device('personal-device', 'personal', 2),
+      device('workspace-device', 'workspace', 0),
+    ];
+
+    expect(getScopedConnectionCount(devices, 'personal', 'personal-device')).toBe(2);
+    expect(getScopedConnectionCount(devices, 'workspace')).toBe(0);
+  });
+
+  /** @example Switching workspaces recomputes the total from the newly scoped device list. */
+  it('aggregates multiple logical devices only within the current workspace response', () => {
+    expect(
+      getScopedConnectionCount(
+        [device('workspace-a', 'workspace', 1), device('workspace-b', 'workspace', 2)],
+        'workspace',
+      ),
+    ).toBe(3);
+  });
+});

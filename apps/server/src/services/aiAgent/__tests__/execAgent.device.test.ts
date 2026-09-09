@@ -574,7 +574,18 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
 
       await expect(
         service.execAgent({ agentId: 'agent-1', prompt: 'Run a command' }),
-      ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' });
+      ).rejects.toMatchObject({
+        cause: {
+          data: {
+            code: 'DEVICE_NOT_FOUND',
+            deviceId: 'device-001',
+            retryable: true,
+            scope: 'workspace',
+            workspaceId: 'workspace-1',
+          },
+        },
+        code: 'PRECONDITION_FAILED',
+      });
 
       expect(mockCreateOperation).not.toHaveBeenCalled();
       expect(mockMessageUpdate).toHaveBeenCalledWith(

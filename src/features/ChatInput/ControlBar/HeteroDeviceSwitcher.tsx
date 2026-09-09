@@ -696,7 +696,9 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     <ExecutionTargetDeviceStatus
       offlineLabel={t('heteroAgent.executionTarget.offline')}
       online={d.online}
-      onlineLabel={t('heteroAgent.executionTarget.online')}
+      onlineLabel={t('heteroAgent.executionTarget.onlineConnections', {
+        count: d.channels.length,
+      })}
     />
   );
 

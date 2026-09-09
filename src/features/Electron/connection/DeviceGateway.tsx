@@ -7,6 +7,8 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
+import { getScopedConnectionCount } from '@/features/DeviceManager/connectionCount';
+import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useElectronStore } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
@@ -40,7 +42,11 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
-const DeviceGateway = memo(() => {
+interface DeviceGatewayProps {
+  workspaceScoped: boolean;
+}
+
+const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
   const { t } = useTranslation('electron');
   const navigate = useWorkspaceAwareNavigate();
   const [
@@ -58,6 +64,9 @@ const DeviceGateway = memo(() => {
   ]);
 
   useFetchGatewayStatus();
+  useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
+  const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
+  const { data: devices, isLoading: isDeviceListLoading } = useDeviceList();
 
   useWatchBroadcast('gatewayConnectionStatusChanged', ({ status }) => {
     setGatewayConnectionStatus(status);
@@ -82,13 +91,24 @@ const DeviceGateway = memo(() => {
     [connectGateway, disconnectGateway],
   );
 
-  const connectionHint = t(
-    isConnecting
-      ? 'gateway.statusConnecting'
-      : isConnected
-        ? 'gateway.statusConnected'
-        : 'gateway.statusDisconnected',
+  const connectionCount = getScopedConnectionCount(
+    devices,
+    workspaceScoped ? 'workspace' : 'personal',
+    workspaceScoped ? undefined : gatewayDeviceInfo?.deviceId,
   );
+  const scopeConnected = workspaceScoped ? !!connectionCount : isConnected;
+  const connectionHint =
+    workspaceScoped && isDeviceListLoading
+      ? t('gateway.statusConnecting')
+      : workspaceScoped
+        ? connectionCount
+          ? t('gateway.workspaceStatusConnections', { count: connectionCount })
+          : t('gateway.workspaceStatusDisconnected')
+        : isConnecting
+          ? t('gateway.statusConnecting')
+          : isConnected && connectionCount
+            ? t('gateway.statusConnectedConnections', { count: connectionCount })
+            : t(isConnected ? 'gateway.statusConnected' : 'gateway.statusDisconnected');
 
   const popoverContent = (
     <Flexbox className={styles.popoverContent} gap={4}>
@@ -105,13 +125,15 @@ const DeviceGateway = memo(() => {
               navigate('/settings/devices', { escape: true });
             }}
           />
-          <Switch
-            aria-label={t('gateway.enableConnection')}
-            checked={isConnected || isConnecting}
-            loading={isConnecting}
-            size="small"
-            onChange={handleSwitchChange}
-          />
+          {!workspaceScoped && (
+            <Switch
+              aria-label={t('gateway.enableConnection')}
+              checked={isConnected || isConnecting}
+              loading={isConnecting}
+              size="small"
+              onChange={handleSwitchChange}
+            />
+          )}
         </Flexbox>
       </Flexbox>
       <span className={styles.scopeHint}>{connectionHint}</span>
@@ -136,7 +158,7 @@ const DeviceGateway = memo(() => {
           title={t('gateway.title')}
           tooltipProps={{ placement: 'bottomRight' }}
         />
-        {isConnected && <div className={styles.greenDot} />}
+        {scopeConnected && <div className={styles.greenDot} />}
       </div>
     </Popover>
   );
@@ -146,9 +168,9 @@ const DeviceGatewayWithAuth = memo(() => {
   const isSyncActive = useElectronStore(electronSyncSelectors.isSyncActive);
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
 
-  if (!isSyncActive || activeWorkspaceSlug) return null;
+  if (!isSyncActive) return null;
 
-  return <DeviceGateway />;
+  return <DeviceGateway workspaceScoped={!!activeWorkspaceSlug} />;
 });
 
 export default DeviceGatewayWithAuth;

@@ -19,6 +19,7 @@ import type {
   ToolSource,
 } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
+import type { DeviceUnavailableErrorData } from '@lobechat/device-gateway-client';
 import type { ChatTopicBotContext, RequestTrigger } from '@lobechat/types';
 import { getActivePluginIds } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
@@ -691,9 +692,17 @@ export const discoverTools = async (
     // before tool/runtime preparation so no operation can start elsewhere.
     if (
       isFixedDeviceTarget &&
+      boundDeviceId &&
       resolveToolMode(agentConfig.chatConfig ?? undefined) !== 'chat' &&
       executionPlan.kind !== 'device'
     ) {
+      const errorData: DeviceUnavailableErrorData = {
+        code: 'DEVICE_NOT_FOUND',
+        deviceId: boundDeviceId,
+        retryable: true,
+        scope: deps.workspaceId ? 'workspace' : 'personal',
+        ...(deps.workspaceId ? { workspaceId: deps.workspaceId } : {}),
+      };
       const detail =
         executionPlan.kind === 'device-unrouted' && executionPlan.reason === 'bound-device-offline'
           ? 'The device fixed by this agent is offline. Ask an editor to bring it online or change the agent device policy.'
@@ -701,13 +710,13 @@ export const discoverTools = async (
       await deps.messageModel.update(assistantMessageId, {
         content: '',
         error: {
-          body: { detail },
+          body: { detail, ...errorData },
           message: 'Fixed agent device unavailable',
           type: 'ServerAgentRuntimeError',
         },
       });
       throw new TRPCError({
-        cause: { data: { code: 'FixedAgentDeviceUnavailable' } },
+        cause: { data: errorData },
         code: 'PRECONDITION_FAILED',
         message: detail,
       });
