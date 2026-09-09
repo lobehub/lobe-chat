@@ -110,7 +110,21 @@ export class GoalModel {
   update = async (id: string, value: Partial<Omit<GoalItem, 'id' | 'userId'>>) => {
     const [row] = await this.db
       .update(goals)
-      .set({ ...value, updatedAt: new Date() })
+      .set({
+        ...value,
+        // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
+        // ownership always comes from the current row, never that snapshot.
+        ...(value.config !== undefined
+          ? {
+              config: sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol')
+                || jsonb_strip_nulls(jsonb_build_object(
+                  'planningCheckpoint', ${goals.config}->'planningCheckpoint',
+                  'planningProtocol', ${goals.config}->'planningProtocol'
+                ))`,
+            }
+          : {}),
+        updatedAt: new Date(),
+      })
       .where(and(eq(goals.id, id), this.ownership()))
       .returning();
     return row as GoalItem | undefined;
@@ -133,6 +147,15 @@ export class GoalModel {
       const model = new GoalModel(tx, this.userId, this.workspaceId);
       const goal = await model.findByIdForUpdate(id);
       if (!goal || !['planning', 'running'].includes(goal.status)) return undefined;
+      // A running goal without lease provenance may still have an unfenced
+      // pre-lease worker in flight. Never infer abandonment from elapsed time.
+      // See docs/development/goal-planning-lease-rollout.md before rollout/rollback.
+      if (
+        goal.status === 'running' &&
+        !goal.config?.planningProtocol &&
+        !goal.config?.planningCheckpoint
+      )
+        return undefined;
       const now = Date.now();
       if (
         goal.config?.planningCheckpoint &&
@@ -152,7 +175,7 @@ export class GoalModel {
       await tx
         .update(goals)
         .set({
-          config: { ...goal.config, planningCheckpoint: checkpoint },
+          config: { ...goal.config, planningCheckpoint: checkpoint, planningProtocol: 'lease-v1' },
           startedAt: goal.startedAt ?? new Date(now),
           status: 'running',
           updatedAt: new Date(now),

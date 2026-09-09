@@ -922,6 +922,20 @@ describe('GoalService', () => {
     expect(after.edges.filter((e) => e.kind === 'depends_on')).toHaveLength(1);
   });
 
+  it('waits for an unfenced legacy planner instead of generating a second graph', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Legacy in-flight planning' });
+    // The pre-lease binary claimed only the status, without a checkpoint.
+    await serverDB.update(goals).set({ status: 'running' }).where(eq(goals.id, graph.goal.id));
+    const planner = vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose');
+
+    expect((await service.tick(graph.goal.id)).outcome).toBe('waiting_external');
+    expect(planner).not.toHaveBeenCalled();
+    expect(
+      (await service.graph(graph.goal.id)).nodes.filter((node) => node.kind === 'task'),
+    ).toHaveLength(0);
+  });
+
   it('does not call the planner again when a late advance sees running with no tasks', async () => {
     let release!: () => void;
     const gate = new Promise<void>((resolve) => {
@@ -981,15 +995,18 @@ describe('GoalService', () => {
       await vi.waitFor(() => expect(planner).toHaveBeenCalledTimes(1));
       const model = new GoalModel(serverDB, userId);
       const current = await model.findById(graph.goal.id);
-      await model.update(graph.goal.id, {
-        config: {
-          ...current?.config,
-          planningCheckpoint: {
-            token: current!.config!.planningCheckpoint!.token,
-            expiresAt: '2000-01-01T00:00:00.000Z',
+      await serverDB
+        .update(goals)
+        .set({
+          config: {
+            ...current?.config,
+            planningCheckpoint: {
+              token: current!.config!.planningCheckpoint!.token,
+              expiresAt: '2000-01-01T00:00:00.000Z',
+            },
           },
-        },
-      });
+        })
+        .where(eq(goals.id, graph.goal.id));
       await new GoalService(serverDB, userId).tick(graph.goal.id);
     } finally {
       release();

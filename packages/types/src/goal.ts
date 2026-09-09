@@ -142,6 +142,8 @@ export interface GoalConfig {
   pausedBy?: GoalPauseReason;
   /** Coordinator-owned lease for initial decomposition; not a user policy. */
   planningCheckpoint?: { expiresAt: string; token: string };
+  /** Retained after release to distinguish lease-aware retries from legacy planners. */
+  planningProtocol?: 'lease-v1';
   recovery?: GoalRecoveryPolicy;
   schedule?: GoalSchedulePolicy;
 }
