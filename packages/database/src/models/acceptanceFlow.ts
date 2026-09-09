@@ -215,26 +215,34 @@ export class AcceptanceFlowModel {
     // Read each journey from its entry, keeping a branch together. UUID order
     // only breaks ties between sibling edges; it must not order the whole plan.
     const rowsById = new Map(nodeRows.map((row) => [row.node.id, row]));
-    const outgoing = new Map<string, string[]>();
+    const outgoing = new Map<string, typeof edgeRows>();
     for (const edge of edgeRows) {
       const targets = outgoing.get(edge.sourceNodeId) ?? [];
-      targets.push(edge.targetNodeId);
+      targets.push(edge);
       outgoing.set(edge.sourceNodeId, targets);
     }
     const orderedRows: typeof nodeRows = [];
     const visited = new Set<string>();
-    const pending = entry ? [entry] : [];
+    const occurrenceOrder: string[] = [];
+    const pending = entry ? [{ nodeId: entry, occurrenceId: 'entry' }] : [];
     while (pending.length) {
-      const id = pending.pop()!;
+      const { nodeId: id, occurrenceId } = pending.pop()!;
+      // Every incoming edge creates a check occurrence, including revisits.
+      // Expand a node's outgoing edges only once to terminate cycles.
+      occurrenceOrder.push(occurrenceId);
       if (visited.has(id)) continue;
       visited.add(id);
       const row = rowsById.get(id);
       if (!row) throw new Error('Unknown edge endpoint');
       orderedRows.push(row);
-      pending.push(...(outgoing.get(id) ?? []).toReversed());
+      pending.push(
+        ...(outgoing.get(id) ?? [])
+          .toReversed()
+          .map((edge) => ({ nodeId: edge.targetNodeId, occurrenceId: edge.id })),
+      );
     }
     if (orderedRows.length !== nodeRows.length) throw new Error('Unreachable nodes');
-    const plan: VerifyCheckItem[] = [];
+    const occurrencePlans = new Map<string, VerifyCheckItem[]>();
     const snapshot: VerifyFlowSnapshot = {
       flowId,
       title: flow.title,
@@ -288,11 +296,11 @@ export class AcceptanceFlowModel {
               targetNodeId: prefix + edge.targetNodeId,
             })),
           );
-          plan.push(
-            ...child.plan.map((item, index) => ({
+          occurrencePlans.set(
+            branch?.id ?? 'entry',
+            child.plan.map((item) => ({
               ...item,
               id: prefix + item.id,
-              index: plan.length + index,
               required: (node.overrides?.required ?? branch?.required ?? true) && item.required,
               onFail: node.overrides?.onFail ?? item.onFail,
               sourceFlowNode: {
@@ -339,27 +347,31 @@ export class AcceptanceFlowModel {
       for (const branch of branches) {
         const id = `${node.id}:${branch?.id ?? 'entry'}`;
         itemIds.push(id);
-        plan.push({
-          id,
-          index: plan.length,
-          title: asset.title,
-          description: asset.description ?? undefined,
-          category: flow.title,
-          sourceCriterionId: asset.id,
-          sourceFlowNode: { flowId, nodeId: node.id, incomingEdgeId: branch?.id },
-          definition: {
-            ...definition,
-            preconditions: [
-              ...(definition.preconditions ?? []),
-              ...(branch ? [branch.trigger, ...(branch.condition ? [branch.condition] : [])] : []),
-            ],
+        occurrencePlans.set(branch?.id ?? 'entry', [
+          {
+            id,
+            index: 0,
+            title: asset.title,
+            description: asset.description ?? undefined,
+            category: flow.title,
+            sourceCriterionId: asset.id,
+            sourceFlowNode: { flowId, nodeId: node.id, incomingEdgeId: branch?.id },
+            definition: {
+              ...definition,
+              preconditions: [
+                ...(definition.preconditions ?? []),
+                ...(branch
+                  ? [branch.trigger, ...(branch.condition ? [branch.condition] : [])]
+                  : []),
+              ],
+            },
+            documentId: asset.documentId,
+            verifierType: asset.verifierType,
+            verifierConfig: asset.verifierConfig ?? {},
+            onFail: node.overrides?.onFail ?? asset.onFail,
+            required: node.overrides?.required ?? branch?.required ?? true,
           },
-          documentId: asset.documentId,
-          verifierType: asset.verifierType,
-          verifierConfig: asset.verifierConfig ?? {},
-          onFail: node.overrides?.onFail ?? asset.onFail,
-          required: node.overrides?.required ?? branch?.required ?? true,
-        });
+        ]);
       }
       snapshot.nodes.push({
         id: node.id,
@@ -368,6 +380,9 @@ export class AcceptanceFlowModel {
         checkItemIds: itemIds,
       });
     }
+    const plan = occurrenceOrder
+      .flatMap((id) => occurrencePlans.get(id)!)
+      .map((item, index) => ({ ...item, index }));
     const acceptance = await this.owned(flow.acceptanceId, database);
     const frozen = await new VerifyCriterionModel(
       database,
