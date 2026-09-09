@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { ListTreeIcon, PauseIcon, PlayIcon } from 'lucide-react';
+import { EyeIcon, PauseIcon, PlayIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -39,6 +39,7 @@ import {
 } from './goalPresentation';
 import GoalRequirement from './GoalRequirement';
 import GoalStatusGlyph from './GoalStatusGlyph';
+import { GoalSupervision } from './GoalSupervision';
 import NorthStarMetrics from './NorthStarMetrics';
 import ProcessControl from './ProcessControl';
 import { useGoalChatPanel } from './useGoalChatPanel';
@@ -277,7 +278,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
               <Flexbox horizontal align={'center'} gap={8}>
                 {managerConversation && (
                   <Button
-                    icon={ListTreeIcon}
+                    icon={EyeIcon}
                     size={'small'}
                     onClick={() => {
                       clearPortalStack();
@@ -432,6 +433,14 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
       >
         {graphFullscreen ? null : showPortal ? (
           <PortalContent />
+        ) : chat.agentId && chat.topicId ? (
+          <GoalSupervision
+            agentId={chat.agentId}
+            goalId={goalId}
+            key={`${goalId}:${chat.agentId}:${chat.request}`}
+            topicId={chat.topicId}
+            onCollapse={() => chat.setOpen(false)}
+          />
         ) : chat.agentId ? (
           <GoalChat
             agentId={chat.agentId}

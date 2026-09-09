@@ -1933,8 +1933,7 @@ export default {
   'goalDetail.unnamedRun': 'Untitled run',
   'goalDetail.viewPlan': 'View execution plan',
   'goalProcess.frontier.title': 'Current tasks',
-  'goalProcess.northStar.emptyHint':
-    'No measurable target declared yet — e.g. followers >= 10,000, or open security issues down to 0',
+  'goalProcess.northStar.emptyHint': 'No measurable target declared yet',
   'goalProcess.northStar.met': 'Met',
   'goalProcess.northStar.unmeasured':
     'Never measured — the clause counts as unmet until a value lands',
