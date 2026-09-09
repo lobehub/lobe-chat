@@ -224,6 +224,9 @@ jobs:
           pattern: release-*
           merge-multiple: true
 
+      - name: Validate platform renderer hashes
+        run: node apps/desktop/scripts/validateMainHash.mjs release release-macos-latest release-macos-15-intel release-windows-2025 release-ubuntu-latest
+
       # 列出下载的构建产物
       - name: List downloaded artifacts
         run: ls -R release

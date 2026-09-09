@@ -300,7 +300,7 @@ jobs:
   # 合并 macOS 多架构文件
   # ============================================
   merge-mac-files:
-    needs: [build, check-stable]
+    needs: [build, check-stable, configure-build]
     name: Merge macOS Release Files
     runs-on: ubuntu-latest
     permissions:
@@ -320,6 +320,17 @@ jobs:
           path: release
           pattern: release-*
           merge-multiple: true
+
+      - name: Validate platform renderer hashes
+        env:
+          BUILD_MATRIX: ${{ needs.configure-build.outputs.matrix }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { validateReleaseInputs } from './apps/desktop/scripts/validateMainHash.mjs';
+          const expected = JSON.parse(process.env.BUILD_MATRIX).include.map(({ name }) => `release-${name}`);
+          const manifest = await validateReleaseInputs('release', expected);
+          console.log(`Validated ${expected.length} platform hashes: ${manifest.mainHash}`);
+          NODE
 
       - name: List downloaded artifacts
         run: ls -R release

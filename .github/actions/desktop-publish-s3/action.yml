@@ -53,6 +53,13 @@ runs:
         echo ""
         echo "📋 Version: ${{ inputs.version }}, Channel: ${{ inputs.channel }}"
 
+    - name: Validate renderer OTA baseline before publishing
+      shell: bash
+      env:
+        CHANNEL: ${{ inputs.channel }}
+        VERSION: ${{ inputs.version }}
+      run: node apps/desktop/scripts/validateMainHash.mjs --base release "$CHANNEL" "$VERSION"
+
     - name: Upload to S3
       if: inputs.upload-release-files == 'true'
       shell: bash
@@ -196,6 +203,8 @@ runs:
         aws s3 cp "$SNAPSHOT" "$S3_RENDERER_ROOT/versions/r0.json" \
           --cache-control no-store $ENDPOINT_ARG
         aws s3 cp "$LATEST" "$S3_RENDERER_ROOT/latest.json" \
+          --cache-control no-store $ENDPOINT_ARG
+        aws s3 cp release/renderer-mainhash-inputs.json "$S3_RENDERER_ROOT/mainhash-inputs.json" \
           --cache-control no-store $ENDPOINT_ARG
         aws s3 cp /tmp/renderer-ota-base.json "s3://$S3_BUCKET/$CHANNEL/base.json" \
           --cache-control no-store $ENDPOINT_ARG

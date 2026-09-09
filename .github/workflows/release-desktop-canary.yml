@@ -391,6 +391,9 @@ jobs:
           pattern: release-*
           merge-multiple: true
 
+      - name: Validate platform renderer hashes
+        run: node apps/desktop/scripts/validateMainHash.mjs release release-macos-15 release-macos-15-intel release-windows-2025 release-ubuntu-latest
+
       - name: List downloaded artifacts
         run: ls -R release
 
