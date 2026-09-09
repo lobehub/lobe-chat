@@ -384,7 +384,7 @@
   "acceptance.workspace.searchScope": "已在载入的 {{count}} 条中搜索。",
   "acceptance.workspace.statusError": "状态更新失败",
   "acceptance.workspace.statusSuccess": "状态已更新",
-  "acceptance.workspace.title": "交付",
+  "acceptance.workspace.title": "验收",
   "actions.backToApp": "返回 {{name}}",
   "actions.cancel": "取消",
   "actions.delete": "删除",
