@@ -3,8 +3,6 @@ resolutionMode: highest
 dedupePeerDependents: true
 ignoreWorkspaceRootCheck: true
 enablePrePostScripts: true
-# ponytail: serialize builds while editor instances patch shared Lexical files; remove once upstream writes atomically.
-childConcurrency: 1
 
 publicHoistPattern:
   - '*@umijs/lint*'
