@@ -75,9 +75,10 @@ export interface AgentHookEvent {
   /**
    * Structured allowance context when the run was rejected for want of
    * spendable credits — which allowance ran out, how much it had left, and how
-   * much this request needed. Lets a consumer name the exhausted allowance and
-   * quote the numbers instead of rendering one generic "not enough credits"
-   * line for every scope.
+   * much this request needed. Lets a consumer name the exhausted allowance
+   * instead of rendering one generic "not enough credits" line for every
+   * scope. Consumers decide what is safe to show: the figures describe the
+   * billed allowance, which is not necessarily the recipient's own.
    */
   errorBudget?: ChatErrorBudgetContext;
   // Content

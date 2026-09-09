@@ -245,12 +245,6 @@ type SystemStrings = {
   dmRejectedAllowlist: string;
   dmRejectedDisabled: string;
   error: string;
-  /**
-   * Trailing line quoting the allowance that ran out. Both numbers are already
-   * formatted for display; the renderer omits the line entirely when either is
-   * unknown.
-   */
-  errorBudgetAmounts: (available: string, required: string) => string;
   errorExceededContextWindow: string;
   errorInvalidProviderAPIKey: string;
   errorCommandConnectionClosed: string;
@@ -345,7 +339,6 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     dmRejectedDisabled:
       "This bot isn't accepting direct messages. Please reach out by mentioning it in a shared channel or group instead.",
     error: '**Agent Execution Failed**',
-    errorBudgetAmounts: (available, required) => `Budget: ${available} left · ${required} needed.`,
     errorExceededContextWindow:
       "**Context window exceeded.**\nThe conversation is too long for this model. Send `/new` to start a fresh topic, or switch to a model with a larger context window in the agent's settings.",
     errorCommandConnectionClosed:
@@ -455,7 +448,6 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     dmRejectedAllowlist: '抱歉，您没有私信该机器人的权限。如需访问请联系机器人管理员。',
     dmRejectedDisabled: '该机器人不接受私信。请在共享频道或群组里 @它来联系。',
     error: '**Agent 执行失败**',
-    errorBudgetAmounts: (available, required) => `额度：剩余 ${available} · 本次需要 ${required}。`,
     errorExceededContextWindow:
       '**上下文已超出模型上限**\n当前对话长度超过了该模型的上下文窗口。可以发送 `/new` 开启新话题，或在 Agent 设置中切换到上下文更大的模型后重试。',
     errorCommandConnectionClosed:
@@ -614,60 +606,17 @@ const FALLBACK_ERROR_BY_ATTRIBUTION: Record<string, keyof SystemStrings> = {
  * member whose own workspace allowance is spent can top up all day without
  * unblocking the run, and a shared workspace pool is the admin's to refill.
  * Tags this map doesn't recognize keep the default copy.
+ *
+ * Only the *scope* is surfaced — never the figures. Runs triggered from a
+ * shared channel are billed to the bot owner's allowance (see
+ * `BotMessageRouter.registerHandlers`), so a reply that quoted
+ * `availableCredits` would publish the owner's balance to whoever mentioned
+ * the bot.
  */
 const BUDGET_SCOPE_ERROR = new Map<string, keyof SystemStrings>([
   ['workspace', 'errorInsufficientWorkspaceCredits'],
   ['workspace_member', 'errorInsufficientMemberBudget'],
 ]);
-
-/** The copy tiers that a budget amounts line belongs under. */
-const BUDGET_ERROR_KEYS = new Set<keyof SystemStrings>([
-  'errorInsufficientCredits',
-  'errorInsufficientMemberBudget',
-  'errorInsufficientWorkspaceCredits',
-]);
-
-/**
- * Format a credit amount the way the web app's balance chip does — `7.24M`
- * once past a whole unit, a plain integer below it — so the same number reads
- * the same in chat as on the website. A missing / non-finite / negative value
- * yields nothing rather than a figure the user can't act on.
- */
-const CREDIT_DISPLAY_UNIT = 1_000_000;
-
-// Digit grouping is pinned to en-US rather than the reply locale: every locale
-// this template ships uses the same thousands separator, and a bot reply should
-// not render the same balance differently than the website does.
-const groupDigits = new Intl.NumberFormat('en-US');
-
-const formatCredits = (credits: number | undefined): string | undefined => {
-  if (credits === undefined || !Number.isFinite(credits) || credits < 0) return undefined;
-
-  return credits >= CREDIT_DISPLAY_UNIT
-    ? `${(credits / CREDIT_DISPLAY_UNIT).toFixed(2)}M`
-    : groupDigits.format(Math.round(credits));
-};
-
-/**
- * Quote the allowance next to the budget copy. "You are out of credits" alone
- * leaves the user guessing whether the run was expensive or the allowance was
- * empty; the pair answers that in one line — and when the numbers contradict
- * the failure (plenty left, little needed) it points at an accounting bug
- * without anyone having to pull the trace.
- *
- * Both numbers or neither: a half-quoted allowance is noise.
- */
-const appendBudgetAmounts = (
-  value: string,
-  strings: SystemStrings,
-  budget: ChatErrorBudgetContext | undefined,
-): string => {
-  const available = formatCredits(budget?.availableCredits);
-  const required = formatCredits(budget?.requiredCredits);
-  if (!available || !required) return value;
-
-  return `${value}\n${strings.errorBudgetAmounts(available, required)}`;
-};
 
 /**
  * Append the Operation ID as a traceable footer so operators can still grep
@@ -739,10 +688,7 @@ export function renderAgentError(
   if (stringKey) {
     const value = strings[stringKey];
     if (typeof value === 'string') {
-      return appendOperationId(
-        BUDGET_ERROR_KEYS.has(stringKey) ? appendBudgetAmounts(value, strings, budget) : value,
-        operationId,
-      );
+      return appendOperationId(value, operationId);
     }
   }
 

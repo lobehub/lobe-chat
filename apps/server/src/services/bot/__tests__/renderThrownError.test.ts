@@ -51,7 +51,8 @@ describe('renderThrownAgentError', () => {
     );
 
     expect(out).toContain('Your budget in this workspace is used up');
-    expect(out).toContain('7.24M left');
+    expect(out).not.toContain('7.24M');
+    expect(out).not.toContain('7242747');
   });
 
   it('never leaks the raw error message into the reply', () => {

@@ -504,51 +504,25 @@ describe('replyTemplate', () => {
         ).toContain('Not enough credits');
       });
 
-      // Available far above required with a zero shortfall is exactly the shape
-      // the incident had: quoting it turns a 10-minute channel investigation
-      // into a glance.
-      it('quotes the allowance next to the copy, formatted like the web balance', () => {
-        const en = renderAgentError(
-          'InsufficientBudgetForModel',
-          undefined,
-          'op-1',
-          'en-US',
-          'user',
-          budget,
-        );
+      // Runs mentioned from a shared channel are billed to the bot owner, so the
+      // reply must name the scope without publishing the owner's balance to
+      // everyone in the channel.
+      it('never quotes the allowance figures, only the scope', () => {
+        for (const lng of ['en-US', 'zh-CN'] as const) {
+          const out = renderAgentError(
+            'InsufficientBudgetForModel',
+            undefined,
+            'op-1',
+            lng,
+            'user',
+            budget,
+          );
 
-        expect(en).toContain('Budget: 7.24M left · 197,391 needed.');
-
-        const zh = renderAgentError(
-          'InsufficientBudgetForModel',
-          undefined,
-          'op-1',
-          'zh-CN',
-          'user',
-          budget,
-        );
-
-        expect(zh).toContain('额度：剩余 7.24M · 本次需要 197,391。');
-      });
-
-      it('omits the amounts line unless both numbers are known', () => {
-        const partial = renderAgentError(
-          'InsufficientBudgetForModel',
-          undefined,
-          'op-1',
-          'en-US',
-          'user',
-          { budgetTypeAtError: 'workspace_member', requiredCredits: 197_391 },
-        );
-
-        expect(partial).toContain('Your budget in this workspace is used up');
-        expect(partial).not.toContain('Budget:');
-      });
-
-      it('leaves non-budget copy untouched', () => {
-        expect(
-          renderAgentError('NoAvailableProvider', undefined, 'op-1', 'en-US', 'user', budget),
-        ).not.toContain('Budget:');
+          expect(out).not.toContain('7.24M');
+          expect(out).not.toContain('7242747');
+          expect(out).not.toContain('197,391');
+          expect(out).not.toContain('197391');
+        }
       });
     });
 

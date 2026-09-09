@@ -89,7 +89,8 @@ export interface BotCallbackBody {
   /**
    * Which spending allowance ran out, and by how much, when the run failed on
    * an insufficient-credits code. Lets the reply name the exhausted allowance
-   * and quote its numbers instead of the generic personal-credits copy.
+   * instead of the generic personal-credits copy (the figures themselves are
+   * never rendered — they belong to the billed owner, not the recipient).
    * Forwarded verbatim from the agent lifecycle event.
    */
   errorBudget?: ChatErrorBudgetContext;
