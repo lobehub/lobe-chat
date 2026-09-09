@@ -1933,8 +1933,7 @@ export default {
   'goalDetail.unnamedRun': 'Untitled run',
   'goalDetail.viewPlan': 'View execution plan',
   'goalProcess.frontier.title': 'Current tasks',
-  'goalProcess.northStar.emptyHint':
-    'No measurable target declared yet — e.g. followers >= 10,000, or open security issues down to 0',
+  'goalProcess.northStar.emptyHint': 'No measurable target declared yet',
   'goalProcess.northStar.met': 'Met',
   'goalProcess.northStar.unmeasured':
     'Never measured — the clause counts as unmet until a value lands',
@@ -2122,6 +2121,10 @@ export default {
   'goalProcess.summary.notStarted': 'Not started yet',
   'goalProcess.summary.gateOpen': 'Waiting for your decision',
   'goalProcess.summary.gateResolved': 'Decided: {{option}}',
+  'goalProcess.manager.title': 'Main agent',
+  'goalProcess.manager.turns': 'Planning rounds: {{count}}',
+  'goalProcess.manager.pending': 'Waiting for the first run',
+  'goalProcess.manager.viewTrace': 'View supervision progress',
   'goalProcess.pause': 'Pause',
   'goalProcess.resume': 'Resume',
   'goalProcess.paused': 'Paused — no new work will start',

@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { PauseIcon, PlayIcon } from 'lucide-react';
+import { EyeIcon, PauseIcon, PlayIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -30,11 +30,19 @@ import { goalSelectors, useGoalStore } from '@/store/goal';
 
 import GoalChat from './GoalChat';
 import GoalDetailActions from './GoalDetailActions';
-import { formatSpan, formatUsd, goalStatusKey, summarizeGoalBudget } from './goalPresentation';
+import {
+  formatSpan,
+  formatUsd,
+  goalManagerConversation,
+  goalStatusKey,
+  summarizeGoalBudget,
+} from './goalPresentation';
 import GoalRequirement from './GoalRequirement';
 import GoalStatusGlyph from './GoalStatusGlyph';
+import { GoalSupervision } from './GoalSupervision';
 import NorthStarMetrics from './NorthStarMetrics';
 import ProcessControl from './ProcessControl';
+import { useGoalChatPanel } from './useGoalChatPanel';
 
 /**
  * The goal detail page. A goal is a Goal Graph — it owns its own decomposition
@@ -121,7 +129,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
 
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
   const currentViewType = useChatStore(chatPortalSelectors.currentViewType);
-  const [chatOpen, setChatOpen] = useState(true);
+  const chat = useGoalChatPanel(goalId, agentId);
   const openGoalMetric = useChatStore((s) => s.openGoalMetric);
   const clearPortalStack = useChatStore((s) => s.clearPortalStack);
 
@@ -199,14 +207,15 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
     );
 
   const { goal, nodes } = snapshot;
+  const managerConversation = goalManagerConversation(goal.config);
   const tasks = nodes.filter((node) => node.kind === 'task').length;
   const findings = nodes.filter((node) => node.kind === 'finding').length;
   const open = (metric: GoalMetricKind) => () => openGoalMetric(goalId, metric);
 
   // The panel hosts the goal conversation only when the goal has a
   // responsible agent; without one it is drill-down-only.
-  const panelExpandable = !!agentId;
-  const chatVisible = chatOpen && panelExpandable;
+  const panelExpandable = !!chat.agentId;
+  const chatVisible = chat.open && panelExpandable;
 
   const paused = goal.status === 'paused';
   // Pace control exists only while the coordinator loop is actually moving (or
@@ -266,22 +275,27 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
           }
           right={
             graphFullscreen ? undefined : (
-              /* Re-entry point for a collapsed panel: the GoalChat toolbar's
-                 close button (or a drag under the collapse threshold) hides
-                 the panel, and with `expandable={false}` on the panel itself
-                 this header button is the only way back. Hidden while a
-                 drill-down owns the panel — its header carries the close. */
-              <ToggleRightPanelButton
-                hideWhenExpanded
-                expand={showPortal || chatVisible}
-                onToggle={() => {
-                  if (showPortal) {
-                    clearPortalStack();
-                    return;
-                  }
-                  if (panelExpandable) setChatOpen(true);
-                }}
-              />
+              <Flexbox horizontal align={'center'} gap={8}>
+                {managerConversation && (
+                  <Button
+                    icon={EyeIcon}
+                    size={'small'}
+                    onClick={() => {
+                      clearPortalStack();
+                      chat.openSupervision(managerConversation);
+                    }}
+                  >
+                    {t('goalProcess.manager.viewTrace')}
+                  </Button>
+                )}
+                {panelExpandable && (
+                  <ToggleRightPanelButton
+                    hideWhenExpanded
+                    expand={showPortal || chatVisible}
+                    onToggle={() => chat.setOpen(true)}
+                  />
+                )}
+              </Flexbox>
             )
           }
         />
@@ -402,13 +416,27 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
         onSizeChange={(size) => updateWidth(size?.width)}
         onExpandChange={(next) => {
           if (!next) clearPortalStack();
-          setChatOpen(next);
+          chat.setOpen(next);
         }}
       >
         {graphFullscreen ? null : showPortal ? (
           <PortalContent />
-        ) : agentId ? (
-          <GoalChat agentId={agentId} goalId={goalId} onCollapse={() => setChatOpen(false)} />
+        ) : chat.agentId && chat.topicId ? (
+          <GoalSupervision
+            agentId={chat.agentId}
+            goalId={goalId}
+            key={`${goalId}:${chat.agentId}:${chat.request}`}
+            topicId={chat.topicId}
+            onCollapse={() => chat.setOpen(false)}
+          />
+        ) : chat.agentId ? (
+          <GoalChat
+            agentId={chat.agentId}
+            goalId={goalId}
+            initialTopicId={chat.topicId}
+            key={`${goalId}:${chat.agentId}:${chat.request}`}
+            onCollapse={() => chat.setOpen(false)}
+          />
         ) : null}
       </RightPanel>
     </Flexbox>

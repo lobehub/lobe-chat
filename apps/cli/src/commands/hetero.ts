@@ -990,6 +990,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
   // completion reason a server-ingest one does. Runs before the sink so a
   // failing server call still leaves a complete snapshot on disk.
   await traceRecorder.finalize({ error: finishError, result: runResult });
+  let finishDeliveryFailed = false;
 
   if (serverIngester && sink) {
     try {
@@ -1000,6 +1001,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
         sessionId,
       });
     } catch (err) {
+      finishDeliveryFailed = true;
       log.error('Failed to send heteroFinish:', err instanceof Error ? err.message : String(err));
     }
   }
@@ -1015,7 +1017,8 @@ const exec = async (options: ExecOptions): Promise<void> => {
   if (askMcpConfigPath) await unlink(askMcpConfigPath).catch(() => {});
 
   if (code !== null) {
-    const hasRunError = result.ingestError || (!result.cancelled && result.sawTerminalError);
+    const hasRunError =
+      finishDeliveryFailed || result.ingestError || (!result.cancelled && result.sawTerminalError);
     process.exit(hasRunError ? 1 : code);
   }
   if (signal === 'SIGINT') process.exit(130);

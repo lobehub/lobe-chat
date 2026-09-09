@@ -150,6 +150,26 @@ describe('hetero exec command', () => {
     }
   };
 
+  it('reports a failed CLI exit when terminal delivery is rejected', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle({ exitCode: 0 }));
+    mockHeteroFinishMutate.mockRejectedValue(
+      Object.assign(new Error('Denied'), { data: { code: 'UNAUTHORIZED' } }),
+    );
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'kimi-code',
+      '--prompt',
+      'hi',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-1',
+    ]);
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
   it('supports exactly the local agent descriptor types', () => {
     expect([...SUPPORTED_AGENT_TYPES].toSorted()).toEqual(
       HETEROGENEOUS_AGENT_CONFIGS.map(({ type }) => type).toSorted(),
