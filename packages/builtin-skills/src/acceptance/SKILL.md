@@ -277,6 +277,21 @@ sufficient description. This also applies when a text file is stored inline.
 Shared rules for every artifact — media types, provenance, file vs inline,
 safety — are in [evidence.md](references/evidence.md).
 
+## Keep checklist explanations brief
+
+Write each check's `observation` and inline explanation in the user's language,
+usually 1–3 short sentences: what was done, what happened, and any limitation
+needed to judge that outcome. Do not paste the execution report into the check.
+Omit repeated titles, verdict labels, SHA/port/ID headers, environment boilerplate,
+and round-history explanations. Put shared setup and revision details once in
+the round report; keep commands, traces, raw output, and detailed reasoning in
+separate evidence attachments. Briefly disclose a limitation in the check when
+it changes the verdict; concision must not hide missing verification.
+
+Example: “转派后，新 Agent 收到原对话上下文并创建了独立话题。刷新后消息仍保留。”
+For a failure, name the unmet outcome directly, without recounting the debugging
+process. Keep required evidence complete; shorten its presentation, not the work.
+
 ## Final handoff (mandatory)
 
 Before declaring the task done, prove coverage: for each check with
