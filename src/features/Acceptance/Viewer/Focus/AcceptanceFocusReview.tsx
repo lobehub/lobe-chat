@@ -164,9 +164,10 @@ const AcceptanceFocusReview = ({
   return (
     <div className={styles.layout}>
       <Flexbox className={styles.outline}>
-        {/* A phone nav bar is one 44px line, not a stack of 44px minimums —
-            padding on the row plus a 44px minimum on each control made the
-            header twice as tall as the content it introduces. */}
+        {/* The phone top line is a breadcrumb, not a nav bar: it introduces the
+            check and hands off to the outline. The row below it already owns
+            44px targets for stepping between checks, so stacking another
+            44px band here just pushed the check itself down the screen. */}
         <Flexbox
           align={md ? undefined : 'center'}
           flex={'none'}
@@ -177,13 +178,13 @@ const AcceptanceFocusReview = ({
         >
           <Button
             aria-label={t('acceptance.focus.back')}
-            icon={<Icon icon={ArrowLeft} />}
+            icon={<Icon icon={ArrowLeft} size={md ? undefined : 16} />}
             size={'small'}
             type={'text'}
             style={{
               alignSelf: 'flex-start',
-              minHeight: md ? undefined : 40,
-              minWidth: md ? undefined : 40,
+              minHeight: md ? undefined : 30,
+              minWidth: md ? undefined : 30,
             }}
             onClick={onBack}
           >
@@ -192,10 +193,15 @@ const AcceptanceFocusReview = ({
           {!md && (
             <Button
               aria-expanded={outlineOpen}
-              icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
+              icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} size={14} />}
               size={'small'}
-              style={{ minHeight: 40, textAlign: 'start' }}
               type={'text'}
+              style={{
+                fontSize: 13,
+                minHeight: 30,
+                paddingInline: 6,
+                textAlign: 'start',
+              }}
               onClick={() => setOutlineOpen((open) => !open)}
             >
               {t('acceptance.checks.title')} · {currentIndex + 1} / {orderedChecks.length}

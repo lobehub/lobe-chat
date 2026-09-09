@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Button, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Button, Segmented, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -131,13 +131,20 @@ export const MobileEvidenceReview = ({
             </Flexbox>
             <div className={styles.stage}>{image}</div>
             <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
-              <Button
-                aria-pressed={drawing}
-                style={{ minHeight: 44 }}
-                onClick={() => onStep('toggle-draw')}
-              >
-                {t(drawing ? 'acceptance.review.browseImage' : 'acceptance.review.drawRegion')}
-              </Button>
+              {/* A mode switch, not an action button. The old single button was
+                  labelled with the mode it would LEAVE, so it read as a stray
+                  box whose 44px slab said nothing about which mode was on. */}
+              <Segmented
+                size={'small'}
+                value={drawing ? 'draw' : 'browse'}
+                options={[
+                  { label: t('acceptance.review.browseImage'), value: 'browse' },
+                  { label: t('acceptance.review.drawRegion'), value: 'draw' },
+                ]}
+                onChange={(value) => {
+                  if ((value === 'draw') !== drawing) onStep('toggle-draw');
+                }}
+              />
               <Flexbox flex={1} />
               <ActionIcon
                 aria-label={t('acceptance.review.zoomOut')}
