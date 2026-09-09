@@ -15,7 +15,10 @@ import { MessageModel } from '@/database/models/message';
 import { recomputeTopicUsage } from '@/database/models/topicUsage';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import { type LobeChatDatabase } from '@/database/type';
-import { formatErrorForState } from '@/server/modules/AgentRuntime/formatErrorForState';
+import {
+  formatErrorForState,
+  readErrorBudgetContext,
+} from '@/server/modules/AgentRuntime/formatErrorForState';
 import { buildFinalSnapshotKey } from '@/server/modules/AgentTracing';
 import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { toAgentSignalTraceEvents } from '@/server/services/agentSignal/observability/traceEvents';
@@ -1148,9 +1151,10 @@ export class CompletionLifecycle {
       : undefined;
 
     // On the error path, normalize the runtime error once so the lifecycle
-    // event carries the stable taxonomy fields (errorType + attribution). Bot
-    // reply renderers switch on these to surface a perceivable cause (network /
-    // quota / provider outage …) instead of an opaque Operation ID. Mirrors the
+    // event carries the stable taxonomy fields (errorType + attribution + the
+    // budget context an admission gate attached). Bot reply renderers switch on
+    // these to surface a perceivable cause (network / quota / provider outage /
+    // which allowance ran out) instead of an opaque Operation ID. Mirrors the
     // same normalization dispatchHooks runs before writing the error onto the
     // assistant message row.
     const formattedError = state?.error ? formatErrorForState(state.error) : undefined;
@@ -1163,6 +1167,7 @@ export class CompletionLifecycle {
         cost: state?.cost?.total,
         duration,
         errorAttribution: formattedError?.attribution,
+        errorBudget: readErrorBudgetContext(formattedError),
         errorDetail: state?.error,
         errorMessage: this.extractErrorMessage(state?.error) || String(state?.error || ''),
         errorType: formattedError?.type === undefined ? undefined : String(formattedError.type),

@@ -414,6 +414,144 @@ describe('replyTemplate', () => {
       expect(zh).not.toContain('请检查你的输入');
     });
 
+    // The admission gate emits one of three codes for the same "the allowance
+    // can't cover this" outcome; the plan-limit pair used to fall to the `user`
+    // tier and tell the user to check their input (LOBE-13726).
+    it('gives every budget-exhaustion code the credits copy, not "check your input"', () => {
+      for (const code of ['FreePlanLimit', 'InsufficientBudgetForModel', 'SubscriptionPlanLimit']) {
+        const out = renderAgentError(code, 'Budget exceeded', 'op-1', 'en-US', 'user');
+
+        expect(out).toContain('Not enough credits');
+        expect(out).not.toContain("couldn't be completed");
+      }
+    });
+
+    // LOBE-13726: a workspace member's own allowance ran out and the reply told
+    // them to top up — which does nothing for that allowance — while the numbers
+    // that would have identified the real fault stayed in the trace.
+    describe('budget scope', () => {
+      const budget = {
+        availableCredits: 7_242_747,
+        budgetTypeAtError: 'workspace_member',
+        requiredCredits: 197_391,
+        shortfallCredits: 0,
+      };
+
+      it('names the member allowance instead of telling them to top up', () => {
+        const en = renderAgentError(
+          'InsufficientBudgetForModel',
+          'Workspace budget exceeded',
+          'op-1',
+          'en-US',
+          'user',
+          budget,
+        );
+
+        expect(en).toContain('Your budget in this workspace is used up');
+        expect(en).not.toContain('Not enough credits');
+        expect(en).toContain('Operation ID: `op-1`');
+
+        const zh = renderAgentError(
+          'InsufficientBudgetForModel',
+          'Workspace budget exceeded',
+          'op-1',
+          'zh-CN',
+          'user',
+          budget,
+        );
+
+        expect(zh).toContain('你在该工作区的预算已用尽');
+        expect(zh).not.toContain('积分余额不足');
+      });
+
+      it('names the shared workspace pool for a workspace-scoped allowance', () => {
+        const en = renderAgentError(
+          'InsufficientBudgetForModel',
+          undefined,
+          'op-1',
+          'en-US',
+          'user',
+          { ...budget, budgetTypeAtError: 'workspace' },
+        );
+
+        expect(en).toContain('Workspace credits exhausted');
+
+        const zh = renderAgentError(
+          'InsufficientBudgetForModel',
+          undefined,
+          'op-1',
+          'zh-CN',
+          'user',
+          { ...budget, budgetTypeAtError: 'workspace' },
+        );
+
+        expect(zh).toContain('工作区额度已用尽');
+      });
+
+      it('keeps the personal credits copy for an unrecognized or absent scope', () => {
+        expect(
+          renderAgentError('InsufficientBudgetForModel', undefined, 'op-1', 'en-US', 'user', {
+            ...budget,
+            budgetTypeAtError: 'some_new_scope',
+          }),
+        ).toContain('Not enough credits');
+
+        expect(
+          renderAgentError('InsufficientBudgetForModel', undefined, 'op-1', 'en-US', 'user', {
+            availableCredits: 12,
+            requiredCredits: 34,
+          }),
+        ).toContain('Not enough credits');
+      });
+
+      // Available far above required with a zero shortfall is exactly the shape
+      // the incident had: quoting it turns a 10-minute channel investigation
+      // into a glance.
+      it('quotes the allowance next to the copy, formatted like the web balance', () => {
+        const en = renderAgentError(
+          'InsufficientBudgetForModel',
+          undefined,
+          'op-1',
+          'en-US',
+          'user',
+          budget,
+        );
+
+        expect(en).toContain('Budget: 7.24M left · 197,391 needed.');
+
+        const zh = renderAgentError(
+          'InsufficientBudgetForModel',
+          undefined,
+          'op-1',
+          'zh-CN',
+          'user',
+          budget,
+        );
+
+        expect(zh).toContain('额度：剩余 7.24M · 本次需要 197,391。');
+      });
+
+      it('omits the amounts line unless both numbers are known', () => {
+        const partial = renderAgentError(
+          'InsufficientBudgetForModel',
+          undefined,
+          'op-1',
+          'en-US',
+          'user',
+          { budgetTypeAtError: 'workspace_member', requiredCredits: 197_391 },
+        );
+
+        expect(partial).toContain('Your budget in this workspace is used up');
+        expect(partial).not.toContain('Budget:');
+      });
+
+      it('leaves non-budget copy untouched', () => {
+        expect(
+          renderAgentError('NoAvailableProvider', undefined, 'op-1', 'en-US', 'user', budget),
+        ).not.toContain('Budget:');
+      });
+    });
+
     it('maps both QuotaLimitReached and InsufficientQuota to the same quota copy', () => {
       const a = renderAgentError('QuotaLimitReached', undefined, 'op-1');
       const b = renderAgentError('InsufficientQuota', undefined, 'op-1');

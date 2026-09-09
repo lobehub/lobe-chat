@@ -1,3 +1,5 @@
+import type { ChatErrorBudgetContext } from '@lobechat/types';
+
 import type { StepPresentationData } from '../agentRuntime/types';
 import { getExtremeAck } from './ackPhrases';
 // Import from the leaf modules (`const` / `utils`) instead of the
@@ -243,6 +245,12 @@ type SystemStrings = {
   dmRejectedAllowlist: string;
   dmRejectedDisabled: string;
   error: string;
+  /**
+   * Trailing line quoting the allowance that ran out. Both numbers are already
+   * formatted for display; the renderer omits the line entirely when either is
+   * unknown.
+   */
+  errorBudgetAmounts: (available: string, required: string) => string;
   errorExceededContextWindow: string;
   errorInvalidProviderAPIKey: string;
   errorCommandConnectionClosed: string;
@@ -251,6 +259,8 @@ type SystemStrings = {
   errorModelRefusal: string;
   errorHarnessInternal: string;
   errorInsufficientCredits: string;
+  errorInsufficientMemberBudget: string;
+  errorInsufficientWorkspaceCredits: string;
   errorLocationNotSupported: string;
   errorModelNotFound: string;
   errorNoAvailableProvider: string;
@@ -335,6 +345,7 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     dmRejectedDisabled:
       "This bot isn't accepting direct messages. Please reach out by mentioning it in a shared channel or group instead.",
     error: '**Agent Execution Failed**',
+    errorBudgetAmounts: (available, required) => `Budget: ${available} left · ${required} needed.`,
     errorExceededContextWindow:
       "**Context window exceeded.**\nThe conversation is too long for this model. Send `/new` to start a fresh topic, or switch to a model with a larger context window in the agent's settings.",
     errorCommandConnectionClosed:
@@ -349,6 +360,10 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       '**Something went wrong on our side.**\nThe agent run hit an internal error, which has been logged. Please try again — if it keeps happening, share the Operation ID below with support.',
     errorInsufficientCredits:
       "**Not enough credits.**\nYour remaining credits can't cover this model's estimated cost. Please top up credits or upgrade your plan on the LobeHub website, or switch to a less expensive model in the agent's settings.",
+    errorInsufficientMemberBudget:
+      "**Your budget in this workspace is used up.**\nYour own spending allowance in this workspace can't cover this run's estimated cost — topping up personally won't change it. Ask a workspace admin to raise your member budget, or switch to a less expensive model in the agent's settings.",
+    errorInsufficientWorkspaceCredits:
+      "**Workspace credits exhausted.**\nThis workspace's shared credits can't cover this run's estimated cost. Ask a workspace admin to top up or upgrade the workspace, or switch to a less expensive model in the agent's settings.",
     errorInvalidProviderAPIKey:
       "**Invalid or missing API key.**\nThe configured model provider rejected its API key. Please verify the key in the agent's provider settings (it may be expired, revoked, or mistyped) and try again.",
     errorLocationNotSupported:
@@ -440,6 +455,7 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     dmRejectedAllowlist: '抱歉，您没有私信该机器人的权限。如需访问请联系机器人管理员。',
     dmRejectedDisabled: '该机器人不接受私信。请在共享频道或群组里 @它来联系。',
     error: '**Agent 执行失败**',
+    errorBudgetAmounts: (available, required) => `额度：剩余 ${available} · 本次需要 ${required}。`,
     errorExceededContextWindow:
       '**上下文已超出模型上限**\n当前对话长度超过了该模型的上下文窗口。可以发送 `/new` 开启新话题，或在 Agent 设置中切换到上下文更大的模型后重试。',
     errorCommandConnectionClosed:
@@ -454,6 +470,10 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       '**我们这边出了点问题**\nAgent 执行遇到内部错误，已记录。请重试；如果持续出现，请把下方 Operation ID 提供给支持人员。',
     errorInsufficientCredits:
       '**积分余额不足**\n剩余积分不足以覆盖本次模型调用的预估费用。请前往 LobeHub 网页端充值积分或升级订阅计划，或在 Agent 设置中切换到费用更低的模型。',
+    errorInsufficientMemberBudget:
+      '**你在该工作区的预算已用尽**\n你在当前工作区的个人预算不足以覆盖本次运行的预估费用，个人充值不会改变该预算。请联系工作区管理员提高你的成员预算，或在 Agent 设置中切换到费用更低的模型。',
+    errorInsufficientWorkspaceCredits:
+      '**工作区额度已用尽**\n当前工作区的共享额度不足以覆盖本次运行的预估费用。请联系工作区管理员充值或升级工作区，或在 Agent 设置中切换到费用更低的模型。',
     errorInvalidProviderAPIKey:
       '**API Key 无效或缺失**\n所配置的模型 Provider 拒绝了 API Key，可能已过期、被吊销或填写错误。请到 Agent 的 Provider 设置中检查并更新 API Key 后重试。',
     errorLocationNotSupported:
@@ -533,9 +553,16 @@ const FRIENDLY_ERROR_BY_TYPE: Record<string, keyof SystemStrings> = {
   // ── user-fixable config / input (attribution: user) ──
   ContentModeration: 'errorContentModeration',
   ExceededContextWindow: 'errorExceededContextWindow',
-  // Cloud-managed credits: balance is positive but below the model's estimated
-  // cost, so the fix is topping up / upgrading — not editing the input.
+  // Managed credits: the allowance ran out or can't cover the model's estimated
+  // cost, so the fix is topping up / upgrading — not editing the input. All
+  // three codes come out of the same admission gate (which one depends on the
+  // plan and on whether the run could be priced upfront), so they share copy;
+  // `budget` then refines it by the allowance that actually ran out. Without
+  // them here the plan-limit pair fell to the `user` tier's "check your input",
+  // which is not what happened at all.
+  FreePlanLimit: 'errorInsufficientCredits',
   InsufficientBudgetForModel: 'errorInsufficientCredits',
+  SubscriptionPlanLimit: 'errorInsufficientCredits',
   InsufficientQuota: 'errorQuotaLimitReached',
   InvalidProviderAPIKey: 'errorInvalidProviderAPIKey',
   LocationNotSupportError: 'errorLocationNotSupported',
@@ -579,6 +606,70 @@ const FALLBACK_ERROR_BY_ATTRIBUTION: Record<string, keyof SystemStrings> = {
 };
 
 /**
+ * Refine the insufficient-credits copy by the allowance that actually ran out,
+ * as named by `ChatErrorBudgetContext['budgetTypeAtError']`.
+ *
+ * The default copy tells the user to top up or upgrade, which is wrong — and
+ * actively misleading — for an allowance that isn't theirs to pay for: a
+ * member whose own workspace allowance is spent can top up all day without
+ * unblocking the run, and a shared workspace pool is the admin's to refill.
+ * Tags this map doesn't recognize keep the default copy.
+ */
+const BUDGET_SCOPE_ERROR = new Map<string, keyof SystemStrings>([
+  ['workspace', 'errorInsufficientWorkspaceCredits'],
+  ['workspace_member', 'errorInsufficientMemberBudget'],
+]);
+
+/** The copy tiers that a budget amounts line belongs under. */
+const BUDGET_ERROR_KEYS = new Set<keyof SystemStrings>([
+  'errorInsufficientCredits',
+  'errorInsufficientMemberBudget',
+  'errorInsufficientWorkspaceCredits',
+]);
+
+/**
+ * Format a credit amount the way the web app's balance chip does — `7.24M`
+ * once past a whole unit, a plain integer below it — so the same number reads
+ * the same in chat as on the website. A missing / non-finite / negative value
+ * yields nothing rather than a figure the user can't act on.
+ */
+const CREDIT_DISPLAY_UNIT = 1_000_000;
+
+// Digit grouping is pinned to en-US rather than the reply locale: every locale
+// this template ships uses the same thousands separator, and a bot reply should
+// not render the same balance differently than the website does.
+const groupDigits = new Intl.NumberFormat('en-US');
+
+const formatCredits = (credits: number | undefined): string | undefined => {
+  if (credits === undefined || !Number.isFinite(credits) || credits < 0) return undefined;
+
+  return credits >= CREDIT_DISPLAY_UNIT
+    ? `${(credits / CREDIT_DISPLAY_UNIT).toFixed(2)}M`
+    : groupDigits.format(Math.round(credits));
+};
+
+/**
+ * Quote the allowance next to the budget copy. "You are out of credits" alone
+ * leaves the user guessing whether the run was expensive or the allowance was
+ * empty; the pair answers that in one line — and when the numbers contradict
+ * the failure (plenty left, little needed) it points at an accounting bug
+ * without anyone having to pull the trace.
+ *
+ * Both numbers or neither: a half-quoted allowance is noise.
+ */
+const appendBudgetAmounts = (
+  value: string,
+  strings: SystemStrings,
+  budget: ChatErrorBudgetContext | undefined,
+): string => {
+  const available = formatCredits(budget?.availableCredits);
+  const required = formatCredits(budget?.requiredCredits);
+  if (!available || !required) return value;
+
+  return `${value}\n${strings.errorBudgetAmounts(available, required)}`;
+};
+
+/**
  * Append the Operation ID as a traceable footer so operators can still grep
  * logs for the failure even when the user-facing copy is a friendly, actionable
  * message rather than the raw "Operation ID" line.
@@ -613,6 +704,8 @@ const isCommandConnectionClosedError = (
  *
  * 1. **Precise** — switch on the stable `errorType` code (from
  *    `AgentRuntimeError.chat`) for copy tailored to that exact failure mode.
+ *    An insufficient-credits code is refined once more by `budget`, which
+ *    names *which* allowance ran out (see {@link BUDGET_SCOPE_ERROR}).
  * 2. **Attribution** — when the code is unknown, fall back to a message keyed
  *    on `attribution` (network / provider / harness / user) so the user still
  *    learns who owns the failure and whether to retry.
@@ -628,6 +721,7 @@ export function renderAgentError(
   operationId: string | undefined,
   lng?: BotReplyLocale,
   attribution?: string,
+  budget?: ChatErrorBudgetContext,
 ): string {
   const strings = getSystemStrings(lng);
 
@@ -635,13 +729,20 @@ export function renderAgentError(
     return appendOperationId(strings.errorCommandConnectionClosed, operationId);
   }
 
+  const friendlyKey = errorType ? FRIENDLY_ERROR_BY_TYPE[errorType] : undefined;
   const stringKey =
-    (errorType ? FRIENDLY_ERROR_BY_TYPE[errorType] : undefined) ??
+    (friendlyKey === 'errorInsufficientCredits' && budget?.budgetTypeAtError
+      ? BUDGET_SCOPE_ERROR.get(budget.budgetTypeAtError)
+      : undefined) ??
+    friendlyKey ??
     (attribution ? FALLBACK_ERROR_BY_ATTRIBUTION[attribution] : undefined);
   if (stringKey) {
     const value = strings[stringKey];
     if (typeof value === 'string') {
-      return appendOperationId(value, operationId);
+      return appendOperationId(
+        BUDGET_ERROR_KEYS.has(stringKey) ? appendBudgetAmounts(value, strings, budget) : value,
+        operationId,
+      );
     }
   }
 

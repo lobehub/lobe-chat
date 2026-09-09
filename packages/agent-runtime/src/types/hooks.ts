@@ -1,3 +1,5 @@
+import type { ChatErrorBudgetContext } from '@lobechat/types';
+
 import type { ToolRunResult } from '../transport/tool';
 
 /**
@@ -70,6 +72,14 @@ export interface AgentHookEvent {
    * prominent) without re-deriving the error spec themselves.
    */
   errorAttribution?: string;
+  /**
+   * Structured allowance context when the run was rejected for want of
+   * spendable credits — which allowance ran out, how much it had left, and how
+   * much this request needed. Lets a consumer name the exhausted allowance and
+   * quote the numbers instead of rendering one generic "not enough credits"
+   * line for every scope.
+   */
+  errorBudget?: ChatErrorBudgetContext;
   // Content
   errorDetail?: string;
 
