@@ -336,5 +336,4 @@ describe('path helpers', () => {
     expect(collectCssResourceHrefs(pathological)).toEqual(['late.png']);
     expect(Date.now() - started).toBeLessThan(1000);
   });
-
 });

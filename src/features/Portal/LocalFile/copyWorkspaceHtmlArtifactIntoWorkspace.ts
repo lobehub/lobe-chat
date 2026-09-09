@@ -9,7 +9,7 @@ import path from 'path-browserify-esm';
 export interface CopyWorkspaceHtmlArtifactResult {
   entryPath: string;
   failed: EscapedResourceRef[];
-  htmlContent: string;
+  htmlContent?: string;
   targetDirectory: string;
 }
 
@@ -22,7 +22,7 @@ export const copyWorkspaceHtmlArtifactIntoWorkspace = async ({
 }: {
   copyFile: (from: string, to: string) => Promise<void>;
   escaped: EscapedResourceRef[];
-  htmlContent: string;
+  htmlContent?: string;
   htmlFilePath: string;
   workingDirectory: string;
 }): Promise<CopyWorkspaceHtmlArtifactResult> => {
@@ -40,8 +40,7 @@ export const copyWorkspaceHtmlArtifactIntoWorkspace = async ({
     const relativePath = pathApi.relative(htmlDirectory, ref.absolutePath);
     const keepsLayout =
       relativePath !== '' &&
-      relativePath !== '..' &&
-      !relativePath.startsWith(`..${pathApi.sep}`) &&
+      relativePath.split(/[\\/]/, 1)[0] !== '..' &&
       !pathApi.isAbsolute(relativePath);
     const targetRelativePath = keepsLayout
       ? relativePath
@@ -53,7 +52,7 @@ export const copyWorkspaceHtmlArtifactIntoWorkspace = async ({
 
     try {
       await copyFile(ref.absolutePath, pathApi.join(targetDirectory, targetRelativePath));
-      if (!keepsLayout) {
+      if (!keepsLayout && copiedHtml !== undefined) {
         const suffix = ref.href.match(/[?#].*$/u)?.[0] ?? '';
         copiedHtml = replaceHrefToken(
           copiedHtml,

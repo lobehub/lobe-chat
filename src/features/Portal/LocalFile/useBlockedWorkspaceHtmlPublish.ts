@@ -1,5 +1,6 @@
 import type { EscapedResourceRef } from '@lobechat/html-artifact';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
+import debug from 'debug';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +19,8 @@ import type {
 } from './workspaceHtmlArtifact';
 
 type OutsideWorkspacePlan = Extract<WorkspaceHtmlPublishPlan, { blocked: 'outside-workspace' }>;
+
+const log = debug('lobe-client:workspace-html-publish');
 
 export interface BlockedWorkspaceHtmlPublishInput {
   agentId?: string | null;
@@ -58,7 +61,7 @@ export const useBlockedWorkspaceHtmlPublish = ({
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<EscapedResourceRef[]>([]);
   const htmlEntry = plan.gathered.files.find((file) => file.path === plan.gathered.entryPath);
-  const htmlContent = htmlEntry?.encoding === 'utf8' ? htmlEntry.content : '';
+  const htmlContent = htmlEntry?.encoding === 'utf8' ? htmlEntry.content : undefined;
 
   const handleForceChange = (checked: boolean) => {
     if (!checked) {
@@ -103,9 +106,16 @@ export const useBlockedWorkspaceHtmlPublish = ({
   const prepareNext = async (input: Parameters<typeof prepareWorkspaceHtmlPublish>[0]) => {
     const next = await prepareWorkspaceHtmlPublish(input);
     if ('blocked' in next) {
-      notifyWorkspaceHtmlPublishBlocked(next);
       if (next.blocked === 'outside-workspace') {
-        toast.error(t('workingPanel.localFile.publish.failed'));
+        log(
+          'Prepared page still references paths outside the workspace: %O',
+          next.escaped.map((item) => item.absolutePath),
+        );
+        toast.error(
+          t('workingPanel.localFile.publish.outsideWorkspace.stillBlocked', { ns: 'chat' }),
+        );
+      } else {
+        notifyWorkspaceHtmlPublishBlocked(next);
       }
       return;
     }
@@ -149,8 +159,11 @@ export const useBlockedWorkspaceHtmlPublish = ({
         workingDirectory,
       });
       if (ready) openConfirm(ready, copied.targetDirectory);
-    } catch {
-      setFailed([{ absolutePath: filePath, href: filePath }]);
+    } catch (error) {
+      log('Failed to copy workspace HTML entry %s: %O', filePath, error);
+      toast.error(
+        t('workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry', { ns: 'chat' }),
+      );
     } finally {
       setBusy(false);
     }

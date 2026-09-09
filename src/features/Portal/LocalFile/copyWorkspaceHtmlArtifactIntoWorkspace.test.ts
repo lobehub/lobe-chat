@@ -46,7 +46,7 @@ describe('copyWorkspaceHtmlArtifactIntoWorkspace', () => {
     expect(result.htmlContent).toBe(`<html><img src="${relativeTarget}"></html>`);
   });
 
-  it('uses the same target when a temporary parent directory changes', async () => {
+  it('keeps external entry identifiers distinct and canonical', async () => {
     const input = {
       copyFile: vi.fn().mockResolvedValue(undefined),
       escaped: [],
@@ -54,16 +54,42 @@ describe('copyWorkspaceHtmlArtifactIntoWorkspace', () => {
       workingDirectory: '/project',
     };
 
-    const first = await copyWorkspaceHtmlArtifactIntoWorkspace({
+    const siteA = await copyWorkspaceHtmlArtifactIntoWorkspace({
       ...input,
-      htmlFilePath: '/tmp/random-session-a/site/index.html',
+      htmlFilePath: '/tmp/site-a/index.html',
     });
-    const second = await copyWorkspaceHtmlArtifactIntoWorkspace({
+    const siteARepeat = await copyWorkspaceHtmlArtifactIntoWorkspace({
       ...input,
-      htmlFilePath: '/tmp/random-session-b/site/index.html',
+      htmlFilePath: '/tmp/site-a/index.html',
+    });
+    const privateSiteA = await copyWorkspaceHtmlArtifactIntoWorkspace({
+      ...input,
+      htmlFilePath: '/private/tmp/site-a/index.html',
+    });
+    const siteB = await copyWorkspaceHtmlArtifactIntoWorkspace({
+      ...input,
+      htmlFilePath: '/tmp/site-b/index.html',
     });
 
-    expect(first.targetDirectory).toBe(second.targetDirectory);
+    expect(siteA.targetDirectory).toBe(siteARepeat.targetDirectory);
+    expect(siteA.targetDirectory).toBe(privateSiteA.targetDirectory);
+    expect(siteA.targetDirectory).not.toBe(siteB.targetDirectory);
+  });
+
+  it('moves parent escapes with mixed separators under __external__', async () => {
+    const copyFile = vi.fn().mockResolvedValue(undefined);
+    const source = '/tmp/site\\nested\\..\\shared\\logo.png';
+
+    const result = await copyWorkspaceHtmlArtifactIntoWorkspace({
+      copyFile,
+      escaped: [escaped(source, '..\\shared\\logo.png')],
+      htmlContent: '<html><img src="..\\shared\\logo.png"></html>',
+      htmlFilePath: '/tmp/site\\nested/index.html',
+      workingDirectory: '/project',
+    });
+
+    expect(copyFile.mock.calls[1][1]).toContain('/__external__/');
+    expect(result.htmlContent).toContain('__external__/');
   });
 
   it('returns resource copy failures without dropping successful copies', async () => {

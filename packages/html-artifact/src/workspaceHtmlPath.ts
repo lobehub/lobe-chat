@@ -182,14 +182,17 @@ export const resolveLocalResourceHref = ({
   return { absolutePath: resolvedPath, href, kind: 'resolved' };
 };
 
-export const createWorkspaceHtmlArtifactIdentifier = (relativePath: string): string => {
+export const createWorkspaceHtmlArtifactIdentifier = (
+  relativePath: string,
+  digestPath = relativePath,
+): string => {
   const normalized = relativePath.replaceAll('\\', '/').replace(/^\/+/u, '');
   const slug = normalized
     .replaceAll(/[^a-z0-9]+/gi, '-')
     .replaceAll(/^-+|-+$/g, '')
     .toLowerCase()
     .slice(0, 48);
-  const digest = sha256(normalized).slice(0, 10);
+  const digest = sha256(digestPath.replaceAll('\\', '/')).slice(0, 10);
 
   return `workspace-html-${slug || 'page'}-${digest}`;
 };
@@ -198,13 +201,16 @@ export const workspaceHtmlArtifactIdentifierForFile = (
   filePath: string,
   workingDirectory: string,
 ): string => {
+  const absolutePath = toWorkspaceAbsolutePath(filePath, workingDirectory);
   const relativePath =
-    toWorkspaceRelativePath(
-      toWorkspaceAbsolutePath(filePath, workingDirectory),
-      workingDirectory,
-    ) ||
+    toWorkspaceRelativePath(absolutePath, workingDirectory) ||
     (stripTrailingSlash(toSlashPath(filePath)).split('/').at(-1) ?? filePath);
-  return createWorkspaceHtmlArtifactIdentifier(relativePath);
+  return createWorkspaceHtmlArtifactIdentifier(
+    relativePath,
+    isPathInsideWorkspace(absolutePath, workingDirectory)
+      ? relativePath
+      : canonicalizeWorkspacePath(absolutePath),
+  );
 };
 
 export { parentDirectory };

@@ -6,19 +6,27 @@ import { useBlockedWorkspaceHtmlPublish } from './useBlockedWorkspaceHtmlPublish
 const mocks = vi.hoisted(() => ({
   copy: vi.fn(),
   confirmModal: vi.fn(),
+  debugLog: vi.fn(),
   notifyBlocked: vi.fn(),
   openConfirm: vi.fn(),
   prepare: vi.fn(),
   publishPrepared: vi.fn(),
+  toastError: vi.fn(),
+  translate: vi.fn((key: string, _options?: Record<string, unknown>) => key),
 }));
+
+vi.mock('debug', () => ({ default: () => mocks.debugLog }));
 
 vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   confirmModal: (...args: unknown[]) => mocks.confirmModal(...args),
+  toast: { error: (...args: unknown[]) => mocks.toastError(...args) },
 }));
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string, options?: Record<string, unknown>) => mocks.translate(key, options),
+  }),
 }));
 vi.mock('./copyWorkspaceHtmlArtifactIntoWorkspace', () => ({
   copyWorkspaceHtmlArtifactIntoWorkspace: (...args: unknown[]) => mocks.copy(...args),
@@ -141,5 +149,65 @@ describe('useBlockedWorkspaceHtmlPublish', () => {
       }),
     );
     expect(mocks.openConfirm).toHaveBeenCalledOnce();
+  });
+
+  it('lets prepare reload a non-utf8 entry instead of publishing empty HTML', async () => {
+    mocks.prepare.mockResolvedValue(ready);
+    const nonUtf8Input = {
+      ...input,
+      plan: {
+        ...input.plan,
+        gathered: {
+          entryPath: 'index.html',
+          files: [
+            {
+              content: 'PGh0bWw+PC9odG1sPg==',
+              contentType: 'text/html',
+              encoding: 'base64' as const,
+              path: 'index.html',
+            },
+          ],
+        } as never,
+      },
+    };
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(nonUtf8Input));
+
+    act(() => result.current.handleForceChange(true));
+    act(() => mocks.confirmModal.mock.calls[0][0].onOk());
+    await act(() => result.current.handleContinue());
+
+    expect(mocks.prepare).toHaveBeenCalledWith(expect.objectContaining({ content: undefined }));
+  });
+
+  it('keeps an entry-copy failure retryable and out of escaped failures', async () => {
+    mocks.copy.mockRejectedValue(new Error('entry gone'));
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    await act(() => result.current.handleContinue());
+
+    expect(result.current.failed).toEqual([]);
+    expect(mocks.toastError).toHaveBeenCalledOnce();
+    expect(mocks.translate).toHaveBeenCalledWith(
+      'workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry',
+      { ns: 'chat' },
+    );
+
+    await act(() => result.current.handleContinue());
+    expect(mocks.copy).toHaveBeenCalledTimes(2);
+  });
+
+  it('explains when a second prepare is still blocked outside the workspace', async () => {
+    mocks.prepare.mockResolvedValue(input.plan);
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    act(() => result.current.handleForceChange(true));
+    act(() => mocks.confirmModal.mock.calls[0][0].onOk());
+    await act(() => result.current.handleContinue());
+
+    expect(mocks.translate).toHaveBeenCalledWith(
+      'workingPanel.localFile.publish.outsideWorkspace.stillBlocked',
+      { ns: 'chat' },
+    );
+    expect(mocks.debugLog).toHaveBeenCalledWith(expect.any(String), ['/tmp/site/logo.png']);
   });
 });

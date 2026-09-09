@@ -2770,10 +2770,16 @@ export default {
   'workingPanel.localFile.publish.outsideWorkspace.copyAction': 'Copy to workspace and publish',
   'workingPanel.localFile.publish.outsideWorkspace.copyFailed':
     'Could not copy these files: {{list}}',
-  'workingPanel.localFile.publish.outsideWorkspace.copyHint':
+  'workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry':
+    'Could not copy the page file. Please try again.',
+  'workingPanel.localFile.publish.outsideWorkspace.copyHint_one':
+    'The page and its 1 external file will be copied to {{dir}} in this workspace and published from there.',
+  'workingPanel.localFile.publish.outsideWorkspace.copyHint_other':
     'The page and its {{count}} external files will be copied to {{dir}} in this workspace and published from there.',
   'workingPanel.localFile.publish.outsideWorkspace.copying': 'Copying files…',
-  'workingPanel.localFile.publish.outsideWorkspace.description':
+  'workingPanel.localFile.publish.outsideWorkspace.description_one':
+    'This page references 1 file outside the current workspace. That file would stop working after publish.',
+  'workingPanel.localFile.publish.outsideWorkspace.description_other':
     'This page references {{count}} files outside the current workspace. Those files would stop working after publish.',
   'workingPanel.localFile.publish.outsideWorkspace.forceAction':
     'Publish anyway (include files outside the workspace)',
@@ -2781,6 +2787,8 @@ export default {
     'This publish will include content read from outside the workspace. Use only with files you trust.',
   'workingPanel.localFile.publish.outsideWorkspace.forceLabel':
     'Still read and pack these files outside the workspace',
+  'workingPanel.localFile.publish.outsideWorkspace.stillBlocked':
+    'The copied page still references files outside the workspace, so it cannot be published yet.',
   'workingPanel.localFile.publish.outsideWorkspace.title': 'Cannot publish this page directly',
   'workingPanel.localFile.publish.outsideWorkspace.workspace': 'Current workspace: {{path}}',
   'workingPanel.localFile.publish.remotes':
