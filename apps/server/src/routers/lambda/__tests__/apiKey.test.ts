@@ -12,6 +12,7 @@ const {
 } = vi.hoisted(() => {
   const apiKeyModel = {
     create: vi.fn(),
+    createWithPlaintext: vi.fn(),
     delete: vi.fn(),
     deleteAll: vi.fn(),
     findById: vi.fn(),
@@ -74,10 +75,11 @@ describe('apiKeyRouter workspace member access', () => {
     mockCanUseWorkspaceApiKeys.mockResolvedValue(true);
     mockGetApiKeyMemberCreation.mockResolvedValue('all_members');
     mockAuditCreate.mockResolvedValue(undefined);
-    mockApiKeyModel.create.mockResolvedValue({
+    mockApiKeyModel.createWithPlaintext.mockResolvedValue({
       enabled: true,
       expiresAt: null,
       id: 'key-1',
+      key: 'sk-lh-plaintext',
       name: 'Member integration',
       scopes: ['*'],
       userId: 'member-user',
@@ -107,13 +109,15 @@ describe('apiKeyRouter workspace member access', () => {
   });
 
   it('allows members to create full-access keys when the workspace policy allows members', async () => {
-    await createCaller('member').createApiKey({
+    const created = await createCaller('member').createApiKey({
       expiresAt: null,
       name: 'Member integration',
       scopes: ['*'],
     });
 
-    expect(mockApiKeyModel.create).toHaveBeenCalledWith({
+    // The creation response is the one-time plaintext reveal for the UI.
+    expect(created.key).toBe('sk-lh-plaintext');
+    expect(mockApiKeyModel.createWithPlaintext).toHaveBeenCalledWith({
       expiresAt: null,
       name: 'Member integration',
       scopes: ['*'],
@@ -133,7 +137,7 @@ describe('apiKeyRouter workspace member access', () => {
     await expect(
       createCaller('member').createApiKey({ name: 'Blocked', scopes: ['agent:read'] }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-    expect(mockApiKeyModel.create).not.toHaveBeenCalled();
+    expect(mockApiKeyModel.createWithPlaintext).not.toHaveBeenCalled();
   });
 
   it('lets the creator edit scopes in place and records before/after grants', async () => {
