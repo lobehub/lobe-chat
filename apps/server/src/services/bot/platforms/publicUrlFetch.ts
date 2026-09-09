@@ -230,7 +230,18 @@ const resolveSafeUrl = async (
     }
   }
 
-  if (answers.length === 0 || answers.some((entry) => isPrivateAddress(entry.address))) {
+  // An explicit administrator exception applies to caller-supplied URLs too.
+  // Check every DNS answer and every redirect; keep pinning the vetted address.
+  const allowedIPs = new Set(
+    (process.env.SSRF_ALLOW_IP_ADDRESS_LIST ?? '')
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter((entry) => isIP(entry)),
+  );
+  if (
+    answers.length === 0 ||
+    answers.some((entry) => isPrivateAddress(entry.address) && !allowedIPs.has(entry.address))
+  ) {
     log('resolveSafeUrl: refusing %s — resolves to a private address', host);
     return undefined;
   }
