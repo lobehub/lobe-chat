@@ -25,9 +25,28 @@ packages:
   - '../../packages/model-bank'
   - '../../packages/utils'
   - '.'
+
+lockfile: true
+shamefullyHoist: true
+ignoreWorkspaceRootCheck: true
+
+publicHoistPattern:
+  - '*@umijs/lint*'
+  - '*unicorn*'
+  - '*changelog*'
+  - '*commitlint*'
+  - '*eslint*'
+  - '*postcss*'
+  - '*prettier*'
+  - '*remark*'
+  - '*semantic-release*'
+  - '*stylelint*'
+  - '@auth/core'
+  - 'pdfjs-dist'
+
 allowBuilds:
-  electron: set this to true or false
-  electron-winstaller: set this to true or false
-  esbuild: set this to true or false
-  get-windows: set this to true or false
-  node-mac-permissions: set this to true or false
+  electron: false
+  electron-winstaller: false
+  esbuild: false
+  get-windows: false
+  node-mac-permissions: false
