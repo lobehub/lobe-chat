@@ -1,5 +1,9 @@
 import { AGENT_SKILLS_IDENTIFIER_PREFIX } from '@lobechat/const';
-import { formatCommandResult, resourcesTreePrompt } from '@lobechat/prompts';
+import {
+  formatCommandResult,
+  formatSandboxRecreation,
+  resourcesTreePrompt,
+} from '@lobechat/prompts';
 import type {
   BuiltinServerRuntimeOutput,
   BuiltinSkill,
@@ -525,9 +529,10 @@ export class SkillsExecutionRuntime {
     });
 
     return {
-      content,
+      content: formatSandboxRecreation(content, result.sessionExpiredAndRecreated),
       state: {
         command,
+        ...(result.sessionExpiredAndRecreated && { sessionExpiredAndRecreated: true }),
         ...(result.executionEnv && { executionEnv: result.executionEnv }),
         exitCode: result.exitCode,
         ...(result.outputFiles && { outputFiles: result.outputFiles }),
