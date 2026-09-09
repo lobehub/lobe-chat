@@ -13,28 +13,33 @@ class TestComputerRuntime extends ComputerRuntime {
   }
 }
 
-describe.each(['runCommand', 'executeCode'] as const)('CloudSandbox %s recreation', (api) => {
-  it.each([true, false])('surfaces recreation with transport success %s', async (success) => {
-    const runtime = new CloudSandboxExecutionRuntime({
-      callTool: vi.fn().mockResolvedValue({
-        error: success ? undefined : { message: 'missing input file' },
-        result: { exitCode: success ? 0 : 1, output: 'partial output' },
-        sessionExpiredAndRecreated: true,
-        success,
-      }),
-      exportAndUploadFile: vi.fn(),
+describe.each(['runCommand', 'executeCode', 'getCommandOutput'] as const)(
+  'CloudSandbox %s recreation',
+  (api) => {
+    it.each([true, false])('surfaces recreation with transport success %s', async (success) => {
+      const runtime = new CloudSandboxExecutionRuntime({
+        callTool: vi.fn().mockResolvedValue({
+          error: success ? undefined : { message: 'missing input file' },
+          result: { exitCode: success ? 0 : 1, output: 'partial output' },
+          sessionExpiredAndRecreated: true,
+          success,
+        }),
+        exportAndUploadFile: vi.fn(),
+      });
+
+      const result =
+        api === 'runCommand'
+          ? await runtime.runCommand({ command: 'cat /tmp/input' })
+          : api === 'executeCode'
+            ? await runtime.executeCode({ code: 'print("output")' })
+            : await runtime.getCommandOutput({ commandId: 'task-1' });
+
+      expect(result.content).toContain('sandbox session expired and was recreated');
+      expect(result.content).toContain(success ? 'partial output' : 'missing input file');
+      expect(result.state).toMatchObject({ sessionExpiredAndRecreated: true, success });
     });
-
-    const result =
-      api === 'runCommand'
-        ? await runtime.runCommand({ command: 'cat /tmp/input' })
-        : await runtime.executeCode({ code: 'print("output")' });
-
-    expect(result.content).toContain('sandbox session expired and was recreated');
-    expect(result.content).toContain(success ? 'partial output' : 'missing input file');
-    expect(result.state).toMatchObject({ sessionExpiredAndRecreated: true, success });
-  });
-});
+  },
+);
 
 describe('ComputerRuntime command status mapping', () => {
   it('uses command result success when command transport succeeds with non-zero exit code', async () => {

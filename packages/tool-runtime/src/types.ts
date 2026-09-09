@@ -289,6 +289,8 @@ export interface GetCommandOutputState {
     stdout: { path: string; size: number; truncated: boolean };
   };
   running?: boolean;
+  /** The sandbox workspace was recreated before polling this command. */
+  sessionExpiredAndRecreated?: boolean;
   stderr?: string;
   stdout?: string;
   success: boolean;

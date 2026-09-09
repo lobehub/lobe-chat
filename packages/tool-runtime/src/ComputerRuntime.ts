@@ -384,12 +384,20 @@ export abstract class ComputerRuntime {
   async getCommandOutput(args: GetCommandOutputParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const result = await this.callService('getCommandOutput', args);
+      const sessionState = result.sessionExpiredAndRecreated
+        ? { sessionExpiredAndRecreated: true }
+        : {};
 
       if (!result.success) {
-        return this.errorOutput(result, {
+        const output = this.errorOutput(result, {
+          ...sessionState,
           error: result.error?.message,
           success: false,
         });
+        return {
+          ...output,
+          content: formatSandboxRecreation(output.content, result.sessionExpiredAndRecreated),
+        };
       }
 
       const r = result.result || {};
@@ -397,6 +405,7 @@ export abstract class ComputerRuntime {
       const outputFiles = r.outputFiles ?? r.output_files;
 
       const state: GetCommandOutputState = {
+        ...sessionState,
         durationMs: r.durationMs ?? r.duration_ms,
         error: r.error,
         exitCode: r.exitCode ?? r.exit_code,
@@ -418,7 +427,11 @@ export abstract class ComputerRuntime {
         success: outputSuccess,
       });
 
-      return { content, state, success: true };
+      return {
+        content: formatSandboxRecreation(content, result.sessionExpiredAndRecreated),
+        state,
+        success: true,
+      };
     } catch (error) {
       return this.handleError(error);
     }
