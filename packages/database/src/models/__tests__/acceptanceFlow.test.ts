@@ -269,6 +269,49 @@ describe('check assets and round snapshots', () => {
     ).toHaveLength(1);
   });
 
+  it('leaves an abandoned older draft alone once a newer round has taken over', async () => {
+    const { flowId, hash } = await model.publish(acceptanceId, definition);
+    const stale = await model.start(acceptanceId, flowId);
+    const staleSnapshot = (await roundPlan(stale.id)).flowSnapshots;
+    // A replay opens its own round and pins the definition it replays.
+    const replay = await model.start(acceptanceId, flowId, undefined, stale.id);
+    expect(replay.id).not.toBe(stale.id);
+    await model.record(acceptanceId, {
+      verifyRunId: replay.id,
+      checkItemId: (await roundPlan(replay.id)).plan![0].id,
+      verdict: 'passed',
+      observation: 'Composer visible',
+    });
+
+    // The newest round is frozen now, so the stale draft must not be reused…
+    await model.publish(acceptanceId, { ...definition, title: 'Edited later' }, flowId, hash);
+    expect((await roundPlan(stale.id)).flowSnapshots).toEqual(staleSnapshot);
+    const fresh = await model.start(acceptanceId, flowId);
+    expect(fresh.id).not.toBe(stale.id);
+    expect((await roundPlan(fresh.id)).roundIndex).toBe(3);
+  });
+
+  it('keeps a replay pinned to the definition it replays while it is still unexecuted', async () => {
+    const { flowId, hash } = await model.publish(acceptanceId, definition);
+    const first = await model.start(acceptanceId, flowId);
+    await model.record(acceptanceId, {
+      verifyRunId: first.id,
+      checkItemId: (await roundPlan(first.id)).plan![0].id,
+      verdict: 'passed',
+      observation: 'Composer visible',
+    });
+    const replay = await model.start(acceptanceId, flowId, undefined, first.id);
+    const pinned = await roundPlan(replay.id);
+
+    await model.publish(acceptanceId, { ...definition, title: 'Edited later' }, flowId, hash);
+
+    const after = await roundPlan(replay.id);
+    expect(after.flowSnapshots).toEqual(pinned.flowSnapshots);
+    expect(after.plan).toEqual(pinned.plan);
+    // The replay is a numbered round, so planning again opens the next one.
+    expect((await model.start(acceptanceId, flowId)).id).not.toBe(replay.id);
+  });
+
   it('leaves an executed round frozen when the flow is edited afterwards', async () => {
     const { flowId, hash } = await model.publish(acceptanceId, definition);
     const run = await model.start(acceptanceId, flowId);

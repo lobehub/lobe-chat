@@ -66,6 +66,11 @@ function fingerprint(value: unknown) {
     .digest('hex');
 }
 
+/** The newest round of a chain ordered by ascending `roundIndex`. */
+function latestRound<T extends { roundIndex: number | null }>(rounds: T[]) {
+  return rounds.findLast((round) => round.roundIndex != null);
+}
+
 /** Link each occurrence to the plan items earlier rounds recorded at the same graph position. */
 function withSupersedes(
   plan: VerifyCheckItem[],
@@ -220,8 +225,10 @@ export class AcceptanceFlowModel {
 
   /**
    * Editing a graph before any round executes must not fork a new version:
-   * refresh the snapshot and plan of every round that is still only planned,
-   * so the ledger keeps describing the graph the editor shows.
+   * refresh the snapshot and plan of the open draft, so the ledger keeps
+   * describing the graph the editor shows. Only the newest round qualifies —
+   * an older draft the ledger has moved past, and a replay pinned to a frozen
+   * definition, both keep what they already hold.
    */
   private async syncOpenRounds(acceptanceId: string, tx: Transaction) {
     const rounds = await tx
@@ -230,8 +237,9 @@ export class AcceptanceFlowModel {
       .where(eq(verifyRuns.acceptanceId, acceptanceId))
       .orderBy(asc(verifyRuns.roundIndex))
       .for('update');
-    for (const round of rounds) {
-      if (!isDraftVerifyRun(round) || !round.flowSnapshots?.length) continue;
+    const open = latestRound(rounds);
+    for (const round of open && isDraftVerifyRun(open) ? [open] : []) {
+      if (!round.flowSnapshots?.length) continue;
       let plan = round.plan ?? [];
       const snapshots: VerifyFlowSnapshot[] = [];
       let changed = false;
@@ -519,14 +527,15 @@ export class AcceptanceFlowModel {
       }
       if (!verifyRunId && !sourceRunId) {
         // Planning again is a refresh of the open draft, never another round.
-        const draft = (
+        const latest = latestRound(
           await tx
             .select()
             .from(verifyRuns)
             .where(eq(verifyRuns.acceptanceId, acceptanceId))
-            .orderBy(desc(verifyRuns.roundIndex))
-            .for('update')
-        ).find(isDraftVerifyRun);
+            .orderBy(asc(verifyRuns.roundIndex))
+            .for('update'),
+        );
+        const draft = latest && isDraftVerifyRun(latest) ? latest : undefined;
         if (draft) {
           verifyRunId = draft.id;
           if (draft.flowSnapshots?.some((s) => s.flowId === flowId)) {
@@ -552,6 +561,9 @@ export class AcceptanceFlowModel {
             roundIndex: (last?.roundIndex ?? 0) + 1,
             title: flow.title,
             status: 'planned',
+            // A replay is pinned to the definition it replays, so it stays out
+            // of the draft reuse and refresh paths.
+            ...(sourceRunId ? { metadata: { replayOfRunId: sourceRunId } } : {}),
           })
           .returning();
         verifyRunId = created.id;

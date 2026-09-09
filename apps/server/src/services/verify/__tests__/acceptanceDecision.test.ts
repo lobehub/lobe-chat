@@ -171,6 +171,25 @@ describe('AcceptanceService decision gating', () => {
     expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
   });
 
+  it('opens a new round when the newest one is no longer a draft', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-3', plan: [] });
+    // Ascending chain: an abandoned draft sits behind an executed newer round.
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+      { id: 'run-2', planConfirmedAt: new Date(), roundIndex: 2, status: null, userDecision: null },
+    ]);
+    mocks.attachToAcceptance.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-3',
+      roundIndex: 3,
+    });
+
+    await expect(service().attachRun('run-3', 'acc-1')).resolves.toMatchObject({ id: 'run-3' });
+    expect(mocks.foldIntoRound).not.toHaveBeenCalled();
+    expect(mocks.attachToAcceptance).toHaveBeenCalledWith('run-3', 'acc-1', undefined);
+  });
+
   it.each(['delivered', 'errored'])('accepts a settled (%s) delivery', async (status) => {
     mocks.findById.mockResolvedValue(acceptance(status));
 
