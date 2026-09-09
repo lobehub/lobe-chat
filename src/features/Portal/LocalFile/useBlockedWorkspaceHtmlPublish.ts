@@ -1,5 +1,5 @@
 import type { EscapedResourceRef } from '@lobechat/html-artifact';
-import { toast } from '@lobehub/ui/base-ui';
+import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -53,12 +53,28 @@ export const useBlockedWorkspaceHtmlPublish = ({
   topicId,
   workingDirectory,
 }: BlockedWorkspaceHtmlPublishInput) => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'common']);
   const [force, setForce] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<EscapedResourceRef[]>([]);
   const htmlEntry = plan.gathered.files.find((file) => file.path === plan.gathered.entryPath);
   const htmlContent = htmlEntry?.encoding === 'utf8' ? htmlEntry.content : '';
+
+  const handleForceChange = (checked: boolean) => {
+    if (!checked) {
+      setForce(false);
+      return;
+    }
+
+    confirmModal({
+      cancelText: t('cancel', { ns: 'common' }),
+      content: t('workingPanel.localFile.publish.outsideWorkspace.forceHint', { ns: 'chat' }),
+      okButtonProps: { danger: true },
+      okText: t('confirm', { ns: 'common' }),
+      onOk: () => setForce(true),
+      title: t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' }),
+    });
+  };
 
   const openConfirm = (ready: ReadyWorkspaceHtmlPublishPlan, copiedDirectory?: string) => {
     close();
@@ -140,5 +156,5 @@ export const useBlockedWorkspaceHtmlPublish = ({
     }
   };
 
-  return { busy, failed, force, handleContinue, setForce };
+  return { busy, failed, force, handleContinue, handleForceChange };
 };

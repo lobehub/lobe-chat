@@ -5,10 +5,16 @@ import { useBlockedWorkspaceHtmlPublish } from './useBlockedWorkspaceHtmlPublish
 
 const mocks = vi.hoisted(() => ({
   copy: vi.fn(),
+  confirmModal: vi.fn(),
   notifyBlocked: vi.fn(),
   openConfirm: vi.fn(),
   prepare: vi.fn(),
   publishPrepared: vi.fn(),
+}));
+
+vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  confirmModal: (...args: unknown[]) => mocks.confirmModal(...args),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -105,11 +111,26 @@ describe('useBlockedWorkspaceHtmlPublish', () => {
     expect(mocks.openConfirm).not.toHaveBeenCalled();
   });
 
-  it('requires explicit force state before preparing external reads and performs no copy', async () => {
+  it('requires warning confirmation before preparing external reads and performs no copy', async () => {
     mocks.prepare.mockResolvedValue(ready);
     const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
 
-    await act(() => result.current.setForce(true));
+    act(() => result.current.handleForceChange(true));
+    expect(result.current.force).toBe(false);
+
+    const warning = mocks.confirmModal.mock.calls[0][0];
+    expect(warning).toEqual(
+      expect.objectContaining({
+        content: 'workingPanel.localFile.publish.outsideWorkspace.forceHint',
+        okButtonProps: { danger: true },
+        okText: 'confirm',
+        title: 'workingPanel.localFile.publish.outsideWorkspace.forceLabel',
+      }),
+    );
+
+    act(() => warning.onOk());
+    expect(result.current.force).toBe(true);
+
     await act(() => result.current.handleContinue());
 
     expect(mocks.copy).not.toHaveBeenCalled();

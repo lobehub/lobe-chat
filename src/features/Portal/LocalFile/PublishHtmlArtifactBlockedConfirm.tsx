@@ -28,15 +28,16 @@ export type OpenWorkspaceHtmlPublishBlockedConfirmInput = Omit<
 const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInput) => {
   const { t } = useTranslation(['chat', 'common']);
   const { close } = useModalContext();
-  const { busy, failed, force, handleContinue, setForce } = useBlockedWorkspaceHtmlPublish({
-    ...input,
-    close,
-  });
+  const { busy, failed, force, handleContinue, handleForceChange } = useBlockedWorkspaceHtmlPublish(
+    {
+      ...input,
+      close,
+    },
+  );
   const { filePath, plan, workingDirectory } = input;
   const identifier = workspaceHtmlArtifactIdentifierForFile(filePath, workingDirectory);
   const relativeTargetDirectory = `.lobe-artifacts/${identifier}`;
   const failedPaths = new Set(failed.map((item) => item.absolutePath));
-
   return (
     <>
       <ScrollArea
@@ -110,13 +111,10 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
           )}
         </Flexbox>
       </ScrollArea>
-      <Flexbox gap={4} style={{ paddingBlock: '8px 4px', paddingInline: 16 }}>
-        <Checkbox checked={force} onChange={setForce}>
+      <Flexbox style={{ paddingBlock: '8px 4px', paddingInline: 16 }}>
+        <Checkbox checked={force} onChange={handleForceChange}>
           {t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' })}
         </Checkbox>
-        <Text style={{ color: cssVar.colorError }}>
-          {t('workingPanel.localFile.publish.outsideWorkspace.forceHint', { ns: 'chat' })}
-        </Text>
       </Flexbox>
       <Flexbox
         horizontal
