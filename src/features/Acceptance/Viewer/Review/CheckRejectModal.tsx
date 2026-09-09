@@ -16,8 +16,8 @@ import {
   useFeedbackAttachments,
 } from '../Evidence/attachments';
 import { MobileEvidenceReview } from '../Evidence/MobileEvidenceReview';
-import type { MobileReviewEvent } from '../Evidence/mobileReviewFlow';
-import { initialMobileReviewStep, nextMobileReviewStep } from '../Evidence/mobileReviewFlow';
+import type { MobileReviewEvent, MobileReviewStep } from '../Evidence/mobileReviewFlow';
+import { nextMobileReviewStep } from '../Evidence/mobileReviewFlow';
 import { useMeasuredWidth } from '../Evidence/useMeasuredWidth';
 import { frostedModalStyles } from './modals';
 import { useReviewSubmit } from './useReviewSubmit';
@@ -342,13 +342,12 @@ export const CheckRejectModalContent = memo<CheckRejectModalProps>(
   }) => {
     const { t: translate } = useTranslation('verify');
     const { md = true } = useResponsive();
-    // Browsing / marking / writing are one flow, not two booleans that can
-    // disagree — see mobileReviewFlow for the transitions.
-    const [step, setStep] = useState(() => initialMobileReviewStep(evidence.length));
+    // Marking or panning — the phone review has no second screen to be on,
+    // so this is the only mode left. See mobileReviewFlow.
+    const [step, setStep] = useState<MobileReviewStep>('browse');
     const advance = (event: MobileReviewEvent) =>
       setStep((current) => nextMobileReviewStep(current, event));
     const drawing = step === 'draw';
-    const showFeedback = step === 'feedback';
     const swipeStart = useRef<{ x: number; y: number } | null>(null);
     const { close, setCanDismissByClickOutside } = useModalContext();
     const [draft] = useState(() => readDraft(draftKey));
@@ -390,9 +389,8 @@ export const CheckRejectModalContent = memo<CheckRejectModalProps>(
       useFeedbackAttachments(6, draft?.attachments ?? previousAttachments);
 
     const [zoom, setZoom] = useState(1);
-    // The stage node is remounted by the responsive flip and by every step
-    // between the image and the feedback screen, so the measurement follows
-    // the node rather than a ref captured once — see useMeasuredWidth.
+    // The stage node is remounted by the responsive flip, so the measurement
+    // follows the node rather than a ref captured once — see useMeasuredWidth.
     const {
       node: viewportNode,
       ref: viewportRef,
@@ -645,7 +643,6 @@ export const CheckRejectModalContent = memo<CheckRejectModalProps>(
           imageCount={evidence.length}
           imageIndex={activeIndex}
           loading={loading}
-          showFeedback={showFeedback}
           zoom={zoom}
           editor={
             <Flexbox gap={16}>

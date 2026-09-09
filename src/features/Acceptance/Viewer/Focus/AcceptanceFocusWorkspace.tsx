@@ -1,6 +1,5 @@
 'use client';
 
-import { copyToClipboard } from '@lobehub/ui';
 import { toast } from '@lobehub/ui/base-ui';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
@@ -11,7 +10,6 @@ import { verifyService } from '@/services/verify';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { openAddCheckModal } from '../Checks/AddCheckModal';
-import { copyCheckRepairPrompt } from '../Checks/checkWork';
 import { acceptanceCheckPath, acceptanceOverviewPath } from '../routes';
 import { checksForTurn } from '../turnChecks';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
@@ -84,14 +82,6 @@ const AcceptanceFocusWorkspace = () => {
                 onSubmit: (items) =>
                   saveStanding([...(data.acceptance.config?.checklist ?? []), ...items]),
               })
-          : undefined
-      }
-      onCheckWork={
-        canReviewAcceptance(data) && data.acceptance.status !== 'closed'
-          ? async () => {
-              await copyCheckRepairPrompt(data.acceptance.id, focusedCheck, copyToClipboard);
-              toast.success({ title: t('acceptance.checkWork.copied') });
-            }
           : undefined
       }
       onEditStandingCheck={

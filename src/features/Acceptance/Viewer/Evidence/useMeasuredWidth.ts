@@ -5,8 +5,7 @@ import { useLayoutEffect, useState } from 'react';
  *
  * A `useRef` + one-shot `ResizeObserver` keeps observing the node it first saw.
  * The reject modal replaces that node whenever the layout flips between the
- * desktop and phone branch, or whenever the reviewer steps between the image
- * and the feedback screen — after which the observer is watching a detached
+ * desktop and phone branch — after which the observer is watching a detached
  * element and the width freezes at whatever the previous layout measured
  * (often 0, while the modal was still animating open). A zoom factor
  * multiplied into a frozen or zero width is why the phone viewer showed 200%

@@ -663,6 +663,33 @@ export const AcceptanceCheckRow = memo<{
                 </Flexbox>
               ))}
 
+            {/* How this check got here comes BEFORE the verdict buttons: the
+              rounds it already went through are context for the decision, not
+              an appendix to one the reviewer has already made. */}
+            {hasHistory && (
+              <span
+                className={styles.historyToggle}
+                onClick={() => setHistoryOpen((open) => !open)}
+              >
+                <Icon
+                  icon={ChevronRight}
+                  size={12}
+                  style={{
+                    transform: historyOpen ? 'rotate(90deg)' : 'none',
+                    transition: 'transform 0.2s',
+                  }}
+                />
+                {t('acceptance.checks.iterationHistory', { count: check.revisions })}
+              </span>
+            )}
+            {historyOpen && hasHistory && (
+              <IterationTimeline
+                check={check}
+                evidenceById={evidenceById}
+                historyReviews={historyReviews}
+                onRound={onRound}
+              />
+            )}
             {/* Confirm (plain filled) anchors the right edge; reject is the
               quiet text escape next to it. */}
             {reviewable &&
@@ -748,31 +775,6 @@ export const AcceptanceCheckRow = memo<{
                   </Button>
                 </Flexbox>
               ))}
-
-            {hasHistory && (
-              <span
-                className={styles.historyToggle}
-                onClick={() => setHistoryOpen((open) => !open)}
-              >
-                <Icon
-                  icon={ChevronRight}
-                  size={12}
-                  style={{
-                    transform: historyOpen ? 'rotate(90deg)' : 'none',
-                    transition: 'transform 0.2s',
-                  }}
-                />
-                {t('acceptance.checks.iterationHistory', { count: check.revisions })}
-              </span>
-            )}
-            {historyOpen && hasHistory && (
-              <IterationTimeline
-                check={check}
-                evidenceById={evidenceById}
-                historyReviews={historyReviews}
-                onRound={onRound}
-              />
-            )}
           </Flexbox>
         )}
       </Flexbox>

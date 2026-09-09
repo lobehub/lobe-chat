@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 
-import { checkFilterState, focusedCheckStates, isCheckWorkActionable } from '../Checks/checkState';
+import { checkFilterState, focusedCheckStates } from '../Checks/checkState';
 import {
   type AcceptanceCheck,
   type CheckReviewInput,
@@ -116,12 +116,6 @@ const styles = createStaticStyles(({ css }) => ({
     width: min(880px, 100%);
     margin-inline: auto;
   `,
-  work: css`
-    padding: 16px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorFillQuaternary};
-  `,
 }));
 
 interface AcceptanceFocusReviewProps {
@@ -130,7 +124,6 @@ interface AcceptanceFocusReviewProps {
   focusedCheck: AcceptanceCheck;
   onAddChecks?: () => void;
   onBack: () => void;
-  onCheckWork?: () => void;
   onDismissProposal?: (input: ProposalDismissInput) => Promise<void>;
   onEditStandingCheck?: (item: AcceptanceChecklistItem) => void;
   onReview: (input: CheckReviewInput) => Promise<boolean>;
@@ -150,7 +143,6 @@ const AcceptanceFocusReview = ({
   focusedCheck,
   onAddChecks,
   onBack,
-  onCheckWork,
   onDismissProposal,
   onEditStandingCheck,
   onReview,
@@ -404,7 +396,7 @@ const AcceptanceFocusReview = ({
                           : CircleDashed
                   }
                 />
-                {t('acceptance.focus.verifierLabel')} ·{' '}
+                {t('acceptance.focus.judgeLabel')} ·{' '}
                 {t(`report.verdict.${focusedStates.verifierLabel}`)}
               </Flexbox>
             </Flexbox>
@@ -427,19 +419,6 @@ const AcceptanceFocusReview = ({
               {t(`acceptance.focus.verifierDescription.${focusedStates.verifierLabel}`)}
             </Text>
           </Flexbox>
-          {md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
-            <Flexbox horizontal align={'center'} className={styles.work} gap={16}>
-              <Flexbox flex={1} gap={3}>
-                <Text strong>{t('acceptance.checkWork.title')}</Text>
-                <Text fontSize={12} type={'secondary'}>
-                  {t('acceptance.checkWork.description')}
-                </Text>
-              </Flexbox>
-              <Button type={'primary'} onClick={onCheckWork}>
-                {t('acceptance.checkWork.copy')}
-              </Button>
-            </Flexbox>
-          )}
           <FocusedCheckDetails
             canReview={canReview}
             check={focusedCheck}
@@ -448,15 +427,6 @@ const AcceptanceFocusReview = ({
             onReview={onReview}
             onRound={onRound}
           />
-          {!md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
-            <Button
-              style={{ alignSelf: 'flex-start', minHeight: 44 }}
-              type={'text'}
-              onClick={onCheckWork}
-            >
-              {t('acceptance.checkWork.copy')}
-            </Button>
-          )}
         </Flexbox>
       </Flexbox>
     </div>
