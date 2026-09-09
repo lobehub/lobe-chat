@@ -155,13 +155,11 @@ describe('startup reindex coordinator', () => {
       checkpointExists = true;
       statuses.set('messages', status('messages', 'in_sync'));
     });
-    const options = {
+    const options: Parameters<typeof runFtsSearchStartupMigration>[0] = {
       applyGeneration,
       describeEntity: async (entity: FtsSearchDocumentEntity) => statuses.get(entity)!,
       drainIncrementalSync: async () => ({ hasMore: false }),
-      generations: [
-        { entities: ['agents', 'messages'] as FtsSearchDocumentEntity[], schemaVersion: 1 },
-      ],
+      generations: [{ entities: ['agents', 'messages'], schemaVersion: 1 }],
       promoteEntity: async (entity: FtsSearchDocumentEntity) => {
         statuses.set(entity, status(entity, 'in_sync'));
       },
