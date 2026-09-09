@@ -36,3 +36,7 @@ publicHoistPattern:
 
 allowBuilds:
   esbuild: true
+
+overrides:
+  '@types/react': 19.2.13
+  antd: 6.3.5
