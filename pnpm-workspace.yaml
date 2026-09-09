@@ -30,6 +30,13 @@ packages:
 minimumReleaseAgeExclude:
   - '@lobehub/ui@5.20.2'
 
+# Build scripts run one at a time. Several peer-variant copies of
+# @lobehub/editor resolve in this workspace and every copy's postinstall
+# patches the SAME hoisted `lexical` files; run in parallel they race on those
+# writes and CI fails with "Patch context mismatch" (LOBE-13963). Only the
+# handful of packages allowed below build, so serializing costs seconds.
+childConcurrency: 1
+
 allowBuilds:
   '@google/genai': true
   '@lobehub/editor': true

@@ -14,8 +14,12 @@ import {
 import { MessageModel } from '@/database/models/message';
 import { recomputeTopicUsage } from '@/database/models/topicUsage';
 import { VerifyRunModel } from '@/database/models/verifyRun';
+import { WorkModel } from '@/database/models/work';
 import { type LobeChatDatabase } from '@/database/type';
-import { formatErrorForState } from '@/server/modules/AgentRuntime/formatErrorForState';
+import {
+  formatErrorForState,
+  readErrorBudgetContext,
+} from '@/server/modules/AgentRuntime/formatErrorForState';
 import { buildFinalSnapshotKey } from '@/server/modules/AgentTracing';
 import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { toAgentSignalTraceEvents } from '@/server/services/agentSignal/observability/traceEvents';
@@ -783,7 +787,8 @@ export class CompletionLifecycle {
       const outcome = await registerWorksForOperation({
         // The round's final assistant message — the shell github scan stamps the
         // Work display anchor onto it for hetero runs (see registerWorksForOperation).
-        assistantMessageId: state?.metadata?.assistantMessageId ?? null,
+        assistantMessageId:
+          state?.metadata?.workAssistantMessageId ?? state?.metadata?.assistantMessageId ?? null,
         // Live terminal totals: on the pre-snapshot path the op row's cost/usage
         // columns are not persisted yet (recordCompletion runs later), so the
         // registration must not rely on reading them back from the DB.
@@ -794,6 +799,35 @@ export class CompletionLifecycle {
         userId: state?.metadata?.userId || this.userId,
         workspaceId: this.workspaceId,
       });
+      // Skill tools may have registered Works before the terminal file scan.
+      // Query the registry instead of inferring output from display messages.
+      const works = await new WorkModel(
+        this.serverDB,
+        state?.metadata?.userId || this.userId,
+        this.workspaceId,
+      ).listByRootOperation({ includeFileWorks: true, limit: 1, rootOperationId: operationId });
+      if (works.length > 0) {
+        const assistantMessageId =
+          state?.metadata?.workAssistantMessageId ??
+          state?.metadata?.assistantMessageId ??
+          outcome.anchorMessageId;
+        if (!assistantMessageId) {
+          log('[%s] No assistant message available for registered Works', operationId);
+          return;
+        }
+        const result = await this.messageModel.update(assistantMessageId, {
+          metadata: {
+            work: {
+              rootOperationId: operationId,
+              userMessageId: state?.metadata?.sourceMessageId,
+            },
+          },
+        });
+        if (!result.success) {
+          log('[%s] Failed to stamp Work anchor on %s', operationId, assistantMessageId);
+          return;
+        }
+      }
       // Stamp the idempotency marker ONLY when nothing failed. A partial failure
       // (some files exported/registered, others did not) must NOT be recorded as
       // a completed registration, or the dispatchHooks backstop would skip the
@@ -1148,9 +1182,10 @@ export class CompletionLifecycle {
       : undefined;
 
     // On the error path, normalize the runtime error once so the lifecycle
-    // event carries the stable taxonomy fields (errorType + attribution). Bot
-    // reply renderers switch on these to surface a perceivable cause (network /
-    // quota / provider outage …) instead of an opaque Operation ID. Mirrors the
+    // event carries the stable taxonomy fields (errorType + attribution + the
+    // budget context an admission gate attached). Bot reply renderers switch on
+    // these to surface a perceivable cause (network / quota / provider outage /
+    // which allowance ran out) instead of an opaque Operation ID. Mirrors the
     // same normalization dispatchHooks runs before writing the error onto the
     // assistant message row.
     const formattedError = state?.error ? formatErrorForState(state.error) : undefined;
@@ -1163,6 +1198,7 @@ export class CompletionLifecycle {
         cost: state?.cost?.total,
         duration,
         errorAttribution: formattedError?.attribution,
+        errorBudget: readErrorBudgetContext(formattedError),
         errorDetail: state?.error,
         errorMessage: this.extractErrorMessage(state?.error) || String(state?.error || ''),
         errorType: formattedError?.type === undefined ? undefined : String(formattedError.type),

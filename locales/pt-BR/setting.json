@@ -1491,6 +1491,8 @@
   "tools.builtins.lobe-cloud-sandbox.description": "Execute códigos em Python, JavaScript e TypeScript em um ambiente isolado na nuvem. Rode comandos de terminal, gerencie arquivos, pesquise conteúdos com regex e exporte resultados com segurança.",
   "tools.builtins.lobe-cloud-sandbox.readme": "Execute códigos em Python, JavaScript e TypeScript em um ambiente isolado na nuvem. Rode comandos de terminal, gerencie arquivos, pesquise conteúdos com regex e exporte resultados com segurança.",
   "tools.builtins.lobe-cloud-sandbox.title": "Sandbox na Nuvem",
+  "tools.builtins.lobe-computer-use.description": "Use aplicativos de desktop, interaja com controles e capture a tela.",
+  "tools.builtins.lobe-computer-use.title": "Uso do Computador",
   "tools.builtins.lobe-creds.description": "Gerencie credenciais do usuário para autenticação, injeção de variáveis de ambiente e verificação de APIs — incluindo chaves de API, tokens OAuth e segredos para integrações de terceiros.",
   "tools.builtins.lobe-creds.title": "Credenciais",
   "tools.builtins.lobe-group-agent-builder.description": "Configure metadados de grupo, membros e conteúdo compartilhado para grupos multiagentes",

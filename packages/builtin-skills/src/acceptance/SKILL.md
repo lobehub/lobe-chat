@@ -238,22 +238,26 @@ excuse below was made in a real round.
 | "One more config edit and the env will boot" / "I'll mock it" / "I'll drive the rest myself"           | Timebox. Inventory running instances, probe for the real capability before mocking (a mock that records nothing is not in the path), re-delegate a dead subagent's remaining steps, revert experiments and ask. (M17)           |
 | "The fix is in and tests pass — verified"                                                              | Reproduce the failure's precondition first, then verify with it held. A run that cannot fail proves nothing; "reproduces sometimes" means an unnamed precondition. When the mocked seam is the suspect, drop the mock. (M31)    |
 
-## Pick the surface by what you changed
+## Pick the surface by the user-visible outcome
 
-Match the change to the cheapest surface that can prove it; escalate only if
-needed.
+Match the requirement to the cheapest surface that can prove the complete outcome,
+not merely the layer containing the code change. A backend fix for missing cards,
+stale lists, navigation, or another visible behavior still requires the consuming
+UI, its actual data response, and inspected screenshots. Database assertions and
+passing tests support that evidence; they do not replace it.
 
 | What your task changed                                      | Surface                                               | Guide                                                  |
 | ----------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------ |
-| Backend / CLI / library / data logic                        | **CLI** — stdout as `text`, zero UI flakiness         | [surfaces/cli.md](surfaces/cli.md)                     |
+| Backend / CLI / library / data logic with no UI outcome     | **CLI** — stdout as `text`, zero UI flakiness         | [surfaces/cli.md](surfaces/cli.md)                     |
 | Web app frontend / styles / interactions                    | **Web** (agent-browser → running web app)             | [surfaces/web.md](surfaces/web.md)                     |
 | New/changed API **plus** the UI consuming it                | **Web**, full-stack (agent-browser + network capture) | [surfaces/web.md](surfaces/web.md#web-full-stack)      |
 | Desktop-only behavior (native windows, IPC, packaged shell) | **Electron** (agent-browser `--cdp`)                  | [surfaces/electron.md](surfaces/electron.md)           |
 | Native macOS app / OS chrome agent-browser can't reach      | **Native** (osascript + screencapture, local macOS)   | [surfaces/native.md](surfaces/native.md)               |
 | Native iOS behavior, gestures, device-size layout           | **iOS Simulator** (AXe/native CLI + `simctl`)         | [surfaces/ios-simulator.md](surfaces/ios-simulator.md) |
 
-- **Don't open a browser for a backend change**; command output as `text` is the
-  strongest, cheapest proof. Use **Electron** only when the criterion depends on
+- **Use CLI alone only when the required outcome has no UI surface.** If a visible
+  outcome cannot be exercised, report that acceptance as incomplete instead of
+  narrowing it to data checks. Use **Electron** only when the criterion depends on
   desktop-only code; iOS is driven by a Simulator HID/AX CLI, never host mouse —
   mark the case `blocked` if the CLI cannot express the gesture.
 - **Structured data uses native visualizations** (`cases[].datasets` +
