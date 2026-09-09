@@ -29,7 +29,6 @@ export default defineConfig({
 
     },
     coverage: {
-      all: false,
       exclude: [
         // https://github.com/lobehub/lobe-chat/pull/7265
         ...coverageConfigDefaults.exclude,
@@ -43,11 +42,8 @@ export default defineConfig({
       TEST_SERVER_DB: '1',
     },
     environment: 'node',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    isolate: false,
+    maxWorkers: 1,
     setupFiles: './tests/setup-db.ts',
   },
 });
