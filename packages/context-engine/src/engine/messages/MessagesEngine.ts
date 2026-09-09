@@ -68,6 +68,7 @@ import {
   ToolSystemRoleProvider,
   TopicReferenceContextInjector,
   UserMemoryInjector,
+  WorkspaceContextInjector,
 } from '../../providers';
 import { SelectedToolInjector } from '../../providers/SelectedToolInjector';
 import type { ContextProcessor } from '../../types';
@@ -171,6 +172,7 @@ export class MessagesEngine {
       messages,
       agentBuilderContext,
       botPlatformContext,
+      workspaceContext,
       discordContext,
       evalContext,
       onboardingContext,
@@ -305,6 +307,13 @@ export class MessagesEngine {
           video: capabilities?.isCanUseVideo?.(model, provider),
           vision: capabilities?.isCanUseVision?.(model, provider),
         },
+      }),
+      // Workspace context (app origin + workspace slug → correct in-app links).
+      // Sits with the other environment facts (date / model) after the
+      // persona-level injectors.
+      new WorkspaceContextInjector({
+        context: workspaceContext,
+        enabled: !!workspaceContext,
       }),
       // Skill context (available skills list + activated skill content).
       // Disabled in chat mode — pairs with the tools-engine gate so the LLM

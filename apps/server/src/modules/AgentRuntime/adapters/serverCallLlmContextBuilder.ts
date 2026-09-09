@@ -19,6 +19,7 @@ import type {
   OfficialToolItem,
   OnboardingContext,
   PlanTodoConfig,
+  WorkspaceContext,
 } from '@lobechat/context-engine';
 import { resolveTopicReferences } from '@lobechat/context-engine';
 import type { ChatStreamPayload } from '@lobechat/model-runtime';
@@ -39,6 +40,8 @@ import { TopicModel } from '@/database/models/topic';
 import { TopicDocumentModel } from '@/database/models/topicDocument';
 import { UserModel } from '@/database/models/user';
 import { UserPersonaModel } from '@/database/models/userMemory/persona';
+import { WorkspaceModel } from '@/database/models/workspace';
+import { appEnv } from '@/envs/app';
 import { serverMessagesEngine } from '@/server/modules/Mecha/ContextEngineering';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { MarketService } from '@/server/services/market';
@@ -318,6 +321,14 @@ export const buildServerCallLlmContext = async ({
       log('Failed to fetch user info for {{username}}/{{language}} substitution: %O', error);
     }
   }
+
+  // Where the run lives — app origin + workspace slug — so the model can
+  // write in-app links that resolve to the right scope. `workspaceId` is only
+  // threaded through for DB scoping otherwise, so without this the model has no
+  // idea it is inside a team workspace and composes personal-space (or
+  // training-data) URLs. Best-effort: a failed lookup skips the block and
+  // never blocks the LLM call.
+  const workspaceContext = await resolveWorkspaceContext(ctx, state);
 
   const sandboxEnabled = String(resolved.enabledToolIds.includes('lobe-cloud-sandbox'));
   // `sandbox_enabled` tracks whether the dedicated Cloud Sandbox tool is
@@ -685,6 +696,7 @@ export const buildServerCallLlmContext = async ({
     userTimezone: ctx.userTimezone,
     capabilities,
     botPlatformContext: ctx.botPlatformContext,
+    ...(workspaceContext && { workspaceContext }),
     discordContext: ctx.discordContext,
     enableExpertise: state.enableExpertise,
     enableHistoryCount: agentConfig.chatConfig?.enableHistoryCount ?? undefined,
@@ -794,4 +806,46 @@ export const buildServerCallLlmContext = async ({
     resolvedExtendParams,
     shouldReplayAssistantReasoning,
   };
+};
+
+const getAppUrl = (): string | undefined => {
+  try {
+    return appEnv.APP_URL;
+  } catch {
+    return process.env.APP_URL;
+  }
+};
+
+const resolveWorkspaceContext = async (
+  ctx: RuntimeExecutorContext,
+  state: AgentState,
+): Promise<WorkspaceContext | undefined> => {
+  // A share visitor converses under the CREATOR's identity: the creator's
+  // routes (workspace or personal) are not the visitor's, so never describe
+  // that scope to them — skip the block entirely, whatever the run's scope.
+  if (ctx.agentShareVisitor) return undefined;
+
+  const appUrl = getAppUrl();
+  const workspaceId = state.metadata?.workspaceId ?? ctx.workspaceId;
+
+  // Personal space: the origin alone is enough to anchor links.
+  if (!workspaceId) return appUrl ? { appUrl } : undefined;
+
+  // Workspace run whose slug cannot be resolved: injecting origin-only would
+  // wrongly tell the model it is in the personal space, so inject nothing
+  // (the pre-fix behaviour) rather than a false statement.
+  if (!ctx.serverDB || !ctx.userId) return undefined;
+
+  try {
+    const workspace = await new WorkspaceModel(ctx.serverDB, ctx.userId).findById(workspaceId);
+    if (!workspace?.slug) {
+      log('Workspace %s has no slug; skipping workspace context', workspaceId);
+      return undefined;
+    }
+
+    return { appUrl, workspace: { slug: workspace.slug } };
+  } catch (error) {
+    log('Failed to resolve workspace context for %s: %O', workspaceId, error);
+    return undefined;
+  }
 };

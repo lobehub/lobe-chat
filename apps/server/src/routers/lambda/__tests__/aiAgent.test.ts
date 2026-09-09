@@ -321,7 +321,11 @@ describe('AI Agent Router Integration Tests', () => {
             agentId: testAgentId,
           }),
           autoStart: false,
-          modelRuntimeConfig: { model: 'gpt-4o-mini', provider: 'openai' },
+          modelRuntimeConfig: {
+            mediaCapabilities: expect.objectContaining({ vision: true }),
+            model: 'gpt-4o-mini',
+            provider: 'openai',
+          },
           userId,
         }),
       );

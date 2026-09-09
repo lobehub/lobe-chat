@@ -468,8 +468,10 @@ describe('ApiKey', () => {
     const toggleScope = (groupKey: string) => {
       const group = within(dialog).getByText(`apikey.scopes.groups.${groupKey}`).parentElement!;
       const checkbox = within(group).getByRole('checkbox', { name: 'apikey.scopes.read' });
-      fireEvent.keyDown(checkbox, { key: ' ' });
-      fireEvent.keyUp(checkbox, { key: ' ' });
+      // base-ui >= 1.8 ignores synthetic Space keyDown/keyUp and a bare click
+      // on the `role=checkbox` span inside a dialog; clicking the wrapping
+      // <label> is what toggles it, and is what a real pointer hits anyway.
+      fireEvent.click(checkbox.closest('label')!);
     };
     toggleScope('agent');
     toggleScope('chat');

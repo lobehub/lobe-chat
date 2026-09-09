@@ -15,6 +15,7 @@ const {
   mockGetAgentConfig,
   mockGetBuiltinAgent,
   mockGetInfoForAIGeneration,
+  mockGetModelMetadata,
   mockIsAgentSignalEnabledForUser,
   mockMessageCreate,
   mockMessageQuery,
@@ -25,6 +26,7 @@ const {
   mockGetAgentConfig: vi.fn(),
   mockGetBuiltinAgent: vi.fn(),
   mockGetInfoForAIGeneration: vi.fn(),
+  mockGetModelMetadata: vi.fn(),
   mockIsAgentSignalEnabledForUser: vi.fn(),
   mockMessageCreate: vi.fn(),
   mockMessageQuery: vi.fn(),
@@ -52,6 +54,12 @@ vi.mock('@/database/models/message', () => ({
     getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
     query: mockMessageQuery,
     update: vi.fn().mockResolvedValue({}),
+  })),
+}));
+
+vi.mock('@/database/models/aiModel', () => ({
+  AiModelModel: vi.fn().mockImplementation(() => ({
+    findByIdAndProvider: mockGetModelMetadata,
   })),
 }));
 
@@ -223,6 +231,7 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
       responseLanguage: 'en-US',
       userName: 'Test User',
     });
+    mockGetModelMetadata.mockResolvedValue(undefined);
     mockToolsEnv.MULTIMODAL_UNDERSTANDING_MODEL = 'vision-model';
     mockToolsEnv.MULTIMODAL_UNDERSTANDING_PROVIDER = 'test-provider';
     mockCreateOperation.mockResolvedValue({
@@ -696,5 +705,87 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
 
     const callArgs = vi.mocked(createServerAgentToolsEngine).mock.calls[0][1];
     expect(callArgs.agentConfig.plugins).not.toContain('lobe-agent');
+  });
+
+  it('should not inject lobe-agent when user model abilities support images natively', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-custom',
+      model: 'custom-vision-model',
+      plugins: [],
+      provider: 'custom-provider',
+      systemRole: '',
+    });
+    mockGetModelMetadata.mockResolvedValue({ abilities: { vision: true } });
+    mockMessageQuery.mockResolvedValue([
+      {
+        id: 'history-image',
+        imageList: [{ alt: 'image.png', id: 'file-image', url: 'https://example.com/image.png' }],
+        role: 'user',
+      },
+    ]);
+
+    await service.execAgent({
+      agentId: 'agent-custom',
+      appContext: { topicId: 'topic-1' },
+      prompt: 'What is shown in the previous image?',
+    });
+
+    const callArgs = vi.mocked(createServerAgentToolsEngine).mock.calls[0][1];
+    expect(callArgs.agentConfig.plugins).not.toContain('lobe-agent');
+  });
+
+  it('should inject lobe-agent when user model abilities disable builtin image support', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-custom',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      systemRole: '',
+    });
+    mockGetModelMetadata.mockResolvedValue({ abilities: { vision: false } });
+    mockMessageQuery.mockResolvedValue([
+      {
+        id: 'history-image',
+        imageList: [{ alt: 'image.png', id: 'file-image', url: 'https://example.com/image.png' }],
+        role: 'user',
+      },
+    ]);
+
+    await service.execAgent({
+      agentId: 'agent-custom',
+      appContext: { topicId: 'topic-1' },
+      prompt: 'What is shown in the previous image?',
+    });
+
+    expect(createServerAgentToolsEngine).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        agentConfig: expect.objectContaining({
+          plugins: expect.arrayContaining(['lobe-agent']),
+        }),
+      }),
+    );
+  });
+
+  it('should preserve builtin image output support when user abilities override vision', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-custom',
+      model: 'gemini-3.1-flash-image',
+      plugins: [],
+      provider: 'google',
+      systemRole: '',
+    });
+    mockGetModelMetadata.mockResolvedValue({ abilities: { vision: false } });
+
+    await service.execAgent({
+      agentId: 'agent-custom',
+      prompt: 'Generate an image',
+    });
+
+    const callArgs = vi.mocked(createServerAgentToolsEngine).mock.calls[0][1];
+    expect(callArgs.modelAbilities).toMatchObject({ imageOutput: true });
   });
 });

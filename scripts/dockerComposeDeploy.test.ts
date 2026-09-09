@@ -117,9 +117,15 @@ describe('deploy docker-compose optional Elasticsearch', () => {
     expect(reindex.command).toEqual(['--status']);
     expect(reindex.environment).toContain('ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex');
     expect(reindex.volumes).toContain('fts-search-reindex-state:/app/.elasticsearch-reindex');
+    expect(compose.services.lobe.volumes).toContain(
+      'fts-search-reindex-state:/app/.elasticsearch-reindex',
+    );
     expect(compose.volumes).toHaveProperty('fts-search-reindex-state');
     // The image pre-creates the checkpoint mountpoint so the named volume inherits nextjs ownership.
     expect(dockerfile).toContain('mkdir -p /app/.elasticsearch-reindex');
+    expect(compose.services.lobe.environment).toContain(
+      'ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex',
+    );
 
     expect(sync.image).toBe('lobehub/lobehub');
     expect(sync.restart).toBe('always');

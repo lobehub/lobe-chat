@@ -14,7 +14,6 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
   private states: Map<string, AgentState> = new Map();
   private steps: Map<string, any[]> = new Map();
   private metadata: Map<string, AgentOperationMetadata> = new Map();
-  private events: Map<string, any[][]> = new Map();
   private stepLocks: Map<string, { expiresAt: number; ownerId: string }> = new Map();
   private interrupted: Set<string> = new Set();
 
@@ -78,19 +77,6 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
       stepHistory.length = 200;
     }
 
-    // Save step event sequence
-    if (stepResult.events && stepResult.events.length > 0) {
-      let eventHistory = this.events.get(operationId);
-      if (!eventHistory) {
-        eventHistory = [];
-        this.events.set(operationId, eventHistory);
-      }
-      eventHistory.unshift(stepResult.events);
-      if (eventHistory.length > 200) {
-        eventHistory.length = 200;
-      }
-    }
-
     // Update operation metadata
     const existingMeta = this.metadata.get(operationId);
     if (existingMeta) {
@@ -100,12 +86,7 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
       existingMeta.totalSteps = stepResult.newState.stepCount;
     }
 
-    log(
-      '[%s:%d] Saved step result with %d events',
-      operationId,
-      stepResult.stepIndex,
-      stepResult.events?.length || 0,
-    );
+    log('[%s:%d] Saved step result', operationId, stepResult.stepIndex);
   }
 
   async getExecutionHistory(operationId: string, limit: number = 50): Promise<any[]> {
@@ -165,7 +146,6 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     this.states.delete(operationId);
     this.steps.delete(operationId);
     this.metadata.delete(operationId);
-    this.events.delete(operationId);
     this.interrupted.delete(operationId);
     log('Deleted operation %s', operationId);
   }
@@ -296,16 +276,8 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     this.states.clear();
     this.steps.clear();
     this.metadata.clear();
-    this.events.clear();
     this.stepLocks.clear();
     log('All data cleared');
-  }
-
-  /**
-   * Get event history (for test verification)
-   */
-  getEventHistory(operationId: string): any[][] {
-    return this.events.get(operationId) ?? [];
   }
 }
 

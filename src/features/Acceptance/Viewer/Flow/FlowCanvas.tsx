@@ -20,14 +20,14 @@ import type { FlowGraphData } from './flowGraph';
 
 const edgeTypes = { transition: FlowEdge };
 
-const fitOptions = { maxZoom: 1, padding: 0.08 };
+const fitOptions = { maxZoom: 1, minZoom: 0.65, padding: 0.08 };
 const styles = createStaticStyles(({ css }) => ({
   canvas: css`
     overflow: hidden;
     flex: none;
 
     width: 100%;
-    min-width: 320px;
+    min-width: 0;
     height: clamp(520px, calc(100dvh - 400px), 900px);
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -46,12 +46,14 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 export function FlowCanvas({
+  fullscreen = false,
   nodes,
   edges,
   nodeTypes,
   onSelect,
   viewKey,
 }: {
+  fullscreen?: boolean;
   nodes: Node<FlowGraphData>[];
   edges: Edge[];
   nodeTypes: NodeTypes;
@@ -84,9 +86,13 @@ export function FlowCanvas({
         height: container?.clientHeight ?? 0,
       });
     };
-  }, [viewKey, fitView, getViewport, setViewport, viewports]);
+  }, [viewKey, fullscreen, fitView, getViewport, setViewport, viewports]);
   return (
-    <Flexbox className={styles.canvas} ref={ref}>
+    <Flexbox
+      className={styles.canvas}
+      ref={ref}
+      style={fullscreen ? { flex: 1, height: '100%', minHeight: 0 } : undefined}
+    >
       <ReactFlow
         fitView
         panOnDrag

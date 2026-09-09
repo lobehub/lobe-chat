@@ -35,6 +35,7 @@ import type {
   PlanTodoConfig,
   ToolDiscoveryConfig,
   UserMemoryData,
+  WorkspaceContext,
 } from '@lobechat/context-engine';
 import { MessagesEngine, resolveTopicReferences } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
@@ -48,6 +49,7 @@ import {
 } from '@lobechat/types';
 import debug from 'debug';
 
+import { getActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { VARIABLE_GENERATORS } from '@/helpers/parserPlaceholder';
 import { lambdaClient } from '@/libs/trpc/client';
@@ -64,6 +66,8 @@ import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { getElectronStoreState } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { getToolStoreState } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -712,11 +716,17 @@ export const contextEngineering = async ({
     ? agentSelectors.getAgentMetaById(agentId)(agentStoreState)
     : undefined;
 
+  // Where the run lives (app origin + active workspace slug) so the model
+  // writes in-app links that resolve to the right scope. Mirrors the server
+  // runtime's `resolveWorkspaceContext`.
+  const workspaceContext = resolveClientWorkspaceContext();
+
   // Create MessagesEngine with injected dependencies
   const engine = new MessagesEngine({
     additionalContexts,
     // Agent configuration
     agentIdentity: { name: agentIdentityMeta?.name, title: agentIdentityMeta?.title },
+    ...(workspaceContext && { workspaceContext }),
     enableHistoryCount,
     formatHistorySummary: historySummaryPrompt,
     historyCount,
@@ -853,4 +863,19 @@ export const contextEngineering = async ({
   }
 
   return result.messages;
+};
+
+const resolveClientAppOrigin = (): string | undefined => {
+  if (isDesktop) return electronSyncSelectors.remoteServerUrl(getElectronStoreState()) || undefined;
+  if (typeof window === 'undefined') return undefined;
+  return window.location.origin || undefined;
+};
+
+const resolveClientWorkspaceContext = (): WorkspaceContext | undefined => {
+  const appUrl = resolveClientAppOrigin();
+  const slug = getActiveWorkspaceSlug();
+
+  if (!appUrl && !slug) return undefined;
+
+  return { appUrl, ...(slug && { workspace: { slug } }) };
 };
