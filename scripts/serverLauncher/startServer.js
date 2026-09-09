@@ -268,7 +268,9 @@ const runServer = async () => {
   /** Search indexes must be ready before the application can accept requests. */
   if (migrateElasticsearch) {
     try {
-      await runScript(ES_MIGRATION_SCRIPT_PATH, false, ['--startup', '--yes']);
+      const args = ['--startup', '--yes'];
+      if (process.env.ENABLE_TELEMETRY) args.push('--telemetry-environment=production');
+      await runScript(ES_MIGRATION_SCRIPT_PATH, false, args);
     } catch (err) {
       console.error('❌ Elasticsearch migration failed; application startup stopped.');
       console.error(err);

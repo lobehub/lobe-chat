@@ -64,6 +64,26 @@ describe('Docker startup migrations', () => {
     ]);
   });
 
+  it('supplies the migration telemetry environment when Docker telemetry is enabled', async () => {
+    const result = await launch({
+      ENABLE_TELEMETRY: '1',
+      FTS_SEARCH_PROVIDER: 'elasticsearch',
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://collector:4318',
+    });
+    expect(result.commands).toEqual([
+      ['/bin/node', '/app/docker.cjs'],
+      [
+        '/bin/node',
+        '/app/fts-search-elasticsearch-reindex.cjs',
+        '--startup',
+        '--yes',
+        '--telemetry-environment=production',
+      ],
+      ['/bin/node', '/app/server.js'],
+    ]);
+    expect(result.exits).toEqual([]);
+  });
+
   it('keeps PostgreSQL-only startup free of Elasticsearch operations', async () => {
     const result = await launch({ DATABASE_DRIVER: 'node', FTS_SEARCH_PROVIDER: 'pg_search' });
     expect(result.commands.map((command) => command[1])).toEqual([
