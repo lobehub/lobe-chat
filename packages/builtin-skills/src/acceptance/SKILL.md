@@ -306,10 +306,11 @@ surface; append `?r=<roundIndex>` for this round's fixed snapshot.
 Put no images, local paths, local file links, or internal run-page paths in the
 chat reply.
 
-```text
-Acceptance:   https://app.lobehub.com/acceptance/<acceptanceId>
+Write the link as a plain-text line, never inside a fenced or inline code block — the
+chat client only linkifies plain text, and a code block makes it unclickable:
+
+Acceptance: <https://app.lobehub.com/acceptance/><acceptanceId>
 Coverage: 2/2 criteria, all required evidence uploaded
-```
 
 ## Portability rules
 
