@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 
-import { checkFilterState, focusedCheckStates, isCheckWorkActionable } from '../Checks/checkState';
+import { checkFilterState, focusedCheckStates } from '../Checks/checkState';
 import {
   type AcceptanceCheck,
   type CheckReviewInput,
@@ -116,12 +116,6 @@ const styles = createStaticStyles(({ css }) => ({
     width: min(880px, 100%);
     margin-inline: auto;
   `,
-  work: css`
-    padding: 16px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorFillQuaternary};
-  `,
 }));
 
 interface AcceptanceFocusReviewProps {
@@ -130,7 +124,6 @@ interface AcceptanceFocusReviewProps {
   focusedCheck: AcceptanceCheck;
   onAddChecks?: () => void;
   onBack: () => void;
-  onCheckWork?: () => void;
   onDismissProposal?: (input: ProposalDismissInput) => Promise<void>;
   onEditStandingCheck?: (item: AcceptanceChecklistItem) => void;
   onReview: (input: CheckReviewInput) => Promise<boolean>;
@@ -150,7 +143,6 @@ const AcceptanceFocusReview = ({
   focusedCheck,
   onAddChecks,
   onBack,
-  onCheckWork,
   onDismissProposal,
   onEditStandingCheck,
   onReview,
@@ -172,23 +164,27 @@ const AcceptanceFocusReview = ({
   return (
     <div className={styles.layout}>
       <Flexbox className={styles.outline}>
+        {/* The phone top line is a breadcrumb, not a nav bar: it introduces the
+            check and hands off to the outline. The row below it already owns
+            44px targets for stepping between checks, so stacking another
+            44px band here just pushed the check itself down the screen. */}
         <Flexbox
           align={md ? undefined : 'center'}
           flex={'none'}
           gap={md ? 10 : 0}
           horizontal={!md}
-          paddingBlock={8}
+          paddingBlock={md ? 8 : 0}
           paddingInline={4}
         >
           <Button
             aria-label={t('acceptance.focus.back')}
-            icon={<Icon icon={ArrowLeft} />}
+            icon={<Icon icon={ArrowLeft} size={md ? undefined : 16} />}
             size={'small'}
             type={'text'}
             style={{
               alignSelf: 'flex-start',
-              minHeight: md ? undefined : 44,
-              minWidth: md ? undefined : 44,
+              minHeight: md ? undefined : 30,
+              minWidth: md ? undefined : 30,
             }}
             onClick={onBack}
           >
@@ -197,9 +193,15 @@ const AcceptanceFocusReview = ({
           {!md && (
             <Button
               aria-expanded={outlineOpen}
-              icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
-              style={{ height: 'auto', minHeight: 44, textAlign: 'start', whiteSpace: 'normal' }}
+              icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} size={14} />}
+              size={'small'}
               type={'text'}
+              style={{
+                fontSize: 13,
+                minHeight: 30,
+                paddingInline: 6,
+                textAlign: 'start',
+              }}
               onClick={() => setOutlineOpen((open) => !open)}
             >
               {t('acceptance.checks.title')} · {currentIndex + 1} / {orderedChecks.length}
@@ -404,7 +406,7 @@ const AcceptanceFocusReview = ({
                           : CircleDashed
                   }
                 />
-                {t('acceptance.focus.verifierLabel')} ·{' '}
+                {t('acceptance.focus.judgeLabel')} ·{' '}
                 {t(`report.verdict.${focusedStates.verifierLabel}`)}
               </Flexbox>
             </Flexbox>
@@ -427,19 +429,6 @@ const AcceptanceFocusReview = ({
               {t(`acceptance.focus.verifierDescription.${focusedStates.verifierLabel}`)}
             </Text>
           </Flexbox>
-          {md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
-            <Flexbox horizontal align={'center'} className={styles.work} gap={16}>
-              <Flexbox flex={1} gap={3}>
-                <Text strong>{t('acceptance.checkWork.title')}</Text>
-                <Text fontSize={12} type={'secondary'}>
-                  {t('acceptance.checkWork.description')}
-                </Text>
-              </Flexbox>
-              <Button type={'primary'} onClick={onCheckWork}>
-                {t('acceptance.checkWork.copy')}
-              </Button>
-            </Flexbox>
-          )}
           <FocusedCheckDetails
             canReview={canReview}
             check={focusedCheck}
@@ -448,15 +437,6 @@ const AcceptanceFocusReview = ({
             onReview={onReview}
             onRound={onRound}
           />
-          {!md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
-            <Button
-              style={{ alignSelf: 'flex-start', minHeight: 44 }}
-              type={'text'}
-              onClick={onCheckWork}
-            >
-              {t('acceptance.checkWork.copy')}
-            </Button>
-          )}
         </Flexbox>
       </Flexbox>
     </div>

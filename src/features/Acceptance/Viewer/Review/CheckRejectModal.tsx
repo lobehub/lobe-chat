@@ -1,11 +1,11 @@
 'use client';
 
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
-import { Flexbox, TextArea } from '@lobehub/ui';
+import { Flexbox, Icon, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
-import { Trash2, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Crosshair, Trash2, ZoomIn, ZoomOut } from 'lucide-react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AnnotationCanvas } from '../Evidence/Annotation';
@@ -16,6 +16,9 @@ import {
   useFeedbackAttachments,
 } from '../Evidence/attachments';
 import { MobileEvidenceReview } from '../Evidence/MobileEvidenceReview';
+import type { MobileReviewEvent, MobileReviewStep } from '../Evidence/mobileReviewFlow';
+import { nextMobileReviewStep } from '../Evidence/mobileReviewFlow';
+import { useMeasuredWidth } from '../Evidence/useMeasuredWidth';
 import { frostedModalStyles } from './modals';
 import { useReviewSubmit } from './useReviewSubmit';
 
@@ -103,6 +106,30 @@ const styles = createStaticStyles(({ css }) => ({
     flex: none;
     padding-block-start: 12px;
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+  `,
+  /** The region caption on a phone: a link, not a button-shaped box. The tap
+      target comes from padding around a compact line, so a list of regions
+      does not turn into a column of 44px slabs. */
+  regionJump: css`
+    cursor: pointer;
+
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    align-self: flex-start;
+
+    padding-block: 7px;
+    padding-inline: 2px;
+    border: none;
+
+    font-size: 13px;
+    color: ${cssVar.colorLink};
+
+    background: none;
+
+    &:active {
+      opacity: 0.6;
+    }
   `,
   regionIndex: css`
     flex: none;
@@ -324,7 +351,7 @@ export const mergeRejectComments = (initialComment = '', storedComment = '') => 
   return `${initial}\n\n${stored}`;
 };
 
-const CheckRejectModalContent = memo<CheckRejectModalProps>(
+export const CheckRejectModalContent = memo<CheckRejectModalProps>(
   ({
     checkTitle,
     draftKey,
@@ -339,8 +366,12 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
   }) => {
     const { t: translate } = useTranslation('verify');
     const { md = true } = useResponsive();
-    const [drawing, setDrawing] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(evidence.length === 0);
+    // Marking or panning — the phone review has no second screen to be on,
+    // so this is the only mode left. See mobileReviewFlow.
+    const [step, setStep] = useState<MobileReviewStep>('browse');
+    const advance = (event: MobileReviewEvent) =>
+      setStep((current) => nextMobileReviewStep(current, event));
+    const drawing = step === 'draw';
     const swipeStart = useRef<{ x: number; y: number } | null>(null);
     const { close, setCanDismissByClickOutside } = useModalContext();
     const [draft] = useState(() => readDraft(draftKey));
@@ -382,33 +413,13 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       useFeedbackAttachments(6, draft?.attachments ?? previousAttachments);
 
     const [zoom, setZoom] = useState(1);
-    const viewportRef = useRef<HTMLDivElement>(null);
-    const [viewportWidth, setViewportWidth] = useState<number>();
-    useLayoutEffect(() => {
-      if (evidence.length === 0) return;
-      let observer: ResizeObserver | undefined;
-      let raf = 0;
-      // The Modal body mounts async (portal + open animation), so the ref may
-      // be null on the first pass — retry on the next frame until it attaches,
-      // then track its width. Without this the image stays fit-width and zoom
-      // does nothing (viewportWidth never resolves).
-      const attach = () => {
-        const node = viewportRef.current;
-        if (!node) {
-          raf = requestAnimationFrame(attach);
-          return;
-        }
-        const measure = () => setViewportWidth(node.clientWidth);
-        measure();
-        observer = new ResizeObserver(measure);
-        observer.observe(node);
-      };
-      attach();
-      return () => {
-        cancelAnimationFrame(raf);
-        observer?.disconnect();
-      };
-    }, [activeEvidenceId, evidence.length, showFeedback]);
+    // The stage node is remounted by the responsive flip, so the measurement
+    // follows the node rather than a ref captured once — see useMeasuredWidth.
+    const {
+      node: viewportNode,
+      ref: viewportRef,
+      width: viewportWidth,
+    } = useMeasuredWidth<HTMLDivElement>();
 
     // Persist the draft as it is typed; an empty draft cleans the slot up.
     useEffect(() => {
@@ -432,7 +443,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       if (!evidence[index]) return;
       setActiveEvidenceId(evidence[index].id);
       setZoom(1);
-      viewportRef.current?.scrollTo(0, 0);
+      viewportNode?.scrollTo(0, 0);
     };
     const activeEvidence = evidence.find((item) => item.id === activeEvidenceId);
     const activeAnnotations = annotations.filter((item) => item.evidenceId === activeEvidenceId);
@@ -473,10 +484,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
           ...previous,
           { comment: '', evidenceId: activeEvidence!.id, key: nextAnnotationKey(), rect },
         ]);
-        if (!md) {
-          setDrawing(false);
-          setShowFeedback(true);
-        }
+        advance('region-drawn');
       },
       onRemove: (index: number) => {
         const target = activeAnnotations[index];
@@ -493,17 +501,21 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
     };
 
     const annotationInputs = (md ? activeAnnotations : annotations).map((annotation, index) => (
-      <Flexbox gap={8} key={annotation.key}>
+      <Flexbox gap={4} key={annotation.key}>
         {!md && (
-          <Button
-            style={{ alignSelf: 'flex-start', minHeight: 44 }}
-            type={'text'}
+          // A caption that jumps back to its box on the image. It reads as a
+          // link — crosshair, link colour, hugging the note it labels — because
+          // a full-height text Button looked like an inert boxed heading and
+          // ate a 44px band per region.
+          <button
+            className={styles.regionJump}
+            type={'button'}
             onClick={() => {
               selectEvidence(evidence.findIndex((item) => item.id === annotation.evidenceId));
-              setDrawing(true);
-              setShowFeedback(false);
+              advance('edit-region');
             }}
           >
+            <Icon icon={Crosshair} size={13} />
             {translate('acceptance.review.regionImage', {
               image: evidence.findIndex((item) => item.id === annotation.evidenceId) + 1,
               region:
@@ -511,7 +523,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
                   .filter((item) => item.evidenceId === annotation.evidenceId)
                   .findIndex((item) => item.key === annotation.key) + 1,
             })}
-          </Button>
+          </button>
         )}
         <Flexbox horizontal align={'flex-start'} gap={8}>
           <span
@@ -652,6 +664,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
     if (!md)
       return (
         <MobileEvidenceReview
+          annotationCount={activeAnnotations.length}
           canSubmit={canSubmit && !uploading}
           drawing={drawing}
           failed={failed}
@@ -659,7 +672,6 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
           imageCount={evidence.length}
           imageIndex={activeIndex}
           loading={loading}
-          showFeedback={showFeedback}
           zoom={zoom}
           editor={
             <Flexbox gap={16}>
@@ -692,9 +704,8 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
             </Flexbox>
           }
           onConfirm={handleConfirm}
-          onDrawingChange={setDrawing}
           onImageChange={selectEvidence}
-          onShowFeedback={setShowFeedback}
+          onStep={advance}
           onZoom={stepZoom}
         />
       );
