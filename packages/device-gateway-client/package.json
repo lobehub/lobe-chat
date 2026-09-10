@@ -11,6 +11,7 @@
     "test:coverage": "bunx vitest run --coverage"
   },
   "dependencies": {
+    "@lobechat/types": "workspace:*",
     "ws": "^8.21.0"
   },
   "devDependencies": {

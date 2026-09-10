@@ -112,9 +112,13 @@ vi.mock('@/server/services/toolExecution/preprocessLhCommand', () => ({
 
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
-    executeToolCall: mocks.executeToolCall,
     prepareSkillDirectory: mocks.prepareSkillDirectory,
   },
+}));
+
+vi.mock('@/server/services/deviceGateway/authorizedToolCall', () => ({
+  executeAuthorizedDeviceToolCall: (_serverDB: unknown, ...args: unknown[]) =>
+    mocks.executeToolCall(...args),
 }));
 
 vi.mock('../resolveWorkspaceScope', () => ({

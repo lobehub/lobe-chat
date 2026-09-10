@@ -16,6 +16,7 @@ const {
   mockGetHeterogeneousResumeSessionId,
   mockMessageCreate,
   mockMessageQuery,
+  mockMessageUpdate,
   mockResolveAttachmentsByFileIds,
   mockSpawnHeteroSandbox,
   mockIngestAttachment,
@@ -33,6 +34,7 @@ const {
   mockIngestAttachment: vi.fn(),
   mockMessageCreate: vi.fn(),
   mockMessageQuery: vi.fn(),
+  mockMessageUpdate: vi.fn().mockResolvedValue({}),
   mockPublishAgentRuntimeEnd: vi.fn().mockResolvedValue('end-event-id'),
   mockPublishAgentRuntimeInit: vi.fn().mockResolvedValue('init-event-id'),
   mockResolveAttachmentsByFileIds: vi.fn(),
@@ -87,7 +89,7 @@ vi.mock('@/database/models/message', () => ({
     getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
     getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
     query: mockMessageQuery,
-    update: vi.fn().mockResolvedValue({}),
+    update: mockMessageUpdate,
   })),
 }));
 
@@ -210,6 +212,10 @@ vi.mock('@/server/services/deviceGateway', () => ({
     queryDeviceList: vi.fn().mockResolvedValue([]),
     resolveDeviceWorkspaceId: vi.fn().mockResolvedValue(undefined),
   },
+}));
+
+vi.mock('@/server/services/deviceGateway/dispatchAuthorization', () => ({
+  resolveDeviceDispatchAuthorizationFailure: vi.fn().mockResolvedValue(undefined),
 }));
 
 vi.mock('@/server/services/heterogeneousAgent/remoteDeviceHeteroContext', () => ({
@@ -515,6 +521,52 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       }),
     );
     expect(mockSpawnHeteroSandbox).not.toHaveBeenCalled();
+  });
+
+  it('returns structured retry context when a device disappears between discovery and dispatch', async () => {
+    heteroAgentConfig.model = 'amp';
+    heteroAgentConfig.provider = 'amp';
+    heteroAgentConfig.agencyConfig = {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { type: 'amp' },
+    } as any;
+    mockDispatchAgentRun.mockResolvedValueOnce({
+      error: 'DEVICE_NOT_FOUND',
+      errorData: {
+        code: 'DEVICE_NOT_FOUND',
+        deviceId: 'device-1',
+        retryable: true,
+        scope: 'personal',
+      },
+      success: false,
+    });
+
+    const result = await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'Use Amp on my device',
+    });
+
+    // ROOT CAUSE:
+    //
+    // A device can disconnect after discovery succeeds but before the Gateway accepts dispatch.
+    // The old result kept only the error string, so an outer agent could not distinguish a safe
+    // presence retry from an execution failure. The structured transport data now survives the
+    // Agent result and persisted message envelope.
+    expect(result.errorData).toEqual({
+      code: 'DEVICE_NOT_FOUND',
+      deviceId: 'device-1',
+      retryable: true,
+      scope: 'personal',
+    });
+    expect(mockMessageUpdate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        error: expect.objectContaining({
+          body: expect.objectContaining({ code: 'DEVICE_NOT_FOUND', retryable: true }),
+        }),
+      }),
+    );
   });
 
   it('resumes Amp natively without loading or injecting fallback history', async () => {

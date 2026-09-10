@@ -4,6 +4,7 @@ import {
   type AgentShareVisitorContext,
   type ChatToolPayload,
   type ClientSecretPayload,
+  type DeviceUnavailableErrorData,
   type ExecSubAgentParams,
   type StepActivatedSkill,
   type StepContextTodoItem,
@@ -346,6 +347,8 @@ export interface ToolExecutionResult {
    */
   deferred?: boolean;
   error?: any;
+  /** Structured unavailable-device context preserved through the runtime error envelope. */
+  errorData?: DeviceUnavailableErrorData;
   state?: Record<string, any>;
   success: boolean;
   /**
