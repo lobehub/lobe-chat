@@ -14,9 +14,17 @@ import {
   AcceptanceCommentModel,
   acceptanceReactionClientId,
 } from '@/database/models/acceptanceComment';
-import { agents, users, verifyRuns, workspaceMembers } from '@/database/schemas';
+import {
+  agents,
+  users,
+  verifyCheckResults,
+  verifyEvidence,
+  verifyRuns,
+  workspaceMembers,
+} from '@/database/schemas';
 import type { AcceptanceCommentRow } from '@/database/schemas/acceptanceComment';
 import type { LobeChatDatabase } from '@/database/type';
+import { assertAgentUsableBy } from '@/database/utils/agent-access';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createEvidenceFileResolver } from '@/server/services/verify/evidenceFiles';
@@ -279,6 +287,64 @@ const requireComment = async (
   return { access, comment };
 };
 
+/**
+ * A comment may only speak as an agent the caller is actually allowed to use.
+ *
+ * `author_agent_id` decides whose name, title and avatar the discussion shows,
+ * and a public acceptance shows it to anyone with the link. Without this gate a
+ * participant could name any agent id that exists and impersonate it. The scope
+ * is the acceptance's own workspace, because that is the audience the agent is
+ * being presented to.
+ */
+const assertAuthorAgentUsable = async (
+  db: LobeChatDatabase,
+  ctx: { userId: string; workspaceId?: string },
+  agentId?: string,
+) => {
+  if (!agentId) return;
+  try {
+    await assertAgentUsableBy(db, agentId, ctx);
+  } catch (error) {
+    if (error instanceof TRPCError && error.code === 'NOT_FOUND')
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Author agent not found' });
+    throw error;
+  }
+};
+
+/**
+ * A comment may only point at a round or an evidence tile of its own acceptance.
+ *
+ * The foreign keys prove these ids exist somewhere in the database; they say
+ * nothing about which acceptance they hang off. Access is checked against
+ * `acceptanceId` alone, so an unscoped reference would let a participant pull a
+ * round index or an evidence anchor out of an acceptance they cannot read.
+ */
+const assertReferencesBelongToAcceptance = async (
+  db: LobeChatDatabase,
+  acceptanceId: string,
+  refs: { evidenceId?: string; runId?: string },
+) => {
+  if (refs.runId) {
+    const [run] = await db
+      .select({ id: verifyRuns.id })
+      .from(verifyRuns)
+      .where(and(eq(verifyRuns.id, refs.runId), eq(verifyRuns.acceptanceId, acceptanceId)))
+      .limit(1);
+    if (!run) throw new TRPCError({ code: 'NOT_FOUND', message: 'Round not found' });
+  }
+
+  if (refs.evidenceId) {
+    const [evidence] = await db
+      .select({ id: verifyEvidence.id })
+      .from(verifyEvidence)
+      .innerJoin(verifyCheckResults, eq(verifyCheckResults.id, verifyEvidence.checkResultId))
+      .innerJoin(verifyRuns, eq(verifyRuns.id, verifyCheckResults.verifyRunId))
+      .where(and(eq(verifyEvidence.id, refs.evidenceId), eq(verifyRuns.acceptanceId, acceptanceId)))
+      .limit(1);
+    if (!evidence) throw new TRPCError({ code: 'NOT_FOUND', message: 'Evidence not found' });
+  }
+};
+
 export const acceptanceCommentRouter = router({
   create: writeProcedure.input(createSchema).mutation(async ({ ctx, input }) => {
     const access = await resolveAcceptanceCommentAccess(
@@ -287,6 +353,16 @@ export const acceptanceCommentRouter = router({
       input.acceptanceId,
     );
     if (!access.canComment) throw new TRPCError({ code: 'FORBIDDEN', message: 'Read-only access' });
+
+    await assertAuthorAgentUsable(
+      ctx.serverDB,
+      { userId: ctx.userId, workspaceId: access.acceptance.workspaceId ?? undefined },
+      input.authorAgentId,
+    );
+    await assertReferencesBelongToAcceptance(ctx.serverDB, access.acceptance.id, {
+      evidenceId: input.anchor?.evidenceId,
+      runId: input.contextRunId,
+    });
 
     try {
       const { comment } = await ctx.acceptanceCommentModel.create({
