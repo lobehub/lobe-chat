@@ -2257,9 +2257,10 @@ export class MessageModel {
               ),
             )
         : Promise.resolve([]),
-    ]);
 
-    await this.refreshToolResultImageUrls(result, postProcessUrl);
+      // 2e. Refresh the tool-result image URLs in place (see the method doc).
+      this.refreshToolResultImageUrls(result, postProcessUrl),
+    ]);
 
     // 3. Process file results
     const relatedFileList = await Promise.all(
