@@ -38,3 +38,36 @@ test('selects the newest baseline in the target commit lineage', async () => {
   assert.equal(result, '200');
   assert.deepEqual(artifactRunIds, [200]);
 });
+
+for (const artifactSelector of [{ artifactName: 'baseline' }, { artifactPrefix: 'base' }]) {
+  for (const available of [true, false]) {
+    test(`skips expired baselines (${JSON.stringify(artifactSelector)}, available=${available})`, async () => {
+      const github = {
+        request: async () => ({ data: { status: 'ahead' } }),
+        rest: {
+          actions: {
+            listWorkflowRuns: async () => ({
+              data: {
+                workflow_runs: [
+                  { id: 300, head_sha: 'newer' },
+                  { id: 200, head_sha: 'older' },
+                ],
+              },
+            }),
+            listWorkflowRunArtifacts: async ({ run_id }) => ({
+              data: { artifacts: [{ name: 'baseline', expired: run_id === 300 || !available }] },
+            }),
+          },
+        },
+      };
+      const result = await findSizeBaseline({
+        ...artifactSelector,
+        context: { repo: { owner: 'lobehub', repo: 'lobehub' } },
+        github,
+        targetSha: 'head',
+        workflowId: 'e2e.yml',
+      });
+      assert.equal(result, available ? '200' : '');
+    });
+  }
+}

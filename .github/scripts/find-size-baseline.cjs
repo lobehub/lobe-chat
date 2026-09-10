@@ -55,8 +55,10 @@ const findSizeBaseline = async ({
       run_id: run.id,
     });
 
-    const match = artifacts.artifacts.find((artifact) =>
-      artifactName ? artifact.name === artifactName : artifact.name.startsWith(artifactPrefix),
+    const match = artifacts.artifacts.find(
+      (artifact) =>
+        !artifact.expired &&
+        (artifactName ? artifact.name === artifactName : artifact.name.startsWith(artifactPrefix)),
     );
 
     if (match) {
