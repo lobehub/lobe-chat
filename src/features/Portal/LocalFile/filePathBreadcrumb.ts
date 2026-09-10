@@ -65,30 +65,48 @@ export const toBreadcrumbSegments = (filePath: string, rootPath?: string): Bread
   ];
 };
 
-/**
- * Immediate children of a directory, read out of the flat project index.
- *
- * Index entries mark a directory with a trailing slash (`src/`), which has to
- * come off before the depth test or every folder reads as a grandchild and only
- * files ever show up.
- */
-export const listDirectoryChildren = <T extends BreadcrumbEntry>(
-  entries: T[],
-  directoryRelativePath: string,
-): T[] => {
-  const prefix = directoryRelativePath ? `${directoryRelativePath.replace(/\/$/, '')}/` : '';
+/** Strip the trailing slash the project index puts on a directory entry. */
+const withoutTrailingSlash = (relativePath: string): string => relativePath.replace(/\/$/, '');
 
-  return entries
-    .filter((entry) => {
-      const relativePath = entry.relativePath.replace(/\/$/, '');
-      if (!relativePath.startsWith(prefix)) return false;
-      const rest = relativePath.slice(prefix.length);
-      return rest.length > 0 && !rest.includes('/');
-    })
-    .sort((a, b) => {
-      // Folders first, then case-insensitive by name — the order every file
-      // tree in this product already uses.
+/**
+ * Index the flat project file list by parent directory, so a menu can walk the
+ * tree without rescanning every entry per folder. The root's children sit under
+ * `''`.
+ *
+ * Directory entries are marked with a trailing slash (`src/`), which has to come
+ * off before the depth test or every folder reads as a grandchild and only files
+ * ever show up.
+ */
+export const groupChildrenByParent = <T extends BreadcrumbEntry>(
+  entries: T[],
+): Map<string, T[]> => {
+  const byParent = new Map<string, T[]>();
+
+  for (const entry of entries) {
+    const relativePath = withoutTrailingSlash(entry.relativePath);
+    if (!relativePath) continue;
+
+    const lastSlash = relativePath.lastIndexOf('/');
+    const parent = lastSlash < 0 ? '' : relativePath.slice(0, lastSlash);
+    const siblings = byParent.get(parent);
+    if (siblings) siblings.push(entry);
+    else byParent.set(parent, [entry]);
+  }
+
+  for (const siblings of byParent.values()) {
+    // Folders first, then case-insensitive by name — the order every file tree
+    // in this product already uses.
+    siblings.sort((a, b) => {
       if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1;
       return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
     });
+  }
+
+  return byParent;
 };
+
+/** Immediate children of a directory, in the same order as the grouping above. */
+export const listDirectoryChildren = <T extends BreadcrumbEntry>(
+  entries: T[],
+  directoryRelativePath: string,
+): T[] => groupChildrenByParent(entries).get(withoutTrailingSlash(directoryRelativePath)) ?? [];

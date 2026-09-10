@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   type BreadcrumbEntry,
+  groupChildrenByParent,
   listDirectoryChildren,
   toBreadcrumbSegments,
 } from './filePathBreadcrumb';
@@ -96,5 +97,31 @@ describe('listDirectoryChildren', () => {
       'ui',
       'index.ts',
     ]);
+  });
+});
+
+describe('groupChildrenByParent', () => {
+  const entries: BreadcrumbEntry[] = [
+    { isDirectory: true, name: 'src', path: '/w/app/src', relativePath: 'src/' },
+    { isDirectory: true, name: 'ui', path: '/w/app/src/ui', relativePath: 'src/ui/' },
+    {
+      isDirectory: false,
+      name: 'Button.tsx',
+      path: '/w/app/src/ui/Button.tsx',
+      relativePath: 'src/ui/Button.tsx',
+    },
+    { isDirectory: false, name: 'README.md', path: '/w/app/README.md', relativePath: 'README.md' },
+  ];
+
+  it('keys every level by its parent, with the root under an empty string', () => {
+    const byParent = groupChildrenByParent(entries);
+
+    expect(byParent.get('')?.map((e) => e.name)).toEqual(['src', 'README.md']);
+    expect(byParent.get('src')?.map((e) => e.name)).toEqual(['ui']);
+    expect(byParent.get('src/ui')?.map((e) => e.name)).toEqual(['Button.tsx']);
+  });
+
+  it('has no entry for a folder that holds nothing', () => {
+    expect(groupChildrenByParent(entries).get('src/ui/Button.tsx')).toBeUndefined();
   });
 });

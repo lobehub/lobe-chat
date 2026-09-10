@@ -1,17 +1,18 @@
 'use client';
 
 import type { ProjectFileIndexEntry } from '@lobechat/electron-client-ipc';
-import { DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
+import { type DropdownItem, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { ChevronRightIcon, FileIcon } from 'lucide-react';
+import { ChevronRightIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 
+import FileIcon from '@/components/FileIcon';
 import { useProjectFiles } from '@/features/Conversation/WorkingSidebar/Files/useProjectFiles';
 import { useChatStore } from '@/store/chat';
 
 import {
   type BreadcrumbSegment,
-  listDirectoryChildren,
+  groupChildrenByParent,
   toBreadcrumbSegments,
 } from './filePathBreadcrumb';
 
@@ -70,20 +71,71 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
+interface BuildMenuParams {
+  byParent: Map<string, ProjectFileIndexEntry[]>;
+  deviceId?: string;
+  openFile: (filePath: string) => void;
+  parentRelativePath: string;
+}
+
+/**
+ * The contents of one folder as menu items: files open the preview, folders
+ * become submenus of their own contents, so the breadcrumb walks the tree the
+ * way a desktop editor's does.
+ *
+ * A folder with nothing indexed under it is left out rather than rendered as an
+ * empty submenu — there would be nothing to pick.
+ */
+const buildFolderItems = ({
+  byParent,
+  deviceId,
+  openFile,
+  parentRelativePath,
+}: BuildMenuParams): DropdownItem[] => {
+  const children = byParent.get(parentRelativePath) ?? [];
+
+  return children.flatMap((child): DropdownItem[] => {
+    const relativePath = child.relativePath.replace(/\/$/, '');
+    const icon = (
+      <FileIcon fileName={child.name} isDirectory={child.isDirectory} size={14} variant={'raw'} />
+    );
+
+    if (!child.isDirectory) {
+      return [{ icon, key: child.path, label: child.name, onClick: () => openFile(child.path) }];
+    }
+
+    const grandChildren = buildFolderItems({
+      byParent,
+      deviceId,
+      openFile,
+      parentRelativePath: relativePath,
+    });
+    if (grandChildren.length === 0) return [];
+
+    return [
+      {
+        children: grandChildren,
+        icon,
+        key: child.path,
+        label: child.name,
+        openOnHover: true,
+        type: 'submenu',
+      },
+    ];
+  });
+};
+
 /**
  * One level of the path. A level backed by the project index opens a menu of
- * the files in that folder, so the breadcrumb doubles as a file switcher.
- *
- * Only files are listed: every folder on the path already has its own crumb, so
- * a sub-folder entry would be an affordance with nowhere to go.
+ * that folder's contents, so the breadcrumb doubles as a file switcher.
  */
 const Crumb = memo<{
+  byParent?: Map<string, ProjectFileIndexEntry[]>;
   deviceId?: string;
-  entries?: ProjectFileIndexEntry[];
   isLast: boolean;
   rootPath?: string;
   segment: BreadcrumbSegment;
-}>(({ deviceId, entries, isLast, rootPath, segment }) => {
+}>(({ byParent, deviceId, isLast, rootPath, segment }) => {
   const openLocalFile = useChatStore((s) => s.openLocalFile);
 
   const ownFolder = useMemo(() => {
@@ -93,22 +145,18 @@ const Crumb = memo<{
   }, [isLast, segment.relativePath]);
 
   const items = useMemo(() => {
-    if (!entries || !rootPath || ownFolder === undefined) return [];
+    if (!byParent || !rootPath || ownFolder === undefined) return [];
 
-    return listDirectoryChildren(entries, ownFolder)
-      .filter((child) => !child.isDirectory)
-      .map((child) => ({
-        icon: <Icon icon={FileIcon} size={14} />,
-        key: child.path,
-        label: child.name,
-        onClick: () =>
-          openLocalFile({ deviceId, filePath: child.path, workingDirectory: rootPath }),
-      }));
-  }, [deviceId, entries, openLocalFile, ownFolder, rootPath]);
+    return buildFolderItems({
+      byParent,
+      deviceId,
+      openFile: (filePath) => openLocalFile({ deviceId, filePath, workingDirectory: rootPath }),
+      parentRelativePath: ownFolder,
+    });
+  }, [byParent, deviceId, openLocalFile, ownFolder, rootPath]);
 
   // A folder on the path holds at least the open file, so an empty result means
-  // either the index does not reach here (a project past the walk's cap) or the
-  // folder only holds sub-folders. Either way there is nothing to switch to.
+  // the index does not reach here — a project past the walk's cap.
   const canBrowse = items.length > 0;
 
   // A span rather than a button: the menu's trigger applies its own button
@@ -133,6 +181,10 @@ interface PathBreadcrumbProps {
 const PathBreadcrumb = memo<PathBreadcrumbProps>(({ deviceId, path, rootPath }) => {
   const { data } = useProjectFiles(deviceId, rootPath);
   const segments = useMemo(() => toBreadcrumbSegments(path, rootPath), [path, rootPath]);
+  const byParent = useMemo(
+    () => (data?.entries ? groupChildrenByParent(data.entries) : undefined),
+    [data?.entries],
+  );
 
   return (
     <>
@@ -152,8 +204,8 @@ const PathBreadcrumb = memo<PathBreadcrumbProps>(({ deviceId, path, rootPath }) 
               </span>
             )}
             <Crumb
+              byParent={byParent}
               deviceId={deviceId}
-              entries={data?.entries}
               isLast={isLast}
               rootPath={rootPath}
               segment={segment}
