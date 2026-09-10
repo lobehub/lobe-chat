@@ -209,18 +209,21 @@ describe('shareRouter', () => {
         expect(AgentShareModel.findBySlugOrId).not.toHaveBeenCalled();
       });
 
-      it('rejects a non-owner visitor when the agent share flag is off', async () => {
-        mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare: false });
-        const caller = shareRouter.createCaller(
-          await createContextInner({ userId: 'visitor-user' }),
-        );
+      it.each([false, undefined])(
+        'admits a non-owner visitor when the agent share flag is %s',
+        async (enableAgentShare) => {
+          mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare });
+          const caller = shareRouter.createCaller(
+            await createContextInner({ userId: 'visitor-user' }),
+          );
 
-        await expect(caller.getSharedAgent({ slugOrId: 'shared-agent' })).rejects.toMatchObject({
-          code: 'FORBIDDEN',
-        });
-        expect(mockGetFeatureFlagsState).toHaveBeenCalledWith('visitor-user');
-        expect(AgentShareModel.incrementUserViewCount).not.toHaveBeenCalled();
-      });
+          await expect(caller.getSharedAgent({ slugOrId: 'shared-agent' })).resolves.toMatchObject({
+            isOwner: false,
+          });
+          expect(mockGetFeatureFlagsState).not.toHaveBeenCalled();
+          expect(AgentShareModel.incrementUserViewCount).toHaveBeenCalled();
+        },
+      );
 
       it('still lets the owner preview their own share when the agent share flag is off', async () => {
         mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare: false });

@@ -579,26 +579,30 @@ describe('shareChatRouter', () => {
       expect(mockAccessCheck).not.toHaveBeenCalled();
     });
 
-    it('rejects every procedure when the agent share flag is off for this visitor', async () => {
-      mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare: false });
-      const caller = await createCaller();
+    it.each([false, undefined])(
+      'admits visitor procedures when the agent share flag is %s',
+      async (enableAgentShare) => {
+        mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare });
+        mockMessageQueryForVisitor.mockResolvedValue([]);
+        const caller = await createCaller();
 
-      await expect(caller.getTopics({ shareId: 'share-1' })).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-      });
-      await expect(
-        caller.getMessages({ shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      await expect(caller.execAgent({ prompt: 'hi', shareId: 'share-1' })).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-      });
-      await expect(
-        caller.interruptTask({ operationId: 'op-1', shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      await expect(
-        caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      expect(mockAccessCheck).not.toHaveBeenCalled();
-    });
+        await expect(caller.getTopics({ shareId: 'share-1' })).resolves.toEqual([]);
+        await expect(
+          caller.getMessages({ shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toEqual([]);
+        await expect(caller.execAgent({ prompt: 'hi', shareId: 'share-1' })).resolves.toMatchObject(
+          {
+            success: true,
+          },
+        );
+        await expect(
+          caller.interruptTask({ operationId: 'op-1', shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toMatchObject({ success: true });
+        await expect(
+          caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toEqual({ token: 'visitor-jwt' });
+        expect(mockGetFeatureFlagsState).not.toHaveBeenCalled();
+      },
+    );
   });
 });
