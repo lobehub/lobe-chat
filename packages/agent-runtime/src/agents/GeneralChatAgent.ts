@@ -30,8 +30,13 @@ import { shouldCompress } from '../utils/tokenCounter';
 const TOOL_NOT_ALLOWED_CONTENT =
   'Tool execution blocked because the tool is not allowed in the current execution scope.';
 const TOOL_NOT_ALLOWED_REASON = 'tool_not_allowed';
-const UNRESOLVED_TOOL_CONTENT =
-  'Tool call rejected: that tool name does not exist. Copy a name exactly as declared in the tools schema and call it again.';
+/**
+ * Names the offending calls so the model sees what it actually emitted. The
+ * name it reads back from its own turn is regenerated from the persisted
+ * identifier/apiName pair, which for an unparseable name is not what it typed.
+ */
+const unresolvedToolContent = (names: string) =>
+  `Tool call rejected: no available tool is named ${names}. Copy a name exactly as declared in the tools schema and call it again.`;
 const UNRESOLVED_TOOL_REASON = 'tool_name_unresolved';
 /**
  * How many times one operation may answer unresolvable tool calls with a
@@ -93,17 +98,6 @@ export class GeneralChatAgent implements Agent {
     }
 
     return { allowedTools, blockedTools };
-  }
-
-  /**
-   * How many unresolvable-tool-call rejections this operation has already
-   * written. Counted off the tool rows `resolve_blocked_tools` pushes into
-   * state, which is the only record that survives a step boundary.
-   */
-  private countUnresolvedToolFeedback(state: AgentState): number {
-    return state.messages.filter(
-      (message) => message.role === 'tool' && message.content === UNRESOLVED_TOOL_CONTENT,
-    ).length;
   }
 
   /**
@@ -792,7 +786,7 @@ export class GeneralChatAgent implements Agent {
             .map((toolCall) => toolCall.function.name)
             .join(', ');
           const overFeedbackLimit =
-            this.countUnresolvedToolFeedback(state) >= UNRESOLVED_TOOL_FEEDBACK_LIMIT;
+            (state.unresolvedToolFeedbackRounds ?? 0) >= UNRESOLVED_TOOL_FEEDBACK_LIMIT;
 
           // Past max steps the LLM payload carries no tools at all, so a tool
           // call here is the model ignoring that. The run is already over
@@ -817,9 +811,10 @@ export class GeneralChatAgent implements Agent {
 
           return {
             payload: {
-              blockedContent: UNRESOLVED_TOOL_CONTENT,
+              blockedContent: unresolvedToolContent(unresolvedNames),
               blockedReason: UNRESOLVED_TOOL_REASON,
               parentMessageId,
+              unresolvedToolNames: true,
               toolsCalling: namedToolCalls.map((toolCall): ChatToolPayload => {
                 const [identifier, apiName] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
 

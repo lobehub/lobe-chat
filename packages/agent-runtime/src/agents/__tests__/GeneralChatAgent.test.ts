@@ -336,9 +336,10 @@ describe('GeneralChatAgent', () => {
         type: 'resolve_blocked_tools',
         payload: {
           blockedContent:
-            'Tool call rejected: that tool name does not exist. Copy a name exactly as declared in the tools schema and call it again.',
+            'Tool call rejected: no available tool is named activateTools, lobe-skills____activateSkill. Copy a name exactly as declared in the tools schema and call it again.',
           blockedReason: 'tool_name_unresolved',
           parentMessageId: 'msg-1',
+          unresolvedToolNames: true,
           toolsCalling: [
             {
               apiName: 'activateTools',
@@ -366,17 +367,7 @@ describe('GeneralChatAgent', () => {
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
-      const rejection = {
-        content:
-          'Tool call rejected: that tool name does not exist. Copy a name exactly as declared in the tools schema and call it again.',
-        role: 'tool' as const,
-      };
-      const state = createMockState({
-        messages: [
-          { ...rejection, id: 'tool-1', tool_call_id: 't0' },
-          { ...rejection, id: 'tool-2', tool_call_id: 't1' },
-        ] as AgentState['messages'],
-      });
+      const state = createMockState({ unresolvedToolFeedbackRounds: 2 });
       const context = createMockContext('llm_result', {
         hasToolsCalling: true,
         toolsCalling: [],
@@ -420,6 +411,44 @@ describe('GeneralChatAgent', () => {
         reason: 'max_steps_completed',
         reasonDetail: 'LLM returned 1 unresolvable tool_calls after max steps: activateTools',
       });
+    });
+
+    // The message history is rehydrated from the DB every step and carries
+    // rejections written by earlier operations, so the budget has to be
+    // operation-scoped state rather than a count of matching tool rows.
+    it('should not spend the budget on rejections from earlier operations', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const rejection = {
+        content:
+          'Tool call rejected: no available tool is named activateTools. Copy a name exactly as declared in the tools schema and call it again.',
+        role: 'tool' as const,
+      };
+      const state = createMockState({
+        messages: [
+          { ...rejection, id: 'tool-1', tool_call_id: 'old-1' },
+          { ...rejection, id: 'tool-2', tool_call_id: 'old-2' },
+        ] as AgentState['messages'],
+      });
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [],
+        parentMessageId: 'msg-1',
+        result: {
+          content: '',
+          tool_calls: [
+            { id: 't1', type: 'function', function: { name: 'activateTools', arguments: '{}' } },
+          ],
+        },
+      });
+
+      const result = await agent.runner(context, state);
+
+      expect((result as any).type).toBe('resolve_blocked_tools');
     });
 
     it('should fail when unresolvable tool_calls carry no name to reject', async () => {
