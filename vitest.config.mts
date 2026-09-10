@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from 'node:path';
 
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { coverageConfigDefaults, defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
 if (process.env.NODE_ENV === 'production') {
   Reflect.set(process.env, 'NODE_ENV', 'test');
@@ -147,7 +147,13 @@ export default defineConfig({
     coverage: {
       exclude: [
         // https://github.com/lobehub/lobe-chat/pull/7265
-        ...coverageConfigDefaults.exclude,
+        // Vitest 4+ ships an empty `coverageConfigDefaults.exclude`; keep the previous
+        // default exclusions explicitly so the coverage set does not silently grow.
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/cypress/**',
+        '**/.{idea,git,cache,output,temp}/**',
+        '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
         '__mocks__/**',
         '**/packages/**',
         // just ignore the migration code
