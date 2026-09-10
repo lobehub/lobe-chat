@@ -16,6 +16,7 @@ import {
   CollapsibleMarkdownEvidence,
   EvidenceFileCard,
   markdownTextEvidenceTypes,
+  rendersAsMarkdown,
 } from '../../Report/MarkdownEvidence';
 import type { AcceptanceEvidence } from '../Checks/types';
 import { AnnotatedImage } from '../Evidence/Annotation';
@@ -268,7 +269,9 @@ export const EvidenceList = memo<{
             // An authored alt/description becomes the fold row's title itself —
             // the supplement below the row duplicated it one line later.
             <CollapsibleMarkdownEvidence
+              fileName={item.fileName}
               key={item.id}
+              markdown={rendersAsMarkdown(item)}
               title={item.description?.trim() || item.fileName?.trim() || undefined}
             >
               {item.content}
@@ -284,10 +287,10 @@ export const EvidenceList = memo<{
         if (item.fileUrl && markdownTextEvidenceTypes.has(item.type))
           return (
             <EvidenceFileCard
-              markdown
               description={item.description}
               fileName={item.fileName}
               key={item.id}
+              markdown={rendersAsMarkdown(item)}
               url={item.fileUrl}
             />
           );
