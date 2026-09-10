@@ -7,6 +7,7 @@ import type {
   ReviewAdjudication,
   ReviewProposalEdit,
   VerifierType,
+  VerifyCheckDefinition,
   VerifyCheckItem,
   VerifyEvidence,
   VerifyOnFailStrategy,
@@ -45,10 +46,13 @@ export type AcceptanceStatusOverride = 'accepted' | 'closed' | 'delivered' | 're
 
 /** Editable fields of a single delivery-check criterion. */
 export interface UpdateCriterionValue {
+  archivedAt?: Date | null;
+  definition?: VerifyCheckDefinition | null;
   description?: string | null;
   documentId?: string | null;
   onFail?: VerifyOnFailStrategy;
   required?: boolean;
+  tags?: string[];
   title?: string;
   verifierConfig?: Record<string, unknown>;
   verifierType?: VerifierType;
@@ -56,9 +60,12 @@ export interface UpdateCriterionValue {
 
 /** Fields for authoring a new delivery-check criterion. */
 export interface CreateCriterionInput {
+  definition?: VerifyCheckDefinition;
+  description?: string;
   documentId?: string;
   onFail?: VerifyOnFailStrategy;
   required?: boolean;
+  tags?: string[];
   title: string;
   verifierConfig?: Record<string, unknown>;
   verifierType: VerifierType;
@@ -156,6 +163,12 @@ export interface GenerateDraftPlanInput {
 
 /** Client wrapper around the `verify` lambda router. */
 export class VerifyService {
+  startFlow = (input: Parameters<typeof lambdaClient.acceptance.startFlow.mutate>[0]) =>
+    lambdaClient.acceptance.startFlow.mutate(input);
+
+  reviewFlowStep = (input: Parameters<typeof lambdaClient.acceptance.reviewFlowStep.mutate>[0]) =>
+    lambdaClient.acceptance.reviewFlowStep.mutate(input);
+
   // ---- subject-level acceptance ----
   getAcceptanceBundle = (id: string): Promise<AcceptanceBundle> =>
     lambdaClient.acceptance.getBundle.query({ id });
@@ -182,11 +195,19 @@ export class VerifyService {
     filter?: 'active' | 'all' | 'completed';
     /** Widen the recency window (server-capped) — the merge picker asks for more. */
     limit?: number;
+    projectId?: string;
     q?: string;
     quiet?: boolean;
   }): Promise<AcceptanceListItem[]> =>
     lambdaClient.acceptance.list.query(
-      options ? { filter: options.filter, limit: options.limit, q: options.q } : undefined,
+      options
+        ? {
+            filter: options.filter,
+            limit: options.limit,
+            projectId: options.projectId,
+            q: options.q,
+          }
+        : undefined,
       options?.quiet ? { context: { showNotification: false } } : undefined,
     );
 
@@ -195,6 +216,7 @@ export class VerifyService {
     cursor?: string;
     filter?: AcceptanceListFilter;
     limit?: number;
+    projectId?: string;
   }): Promise<AcceptanceListPage> => lambdaClient.acceptance.listPage.query(params);
 
   /**

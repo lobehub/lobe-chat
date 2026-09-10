@@ -47,6 +47,9 @@ vi.mock('@lobehub/ui/base-ui', () => ({
 
 vi.mock('@lobehub/icons', () => ({
   LobeHub: { Morden: () => <span /> },
+}));
+
+vi.mock('@/components/LobeIcons', () => ({
   ModelIcon: () => <span />,
   ProviderIcon: () => <span />,
 }));

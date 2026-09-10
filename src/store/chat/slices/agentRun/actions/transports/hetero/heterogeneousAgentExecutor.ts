@@ -1853,21 +1853,6 @@ export const executeHeterogeneousAgent = async (
       : undefined;
   const serverDefaultBindingActive = !!serverDefaultApiConfig;
   const userProviderBindingActive = !!providerApiConfig;
-  // The Labs flag gates every API-mode path, including the server-default
-  // binding: with the flag off, an api-auth agent must behave exactly as it
-  // did before the feature existed — blocked with a pointer to Labs.
-  if (
-    providerBindingActive &&
-    !labPreferSelectors.enableAgentProviderBinding(useUserStore.getState())
-  ) {
-    await persistTerminalError(
-      toHeterogeneousAgentMessageError(
-        new Error(t('heteroAgent.apiMode.labDisabled.title', { ns: 'chat' })),
-        adapterType,
-      ),
-    );
-    return;
-  }
   if (providerBindingActive && !serverDefaultBindingActive && !userProviderBindingActive) {
     await persistTerminalError(
       toHeterogeneousAgentMessageError(
@@ -2385,6 +2370,7 @@ export const executeHeterogeneousAgent = async (
               runId: operationId,
               runScope,
               runtimeType: 'hetero',
+              status: 'completed',
             });
 
             // Shell Work scan for this LOCAL run: no server operation exists, so

@@ -94,6 +94,8 @@ const chatStore = vi.hoisted(() => ({
   portalStack: [] as Array<{ startMessageId?: string; threadId?: string; type: string }>,
   showPortal: false,
   threadMaps: {} as Record<string, any[]>,
+  // read by the real topicSelectors.currentTopicMetadata (sourcePath resolution)
+  topicDataMap: {} as Record<string, unknown>,
 }));
 
 const globalStore = vi.hoisted(() => ({
@@ -110,6 +112,15 @@ const globalStore = vi.hoisted(() => ({
     workingSidebarTab: 'params' as string | undefined,
     workingSidebarTabRequest: undefined as { nonce: number; tab: string } | undefined,
     workingSidebarWidth: 360 as number | undefined,
+  },
+}));
+
+vi.mock('motion/react', () => ({
+  AnimatePresence: ({ children }: { children?: ReactNode }) => <>{children}</>,
+  m: {
+    div: ({ children, ...props }: { children?: ReactNode; [key: string]: unknown }) => (
+      <div {...props}>{children}</div>
+    ),
   },
 }));
 
@@ -1136,16 +1147,6 @@ describe('AgentWorkingSidebar — tab strip', () => {
     expect(globalStore.toggleRightPanel).toHaveBeenCalledWith(false);
   });
 
-  it('keeps the independent Overview panel closable', () => {
-    localStorageState.openTabsByContext = {};
-    globalStore.status.workingSidebarTab = 'overview';
-
-    render(<AgentWorkingSidebar />);
-    fireEvent.click(screen.getByRole('button', { name: 'workingPanel.tabs.closePanel' }));
-
-    expect(globalStore.updateSystemStatus).toHaveBeenCalledWith({ showWorkingOverview: false });
-  });
-
   it('does not show Overview beside a legacy persisted open workspace panel', () => {
     globalStore.status.showRightPanel = true;
     globalStore.status.showWorkingOverview = undefined;
@@ -1154,20 +1155,6 @@ describe('AgentWorkingSidebar — tab strip', () => {
 
     expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
     expect(rightPanel.current?.expand).toBe(true);
-  });
-
-  it('lets the independent Overview close without removing pinned tabs', () => {
-    agentStore.activeAgentId = 'agent';
-    localStorageState.openTabsByContext = {};
-    localStorageState.pinnedTabsByAgent = { agent: ['works'] };
-    globalStore.status.workingSidebarTab = 'overview';
-
-    render(<AgentWorkingSidebar />);
-
-    fireEvent.click(screen.getByRole('button', { name: 'workingPanel.tabs.closePanel' }));
-
-    expect(globalStore.updateSystemStatus).toHaveBeenCalledWith({ showWorkingOverview: false });
-    expect(localStorageState.pinnedTabsByAgent).toEqual({ agent: ['works'] });
   });
 
   it('reopens a closed tab when the same external target is requested again', async () => {

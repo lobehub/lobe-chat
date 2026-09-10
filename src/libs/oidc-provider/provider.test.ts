@@ -116,7 +116,7 @@ describe('OIDC Provider - Market Client Integration', () => {
         BackchannelAuthenticationRequest: 600,
         ClientCredentials: 600,
         DeviceCode: 600,
-        Grant: 14 * 24 * 60 * 60,
+        Grant: 365 * 24 * 60 * 60,
         IdToken: 3600,
         Interaction: 3600,
         RefreshToken: 30 * 24 * 60 * 60,
@@ -128,6 +128,23 @@ describe('OIDC Provider - Market Client Integration', () => {
         expect(Number.isSafeInteger(ttl)).toBe(true);
         expect(ttl).toBeGreaterThan(0);
       }
+
+      vi.doUnmock('@/envs/app');
+    }, 10000);
+
+    it('keeps the grant alive longer than a rotating refresh token', async () => {
+      vi.doMock('@/envs/app', () => ({
+        appEnv: {
+          APP_URL: 'https://example.com',
+          MARKET_BASE_URL: undefined,
+        },
+      }));
+
+      const { oidcArtifactTTL } = await import('./provider');
+      const dayFifteen = 15 * 24 * 60 * 60;
+
+      expect(oidcArtifactTTL.Grant).toBeGreaterThan(dayFifteen);
+      expect(oidcArtifactTTL.Grant).toBeGreaterThanOrEqual(oidcArtifactTTL.RefreshToken);
 
       vi.doUnmock('@/envs/app');
     }, 10000);

@@ -54,13 +54,28 @@ export class LarkApiClient {
     return data.data;
   }
 
+  /**
+   * List messages in a chat.
+   *
+   * `sortType` defaults to `ByCreateTimeAsc` on Feishu's side, i.e. the FIRST
+   * page is the OLDEST messages in the chat. A caller that wants "what was
+   * just discussed" must ask for `ByCreateTimeDesc` — and keep passing the
+   * same value on every `pageToken` follow-up, which Feishu requires.
+   */
   async listMessages(
     chatId: string,
-    options?: { pageSize?: number; pageToken?: string; startTime?: string; endTime?: string },
+    options?: {
+      pageSize?: number;
+      pageToken?: string;
+      sortType?: 'ByCreateTimeAsc' | 'ByCreateTimeDesc';
+      startTime?: string;
+      endTime?: string;
+    },
   ): Promise<{ items: any[]; hasMore: boolean; pageToken?: string }> {
     const params = new URLSearchParams({ container_id_type: 'chat', container_id: chatId });
     if (options?.pageSize) params.set('page_size', String(options.pageSize));
     if (options?.pageToken) params.set('page_token', options.pageToken);
+    if (options?.sortType) params.set('sort_type', options.sortType);
     if (options?.startTime) params.set('start_time', options.startTime);
     if (options?.endTime) params.set('end_time', options.endTime);
 
@@ -80,10 +95,16 @@ export class LarkApiClient {
     return { messageId: data.data.message_id, raw: data.data };
   }
 
-  async addReaction(messageId: string, emojiType: string): Promise<void> {
-    await this.call('POST', `/im/v1/messages/${messageId}/reactions`, {
+  /**
+   * Add a reaction. Returns the `reaction_id` the delete endpoint needs —
+   * it is only ever handed out here, so a caller that intends to remove its
+   * own reaction later has to keep it.
+   */
+  async addReaction(messageId: string, emojiType: string): Promise<{ reactionId: string }> {
+    const data = await this.call('POST', `/im/v1/messages/${messageId}/reactions`, {
       reaction_type: { emoji_type: emojiType },
     });
+    return { reactionId: data.data?.reaction_id };
   }
 
   async removeReaction(messageId: string, reactionId: string): Promise<void> {
@@ -266,6 +287,37 @@ export class LarkApiClient {
     return text;
   }
 
+  /**
+   * Flatten the `error` object Lark attaches to a failed response.
+   *
+   * `code` + `msg` alone are close to useless for the two failures operators
+   * actually hit: a permission error says `230027 Permission denied` and
+   * nothing about WHICH scope is missing — even though Lark puts exactly that
+   * in `error.permission_violations`. Dropping it sent a real debugging session
+   * hunting for a scope name in our own docs instead of reading it off the
+   * response. `troubleshooter` is Lark's own log-id-scoped diagnosis link.
+   */
+  private static describeError(error: any): string {
+    if (!error || typeof error !== 'object') return '';
+    const parts: string[] = [];
+
+    const violations = Array.isArray(error.permission_violations)
+      ? error.permission_violations
+      : [];
+    for (const violation of violations) {
+      const subject = violation?.subject ?? violation?.type;
+      const description = violation?.description;
+      const detail = [subject, description].filter(Boolean).join(': ');
+      if (detail) parts.push(`missing permission — ${detail}`);
+    }
+
+    if (typeof error.troubleshooter === 'string' && error.troubleshooter) {
+      parts.push(error.troubleshooter);
+    }
+
+    return parts.length > 0 ? ` (${parts.join('; ')})` : '';
+  }
+
   private async call(method: string, path: string, body: Record<string, unknown>): Promise<any> {
     const token = await this.getTenantAccessToken();
     const url = `${this.baseUrl}${path}`;
@@ -292,7 +344,9 @@ export class LarkApiClient {
     const data: any = await response.json();
 
     if (data.code !== 0) {
-      throw new Error(`Lark API ${method} ${path} failed: ${data.code} ${data.msg}`);
+      throw new Error(
+        `Lark API ${method} ${path} failed: ${data.code} ${data.msg}${LarkApiClient.describeError(data.error)}`,
+      );
     }
 
     return data;

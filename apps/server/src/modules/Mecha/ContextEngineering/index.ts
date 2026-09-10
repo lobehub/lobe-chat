@@ -122,6 +122,7 @@ export const serverMessagesEngine = async ({
   modelKnowledgeCutoff,
   provider,
   systemRole,
+  agentIdentity,
   inputTemplate,
   enableAgentMode,
   enableExpertise,
@@ -141,6 +142,7 @@ export const serverMessagesEngine = async ({
   agentBuilderContext,
   agentGroup,
   botPlatformContext,
+  workspaceContext,
   discordContext,
   evalContext,
   expertise,
@@ -203,6 +205,7 @@ export const serverMessagesEngine = async ({
     provider,
     planTodo,
     systemRole,
+    agentIdentity,
 
     // Timezone for system date provider
     timezone: userTimezone,
@@ -244,6 +247,7 @@ export const serverMessagesEngine = async ({
     ...(agentBuilderContext && { agentBuilderContext }),
     ...(agentGroup && { agentGroup }),
     ...(botPlatformContext && { botPlatformContext }),
+    ...(workspaceContext && { workspaceContext }),
     ...(discordContext && { discordContext }),
     ...(evalContext && { evalContext }),
     ...(onboardingContext && { onboardingContext }),

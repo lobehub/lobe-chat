@@ -72,6 +72,8 @@ Connect a Feishu custom app bot to your agent.
 2. Search and add:
    - \`im:message\` — receive and send messages
    - \`im:message.group_at_msg\` — receive @bot messages in groups (if needed)
+   - \`im:message:readonly\` — read chat history (needed for \`readMessages\`)
+   - \`im:message.group_msg\` — 「获取群组中所有消息」, read **group** chat history; required *in addition to* \`im:message:readonly\`, otherwise history reads in groups fail with \`230027 权限不足\`. Search 权限管理 by the Chinese name — the console does not match on the code. It is 免审, but the app must be re-published (创建版本 → 发布) before it takes effect. Do NOT confuse it with \`im:message.group_msg.include_bot:read\`（获取群组中用户和机器人发送的消息）, which governs the receive-message event, not history reads
 3. Publish the app (see Step 7) for permissions to take effect
 
 ### Step 7: Publish the App

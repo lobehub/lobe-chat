@@ -5,10 +5,8 @@ import { Button } from '@lobehub/ui/base-ui';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router';
-import { SWRConfig } from 'swr';
 
 import AsyncError from '@/components/AsyncError';
-import SuspenseRouteBoundary from '@/components/SuspenseRouteBoundary';
 import RegisterHotkeys from '@/features/ResourceLibrary/RegisterHotkeys';
 import { useKnowledgeBaseItem } from '@/features/ResourceManager/hooks/useKnowledgeItem';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -47,11 +45,7 @@ const LibraryLayout: FC = () => {
     <>
       <Sidebar />
       <Flexbox className={styles.mainContainer} flex={1} height={'100%'}>
-        <SWRConfig value={{ suspense: true }}>
-          <SuspenseRouteBoundary>
-            <Outlet />
-          </SuspenseRouteBoundary>
-        </SWRConfig>
+        <Outlet />
       </Flexbox>
       <RegisterHotkeys />
     </>

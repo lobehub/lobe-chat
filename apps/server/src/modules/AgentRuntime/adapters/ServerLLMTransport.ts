@@ -263,6 +263,7 @@ export class ServerLLMTransport implements LLMTransport {
           handlers?.onText?.(text);
         },
       },
+      metadata: { topicId: this.ctx.topicId },
       user: this.ctx.userId,
     });
 

@@ -108,6 +108,31 @@ export const isServerDefaultHeterogeneousModel = (
   operationModel: string,
 ): boolean => requestModel === formatServerDefaultHeterogeneousModel(operationModel);
 
+export interface ServerDefaultHeterogeneousRelayInvocation {
+  acceptedAt: string;
+  agentType: string;
+  ingress: 'anthropic-messages' | 'openai-responses';
+  model: string;
+  operationId: string;
+  provider: string;
+}
+
+/** Durable proof written only after the official relay accepts a model invocation. */
+export const isServerDefaultHeterogeneousRelayInvocation = (
+  value: unknown,
+): value is ServerDefaultHeterogeneousRelayInvocation => {
+  if (!value || typeof value !== 'object') return false;
+  const invocation = value as Partial<ServerDefaultHeterogeneousRelayInvocation>;
+  return (
+    typeof invocation.acceptedAt === 'string' &&
+    typeof invocation.agentType === 'string' &&
+    ['anthropic-messages', 'openai-responses'].includes(invocation.ingress ?? '') &&
+    typeof invocation.model === 'string' &&
+    typeof invocation.operationId === 'string' &&
+    typeof invocation.provider === 'string'
+  );
+};
+
 /**
  * Map a CLI-reported server-default model back to the catalog id.
  *
@@ -224,6 +249,17 @@ export interface HeterogeneousTopicModel {
 }
 
 /**
+ * Everything a topic pins for a heterogeneous run: the model/provider pair from
+ * the top-level `topics.model`/`provider` columns plus the reasoning effort
+ * from `topics.metadata.heteroEffort`. Each part is optional — a topic may pin
+ * an effort without a model (runtimes without a model selector) or the other
+ * way round.
+ */
+export interface HeterogeneousTopicPin extends Partial<HeterogeneousTopicModel> {
+  effort?: HeterogeneousReasoningEffort;
+}
+
+/**
  * Resolve the topic-level model snapshot for a heterogeneous provider.
  *
  * Server-default API models intentionally remain Agent-scoped: unlike a user-provider
@@ -243,9 +279,9 @@ export const resolveHeterogeneousProviderTopicModel = (
   return model ? { model, provider: config.type } : undefined;
 };
 
-export const applyTopicModelToHeterogeneousProvider = (
+const applyTopicModelPin = (
   config: HeterogeneousProviderConfig,
-  topicModel: HeterogeneousTopicModel | undefined,
+  topicModel: HeterogeneousTopicPin | undefined,
 ): HeterogeneousProviderConfig => {
   if (!topicModel?.model) return config;
 
@@ -271,6 +307,37 @@ export const applyTopicModelToHeterogeneousProvider = (
   return {
     ...config,
     ...applyHeteroSelection(config, { model: topicModel.model }),
+  };
+};
+
+/**
+ * Overlay a topic's pins (model/provider + reasoning effort) on the agent's
+ * heterogeneous provider config. The model pin follows the auth-mode rules of
+ * {@link applyTopicModelPin}; the effort pin is a plain CLI-level override, so
+ * it applies when supported by the effective model — independent of whether
+ * a model was pinned. `'default'` is a real pin (it means "drop the
+ * agent's effort flag for this topic"), only `undefined` keeps the agent value.
+ */
+export const applyTopicModelToHeterogeneousProvider = (
+  config: HeterogeneousProviderConfig,
+  topicModel: HeterogeneousTopicPin | undefined,
+): HeterogeneousProviderConfig => {
+  const withModel = applyTopicModelPin(config, topicModel);
+  let effort = topicModel?.effort;
+  if (effort === undefined) return withModel;
+  const capability = getHeteroSelectorCapability(withModel.type);
+  if (!capability?.effort) return withModel;
+  const model =
+    withModel.authMode === 'api'
+      ? withModel.apiConfig?.model
+      : capability.model?.resolve(withModel);
+  /** Auth-mode changes can reject the topic model while leaving its old effort behind. */
+  if (effort !== 'default' && !capability.effort.levels(model ?? 'default').includes(effort)) {
+    effort = 'default';
+  }
+  return {
+    ...withModel,
+    ...applyHeteroSelection(withModel, { effort }),
   };
 };
 

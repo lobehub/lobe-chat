@@ -18,6 +18,7 @@ import {
   type Decision,
   DECISIONS,
   deriveReportVerdict,
+  evidenceDescriptionForFile,
   evidenceTypeForFile,
   genericContextFromResult,
   inlineTextEvidenceForFile,
@@ -347,7 +348,7 @@ async function submitAction(options: SubmitOptions): Promise<void> {
         {
           capturedBy: options.by as any,
           content: inlineContent,
-          description: options.desc,
+          description: evidenceDescriptionForFile(options.desc, options.file),
           fileId,
           type: options.type as any,
         },
@@ -420,7 +421,7 @@ async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<voi
     capturedBy: options.by as any,
     checkResultId: options.check,
     content: inlineContent,
-    description: options.desc,
+    description: evidenceDescriptionForFile(options.desc, options.file),
     fileId,
     type: options.type as any,
   });
@@ -620,7 +621,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
 
   // What the run set out to check, written before it ran. Paired with the
   // results by `id`, so the report can show a planned item that never ran.
-  const plan = planFromResult(result, droppedIds);
+  let plan = planFromResult(result, droppedIds);
 
   const goal = options.goal ?? (typeof result.focus === 'string' ? result.focus : undefined);
   const title = options.title ?? result.title;
@@ -672,6 +673,14 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   if (requestedAcceptanceId) {
     const bundle = await client.acceptance.getBundle.query({ id: requestedAcceptanceId });
     acceptance = bundle.acceptance;
+    plan = plan?.map((item) => ({
+      ...item,
+      sourceCriterionId:
+        item.sourceCriterionId ??
+        bundle.checks?.find((check) => check.id === item.id || check.planItem?.id === item.id)
+          ?.planItem?.sourceCriterionId ??
+        undefined,
+    }));
     subject = {
       ref: {
         subjectId: acceptance.subjectId,
@@ -705,8 +714,9 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
     process.exit(1);
   }
 
-  // Every ingest is a new immutable verification snapshot. A repair or
-  // re-verification is represented by another run on the same acceptance.
+  // Every ingest is an immutable verification snapshot. A repair or
+  // re-verification is another round on the same acceptance, unless the
+  // acceptance still holds a draft round: the server folds this run into it.
   const run = await client.verify.createRun.mutate({
     context,
     goal,
@@ -717,13 +727,15 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
     source: options.source as any,
     title,
   });
-  const runId = run.id;
-
   // 1c. Chain the session onto its subject's acceptance as the next round
   //     BEFORE the report lands, so the report-time status rollup already
-  //     sees the aggregate.
+  //     sees the aggregate. Results and the report go to the round the server
+  //     returns, which is the draft round when this run was folded into one.
   const acceptanceId = acceptance.id;
-  const attached = await client.acceptance.attachRun.mutate({ acceptanceId, verifyRunId: runId });
+  const attached = await client.acceptance.attachRun.mutate({ acceptanceId, verifyRunId: run.id });
+  const runId = attached?.id ?? run.id;
+  if (runId !== run.id)
+    console.log(pc.dim(`Folded into the acceptance's draft round ${attached.roundIndex ?? ''}`));
   // The chained round's index — `?r=<roundIndex>` on the acceptance URL
   // deep-links this round's report as the fixed snapshot view.
   const roundIndex = attached?.roundIndex ?? null;
@@ -777,7 +789,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
           // The filename, not the case title — the title already heads the
           // check card, so reusing it here just triples the same text.
           content: inlineContent,
-          description: evidenceInput.description ?? path.basename(abs),
+          description: evidenceDescriptionForFile(evidenceInput.description, abs),
           fileId: file?.id,
           metadata: evidenceInput.comparison ? { comparison: evidenceInput.comparison } : undefined,
           type,

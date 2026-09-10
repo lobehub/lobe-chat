@@ -1,8 +1,6 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui/base-ui';
-import { Card } from 'antd';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   Activity,
@@ -21,6 +19,8 @@ import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { runSelectors, useEvalStore } from '@/store/eval';
 
 import BenchmarkHeader from './features/BenchmarkHeader';
@@ -90,7 +90,7 @@ const BenchmarkDetail = memo(() => {
   const useFetchRuns = useEvalStore((s) => s.useFetchRuns);
   const runList = useEvalStore(runSelectors.runList);
 
-  useFetchBenchmarkDetail(benchmarkId);
+  const { error, isLoading, mutate } = useFetchBenchmarkDetail(benchmarkId);
   useFetchDatasets(benchmarkId);
 
   const handleRefreshDatasets = useCallback(async () => {
@@ -112,62 +112,10 @@ const BenchmarkDetail = memo(() => {
 
   const totalCases = datasets.reduce((sum, ds) => sum + (ds.testCaseCount || 0), 0);
 
-  if (!benchmark)
-    return (
-      <Flexbox className={styles.container} gap={24} height="100%" width="100%">
-        {/* Header skeleton */}
-        <Flexbox gap={16}>
-          <Flexbox horizontal align="start" gap={12}>
-            <Skeleton.Avatar
-              shape="square"
-              size={40}
-              style={{ borderRadius: cssVar.borderRadiusLG }}
-            />
-            <Flexbox flex={1} gap={8}>
-              <Skeleton height={24} width={200} />
-              <Skeleton height={14} width={320} />
-            </Flexbox>
-          </Flexbox>
-        </Flexbox>
-
-        {/* Stats cards skeleton */}
-        <Flexbox horizontal gap={12}>
-          {[1, 2, 3, 4].map((i) => (
-            <Card
-              key={i}
-              styles={{ body: { padding: 16 } }}
-              style={{
-                border: `1px solid ${cssVar.colorBorderSecondary}`,
-                borderRadius: cssVar.borderRadius,
-                flex: 1,
-                minWidth: 0,
-              }}
-            >
-              <Flexbox gap={12}>
-                <Flexbox horizontal align="center" gap={8}>
-                  <Skeleton.Avatar
-                    shape="square"
-                    size={36}
-                    style={{ borderRadius: cssVar.borderRadius }}
-                  />
-                  <Skeleton height={14} width={80} />
-                </Flexbox>
-                <Flexbox gap={4}>
-                  <Skeleton height={24} width={60} />
-                  <Skeleton height={12} width={100} />
-                </Flexbox>
-              </Flexbox>
-            </Card>
-          ))}
-        </Flexbox>
-
-        {/* Section skeletons */}
-        <Skeleton height={16} width={80} />
-        <Skeleton height={64} width={'100%'} />
-        <Skeleton height={16} width={80} />
-        <Skeleton height={64} width={'100%'} />
-      </Flexbox>
-    );
+  if (!benchmark) {
+    if (isLoading || !error) return <RouteLoading />;
+    return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+  }
 
   return (
     <Flexbox className={styles.container} gap={24} height="100%" width="100%">

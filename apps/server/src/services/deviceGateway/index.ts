@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { type DeviceAttachment } from '@lobechat/builtin-tool-remote-device';
 import {
+  describeGatewayRequestFailure,
   type DeviceMessageApiResult,
   type DeviceStatusResult,
   type DeviceSystemInfo,
@@ -12,6 +13,7 @@ import {
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type { ClaudeCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
 import type {
+  DeviceDirectoryBrowseResult,
   DeviceGitAddWorktreeResult,
   DeviceGitAheadBehind,
   DeviceGitBranchDiffPatches,
@@ -970,6 +972,50 @@ export class DeviceGateway {
     }
   }
 
+  /** List one directory level on a remote execution device for folder pickers. */
+  async browseDirectory(params: {
+    cursor?: string;
+    deviceId: string;
+    limit?: number;
+    path?: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceDirectoryBrowseResult | undefined> {
+    const {
+      cursor,
+      deviceId,
+      limit,
+      path: directoryPath,
+      timeout = 10_000,
+      userId,
+      workspaceId,
+    } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceDirectoryBrowseResult>(
+        { deviceId, timeout, userId, workspaceId },
+        {
+          method: 'browseDirectory',
+          params: { cursor, limit, path: directoryPath },
+        },
+      );
+
+      if (!result.success || !result.data) {
+        log('browseDirectory: failed for deviceId=%s', deviceId);
+        return undefined;
+      }
+
+      return result.data;
+    } catch (error) {
+      const errorType = error instanceof Error ? error.name : typeof error;
+      log('browseDirectory: error for deviceId=%s (%s)', deviceId, errorType);
+      return undefined;
+    }
+  }
+
   /**
    * Project file search for a directory on a remote device via the
    * `searchProjectFiles` device RPC. The device performs matching and returns a
@@ -1400,7 +1446,11 @@ export class DeviceGateway {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log('executeToolCall: error — %s', message);
-      return { content: `Device tool call error: ${message}`, error: message, success: false };
+      // Backstop for anything the http client did not already describe. A raw
+      // `TimeoutError` / driver message here reads to the model as if the tool
+      // itself blew up; name the failing hop and its recovery instead.
+      const failure = describeGatewayRequestFailure(error, 'tool call');
+      return { content: failure.content, error: failure.error, success: false };
     }
   }
 
@@ -1444,7 +1494,8 @@ export class DeviceGateway {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log('executeMcpCall: error — %s', message);
-      return { content: `Device MCP call error: ${message}`, error: message, success: false };
+      const failure = describeGatewayRequestFailure(error, 'tool call');
+      return { content: failure.content, error: failure.error, success: false };
     }
   }
 

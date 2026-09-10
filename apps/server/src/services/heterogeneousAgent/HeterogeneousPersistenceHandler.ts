@@ -202,12 +202,29 @@ interface StoredHeterogeneousIntervention {
 }
 
 const HETEROGENEOUS_INTERVENTION_STATE_KEY = 'heterogeneousIntervention';
+const MAX_INTERVENTION_SUMMARY_LENGTH = 160;
 
-const interventionSummary = (request?: AgentInterventionRequestData): string => {
+const interventionSummary = (
+  request?: AgentInterventionRequestData,
+  reviewDetail?: Extract<
+    AgentInterventionReviewDetail,
+    { type: 'permission' | 'plan' | 'question' }
+  >,
+): string => {
+  if (reviewDetail?.type === 'question') {
+    const question = reviewDetail.questions[0]?.question.trim().replaceAll(/\s+/g, ' ');
+    if (question) {
+      const characters = [...question];
+      return characters.length > MAX_INTERVENTION_SUMMARY_LENGTH
+        ? `${characters.slice(0, MAX_INTERVENTION_SUMMARY_LENGTH - 1).join('')}…`
+        : question;
+    }
+  }
+
   const provider = request?.provider ?? 'heterogeneous-agent';
   const kind = request?.interactionKind ?? 'question';
   const apiName = request?.apiName || 'interaction';
-  return `${provider} ${kind}: ${apiName}`.slice(0, 160);
+  return `${provider} ${kind}: ${apiName}`.slice(0, MAX_INTERVENTION_SUMMARY_LENGTH);
 };
 
 const buildHeterogeneousReviewDetail = (
@@ -1299,8 +1316,9 @@ export class HeterogeneousPersistenceHandler {
       );
     }
 
-    const summary = interventionSummary(intent.request);
     const reviewRequest = sanitizeAgentInterventionRequestForReview(intent.request);
+    const reviewDetail = reviewRequest ? buildHeterogeneousReviewDetail(reviewRequest) : undefined;
+    const summary = interventionSummary(intent.request, reviewDetail);
     const transitionKey = `${state.operationId}:${intent.toolCallId}:${intent.transition}`;
     const pendingTransitionKey = `${state.operationId}:${intent.toolCallId}:pending`;
     const requiresPendingReviewNotification =
@@ -1309,7 +1327,7 @@ export class HeterogeneousPersistenceHandler {
       !state.notifiedInterventionTransitions.has(pendingTransitionKey);
     if (
       requiresPendingReviewNotification &&
-      (!reviewRequest?.interactionKind || !reviewRequest.provider)
+      (!reviewRequest?.interactionKind || !reviewRequest.provider || !reviewDetail)
     ) {
       throw new Error(
         `Unsafe heterogeneous intervention review payload toolCallId=${intent.toolCallId}`,
@@ -1336,7 +1354,7 @@ export class HeterogeneousPersistenceHandler {
     if (!this.deps.userId || state.notifiedInterventionTransitions.has(transitionKey)) return;
 
     if (!state.notifiedInterventionTransitions.has(pendingTransitionKey)) {
-      if (!reviewRequest?.interactionKind || !reviewRequest.provider) {
+      if (!reviewRequest?.interactionKind || !reviewRequest.provider || !reviewDetail) {
         throw new Error(
           `Unsafe heterogeneous intervention review payload toolCallId=${intent.toolCallId}`,
         );
@@ -1391,7 +1409,7 @@ export class HeterogeneousPersistenceHandler {
         items: [
           {
             allowedActions,
-            detail: buildHeterogeneousReviewDetail(reviewRequest),
+            detail: reviewDetail,
             interactionKind: reviewRequest.interactionKind,
             provider: reviewRequest.provider,
             requestRevision: {

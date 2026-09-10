@@ -19,7 +19,9 @@ import { FaviconProvider } from '@/layout/GlobalProvider/FaviconProvider';
 import { GroupWizardProvider } from '@/layout/GlobalProvider/GroupWizardProvider';
 import QueryProvider from '@/layout/GlobalProvider/Query';
 import ServerVersionOutdatedAlert from '@/layout/GlobalProvider/ServerVersionOutdatedAlert';
-import StoreInitialization from '@/layout/GlobalProvider/StoreInitialization';
+import StoreInitialization, {
+  BuiltinAgentInitialization,
+} from '@/layout/GlobalProvider/StoreInitialization';
 import { registerNativeContextMenuInterceptor } from '@/libs/contextMenu';
 import { usePostRenderReady } from '@/spa/atoms/app';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
@@ -31,6 +33,7 @@ registerNativeContextMenuInterceptor();
 const DevDock = lazy(() => import('@/features/DevDock'));
 const ImperativeMountHost = lazy(() => import('@/components/ImperativeMount'));
 const DynamicFavicon = lazy(() => import('@/layout/GlobalProvider/DynamicFavicon'));
+const TaskDock = lazy(() => import('@/features/TaskDock'));
 
 const devDockLayoutStyle: CSSProperties = {
   alignItems: 'center',
@@ -100,6 +103,7 @@ const SPAGlobalProvider = memo<PropsWithChildren>(({ children }) => {
                     <LobeAnalyticsProviderWrapper>
                       {isDesktop && <ProtocolUrlHandler />}
                       <CacheHydrationGate>
+                        <BuiltinAgentInitialization />
                         <DevDockLayout>{children}</DevDockLayout>
                       </CacheHydrationGate>
                     </LobeAnalyticsProviderWrapper>
@@ -110,6 +114,7 @@ const SPAGlobalProvider = memo<PropsWithChildren>(({ children }) => {
                 <ToastHost />
                 <ContextMenuHost />
                 <Suspense>
+                  <TaskDock />
                   <ImperativeMountHost />
                 </Suspense>
               </LazyMotion>

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import { agentEvalService } from '@/services/agentEval';
@@ -107,7 +108,7 @@ const DatasetDetail = memo(() => {
   const refreshTestCases = useEvalStore((s) => s.refreshTestCases);
   const refreshDatasetDetail = useEvalStore((s) => s.refreshDatasetDetail);
 
-  const { data: dataset, error, mutate } = useFetchDatasetDetail(datasetId);
+  const { data: dataset, error, isLoading, mutate } = useFetchDatasetDetail(datasetId);
   // Nullable: a dataset accumulated from captured cases belongs to no benchmark.
   const benchmarkId: string | null =
     (dataset as { benchmarkId?: string | null })?.benchmarkId ?? null;
@@ -209,6 +210,8 @@ const DatasetDetail = memo(() => {
       error={error}
       errorVariant={'page'}
       isEmpty={!dataset}
+      isLoading={isLoading}
+      loading={<RouteLoading />}
       onRetry={() => mutate()}
     >
       {dataset && (

@@ -25,6 +25,7 @@ vi.mock('@/server/modules/AgentRuntime', () => ({
     saveStepResult: vi.fn(),
     createAgentOperation: vi.fn(),
     getOperationMetadata: vi.fn(),
+    isInterrupted: vi.fn().mockResolvedValue(false),
     tryClaimStep: vi.fn().mockResolvedValue(true),
     releaseStepLock: vi.fn().mockResolvedValue(undefined),
     refreshStepLock: vi.fn().mockResolvedValue(true),
@@ -314,6 +315,26 @@ describe('AgentRuntimeService.executeStep - early exit on terminal state', () =>
 
     expect(createRuntimeExecutors).toHaveBeenCalledWith(
       expect.objectContaining({ workspaceId: 'ws-1' }),
+    );
+  });
+
+  it('restores the persisted model runtime snapshot into runtime executors', async () => {
+    vi.mocked(createRuntimeExecutors).mockClear();
+    const service = new AgentRuntimeService({} as any, 'user-1', { queueService: null });
+    const modelRuntimeConfig = {
+      mediaCapabilities: { audio: false, video: false, vision: true },
+      model: 'custom-vision-model',
+      provider: 'custom-provider',
+    };
+
+    await (service as any).createAgentRuntime({
+      metadata: { agentConfig: {}, modelRuntimeConfig, userId: 'user-1' },
+      operationId: 'op-model-runtime-snapshot',
+      stepIndex: 0,
+    });
+
+    expect(createRuntimeExecutors).toHaveBeenCalledWith(
+      expect.objectContaining({ modelRuntimeConfig }),
     );
   });
 

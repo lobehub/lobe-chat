@@ -9,6 +9,7 @@ import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
 import { TaskService } from '@/server/services/task';
 import { TaskResultBridgeService } from '@/server/services/taskResultBridge';
 
+import { reviewGoalDelivery } from './goalReview';
 import { maybeAutoRepair } from './repairService';
 import { VerifyReporterService } from './reporter';
 import { VerifyStatusService } from './statusService';
@@ -98,8 +99,20 @@ export const driveTaskFromVerify = async (
     const task = await taskModel.findById(taskOperation.taskId);
     if (!task || TERMINAL_TASK_STATUS.has(task.status)) return; // task already settled
 
-    if (run.status === 'passed') {
-      // Verify passing completes the task and cascades (checkpoint / sibling
+    const goalReview =
+      run.status === 'passed'
+        ? await reviewGoalDelivery(db, userId, taskOperation.taskId, operationId, workspaceId)
+        : undefined;
+    const outcome =
+      goalReview?.status === 'rejected'
+        ? 'failed'
+        : goalReview?.status === 'errored'
+          ? 'errored'
+          : run.status;
+
+    if (outcome === 'passed') {
+      // Verify and, for Goal tasks, Acceptance review must pass before completing
+      // the task and cascading (checkpoint / sibling
       // rollup / downstream unlock). A Goal Graph Task is an ordinary task
       // here — the coordinator reads its completed status on the next tick and
       // synthesizes the finding from it.
@@ -122,7 +135,7 @@ export const driveTaskFromVerify = async (
       // - failed:  the verifier ran and judged the delivery short of the criteria.
       // - errored: the verifier could not run (infra) — the delivery was NOT
       //   evaluated, so we must not claim it "did not pass".
-      const isErrored = run.status === 'errored';
+      const isErrored = outcome === 'errored';
 
       // `Delivery did not pass verification.` is a contract string, not just
       // copy: the Goal coordinator matches on it to decide whether a paused
@@ -130,13 +143,26 @@ export const driveTaskFromVerify = async (
       const pauseSummary = isErrored
         ? 'Verification could not run (internal error); the delivery was not evaluated.'
         : 'Delivery did not pass verification.';
-      // Verification outcomes belong to the task itself. Do not create an inbox
-      // brief here: a verifier rejection/error is not a separate user todo.
-      await taskModel.updateStatus(taskOperation.taskId, 'paused', { error: pauseSummary });
-      log(
-        isErrored ? 'verify errored → task %s paused' : 'verify failed → task %s paused',
-        taskOperation.taskId,
-      );
+      if (task.automationMode) {
+        // Mirror of the pass branch: verify judges THIS tick, not the lifetime
+        // schedule. Pausing here would permanently disarm the cron (the
+        // schedule query never picks `paused` tasks up again), so a recurring
+        // task keeps its schedule and the verdict stays on the run.
+        log(
+          isErrored
+            ? 'verify errored → recurring task %s remains scheduled'
+            : 'verify failed → recurring task %s remains scheduled',
+          taskOperation.taskId,
+        );
+      } else {
+        // Verification outcomes belong to the task itself. Do not create an inbox
+        // brief here: a verifier rejection/error is not a separate user todo.
+        await taskModel.updateStatus(taskOperation.taskId, 'paused', { error: pauseSummary });
+        log(
+          isErrored ? 'verify errored → task %s paused' : 'verify failed → task %s paused',
+          taskOperation.taskId,
+        );
+      }
     }
 
     // Deferred creator callback: verify-bound runs defer
@@ -146,14 +172,14 @@ export const driveTaskFromVerify = async (
     // Best-effort; must not block the idempotency marker below.
     try {
       const errorMessage =
-        run.status === 'failed'
+        outcome === 'failed'
           ? 'Delivery did not pass verification.'
-          : run.status === 'errored'
+          : outcome === 'errored'
             ? 'Verification could not be completed due to an internal error; the delivery was not evaluated. Please retry or review it manually.'
             : undefined;
       await new TaskResultBridgeService(db, userId, workspaceId).deliver({
         operationId,
-        reason: run.status === 'passed' ? 'done' : 'error',
+        reason: outcome === 'passed' ? 'done' : 'error',
         taskId: taskOperation.taskId,
         taskIdentifier: task.identifier,
         topicId: op.topicId ?? undefined,

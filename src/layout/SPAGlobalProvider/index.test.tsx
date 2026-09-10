@@ -13,11 +13,14 @@ import { type DevDockLayout as DevDockLayoutComponent } from './index';
 
 let SPAGlobalProvider: typeof SPAGlobalProviderComponent;
 let DevDockLayout: typeof DevDockLayoutComponent;
-const { cacheGateReleased, canAccessDevDock, devDockRenderError } = vi.hoisted(() => ({
-  cacheGateReleased: { current: true },
-  canAccessDevDock: vi.fn(() => false),
-  devDockRenderError: { current: null as Error | null },
-}));
+const { cacheGateReleased, canAccessDevDock, devDockRenderError, initializeBuiltin } = vi.hoisted(
+  () => ({
+    cacheGateReleased: { current: true },
+    canAccessDevDock: vi.fn(() => false),
+    devDockRenderError: { current: null as Error | null },
+    initializeBuiltin: vi.fn(() => null),
+  }),
+);
 
 vi.mock('@lobehub/ui', async (importOriginal) => {
   const React = await import('react');
@@ -149,6 +152,7 @@ vi.mock('@/layout/GlobalProvider/ServerVersionOutdatedAlert', () => ({
 }));
 
 vi.mock('@/layout/GlobalProvider/StoreInitialization', () => ({
+  BuiltinAgentInitialization: initializeBuiltin,
   default: () => null,
 }));
 
@@ -183,12 +187,32 @@ describe('SPAGlobalProvider', () => {
   }, 30_000);
 
   beforeEach(() => {
+    initializeBuiltin.mockClear();
     cacheGateReleased.current = true;
     canAccessDevDock.mockReturnValue(false);
     devDockRenderError.current = null;
     setDevDockUnlocked(false);
     Reflect.deleteProperty(window, '__SERVER_CONFIG__');
     setPostRenderReady(false);
+  });
+
+  it('defers builtin subscriptions until persistent cache hydration has completed', () => {
+    cacheGateReleased.current = false;
+    const { unmount } = render(
+      <SPAGlobalProvider>
+        <div />
+      </SPAGlobalProvider>,
+    );
+    expect(initializeBuiltin).not.toHaveBeenCalled();
+    unmount();
+
+    cacheGateReleased.current = true;
+    render(
+      <SPAGlobalProvider>
+        <div />
+      </SPAGlobalProvider>,
+    );
+    expect(initializeBuiltin).toHaveBeenCalled();
   });
 
   afterEach(() => {

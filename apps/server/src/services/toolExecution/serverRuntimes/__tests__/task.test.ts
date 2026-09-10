@@ -1,7 +1,7 @@
 import { normalizeListTasksParams, UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createTaskRuntime } from '../task';
+import { createTaskRuntime, taskRuntime } from '../task';
 
 const verifyMocks = vi.hoisted(() => ({ createCriteriaFromDrafts: vi.fn() }));
 
@@ -39,8 +39,15 @@ vi.mock('@lobechat/const/rbac', () => ({
   canWorkspaceRoleBeTaskAssignee: (role?: string | null) => !!role && role !== 'viewer',
 }));
 
+const routerMocks = vi.hoisted(() => ({ callerContexts: [] as unknown[] }));
+
 vi.mock('@/server/routers/lambda/task', () => ({
-  taskRouter: { createCaller: () => ({}) },
+  taskRouter: {
+    createCaller: (ctx: unknown) => {
+      routerMocks.callerContexts.push(ctx);
+      return { update: vi.fn().mockResolvedValue({ data: { id: 'task-1' } }) };
+    },
+  },
 }));
 
 // APP_URL is a server-only env var; the unit-test env is flagged as client, so
@@ -60,6 +67,34 @@ vi.mock('@/server/services/task', () => ({
 vi.mock('@/server/services/verify/planGenerator', () => ({
   VerifyPlanGeneratorService: vi.fn().mockImplementation(() => verifyMocks),
 }));
+
+describe('taskRuntime.factory', () => {
+  beforeEach(() => {
+    routerMocks.callerContexts.length = 0;
+  });
+
+  it('keeps agent attribution on the caller the wrapped methods actually use', async () => {
+    const runtime = taskRuntime.factory({
+      agentId: 'agt-manager',
+      serverDB: {} as never,
+      userId: 'user-1',
+      workspaceId: 'ws-1',
+    } as never);
+
+    // Every exported method awaits `ensureModels()`, which REPLACES the caller
+    // built by the factory. A regression there is invisible from
+    // `createTaskRuntime` (which receives an already-built caller), so assert
+    // on the caller the method really runs against.
+    await (runtime as unknown as { editTask: (a: unknown) => Promise<unknown> })
+      .editTask({ identifier: 'T-1', name: 'Edited' })
+      .catch(() => undefined);
+
+    expect(routerMocks.callerContexts.length).toBeGreaterThan(0);
+    for (const ctx of routerMocks.callerContexts) {
+      expect(ctx).toMatchObject({ actingAgentId: 'agt-manager' });
+    }
+  });
+});
 
 describe('createTaskRuntime', () => {
   describe('task comments', () => {
@@ -535,6 +570,8 @@ describe('createTaskRuntime', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('name → "Edited"');
+      // The acting agent is NOT in the payload — attribution rides the
+      // caller's context so a client cannot forge it.
       expect(deps.taskCaller.update).toHaveBeenCalledWith({ id: 'task-1', name: 'Edited' });
     });
 

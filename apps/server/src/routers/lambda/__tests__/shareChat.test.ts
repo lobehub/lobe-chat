@@ -53,9 +53,11 @@ vi.mock('@/database/models/agentShare', () => ({
 const mockFindById = vi.fn();
 const mockCountBySender = vi.fn();
 const mockQueryBySender = vi.fn();
+const mockIsRunningOperationAlive = vi.fn();
 const TopicModelMock = vi.fn(() => ({
   countBySender: mockCountBySender,
   findById: mockFindById,
+  isRunningOperationAlive: mockIsRunningOperationAlive,
   queryBySender: mockQueryBySender,
 }));
 vi.mock('@/database/models/topic', () => ({
@@ -144,6 +146,7 @@ describe('shareChatRouter', () => {
     mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare: true });
     mockAccessCheck.mockResolvedValue(share);
     mockFindById.mockResolvedValue(visitorTopic);
+    mockIsRunningOperationAlive.mockResolvedValue(true);
     mockCountBySender.mockResolvedValue(0);
     mockQueryBySender.mockResolvedValue([]);
     mockMessageCountByTopic.mockResolvedValue(0);
@@ -263,7 +266,7 @@ describe('shareChatRouter', () => {
       );
     });
 
-    // Regression for Codex P1 (LOBE-11930, `shareChat.ts` prompt schema): a
+    // Regression for Codex P1 (`shareChat.ts` prompt schema): a
     // direct RPC caller (bypassing any client-side textarea limit) could
     // previously submit an HTTP-infrastructure-limit-sized `prompt`, which
     // `AiAgentService.execAgent` would persist verbatim into the CREATOR's
@@ -290,7 +293,7 @@ describe('shareChatRouter', () => {
       ).resolves.toMatchObject({ operationId: 'op-1' });
     });
 
-    // Regression for Codex P2 (LOBE-11930): a startup failure BEFORE Gateway
+    // Regression for Codex P2: a startup failure BEFORE Gateway
     // streaming begins (e.g. the queue/runtime backend returning a raw
     // diagnostic) must not reach the visitor verbatim — the run executes
     // under the CREATOR's identity, so `error.message` here can carry
@@ -313,7 +316,7 @@ describe('shareChatRouter', () => {
       });
     });
 
-    // Regression for Codex P2 follow-up (LOBE-11930, `shareChat.ts:249`):
+    // Regression for Codex P2 follow-up (`shareChat.ts:249`):
     // `AiAgentService.execAgent` RESOLVES (rather than throws) with
     // `{ success: false, error }` when `createOperation` itself fails to
     // start (see `aiAgent/index.ts`'s `execAgent` catch block) — a case the
@@ -350,7 +353,7 @@ describe('shareChatRouter', () => {
     });
 
     it('never sets interactiveStart, so concurrent visitor sends contend on the real runningOperation liveness instead of only the short reservation', async () => {
-      // Regression for Codex P1 (LOBE-11930, `shareChat.ts:186`): `interactiveStart:
+      // Regression for Codex P1 (`shareChat.ts:186`): `interactiveStart:
       // true` makes `TopicModel.tryReserveTaskCallback` skip its `runningOperation`
       // liveness check entirely (`ignoreRunningOperation`) and contend only on the
       // short-lived `taskCallbackReservation`, which is released right after the
@@ -422,7 +425,7 @@ describe('shareChatRouter', () => {
       expect(mockInterruptTask).not.toHaveBeenCalled();
     });
 
-    // Regression for Codex P2 (LOBE-11930): same startup-failure redaction as
+    // Regression for Codex P2: same startup-failure redaction as
     // `execAgent` — `AiAgentService.interruptTask` also runs creator-scoped
     // and can throw a raw infra/provider diagnostic before any Gateway event
     // exists to sanitize.
@@ -536,6 +539,23 @@ describe('shareChatRouter', () => {
       await expect(
         caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
       ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+      expect(mockSignUserJWT).not.toHaveBeenCalled();
+    });
+
+    // The marker is cleared best-effort at finish, so a stale one must not
+    // send the visitor's browser to reconnect to a finished run (it would
+    // register the topic as "running" locally and freeze its message list).
+    it('rejects when the marker points at a run that already ended', async () => {
+      mockIsRunningOperationAlive.mockResolvedValue(false);
+      const caller = await createCaller();
+
+      await expect(
+        caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
+      ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+      expect(mockIsRunningOperationAlive).toHaveBeenCalledWith(
+        expect.anything(),
+        visitorTopic.metadata.runningOperation,
+      );
       expect(mockSignUserJWT).not.toHaveBeenCalled();
     });
   });

@@ -28,11 +28,12 @@ import {
   RECEIVED_REACTION_EMOJI,
   THINKING_REACTION_EMOJI,
 } from './platforms';
+import { resolveUnsupportedMessageApis } from './platforms/messageCapabilities';
 import { clearReactionState, saveReactionState } from './reactionState';
 import { buildRecentChannelHistory } from './recentChannelHistory';
+import { renderThrownAgentError } from './renderThrownError';
 import {
   renderAgentError,
-  renderError,
   renderErrorWithDetails,
   renderFinalReply,
   renderStart,
@@ -144,6 +145,40 @@ interface DiscordChannelContext {
   channel: { id: string; name?: string; topic?: string; type?: number };
   guild: { id: string };
   thread?: { id: string; name?: string };
+}
+
+/**
+ * Resolve the `{ platform, channelId }` pair the `lobe-message` tool needs to
+ * act on the conversation this run is replying in.
+ *
+ * `PlatformClient.extractChatId` is the decoder each platform already uses for
+ * its own outbound calls, so what it returns is by construction what that
+ * platform's message service accepts as `channelId` — Feishu/Lark `oc_…`,
+ * Discord channel-or-thread id, Telegram chat id. A platform whose history
+ * read cannot be scoped that precisely (a Slack reply thread decodes to its
+ * parent channel) overrides `extractConversationId` and returns undefined, and
+ * the block is omitted rather than pointing the model at the wrong history.
+ *
+ * Returns undefined when we have no bot context or no client (e.g. a run that
+ * didn't originate from an IM thread) — the prompt block is then simply omitted.
+ */
+function resolveCurrentChannel(
+  botContext: ChatTopicBotContext | undefined,
+  client: PlatformClient | undefined,
+): { id: string; platformId: string } | undefined {
+  if (!botContext?.platformThreadId || !client) return undefined;
+  try {
+    const id = client.extractConversationId
+      ? client.extractConversationId(botContext.platformThreadId)
+      : client.extractChatId(botContext.platformThreadId);
+    if (!id) return undefined;
+    return { id, platformId: botContext.platform };
+  } catch (error) {
+    // A malformed/legacy threadId must never break the run — the model just
+    // loses the shortcut and falls back to asking, which is today's behavior.
+    log('resolveCurrentChannel: failed to extract chat id (non-fatal): %O', error);
+    return undefined;
+  }
 }
 
 interface ThreadState {
@@ -414,10 +449,14 @@ export class AgentBridgeService {
 
     AgentBridgeService.clearActiveThread(thread.id);
 
+    // Classify before rendering so a startup failure lands on curated copy
+    // (harness / provider / user tier) instead of a bare "Agent Execution
+    // Failed" that tells the user nothing — especially when the run died
+    // before it had an operation id to show.
     const errorContent = {
       markdown: stopped
         ? renderStopped(errorMessage, replyLocale)
-        : renderError(operationId, replyLocale),
+        : renderThrownAgentError(error, operationId, replyLocale),
     };
 
     if (progressMessage) {
@@ -531,7 +570,7 @@ export class AgentBridgeService {
         const operationId = AgentBridgeService.activeOperations.get(thread.id);
         log('handleMention error: operationId=%s, %O', operationId, error);
         try {
-          await thread.post({ markdown: renderError(operationId, replyLocale) });
+          await thread.post({ markdown: renderThrownAgentError(error, operationId, replyLocale) });
         } catch (postError) {
           log('handleMention: failed to post error message: %O', postError);
         }
@@ -745,13 +784,24 @@ export class AgentBridgeService {
     // Platforms whose runtime rejects `readMessages` (e.g. WeChat) can't fetch
     // history on demand. We flag that so the prompt stops telling the model to
     // call `readMessages`, and instead pre-inject recent same-channel history
-    // below (see `buildRecentChannelHistory`).
-    const canReadHistory = !platformDef?.unsupportedMessageApis?.includes(
-      MessageApiName.readMessages,
-    );
+    // below (see `buildRecentChannelHistory`). Guest Telegram summons use the
+    // guest overlay (no channel tools, including history).
+    const canReadHistory = !resolveUnsupportedMessageApis(
+      opts.botContext?.platform,
+      opts.botContext?.platformThreadId,
+    )?.includes(MessageApiName.readMessages);
+    // The `channelId` the model must pass to `lobe-message` to act on THIS
+    // conversation. `extractChatId` is the same decoder each platform client
+    // already uses for its own outbound calls, so the injected value is exactly
+    // what the message service expects (Feishu `oc_…`, Discord channel/thread
+    // id, Slack channel id). Without it `readMessages` — whose `channelId` is
+    // required, and which most platforms have no `listChannels` to discover —
+    // is unusable, and the model falls back to asking the user for a group ID.
+    const currentChannel = resolveCurrentChannel(opts.botContext, opts.client);
     const botPlatformContext: BotPlatformContext | undefined = platformDef
       ? {
           canReadHistory,
+          ...(currentChannel && { currentChannel }),
           platformName: platformDef.name,
           supportsMarkdown: platformDef.supportsMarkdown !== false,
         }
@@ -1347,6 +1397,7 @@ export class AgentBridgeService {
                       event.operationId,
                       replyLocale,
                       event.errorAttribution,
+                      event.errorBudget,
                     );
                     // Wrap in `{ markdown }` so the Chat SDK adapter sets the
                     // platform's markdown parse_mode (e.g. Telegram `Markdown`,
@@ -1468,6 +1519,7 @@ export class AgentBridgeService {
                           );
                           const title = await systemAgent.generateTopicTitle({
                             lastAssistantContent,
+                            topicId: resolvedTopicId,
                             userPrompt: prompt,
                           });
                           if (!title) return;
@@ -1531,7 +1583,7 @@ export class AgentBridgeService {
             if (progressMessage) {
               try {
                 await progressMessage.edit({
-                  markdown: renderError(result.operationId, replyLocale),
+                  markdown: renderThrownAgentError(result.error, result.operationId, replyLocale),
                 });
               } catch (error) {
                 log('executeWithCallback[local]: failed to edit startup error: %O', error);
@@ -1608,7 +1660,7 @@ export class AgentBridgeService {
           if (progressMessage) {
             try {
               await progressMessage.edit({
-                markdown: renderError(fallbackOperationId, replyLocale),
+                markdown: renderThrownAgentError(error, fallbackOperationId, replyLocale),
               });
             } catch (editError) {
               log('executeWithCallback[local]: failed to edit startup error: %O', editError);

@@ -408,7 +408,14 @@ describe('WechatGatewayClient', () => {
       const voiceBuf = Buffer.from('voice');
       mockDownloadMediaFromRawMessage.mockResolvedValue([
         { buffer: imageBuf, mimeType: 'image/jpeg', name: 'image.jpg', type: 'image', url: '' },
-        { buffer: voiceBuf, mimeType: 'audio/silk', type: 'audio', url: '' },
+        {
+          buffer: voiceBuf,
+          mimeType: 'audio/wav',
+          name: 'voice.wav',
+          size: 5,
+          type: 'audio',
+          url: '',
+        },
       ]);
       const client = createClient();
       const result = await client.extractFiles!(
@@ -422,7 +429,7 @@ describe('WechatGatewayClient', () => {
       expect(result).toEqual({
         files: [
           { buffer: imageBuf, mimeType: 'image/jpeg', name: 'image.jpg', size: undefined },
-          { buffer: voiceBuf, mimeType: 'audio/silk', name: undefined, size: undefined },
+          { buffer: voiceBuf, mimeType: 'audio/wav', name: 'voice.wav', size: 5 },
         ],
         warnings: undefined,
       });

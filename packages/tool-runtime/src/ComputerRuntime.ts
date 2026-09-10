@@ -10,6 +10,7 @@ import {
   formatKillResult,
   formatMoveResults,
   formatRenameResult,
+  formatSandboxRecreation,
   formatWriteResult,
 } from '@lobechat/prompts/fileSystem';
 import type { BuiltinServerRuntimeOutput } from '@lobechat/types';
@@ -322,9 +323,13 @@ export abstract class ComputerRuntime {
   async runCommand(args: RunCommandParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const result = await this.callService('runCommand', args);
+      const sessionState = result.sessionExpiredAndRecreated
+        ? { sessionExpiredAndRecreated: true }
+        : {};
 
       if (!result.success) {
-        return this.errorOutput(result, {
+        const output = this.errorOutput(result, {
+          ...sessionState,
           error: result.error?.message,
           exitCode: result.result?.exitCode ?? result.result?.exit_code,
           isBackground: args.background || false,
@@ -332,6 +337,10 @@ export abstract class ComputerRuntime {
           stdout: result.result?.stdout,
           success: false,
         });
+        return {
+          ...output,
+          content: formatSandboxRecreation(output.content, result.sessionExpiredAndRecreated),
+        };
       }
 
       const r = result.result || {};
@@ -339,6 +348,7 @@ export abstract class ComputerRuntime {
       const outputFiles = r.outputFiles ?? r.output_files;
 
       const state: RunCommandState = {
+        ...sessionState,
         commandId: r.commandId || r.shell_id,
         error: r.error,
         exitCode: r.exitCode ?? r.exit_code,
@@ -361,7 +371,11 @@ export abstract class ComputerRuntime {
         success: commandSuccess,
       });
 
-      return { content, state, success: true };
+      return {
+        content: formatSandboxRecreation(content, result.sessionExpiredAndRecreated),
+        state,
+        success: true,
+      };
     } catch (error) {
       return this.handleError(error);
     }
@@ -370,12 +384,20 @@ export abstract class ComputerRuntime {
   async getCommandOutput(args: GetCommandOutputParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const result = await this.callService('getCommandOutput', args);
+      const sessionState = result.sessionExpiredAndRecreated
+        ? { sessionExpiredAndRecreated: true }
+        : {};
 
       if (!result.success) {
-        return this.errorOutput(result, {
+        const output = this.errorOutput(result, {
+          ...sessionState,
           error: result.error?.message,
           success: false,
         });
+        return {
+          ...output,
+          content: formatSandboxRecreation(output.content, result.sessionExpiredAndRecreated),
+        };
       }
 
       const r = result.result || {};
@@ -383,6 +405,7 @@ export abstract class ComputerRuntime {
       const outputFiles = r.outputFiles ?? r.output_files;
 
       const state: GetCommandOutputState = {
+        ...sessionState,
         durationMs: r.durationMs ?? r.duration_ms,
         error: r.error,
         exitCode: r.exitCode ?? r.exit_code,
@@ -404,7 +427,11 @@ export abstract class ComputerRuntime {
         success: outputSuccess,
       });
 
-      return { content, state, success: true };
+      return {
+        content: formatSandboxRecreation(content, result.sessionExpiredAndRecreated),
+        state,
+        success: true,
+      };
     } catch (error) {
       return this.handleError(error);
     }

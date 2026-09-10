@@ -347,6 +347,7 @@ export const isMyTaskListKey = (key: unknown): boolean =>
  */
 export const goalKeys = {
   graph: def('goal:graph', (goalId: string) => ['goal:graph', goalId]),
+  metricSeries: def('goal:metricSeries', (goalId: string) => ['goal:metricSeries', goalId]),
 };
 
 export const taskKeys = {
@@ -393,21 +394,26 @@ export const taskKeys = {
       // fetches everything, and a shared entry would serve one surface the
       // other's filter. Folded into one trailing slot (appended only when a
       // filter is actually set) so unfiltered keys keep their shape.
-      filters?: { automated?: boolean; statuses?: readonly string[] },
+      // `complete` marks the every-page walk the Tasks list view does; the
+      // kanban view and Home read a single page and must not be served (or
+      // serve) the walked list from a shared entry.
+      filters?: { automated?: boolean; complete?: boolean; statuses?: readonly string[] },
     ) => {
       const key = projectId
         ? ['task:list', agentKey, visibility, orderBy, projectId]
         : ['task:list', agentKey, visibility, orderBy];
       const automated = filters?.automated;
+      const complete = filters?.complete ? true : undefined;
       // Order-insensitive: the same status set must hash to the same key.
       const statuses = filters?.statuses?.length
         ? [...filters.statuses].sort().join(',')
         : undefined;
-      if (automated === undefined && statuses === undefined) return key;
+      if (automated === undefined && complete === undefined && statuses === undefined) return key;
       return [
         ...key,
         {
           ...(automated === undefined ? {} : { automated }),
+          ...(complete === undefined ? {} : { complete }),
           ...(statuses === undefined ? {} : { statuses }),
         },
       ];
@@ -814,6 +820,11 @@ export const knowledgeBaseKeys = {
 
 // ---- device -------------------------------------------------------------
 export const deviceKeys = {
+  browseDirectory: def(
+    'device:browseDirectory',
+    (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
+      ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
+  ),
   gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
     'device:gitAheadBehind',
     deviceId,
@@ -1077,20 +1088,25 @@ export const verifyKeys = {
    */
   acceptancePage: def(
     'verify:acceptancePage',
-    (workspaceId: string | undefined, filter: string, cursor?: string) => [
+    (workspaceId: string | undefined, filter: string, projectId?: string, cursor?: string) => [
       'verify:acceptancePage',
       workspaceId ?? '',
       filter,
+      projectId ?? '',
       cursor ?? '',
     ],
   ),
   /** Query inputs are part of the key so server-side list filtering never reuses stale rows. */
-  acceptances: def('verify:acceptances', (limit?: number, q?: string, filter?: string) => [
+  acceptances: def(
     'verify:acceptances',
-    String(limit ?? ''),
-    q ?? '',
-    filter ?? '',
-  ]),
+    (limit?: number, q?: string, filter?: string, projectId?: string) => [
+      'verify:acceptances',
+      String(limit ?? ''),
+      q ?? '',
+      filter ?? '',
+      projectId ?? '',
+    ],
+  ),
   criteria: def('verify:criteria', () => ['verify:criteria']),
   instruction: def('verify:instruction', (documentId: string) => [
     'verify:instruction',
@@ -1375,7 +1391,11 @@ export const userKeys = {
   initState: def('user:initState', () => ['user:initState']),
 };
 export const builtinAgentKeys = {
-  init: def('builtinAgent:init', (slug: string) => ['builtinAgent:init', slug]),
+  init: def('builtinAgent:init', (slug: string, scope: string) => [
+    'builtinAgent:init',
+    slug,
+    scope,
+  ]),
 };
 export const imessageKeys = {
   bridgeStatus: def('imessage:bridgeStatus', () => ['imessage:bridgeStatus']),

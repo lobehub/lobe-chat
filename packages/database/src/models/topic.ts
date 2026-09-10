@@ -34,6 +34,8 @@ import {
   sql,
 } from 'drizzle-orm';
 
+import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
+
 import type { FtsSearchCandidateSource } from '../repositories/ftsSearch';
 import type { TopicItem } from '../schemas';
 import {
@@ -1540,8 +1542,10 @@ export class TopicModel {
 
           await tx.insert(messagePlugins).values({
             ...plugin,
+            apiName: clampToolIdentifier(plugin.apiName),
             clientId: null,
             id: newId,
+            identifier: clampToolIdentifier(plugin.identifier),
             toolCallId: newToolCallId,
           });
         }
@@ -1670,9 +1674,26 @@ export class TopicModel {
   // **************** Update *************** //
 
   update = async (id: string, data: Partial<TopicItem>) => {
+    /**
+     * Older clients switch models through the general update endpoint. Clear
+     * the old model's reasoning pin in the same statement, comparing against
+     * the persisted row so partial writes and concurrent switches stay safe.
+     * Explicit metadata remains the caller's replacement snapshot.
+     */
+    const modelChanged = or(
+      data.model !== undefined ? sql`${topics.model} is distinct from ${data.model}` : undefined,
+      data.provider !== undefined
+        ? sql`${topics.provider} is distinct from ${data.provider}`
+        : undefined,
+    );
+    const metadata =
+      data.metadata === undefined && modelChanged
+        ? sql`case when ${modelChanged} then coalesce(${topics.metadata}, '{}'::jsonb) - 'reasoningConfig' else ${topics.metadata} end`
+        : data.metadata;
+
     return this.db
       .update(topics)
-      .set({ ...data, updatedAt: new Date() })
+      .set({ ...data, metadata, updatedAt: new Date() })
       .where(and(eq(topics.id, id), this.ownership()))
       .returning();
   };
@@ -1911,6 +1932,51 @@ export class TopicModel {
     });
   };
 
+  /**
+   * Switch a topic's pinned model together with its model-scoped effort pin
+   * (`metadata.reasoningConfig` / `metadata.heteroEffort`) in one row-locked
+   * statement, so neither a concurrent switch nor an in-flight run can observe
+   * the new model paired with the previous model's pin. `reasoningConfig` is
+   * model-keyed and therefore always replaced (dropped when not provided);
+   * `heteroEffort` is only touched when given.
+   */
+  updateModelPin = async (
+    id: string,
+    {
+      metadata,
+      model,
+      provider,
+    }: {
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      model: string;
+      provider: string;
+    },
+  ) =>
+    this.db.transaction(async (tx) => {
+      const [existing] = await tx
+        .select({ metadata: topics.metadata })
+        .from(topics)
+        .where(and(eq(topics.id, id), this.ownership()))
+        .for('update');
+
+      if (!existing) return [];
+
+      const { reasoningConfig: _stale, ...rest } = existing.metadata ?? {};
+      const mergedMetadata: ChatTopicMetadata = {
+        ...rest,
+        ...(metadata?.heteroEffort !== undefined && { heteroEffort: metadata.heteroEffort }),
+        ...(metadata?.reasoningConfig !== undefined && {
+          reasoningConfig: metadata.reasoningConfig,
+        }),
+      };
+
+      return tx
+        .update(topics)
+        .set({ metadata: mergedMetadata, model, provider, updatedAt: new Date() })
+        .where(and(eq(topics.id, id), this.ownership()))
+        .returning();
+    });
+
   appendRunningOperationChild = async (
     id: string,
     parentOperationId: string,
@@ -2072,6 +2138,10 @@ export class TopicModel {
    * Whether the run a `runningOperation` marker points at is still the topic's
    * legitimate owner.
    *
+   * Public so the gateway-token refresh routers can refuse to reconnect a
+   * client to a marker whose run has already ended (the marker is cleared
+   * best-effort, so a stale one must not be taken at face value).
+   *
    * The marker itself cannot answer this — it carries no heartbeat and is
    * cleared best-effort — so the authority is the operation row, which both the
    * in-process runtime (`createOperation`) and the heterogeneous path
@@ -2082,7 +2152,7 @@ export class TopicModel {
    * with a marker and no row. A marker with neither a row nor a stamp cannot be
    * proven live and must not keep an already-stuck topic stuck.
    */
-  private isRunningOperationAlive = async (
+  isRunningOperationAlive = async (
     tx: Pick<LobeChatDatabase, 'select'>,
     runningOperation: NonNullable<ChatTopicMetadata['runningOperation']>,
   ): Promise<boolean> => {

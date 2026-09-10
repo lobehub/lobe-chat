@@ -1,10 +1,13 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type * as AcceptanceServiceModule from '../acceptanceService';
 import { instantiateVerifyPlanOnStart } from '../planInstantiation';
 import { createRepairRunner } from '../repairService';
 
 const mocks = vi.hoisted(() => ({
+  goalFind: vi.fn(),
+  loadRounds: vi.fn(),
   acceptanceAttachPolicyRun: vi.fn(),
   acceptanceEnsureForSubject: vi.fn(),
   acceptanceUpdate: vi.fn(),
@@ -21,8 +24,14 @@ const mocks = vi.hoisted(() => ({
   taskAcceptanceResolve: vi.fn(),
 }));
 
-vi.mock('../acceptanceService', () => ({
+vi.mock('@/database/models/goal', () => ({
+  GoalModel: vi.fn(() => ({ findByGraphTask: mocks.goalFind })),
+}));
+
+vi.mock('../acceptanceService', async (original) => ({
+  ...(await original<typeof AcceptanceServiceModule>()),
   AcceptanceService: vi.fn(() => ({
+    loadRounds: mocks.loadRounds,
     acceptanceModel: { update: mocks.acceptanceUpdate },
     attachPolicyRun: mocks.acceptanceAttachPolicyRun,
     ensureForSubject: mocks.acceptanceEnsureForSubject,
@@ -71,6 +80,30 @@ const db = {} as any;
 const plan = [{ id: 'check-1', required: true }];
 
 describe('Verify acceptance lifecycle', () => {
+  it('reuses the Goal acceptance checklist and supplemental check ids on a repair attempt', async () => {
+    mocks.goalFind.mockResolvedValue({ id: 'goal-1' });
+    mocks.taskAcceptanceResolve.mockResolvedValue({
+      acceptance: { id: 'a1' },
+      config: { enabled: true },
+      requirement: 'Deliver the report',
+    });
+    mocks.taskFindById.mockResolvedValue({ name: 'Report' });
+    const previousPlan = [
+      { id: 'original', title: 'Report', required: true },
+      { id: 'supplement', title: 'Evidence', required: true },
+    ];
+    mocks.loadRounds.mockResolvedValue({
+      runs: [{ id: 'r1', roundIndex: 1, plan: previousPlan }],
+      results: [],
+    });
+    mocks.ensureForOperation.mockResolvedValue({ id: 'retry' });
+    await instantiateVerifyPlanOnStart(db, 'u1', { operationId: 'op2', taskId: 't1' });
+    expect(mocks.setPlan).toHaveBeenCalledWith('retry', previousPlan);
+    expect(mocks.confirmPlan).toHaveBeenCalledWith('retry');
+    expect(mocks.acceptanceAttachPolicyRun).toHaveBeenCalledWith('retry', 'a1');
+    expect(mocks.generateDraftPlan).not.toHaveBeenCalled();
+  });
+
   beforeEach(() => {
     Object.values(mocks).forEach((mock) => mock.mockReset());
   });
@@ -97,6 +130,25 @@ describe('Verify acceptance lifecycle', () => {
     );
 
     expect(mocks.acceptanceAttachPolicyRun).toHaveBeenCalledWith('run-1', 'acceptance-1');
+  });
+
+  it('skips instantiation for a recurring task, even when an Acceptance policy exists', async () => {
+    // A failed acceptance pauses the task, and `paused` is permanently off the
+    // cron — so a recurring task must never get a verify plan in the first place.
+    mocks.taskFindById.mockResolvedValue({ automationMode: 'schedule', id: 'task-1' });
+    mocks.taskAcceptanceResolve.mockResolvedValue({
+      acceptance: { id: 'acceptance-1' },
+      config: { enabled: true, verifyRubricId: 'rubric-1' },
+    });
+
+    await instantiateVerifyPlanOnStart(db, 'user-1', {
+      operationId: 'operation-1',
+      taskId: 'task-1',
+    });
+
+    expect(mocks.taskAcceptanceResolve).not.toHaveBeenCalled();
+    expect(mocks.generateDraftPlan).not.toHaveBeenCalled();
+    expect(mocks.confirmPlan).not.toHaveBeenCalled();
   });
 
   it('keeps an empty Acceptance opted out of verification', async () => {
@@ -198,3 +250,5 @@ describe('Verify acceptance lifecycle', () => {
     expect(mocks.acceptanceAttachPolicyRun).toHaveBeenCalledWith('repair-run', 'acceptance-1');
   });
 });
+
+vi.mock('@/server/services/task', () => ({ TaskService: vi.fn() }));

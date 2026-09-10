@@ -18,6 +18,7 @@ import { Message, parseMarkdown } from 'chat';
 import { LarkApiClient } from './api';
 import { decryptLarkEvent } from './crypto';
 import { LarkFormatConverter } from './format-converter';
+import { toFeishuEmojiType } from './reactionEmoji';
 import type {
   LarkAdapterConfig,
   LarkMessageBody,
@@ -489,12 +490,20 @@ export class LarkAdapter implements Adapter<LarkThreadId, LarkRawMessage> {
   ): Promise<FetchResult<LarkRawMessage>> {
     const { chatId } = this.decodeThreadId(threadId);
 
+    // `backward` (the default) means "the most recent messages", but Feishu's
+    // own default sort is ascending — left alone, the first page would be the
+    // chat's oldest messages. Fetch newest-first for `backward` and flip the
+    // page so `FetchResult.messages` stays oldest-first as the contract says;
+    // `forward` maps straight onto Feishu's ascending order.
+    const forward = options?.direction === 'forward';
     const result = await this.api.listMessages(chatId, {
       pageSize: options?.limit || 50,
       pageToken: options?.cursor,
+      sortType: forward ? 'ByCreateTimeAsc' : 'ByCreateTimeDesc',
     });
 
     const messages = result.items.map((item: any) => this.parseMessage(item));
+    if (!forward) messages.reverse();
 
     return {
       messages,
@@ -585,10 +594,17 @@ export class LarkAdapter implements Adapter<LarkThreadId, LarkRawMessage> {
     emoji: EmojiValue | string,
   ): Promise<void> {
     const emojiType = this.toEmojiType(emoji);
+    if (!emojiType) {
+      this.logger.warn('No Lark emoji_type for reaction %s, skipping', String(emoji));
+      return;
+    }
     try {
       await this.api.addReaction(messageId, emojiType);
-    } catch {
-      // Reactions may not be supported in all chat types
+    } catch (error) {
+      // Reactions are unavailable in some chat types, so this stays non-fatal —
+      // but it is logged now: silently swallowing it is what hid the fact that
+      // every reaction was failing with `231001`.
+      this.logger.warn('Failed to add reaction %s: %s', emojiType, String(error));
     }
   }
 
@@ -597,8 +613,10 @@ export class LarkAdapter implements Adapter<LarkThreadId, LarkRawMessage> {
     _messageId: string,
     _emoji: EmojiValue | string,
   ): Promise<void> {
-    // Lark's remove reaction requires a reaction ID, which we don't track.
-    // No-op for now.
+    // Lark's delete endpoint is keyed by `reaction_id`, handed out only in the
+    // add response, and this adapter keeps no state to stash it in — so removal
+    // is a no-op here. The server-side bot messenger, which is what the bot
+    // runtime actually drives, does track it (`feishu/reactionTracker.ts`).
   }
 
   // ------------------------------------------------------------------
@@ -741,10 +759,15 @@ export class LarkAdapter implements Adapter<LarkThreadId, LarkRawMessage> {
     }
   }
 
-  private toEmojiType(emoji: EmojiValue | string): string {
-    if (typeof emoji === 'string') return emoji;
-    // EmojiValue is a symbol-like; use its string form
-    return String(emoji);
+  /**
+   * Lark reactions are a named enum, not unicode — `toFeishuEmojiType` owns the
+   * translation (and the reason it can't just be `String(emoji)`: passing a
+   * unicode emoji through is a guaranteed `231001 reaction type is invalid`).
+   * Returns undefined when there is no documented equivalent, so the caller can
+   * skip the request instead of making one that cannot succeed.
+   */
+  private toEmojiType(emoji: EmojiValue | string): string | undefined {
+    return toFeishuEmojiType(typeof emoji === 'string' ? emoji : String(emoji));
   }
 }
 

@@ -72,6 +72,28 @@ export const verifyRunStatuses = [
 export type VerifyRunStatus = (typeof verifyRunStatuses)[number];
 
 /**
+ * A draft round only describes what will be verified: nothing has executed and
+ * nobody has decided. Drafts follow the live plan and are reused by the next
+ * plan or ingest instead of consuming another round number.
+ *
+ * A replay is excluded: it is pinned to the source round's frozen definition, so
+ * it must not follow later graph edits or absorb another flow. Only the newest
+ * round can be the open draft — an older one left behind by a replay is an
+ * abandoned ledger position, so callers check the latest round rather than
+ * searching the whole chain.
+ */
+export const isDraftVerifyRun = (run: {
+  metadata?: { replayOfRunId?: string } | null;
+  planConfirmedAt?: Date | string | null;
+  status?: string | null;
+  userDecision?: string | null;
+}): boolean =>
+  run.status === 'planned' &&
+  !run.planConfirmedAt &&
+  !run.userDecision &&
+  !run.metadata?.replayOfRunId;
+
+/**
  * What produced a verification session.
  * - agent:         verifying a real Agent Run (`verify_runs.operation_id` set)
  * - agent-testing: a standalone session ingested from the agent-testing harness

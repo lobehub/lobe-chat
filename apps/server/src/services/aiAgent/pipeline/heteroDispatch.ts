@@ -9,7 +9,7 @@ import {
 import type {
   ErrorType,
   ExecAgentResult,
-  HeterogeneousTopicModel,
+  HeterogeneousTopicPin,
   LobeAgentAgencyConfig,
   RequestTrigger,
   WorkingDirConfig,
@@ -182,7 +182,7 @@ export interface HeteroDispatchInput {
   memberDeviceOverride?: Pick<LobeAgentAgencyConfig, 'boundDeviceId' | 'executionTarget'>;
   operationTaskId?: string;
   parentOperationId?: string;
-  pinnedHeterogeneousTopicModel?: HeterogeneousTopicModel;
+  pinnedHeterogeneousTopicModel?: HeterogeneousTopicPin;
   requestedDeviceId?: string;
   requestTrigger?: RequestTrigger;
   runAttachments: { imageList?: Array<{ alt: string; id: string; url: string }> };
@@ -247,6 +247,12 @@ export const dispatchHeteroAgent = async (
   // so hetero ops aren't visually distinct bare nanoids in the trace/op tables.
   const operationId = `op_${Date.now()}_${resolvedAgentId}_${topicId}_${nanoid(8)}`;
 
+  // Hooks belong to this operation's lifecycle. Persist their serializable
+  // form on the durable operation row before dispatch; runningOperation below
+  // remains a compatibility mirror for older terminal consumers.
+  if (hooks?.length) hookDispatcher.register(operationId, hooks);
+  const serializedHooks = hookDispatcher.getSerializedHooks(operationId);
+
   // Persist a first-class agent_operations row for the hetero run. The id is
   // generated here (authoritative) and flows through to heteroIngest /
   // heteroFinish unchanged. Without this row the run is invisible to the
@@ -261,8 +267,13 @@ export const dispatchHeteroAgent = async (
     deps.workspaceId,
   ).recordStart({
     agentId: persistAgentId,
+    appContext: { ...appContext, sourceMessageId: userMessageId },
     chatGroupId: appContext?.groupId ?? null,
     maxSteps,
+    metadata: {
+      _hooks: serializedHooks,
+      assistantMessageId,
+    },
     operationId,
     parentOperationId,
     provider: heteroType,
@@ -272,6 +283,7 @@ export const dispatchHeteroAgent = async (
     trigger,
   });
   if (!operationPersisted) {
+    hookDispatcher.unregister(operationId);
     throw new Error('Failed to persist heterogeneous agent operation');
   }
 
@@ -444,16 +456,32 @@ export const dispatchHeteroAgent = async (
     ? deps.userId
     : (agentConfig.userId ?? deps.userId);
 
+  // Resolve CLI-device routing before persisting the marker. Cancellation
+  // must address the same device even though local CLI agents use a different
+  // dispatch transport from notify-based platform agents.
+  const deviceHeteroPlan = !isRemoteHetero
+    ? resolveExecutionPlan({
+        agencyConfig: agentConfig.agencyConfig,
+        canUseDevice,
+        isHetero: true,
+        clientExecutionAvailable: false,
+        requestedDeviceId,
+        sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
+        trigger: requestTrigger,
+      })
+    : undefined;
+  const cliDeviceId = deviceHeteroPlan?.kind === 'device' ? deviceHeteroPlan.deviceId : undefined;
+  const cliDeviceWorkspaceId = cliDeviceId
+    ? await deps.resolveDeviceWorkspaceId(cliDeviceId)
+    : undefined;
+
   // Register the run's lifecycle hooks so the hetero terminal path fires
   // onComplete/onError through the same `hookDispatcher` the normal LLM
   // runtime uses — driving the task lifecycle (onTopicComplete) and IM bot
   // completion callbacks uniformly. The hetero block returns before
   // AgentRuntimeService (which registers hooks for normal runs), so we do it
-  // here. Local mode dispatches these in-memory handlers; queue mode
-  // delivers the serialized webhooks persisted on runningOperation below.
-  if (hooks?.length) hookDispatcher.register(operationId, hooks);
-  const serializedHooks = hookDispatcher.getSerializedHooks(operationId);
-
+  // here. Local mode dispatches these in-memory handlers; queue mode delivers
+  // the serialized webhooks persisted on the operation row above.
   // Seed topic.metadata.runningOperation so heteroIngest can validate the
   // operation, and so every terminal site (heteroFinish, agentNotify done,
   // dispatch failure) can re-fire the serialized hooks across a process
@@ -469,7 +497,13 @@ export const dispatchHeteroAgent = async (
           deviceUserId: remoteDeviceUserId,
           deviceWorkspaceId: remoteDeviceWorkspaceId,
         }
-      : {}),
+      : cliDeviceId
+        ? {
+            deviceId: cliDeviceId,
+            deviceUserId: deps.userId,
+            deviceWorkspaceId: cliDeviceWorkspaceId,
+          }
+        : {}),
     operationId,
     orchestrationRole: appContext?.orchestrationRole,
     scope: appContext?.scope ?? undefined,
@@ -766,15 +800,7 @@ export const dispatchHeteroAgent = async (
       log('execAgent: failed to init stream for local hetero: %O', err);
     }
 
-    const heteroPlan = resolveExecutionPlan({
-      agencyConfig: agentConfig.agencyConfig,
-      canUseDevice,
-      isHetero: true,
-      clientExecutionAvailable: false,
-      requestedDeviceId,
-      sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
-      trigger: requestTrigger,
-    });
+    const heteroPlan = deviceHeteroPlan!;
 
     if (heteroPlan.kind !== 'sandbox') {
       const dispatchDeviceId = heteroPlan.kind === 'device' ? heteroPlan.deviceId : undefined;
@@ -815,7 +841,7 @@ export const dispatchHeteroAgent = async (
       const boundDevice =
         (await deviceModelForCwd.findByDeviceId(dispatchDeviceId)) ??
         (await deviceModelForCwd.findWorkspaceDeviceById(dispatchDeviceId));
-      const dispatchWorkspaceId = await deps.resolveDeviceWorkspaceId(dispatchDeviceId);
+      const dispatchWorkspaceId = cliDeviceWorkspaceId;
       // Resolve via the shared precedence helper so dispatch, workspace-init,
       // and the new-topic backfill below all agree on the cwd.
       const deviceCwdConfig = resolveDeviceWorkingDirectoryConfig({

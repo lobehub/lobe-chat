@@ -27,6 +27,7 @@ describe('getPortalViewMinWidth', () => {
       PortalViewType.GoalMetric,
       PortalViewType.GoalNode,
       PortalViewType.TaskDetail,
+      PortalViewType.TaskResult,
       PortalViewType.Thread,
       PortalViewType.ToolUI,
     ]) {
@@ -43,7 +44,11 @@ describe('getPortalViewWidth', () => {
   });
 
   it('opens task and goal-node detail at the task width even when the legacy width is narrow', () => {
-    for (const viewType of [PortalViewType.TaskDetail, PortalViewType.GoalNode]) {
+    for (const viewType of [
+      PortalViewType.TaskDetail,
+      PortalViewType.TaskResult,
+      PortalViewType.GoalNode,
+    ]) {
       expect(getPortalViewWidth({ legacyWidth: CHAT_PORTAL_WIDTH, viewType })).toBe(
         CHAT_PORTAL_TASK_WIDTH,
       );
@@ -79,9 +84,11 @@ describe('getPortalViewWidth', () => {
   });
 
   it('falls back to the legacy width for views without an explicit default', () => {
-    expect(getPortalViewWidth({ legacyWidth: 520, viewType: PortalViewType.Home })).toBe(520);
-    expect(getPortalViewWidth({ viewType: PortalViewType.Home })).toBe(CHAT_PORTAL_WIDTH);
-    expect(getPortalViewWidth({})).toBe(CHAT_PORTAL_WIDTH);
+    // Document has no entry in the default-width map, so it rides the legacy
+    // chain. (Home is the conversation host state now — see
+    // conversationWidth.test.ts — so it deliberately ignores the legacy width.)
+    expect(getPortalViewWidth({ legacyWidth: 520, viewType: PortalViewType.Document })).toBe(520);
+    expect(getPortalViewWidth({ legacyWidth: 480, viewType: PortalViewType.Notebook })).toBe(480);
   });
 
   it('clamps to the view min width and the panel max width', () => {
