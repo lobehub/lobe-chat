@@ -116,6 +116,36 @@ const failedGoal = async (enabled = true, error = 'fetch failed: ECONNRESET') =>
   return { goalId: graph.goal.id, nodeId: created.nodeId!, operationId, taskId };
 };
 
+/**
+ * The run itself settled cleanly and something around it broke: the device link
+ * dropped, or verification could not run. The Task is left `paused`, not `failed`,
+ * and its operation is `done`, not `error`.
+ */
+const pipelineFailureGoal = async (error = 'Device offline', withRun = true) => {
+  const graph = await service().create({
+    config: { supervision: { enabled: true } },
+    tasks: ['Finish existing report'],
+    title: 'Interrupted delivery',
+  });
+  const created = await service().tick(graph.goal.id);
+  const taskId = created.taskId!;
+  if (withRun) {
+    const topicId = `topic-pipeline-${++sequence}`;
+    const operationId = `op-pipeline-${sequence}`;
+    await db.insert(topics).values({ id: topicId, userId });
+    await operationModel.recordStart({ operationId, taskId, topicId });
+    await operationModel.recordCompletion(operationId, {
+      completionReason: 'done',
+      status: 'done',
+    });
+    await db
+      .insert(taskTopics)
+      .values({ operationId, seq: 1, status: 'completed', taskId, topicId, userId });
+  }
+  await taskModel.update(taskId, { status: 'paused', error, totalTopics: withRun ? 1 : 0 });
+  return { goalId: graph.goal.id, taskId };
+};
+
 const diagnose = async (goalId: string, action = 'retry') => {
   const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
   const incident = state.incidents.at(-1)!;
@@ -454,6 +484,29 @@ describe('Goal Supervisor integration', () => {
     expect((await goalModel.findById(goalId))?.config?.supervisorState?.incidents[0]).toMatchObject(
       { recoveryOperationId: operationId, status: 'recovered' },
     );
+  });
+
+  it('recovers a paused pipeline failure instead of leaving it on the human Gate', async () => {
+    const { goalId, taskId } = await pipelineFailureGoal();
+    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
+    expect((await service().graph(goalId)).decisions).toHaveLength(0);
+    await diagnose(goalId);
+    expect((await service().tick(goalId)).outcome).toBe('advanced');
+    // The Task holds `paused`, so a recovery that only accepted `failed` would
+    // silently do nothing here and escalate the incident.
+    expect((await taskModel.findById(taskId))?.status).toBe('backlog');
+    const graph = await service().graph(goalId);
+    expect(graph.goal.config?.supervisorState?.incidents.at(-1)?.status).not.toBe('escalated');
+  });
+
+  it('supervises a dispatch that failed before it ever wrote a run', async () => {
+    const { goalId } = await pipelineFailureGoal('Kickoff failed before dispatch', false);
+    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
+    const graph = await service().graph(goalId);
+    expect(graph.decisions).toHaveLength(0);
+    const incident = graph.goal.config?.supervisorState?.incidents.at(-1);
+    expect(incident?.eligible).toBe(true);
+    expect(incident?.failedOperationId).toMatch(/^dispatch:/);
   });
 
   it('without supervision the same transport failure opens a human Gate', async () => {

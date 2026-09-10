@@ -21,7 +21,12 @@ import { AiAgentService } from '@/server/services/aiAgent';
 
 import { resolveGoalModelConfig } from '../modelConfig';
 import { scheduleGoalAdvance } from '../scheduler';
-import { recoveryEligibility, supervisionLimit, SUPERVISOR_DIAGNOSIS_TIMEOUT_MS } from './policy';
+import {
+  dispatchFailureKey,
+  recoveryEligibility,
+  supervisionLimit,
+  SUPERVISOR_DIAGNOSIS_TIMEOUT_MS,
+} from './policy';
 
 /** Durable supervisor with a dedicated, incident-scoped tool set. */
 export class GoalSupervisorService {
@@ -128,10 +133,15 @@ export class GoalSupervisorService {
       task.id,
     );
     const latest = runs[0];
-    if (!latest?.operationId) return null;
-    const failedOperation = await operations.findById(latest.operationId);
+    // A kickoff that threw before writing a run has no operation to key on, yet it
+    // is the failure least in need of a person. Fall back to a per-attempt key so
+    // the incident is still recorded, deduplicated and budgeted.
+    const failureKey = latest?.operationId ?? dispatchFailureKey(task);
+    const failedOperation = latest?.operationId
+      ? await operations.findById(latest.operationId)
+      : undefined;
     const state = graph.goal.config.supervisorState ?? (await this.initialize(graph));
-    let incident = state.incidents.find((item) => item.failedOperationId === latest.operationId);
+    let incident = state.incidents.find((item) => item.failedOperationId === failureKey);
     if (!incident) {
       if (state.incidents.some((item) => item.status === 'diagnosing'))
         return waiting('Another interruption is being diagnosed');
@@ -156,8 +166,8 @@ export class GoalSupervisorService {
       incident = {
         createdAt: new Date().toISOString(),
         eligible: eligibility.eligible,
-        failedOperationId: latest.operationId,
-        id: latest.operationId,
+        failedOperationId: failureKey,
+        id: failureKey,
         nodeId,
         reason: eligibility.reason,
         status: eligibility.eligible ? 'diagnosing' : 'escalated',
@@ -311,16 +321,20 @@ export class GoalSupervisorService {
         !currentGraph ||
         !currentTask ||
         ownIncident?.status !== 'diagnosing' ||
-        currentRuns[0]?.operationId !== incident.failedOperationId ||
+        (currentRuns[0]?.operationId ?? dispatchFailureKey(currentTask)) !==
+          incident.failedOperationId ||
         !recoveryEligibility(currentGraph, currentTask, failedOperation).eligible ||
         (await new GoalSupervisorService(tx, this.userId, this.workspaceId).budgetBlocked(
           currentGraph,
         ))
       )
         return false;
+      // Compare against the status this Task actually holds. A pipeline failure
+      // leaves it `paused`, so a fixed `failed` expectation would never match and
+      // every recovery would silently fall back to the human gate.
       const changed = await new TaskModel(tx, this.userId, this.workspaceId).updateStatusIfCurrent(
         task.id,
-        'failed',
+        currentTask.status,
         'backlog',
         { error: null },
       );
