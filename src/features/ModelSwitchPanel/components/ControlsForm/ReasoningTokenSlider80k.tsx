@@ -39,7 +39,12 @@ const ReasoningTokenSlider80k = memo<ReasoningTokenSlider80kProps>(
     });
 
     const options = useMemo(
-      () => MARK_TOKENS.map((token, index) => ({ label: `${token}k`, value: index })),
+      () =>
+        MARK_TOKENS.map((token, index) => ({
+          label: `${token}k`,
+          style: { overflowWrap: 'normal' as const, whiteSpace: 'nowrap' as const },
+          value: index,
+        })),
       [],
     );
 
@@ -55,7 +60,7 @@ const ReasoningTokenSlider80k = memo<ReasoningTokenSlider80kProps>(
 
     return (
       <Flexbox horizontal align={'center'} gap={12} paddingInline={'4px 0'}>
-        <Flexbox flex={1} style={{ minWidth: 200, maxWidth: 360 }}>
+        <Flexbox flex={1} style={{ minWidth: 200, maxWidth: 320 }}>
           <DiscreteSlider
             options={options}
             value={sliderIndex}
