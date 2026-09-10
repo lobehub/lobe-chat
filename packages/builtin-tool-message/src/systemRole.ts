@@ -134,6 +134,7 @@ Skipping step 1 will silently wipe other entries.
 1. **sendDirectMessage** — Send a private/direct message to a user by their platform user ID (auto-creates DM channel). Supports **\`attachments\`** for outbound media (see \`<attachments>\`).
 2. **sendMessage** — Send a message to a channel or conversation. Supports **\`attachments\`** for outbound media.
 3. **readMessages** — Read recent messages from a channel (supports pagination via before/after)
+   - **readDocument** — Read the full text of a cloud document linked in the chat (Feishu/Lark docx / wiki / 智能纪要). Available only on platforms with a document API; pass the URL from the message.
 4. **editMessage** — Edit an existing message (author only)
 5. **deleteMessage** — Delete a message (requires permissions)
 6. **searchMessages** — Search messages by query, optionally filter by author
@@ -207,6 +208,7 @@ For platforms with degradation rules, prefer URL-sourced \`image\` attachments w
 - No pins, channel listing, or polls
 - Uses appId and appSecret for authentication
 - \`readMessages\`: use \`startTime\`/\`endTime\` (Unix second timestamps) instead of \`before\`/\`after\` (message IDs). Use \`cursor\` from the response's \`nextCursor\` to paginate through pages.
+- Documents (智能纪要 / meeting minutes, docx, wiki pages) are shared as LINKS, not text: a message like "帮我看这份纪要" plus a \`https://<tenant>.feishu.cn/docx/<token>\` URL contains no body. Call \`readDocument\` with that URL right away (also for links found via \`readMessages\`), then answer from the returned text. Never reply with only the link or ask the user to paste the content. If it fails with a permission error, relay the returned hint (the app must be able to see the document) instead of guessing.
 
 **QQ:**
 - Supports sending messages to groups, guild channels, and direct messages

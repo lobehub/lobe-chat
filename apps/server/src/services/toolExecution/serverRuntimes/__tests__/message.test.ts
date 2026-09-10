@@ -203,13 +203,20 @@ vi.mock('@/server/services/bot/platforms/slack/api', () => ({
 }));
 
 const mockFeishuSendMessage = vi.fn();
-vi.mock('@lobechat/chat-adapter-feishu', () => ({
+const mockFeishuGetDocxRawContent = vi.fn();
+const mockFeishuGetDocxDocument = vi.fn();
+vi.mock('@lobechat/chat-adapter-feishu', async (importOriginal) => ({
+  // Keep the pure helpers (URL parsing, content flattening) real — only the
+  // HTTP client is mocked.
+  ...(await importOriginal<Record<string, unknown>>()),
   LarkApiClient: vi.fn().mockImplementation(function () {
     return {
       addReaction: vi.fn(),
       deleteMessage: vi.fn(),
       editMessage: vi.fn(),
       getChatInfo: vi.fn(),
+      getDocxDocument: mockFeishuGetDocxDocument,
+      getDocxRawContent: mockFeishuGetDocxRawContent,
       getUserInfo: vi.fn(),
       listMessages: vi.fn(),
       replyMessage: vi.fn(),
@@ -407,6 +414,41 @@ describe('messageRuntime', () => {
         messageId: 'om_feishu_123',
         platform: 'feishu',
       });
+    });
+
+    it('reads a docx document linked from the chat', async () => {
+      mockProviderFor('feishu', { appSecret: 'feishu-secret' });
+      mockFeishuGetDocxRawContent.mockResolvedValue('参会人：A、B\n总结：上线延期一周');
+      mockFeishuGetDocxDocument.mockResolvedValue({ documentId: 'DocTok', title: '评审会纪要' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.readDocument({
+        platform: 'feishu',
+        url: 'https://lobe-hub.feishu.cn/docx/DocTok?from=chat',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockFeishuGetDocxRawContent).toHaveBeenCalledWith('DocTok');
+      expect(result.content).toContain('Document: 评审会纪要');
+      expect(result.content).toContain('总结：上线延期一周');
+      expect(result.state).toMatchObject({
+        documentId: 'DocTok',
+        kind: 'docx',
+        platform: 'feishu',
+      });
+    });
+
+    it('reports readDocument as unsupported on a platform without a document API', async () => {
+      mockProviderFor('discord', { botToken: 'discord-token' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.readDocument({
+        platform: 'discord',
+        url: 'https://example.com/doc',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not supported on discord');
     });
   });
 
