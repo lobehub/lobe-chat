@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { State } from '../../initialState';
 import { messageStateSelectors } from './selectors';
@@ -44,6 +44,17 @@ describe('isRowGenerating', () => {
   it('falls back to the message itself for a plain row', () => {
     expect(messageStateSelectors.isRowGenerating('u1')(stateWith(steered, []))).toBe(false);
     expect(messageStateSelectors.isRowGenerating('g1')(stateWith(steered, ['g1']))).toBe(true);
+  });
+});
+
+describe('isAssistantGroupItemGenerating', () => {
+  it('resolves a block to its group without rescanning the message list', () => {
+    const state = stateWith(steered, ['g2']);
+    const scans = vi.spyOn(state.displayMessages, 'find');
+
+    expect(messageStateSelectors.isAssistantGroupItemGenerating('g2-b')(state)).toBe(true);
+    expect(messageStateSelectors.isAssistantGroupItemGenerating('g1')(state)).toBe(false);
+    expect(scans).not.toHaveBeenCalled();
   });
 });
 

@@ -16,6 +16,10 @@ export interface SteerChainIndex {
   hostOf: Map<string, string>;
 }
 
+// A plain `assistant` reply (a turn that finished without tool calls) cannot host a
+// chain: its row component has no continuation rendering, so a steer after it stays
+// a separate row. Fixing that means promoting the reply to `assistantGroup` when it is
+// interrupted, not widening this predicate.
 const isTurnHost = (message?: UIChatMessage) =>
   message?.role === 'assistantGroup' || message?.role === 'supervisor';
 
