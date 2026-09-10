@@ -924,7 +924,13 @@ export class CompletionLifecycle {
           metadata?.userId || this.userId,
           typeof metadata?.topicId === 'string' ? metadata.topicId : undefined,
         );
-        if (recovered) event.lastAssistantContent = recovered;
+        if (recovered) {
+          event.lastAssistantContent = recovered;
+          const attachments = extractOutboundAttachments([
+            { content: recovered, role: 'assistant' },
+          ]);
+          event.attachments = attachments.length > 0 ? attachments : undefined;
+        }
       }
 
       await hookDispatcher.dispatch(operationId, 'onComplete', event, metadata._hooks);
