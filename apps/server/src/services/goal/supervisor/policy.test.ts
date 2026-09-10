@@ -105,6 +105,23 @@ describe('supervisor recovery authority', () => {
       recoveryEligibility(graph, { ...task, error: 'Superseded by a newer plan' }, settled)
         .eligible,
     ).toBe(false);
+    // The status update keeps the old error when none is supplied, so an actor can
+    // leave a Task `failed` still carrying the transport reason it was paused with.
+    expect(
+      recoveryEligibility(
+        graph,
+        { ...task, error: '{"error":"DEVICE_OFFLINE","success":false}' },
+        settled,
+      ).eligible,
+    ).toBe(false);
+    // The same text on a `paused` Task is the pipeline failure it looks like.
+    expect(
+      recoveryEligibility(
+        graph,
+        { ...task, error: '{"error":"DEVICE_OFFLINE","success":false}', status: 'paused' },
+        settled,
+      ).eligible,
+    ).toBe(true);
   });
 
   it('reads an errored run as an agent failure even when the Task is left paused', () => {

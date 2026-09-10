@@ -1715,6 +1715,17 @@ export class GoalService {
       };
     }
 
+    // Nothing failed: somebody settled the Task while this advance was deciding.
+    // Opening a gate would ask them to judge their own decision.
+    if (recovery.outcome === 'settled') {
+      return {
+        goalId: graph.goal.id,
+        message: `Task ${task.identifier} was settled while recovery was being decided`,
+        nodeId,
+        outcome: 'no_progress',
+        taskId: task.id,
+      };
+    }
     const exhaustedReason =
       recovery.outcome === 'exhausted-cost'
         ? 'Goal cost budget was exhausted'
@@ -1996,6 +2007,17 @@ export class GoalService {
       };
     }
 
+    // Nothing failed: somebody settled the Task while this advance was deciding.
+    // Opening a gate would ask them to judge their own decision.
+    if (recovery.outcome === 'settled') {
+      return {
+        goalId: graph.goal.id,
+        message: `Task ${task.identifier} was settled while recovery was being decided`,
+        nodeId,
+        outcome: 'no_progress',
+        taskId: task.id,
+      };
+    }
     const reason =
       recovery.outcome === 'exhausted-cost'
         ? 'Goal cost budget was exhausted after an operation was abandoned'

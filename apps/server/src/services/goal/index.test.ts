@@ -35,10 +35,15 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
 import { GoalCriteriaGeneratorService } from './criteriaGenerator';
-import { LEASE_EXPIRED_ERROR, VERIFICATION_FAILED_ERROR } from './decideNextMove';
+import {
+  LEASE_EXPIRED_ERROR,
+  VERIFICATION_ERRORED_ERROR,
+  VERIFICATION_FAILED_ERROR,
+} from './decideNextMove';
 import { GoalExplorationPlanner } from './explorationPlanner';
 import { GoalService } from './index';
 import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
+import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
 import type { GoalTickObservation } from './traceObservation';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -394,6 +399,37 @@ describe('GoalService', () => {
       expect(runSpy).not.toHaveBeenCalled();
       expect(stopped).toMatchObject({ outcome: 'no_progress' });
       expect(stopped.message).toContain('Deadline passed');
+    },
+  );
+
+  it.each([LEASE_EXPIRED_ERROR, VERIFICATION_ERRORED_ERROR])(
+    'does not restart a Task settled while recovery for %s was being decided',
+    async (error) => {
+      const runSpy = vi
+        .spyOn(TaskRunnerService.prototype, 'runTask')
+        .mockResolvedValue({} as never);
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: `Settled during recovery ${error}`,
+        tasks: ['Do not restart'],
+      });
+      const created = await service.tick(graph.goal.id);
+      await taskModel.updateStatus(created.taskId!, 'paused', { error });
+      // The advance routed here holding the paused row; a person settled the Task
+      // before the claim, which is the row the coordinator now reads.
+      const stale = (await taskModel.findById(created.taskId!))!;
+      await taskModel.updateStatus(created.taskId!, 'completed', { error: null });
+      runSpy.mockClear();
+
+      const recovery = await new TaskRecoveryCoordinator(serverDB, userId).recover({
+        goal: (await service.graph(graph.goal.id)).goal,
+        task: stale,
+      });
+
+      expect(recovery.outcome).toBe('settled');
+      expect(runSpy).not.toHaveBeenCalled();
+      expect((await taskModel.findById(created.taskId!))?.status).toBe('completed');
     },
   );
 

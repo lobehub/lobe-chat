@@ -7,6 +7,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { resolveTaskAttemptBudget, resolveTaskMaxSteps } from './recoveryPolicy';
+import { RECOVERABLE_TASK_STATUSES } from './supervisor/policy';
 
 const log = debug('lobe-server:goal-task-recovery');
 
@@ -15,6 +16,8 @@ export type TaskRecoveryOutcome =
   | 'started'
   /** Another overlapping advance owns the retry; this one started nothing. */
   | 'already-running'
+  /** Someone settled the Task while this recovery was being decided. */
+  | 'settled'
   | 'exhausted-cost'
   | 'exhausted-rounds'
   | 'spawn-failed';
@@ -72,6 +75,13 @@ export class TaskRecoveryCoordinator {
     if (!current || current.status === 'running') {
       log('task %s recovery was already claimed by another advance', task.identifier);
       return { outcome: 'already-running' };
+    }
+    // The tick that routed here read the Task before it decided. Claiming whatever
+    // status it holds now would swap a completion or a cancellation to `running` and
+    // start a paid run against a decision somebody already made.
+    if (!RECOVERABLE_TASK_STATUSES.has(current.status)) {
+      log('task %s was settled as %s; leaving it alone', task.identifier, current.status);
+      return { outcome: 'settled' };
     }
     const claimed = await taskModel.updateStatusIfCurrent(task.id, current.status, 'running', {
       error: null,

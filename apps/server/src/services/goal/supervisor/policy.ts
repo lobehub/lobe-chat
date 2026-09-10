@@ -91,6 +91,14 @@ export const recoveryEligibility = (
   if (!RECOVERABLE_TASK_STATUSES.has(task.status)) {
     return { eligible: false, reason: `A ${task.status} Task is not supervision's to restart` };
   }
+  // `TaskService.updateStatus` replaces `error` only when a new one is supplied, so an
+  // actor can move a pipeline-paused Task to `failed` and leave the transport text
+  // that paused it. The status log records assignee changes, not transitions, so the
+  // author is not readable; require the errored run instead. Nothing the system does
+  // writes `failed` with a recoverable error — its own is `Heartbeat timeout`.
+  if (task.status === 'failed' && operation?.status !== 'error') {
+    return { eligible: false, reason: 'A failed Task without an errored run is a decision' };
+  }
   if ((task.totalTopics ?? 0) >= resolveTaskAttemptBudget(graph.goal)) {
     return { eligible: false, reason: 'Task attempt budget exhausted' };
   }
