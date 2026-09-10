@@ -10,7 +10,6 @@ export default {
   'marketSubmission.failed': 'Could not submit. Please try again.',
   'marketSubmission.linkFailed':
     'Submitted, but could not save the Market link locally ({{identifier}}). Keep this identifier and avoid resubmitting as a new agent.',
-  'marketPublish.status.underReview': 'Under Review',
   'marketPublish.status.published': 'Published',
   'marketPublish.status.unpublished': 'Unpublished',
   'marketPublish.status.archived': 'Archived',

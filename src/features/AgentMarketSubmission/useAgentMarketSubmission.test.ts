@@ -126,6 +126,10 @@ describe('Market review submission', () => {
 
   it('submits existing listings as new versions under the workspace identity', async () => {
     mocks.workspace = true;
+    mocks.workspaceIdentity.mockImplementation(async (input) => {
+      if (!input?.autoProvision) throw new Error('Community profile setup required');
+      return { marketAccountId: 42 };
+    });
     mocks.meta.marketIdentifier = 'existing';
     mocks.submit.mockResolvedValue({ identifier: 'existing', isNewAgent: false, success: true });
     const { result } = renderSubmission();
@@ -148,11 +152,44 @@ describe('Market review submission', () => {
 
   it('stops when Market authorization is cancelled', async () => {
     mocks.authenticated = false;
-    mocks.signIn.mockResolvedValue(null);
+    mocks.signIn.mockRejectedValueOnce(new Error('User cancelled authorization'));
     const { result } = renderSubmission();
     await act(() => result.current.open());
     expect(mocks.signIn).toHaveBeenCalledOnce();
     expect(confirmModal).not.toHaveBeenCalled();
+    expect(mocks.submit).not.toHaveBeenCalled();
+    expect(toast.error).not.toHaveBeenCalled();
+
+    mocks.signIn.mockResolvedValueOnce(true);
+    await act(() => result.current.open());
+    expect(confirmModal).toHaveBeenCalledOnce();
+  });
+
+  it('reports real authorization failures without submitting', async () => {
+    mocks.authenticated = false;
+    mocks.signIn.mockRejectedValueOnce(new Error('Authorization state mismatch'));
+    const { result } = renderSubmission();
+    await act(() => result.current.open());
+    expect(toast.error).toHaveBeenCalledWith('marketSubmission.failed');
+    expect(confirmModal).not.toHaveBeenCalled();
+    expect(mocks.submit).not.toHaveBeenCalled();
+  });
+
+  it('does not fall back to personal submission when workspace provisioning fails', async () => {
+    mocks.workspace = true;
+    mocks.workspaceIdentity.mockRejectedValueOnce(new Error('Provisioning failed'));
+    const { result } = renderSubmission();
+    await act(() => result.current.open());
+    await act(async () => {
+      await expect(confirmation().onOk?.()).rejects.toThrow('Provisioning failed');
+    });
+    expect(mocks.submit).not.toHaveBeenCalled();
+    expect(toast.success).not.toHaveBeenCalled();
+    expect(result.current.isUnderReview).toBe(false);
+    expect(result.current.isSubmitting).toBe(false);
+
+    await act(async () => confirmation().onOk?.());
+    expect(mocks.submit).toHaveBeenCalledWith(expect.objectContaining({ actAs: 42 }));
   });
 
   it('keeps the originating agent ID and suppresses duplicate submissions during a route change', async () => {

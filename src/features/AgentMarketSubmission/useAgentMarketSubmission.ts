@@ -60,7 +60,11 @@ export const useAgentMarketSubmission = ({ agentId, canSubmit, getPrompt }: Opti
           setIsSubmitting(true);
           try {
             const actAs = hasActiveWorkspace
-              ? (await lambdaClient.workspace.ensureMarketOrganization.mutate()).marketAccountId
+              ? (
+                  await lambdaClient.workspace.ensureMarketOrganization.mutate({
+                    autoProvision: true,
+                  })
+                ).marketAccountId
               : undefined;
             const result = await lambdaClient.market.agent.publishOrCreate.mutate({
               actAs,
@@ -117,6 +121,8 @@ export const useAgentMarketSubmission = ({ agentId, canSubmit, getPrompt }: Opti
         title: t('marketSubmission.title'),
       });
     } catch (error) {
+      // MarketAuthProvider rejects signIn when its authorization dialog is cancelled.
+      if (error instanceof Error && error.message === 'User cancelled authorization') return;
       console.error('Failed to authorize Market submission:', error);
       toast.error(t('marketSubmission.failed'));
     } finally {
