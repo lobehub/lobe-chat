@@ -500,7 +500,7 @@ export class AgentModel {
     const rows = await this.db
       .select({ id: agents.id })
       .from(agents)
-      .where(and(eq(agents.id, id), eq(agents.userId, this.userId)))
+      .where(and(eq(agents.id, id), eq(agents.userId, this.userId), notTrashed(agents.isDeleted)))
       .limit(1);
 
     return rows.length > 0;
