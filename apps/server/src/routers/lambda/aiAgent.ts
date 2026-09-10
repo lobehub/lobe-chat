@@ -1098,7 +1098,12 @@ const ExecAgentSchema = z
      * messages are the dominant caller. Pass a more specific value (`'cli'`,
      * `'openapi'`, `'eval'`, …) to override.
      */
-    trigger: z.string().optional(),
+    trigger: z
+      .string()
+      .refine((value) => value !== RequestTrigger.Bot, {
+        message: 'The bot trigger is reserved for authenticated server-side bot ingress',
+      })
+      .optional(),
     /**
      * User intervention configuration for tool approvals.
      * Pass `{ approvalMode: 'headless' }` from headless clients (CLI, cron, bots)

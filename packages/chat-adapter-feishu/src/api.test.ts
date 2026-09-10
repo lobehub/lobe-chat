@@ -117,3 +117,100 @@ describe('LarkApiClient cloud documents', () => {
     );
   });
 });
+
+const TOKEN_RESPONSE = { code: 0, expire: 7200, msg: 'ok', tenant_access_token: 't-acc' };
+
+/**
+ * Answer the token handshake `call()` always performs first, then hand the
+ * next response to the endpoint under test.
+ */
+function mockFetch(appResponse: unknown, status = 200) {
+  return vi.fn(async (input: any) => {
+    const url = typeof input === 'string' ? input : input.url;
+    if (url.includes('/auth/v3/tenant_access_token/internal')) {
+      return new Response(JSON.stringify(TOKEN_RESPONSE), { status: 200 });
+    }
+    return new Response(JSON.stringify(appResponse), { status });
+  });
+}
+
+function appInfo(app: Record<string, unknown>) {
+  return { code: 0, data: { app }, msg: 'success' };
+}
+
+describe('LarkApiClient.getAppOwnerId', () => {
+  let fetchSpy: ReturnType<typeof mockFetch>;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const client = () => new LarkApiClient('cli_app_1', 'secret', 'feishu');
+
+  it('returns the app owner open_id', async () => {
+    fetchSpy = mockFetch(
+      appInfo({
+        app_id: 'cli_app_1',
+        creator_id: 'ou_creator_1111',
+        owner: { name: 'Lin', owner_id: 'ou_owner_2222', type: 2 },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await expect(client().getAppOwnerId()).resolves.toEqual({
+      openId: 'ou_owner_2222',
+      source: 'owner',
+    });
+  });
+
+  it('asks the app-info endpoint for open_id ids and the required lang', async () => {
+    fetchSpy = mockFetch(appInfo({ owner: { owner_id: 'ou_owner_2222' } }));
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await client().getAppOwnerId();
+
+    const url = fetchSpy.mock.calls.at(-1)![0] as string;
+    expect(url).toContain('/application/v6/applications/cli_app_1');
+    expect(url).toContain('user_id_type=open_id');
+    // `lang` is a required query parameter; omitting it fails the request.
+    expect(url).toContain('lang=');
+  });
+
+  it('falls back to the creator when the owner slot is not a person', async () => {
+    // A partner- or tenant-owned app puts a non-`ou_` id in `owner`, which can
+    // never match an inbound `sender_id.open_id`.
+    fetchSpy = mockFetch(
+      appInfo({
+        creator_id: 'ou_creator_1111',
+        owner: { owner_id: 'tenant_abc', type: 0 },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await expect(client().getAppOwnerId()).resolves.toEqual({
+      openId: 'ou_creator_1111',
+      source: 'creator',
+    });
+  });
+
+  it('returns null when neither field carries a user open_id', async () => {
+    fetchSpy = mockFetch(appInfo({ app_id: 'cli_app_1', owner: { type: 0 } }));
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await expect(client().getAppOwnerId()).resolves.toBeNull();
+  });
+
+  it('surfaces a permission failure instead of returning null', async () => {
+    // Missing `application:application:self_manage` comes back as a non-zero
+    // business code, which `call()` turns into an error — the caller has to be
+    // able to tell "no permission" from "no owner on the app".
+    fetchSpy = mockFetch({ code: 99_991_672, msg: 'no permission' });
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await expect(client().getAppOwnerId()).rejects.toThrow(/99991672|no permission/);
+  });
+});

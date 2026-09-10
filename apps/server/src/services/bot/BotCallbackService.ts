@@ -218,6 +218,40 @@ export class BotCallbackService {
         { ...body, workspaceId: body.workspaceId ?? workspaceId ?? undefined },
         messenger,
       );
+      // The topic is idle now — replay any follow-up the bridge parked while
+      // this run was executing (WeChat "one image + one sentence" arrives as
+      // two messages; the second used to fail the topic-start reservation).
+      await this.replayDeferredMessages(
+        platform,
+        applicationId,
+        platformThreadId,
+        messengerInstallationKey,
+      );
+    }
+  }
+
+  private async replayDeferredMessages(
+    platform: string,
+    applicationId: string,
+    platformThreadId: string,
+    messengerInstallationKey?: string,
+  ): Promise<void> {
+    try {
+      if (messengerInstallationKey) {
+        const { getMessengerRouter } = await import('@/server/services/messenger/MessengerRouter');
+        await getMessengerRouter().replayDeferredMessages(
+          messengerInstallationKey,
+          applicationId,
+          platformThreadId,
+        );
+        return;
+      }
+      const { getBotMessageRouter } = await import('./BotMessageRouter');
+      await getBotMessageRouter().replayDeferredMessages(platform, applicationId, platformThreadId);
+    } catch (error) {
+      // A replay failure must not fail the callback (QStash would redeliver
+      // the completion and re-post the final reply).
+      log('replayDeferredMessages failed for thread=%s: %O', platformThreadId, error);
     }
   }
 

@@ -59,6 +59,14 @@ export class BotSliceActionImpl {
     return agentBotProviderService.lineFetchBotInfo(channelAccessToken);
   };
 
+  feishuFetchOwnerId = async (params: {
+    appId: string;
+    appSecret: string;
+    platform: 'feishu' | 'lark';
+  }) => {
+    return agentBotProviderService.feishuFetchOwnerId(params);
+  };
+
   deleteAllBotProviders = async (agentId: string) => {
     const providers = await agentBotProviderService.getByAgentId(agentId);
     await Promise.all(providers.map((p) => agentBotProviderService.delete(p.id)));

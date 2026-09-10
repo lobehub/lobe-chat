@@ -199,6 +199,17 @@ export interface LobeChatPluginApi {
    */
   humanIntervention?: ExtendedHumanInterventionConfig;
   name: string;
+  /**
+   * Run this API's calls one after another, in the order the model emitted
+   * them, when several land in the same tool batch. Set it on APIs whose side
+   * effects are order-sensitive — posting successive chat messages — where
+   * concurrent dispatch would let the platform keep whichever arrived first.
+   * Unmarked APIs in the same batch still run concurrently.
+   *
+   * Framework-only config like `humanIntervention`: it never reaches the
+   * LLM-facing tool spec.
+   */
+  ordered?: boolean;
   parameters: Record<string, any>;
   /**
    * Control the render display behavior for tool results
@@ -223,6 +234,7 @@ export const LobeChatPluginApiSchema = z.object({
   description: z.string(),
   humanIntervention: ExtendedHumanInterventionConfigSchema.optional(),
   name: z.string(),
+  ordered: z.boolean().optional(),
   parameters: z.record(z.string(), z.any()),
   renderDisplayControl: RenderDisplayControlSchema.optional(),
   url: z.string().optional(),

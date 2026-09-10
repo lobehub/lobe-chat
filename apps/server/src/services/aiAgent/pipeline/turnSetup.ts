@@ -318,6 +318,7 @@ export interface TurnSetupInput {
   /** Spine anchor for a batch approval — overrides the assistant's parent. */
   batchApprovalAnchorId?: string;
   botContext?: InternalExecAgentParams['botContext'];
+  botSender?: InternalExecAgentParams['botSender'];
   clientIds?: InternalExecAgentParams['clientIds'];
   /** Stable assistant id for a generic intervention continuation. */
   continuationAssistantId?: string;
@@ -391,6 +392,7 @@ export const setupTurn = async (
     attachedFileIds,
     batchApprovalAnchorId,
     botContext,
+    botSender,
     clientIds,
     continuationAssistantId,
     conversationAgentId,
@@ -644,6 +646,9 @@ export const setupTurn = async (
     ...(appContext?.conversationAgentId && appContext.scope === 'sub_agent'
       ? { agentDispatch: { kind: 'callAgent' as const, visibility: 'internal' as const } }
       : undefined),
+    // Bot-channel turns are inserted under the OWNER's userId; keep the real
+    // platform author alongside so the UI can attribute the bubble correctly.
+    ...(botSender ? { botSender } : undefined),
   };
 
   // Attachment ingestion: raw bot/IM `files` → S3, pre-uploaded

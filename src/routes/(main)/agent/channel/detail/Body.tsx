@@ -29,7 +29,11 @@ import type {
   SerializedPlatformDefinition,
 } from '@/server/services/bot/platforms/types';
 
-import { platformCredentialBodyMap, platformCredentialExtrasMap } from '../platform/registry';
+import {
+  platformCredentialBodyMap,
+  platformCredentialExtrasMap,
+  platformSettingsFieldExtrasMap,
+} from '../platform/registry';
 import { extractSettingsDefaults } from './formState';
 import type { ChannelFormValues } from './index';
 
@@ -214,7 +218,15 @@ const SchemaField = memo<SchemaFieldProps>(
     const watchedValue = AntdForm.useWatch(
       field.visibleWhen ? [parentKey, field.visibleWhen.field] : [],
     );
-    if (field.visibleWhen && watchedValue !== field.visibleWhen.value) return null;
+    if (field.visibleWhen) {
+      // An array matches any of its entries, so one field can be shared by
+      // several sibling values (e.g. the window size for `burst` + `debounce`).
+      const expected = field.visibleWhen.value;
+      const matches = Array.isArray(expected)
+        ? expected.includes(watchedValue)
+        : watchedValue === expected;
+      if (!matches) return null;
+    }
 
     // Only explicitly authored, actionable guidance earns a help affordance.
     // Generic schema descriptions stay out of the compact row layout.
@@ -565,6 +577,14 @@ const Body = memo<BodyProps>(
       onValuesChange?.(form.getFieldsValue(true) as ChannelFormValues);
     }, [form, onValuesChange, platformDef.schema]);
 
+    // A settings-field helper writes straight into the form, which does not
+    // fire the Form's `onValuesChange` — same reason `handleResetSettings`
+    // reports its own write. Without this the page never sees the change and
+    // the unsaved-changes affordances stay hidden.
+    const handleFieldExtrasFilled = useCallback(() => {
+      onValuesChange?.(form.getFieldsValue(true) as ChannelFormValues);
+    }, [form, onValuesChange]);
+
     const handleSettingsHeaderClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -674,15 +694,26 @@ const Body = memo<BodyProps>(
                   const featureLocked =
                     !!field.paidFeature &&
                     platformDef.access?.features?.[field.paidFeature]?.allowed === false;
+                  const FieldExtras =
+                    platformSettingsFieldExtrasMap[`${platformDef.id}:${field.key}`];
                   return (
-                    <SchemaField
-                      divider
-                      disabled={disabled}
-                      featureLocked={featureLocked}
-                      field={field}
-                      key={field.key}
-                      parentKey="settings"
-                    />
+                    <Fragment key={field.key}>
+                      <SchemaField
+                        divider
+                        disabled={disabled}
+                        featureLocked={featureLocked}
+                        field={field}
+                        parentKey="settings"
+                      />
+                      {FieldExtras && (
+                        <FieldExtras
+                          disabled={disabled || featureLocked}
+                          platformId={platformDef.id}
+                          savedValue={currentConfig?.settings?.[field.key]}
+                          onFilled={handleFieldExtrasFilled}
+                        />
+                      )}
+                    </Fragment>
                   );
                 })}
               </FormGroup>

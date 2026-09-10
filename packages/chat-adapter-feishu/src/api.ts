@@ -137,6 +137,51 @@ export class LarkApiClient {
     return data.bot;
   }
 
+  /**
+   * Resolve the `open_id` of the human who owns this Feishu / Lark app.
+   *
+   * Why this exists: an `open_id` is scoped to a single application, so no
+   * console page can ever show a person their own id for THIS bot — the only
+   * other way to learn it is to message the bot and read the sender id back.
+   * For a self-built app the platform does know one relevant human, the app's
+   * owner (and, separately, its creator), which is normally the same person
+   * configuring the channel.
+   *
+   * The call authenticates with the app's own tenant token, so the id that
+   * comes back is already scoped to this app — the exact value inbound
+   * webhooks carry as `sender_id.open_id`.
+   *
+   * Needs `application:application:self_manage` (already part of the
+   * documented Batch Import scope list) or `admin:app.info:readonly`. `lang`
+   * is a required query parameter; the value only selects the language of the
+   * human-readable fields, which we ignore.
+   *
+   * @see https://open.feishu.cn/document/server-docs/application-v6/application/get
+   */
+  async getAppOwnerId(): Promise<{ openId: string; source: 'creator' | 'owner' } | null> {
+    const data = await this.call(
+      'GET',
+      `/application/v6/applications/${this.appId}?lang=zh_cn&user_id_type=open_id`,
+      {},
+    );
+    const app = data.data?.app;
+    if (!app) return null;
+
+    // `owner.owner_id` is the current owner, which the console lets an admin
+    // transfer; `creator_id` is whoever first created the app. Prefer the
+    // owner and fall back to the creator, but only accept `ou_`-prefixed
+    // values: the owner slot can also hold a tenant-level or partner entry,
+    // which is not a person and would never match an inbound sender id.
+    const candidates: Array<{ source: 'creator' | 'owner'; value: unknown }> = [
+      { source: 'owner', value: app.owner?.owner_id },
+      { source: 'creator', value: app.creator_id },
+    ];
+    for (const { source, value } of candidates) {
+      if (typeof value === 'string' && value.startsWith('ou_')) return { openId: value, source };
+    }
+    return null;
+  }
+
   async getUserInfo(openId: string): Promise<{ name?: string } | null> {
     const userIdType = openId.startsWith('ou_')
       ? 'open_id'

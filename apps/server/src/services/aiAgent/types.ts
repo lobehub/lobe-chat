@@ -1,5 +1,6 @@
 import type { BotPlatformContext } from '@lobechat/context-engine';
 import type {
+  BotSenderMetadata,
   ChatTopicBotContext,
   ExecAgentParams,
   LobeAgentChatConfig,
@@ -81,6 +82,11 @@ export interface InternalExecAgentParams extends ExecAgentParams {
   botContext?: ChatTopicBotContext;
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
+  /**
+   * Real platform author of a bot-channel turn, persisted on the inbound user
+   * message as `metadata.botSender` so the UI shows them instead of the owner.
+   */
+  botSender?: BotSenderMetadata;
   /**
    * chatConfig overrides (thinking / reasoning-effort extend params) merged over
    * the executing agent's own chatConfig, skipping nulled keys. Internal-only:
