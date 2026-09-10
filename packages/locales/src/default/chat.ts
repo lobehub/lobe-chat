@@ -2767,15 +2767,17 @@ export default {
   'workingPanel.localFile.publish.oversized': 'These files are too large to publish: {{list}}',
   'workingPanel.localFile.publish.outsideWorkspace.copiedToast':
     'Published from the workspace copy at {{dir}}',
+  'workingPanel.localFile.publish.outsideWorkspace.closureDescription':
+    'More local files were found. Review the complete list, then click copy again to continue.',
   'workingPanel.localFile.publish.outsideWorkspace.copyAction': 'Copy to workspace and publish',
   'workingPanel.localFile.publish.outsideWorkspace.copyFailed':
     'Could not copy these files: {{list}}',
   'workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry':
     'Could not copy the page file. Please try again.',
   'workingPanel.localFile.publish.outsideWorkspace.copyHint_one':
-    'The page and its 1 external file will be copied to {{dir}} in this workspace and published from there.',
+    'The page and its 1 local file will be copied to {{dir}} in this workspace and published from there.',
   'workingPanel.localFile.publish.outsideWorkspace.copyHint_other':
-    'The page and its {{count}} external files will be copied to {{dir}} in this workspace and published from there.',
+    'The page and its {{count}} local files will be copied to {{dir}} in this workspace and published from there.',
   'workingPanel.localFile.publish.outsideWorkspace.copying': 'Copying files…',
   'workingPanel.localFile.publish.outsideWorkspace.description_one':
     'This page references 1 file outside the current workspace. That file would stop working after publish.',
@@ -2788,7 +2790,9 @@ export default {
   'workingPanel.localFile.publish.outsideWorkspace.forceLabel':
     'Still read and pack these files outside the workspace',
   'workingPanel.localFile.publish.outsideWorkspace.stillBlocked':
-    'The copied page still references files outside the workspace, so it cannot be published yet.',
+    'The workspace copy still has missing or outside-workspace files, so it cannot be published yet.',
+  'workingPanel.localFile.publish.outsideWorkspace.source.nested': 'Nested dependency',
+  'workingPanel.localFile.publish.outsideWorkspace.source.workspace': 'Workspace file',
   'workingPanel.localFile.publish.outsideWorkspace.title': 'Cannot publish this page directly',
   'workingPanel.localFile.publish.outsideWorkspace.workspace': 'Current workspace: {{path}}',
   'workingPanel.localFile.publish.remotes':

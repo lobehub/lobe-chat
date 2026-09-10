@@ -1,7 +1,9 @@
 import {
+  isPathInsideWorkspace,
   isTextContentType,
   type ReadWorkspaceAssetResult,
   resolveWorkspaceAssetContentType,
+  toWorkspaceAbsolutePath,
   WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES,
 } from '@lobechat/html-artifact';
 import { base64ToBytes, getMimeType } from '@lobechat/utils';
@@ -98,17 +100,17 @@ const previewToBytes = async (
   return;
 };
 
-export const readWorkspaceAsset = async ({
-  deviceId,
-  path,
-  sandboxTopicId,
-  workingDirectory,
-}: {
+interface ReadAssetInput {
   deviceId?: string;
   path: string;
   sandboxTopicId?: string;
   workingDirectory: string;
-}): Promise<ReadWorkspaceAssetResult> => {
+}
+
+const readAsset = async (
+  { deviceId, path, sandboxTopicId, workingDirectory }: ReadAssetInput,
+  externalForPublish: boolean,
+): Promise<ReadWorkspaceAssetResult> => {
   try {
     if (sandboxTopicId) {
       const contentType = getMimeType(path);
@@ -145,25 +147,25 @@ export const readWorkspaceAsset = async ({
       return { bytes, contentType, ok: true };
     }
 
-    const preview = await projectFileService.getLocalFilePreview({
-      deviceId,
-      path,
-      workingDirectory,
-    });
-    const fromPreview = await previewToBytes(preview);
-    if (fromPreview) {
-      if (!fromPreview.ok) return fromPreview;
-      return {
-        ...fromPreview,
-        contentType: resolveWorkspaceAssetContentType(path, fromPreview.contentType),
-      };
+    if (!externalForPublish) {
+      const preview = await projectFileService.getLocalFilePreview({
+        deviceId,
+        path,
+        workingDirectory,
+      });
+      const fromPreview = await previewToBytes(preview);
+      if (fromPreview) {
+        if (!fromPreview.ok) return fromPreview;
+        return {
+          ...fromPreview,
+          contentType: resolveWorkspaceAssetContentType(path, fromPreview.contentType),
+        };
+      }
     }
 
-    const bytesResult = await projectFileService.readProjectFileBytes({
-      deviceId,
-      path,
-      workingDirectory,
-    });
+    const bytesResult = externalForPublish
+      ? await projectFileService.readExternalAssetForPublish({ deviceId, path, workingDirectory })
+      : await projectFileService.readProjectFileBytes({ deviceId, path, workingDirectory });
     if (!bytesResult) return { ok: false, reason: 'unreadable' };
     if (bytesResult.bytes.byteLength > WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES) {
       return { ok: false, reason: 'oversized', sizeBytes: bytesResult.bytes.byteLength };
@@ -178,3 +180,19 @@ export const readWorkspaceAsset = async ({
     return { ok: false, reason: 'missing' };
   }
 };
+
+export const readWorkspaceAsset = async (
+  input: ReadAssetInput,
+): Promise<ReadWorkspaceAssetResult> => {
+  const absolutePath = toWorkspaceAbsolutePath(input.path, input.workingDirectory);
+  if (!isPathInsideWorkspace(absolutePath, input.workingDirectory)) {
+    return { ok: false, reason: 'missing' };
+  }
+
+  return readAsset({ ...input, path: absolutePath }, false);
+};
+
+/** The explicit-consent publish flow is the only caller allowed to reach this reader. */
+export const readExternalAssetForPublish = (
+  input: ReadAssetInput,
+): Promise<ReadWorkspaceAssetResult> => readAsset(input, true);

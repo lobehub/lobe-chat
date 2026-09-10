@@ -447,6 +447,44 @@ describe('LocalFileProtocolManager', () => {
     expect(neighborUrl).toBeNull();
   });
 
+  it('can mint one external URL without granting lasting preview access', async () => {
+    const manager = new LocalFileProtocolManager();
+    const url = await manager.createPreviewUrl({
+      allowExternalFile: true,
+      filePath: '/outside/app.css',
+      persistExternalApproval: false,
+      workspaceRoot: '/Users/alice/project',
+    });
+
+    expect(url).toContain('token=');
+    await expect(
+      manager.createPreviewUrl({
+        filePath: '/outside/app.css',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).resolves.toBeNull();
+  });
+
+  it('reads an external publish asset without the preview cap or lasting approval', async () => {
+    mockStat.mockResolvedValue({ isFile: () => true, size: 20 * 1024 * 1024 + 1 });
+    mockReadFile.mockResolvedValue(Buffer.from('%PDF publish bytes'));
+    const manager = new LocalFileProtocolManager();
+
+    const result = await manager.readExternalFileForPublish({
+      filePath: '/outside/big.pdf',
+      workspaceRoot: '/Users/alice/project',
+    });
+
+    expect(result?.buffer).toEqual(Buffer.from('%PDF publish bytes'));
+    expect(mockReadFile).toHaveBeenCalledWith('/outside/big.pdf');
+    await expect(
+      manager.createPreviewUrl({
+        filePath: '/outside/big.pdf',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).resolves.toBeNull();
+  });
+
   it('can approve a project root derived from an already approved nested scope', async () => {
     const manager = new LocalFileProtocolManager();
     await manager.approveWorkspaceRoot('/Users/alice/project/packages/app');

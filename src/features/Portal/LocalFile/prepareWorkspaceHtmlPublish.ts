@@ -2,6 +2,7 @@ import {
   type EscapedResourceRef,
   type GatheredWorkspaceHtmlArtifact,
   gatherWorkspaceHtmlArtifact,
+  isPathInsideWorkspace,
   type PackedWorkspaceHtmlSite,
   packWorkspaceHtmlDocument,
   type WorkspaceHtmlArtifactPublisher,
@@ -10,6 +11,7 @@ import {
 import { toast } from '@lobehub/ui/base-ui';
 import { t } from 'i18next';
 
+import { readExternalAssetForPublish } from './readExternalAssetForPublish';
 import { readWorkspaceAsset } from './readWorkspaceAsset';
 
 export interface ReadyWorkspaceHtmlPublishPlan {
@@ -87,7 +89,9 @@ export const prepareWorkspaceHtmlPublish = async ({
     htmlContent,
     htmlFilePath: filePath,
     readAsset: (absolutePath) =>
-      readWorkspaceAsset({
+      (allowExternalReads && !isPathInsideWorkspace(absolutePath, workingDirectory)
+        ? readExternalAssetForPublish
+        : readWorkspaceAsset)({
         deviceId,
         path: absolutePath,
         sandboxTopicId,

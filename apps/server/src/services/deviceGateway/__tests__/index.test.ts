@@ -874,6 +874,32 @@ describe('DeviceGateway', () => {
     });
   });
 
+  describe('readExternalAssetForPublish', () => {
+    it('invokes only the dedicated publish RPC method', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+      const data = { base64: 'AQID', contentType: 'image/png', success: true };
+      mockClient.invokeRpc.mockResolvedValue({ data, success: true });
+
+      const proxy = new DeviceGateway();
+      const result = await proxy.readExternalAssetForPublish({
+        deviceId: 'dev-1',
+        path: '/outside/image.png',
+        userId: 'user-1',
+        workingDirectory: '/proj',
+      });
+
+      expect(result).toEqual(data);
+      expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+        { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+        {
+          method: 'readExternalAssetForPublish',
+          params: { path: '/outside/image.png', workingDirectory: '/proj' },
+        },
+      );
+    });
+  });
+
   describe('file mutation containment', () => {
     const configure = () => {
       mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';

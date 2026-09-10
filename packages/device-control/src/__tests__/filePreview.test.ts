@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { defaultGetLocalFilePreview } from '../filePreview';
+import { defaultGetLocalFilePreview, defaultReadExternalAssetForPublish } from '../filePreview';
 
 const mockedHome = vi.hoisted(() => ({ dir: '' }));
 
@@ -151,5 +151,20 @@ describe('defaultGetLocalFilePreview', () => {
       workingDirectory: root,
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('defaultReadExternalAssetForPublish', () => {
+  it('reads a file outside the workspace through the dedicated publish method', async () => {
+    const result = await defaultReadExternalAssetForPublish({
+      path: path.join(outside, 'secret.txt'),
+      workingDirectory: root,
+    });
+
+    expect(result).toMatchObject({
+      base64: Buffer.from('do not read\n').toString('base64'),
+      contentType: 'text/plain; charset=utf-8',
+      success: true,
+    });
   });
 });

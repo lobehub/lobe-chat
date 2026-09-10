@@ -9,6 +9,7 @@ import {
 } from './prepareWorkspaceHtmlPublish';
 
 const readWorkspaceAsset = vi.hoisted(() => vi.fn());
+const readExternalAssetForPublish = vi.hoisted(() => vi.fn());
 const toastError = vi.hoisted(() => vi.fn());
 const toastSuccess = vi.hoisted(() => vi.fn());
 
@@ -25,9 +26,14 @@ vi.mock('./readWorkspaceAsset', async (importOriginal) => {
   };
 });
 
+vi.mock('./readExternalAssetForPublish', () => ({
+  readExternalAssetForPublish: (...args: unknown[]) => readExternalAssetForPublish(...args),
+}));
+
 describe('prepareWorkspaceHtmlPublish', () => {
   beforeEach(() => {
     readWorkspaceAsset.mockReset();
+    readExternalAssetForPublish.mockReset();
     toastError.mockReset();
     toastSuccess.mockReset();
   });
@@ -69,14 +75,20 @@ describe('prepareWorkspaceHtmlPublish', () => {
     expect(plan.gathered.title).toBe('From disk');
   });
 
-  it('blocks on outside-workspace refs before packing, then allows an explicit external read', async () => {
+  it('uses the publish-only reader for external refs and the normal reader inside the workspace', async () => {
     readWorkspaceAsset.mockResolvedValue({
+      bytes: new TextEncoder().encode('console.log(1)'),
+      contentType: 'text/javascript',
+      ok: true,
+      text: 'console.log(1)',
+    });
+    readExternalAssetForPublish.mockResolvedValue({
       bytes: new Uint8Array([1, 2, 3]),
       contentType: 'image/png',
       ok: true,
     });
     const input = {
-      content: '<html><img src="../../outside/logo.png"></html>',
+      content: '<html><script src="../app.js"></script><img src="../../outside/logo.png"></html>',
       filePath: '/repo/pages/index.html',
       workingDirectory: '/repo',
     };
@@ -84,15 +96,27 @@ describe('prepareWorkspaceHtmlPublish', () => {
     const blocked = await prepareWorkspaceHtmlPublish(input);
     expect(blocked).toMatchObject({
       blocked: 'outside-workspace',
-      escaped: [{ absolutePath: '/outside/logo.png', href: '../../outside/logo.png' }],
+      escaped: [{ absolutePath: '/outside/logo.png', hrefs: ['../../outside/logo.png'] }],
     });
-    expect(readWorkspaceAsset).not.toHaveBeenCalled();
+    expect(readWorkspaceAsset).toHaveBeenCalledWith({
+      deviceId: undefined,
+      path: '/repo/app.js',
+      sandboxTopicId: undefined,
+      workingDirectory: '/repo',
+    });
+    readWorkspaceAsset.mockClear();
 
     const ready = await prepareWorkspaceHtmlPublish({ ...input, allowExternalReads: true });
     expect('blocked' in ready).toBe(false);
-    expect(readWorkspaceAsset).toHaveBeenCalledWith({
+    expect(readExternalAssetForPublish).toHaveBeenCalledWith({
       deviceId: undefined,
       path: '/outside/logo.png',
+      sandboxTopicId: undefined,
+      workingDirectory: '/repo',
+    });
+    expect(readWorkspaceAsset).toHaveBeenCalledWith({
+      deviceId: undefined,
+      path: '/repo/app.js',
       sandboxTopicId: undefined,
       workingDirectory: '/repo',
     });

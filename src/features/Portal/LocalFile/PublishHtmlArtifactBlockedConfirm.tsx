@@ -28,12 +28,11 @@ export type OpenWorkspaceHtmlPublishBlockedConfirmInput = Omit<
 const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInput) => {
   const { t } = useTranslation(['chat', 'common']);
   const { close } = useModalContext();
-  const { busy, failed, force, handleContinue, handleForceChange } = useBlockedWorkspaceHtmlPublish(
-    {
+  const { busy, cancel, failed, force, handleContinue, handleForceChange, resources } =
+    useBlockedWorkspaceHtmlPublish({
       ...input,
       close,
-    },
-  );
+    });
   const { filePath, plan, workingDirectory } = input;
   const identifier = workspaceHtmlArtifactIdentifierForFile(filePath, workingDirectory);
   const relativeTargetDirectory = `.lobe-artifacts/${identifier}`;
@@ -59,6 +58,13 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
               path: workingDirectory,
             })}
           </Text>
+          {resources.some((item) => item.source) && (
+            <Text type={'secondary'}>
+              {t('workingPanel.localFile.publish.outsideWorkspace.closureDescription', {
+                ns: 'chat',
+              })}
+            </Text>
+          )}
           <Accordion
             indicatorPlacement={'start'}
             variant={'borderless'}
@@ -66,9 +72,17 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
               {
                 children: (
                   <Flexbox gap={8} paddingBlock={'4px 0'}>
-                    {plan.escaped.map((item) => (
-                      <Flexbox gap={2} key={`${item.absolutePath}:${item.href}`}>
-                        <Text>{item.href}</Text>
+                    {resources.map((item) => (
+                      <Flexbox gap={2} key={item.absolutePath}>
+                        <Text>{item.hrefs.join(', ')}</Text>
+                        {item.source && (
+                          <Text fontSize={12} type={'secondary'}>
+                            {t(
+                              `workingPanel.localFile.publish.outsideWorkspace.source.${item.source}`,
+                              { ns: 'chat' },
+                            )}
+                          </Text>
+                        )}
                         <Text
                           type={'secondary'}
                           style={{
@@ -96,7 +110,7 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
           />
           <Text type={'secondary'}>
             {t('workingPanel.localFile.publish.outsideWorkspace.copyHint', {
-              count: plan.escaped.length,
+              count: resources.length,
               dir: relativeTargetDirectory,
               ns: 'chat',
             })}
@@ -124,13 +138,8 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
         justify={'flex-end'}
         style={{ paddingBlock: 12, paddingInline: 16 }}
       >
-        <Button onClick={close}>{t('cancel', { ns: 'common' })}</Button>
-        <Button
-          disabled={!force && failed.length > 0}
-          loading={busy}
-          type={'primary'}
-          onClick={() => void handleContinue()}
-        >
+        <Button onClick={cancel}>{t('cancel', { ns: 'common' })}</Button>
+        <Button loading={busy} type={'primary'} onClick={() => void handleContinue()}>
           {busy && !force
             ? t('workingPanel.localFile.publish.outsideWorkspace.copying', { ns: 'chat' })
             : t(

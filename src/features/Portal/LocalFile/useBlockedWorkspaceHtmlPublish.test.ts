@@ -41,10 +41,33 @@ vi.mock('./PublishHtmlArtifactConfirm', () => ({
   openWorkspaceHtmlPublishConfirm: (...args: unknown[]) => mocks.openConfirm(...args),
 }));
 
-const ready = {
-  gathered: { identifier: 'copied', title: 'Demo' },
-  packed: { html: '<html></html>', inlinedPaths: [], sidecars: [], unresolvedHrefs: [] },
-} as never;
+const externalResource = {
+  absolutePath: '/tmp/site/logo.png',
+  contentType: 'image/png',
+  hrefs: ['logo.png'],
+};
+
+const readyPlan = (resources = [externalResource], missing: string[] = []) =>
+  ({
+    gathered: {
+      entryPath: 'index.html',
+      files: [
+        {
+          content: '<html><img src="logo.png"></html>',
+          contentType: 'text/html',
+          encoding: 'utf8',
+          path: 'index.html',
+        },
+      ],
+      identifier: 'copied',
+      missing,
+      resources,
+      title: 'Demo',
+    },
+    packed: { html: '<html></html>', inlinedPaths: [], sidecars: [], unresolvedHrefs: [] },
+  }) as never;
+
+const ready = readyPlan();
 
 const input = {
   close: vi.fn(),
@@ -53,7 +76,7 @@ const input = {
   hasExisting: false,
   plan: {
     blocked: 'outside-workspace' as const,
-    escaped: [{ absolutePath: '/tmp/site/logo.png', href: 'logo.png' }],
+    escaped: [{ absolutePath: '/tmp/site/logo.png', hrefs: ['logo.png'] }],
     gathered: {
       entryPath: 'index.html',
       files: [
@@ -69,6 +92,14 @@ const input = {
   publish: vi.fn(),
   topicId: 'topic-1',
   workingDirectory: '/project',
+  writeFile: vi.fn(),
+};
+
+const copied = {
+  entryPath: '/project/.lobe-artifacts/copied/index.html',
+  failed: [],
+  htmlContent: '<html><img src="logo.png"></html>',
+  targetDirectory: '/project/.lobe-artifacts/copied',
 };
 
 describe('useBlockedWorkspaceHtmlPublish', () => {
@@ -77,137 +108,135 @@ describe('useBlockedWorkspaceHtmlPublish', () => {
     mocks.publishPrepared.mockResolvedValue({ id: 'published' });
   });
 
-  it('copies, prepares from the new entry, and opens the normal privacy confirm', async () => {
-    mocks.copy.mockResolvedValue({
-      entryPath: '/project/.lobe-artifacts/copied/index.html',
-      failed: [],
-      htmlContent: '<html><img src="logo.png"></html>',
-      targetDirectory: '/project/.lobe-artifacts/copied',
-    });
-    mocks.prepare.mockResolvedValue(ready);
+  it('copies immediately when closure discovery adds no files, then safely prepares', async () => {
+    mocks.prepare.mockResolvedValueOnce(ready).mockResolvedValueOnce(ready);
+    mocks.copy.mockResolvedValue(copied);
     const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    await act(() => result.current.handleContinue());
+
+    expect(mocks.prepare.mock.calls[0][0]).toEqual(
+      expect.objectContaining({ allowExternalReads: true, filePath: '/tmp/site/index.html' }),
+    );
+    expect(mocks.copy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        htmlFilePath: '/tmp/site/index.html',
+        resources: [externalResource],
+        writeFile: input.writeFile,
+      }),
+    );
+    expect(mocks.prepare.mock.calls[1][0]).toEqual({
+      deviceId: undefined,
+      filePath: copied.entryPath,
+      sandboxTopicId: undefined,
+      workingDirectory: '/project',
+    });
+    expect(mocks.openConfirm).toHaveBeenCalledOnce();
+  });
+
+  it('shows newly discovered closure files and requires a second click before copying', async () => {
+    const localResource = {
+      absolutePath: '/project/assets/app.css',
+      contentType: 'text/css',
+      hrefs: ['/assets/app.css'],
+      text: 'body{}',
+    };
+    const closure = readyPlan([externalResource, localResource]);
+    mocks.prepare
+      .mockResolvedValueOnce(closure)
+      .mockResolvedValueOnce(closure)
+      .mockResolvedValueOnce(ready);
+    mocks.copy.mockResolvedValue(copied);
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    await act(() => result.current.handleContinue());
+
+    expect(mocks.copy).not.toHaveBeenCalled();
+    expect(result.current.resources).toEqual([
+      externalResource,
+      expect.objectContaining({ ...localResource, source: 'workspace' }),
+    ]);
 
     await act(() => result.current.handleContinue());
 
     expect(mocks.copy).toHaveBeenCalledWith(
-      expect.objectContaining({ htmlFilePath: '/tmp/site/index.html' }),
-    );
-    expect(mocks.prepare).toHaveBeenCalledWith(
-      expect.objectContaining({ filePath: '/project/.lobe-artifacts/copied/index.html' }),
+      expect.objectContaining({ resources: [externalResource, localResource] }),
     );
     expect(mocks.openConfirm).toHaveBeenCalledOnce();
-
-    mocks.openConfirm.mock.calls[0][0].onOk();
-    expect(mocks.publishPrepared).toHaveBeenCalledWith(
-      expect.objectContaining({
-        plan: ready,
-        successMessage: 'workingPanel.localFile.publish.outsideWorkspace.copiedToast',
-        topicId: 'topic-1',
-      }),
-    );
   });
 
-  it('keeps copy failures in the blocked modal and does not continue preparing', async () => {
-    const failed = [{ absolutePath: '/tmp/site/logo.png', href: 'logo.png' }];
-    mocks.copy.mockResolvedValue({ failed });
+  it('hard-blocks when the safe prepare still has missing files', async () => {
+    mocks.prepare
+      .mockResolvedValueOnce(ready)
+      .mockResolvedValueOnce(readyPlan([externalResource], ['gone.png']));
+    mocks.copy.mockResolvedValue(copied);
     const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
 
     await act(() => result.current.handleContinue());
 
-    expect(result.current.failed).toEqual(failed);
-    expect(mocks.prepare).not.toHaveBeenCalled();
+    expect(mocks.openConfirm).not.toHaveBeenCalled();
+    expect(mocks.toastError).toHaveBeenCalledWith(
+      'workingPanel.localFile.publish.outsideWorkspace.stillBlocked',
+    );
+    expect(mocks.debugLog).toHaveBeenCalledWith(expect.any(String), ['gone.png']);
+  });
+
+  it('does not reopen a confirm after the user cancels a pending closure read', async () => {
+    let resolvePrepare: (value: typeof ready) => void = () => {};
+    mocks.prepare.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolvePrepare = resolve;
+      }),
+    );
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    let pending: Promise<void>;
+    act(() => {
+      pending = result.current.handleContinue();
+    });
+    act(() => result.current.cancel());
+    await act(async () => {
+      resolvePrepare(ready);
+      await pending!;
+    });
+
+    expect(input.close).toHaveBeenCalledOnce();
+    expect(mocks.copy).not.toHaveBeenCalled();
     expect(mocks.openConfirm).not.toHaveBeenCalled();
   });
 
-  it('requires warning confirmation before preparing external reads and performs no copy', async () => {
+  it('clears resource-copy failures so a second attempt can succeed', async () => {
+    mocks.prepare
+      .mockResolvedValueOnce(ready)
+      .mockResolvedValueOnce(ready)
+      .mockResolvedValueOnce(ready);
+    mocks.copy.mockResolvedValueOnce({ failed: [externalResource] }).mockResolvedValueOnce(copied);
+    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
+
+    await act(() => result.current.handleContinue());
+    expect(result.current.failed).toEqual([externalResource]);
+
+    await act(() => result.current.handleContinue());
+    expect(result.current.failed).toEqual([]);
+    expect(mocks.copy).toHaveBeenCalledTimes(2);
+    expect(mocks.openConfirm).toHaveBeenCalledOnce();
+  });
+
+  it('requires warning confirmation before using the external publish reader', async () => {
     mocks.prepare.mockResolvedValue(ready);
     const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
 
     act(() => result.current.handleForceChange(true));
     expect(result.current.force).toBe(false);
-
-    const warning = mocks.confirmModal.mock.calls[0][0];
-    expect(warning).toEqual(
-      expect.objectContaining({
-        content: 'workingPanel.localFile.publish.outsideWorkspace.forceHint',
-        okButtonProps: { danger: true },
-        okText: 'confirm',
-        title: 'workingPanel.localFile.publish.outsideWorkspace.forceLabel',
-      }),
-    );
-
-    act(() => warning.onOk());
+    act(() => mocks.confirmModal.mock.calls[0][0].onOk());
     expect(result.current.force).toBe(true);
 
     await act(() => result.current.handleContinue());
 
     expect(mocks.copy).not.toHaveBeenCalled();
     expect(mocks.prepare).toHaveBeenCalledWith(
-      expect.objectContaining({
-        allowExternalReads: true,
-        filePath: '/tmp/site/index.html',
-      }),
+      expect.objectContaining({ allowExternalReads: true, filePath: '/tmp/site/index.html' }),
     );
     expect(mocks.openConfirm).toHaveBeenCalledOnce();
-  });
-
-  it('lets prepare reload a non-utf8 entry instead of publishing empty HTML', async () => {
-    mocks.prepare.mockResolvedValue(ready);
-    const nonUtf8Input = {
-      ...input,
-      plan: {
-        ...input.plan,
-        gathered: {
-          entryPath: 'index.html',
-          files: [
-            {
-              content: 'PGh0bWw+PC9odG1sPg==',
-              contentType: 'text/html',
-              encoding: 'base64' as const,
-              path: 'index.html',
-            },
-          ],
-        } as never,
-      },
-    };
-    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(nonUtf8Input));
-
-    act(() => result.current.handleForceChange(true));
-    act(() => mocks.confirmModal.mock.calls[0][0].onOk());
-    await act(() => result.current.handleContinue());
-
-    expect(mocks.prepare).toHaveBeenCalledWith(expect.objectContaining({ content: undefined }));
-  });
-
-  it('keeps an entry-copy failure retryable and out of escaped failures', async () => {
-    mocks.copy.mockRejectedValue(new Error('entry gone'));
-    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
-
-    await act(() => result.current.handleContinue());
-
-    expect(result.current.failed).toEqual([]);
-    expect(mocks.toastError).toHaveBeenCalledOnce();
-    expect(mocks.translate).toHaveBeenCalledWith(
-      'workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry',
-      { ns: 'chat' },
-    );
-
-    await act(() => result.current.handleContinue());
-    expect(mocks.copy).toHaveBeenCalledTimes(2);
-  });
-
-  it('explains when a second prepare is still blocked outside the workspace', async () => {
-    mocks.prepare.mockResolvedValue(input.plan);
-    const { result } = renderHook(() => useBlockedWorkspaceHtmlPublish(input));
-
-    act(() => result.current.handleForceChange(true));
-    act(() => mocks.confirmModal.mock.calls[0][0].onOk());
-    await act(() => result.current.handleContinue());
-
-    expect(mocks.translate).toHaveBeenCalledWith(
-      'workingPanel.localFile.publish.outsideWorkspace.stillBlocked',
-      { ns: 'chat' },
-    );
-    expect(mocks.debugLog).toHaveBeenCalledWith(expect.any(String), ['/tmp/site/logo.png']);
   });
 });

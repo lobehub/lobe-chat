@@ -81,6 +81,7 @@ const mockLocalFileProtocolManager = {
   approveIndexedProjectRoot: vi.fn(),
   approveProjectRootFromScope: vi.fn(),
   createPreviewUrl: vi.fn(),
+  readExternalFileForPublish: vi.fn(),
   readPreviewFile: vi.fn(),
 };
 
@@ -321,6 +322,53 @@ describe('LocalFileCtr', () => {
       expect(result).toEqual({
         success: true,
         url: 'localfile://file/tmp/worktree-switcher-demo.html?token=abc',
+      });
+    });
+  });
+
+  describe('external publish asset channels', () => {
+    it('creates a URL with external access only on the publish-scoped IPC method', async () => {
+      mockLocalFileProtocolManager.createPreviewUrl.mockResolvedValue(
+        'localfile://publish/outside.css?token=abc',
+      );
+
+      const result = await localFileCtr.getExternalAssetForPublishUrl({
+        path: '/outside/app.css',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.createPreviewUrl).toHaveBeenCalledWith({
+        allowExternalFile: true,
+        filePath: '/outside/app.css',
+        persistExternalApproval: false,
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        success: true,
+        url: 'localfile://publish/outside.css?token=abc',
+      });
+    });
+
+    it('returns raw bytes for the publish-scoped device RPC handler', async () => {
+      mockLocalFileProtocolManager.readExternalFileForPublish.mockResolvedValue({
+        buffer: Buffer.from([1, 2, 3]),
+        contentType: 'image/png',
+        realPath: '/outside/image.png',
+      });
+
+      const result = await localFileCtr.readExternalAssetForPublish({
+        path: '/outside/image.png',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.readExternalFileForPublish).toHaveBeenCalledWith({
+        filePath: '/outside/image.png',
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        base64: 'AQID',
+        contentType: 'image/png',
+        success: true,
       });
     });
   });

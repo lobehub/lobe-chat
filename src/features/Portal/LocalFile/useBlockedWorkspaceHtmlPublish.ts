@@ -1,7 +1,7 @@
-import type { EscapedResourceRef } from '@lobechat/html-artifact';
+import type { GatheredWorkspaceHtmlResource } from '@lobechat/html-artifact';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import debug from 'debug';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { copyWorkspaceHtmlArtifactIntoWorkspace } from './copyWorkspaceHtmlArtifactIntoWorkspace';
@@ -17,8 +17,13 @@ import type {
   WorkspaceHtmlArtifactPublisher,
   WorkspaceHtmlArtifactPublishResult,
 } from './workspaceHtmlArtifact';
+import { isPathInsideWorkspace } from './workspaceHtmlPath';
 
 type OutsideWorkspacePlan = Extract<WorkspaceHtmlPublishPlan, { blocked: 'outside-workspace' }>;
+type ResourceSource = 'nested' | 'workspace';
+export type DisplayedWorkspaceHtmlResource = GatheredWorkspaceHtmlResource & {
+  source?: ResourceSource;
+};
 
 const log = debug('lobe-client:workspace-html-publish');
 
@@ -39,6 +44,7 @@ export interface BlockedWorkspaceHtmlPublishInput {
   sandboxTopicId?: string;
   topicId: string;
   workingDirectory: string;
+  writeFile: (path: string, content: string) => Promise<void>;
 }
 
 export const useBlockedWorkspaceHtmlPublish = ({
@@ -55,13 +61,24 @@ export const useBlockedWorkspaceHtmlPublish = ({
   sandboxTopicId,
   topicId,
   workingDirectory,
+  writeFile,
 }: BlockedWorkspaceHtmlPublishInput) => {
   const { t } = useTranslation(['chat', 'common']);
   const [force, setForce] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState<EscapedResourceRef[]>([]);
+  const [failed, setFailed] = useState<GatheredWorkspaceHtmlResource[]>([]);
+  const [resources, setResources] = useState<DisplayedWorkspaceHtmlResource[]>(plan.escaped);
+  const cancelled = useRef(false);
+  const busyRef = useRef(false);
   const htmlEntry = plan.gathered.files.find((file) => file.path === plan.gathered.entryPath);
   const htmlContent = htmlEntry?.encoding === 'utf8' ? htmlEntry.content : undefined;
+
+  useEffect(() => () => void (cancelled.current = true), []);
+
+  const cancel = () => {
+    cancelled.current = true;
+    close();
+  };
 
   const handleForceChange = (checked: boolean) => {
     if (!checked) {
@@ -103,28 +120,38 @@ export const useBlockedWorkspaceHtmlPublish = ({
     });
   };
 
-  const prepareNext = async (input: Parameters<typeof prepareWorkspaceHtmlPublish>[0]) => {
+  const stillBlocked = (paths: string[]) => {
+    log('Prepared workspace copy still has unresolved paths: %O', paths);
+    toast.error(t('workingPanel.localFile.publish.outsideWorkspace.stillBlocked', { ns: 'chat' }));
+  };
+
+  const prepareNext = async (
+    input: Parameters<typeof prepareWorkspaceHtmlPublish>[0],
+    requireClean = false,
+  ) => {
     const next = await prepareWorkspaceHtmlPublish(input);
     if ('blocked' in next) {
       if (next.blocked === 'outside-workspace') {
-        log(
-          'Prepared page still references paths outside the workspace: %O',
-          next.escaped.map((item) => item.absolutePath),
-        );
-        toast.error(
-          t('workingPanel.localFile.publish.outsideWorkspace.stillBlocked', { ns: 'chat' }),
-        );
+        stillBlocked(next.escaped.map((item) => item.absolutePath));
       } else {
         notifyWorkspaceHtmlPublishBlocked(next);
       }
+      return;
+    }
+    if (requireClean && next.gathered.missing.length > 0) {
+      stillBlocked(next.gathered.missing);
       return;
     }
     return next;
   };
 
   const handleContinue = async () => {
-    if (busy || (!force && failed.length > 0)) return;
+    if (busyRef.current) return;
+    busyRef.current = true;
+    cancelled.current = false;
+    setFailed([]);
     setBusy(true);
+
     try {
       if (force) {
         const ready = await prepareNext({
@@ -135,39 +162,83 @@ export const useBlockedWorkspaceHtmlPublish = ({
           sandboxTopicId,
           workingDirectory,
         });
-        if (ready) openConfirm(ready);
+        if (!cancelled.current && ready) openConfirm(ready);
+        return;
+      }
+
+      const closure = await prepareNext({
+        allowExternalReads: true,
+        content: htmlContent,
+        deviceId,
+        filePath,
+        sandboxTopicId,
+        workingDirectory,
+      });
+      if (cancelled.current || !closure) return;
+
+      const displayedPaths = new Set(resources.map((resource) => resource.absolutePath));
+      if (
+        closure.gathered.resources.some((resource) => !displayedPaths.has(resource.absolutePath))
+      ) {
+        const initiallyDisplayed = new Set(plan.escaped.map((resource) => resource.absolutePath));
+        setResources(
+          closure.gathered.resources.map((resource) =>
+            initiallyDisplayed.has(resource.absolutePath)
+              ? resource
+              : {
+                  ...resource,
+                  source: isPathInsideWorkspace(resource.absolutePath, workingDirectory)
+                    ? 'workspace'
+                    : 'nested',
+                },
+          ),
+        );
+        return;
+      }
+
+      const entry = closure.gathered.files.find(
+        (file) => file.path === closure.gathered.entryPath && file.encoding === 'utf8',
+      );
+      if (!entry) {
+        notifyWorkspaceHtmlPublishBlocked({ blocked: 'unreadable' });
         return;
       }
 
       const copied = await copyWorkspaceHtmlArtifactIntoWorkspace({
         copyFile,
-        escaped: plan.escaped,
-        htmlContent,
+        htmlContent: entry.content,
         htmlFilePath: filePath,
+        resources: closure.gathered.resources,
         workingDirectory,
+        writeFile,
       });
+      if (cancelled.current) return;
       if (copied.failed.length > 0) {
         setFailed(copied.failed);
         return;
       }
 
-      const ready = await prepareNext({
-        content: copied.htmlContent,
-        deviceId,
-        filePath: copied.entryPath,
-        sandboxTopicId,
-        workingDirectory,
-      });
-      if (ready) openConfirm(ready, copied.targetDirectory);
+      const ready = await prepareNext(
+        {
+          deviceId,
+          filePath: copied.entryPath,
+          sandboxTopicId,
+          workingDirectory,
+        },
+        true,
+      );
+      if (!cancelled.current && ready) openConfirm(ready, copied.targetDirectory);
     } catch (error) {
+      if (cancelled.current) return;
       log('Failed to copy workspace HTML entry %s: %O', filePath, error);
       toast.error(
         t('workingPanel.localFile.publish.outsideWorkspace.copyFailedEntry', { ns: 'chat' }),
       );
     } finally {
-      setBusy(false);
+      busyRef.current = false;
+      if (!cancelled.current) setBusy(false);
     }
   };
 
-  return { busy, failed, force, handleContinue, handleForceChange };
+  return { busy, cancel, failed, force, handleContinue, handleForceChange, resources };
 };

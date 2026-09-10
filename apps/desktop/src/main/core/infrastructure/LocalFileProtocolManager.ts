@@ -318,12 +318,14 @@ export class LocalFileProtocolManager {
     accept,
     allowExternalFile,
     filePath,
+    persistExternalApproval = true,
     resourceScope,
     workspaceRoot,
   }: {
     accept?: PreviewFileAccept;
     allowExternalFile?: boolean;
     filePath: string;
+    persistExternalApproval?: boolean;
     resourceScope?: 'workspace';
     workspaceRoot: string;
   }): Promise<string | null> {
@@ -339,7 +341,12 @@ export class LocalFileProtocolManager {
             workspaceRoot,
           })
         )?.realPath
-      : await this.resolveApprovedPreviewPath({ allowExternalFile, filePath, workspaceRoot });
+      : await this.resolveApprovedPreviewPath({
+          allowExternalFile,
+          filePath,
+          persistExternalApproval,
+          workspaceRoot,
+        });
     if (!realFilePath) return null;
 
     this.cleanupExpiredTokens();
@@ -426,6 +433,32 @@ export class LocalFileProtocolManager {
     return {
       buffer,
       contentType,
+      realPath: realFilePath,
+    };
+  }
+
+  async readExternalFileForPublish({
+    filePath,
+    workspaceRoot,
+  }: {
+    filePath: string;
+    workspaceRoot: string;
+  }): Promise<PreviewFileReadResult | null> {
+    const realFilePath = await this.resolveApprovedPreviewPath({
+      allowExternalFile: true,
+      filePath,
+      persistExternalApproval: false,
+      workspaceRoot,
+    });
+    if (!realFilePath) return null;
+
+    const fileStat = await stat(realFilePath);
+    if (!fileStat.isFile()) return null;
+    const buffer = await readFile(realFilePath);
+
+    return {
+      buffer,
+      contentType: await resolveMimeType(realFilePath, buffer),
       realPath: realFilePath,
     };
   }
