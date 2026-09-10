@@ -112,6 +112,31 @@ describe('GoalExplorationModel', () => {
     ).rejects.toThrow(/corrected protocols/);
   });
 
+  it('does not charge ordinary branches to the correction budget', async () => {
+    const { goalId, parent } = await seed(9);
+    // Two ordinary expansions also write `derived_from` edges at this parent; counting
+    // the edge alone would refuse the very first correction.
+    for (const _ of [1, 2])
+      expect(
+        (await model.apply(goalId, (await claim(goalId))!.token, expand(parent.id))).outcome,
+      ).toBe('expanded');
+    expect(
+      (await model.apply(goalId, (await claim(goalId))!.token, revise(parent.id))).outcome,
+    ).toBe('revised');
+  });
+
+  it('keeps a standalone correction out of the experiment count and off the target list', async () => {
+    // One slot only: a correction that read back as a new experiment would both spend
+    // the slot and become a fresh target carrying an empty correction budget.
+    const { goalId, parent } = await seed(1);
+    const first = await model.apply(goalId, (await claim(goalId))!.token, revise(parent.id));
+    expect(first.outcome).toBe('revised');
+    await graphModel.updateNodeStatus(goalId, first.nodeId!, 'resolved');
+    await expect(
+      model.apply(goalId, (await claim(goalId))!.token, revise(first.nodeId!)),
+    ).rejects.toThrow(/resolved experiment/);
+  });
+
   it('refuses to revise an experiment that never produced a result', async () => {
     const { goalId } = await seed();
     const unresolved = await graphModel.createNode(goalId, {

@@ -1,7 +1,14 @@
 import type { GoalGraphNode, GoalGraphSnapshot, GoalNodeKind } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { experimentMembers, experimentStatus, graphScopeIds } from './goalGraph';
+import {
+  experimentMembers,
+  experimentStatus,
+  graphScopeIds,
+  isProtocolRevision,
+  protocolRevisionCount,
+  provenanceParentId,
+} from './goalGraph';
 
 const node = (
   id: string,
@@ -78,5 +85,36 @@ describe('experiment containment', () => {
     g.nodes.push(node('new-task', 'task'));
     g.edges.push({ ...g.edges[1], id: 'new-edge', targetNodeId: 'new-task' });
     expect(experimentStatus(g, g.nodes[1])).toBe('active');
+  });
+});
+
+describe('provenance and protocol revisions', () => {
+  const graph = {
+    edges: [
+      { kind: 'contains', sourceNodeId: 'exp', targetNodeId: 'run1' },
+      { kind: 'contains', sourceNodeId: 'exp', targetNodeId: 'fix1' },
+      { kind: 'derived_from', sourceNodeId: 'exp', targetNodeId: 'older' },
+      { kind: 'derived_from', sourceNodeId: 'fix1', targetNodeId: 'exp' },
+    ],
+    nodes: [
+      { id: 'older', kind: 'experiment' },
+      { id: 'exp', kind: 'experiment' },
+      { id: 'run1', kind: 'task' },
+      { id: 'fix1', kind: 'task' },
+    ],
+  } as any;
+
+  it('gives a corrected protocol its own parent rather than its container’s', () => {
+    // `fix1` corrects `exp`; reading the container would hand it `older` instead.
+    expect(provenanceParentId(graph, 'fix1')).toBe('exp');
+    expect(provenanceParentId(graph, 'run1')).toBe('older');
+  });
+
+  it('separates a correction from an ordinary branch when counting', () => {
+    expect(isProtocolRevision(graph, 'fix1')).toBe(true);
+    // `exp` also has a `derived_from` edge, but it is a branch, not a correction.
+    expect(isProtocolRevision(graph, 'exp')).toBe(false);
+    expect(protocolRevisionCount(graph, 'exp')).toBe(1);
+    expect(protocolRevisionCount(graph, 'older')).toBe(0);
   });
 });

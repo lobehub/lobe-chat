@@ -2,7 +2,12 @@ import { createHash, randomUUID } from 'node:crypto';
 
 import { GOAL_ACCEPTANCE_TASK_TITLE, GOAL_COORDINATOR_ACTOR_ID } from '@lobechat/const/goal';
 import type { GoalExplorationDecision, GoalGraphSnapshot } from '@lobechat/types';
-import { experimentMembers, experimentOwner } from '@lobechat/utils/goalGraph';
+import {
+  experimentMembers,
+  experimentOwner,
+  isProtocolRevision,
+  protocolRevisionCount,
+} from '@lobechat/utils/goalGraph';
 import { and, eq } from 'drizzle-orm';
 
 import { goals } from '../schemas/goal';
@@ -132,9 +137,13 @@ export class GoalExplorationModel {
       const experiments = graph.nodes.filter(
         (node) =>
           node.kind === 'experiment' ||
+          // A standalone correction re-runs an existing question, so it must not
+          // read back as a new experiment: that would spend a slot and let the
+          // planner revise it as a fresh target with an empty correction budget.
           (node.kind === 'task' &&
             node.title !== GOAL_ACCEPTANCE_TASK_TITLE &&
-            !experimentOwner(graph, node.id)),
+            !experimentOwner(graph, node.id) &&
+            !isProtocolRevision(graph, node.id)),
       );
       if (decision.action === 'verify') {
         await tx
@@ -167,11 +176,7 @@ export class GoalExplorationModel {
           (node) => node.id === decision.parentNodeId && node.status === 'resolved',
         );
         if (!target) throw new Error('A revision must correct a resolved experiment in this goal');
-        // Count the corrections already aimed at this experiment rather than the tasks it
-        // holds: a standalone task has no container, so members would never bound anything.
-        const revisions = graph.edges.filter(
-          (edge) => edge.kind === 'derived_from' && edge.targetNodeId === target.id,
-        ).length;
+        const revisions = protocolRevisionCount(graph, target.id);
         if (revisions >= MAX_PROTOCOL_REVISIONS)
           throw new Error(
             `Experiment already ran ${revisions} corrected protocols; expand or verify instead of revising again`,

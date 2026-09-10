@@ -1,7 +1,7 @@
 import type { GoalAdvanceEffect } from '@lobechat/agent-tracing';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
 import type { GoalGraphSnapshot, GoalTickResult } from '@lobechat/types';
-import { experimentMembers, experimentOwner } from '@lobechat/utils/goalGraph';
+import { experimentMembers, experimentOwner, isProtocolRevision } from '@lobechat/utils/goalGraph';
 
 import { GoalExplorationModel, goalExplorationSnapshot } from '@/database/models/goalExploration';
 import type { LobeChatDatabase } from '@/database/type';
@@ -50,7 +50,8 @@ export async function exploreGraph(params: {
             node.kind === 'experiment' ||
             (node.kind === 'task' &&
               node.title !== GOAL_ACCEPTANCE_TASK_TITLE &&
-              !experimentOwner(graph, node.id)),
+              !experimentOwner(graph, node.id) &&
+              !isProtocolRevision(graph, node.id)),
         )
         .map((node) => ({
           id: node.id,

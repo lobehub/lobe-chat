@@ -70,3 +70,49 @@ export const graphScopeIds = (graph: Graph, scopeId?: string): Set<string> => {
     graph.nodes.filter((node) => !experimentOwner(graph, node.id)).map((node) => node.id),
   );
 };
+
+/**
+ * A `derived_from` edge sourced by a task is a protocol correction; the same edge
+ * sourced by an experiment is an ordinary branch. Keeping them apart matters because
+ * both provenances share one edge kind, so counting the edge alone would charge a
+ * branch to the correction budget and let a chain of corrections restart it.
+ */
+export const isProtocolRevision = (graph: Graph, nodeId: string): boolean =>
+  graph.nodes.find((node) => node.id === nodeId)?.kind === 'task' &&
+  graph.edges.some((edge) => edge.kind === 'derived_from' && edge.sourceNodeId === nodeId);
+
+/**
+ * Corrections already aimed at this experiment, following a standalone chain back to
+ * its origin so revising the latest attempt cannot hand the budget back.
+ */
+export const protocolRevisionCount = (graph: Graph, targetId: string): number => {
+  const revisions = graph.edges.filter(
+    (edge) => edge.kind === 'derived_from' && isProtocolRevision(graph, edge.sourceNodeId),
+  );
+  const seen = new Set<string>();
+  let cursor: string | undefined = targetId;
+  let count = 0;
+  while (cursor && !seen.has(cursor)) {
+    seen.add(cursor);
+    count += revisions.filter((edge) => edge.targetNodeId === cursor).length;
+    cursor = revisions.find((edge) => edge.sourceNodeId === cursor)?.targetNodeId;
+  }
+  return count;
+};
+
+/**
+ * The experiment whose results a node's run should carry.
+ *
+ * A corrected protocol has its own provenance edge, so it must be preferred over the
+ * container's: reading the container's would hand the run the results of the older
+ * experiment that container was itself branched from.
+ */
+export const provenanceParentId = (graph: Graph, nodeId: string): string | undefined =>
+  (
+    graph.edges.find((edge) => edge.kind === 'derived_from' && edge.sourceNodeId === nodeId) ??
+    graph.edges.find(
+      (edge) =>
+        edge.kind === 'derived_from' &&
+        edge.sourceNodeId === (experimentOwner(graph, nodeId) ?? nodeId),
+    )
+  )?.targetNodeId;

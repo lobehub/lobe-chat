@@ -20,7 +20,7 @@ import type {
   TaskTopicHandoff,
   WorkVersionEventItem,
 } from '@lobechat/types';
-import { experimentOwner } from '@lobechat/utils/goalGraph';
+import { experimentOwner, provenanceParentId } from '@lobechat/utils/goalGraph';
 import { TRPCError } from '@trpc/server';
 import { sql } from 'drizzle-orm';
 
@@ -1576,11 +1576,7 @@ export class GoalService {
     let acceptanceId: string | undefined;
     let task: TaskItem | undefined;
     try {
-      const parentId = graph.edges.find(
-        (edge) =>
-          edge.sourceNodeId === (experimentOwner(graph, frontier.id) ?? frontier.id) &&
-          edge.kind === 'derived_from',
-      )?.targetNodeId;
+      const parentId = provenanceParentId(graph, frontier.id);
       const parent = graph.nodes.find((node) => node.id === parentId);
       const description = [
         frontier.description ?? frontier.title,
