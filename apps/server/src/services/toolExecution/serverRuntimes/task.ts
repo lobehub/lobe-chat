@@ -20,7 +20,7 @@ import {
   priorityLabel,
 } from '@lobechat/prompts';
 import type { TaskAutomationMode, TaskStatus } from '@lobechat/types';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { notifyTaskAssigned } from '@/business/server/task/notifyTaskAssigned';
 import { AgentModel } from '@/database/models/agent';
@@ -30,6 +30,7 @@ import { UserModel } from '@/database/models/user';
 import { WorkspaceModel } from '@/database/models/workspace';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import { tasks } from '@/database/schemas';
+import { notTrashed } from '@/database/utils/softDelete';
 import { appEnv } from '@/envs/app';
 import { taskRouter } from '@/server/routers/lambda/task';
 import { TaskService } from '@/server/services/task';
@@ -49,7 +50,7 @@ const resolveWorkspaceId = async (
   const [row] = await db
     .select({ workspaceId: tasks.workspaceId })
     .from(tasks)
-    .where(eq(tasks.id, taskId))
+    .where(and(eq(tasks.id, taskId), notTrashed(tasks.isDeleted)))
     .limit(1);
   return row?.workspaceId ?? undefined;
 };

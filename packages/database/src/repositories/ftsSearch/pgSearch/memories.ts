@@ -2,6 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { userMemories } from '../../../schemas';
 import { sanitizeBm25Query } from '../../../utils/bm25';
+import { notTrashed } from '../../../utils/softDelete';
 import type { FtsSearchBackendResponse, FtsSearchMemoryResult } from '../types';
 import { buildResponse, truncate } from './results';
 import type { PgSearchFtsSearchContext } from './scope';
@@ -31,6 +32,7 @@ export async function searchMemories(
     .where(
       and(
         eq(userMemories.userId, context.userId),
+        notTrashed(userMemories.isDeleted),
         sql`(${userMemories.title} @@@ ${bm25Query} OR ${userMemories.summary} @@@ ${bm25Query} OR ${userMemories.details} @@@ ${bm25Query})`,
       ),
     )

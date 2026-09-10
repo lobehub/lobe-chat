@@ -17,6 +17,7 @@ import { today } from '@/utils/time';
 import type { NewUser, UserItem, UserSettingsItem } from '../schemas';
 import { messages, nextauthAccounts, topics, users, userSettings } from '../schemas';
 import type { LobeChatDatabase } from '../type';
+import { notTrashed } from '../utils/softDelete';
 import { AGENT_TRANSFER_PENDING_OWNER_DELETE, AgentTransferJobModel } from './agentTransferJob';
 
 type DecryptUserKeyVaults = (
@@ -72,7 +73,14 @@ export class UserModel {
         userCreatedAt: users.createdAt,
       })
       .from(users)
-      .leftJoin(messages, and(eq(messages.userId, users.id), eq(messages.role, 'user')))
+      .leftJoin(
+        messages,
+        and(
+          eq(messages.userId, users.id),
+          eq(messages.role, 'user'),
+          notTrashed(messages.isDeleted),
+        ),
+      )
       .where(eq(users.id, this.userId))
       .groupBy(users.createdAt);
 
