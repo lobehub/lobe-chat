@@ -402,36 +402,36 @@ describe('GoalService', () => {
     },
   );
 
-  it.each([LEASE_EXPIRED_ERROR, VERIFICATION_ERRORED_ERROR])(
-    'does not restart a Task settled while recovery for %s was being decided',
-    async (error) => {
-      const runSpy = vi
-        .spyOn(TaskRunnerService.prototype, 'runTask')
-        .mockResolvedValue({} as never);
-      const service = new GoalService(serverDB, userId);
-      const taskModel = new TaskModel(serverDB, userId);
-      const graph = await service.create({
-        title: `Settled during recovery ${error}`,
-        tasks: ['Do not restart'],
-      });
-      const created = await service.tick(graph.goal.id);
-      await taskModel.updateStatus(created.taskId!, 'paused', { error });
-      // The advance routed here holding the paused row; a person settled the Task
-      // before the claim, which is the row the coordinator now reads.
-      const stale = (await taskModel.findById(created.taskId!))!;
-      await taskModel.updateStatus(created.taskId!, 'completed', { error: null });
-      runSpy.mockClear();
+  it.each([
+    [LEASE_EXPIRED_ERROR, 'completed'],
+    [LEASE_EXPIRED_ERROR, 'failed'],
+    [VERIFICATION_ERRORED_ERROR, 'completed'],
+    [VERIFICATION_ERRORED_ERROR, 'canceled'],
+  ])('does not restart a Task settled during recovery (%s → %s)', async (error, settledAs) => {
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const taskModel = new TaskModel(serverDB, userId);
+    const graph = await service.create({
+      title: `Settled during recovery ${error} ${settledAs}`,
+      tasks: ['Do not restart'],
+    });
+    const created = await service.tick(graph.goal.id);
+    await taskModel.updateStatus(created.taskId!, 'paused', { error });
+    // The advance routed here holding the paused row; a person settled the Task
+    // before the claim, which is the row the coordinator now reads.
+    const stale = (await taskModel.findById(created.taskId!))!;
+    await taskModel.updateStatus(created.taskId!, settledAs, { error: null });
+    runSpy.mockClear();
 
-      const recovery = await new TaskRecoveryCoordinator(serverDB, userId).recover({
-        goal: (await service.graph(graph.goal.id)).goal,
-        task: stale,
-      });
+    const recovery = await new TaskRecoveryCoordinator(serverDB, userId).recover({
+      goal: (await service.graph(graph.goal.id)).goal,
+      task: stale,
+    });
 
-      expect(recovery.outcome).toBe('settled');
-      expect(runSpy).not.toHaveBeenCalled();
-      expect((await taskModel.findById(created.taskId!))?.status).toBe('completed');
-    },
-  );
+    expect(recovery.outcome).toBe('settled');
+    expect(runSpy).not.toHaveBeenCalled();
+    expect((await taskModel.findById(created.taskId!))?.status).toBe(settledAs);
+  });
 
   it('hands back a dispatch claim whose worker died before the run existed', async () => {
     // The claim is taken just before `runTask` creates the topic. If the worker

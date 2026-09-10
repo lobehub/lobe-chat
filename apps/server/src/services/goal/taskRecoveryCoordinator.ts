@@ -7,7 +7,6 @@ import type { LobeChatDatabase } from '@/database/type';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { resolveTaskAttemptBudget, resolveTaskMaxSteps } from './recoveryPolicy';
-import { RECOVERABLE_TASK_STATUSES } from './supervisor/policy';
 
 const log = debug('lobe-server:goal-task-recovery');
 
@@ -76,14 +75,19 @@ export class TaskRecoveryCoordinator {
       log('task %s recovery was already claimed by another advance', task.identifier);
       return { outcome: 'already-running' };
     }
-    // The tick that routed here read the Task before it decided. Claiming whatever
-    // status it holds now would swap a completion or a cancellation to `running` and
-    // start a paid run against a decision somebody already made.
-    if (!RECOVERABLE_TASK_STATUSES.has(current.status)) {
-      log('task %s was settled as %s; leaving it alone', task.identifier, current.status);
+    // Both branches that route here require `paused`, so that is the only status this
+    // claim may take. The tick read the Task before it decided; claiming whatever it
+    // holds now would swap somebody's completion, cancellation or explicit failure to
+    // `running` and start a paid run over their decision.
+    if (current.status !== 'paused') {
+      log(
+        'task %s moved to %s before the claim; leaving it alone',
+        task.identifier,
+        current.status,
+      );
       return { outcome: 'settled' };
     }
-    const claimed = await taskModel.updateStatusIfCurrent(task.id, current.status, 'running', {
+    const claimed = await taskModel.updateStatusIfCurrent(task.id, 'paused', 'running', {
       error: null,
       startedAt: new Date(),
     });
@@ -104,7 +108,7 @@ export class TaskRecoveryCoordinator {
       log('task %s recovery spawn failed (non-fatal): %O', task.identifier, error);
       // We own the claim, so nothing else will put the task back.
       await taskModel
-        .updateStatusIfCurrent(task.id, 'running', current.status, { error: current.error })
+        .updateStatusIfCurrent(task.id, 'running', 'paused', { error: current.error })
         .catch((releaseError) => {
           log('task %s failed to release the recovery claim: %O', task.identifier, releaseError);
         });
