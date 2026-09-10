@@ -171,6 +171,17 @@ describe('status provenance', () => {
     expect(
       statusAuthoredByActor([act({ actorUserId: 'u1', type: 'assignee_user' })], 'failed'),
     ).toBe(false);
+    // Deleting the actor clears the id columns, so "someone who is gone" would read
+    // as the system without the durable kind written beside them.
+    expect(
+      statusAuthoredByActor([act({ payload: { actorKind: 'agent', to: 'failed' } })], 'failed'),
+    ).toBe(true);
+    expect(
+      statusAuthoredByActor([act({ payload: { actorKind: 'user', to: 'failed' } })], 'failed'),
+    ).toBe(true);
+    expect(
+      statusAuthoredByActor([act({ payload: { actorKind: 'system', to: 'failed' } })], 'failed'),
+    ).toBe(false);
   });
 });
 

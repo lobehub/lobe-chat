@@ -48,7 +48,13 @@ export const statusAuthoredByActor = (
   status: string,
 ): boolean => {
   const latest = [...activities].reverse().find((item) => item.type === 'status');
-  if (!latest || (latest.payload as { to?: string } | undefined)?.to !== status) return false;
+  const payload = latest?.payload as { actorKind?: string; to?: string } | undefined;
+  if (!latest || payload?.to !== status) return false;
+  // The id columns are cleared when the actor is deleted, so a transition made by
+  // someone who has since left would read as the system's. `actorKind` is written
+  // beside them precisely so it survives that; fall back to the ids only for rows
+  // written before it existed.
+  if (payload?.actorKind) return payload.actorKind !== 'system';
   return Boolean(latest.actorUserId || latest.actorAgentId);
 };
 
