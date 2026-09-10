@@ -266,6 +266,12 @@ describe('path helpers', () => {
         '/project',
       ),
     ).toBe('/project');
+    expect(
+      lowestCommonAncestorDirectory(
+        ['/project/pages/index.html', '/outside/assets/logo.png'],
+        '/project',
+      ),
+    ).toBe('/');
   });
 
   it('builds a stable artifact identifier from the html relative path', () => {

@@ -25,6 +25,7 @@ import {
 export interface GatheredWorkspaceHtmlArtifact {
   blocked?: 'too-large' | 'too-many';
   entryPath: string;
+  escaped: EscapedResourceRef[];
   files: WorkspaceHtmlArtifactFile[];
   identifier: string;
   missing: string[];
@@ -33,6 +34,11 @@ export interface GatheredWorkspaceHtmlArtifact {
   title: string;
   totalBytes: number;
   unsupported: string[];
+}
+
+export interface EscapedResourceRef {
+  absolutePath: string;
+  href: string;
 }
 
 const READ_CONCURRENCY = 5;
@@ -64,11 +70,13 @@ const toArtifactFile = (
 };
 
 export const gatherWorkspaceHtmlArtifact = async ({
+  allowExternalReads = false,
   htmlContent,
   htmlFilePath,
   readAsset,
   workingDirectory,
 }: {
+  allowExternalReads?: boolean;
   htmlContent: string;
   htmlFilePath: string;
   readAsset: (absolutePath: string) => Promise<ReadWorkspaceAssetResult>;
@@ -76,6 +84,7 @@ export const gatherWorkspaceHtmlArtifact = async ({
 }): Promise<GatheredWorkspaceHtmlArtifact> => {
   const absoluteHtmlPath = toWorkspaceAbsolutePath(htmlFilePath, workingDirectory);
   const htmlRefs = collectLocalResourceRefs({
+    allowExternalReads,
     content: htmlContent,
     sourceKind: 'html',
     sourcePath: absoluteHtmlPath,
@@ -87,6 +96,7 @@ export const gatherWorkspaceHtmlArtifact = async ({
   const handled = new Set<string>();
   const walkQueue = pending.filter((ref) => isWalkableAssetPath(ref.absolutePath));
   const missing: string[] = [];
+  const escaped: EscapedResourceRef[] = [];
   const oversized: string[] = [];
   const remotes: string[] = [];
   const unsupported: string[] = [];
@@ -94,13 +104,19 @@ export const gatherWorkspaceHtmlArtifact = async ({
 
   const bucketForSkipReason = (reason: LocalResourceSkipReason): string[] | undefined => {
     if (reason === 'remote') return remotes;
-    if (reason === 'escape') return missing;
     if (reason === 'extension') return unsupported;
     return;
   };
 
   const collectSkipped = (skipped: typeof htmlRefs.skipped) => {
     for (const item of skipped) {
+      if (
+        item.reason === 'escape' &&
+        item.absolutePath &&
+        !escaped.some((ref) => ref.absolutePath === item.absolutePath)
+      ) {
+        escaped.push({ absolutePath: item.absolutePath, href: item.href });
+      }
       const bucket = bucketForSkipReason(item.reason);
       if (!bucket || bucket.includes(item.href)) continue;
       bucket.push(item.href);
@@ -184,6 +200,7 @@ export const gatherWorkspaceHtmlArtifact = async ({
     if (!text) continue;
 
     const nested = collectLocalResourceRefs({
+      allowExternalReads,
       content: text,
       rootDirectory: isJsAssetPath(walkRef.absolutePath) ? htmlDirectory : undefined,
       sourceKind: isJsAssetPath(walkRef.absolutePath) ? 'js' : 'css',
@@ -236,6 +253,7 @@ export const gatherWorkspaceHtmlArtifact = async ({
   return {
     blocked,
     entryPath,
+    escaped,
     files,
     identifier: workspaceHtmlArtifactIdentifierForFile(htmlFilePath, workingDirectory),
     missing,

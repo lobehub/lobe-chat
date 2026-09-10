@@ -62,7 +62,7 @@ const isCssFile = (file: WorkspaceHtmlArtifactFile) =>
 const isJsFile = (file: WorkspaceHtmlArtifactFile) =>
   file.contentType.includes('javascript') || isJsAssetPath(file.path);
 
-const replaceHrefToken = (source: string, href: string, replacement: string): string => {
+export const replaceHrefToken = (source: string, href: string, replacement: string): string => {
   const escaped = escapeRegExp(href);
 
   return source

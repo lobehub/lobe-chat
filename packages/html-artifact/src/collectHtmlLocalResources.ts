@@ -49,6 +49,7 @@ export interface CollectedLocalResourceRef {
 }
 
 export interface SkippedLocalResourceRef {
+  absolutePath?: string;
   href: string;
   reason: LocalResourceSkipReason;
 }
@@ -75,6 +76,7 @@ const pushRef = (
   result: CollectLocalResourceResult,
   seenRefs: Set<string>,
   resolved: ReturnType<typeof resolveLocalResourceHref>,
+  allowExternalReads: boolean,
 ) => {
   if (resolved.kind === 'empty') {
     result.skipped.push({ href: resolved.href, reason: 'empty' });
@@ -86,8 +88,12 @@ const pushRef = (
     return;
   }
 
-  if (resolved.kind === 'escape' || !resolved.absolutePath) {
-    result.skipped.push({ href: resolved.href, reason: 'escape' });
+  if ((resolved.kind === 'escape' && !allowExternalReads) || !resolved.absolutePath) {
+    result.skipped.push({
+      absolutePath: resolved.absolutePath,
+      href: resolved.href,
+      reason: 'escape',
+    });
     return;
   }
 
@@ -331,12 +337,14 @@ const walkHtmlTags = (html: string, onTag: (tagName: string, tagText: string) =>
 };
 
 export const collectLocalResourceRefs = ({
+  allowExternalReads = false,
   content,
   rootDirectory,
   sourceKind,
   sourcePath,
   workingDirectory,
 }: {
+  allowExternalReads?: boolean;
   content: string;
   rootDirectory?: string;
   sourceKind: 'css' | 'html' | 'js';
@@ -359,6 +367,7 @@ export const collectLocalResourceRefs = ({
           sourcePath,
           workingDirectory,
         }),
+        allowExternalReads,
       );
     }
     return result;
@@ -380,7 +389,7 @@ export const collectLocalResourceRefs = ({
       return;
     }
 
-    pushRef(result, seenRefs, resolved);
+    pushRef(result, seenRefs, resolved, allowExternalReads);
   };
 
   walkHtmlTags(content, (tagName, tagText) => {

@@ -114,13 +114,12 @@ export const lowestCommonAncestorDirectory = (
 ): string => {
   if (absolutePaths.length === 0) return workingDirectory;
 
-  const relativeDirs = absolutePaths.map((absolutePath) => {
-    const relativePath = toWorkspaceRelativePath(absolutePath, workingDirectory);
-    const segments = relativePath.split('/').filter(Boolean);
-    return segments.slice(0, -1);
+  const directorySegments = absolutePaths.map((absolutePath) => {
+    const canonical = canonicalizeWorkspacePath(absolutePath);
+    return canonical.slice(0, canonical.lastIndexOf('/')).split('/');
   });
 
-  const [first, ...rest] = relativeDirs;
+  const [first, ...rest] = directorySegments;
   const common: string[] = [];
 
   for (const [index, segment] of first.entries()) {
@@ -131,9 +130,7 @@ export const lowestCommonAncestorDirectory = (
     break;
   }
 
-  if (common.length === 0) return workingDirectory;
-
-  const slashRoot = `${stripTrailingSlash(toSlashPath(workingDirectory))}/${common.join('/')}`;
+  const slashRoot = common.join('/') || '/';
   return fromSlashPath(slashRoot, workingDirectory);
 };
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { gatherWorkspaceHtmlArtifact } from './gatherWorkspaceHtmlArtifact';
 import type { ReadWorkspaceAssetResult } from './limits';
@@ -281,5 +281,44 @@ describe('gatherWorkspaceHtmlArtifact', () => {
 
     expect(result.unsupported).toEqual(['./site.webmanifest', '../fonts/brand.fontkit']);
     expect(result.missing).toEqual([]);
+  });
+
+  it('reports workspace escapes without reading them or calling them missing', async () => {
+    const readAsset = vi.fn();
+    const result = await gatherWorkspaceHtmlArtifact({
+      htmlContent:
+        '<html><img src="../../outside/logo.png"><img src="../../outside/logo.png"></html>',
+      htmlFilePath: '/project/pages/index.html',
+      readAsset,
+      workingDirectory: '/project',
+    });
+
+    expect(result.escaped).toEqual([
+      { absolutePath: '/outside/logo.png', href: '../../outside/logo.png' },
+    ]);
+    expect(result.missing).toEqual([]);
+    expect(readAsset).not.toHaveBeenCalled();
+  });
+
+  it('reads and packs workspace escapes only when external reads are allowed', async () => {
+    const readAsset = vi.fn(async () => ({
+      bytes: new Uint8Array([1, 2, 3]),
+      contentType: 'image/png',
+      ok: true as const,
+    }));
+    const result = await gatherWorkspaceHtmlArtifact({
+      allowExternalReads: true,
+      htmlContent: '<html><img src="../../outside/logo.png"></html>',
+      htmlFilePath: '/project/pages/index.html',
+      readAsset,
+      workingDirectory: '/project',
+    });
+
+    expect(result.escaped).toEqual([]);
+    expect(readAsset).toHaveBeenCalledWith('/outside/logo.png');
+    expect(result.files.map((file) => file.path).sort()).toEqual([
+      'outside/logo.png',
+      'project/pages/index.html',
+    ]);
   });
 });

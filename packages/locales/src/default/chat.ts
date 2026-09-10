@@ -2765,6 +2765,24 @@ export default {
   'workingPanel.localFile.publish.noTopic': 'Open a topic to publish this page',
   'workingPanel.localFile.publish.note': 'You can unpublish it at any time.',
   'workingPanel.localFile.publish.oversized': 'These files are too large to publish: {{list}}',
+  'workingPanel.localFile.publish.outsideWorkspace.copiedToast':
+    'Published from the workspace copy at {{dir}}',
+  'workingPanel.localFile.publish.outsideWorkspace.copyAction': 'Copy to workspace and publish',
+  'workingPanel.localFile.publish.outsideWorkspace.copyFailed':
+    'Could not copy these files: {{list}}',
+  'workingPanel.localFile.publish.outsideWorkspace.copyHint':
+    'The page and its {{count}} external files will be copied to {{dir}} in this workspace and published from there.',
+  'workingPanel.localFile.publish.outsideWorkspace.copying': 'Copying files…',
+  'workingPanel.localFile.publish.outsideWorkspace.description':
+    'This page references {{count}} files outside the current workspace. Those files would stop working after publish.',
+  'workingPanel.localFile.publish.outsideWorkspace.forceAction':
+    'Publish anyway (include files outside the workspace)',
+  'workingPanel.localFile.publish.outsideWorkspace.forceHint':
+    'This publish will include content read from outside the workspace. Use only with files you trust.',
+  'workingPanel.localFile.publish.outsideWorkspace.forceLabel':
+    'Still read and pack these files outside the workspace',
+  'workingPanel.localFile.publish.outsideWorkspace.title': 'Cannot publish this page directly',
+  'workingPanel.localFile.publish.outsideWorkspace.workspace': 'Current workspace: {{path}}',
   'workingPanel.localFile.publish.remotes':
     'These remote URLs stay as they are. After publish they still load from the original hosts.',
   'workingPanel.localFile.publish.scanning': 'Preparing this page…',
