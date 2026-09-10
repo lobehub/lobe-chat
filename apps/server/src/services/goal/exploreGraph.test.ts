@@ -11,11 +11,15 @@ const { plan, claim, apply } = vi.hoisted(() => ({
   plan: vi.fn(),
 }));
 vi.mock('@/database/models/goalExploration', () => ({
-  GoalExplorationModel: vi.fn(() => ({ apply, claim, fail: vi.fn() })),
+  GoalExplorationModel: vi.fn(function () {
+    return { apply, claim, fail: vi.fn() };
+  }),
   goalExplorationSnapshot: () => 'snapshot',
 }));
 vi.mock('./explorationPlanner', () => ({
-  GoalExplorationPlanner: vi.fn(() => ({ plan })),
+  GoalExplorationPlanner: vi.fn(function () {
+    return { plan };
+  }),
 }));
 
 const node = (id: string, kind: string, status = 'resolved') =>

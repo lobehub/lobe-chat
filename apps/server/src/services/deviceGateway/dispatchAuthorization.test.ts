@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({ findWorkspaceDeviceById: vi.fn() }));
 
 vi.mock('@/database/models/device', () => ({
-  DeviceModel: vi.fn().mockImplementation(() => ({
-    findWorkspaceDeviceById: mocks.findWorkspaceDeviceById,
-  })),
+  DeviceModel: vi.fn().mockImplementation(function () {
+    return {
+      findWorkspaceDeviceById: mocks.findWorkspaceDeviceById,
+    };
+  }),
 }));
 
 const { resolveDeviceDispatchAuthorizationFailure } = await import('./dispatchAuthorization');
