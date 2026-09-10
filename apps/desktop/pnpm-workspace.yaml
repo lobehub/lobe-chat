@@ -11,6 +11,7 @@ packages:
   - '../../packages/electron-mac-notifications'
   - '../../packages/napi-loader'
   - '../../packages/file-loaders'
+  - '../../packages/html-artifact'
   - '../../packages/desktop-bridge'
   - '../../packages/device-control'
   - '../../packages/device-sandbox'

@@ -506,6 +506,24 @@ importers:
         specifier: 4.5.4
         version: 4.5.4
 
+  ../../packages/html-artifact:
+    dependencies:
+      '@lobechat/const':
+        specifier: workspace:*
+        version: link:../const
+      '@lobechat/prompts':
+        specifier: workspace:*
+        version: link:../prompts
+      '@lobechat/utils':
+        specifier: workspace:*
+        version: link:../utils
+      es-toolkit:
+        specifier: ^1.50.0
+        version: 1.52.0
+      js-sha256:
+        specifier: ^0.11.1
+        version: 0.11.1
+
   ../../packages/local-file-shell:
     dependencies:
       '@lobechat/device-sandbox':
@@ -739,6 +757,9 @@ importers:
       '@lobechat/heterogeneous-agents':
         specifier: workspace:*
         version: link:../../packages/heterogeneous-agents
+      '@lobechat/html-artifact':
+        specifier: workspace:*
+        version: link:../../packages/html-artifact
       '@lobechat/local-file-shell':
         specifier: workspace:*
         version: link:../../packages/local-file-shell
@@ -6012,6 +6033,9 @@ packages:
 
   js-cookie@3.0.8:
     resolution: {integrity: sha512-yeJd4aNAdYZQjaon2bpD/Gb0B/omw7HQOsynXXcOiWVCacbBcPlgn8S/d1X6blFSaHao7ozqtW7NZW19xpCtIw==}
+
+  js-sha256@0.11.1:
+    resolution: {integrity: sha512-o6WSo/LUvY2uC4j7mO50a2ms7E/EAdbP0swigLV+nzHKTTaYnaLIWJ02VdXrsJX0vGedDESQnLsOekr94ryfjg==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -14404,6 +14428,8 @@ snapshots:
   joycon@3.1.1: {}
 
   js-cookie@3.0.8: {}
+
+  js-sha256@0.11.1: {}
 
   js-tokens@4.0.0: {}
 
