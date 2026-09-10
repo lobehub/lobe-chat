@@ -477,4 +477,6 @@ export function splitFallbackMessageBatches<T>(
 }
 
 export const splitFallbackMessages = (fallbackLines: string[], maxChars: number): string[] =>
-  splitFallbackMessageBatches(fallbackLines, (line) => line, maxChars).map((batch) => batch.message);
+  splitFallbackMessageBatches(fallbackLines, (line) => line, maxChars).map(
+    (batch) => batch.message,
+  );

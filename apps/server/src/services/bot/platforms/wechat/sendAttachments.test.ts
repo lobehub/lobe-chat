@@ -280,8 +280,17 @@ describe('sendWechatAttachments', () => {
 
   it('keeps separate outcomes for repeated objects and matching source URLs', async () => {
     const api = makeApi();
-    const attachment = { data: 'YQ==', fetchUrl: 'https://example.com/same', type: 'file' } as const;
-    api.uploadCdnMedia.mockResolvedValueOnce({ aesKey: 'key', cipherSize: 16, encryptQueryParam: 'p', rawSize: 1 });
+    const attachment = {
+      data: 'YQ==',
+      fetchUrl: 'https://example.com/same',
+      type: 'file',
+    } as const;
+    api.uploadCdnMedia.mockResolvedValueOnce({
+      aesKey: 'key',
+      cipherSize: 16,
+      encryptQueryParam: 'p',
+      rawSize: 1,
+    });
     api.uploadCdnMedia.mockRejectedValueOnce(new Error('second upload failed'));
 
     const result = await sendWechatAttachments(

@@ -13,13 +13,16 @@ describe('fallback message batching', () => {
     { lines: ['too long'], maxChars: 5, messages: ['too long'] },
     { lines: ['', 'a', ''], maxChars: 5, messages: ['a\n\n'] },
     { lines: ['', ''], maxChars: 5, messages: [] },
-  ])('preserves message text for $lines at $maxChars characters', ({ lines, maxChars, messages }) => {
-    const items = lines.map((line, index) => ({ index, line }));
-    const batches = splitFallbackMessageBatches(items, (item) => item.line, maxChars);
+  ])(
+    'preserves message text for $lines at $maxChars characters',
+    ({ lines, maxChars, messages }) => {
+      const items = lines.map((line, index) => ({ index, line }));
+      const batches = splitFallbackMessageBatches(items, (item) => item.line, maxChars);
 
-    expect(batches.map((batch) => batch.message)).toEqual(messages);
-    expect(splitFallbackMessages(lines, maxChars)).toEqual(messages);
-  });
+      expect(batches.map((batch) => batch.message)).toEqual(messages);
+      expect(splitFallbackMessages(lines, maxChars)).toEqual(messages);
+    },
+  );
 
   it('retains input references and order when repeated lines span multiple batches', () => {
     const first = { index: 0, line: 'aa' };

@@ -147,8 +147,11 @@ export const sendWechatAttachments = async (
   contextToken: string,
 ): Promise<WechatAttachmentSendResult> => {
   const budget = PLATFORM_ATTACHMENT_BUDGETS.wechat;
-  const fallbackLines: Array<{ attachment: WechatOutboundAttachment; index: number; line: string }> =
-    [];
+  const fallbackLines: Array<{
+    attachment: WechatOutboundAttachment;
+    index: number;
+    line: string;
+  }> = [];
   const undelivered: WechatOutboundAttachment[] = [];
   const failures: WechatAttachmentFailure[] = [];
   const outcomes: SendMessageAttachmentOutcome[] = attachments.map((attachment, index) => ({
@@ -274,7 +277,11 @@ export const sendWechatAttachments = async (
   }
 
   // Deliberately outside the loop's try/catch — see the note above.
-  const linkMessages = splitFallbackMessageBatches(fallbackLines, (item) => item.line, budget.textMaxChars);
+  const linkMessages = splitFallbackMessageBatches(
+    fallbackLines,
+    (item) => item.line,
+    budget.textMaxChars,
+  );
   for (const { items, message } of linkMessages) {
     try {
       await api.sendMessage(toUserId, message, contextToken);
