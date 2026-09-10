@@ -136,11 +136,21 @@ describe('DocumentService', () => {
       findById: vi.fn().mockResolvedValue({ id: 'kb-1', visibility: 'public' }),
     };
 
-    vi.mocked(DocumentModel).mockImplementation(() => mockDocumentModel);
-    vi.mocked(DocumentHistoryService).mockImplementation(() => mockDocumentHistoryService);
-    vi.mocked(FileModel).mockImplementation(() => mockFileModel);
-    vi.mocked(FileService).mockImplementation(() => mockFileService);
-    vi.mocked(KnowledgeBaseModel).mockImplementation(() => mockKnowledgeBaseModel);
+    vi.mocked(DocumentModel).mockImplementation(function () {
+      return mockDocumentModel;
+    });
+    vi.mocked(DocumentHistoryService).mockImplementation(function () {
+      return mockDocumentHistoryService;
+    });
+    vi.mocked(FileModel).mockImplementation(function () {
+      return mockFileModel;
+    });
+    vi.mocked(FileService).mockImplementation(function () {
+      return mockFileService;
+    });
+    vi.mocked(KnowledgeBaseModel).mockImplementation(function () {
+      return mockKnowledgeBaseModel;
+    });
 
     service = new DocumentService(mockDb, userId);
   });
@@ -1863,9 +1873,9 @@ describe('DocumentService', () => {
       const executeSpy = vi.fn().mockResolvedValue(undefined);
       const trx = { execute: executeSpy };
       mockDb.transaction = vi.fn(async (callback: any) => callback(trx));
-      vi.mocked(DocumentModel).mockImplementation(
-        (db: any) => (db === trx ? transactionModel : mockDocumentModel) as any,
-      );
+      vi.mocked(DocumentModel).mockImplementation(function (db: any) {
+        return (db === trx ? transactionModel : mockDocumentModel) as any;
+      });
 
       return { executeSpy, trx };
     };

@@ -13,11 +13,13 @@ vi.mock('@lobechat/chat-adapter-feishu', async (importOriginal) => ({
   ...(await importOriginal<typeof FeishuAdapterModule>()),
   createLarkAdapter: mockCreateLarkAdapter,
   downloadMediaFromRawMessage: mockDownloadMediaFromRawMessage,
-  LarkApiClient: vi.fn().mockImplementation(() => ({
-    addReaction: mockAddReaction,
-    getTenantAccessToken: mockGetTenantAccessToken,
-    removeReaction: mockRemoveReaction,
-  })),
+  LarkApiClient: vi.fn().mockImplementation(function () {
+    return {
+      addReaction: mockAddReaction,
+      getTenantAccessToken: mockGetTenantAccessToken,
+      removeReaction: mockRemoveReaction,
+    };
+  }),
 }));
 
 // Keep `./reactionTracker` real — the key layout and the read-before-write
@@ -43,10 +45,12 @@ vi.mock('@/server/services/gateway/runtimeStatus', () => ({
 }));
 
 vi.mock('./gateway', () => ({
-  FeishuWSConnection: vi.fn().mockImplementation(() => ({
-    close: vi.fn(),
-    start: vi.fn().mockResolvedValue(undefined),
-  })),
+  FeishuWSConnection: vi.fn().mockImplementation(function () {
+    return {
+      close: vi.fn(),
+      start: vi.fn().mockResolvedValue(undefined),
+    };
+  }),
 }));
 
 const { FeishuClientFactory } = await import('./client');
@@ -238,14 +242,13 @@ describe('Feishu messenger reactions', () => {
     // factory's constructor implementation — re-establish it here rather than
     // depending on describe ordering.
     const { LarkApiClient } = await import('@lobechat/chat-adapter-feishu');
-    vi.mocked(LarkApiClient).mockImplementation(
-      () =>
-        ({
-          addReaction: mockAddReaction,
-          getTenantAccessToken: mockGetTenantAccessToken,
-          removeReaction: mockRemoveReaction,
-        }) as any,
-    );
+    vi.mocked(LarkApiClient).mockImplementation(function () {
+      return {
+        addReaction: mockAddReaction,
+        getTenantAccessToken: mockGetTenantAccessToken,
+        removeReaction: mockRemoveReaction,
+      } as any;
+    });
   });
 
   it('sends the named emoji_type Feishu accepts, not the bridge unicode', async () => {

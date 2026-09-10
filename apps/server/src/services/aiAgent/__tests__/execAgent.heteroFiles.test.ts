@@ -46,14 +46,18 @@ const {
 // the assertion below can verify the init, and so the real one (which probes
 // Redis synchronously) doesn't throw a server-env error in the test env.
 vi.mock('@/server/modules/AgentRuntime/factory', () => ({
-  createAgentStateManager: vi.fn(() => ({
-    createOperationMetadata: mockCreateOperationMetadata,
-  })),
+  createAgentStateManager: vi.fn(function () {
+    return {
+      createOperationMetadata: mockCreateOperationMetadata,
+    };
+  }),
   createStreamEventManager: () => ({
     publishAgentRuntimeEnd: mockPublishAgentRuntimeEnd,
     publishAgentRuntimeInit: mockPublishAgentRuntimeInit,
   }),
-  isRedisAvailable: vi.fn(() => false),
+  isRedisAvailable: vi.fn(function () {
+    return false;
+  }),
 }));
 
 const emptyResolvedAttachments = {
@@ -65,7 +69,9 @@ const emptyResolvedAttachments = {
 };
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn().mockImplementation(() => ({})),
+  FileService: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 
 vi.mock('../ingestAttachment', () => ({
@@ -84,13 +90,15 @@ vi.mock('@/libs/trpc/utils/internalJwt', () => ({
 }));
 
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({
-    create: mockMessageCreate,
-    getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
-    getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
-    query: mockMessageQuery,
-    update: mockMessageUpdate,
-  })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {
+      create: mockMessageCreate,
+      getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
+      getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
+      query: mockMessageQuery,
+      update: mockMessageUpdate,
+    };
+  }),
 }));
 
 const heteroAgentConfig = {
@@ -106,29 +114,37 @@ const heteroAgentConfig = {
 };
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn().mockImplementation(() => ({
-    getAgentConfig: vi.fn().mockResolvedValue(heteroAgentConfig),
-    queryAgents: vi.fn().mockResolvedValue([]),
-  })),
+  AgentModel: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfig: vi.fn().mockResolvedValue(heteroAgentConfig),
+      queryAgents: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/device', () => ({
-  DeviceModel: vi.fn().mockImplementation(() => ({
-    findByDeviceId: mockDeviceFindByDeviceId,
-    findWorkspaceDeviceById: mockDeviceFindWorkspaceDeviceById,
-  })),
+  DeviceModel: vi.fn().mockImplementation(function () {
+    return {
+      findByDeviceId: mockDeviceFindByDeviceId,
+      findWorkspaceDeviceById: mockDeviceFindWorkspaceDeviceById,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/agent', () => ({
-  AgentService: vi.fn().mockImplementation(() => ({
-    getAgentConfig: vi.fn().mockResolvedValue(heteroAgentConfig),
-  })),
+  AgentService: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfig: vi.fn().mockResolvedValue(heteroAgentConfig),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  PluginModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 const topicMock = {
@@ -142,33 +158,41 @@ const topicMock = {
   updateMetadata: vi.fn().mockResolvedValue(undefined),
 };
 vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn().mockImplementation(() => topicMock),
+  TopicModel: vi.fn().mockImplementation(function () {
+    return topicMock;
+  }),
 }));
 
 vi.mock('@/database/models/thread', () => ({
-  ThreadModel: vi.fn().mockImplementation(() => ({
-    create: vi.fn(),
-    findById: vi.fn(),
-    update: vi.fn(),
-  })),
+  ThreadModel: vi.fn().mockImplementation(function () {
+    return {
+      create: vi.fn(),
+      findById: vi.fn(),
+      update: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn().mockImplementation(() => ({
-    getLobehubSkillManifests: vi.fn().mockResolvedValue([]),
-    market: {
-      creds: {
-        get: vi.fn(),
-        list: vi.fn().mockResolvedValue({ data: [] }),
+  MarketService: vi.fn().mockImplementation(function () {
+    return {
+      getLobehubSkillManifests: vi.fn().mockResolvedValue([]),
+      market: {
+        creds: {
+          get: vi.fn(),
+          list: vi.fn().mockResolvedValue({ data: [] }),
+        },
       },
-    },
-  })),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/heterogeneousAgent', () => ({
-  HeterogeneousAgentService: vi.fn().mockImplementation(() => ({
-    getHeterogeneousResumeSessionId: mockGetHeterogeneousResumeSessionId,
-  })),
+  HeterogeneousAgentService: vi.fn().mockImplementation(function () {
+    return {
+      getHeterogeneousResumeSessionId: mockGetHeterogeneousResumeSessionId,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/heterogeneousAgent/sandboxRunner', () => ({
@@ -180,21 +204,25 @@ vi.mock('@/server/services/file/resolveAttachments', () => ({
 }));
 
 vi.mock('@/server/services/document', () => ({
-  DocumentService: vi.fn().mockImplementation(() => ({
-    parseFile: vi.fn().mockResolvedValue({ content: '' }),
-  })),
+  DocumentService: vi.fn().mockImplementation(function () {
+    return {
+      parseFile: vi.fn().mockResolvedValue({ content: '' }),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/agentRuntime', () => ({
-  AgentRuntimeService: vi.fn().mockImplementation(() => ({
-    createOperation: vi.fn().mockResolvedValue({
-      autoStarted: true,
-      messageId: 'queue-msg-1',
-      operationId: 'op-123',
-      success: true,
-    }),
-    interruptOperation: mockInterruptOperation,
-  })),
+  AgentRuntimeService: vi.fn().mockImplementation(function () {
+    return {
+      createOperation: vi.fn().mockResolvedValue({
+        autoStarted: true,
+        messageId: 'queue-msg-1',
+        operationId: 'op-123',
+        success: true,
+      }),
+      interruptOperation: mockInterruptOperation,
+    };
+  }),
 }));
 
 vi.mock('@/server/modules/Mecha', () => ({
@@ -248,9 +276,9 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     mockExecuteToolCall.mockResolvedValue({ success: true });
     mockGetHeterogeneousResumeSessionId.mockResolvedValue(undefined);
     mockMessageQuery.mockResolvedValue([]);
-    mockBuildRemoteDeviceHeteroContext.mockImplementation(({ conversationHistory }) =>
-      conversationHistory ? 'device recovery context' : 'device context',
-    );
+    mockBuildRemoteDeviceHeteroContext.mockImplementation(function ({ conversationHistory }) {
+      return conversationHistory ? 'device recovery context' : 'device context';
+    });
     mockDeviceFindByDeviceId.mockResolvedValue({ defaultCwd: '/Users/alice/repo' });
     mockDeviceFindWorkspaceDeviceById.mockResolvedValue(undefined);
     mockCreateOperationMetadata.mockResolvedValue(undefined);
@@ -297,12 +325,11 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     // Before: tryReserveTaskCallback ran immediately for the replacement.
     // After: interruptTask settles the old physical run before reservation.
     let releaseInterrupt: (() => void) | undefined;
-    const interruptSpy = vi.spyOn(service, 'interruptTask').mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          releaseInterrupt = () => resolve({ operationId: 'op-old', success: true });
-        }),
-    );
+    const interruptSpy = vi.spyOn(service, 'interruptTask').mockImplementation(function () {
+      return new Promise((resolve) => {
+        releaseInterrupt = () => resolve({ operationId: 'op-old', success: true });
+      });
+    });
 
     const replacement = service.execAgent({
       agentId: 'agent-1',

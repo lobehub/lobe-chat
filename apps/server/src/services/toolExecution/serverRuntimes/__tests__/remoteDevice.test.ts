@@ -17,11 +17,13 @@ const mockQueryPersonal = vi.fn();
 const mockQueryWorkspaceDevices = vi.fn();
 const mockQueryWorkspaceHiddenDeviceIds = vi.fn();
 vi.mock('@/database/models/device', () => ({
-  DeviceModel: vi.fn().mockImplementation(() => ({
-    queryPersonal: mockQueryPersonal,
-    queryWorkspaceDevices: mockQueryWorkspaceDevices,
-    queryWorkspaceHiddenDeviceIds: mockQueryWorkspaceHiddenDeviceIds,
-  })),
+  DeviceModel: vi.fn().mockImplementation(function () {
+    return {
+      queryPersonal: mockQueryPersonal,
+      queryWorkspaceDevices: mockQueryWorkspaceDevices,
+      queryWorkspaceHiddenDeviceIds: mockQueryWorkspaceHiddenDeviceIds,
+    };
+  }),
 }));
 
 // Import after mock setup
@@ -149,9 +151,9 @@ describe('remoteDeviceRuntime', () => {
         platform: 'darwin',
       };
 
-      mockQueryDeviceList.mockImplementation((_userId: string, wsId?: string) =>
-        Promise.resolve(wsId ? [workspaceDevice] : [personalDevice]),
-      );
+      mockQueryDeviceList.mockImplementation(function (_userId: string, wsId?: string) {
+        return Promise.resolve(wsId ? [workspaceDevice] : [personalDevice]);
+      });
       mockQueryWorkspaceDevices.mockResolvedValue([
         { ...workspaceDevice, lastSeenAt: new Date(workspaceDevice.lastSeen) },
       ]);
@@ -194,9 +196,9 @@ describe('remoteDeviceRuntime', () => {
         online: true,
         platform: 'darwin',
       };
-      mockQueryDeviceList.mockImplementation((_userId: string, wsId?: string) =>
-        Promise.resolve(wsId ? [workspaceDevice] : [personalDevice]),
-      );
+      mockQueryDeviceList.mockImplementation(function (_userId: string, wsId?: string) {
+        return Promise.resolve(wsId ? [workspaceDevice] : [personalDevice]);
+      });
       mockQueryWorkspaceDevices.mockResolvedValue([
         { ...workspaceDevice, lastSeenAt: new Date(workspaceDevice.lastSeen) },
       ]);
@@ -252,9 +254,9 @@ describe('remoteDeviceRuntime', () => {
         online: true,
         platform: 'linux',
       };
-      mockQueryDeviceList.mockImplementation((_userId: string, wsId?: string) =>
-        Promise.resolve(wsId ? [gatewayWorkspaceDevice] : []),
-      );
+      mockQueryDeviceList.mockImplementation(function (_userId: string, wsId?: string) {
+        return Promise.resolve(wsId ? [gatewayWorkspaceDevice] : []);
+      });
       mockQueryWorkspaceDevices.mockResolvedValue([
         {
           deviceId: 'd-ws',
@@ -290,8 +292,8 @@ describe('remoteDeviceRuntime', () => {
       };
 
       mockQueryWorkspaceDevices.mockRejectedValue(new Error('db down'));
-      mockQueryDeviceList.mockImplementation((_userId: string, wsId?: string) =>
-        Promise.resolve(
+      mockQueryDeviceList.mockImplementation(function (_userId: string, wsId?: string) {
+        return Promise.resolve(
           wsId
             ? [
                 {
@@ -303,8 +305,8 @@ describe('remoteDeviceRuntime', () => {
                 },
               ]
             : [],
-        ),
-      );
+        );
+      });
 
       const runtime = remoteDeviceRuntime.factory(context) as RemoteDeviceExecutionRuntime;
       const result = await runtime.listOnlineDevices();

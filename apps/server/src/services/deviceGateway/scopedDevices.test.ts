@@ -8,10 +8,12 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@/database/models/device', () => ({
-  DeviceModel: vi.fn().mockImplementation(() => ({
-    queryPersonal: mocks.queryPersonal,
-    queryWorkspaceDevices: mocks.queryWorkspaceDevices,
-  })),
+  DeviceModel: vi.fn().mockImplementation(function () {
+    return {
+      queryPersonal: mocks.queryPersonal,
+      queryWorkspaceDevices: mocks.queryWorkspaceDevices,
+    };
+  }),
 }));
 
 vi.mock('./index', () => ({

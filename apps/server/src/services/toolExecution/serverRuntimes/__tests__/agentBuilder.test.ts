@@ -28,29 +28,37 @@ vi.mock('@/business/server/aiProvider', () => ({
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn(() => ({
-    getAgentConfigById: mockGetAgentConfigById,
-    update: mockUpdateAgent,
-    updateConfig: mockUpdateConfig,
-  })),
+  AgentModel: vi.fn(function () {
+    return {
+      getAgentConfigById: mockGetAgentConfigById,
+      update: mockUpdateAgent,
+      updateConfig: mockUpdateConfig,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn(() => ({
-    create: mockCreatePlugin,
-    findById: mockFindById,
-  })),
+  PluginModel: vi.fn(function () {
+    return {
+      create: mockCreatePlugin,
+      findById: mockFindById,
+    };
+  }),
 }));
 
 vi.mock('@/database/repositories/aiInfra', () => ({
-  AiInfraRepos: vi.fn(() => ({
-    getAiProviderList: mockGetAiProviderList,
-    getAiProviderModelList: mockGetAiProviderModelList,
-  })),
+  AiInfraRepos: vi.fn(function () {
+    return {
+      getAiProviderList: mockGetAiProviderList,
+      getAiProviderModelList: mockGetAiProviderModelList,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/discover', () => ({
-  DiscoverService: vi.fn(() => ({})),
+  DiscoverService: vi.fn(function () {
+    return {};
+  }),
 }));
 
 const createRuntime = () =>

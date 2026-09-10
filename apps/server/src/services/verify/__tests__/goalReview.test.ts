@@ -17,24 +17,34 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock('../goalReviewModelConfig', () => ({ resolveGoalReviewModelConfig: mocks.reviewModel }));
 vi.mock('@/database/models/verifyEvidence', () => ({
-  VerifyEvidenceModel: vi.fn(() => ({ listByCheckResult: vi.fn().mockResolvedValue([]) })),
+  VerifyEvidenceModel: vi.fn(function () {
+    return { listByCheckResult: vi.fn().mockResolvedValue([]) };
+  }),
 }));
 vi.mock('@/database/models/goal', () => ({
-  GoalModel: vi.fn(() => ({ findByGraphTask: mocks.goal })),
+  GoalModel: vi.fn(function () {
+    return { findByGraphTask: mocks.goal };
+  }),
 }));
 vi.mock('@/database/models/verifyRun', () => ({
-  VerifyRunModel: vi.fn(() => ({ findByOperation: mocks.run, setMetadata: mocks.metadata })),
+  VerifyRunModel: vi.fn(function () {
+    return { findByOperation: mocks.run, setMetadata: mocks.metadata };
+  }),
 }));
 vi.mock('../acceptanceService', async (original) => ({
   ...(await original<typeof AcceptanceServiceModule>()),
-  AcceptanceService: vi.fn(() => ({
-    acceptanceModel: { findById: mocks.acceptance },
-    loadRounds: mocks.rounds,
-  })),
+  AcceptanceService: vi.fn(function () {
+    return {
+      acceptanceModel: { findById: mocks.acceptance },
+      loadRounds: mocks.rounds,
+    };
+  }),
 }));
 vi.mock('../reviewPredictor', () => ({
   REVIEW_PREDICT_CONCURRENCY: 4,
-  VerifyReviewPredictorService: vi.fn(() => ({ predict: mocks.predict })),
+  VerifyReviewPredictorService: vi.fn(function () {
+    return { predict: mocks.predict };
+  }),
 }));
 const db = {} as LobeChatDatabase;
 const check = {

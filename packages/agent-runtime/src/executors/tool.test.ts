@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AgentRuntimeHost } from '../transport';
@@ -51,7 +52,7 @@ const createToolCall = (id = 'tool-call-1', identifier = 'web-search') => ({
 });
 
 describe('tool executors', () => {
-  let createToolMessage: ReturnType<typeof vi.fn>;
+  let createToolMessage: Mock;
   let findToolMessageIdByToolCallId: ReturnType<typeof vi.fn>;
   let updateToolIntervention: ReturnType<typeof vi.fn>;
   let updateToolMessage: ReturnType<typeof vi.fn>;
@@ -65,7 +66,7 @@ describe('tool executors', () => {
   let publishError: ReturnType<typeof vi.fn>;
   let publishEvent: ReturnType<typeof vi.fn>;
   let query: ReturnType<typeof vi.fn>;
-  let runTool: ReturnType<typeof vi.fn>;
+  let runTool: Mock;
   let host: AgentRuntimeHost;
 
   beforeEach(() => {

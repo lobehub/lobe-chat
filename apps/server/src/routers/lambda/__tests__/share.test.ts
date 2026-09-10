@@ -22,7 +22,9 @@ vi.mock('@/database/models/topicShare', () => ({
 }));
 
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => ({})),
+  getServerDB: vi.fn(function () {
+    return {};
+  }),
 }));
 
 vi.mock('@/database/server', () => ({
@@ -187,7 +189,7 @@ describe('shareRouter', () => {
 
     it('does not count a failed FORBIDDEN access', async () => {
       const code = 'FORBIDDEN';
-      vi.mocked(AgentShareModel.assertShareAccess).mockImplementation(() => {
+      vi.mocked(AgentShareModel.assertShareAccess).mockImplementation(function () {
         throw new TRPCError({ code, message: 'This share is private' });
       });
       const caller = shareRouter.createCaller(await createContextInner({ userId: 'visitor-user' }));
