@@ -3,6 +3,7 @@ import { summarizeGoalSupervision } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import type { AgentOperationItem } from '@/database/schemas/agentOperations';
+import { humanizeHeteroDispatchError } from '@/server/services/aiAgent/helpers/heteroErrors';
 
 import { recoveryEligibility } from './policy';
 
@@ -64,13 +65,16 @@ describe('supervisor recovery authority', () => {
 
   const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
 
-  it('recovers a dispatch the gateway says never started, without asking a person', () => {
+  it('recovers a dispatch the gateway says never started, in either stored shape', () => {
     // The run finished or never began and the device link broke around it, so there is
-    // no errored operation to read: the gateway code is the only evidence.
+    // no errored operation to read: the dispatch failure is the only evidence. It
+    // reaches storage as a raw code from the coordinator's dispatch and as the
+    // humanized headline once the runtime finalizes it.
     for (const error of [
       '{"error":"DEVICE_OFFLINE","success":false}',
-      'DEVICE_GATEWAY_UNREACHABLE',
       'DEVICE_GATEWAY_RATE_LIMITED',
+      humanizeHeteroDispatchError('DEVICE_OFFLINE'),
+      humanizeHeteroDispatchError('DEVICE_GATEWAY_UNREACHABLE'),
     ])
       expect(
         recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,
@@ -82,6 +86,8 @@ describe('supervisor recovery authority', () => {
       'DEVICE_GATEWAY_UNAUTHORIZED',
       'GATEWAY_NOT_CONFIGURED',
       'DEVICE_RESPONSE_TIMEOUT',
+      humanizeHeteroDispatchError('DEVICE_RESPONSE_TIMEOUT'),
+      humanizeHeteroDispatchError('GATEWAY_NOT_CONFIGURED'),
     ])
       expect(
         recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,

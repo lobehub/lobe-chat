@@ -7,6 +7,7 @@ import type {
 } from '@lobechat/types';
 
 import type { AgentOperationItem } from '@/database/schemas/agentOperations';
+import { HETERO_DISPATCH_ERROR_HEADLINES } from '@/server/services/aiAgent/helpers/heteroErrors';
 
 import { resolveTaskAttemptBudget } from '../recoveryPolicy';
 
@@ -40,14 +41,31 @@ const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
 ]);
 
 /**
- * Gateway codes whose message states the run never started, so retrying cannot
- * duplicate committed work. `DEVICE_GATEWAY_UNAUTHORIZED` and
- * `GATEWAY_NOT_CONFIGURED` say retrying will not help, and
- * `DEVICE_RESPONSE_TIMEOUT` says whether the run started is unknown; those stay
- * with a person.
+ * Gateway codes whose own message states the run never started, so a retry cannot
+ * duplicate committed work. `DEVICE_GATEWAY_UNAUTHORIZED` and `GATEWAY_NOT_CONFIGURED`
+ * say retrying will not help, `DEVICE_RESPONSE_TIMEOUT` says whether the run started is
+ * unknown, and `DEVICE_NOT_FOUND` needs someone to reconnect or rebind; those stay with
+ * a person.
  */
-const RETRYABLE_DISPATCH_CODES =
-  /DEVICE_OFFLINE|DEVICE_CHANNEL_UNAVAILABLE|DEVICE_GATEWAY_UNREACHABLE|DEVICE_GATEWAY_RATE_LIMITED/i;
+const RETRYABLE_DISPATCH_CODES = [
+  'DEVICE_OFFLINE',
+  'DEVICE_CHANNEL_UNAVAILABLE',
+  'DEVICE_GATEWAY_UNREACHABLE',
+  'DEVICE_GATEWAY_RATE_LIMITED',
+];
+
+/**
+ * The same failure reaches `task.error` as a raw code when the coordinator's own
+ * dispatch fails, and as the humanized headline when the runtime finalizes it. Match
+ * both, off the one map, so neither storage shape decides whether a person is needed.
+ */
+const isRetryableDispatchFailure = (error: string) =>
+  RETRYABLE_DISPATCH_CODES.some(
+    (code) =>
+      error.includes(code) ||
+      (HETERO_DISPATCH_ERROR_HEADLINES[code] &&
+        error.includes(HETERO_DISPATCH_ERROR_HEADLINES[code])),
+  );
 
 export const recoveryEligibility = (
   graph: GoalGraphSnapshot,
@@ -91,7 +109,7 @@ export const recoveryEligibility = (
   // reopened — arrives looking exactly like a dropped dispatch. Recognising the
   // failures instead keeps an authored decision with the person who made it.
   if (
-    !RETRYABLE_DISPATCH_CODES.test(error) &&
+    !isRetryableDispatchFailure(error) &&
     !/ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENOTFOUND|fetch failed|network error|socket hang up|service unavailable|bad gateway|gateway timeout|\b50[234]\b/i.test(
       error,
     )
