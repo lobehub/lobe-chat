@@ -72,6 +72,13 @@ export const graphScopeIds = (graph: Graph, scopeId?: string): Set<string> => {
 };
 
 /**
+ * How many corrected protocols one experiment may take. Bounding them keeps a planner
+ * that keeps "fixing" the same instrument from spending the goal's budget without ever
+ * changing the question.
+ */
+export const MAX_PROTOCOL_REVISIONS = 2;
+
+/**
  * A `derived_from` edge sourced by a task is a protocol correction; the same edge
  * sourced by an experiment is an ordinary branch. Keeping them apart matters because
  * both provenances share one edge kind, so counting the edge alone would charge a
@@ -116,3 +123,28 @@ export const provenanceParentId = (graph: Graph, nodeId: string): string | undef
         edge.sourceNodeId === (experimentOwner(graph, nodeId) ?? nodeId),
     )
   )?.targetNodeId;
+
+/**
+ * Every node whose work belongs to this experiment: its container members plus the
+ * corrections aimed at it. A correction re-runs the same question, so its findings and
+ * produced versions are the experiment's evidence — without this the planner would
+ * keep reading the pre-correction result and never see what the rerun found.
+ */
+export const experimentScope = (graph: Graph, nodeId: string): Set<string> => {
+  const scope = experimentMembers(graph, nodeId);
+  scope.add(nodeId);
+  for (;;) {
+    const next = graph.edges.filter(
+      (edge) =>
+        edge.kind === 'derived_from' &&
+        scope.has(edge.targetNodeId) &&
+        !scope.has(edge.sourceNodeId) &&
+        isProtocolRevision(graph, edge.sourceNodeId),
+    );
+    if (!next.length) return scope;
+    for (const edge of next) {
+      scope.add(edge.sourceNodeId);
+      for (const member of experimentMembers(graph, edge.sourceNodeId)) scope.add(member);
+    }
+  }
+};

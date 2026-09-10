@@ -106,10 +106,12 @@ describe('GoalExplorationModel', () => {
       expect(outcome.outcome).toBe('revised');
     }
     // Two corrections are already recorded against this parent; a third would let the
-    // planner keep polishing one instrument instead of changing the question.
-    await expect(
-      model.apply(goalId, (await claim(goalId))!.token, revise(parent.id)),
-    ).rejects.toThrow(/corrected protocols/);
+    // planner keep polishing one instrument instead of changing the question. It reports
+    // the spent allowance rather than throwing, which would pause the whole goal.
+    expect(await model.apply(goalId, (await claim(goalId))!.token, revise(parent.id))).toEqual({
+      outcome: 'revision-limit',
+      parentNodeId: parent.id,
+    });
   });
 
   it('does not charge ordinary branches to the correction budget', async () => {

@@ -1,7 +1,13 @@
 import type { GoalAdvanceEffect } from '@lobechat/agent-tracing';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
 import type { GoalGraphSnapshot, GoalTickResult } from '@lobechat/types';
-import { experimentMembers, experimentOwner, isProtocolRevision } from '@lobechat/utils/goalGraph';
+import {
+  experimentOwner,
+  experimentScope,
+  isProtocolRevision,
+  MAX_PROTOCOL_REVISIONS,
+  protocolRevisionCount,
+} from '@lobechat/utils/goalGraph';
 
 import { GoalExplorationModel, goalExplorationSnapshot } from '@/database/models/goalExploration';
 import type { LobeChatDatabase } from '@/database/type';
@@ -9,8 +15,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { GoalExplorationPlanner } from './explorationPlanner';
 
 export const experimentResults = (graph: GoalGraphSnapshot, nodeId: string): string[] => {
-  const members = experimentMembers(graph, nodeId);
-  members.add(nodeId);
+  const members = experimentScope(graph, nodeId);
   const findings = new Set(
     graph.edges
       .filter((edge) => members.has(edge.sourceNodeId) && edge.kind === 'produces')
@@ -63,11 +68,14 @@ export async function exploreGraph(params: {
           derivedFromId: graph.edges.find(
             (edge) => edge.sourceNodeId === node.id && edge.kind === 'derived_from',
           )?.targetNodeId,
+          revisionsRemaining: Math.max(
+            MAX_PROTOCOL_REVISIONS - protocolRevisionCount(graph, node.id),
+            0,
+          ),
           inputVersionIds: graph.workVersions
             .filter(
               (version) =>
-                (version.nodeId === node.id ||
-                  experimentMembers(graph, node.id).has(version.nodeId)) &&
+                experimentScope(graph, node.id).has(version.nodeId) &&
                 version.relation === 'produced' &&
                 version.work,
             )
@@ -87,6 +95,13 @@ export async function exploreGraph(params: {
         goalId,
         outcome: 'no_progress',
         message: `Experiment limit reached (${policy.maxExperiments}); goal is not yet accepted. ${decision.reason}`,
+      };
+    }
+    if (result.outcome === 'revision-limit') {
+      return {
+        goalId,
+        outcome: 'advanced',
+        message: `Experiment ${result.parentNodeId} has no corrected protocol left; re-planning`,
       };
     }
     if (result.outcome === 'revised') {

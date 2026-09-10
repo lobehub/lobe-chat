@@ -62,6 +62,52 @@ describe('exploreGraph', () => {
     expect(experiments.find((item: any) => item.id === 'parent').derivedFromId).toBeUndefined();
   });
 
+  it('folds a correction’s results into the experiment it corrected', async () => {
+    const withCorrection = {
+      ...graph(),
+      edges: [{ kind: 'derived_from', sourceNodeId: 'fix', targetNodeId: 'parent' }],
+      nodes: [
+        node('parent', 'experiment'),
+        { ...node('fix', 'task'), description: null },
+        { ...node('rerun-result', 'finding'), description: 'AUC 0.71 on the same holdout' },
+      ],
+    } as any;
+    withCorrection.edges.push({
+      kind: 'produces',
+      sourceNodeId: 'fix',
+      targetNodeId: 'rerun-result',
+    });
+    await exploreGraph({
+      db: {} as LobeChatDatabase,
+      effects: [],
+      graph: withCorrection,
+      userId: 'user',
+    });
+    const parent = plan.mock.calls[0][0].experiments.find((item: any) => item.id === 'parent');
+    // Without this the next turn reads only the pre-correction evidence.
+    expect(parent.results.join('\n')).toContain('AUC 0.71');
+    expect(parent.revisionsRemaining).toBe(1);
+  });
+
+  it('re-plans instead of pausing the goal when an allowance is spent', async () => {
+    plan.mockResolvedValue({
+      action: 'revise',
+      instruction: 'Try once more',
+      parentNodeId: 'parent',
+      reason: 'Still not measuring the right thing',
+      title: '',
+    });
+    apply.mockResolvedValue({ outcome: 'revision-limit', parentNodeId: 'parent' });
+    const result = await exploreGraph({
+      db: {} as LobeChatDatabase,
+      effects: [],
+      graph: graph(),
+      userId: 'user',
+    });
+    expect(result.outcome).toBe('advanced');
+    expect(result.message).toContain('no corrected protocol left');
+  });
+
   it('reports a revision as its own advance so the corrected protocol is dispatched', async () => {
     plan.mockResolvedValue({
       action: 'revise',

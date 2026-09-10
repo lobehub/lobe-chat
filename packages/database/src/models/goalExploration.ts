@@ -6,6 +6,7 @@ import {
   experimentMembers,
   experimentOwner,
   isProtocolRevision,
+  MAX_PROTOCOL_REVISIONS,
   protocolRevisionCount,
 } from '@lobechat/utils/goalGraph';
 import { and, eq } from 'drizzle-orm';
@@ -15,13 +16,6 @@ import { goalEvents } from '../schemas/goalGraph';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
 import { GoalGraphModel } from './goalGraph';
-
-/**
- * A revision re-runs one experiment with a corrected protocol. Bounding them keeps a
- * planner that keeps "fixing" the same instrument from spending the goal's budget
- * without ever changing the question.
- */
-const MAX_PROTOCOL_REVISIONS = 2;
 
 /** Ignore only coordinator bookkeeping; edits to policy, evidence or graph invalidate a plan. */
 export const goalExplorationSnapshot = (graph: GoalGraphSnapshot): string => {
@@ -176,11 +170,11 @@ export class GoalExplorationModel {
           (node) => node.id === decision.parentNodeId && node.status === 'resolved',
         );
         if (!target) throw new Error('A revision must correct a resolved experiment in this goal');
-        const revisions = protocolRevisionCount(graph, target.id);
-        if (revisions >= MAX_PROTOCOL_REVISIONS)
-          throw new Error(
-            `Experiment already ran ${revisions} corrected protocols; expand or verify instead of revising again`,
-          );
+        // A spent allowance is a predictable policy answer, not a planner crash. Throwing
+        // here would pause the whole goal through the generic failure path, and resuming
+        // could produce the same choice again.
+        if (protocolRevisionCount(graph, target.id) >= MAX_PROTOCOL_REVISIONS)
+          return { outcome: 'revision-limit' as const, parentNodeId: target.id };
         // Correcting an instrument reuses the parent's container, so the graph keeps one
         // question with successive protocols instead of a row of flawed siblings.
         const container =

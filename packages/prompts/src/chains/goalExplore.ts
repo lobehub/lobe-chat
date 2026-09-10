@@ -26,6 +26,8 @@ export interface GoalExploreInput {
     inputVersionIds: string[];
     /** Set when a previous exploration turn derived this experiment from another. */
     derivedFromId?: string;
+    /** Corrected protocols this experiment may still take; 0 means revise is closed. */
+    revisionsRemaining: number;
   }>;
   instruction: string;
   maxExperiments: number;
@@ -49,6 +51,7 @@ export const chainGoalExplore = (input: GoalExploreInput) => ({
         'Return verify only when the evidence warrants final acceptance; this requests independent verification, never declares the Goal achieved.',
         'The experiment limit is a resource limit, not a success criterion. If more work is needed even at the limit, return expand; the coordinator will stop without claiming success.',
         'For revise, set parentNodeId to the experiment being corrected and put the corrected protocol in instruction; title may repeat the parent title.',
+        'revisionsRemaining is how many corrected protocols an experiment may still take. Never return revise for an experiment whose revisionsRemaining is 0; expand or verify instead.',
         'For verify, use empty strings for parentNodeId, title, and instruction. Always explain your reason using concrete results.',
         'Write human-facing fields in the language of the goal.',
       ].join('\n'),
