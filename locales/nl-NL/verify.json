@@ -104,7 +104,7 @@
   "acceptance.focus.enter": "Controles beoordelen",
   "acceptance.focus.evidenceCount": "{{count}} bewijselementen",
   "acceptance.focus.evidenceHint": "Bekijk het acceptatiecriterium, bewijs en feedback voor deze controle.",
-  "acceptance.focus.judgeLabel": "Ajan beoordeeld",
+  "acceptance.focus.judgeLabel": "Agent beoordeeld",
   "acceptance.focus.next": "Volgende controle",
   "acceptance.focus.previous": "Vorige controle",
   "acceptance.focus.state.accepted": "Geaccepteerd",

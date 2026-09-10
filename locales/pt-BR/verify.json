@@ -104,7 +104,7 @@
   "acceptance.focus.enter": "Revisar verificações",
   "acceptance.focus.evidenceCount": "{{count}} itens de evidência",
   "acceptance.focus.evidenceHint": "Revise o critério de aceitação, evidências e feedback para esta verificação.",
-  "acceptance.focus.judgeLabel": "Ajan avaliado",
+  "acceptance.focus.judgeLabel": "Agente avaliado",
   "acceptance.focus.next": "Próxima verificação",
   "acceptance.focus.previous": "Verificação anterior",
   "acceptance.focus.state.accepted": "Aceito",
