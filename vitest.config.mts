@@ -221,7 +221,10 @@ export default defineConfig({
                   ) {
                     return resolve(__dirname, './tests/mocks/lobehubUiMotionProvider.tsx');
                   }
-                  if (source === './style/index.js' && importer?.endsWith('/FluentEmoji/index.js')) {
+                  if (
+                    source === './style/index.js' &&
+                    importer?.endsWith('/FluentEmoji/index.js')
+                  ) {
                     return resolve(dirname(importer), 'style.js');
                   }
                   return null;
