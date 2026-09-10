@@ -347,6 +347,9 @@ importers:
 
   ../../packages/device-gateway-client:
     dependencies:
+      '@lobechat/types':
+        specifier: workspace:*
+        version: link:../types
       ws:
         specifier: ^8.21.0
         version: 8.21.0

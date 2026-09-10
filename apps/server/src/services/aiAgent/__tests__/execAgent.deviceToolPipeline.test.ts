@@ -17,6 +17,7 @@ const {
   mockPluginQuery,
   mockQueryDeviceList,
   mockQueryDeviceSystemInfo,
+  mockQueryWorkspaceDevices,
 } = vi.hoisted(() => ({
   mockCreateOperation: vi.fn(),
   mockCreateServerAgentToolsEngine: vi.fn(),
@@ -28,6 +29,7 @@ const {
   mockPluginQuery: vi.fn(),
   mockQueryDeviceList: vi.fn(),
   mockQueryDeviceSystemInfo: vi.fn(),
+  mockQueryWorkspaceDevices: vi.fn(),
 }));
 
 vi.mock('@/libs/trusted-client', () => ({
@@ -53,16 +55,15 @@ vi.mock('@/database/models/agent', () => ({
   })),
 }));
 
-// Empty DB-side device rows so getScopedOnlineDevices falls through to the
-// gateway list as transient devices. Returning [] (not rejecting) for
-// queryWorkspaceHiddenDeviceIds is required — a failed/null hidden lookup
-// suppresses all workspace-scope transients.
+// This mock previously kept every DB-side device query empty so gateway devices
+// became transient rows. Workspace transients are now intentionally rejected;
+// expose the workspace query so tests can register authorized workspace devices.
 vi.mock('@/database/models/device', () => ({
   DeviceModel: vi.fn().mockImplementation(() => ({
     findByDeviceId: vi.fn().mockResolvedValue(undefined),
     findWorkspaceDeviceById: vi.fn().mockResolvedValue(undefined),
     queryPersonal: vi.fn().mockResolvedValue([]),
-    queryWorkspaceDevices: vi.fn().mockResolvedValue([]),
+    queryWorkspaceDevices: mockQueryWorkspaceDevices,
     queryWorkspaceHiddenDeviceIds: vi.fn().mockResolvedValue([]),
   })),
 }));
@@ -203,6 +204,7 @@ describe('AiAgentService.execAgent - device tool pipeline ()', () => {
     });
     mockQueryDeviceList.mockResolvedValue([]);
     mockQueryDeviceSystemInfo.mockResolvedValue(null);
+    mockQueryWorkspaceDevices.mockResolvedValue([]);
     mockPluginQuery.mockResolvedValue([]);
     mockGenerateToolsDetailed.mockReturnValue({ enabledToolIds: [], tools: [] });
     mockGetEnabledPluginManifests.mockReturnValue(new Map());
@@ -631,14 +633,27 @@ describe('AiAgentService.execAgent - device tool pipeline ()', () => {
       workingDirectory: '/',
     };
 
+    /** @example A registered live workspace device supplies scoped system information. */
     it('should query system info with workspace id and inject into createOperation for workspace devices', async () => {
       const workspaceId = 'ws-1';
       service = new AiAgentService(mockDb, userId, { workspaceId });
 
       const { deviceGateway } = await import('@/server/services/deviceGateway');
       vi.spyOn(deviceGateway, 'isConfigured', 'get').mockReturnValue(true);
-      // Single online device under the workspace principal → auto-activates.
-      // getScopedOnlineDevices tags scope from the workspaceId argument.
+      // ROOT CAUSE:
+      //
+      // This test previously supplied only Gateway presence. Workspace authorization now requires
+      // a matching database enrollment, so the transient device was correctly filtered before
+      // system-info lookup. Register the device in the DB mock and keep Gateway as liveness truth.
+      mockQueryWorkspaceDevices.mockResolvedValue([
+        {
+          deviceId: 'ws-dev-1',
+          friendlyName: null,
+          hostname: 'workspace-mac',
+          lastSeenAt: new Date('2026-09-09T00:00:00.000Z'),
+          platform: 'darwin',
+        },
+      ]);
       mockQueryDeviceList.mockResolvedValue([
         { deviceId: 'ws-dev-1', hostname: 'workspace-mac', online: true, platform: 'darwin' },
       ]);
