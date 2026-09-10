@@ -3,8 +3,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { GOAL_ACCEPTANCE_TASK_TITLE, GOAL_COORDINATOR_ACTOR_ID } from '@lobechat/const/goal';
 import type { GoalExplorationDecision, GoalGraphSnapshot } from '@lobechat/types';
 import {
-  experimentMembers,
   experimentOwner,
+  experimentScope,
   isProtocolRevision,
   MAX_PROTOCOL_REVISIONS,
   protocolRevisionCount,
@@ -173,12 +173,25 @@ export class GoalExplorationModel {
         // A spent allowance is a predictable policy answer, not a planner crash. Throwing
         // here would pause the whole goal through the generic failure path, and resuming
         // could produce the same choice again.
-        if (protocolRevisionCount(graph, target.id) >= MAX_PROTOCOL_REVISIONS)
+        if (protocolRevisionCount(graph, target.id) >= MAX_PROTOCOL_REVISIONS) {
+          // Release the lease like every other terminal path, or the re-plan this
+          // returns is refused by the next claim until the checkpoint times out.
+          await tx
+            .update(goals)
+            .set({ config: { ...goal.config, exploration: { ...policy, checkpoint: undefined } } })
+            .where(eq(goals.id, goalId));
           return { outcome: 'revision-limit' as const, parentNodeId: target.id };
+        }
         // Correcting an instrument reuses the parent's container, so the graph keeps one
-        // question with successive protocols instead of a row of flawed siblings.
+        // question with successive protocols instead of a row of flawed siblings. An
+        // uncontained legacy seed has no such container: a correction there would be
+        // another root task, which the planner cannot see, which drops the previous
+        // correction's Work, and which an older release would read back as an
+        // experiment consuming a slot. Those goals expand first.
         const container =
           target.kind === 'experiment' ? target.id : experimentOwner(graph, target.id);
+        if (!container)
+          throw new Error('A revision needs an experiment container; expand this seed first');
         const node = await graphModel.createNode(goalId, {
           description: decision.instruction,
           kind: 'task',
@@ -187,8 +200,7 @@ export class GoalExplorationModel {
         });
         if (!node) throw new Error('Could not persist the revised protocol');
         await graphModel.createEdge(goalId, node.id, target.id, 'derived_from');
-        const members = container ? experimentMembers(graph, container) : new Set<string>();
-        members.add(target.id);
+        const members = experimentScope(graph, container);
         for (const version of graph.workVersions.filter(
           (item) => members.has(item.nodeId) && item.relation === 'produced',
         ))
@@ -247,8 +259,7 @@ export class GoalExplorationModel {
       });
       if (!node) throw new Error('Could not persist exploration node');
       await graphModel.createEdge(goalId, experiment.id, parent.id, 'derived_from');
-      const parentMembers = experimentMembers(graph, parent.id);
-      parentMembers.add(parent.id);
+      const parentMembers = experimentScope(graph, parent.id);
       for (const version of graph.workVersions.filter(
         (item) => parentMembers.has(item.nodeId) && item.relation === 'produced',
       )) {

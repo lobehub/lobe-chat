@@ -68,10 +68,12 @@ export async function exploreGraph(params: {
           derivedFromId: graph.edges.find(
             (edge) => edge.sourceNodeId === node.id && edge.kind === 'derived_from',
           )?.targetNodeId,
-          revisionsRemaining: Math.max(
-            MAX_PROTOCOL_REVISIONS - protocolRevisionCount(graph, node.id),
-            0,
-          ),
+          // An uncontained seed cannot hold a correction, so it reports none left
+          // rather than inviting a choice the apply step would refuse.
+          revisionsRemaining:
+            node.kind === 'experiment' || experimentOwner(graph, node.id)
+              ? Math.max(MAX_PROTOCOL_REVISIONS - protocolRevisionCount(graph, node.id), 0)
+              : 0,
           inputVersionIds: graph.workVersions
             .filter(
               (version) =>
