@@ -62,6 +62,46 @@ describe('supervisor recovery authority', () => {
     ).toBe(false);
   });
 
+  it('recovers a failure that happened outside the agent run without asking a person', () => {
+    // The run itself finished cleanly; the device link, the dispatch or the verifier
+    // broke around it, so there is no errored operation to pattern-match.
+    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
+    for (const error of [
+      'Verification could not run (internal error); the delivery was not evaluated.',
+      '{"error":"DEVICE_OFFLINE","success":false}',
+      'Automatic recovery could not start the next attempt',
+    ])
+      expect(
+        recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,
+      ).toBe(true);
+    expect(recoveryEligibility(graph, { ...task, status: 'paused' }, undefined).eligible).toBe(
+      true,
+    );
+  });
+
+  it('still refuses a pipeline failure that a person or a limit caused', () => {
+    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
+    expect(recoveryEligibility(graph, { ...task, status: 'canceled' }, settled).eligible).toBe(
+      false,
+    );
+    expect(
+      recoveryEligibility(
+        graph,
+        { ...task, error: 'device unauthorized', status: 'paused' },
+        settled,
+      ).eligible,
+    ).toBe(false);
+    expect(
+      recoveryEligibility(graph, { ...task, status: 'paused' }, {
+        ...settled,
+        completionReason: 'cost_limit',
+      } as AgentOperationItem).eligible,
+    ).toBe(false);
+    expect(
+      recoveryEligibility(graph, { ...task, totalTopics: 3, status: 'paused' }, settled).eligible,
+    ).toBe(false);
+  });
+
   it('respects attempt exhaustion and explicit manual decisions', () => {
     expect(recoveryEligibility(graph, { ...task, totalTopics: 3 }, operation).eligible).toBe(false);
     expect(
