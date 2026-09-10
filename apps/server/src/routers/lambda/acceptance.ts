@@ -240,6 +240,17 @@ export const acceptanceRouter = router({
         input.expectedHash,
       );
     }),
+  deleteFlow: acceptanceWriteProcedure
+    .input(z.object({ id: z.string().uuid(), flowId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
+      const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).delete(
+        input.id,
+        input.flowId,
+      );
+      await service.recomputeStatus(input.id);
+      return result;
+    }),
   startFlow: acceptanceWriteProcedure
     .input(
       z.object({

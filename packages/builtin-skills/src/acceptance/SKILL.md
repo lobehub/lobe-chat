@@ -164,6 +164,12 @@ execution semantics.
    definition and returns `flowId`. To edit it, include that `flowId` and the
    current `expectedHash` in the file. `lh acceptance flow view <acceptanceId>`
    reads definitions, snapshots and results. Publishing does not execute checks.
+   Revise a graph in place rather than publishing a second one; a superseded
+   graph left behind still renders as its own journey with its own unexecuted
+   checks. `lh acceptance flow delete <acceptanceId> --flow <flowId>` removes
+   one that never should have existed, and only while it has no verified
+   history: it is refused once a settled round has run it, or while another
+   flow invokes it as a subflow.
 3. `lh acceptance flow plan <acceptanceId> --flow <flowId>` creates a draft round
    with the graph and its plan. While the round is only planned it follows the
    live graph: publishing an edit refreshes its snapshot and plan in place, and
