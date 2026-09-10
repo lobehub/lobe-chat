@@ -124,7 +124,12 @@ vi.mock('@lobechat/const', async (importOriginal) => {
   };
 });
 
-// Desktop notification IPC — dynamically imported inside `notifyCompletion`.
+vi.mock(
+  '@/store/chat/utils/desktopNotification',
+  () => import('@/store/chat/utils/desktopNotification.desktop'),
+);
+
+// Exercise the desktop implementation while mocking the notification IPC boundary.
 const mockShowNotification = vi.fn(async (..._args: any[]) => {});
 const mockSetBadgeCount = vi.fn(async (..._args: any[]) => {});
 const mockGetNotificationSoundFile = vi.fn(async (..._args: any[]) => undefined);
