@@ -16,6 +16,7 @@ packages:
   - '../../packages/ssrf-safe-fetch'
   - '../../packages/business/const'
   - '../../packages/file-loaders'
+  - '../../packages/html-artifact'
   - '../../packages/utils'
   - '.'
 
