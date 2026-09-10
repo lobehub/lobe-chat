@@ -12,11 +12,12 @@ import {
 import { createStaticStyles, cssVar } from 'antd-style';
 import { useEffect, useRef } from 'react';
 
-import { useFitViewOnResize } from '@/features/AgentGoals/ProcessControl/Graph/useFitViewOnResize';
+import { observeWidth } from '@/features/AgentGoals/ProcessControl/Graph/useFitViewOnResize';
 import { useSingleton } from '@/hooks/useSingleton';
 
 import { FlowEdge } from './FlowEdge';
 import type { FlowGraphData } from './flowGraph';
+import { getSelectedFlowNodeId, revealSelectionAfterResize } from './flowViewport';
 
 const edgeTypes = { transition: FlowEdge };
 
@@ -61,11 +62,29 @@ export function FlowCanvas({
   viewKey: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { fitView, getViewport, setViewport } = useReactFlow();
+  const { fitView, getNodesBounds, getViewport, setViewport } = useReactFlow();
   const viewports = useSingleton(
     () => new Map<string, { viewport: Viewport; width: number; height: number }>(),
   );
-  useFitViewOnResize(ref, fitView, fitOptions);
+  const selectedId = getSelectedFlowNodeId(nodes);
+  const selectedRef = useRef(selectedId);
+  useEffect(() => {
+    selectedRef.current = selectedId;
+  }, [selectedId]);
+  // The details panel opens beside the canvas when a node is picked. Refitting
+  // here would throw away the zoom the user just set, so only bring the picked
+  // node back into view when the narrower canvas hid it.
+  useEffect(() => {
+    const container = ref.current;
+    if (!container || typeof ResizeObserver === 'undefined') return;
+    return observeWidth(container, () =>
+      revealSelectionAfterResize(
+        { fitView, getNodesBounds, getViewport },
+        { height: container.clientHeight, width: container.clientWidth },
+        selectedRef.current,
+      ),
+    );
+  }, [fitView, getNodesBounds, getViewport]);
   useEffect(() => {
     const container = ref.current;
     const frame = requestAnimationFrame(() => {

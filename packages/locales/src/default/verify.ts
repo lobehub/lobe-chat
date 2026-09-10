@@ -88,7 +88,7 @@ export default {
   'flow.running': 'Verification in progress',
   'flow.planned': 'Plan published \u00B7 verification has not started',
 
-  'flow.pendingPlan': 'Pending verification plan',
+  'flow.pendingPlan': 'Draft',
   'flow.title': 'User flow',
   'flow.empty': 'The agent will publish the verification flow here before running checks.',
   'flow.run': 'Run {{number}}',

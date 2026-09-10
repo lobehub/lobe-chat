@@ -165,8 +165,10 @@ execution semantics.
    current `expectedHash` in the file. `lh acceptance flow view <acceptanceId>`
    reads definitions, snapshots and results. Publishing does not execute checks.
 3. `lh acceptance flow plan <acceptanceId> --flow <flowId>` creates a draft round
-   with a frozen graph and plan. Add `--run <verifyRunId>` to attach another flow
-   to the same open round. Read `lh acceptance run get <verifyRunId> --json` for
+   with the graph and its plan. While the round is only planned it follows the
+   live graph: publishing an edit refreshes its snapshot and plan in place, and
+   running `flow plan` again refreshes the same draft instead of opening another
+   round. Add `--run <verifyRunId>` to attach another flow to the same draft. Read `lh acceptance run get <verifyRunId> --json` for
    the actual plan IDs: each branch and subflow invocation has its own
    `checkItemId`; never substitute the reusable asset ID.
 4. Share the acceptance link so the user can inspect the proposed nodes, branches
@@ -174,8 +176,9 @@ execution semantics.
    feedback. Preparing a plan neither executes checks nor approves delivery;
    there is no separate flow-confirmation action. Continue within the user's
    authorized scope, or pause if the user explicitly asked to review before work.
-   For requested changes, publish the revised definition and prepare a new draft
-   round in the same acceptance.
+   For requested changes, publish the revised definition with its `flowId` and
+   `expectedHash`; the draft round follows automatically. Never open another
+   round or another flow just to revise a plan that has not executed.
 5. Implement the work and exercise the real product, then use
    `lh acceptance flow record <acceptanceId> --file result.json`, containing
    `verifyRunId`, `checkItemId`, `verdict` (`passed`, `failed`, `uncertain`, or
@@ -189,7 +192,10 @@ execution semantics.
 
 To rerun the exact old graph, prepare a plan with `--from-run <sourceVerifyRunId>` and
 omit `--run` for a fresh round. This preserves the old definition and starts
-without results. Each replay starts as an unexecuted draft. Accepted or closed
+without results. Each replay starts as an unexecuted draft. A round is frozen
+by its first recorded result; only then does it keep its number. An
+`lh acceptance run ingest` that reaches an acceptance whose latest round is
+still a draft folds into that draft rather than opening a new round. Accepted or closed
 acceptances must be explicitly reopened
 before starting. Edges describe business transitions; they do not automatically
 schedule execution. Continue to read `lh acceptance feedback <acceptanceId> --actionable` before repairs and publish new rounds into the same acceptance.

@@ -1,5 +1,6 @@
 'use client';
 
+import { isDraftVerifyRun } from '@lobechat/const/verify';
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Select, Text, toast } from '@lobehub/ui/base-ui';
 import { createStaticStyles, useResponsive } from 'antd-style';
@@ -273,7 +274,9 @@ const AcceptanceCheckInventory = ({
               options={[
                 { label: t('acceptance.filter.roundAll'), value: 'all' },
                 ...[...data.rounds].reverse().map((round) => ({
-                  label: t('acceptance.round', { round: round.run.roundIndex }),
+                  label: isDraftVerifyRun(round.run)
+                    ? t('flow.pendingPlan')
+                    : t('acceptance.round', { round: round.run.roundIndex }),
                   value: String(round.run.roundIndex),
                 })),
               ]}

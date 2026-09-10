@@ -503,7 +503,7 @@
   "flow.noAttachments": "暂无附加证据，可先查看上方实际结果。",
   "flow.nodeCount": "{{count}} 个节点",
   "flow.outlineView": "步骤",
-  "flow.pendingPlan": "待验证计划",
+  "flow.pendingPlan": "草稿",
   "flow.plan.actionError": "流程计划更新失败，请刷新并检查最新计划后重试。",
   "flow.plan.feedbackDescription": "说明哪些业务流程、分支或预期结果需要调整。",
   "flow.plan.label": "验收流程计划",
