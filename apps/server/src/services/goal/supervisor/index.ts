@@ -332,11 +332,16 @@ export class GoalSupervisorService {
       // opened on. Re-reading first and comparing against that would swap whatever
       // the person chose in the meantime.
       if (!RECOVERABLE_TASK_STATUSES.has(currentTask.status)) return false;
+      // An incident persisted before this field existed cannot say what it opened
+      // on, so it cannot show the row is unchanged. Claiming against a later read
+      // would restore the race this closes; a rolling deploy leaves at most the
+      // handful mid-diagnosis, and they escalate rather than retry silently.
+      if (!ownIncident.taskStatus) return false;
       const changed = await claimGoalTask(
         new TaskModel(tx, this.userId, this.workspaceId),
         // The status this incident opened on, so anything a person did across the
         // whole diagnosis wins the race rather than only a change since this tick.
-        { id: task.id, status: ownIncident.taskStatus ?? currentTask.status },
+        { id: task.id, status: ownIncident.taskStatus },
         'backlog',
         { error: null },
       );

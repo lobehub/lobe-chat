@@ -525,6 +525,28 @@ describe('Goal Supervisor integration', () => {
     expect((await taskModel.findById(taskId))?.status).toBe('failed');
   });
 
+  it('escalates a diagnosis persisted before the opening status was recorded', async () => {
+    const { goalId, taskId } = await pipelineFailureGoal();
+    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
+    await diagnose(goalId);
+    // A rolling deploy leaves incidents from the previous version with no record of
+    // what they opened on, so they cannot prove the row is still theirs to claim.
+    const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
+    await goalModel.updateSupervisorState(goalId, state.revision, {
+      ...state,
+      incidents: state.incidents.map(({ taskStatus: _drop, ...rest }) => rest),
+    });
+    expect(
+      (await goalModel.findById(goalId))!.config!.supervisorState!.incidents.at(-1)?.taskStatus,
+    ).toBeUndefined();
+
+    await service().tick(goalId);
+
+    expect((await taskModel.findById(taskId))?.status).toBe('paused');
+    const after = (await goalModel.findById(goalId))!.config!.supervisorState!;
+    expect(after.incidents.at(-1)?.status).toBe('escalated');
+  });
+
   it('without supervision the same transport failure opens a human Gate', async () => {
     const { goalId } = await failedGoal(false);
     expect((await service().tick(goalId)).outcome).toBe('waiting_human');
