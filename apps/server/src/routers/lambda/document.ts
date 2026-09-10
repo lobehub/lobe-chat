@@ -16,11 +16,11 @@ import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DocumentService } from '@/server/services/document';
+import { canViewDocumentContent } from '@/server/services/documentAccess';
 import { FileService } from '@/server/services/file';
 import {
   assertCanPerformResourceAction,
   buildResourcePermissionState,
-  canPerformResourceAction,
   getResourceMeta,
 } from '@/server/services/resourcePermission';
 import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermission';
@@ -105,14 +105,11 @@ const notifyDocumentMentionsBestEffort = (
           const grantedPermissions = permissionsByUserId.get(recipientUserId);
           if (!grantedPermissions) return;
 
-          const canView = await canPerformResourceAction({
-            action: 'view',
+          const canView = await canViewDocumentContent({
             db: ctx.serverDB,
-            effectiveAccessLevel: 'view',
             grantedPermissions,
             meta,
             resourceId: params.documentId,
-            resourceType: 'document',
             userId: recipientUserId,
             workspaceId: ctx.workspaceId,
           });

@@ -100,7 +100,7 @@ vi.mock('@/server/services/resourcePermission', () => ({
 vi.mock('@/server/services/workspacePermission', () => ({
   hasWorkspaceScopedPermission: vi.fn(),
 }));
-vi.mock('@/server/routers/lambda/_helpers/knowledgeBaseAccess', () => ({
+vi.mock('@/server/services/knowledgeBaseAccess', () => ({
   assertContentsNotInRestrictedKnowledgeBase: mocks.assertContentsNotInRestrictedKnowledgeBase,
   getRestrictedKnowledgeBaseIds: vi.fn().mockResolvedValue([]),
 }));
@@ -474,6 +474,32 @@ describe('documentRouter updateDocument mention notifications', () => {
 
     expect(mocks.getWorkspaceUsersPermissions).not.toHaveBeenCalled();
     expect(mocks.notifyDocumentMention).not.toHaveBeenCalled();
+  });
+
+  it('skips a restricted knowledge base recipient without blocking other mentions', async () => {
+    mocks.updateDocument.mockResolvedValue({
+      addedMentionUserIds: ['member-2', 'member-3'],
+      historyAppended: true,
+      id: 'doc-1',
+      savedAt,
+    });
+    mocks.getWorkspaceUsersPermissions.mockResolvedValue(
+      new Map([
+        ['member-2', ['document:view']],
+        ['member-3', ['document:view']],
+      ]),
+    );
+    mocks.assertContentsNotInRestrictedKnowledgeBase.mockImplementation(async ({ userId }) => {
+      if (userId === 'member-2') throw new TRPCError({ code: 'FORBIDDEN' });
+    });
+
+    await createCaller().updateDocument({ id: 'doc-1', editorData: '{"root":{}}' });
+    await flushAfterWork();
+
+    expect(mocks.notifyDocumentMention).toHaveBeenCalledTimes(1);
+    expect(mocks.notifyDocumentMention).toHaveBeenCalledWith(
+      expect.objectContaining({ recipientUserId: 'member-3' }),
+    );
   });
 
   it('does nothing outside a workspace', async () => {
