@@ -62,18 +62,40 @@ describe('supervisor recovery authority', () => {
     ).toBe(false);
   });
 
-  it('recovers a failure that happened outside the agent run without asking a person', () => {
-    // The run itself finished cleanly; the device link, the dispatch or the verifier
-    // broke around it, so there is no errored operation to pattern-match.
-    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
+  const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
+
+  it('recovers a dispatch the gateway says never started, without asking a person', () => {
+    // The run finished or never began and the device link broke around it, so there is
+    // no errored operation to read: the gateway code is the only evidence.
     for (const error of [
-      'Verification could not run (internal error); the delivery was not evaluated.',
       '{"error":"DEVICE_OFFLINE","success":false}',
-      'Automatic recovery could not start the next attempt',
+      'DEVICE_GATEWAY_UNREACHABLE',
+      'DEVICE_GATEWAY_RATE_LIMITED',
     ])
       expect(
         recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,
       ).toBe(true);
+  });
+
+  it('keeps a dispatch failure a retry cannot fix, or whose outcome is unknown, with a person', () => {
+    for (const error of [
+      'DEVICE_GATEWAY_UNAUTHORIZED',
+      'GATEWAY_NOT_CONFIGURED',
+      'DEVICE_RESPONSE_TIMEOUT',
+    ])
+      expect(
+        recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,
+      ).toBe(false);
+  });
+
+  it('leaves a failure an actor authored to the actor', () => {
+    // A caller marking a Goal-linked Task failed after a clean run looks exactly like
+    // a dropped dispatch. Recovery must not reopen it and spend more paid work.
+    expect(recoveryEligibility(graph, { ...task, error: null }, settled).eligible).toBe(false);
+    expect(
+      recoveryEligibility(graph, { ...task, error: 'Superseded by a newer plan' }, settled)
+        .eligible,
+    ).toBe(false);
   });
 
   it('reads an errored run as an agent failure even when the Task is left paused', () => {
@@ -90,13 +112,11 @@ describe('supervisor recovery authority', () => {
   });
 
   it('never restarts a Task a person already settled', () => {
-    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
     for (const status of ['completed', 'canceled', 'running'])
       expect(recoveryEligibility(graph, { ...task, status }, settled).eligible).toBe(false);
   });
 
   it('still refuses a pipeline failure that a person or a limit caused', () => {
-    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
     expect(
       recoveryEligibility(
         graph,

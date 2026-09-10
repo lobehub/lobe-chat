@@ -40,22 +40,14 @@ const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
 ]);
 
 /**
- * Where the failure happened, which is what decides whether a person must be involved.
- *
- * `agent-run` is a run that errored, so its own error text says whether retrying is
- * safe. The Task status cannot decide this: an ad-hoc run that fails is stored as
- * `paused`, exactly like a pipeline failure, so reading the Task would route real
- * agent errors around the credential and transport checks.
- *
- * `pipeline` is everything the coordinator routed here without an errored operation:
- * the dispatch never reached the device, the device link dropped, or a post-run step
- * like verification broke. Those never produce an error to inspect, so demanding one
- * used to escalate the entire class to a human.
+ * Gateway codes whose message states the run never started, so retrying cannot
+ * duplicate committed work. `DEVICE_GATEWAY_UNAUTHORIZED` and
+ * `GATEWAY_NOT_CONFIGURED` say retrying will not help, and
+ * `DEVICE_RESPONSE_TIMEOUT` says whether the run started is unknown; those stay
+ * with a person.
  */
-export type GoalFailureOrigin = 'agent-run' | 'pipeline';
-
-export const failureOrigin = (operation?: AgentOperationItem): GoalFailureOrigin =>
-  operation?.status === 'error' ? 'agent-run' : 'pipeline';
+const RETRYABLE_DISPATCH_CODES =
+  /DEVICE_OFFLINE|DEVICE_CHANNEL_UNAVAILABLE|DEVICE_GATEWAY_UNREACHABLE|DEVICE_GATEWAY_RATE_LIMITED/i;
 
 export const recoveryEligibility = (
   graph: GoalGraphSnapshot,
@@ -93,15 +85,13 @@ export const recoveryEligibility = (
       reason: 'Credentials, permission, cancellation or spending requires user action',
     };
   }
-  // A pipeline failure has no run error to pattern-match, and retrying it re-runs a
-  // dispatch the goal already authorised rather than granting anything new.
-  if (failureOrigin(operation) === 'pipeline') {
-    return {
-      eligible: true,
-      reason: 'Failure outside the agent run; retrying uses the authority the goal already granted',
-    };
-  }
+  // One allowlist for both origins, read off whatever error text exists. Inferring a
+  // recoverable failure from the *absence* of a run error is an open set: every state
+  // an actor can author — a Task marked failed through the API, a settled run someone
+  // reopened — arrives looking exactly like a dropped dispatch. Recognising the
+  // failures instead keeps an authored decision with the person who made it.
   if (
+    !RETRYABLE_DISPATCH_CODES.test(error) &&
     !/ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENOTFOUND|fetch failed|network error|socket hang up|service unavailable|bad gateway|gateway timeout|\b50[234]\b/i.test(
       error,
     )

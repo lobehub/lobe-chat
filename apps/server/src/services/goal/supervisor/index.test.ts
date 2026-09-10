@@ -121,7 +121,10 @@ const failedGoal = async (enabled = true, error = 'fetch failed: ECONNRESET') =>
  * dropped, or verification could not run. The Task is left `paused`, not `failed`,
  * and its operation is `done`, not `error`.
  */
-const pipelineFailureGoal = async (error = 'Device offline', withRun = true) => {
+const pipelineFailureGoal = async (
+  error = '{"error":"DEVICE_OFFLINE","success":false}',
+  withRun = true,
+) => {
   const graph = await service().create({
     config: { supervision: { enabled: true } },
     tasks: ['Finish existing report'],
