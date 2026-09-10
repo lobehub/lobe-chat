@@ -18,7 +18,7 @@ import { AiAgentService } from '@/server/services/aiAgent';
 
 import { AgentBridgeService } from './AgentBridgeService';
 import { buildBotContext } from './buildBotContext';
-import { drainDeferredBotMessages } from './deferredMessages';
+import { replayDeferredBotMessages } from './deferredMessages';
 import {
   createOrGetPairingRequest,
   deletePairingRequest,
@@ -27,6 +27,7 @@ import {
 } from './dmPairingStore';
 import { submitBotFeedback } from './feedbackSubmit';
 import { buildReplayMessages, getSameSenderMessages, mergeBotMessages } from './mergeMessages';
+import { patchSenderBatches } from './patchSenderBatches';
 import {
   type BotPlatformRuntimeContext,
   type BotReplyLocale,
@@ -584,7 +585,9 @@ export class BotMessageRouter {
       });
     }
 
-    return new Chat(config);
+    const bot = new Chat(config);
+    patchSenderBatches(bot);
+    return bot;
   }
 
   /**
@@ -614,30 +617,18 @@ export class BotMessageRouter {
     applicationId: string,
     platformThreadId: string,
   ): Promise<void> {
-    const entries = await drainDeferredBotMessages(applicationId, platformThreadId);
-    const replays = buildReplayMessages(entries);
-    if (replays.length === 0) return;
-
-    const bot = await this.getOrCreateBot(platform, applicationId);
-    const adapter = bot?.adapters[platform];
-    if (!bot || !adapter) {
-      log(
-        'replayDeferredMessages: no %s bot/adapter for app=%s, dropping %d deferred message(s)',
-        platform,
-        applicationId,
-        entries.length,
+    await replayDeferredBotMessages(applicationId, platformThreadId, async (entries) => {
+      const bot = await this.getOrCreateBot(platform, applicationId);
+      const adapter = bot?.adapters[platform];
+      if (!bot || !adapter) throw new Error(`Bot adapter unavailable for ${platform}`);
+      const results = await Promise.allSettled(
+        buildReplayMessages(entries).map((message) =>
+          bot.chatBot.processMessage(adapter, platformThreadId, message),
+        ),
       );
-      return;
-    }
-
-    log(
-      'replayDeferredMessages: replaying %d message(s) on thread=%s',
-      entries.length,
-      platformThreadId,
-    );
-    await Promise.all(
-      replays.map((message) => bot.chatBot.processMessage(adapter, platformThreadId, message)),
-    );
+      const failure = results.find((result) => result.status === 'rejected');
+      if (failure?.status === 'rejected') throw failure.reason;
+    });
   }
 
   /**

@@ -66,12 +66,14 @@ export async function deferBotMessages(
   const key = buildDeferredMessagesKey(applicationId, platformThreadId);
   try {
     const payloads = messages.map((message) => JSON.stringify(message.toJSON()));
-    await redis
+    const results = await redis
       .multi()
       .rpush(key, ...payloads)
       .ltrim(key, -MAX_DEFERRED_PER_THREAD, -1)
       .expire(key, TTL_SECONDS)
       .exec();
+    const failure = results?.find(([error]) => error)?.[0];
+    if (!results || failure) throw failure ?? new Error('Deferred write aborted');
     log(
       'deferred %d message(s) [%s] for thread=%s app=%s',
       messages.length,
@@ -86,44 +88,47 @@ export async function deferBotMessages(
   }
 }
 
-/**
- * Atomically take every parked message for the thread, oldest first. Returns
- * an empty array when nothing is parked or Redis is unavailable.
- */
-export async function drainDeferredBotMessages(
+/** Read a snapshot without removing messages before the SDK accepts them. */
+export async function readDeferredBotMessages(
   applicationId: string,
   platformThreadId: string,
 ): Promise<DeferredBotMessage[]> {
   const redis = getAgentRuntimeRedisClient();
   if (!redis) return [];
-
   const key = buildDeferredMessagesKey(applicationId, platformThreadId);
-  try {
-    const results = await redis.multi().lrange(key, 0, -1).del(key).exec();
-    const entries = (results?.[0]?.[1] as string[] | undefined) ?? [];
-    const messages: DeferredBotMessage[] = [];
-    for (const entry of entries) {
-      try {
-        messages.push(JSON.parse(entry) as DeferredBotMessage);
-      } catch (error) {
-        log(
-          'drainDeferredBotMessages: dropping unparsable entry for thread=%s: %O',
-          platformThreadId,
-          error,
-        );
-      }
+  const entries = await redis.lrange(key, 0, -1);
+  const messages: DeferredBotMessage[] = [];
+  for (const entry of entries) {
+    try {
+      messages.push(JSON.parse(entry) as DeferredBotMessage);
+    } catch (error) {
+      log('Invalid deferred payload for thread=%s: %O', platformThreadId, error);
     }
-    if (messages.length > 0) {
-      log(
-        'drained %d deferred message(s) for thread=%s app=%s',
-        messages.length,
-        platformThreadId,
-        applicationId,
-      );
-    }
-    return messages;
-  } catch (error) {
-    log('drainDeferredBotMessages failed for thread=%s: %O', platformThreadId, error);
-    return [];
   }
+  return messages;
+}
+
+/**
+ * Acknowledge only the snapshot successfully handed to the SDK. New arrivals
+ * remain queued. A failure (including process/Redis failure) leaves the original
+ * entries available for retry. Delivery is at-least-once if a batch partially
+ * succeeds or completion callbacks overlap.
+ */
+export async function replayDeferredBotMessages(
+  applicationId: string,
+  platformThreadId: string,
+  replay: (entries: DeferredBotMessage[]) => Promise<void>,
+): Promise<void> {
+  const entries = await readDeferredBotMessages(applicationId, platformThreadId);
+  if (entries.length === 0) return;
+  await replay(entries);
+
+  const redis = getAgentRuntimeRedisClient();
+  if (!redis) throw new Error('Redis unavailable while acknowledging deferred messages');
+  const key = buildDeferredMessagesKey(applicationId, platformThreadId);
+  const transaction = redis.multi();
+  for (const entry of entries) transaction.lrem(key, 1, JSON.stringify(entry));
+  const results = await transaction.exec();
+  const failure = results?.find(([error]) => error)?.[0];
+  if (!results || failure) throw failure ?? new Error('Deferred replay acknowledgement aborted');
 }

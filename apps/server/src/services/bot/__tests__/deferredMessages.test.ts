@@ -9,7 +9,8 @@ vi.mock('@/server/modules/AgentRuntime/redis', () => ({
 const {
   buildDeferredMessagesKey,
   deferBotMessages,
-  drainDeferredBotMessages,
+  readDeferredBotMessages,
+  replayDeferredBotMessages,
   isDeferredMessagesAvailable,
 } = await import('../deferredMessages');
 
@@ -17,14 +18,14 @@ const {
 function createRedis(execResult: unknown = []) {
   const calls: Array<[string, ...unknown[]]> = [];
   const chain: any = {};
-  for (const cmd of ['rpush', 'ltrim', 'expire', 'lrange', 'del']) {
+  for (const cmd of ['rpush', 'ltrim', 'expire', 'lrem']) {
     chain[cmd] = vi.fn((...args: unknown[]) => {
       calls.push([cmd, ...args]);
       return chain;
     });
   }
   chain.exec = vi.fn().mockResolvedValue(execResult);
-  return { calls, chain, multi: vi.fn(() => chain) };
+  return { calls, chain, lrange: vi.fn().mockResolvedValue([]), multi: vi.fn(() => chain) };
 }
 
 const makeMessage = (id: string) => ({ id, toJSON: () => ({ _type: 'chat:Message', id }) }) as any;
@@ -45,7 +46,7 @@ describe('deferredMessages', () => {
 
     expect(isDeferredMessagesAvailable()).toBe(false);
     await expect(deferBotMessages('app-1', 't', [makeMessage('1')])).resolves.toBe(false);
-    await expect(drainDeferredBotMessages('app-1', 't')).resolves.toEqual([]);
+    await expect(readDeferredBotMessages('app-1', 't')).resolves.toEqual([]);
   });
 
   it('appends serialized messages in order with a cap and TTL', async () => {
@@ -73,19 +74,36 @@ describe('deferredMessages', () => {
     await expect(deferBotMessages('app-1', 't', [makeMessage('1')])).resolves.toBe(false);
   });
 
-  it('drains every entry oldest-first, deletes the key and skips corrupt entries', async () => {
-    const redis = createRedis([
-      [null, ['{"id":"1"}', 'not json', '{"id":"2"}']],
-      [null, 1],
-    ]);
+  it('reads oldest-first without removing entries and skips corrupt payloads', async () => {
+    const redis = createRedis();
+    redis.lrange.mockResolvedValue(['{"id":"1"}', 'not json', '{"id":"2"}']);
     mockGetAgentRuntimeRedisClient.mockReturnValue(redis);
+    expect(await readDeferredBotMessages('app-1', 't')).toEqual([{ id: '1' }, { id: '2' }]);
+    expect(redis.calls).toEqual([]);
+  });
 
-    const entries = await drainDeferredBotMessages('app-1', 't');
+  it('retains the full batch when replay fails, then acknowledges only those entries on retry', async () => {
+    const redis = createRedis();
+    const payloads = ['{"id":"1"}', '{"id":"2"}'];
+    redis.lrange.mockResolvedValue(payloads);
+    mockGetAgentRuntimeRedisClient.mockReturnValue(redis);
+    const replay = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('adapter unavailable'))
+      .mockResolvedValueOnce(undefined);
+    await expect(replayDeferredBotMessages('app-1', 't', replay)).rejects.toThrow(
+      'adapter unavailable',
+    );
+    expect(redis.calls).toEqual([]);
+    await replayDeferredBotMessages('app-1', 't', replay);
+    expect(replay).toHaveBeenNthCalledWith(2, [{ id: '1' }, { id: '2' }]);
+    expect(redis.calls).toEqual(
+      payloads.map((payload) => ['lrem', 'bot:deferred-messages:app-1:t', 1, payload]),
+    );
+  });
 
-    expect(entries).toEqual([{ id: '1' }, { id: '2' }]);
-    expect(redis.calls).toEqual([
-      ['lrange', 'bot:deferred-messages:app-1:t', 0, -1],
-      ['del', 'bot:deferred-messages:app-1:t'],
-    ]);
+  it('reports Redis transaction errors as a failed write', async () => {
+    mockGetAgentRuntimeRedisClient.mockReturnValue(createRedis([[new Error('read only'), null]]));
+    await expect(deferBotMessages('app-1', 't', [makeMessage('1')])).resolves.toBe(false);
   });
 });

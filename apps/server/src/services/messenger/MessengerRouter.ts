@@ -19,13 +19,14 @@ import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis'
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AgentBridgeService } from '@/server/services/bot/AgentBridgeService';
 import { buildBotContext } from '@/server/services/bot/buildBotContext';
-import { drainDeferredBotMessages } from '@/server/services/bot/deferredMessages';
+import { replayDeferredBotMessages } from '@/server/services/bot/deferredMessages';
 import { submitBotFeedback } from '@/server/services/bot/feedbackSubmit';
 import {
   buildReplayMessages,
   getSameSenderMessages,
   mergeBotMessages,
 } from '@/server/services/bot/mergeMessages';
+import { patchSenderBatches } from '@/server/services/bot/patchSenderBatches';
 import type { PlatformClient } from '@/server/services/bot/platforms';
 import { getBotReplyLocale } from '@/server/services/bot/platforms/const';
 // Leaf module, not the `./platforms` barrel: the barrel instantiates every
@@ -447,32 +448,21 @@ export class MessengerRouter {
     applicationId: string,
     platformThreadId: string,
   ): Promise<void> {
-    const entries = await drainDeferredBotMessages(applicationId, platformThreadId);
-    const replays = buildReplayMessages(entries);
-    if (replays.length === 0) return;
-
-    const platform = installationKey.split(':')[0] as MessengerPlatform;
-    const store = getInstallationStore(platform);
-    const creds = await store?.resolveByKey(installationKey);
-    const bot = creds ? await this.getOrCreateBot(creds) : null;
-    const adapter = bot?.adapters[platform];
-    if (!bot || !adapter) {
-      log(
-        'replayDeferredMessages: no messenger bot/adapter for %s, dropping %d deferred message(s)',
-        installationKey,
-        entries.length,
+    await replayDeferredBotMessages(applicationId, platformThreadId, async (entries) => {
+      const platform = installationKey.split(':')[0] as MessengerPlatform;
+      const store = getInstallationStore(platform);
+      const creds = await store?.resolveByKey(installationKey);
+      const bot = creds ? await this.getOrCreateBot(creds) : null;
+      const adapter = bot?.adapters[platform];
+      if (!bot || !adapter) throw new Error(`Messenger adapter unavailable for ${platform}`);
+      const results = await Promise.allSettled(
+        buildReplayMessages(entries).map((message) =>
+          bot.chatBot.processMessage(adapter, platformThreadId, message),
+        ),
       );
-      return;
-    }
-
-    log(
-      'replayDeferredMessages: replaying %d message(s) on thread=%s',
-      entries.length,
-      platformThreadId,
-    );
-    await Promise.all(
-      replays.map((message) => bot.chatBot.processMessage(adapter, platformThreadId, message)),
-    );
+      const failure = results.find((result) => result.status === 'rejected');
+      if (failure?.status === 'rejected') throw failure.reason;
+    });
   }
 
   private createChatBot(adapters: Record<string, any>, creds: InstallationCredentials): Chat<any> {
@@ -502,7 +492,9 @@ export class MessengerRouter {
       });
     }
 
-    return new Chat(config);
+    const bot = new Chat(config);
+    patchSenderBatches(bot);
+    return bot;
   }
 
   private registerHandlers(

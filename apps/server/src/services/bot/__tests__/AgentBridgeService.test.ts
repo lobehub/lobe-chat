@@ -10,6 +10,15 @@ const mockIsRunningOperationAlive = vi.hoisted(() => vi.fn());
 const mockDeferBotMessages = vi.hoisted(() => vi.fn());
 const mockIsDeferredMessagesAvailable = vi.hoisted(() => vi.fn());
 
+const mockReplayBot = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const mockReplayMessenger = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+vi.mock('../BotMessageRouter', () => ({
+  getBotMessageRouter: () => ({ replayDeferredMessages: mockReplayBot }),
+}));
+vi.mock('@/server/services/messenger/MessengerRouter', () => ({
+  getMessengerRouter: () => ({ replayDeferredMessages: mockReplayMessenger }),
+}));
+
 vi.mock('@/database/models/topic', () => ({
   TopicModel: vi.fn().mockImplementation(function () {
     return {
@@ -709,6 +718,31 @@ describe('AgentBridgeService', () => {
 
       expect(mockDeferBotMessages).toHaveBeenCalledWith('app-1', THREAD_ID, [image, text]);
     });
+
+    it.each([false, true])(
+      'replays when completion wins the enqueue race (messenger=%s)',
+      async (messenger) => {
+        mockTopicFindById
+          .mockResolvedValueOnce(busyTopic)
+          .mockResolvedValueOnce({ ...busyTopic, metadata: {} });
+        mockIsRunningOperationAlive.mockResolvedValue(true);
+        const service = new AgentBridgeService(FAKE_DB, USER_ID);
+        const options = opts();
+        if (messenger) options.botContext.messengerInstallationKey = 'wechat:example';
+        await service.handleSubscribedMessage(
+          createThread({ topicId: 'topic-1' }),
+          createMessage(),
+          options,
+        );
+        expect(mockDeferBotMessages).toHaveBeenCalledTimes(1);
+        expect(messenger ? mockReplayMessenger : mockReplayBot).toHaveBeenCalledWith(
+          messenger ? 'wechat:example' : 'wechat',
+          'app-1',
+          THREAD_ID,
+        );
+        expect(mockExecAgent).not.toHaveBeenCalled();
+      },
+    );
 
     it('runs normally when the marker is stale (operation no longer alive)', async () => {
       mockTopicFindById.mockResolvedValue(busyTopic);

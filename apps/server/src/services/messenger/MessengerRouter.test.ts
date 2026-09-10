@@ -70,6 +70,7 @@ const mockSetIfNotExists = vi.fn();
 const mockGetList = vi.fn();
 const mockAppendToList = vi.fn();
 const mockChatBot = {
+  dispatchToHandlers: vi.fn(),
   getState: vi.fn(() => ({
     appendToList: (...args: any[]) => mockAppendToList(...args),
     getList: (...args: any[]) => mockGetList(...args),

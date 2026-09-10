@@ -96,6 +96,7 @@ vi.mock('chat', () => ({
   BaseFormatConverter: class {},
   Chat: vi.fn().mockImplementation(function () {
     return {
+      dispatchToHandlers: vi.fn(),
       getState: vi.fn(() => ({
         appendToList: mockAppendToList,
         getList: mockGetList,
@@ -114,7 +115,14 @@ vi.mock('chat', () => ({
 }));
 
 vi.mock('../deferredMessages', () => ({
-  drainDeferredBotMessages: mockDrainDeferredBotMessages,
+  replayDeferredBotMessages: async (
+    app: string,
+    thread: string,
+    replay: (entries: unknown[]) => Promise<void>,
+  ) => {
+    const entries = await mockDrainDeferredBotMessages(app, thread);
+    if (entries.length) await replay(entries);
+  },
 }));
 
 vi.mock('../mergeMessages', async (importOriginal) => {
@@ -3554,7 +3562,7 @@ describe('BotMessageRouter', () => {
       expect(mockProcessMessage).not.toHaveBeenCalled();
     });
 
-    it('drops the replay when no bot is registered for the application', async () => {
+    it('rejects replay when no bot is registered so entries remain pending', async () => {
       mockFindEnabledByPlatform.mockResolvedValue([]);
       mockDrainDeferredBotMessages.mockResolvedValue([{ id: 'm1' }]);
       mockBuildReplayMessages.mockReturnValue([{ id: 'm1:replay:1:0' }]);
@@ -3562,7 +3570,7 @@ describe('BotMessageRouter', () => {
       const router = new BotMessageRouter();
       await expect(
         router.replayDeferredMessages('telegram', 'tg-bot-missing', THREAD),
-      ).resolves.toBeUndefined();
+      ).rejects.toThrow('Bot adapter unavailable');
 
       expect(mockProcessMessage).not.toHaveBeenCalled();
     });

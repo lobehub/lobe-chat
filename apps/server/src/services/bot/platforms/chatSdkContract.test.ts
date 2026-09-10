@@ -3,6 +3,7 @@ import { Chat, Message } from 'chat';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildReplayMessages, getSourceMessages, mergeBotMessages } from '../mergeMessages';
+import { patchSenderBatches } from '../patchSenderBatches';
 import { patchDiscordForwardedInteractions } from './discord/patch';
 
 /**
@@ -116,6 +117,7 @@ const createRealBot = ({
     userName: 'lobehub',
   } as any);
 
+  patchSenderBatches(chatBot);
   if (patch) patchDiscordForwardedInteractions(chatBot);
   return chatBot;
 };
@@ -397,6 +399,51 @@ describe('chat-sdk contract · overlapping-message strategies', () => {
 
     expect(received).toEqual([[{ kind: 'image' }, { kind: 'text' }]]);
   });
+
+  it.each(['burst', 'debounce', 'queue'])(
+    'preserves each sender through %s dispatch',
+    async (strategy) => {
+      const bot = createRealBot({ concurrency: { debounceMs: 80, strategy } });
+      const received: { sender: string; sourceIds: string[]; authors: string[] }[] = [];
+      bot.onNewMention(async (_thread, message, context) => {
+        const sources = getSourceMessages(mergeBotMessages(message, context?.skipped));
+        received.push({
+          sender: message.author.userId,
+          sourceIds: sources.map((m) => m.id),
+          authors: sources.map((m) => m.author.userId),
+        });
+      });
+      await bot.initialize();
+      const adapter = (bot as any).adapters.get('discord');
+      const threadId = `discord:@me:${DM_CHANNEL_ID}`;
+      const messages = ['alice', 'alice', 'bob', 'alice'].map(
+        (sender, index) =>
+          new Message({
+            attachments: [],
+            author: {
+              fullName: sender,
+              isBot: false,
+              isMe: false,
+              userId: sender,
+              userName: sender,
+            },
+            formatted: { type: 'root', children: [] },
+            id: `sender-${index}`,
+            metadata: { dateSent: new Date(), edited: false },
+            raw: { kind: index === 0 ? 'image' : 'text' },
+            text: index === 0 ? '' : `message ${index}`,
+            threadId,
+          }),
+      );
+      await Promise.all(messages.map((message) => bot.processMessage(adapter, threadId, message)));
+      expect(received.flatMap((call) => call.sourceIds)).toEqual(
+        messages.map((message) => message.id),
+      );
+      for (const call of received)
+        expect(call.authors.every((author) => author === call.sender)).toBe(true);
+      expect(received.map((call) => call.sender)).toContain('bob');
+    },
+  );
 
   it('collects a burst into ONE handler call carrying the earlier message', async () => {
     const calls = await collectTurn('burst');

@@ -690,7 +690,7 @@ export class AgentBridgeService {
         isQueueAgentRuntimeEnabled() &&
         (await topicModel.isRunningOperationAlive(this.db, runningOperation))
       ) {
-        const deferred = await this.deferWhileTopicBusy(thread, message, botContext);
+        const deferred = await this.deferWhileTopicBusy(thread, message, botContext, topicId);
         if (deferred) return;
       }
     } catch (error) {
@@ -767,7 +767,7 @@ export class AgentBridgeService {
         // reservation give up with "remained busy". Same remedy — park the
         // message for replay instead of telling the user the agent failed.
         if (queueMode && isTopicBusyError(errMsg)) {
-          const deferred = await this.deferWhileTopicBusy(thread, message, botContext);
+          const deferred = await this.deferWhileTopicBusy(thread, message, botContext, topicId);
           if (deferred) return;
         }
 
@@ -1861,6 +1861,7 @@ export class AgentBridgeService {
     thread: Thread<ThreadState>,
     message: Message,
     botContext: ChatTopicBotContext | undefined,
+    topicId: string,
   ): Promise<boolean> {
     if (!botContext?.applicationId) return false;
     if (!isDeferredMessagesAvailable()) return false;
@@ -1873,6 +1874,36 @@ export class AgentBridgeService {
       getSourceMessages(message),
     );
     if (!deferred) return false;
+
+    // Completion may have drained the queue between the initial liveness
+    // check and this write. Recheck after enqueueing and initiate replay when
+    // no live operation remains; the callback covers completion after this check.
+    try {
+      const topicModel = new TopicModel(this.db, this.userId, this.workspaceId);
+      const topic = await topicModel.findById(topicId);
+      const running = topic?.metadata?.runningOperation;
+      if (!running || !(await topicModel.isRunningOperationAlive(this.db, running))) {
+        if (botContext.messengerInstallationKey) {
+          const { getMessengerRouter } =
+            await import('@/server/services/messenger/MessengerRouter');
+          await getMessengerRouter().replayDeferredMessages(
+            botContext.messengerInstallationKey,
+            botContext.applicationId,
+            thread.id,
+          );
+        } else {
+          const { getBotMessageRouter } = await import('./BotMessageRouter');
+          await getBotMessageRouter().replayDeferredMessages(
+            botContext.platform,
+            botContext.applicationId,
+            thread.id,
+          );
+        }
+      }
+    } catch (error) {
+      // Keep the durable entries if lookup or dispatch is temporarily unavailable.
+      log('Post-enqueue replay failed for thread=%s: %O', thread.id, error);
+    }
 
     log(
       'handleSubscribedMessage: topic busy, deferred message=%s on thread=%s until the running operation completes',
