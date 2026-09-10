@@ -32,6 +32,7 @@ export enum WorkspaceSettingsTabs {
   Skill = 'skill',
   Stats = 'statistics',
   Storage = 'storage',
+  Trash = 'trash',
   Usage = 'usage',
 }
 

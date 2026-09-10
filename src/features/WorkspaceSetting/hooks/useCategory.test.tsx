@@ -2,6 +2,7 @@ import { cleanup, renderHook } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { initServerConfigStore, Provider } from '@/store/serverConfig/store';
 import { useUserStore } from '@/store/user';
 import { WorkspaceSettingsTabs } from '@/types/workspaceSettings';
@@ -100,11 +101,38 @@ describe('workspace settings useCategory', () => {
       (group) => group.key === WorkspaceSettingsGroupKey.System,
     );
 
-    expect(systemGroup?.items.map((item) => item.key)).toEqual([WorkspaceSettingsTabs.About]);
+    expect(systemGroup?.items.map((item) => item.key)).toEqual([
+      WorkspaceSettingsTabs.Trash,
+      WorkspaceSettingsTabs.About,
+    ]);
     expect(result.current.map((group) => group.key).slice(-2)).toEqual([
       WorkspaceSettingsGroupKey.System,
       WorkspaceSettingsGroupKey.Developer,
     ]);
+  });
+
+  it('keeps Trash visible when documentation is disabled', () => {
+    mocks.canCreateContent = false;
+    mocks.canManageWorkspace = false;
+    mocks.canViewBilling = false;
+    const { result } = renderHook(() => useWorkspaceSettingCategory(), {
+      wrapper: ({ children }) => (
+        <Provider
+          createStore={() =>
+            initServerConfigStore({
+              featureFlags: { ...mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS), hideDocs: true },
+            })
+          }
+        >
+          {children}
+        </Provider>
+      ),
+    });
+    const systemGroups = result.current.filter(
+      (group) => group.key === WorkspaceSettingsGroupKey.System,
+    );
+    expect(systemGroups).toHaveLength(1);
+    expect(systemGroups[0]?.items.map((item) => item.key)).toEqual([WorkspaceSettingsTabs.Trash]);
   });
 
   it('hides OAuth Apps by default', () => {

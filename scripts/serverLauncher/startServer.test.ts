@@ -104,3 +104,12 @@ describe('Docker startup migrations', () => {
     },
   );
 });
+
+describe('server launcher QStash schedules', () => {
+  it('registers the hourly recycle-bin retention sweep', async () => {
+    const source = await readFile(launcher, 'utf8');
+    expect(source).toMatch(
+      /cron: '0 \* \* \* \*',[\s\S]*id: 'lobe-trash-purge',[\s\S]*path: '\/api\/workflows\/trash\/purge'/,
+    );
+  });
+});

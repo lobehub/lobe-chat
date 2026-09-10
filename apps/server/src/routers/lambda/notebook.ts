@@ -6,7 +6,6 @@ import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPer
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { DocumentModel } from '@/database/models/document';
-import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { TopicDocumentModel } from '@/database/models/topicDocument';
 import { WorkModel } from '@/database/models/work';
 import { router } from '@/libs/trpc/lambda';
@@ -146,13 +145,6 @@ export const notebookRouter = router({
       await ctx.notebookService.deleteDocument(input.id, {
         restrictToCreator: isWorkspaceNonOwner(ctx),
       });
-
-      if (ctx.workspaceId) {
-        await new ResourcePermissionModel(ctx.serverDB, ctx.workspaceId).removeAll(
-          'document',
-          input.id,
-        );
-      }
 
       return { success: true };
     }),
