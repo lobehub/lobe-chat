@@ -899,6 +899,59 @@ describe('DocumentService', () => {
       expect(result).toEqual({ historyAppended: false, id: 'doc-1' });
     });
 
+    it('should report members newly mentioned by this save on the accepted view', async () => {
+      const mention = (id: string) => ({ metadata: { id, type: 'member' }, type: 'mention' });
+      const paragraph = (...children: unknown[]) => ({ children, type: 'paragraph' });
+      const currentEditorData = {
+        root: { children: [paragraph(mention('user-1'))], type: 'root' },
+      };
+      const editorData = {
+        root: {
+          children: [
+            paragraph(mention('user-1'), mention('user-2')),
+            // A chip inside a pending "add" diff block is not accepted yet.
+            {
+              children: [paragraph(mention('user-3'))],
+              diffType: 'add',
+              type: 'diff',
+            },
+          ],
+          type: 'root',
+        },
+      };
+      mockDocumentModel.update.mockResolvedValue({ id: 'doc-1' });
+      mockDocumentModel.findById.mockResolvedValue(
+        createCurrentDocument({ editorData: currentEditorData }),
+      );
+
+      const result = await service.updateDocument('doc-1', { editorData });
+
+      expect(result.historyAppended).toBe(true);
+      expect(result.addedMentionUserIds).toEqual(['user-2']);
+    });
+
+    it('should omit addedMentionUserIds when the mentions did not change', async () => {
+      const mention = { metadata: { id: 'user-1', type: 'member' }, type: 'mention' };
+      const currentEditorData = {
+        root: { children: [{ children: [mention], type: 'paragraph' }], type: 'root' },
+      };
+      const editorData = {
+        root: {
+          children: [{ children: [{ text: 'edited ', type: 'text' }, mention], type: 'paragraph' }],
+          type: 'root',
+        },
+      };
+      mockDocumentModel.update.mockResolvedValue({ id: 'doc-1' });
+      mockDocumentModel.findById.mockResolvedValue(
+        createCurrentDocument({ editorData: currentEditorData }),
+      );
+
+      const result = await service.updateDocument('doc-1', { editorData });
+
+      expect(result.historyAppended).toBe(true);
+      expect(result).not.toHaveProperty('addedMentionUserIds');
+    });
+
     it('should update title and filename together', async () => {
       mockDocumentModel.update.mockResolvedValue({ id: 'doc-1' });
       mockDocumentModel.findById.mockResolvedValue(createCurrentDocument());
