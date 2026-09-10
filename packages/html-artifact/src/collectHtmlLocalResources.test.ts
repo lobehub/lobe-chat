@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { collectJsResourceHrefs, collectLocalResourceRefs } from './collectHtmlLocalResources';
+import {
+  collectCssResourceHrefs,
+  collectJsResourceHrefs,
+  collectLocalResourceRefs,
+} from './collectHtmlLocalResources';
 import { extractHtmlTitle } from './htmlTagScanner';
 import {
   createWorkspaceHtmlArtifactIdentifier,
@@ -310,4 +314,21 @@ describe('path helpers', () => {
       '/tmp/site/index.html',
     );
   });
+  it('strips css comments without going quadratic on unterminated openers', () => {
+    const css = `
+      @import "kept.css";
+      /* a comment with url("ignored.png") inside */
+      body { background: url("used.png"); }
+    `;
+
+    expect(collectCssResourceHrefs(css)).toEqual(['kept.css', 'used.png']);
+
+    // A sheet of unclosed openers is what makes the lazy regex backtrack; the
+    // scanner must return promptly and treat the first opener as running to EOF.
+    const pathological = `body{background:url("late.png")}${'a/*'.repeat(40_000)}`;
+    const started = Date.now();
+    expect(collectCssResourceHrefs(pathological)).toEqual(['late.png']);
+    expect(Date.now() - started).toBeLessThan(1000);
+  });
+
 });
