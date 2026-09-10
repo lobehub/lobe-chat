@@ -11,6 +11,13 @@ import type { LobeChatDatabase } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
 import { GoalGraphModel } from './goalGraph';
 
+/**
+ * A revision re-runs one experiment with a corrected protocol. Bounding them keeps a
+ * planner that keeps "fixing" the same instrument from spending the goal's budget
+ * without ever changing the question.
+ */
+const MAX_PROTOCOL_REVISIONS = 2;
+
 /** Ignore only coordinator bookkeeping; edits to policy, evidence or graph invalidate a plan. */
 export const goalExplorationSnapshot = (graph: GoalGraphSnapshot): string => {
   const { checkpoint: _checkpoint, ...policy } = graph.goal.config?.exploration ?? {};
@@ -154,6 +161,46 @@ export class GoalExplorationModel {
           `Exploration requests final acceptance: ${decision.reason}`,
         );
         return { outcome: 'verify' as const };
+      }
+      if (decision.action === 'revise') {
+        const target = experiments.find(
+          (node) => node.id === decision.parentNodeId && node.status === 'resolved',
+        );
+        if (!target) throw new Error('A revision must correct a resolved experiment in this goal');
+        // Count the corrections already aimed at this experiment rather than the tasks it
+        // holds: a standalone task has no container, so members would never bound anything.
+        const revisions = graph.edges.filter(
+          (edge) => edge.kind === 'derived_from' && edge.targetNodeId === target.id,
+        ).length;
+        if (revisions >= MAX_PROTOCOL_REVISIONS)
+          throw new Error(
+            `Experiment already ran ${revisions} corrected protocols; expand or verify instead of revising again`,
+          );
+        // Correcting an instrument reuses the parent's container, so the graph keeps one
+        // question with successive protocols instead of a row of flawed siblings.
+        const container =
+          target.kind === 'experiment' ? target.id : experimentOwner(graph, target.id);
+        const node = await graphModel.createNode(goalId, {
+          description: decision.instruction,
+          kind: 'task',
+          scopeId: container,
+          title: decision.title.trim() || target.title,
+        });
+        if (!node) throw new Error('Could not persist the revised protocol');
+        await graphModel.createEdge(goalId, node.id, target.id, 'derived_from');
+        const members = container ? experimentMembers(graph, container) : new Set<string>();
+        members.add(target.id);
+        for (const version of graph.workVersions.filter(
+          (item) => members.has(item.nodeId) && item.relation === 'produced',
+        ))
+          // Preserve the existing version visibility checks; never turn a graph link into read permission.
+          await graphModel.attachWorkVersion(goalId, node.id, version.workVersionId, 'input');
+        await tx
+          .update(goals)
+          .set({ config: { ...goal.config, exploration: { ...policy, checkpoint: undefined } } })
+          .where(eq(goals.id, goalId));
+        await this.recordDecision(tx, goalId, `Revised ${target.id}: ${decision.reason}`);
+        return { outcome: 'revised' as const, nodeId: node.id, parentNodeId: target.id };
       }
       if (experiments.length >= policy.maxExperiments) {
         await tx

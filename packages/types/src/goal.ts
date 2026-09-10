@@ -107,7 +107,12 @@ export interface GoalAcceptancePolicy {
 export type GoalPauseReason = 'measured_acceptance' | 'exploration_limit' | 'user';
 
 export interface GoalExplorationDecision {
-  action: 'expand' | 'verify';
+  /**
+   * `expand` opens a sibling experiment for a new question; `revise` corrects the
+   * protocol of an experiment that already ran, so a flawed instrument is fixed in
+   * place instead of being inherited by another sibling.
+   */
+  action: 'expand' | 'revise' | 'verify';
   instruction: string;
   parentNodeId: string;
   reason: string;

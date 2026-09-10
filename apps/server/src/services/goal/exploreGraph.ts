@@ -57,6 +57,11 @@ export async function exploreGraph(params: {
           title: node.title,
           status: node.status,
           results: experimentResults(graph, node.id),
+          // Tells the planner which experiments a previous turn authored, so it can
+          // judge whether its own last move helped before repeating that direction.
+          derivedFromId: graph.edges.find(
+            (edge) => edge.sourceNodeId === node.id && edge.kind === 'derived_from',
+          )?.targetNodeId,
           inputVersionIds: graph.workVersions
             .filter(
               (version) =>
@@ -82,6 +87,14 @@ export async function exploreGraph(params: {
         outcome: 'no_progress',
         message: `Experiment limit reached (${policy.maxExperiments}); goal is not yet accepted. ${decision.reason}`,
       };
+    }
+    if (result.outcome === 'revised') {
+      effects.push({
+        type: 'created_node',
+        nodeId: result.nodeId,
+        detail: `revised ${result.parentNodeId}: ${decision.reason}`,
+      });
+      return { goalId, nodeId: result.nodeId, outcome: 'advanced', message: decision.reason };
     }
     if (result.outcome === 'expanded') {
       effects.push({

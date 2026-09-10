@@ -48,7 +48,81 @@ const expand = (parentNodeId: string) => ({
   reason: 'The first result is promising',
 });
 
+const revise = (
+  parentNodeId: string,
+  instruction = 'Emit a calibrated score, then report AUC',
+) => ({
+  action: 'revise' as const,
+  parentNodeId,
+  title: '',
+  instruction,
+  reason: 'The arms measured a hard verdict, which discards the ranking signal',
+});
+
 describe('GoalExplorationModel', () => {
+  it('reruns a corrected protocol inside the same experiment without spending a slot', async () => {
+    const { goalId, parent } = await seed(1);
+    const task = await new TaskModel(db, userId).create({ instruction: 'baseline evidence' });
+    const work = await new WorkModel(db, userId).registerTask({
+      changeType: 'created',
+      taskId: task.id,
+      toolIdentifier: 'test',
+      toolName: 'createTask',
+    });
+    await graphModel.attachWorkVersion(goalId, parent.id, work!.currentVersionId!, 'produced');
+    // The single experiment slot is already taken, so an expansion here would be
+    // refused; a revision must still go through because it corrects that experiment.
+    const result = await model.apply(goalId, (await claim(goalId))!.token, revise(parent.id));
+    expect(result.outcome).toBe('revised');
+    const graph = (await graphModel.getGraph(goalId))!;
+    expect(graph.nodes.filter((node) => node.kind === 'experiment')).toHaveLength(0);
+    const revised = graph.nodes.find((node) => node.id === result.nodeId)!;
+    expect(revised.kind).toBe('task');
+    expect(revised.description).toBe('Emit a calibrated score, then report AUC');
+    expect(revised.title).toBe(parent.title);
+    expect(graph.workVersions).toContainEqual(
+      expect.objectContaining({
+        nodeId: result.nodeId,
+        relation: 'input',
+        workVersionId: work!.currentVersionId,
+      }),
+    );
+    expect(graph.events).toContainEqual(
+      expect.objectContaining({
+        actorType: 'system',
+        reason: `Revised ${parent.id}: The arms measured a hard verdict, which discards the ranking signal`,
+      }),
+    );
+  });
+
+  it('stops revising the same instrument once its corrections are exhausted', async () => {
+    const { goalId, parent } = await seed();
+    for (const attempt of [1, 2]) {
+      const outcome = await model.apply(
+        goalId,
+        (await claim(goalId))!.token,
+        revise(parent.id, `attempt ${attempt}`),
+      );
+      expect(outcome.outcome).toBe('revised');
+    }
+    // Two corrections are already recorded against this parent; a third would let the
+    // planner keep polishing one instrument instead of changing the question.
+    await expect(
+      model.apply(goalId, (await claim(goalId))!.token, revise(parent.id)),
+    ).rejects.toThrow(/corrected protocols/);
+  });
+
+  it('refuses to revise an experiment that never produced a result', async () => {
+    const { goalId } = await seed();
+    const unresolved = await graphModel.createNode(goalId, {
+      kind: 'task',
+      title: 'Still running',
+      status: 'active',
+    });
+    await expect(
+      model.apply(goalId, (await claim(goalId))!.token, revise(unresolved!.id)),
+    ).rejects.toThrow(/resolved experiment/);
+  });
   it('branches from an older experiment and pins its produced version with an auditable reason', async () => {
     const { goalId, parent } = await seed();
     await graphModel.createNode(goalId, {
