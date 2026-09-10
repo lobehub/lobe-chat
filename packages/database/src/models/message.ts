@@ -102,6 +102,17 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
 import { WorkModel } from './work';
 
+/**
+ * A stored tool-result image URL is durable when it already points at this
+ * file's proxy route (`/f/<fileId>`), which is what a production deployment
+ * writes. Only the presigned snapshots a dev/self-host server hands out — and
+ * rows written before the proxy existed — need re-resolving, so this keeps the
+ * common path free of a lookup. The trade-off is that a proxy URL carrying a
+ * host the deployment no longer serves is left as-is.
+ */
+const isDurableFileUrl = (url: unknown, fileId: string): boolean =>
+  typeof url === 'string' && url.includes(`/f/${fileId}`);
+
 const createChatImageItem = ({
   id,
   metadata,
@@ -1787,9 +1798,10 @@ export class MessageModel {
       for (const image of images) {
         if (!isPlainRecord(image)) continue;
         const fileId = (image as { fileId?: unknown }).fileId;
-        if (typeof fileId === 'string' && fileId.length > 0) {
-          targets.push({ fileId, image: image as Record<string, any> });
-        }
+        if (typeof fileId !== 'string' || fileId.length === 0) continue;
+        if (isDurableFileUrl((image as { url?: unknown }).url, fileId)) continue;
+
+        targets.push({ fileId, image: image as Record<string, any> });
       }
     }
     if (targets.length === 0) return;

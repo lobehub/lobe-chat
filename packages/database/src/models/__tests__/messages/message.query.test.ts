@@ -465,6 +465,51 @@ describe('MessageModel Query Tests', () => {
       );
     });
 
+    it('should leave a proxy-shaped tool image url alone without a lookup', async () => {
+      // Production stores `/f/<fileId>`, which never expires: re-resolving it
+      // would cost a query per read and hand back the same string.
+      const proxyUrl = 'https://app.lobehub.com/f/tool-image-durable-file';
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(topics).values({ id: 'tool-image-durable-topic', sessionId: '1', userId });
+        await trx.insert(messages).values({
+          content: '',
+          createdAt: new Date('2023-01-01'),
+          id: 'tool-image-durable-message',
+          role: 'tool',
+          topicId: 'tool-image-durable-topic',
+          userId,
+        });
+        await trx.insert(files).values({
+          fileType: 'image/png',
+          id: 'tool-image-durable-file',
+          name: 'capture.png',
+          size: 2048,
+          url: 'files/2026-09-10/capture.png',
+          userId,
+        });
+        await trx.insert(messagePlugins).values({
+          apiName: 'readFile',
+          id: 'tool-image-durable-message',
+          identifier: 'lobe-local-system',
+          state: {
+            images: [{ fileId: 'tool-image-durable-file', mediaType: 'image/png', url: proxyUrl }],
+          },
+          toolCallId: 'tool-image-durable-call',
+          userId,
+        });
+      });
+
+      const postProcessUrl = vi.fn(async (path: string | null) => `/fresh/${path}`);
+
+      const [page] = await messageModel.query(
+        { topicId: 'tool-image-durable-topic' },
+        { postProcessUrl },
+      );
+
+      expect((page.pluginState as any).images[0].url).toBe(proxyUrl);
+      expect(postProcessUrl).not.toHaveBeenCalled();
+    });
+
     it('should keep the stored tool image url when its file is gone', async () => {
       const staleUrl = 'https://s3.example.com/files/deleted.png?X-Amz-Expires=7200';
       await serverDB.transaction(async (trx) => {
