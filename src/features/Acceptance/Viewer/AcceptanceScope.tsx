@@ -22,6 +22,9 @@ export const useAcceptanceScope = () => {
   return scope;
 };
 
+/** For leaves that may also render outside the viewer (no scope → no collaboration UI). */
+export const useOptionalAcceptanceScope = () => use(AcceptanceScopeContext);
+
 export const AcceptanceScope = ({
   acceptanceId,
   children,

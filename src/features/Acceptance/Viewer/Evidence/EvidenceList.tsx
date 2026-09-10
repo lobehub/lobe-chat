@@ -1,6 +1,5 @@
 'use client';
 
-import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { Flexbox, Image } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { memo } from 'react';
@@ -22,6 +21,7 @@ import type { AcceptanceEvidence } from '../Checks/types';
 import { AnnotatedImage } from '../Evidence/Annotation';
 import { ScreenshotTiles } from '../Evidence/ScreenshotTiles';
 import { IMAGE_EVIDENCE, imageRatio, isVisual } from './evidence';
+import type { EvidenceOverlayMap } from './overlay';
 import { styles } from './styles';
 
 /** Flat media for a comparison side — the card frames it, so no own border/radius. */
@@ -64,14 +64,11 @@ export const EvidenceList = memo<{
   onReviewEvidence?: (id: string) => void;
   /**
    * Regions to draw over an evidence image, keyed by evidence id. Used by the
-   * AI proposal: rather than the card rendering its own copy of the screenshot
-   * (which showed the same image twice in one row), the boxes land on the image
-   * that is already here.
+   * AI proposal and by reviewers' circled comments: rather than the card
+   * rendering its own copy of the screenshot (which showed the same image twice
+   * in one row), the boxes land on the image that is already here.
    */
-  overlays?: Map<
-    string,
-    { comment?: string; label?: number; rect: AcceptanceReviewAnnotation['rect'] }[]
-  >;
+  overlays?: EvidenceOverlayMap;
 }>(({ evidence, overlays, onReviewEvidence }) => {
   const { md = true } = useResponsive();
   const sorted = [...evidence].sort((a, b) => (isVisual(b) ? 1 : 0) - (isVisual(a) ? 1 : 0));

@@ -1,6 +1,5 @@
 'use client';
 
-import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { copyToClipboard, Flexbox, Icon, TextArea, Tooltip } from '@lobehub/ui';
 import { ActionIcon, Button, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar, cx, useResponsive } from 'antd-style';
@@ -16,6 +15,7 @@ import {
   FileText,
   Film,
   Images,
+  MessageSquare,
   MessageSquareX,
   Repeat,
   Route,
@@ -26,12 +26,22 @@ import { useTranslation } from 'react-i18next';
 import { hasRenderableEvidence, readVisualizationManifest } from '../../Report/visualization';
 import { VisualizationDeltaBadge, VisualizationRenderer } from '../../Report/VisualizationRenderer';
 import { checkDisplayTitle } from '../../utils';
+import { useOptionalAcceptanceScope } from '../AcceptanceScope';
+import { acceptanceAuthorColor } from '../Comments/authorColor';
+import { commentAuthorName } from '../Comments/CommentCard';
+import CommentThread from '../Comments/CommentThread';
+import { openEvidenceCommentModal } from '../Comments/EvidenceCommentModal';
+import { useAcceptanceComments } from '../Comments/hooks';
+import ThreadEvidence from '../Comments/ThreadEvidence';
+import { threadsForCheck } from '../Comments/threads';
 import { evidenceCounts, hasAnnotatableEvidence, isAnnotatable } from '../Evidence/evidence';
 import { EvidenceList } from '../Evidence/EvidenceList';
+import type { EvidenceOverlayMap } from '../Evidence/overlay';
 import { openCheckRejectModal } from '../Review/CheckRejectModal';
 import type { CheckProposal } from '../Review/proposal';
 import { classifyProposalEdit } from '../Review/proposal';
 import ProposalCard from '../Review/ProposalCard';
+import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import {
   AcceptedNote,
   collectEvidenceById,
@@ -124,10 +134,7 @@ export const AcceptanceCheckRow = memo<{
     // open — boxes with no visible explanation read as a defect of the evidence.
     const proposalOverlays = useMemo(() => {
       if (!proposalOpen || !check.prediction) return undefined;
-      const map = new Map<
-        string,
-        { comment?: string; label?: number; rect: AcceptanceReviewAnnotation['rect'] }[]
-      >();
+      const map: EvidenceOverlayMap = new Map();
       (check.prediction.annotations ?? []).forEach((annotation, index) => {
         const bucket = map.get(annotation.evidenceId) ?? [];
         bucket.push({ comment: annotation.comment, label: index + 1, rect: annotation.rect });
@@ -136,6 +143,75 @@ export const AcceptanceCheckRow = memo<{
       return map.size > 0 ? map : undefined;
     }, [proposalOpen, check.prediction]);
     const hasHistory = check.revisions > 1 || historyReviews.length > 0;
+
+    // Collaboration: threads circled on this check's evidence. Only inside the
+    // viewer — the row also renders in hosts with no acceptance scope.
+    const scope = useOptionalAcceptanceScope();
+    const { data: bundle } = useAcceptanceBundle(scope?.acceptanceId ?? '');
+    const comments = useAcceptanceComments(scope?.acceptanceId);
+    const checkThreads = useMemo(
+      () => threadsForCheck(comments.threads, check.id),
+      [comments.threads, check.id],
+    );
+    const commentActions = {
+      onDelete: comments.remove,
+      onReply: (rootId: string, content: string, attachments: { fileId: string }[]) =>
+        comments.create({
+          attachments,
+          clientId: `${rootId}:${Date.now()}`,
+          content,
+          contextRunId: bundle?.rounds.at(-1)?.run.id,
+          parentCommentId: rootId,
+        }),
+      onResolve: comments.setResolved,
+    };
+    // A region whose evidence a later round replaced: the box has nothing left
+    // to sit on, so the thread renders under the evidence with its own copy of
+    // the picture instead of disappearing.
+    const showsNow = new Set(check.evidence.map((item) => item.id));
+    const staleThreads = checkThreads.filter(
+      (thread) => thread.root.evidenceId && !showsNow.has(thread.root.evidenceId),
+    );
+    // Each reviewer's regions carry their own colour, so two people circling
+    // the same screenshot never read as one person's notes; the marker on the
+    // box opens that thread in full — replies and all.
+    const commentOverlays = useMemo(() => {
+      const map: EvidenceOverlayMap = new Map(proposalOverlays ?? []);
+      checkThreads.forEach((thread, index) => {
+        const { author, authorUserId, evidenceId, rect, content, deletedAt } = thread.root;
+        if (!evidenceId || !rect || deletedAt) return;
+        const bucket = map.get(evidenceId) ?? [];
+        bucket.push({
+          authorName: commentAuthorName(author),
+          color: acceptanceAuthorColor(authorUserId),
+          comment: content,
+          label: index + 1,
+          panel: (
+            <CommentThread canComment={comments.canComment} thread={thread} {...commentActions} />
+          ),
+          rect,
+          resolved: Boolean(thread.root.resolvedAt),
+        });
+        map.set(evidenceId, bucket);
+      });
+      return map.size > 0 ? map : undefined;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [proposalOverlays, checkThreads, comments.canComment]);
+    const canCommentEvidence =
+      comments.canComment && Boolean(check.result) && hasAnnotatableEvidence(check);
+    const openEvidenceComment = () =>
+      openEvidenceCommentModal({
+        evidence: check.evidence,
+        onConfirm: async ({ content, evidenceId, rect }) => {
+          await comments.create({
+            anchor: { checkItemId: check.id, evidenceId, rect },
+            clientId: `${check.id}:${Date.now()}`,
+            content,
+            contextRunId: bundle?.rounds.at(-1)?.run.id,
+          });
+          return true;
+        },
+      });
 
     /**
      * @param fromProposal - when set, the modal opens prefilled with the
@@ -409,6 +485,21 @@ export const AcceptanceCheckRow = memo<{
                   </Tooltip>
                 ) : null,
               )}
+              {checkThreads.length > 0 && (
+                <Tooltip
+                  title={t('acceptance.comments.regionCount', { count: checkThreads.length })}
+                >
+                  <Flexbox
+                    horizontal
+                    align={'center'}
+                    gap={3}
+                    style={{ color: cssVar.colorTextTertiary, fontSize: 11 }}
+                  >
+                    <Icon icon={MessageSquare} size={13} />
+                    {checkThreads.length}
+                  </Flexbox>
+                </Tooltip>
+              )}
               {/* The iteration mark stays compact — [↻ N]; the words (verified N
               rounds · introduced in round X) live in its tooltip. Clicking
               jumps to the round the concern first appeared in. */}
@@ -520,9 +611,64 @@ export const AcceptanceCheckRow = memo<{
             {visualization && <VisualizationRenderer manifest={visualization} />}
             <EvidenceList
               evidence={check.evidence}
-              overlays={proposalOverlays}
+              overlays={commentOverlays}
               onReviewEvidence={canReview ? (id) => openReject(undefined, id) : undefined}
             />
+            {staleThreads.length > 0 && (
+              <Flexbox className={styles.staleRegions} gap={10}>
+                <Text fontSize={12} type={'secondary'}>
+                  {t('acceptance.comments.historicalRegions', { count: staleThreads.length })}
+                </Text>
+                {staleThreads.map((thread) => {
+                  const evidence = thread.root.evidenceId
+                    ? evidenceById.get(thread.root.evidenceId)
+                    : undefined;
+                  return (
+                    <Flexbox
+                      horizontal
+                      align={'flex-start'}
+                      gap={12}
+                      key={thread.root.id}
+                      wrap={'wrap'}
+                    >
+                      {evidence && (
+                        <ThreadEvidence
+                          stale
+                          comment={thread.root}
+                          evidence={evidence}
+                          roundIndex={
+                            check.timeline.find((entry) =>
+                              entry.evidence.some((item) => item.id === thread.root.evidenceId),
+                            )?.roundIndex
+                          }
+                        />
+                      )}
+                      <Flexbox flex={1} style={{ minWidth: 200 }}>
+                        <CommentThread
+                          canComment={comments.canComment}
+                          thread={thread}
+                          {...commentActions}
+                        />
+                      </Flexbox>
+                    </Flexbox>
+                  );
+                })}
+              </Flexbox>
+            )}
+            {canCommentEvidence && (
+              <Button
+                outdent
+                icon={<Icon icon={MessageSquare} />}
+                style={{ alignSelf: 'flex-start' }}
+                type={'text'}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openEvidenceComment();
+                }}
+              >
+                {t('acceptance.comments.commentEvidence')}
+              </Button>
+            )}
 
             {check.state === 'not_executed' && (
               <Flexbox
