@@ -20,7 +20,6 @@ import {
   priorityLabel,
 } from '@lobechat/prompts';
 import type { TaskAutomationMode, TaskStatus } from '@lobechat/types';
-import { and, eq } from 'drizzle-orm';
 
 import { notifyTaskAssigned } from '@/business/server/task/notifyTaskAssigned';
 import { AgentModel } from '@/database/models/agent';
@@ -29,31 +28,13 @@ import { TaskModel } from '@/database/models/task';
 import { UserModel } from '@/database/models/user';
 import { WorkspaceModel } from '@/database/models/workspace';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
-import { tasks } from '@/database/schemas';
-import { notTrashed } from '@/database/utils/softDelete';
 import { appEnv } from '@/envs/app';
 import { taskRouter } from '@/server/routers/lambda/task';
 import { TaskService } from '@/server/services/task';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
+import { resolveTaskWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
-
-// Row-level workspace resolution: the agent runtime hasn't threaded
-// `workspaceId` into `ToolExecutionContext` yet. When the tool fires inside a
-// task we derive the workspace from that task row; otherwise we fall back to
-// personal mode.
-const resolveWorkspaceId = async (
-  db: LobeChatDatabase,
-  taskId: string | undefined,
-): Promise<string | undefined> => {
-  if (!taskId) return undefined;
-  const [row] = await db
-    .select({ workspaceId: tasks.workspaceId })
-    .from(tasks)
-    .where(and(eq(tasks.id, taskId), notTrashed(tasks.isDeleted)))
-    .limit(1);
-  return row?.workspaceId ?? undefined;
-};
 
 export interface TaskRuntimeDeps {
   agentId?: string;
@@ -989,7 +970,7 @@ export const taskRuntime: ServerRuntimeRegistration = {
       // Prefer pipeline-threaded `context.workspaceId`. Fall back to looking
       // up the owning task row for callers that pre-date the propagation work
       // and still construct `ToolExecutionContext` without `workspaceId`.
-      const wsId = context.workspaceId ?? (await resolveWorkspaceId(db, taskId));
+      const wsId = context.workspaceId ?? (await resolveTaskWorkspaceId(db, taskId));
       workspaceId = wsId;
       deps.workspaceId = wsId;
       deps.agentModel = new AgentModel(db, userId, wsId);
