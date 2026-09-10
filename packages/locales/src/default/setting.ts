@@ -1,14 +1,16 @@
 export default {
-  'marketSubmission.entry': 'Submit to Market for review',
-  'marketSubmission.title': 'Submit agent for review',
-  'marketSubmission.submit': 'Submit for review',
+  'marketSubmission.entry': 'Publish',
+  'marketSubmission.title': 'Publish to Market',
+  'marketSubmission.submit': 'Publish',
   'marketSubmission.confirm':
-    'Submit the current snapshot of “{{name}}” to Market? Its profile, prompt, model settings and enabled tool identifiers will be uploaded and become public after approval. Do not include secrets or private information. Conversations, files and credentials are not included. If you own its Market listing, a new version will be submitted; otherwise a separate listing will be created.',
-  'marketSubmission.required': 'Add an agent name and prompt before submitting for review.',
-  'marketSubmission.success': 'Submitted for review. It will appear in Market after approval.',
-  'marketSubmission.failed': 'Could not submit for review. Please try again.',
+    '“{{name}}” will become a public agent when published to Market. Make sure its profile and prompt contain no private information or secrets.',
+  'marketSubmission.required': 'Add an agent name and prompt before publishing.',
+  'marketSubmission.success':
+    'Submitted. Your agent is under review and will appear in Market after approval.',
+  'marketSubmission.failed': 'Could not submit. Please try again.',
   'marketSubmission.linkFailed':
     'Submitted, but could not save the Market link locally ({{identifier}}). Keep this identifier and avoid resubmitting as a new agent.',
+  'marketPublish.status.underReview': 'Under Review',
   'marketPublish.status.published': 'Published',
   'marketPublish.status.unpublished': 'Unpublished',
   'marketPublish.status.archived': 'Archived',

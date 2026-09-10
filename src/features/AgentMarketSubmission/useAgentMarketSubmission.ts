@@ -22,6 +22,7 @@ export const useAgentMarketSubmission = ({ agentId, canSubmit, getPrompt }: Opti
   const hasActiveWorkspace = useHasActiveWorkspace();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [submittedAgentId, setSubmittedAgentId] = useState<string>();
   const busy = useRef(false);
   const modal = useRef<ReturnType<typeof confirmModal> | null>(null);
 
@@ -100,6 +101,7 @@ export const useAgentMarketSubmission = ({ agentId, canSubmit, getPrompt }: Opti
                 toast.warning(t('marketSubmission.linkFailed', { identifier: result.identifier }));
               }
             }
+            setSubmittedAgentId(agentId);
             setRevision((value) => value + 1);
             toast.success(t('marketSubmission.success'));
           } catch (error) {
@@ -122,5 +124,5 @@ export const useAgentMarketSubmission = ({ agentId, canSubmit, getPrompt }: Opti
     }
   };
 
-  return { isSubmitting, open, revision };
+  return { isSubmitting, isUnderReview: !!agentId && submittedAgentId === agentId, open, revision };
 };

@@ -69,6 +69,7 @@ describe('Market review submission', () => {
     const { result } = renderSubmission();
     await act(() => result.current.open());
     expect(mocks.submit).not.toHaveBeenCalled();
+    expect(result.current.isUnderReview).toBe(false);
     await act(async () => confirmation().onOk?.());
     expect(mocks.submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -94,6 +95,33 @@ describe('Market review submission', () => {
     });
     expect(toast.success).toHaveBeenCalledWith('marketSubmission.success');
     expect(result.current.revision).toBe(1);
+    expect(result.current.isUnderReview).toBe(true);
+  });
+
+  it('does not show another agent as under review after navigating during submission', async () => {
+    let resolve!: (value: { identifier: string; isNewAgent: boolean; success: boolean }) => void;
+    mocks.submit.mockReturnValue(
+      new Promise((done) => {
+        resolve = done;
+      }),
+    );
+    const { result, rerender } = renderHook(
+      ({ agentId }) => useAgentMarketSubmission({ agentId, canSubmit: true, getPrompt }),
+      { initialProps: { agentId: 'agent-a' } },
+    );
+    await act(() => result.current.open());
+    let pending: void | Promise<void>;
+    act(() => {
+      pending = confirmation().onOk?.();
+    });
+    expect(result.current.isUnderReview).toBe(false);
+    mocks.state.activeAgentId = 'agent-b';
+    rerender({ agentId: 'agent-b' });
+    await act(async () => {
+      resolve({ identifier: 'market-a', isNewAgent: true, success: true });
+      await pending;
+    });
+    expect(result.current.isUnderReview).toBe(false);
   });
 
   it('submits existing listings as new versions under the workspace identity', async () => {
@@ -162,7 +190,9 @@ describe('Market review submission', () => {
     expect(toast.success).not.toHaveBeenCalled();
     expect(mocks.state.updateAgentMetaById).not.toHaveBeenCalled();
     expect(result.current.isSubmitting).toBe(false);
+    expect(result.current.isUnderReview).toBe(false);
     await act(async () => confirmation().onOk?.());
     expect(toast.success).toHaveBeenCalledOnce();
+    expect(result.current.isUnderReview).toBe(true);
   });
 });
