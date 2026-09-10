@@ -100,14 +100,8 @@ export async function exploreGraph(params: {
       };
     }
     if (result.outcome === 'revision-limit') {
-      // The graph and `revisionsRemaining: 0` are unchanged, so replanning right away
-      // would ask the same question and could spend the whole tick budget on it. End
-      // the advance instead; the goal stays running for the next wakeup.
-      return {
-        goalId,
-        outcome: 'no_progress',
-        message: `Experiment ${result.parentNodeId} has no corrected protocol left; ended this advance`,
-      };
+      effects.push({ detail: 'paused: revision allowance spent', type: 'goal_status' });
+      return { goalId, outcome: 'no_progress', message: result.reason };
     }
     if (result.outcome === 'revised') {
       effects.push({

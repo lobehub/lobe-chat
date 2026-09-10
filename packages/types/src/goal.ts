@@ -104,7 +104,12 @@ export interface GoalAcceptancePolicy {
  * stored explicitly rather than as the absence of a marker, because pausing an
  * already-paused goal is a no-op that leaves no other trace of who asked.
  */
-export type GoalPauseReason = 'measured_acceptance' | 'exploration_limit' | 'user';
+export type GoalPauseReason =
+  | 'measured_acceptance'
+  | 'exploration_limit'
+  /** The planner asked for a correction after its allowance was already spent. */
+  | 'exploration_revision_limit'
+  | 'user';
 
 export interface GoalExplorationDecision {
   /**

@@ -140,7 +140,7 @@ describe('GoalExplorationModel', () => {
     );
   }, 20_000);
 
-  it('reports a spent allowance and releases its lease instead of throwing', async () => {
+  it('parks the goal when the planner asks past a spent allowance', async () => {
     const { goalId } = await seed(4);
     const { experimentId } = await seedExperiment(goalId);
     for (const attempt of [1, 2]) {
@@ -154,13 +154,13 @@ describe('GoalExplorationModel', () => {
       // each rerun must finish before the next correction can target it.
       await graphModel.updateNodeStatus(goalId, applied.nodeId!, 'resolved');
     }
-    expect(await model.apply(goalId, (await claim(goalId))!.token, revise(experimentId))).toEqual({
-      outcome: 'revision-limit',
-      parentNodeId: experimentId,
-    });
-    // A retained lease would make the next claim wait out the checkpoint instead of
-    // re-planning, which is what the returned outcome asks the coordinator to do.
-    expect(await claim(goalId)).toBeTruthy();
+    const spent = await model.apply(goalId, (await claim(goalId))!.token, revise(experimentId));
+    expect(spent).toMatchObject({ outcome: 'revision-limit' });
+    expect((spent as { reason: string }).reason).toContain('already ran 2 corrected protocols');
+    // Leaving it running would let every sweep buy another identical planning call.
+    const goal = await new GoalModel(db, userId).findById(goalId);
+    expect(goal?.status).toBe('paused');
+    expect(goal?.config?.pausedBy).toBe('exploration_revision_limit');
   });
 
   it('does not charge ordinary branches to the correction budget', async () => {

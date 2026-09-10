@@ -33,8 +33,14 @@ Corrections carry a dedicated `revises` edge rather than `derived_from`: that ki
 is generic provenance, is writable through the public `addEdge` mutation, and
 already appears on hand-authored tasks, so reusing it would reinterpret unrelated
 provenance as a correction. `revises` is written only by the coordinator and is
-deliberately absent from the public vocabulary. An experiment reads as unresolved
-while a correction runs,
+deliberately absent from the public vocabulary. Rolling this release back leaves
+any queued correction dispatchable but weaker: the previous coordinator resolves
+provenance through the containing experiment, so the rerun carries that
+experiment's branch parent instead of the experiment it corrects, or no history
+when the container is a root. The corrected protocol itself is in the Task
+description and survives, so the degradation is missing context rather than a
+wrong instruction; drain queued corrections before rolling back if that matters.
+An experiment reads as unresolved while a correction runs,
 so corrections are serial. A seed Task with no experiment container cannot hold
 one and reports no allowance; those goals expand first.
 

@@ -89,7 +89,7 @@ describe('exploreGraph', () => {
     expect(parent.revisionsRemaining).toBe(1);
   });
 
-  it('ends the advance instead of pausing or replanning when an allowance is spent', async () => {
+  it('reports the park instead of replanning when an allowance is spent', async () => {
     plan.mockResolvedValue({
       action: 'revise',
       instruction: 'Try once more',
@@ -97,16 +97,19 @@ describe('exploreGraph', () => {
       reason: 'Still not measuring the right thing',
       title: '',
     });
-    apply.mockResolvedValue({ outcome: 'revision-limit', parentNodeId: 'parent' });
+    apply.mockResolvedValue({ outcome: 'revision-limit', reason: 'allowance spent' });
+    const effects: any[] = [];
     const result = await exploreGraph({
       db: {} as LobeChatDatabase,
-      effects: [],
+      effects,
       graph: graph(),
       userId: 'user',
     });
-    // `advanced` here would replan on identical input and could burn the tick budget.
-    expect(result.outcome).toBe('no_progress');
-    expect(result.message).toContain('no corrected protocol left');
+    // `advanced` here would replan on identical input and burn the tick budget.
+    expect(result).toMatchObject({ message: 'allowance spent', outcome: 'no_progress' });
+    expect(effects).toContainEqual(
+      expect.objectContaining({ detail: 'paused: revision allowance spent' }),
+    );
   });
 
   it('reports a revision as its own advance so the corrected protocol is dispatched', async () => {

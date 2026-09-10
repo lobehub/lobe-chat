@@ -173,14 +173,26 @@ export class GoalExplorationModel {
         // A spent allowance is a predictable policy answer, not a planner crash. Throwing
         // here would pause the whole goal through the generic failure path, and resuming
         // could produce the same choice again.
-        if (protocolRevisionCount(graph, target.id) >= MAX_PROTOCOL_REVISIONS) {
-          // Release the lease like every other terminal path, or the re-plan this
-          // returns is refused by the next claim until the checkpoint times out.
+        const spent = protocolRevisionCount(graph, target.id);
+        if (spent >= MAX_PROTOCOL_REVISIONS) {
+          // The planner asked for a correction after being told the allowance was
+          // gone, and nothing about the graph will change on its own. Leaving the
+          // goal running would let every sweep buy another identical planning call
+          // forever, so park it the way an exhausted experiment budget does.
+          const reason = `Experiment ${target.id} already ran ${spent} corrected protocols; the planner asked for another. Resume to replan.`;
           await tx
             .update(goals)
-            .set({ config: { ...goal.config, exploration: { ...policy, checkpoint: undefined } } })
+            .set({
+              config: {
+                ...goal.config,
+                exploration: { ...policy, checkpoint: undefined },
+                pausedBy: 'exploration_revision_limit',
+              },
+              status: 'paused',
+            })
             .where(eq(goals.id, goalId));
-          return { outcome: 'revision-limit' as const, parentNodeId: target.id };
+          await graphModel.recordGoalStatus(goalId, 'running', 'paused', reason);
+          return { outcome: 'revision-limit' as const, reason };
         }
         // Correcting an instrument reuses the parent's container, so the graph keeps one
         // question with successive protocols instead of a row of flawed siblings. An
