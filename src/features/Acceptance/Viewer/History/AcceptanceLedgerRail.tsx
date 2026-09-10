@@ -158,6 +158,7 @@ const AcceptanceLedgerRail = () => {
         </AcceptanceDrawer>
       ) : (
         <DraggablePanel
+          backgroundColor={cssVar.colorBgLayout}
           defaultSize={{ width: 340 }}
           expand={expand}
           minWidth={300}
