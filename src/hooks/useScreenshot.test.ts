@@ -12,15 +12,17 @@ vi.mock('@lobechat/business-const', () => ({
 }));
 
 describe('getImageUrl', () => {
-  it('captures raster images without placeholders or a third-party proxy', async () => {
+  it('captures raster images without placeholders', async () => {
     toBlob.mockResolvedValue(new Blob(['x'], { type: 'image/png' }));
     document.body.innerHTML = '<div id="preview"><img src="data:image/png;base64,aaa"/></div>';
 
     await getImageUrl({ imageType: ImageType.PNG });
 
-    expect(toBlob).toHaveBeenCalledWith(expect.any(HTMLDivElement), {
+    const options = toBlob.mock.calls[0][1];
+    expect(options).toMatchObject({
       placeholders: false,
       type: 'png',
+      useProxy: 'https://proxy.corsfix.com/?',
     });
   });
 });

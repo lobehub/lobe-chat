@@ -54,6 +54,7 @@ export const getImageUrl = async ({
     const blobResult = await snapdom.toBlob(width ? copy : dom, {
       type: blobType,
       placeholders: false,
+      useProxy: 'https://proxy.corsfix.com/?',
     });
 
     if (!blobResult) {

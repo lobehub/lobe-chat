@@ -66,7 +66,6 @@ describe('file proxy route', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get('location')).toBe('https://s3.example.com/presigned-preview-url');
-    expect(response.headers.get('access-control-allow-origin')).toBe('*');
     expect(FileModel.getFileById).toHaveBeenCalledWith(db, 'file-id');
     expect(FileService).toHaveBeenCalledWith(db, 'owner-user-id');
     expect(fileServiceMocks.instance.createCachedPreSignedUrlForPreview).toHaveBeenCalledWith(

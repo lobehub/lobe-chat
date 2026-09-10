@@ -51,14 +51,8 @@ export const GET = async (req: Request, segmentData: { params: Params }) => {
       : await fileService.createCachedPreSignedUrlForPreview(file.url);
     log('Web S3 presigned URL generated (%s)', isDownload ? 'download' : 'preview');
 
-    // Allow screenshot capture to follow the cross-origin storage redirect.
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Location': redirectUrl,
-      },
-      status: 302,
-    });
+    // Return 302 redirect
+    return Response.redirect(redirectUrl, 302);
   } catch (error) {
     console.error('File proxy error:', error);
     return new Response('Internal server error', {
