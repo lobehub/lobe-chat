@@ -79,18 +79,22 @@ export const styles = createStaticStyles(({ css }) => ({
       color: ${cssVar.colorTextQuaternary};
     }
 
-    .cm-activeLineGutter {
+    /* The bundle carries a base style that paints the caret's line and gutter a
+       hard-coded near-white, in dark mode too, and qualifies both of them with
+       the editor class. Naming that class twice is what outranks it: otherwise
+       the focused line reads as a white band with its punctuation washed out. */
+    .cm-editor.cm-editor .cm-activeLineGutter {
       color: ${cssVar.colorText} !important;
       background: transparent;
     }
 
-    .cm-activeLine {
+    .cm-editor.cm-editor .cm-activeLine {
       background: ${cssVar.colorFillQuaternary};
     }
 
     /* A focused editor gets the stronger cue; an unfocused one keeps a faint
        marker so the caret position is still findable after a click elsewhere. */
-    .cm-editor:not(.cm-focused) .cm-activeLine {
+    .cm-editor.cm-editor:not(.cm-focused) .cm-activeLine {
       background: transparent;
     }
 
