@@ -44,14 +44,6 @@ const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
  */
 export type GoalFailureOrigin = 'agent-run' | 'pipeline';
 
-/**
- * Stable id for a failure that produced no operation, so a kickoff that threw
- * before writing a run can still be deduplicated and counted. Keyed per attempt:
- * a second failed dispatch is a second incident, not a silent reuse of the first.
- */
-export const dispatchFailureKey = (task: TaskItem) =>
-  `dispatch:${task.id}:${task.totalTopics ?? 0}`;
-
 export const failureOrigin = (task: TaskItem, operation?: AgentOperationItem): GoalFailureOrigin =>
   task.status === 'failed' && operation?.status === 'error' ? 'agent-run' : 'pipeline';
 

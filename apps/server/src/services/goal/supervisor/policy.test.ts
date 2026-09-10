@@ -74,9 +74,6 @@ describe('supervisor recovery authority', () => {
       expect(
         recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,
       ).toBe(true);
-    expect(recoveryEligibility(graph, { ...task, status: 'paused' }, undefined).eligible).toBe(
-      true,
-    );
   });
 
   it('still refuses a pipeline failure that a person or a limit caused', () => {

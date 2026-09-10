@@ -21,12 +21,7 @@ import { AiAgentService } from '@/server/services/aiAgent';
 
 import { resolveGoalModelConfig } from '../modelConfig';
 import { scheduleGoalAdvance } from '../scheduler';
-import {
-  dispatchFailureKey,
-  recoveryEligibility,
-  supervisionLimit,
-  SUPERVISOR_DIAGNOSIS_TIMEOUT_MS,
-} from './policy';
+import { recoveryEligibility, supervisionLimit, SUPERVISOR_DIAGNOSIS_TIMEOUT_MS } from './policy';
 
 /** Durable supervisor with a dedicated, incident-scoped tool set. */
 export class GoalSupervisorService {
@@ -133,15 +128,13 @@ export class GoalSupervisorService {
       task.id,
     );
     const latest = runs[0];
-    // A kickoff that threw before writing a run has no operation to key on, yet it
-    // is the failure least in need of a person. Fall back to a per-attempt key so
-    // the incident is still recorded, deduplicated and budgeted.
-    const failureKey = latest?.operationId ?? dispatchFailureKey(task);
-    const failedOperation = latest?.operationId
-      ? await operations.findById(latest.operationId)
-      : undefined;
+    // A kickoff that threw before writing a run has no operation to key an incident on,
+    // and settlement is anchored on that run's sequence. Supervising it needs incident
+    // identity and settlement redesigned, so it still reaches a person for now.
+    if (!latest?.operationId) return null;
+    const failedOperation = await operations.findById(latest.operationId);
     const state = graph.goal.config.supervisorState ?? (await this.initialize(graph));
-    let incident = state.incidents.find((item) => item.failedOperationId === failureKey);
+    let incident = state.incidents.find((item) => item.failedOperationId === latest.operationId);
     if (!incident) {
       if (state.incidents.some((item) => item.status === 'diagnosing'))
         return waiting('Another interruption is being diagnosed');
@@ -166,8 +159,8 @@ export class GoalSupervisorService {
       incident = {
         createdAt: new Date().toISOString(),
         eligible: eligibility.eligible,
-        failedOperationId: failureKey,
-        id: failureKey,
+        failedOperationId: latest.operationId,
+        id: latest.operationId,
         nodeId,
         reason: eligibility.reason,
         status: eligibility.eligible ? 'diagnosing' : 'escalated',
@@ -321,8 +314,7 @@ export class GoalSupervisorService {
         !currentGraph ||
         !currentTask ||
         ownIncident?.status !== 'diagnosing' ||
-        (currentRuns[0]?.operationId ?? dispatchFailureKey(currentTask)) !==
-          incident.failedOperationId ||
+        currentRuns[0]?.operationId !== incident.failedOperationId ||
         !recoveryEligibility(currentGraph, currentTask, failedOperation).eligible ||
         (await new GoalSupervisorService(tx, this.userId, this.workspaceId).budgetBlocked(
           currentGraph,

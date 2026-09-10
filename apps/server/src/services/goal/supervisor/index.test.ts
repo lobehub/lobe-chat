@@ -499,16 +499,6 @@ describe('Goal Supervisor integration', () => {
     expect(graph.goal.config?.supervisorState?.incidents.at(-1)?.status).not.toBe('escalated');
   });
 
-  it('supervises a dispatch that failed before it ever wrote a run', async () => {
-    const { goalId } = await pipelineFailureGoal('Kickoff failed before dispatch', false);
-    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
-    const graph = await service().graph(goalId);
-    expect(graph.decisions).toHaveLength(0);
-    const incident = graph.goal.config?.supervisorState?.incidents.at(-1);
-    expect(incident?.eligible).toBe(true);
-    expect(incident?.failedOperationId).toMatch(/^dispatch:/);
-  });
-
   it('without supervision the same transport failure opens a human Gate', async () => {
     const { goalId } = await failedGoal(false);
     expect((await service().tick(goalId)).outcome).toBe('waiting_human');
