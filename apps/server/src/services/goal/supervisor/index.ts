@@ -21,6 +21,7 @@ import { AiAgentService } from '@/server/services/aiAgent';
 
 import { resolveGoalModelConfig } from '../modelConfig';
 import { scheduleGoalAdvance } from '../scheduler';
+import { claimGoalTask } from '../taskClaim';
 import {
   RECOVERABLE_TASK_STATUSES,
   recoveryEligibility,
@@ -170,6 +171,7 @@ export class GoalSupervisorService {
         reason: eligibility.reason,
         status: eligibility.eligible ? 'diagnosing' : 'escalated',
         taskId: task.id,
+        taskStatus: task.status,
       };
       const claimed = await new GoalModel(
         this.db,
@@ -326,14 +328,15 @@ export class GoalSupervisorService {
         ))
       )
         return false;
-      // Compare against the status this Task actually holds, because a pipeline
-      // failure leaves it `paused` and a fixed `failed` expectation would never
-      // match. Guard the set first: a completion recorded during the diagnosis must
-      // never be swapped back to `backlog` and rerun.
+      // A diagnosis takes minutes, so claim against the status the incident was
+      // opened on. Re-reading first and comparing against that would swap whatever
+      // the person chose in the meantime.
       if (!RECOVERABLE_TASK_STATUSES.has(currentTask.status)) return false;
-      const changed = await new TaskModel(tx, this.userId, this.workspaceId).updateStatusIfCurrent(
-        task.id,
-        currentTask.status,
+      const changed = await claimGoalTask(
+        new TaskModel(tx, this.userId, this.workspaceId),
+        // The status this incident opened on, so anything a person did across the
+        // whole diagnosis wins the race rather than only a change since this tick.
+        { id: task.id, status: ownIncident.taskStatus ?? currentTask.status },
         'backlog',
         { error: null },
       );

@@ -512,6 +512,19 @@ describe('Goal Supervisor integration', () => {
     expect((await taskModel.findById(taskId))?.status).toBe('completed');
   });
 
+  it('loses the claim when the Task moved to another recoverable state mid-diagnosis', async () => {
+    // Routed as `paused`; a person then marks it `failed` without supplying a new
+    // error, so the run's transport reason survives and the policy still accepts it.
+    // Only claiming against the status the incident was opened on keeps this decision.
+    const { goalId, taskId } = await failedGoal(true, '{"error":"DEVICE_OFFLINE","success":false}');
+    await taskModel.update(taskId, { status: 'paused' });
+    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
+    await diagnose(goalId);
+    await taskModel.update(taskId, { status: 'failed' });
+    await service().tick(goalId);
+    expect((await taskModel.findById(taskId))?.status).toBe('failed');
+  });
+
   it('without supervision the same transport failure opens a human Gate', async () => {
     const { goalId } = await failedGoal(false);
     expect((await service().tick(goalId)).outcome).toBe('waiting_human');

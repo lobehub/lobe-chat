@@ -62,6 +62,7 @@ import {
   VERIFY_SETTLE_GRACE_MS,
 } from './recoveryPolicy';
 import { GoalSupervisorService } from './supervisor';
+import { claimGoalTask } from './taskClaim';
 import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
 import {
   type GoalTickOptions,
@@ -1790,12 +1791,10 @@ export class GoalService {
       ).countRunningTasks(goalId);
       if (inFlight >= resolveMaxConcurrentTasks(graph.goal)) return 'at-capacity' as const;
 
-      return new TaskModel(tx, this.userId, this.workspaceId).updateStatusIfCurrent(
-        task.id,
-        task.status,
-        'running',
-        { error: null, startedAt: new Date() },
-      );
+      return claimGoalTask(new TaskModel(tx, this.userId, this.workspaceId), task, 'running', {
+        error: null,
+        startedAt: new Date(),
+      });
     });
 
     if (claimed === 'stopped')

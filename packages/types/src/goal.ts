@@ -165,6 +165,12 @@ export interface GoalSupervisionIncident {
   status: 'diagnosing' | 'retrying' | 'recovered' | 'escalated' | 'unsuccessful' | 'human_resumed';
   supervisorOperationId?: string;
   taskId: string;
+  /**
+   * Status the Task held when this incident opened. A diagnosis runs for minutes, so
+   * the recovery claims against this rather than a later read: anything a person did
+   * in between must win, not be swapped back into work.
+   */
+  taskStatus?: string;
 }
 
 /** Server-owned state; never accepted as client configuration. */

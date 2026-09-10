@@ -7,6 +7,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { resolveTaskAttemptBudget, resolveTaskMaxSteps } from './recoveryPolicy';
+import { claimGoalTask } from './taskClaim';
 
 const log = debug('lobe-server:goal-task-recovery');
 
@@ -87,7 +88,7 @@ export class TaskRecoveryCoordinator {
       );
       return { outcome: 'settled' };
     }
-    const claimed = await taskModel.updateStatusIfCurrent(task.id, 'paused', 'running', {
+    const claimed = await claimGoalTask(taskModel, { id: task.id, status: 'paused' }, 'running', {
       error: null,
       startedAt: new Date(),
     });
