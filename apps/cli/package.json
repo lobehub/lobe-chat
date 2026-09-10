@@ -17,7 +17,7 @@
     "man"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "bun scripts/ensureWorkspaceLinks.ts && tsdown",
     "cli:link": "bun link",
     "cli:unlink": "bun unlink",
     "dev": "LOBEHUB_CLI_HOME=.lobehub-dev bun src/index.ts",
