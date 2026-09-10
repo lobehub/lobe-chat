@@ -1,16 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
 import { hasAnnotatableEvidence, hasVisualEvidence } from '../Evidence/evidence';
+import { mergeRejectComments, serializeReviewAnnotations } from '../Review/rejectDraft';
 import {
   canDismissRejectModal,
   CHECK_REJECT_MODAL_SIZE,
   checkRejectModalShell,
   checkRejectModalSize,
-  mergeRejectComments,
   rejectModalTitle,
-  serializeReviewAnnotations,
   TEXT_REJECT_MODAL_WIDTH,
-} from '../Review/CheckRejectModal';
+} from '../Review/rejectModalShell';
 import {
   checkFilterState,
   focusedCheckStates,
