@@ -464,6 +464,29 @@ describe('aiAgentRouter — remote Human-in-the-loop', () => {
     );
   });
 
+  it('answers a rejected source resolution with a client error instead of a 500', async () => {
+    const resolutionRequestId = '018fbd8e-7baf-7c6d-8000-000000000031';
+    await insertPendingTool({
+      batchId: 'batch-invalid',
+      messageId: 'message-invalid',
+      operationId: 'operation-invalid',
+      toolCallId: 'call-invalid',
+    });
+    businessV2.resolveAgentInterventionBySource.mockRejectedValueOnce(
+      new Error('AGENT_INTERVENTION_INVALID_ACTION'),
+    );
+
+    await expect(
+      userCaller().resolveAgentInterventionBySource({
+        action: { result: { mode: ['safe'] }, type: 'submit_answers' },
+        batchId: 'batch-invalid',
+        operationId: 'operation-invalid',
+        resolutionRequestId,
+        targets: [{ toolCallId: 'call-invalid', toolMessageId: 'message-invalid' }],
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+  });
+
   it('does not dispatch again when another surface already won the source claim', async () => {
     businessV2.resolveAgentInterventionBySource.mockResolvedValueOnce({
       contractVersion: 2,

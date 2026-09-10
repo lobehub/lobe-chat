@@ -68,6 +68,7 @@ import {
   resolveServerDefaultHeterogeneousModel,
   SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES,
 } from '@/server/modules/ModelRuntime';
+import { mapAgentInterventionTRPCError } from '@/server/routers/lambda/_helpers/agentInterventionError';
 import {
   assertCanUseMessageTargets,
   assertCanUseTopicTargets,
@@ -3280,6 +3281,8 @@ export const aiAgentRouter = router({
         workspaceId: ctx.workspaceId,
       });
 
+      // A rejected resolution describes the submitted response, not a server
+      // fault, so map the contract failure instead of letting it become a 500.
       const resolution = await resolveAgentInterventionBySource({
         action: input.action,
         actorUserId: ctx.userId,
@@ -3288,6 +3291,8 @@ export const aiAgentRouter = router({
         resolutionRequestId: input.resolutionRequestId,
         targets: input.targets,
         workspaceId: ctx.workspaceId ?? undefined,
+      }).catch((error: unknown) => {
+        throw mapAgentInterventionTRPCError(error);
       });
 
       if (!resolution.handled) {
@@ -3335,6 +3340,8 @@ export const aiAgentRouter = router({
         reviewToken: input.reviewToken,
         userId: ctx.userId,
         workspaceId: ctx.workspaceId ?? undefined,
+      }).catch((error: unknown) => {
+        throw mapAgentInterventionTRPCError(error);
       });
 
       if (!resolution.handled) {
@@ -3393,6 +3400,8 @@ export const aiAgentRouter = router({
         target: { reviewToken: input.reviewToken },
         userId: ctx.userId,
         workspaceId: ctx.workspaceId ?? undefined,
+      }).catch((error: unknown) => {
+        throw mapAgentInterventionTRPCError(error);
       });
 
       if (!resolution.handled) return { status: 'unavailable' as const, success: false as const };
