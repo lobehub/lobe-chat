@@ -1,8 +1,10 @@
 import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import type { LucideIcon } from 'lucide-react';
+import { ChevronRightIcon, type LucideIcon } from 'lucide-react';
 import type { MouseEventHandler, ReactNode } from 'react';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
+
+import { toBreadcrumbSegments } from './filePathBreadcrumb';
 
 const styles = createStaticStyles(({ css }) => ({
   action: css`
@@ -68,22 +70,32 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgContainer};
   `,
-  dir: css`
+  crumb: css`
     overflow: hidden;
-
-    /* Shrinks long before the filename does — the filename only starts
-       ellipsizing once the directory is fully collapsed. */
-    flex-shrink: 100;
-
     color: ${cssVar.colorTextTertiary};
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
-  name: css`
+  crumbGroup: css`
     overflow: hidden;
-    color: ${cssVar.colorTextSecondary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+    /* Ancestors give up their width long before the filename does, so the file
+       being previewed is the last thing to ellipsize. */
+    flex-shrink: 100;
+    min-width: 0;
+
+    &:last-child {
+      flex-shrink: 1;
+    }
+  `,
+  crumbLast: css`
+    color: ${cssVar.colorText};
+  `,
+  separator: css`
+    display: flex;
+    flex: none;
+    align-items: center;
+    color: ${cssVar.colorTextQuaternary};
   `,
   path: css`
     overflow: hidden;
@@ -136,20 +148,33 @@ ToolbarActionButton.displayName = 'ToolbarActionButton';
 interface PreviewToolbarProps {
   actions?: ReactNode;
   path: string;
+  /** Project root the path is shown relative to, when the file lives inside it. */
+  rootPath?: string;
 }
 
-const PreviewToolbar = memo<PreviewToolbarProps>(({ actions, path }) => {
-  const lastSlash = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
-  const dir = lastSlash > 0 ? path.slice(0, lastSlash) : '';
-  const sep = lastSlash > 0 ? path[lastSlash] : '';
-  const name = path.slice(lastSlash + 1);
+const PreviewToolbar = memo<PreviewToolbarProps>(({ actions, path, rootPath }) => {
+  const segments = useMemo(() => toBreadcrumbSegments(path, rootPath), [path, rootPath]);
 
   return (
     <Flexbox horizontal align={'center'} className={styles.bar} gap={8} justify={'space-between'}>
       <Tooltip title={path}>
         <Flexbox horizontal align={'center'} className={styles.path} flex={1}>
-          {dir && <span className={styles.dir}>{dir}</span>}
-          <span className={styles.name}>{dir ? `${sep}${name}` : name}</span>
+          {segments.map((segment, index) => {
+            const isLast = index === segments.length - 1;
+
+            return (
+              // Segments repeat within one path (`src/app/src`), so the index is
+              // the only stable identity here.
+              <Flexbox horizontal align={'center'} className={styles.crumbGroup} key={index}>
+                {index > 0 && (
+                  <span aria-hidden className={styles.separator}>
+                    <Icon icon={ChevronRightIcon} size={12} />
+                  </span>
+                )}
+                <span className={cx(styles.crumb, isLast && styles.crumbLast)}>{segment}</span>
+              </Flexbox>
+            );
+          })}
         </Flexbox>
       </Tooltip>
       {actions && (
