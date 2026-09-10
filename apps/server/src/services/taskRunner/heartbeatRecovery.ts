@@ -38,12 +38,13 @@ export interface HeartbeatRecoveryResult {
  * unaffected — its ticks are persisted server-side and re-deliver on their
  * own — so this sweep is a no-op there.
  *
- * For every runnable heartbeat task (`automationMode='heartbeat'`, positive
- * interval, not terminal/paused/running, fuse intact, no unresolved urgent
- * brief — the last two mirror `maybeRearmHeartbeat`'s gates, whose skip
- * leaves no pending tick at rest in QStash mode either) a fresh tick is
- * scheduled and the scheduler context is rewritten with a new `tickToken` /
- * `tickMessageId`:
+ * For every armed heartbeat task (`automationMode='heartbeat'`, status
+ * 'scheduled' — the only resting state a tick is ever published from, see
+ * {@link TaskModel.findRunnableHeartbeatTasks} — positive interval, fuse
+ * intact, no unresolved urgent brief; the last two mirror
+ * `maybeRearmHeartbeat`'s gates, whose skip leaves no pending tick at rest in
+ * QStash mode either) a fresh tick is scheduled and the scheduler context is
+ * rewritten with a new `tickToken` / `tickMessageId`:
  * - ticks that came due while the process was down fire after the floor delay;
  * - ticks still in the future keep their remaining wait, resuming the cadence
  *   where `scheduledAt + heartbeatInterval` says it left off.

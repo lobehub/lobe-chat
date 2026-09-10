@@ -1480,13 +1480,18 @@ export class TaskModel {
       );
   }
 
-  // Heartbeat twin of {@link getScheduledTasks}: rows whose heartbeat loop
-  // should still be alive. `paused` requires user attention, `running` is
-  // already in flight (and `runTask` would CONFLICT anyway) — same exclusions
-  // as the schedule twin.
+  // Heartbeat twin of {@link getScheduledTasks}, with a deliberate asymmetry:
+  // schedule mode dispatches any non-terminal/paused/running row whose cron
+  // pattern is set — configuring the pattern *is* arming it. Heartbeat loops
+  // are armed only by an explicit Start: the seed path in
+  // TaskService.updateStatus publishes the first tick exactly when the task
+  // transitions to 'scheduled', so 'scheduled' is the only resting state that
+  // legitimately carries a pending tick. A `backlog` row with heartbeat config
+  // was never started — selecting it here (and `runHeartbeatTick` does not
+  // reject backlog) would auto-start a task the user never ran.
   //
   // Used by the local-queue startup sweep: a process restart wipes the
-  // LocalTaskScheduler's in-flight setTimeout timers, so every runnable
+  // LocalTaskScheduler's in-flight setTimeout timers, so every armed
   // heartbeat task must have its next tick re-armed from scratch.
   static async findRunnableHeartbeatTasks(db: LobeChatDatabase): Promise<TaskItem[]> {
     return db
@@ -1495,8 +1500,8 @@ export class TaskModel {
       .where(
         and(
           eq(tasks.automationMode, 'heartbeat'),
+          eq(tasks.status, 'scheduled'),
           gt(tasks.heartbeatInterval, 0),
-          notInArray(tasks.status, ['canceled', 'completed', 'failed', 'paused', 'running']),
         ),
       );
   }
