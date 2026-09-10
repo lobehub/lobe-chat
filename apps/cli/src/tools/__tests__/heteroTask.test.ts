@@ -741,6 +741,39 @@ describe('cancelHeteroTask (process-group kill)', () => {
     killSpy.mockRestore();
   });
 
+  it('kills the persisted process tree with taskkill on Windows', async () => {
+    vi.spyOn(process, 'platform', 'get').mockReturnValue('win32');
+    let exitHandler: ((code: number) => void) | undefined;
+    spawnMock.mockReturnValue({
+      once: vi.fn((event: string, handler: (code: number) => void) => {
+        if (event === 'exit') exitHandler = handler;
+      }),
+    });
+    taskStore['op-windows-cancel'] = {
+      agentType: 'codex',
+      operationId: 'op-windows-cancel',
+      pid: 4242,
+      startedAt: new Date().toISOString(),
+      taskId: 'op-windows-cancel',
+      topicId: 'tpc-cli',
+    };
+
+    const cancellation = cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-windows-cancel' });
+    await vi.waitFor(() => expect(exitHandler).toBeDefined());
+    exitHandler?.(0);
+
+    await expect(cancellation).resolves.toEqual({
+      exited: true,
+      pid: 4242,
+      signal: 'SIGINT',
+      taskId: 'op-windows-cancel',
+    });
+    expect(spawnMock).toHaveBeenCalledWith('taskkill', ['/pid', '4242', '/T', '/F'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+  });
+
   it('still escalates after the wrapper exits and removes its registry entry', async () => {
     vi.useFakeTimers();
     let groupAlive = true;

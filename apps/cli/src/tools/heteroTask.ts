@@ -467,11 +467,11 @@ export async function cancelHeteroTask(
   params: CancelHeteroTaskParams,
 ): Promise<CancelHeteroTaskNotFoundResult | CancelHeteroTaskResult> {
   const { signal = 'SIGINT', taskId } = params;
-  const local = await cancelAgentRun(taskId, signal);
-  if (local) return { ...local, taskId };
   const entry = getTask(taskId);
 
   if (!entry) {
+    const local = await cancelAgentRun(taskId, signal);
+    if (local) return { ...local, signal, taskId };
     return { message: `No task found with taskId: ${taskId}`, success: false };
   }
 
