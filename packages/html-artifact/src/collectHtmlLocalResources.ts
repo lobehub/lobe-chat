@@ -1,6 +1,5 @@
-import { findAttribute, findOpeningTag, findTagEnd } from '@/components/HtmlPreview/htmlTagScanner';
-
-import { getFileExtension } from './Body.helpers';
+import { getFileExtension } from './fileExtension';
+import { findAttribute, findOpeningTag, findTagEnd } from './htmlTagScanner';
 import { parentDirectory, resolveLocalResourceHref } from './workspaceHtmlPath';
 
 const ALLOWED_ASSET_EXTENSIONS = new Set([
@@ -142,7 +141,26 @@ const collectTagAttributeHrefs = (tagText: string): string[] => {
   return hrefs;
 };
 
-const stripCssComments = (css: string): string => css.replaceAll(/\/\*[\s\S]*?\*\//g, '');
+/**
+ * Scanned rather than matched with `/\*[\s\S]*?\*\//g`: on a stylesheet full of
+ * unterminated `/*` the lazy match restarts from every opener and goes
+ * quadratic, and the CSS reaching here comes from files the user names.
+ */
+const stripCssComments = (css: string): string => {
+  let result = '';
+  let index = 0;
+
+  for (;;) {
+    const start = css.indexOf('/*', index);
+    if (start === -1) return result + css.slice(index);
+
+    result += css.slice(index, start);
+    const end = css.indexOf('*/', start + 2);
+    // An unterminated comment runs to the end of the sheet, as CSS defines it.
+    if (end === -1) return result;
+    index = end + 2;
+  }
+};
 
 const readCssUrlArgument = (source: string, openParenIndex: number): string | undefined => {
   let index = openParenIndex + 1;

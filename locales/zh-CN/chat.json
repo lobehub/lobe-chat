@@ -2480,6 +2480,7 @@
   "workingPanel.localFile.publish.tooLarge": "此页面过大，无法发布（{{size}} 字节）。",
   "workingPanel.localFile.publish.tooMany": "此页面引用的本地文件过多，无法发布。",
   "workingPanel.localFile.publish.unresolvedLocals": "此页面仍引用未打包的本地文件，发布后这些资源会失效。",
+  "workingPanel.localFile.publish.unsupported": "这些文件类型无法发布，将被跳过：{{list}}",
   "workingPanel.localFile.publish.upload_one": "1 个较大的文件会与页面一起上传。",
   "workingPanel.localFile.publish.upload_other": "{{count}} 个较大的文件会与页面一起上传。",
   "workingPanel.localFile.publish.uploadingProgress": "正在上传 {{completed}} / {{total}} · {{percent}}%",

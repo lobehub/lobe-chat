@@ -1,18 +1,18 @@
 import { bytesToBase64 } from '@lobechat/utils';
 
-import { extractHtmlTitle } from '@/components/HtmlPreview/htmlTagScanner';
-
 import {
   type CollectedLocalResourceRef,
   collectLocalResourceRefs,
   isCssAssetPath,
   isJsAssetPath,
+  type LocalResourceSkipReason,
 } from './collectHtmlLocalResources';
+import { extractHtmlTitle } from './htmlTagScanner';
 import {
   type ReadWorkspaceAssetResult,
   WORKSPACE_HTML_ARTIFACT_MAX_FILES,
   WORKSPACE_HTML_ARTIFACT_MAX_TOTAL_BYTES,
-} from './readWorkspaceAsset';
+} from './limits';
 import type { WorkspaceHtmlArtifactFile } from './workspaceHtmlArtifact';
 import {
   lowestCommonAncestorDirectory,
@@ -32,6 +32,7 @@ export interface GatheredWorkspaceHtmlArtifact {
   remotes: string[];
   title: string;
   totalBytes: number;
+  unsupported: string[];
 }
 
 const READ_CONCURRENCY = 5;
@@ -88,20 +89,25 @@ export const gatherWorkspaceHtmlArtifact = async ({
   const missing: string[] = [];
   const oversized: string[] = [];
   const remotes: string[] = [];
+  const unsupported: string[] = [];
   const htmlDirectory = parentDirectory(absoluteHtmlPath);
 
-  const addRemotes = (skipped: typeof htmlRefs.skipped) => {
+  const bucketForSkipReason = (reason: LocalResourceSkipReason): string[] | undefined => {
+    if (reason === 'remote') return remotes;
+    if (reason === 'escape') return missing;
+    if (reason === 'extension') return unsupported;
+    return;
+  };
+
+  const collectSkipped = (skipped: typeof htmlRefs.skipped) => {
     for (const item of skipped) {
-      if (item.reason !== 'remote') continue;
-      if (!remotes.includes(item.href)) remotes.push(item.href);
+      const bucket = bucketForSkipReason(item.reason);
+      if (!bucket || bucket.includes(item.href)) continue;
+      bucket.push(item.href);
     }
   };
 
-  addRemotes(htmlRefs.skipped);
-  for (const item of htmlRefs.skipped) {
-    if (item.reason !== 'escape') continue;
-    if (!missing.includes(item.href)) missing.push(item.href);
-  }
+  collectSkipped(htmlRefs.skipped);
   const resolvedAssets: Array<{
     absolutePath: string;
     bytes: Uint8Array;
@@ -184,7 +190,7 @@ export const gatherWorkspaceHtmlArtifact = async ({
       sourcePath: walkRef.absolutePath,
       workingDirectory,
     });
-    addRemotes(nested.skipped);
+    collectSkipped(nested.skipped);
 
     for (const ref of nested.refs) {
       if (seen.has(ref.absolutePath)) continue;
@@ -237,5 +243,6 @@ export const gatherWorkspaceHtmlArtifact = async ({
     remotes,
     title: extractHtmlTitle(htmlContent) || filename,
     totalBytes,
+    unsupported,
   };
 };
