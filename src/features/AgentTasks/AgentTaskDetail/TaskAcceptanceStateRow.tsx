@@ -34,7 +34,7 @@ import { useOpenAcceptanceInPanel } from './useOpenAcceptanceInPanel';
  * task — the same destination the checklist and run tags use. The standalone
  * `/acceptance/:id` page is a public, workspace-less route: navigating there
  * from a workspace task drops the slug from the URL and flips the whole app
- * back to personal scope (LOBE-13898).
+ * back to personal scope.
  *
  * `delivered` alone cannot be rendered honestly: a converged delivery and a
  * budget-exhausted one both land there. The latest round's verdict (shipped
