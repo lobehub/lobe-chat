@@ -28,10 +28,13 @@ A correction is a Task inside the experiment it corrects, not a new container, s
 it does not consume an experiment slot: fixing an instrument should not cost an
 exploration budget. `MAX_PROTOCOL_REVISIONS` bounds them per experiment, and
 `revisionsRemaining` reports the balance in the planner input so an exhausted
-allowance is visible before the choice is made rather than refused after it. The
-provenance edge is sourced by the Task, which is what separates a correction from
-an ordinary branch when counting them and when a dispatched run resolves which
-results it inherits. An experiment reads as unresolved while a correction runs,
+allowance is visible before the choice is made rather than refused after it.
+Corrections carry a dedicated `revises` edge rather than `derived_from`: that kind
+is generic provenance, is writable through the public `addEdge` mutation, and
+already appears on hand-authored tasks, so reusing it would reinterpret unrelated
+provenance as a correction. `revises` is written only by the coordinator and is
+deliberately absent from the public vocabulary. An experiment reads as unresolved
+while a correction runs,
 so corrections are serial. A seed Task with no experiment container cannot hold
 one and reports no allowance; those goals expand first.
 
