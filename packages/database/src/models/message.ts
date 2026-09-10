@@ -1540,6 +1540,7 @@ export class MessageModel {
       skipWorks
         ? ({} as Record<string, WorkSummaryItem[]>)
         : this.queryMessageWorkSummaries(result, includeFileWorks, timing),
+      this.refreshToolResultImageUrls(result, postProcessUrl, timing),
     ]);
 
     if (messageIds.length === 0 && messageGroupNodes.length === 0) {
@@ -1756,6 +1757,68 @@ export class MessageModel {
           { allowShareVisitor },
         ),
       { current, hasMessages: true, topicId },
+    );
+  };
+
+  /**
+   * A tool result persists the image URL its producer received at upload time
+   * (`pluginState.images[].url`). That snapshot is a presigned storage URL
+   * whenever the deployment hands one out — self-hosted/dev servers always do,
+   * and rows written before the file proxy existed carry one too — so it stops
+   * resolving a couple of hours later: reopening the topic renders a broken
+   * image and the model is handed a link it can no longer fetch. Re-resolve
+   * every image that carries a `fileId` through the same resolver the file
+   * lists use, and leave the stored URL untouched when the file is gone or
+   * invisible to this viewer.
+   */
+  private refreshToolResultImageUrls = async (
+    rows: { pluginState?: unknown }[],
+    postProcessUrl: QueryMessagesOptions['postProcessUrl'],
+    timing?: ModelTimingContext,
+  ): Promise<void> => {
+    if (!postProcessUrl) return;
+
+    const targets: { fileId: string; image: Record<string, any> }[] = [];
+    for (const row of rows) {
+      if (!isPlainRecord(row.pluginState)) continue;
+      const images = (row.pluginState as { images?: unknown }).images;
+      if (!Array.isArray(images)) continue;
+
+      for (const image of images) {
+        if (!isPlainRecord(image)) continue;
+        const fileId = (image as { fileId?: unknown }).fileId;
+        if (typeof fileId === 'string' && fileId.length > 0) {
+          targets.push({ fileId, image: image as Record<string, any> });
+        }
+      }
+    }
+    if (targets.length === 0) return;
+
+    const fileIds = Array.from(new Set(targets.map((target) => target.fileId)));
+    const fileRows = await runTimedStage(
+      timing,
+      'db.message.toolResultImages.select',
+      () =>
+        this.db
+          .select({ fileType: files.fileType, id: files.id, url: files.url })
+          .from(files)
+          .where(
+            and(
+              inArray(files.id, fileIds),
+              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, files),
+            ),
+          ),
+      { fileCount: fileIds.length },
+    );
+
+    const fileMap = new Map(fileRows.map((file) => [file.id, file]));
+
+    await Promise.all(
+      targets.map(async ({ fileId, image }) => {
+        const file = fileMap.get(fileId);
+        if (!file) return;
+        image.url = await postProcessUrl(file.url, file);
+      }),
     );
   };
 
@@ -2195,6 +2258,8 @@ export class MessageModel {
             )
         : Promise.resolve([]),
     ]);
+
+    await this.refreshToolResultImageUrls(result, postProcessUrl);
 
     // 3. Process file results
     const relatedFileList = await Promise.all(
