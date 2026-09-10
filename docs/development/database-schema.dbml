@@ -1,9 +1,10 @@
 table acceptance_comments {
-  id uuid [pk, not null, default: `gen_random_uuid()`]
+  id text [pk, not null]
   acceptance_id uuid [not null]
   author_user_id text
+  author_agent_id text
   workspace_id text
-  parent_comment_id uuid
+  parent_comment_id text
   kind text [not null, default: 'comment']
   anchor_type text [not null, default: 'acceptance']
   context_run_id uuid
@@ -11,6 +12,8 @@ table acceptance_comments {
   evidence_id uuid
   anchor_rect jsonb
   content text [not null]
+  editor_data jsonb
+  attachments jsonb
   client_id text [not null]
   resolved_at "timestamp with time zone"
   resolved_by_user_id text
@@ -24,6 +27,7 @@ table acceptance_comments {
     parent_comment_id [name: 'acceptance_comments_parent_comment_id_idx']
     evidence_id [name: 'acceptance_comments_evidence_id_idx']
     author_user_id [name: 'acceptance_comments_author_user_id_idx']
+    author_agent_id [name: 'acceptance_comments_author_agent_id_idx']
     workspace_id [name: 'acceptance_comments_workspace_id_idx']
   }
 }

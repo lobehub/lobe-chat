@@ -43,5 +43,5 @@ CREATE INDEX IF NOT EXISTS "acceptance_comments_acceptance_id_created_at_id_idx"
 CREATE INDEX IF NOT EXISTS "acceptance_comments_parent_comment_id_idx" ON "acceptance_comments" USING btree ("parent_comment_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_comments_evidence_id_idx" ON "acceptance_comments" USING btree ("evidence_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_comments_author_user_id_idx" ON "acceptance_comments" USING btree ("author_user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "acceptance_comments_workspace_id_idx" ON "acceptance_comments" USING btree ("workspace_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "acceptance_comments_author_agent_id_idx" ON "acceptance_comments" USING btree ("author_agent_id");
+CREATE INDEX IF NOT EXISTS "acceptance_comments_author_agent_id_idx" ON "acceptance_comments" USING btree ("author_agent_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "acceptance_comments_workspace_id_idx" ON "acceptance_comments" USING btree ("workspace_id");

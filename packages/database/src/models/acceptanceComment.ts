@@ -175,7 +175,7 @@ export class AcceptanceCommentModel {
    */
   delete = async (id: string, authorUserId: string): Promise<'hard' | 'soft' | false> => {
     return this.db.transaction(async (tx) => {
-      const [comment] = await tx
+      const [target] = await tx
         .select({
           deletedAt: acceptanceComments.deletedAt,
           id: acceptanceComments.id,
@@ -185,8 +185,43 @@ export class AcceptanceCommentModel {
         .where(
           and(eq(acceptanceComments.id, id), eq(acceptanceComments.authorUserId, authorUserId)),
         )
+        .limit(1);
+      if (!target) return false;
+
+      /**
+       * Every deletion in a thread takes the root's lock first, then the row it
+       * is actually removing. Locking the root serializes the sweep below: two
+       * people deleting the last two replies at once would otherwise each count
+       * the other's uncommitted sibling, both skip the sweep, and leave an empty
+       * tombstone standing forever. Taking the two locks in a fixed order — root
+       * before child — also keeps a root deletion and a child deletion from
+       * deadlocking on each other.
+       */
+      const rootId = target.parentCommentId ?? target.id;
+      const [root] = await tx
+        .select({ deletedAt: acceptanceComments.deletedAt, id: acceptanceComments.id })
+        .from(acceptanceComments)
+        .where(eq(acceptanceComments.id, rootId))
         .limit(1)
         .for('update');
+      if (!root) return false;
+
+      // Re-read the target under its own lock: the wait above may have outlived
+      // the snapshot the first read came from.
+      const [comment] = target.parentCommentId
+        ? await tx
+            .select({
+              deletedAt: acceptanceComments.deletedAt,
+              id: acceptanceComments.id,
+              parentCommentId: acceptanceComments.parentCommentId,
+            })
+            .from(acceptanceComments)
+            .where(
+              and(eq(acceptanceComments.id, id), eq(acceptanceComments.authorUserId, authorUserId)),
+            )
+            .limit(1)
+            .for('update')
+        : [{ ...target, deletedAt: root.deletedAt }];
       if (!comment || comment.deletedAt) return false;
 
       // Reactions are children but not replies: a comment nobody answered is
@@ -199,9 +234,18 @@ export class AcceptanceCommentModel {
         );
 
       if ((replyCount?.total ?? 0) > 0) {
+        // The tombstone keeps the replies' context and nothing else: every way
+        // the body could still be read — the plain text, the editor's own tree,
+        // and the attached files — goes with it.
         await tx
           .update(acceptanceComments)
-          .set({ content: '', deletedAt: new Date(), updatedAt: new Date() })
+          .set({
+            attachments: null,
+            content: '',
+            deletedAt: new Date(),
+            editorData: null,
+            updatedAt: new Date(),
+          })
           .where(eq(acceptanceComments.id, id));
         return 'soft';
       }
@@ -209,28 +253,23 @@ export class AcceptanceCommentModel {
       await tx.delete(acceptanceComments).where(eq(acceptanceComments.parentCommentId, id));
       await tx.delete(acceptanceComments).where(eq(acceptanceComments.id, id));
 
-      if (comment.parentCommentId) {
-        const [parent] = await tx
-          .select({ deletedAt: acceptanceComments.deletedAt, id: acceptanceComments.id })
+      // A tombstone only exists to hold its replies up; `root` is this reply's
+      // parent, locked and re-read above, so the count below is exclusive.
+      if (comment.parentCommentId && root.deletedAt) {
+        const [siblings] = await tx
+          .select({ total: count() })
           .from(acceptanceComments)
-          .where(eq(acceptanceComments.id, comment.parentCommentId))
-          .limit(1);
-        if (parent?.deletedAt) {
-          const [siblings] = await tx
-            .select({ total: count() })
-            .from(acceptanceComments)
-            .where(
-              and(
-                eq(acceptanceComments.parentCommentId, parent.id),
-                ne(acceptanceComments.kind, 'reaction'),
-              ),
-            );
-          if ((siblings?.total ?? 0) === 0) {
-            await tx
-              .delete(acceptanceComments)
-              .where(eq(acceptanceComments.parentCommentId, parent.id));
-            await tx.delete(acceptanceComments).where(eq(acceptanceComments.id, parent.id));
-          }
+          .where(
+            and(
+              eq(acceptanceComments.parentCommentId, root.id),
+              ne(acceptanceComments.kind, 'reaction'),
+            ),
+          );
+        if ((siblings?.total ?? 0) === 0) {
+          await tx
+            .delete(acceptanceComments)
+            .where(eq(acceptanceComments.parentCommentId, root.id));
+          await tx.delete(acceptanceComments).where(eq(acceptanceComments.id, root.id));
         }
       }
       return 'hard';

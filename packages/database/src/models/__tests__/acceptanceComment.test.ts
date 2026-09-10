@@ -210,6 +210,13 @@ describe('AcceptanceCommentModel', () => {
           clientId: `c${index}`,
           content: `m${index}`,
         });
+        // Five writes in a loop can land on the same microsecond, and the tie
+        // then breaks on a random id. Space them so the assertion measures the
+        // ordering rule rather than the clock.
+        await serverDB
+          .update(acceptanceComments)
+          .set({ createdAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)) })
+          .where(eq(acceptanceComments.id, comment.id));
         created.push(comment.id);
       }
       const rows = await model.listByAcceptance(acceptanceId);
@@ -256,6 +263,33 @@ describe('AcceptanceCommentModel', () => {
 
       expect(await model.delete(reply.id, owner)).toBe('hard');
       expect(await model.findById(root.id)).toBeUndefined();
+    });
+
+    it('strips every readable body from a tombstone, not just the text', async () => {
+      const { comment: root } = await model.create({
+        acceptanceId,
+        attachments: [{ fileId: 'file_secret' }],
+        authorUserId: reviewer,
+        clientId: 'rich-root',
+        content: 'a body with a picture',
+        editorData: { content: [{ text: 'a body with a picture' }] } as never,
+      });
+      await model.create({
+        acceptanceId,
+        authorUserId: owner,
+        clientId: 'rich-reply',
+        content: 'reply',
+        parentCommentId: root.id,
+      });
+
+      expect(await model.delete(root.id, reviewer)).toBe('soft');
+
+      // The tombstone exists to hold the reply up. Leaving the editor tree or
+      // the attached files behind would keep a deleted remark readable.
+      const tombstone = await model.findById(root.id);
+      expect(tombstone?.content).toBe('');
+      expect(tombstone?.editorData).toBeNull();
+      expect(tombstone?.attachments).toBeNull();
     });
   });
 
