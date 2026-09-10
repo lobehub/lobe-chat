@@ -51,11 +51,7 @@ export const GET = async (req: Request, segmentData: { params: Params }) => {
       : await fileService.createCachedPreSignedUrlForPreview(file.url);
     log('Web S3 presigned URL generated (%s)', isDownload ? 'download' : 'preview');
 
-    // Return 302 redirect with CORS header so that browser-side fetch()
-    // (used by screenshot export to pre-inline images as data URLs) can
-    // follow the redirect to the cross-origin S3/R2 URL. Without this
-    // header, the browser blocks the redirect for CORS-mode fetches and
-    // the image becomes a blank/gray area in exported screenshots.
+    // Allow screenshot capture to follow the cross-origin storage redirect.
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': '*',

@@ -66,10 +66,6 @@ describe('file proxy route', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get('location')).toBe('https://s3.example.com/presigned-preview-url');
-    // CORS header on the 302 lets browser-side fetch() follow the redirect
-    // to the cross-origin S3/R2 URL (used by screenshot export to pre-inline
-    // images as data URLs). Without it the browser blocks the redirect for
-    // CORS-mode fetches and images become gray in exported screenshots.
     expect(response.headers.get('access-control-allow-origin')).toBe('*');
     expect(FileModel.getFileById).toHaveBeenCalledWith(db, 'file-id');
     expect(FileService).toHaveBeenCalledWith(db, 'owner-user-id');
