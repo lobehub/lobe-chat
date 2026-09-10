@@ -38,6 +38,7 @@ export { RuntimeAdditionalContextProvider } from './RuntimeAdditionalContextProv
 export {
   formatSelectedSkills,
   formatSelectedSkillsContext,
+  parseSelectedSkillTags,
   SelectedSkillInjector,
 } from './SelectedSkillInjector';
 export {
