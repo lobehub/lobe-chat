@@ -24,6 +24,13 @@ const INTERVENTION_REASONS = new Set<AgentOperationCompletionReason>([
   'waiting_for_human',
 ]);
 
+/**
+ * Only a Task the coordinator routed to recovery may be restarted. Anything else —
+ * a cancellation, or a completion a person recorded while the diagnosis ran — is a
+ * decision supervision must not overwrite.
+ */
+export const RECOVERABLE_TASK_STATUSES = new Set(['failed', 'paused']);
+
 /** The run has not settled yet; the lease reclaim owns it, not recovery. */
 const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
   'idle',
@@ -35,17 +42,20 @@ const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
 /**
  * Where the failure happened, which is what decides whether a person must be involved.
  *
- * `agent-run` is a run that started and errored, so its own error text says whether
- * retrying is safe. `pipeline` is everything the coordinator routed here without such
- * an error: the dispatch never reached the device, the device link dropped, or a
- * post-run step like verification broke. Those never produce an errored operation, so
- * demanding one used to escalate the entire class to a human — the failures least in
- * need of a human judgement were the only ones that always got one.
+ * `agent-run` is a run that errored, so its own error text says whether retrying is
+ * safe. The Task status cannot decide this: an ad-hoc run that fails is stored as
+ * `paused`, exactly like a pipeline failure, so reading the Task would route real
+ * agent errors around the credential and transport checks.
+ *
+ * `pipeline` is everything the coordinator routed here without an errored operation:
+ * the dispatch never reached the device, the device link dropped, or a post-run step
+ * like verification broke. Those never produce an error to inspect, so demanding one
+ * used to escalate the entire class to a human.
  */
 export type GoalFailureOrigin = 'agent-run' | 'pipeline';
 
-export const failureOrigin = (task: TaskItem, operation?: AgentOperationItem): GoalFailureOrigin =>
-  task.status === 'failed' && operation?.status === 'error' ? 'agent-run' : 'pipeline';
+export const failureOrigin = (operation?: AgentOperationItem): GoalFailureOrigin =>
+  operation?.status === 'error' ? 'agent-run' : 'pipeline';
 
 export const recoveryEligibility = (
   graph: GoalGraphSnapshot,
@@ -66,8 +76,8 @@ export const recoveryEligibility = (
   ) {
     return { eligible: false, reason: 'Operation stopped at an explicit intervention or limit' };
   }
-  if (task.status === 'canceled') {
-    return { eligible: false, reason: 'A cancelled Task is a human decision' };
+  if (!RECOVERABLE_TASK_STATUSES.has(task.status)) {
+    return { eligible: false, reason: `A ${task.status} Task is not supervision's to restart` };
   }
   if ((task.totalTopics ?? 0) >= resolveTaskAttemptBudget(graph.goal)) {
     return { eligible: false, reason: 'Task attempt budget exhausted' };
@@ -85,7 +95,7 @@ export const recoveryEligibility = (
   }
   // A pipeline failure has no run error to pattern-match, and retrying it re-runs a
   // dispatch the goal already authorised rather than granting anything new.
-  if (failureOrigin(task, operation) === 'pipeline') {
+  if (failureOrigin(operation) === 'pipeline') {
     return {
       eligible: true,
       reason: 'Failure outside the agent run; retrying uses the authority the goal already granted',

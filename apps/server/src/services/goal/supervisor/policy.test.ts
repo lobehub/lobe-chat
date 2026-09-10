@@ -76,11 +76,27 @@ describe('supervisor recovery authority', () => {
       ).toBe(true);
   });
 
+  it('reads an errored run as an agent failure even when the Task is left paused', () => {
+    // An ad-hoc run that fails is stored as `paused`, the same shape a pipeline
+    // failure leaves. Reading the Task instead of the operation would route real
+    // agent errors around the transport allowlist.
+    const paused = { ...task, error: 'TypeError: cannot read property', status: 'paused' };
+    const errored = { ...operation, error: { message: 'TypeError: cannot read property' } };
+    expect(recoveryEligibility(graph, paused, errored).eligible).toBe(false);
+    expect(
+      recoveryEligibility(graph, paused, { ...operation, error: { message: 'ECONNRESET' } })
+        .eligible,
+    ).toBe(true);
+  });
+
+  it('never restarts a Task a person already settled', () => {
+    const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
+    for (const status of ['completed', 'canceled', 'running'])
+      expect(recoveryEligibility(graph, { ...task, status }, settled).eligible).toBe(false);
+  });
+
   it('still refuses a pipeline failure that a person or a limit caused', () => {
     const settled = { completionReason: 'done', status: 'done' } as AgentOperationItem;
-    expect(recoveryEligibility(graph, { ...task, status: 'canceled' }, settled).eligible).toBe(
-      false,
-    );
     expect(
       recoveryEligibility(
         graph,

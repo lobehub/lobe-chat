@@ -21,7 +21,12 @@ import { AiAgentService } from '@/server/services/aiAgent';
 
 import { resolveGoalModelConfig } from '../modelConfig';
 import { scheduleGoalAdvance } from '../scheduler';
-import { recoveryEligibility, supervisionLimit, SUPERVISOR_DIAGNOSIS_TIMEOUT_MS } from './policy';
+import {
+  RECOVERABLE_TASK_STATUSES,
+  recoveryEligibility,
+  supervisionLimit,
+  SUPERVISOR_DIAGNOSIS_TIMEOUT_MS,
+} from './policy';
 
 /** Durable supervisor with a dedicated, incident-scoped tool set. */
 export class GoalSupervisorService {
@@ -321,9 +326,11 @@ export class GoalSupervisorService {
         ))
       )
         return false;
-      // Compare against the status this Task actually holds. A pipeline failure
-      // leaves it `paused`, so a fixed `failed` expectation would never match and
-      // every recovery would silently fall back to the human gate.
+      // Compare against the status this Task actually holds, because a pipeline
+      // failure leaves it `paused` and a fixed `failed` expectation would never
+      // match. Guard the set first: a completion recorded during the diagnosis must
+      // never be swapped back to `backlog` and rerun.
+      if (!RECOVERABLE_TASK_STATUSES.has(currentTask.status)) return false;
       const changed = await new TaskModel(tx, this.userId, this.workspaceId).updateStatusIfCurrent(
         task.id,
         currentTask.status,

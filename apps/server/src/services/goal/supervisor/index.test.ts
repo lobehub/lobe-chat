@@ -499,6 +499,16 @@ describe('Goal Supervisor integration', () => {
     expect(graph.goal.config?.supervisorState?.incidents.at(-1)?.status).not.toBe('escalated');
   });
 
+  it('does not overwrite a completion a person recorded during the diagnosis', async () => {
+    const { goalId, taskId } = await pipelineFailureGoal();
+    expect((await service().tick(goalId)).outcome).toBe('waiting_external');
+    await diagnose(goalId);
+    // The person settled the Task while the supervisor was still deciding.
+    await taskModel.update(taskId, { status: 'completed', error: null });
+    await service().tick(goalId);
+    expect((await taskModel.findById(taskId))?.status).toBe('completed');
+  });
+
   it('without supervision the same transport failure opens a human Gate', async () => {
     const { goalId } = await failedGoal(false);
     expect((await service().tick(goalId)).outcome).toBe('waiting_human');
