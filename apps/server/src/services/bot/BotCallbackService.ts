@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import type { ChatErrorBudgetContext } from '@lobechat/types';
 import debug from 'debug';
 
@@ -16,6 +18,7 @@ import { messengerPlatformRegistry } from '@/server/services/messenger/platforms
 import { SystemAgentService } from '@/server/services/systemAgent';
 
 import { AgentBridgeService } from './AgentBridgeService';
+import { runDeferredReplay, scheduleDeferredReplay } from './deferredReplay';
 import type {
   BotMessageAttachment,
   BotReplyLocale,
@@ -226,6 +229,7 @@ export class BotCallbackService {
         applicationId,
         platformThreadId,
         messengerInstallationKey,
+        body.operationId ?? randomUUID(),
       );
     }
   }
@@ -234,24 +238,25 @@ export class BotCallbackService {
     platform: string,
     applicationId: string,
     platformThreadId: string,
-    messengerInstallationKey?: string,
+    messengerInstallationKey: string | undefined,
+    replayId: string,
   ): Promise<void> {
+    const target = { applicationId, messengerInstallationKey, platform, platformThreadId };
     try {
-      if (messengerInstallationKey) {
-        const { getMessengerRouter } = await import('@/server/services/messenger/MessengerRouter');
-        await getMessengerRouter().replayDeferredMessages(
-          messengerInstallationKey,
-          applicationId,
-          platformThreadId,
-        );
-        return;
-      }
-      const { getBotMessageRouter } = await import('./BotMessageRouter');
-      await getBotMessageRouter().replayDeferredMessages(platform, applicationId, platformThreadId);
+      await runDeferredReplay(target);
     } catch (error) {
-      // A replay failure must not fail the callback (QStash would redeliver
-      // the completion and re-post the final reply).
       log('replayDeferredMessages failed for thread=%s: %O', platformThreadId, error);
+      // Only the replay job retries. Redelivering this completion would post
+      // the already-delivered final response again.
+      try {
+        await scheduleDeferredReplay(target, replayId);
+      } catch (scheduleError) {
+        log(
+          'Could not schedule deferred replay for thread=%s: %O',
+          platformThreadId,
+          scheduleError,
+        );
+      }
     }
   }
 

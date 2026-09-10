@@ -227,6 +227,12 @@ function makeTelegramBody(overrides: Partial<BotCallbackBody> = {}): BotCallback
 
 // ==================== Tests ====================
 
+const mockScheduleDeferredReplay = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+vi.mock('../deferredReplay', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  scheduleDeferredReplay: mockScheduleDeferredReplay,
+}));
+
 describe('BotCallbackService', () => {
   let service: BotCallbackService;
 
@@ -582,7 +588,7 @@ describe('BotCallbackService', () => {
       expect(mockBotRouterReplay).not.toHaveBeenCalled();
     });
 
-    it('swallows replay failures so the completion callback still succeeds', async () => {
+    it('schedules an isolated retry after replay fails without failing the completion', async () => {
       mockBotRouterReplay.mockRejectedValueOnce(new Error('redis down'));
 
       await expect(
@@ -590,6 +596,14 @@ describe('BotCallbackService', () => {
           makeBody({ lastAssistantContent: 'done', reason: 'completed', type: 'completion' }),
         ),
       ).resolves.toBeUndefined();
+      expect(mockScheduleDeferredReplay).toHaveBeenCalledWith(
+        expect.objectContaining({
+          applicationId: 'app-123',
+          platform: 'discord',
+          platformThreadId: 'discord:guild:channel-id',
+        }),
+        expect.any(String),
+      );
     });
   });
 

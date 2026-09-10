@@ -20,6 +20,7 @@ import { SystemAgentService } from '@/server/services/systemAgent';
 
 import { createBotCompletionWebhook } from './createBotCompletionHook';
 import { deferBotMessages, isDeferredMessagesAvailable } from './deferredMessages';
+import { runDeferredReplay, scheduleDeferredReplay } from './deferredReplay';
 import { buildBotSender, formatPrompt as formatPromptUtil } from './formatPrompt';
 import { getSourceMessages } from './mergeMessages';
 import type { BotReplyLocale, PlatformClient } from './platforms';
@@ -1878,31 +1879,26 @@ export class AgentBridgeService {
     // Completion may have drained the queue between the initial liveness
     // check and this write. Recheck after enqueueing and initiate replay when
     // no live operation remains; the callback covers completion after this check.
+    const target = {
+      applicationId: botContext.applicationId,
+      messengerInstallationKey: botContext.messengerInstallationKey,
+      platform: botContext.platform,
+      platformThreadId: thread.id,
+    };
     try {
       const topicModel = new TopicModel(this.db, this.userId, this.workspaceId);
       const topic = await topicModel.findById(topicId);
       const running = topic?.metadata?.runningOperation;
       if (!running || !(await topicModel.isRunningOperationAlive(this.db, running))) {
-        if (botContext.messengerInstallationKey) {
-          const { getMessengerRouter } =
-            await import('@/server/services/messenger/MessengerRouter');
-          await getMessengerRouter().replayDeferredMessages(
-            botContext.messengerInstallationKey,
-            botContext.applicationId,
-            thread.id,
-          );
-        } else {
-          const { getBotMessageRouter } = await import('./BotMessageRouter');
-          await getBotMessageRouter().replayDeferredMessages(
-            botContext.platform,
-            botContext.applicationId,
-            thread.id,
-          );
-        }
+        await runDeferredReplay(target);
       }
     } catch (error) {
-      // Keep the durable entries if lookup or dispatch is temporarily unavailable.
       log('Post-enqueue replay failed for thread=%s: %O', thread.id, error);
+      try {
+        await scheduleDeferredReplay(target, `defer:${message.id}`);
+      } catch (scheduleError) {
+        log('Could not schedule deferred replay for thread=%s: %O', thread.id, scheduleError);
+      }
     }
 
     log(
