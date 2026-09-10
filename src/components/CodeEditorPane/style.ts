@@ -60,11 +60,17 @@ export const styles = createStaticStyles(({ css }) => ({
       background: ${cssVar.colorBgContainer};
     }
 
-    /* Sized for a four-digit line number and no more — the gutter is a ruler,
-       not a column. */
+    /* The bundled theme pads every line by 12px, which lands on top of the
+       gutter's own trailing space and pushes the code away from its number. */
+    .cm-editor.cm-editor .cm-line {
+      padding-inline: 6px 12px;
+    }
+
+    /* The number sits closer to the code than to the pane edge: it labels the
+       line, so the eye should travel from it rightwards, not across a gap. */
     .cm-lineNumbers .cm-gutterElement {
-      min-width: 26px;
-      padding-inline: 6px;
+      min-width: 22px;
+      padding-inline: 16px 2px;
 
       font-family: ${cssVar.fontFamilyCode};
       font-size: 11px;
@@ -109,7 +115,7 @@ export const styles = createStaticStyles(({ css }) => ({
       align-items: center;
       justify-content: center;
 
-      width: 14px;
+      width: 13px;
       height: 20px;
 
       color: ${cssVar.colorTextTertiary};

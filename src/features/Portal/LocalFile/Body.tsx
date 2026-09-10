@@ -293,6 +293,7 @@ const TextPreviewPane = memo<TextPreviewPaneProps>(
         <Flexbox flex={1} height={'100%'} style={{ minHeight: 0, overflow: 'hidden' }}>
           <PublishHtmlArtifactLiveBar />
           <PreviewToolbar
+            deviceId={deviceId}
             path={filePath}
             rootPath={workingDirectory}
             actions={
