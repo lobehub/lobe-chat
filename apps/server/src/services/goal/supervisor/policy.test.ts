@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import type { AgentOperationItem } from '@/database/schemas/agentOperations';
 import { humanizeHeteroDispatchError } from '@/server/services/aiAgent/helpers/heteroErrors';
 
-import { recoveryEligibility } from './policy';
+import { recoveryEligibility, statusAuthoredByActor } from './policy';
 
 const graph = {
   decisions: [],
@@ -97,49 +97,19 @@ describe('supervisor recovery authority', () => {
       ).toBe(false);
   });
 
-  it('leaves a failure an actor authored to the actor', () => {
-    // A caller marking a Goal-linked Task failed after a clean run looks exactly like
-    // a dropped dispatch. Recovery must not reopen it and spend more paid work.
-    expect(recoveryEligibility(graph, { ...task, error: null }, settled).eligible).toBe(false);
-    expect(
-      recoveryEligibility(graph, { ...task, error: 'Superseded by a newer plan' }, settled)
-        .eligible,
-    ).toBe(false);
-    // The status update keeps the old error when none is supplied, so an actor can
-    // leave a Task `failed` still carrying the transport reason it was paused with.
-    expect(
-      recoveryEligibility(
-        graph,
-        { ...task, error: '{"error":"DEVICE_OFFLINE","success":false}' },
-        settled,
-      ).eligible,
-    ).toBe(false);
-    // The same text on a `paused` Task is the pipeline failure it looks like.
-    expect(
-      recoveryEligibility(
-        graph,
-        { ...task, error: '{"error":"DEVICE_OFFLINE","success":false}', status: 'paused' },
-        settled,
-      ).eligible,
-    ).toBe(true);
-  });
-
-  it('reads an errored run as an agent failure even when the Task is left paused', () => {
-    // An ad-hoc run that fails is stored as `paused`, the same shape a pipeline
-    // failure leaves. Reading the Task instead of the operation would route real
-    // agent errors around the transport allowlist.
-    const paused = { ...task, error: 'TypeError: cannot read property', status: 'paused' };
-    const errored = { ...operation, error: { message: 'TypeError: cannot read property' } };
-    expect(recoveryEligibility(graph, paused, errored).eligible).toBe(false);
-    expect(
-      recoveryEligibility(graph, paused, { ...operation, error: { message: 'ECONNRESET' } })
-        .eligible,
-    ).toBe(true);
-  });
-
-  it('never restarts a Task a person already settled', () => {
-    for (const status of ['completed', 'canceled', 'running'])
-      expect(recoveryEligibility(graph, { ...task, status }, settled).eligible).toBe(false);
+  it('leaves a status a person wrote to the person, whatever the error says', () => {
+    const errored = { ...operation, error: { message: 'ECONNRESET' } } as AgentOperationItem;
+    // The run genuinely errored and the Task was paused with recoverable text; a
+    // person then marked it failed without supplying a new error, so the text stayed.
+    // Only the transition's author separates this from the failure it looks like.
+    expect(recoveryEligibility(graph, task, errored, true).eligible).toBe(false);
+    expect(recoveryEligibility(graph, task, errored, false).eligible).toBe(true);
+    // Same for a dispatch failure a person closed out.
+    const stalled = { ...task, error: '{"error":"DEVICE_OFFLINE","success":false}' };
+    expect(recoveryEligibility(graph, stalled, settled, true).eligible).toBe(false);
+    expect(recoveryEligibility(graph, { ...stalled, status: 'paused' }, settled).eligible).toBe(
+      true,
+    );
   });
 
   it('still refuses a pipeline failure that a person or a limit caused', () => {
@@ -169,6 +139,37 @@ describe('supervisor recovery authority', () => {
         task,
         operation,
       ).eligible,
+    ).toBe(false);
+  });
+});
+
+describe('status provenance', () => {
+  const act = (over: Record<string, unknown> = {}) => ({
+    actorAgentId: null,
+    actorUserId: null,
+    payload: { to: 'failed' },
+    type: 'status',
+    ...over,
+  });
+
+  it('reads the author of the transition that produced the current status', () => {
+    expect(statusAuthoredByActor([act({ actorUserId: 'u1' })], 'failed')).toBe(true);
+    expect(statusAuthoredByActor([act({ actorAgentId: 'a1' })], 'failed')).toBe(true);
+    // The pipeline writes without an actor.
+    expect(statusAuthoredByActor([act()], 'failed')).toBe(false);
+    // A later pipeline transition supersedes an earlier authored one.
+    expect(
+      statusAuthoredByActor(
+        [act({ actorUserId: 'u1' }), act({ payload: { to: 'paused' } })],
+        'paused',
+      ),
+    ).toBe(false);
+    // An authored move somewhere else does not speak for this status.
+    expect(statusAuthoredByActor([act({ actorUserId: 'u1' })], 'paused')).toBe(false);
+    expect(statusAuthoredByActor([], 'failed')).toBe(false);
+    // Assignee changes are not status provenance.
+    expect(
+      statusAuthoredByActor([act({ actorUserId: 'u1', type: 'assignee_user' })], 'failed'),
     ).toBe(false);
   });
 });

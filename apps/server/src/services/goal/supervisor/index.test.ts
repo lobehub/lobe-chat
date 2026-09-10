@@ -26,6 +26,7 @@ import {
   users,
 } from '@/database/schemas';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { TaskService } from '@/server/services/task';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { GoalService } from '../index';
@@ -545,6 +546,20 @@ describe('Goal Supervisor integration', () => {
     expect((await taskModel.findById(taskId))?.status).toBe('paused');
     const after = (await goalModel.findById(goalId))!.config!.supervisorState!;
     expect(after.incidents.at(-1)?.status).toBe('escalated');
+  });
+
+  it('leaves a paused transport failure alone once a person marks it failed', async () => {
+    // The run errored with a recoverable transport error and the lifecycle paused the
+    // Task. A person then marks it failed without supplying a new error, so the
+    // transport text survives and only the transition's author tells them apart.
+    const { goalId, taskId } = await failedGoal();
+    await taskModel.update(taskId, { status: 'paused' });
+    await new TaskService(db, userId).updateStatus({ id: taskId, status: 'failed' }, { userId });
+
+    const move = await service().tick(goalId);
+
+    expect((await taskModel.findById(taskId))?.status).toBe('failed');
+    expect(move.outcome).not.toBe('waiting_external');
   });
 
   it('without supervision the same transport failure opens a human Gate', async () => {

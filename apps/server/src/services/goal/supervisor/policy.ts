@@ -32,6 +32,26 @@ const INTERVENTION_REASONS = new Set<AgentOperationCompletionReason>([
  */
 export const RECOVERABLE_TASK_STATUSES = new Set(['failed', 'paused']);
 
+/**
+ * Whether the Task's current status was written by a person or an agent tool rather
+ * than by the pipeline. `updateWithLog` records an actor on every tracked transition,
+ * which is the only way to tell an authored `failed` from a run that failed into one:
+ * both can carry the same recoverable error text.
+ */
+export const statusAuthoredByActor = (
+  activities: {
+    actorAgentId?: string | null;
+    actorUserId?: string | null;
+    payload?: unknown;
+    type: string;
+  }[],
+  status: string,
+): boolean => {
+  const latest = [...activities].reverse().find((item) => item.type === 'status');
+  if (!latest || (latest.payload as { to?: string } | undefined)?.to !== status) return false;
+  return Boolean(latest.actorUserId || latest.actorAgentId);
+};
+
 /** The run has not settled yet; the lease reclaim owns it, not recovery. */
 const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
   'idle',
@@ -73,6 +93,8 @@ export const recoveryEligibility = (
   graph: GoalGraphSnapshot,
   task: TaskItem,
   operation?: AgentOperationItem,
+  /** Whether the Task's current status was written by a person or an agent tool. */
+  actorAuthoredStatus = false,
 ): { eligible: boolean; reason: string } => {
   if (!graph.goal.config?.supervision?.enabled && !graph.goal.config?.manager)
     return { eligible: false, reason: 'Supervision is disabled' };
@@ -91,13 +113,13 @@ export const recoveryEligibility = (
   if (!RECOVERABLE_TASK_STATUSES.has(task.status)) {
     return { eligible: false, reason: `A ${task.status} Task is not supervision's to restart` };
   }
-  // `TaskService.updateStatus` replaces `error` only when a new one is supplied, so an
-  // actor can move a pipeline-paused Task to `failed` and leave the transport text
-  // that paused it. The status log records assignee changes, not transitions, so the
-  // author is not readable; require the errored run instead. Nothing the system does
-  // writes `failed` with a recoverable error — its own is `Heartbeat timeout`.
-  if (task.status === 'failed' && operation?.status !== 'error') {
-    return { eligible: false, reason: 'A failed Task without an errored run is a decision' };
+  // `TaskService.updateStatus` replaces `error` only when a new one is supplied, so a
+  // person can move a Task the pipeline paused — or one whose run genuinely errored —
+  // to `failed` and leave the recoverable text behind. Reading the error cannot tell
+  // the two apart, so ask who wrote the status: `updateWithLog` records the actor on
+  // every tracked transition, and a transition somebody made is theirs to undo.
+  if (actorAuthoredStatus) {
+    return { eligible: false, reason: 'Someone set this status themselves' };
   }
   if ((task.totalTopics ?? 0) >= resolveTaskAttemptBudget(graph.goal)) {
     return { eligible: false, reason: 'Task attempt budget exhausted' };

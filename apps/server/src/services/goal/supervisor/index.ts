@@ -25,6 +25,7 @@ import { claimGoalTask } from '../taskClaim';
 import {
   RECOVERABLE_TASK_STATUSES,
   recoveryEligibility,
+  statusAuthoredByActor,
   supervisionLimit,
   SUPERVISOR_DIAGNOSIS_TIMEOUT_MS,
 } from './policy';
@@ -155,7 +156,13 @@ export class GoalSupervisorService {
         }
         return null;
       }
-      let eligibility = recoveryEligibility(graph, task, failedOperation);
+      const taskModel = new TaskModel(this.db, this.userId, this.workspaceId);
+      let eligibility = recoveryEligibility(
+        graph,
+        task,
+        failedOperation,
+        statusAuthoredByActor(await taskModel.getActivities(task.id, 20), task.status),
+      );
       if (eligibility.eligible && (await this.budgetBlocked(graph))) {
         eligibility = {
           eligible: false,
@@ -322,7 +329,15 @@ export class GoalSupervisorService {
         !currentTask ||
         ownIncident?.status !== 'diagnosing' ||
         currentRuns[0]?.operationId !== incident.failedOperationId ||
-        !recoveryEligibility(currentGraph, currentTask, failedOperation).eligible ||
+        !recoveryEligibility(
+          currentGraph,
+          currentTask,
+          failedOperation,
+          statusAuthoredByActor(
+            await new TaskModel(tx, this.userId, this.workspaceId).getActivities(task.id, 20),
+            currentTask.status,
+          ),
+        ).eligible ||
         (await new GoalSupervisorService(tx, this.userId, this.workspaceId).budgetBlocked(
           currentGraph,
         ))
