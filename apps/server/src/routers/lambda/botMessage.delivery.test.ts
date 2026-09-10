@@ -7,15 +7,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: async () => ({}) }));
 vi.mock('@/database/models/agentBotProvider', () => ({
-  AgentBotProviderModel: vi.fn().mockImplementation(() => ({
-    findById: async () => ({
-      applicationId: 'fixture-app',
-      credentials: { botId: 'fixture-bot', botToken: 'fixture-token' },
-      enabled: true,
-      platform: 'wechat',
-      settings: {},
-    }),
-  })),
+  AgentBotProviderModel: vi.fn().mockImplementation(function () {
+    return {
+      findById: async () => ({
+        applicationId: 'fixture-app',
+        credentials: { botId: 'fixture-bot', botToken: 'fixture-token' },
+        enabled: true,
+        platform: 'wechat',
+        settings: {},
+      }),
+    };
+  }),
 }));
 vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
   KeyVaultsGateKeeper: { initWithEnvKey: async () => ({}) },
