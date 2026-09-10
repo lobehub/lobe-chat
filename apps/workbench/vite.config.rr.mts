@@ -37,9 +37,9 @@ const shikiVersion = JSON.parse(
 const electronStubs = electronClientStubs();
 
 const ssrStubs: Record<string, string> = {
+  ...electronStubs,
   '@/libs/trpc/client': path.resolve(import.meta.dirname, 'app/stubs/trpcClient.ts'),
   '@/services/global': path.resolve(import.meta.dirname, 'app/stubs/globalService.ts'),
-  '@/store/electron': electronStubs['@/store/electron']!,
   '@/store/file': path.resolve(import.meta.dirname, 'app/stubs/fileStore.ts'),
   '@/utils/i18n/loadI18nNamespaceModule': path.resolve(
     import.meta.dirname,
