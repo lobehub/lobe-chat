@@ -73,8 +73,11 @@ describe('supervisor recovery authority', () => {
     for (const error of [
       '{"error":"DEVICE_OFFLINE","success":false}',
       'DEVICE_GATEWAY_RATE_LIMITED',
+      // A gateway 500 lands here, outside the transport regex's 502-504.
+      'DEVICE_GATEWAY_ERROR (HTTP 500)',
       humanizeHeteroDispatchError('DEVICE_OFFLINE'),
       humanizeHeteroDispatchError('DEVICE_GATEWAY_UNREACHABLE'),
+      humanizeHeteroDispatchError('DEVICE_GATEWAY_ERROR'),
     ])
       expect(
         recoveryEligibility(graph, { ...task, error, status: 'paused' }, settled).eligible,

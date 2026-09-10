@@ -50,6 +50,8 @@ const IN_FLIGHT_STATUSES = new Set<AgentOperationStatus>([
 const RETRYABLE_DISPATCH_CODES = [
   'DEVICE_OFFLINE',
   'DEVICE_CHANNEL_UNAVAILABLE',
+  // Any gateway 5xx, so it covers the 500 the transport regex's 502-504 misses.
+  'DEVICE_GATEWAY_ERROR',
   'DEVICE_GATEWAY_UNREACHABLE',
   'DEVICE_GATEWAY_RATE_LIMITED',
 ];
