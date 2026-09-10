@@ -1770,6 +1770,14 @@ export class AgentBridgeService {
     }>;
     warnings?: string[];
   }> {
+    const sources = (message as Message & { sourceMessages?: Message[] }).sourceMessages;
+    if (sources?.length) {
+      const results = [];
+      for (const source of sources) results.push(await this.resolveFiles(source, client));
+      const files = results.flatMap((result) => result.files ?? []);
+      const warnings = results.flatMap((result) => result.warnings ?? []);
+      return { files, warnings: warnings.length ? warnings : undefined };
+    }
     const result = await client?.extractFiles?.(message);
     if (!result) return {};
     if (Array.isArray(result)) return { files: result };

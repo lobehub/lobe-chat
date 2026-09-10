@@ -3326,3 +3326,24 @@ describe('BotMessageRouter', () => {
     });
   });
 });
+
+describe('queued attachment source preservation', () => {
+  it('keeps original PDF and text messages for platform extraction without changing latest raw', () => {
+    const pdf = {
+      id: 'pdf',
+      text: '[file: queued.pdf]',
+      raw: { item_list: [{ type: 4 }] },
+      attachments: [{ name: 'queued.pdf' }],
+    };
+    const text = {
+      id: 'text',
+      text: 'read it',
+      raw: { item_list: [{ type: 1 }] },
+      attachments: [],
+    };
+    const merged = (BotMessageRouter as any).mergeSkippedMessages(text, { skipped: [pdf] });
+    expect(merged.sourceMessages).toEqual([pdf, text]);
+    expect(merged.raw).toBe(text.raw);
+    expect(merged.attachments).toEqual(pdf.attachments);
+  });
+});
