@@ -151,6 +151,28 @@ describe('flattenLarkMessageContent', () => {
     );
   });
 
+  it('keeps escaped image syntax and code spans with arbitrary backtick delimiters', () => {
+    const text = '\\![escaped](img_escaped) ````![code](img_code)```` ![real](img_real)';
+    const result = flattenLarkMessageContent('post', {
+      content_v2: [[{ tag: 'md', text }]],
+    });
+
+    expect(result.imageKeys).toEqual(['img_real']);
+    expect(result.text).toBe('\\![escaped](img_escaped) ````![code](img_code)```` [image]');
+  });
+
+  it.each(['![', '![](!'])('handles repeated incomplete image syntax: %s', (prefix) => {
+    const text = prefix.repeat(30_000);
+    const started = performance.now();
+    const result = flattenLarkMessageContent('post', {
+      content_v2: [[{ tag: 'md', text }]],
+    });
+
+    expect(result.imageKeys).toEqual([]);
+    expect(result.text).toBe(text);
+    expect(performance.now() - started).toBeLessThan(2000);
+  });
+
   it('unwraps a locale-keyed post body', () => {
     const content = {
       zh_cn: { content: [[{ tag: 'text', text: 'hello' }]], title: 'T' },

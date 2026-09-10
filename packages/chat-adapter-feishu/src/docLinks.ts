@@ -107,9 +107,10 @@ const LINK_KEYS = new Set([
   'default_url',
 ]);
 const TEXT_KEYS = new Set(['text', 'content', 'title', 'label', 'summary', 'file_name', 'name']);
-const FEISHU_IMAGE_KEY_RE = /^img_[\w-]+$/;
+// Excluding nested label openers and matching only native image destinations
+// prevents repeated incomplete image markers from rescanning the remaining text.
 const MARKDOWN_IMAGE_SCAN_RE =
-  /(```[\s\S]*?```|~~~[\s\S]*?~~~|``[\s\S]*?``|`[^`\n]*`)|!\[[^\]]*\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
+  /(\\[\s\S]|```[\s\S]*?```|~~~[\s\S]*?~~~|``[\s\S]*?``|`[^`\n]*`)|!\[[^[\]]*\]\((img_[\w-]+)(?:\s+["'][^"']*["'])?\)/g;
 
 function pushUnique(list: string[], seen: Set<string>, value: string) {
   if (!value || seen.has(value)) return;
@@ -122,11 +123,10 @@ function collectUrlsFromString(value: string, links: string[], seen: Set<string>
 }
 
 function renderPostMarkdown(value: string, imageKeys: string[]): string {
-  return value.replaceAll(MARKDOWN_IMAGE_SCAN_RE, (match, codeRegion, target) => {
-    if (codeRegion || !target || !FEISHU_IMAGE_KEY_RE.test(target)) return match;
-    imageKeys.push(target);
-    // Feishu resource keys are not URLs. The image is delivered as an attachment;
-    // leaving its Markdown reference would render a second, broken image.
+  return value.replaceAll(MARKDOWN_IMAGE_SCAN_RE, (match, literal, imageKey) => {
+    if (literal || !imageKey) return match;
+    imageKeys.push(imageKey);
+    // Native image keys are delivered as attachments, not browser image URLs.
     return '[image]';
   });
 }
