@@ -10,7 +10,12 @@ import type {
 import { describe, expect, it } from 'vitest';
 
 import { experimentRelations, graphNodeKind, isExperiment } from '../Experiments/model';
-import { buildGoalGraphView, hasReviewableResult, isTroubledTaskNode } from './goalGraphViewModel';
+import {
+  buildGoalGraphView,
+  hasReviewableResult,
+  isRunningNode,
+  isTroubledTaskNode,
+} from './goalGraphViewModel';
 
 const T0 = new Date('2026-08-01T00:00:00Z');
 const at = (minutes: number) => new Date(T0.getTime() + minutes * 60_000);
@@ -567,6 +572,40 @@ describe('isTroubledTaskNode', () => {
     );
 
     expect(isTroubledTaskNode(view.byId.p1)).toBe(false);
+  });
+});
+
+describe('isRunningNode', () => {
+  it('reads an active task as running', () => {
+    const view = buildGoalGraphView(
+      snapshot({
+        events: [event('w1', 'activated', 110)],
+        nodes: [node('w1', { status: 'active', updatedAt: at(115) })],
+      }),
+      NOW,
+    );
+
+    expect(isRunningNode(view.byId.w1)).toBe(true);
+  });
+
+  // An open question is not work in flight — the card already says it is
+  // unanswered, and a running chip there promises activity nobody is doing.
+  it('never reads a question as running', () => {
+    const view = buildGoalGraphView(
+      snapshot({ nodes: [node('p1', { kind: 'problem', status: 'active', updatedAt: at(115) })] }),
+      NOW,
+    );
+
+    expect(isRunningNode(view.byId.p1)).toBe(false);
+  });
+
+  it('does not read a stale task as running', () => {
+    const view = buildGoalGraphView(
+      snapshot({ nodes: [node('w1', { status: 'active', updatedAt: at(0) })] }),
+      NOW,
+    );
+
+    expect(isRunningNode(view.byId.w1)).toBe(false);
   });
 });
 
