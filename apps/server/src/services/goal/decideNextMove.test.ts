@@ -10,6 +10,7 @@ import {
   needsBudget,
   needsMetricCriteria,
   selectFrontier,
+  VERIFICATION_ERRORED_ERROR,
   VERIFICATION_FAILED_ERROR,
 } from './decideNextMove';
 
@@ -176,6 +177,17 @@ describe('decideNextMove', () => {
           frontierTask: task({ error: VERIFICATION_FAILED_ERROR, status: 'paused' }),
         }).branch,
       ).toBe('recover_verification');
+
+      // A verifier that crashed never judged the delivery, so it recovers like a
+      // rejection instead of stopping the goal on a verdict nobody reached.
+      expect(
+        decide(snapshot, {
+          frontierTask: task({ error: VERIFICATION_ERRORED_ERROR, status: 'paused' }),
+        }),
+      ).toMatchObject({
+        branch: 'recover_verification',
+        message: 'Verification could not run for Task T-1',
+      });
 
       expect(
         decide(snapshot, { frontierTask: task({ error: 'Device offline', status: 'failed' }) }),

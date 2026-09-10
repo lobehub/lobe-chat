@@ -35,10 +35,15 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
 import { GoalCriteriaGeneratorService } from './criteriaGenerator';
-import { LEASE_EXPIRED_ERROR, VERIFICATION_FAILED_ERROR } from './decideNextMove';
+import {
+  LEASE_EXPIRED_ERROR,
+  VERIFICATION_ERRORED_ERROR,
+  VERIFICATION_FAILED_ERROR,
+} from './decideNextMove';
 import { GoalExplorationPlanner } from './explorationPlanner';
 import { GoalService } from './index';
 import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
+import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
 import type { GoalTickObservation } from './traceObservation';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -396,6 +401,65 @@ describe('GoalService', () => {
       expect(stopped.message).toContain('Deadline passed');
     },
   );
+
+  it.each([
+    [LEASE_EXPIRED_ERROR, 'completed'],
+    [LEASE_EXPIRED_ERROR, 'failed'],
+    [VERIFICATION_ERRORED_ERROR, 'completed'],
+    [VERIFICATION_ERRORED_ERROR, 'canceled'],
+  ])('does not restart a Task settled during recovery (%s → %s)', async (error, settledAs) => {
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const taskModel = new TaskModel(serverDB, userId);
+    const graph = await service.create({
+      title: `Settled during recovery ${error} ${settledAs}`,
+      tasks: ['Do not restart'],
+    });
+    const created = await service.tick(graph.goal.id);
+    await taskModel.updateStatus(created.taskId!, 'paused', { error });
+    // The advance routed here holding the paused row; a person settled the Task
+    // before the claim, which is the row the coordinator now reads.
+    const stale = (await taskModel.findById(created.taskId!))!;
+    await taskModel.updateStatus(created.taskId!, settledAs, { error: null });
+    runSpy.mockClear();
+
+    const recovery = await new TaskRecoveryCoordinator(serverDB, userId).recover({
+      goal: (await service.graph(graph.goal.id)).goal,
+      task: stale,
+    });
+
+    expect(recovery.outcome).toBe('settled');
+    expect(runSpy).not.toHaveBeenCalled();
+    expect((await taskModel.findById(created.taskId!))?.status).toBe(settledAs);
+  });
+
+  it('does not restart a Task a person paused themselves', async () => {
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const taskModel = new TaskModel(serverDB, userId);
+    const graph = await service.create({
+      title: 'Actor paused during recovery',
+      tasks: ['Do not restart'],
+    });
+    const created = await service.tick(graph.goal.id);
+    await taskModel.updateStatus(created.taskId!, 'paused', { error: VERIFICATION_ERRORED_ERROR });
+    // A manual round trip keeps the routing error, because the status update replaces
+    // it only when a new one is supplied, so the final pause is the person's.
+    const taskService = new TaskService(serverDB, userId);
+    await taskService.updateStatus({ id: created.taskId!, status: 'failed' }, { userId });
+    await taskService.updateStatus({ id: created.taskId!, status: 'paused' }, { userId });
+    const stale = (await taskModel.findById(created.taskId!))!;
+    runSpy.mockClear();
+
+    const recovery = await new TaskRecoveryCoordinator(serverDB, userId).recover({
+      goal: (await service.graph(graph.goal.id)).goal,
+      task: stale,
+    });
+
+    expect(recovery.outcome).toBe('settled');
+    expect(runSpy).not.toHaveBeenCalled();
+    expect((await taskModel.findById(created.taskId!))?.status).toBe('paused');
+  });
 
   it('hands back a dispatch claim whose worker died before the run existed', async () => {
     // The claim is taken just before `runTask` creates the topic. If the worker
