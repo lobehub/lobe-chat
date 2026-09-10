@@ -94,12 +94,15 @@ describe('provenance and protocol revisions', () => {
       { kind: 'contains', sourceNodeId: 'exp', targetNodeId: 'run1' },
       { kind: 'contains', sourceNodeId: 'exp', targetNodeId: 'fix1' },
       { kind: 'derived_from', sourceNodeId: 'exp', targetNodeId: 'older' },
-      { kind: 'derived_from', sourceNodeId: 'fix1', targetNodeId: 'exp' },
+      { kind: 'derived_from', sourceNodeId: 'hand', targetNodeId: 'older' },
+      { kind: 'contains', sourceNodeId: 'exp', targetNodeId: 'hand' },
+      { kind: 'revises', sourceNodeId: 'fix1', targetNodeId: 'exp' },
     ],
     nodes: [
       { id: 'older', kind: 'experiment' },
       { id: 'exp', kind: 'experiment' },
       { id: 'run1', kind: 'task' },
+      { id: 'hand', kind: 'task' },
       { id: 'fix1', kind: 'task' },
     ],
   } as any;
@@ -107,13 +110,19 @@ describe('provenance and protocol revisions', () => {
   it('gives a corrected protocol its own parent rather than its container’s', () => {
     // `fix1` corrects `exp`; reading the container would hand it `older` instead.
     expect(provenanceParentId(graph, 'fix1')).toBe('exp');
+    // An ordinary member falls back to its container's branch parent.
     expect(provenanceParentId(graph, 'run1')).toBe('older');
+    // A hand-authored provenance edge is preferred over the container's, and is
+    // still not treated as a correction.
+    expect(provenanceParentId(graph, 'hand')).toBe('older');
   });
 
   it('separates a correction from an ordinary branch when counting', () => {
     expect(isProtocolRevision(graph, 'fix1')).toBe(true);
     // `exp` also has a `derived_from` edge, but it is a branch, not a correction.
     expect(isProtocolRevision(graph, 'exp')).toBe(false);
+    // A hand-authored task provenance edge is not a correction either.
+    expect(isProtocolRevision(graph, 'hand')).toBe(false);
     expect(protocolRevisionCount(graph, 'exp')).toBe(1);
     expect(protocolRevisionCount(graph, 'older')).toBe(0);
   });

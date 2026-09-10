@@ -199,7 +199,7 @@ export class GoalExplorationModel {
           title: decision.title.trim() || target.title,
         });
         if (!node) throw new Error('Could not persist the revised protocol');
-        await graphModel.createEdge(goalId, node.id, target.id, 'derived_from');
+        await graphModel.createEdge(goalId, node.id, target.id, 'revises');
         const members = experimentScope(graph, container);
         for (const version of graph.workVersions.filter(
           (item) => members.has(item.nodeId) && item.relation === 'produced',

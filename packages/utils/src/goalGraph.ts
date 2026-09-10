@@ -78,24 +78,16 @@ export const graphScopeIds = (graph: Graph, scopeId?: string): Set<string> => {
  */
 export const MAX_PROTOCOL_REVISIONS = 2;
 
-/**
- * A `derived_from` edge sourced by a task is a protocol correction; the same edge
- * sourced by an experiment is an ordinary branch. Keeping them apart matters because
- * both provenances share one edge kind, so counting the edge alone would charge a
- * branch to the correction budget and let a chain of corrections restart it.
- */
+/** A node that replaces an earlier protocol, rather than opening a new branch. */
 export const isProtocolRevision = (graph: Graph, nodeId: string): boolean =>
-  graph.nodes.find((node) => node.id === nodeId)?.kind === 'task' &&
-  graph.edges.some((edge) => edge.kind === 'derived_from' && edge.sourceNodeId === nodeId);
+  graph.edges.some((edge) => edge.kind === 'revises' && edge.sourceNodeId === nodeId);
 
 /**
  * Corrections already aimed at this experiment, following a standalone chain back to
  * its origin so revising the latest attempt cannot hand the budget back.
  */
 export const protocolRevisionCount = (graph: Graph, targetId: string): number => {
-  const revisions = graph.edges.filter(
-    (edge) => edge.kind === 'derived_from' && isProtocolRevision(graph, edge.sourceNodeId),
-  );
+  const revisions = graph.edges.filter((edge) => edge.kind === 'revises');
   const seen = new Set<string>();
   let cursor: string | undefined = targetId;
   let count = 0;
@@ -116,7 +108,10 @@ export const protocolRevisionCount = (graph: Graph, targetId: string): number =>
  */
 export const provenanceParentId = (graph: Graph, nodeId: string): string | undefined =>
   (
-    graph.edges.find((edge) => edge.kind === 'derived_from' && edge.sourceNodeId === nodeId) ??
+    graph.edges.find(
+      (edge) =>
+        (edge.kind === 'revises' || edge.kind === 'derived_from') && edge.sourceNodeId === nodeId,
+    ) ??
     graph.edges.find(
       (edge) =>
         edge.kind === 'derived_from' &&
@@ -136,10 +131,7 @@ export const experimentScope = (graph: Graph, nodeId: string): Set<string> => {
   for (;;) {
     const next = graph.edges.filter(
       (edge) =>
-        edge.kind === 'derived_from' &&
-        scope.has(edge.targetNodeId) &&
-        !scope.has(edge.sourceNodeId) &&
-        isProtocolRevision(graph, edge.sourceNodeId),
+        edge.kind === 'revises' && scope.has(edge.targetNodeId) && !scope.has(edge.sourceNodeId),
     );
     if (!next.length) return scope;
     for (const edge of next) {

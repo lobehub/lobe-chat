@@ -302,6 +302,13 @@ export type GoalEdgeKind =
   | 'decomposes'
   | 'depends_on'
   | 'derived_from'
+  /**
+   * A corrected protocol replacing an earlier one inside the same experiment.
+   * Distinct from `derived_from`, which records generic provenance and is writable
+   * through the public graph mutation: reusing it would silently reinterpret any
+   * hand-authored task provenance as a correction.
+   */
+  | 'revises'
   | 'investigates'
   | 'produces'
   | 'supports'

@@ -65,7 +65,7 @@ describe('exploreGraph', () => {
   it('folds a correction’s results into the experiment it corrected', async () => {
     const withCorrection = {
       ...graph(),
-      edges: [{ kind: 'derived_from', sourceNodeId: 'fix', targetNodeId: 'parent' }],
+      edges: [{ kind: 'revises', sourceNodeId: 'fix', targetNodeId: 'parent' }],
       nodes: [
         node('parent', 'experiment'),
         { ...node('fix', 'task'), description: null },
@@ -89,7 +89,7 @@ describe('exploreGraph', () => {
     expect(parent.revisionsRemaining).toBe(1);
   });
 
-  it('re-plans instead of pausing the goal when an allowance is spent', async () => {
+  it('ends the advance instead of pausing or replanning when an allowance is spent', async () => {
     plan.mockResolvedValue({
       action: 'revise',
       instruction: 'Try once more',
@@ -104,7 +104,8 @@ describe('exploreGraph', () => {
       graph: graph(),
       userId: 'user',
     });
-    expect(result.outcome).toBe('advanced');
+    // `advanced` here would replan on identical input and could burn the tick budget.
+    expect(result.outcome).toBe('no_progress');
     expect(result.message).toContain('no corrected protocol left');
   });
 
