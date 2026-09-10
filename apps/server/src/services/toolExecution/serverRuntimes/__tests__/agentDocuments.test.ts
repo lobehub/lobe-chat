@@ -79,10 +79,14 @@ describe('agentDocumentsRuntime auto-pin to task', () => {
     });
   });
 
-  const buildContext = (taskId?: string, workspaceId?: string) => {
+  const buildContext = (
+    taskId?: string,
+    workspaceId?: string,
+    taskRows: Array<{ workspaceId: string | null }> = [{ workspaceId: null }],
+  ) => {
     // Mock the workspace lookup chain that `pinToTask` runs against the task
     // row. Returning `workspaceId: null` reproduces personal-mode behavior.
-    const limit = vi.fn().mockResolvedValue([{ workspaceId: null }]);
+    const limit = vi.fn().mockResolvedValue(taskRows);
     const where = vi.fn().mockReturnValue({ limit });
     const from = vi.fn().mockReturnValue({ where });
     const select = vi.fn().mockReturnValue({ from });
@@ -101,6 +105,34 @@ describe('agentDocumentsRuntime auto-pin to task', () => {
     await runtime.createDocument({ content: 'body', title: 'Daily Brief' }, { agentId: 'agent-1' });
 
     expect(pinDocument).toHaveBeenCalledWith('task-1', 'documents-row-id', 'agent');
+  });
+
+  it('fails before document mutation when a legacy task anchor was trashed', async () => {
+    const runtime = agentDocumentsRuntime.factory(buildContext('trashed-task', undefined, []));
+
+    await expect(
+      runtime.createDocument(
+        { content: 'body', title: 'Must not write to personal scope' },
+        { agentId: 'agent-1' },
+      ),
+    ).rejects.toThrow('missing or trashed task trashed-task');
+    expect(serviceImpl.createDocument).not.toHaveBeenCalled();
+    expect(pinDocument).not.toHaveBeenCalled();
+  });
+
+  it('uses the recovered task workspace for both document mutation and pinning', async () => {
+    const context = buildContext('task-1', undefined, [{ workspaceId: 'workspace-1' }]);
+    const runtime = agentDocumentsRuntime.factory(context);
+
+    await runtime.createDocument({ content: 'body', title: 'Scoped' }, { agentId: 'agent-1' });
+
+    expect(AgentDocumentsService).toHaveBeenLastCalledWith(
+      context.serverDB,
+      'user-1',
+      'workspace-1',
+      undefined,
+    );
+    expect(TaskModel).toHaveBeenLastCalledWith(context.serverDB, 'user-1', 'workspace-1');
   });
 
   it('emits create outcomes with the agent document binding id', async () => {
