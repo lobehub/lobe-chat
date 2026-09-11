@@ -2,8 +2,8 @@ import type { AiModelReasoningConfig } from 'model-bank';
 import { AiModelReasoningConfigSchema } from 'model-bank/aiModel';
 import { z } from 'zod';
 
-import type { HeterogeneousReasoningEffort } from '../agent/heteroSelectorCapabilities';
 import type { LobeAgentAgencyConfig } from '../agent';
+import type { HeterogeneousReasoningEffort } from '../agent/heteroSelectorCapabilities';
 import type { SerializedAgentHook } from '../agentHook';
 import { serializedAgentHookSchema } from '../agentHook';
 import type { WorkingDirConfig } from '../device';
