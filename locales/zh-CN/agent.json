@@ -90,6 +90,7 @@
   "channel.endpointUrl": "Webhook URL",
   "channel.endpointUrlHint": "请复制此 URL 并粘贴到 {{name}} 开发者门户的 <bold>{{fieldName}}</bold> 字段中。",
   "channel.exportConfig": "导出平台配置",
+  "channel.exportContainsCredentials": "这个文件里是明文的机器人凭证，请妥善保管。",
   "channel.feishu.description": "将助手连接到飞书，支持私聊和群聊。",
   "channel.feishu.fetchOwnerId": "从应用信息获取",
   "channel.feishu.fetchOwnerIdAutoSuccess": "已自动填入应用所有者的 Open ID，确认是你本人后保存",
