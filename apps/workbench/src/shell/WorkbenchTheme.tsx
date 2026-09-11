@@ -9,7 +9,6 @@ import { domMax, LazyMotion } from 'motion/react';
 import * as m from 'motion/react-m';
 import { memo, type PropsWithChildren } from 'react';
 
-import AntdStaticMethods from '@/components/AntdStaticMethods';
 import { useIsDark } from '@/hooks/useIsDark';
 import Image from '@/libs/next/Image';
 import Link from '@/libs/next/Link';
@@ -28,7 +27,6 @@ const WorkbenchTheme = memo<PropsWithChildren>(({ children }) => {
       theme={{ cssVar: { key: 'lobe-vars' } }}
     >
       <App style={{ height: '100%' }}>
-        <AntdStaticMethods />
         <ConfigProvider config={{ aAs: Link, imgAs: Image, imgUnoptimized: true }} motion={m}>
           <LazyMotion features={domMax}>{children}</LazyMotion>
         </ConfigProvider>

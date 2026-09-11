@@ -10,7 +10,6 @@ import * as m from 'motion/react-m';
 import { type PropsWithChildren } from 'react';
 import { memo } from 'react';
 
-import AntdStaticMethods from '@/components/AntdStaticMethods';
 import { useIsDark } from '@/hooks/useIsDark';
 import Image from '@/libs/next/Image';
 import Link from '@/libs/next/Link';
@@ -35,7 +34,6 @@ const AuthThemeLite = memo<AuthThemeLiteProps>(({ children, globalCDN }) => {
       }}
     >
       <App style={{ height: '100%' }}>
-        <AntdStaticMethods />
         <ConfigProvider
           motion={m}
           config={{
