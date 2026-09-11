@@ -22,7 +22,7 @@ const styles = createStaticStyles(({ css }) => ({
     max-height: 94px;
     padding-block: 4px;
     padding-inline: 6px;
-    border: 1px solid transparent;
+    border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: 6px;
 
     font-size: 12px;
@@ -34,11 +34,12 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorBgContainer};
   `,
   // The caption is the branch's only hit target, so a picked one wears the same
-  // ring as a picked state card.
+  // ring as a picked state card. The background stays opaque: the edge runs
+  // under the caption, and a translucent fill lets the line strike the text out.
   selected: css`
     border-color: ${cssVar.colorPrimaryBorder};
     color: ${cssVar.colorText};
-    background: ${cssVar.colorFillQuaternary};
+    background: ${cssVar.colorBgElevated};
     box-shadow: 0 0 0 2px ${cssVar.colorPrimaryBg};
   `,
 }));
