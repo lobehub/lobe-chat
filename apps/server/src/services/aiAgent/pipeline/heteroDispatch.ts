@@ -191,13 +191,16 @@ const finalizeHeteroDispatchError = async (
  * op row + its task failed, and closes the UI stream out from under a run that
  * is still producing output.
  *
- * Two cheap reads tell a stranded dispatch apart from a live one:
+ * Two reads tell a stranded dispatch apart from a live one:
  *
  * 1. `agent_operations.status` — anything other than `running` means the run
  *    reached `heteroFinish` (or a park) on its own. Nothing left to finalize.
- * 2. `topics.metadata.heteroCurrentMsgId` — the ingest path repoints this at
- *    every assistant turn it persists, scoped by `operationId`. It naming THIS
- *    operation is proof the sandbox is alive and writing.
+ * 2. Any assistant/tool row persisted after the seeded assistant message. The
+ *    ingest path writes one on every turn shape, including the first, which is
+ *    why this is NOT keyed off `topics.metadata.heteroCurrentMsgId`: that
+ *    pointer only moves on `createAssistant`, so a first turn — which persists
+ *    into the seeded message the dispatcher already created — would look idle
+ *    right up until its second turn opens.
  *
  * When neither fires the sandbox really never came up and the caller finalizes
  * as before. A run that passes this probe and then dies is not stranded: the
@@ -205,9 +208,9 @@ const finalizeHeteroDispatchError = async (
  */
 const hasHeteroRunStarted = async (
   deps: HeteroDispatchDeps,
-  params: { operationId: string; topicId: string },
+  params: { assistantMessageId: string; operationId: string; topicId: string },
 ): Promise<boolean> => {
-  const { operationId, topicId } = params;
+  const { assistantMessageId, operationId, topicId } = params;
 
   try {
     const operation = await new AgentOperationModel(
@@ -225,10 +228,13 @@ const hasHeteroRunStarted = async (
       return true;
     }
 
-    const topic = await deps.topicModel.findById(topicId);
-    if (topic?.metadata?.heteroCurrentMsgId?.operationId === operationId) {
+    const persisted = await deps.messageModel.hasMessagesPersistedAfter({
+      anchorMessageId: assistantMessageId,
+      topicId,
+    });
+    if (persisted) {
       log(
-        'hasHeteroRunStarted: op=%s has ingested turns — skipping spawn-failure finalize',
+        'hasHeteroRunStarted: op=%s has persisted output — skipping spawn-failure finalize',
         operationId,
       );
       return true;
@@ -1106,7 +1112,7 @@ export const dispatchHeteroAgent = async (
         // call is the only dispatch failure that can land AFTER the agent
         // started, so a rejection here is not by itself evidence that nothing
         // ran — see `hasHeteroRunStarted`.
-        if (await hasHeteroRunStarted(deps, { operationId, topicId })) return;
+        if (await hasHeteroRunStarted(deps, { assistantMessageId, operationId, topicId })) return;
 
         await finalizeHeteroDispatchError(deps, {
           agentId: resolvedAgentId,

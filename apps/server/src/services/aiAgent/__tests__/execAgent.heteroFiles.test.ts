@@ -14,6 +14,7 @@ const {
   mockExecuteToolCall,
   mockInterruptOperation,
   mockGetHeterogeneousResumeSessionId,
+  mockHasMessagesPersistedAfter,
   mockMessageCreate,
   mockMessageQuery,
   mockMessageUpdate,
@@ -32,6 +33,7 @@ const {
   mockInterruptOperation: vi.fn().mockResolvedValue(true),
   mockGetHeterogeneousResumeSessionId: vi.fn().mockResolvedValue(undefined),
   mockIngestAttachment: vi.fn(),
+  mockHasMessagesPersistedAfter: vi.fn().mockResolvedValue(false),
   mockMessageCreate: vi.fn(),
   mockMessageQuery: vi.fn(),
   mockMessageUpdate: vi.fn().mockResolvedValue({}),
@@ -95,6 +97,7 @@ vi.mock('@/database/models/message', () => ({
       create: mockMessageCreate,
       getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
       getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
+      hasMessagesPersistedAfter: mockHasMessagesPersistedAfter,
       query: mockMessageQuery,
       update: mockMessageUpdate,
     };
@@ -1923,6 +1926,7 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       findOperationSpy = vi
         .spyOn(AgentOperationModel.prototype, 'findById')
         .mockResolvedValue({ status: 'running' } as any);
+      mockHasMessagesPersistedAfter.mockResolvedValue(false);
     });
 
     afterEach(() => {
@@ -1979,28 +1983,35 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
      * Same 504, but arriving mid-run: finalizing closed the UI stream and marked
      * the op failed while the sandbox was still producing output, so the
      * conversation stopped dead at the moment the 504 landed.
+     *
+     * The probe must key off persisted rows rather than
+     * `topics.metadata.heteroCurrentMsgId`, which the ingest path only moves on
+     * `createAssistant` — so it is still unset here, on the FIRST turn, which
+     * persists into the seeded assistant message the dispatcher created.
      */
-    it('leaves a run that is still ingesting turns alone', async () => {
-      mockSpawnHeteroSandbox.mockImplementationOnce(async ({ operationId }: any) => {
-        // The sandbox is alive and has already persisted an assistant turn.
-        topicMock.findById.mockResolvedValue({
-          metadata: { heteroCurrentMsgId: { msgId: 'msg-live', operationId } },
-        });
+    it('leaves a first turn that is still streaming alone', async () => {
+      topicMock.findById.mockResolvedValue({ metadata: {} });
+      mockSpawnHeteroSandbox.mockImplementationOnce(async () => {
+        // The sandbox is alive: its first tool row is already on screen, but no
+        // second assistant turn has opened yet.
+        mockHasMessagesPersistedAfter.mockResolvedValue(true);
         throw new Error('Gateway Timeout');
       });
 
       await service.execAgent({ agentId: 'agent-1', prompt: 'clean the worktrees' });
 
-      await vi.waitFor(() => expect(topicMock.findById).toHaveBeenCalled());
+      await vi.waitFor(() => expect(mockHasMessagesPersistedAfter).toHaveBeenCalled());
+      expect(mockHasMessagesPersistedAfter).toHaveBeenCalledWith({
+        anchorMessageId: expect.any(String),
+        topicId: expect.any(String),
+      });
       expect(errorBubbleUpdates()).toHaveLength(0);
       expect(completeOperationSpy).not.toHaveBeenCalled();
       expect(mockPublishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
 
-    it('still finalizes when the topic pointer names a different operation', async () => {
-      topicMock.findById.mockResolvedValue({
-        metadata: { heteroCurrentMsgId: { msgId: 'msg-old', operationId: 'op-previous-turn' } },
-      });
+    it('still finalizes when the probe itself cannot read', async () => {
+      findOperationSpy.mockRejectedValue(new Error('db unreachable'));
       mockSpawnHeteroSandbox.mockRejectedValueOnce(new Error('Gateway Timeout'));
 
       await service.execAgent({ agentId: 'agent-1', prompt: 'clean the worktrees' });

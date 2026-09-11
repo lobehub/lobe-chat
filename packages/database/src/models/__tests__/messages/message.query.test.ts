@@ -4085,4 +4085,131 @@ describe('MessageModel Query Tests', () => {
       expect(await messageModel.getLatestSpineMessageId({ topicId: 'topic1' })).toBe('null-only');
     });
   });
+
+  /**
+   * Liveness probe for the hetero dispatch path: it has to tell a sandbox that
+   * never came up apart from one already mid-run when a delayed gateway error
+   * arrives. See `hasHeteroRunStarted` in `heteroDispatch.ts`.
+   */
+  describe('hasMessagesPersistedAfter', () => {
+    const seedTurn = async (rows: (typeof messages.$inferInsert)[]) => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'user-1',
+          userId,
+          topicId: 'topic1',
+          role: 'user',
+          content: 'clean the worktrees',
+          createdAt: new Date('2023-01-01T00:00:00'),
+        },
+        {
+          id: 'seed-assistant',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: '',
+          createdAt: new Date('2023-01-01T00:00:01'),
+        },
+        ...rows,
+      ]);
+    };
+
+    it('is false for a dispatch that produced nothing', async () => {
+      await seedTurn([]);
+
+      expect(
+        await messageModel.hasMessagesPersistedAfter({
+          anchorMessageId: 'seed-assistant',
+          topicId: 'topic1',
+        }),
+      ).toBe(false);
+    });
+
+    /**
+     * The first turn persists INTO the seeded assistant and creates tool rows
+     * beside it — it never opens a second assistant, so
+     * `topics.metadata.heteroCurrentMsgId` stays unset for its whole duration.
+     * A tool row is the earliest durable trace such a run leaves.
+     */
+    it('is true once a first-turn tool row lands', async () => {
+      await seedTurn([
+        {
+          id: 'tool-1',
+          userId,
+          topicId: 'topic1',
+          role: 'tool',
+          content: 'total 8',
+          createdAt: new Date('2023-01-01T00:00:09'),
+        },
+      ]);
+
+      expect(
+        await messageModel.hasMessagesPersistedAfter({
+          anchorMessageId: 'seed-assistant',
+          topicId: 'topic1',
+        }),
+      ).toBe(true);
+    });
+
+    it('ignores a user message typed while the run was deciding', async () => {
+      await seedTurn([
+        {
+          id: 'user-steer',
+          userId,
+          topicId: 'topic1',
+          role: 'user',
+          content: 'actually, wait',
+          createdAt: new Date('2023-01-01T00:00:05'),
+        },
+      ]);
+
+      expect(
+        await messageModel.hasMessagesPersistedAfter({
+          anchorMessageId: 'seed-assistant',
+          topicId: 'topic1',
+        }),
+      ).toBe(false);
+    });
+
+    it('ignores rows that predate the anchor, including a prior turn', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'previous-assistant',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: 'answer from the turn before',
+          createdAt: new Date('2022-12-31T23:00:00'),
+        },
+        {
+          id: 'seed-assistant',
+          userId,
+          topicId: 'topic1',
+          role: 'assistant',
+          content: '',
+          createdAt: new Date('2023-01-01T00:00:01'),
+        },
+      ]);
+
+      expect(
+        await messageModel.hasMessagesPersistedAfter({
+          anchorMessageId: 'seed-assistant',
+          topicId: 'topic1',
+        }),
+      ).toBe(false);
+    });
+
+    it('is false when the anchor does not resolve', async () => {
+      expect(
+        await messageModel.hasMessagesPersistedAfter({
+          anchorMessageId: 'no-such-message',
+          topicId: 'topic1',
+        }),
+      ).toBe(false);
+    });
+  });
 });

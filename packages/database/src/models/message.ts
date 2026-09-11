@@ -1270,6 +1270,52 @@ export class MessageModel {
   };
 
   /**
+   * Whether the turn seeded by `anchorMessageId` persisted anything into
+   * `topicId` — any assistant or tool row created after the anchor.
+   *
+   * Used as a liveness probe by the hetero dispatch path, which has to tell a
+   * sandbox that never came up apart from one that is mid-run when a delayed
+   * gateway error arrives (see `hasHeteroRunStarted`). Every shape a turn can
+   * take writes a row here: a text-first turn updates the seeded assistant and
+   * then creates the next one, a tool-first turn creates the tool row straight
+   * away. `topics.metadata.heteroCurrentMsgId` is NOT a substitute — the ingest
+   * path only repoints it on `createAssistant`, so it stays unset for the whole
+   * first turn.
+   *
+   * `user` rows are excluded so a steer typed while the run is deciding cannot
+   * be mistaken for the run's own output.
+   */
+  hasMessagesPersistedAfter = async ({
+    anchorMessageId,
+    topicId,
+  }: {
+    anchorMessageId: string;
+    topicId: string;
+  }): Promise<boolean> => {
+    const anchor = await this.db.query.messages.findFirst({
+      columns: { createdAt: true },
+      where: and(eq(messages.id, anchorMessageId), this.ownership()),
+    });
+    if (!anchor) return false;
+
+    const [row] = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(
+        and(
+          this.ownership(),
+          eq(messages.topicId, topicId),
+          gt(messages.createdAt, anchor.createdAt),
+          ne(messages.id, anchorMessageId),
+          ne(messages.role, 'user'),
+        ),
+      )
+      .limit(1);
+
+    return !!row;
+  };
+
+  /**
    * Return a lightweight, ownership-scoped transcript for a topic.
    *
    * Unlike the conversation query, this intentionally does not infer missing
