@@ -6,7 +6,11 @@ import { promisify } from 'node:util';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { defaultGetProjectFileIndex, defaultSearchProjectFiles } from '../projectFileIndex';
+import {
+  defaultGetProjectFileIndex,
+  defaultListProjectDirectory,
+  defaultSearchProjectFiles,
+} from '../projectFileIndex';
 
 const cleanup: string[] = [];
 
@@ -77,6 +81,29 @@ describe('defaultGetProjectFileIndex', () => {
       ]);
     }
     expect(paths).toContain('.husky/_/hook');
+    // Its children are already indexed, so nothing is left to fetch on expand.
+    expect(result.entries.find((entry) => entry.relativePath === '.husky/_/')?.collapsed).toBe(
+      undefined,
+    );
+  });
+
+  it('flags a collapsed ignored directory so its children can be fetched on expand', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-index-collapsed-'));
+    cleanup.push(dir);
+    execFileSync('git', ['-c', 'init.defaultBranch=main', 'init'], { cwd: dir });
+    await writeFile(path.join(dir, '.gitignore'), 'traces/\n');
+    await mkdir(path.join(dir, 'traces', 'nested'), { recursive: true });
+    await writeFile(path.join(dir, 'traces', 'one.json'), '{}\n');
+    await writeFile(path.join(dir, 'traces', 'nested', 'two.json'), '{}\n');
+
+    const result = await defaultGetProjectFileIndex({ scope: dir });
+
+    expect(result.entries.find((entry) => entry.relativePath === 'traces/')).toMatchObject({
+      collapsed: true,
+      gitIgnored: true,
+      isDirectory: true,
+    });
+    expect(result.entries.map((entry) => entry.relativePath)).not.toContain('traces/one.json');
   });
 
   it('falls back to a glob walk when the scope is not a git repo', async () => {
@@ -112,6 +139,63 @@ describe('defaultGetProjectFileIndex', () => {
     expect(byRel['.agents/config.md']?.isDirectory).toBe(false);
 
     expect(result).not.toHaveProperty('totalCount');
+  });
+});
+
+describe('defaultListProjectDirectory', () => {
+  it('lists one level of a collapsed directory, flagging subdirectories for the next expand', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-'));
+    cleanup.push(dir);
+    await mkdir(path.join(dir, 'traces', 'nested'), { recursive: true });
+    await writeFile(path.join(dir, 'traces', 'one.json'), '{}\n');
+    await writeFile(path.join(dir, 'traces', 'nested', 'two.json'), '{}\n');
+
+    const result = await defaultListProjectDirectory({ relativePath: 'traces/', root: dir });
+
+    expect(result.truncated).toBe(false);
+    expect(result.entries).toEqual([
+      expect.objectContaining({
+        collapsed: true,
+        gitIgnored: true,
+        isDirectory: true,
+        relativePath: 'traces/nested/',
+      }),
+      expect.objectContaining({
+        gitIgnored: true,
+        isDirectory: false,
+        relativePath: 'traces/one.json',
+      }),
+    ]);
+    expect(result.entries[1]).not.toHaveProperty('collapsed');
+  });
+
+  it('reports truncation instead of returning an unbounded directory', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-limit-'));
+    cleanup.push(dir);
+    await mkdir(path.join(dir, 'many'), { recursive: true });
+    await Promise.all(
+      Array.from({ length: 5 }).map((_, index) =>
+        writeFile(path.join(dir, 'many', `file-${index}.txt`), 'x\n'),
+      ),
+    );
+
+    const result = await defaultListProjectDirectory({
+      limit: 2,
+      relativePath: 'many',
+      root: dir,
+    });
+
+    expect(result.entries).toHaveLength(2);
+    expect(result.truncated).toBe(true);
+  });
+
+  it('refuses to walk outside the project root', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-escape-'));
+    cleanup.push(dir);
+
+    await expect(defaultListProjectDirectory({ relativePath: '../', root: dir })).rejects.toThrow(
+      'outside the project root',
+    );
   });
 });
 

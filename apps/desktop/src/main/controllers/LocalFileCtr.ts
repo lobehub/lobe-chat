@@ -10,6 +10,7 @@ import type {
 } from '@lobechat/device-control';
 import {
   defaultGetProjectFileIndex,
+  defaultListProjectDirectory,
   defaultSearchProjectFiles,
 } from '@lobechat/device-control/project-file-index';
 import {
@@ -38,6 +39,8 @@ import {
   type PickFileResult,
   type PrepareSkillDirectoryParams,
   type PrepareSkillDirectoryResult,
+  type ProjectDirectoryListParams,
+  type ProjectDirectoryListResult,
   type ProjectFileIndexParams,
   type ProjectFileIndexResult,
   type ProjectFileSearchParams,
@@ -49,6 +52,8 @@ import {
   type ShowOpenDialogResult,
   type ShowSaveDialogParams,
   type ShowSaveDialogResult,
+  type TrashLocalFilesParams,
+  type TrashLocalFilesResult,
   type WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import {
@@ -720,6 +725,46 @@ export default class LocalFileCtr extends ControllerModule {
     await this.approveProjectRootForPreview(result.root);
 
     return result;
+  }
+
+  /**
+   * Children of one directory inside an already-indexed project. The file tree
+   * calls this when the user expands a directory the index collapsed, so an
+   * ignored subtree costs a read only when someone opens it.
+   */
+  @IpcMethod()
+  async listProjectDirectory(
+    params: ProjectDirectoryListParams,
+  ): Promise<ProjectDirectoryListResult> {
+    logger.debug('Listing project directory', {
+      relativePath: params.relativePath,
+      root: params.root,
+    });
+
+    return defaultListProjectDirectory(params);
+  }
+
+  /**
+   * Move files/folders to the OS trash. Recoverable by design — the file tree
+   * never hard-deletes, so a misclick can be undone from Finder / Explorer.
+   */
+  @IpcMethod()
+  async trashLocalFiles({ paths }: TrashLocalFilesParams): Promise<TrashLocalFilesResult> {
+    if (paths.length === 0) return { error: 'No path to delete', success: false };
+
+    logger.debug('Trashing local files', { count: paths.length });
+
+    for (const rawPath of paths) {
+      const targetPath = expandTilde(rawPath) ?? rawPath;
+      try {
+        await shell.trashItem(targetPath);
+      } catch (error) {
+        logger.error('Failed to trash local file:', error);
+        return { error: (error as Error).message, success: false };
+      }
+    }
+
+    return { success: true };
   }
 
   /**
