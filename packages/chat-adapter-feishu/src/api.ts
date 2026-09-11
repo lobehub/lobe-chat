@@ -6,6 +6,18 @@ const BASE_URLS: Record<string, string> = {
 const MAX_TEXT_LENGTH = 4000;
 
 /**
+ * `LARK_API_BASE_URL` redirects every call (auth included) to a stand-in Open
+ * API — the seam a local acceptance run uses to drive the real client without
+ * a Feishu tenant. Unset in production, where the platform picks the host.
+ */
+const resolveBaseUrl = (platform: string): string => {
+  const override =
+    typeof process === 'undefined' ? undefined : process.env?.LARK_API_BASE_URL?.trim();
+  if (override) return override.replace(/\/$/, '');
+  return BASE_URLS[platform] || BASE_URLS.lark;
+};
+
+/**
  * Lightweight wrapper around the Lark/Feishu Open API.
  *
  * Auth: app_id + app_secret -> tenant_access_token (cached, auto-refreshed).
@@ -21,7 +33,7 @@ export class LarkApiClient {
   constructor(appId: string, appSecret: string, platform: string = 'lark') {
     this.appId = appId;
     this.appSecret = appSecret;
-    this.baseUrl = BASE_URLS[platform] || BASE_URLS.lark;
+    this.baseUrl = resolveBaseUrl(platform);
   }
 
   // ------------------------------------------------------------------
@@ -244,6 +256,64 @@ export class LarkApiClient {
     }
 
     return Buffer.from(await response.arrayBuffer());
+  }
+
+  // ------------------------------------------------------------------
+  // Cloud documents (docx / wiki)
+  // ------------------------------------------------------------------
+
+  /**
+   * Metadata of a docx document: title + revision. Needs
+   * `docx:document:readonly` (or `docx:document`) on the app, AND the
+   * document must be visible to the app — via a group the bot is in, or by
+   * adding the app as a collaborator.
+   *
+   * @see https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/get
+   */
+  async getDocxDocument(
+    documentId: string,
+  ): Promise<{ documentId: string; revisionId?: number; title?: string }> {
+    const data = await this.call('GET', `/docx/v1/documents/${documentId}`, {});
+    const doc = data.data?.document ?? {};
+    return {
+      documentId: doc.document_id ?? documentId,
+      revisionId: doc.revision_id,
+      title: doc.title,
+    };
+  }
+
+  /**
+   * Plain-text body of a docx document (headings, paragraphs, table cells
+   * flattened into text — no block structure). Same scope as
+   * {@link getDocxDocument}. Rate-limited to 5 req/s per app.
+   *
+   * @see https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/raw_content
+   */
+  async getDocxRawContent(documentId: string): Promise<string> {
+    const data = await this.call('GET', `/docx/v1/documents/${documentId}/raw_content`, {});
+    return typeof data.data?.content === 'string' ? data.data.content : '';
+  }
+
+  /**
+   * Resolve a wiki node token to the underlying object it wraps. A wiki
+   * link (`/wiki/<token>`) is a tree node, not a document; the document
+   * token to feed the docx endpoints is `obj_token` (when `obj_type` is
+   * `docx`). Needs `wiki:wiki:readonly` (or `wiki:wiki`) on the app.
+   *
+   * @see https://open.feishu.cn/document/server-docs/docs/wiki-v2/space-node/get_node
+   */
+  async getWikiNode(
+    token: string,
+  ): Promise<{ nodeToken: string; objToken?: string; objType?: string; title?: string }> {
+    const params = new URLSearchParams({ token });
+    const data = await this.call('GET', `/wiki/v2/spaces/get_node?${params.toString()}`, {});
+    const node = data.data?.node ?? {};
+    return {
+      nodeToken: node.node_token ?? token,
+      objToken: node.obj_token,
+      objType: node.obj_type,
+      title: node.title,
+    };
   }
 
   // ------------------------------------------------------------------

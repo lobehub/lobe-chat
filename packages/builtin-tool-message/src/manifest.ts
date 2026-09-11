@@ -287,6 +287,33 @@ export const MessageManifest: BuiltinToolManifest = {
       },
     },
     {
+      description:
+        'Read the full text of a cloud document shared in the chat (Feishu/Lark docx, wiki pages, meeting minutes / 智能纪要 documents). Pass the document URL exactly as it appears in the message. Use this IMMEDIATELY whenever the user points at a document link ("看这份纪要", "总结这个文档") or a message you read contains one — never ask the user to paste the content.',
+      name: MessageApiName.readDocument,
+      parameters: {
+        additionalProperties: false,
+        properties: {
+          documentId: {
+            description:
+              'Platform document ID / token, only when you have it without a URL. Prefer `url`.',
+            type: 'string',
+          },
+          platform: {
+            description: 'Target messaging platform',
+            enum: platformEnum,
+            type: 'string',
+          },
+          url: {
+            description:
+              'Document URL as it appeared in the chat, e.g. https://<tenant>.feishu.cn/docx/<token> or a /wiki/ link.',
+            type: 'string',
+          },
+        },
+        required: ['platform'],
+        type: 'object',
+      },
+    },
+    {
       description: 'Edit an existing message. Only the message author can edit their messages.',
       name: MessageApiName.editMessage,
       parameters: {

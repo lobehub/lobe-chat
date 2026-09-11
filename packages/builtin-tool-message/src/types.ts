@@ -27,6 +27,7 @@ export const MessageApiName = {
   listPins: 'listPins',
   pinMessage: 'pinMessage',
   reactToMessage: 'reactToMessage',
+  readDocument: 'readDocument',
   readMessages: 'readMessages',
   searchMessages: 'searchMessages',
   sendMessage: 'sendMessage',
@@ -200,6 +201,35 @@ export interface MessageItem {
   id: string;
   replyTo?: string;
   timestamp: string;
+}
+
+// --- Documents ---
+
+export interface ReadDocumentParams {
+  /**
+   * Platform document ID, for callers that already hold one (e.g. a Feishu
+   * docx token). Either this or `url` is required; `url` wins when both given.
+   */
+  documentId?: string;
+  /** Platform to read from */
+  platform: MessagePlatformType;
+  /** Document URL as it appeared in the chat (e.g. `https://x.feishu.cn/docx/<token>`) */
+  url?: string;
+}
+
+export interface ReadDocumentState {
+  /** Plain-text body of the document */
+  content?: string;
+  /** Resolved document ID on the platform */
+  documentId?: string;
+  /** Document kind on the platform (e.g. `docx`, `wiki`) */
+  kind?: string;
+  platform?: string;
+  title?: string;
+  /** True when the body was cut to fit the tool result */
+  truncated?: boolean;
+  /** Canonical URL of the document, when known */
+  url?: string;
 }
 
 export interface EditMessageParams {

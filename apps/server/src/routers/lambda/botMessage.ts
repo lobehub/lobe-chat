@@ -387,6 +387,33 @@ export const botMessageRouter = router({
       });
     }),
 
+  readDocument: botMessageProcedure
+    .input(
+      z
+        .object({
+          botId: z.string(),
+          documentId: z.string().optional(),
+          url: z.string().optional(),
+        })
+        .refine((v) => !!v.url || !!v.documentId, {
+          message: 'Either url or documentId is required',
+        }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { service, platform } = await resolveBot(ctx.agentBotProviderModel, input.botId);
+      if (!service.readDocument) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `readDocument is not supported on ${platform}`,
+        });
+      }
+      return service.readDocument({
+        documentId: input.documentId,
+        platform,
+        url: input.url,
+      });
+    }),
+
   editMessage: botMessageWriteProcedure
     .input(
       z.object({
