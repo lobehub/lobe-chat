@@ -496,6 +496,7 @@ export const topicRouter = router({
         .object({
           favorite: z.boolean().optional(),
           groupId: z.string().nullish(),
+          metadata: chatTopicMetadataUpdateSchema.pick({ executionConfig: true }).optional(),
           messages: z.array(z.string()).optional(),
           // The pinned reasoning snapshot taken next to the pinned model
           // (`snapshotAgentReasoning`); other metadata keys are server-owned.
