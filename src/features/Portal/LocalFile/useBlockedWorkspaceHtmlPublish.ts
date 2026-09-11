@@ -1,4 +1,9 @@
-import type { GatheredWorkspaceHtmlResource } from '@lobechat/html-artifact';
+import {
+  type GatheredWorkspaceHtmlResource,
+  isPathInsideWorkspace,
+  type WorkspaceHtmlArtifactPublisher,
+  type WorkspaceHtmlArtifactPublishResult,
+} from '@lobechat/html-artifact';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import debug from 'debug';
 import { useEffect, useRef, useState } from 'react';
@@ -13,11 +18,6 @@ import {
   type WorkspaceHtmlPublishPlan,
 } from './prepareWorkspaceHtmlPublish';
 import { openWorkspaceHtmlPublishConfirm } from './PublishHtmlArtifactConfirm';
-import type {
-  WorkspaceHtmlArtifactPublisher,
-  WorkspaceHtmlArtifactPublishResult,
-} from './workspaceHtmlArtifact';
-import { isPathInsideWorkspace } from './workspaceHtmlPath';
 
 type OutsideWorkspacePlan = Extract<WorkspaceHtmlPublishPlan, { blocked: 'outside-workspace' }>;
 type ResourceSource = 'nested' | 'workspace';
