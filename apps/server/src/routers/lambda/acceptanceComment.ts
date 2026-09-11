@@ -11,6 +11,7 @@ import { z } from 'zod';
 
 import {
   ACCEPTANCE_COMMENT_PARENT_NOT_FOUND,
+  ACCEPTANCE_COMMENT_RATE_LIMITED,
   AcceptanceCommentModel,
   acceptanceReactionClientId,
 } from '@/database/models/acceptanceComment';
@@ -375,6 +376,10 @@ const assertReferencesBelongToAcceptance = async (
  * somewhere; a reader answering evidence writes a handful of remarks, and a
  * flood writes hundreds. Reviewers are exempt — the round-publishing tools post
  * on their behalf in bursts.
+ *
+ * A retry of a remark that already landed is not a new remark: the ceiling is
+ * charged where the row is written, so an idempotent replay of the tenth one
+ * still answers with that row instead of a refusal.
  */
 const VISITOR_COMMENT_WINDOW_MS = 60_000;
 const VISITOR_COMMENTS_PER_WINDOW = 10;
@@ -391,21 +396,6 @@ export const acceptanceCommentRouter = router({
     // reader answering it: a visitor holding the public link writes remarks.
     if ((input.kind === 'approval' || input.kind === 'proposal') && !access.canApprove)
       throw new TRPCError({ code: 'FORBIDDEN', message: 'Not a reviewer of this acceptance' });
-
-    // Reactions do not come through here, and each (comment, emoji) pair is one
-    // idempotent row per person anyway.
-    if (!access.canApprove) {
-      const recent = await ctx.acceptanceCommentModel.countRecentByAuthor({
-        acceptanceId: access.acceptance.id,
-        authorUserId: ctx.userId,
-        since: new Date(Date.now() - VISITOR_COMMENT_WINDOW_MS),
-      });
-      if (recent >= VISITOR_COMMENTS_PER_WINDOW)
-        throw new TRPCError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Too many comments on this acceptance, try again in a minute',
-        });
-    }
 
     await assertAuthorAgentUsable(
       ctx.serverDB,
@@ -430,6 +420,19 @@ export const acceptanceCommentRouter = router({
         editorData: input.editorData as never,
         kind: input.kind,
         parentCommentId: input.parentCommentId,
+        /*
+         * The ceiling travels INTO the write so it is counted and charged in
+         * one transaction: checked out here it would be advisory only, and a
+         * burst of parallel requests would each read the same under-limit
+         * count. Reactions take another path, and each (comment, emoji) pair is
+         * one idempotent row per person anyway.
+         */
+        rateLimit: access.canApprove
+          ? undefined
+          : {
+              max: VISITOR_COMMENTS_PER_WINDOW,
+              since: new Date(Date.now() - VISITOR_COMMENT_WINDOW_MS),
+            },
         workspaceId: access.acceptance.workspaceId,
       });
       const [item] = await enrich(ctx.serverDB, [comment], {
@@ -444,6 +447,11 @@ export const acceptanceCommentRouter = router({
       if (error instanceof TRPCError) throw error;
       if (error instanceof Error && error.message === ACCEPTANCE_COMMENT_PARENT_NOT_FOUND)
         throw new TRPCError({ code: 'NOT_FOUND', message: error.message });
+      if (error instanceof Error && error.message === ACCEPTANCE_COMMENT_RATE_LIMITED)
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many comments on this acceptance, try again in a minute',
+        });
       console.error('[acceptanceComment:create]', error);
       throw new TRPCError({
         cause: error,

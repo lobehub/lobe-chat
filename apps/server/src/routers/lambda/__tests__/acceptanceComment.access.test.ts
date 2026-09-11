@@ -168,6 +168,43 @@ describe('acceptanceCommentRouter access', () => {
     });
   });
 
+  // The ceiling is charged where the row is written, so a lost response that
+  // gets retried answers with the row it already wrote.
+  it('lets a visitor retry the remark that reached the ceiling', async () => {
+    let lastClientId = '';
+    for (let index = 0; index < 10; index++) {
+      lastClientId = `c-${randomUUID()}`;
+      await caller(visitorId).create({
+        acceptanceId: publicAcceptanceId,
+        clientId: lastClientId,
+        content: `remark ${index}`,
+      });
+    }
+
+    const { data } = await caller(visitorId).create({
+      acceptanceId: publicAcceptanceId,
+      clientId: lastClientId,
+      content: 'remark 9',
+    });
+
+    expect(data.content).toBe('remark 9');
+  });
+
+  // The refusal rolls the write back with it: a rejected remark must not be
+  // half-written, or the next window starts already over the line.
+  it('writes nothing when the ceiling refuses a remark', async () => {
+    for (let index = 0; index < 10; index++)
+      await comment(visitorId, publicAcceptanceId, `remark ${index}`);
+    const before = await caller(visitorId).list({ acceptanceId: publicAcceptanceId });
+
+    await expect(comment(visitorId, publicAcceptanceId, 'one too many')).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    });
+
+    const after = await caller(visitorId).list({ acceptanceId: publicAcceptanceId });
+    expect(after.items).toHaveLength(before.items.length);
+  });
+
   it('does not throttle the creator publishing a round', async () => {
     for (let index = 0; index < 12; index++)
       await comment(ownerId, publicAcceptanceId, `note ${index}`);

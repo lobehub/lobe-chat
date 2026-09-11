@@ -21,7 +21,7 @@ import {
   Repeat,
   Route,
 } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
@@ -159,10 +159,17 @@ export const AcceptanceCheckRow = memo<{
      * and the acceptance's reviewers may close anyone's. Ownership is read from
      * the author, not from `canDelete` — that flag also turns on for a
      * moderator, and borrowing it would silently hand the same power out.
+     *
+     * Memoized on the identity it reads: the profile arrives after the first
+     * paint, and the overlay memo below would otherwise keep handing its
+     * threads the answer computed while nobody was signed in.
      */
-    const canResolveThread = (thread: AcceptanceCommentThread) =>
-      comments.canApprove ||
-      (Boolean(viewerId) && thread.root.authorUserId === viewerId && !thread.root.deletedAt);
+    const canResolveThread = useCallback(
+      (thread: AcceptanceCommentThread) =>
+        comments.canApprove ||
+        (Boolean(viewerId) && thread.root.authorUserId === viewerId && !thread.root.deletedAt),
+      [comments.canApprove, viewerId],
+    );
     const checkThreads = useMemo(
       () => threadsForCheck(comments.threads, check.id),
       [comments.threads, check.id],
@@ -215,7 +222,7 @@ export const AcceptanceCheckRow = memo<{
       });
       return map.size > 0 ? map : undefined;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proposalOverlays, checkThreads, comments.canComment, comments.canApprove]);
+    }, [proposalOverlays, checkThreads, comments.canComment, canResolveThread]);
     const canCommentEvidence =
       comments.canComment && Boolean(check.result) && hasAnnotatableEvidence(check);
     const openEvidenceComment = () =>

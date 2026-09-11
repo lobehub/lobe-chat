@@ -4,13 +4,14 @@ import type {
   AcceptanceReviewAnnotation,
   DocumentCommentJson,
 } from '@lobechat/types';
-import { and, count, desc, eq, gte, isNull, ne } from 'drizzle-orm';
+import { and, count, desc, eq, gte, isNull, ne, sql } from 'drizzle-orm';
 
 import type { AcceptanceCommentRow } from '../schemas/acceptanceComment';
 import { acceptanceComments } from '../schemas/acceptanceComment';
 import type { LobeChatDatabase } from '../type';
 
 export const ACCEPTANCE_COMMENT_PARENT_NOT_FOUND = 'Parent comment not found in this acceptance';
+export const ACCEPTANCE_COMMENT_RATE_LIMITED = 'Too many comments in the window';
 
 /**
  * One person's emoji on one comment is one row, and the idempotency key is
@@ -43,6 +44,13 @@ export interface CreateAcceptanceCommentParams {
   editorData?: DocumentCommentJson;
   kind?: AcceptanceCommentKind;
   parentCommentId?: string;
+  /**
+   * Ceiling for this author on this acceptance, enforced inside the write's own
+   * transaction. Counting outside it would be advisory only: a handful of
+   * parallel requests all read the same under-limit count before any of them
+   * commits, which is exactly how a flood arrives.
+   */
+  rateLimit?: { max: number; since: Date };
   workspaceId?: string | null;
 }
 
@@ -70,6 +78,14 @@ export class AcceptanceCommentModel {
     params: CreateAcceptanceCommentParams,
   ): Promise<CreateAcceptanceCommentResult> => {
     return this.db.transaction(async (tx) => {
+      if (params.rateLimit)
+        // One author on one acceptance is the contended pair, and the lock is
+        // released when this transaction ends either way. Everybody else writes
+        // in parallel exactly as before.
+        await tx.execute(
+          sql`select pg_advisory_xact_lock(hashtext(${params.acceptanceId}), hashtext(${params.authorUserId}))`,
+        );
+
       let parentCommentId: string | undefined;
       if (params.parentCommentId) {
         const [parent] = await tx
@@ -122,7 +138,26 @@ export class AcceptanceCommentModel {
         })
         .returning();
 
-      if (inserted) return { comment: inserted, isDuplicate: false };
+      if (inserted) {
+        if (params.rateLimit) {
+          const [recent] = await tx
+            .select({ total: count() })
+            .from(acceptanceComments)
+            .where(
+              and(
+                eq(acceptanceComments.acceptanceId, params.acceptanceId),
+                eq(acceptanceComments.authorUserId, params.authorUserId),
+                ne(acceptanceComments.kind, 'reaction'),
+                gte(acceptanceComments.createdAt, params.rateLimit.since),
+              ),
+            );
+          // The row just written is part of this count, so the first one over
+          // the ceiling rolls itself back and nothing lands.
+          if ((recent?.total ?? 0) > params.rateLimit.max)
+            throw new Error(ACCEPTANCE_COMMENT_RATE_LIMITED);
+        }
+        return { comment: inserted, isDuplicate: false };
+      }
 
       const [existing] = await tx
         .select()
@@ -166,30 +201,6 @@ export class AcceptanceCommentModel {
       .orderBy(desc(acceptanceComments.createdAt), desc(acceptanceComments.id))
       .limit(MAX_COMMENTS_PER_ACCEPTANCE);
     return rows.reverse();
-  };
-
-  /**
-   * How many remarks one author has landed on one acceptance since `since`.
-   * Reactions are excluded: they are idempotent single rows and cost a reader
-   * nothing to scroll past.
-   */
-  countRecentByAuthor = async (params: {
-    acceptanceId: string;
-    authorUserId: string;
-    since: Date;
-  }): Promise<number> => {
-    const [row] = await this.db
-      .select({ total: count() })
-      .from(acceptanceComments)
-      .where(
-        and(
-          eq(acceptanceComments.acceptanceId, params.acceptanceId),
-          eq(acceptanceComments.authorUserId, params.authorUserId),
-          ne(acceptanceComments.kind, 'reaction'),
-          gte(acceptanceComments.createdAt, params.since),
-        ),
-      );
-    return row?.total ?? 0;
   };
 
   /**
