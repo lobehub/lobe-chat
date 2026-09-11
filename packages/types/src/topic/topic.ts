@@ -625,10 +625,11 @@ export const chatTopicMetadataUpdateSchema = z.object({
 });
 
 /**
- * Metadata a client may seed when creating a topic: the pinned reasoning
- * snapshot taken alongside the pinned model (see `snapshotAgentModel`).
+ * Metadata a client may seed when creating a topic: execution routing and the
+ * reasoning snapshot taken alongside the pinned model (see `snapshotAgentModel`).
  */
 export const chatTopicCreateMetadataSchema = chatTopicMetadataUpdateSchema.pick({
+  executionConfig: true,
   heteroEffort: true,
   reasoningConfig: true,
 });
