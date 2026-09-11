@@ -10,16 +10,22 @@ import { cssVar } from 'antd-style';
  * other surface. The semantic hues are deliberately absent: `volcano` is
  * `colorError` and `green` is `colorSuccess`, and a person's box wearing either
  * would read as a verdict on the evidence rather than as an author.
+ *
+ * Step 10, not the bare hue. The bare token is the scale's tint step, which in
+ * light mode lands somewhere around #95f3d9 for cyan — a 2px box in that colour
+ * on a white screenshot is invisible, and a mark nobody can see is a mark
+ * nobody answers. Step 10 is the scale's solid step: legible on the page in
+ * light mode, and a light tint of the same hue in dark mode.
  */
 export const ACCEPTANCE_AUTHOR_COLORS = [
-  cssVar.geekblue,
-  cssVar.magenta,
-  cssVar.gold,
-  cssVar.cyan,
-  cssVar.purple,
-  cssVar.lime,
-  cssVar.orange,
-  cssVar.blue,
+  cssVar.geekblue10,
+  cssVar.magenta10,
+  cssVar.gold10,
+  cssVar.cyan10,
+  cssVar.purple10,
+  cssVar.lime10,
+  cssVar.orange10,
+  cssVar.blue10,
 ] as const;
 
 /** Deterministic, order-independent: the same author keeps their colour across rounds and reloads. */

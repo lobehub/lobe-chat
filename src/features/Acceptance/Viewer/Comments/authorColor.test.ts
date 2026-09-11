@@ -25,6 +25,12 @@ describe('acceptanceAuthorColor', () => {
     for (const color of ACCEPTANCE_AUTHOR_COLORS) expect(color).toMatch(/^var\(--/);
   });
 
+  // The bare hue token is the scale's tint step: in light mode cyan lands near
+  // #95f3d9, and a 2px box in that colour on a white screenshot cannot be seen.
+  it('uses the scale step that stays legible on the page', () => {
+    for (const color of ACCEPTANCE_AUTHOR_COLORS) expect(color).toMatch(/-10\)$/);
+  });
+
   it('leaves the verdict colours to verdicts', () => {
     const { cssVar } = require('antd-style');
     for (const semantic of [cssVar.volcano, cssVar.green, cssVar.colorError, cssVar.colorSuccess]) {

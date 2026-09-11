@@ -353,6 +353,10 @@ export const acceptanceCommentRouter = router({
       input.acceptanceId,
     );
     if (!access.canComment) throw new TRPCError({ code: 'FORBIDDEN', message: 'Read-only access' });
+    // An approval and a round introduction are the delivery speaking, not a
+    // reader answering it: a visitor holding the public link writes remarks.
+    if ((input.kind === 'approval' || input.kind === 'proposal') && !access.canApprove)
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'Not a reviewer of this acceptance' });
 
     await assertAuthorAgentUsable(
       ctx.serverDB,
@@ -422,7 +426,7 @@ export const acceptanceCommentRouter = router({
         userId: ctx.userId,
         workspaceId: access.acceptance.workspaceId,
       });
-      return { canComment: access.canComment, items };
+      return { canApprove: access.canApprove, canComment: access.canComment, items };
     }),
 
   /**
@@ -468,9 +472,13 @@ export const acceptanceCommentRouter = router({
   setResolved: writeProcedure
     .input(z.object({ id: z.string().min(1), resolved: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const { comment } = await requireComment(ctx, input.id);
+      const { access, comment } = await requireComment(ctx, input.id);
       if (comment.parentCommentId)
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Only a thread root can be resolved' });
+      // Closing a thread is a verdict on it. Whoever opened it may close their
+      // own; everyone else's is the reviewers' call, not any reader's.
+      if (!access.canApprove && comment.authorUserId !== ctx.userId)
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not a reviewer of this acceptance' });
       const row = await ctx.acceptanceCommentModel.setResolved(
         comment.id,
         input.resolved,

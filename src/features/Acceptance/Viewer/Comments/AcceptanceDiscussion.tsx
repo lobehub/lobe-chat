@@ -2,7 +2,7 @@
 
 import type { AcceptanceCommentItem } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
+import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { BadgeCheck, GitCommitHorizontal } from 'lucide-react';
 import { nanoid } from 'nanoid';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useActivityTime } from '@/hooks/useActivityTime';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
@@ -26,11 +26,51 @@ import { styles, TIMELINE_NODE } from './styles';
 /** Enough room to start writing without the box dominating the column. */
 const COMPOSER_MIN_HEIGHT = 80;
 
+/** Where a visitor lands after signing in: back on the page they were reading. */
+const authPath = (route: 'signin' | 'signup') =>
+  `/${route}?callbackUrl=${encodeURIComponent(
+    typeof window === 'undefined' ? '/' : window.location.pathname + window.location.search,
+  )}`;
+
+/**
+ * The end of a discussion a signed-out reader cannot join. A bare line of grey
+ * text states the rule and leaves them there; the way in belongs in the same
+ * place the reply box would have been, which is what GitHub does under a
+ * thread on a public repo.
+ */
+const SignInPrompt = memo(() => {
+  const { t } = useTranslation('verify');
+  return (
+    <Flexbox className={local.signInPrompt} gap={10}>
+      <Text weight={600}>{t('acceptance.comments.signInTitle')}</Text>
+      <Text fontSize={13} type={'secondary'}>
+        {t('acceptance.comments.signInDescription')}
+      </Text>
+      <Flexbox horizontal gap={8}>
+        <Button href={authPath('signin')} type={'primary'}>
+          {t('acceptance.comments.signIn')}
+        </Button>
+        <Button href={authPath('signup')}>{t('acceptance.comments.signUp')}</Button>
+      </Flexbox>
+    </Flexbox>
+  );
+});
+
+SignInPrompt.displayName = 'AcceptanceDiscussionSignInPrompt';
+
 const local = createStaticStyles(({ css }) => ({
   empty: css`
     padding-block: 16px;
     font-size: 13px;
     color: ${cssVar.colorTextTertiary};
+  `,
+  signInPrompt: css`
+    padding-block: 16px;
+    padding-inline: 16px;
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: ${cssVar.borderRadiusLG};
+
+    background: ${cssVar.colorFillQuaternary};
   `,
 }));
 
@@ -166,6 +206,7 @@ const AcceptanceDiscussion = memo(() => {
   const { t } = useTranslation('verify');
   const { acceptanceId, embedded } = useAcceptanceScope();
   const viewerId = useUserStore(userProfileSelectors.userId);
+  const isSignedIn = useUserStore(authSelectors.isLogin);
   const { data } = useAcceptanceBundle(acceptanceId);
   const { canComment, create, error, isLoading, items, react, remove, threads } =
     useAcceptanceComments(acceptanceId);
@@ -264,11 +305,17 @@ const AcceptanceDiscussion = memo(() => {
             />
           </Flexbox>
         </Flexbox>
-      ) : (
+      ) : error ? (
+        // A read that failed says nothing about permission.
         <Text fontSize={13} type={'secondary'}>
-          {/* A read that failed says nothing about permission. */}
-          {error ? t('acceptance.comments.loadFailed') : t('acceptance.comments.readOnly')}
+          {t('acceptance.comments.loadFailed')}
         </Text>
+      ) : isSignedIn ? (
+        <Text fontSize={13} type={'secondary'}>
+          {t('acceptance.comments.readOnly')}
+        </Text>
+      ) : (
+        <SignInPrompt />
       )}
     </Flexbox>
   );

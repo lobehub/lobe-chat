@@ -179,6 +179,8 @@ export default {
   'acceptance.detail.suggestion': 'Suggestion',
   'acceptance.error.description': 'Check your connection and try loading this acceptance again.',
   'acceptance.error.title': 'Unable to load acceptance',
+  'acceptance.notFound.description': 'It may have been deleted, or it was never shared with you.',
+  'acceptance.notFound.title': 'No such acceptance',
   'acceptance.comments.title': 'Discussion',
   'acceptance.comments.moreActions': 'More actions',
   'acceptance.comments.placeholder': 'Say something about this delivery…',
@@ -200,13 +202,18 @@ export default {
     'Evidence from round {{round}} — replaced in a later round',
   'acceptance.comments.evidenceThisRound': 'The evidence this check shows now',
   'acceptance.comments.roundLanded': 'Round {{round}} landed',
+  'acceptance.comments.signIn': 'Sign in',
+  'acceptance.comments.signInDescription':
+    'Sign in to comment, reply, and circle what you see on a screenshot.',
+  'acceptance.comments.signInTitle': 'Join the discussion',
+  'acceptance.comments.signUp': 'Sign up',
   'acceptance.comments.roundCompletedBy': '{{name}} completed round {{round}}',
   'acceptance.comments.approvedBy': '{{name}} approved this delivery',
   'acceptance.comments.approvedByAtRound': '{{name}} approved round {{round}}',
   'acceptance.comments.historicalRegions':
     '{{count}} region note(s) on evidence a later round replaced',
   'acceptance.comments.empty': 'No discussion yet.',
-  'acceptance.comments.readOnly': 'You can read the discussion; join the workspace to take part.',
+  'acceptance.comments.readOnly': 'You can read the discussion; sign in to take part.',
   'acceptance.comments.region': 'Region',
   'acceptance.comments.roundContext': 'Round {{round}}',
   'acceptance.comments.commentEvidence': 'Comment on a region',
@@ -400,6 +407,8 @@ export default {
   'acceptance.roundStatus.repairing': 'Repairing',
   'acceptance.roundStatus.uncertain': 'Verify uncertain',
   'acceptance.roundStatus.verifying': 'In progress',
+  'acceptance.sharedNotice.commentableDescription':
+    'You can browse every check and its evidence and join the discussion, but only the author can act on this acceptance.',
   'acceptance.sharedNotice.readOnlyDescription':
     'You can browse every check and its evidence, but only the author can act on this acceptance.',
   'acceptance.sharedNotice.reviewableDescription':

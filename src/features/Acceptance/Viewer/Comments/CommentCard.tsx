@@ -185,7 +185,7 @@ const CommentCard = memo<CommentCardProps>(
           {/* Exhibits, under the words rather than inside them. */}
           {comment.attachments.length > 0 && (
             <div className={styles.attachments}>
-              <AttachmentThumbs attachments={comment.attachments} />
+              <AttachmentThumbs attachments={comment.attachments} size={'comment'} />
             </div>
           )}
           {onReact && (
