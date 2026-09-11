@@ -841,7 +841,9 @@ const EvidenceItem = memo<{
         // becomes the fold row's title, not a supplement line below it. The
         // raw description, not the caption filter — with no fileName the label
         // IS the description, and the filter would null it out.
-        <CollapsibleMarkdownEvidence title={e.description ?? undefined}>
+        <CollapsibleMarkdownEvidence
+          title={e.description?.trim() || e.fileName?.trim() || undefined}
+        >
           {e.content}
         </CollapsibleMarkdownEvidence>
       ) : e.content ? (

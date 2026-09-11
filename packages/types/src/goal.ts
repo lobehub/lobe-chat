@@ -104,10 +104,32 @@ export interface GoalAcceptancePolicy {
  * stored explicitly rather than as the absence of a marker, because pausing an
  * already-paused goal is a no-op that leaves no other trace of who asked.
  */
-export type GoalPauseReason = 'measured_acceptance' | 'user';
+export type GoalPauseReason = 'measured_acceptance' | 'exploration_limit' | 'user';
+
+export interface GoalExplorationDecision {
+  action: 'expand' | 'verify';
+  instruction: string;
+  parentNodeId: string;
+  reason: string;
+  title: string;
+}
+
+/** Opt-in, bounded graph exploration. Runtime checkpoint is coordinator-owned. */
+export interface GoalExplorationConfig {
+  checkpoint?: {
+    token: string;
+    snapshot: string;
+    expiresAt: string;
+    readyForAcceptance?: boolean;
+    reviewedNodeIds?: string[];
+  };
+  instruction: string;
+  maxExperiments: number;
+}
 
 export interface GoalConfig {
   acceptance?: GoalAcceptancePolicy;
+  exploration?: GoalExplorationConfig;
   /**
    * How many of a goal's Tasks may be in flight at once. Independent Tasks are
    * the common case — four bug fixes that share no code have no reason to run
@@ -154,7 +176,7 @@ export interface GoalItem {
 // ============================================
 
 /** Coarse-grained semantic role of a node in a Goal Graph. */
-export type GoalNodeKind = 'problem' | 'task' | 'finding' | 'decision';
+export type GoalNodeKind = 'problem' | 'experiment' | 'task' | 'finding' | 'decision';
 
 /** Semantic lifecycle of a node; independent from the execution status of its Task. */
 export type GoalNodeStatus =
@@ -162,8 +184,11 @@ export type GoalNodeStatus =
 
 /** How two Goal Graph nodes are related. */
 export type GoalEdgeKind =
+  | 'contains'
+  | 'answers'
   | 'decomposes'
   | 'depends_on'
+  | 'derived_from'
   | 'investigates'
   | 'produces'
   | 'supports'

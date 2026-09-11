@@ -172,7 +172,22 @@ const INLINE_RENDER_MAX_CHARS = 160;
  * and blank lines are skipped — a document that opens with a code block should
  * be labeled by its first code line, not by "```bash".
  */
-export const evidenceTitleFromMarkdown = (content: string): string => {
+export const evidenceTitleFromMarkdown = (
+  content: string,
+  description?: string | null,
+  fileName?: string | null,
+): string => {
+  const label = description?.trim() || fileName?.trim();
+  if (label) return label;
+  // Raw JSON has no prose heading; its first line is not a useful document title.
+  if (/^[{[]/.test(content.trim())) {
+    try {
+      JSON.parse(content);
+      return 'JSON';
+    } catch {
+      // Markdown links and non-JSON text still use their first meaningful line.
+    }
+  }
   for (const raw of content.split('\n')) {
     let line = raw.trim();
     if (!line || line.startsWith('```') || /^-{3,}$/.test(line)) continue;
@@ -202,7 +217,9 @@ export const resolveMarkdownEvidenceFold = (content: string, authoredTitle?: str
   const foldTitle = authoredTitle?.trim() || derivedTitle;
   const trimmed = content.trim();
   const inlineEligible = !trimmed.includes('\n') && trimmed.length <= INLINE_RENDER_MAX_CHARS;
-  const fold = Boolean(foldTitle) && (Boolean(authoredTitle?.trim()) || !inlineEligible);
+  const fold =
+    Boolean(foldTitle) &&
+    (Boolean(authoredTitle?.trim()) || derivedTitle === 'JSON' || !inlineEligible);
   return { fold, foldTitle };
 };
 

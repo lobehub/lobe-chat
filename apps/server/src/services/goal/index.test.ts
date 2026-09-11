@@ -36,6 +36,7 @@ import { TaskRunnerService } from '../taskRunner';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
 import { GoalCriteriaGeneratorService } from './criteriaGenerator';
 import { LEASE_EXPIRED_ERROR, VERIFICATION_FAILED_ERROR } from './decideNextMove';
+import { GoalExplorationPlanner } from './explorationPlanner';
 import { GoalService } from './index';
 import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
 import type { GoalTickObservation } from './traceObservation';
@@ -68,6 +69,112 @@ afterEach(async () => {
 });
 
 describe('GoalService', () => {
+  it('explores after result settlement and dispatches the new graph node through the ordinary Task path', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      title: 'Explore',
+      config: { exploration: { instruction: 'Compare evidence', maxExperiments: 3 } },
+    });
+    const parent = graph.nodes.find((node) => node.kind === 'task')!;
+    await serverDB.update(goals).set({ status: 'running' }).where(eq(goals.id, graph.goal.id));
+    await serverDB.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, parent.id));
+    const planner = vi.spyOn(GoalExplorationPlanner.prototype, 'plan').mockResolvedValue({
+      action: 'expand',
+      parentNodeId: graph.nodes.find((node) => node.kind === 'experiment')!.id,
+      title: 'Alternative',
+      instruction: 'Improve baseline',
+      reason: 'Try a new direction',
+    });
+    const expanded = await service.tick(graph.goal.id);
+    expect(expanded).toMatchObject({ outcome: 'advanced', message: 'Try a new direction' });
+    expect(planner).toHaveBeenCalledOnce();
+    const created = await service.tick(graph.goal.id);
+    expect(created.outcome).toBe('advanced');
+    expect(created.nodeId).not.toBe(expanded.nodeId);
+    expect((await service.graph(graph.goal.id)).edges).toContainEqual(
+      expect.objectContaining({
+        sourceNodeId: expanded.nodeId,
+        targetNodeId: created.nodeId,
+        kind: 'contains',
+      }),
+    );
+    expect(created.taskId).toBeTruthy();
+  });
+
+  it('pauses a failed exploration planner without creating a phantom experiment', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      title: 'Explore',
+      config: { exploration: { instruction: 'Compare evidence', maxExperiments: 3 } },
+    });
+    const parent = graph.nodes.find((node) => node.kind === 'task')!;
+    await serverDB.update(goals).set({ status: 'running' }).where(eq(goals.id, graph.goal.id));
+    await serverDB.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, parent.id));
+    vi.spyOn(GoalExplorationPlanner.prototype, 'plan').mockRejectedValue(
+      new Error('provider unavailable'),
+    );
+    expect(await service.tick(graph.goal.id)).toMatchObject({ outcome: 'no_progress' });
+    const after = await service.graph(graph.goal.id);
+    expect(after.goal.status).toBe('paused');
+    expect(after.nodes.filter((node) => node.kind === 'task')).toHaveLength(1);
+  });
+
+  it('resumes an exhausted exploration only after increasing its cap, preserving explicit user pause', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      title: 'Explore',
+      config: { exploration: { instruction: 'Compare evidence', maxExperiments: 1 } },
+    });
+    const parent = graph.nodes.find((node) => node.kind === 'task')!;
+    await serverDB.update(goals).set({ status: 'running' }).where(eq(goals.id, graph.goal.id));
+    await serverDB.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, parent.id));
+    vi.spyOn(GoalExplorationPlanner.prototype, 'plan').mockResolvedValue({
+      action: 'expand',
+      parentNodeId: parent.id,
+      title: 'Alternative',
+      instruction: 'Improve baseline',
+      reason: 'Still insufficient',
+    });
+    await service.tick(graph.goal.id);
+    expect((await service.setBudget(graph.goal.id, { maxExperiments: 1 })).status).toBe('paused');
+    expect((await service.setBudget(graph.goal.id, { maxExperiments: 2 })).status).toBe('running');
+    await service.pause(graph.goal.id);
+    expect((await service.setBudget(graph.goal.id, { maxExperiments: 3 })).status).toBe('paused');
+  });
+
+  it('passes the selected older experiment result into the actual child Task instruction', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      title: 'Text exploration',
+      config: { exploration: { instruction: 'Compare alternatives', maxExperiments: 3 } },
+    });
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const parent = graph.nodes.find((node) => node.kind === 'task')!;
+    await serverDB.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, parent.id));
+    const finding = await graphModel.createNode(graph.goal.id, {
+      kind: 'finding',
+      title: 'Baseline result',
+      description: 'HISTORICAL_EVIDENCE_731: candidate A scored 7.',
+    });
+    await graphModel.createEdge(graph.goal.id, parent.id, finding!.id, 'produces');
+    await graphModel.createNode(graph.goal.id, {
+      kind: 'task',
+      title: 'Newer alternative',
+      status: 'resolved',
+    });
+    const child = await graphModel.createNode(graph.goal.id, {
+      kind: 'task',
+      title: 'Revisit baseline',
+      description: 'Try changing A',
+    });
+    await graphModel.createEdge(graph.goal.id, child!.id, parent.id, 'derived_from');
+    const created = await service.tick(graph.goal.id);
+    const dispatched = await new TaskModel(serverDB, userId).findById(created.taskId!);
+    expect(dispatched?.instruction).toContain(parent.id);
+    expect(dispatched?.instruction).toContain('HISTORICAL_EVIDENCE_731: candidate A scored 7.');
+    expect(dispatched?.instruction).toContain('Try changing A');
+  });
+
   it('persists structured criteria on create and records their ids on the goal config', async () => {
     const service = new GoalService(serverDB, userId);
     const graph = await service.create({
@@ -592,6 +699,30 @@ describe('GoalService', () => {
     expect(await service.graph(graph.goal.id)).toBeDefined();
   });
 
+  it('creates persistent answer containers by default without exploration enabled', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Question', tasks: ['Candidate answer'] });
+    const question = graph.nodes.find((n) => n.kind === 'problem')!;
+    const answer = graph.nodes.find((n) => n.kind === 'experiment')!;
+    const task = graph.nodes.find((n) => n.kind === 'task')!;
+    expect(graph.goal.config?.exploration).toBeUndefined();
+    expect(answer.taskId).toBeNull();
+    expect(graph.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'answers',
+          sourceNodeId: answer.id,
+          targetNodeId: question.id,
+        }),
+        expect.objectContaining({
+          kind: 'contains',
+          sourceNodeId: answer.id,
+          targetNodeId: task.id,
+        }),
+      ]),
+    );
+  });
+
   it('plans the decomposition when a goal has no tasks yet', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '核心问题的一句话陈述',
@@ -622,7 +753,9 @@ describe('GoalService', () => {
       '方向C:汇编',
     ]);
     expect(after.nodes.find((n) => n.kind === 'problem')?.description).toBe('核心问题的一句话陈述');
-    expect(after.edges.filter((e) => e.kind === 'decomposes')).toHaveLength(3);
+    expect(after.nodes.filter((n) => n.kind === 'experiment')).toHaveLength(3);
+    expect(after.edges.filter((e) => e.kind === 'answers')).toHaveLength(3);
+    expect(after.edges.filter((e) => e.kind === 'contains')).toHaveLength(3);
 
     // The planner's dependsOn indices become depends_on edges, dependent →
     // prerequisite; the self and forward references were dropped.
@@ -635,6 +768,30 @@ describe('GoalService', () => {
       expect.arrayContaining([
         [byTitle.get('方向B:分析'), byTitle.get('方向A:收集')],
         [byTitle.get('方向C:汇编'), byTitle.get('方向B:分析')],
+      ]),
+    );
+  });
+
+  it('creates persistent answer containers by default without exploration enabled', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Question', tasks: ['Candidate answer'] });
+    const question = graph.nodes.find((n) => n.kind === 'problem')!;
+    const answer = graph.nodes.find((n) => n.kind === 'experiment')!;
+    const task = graph.nodes.find((n) => n.kind === 'task')!;
+    expect(graph.goal.config?.exploration).toBeUndefined();
+    expect(answer.taskId).toBeNull();
+    expect(graph.edges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'answers',
+          sourceNodeId: answer.id,
+          targetNodeId: question.id,
+        }),
+        expect.objectContaining({
+          kind: 'contains',
+          sourceNodeId: answer.id,
+          targetNodeId: task.id,
+        }),
       ]),
     );
   });
@@ -1434,7 +1591,10 @@ describe('GoalService', () => {
     const service = new GoalService(serverDB, userId);
     const taskModel = new TaskModel(serverDB, userId);
     const graph = await service.create({
-      config: { recovery: { maxAttemptsPerTask: 3, maxStepsPerRun: 500 } },
+      config: {
+        exploration: { instruction: 'Compare evidence', maxExperiments: 3 },
+        recovery: { maxAttemptsPerTask: 3, maxStepsPerRun: 500 },
+      },
       title: 'Recover BW 150 research',
       tasks: ['Verify Micron BW 150 suppliers'],
     });
@@ -1452,7 +1612,12 @@ describe('GoalService', () => {
       taskId: created.taskId,
       trigger: 'goal',
     });
-    expect((await service.graph(graph.goal.id)).decisions).toHaveLength(0);
+    const afterRetry = await service.graph(graph.goal.id);
+    expect(afterRetry.decisions).toHaveLength(0);
+    expect(afterRetry.nodes.filter((node) => node.kind === 'task')).toEqual([
+      expect.objectContaining({ id: created.nodeId, taskId: created.taskId }),
+    ]);
+    expect(afterRetry.edges.filter((edge) => edge.kind === 'derived_from')).toHaveLength(0);
   });
 
   it('reclaims a stale running Task operation and starts the next attempt', async () => {

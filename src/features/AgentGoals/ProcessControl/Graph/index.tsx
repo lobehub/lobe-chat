@@ -2,23 +2,26 @@
 
 import '@xyflow/react/dist/style.css';
 
-import type { GoalGraphEdge, GoalGraphNode, GoalNodeKind } from '@lobechat/types';
+import type { GoalGraphEdge } from '@lobechat/types';
+import { experimentMembers } from '@lobechat/utils/goalGraph';
 import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Segmented, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Button, Segmented, Text } from '@lobehub/ui/base-ui';
 import {
   Background,
   BackgroundVariant,
   Controls,
   type Edge as FlowEdge,
   MarkerType,
+  MiniMap,
   type Node as FlowNode,
+  Panel,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
 } from '@xyflow/react';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { Maximize2, X } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronRight, Maximize2, X } from 'lucide-react';
+import { memo, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PortalContent } from '@/features/Portal/router';
@@ -27,10 +30,16 @@ import RightPanel from '@/features/RightPanel';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
+import { type GoalGraphNodeKind, graphNodeKind, graphNodeLabel } from '../../Experiments/model';
 import type { GoalGraphView, GoalNodeView } from '../goalGraphViewModel';
 import { KindDot } from '../shared';
+import { edgeDirection } from './edgeRouting';
+import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
+import ExplorationEdge from './ExplorationEdge';
+import { explorationMap } from './explorationMap';
 import GraphNodeView, { GhostNodeView, type GraphNodeData } from './GraphNode';
 import { hideKinds, layoutGraph, NODE_WIDTH } from './layout';
+import { useExplorationNavigation } from './useExplorationNavigation';
 import { useFitViewOnResize } from './useFitViewOnResize';
 
 /**
@@ -44,6 +53,7 @@ import { useFitViewOnResize } from './useFitViewOnResize';
 
 const styles = createStaticStyles(({ css }) => ({
   canvas: css`
+    position: relative;
     width: 100%;
     height: 560px;
 
@@ -54,6 +64,12 @@ const styles = createStaticStyles(({ css }) => ({
     .react-flow__edge-path {
       stroke: ${cssVar.colorBorder};
       stroke-width: 1.25;
+    }
+
+    /* Provenance links can cross cards, but must not intercept their actions. */
+    .react-flow__edge,
+    .react-flow__edge * {
+      pointer-events: none;
     }
 
     .react-flow__edge.goal-dep .react-flow__edge-path {
@@ -128,8 +144,15 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorBgContainer};
     box-shadow: ${cssVar.boxShadowTertiary};
   `,
-  floatLeft: css`
-    inset-inline-start: 16px;
+  navigation: css`
+    max-width: calc(100% - 32px);
+    padding-block: 8px;
+    padding-inline: 12px;
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: ${cssVar.borderRadiusLG};
+
+    background: ${cssVar.colorBgContainer};
+    box-shadow: ${cssVar.boxShadowTertiary};
   `,
   floatRight: css`
     inset-inline-end: 16px;
@@ -171,16 +194,12 @@ interface GraphProps {
   selectedId?: string;
 }
 
-/** `depends_on` is drawn blocker → blocked so the map always reads downward. */
-const orient = (edge: GoalGraphEdge): [string, string] =>
-  edge.kind === 'depends_on'
-    ? [edge.targetNodeId, edge.sourceNodeId]
-    : [edge.sourceNodeId, edge.targetNodeId];
-
 /** The nodes worth showing before the user asks for the whole map. */
 const stageNodeIds = (graph: GoalGraphView): Set<string> => {
   const active = new Set<string>();
-  for (const view of graph.nodes) if (view.node.status !== 'proposed') active.add(view.node.id);
+  for (const view of graph.nodes)
+    if (view.node.status !== 'proposed' || ['experiment', 'problem'].includes(view.node.kind))
+      active.add(view.node.id);
   for (const item of graph.frontier) active.add(item.view.node.id);
   const visible = new Set(active);
   for (const view of graph.blocked)
@@ -221,6 +240,15 @@ const useEdgeLabel = () => {
   return useCallback(
     (kind: GoalGraphEdge['kind']): string | undefined => {
       switch (kind) {
+        case 'answers': {
+          return t('goalExperiment.answers');
+        }
+        case 'contains': {
+          return undefined;
+        }
+        case 'derived_from': {
+          return t('goalExperiment.continuedFrom');
+        }
         case 'contradicts': {
           return t('goalProcess.edge.contradicts');
         }
@@ -249,9 +277,16 @@ const useEdgeLabel = () => {
   );
 };
 
-const nodeTypes = { goalGhost: GhostNodeView, goalNode: GraphNodeView };
+const edgeTypes = { exploration: ExplorationEdge };
 
-const FIT_VIEW_OPTIONS = { duration: 200, maxZoom: 1, minZoom: 0.6, padding: 0.12 } as const;
+const nodeTypes = {
+  goalExperiment: GraphNodeView,
+  goalExperimentGroup: ExperimentGroup,
+  goalGhost: GhostNodeView,
+  goalNode: GraphNodeView,
+};
+
+const FIT_VIEW_OPTIONS = { duration: 200, maxZoom: 1, minZoom: 0.05, padding: 0.12 } as const;
 
 /** Ghost placeholders rendered beneath the problem while planning runs. */
 const GHOST_COUNT = 3;
@@ -263,10 +298,14 @@ const Canvas = memo<
   Pick<GraphProps, 'graph' | 'onSelect' | 'planning' | 'selectedId'> & {
     className: string;
     fullscreen: boolean;
-    hiddenKinds: ReadonlySet<GoalNodeKind>;
+    hiddenKinds: ReadonlySet<GoalGraphNodeKind>;
     /** Bump to refit after the frame around the canvas changes size. */
     refitKey?: boolean;
     view: GraphViewMode;
+    collapsed: ReadonlySet<string>;
+    onInspect: (id: string) => void;
+    onEnter: (id: string) => void;
+    navigation?: ReactNode;
   }
 >(
   ({
@@ -278,40 +317,60 @@ const Canvas = memo<
     planning,
     refitKey,
     selectedId,
+    collapsed,
+    onInspect,
+    onEnter,
+    navigation,
     view,
   }) => {
     const { fitView } = useReactFlow();
+    const hasNavigation = !!navigation;
+    const fitOptions = useMemo(
+      () => ({
+        ...FIT_VIEW_OPTIONS,
+        // Keep fitted nodes below the canvas navigation, including fullscreen controls.
+        padding: hasNavigation
+          ? {
+              top: fullscreen ? ('160px' as const) : ('80px' as const),
+              right: '12%' as const,
+              bottom: '12%' as const,
+              left: '12%' as const,
+            }
+          : FIT_VIEW_OPTIONS.padding,
+      }),
+      [fullscreen, hasNavigation],
+    );
+    const { t } = useTranslation('chat');
     const containerRef = useRef<HTMLDivElement>(null);
     const subtitleOf = useSubtitle();
     const edgeLabel = useEdgeLabel();
 
-    const baseIds = useMemo(
+    const hasExperiments = graph.nodes.some((item) => item.node.kind === 'experiment');
+    const map = useMemo(
       () =>
-        view === 'all' ? new Set(graph.nodes.map((item) => item.node.id)) : stageNodeIds(graph),
-      [graph, view],
-    );
-    const { bridges, visibleIds } = useMemo(
-      () =>
-        hideKinds(
-          graph.nodes.filter((item) => baseIds.has(item.node.id)).map((item) => item.node),
+        explorationMap(
+          graph.nodes.map((item) => item.node),
           graph.edges,
+          collapsed,
           hiddenKinds,
         ),
-      [graph, baseIds, hiddenKinds],
+      [graph, collapsed, hiddenKinds],
     );
-    const positions = useMemo(() => {
-      const nodes: GoalGraphNode[] = graph.nodes
-        .filter((item) => visibleIds.has(item.node.id))
-        .map((item) => item.node);
-      const edges = [
-        ...graph.edges.filter(
-          (edge) => visibleIds.has(edge.sourceNodeId) && visibleIds.has(edge.targetNodeId),
-        ),
-        // Bridges rank like the chain they replace, keeping survivors at depth.
-        ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const })),
-      ];
-      return layoutGraph(nodes, edges);
-    }, [graph, visibleIds, bridges]);
+    const baseNodes = hasExperiments
+      ? map.nodes
+      : graph.nodes
+          .map((item) => item.node)
+          .filter((node) => view === 'all' || stageNodeIds(graph).has(node.id));
+    const { bridges, visibleIds } = useMemo(
+      () => hideKinds(baseNodes, graph.edges, hiddenKinds),
+      [baseNodes, graph.edges, hiddenKinds],
+    );
+    const positions = hasExperiments
+      ? map.boxes
+      : layoutGraph(
+          baseNodes.filter((node) => visibleIds.has(node.id)),
+          [...graph.edges, ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const }))],
+        );
 
     const ghosts = useMemo(() => {
       if (!planning) return [];
@@ -341,8 +400,8 @@ const Canvas = memo<
         ...boxes.map((box) => box.y + box.height),
         ...ghosts.map((ghost) => ghost.y + GHOST_HEIGHT),
       );
-      return Math.min(560, Math.max(216, bottom - top + 72));
-    }, [positions, ghosts]);
+      return Math.min(hasExperiments ? 760 : 560, Math.max(216, bottom - top + 72));
+    }, [positions, ghosts, hasExperiments]);
 
     const ghostFlowNodes: FlowNode[] = useMemo(
       () =>
@@ -360,31 +419,72 @@ const Canvas = memo<
 
     const flowNodes: FlowNode[] = useMemo(
       () =>
-        graph.nodes
-          .filter((item) => visibleIds.has(item.node.id))
-          .map((item) => {
+        baseNodes
+          .filter((node) => visibleIds.has(node.id))
+          .map((node) => {
+            const item = graph.byId[node.id];
             const box = positions[item.node.id];
             const isGate = item.node.kind === 'decision' && item.node.status === 'waiting';
             const data: GraphNodeData = {
               // Not started and still blocked — it is context, not the story.
               dim: item.node.status === 'proposed' && item.blockers.length > 0,
               isGate,
+              memberCount: experimentMembers(
+                { nodes: graph.nodes.map((view) => view.node), edges: graph.edges },
+                item.node.id,
+                false,
+              ).size,
+              kind: graphNodeKind(graph, item),
               running: item.node.status === 'active' && !item.isStale,
               selected: selectedId === item.node.id,
               stale: item.isStale,
               subtitle: subtitleOf(item),
               view: item,
             };
+            const expanded = item.node.kind === 'experiment' && !collapsed.has(item.node.id);
             return {
-              data,
+              data: expanded
+                ? ({
+                    ...data,
+                    onInspect: () => onInspect(item.node.id),
+                    onEnter: () => onEnter(item.node.id),
+                    onToggle: () => onSelect(item.node.id),
+                  } satisfies ExperimentGroupData)
+                : data,
               draggable: false,
               id: item.node.id,
               position: { x: box?.x ?? 0, y: box?.y ?? 0 },
-              type: 'goalNode',
-              width: NODE_WIDTH[item.node.kind],
+              type: expanded
+                ? 'goalExperimentGroup'
+                : graphNodeKind(graph, item) === 'experiment'
+                  ? 'goalExperiment'
+                  : 'goalNode',
+              parentId: hasExperiments ? map.parents.get(item.node.id) : undefined,
+              ...(expanded ? { style: { width: box.width, height: box.height } } : {}),
+              ariaLabel: graphNodeLabel(
+                t(`goalProcess.kind.${graphNodeKind(graph, item)}`),
+                item.node.title,
+                item.seq,
+              ),
+              width: box?.width ?? NODE_WIDTH[item.node.kind],
+              initialHeight: box?.height,
             } satisfies FlowNode;
           }),
-      [graph, visibleIds, positions, selectedId, subtitleOf],
+      [
+        graph,
+        baseNodes,
+        visibleIds,
+        positions,
+        selectedId,
+        subtitleOf,
+        t,
+        collapsed,
+        onInspect,
+        onEnter,
+        onSelect,
+        hasExperiments,
+        map.parents,
+      ],
     );
 
     const flowEdges: FlowEdge[] = useMemo(() => {
@@ -394,20 +494,35 @@ const Canvas = memo<
         type: MarkerType.ArrowClosed,
         width: 12,
       };
-      const direct = graph.edges
+      const lanes = new Map<string, number>();
+      const direct = (hasExperiments ? map.edges : graph.edges)
         .filter((edge) => visibleIds.has(edge.sourceNodeId) && visibleIds.has(edge.targetNodeId))
         .map((edge) => {
-          const [source, target] = orient(edge);
+          const [source, target] = edgeDirection(edge);
+          const pair = `${source}/${target}`;
+          const lane = lanes.get(pair) ?? 0;
+          lanes.set(pair, lane + 1);
           const hot = selectedId === edge.sourceNodeId || selectedId === edge.targetNodeId;
           return {
-            className: cx(edge.kind === 'depends_on' && 'goal-dep', hot && 'goal-hot'),
+            className: cx(
+              (edge.kind === 'depends_on' || ('projected' in edge && edge.projected === true)) &&
+                'goal-dep',
+              hot && 'goal-hot',
+            ),
             id: edge.id,
-            label: edgeLabel(edge.kind),
+            zIndex: 2,
+            label:
+              'projected' in edge && edge.projected === true
+                ? t('goalExperiment.projectedRelation', {
+                    relation: edgeLabel(edge.kind) ?? edge.kind,
+                  })
+                : edgeLabel(edge.kind),
             labelShowBg: true,
             markerEnd: marker,
             source,
             target,
-            type: 'default',
+            type: hasExperiments ? 'exploration' : 'default',
+            data: { lane },
           } satisfies FlowEdge;
         });
       // A bridge stands in for a chain through hidden nodes: dashed like other
@@ -425,7 +540,7 @@ const Canvas = memo<
         } satisfies FlowEdge;
       });
       return [...direct, ...bridged];
-    }, [graph, visibleIds, bridges, selectedId, edgeLabel]);
+    }, [graph, visibleIds, bridges, selectedId, edgeLabel, hasExperiments, map.edges, t]);
 
     const ghostFlowEdges: FlowEdge[] = useMemo(
       () =>
@@ -446,20 +561,20 @@ const Canvas = memo<
 
     // The inline map is a framed overview, so keep it fitted to the space left by
     // the detail panel. Fullscreen keeps its existing user-navigation behavior.
-    useFitViewOnResize(containerRef, fitView, FIT_VIEW_OPTIONS, !fullscreen);
+    useFitViewOnResize(containerRef, fitView, fitOptions, !fullscreen);
 
     useEffect(() => {
-      const timer = setTimeout(() => fitView(FIT_VIEW_OPTIONS), 30);
+      const timer = setTimeout(() => fitView(fitOptions), 30);
       return () => clearTimeout(timer);
-    }, [view, allNodes.length, hiddenKinds, fitView]);
+    }, [view, collapsed, allNodes.length, hiddenKinds, fitView, fitOptions]);
 
     // The portal panel borrows width from the canvas; wait out its slide
     // animation before refitting, or the fit is computed mid-transition.
     useEffect(() => {
       if (refitKey === undefined) return;
-      const timer = setTimeout(() => fitView(FIT_VIEW_OPTIONS), 280);
+      const timer = setTimeout(() => fitView(fitOptions), 280);
       return () => clearTimeout(timer);
-    }, [refitKey, fitView]);
+    }, [refitKey, fitView, fitOptions]);
 
     return (
       <div
@@ -470,14 +585,26 @@ const Canvas = memo<
         {/* Embedded graphs keep ordinary scrolling available to the page.
             Both views support drag, pinch, double-click and zoom controls;
             fullscreen also uses two-finger scrolling to pan. */}
+        {graph.nodes.length === 0 && !planning && (
+          <Flexbox
+            align={'center'}
+            justify={'center'}
+            padding={24}
+            style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}
+          >
+            <Text type={'secondary'}>{t('goalExperiment.emptyGraph')}</Text>
+          </Flexbox>
+        )}
         <ReactFlow
           fitView
           panOnDrag
           zoomOnDoubleClick
           zoomOnPinch
+          edgeTypes={edgeTypes}
           edges={allEdges}
+          fitViewOptions={fitOptions}
           maxZoom={1.5}
-          minZoom={0.3}
+          minZoom={0.03}
           nodeTypes={nodeTypes}
           nodes={allNodes}
           nodesConnectable={false}
@@ -487,16 +614,36 @@ const Canvas = memo<
           proOptions={{ hideAttribution: true }}
           zoomOnScroll={false}
           onNodeClick={(_, node) => {
-            if (node.type !== 'goalGhost') onSelect(node.id);
+            if (node.type !== 'goalGhost' && node.type !== 'goalExperimentGroup') onSelect(node.id);
           }}
         >
+          {navigation && (
+            <Panel className={styles.navigation} position={'top-left'}>
+              {navigation}
+            </Panel>
+          )}
           <Background
             color={cssVar.colorBorderSecondary}
             gap={18}
             size={1}
             variant={BackgroundVariant.Dots}
           />
-          <Controls position={'bottom-right'} showInteractive={false} />
+          {fullscreen && (
+            <MiniMap
+              pannable
+              zoomable
+              maskColor={cssVar.colorFillSecondary}
+              nodeStrokeColor={cssVar.colorBorder}
+              position={'bottom-left'}
+              style={{ background: cssVar.colorBgContainer }}
+              nodeColor={(node) =>
+                node.type === 'goalExperimentGroup'
+                  ? cssVar.colorFillTertiary
+                  : cssVar.colorTextSecondary
+              }
+            />
+          )}
+          <Controls fitViewOptions={fitOptions} position={'bottom-right'} showInteractive={false} />
         </ReactFlow>
       </div>
     );
@@ -507,8 +654,25 @@ Canvas.displayName = 'GoalGraphCanvas';
 
 const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) => {
   const { t } = useTranslation('chat');
+  const navigation = useExplorationNavigation(props.graph.goal.id, {
+    nodes: props.graph.nodes.map((item) => item.node),
+    edges: props.graph.edges,
+  });
+  const { collapsed, scopeId } = navigation;
+  const scopeIds = new Set(navigation.nodes.map((node) => node.id));
+  const scopedGraph: GoalGraphView = scopeId
+    ? {
+        ...props.graph,
+        nodes: props.graph.nodes.filter((item) => scopeIds.has(item.node.id)),
+        edges: navigation.edges,
+        frontier: props.graph.frontier.filter((item) => scopeIds.has(item.view.node.id)),
+        blocked: props.graph.blocked.filter((item) => scopeIds.has(item.node.id)),
+      }
+    : props.graph;
+  const openNode = useChatStore((s) => s.openGoalNode);
   const [view, setView] = useState<GraphViewMode>('stage');
-  const [hiddenKinds, setHiddenKinds] = useState<ReadonlySet<GoalNodeKind>>(() => new Set());
+  const experiments = props.graph.nodes.filter((item) => item.node.kind === 'experiment');
+  const [hiddenKinds, setHiddenKinds] = useState<ReadonlySet<GoalGraphNodeKind>>(() => new Set());
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
   const currentViewType = useChatStore(chatPortalSelectors.currentViewType);
   const clearPortalStack = useChatStore((s) => s.clearPortalStack);
@@ -516,7 +680,7 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
   // size when it moves between the page and the fullscreen overlay.
   const { maxWidth, minWidth, updateWidth, width } = usePortalPanelWidth(currentViewType, 'goal');
 
-  const toggleKind = useCallback((kind: GoalNodeKind) => {
+  const toggleKind = useCallback((kind: GoalGraphNodeKind) => {
     setHiddenKinds((prev) => {
       const next = new Set(prev);
       if (next.has(kind)) next.delete(kind);
@@ -525,36 +689,105 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
     });
   }, []);
 
+  const selectNode = (nodeId: string) => {
+    if (props.graph.byId[nodeId]?.node.kind === 'experiment') {
+      navigation.toggle(nodeId);
+    } else props.onSelect(nodeId);
+  };
+  const overview = experiments.length > 0 && (
+    <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
+      <Text fontSize={12} type={'secondary'}>
+        {t('goalExperiment.overviewCount', {
+          count: experiments.length,
+          nodes: props.graph.nodes.length,
+        })}
+      </Text>
+      <Button size={'small'} onClick={() => navigation.expandAll(true)}>
+        {t(scopeId ? 'goalExperiment.expandScope' : 'goalExperiment.expandAll')}
+      </Button>
+      <Button size={'small'} onClick={() => navigation.expandAll(false)}>
+        {t(scopeId ? 'goalExperiment.collapseScope' : 'goalExperiment.collapseAll')}
+      </Button>
+    </Flexbox>
+  );
+  const breadcrumbs = scopeId && (
+    <Flexbox
+      horizontal
+      align={'center'}
+      aria-label={t('goalExperiment.location')}
+      gap={4}
+      role={'navigation'}
+      wrap={'wrap'}
+    >
+      <Button size={'small'} onClick={() => navigation.backTo(0)}>
+        {t('goalExperiment.root')}
+      </Button>
+      {navigation.path.map((id, index) => (
+        <Flexbox horizontal align={'center'} gap={4} key={id}>
+          <ChevronRight size={14} />
+          {index === navigation.path.length - 1 ? (
+            <Text aria-current={'page'} fontSize={12}>
+              {props.graph.byId[id]?.node.title}
+            </Text>
+          ) : (
+            <Button size={'small'} onClick={() => navigation.backTo(index + 1)}>
+              {props.graph.byId[id]?.node.title}
+            </Button>
+          )}
+        </Flexbox>
+      ))}
+    </Flexbox>
+  );
   const titleAndViews = (
     <>
       <Text fontSize={16} weight={600}>
         {t('goalProcess.graph.title')}
       </Text>
-      <Segmented
-        size={'small'}
-        value={view}
-        options={[
-          { label: t('goalProcess.graph.view.stage'), value: 'stage' },
-          { label: t('goalProcess.graph.view.all'), value: 'all' },
-        ]}
-        onChange={(value) => setView(value as GraphViewMode)}
-      />
+      {experiments.length === 0 && (
+        <Segmented
+          size={'small'}
+          value={view}
+          options={[
+            { label: t('goalProcess.graph.view.stage'), value: 'stage' },
+            { label: t('goalProcess.graph.view.all'), value: 'all' },
+          ]}
+          onChange={(value) => setView(value as GraphViewMode)}
+        />
+      )}
     </>
   );
   const legend = (
     <Flexbox horizontal align={'center'} className={styles.legend} gap={10}>
-      {(['problem', 'task', 'finding', 'decision'] as const).map((kind) => {
+      {(
+        [
+          'problem',
+          'task',
+          ...(props.graph.nodes.some((view) => view.node.kind === 'experiment')
+            ? ['experiment' as const]
+            : []),
+          'finding',
+          'decision',
+        ] as const
+      ).map((kind) => {
         const off = hiddenKinds.has(kind);
         return (
           <Flexbox
             horizontal
             align={'center'}
+            aria-pressed={!off}
             className={cx(styles.legendItem, off && styles.legendOff)}
             gap={4}
             key={kind}
             role={'button'}
+            tabIndex={0}
             title={t(off ? 'goalProcess.graph.legend.show' : 'goalProcess.graph.legend.hide')}
             onClick={() => toggleKind(kind)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleKind(kind);
+              }
+            }}
           >
             <KindDot kind={kind} />
             <span>{t(`goalProcess.kind.${kind}` as const)}</span>
@@ -568,6 +801,9 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
       icon={fullscreen ? X : Maximize2}
       size={'small'}
       title={fullscreen ? t('goalProcess.graph.exitFullscreen') : t('goalProcess.graph.fullscreen')}
+      aria-label={
+        fullscreen ? t('goalProcess.graph.exitFullscreen') : t('goalProcess.graph.fullscreen')
+      }
       onClick={() => onFullscreenChange(!fullscreen)}
     />
   );
@@ -581,14 +817,27 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
               {...props}
               fullscreen
               className={cx(styles.canvas, styles.full)}
+              collapsed={collapsed}
+              graph={scopedGraph}
               hiddenKinds={hiddenKinds}
+              key={scopeId ?? 'root'}
+              planning={scopeId ? false : props.planning}
               refitKey={showPortal}
-              view={view}
+              view={scopeId ? 'all' : view}
+              navigation={
+                <Flexbox gap={8}>
+                  {titleAndViews}
+                  {overview}
+                  {breadcrumbs}
+                </Flexbox>
+              }
+              onEnter={navigation.enter}
+              onInspect={(id) => openNode(props.graph.goal.id, id)}
+              onSelect={selectNode}
             />
           </ReactFlowProvider>
           {/* Corner cards float over the canvas — the map owns the whole screen
               and panned content stays visible between them. */}
-          <div className={cx(styles.float, styles.floatLeft)}>{titleAndViews}</div>
           <div className={cx(styles.float, styles.floatRight)}>
             {legend}
             {toggle}
@@ -614,6 +863,7 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
 
   return (
     <Flexbox gap={4}>
+      {overview}
       <Flexbox horizontal align={'center'} justify={'space-between'} paddingBlock={4}>
         <Flexbox horizontal align={'center'} gap={12}>
           {titleAndViews}
@@ -627,9 +877,17 @@ const Graph = memo<GraphProps>(({ fullscreen, onFullscreenChange, ...props }) =>
         <Canvas
           {...props}
           className={styles.canvas}
+          collapsed={collapsed}
           fullscreen={false}
+          graph={scopedGraph}
           hiddenKinds={hiddenKinds}
-          view={view}
+          key={scopeId ?? 'root'}
+          navigation={breadcrumbs}
+          planning={scopeId ? false : props.planning}
+          view={scopeId ? 'all' : view}
+          onEnter={navigation.enter}
+          onInspect={(id) => openNode(props.graph.goal.id, id)}
+          onSelect={selectNode}
         />
       </ReactFlowProvider>
     </Flexbox>

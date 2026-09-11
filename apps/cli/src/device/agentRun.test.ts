@@ -47,6 +47,7 @@ describe('spawnHeteroAgentRun', () => {
 
   afterEach(() => {
     spawnMock.mockReset();
+    vi.unstubAllEnvs();
   });
 
   it('spawns `lh hetero exec` in server-ingest mode via the current CLI entry', async () => {
@@ -100,6 +101,24 @@ describe('spawnHeteroAgentRun', () => {
     await expect(ackPromise).resolves.toEqual({ status: 'accepted' });
     expect(child.stdin.write).toHaveBeenCalledWith(JSON.stringify('hi'));
     expect(child.stdin.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('replaces the launcher conversation context with the dispatched run', async () => {
+    for (const key of ['AGENT', 'TASK', 'OPERATION', 'TOPIC', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+      vi.stubEnv(`LOBEHUB_${key}_ID`, `launcher-${key}`);
+    }
+    const child = makeFakeChild();
+    spawnMock.mockReturnValue(child);
+
+    const ack = spawnHeteroAgentRun({ ...baseParams, assistantMessageId: undefined });
+    const env = spawnMock.mock.calls[0][2].env;
+    expect(env.LOBEHUB_OPERATION_ID).toBe('op');
+    expect(env.LOBEHUB_TOPIC_ID).toBe('tpc');
+    for (const key of ['AGENT', 'TASK', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+      expect(env).not.toHaveProperty(`LOBEHUB_${key}_ID`);
+    }
+    child.emit('spawn');
+    await expect(ack).resolves.toEqual({ status: 'accepted' });
   });
 
   it('starts the wrapper from home so its inner preflight can report a missing cwd', async () => {

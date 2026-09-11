@@ -69,3 +69,33 @@ describe('resolveMarkdownEvidenceFold — authored alt as the fold title', () =>
     expect(foldTitle).toBe('环境说明');
   });
 });
+
+describe('evidence labels preserve artifact identity', () => {
+  it('uses the description instead of a JSON opening brace', () => {
+    expect(evidenceTitleFromMarkdown('{\n  "status": "done"\n}', 'Goal final state')).toBe(
+      'Goal final state',
+    );
+  });
+
+  it('keeps a file name when there is no meaningful description', () => {
+    expect(evidenceTitleFromMarkdown('{\n}', '  ', 'goal-final-state.json')).toBe(
+      'goal-final-state.json',
+    );
+  });
+
+  it('preserves markdown links as prose titles', () => {
+    expect(evidenceTitleFromMarkdown('[Report](https://example.com)')).toBe('Report');
+  });
+
+  it('labels legacy JSON objects and arrays without exposing raw payloads as titles', () => {
+    expect(evidenceTitleFromMarkdown('{\n  "status": "done"\n}')).toBe('JSON');
+    expect(evidenceTitleFromMarkdown('[{"id":"wk_123"}]')).toBe('JSON');
+  });
+});
+
+it('folds short JSON payloads behind a readable type label', () => {
+  expect(resolveMarkdownEvidenceFold('[{"id":"wk_123"}]')).toEqual({
+    fold: true,
+    foldTitle: 'JSON',
+  });
+});

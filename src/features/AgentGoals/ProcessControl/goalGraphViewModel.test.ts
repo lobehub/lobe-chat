@@ -1,3 +1,4 @@
+import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
 import type {
   GoalGraphDecision,
   GoalGraphEdge,
@@ -8,6 +9,7 @@ import type {
 } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
+import { experimentRelations, graphNodeKind, isExperiment } from '../Experiments/model';
 import { buildGoalGraphView, hasReviewableResult, isTroubledTaskNode } from './goalGraphViewModel';
 
 const T0 = new Date('2026-08-01T00:00:00Z');
@@ -638,5 +640,41 @@ describe('hasReviewableResult', () => {
 
     expect(view.byId.w1.isStale).toBe(true);
     expect(hasReviewableResult(view.byId.w1)).toBe(false);
+  });
+});
+
+describe('experiment navigation', () => {
+  it('keeps historical branching separate from dependencies and excludes terminal acceptance', () => {
+    const view = buildGoalGraphView(
+      snapshot({
+        goal: goal({ config: { exploration: { instruction: 'Compare', maxExperiments: 3 } } }),
+        nodes: [
+          node('first', { kind: 'experiment' }),
+          node('second', { kind: 'experiment' }),
+          node('third', { kind: 'experiment' }),
+          node('acceptance', { title: GOAL_ACCEPTANCE_TASK_TITLE }),
+        ],
+        edges: [
+          edge('second', 'first', 'derived_from'),
+          edge('third', 'first', 'derived_from'),
+          edge('third', 'second', 'depends_on'),
+        ],
+      }),
+      NOW,
+    );
+    expect(experimentRelations(view, 'third').parents.map((v) => v.node.id)).toEqual(['first']);
+    expect(experimentRelations(view, 'first').children.map((v) => v.node.id)).toEqual([
+      'second',
+      'third',
+    ]);
+    expect(graphNodeKind(view, view.byId.first)).toBe('experiment');
+    expect(graphNodeKind(view, view.byId.acceptance)).toBe('task');
+    expect(isExperiment(view, view.byId.acceptance)).toBe(false);
+    expect(view.nodes.filter((v) => isExperiment(view, v))).toHaveLength(3);
+  });
+  it('does not reclassify ordinary Goal tasks as experiments', () => {
+    const view = buildGoalGraphView(snapshot({ nodes: [node('task')] }), NOW);
+    expect(graphNodeKind(view, view.byId.task)).toBe('task');
+    expect(isExperiment(view, view.byId.task)).toBe(false);
   });
 });
