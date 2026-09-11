@@ -3,7 +3,7 @@
 import 'antd/dist/reset.css';
 
 import { type NeutralColors, type PrimaryColors } from '@lobehub/ui';
-import { ConfigProvider, FontLoader, ThemeProvider } from '@lobehub/ui';
+import { ConfigProvider, FontLoader, MotionProvider, ThemeProvider } from '@lobehub/ui';
 import { createStaticStyles, cx } from 'antd-style';
 import * as m from 'motion/react-m';
 import { type ReactNode } from 'react';
@@ -159,42 +159,46 @@ const AppTheme = memo<AppThemeProps>(
     const currentAppearence = isDark ? 'dark' : 'light';
 
     return (
-      <ThemeProvider
-        appearance={currentAppearence}
-        className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
-        defaultAppearance={currentAppearence}
-        defaultThemeMode={currentAppearence}
-        customTheme={{
-          neutralColor: neutralColor ?? defaultNeutralColor,
-          primaryColor: primaryColor ?? defaultPrimaryColor,
-        }}
-        theme={{
-          cssVar: { key: 'lobe-vars' },
-          token: {
-            fontFamily,
-            fontFamilyCode,
-            motion: animationMode !== 'disabled',
-            motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
-          },
-        }}
-      >
-        {!!customFontURL && <FontLoader url={customFontURL} />}
-        <GlobalStyle />
-        <AntdStaticMethods />
-        <ConfigProvider
-          locale={uiLocale}
-          motion={m}
-          resources={uiResources}
-          config={{
-            aAs: Link,
-            imgAs: Image,
-            imgUnoptimized: true,
-            proxy: globalCDN ? 'unpkg' : undefined,
+      // antd App (and its notification/modal holders) mounts inside ThemeProvider, above the
+      // lobe-ui ConfigProvider; lobe-ui components rendered by the static APIs need this context.
+      <MotionProvider motion={m}>
+        <ThemeProvider
+          appearance={currentAppearence}
+          className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
+          defaultAppearance={currentAppearence}
+          defaultThemeMode={currentAppearence}
+          customTheme={{
+            neutralColor: neutralColor ?? defaultNeutralColor,
+            primaryColor: primaryColor ?? defaultPrimaryColor,
+          }}
+          theme={{
+            cssVar: { key: 'lobe-vars' },
+            token: {
+              fontFamily,
+              fontFamilyCode,
+              motion: animationMode !== 'disabled',
+              motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
+            },
           }}
         >
-          {children}
-        </ConfigProvider>
-      </ThemeProvider>
+          {!!customFontURL && <FontLoader url={customFontURL} />}
+          <GlobalStyle />
+          <AntdStaticMethods />
+          <ConfigProvider
+            locale={uiLocale}
+            motion={m}
+            resources={uiResources}
+            config={{
+              aAs: Link,
+              imgAs: Image,
+              imgUnoptimized: true,
+              proxy: globalCDN ? 'unpkg' : undefined,
+            }}
+          >
+            {children}
+          </ConfigProvider>
+        </ThemeProvider>
+      </MotionProvider>
     );
   },
 );
