@@ -451,9 +451,11 @@ When('用户在搜索框中输入 {string}', async function (this: CustomWorld, 
 
   // Find the search input in the sidebar
   // Support both English and Chinese placeholders
-  const searchInput = this.page.locator(
-    'input[placeholder*="Search"], input[placeholder*="搜索"], [data-testid="search-input"]',
-  );
+  const searchInput = this.page
+    .locator(
+      'input[placeholder*="Search"], input[placeholder*="搜索"], [data-testid="search-input"]',
+    )
+    .locator('visible=true');
 
   if ((await searchInput.count()) > 0) {
     await searchInput.first().click();
