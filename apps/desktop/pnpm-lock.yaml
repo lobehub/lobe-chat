@@ -325,6 +325,9 @@ importers:
       '@lobechat/heterogeneous-agents':
         specifier: workspace:*
         version: link:../heterogeneous-agents
+      '@lobechat/html-artifact':
+        specifier: workspace:*
+        version: link:../html-artifact
       '@lobechat/local-file-shell':
         specifier: workspace:*
         version: link:../local-file-shell

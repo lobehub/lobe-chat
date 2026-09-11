@@ -711,6 +711,13 @@ export interface DeviceLocalFilePreviewResult {
   success: boolean;
 }
 
+export interface DeviceExternalAssetForPublishResult {
+  base64?: string;
+  contentType?: string;
+  error?: string;
+  success: boolean;
+}
+
 /** One file/folder to move within a directory on a remote device. Mirrors `MoveLocalFileParams`. */
 export interface DeviceMoveProjectFileItem {
   newPath: string;

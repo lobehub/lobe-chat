@@ -49,6 +49,7 @@ export interface CollectedLocalResourceRef {
 }
 
 export interface SkippedLocalResourceRef {
+  absolutePath?: string;
   href: string;
   reason: LocalResourceSkipReason;
 }
@@ -75,6 +76,7 @@ const pushRef = (
   result: CollectLocalResourceResult,
   seenRefs: Set<string>,
   resolved: ReturnType<typeof resolveLocalResourceHref>,
+  allowExternalReads: boolean,
 ) => {
   if (resolved.kind === 'empty') {
     result.skipped.push({ href: resolved.href, reason: 'empty' });
@@ -86,8 +88,12 @@ const pushRef = (
     return;
   }
 
-  if (resolved.kind === 'escape' || !resolved.absolutePath) {
-    result.skipped.push({ href: resolved.href, reason: 'escape' });
+  if ((resolved.kind === 'escape' && !allowExternalReads) || !resolved.absolutePath) {
+    result.skipped.push({
+      absolutePath: resolved.absolutePath,
+      href: resolved.href,
+      reason: 'escape',
+    });
     return;
   }
 
@@ -302,9 +308,10 @@ const resolveHtmlResourceBasePath = (
   });
 
   if (resolved.kind === 'remote') return { remote: true, sourcePath: htmlFilePath };
-  if (resolved.kind !== 'resolved' || !resolved.absolutePath) {
-    return { remote: false, sourcePath: htmlFilePath };
-  }
+  // A base that points outside the workspace still decides where every relative
+  // href resolves. Keep it: `pushRef` is what refuses to read escaped targets,
+  // so honouring it here is what lets the page report its real dependencies.
+  if (!resolved.absolutePath) return { remote: false, sourcePath: htmlFilePath };
 
   const extension = getFileExtension(resolved.absolutePath);
   const directory = extension ? parentDirectory(resolved.absolutePath) : resolved.absolutePath;
@@ -331,12 +338,14 @@ const walkHtmlTags = (html: string, onTag: (tagName: string, tagText: string) =>
 };
 
 export const collectLocalResourceRefs = ({
+  allowExternalReads = false,
   content,
   rootDirectory,
   sourceKind,
   sourcePath,
   workingDirectory,
 }: {
+  allowExternalReads?: boolean;
   content: string;
   rootDirectory?: string;
   sourceKind: 'css' | 'html' | 'js';
@@ -359,6 +368,7 @@ export const collectLocalResourceRefs = ({
           sourcePath,
           workingDirectory,
         }),
+        allowExternalReads,
       );
     }
     return result;
@@ -380,7 +390,7 @@ export const collectLocalResourceRefs = ({
       return;
     }
 
-    pushRef(result, seenRefs, resolved);
+    pushRef(result, seenRefs, resolved, allowExternalReads);
   };
 
   walkHtmlTags(content, (tagName, tagText) => {
