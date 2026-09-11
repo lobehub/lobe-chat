@@ -385,6 +385,42 @@ describe('GeneralChatAgent', () => {
       );
     });
 
+    // Gemini 3.x 400s on the next tool-call turn unless `thoughtSignature` is
+    // round-tripped, which would kill the retry the rejection exists to enable.
+    it('should keep the thought signature of an unresolvable tool call', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [],
+        parentMessageId: 'msg-1',
+        result: {
+          content: '',
+          tool_calls: [
+            {
+              id: 't1',
+              type: 'function',
+              function: { name: 'activateTools', arguments: '{}' },
+              thoughtSignature: 'EoMYCoAYA_gemini3_thought_signature_fixture',
+            },
+          ],
+        },
+      });
+
+      const result = await agent.runner(context, createMockState());
+
+      expect((result as any).payload.toolsCalling[0]).toEqual(
+        expect.objectContaining({
+          id: 't1',
+          thoughtSignature: 'EoMYCoAYA_gemini3_thought_signature_fixture',
+        }),
+      );
+    });
+
     it('should finish instead of retrying unresolvable tool_calls past max steps', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },

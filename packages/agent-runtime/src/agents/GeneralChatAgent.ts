@@ -823,6 +823,11 @@ export class GeneralChatAgent implements Agent {
                   arguments: toolCall.function.arguments,
                   id: toolCall.id,
                   identifier,
+                  // A garbled name does not mean a garbled signature: Gemini
+                  // 3.x still requires `thoughtSignature` to come back on the
+                  // next turn or it 400s, which would kill the retry this
+                  // rejection exists to enable.
+                  thoughtSignature: toolCall.thoughtSignature,
                   type: 'builtin',
                 };
               }),
