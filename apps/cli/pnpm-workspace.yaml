@@ -6,6 +6,7 @@ packages:
   - '../../packages/device-gateway-client'
   - '../../packages/device-identity'
   - '../../packages/heterogeneous-agents'
+  - '../../packages/html-artifact'
   - '../../packages/local-file-shell'
   - '../../packages/tool-runtime'
   - '../../packages/prompts'
