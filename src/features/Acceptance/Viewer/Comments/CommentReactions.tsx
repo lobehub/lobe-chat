@@ -88,7 +88,12 @@ const styles = createStaticStyles(({ css }) => ({
       background: ${cssVar.colorFillSecondary};
     }
   `,
-  /** The add button, quiet until the comment is hovered — GitHub's behaviour. */
+  /**
+   * The add button stands on its own rather than waiting for a hover: reacting
+   * is the cheapest way to answer a delivery, and an affordance you have to
+   * find by sweeping the mouse is one most readers never find at all. Quiet by
+   * default, it darkens under the cursor.
+   */
   trigger: css`
     cursor: pointer;
 
@@ -103,22 +108,13 @@ const styles = createStaticStyles(({ css }) => ({
 
     color: ${cssVar.colorTextTertiary};
 
-    opacity: 0;
-
-    transition: opacity ${cssVar.motionDurationFast};
+    transition: color ${cssVar.motionDurationFast};
 
     &:hover,
     &[data-open] {
       color: ${cssVar.colorText};
-      opacity: 1;
+      background: ${cssVar.colorFillQuaternary};
     }
-
-    @media (hover: none) {
-      opacity: 1;
-    }
-  `,
-  triggerVisible: css`
-    opacity: 1;
   `,
 }));
 
@@ -211,7 +207,7 @@ const CommentReactions = memo<CommentReactionsProps>(({ onReact, reactions }) =>
         >
           <span
             data-comment-reaction-add
-            className={cx(styles.trigger, open && styles.triggerVisible)}
+            className={styles.trigger}
             title={t('acceptance.comments.addReaction')}
             {...(open ? { 'data-open': '' } : {})}
           >

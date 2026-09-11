@@ -255,8 +255,7 @@ export const styles = createStaticStyles(({ css }) => ({
       background: ${cssVar.colorBorderSecondary};
     }
 
-    &:hover [data-comment-actions],
-    &:hover [data-comment-reaction-add] {
+    &:hover [data-comment-actions] {
       opacity: 1;
     }
 
