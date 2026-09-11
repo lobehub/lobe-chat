@@ -6,9 +6,25 @@
  */
 export const AGENT_SHARE_VISITOR_PATH = '/a';
 
-/** Visitor page of an agent share, by custom slug or raw share id. */
+/**
+ * Profile page of an agent share — the canonical landing surface. A link
+ * recipient is deciding whether this agent is worth their attention, not
+ * resuming a conversation, so the bare `/a/<slug>` answers "what is this"
+ * and the composer lives one segment deeper.
+ */
+export const buildAgentShareProfilePath = (slugOrId: string) =>
+  `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}`;
+
+/** Conversation surface of an agent share, optionally on a saved topic. */
+export const buildAgentShareChatPath = (slugOrId: string, topicId?: string) =>
+  `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}/chat${topicId ? `/${topicId}` : ''}`;
+
+/**
+ * Where a share link should return a visitor after sign-in. Falls back to the
+ * profile so an anonymous visitor lands on the page that explains the agent.
+ */
 export const buildAgentShareVisitorPath = (slugOrId: string, topicId?: string) =>
-  `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}${topicId ? `/${topicId}` : ''}`;
+  topicId ? buildAgentShareChatPath(slugOrId, topicId) : buildAgentShareProfilePath(slugOrId);
 
 /**
  * Sign-in URL that returns the visitor to the same share once signed in.

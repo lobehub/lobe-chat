@@ -4,12 +4,14 @@ import { SHARE_VISITOR_PROMPT_MAX_LENGTH } from '@lobechat/const';
 import { Flexbox } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
+import debug from 'debug';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
 import {
   type ActionKeys,
+  type ChatInputEditor,
   type ChatInputFeature,
   ChatInputProvider,
   DesktopChatInput,
@@ -57,6 +59,8 @@ const VISITOR_FEATURE: ChatInputFeature = {
   slash: false,
 };
 
+const log = debug('lobe-share:visitor-composer');
+
 const noop = () => {};
 
 interface VisitorComposerProps {
@@ -67,6 +71,13 @@ interface VisitorComposerProps {
    * sending would only fail server-side anyway.
    */
   blockedKey?: string;
+  /**
+   * Starter prompt carried over from the share profile. Seeded into the
+   * editor once, as a draft the visitor still has to send — arriving with a
+   * message already sent on their behalf would spend the creator's budget
+   * without consent.
+   */
+  initialPrompt?: string;
   /** Refresh the visitor topic list after a send created a new topic. */
   onTopicCreated?: (topicId: string) => void;
   shareId: string;
@@ -89,8 +100,10 @@ interface VisitorComposerProps {
  * {@link sendVisitorMessage} directly.
  */
 const VisitorComposer = memo<VisitorComposerProps>(
-  ({ agentId, blockedKey, onTopicCreated, shareId, topicId }) => {
+  ({ agentId, blockedKey, initialPrompt, onTopicCreated, shareId, topicId }) => {
     const { t } = useTranslation('agent');
+    const editorRef = useRef<ChatInputEditor | null>(null);
+    const seededPrompt = useRef(false);
     const [errorKey, setErrorKey] = useState<string>();
     const [sending, setSending] = useState(false);
     const { stopError, stopping, stopSharedRun } = useShareRunStop(shareId, agentId, topicId);
@@ -119,6 +132,28 @@ const VisitorComposer = memo<VisitorComposerProps>(
     const blocked =
       blockedKey ?? (errorKey && isTerminalVisitorError(errorKey) ? errorKey : undefined);
     const displayedErrorKey = blocked ?? errorKey;
+
+    /**
+     * Seed the starter prompt AFTER the editor has mounted its plugins.
+     * Writing from the `chatInputEditorRef` callback runs while the editor is
+     * still assembling and throws `DataSource for type "markdown" is not
+     * registered`, which the route's error boundary turns into a blank
+     * "page unavailable" screen for the whole conversation. The catch keeps a
+     * future editor change degrading to "no prefill" instead of that.
+     */
+    useEffect(() => {
+      if (!initialPrompt || seededPrompt.current) return;
+      const editor = editorRef.current;
+      if (!editor) return;
+
+      seededPrompt.current = true;
+      try {
+        editor.instance?.setDocument('markdown', initialPrompt);
+        editor.focus?.();
+      } catch (error) {
+        log('failed to seed the starter prompt: %O', error);
+      }
+    }, [initialPrompt]);
 
     // `sendButtonProps.disabled` is read from the store, which lags a keystroke
     // behind the editor; the Enter handler asks this ref instead so a fast
@@ -210,10 +245,20 @@ const VisitorComposer = memo<VisitorComposerProps>(
             <ChatInputProvider
               agentId=""
               allowExpand={false}
+              // Deliberately kept out of the global `mainInputEditor` slot the
+              // owner composer uses: a share page must not hand a foreign
+              // editor to the rest of the app.
               feature={VISITOR_FEATURE}
               leftActions={NO_ACTIONS}
               resolveSendBlocked={() => busyRef.current}
               rightActions={NO_ACTIONS}
+              // Deliberately kept out of the global `mainInputEditor` slot the
+              // owner composer uses: a share page must not hand a foreign
+              // editor to the rest of the app. The write happens in the effect
+              // above, not here.
+              chatInputEditorRef={(instance) => {
+                editorRef.current = instance;
+              }}
               sendButtonProps={{
                 disabled: busy,
                 // A run is actually streaming (as opposed to `sending`, the brief

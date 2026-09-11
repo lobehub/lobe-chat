@@ -285,8 +285,10 @@ describe('desktop router shared definition', () => {
     // …and the agent-share visitor surface lives at `/a/:slugOrId`, a sibling
     // of the main layout on every platform (Web, Electron, and the mobile
     // router — see mobileRouter.test.tsx).
-    expect(webPaths).toContain('/a/:slugOrId/:topicId?');
-    expect(electronPaths).toContain('/a/:slugOrId/:topicId?');
+    expect(webPaths).toContain('/a/:slugOrId');
+    expect(electronPaths).toContain('/a/:slugOrId');
+    expect(webPaths).toContain('/a/:slugOrId/chat/:topicId?');
+    expect(electronPaths).toContain('/a/:slugOrId/chat/:topicId?');
     expect(webPaths).not.toContain('/verify');
     expect(webPaths).toContain('/acceptance');
     expect(webPaths).toContain('/onboarding');
@@ -547,19 +549,35 @@ describe('desktop router shared definition', () => {
     ['Web', webDesktopRoutes],
     ['Electron', electronDesktopRoutes],
   ])(
-    '%s serves the agent-share visitor page on /a/:slugOrId outside the main layout',
+    '%s lands a share link on the profile and keeps the conversation one segment deeper',
     (_, routes) => {
       const matches = matchRoutes(routes, '/a/my-bot');
 
       expect(matches).toHaveLength(1);
-      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
+      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
       expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-bot' });
 
-      const topicMatches = matchRoutes(routes, '/a/my-bot/tpc_saved');
+      const chatMatches = matchRoutes(routes, '/a/my-bot/chat');
+      expect(chatMatches?.[0]?.route.path).toBe('/a/:slugOrId/chat/:topicId?');
+
+      const topicMatches = matchRoutes(routes, '/a/my-bot/chat/tpc_saved');
       expect(topicMatches).toHaveLength(1);
       expect(topicMatches?.[0]?.params).toEqual({ slugOrId: 'my-bot', topicId: 'tpc_saved' });
     },
   );
+
+  it.each([
+    ['Web', webDesktopRoutes],
+    ['Electron', electronDesktopRoutes],
+  ])('%s still resolves pre-split topic deep links', (_, routes) => {
+    // `/a/:slug/:topicId` was the conversation URL before the profile split;
+    // the static `chat` segment must outrank this catch-all.
+    const matches = matchRoutes(routes, '/a/my-bot/tpc_saved');
+
+    expect(matches).toHaveLength(1);
+    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:legacyTopicId');
+    expect(matches?.[0]?.params).toEqual({ legacyTopicId: 'tpc_saved', slugOrId: 'my-bot' });
+  });
 
   it('keeps business resource and task routes in the shared definition', async () => {
     const [sharedSource] = await readRouterSources();

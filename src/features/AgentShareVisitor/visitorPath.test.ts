@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildAgentShareChatPath,
   buildAgentShareOwnerPath,
+  buildAgentShareProfilePath,
   buildAgentShareSignInUrl,
   buildAgentShareVisitorPath,
 } from './visitorPath';
@@ -16,10 +18,16 @@ describe('visitorPath', () => {
   });
 
   it('builds a bookmarkable topic path and preserves it through sign-in', () => {
-    expect(buildAgentShareVisitorPath('my-bot', 'tpc_1')).toBe('/a/my-bot/tpc_1');
+    expect(buildAgentShareVisitorPath('my-bot', 'tpc_1')).toBe('/a/my-bot/chat/tpc_1');
     expect(buildAgentShareSignInUrl('my-bot', 'tpc_1')).toBe(
-      '/signin?callbackUrl=%2Fa%2Fmy-bot%2Ftpc_1',
+      '/signin?callbackUrl=%2Fa%2Fmy-bot%2Fchat%2Ftpc_1',
     );
+  });
+
+  it('separates the profile landing surface from the conversation surface', () => {
+    expect(buildAgentShareProfilePath('my-bot')).toBe('/a/my-bot');
+    expect(buildAgentShareChatPath('my-bot')).toBe('/a/my-bot/chat');
+    expect(buildAgentShareChatPath('my-bot', 'tpc_1')).toBe('/a/my-bot/chat/tpc_1');
   });
 
   describe('buildAgentShareOwnerPath', () => {

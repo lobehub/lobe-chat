@@ -6,13 +6,17 @@ import {
   BusinessMobileRoutesWithMainLayout,
   BusinessMobileRoutesWithoutMainLayout,
 } from '@/business/client/BusinessMobileRoutes';
+import AgentShareProfileSkeleton from '@/components/Skeleton/AgentShareProfile';
 import AgentShareVisitorSkeleton from '@/components/Skeleton/AgentShareVisitor';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityListSkeleton from '@/components/Skeleton/CommunityList';
 import { delayed } from '@/components/Skeleton/Delayed';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
-import { agentShareVisitorRouteMeta } from '@/features/AgentShareVisitor/routeMeta';
+import {
+  agentShareProfileRouteMeta,
+  agentShareVisitorRouteMeta,
+} from '@/features/AgentShareVisitor/routeMeta';
 import { AGENT_SHARE_VISITOR_PATH } from '@/features/AgentShareVisitor/visitorPath';
 import { mobileAgentSettingsRouteMeta } from '@/features/RouteMeta/mobileRouteMeta';
 import WorkspaceProviderRedirect from '@/features/WorkspaceSetting/ProviderRedirect';
@@ -679,13 +683,33 @@ export const mobileRoutes: RouteObject[] = [
   // app). Outside the `/` layout: a visitor gets no nav, no workspace scope.
   {
     element: dynamicElement(
+      () => import('@/features/AgentShareVisitor/ProfilePage'),
+      'Mobile > Share > Agent Profile',
+      { fallback: delayed(<AgentShareProfileSkeleton />) },
+    ),
+    errorElement: <ErrorBoundary />,
+    handle: { meta: agentShareProfileRouteMeta },
+    path: AGENT_SHARE_VISITOR_PATH + '/:slugOrId',
+  },
+  {
+    element: dynamicElement(
       () => import('@/features/AgentShareVisitor/Page'),
       'Mobile > Share > Agent',
       { fallback: delayed(<AgentShareVisitorSkeleton />) },
     ),
     errorElement: <ErrorBoundary />,
     handle: { meta: agentShareVisitorRouteMeta },
-    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:topicId?`,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/chat/:topicId?`,
+  },
+  {
+    // Pre-split deep links put the topic id in this slot; static `chat` above
+    // outranks the dynamic segment, so only the legacy shape lands here.
+    element: dynamicElement(
+      () => import('@/features/AgentShareVisitor/LegacyTopicRedirect'),
+      'Mobile > Share > Agent Legacy Topic',
+    ),
+    errorElement: <ErrorBoundary />,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:legacyTopicId`,
   },
 
   // Messenger verify route (outside main layout)

@@ -8,18 +8,24 @@ import { mobileRoutes } from './mobileRouter.config';
 import { getRouteMetaFromHandle } from './routeMeta';
 
 describe('mobileRouter agent share route', () => {
-  it('serves the agent-share visitor page on /a/:slugOrId outside the main layout', () => {
+  it('lands a share link on the profile outside the main layout', () => {
     const matches = matchRoutes(mobileRoutes, '/a/my-agent');
 
     expect(matches).toHaveLength(1);
-    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
+    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
     expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-agent' });
   });
 
   it('opens a visitor topic directly without the owner layout', () => {
-    const matches = matchRoutes(mobileRoutes, '/a/my-agent/tpc_saved');
+    const matches = matchRoutes(mobileRoutes, '/a/my-agent/chat/tpc_saved');
     expect(matches).toHaveLength(1);
     expect(matches?.[0]?.params).toEqual({ slugOrId: 'my-agent', topicId: 'tpc_saved' });
+  });
+
+  it('still resolves pre-split topic deep links', () => {
+    const matches = matchRoutes(mobileRoutes, '/a/my-agent/tpc_saved');
+    expect(matches).toHaveLength(1);
+    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:legacyTopicId');
   });
 
   it('keeps the creator agent surface on /agent/:aid', () => {

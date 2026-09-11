@@ -32,6 +32,7 @@ import {
   BusinessResourceRoutes,
 } from '@/business/client/BusinessDesktopRoutes';
 import BrandTextLoading from '@/components/Loading/BrandTextLoading';
+import AgentShareProfileSkeleton from '@/components/Skeleton/AgentShareProfile';
 import AgentShareVisitorSkeleton from '@/components/Skeleton/AgentShareVisitor';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityHomeSkeleton from '@/components/Skeleton/CommunityHome';
@@ -47,7 +48,10 @@ import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
 import { agentDocumentRouteMeta } from '@/features/AgentDocumentPage/routeMeta';
 import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/routeMeta';
-import { agentShareVisitorRouteMeta } from '@/features/AgentShareVisitor/routeMeta';
+import {
+  agentShareProfileRouteMeta,
+  agentShareVisitorRouteMeta,
+} from '@/features/AgentShareVisitor/routeMeta';
 import { AGENT_SHARE_VISITOR_PATH } from '@/features/AgentShareVisitor/visitorPath';
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
@@ -1655,11 +1659,22 @@ export const createSharedDesktopRoutes = ({
     path: '/',
   },
   {
-    // The agent-share visitor page. A sibling of the main layout, not a child:
-    // a visitor has no business with the creator's nav rail, workspace scope,
-    // or command palette, and the page draws its own product bar. Outside
-    // `withSegmentFallback`, so the skeleton is passed explicitly — the same
-    // one the page shows while the share itself loads.
+    // The agent-share landing surface. A sibling of the main layout, not a
+    // child: a visitor has no business with the creator's nav rail, workspace
+    // scope, or command palette, and the page draws its own product bar.
+    // Outside `withSegmentFallback`, so the skeleton is passed explicitly —
+    // the same one the page shows while the share itself loads.
+    element: dynamicElement(
+      () => import('@/features/AgentShareVisitor/ProfilePage'),
+      'Desktop > Share > Agent Profile',
+      { fallback: delayed(<AgentShareProfileSkeleton />) },
+    ),
+    errorElement: <ErrorBoundary />,
+    handle: { meta: agentShareProfileRouteMeta },
+    path: AGENT_SHARE_VISITOR_PATH + '/:slugOrId',
+  },
+  {
+    // The conversation surface, reached from the profile.
     element: dynamicElement(
       () => import('@/features/AgentShareVisitor/Page'),
       'Desktop > Share > Agent',
@@ -1667,7 +1682,18 @@ export const createSharedDesktopRoutes = ({
     ),
     errorElement: <ErrorBoundary />,
     handle: { meta: agentShareVisitorRouteMeta },
-    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:topicId?`,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/chat/:topicId?`,
+  },
+  {
+    // Links handed out before the profile/chat split put the topic id in this
+    // slot. Static `chat` above outranks this dynamic segment, so it only
+    // catches the legacy shape.
+    element: dynamicElement(
+      () => import('@/features/AgentShareVisitor/LegacyTopicRedirect'),
+      'Desktop > Share > Agent Legacy Topic',
+    ),
+    errorElement: <ErrorBoundary />,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:legacyTopicId`,
   },
   ...BusinessDesktopRoutesWithoutMainLayout,
   ...platformRoutes,

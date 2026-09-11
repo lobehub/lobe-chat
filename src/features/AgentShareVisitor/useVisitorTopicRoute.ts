@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
-import { buildAgentShareVisitorPath } from './visitorPath';
+import { buildAgentShareChatPath } from './visitorPath';
 
 /** The URL owns selection; a created topic replaces its blank conversation entry. */
 export const useVisitorTopicRoute = () => {
@@ -32,10 +32,10 @@ export const useVisitorTopicRoute = () => {
     onTopicCreated: (createdTopicId: string) => {
       /** A delayed send must not pull the visitor back after they navigate away. */
       if (currentLocationKey.current !== location.key) return;
-      navigateIfChanged(buildAgentShareVisitorPath(slugOrId, createdTopicId), { replace: true });
+      navigateIfChanged(buildAgentShareChatPath(slugOrId, createdTopicId), { replace: true });
     },
     selectTopic: (nextTopicId?: string) => {
-      navigateIfChanged(buildAgentShareVisitorPath(slugOrId, nextTopicId));
+      navigateIfChanged(buildAgentShareChatPath(slugOrId, nextTopicId));
     },
     topicId,
   };
