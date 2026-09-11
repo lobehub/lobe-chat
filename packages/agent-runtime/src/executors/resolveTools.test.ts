@@ -145,6 +145,79 @@ describe('resolveTools executors', () => {
     );
   });
 
+  // Without this write the rejection is lost: state messages are rebuilt from
+  // the DB every step, and conversation-flow only collects a tool row whose
+  // parent assistant lists the matching call.
+  it('advertises unresolvable calls on the parent assistant and counts the round', async () => {
+    const instruction: Extract<AgentInstruction, { type: 'resolve_blocked_tools' }> = {
+      payload: {
+        blockedContent: 'Tool call rejected: no available tool is named searchh.',
+        blockedReason: 'tool_name_unresolved',
+        parentMessageId: 'assistant-msg-1',
+        toolsCalling: [createToolCall()],
+        unresolvedToolNames: true,
+      },
+      type: 'resolve_blocked_tools',
+    };
+
+    const result = await resolveBlockedTools(host)(instruction, createState());
+
+    expect(host.transports.messages.update).toHaveBeenCalledWith('assistant-msg-1', {
+      tools: [createToolCall()],
+    });
+    expect(result.newState.unresolvedToolFeedbackRounds).toBe(1);
+  });
+
+  it('accumulates unresolvable rounds across steps of one operation', async () => {
+    const instruction: Extract<AgentInstruction, { type: 'resolve_blocked_tools' }> = {
+      payload: {
+        parentMessageId: 'assistant-msg-1',
+        toolsCalling: [createToolCall()],
+        unresolvedToolNames: true,
+      },
+      type: 'resolve_blocked_tools',
+    };
+
+    const result = await resolveBlockedTools(host)(
+      instruction,
+      createState({ unresolvedToolFeedbackRounds: 1 }),
+    );
+
+    expect(result.newState.unresolvedToolFeedbackRounds).toBe(2);
+  });
+
+  it('leaves the parent untouched for ordinary blocked tools', async () => {
+    const instruction: Extract<AgentInstruction, { type: 'resolve_blocked_tools' }> = {
+      payload: {
+        parentMessageId: 'assistant-msg-1',
+        toolsCalling: [createToolCall()],
+      },
+      type: 'resolve_blocked_tools',
+    };
+
+    const result = await resolveBlockedTools(host)(instruction, createState());
+
+    expect(host.transports.messages.update).not.toHaveBeenCalled();
+    expect(result.newState.unresolvedToolFeedbackRounds).toBeUndefined();
+  });
+
+  it('fails loudly when the parent assistant cannot be updated', async () => {
+    const failure = new Error('db down');
+    host.transports.messages.update = vi.fn().mockRejectedValue(failure);
+
+    const instruction: Extract<AgentInstruction, { type: 'resolve_blocked_tools' }> = {
+      payload: {
+        parentMessageId: 'assistant-msg-1',
+        toolsCalling: [createToolCall()],
+        unresolvedToolNames: true,
+      },
+      type: 'resolve_blocked_tools',
+    };
+
+    await expect(resolveBlockedTools(host)(instruction, createState())).rejects.toThrow('db down');
+    expect(createToolMessage).not.toHaveBeenCalled();
+  });
+
   it('persists a caller-provided blocked reason and content', async () => {
     const instruction: Extract<AgentInstruction, { type: 'resolve_blocked_tools' }> = {
       payload: {
