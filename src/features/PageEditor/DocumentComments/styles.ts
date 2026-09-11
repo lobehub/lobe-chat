@@ -121,7 +121,7 @@ export const styles = createStaticStyles(({ css }) => ({
 
     /* Only untouched images get the thumbnail treatment. Forcing width: auto
        on every image would beat the inline width the resize handles write, so
-       dragging would appear to do nothing (LOBE-13874). */
+       dragging would appear to do nothing. */
     & [contenteditable='true'] img:not(${RESIZED_IMAGE}) {
       width: auto !important;
       max-height: ${COMMENT_EDITOR_IMAGE_MAX_HEIGHT}px;
