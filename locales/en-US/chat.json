@@ -1584,6 +1584,7 @@
   "signalCallbacks.empty": "No callback messages",
   "signalCallbacks.expand": "Show details",
   "signalCallbacks.title": "{{tool}} · {{count}} callback updates",
+  "steer.tag": "Steered",
   "stt.action": "Voice Input",
   "stt.loading": "Recognizing...",
   "stt.prettifying": "Polishing...",
