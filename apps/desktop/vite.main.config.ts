@@ -57,6 +57,10 @@ export default defineConfig(async (env) => {
         ],
         output: {
           assetFileNames: 'chunks/[name]-[hash].[ext]',
+          // Rolldown hoists chunk requires above any entry statement, so the V8
+          // compile cache has to be switched on from a banner to cover `main-app`.
+          banner: (chunk) =>
+            chunk.isEntry ? 'require("node:module").enableCompileCache?.();' : '',
           // Keep Electron's side-effectful entry as a tiny bootstrap and put the
           // application graph in a normal CommonJS chunk. Electron evaluates its entry
           // outside the usual CJS cache path; when a deferred chunk back-references
