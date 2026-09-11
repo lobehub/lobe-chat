@@ -33,6 +33,8 @@ import {
   type OpenLocalFolderParams,
   type PrepareSkillDirectoryParams,
   type PrepareSkillDirectoryResult,
+  type ProjectDirectoryListParams,
+  type ProjectDirectoryListResult,
   type ProjectFileIndexParams,
   type ProjectFileIndexResult,
   type ProjectFileSearchParams,
@@ -44,6 +46,8 @@ import {
   type RunCommandResult,
   type ShowSaveDialogParams,
   type ShowSaveDialogResult,
+  type TrashLocalFilesParams,
+  type TrashLocalFilesResult,
   type WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 
@@ -219,6 +223,16 @@ class LocalFileService {
 
   async searchProjectFiles(params: ProjectFileSearchParams): Promise<ProjectFileSearchResult> {
     return ensureElectronIpc().localSystem.searchProjectFiles(params);
+  }
+
+  async listProjectDirectory(
+    params: ProjectDirectoryListParams,
+  ): Promise<ProjectDirectoryListResult> {
+    return ensureElectronIpc().localSystem.listProjectDirectory(params);
+  }
+
+  async trashLocalFiles(params: TrashLocalFilesParams): Promise<TrashLocalFilesResult> {
+    return ensureElectronIpc().localSystem.trashLocalFiles(params);
   }
 
   async listProjectSkills(params: ListProjectSkillsParams): Promise<ListProjectSkillsResult> {

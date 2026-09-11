@@ -2,7 +2,7 @@
 
 import type { ProjectFileIndexEntry } from '@lobechat/electron-client-ipc';
 import { Center, copyToClipboard, Empty, Flexbox, Icon, stopPropagation } from '@lobehub/ui';
-import { ActionIcon, Button, DropdownMenu, Input, toast } from '@lobehub/ui/base-ui';
+import { ActionIcon, Button, confirmModal, DropdownMenu, Input, toast } from '@lobehub/ui/base-ui';
 import type { GitStatusEntry } from '@pierre/trees';
 import { createStaticStyles } from 'antd-style';
 import {
@@ -31,6 +31,7 @@ import {
 } from '@/features/ExplorerTree';
 import type { ExplorerTreeHandle } from '@/features/ExplorerTree/types';
 import { usePublishWorkspaceHtmlFromFile } from '@/features/Portal/LocalFile/usePublishWorkspaceHtmlFromFile';
+import { useSingleton } from '@/hooks/useSingleton';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 import { localFileService } from '@/services/electron/localFileService';
 import { projectFileService } from '@/services/projectFile';
@@ -39,6 +40,7 @@ import { useGlobalStore } from '@/store/global';
 
 import { filterProjectFileEntries, mergeMissingDeletedEntries } from './fileFilter';
 import { isExcludedProjectFileEntry } from './fileVisibility';
+import { useCollapsedDirectoryEntries } from './useCollapsedDirectoryEntries';
 import { buildGitStatusEntries, useGitWorkingTreeFiles } from './useGitWorkingTreeFiles';
 import { useProjectFiles } from './useProjectFiles';
 
@@ -222,7 +224,11 @@ FilesSearchBar.displayName = 'FilesSearchBar';
 const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
   const { t } = useTranslation('chat');
   const isRemote = !!deviceId;
-  const { data, isLoading } = useProjectFiles(deviceId, workingDirectory);
+  const {
+    data,
+    isLoading,
+    mutate: revalidateProjectFiles,
+  } = useProjectFiles(deviceId, workingDirectory);
   const { data: gitFiles } = useGitWorkingTreeFiles(
     deviceId,
     workingDirectory,
@@ -231,7 +237,19 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
   const projectSource = data?.source;
   const projectRoot = data?.root ?? workingDirectory;
 
-  const entries = useMemo(() => data?.entries ?? [], [data]);
+  const indexedEntries = useMemo(() => data?.entries ?? [], [data]);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  // Directories the index collapsed are read from disk as they are expanded.
+  const {
+    entries,
+    invalidate: invalidateDirectory,
+    truncatedPaths,
+  } = useCollapsedDirectoryEntries({
+    deviceId,
+    entries: indexedEntries,
+    expandedIds,
+    root: projectRoot,
+  });
   const [viewMode, setViewMode] = useState<FileViewMode>('project');
   const [hideIgnored, setHideIgnored] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
@@ -249,9 +267,9 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
     [workingTreeGitStatus],
   );
   const displayEntries = useMemo(() => {
-    const indexedEntries = isFiltering ? (searchEntries ?? []) : entries;
+    const sourceEntries = isFiltering ? (searchEntries ?? []) : entries;
     const entriesWithDeleted = mergeMissingDeletedEntries(
-      indexedEntries,
+      sourceEntries,
       isFiltering ? [] : (gitFiles?.deleted ?? []),
       projectRoot,
     );
@@ -299,8 +317,6 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
     () => getExplorerTreeStyleVars({ reserveChevronSlot: nodes.some((node) => node.isFolder) }),
     [nodes],
   );
-
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
 
   useEffect(() => {
     setViewMode('project');
@@ -405,6 +421,16 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
     treeRef.current?.setExpanded(defaultExpandedIds);
   }, [defaultExpandedIds, isFiltering]);
 
+  // A directory too large to list in full would otherwise look complete.
+  const warnedTruncations = useSingleton(() => new Set<string>());
+  useEffect(() => {
+    for (const relativePath of truncatedPaths) {
+      if (warnedTruncations.has(relativePath)) continue;
+      warnedTruncations.add(relativePath);
+      toast.warning(t('workingPanel.files.directoryTruncated', { name: relativePath }));
+    }
+  }, [t, truncatedPaths, warnedTruncations]);
+
   const revealRequest = useGlobalStore((s) => s.status.workingSidebarRevealRequest);
   const openWorkingSidebar = useGlobalStore((s) => s.openWorkingSidebar);
 
@@ -450,6 +476,57 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
       openNode(node);
     },
     [openNode],
+  );
+
+  /**
+   * Delete goes to the OS trash, never an unlink: a misclick here costs one
+   * trip to Finder, not the file. The row disappears once the index — and the
+   * lazily read parent directory, if the file came from one — is re-read.
+   */
+  const deleteNode = useCallback(
+    async (node: ExplorerTreeNode<ProjectFileIndexEntry>) => {
+      if (!node.data) return;
+      const { name, path, relativePath } = node.data;
+
+      const result = await projectFileService.trashProjectFiles({ deviceId, paths: [path] });
+      if (!result.success) {
+        const failure = result.items.find((item) => !item.success);
+        toast.error(failure?.error || t('workingPanel.files.deleteFailed', { name }));
+        return;
+      }
+
+      const parentPath = getParentRelativePath(relativePath);
+      if (parentPath) invalidateDirectory(parentPath);
+      if (node.isFolder) invalidateDirectory(relativePath);
+      await revalidateProjectFiles();
+
+      toast.success(t('workingPanel.files.deleteSuccess', { name }));
+    },
+    [deviceId, invalidateDirectory, revalidateProjectFiles, t],
+  );
+
+  const confirmDeleteNode = useCallback(
+    (node: ExplorerTreeNode<ProjectFileIndexEntry>) => {
+      if (!node.data) return;
+
+      confirmModal({
+        // `confirmModal` falls back to an untranslated "Cancel" when no
+        // cancelText is given, which reads as English inside an otherwise
+        // localized dialog.
+        cancelText: t('cancel', { ns: 'common' }),
+        content: t(
+          node.isFolder
+            ? 'workingPanel.files.deleteFolderConfirm'
+            : 'workingPanel.files.deleteFileConfirm',
+          { name: node.data.name },
+        ),
+        okButtonProps: { danger: true },
+        okText: t('workingPanel.files.delete'),
+        onOk: () => deleteNode(node),
+        title: t('workingPanel.files.delete'),
+      });
+    },
+    [deleteNode, t],
   );
 
   // Dragging a row into the chat input inserts a `<localFile />` mention instead
@@ -539,9 +616,33 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
         },
       );
 
+      // Trashing runs against the local filesystem, so it stays off remote
+      // devices — same line the other OS-level actions draw.
+      if (!isRemote) {
+        items.push(
+          { key: 'divider-delete', type: 'divider' as const },
+          {
+            danger: true,
+            key: 'delete',
+            label: t('workingPanel.files.delete'),
+            onClick: () => confirmDeleteNode(node),
+            sfSymbol: 'trash',
+          },
+        );
+      }
+
       return items;
     },
-    [canOfferFile, dirtyFilePaths, isRemote, openNode, openWorkingSidebar, publishFile, t],
+    [
+      canOfferFile,
+      confirmDeleteNode,
+      dirtyFilePaths,
+      isRemote,
+      openNode,
+      openWorkingSidebar,
+      publishFile,
+      t,
+    ],
   );
 
   const isEmpty = displayEntries.length === 0;
@@ -626,6 +727,7 @@ const Files = memo<FilesProps>(({ deviceId, workingDirectory }) => {
         <div className={styles.tree} style={treeStyleVars}>
           <ExplorerTree<ProjectFileIndexEntry>
             iconsColored
+            showRowActionButton
             defaultExpandedIds={defaultExpandedIds}
             getContextMenuItems={getContextMenuItems}
             gitStatus={gitStatus}

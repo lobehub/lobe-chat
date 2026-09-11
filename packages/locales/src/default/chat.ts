@@ -2853,6 +2853,14 @@ export default {
   'workingPanel.files.copyAbsolutePath': 'Copy Path',
   'workingPanel.files.copyRelativePath': 'Copy Relative Path',
   'workingPanel.files.collapseAll': 'Collapse Folders in Explorer',
+  'workingPanel.files.delete': 'Move to Trash',
+  'workingPanel.files.deleteFailed': 'Could not move {{name}} to the trash',
+  'workingPanel.files.deleteFileConfirm':
+    'Move {{name}} to the trash? You can restore it from the system trash.',
+  'workingPanel.files.deleteFolderConfirm':
+    'Move {{name}} and everything inside it to the trash? You can restore it from the system trash.',
+  'workingPanel.files.deleteSuccess': 'Moved {{name}} to the trash',
+  'workingPanel.files.directoryTruncated': 'Showing only the first items of {{name}}',
   'workingPanel.files.empty': 'No files in this workspace',
   'workingPanel.files.filters.changedOnly': 'Show Git Changes Only',
   'workingPanel.files.filters.hideIgnored': 'Exclude Ignored Files',

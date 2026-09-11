@@ -90,7 +90,35 @@ function ExplorerTreeInner<TData>(
         ? null
         : (adapterRef.current.nodeById.get(adapterRef.current.idByPath.get(path) ?? '') ?? null);
 
+    const toNodeByItemPath = (itemPath: string, isFolder: boolean) => {
+      const a = adapterRef.current;
+      const id =
+        a.idByPath.get(toCanonicalTreePath(itemPath, isFolder)) ?? a.idByPath.get(itemPath) ?? '';
+      return a.nodeById.get(id) ?? null;
+    };
+
     return {
+      // The row's "…" button is the tree's own affordance, but the menu it
+      // opens is ours. Closing the anchor as soon as we've opened our menu
+      // keeps the row out of the "menu is open" state — and out of the way of
+      // the click-catching wash the tree renders underneath its own menus.
+      composition: props.showRowActionButton
+        ? {
+            contextMenu: {
+              buttonVisibility: 'when-needed',
+              enabled: true,
+              onOpen: (item, context) => {
+                const node = toNodeByItemPath(item.path, item.kind === 'directory');
+                context.close({ restoreFocus: false });
+                if (!node) return;
+                const items = propsRef.current.getContextMenuItems?.(node);
+                if (!items || items.length === 0) return;
+                openExplorerContextMenu(items);
+              },
+              triggerMode: 'button',
+            },
+          }
+        : undefined,
       density: props.density,
       dragAndDrop: {
         canDrag: (paths) => {

@@ -3,9 +3,11 @@ import type {
   LocalFilePreviewUrlParams,
   LocalMoveFilesResultItem,
   MoveLocalFileParams,
+  ProjectDirectoryListResult,
   ProjectFileIndexResult,
   ProjectFileSearchResult,
   RenameLocalFileResult,
+  TrashLocalFilesResult,
 } from '@lobechat/electron-client-ipc';
 import type { DeviceLocalFilePreview } from '@lobechat/types';
 
@@ -69,6 +71,54 @@ class ProjectFileService {
     return deviceId
       ? ((await lambdaClient.device.getProjectFileIndex.query({ deviceId, scope })) ?? undefined)
       : localFileService.getProjectFileIndex({ scope });
+  }
+
+  /**
+   * Children of one directory inside a project working directory. The index
+   * collapses fully ignored directories, so the tree fills them in one level at
+   * a time as the user expands them.
+   */
+  async listProjectDirectory({
+    deviceId,
+    relativePath,
+    root,
+  }: {
+    deviceId?: string;
+    relativePath: string;
+    root: string;
+  }): Promise<ProjectDirectoryListResult | undefined> {
+    return deviceId
+      ? ((await lambdaClient.device.listProjectDirectory.query({
+          deviceId,
+          relativePath,
+          root,
+        })) ?? undefined)
+      : localFileService.listProjectDirectory({ relativePath, root });
+  }
+
+  /**
+   * Move files/folders to the OS trash. Local desktop only — a remote device
+   * has no trash RPC, so the UI hides delete in device mode.
+   */
+  async trashProjectFiles({
+    deviceId,
+    paths,
+  }: {
+    deviceId?: string;
+    paths: string[];
+  }): Promise<TrashLocalFilesResult> {
+    if (deviceId || !isDesktop) {
+      return {
+        items: paths.map((path) => ({
+          error: 'Deleting files is only supported on this device',
+          path,
+          success: false,
+        })),
+        success: false,
+      };
+    }
+
+    return localFileService.trashLocalFiles({ paths });
   }
 
   /** Search files within a project working directory. Matching runs on the file host. */

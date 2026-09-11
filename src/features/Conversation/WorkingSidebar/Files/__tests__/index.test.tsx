@@ -29,6 +29,15 @@ const gitFilesMock = vi.hoisted(() => ({
 }));
 const openLocalFileMock = vi.hoisted(() => vi.fn());
 const searchProjectFilesMock = vi.hoisted(() => vi.fn());
+const listProjectDirectoryMock = vi.hoisted(() => vi.fn());
+const trashProjectFilesMock = vi.hoisted(() => vi.fn());
+const confirmModalMock = vi.hoisted(() => vi.fn());
+const toastMock = vi.hoisted(() => ({
+  error: vi.fn(),
+  success: vi.fn(),
+  warning: vi.fn(),
+}));
+const revalidateProjectFilesMock = vi.hoisted(() => vi.fn());
 const projectFilesMock = vi.hoisted(() => ({
   data: {
     entries: [
@@ -152,13 +161,15 @@ vi.mock('../useProjectFiles', () => ({
     },
     isLoading: false,
     isValidating: false,
-    mutate: vi.fn(),
+    mutate: revalidateProjectFilesMock,
   }),
 }));
 
 vi.mock('@/services/projectFile', () => ({
   projectFileService: {
+    listProjectDirectory: listProjectDirectoryMock,
     searchProjectFiles: searchProjectFilesMock,
+    trashProjectFiles: trashProjectFilesMock,
   },
 }));
 
@@ -186,6 +197,8 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
   ...((await importOriginal()) as Record<string, unknown>),
+  confirmModal: confirmModalMock,
+  toast: toastMock,
   ActionIcon: ({ onClick, title }: { onClick?: () => void; title?: string }) => (
     <button title={title} type={'button'} onClick={onClick} />
   ),
@@ -271,6 +284,15 @@ beforeEach(() => {
   handleSpies.setExpanded.mockClear();
   messageSpy.warning.mockClear();
   openLocalFileMock.mockClear();
+  confirmModalMock.mockReset();
+  revalidateProjectFilesMock.mockReset();
+  toastMock.error.mockClear();
+  toastMock.success.mockClear();
+  toastMock.warning.mockClear();
+  listProjectDirectoryMock.mockReset();
+  listProjectDirectoryMock.mockResolvedValue({ entries: [], truncated: false });
+  trashProjectFilesMock.mockReset();
+  trashProjectFilesMock.mockResolvedValue({ items: [], success: true });
   // Default to an empty result so EVERY call resolves to a promise. The search
   // effect can fire more than once (debounce + effect re-run / StrictMode), and
   // per-test `mockResolvedValueOnce` only covers the first call — an extra,
@@ -436,6 +458,8 @@ describe('Files — reveal request integration', () => {
       'divider-copy',
       'copy-absolute-path',
       'copy-relative-path',
+      'divider-delete',
+      'delete',
     ]);
     expect(getContextMenuItems(cleanFolderNode).map((item) => item.key)).toEqual([
       'open',
@@ -444,6 +468,8 @@ describe('Files — reveal request integration', () => {
       'divider-copy',
       'copy-absolute-path',
       'copy-relative-path',
+      'divider-delete',
+      'delete',
     ]);
     expect(getContextMenuItems(ignoredNode).map((item) => item.key)).not.toContain(
       'show-in-review',
@@ -681,5 +707,142 @@ describe('Files — reveal request integration', () => {
     expect(handleSpies.select).not.toHaveBeenCalled();
     expect(handleSpies.focus).not.toHaveBeenCalled();
     expect(messageSpy.warning).not.toHaveBeenCalled();
+  });
+});
+
+describe('Files — collapsed directories', () => {
+  const collapsedEntry = {
+    collapsed: true,
+    gitIgnored: true,
+    isDirectory: true,
+    name: '.traces',
+    path: '/repo/.traces',
+    relativePath: '.traces/',
+  };
+
+  beforeEach(() => {
+    projectFilesMock.data.entries = [...projectFilesMock.data.entries, collapsedEntry];
+  });
+
+  afterEach(() => {
+    projectFilesMock.data.entries = projectFilesMock.data.entries.filter(
+      (entry) => entry !== collapsedEntry,
+    );
+  });
+
+  const expandNode = (id: string) => {
+    const onExpandedChange = explorerTreeProps.current?.onExpandedChange as (ids: string[]) => void;
+    onExpandedChange([id]);
+  };
+
+  it('reads a collapsed directory from disk the first time it is expanded', async () => {
+    listProjectDirectoryMock.mockResolvedValue({
+      entries: [
+        {
+          gitIgnored: true,
+          isDirectory: false,
+          name: 'trace.json',
+          path: '/repo/.traces/trace.json',
+          relativePath: '.traces/trace.json',
+        },
+      ],
+      truncated: false,
+    });
+
+    render(<Files workingDirectory="/repo" />);
+
+    // Nothing is fetched until the row is actually opened.
+    expect(listProjectDirectoryMock).not.toHaveBeenCalled();
+
+    expandNode('.traces/');
+
+    await waitFor(() => {
+      expect(listProjectDirectoryMock).toHaveBeenCalledWith({
+        deviceId: undefined,
+        relativePath: '.traces/',
+        root: '/repo',
+      });
+    });
+
+    await waitFor(() => {
+      const nodes = explorerTreeProps.current?.nodes as { id: string; parentId: string }[];
+      expect(nodes.find((node) => node.id === '.traces/trace.json')?.parentId).toBe('.traces/');
+    });
+
+    // A second expand of the same directory reuses the loaded children.
+    expandNode('.traces/');
+    await waitFor(() => {
+      expect(listProjectDirectoryMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('warns when a directory holds more children than one read returns', async () => {
+    listProjectDirectoryMock.mockResolvedValue({ entries: [], truncated: true });
+
+    render(<Files workingDirectory="/repo" />);
+    expandNode('.traces/');
+
+    await waitFor(() => {
+      expect(toastMock.warning).toHaveBeenCalledWith('workingPanel.files.directoryTruncated');
+    });
+  });
+});
+
+describe('Files — delete', () => {
+  const getDeleteItem = (nodeId: string) => {
+    const nodes = explorerTreeProps.current?.nodes as { id: string }[];
+    const getContextMenuItems = explorerTreeProps.current?.getContextMenuItems as (
+      node: unknown,
+    ) => { key: string; onClick?: () => void }[];
+    return getContextMenuItems(nodes.find((node) => node.id === nodeId)).find(
+      (item) => item.key === 'delete',
+    );
+  };
+
+  it('confirms first, then moves the file to the trash and re-reads the index', async () => {
+    confirmModalMock.mockImplementation(({ onOk }: { onOk: () => Promise<void> }) => onOk());
+
+    render(<Files workingDirectory="/repo" />);
+    getDeleteItem('src/foo/bar.ts')?.onClick?.();
+
+    expect(confirmModalMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        // The dialog is otherwise localized; an untranslated Cancel reads as a bug.
+        cancelText: 'cancel',
+        content: 'workingPanel.files.deleteFileConfirm',
+      }),
+    );
+    await waitFor(() => {
+      expect(trashProjectFilesMock).toHaveBeenCalledWith({
+        deviceId: undefined,
+        paths: ['/repo/src/foo/bar.ts'],
+      });
+    });
+    await waitFor(() => {
+      expect(revalidateProjectFilesMock).toHaveBeenCalled();
+    });
+    expect(toastMock.success).toHaveBeenCalledWith('workingPanel.files.deleteSuccess');
+  });
+
+  it('reports a failed delete instead of dropping the row', async () => {
+    confirmModalMock.mockImplementation(({ onOk }: { onOk: () => Promise<void> }) => onOk());
+    trashProjectFilesMock.mockResolvedValue({
+      items: [{ error: 'Permission denied', path: '/repo/src/foo/bar.ts', success: false }],
+      success: false,
+    });
+
+    render(<Files workingDirectory="/repo" />);
+    getDeleteItem('src/foo/bar.ts')?.onClick?.();
+
+    await waitFor(() => {
+      expect(toastMock.error).toHaveBeenCalledWith('Permission denied');
+    });
+    expect(revalidateProjectFilesMock).not.toHaveBeenCalled();
+  });
+
+  it('hides delete on a remote device, where there is no local trash', () => {
+    render(<Files deviceId="dev_1" workingDirectory="/repo" />);
+
+    expect(getDeleteItem('src/foo/bar.ts')).toBeUndefined();
   });
 });
