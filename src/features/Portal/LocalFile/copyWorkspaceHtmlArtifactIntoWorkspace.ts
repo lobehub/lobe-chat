@@ -4,6 +4,7 @@ import {
   isCssAssetPath,
   isJsAssetPath,
   READ_CONCURRENCY,
+  removeLocalBaseTag,
   replaceHrefToken,
   workspaceHtmlArtifactIdentifierForFile,
 } from '@lobechat/html-artifact';
@@ -130,7 +131,9 @@ export const copyWorkspaceHtmlArtifactIntoWorkspace = async ({
     }),
   );
 
-  const copiedHtml = rewrite(htmlContent, htmlFilePath, pathApi.basename(entryPath), 'html');
+  const copiedHtml = removeLocalBaseTag(
+    rewrite(htmlContent, htmlFilePath, pathApi.basename(entryPath), 'html'),
+  );
   await writeFile(entryPath, copiedHtml);
 
   return { entryPath, failed, htmlContent: copiedHtml, targetDirectory };

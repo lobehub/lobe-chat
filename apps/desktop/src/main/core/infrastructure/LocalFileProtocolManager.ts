@@ -3,6 +3,7 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
+import { EXTERNAL_PUBLISH_ASSET_MAX_BYTES } from '@lobechat/device-control/file-preview';
 import { getMimeType, resolveMimeType } from '@lobechat/utils/mimeType';
 import { app, protocol } from 'electron';
 
@@ -454,6 +455,11 @@ export class LocalFileProtocolManager {
 
     const fileStat = await stat(realFilePath);
     if (!fileStat.isFile()) return null;
+    // Reject by size before reading: the renderer's limit check only runs after
+    // the whole file has been read and base64-encoded into a gateway response.
+    if (fileStat.size > EXTERNAL_PUBLISH_ASSET_MAX_BYTES) {
+      throw new Error('File is too large to publish');
+    }
     const buffer = await readFile(realFilePath);
 
     return {

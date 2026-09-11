@@ -35,6 +35,42 @@ describe('copyWorkspaceHtmlArtifactIntoWorkspace', () => {
     expect(writeFile).toHaveBeenCalledWith(result.entryPath, htmlContent);
   });
 
+  it('drops a local base tag so the copy resolves against its own directory', async () => {
+    const copyFile = vi.fn().mockResolvedValue(undefined);
+    const writeFile = vi.fn().mockResolvedValue(undefined);
+    const source = '/tmp/shared/logo.png';
+
+    const result = await copyWorkspaceHtmlArtifactIntoWorkspace({
+      copyFile,
+      htmlContent: '<html><head><base href="../shared/"></head><img src="logo.png"></html>',
+      htmlFilePath: '/tmp/site/index.html',
+      resources: [resource(source, ['logo.png'])],
+      workingDirectory: '/project',
+      writeFile,
+    });
+
+    expect(result.htmlContent).not.toContain('<base');
+    expect(result.htmlContent).toContain(
+      `src="__external__/${sha256(source).slice(0, 8)}/logo.png"`,
+    );
+  });
+
+  it('keeps a remote base tag, which governs refs the copy never relocates', async () => {
+    const copyFile = vi.fn().mockResolvedValue(undefined);
+    const writeFile = vi.fn().mockResolvedValue(undefined);
+
+    const result = await copyWorkspaceHtmlArtifactIntoWorkspace({
+      copyFile,
+      htmlContent: '<html><head><base href="https://cdn.example.com/app/"></head></html>',
+      htmlFilePath: '/tmp/site/index.html',
+      resources: [],
+      workingDirectory: '/project',
+      writeFile,
+    });
+
+    expect(result.htmlContent).toContain('<base href="https://cdn.example.com/app/">');
+  });
+
   it('copies one file and rewrites every spelling of its external href', async () => {
     const copyFile = vi.fn().mockResolvedValue(undefined);
     const writeFile = vi.fn().mockResolvedValue(undefined);

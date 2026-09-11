@@ -308,9 +308,10 @@ const resolveHtmlResourceBasePath = (
   });
 
   if (resolved.kind === 'remote') return { remote: true, sourcePath: htmlFilePath };
-  if (resolved.kind !== 'resolved' || !resolved.absolutePath) {
-    return { remote: false, sourcePath: htmlFilePath };
-  }
+  // A base that points outside the workspace still decides where every relative
+  // href resolves. Keep it: `pushRef` is what refuses to read escaped targets,
+  // so honouring it here is what lets the page report its real dependencies.
+  if (!resolved.absolutePath) return { remote: false, sourcePath: htmlFilePath };
 
   const extension = getFileExtension(resolved.absolutePath);
   const directory = extension ? parentDirectory(resolved.absolutePath) : resolved.absolutePath;

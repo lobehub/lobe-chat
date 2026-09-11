@@ -2,6 +2,7 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
+import { WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES } from '@lobechat/html-artifact/limits';
 import { getMimeType, resolveMimeType } from '@lobechat/utils/mimeType';
 
 import type {
@@ -11,6 +12,9 @@ import type {
   LocalFilePreviewResult,
   LocalFilePreviewUrlParams,
 } from './types';
+
+/** Device-side ceiling for a single publish asset, shared with the Electron main process. */
+export const EXTERNAL_PUBLISH_ASSET_MAX_BYTES = WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES;
 
 const TEXT_PREVIEW_MIME_TYPES = new Set([
   'application/graphql',
@@ -169,6 +173,11 @@ export const defaultReadExternalAssetForPublish = async ({
     const realFile = await realpath(resolvedPath);
     const stats = await stat(realFile);
     if (!stats.isFile()) return { error: 'Path is not a file', success: false };
+    // Reject by size before reading: the renderer's limit check only runs after
+    // the whole file has been read and base64-encoded into a gateway response.
+    if (stats.size > EXTERNAL_PUBLISH_ASSET_MAX_BYTES) {
+      return { error: 'File is too large to publish', success: false };
+    }
 
     const buffer = await readFile(realFile);
     return {

@@ -142,6 +142,27 @@ describe('collectLocalResourceRefs', () => {
     expect(result.refs).toEqual([{ absolutePath: '/project/shared/logo.png', href: 'logo.png' }]);
   });
 
+  it('keeps a base that escapes the workspace so its refs report the real files', () => {
+    const escaped = {
+      content: `
+        <base href="../../shared/">
+        <img src="logo.png">
+      `,
+      sourceKind: 'html' as const,
+      sourcePath: htmlFilePath,
+      workingDirectory,
+    };
+
+    expect(collectLocalResourceRefs(escaped).skipped).toContainEqual({
+      absolutePath: '/shared/logo.png',
+      href: 'logo.png',
+      reason: 'escape',
+    });
+    expect(collectLocalResourceRefs({ ...escaped, allowExternalReads: true }).refs).toEqual([
+      { absolutePath: '/shared/logo.png', href: 'logo.png' },
+    ]);
+  });
+
   it('collects css url and import refs from the stylesheet directory', () => {
     const result = collectLocalResourceRefs({
       content: `

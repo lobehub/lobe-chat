@@ -1,3 +1,4 @@
+import { EXTERNAL_PUBLISH_ASSET_MAX_BYTES } from '@lobechat/device-control/file-preview';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalFileProtocolManager } from '../LocalFileProtocolManager';
@@ -483,6 +484,22 @@ describe('LocalFileProtocolManager', () => {
         workspaceRoot: '/Users/alice/project',
       }),
     ).resolves.toBeNull();
+  });
+
+  it('rejects an external publish asset over the limit before reading it', async () => {
+    mockStat.mockResolvedValue({
+      isFile: () => true,
+      size: EXTERNAL_PUBLISH_ASSET_MAX_BYTES + 1,
+    });
+    const manager = new LocalFileProtocolManager();
+
+    await expect(
+      manager.readExternalFileForPublish({
+        filePath: '/outside/huge.mp4',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).rejects.toThrow('File is too large to publish');
+    expect(mockReadFile).not.toHaveBeenCalled();
   });
 
   it('can approve a project root derived from an already approved nested scope', async () => {

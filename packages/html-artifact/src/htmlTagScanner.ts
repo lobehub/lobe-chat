@@ -101,3 +101,22 @@ export const extractHtmlTitle = (html: string): string | undefined => {
   const title = match?.[1]?.replaceAll(/\s+/g, ' ').trim();
   return title || undefined;
 };
+
+const isRemoteHref = (href: string): boolean =>
+  /^[a-z][a-z\d+.-]*:/i.test(href) || href.startsWith('//');
+
+/**
+ * Drop a workspace-local `<base href>` from a relocated copy. Every resource
+ * href in the copy is rewritten relative to the copy's own directory, so a
+ * surviving base would send resolution back to the original layout. A remote
+ * base is left alone: it governs refs this pipeline never copies.
+ */
+export const removeLocalBaseTag = (html: string): string => {
+  const baseTag = findOpeningTag(html, 'base');
+  if (!baseTag) return html;
+
+  const href = findAttribute(baseTag.text, 'href')?.value;
+  if (!href || isRemoteHref(href)) return html;
+
+  return html.slice(0, baseTag.start) + html.slice(baseTag.end);
+};
