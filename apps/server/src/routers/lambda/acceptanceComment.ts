@@ -23,6 +23,7 @@ import {
   workspaceMembers,
 } from '@/database/schemas';
 import type { AcceptanceCommentRow } from '@/database/schemas/acceptanceComment';
+import type { AcceptanceItem } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
 import { assertAgentUsableBy } from '@/database/utils/agent-access';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
@@ -106,6 +107,11 @@ const deactivatedAuthor: AcceptanceCommentAuthor = {
  * Join author profiles and round indexes onto raw rows. Membership status is
  * read against the acceptance's own workspace so a departed teammate renders
  * as `former` rather than vanishing from the discussion.
+ *
+ * That inference only holds on a delivery nobody outside could write on. Once
+ * the link is public, most people in the discussion never had a seat in that
+ * workspace and "left" would be a lie about every one of them, so the label is
+ * dropped there rather than guessed.
  */
 const enrich = async (
   db: LobeChatDatabase,
@@ -115,6 +121,8 @@ const enrich = async (
     canModerate?: boolean;
     ownerUserId: string;
     userId?: string | null;
+    /** Only a private delivery can prove a non-member once had a seat. */
+    visibility: AcceptanceItem['visibility'];
     workspaceId: string | null;
   },
 ): Promise<AcceptanceCommentItem[]> => {
@@ -210,8 +218,10 @@ const enrich = async (
       };
     const profile = authorUserId ? profileById.get(authorUserId) : undefined;
     if (!profile) return deactivatedAuthor;
-    // Without a workspace there is no membership to lapse from.
-    const active = !scope.workspaceId || activeIds.has(profile.id);
+    // Without a workspace there is no membership to lapse from, and on a public
+    // delivery a non-member is an invited reader rather than a departed one.
+    const active =
+      !scope.workspaceId || scope.visibility !== 'private' || activeIds.has(profile.id);
     return { ...profile, status: active ? 'active' : 'former', type: 'user' as const };
   };
 
@@ -426,6 +436,7 @@ export const acceptanceCommentRouter = router({
         canModerate: access.canApprove,
         ownerUserId: access.acceptance.userId,
         userId: ctx.userId,
+        visibility: access.acceptance.visibility,
         workspaceId: access.acceptance.workspaceId,
       });
       return { data: item, success: true };
@@ -478,6 +489,7 @@ export const acceptanceCommentRouter = router({
         canModerate: access.canApprove,
         ownerUserId: access.acceptance.userId,
         userId: ctx.userId,
+        visibility: access.acceptance.visibility,
         workspaceId: access.acceptance.workspaceId,
       });
       return { canApprove: access.canApprove, canComment: access.canComment, items };
