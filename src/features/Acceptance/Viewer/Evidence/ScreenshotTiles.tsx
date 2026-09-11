@@ -63,14 +63,16 @@ const styles = createStaticStyles(({ css }) => ({
     inset-inline-end: -10px;
 
     display: inline-flex;
-    gap: 2px;
     align-items: center;
     justify-content: center;
 
-    padding-block: 2px;
-    padding-inline: 5px;
+    /* A circle, not a pill: the face inside is round, and a rounded rectangle
+       hugging it reads as a squashed oval. Same 18px as the numbered badge on
+       the opposite corner, so the two corners of one box match. */
+    width: 18px;
+    height: 18px;
     border: none;
-    border-radius: 999px;
+    border-radius: 50%;
 
     font-size: 10px;
     font-weight: 600;
