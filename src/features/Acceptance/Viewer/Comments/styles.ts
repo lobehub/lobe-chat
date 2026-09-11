@@ -141,6 +141,22 @@ export const styles = createStaticStyles(({ css }) => ({
     font-size: 12px;
     color: ${cssVar.colorTextTertiary};
   `,
+  /** The timestamp doubles as the permalink: quiet until you reach for it. */
+  timeLink: css`
+    cursor: pointer;
+
+    padding: 0;
+    border: none;
+
+    background: none;
+
+    transition: color ${cssVar.motionDurationFast};
+
+    &:hover {
+      color: ${cssVar.colorText};
+      text-decoration: underline;
+    }
+  `,
   panelBody: css`
     padding-block-start: 6px;
 

@@ -96,6 +96,7 @@
   "acceptance.comments.commentEvidence": "Comment on a region",
   "acceptance.comments.commented": "commented {{time}}",
   "acceptance.comments.copyLink": "Copy link",
+  "acceptance.comments.copyLinkHint": "{{time}} · click to copy this comment’s link",
   "acceptance.comments.createFailed": "Failed to post the comment. Please try again.",
   "acceptance.comments.delete": "Delete",
   "acceptance.comments.deleteConfirm": "Delete this comment?",

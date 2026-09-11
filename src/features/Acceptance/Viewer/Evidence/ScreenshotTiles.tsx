@@ -155,6 +155,18 @@ const styles = createStaticStyles(({ css }) => ({
       inset-inline: calc(100% + 12px) auto;
     }
   `,
+  /** The avatar fills the pin; the pin's own colour stays visible as its rim. */
+  pinFace: css`
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+  `,
+  pinInitial: css`
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+  `,
   /** Positioning context for the floating note; the frame itself clips. */
   stage: css`
     position: relative;
@@ -226,7 +238,15 @@ const OverlayRect = memo<OverlayRectProps>(
             type={'button'}
             onClick={() => onToggle(index)}
           >
-            <Icon icon={annotation.resolved ? Check : MessageSquare} size={10} />
+            {annotation.resolved ? (
+              <Icon icon={Check} size={10} />
+            ) : (
+              <AnnotationFace
+                name={annotation.authorName}
+                size={14}
+                src={annotation.authorAvatar}
+              />
+            )}
           </button>
         )}
       </div>
@@ -235,6 +255,35 @@ const OverlayRect = memo<OverlayRectProps>(
 );
 
 OverlayRect.displayName = 'AcceptanceOverlayRect';
+
+/**
+ * The author inside a pin. An avatar when we have one, their initial when we
+ * do not, and the speech bubble only when the author is unknown — a pin with
+ * no face is indistinguishable from the next pin along.
+ */
+const AnnotationFace = memo<{ name?: string; size?: number; src?: string | null }>(
+  ({ name, size = 18, src }) => {
+    if (src)
+      return (
+        <img
+          alt={name ?? ''}
+          className={styles.pinFace}
+          src={src}
+          style={{ height: size, width: size }}
+        />
+      );
+    const initial = name?.trim().slice(0, 1);
+    if (initial)
+      return (
+        <span className={styles.pinInitial} style={{ fontSize: size < 16 ? 9 : 11 }}>
+          {initial.toUpperCase()}
+        </span>
+      );
+    return <Icon icon={MessageSquare} size={size < 16 ? 10 : 12} />;
+  },
+);
+
+AnnotationFace.displayName = 'AcceptanceAnnotationFace';
 
 interface ScreenshotTilesProps {
   alt: string;
@@ -311,7 +360,11 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
             }}
             onClick={() => toggleNote(index)}
           >
-            <Icon icon={annotation.resolved ? Check : MessageSquare} size={12} />
+            {annotation.resolved ? (
+              <Icon icon={Check} size={12} />
+            ) : (
+              <AnnotationFace name={annotation.authorName} src={annotation.authorAvatar} />
+            )}
           </button>
         ) : null,
       );

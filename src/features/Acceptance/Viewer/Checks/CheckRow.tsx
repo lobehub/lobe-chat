@@ -31,7 +31,7 @@ import { hasRenderableEvidence, readVisualizationManifest } from '../../Report/v
 import { VisualizationDeltaBadge, VisualizationRenderer } from '../../Report/VisualizationRenderer';
 import { checkDisplayTitle } from '../../utils';
 import { useOptionalAcceptanceScope } from '../AcceptanceScope';
-import { acceptanceAuthorColor } from '../Comments/authorColor';
+import { useAcceptanceAuthorColor } from '../Comments/authorColor';
 import { commentAuthorName } from '../Comments/CommentCard';
 import CommentThread from '../Comments/CommentThread';
 import { openEvidenceCommentModal } from '../Comments/EvidenceCommentModal';
@@ -153,6 +153,7 @@ export const AcceptanceCheckRow = memo<{
     const scope = useOptionalAcceptanceScope();
     const { data: bundle } = useAcceptanceBundle(scope?.acceptanceId ?? '');
     const comments = useAcceptanceComments(scope?.acceptanceId);
+    const authorColor = useAcceptanceAuthorColor();
     const viewerId = useUserStore(userProfileSelectors.userId);
     /**
      * Closing a note is a verdict on it: whoever raised it may close their own,
@@ -203,8 +204,9 @@ export const AcceptanceCheckRow = memo<{
         if (!evidenceId || !rect || deletedAt) return;
         const bucket = map.get(evidenceId) ?? [];
         bucket.push({
+          authorAvatar: author.avatar,
           authorName: commentAuthorName(author),
-          color: acceptanceAuthorColor(authorUserId),
+          color: authorColor(authorUserId),
           comment: content,
           label: index + 1,
           panel: (
@@ -222,7 +224,7 @@ export const AcceptanceCheckRow = memo<{
       });
       return map.size > 0 ? map : undefined;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proposalOverlays, checkThreads, comments.canComment, canResolveThread]);
+    }, [proposalOverlays, checkThreads, comments.canComment, canResolveThread, authorColor]);
     const canCommentEvidence =
       comments.canComment && Boolean(check.result) && hasAnnotatableEvidence(check);
     const openEvidenceComment = () =>
