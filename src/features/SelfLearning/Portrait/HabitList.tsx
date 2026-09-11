@@ -163,12 +163,11 @@ const HabitRow = memo<HabitRowProps>(({ agentId, domainTitle, habit, onChanged, 
         <Popover
           // Long enough that dragging the pointer down the list does not fetch every row.
           openDelay={420}
-          // Above the row rather than below it: the row's own hint sits directly beneath the
-          // title, so a card there buries the line the reader just came from.
-          placement={'topRight'}
-          // This stack never flips a popup to the opposite side, so the card has to fit in the
-          // space above the row; the padding keeps it clear of the viewport edge.
-          positionerProps={{ collisionPadding: 12 }}
+          // Keep the row visible while the reader moves into the preview beneath it.
+          placement={'bottomRight'}
+          // The product direction is deliberately stable: fit/scroll in the available space
+          // below instead of letting Base UI flip the card above rows near the viewport edge.
+          positionerProps={{ collisionAvoidance: { side: 'none' }, collisionPadding: 12 }}
           trigger={'hover'}
           content={
             <LessonPreview

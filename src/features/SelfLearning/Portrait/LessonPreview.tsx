@@ -26,9 +26,9 @@ const styles = createStaticStyles(({ css }) => ({
     /* less the popup's own chrome, which sits outside this element */
 
     /*
-     * The card is anchored above the row, and this stack never flips a popup to the opposite
-     * side — an explicit collisionAvoidance side:'flip' was measured to do nothing. So for a row
-     * high on the page the card has to fit in the space above it or its tail becomes unreachable.
+     * The card is anchored below the row with side-axis collision flipping disabled. For a row
+     * low on the page it therefore has to fit in the space below it or its tail becomes
+     * unreachable.
      */
     max-height: calc(var(--available-height, 100dvh) - 16px);
   `,
@@ -64,7 +64,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-/** Kept low so the card fits above the row it describes; the rest is one line away. */
+/** Kept low so the card fits below the row it describes; the rest is one line away. */
 const MAX_EVIDENCE = 2;
 
 interface LessonPreviewProps {
