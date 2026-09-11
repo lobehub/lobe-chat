@@ -830,7 +830,16 @@ export function registerBotCommand(program: Command) {
       }
 
       const client = await getTrpcClient();
-      await client.agentBotProvider.delete.mutate({ id: botId });
+      const removed = await client.agentBotProvider.delete.mutate({ id: botId });
+
+      // The server returns the rows it removed. Printing the checkmark without
+      // reading it is how a delete that matched nothing used to read as done.
+      if (Array.isArray(removed) && removed.length === 0) {
+        console.error(`${pc.red('✗')} Nothing removed — bot ${pc.bold(botId)} still exists`);
+        process.exitCode = 1;
+        return;
+      }
+
       console.log(`${pc.green('✓')} Removed bot ${pc.bold(botId)}`);
     });
 

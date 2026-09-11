@@ -11,6 +11,8 @@ import {
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentBotProviderModel } from '@/database/models/agentBotProvider';
+import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
+import type { LobeChatDatabase } from '@/database/type';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
@@ -51,6 +53,76 @@ const agentBotProviderProcedure = wsCompatProcedure.use(serverDatabase).use(asyn
 const agentBotProviderProcedureWrite = agentBotProviderProcedure.use(
   withScopedPermission('agent:update'),
 );
+
+const BOT_NOT_FOUND_MESSAGE = 'Bot integration not found';
+
+/**
+ * Gate the cross-scope reclaim on the workspace the binding actually lives in.
+ *
+ * The procedure's `agent:update` scope is evaluated against the caller's active
+ * workspace, which by definition is not the one holding a stranded row. Being
+ * its original creator says nothing about present access, so re-check
+ * membership where it counts: an active, non-viewer seat in the owning
+ * workspace. A binding with no workspace is personal, and the creator check
+ * already settled it.
+ */
+async function assertStrandedWorkspaceStillManageable(
+  ctx: { serverDB: LobeChatDatabase; userId: string },
+  workspaceId: string | null,
+): Promise<void> {
+  if (!workspaceId) return;
+
+  const member = await new WorkspaceMemberModel(ctx.serverDB, ctx.userId).getMember(
+    workspaceId,
+    ctx.userId,
+  );
+
+  if (member && member.role !== 'viewer') return;
+
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message: `This bot belongs to workspace ${workspaceId}, and you no longer have permission to manage it there. Ask a member of that workspace to remove the binding.`,
+  });
+}
+
+/**
+ * Turn a unique-index violation into something the caller can act on.
+ *
+ * `(platform, applicationId)` is unique across the whole deployment because it
+ * is the webhook routing key, while `list` only ever shows the caller's active
+ * scope. The old message asserted "already registered" without looking, so a
+ * holder sitting in the caller's other scope — invisible to `list`, untouched
+ * by `remove` — read as a phantom constraint with nothing behind it.
+ *
+ * Resolve the actual holder and say where it is. A binding the caller created
+ * is theirs to know about in full; anyone else's is reported as taken without
+ * naming the agent, the workspace or the owner.
+ */
+async function describeApplicationIdConflict(
+  ctx: { serverDB: LobeChatDatabase; userId: string },
+  platform: string,
+  applicationId: string,
+): Promise<string> {
+  const head = `Application ID "${applicationId}" is already bound on ${platform}`;
+  const holder = await AgentBotProviderModel.findByPlatformAndAppId(
+    ctx.serverDB,
+    platform,
+    applicationId,
+  );
+
+  // Lost the race with a concurrent delete — the key is free again.
+  if (!holder) return `${head}. Retry the request.`;
+
+  if (holder.userId !== ctx.userId) {
+    return `${head} by another account. An application ID can only be bound to one agent, so ask whoever set it up to remove their binding first.`;
+  }
+
+  const where = holder.workspaceId
+    ? `workspace ${holder.workspaceId}`
+    : 'your personal (non-workspace) scope';
+
+  return `${head} to your agent ${holder.agentId} in ${where}. Remove that binding first: lh bot remove ${holder.id}. If it does not appear in \`lh bot list\`, you are listing a different scope — the binding is still there and still holds the ID.`;
+}
 
 /**
  * Wrap the shared access-policy validator so violations surface as
@@ -147,7 +219,7 @@ export const agentBotProviderRouter = router({
         if (e?.cause?.code === '23505') {
           throw new TRPCError({
             code: 'CONFLICT',
-            message: `A bot with application ID "${input.applicationId}" is already registered on ${input.platform}. Each application ID can only be used once.`,
+            message: await describeApplicationIdConflict(ctx, input.platform, input.applicationId),
           });
         }
         throw e;
@@ -161,16 +233,46 @@ export const agentBotProviderRouter = router({
       const existing = await ctx.agentBotProviderModel.findById(input.id);
       if (existing) assertWorkspaceRowManageable(ctx, existing.userId, 'bot provider');
 
-      const result = await ctx.agentBotProviderModel.delete(input.id);
+      let deleted = await ctx.agentBotProviderModel.delete(input.id);
+      // Only the routing identifiers are needed downstream, so keep this
+      // independent of whether the row came back decrypted or raw.
+      let routing = existing && {
+        applicationId: existing.applicationId,
+        platform: existing.platform,
+      };
 
-      // Stop running client and invalidate cached bot
-      if (existing) {
-        const service = new GatewayService();
-        await service.stopClient(existing.platform, existing.applicationId, ctx.userId);
-        await getBotMessageRouter().invalidateBot(existing.platform, existing.applicationId);
+      // Nothing matched in the caller's scope. The binding may still exist in
+      // their other scope — a personal session cannot see a workspace row and
+      // vice versa — where it stays invisible to `list` yet keeps holding the
+      // global (platform, applicationId) key. Let the creator reclaim it from
+      // either side rather than reporting a delete that never happened.
+      if (deleted.length === 0) {
+        const stranded = await ctx.agentBotProviderModel.findByIdAcrossScopes(input.id);
+
+        // A binding owned by someone else is not the caller's to delete, and
+        // saying so would confirm it exists — both answer NOT_FOUND.
+        if (!stranded || stranded.userId !== ctx.userId) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: BOT_NOT_FOUND_MESSAGE });
+        }
+
+        // Having created it is not enough when it lives in a workspace: the
+        // procedure's `agent:update` gate only covers the *active* scope, so
+        // without this a creator who has since left that workspace could reach
+        // in from personal scope and kill an integration the team still runs.
+        await assertStrandedWorkspaceStillManageable(ctx, stranded.workspaceId);
+
+        deleted = await ctx.agentBotProviderModel.deleteAcrossScopes(input.id);
+        routing = { applicationId: stranded.applicationId, platform: stranded.platform };
       }
 
-      return result;
+      // Stop running client and invalidate cached bot
+      if (routing) {
+        const service = new GatewayService();
+        await service.stopClient(routing.platform, routing.applicationId, ctx.userId);
+        await getBotMessageRouter().invalidateBot(routing.platform, routing.applicationId);
+      }
+
+      return deleted;
     }),
 
   getByAgentId: agentBotProviderProcedure
