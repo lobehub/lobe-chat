@@ -7,16 +7,19 @@ import { useCallback } from 'react';
  * author gets a stable hue from the design system's preset scale, so the box on
  * the image, the ring on their avatar and the marker badge always agree.
  *
- * Theme tokens rather than raw hexes, and a different STEP per theme. The
- * scale's steps are not symmetrical: step 10 is the solid, readable tone on a
- * light page (cyan lands near #2fa28a) but a near-white tint on a dark one
- * (#bdf7e4), which glows over a dark screenshot. Step 7 is the solid tone at
- * the dark end (#55bca4). Picking per theme is what keeps one mark equally
- * legible and equally quiet in both.
+ * Two separate problems meet on this box, and each has its own answer.
  *
- * The semantic hues are deliberately absent: `volcano` is `colorError` and
- * `green` is `colorSuccess`, and a person's box wearing either would read as a
- * verdict on the evidence rather than as an author.
+ * The token resolves per theme, and the same step is not the same tone on both
+ * ends: step 10 is the mid-tone solid in light (#2fa28a for cyan) but a
+ * near-white tint in dark (#bdf7e4). Reading one step in both themes therefore
+ * hands the dark page a glowing mark, so the step is picked per theme — 10 in
+ * light, 7 in dark — to land on the mid-tone either way.
+ *
+ * That still says nothing about whether the mark is legible, because it does
+ * not sit on the page: it sits on the evidence IMAGE, which can be a white
+ * report or a dark IDE capture no matter which theme the reader is in. No hue
+ * survives both, so the box carries its own two-sided halo (see `rect`) and the
+ * hue is left to say who, not to carry contrast.
  */
 export const ACCEPTANCE_AUTHOR_COLORS = [
   cssVar.geekblue10,
@@ -29,7 +32,7 @@ export const ACCEPTANCE_AUTHOR_COLORS = [
   cssVar.blue10,
 ] as const;
 
-/** Same hues, one step in from the light end — the dark page's readable tone. */
+/** The same hues at the step that is mid-tone on the dark end of the scale. */
 export const ACCEPTANCE_AUTHOR_COLORS_DARK = [
   cssVar.geekblue7,
   cssVar.magenta7,
@@ -41,7 +44,7 @@ export const ACCEPTANCE_AUTHOR_COLORS_DARK = [
   cssVar.blue7,
 ] as const;
 
-/** Deterministic, order-independent: the same author keeps their colour across rounds and reloads. */
+/** Deterministic, order-independent: the same author keeps their slot across rounds and reloads. */
 const authorSlot = (authorUserId?: string | null): number => {
   if (!authorUserId) return 0;
   let hash = 0;

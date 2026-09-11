@@ -35,23 +35,20 @@ describe('acceptanceAuthorColor', () => {
     for (const color of ACCEPTANCE_AUTHOR_COLORS) expect(color).toMatch(/-10\)$/);
   });
 
-  // Step 10 is near-white at the dark end (#bdf7e4 for cyan) and glows over a
-  // dark screenshot; step 7 is the readable tone there.
-  it('steps down for the dark page and keeps the hues aligned', () => {
+  // Step 10 resolves to a near-white tint through the dark theme (#bdf7e4 for
+  // cyan) and glows over a dark capture; step 7 is the mid-tone at that end.
+  it('picks the step that is mid-tone at each end of the scale', () => {
     expect(ACCEPTANCE_AUTHOR_COLORS_DARK).toHaveLength(ACCEPTANCE_AUTHOR_COLORS.length);
     for (const color of ACCEPTANCE_AUTHOR_COLORS_DARK) expect(color).toMatch(/-7\)$/);
     for (const [index, light] of ACCEPTANCE_AUTHOR_COLORS.entries())
       expect(ACCEPTANCE_AUTHOR_COLORS_DARK[index]).toBe(light.replace('-10)', '-7)'));
   });
 
-  it('gives one author the same slot in both themes', () => {
-    for (const id of ['user_1', 'user_2', '文一']) {
-      const light = acceptanceAuthorColor(id);
-      const dark = acceptanceAuthorColor(id, 'dark');
-      expect(ACCEPTANCE_AUTHOR_COLORS.indexOf(light as never)).toBe(
-        ACCEPTANCE_AUTHOR_COLORS_DARK.indexOf(dark as never),
+  it('keeps one author in one slot whichever theme reads it', () => {
+    for (const id of ['user_1', 'user_2', '文一'])
+      expect(ACCEPTANCE_AUTHOR_COLORS.indexOf(acceptanceAuthorColor(id) as never)).toBe(
+        ACCEPTANCE_AUTHOR_COLORS_DARK.indexOf(acceptanceAuthorColor(id, 'dark') as never),
       );
-    }
   });
 
   it('leaves the verdict colours to verdicts', () => {
