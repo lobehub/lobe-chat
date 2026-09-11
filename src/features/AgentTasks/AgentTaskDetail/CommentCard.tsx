@@ -20,6 +20,7 @@ import { LinearFileCard } from '@/features/EditorCanvas/LinearFilePlugin';
 import { useWorkspaceCommentMentionOption } from '@/features/Portal/TopicComments/useWorkspaceCommentMentionOption';
 import { useActivityTime } from '@/hooks/useActivityTime';
 import { useTaskStore } from '@/store/task';
+import { isOptimisticActivityId } from '@/store/task/slices/detail/optimisticActivity';
 
 import { styles } from '../shared/style';
 
@@ -194,7 +195,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
         </Markdown>
       )}
 
-      {!isEditing && commentId && (
+      {!isEditing && commentId && !isOptimisticActivityId(commentId) && (
         <div className={`${styles.commentActions} comment-actions`}>
           <DropdownMenu items={menuItems}>
             <ActionIcon icon={MoreHorizontal} size={'small'} />

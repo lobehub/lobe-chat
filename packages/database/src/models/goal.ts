@@ -1,5 +1,7 @@
+import { randomUUID } from 'node:crypto';
+
 import type { GoalStatus } from '@lobechat/const/goal';
-import type { GoalNodeStatus } from '@lobechat/types';
+import type { GoalNodeStatus, GoalSupervisionState } from '@lobechat/types';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
 import type { GoalItem, NewGoal } from '../schemas/goal';
@@ -73,6 +75,17 @@ export class GoalModel {
     return row;
   };
 
+  /** Lock the owned Goal while committing a supervisor transition. Call inside a transaction. */
+  lockById = async (id: string): Promise<GoalItem | undefined> => {
+    const [row] = await this.db
+      .select()
+      .from(goals)
+      .where(and(eq(goals.id, id), this.ownership()))
+      .for('update')
+      .limit(1);
+    return row;
+  };
+
   /** The Goal Graph that owns this Task, or undefined when the task is not graph-managed. */
   findByGraphTask = async (taskId: string): Promise<GoalItem | undefined> => {
     const [row] = await this.db
@@ -84,32 +97,145 @@ export class GoalModel {
     return row?.goal;
   };
 
+  /**
+   * Patch only `config.pausedBy`, leaving every other key in the column alone.
+   *
+   * The coordinator writes this marker from a tick while the user edits budget
+   * and acceptance criteria on the same JSONB column from the goal page. A
+   * read-modify-write of the whole config would let whichever landed second
+   * discard the other's work — the user's new criteria, or the marker a
+   * measured-acceptance goal needs to ever reopen.
+   */
+  updatePauseReason = async (id: string, reason: string | undefined): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config: reason
+          ? sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{pausedBy}', ${JSON.stringify(reason)}::jsonb)`
+          : sql`COALESCE(${goals.config}, '{}'::jsonb) - 'pausedBy'`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /** Compare-and-swap only the supervisor namespace; concurrent budget edits survive. */
+  updateSupervisorState = async (
+    id: string,
+    expectedRevision: number,
+    state: Omit<GoalSupervisionState, 'revision'>,
+  ): Promise<GoalSupervisionState | undefined> => {
+    const next = { ...state, revision: expectedRevision + 1 };
+    const [row] = await this.db
+      .update(goals)
+      .set({
+        config: sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{supervisorState}', ${JSON.stringify(next)}::jsonb)`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`COALESCE((${goals.config}->'supervisorState'->>'revision')::integer, 0) = ${expectedRevision}`,
+        ),
+      )
+      .returning({ id: goals.id });
+    return row ? next : undefined;
+  };
+
   update = async (id: string, value: Partial<Omit<GoalItem, 'id' | 'userId'>>) => {
     const [row] = await this.db
       .update(goals)
-      .set({ ...value, updatedAt: new Date() })
+      .set({
+        ...value,
+        // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
+        // ownership always comes from the current row, never that snapshot, and
+        // policy edits cannot replace the concurrently written incident ledger.
+        ...(value.config !== undefined
+          ? {
+              config: sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol' - 'supervisorState' - 'managerState')
+                || jsonb_strip_nulls(jsonb_build_object(
+                  'planningCheckpoint', ${goals.config}->'planningCheckpoint',
+                  'planningProtocol', ${goals.config}->'planningProtocol',
+                  'supervisorState', ${goals.config}->'supervisorState',
+                  'managerState', ${goals.config}->'managerState'
+                ))`,
+            }
+          : {}),
+        updatedAt: new Date(),
+      })
       .where(and(eq(goals.id, id), this.ownership()))
       .returning();
     return row as GoalItem | undefined;
   };
 
-  /**
-   * Atomically take `planning → running` as the decomposition claim: several
-   * concurrent advances can all see an unplanned goal, and only the one this
-   * conditional write succeeds for may seed the graph. `startedAt` is stamped
-   * here because the later dispatch transition becomes a same-status no-op.
-   */
-  claimPlanning = async (id: string) => {
+  /** Call inside a transaction when a coordinator needs to serialize a write. */
+  findByIdForUpdate = async (id: string) => {
     const [row] = await this.db
+      .select()
+      .from(goals)
+      .where(and(eq(goals.id, id), this.ownership()))
+      .limit(1)
+      .for('update');
+    return row;
+  };
+
+  /** Claim a bounded planning lease without holding a connection during the model call. */
+  claimPlanning = async (id: string) =>
+    this.db.transaction(async (tx) => {
+      const model = new GoalModel(tx, this.userId, this.workspaceId);
+      const goal = await model.findByIdForUpdate(id);
+      if (!goal || !['planning', 'running'].includes(goal.status)) return undefined;
+      // A running goal without lease provenance may still have an unfenced
+      // pre-lease worker in flight. Never infer abandonment from elapsed time.
+      // See docs/development/goal-planning-lease-rollout.md before rollout/rollback.
+      if (
+        goal.status === 'running' &&
+        !goal.config?.planningProtocol &&
+        !goal.config?.planningCheckpoint
+      )
+        return undefined;
+      const now = Date.now();
+      if (
+        goal.config?.planningCheckpoint &&
+        Date.parse(goal.config.planningCheckpoint.expiresAt) > now
+      )
+        return undefined;
+      const [task] = await tx
+        .select({ id: goalNodes.id })
+        .from(goalNodes)
+        .where(and(eq(goalNodes.goalId, id), eq(goalNodes.kind, 'task')))
+        .limit(1);
+      if (task) return undefined;
+      const checkpoint = {
+        token: randomUUID(),
+        expiresAt: new Date(now + 5 * 60_000).toISOString(),
+      };
+      await tx
+        .update(goals)
+        .set({
+          config: { ...goal.config, planningCheckpoint: checkpoint, planningProtocol: 'lease-v1' },
+          startedAt: goal.startedAt ?? new Date(now),
+          status: 'running',
+          updatedAt: new Date(now),
+        })
+        .where(eq(goals.id, id));
+      return { ...checkpoint, previousStatus: goal.status };
+    });
+
+  /** A late worker must never clear a newer worker's lease or other configuration. */
+  releasePlanning = async (id: string, token: string) => {
+    await this.db
       .update(goals)
       .set({
-        startedAt: sql`coalesce(${goals.startedAt}, now())`,
-        status: 'running',
-        updatedAt: new Date(),
+        config: sql`${goals.config} - 'planningCheckpoint'`,
       })
-      .where(and(eq(goals.id, id), eq(goals.status, 'planning'), this.ownership()))
-      .returning();
-    return row as GoalItem | undefined;
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`${goals.config}->'planningCheckpoint'->>'token' = ${token}`,
+        ),
+      );
   };
 
   /**

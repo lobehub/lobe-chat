@@ -17,8 +17,9 @@ import type {
   ToolDiscoveryConfig,
   TopicReferenceItem,
   UserMemoryData,
+  WorkspaceContext,
 } from '@lobechat/context-engine';
-import type { PageContentContext } from '@lobechat/prompts';
+import type { AgentIdentityContext, PageContentContext } from '@lobechat/prompts';
 import type {
   ExpertiseContextSnapshot,
   RuntimeAdditionalContextFragment,
@@ -105,6 +106,8 @@ export interface ServerMessagesEngineParams {
   capabilities?: ServerModelCapabilities;
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
+  /** App origin + workspace slug so the model writes links that resolve to the right scope */
+  workspaceContext?: WorkspaceContext;
   /** Discord context for injecting channel/guild info */
   discordContext?: DiscordContext;
   // ========== Eval context ==========
@@ -163,6 +166,9 @@ export interface ServerMessagesEngineParams {
 
   /** System role */
   systemRole?: string;
+
+  /** The agent's identity (personal name + role title) for self-introduction */
+  agentIdentity?: AgentIdentityContext;
 
   // ========== Skills ==========
   /** Skills configuration for <available_skills> injection */

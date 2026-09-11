@@ -65,6 +65,51 @@ export interface TaskSummary {
  * resolve a relative path against. Omit it only for in-app (SPA) rendering,
  * where a relative path resolves against the current origin and is more durable.
  */
+/**
+ * One rule for naming an assignment participant, so every task-detail surface
+ * tells the same story about who acted.
+ *
+ * The three states are deliberately distinct: no author means the system acted
+ * (the runner assigning its fallback agent); a recorded id with no live row is
+ * deleted or invisible to this reader; a resolved row with an empty display
+ * name is still a real participant.
+ */
+export const assignmentParticipantLabel = (
+  party?: { id: string; name?: string | null; unresolved?: boolean } | null,
+  absentLabel = 'unassigned',
+): string => {
+  if (!party) return absentLabel;
+  // A recorded participant whose row is gone keeps its id when one survived;
+  // a deleted actor leaves no id at all and must still read as a person.
+  return party.name || party.id || (party.unresolved ? 'a deleted participant' : 'unnamed');
+};
+
+/** Render one side of a property change for a text surface. */
+export const formatPropertyValue = (field: string | undefined, value: unknown): string => {
+  if (value === null || value === undefined) return field === 'automation' ? 'off' : 'none';
+  if (field === 'priority') return priorityLabel(value as number);
+  if (typeof value === 'object') {
+    const v = value as {
+      heartbeatInterval?: number | null;
+      maxExecutions?: number | null;
+      mode?: string | null;
+      schedulePattern?: string | null;
+      scheduleTimezone?: string | null;
+    };
+    if (v.mode === 'schedule') {
+      // Every part a user can edit shows, or a timezone-only or cap-only
+      // change reads as "from X to X".
+      const parts = [v.schedulePattern ?? '?'];
+      if (v.scheduleTimezone) parts.push(v.scheduleTimezone);
+      if (typeof v.maxExecutions === 'number') parts.push(`max ${v.maxExecutions}`);
+      return `schedule(${parts.join(', ')})`;
+    }
+    if (v.mode === 'heartbeat') return `heartbeat(${v.heartbeatInterval ?? '?'}s)`;
+    return JSON.stringify(value);
+  }
+  return String(value);
+};
+
 export const taskDetailHref = (identifier: string, baseUrl?: string): string => {
   const path = `/task/${identifier}`;
   return baseUrl ? `${baseUrl.replace(/\/$/, '')}${path}` : path;
@@ -296,6 +341,20 @@ export const formatTaskDetail = (t: TaskDetailData): string => {
         const content = act.content || '';
         const truncated = content.length > 80 ? content.slice(0, 80) + '...' : content;
         lines.push(`  💭 ${act.time || ''} ${author} ${truncated}${idSuffix}`);
+      } else if (act.type === 'property') {
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        const change = act.propertyChange;
+        lines.push(
+          `  🔁 ${act.time || ''} ${actor} changed ${change?.field}: ${formatPropertyValue(change?.field, change?.from)} → ${formatPropertyValue(change?.field, change?.to)}${idSuffix}`,
+        );
+      } else if (act.type === 'assignment') {
+        // Who owns the task changed hands; a formatter that drops the event
+        // shows a reader an assignee they cannot account for.
+        const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        lines.push(
+          `  👥 ${act.time || ''} ${actor} set ${slot} assignee: ${assignmentParticipantLabel(act.assignment?.from)} → ${assignmentParticipantLabel(act.assignment?.to)}${idSuffix}`,
+        );
       }
     }
   }
@@ -478,6 +537,8 @@ export interface TaskRunPromptWorkspaceNode {
  * up without re-discovering everything.
  */
 export interface TaskRunPromptGoalLoop {
+  /** Feedback from the automatic Acceptance review of the previous delivery. */
+  automaticReviewFeedback?: string;
   /** Checks that did not pass in the previous round, with the verifier's why/suggestion. */
   failedChecks?: Array<{ title: string; why?: string }>;
   /** Round budget. Null/undefined = uncapped. */
@@ -691,7 +752,12 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
   }
 
   // Verify — delivery acceptance (builder self-evidence)
-  if (task.verify?.enabled && (task.verify.criteria?.length || task.verify.requirement)) {
+  //
+  // Gated on `enabled` alone: every Task that carries an Acceptance runs it
+  // in-Task. A criteria-less Acceptance still materializes a plan at run start,
+  // and the builder reads those criterion ids at runtime — so having nothing to
+  // print here is not a reason to withhold the instruction.
+  if (task.verify?.enabled) {
     taskLines.push('');
     taskLines.push(
       `Verify — delivery acceptance (maxIterations: ${task.verify.maxIterations || 3}):`,
@@ -710,10 +776,29 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
       }
     }
     taskLines.push(
+      '  Run the Acceptance inside this Task, not after it: drive the real product surface and submit each artifact as soon as the criterion it proves is provable.',
+    );
+    taskLines.push(
+      '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh verify plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
+    );
+    // Two builder shapes, two toolchains. The portable `acceptance` skill is
+    // pulled to disk by external CLI builders and is deliberately absent from
+    // `builtinSkills`, so naming it unconditionally hands the in-product agent
+    // an instruction it cannot act on.
+    taskLines.push(
+      '  With a shell: `lh acceptance install` gives you the `acceptance` skill, and `lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item <checkItemId> --type screenshot --file <path>` uploads a captured artifact.',
+    );
+    taskLines.push(
+      '  Without a shell: drive the product with your own tools and cite artifacts by id through `submitEvidence`.',
+    );
+    taskLines.push(
+      '  A criterion with a visible surface is proved by a screenshot or recording, and `screenshot`/`video` evidence must reference a real artifact by fileId. Never label prose as a visual artifact: if you could not capture one, say what you observed as `text` and name the blocker.',
+    );
+    taskLines.push(
       '  Produce concrete evidence while you work, and include artifact paths, commands, and observed results in your final response.',
     );
     taskLines.push(
-      '  Do not judge the Acceptance. A dedicated post-run phase will ask you to submit the evidence you produced; an independent verifier decides whether this Task is complete.',
+      '  Do not judge the Acceptance — submit evidence only; an independent verifier decides whether this Task is complete.',
     );
   }
 
@@ -724,9 +809,16 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     taskLines.push(
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
-    if (goalLoop.rejectComment) {
-      taskLines.push('  User feedback on the last delivery (address this first):');
-      taskLines.push(`    "${goalLoop.rejectComment}"`);
+    const reviewFeedback = [
+      goalLoop.rejectComment,
+      goalLoop.automaticReviewFeedback &&
+        `Automatic Acceptance review:\n${goalLoop.automaticReviewFeedback}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    if (reviewFeedback) {
+      taskLines.push('  Review feedback on the last delivery (address this first):');
+      taskLines.push(`    "${reviewFeedback}"`);
     }
     if (goalLoop.failedChecks && goalLoop.failedChecks.length > 0) {
       taskLines.push('  Unresolved checks from the last round:');

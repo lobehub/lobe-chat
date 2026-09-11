@@ -440,6 +440,8 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }
 
       if (Object.keys(updateData).length > 0) {
+        // Attribution rides the caller's context, not this payload — see
+        // `AuthContext.actingAgentId`.
         ops.push(taskCaller().update({ id: task.id, ...updateData }));
       }
 
@@ -973,7 +975,10 @@ export const taskRuntime: ServerRuntimeRegistration = {
       agentModel: new AgentModel(db, userId),
       taskModel: new TaskModel(db, userId),
       taskService: new TaskService(db, userId),
-      taskCaller: taskRouter.createCaller({ userId }),
+      // `actingAgentId` names the agent for durable attribution (task
+      // reassignment activity). Server-side only by contract — it must never
+      // reach the router through a client-supplied field.
+      taskCaller: taskRouter.createCaller({ actingAgentId: agentId, userId }),
     } as TaskRuntimeDeps;
 
     let resolved = false;
@@ -989,7 +994,14 @@ export const taskRuntime: ServerRuntimeRegistration = {
       deps.agentModel = new AgentModel(db, userId, wsId);
       deps.taskModel = new TaskModel(db, userId, wsId);
       deps.taskService = new TaskService(db, userId, wsId);
-      deps.taskCaller = taskRouter.createCaller({ userId, workspaceId: wsId });
+      // MUST keep `actingAgentId`: this replaces the caller built above, and
+      // every exported method awaits `ensureModels()` first — dropping it here
+      // silently attributes every agent-driven task edit to the session user.
+      deps.taskCaller = taskRouter.createCaller({
+        actingAgentId: agentId,
+        userId,
+        workspaceId: wsId,
+      });
     };
 
     const baseRuntime = createTaskRuntime(deps);

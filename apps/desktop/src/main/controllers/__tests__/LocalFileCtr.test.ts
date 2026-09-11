@@ -7,8 +7,8 @@ import { type App } from '@/core/App';
 
 import LocalFileCtr from '../LocalFileCtr';
 
-const { execaMock, ipcMainHandleMock, fetchMock } = vi.hoisted(() => ({
-  execaMock: vi.fn(),
+const { getProjectFileIndexMock, ipcMainHandleMock, fetchMock } = vi.hoisted(() => ({
+  getProjectFileIndexMock: vi.fn(),
   ipcMainHandleMock: vi.fn(),
   fetchMock: vi.fn(),
 }));
@@ -17,8 +17,8 @@ vi.mock('@/utils/net-fetch', () => ({
   netFetch: fetchMock,
 }));
 
-vi.mock('execa', () => ({
-  execa: execaMock,
+vi.mock('@lobechat/device-control/project-file-index', () => ({
+  defaultGetProjectFileIndex: getProjectFileIndexMock,
 }));
 
 // Mock file-loaders
@@ -34,6 +34,7 @@ vi.mock('electron', () => ({
   },
   shell: {
     openPath: vi.fn(),
+    showItemInFolder: vi.fn(),
   },
 }));
 
@@ -80,6 +81,7 @@ const mockLocalFileProtocolManager = {
   approveIndexedProjectRoot: vi.fn(),
   approveProjectRootFromScope: vi.fn(),
   createPreviewUrl: vi.fn(),
+  readExternalFileForPublish: vi.fn(),
   readPreviewFile: vi.fn(),
 };
 
@@ -174,16 +176,29 @@ describe('LocalFileCtr', () => {
       expect(mockShell.openPath).toHaveBeenCalledWith(path.join(os.homedir(), 'git/work'));
     });
 
-    it('should open parent directory when isDirectory is false', async () => {
-      vi.mocked(mockShell.openPath).mockResolvedValue('');
-
+    it('should reveal and select the file when isDirectory is false', async () => {
       const result = await localFileCtr.handleOpenLocalFolder({
         path: '/test/folder/file.txt',
         isDirectory: false,
       });
 
       expect(result).toEqual({ success: true });
-      expect(mockShell.openPath).toHaveBeenCalledWith('/test/folder');
+      expect(mockShell.showItemInFolder).toHaveBeenCalledWith('/test/folder/file.txt');
+      expect(mockShell.openPath).not.toHaveBeenCalled();
+    });
+
+    it('should expand a leading ~ when revealing a file', async () => {
+      const os = await import('node:os');
+
+      const result = await localFileCtr.handleOpenLocalFolder({
+        path: '~/git/work/file.txt',
+        isDirectory: false,
+      });
+
+      expect(result).toEqual({ success: true });
+      expect(mockShell.showItemInFolder).toHaveBeenCalledWith(
+        path.join(os.homedir(), 'git/work/file.txt'),
+      );
     });
 
     it('should return error when opening folder fails', async () => {
@@ -307,6 +322,53 @@ describe('LocalFileCtr', () => {
       expect(result).toEqual({
         success: true,
         url: 'localfile://file/tmp/worktree-switcher-demo.html?token=abc',
+      });
+    });
+  });
+
+  describe('external publish asset channels', () => {
+    it('creates a URL with external access only on the publish-scoped IPC method', async () => {
+      mockLocalFileProtocolManager.createPreviewUrl.mockResolvedValue(
+        'localfile://publish/outside.css?token=abc',
+      );
+
+      const result = await localFileCtr.getExternalAssetForPublishUrl({
+        path: '/outside/app.css',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.createPreviewUrl).toHaveBeenCalledWith({
+        allowExternalFile: true,
+        filePath: '/outside/app.css',
+        persistExternalApproval: false,
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        success: true,
+        url: 'localfile://publish/outside.css?token=abc',
+      });
+    });
+
+    it('returns raw bytes for the publish-scoped device RPC handler', async () => {
+      mockLocalFileProtocolManager.readExternalFileForPublish.mockResolvedValue({
+        buffer: Buffer.from([1, 2, 3]),
+        contentType: 'image/png',
+        realPath: '/outside/image.png',
+      });
+
+      const result = await localFileCtr.readExternalAssetForPublish({
+        path: '/outside/image.png',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.readExternalFileForPublish).toHaveBeenCalledWith({
+        filePath: '/outside/image.png',
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        base64: 'AQID',
+        contentType: 'image/png',
+        success: true,
       });
     });
   });
@@ -781,109 +843,52 @@ describe('LocalFileCtr', () => {
   });
 
   describe('getProjectFileIndex', () => {
-    it('should build a project file index from git files', async () => {
-      execaMock
-        .mockResolvedValueOnce({ exitCode: 0, stdout: '/workspace/project' })
-        .mockResolvedValueOnce({
-          exitCode: 0,
-          stdout: 'src/index.ts\nsrc/components/Button.tsx',
-        })
-        .mockResolvedValueOnce({ exitCode: 0, stdout: 'tmp/local.ts' })
-        .mockResolvedValueOnce({ exitCode: 0, stdout: '.env.local\ncache/' });
+    it.each(['git', 'glob'] as const)(
+      'returns the shared %s index and authorizes its root for previews',
+      async (source) => {
+        const index = {
+          entries: [
+            {
+              gitIgnored: true,
+              isDirectory: true,
+              name: '.husky',
+              path: '/workspace/project/.husky',
+              relativePath: '.husky/',
+            },
+          ],
+          indexedAt: '2026-09-08T00:00:00.000Z',
+          root: '/workspace/project',
+          source,
+        };
+        getProjectFileIndexMock.mockResolvedValueOnce(index);
 
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
+        const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project/src' });
 
-      expect(result.source).toBe('git');
-      expect(result.root).toBe('/workspace/project');
-      expect(result.entries).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            isDirectory: true,
-            path: '/workspace/project/src',
-            relativePath: 'src/',
-          }),
-          expect.objectContaining({
-            isDirectory: false,
-            path: '/workspace/project/src/index.ts',
-            relativePath: 'src/index.ts',
-          }),
-          expect.objectContaining({
-            isDirectory: false,
-            path: '/workspace/project/tmp/local.ts',
-            relativePath: 'tmp/local.ts',
-          }),
-          expect.objectContaining({
-            gitIgnored: true,
-            isDirectory: false,
-            path: '/workspace/project/.env.local',
-            relativePath: '.env.local',
-          }),
-          expect.objectContaining({
-            gitIgnored: true,
-            isDirectory: true,
-            path: '/workspace/project/cache',
-            relativePath: 'cache/',
-          }),
-        ]),
+        expect(result).toEqual(index);
+        expect(getProjectFileIndexMock).toHaveBeenCalledWith({ scope: '/workspace/project/src' });
+        expect(
+          mockLocalFileProtocolManager.approveIndexedProjectRoot,
+        ).toHaveBeenCalledExactlyOnceWith('/workspace/project');
+      },
+    );
+
+    it('does not authorize a preview root when indexing fails', async () => {
+      getProjectFileIndexMock.mockRejectedValueOnce(new Error('Index unavailable'));
+
+      await expect(
+        localFileCtr.getProjectFileIndex({ scope: '/workspace/project' }),
+      ).rejects.toThrow('Index unavailable');
+      expect(mockLocalFileProtocolManager.approveIndexedProjectRoot).not.toHaveBeenCalled();
+    });
+
+    it('returns the index even when preview authorization fails', async () => {
+      const index = { entries: [], indexedAt: '', root: '/workspace/project', source: 'git' };
+      getProjectFileIndexMock.mockResolvedValueOnce(index);
+      mockLocalFileProtocolManager.approveIndexedProjectRoot.mockRejectedValueOnce(
+        new Error('Authorization unavailable'),
       );
-      expect(result).not.toHaveProperty('totalCount');
-    });
 
-    it('should fall back to glob when git indexing fails', async () => {
-      execaMock.mockResolvedValueOnce({ exitCode: 1, stdout: '' });
-      mockSearchService.glob.mockResolvedValue({
-        engine: 'fast-glob',
-        files: ['/workspace/project/src', '/workspace/project/src/index.ts'],
-        success: true,
-        total_files: 2,
-      });
-      vi.mocked(mockFsPromises.stat).mockImplementation(async (filePath: string) => ({
-        isDirectory: () => filePath === '/workspace/project/src',
-      }));
-
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
-
-      expect(mockSearchService.glob).toHaveBeenCalledWith({
-        limit: 5000,
-        pattern: '**/*',
-        scope: '/workspace/project',
-      });
-      expect(result.source).toBe('glob');
-      expect(result.entries).toEqual([
-        expect.objectContaining({
-          isDirectory: true,
-          path: '/workspace/project/src',
-          relativePath: 'src/',
-        }),
-        expect.objectContaining({
-          isDirectory: false,
-          path: '/workspace/project/src/index.ts',
-          relativePath: 'src/index.ts',
-        }),
-      ]);
-      expect(result).not.toHaveProperty('totalCount');
-    });
-
-    it('should mark glob entries as files when stat fails', async () => {
-      execaMock.mockResolvedValueOnce({ exitCode: 1, stdout: '' });
-      mockSearchService.glob.mockResolvedValue({
-        engine: 'fast-glob',
-        files: ['/workspace/project/src/index.ts'],
-        success: true,
-        total_files: 1,
-      });
-      vi.mocked(mockFsPromises.stat).mockRejectedValue(new Error('missing'));
-
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
-
-      expect(result.source).toBe('glob');
-      expect(result.entries).toEqual([
-        expect.objectContaining({
-          isDirectory: false,
-          path: '/workspace/project/src/index.ts',
-          relativePath: 'src/index.ts',
-        }),
-      ]);
+      await expect(localFileCtr.getProjectFileIndex()).resolves.toEqual(index);
     });
   });
 

@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { ModelRuntime } from '@lobechat/model-runtime';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { notShareVisitorMessage } from '@/database/utils/shareVisitor';
@@ -38,6 +39,41 @@ describe('FollowUpActionService.extract', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it('reuses the source topic in outgoing OpenCode requests across extractions', async () => {
+    const sessions: (string | null)[] = [];
+    queryFindFirstSpy.mockResolvedValue({ id: FOUND_MSG, content: 'Choose a next step.' });
+    vi.spyOn(ModelRuntimeModule, 'initModelRuntimeFromDB').mockImplementation(async () =>
+      ModelRuntime.initializeWithProvider('opencodecodingplan', { apiKey: 'test' }),
+    );
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if (String(url) === 'https://models.dev/api.json') {
+          return Response.json({ 'opencode-go': { models: {} } });
+        }
+        expect(String(url)).toBe('https://opencode.ai/zen/go/v1/chat/completions');
+        sessions.push(new Headers(init?.headers).get('x-opencode-session'));
+        return Response.json({
+          choices: [
+            { finish_reason: 'stop', message: { content: '{"chips":[]}', role: 'assistant' } },
+          ],
+        });
+      }),
+    );
+
+    for (const topicId of ['topic-1', 'topic-1', 'topic-2']) {
+      expect(
+        await svc.extract({
+          modelConfig: { model: 'glm-5', provider: 'opencodecodingplan' },
+          topicId,
+        }),
+      ).toEqual({ chips: [], messageId: FOUND_MSG });
+    }
+
+    expect(sessions).toEqual(['topic-1', 'topic-1', 'topic-2']);
   });
 
   it('excludes agent-share visitor messages from the assistant lookup', async () => {
@@ -121,6 +157,7 @@ describe('FollowUpActionService.extract', () => {
         model: 'custom-scene-model',
       }),
       expect.objectContaining({
+        metadata: expect.objectContaining({ topicId: TEST_TOPIC }),
         tracing: expect.objectContaining({
           promptVersion: 'v1.0',
           scenario: 'follow_up',

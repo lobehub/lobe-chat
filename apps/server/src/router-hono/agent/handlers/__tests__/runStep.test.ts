@@ -10,15 +10,19 @@ const mockExecuteStep = vi.fn();
 const mockGetServerDB = vi.hoisted(() => vi.fn());
 
 vi.mock('@/server/modules/AgentRuntime', () => ({
-  AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({
-    getOperationMetadata: mockGetOperationMetadata,
-  })),
+  AgentRuntimeCoordinator: vi.fn().mockImplementation(function () {
+    return {
+      getOperationMetadata: mockGetOperationMetadata,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({
-    executeStep: mockExecuteStep,
-  })),
+  AiAgentService: vi.fn().mockImplementation(function () {
+    return {
+      executeStep: mockExecuteStep,
+    };
+  }),
 }));
 
 vi.mock('@/database/core/db-adaptor', () => ({
@@ -27,13 +31,15 @@ vi.mock('@/database/core/db-adaptor', () => ({
 
 function buildOperationDiagnosticDB(row?: any) {
   return {
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        where: vi.fn(() => ({
-          limit: vi.fn().mockResolvedValue(row ? [row] : []),
+    select: vi.fn(function () {
+      return {
+        from: vi.fn(() => ({
+          where: vi.fn(() => ({
+            limit: vi.fn().mockResolvedValue(row ? [row] : []),
+          })),
         })),
-      })),
-    })),
+      };
+    }),
   };
 }
 
@@ -109,7 +115,7 @@ describe('runStep handler', () => {
         traceS3Key: null,
       }),
     );
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(function () {});
     const { ctx, getCaptures } = buildContext({ body: validBody });
 
     const res = await runStep(ctx);
@@ -137,7 +143,7 @@ describe('runStep handler', () => {
   it('includes QStash retry and message IDs in missing metadata diagnostics', async () => {
     mockGetOperationMetadata.mockResolvedValue({});
     mockGetServerDB.mockResolvedValue(buildOperationDiagnosticDB());
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(function () {});
     const { ctx } = buildContext({
       body: validBody,
       messageId: 'msg-123',

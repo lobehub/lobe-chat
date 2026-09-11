@@ -19,7 +19,9 @@ import {
 vi.mock('@lobechat/model-runtime', () => ({
   // RuntimeExecutors (loaded transitively) resolves extend params via this
   // helper; an empty result keeps the runtime payload unchanged.
-  applyModelExtendParams: vi.fn(() => ({})),
+  applyModelExtendParams: vi.fn(function () {
+    return {};
+  }),
   getModelPropertyWithFallback: vi.fn(),
   // `llmErrorClassification.ts` reads these at module-load time; an empty
   // spec map is fine here because this suite never exercises the runtime
@@ -41,37 +43,47 @@ vi.mock('@/libs/trusted-client', () => ({
 
 // Mock database and models
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn().mockImplementation(() => ({
-    getAgentConfigById: vi.fn(),
-  })),
+  AgentModel: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfigById: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  PluginModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 // Mock ModelRuntime to avoid server-side env access
 vi.mock('@/server/modules/ModelRuntime', () => ({
   initializeRuntimeOptions: vi.fn(),
-  ApiKeyManager: vi.fn().mockImplementation(() => ({
-    getApiKey: vi.fn(),
-    getAllApiKeys: vi.fn(),
-  })),
+  ApiKeyManager: vi.fn().mockImplementation(function () {
+    return {
+      getApiKey: vi.fn(),
+      getAllApiKeys: vi.fn(),
+    };
+  }),
 }));
 
 // Mock search service to avoid server-side env access
 vi.mock('@/server/services/search', () => ({
-  SearchService: vi.fn().mockImplementation(() => ({
-    search: vi.fn(),
-  })),
+  SearchService: vi.fn().mockImplementation(function () {
+    return {
+      search: vi.fn(),
+    };
+  }),
   searchService: {
     search: vi.fn(),
   },
@@ -110,16 +122,20 @@ vi.mock('@/server/modules/AgentRuntime', async (importOriginal) => {
 // so this mock survives future executor migrations without edits.
 vi.mock('@lobechat/agent-runtime', async (importOriginal) => ({
   ...((await importOriginal()) as Record<string, unknown>),
-  AgentRuntime: vi.fn().mockImplementation((_agent, _options) => ({
-    step: vi.fn(),
-  })),
+  AgentRuntime: vi.fn().mockImplementation(function (_agent, _options) {
+    return {
+      step: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/queue', () => ({
-  QueueService: vi.fn().mockImplementation(() => ({
-    getImpl: vi.fn().mockReturnValue(null),
-    scheduleMessage: vi.fn(),
-  })),
+  QueueService: vi.fn().mockImplementation(function () {
+    return {
+      getImpl: vi.fn().mockReturnValue(null),
+      scheduleMessage: vi.fn(),
+    };
+  }),
 }));
 
 // Mock Mecha module
@@ -1042,11 +1058,10 @@ describe('AgentRuntimeService', () => {
       const mockRuntime = { step: vi.fn().mockResolvedValue(mockStepResult) };
       vi.spyOn(service as any, 'createAgentRuntime').mockReturnValue({ runtime: mockRuntime });
 
-      // First call returns running state (for executeStep's initial load),
-      // second call returns interrupted state (checked after runtime.step completes)
-      mockCoordinator.loadAgentState
-        .mockResolvedValueOnce(mockState) // initial load
-        .mockResolvedValueOnce({ ...mockState, status: 'interrupted' }); // post-step check
+      // Initial load returns running state; the post-step interrupt check
+      // reads the sentinel instead of the state blob
+      mockCoordinator.loadAgentState.mockResolvedValueOnce(mockState);
+      mockCoordinator.isInterrupted.mockResolvedValueOnce(true);
 
       const result = await service.executeStep(mockParams);
 
@@ -1060,6 +1075,75 @@ describe('AgentRuntimeService', () => {
           newState: expect.objectContaining({ status: 'interrupted' }),
         }),
       );
+    });
+
+    it('should detect an interruption written by an old worker without a sentinel', async () => {
+      const mockStepResult = {
+        events: [],
+        newState: { ...mockState, status: 'running', stepCount: 2 },
+        nextContext: mockParams.context,
+      };
+
+      const mockRuntime = { step: vi.fn().mockResolvedValue(mockStepResult) };
+      vi.spyOn(service as any, 'createAgentRuntime').mockReturnValue({ runtime: mockRuntime });
+      mockCoordinator.loadAgentState
+        .mockResolvedValueOnce(mockState)
+        .mockResolvedValueOnce({ ...mockState, status: 'interrupted' });
+      mockCoordinator.isInterrupted.mockResolvedValueOnce(false);
+
+      const result = await service.executeStep(mockParams);
+
+      expect(result.state).toEqual(expect.objectContaining({ status: 'interrupted' }));
+      expect(result.nextStepScheduled).toBe(false);
+      expect(mockCoordinator.loadAgentState).toHaveBeenCalledTimes(2);
+      expect(mockCoordinator.saveStepResult).toHaveBeenCalledWith(
+        'test-operation-1',
+        expect.objectContaining({
+          newState: expect.objectContaining({ status: 'interrupted' }),
+        }),
+      );
+    });
+
+    it('should abort a long step when an old worker writes only interrupted state', async () => {
+      vi.useFakeTimers();
+      const mockStepResult = {
+        events: [],
+        newState: { ...mockState, status: 'running', stepCount: 2 },
+        nextContext: mockParams.context,
+      };
+
+      try {
+        vi.spyOn(service as any, 'createAgentRuntime').mockImplementation(function (
+          ...args: unknown[]
+        ) {
+          const { abortSignal } = args[0] as { abortSignal: AbortSignal };
+          return {
+            runtime: {
+              step: vi.fn(function () {
+                return new Promise((resolve) => {
+                  abortSignal.addEventListener('abort', () => resolve(mockStepResult), {
+                    once: true,
+                  });
+                });
+              }),
+            },
+          };
+        });
+        mockCoordinator.loadAgentState
+          .mockResolvedValueOnce(mockState)
+          .mockResolvedValue({ ...mockState, status: 'interrupted' });
+        mockCoordinator.isInterrupted.mockResolvedValue(false);
+
+        const execution = service.executeStep(mockParams);
+        await vi.advanceTimersByTimeAsync(0);
+        await vi.advanceTimersByTimeAsync(30_000);
+        const result = await execution;
+
+        expect(result.state).toEqual(expect.objectContaining({ status: 'interrupted' }));
+        expect(result.nextStepScheduled).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('should resolve pending client tools when interruption races the parked result', async () => {
@@ -1113,9 +1197,8 @@ describe('AgentRuntimeService', () => {
         step: vi.fn().mockResolvedValueOnce(parkedResult).mockResolvedValueOnce(resolvedResult),
       };
       vi.spyOn(service as any, 'createAgentRuntime').mockReturnValue({ runtime: mockRuntime });
-      mockCoordinator.loadAgentState
-        .mockResolvedValueOnce(mockState)
-        .mockResolvedValueOnce({ ...mockState, status: 'interrupted' });
+      mockCoordinator.loadAgentState.mockResolvedValueOnce(mockState);
+      mockCoordinator.isInterrupted.mockResolvedValueOnce(true);
 
       const mixedBatchContext = {
         ...mockParams.context!,
@@ -1677,6 +1760,19 @@ describe('AgentRuntimeService', () => {
         'Operation test-operation-1 is in error state',
       );
     });
+
+    it('should reject restarting an interrupted operation', async () => {
+      mockCoordinator.loadAgentState.mockResolvedValue({
+        ...mockState,
+        status: 'interrupted',
+      });
+
+      await expect(service.startExecution(mockParams)).rejects.toThrow(
+        'Operation test-operation-1 is interrupted',
+      );
+      expect(mockCoordinator.saveAgentState).not.toHaveBeenCalled();
+      expect(mockQueueService.scheduleMessage).not.toHaveBeenCalled();
+    });
   });
 
   describe('processHumanIntervention', () => {
@@ -1885,6 +1981,13 @@ describe('AgentRuntimeService', () => {
           lastModified: expect.any(String),
         }),
       );
+      expect(mockCoordinator.markInterrupted).toHaveBeenCalledWith('op-1');
+      // Sentinel must land before the state save: the step-boundary check
+      // reads only the sentinel, so state-first ordering would let a check
+      // between the two writes miss the interrupt and clobber it.
+      expect(mockCoordinator.markInterrupted.mock.invocationCallOrder[0]).toBeLessThan(
+        mockCoordinator.saveAgentState.mock.invocationCallOrder[0],
+      );
     });
 
     it('should interrupt a waiting_for_human operation', async () => {
@@ -1910,6 +2013,7 @@ describe('AgentRuntimeService', () => {
 
       expect(result).toBe(false);
       expect(mockCoordinator.saveAgentState).not.toHaveBeenCalled();
+      expect(mockCoordinator.markInterrupted).not.toHaveBeenCalled();
     });
 
     it('should return false when operation already done', async () => {

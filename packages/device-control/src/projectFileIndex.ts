@@ -85,34 +85,48 @@ const buildEntries = (
       return true;
     });
 
-  const indexedPaths = [...fileEntries, ...ignoredEntries].map((entry) => entry.path);
-
-  return [...collectProjectDirectories(indexedPaths, root), ...fileEntries, ...ignoredEntries];
+  return addMissingParentDirectories([...fileEntries, ...ignoredEntries], root);
 };
 
-const collectGlobFilePaths = async (scope: string): Promise<string[]> => {
-  const files: string[] = [];
+const addMissingParentDirectories = (
+  entries: ProjectFileIndexEntry[],
+  root: string,
+): ProjectFileIndexEntry[] => {
+  const indexedPaths = entries.map((entry) => entry.path);
+  const seen = new Set(indexedPaths);
+  // Explicit entries carry ignore metadata; only synthesize missing parents.
+  const directories = collectProjectDirectories(indexedPaths, root).filter(
+    (entry) => !seen.has(entry.path),
+  );
+
+  return [...directories, ...entries];
+};
+
+const collectGlobEntries = async (scope: string): Promise<ProjectFileIndexEntry[]> => {
+  const entries: ProjectFileIndexEntry[] = [];
   const stream = fg.stream('**/*', {
     cwd: scope,
     dot: true,
     ignore: ['**/node_modules/**', '**/.git/**'],
-    onlyFiles: true,
+    objectMode: true,
+    onlyFiles: false,
   });
 
-  for await (const relativePath of stream as AsyncIterable<string>) {
-    files.push(path.resolve(scope, relativePath));
-    if (files.length >= PROJECT_FILE_GLOB_LIMIT) break;
+  for await (const entry of stream as AsyncIterable<fg.Entry>) {
+    entries.push(
+      createProjectFileEntry(scope, path.resolve(scope, entry.path), entry.dirent.isDirectory()),
+    );
+    if (entries.length >= PROJECT_FILE_GLOB_LIMIT) break;
   }
 
-  return files;
+  return addMissingParentDirectories(entries, scope);
 };
 
 /**
- * Portable project file index for the CLI (and any non-desktop device). Prefers
+ * Shared project file index for desktop and CLI devices. Prefers
  * `git ls-files` (tracked + untracked + collapsed ignored entries,
  * submodule-aware) to enumerate the repo, falling back to a `fast-glob` walk
- * when the scope is not a git repo. Mirrors the desktop
- * `LocalFileCtr.getProjectFileIndex` output shape.
+ * when the scope is not a git repo. Platform adapters own preview authorization.
  */
 export const defaultGetProjectFileIndex = async (
   params: ProjectFileIndexParams = {},
@@ -180,11 +194,8 @@ export const defaultGetProjectFileIndex = async (
     // fall through to glob
   }
 
-  // Non-git scope: walk with fast-glob. `dot: true` keeps dot-directories (e.g.
-  // `.agents`) that the git path would surface via `ls-files`, and `onlyFiles`
-  // leaves directory entries to `buildEntries` so nesting matches the git path.
-  const files = await collectGlobFilePaths(requestedScope);
-  const entries = buildEntries(files, requestedScope);
+  // Include hidden and empty directories consistently across desktop and CLI.
+  const entries = await collectGlobEntries(requestedScope);
 
   return {
     entries,

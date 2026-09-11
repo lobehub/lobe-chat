@@ -2,12 +2,15 @@ import type { GoalGraphNode, GoalGraphSnapshot, TaskItem } from '@lobechat/types
 import { describe, expect, it } from 'vitest';
 
 import {
+  compareMetric,
   decideNextMove,
   frontierNeedsBudget,
   GOAL_ACCEPTANCE_TASK_TITLE,
   LEASE_EXPIRED_ERROR,
   needsBudget,
+  needsMetricCriteria,
   selectFrontier,
+  VERIFICATION_ERRORED_ERROR,
   VERIFICATION_FAILED_ERROR,
 } from './decideNextMove';
 
@@ -48,16 +51,18 @@ const decide = (
     budget?: Parameters<typeof decideNextMove>[0]['budget'];
     concurrency?: number;
     frontierTask?: TaskItem | null;
+    metricCriteria?: Parameters<typeof decideNextMove>[0]['metricCriteria'];
     tasks?: TaskItem[];
   } = {},
 ) => {
-  const { budget, concurrency = 3, frontierTask, tasks } = extra;
+  const { budget, concurrency = 3, frontierTask, metricCriteria, tasks } = extra;
   const listed = tasks ?? (frontierTask ? [frontierTask] : []);
   return decideNextMove({
     budget,
     concurrency,
     frontier: selectFrontier(snapshot),
     graph: snapshot,
+    metricCriteria,
     tasksById: new Map(listed.map((item) => [item.id, item])),
   });
 };
@@ -172,6 +177,17 @@ describe('decideNextMove', () => {
           frontierTask: task({ error: VERIFICATION_FAILED_ERROR, status: 'paused' }),
         }).branch,
       ).toBe('recover_verification');
+
+      // A verifier that crashed never judged the delivery, so it recovers like a
+      // rejection instead of stopping the goal on a verdict nobody reached.
+      expect(
+        decide(snapshot, {
+          frontierTask: task({ error: VERIFICATION_ERRORED_ERROR, status: 'paused' }),
+        }),
+      ).toMatchObject({
+        branch: 'recover_verification',
+        message: 'Verification could not run for Task T-1',
+      });
 
       expect(
         decide(snapshot, { frontierTask: task({ error: 'Device offline', status: 'failed' }) }),
@@ -449,5 +465,128 @@ describe('frontierNeedsBudget', () => {
     });
 
     expect(withTasks(snapshot, [task({ id: 'task_1', status: 'running' })])).toBe(false);
+  });
+});
+
+describe('needsMetricCriteria', () => {
+  const withCriteria = (nodes: GoalGraphNode[]) =>
+    graph({
+      goal: {
+        ...graph().goal,
+        config: { acceptance: { metrics: [{ key: 'followers', target: 1_000_000 }] } },
+      },
+      nodes,
+    });
+
+  it('only asks for criteria in the terminal phase of a goal that declares them', () => {
+    // Evaluating them is a database read per clause; a dispatch tick must not
+    // pay for it.
+    expect(needsMetricCriteria(withCriteria([node('a', { status: 'resolved' })]))).toBe(true);
+    expect(needsMetricCriteria(withCriteria([node('a', { status: 'active' })]))).toBe(false);
+    expect(needsMetricCriteria(withCriteria([]))).toBe(false);
+    expect(needsMetricCriteria(graph({ nodes: [node('a', { status: 'resolved' })] }))).toBe(false);
+  });
+});
+
+describe('compareMetric', () => {
+  it('evaluates each comparison', () => {
+    expect(compareMetric(10, 'gte', 10)).toBe(true);
+    expect(compareMetric(9, 'gte', 10)).toBe(false);
+    expect(compareMetric(10, 'gt', 10)).toBe(false);
+    expect(compareMetric(10, 'lte', 10)).toBe(true);
+    expect(compareMetric(11, 'lt', 10)).toBe(false);
+    expect(compareMetric(10, 'eq', 10)).toBe(true);
+  });
+
+  it('reads both operands at the scale observations are stored with', () => {
+    // `metric_points.value` is numeric(20, 6): recording 0.1234567 reads back
+    // as 0.123457, so a full-precision target would make the clause
+    // unsatisfiable and could flip gte/lte right at the boundary.
+    expect(compareMetric(0.123_457, 'eq', 0.123_456_7)).toBe(true);
+    expect(compareMetric(0.123_457, 'gte', 0.123_456_7)).toBe(true);
+    expect(compareMetric(0.123_457, 'lte', 0.123_456_7)).toBe(true);
+    // Differences the column can still represent are not rounded away.
+    expect(compareMetric(0.123_457, 'eq', 0.123_458)).toBe(false);
+  });
+});
+
+describe('measured acceptance', () => {
+  const terminal = graph({
+    goal: { ...graph().goal, requirement: 'Prove it' },
+    nodes: [node('a', { status: 'resolved' })],
+  });
+
+  it('holds the goal short of the delivery contract while a number is unmet', () => {
+    // The acceptance Task is never created: an unmet number is not something a
+    // verifier can talk its way past, so running it would only spend tokens to
+    // restate the gap.
+    const move = decide(terminal, {
+      metricCriteria: {
+        allMet: false,
+        criteria: [{ key: 'followers', met: false, op: 'gte', target: 1_000_000, value: 4200 }],
+      },
+    });
+
+    expect(move).toMatchObject({ branch: 'measured_acceptance', outcome: 'no_progress' });
+    expect(move.message).toContain('followers');
+    expect(move.message).toContain('4200');
+  });
+
+  it('names a clause that was never measured rather than reading it as satisfied', () => {
+    const move = decide(terminal, {
+      metricCriteria: {
+        allMet: false,
+        criteria: [{ key: 'followers', met: false, op: 'gte', target: 1_000_000, value: null }],
+      },
+    });
+
+    expect(move.message).toContain('no observation');
+  });
+
+  it('falls through to the delivery contract once every number holds', () => {
+    expect(
+      decide(terminal, {
+        metricCriteria: {
+          allMet: true,
+          criteria: [
+            { key: 'followers', met: true, op: 'gte', target: 1_000_000, value: 1_000_001 },
+          ],
+        },
+      }),
+    ).toMatchObject({ branch: 'terminal_acceptance', outcome: 'advanced' });
+  });
+});
+
+describe('exploration terminal phase', () => {
+  const explorationGraph = () => {
+    const snapshot = graph({ nodes: [node('baseline', { status: 'resolved' })] });
+    snapshot.goal.requirement = 'Deliver proven result';
+    snapshot.goal.config = {
+      exploration: { instruction: 'Compare experiments', maxExperiments: 3 },
+    };
+    return snapshot;
+  };
+  it('expands a finished experiment instead of accepting a completed task list', () => {
+    expect(decide(explorationGraph()).branch).toBe('explore_graph');
+  });
+  it('hands a reviewed search to independent acceptance and reopens when new experiments appear', () => {
+    const snapshot = explorationGraph();
+    snapshot.goal.config!.exploration!.checkpoint = {
+      token: 'lease',
+      snapshot: 'hash',
+      expiresAt: '2026-09-08T00:00:00Z',
+      readyForAcceptance: true,
+      reviewedNodeIds: ['baseline'],
+    };
+    expect(decide(snapshot).branch).toBe('terminal_acceptance');
+    snapshot.nodes.push(node('new-result', { status: 'resolved' }));
+    expect(decide(snapshot).branch).toBe('explore_graph');
+  });
+  it('waits for a running experiment and preserves the task retry path', () => {
+    const snapshot = explorationGraph();
+    snapshot.nodes[0] = node('baseline', { status: 'active', taskId: 'task_1' });
+    expect(decide(snapshot, { frontierTask: task({ status: 'running' }) }).branch).not.toBe(
+      'explore_graph',
+    );
   });
 });

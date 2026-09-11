@@ -72,19 +72,45 @@ describe('DevtoolsCtr', () => {
       await expect(devtoolsCtr.getAppProcessMetrics()).resolves.toEqual({
         cpuPercent: 3.75,
         gpu: null,
+        processes: [
+          {
+            cpuPercent: 1.5,
+            name: null,
+            pid: undefined,
+            type: 'Browser',
+            workingSetMB: 100 / 1024,
+          },
+          { cpuPercent: 2.25, name: null, pid: undefined, type: 'Tab', workingSetMB: 200 / 1024 },
+          { cpuPercent: 0, name: null, pid: undefined, type: 'Utility', workingSetMB: 300 / 1024 },
+        ],
         rendererResidentMB: null,
       });
     });
 
     it('should report the gpu process usage separately in megabytes', async () => {
       getAppMetricsMock.mockReturnValue([
-        { cpu: { percentCPUUsage: 1.5 }, memory: { workingSetSize: 1024 }, type: 'Browser' },
-        { cpu: { percentCPUUsage: 2.5 }, memory: { workingSetSize: 65_536 }, type: 'GPU' },
+        {
+          cpu: { percentCPUUsage: 1.5 },
+          memory: { workingSetSize: 1024 },
+          pid: 1,
+          type: 'Browser',
+        },
+        {
+          cpu: { percentCPUUsage: 2.5 },
+          memory: { workingSetSize: 65_536 },
+          name: 'GPU Process',
+          pid: 2,
+          type: 'GPU',
+        },
       ]);
 
       await expect(devtoolsCtr.getAppProcessMetrics()).resolves.toEqual({
         cpuPercent: 4,
         gpu: { cpuPercent: 2.5, memoryMB: 64 },
+        processes: [
+          { cpuPercent: 1.5, name: null, pid: 1, type: 'Browser', workingSetMB: 1 },
+          { cpuPercent: 2.5, name: 'GPU Process', pid: 2, type: 'GPU', workingSetMB: 64 },
+        ],
         rendererResidentMB: null,
       });
     });
@@ -95,7 +121,7 @@ describe('DevtoolsCtr', () => {
         { cpu: { percentCPUUsage: 3 }, memory: { workingSetSize: 3072 }, type: 'GPU' },
       ]);
 
-      await expect(devtoolsCtr.getAppProcessMetrics()).resolves.toEqual({
+      await expect(devtoolsCtr.getAppProcessMetrics()).resolves.toMatchObject({
         cpuPercent: 4,
         gpu: { cpuPercent: 4, memoryMB: 4 },
         rendererResidentMB: null,
@@ -108,6 +134,7 @@ describe('DevtoolsCtr', () => {
       await expect(devtoolsCtr.getAppProcessMetrics()).resolves.toEqual({
         cpuPercent: 0,
         gpu: null,
+        processes: [],
         rendererResidentMB: null,
       });
     });
@@ -123,7 +150,60 @@ describe('DevtoolsCtr', () => {
         runWithIpcContext({ event: { sender } as any, sender }, () =>
           devtoolsCtr.getAppProcessMetrics(),
         ),
-      ).resolves.toEqual({ cpuPercent: 3, gpu: null, rendererResidentMB: 8 });
+      ).resolves.toMatchObject({ cpuPercent: 3, gpu: null, rendererResidentMB: 8 });
+    });
+  });
+
+  describe('captureMemoryDump', () => {
+    it('should drive the memory-infra tracing dance over the sender debugger', async () => {
+      const handlers = new Set<(event: unknown, method: string, params: unknown) => void>();
+      const emit = (method: string, params?: unknown) => {
+        for (const handler of handlers) handler({}, method, params);
+      };
+      const sendCommand = vi.fn(async (method: string) => {
+        if (method === 'Tracing.end') {
+          emit('Tracing.dataCollected', {
+            value: [
+              {
+                args: { dumps: { allocators: { v8: { attrs: { size: { value: '100000' } } } } } },
+                ph: 'v',
+                pid: 42,
+              },
+            ],
+          });
+          emit('Tracing.tracingComplete');
+        }
+        return {};
+      });
+      const dbg = {
+        attach: vi.fn(),
+        detach: vi.fn(),
+        isAttached: () => false,
+        off: vi.fn((_: string, handler: any) => handlers.delete(handler)),
+        on: vi.fn((_: string, handler: any) => handlers.add(handler)),
+        sendCommand,
+      };
+      const sender = { debugger: dbg, getOSProcessId: () => 42 } as any;
+
+      const dump = await runWithIpcContext({ event: { sender } as any, sender }, () =>
+        devtoolsCtr.captureMemoryDump(),
+      );
+
+      expect(sendCommand.mock.calls.map(([method]) => method)).toEqual([
+        'Tracing.start',
+        'Tracing.requestMemoryDump',
+        'Tracing.end',
+      ]);
+      expect(dump.processes).toHaveLength(1);
+      expect(dump.processes[0]).toMatchObject({ isCaller: true, pid: 42 });
+      expect(dump.processes[0].allocators[0]).toEqual({
+        children: [],
+        name: 'v8',
+        sizeBytes: 0x10_00_00,
+      });
+      expect(dbg.attach).toHaveBeenCalledWith('1.3');
+      expect(dbg.detach).toHaveBeenCalledOnce();
+      expect(handlers.size).toBe(0);
     });
   });
 

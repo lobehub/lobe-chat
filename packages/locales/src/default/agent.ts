@@ -268,6 +268,9 @@ export default {
   'channel.charLimit': 'Character Limit',
   'channel.charLimitHint': 'Maximum number of characters per message',
   'channel.concurrency': 'Concurrency Mode',
+  'channel.concurrencyBurst': 'Burst',
+  'channel.concurrencyBurstHint':
+    'Wait briefly, then handle a run of messages as one turn (nothing is dropped)',
   'channel.concurrencyDebounce': 'Debounce',
   'channel.concurrencyDebounceHint':
     'Only process the last message in a burst (earlier ones are dropped)',
@@ -275,7 +278,7 @@ export default {
   'channel.concurrencyQueue': 'Queue',
   'channel.concurrencyQueueHint': 'Process messages one at a time',
   'channel.credentials': 'Credentials',
-  'channel.debounceMs': 'Debounce Window (ms)',
+  'channel.debounceMs': 'Wait Window (ms)',
   'channel.debounceMsHint':
     'How long to wait for additional messages before dispatching to the agent (ms)',
   'channel.dm': 'Direct Messages',
@@ -289,9 +292,19 @@ export default {
   'channel.dmPolicyOpenHint': 'Accept DMs from anyone',
   'channel.dmPolicyPairing': 'Pairing',
   'channel.dmPolicyPairingHint': 'Strangers need /approve to DM',
+  'channel.guestPolicy': 'Guest Policy',
+  'channel.guestPolicyHint': 'Who can summon the bot through Telegram Guest Mode',
+  'channel.guestPolicyAllowlist': 'Allowlist',
+  'channel.guestPolicyAllowlistHint': 'Only listed users can use Guest Mode',
+  'channel.guestPolicyDisabled': 'Disabled',
+  'channel.guestPolicyDisabledHint': 'Reject all Guest Mode summons',
+  'channel.guestPolicyOpen': 'Open',
+  'channel.guestPolicyOpenHint': 'Accept Guest Mode summons from anyone',
+  'channel.guestPolicyPairing': 'Pairing',
+  'channel.guestPolicyPairingHint': 'Strangers need /approve to use Guest Mode',
   'channel.allowFrom': 'Allowed Users',
   'channel.allowFromHint':
-    "Only listed users can interact with the bot; your 'Platform User ID' is auto-included.",
+    "Only listed users can interact with the bot in DMs, groups, and Guest Mode; your 'Platform User ID' is auto-included.",
   'channel.allowFromIdLabel': 'User ID',
   'channel.allowFromIdPlaceholder': 'Platform user ID',
   'channel.allowFromNameLabel': 'Note',
@@ -348,12 +361,19 @@ export default {
   'channel.userIdHint':
     'Lets AI tools reach you proactively (e.g. reminders); auto-trusted by the global allowlist',
   'channel.userIdMissingDesc':
-    "Without it, AI tools can't reach you with reminders, and pairing approvals will fail. Fill it in under Advanced Settings.",
+    "Without it, AI tools can't reach you with reminders, and pairing approvals will fail. Send /whoami to the bot to get your ID, then fill it in under Advanced Settings.",
   'channel.userIdMissingTitle': 'Add your platform User ID',
   'channel.userIdHint.discord':
     'Enable Developer Mode (Settings → Advanced), then right-click your avatar → Copy User ID.',
   'channel.userIdHint.feishu':
-    'Open your app on the Feishu / Lark Open Platform → Permissions, then look up your Open ID.',
+    "Feishu Open IDs are per-app, so no console page shows you your own. Once the credentials are in, the app owner's is filled in for you; if nothing appears, use the button below or send /whoami to the bot in a direct message.",
+  'channel.feishu.fetchOwnerId': 'Fetch from app info',
+  'channel.feishu.fetchOwnerIdAutoSuccess':
+    'Filled in the app owner’s Open ID — check it is you, then save',
+  'channel.feishu.fetchOwnerIdSuccess': 'Open ID filled in — check it is you, then save',
+  'channel.feishu.fetchOwnerIdFailed': 'Failed to read the app owner',
+  'channel.feishu.fetchOwnerIdMissingCredentials':
+    'Enter the Application ID and App Secret first — the lookup runs as your app.',
   'channel.userIdHint.imessage':
     'Use your iMessage handle as seen in BlueBubbles, usually an email address or E.164 phone number.',
   'channel.userIdHint.line':
@@ -404,8 +424,6 @@ export default {
   'share.settings.link.slugError.tooShort': 'Custom links need at least 3 characters.',
   'share.settings.link.slugHint':
     '3–64 characters: lowercase letters, numbers and hyphens. Leave it empty to use the generated link.',
-  'share.settings.link.slugLabel': 'Custom link',
-  'share.settings.link.slugPlaceholder': 'my-agent',
   'share.settings.link.slugSaved': 'Custom link updated',
   'share.settings.link.title': 'Share link',
   'share.settings.link.viewCount': '{{views}} views',
@@ -427,6 +445,8 @@ export default {
   'share.settings.permissions.showModelInfoHint':
     'Off by default: your model and provider choice stays hidden.',
   'share.settings.permissions.title': 'Permissions',
+  'share.settings.tabs.access': 'Access',
+  'share.settings.tabs.stats': 'Stats',
   'share.settings.title': 'Share Agent',
   'share.settings.usage.conversations': 'Conversations',
   'share.settings.usage.desc': 'What this share has attracted, and what it has cost you.',
@@ -443,6 +463,8 @@ export default {
   'share.settings.tools.apiWritesOwnerData':
     'Visitors can never write to your memory — this action stays off in shared runs.',
   'share.settings.tools.availableGroup': 'Not granted · {{count}}',
+  'share.settings.tools.apiGrantedCount': '{{granted}} of {{total}} APIs granted',
+  'share.settings.tools.configureApis': 'Choose which APIs visitors can call',
   'share.settings.tools.empty': 'This Agent has no tools that can be granted to visitors.',
   'share.settings.tools.grantedEmpty':
     'No tools granted yet — visitors get a plain chat. Pick from the list below to grant one.',
@@ -485,6 +507,7 @@ export default {
   'share.visitor.input.stop': 'Stop',
   'share.visitor.privacyNotice':
     'This conversation runs on the owner’s account and may be visible to them. Avoid sharing sensitive information.',
+  'share.visitor.topBar.home': 'Go to my LobeHub',
   'share.visitor.topics.empty': 'No conversations yet',
   'share.visitor.topics.new': 'New conversation',
   'share.visitor.topics.title': 'Conversations',

@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AcceptanceModel } from '@/database/models/acceptance';
 import { TaskModel } from '@/database/models/task';
+import { TaskTopicModel } from '@/database/models/taskTopic';
+import { TaskService } from '@/server/services/task';
 
 import { taskRouter } from '../../task';
 import {
@@ -18,7 +20,9 @@ import {
 // Mock getServerDB
 let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => testDB),
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
 }));
 
 // Mock AiAgentService
@@ -29,24 +33,30 @@ const mockExecAgent = vi.fn().mockResolvedValue({
 });
 const mockInterruptTask = vi.fn().mockResolvedValue({ success: true });
 vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({
-    execAgent: mockExecAgent,
-    interruptTask: mockInterruptTask,
-  })),
+  AiAgentService: vi.fn().mockImplementation(function () {
+    return {
+      execAgent: mockExecAgent,
+      interruptTask: mockInterruptTask,
+    };
+  }),
 }));
 
 // Mock TaskLifecycleService
 vi.mock('@/server/services/taskLifecycle', () => ({
-  TaskLifecycleService: vi.fn().mockImplementation(() => ({
-    onTopicComplete: vi.fn(),
-  })),
+  TaskLifecycleService: vi.fn().mockImplementation(function () {
+    return {
+      onTopicComplete: vi.fn(),
+    };
+  }),
 }));
 
 // Mock TaskReviewService
 vi.mock('@/server/services/taskReview', () => ({
-  TaskReviewService: vi.fn().mockImplementation(() => ({
-    review: vi.fn(),
-  })),
+  TaskReviewService: vi.fn().mockImplementation(function () {
+    return {
+      review: vi.fn(),
+    };
+  }),
 }));
 
 // Mock initModelRuntimeFromDB
@@ -206,6 +216,35 @@ describe('Task Router Integration', () => {
 
       expect(richTextUpdate.data.instruction).toBe('Rich instruction');
       expect(richTextUpdate.data.editorData).toEqual(nextEditorData);
+    });
+
+    it('should apply field and status edits in one mutation', async () => {
+      const task = await caller.create({ instruction: 'Original', name: 'Original' });
+
+      const result = await caller.update({
+        id: task.data.id,
+        name: 'Updated',
+        status: 'completed',
+      });
+
+      expect(result.data.name).toBe('Updated');
+      expect(result.data.status).toBe('completed');
+    });
+
+    it('should roll back field edits when the status transition fails', async () => {
+      const task = await caller.create({ instruction: 'Original', name: 'Original' });
+      const statusError = vi
+        .spyOn(TaskService.prototype, 'updateStatus')
+        .mockRejectedValueOnce(new Error('status transition failed'));
+
+      await expect(
+        caller.update({ id: task.data.id, name: 'Updated', status: 'completed' }),
+      ).rejects.toThrow('Failed to update task');
+
+      statusError.mockRestore();
+      const persisted = await new TaskModel(serverDB, userId).findById(task.data.id);
+      expect(persisted?.name).toBe('Original');
+      expect(persisted?.status).toBe('backlog');
     });
   });
 
@@ -921,6 +960,42 @@ describe('Task Router Integration', () => {
       expect(found.data.status).toBe('paused');
       expect(found.data.error).toContain('LLM failed');
     });
+
+    it('does not book a running topic when execAgent reports a dispatch failure', async () => {
+      // A heterogeneous dispatch or operation startup failure comes back as a
+      // result (`success: false`) rather than a throw: the topic and its error
+      // bubble already exist. Booking that dead operation as a running run left
+      // the Task in flight forever, with a goal coordinator recording a start.
+      mockExecAgent.mockResolvedValueOnce({
+        error:
+          'Heterogeneous agent provider binding is only supported for Desktop local execution.',
+        message: 'Heterogeneous agent provider binding requires Desktop local execution',
+        operationId: 'op_dead',
+        status: 'error',
+        success: false,
+        topicId: testTopicId,
+      });
+
+      const task = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'Test',
+      });
+
+      await expect(caller.run({ id: task.data.id })).rejects.toThrow();
+
+      const found = await caller.find({ id: task.data.id });
+      expect(found.data.status).toBe('paused');
+      expect(found.data.error).toContain('Desktop local execution');
+
+      // The attempt stays visible, but as a failed run — never a running one.
+      const runs = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runs.map((run) => [run.topicId, run.operationId, run.status])).toEqual([
+        [testTopicId, 'op_dead', 'failed'],
+      ]);
+      // ...so a fresh run is allowed instead of "already has a running topic".
+      await caller.run({ id: task.data.id });
+      expect((await caller.detail({ id: task.data.id })).data?.status).toBe('running');
+    });
   });
 
   describe('clearAll', () => {
@@ -1058,7 +1133,7 @@ describe('Task Router Integration', () => {
       expect(mockInterruptTask).not.toHaveBeenCalled();
     });
 
-    it('should skip cancellation when interrupt fails', async () => {
+    it('rejects the status change and retains running work when interrupt fails', async () => {
       const task = await caller.create({
         assigneeAgentId: testAgentId,
         instruction: 'Test interrupt failure',
@@ -1069,13 +1144,133 @@ describe('Task Router Integration', () => {
       // Make interruptTask fail
       mockInterruptTask.mockRejectedValueOnce(new Error('network error'));
 
-      // Transition task from running → paused
-      await caller.updateStatus({ id: task.data.id, status: 'paused' });
+      await expect(caller.updateStatus({ id: task.data.id, status: 'paused' })).rejects.toThrow(
+        'Failed to update status',
+      );
+      expect((await caller.find({ id: task.data.id })).data.status).toBe('running');
+      const runningTopics = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runningTopics.some((topic) => topic.status === 'running')).toBe(true);
+    });
+  });
 
-      // The topic should still be running because interrupt failed
-      // so re-running should hit CONFLICT
-      await caller.updateStatus({ id: task.data.id, status: 'backlog' });
-      await expect(caller.run({ id: task.data.id })).rejects.toThrow(/already has a running topic/);
+  describe('updateStatusCascade', () => {
+    it('updates the task family atomically without rewriting failed subtasks', async () => {
+      const parent = await caller.create({ instruction: 'Parent' });
+      const open = await caller.create({
+        instruction: 'Open',
+        parentTaskId: parent.data.id,
+      });
+      const failed = await caller.create({
+        instruction: 'Failed',
+        parentTaskId: parent.data.id,
+      });
+      await caller.updateStatus({ error: 'Needs attention', id: failed.data.id, status: 'failed' });
+
+      const result = await caller.updateStatusCascade({
+        id: parent.data.identifier,
+        status: 'completed',
+      });
+
+      expect(result.data.updatedSubtasks).toEqual([open.data.identifier]);
+      expect((await caller.find({ id: parent.data.id })).data.status).toBe('completed');
+      expect((await caller.find({ id: open.data.id })).data.status).toBe('completed');
+      expect((await caller.find({ id: failed.data.id })).data).toMatchObject({
+        error: 'Needs attention',
+        status: 'failed',
+      });
+    });
+
+    it('does not start a dependent sibling while completing the whole family', async () => {
+      const parent = await caller.create({ instruction: 'Parent' });
+      const first = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'First',
+        parentTaskId: parent.data.id,
+      });
+      const dependent = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'Dependent',
+        parentTaskId: parent.data.id,
+      });
+      await caller.addDependency({ dependsOnId: first.data.id, taskId: dependent.data.id });
+      mockExecAgent.mockClear();
+
+      await caller.updateStatusCascade({ id: parent.data.id, status: 'completed' });
+
+      expect(mockExecAgent).not.toHaveBeenCalled();
+      expect((await caller.find({ id: first.data.id })).data.status).toBe('completed');
+      expect((await caller.find({ id: dependent.data.id })).data.status).toBe('completed');
+    });
+
+    it('starts an external dependent unlocked by the family completion', async () => {
+      const parent = await caller.create({ instruction: 'Parent' });
+      const sub = await caller.create({ instruction: 'Sub', parentTaskId: parent.data.id });
+      const external = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'External',
+      });
+      await caller.addDependency({ dependsOnId: sub.data.id, taskId: external.data.id });
+      mockExecAgent.mockClear();
+
+      const result = await caller.updateStatusCascade({ id: parent.data.id, status: 'completed' });
+
+      expect(result.data.unlocked).toEqual([external.data.identifier]);
+      expect(mockExecAgent).toHaveBeenCalledTimes(1);
+      expect((await caller.find({ id: external.data.id })).data.status).toBe('running');
+    });
+
+    it('persists successful interrupts before surfacing a partial interrupt failure', async () => {
+      const parent = await caller.create({ instruction: 'Parent' });
+      const subA = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'A',
+        parentTaskId: parent.data.id,
+      });
+      const subB = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'B',
+        parentTaskId: parent.data.id,
+      });
+
+      const topicA = await createTestTopic(serverDB, userId, 'tpc_cascade_a');
+      const topicB = await createTestTopic(serverDB, userId, 'tpc_cascade_b');
+      mockExecAgent.mockResolvedValueOnce({
+        operationId: 'op_cascade_a',
+        success: true,
+        topicId: topicA,
+      });
+      mockExecAgent.mockResolvedValueOnce({
+        operationId: 'op_cascade_b',
+        success: true,
+        topicId: topicB,
+      });
+      await caller.run({ id: subA.data.id });
+      await caller.run({ id: subB.data.id });
+
+      mockInterruptTask.mockImplementation(async ({ operationId }: { operationId: string }) => {
+        if (operationId === 'op_cascade_a') throw new Error('gateway unreachable');
+        return { success: true };
+      });
+
+      await expect(
+        caller.updateStatusCascade({ id: parent.data.id, status: 'canceled' }),
+      ).rejects.toThrow('Failed to update task family status');
+
+      // No status was cascaded — the family is untouched.
+      expect((await caller.find({ id: parent.data.id })).data.status).toBe('backlog');
+      expect((await caller.find({ id: subA.data.id })).data.status).toBe('running');
+      expect((await caller.find({ id: subB.data.id })).data.status).toBe('running');
+
+      // But the interrupt that did succeed is persisted: B's topic is no
+      // longer recorded as running, while A's (failed interrupt) still is.
+      const topicModel = new TaskTopicModel(serverDB, userId);
+      const [aTopic] = await topicModel.findByTaskId(subA.data.id);
+      const [bTopic] = await topicModel.findByTaskId(subB.data.id);
+      expect(aTopic!.status).toBe('running');
+      expect(bTopic!.status).toBe('canceled');
+
+      // clearAllMocks does not restore implementations — undo the override.
+      mockInterruptTask.mockImplementation(async () => ({ success: true }));
     });
   });
 

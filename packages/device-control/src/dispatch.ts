@@ -21,10 +21,13 @@ import {
 } from '@lobechat/local-file-shell/git';
 
 import { getClaudeCodeQuota, type GetClaudeCodeQuotaParams } from './claudeCodeQuota';
+import { defaultReadExternalAssetForPublish } from './filePreview';
 import { prepareSkillDirectory } from './skillDirectory';
 import type {
+  BrowseDirectoryParams,
   DeviceControlDeps,
   EnrollWorkspaceParams,
+  ExternalAssetForPublishParams,
   InitWorkspaceParams,
   ListHeterogeneousAgentModelsParams,
   ListProjectSkillsParams,
@@ -34,7 +37,7 @@ import type {
   ProjectFileSearchParams,
   UnenrollWorkspaceParams,
 } from './types';
-import { initWorkspace, listProjectSkills, statPath } from './workspace';
+import { browseDirectory, initWorkspace, listProjectSkills, statPath } from './workspace';
 
 /**
  * Every method name the device-control RPC dispatcher understands. Mirrors the
@@ -50,10 +53,12 @@ export const DEVICE_RPC_METHODS = [
   'getClaudeCodeQuota',
   'listProjectSkills',
   'prepareSkillDirectory',
+  'browseDirectory',
   'statPath',
   'getProjectFileIndex',
   'searchProjectFiles',
   'getLocalFilePreview',
+  'readExternalAssetForPublish',
   'moveLocalFiles',
   'renameLocalFile',
   'writeLocalFile',
@@ -134,6 +139,10 @@ export const executeDeviceRpc = async (
       return prepareSkillDirectory(params as PrepareSkillDirectoryParams, deps);
     }
 
+    case 'browseDirectory': {
+      return browseDirectory(params as BrowseDirectoryParams);
+    }
+
     case 'statPath': {
       return statPath(params as { path: string });
     }
@@ -148,6 +157,12 @@ export const executeDeviceRpc = async (
 
     case 'getLocalFilePreview': {
       return deps.getLocalFilePreview(params as LocalFilePreviewUrlParams);
+    }
+
+    case 'readExternalAssetForPublish': {
+      return (deps.readExternalAssetForPublish ?? defaultReadExternalAssetForPublish)(
+        params as ExternalAssetForPublishParams,
+      );
     }
 
     case 'moveLocalFiles': {

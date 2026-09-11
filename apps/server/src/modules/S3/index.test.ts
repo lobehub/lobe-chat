@@ -38,7 +38,7 @@ vi.mock('@/envs/file', () => ({
 
 // Mock utilities
 vi.mock('@/utils/url', () => ({
-  inferContentTypeFromImageUrl: vi.fn((key: string) => {
+  inferContentTypeFromImageUrl: vi.fn(function (key: string) {
     if (key.endsWith('.jpg') || key.endsWith('.jpeg')) return 'image/jpeg';
     if (key.endsWith('.png')) return 'image/png';
     if (key.endsWith('.gif')) return 'image/gif';
@@ -55,9 +55,11 @@ describe('S3', () => {
 
     // Setup S3Client mock
     mockS3ClientSend = vi.fn();
-    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({
-      send: mockS3ClientSend,
-    }));
+    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(function () {
+      return {
+        send: mockS3ClientSend,
+      };
+    });
 
     // Setup getSignedUrl mock
     mockGetSignedUrl = vi.fn().mockResolvedValue('https://presigned-url.example.com');
@@ -144,9 +146,11 @@ describe('FileS3', () => {
 
     // Setup S3Client mock
     mockS3ClientSend = vi.fn();
-    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({
-      send: mockS3ClientSend,
-    }));
+    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(function () {
+      return {
+        send: mockS3ClientSend,
+      };
+    });
 
     // Setup getSignedUrl mock
     mockGetSignedUrl = vi.fn().mockResolvedValue('https://presigned-url.example.com');
@@ -399,6 +403,19 @@ describe('FileS3', () => {
       });
       expect(result).toBe('https://presigned-url.example.com');
     });
+
+    it('binds the declared content length into the PUT command', async () => {
+      const s3 = new FileS3();
+
+      await s3.createPreSignedUrl('upload-file.txt', 123);
+
+      expect(PutObjectCommand).toHaveBeenCalledWith({
+        ACL: 'public-read',
+        Bucket: 'test-bucket',
+        ContentLength: 123,
+        Key: 'upload-file.txt',
+      });
+    });
   });
 
   describe('createPreSignedUpload', () => {
@@ -439,6 +456,20 @@ describe('FileS3', () => {
       });
       expect(UploadPartCommand).toHaveBeenCalledWith({
         Bucket: 'test-bucket',
+        Key: 'large.bin',
+        PartNumber: 2,
+        UploadId: 'upload-1',
+      });
+    });
+
+    it('binds the expected content length into each signed part', async () => {
+      const s3 = new FileS3();
+
+      await s3.createPreSignedUploadPartUrl('large.bin', 'upload-1', 2, 123);
+
+      expect(UploadPartCommand).toHaveBeenCalledWith({
+        Bucket: 'test-bucket',
+        ContentLength: 123,
         Key: 'large.bin',
         PartNumber: 2,
         UploadId: 'upload-1',
@@ -510,6 +541,52 @@ describe('FileS3', () => {
       await expect(s3.completeMultipartUpload('large.bin', 'upload-1', 2)).rejects.toThrow(
         'has 1/2 parts',
       );
+      expect(CompleteMultipartUploadCommand).not.toHaveBeenCalled();
+    });
+
+    it('validates listed part sizes before completing a reserved upload', async () => {
+      const s3 = new FileS3();
+      vi.mocked(paginateListParts).mockReturnValue(
+        (async function* (): AsyncGenerator<ListPartsCommandOutput, undefined> {
+          yield {
+            Parts: [
+              { ETag: 'etag-1', PartNumber: 1, Size: 32 },
+              { ETag: 'etag-2', PartNumber: 2, Size: 5 },
+            ],
+          } as ListPartsCommandOutput;
+          return undefined;
+        })(),
+      );
+      mockS3ClientSend.mockResolvedValue({});
+
+      await s3.completeMultipartUpload('large.bin', 'upload-1', 2, undefined, {
+        partSize: 32,
+        size: 37,
+      });
+
+      expect(CompleteMultipartUploadCommand).toHaveBeenCalled();
+    });
+
+    it('rejects a reserved multipart upload with an unexpected part size', async () => {
+      const s3 = new FileS3();
+      vi.mocked(paginateListParts).mockReturnValue(
+        (async function* (): AsyncGenerator<ListPartsCommandOutput, undefined> {
+          yield {
+            Parts: [
+              { ETag: 'etag-1', PartNumber: 1, Size: 31 },
+              { ETag: 'etag-2', PartNumber: 2, Size: 6 },
+            ],
+          } as ListPartsCommandOutput;
+          return undefined;
+        })(),
+      );
+
+      await expect(
+        s3.completeMultipartUpload('large.bin', 'upload-1', 2, undefined, {
+          partSize: 32,
+          size: 37,
+        }),
+      ).rejects.toThrow('unexpected part size');
       expect(CompleteMultipartUploadCommand).not.toHaveBeenCalled();
     });
 

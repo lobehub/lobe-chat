@@ -1,7 +1,7 @@
 import { CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { toTreeItem, TreeActionImpl } from './actions';
+import { sortTreeItems, toTreeItem, TreeActionImpl } from './actions';
 import type { TreeState } from './types';
 
 const {
@@ -52,6 +52,7 @@ vi.mock('@/store/file', () => ({
 
 const createState = (): TreeState => ({
   children: {},
+  dropNodes: vi.fn(),
   epoch: 0,
   errors: {},
   expanded: {},
@@ -499,5 +500,166 @@ describe('TreeActionImpl optimistic moves (destination and other mutations)', ()
     expect(state.children['folder-test']).toBeUndefined();
     expect(state.expanded['folder-test']).toBeUndefined();
     expect(revalidateSpy).toHaveBeenCalledWith('');
+  });
+});
+
+describe('TreeActionImpl.dropNodes', () => {
+  const folderA = toTreeItem({
+    fileType: CUSTOM_FOLDER_FILE_TYPE,
+    id: 'folder-a',
+    name: 'A',
+    slug: 'folder-a-slug',
+  });
+  const folderChild = toTreeItem({
+    fileType: CUSTOM_FOLDER_FILE_TYPE,
+    id: 'folder-child',
+    name: 'Child',
+  });
+  const docA = toTreeItem({ fileType: 'custom/document', id: 'doc-a', name: 'A' });
+
+  const setup = (state: TreeState) => {
+    const actions = new TreeActionImpl(
+      createSetter(() => state),
+      () => state,
+    );
+    const revalidateSpy = vi.spyOn(actions, 'revalidate').mockResolvedValue();
+    return { actions, revalidateSpy };
+  };
+
+  it('refreshes the folder that held the row, not the explorer fallback', async () => {
+    // Regression: deleting a folder from the sidebar right after opening it
+    // left `queryParams.parentId` pointing at the folder being deleted, so the
+    // parent list the sidebar renders was never refetched and the row stayed.
+    const state = createState();
+    state.children = { '': [folderA, docA], 'folder-a': [] };
+    const { actions, revalidateSpy } = setup(state);
+
+    await actions.dropNodes(['folder-a'], 'folder-a-slug');
+
+    expect(state.children['']?.map((i) => i.id)).toEqual(['doc-a']);
+    expect(revalidateSpy).toHaveBeenCalledWith('');
+    expect(revalidateSpy).not.toHaveBeenCalledWith('folder-a-slug');
+  });
+
+  it('forgets the removed folder subtree, descendants included', async () => {
+    const state = createState();
+    state.children = {
+      '': [folderA],
+      'folder-a': [folderChild],
+      'folder-child': [docA],
+    };
+    state.expanded = { 'folder-a': true, 'folder-child': true };
+    state.status = { 'folder-a': 'idle', 'folder-child': 'idle' };
+    state.errors = { 'folder-a': new Error('stale') };
+    const { actions } = setup(state);
+
+    await actions.dropNodes(['folder-a']);
+
+    expect(state.children['folder-a']).toBeUndefined();
+    expect(state.children['folder-child']).toBeUndefined();
+    expect(state.expanded['folder-a']).toBeUndefined();
+    expect(state.expanded['folder-child']).toBeUndefined();
+    expect(state.status['folder-a']).toBeUndefined();
+    expect(state.errors['folder-a']).toBeUndefined();
+  });
+
+  it('falls back to the given parent key when the tree never loaded the row', async () => {
+    const state = createState();
+    state.children = { '': [docA] };
+    const { actions, revalidateSpy } = setup(state);
+
+    await actions.dropNodes(['file-not-in-tree'], 'folder-a');
+
+    expect(revalidateSpy).toHaveBeenCalledWith('folder-a');
+    expect(revalidateSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('refreshes every folder that held one of the rows', async () => {
+    const state = createState();
+    state.children = { '': [folderA], 'folder-a': [docA, folderChild] };
+    const { actions, revalidateSpy } = setup(state);
+
+    await actions.dropNodes(['folder-child', 'doc-a'], 'ignored');
+
+    expect(revalidateSpy).toHaveBeenCalledWith('folder-a');
+    expect(revalidateSpy).toHaveBeenCalledTimes(1);
+    expect(revalidateSpy).not.toHaveBeenCalledWith('ignored');
+  });
+
+  it('skips a parent that is itself being removed', async () => {
+    const state = createState();
+    state.children = { '': [folderA], 'folder-a': [docA] };
+    const { actions, revalidateSpy } = setup(state);
+
+    await actions.dropNodes(['folder-a', 'doc-a'], 'fallback');
+
+    expect(revalidateSpy).toHaveBeenCalledWith('');
+    expect(revalidateSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('does nothing for an empty id list', async () => {
+    const state = createState();
+    state.children = { '': [folderA] };
+    const { actions, revalidateSpy } = setup(state);
+
+    await actions.dropNodes([], 'folder-a');
+
+    expect(state.children['']?.map((i) => i.id)).toEqual(['folder-a']);
+    expect(revalidateSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('sortTreeItems', () => {
+  const doc = (id: string, name: string, createdAt?: string) =>
+    toTreeItem({ createdAt, fileType: 'custom/document', id, name });
+
+  it('puts a just-created page first instead of dropping it into the A-Z list', () => {
+    // LOBE-13814: creating a page inside a folder full of "<name> 周报 — 2026-Wxx"
+    // rows landed the new "Untitled" between "TC" and "xiaojie".
+    const rows = [
+      doc('report-tc', 'TC 周报 — 2026-W35', '2026-08-28T02:00:00.000Z'),
+      doc('untitled', 'Untitled', '2026-09-04T15:31:00.000Z'),
+      doc('report-xiaojie', 'xiaojie 周报 — 2026-W35', '2026-08-29T02:00:00.000Z'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual([
+      'untitled',
+      'report-xiaojie',
+      'report-tc',
+    ]);
+  });
+
+  it('keeps folders ahead of documents no matter how new the document is', () => {
+    const folderRow = toTreeItem({
+      createdAt: '2026-01-01T00:00:00.000Z',
+      fileType: CUSTOM_FOLDER_FILE_TYPE,
+      id: 'folder-old',
+      name: '2026.08',
+    });
+    const newest = doc('doc-new', 'Untitled', '2026-09-04T15:31:00.000Z');
+
+    expect(sortTreeItems([newest, folderRow]).map((item) => item.id)).toEqual([
+      'folder-old',
+      'doc-new',
+    ]);
+  });
+
+  it('sends rows without a timestamp to the tail of their group in A-Z order', () => {
+    const rows = [
+      doc('stub-b', 'B stub'),
+      doc('dated', 'Dated', '2026-08-01T00:00:00.000Z'),
+      doc('stub-a', 'A stub'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual(['dated', 'stub-a', 'stub-b']);
+  });
+
+  it('breaks a createdAt tie by name', () => {
+    const rows = [
+      doc('b', 'Beta', '2026-08-01T00:00:00.000Z'),
+      doc('a', 'Alpha', '2026-08-01T00:00:00.000Z'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual(['a', 'b']);
   });
 });

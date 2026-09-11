@@ -1,6 +1,15 @@
 import type { EvalRunMetrics, EvalRunTopicResult } from '@lobechat/types';
 import { z } from 'zod';
 
+import type {
+  PublicEvalDataset,
+  PublicEvalRun,
+  PublicEvalRunTopic,
+  PublicEvalTestCase,
+} from '../helpers/public-fields';
+import type { PaginationQueryResponse } from './common.type';
+import { PaginationQuerySchema } from './common.type';
+
 export const CreateEvalRunRequestSchema = z
   .object({
     config: z
@@ -25,7 +34,27 @@ export const CreateEvalRunRequestSchema = z
 
 export const EvalRunIdParamSchema = z.object({ id: z.string().min(1).max(128) });
 
+export const EvalDatasetIdParamSchema = z.object({ id: z.string().min(1).max(128) });
+
+const EvalPaginationQuerySchema = PaginationQuerySchema.pick({ page: true, pageSize: true });
+
+export const EvalRunListQuerySchema = EvalPaginationQuerySchema.extend({
+  datasetId: z.string().min(1).max(128).optional(),
+  status: z
+    .enum(['idle', 'pending', 'running', 'completed', 'failed', 'aborted', 'external'])
+    .optional(),
+});
+
+export const EvalDatasetListQuerySchema = EvalPaginationQuerySchema.extend({
+  benchmarkId: z.string().min(1).max(128).optional(),
+});
+
+export const EvalRunTopicListQuerySchema = EvalPaginationQuerySchema;
+
 export type CreateEvalRunRequest = z.infer<typeof CreateEvalRunRequestSchema>;
+export type EvalRunListQuery = z.infer<typeof EvalRunListQuerySchema>;
+export type EvalDatasetListQuery = z.infer<typeof EvalDatasetListQuerySchema>;
+export type EvalRunTopicListQuery = z.infer<typeof EvalRunTopicListQuerySchema>;
 
 export interface EvalRunResponse {
   createdAt: Date;
@@ -55,3 +84,20 @@ export interface EvalRunResultsResponse {
   runId: string;
   total: number;
 }
+
+export type EvalRunListResponse = PaginationQueryResponse<{ runs: PublicEvalRun[] }>;
+
+export type EvalDatasetListResponse = PaginationQueryResponse<{ datasets: PublicEvalDataset[] }>;
+
+export interface EvalDatasetDetailResponse extends PublicEvalDataset {
+  testCases: PublicEvalTestCase[];
+}
+
+export interface EvalRunTopicResponse extends PublicEvalRunTopic {
+  input: string;
+}
+
+export type EvalRunTopicListResponse = PaginationQueryResponse<{
+  runId: string;
+  topics: EvalRunTopicResponse[];
+}>;

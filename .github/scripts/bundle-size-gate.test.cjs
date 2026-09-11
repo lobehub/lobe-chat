@@ -4,7 +4,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { test } = require('node:test');
 
-const { measureEntryGraph, stripHash } = require('./bundle-size-gate.cjs');
+const { countJsFiles, measureEntryGraph, stripHash } = require('./bundle-size-gate.cjs');
 
 const writeDist = (files) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'entry-graph-'));
@@ -48,4 +48,86 @@ test('stripHash removes the trailing rolldown hash including hashes starting wit
   );
   assert.equal(stripHash('assets/es-DBDe-NCK.js'), 'assets/es.js');
   assert.equal(stripHash('assets/index-CDFWou5k.js'), 'assets/index.js');
+});
+
+test('counts Vite-emitted JS files recursively', () => {
+  const root = writeDist({
+    'assets/index-AAAAAAAA.js': 'export const index = 1;',
+    'assets/index-AAAAAAAA.js.map': '{}',
+    'assets/lazy-BBBBBBBB.js': 'export const lazy = 1;',
+    'vendor/vendor-react-CCCCCCCC.js': 'export const react = 1;',
+  });
+
+  assert.equal(countJsFiles(root), 3);
+});
+
+const { spawnSync } = require('node:child_process');
+
+const runCheck = ({ baselineGraphCount, baselineJsTotal, currentGraphCount, currentJsTotal }) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'size-gate-'));
+  const graph = (count) => ({
+    chunks: Object.fromEntries(
+      Array.from({ length: count }, (_, i) => [`assets/chunk-${i}.js`, 1]),
+    ),
+    count,
+    entry: 'assets/index.js',
+    gz: count,
+  });
+  const write = (name, count) =>
+    fs.writeFileSync(
+      path.join(root, name),
+      JSON.stringify({
+        graphs: { 'dist/desktop': graph(count) },
+        jsChunks: {
+          targets: { 'dist/desktop': name === 'baseline.json' ? baselineJsTotal : currentJsTotal },
+          total: name === 'baseline.json' ? baselineJsTotal : currentJsTotal,
+        },
+        sizes: { 'dist/desktop': count },
+      }),
+    );
+  write('baseline.json', baselineGraphCount);
+  write('current.json', currentGraphCount);
+
+  const args = [
+    path.join(__dirname, 'bundle-size-gate.cjs'),
+    'check',
+    '--current',
+    path.join(root, 'current.json'),
+    '--baseline',
+    path.join(root, 'baseline.json'),
+  ];
+  args.push('--js-chunk-percent', '5');
+
+  return spawnSync(process.execPath, args, { encoding: 'utf8' });
+};
+
+test('Vite JS output file count over the baseline percentage limit fails the gate', () => {
+  const result = runCheck({
+    baselineGraphCount: 10,
+    baselineJsTotal: 100,
+    currentGraphCount: 10,
+    currentJsTotal: 106,
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Vite JS output file count increases by more than 5%/);
+});
+
+test('Vite JS output file count at the baseline percentage limit passes the gate', () => {
+  const result = runCheck({
+    baselineGraphCount: 10,
+    baselineJsTotal: 100,
+    currentGraphCount: 10,
+    currentJsTotal: 105,
+  });
+  assert.equal(result.status, 0);
+});
+
+test('reachable graph count increase alone does not fail the gate', () => {
+  const result = runCheck({
+    baselineGraphCount: 10,
+    baselineJsTotal: 100,
+    currentGraphCount: 20,
+    currentJsTotal: 100,
+  });
+  assert.equal(result.status, 0);
 });

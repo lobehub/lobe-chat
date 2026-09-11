@@ -1,3 +1,4 @@
+import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { CloudSandboxManifest } from '@lobechat/builtin-tool-cloud-sandbox';
 import { GoalIdentifier, isGoalPrompt } from '@lobechat/builtin-tool-goal';
 import { LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent';
@@ -18,6 +19,7 @@ import type {
   ToolSource,
 } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
+import type { DeviceUnavailableErrorData } from '@lobechat/device-gateway-client';
 import type { ChatTopicBotContext, RequestTrigger } from '@lobechat/types';
 import { getActivePluginIds } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
@@ -44,6 +46,7 @@ import {
 } from '@/helpers/executionTarget';
 import { buildConnectorManifests } from '@/libs/mcp/buildConnectorManifests';
 import { patchManifestWithPermissions } from '@/libs/mcp/connectorPermissionCheck';
+import { resolveModelMediaCapabilities } from '@/server/modules/AgentRuntime/resolveModelMediaCapabilities';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import type { ServerAgentToolsContext } from '@/server/modules/Mecha';
 import { createServerAgentToolsEngine } from '@/server/modules/Mecha';
@@ -53,7 +56,7 @@ import {
   isLobeAiAgentSlug,
   resolveAgentSelfIterationCapability,
 } from '@/server/services/agentSignal/featureGate';
-import { platformRegistry } from '@/server/services/bot/platforms';
+import { resolveUnsupportedMessageApis } from '@/server/services/bot/platforms/messageCapabilities';
 import type { ComposioService } from '@/server/services/composio';
 import {
   buildLastSyncedAtMap,
@@ -136,6 +139,7 @@ export interface ToolDiscoveryResult {
   hasAgentDocuments: boolean;
   hasEnabledKnowledgeBases: boolean;
   lobehubSkillManifests: LobeToolManifest[];
+  modelMediaCapabilities: Pick<ModelAbilities, 'audio' | 'video' | 'vision'>;
   onlineDevices: DeviceAttachment[];
   operationAgentGroup?: AgentGroupConfig;
   searchDecision: ReturnType<typeof resolveServerSearchDecision>;
@@ -285,6 +289,13 @@ export const discoverTools = async (
   const activeProviderMetadata =
     providerMetadataResult.status === 'fulfilled' ? providerMetadataResult.value : undefined;
   const activeModelAbilities = activeModelMetadata?.abilities as ModelAbilities | undefined;
+  const modelMediaCapabilities =
+    resolveModelMediaCapabilities({
+      builtinModels,
+      model,
+      provider,
+      userAbilities: activeModelAbilities,
+    }) ?? {};
   const searchDecision = resolveServerSearchDecision({
     builtinModels,
     chatConfig: agentConfig.chatConfig ?? undefined,
@@ -593,22 +604,22 @@ export const discoverTools = async (
 
     if (
       multimodalUnderstandingConfigured &&
-      ((!modelAbilities?.audio && !inputMediaAvailability.hasAudios) ||
-        (!modelAbilities?.vision && !inputMediaAvailability.hasImages) ||
-        (!modelAbilities?.video && !inputMediaAvailability.hasVideos))
+      ((!modelMediaCapabilities?.audio && !inputMediaAvailability.hasAudios) ||
+        (!modelMediaCapabilities?.vision && !inputMediaAvailability.hasImages) ||
+        (!modelMediaCapabilities?.video && !inputMediaAvailability.hasVideos))
     ) {
       historyMediaAvailability = getMediaAvailabilityFromMessages(await loadHistoryMessages());
     }
 
     const needsAudioUnderstanding =
       (inputMediaAvailability.hasAudios || historyMediaAvailability.hasAudios) &&
-      !modelAbilities?.audio;
+      !modelMediaCapabilities?.audio;
     const needsImageUnderstanding =
       (inputMediaAvailability.hasImages || historyMediaAvailability.hasImages) &&
-      !modelAbilities?.vision;
+      !modelMediaCapabilities?.vision;
     const needsVideoUnderstanding =
       (inputMediaAvailability.hasVideos || historyMediaAvailability.hasVideos) &&
-      !modelAbilities?.video;
+      !modelMediaCapabilities?.video;
     const shouldEnableMultimodalUnderstanding =
       multimodalUnderstandingConfigured &&
       (needsAudioUnderstanding || needsImageUnderstanding || needsVideoUnderstanding);
@@ -681,9 +692,17 @@ export const discoverTools = async (
     // before tool/runtime preparation so no operation can start elsewhere.
     if (
       isFixedDeviceTarget &&
+      boundDeviceId &&
       resolveToolMode(agentConfig.chatConfig ?? undefined) !== 'chat' &&
       executionPlan.kind !== 'device'
     ) {
+      const errorData: DeviceUnavailableErrorData = {
+        code: 'DEVICE_NOT_FOUND',
+        deviceId: boundDeviceId,
+        retryable: true,
+        scope: deps.workspaceId ? 'workspace' : 'personal',
+        ...(deps.workspaceId ? { workspaceId: deps.workspaceId } : {}),
+      };
       const detail =
         executionPlan.kind === 'device-unrouted' && executionPlan.reason === 'bound-device-offline'
           ? 'The device fixed by this agent is offline. Ask an editor to bring it online or change the agent device policy.'
@@ -691,13 +710,13 @@ export const discoverTools = async (
       await deps.messageModel.update(assistantMessageId, {
         content: '',
         error: {
-          body: { detail },
+          body: { detail, ...errorData },
           message: 'Fixed agent device unavailable',
           type: 'ServerAgentRuntimeError',
         },
       });
       throw new TRPCError({
-        cause: { data: { code: 'FixedAgentDeviceUnavailable' } },
+        cause: { data: errorData },
         code: 'PRECONDITION_FAILED',
         message: detail,
       });
@@ -744,6 +763,19 @@ export const discoverTools = async (
         userId: deps.userId,
       });
     }
+
+    // Opt-in capability from the existing system-info RPC. Older desktop and CLI
+    // clients omit it, so they must never receive the new Computer Use manifest.
+    const supportedDeviceTools =
+      activeDeviceId && canUseDevice && !disableLocalSystem
+        ? (
+            await deviceGateway.queryDeviceSystemInfo(
+              deps.userId,
+              activeDeviceId,
+              activeDeviceScope === 'workspace' ? deps.workspaceId : undefined,
+            )
+          )?.supportedTools
+        : undefined;
 
     // Resolve the operation's group context ONCE here and snapshot it into op
     // metadata below — the per-step context engine reads it back without a DB
@@ -811,6 +843,7 @@ export const discoverTools = async (
             boundDeviceId,
             deviceOnline,
             gatewayConfigured: true,
+            supportedTools: supportedDeviceTools,
           }
         : undefined,
       disableLocalSystem,
@@ -832,13 +865,16 @@ export const discoverTools = async (
       // in the sandbox.
       // For bot conversations we also pass the IM platform so `lobe-message`
       // can drop APIs the platform can't fulfil (e.g. WeChat has no
-      // `readMessages`).
+      // `readMessages`). Telegram Guest Mode uses a stricter overlay —
+      // the bot is not a chat member and has no regular channel tools.
       manifestContext: {
         ...(botContext?.platform && {
           botPlatform: {
             id: botContext.platform,
-            unsupportedMessageApis: platformRegistry.getPlatform(botContext.platform)
-              ?.unsupportedMessageApis,
+            unsupportedMessageApis: resolveUnsupportedMessageApis(
+              botContext.platform,
+              botContext.platformThreadId,
+            ),
           },
         }),
         executionEnv: executionPlanToManifestExecutionEnv(executionPlan, localDeviceId),
@@ -858,7 +894,7 @@ export const discoverTools = async (
       : [
           ...new Set([
             ...agentPlugins,
-            ...(disableLocalSystem ? [] : [LocalSystemManifest.identifier]),
+            ...(disableLocalSystem ? [] : [LocalSystemManifest.identifier, AuvManifest.identifier]),
             RemoteDeviceManifest.identifier,
             // Include LobeHub Skills and Composio tools so they are passed to generateToolsDetailed
             ...activeLobehubSkillManifests.map((m) => m.identifier),
@@ -900,6 +936,12 @@ export const discoverTools = async (
     const isManifestIngestAllowed = (identifier: string): boolean => {
       if (exclusivePluginIds && !exclusivePluginIds.includes(identifier)) return false;
       if (disabledPluginIdSet.has(identifier)) return false;
+      if (
+        gatewayConfigured &&
+        identifier === AuvManifest.identifier &&
+        !supportedDeviceTools?.includes(identifier)
+      )
+        return false;
       if (!canUseDevice && isDeviceToolIdentifier(identifier)) return false;
       if (deviceLocked && REMOTE_DEVICE_TOOL_IDENTIFIERS.has(identifier)) return false;
       return true;
@@ -920,6 +962,7 @@ export const discoverTools = async (
       canUseDevice,
       deviceLocked,
       disableLocalSystem,
+      supportedDeviceTools: gatewayConfigured ? (supportedDeviceTools ?? []) : undefined,
     });
     // Effective runtimeMode from the plan's resolved target — same value the
     // engine derives, single derivation point.
@@ -945,6 +988,7 @@ export const discoverTools = async (
     // executor marking below, and the desktop client owns the tool gate.
     const stripDeviceTools = gatewayConfigured && !deviceCapable;
     if (stripDeviceTools) {
+      delete toolManifestMap[AuvManifest.identifier];
       delete toolManifestMap[RemoteDeviceManifest.identifier];
       delete toolManifestMap[LocalSystemManifest.identifier];
     }
@@ -960,21 +1004,23 @@ export const discoverTools = async (
       }
     }
 
-    // lobe-local-system has `discoverable: isDesktop` in builtinTools, which
-    // evaluates to false on the Node.js server side, so it never enters the
-    // loop above. Explicitly inject it only when the device gateway is
+    // Local System and AUV have `discoverable: isDesktop` in builtinTools,
+    // which evaluates to false on the Node.js server side, so they never enter
+    // the loop above. Explicitly inject them only when the device gateway is
     // configured AND the plan's target is 'local' — skip for sandbox/none
     // targets to avoid leaking local-system into non-local sessions. (The
     // plan already degrades to `none` when device access is denied, so no
     // separate `canUseDevice` check is needed here.)
-    if (
-      !disableLocalSystem &&
-      isManifestIngestAllowed(LocalSystemManifest.identifier) &&
-      gatewayConfigured &&
-      agentRuntimeMode === 'local' &&
-      !toolManifestMap[LocalSystemManifest.identifier]
-    ) {
-      toolManifestMap[LocalSystemManifest.identifier] = LocalSystemManifest as LobeToolManifest;
+    for (const manifest of [LocalSystemManifest, AuvManifest]) {
+      if (
+        !disableLocalSystem &&
+        isManifestIngestAllowed(manifest.identifier) &&
+        gatewayConfigured &&
+        agentRuntimeMode === 'local' &&
+        !toolManifestMap[manifest.identifier]
+      ) {
+        toolManifestMap[manifest.identifier] = manifest as LobeToolManifest;
+      }
     }
 
     // Include lobehub skill and composio manifests for activator discovery.
@@ -1134,6 +1180,7 @@ export const discoverTools = async (
     hasAgentDocuments,
     hasEnabledKnowledgeBases,
     lobehubSkillManifests,
+    modelMediaCapabilities,
     onlineDevices,
     operationAgentGroup,
     searchDecision,

@@ -7,9 +7,10 @@ import {
   isRemoteHeterogeneousType,
 } from '@lobechat/heterogeneous-agents';
 import type {
+  DeviceUnavailableErrorData,
   ErrorType,
   ExecAgentResult,
-  HeterogeneousTopicModel,
+  HeterogeneousTopicPin,
   LobeAgentAgencyConfig,
   RequestTrigger,
   WorkingDirConfig,
@@ -36,6 +37,7 @@ import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLi
 import { hookDispatcher } from '@/server/services/agentRuntime/hooks';
 import type { AgentHook } from '@/server/services/agentRuntime/hooks/types';
 import { deviceGateway } from '@/server/services/deviceGateway';
+import { resolveDeviceDispatchAuthorizationFailure } from '@/server/services/deviceGateway/dispatchAuthorization';
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
 import { buildCloudHeteroContext } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
@@ -94,6 +96,7 @@ const finalizeHeteroDispatchError = async (
     agentId?: string;
     assistantMessageId: string;
     detail: string;
+    errorData?: DeviceUnavailableErrorData;
     /**
      * Client error type. Defaults to the generic `ServerAgentRuntimeError`; pass a
      * dedicated `ChatErrorType` (e.g. `DeviceGatewayNotConfigured`) so the web
@@ -109,6 +112,7 @@ const finalizeHeteroDispatchError = async (
     agentId,
     assistantMessageId,
     detail,
+    errorData,
     errorType = ChatErrorType.ServerAgentRuntimeError,
     message,
     operationId,
@@ -119,7 +123,7 @@ const finalizeHeteroDispatchError = async (
   //    end event below re-reads a message that already carries the error.
   await deps.messageModel.update(assistantMessageId, {
     content: '',
-    error: { body: { detail }, message, type: errorType },
+    error: { body: { detail, ...errorData }, message, type: errorType },
   });
 
   // 1b. Finalize the run through CompletionLifecycle's single entry — the SAME
@@ -182,7 +186,7 @@ export interface HeteroDispatchInput {
   memberDeviceOverride?: Pick<LobeAgentAgencyConfig, 'boundDeviceId' | 'executionTarget'>;
   operationTaskId?: string;
   parentOperationId?: string;
-  pinnedHeterogeneousTopicModel?: HeterogeneousTopicModel;
+  pinnedHeterogeneousTopicModel?: HeterogeneousTopicPin;
   requestedDeviceId?: string;
   requestTrigger?: RequestTrigger;
   runAttachments: { imageList?: Array<{ alt: string; id: string; url: string }> };
@@ -267,6 +271,7 @@ export const dispatchHeteroAgent = async (
     deps.workspaceId,
   ).recordStart({
     agentId: persistAgentId,
+    appContext: { ...appContext, sourceMessageId: userMessageId },
     chatGroupId: appContext?.groupId ?? null,
     maxSteps,
     metadata: {
@@ -455,6 +460,25 @@ export const dispatchHeteroAgent = async (
     ? deps.userId
     : (agentConfig.userId ?? deps.userId);
 
+  // Resolve CLI-device routing before persisting the marker. Cancellation
+  // must address the same device even though local CLI agents use a different
+  // dispatch transport from notify-based platform agents.
+  const deviceHeteroPlan = !isRemoteHetero
+    ? resolveExecutionPlan({
+        agencyConfig: agentConfig.agencyConfig,
+        canUseDevice,
+        isHetero: true,
+        clientExecutionAvailable: false,
+        requestedDeviceId,
+        sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
+        trigger: requestTrigger,
+      })
+    : undefined;
+  const cliDeviceId = deviceHeteroPlan?.kind === 'device' ? deviceHeteroPlan.deviceId : undefined;
+  const cliDeviceWorkspaceId = cliDeviceId
+    ? await deps.resolveDeviceWorkspaceId(cliDeviceId)
+    : undefined;
+
   // Register the run's lifecycle hooks so the hetero terminal path fires
   // onComplete/onError through the same `hookDispatcher` the normal LLM
   // runtime uses — driving the task lifecycle (onTopicComplete) and IM bot
@@ -477,7 +501,13 @@ export const dispatchHeteroAgent = async (
           deviceUserId: remoteDeviceUserId,
           deviceWorkspaceId: remoteDeviceWorkspaceId,
         }
-      : {}),
+      : cliDeviceId
+        ? {
+            deviceId: cliDeviceId,
+            deviceUserId: deps.userId,
+            deviceWorkspaceId: cliDeviceWorkspaceId,
+          }
+        : {}),
     operationId,
     orchestrationRole: appContext?.orchestrationRole,
     scope: appContext?.scope ?? undefined,
@@ -673,40 +703,54 @@ export const dispatchHeteroAgent = async (
 
     // lh connect only handles tool_call_request (not agent_run_request),
     // so we use executeToolCall with the runHeteroTask tool instead of dispatchAgentRun.
-    const result = await deviceGateway.executeToolCall(
-      {
-        deviceId: remoteDeviceId,
-        userId: remoteDeviceUserId,
-        workspaceId: remoteDeviceWorkspaceId,
-      },
-      {
-        apiName: 'runHeteroTask',
-        arguments: JSON.stringify({
-          agentId: resolvedAgentId,
-          agentType: heteroType,
-          cwd: undefined,
-          operationId,
-          parentOperationId: topicStartOwnerOperationId,
-          platformAgentId: agentConfig.agencyConfig?.heterogeneousProvider?.platformAgentId,
-          prompt,
-          taskId: operationId,
-          topicId,
-          // Scope notify callbacks to the same workspace as the dispatched
-          // topic so agentNotify can resolve the workspace-owned topic.
-          // Without this the device's notify call falls back to personal
-          // mode and TopicModel.findById returns NOT_FOUND.
-          workspaceId: deps.workspaceId,
-        }),
-        identifier: 'runHeteroTask',
-      },
-      120_000, // hetero tasks can take longer than the default 30 s
+    const authorizationError = await resolveDeviceDispatchAuthorizationFailure(
+      deps.db,
+      deps.userId,
+      remoteDeviceId,
+      remoteDeviceWorkspaceId,
     );
+    const result = authorizationError
+      ? {
+          content: 'The workspace device is no longer registered or visible for this run.',
+          error: 'DEVICE_NOT_FOUND',
+          errorData: authorizationError,
+          success: false,
+        }
+      : await deviceGateway.executeToolCall(
+          {
+            deviceId: remoteDeviceId,
+            userId: remoteDeviceUserId,
+            workspaceId: remoteDeviceWorkspaceId,
+          },
+          {
+            apiName: 'runHeteroTask',
+            arguments: JSON.stringify({
+              agentId: resolvedAgentId,
+              agentType: heteroType,
+              cwd: undefined,
+              operationId,
+              parentOperationId: topicStartOwnerOperationId,
+              platformAgentId: agentConfig.agencyConfig?.heterogeneousProvider?.platformAgentId,
+              prompt,
+              taskId: operationId,
+              topicId,
+              // Scope notify callbacks to the same workspace as the dispatched
+              // topic so agentNotify can resolve the workspace-owned topic.
+              // Without this the device's notify call falls back to personal
+              // mode and TopicModel.findById returns NOT_FOUND.
+              workspaceId: deps.workspaceId,
+            }),
+            identifier: 'runHeteroTask',
+          },
+          120_000, // hetero tasks can take longer than the default 30 s
+        );
     if (!result.success) {
       log('execAgent: remote hetero dispatch failed: %s', result.error);
       await finalizeHeteroDispatchError(deps, {
         agentId: resolvedAgentId,
         assistantMessageId,
         detail: result.error ?? 'Device dispatch failed',
+        errorData: result.errorData,
         errorType: resolveHeteroDispatchErrorType(result.error),
         message: humanizeHeteroDispatchError(result.error),
         operationId,
@@ -718,6 +762,7 @@ export const dispatchHeteroAgent = async (
         autoStarted: false,
         createdAt: new Date().toISOString(),
         error: result.error,
+        errorData: result.errorData,
         message: 'Remote hetero agent dispatch failed',
         operationId,
         status: 'error',
@@ -774,15 +819,7 @@ export const dispatchHeteroAgent = async (
       log('execAgent: failed to init stream for local hetero: %O', err);
     }
 
-    const heteroPlan = resolveExecutionPlan({
-      agencyConfig: agentConfig.agencyConfig,
-      canUseDevice,
-      isHetero: true,
-      clientExecutionAvailable: false,
-      requestedDeviceId,
-      sandboxExecutionAvailable: supportsCloudHeterogeneousSandbox(heteroType),
-      trigger: requestTrigger,
-    });
+    const heteroPlan = deviceHeteroPlan!;
 
     if (heteroPlan.kind !== 'sandbox') {
       const dispatchDeviceId = heteroPlan.kind === 'device' ? heteroPlan.deviceId : undefined;
@@ -823,7 +860,7 @@ export const dispatchHeteroAgent = async (
       const boundDevice =
         (await deviceModelForCwd.findByDeviceId(dispatchDeviceId)) ??
         (await deviceModelForCwd.findWorkspaceDeviceById(dispatchDeviceId));
-      const dispatchWorkspaceId = await deps.resolveDeviceWorkspaceId(dispatchDeviceId);
+      const dispatchWorkspaceId = cliDeviceWorkspaceId;
       // Resolve via the shared precedence helper so dispatch, workspace-init,
       // and the new-topic backfill below all agree on the cwd.
       const deviceCwdConfig = resolveDeviceWorkingDirectoryConfig({
@@ -862,27 +899,36 @@ export const dispatchHeteroAgent = async (
             })
           : undefined;
 
-      const result = await deviceGateway.dispatchAgentRun({
-        ...heteroParams,
-        args: heteroExecArgs,
-        cwd: deviceCwd,
-        deviceId: dispatchDeviceId,
-        resumeFallbackSystemContext: deviceResumeFallbackSystemContext,
-        systemContext: deviceSystemContext,
-        // Route to the workspace pool when this is a workspace device; the
-        // operation JWT stays member-scoped (the run belongs to the member).
-        workspaceId: dispatchWorkspaceId,
-        // Topic scope for device-side heteroIngest/heteroFinish. Distinct
-        // from the routing workspace above: a workspace topic on a personal
-        // device still has to write back under `deps.workspaceId`.
-        ingestWorkspaceId: deps.workspaceId,
-      });
+      const authorizationError = await resolveDeviceDispatchAuthorizationFailure(
+        deps.db,
+        deps.userId,
+        dispatchDeviceId,
+        dispatchWorkspaceId,
+      );
+      const result = authorizationError
+        ? { error: 'DEVICE_NOT_FOUND', errorData: authorizationError, success: false }
+        : await deviceGateway.dispatchAgentRun({
+            ...heteroParams,
+            args: heteroExecArgs,
+            cwd: deviceCwd,
+            deviceId: dispatchDeviceId,
+            resumeFallbackSystemContext: deviceResumeFallbackSystemContext,
+            systemContext: deviceSystemContext,
+            // Route to the workspace pool when this is a workspace device; the
+            // operation JWT stays member-scoped (the run belongs to the member).
+            workspaceId: dispatchWorkspaceId,
+            // Topic scope for device-side heteroIngest/heteroFinish. Distinct
+            // from the routing workspace above: a workspace topic on a personal
+            // device still has to write back under `deps.workspaceId`.
+            ingestWorkspaceId: deps.workspaceId,
+          });
       if (!result.success) {
         log('execAgent: hetero device dispatch failed: %s', result.error);
         await finalizeHeteroDispatchError(deps, {
           agentId: resolvedAgentId,
           assistantMessageId,
           detail: result.error ?? 'Device dispatch failed',
+          errorData: result.errorData,
           errorType: resolveHeteroDispatchErrorType(result.error),
           message: humanizeHeteroDispatchError(result.error),
           operationId,
@@ -894,6 +940,7 @@ export const dispatchHeteroAgent = async (
           autoStarted: false,
           createdAt: new Date().toISOString(),
           error: result.error,
+          errorData: result.errorData,
           message: 'Hetero agent device dispatch failed',
           operationId,
           status: 'error',
@@ -902,6 +949,26 @@ export const dispatchHeteroAgent = async (
           topicId,
           userMessageId: userMessageId ?? parentMessageId ?? '',
         };
+      }
+
+      // Local CLI hetero agents dispatch to a device just like remote platform
+      // agents, so persist the device route after the dispatch is accepted.
+      // interruptTask uses these fields to find and stop the native process.
+      try {
+        const patched = await deps.topicModel.patchRunningOperation(topicId, operationId, {
+          deviceId: dispatchDeviceId,
+          deviceWorkspaceId: dispatchWorkspaceId,
+          heteroType,
+        });
+        log(
+          'execAgent: patch runningOperation device info=%s deviceId=%s heteroType=%s op=%s',
+          patched,
+          dispatchDeviceId,
+          heteroType,
+          operationId,
+        );
+      } catch (err) {
+        log('execAgent: failed to patch runningOperation with device info: %O', err);
       }
     } else {
       if (!supportsCloudHeterogeneousSandbox(heteroType)) {

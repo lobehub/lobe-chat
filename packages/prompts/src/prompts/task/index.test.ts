@@ -457,7 +457,34 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('console is clean');
     expect(result).toContain('include artifact paths, commands, and observed results');
     expect(result).toContain('an independent verifier decides whether this Task is complete');
-    expect(result).not.toContain('lh acceptance run result submit');
+    expect(result).toContain('Run the Acceptance inside this Task, not after it');
+    expect(result).toContain('lh acceptance install');
+    expect(result).toContain('lh acceptance run result submit');
+    expect(result).toContain('proved by a screenshot or recording');
+    // The portable skill is pulled to disk by CLI builders and is absent from
+    // `builtinSkills`, so it must never be named as an unconditional step.
+    expect(result).not.toContain('Use the `acceptance` skill to drive');
+    expect(result).toContain('must reference a real artifact by fileId');
+  });
+
+  it('should still instruct in-task acceptance when the policy has no criteria or requirement', () => {
+    const result = buildTaskRunPrompt(
+      {
+        task: {
+          id: 'task_root',
+          identifier: 'TASK-1',
+          instruction: 'ship the feature',
+          status: 'running',
+          verify: { criteria: [], enabled: true },
+        },
+      },
+      NOW,
+    );
+
+    expect(result).toContain('Verify — delivery acceptance');
+    expect(result).toContain('Run the Acceptance inside this Task, not after it');
+    expect(result).toContain('Criterion ids are minted when this run starts');
+    expect(result).toContain('lh verify plan state');
   });
 
   it('should omit the verify section when verify is disabled', () => {
@@ -673,6 +700,38 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('2. Lighthouse ≥ 90');
     expect(result).toContain('`lh task topic view TASK-1 <seq>`');
   });
+
+  it.each([undefined, 'Keep the existing table.'])(
+    'renders automatic review feedback alongside optional user feedback (%s)',
+    (rejectComment) => {
+      const result = buildTaskRunPrompt(
+        {
+          goalLoop: {
+            automaticReviewFeedback: 'Add the missing total row.',
+            rejectComment,
+            round: 2,
+          },
+          task: {
+            ...baseTask,
+            identifier: 'TASK-1',
+            name: 'Report',
+            instruction: 'Finish the report.',
+          },
+        },
+        NOW,
+      );
+
+      expect(result).toContain('Review feedback on the last delivery');
+      expect(result).toContain('Automatic Acceptance review:\nAdd the missing total row.');
+      expect(result).not.toContain('undefined');
+      if (rejectComment) {
+        expect(result).toContain(rejectComment);
+        expect(result.indexOf(rejectComment)).toBeLessThan(
+          result.indexOf('Automatic Acceptance review:'),
+        );
+      }
+    },
+  );
 
   it('omits the round budget suffix for uncapped goals', () => {
     const result = buildTaskRunPrompt(

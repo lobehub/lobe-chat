@@ -312,6 +312,8 @@ ENV \
     QWEN_API_KEY="" QWEN_MODEL_LIST="" QWEN_PROXY_URL="" \
     # SambaNova
     SAMBANOVA_API_KEY="" SAMBANOVA_MODEL_LIST="" \
+    # Meta
+    META_API_KEY="" META_MODEL_LIST="" META_PROXY_URL="" \
     # Search1API
     SEARCH1API_API_KEY="" SEARCH1API_MODEL_LIST="" \
     # SenseNova
@@ -326,6 +328,8 @@ ENV \
     TAICHU_API_KEY="" TAICHU_MODEL_LIST="" \
     # TogetherAI
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
+    # Unsloth
+    UNSLOTH_API_KEY="" UNSLOTH_MODEL_LIST="" UNSLOTH_PROXY_URL="" \
     # Upstage
     UPSTAGE_API_KEY="" UPSTAGE_MODEL_LIST="" \
     # v0 (Vercel)

@@ -398,7 +398,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       priority?: number;
       removeDependencies?: string[];
     },
-    _ctx?: BuiltinToolContext,
+    ctx?: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
     try {
       log('[TaskExecutor] editTask - params:', params);
@@ -461,7 +461,15 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
         // `external` is the default, but keep it explicit because editTask must
         // bump the mounted editor's content revision rather than look like an
         // autosave echo.
-        ops.push(store.updateTask(identifier, updateData, { source: 'external' }));
+        ops.push(
+          store.updateTask(identifier, updateData, {
+            // Client-first runtime: name the agent so the feed does not credit
+            // the user for what the agent did (the gateway path carries it
+            // server-side instead).
+            ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
+            source: 'external',
+          }),
+        );
       }
 
       if (addDependencies?.length) {
@@ -504,7 +512,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       schedulePattern?: string | null;
       scheduleTimezone?: string | null;
     },
-    _ctx?: BuiltinToolContext,
+    ctx?: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
     try {
       log('[TaskExecutor] setTaskSchedule - params:', params);
@@ -556,7 +564,12 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
         );
       }
       if (Object.keys(scheduleUpdate).length > 0) {
-        ops.push(taskService.update(identifier, scheduleUpdate));
+        ops.push(
+          taskService.update(identifier, {
+            ...scheduleUpdate,
+            ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
+          }),
+        );
       }
 
       // maxExecutions lives in `tasks.config.schedule.maxExecutions` (JSONB);
@@ -930,6 +943,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
 
       const identifier = params.identifier ?? ctx?.taskId ?? undefined;
       const id = await getTaskStoreState().updateTaskStatus(identifier, params.status, {
+        ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
         error: params.error,
       });
       // Work chips read live task status via the message-list summary join;

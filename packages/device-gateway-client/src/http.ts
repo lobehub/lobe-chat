@@ -1,6 +1,8 @@
 import {
   describeGatewayRequestFailure,
   describeGatewayResponseFailure,
+  type DeviceTransportFailure,
+  type DeviceUnavailableErrorData,
 } from './deviceTransportError';
 import type {
   DeviceSystemInfo,
@@ -23,32 +25,43 @@ export interface DeviceStatusResult {
   online: boolean;
 }
 
+/** Result envelope returned by a tunneled device tool call. */
 export interface DeviceToolCallResult {
   content: string;
   error?: string;
+  /** Structured availability context for callers that can choose whether to retry. */
+  errorData?: DeviceUnavailableErrorData;
   state?: unknown;
   success: boolean;
 }
 
+/** Result envelope returned by a tunneled device messaging call. */
 export interface DeviceMessageApiResult {
   content: string;
   error?: string;
+  /** Structured availability context for callers that can choose whether to retry. */
+  errorData?: DeviceUnavailableErrorData;
   success: boolean;
 }
 
+/**
+ * Result envelope returned by a generic device RPC.
+ *
+ * @param T Successful RPC payload type.
+ */
 export interface DeviceRpcResult<T = unknown> {
   data?: T;
   error?: string;
+  /** Structured availability context for callers that can choose whether to retry. */
+  errorData?: DeviceUnavailableErrorData;
   success: boolean;
 }
 
 /** Shape a described transport failure into the LLM-facing tool result. */
-const toFailedToolCallResult = (failure: {
-  content: string;
-  error: string;
-}): DeviceToolCallResult => ({
+const toFailedToolCallResult = (failure: DeviceTransportFailure): DeviceToolCallResult => ({
   content: failure.content,
   error: failure.error,
+  ...(failure.data ? { errorData: failure.data } : {}),
   success: false,
 });
 
@@ -180,25 +193,35 @@ export class GatewayHttpClient {
 
     if (!res.ok) {
       const text = await res.text().catch(() => '');
-      return toFailedToolCallResult(describeGatewayResponseFailure(res.status, text, 'tool call'));
+      return toFailedToolCallResult(
+        describeGatewayResponseFailure(res.status, text, 'tool call', params),
+      );
     }
 
     const data = await res.json();
+
+    // Device sends a typed envelope ({ content, state, success }). The legacy
+    // fallback used to JSON.stringify `data.content ?? data` — when content was
+    // missing it would stringify the *entire response body* including `success`
+    // and any other top-level fields, which leaked the structured payload into
+    // the LLM-facing content string. Only stringify the `content` field itself;
+    // never fall back to the whole body.
+    const deviceContent =
+      typeof data.content === 'string'
+        ? data.content
+        : data.content === undefined || data.content === null
+          ? ''
+          : JSON.stringify(data.content);
+
     return {
-      // Device sends a typed envelope ({ content, state, success }). The legacy
-      // fallback used to JSON.stringify `data.content ?? data` — when content
-      // was missing it would stringify the *entire response body* including
-      // `success` and any other top-level fields, which leaked the structured
-      // payload into the LLM-facing content string. Only stringify the
-      // `content` field itself; never fall back to the whole body.
-      content:
-        typeof data.content === 'string'
-          ? data.content
-          : data.content !== undefined && data.content !== null
-            ? JSON.stringify(data.content)
-            : typeof data.error === 'string'
-              ? data.error
-              : '',
+      // A device that fails with nothing to say — an api it has no handler for,
+      // a handler that threw before writing output — reported `content: ''`,
+      // and `typeof '' === 'string'` short-circuited the error fallback below.
+      // The failure then reached the model as an empty, successful-looking
+      // result: observed live as a builder calling `screenshot` fifteen times
+      // against a device with no browser handler and reading nothing back each
+      // time. Every other failure path here puts the failure text in `content`.
+      content: deviceContent || (typeof data.error === 'string' ? data.error : ''),
       error: data.error,
       state: data.state,
       success: data.success ?? true,
@@ -219,8 +242,13 @@ export class GatewayHttpClient {
 
     if (!res.ok) {
       const text = await res.text().catch(() => '');
-      const failure = describeGatewayResponseFailure(res.status, text, 'message API call');
-      return { content: failure.content, error: failure.error, success: false };
+      const failure = describeGatewayResponseFailure(res.status, text, 'message API call', params);
+      return {
+        content: failure.content,
+        error: failure.error,
+        ...(failure.data ? { errorData: failure.data } : {}),
+        success: false,
+      };
     }
 
     const data = await res.json();
@@ -258,12 +286,14 @@ export class GatewayHttpClient {
      * `lh hetero exec` can write back under the topic's scope.
      */
     ingestWorkspaceId?: string;
-  }): Promise<{ success: boolean; error?: string }> {
+  }): Promise<{ success: boolean; error?: string; errorData?: DeviceUnavailableErrorData }> {
     const res = await this.post('/api/device/agent/run', params);
     if (!res.ok) {
       const text = await res.text().catch(() => '');
+      const failure = describeGatewayResponseFailure(res.status, text, 'agent run', params);
       return {
-        error: describeGatewayResponseFailure(res.status, text, 'agent run').error,
+        error: failure.error,
+        ...(failure.data ? { errorData: failure.data } : {}),
         success: false,
       };
     }
@@ -308,8 +338,10 @@ export class GatewayHttpClient {
 
     if (!res.ok) {
       const text = await res.text().catch(() => '');
+      const failure = describeGatewayResponseFailure(res.status, text, 'RPC call', params);
       return {
-        error: describeGatewayResponseFailure(res.status, text, 'RPC call').error,
+        error: failure.error,
+        ...(failure.data ? { errorData: failure.data } : {}),
         success: false,
       };
     }

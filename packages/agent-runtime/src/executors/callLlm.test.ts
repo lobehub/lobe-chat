@@ -137,7 +137,7 @@ const createCallTransport = ({
   trace = createTrace(),
 }: {
   policy?: LLMRetryPolicy;
-  runAttempt?: ReturnType<typeof vi.fn>;
+  runAttempt?: LLMTransport['runAttempt'];
   trace?: LLMTrace;
 } = {}) => {
   const createTraceScope = vi.fn().mockReturnValue(trace);

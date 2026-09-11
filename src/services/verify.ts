@@ -7,6 +7,7 @@ import type {
   ReviewAdjudication,
   ReviewProposalEdit,
   VerifierType,
+  VerifyCheckDefinition,
   VerifyCheckItem,
   VerifyEvidence,
   VerifyOnFailStrategy,
@@ -45,10 +46,13 @@ export type AcceptanceStatusOverride = 'accepted' | 'closed' | 'delivered' | 're
 
 /** Editable fields of a single delivery-check criterion. */
 export interface UpdateCriterionValue {
+  archivedAt?: Date | null;
+  definition?: VerifyCheckDefinition | null;
   description?: string | null;
   documentId?: string | null;
   onFail?: VerifyOnFailStrategy;
   required?: boolean;
+  tags?: string[];
   title?: string;
   verifierConfig?: Record<string, unknown>;
   verifierType?: VerifierType;
@@ -56,9 +60,12 @@ export interface UpdateCriterionValue {
 
 /** Fields for authoring a new delivery-check criterion. */
 export interface CreateCriterionInput {
+  definition?: VerifyCheckDefinition;
+  description?: string;
   documentId?: string;
   onFail?: VerifyOnFailStrategy;
   required?: boolean;
+  tags?: string[];
   title: string;
   verifierConfig?: Record<string, unknown>;
   verifierType: VerifierType;
@@ -156,6 +163,12 @@ export interface GenerateDraftPlanInput {
 
 /** Client wrapper around the `verify` lambda router. */
 export class VerifyService {
+  startFlow = (input: Parameters<typeof lambdaClient.acceptance.startFlow.mutate>[0]) =>
+    lambdaClient.acceptance.startFlow.mutate(input);
+
+  reviewFlowStep = (input: Parameters<typeof lambdaClient.acceptance.reviewFlowStep.mutate>[0]) =>
+    lambdaClient.acceptance.reviewFlowStep.mutate(input);
+
   // ---- subject-level acceptance ----
   getAcceptanceBundle = (id: string): Promise<AcceptanceBundle> =>
     lambdaClient.acceptance.getBundle.query({ id });

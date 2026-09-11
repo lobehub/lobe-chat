@@ -222,7 +222,7 @@ When generating PDFs with Chinese text, you MUST:
 <session_behavior>
 - Your sandbox session is automatically managed per conversation topic
 - If a session expires, it will be automatically recreated
-- Files from previous sessions may not persist; recreate them as needed
+- Files from previous sessions may not persist
 - The sessionExpiredAndRecreated flag in responses indicates if this occurred
 </session_behavior>
 

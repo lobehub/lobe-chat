@@ -19,7 +19,9 @@ const mocks = vi.hoisted(() => {
   return {
     buildDeviceLhEnv: vi.fn(),
     checkHash: vi.fn(),
-    createSandboxService: vi.fn(() => sandboxService),
+    createSandboxService: vi.fn(function () {
+      return sandboxService;
+    }),
     executeToolCall: vi.fn(),
     fileService: {
       getFullFileUrl: vi.fn(),
@@ -46,47 +48,63 @@ vi.mock('@lobechat/builtin-skills', () => ({
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn(() => ({
-    getAgentConfigById: mocks.getAgentConfigById,
-  })),
+  AgentModel: vi.fn(function () {
+    return {
+      getAgentConfigById: mocks.getAgentConfigById,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/agentSkill', () => ({
-  AgentSkillModel: vi.fn(() => ({
-    findAll: mocks.findAll,
-    findById: mocks.findById,
-    findByName: mocks.findByName,
-  })),
+  AgentSkillModel: vi.fn(function () {
+    return {
+      findAll: mocks.findAll,
+      findById: mocks.findById,
+      findByName: mocks.findByName,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/file', () => ({
-  FileModel: vi.fn(() => ({
-    checkHash: mocks.checkHash,
-  })),
+  FileModel: vi.fn(function () {
+    return {
+      checkHash: mocks.checkHash,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: vi.fn(() => ({
-    getUserSettings: mocks.getUserSettings,
-  })),
+  UserModel: vi.fn(function () {
+    return {
+      getUserSettings: mocks.getUserSettings,
+    };
+  }),
 }));
 
 vi.mock('@/helpers/skillFilters', () => ({
-  filterBuiltinSkills: vi.fn((skills: unknown) => skills),
+  filterBuiltinSkills: vi.fn(function (skills: unknown) {
+    return skills;
+  }),
 }));
 
 vi.mock('@/server/services/agentDocuments', () => ({
-  AgentDocumentsService: vi.fn(() => ({
-    getAgentSkills: mocks.getAgentSkills,
-  })),
+  AgentDocumentsService: vi.fn(function () {
+    return {
+      getAgentSkills: mocks.getAgentSkills,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => mocks.fileService),
+  FileService: vi.fn(function () {
+    return mocks.fileService;
+  }),
 }));
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn(() => mocks.marketService),
+  MarketService: vi.fn(function () {
+    return mocks.marketService;
+  }),
 }));
 
 vi.mock('@/server/services/sandbox', async () => {
@@ -99,9 +117,11 @@ vi.mock('@/server/services/sandbox', async () => {
 });
 
 vi.mock('@/server/services/skill/resource', () => ({
-  SkillResourceService: vi.fn(() => ({
-    readResource: mocks.readResource,
-  })),
+  SkillResourceService: vi.fn(function () {
+    return {
+      readResource: mocks.readResource,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/toolExecution/preprocessLhCommand', () => ({
@@ -112,9 +132,13 @@ vi.mock('@/server/services/toolExecution/preprocessLhCommand', () => ({
 
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
-    executeToolCall: mocks.executeToolCall,
     prepareSkillDirectory: mocks.prepareSkillDirectory,
   },
+}));
+
+vi.mock('@/server/services/deviceGateway/authorizedToolCall', () => ({
+  executeAuthorizedDeviceToolCall: (_serverDB: unknown, ...args: unknown[]) =>
+    mocks.executeToolCall(...args),
 }));
 
 vi.mock('../resolveWorkspaceScope', () => ({
@@ -656,9 +680,9 @@ describe('skillsRuntime', () => {
       // Hold both prepares pending to prove the second RPC fires before the
       // first resolves (a sequential await chain would deadlock this test).
       const resolvers: ((value: { extractedDir: string; success: boolean }) => void)[] = [];
-      mocks.prepareSkillDirectory.mockImplementation(
-        () => new Promise((resolve) => resolvers.push(resolve)),
-      );
+      mocks.prepareSkillDirectory.mockImplementation(function () {
+        return new Promise((resolve) => resolvers.push(resolve));
+      });
       mocks.executeToolCall.mockResolvedValue({
         content: 'ok',
         state: { exitCode: 0, stdout: 'ok', success: true },

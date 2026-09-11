@@ -20,10 +20,10 @@ import { documentComments, users, workspaceMembers } from '@/database/schemas';
 import type { DocumentCommentItem } from '@/database/schemas/documentComment';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { canViewDocumentContent } from '@/server/services/documentAccess';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 import {
   assertCanPerformResourceAction,
-  canPerformResourceAction,
   getResourceMeta,
 } from '@/server/services/resourcePermission';
 import { getWorkspaceScopedPermissionMatches } from '@/server/services/workspacePermission';
@@ -201,14 +201,11 @@ const notifyActivitiesBestEffort = (
               const grantedPermissions = permissionsByUserId.get(userId);
               if (!grantedPermissions) return null;
 
-              const canView = await canPerformResourceAction({
-                action: 'view',
+              const canView = await canViewDocumentContent({
                 db: ctx.serverDB,
-                effectiveAccessLevel: 'view',
                 grantedPermissions,
                 meta,
                 resourceId: documentId,
-                resourceType: 'document',
                 userId,
                 workspaceId: ctx.workspaceId,
               });

@@ -6,6 +6,7 @@ import {
   ReactImagePlugin,
   ReactLinkPlugin,
   ReactLiteXmlPlugin,
+  ReactMentionPlugin,
   ReactTablePlugin,
   ReactToolbarPlugin,
 } from '@lobehub/editor';
@@ -17,11 +18,13 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { createChatInputRichPlugins } from '@/features/ChatInput/InputEditor/plugins';
+import { writeTopicCommentMentionMarkdown } from '@/features/Portal/TopicComments/editorUtils';
 
 import { type EditorCanvasProps } from './EditorCanvas';
 import InlineToolbar from './InlineToolbar';
 import LinearFilePlugin from './LinearFilePlugin';
 import { registerAttachmentClickOpen } from './registerAttachmentClickOpen';
+import { registerBlockDecoratorCaretGuard } from './registerBlockDecoratorCaretGuard';
 import { useFileUpload, useImageUpload } from './useImageUpload';
 
 const IMAGE_FILTERS = [
@@ -45,6 +48,12 @@ const fileNodeStyles = createStaticStyles(({ css }) => ({
 const STATIC_PLUGINS = [
   ReactLiteXmlPlugin,
   ...createChatInputRichPlugins({ linkPlugin: ReactLinkPlugin }),
+  // The kernel reads a plugin's config once at init, and `mentionOption` can
+  // arrive later (workspace pages resolve their member source asynchronously),
+  // so pin the member chip's markdown form here rather than relying on
+  // `mentionOption.markdownWriter` being present at mount. Same writer as the
+  // comment editors, so a chip serialises identically in every canvas.
+  Editor.withProps(ReactMentionPlugin, { markdownWriter: writeTopicCommentMentionMarkdown }),
   ReactTablePlugin,
 ];
 
@@ -98,6 +107,8 @@ export interface InternalEditorProps extends EditorCanvasProps {
  */
 const InternalEditor = memo<InternalEditorProps>(
   ({
+    blockImageCaretGuard = false,
+    className,
     contentChangeLockRef,
     contentStyle,
     disabled,
@@ -220,6 +231,15 @@ const InternalEditor = memo<InternalEditorProps>(
       return () => unregister?.();
     }, [editor]);
 
+    // Opt-in (comment editors): keep the caret out of the root node around
+    // block images by pushing an empty paragraph next to the image instead of
+    // showing Lexical's horizontal root-level caret (LOBE-13882).
+    useEffect(() => {
+      if (!editor || !blockImageCaretGuard) return;
+      const unregister = registerBlockDecoratorCaretGuard(editor);
+      return () => unregister?.();
+    }, [blockImageCaretGuard, editor]);
+
     const onInitRef = useRef(onInit);
     const initializedEditorRef = useRef<IEditor | null>(null);
 
@@ -306,6 +326,7 @@ const InternalEditor = memo<InternalEditorProps>(
 
     return (
       <div
+        className={className}
         style={wrapperStyle}
         onClick={(e) => {
           e.stopPropagation();

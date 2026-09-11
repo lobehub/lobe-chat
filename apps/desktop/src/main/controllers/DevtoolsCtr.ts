@@ -1,7 +1,8 @@
-import type { AppProcessMetrics, GpuStatus } from '@lobechat/electron-client-ipc';
+import type { AppProcessMetrics, GpuStatus, MemoryDump } from '@lobechat/electron-client-ipc';
 import { app } from 'electron';
 
 import { getIpcContext } from '@/utils/ipc';
+import { parseMemoryDump, type TraceEvent } from '@/utils/memoryDump';
 
 import { ControllerModule, IpcMethod } from './index';
 
@@ -13,6 +14,8 @@ interface CompleteGpuInfo {
 
 const readText = (value: unknown): string | null =>
   typeof value === 'string' && value.length > 0 ? value : null;
+
+const MEMORY_DUMP_TIMEOUT = 15_000;
 
 export default class DevtoolsCtr extends ControllerModule {
   static override readonly groupName = 'devtools';
@@ -44,8 +47,59 @@ export default class DevtoolsCtr extends ControllerModule {
               memoryMB:
                 gpuProcesses.reduce((sum, metric) => sum + metric.memory.workingSetSize, 0) / 1024,
             },
+      processes: metrics.map((metric) => ({
+        cpuPercent: metric.cpu.percentCPUUsage,
+        name: readText(metric.name) ?? readText(metric.serviceName),
+        pid: metric.pid,
+        type: metric.type,
+        workingSetMB: metric.memory.workingSetSize / 1024,
+      })),
       rendererResidentMB: renderer ? renderer.memory.workingSetSize / 1024 : null,
     };
+  }
+
+  @IpcMethod()
+  async captureMemoryDump(): Promise<MemoryDump> {
+    const contents = getIpcContext()?.sender;
+    if (!contents) throw new Error('memory dump needs a renderer sender');
+
+    const dbg = contents.debugger;
+    const attachedHere = !dbg.isAttached();
+    if (attachedHere) dbg.attach('1.3');
+
+    const events: TraceEvent[] = [];
+    let finish!: () => void;
+    const complete = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    const onMessage = (_event: unknown, method: string, params: { value?: TraceEvent[] }) => {
+      if (method === 'Tracing.dataCollected') events.push(...(params.value ?? []));
+      if (method === 'Tracing.tracingComplete') finish();
+    };
+    dbg.on('message', onMessage);
+
+    try {
+      await dbg.sendCommand('Tracing.start', {
+        traceConfig: {
+          includedCategories: ['disabled-by-default-memory-infra'],
+          memoryDumpConfig: { triggers: [] },
+        },
+        transferMode: 'ReportEvents',
+      });
+      await dbg.sendCommand('Tracing.requestMemoryDump', { levelOfDetail: 'detailed' });
+      await dbg.sendCommand('Tracing.end');
+      await Promise.race([
+        complete,
+        new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('memory dump timed out')), MEMORY_DUMP_TIMEOUT);
+        }),
+      ]);
+    } finally {
+      dbg.off('message', onMessage);
+      if (attachedHere) dbg.detach();
+    }
+
+    return parseMemoryDump(events, contents.getOSProcessId());
   }
 
   @IpcMethod()
