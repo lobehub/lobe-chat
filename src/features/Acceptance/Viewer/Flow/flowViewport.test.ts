@@ -1,11 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  getSelectedFlowNodeId,
-  isRectInView,
-  revealSelectionAfterResize,
-  revealToggledGroup,
-} from './flowViewport';
+import { getSelectedFlowNodeId, isRectInView, panNodeIntoView } from './flowViewport';
 
 const size = { height: 600, width: 1000 };
 
@@ -23,40 +18,62 @@ describe('isRectInView', () => {
   });
 });
 
-describe('revealSelectionAfterResize', () => {
+describe('panNodeIntoView', () => {
   const flow = (
-    viewport = { x: 0, y: 0, zoom: 1.4 },
-    bounds = { height: 80, width: 200, x: 100, y: 100 },
+    viewport = { x: 0, y: 0, zoom: 1 },
+    bounds = { height: 100, width: 200, x: 100, y: 50 },
   ) => ({
-    fitView: vi.fn().mockResolvedValue(true),
     getNodesBounds: vi.fn().mockReturnValue(bounds),
     getViewport: vi.fn().mockReturnValue(viewport),
+    setViewport: vi.fn(),
   });
 
-  it('keeps the zoomed viewport untouched when nothing is selected', () => {
-    const api = flow();
-    revealSelectionAfterResize(api, size, undefined);
-    expect(api.fitView).not.toHaveBeenCalled();
+  it('does nothing without a node, without a layout, or when it is already visible', () => {
+    const idle = flow();
+    panNodeIntoView(idle, size, undefined);
+    panNodeIntoView(idle, size, 'node-1');
+    const unlaid = flow({ x: 0, y: 0, zoom: 1 }, { height: 0, width: 0, x: 0, y: 0 });
+    panNodeIntoView(unlaid, size, 'node-1');
+    expect(idle.setViewport).not.toHaveBeenCalled();
+    expect(unlaid.setViewport).not.toHaveBeenCalled();
   });
 
-  it('keeps the zoomed viewport untouched when the selected node is still visible', () => {
-    const api = flow();
-    revealSelectionAfterResize(api, size, 'node-1');
-    expect(api.fitView).not.toHaveBeenCalled();
+  it('pans only far enough to clear the edge the panel pushed the node past', () => {
+    // 880..1080 against a 1000 canvas: 104px of overflow plus the 24px inset.
+    const api = flow({ x: 0, y: 0, zoom: 1 }, { height: 100, width: 200, x: 880, y: 50 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).toHaveBeenCalledWith({ x: -104, y: 0, zoom: 1 });
   });
 
-  it('pans at the same zoom when the panel pushes the selected node out of view', () => {
-    const api = flow({ x: 0, y: 0, zoom: 1.4 }, { height: 80, width: 200, x: 620, y: 100 });
-    revealSelectionAfterResize(api, size, 'node-1');
-    expect(api.fitView).toHaveBeenCalledWith(
-      expect.objectContaining({ maxZoom: 1.4, minZoom: 1.4, nodes: [{ id: 'node-1' }] }),
-    );
+  it('leaves the axis that still fits completely alone', () => {
+    const api = flow({ x: 0, y: 0, zoom: 1 }, { height: 100, width: 200, x: -300, y: 200 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).toHaveBeenCalledWith({ x: 324, y: 0, zoom: 1 });
   });
 
-  it('ignores a selection whose node is not laid out yet', () => {
-    const api = flow(undefined, { height: 0, width: 0, x: 0, y: 0 });
-    revealSelectionAfterResize(api, size, 'node-1');
-    expect(api.fitView).not.toHaveBeenCalled();
+  it('never centres: a node barely past the edge moves by that much, not by half a canvas', () => {
+    // Centring this node would move it ~400px; it only needs 34.
+    const api = flow({ x: 0, y: 0, zoom: 1 }, { height: 100, width: 200, x: 810, y: 50 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).toHaveBeenCalledWith({ x: -34, y: 0, zoom: 1 });
+  });
+
+  it('treats a node inside the canvas but close to its edge as visible', () => {
+    const api = flow({ x: 0, y: 0, zoom: 1 }, { height: 100, width: 200, x: 790, y: 50 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).not.toHaveBeenCalled();
+  });
+
+  it('aligns the leading edge of a node too tall to fit', () => {
+    const api = flow({ x: 0, y: 0, zoom: 1 }, { height: 900, width: 200, x: 100, y: 400 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).toHaveBeenCalledWith({ x: 0, y: -376, zoom: 1 });
+  });
+
+  it('scales the shift with the zoom', () => {
+    const api = flow({ x: 0, y: 0, zoom: 0.5 }, { height: 100, width: 200, x: 2000, y: 50 });
+    panNodeIntoView(api, size, 'node-1');
+    expect(api.setViewport).toHaveBeenCalledWith({ x: -124, y: 0, zoom: 0.5 });
   });
 });
 
@@ -70,48 +87,5 @@ describe('getSelectedFlowNodeId', () => {
       ]),
     ).toBe('b');
     expect(getSelectedFlowNodeId([{ data: {}, id: 'a' }])).toBeUndefined();
-  });
-});
-
-describe('revealToggledGroup', () => {
-  const api = (
-    viewport = { x: 0, y: 0, zoom: 1 },
-    bounds = { height: 96, width: 360, x: 40, y: 40 },
-  ) => ({
-    fitView: vi.fn().mockResolvedValue(true),
-    getNodesBounds: vi.fn().mockReturnValue(bounds),
-    getViewport: vi.fn().mockReturnValue(viewport),
-    setViewport: vi.fn(),
-  });
-
-  it('leaves the canvas alone when the toggled group is already fully visible', () => {
-    const flow = api();
-    revealToggledGroup(flow, size, 'group-1');
-    expect(flow.fitView).not.toHaveBeenCalled();
-    expect(flow.setViewport).not.toHaveBeenCalled();
-  });
-
-  it('pans a collapsed group back into view without changing the zoom', () => {
-    const flow = api({ x: 0, y: 0, zoom: 0.8 }, { height: 96, width: 360, x: 40, y: 900 });
-    revealToggledGroup(flow, size, 'group-1');
-    expect(flow.fitView).toHaveBeenCalledWith(
-      expect.objectContaining({ maxZoom: 0.8, minZoom: 0.8, nodes: [{ id: 'group-1' }] }),
-    );
-    expect(flow.setViewport).not.toHaveBeenCalled();
-  });
-
-  it('reads a group taller than the canvas from its header rather than its middle', () => {
-    const flow = api({ x: 0, y: 0, zoom: 1 }, { height: 1200, width: 360, x: 40, y: 500 });
-    revealToggledGroup(flow, size, 'group-1');
-    expect(flow.setViewport).toHaveBeenCalledWith({ x: 0, y: 24 - 500, zoom: 1 });
-    expect(flow.fitView).not.toHaveBeenCalled();
-  });
-
-  it('ignores a toggle with no group or no layout', () => {
-    const flow = api({ x: 0, y: 0, zoom: 1 }, { height: 0, width: 0, x: 0, y: 0 });
-    revealToggledGroup(flow, size, undefined);
-    revealToggledGroup(flow, size, 'group-1');
-    expect(flow.fitView).not.toHaveBeenCalled();
-    expect(flow.setViewport).not.toHaveBeenCalled();
   });
 });

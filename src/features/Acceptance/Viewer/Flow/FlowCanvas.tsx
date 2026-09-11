@@ -18,11 +18,7 @@ import { useSingleton } from '@/hooks/useSingleton';
 import { FlowAnchorContext } from './flowAnchor';
 import { FlowEdge } from './FlowEdge';
 import type { FlowGraphData } from './flowGraph';
-import {
-  getSelectedFlowNodeId,
-  revealSelectionAfterResize,
-  revealToggledGroup,
-} from './flowViewport';
+import { getSelectedFlowNodeId, panNodeIntoView } from './flowViewport';
 
 const edgeTypes = { transition: FlowEdge };
 
@@ -76,12 +72,12 @@ export function FlowCanvas({
     anchor.current = null;
     const container = ref.current;
     if (!toggled || !container) return;
-    revealToggledGroup(
-      { fitView, getNodesBounds, getViewport, setViewport },
+    panNodeIntoView(
+      { getNodesBounds, getViewport, setViewport },
       { height: container.clientHeight, width: container.clientWidth },
       toggled,
     );
-  }, [nodes, anchor, fitView, getNodesBounds, getViewport, setViewport]);
+  }, [nodes, anchor, getNodesBounds, getViewport, setViewport]);
   const viewports = useSingleton(
     () => new Map<string, { viewport: Viewport; width: number; height: number }>(),
   );
@@ -97,13 +93,13 @@ export function FlowCanvas({
     const container = ref.current;
     if (!container || typeof ResizeObserver === 'undefined') return;
     return observeWidth(container, () =>
-      revealSelectionAfterResize(
-        { fitView, getNodesBounds, getViewport },
+      panNodeIntoView(
+        { getNodesBounds, getViewport, setViewport },
         { height: container.clientHeight, width: container.clientWidth },
         selectedRef.current,
       ),
     );
-  }, [fitView, getNodesBounds, getViewport]);
+  }, [getNodesBounds, getViewport, setViewport]);
   useEffect(() => {
     const container = ref.current;
     const frame = requestAnimationFrame(() => {
