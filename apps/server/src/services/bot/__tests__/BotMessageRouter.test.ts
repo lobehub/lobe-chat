@@ -88,6 +88,7 @@ const mockWebhookHandler = vi.hoisted(() =>
 const mockGetList = vi.hoisted(() => vi.fn().mockResolvedValue([]));
 const mockAppendToList = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const mockStateSetIfNotExists = vi.hoisted(() => vi.fn().mockResolvedValue(true));
+const mockDispatchToHandlers = vi.hoisted(() => vi.fn());
 const mockProcessMessage = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const mockDrainDeferredBotMessages = vi.hoisted(() => vi.fn().mockResolvedValue([]));
 const mockBuildReplayMessages = vi.hoisted(() => vi.fn());
@@ -96,7 +97,7 @@ vi.mock('chat', () => ({
   BaseFormatConverter: class {},
   Chat: vi.fn().mockImplementation(function () {
     return {
-      dispatchToHandlers: vi.fn(),
+      dispatchToHandlers: mockDispatchToHandlers,
       getState: vi.fn(() => ({
         appendToList: mockAppendToList,
         getList: mockGetList,
@@ -270,7 +271,7 @@ vi.mock('../platforms', async () => ({
   // exact Chat SDK concurrency config a channel ends up with, and a stub would
   // only ever test itself. `utils` is safe to import for real — the barrel is
   // mocked because it instantiates every platform definition, `utils` does not.
-  resolveBotConcurrency: (await vi.importActual<PlatformUtils>('../platforms/utils'))
+  resolveBotConcurrency: (await vi.importActual<typeof PlatformUtils>('../platforms/utils'))
     .resolveBotConcurrency,
   getBotReplyLocale: (platform: string | undefined): string => {
     if (platform === 'feishu' || platform === 'qq' || platform === 'wechat') return 'zh-CN';
@@ -916,6 +917,40 @@ describe('BotMessageRouter', () => {
         ...rest,
       };
     }
+
+    it.each([
+      ['/new', 'question'],
+      ['question', '/new'],
+    ])('preserves command and content order for %s then %s', async (first, second) => {
+      const events: string[] = [];
+      const thread = {
+        ...makeThread({ isDM: true }),
+        state: Promise.resolve({ topicId: 'old-topic' }),
+      };
+      thread.setState.mockImplementation(async () => {
+        events.push('reset');
+      });
+      mockHandleSubscribedMessage.mockImplementation(async (_thread, message) => {
+        events.push(message.text);
+      });
+      mockDispatchToHandlers.mockImplementation(async (_adapter, _threadId, message, context) => {
+        const handler = mockOnSubscribedMessage.mock.calls.at(-1)![0];
+        await handler(thread, message, context);
+      });
+      try {
+        await loadSubscribedHandler();
+        const bot = vi.mocked(Chat).mock.results.at(-1)!.value;
+        await bot.dispatchToHandlers({}, thread.id, makeMessage({ text: second }), {
+          skipped: [makeMessage({ text: first })],
+          totalSinceLastHandler: 2,
+        });
+        expect(events).toEqual([first, second].map((text) => (text === '/new' ? 'reset' : text)));
+        expect(thread.setState).toHaveBeenCalledTimes(1);
+        expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+      } finally {
+        mockDispatchToHandlers.mockReset();
+      }
+    });
 
     it('should skip non-mention messages in a multi-human group thread', async () => {
       // post-fix the gate keys off thread.isDM || mention ||

@@ -17,7 +17,10 @@ type Dispatch = (
  *
  * This internal SDK boundary is covered by real-package contract tests.
  */
-export function patchSenderBatches(bot: Chat): void {
+export function patchSenderBatches(
+  bot: Chat,
+  isCommand: (message: Message) => boolean = () => false,
+): void {
   const target = bot as unknown as { dispatchToHandlers: Dispatch };
   if (typeof target.dispatchToHandlers !== 'function') {
     throw new Error('Chat SDK does not expose the sender-batch dispatch boundary');
@@ -27,7 +30,14 @@ export function patchSenderBatches(bot: Chat): void {
     const batches: Message[][] = [];
     for (const source of [...(context?.skipped ?? []), message]) {
       const batch = batches.at(-1);
-      if (batch && getSameSenderMessages(source, [batch[0]]).length > 0) {
+      // Commands change conversation state and must retain their own turn on
+      // either side of ordinary content, even when every source has one author.
+      if (
+        batch &&
+        !isCommand(source) &&
+        !isCommand(batch[0]) &&
+        getSameSenderMessages(source, [batch[0]]).length > 0
+      ) {
         batch.push(source);
       } else {
         batches.push([source]);

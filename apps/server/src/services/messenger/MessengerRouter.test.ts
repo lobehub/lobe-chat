@@ -303,6 +303,7 @@ const wechatCreds = {
 };
 
 beforeEach(() => {
+  mockChatBot.dispatchToHandlers = vi.fn();
   mockVerifySignature.mockReturnValue(true);
   mockChatBot.webhooks = {
     slack: mockWebhookHandler,
@@ -583,6 +584,43 @@ const fakeWechatDmThread = (): any => ({
   isDM: true,
   post: vi.fn(),
   subscribe: vi.fn(),
+});
+
+describe('MessengerRouter collected commands', () => {
+  it.each([
+    ['/new', 'question'],
+    ['question', '/new'],
+  ])('preserves command and content order for %s then %s', async (first, second) => {
+    const events: string[] = [];
+    const thread = {
+      ...fakeWechatDmThread(),
+      state: Promise.resolve({ topicId: 'old-topic' }),
+      setState: vi.fn(async () => {
+        events.push('reset');
+      }),
+    };
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link',
+      platformUserId: 'U_ALICE',
+      userId: 'user_alice',
+    });
+    mockHandleSubscribed.mockImplementation(async (_thread, message) => {
+      events.push(message.text);
+    });
+    mockChatBot.dispatchToHandlers = vi.fn(async (_adapter, _threadId, message, context) => {
+      const handler = mockChatBot.onSubscribedMessage.mock.calls.at(-1)![0];
+      await handler(thread, message, context);
+    });
+    await loadWechatBot();
+    await mockChatBot.dispatchToHandlers({}, thread.id, fakeMessage({ text: second }), {
+      skipped: [fakeMessage({ text: first })],
+      totalSinceLastHandler: 2,
+    });
+    expect(events).toEqual([first, second].map((text) => (text === '/new' ? 'reset' : text)));
+    expect(thread.setState).toHaveBeenCalledTimes(1);
+    expect(mockHandleSubscribed).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('MessengerRouter channel @mention', () => {

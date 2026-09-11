@@ -493,7 +493,11 @@ export class MessengerRouter {
     }
 
     const bot = new Chat(config);
-    patchSenderBatches(bot);
+    const commands = this.getCommandsForPlatform(creds.platform);
+    patchSenderBatches(bot, (message) => {
+      const parsed = parseCommand(message.text);
+      return !!parsed && commands.some((command) => command.name === parsed.name);
+    });
     return bot;
   }
 

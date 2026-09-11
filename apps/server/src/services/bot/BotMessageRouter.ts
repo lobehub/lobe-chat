@@ -479,7 +479,16 @@ export class BotMessageRouter {
     // see `resolveBotConcurrency`, which also rescues channels created before
     // 'burst' existed in chat-sdk 4.29.
     const { debounceMs, strategy } = resolveBotConcurrency(platform, settings);
-    const chatBot = this.createChatBot(adapters, `agent-${agentId}`, strategy, debounceMs);
+    const chatBot = this.createChatBot(
+      adapters,
+      `agent-${agentId}`,
+      strategy,
+      debounceMs,
+      (message) => {
+        const text = client.sanitizeUserInput?.(message.text ?? '') ?? message.text;
+        return BotMessageRouter.dispatchTextCommand(text, commands) !== null;
+      },
+    );
     this.registerHandlers(chatBot, serverDB, client, commands, {
       agentId,
       applicationId,
@@ -561,6 +570,7 @@ export class BotMessageRouter {
     label: string,
     concurrencyStrategy: string,
     debounceMs: number,
+    isCommand: (message: Message) => boolean,
   ): Chat<any> {
     const config: any = {
       adapters,
@@ -586,7 +596,7 @@ export class BotMessageRouter {
     }
 
     const bot = new Chat(config);
-    patchSenderBatches(bot);
+    patchSenderBatches(bot, isCommand);
     return bot;
   }
 

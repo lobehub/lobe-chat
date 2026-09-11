@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { DiscordApi } from './api';
+
 const mocks = vi.hoisted(() => ({
   redisAvailable: true,
   set: vi.fn(),
@@ -25,7 +27,7 @@ const { clearDiscordChatCompositionMemoryCache, isSoloDiscordBotThread } =
 
 const human = (id: string) => ({ member: { user: { bot: false, id } } });
 const bot = (id: string) => ({ member: { user: { bot: true, id } } });
-const makeApi = (listThreadMembers: ReturnType<typeof vi.fn>) => ({ listThreadMembers });
+const makeApi = (listThreadMembers: DiscordApi['listThreadMembers']) => ({ listThreadMembers });
 
 describe('isSoloDiscordBotThread', () => {
   beforeEach(() => {

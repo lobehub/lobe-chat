@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 
-import FeishuUserIdExtras from './feishu/UserIdExtras';
+import { FeishuUserIdExtras } from '@/features/AgentSetting/AgentChannel/feishu/UserIdExtras';
+
 import ImessageCredentialExtras from './imessage/CredentialExtras';
 import LineCredentialExtras from './line/CredentialExtras';
 import type {

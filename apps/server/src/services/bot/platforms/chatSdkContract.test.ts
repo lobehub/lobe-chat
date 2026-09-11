@@ -102,8 +102,9 @@ const createMemoryState = ({ exclusiveLocks = false }: { exclusiveLocks?: boolea
 
 const createRealBot = ({
   concurrency,
+  isCommand,
   patch = true,
-}: { concurrency?: unknown; patch?: boolean } = {}) => {
+}: { concurrency?: unknown; isCommand?: (message: Message) => boolean; patch?: boolean } = {}) => {
   const chatBot = new Chat({
     adapters: {
       discord: createDiscordAdapter({
@@ -117,7 +118,7 @@ const createRealBot = ({
     userName: 'lobehub',
   } as any);
 
-  patchSenderBatches(chatBot);
+  patchSenderBatches(chatBot, isCommand);
   if (patch) patchDiscordForwardedInteractions(chatBot);
   return chatBot;
 };
@@ -399,6 +400,45 @@ describe('chat-sdk contract · overlapping-message strategies', () => {
 
     expect(received).toEqual([[{ kind: 'image' }, { kind: 'text' }]]);
   });
+
+  it.each(['burst', 'debounce', 'queue'])(
+    'keeps commands separate from neighboring content through real %s dispatch',
+    async (strategy) => {
+      const bot = createRealBot({
+        concurrency: { debounceMs: 80, strategy },
+        isCommand: (message) => /^\/new(?:\s|$)/.test(message.text),
+      });
+      const received: string[] = [];
+      bot.onNewMention(async (_thread, message, context) => {
+        received.push(mergeBotMessages(message, context?.skipped).text);
+      });
+      await bot.initialize();
+      const adapter = (bot as any).adapters.get('discord');
+      const threadId = `discord:@me:${DM_CHANNEL_ID}`;
+      const texts = ['before', '/new', 'after', '/new', 'last'];
+      const messages = texts.map(
+        (text, index) =>
+          new Message({
+            attachments: [],
+            author: {
+              fullName: 'user',
+              isBot: false,
+              isMe: false,
+              userId: USER_ID,
+              userName: 'user',
+            },
+            formatted: { type: 'root', children: [] },
+            id: `command-${index}`,
+            metadata: { dateSent: new Date(), edited: false },
+            raw: {},
+            text,
+            threadId,
+          }),
+      );
+      await Promise.all(messages.map((message) => bot.processMessage(adapter, threadId, message)));
+      expect(received).toEqual(texts);
+    },
+  );
 
   it.each(['burst', 'debounce', 'queue'])(
     'preserves each sender through %s dispatch',
