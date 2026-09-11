@@ -663,21 +663,6 @@ export const AcceptanceCheckRow = memo<{
                 })}
               </Flexbox>
             )}
-            {canCommentEvidence && (
-              <Button
-                outdent
-                icon={<Icon icon={MessageSquare} />}
-                style={{ alignSelf: 'flex-start' }}
-                type={'text'}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  openEvidenceComment();
-                }}
-              >
-                {t('acceptance.comments.commentEvidence')}
-              </Button>
-            )}
-
             {check.state === 'not_executed' && (
               <Flexbox
                 horizontal
@@ -860,77 +845,100 @@ export const AcceptanceCheckRow = memo<{
                 onRound={onRound}
               />
             )}
-            {/* Confirm (plain filled) anchors the right edge; reject is the
-              quiet text escape next to it. */}
-            {reviewable &&
-              !activeReview &&
-              (detailMode ? (
-                <Flexbox gap={10} style={{ marginBlockStart: 6 }}>
-                  <TextArea
-                    autoSize={{ maxRows: 8, minRows: 3 }}
-                    placeholder={t('acceptance.review.detailPlaceholder')}
-                    value={reviewComment}
-                    onChange={(event) => setReviewComment(event.target.value)}
-                  />
-                  <Flexbox horizontal gap={8}>
+            {/* One row closes the check: looking harder on the left, deciding on
+              the right. Circling the evidence is another way of reading what
+              was delivered rather than a verdict, so it keeps its quiet text
+              styling and the left edge — but it sits ON the same line as the
+              buttons instead of stacking a half-empty row above them. */}
+            {(canCommentEvidence || (reviewable && !activeReview && !detailMode)) && (
+              <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
+                {canCommentEvidence ? (
+                  <Button
+                    outdent
+                    icon={<Icon icon={MessageSquare} />}
+                    type={'text'}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openEvidenceComment();
+                    }}
+                  >
+                    {t('acceptance.comments.commentEvidence')}
+                  </Button>
+                ) : (
+                  <span />
+                )}
+                {reviewable && !activeReview && !detailMode && (
+                  <Flexbox horizontal gap={4} justify={'flex-end'}>
                     <Button
-                      block
-                      disabled={reviewPending || !reviewComment.trim()}
-                      loading={rejecting}
-                      size={'large'}
-                      style={{ flex: 1 }}
-                      onClick={handleReject}
+                      disabled={reviewPending && !ignoring}
+                      loading={ignoring}
+                      size={'small'}
+                      type={'text'}
+                      onClick={handleIgnore}
+                    >
+                      {t('acceptance.review.ignore')}
+                    </Button>
+                    <Button
+                      disabled={reviewPending}
+                      size={'small'}
+                      type={'text'}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openReject();
+                      }}
                     >
                       {t('acceptance.review.reject')}
                     </Button>
                     <Button
-                      block
                       disabled={reviewPending && !accepting}
                       icon={<Icon icon={Check} />}
                       loading={accepting}
-                      size={'large'}
-                      style={{ flex: 1 }}
+                      size={'small'}
                       type={'fill'}
                       onClick={handleAccept}
                     >
                       {t('acceptance.review.accept')}
                     </Button>
                   </Flexbox>
-                </Flexbox>
-              ) : (
-                <Flexbox horizontal gap={4} justify={'flex-end'}>
+                )}
+              </Flexbox>
+            )}
+            {/* The phone keeps its own stacked shape: a comment box over two
+              full-width buttons, which no single row can hold. */}
+            {reviewable && !activeReview && detailMode && (
+              <Flexbox gap={10} style={{ marginBlockStart: 6 }}>
+                <TextArea
+                  autoSize={{ maxRows: 8, minRows: 3 }}
+                  placeholder={t('acceptance.review.detailPlaceholder')}
+                  value={reviewComment}
+                  onChange={(event) => setReviewComment(event.target.value)}
+                />
+                <Flexbox horizontal gap={8}>
                   <Button
-                    disabled={reviewPending && !ignoring}
-                    loading={ignoring}
-                    size={'small'}
-                    type={'text'}
-                    onClick={handleIgnore}
-                  >
-                    {t('acceptance.review.ignore')}
-                  </Button>
-                  <Button
-                    disabled={reviewPending}
-                    size={'small'}
-                    type={'text'}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      openReject();
-                    }}
+                    block
+                    disabled={reviewPending || !reviewComment.trim()}
+                    loading={rejecting}
+                    size={'large'}
+                    style={{ flex: 1 }}
+                    onClick={handleReject}
                   >
                     {t('acceptance.review.reject')}
                   </Button>
                   <Button
+                    block
                     disabled={reviewPending && !accepting}
                     icon={<Icon icon={Check} />}
                     loading={accepting}
-                    size={'small'}
+                    size={'large'}
+                    style={{ flex: 1 }}
                     type={'fill'}
                     onClick={handleAccept}
                   >
                     {t('acceptance.review.accept')}
                   </Button>
                 </Flexbox>
-              ))}
+              </Flexbox>
+            )}
           </Flexbox>
         )}
       </Flexbox>
