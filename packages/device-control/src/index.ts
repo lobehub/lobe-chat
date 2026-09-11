@@ -1,5 +1,6 @@
 export { DEVICE_RPC_METHODS, type DeviceRpcMethod, executeDeviceRpc } from './dispatch';
 export {
+  defaultCopyAssetForPublish,
   defaultGetLocalFilePreview,
   defaultReadExternalAssetForPublish,
   EXTERNAL_PUBLISH_ASSET_MAX_BYTES,

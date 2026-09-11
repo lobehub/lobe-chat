@@ -82,6 +82,7 @@ const mockLocalFileProtocolManager = {
   approveIndexedProjectRoot: vi.fn(),
   approveProjectRootFromScope: vi.fn(),
   createPreviewUrl: vi.fn(),
+  copyExternalFileForPublish: vi.fn(),
   readExternalFileForPublish: vi.fn(),
   readPreviewFile: vi.fn(),
 };
@@ -371,6 +372,37 @@ describe('LocalFileCtr', () => {
         contentType: 'image/png',
         success: true,
       });
+    });
+  });
+
+  describe('copyAssetForPublish', () => {
+    it('copies through the protocol manager gate', async () => {
+      mockLocalFileProtocolManager.copyExternalFileForPublish.mockResolvedValue(true);
+
+      const result = await localFileCtr.copyAssetForPublish({
+        from: '/outside/image.png',
+        to: '/workspace/.lobe-artifacts/site/image.png',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.copyExternalFileForPublish).toHaveBeenCalledWith({
+        filePath: '/outside/image.png',
+        targetPath: '/workspace/.lobe-artifacts/site/image.png',
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({ success: true });
+    });
+
+    it('reports a refused copy as a failure', async () => {
+      mockLocalFileProtocolManager.copyExternalFileForPublish.mockResolvedValue(false);
+
+      const result = await localFileCtr.copyAssetForPublish({
+        from: '/outside/image.png',
+        to: '/elsewhere/image.png',
+        workingDirectory: '/workspace',
+      });
+
+      expect(result.success).toBe(false);
     });
   });
 
