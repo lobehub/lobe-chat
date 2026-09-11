@@ -26,6 +26,8 @@ const agentMeta = (name: string): SharedAgentData['agentMeta'] => ({
   backgroundColor: null,
   description: null,
   name,
+  openingQuestions: [],
+  tags: [],
   title: null,
 });
 
