@@ -1,3 +1,1 @@
-import { CURRENT_VERSION } from '@/const/version';
-
-export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || CURRENT_VERSION;
+export { WEB_APP_VERSION as APP_VERSION } from '@/const/appVersion';
