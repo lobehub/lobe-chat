@@ -718,6 +718,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
               <Button
                 className={styles.reconnectButton}
                 icon={RefreshCwIcon}
+                iconProps={{ size: 10 }}
                 loading={reconnectingDeviceId === d.deviceId}
                 size={'small'}
                 type={'text'}
