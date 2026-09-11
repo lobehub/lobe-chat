@@ -74,7 +74,11 @@ const cachedTopicStatus = async (): Promise<string | undefined> => {
 describe('persisted topic list across a reload', () => {
   beforeEach(() => {
     act(() => {
-      useChatStore.setState({ activeAgentId: AGENT_ID, activeGroupId: null, topicDataMap: {} });
+      useChatStore.setState({
+        activeAgentId: AGENT_ID,
+        activeGroupId: undefined,
+        topicDataMap: {},
+      });
     });
   });
 
