@@ -123,9 +123,9 @@ const styles = createStaticStyles(({ css }) => ({
       color: ${cssVar.colorTextSecondary};
     }
   `,
-  body: css`
+  deviceList: css`
     overflow-y: auto;
-    max-height: min(520px, 70vh);
+    max-height: 240px;
 
     /* Room for the scrollbar so rows don't sit flush against it. */
     margin-inline-end: -4px;
@@ -772,170 +772,172 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
           </a>
         )}
       </div>
-      <div className={styles.body}>
-        {isHetero ? null : (
-          <OptionRow
-            active={isActive('none')}
-            desc={t('heteroAgent.executionTarget.noneDesc')}
-            icon={<ExecutionTargetIcon target={'none'} />}
-            label={t('heteroAgent.executionTarget.none')}
-            onClick={() => void handleSelect('none')}
-          />
-        )}
-        {isHetero ? null : (
-          <OptionRow
-            active={isActive('auto')}
-            desc={t('heteroAgent.executionTarget.autoDesc')}
-            icon={<ExecutionTargetIcon target={'auto'} />}
-            label={t('heteroAgent.executionTarget.auto')}
-            onClick={() => void handleSelect('auto')}
-          />
-        )}
-        {/* `local` pins this desktop's personal `deviceId`. Available in both
+      {isHetero ? null : (
+        <OptionRow
+          active={isActive('none')}
+          desc={t('heteroAgent.executionTarget.noneDesc')}
+          icon={<ExecutionTargetIcon target={'none'} />}
+          label={t('heteroAgent.executionTarget.none')}
+          onClick={() => void handleSelect('none')}
+        />
+      )}
+      {isHetero ? null : (
+        <OptionRow
+          active={isActive('auto')}
+          desc={t('heteroAgent.executionTarget.autoDesc')}
+          icon={<ExecutionTargetIcon target={'auto'} />}
+          label={t('heteroAgent.executionTarget.auto')}
+          onClick={() => void handleSelect('auto')}
+        />
+      )}
+      {/* `local` pins this desktop's personal `deviceId`. Available in both
           personal and workspace modes now : a workspace-agent
           `local` pick lands in `users.preference.agentDeviceOverrides` — my
           per-user override — so it never binds the workspace-shared
           `agencyConfig` or coerces any other member's dispatch. */}
-        {isDesktop ? (
-          <OptionRow
-            active={isActive('local')}
-            desc={t('heteroAgent.executionTarget.localDesc')}
-            icon={<ExecutionTargetIcon target={'local'} />}
-            // 本机统一显示「本地设备」，不再带具体设备名称
-            label={t('heteroAgent.executionTarget.local')}
-            onClick={() => void handleSelect('local', undefined, false)}
-          />
-        ) : null}
-        {/* Same machine as the row above, fenced: writes confined to the working
+      {isDesktop ? (
+        <OptionRow
+          active={isActive('local')}
+          desc={t('heteroAgent.executionTarget.localDesc')}
+          icon={<ExecutionTargetIcon target={'local'} />}
+          // 本机统一显示「本地设备」，不再带具体设备名称
+          label={t('heteroAgent.executionTarget.local')}
+          onClick={() => void handleSelect('local', undefined, false)}
+        />
+      ) : null}
+      {/* Same machine as the row above, fenced: writes confined to the working
           directory, network denied unless the switch opens the registry
           allowlist. Shown even when the host can't provide a sandbox — disabled,
           carrying the real reason, because "unavailable" here usually means
           "not installed yet" and silently hiding the feature would strand the
           user with no way to find out why. */}
-        {isDesktop ? (
-          <OptionRow
-            active={executionTarget === 'local' && localSandboxEnabled}
-            disabled={!canUseLocalSandbox}
-            icon={<Icon icon={ShieldCheckIcon} size={14} />}
-            label={t('heteroAgent.executionTarget.localSandbox')}
-            desc={
-              canUseLocalSandbox
-                ? t(
-                    localSandboxNetwork
-                      ? 'heteroAgent.executionTarget.localSandboxDescNetwork'
-                      : 'heteroAgent.executionTarget.localSandboxDesc',
-                  )
-                : // Prefer the actionable instruction (Linux's "install this
-                  // package") over the backend's raw diagnostic when we have one.
-                  (sandboxCapability?.instructions ??
-                  t('heteroAgent.executionTarget.localSandboxUnavailable', {
-                    reason: sandboxCapability?.reason ?? '',
-                  }))
-            }
-            extra={
-              canUseLocalSandbox ? (
-                <>
-                  <InstantSwitch
-                    enabled={localSandboxNetwork}
-                    size={'small'}
-                    onChange={handleToggleSandboxNetwork}
-                  />
-                  <Tooltip title={t('heteroAgent.executionTarget.localSandboxNetworkTip')}>
-                    <span className={styles.extraInfo}>
-                      <Icon icon={InfoIcon} size={12} />
-                    </span>
-                  </Tooltip>
-                </>
-              ) : sandboxCapability?.canInstall ? (
-                // The backend is missing but we can provision it — a dead-end row
-                // would leave the user to discover a CLI incantation on their own.
-                <Button loading={isInstallingSandbox} size={'small'} onClick={handleInstallSandbox}>
-                  {t('heteroAgent.executionTarget.localSandboxSetUp')}
-                </Button>
-              ) : undefined
-            }
-            onClick={() => void handleSelect('local', undefined, true)}
-          />
-        ) : null}
+      {isDesktop ? (
         <OptionRow
-          active={isActive('sandbox')}
-          disabled={!supportsSandbox}
-          icon={<ExecutionTargetIcon target={'sandbox'} />}
-          label={t('heteroAgent.executionTarget.sandbox')}
-          desc={t(
-            supportsSandbox
-              ? 'heteroAgent.executionTarget.sandboxDesc'
-              : 'heteroAgent.executionTarget.sandboxUnsupported',
-            { name: heteroType ? HETEROGENEOUS_TYPE_LABELS[heteroType] : undefined },
-          )}
-          onClick={() => void handleSelect('sandbox')}
-        />
-        {deviceRows.length > 0 ? (
-          <div>
-            {showDeviceGroups ? (
+          active={executionTarget === 'local' && localSandboxEnabled}
+          disabled={!canUseLocalSandbox}
+          icon={<Icon icon={ShieldCheckIcon} size={14} />}
+          label={t('heteroAgent.executionTarget.localSandbox')}
+          desc={
+            canUseLocalSandbox
+              ? t(
+                  localSandboxNetwork
+                    ? 'heteroAgent.executionTarget.localSandboxDescNetwork'
+                    : 'heteroAgent.executionTarget.localSandboxDesc',
+                )
+              : // Prefer the actionable instruction (Linux's "install this
+                // package") over the backend's raw diagnostic when we have one.
+                (sandboxCapability?.instructions ??
+                t('heteroAgent.executionTarget.localSandboxUnavailable', {
+                  reason: sandboxCapability?.reason ?? '',
+                }))
+          }
+          extra={
+            canUseLocalSandbox ? (
               <>
-                {privateDevices.length > 0 ? (
-                  <>
-                    <div className={styles.groupLabel}>
-                      {t('heteroAgent.executionTarget.personalGroup')}
-                    </div>
-                    {privateDevices.map((d) => renderDeviceRow(d))}
-                  </>
-                ) : null}
-                {workspaceDevices.length > 0 ? (
-                  <>
-                    <div className={styles.groupLabel}>
-                      {t('heteroAgent.executionTarget.workspaceGroup')}
-                    </div>
-                    {workspaceDevices.map((d) => renderDeviceRow(d))}
-                  </>
-                ) : null}
+                <InstantSwitch
+                  enabled={localSandboxNetwork}
+                  size={'small'}
+                  onChange={handleToggleSandboxNetwork}
+                />
+                <Tooltip title={t('heteroAgent.executionTarget.localSandboxNetworkTip')}>
+                  <span className={styles.extraInfo}>
+                    <Icon icon={InfoIcon} size={12} />
+                  </span>
+                </Tooltip>
               </>
-            ) : (
-              personalOnlyDevices.map((d) => renderDeviceRow(d))
-            )}
+            ) : sandboxCapability?.canInstall ? (
+              // The backend is missing but we can provision it — a dead-end row
+              // would leave the user to discover a CLI incantation on their own.
+              <Button loading={isInstallingSandbox} size={'small'} onClick={handleInstallSandbox}>
+                {t('heteroAgent.executionTarget.localSandboxSetUp')}
+              </Button>
+            ) : undefined
+          }
+          onClick={() => void handleSelect('local', undefined, true)}
+        />
+      ) : null}
+      <OptionRow
+        active={isActive('sandbox')}
+        disabled={!supportsSandbox}
+        icon={<ExecutionTargetIcon target={'sandbox'} />}
+        label={t('heteroAgent.executionTarget.sandbox')}
+        desc={t(
+          supportsSandbox
+            ? 'heteroAgent.executionTarget.sandboxDesc'
+            : 'heteroAgent.executionTarget.sandboxUnsupported',
+          { name: heteroType ? HETEROGENEOUS_TYPE_LABELS[heteroType] : undefined },
+        )}
+        onClick={() => void handleSelect('sandbox')}
+      />
+      {deviceRows.length > 0 ? (
+        showDeviceGroups ? (
+          <>
+            {privateDevices.length > 0 ? (
+              <>
+                <div className={styles.groupLabel}>
+                  {t('heteroAgent.executionTarget.personalGroup')}
+                </div>
+                <div className={styles.deviceList}>
+                  {privateDevices.map((d) => renderDeviceRow(d))}
+                </div>
+              </>
+            ) : null}
+            {workspaceDevices.length > 0 ? (
+              <>
+                <div className={styles.groupLabel}>
+                  {t('heteroAgent.executionTarget.workspaceGroup')}
+                </div>
+                <div className={styles.deviceList}>
+                  {workspaceDevices.map((d) => renderDeviceRow(d))}
+                </div>
+              </>
+            ) : null}
+          </>
+        ) : (
+          <div className={styles.deviceList}>
+            {personalOnlyDevices.map((d) => renderDeviceRow(d))}
           </div>
-        ) : null}
-        {hasNoDevices && isLoading ? (
-          <div className={styles.empty}>{t('heteroAgent.executionTarget.loading')}</div>
-        ) : null}
-        {/* Workspace agent with no workspace device: personal machines are
+        )
+      ) : null}
+      {hasNoDevices && isLoading ? (
+        <div className={styles.empty}>{t('heteroAgent.executionTarget.loading')}</div>
+      ) : null}
+      {/* Workspace agent with no workspace device: personal machines are
           suppressed above, so guide the user to enroll one into the shared
           pool instead of showing a bare menu. */}
-        {showWorkspaceEnrollHint ? (
-          <div className={styles.empty}>
-            {t('heteroAgent.executionTarget.noWorkspaceDevices', {
-              cmd: `lh connect --workspace ${agentWorkspaceId}`,
-            })}
-          </div>
-        ) : null}
-        {/* On web with no remote device, guide the user to the desktop app (which
+      {showWorkspaceEnrollHint ? (
+        <div className={styles.empty}>
+          {t('heteroAgent.executionTarget.noWorkspaceDevices', {
+            cmd: `lh connect --workspace ${agentWorkspaceId}`,
+          })}
+        </div>
+      ) : null}
+      {/* On web with no remote device, guide the user to the desktop app (which
           unlocks local execution + `lh connect`) rather than a muted dead-end. */}
-        {showWebDownloadCard ? (
-          <a
-            className={styles.downloadCard}
-            href={DOWNLOAD_URL.default}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <div className={styles.optionIcon}>
-              <Icon icon={MonitorDownIcon} size={14} />
+      {showWebDownloadCard ? (
+        <a
+          className={styles.downloadCard}
+          href={DOWNLOAD_URL.default}
+          rel="noreferrer"
+          target="_blank"
+        >
+          <div className={styles.optionIcon}>
+            <Icon icon={MonitorDownIcon} size={14} />
+          </div>
+          <div className={styles.optionMeta}>
+            <div className={styles.optionTitle}>
+              {t('heteroAgent.executionTarget.downloadDesktopTitle')}
             </div>
-            <div className={styles.optionMeta}>
-              <div className={styles.optionTitle}>
-                {t('heteroAgent.executionTarget.downloadDesktopTitle')}
-              </div>
-              <div className={styles.desc}>
-                {t('heteroAgent.executionTarget.downloadDesktopDesc')}
-              </div>
+            <div className={styles.desc}>
+              {t('heteroAgent.executionTarget.downloadDesktopDesc')}
             </div>
-            <Icon className={styles.downloadCardArrow} icon={ExternalLinkIcon} size={13} />
-          </a>
-        ) : null}
-        {hasNoDevices && !isLoading && isDesktop && !isWorkspaceAgent ? (
-          <div className={styles.empty}>{t('heteroAgent.executionTarget.noDevices')}</div>
-        ) : null}
-      </div>
+          </div>
+          <Icon className={styles.downloadCardArrow} icon={ExternalLinkIcon} size={13} />
+        </a>
+      ) : null}
+      {hasNoDevices && !isLoading && isDesktop && !isWorkspaceAgent ? (
+        <div className={styles.empty}>{t('heteroAgent.executionTarget.noDevices')}</div>
+      ) : null}
     </Flexbox>
   );
 
