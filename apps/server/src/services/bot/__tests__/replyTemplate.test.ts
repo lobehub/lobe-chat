@@ -21,6 +21,7 @@ import {
   renderStepProgress,
   renderStopped,
   renderToolExecuting,
+  renderWhoami,
   splitMessage,
   summarizeOutput,
 } from '../replyTemplate';
@@ -895,6 +896,35 @@ describe('replyTemplate', () => {
       expect(renderCommandReply('cmdStopNotActive', 'zh-CN')).toContain('没有正在执行');
       expect(renderCommandReply('cmdStopRequested', 'zh-CN')).toBe('已发出停止请求。');
       expect(renderCommandReply('cmdStopUnable', 'zh-CN')).toContain('无法停止');
+    });
+  });
+
+  // ==================== renderWhoami ====================
+
+  describe('renderWhoami', () => {
+    it('echoes the caller ID, display name and the settings pointer in English', () => {
+      const text = renderWhoami({ isOperator: false, userId: 'ou_abc123', userName: 'Lin' });
+      expect(text).toContain('`ou_abc123`');
+      expect(text).toContain('Lin');
+      expect(text).toContain('Your Platform User ID');
+    });
+
+    it('omits the display name line when unknown and flags an already-configured operator', () => {
+      const text = renderWhoami({ isOperator: true, userId: 'ou_abc123' });
+      expect(text).toContain('`ou_abc123`');
+      expect(text).not.toContain('Display name');
+      expect(text).toContain('already set as the bot operator');
+    });
+
+    it('renders Chinese copy for zh-CN', () => {
+      const text = renderWhoami(
+        { isOperator: false, userId: 'ou_abc123', userName: '林' },
+        'zh-CN',
+      );
+      expect(text).toContain('你的平台用户 ID：`ou_abc123`');
+      expect(text).toContain('显示名称：林');
+      expect(text).toContain('高级设置');
+      expect(renderCommandReply('cmdWhoamiUnavailable', 'zh-CN')).toContain('无法');
     });
   });
 

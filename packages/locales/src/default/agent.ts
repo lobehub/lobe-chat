@@ -268,6 +268,9 @@ export default {
   'channel.charLimit': 'Character Limit',
   'channel.charLimitHint': 'Maximum number of characters per message',
   'channel.concurrency': 'Concurrency Mode',
+  'channel.concurrencyBurst': 'Burst',
+  'channel.concurrencyBurstHint':
+    'Wait briefly, then handle a run of messages as one turn (nothing is dropped)',
   'channel.concurrencyDebounce': 'Debounce',
   'channel.concurrencyDebounceHint':
     'Only process the last message in a burst (earlier ones are dropped)',
@@ -275,7 +278,7 @@ export default {
   'channel.concurrencyQueue': 'Queue',
   'channel.concurrencyQueueHint': 'Process messages one at a time',
   'channel.credentials': 'Credentials',
-  'channel.debounceMs': 'Debounce Window (ms)',
+  'channel.debounceMs': 'Wait Window (ms)',
   'channel.debounceMsHint':
     'How long to wait for additional messages before dispatching to the agent (ms)',
   'channel.dm': 'Direct Messages',
@@ -358,12 +361,19 @@ export default {
   'channel.userIdHint':
     'Lets AI tools reach you proactively (e.g. reminders); auto-trusted by the global allowlist',
   'channel.userIdMissingDesc':
-    "Without it, AI tools can't reach you with reminders, and pairing approvals will fail. Fill it in under Advanced Settings.",
+    "Without it, AI tools can't reach you with reminders, and pairing approvals will fail. Send /whoami to the bot to get your ID, then fill it in under Advanced Settings.",
   'channel.userIdMissingTitle': 'Add your platform User ID',
   'channel.userIdHint.discord':
     'Enable Developer Mode (Settings → Advanced), then right-click your avatar → Copy User ID.',
   'channel.userIdHint.feishu':
-    'Open your app on the Feishu / Lark Open Platform → Permissions, then look up your Open ID.',
+    "Feishu Open IDs are per-app, so no console page shows you your own. Once the credentials are in, the app owner's is filled in for you; if nothing appears, use the button below or send /whoami to the bot in a direct message.",
+  'channel.feishu.fetchOwnerId': 'Fetch from app info',
+  'channel.feishu.fetchOwnerIdAutoSuccess':
+    'Filled in the app owner’s Open ID — check it is you, then save',
+  'channel.feishu.fetchOwnerIdSuccess': 'Open ID filled in — check it is you, then save',
+  'channel.feishu.fetchOwnerIdFailed': 'Failed to read the app owner',
+  'channel.feishu.fetchOwnerIdMissingCredentials':
+    'Enter the Application ID and App Secret first — the lookup runs as your app.',
   'channel.userIdHint.imessage':
     'Use your iMessage handle as seen in BlueBubbles, usually an email address or E.164 phone number.',
   'channel.userIdHint.line':

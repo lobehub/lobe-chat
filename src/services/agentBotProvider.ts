@@ -72,6 +72,14 @@ class AgentBotProviderService {
     return lambdaClient.agentBotProvider.lineFetchBotInfo.mutate({ channelAccessToken });
   };
 
+  feishuFetchOwnerId = async (params: {
+    appId: string;
+    appSecret: string;
+    platform: 'feishu' | 'lark';
+  }) => {
+    return lambdaClient.agentBotProvider.feishuFetchOwnerId.mutate(params);
+  };
+
   wechatGetQrCode = async () => {
     return lambdaClient.agentBotProvider.wechatGetQrCode.mutate();
   };

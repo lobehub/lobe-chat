@@ -1,3 +1,4 @@
+import { LarkApiClient } from '@lobechat/chat-adapter-feishu';
 import { LineApiClient } from '@lobechat/chat-adapter-line';
 import { fetchQrCode, pollQrStatus } from '@lobechat/chat-adapter-wechat';
 import { TRPCError } from '@trpc/server';
@@ -26,6 +27,7 @@ import {
   formatFieldFormatViolations,
   mergeWithDefaults,
   platformRegistry,
+  withResolvedConcurrencySettings,
 } from '@/server/services/bot/platforms';
 import { GatewayService } from '@/server/services/gateway';
 import { getBotRuntimeStatus } from '@/server/services/gateway/runtimeStatus';
@@ -183,6 +185,14 @@ export const agentBotProviderRouter = router({
       return providers.map((p, i) => ({
         ...p,
         runtimeStatus: statuses[i].status,
+        // Show the strategy the runtime will actually use. A channel created
+        // before `burst` existed still stores `queue`, which its platform no
+        // longer offers; rendering that raw would also let an untouched save
+        // persist its stale window as a real collection window.
+        settings: withResolvedConcurrencySettings(
+          p.platform,
+          p.settings as Record<string, unknown> | undefined,
+        ),
       }));
     }),
 
@@ -226,6 +236,14 @@ export const agentBotProviderRouter = router({
       return providers.map((p, i) => ({
         ...p,
         runtimeStatus: statuses[i].status,
+        // Show the strategy the runtime will actually use. A channel created
+        // before `burst` existed still stores `queue`, which its platform no
+        // longer offers; rendering that raw would also let an untouched save
+        // persist its stale window as a real collection window.
+        settings: withResolvedConcurrencySettings(
+          p.platform,
+          p.settings as Record<string, unknown> | undefined,
+        ),
       }));
     }),
 
@@ -327,6 +345,52 @@ export const agentBotProviderRouter = router({
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: error instanceof Error ? error.message : 'Failed to fetch bot info from LINE',
+        });
+      }
+    }),
+
+  /**
+   * Resolve the operator's own `open_id` from the Feishu / Lark app's
+   * credentials, so the channel form can fill `settings.userId` in one click.
+   *
+   * Feishu `open_id`s are per-application, so there is no console page where
+   * an operator can look up their own id for this bot; without this the only
+   * route is DMing the bot `/whoami`. The app owner is the one personal
+   * identity the platform will hand back to the app itself.
+   *
+   * The display name is best-effort on purpose: it needs a contact scope the
+   * bot may not hold, and a missing name must not fail a lookup that already
+   * succeeded. When it is there, the form can name who it filled in — an app
+   * an admin created on someone else's behalf resolves to that admin, and the
+   * operator has to notice that before saving.
+   */
+  feishuFetchOwnerId: authedProcedure
+    .input(
+      z.object({
+        appId: z.string().min(1),
+        appSecret: z.string().min(1),
+        platform: z.enum(['feishu', 'lark']),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const api = new LarkApiClient(input.appId, input.appSecret, input.platform);
+      try {
+        const owner = await api.getAppOwnerId();
+        if (!owner) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message:
+              'The app info carries no personal open_id for its owner or creator. Send /whoami to the bot instead.',
+          });
+        }
+        const info = await api.getUserInfo(owner.openId).catch(() => null);
+        return { name: info?.name, openId: owner.openId, source: owner.source };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            error instanceof Error ? error.message : 'Failed to fetch app info from Feishu / Lark',
         });
       }
     }),

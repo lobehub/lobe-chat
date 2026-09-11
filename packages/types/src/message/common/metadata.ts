@@ -195,7 +195,35 @@ export interface AgentDispatchMetadata {
   visibility: 'internal';
 }
 
+export const BotSenderMetadataSchema = z.object({
+  avatar: z.string().optional(),
+  fullName: z.string().optional(),
+  id: z.string(),
+  platform: z.string(),
+  username: z.string().optional(),
+});
+
+/**
+ * The real platform author of a user message that arrived through a bot
+ * channel (Feishu, Discord, Slack, …). Such rows are inserted under the bot
+ * OWNER's `userId`, so the joined `sender` is the owner — this block carries
+ * the identity the UI should show instead.
+ */
+export interface BotSenderMetadata {
+  /** Absolute avatar URL when the platform exposes one. */
+  avatar?: string;
+  /** Platform display name / nickname. */
+  fullName?: string;
+  /** Platform user id (Feishu open_id, Discord snowflake, …). */
+  id: string;
+  /** Bot platform identifier, e.g. `feishu`, `discord`. */
+  platform: string;
+  /** Platform handle when distinct from the display name. */
+  username?: string;
+}
+
 export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
+  botSender: BotSenderMetadataSchema.optional(),
   agentDispatch: AgentDispatchMetadataSchema.optional(),
   collapsed: z.boolean().optional(),
   contextSelections: z.array(ContextSelectionSchema).optional(),
@@ -289,6 +317,10 @@ export interface MessageMetadata {
    * Renderers consume this marker instead of inferring intent from the message tree.
    */
   agentDispatch?: AgentDispatchMetadata;
+  /**
+   * Real platform author of a bot-channel user message; see `BotSenderMetadata`.
+   */
+  botSender?: BotSenderMetadata;
   /**
    * Message collapse state
    * true: collapsed, false/undefined: expanded

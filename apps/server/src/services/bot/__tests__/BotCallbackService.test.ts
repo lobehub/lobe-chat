@@ -112,6 +112,17 @@ vi.mock('../AgentBridgeService', () => ({
   },
 }));
 
+const mockBotRouterReplay = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const mockMessengerRouterReplay = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+
+vi.mock('../BotMessageRouter', () => ({
+  getBotMessageRouter: () => ({ replayDeferredMessages: mockBotRouterReplay }),
+}));
+
+vi.mock('@/server/services/messenger/MessengerRouter', () => ({
+  getMessengerRouter: () => ({ replayDeferredMessages: mockMessengerRouterReplay }),
+}));
+
 vi.mock('@/server/services/gateway/MessageGatewayClient', () => ({
   getMessageGatewayClient: vi.fn().mockReturnValue({
     isConfigured: false,
@@ -215,6 +226,12 @@ function makeTelegramBody(overrides: Partial<BotCallbackBody> = {}): BotCallback
 }
 
 // ==================== Tests ====================
+
+const mockScheduleDeferredReplay = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+vi.mock('../deferredReplay', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  scheduleDeferredReplay: mockScheduleDeferredReplay,
+}));
 
 describe('BotCallbackService', () => {
   let service: BotCallbackService;
@@ -531,6 +548,64 @@ describe('BotCallbackService', () => {
   });
 
   // ==================== Completion handling ====================
+
+  describe('deferred follow-up replay', () => {
+    it('replays deferred messages through the bot router after completion', async () => {
+      await service.handleCallback(
+        makeBody({ lastAssistantContent: 'done', reason: 'completed', type: 'completion' }),
+      );
+
+      expect(mockBotRouterReplay).toHaveBeenCalledWith(
+        'discord',
+        'app-123',
+        'discord:guild:channel-id',
+      );
+      expect(mockMessengerRouterReplay).not.toHaveBeenCalled();
+    });
+
+    it('routes messenger-originated runs to the messenger router', async () => {
+      await service.handleCallback(
+        makeTelegramBody({
+          applicationId: 'messenger-telegram',
+          lastAssistantContent: 'done',
+          messengerInstallationKey: 'telegram:singleton',
+          reason: 'completed',
+          type: 'completion',
+        }),
+      );
+
+      expect(mockMessengerRouterReplay).toHaveBeenCalledWith(
+        'telegram:singleton',
+        'messenger-telegram',
+        'telegram:chat-456',
+      );
+      expect(mockBotRouterReplay).not.toHaveBeenCalled();
+    });
+
+    it('does not replay on step callbacks', async () => {
+      await service.handleCallback(makeBody({ shouldContinue: true, type: 'step' }));
+
+      expect(mockBotRouterReplay).not.toHaveBeenCalled();
+    });
+
+    it('schedules an isolated retry after replay fails without failing the completion', async () => {
+      mockBotRouterReplay.mockRejectedValueOnce(new Error('redis down'));
+
+      await expect(
+        service.handleCallback(
+          makeBody({ lastAssistantContent: 'done', reason: 'completed', type: 'completion' }),
+        ),
+      ).resolves.toBeUndefined();
+      expect(mockScheduleDeferredReplay).toHaveBeenCalledWith(
+        expect.objectContaining({
+          applicationId: 'app-123',
+          platform: 'discord',
+          platformThreadId: 'discord:guild:channel-id',
+        }),
+        expect.any(String),
+      );
+    });
+  });
 
   describe('completion handling', () => {
     it('should render operation id when reason is error', async () => {

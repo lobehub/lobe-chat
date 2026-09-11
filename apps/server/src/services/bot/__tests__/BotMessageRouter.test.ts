@@ -1,6 +1,9 @@
+import { DEFAULT_BOT_DEBOUNCE_MS } from '@lobechat/const';
+import { Chat } from 'chat';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BotMessageRouter } from '../BotMessageRouter';
+import type * as PlatformUtils from '../platforms/utils';
 
 // ==================== Hoisted mocks ====================
 
@@ -85,11 +88,16 @@ const mockWebhookHandler = vi.hoisted(() =>
 const mockGetList = vi.hoisted(() => vi.fn().mockResolvedValue([]));
 const mockAppendToList = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const mockStateSetIfNotExists = vi.hoisted(() => vi.fn().mockResolvedValue(true));
+const mockDispatchToHandlers = vi.hoisted(() => vi.fn());
+const mockProcessMessage = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const mockDrainDeferredBotMessages = vi.hoisted(() => vi.fn().mockResolvedValue([]));
+const mockBuildReplayMessages = vi.hoisted(() => vi.fn());
 
 vi.mock('chat', () => ({
   BaseFormatConverter: class {},
   Chat: vi.fn().mockImplementation(function () {
     return {
+      dispatchToHandlers: mockDispatchToHandlers,
       getState: vi.fn(() => ({
         appendToList: mockAppendToList,
         getList: mockGetList,
@@ -100,11 +108,28 @@ vi.mock('chat', () => ({
       onNewMessage: mockOnNewMessage,
       onSlashCommand: mockOnSlashCommand,
       onSubscribedMessage: mockOnSubscribedMessage,
+      processMessage: mockProcessMessage,
       webhooks: mockChatWebhooks,
     };
   }),
   ConsoleLogger: vi.fn(),
 }));
+
+vi.mock('../deferredMessages', () => ({
+  replayDeferredBotMessages: async (
+    app: string,
+    thread: string,
+    replay: (entries: unknown[]) => Promise<void>,
+  ) => {
+    const entries = await mockDrainDeferredBotMessages(app, thread);
+    if (entries.length) await replay(entries);
+  },
+}));
+
+vi.mock('../mergeMessages', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return { ...actual, buildReplayMessages: mockBuildReplayMessages };
+});
 
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: vi.fn().mockImplementation(function () {
@@ -240,8 +265,14 @@ const parseAllowlistMock = vi.hoisted(() => (raw: unknown): string[] => {
   return [];
 });
 
-vi.mock('../platforms', () => ({
+vi.mock('../platforms', async () => ({
   buildRuntimeKey: (platform: string, appId: string) => `${platform}:${appId}`,
+  // Pull the real resolver rather than restating it: these tests assert the
+  // exact Chat SDK concurrency config a channel ends up with, and a stub would
+  // only ever test itself. `utils` is safe to import for real — the barrel is
+  // mocked because it instantiates every platform definition, `utils` does not.
+  resolveBotConcurrency: (await vi.importActual<typeof PlatformUtils>('../platforms/utils'))
+    .resolveBotConcurrency,
   getBotReplyLocale: (platform: string | undefined): string => {
     if (platform === 'feishu' || platform === 'qq' || platform === 'wechat') return 'zh-CN';
     return 'en-US';
@@ -887,6 +918,40 @@ describe('BotMessageRouter', () => {
       };
     }
 
+    it.each([
+      ['/new', 'question'],
+      ['question', '/new'],
+    ])('preserves command and content order for %s then %s', async (first, second) => {
+      const events: string[] = [];
+      const thread = {
+        ...makeThread({ isDM: true }),
+        state: Promise.resolve({ topicId: 'old-topic' }),
+      };
+      thread.setState.mockImplementation(async () => {
+        events.push('reset');
+      });
+      mockHandleSubscribedMessage.mockImplementation(async (_thread, message) => {
+        events.push(message.text);
+      });
+      mockDispatchToHandlers.mockImplementation(async (_adapter, _threadId, message, context) => {
+        const handler = mockOnSubscribedMessage.mock.calls.at(-1)![0];
+        await handler(thread, message, context);
+      });
+      try {
+        await loadSubscribedHandler();
+        const bot = vi.mocked(Chat).mock.results.at(-1)!.value;
+        await bot.dispatchToHandlers({}, thread.id, makeMessage({ text: second }), {
+          skipped: [makeMessage({ text: first })],
+          totalSinceLastHandler: 2,
+        });
+        expect(events).toEqual([first, second].map((text) => (text === '/new' ? 'reset' : text)));
+        expect(thread.setState).toHaveBeenCalledTimes(1);
+        expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+      } finally {
+        mockDispatchToHandlers.mockReset();
+      }
+    });
+
     it('should skip non-mention messages in a multi-human group thread', async () => {
       // post-fix the gate keys off thread.isDM || mention ||
       // singleHumanThread. Default beforeEach seeds two known participants,
@@ -1021,6 +1086,189 @@ describe('BotMessageRouter', () => {
         expect(isSoloBotConversation).toHaveBeenCalledWith('telegram:chat-1');
         expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
       });
+
+      it('announces mention-only mode immediately when real membership reports a shared thread', async () => {
+        // Regression: one human + this bot + another bot has only one human
+        // speaker, but is still shared and must not silently enter mention-only
+        // mode without the one-time explanation.
+        mockGetList.mockResolvedValue([]);
+        const isSoloBotConversation = vi.fn().mockResolvedValue(false);
+        withMembershipLookup(isSoloBotConversation);
+        const handler = await loadSubscribedHandler();
+        const thread = makeThread({ id: 'discord:guild-1:channel-1:thread-1' });
+        mockStateSetIfNotExists.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+
+        await handler(thread, makeMessage({ isMention: false, text: 'talking to another bot' }));
+        await handler(thread, makeMessage({ isMention: false, text: 'still talking' }));
+
+        expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
+        expect(mockStateSetIfNotExists).toHaveBeenCalledWith(
+          'messenger:thread-mention-required-announced:discord:guild-1:channel-1:thread-1',
+          '1',
+          expect.any(Number),
+        );
+        expect(thread.post).toHaveBeenCalledWith(expect.stringContaining('@mention me'));
+        expect(thread.post).toHaveBeenCalledTimes(1);
+      });
+
+      it('routes real Discord membership verdicts and preserves batched participants', async () => {
+        const { DiscordClientFactory } = await import('../platforms/discord/client');
+        const { clearDiscordChatCompositionMemoryCache } =
+          await import('../platforms/discord/chatComposition');
+        clearDiscordChatCompositionMemoryCache();
+        const client = new DiscordClientFactory().createClient(
+          {
+            applicationId: 'app-123',
+            credentials: { botToken: 'fixture-token', publicKey: 'fixture-key' },
+            platform: 'discord',
+            settings: {},
+          },
+          {},
+        );
+        const human = (id: string) => ({ member: { user: { bot: false, id } } });
+        const botMember = (id: string) => ({ member: { user: { bot: true, id } } });
+        const requests: unknown[] = [];
+        const get = vi.fn(async (path: string, options: { query: URLSearchParams }) => {
+          requests.push({ path, query: Object.fromEntries(options.query) });
+          if (path.includes('unavailable')) throw new Error('Missing Access');
+          return path.includes('shared')
+            ? [human('alice-id'), botMember('app-123'), botMember('other-bot')]
+            : [human('alice-id'), botMember('app-123')];
+        });
+        (client as any).discord.rest = { get };
+        const membership = vi.fn((id: string) => client.isSoloBotConversation!(id));
+        withMembershipLookup(membership);
+
+        const lists = new Map<string, string[]>();
+        const announcements = new Set<string>();
+        mockGetList.mockImplementation(async (key: string) => lists.get(key) ?? []);
+        mockAppendToList.mockImplementation(async (key: string, id: string) => {
+          lists.set(key, [...(lists.get(key) ?? []), id]);
+        });
+        mockStateSetIfNotExists.mockImplementation(async (key: string) => {
+          if (announcements.has(key)) return false;
+          announcements.add(key);
+          return true;
+        });
+        const handler = await loadSubscribedHandler();
+        const observations: Record<string, unknown> = {};
+        for (const scenario of ['solo', 'shared', 'unavailable', 'channel']) {
+          const id = `discord:guild-1:channel-1${scenario === 'channel' ? '' : `:${scenario}`}`;
+          const thread = makeThread({ id });
+          mockHandleSubscribedMessage.mockClear();
+          await handler(thread, makeMessage({ text: 'ordinary follow-up' }));
+          const firstDispatches = mockHandleSubscribedMessage.mock.calls.length;
+          const firstPosts = thread.post.mock.calls.length;
+          await handler(thread, makeMessage({ text: 'second follow-up' }));
+          const repeatedPosts = thread.post.mock.calls.length;
+          mockHandleSubscribedMessage.mockClear();
+          await handler(thread, makeMessage({ isMention: true, text: '@bot please answer' }));
+          observations[scenario] = {
+            firstDispatches,
+            firstPosts,
+            mentionDispatches: mockHandleSubscribedMessage.mock.calls.length,
+            repeatedPosts,
+          };
+          expect(firstDispatches).toBe(scenario === 'solo' ? 1 : 0);
+          expect(firstPosts).toBe(scenario === 'solo' ? 0 : 1);
+          expect(repeatedPosts).toBe(firstPosts);
+          expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+        }
+
+        const queuedThread = makeThread({ id: 'discord:guild-1:channel-1:queued' });
+        const botMessage = {
+          author: { isBot: true, userId: 'other-bot', userName: 'other bot' },
+          isMention: false,
+          text: 'bot reply',
+        };
+        mockHandleSubscribedMessage.mockClear();
+        await handler(queuedThread, botMessage, {
+          skipped: [
+            makeMessage({ userId: 'bob-id' }),
+            botMessage,
+            makeMessage({ userId: 'carol-id' }),
+          ],
+          totalSinceLastHandler: 4,
+        });
+        const queuedHumans = lists.get(`messenger:thread-humans:${queuedThread.id}`);
+        expect(queuedHumans).toEqual(['bob-id', 'carol-id']);
+        expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
+        observations.queued = {
+          agentDispatches: mockHandleSubscribedMessage.mock.calls.length,
+          inputSenders: ['bob-id', 'other-bot', 'carol-id', 'other-bot'],
+          persistedHumans: queuedHumans,
+        };
+        if (process.env.T500_ACCEPTANCE_CAPTURE === '1') {
+          console.log(
+            'T500_ACCEPTANCE:integrated-routing',
+            JSON.stringify({ observations, requests }),
+          );
+        }
+        clearDiscordChatCompositionMemoryCache();
+      });
+    });
+
+    it('tracks every human sender preserved in context.skipped', async () => {
+      mockGetList.mockResolvedValue(['alice-id']);
+      const handler = await loadSubscribedHandler();
+      const thread = makeThread();
+      const skipped = [
+        makeMessage({ text: 'from bob', userId: 'bob-id' }),
+        {
+          author: { isBot: true, userId: 'skipped-bot-id', userName: 'skipped bot' },
+          isMention: false,
+          text: 'from a bot',
+        },
+        makeMessage({ text: 'from carol', userId: 'carol-id' }),
+      ];
+
+      await handler(
+        thread,
+        makeMessage({ isMention: true, text: '@bot latest', userId: 'alice-id' }),
+        { skipped, totalSinceLastHandler: 4 },
+      );
+
+      expect(mockAppendToList).toHaveBeenCalledWith(
+        'messenger:thread-humans:telegram:chat-1',
+        'bob-id',
+        expect.any(Object),
+      );
+      expect(mockAppendToList).toHaveBeenCalledWith(
+        'messenger:thread-humans:telegram:chat-1',
+        'carol-id',
+        expect.any(Object),
+      );
+      expect(mockAppendToList).not.toHaveBeenCalledWith(
+        'messenger:thread-humans:telegram:chat-1',
+        'skipped-bot-id',
+        expect.any(Object),
+      );
+    });
+
+    it('tracks skipped humans before returning for a bot primary message', async () => {
+      mockGetList.mockResolvedValue([]);
+      const handler = await loadSubscribedHandler();
+      const thread = makeThread();
+      const skipped = [makeMessage({ text: 'human arrived first', userId: 'alice-id' })];
+      const botMessage = {
+        author: { isBot: true, userId: 'another-bot', userName: 'other bot' },
+        isMention: false,
+        text: 'bot primary',
+      };
+
+      await handler(thread, botMessage, { skipped, totalSinceLastHandler: 2 });
+
+      expect(mockAppendToList).toHaveBeenCalledWith(
+        'messenger:thread-humans:telegram:chat-1',
+        'alice-id',
+        expect.any(Object),
+      );
+      expect(mockAppendToList).not.toHaveBeenCalledWith(
+        'messenger:thread-humans:telegram:chat-1',
+        'another-bot',
+        expect.any(Object),
+      );
+      expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
     });
 
     it('should respond when a debounced/skipped earlier message contained the mention', async () => {
@@ -2841,6 +3089,70 @@ describe('BotMessageRouter', () => {
       expect(thread.setState).not.toHaveBeenCalled();
     });
 
+    it('answers /whoami for a non-allowlisted sender without touching state (bypassGate)', async () => {
+      const { cmdRegexHandler } = await loadAllHandlers({ allowFrom: 'alice-id' });
+      const thread = {
+        channelId: 'channel-1',
+        id: 'telegram:channel-1',
+        isDM: true,
+        post: vi.fn().mockResolvedValue(undefined),
+        setState: vi.fn().mockResolvedValue(undefined),
+      };
+      const message = {
+        author: { isBot: false, userId: 'lin-id', userName: 'lin' },
+        isMention: false,
+        text: '/whoami',
+      };
+
+      await cmdRegexHandler(thread, message);
+
+      expect(thread.post).toHaveBeenCalledTimes(1);
+      expect(thread.post.mock.calls[0][0]).toContain('`lin-id`');
+      expect(thread.post.mock.calls[0][0]).not.toContain("aren't authorized");
+      expect(thread.setState).not.toHaveBeenCalled();
+    });
+
+    it('answers /whoami under the pairing DM policy before settings.userId exists (no pairing code)', async () => {
+      const { subscribed } = await loadAllHandlers({ dmPolicy: 'pairing' });
+      const thread = {
+        channelId: 'channel-1',
+        id: 'telegram:channel-1',
+        isDM: true,
+        post: vi.fn().mockResolvedValue(undefined),
+        setState: vi.fn().mockResolvedValue(undefined),
+        state: Promise.resolve(null),
+      };
+      const message = {
+        author: { isBot: false, userId: 'lin-id', userName: 'lin' },
+        isMention: false,
+        text: '/whoami',
+      };
+
+      await subscribed(thread, message);
+
+      expect(thread.post).toHaveBeenCalledTimes(1);
+      expect(thread.post.mock.calls[0][0]).toContain('`lin-id`');
+      expect(thread.post.mock.calls[0][0]).not.toMatch(/approve/i);
+      expect(mockHandleMention).not.toHaveBeenCalled();
+    });
+
+    it('marks the caller as operator in /whoami when their ID matches settings.userId', async () => {
+      const { cmdRegexHandler } = await loadAllHandlers({ userId: 'lin-id' });
+      const thread = {
+        channelId: 'channel-1',
+        id: 'telegram:channel-1',
+        isDM: true,
+        post: vi.fn().mockResolvedValue(undefined),
+        setState: vi.fn().mockResolvedValue(undefined),
+      };
+      await cmdRegexHandler(thread, {
+        author: { isBot: false, userId: 'lin-id', userName: 'lin' },
+        isMention: false,
+        text: '/whoami',
+      });
+      expect(thread.post.mock.calls[0][0]).toContain('already set as the bot operator');
+    });
+
     it('still allows /commands from an allowlisted sender (gate does not break the happy path)', async () => {
       const { cmdRegexHandler } = await loadAllHandlers({ allowFrom: 'alice-id' });
       const thread = {
@@ -3195,6 +3507,107 @@ describe('BotMessageRouter', () => {
       expect(mockProviderUpdate).not.toHaveBeenCalled();
       expect(mockDeletePairingRequest).toHaveBeenCalledTimes(1);
       expect(event.channel.post.mock.calls[0][0]).toMatch(/Approved Lin/i);
+    });
+  });
+
+  describe('concurrency strategy wiring', () => {
+    const loadWith = async (settings: Record<string, unknown>, platform = 'telegram') => {
+      mockFindEnabledByPlatform.mockResolvedValue([
+        makeProvider({ applicationId: 'app-1', settings }),
+      ]);
+      const router = new BotMessageRouter();
+      await router.getWebhookHandler(
+        platform,
+        'app-1',
+      )(new Request('https://example.com/webhook', { body: '{}', method: 'POST' }));
+      return (Chat as unknown as { mock: { calls: any[][] } }).mock.calls.at(-1)![0];
+    };
+
+    it('collects a burst window when the channel asks for it', async () => {
+      // The strategy a WeChat channel needs so an image and the sentence about
+      // it reach the agent as one turn instead of two separate runs.
+      const config = await loadWith({ concurrency: 'burst', debounceMs: 1200 });
+
+      expect(config.concurrency).toEqual({ debounceMs: 1200, strategy: 'burst' });
+    });
+
+    it('still supports debounce for channels that opted into it', async () => {
+      const config = await loadWith({ concurrency: 'debounce', debounceMs: 900 });
+
+      expect(config.concurrency).toEqual({ debounceMs: 900, strategy: 'debounce' });
+    });
+
+    it('falls back to the plain queue when the setting is absent or unknown', async () => {
+      expect((await loadWith({})).concurrency).toBe('queue');
+      expect((await loadWith({ concurrency: 'nonsense' })).concurrency).toBe('queue');
+    });
+
+    it('rescues a WeChat channel still carrying the pre-burst queue setting', async () => {
+      // Live WeChat channels persisted `queue` plus the old 5s window when they
+      // were created, so a schema default alone would never reach them. They
+      // collect a burst regardless, on the platform's own window — 5s in front
+      // of every reply would read as a dead bot.
+      const config = await loadWith({ concurrency: 'queue', debounceMs: 5000 }, 'wechat');
+
+      expect(config.concurrency).toEqual({
+        debounceMs: DEFAULT_BOT_DEBOUNCE_MS,
+        strategy: 'burst',
+      });
+    });
+  });
+
+  describe('replayDeferredMessages', () => {
+    const THREAD = 'telegram:chat-1';
+
+    beforeEach(() => {
+      mockDrainDeferredBotMessages.mockResolvedValue([]);
+      mockBuildReplayMessages.mockReset();
+      mockProcessMessage.mockResolvedValue(undefined);
+      mockCreateAdapter.mockReturnValue({ telegram: { type: 'mock-adapter' } });
+    });
+
+    it('re-dispatches each original through Chat.processMessage with the platform adapter', async () => {
+      mockFindEnabledByPlatform.mockResolvedValue([makeProvider({ applicationId: 'tg-bot-123' })]);
+      const entries = [{ id: 'm1' }, { id: 'm2' }];
+      const replays = [
+        { id: 'm1:replay:1:0', text: 'first' },
+        { id: 'm2:replay:1:1', text: 'second' },
+      ];
+      mockDrainDeferredBotMessages.mockResolvedValue(entries);
+      mockBuildReplayMessages.mockReturnValue(replays);
+
+      const router = new BotMessageRouter();
+      await router.replayDeferredMessages('telegram', 'tg-bot-123', THREAD);
+
+      expect(mockDrainDeferredBotMessages).toHaveBeenCalledWith('tg-bot-123', THREAD);
+      expect(mockBuildReplayMessages).toHaveBeenCalledWith(entries);
+      expect(mockProcessMessage).toHaveBeenCalledTimes(2);
+      for (const replay of replays) {
+        expect(mockProcessMessage).toHaveBeenCalledWith({ type: 'mock-adapter' }, THREAD, replay);
+      }
+    });
+
+    it('does nothing (and does not load the bot) when nothing was deferred', async () => {
+      mockBuildReplayMessages.mockReturnValue([]);
+
+      const router = new BotMessageRouter();
+      await router.replayDeferredMessages('telegram', 'tg-bot-123', THREAD);
+
+      expect(mockFindEnabledByPlatform).not.toHaveBeenCalled();
+      expect(mockProcessMessage).not.toHaveBeenCalled();
+    });
+
+    it('rejects replay when no bot is registered so entries remain pending', async () => {
+      mockFindEnabledByPlatform.mockResolvedValue([]);
+      mockDrainDeferredBotMessages.mockResolvedValue([{ id: 'm1' }]);
+      mockBuildReplayMessages.mockReturnValue([{ id: 'm1:replay:1:0' }]);
+
+      const router = new BotMessageRouter();
+      await expect(
+        router.replayDeferredMessages('telegram', 'tg-bot-missing', THREAD),
+      ).rejects.toThrow('Bot adapter unavailable');
+
+      expect(mockProcessMessage).not.toHaveBeenCalled();
     });
   });
 

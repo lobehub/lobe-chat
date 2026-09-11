@@ -97,6 +97,50 @@ export interface MessageTarget {
 
 // ==================== Parameter Types ====================
 
+// --- Rich embeds (Discord cards) ---
+
+/** A single key/value block inside a Discord embed. */
+export interface SendMessageEmbedField {
+  /** Render side-by-side with neighbouring inline fields (up to 3 per row). */
+  inline?: boolean;
+  /** Field label (max 256 chars). */
+  name: string;
+  /** Field body, markdown allowed (max 1024 chars). */
+  value: string;
+}
+
+/**
+ * JSON-safe outbound "card" for platforms with native rich embeds. Modelled
+ * on the Discord embed object — every property is optional but at least one
+ * visible block (title / description / fields / footer / author / image) is
+ * required for the card to render. Platforms without an embed concept drop
+ * these silently so the text `content` still ships.
+ *
+ * @see https://discord.com/developers/docs/resources/message#embed-object
+ */
+export interface SendMessageEmbed {
+  /** Small header line above the title. */
+  author?: { icon_url?: string; name: string; url?: string };
+  /** Left accent colour — integer (0xRRGGBB) or `#RRGGBB` string. */
+  color?: number | string;
+  /** Body text, markdown allowed (max 4096 chars). */
+  description?: string;
+  /** Key/value blocks below the description (max 25). */
+  fields?: SendMessageEmbedField[];
+  /** Small footer line at the bottom of the card. */
+  footer?: { icon_url?: string; text: string };
+  /** Large image rendered below the fields. */
+  image?: { url: string };
+  /** Small image rendered top-right of the card. */
+  thumbnail?: { url: string };
+  /** ISO-8601 timestamp shown next to the footer. */
+  timestamp?: string;
+  /** Card heading (max 256 chars). */
+  title?: string;
+  /** Makes the title a hyperlink. */
+  url?: string;
+}
+
 // --- Direct Messaging ---
 
 export interface SendDirectMessageParams {
@@ -107,6 +151,11 @@ export interface SendDirectMessageParams {
   attachments?: SendMessageAttachment[];
   /** Message content */
   content: string;
+  /**
+   * Optional: rich embeds / cards. Same shape as `SendMessageParams.embeds`.
+   * Only Discord renders these today; other platforms ignore them.
+   */
+  embeds?: SendMessageEmbed[];
   /** Platform */
   platform: MessagePlatformType;
   /** Target user ID on the platform */
@@ -150,8 +199,12 @@ export interface SendMessageParams {
   channelId: string;
   /** Message content (text, markdown depending on platform support) */
   content: string;
-  /** Optional: embed / attachment metadata (platform-specific) */
-  embeds?: Record<string, unknown>[];
+  /**
+   * Optional: rich embeds / cards rendered natively by the platform. Only
+   * Discord renders these today (as Discord embeds); other platforms ignore
+   * them so the text `content` still ships. See `SendMessageEmbed`.
+   */
+  embeds?: SendMessageEmbed[];
   /** Platform to send on */
   platform: MessagePlatformType;
   /** Optional: reply to a specific message */
@@ -438,6 +491,11 @@ export interface ReplyToThreadParams {
   attachments?: SendMessageAttachment[];
   /** Reply content */
   content: string;
+  /**
+   * Optional: rich embeds / cards. Same shape as `SendMessageParams.embeds`.
+   * Only Discord renders these today; other platforms ignore them.
+   */
+  embeds?: SendMessageEmbed[];
   /** Platform */
   platform: MessagePlatformType;
   /** Thread ID */

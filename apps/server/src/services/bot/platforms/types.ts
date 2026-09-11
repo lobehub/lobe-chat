@@ -105,7 +105,11 @@ export interface FieldSchema {
    * - 'array' → list
    */
   type: 'array' | 'boolean' | 'integer' | 'number' | 'object' | 'password' | 'string';
-  /** Conditional visibility: show only when another field matches a value */
+  /**
+   * Conditional visibility: show only when another field matches a value. Pass
+   * an array to match any of several values, e.g. a window size that applies to
+   * both the `burst` and `debounce` concurrency strategies.
+   */
   visibleWhen?: { field: string; value: unknown };
 }
 
