@@ -1,16 +1,34 @@
 import type { EvalRunTopicResult } from '@lobechat/types';
 
-import { AgentEvalRunModel, AgentEvalRunTopicModel } from '@/database/models/agentEval';
+import {
+  AgentEvalDatasetModel,
+  AgentEvalRunModel,
+  AgentEvalRunTopicModel,
+} from '@/database/models/agentEval';
 import type { AgentEvalRunItem } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { AgentEvalRunService, RUN_CREATE_ID_CONFLICT } from '@/server/services/agentEvalRun';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 
 import { BaseService } from '../common/base.service';
+import { processPaginationConditions } from '../helpers/pagination';
+import {
+  projectPublicEvalDataset,
+  projectPublicEvalRun,
+  projectPublicEvalRunTopic,
+  projectPublicEvalTestCase,
+} from '../helpers/public-fields';
 import type {
   CreateEvalRunRequest,
+  EvalDatasetDetailResponse,
+  EvalDatasetListQuery,
+  EvalDatasetListResponse,
+  EvalRunListQuery,
+  EvalRunListResponse,
   EvalRunResponse,
   EvalRunResultsResponse,
+  EvalRunTopicListQuery,
+  EvalRunTopicListResponse,
 } from '../types/eval.type';
 
 const projectRun = (run: AgentEvalRunItem): EvalRunResponse => ({
@@ -63,12 +81,14 @@ const projectResult = (value: EvalRunTopicResult | null): EvalRunTopicResult | n
 };
 
 export class EvalService extends BaseService {
+  private datasetModel: AgentEvalDatasetModel;
   private runModel: AgentEvalRunModel;
   private runService: AgentEvalRunService;
   private runTopicModel: AgentEvalRunTopicModel;
 
   constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
     super(db, userId, workspaceId);
+    this.datasetModel = new AgentEvalDatasetModel(db, userId, workspaceId);
     this.runModel = new AgentEvalRunModel(db, userId, workspaceId);
     this.runService = new AgentEvalRunService(db, userId, workspaceId);
     this.runTopicModel = new AgentEvalRunTopicModel(db, userId, workspaceId);
@@ -103,6 +123,64 @@ export class EvalService extends BaseService {
     }
 
     return projectRun(run);
+  }
+
+  async listRuns(query: EvalRunListQuery): Promise<EvalRunListResponse> {
+    const { limit, offset } = processPaginationConditions(query);
+    const filter = { datasetId: query.datasetId, status: query.status };
+
+    const [runs, total] = await Promise.all([
+      this.runModel.query({ ...filter, limit, offset }),
+      this.runModel.count(filter),
+    ]);
+
+    return { runs: runs.map(projectPublicEvalRun), total };
+  }
+
+  async listDatasets(query: EvalDatasetListQuery): Promise<EvalDatasetListResponse> {
+    const { limit, offset } = processPaginationConditions(query);
+    const filter = { benchmarkId: query.benchmarkId };
+
+    const [datasets, total] = await Promise.all([
+      this.datasetModel.queryList({ ...filter, limit, offset }),
+      this.datasetModel.count(filter),
+    ]);
+
+    return { datasets: datasets.map(projectPublicEvalDataset), total };
+  }
+
+  async getDataset(id: string): Promise<EvalDatasetDetailResponse> {
+    const dataset = await this.datasetModel.findById(id);
+    if (!dataset) throw this.createNotFoundError('Eval dataset not found');
+
+    const { testCases, ...rest } = dataset;
+
+    return {
+      ...projectPublicEvalDataset(rest),
+      testCases: testCases.map(projectPublicEvalTestCase),
+    };
+  }
+
+  async getRunTopics(id: string, query: EvalRunTopicListQuery): Promise<EvalRunTopicListResponse> {
+    // Ownership check first: a run owned by someone else is a plain 404.
+    const run = await this.runModel.findById(id);
+    if (!run) throw this.createNotFoundError('Eval run not found');
+
+    const { limit, offset } = processPaginationConditions(query);
+
+    const [rows, total] = await Promise.all([
+      this.runTopicModel.findByRunId(id, { limit, offset }),
+      this.runTopicModel.countByRunId(id),
+    ]);
+
+    return {
+      runId: id,
+      topics: rows.map((row) => ({
+        ...projectPublicEvalRunTopic(row),
+        input: row.testCase?.content.input ?? '',
+      })),
+      total,
+    };
   }
 
   async getRun(id: string): Promise<EvalRunResponse> {

@@ -3409,6 +3409,351 @@ paths:
                 - datasetId
                 - targetAgentId
               additionalProperties: false
+    get:
+      operationId: getApiV1EvalRuns
+      summary: List eval runs
+      tags:
+        - eval
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    $ref: "#/components/schemas/EvalRun"
+                  message:
+                    type: string
+                  success:
+                    const: true
+                    type: boolean
+                  timestamp:
+                    format: date-time
+                    type: string
+                required:
+                  - success
+                  - timestamp
+                type: object
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Authentication required
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Insufficient permission
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource conflict
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Rate limit exceeded
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Internal server error
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          schema:
+            type: string
+        - in: query
+          name: datasetId
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - idle
+              - pending
+              - running
+              - completed
+              - failed
+              - aborted
+              - external
+  /api/v1/eval/datasets:
+    get:
+      operationId: getApiV1EvalDatasets
+      summary: List eval datasets
+      tags:
+        - eval
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    $ref: "#/components/schemas/EvalRun"
+                  message:
+                    type: string
+                  success:
+                    const: true
+                    type: boolean
+                  timestamp:
+                    format: date-time
+                    type: string
+                required:
+                  - success
+                  - timestamp
+                type: object
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Authentication required
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Insufficient permission
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource conflict
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Rate limit exceeded
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Internal server error
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          schema:
+            type: string
+        - in: query
+          name: benchmarkId
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+  /api/v1/eval/datasets/{id}:
+    get:
+      operationId: getApiV1EvalDatasetsById
+      summary: Get an eval dataset
+      tags:
+        - eval
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    $ref: "#/components/schemas/EvalRun"
+                  message:
+                    type: string
+                  success:
+                    const: true
+                    type: boolean
+                  timestamp:
+                    format: date-time
+                    type: string
+                required:
+                  - success
+                  - timestamp
+                type: object
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Authentication required
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Insufficient permission
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource conflict
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Rate limit exceeded
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Internal server error
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          required: true
+  /api/v1/eval/runs/{id}/topics:
+    get:
+      operationId: getApiV1EvalRunsByIdTopics
+      summary: List topic results of an eval run
+      tags:
+        - eval
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    $ref: "#/components/schemas/EvalRun"
+                  message:
+                    type: string
+                  success:
+                    const: true
+                    type: boolean
+                  timestamp:
+                    format: date-time
+                    type: string
+                required:
+                  - success
+                  - timestamp
+                type: object
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Authentication required
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Insufficient permission
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Resource conflict
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Rate limit exceeded
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+          description: Internal server error
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          required: true
+        - in: query
+          name: page
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          schema:
+            type: string
   /api/v1/eval/runs/{id}:
     get:
       operationId: getApiV1EvalRunsById

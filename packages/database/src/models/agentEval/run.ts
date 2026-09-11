@@ -82,6 +82,30 @@ export class AgentEvalRunModel {
   };
 
   /**
+   * Count runs with optional filters (same predicates as `query`)
+   */
+  count = async (filter?: {
+    datasetId?: string;
+    status?: 'idle' | 'pending' | 'running' | 'completed' | 'failed' | 'aborted' | 'external';
+  }) => {
+    const conditions = [this.ownership()];
+
+    if (filter?.datasetId) {
+      conditions.push(eq(agentEvalRuns.datasetId, filter.datasetId));
+    }
+
+    if (filter?.status) {
+      conditions.push(eq(agentEvalRuns.status, filter.status));
+    }
+
+    const result = await this.db
+      .select({ value: count() })
+      .from(agentEvalRuns)
+      .where(and(...conditions));
+    return Number(result[0]?.value) || 0;
+  };
+
+  /**
    * Find run by id
    */
   findById = async (id: string) => {
