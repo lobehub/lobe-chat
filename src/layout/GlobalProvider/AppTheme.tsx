@@ -9,7 +9,6 @@ import * as m from 'motion/react-m';
 import { type ReactNode } from 'react';
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import AntdStaticMethods from '@/components/AntdStaticMethods';
 import Link from '@/components/Link';
 import { genFontFamily, genFontFamilyCode } from '@/const/font';
 import { LOBE_THEME_NEUTRAL_COLOR, LOBE_THEME_PRIMARY_COLOR } from '@/const/theme';
@@ -180,7 +179,6 @@ const AppTheme = memo<AppThemeProps>(
       >
         {!!customFontURL && <FontLoader url={customFontURL} />}
         <GlobalStyle />
-        <AntdStaticMethods />
         <ConfigProvider
           locale={uiLocale}
           motion={m}
