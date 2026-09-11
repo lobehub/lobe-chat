@@ -8,13 +8,13 @@ import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import { describeRoute } from 'hono-openapi';
 
-import { SCALAR_CUSTOM_CSS } from './docs-theme.js';
+import { SCALAR_CUSTOM_CSS } from './docs-theme';
 // Import user authentication middleware (supports both OIDC and API Key authentication)
-import { userAuthMiddleware } from './middleware/auth.js';
-import { workspaceAuthMiddleware } from './middleware/workspace.js';
+import { userAuthMiddleware } from './middleware/auth';
+import { workspaceAuthMiddleware } from './middleware/workspace';
 // Import routes
-import routes from './routes.js';
-import { buildSpecDocument } from './spec.js';
+import routes from './routes';
+import { buildSpecDocument } from './spec';
 
 // Create Hono app instance
 const app = new Hono().basePath('/api/v1');
