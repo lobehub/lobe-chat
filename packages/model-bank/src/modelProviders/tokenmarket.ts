@@ -5,7 +5,7 @@ const TokenMarket: ModelProviderCard = {
   checkModel: 'gpt-5.4-mini',
   description:
     'Token Market provides unified access to models from OpenAI, Anthropic, Google, DeepSeek, Qwen, GLM, MiniMax, and more through an OpenAI-compatible API with smart routing and failover.',
-  id: 'tokensmarket',
+  id: 'tokenmarket',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://www.tokensmarket.ai/models',
   name: 'Token Market',
