@@ -97,6 +97,18 @@ export interface LocalFilePreviewUrlParams {
   workingDirectory: string;
 }
 
+export interface ExternalAssetForPublishParams {
+  path: string;
+  workingDirectory: string;
+}
+
+export interface ExternalAssetForPublishResult {
+  base64?: string;
+  contentType?: string;
+  error?: string;
+  success: boolean;
+}
+
 export interface LocalFilePreviewText {
   content: string;
   contentType: string;
@@ -246,6 +258,10 @@ export interface DeviceControlDeps extends SkillDirectoryDeps, WorkspaceScanDeps
   listHeterogeneousAgentModels?: (
     params: ListHeterogeneousAgentModelsParams,
   ) => Promise<HeterogeneousAgentModelCatalog>;
+  /** Read raw bytes after the user explicitly approved an external publish closure. */
+  readExternalAssetForPublish?: (
+    params: ExternalAssetForPublishParams,
+  ) => Promise<ExternalAssetForPublishResult>;
   /** Search project files without shipping the whole index to the caller. */
   searchProjectFiles: (params: ProjectFileSearchParams) => Promise<ProjectFileSearchResult>;
   /**
@@ -267,7 +283,16 @@ export interface ListHeterogeneousAgentModelsParams {
   command?: string;
   cwd?: string;
   env?: Record<string, string>;
-  type: 'codebuddy' | 'cursor' | 'droid' | 'grok-build' | 'opencode' | 'pi' | 'qoder' | 'trae';
+  type:
+    | 'codebuddy'
+    | 'cursor'
+    | 'devin'
+    | 'droid'
+    | 'grok-build'
+    | 'opencode'
+    | 'pi'
+    | 'qoder'
+    | 'trae';
 }
 
 export interface HeterogeneousAgentModelCatalogItem {

@@ -283,16 +283,15 @@ export const buildRunLifecycle = (
       }
     },
     afterRunComplete: async (event: RunCompleteEvent) => {
-      if (adapter.runScope === 'sub_agent') return;
+      if (adapter.runScope === 'sub_agent' || resolveTerminalDisposition(event) !== 'success')
+        return;
 
       // A voice-only first message cannot be summarized at the post-persist seam:
       // its content is empty and the assistant row is still a loading placeholder.
       // Once the reply completes, use the now-textual conversation to generate a
       // meaningful title. This also leaves the visible default title intact if the
       // title request fails instead of turning the sidebar row blank.
-      if (resolveTerminalDisposition(event) === 'success') {
-        summarizeVoiceTopicTitleAfterCompletion();
-      }
+      summarizeVoiceTopicTitleAfterCompletion();
 
       // Desktop notification + dock badge. Single home for all runtimes'
       // completion notification — every transport funnels through the shared

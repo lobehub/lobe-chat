@@ -86,6 +86,18 @@ export interface OIDCAuth {
 }
 
 export interface AuthContext {
+  // Add OIDC authentication information
+  /**
+   * The agent on whose behalf this call runs, used for attribution in durable
+   * records (e.g. who reassigned a task).
+   *
+   * SECURITY: same contract as {@link AuthContext.spendOrigin} — never derived
+   * from request input, because it decides whose name a persisted action is
+   * recorded under. Populated ONLY by a server-side `createCaller` from an
+   * already-authorized run context; a client-supplied value would let a caller
+   * pin its own action on somebody else's agent.
+   */
+  actingAgentId?: string | null;
   /**
    * Set only when the request authenticated via an API key: the key's
    * capability scopes (`null` = full-access key). `undefined` means the
@@ -96,7 +108,6 @@ export interface AuthContext {
   clientMetadata?: ClientMetadata;
   jwtPayload?: ClientSecretPayload | null;
   marketAccessToken?: string;
-  // Add OIDC authentication information
   oidcAuth?: OIDCAuth | null;
   oidcClientId?: string;
   resHeaders?: Headers;
@@ -122,6 +133,8 @@ export interface AuthContext {
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
 export const createContextInner = async (params?: {
+  /** See {@link AuthContext.actingAgentId} — server-side callers only. */
+  actingAgentId?: string | null;
   apiKeyScopes?: string[] | null;
   authFailure?: string;
   clientMetadata?: ClientMetadata;
@@ -143,6 +156,7 @@ export const createContextInner = async (params?: {
   }
 
   return {
+    actingAgentId: params?.actingAgentId,
     apiKeyScopes: params?.apiKeyScopes,
     clientMetadata: params?.clientMetadata || { type: 'unknown' },
     clientIp: params?.clientIp,

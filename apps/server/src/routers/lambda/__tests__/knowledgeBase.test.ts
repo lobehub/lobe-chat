@@ -45,39 +45,49 @@ vi.mock('@/server/routers/lambda/_helpers/knowledgeBaseAccess', () => ({
 }));
 
 vi.mock('@/database/models/document', () => ({
-  DocumentModel: vi.fn(() => ({ findByIds: mockDocumentModelFindByIds })),
+  DocumentModel: vi.fn(function () {
+    return { findByIds: mockDocumentModelFindByIds };
+  }),
 }));
 
 vi.mock('@/database/models/file', () => ({
-  FileModel: vi.fn(() => ({ findByIds: mockFileModelFindByIds })),
+  FileModel: vi.fn(function () {
+    return { findByIds: mockFileModelFindByIds };
+  }),
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => ({ deleteFiles: vi.fn() })),
+  FileService: vi.fn(function () {
+    return { deleteFiles: vi.fn() };
+  }),
 }));
 
 const mockPermissionRemoveAll = vi.fn();
 const mockPermissionSetAccessLevel = vi.fn();
 vi.mock('@/database/models/resourcePermission', () => ({
-  ResourcePermissionModel: vi.fn(() => ({
-    removeAll: mockPermissionRemoveAll,
-    setAccessLevel: mockPermissionSetAccessLevel,
-  })),
+  ResourcePermissionModel: vi.fn(function () {
+    return {
+      removeAll: mockPermissionRemoveAll,
+      setAccessLevel: mockPermissionSetAccessLevel,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/knowledgeBase', () => ({
-  KnowledgeBaseModel: vi.fn(() => ({
-    addFilesToKnowledgeBase: mockKnowledgeBaseModelAddFiles,
-    copyToWorkspace: mockKnowledgeBaseModelCopyToWorkspace,
-    countFileUsage: mockKnowledgeBaseModelCountFileUsage,
-    deleteWithFiles: mockKnowledgeBaseModelDeleteWithFiles,
-    findById: mockKnowledgeBaseModelFindById,
-    hasForeignLinkedRows: mockKnowledgeBaseModelHasForeignLinkedRows,
-    query: mockKnowledgeBaseModelQuery,
-    removeFilesFromKnowledgeBase: mockKnowledgeBaseModelRemoveFiles,
-    transferTo: mockKnowledgeBaseModelTransferTo,
-    update: mockKnowledgeBaseModelUpdate,
-  })),
+  KnowledgeBaseModel: vi.fn(function () {
+    return {
+      addFilesToKnowledgeBase: mockKnowledgeBaseModelAddFiles,
+      copyToWorkspace: mockKnowledgeBaseModelCopyToWorkspace,
+      countFileUsage: mockKnowledgeBaseModelCountFileUsage,
+      deleteWithFiles: mockKnowledgeBaseModelDeleteWithFiles,
+      findById: mockKnowledgeBaseModelFindById,
+      hasForeignLinkedRows: mockKnowledgeBaseModelHasForeignLinkedRows,
+      query: mockKnowledgeBaseModelQuery,
+      removeFilesFromKnowledgeBase: mockKnowledgeBaseModelRemoveFiles,
+      transferTo: mockKnowledgeBaseModelTransferTo,
+      update: mockKnowledgeBaseModelUpdate,
+    };
+  }),
 }));
 
 describe('knowledgeBaseRouter', () => {

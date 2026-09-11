@@ -349,6 +349,8 @@
   "sortModal.success": "排序更新成功",
   "sortModal.title": "自定義排序",
   "sortModal.update": "更新",
+  "unsloth.checker.guidance": "針對瀏覽器網路錯誤，請檢查 Studio 是否允許此頁面通過 CORS。針對身份驗證錯誤，請輸入有效的 Studio API 金鑰；無金鑰的終端訪問無法授予瀏覽器訪問權限。",
+  "unsloth.checker.setupGuide": "Unsloth 連接設置指南",
   "updateAiProvider.confirmDelete": "刪除該 AI 服務商？",
   "updateAiProvider.confirmDeleteDescription": "刪除後將無法找回。",
   "updateAiProvider.deleteSuccess": "刪除成功",

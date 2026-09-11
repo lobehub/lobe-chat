@@ -3771,6 +3771,7 @@ export class AgentRuntimeService {
       hookDispatcher,
       loadAgentState: this.coordinator.loadAgentState.bind(this.coordinator),
       messageModel: this.messageModel,
+      modelRuntimeConfig: metadata?.modelRuntimeConfig,
       operationId,
       searchDecision: metadata?.searchDecision,
       serverDB: this.serverDB,

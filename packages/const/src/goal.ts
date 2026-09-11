@@ -49,3 +49,18 @@ export const GOAL_COORDINATOR_ACTOR_ID = 'goal-coordinator';
  * recognize it and render the localized copy (`goalProcess.node.terminalAcceptance`).
  */
 export const GOAL_ACCEPTANCE_TASK_TITLE = 'Complete full Goal acceptance';
+
+/**
+ * Task error strings the Goal coordinator matches on to route a paused Task.
+ *
+ * These are a contract between whoever pauses a Task and the coordinator that
+ * reads it back, not user-facing copy. A string with no branch here falls
+ * through to the human decision gate, so an unmatched infrastructure failure
+ * stops a long-horizon goal until a person clicks retry.
+ */
+export const LEASE_EXPIRED_ERROR = 'Goal Task operation lease expired.';
+/** The verifier ran and judged the delivery short of the criteria. */
+export const VERIFICATION_FAILED_ERROR = 'Delivery did not pass verification.';
+/** The verifier itself could not run, so the delivery was never evaluated. */
+export const VERIFICATION_ERRORED_ERROR =
+  'Verification could not run (internal error); the delivery was not evaluated.';

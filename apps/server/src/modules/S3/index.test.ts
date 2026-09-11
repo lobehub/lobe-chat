@@ -38,7 +38,7 @@ vi.mock('@/envs/file', () => ({
 
 // Mock utilities
 vi.mock('@/utils/url', () => ({
-  inferContentTypeFromImageUrl: vi.fn((key: string) => {
+  inferContentTypeFromImageUrl: vi.fn(function (key: string) {
     if (key.endsWith('.jpg') || key.endsWith('.jpeg')) return 'image/jpeg';
     if (key.endsWith('.png')) return 'image/png';
     if (key.endsWith('.gif')) return 'image/gif';
@@ -55,9 +55,11 @@ describe('S3', () => {
 
     // Setup S3Client mock
     mockS3ClientSend = vi.fn();
-    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({
-      send: mockS3ClientSend,
-    }));
+    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(function () {
+      return {
+        send: mockS3ClientSend,
+      };
+    });
 
     // Setup getSignedUrl mock
     mockGetSignedUrl = vi.fn().mockResolvedValue('https://presigned-url.example.com');
@@ -144,9 +146,11 @@ describe('FileS3', () => {
 
     // Setup S3Client mock
     mockS3ClientSend = vi.fn();
-    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({
-      send: mockS3ClientSend,
-    }));
+    (S3Client as unknown as ReturnType<typeof vi.fn>).mockImplementation(function () {
+      return {
+        send: mockS3ClientSend,
+      };
+    });
 
     // Setup getSignedUrl mock
     mockGetSignedUrl = vi.fn().mockResolvedValue('https://presigned-url.example.com');

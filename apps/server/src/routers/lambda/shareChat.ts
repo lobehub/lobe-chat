@@ -51,12 +51,9 @@ const log = debug('lobe-server:router:shareChat');
  * workspaceId is ever threaded into the creator-scoped models/services.
  */
 const shareChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
-  // Availability gate for the VISITOR side of Agent Share (see
-  // `_helpers/agentShareFeatureGate.ts`): `ENABLE_BUSINESS_FEATURES`
-  // (compile-time, false in OSS) AND the `enableAgentShare` grayscale flag,
-  // both evaluated for the VISITOR calling in — never the share owner,
-  // who reaches their own agent through `aiAgent.execAgent`, not this router.
-  await assertAgentShareVisitorEnabled(opts.ctx.userId);
+  // Visitor access depends on deployment support and share permissions,
+  // not the publishing rollout flag.
+  assertAgentShareVisitorEnabled();
 
   return opts.next();
 });

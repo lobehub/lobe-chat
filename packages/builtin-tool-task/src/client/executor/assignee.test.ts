@@ -126,6 +126,18 @@ describe('TaskExecutor — human assignee (assigneeUserId)', () => {
       expect(result.content).toContain('assignee member → Alice Chen (usr_2)');
     });
 
+    it('names the acting agent so the client-first runtime is attributed to it, not the user', async () => {
+      await taskExecutor.editTask({ assigneeUserId: 'usr_2', identifier: 'T-1' }, {
+        agentId: 'agt-self',
+      } as any);
+
+      expect(mocks.updateTask).toHaveBeenCalledWith(
+        'T-1',
+        { assigneeUserId: 'usr_2' },
+        { actorAgentId: 'agt-self', source: 'external' },
+      );
+    });
+
     it('setting the agent leaves the member side untouched (assignees coexist)', async () => {
       await taskExecutor.editTask({ assigneeAgentId: 'agt-new', identifier: 'T-1' });
 

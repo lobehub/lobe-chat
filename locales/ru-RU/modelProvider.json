@@ -349,6 +349,8 @@
   "sortModal.success": "Сортировка успешно обновлена",
   "sortModal.title": "Пользовательский порядок",
   "sortModal.update": "Обновить",
+  "unsloth.checker.guidance": "Для сетевых ошибок браузера убедитесь, что Studio разрешает этой странице доступ через CORS. Для ошибок аутентификации введите действительный API-ключ Studio; доступ к терминалу без ключа не предоставляет доступ через браузер.",
+  "unsloth.checker.setupGuide": "Руководство по настройке подключения Unsloth",
   "updateAiProvider.confirmDelete": "Удалить этого AI-провайдера?",
   "updateAiProvider.confirmDeleteDescription": "После удаления этого AI-провайдера восстановление невозможно.",
   "updateAiProvider.deleteSuccess": "Удаление прошло успешно",

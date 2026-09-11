@@ -978,7 +978,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     <>
       {overviewPanel}
       <RightPanel
-        stableLayout
         collapseThreshold={320}
         defaultWidth={renderWidth}
         expand={Boolean(showRightPanel) && fits}
@@ -988,8 +987,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
         width={renderWidth}
         onSizeChange={(size) => {
           if (!size?.width) return;
-          // DraggablePanel emits width as a `"420px"` string on drag-stop; parse it so
-          // the controlled width actually updates (otherwise the panel snaps back).
+          // The size type allows a string on either axis, so narrow before storing.
           const w = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
           if (!Number.isFinite(w) || w === storedWidth) return;
           updateSystemStatus({ workingSidebarWidth: w });

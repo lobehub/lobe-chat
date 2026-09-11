@@ -69,6 +69,7 @@ export interface RuntimeExecutorContext {
   hookDispatcher?: HookDispatcher;
   loadAgentState?: (operationId: string) => Promise<AgentState | null>;
   messageModel: MessageModel;
+  modelRuntimeConfig?: AgentState['modelRuntimeConfig'];
   operationId: string;
   searchDecision?: SearchDecision;
   serverDB: LobeChatDatabase;

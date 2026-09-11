@@ -72,6 +72,8 @@ export interface SandboxProviderFileExportResult {
 export interface SandboxCommandResult {
   exitCode: number;
   output: string;
+  /** The provider recreated the workspace before executing this command. */
+  sessionExpiredAndRecreated?: boolean;
   stderr?: string;
   success: boolean;
 }

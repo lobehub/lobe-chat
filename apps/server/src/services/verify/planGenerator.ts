@@ -123,6 +123,7 @@ const criterionToCheckItem = (
   onFail: criterion.onFail,
   required: criterion.required,
   sourceCriterionId: criterion.id,
+  definition: criterion.definition ?? undefined,
   sourceRubricId,
   title: criterion.title,
   verifierConfig: (criterion.verifierConfig as Record<string, unknown>) ?? {},

@@ -101,7 +101,11 @@ export class TaskRunnerService {
         // fallback must stay ephemeral — persisting it would silently replace
         // the member assignment on the first run.
         if (!task.assigneeUserId) {
-          await this.taskModel.update(task.id, { assigneeAgentId: inboxAgent.id });
+          // Goes through the logging path like every other assignee write: the
+          // chip visibly flips from unassigned to the inbox agent, so the feed
+          // has to be able to say who did it. No actor — nobody asked for this
+          // one, the runner needed an agent to execute with.
+          await this.taskModel.updateWithLog(task.id, { assigneeAgentId: inboxAgent.id }, {});
         }
         task.assigneeAgentId = inboxAgent.id;
       }
@@ -253,6 +257,29 @@ export class TaskRunnerService {
         userInterventionConfig: { approvalMode: 'headless' },
         ...(continueTopicId && { appContext: { topicId: continueTopicId } }),
       });
+
+      if (!result.success) {
+        // execAgent reports a dispatch or startup failure as a result rather
+        // than a throw (`startOperation`, `heteroDispatch`): the assistant
+        // bubble already carries the error and the run's lifecycle hooks have
+        // fired. Booking that dead operation as a running topic would leave
+        // the Task looking in flight — a goal coordinator would even record a
+        // `started_run` for it — with nothing left to ever settle it. Keep the
+        // attempt visible as a failed run, then fail the kickoff like any other.
+        if (result.topicId && !continueTopicId) {
+          await this.taskModel.incrementTopicCount(task.id);
+          await this.taskModel.updateCurrentTopic(task.id, result.topicId);
+          await this.taskTopicModel.add(task.id, result.topicId, {
+            operationId: result.operationId,
+            seq: (task.totalTopics || 0) + 1,
+            trigger,
+          });
+        }
+        if (result.topicId) {
+          await this.taskTopicModel.updateStatus(task.id, result.topicId, 'failed');
+        }
+        throw new Error(result.error || result.message || 'Agent run failed to start');
+      }
 
       if (result.topicId) {
         if (continueTopicId) {

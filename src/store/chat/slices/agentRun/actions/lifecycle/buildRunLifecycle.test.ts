@@ -47,7 +47,7 @@ const makeStore = (afterCompletionCallbacks?: Array<() => void>) => {
     activeTopicId: 't1',
     completeOperation: vi.fn(),
     dbMessagesMap: {},
-    drainQueuedMessages: vi.fn(() => []),
+    drainQueuedMessages: vi.fn<ChatStore['drainQueuedMessages']>(() => []),
     failOperation: vi.fn(),
     internal_updateTopic: vi.fn(),
     markTopicUnread: vi.fn(),
@@ -524,6 +524,7 @@ describe('buildRunLifecycle.afterRunComplete — client desktop notification bod
       await lifecycle('client', get).afterRunComplete(completeEvent('client', { runtimeStatus }));
 
       expect(store.summaryTopicTitle).not.toHaveBeenCalled();
+      expect(desktopNotificationMock.notifyDesktopAgentCompleted).not.toHaveBeenCalled();
     },
   );
 

@@ -1450,6 +1450,75 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                 handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
                 path: 'devices',
               },
+              // Account-level tabs mirrored inside the workspace so members can
+              // adjust user settings without leaving the workspace. Same pages
+              // as personal `/settings/*`; only the chrome is workspace-owned.
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/profile'),
+                  'Desktop > Workspace > Settings > Profile',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'profile',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/appearance'),
+                  'Desktop > Workspace > Settings > Appearance',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'appearance',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/hotkey'),
+                  'Desktop > Workspace > Settings > Hotkey',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'hotkey',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
+                  'Desktop > Workspace > Settings > Messenger',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+                path: 'messenger',
+              },
+              // Platform detail level — the page reads the platform from `sub`.
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
+                  'Desktop > Workspace > Settings > Messenger > Platform',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+                path: 'messenger/:sub',
+              },
+              // Developer tools mirrored inside the workspace (user preferences).
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/advanced'),
+                  'Desktop > Workspace > Settings > Advanced',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'advanced',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/labs'),
+                  'Desktop > Workspace > Settings > Labs',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'labs',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/about'),
+                  'Desktop > Workspace > Settings > About',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'about',
+              },
             ],
             element: dynamicLayout(
               () => import('@/routes/(main)/[workspaceSlug]/settings/_content-layout'),

@@ -12,6 +12,7 @@ import type {
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
+import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
@@ -111,6 +112,7 @@ const rubricConfigSchema = z.object({
 });
 
 const checkItemSchema = z.object({
+  definition: verifyCheckDefinitionSchema.optional(),
   category: z.string().optional(),
   description: z.string().optional(),
   id: z.string(),
@@ -338,6 +340,9 @@ export const verifyRouter = router({
   createCriterion: verifyWriteProcedure
     .input(
       z.object({
+        definition: verifyCheckDefinitionSchema.optional(),
+        tags: z.array(z.string()).max(50).optional(),
+        description: z.string().optional(),
         documentId: z.string().optional(),
         onFail: onFailSchema.optional(),
         required: z.boolean().optional(),
@@ -392,13 +397,34 @@ export const verifyRouter = router({
       return input.ids.map((id) => byId.get(id)).filter(Boolean);
     }),
 
-  listCriteria: verifyProcedure.query(async ({ ctx }) => ctx.criterionModel.query()),
+  listCriteria: verifyProcedure
+    .input(
+      z
+        .object({
+          search: z.string().optional(),
+          tags: z.array(z.string()).optional(),
+          includeArchived: z.boolean().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => ctx.criterionModel.query(input)),
+
+  getCriterionResults: verifyProcedure
+    .input(z.object({ id: z.string().uuid(), limit: z.number().int().min(1).max(100).optional() }))
+    .query(async ({ ctx, input }) => {
+      if (!(await ctx.criterionModel.findById(input.id)))
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Check asset not found' });
+      return ctx.resultModel.listByCriterion(input.id, input.limit);
+    }),
 
   updateCriterion: verifyWriteProcedure
     .input(
       z.object({
         id: z.string(),
         value: z.object({
+          definition: verifyCheckDefinitionSchema.nullish(),
+          tags: z.array(z.string()).max(50).optional(),
+          archivedAt: z.coerce.date().nullish(),
           description: z.string().nullish(),
           documentId: z.string().nullish(),
           onFail: onFailSchema.optional(),

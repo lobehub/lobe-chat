@@ -349,6 +349,8 @@
   "sortModal.success": "Cập nhật sắp xếp thành công",
   "sortModal.title": "Thứ tự tùy chỉnh",
   "sortModal.update": "Cập nhật",
+  "unsloth.checker.guidance": "Đối với lỗi mạng trình duyệt, hãy kiểm tra rằng Studio cho phép trang này thông qua CORS. Đối với lỗi xác thực, hãy nhập một khóa API Studio thực; truy cập terminal không cần khóa không cấp quyền truy cập trình duyệt.",
+  "unsloth.checker.setupGuide": "Hướng dẫn thiết lập kết nối Unsloth",
   "updateAiProvider.confirmDelete": "Xóa nhà cung cấp AI này?",
   "updateAiProvider.confirmDeleteDescription": "Sau khi xóa, nhà cung cấp AI này sẽ không thể khôi phục.",
   "updateAiProvider.deleteSuccess": "Xóa thành công",

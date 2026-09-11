@@ -34,6 +34,7 @@ vi.mock('electron', () => ({
   },
   shell: {
     openPath: vi.fn(),
+    showItemInFolder: vi.fn(),
   },
 }));
 
@@ -80,6 +81,7 @@ const mockLocalFileProtocolManager = {
   approveIndexedProjectRoot: vi.fn(),
   approveProjectRootFromScope: vi.fn(),
   createPreviewUrl: vi.fn(),
+  readExternalFileForPublish: vi.fn(),
   readPreviewFile: vi.fn(),
 };
 
@@ -174,16 +176,29 @@ describe('LocalFileCtr', () => {
       expect(mockShell.openPath).toHaveBeenCalledWith(path.join(os.homedir(), 'git/work'));
     });
 
-    it('should open parent directory when isDirectory is false', async () => {
-      vi.mocked(mockShell.openPath).mockResolvedValue('');
-
+    it('should reveal and select the file when isDirectory is false', async () => {
       const result = await localFileCtr.handleOpenLocalFolder({
         path: '/test/folder/file.txt',
         isDirectory: false,
       });
 
       expect(result).toEqual({ success: true });
-      expect(mockShell.openPath).toHaveBeenCalledWith('/test/folder');
+      expect(mockShell.showItemInFolder).toHaveBeenCalledWith('/test/folder/file.txt');
+      expect(mockShell.openPath).not.toHaveBeenCalled();
+    });
+
+    it('should expand a leading ~ when revealing a file', async () => {
+      const os = await import('node:os');
+
+      const result = await localFileCtr.handleOpenLocalFolder({
+        path: '~/git/work/file.txt',
+        isDirectory: false,
+      });
+
+      expect(result).toEqual({ success: true });
+      expect(mockShell.showItemInFolder).toHaveBeenCalledWith(
+        path.join(os.homedir(), 'git/work/file.txt'),
+      );
     });
 
     it('should return error when opening folder fails', async () => {
@@ -307,6 +322,53 @@ describe('LocalFileCtr', () => {
       expect(result).toEqual({
         success: true,
         url: 'localfile://file/tmp/worktree-switcher-demo.html?token=abc',
+      });
+    });
+  });
+
+  describe('external publish asset channels', () => {
+    it('creates a URL with external access only on the publish-scoped IPC method', async () => {
+      mockLocalFileProtocolManager.createPreviewUrl.mockResolvedValue(
+        'localfile://publish/outside.css?token=abc',
+      );
+
+      const result = await localFileCtr.getExternalAssetForPublishUrl({
+        path: '/outside/app.css',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.createPreviewUrl).toHaveBeenCalledWith({
+        allowExternalFile: true,
+        filePath: '/outside/app.css',
+        persistExternalApproval: false,
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        success: true,
+        url: 'localfile://publish/outside.css?token=abc',
+      });
+    });
+
+    it('returns raw bytes for the publish-scoped device RPC handler', async () => {
+      mockLocalFileProtocolManager.readExternalFileForPublish.mockResolvedValue({
+        buffer: Buffer.from([1, 2, 3]),
+        contentType: 'image/png',
+        realPath: '/outside/image.png',
+      });
+
+      const result = await localFileCtr.readExternalAssetForPublish({
+        path: '/outside/image.png',
+        workingDirectory: '/workspace',
+      });
+
+      expect(mockLocalFileProtocolManager.readExternalFileForPublish).toHaveBeenCalledWith({
+        filePath: '/outside/image.png',
+        workspaceRoot: '/workspace',
+      });
+      expect(result).toEqual({
+        base64: 'AQID',
+        contentType: 'image/png',
+        success: true,
       });
     });
   });

@@ -226,6 +226,9 @@ const buildFinalState = ({
   visibleOutputEndPublishedStepIndex?: number;
 }): AgentState => {
   const newState = structuredClone(state);
+  // Completion must retain the persisted assistant identity even when messages
+  // are rehydrated into display groups before the next runtime step.
+  newState.metadata = { ...newState.metadata, workAssistantMessageId: assistantMessageId };
   newState.toolCallRepeatGuard = toolCallRepeatGuard;
   newState.messages.push({
     content: output.content,

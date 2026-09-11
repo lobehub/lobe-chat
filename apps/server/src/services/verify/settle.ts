@@ -1,3 +1,4 @@
+import { VERIFICATION_ERRORED_ERROR, VERIFICATION_FAILED_ERROR } from '@lobechat/const/goal';
 import debug from 'debug';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
@@ -137,12 +138,11 @@ export const driveTaskFromVerify = async (
       //   evaluated, so we must not claim it "did not pass".
       const isErrored = outcome === 'errored';
 
-      // `Delivery did not pass verification.` is a contract string, not just
-      // copy: the Goal coordinator matches on it to decide whether a paused
-      // Goal Task should start another attempt or open a decision gate.
-      const pauseSummary = isErrored
-        ? 'Verification could not run (internal error); the delivery was not evaluated.'
-        : 'Delivery did not pass verification.';
+      // Both summaries are contract strings, not copy: the Goal coordinator
+      // matches on them to decide whether a paused Goal Task starts another
+      // attempt or opens a decision gate. They live in `@lobechat/const/goal`
+      // so the writer and the reader cannot drift apart.
+      const pauseSummary = isErrored ? VERIFICATION_ERRORED_ERROR : VERIFICATION_FAILED_ERROR;
       if (task.automationMode) {
         // Mirror of the pass branch: verify judges THIS tick, not the lifetime
         // schedule. Pausing here would permanently disarm the cron (the

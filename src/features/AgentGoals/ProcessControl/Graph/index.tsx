@@ -31,7 +31,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
 import { type GoalGraphNodeKind, graphNodeKind, graphNodeLabel } from '../../Experiments/model';
-import type { GoalGraphView, GoalNodeView } from '../goalGraphViewModel';
+import { type GoalGraphView, type GoalNodeView, isRunningNode } from '../goalGraphViewModel';
 import { KindDot } from '../shared';
 import { edgeDirection } from './edgeRouting';
 import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
@@ -435,7 +435,7 @@ const Canvas = memo<
                 false,
               ).size,
               kind: graphNodeKind(graph, item),
-              running: item.node.status === 'active' && !item.isStale,
+              running: isRunningNode(item),
               selected: selectedId === item.node.id,
               stale: item.isStale,
               subtitle: subtitleOf(item),

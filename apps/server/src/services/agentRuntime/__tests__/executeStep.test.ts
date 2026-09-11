@@ -16,45 +16,61 @@ import { hookDispatcher } from '../hooks';
 // Mock all heavy dependencies to isolate executeStep logic
 vi.mock('@/envs/app', () => ({ appEnv: { APP_URL: 'http://localhost:3010' } }));
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({})),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 vi.mock('@/server/modules/AgentRuntime', () => ({
-  AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({
-    loadAgentState: vi.fn(),
-    saveAgentState: vi.fn(),
-    saveStepResult: vi.fn(),
-    createAgentOperation: vi.fn(),
-    getOperationMetadata: vi.fn(),
-    isInterrupted: vi.fn().mockResolvedValue(false),
-    tryClaimStep: vi.fn().mockResolvedValue(true),
-    releaseStepLock: vi.fn().mockResolvedValue(undefined),
-    refreshStepLock: vi.fn().mockResolvedValue(true),
-  })),
-  createStreamEventManager: vi.fn(() => ({
-    publishStreamEvent: vi.fn(),
-    publishAgentRuntimeEnd: vi.fn(),
-    publishAgentRuntimeInit: vi.fn(),
-    cleanupOperation: vi.fn(),
-  })),
+  AgentRuntimeCoordinator: vi.fn().mockImplementation(function () {
+    return {
+      loadAgentState: vi.fn(),
+      saveAgentState: vi.fn(),
+      saveStepResult: vi.fn(),
+      createAgentOperation: vi.fn(),
+      getOperationMetadata: vi.fn(),
+      isInterrupted: vi.fn().mockResolvedValue(false),
+      tryClaimStep: vi.fn().mockResolvedValue(true),
+      releaseStepLock: vi.fn().mockResolvedValue(undefined),
+      refreshStepLock: vi.fn().mockResolvedValue(true),
+    };
+  }),
+  createStreamEventManager: vi.fn(function () {
+    return {
+      publishStreamEvent: vi.fn(),
+      publishAgentRuntimeEnd: vi.fn(),
+      publishAgentRuntimeInit: vi.fn(),
+      cleanupOperation: vi.fn(),
+    };
+  }),
 }));
 vi.mock('@/server/modules/AgentRuntime/RuntimeExecutors', () => ({
-  createRuntimeExecutors: vi.fn(() => ({})),
+  createRuntimeExecutors: vi.fn(function () {
+    return {};
+  }),
 }));
 vi.mock('@/server/services/mcp', () => ({ mcpService: {} }));
 vi.mock('@/server/services/queue', () => ({
-  QueueService: vi.fn().mockImplementation(() => ({
-    getImpl: vi.fn(() => ({})),
-    scheduleMessage: vi.fn(),
-  })),
+  QueueService: vi.fn().mockImplementation(function () {
+    return {
+      getImpl: vi.fn(function () {
+        return {};
+      }),
+      scheduleMessage: vi.fn(),
+    };
+  }),
 }));
 vi.mock('@/server/services/queue/impls', () => ({
   LocalQueueServiceImpl: class {},
 }));
 vi.mock('@/server/services/toolExecution', () => ({
-  ToolExecutionService: vi.fn().mockImplementation(() => ({})),
+  ToolExecutionService: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 vi.mock('@/server/services/toolExecution/builtin', () => ({
-  BuiltinToolsExecutor: vi.fn().mockImplementation(() => ({})),
+  BuiltinToolsExecutor: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 vi.mock('@lobechat/builtin-tools/dynamicInterventionAudits', () => ({
   dynamicInterventionAudits: [],
@@ -315,6 +331,26 @@ describe('AgentRuntimeService.executeStep - early exit on terminal state', () =>
 
     expect(createRuntimeExecutors).toHaveBeenCalledWith(
       expect.objectContaining({ workspaceId: 'ws-1' }),
+    );
+  });
+
+  it('restores the persisted model runtime snapshot into runtime executors', async () => {
+    vi.mocked(createRuntimeExecutors).mockClear();
+    const service = new AgentRuntimeService({} as any, 'user-1', { queueService: null });
+    const modelRuntimeConfig = {
+      mediaCapabilities: { audio: false, video: false, vision: true },
+      model: 'custom-vision-model',
+      provider: 'custom-provider',
+    };
+
+    await (service as any).createAgentRuntime({
+      metadata: { agentConfig: {}, modelRuntimeConfig, userId: 'user-1' },
+      operationId: 'op-model-runtime-snapshot',
+      stepIndex: 0,
+    });
+
+    expect(createRuntimeExecutors).toHaveBeenCalledWith(
+      expect.objectContaining({ modelRuntimeConfig }),
     );
   });
 
@@ -1004,7 +1040,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     // First loadAgentState call succeeds (returns running state to enter step execution)
     // Second call in catch block fails (Redis ECONNRESET)
     let loadCallCount = 0;
-    coordinator.loadAgentState = vi.fn().mockImplementation(() => {
+    coordinator.loadAgentState = vi.fn().mockImplementation(function () {
       loadCallCount++;
       if (loadCallCount === 1) {
         return Promise.resolve({
@@ -1020,7 +1056,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     // publishStreamEvent: first call (step_start) succeeds, subsequent calls fail
     // Simulates Redis going down mid-execution
     let publishCallCount = 0;
-    streamManager.publishStreamEvent = vi.fn().mockImplementation(() => {
+    streamManager.publishStreamEvent = vi.fn().mockImplementation(function () {
       publishCallCount++;
       if (publishCallCount === 1) return Promise.resolve();
       return Promise.reject(new Error('Redis ECONNRESET'));
@@ -1062,7 +1098,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     coordinator.tryClaimStep = vi.fn().mockResolvedValue(true);
 
     let loadCallCount = 0;
-    coordinator.loadAgentState = vi.fn().mockImplementation(() => {
+    coordinator.loadAgentState = vi.fn().mockImplementation(function () {
       loadCallCount++;
       if (loadCallCount === 1) {
         return Promise.resolve({
@@ -1077,7 +1113,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
 
     // First publishStreamEvent call (step_start) succeeds, subsequent fail
     let publishCallCount = 0;
-    streamManager.publishStreamEvent = vi.fn().mockImplementation(() => {
+    streamManager.publishStreamEvent = vi.fn().mockImplementation(function () {
       publishCallCount++;
       if (publishCallCount === 1) return Promise.resolve();
       return Promise.reject(new Error('Redis ECONNRESET'));
@@ -1118,7 +1154,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     coordinator.tryClaimStep = vi.fn().mockResolvedValue(true);
 
     let loadCallCount = 0;
-    coordinator.loadAgentState = vi.fn().mockImplementation(() => {
+    coordinator.loadAgentState = vi.fn().mockImplementation(function () {
       loadCallCount++;
       if (loadCallCount === 1) {
         return Promise.resolve({
@@ -1132,7 +1168,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     });
 
     let publishCallCount = 0;
-    streamManager.publishStreamEvent = vi.fn().mockImplementation(() => {
+    streamManager.publishStreamEvent = vi.fn().mockImplementation(function () {
       publishCallCount++;
       if (publishCallCount === 1) return Promise.resolve();
       return Promise.reject(new Error('Redis ECONNRESET'));
@@ -1165,7 +1201,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     coordinator.tryClaimStep = vi.fn().mockResolvedValue(true);
 
     let loadCallCount = 0;
-    coordinator.loadAgentState = vi.fn().mockImplementation(() => {
+    coordinator.loadAgentState = vi.fn().mockImplementation(function () {
       loadCallCount++;
       if (loadCallCount === 1) {
         return Promise.resolve({
@@ -1179,7 +1215,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
     });
 
     let publishCallCount = 0;
-    streamManager.publishStreamEvent = vi.fn().mockImplementation(() => {
+    streamManager.publishStreamEvent = vi.fn().mockImplementation(function () {
       publishCallCount++;
       if (publishCallCount === 1) return Promise.resolve();
       return Promise.reject(new Error('Redis ECONNRESET'));
@@ -1234,7 +1270,7 @@ describe('AgentRuntimeService.executeStep - Redis failure in error handler', () 
 
     // publishStreamEvent: first call succeeds, subsequent fail
     let publishCallCount = 0;
-    streamManager.publishStreamEvent = vi.fn().mockImplementation(() => {
+    streamManager.publishStreamEvent = vi.fn().mockImplementation(function () {
       publishCallCount++;
       if (publishCallCount === 1) return Promise.resolve();
       return Promise.reject(new Error('Redis ECONNRESET'));

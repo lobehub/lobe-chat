@@ -98,6 +98,8 @@ export interface AsyncTaskErrorBody {
   persistErrors?: AsyncTaskStructuredErrorItem[];
   progressErrors?: AsyncTaskStructuredErrorItem[];
   retrievalErrors?: AsyncTaskStructuredErrorItem[];
+  /** Earliest retry time for this failure, as an ISO timestamp. */
+  retryAt?: string;
 }
 
 export interface IAsyncTaskError {

@@ -3,7 +3,11 @@ import { constants, createReadStream } from 'node:fs';
 import { access, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { SkillDirectoryDeps } from '@lobechat/device-control';
+import type {
+  ExternalAssetForPublishParams,
+  ExternalAssetForPublishResult,
+  SkillDirectoryDeps,
+} from '@lobechat/device-control';
 import {
   defaultGetProjectFileIndex,
   defaultSearchProjectFiles,
@@ -292,19 +296,18 @@ export default class LocalFileCtr extends ControllerModule {
     success: boolean;
   }> {
     const resolvedTarget = expandTilde(targetPath) ?? targetPath;
-    const folderPath = isDirectory ? resolvedTarget : path.dirname(resolvedTarget);
-    logger.debug('Attempting to open folder:', {
-      folderPath,
-      isDirectory,
-      targetPath: resolvedTarget,
-    });
+    logger.debug('Attempting to open folder:', { isDirectory, targetPath: resolvedTarget });
 
     try {
-      await shell.openPath(folderPath);
-      logger.debug('Folder opened successfully:', { folderPath });
+      if (isDirectory) {
+        await shell.openPath(resolvedTarget);
+      } else {
+        shell.showItemInFolder(resolvedTarget);
+      }
+      logger.debug('Folder opened successfully:', { targetPath: resolvedTarget });
       return { success: true };
     } catch (error) {
-      logger.error(`Failed to open folder ${folderPath}:`, error);
+      logger.error(`Failed to open folder for ${resolvedTarget}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -556,6 +559,49 @@ export default class LocalFileCtr extends ControllerModule {
       return { success: true, url };
     } catch (error) {
       logger.error('Failed to create local file preview URL:', error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  @IpcMethod()
+  async getExternalAssetForPublishUrl({
+    path: filePath,
+    workingDirectory,
+  }: ExternalAssetForPublishParams): Promise<LocalFilePreviewUrlResult> {
+    try {
+      const url = await this.app.localFileProtocolManager.createPreviewUrl({
+        allowExternalFile: true,
+        filePath,
+        persistExternalApproval: false,
+        workspaceRoot: workingDirectory,
+      });
+      return url
+        ? { success: true, url }
+        : { error: 'Failed to approve external publish asset', success: false };
+    } catch (error) {
+      logger.error('Failed to create external publish asset URL:', error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async readExternalAssetForPublish({
+    path: filePath,
+    workingDirectory,
+  }: ExternalAssetForPublishParams): Promise<ExternalAssetForPublishResult> {
+    try {
+      const asset = await this.app.localFileProtocolManager.readExternalFileForPublish({
+        filePath,
+        workspaceRoot: workingDirectory,
+      });
+      if (!asset) return { error: 'Failed to approve external publish asset', success: false };
+
+      return {
+        base64: asset.buffer.toString('base64'),
+        contentType: asset.contentType,
+        success: true,
+      };
+    } catch (error) {
+      logger.error('Failed to read external publish asset:', error);
       return { error: (error as Error).message, success: false };
     }
   }

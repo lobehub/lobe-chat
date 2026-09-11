@@ -25,6 +25,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
 import { type DeviceAttachment, deviceGateway } from '@/server/services/deviceGateway';
+import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 
 import { preserveWorkspaceCache } from './deviceWorkingDirs';
 import { assertWorkspaceDeviceVisible, assertWorkspaceRootApproved } from './deviceWorkspaceGuard';
@@ -311,6 +312,7 @@ export const deviceRouter = router({
           'codebuddy',
           'cursor',
           'droid',
+          'devin',
           'grok-build',
           'opencode',
           'pi',
@@ -696,6 +698,18 @@ export const deviceRouter = router({
       });
     }),
 
+  readExternalAssetForPublish: workspaceFileProcedure
+    .input(z.object({ path: z.string() }))
+    .query(async ({ ctx, input }) =>
+      deviceGateway.readExternalAssetForPublish({
+        deviceId: input.deviceId,
+        path: input.path,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+        workingDirectory: input.workingDirectory,
+      }),
+    ),
+
   /**
    * Project skills (`.agents/skills` / `.claude/skills`) for a directory on a
    * remote device, via the device's `listProjectSkills` RPC. Powers the
@@ -860,34 +874,23 @@ export const deviceRouter = router({
    * device may therefore hold multiple channels (e.g. desktop app + CLI both
    * connected at once), and `online` is simply "has at least one live channel".
    *
-   * A union, not just the DB rows: a device may be connected but not yet in
-   * the DB (old client that predates auto-register, or registration still in
-   * flight). Those are surfaced as transient entries so the picker never loses
-   * a currently-reachable device during rollout.
+   * Personal scope is a union rather than only DB rows: auto-registration may
+   * briefly lag a live socket. Workspace scope fails closed on visible registry
+   * rows because the row is the enrollment and authorization boundary.
    */
   listDevices: deviceProcedure.query(async ({ ctx }): Promise<DeviceListItem[]> => {
     const wsId = ctx.workspaceId;
 
     // Personal devices resolve under the user principal; workspace devices under
     // the `workspace:<id>` principal (a separate gateway pool). Fetch both.
-    // `hiddenWorkspaceIds` (other members' private enrollments) is needed because
-    // the gateway pool is visibility-blind: without it a private device would
-    // resurface below as an online "ghost".
-    const [
-      personalRows,
-      workspaceRows,
-      hiddenWorkspaceIds,
-      sharedRows,
-      personalOnline,
-      workspaceOnline,
-    ] = await Promise.all([
-      ctx.deviceModel.queryPersonal(),
-      wsId ? ctx.deviceModel.queryWorkspaceDevices() : Promise.resolve([]),
-      wsId ? ctx.deviceModel.queryWorkspaceHiddenDeviceIds() : Promise.resolve([]),
-      ctx.deviceModel.querySharedWorkspaceDevices(),
-      deviceGateway.queryDeviceList(ctx.userId),
-      wsId ? deviceGateway.queryDeviceList(ctx.userId, wsId) : Promise.resolve([]),
-    ]);
+    const [personalRows, workspaceRows, sharedRows, personalOnline, workspaceOnline] =
+      await Promise.all([
+        ctx.deviceModel.queryPersonal(),
+        wsId ? ctx.deviceModel.queryWorkspaceDevices() : Promise.resolve([]),
+        ctx.deviceModel.querySharedWorkspaceDevices(),
+        deviceGateway.queryDeviceList(ctx.userId),
+        wsId ? deviceGateway.queryDeviceList(ctx.userId, wsId) : Promise.resolve([]),
+      ]);
 
     // Shares the caller created from their personal device list, grouped by the
     // source personal deviceId — attached to personal rows below so the list can
@@ -952,14 +955,10 @@ export const deviceRouter = router({
       rows: Awaited<ReturnType<typeof ctx.deviceModel.queryPersonal>>,
       onlineList: DeviceAttachment[],
       scope: DeviceScope,
-      hiddenIds: string[] = [],
     ): DeviceListItem[] => {
-      const hidden = new Set(hiddenIds);
+      const registeredDeviceIds = new Set(rows.map((device) => device.deviceId));
       const channelsByDevice = new Map<string, DeviceChannel[]>();
-      for (const conn of onlineList) {
-        // Another member's private device: online in the workspace gateway pool
-        // but not visible to the caller — must not leak as a ghost row.
-        if (hidden.has(conn.deviceId)) continue;
+      for (const conn of filterAuthorizedDevicePresence(registeredDeviceIds, onlineList, scope)) {
         channelsByDevice.set(conn.deviceId, toChannels(conn));
       }
 
@@ -1012,7 +1011,10 @@ export const deviceRouter = router({
         };
       });
 
-      // Online but not yet persisted — transient until the client auto-registers.
+      // Personal clients auto-register immediately before opening their
+      // socket, so preserve their brief Gateway-first race. Workspace rows are
+      // authorization: a Gateway-only socket may be a stale process that missed
+      // Unshare, and must stay hidden and ineligible.
       const ghosts = [...channelsByDevice.entries()]
         .filter(([deviceId]) => !seen.has(deviceId))
         .map(([deviceId, channels]): DeviceListItem => ({
@@ -1043,7 +1045,7 @@ export const deviceRouter = router({
     // filtering preserves order, so one pass serves every surface.
     return sortDevicesByActivity([
       ...buildItems(personalRows, personalOnline, 'personal'),
-      ...buildItems(workspaceRows, workspaceOnline, 'workspace', hiddenWorkspaceIds),
+      ...buildItems(workspaceRows, workspaceOnline, 'workspace'),
     ]);
   }),
 

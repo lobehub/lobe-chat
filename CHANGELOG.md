@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.2.16](https://github.com/lobehub/lobe-chat/compare/v2.2.16-canary.28...v2.2.16)
+
+<sup>Released on **2026-09-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **heterogeneous-agent**: preserve TRAE auth for model bindings.
+
+#### ✨ Features
+
+- **misc**: relax workspace resource management.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **heterogeneous-agent**: preserve TRAE auth for model bindings, closes [#18932](https://github.com/lobehub/lobe-chat/issues/18932) ([08a22e1](https://github.com/lobehub/lobe-chat/commit/08a22e1))
+
+#### What's improved
+
+- **misc**: relax workspace resource management, closes [#19107](https://github.com/lobehub/lobe-chat/issues/19107) ([29da6a6](https://github.com/lobehub/lobe-chat/commit/29da6a6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.2.11](https://github.com/lobehub/lobe-chat/compare/v2.2.11-canary.67...v2.2.11)
 
 <sup>Released on **2026-07-23**</sup>

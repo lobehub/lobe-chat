@@ -99,6 +99,14 @@ vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
 
+// 默认设置 isServerMode 为 false
+vi.mock(import('@/const/version'), async (importOriginal) => ({
+  ...(await importOriginal()),
+  isServerMode: false,
+  isDeprecatedEdition: true,
+  isDesktop: false,
+}));
+
 vi.stubGlobal(
   'fetch',
   vi.fn(() => Promise.resolve(new Response(JSON.stringify({ some: 'data' })))),
@@ -109,6 +117,13 @@ vi.mock('@lobechat/fetch-sse', async (importOriginal) => {
   const module = await importOriginal();
 
   return { ...(module as any), getMessageError: vi.fn() };
+});
+vi.mock('@lobechat/fetch-sse', async (importOriginal) => {
+  const module = await importOriginal();
+  return {
+    ...(module as any),
+    fetchSSE: vi.fn(),
+  };
 });
 vi.mock('@lobechat/utils/url', () => ({
   isDesktopLocalStaticServerUrl: vi.fn(),
@@ -130,12 +145,9 @@ beforeEach(async () => {
   // 清除所有模块的缓存
   vi.resetModules();
 
-  // 默认设置 isServerMode 为 false
-  vi.mock('@/const/version', () => ({
-    isServerMode: false,
-    isDeprecatedEdition: true,
-    isDesktop: false,
-  }));
+  // Vitest 5 keeps the module-mock factory instance across `vi.resetModules()`, so a
+  // `mockReturnValue` set inside a test leaks into every later test; restore the default.
+  vi.mocked(isCanUseFC).mockReturnValue(true);
 
   // Default mock for agentSelectors - resolveAgentConfig needs these
   vi.spyOn(agentSelectors, 'getAgentConfigById').mockReturnValue(
@@ -2075,13 +2087,6 @@ describe('ChatService private methods', () => {
   describe('getChatCompletion', () => {
     it('should merge responseAnimation styles correctly', async () => {
       const { fetchSSE } = await import('@lobechat/fetch-sse');
-      vi.mock('@lobechat/fetch-sse', async (importOriginal) => {
-        const module = await importOriginal();
-        return {
-          ...(module as any),
-          fetchSSE: vi.fn(),
-        };
-      });
 
       // Mock provider config
       const { aiProviderSelectors } = await import('@/store/aiInfra');
