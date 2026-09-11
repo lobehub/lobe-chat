@@ -4,7 +4,7 @@ import type {
   AcceptanceReviewAnnotation,
   DocumentCommentJson,
 } from '@lobechat/types';
-import { and, count, desc, eq, isNull, ne } from 'drizzle-orm';
+import { and, count, desc, eq, gte, isNull, ne } from 'drizzle-orm';
 
 import type { AcceptanceCommentRow } from '../schemas/acceptanceComment';
 import { acceptanceComments } from '../schemas/acceptanceComment';
@@ -169,11 +169,50 @@ export class AcceptanceCommentModel {
   };
 
   /**
-   * Delete the author's own comment. A root that still has replies becomes a
-   * tombstone so the replies keep their context; a reply whose tombstoned root
-   * has no other replies takes the root with it.
+   * How many remarks one author has landed on one acceptance since `since`.
+   * Reactions are excluded: they are idempotent single rows and cost a reader
+   * nothing to scroll past.
    */
-  delete = async (id: string, authorUserId: string): Promise<'hard' | 'soft' | false> => {
+  countRecentByAuthor = async (params: {
+    acceptanceId: string;
+    authorUserId: string;
+    since: Date;
+  }): Promise<number> => {
+    const [row] = await this.db
+      .select({ total: count() })
+      .from(acceptanceComments)
+      .where(
+        and(
+          eq(acceptanceComments.acceptanceId, params.acceptanceId),
+          eq(acceptanceComments.authorUserId, params.authorUserId),
+          ne(acceptanceComments.kind, 'reaction'),
+          gte(acceptanceComments.createdAt, params.since),
+        ),
+      );
+    return row?.total ?? 0;
+  };
+
+  /**
+   * Remove one comment. A root that still has replies becomes a tombstone so
+   * the replies keep their context; a reply whose tombstoned root has no other
+   * replies takes the root with it.
+   *
+   * `by.authorUserId` scopes the removal to that author's own row — the normal
+   * case. `by.moderator` skips the author check for someone the caller has
+   * already established may moderate this acceptance: since the discussion is
+   * open to anyone holding a public link, its owner needs a way to take a
+   * remark down, and the author of an unwanted remark is exactly who will not
+   * remove it. The router decides who that is; the model only obeys.
+   */
+  delete = async (
+    id: string,
+    by: { authorUserId: string } | { moderator: true },
+  ): Promise<'hard' | 'soft' | false> => {
+    const authorUserId = 'authorUserId' in by ? by.authorUserId : undefined;
+    const ownRow = (rowId: string) =>
+      authorUserId
+        ? and(eq(acceptanceComments.id, rowId), eq(acceptanceComments.authorUserId, authorUserId))
+        : eq(acceptanceComments.id, rowId);
     return this.db.transaction(async (tx) => {
       const [target] = await tx
         .select({
@@ -182,9 +221,7 @@ export class AcceptanceCommentModel {
           parentCommentId: acceptanceComments.parentCommentId,
         })
         .from(acceptanceComments)
-        .where(
-          and(eq(acceptanceComments.id, id), eq(acceptanceComments.authorUserId, authorUserId)),
-        )
+        .where(ownRow(id))
         .limit(1);
       if (!target) return false;
 
@@ -216,9 +253,7 @@ export class AcceptanceCommentModel {
               parentCommentId: acceptanceComments.parentCommentId,
             })
             .from(acceptanceComments)
-            .where(
-              and(eq(acceptanceComments.id, id), eq(acceptanceComments.authorUserId, authorUserId)),
-            )
+            .where(ownRow(id))
             .limit(1)
             .for('update')
         : [{ ...target, deletedAt: root.deletedAt }];

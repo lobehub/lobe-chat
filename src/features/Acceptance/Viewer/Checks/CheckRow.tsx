@@ -1,5 +1,6 @@
 'use client';
 
+import type { AcceptanceCommentThread } from '@lobechat/types';
 import { copyToClipboard, Flexbox, Icon, TextArea, Tooltip } from '@lobehub/ui';
 import { ActionIcon, Button, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar, cx, useResponsive } from 'antd-style';
@@ -22,6 +23,9 @@ import {
 } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { hasRenderableEvidence, readVisualizationManifest } from '../../Report/visualization';
 import { VisualizationDeltaBadge, VisualizationRenderer } from '../../Report/VisualizationRenderer';
@@ -149,6 +153,16 @@ export const AcceptanceCheckRow = memo<{
     const scope = useOptionalAcceptanceScope();
     const { data: bundle } = useAcceptanceBundle(scope?.acceptanceId ?? '');
     const comments = useAcceptanceComments(scope?.acceptanceId);
+    const viewerId = useUserStore(userProfileSelectors.userId);
+    /**
+     * Closing a note is a verdict on it: whoever raised it may close their own,
+     * and the acceptance's reviewers may close anyone's. Ownership is read from
+     * the author, not from `canDelete` — that flag also turns on for a
+     * moderator, and borrowing it would silently hand the same power out.
+     */
+    const canResolveThread = (thread: AcceptanceCommentThread) =>
+      comments.canApprove ||
+      (Boolean(viewerId) && thread.root.authorUserId === viewerId && !thread.root.deletedAt);
     const checkThreads = useMemo(
       () => threadsForCheck(comments.threads, check.id),
       [comments.threads, check.id],
@@ -189,9 +203,7 @@ export const AcceptanceCheckRow = memo<{
           panel: (
             <CommentThread
               canComment={comments.canComment}
-              // `canDelete` is only ever true on the caller's own live rows, so
-              // it doubles as "I raised this one".
-              canResolve={comments.canApprove || thread.root.canDelete}
+              canResolve={canResolveThread(thread)}
               thread={thread}
               {...commentActions}
             />
@@ -653,7 +665,7 @@ export const AcceptanceCheckRow = memo<{
                       <Flexbox flex={1} style={{ minWidth: 200 }}>
                         <CommentThread
                           canComment={comments.canComment}
-                          canResolve={comments.canApprove || thread.root.canDelete}
+                          canResolve={canResolveThread(thread)}
                           thread={thread}
                           {...commentActions}
                         />

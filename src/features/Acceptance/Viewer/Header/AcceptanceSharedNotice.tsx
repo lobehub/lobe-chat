@@ -26,7 +26,7 @@ const AcceptanceSharedNotice = ({ style }: { style?: CSSProperties }) => {
   const { acceptanceId } = useAcceptanceScope();
   const { data } = useAcceptanceBundle(acceptanceId);
   const author = useAuthorInfo(data?.acceptance.userId ?? undefined);
-  const { canComment } = useAcceptanceComments(acceptanceId);
+  const { canComment, isLoading: permissionLoading } = useAcceptanceComments(acceptanceId);
 
   if (!data || data.isOwner) return null;
 
@@ -40,7 +40,10 @@ const AcceptanceSharedNotice = ({ style }: { style?: CSSProperties }) => {
       description={t(
         canReviewAcceptance(data)
           ? 'acceptance.sharedNotice.reviewableDescription'
-          : canComment
+          : // Until the discussion answers, the wider line is the safe guess:
+            // telling a reader they may join and then taking it away reads as a
+            // bug, while the reverse reads as the page changing its mind.
+            canComment || permissionLoading
             ? 'acceptance.sharedNotice.commentableDescription'
             : 'acceptance.sharedNotice.readOnlyDescription',
       )}

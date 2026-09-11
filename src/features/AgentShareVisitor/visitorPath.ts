@@ -1,3 +1,5 @@
+import { buildAuthReturnUrl } from '@/utils/authReturnUrl';
+
 /**
  * Route prefix of the agent-share visitor page. `/a/<slug>` on purpose — short
  * enough to read aloud, and not `/agent/…`, which the marketing site already
@@ -10,13 +12,9 @@ export const AGENT_SHARE_VISITOR_PATH = '/a';
 export const buildAgentShareVisitorPath = (slugOrId: string, topicId?: string) =>
   `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}${topicId ? `/${topicId}` : ''}`;
 
-/**
- * Sign-in URL that returns the visitor to the same share once signed in.
- * `/signin` is an auth shell outside the SPA router, so callers navigate to it
- * with a full document load.
- */
+/** Sign-in URL that returns the visitor to the same share once signed in. */
 export const buildAgentShareSignInUrl = (slugOrId: string, topicId?: string) =>
-  `/signin?callbackUrl=${encodeURIComponent(buildAgentShareVisitorPath(slugOrId, topicId))}`;
+  buildAuthReturnUrl('signin', buildAgentShareVisitorPath(slugOrId, topicId));
 
 /**
  * Where the CREATOR lands when they open their own share link: the share

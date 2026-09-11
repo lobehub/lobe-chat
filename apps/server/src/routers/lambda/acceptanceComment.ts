@@ -110,7 +110,13 @@ const deactivatedAuthor: AcceptanceCommentAuthor = {
 const enrich = async (
   db: LobeChatDatabase,
   rows: AcceptanceCommentRow[],
-  scope: { ownerUserId: string; userId?: string | null; workspaceId: string | null },
+  scope: {
+    /** Whether this reader may take down a remark that is not theirs. */
+    canModerate?: boolean;
+    ownerUserId: string;
+    userId?: string | null;
+    workspaceId: string | null;
+  },
 ): Promise<AcceptanceCommentItem[]> => {
   const authorIds = [
     ...new Set(rows.flatMap((row) => (row.authorUserId ? [row.authorUserId] : []))),
@@ -247,7 +253,10 @@ const enrich = async (
       author: getAuthor(row.authorUserId, row.authorAgentId),
       authorAgentId: row.authorAgentId,
       authorUserId: row.authorUserId,
-      canDelete: !row.deletedAt && Boolean(scope.userId) && row.authorUserId === scope.userId,
+      canDelete:
+        !row.deletedAt &&
+        Boolean(scope.userId) &&
+        (row.authorUserId === scope.userId || Boolean(scope.canModerate)),
       checkItemId: row.checkItemId,
       clientId: row.clientId,
       content: row.content,
@@ -292,9 +301,14 @@ const requireComment = async (
  *
  * `author_agent_id` decides whose name, title and avatar the discussion shows,
  * and a public acceptance shows it to anyone with the link. Without this gate a
- * participant could name any agent id that exists and impersonate it. The scope
- * is the acceptance's own workspace, because that is the audience the agent is
- * being presented to.
+ * participant could name any agent id that exists and impersonate it.
+ *
+ * The scope is the acceptance's workspace ONLY for callers who belong to it.
+ * The workspace scope answers "is this agent visible in that workspace", not
+ * "may this caller use it", so handing it to a visitor who merely opened a
+ * public link would let them post under any agent of that workspace — and the
+ * discussion payload hands them the ids to pick from. A visitor falls back to
+ * personal scope, where they can only sign as their own agents.
  */
 const assertAuthorAgentUsable = async (
   db: LobeChatDatabase,
@@ -345,6 +359,16 @@ const assertReferencesBelongToAcceptance = async (
   }
 };
 
+/**
+ * What a visitor may land on one acceptance in one minute. The discussion is
+ * open to whoever holds the link, so the cost of flooding it has to sit
+ * somewhere; a reader answering evidence writes a handful of remarks, and a
+ * flood writes hundreds. Reviewers are exempt — the round-publishing tools post
+ * on their behalf in bursts.
+ */
+const VISITOR_COMMENT_WINDOW_MS = 60_000;
+const VISITOR_COMMENTS_PER_WINDOW = 10;
+
 export const acceptanceCommentRouter = router({
   create: writeProcedure.input(createSchema).mutation(async ({ ctx, input }) => {
     const access = await resolveAcceptanceCommentAccess(
@@ -358,9 +382,24 @@ export const acceptanceCommentRouter = router({
     if ((input.kind === 'approval' || input.kind === 'proposal') && !access.canApprove)
       throw new TRPCError({ code: 'FORBIDDEN', message: 'Not a reviewer of this acceptance' });
 
+    // Reactions do not come through here, and each (comment, emoji) pair is one
+    // idempotent row per person anyway.
+    if (!access.canApprove) {
+      const recent = await ctx.acceptanceCommentModel.countRecentByAuthor({
+        acceptanceId: access.acceptance.id,
+        authorUserId: ctx.userId,
+        since: new Date(Date.now() - VISITOR_COMMENT_WINDOW_MS),
+      });
+      if (recent >= VISITOR_COMMENTS_PER_WINDOW)
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Too many comments on this acceptance, try again in a minute',
+        });
+    }
+
     await assertAuthorAgentUsable(
       ctx.serverDB,
-      { userId: ctx.userId, workspaceId: access.acceptance.workspaceId ?? undefined },
+      { userId: ctx.userId, workspaceId: access.memberOfWorkspaceId },
       input.authorAgentId,
     );
     await assertReferencesBelongToAcceptance(ctx.serverDB, access.acceptance.id, {
@@ -384,6 +423,7 @@ export const acceptanceCommentRouter = router({
         workspaceId: access.acceptance.workspaceId,
       });
       const [item] = await enrich(ctx.serverDB, [comment], {
+        canModerate: access.canApprove,
         ownerUserId: access.acceptance.userId,
         userId: ctx.userId,
         workspaceId: access.acceptance.workspaceId,
@@ -402,13 +442,26 @@ export const acceptanceCommentRouter = router({
     }
   }),
 
+  /**
+   * Take a remark down. Its author always may; the acceptance's reviewers may
+   * take down anyone's, because the discussion is open to whoever holds the
+   * link and the author of an unwanted remark is exactly who will not remove
+   * it. The row becomes the same tombstone either way.
+   */
   delete: writeProcedure
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      const { comment } = await requireComment(ctx, input.id);
-      if (comment.authorUserId !== ctx.userId)
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Only the author may delete' });
-      const result = await ctx.acceptanceCommentModel.delete(comment.id, ctx.userId);
+      const { access, comment } = await requireComment(ctx, input.id);
+      const own = comment.authorUserId === ctx.userId;
+      if (!own && !access.canApprove)
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Only the author or a reviewer of this acceptance may delete',
+        });
+      const result = await ctx.acceptanceCommentModel.delete(
+        comment.id,
+        own ? { authorUserId: ctx.userId } : { moderator: true },
+      );
       return { data: { deleted: result !== false }, success: true };
     }),
 
@@ -422,6 +475,7 @@ export const acceptanceCommentRouter = router({
       );
       const rows = await ctx.acceptanceCommentModel.listByAcceptance(access.acceptance.id);
       const items = await enrich(ctx.serverDB, rows, {
+        canModerate: access.canApprove,
         ownerUserId: access.acceptance.userId,
         userId: ctx.userId,
         workspaceId: access.acceptance.workspaceId,
