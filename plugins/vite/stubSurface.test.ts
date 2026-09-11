@@ -8,9 +8,10 @@ import {
   parseStubSurface,
   reportStubSurfaceGaps,
   stubUsageGaps,
-} from './surface';
+} from './stubSurface';
 
-const stubDir = import.meta.dirname;
+const stubDir = path.resolve(import.meta.dirname, '../../apps/workbench/app/stubs');
+const electronStubDir = path.resolve(import.meta.dirname, 'electronStubs');
 
 describe('workbench stub surface', () => {
   it('treats reject() and createTRPCClient() as open members', () => {
@@ -61,7 +62,9 @@ describe('workbench stub surface', () => {
   });
 
   it('allows implemented hook members and ignores type-only imports', () => {
-    const surface = parseStubSurface(readFileSync(path.join(stubDir, 'electronStore.ts'), 'utf8'));
+    const surface = parseStubSurface(
+      readFileSync(path.join(electronStubDir, 'electronStore.ts'), 'utf8'),
+    );
     const usage = collectStubUsage(
       `import type { ElectronStore } from '@/store/electron';
        import { getElectronStoreState, useElectronStore } from '@/store/electron';

@@ -1,9 +1,8 @@
 import type * as lobechatConstModule from '@lobechat/const';
-import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import type * as modelRuntimeModule from '@lobechat/model-runtime';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type * as lobechatTypesModule from '@lobechat/types';
-import { ChatErrorType } from '@lobechat/types';
+import { ChatErrorType, HeterogeneousAgentSessionErrorCode } from '@lobechat/types';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -104,7 +103,7 @@ vi.mock('@/features/Conversation/ChatItem/components/ErrorContent', () => ({
   ),
 }));
 
-vi.mock('@/features/Electron/HeterogeneousAgent/StatusGuide', () => ({
+vi.mock('@/features/HeterogeneousAgent/StatusGuide', () => ({
   default: ({
     agentType,
     error,

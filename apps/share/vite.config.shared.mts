@@ -6,14 +6,17 @@ import { lobeStaticCssPlugin } from '@lobehub/ui/static-css/vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig, type Plugin, type PluginOption } from 'vite';
 
+import { electronClientStubs } from '../../plugins/vite/electronStubs';
 import { lobeIconImports } from '../../plugins/vite/lobeIconImports';
 import { viteMarkdownImport } from '../../plugins/vite/markdownImport';
+import { assertNoElectronBuildInputs } from '../../plugins/vite/microAppBuildInputs';
 import { viteNodeModuleStub } from '../../plugins/vite/nodeModuleStub';
 import { vitePlatformResolve } from '../../plugins/vite/platformResolve';
 import {
   sharedRendererDedupe,
   sharedRendererDefine,
 } from '../../plugins/vite/sharedRendererConfig';
+import { stubSurfaceGuard } from '../../plugins/vite/stubSurfaceGuard';
 
 interface StaticCssOptions {
   hrefTemplate: (hash: string) => string;
@@ -39,6 +42,13 @@ export interface ShareRrConfigOptions {
   staticCss: { antd: StaticCssOptions; themeVars: StaticCssOptions };
 }
 
+const STUB_SKIP_PREFIXES = [
+  'apps/share/app/stubs/',
+  'lobehub/apps/share/app/stubs/',
+  'plugins/vite/electronStubs/',
+  'lobehub/plugins/vite/electronStubs/',
+];
+
 const CLIENT_MODULE_RE = /\.client(?:\.[jt]sx?)?$/;
 
 export const createShareRrConfig = ({
@@ -53,11 +63,13 @@ export const createShareRrConfig = ({
 
   const stub = (file: string) => path.resolve(appRoot, 'app/stubs', file);
 
+  const clientStubs = electronClientStubs();
+
   const ssrStubs: Record<string, string> = {
     '@/libs/trpc/client': stub('trpcClient.ts'),
     '@/services/global': stub('globalService.ts'),
     '@/spa/initialize/toolSurfaces': stub('toolSurfaces.ts'),
-    '@/store/electron': stub('electronStore.ts'),
+    '@/store/electron': clientStubs['@/store/electron']!,
     '@/store/file': stub('fileStore.ts'),
     '@/store/user': stub('userStore.ts'),
     '@/utils/i18n/loadI18nNamespaceModule': stub('loadI18nNamespaceModule.ts'),
@@ -65,6 +77,15 @@ export const createShareRrConfig = ({
     'shiki/wasm': stub('shikiWasm.ts'),
     ...extraSsrStubs,
   };
+
+  const shareClientStubs = (): Plugin => ({
+    applyToEnvironment: (environment) => environment.name === 'client',
+    enforce: 'pre',
+    name: 'share-client-stubs',
+    resolveId(source) {
+      return clientStubs[source];
+    },
+  });
 
   const shareSsrStubs = (): Plugin => ({
     applyToEnvironment: (environment) => environment.name === 'ssr',
@@ -160,6 +181,7 @@ export const createShareRrConfig = ({
       if (!options.dir?.includes('build/server')) return;
       const manifest = [...buildInputIds].sort().join('\n');
       writeFileSync(path.resolve('build-inputs.txt'), `${manifest}\n`);
+      assertNoElectronBuildInputs('share', buildInputIds);
     },
   });
 
@@ -218,7 +240,22 @@ export const createShareRrConfig = ({
       process.env.SHARE_CHUNK_REPORT ? ssrChunkReport() : undefined,
       process.env.SHARE_TRACE_MODULE ? ssrModuleTrace(process.env.SHARE_TRACE_MODULE) : undefined,
       shareSsrStubs(),
+      shareClientStubs(),
       shareClientOnlyStub(),
+      stubSurfaceGuard({
+        appName: 'Share',
+        env: 'ssr',
+        repoRoot,
+        skipPrefixes: STUB_SKIP_PREFIXES,
+        stubs: ssrStubs,
+      }),
+      stubSurfaceGuard({
+        appName: 'Share',
+        env: 'client',
+        repoRoot,
+        skipPrefixes: STUB_SKIP_PREFIXES,
+        stubs: clientStubs,
+      }),
       buildInputsManifest(),
       viteMarkdownImport(),
       viteNodeModuleStub(),

@@ -1,11 +1,9 @@
-import { isDesktop } from '@lobechat/const';
 import { type PartialDeep } from 'type-fest';
 
 import { type VersionResponseData } from '@/app/(backend)/api/version/route';
 import { BusinessGlobalService } from '@/business/client/services/BusinessGlobalService';
 import { lambdaClient } from '@/libs/trpc/client';
-import { getElectronStoreState } from '@/store/electron';
-import { electronSyncSelectors } from '@/store/electron/selectors';
+import { getRemoteServerUrl } from '@/services/remoteServerUrl';
 import { type LobeAgentConfig } from '@/types/agent';
 import { type GlobalRuntimeConfig } from '@/types/serverConfig';
 
@@ -30,19 +28,14 @@ class GlobalService extends BusinessGlobalService {
    */
   getServerVersion = async (): Promise<string | null> => {
     const origin = (() => {
-      if (isDesktop) {
-        const remoteServerUrl = electronSyncSelectors.remoteServerUrl(getElectronStoreState());
-        if (!remoteServerUrl) return undefined;
+      const remoteServerUrl = getRemoteServerUrl();
+      if (!remoteServerUrl) return undefined;
 
-        try {
-          return new URL(remoteServerUrl).origin;
-        } catch {
-          // fallback: use as-is; URL construction below will throw if invalid
-          return remoteServerUrl;
-        }
+      try {
+        return new URL(remoteServerUrl).origin;
+      } catch {
+        return remoteServerUrl;
       }
-
-      return undefined;
     })();
 
     if (!origin) return null;

@@ -389,6 +389,9 @@ importers:
       '@lobechat/heterogeneous-agents':
         specifier: workspace:*
         version: link:../heterogeneous-agents
+      '@lobechat/types':
+        specifier: workspace:*
+        version: link:../types
       react:
         specifier: 19.2.7
         version: 19.2.7

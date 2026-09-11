@@ -35,6 +35,7 @@ import { useUserStore } from '@/store/user';
 
 import { buildRunLifecycle } from '../lifecycle/buildRunLifecycle';
 import { type RunScope } from '../lifecycle/types';
+import { localHeteroAgentService } from './localHeteroIntervention';
 
 /**
  * Actions for controlling conversation operations like cancellation and error handling
@@ -1748,10 +1749,7 @@ export class ConversationControlActionImpl {
     // Both paths are idempotent on an unknown / already-settled toolCallId.
     try {
       if (isLocalDesktopHetero) {
-        // Dynamic import keeps `@/services/electron/*` out of non-Electron bundles.
-        const { heterogeneousAgentService } =
-          await import('@/services/electron/heterogeneousAgent');
-        await heterogeneousAgentService.submitIntervention(
+        await localHeteroAgentService.submitIntervention(
           actionType === 'submit'
             ? { operationId, result: payload ?? {}, toolCallId }
             : { cancelReason: 'user_cancelled', cancelled: true, operationId, toolCallId },

@@ -29,6 +29,7 @@ export * from './followUpAction';
 export * from './ftsSearch';
 export * from './generation';
 export * from './goal';
+export * from './heterogeneousAgentError';
 export * from './heteroSessionImport';
 export * from './home';
 export * from './hotkey';

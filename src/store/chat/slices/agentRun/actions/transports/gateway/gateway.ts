@@ -27,7 +27,6 @@ import {
   type ResumeApprovalParam,
   type ResumeToolResultParam,
 } from '@/services/aiAgent';
-import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
 import { messageService } from '@/services/message';
 import { shareChatService } from '@/services/shareChat';
 import { topicService } from '@/services/topic';
@@ -55,6 +54,7 @@ import { createGatewayEventBuffer } from './gatewayEventBuffer';
 import { createGatewayEventHandler, isCompletedRuntimeEnd } from './gatewayEventHandler';
 import { createGatewayEventRouter } from './gatewayEventRouter';
 import { createGatewayMemberStreamHandler } from './gatewayMemberStreamHandler';
+import { getLocalDeviceInfo } from './localDeviceInfo';
 
 /**
  * Interrupts a gateway operation and rejects when its physical shutdown is unconfirmed.
@@ -157,7 +157,7 @@ const resolveDesktopDeviceHints = async (
   if (!isPlatformTask && executionTarget !== 'local') return {};
 
   try {
-    const info = await gatewayConnectionService.getDeviceInfo();
+    const info = await getLocalDeviceInfo();
     if (!info?.deviceId) return {};
     return isPlatformTask
       ? { localDeviceId: info.deviceId }

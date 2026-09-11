@@ -1,7 +1,5 @@
 import type { HeteroQuotaWindow } from '@lobechat/heterogeneous-agents/quota';
 
-import type { HeterogeneousCliAgentType } from './binary';
-
 export {
   AMP_CLI_INSTALL_COMMANDS,
   AMP_CLI_INSTALL_DOCS_URL,
@@ -25,34 +23,11 @@ export {
   QODER_CLI_INSTALL_COMMANDS,
   QODER_CLI_INSTALL_DOCS_URL,
 } from '@lobechat/heterogeneous-agents';
-
-export const HeterogeneousAgentSessionErrorCode = {
-  AuthRequired: 'auth_required',
-  /**
-   * The shell probe that resolves PATH ran out of time. Distinct from
-   * `CliNotFound` because it says nothing about whether the CLI is installed —
-   * conflating them told users to reinstall a working binary.
-   */
-  CliDetectionTimeout: 'cli_detection_timeout',
-  CliNotFound: 'cli_not_found',
-  Overloaded: 'overloaded',
-  RateLimit: 'rate_limit',
-  ResumeCwdMismatch: 'resume_cwd_mismatch',
-  ResumeThreadNotFound: 'resume_thread_not_found',
-  WorkingDirectoryNotFound: 'working_directory_not_found',
-} as const;
-
-export type HeterogeneousAgentSessionErrorCode =
-  (typeof HeterogeneousAgentSessionErrorCode)[keyof typeof HeterogeneousAgentSessionErrorCode];
-
-export interface HeterogeneousAgentRateLimitInfo {
-  isUsingOverage?: boolean;
-  overageDisabledReason?: string;
-  overageStatus?: string;
-  rateLimitType?: string;
-  resetsAt?: number;
-  status?: string;
-}
+export type {
+  HeterogeneousAgentRateLimitInfo,
+  HeterogeneousAgentSessionError,
+} from '@lobechat/types';
+export { HeterogeneousAgentSessionErrorCode } from '@lobechat/types';
 
 // The Claude quota snapshot shapes are shared with the device RPC path
 // (`lh connect` samples the same snapshot), so they live in the
@@ -114,21 +89,6 @@ export type CodexRateLimitResetOutcome =
 export interface CodexRateLimitResetResult {
   outcome: CodexRateLimitResetOutcome;
   quota: CodexQuotaSnapshot;
-}
-
-export interface HeterogeneousAgentSessionError {
-  agentType?: HeterogeneousCliAgentType;
-  code?: HeterogeneousAgentSessionErrorCode | string;
-  command?: string;
-  /** Diagnostic context from the CLI's terminal event (subtype, HTTP status, turn count, …). */
-  details?: Record<string, unknown>;
-  docsUrl?: string;
-  installCommands?: readonly string[];
-  message: string;
-  rateLimitInfo?: HeterogeneousAgentRateLimitInfo;
-  resumeSessionId?: string;
-  stderr?: string;
-  workingDirectory?: string;
 }
 
 export type HeterogeneousAgentRuntimeState =

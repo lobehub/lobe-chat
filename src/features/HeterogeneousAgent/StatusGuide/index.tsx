@@ -1,6 +1,6 @@
 'use client';
 
-import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
+import { HeterogeneousAgentSessionErrorCode } from '@lobechat/types';
 import { memo } from 'react';
 
 import { resolveHeterogeneousAgentGuideConfig } from './config';

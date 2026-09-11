@@ -120,6 +120,10 @@ vi.mock('@lobechat/const', async (importOriginal) => {
 vi.mock('@/services/electron/desktopNotification', () => ({
   desktopNotificationService: desktopNotificationMock,
 }));
+vi.mock(
+  '@/store/chat/utils/desktopNotification',
+  () => import('@/store/chat/utils/desktopNotification.desktop'),
+);
 vi.mock('@/services/electron/completionSound', () => ({
   completionSoundService: completionSoundMock,
 }));

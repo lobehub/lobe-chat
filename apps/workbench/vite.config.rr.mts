@@ -6,17 +6,21 @@ import { lobeStaticCssPlugin } from '@lobehub/ui/static-css/vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig, type Plugin } from 'vite';
 
+import { electronClientStubs } from '../../plugins/vite/electronStubs';
 import { lobeIconImports } from '../../plugins/vite/lobeIconImports';
 import { viteMarkdownImport } from '../../plugins/vite/markdownImport';
+import { assertNoElectronBuildInputs } from '../../plugins/vite/microAppBuildInputs';
 import { viteNodeModuleStub } from '../../plugins/vite/nodeModuleStub';
 import { vitePlatformResolve } from '../../plugins/vite/platformResolve';
 import { sharedRendererDefine } from '../../plugins/vite/sharedRendererConfig';
+import { stubSurfaceGuard } from '../../plugins/vite/stubSurfaceGuard';
 import { shikiCdnUrl } from './app/stubs/shikiCdn';
 import { isShikiSource } from './app/stubs/shikiSource';
-import { reportStubSurfaceGaps } from './app/stubs/surface';
 import { antdStaticCssOptions, themeVarsCssOptions } from './staticCssOptions.mjs';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
+
+const STUB_SKIP_PREFIXES = ['apps/workbench/app/stubs/', 'plugins/vite/electronStubs/'];
 
 const define = {
   ...sharedRendererDefine({ isElectron: false, isMobile: true }),
@@ -30,10 +34,12 @@ const shikiVersion = JSON.parse(
   readFileSync(path.resolve(repoRoot, 'node_modules/shiki/package.json'), 'utf8'),
 ).version as string;
 
+const electronStubs = electronClientStubs();
+
 const ssrStubs: Record<string, string> = {
+  ...electronStubs,
   '@/libs/trpc/client': path.resolve(import.meta.dirname, 'app/stubs/trpcClient.ts'),
   '@/services/global': path.resolve(import.meta.dirname, 'app/stubs/globalService.ts'),
-  '@/store/electron': path.resolve(import.meta.dirname, 'app/stubs/electronStore.ts'),
   '@/store/file': path.resolve(import.meta.dirname, 'app/stubs/fileStore.ts'),
   '@/utils/i18n/loadI18nNamespaceModule': path.resolve(
     import.meta.dirname,
@@ -57,6 +63,7 @@ const i18nClientStub = path.resolve(
 );
 
 const clientStubs: Record<string, string> = {
+  ...electronStubs,
   '@/libs/trpc/client': path.resolve(import.meta.dirname, 'app/stubs/trpcClient.client.ts'),
   '@/utils/i18n/loadI18nNamespaceModule': i18nClientStub,
 };
@@ -92,41 +99,6 @@ const I18N_NS_PATTERNS = [
   /\bt\(\s*['"]([A-Za-z]+):/g,
 ];
 const I18N_NS_ARRAY_PATTERN = /useTranslation\(\s*\[([^\]]*)\]/g;
-
-const stubSurfaceGuard = (env: 'client' | 'ssr', stubs: Record<string, string>): Plugin => ({
-  apply: 'build',
-  applyToEnvironment: (environment) => environment.name === env,
-  buildEnd() {
-    const stubEntries = Object.entries(stubs).map(([specifier, file]) => ({
-      source: readFileSync(file, 'utf8'),
-      specifier,
-    }));
-    const files: Array<{ rel: string; source: string }> = [];
-    for (const id of this.getModuleIds()) {
-      if (!id.startsWith(repoRoot) || id.includes('/node_modules/') || id.includes('\0')) continue;
-      const file = id.split('?')[0]!;
-      if (!/\.[cm]?[jt]sx?$/.test(file)) continue;
-      const rel = path.relative(repoRoot, file);
-      if (rel.startsWith('apps/workbench/app/stubs/')) continue;
-      let source: string;
-      try {
-        source = readFileSync(file, 'utf8');
-      } catch {
-        continue;
-      }
-      files.push({ rel, source });
-    }
-    const lines = reportStubSurfaceGaps(files, stubEntries);
-    if (lines.length > 0) {
-      this.error(
-        `Workbench ${env} stub is missing APIs used by the module graph:\n${lines.join('\n')}\n` +
-          `Add the export/member to the matching file in app/stubs/ (empty state or reject), ` +
-          `or keep the importer off this graph.`,
-      );
-    }
-  },
-  name: `workbench-${env}-stub-surface-guard`,
-});
 
 const clientI18nNsGuard = (): Plugin => ({
   apply: 'build',
@@ -249,6 +221,7 @@ const buildInputsManifest = (): Plugin => ({
     if (!options.dir?.includes('build/server')) return;
     const manifest = [...buildInputIds].sort().join('\n');
     writeFileSync(path.resolve(import.meta.dirname, 'build-inputs.txt'), `${manifest}\n`);
+    assertNoElectronBuildInputs('workbench', buildInputIds);
   },
 });
 
@@ -310,8 +283,20 @@ export default defineConfig({
     workbenchSsrStubs(),
     workbenchClientStubs(),
     workbenchClientShikiCdn(),
-    stubSurfaceGuard('ssr', ssrStubs),
-    stubSurfaceGuard('client', clientStubs),
+    stubSurfaceGuard({
+      appName: 'Workbench',
+      env: 'ssr',
+      repoRoot,
+      skipPrefixes: STUB_SKIP_PREFIXES,
+      stubs: ssrStubs,
+    }),
+    stubSurfaceGuard({
+      appName: 'Workbench',
+      env: 'client',
+      repoRoot,
+      skipPrefixes: STUB_SKIP_PREFIXES,
+      stubs: clientStubs,
+    }),
     clientI18nNsGuard(),
     buildInputsManifest(),
     viteMarkdownImport(),

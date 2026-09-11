@@ -1,4 +1,3 @@
-import type * as Constants from '@lobechat/const';
 import {
   AGENT_CHAT_TOPIC_URL,
   AGENT_CHAT_URL,
@@ -16,7 +15,7 @@ import {
   resolveNotificationNavigate,
   resolveNotificationNavigatePath,
   resolveNotificationTitle,
-} from './desktopNotification';
+} from './desktopNotification.desktop';
 import { renderAvatarToDataUrl } from './notificationAvatar';
 import { topicMapKey } from './topicMapKey';
 
@@ -24,10 +23,6 @@ const { getNotificationSoundFile, playSound, showNotification } = vi.hoisted(() 
   getNotificationSoundFile: vi.fn(),
   playSound: vi.fn(),
   showNotification: vi.fn(),
-}));
-vi.mock('@lobechat/const', async (importOriginal) => ({
-  ...(await importOriginal<typeof Constants>()),
-  isDesktop: true,
 }));
 vi.mock('@/services/electron/completionSound', () => ({
   completionSoundService: { getNotificationSoundFile, play: playSound },

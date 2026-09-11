@@ -313,6 +313,39 @@ export default eslint(
     },
   },
   {
+    files: ['apps/share/**/*.{ts,tsx}', 'apps/workbench/**/*.{ts,tsx}', 'apps/auth/**/*.{ts,tsx}'],
+    ignores: ['**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': createRestrictedImportRule({
+        paths: [
+          {
+            message:
+              'Micro apps must import Conversation pieces from their subpaths ("@/features/Conversation/ChatList", ".../ConversationProvider", ".../Messages"); the root barrel also exports ChatInput.',
+            name: '@/features/Conversation',
+          },
+        ],
+        patterns: [
+          {
+            group: [
+              '@/services/electron',
+              '@/services/electron/**',
+              '@/store/electron',
+              '@/store/electron/**',
+              '@/utils/electron',
+              '@/utils/electron/**',
+              '@/features/Electron',
+              '@/features/Electron/**',
+              '@lobechat/electron-client-ipc',
+              '@lobechat/electron-client-ipc/**',
+            ],
+            message:
+              'Micro apps never ship Electron layers. Route the call through a platform twin (x.ts + x.desktop.ts, see plugins/vite/platformResolve.ts) in the shared feature instead.',
+          },
+        ],
+      }),
+    },
+  },
+  {
     files: [
       'src/routes/**/_layout/Sidebar.{ts,tsx}',
       'src/routes/**/_layout/Sidebar/**/*.{ts,tsx}',

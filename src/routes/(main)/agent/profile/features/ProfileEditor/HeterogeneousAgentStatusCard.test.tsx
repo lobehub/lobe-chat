@@ -195,7 +195,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-vi.mock('@/features/Electron/HeterogeneousAgent/StatusGuide', () => ({
+vi.mock('@/features/HeterogeneousAgent/StatusGuide', () => ({
   default: ({ agentType }: { agentType?: string }) => (
     <div>{`${agentType ?? 'codex'} Install Guide`}</div>
   ),

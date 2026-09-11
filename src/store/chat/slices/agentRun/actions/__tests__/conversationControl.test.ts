@@ -4,8 +4,8 @@ import { t } from 'i18next';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { heterogeneousAgentService } from '@/services/electron/heterogeneousAgent';
 import { messageService } from '@/services/message';
+import { localHeteroAgentService } from '@/store/chat/slices/agentRun/actions/entries/localHeteroIntervention';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
@@ -34,6 +34,10 @@ vi.mock('@/services/agentRuntime', () => ({
   agentRuntimeService: {
     handleHumanIntervention: vi.fn().mockResolvedValue({ success: true }),
   },
+}));
+
+vi.mock('@/store/chat/slices/agentRun/actions/entries/localHeteroIntervention', () => ({
+  localHeteroAgentService: { submitIntervention: vi.fn() },
 }));
 
 vi.mock('@/utils/localStorage', () => {
@@ -2915,7 +2919,7 @@ describe('ConversationControl actions', () => {
           .mockResolvedValue({ messages: [], success: true });
         const legacyRemoteSubmit = vi.mocked(lambdaClient.aiAgent.submitHeteroIntervention.mutate);
         const localSubmit = vi
-          .spyOn(heterogeneousAgentService, 'submitIntervention')
+          .spyOn(localHeteroAgentService, 'submitIntervention')
           .mockResolvedValue(undefined as any);
 
         await act(async () => {
@@ -3055,7 +3059,7 @@ describe('ConversationControl actions', () => {
         .mockResolvedValue(undefined);
       const legacyRemoteSubmit = vi.mocked(lambdaClient.aiAgent.submitHeteroIntervention.mutate);
       const localSubmit = vi
-        .spyOn(heterogeneousAgentService, 'submitIntervention')
+        .spyOn(localHeteroAgentService, 'submitIntervention')
         .mockResolvedValue(undefined as any);
 
       await act(async () => {
@@ -3116,7 +3120,7 @@ describe('ConversationControl actions', () => {
         success: true,
       });
       const localSubmit = vi
-        .spyOn(heterogeneousAgentService, 'submitIntervention')
+        .spyOn(localHeteroAgentService, 'submitIntervention')
         .mockResolvedValue(undefined as any);
       const sourceMutation = vi.mocked(
         lambdaClient.aiAgent.resolveAgentInterventionBySource.mutate,
@@ -3317,7 +3321,7 @@ describe('ConversationControl actions', () => {
         .spyOn(result.current, 'updateTopicStatus')
         .mockResolvedValue(undefined as any);
       const submitInterventionSpy = vi
-        .spyOn(heterogeneousAgentService, 'submitIntervention')
+        .spyOn(localHeteroAgentService, 'submitIntervention')
         .mockResolvedValue(undefined as any);
 
       const payload = { 'Which color?': 'Blue' };
@@ -3398,7 +3402,7 @@ describe('ConversationControl actions', () => {
       vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
       vi.spyOn(result.current, 'updateTopicStatus').mockResolvedValue(undefined as any);
       const submitInterventionSpy = vi
-        .spyOn(heterogeneousAgentService, 'submitIntervention')
+        .spyOn(localHeteroAgentService, 'submitIntervention')
         .mockResolvedValue(undefined as any);
 
       const payload = { 'Which color?': 'Blue' };
@@ -3469,7 +3473,7 @@ describe('ConversationControl actions', () => {
         .spyOn(result.current, 'updateTopicStatus')
         .mockResolvedValue(undefined as any);
       const submitInterventionSpy = vi
-        .spyOn(heterogeneousAgentService, 'submitIntervention')
+        .spyOn(localHeteroAgentService, 'submitIntervention')
         .mockResolvedValue(undefined as any);
       const remoteSubmit = vi.mocked(lambdaClient.aiAgent.submitHeteroIntervention.mutate);
       remoteSubmit.mockClear();
@@ -3587,7 +3591,7 @@ describe('ConversationControl actions', () => {
       const updateTopicStatusSpy = vi
         .spyOn(result.current, 'updateTopicStatus')
         .mockResolvedValue(undefined as any);
-      vi.spyOn(heterogeneousAgentService, 'submitIntervention').mockResolvedValue(undefined as any);
+      vi.spyOn(localHeteroAgentService, 'submitIntervention').mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.submitHeteroIntervention(

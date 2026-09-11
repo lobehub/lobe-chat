@@ -20,13 +20,13 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
-import HeterogeneousAgentStatusGuide from '@/features/Electron/HeterogeneousAgent/StatusGuide';
 import { useProviderBindingCompatibleProviders } from '@/features/HeterogeneousAgent/hooks/useProviderBinding';
 import {
   buildServerDefaultModelOptions,
   MODEL_PICKER_STYLE,
   modelPickerStyles,
 } from '@/features/HeterogeneousAgent/modelPicker';
+import HeterogeneousAgentStatusGuide from '@/features/HeterogeneousAgent/StatusGuide';
 import ModelSelect from '@/features/ModelSelect';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
