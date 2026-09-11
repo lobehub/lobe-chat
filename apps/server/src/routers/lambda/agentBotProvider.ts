@@ -11,6 +11,7 @@ import {
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentBotProviderModel } from '@/database/models/agentBotProvider';
+import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import type { LobeChatDatabase } from '@/database/type';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -54,6 +55,35 @@ const agentBotProviderProcedureWrite = agentBotProviderProcedure.use(
 );
 
 const BOT_NOT_FOUND_MESSAGE = 'Bot integration not found';
+
+/**
+ * Gate the cross-scope reclaim on the workspace the binding actually lives in.
+ *
+ * The procedure's `agent:update` scope is evaluated against the caller's active
+ * workspace, which by definition is not the one holding a stranded row. Being
+ * its original creator says nothing about present access, so re-check
+ * membership where it counts: an active, non-viewer seat in the owning
+ * workspace. A binding with no workspace is personal, and the creator check
+ * already settled it.
+ */
+async function assertStrandedWorkspaceStillManageable(
+  ctx: { serverDB: LobeChatDatabase; userId: string },
+  workspaceId: string | null,
+): Promise<void> {
+  if (!workspaceId) return;
+
+  const member = await new WorkspaceMemberModel(ctx.serverDB, ctx.userId).getMember(
+    workspaceId,
+    ctx.userId,
+  );
+
+  if (member && member.role !== 'viewer') return;
+
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message: `This bot belongs to workspace ${workspaceId}, and you no longer have permission to manage it there. Ask a member of that workspace to remove the binding.`,
+  });
+}
 
 /**
  * Turn a unique-index violation into something the caller can act on.
@@ -224,6 +254,12 @@ export const agentBotProviderRouter = router({
         if (!stranded || stranded.userId !== ctx.userId) {
           throw new TRPCError({ code: 'NOT_FOUND', message: BOT_NOT_FOUND_MESSAGE });
         }
+
+        // Having created it is not enough when it lives in a workspace: the
+        // procedure's `agent:update` gate only covers the *active* scope, so
+        // without this a creator who has since left that workspace could reach
+        // in from personal scope and kill an integration the team still runs.
+        await assertStrandedWorkspaceStillManageable(ctx, stranded.workspaceId);
 
         deleted = await ctx.agentBotProviderModel.deleteAcrossScopes(input.id);
         routing = { applicationId: stranded.applicationId, platform: stranded.platform };

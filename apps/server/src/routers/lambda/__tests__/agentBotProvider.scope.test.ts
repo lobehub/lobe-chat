@@ -54,6 +54,13 @@ vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
   KeyVaultsGateKeeper: { initWithEnvKey: vi.fn(async () => ({})) },
 }));
 
+const mockGetMember = vi.fn();
+vi.mock('@/database/models/workspaceMember', () => ({
+  WorkspaceMemberModel: vi.fn(function () {
+    return { getMember: mockGetMember };
+  }),
+}));
+
 const mockCreate = vi.fn();
 const mockFindById = vi.fn();
 const mockDelete = vi.fn();
@@ -96,12 +103,16 @@ const strandedRow = {
   workspaceId: null,
 };
 
+/** Same row, but parked in a workspace instead of personal scope. */
+const strandedInWorkspace = { ...strandedRow, workspaceId: 'ws-other' };
+
 beforeEach(() => {
   vi.clearAllMocks();
   mockFindById.mockResolvedValue(undefined);
   mockDelete.mockResolvedValue([]);
   mockFindByIdAcrossScopes.mockResolvedValue(undefined);
   mockDeleteAcrossScopes.mockResolvedValue([{ id: BOT_ID }]);
+  mockGetMember.mockResolvedValue({ role: 'member' });
 });
 
 describe('agentBotProviderRouter · bindings stranded outside the active scope', () => {
@@ -133,6 +144,44 @@ describe('agentBotProviderRouter · bindings stranded outside the active scope',
       const caller = agentBotProviderRouter.createCaller(ctx);
 
       await expect(caller.delete({ id: BOT_ID })).rejects.toMatchObject({ code: 'NOT_FOUND' });
+      expect(mockDeleteAcrossScopes).not.toHaveBeenCalled();
+    });
+
+    it('does not consult workspace membership for a personal binding', async () => {
+      mockFindByIdAcrossScopes.mockResolvedValue(strandedRow);
+      const caller = agentBotProviderRouter.createCaller(ctx);
+
+      await expect(caller.delete({ id: BOT_ID })).resolves.toEqual([{ id: BOT_ID }]);
+      expect(mockGetMember).not.toHaveBeenCalled();
+    });
+
+    it('reclaims a workspace binding while the creator still has a seat there', async () => {
+      mockFindByIdAcrossScopes.mockResolvedValue(strandedInWorkspace);
+      const caller = agentBotProviderRouter.createCaller(ctx);
+
+      await expect(caller.delete({ id: BOT_ID })).resolves.toEqual([{ id: BOT_ID }]);
+      expect(mockGetMember).toHaveBeenCalledWith('ws-other', 'user-1');
+    });
+
+    it('refuses once the creator has left the workspace holding the binding', async () => {
+      // Creating it once is not standing access: the procedure's agent:update
+      // gate only covers the active scope, so a departed member could otherwise
+      // kill an integration the workspace still runs.
+      mockFindByIdAcrossScopes.mockResolvedValue(strandedInWorkspace);
+      mockGetMember.mockResolvedValue(undefined);
+      const caller = agentBotProviderRouter.createCaller(ctx);
+
+      await expect(caller.delete({ id: BOT_ID })).rejects.toMatchObject({ code: 'FORBIDDEN' });
+      expect(mockDeleteAcrossScopes).not.toHaveBeenCalled();
+      expect(mockStopClient).not.toHaveBeenCalled();
+    });
+
+    it('refuses a creator demoted to viewer in the workspace holding the binding', async () => {
+      mockFindByIdAcrossScopes.mockResolvedValue(strandedInWorkspace);
+      mockGetMember.mockResolvedValue({ role: 'viewer' });
+      const caller = agentBotProviderRouter.createCaller(ctx);
+
+      await expect(caller.delete({ id: BOT_ID })).rejects.toMatchObject({ code: 'FORBIDDEN' });
       expect(mockDeleteAcrossScopes).not.toHaveBeenCalled();
     });
 
