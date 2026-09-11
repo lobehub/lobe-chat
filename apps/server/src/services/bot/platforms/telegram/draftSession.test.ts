@@ -122,6 +122,13 @@ describe('Telegram draft session', () => {
     });
   });
 
+  it('fails closed when durable draft storage is unavailable', async () => {
+    getRedisMock.mockReturnValue(null);
+
+    await expect(saveTelegramDraftSession(session, true)).resolves.toBe(false);
+    await expect(getTelegramDraftSession('bot-1', 'telegram:7', 42)).resolves.toBeUndefined();
+  });
+
   it('uses a preset Redis claim boundary result without interpreting Lua', async () => {
     const redis = {
       eval: vi.fn().mockResolvedValueOnce('{}').mockResolvedValueOnce(0),
@@ -137,9 +144,8 @@ describe('Telegram draft session', () => {
 
   it('records Stop in memory when Redis writes fail', async () => {
     const redis = {
-      eval: vi.fn().mockResolvedValue('{}'),
+      eval: vi.fn().mockResolvedValueOnce('{}').mockRejectedValueOnce(new Error('redis down')),
       get: vi.fn().mockResolvedValue(null),
-      set: vi.fn().mockRejectedValue(new Error('redis down')),
     };
     getRedisMock.mockReturnValue(redis);
     await saveTelegramDraftSession(session);

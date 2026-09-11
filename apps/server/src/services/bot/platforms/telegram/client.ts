@@ -20,7 +20,7 @@ import {
   type ValidationResult,
 } from '../types';
 import { formatUsageStats } from '../utils';
-import { TELEGRAM_API_BASE, TelegramApi } from './api';
+import { TELEGRAM_API_BASE, TelegramApi, TelegramEditUnavailableError } from './api';
 import {
   claimTelegramDraftCompletion,
   clearTelegramDraftSession,
@@ -304,11 +304,20 @@ class TelegramWebhookClient implements PlatformClient {
       // attachments flow through createMessage instead.
       editMessage: async (messageId, content) => {
         const text = messengerContentText(content);
-        await telegram.editRichMessageText({
-          chatId,
-          messageId: parseTelegramMessageId(messageId),
-          richMessage: { markdown: sanitizeTelegramRichMarkdown(text) },
-        });
+        try {
+          await telegram.editRichMessageText({
+            chatId,
+            messageId: parseTelegramMessageId(messageId),
+            richMessage: { markdown: sanitizeTelegramRichMarkdown(text) },
+          });
+        } catch (error) {
+          if (!(error instanceof TelegramEditUnavailableError)) throw error;
+          await sendTelegramRichReply(telegram, {
+            chatId,
+            messageThreadId: parsedThread.messageThreadId,
+            text,
+          });
+        }
       },
       removeReaction: (messageId) =>
         telegram.removeMessageReaction(chatId, parseTelegramMessageId(messageId)),
@@ -338,13 +347,18 @@ class TelegramWebhookClient implements PlatformClient {
       messenger.createDraft = async (content, context) => {
         const draftId = Math.floor(Math.random() * 2_147_483_646) + 1;
         const richMessage = { markdown: sanitizeTelegramRichMarkdown(content) };
-        await saveTelegramDraftSession({
-          ...context,
-          applicationId: this.applicationId,
-          content: richMessage.markdown,
-          draftId,
-          platformThreadId,
-        });
+        const saved = await saveTelegramDraftSession(
+          {
+            applicationId: this.applicationId,
+            content: richMessage.markdown,
+            draftId,
+            platformThreadId,
+            userId: context.userId,
+            workspaceId: context.workspaceId,
+          },
+          context.durable,
+        );
+        if (!saved) throw new Error('Durable Telegram draft storage is unavailable');
         try {
           await sendDraft(draftId, richMessage.markdown);
         } catch (error) {

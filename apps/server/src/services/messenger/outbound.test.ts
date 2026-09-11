@@ -184,7 +184,7 @@ describe('sendOutboundDirectMessage', () => {
       expect(mocks.sendTelegramRichMessage).toHaveBeenCalledWith({
         chatId: '12345',
         richMessage: {
-          markdown: 'see attached\n\n![](tg://document?id=media_0 "report.pdf")',
+          markdown: 'see attached\n\n![](tg://document?id=media_0)',
           media: [
             {
               id: 'media_0',

@@ -153,4 +153,20 @@ describeWithRedis('Telegram draft session Redis invariants', () => {
       stopRequested: true,
     });
   });
+
+  it('atomically coordinates concurrent Stop and operation registration', async () => {
+    const scope = createScope();
+    await saveTelegramDraftSession(createSession(scope));
+
+    const [stopSession, operationSawStop] = await Promise.all([
+      requestTelegramDraftStop(...sessionArgs(scope)),
+      setTelegramDraftOperation(...sessionArgs(scope), 'operation-race'),
+    ]);
+
+    expect(operationSawStop || stopSession?.operationId === 'operation-race').toBe(true);
+    await expect(getTelegramDraftSession(...sessionArgs(scope))).resolves.toMatchObject({
+      operationId: 'operation-race',
+      stopRequested: true,
+    });
+  });
 });

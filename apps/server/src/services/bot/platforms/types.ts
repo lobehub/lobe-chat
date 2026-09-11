@@ -160,6 +160,7 @@ export interface BotMessageAttachment {
 export type MessengerContent = string | { attachments?: BotMessageAttachment[]; content?: string };
 
 export interface MessengerDraftContext {
+  durable?: boolean;
   userId: string;
   workspaceId?: string;
 }

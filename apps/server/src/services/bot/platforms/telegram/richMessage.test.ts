@@ -80,7 +80,8 @@ describe('prepareTelegramRichMessage', () => {
       },
     ]);
 
-    expect(prepared.richMessage.markdown).toContain('![](tg://document?id=media_0 "report.pdf")');
+    expect(prepared.richMessage.markdown).toContain('![](tg://document?id=media_0)');
+    expect(prepared.richMessage.markdown).not.toContain('"report.pdf"');
     expect(prepared.richMessage.media).toEqual([
       {
         id: 'media_0',
@@ -134,7 +135,7 @@ describe('prepareTelegramRichMessage', () => {
 
     expect(Array.from(prepared.richMessage.markdown).length).toBeLessThanOrEqual(32_768);
     expect(prepared.richMessage.markdown).toContain('![](tg://photo?id=media_0 "Chart")');
-    expect(prepared.richMessage.markdown).toContain('![](tg://document?id=media_1 "Report")');
+    expect(prepared.richMessage.markdown).toContain('![](tg://document?id=media_1)');
   });
 
   it('does not register media whose complete reference cannot fit', async () => {

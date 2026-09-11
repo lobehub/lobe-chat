@@ -9,7 +9,11 @@ import { TopicModel } from '@/database/models/topic';
 import { type LobeChatDatabase } from '@/database/type';
 import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { getDeliveredChunkCount, markDeliveryChunk } from '@/server/services/callbackDelivery';
+import {
+  claimDeliveryChunk,
+  getDeliveredChunkCount,
+  releaseDeliveryLease,
+} from '@/server/services/callbackDelivery';
 import { getMessageGatewayClient } from '@/server/services/gateway/MessageGatewayClient';
 import {
   getInstallationStore,
@@ -145,8 +149,11 @@ export interface BotCallbackBody {
 }
 
 export interface BotCallbackOptions {
+  claimChunkDelivery?: (deliveredChunkCount: number) => Promise<boolean>;
   deliveredChunkCount?: number;
+  durableDelivery?: boolean;
   onChunkDelivered?: (deliveredChunkCount: number) => Promise<void>;
+  releaseDeliveryLease?: () => Promise<void>;
   strictDelivery?: boolean;
 }
 
@@ -243,8 +250,20 @@ export class BotCallbackService {
       await finishCompletion();
       return;
     }
-    const deliveryOptions = await this.getDeliveryOptions(body.operationId, options);
     const leaseOwner = draftClaim?.status === 'claimed' ? draftClaim.owner : undefined;
+    let deliveryOptions: BotCallbackOptions | undefined;
+    try {
+      deliveryOptions = await this.getDeliveryOptions(body.operationId, options);
+    } catch (error) {
+      if (leaseOwner && body.draftId) {
+        try {
+          await messenger.releaseDraftCompletion?.(body.draftId, leaseOwner);
+        } catch (releaseError) {
+          log('handleCallback: failed to release native draft completion claim: %O', releaseError);
+        }
+      }
+      throw error;
+    }
 
     try {
       const strictDelivery = deliveryOptions?.strictDelivery ?? Boolean(body.draftId);
@@ -259,6 +278,7 @@ export class BotCallbackService {
         strictDelivery,
         deliveryOptions?.deliveredChunkCount,
         deliveryOptions?.onChunkDelivered,
+        deliveryOptions?.claimChunkDelivery,
         body.draftId,
         leaseOwner,
       );
@@ -271,6 +291,12 @@ export class BotCallbackService {
         }
       }
       throw error;
+    } finally {
+      try {
+        await deliveryOptions?.releaseDeliveryLease?.();
+      } catch (error) {
+        log('handleCallback: failed to release callback delivery lease: %O', error);
+      }
     }
     if (body.draftId) {
       if (leaseOwner && messenger.markDraftDelivered) {
@@ -326,18 +352,28 @@ export class BotCallbackService {
     options: BotCallbackOptions | undefined,
   ): Promise<BotCallbackOptions | undefined> {
     if (!operationId || options?.deliveredChunkCount !== undefined || options?.onChunkDelivered) {
+      if (options?.durableDelivery && !operationId) {
+        throw new Error('Completion callback is missing operationId');
+      }
       return options;
     }
 
     const redis = getAgentRuntimeRedisClient();
-    if (!redis) return options;
+    if (!redis) {
+      if (options?.durableDelivery) {
+        throw new Error('Durable completion delivery storage is unavailable');
+      }
+      return options;
+    }
     const key = `bot-callback:delivery:${operationId}`;
     const deliveredChunkCount = await getDeliveredChunkCount(redis, key);
+    const deliveryOwner = randomUUID();
 
     return {
       ...options,
+      claimChunkDelivery: (count) => claimDeliveryChunk(redis, key, count, deliveryOwner),
       deliveredChunkCount,
-      onChunkDelivered: (count) => markDeliveryChunk(redis, key, count),
+      releaseDeliveryLease: () => releaseDeliveryLease(redis, key, deliveryOwner),
     };
   }
 
@@ -553,6 +589,7 @@ export class BotCallbackService {
     strictDelivery = false,
     deliveredChunkCount = 0,
     onChunkDelivered?: (deliveredChunkCount: number) => Promise<void>,
+    claimChunkDelivery?: (deliveredChunkCount: number) => Promise<boolean>,
     draftId?: string,
     leaseOwner?: string,
   ): Promise<void> {
@@ -584,6 +621,11 @@ export class BotCallbackService {
       await renewDeliveryLease();
       await onChunkDelivered?.(count);
     };
+    const claimChunk = async (count: number) => {
+      assertDeliveryLease();
+      await renewDeliveryLease();
+      return (await claimChunkDelivery?.(count)) ?? true;
+    };
     const {
       reason,
       lastAssistantContent,
@@ -612,7 +654,7 @@ export class BotCallbackService {
           errorBudget,
         );
         const errorText = client.formatMarkdown?.(errorBody) ?? errorBody;
-        if (deliveredChunkCount < 1) {
+        if (deliveredChunkCount < 1 && (await claimChunk(1))) {
           const delivered = await this.deliverFirstChunk(
             messenger,
             progressMessageId,
@@ -627,7 +669,7 @@ export class BotCallbackService {
       }
 
       if (reason === 'interrupted') {
-        if (deliveredChunkCount >= 1) return;
+        if (deliveredChunkCount >= 1 || !(await claimChunk(1))) return;
         const stoppedText = renderStopped(errorMessage, replyLocale);
         try {
           await messenger.createMessage(stoppedText);
@@ -693,7 +735,7 @@ export class BotCallbackService {
       const lastIndex = chunks.length - 1;
       const firstChunkAttachments = lastIndex === 0 ? attachments : undefined;
 
-      if (deliveredChunkCount < 1) {
+      if (deliveredChunkCount < 1 && (await claimChunk(1))) {
         const delivered = await this.deliverFirstChunk(
           messenger,
           progressMessageId,
@@ -708,6 +750,7 @@ export class BotCallbackService {
       // (rate-limit, network blip) doesn't drop everything that follows.
       for (let i = Math.max(1, deliveredChunkCount); i < chunks.length; i++) {
         try {
+          if (!(await claimChunk(i + 1))) continue;
           const isLast = i === lastIndex;
           await messenger.createMessage(
             isLast && attachments?.length ? { attachments, content: chunks[i] } : chunks[i],
@@ -749,6 +792,7 @@ export class BotCallbackService {
         log('completion reply delivered via editMessage: message=%s', progressMessageId);
         return true;
       } catch (error) {
+        if (strictDelivery) throw error;
         log('handleCompletion: editMessage failed, falling back to createMessage: %O', error);
       }
     }

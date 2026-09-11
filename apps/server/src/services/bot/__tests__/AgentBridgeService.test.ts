@@ -534,6 +534,10 @@ describe('AgentBridgeService', () => {
         client,
       });
 
+      expect(messenger.createDraft).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ durable: true }),
+      );
       expect(messenger.setDraftOperation).toHaveBeenCalledWith('draft-42', 'op-1');
       expect(mockInterruptTask).toHaveBeenCalledWith({ operationId: 'op-1' });
     });
@@ -883,6 +887,55 @@ describe('AgentBridgeService', () => {
       expect(messenger.createMessage).toHaveBeenCalledWith(expect.stringContaining('Final answer'));
       expect(messenger.clearDraft).toHaveBeenCalledWith('draft-42');
     });
+  });
+
+  it('routes local attachment replies through the platform messenger', async () => {
+    mockIsQueueAgentRuntimeEnabled.mockReturnValue(false);
+    const messenger = createDraftMessenger({ createDraft: undefined });
+    const client = createClient();
+    client.getMessenger.mockReturnValue(messenger);
+    mockExecAgent.mockImplementationOnce(async (params: any) => {
+      queueMicrotask(() => {
+        const completion = params.hooks.find(
+          (hook: { id: string }) => hook.id === 'bot-completion',
+        );
+        void completion.handler({
+          attachments: [
+            {
+              data: 'cmVwb3J0',
+              mimeType: 'application/pdf',
+              name: 'report.pdf',
+              type: 'file',
+            },
+          ],
+          lastAssistantContent: 'Report attached.',
+          reason: 'completed',
+        });
+      });
+      return localExecResult();
+    });
+    const thread = createThread();
+    thread.isDM = false;
+    const service = new AgentBridgeService(FAKE_DB, USER_ID);
+
+    await service.handleMention(thread, createMessage(), {
+      agentId: 'agent-1',
+      botContext: { platformThreadId: THREAD_ID } as any,
+      client,
+    });
+
+    expect(messenger.createMessage).toHaveBeenCalledWith({
+      attachments: [
+        {
+          data: 'cmVwb3J0',
+          mimeType: 'application/pdf',
+          name: 'report.pdf',
+          type: 'file',
+        },
+      ],
+      content: expect.stringContaining('Report attached.'),
+    });
+    expect(thread.post).toHaveBeenCalledTimes(1);
   });
 
   describe('stale cached topic recovery', () => {

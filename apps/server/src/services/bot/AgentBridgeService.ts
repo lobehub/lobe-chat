@@ -1013,6 +1013,7 @@ export class AgentBridgeService {
         draftId = await messenger.createDraft(
           renderStart(userMessage.text, { lng: replyLocale, timezone }),
           {
+            durable: queueMode,
             userId: this.userId,
             workspaceId: this.workspaceId,
           },
@@ -1667,16 +1668,35 @@ export class AgentBridgeService {
                           );
                         }
                       } else if (progressMessage) {
-                        if (chunks[0] !== lastProgressText) {
+                        if (lastIdx === 0 && rawAttachments?.length && messenger) {
+                          await messenger.createMessage({
+                            attachments: rawAttachments,
+                            content: chunks[0],
+                          });
+                        } else if (chunks[0] !== lastProgressText) {
                           await progressMessage.edit(buildPostable(chunks[0], 0));
                           lastProgressText = chunks[0];
                         }
                         for (let i = 1; i < chunks.length; i++) {
-                          await thread.post(buildPostable(chunks[i], i));
+                          if (i === lastIdx && rawAttachments?.length && messenger) {
+                            await messenger.createMessage({
+                              attachments: rawAttachments,
+                              content: chunks[i],
+                            });
+                          } else {
+                            await thread.post(buildPostable(chunks[i], i));
+                          }
                         }
                       } else {
                         for (let i = 0; i < chunks.length; i++) {
-                          await thread.post(buildPostable(chunks[i], i));
+                          if (i === lastIdx && rawAttachments?.length && messenger) {
+                            await messenger.createMessage({
+                              attachments: rawAttachments,
+                              content: chunks[i],
+                            });
+                          } else {
+                            await thread.post(buildPostable(chunks[i], i));
+                          }
                         }
                       }
                     } catch (error) {

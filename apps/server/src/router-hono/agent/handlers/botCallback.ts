@@ -53,7 +53,7 @@ export async function botCallback(c: Context): Promise<Response> {
     const service = new BotCallbackService(serverDB);
     await service.handleCallback(
       body,
-      type === 'completion' ? { strictDelivery: true } : undefined,
+      type === 'completion' ? { durableDelivery: true, strictDelivery: true } : undefined,
     );
 
     return c.json({ success: true });

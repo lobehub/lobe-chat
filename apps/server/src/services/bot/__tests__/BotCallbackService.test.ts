@@ -585,11 +585,12 @@ describe('BotCallbackService', () => {
       try {
         const completion = service.handleCallback(body);
         await vi.waitFor(() => expect(mockCreateMessage).toHaveBeenCalledTimes(1));
-        expect(mockRenewDraftCompletion).not.toHaveBeenCalled();
+        expect(mockRenewDraftCompletion).toHaveBeenCalledTimes(1);
 
         await vi.advanceTimersByTimeAsync(30_000);
 
-        expect(mockRenewDraftCompletion).toHaveBeenCalledWith('draft-42', 'owner-1');
+        expect(mockRenewDraftCompletion).toHaveBeenCalledTimes(2);
+        expect(mockRenewDraftCompletion).toHaveBeenLastCalledWith('draft-42', 'owner-1');
         resolveDelivery({ id: 'new-msg' });
         await completion;
       } finally {
@@ -701,7 +702,7 @@ describe('BotCallbackService', () => {
         'Telegram draft delivery lease lost',
       );
 
-      expect(mockCreateMessage).toHaveBeenCalledTimes(1);
+      expect(mockCreateMessage).not.toHaveBeenCalled();
       expect(mockReleaseDraftCompletion).toHaveBeenCalledWith('draft-42', 'owner-1');
       expect(mockClearDraft).not.toHaveBeenCalled();
     });
@@ -722,6 +723,23 @@ describe('BotCallbackService', () => {
 
       expect(mockReleaseDraftCompletion).toHaveBeenCalledWith('draft-42', 'owner-1');
       expect(mockClearDraft).not.toHaveBeenCalled();
+    });
+
+    it('releases the native draft claim when durable delivery cannot initialize', async () => {
+      const body = makeTelegramBody({
+        draftId: 'draft-42',
+        lastAssistantContent: 'Here is the answer.',
+        progressMessageId: undefined,
+        reason: 'completed',
+        type: 'completion',
+      });
+
+      await expect(service.handleCallback(body, { durableDelivery: true })).rejects.toThrow(
+        'missing operationId',
+      );
+
+      expect(mockReleaseDraftCompletion).toHaveBeenCalledWith('draft-42', 'owner-1');
+      expect(mockCreateMessage).not.toHaveBeenCalled();
     });
 
     it('releases the native draft claim when ordinary callback delivery fails', async () => {
@@ -1020,9 +1038,8 @@ describe('BotCallbackService', () => {
       );
     });
 
-    it('should fail strict proactive delivery when the platform rejects the reply', async () => {
+    it('does not create a second message after an ambiguous strict edit failure', async () => {
       mockEditMessage.mockRejectedValueOnce(new Error('message to edit not found'));
-      mockCreateMessage.mockRejectedValueOnce(new Error('Discord channel unavailable'));
       const body = makeBody({
         lastAssistantContent: 'A result that must reach the creator.',
         reason: 'completed',
@@ -1030,8 +1047,9 @@ describe('BotCallbackService', () => {
       });
 
       await expect(service.handleCallback(body, { strictDelivery: true })).rejects.toThrow(
-        'Discord channel unavailable',
+        'message to edit not found',
       );
+      expect(mockCreateMessage).not.toHaveBeenCalled();
     });
 
     it('should fall back to createMessage when error-state edit fails', async () => {
@@ -1110,7 +1128,7 @@ describe('BotCallbackService', () => {
 
     it('resumes ordinary callback delivery from its Redis chunk checkpoint', async () => {
       const get = vi.fn().mockResolvedValue('1');
-      const evalScript = vi.fn().mockResolvedValue(2);
+      const evalScript = vi.fn().mockResolvedValue(1);
       mockGetAgentRuntimeRedisClient.mockReturnValue({ eval: evalScript, get });
       const longContent = 'A'.repeat(2000) + '\n\n' + 'B'.repeat(2000);
       const body = makeBody({
@@ -1127,12 +1145,50 @@ describe('BotCallbackService', () => {
       expect(mockCreateMessage).toHaveBeenCalled();
       expect(evalScript).toHaveBeenCalledWith(
         expect.stringContaining("redis.call('SET'"),
-        1,
+        2,
         'bot-callback:delivery:operation-42',
+        'bot-callback:delivery:operation-42:lease',
         2,
         21_600,
+        expect.any(String),
+        90_000,
       );
-      expect(evalScript.mock.calls.some(([, , , count]) => count === 1)).toBe(false);
+      expect(evalScript.mock.calls.some((call) => call[4] === 1)).toBe(false);
+    });
+
+    it('does not resend a chunk after an ambiguous dispatched failure', async () => {
+      const claimChunkDelivery = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+      mockCreateMessage.mockRejectedValueOnce(new Error('Telegram request timed out'));
+      const body = makeBody({
+        lastAssistantContent: 'A result that may already have reached Telegram.',
+        progressMessageId: undefined,
+        reason: 'completed',
+        type: 'completion',
+      });
+      const options = {
+        claimChunkDelivery,
+        deliveredChunkCount: 0,
+        strictDelivery: true,
+      };
+
+      await expect(service.handleCallback(body, options)).rejects.toThrow('timed out');
+      await expect(service.handleCallback(body, options)).resolves.toBeUndefined();
+
+      expect(mockCreateMessage).toHaveBeenCalledTimes(1);
+      expect(claimChunkDelivery).toHaveBeenCalledTimes(2);
+    });
+
+    it('fails closed when a durable callback has no operation identity', async () => {
+      const body = makeBody({
+        lastAssistantContent: 'reply',
+        reason: 'completed',
+        type: 'completion',
+      });
+
+      await expect(service.handleCallback(body, { durableDelivery: true })).rejects.toThrow(
+        'missing operationId',
+      );
+      expect(mockCreateMessage).not.toHaveBeenCalled();
     });
 
     it('should not throw when sending interrupted message fails', async () => {

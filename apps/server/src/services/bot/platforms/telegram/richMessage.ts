@@ -314,7 +314,10 @@ export const prepareTelegramRichMessage = async (
     const id = `media_${index}`;
     const fieldName = `file_${index}`;
     const boundFileId = options?.boundFileIds?.[index]?.trim();
-    const mediaBlock = richMediaLink(type, id, attachment.name);
+    // Telegram already renders a document's uploaded filename in the file
+    // card. Repeating it as the Rich media caption produces a duplicate line
+    // below that card; photos/video/audio still benefit from an explicit label.
+    const mediaBlock = richMediaLink(type, id, type === 'document' ? undefined : attachment.name);
     const nextMediaMarkdown = [...attachmentBlocks, mediaBlock].join('\n\n');
     if (Array.from(nextMediaMarkdown).length > TELEGRAM_RICH_MESSAGE_LIMIT) {
       droppedAttachments.push(attachmentLabel(attachment, index));

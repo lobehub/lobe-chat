@@ -846,6 +846,16 @@ describe('TelegramWebhookClient rich messenger', () => {
     expect(secondBody.rich_message.markdown).toBe('Using a tool…');
   });
 
+  it('does not expose a queue draft without durable storage', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const messenger = createClient().getMessenger('telegram:7');
+
+    await expect(
+      messenger.createDraft?.('Thinking…', { durable: true, userId: 'user-1' }),
+    ).rejects.toThrow('Durable Telegram draft storage is unavailable');
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it('applies structural sanitizing to draft updates', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => okResponse({}));
     const messenger = createClient().getMessenger('telegram:7');
@@ -973,6 +983,39 @@ describe('TelegramWebhookClient rich messenger', () => {
     expect(String(fetchSpy.mock.calls[0]![0])).toContain('/editMessageText');
     const body = JSON.parse((fetchSpy.mock.calls[0]![1] as RequestInit).body as string);
     expect(body.rich_message.markdown).toBe('updated');
+  });
+
+  it('creates a replacement only when Telegram definitively rejects editing', async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            description: 'Bad Request: message to edit not found',
+            error_code: 400,
+            ok: false,
+          }),
+          { headers: { 'Content-Type': 'application/json' }, status: 200 },
+        ),
+      )
+      .mockResolvedValueOnce(okResponse({ message_id: 10 }));
+    const messenger = createClient().getMessenger('telegram:7');
+
+    await messenger.editMessage('telegram:7:9', 'updated');
+
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    expect(String(fetchSpy.mock.calls[0]![0])).toContain('/editMessageText');
+    expect(String(fetchSpy.mock.calls[1]![0])).toContain('/sendRichMessage');
+  });
+
+  it('does not create a replacement after an ambiguous edit timeout', async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockRejectedValueOnce(Object.assign(new Error('fetch failed'), { code: 'ETIMEDOUT' }));
+    const messenger = createClient().getMessenger('telegram:7');
+
+    await expect(messenger.editMessage('telegram:7:9', 'updated')).rejects.toThrow('fetch failed');
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('claims and releases a native draft completion', async () => {

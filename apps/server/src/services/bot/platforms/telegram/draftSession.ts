@@ -66,7 +66,7 @@ const completedSession = (
   status: 'completed',
 });
 
-const TTL_SECONDS = 30 * 60;
+const TTL_SECONDS = 6 * 60 * 60;
 /**
  * A `delivering` claim that is older than this can be reclaimed, but only
  * after the owner stops renewing. `handleCompletion` heartbeats during
@@ -180,6 +180,34 @@ local encoded = cjson.encode(incoming)
 redis.call('SET', KEYS[1], encoded, 'EX', ARGV[2])
 return encoded
 `;
+const SET_OPERATION_SCRIPT = `
+local raw = redis.call('GET', KEYS[1])
+if not raw then return nil end
+local session = cjson.decode(raw)
+local status = session.status or 'active'
+if status ~= 'active' then return nil end
+session.operationId = ARGV[1]
+if session.stopRequested or redis.call('GET', KEYS[2]) == '1' then
+  session.stopRequested = true
+end
+session.savedAt = tonumber(ARGV[2])
+local encoded = cjson.encode(session)
+redis.call('SET', KEYS[1], encoded, 'EX', ARGV[3])
+return encoded
+`;
+const REQUEST_STOP_SCRIPT = `
+local raw = redis.call('GET', KEYS[1])
+if not raw then return nil end
+local session = cjson.decode(raw)
+local status = session.status or 'active'
+if status ~= 'active' then return nil end
+session.stopRequested = true
+session.savedAt = tonumber(ARGV[1])
+local encoded = cjson.encode(session)
+redis.call('SET', KEYS[1], encoded, 'EX', ARGV[2])
+redis.call('SET', KEYS[2], '1', 'EX', ARGV[2])
+return encoded
+`;
 
 const buildKey = (applicationId: string, platformThreadId: string, draftId: number): string =>
   `bot:telegram-draft:${applicationId}:${platformThreadId}:${draftId}`;
@@ -223,11 +251,14 @@ const writeMemory = (key: string, session: TelegramDraftSession): void => {
   memory.set(key, { expiresAt: now + TTL_SECONDS * 1000, session });
 };
 
-export const saveTelegramDraftSession = async (session: TelegramDraftSession): Promise<void> => {
+export const saveTelegramDraftSession = async (
+  session: TelegramDraftSession,
+  durable = false,
+): Promise<boolean> => {
   const key = buildKey(session.applicationId, session.platformThreadId, session.draftId);
   const stamped = { ...session, savedAt: Date.now(), status: session.status ?? 'active' } as const;
   const existing = readMemory(key);
-  if (draftStatusRank(existing?.status) > draftStatusRank(stamped.status)) return;
+  if (!durable && draftStatusRank(existing?.status) > draftStatusRank(stamped.status)) return true;
 
   const redis = getAgentRuntimeRedisClient();
   if (redis) {
@@ -239,20 +270,23 @@ export const saveTelegramDraftSession = async (session: TelegramDraftSession): P
         JSON.stringify(stamped),
         TTL_SECONDS,
       );
-      if (saved === 0) return;
+      if (saved === 0) return true;
       if (typeof saved === 'string') {
         writeMemory(key, JSON.parse(saved) as TelegramDraftSession);
-        return;
+        return true;
       }
     } catch (error) {
       console.error(
         `[draftSession] failed to persist Telegram draft session (thread=${session.platformThreadId})`,
         error,
       );
+      if (durable) return false;
     }
   }
 
+  if (durable) return false;
   writeMemory(key, stamped);
+  return true;
 };
 
 export const getTelegramDraftSession = async (
@@ -290,21 +324,36 @@ export const setTelegramDraftOperation = async (
 ): Promise<boolean> => {
   const key = buildKey(applicationId, platformThreadId, draftId);
   return withLocalLock(key, async () => {
+    const redis = getAgentRuntimeRedisClient();
+    if (redis) {
+      try {
+        const saved = await redis.eval(
+          SET_OPERATION_SCRIPT,
+          2,
+          key,
+          buildStopKey(key),
+          operationId,
+          Date.now(),
+          TTL_SECONDS,
+        );
+        if (typeof saved === 'string') {
+          const session = JSON.parse(saved) as TelegramDraftSession;
+          writeMemory(key, session);
+          return Boolean(session.stopRequested);
+        }
+        return false;
+      } catch (error) {
+        console.error(
+          `[draftSession] failed to register Telegram draft operation (thread=${platformThreadId})`,
+          error,
+        );
+      }
+    }
     const session = await getTelegramDraftSession(applicationId, platformThreadId, draftId);
     if (!isActiveSession(session)) return false;
     await saveTelegramDraftSession({ ...session, operationId });
     if (stopRequests.has(key) || session.stopRequested) return true;
-    const redis = getAgentRuntimeRedisClient();
-    if (!redis) return false;
-    try {
-      return (await redis.get(buildStopKey(key))) === '1';
-    } catch (error) {
-      console.error(
-        `[draftSession] failed to read Telegram draft stop marker (thread=${platformThreadId})`,
-        error,
-      );
-      return false;
-    }
+    return false;
   });
 };
 
@@ -315,20 +364,34 @@ export const requestTelegramDraftStop = async (
 ): Promise<TelegramDraftSession | undefined> => {
   const key = buildKey(applicationId, platformThreadId, draftId);
   return withLocalLock(key, async () => {
-    const session = await getTelegramDraftSession(applicationId, platformThreadId, draftId);
-    if (!isActiveSession(session)) return undefined;
-    stopRequests.set(key, Date.now() + TTL_SECONDS * 1000);
     const redis = getAgentRuntimeRedisClient();
     if (redis) {
       try {
-        await redis.set(buildStopKey(key), '1', 'EX', TTL_SECONDS);
+        const saved = await redis.eval(
+          REQUEST_STOP_SCRIPT,
+          2,
+          key,
+          buildStopKey(key),
+          Date.now(),
+          TTL_SECONDS,
+        );
+        if (typeof saved === 'string') {
+          const session = JSON.parse(saved) as TelegramDraftSession;
+          writeMemory(key, session);
+          stopRequests.set(key, Date.now() + TTL_SECONDS * 1000);
+          return session;
+        }
+        return undefined;
       } catch (error) {
         console.error(
-          `[draftSession] failed to persist Telegram draft stop marker (thread=${platformThreadId})`,
+          `[draftSession] failed to persist Telegram draft stop (thread=${platformThreadId})`,
           error,
         );
       }
     }
+    const session = await getTelegramDraftSession(applicationId, platformThreadId, draftId);
+    if (!isActiveSession(session)) return undefined;
+    stopRequests.set(key, Date.now() + TTL_SECONDS * 1000);
     const updated = { ...session, stopRequested: true };
     await saveTelegramDraftSession(updated);
     return updated;
