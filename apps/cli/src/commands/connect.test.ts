@@ -3,7 +3,13 @@ import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { resolveToken } from '../auth/resolveToken';
-import { removeStatus, spawnDaemon, stopDaemon, writeStatus } from '../daemon/manager';
+import {
+  removeStatus,
+  reportDaemonStartupReady,
+  spawnDaemon,
+  stopDaemon,
+  writeStatus,
+} from '../daemon/manager';
 import type * as DeviceRegister from '../device/register';
 import { loadSettings, saveSettings } from '../settings';
 import { executeToolCall } from '../tools';
@@ -56,6 +62,7 @@ vi.mock('../daemon/manager', () => ({
   readStatus: vi.fn().mockImplementation(() => mockStatus),
   removePid: vi.fn(),
   removeStatus: vi.fn(),
+  reportDaemonStartupError: vi.fn().mockResolvedValue(undefined),
   reportDaemonStartupReady: vi.fn().mockResolvedValue(undefined),
   spawnDaemon: vi.fn().mockImplementation(() => {
     mockSpawnedPid = 99999;
@@ -84,7 +91,7 @@ let connectCalled = false;
 let lastSentToolResponse: any = null;
 let lastSentSystemInfoResponse: any = null;
 vi.mock('@lobechat/device-gateway-client', () => ({
-  GatewayClient: vi.fn().mockImplementation((opts: any) => {
+  GatewayClient: vi.fn().mockImplementation(function (this: any, opts: any) {
     clientOptions = opts;
     clientEventHandlers = {};
     connectCalled = false;
@@ -161,6 +168,17 @@ describe('connect command', () => {
     expect(writeStatus).toHaveBeenLastCalledWith(
       expect.objectContaining({ connectionStatus: 'connected', deviceId: 'mock-device-id' }),
     );
+  });
+
+  it('should report daemon readiness only after the gateway connects', async () => {
+    const program = createProgram();
+    await program.parseAsync(['node', 'test', 'connect', '--daemon-child']);
+
+    expect(reportDaemonStartupReady).not.toHaveBeenCalled();
+
+    clientEventHandlers.connected?.();
+
+    expect(reportDaemonStartupReady).toHaveBeenCalledOnce();
   });
 
   it('should connect to gateway', async () => {
