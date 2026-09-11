@@ -2,19 +2,10 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, inArray, isNull } from 'drizzle-orm';
 import isEqual from 'fast-deep-equal';
 
-import {
-  AgentEvalRunModel,
-  AgentEvalRunTopicModel,
-  AgentEvalTestCaseModel,
-} from '@/database/models/agentEval';
+import { AgentEvalRunModel, AgentEvalRunTopicModel } from '@/database/models/agentEval';
 import { ThreadModel } from '@/database/models/thread';
-import {
-  agentEvalRuns,
-  agentEvalRunTopics,
-  agentEvalTestCases,
-  threads,
-  topics,
-} from '@/database/schemas';
+import { agentEvalRuns, agentEvalRunTopics, threads, topics } from '@/database/schemas';
+import type { LobeChatDatabase } from '@/database/type';
 import { evaluateAndFinalizeRun } from '@/server/services/agentEvalRun/aggregate';
 import {
   applyReportResult,
@@ -25,8 +16,21 @@ import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 import { BaseService } from '../common/base.service';
 import { projectRun } from '../helpers/eval-run';
 import type { EvalBatchReport, EvalReport, EvalSetStatus } from '../types/eval.type';
+import { EvalResourceService } from './eval-resource.service';
 
 export class EvalLifecycleService extends BaseService {
+  private reportContext(db: LobeChatDatabase) {
+    const resources = new EvalResourceService(db, this.userId, this.workspaceId);
+    return {
+      runModel: new AgentEvalRunModel(db, this.userId, this.workspaceId),
+      runTopicModel: new AgentEvalRunTopicModel(db, this.userId, this.workspaceId),
+      testCaseModel: {
+        countByDatasetId: async (id: string) => (await resources.getDataset(id)).testCaseCount,
+      },
+      threadModel: new ThreadModel(db, this.userId, this.workspaceId),
+      runService: { evaluateAndFinalizeRun },
+    };
+  }
   private async getRun(id: string) {
     const run = await new AgentEvalRunModel(this.db, this.userId, this.workspaceId).findById(id);
     if (!run) throw this.createNotFoundError('Eval run not found');
@@ -60,13 +64,8 @@ export class EvalLifecycleService extends BaseService {
         if (!run) throw this.createNotFoundError('Eval run not found');
         if (!['running', 'external', 'completed', 'failed'].includes(run.status))
           throw this.createConflictError('Run does not accept results in its current state');
-        const ctx = {
-          runModel: new AgentEvalRunModel(tx, this.userId, this.workspaceId),
-          runTopicModel: new AgentEvalRunTopicModel(tx, this.userId, this.workspaceId),
-          testCaseModel: new AgentEvalTestCaseModel(tx, this.userId, this.workspaceId),
-          threadModel: new ThreadModel(tx, this.userId, this.workspaceId),
-          runService: { evaluateAndFinalizeRun },
-        };
+        const ctx = this.reportContext(tx);
+        const resources = new EvalResourceService(tx, this.userId, this.workspaceId);
         const receipts = [];
         for (const item of input.items) {
           let [topic] = await tx
@@ -80,16 +79,7 @@ export class EvalLifecycleService extends BaseService {
               ),
             );
           if (!topic && run.config?.executionMode === 'external' && item.testCaseId) {
-            const [testCase] = await tx
-              .select({ id: agentEvalTestCases.id })
-              .from(agentEvalTestCases)
-              .where(
-                and(
-                  eq(agentEvalTestCases.id, item.testCaseId),
-                  eq(agentEvalTestCases.datasetId, run.datasetId),
-                  this.buildWorkspaceWhere(agentEvalTestCases),
-                ),
-              );
+            const testCase = await resources.getTestCase(item.testCaseId);
             const [sourceTopic] = await tx
               .select({ id: topics.id })
               .from(topics)
@@ -100,7 +90,7 @@ export class EvalLifecycleService extends BaseService {
                   this.buildWorkspaceWhere(topics),
                 ),
               );
-            if (!testCase || !sourceTopic)
+            if (testCase.datasetId !== run.datasetId || !sourceTopic)
               throw this.createNotFoundError('Test case or topic not found');
             if (['completed', 'failed'].includes(run.status))
               throw this.createConflictError('Terminal runs cannot add results');
@@ -198,12 +188,7 @@ export class EvalLifecycleService extends BaseService {
         !['failed', 'aborted'].includes(input.status)
       )
         throw this.createConflictError('Run must be claimed first');
-      const ctx = {
-        runModel: new AgentEvalRunModel(tx, this.userId, this.workspaceId),
-        runTopicModel: new AgentEvalRunTopicModel(tx, this.userId, this.workspaceId),
-        testCaseModel: new AgentEvalTestCaseModel(tx, this.userId, this.workspaceId),
-        runService: { evaluateAndFinalizeRun },
-      };
+      const ctx = this.reportContext(tx);
       if (input.status === 'completed') {
         const status = await recomputeRunAggregation(ctx, id);
         if (status !== 'completed')

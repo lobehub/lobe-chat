@@ -53,6 +53,64 @@ const seedRun = async (id: string, status: 'pending' | 'running' = 'pending') =>
   });
 };
 describe('external run lifecycle', () => {
+  it('reports shared dataset cases and counts the whole readable dataset', async () => {
+    await db.insert(agentEvalDatasets).values({
+      id: 'shared-lifecycle-dataset',
+      identifier: 'shared-lifecycle-dataset',
+      name: 'Shared cases',
+    });
+    await db.insert(agentEvalTestCases).values(
+      ['shared-case-1', 'shared-case-2'].map((id) => ({
+        id,
+        datasetId: 'shared-lifecycle-dataset',
+        content: { input: id },
+        userId: 'lifecycle-foreign',
+      })),
+    );
+    await db.insert(agentEvalRuns).values({
+      id: 'shared-case-run',
+      datasetId: 'shared-lifecycle-dataset',
+      userId: 'lifecycle-owner',
+      config: { executionMode: 'external', k: 1 },
+      status: 'pending',
+    });
+    await db
+      .insert(topics)
+      .values(
+        ['shared-topic-1', 'shared-topic-2'].map((id) => ({ id, userId: 'lifecycle-owner' })),
+      );
+    await owner.claim('shared-case-run');
+    await expect(
+      owner.report('shared-case-run', 'shared-topic-1', {
+        testCaseId: 'lifecycle-case',
+        score: 1,
+        correct: true,
+      }),
+    ).rejects.toMatchObject({ name: 'NotFoundError' });
+    expect(
+      await owner.report('shared-case-run', 'shared-topic-1', {
+        testCaseId: 'shared-case-1',
+        score: 1,
+        correct: true,
+      }),
+    ).toMatchObject({ runStatus: 'running' });
+    const first = (await db.select().from(agentEvalRuns)).find(
+      (run) => run.id === 'shared-case-run',
+    );
+    expect(first?.metrics).toMatchObject({ totalCases: 2, completedCases: 1, passRate: 0.5 });
+    await expect(owner.setStatus('shared-case-run', { status: 'completed' })).rejects.toMatchObject(
+      {
+        name: 'ConflictError',
+      },
+    );
+    expect(
+      await owner.report('shared-case-run', 'shared-topic-2', {
+        testCaseId: 'shared-case-2',
+        score: 1,
+        correct: true,
+      }),
+    ).toMatchObject({ runStatus: 'completed' });
+  });
   it('allows exactly one worker to claim, isolates ownership and rejects internal claims', async () => {
     await seedRun('claim-run');
     await expect(foreign.claim('claim-run')).rejects.toMatchObject({ name: 'NotFoundError' });

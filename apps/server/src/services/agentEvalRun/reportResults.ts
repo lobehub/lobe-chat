@@ -68,7 +68,7 @@ export const recomputeRunAggregation = async (
     runModel: AgentEvalRunModel;
     runService: Pick<AgentEvalRunService, 'evaluateAndFinalizeRun'>;
     runTopicModel: AgentEvalRunTopicModel;
-    testCaseModel: AgentEvalTestCaseModel;
+    testCaseModel: Pick<AgentEvalTestCaseModel, 'countByDatasetId'>;
   },
   runId: string,
 ) => {
@@ -110,7 +110,7 @@ export const applyReportResult = async (
     runModel: AgentEvalRunModel;
     runTopicModel: AgentEvalRunTopicModel;
     runService: Pick<AgentEvalRunService, 'evaluateAndFinalizeRun'>;
-    testCaseModel: AgentEvalTestCaseModel;
+    testCaseModel: Pick<AgentEvalTestCaseModel, 'countByDatasetId'>;
     threadModel: ThreadModel;
   },
   input: ReportResultInput,
