@@ -53,6 +53,17 @@ const stableJson = (value) =>
       : item,
   );
 
+export function lockedPackages(lockfile) {
+  const locked = new Set();
+  let inPackages = false;
+  for (const line of lockfile.split('\n')) {
+    if (/^\S/.test(line)) inPackages = line.startsWith('packages:');
+    const key = inPackages && line.match(/^ {2}'?(\S+?)'?:\s*$/)?.[1];
+    if (key) locked.add(key);
+  }
+  return locked;
+}
+
 export function createInputManifest(inputs) {
   const sorted = [...inputs].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   if (new Set(sorted.map((input) => input.path)).size !== sorted.length) {
@@ -166,14 +177,42 @@ export async function collectSourceInputs({
   };
 
   const sourceFile = (id) => id.replace(/^\0/, '').split('?')[0];
-  let installedRoot;
+  // The lockfile is the only dependency input to the hash, so every bundled npm module
+  // must resolve to a version it pins, wherever pnpm happened to link it from.
+  let locked;
+  const packageIdentity = async (file) => {
+    for (let dir = path.dirname(file); ; dir = path.dirname(dir)) {
+      try {
+        const { name, version } = JSON.parse(
+          await readFile(path.join(dir, 'package.json'), 'utf8'),
+        );
+        if (name && version) return `${name}@${version}`;
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+      }
+      if (dir === path.dirname(dir)) return undefined;
+    }
+  };
   for (const target of graph) {
     for (const id of target.nodes.keys()) {
       const file = sourceFile(id);
       if (!path.isAbsolute(file) || !slash(file).includes('/node_modules/')) continue;
-      installedRoot ??= await realpath(path.join(repoRoot, 'apps/desktop/node_modules'));
-      if (!inside(installedRoot, await realpath(file))) {
-        throw new Error(`Main hash dependency is outside Desktop's locked installation: ${file}`);
+      locked ??= lockedPackages(
+        await readFile(path.join(repoRoot, 'apps/desktop/pnpm-lock.yaml'), 'utf8'),
+      );
+      const dependency = await packageIdentity(await realpath(file));
+      const name = dependency?.slice(0, dependency.lastIndexOf('@'));
+      // Tarball, git, file: and link: specifiers pin by resolution instead of version.
+      const pinned =
+        dependency &&
+        (locked.has(dependency) ||
+          [...locked].some(
+            (key) => key.startsWith(`${name}@`) && /^[a-z+]+:/.test(key.slice(name.length + 1)),
+          ));
+      if (!pinned) {
+        throw new Error(
+          `Main hash dependency is not pinned by apps/desktop/pnpm-lock.yaml: ${dependency ?? 'unknown'} (${file})`,
+        );
       }
     }
   }

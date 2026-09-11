@@ -707,6 +707,9 @@ importers:
       numeral:
         specifier: ^2.0.6
         version: 2.0.6
+      partial-json:
+        specifier: ^0.1.7
+        version: 0.1.7
       pure-rand:
         specifier: ^7.0.1
         version: 7.0.1
@@ -7334,6 +7337,9 @@ packages:
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
+
+  partial-json@0.1.7:
+    resolution: {integrity: sha512-Njv/59hHaokb/hRUjce3Hdv12wd60MtM9Z5Olmn+nehe0QDAsRtRbJPvJ0Z91TusF0SuZRIvnM+S4l6EIP8leA==}
 
   patch-console@2.0.0:
     resolution: {integrity: sha512-0YNdUceMdaQwoKce1gatDScmMo5pu/tfABfnzEqeG0gtTmd7mh/WcwgUjtAeOU7N8nFFlbQBnFK2gXW5fGvmMA==}
@@ -16253,6 +16259,8 @@ snapshots:
       entities: 6.0.1
 
   parseurl@1.3.3: {}
+
+  partial-json@0.1.7: {}
 
   patch-console@2.0.0: {}
 
