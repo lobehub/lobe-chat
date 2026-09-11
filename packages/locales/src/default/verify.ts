@@ -206,7 +206,7 @@ export default {
   'acceptance.comments.historicalRegions':
     '{{count}} region note(s) on evidence a later round replaced',
   'acceptance.comments.empty': 'No discussion yet.',
-  'acceptance.comments.readOnly': 'You can read the discussion; join the workspace to take part.',
+  'acceptance.comments.readOnly': 'You can read the discussion; sign in to take part.',
   'acceptance.comments.region': 'Region',
   'acceptance.comments.roundContext': 'Round {{round}}',
   'acceptance.comments.commentEvidence': 'Comment on a region',
@@ -401,7 +401,7 @@ export default {
   'acceptance.roundStatus.uncertain': 'Verify uncertain',
   'acceptance.roundStatus.verifying': 'In progress',
   'acceptance.sharedNotice.readOnlyDescription':
-    'You can browse every check and its evidence, but only the author can act on this acceptance.',
+    'You can browse every check and its evidence and join the discussion, but only the author can act on this acceptance.',
   'acceptance.sharedNotice.reviewableDescription':
     'You can browse every check and its evidence, and review them on behalf of your workspace.',
   'acceptance.sharedNotice.title': 'Shared with you',

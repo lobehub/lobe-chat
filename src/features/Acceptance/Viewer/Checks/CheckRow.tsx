@@ -187,7 +187,14 @@ export const AcceptanceCheckRow = memo<{
           comment: content,
           label: index + 1,
           panel: (
-            <CommentThread canComment={comments.canComment} thread={thread} {...commentActions} />
+            <CommentThread
+              canComment={comments.canComment}
+              // `canDelete` is only ever true on the caller's own live rows, so
+              // it doubles as "I raised this one".
+              canResolve={comments.canApprove || thread.root.canDelete}
+              thread={thread}
+              {...commentActions}
+            />
           ),
           rect,
           resolved: Boolean(thread.root.resolvedAt),
@@ -196,7 +203,7 @@ export const AcceptanceCheckRow = memo<{
       });
       return map.size > 0 ? map : undefined;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proposalOverlays, checkThreads, comments.canComment]);
+    }, [proposalOverlays, checkThreads, comments.canComment, comments.canApprove]);
     const canCommentEvidence =
       comments.canComment && Boolean(check.result) && hasAnnotatableEvidence(check);
     const openEvidenceComment = () =>
@@ -646,6 +653,7 @@ export const AcceptanceCheckRow = memo<{
                       <Flexbox flex={1} style={{ minWidth: 200 }}>
                         <CommentThread
                           canComment={comments.canComment}
+                          canResolve={comments.canApprove || thread.root.canDelete}
                           thread={thread}
                           {...commentActions}
                         />

@@ -121,7 +121,9 @@ export interface AcceptanceApprovalSummary {
 }
 
 export interface AcceptanceCommentList {
-  /** May the caller write comments / approvals here? */
+  /** May the caller approve a round — speak for the delivery rather than about it? */
+  canApprove: boolean;
+  /** May the caller write comments, annotations and reactions here? */
   canComment: boolean;
   items: AcceptanceCommentItem[];
 }

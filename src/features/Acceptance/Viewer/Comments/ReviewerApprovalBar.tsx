@@ -29,9 +29,12 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 /**
- * The reviewer's counterpart of the decision bar. A teammate who can comment
+ * The reviewer's counterpart of the decision bar. A teammate who can review
  * but cannot close the acceptance says "fine by me" here; it lands as an
  * approval row the owner reads, and the acceptance status stays untouched.
+ *
+ * A visitor who only holds the public link is not offered it: they can answer
+ * the evidence in the discussion, but accepting a delivery is the team's call.
  *
  * An approval is never final while the round is open: review is a moving
  * opinion, so it can be withdrawn and given again at any point. Only the state
@@ -41,11 +44,11 @@ const ReviewerApprovalBar = memo(() => {
   const { t } = useTranslation('verify');
   const { acceptanceId } = useAcceptanceScope();
   const { data } = useAcceptanceBundle(acceptanceId);
-  const { canComment, create, items, remove } = useAcceptanceComments(acceptanceId);
+  const { canApprove, create, items, remove } = useAcceptanceComments(acceptanceId);
   const [summary, setSummary] = useState('');
   const [pending, setPending] = useState(false);
 
-  if (!data || !canComment || canReviewAcceptance(data)) return null;
+  if (!data || !canApprove || canReviewAcceptance(data)) return null;
   if (data.acceptance.status === 'accepted' || data.acceptance.status === 'closed') return null;
 
   // Nothing has been delivered yet, so there is nothing to approve. Allowing it
