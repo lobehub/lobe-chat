@@ -1,3 +1,4 @@
+import { EXTERNAL_PUBLISH_ASSET_MAX_BYTES } from '@lobechat/device-control/file-preview';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalFileProtocolManager } from '../LocalFileProtocolManager';
@@ -445,6 +446,60 @@ describe('LocalFileProtocolManager', () => {
       workspaceRoot: '/tmp',
     });
     expect(neighborUrl).toBeNull();
+  });
+
+  it('can mint one external URL without granting lasting preview access', async () => {
+    const manager = new LocalFileProtocolManager();
+    const url = await manager.createPreviewUrl({
+      allowExternalFile: true,
+      filePath: '/outside/app.css',
+      persistExternalApproval: false,
+      workspaceRoot: '/Users/alice/project',
+    });
+
+    expect(url).toContain('token=');
+    await expect(
+      manager.createPreviewUrl({
+        filePath: '/outside/app.css',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).resolves.toBeNull();
+  });
+
+  it('reads an external publish asset without the preview cap or lasting approval', async () => {
+    mockStat.mockResolvedValue({ isFile: () => true, size: 20 * 1024 * 1024 + 1 });
+    mockReadFile.mockResolvedValue(Buffer.from('%PDF publish bytes'));
+    const manager = new LocalFileProtocolManager();
+
+    const result = await manager.readExternalFileForPublish({
+      filePath: '/outside/big.pdf',
+      workspaceRoot: '/Users/alice/project',
+    });
+
+    expect(result?.buffer).toEqual(Buffer.from('%PDF publish bytes'));
+    expect(mockReadFile).toHaveBeenCalledWith('/outside/big.pdf');
+    await expect(
+      manager.createPreviewUrl({
+        filePath: '/outside/big.pdf',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).resolves.toBeNull();
+  });
+
+  it('rejects an external publish asset over the limit before reading it', async () => {
+    mockStat.mockResolvedValue({
+      isFile: () => true,
+      size: EXTERNAL_PUBLISH_ASSET_MAX_BYTES + 1,
+    });
+    const manager = new LocalFileProtocolManager();
+
+    await expect(
+      manager.readExternalFileForPublish({
+        filePath: '/outside/huge.mp4',
+        workspaceRoot: '/Users/alice/project',
+      }),
+    ).rejects.toThrow('File is too large to publish');
+    expect(mockReadFile).not.toHaveBeenCalled();
   });
 
   it('can approve a project root derived from an already approved nested scope', async () => {

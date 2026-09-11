@@ -698,6 +698,18 @@ export const deviceRouter = router({
       });
     }),
 
+  readExternalAssetForPublish: workspaceFileProcedure
+    .input(z.object({ path: z.string() }))
+    .query(async ({ ctx, input }) =>
+      deviceGateway.readExternalAssetForPublish({
+        deviceId: input.deviceId,
+        path: input.path,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+        workingDirectory: input.workingDirectory,
+      }),
+    ),
+
   /**
    * Project skills (`.agents/skills` / `.claude/skills`) for a directory on a
    * remote device, via the device's `listProjectSkills` RPC. Powers the

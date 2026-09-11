@@ -4,6 +4,7 @@ packages:
   - '../../packages/agent-tracing'
   - '../../packages/chat-adapter-imessage'
   - '../../packages/heterogeneous-agents'
+  - '../../packages/html-artifact'
   - '../../packages/const'
   - '../../packages/eval-rubric'
   - '../../packages/electron-server-ipc'

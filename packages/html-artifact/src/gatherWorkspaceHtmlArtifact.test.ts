@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { gatherWorkspaceHtmlArtifact } from './gatherWorkspaceHtmlArtifact';
 import type { ReadWorkspaceAssetResult } from './limits';
@@ -281,5 +281,95 @@ describe('gatherWorkspaceHtmlArtifact', () => {
 
     expect(result.unsupported).toEqual(['./site.webmanifest', '../fonts/brand.fontkit']);
     expect(result.missing).toEqual([]);
+  });
+
+  it('reports workspace escapes with every href spelling without reading them', async () => {
+    const readAsset = vi.fn();
+    const result = await gatherWorkspaceHtmlArtifact({
+      htmlContent:
+        '<html><img src="../../outside/logo.png"><img src="../../outside/logo.png?v=2"></html>',
+      htmlFilePath: '/project/pages/index.html',
+      readAsset,
+      workingDirectory: '/project',
+    });
+
+    expect(result.escaped).toEqual([
+      {
+        absolutePath: '/outside/logo.png',
+        hrefs: ['../../outside/logo.png', '../../outside/logo.png?v=2'],
+      },
+    ]);
+    expect(result.missing).toEqual([]);
+    expect(readAsset).not.toHaveBeenCalled();
+  });
+
+  it('reads and packs workspace escapes only when external reads are allowed', async () => {
+    const readAsset = vi.fn(async () => ({
+      bytes: new Uint8Array([1, 2, 3]),
+      contentType: 'image/png',
+      ok: true as const,
+    }));
+    const result = await gatherWorkspaceHtmlArtifact({
+      allowExternalReads: true,
+      htmlContent: '<html><img src="../../outside/logo.png"></html>',
+      htmlFilePath: '/project/pages/index.html',
+      readAsset,
+      workingDirectory: '/project',
+    });
+
+    expect(result.escaped).toEqual([]);
+    expect(readAsset).toHaveBeenCalledWith('/outside/logo.png');
+    expect(result.resources).toEqual([
+      expect.objectContaining({
+        absolutePath: '/outside/logo.png',
+        hrefs: ['../../outside/logo.png'],
+      }),
+    ]);
+    expect(result.files.map((file) => file.path).sort()).toEqual([
+      'outside/logo.png',
+      'project/pages/index.html',
+    ]);
+  });
+
+  it('returns the complete readable closure for copying', async () => {
+    const files = new Map<string, ReadWorkspaceAssetResult>([
+      ['/outside/app.css', textAsset('body { background: url("image.png") }', 'text/css')],
+      ['/outside/image.png', { bytes: new Uint8Array([1]), contentType: 'image/png', ok: true }],
+      ['/project/local.js', textAsset('console.log("ok")', 'text/javascript')],
+    ]);
+
+    const result = await gatherWorkspaceHtmlArtifact({
+      allowExternalReads: true,
+      htmlContent:
+        '<html><link rel="stylesheet" href="../outside/app.css"><script src="local.js"></script></html>',
+      htmlFilePath: '/project/index.html',
+      readAsset: async (absolutePath) =>
+        files.get(absolutePath) ?? { ok: false, reason: 'missing' },
+      workingDirectory: '/project',
+    });
+
+    expect(result.resources).toEqual([
+      expect.objectContaining({ absolutePath: '/outside/app.css', hrefs: ['../outside/app.css'] }),
+      expect.objectContaining({ absolutePath: '/project/local.js', hrefs: ['local.js'] }),
+      expect.objectContaining({ absolutePath: '/outside/image.png', hrefs: ['image.png'] }),
+    ]);
+  });
+
+  it('counts unread external closure files toward the 64-file cap', async () => {
+    const readAsset = vi.fn();
+    const refs = Array.from(
+      { length: 64 },
+      (_, index) => `<img src="../../outside/a${index}.png">`,
+    ).join('');
+
+    const result = await gatherWorkspaceHtmlArtifact({
+      htmlContent: `<html>${refs}</html>`,
+      htmlFilePath: '/project/pages/index.html',
+      readAsset,
+      workingDirectory: '/project',
+    });
+
+    expect(result.blocked).toBe('too-many');
+    expect(readAsset).not.toHaveBeenCalled();
   });
 });

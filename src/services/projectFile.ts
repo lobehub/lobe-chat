@@ -144,6 +144,32 @@ class ProjectFileService {
     return localFileService.readLocalFileBytes({ path, workingDirectory });
   }
 
+  async readExternalAssetForPublish({
+    deviceId,
+    path,
+    workingDirectory,
+  }: {
+    deviceId?: string;
+    path: string;
+    workingDirectory: string;
+  }): Promise<{ bytes: Uint8Array; contentType: string } | undefined> {
+    if (!deviceId) {
+      return localFileService.readExternalAssetForPublish({ path, workingDirectory });
+    }
+
+    const result = await lambdaClient.device.readExternalAssetForPublish.query({
+      deviceId,
+      path,
+      workingDirectory,
+    });
+    if (!result.success || result.base64 === undefined || !result.contentType) return;
+
+    return {
+      bytes: Uint8Array.from(globalThis.atob(result.base64), (char) => char.charCodeAt(0)),
+      contentType: result.contentType,
+    };
+  }
+
   /**
    * Move one or more files/folders within a project working directory. Batched:
    * each item succeeds or fails independently.

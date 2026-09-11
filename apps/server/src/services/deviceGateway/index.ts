@@ -14,6 +14,7 @@ import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type { ClaudeCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
 import type {
   DeviceDirectoryBrowseResult,
+  DeviceExternalAssetForPublishResult,
   DeviceGitAddWorktreeResult,
   DeviceGitAheadBehind,
   DeviceGitBranchDiffPatches,
@@ -1120,6 +1121,33 @@ export class DeviceGateway {
       return result.data;
     } catch (error) {
       log('getLocalFilePreview: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async readExternalAssetForPublish(params: {
+    deviceId: string;
+    path: string;
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceExternalAssetForPublishResult> {
+    const { userId, deviceId, path, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    try {
+      const result = await client.invokeRpc<DeviceExternalAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'readExternalAssetForPublish', params: { path, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to read external publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('readExternalAssetForPublish: error for deviceId=%s — %O', deviceId, error);
       return { error: (error as Error).message, success: false };
     }
   }
