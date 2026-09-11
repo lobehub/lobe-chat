@@ -30,6 +30,8 @@ export const API_KEY_SCOPES = [
   API_KEY_FULL_ACCESS_SCOPE,
   'agent:read',
   'agent:write',
+  'eval:read',
+  'eval:write',
   'chat:read',
   'chat:write',
   'model:invoke',
