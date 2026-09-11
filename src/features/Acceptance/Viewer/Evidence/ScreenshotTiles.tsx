@@ -3,8 +3,9 @@
 import { Flexbox, Icon, Image } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { Check, MessageSquare } from 'lucide-react';
+import { Check, MessageSquare, X } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { EvidenceOverlay } from './overlay';
 import {
@@ -104,6 +105,9 @@ const styles = createStaticStyles(({ css }) => ({
     width: min(280px, 76%);
     padding: 12px;
 
+    /* Room for the close control, so it never lands on the author's name. */
+    padding-inline-end: 32px;
+
     /* No frame: an elevated surface is the whole affordance, the way Figma's
        comments read. A 1px box around content that already sits in a box is
        what made the earlier rounds look like wireframes. */
@@ -117,6 +121,35 @@ const styles = createStaticStyles(({ css }) => ({
     @media (width >= 1440px) {
       inset-inline: calc(100% + 12px) auto;
       width: 240px;
+    }
+  `,
+  /** Sits in the gutter the note reserves for it, clear of the panel's text. */
+  noteClose: css`
+    cursor: pointer;
+
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: ${cssVar.borderRadius};
+
+    color: ${cssVar.colorTextTertiary};
+
+    background: none;
+
+    transition: all ${cssVar.motionDurationFast};
+
+    &:hover {
+      color: ${cssVar.colorText};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
   noteFallbackHead: css`
@@ -298,6 +331,7 @@ interface ScreenshotTilesProps {
 
 export const ScreenshotTiles = memo<ScreenshotTilesProps>(
   ({ alt, annotations, caption, fileHeight, fileWidth, flat = false, src }) => {
+    const { t } = useTranslation('verify');
     const [natural, setNatural] = useState(
       fileWidth && fileHeight ? { height: fileHeight, width: fileWidth } : undefined,
     );
@@ -325,6 +359,20 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
         className={styles.note}
         style={{ insetBlockStart: `${Math.min(Math.max(opened.rect.y, 0), 0.62) * 100}%` }}
       >
+        {/*
+         * Opening a note hides every pin, including the one that opened it, so
+         * without this the only way back is the small marker on the box itself
+         * — findable if you know it is there, and nowhere near where the reader
+         * is looking.
+         */}
+        <button
+          className={styles.noteClose}
+          title={t('acceptance.comments.collapseThread')}
+          type={'button'}
+          onClick={() => setOpenedNote(undefined)}
+        >
+          <Icon icon={X} size={12} />
+        </button>
         {opened.panel ?? (
           <Flexbox gap={4}>
             <Flexbox horizontal align={'center'} className={styles.noteFallbackHead} gap={6}>
