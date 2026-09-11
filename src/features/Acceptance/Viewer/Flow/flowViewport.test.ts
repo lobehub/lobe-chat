@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getSelectedFlowNodeId, isRectInView, revealSelectionAfterResize } from './flowViewport';
+import {
+  getSelectedFlowNodeId,
+  isRectInView,
+  revealSelectionAfterResize,
+  revealToggledGroup,
+} from './flowViewport';
 
 const size = { height: 600, width: 1000 };
 
@@ -65,5 +70,48 @@ describe('getSelectedFlowNodeId', () => {
       ]),
     ).toBe('b');
     expect(getSelectedFlowNodeId([{ data: {}, id: 'a' }])).toBeUndefined();
+  });
+});
+
+describe('revealToggledGroup', () => {
+  const api = (
+    viewport = { x: 0, y: 0, zoom: 1 },
+    bounds = { height: 96, width: 360, x: 40, y: 40 },
+  ) => ({
+    fitView: vi.fn().mockResolvedValue(true),
+    getNodesBounds: vi.fn().mockReturnValue(bounds),
+    getViewport: vi.fn().mockReturnValue(viewport),
+    setViewport: vi.fn(),
+  });
+
+  it('leaves the canvas alone when the toggled group is already fully visible', () => {
+    const flow = api();
+    revealToggledGroup(flow, size, 'group-1');
+    expect(flow.fitView).not.toHaveBeenCalled();
+    expect(flow.setViewport).not.toHaveBeenCalled();
+  });
+
+  it('pans a collapsed group back into view without changing the zoom', () => {
+    const flow = api({ x: 0, y: 0, zoom: 0.8 }, { height: 96, width: 360, x: 40, y: 900 });
+    revealToggledGroup(flow, size, 'group-1');
+    expect(flow.fitView).toHaveBeenCalledWith(
+      expect.objectContaining({ maxZoom: 0.8, minZoom: 0.8, nodes: [{ id: 'group-1' }] }),
+    );
+    expect(flow.setViewport).not.toHaveBeenCalled();
+  });
+
+  it('reads a group taller than the canvas from its header rather than its middle', () => {
+    const flow = api({ x: 0, y: 0, zoom: 1 }, { height: 1200, width: 360, x: 40, y: 500 });
+    revealToggledGroup(flow, size, 'group-1');
+    expect(flow.setViewport).toHaveBeenCalledWith({ x: 0, y: 24 - 500, zoom: 1 });
+    expect(flow.fitView).not.toHaveBeenCalled();
+  });
+
+  it('ignores a toggle with no group or no layout', () => {
+    const flow = api({ x: 0, y: 0, zoom: 1 }, { height: 0, width: 0, x: 0, y: 0 });
+    revealToggledGroup(flow, size, undefined);
+    revealToggledGroup(flow, size, 'group-1');
+    expect(flow.fitView).not.toHaveBeenCalled();
+    expect(flow.setViewport).not.toHaveBeenCalled();
   });
 });

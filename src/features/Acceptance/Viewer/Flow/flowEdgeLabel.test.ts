@@ -22,6 +22,11 @@ describe('forward branch labels', () => {
     expect(label.x + label.maxWidth / 2).toBeLessThan(branch.targetX);
   });
 
+  it('spends the whole gutter on the caption so a branch condition stays readable', () => {
+    expect(getFlowEdgeLabelLayout({ ...branch, targetX: 468 }).maxWidth).toBe(192);
+    expect(getFlowEdgeLabelLayout({ ...branch, targetX: 900 }).maxWidth).toBe(200);
+  });
+
   it('separates captions for branches with different destinations', () => {
     const first = getFlowEdgeLabelLayout(branch);
     const second = getFlowEdgeLabelLayout({ ...branch, targetY: 420 });
@@ -36,7 +41,7 @@ describe('forward branch labels', () => {
     expect(getFlowEdgeLabelLayout({ ...branch, ...overrides })).toEqual({
       x: branch.labelX,
       y: branch.labelY,
-      maxWidth: 180,
+      maxWidth: 200,
     });
   });
 });

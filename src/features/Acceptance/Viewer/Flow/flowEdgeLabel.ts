@@ -1,5 +1,8 @@
 import { Position } from '@xyflow/react';
 
+/** The caption is the only place the branch condition is readable, so it claims the gutter. */
+const MAX_LABEL_WIDTH = 200;
+
 /** Keep ordinary forward-branch captions in the gutter beside their destination. */
 export function getFlowEdgeLabelLayout({
   sourceX,
@@ -25,7 +28,7 @@ export function getFlowEdgeLabelLayout({
     return {
       x: (sourceX + targetX) / 2,
       y: targetY,
-      maxWidth: Math.min(180, gap - 16),
+      maxWidth: Math.min(MAX_LABEL_WIDTH, gap - 16),
     };
-  return { x: labelX, y: labelY, maxWidth: 180 };
+  return { x: labelX, y: labelY, maxWidth: MAX_LABEL_WIDTH };
 }

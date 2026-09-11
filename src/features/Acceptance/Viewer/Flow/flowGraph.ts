@@ -21,6 +21,13 @@ export interface FlowGraphView {
   version: FlowVersion;
 }
 
+/** The gutter between two columns. Branch captions live in it, so it has to fit prose. */
+const COLUMN_GAP = 208;
+const ROW_GAP = 64;
+/** A business flow with a single state is its own header — a group box around it says nothing. */
+const isSoloState = (view: FlowGraphView) =>
+  view.version.nodes.length === 1 && !view.version.nodes[0].subFlowId;
+
 export function buildFlowGraph(
   views: FlowGraphView[],
   collapsed: Set<string>,
@@ -142,7 +149,7 @@ export function buildFlowGraph(
     let x = 24;
     for (const depth of [...columnWidths.keys()].sort((a, b) => a - b)) {
       columnX.set(depth, x);
-      x += columnWidths.get(depth)! + 112;
+      x += columnWidths.get(depth)! + COLUMN_GAP;
     }
     const columnY = new Map<number, number>();
     const resultNodes: Node<FlowGraphData>[] = [];
@@ -151,7 +158,7 @@ export function buildFlowGraph(
       const { node, id } = part;
       const depth = depths.get(node.id) ?? 0;
       const y = columnY.get(depth) ?? 64;
-      columnY.set(depth, y + part.height + 64);
+      columnY.set(depth, y + part.height + ROW_GAP);
       bottom = Math.max(bottom, y + part.height);
       const visits = (view.run?.attempts ?? []).filter((v) => v.nodeId === node.id);
       const data: FlowGraphData = node.subFlowId
@@ -213,7 +220,7 @@ export function buildFlowGraph(
     return {
       nodes: resultNodes,
       edges: resultEdges,
-      width: Math.max(360, x - 112 + 24),
+      width: Math.max(360, x - COLUMN_GAP + 24),
       height: bottom + 56,
     };
   }
@@ -232,6 +239,12 @@ export function buildFlowGraph(
       for (const node of focused.nodes)
         nodes.push(node.parentId === id ? { ...node, parentId: undefined } : node);
       edges.push(...focused.edges);
+      continue;
+    }
+    if (isSoloState(view)) {
+      const [solo] = layout(view, undefined, id).nodes;
+      nodes.push({ ...solo, parentId: undefined, position: { x: 0, y: top } });
+      top += solo.height! + 48;
       continue;
     }
     const child = collapsed.has(id) ? undefined : layout(view, undefined, id);

@@ -1,5 +1,8 @@
 import type { FitViewOptions, Rect, Viewport } from '@xyflow/react';
 
+/** Breathing room above a group that is pinned to the top of the canvas. */
+const TOP_INSET = 24;
+
 export interface CanvasSize {
   height: number;
   width: number;
@@ -29,6 +32,35 @@ export interface FlowViewportApi {
   getNodesBounds: (nodes: string[]) => Rect;
   getViewport: () => Viewport;
 }
+
+/**
+ * Expanding a group pushes everything below it down and can leave the group
+ * itself running off the bottom; collapsing one pulls the stack back up. Move
+ * only when the toggled group is not fully visible, and never change the zoom.
+ */
+export const revealToggledGroup = (
+  flow: FlowViewportApi & { setViewport: (viewport: Viewport) => unknown },
+  size: CanvasSize,
+  id: string | undefined,
+) => {
+  if (!id) return;
+  const bounds = flow.getNodesBounds([id]);
+  if (!bounds.height) return;
+  const viewport = flow.getViewport();
+  if (isRectInView(bounds, viewport, size)) return;
+  // A group taller than the canvas can never be centred usefully — read it from
+  // its header down instead of landing in its middle.
+  if (bounds.height * viewport.zoom > size.height - TOP_INSET * 2) {
+    flow.setViewport({ ...viewport, y: TOP_INSET - bounds.y * viewport.zoom });
+    return;
+  }
+  void flow.fitView({
+    duration: 200,
+    maxZoom: viewport.zoom,
+    minZoom: viewport.zoom,
+    nodes: [{ id }],
+  });
+};
 
 /**
  * A side panel opening or closing changes the canvas width around the graph.

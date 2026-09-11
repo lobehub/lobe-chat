@@ -110,6 +110,23 @@ describe('grouped acceptance canvas', () => {
     expect(build([flow]).nodes.every((node) => Number.isFinite(node.position.x))).toBe(true);
   });
 
+  it('drops the group box around a business flow that holds a single state', () => {
+    const solo = view('solo');
+    solo.version.nodes = [solo.version.nodes[0]];
+    solo.version.edges = [];
+    const graph = build([solo, view('send')]);
+    expect(graph.nodes.filter((node) => node.type === 'flowGroup').map((node) => node.id)).toEqual([
+      'send',
+    ]);
+    const [bare] = graph.nodes;
+    expect(bare).toMatchObject({ id: 'solo/a', parentId: undefined, type: 'state' });
+    expect(bare.position).toEqual({ x: 0, y: 0 });
+    expect(graph.checks.has('solo/a')).toBe(true);
+    expect(graph.nodes.find((node) => node.id === 'send')!.position.y).toBeGreaterThan(
+      bare.position.y + bare.height!,
+    );
+  });
+
   it('collapses groups without losing their definitions and drills into one group', () => {
     const views = [view('send'), view('switch')];
     const collapsed = build(views, new Set(['send']));

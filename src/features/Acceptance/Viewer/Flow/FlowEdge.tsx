@@ -14,15 +14,16 @@ const styles = createStaticStyles(({ css }) => ({
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 5;
 
-    max-width: 180px;
+    max-width: 200px;
     height: auto;
     min-height: 0;
-    max-height: 42px;
-    padding-block: 3px;
-    padding-inline: 2px;
-    border-radius: 4px;
+    max-height: 94px;
+    padding-block: 4px;
+    padding-inline: 6px;
+    border: 1px solid transparent;
+    border-radius: 6px;
 
     font-size: 12px;
     line-height: 18px;
@@ -32,9 +33,21 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgContainer};
   `,
+  // The caption is the branch's only hit target, so a picked one wears the same
+  // ring as a picked state card.
+  selected: css`
+    border-color: ${cssVar.colorPrimaryBorder};
+    color: ${cssVar.colorText};
+    background: ${cssVar.colorFillQuaternary};
+    box-shadow: 0 0 0 2px ${cssVar.colorPrimaryBg};
+  `,
 }));
 
-type TransitionEdge = Edge<{ onSelect: (id: string) => void; laneOffset?: number }>;
+type TransitionEdge = Edge<{
+  laneOffset?: number;
+  onSelect: (id: string) => void;
+  selected?: boolean;
+}>;
 
 /** Labels share the graph scale so zooming out preserves their spacing. */
 export function FlowEdge(props: EdgeProps<TransitionEdge>) {
@@ -52,7 +65,7 @@ export function FlowEdge(props: EdgeProps<TransitionEdge>) {
       <BaseEdge id={props.id} markerEnd={props.markerEnd} path={path} style={props.style} />
       <EdgeLabelRenderer>
         <Button
-          className={cx(styles.label, 'nodrag', 'nopan')}
+          className={cx(styles.label, props.data?.selected && styles.selected, 'nodrag', 'nopan')}
           size="small"
           title={typeof props.label === 'string' ? props.label : undefined}
           type="text"
