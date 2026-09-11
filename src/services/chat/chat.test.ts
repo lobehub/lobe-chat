@@ -100,7 +100,8 @@ vi.mock('i18next', () => ({
 }));
 
 // 默认设置 isServerMode 为 false
-vi.mock('@/const/version', () => ({
+vi.mock(import('@/const/version'), async (importOriginal) => ({
+  ...(await importOriginal()),
   isServerMode: false,
   isDeprecatedEdition: true,
   isDesktop: false,
