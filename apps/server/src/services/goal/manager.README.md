@@ -67,10 +67,24 @@ The terminal acceptance node is excluded from that retirement.
 retiring it parks the Goal on `no_progress` with neither a Gate nor a verdict;
 failing the Goal belongs to the Gate's own `retire` answer, which is coupled to that
 option rather than to the node's status. A takeover invited for a FAILED terminal
-acceptance does start — the acceptance guard is uninvited-only — so the Agent can
-diagnose an incorrect judge and put that diagnosis on the Gate, or plan corrective
-work. Making corrective work supersede a failed acceptance on its own needs the
-acceptance lifecycle to allow superseding, which is a separate change.
+acceptance does start — the acceptance guard is uninvited-only — but it is accepted
+only as an `escalate`: a corrective task returns to the same failed node and `verify`
+sets `readyForAcceptance` without producing a fresh run, so both would strand.
+Refusing at submit keeps the prompt's offer and the server's answer identical, and
+the prompt names the limit so a turn is not spent discovering it. Letting corrective
+work supersede a failed acceptance is a lifecycle change, not a validation one.
+
+Retirement is also refused when something `depends_on` the stuck node: a prerequisite
+counts as met only when it is `resolved`, and the graph has no edge removal, so the
+dependents cannot be rewired onto the replacement and would sit behind a prerequisite
+that can never resolve. Those blocks go to the Gate.
+
+**Known gap.** Exploration's own stop conditions — the experiment limit, a spent
+revision allowance, a planner error — pause the Goal directly instead of passing
+through `gateOrTakeOver`, and `eligible()` then rejects the paused Goal. So the one
+planner whose "I am out of moves" most deserves a second opinion never reaches the
+main Agent. Closing that needs an invited turn to be allowed to revive a Goal the
+system paused, which changes who may restart it.
 which puts the Gate back with its original reason, one turn later and with the
 Agent's diagnosis appended to the question. An escalation from a takeover turn
 deliberately does NOT pause the Goal the way an ordinary planning turn's does: the

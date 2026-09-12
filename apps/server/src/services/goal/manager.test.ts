@@ -942,30 +942,105 @@ describe('takeover on a failed terminal acceptance', () => {
   });
 
   /**
-   * `decideWithoutFrontier` finds the acceptance task by TITLE regardless of status,
-   * so retiring that node parks the Goal on `no_progress` with neither a Gate nor a
-   * verdict. Failing the Goal belongs to the Gate's own `retire` answer.
+   * A failed acceptance cannot be superseded: the acceptance task is matched by TITLE
+   * regardless of status, so a corrective task returns to that same failed node and
+   * `verify` sets `readyForAcceptance` without producing a fresh run. Refusing keeps
+   * the prompt's offer and the server's answer identical instead of accepting a plan
+   * that strands.
    */
-  it('never retires the acceptance node itself', async () => {
+  it('accepts only an escalation for a failed acceptance', async () => {
     const { goalId, taskId } = await failedAcceptance();
     const state = (await model().findById(goalId))!.config!.managerState!;
     const turn = await ops().findByTopicSourceMessage(
       state.topicId,
       `msg_goal_manager_${state.token}`,
     );
+    const caller = operationCaller(turn!.id);
+    await expect(
+      caller.submitOperationPlan({
+        id: goalId,
+        operationId: turn!.id,
+        plan: {
+          action: 'tasks',
+          reason: 'The judge read evidence it was never shown',
+          tasks: [{ description: 'Recapture the evidence and redeliver', title: 'Recapture' }],
+        },
+        token: state.token,
+      }),
+    ).rejects.toThrow('can only be escalated');
+    await expect(
+      caller.submitOperationPlan({
+        id: goalId,
+        operationId: turn!.id,
+        plan: { action: 'escalate', reason: 'The judge read evidence it was never shown' },
+        token: state.token,
+      }),
+    ).resolves.toMatchObject({ success: true });
+    expect(
+      (await service().graph(goalId)).nodes.find((node) => node.taskId === taskId)!.status,
+    ).not.toBe('retired');
+  });
+});
+
+/**
+ * Codex review round 5, dependency half. A prerequisite only counts as met when it is
+ * `resolved`, so retiring a node something depends on leaves the dependent blocked and
+ * the Goal lands on `no_frontier` — and the graph has no edge removal, so the
+ * dependents cannot be rewired onto the replacement.
+ */
+describe('takeover and dependent work', () => {
+  it('leaves stuck work that something depends on for the Gate', async () => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 4 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      tasks: ['Measure ranking ability'],
+      title: 'Explored research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const blockedNode = (await service().graph(graph.goal.id)).nodes.find(
+      (node) => node.taskId === created.taskId,
+    )!;
+    const problem = (await service().graph(graph.goal.id)).nodes.find(
+      (node) => node.kind === 'problem',
+    )!;
+    const dependent = await service().addNode(graph.goal.id, {
+      kind: 'task',
+      title: 'Train the head',
+    });
+    await service().addEdge(graph.goal.id, problem.id, dependent!.id, 'decomposes');
+    await service().addEdge(graph.goal.id, dependent!.id, blockedNode.id, 'depends_on');
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+    await service().tick(graph.goal.id);
+
+    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+    const turn = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
     await operationCaller(turn!.id).submitOperationPlan({
-      id: goalId,
+      id: graph.goal.id,
       operationId: turn!.id,
       plan: {
         action: 'tasks',
-        reason: 'The judge read evidence it was never shown',
-        tasks: [{ description: 'Recapture the evidence and redeliver', title: 'Recapture' }],
+        reason: 'Replace the stuck measurement',
+        tasks: [{ description: 'Measure again from the frozen inputs', title: 'Measure again' }],
       },
       token: state.token,
     });
 
-    const graph = await service().graph(goalId);
-    expect(graph.nodes.find((node) => node.taskId === taskId)!.status).not.toBe('retired');
-    expect(graph.nodes.some((node) => node.title === 'Recapture')).toBe(true);
+    // Retiring it would strand "Train the head" behind a prerequisite that can never
+    // resolve, so the node keeps its status and the block stays visible to a person.
+    expect(
+      (await service().graph(graph.goal.id)).nodes.find((node) => node.id === blockedNode.id)!
+        .status,
+    ).not.toBe('retired');
   });
 });

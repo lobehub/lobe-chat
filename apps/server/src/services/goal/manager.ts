@@ -517,6 +517,27 @@ export class GoalManagerService {
       const unfinished = graph.nodes.filter(
         (n) => n.kind === 'task' && !terminalNodes.has(n.status),
       );
+      // A takeover of the terminal acceptance can only be answered with `escalate`.
+      // The acceptance task is matched by TITLE regardless of status, so a corrective
+      // task returns to that same failed node and `verify` sets `readyForAcceptance`
+      // without producing a fresh run — both end at the Gate. Refusing here keeps the
+      // prompt's offer and the server's answer the same; letting the acceptance be
+      // superseded is a lifecycle change, not a validation one.
+      if (
+        state.problem &&
+        (plan.action === 'tasks' || plan.action === 'verify') &&
+        graph.nodes.some(
+          (n) =>
+            n.kind === 'task' &&
+            n.taskId === state.problemTaskId &&
+            n.title === GOAL_ACCEPTANCE_TASK_TITLE,
+        )
+      )
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message:
+            'A failed Goal acceptance can only be escalated; it cannot be superseded by new work yet',
+        });
       // The unfinished-work guard asks whether an UNINVITED turn may plan while
       // work is in flight; it would double-plan the frontier. A takeover turn
       // inherits work that is stuck by definition — the coordinator only handed it
@@ -551,16 +572,17 @@ export class GoalManagerService {
         const inherited = graph.nodes.find(
           (n) => n.kind === 'task' && n.taskId === state.problemTaskId,
         );
-        // Never the terminal acceptance node. `decideWithoutFrontier` finds that task
-        // by TITLE regardless of status, so retiring it does not hand the Goal a
-        // fresh acceptance — it parks the Goal on `no_progress` with no Gate and no
-        // verdict. Failing the Goal is the human Gate's `retire` answer, and it is
-        // coupled to that option, not to this node's status.
-        if (
+        // A prerequisite only counts as met when it is `resolved`, so retiring a node
+        // that something depends on leaves the dependent blocked forever and the Goal
+        // lands on `no_frontier`. Rewiring the dependents onto the replacement would
+        // be the answer, but the graph has no edge removal, so the old edge would keep
+        // pointing at the retired node. Leave it alone and let the Gate handle it.
+        const hasDependents =
           inherited &&
-          inherited.title !== GOAL_ACCEPTANCE_TASK_TITLE &&
-          !terminalNodes.has(inherited.status)
-        )
+          graph.edges.some(
+            (edge) => edge.kind === 'depends_on' && edge.targetNodeId === inherited.id,
+          );
+        if (inherited && !hasDependents && !terminalNodes.has(inherited.status))
           await authored.updateNodeStatus(goalId, inherited.id, 'retired', plan.reason);
       }
       if (plan.action === 'tasks') {
