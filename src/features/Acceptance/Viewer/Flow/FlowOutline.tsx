@@ -31,18 +31,28 @@ const styles = createStaticStyles(({ css }) => ({
     text-align: start;
     white-space: normal;
   `,
+  // A branch is the condition for reaching the next step, not a step of its own.
+  // Row-width and body-size type made it read as one more item in the list, so
+  // it shrinks to caption scale and hugs its own text.
   branch: css`
     justify-content: flex-start;
 
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
     height: auto;
-    min-height: 32px;
-    padding-block: 4px;
-    padding-inline: 12px;
+    min-height: 24px;
+    padding-block: 2px;
+    padding-inline: 8px;
 
-    color: ${cssVar.colorTextSecondary};
+    font-size: 12px;
+    line-height: 18px;
     text-align: start;
     white-space: normal;
+  `,
+  // The button carries its own colour rule, so the caption tone has to sit on
+  // the content it wraps.
+  branchContent: css`
+    color: ${cssVar.colorTextTertiary};
   `,
   nested: css`
     margin-inline-start: 18px;
@@ -117,10 +127,10 @@ export function FlowOutline({
         type="text"
         onClick={() => onSelect(branch.edge.id)}
       >
-        <Flexbox horizontal align="center" gap={8}>
+        <Flexbox horizontal align="center" className={styles.branchContent} gap={6}>
           <Icon
             icon={reference ? ArrowRight : CornerDownRight}
-            size={14}
+            size={12}
             style={{ flex: 'none' }}
           />
           <span>{reference ? `${label} → ${branch.target.data.title}` : label}</span>
