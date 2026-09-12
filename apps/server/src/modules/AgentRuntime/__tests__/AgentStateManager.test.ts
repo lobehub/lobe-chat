@@ -278,7 +278,9 @@ describe('AgentStateManager', () => {
 
   describe('inline resume envelope', () => {
     it('parks the envelope under the operation TTL', async () => {
-      await stateManager.saveInlineResume('op-resume', '{"stepIndex":4}');
+      await expect(stateManager.saveInlineResume('op-resume', '{"stepIndex":4}')).resolves.toBe(
+        true,
+      );
 
       expect(redisMock.setex).toHaveBeenCalledWith(
         'agent_runtime_inline_resume:op-resume',
@@ -293,6 +295,18 @@ describe('AgentStateManager', () => {
 
       await stateManager.clearInlineResume('op-resume');
       expect(redisMock.del).toHaveBeenCalledWith('agent_runtime_inline_resume:op-resume');
+    });
+
+    it('reports a failed park so the caller can fall back to the queue', async () => {
+      // Silently swallowing this would inline the next step with no envelope and
+      // no queue message behind it — the exact stranding the envelope prevents.
+      redisMock.setex.mockRejectedValueOnce(new Error('redis down'));
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
+
+      await expect(stateManager.saveInlineResume('op-resume', '{"stepIndex":4}')).resolves.toBe(
+        false,
+      );
+      errorSpy.mockRestore();
     });
 
     it('degrades to null rather than throwing when Redis is unavailable', async () => {

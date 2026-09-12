@@ -523,15 +523,19 @@ export class AgentStateManager {
    * redelivery arriving after the loop died can pick the operation back up from
    * where it actually stopped rather than from the delivered (older) step index.
    */
-  async saveInlineResume(operationId: string, serialized: string): Promise<void> {
+  async saveInlineResume(operationId: string, serialized: string): Promise<boolean> {
     try {
       await this.redis.setex(
         `${this.INLINE_RESUME_PREFIX}:${operationId}`,
         this.DEFAULT_TTL,
         serialized,
       );
+      return true;
     } catch (error) {
+      // Reported, never swallowed: the caller must fall back to the queue, or
+      // it would run the next step with no recovery path behind it at all.
       console.error('Failed to save inline resume pointer:', error);
+      return false;
     }
   }
 

@@ -324,7 +324,7 @@ export class AgentRuntimeCoordinator {
    * that arrives after the loop died resumes from the step it actually reached
    * instead of being dismissed as a stale duplicate.
    */
-  async saveInlineResume<T>(operationId: string, envelope: T): Promise<void> {
+  async saveInlineResume<T>(operationId: string, envelope: T): Promise<boolean> {
     return this.stateManager.saveInlineResume(operationId, JSON.stringify(envelope));
   }
 

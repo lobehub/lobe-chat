@@ -220,8 +220,9 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     return stats;
   }
 
-  async saveInlineResume(operationId: string, serialized: string): Promise<void> {
+  async saveInlineResume(operationId: string, serialized: string): Promise<boolean> {
     this.inlineResumes.set(operationId, serialized);
+    return true;
   }
 
   async loadInlineResume(operationId: string): Promise<null | string> {

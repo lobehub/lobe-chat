@@ -133,7 +133,7 @@ export interface IAgentStateManager {
    * Park the envelope for the step an inline loop is about to run, so a
    * redelivery can resume from it if the loop dies mid-run.
    */
-  saveInlineResume: (operationId: string, serialized: string) => Promise<void>;
+  saveInlineResume: (operationId: string, serialized: string) => Promise<boolean>;
 
   /**
    * Save step execution result

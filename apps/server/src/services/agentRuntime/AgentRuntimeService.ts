@@ -2214,17 +2214,32 @@ export class AgentRuntimeService {
             stepIndex: nextStepIndex,
           };
 
-          if (inlineContinuation) {
+          // Park the envelope before handing it over. The caller is about to run
+          // this step in-process with nothing queued behind it; if that
+          // invocation dies mid-step, the only way back is for a redelivery to
+          // find this envelope — the stale-delivery guard would otherwise ACK
+          // the (now older) delivered step and strand the operation.
+          //
+          // Inlining is therefore conditional on the park succeeding. When it
+          // doesn't, fall back to the ordinary queue round-trip: slower by a
+          // step boundary, but it keeps the recovery path the queue provides.
+          const parked = inlineContinuation
+            ? await this.coordinator.saveInlineResume(operationId, next)
+            : false;
+
+          if (!parked && inlineContinuation) {
+            log(
+              '[%s][%d] Could not park the inline envelope; falling back to the queue',
+              operationId,
+              stepIndex,
+            );
+          }
+
+          if (parked) {
             // Hand the next step back to the caller instead of paying a full
             // queue round-trip for it. The caller either runs it in this same
             // invocation or publishes it via `scheduleContinuation` when its
             // time budget runs out, so the step is never dropped.
-            // Park the envelope before handing it over. The caller is about to
-            // run this step in-process with nothing queued behind it; if that
-            // invocation dies mid-step, the only way back is for a redelivery to
-            // find this pointer — the stale-delivery guard would otherwise ACK
-            // the (now older) delivered step and strand the operation.
-            await this.coordinator.saveInlineResume(operationId, next);
             continuation = next;
             logToolCallPc(operationId, stepIndex, 'post.next_step_inlined', () => ({
               nextStepIndex,
