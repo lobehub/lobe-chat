@@ -41,8 +41,11 @@ const styles = createStaticStyles(({ css }) => ({
     max-width: 100%;
     height: auto;
     min-height: 24px;
+
+    /* Same inline padding as a step row, so the branch glyph sits on the same
+       axis as the status glyphs above and below it. */
     padding-block: 2px;
-    padding-inline: 8px;
+    padding-inline: 12px;
 
     font-size: 12px;
     line-height: 18px;
@@ -127,11 +130,13 @@ export function FlowOutline({
         type="text"
         onClick={() => onSelect(branch.edge.id)}
       >
-        <Flexbox horizontal align="center" className={styles.branchContent} gap={6}>
+        {/* Top-aligned: a caption that wraps keeps its glyph on the first line and
+            its later lines under the text, not under the glyph. */}
+        <Flexbox horizontal align="flex-start" className={styles.branchContent} gap={6}>
           <Icon
             icon={reference ? ArrowRight : CornerDownRight}
             size={12}
-            style={{ flex: 'none' }}
+            style={{ flex: 'none', marginBlockStart: 3 }}
           />
           <span>{reference ? `${label} → ${branch.target.data.title}` : label}</span>
         </Flexbox>
