@@ -42,7 +42,7 @@ const Body = memo(() => {
       style={{ minHeight: 0, overflowY: 'auto' }}
     >
       {isInitialLoading ? (
-        <TaskDetailSkeleton />
+        <TaskDetailSkeleton chrome={'body'} />
       ) : (
         <>
           {/* Report, then the verdict on it, then the artifacts it produced.

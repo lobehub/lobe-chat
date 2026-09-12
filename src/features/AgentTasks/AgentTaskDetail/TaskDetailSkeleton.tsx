@@ -5,6 +5,9 @@ import { createStaticStyles, cssVar } from 'antd-style';
 import { memo } from 'react';
 
 import SkeletonBar from '@/components/Skeleton/Bar';
+import NavHeader from '@/features/NavHeader';
+import WideScreenContainer from '@/features/WideScreenContainer';
+import type { RouteSkeletonProps } from '@/spa/router/routeMeta';
 
 import { taskDetailLayoutStyles as layout } from './taskDetailLayoutStyles';
 
@@ -29,7 +32,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const TaskDetailSkeleton = memo(() => (
+const TaskDetailBodySkeleton = () => (
   <Flexbox aria-busy className={layout.root} flex={1}>
     <div className={layout.header}>
       <Flexbox className={layout.main} gap={12}>
@@ -96,7 +99,22 @@ const TaskDetailSkeleton = memo(() => (
       </Flexbox>
     </Flexbox>
   </Flexbox>
-));
+);
+
+const TaskDetailSkeleton = memo<RouteSkeletonProps>(({ chrome = 'page' }) =>
+  chrome === 'body' ? (
+    <TaskDetailBodySkeleton />
+  ) : (
+    <Flexbox flex={1} height={'100%'}>
+      <NavHeader />
+      <Flexbox flex={1} style={{ minHeight: 0, overflowY: 'auto' }}>
+        <WideScreenContainer>
+          <TaskDetailBodySkeleton />
+        </WideScreenContainer>
+      </Flexbox>
+    </Flexbox>
+  ),
+);
 
 TaskDetailSkeleton.displayName = 'TaskDetailSkeleton';
 
