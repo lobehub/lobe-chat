@@ -84,6 +84,11 @@ export interface AcceptanceCommentItem extends AcceptanceCommentAnchor {
   /** The agent that signed it, when an agent wrote the row. */
   authorAgentId: string | null;
   authorUserId: string | null;
+  /**
+   * Whether THIS reader may remove the row: its author, or someone who may
+   * moderate the acceptance. Never a stand-in for "I wrote this" — compare
+   * `authorUserId` for that.
+   */
   canDelete: boolean;
   clientId: string;
   content: string;

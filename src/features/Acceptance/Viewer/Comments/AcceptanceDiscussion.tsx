@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useActivityTime } from '@/hooks/useActivityTime';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { buildAuthReturnUrl, currentReturnPath } from '@/utils/authReturnUrl';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
@@ -25,12 +26,6 @@ import { styles, TIMELINE_NODE } from './styles';
 
 /** Enough room to start writing without the box dominating the column. */
 const COMPOSER_MIN_HEIGHT = 80;
-
-/** Where a visitor lands after signing in: back on the page they were reading. */
-const authPath = (route: 'signin' | 'signup') =>
-  `/${route}?callbackUrl=${encodeURIComponent(
-    typeof window === 'undefined' ? '/' : window.location.pathname + window.location.search,
-  )}`;
 
 /**
  * The end of a discussion a signed-out reader cannot join. A bare line of grey
@@ -47,10 +42,12 @@ const SignInPrompt = memo(() => {
         {t('acceptance.comments.signInDescription')}
       </Text>
       <Flexbox horizontal gap={8}>
-        <Button href={authPath('signin')} type={'primary'}>
+        <Button href={buildAuthReturnUrl('signin', currentReturnPath())} type={'primary'}>
           {t('acceptance.comments.signIn')}
         </Button>
-        <Button href={authPath('signup')}>{t('acceptance.comments.signUp')}</Button>
+        <Button href={buildAuthReturnUrl('signup', currentReturnPath())}>
+          {t('acceptance.comments.signUp')}
+        </Button>
       </Flexbox>
     </Flexbox>
   );
@@ -310,7 +307,7 @@ const AcceptanceDiscussion = memo(() => {
         <Text fontSize={13} type={'secondary'}>
           {t('acceptance.comments.loadFailed')}
         </Text>
-      ) : isSignedIn ? (
+      ) : isLoading ? null : isSignedIn ? ( // Neither line below is true yet while the answer is in flight.
         <Text fontSize={13} type={'secondary'}>
           {t('acceptance.comments.readOnly')}
         </Text>

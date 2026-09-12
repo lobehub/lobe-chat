@@ -2,8 +2,15 @@
 import { randomUUID } from 'node:crypto';
 
 import { type LobeChatDatabase } from '@lobechat/database';
-import { acceptances, verifyRuns } from '@lobechat/database/schemas';
+import {
+  acceptances,
+  agents,
+  verifyRuns,
+  workspaceMembers,
+  workspaces,
+} from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { acceptanceCommentRouter } from '../acceptanceComment';
@@ -134,9 +141,211 @@ describe('acceptanceCommentRouter access', () => {
     expect(data.resolvedAt).not.toBeNull();
   });
 
+  it("lets the creator take down a visitor's remark", async () => {
+    const { data: theirs } = await comment(visitorId, publicAcceptanceId, 'buy my thing');
+
+    const { data } = await caller(ownerId).delete({ id: theirs.id });
+
+    expect(data.deleted).toBe(true);
+  });
+
+  it("refuses a visitor taking down the creator's remark", async () => {
+    const { data: owned } = await comment(ownerId, publicAcceptanceId, 'round 1 is up');
+
+    await expect(caller(visitorId).delete({ id: owned.id })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+  });
+
+  // The discussion is open to whoever holds the link, so the cost of flooding
+  // it has to land somewhere.
+  it('refuses a visitor who floods the discussion', async () => {
+    for (let index = 0; index < 10; index++)
+      await comment(visitorId, publicAcceptanceId, `remark ${index}`);
+
+    await expect(comment(visitorId, publicAcceptanceId, 'and one more')).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    });
+  });
+
+  // The ceiling is charged where the row is written, so a lost response that
+  // gets retried answers with the row it already wrote.
+  it('lets a visitor retry the remark that reached the ceiling', async () => {
+    let lastClientId = '';
+    for (let index = 0; index < 10; index++) {
+      lastClientId = `c-${randomUUID()}`;
+      await caller(visitorId).create({
+        acceptanceId: publicAcceptanceId,
+        clientId: lastClientId,
+        content: `remark ${index}`,
+      });
+    }
+
+    const { data } = await caller(visitorId).create({
+      acceptanceId: publicAcceptanceId,
+      clientId: lastClientId,
+      content: 'remark 9',
+    });
+
+    expect(data.content).toBe('remark 9');
+  });
+
+  // The refusal rolls the write back with it: a rejected remark must not be
+  // half-written, or the next window starts already over the line.
+  it('writes nothing when the ceiling refuses a remark', async () => {
+    for (let index = 0; index < 10; index++)
+      await comment(visitorId, publicAcceptanceId, `remark ${index}`);
+    const before = await caller(visitorId).list({ acceptanceId: publicAcceptanceId });
+
+    await expect(comment(visitorId, publicAcceptanceId, 'one too many')).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    });
+
+    const after = await caller(visitorId).list({ acceptanceId: publicAcceptanceId });
+    expect(after.items).toHaveLength(before.items.length);
+  });
+
+  it('does not throttle the creator publishing a round', async () => {
+    for (let index = 0; index < 12; index++)
+      await comment(ownerId, publicAcceptanceId, `note ${index}`);
+
+    await expect(comment(ownerId, publicAcceptanceId, 'still fine')).resolves.toBeTruthy();
+  });
+
   it('keeps a private acceptance invisible to a visitor', async () => {
     await expect(comment(visitorId, privateAcceptanceId, 'hello?')).rejects.toMatchObject({
       code: 'NOT_FOUND',
     });
+  });
+});
+
+/**
+ * An acceptance filed in a workspace carries that workspace's agents in its
+ * discussion payload. Opening the link hands a stranger those ids; it must not
+ * hand them the right to post under them.
+ */
+describe('acceptanceCommentRouter workspace scoping', () => {
+  let serverDB: LobeChatDatabase;
+  let ownerId: string;
+  let viewerId: string;
+  let visitorId: string;
+  let workspaceId: string;
+  let workspaceAgentId: string;
+  let openAcceptanceId: string;
+  let closedAcceptanceId: string;
+
+  beforeEach(async () => {
+    serverDB = await getTestDB();
+    testDB = serverDB;
+    ownerId = await createTestUser(serverDB);
+    viewerId = await createTestUser(serverDB);
+    visitorId = await createTestUser(serverDB);
+
+    const [workspace] = await serverDB
+      .insert(workspaces)
+      .values({ name: 'Delivery team', primaryOwnerId: ownerId, slug: `ws-${ownerId}` })
+      .returning();
+    workspaceId = workspace.id;
+    await serverDB.insert(workspaceMembers).values([
+      { role: 'owner', userId: ownerId, workspaceId },
+      { role: 'viewer', userId: viewerId, workspaceId },
+    ]);
+
+    workspaceAgentId = `agt_${randomUUID()}`;
+    await serverDB.insert(agents).values({
+      id: workspaceAgentId,
+      slug: workspaceAgentId,
+      title: 'Delivery Bot',
+      userId: ownerId,
+      visibility: 'public',
+      workspaceId,
+    });
+
+    const [open, closed] = await serverDB
+      .insert(acceptances)
+      .values([
+        {
+          subjectId: randomUUID(),
+          subjectType: 'standalone',
+          userId: ownerId,
+          visibility: 'public',
+          workspaceId,
+        },
+        {
+          subjectId: randomUUID(),
+          subjectType: 'standalone',
+          userId: ownerId,
+          visibility: 'private',
+          workspaceId,
+        },
+      ])
+      .returning();
+    openAcceptanceId = open.id;
+    closedAcceptanceId = closed.id;
+  });
+
+  afterEach(async () => {
+    await serverDB.delete(workspaces).where(eq(workspaces.id, workspaceId));
+    await cleanupTestUser(serverDB, visitorId);
+    await cleanupTestUser(serverDB, viewerId);
+    await cleanupTestUser(serverDB, ownerId);
+    vi.clearAllMocks();
+  });
+
+  const caller = (userId: string) =>
+    acceptanceCommentRouter.createCaller({ jwtPayload: { userId }, userId } as any);
+
+  it("refuses a visitor signing as the workspace's agent", async () => {
+    await expect(
+      caller(visitorId).create({
+        acceptanceId: openAcceptanceId,
+        authorAgentId: workspaceAgentId,
+        clientId: `c-${randomUUID()}`,
+        content: 'looks done to me',
+      }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+  });
+
+  it("lets the creator sign as the workspace's agent", async () => {
+    const { data } = await caller(ownerId).create({
+      acceptanceId: openAcceptanceId,
+      authorAgentId: workspaceAgentId,
+      clientId: `c-${randomUUID()}`,
+      content: 'round 1 delivered',
+    });
+
+    expect(data.author).toMatchObject({ id: workspaceAgentId, type: 'agent' });
+  });
+
+  it('still lets a visitor remark under their own name', async () => {
+    const { data } = await caller(visitorId).create({
+      acceptanceId: openAcceptanceId,
+      clientId: `c-${randomUUID()}`,
+      content: 'the export path is missing',
+    });
+
+    expect(data.authorUserId).toBe(visitorId);
+  });
+
+  // Read-only in the workspace means read-only on its private deliveries, the
+  // same rule topic and document comments enforce.
+  it('keeps a workspace viewer read-only on a private delivery', async () => {
+    await expect(
+      caller(viewerId).create({
+        acceptanceId: closedAcceptanceId,
+        clientId: `c-${randomUUID()}`,
+        content: 'can I write here?',
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  });
+
+  it('lets a workspace viewer remark once the delivery is public', async () => {
+    const { data } = await caller(viewerId).create({
+      acceptanceId: openAcceptanceId,
+      clientId: `c-${randomUUID()}`,
+      content: 'reading it from the link like everyone else',
+    });
+
+    expect(data.authorUserId).toBe(viewerId);
   });
 });

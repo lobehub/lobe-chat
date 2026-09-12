@@ -17,6 +17,8 @@ import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActivityTime } from '@/hooks/useActivityTime';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { AttachmentThumbs } from '../Evidence/attachments';
 import { commentAnchorUrl } from './anchor';
@@ -83,6 +85,8 @@ const CommentCard = memo<CommentCardProps>(
     const time = useActivityTime(comment.createdAt);
     const [deleting, setDeleting] = useState(false);
     const name = nameOverride ?? commentAuthorName(comment.author);
+    const viewerId = useUserStore(userProfileSelectors.userId);
+    const own = Boolean(viewerId) && comment.authorUserId === viewerId;
 
     const menuItems: DropdownItem[] = [
       ...(anchored
@@ -109,12 +113,18 @@ const CommentCard = memo<CommentCardProps>(
               danger: true,
               icon: <Icon icon={Trash2} />,
               key: 'delete',
-              label: t('acceptance.comments.delete'),
+              // Taking down someone else's remark is a different act from
+              // deleting your own, and the confirm says which one this is.
+              label: own ? t('acceptance.comments.delete') : t('acceptance.comments.removeOthers'),
               onClick: () =>
                 confirmModal({
-                  content: t('acceptance.comments.deleteConfirm'),
+                  content: own
+                    ? t('acceptance.comments.deleteConfirm')
+                    : t('acceptance.comments.removeOthersConfirm'),
                   okButtonProps: { danger: true },
-                  okText: t('acceptance.comments.delete'),
+                  okText: own
+                    ? t('acceptance.comments.delete')
+                    : t('acceptance.comments.removeOthers'),
                   onOk: async () => {
                     setDeleting(true);
                     try {

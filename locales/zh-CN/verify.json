@@ -116,6 +116,8 @@
   "acceptance.comments.regionHint": "在图上拖一个框，然后写下你的意见。",
   "acceptance.comments.regionMissing": "先在图上圈出一处。",
   "acceptance.comments.regionModalTitle": "在截图上圈出要说的位置",
+  "acceptance.comments.removeOthers": "移除",
+  "acceptance.comments.removeOthersConfirm": "移除这条别人写的评论？它会从讨论里消失。",
   "acceptance.comments.reopen": "重新打开",
   "acceptance.comments.reply": "回复",
   "acceptance.comments.replyPlaceholder": "回复…",

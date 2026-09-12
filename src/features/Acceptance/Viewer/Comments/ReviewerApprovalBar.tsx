@@ -8,6 +8,9 @@ import { nanoid } from 'nanoid';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
+
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { canReviewAcceptance } from '../visibility';
@@ -45,6 +48,7 @@ const ReviewerApprovalBar = memo(() => {
   const { acceptanceId } = useAcceptanceScope();
   const { data } = useAcceptanceBundle(acceptanceId);
   const { canApprove, create, items, remove } = useAcceptanceComments(acceptanceId);
+  const viewerId = useUserStore(userProfileSelectors.userId);
   const [summary, setSummary] = useState('');
   const [pending, setPending] = useState(false);
 
@@ -58,9 +62,18 @@ const ReviewerApprovalBar = memo(() => {
   const currentRound = data.rounds.at(-1)?.run;
   if (!currentRound) return null;
 
-  // `canDelete` is only ever true on the caller's own live rows, so it doubles
-  // as "mine" without a user store lookup.
-  const mine = [...items].reverse().find((item) => item.kind === 'approval' && item.canDelete);
+  // Read ownership from the author. `canDelete` also turns on for someone who
+  // may moderate this acceptance, so borrowing it here would show a reviewer
+  // their teammate's approval as their own and let them withdraw it.
+  const mine = [...items]
+    .reverse()
+    .find(
+      (item) =>
+        item.kind === 'approval' &&
+        !item.deletedAt &&
+        Boolean(viewerId) &&
+        item.authorUserId === viewerId,
+    );
   const approvedCurrentRound = mine?.contextRoundIndex === currentRound.roundIndex;
 
   const run = async (action: () => Promise<unknown>) => {

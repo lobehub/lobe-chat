@@ -116,6 +116,8 @@
   "acceptance.comments.regionHint": "Drag a box on the image, then write your note.",
   "acceptance.comments.regionMissing": "Circle a region first.",
   "acceptance.comments.regionModalTitle": "Circle the spot you mean",
+  "acceptance.comments.removeOthers": "Remove",
+  "acceptance.comments.removeOthersConfirm": "Remove someone else's comment? It disappears from the discussion.",
   "acceptance.comments.reopen": "Reopen",
   "acceptance.comments.reply": "Reply",
   "acceptance.comments.replyPlaceholder": "Reply…",
