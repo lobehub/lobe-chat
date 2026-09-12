@@ -150,7 +150,10 @@ export function FlowCanvas({
           proOptions={{ hideAttribution: true }}
           style={{ background: 'transparent' }}
           zoomOnScroll={false}
-          onEdgeClick={(_, e) => onSelect(e.id)}
+          // No onEdgeClick: the edge runs behind its own caption, so clicking
+          // the caption selected the branch, opened the panel and shifted the
+          // canvas out from under the pointer. Branches stay pickable in the
+          // outline view; on the canvas the state card is the way in.
           onNodeClick={(_, n) => onSelect(n.id)}
           onPaneClick={() => onSelect('')}
         >

@@ -34,7 +34,6 @@ export function buildFlowGraph(
   selected: string | undefined,
   onToggle: (id: string) => void,
   onEnter: (id: string) => void,
-  onSelect: (id: string) => void,
   focus?: string,
 ) {
   const nodes: Node<FlowGraphData>[] = [];
@@ -213,7 +212,7 @@ export function buildFlowGraph(
         label: edge.trigger,
         sourceHandle: stacked ? 'stack-out' : returning ? 'return-out' : 'out',
         targetHandle: stacked ? 'stack-in' : returning ? 'return-in' : 'in',
-        data: { onSelect, laneOffset: (peers.indexOf(edge) - (peers.length - 1) / 2) * 64 },
+        data: { laneOffset: (peers.indexOf(edge) - (peers.length - 1) / 2) * 64 },
       };
     });
     for (const part of parts) if (part.child) resultEdges.push(...part.child.edges);

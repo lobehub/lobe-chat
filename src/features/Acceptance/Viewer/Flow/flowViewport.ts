@@ -8,15 +8,15 @@ export interface CanvasSize {
   width: number;
 }
 
-/** Whether a flow-space rect sits fully inside the visible canvas. */
-export const isRectInView = (rect: Rect, viewport: Viewport, size: CanvasSize) => {
+/** Whether any part of a flow-space rect is on screen. */
+export const isRectVisible = (rect: Rect, viewport: Viewport, size: CanvasSize) => {
   const left = rect.x * viewport.zoom + viewport.x;
   const top = rect.y * viewport.zoom + viewport.y;
   return (
-    left >= 0 &&
-    top >= 0 &&
-    left + rect.width * viewport.zoom <= size.width &&
-    top + rect.height * viewport.zoom <= size.height
+    left < size.width &&
+    top < size.height &&
+    left + rect.width * viewport.zoom > 0 &&
+    top + rect.height * viewport.zoom > 0
   );
 };
 
@@ -44,10 +44,13 @@ const axisShift = (start: number, length: number, extent: number) => {
 };
 
 /**
- * Bring a node into view by panning the least possible distance, never by
- * zooming and never by centring. Centring throws the whole graph across the
- * canvas, so whatever the user just clicked ends up somewhere else entirely and
- * reads as having vanished.
+ * Rescue a node that the narrower canvas pushed off screen entirely, by panning
+ * the least possible distance and never by zooming.
+ *
+ * A node the user can still see, even partly, is left exactly where it is. The
+ * canvas moving under a click is far more disorienting than a clipped card:
+ * whatever was clicked ends up somewhere else, which reads as it vanishing. The
+ * details panel spells the node out anyway, so a clipped edge costs nothing.
  */
 export const panNodeIntoView = (
   flow: FlowViewportApi,
@@ -58,7 +61,7 @@ export const panNodeIntoView = (
   const bounds = flow.getNodesBounds([id]);
   if (!bounds.width || !bounds.height) return;
   const viewport = flow.getViewport();
-  if (isRectInView(bounds, viewport, size)) return;
+  if (isRectVisible(bounds, viewport, size)) return;
   const x =
     viewport.x +
     axisShift(bounds.x * viewport.zoom + viewport.x, bounds.width * viewport.zoom, size.width);

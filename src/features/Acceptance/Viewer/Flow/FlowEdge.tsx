@@ -1,13 +1,16 @@
-import { Button } from '@lobehub/ui/base-ui';
 import type { Edge, EdgeProps } from '@xyflow/react';
 import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath } from '@xyflow/react';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 
 import { getFlowEdgeLabelLayout } from './flowEdgeLabel';
 
 const styles = createStaticStyles(({ css }) => ({
+  // The caption reads the branch condition out; it is not a control. Clicking it
+  // used to open the details panel, which narrows the canvas and shifts the page
+  // column, so the caption moved out from under the pointer as if it had gone.
+  // Clicks fall through to the canvas instead; the state card is the way in.
   label: css`
-    pointer-events: all;
+    pointer-events: none;
 
     position: absolute;
 
@@ -17,8 +20,6 @@ const styles = createStaticStyles(({ css }) => ({
     -webkit-line-clamp: 5;
 
     max-width: 200px;
-    height: auto;
-    min-height: 0;
     max-height: 94px;
     padding-block: 4px;
     padding-inline: 6px;
@@ -33,22 +34,9 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgContainer};
   `,
-  // The caption is the branch's only hit target, so a picked one wears the same
-  // ring as a picked state card. The background stays opaque: the edge runs
-  // under the caption, and a translucent fill lets the line strike the text out.
-  selected: css`
-    border-color: ${cssVar.colorPrimaryBorder};
-    color: ${cssVar.colorText};
-    background: ${cssVar.colorBgElevated};
-    box-shadow: 0 0 0 2px ${cssVar.colorPrimaryBg};
-  `,
 }));
 
-type TransitionEdge = Edge<{
-  laneOffset?: number;
-  onSelect: (id: string) => void;
-  selected?: boolean;
-}>;
+type TransitionEdge = Edge<{ laneOffset?: number }>;
 
 /** Labels share the graph scale so zooming out preserves their spacing. */
 export function FlowEdge(props: EdgeProps<TransitionEdge>) {
@@ -65,19 +53,15 @@ export function FlowEdge(props: EdgeProps<TransitionEdge>) {
     <>
       <BaseEdge id={props.id} markerEnd={props.markerEnd} path={path} style={props.style} />
       <EdgeLabelRenderer>
-        <Button
-          className={cx(styles.label, props.data?.selected && styles.selected, 'nodrag', 'nopan')}
-          size="small"
-          title={typeof props.label === 'string' ? props.label : undefined}
-          type="text"
+        <div
+          className={styles.label}
           style={{
             maxWidth: label.maxWidth,
             transform: `translate(-50%, -50%) translate(${label.x}px, ${label.y}px)`,
           }}
-          onClick={() => props.data?.onSelect(props.id)}
         >
           {props.label}
-        </Button>
+        </div>
       </EdgeLabelRenderer>
     </>
   );

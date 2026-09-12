@@ -140,7 +140,6 @@ export function AcceptanceFlow() {
       });
     },
     setFocus,
-    setSelected,
     focus,
   );
   if (!views.length) return <Empty description={t('flow.empty')} />;
@@ -164,7 +163,6 @@ export function AcceptanceFlow() {
     crumbs.unshift({ id, title: graph.groups.get(id)!.title });
   const graphEdges = graph.edges.map((edge) => ({
     ...edge,
-    data: { ...edge.data, selected: edge.id === selected },
     markerEnd: { type: MarkerType.Arrow, color: cssVar.colorTextQuaternary, width: 16, height: 16 },
     style: {
       stroke: edge.id === selected ? cssVar.colorPrimary : cssVar.colorTextQuaternary,

@@ -69,7 +69,6 @@ const build = (views: FlowGraphView[], collapsed = new Set<string>(), focus?: st
     undefined,
     () => {},
     () => {},
-    () => {},
     focus,
   );
 
