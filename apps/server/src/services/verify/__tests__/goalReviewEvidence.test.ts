@@ -105,6 +105,43 @@ describe('Goal review evidence', () => {
       'Actual command output: 42',
     );
   });
+  /**
+   * Regression: the budget was spent in capture order, so an oversized row
+   * consumed it and every later row was dropped without a trace. A Goal
+   * delivery lost its own summary that way and was rejected for "missing
+   * evidence" it had attached.
+   */
+  it('keeps a later small evidence row when an earlier attachment is oversized', async () => {
+    mocks.evidence.mockResolvedValue([
+      { content: 'x'.repeat(70_000), id: 'e1', type: 'text' },
+      { content: 'RERUN: all five commands exited 0', id: 'e2', type: 'text' },
+    ]);
+    await review().predict({ ...params, includeTextEvidence: true });
+    expect(JSON.stringify(mocks.generate.mock.calls[0][0].messages)).toContain(
+      'RERUN: all five commands exited 0',
+    );
+  });
+
+  /**
+   * Regression: the caption a builder wrote on a text row was dropped, leaving
+   * the reviewer to infer what a raw payload was from its bytes. Visual rows had
+   * always carried their description.
+   */
+  it('shows the caption the builder wrote on each text row', async () => {
+    mocks.evidence.mockResolvedValue([
+      {
+        content: 'exit=0',
+        description: 'rerun log, byte-identical to round 1',
+        id: 'e1',
+        type: 'text',
+      },
+    ]);
+    await review().predict({ ...params, includeTextEvidence: true });
+    expect(JSON.stringify(mocks.generate.mock.calls[0][0].messages)).toContain(
+      'rerun log, byte-identical to round 1',
+    );
+  });
+
   it.each([
     [new Error('Connection timed out'), 'Connection timed out'],
     [{ message: 'Rate limit exceeded' }, 'Rate limit exceeded'],

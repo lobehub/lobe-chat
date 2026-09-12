@@ -19,6 +19,8 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 
+import type { ReviewEvidenceRow } from './reviewEvidence';
+import { formatTextEvidence, TEXT_EVIDENCE_TYPES } from './reviewEvidence';
 import type { RawReviewPrediction } from './schema';
 import { ReviewPredictionSchema } from './schema';
 
@@ -186,8 +188,14 @@ export class VerifyReviewPredictorService {
       ? await this.collectTextEvidence(result.id)
       : undefined;
     if (visuals.length === 0 && !textEvidence) {
-      log('predict: %s has no visual evidence, skipping', checkResultId);
-      return this.record(params, 'skipped', 'no visual evidence to judge');
+      log('predict: %s has no readable evidence, skipping', checkResultId);
+      return this.record(
+        params,
+        'skipped',
+        params.includeTextEvidence
+          ? 'no readable evidence (no frames and no text payload) to judge'
+          : 'no visual evidence to judge',
+      );
     }
 
     const instruction = params.instructionDocumentId
@@ -285,25 +293,36 @@ export class VerifyReviewPredictorService {
 
   private async collectTextEvidence(resultId: string) {
     const evidence = await this.evidenceModel.listByCheckResult(resultId);
-    const parts: string[] = [];
-    let remaining = 60_000;
+    const rows: ReviewEvidenceRow[] = [];
     for (const row of evidence) {
-      if (remaining <= 0) break;
-      if (!['text', 'markdown', 'dom_snapshot', 'transcript'].includes(row.type)) continue;
-      let content = row.content;
-      if (!content && row.documentId) {
-        content = (await this.documentModel.findById(row.documentId))?.content ?? null;
-      }
-      if (!content && row.fileId) {
-        const file = await this.fileModel.findById(row.fileId);
-        if (file && file.size <= 1_000_000)
-          content = await this.fileService.getFileContent(file.url);
-      }
-      if (!content) continue;
-      parts.push(`[Evidence ${row.id}]\n${content.slice(0, remaining)}`);
-      remaining -= content.length;
+      if (!TEXT_EVIDENCE_TYPES.has(row.type)) continue;
+      const content = await this.resolveEvidenceContent(row);
+      if (content) rows.push({ content, description: row.description, id: row.id, type: row.type });
     }
-    return parts.join('\n\n');
+    return formatTextEvidence(rows);
+  }
+
+  /**
+   * The payload a text evidence row stands for, wherever it lives. A row that
+   * only names a path proves nothing, so an attachment is read rather than
+   * quoted: the size ceiling keeps one oversized artifact from being streamed
+   * into a prompt that could never hold it.
+   */
+  private async resolveEvidenceContent(row: {
+    content?: string | null;
+    documentId?: string | null;
+    fileId?: string | null;
+  }) {
+    if (row.content) return row.content;
+    if (row.documentId) {
+      const document = await this.documentModel.findById(row.documentId);
+      if (document?.content) return document.content;
+    }
+    if (row.fileId) {
+      const file = await this.fileModel.findById(row.fileId);
+      if (file && file.size <= 1_000_000) return this.fileService.getFileContent(file.url);
+    }
+    return null;
   }
 
   /**
