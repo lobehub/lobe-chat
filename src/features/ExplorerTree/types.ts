@@ -80,6 +80,11 @@ export interface ExplorerTreeProps<TData = unknown> {
   onSelectedChange?: (ids: string[]) => void;
   overscan?: number;
   selectedIds?: string[];
+  /**
+   * Render a hover "…" button on each row that opens the same menu as
+   * right-click. Read once on mount, like the other composition options.
+   */
+  showRowActionButton?: boolean;
   style?: CSSProperties;
   /** Raw CSS injected into the pierre/trees shadow DOM via FILE_TREE_UNSAFE_CSS_ATTRIBUTE. */
   unsafeCSS?: string;
