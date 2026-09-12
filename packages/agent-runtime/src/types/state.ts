@@ -7,6 +7,7 @@ import type {
 } from '@lobechat/context-engine';
 import type {
   ChatToolPayload,
+  ExpertiseContextSnapshot,
   SecurityBlacklistConfig,
   UserInterventionConfig,
 } from '@lobechat/types';
@@ -35,7 +36,11 @@ export interface AgentState {
   costLimit?: CostLimit;
   // --- Metadata ---
   createdAt: string;
+  /** Whether ContextEngine may inject the operation expertise snapshot. */
+  enableExpertise?: boolean;
   error?: any;
+  /** Immutable expertise snapshot resolved once when this operation starts. */
+  expertise?: ExpertiseContextSnapshot;
   /**
    * When true, the agent is in force-finish mode (maxSteps exceeded).
    * Tools are allowed to complete, but the next LLM call will have tools stripped
@@ -76,6 +81,15 @@ export interface AgentState {
    * Used as fallback when call_llm instruction doesn't specify model/provider
    */
   modelRuntimeConfig?: {
+    /**
+     * Immutable operation snapshot shared by tool discovery and context processing.
+     * Optional for operations created before this snapshot was introduced.
+     */
+    mediaCapabilities?: {
+      audio?: boolean;
+      video?: boolean;
+      vision?: boolean;
+    };
     model: string;
     provider: string;
     /**
@@ -91,6 +105,24 @@ export interface AgentState {
 
   /** Operation-level tool set snapshot (immutable after creation) */
   operationToolSet?: OperationToolSet;
+  pendingApprovalBatch?: {
+    assistantMessageId: string;
+    id: string;
+    sealed: true;
+    stepIndex: number;
+    /**
+     * Previous durable batch whose still-pending rows were rebound into this
+     * parked operation. The server notification adapter turns this into an
+     * atomic generic-store supersession; keeping only authoritative source
+     * identities here avoids coupling the runtime package to ActivityKit or a
+     * Cloud database model.
+     */
+    supersedes?: {
+      batchId: string;
+      operationId: string;
+      toolCallIds: string[];
+    };
+  };
   // --- HIL ---
   /**
    * Assistant placeholder seeded for a resume that starts by executing a tool
@@ -100,14 +132,16 @@ export interface AgentState {
    * Cleared once consumed.
    */
   pendingAssistantMessageId?: string;
-  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
 
+  pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
   pendingHumanSelect?: {
     metadata?: Record<string, unknown>;
     multi?: boolean;
     options: Array<{ label: string; value: string }>;
     prompt?: string;
   };
+  /** toolCallId -> durable pending tool-message id for the current sealed batch. */
+  pendingToolMessageIds?: Record<string, string>;
   /**
    * When status is 'waiting_for_human', this stores pending requests
    * for human-in-the-loop operations.
@@ -138,6 +172,14 @@ export interface AgentState {
   stepCount: number;
 
   systemRole?: string;
+  /**
+   * Consecutive LLM turns that emitted the same normalized tool calls.
+   * Only signatures present in the latest tool-calling turn are retained.
+   */
+  toolCallRepeatGuard?: {
+    counts: Record<string, number>;
+  };
+
   /** Tool executor map for routing tool execution between server and client */
   toolExecutorMap?: Record<string, ToolExecutor>;
 
@@ -147,6 +189,15 @@ export interface AgentState {
 
   /** Tool source map for routing tool execution to correct handler */
   toolSourceMap?: Record<string, ToolSource>;
+
+  /**
+   * How many times this operation has answered unresolvable tool calls with a
+   * rejected tool result. Operation-scoped on purpose: the same rejection rows
+   * are also readable from the message history, but that history is rehydrated
+   * from the DB on every step and carries earlier operations' rejections, so
+   * counting rows there would spend a new operation's budget before it starts.
+   */
+  unresolvedToolFeedbackRounds?: number;
   // --- Usage and Cost Tracking ---
   /**
    * Accumulated usage statistics for this session.

@@ -4,6 +4,7 @@
 // single IIFE global. Bundled from THIS repo's node_modules, so versions match
 // production exactly. Missing a component? Add it below and rebuild (~2s):
 //   bash .agents/skills/design-prototype/scripts/build-runtime.sh
+import { Amp, ClaudeCode, Codex, HermesAgent, OpenClaw, OpenCode } from '@lobehub/icons';
 import {
   ActionIcon,
   Alert,
@@ -12,6 +13,7 @@ import {
   Button,
   Center,
   Collapse,
+  ConfigProvider,
   DraggablePanel,
   Drawer,
   DropdownMenu,
@@ -25,6 +27,7 @@ import {
   InputNumber,
   Markdown,
   Modal,
+  MotionProvider,
   NeuralNetworkLoading,
   Popover,
   ScrollShadow,
@@ -56,6 +59,8 @@ import {
 } from 'antd';
 import * as antdStyle from 'antd-style';
 import * as lucide from 'lucide-react';
+import * as motionReact from 'motion/react';
+import * as motionReactM from 'motion/react-m';
 import * as react from 'react';
 import * as jsxRuntime from 'react/jsx-runtime';
 import * as reactDom from 'react-dom';
@@ -70,6 +75,7 @@ export default {
     Button,
     Center,
     Collapse,
+    ConfigProvider,
     DraggablePanel,
     Drawer,
     DropdownMenu,
@@ -95,13 +101,17 @@ export default {
     Tag,
     Text,
     TextArea,
+    MotionProvider,
     ThemeProvider,
     Tooltip,
   },
+  '@lobehub/icons': { Amp, ClaudeCode, Codex, HermesAgent, OpenClaw, OpenCode },
   '@lobehub/ui/base-ui': baseUI,
   'antd': { App, Badge, Checkbox, Divider, Dropdown, Progress, Radio, Slider, Space, Steps, Table },
   'antd-style': antdStyle,
   'lucide-react': lucide,
+  'motion/react': motionReact,
+  'motion/react-m': motionReactM,
   'react': react,
   'react-dom': reactDom,
   'react-dom/client': reactDomClient,

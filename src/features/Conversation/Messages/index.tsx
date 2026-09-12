@@ -16,13 +16,16 @@ import History from '../components/History';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import MessageSelectionWrapper from '../MessageForward/MessageSelectionWrapper';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../store';
+import type { SteerContinuation } from '../store/slices/data/steerChains';
 import AgentCouncilMessage from './AgentCouncil';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
 import type { WorkflowExpandLevelDefault } from './AssistantGroup/components/WorkflowCollapse';
+import PendingRetryTurn from './components/PendingRetryTurn';
 import TextSelectionActionLayer from './components/TextSelectionActionLayer';
 import CompressedGroupMessage from './CompressedGroup';
 import GroupTasksMessage from './GroupTasks';
+import { getMessageInteractionState } from './messageInteraction';
 import TaskMessage from './Task';
 import TaskCallbackMessage from './TaskCallback';
 import TasksMessage from './Tasks';
@@ -47,6 +50,7 @@ const styles = createStaticStyles(({ css }) => ({
 
 export interface MessageItemProps {
   className?: string;
+  continuations?: SteerContinuation[];
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
   disableEditing?: boolean;
   enableHistoryDivider?: boolean;
@@ -61,6 +65,7 @@ export interface MessageItemProps {
 const MessageItem = memo<MessageItemProps>(
   ({
     className,
+    continuations,
     defaultWorkflowExpandLevel,
     enableHistoryDivider,
     id,
@@ -79,6 +84,10 @@ const MessageItem = memo<MessageItemProps>(
     // Get message from ConversationStore
     const message = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual);
     const role = message?.role;
+    const { effectiveDisableEditing, shouldSuppressContextMenu } = getMessageInteractionState(
+      message,
+      disableEditing,
+    );
 
     const [editing, isMessageCreating] = useConversationStore((s) => [
       messageStateSelectors.isMessageEditing(id)(s),
@@ -102,6 +111,11 @@ const MessageItem = memo<MessageItemProps>(
 
     const onContextMenu = useCallback(
       async (event: MouseEvent<HTMLDivElement>) => {
+        if (shouldSuppressContextMenu) {
+          event.preventDefault();
+          return;
+        }
+
         if (!role || (role !== 'user' && role !== 'assistant' && role !== 'assistantGroup')) return;
 
         if (!message) return;
@@ -127,19 +141,27 @@ const MessageItem = memo<MessageItemProps>(
 
         handleContextMenu(event);
       },
-      [handleContextMenu, id, role, message],
+      [handleContextMenu, id, message, role, shouldSuppressContextMenu],
     );
 
     const renderContent = useCallback(() => {
       switch (role) {
         case 'user': {
-          return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
+          return (
+            <>
+              <UserMessage disableEditing={effectiveDisableEditing} id={id} index={index} />
+              {/* A retry deletes the failed reply before its replacement exists.
+                  The user turn outlives that window, so it carries the pending
+                  state the deleted reply no longer can. */}
+              <PendingRetryTurn userMessageId={id} />
+            </>
+          );
         }
 
         case 'assistant': {
           return (
             <AssistantMessage
-              disableEditing={disableEditing}
+              disableEditing={effectiveDisableEditing}
               footerRender={footerRender}
               id={id}
               index={index}
@@ -151,8 +173,9 @@ const MessageItem = memo<MessageItemProps>(
         case 'assistantGroup': {
           return (
             <AssistantGroupMessage
+              continuations={continuations}
               defaultWorkflowExpandLevel={defaultWorkflowExpandLevel}
-              disableEditing={disableEditing}
+              disableEditing={effectiveDisableEditing}
               footerRender={footerRender}
               id={id}
               index={index}
@@ -168,8 +191,9 @@ const MessageItem = memo<MessageItemProps>(
           // turn. Keeps a single code path instead of a thinner duplicate.
           return (
             <AssistantGroupMessage
+              continuations={continuations}
               defaultWorkflowExpandLevel={defaultWorkflowExpandLevel}
-              disableEditing={disableEditing}
+              disableEditing={effectiveDisableEditing}
               footerRender={footerRender}
               id={id}
               index={index}
@@ -181,7 +205,7 @@ const MessageItem = memo<MessageItemProps>(
         case 'task': {
           return (
             <TaskMessage
-              disableEditing={disableEditing}
+              disableEditing={effectiveDisableEditing}
               id={id}
               index={index}
               isLatestItem={isLatestItem}
@@ -205,7 +229,7 @@ const MessageItem = memo<MessageItemProps>(
         }
 
         case 'tool': {
-          return <ToolMessage disableEditing={disableEditing} id={id} index={index} />;
+          return <ToolMessage disableEditing={effectiveDisableEditing} id={id} index={index} />;
         }
 
         case 'verify': {
@@ -218,7 +242,16 @@ const MessageItem = memo<MessageItemProps>(
       }
 
       return null;
-    }, [role, defaultWorkflowExpandLevel, disableEditing, footerRender, id, index, isLatestItem]);
+    }, [
+      role,
+      continuations,
+      defaultWorkflowExpandLevel,
+      effectiveDisableEditing,
+      footerRender,
+      id,
+      index,
+      isLatestItem,
+    ]);
 
     if (!role) return;
 

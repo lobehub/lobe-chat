@@ -1,11 +1,13 @@
 'use client';
 
-import { Badge, Checkbox, Skeleton, Table, Tag, Tooltip, Typography } from 'antd';
+import { Checkbox, Tag } from '@lobehub/ui/base-ui';
+import { Badge, Table, Tooltip, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ArticleSkeleton } from '@/components/Skeleton';
 import { agentEvalService } from '@/services/agentEval';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -101,7 +103,7 @@ const BatchResumeContent: FC<BatchResumeContentProps> = ({
             <Checkbox
               checked={selectedIds.includes(record.testCaseId)}
               disabled={!record.canResume}
-              onChange={(e) => handleToggleRow(record.testCaseId, e.target.checked)}
+              onChange={(checked) => handleToggleRow(record.testCaseId, checked)}
             />
           </Tooltip>
         ),
@@ -110,7 +112,7 @@ const BatchResumeContent: FC<BatchResumeContentProps> = ({
             checked={allSelected}
             disabled={resumableCases.length === 0}
             indeterminate={indeterminate}
-            onChange={(e) => handleToggleAll(e.target.checked)}
+            onChange={handleToggleAll}
           />
         ),
         width: 48,
@@ -150,7 +152,7 @@ const BatchResumeContent: FC<BatchResumeContentProps> = ({
   );
 
   return loading ? (
-    <Skeleton active paragraph={{ rows: 4 }} />
+    <ArticleSkeleton rows={4} />
   ) : (
     <Table
       columns={columns}

@@ -9,6 +9,8 @@ const activeTaskId = (s: TaskStoreState) => s.activeTaskId;
 const activeTaskDetail = (s: TaskStoreState): TaskDetailData | undefined =>
   s.activeTaskId ? s.taskDetailMap[s.activeTaskId] : undefined;
 
+const activeTaskDatabaseId = (s: TaskStoreState) => activeTaskDetail(s)?.id;
+
 const taskDetailById = (id: string) => (s: TaskStoreState) => s.taskDetailMap[id];
 
 const isTaskDetailLoading = (s: TaskStoreState): boolean =>
@@ -27,6 +29,9 @@ const activeTaskCreatedByUserId = (s: TaskStoreState) => activeTaskDetail(s)?.cr
 
 const activeTaskInstruction = (s: TaskStoreState) => activeTaskDetail(s)?.instruction;
 
+const activeTaskInstructionRevision = (s: TaskStoreState) =>
+  (s.activeTaskId ? s.taskInstructionRevisionMap[s.activeTaskId] : undefined) ?? 0;
+
 const activeTaskEditorData = (s: TaskStoreState) => activeTaskDetail(s)?.editorData;
 
 const activeTaskFiles = (s: TaskStoreState) => activeTaskDetail(s)?.files;
@@ -34,6 +39,10 @@ const activeTaskFiles = (s: TaskStoreState) => activeTaskDetail(s)?.files;
 const activeTaskDescription = (s: TaskStoreState) => activeTaskDetail(s)?.description;
 
 const activeTaskAgentId = (s: TaskStoreState) => activeTaskDetail(s)?.agentId;
+
+// Human assignee (workspace member). `detail.userId` is populated from the
+// server-side `tasks.assignee_user_id` column.
+const activeTaskAssigneeUserId = (s: TaskStoreState) => activeTaskDetail(s)?.userId;
 
 // TODO: Once the frontend store switches to reading from detail.model / detail.provider returned by the backend getTaskDetail procedure
 const activeTaskModel = (s: TaskStoreState) =>
@@ -107,11 +116,23 @@ const taskSaveStatus = (s: TaskStoreState): SaveStatus =>
 
 const activeTopicDrawerTopicId = (s: TaskStoreState) => s.activeTopicDrawerTopicId;
 
+/**
+ * Which agent the open run drawer talks to. A run opened from a task detail
+ * inherits the task's agent; one opened from the home inbox carries its own,
+ * since the topic may have no parent task.
+ */
+const topicDrawerAgentId = (s: TaskStoreState) =>
+  s.activeTopicDrawerAgentId ?? activeTaskAgentId(s);
+
+const topicDrawerTitle = (s: TaskStoreState) => s.activeTopicDrawerTitle;
+
 export const taskDetailSelectors = {
   activeTaskAgentId,
+  activeTaskAssigneeUserId,
   activeTaskAutomationMode,
   activeTaskCheckpoint,
   activeTaskCreatedByUserId,
+  activeTaskDatabaseId,
   activeTaskModel,
   activeTaskDependencies,
   activeTaskDescription,
@@ -121,6 +142,7 @@ export const taskDetailSelectors = {
   activeTaskFiles,
   activeTaskId,
   activeTaskInstruction,
+  activeTaskInstructionRevision,
   activeTaskName,
   activeTaskParent,
   activeTaskPeriodicInterval,
@@ -143,4 +165,6 @@ export const taskDetailSelectors = {
   isTaskDetailLoading,
   taskDetailById,
   taskSaveStatus,
+  topicDrawerAgentId,
+  topicDrawerTitle,
 };

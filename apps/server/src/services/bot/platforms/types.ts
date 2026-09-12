@@ -29,6 +29,11 @@ export type ConnectionMode = 'polling' | 'webhook' | 'websocket';
 export interface PlatformAccessMeta {
   allowed?: boolean;
   blockedMessage?: string;
+  /**
+   * Per-feature access flags keyed by feature id (see `FieldSchema.paidFeature`).
+   * Platform-level `allowed` stays authoritative for the channel itself.
+   */
+  features?: Record<string, { allowed: boolean }>;
   requiredPlan?: 'paid';
   rolloutMode?: 'enforce' | 'notice';
 }
@@ -62,6 +67,24 @@ export interface FieldSchema {
   label: string;
   maximum?: number;
   minimum?: number;
+  /**
+   * Marks the field as belonging to a gated feature (by feature id). The
+   * frontend renders a paid badge next to the label and disables editing
+   * when the platform access meta reports the feature as not allowed.
+   */
+  paidFeature?: string;
+  /**
+   * Format constraint for `string` / `password` fields, as a regex **source
+   * string** — the schema is serialized over TRPC to drive the frontend form,
+   * so it cannot carry a `RegExp` instance. Enforced on both sides: the form
+   * turns it into an antd rule, and the save mutation re-checks it so callers
+   * bypassing the UI can't persist a malformed credential.
+   *
+   * Empty values are exempt — `required` owns that check.
+   */
+  pattern?: string;
+  /** i18n key for the message shown when the value fails `pattern`. */
+  patternMessage?: string;
   placeholder?: string;
   /** Nested fields (for type: 'object') */
   properties?: FieldSchema[];
@@ -82,7 +105,11 @@ export interface FieldSchema {
    * - 'array' → list
    */
   type: 'array' | 'boolean' | 'integer' | 'number' | 'object' | 'password' | 'string';
-  /** Conditional visibility: show only when another field matches a value */
+  /**
+   * Conditional visibility: show only when another field matches a value. Pass
+   * an array to match any of several values, e.g. a window size that applies to
+   * both the `burst` and `debounce` concurrency strategies.
+   */
   visibleWhen?: { field: string; value: unknown };
 }
 
@@ -103,6 +130,23 @@ export interface BotMessageAttachment {
   fetchUrl?: string;
   mimeType?: string;
   name?: string;
+  /**
+   * Size of the underlying bytes, when the caller knows it (e.g. from the
+   * files table). Lets the send path apply platform size budgets without
+   * downloading URL-sourced attachments first.
+   */
+  size?: number;
+  /**
+   * Set ONLY when the server itself produced `fetchUrl` from a record the
+   * caller was checked to own (see `sendMessengerPush`). It relaxes the
+   * outbound SSRF guard to accept our own configured origins even when they
+   * resolve privately, which self-hosted storage and local dev need.
+   *
+   * Never set it from request input: a caller-supplied URL that merely lands
+   * on a configured origin is not owned, and trusting it would turn the
+   * relaxation into the bypass it exists to avoid.
+   */
+  trustedUrl?: boolean;
   type: 'image' | 'file' | 'video' | 'audio';
 }
 
@@ -194,6 +238,23 @@ export interface PlatformClient {
   createAdapter: () => Record<string, any>;
 
   /**
+   * Ensure the triggering user is a member of the platform thread the bot
+   * replies in, so the platform pushes them a notification and surfaces the
+   * thread in their client.
+   *
+   * Discord: the auto-created per-mention reply thread never adds the
+   * mentioning user as a member — the reply lands in a thread the user is
+   * not notified about, and thread-pill rendering on the origin message has
+   * proven unreliable (two separate clients showed no pill for
+   * hours while the API said `HAS_THREAD`). Explicit membership bypasses
+   * both gaps. Best-effort — implementations must swallow failures.
+   *
+   * Platforms whose replies land directly in the conversation (Telegram,
+   * Slack channel replies, DMs) can omit this method.
+   */
+  ensureThreadMember?: (platformThreadId: string, platformUserId: string) => Promise<void>;
+
+  /**
    * Read the inbound message author's preferred language from the platform
    * payload (e.g. Telegram's `from.language_code`, Discord's `user.locale`).
    * Returns the raw platform string — caller is responsible for normalizing
@@ -208,6 +269,19 @@ export interface PlatformClient {
 
   /** Extract the chat/channel ID from a composite platformThreadId. */
   extractChatId: (platformThreadId: string) => string;
+
+  /**
+   * The `channelId` that `readMessages` needs to read THIS conversation's
+   * history, injected into the model's prompt as the current conversation.
+   *
+   * Omit it when `extractChatId` already identifies the conversation exactly
+   * (Feishu `oc_…`, Discord channel-or-thread id, Telegram chat id). Implement
+   * it — returning `undefined` — when the platform's history read cannot be
+   * scoped to what `platformThreadId` denotes: a Slack reply thread decodes to
+   * its parent channel, and `conversations.history` on that channel would read
+   * unrelated channel traffic while claiming to be the current conversation.
+   */
+  extractConversationId?: (platformThreadId: string) => string | undefined;
 
   /**
    * Resolve attachments on an inbound `Message` into `AttachmentSource[]` for
@@ -257,12 +331,27 @@ export interface PlatformClient {
    */
   formatReply?: (body: string, stats?: UsageStats) => string;
 
-  // --- Runtime Operations ---
-
   /** Get a messenger for a specific thread (outbound messaging). */
   getMessenger: (platformThreadId: string) => PlatformMessenger;
 
+  // --- Runtime Operations ---
+
   readonly id: string;
+
+  /**
+   * Whether this conversation contains only the operator and this bot, so every
+   * message in it is implicitly addressed to the bot and no @-mention is needed.
+   *
+   * The router otherwise infers that from how many distinct humans have SPOKEN
+   * in the thread, which misreads a quiet group as private — badly so on
+   * platforms where the subscribed "thread" is the entire group chat. A platform
+   * that can report real membership should implement this and settle it.
+   *
+   * Must fail CLOSED: resolve `false` whenever membership can't be established,
+   * so an unprovable chat stays mention-only rather than the bot talking over a
+   * group. Platforms that can't tell omit the method.
+   */
+  isSoloBotConversation?: (platformThreadId: string) => Promise<boolean>;
 
   /**
    * Optional hook called from the router when a non-DM message wakes the
@@ -286,6 +375,18 @@ export interface PlatformClient {
 
   /** Parse a composite message ID into the platform-native format. */
   parseMessageId: (compositeId: string) => string | number;
+
+  /**
+   * Re-register the platform webhook with the current credentials.
+   *
+   * `BotMessageRouter` calls this (rate-limited per bot) when the adapter
+   * rejects an inbound webhook as unverified (401) — the platform is still
+   * delivering to a registration made with missing or stale verification
+   * material. Implementations must be idempotent and safe to call while the
+   * bot keeps serving traffic. Webhook-mode platforms whose registration we
+   * own (Telegram) implement it; others omit it.
+   */
+  reconcileWebhook?: () => Promise<void>;
 
   /**
    * Register bot commands with the platform (e.g., Telegram setMyCommands).
@@ -459,6 +560,15 @@ export interface PlatformDefinition {
   /** The name of the platform. */
   name: string;
 
+  /**
+   * Credential keys that are identifiers rather than secrets, for platforms
+   * whose credentials never come from the form schema and so have no
+   * `type: 'password'` marking to read. WeChat's QR handshake writes `botId`
+   * and `userId` alongside the token; those two are safe to show, the token is
+   * not. Everything unlisted is treated as secret.
+   */
+  publicCredentialKeys?: string[];
+
   /** Field schema — top-level objects `credentials` and `settings` map to DB columns. */
   schema: FieldSchema[];
 
@@ -479,6 +589,19 @@ export interface PlatformDefinition {
    * Defaults to true.
    */
   supportsMessageEdit?: boolean;
+
+  /**
+   * `lobe-message` channel API names this platform does NOT support — either the
+   * service throws `PlatformUnsupportedError`, or the optional method is absent
+   * and the execution runtime rejects it generically (e.g. `sendDirectMessage`).
+   * Sourced from `PLATFORM_UNSUPPORTED_MESSAGE_APIS` and surfaced into the agent
+   * runtime's manifest resolve context so `resolveMessageManifest` removes them
+   * from the tool list — otherwise the model calls an operation that can only
+   * fail (the WeChat `readMessages` "刚刚聊了啥" case). A missing/empty value means
+   * "fully supported", so a limited platform MUST populate this. See
+   * `messageCapabilities.ts` (kept honest against the services by its test).
+   */
+  unsupportedMessageApis?: string[];
 }
 
 /** Serialized platform definition for frontend consumption (excludes runtime-only fields). */

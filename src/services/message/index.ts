@@ -5,6 +5,7 @@ import {
   type ChatTTS,
   type CreateMessageParams,
   type CreateMessageResult,
+  type HeterogeneousToolStateSnapshot,
   type MessageMetadata,
   type MessagePluginItem,
   type ModelRankItem,
@@ -31,6 +32,22 @@ export interface MessageQueryContext {
   topicShareId?: string;
 }
 
+interface MessageReadQueryContext {
+  agentId?: string | null;
+  /** Agent-share visitor surface — routes the read through `shareChat.getMessages`. */
+  agentShareId?: string;
+  groupId?: string | null;
+  /**
+   * Skip the Work-summary assembly on the server — set by mid-stream
+   * refetches (tool_end / step_complete) so each tool round doesn't re-run
+   * the per-type Work queries. See `QueryMessageParams.skipWorks`.
+   */
+  skipWorks?: boolean;
+  threadId?: string | null;
+  topicId?: string | null;
+  topicShareId?: string;
+}
+
 export type MessageBatchOperation =
   | {
       message: CreateMessageParams;
@@ -46,15 +63,45 @@ export type MessageBatchOperation =
       type: 'updateToolMessage';
       value: {
         content?: string;
+        heterogeneousToolState?: HeterogeneousToolStateSnapshot;
         metadata?: Record<string, any>;
         pluginError?: any;
         pluginState?: Record<string, any>;
       };
     };
 
+export interface MessageBatchMutationResult {
+  results?: Array<{
+    error?: string;
+    id?: string;
+    index: number;
+    success: boolean;
+    type: MessageBatchOperation['type'];
+  }>;
+  success?: boolean;
+}
+
+export class MessageBatchMutationError extends Error {
+  constructor(public readonly result: MessageBatchMutationResult) {
+    const failed = result.results?.filter((item) => !item.success) ?? [];
+    const reasons = [...new Set(failed.map((item) => item.error).filter(Boolean))];
+    super(
+      `Message batch mutation failed for ${failed.length || 'unknown'} operation(s)` +
+        (reasons.length > 0 ? `: ${reasons.join('; ')}` : ''),
+    );
+  }
+}
+
+const getBatchMutationAbortKey = (operations: MessageBatchOperation[]) => {
+  if (operations.length !== 1) return;
+
+  const [operation] = operations;
+  if (operation.type === 'updateToolMessage') return `tool-message-${operation.id}`;
+};
+
 export class MessageService {
-  batchMutate = async (operations: MessageBatchOperation[]) => {
-    return lambdaClient.message.batchMutate.mutate({
+  batchMutate = async (operations: MessageBatchOperation[], signal?: AbortSignal) => {
+    const input = {
       operations: operations.map((operation) => {
         if (operation.type === 'createMessage') {
           return {
@@ -69,20 +116,76 @@ export class MessageService {
           value: operation.value,
         };
       }),
-    } as any);
+    } as any;
+
+    return signal
+      ? lambdaClient.message.batchMutate.mutate(input, { signal })
+      : lambdaClient.message.batchMutate.mutate(input);
+  };
+
+  batchMutateOrThrow = async (operations: MessageBatchOperation[]) => {
+    const execute = async (signal?: AbortSignal) => {
+      const result = (await (signal
+        ? this.batchMutate(operations, signal)
+        : this.batchMutate(operations))) as MessageBatchMutationResult;
+      const hasFailedOperation = result.results?.some((item) => !item.success) ?? false;
+      const hasCompleteResults = result.results?.length === operations.length;
+
+      if (result.success !== true || !hasCompleteResults || hasFailedOperation) {
+        throw new MessageBatchMutationError(result);
+      }
+
+      return result;
+    };
+
+    const abortKey = getBatchMutationAbortKey(operations);
+
+    return abortKey ? abortableRequest.execute(abortKey, execute) : execute();
   };
 
   createMessage = async (params: CreateMessageParams): Promise<CreateMessageResult> => {
     return lambdaClient.message.createMessage.mutate(params as any);
   };
 
-  getMessages = async (params: MessageQueryContext): Promise<UIChatMessage[]> => {
-    const data = await lambdaClient.message.getMessages.query(params);
+  getMessages = async (params: MessageReadQueryContext): Promise<UIChatMessage[]> => {
+    // Agent-share visitor surface: the owner-scoped query below resolves rows in
+    // the CALLER's scope, so it would come back empty for a visitor (share rows
+    // belong to the creator). Route through the share-authorized read instead.
+    // A share context without a topic is the visitor's new-topic bucket —
+    // nothing to fetch.
+    if (params.agentShareId) {
+      if (!params.topicId) return [];
+
+      const shared = await lambdaClient.shareChat.getMessages.query({
+        shareId: params.agentShareId,
+        topicId: params.topicId,
+      });
+
+      return shared as unknown as UIChatMessage[];
+    }
+
+    // Opt into `file` (and any future gated) work summaries in the message
+    // payload. This client ships the descriptor fallback; clients that predate
+    // the `file` type run the old service without the flag and stay on the
+    // legacy set. See resolveAllowedWorkTypes.
+    const data = await lambdaClient.message.getMessages.query({
+      ...params,
+      includeFileWorks: true,
+    });
 
     return data as unknown as UIChatMessage[];
   };
 
+  diagnoseTopic = async (params: { agentId?: string | null; topicId: string }) => {
+    return lambdaClient.message.diagnoseTopic.query(params);
+  };
+
+  repairTopic = async (params: { agentId?: string | null; topicId: string }) => {
+    return lambdaClient.message.repairTopic.mutate(params);
+  };
+
   countMessages = async (params?: {
+    approximate?: boolean;
     endDate?: string;
     range?: [string, string];
     startDate?: string;
@@ -214,6 +317,7 @@ export class MessageService {
     id: string,
     value: {
       content?: string;
+      heterogeneousToolState?: HeterogeneousToolStateSnapshot;
       metadata?: Record<string, any>;
       pluginError?: any;
       pluginState?: Record<string, any>;
@@ -289,6 +393,7 @@ export class MessageService {
     content: string;
     groupId?: string | null;
     messageGroupId: string;
+    sourceGroupIds?: string[];
     threadId?: string | null;
     topicId: string;
   }): Promise<{ messages?: UIChatMessage[] }> => {

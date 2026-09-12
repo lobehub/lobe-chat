@@ -1,6 +1,12 @@
-import { normalizeListTasksParams, TaskIdentifier } from '@lobechat/builtin-tool-task';
+import type { ListWorkspaceMembersParams } from '@lobechat/builtin-tool-task';
+import {
+  normalizeListTasksParams,
+  normalizeListWorkspaceMembersParams,
+  selectAssignableMembers,
+  TaskIdentifier,
+} from '@lobechat/builtin-tool-task';
 import type { LobeChatDatabase } from '@lobechat/database';
-import type { TaskCreatedItem } from '@lobechat/prompts';
+import type { TaskAssignableMember, TaskCreatedItem } from '@lobechat/prompts';
 import {
   formatDependencyAdded,
   formatDependencyRemoved,
@@ -10,18 +16,24 @@ import {
   formatTaskEdited,
   formatTaskList,
   formatTasksCreated,
+  formatWorkspaceMembers,
   priorityLabel,
 } from '@lobechat/prompts';
 import type { TaskAutomationMode, TaskStatus } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 
+import { notifyTaskAssigned } from '@/business/server/task/notifyTaskAssigned';
 import { AgentModel } from '@/database/models/agent';
+import { MessengerAccountLinkModel } from '@/database/models/messengerAccountLink';
 import { TaskModel } from '@/database/models/task';
+import { UserModel } from '@/database/models/user';
 import { WorkspaceModel } from '@/database/models/workspace';
+import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import { tasks } from '@/database/schemas';
 import { appEnv } from '@/envs/app';
 import { taskRouter } from '@/server/routers/lambda/task';
 import { TaskService } from '@/server/services/task';
+import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { type ServerRuntimeRegistration } from './types';
 
@@ -48,6 +60,7 @@ export interface TaskRuntimeDeps {
   // Assistant message that carried the createTask tool call — the tool-call
   // anchor, NOT the source user message. Recorded as `context.origin.messageId`.
   assistantMessageId?: string;
+  db?: LobeChatDatabase;
   // Pointers to the conversation that invoked the createTask tool. Recorded into
   // `tasks.context.origin` so the task's handoff result can later be delivered
   // back to this session. All optional — a task can be created
@@ -58,17 +71,33 @@ export interface TaskRuntimeDeps {
   // resolved workspaceId); when absent (unit tests) links fall back to the bare
   // app origin.
   resolveLinkBaseUrl?: () => Promise<string>;
+  // Root runtime operation used to aggregate Works produced during one run.
+  rootOperationId?: string;
   scope?: string | null;
   taskCaller: ReturnType<typeof taskRouter.createCaller>;
   taskId?: string;
   taskModel: TaskModel;
   taskService: TaskService;
+  threadId?: string | null;
   toolCallId?: string;
-  topicId?: string;
+  // Source tool result message id, when the runtime already has one.
+  toolMessageId?: string;
+  topicId?: string | null;
+  userId?: string;
+  workspaceId?: string;
 }
 
 export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
-  const { agentId, assistantMessageId, operationId, scope, taskId, toolCallId, topicId } = deps;
+  const {
+    agentId,
+    assistantMessageId,
+    operationId,
+    rootOperationId,
+    scope,
+    taskId,
+    toolCallId,
+    topicId,
+  } = deps;
   // Models are read through `deps` (not destructured) so callers can swap them
   // in lazily — e.g. after async workspace resolution in the runtime factory.
   const agentModel = () => deps.agentModel;
@@ -96,9 +125,63 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
     } as const;
   };
 
+  // Human-readable label for a member assignee in tool output: "Alice (usr_1)".
+  // Falls back to the bare id when no db is wired (unit tests) or lookup fails.
+  const resolveMemberLabel = async (assigneeUserId: string): Promise<string> => {
+    if (!deps.db) return assigneeUserId;
+    try {
+      const [user] = await UserModel.getDisplayInfoByIds(deps.db, [assigneeUserId]);
+      const name = user?.fullName?.trim() || user?.username?.trim();
+      return name ? `${name} (${assigneeUserId})` : assigneeUserId;
+    } catch {
+      return assigneeUserId;
+    }
+  };
+
+  // Assignment ping (Linear-style), mirroring `task.create` in the router: the
+  // runtime calls TaskService directly (to persist `context.origin`), so the
+  // router's notify hook never fires for tool-created tasks. Delivered after
+  // the response as best-effort work — the `@/business` slot defaults to a
+  // no-op, and a rejecting implementation must not become an unhandled
+  // rejection. Silent for self-assignment; the assignee lock already
+  // guarantees the member can open the task (private tasks cannot be assigned
+  // to anyone but their creator).
+  const notifyMemberAssigned = (task: {
+    assigneeUserId: string | null;
+    id: string;
+    identifier: string;
+    name: string | null;
+  }) => {
+    const { assigneeUserId } = task;
+    if (!assigneeUserId || !deps.userId || assigneeUserId === deps.userId) return;
+    const params = {
+      actorUserId: deps.userId,
+      assigneeUserId,
+      taskId: task.id,
+      taskIdentifier: task.identifier,
+      taskName: task.name,
+      workspaceId: deps.workspaceId,
+    };
+    after(async () => {
+      try {
+        await notifyTaskAssigned(params);
+      } catch (error) {
+        console.error('[task-runtime] Failed to send assignment notification', error);
+      }
+    });
+  };
+
   type CreateTaskArgs = {
     instruction: string;
     assigneeAgentId?: string;
+    assigneeUserId?: string;
+    // Bind a goal entity to the created task (see TaskService.createTask).
+    goal?: {
+      maxRounds?: number | null;
+      maxTotalCost?: number | null;
+      requirement?: string | null;
+      title?: string;
+    };
     name: string;
     parentIdentifier?: string;
     priority?: number;
@@ -107,7 +190,7 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
 
   const createTaskImpl = async (
     args: CreateTaskArgs,
-  ): Promise<{ content: string; identifier?: string; success: boolean }> => {
+  ): Promise<{ content: string; identifier?: string; success: boolean; taskId?: string }> => {
     let parentLabel: string | undefined;
 
     // Pre-resolve parent identifier so we can surface a tool-friendly error
@@ -128,13 +211,24 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
     // bridge the handoff result back to the creator conversation.
     // Only persist the pocket when we actually have a creator agent + topic;
     // tasks created outside an agent turn (e.g. via API) have no origin.
+    const originOperationId = rootOperationId ?? operationId;
     const origin =
       agentId && topicId
-        ? { agentId, messageId: assistantMessageId, operationId, toolCallId, topicId }
+        ? {
+            agentId,
+            messageId: assistantMessageId,
+            operationId: originOperationId,
+            toolCallId,
+            topicId,
+          }
         : undefined;
 
+    // Executing agent and human owner are independent, coexisting sides (the
+    // member owns the outcome, the agent executes) — a member owner does not
+    // suppress the usual current-agent default.
     const task = await taskService().createTask({
       assigneeAgentId: args.assigneeAgentId ?? (scope === 'task' ? undefined : agentId),
+      assigneeUserId: args.assigneeUserId,
       context: origin ? { origin } : undefined,
       createdByAgentId: agentId,
       instruction: args.instruction,
@@ -144,8 +238,13 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       sortOrder: args.sortOrder,
     });
 
+    notifyMemberAssigned(task);
+
     return {
       content: formatTaskCreated({
+        assigneeLabel: task.assigneeUserId
+          ? await resolveMemberLabel(task.assigneeUserId)
+          : undefined,
         // Absolute, workspace-scoped link: this content can be pushed to IM /
         // bot channels and mobile, where a relative path has no app origin to
         // resolve against and the `/{slug}` prefix would otherwise be lost.
@@ -159,6 +258,7 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }),
       identifier: task.identifier,
       success: true,
+      taskId: task.id,
     };
   };
 
@@ -191,12 +291,16 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
     },
 
     createTask: async (args: CreateTaskArgs) => {
-      const { identifier, ...rest } = await createTaskImpl(args);
+      const result = await createTaskImpl(args);
+      const { identifier, taskId: createdTaskId, ...rest } = result;
       // Surface the created task identifier as plugin state (mirrors the client
       // executor's `{ identifier, success }`) so the inline render can link to
-      // the task detail. Without this the tool message persists no state and the
-      // card has nothing to open.
-      return identifier ? { ...rest, state: { identifier, success: rest.success } } : rest;
+      // the task detail, AND so the dispatch-layer Work registration can read the
+      // created task identity from `result.state`. Without this the tool message
+      // persists no state and the card has nothing to open.
+      return identifier
+        ? { ...rest, state: { identifier, success: rest.success, taskId: createdTaskId } }
+        : rest;
     },
 
     createTasks: async (args: { tasks: CreateTaskArgs[] }) => {
@@ -222,12 +326,17 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
         }
       }
 
-      const failed = results.filter((r) => !r.success).length;
+      const succeeded = results.filter((r) => r.success).length;
+      const failed = results.length - succeeded;
 
       return {
         // Absolute, workspace-scoped links so the summary stays clickable when
         // pushed to IM / mobile.
         content: formatTasksCreated(results, await taskLinkBaseUrl()),
+        // State parity with the client executor (`{ failed, results, succeeded }`)
+        // so the dispatch-layer Work registration can read per-item identity +
+        // success from `result.state.results` for partial-failure batches.
+        state: { failed, results, succeeded },
         success: failed === 0,
       };
     },
@@ -240,6 +349,10 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
 
       return {
         content: formatTaskDeleted(task.identifier, task.name),
+        // Surface the deleted task's internal id so the dispatch-layer Work
+        // deletion (`work: { action: 'delete' }`) can locate the Work by
+        // `works.resourceId = taskId` after the task row is gone.
+        state: { identifier: task.identifier, success: true, taskId: task.id },
         success: true,
       };
     },
@@ -261,6 +374,7 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
     editTask: async (args: {
       addDependencies?: string[];
       assigneeAgentId?: string | null;
+      assigneeUserId?: string | null;
       description?: string;
       identifier: string;
       instruction?: string;
@@ -274,6 +388,7 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
 
       const updateData: {
         assigneeAgentId?: string | null;
+        assigneeUserId?: string | null;
         description?: string;
         instruction?: string;
         name?: string;
@@ -296,6 +411,16 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
           args.assigneeAgentId ? `assignee agent → ${args.assigneeAgentId}` : 'assignee cleared',
         );
       }
+      // Independent of the agent side: the member is the human owner and the
+      // two assignees coexist, so touching one never clears the other.
+      if (args.assigneeUserId !== undefined) {
+        updateData.assigneeUserId = args.assigneeUserId;
+        changes.push(
+          args.assigneeUserId
+            ? `assignee member → ${await resolveMemberLabel(args.assigneeUserId)}`
+            : 'assignee member cleared',
+        );
+      }
       if (args.instruction !== undefined) {
         updateData.instruction = args.instruction;
         changes.push(`instruction updated`);
@@ -315,6 +440,8 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }
 
       if (Object.keys(updateData).length > 0) {
+        // Attribution rides the caller's context, not this payload — see
+        // `AuthContext.actingAgentId`.
         ops.push(taskCaller().update({ id: task.id, ...updateData }));
       }
 
@@ -358,6 +485,10 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
         );
       }
 
+      if (ops.length === 0 && depResults.length === 0) {
+        return { content: 'No fields provided; nothing to update.', success: false };
+      }
+
       const [, depErrors] = await Promise.all([Promise.all(ops), Promise.all(depResults)]);
       const firstDepError = depErrors.find((e) => e);
       if (firstDepError) return { content: firstDepError, success: false };
@@ -392,6 +523,81 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
           content: `Failed to list tasks: ${message}`,
           success: false,
         };
+      }
+    },
+
+    listWorkspaceMembers: async (args: ListWorkspaceMembersParams = {}) => {
+      const db = deps.db;
+      const userId = deps.userId;
+      if (!db || !userId) {
+        return { content: 'Member directory is unavailable in this context.', success: false };
+      }
+
+      try {
+        const workspaceId = deps.workspaceId;
+        const { limit, query } = normalizeListWorkspaceMembersParams(args);
+        // Workspace mode: `query` and `limit` run in SQL, so a large workspace
+        // costs one page plus a count. Personal mode: the caller is the only
+        // human a task can be assigned to (TaskService.assertAssigneeUserAssignable
+        // enforces the same rule), and the same query contract applies.
+        const page = workspaceId
+          ? await new WorkspaceMemberModel(db, userId).searchAssignableMembers(workspaceId, {
+              limit,
+              query,
+            })
+          : (() => {
+              const self = selectAssignableMembers([{ id: userId, isSelf: true }], args);
+              return {
+                rows: self.members.map((m) => ({ role: null, userId: m.id })),
+                total: self.total,
+              };
+            })();
+        const memberRows = page.rows;
+        const total = page.total;
+
+        const memberIds = memberRows.map((m) => m.userId);
+        // Linked IM identities (Discord/Slack/Telegram…) make handle-based
+        // requests ("assign this to @Neko") resolvable by exact platform id
+        // instead of name similarity. Scoped to this workspace: identities a
+        // member linked elsewhere are not exposed to coworkers here.
+        const [profiles, emails, imLinks] = await Promise.all([
+          UserModel.getDisplayInfoByIds(db, memberIds),
+          UserModel.getEmailsByIds(db, memberIds),
+          MessengerAccountLinkModel.findByUserIds(db, memberIds, {
+            workspaceId: workspaceId ?? null,
+          }),
+        ]);
+        const profileMap = new Map(profiles.map((u) => [u.id, u]));
+        const emailMap = new Map(emails.map((u) => [u.id, u.email]));
+        const imMap = new Map<string, string[]>();
+        for (const link of imLinks) {
+          const alias = link.platformUsername
+            ? `${link.platform}:@${link.platformUsername}(${link.platformUserId})`
+            : `${link.platform}:${link.platformUserId}`;
+          imMap.set(link.userId, [...(imMap.get(link.userId) ?? []), alias]);
+        }
+
+        const members: TaskAssignableMember[] = memberRows.map((m) => {
+          const profile = profileMap.get(m.userId);
+          return {
+            email: emailMap.get(m.userId),
+            id: m.userId,
+            imAccounts: imMap.get(m.userId),
+            isSelf: m.userId === userId,
+            name: profile?.fullName,
+            role: m.role,
+            username: profile?.username,
+          };
+        });
+
+        return {
+          content: formatWorkspaceMembers(members, { inWorkspace: !!workspaceId, query, total }),
+          state: { count: members.length, query, success: true, total },
+          success: true,
+        };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to list members';
+        return { content: `Failed to list workspace members: ${message}`, success: false };
       }
     },
 
@@ -647,6 +853,26 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }
 
       try {
+        // Completing the task that owns the current operation is a delivery
+        // request, not an external cancellation. TaskService.updateStatus
+        // interrupts every still-running topic when a task leaves `running`;
+        // calling it here would therefore make the agent cancel itself and
+        // leave an `interrupted` operation / `canceled` topic. Persist the
+        // intent instead and let onTopicComplete finalize it after the runtime
+        // has reached `done`.
+        if (args.status === 'completed' && operationId && taskId) {
+          const target = await taskModel().resolve(id);
+          if (target?.id === taskId) {
+            await taskModel().updateContext(target.id, {
+              completion: { requestedByOperationId: operationId },
+            });
+            return {
+              content: `Task ${target.identifier} completion requested. It will be finalized when the current run finishes.`,
+              success: true,
+            };
+          }
+        }
+
         const result = await taskCaller().updateStatus({
           error: args.error,
           id,
@@ -698,8 +924,16 @@ export const taskRuntime: ServerRuntimeRegistration = {
 
     const db = context.serverDB;
     const userId = context.userId;
-    const { agentId, assistantMessageId, operationId, taskId, toolCallId, topicId, scope } =
-      context;
+    const {
+      agentId,
+      assistantMessageId,
+      operationId,
+      taskId,
+      threadId,
+      toolCallId,
+      topicId,
+      scope,
+    } = context;
 
     // Workspace slug for deep-links: resolved once (memoized) from the workspace
     // owning the created task (`workspaceId` is set by `ensureModels` below),
@@ -725,17 +959,26 @@ export const taskRuntime: ServerRuntimeRegistration = {
       agentId,
       assistantMessageId,
       operationId,
+      rootOperationId: context.rootOperationId ?? operationId,
       resolveLinkBaseUrl,
       scope,
       taskId,
+      threadId,
       toolCallId,
+      toolMessageId: context.toolMessageId,
       topicId,
+      db,
+      userId,
+      workspaceId,
       // Initial personal-mode models cover the no-task-context case. Replaced
       // before the first call when `taskId` is set.
       agentModel: new AgentModel(db, userId),
       taskModel: new TaskModel(db, userId),
       taskService: new TaskService(db, userId),
-      taskCaller: taskRouter.createCaller({ userId }),
+      // `actingAgentId` names the agent for durable attribution (task
+      // reassignment activity). Server-side only by contract — it must never
+      // reach the router through a client-supplied field.
+      taskCaller: taskRouter.createCaller({ actingAgentId: agentId, userId }),
     } as TaskRuntimeDeps;
 
     let resolved = false;
@@ -747,10 +990,18 @@ export const taskRuntime: ServerRuntimeRegistration = {
       // and still construct `ToolExecutionContext` without `workspaceId`.
       const wsId = context.workspaceId ?? (await resolveWorkspaceId(db, taskId));
       workspaceId = wsId;
+      deps.workspaceId = wsId;
       deps.agentModel = new AgentModel(db, userId, wsId);
       deps.taskModel = new TaskModel(db, userId, wsId);
       deps.taskService = new TaskService(db, userId, wsId);
-      deps.taskCaller = taskRouter.createCaller({ userId, workspaceId: wsId });
+      // MUST keep `actingAgentId`: this replaces the caller built above, and
+      // every exported method awaits `ensureModels()` first — dropping it here
+      // silently attributes every agent-driven task edit to the session user.
+      deps.taskCaller = taskRouter.createCaller({
+        actingAgentId: agentId,
+        userId,
+        workspaceId: wsId,
+      });
     };
 
     const baseRuntime = createTaskRuntime(deps);

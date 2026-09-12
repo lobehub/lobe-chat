@@ -1,22 +1,30 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import { type LobeChatDatabase } from '@lobechat/database';
+import type { LobeChatDatabase } from '@lobechat/database';
+import { idGenerator } from '@lobechat/database';
 import { evaluate } from '@lobechat/eval-rubric';
 import type {
   EvalBenchmarkRubric,
+  EvalCaseEnvironment,
   EvalRunAgentSnapshot,
   EvalRunConfig,
   EvalRunInputConfig,
   EvalRunMetrics,
   EvalRunTopicResult,
+  EvalTestCaseMetadata,
   EvalThreadResult,
+  ImportedMessage,
   RubricType,
+  ToolIntervention,
 } from '@lobechat/types';
 import { getActivePluginIds, RequestTrigger } from '@lobechat/types';
+import { clampToolIdentifier } from '@lobechat/utils/clampToolIdentifier';
 import debug from 'debug';
+import { eq, inArray, sql } from 'drizzle-orm';
 
 import {
   AgentEvalBenchmarkModel,
   AgentEvalDatasetModel,
+  AgentEvalExperimentModel,
   AgentEvalRunModel,
   AgentEvalRunTopicModel,
   AgentEvalTestCaseModel,
@@ -24,8 +32,10 @@ import {
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
+import { agentEvalRunTopics, messagePlugins, messages, topics } from '@/database/schemas';
 import { AgentService } from '@/server/services/agent';
 import { AgentRuntimeService } from '@/server/services/agentRuntime/AgentRuntimeService';
+import type { EvalRuntimeContext } from '@/server/services/agentRuntime/types';
 import { AiAgentService } from '@/server/services/aiAgent';
 import {
   AgentEvalRunWorkflow,
@@ -33,11 +43,50 @@ import {
   type ResumeThreadTrajectoryPayload,
 } from '@/server/workflows/agentEvalRun';
 
+import { evaluateAndFinalizeRun } from './aggregate';
+
 /** Round cost to at most 6 decimal places to avoid floating-point noise */
 const roundCost = (v: number): number => Math.round(v * 1e6) / 1e6;
-const EVAL_AGENT_RUNTIME_QSTASH_RETRIES = 10;
+const EVAL_AGENT_RUNTIME_QSTASH_RETRIES = 5;
 const EVAL_AGENT_RUNTIME_QSTASH_RETRY_DELAY = '10000 * (1 + retried)';
+const EVAL_HISTORY_MESSAGE_BATCH_SIZE = 500;
+const EVAL_HISTORY_TAIL_METADATA_KEY = 'evalHistoryTailMessageId';
 const RESUMABLE_THREAD_STATUSES = new Set(['error', 'timeout']);
+
+const getEvalContextParams = (
+  envPrompt?: string,
+  environment?: EvalCaseEnvironment,
+  caseId?: string,
+) => {
+  const mergedEnvPrompt =
+    [envPrompt, environment?.envPrompt].filter(Boolean).join('\n\n') || undefined;
+  const evalRuntime: EvalRuntimeContext | undefined =
+    caseId || environment?.toolForwarding
+      ? { ...(caseId && { caseId }), toolForwarding: environment?.toolForwarding }
+      : undefined;
+
+  return {
+    ...(mergedEnvPrompt && { evalContext: { envPrompt: mergedEnvPrompt } }),
+    ...(evalRuntime && { evalRuntime }),
+  };
+};
+
+const getCaseId = (metadata?: EvalTestCaseMetadata | null) => metadata?.caseId;
+
+/** Thrown when a caller-supplied run id exists with non-equivalent create params. */
+export const RUN_CREATE_ID_CONFLICT = 'Run id already exists with different create parameters';
+
+/** Stable JSON stringify: sorts object keys recursively, drops undefined. */
+const stableStringify = (value: unknown): string => {
+  if (value === undefined) return '';
+  if (value === null || typeof value !== 'object') return JSON.stringify(value) ?? '';
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
+  const entries = Object.entries(value as Record<string, unknown>)
+    .filter(([, v]) => v !== undefined)
+    .sort(([a], [b]) => (a < b ? -1 : 1))
+    .map(([k, v]) => `${JSON.stringify(k)}:${stableStringify(v)}`);
+  return `{${entries.join(',')}}`;
+};
 
 const log = debug('lobe-server:eval-run-service');
 
@@ -79,6 +128,7 @@ export class AgentEvalRunService {
   private readonly runModel: AgentEvalRunModel;
   private readonly benchmarkModel: AgentEvalBenchmarkModel;
   private readonly datasetModel: AgentEvalDatasetModel;
+  private readonly experimentModel: AgentEvalExperimentModel;
   private readonly runTopicModel: AgentEvalRunTopicModel;
   private readonly testCaseModel: AgentEvalTestCaseModel;
   private readonly messageModel: MessageModel;
@@ -95,6 +145,7 @@ export class AgentEvalRunService {
     this.runModel = new AgentEvalRunModel(db, userId, workspaceId);
     this.benchmarkModel = new AgentEvalBenchmarkModel(db, userId, workspaceId);
     this.datasetModel = new AgentEvalDatasetModel(db, userId, workspaceId);
+    this.experimentModel = new AgentEvalExperimentModel(db, userId, workspaceId);
     this.runTopicModel = new AgentEvalRunTopicModel(db, userId, workspaceId);
     this.testCaseModel = new AgentEvalTestCaseModel(db, userId, workspaceId);
     this.messageModel = new MessageModel(db, userId, workspaceId);
@@ -106,40 +157,322 @@ export class AgentEvalRunService {
   async createRun(params: {
     config?: EvalRunInputConfig;
     datasetId: string;
+    experimentId?: string;
+    /**
+     * Caller-supplied run id for idempotent cross-server creation. When a run
+     * with this id already exists: equivalent immutable create params → the
+     * existing run is returned; otherwise a conflict error is thrown.
+     */
+    id?: string;
+    /**
+     * 'internal' (default): pre-create Topics/RunTopics for every test case and
+     * leave the run `idle` until `startRun` triggers the QStash workflow.
+     * 'external': create no Topics/RunTopics and set the run `pending` so an
+     * external worker can claim it; no workflow is triggered.
+     */
+    mode?: 'external' | 'internal';
     name?: string;
+    parentRunId?: string;
     targetAgentId?: string;
   }) {
-    const agentSnapshot = params.targetAgentId
-      ? await this.snapshotAgentConfig(params.targetAgentId)
-      : undefined;
+    let { datasetId, targetAgentId } = params;
+    let inputConfig = params.config;
+    const isExternal = params.mode === 'external';
 
-    const config = { ...params.config, agentSnapshot };
+    // Fork: inherit target agent / dataset / config from the parent run.
+    // These are immutable on a fork — reject any override attempt.
+    if (params.parentRunId) {
+      const parent = await this.runModel.findById(params.parentRunId);
+      if (!parent) throw new Error('Parent run not found');
 
-    const run = await this.runModel.create({ ...params, config });
+      if (
+        (params.targetAgentId && params.targetAgentId !== parent.targetAgentId) ||
+        (params.config && Object.keys(params.config).length > 0) ||
+        (params.datasetId && params.datasetId !== parent.datasetId)
+      ) {
+        throw new Error('Cannot override target agent, config, or dataset when forking a run');
+      }
+
+      targetAgentId = parent.targetAgentId ?? undefined;
+      datasetId = parent.datasetId;
+      inputConfig = (parent.config as EvalRunInputConfig | undefined) ?? undefined;
+    }
+
+    // External execution is driven case-by-case through `runExecuteCase`, which
+    // only supports single-thread (k=1) runs today. Check after fork resolution
+    // so inherited configs are covered too.
+    if (isExternal && ((inputConfig as { k?: number } | undefined)?.k ?? 1) > 1) {
+      throw new Error('External runs only support k=1 (pass@k is not supported yet)');
+    }
+
+    // Validate the experiment scope (and bump its recency once the run exists).
+    if (params.experimentId) {
+      const experiment = await this.experimentModel.findById(params.experimentId);
+      if (!experiment) throw new Error('Experiment not found');
+    }
+
+    // Re-snapshot the current agent config (forks capture the *current* state).
+    const agentSnapshot = targetAgentId ? await this.snapshotAgentConfig(targetAgentId) : undefined;
+
+    // Persist the execution mode as an immutable snapshot: a run's mode cannot
+    // be inferred from status once the run reaches a terminal state, and the
+    // idempotency check below must compare it.
+    const executionMode = isExternal ? ('external' as const) : ('internal' as const);
+    const config = { ...inputConfig, agentSnapshot, executionMode };
+
+    // Idempotent create: a caller-supplied id that already exists returns the
+    // existing run when the immutable create params are equivalent (datasetId /
+    // experimentId / parentRunId / targetAgentId / executionMode / input config
+    // — the agent snapshot is excluded since it is re-captured server-side on
+    // every create).
+    const matchesExisting = (existing: {
+      config?: unknown;
+      datasetId: string;
+      experimentId?: string | null;
+      parentRunId?: string | null;
+      targetAgentId?: string | null;
+    }) => {
+      const {
+        agentSnapshot: _existingSnapshot,
+        executionMode: existingMode,
+        ...existingConfig
+      } = (existing.config ?? {}) as Record<string, unknown>;
+      return (
+        existing.datasetId === datasetId &&
+        (existing.experimentId ?? null) === (params.experimentId ?? null) &&
+        (existing.parentRunId ?? null) === (params.parentRunId ?? null) &&
+        (existing.targetAgentId ?? null) === (targetAgentId ?? null) &&
+        existingMode === executionMode &&
+        stableStringify(existingConfig) === stableStringify(inputConfig ?? {})
+      );
+    };
+
+    if (params.id) {
+      const existing = await this.runModel.findById(params.id);
+      if (existing) {
+        if (!matchesExisting(existing)) throw new Error(RUN_CREATE_ID_CONFLICT);
+        return existing;
+      }
+    }
+
+    const { mode: _mode, ...restParams } = params;
+    let run;
+    try {
+      run = await this.runModel.create({
+        ...restParams,
+        datasetId,
+        targetAgentId,
+        config,
+        // External runs start claimable; internal runs wait for `startRun`.
+        status: isExternal ? 'pending' : 'idle',
+      });
+    } catch (error) {
+      // Race-safe idempotency: a concurrent create with the same caller id won
+      // — return the winner when params are equivalent, else conflict.
+      const databaseError = error as { code?: string; cause?: { code?: string } };
+      if (params.id && (databaseError?.code ?? databaseError?.cause?.code) === '23505') {
+        const existing = await this.runModel.findById(params.id);
+        if (existing) {
+          if (!matchesExisting(existing)) throw new Error(RUN_CREATE_ID_CONFLICT, { cause: error });
+          return existing;
+        }
+        throw new Error(RUN_CREATE_ID_CONFLICT, { cause: error });
+      }
+      throw error;
+    }
+
+    if (params.experimentId) {
+      await this.experimentModel.touch(params.experimentId);
+    }
+
+    // External runs create Topics/RunTopics on demand (per executed case).
+    if (isExternal) return run;
 
     // Pre-create Topics and RunTopics for all test cases (status='pending')
-    const testCases = await this.testCaseModel.findByDatasetId(params.datasetId);
+    const testCases = await this.testCaseModel.findByDatasetId(datasetId);
 
     if (testCases.length > 0) {
-      const createdTopics = await this.topicModel.batchCreate(
-        testCases.map((tc) => ({
-          agentId: params.targetAgentId ?? undefined,
-          title: `[Eval Case #${(tc.sortOrder ?? 0) + 1}] ${tc.content?.input?.slice(0, 50) || 'Test Case'}...`,
-          trigger: RequestTrigger.Eval,
-        })),
-      );
-
-      await this.runTopicModel.batchCreate(
-        createdTopics.map((topic, index) => ({
-          runId: run.id,
-          status: 'pending' as const,
-          testCaseId: testCases[index].id,
-          topicId: topic.id,
-        })),
-      );
+      await this.createRunTopics(run.id, targetAgentId, testCases);
     }
 
     return run;
+  }
+
+  private createRunTopics(
+    runId: string,
+    targetAgentId: string | null | undefined,
+    testCases: Array<{
+      content: { input: string; messages?: ImportedMessage[] };
+      id: string;
+      sortOrder: number | null;
+    }>,
+  ) {
+    return this.db.transaction(async (tx) => {
+      const preparedCases = testCases.map((testCase) => ({
+        testCase,
+        topicId: idGenerator('topics'),
+      }));
+
+      await tx.insert(topics).values(
+        preparedCases.map(({ testCase, topicId }) => ({
+          agentId: targetAgentId ?? null,
+          id: topicId,
+          title: `[${(testCase.sortOrder ?? 0) + 1}] ${testCase.content.input.slice(0, 50) || 'Topic'}...`,
+          trigger: 'eval' as const,
+          userId: this.userId,
+          workspaceId: this.workspaceId ?? null,
+        })),
+      );
+
+      for (const { testCase, topicId } of preparedCases) {
+        const history = testCase.content.messages?.filter((message) => message.role !== 'system');
+        if (!history?.length) continue;
+
+        const idMapping = new Map<string, string>();
+        const hasParentInfo = history.some((message) => message.parentId != null);
+        const now = Date.now();
+        let previousCreatedAt = Number.NEGATIVE_INFINITY;
+        const preparedMessages = history.map((message, index) => {
+          const id = idGenerator('messages');
+          if (message.id) idMapping.set(message.id, id);
+
+          const timestamp =
+            message.createdAt === undefined
+              ? now + index
+              : typeof message.createdAt === 'number'
+                ? message.createdAt
+                : Date.parse(message.createdAt);
+          const createdAt = Math.max(
+            Number.isNaN(timestamp) ? now + index : timestamp,
+            previousCreatedAt + 1,
+          );
+          previousCreatedAt = createdAt;
+
+          const updatedTimestamp =
+            message.updatedAt === undefined
+              ? createdAt
+              : typeof message.updatedAt === 'number'
+                ? message.updatedAt
+                : Date.parse(message.updatedAt);
+
+          return {
+            createdAt,
+            id,
+            message,
+            updatedAt: Math.max(
+              Number.isNaN(updatedTimestamp) ? createdAt : updatedTimestamp,
+              createdAt,
+            ),
+          };
+        });
+
+        const messageRows = preparedMessages.map(
+          ({ createdAt, id, message, updatedAt }, index) => ({
+            agentId: null,
+            content: message.content,
+            createdAt: new Date(createdAt),
+            error: message.error ?? null,
+            id,
+            metadata: message.metadata ?? null,
+            model: message.model ?? null,
+            parentId: null,
+            provider: message.provider ?? null,
+            reasoning: message.reasoning ?? null,
+            role: message.role,
+            search: message.search ?? null,
+            tools: message.tools ?? null,
+            topicId,
+            traceId: message.traceId ?? null,
+            updatedAt: new Date(updatedAt),
+            userId: this.userId,
+            workspaceId: this.workspaceId ?? null,
+          }),
+        );
+        const pluginRows = preparedMessages.flatMap(({ id, message }) => {
+          if (
+            !message.plugin &&
+            !message.pluginError &&
+            !message.pluginIntervention &&
+            !message.pluginState &&
+            !message.tool_call_id
+          ) {
+            return [];
+          }
+
+          return [
+            {
+              apiName: clampToolIdentifier(message.plugin?.apiName) ?? null,
+              arguments: message.plugin?.arguments ?? null,
+              error: message.pluginError ?? null,
+              id,
+              identifier: clampToolIdentifier(message.plugin?.identifier) ?? null,
+              intervention: message.pluginIntervention as ToolIntervention | undefined,
+              state: message.pluginState ?? null,
+              toolCallId: message.tool_call_id ?? null,
+              type: message.plugin?.type ?? null,
+              userId: this.userId,
+              workspaceId: this.workspaceId ?? null,
+            },
+          ];
+        });
+
+        for (let index = 0; index < messageRows.length; index += EVAL_HISTORY_MESSAGE_BATCH_SIZE) {
+          await tx
+            .insert(messages)
+            .values(messageRows.slice(index, index + EVAL_HISTORY_MESSAGE_BATCH_SIZE));
+        }
+        const parentLinks = preparedMessages
+          .map(({ id, message }, index) => ({
+            id,
+            parentId: hasParentInfo
+              ? message.parentId
+                ? (idMapping.get(message.parentId) ?? null)
+                : null
+              : (preparedMessages[index - 1]?.id ?? null),
+          }))
+          .filter((link): link is { id: string; parentId: string } => link.parentId !== null);
+        for (let index = 0; index < parentLinks.length; index += EVAL_HISTORY_MESSAGE_BATCH_SIZE) {
+          const chunk = parentLinks.slice(index, index + EVAL_HISTORY_MESSAGE_BATCH_SIZE);
+          await tx
+            .update(messages)
+            .set({
+              parentId: sql`case ${messages.id} ${sql.join(
+                chunk.map(({ id, parentId }) => sql`when ${id} then ${parentId}`),
+                sql` `,
+              )} end`,
+            })
+            .where(
+              inArray(
+                messages.id,
+                chunk.map(({ id }) => id),
+              ),
+            );
+        }
+        for (let index = 0; index < pluginRows.length; index += EVAL_HISTORY_MESSAGE_BATCH_SIZE) {
+          await tx
+            .insert(messagePlugins)
+            .values(pluginRows.slice(index, index + EVAL_HISTORY_MESSAGE_BATCH_SIZE));
+        }
+
+        await tx
+          .update(topics)
+          .set({ metadata: { [EVAL_HISTORY_TAIL_METADATA_KEY]: preparedMessages.at(-1)!.id } })
+          .where(eq(topics.id, topicId));
+      }
+
+      await tx.insert(agentEvalRunTopics).values(
+        preparedCases.map(({ testCase, topicId }) => ({
+          runId,
+          status: 'pending' as const,
+          testCaseId: testCase.id,
+          topicId,
+          userId: this.userId,
+          workspaceId: this.workspaceId ?? null,
+        })),
+      );
+
+      return preparedCases.map(({ topicId }) => topicId);
+    });
   }
 
   async deleteRun(id: string) {
@@ -195,35 +528,19 @@ export class AgentEvalRunService {
 
     // Collect test case IDs and info for recreation
     const errorTestCases = errorTopics.map((t) => ({
+      content: t.testCase?.content ?? { input: '' },
       id: t.testCaseId,
-      input: t.testCase?.content?.input,
-      sortOrder: t.testCase?.sortOrder,
+      sortOrder: t.testCase?.sortOrder ?? null,
     }));
 
-    // 1. Delete error/timeout RunTopics
+    // 1. Delete error/terminal RunTopics (the filter above excludes active
+    // running/pending cases, so only terminal rows are ever removed).
     await this.runTopicModel.deleteErrorRunTopics(runId);
 
-    // 2. Delete orphan Topics (old conversations)
-    const topicIds = errorTopics.map((t) => t.topicId).filter(Boolean);
-    if (topicIds.length > 0) await this.topicModel.batchDelete(topicIds);
-
-    // 3. Create new Topics and pending RunTopics for the error test cases
-    const createdTopics = await this.topicModel.batchCreate(
-      errorTestCases.map((tc) => ({
-        agentId: run.targetAgentId ?? undefined,
-        title: `[Eval Case #${(tc.sortOrder ?? 0) + 1}] ${tc.input?.slice(0, 50) || 'Test Case'}...`,
-        trigger: RequestTrigger.Eval,
-      })),
-    );
-
-    await this.runTopicModel.batchCreate(
-      createdTopics.map((topic, index) => ({
-        runId,
-        status: 'pending' as const,
-        testCaseId: errorTestCases[index].id,
-        topicId: topic.id,
-      })),
-    );
+    // 2. Preserve old Topics (old conversations are kept for audit/history);
+    // only the RunTopic association is replaced.
+    // 3. Create fresh Topics, histories, and pending RunTopics together.
+    await this.createRunTopics(runId, run.targetAgentId, errorTestCases);
 
     // 4. Set run status to pending
     await this.runModel.update(runId, { status: 'pending' });
@@ -238,30 +555,21 @@ export class AgentEvalRunService {
     const runTopic = await this.runTopicModel.findByRunAndTestCase(runId, testCaseId);
     if (!runTopic) throw new Error('RunTopic not found');
 
-    // 1. Delete old RunTopic
-    await this.runTopicModel.deleteByRunAndTestCase(runId, testCaseId);
-
-    // 2. Delete old Topic
-    if (runTopic.topicId) {
-      await this.topicModel.batchDelete([runTopic.topicId]);
+    // Active associations must not be replaced — surface a conflict.
+    if (runTopic.status === 'running' || runTopic.status === 'pending') {
+      throw new Error(`Cannot retry: case is ${runTopic.status}`);
     }
 
-    // 3. Create new Topic
-    const [newTopic] = await this.topicModel.batchCreate([
-      {
-        agentId: run.targetAgentId ?? undefined,
-        title: `[Eval Case #${(runTopic.testCase?.sortOrder ?? 0) + 1}] ${runTopic.testCase?.content?.input?.slice(0, 50) || 'Test Case'}...`,
-        trigger: RequestTrigger.Eval,
-      },
-    ]);
+    // 1. Delete old RunTopic association
+    await this.runTopicModel.deleteByRunAndTestCase(runId, testCaseId);
 
-    // 4. Create new RunTopic with pending status
-    await this.runTopicModel.batchCreate([
+    // 2. Preserve the old Topic (conversation history); only re-link.
+    // 3. Create a fresh Topic, its history, and its RunTopic together.
+    await this.createRunTopics(runId, run.targetAgentId, [
       {
-        runId,
-        status: 'pending' as const,
-        testCaseId,
-        topicId: newTopic.id,
+        content: runTopic.testCase?.content ?? { input: '' },
+        id: testCaseId,
+        sortOrder: runTopic.testCase?.sortOrder ?? null,
       },
     ]);
 
@@ -391,7 +699,7 @@ export class AgentEvalRunService {
     }
 
     const target = await this.resolveTrajectoryResumeTarget(params);
-    const { envPrompt, parentMessageId, run, thread, topicId } = target;
+    const { caseId, envPrompt, environment, parentMessageId, run, thread, topicId } = target;
     log(
       'resumeTrajectory: resolved target — topicId=%s parentMessageId=%s threadId=%s',
       topicId,
@@ -403,6 +711,7 @@ export class AgentEvalRunService {
       log('resumeTrajectory: triggering resume-thread-trajectory');
       await AgentEvalRunWorkflow.triggerResumeThreadTrajectory({
         appContext: { threadId: thread.id, topicId },
+        caseId,
         envPrompt,
         maxSteps: run.config?.maxSteps,
         parentMessageId,
@@ -411,12 +720,14 @@ export class AgentEvalRunService {
         testCaseId: params.testCaseId,
         threadId: thread.id,
         topicId,
+        environment,
         userId: this.userId,
       });
     } else {
       log('resumeTrajectory: triggering resume-agent-trajectory');
       await AgentEvalRunWorkflow.triggerResumeAgentTrajectory({
         appContext: { topicId },
+        caseId,
         envPrompt,
         maxSteps: run.config?.maxSteps,
         parentMessageId,
@@ -424,6 +735,7 @@ export class AgentEvalRunService {
         targetAgentId: run.targetAgentId ?? undefined,
         testCaseId: params.testCaseId,
         topicId,
+        environment,
         userId: this.userId,
       });
     }
@@ -495,6 +807,7 @@ export class AgentEvalRunService {
       targetAgentId,
       testCaseId,
       topicId,
+      environment,
     } = params;
 
     const resumeCheck = await this.canResumeTrajectory({ runId, testCaseId });
@@ -578,7 +891,7 @@ export class AgentEvalRunService {
             },
           },
         ],
-        ...(envPrompt && { evalContext: { envPrompt } }),
+        ...getEvalContextParams(envPrompt, environment, params.caseId),
         initialStepCount: prevSteps,
         maxSteps,
         parentMessageId,
@@ -626,6 +939,7 @@ export class AgentEvalRunService {
   async executeResumedThreadTrajectory(params: ResumeThreadTrajectoryPayload) {
     const {
       appContext,
+      caseId,
       envPrompt,
       maxSteps,
       parentMessageId,
@@ -633,6 +947,7 @@ export class AgentEvalRunService {
       targetAgentId,
       testCaseId,
       threadId,
+      environment,
       topicId,
     } = params;
 
@@ -723,7 +1038,7 @@ export class AgentEvalRunService {
             },
           },
         ],
-        ...(envPrompt && { evalContext: { envPrompt } }),
+        ...getEvalContextParams(envPrompt, environment, caseId),
         initialStepCount: prevSteps,
         maxSteps,
         parentMessageId,
@@ -782,7 +1097,7 @@ export class AgentEvalRunService {
       throw new Error(loaded.error);
     }
 
-    const { envPrompt, run } = loaded;
+    const { envPrompt, environment, run, testCase } = loaded;
     const runTopic = await this.runTopicModel.findByRunAndTestCase(params.runId, params.testCaseId);
     if (!runTopic?.topicId) throw new Error('RunTopic topicId is required');
 
@@ -825,11 +1140,13 @@ export class AgentEvalRunService {
       appContext: thread
         ? { threadId: thread.id, topicId: runTopic.topicId }
         : { topicId: runTopic.topicId },
+      caseId: getCaseId(testCase.metadata),
       envPrompt,
       parentMessageId,
       run,
       runTopic,
       thread,
+      environment,
       topicId: runTopic.topicId,
     };
   }
@@ -930,12 +1247,14 @@ export class AgentEvalRunService {
     if (!testCase) return { error: 'Test case not found' as const };
 
     let envPrompt: string | undefined;
+    let environment: EvalCaseEnvironment | undefined;
     if (run.datasetId) {
       const dataset = await this.datasetModel.findById(run.datasetId);
       envPrompt = dataset?.evalConfig?.envPrompt;
+      environment = testCase.content.environment;
     }
 
-    return { envPrompt, run, testCase };
+    return { envPrompt, environment, run, testCase };
   }
 
   async executeTrajectory(params: {
@@ -946,10 +1265,15 @@ export class AgentEvalRunService {
       targetAgentId?: string | null;
     };
     runId: string;
-    testCase: { content: { input?: string }; sortOrder?: number | null };
+    testCase: {
+      content: { input?: string };
+      metadata?: EvalTestCaseMetadata | null;
+      sortOrder?: number | null;
+    };
     testCaseId: string;
+    environment?: EvalCaseEnvironment;
   }) {
-    const { envPrompt, run, runId, testCaseId } = params;
+    const { runId, testCaseId } = params;
 
     // Look up the pre-created RunTopic (created during createRun)
     const runTopic = await this.runTopicModel.findByRunAndTestCase(runId, testCaseId);
@@ -957,7 +1281,34 @@ export class AgentEvalRunService {
       throw new Error(`RunTopic not found for run=${runId} testCase=${testCaseId}`);
     }
 
-    const topicId = runTopic.topicId;
+    return this.executeTrajectoryCore({ ...params, topicId: runTopic.topicId });
+  }
+
+  /**
+   * Shared trajectory execution once the target topic is known. Marks the
+   * RunTopic running and starts the agent via execAgent.
+   */
+  private async executeTrajectoryCore(params: {
+    /** Route execution to an enrolled device (native AgentRuntime). */
+    deviceId?: string;
+    envPrompt?: string;
+    run: {
+      config?: EvalRunConfig | null;
+      datasetId: string;
+      targetAgentId?: string | null;
+    };
+    runId: string;
+    testCase: {
+      content: { input?: string };
+      metadata?: EvalTestCaseMetadata | null;
+      sortOrder?: number | null;
+    };
+    testCaseId: string;
+    topicId: string;
+    environment?: EvalCaseEnvironment;
+  }) {
+    const { envPrompt, environment, run, runId, testCaseId, topicId } = params;
+    const caseId = getCaseId(params.testCase.metadata);
 
     // Update status from 'pending' to 'running'
     await this.runTopicModel.updateByRunAndTopic(runId, topicId, { status: 'running' });
@@ -974,6 +1325,7 @@ export class AgentEvalRunService {
         agentId: run.targetAgentId ?? undefined,
         appContext: { topicId },
         autoStart: true,
+        ...(params.deviceId && { deviceId: params.deviceId }),
         trigger: RequestTrigger.Eval,
         hooks: [
           {
@@ -1006,7 +1358,7 @@ export class AgentEvalRunService {
             },
           },
         ],
-        ...(envPrompt && { evalContext: { envPrompt } }),
+        ...getEvalContextParams(envPrompt, environment, caseId),
         maxSteps: run.config?.maxSteps,
         prompt: params.testCase.content.input || '',
         queueRetries: EVAL_AGENT_RUNTIME_QSTASH_RETRIES,
@@ -1020,7 +1372,7 @@ export class AgentEvalRunService {
         });
       }
 
-      return { topicId };
+      return { operationId: execResult?.operationId, topicId };
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Agent execution failed to start';
@@ -1038,6 +1390,114 @@ export class AgentEvalRunService {
 
       return { error: errorMessage, topicId };
     }
+  }
+
+  /**
+   * Atomically claim a pending external run (pending -> running) and return
+   * everything a worker needs: the run, its dataset, all test cases (each
+   * exposing the dataset-native `metadata.caseId`), and the agent snapshot.
+   * Throws when the run is not owned or not currently pending.
+   */
+  async claimRun(runId: string) {
+    const run = await this.runModel.claim(runId);
+    if (!run) throw new Error('Run is not pending or already claimed');
+
+    const [dataset, testCases] = await Promise.all([
+      this.datasetModel.findById(run.datasetId),
+      this.testCaseModel.findByDatasetId(run.datasetId),
+    ]);
+
+    return {
+      agentSnapshot: (run.config as EvalRunConfig | null)?.agentSnapshot,
+      dataset: dataset
+        ? {
+            evalConfig: dataset.evalConfig,
+            id: dataset.id,
+            identifier: dataset.identifier,
+            metadata: dataset.metadata,
+            name: dataset.name,
+          }
+        : undefined,
+      run,
+      testCases: testCases.map((tc) => ({
+        content: tc.content,
+        id: tc.id,
+        metadata: tc.metadata,
+        sortOrder: tc.sortOrder,
+      })),
+    };
+  }
+
+  /**
+   * External worker entry point: execute a single case of a claimed run by its
+   * dataset-native `metadata.caseId` (falling back to the internal test case
+   * id). Creates the Topic/RunTopic on demand (external runs pre-create none),
+   * then runs the trajectory. Idempotent for terminal cases — the old RunTopic
+   * association is replaced with a fresh Topic; an active case is rejected.
+   */
+  async executeTrajectoryOnDemand(params: {
+    caseId: string;
+    /** Route execution to an enrolled device (native AgentRuntime). */
+    deviceId?: string;
+    prompt?: string;
+    runId: string;
+  }) {
+    const { runId, caseId } = params;
+
+    const run = await this.runModel.findById(runId);
+    if (!run) throw new Error('Run not found');
+    if (run.status !== 'running') {
+      throw new Error(`Run is not running (status=${run.status}); claim it first`);
+    }
+    if (((run.config as EvalRunConfig | null)?.k ?? 1) > 1) {
+      throw new Error('External execution only supports k=1');
+    }
+
+    // Resolve the dataset-native caseId to an internal test case.
+    let testCase = await this.testCaseModel.findByDatasetIdAndCaseId(run.datasetId, caseId);
+    if (!testCase) {
+      const byId = await this.testCaseModel.findById(caseId);
+      if (byId && byId.datasetId === run.datasetId) testCase = byId;
+    }
+    if (!testCase) throw new Error(`Test case not found for caseId=${caseId}`);
+
+    const testCaseId = testCase.id;
+    const dataset = await this.datasetModel.findById(run.datasetId);
+    const envPrompt = dataset?.evalConfig?.envPrompt;
+    const environment = testCase.content.environment;
+
+    // Idempotent re-run of a terminal case: drop only the old RunTopic
+    // association (the old Topic is preserved) and link a fresh one.
+    const existing = await this.runTopicModel.findByRunAndTestCase(runId, testCaseId);
+    if (existing) {
+      if (existing.status === 'running' || existing.status === 'pending') {
+        throw new Error(`Case ${caseId} is already active for this run`);
+      }
+      await this.runTopicModel.deleteByRunAndTestCase(runId, testCaseId);
+    }
+
+    const topicId = (
+      await this.createRunTopics(runId, run.targetAgentId, [
+        { content: testCase.content, id: testCaseId, sortOrder: testCase.sortOrder },
+      ])
+    )[0]!;
+
+    const result = await this.executeTrajectoryCore({
+      deviceId: params.deviceId,
+      envPrompt,
+      run: { config: run.config, datasetId: run.datasetId, targetAgentId: run.targetAgentId },
+      runId,
+      testCase: {
+        content: { ...testCase.content, input: params.prompt ?? testCase.content.input },
+        metadata: testCase.metadata,
+        sortOrder: testCase.sortOrder,
+      },
+      testCaseId,
+      topicId,
+      environment,
+    });
+
+    return { ...result, testCaseId };
   }
 
   /**
@@ -1062,6 +1522,10 @@ export class AgentEvalRunService {
     }
 
     const topicId = runTopic.topicId;
+    const topic = await this.topicModel.findById(topicId);
+    const historyTailMessageId = topic?.metadata?.[EVAL_HISTORY_TAIL_METADATA_KEY];
+    const sourceMessageId =
+      typeof historyTailMessageId === 'string' ? historyTailMessageId : undefined;
 
     // Update status from 'pending' to 'running'
     await this.runTopicModel.updateByRunAndTopic(runId, topicId, { status: 'running' });
@@ -1070,6 +1534,7 @@ export class AgentEvalRunService {
     const threadIds: string[] = [];
     for (let i = 0; i < k; i++) {
       const thread = await this.threadModel.create({
+        sourceMessageId,
         topicId,
         type: 'eval',
       });
@@ -1114,12 +1579,18 @@ export class AgentEvalRunService {
       targetAgentId?: string | null;
     };
     runId: string;
-    testCase: { content: { input?: string }; sortOrder?: number | null };
+    testCase: {
+      content: { input?: string };
+      metadata?: EvalTestCaseMetadata | null;
+      sortOrder?: number | null;
+    };
     testCaseId: string;
     threadId: string;
     topicId: string;
+    environment?: EvalCaseEnvironment;
   }) {
-    const { envPrompt, run, runId, testCaseId, threadId, topicId } = params;
+    const { envPrompt, environment, run, runId, testCaseId, threadId, topicId } = params;
+    const caseId = getCaseId(params.testCase.metadata);
 
     const aiAgentService = new AiAgentService(this.db, this.userId, {
       workspaceId: this.workspaceId,
@@ -1166,7 +1637,7 @@ export class AgentEvalRunService {
             },
           },
         ],
-        ...(envPrompt && { evalContext: { envPrompt } }),
+        ...getEvalContextParams(envPrompt, environment, caseId),
         maxSteps: run.config?.maxSteps,
         prompt: params.testCase.content.input || '',
         queueRetries: EVAL_AGENT_RUNTIME_QSTASH_RETRIES,
@@ -1419,8 +1890,13 @@ export class AgentEvalRunService {
     const dataset = await this.datasetModel.findById(run.datasetId);
     if (!dataset) return { ...baseMeta, error: 'Dataset not found', passed: false, score: 0 };
 
-    const benchmark = await this.benchmarkModel.findById(dataset.benchmarkId);
-    if (!benchmark) return { ...baseMeta, error: 'Benchmark not found', passed: false, score: 0 };
+    // A dataset need not belong to a benchmark; such a dataset simply
+    // contributes no benchmark-level rubrics, and scoring falls back to the
+    // per-case / per-dataset evalMode. Bailing here would leave every case in a
+    // captured dataset permanently unscored.
+    const benchmark = dataset.benchmarkId
+      ? await this.benchmarkModel.findById(dataset.benchmarkId)
+      : null;
 
     const testCase = await this.testCaseModel.findById(testCaseId);
     if (!testCase) return { ...baseMeta, error: 'Test case not found', passed: false, score: 0 };
@@ -1469,7 +1945,7 @@ export class AgentEvalRunService {
         },
       ];
     } else {
-      effectiveRubrics = benchmark.rubrics ?? [];
+      effectiveRubrics = benchmark?.rubrics ?? [];
     }
 
     // Run evaluation
@@ -1838,159 +2314,7 @@ export class AgentEvalRunService {
     return { allDone: completedCount >= totalCases, completedCount };
   }
 
-  async evaluateAndFinalizeRun(params: {
-    run: {
-      config?: EvalRunConfig | null;
-      id: string;
-      metrics?: EvalRunMetrics | null;
-      startedAt?: Date | null;
-    };
-    runTopics: Array<{
-      evalResult?: EvalRunTopicResult | null;
-      passed?: boolean | null;
-      runId: string;
-      score?: number | null;
-      status?: string | null;
-      topicId: string;
-    }>;
-  }): Promise<EvalRunMetrics> {
-    const { run, runTopics } = params;
-    const k = run.config?.k ?? 1;
-
-    let passedCases = 0;
-    let failedCases = 0;
-    let errorCases = 0;
-    let externalCases = 0;
-    let timeoutCases = 0;
-    let totalScore = 0;
-    // Sum of per-case averages (for per-case display)
-    let sumCost = 0;
-    let sumTokens = 0;
-    let sumSteps = 0;
-    let sumLlmCalls = 0;
-    let sumToolCalls = 0;
-    // Actual cumulative totals across all K executions
-    let actualTotalCost = 0;
-    let actualTotalTokens = 0;
-    let actualTotalDuration = 0;
-    const rubricScoreAcc: Record<string, { count: number; sum: number }> = {};
-
-    // pass@k / pass^k counters (only meaningful when k > 1)
-    let passAtKCount = 0;
-    let passAllKCount = 0;
-
-    for (const runTopic of runTopics) {
-      const existingResult = runTopic.evalResult;
-
-      // Accumulate per-case averages (cost/tokens/steps/llmCalls/toolCalls are averages per execution)
-      if (existingResult?.cost) sumCost += existingResult.cost;
-      if (existingResult?.tokens) sumTokens += existingResult.tokens;
-      if (existingResult?.steps) sumSteps += existingResult.steps;
-      if (existingResult?.llmCalls) sumLlmCalls += existingResult.llmCalls;
-      if (existingResult?.toolCalls) sumToolCalls += existingResult.toolCalls;
-
-      // Accumulate actual totals (totalCost has K-thread cumulative, fallback to cost for K=1)
-      actualTotalCost += existingResult?.totalCost ?? existingResult?.cost ?? 0;
-      actualTotalTokens += existingResult?.totalTokens ?? existingResult?.tokens ?? 0;
-      actualTotalDuration += existingResult?.totalDuration ?? existingResult?.duration ?? 0;
-
-      // Count by status
-      if (runTopic.status === 'passed') {
-        passedCases++;
-      } else if (runTopic.status === 'failed') {
-        failedCases++;
-      } else if (runTopic.status === 'error') {
-        errorCases++;
-      } else if (runTopic.status === 'external') {
-        externalCases++;
-      } else if (runTopic.status === 'timeout') {
-        timeoutCases++;
-      }
-
-      // Only accumulate scores for evaluated (non-error, non-timeout, non-external) cases
-      if (
-        runTopic.status !== 'error' &&
-        runTopic.status !== 'timeout' &&
-        runTopic.status !== 'external' &&
-        runTopic.score != null
-      ) {
-        totalScore += runTopic.score;
-      }
-
-      // Accumulate per-rubric scores from existing evalResult (exclude error/timeout/external cases)
-      if (
-        runTopic.status !== 'error' &&
-        runTopic.status !== 'timeout' &&
-        runTopic.status !== 'external' &&
-        existingResult?.rubricScores
-      ) {
-        for (const rs of existingResult.rubricScores) {
-          if (!rubricScoreAcc[rs.rubricId]) {
-            rubricScoreAcc[rs.rubricId] = { count: 0, sum: 0 };
-          }
-          rubricScoreAcc[rs.rubricId].sum += rs.score;
-          rubricScoreAcc[rs.rubricId].count++;
-        }
-      }
-
-      // pass@k / pass^k: derive from thread results when k > 1
-      if (k > 1 && existingResult?.threads && existingResult.threads.length > 0) {
-        const anyThreadPassed = existingResult.threads.some((t) => t.passed === true);
-        const allThreadsPassed = existingResult.threads.every((t) => t.passed === true);
-        if (anyThreadPassed) passAtKCount++;
-        if (allThreadsPassed) passAllKCount++;
-      }
-    }
-
-    const totalCases = runTopics.length;
-    const evaluatedCases = passedCases + failedCases;
-    const rubricScores: Record<string, number> = {};
-    for (const [rubricId, acc] of Object.entries(rubricScoreAcc)) {
-      rubricScores[rubricId] = acc.count > 0 ? acc.sum / acc.count : 0;
-    }
-
-    // Wall-clock duration: from startedAt (DB column, set when run enters 'running') to now
-    const startedAt = run.startedAt ? new Date(run.startedAt).getTime() : undefined;
-    const wallClockDuration = startedAt ? Date.now() - startedAt : undefined;
-
-    const metrics: EvalRunMetrics = {
-      averageScore: evaluatedCases > 0 ? totalScore / evaluatedCases : 0,
-      completedCases: totalCases,
-      cost: sumCost ? roundCost(sumCost) : undefined,
-      duration: wallClockDuration || undefined,
-      errorCases,
-      externalCases: externalCases || undefined,
-      failedCases,
-      llmCalls: sumLlmCalls || undefined,
-      passRate: totalCases > 0 ? passedCases / totalCases : 0,
-      passedCases,
-      perCaseCost: sumCost && totalCases ? roundCost(sumCost / totalCases) : undefined,
-      perCaseLlmCalls:
-        sumLlmCalls && totalCases ? Math.round((sumLlmCalls / totalCases) * 10) / 10 : undefined,
-      perCaseSteps:
-        sumSteps && totalCases ? Math.round((sumSteps / totalCases) * 10) / 10 : undefined,
-      perCaseTokens: sumTokens && totalCases ? Math.round(sumTokens / totalCases) : undefined,
-      perCaseToolCalls:
-        sumToolCalls && totalCases ? Math.round((sumToolCalls / totalCases) * 10) / 10 : undefined,
-      rubricScores,
-      steps: sumSteps || undefined,
-      timeoutCases,
-      tokens: sumTokens || undefined,
-      toolCalls: sumToolCalls || undefined,
-      totalCases,
-      totalCost: actualTotalCost ? roundCost(actualTotalCost) : undefined,
-      totalDuration: actualTotalDuration || undefined,
-      totalTokens: actualTotalTokens || undefined,
-    };
-
-    // Add pass@k / pass^k only when k > 1
-    if (k > 1) {
-      metrics.passAtK = totalCases > 0 ? passAtKCount / totalCases : 0;
-      metrics.passAllK = totalCases > 0 ? passAllKCount / totalCases : 0;
-    }
-
-    return metrics;
-  }
+  evaluateAndFinalizeRun = evaluateAndFinalizeRun;
 
   private async evaluateCase(
     runId: string,
@@ -2008,11 +2332,12 @@ export class AgentEvalRunService {
     const dataset = await this.datasetModel.findById(run.datasetId);
     if (!dataset) return;
 
-    const benchmark = await this.benchmarkModel.findById(dataset.benchmarkId);
-    if (!benchmark) return;
+    const benchmark = dataset.benchmarkId
+      ? await this.benchmarkModel.findById(dataset.benchmarkId)
+      : null;
 
     const passThreshold = (run.config?.passThreshold as number) ?? 0.6;
-    const benchmarkRubrics = benchmark.rubrics;
+    const benchmarkRubrics = benchmark?.rubrics ?? [];
 
     // Get messages for this topic
     const messages = await this.messageModel.query({ topicId: runTopic.topicId });

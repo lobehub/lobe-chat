@@ -1,4 +1,5 @@
-import { AccordionItem, Flexbox, Text } from '@lobehub/ui';
+import { AccordionItem, Flexbox } from '@lobehub/ui';
+import { Text } from '@lobehub/ui/base-ui';
 import dayjs from 'dayjs';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,6 +46,7 @@ const GroupItem = memo<GroupItemProps>(({ group, activeTopicId, activeThreadId }
             status={topic.status}
             threadId={activeThreadId}
             title={topic.title}
+            userId={topic.userId}
           />
         ))}
       </Flexbox>

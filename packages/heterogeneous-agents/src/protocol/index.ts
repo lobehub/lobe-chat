@@ -7,7 +7,19 @@
  * Executor-side helpers that materialize this contract (`normalizeImage`,
  * `buildAgentInput`, `spawnAgent`, …) live under `./spawn` instead.
  */
+export type {
+  HeterogeneousAgentCancellationResult,
+  HeterogeneousAgentCancellationSignal,
+} from './cancellation';
 export { buildHeteroExecStdinPayload, type HeteroExecImageRef } from './execStdinPayload';
+export const HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV = 'LOBEHUB_HETERO_EXEC_INHERIT_PROCESS_GROUP';
+export {
+  buildHeterogeneousPrompt,
+  type HeterogeneousPromptContextProvider,
+  HeterogeneousPromptEngine,
+  type HeterogeneousPromptEngineInput,
+  type HeterogeneousPromptImage,
+} from './promptEngine';
 export type {
   AgentContentBlock,
   AgentImageBlock,

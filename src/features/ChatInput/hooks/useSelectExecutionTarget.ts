@@ -1,66 +1,69 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import type { DeviceExecutionTarget } from '@lobechat/types';
-import { useCallback } from 'react';
+import { type DeviceExecutionTarget, snapshotTopicExecutionConfig } from '@lobechat/types';
+import { toast } from '@lobehub/ui/base-ui';
+import { t } from 'i18next';
 
+import { useTopicAgencyConfig } from '@/hooks/useTopicAgencyConfig';
 import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
-import { useAgentStore } from '@/store/agent';
-import { agentByIdSelectors } from '@/store/agent/selectors';
+import { useChatStore } from '@/store/chat';
 import { useElectronStore } from '@/store/electron';
 
-/**
- * Persist an execution-target selection for an agent. Shared by the device
- * switcher and the sandbox notice so the `local` device-id resolution (which
- * has to find this machine's gateway `deviceId`) lives in one place.
- *
- * `executionTarget` is the single source of truth — the server tool gate +
- * client `getRuntimeModeById` derive `runtimeMode` from it.
- */
+export interface SelectExecutionTargetOptions {
+  localSandbox?: boolean;
+  localSandboxNetwork?: boolean;
+  silent?: boolean;
+}
+
+/** Capture the destination before device discovery or persistence can yield. */
 export const useSelectExecutionTarget = (agentId: string) => {
-  const agencyConfig = useAgentStore(agentByIdSelectors.getAgencyConfigById(agentId));
-  const isHetero = useAgentStore(agentByIdSelectors.isAgentHeterogeneousById(agentId));
-  const isWorkspaceAgent = useAgentStore((s) => Boolean(s.agentMap[agentId]?.workspaceId));
-  const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
+  const { agencyConfig, canSelectExecutionTarget } = useTopicAgencyConfig(agentId);
+  const topicId = useChatStore((s) => (s.activeAgentId === agentId ? s.activeTopicId : undefined));
+  const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
 
-  // The current machine's own gateway deviceId (desktop only); used to pin a
-  // `local` selection to this device.
-  const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
-  const currentDeviceId = isDesktop ? gatewayDeviceInfo?.deviceId : undefined;
-
-  return useCallback(
-    async (target: DeviceExecutionTarget, deviceId?: string) => {
-      // A workspace agent may only bind devices enrolled in the same workspace
-      // (server-enforced by `assertWorkspaceDeviceBinding`). `local` pins this
-      // machine's PERSONAL gateway deviceId — a different identity from its
-      // workspace enrollment — so the write would always be rejected; refuse it
-      // here instead of letting the save silently fail.
-      if (target === 'local' && isWorkspaceAgent) return;
-
-      const boundDeviceId = agencyConfig?.boundDeviceId;
-      let nextBoundDeviceId = target === 'device' ? deviceId : boundDeviceId;
+  return async (
+    target: DeviceExecutionTarget,
+    deviceId?: string,
+    options?: SelectExecutionTargetOptions,
+  ) => {
+    if (!canSelectExecutionTarget) return;
+    // An automatic default must not create an empty conversation on mount.
+    if (options?.silent && !topicId) return;
+    try {
+      let boundDeviceId = target === 'device' ? deviceId : undefined;
       if (target === 'local') {
-        nextBoundDeviceId = currentDeviceId;
-        if (!nextBoundDeviceId) {
-          try {
-            nextBoundDeviceId = (await gatewayConnectionService.getDeviceInfo())?.deviceId;
-          } catch {
-            nextBoundDeviceId = undefined;
-          }
-        }
-        // Hetero agents must execute somewhere; without a resolvable local
-        // device there is nothing to pin `local` to, so don't switch.
-        if (isHetero && !nextBoundDeviceId) return;
+        boundDeviceId =
+          (isDesktop ? currentDeviceId : undefined) ??
+          (await gatewayConnectionService.getDeviceInfo())?.deviceId;
+        if (!boundDeviceId) return;
       }
-
-      await updateAgentConfigById(agentId, {
-        agencyConfig: {
-          ...agencyConfig,
+      if (target === 'device' && !boundDeviceId) return;
+      const store = useChatStore.getState();
+      if (!topicId && (store.activeAgentId !== agentId || store.activeTopicId)) return;
+      const destination = topicId ?? (await store.createTopic(agentId));
+      if (!destination) return;
+      await useChatStore.getState().updateTopicMetadata(destination, {
+        executionConfig: {
+          ...snapshotTopicExecutionConfig(agencyConfig),
+          inheritWorkspaceScope: false,
+          boundDeviceId,
           executionTarget: target,
-          ...(nextBoundDeviceId ? { boundDeviceId: nextBoundDeviceId } : {}),
+          ...(options?.localSandbox === undefined ? {} : { localSandbox: options.localSandbox }),
+          ...(options?.localSandboxNetwork === undefined
+            ? {}
+            : { localSandboxNetwork: options.localSandboxNetwork }),
         },
       });
-    },
-    [agentId, agencyConfig, currentDeviceId, isHetero, isWorkspaceAgent, updateAgentConfigById],
-  );
+      if (
+        !topicId &&
+        useChatStore.getState().activeAgentId === agentId &&
+        !useChatStore.getState().activeTopicId
+      ) {
+        await useChatStore.getState().switchTopic(destination);
+      }
+    } catch {
+      if (!options?.silent) toast.error(t('saveAgentConfigFail', { ns: 'common' }));
+    }
+  };
 };

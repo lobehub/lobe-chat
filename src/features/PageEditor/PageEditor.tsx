@@ -2,11 +2,12 @@
 
 import { DEFAULT_BLOCK_ANCHOR_PADDING, EditorProvider } from '@lobehub/editor/react';
 import { Flexbox } from '@lobehub/ui';
-import { createStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import type { CSSProperties, FC, ReactNode, UIEvent } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
 import { CONVERSATION_MIN_WIDTH } from '@/const/layoutTokens';
+import type { ComposerTarget } from '@/features/Conversation/types';
 import DiffAllToolbar from '@/features/EditorCanvas/DiffAllToolbar';
 import PageMetaBar from '@/features/PageEditor/PageMetaBar';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -17,6 +18,8 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { usePageStore } from '@/store/page';
 import { StyleSheet } from '@/utils/styles';
 
+import DocumentComments from './DocumentComments';
+import DocumentLikes from './DocumentLikes';
 import EditorCanvas from './EditorCanvas';
 import Header from './Header';
 import LockedAlert from './LockedAlert';
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const useTableOverrideStyles = createStyles(({ css }) => ({
+const overrideStyles = createStaticStyles(({ css }) => ({
   editorContent: css`
     .lobe-editor-table-scroll-wrapper.lobe-editor-table-scroll-wrapper {
       --lobe-block-anchor-padding: var(--lobe-pageeditor-table-bleed-inline);
@@ -99,6 +102,8 @@ const useTableOverrideStyles = createStyles(({ css }) => ({
 }));
 
 interface PageEditorProps {
+  /** Composer that receives selections created by the Ask Copilot toolbar item. */
+  askCopilotTarget?: ComposerTarget;
   emoji?: string;
   /**
    * When true, the header spans the full editor width above the body and the
@@ -138,18 +143,19 @@ interface PageEditorProps {
 }
 
 interface PageEditorCanvasProps {
+  askCopilotTarget?: ComposerTarget;
   fullWidthHeader?: boolean;
   header?: PageEditorHeader;
   rightPanel?: boolean;
 }
 
-const PageEditorCanvas = memo<PageEditorCanvasProps>(({ header, fullWidthHeader, rightPanel }) => {
+const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
+  const { askCopilotTarget, header, fullWidthHeader, rightPanel } = props;
   const showRightPanel = rightPanel !== false;
   const editable = usePageEditable();
   const editor = usePageEditorStore((s) => s.editor);
   const documentId = usePageEditorStore((s) => s.documentId);
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
-  const { styles: overrideStyles } = useTableOverrideStyles();
   const tableBleedInline = wideScreen
     ? `${TABLE_BASE_BLEED}px`
     : `calc(${TABLE_BASE_BLEED}px + max((100cqi - ${CONVERSATION_MIN_WIDTH}px) / 2, 0px))`;
@@ -310,7 +316,9 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>(({ header, fullWidthHeader,
             {/* Prominent in-body notice when another member holds the lock; the
                 compact status badge lives in the Header (EditingIndicator). */}
             <LockedAlert />
-            <EditorCanvas />
+            <EditorCanvas askCopilotTarget={askCopilotTarget} />
+            {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
+            {documentId && <DocumentComments documentId={documentId} />}
           </Flexbox>
         </WideScreenContainer>
       </Flexbox>
@@ -349,6 +357,7 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>(({ header, fullWidthHeader,
  * A reusable component. Should NOT depend on context.
  */
 export const PageEditor: FC<PageEditorProps> = ({
+  askCopilotTarget,
   pageId,
   header,
   fullWidthHeader,
@@ -400,6 +409,7 @@ export const PageEditor: FC<PageEditorProps> = ({
           }}
         >
           <PageEditorCanvas
+            askCopilotTarget={askCopilotTarget}
             fullWidthHeader={fullWidthHeader}
             header={header}
             rightPanel={rightPanel}

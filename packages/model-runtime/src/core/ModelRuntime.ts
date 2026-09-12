@@ -509,12 +509,15 @@ export class ModelRuntime {
           apiKey?: string;
           baseURL?: string;
           userId?: string;
+          workspaceId?: string;
         }
     >,
     hooks?: ModelRuntimeHooks,
   ) {
-    // @ts-expect-error runtime map not include vertex so it will be undefined
-    const providerAI = providerRuntimeMap[provider] ?? LobeOpenAI;
+    // runtime map does not include every provider id (e.g. vertex), so index loosely
+    const runtimeMap: Partial<Record<string, new (params: any) => LobeRuntimeAI>> =
+      providerRuntimeMap;
+    const providerAI = runtimeMap[provider] ?? LobeOpenAI;
 
     const runtimeModel: LobeRuntimeAI = new providerAI(params);
 

@@ -3,12 +3,14 @@
 import { isDesktop } from '@lobechat/const';
 import { TITLE_BAR_HEIGHT } from '@lobechat/desktop-bridge';
 import { type SkillResourceTreeNode } from '@lobechat/types';
-import { Button, Drawer, Flexbox } from '@lobehub/ui';
-import { Alert, App, Form as AForm, Popconfirm, Skeleton } from 'antd';
+import { Flexbox } from '@lobehub/ui';
+import { Alert, Button, Drawer, toast } from '@lobehub/ui/base-ui';
+import { Form as AForm, Popconfirm } from 'antd';
 import { createStaticStyles } from 'antd-style';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ArticleSkeleton } from '@/components/Skeleton';
 import ContentViewer from '@/features/AgentSkillDetail/ContentViewer';
 import FileTree from '@/features/FileTree';
 import { usePermission } from '@/hooks/usePermission';
@@ -60,7 +62,7 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
   const { t } = useTranslation('setting');
   const { t: tp } = useTranslation('plugin');
   const { t: tc } = useTranslation('common');
-  const { message } = App.useApp();
+
   const { allowed: canEdit } = usePermission('edit_own_content');
 
   const [selectedFile, setSelectedFile] = useState('SKILL.md');
@@ -74,7 +76,7 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
   const deleteAgentSkill = useToolStore((s) => s.deleteAgentSkill);
 
   const skillDetail = data?.skillDetail;
-  const resourceTree = data?.resourceTree ?? [];
+  const resourceTree = useMemo(() => data?.resourceTree ?? [], [data?.resourceTree]);
   const contentMap = useMemo(() => buildContentMap(resourceTree), [resourceTree]);
 
   const initialValues: SkillEditFormValues = useMemo(
@@ -94,7 +96,7 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
         id: skillId,
         manifest: { description: values.description },
       });
-      message.success(t('agentSkillEdit.saveSuccess'));
+      toast.success(t('agentSkillEdit.saveSuccess'));
       onClose();
     } finally {
       setSaving(false);
@@ -104,7 +106,7 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
   const handleDelete = async () => {
     if (!canEdit) return;
     await deleteAgentSkill(skillId);
-    message.success(tp('dev.deleteSuccess'));
+    toast.success(tp('dev.deleteSuccess'));
     onClose();
   };
 
@@ -145,7 +147,6 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
 
   return (
     <Drawer
-      destroyOnHidden
       containerMaxWidth={'auto'}
       footer={footer}
       height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
@@ -154,16 +155,12 @@ const AgentSkillEdit = memo<AgentSkillEditProps>(({ skillId, open, onClose }) =>
       push={false}
       title={t('agentSkillEdit.title')}
       styles={{
-        body: { padding: 0 },
-        bodyContent: { height: '100%' },
+        bodyContent: { height: '100%', padding: 0 },
       }}
-      onClose={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
+      onClose={onClose}
     >
       {isLoading ? (
-        <Skeleton active paragraph={{ rows: 8 }} style={{ padding: 16 }} />
+        <ArticleSkeleton rows={8} style={{ padding: 16 }} />
       ) : (
         <Flexbox
           horizontal

@@ -1,8 +1,8 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import { Button, Icon } from '@lobehub/ui';
-import { SplitButton } from '@lobehub/ui/base-ui';
+import { Icon } from '@lobehub/ui';
+import { Button, SplitButton } from '@lobehub/ui/base-ui';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +52,7 @@ const ProviderConfig = memo(() => {
 
   if (!items || items?.length === 0)
     return (
-      <Button block size={'large'} style={{ flex: 1 }} type={'primary'}>
+      <Button block size={'large'} style={{ flex: 1 }} type={'primary'} onClick={openSettings}>
         {t('providers.config')}
       </Button>
     );

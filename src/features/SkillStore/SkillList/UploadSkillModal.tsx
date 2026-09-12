@@ -1,9 +1,15 @@
 'use client';
 
 import { LoadingOutlined } from '@ant-design/icons';
-import { Alert, Flexbox, Icon } from '@lobehub/ui';
-import { createModal, type ModalInstance, useModalContext } from '@lobehub/ui/base-ui';
-import { App, Spin, Typography, Upload } from 'antd';
+import { Flexbox, Icon } from '@lobehub/ui';
+import {
+  Alert,
+  createModal,
+  type ModalInstance,
+  toast,
+  useModalContext,
+} from '@lobehub/ui/base-ui';
+import { Spin, Typography, Upload } from 'antd';
 import { sha256 } from 'js-sha256';
 import { ArrowLeftRight, InboxIcon, Sparkles, Upload as UploadIcon } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -17,7 +23,7 @@ import { useToolStore } from '@/store/tool';
 const UploadSkillContent = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
   const { close, setCanDismissByClickOutside } = useModalContext();
-  const { message } = App.useApp();
+
   const importAgentSkillFromZip = useToolStore((s) => s.importAgentSkillFromZip);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,11 +37,13 @@ const UploadSkillContent = memo(() => {
     if (!canCreate) return;
     setLoading(true);
     setError(null);
+    let uploadedPathname: string | undefined;
 
     try {
       const { data: metadata } = await uploadService.uploadFileToS3(file, {
         directory: 'skills',
       });
+      uploadedPathname = metadata.path;
 
       const hash = sha256(await file.arrayBuffer());
 
@@ -47,11 +55,13 @@ const UploadSkillContent = memo(() => {
         size: file.size,
         url: metadata.path,
       });
+      uploadedPathname = undefined;
 
       await importAgentSkillFromZip({ zipFileId: result.id });
-      message.success(t('agentSkillModal.importSuccess'));
+      toast.success(t('agentSkillModal.importSuccess'));
       close();
     } catch (err: any) {
+      if (uploadedPathname) await uploadService.releaseUpload(uploadedPathname);
       setError(err?.message || String(err));
     } finally {
       setLoading(false);
@@ -140,6 +150,5 @@ export const openUploadSkillModal = (): ModalInstance =>
     content: <UploadSkillContent />,
     footer: null,
     maskClosable: true,
-    styles: { header: { display: 'none' } },
     width: 480,
   });

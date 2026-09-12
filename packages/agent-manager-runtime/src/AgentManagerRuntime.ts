@@ -14,7 +14,8 @@
  * Services must be injected via constructor for runtime-agnostic usage
  * (e.g., server-side services vs client-side services).
  */
-import { COMPOSIO_APP_TYPES, LOBEHUB_SKILL_PROVIDERS } from '@lobechat/const';
+import type { ComposioAppType, LobehubSkillProviderType } from '@lobechat/const';
+import { resolveConnectorCatalogItem } from '@lobechat/const';
 import {
   marketToolsResultsPrompt,
   modelsResultsPrompt,
@@ -38,7 +39,9 @@ import {
   lobehubSkillStoreSelectors,
   pluginSelectors,
 } from '@/store/tool/selectors';
+import type { ComposioServer } from '@/store/tool/slices/composioStore/types';
 import { ComposioServerStatus } from '@/store/tool/slices/composioStore/types';
+import type { LobehubSkillServer } from '@/store/tool/slices/lobehubSkillStore/types';
 import { LobehubSkillStatus } from '@/store/tool/slices/lobehubSkillStore/types';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
@@ -73,6 +76,12 @@ import type {
 const MAX_SEARCH_AGENT_LIMIT = 20;
 
 export class AgentManagerRuntime {
+  /**
+   * Preserve invocation order for prompt updates targeting the same agent,
+   * including calls issued through different AgentManagerRuntime instances.
+   */
+  private static promptUpdateQueues = new Map<string, Promise<unknown>>();
+
   private agentService: IAgentService;
   private discoverService: IDiscoverService;
 
@@ -561,19 +570,22 @@ export class AgentManagerRuntime {
    */
   async updatePrompt(agentId: string, params: UpdatePromptParams): Promise<BuiltinToolResult> {
     try {
-      await this.ensureAgentLoaded(agentId);
-      const state = getAgentStoreState();
-      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
-      const previousPrompt = previousConfig?.systemRole;
+      const previousPrompt = await this.enqueuePromptUpdate(agentId, async () => {
+        await this.ensureAgentLoaded(agentId);
+        const state = getAgentStoreState();
+        const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
 
-      if (params.streaming) {
-        await this.streamUpdatePrompt(agentId, params.prompt);
-      } else {
-        await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-          editorData: null,
-          systemRole: params.prompt,
-        });
-      }
+        if (params.streaming) {
+          await this.performStreamingPromptUpdate(agentId, params.prompt);
+        } else {
+          await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+            editorData: null,
+            systemRole: params.prompt,
+          });
+        }
+
+        return previousConfig?.systemRole;
+      });
 
       const content = params.prompt
         ? `Successfully updated system prompt (${params.prompt.length} characters)`
@@ -597,24 +609,59 @@ export class AgentManagerRuntime {
   }
 
   /**
+   * Queue prompt mutations by agent so later invocations cannot finish first
+   * and then be overwritten by an older, slower stream.
+   */
+  private async enqueuePromptUpdate<T>(agentId: string, update: () => Promise<T>): Promise<T> {
+    const previousUpdate = AgentManagerRuntime.promptUpdateQueues.get(agentId);
+    const previousSettled = previousUpdate
+      ? previousUpdate.then(
+          () => undefined,
+          () => undefined,
+        )
+      : Promise.resolve();
+    const queuedUpdate = previousSettled.then(update);
+
+    AgentManagerRuntime.promptUpdateQueues.set(agentId, queuedUpdate);
+
+    try {
+      return await queuedUpdate;
+    } finally {
+      if (AgentManagerRuntime.promptUpdateQueues.get(agentId) === queuedUpdate) {
+        AgentManagerRuntime.promptUpdateQueues.delete(agentId);
+      }
+    }
+  }
+
+  /**
    * Stream update prompt with typewriter effect
    */
-  private async streamUpdatePrompt(agentId: string, prompt: string): Promise<void> {
-    getAgentStoreState().startStreamingSystemRole();
+  private async performStreamingPromptUpdate(agentId: string, prompt: string): Promise<void> {
+    const generation = getAgentStoreState().startStreamingSystemRole(agentId);
 
     const chunkSize = 5;
     const delay = 10;
 
     for (let i = 0; i < prompt.length; i += chunkSize) {
       const chunk = prompt.slice(i, i + chunkSize);
-      getAgentStoreState().appendStreamingSystemRole(chunk);
+      getAgentStoreState().appendStreamingSystemRole(agentId, generation, chunk);
 
       if (i + chunkSize < prompt.length) {
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
-    await getAgentStoreState().finishStreamingSystemRole(agentId);
+    try {
+      // Persistence is invocation-scoped and independent from ownership of the
+      // global visual stream. Another agent may take over the animation without
+      // turning this explicit update into a successful no-op.
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        editorData: null,
+        systemRole: prompt,
+      });
+    } finally {
+      await getAgentStoreState().finishStreamingSystemRole(agentId, generation);
+    }
   }
 
   // ==================== Plugin/Tools ====================
@@ -685,41 +732,39 @@ export class AgentManagerRuntime {
       const toolState = getToolStoreState();
 
       if (source === 'official') {
-        // Check if it's a Composio tool
         const isComposioEnabled =
           typeof window !== 'undefined' &&
           window.global_serverConfigStore?.getState()?.serverConfig?.enableComposio;
-
-        if (isComposioEnabled) {
-          const composioServer = composioStoreSelectors
-            .getServers(toolState)
-            .find((s) => s.identifier === identifier);
-          const composioAppInfo = COMPOSIO_APP_TYPES.find((t) => t.identifier === identifier);
-
-          if (composioAppInfo) {
-            return this.handleComposioInstall(agentId, identifier, composioAppInfo, composioServer);
-          }
-        }
-
-        // Check if it's a LobehubSkill provider
         const isLobehubSkillEnabled =
           typeof window !== 'undefined' &&
           window.global_serverConfigStore?.getState()?.serverConfig?.enableLobehubSkill;
+        const connector = resolveConnectorCatalogItem(identifier, {
+          composio: Boolean(isComposioEnabled),
+          lobehub: Boolean(isLobehubSkillEnabled),
+        });
 
-        if (isLobehubSkillEnabled) {
+        if (connector?.type === 'composio') {
+          const composioServer = composioStoreSelectors
+            .getServers(toolState)
+            .find((s) => s.identifier === identifier);
+          return this.handleComposioInstall(
+            agentId,
+            identifier,
+            connector.serverType,
+            composioServer,
+          );
+        }
+
+        if (connector?.type === 'lobehub') {
           const lobehubSkillServer = lobehubSkillStoreSelectors
             .getServers(toolState)
             .find((s) => s.identifier === identifier);
-          const lobehubSkillProviderInfo = LOBEHUB_SKILL_PROVIDERS.find((p) => p.id === identifier);
-
-          if (lobehubSkillProviderInfo) {
-            return this.handleLobehubSkillInstall(
-              agentId,
-              identifier,
-              lobehubSkillProviderInfo,
-              lobehubSkillServer,
-            );
-          }
+          return this.handleLobehubSkillInstall(
+            agentId,
+            identifier,
+            connector.provider,
+            lobehubSkillServer,
+          );
         }
 
         // Check if it's a builtin tool
@@ -787,8 +832,8 @@ export class AgentManagerRuntime {
   private async handleComposioInstall(
     agentId: string,
     identifier: string,
-    composioAppInfo: (typeof COMPOSIO_APP_TYPES)[0],
-    composioServer: any,
+    composioAppInfo: ComposioAppType,
+    composioServer?: ComposioServer,
   ): Promise<BuiltinToolResult> {
     if (composioServer) {
       if (composioServer.status === ComposioServerStatus.ACTIVE) {
@@ -916,8 +961,8 @@ export class AgentManagerRuntime {
   private async handleLobehubSkillInstall(
     agentId: string,
     identifier: string,
-    providerInfo: (typeof LOBEHUB_SKILL_PROVIDERS)[0],
-    server: any,
+    providerInfo: LobehubSkillProviderType,
+    server?: LobehubSkillServer,
   ): Promise<BuiltinToolResult> {
     if (server?.status === LobehubSkillStatus.CONNECTED) {
       await this.enablePluginForAgent(agentId, identifier);

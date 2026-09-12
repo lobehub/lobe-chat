@@ -6,6 +6,7 @@ import {
   CDN_BASE_URL,
   DEFAULT_BASE_URL,
   fetchQrCode,
+  getWechatTextSendCount,
   pollQrStatus,
   resolveAesKey,
   WechatApiClient,
@@ -125,6 +126,7 @@ describe('WechatApiClient', () => {
       await client.sendMessage('user_1', longText, 'ctx');
 
       // 4500 / 2000 = 3 chunks
+      expect(getWechatTextSendCount(longText)).toBe(3);
       expect(mockFetch).toHaveBeenCalledTimes(3);
     });
 
@@ -322,6 +324,31 @@ describe('WechatApiClient', () => {
       // Returned aes_key should be base64(hex_string) — round-trips back to the hex
       const decoded = Buffer.from(result.aesKey, 'base64').toString('ascii');
       expect(decoded).toBe(step1Body.aeskey);
+    });
+
+    it('gives the CDN byte transfer a longer budget than the JSON call', async () => {
+      // Regression: both legs shared one 15s timeout. Next to the CDN a 2MB
+      // upload finishes in under a second, so local testing never hit it — but
+      // from a server a continent away the same upload was aborted, the
+      // attachment counted as failed, and the picture went out as a download
+      // link with nothing in sight pointing at a timeout.
+      const timeouts: number[] = [];
+      const timeout = vi.spyOn(AbortSignal, 'timeout').mockImplementation((ms: number) => {
+        timeouts.push(ms);
+        return new AbortController().signal;
+      });
+
+      mockFetch.mockResolvedValueOnce(jsonResponse({ upload_param: 'UP' }));
+      mockFetch.mockResolvedValueOnce(
+        new Response('', { headers: { 'x-encrypted-param': 'ENC' }, status: 200 }),
+      );
+
+      await client.uploadCdnMedia('u', WechatUploadMediaType.IMAGE, Buffer.alloc(2 * 1024 * 1024));
+
+      // [0] = getuploadurl (JSON), [1] = the CDN upload (bytes).
+      expect(timeouts).toHaveLength(2);
+      expect(timeouts[1]).toBeGreaterThan(timeouts[0]);
+      timeout.mockRestore();
     });
 
     it('should round-trip — uploaded ciphertext decrypts to the original plaintext', async () => {

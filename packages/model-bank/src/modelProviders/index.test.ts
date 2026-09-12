@@ -1,10 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { type ModelProviderCard } from '@/types/llm';
+import { type ModelProviderCard } from '../types';
+import {
+  DEFAULT_MODEL_PROVIDER_LIST,
+  getProviderDisplayName,
+  isProviderDisableBrowserRequest,
+  isProviderOAuthDeviceFlow,
+} from './index';
 
-import { DEFAULT_MODEL_PROVIDER_LIST, isProviderDisableBrowserRequest } from './index';
-
-describe('isProviderDisableBrowserRequest', () => {
+describe('model provider predicates', () => {
   const originalProviders = [...DEFAULT_MODEL_PROVIDER_LIST];
 
   const createProvider = (overrides: Partial<ModelProviderCard>): ModelProviderCard => ({
@@ -21,6 +25,7 @@ describe('isProviderDisableBrowserRequest', () => {
     DEFAULT_MODEL_PROVIDER_LIST.push(
       createProvider({ id: 'root-disabled', disableBrowserRequest: true }),
       createProvider({ id: 'settings-disabled', settings: { disableBrowserRequest: true } }),
+      createProvider({ id: 'oauth-provider', settings: { authType: 'oauthDeviceFlow' } }),
       createProvider({ id: 'enabled-provider' }),
     );
   });
@@ -44,5 +49,17 @@ describe('isProviderDisableBrowserRequest', () => {
 
   it('returns false for unknown provider id', () => {
     expect(isProviderDisableBrowserRequest('not-exists')).toBe(false);
+  });
+
+  it('resolves a provider id to its display name and falls back to the id', () => {
+    expect(getProviderDisplayName('enabled-provider')).toBe('Test Provider');
+    expect(getProviderDisplayName('not-exists')).toBe('not-exists');
+  });
+
+  it('detects OAuth device flow providers', () => {
+    expect(isProviderOAuthDeviceFlow('oauth-provider')).toBe(true);
+    expect(isProviderOAuthDeviceFlow('enabled-provider')).toBe(false);
+    expect(isProviderOAuthDeviceFlow('not-exists')).toBe(false);
+    expect(isProviderOAuthDeviceFlow()).toBe(false);
   });
 });

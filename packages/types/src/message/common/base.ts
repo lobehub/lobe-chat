@@ -18,6 +18,31 @@ export type ChatMessageErrorAttribution = 'user' | 'provider' | 'harness' | 'sys
 export type ChatMessageErrorSeverity = 'info' | 'warning' | 'error' | 'critical';
 
 /**
+ * Structured allowance context attached by a cost-admission gate when a run is
+ * rejected for want of spendable credits. It rides along inside
+ * `ChatMessageError['body'].budget`, so consumers can tell the user *which*
+ * allowance ran out and by how much instead of a single generic "not enough
+ * credits" line.
+ *
+ * `budgetTypeAtError` is an opaque tag naming the allowance that was checked —
+ * whoever mounts the gate defines its vocabulary, and renderers that don't
+ * recognize a tag must fall back to generic copy rather than guessing.
+ *
+ * Every field is optional: an admission gate that can't price the request
+ * upfront still reports the failure, just without the numbers.
+ */
+export interface ChatErrorBudgetContext {
+  /** Credits still spendable on the exhausted allowance. */
+  availableCredits?: number;
+  /** Opaque tag naming which allowance was checked. */
+  budgetTypeAtError?: string;
+  /** Credits the rejected request was estimated to need. */
+  requiredCredits?: number;
+  /** `requiredCredits - availableCredits`, floored at 0. */
+  shortfallCredits?: number;
+}
+
+/**
  * Chat message error object
  */
 export interface ChatMessageError {
@@ -84,6 +109,22 @@ export interface MessageContentPartImage {
 
 export type MessageContentPart = MessageContentPartText | MessageContentPartImage;
 
+/**
+ * Original OpenAI Responses reasoning output item persisted verbatim so multi-turn
+ * stateless requests can replay it unchanged. `encrypted_content` holds the
+ * scope-serialized envelope produced by `serializeScopedSignature`, never the raw
+ * provider payload.
+ */
+export interface ModelReasoningResponseItem {
+  [key: string]: unknown;
+  content?: Array<Record<string, unknown>>;
+  encrypted_content?: string | null;
+  id: string;
+  status?: 'in_progress' | 'completed' | 'incomplete';
+  summary: Array<{ text: string; type: 'summary_text' }>;
+  type: 'reasoning';
+}
+
 export interface ModelReasoning {
   /**
    * Reasoning content, can be plain string or serialized JSON array of MessageContentPart[]
@@ -94,13 +135,30 @@ export interface ModelReasoning {
    * Flag indicating if content is multimodal (serialized MessageContentPart[])
    */
   isMultimodal?: boolean;
+  /**
+   * Complete OpenAI Responses reasoning items in original stream order; preferred
+   * over the scalar `signature` when replaying to the Responses API
+   */
+  responseItems?: ModelReasoningResponseItem[];
   signature?: string;
   tempDisplayContent?: MessageContentPart[];
 }
+
+export const ModelReasoningResponseItemSchema = z
+  .object({
+    content: z.array(z.record(z.string(), z.unknown())).optional(),
+    encrypted_content: z.string().nullish(),
+    id: z.string(),
+    status: z.enum(['in_progress', 'completed', 'incomplete']).optional(),
+    summary: z.array(z.object({ text: z.string(), type: z.literal('summary_text') })),
+    type: z.literal('reasoning'),
+  })
+  .passthrough();
 
 export const ModelReasoningSchema = z.object({
   content: z.string().optional(),
   duration: z.number().optional(),
   isMultimodal: z.boolean().optional(),
+  responseItems: z.array(ModelReasoningResponseItemSchema).optional(),
   signature: z.string().optional(),
 });

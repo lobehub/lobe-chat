@@ -1,10 +1,17 @@
-import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
-import { Flexbox, Icon, Select, SliderWithInput, TextArea } from '@lobehub/ui';
-import { Form as AntdForm, Switch } from 'antd';
+import {
+  DEFAULT_AGENT_CONFIG,
+  resolveSubAgentChatConfig,
+  resolveSubAgentModel,
+} from '@lobechat/const';
+import { resolveEffectiveReasoningChatConfig } from '@lobechat/model-runtime/utils/modelExtendParams';
+import { Flexbox, Icon, TextArea } from '@lobehub/ui';
+import { Select, SliderWithInput, Switch } from '@lobehub/ui/base-ui';
+import { Form as AntdForm } from 'antd';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { debounce } from 'es-toolkit/compat';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { MODEL_REASONING_EXTEND_PARAMS } from 'model-bank/aiModel';
 import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +19,7 @@ import type { PartialDeep } from 'type-fest';
 
 import InfoTooltip from '@/components/InfoTooltip';
 import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
+import ModelSelect from '@/features/ModelSelect';
 import ControlsForm from '@/features/ModelSwitchPanel/components/ControlsForm';
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
@@ -19,14 +27,13 @@ import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selec
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import type { LobeAgentConfig } from '@/types/agent';
+import type { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
+import { useParamsModelConfig } from './useParamsModelConfig';
 
 interface ControlsProps {
-  setUpdating: (updating: boolean) => void;
-  updating: boolean;
   variant?: 'popover' | 'sidebar';
 }
 
@@ -411,6 +418,8 @@ const PARAM_CONFIG = {
 
 const PARAM_ORDER: ParamKey[] = ['temperature', 'top_p', 'frequency_penalty', 'presence_penalty'];
 
+const REASONING_PARAMS_SET = new Set<string>(MODEL_REASONING_EXTEND_PARAMS);
+
 const ADVANCED_OPEN_STORAGE_KEY = 'lobehub-chat-input-params-advanced-open';
 const MODEL_CONFIG_OPEN_STORAGE_KEY = 'lobehub-chat-input-params-model-config-open';
 
@@ -459,7 +468,7 @@ interface ControlRowProps {
   tooltip?: string;
 }
 
-const ControlRow = memo<ControlRowProps>(({ action, children, muted, tag, title, tooltip }) => (
+const ControlRow = ({ action, children, muted, tag, title, tooltip }: ControlRowProps) => (
   <Flexbox className={cx('control-row', styles.rowRoot, muted && styles.muted)} gap={10}>
     <Flexbox horizontal align={'center'} gap={12} justify={'space-between'}>
       <ControlLabel tag={tag} title={title} tooltip={tooltip} />
@@ -467,7 +476,7 @@ const ControlRow = memo<ControlRowProps>(({ action, children, muted, tag, title,
     </Flexbox>
     {children && <div className={styles.rowControl}>{children}</div>}
   </Flexbox>
-));
+);
 
 interface SectionHeaderProps {
   onToggle: () => void;
@@ -491,49 +500,67 @@ interface SliderFieldProps extends SliderConfig {
   value?: number;
 }
 
-const SliderField = memo<SliderFieldProps>(
-  ({ value, disabled, onChange, min, max, step, unlimitedInput, inputWidth = 56 }) => (
-    <SliderWithInput
-      changeOnWheel
-      className={styles.slider}
-      controls={false}
-      disabled={disabled}
-      gap={10}
-      max={max}
-      min={min}
-      size={'small'}
-      step={step}
-      style={{ height: 28 }}
-      unlimitedInput={unlimitedInput}
-      value={value}
-      styles={{
-        input: {
-          maxWidth: inputWidth,
-        },
-      }}
-      onChange={onChange}
-    />
-  ),
+const SliderField = ({
+  value,
+  disabled,
+  onChange,
+  min,
+  max,
+  step,
+  unlimitedInput,
+  inputWidth = 56,
+}: SliderFieldProps) => (
+  <SliderWithInput
+    changeOnWheel
+    className={styles.slider}
+    controls={false}
+    disabled={disabled}
+    gap={10}
+    max={max}
+    min={min}
+    size={'small'}
+    step={step}
+    style={{ height: 28 }}
+    unlimitedInput={unlimitedInput}
+    value={value}
+    styles={{
+      input: {
+        maxWidth: inputWidth,
+      },
+    }}
+    onChange={onChange}
+  />
 );
 
-const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popover' }) => {
+const Controls = ({ variant = 'popover' }: ControlsProps) => {
   const { t } = useTranslation(['setting', 'components']);
   const agentId = useAgentId();
   const { updateAgentConfig } = useUpdateAgentConfig();
   const { allowed: canCreate } = usePermission('create_content');
+  // Saving feedback belongs to this form. Keeping it here prevents a write from
+  // re-rendering whichever toolbar or sidebar merely hosts the panel.
+  const [updating, setUpdating] = useState(false);
 
   const config = useAgentStore(
     (s) => agentByIdSelectors.getAgentConfigById(agentId)(s) || DEFAULT_AGENT_CONFIG,
     isEqual,
   );
-  const agentModel = useAgentStore((s) => agentByIdSelectors.getAgentModelById(agentId)(s));
-  const agentProvider = useAgentStore((s) =>
-    agentByIdSelectors.getAgentModelProviderById(agentId)(s),
+  const { disabledParams, model, provider } = useParamsModelConfig(agentId);
+  const modelExtendParamsList = useAiInfraStore(
+    aiModelSelectors.modelExtendParams(model, provider),
+    isEqual,
+  );
+  // Reasoning fields are user-level model-instance settings now (edited via
+  // the ChatInput Effort control); only non-reasoning params warrant this section
+  const hasModelConfig = (modelExtendParamsList ?? []).some(
+    (param) => !REASONING_PARAMS_SET.has(param),
+  );
+  // Same reason: hide the legacy Advanced raw `params.reasoning_effort` for
+  // those models — the send path strips it in favor of the instance config
+  const hasReasoningExtendParams = (modelExtendParamsList ?? []).some((param) =>
+    REASONING_PARAMS_SET.has(param),
   );
   const enableAgentMode = useAgentStore(agentByIdSelectors.getAgentEnableModeById(agentId));
-  const hasModelConfig = useAiInfraStore(
-    aiModelSelectors.isModelHasExtendParams(agentModel ?? '', agentProvider ?? ''),
-  );
   const [form] = AntdForm.useForm();
   const [advancedOpen, setAdvancedOpen] = useState(() => getStoredOpen(ADVANCED_OPEN_STORAGE_KEY));
   const [modelConfigOpen, setModelConfigOpen] = useState(() =>
@@ -559,9 +586,6 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
   const showFollowUpHint = !globalFollowUpReady && Boolean(enableFollowUpChips);
   const enableReasoningEffort = form.getFieldValue(['chatConfig', 'enableReasoningEffort']);
   const reasoningEffortValue = form.getFieldValue(['params', 'reasoning_effort']);
-  const disabledParams = useAiInfraStore(
-    aiModelSelectors.modelDisabledParams(agentModel ?? '', agentProvider ?? ''),
-  );
   const { frequency_penalty, presence_penalty, temperature, top_p } = config.params ?? {};
 
   const historyCountFromStore = useAgentStore((s) =>
@@ -622,6 +646,56 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
   const panelTitle = enableAgentMode
     ? t('settingModel.params.panel.agentTitle')
     : t('settingModel.params.panel.title');
+
+  // Explicit sub-agent model override, if any. When unset, sub-agents follow
+  // the parent run's effective model — rendered as the select's empty state
+  // (placeholder) rather than a concrete model, so the panel never shows a
+  // model the run won't actually use.
+  const subAgentModelValue = config.agencyConfig?.subagent?.model
+    ? resolveSubAgentModel(config.agencyConfig.subagent)
+    : undefined;
+  const rawSubAgentChatConfig = config.agencyConfig?.subagent?.chatConfig;
+  const subAgentHasReasoningParams = useAiInfraStore(
+    aiModelSelectors.isModelHasReasoningExtendParams(
+      subAgentModelValue?.model || '',
+      subAgentModelValue?.provider || '',
+    ),
+  );
+  const subAgentModelReasoningConfig = useAiInfraStore(
+    aiModelSelectors.modelReasoningConfig(
+      subAgentModelValue?.model || '',
+      subAgentModelValue?.provider || '',
+    ),
+    isEqual,
+  );
+  // Warm the overridden sub-agent model's saved reasoning defaults —
+  // ReasoningConfigLoader only fetches the main effective model
+  const useFetchAiModelReasoningConfig = useAiInfraStore((s) => s.useFetchAiModelReasoningConfig);
+  useFetchAiModelReasoningConfig(
+    subAgentHasReasoningParams ? subAgentModelValue?.model : undefined,
+    subAgentHasReasoningParams ? subAgentModelValue?.provider : undefined,
+  );
+  // Effective sub-agent chatConfig, built the same way the run does
+  // (resolveModelExtendParams / serverCallLlmContextHints): merged parent
+  // config with the migrated reasoning fields stripped ← model-instance
+  // defaults ← explicit sub-agent overrides. Without the same sanitizing, a
+  // legacy parent `chatConfig.reasoningEffort` would show a value the run
+  // ignores, so the controls below stay WYSIWYG.
+  const subAgentChatConfig = useMemo(
+    () =>
+      resolveEffectiveReasoningChatConfig({
+        agentChatConfig: resolveSubAgentChatConfig(config.chatConfig, rawSubAgentChatConfig) ?? {},
+        modelReasoningConfig: subAgentModelReasoningConfig,
+        subAgentReasoningOverrides: rawSubAgentChatConfig,
+      }),
+    [config.chatConfig, rawSubAgentChatConfig, subAgentModelReasoningConfig],
+  );
+  const subAgentHasModelConfig = useAiInfraStore(
+    aiModelSelectors.isModelHasExtendParams(
+      subAgentModelValue?.model || '',
+      subAgentModelValue?.provider || '',
+    ),
+  );
 
   const handleToggle = useCallback(
     async (key: ParamKey, enabled: boolean) => {
@@ -709,6 +783,42 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
       handleValuesChange(form.getFieldsValue(true) as PartialDeep<LobeAgentConfig>);
     },
     [canCreate, form, handleValuesChange, refreshFormValues],
+  );
+
+  const handleSubAgentModelChange = useCallback(
+    async ({ model, provider }: { model: string; provider: string }) => {
+      if (!canCreate) return;
+      setUpdating(true);
+      try {
+        await updateAgentConfig({ agencyConfig: { subagent: { model, provider } } });
+      } finally {
+        setUpdating(false);
+      }
+    },
+    [canCreate, setUpdating, updateAgentConfig],
+  );
+
+  // Back to "follow the main agent model". `null` rather than `undefined`: the
+  // config deep-merge skips `undefined` keys, which would keep the old override.
+  // The thinking overrides are cleared along with the model they were set for.
+  const handleSubAgentModelClear = useCallback(async () => {
+    if (!canCreate) return;
+    setUpdating(true);
+    try {
+      await updateAgentConfig({
+        agencyConfig: { subagent: { chatConfig: null, model: null, provider: null } },
+      });
+    } finally {
+      setUpdating(false);
+    }
+  }, [canCreate, setUpdating, updateAgentConfig]);
+
+  const handleSubAgentChatConfigChange = useCallback(
+    async (patch: Partial<LobeAgentChatConfig>) => {
+      if (!canCreate) return;
+      await updateAgentConfig({ agencyConfig: { subagent: { chatConfig: patch } } });
+    },
+    [canCreate, updateAgentConfig],
   );
 
   const handleAdvancedOpenChange = useCallback(() => {
@@ -846,6 +956,37 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
                 }}
               />
             </ControlRow>
+            {enableAgentMode && (
+              <ControlRow
+                tag="subAgentModel"
+                title={t('settingModel.params.panel.subAgentModel')}
+                tooltip={t('settingModel.subAgentModel.desc')}
+              >
+                <ModelSelect
+                  allowClear
+                  disabled={!canCreate}
+                  placeholder={t('settingModel.subAgentModel.followParent')}
+                  style={{ width: '100%' }}
+                  value={subAgentModelValue}
+                  onChange={handleSubAgentModelChange}
+                  onClear={handleSubAgentModelClear}
+                />
+                {/* Thinking / reasoning-effort controls for the overridden
+                 * sub-agent model. Hidden while following the parent model —
+                 * the sub-agent then inherits the parent's chatConfig wholesale,
+                 * so the main panel's controls already describe it. */}
+                {subAgentModelValue && subAgentHasModelConfig && (
+                  <ControlsForm
+                    chatConfig={subAgentChatConfig}
+                    disabled={!canCreate}
+                    model={subAgentModelValue.model}
+                    provider={subAgentModelValue.provider}
+                    onChatConfigChange={handleSubAgentChatConfigChange}
+                    onUpdatingChange={setUpdating}
+                  />
+                )}
+              </ControlRow>
+            )}
           </div>
           {hasModelConfig && (
             <>
@@ -858,9 +999,10 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
               {modelConfigOpen && (
                 <div className={styles.modelConfigSection}>
                   <ControlsForm
+                    hideReasoningParams
                     disabled={!canCreate}
-                    model={agentModel}
-                    provider={agentProvider}
+                    model={model}
+                    provider={provider}
                     onUpdatingChange={setUpdating}
                   />
                 </div>
@@ -945,44 +1087,51 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
                       />
                     )}
                   </ControlRow>
-                  <ControlRow
-                    tag="reasoning_effort"
-                    title={t('settingModel.reasoningEffort.title')}
-                    tooltip={t('settingModel.reasoningEffort.desc')}
-                    action={
-                      <Switch
-                        checked={Boolean(enableReasoningEffort)}
-                        size={'small'}
-                        onChange={(checked) => {
-                          if (checked && typeof reasoningEffortValue !== 'string') {
-                            form.setFieldValue(['params', 'reasoning_effort'], 'medium');
+                  {!hasReasoningExtendParams && (
+                    <ControlRow
+                      tag="reasoning_effort"
+                      title={t('settingModel.reasoningEffort.title')}
+                      tooltip={t('settingModel.reasoningEffort.desc')}
+                      action={
+                        <Switch
+                          checked={Boolean(enableReasoningEffort)}
+                          size={'small'}
+                          onChange={(checked) => {
+                            if (checked && typeof reasoningEffortValue !== 'string') {
+                              form.setFieldValue(['params', 'reasoning_effort'], 'medium');
+                            }
+                            handleFieldChange(['chatConfig', 'enableReasoningEffort'], checked);
+                          }}
+                        />
+                      }
+                    >
+                      {enableReasoningEffort && (
+                        <Select
+                          size={'small'}
+                          style={{ width: '100%' }}
+                          options={[
+                            { label: t('settingModel.reasoningEffort.options.low'), value: 'low' },
+                            {
+                              label: t('settingModel.reasoningEffort.options.medium'),
+                              value: 'medium',
+                            },
+                            {
+                              label: t('settingModel.reasoningEffort.options.high'),
+                              value: 'high',
+                            },
+                          ]}
+                          value={
+                            typeof reasoningEffortValue === 'string'
+                              ? reasoningEffortValue
+                              : 'medium'
                           }
-                          handleFieldChange(['chatConfig', 'enableReasoningEffort'], checked);
-                        }}
-                      />
-                    }
-                  >
-                    {enableReasoningEffort && (
-                      <Select
-                        size={'small'}
-                        style={{ width: '100%' }}
-                        options={[
-                          { label: t('settingModel.reasoningEffort.options.low'), value: 'low' },
-                          {
-                            label: t('settingModel.reasoningEffort.options.medium'),
-                            value: 'medium',
-                          },
-                          { label: t('settingModel.reasoningEffort.options.high'), value: 'high' },
-                        ]}
-                        value={
-                          typeof reasoningEffortValue === 'string' ? reasoningEffortValue : 'medium'
-                        }
-                        onChange={(value) => {
-                          handleFieldChange(['params', 'reasoning_effort'], value);
-                        }}
-                      />
-                    )}
-                  </ControlRow>
+                          onChange={(value) => {
+                            handleFieldChange(['params', 'reasoning_effort'], value);
+                          }}
+                        />
+                      )}
+                    </ControlRow>
+                  )}
                 </div>
               )}
             </>
@@ -991,6 +1140,6 @@ const Controls = memo<ControlsProps>(({ setUpdating, updating, variant = 'popove
       </div>
     </div>
   );
-});
+};
 
 export default Controls;

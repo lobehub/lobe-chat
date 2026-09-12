@@ -1,15 +1,7 @@
 'use client';
 
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  Flexbox,
-  Skeleton,
-  Text,
-  Tooltip,
-  TooltipGroup,
-} from '@lobehub/ui';
+import { Flexbox, Tooltip, TooltipGroup } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Skeleton, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import { ExternalLink, Globe, Settings } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
@@ -66,7 +58,7 @@ const WorkspaceHeader = memo(() => {
             )}
           </Flexbox>
           {isLoading ? (
-            <Skeleton.Button active style={{ height: 32, width: 140 }} />
+            <Skeleton height={32} width={140} />
           ) : (
             <Flexbox horizontal gap={8}>
               {publicProfileUrl && (

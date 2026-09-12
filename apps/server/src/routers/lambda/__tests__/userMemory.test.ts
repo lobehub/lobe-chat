@@ -1,6 +1,10 @@
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  UserPersonaVersionNotFoundError,
+  UserPersonaVersionSnapshotMissingError,
+} from '@/database/models/userMemory/persona';
 import { userMemoryRouter } from '@/server/routers/lambda/userMemory';
 import { AsyncTaskErrorType, AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 import { MemorySourceType } from '@/types/userMemory';
@@ -13,41 +17,69 @@ const mockFindById = vi.fn();
 const mockCountTopicsForMemoryExtractor = vi.fn();
 const mockDeleteAll = vi.fn();
 const mockDeletePersona = vi.fn();
+const mockListPersonaVersions = vi.fn();
+const mockResetMemoryExtractStatus = vi.fn();
+const mockRestorePersonaVersion = vi.fn();
 const { mockTriggerProcessUsers } = vi.hoisted(() => ({
   mockTriggerProcessUsers: vi.fn(),
 }));
 
 vi.mock('@/database/models/asyncTask', () => ({
-  AsyncTaskModel: vi.fn(() => ({
-    create: mockCreate,
-    findById: mockFindById,
-    findActiveByType: mockFindActiveByType,
-    update: mockUpdate,
-  })),
-  initUserMemoryExtractionMetadata: vi.fn((metadata) => metadata),
+  AsyncTaskModel: vi.fn(function () {
+    return {
+      create: mockCreate,
+      findById: mockFindById,
+      findActiveByType: mockFindActiveByType,
+      update: mockUpdate,
+    };
+  }),
+  initUserMemoryExtractionMetadata: vi.fn(function (metadata) {
+    return metadata;
+  }),
 }));
 
 vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn(() => ({
-    countTopicsForMemoryExtractor: mockCountTopicsForMemoryExtractor,
-  })),
+  TopicModel: vi.fn(function () {
+    return {
+      countTopicsForMemoryExtractor: mockCountTopicsForMemoryExtractor,
+      resetMemoryExtractStatus: mockResetMemoryExtractStatus,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/userMemory', () => ({
-  UserMemoryActivityModel: vi.fn(() => ({})),
-  UserMemoryContextModel: vi.fn(() => ({})),
-  UserMemoryExperienceModel: vi.fn(() => ({})),
-  UserMemoryIdentityModel: vi.fn(() => ({})),
-  UserMemoryModel: vi.fn(() => ({
-    deleteAll: mockDeleteAll,
-  })),
-  UserMemoryPreferenceModel: vi.fn(() => ({})),
+  UserMemoryActivityModel: vi.fn(function () {
+    return {};
+  }),
+  UserMemoryContextModel: vi.fn(function () {
+    return {};
+  }),
+  UserMemoryExperienceModel: vi.fn(function () {
+    return {};
+  }),
+  UserMemoryIdentityModel: vi.fn(function () {
+    return {};
+  }),
+  UserMemoryModel: vi.fn(function () {
+    return {
+      deleteAll: mockDeleteAll,
+    };
+  }),
+  UserMemoryPreferenceModel: vi.fn(function () {
+    return {};
+  }),
 }));
 
 vi.mock('@/database/models/userMemory/persona', () => ({
-  UserPersonaModel: vi.fn(() => ({
-    deletePersona: mockDeletePersona,
-  })),
+  UserPersonaVersionNotFoundError: class UserPersonaVersionNotFoundError extends Error {},
+  UserPersonaVersionSnapshotMissingError: class UserPersonaVersionSnapshotMissingError extends Error {},
+  UserPersonaModel: vi.fn(function () {
+    return {
+      deletePersona: mockDeletePersona,
+      listVersions: mockListPersonaVersions,
+      restoreVersion: mockRestorePersonaVersion,
+    };
+  }),
 }));
 
 vi.mock('@/envs/app', () => ({
@@ -58,10 +90,12 @@ vi.mock('@/envs/app', () => ({
 }));
 
 vi.mock('@/server/globalConfig/parseMemoryExtractionConfig', () => ({
-  parseMemoryExtractionConfig: vi.fn(() => ({
-    webhook: { baseUrl: 'https://internal.example.com' },
-    upstashWorkflowExtraHeaders: { 'x-test': 'ok' },
-  })),
+  parseMemoryExtractionConfig: vi.fn(function () {
+    return {
+      webhook: { baseUrl: 'https://internal.example.com' },
+      upstashWorkflowExtraHeaders: { 'x-test': 'ok' },
+    };
+  }),
 }));
 
 vi.mock('@/server/services/memory/userMemory/extract', () => ({
@@ -309,12 +343,75 @@ describe('userMemoryRouter.deleteAll', () => {
   it('purges all user memories through the aggregate model', async () => {
     mockDeleteAll.mockResolvedValue(undefined);
     mockDeletePersona.mockResolvedValue(undefined);
+    mockResetMemoryExtractStatus.mockResolvedValue(undefined);
 
     const caller = createCaller();
     const result = await caller.deleteAll();
 
     expect(mockDeleteAll).toHaveBeenCalledOnce();
     expect(mockDeletePersona).toHaveBeenCalledOnce();
+    expect(mockResetMemoryExtractStatus).toHaveBeenCalledOnce();
     expect(result).toEqual({ success: true });
   });
+});
+
+describe('userMemoryRouter persona versions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('lists the caller persona history projection', async () => {
+    const versions = [
+      {
+        createdAt: new Date('2026-07-20T00:00:00.000Z'),
+        id: 'history-1',
+        nextVersion: 2,
+        previousVersion: 1,
+        snapshotPersona: '# Persona',
+        snapshotTagline: 'Tagline',
+      },
+    ];
+    mockListPersonaVersions.mockResolvedValue(versions);
+
+    await expect(createCaller().listPersonaVersions()).resolves.toEqual(versions);
+    expect(mockListPersonaVersions).toHaveBeenCalledWith();
+  });
+
+  it('restores a historical snapshot as a new persona version', async () => {
+    mockRestorePersonaVersion.mockResolvedValue({ document: { version: 4 } });
+
+    await expect(createCaller().restorePersonaVersion({ historyId: 'history-1' })).resolves.toEqual(
+      { historyId: 'history-1', personaVersion: 4 },
+    );
+    expect(mockRestorePersonaVersion).toHaveBeenCalledWith('history-1');
+  });
+
+  it('maps an unavailable persona version to not found', async () => {
+    mockRestorePersonaVersion.mockRejectedValue(new UserPersonaVersionNotFoundError());
+
+    await expect(
+      createCaller().restorePersonaVersion({ historyId: 'history-missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+  });
+
+  it('maps a missing persona snapshot to a failed precondition', async () => {
+    mockRestorePersonaVersion.mockRejectedValue(new UserPersonaVersionSnapshotMissingError());
+
+    await expect(
+      createCaller().restorePersonaVersion({ historyId: 'history-incomplete' }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' });
+  });
+
+  it.each(['listPersonaVersions', 'restorePersonaVersion'] as const)(
+    'rejects %s in workspace scope',
+    async (procedure) => {
+      const caller = createCaller({ workspaceId: 'workspace-1' });
+      const operation =
+        procedure === 'listPersonaVersions'
+          ? caller.listPersonaVersions()
+          : caller.restorePersonaVersion({ historyId: 'history-1' });
+
+      await expect(operation).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    },
+  );
 });

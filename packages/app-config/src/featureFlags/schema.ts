@@ -1,3 +1,4 @@
+import type { IFeatureFlagsState } from '@lobechat/types';
 import { z } from 'zod';
 
 // Define a union type for feature flag values: either boolean or array of user IDs
@@ -17,8 +18,17 @@ export const FeatureFlagsSchema = z.object({
   api_key_manage: FeatureFlagValue.optional(),
   edit_agent: FeatureFlagValue.optional(),
 
+  /**
+   * Rollout gate for publishing or re-enabling Agent Share. Array values are
+   * creator user IDs. Visiting, chatting on, and managing existing shares do
+   * not require this flag. Deployment support is independently enforced by
+   * `ENABLE_BUSINESS_FEATURES` (see `_helpers/agentShareFeatureGate.ts`).
+   */
+  agent_share: FeatureFlagValue.optional(),
+
   ai_image: FeatureFlagValue.optional(),
   speech_to_text: FeatureFlagValue.optional(),
+  voice_dictation: FeatureFlagValue.optional(),
   token_counter: FeatureFlagValue.optional(),
 
   welcome_suggest: FeatureFlagValue.optional(),
@@ -32,9 +42,12 @@ export const FeatureFlagsSchema = z.object({
   // internal flag
   agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
+  dev_dock: FeatureFlagValue.optional(),
+  dev_dock_workspaces: z.array(z.string()).optional(),
   // Cloud feature flag. Keep here until cloud owns a separate runtime flag domain.
   auth_captcha: FeatureFlagValue.optional(),
   cloud_promotion: FeatureFlagValue.optional(),
+  onboarding_v2: FeatureFlagValue.optional(),
   storage_overage: FeatureFlagValue.optional(),
   workspace: FeatureFlagValue.optional(),
 
@@ -60,7 +73,8 @@ export const evaluateFeatureFlag = (
   if (typeof flagValue === 'boolean') return flagValue;
 
   if (Array.isArray(flagValue)) {
-    return userId ? flagValue.includes(userId) : false;
+    if (userId && flagValue.includes(userId)) return true;
+    return false;
   }
 };
 
@@ -73,6 +87,12 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   api_key_manage: false,
   edit_agent: true,
 
+  // Cloud-only grayscale: off everywhere until an admin publishes a whitelist
+  // (array of user IDs) or flips it to true. Self-hosted deployments
+  // are additionally hard-blocked by ENABLE_BUSINESS_FEATURES on the server
+  // gate, so setting this env-side does not enable the feature there.
+  agent_share: false,
+
   ai_image: true,
 
   check_updates: true,
@@ -84,13 +104,16 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   agent_self_iteration: isDev,
   agent_onboarding: isDev,
+  dev_dock: isDev,
   auth_captcha: true,
   cloud_promotion: false,
+  onboarding_v2: isDev,
   storage_overage: true,
-  workspace: false,
+  workspace: isDev,
 
   market: true,
   speech_to_text: true,
+  voice_dictation: false,
   changelog: true,
 
   // the flags below can only be used with commercial license
@@ -100,9 +123,17 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   commercial_hide_docs: false,
 };
 
-export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string) => {
+// The explicit return type pins this mapping to the canonical shared interface:
+// adding a flag here without updating `IFeatureFlagsState` (or vice versa) is a
+// compile error, so the two can never drift apart.
+export const mapFeatureFlagsEnvToState = (
+  config: IFeatureFlags,
+  userId?: string,
+): IFeatureFlagsState => {
   return {
     isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
+
+    enableAgentShare: evaluateFeatureFlag(config.agent_share, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
@@ -120,7 +151,9 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
     enableAgentSelfIteration: evaluateFeatureFlag(config.agent_self_iteration, userId),
     enableAgentOnboarding: evaluateFeatureFlag(config.agent_onboarding, userId),
+    enableDevDock: evaluateFeatureFlag(config.dev_dock, userId),
     enableAuthCaptcha: evaluateFeatureFlag(config.auth_captcha, userId),
+    enableOnboardingV2: evaluateFeatureFlag(config.onboarding_v2, userId),
     enableStorageOverage: evaluateFeatureFlag(config.storage_overage, userId),
 
     showCloudPromotion: evaluateFeatureFlag(config.cloud_promotion, userId),
@@ -128,10 +161,11 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     showMarket: evaluateFeatureFlag(config.market, userId),
     enableSTT: evaluateFeatureFlag(config.speech_to_text, userId),
+    enableVoiceDictation: evaluateFeatureFlag(config.voice_dictation, userId),
 
     hideGitHub: evaluateFeatureFlag(config.commercial_hide_github, userId),
     hideDocs: evaluateFeatureFlag(config.commercial_hide_docs, userId),
   };
 };
 
-export type IFeatureFlagsState = ReturnType<typeof mapFeatureFlagsEnvToState>;
+export type { IFeatureFlagsState };

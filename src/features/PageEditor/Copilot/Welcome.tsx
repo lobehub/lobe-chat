@@ -1,6 +1,7 @@
 'use client';
 
-import { Avatar, Flexbox, Markdown, Text } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { Avatar, Text } from '@lobehub/ui/base-ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,9 +30,6 @@ const AgentBuilderWelcome = memo(() => {
         <Text fontSize={24} weight={'bold'}>
           {t('pageCopilot.title')}
         </Text>
-        <Markdown fontSize={14} variant={'chat'}>
-          {t('pageCopilot.welcome')}
-        </Markdown>
         <SuggestQuestions count={3} mode="write" />
       </Flexbox>
     </>

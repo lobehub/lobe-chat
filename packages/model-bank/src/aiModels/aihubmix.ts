@@ -1,4 +1,4 @@
-import { gptImage2Schema } from '../const/imageParameters';
+import { gptImage2Schema, nanoBanana2LiteParameters } from '../const/imageParameters';
 import type { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 
 const aihubmixChatModels: AIChatModelCard[] = [
@@ -22,39 +22,30 @@ const aihubmixChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 5,
-              '[0.272, infinity]': 10,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 5, upTo: 272_000 },
+            { rate: 10, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 0.5,
-              '[0.272, infinity]': 1,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput_cacheRead',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 272_000 },
+            { rate: 1, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 30,
-              '[0.272, infinity]': 45,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 30, upTo: 272_000 },
+            { rate: 45, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -86,39 +77,30 @@ const aihubmixChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 2.5,
-              '[0.272, infinity]': 5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 2.5, upTo: 272_000 },
+            { rate: 5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 0.25,
-              '[0.272, infinity]': 0.5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput_cacheRead',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.25, upTo: 272_000 },
+            { rate: 0.5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 15,
-              '[0.272, infinity]': 22.5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 15, upTo: 272_000 },
+            { rate: 22.5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -212,27 +194,21 @@ const aihubmixChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 30,
-              '[0.272, infinity]': 60,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 30, upTo: 272_000 },
+            { rate: 60, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 180,
-              '[0.272, infinity]': 270,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 180, upTo: 272_000 },
+            { rate: 270, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -1139,43 +1115,6 @@ const aihubmixChatModels: AIChatModelCard[] = [
       structuredOutput: true,
       vision: true,
     },
-    contextWindowTokens: 200_000,
-    description:
-      'Claude Opus 4.1 is Anthropic’s newest and most powerful model for highly complex tasks, excelling in performance, intelligence, fluency, and comprehension.',
-    displayName: 'Claude Opus 4.1',
-    family: 'claude-opus',
-    generation: 'claude-4.1',
-    id: 'claude-opus-4-1-20250805',
-    knowledgeCutoff: '2025-01',
-    maxOutput: 32_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 16.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 82.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: { prices: { '5m': 20.625 }, pricingParams: ['ttl'] },
-          name: 'textInput_cacheWrite',
-          strategy: 'lookup',
-          unit: 'millionTokens',
-        },
-      ],
-    },
-    releasedAt: '2025-08-05',
-    settings: {
-      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      structuredOutput: true,
-      vision: true,
-    },
     contextWindowTokens: 1_000_000,
     description: 'Claude Sonnet 4.6 is Anthropic’s best combination of speed and intelligence.',
     displayName: 'Claude Sonnet 4.6',
@@ -1867,6 +1806,25 @@ const aihubmixChatModels: AIChatModelCard[] = [
 ];
 
 const aihubmixImageModels: AIImageModelCard[] = [
+  {
+    description:
+      "Gemini 3.1 Flash Lite Image (Nano Banana 2 Lite) is Google's fastest and most cost-efficient image generation model, built for high-volume generation and editing.",
+    displayName: 'Nano Banana 2 Lite',
+    enabled: true,
+    id: 'gemini-3.1-flash-lite-image:image',
+    parameters: nanoBanana2LiteParameters,
+    pricing: {
+      approximatePricePerImage: 0.034,
+      units: [
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2026-06-30',
+    type: 'image',
+  },
   {
     description:
       "OpenAI's next-generation multimodal image model with native reasoning, up to 4K resolution, near-perfect text rendering, and high-fidelity multilingual support.",

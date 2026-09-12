@@ -17,8 +17,11 @@ const mocks = vi.hoisted(() => {
   };
 
   return {
+    buildDeviceLhEnv: vi.fn(),
     checkHash: vi.fn(),
-    createSandboxService: vi.fn(() => sandboxService),
+    createSandboxService: vi.fn(function () {
+      return sandboxService;
+    }),
     executeToolCall: vi.fn(),
     fileService: {
       getFullFileUrl: vi.fn(),
@@ -26,6 +29,7 @@ const mocks = vi.hoisted(() => {
     findAll: vi.fn(),
     findById: vi.fn(),
     findByName: vi.fn(),
+    isLhCommand: vi.fn(),
     getAgentConfigById: vi.fn(),
     getAgentSkills: vi.fn(),
     getUserSettings: vi.fn(),
@@ -33,6 +37,7 @@ const mocks = vi.hoisted(() => {
     prepareSkillDirectory: vi.fn(),
     preprocessLhCommand: vi.fn(),
     readResource: vi.fn(),
+    resolveContentWorkspaceId: vi.fn(),
     resolveRunWorkspaceId: vi.fn(),
     sandboxService,
   };
@@ -43,47 +48,63 @@ vi.mock('@lobechat/builtin-skills', () => ({
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn(() => ({
-    getAgentConfigById: mocks.getAgentConfigById,
-  })),
+  AgentModel: vi.fn(function () {
+    return {
+      getAgentConfigById: mocks.getAgentConfigById,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/agentSkill', () => ({
-  AgentSkillModel: vi.fn(() => ({
-    findAll: mocks.findAll,
-    findById: mocks.findById,
-    findByName: mocks.findByName,
-  })),
+  AgentSkillModel: vi.fn(function () {
+    return {
+      findAll: mocks.findAll,
+      findById: mocks.findById,
+      findByName: mocks.findByName,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/file', () => ({
-  FileModel: vi.fn(() => ({
-    checkHash: mocks.checkHash,
-  })),
+  FileModel: vi.fn(function () {
+    return {
+      checkHash: mocks.checkHash,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: vi.fn(() => ({
-    getUserSettings: mocks.getUserSettings,
-  })),
+  UserModel: vi.fn(function () {
+    return {
+      getUserSettings: mocks.getUserSettings,
+    };
+  }),
 }));
 
 vi.mock('@/helpers/skillFilters', () => ({
-  filterBuiltinSkills: vi.fn((skills: unknown) => skills),
+  filterBuiltinSkills: vi.fn(function (skills: unknown) {
+    return skills;
+  }),
 }));
 
 vi.mock('@/server/services/agentDocuments', () => ({
-  AgentDocumentsService: vi.fn(() => ({
-    getAgentSkills: mocks.getAgentSkills,
-  })),
+  AgentDocumentsService: vi.fn(function () {
+    return {
+      getAgentSkills: mocks.getAgentSkills,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => mocks.fileService),
+  FileService: vi.fn(function () {
+    return mocks.fileService;
+  }),
 }));
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn(() => mocks.marketService),
+  MarketService: vi.fn(function () {
+    return mocks.marketService;
+  }),
 }));
 
 vi.mock('@/server/services/sandbox', async () => {
@@ -96,23 +117,32 @@ vi.mock('@/server/services/sandbox', async () => {
 });
 
 vi.mock('@/server/services/skill/resource', () => ({
-  SkillResourceService: vi.fn(() => ({
-    readResource: mocks.readResource,
-  })),
+  SkillResourceService: vi.fn(function () {
+    return {
+      readResource: mocks.readResource,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/toolExecution/preprocessLhCommand', () => ({
+  buildDeviceLhEnv: mocks.buildDeviceLhEnv,
+  isLhCommand: mocks.isLhCommand,
   preprocessLhCommand: mocks.preprocessLhCommand,
 }));
 
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
-    executeToolCall: mocks.executeToolCall,
     prepareSkillDirectory: mocks.prepareSkillDirectory,
   },
 }));
 
+vi.mock('@/server/services/deviceGateway/authorizedToolCall', () => ({
+  executeAuthorizedDeviceToolCall: (_serverDB: unknown, ...args: unknown[]) =>
+    mocks.executeToolCall(...args),
+}));
+
 vi.mock('../resolveWorkspaceScope', () => ({
+  resolveContentWorkspaceId: mocks.resolveContentWorkspaceId,
   resolveRunWorkspaceId: mocks.resolveRunWorkspaceId,
 }));
 
@@ -138,11 +168,17 @@ describe('skillsRuntime', () => {
     });
     mocks.getAgentSkills.mockResolvedValue([]);
     mocks.getUserSettings.mockResolvedValue({ market: { accessToken: 'market-token' } });
-    mocks.preprocessLhCommand.mockResolvedValue({
-      command: 'echo ok',
+    // Pass-through by default: the runtime now routes both runCommand and
+    // execScript through preprocessing, so a fixed return value would rewrite
+    // every command in the suite.
+    mocks.preprocessLhCommand.mockImplementation(async (command: string) => ({
+      command,
       isLhCommand: false,
       skipSkillLookup: false,
-    });
+    }));
+    mocks.isLhCommand.mockReturnValue(false);
+    mocks.buildDeviceLhEnv.mockReturnValue(undefined);
+    mocks.resolveContentWorkspaceId.mockResolvedValue(undefined);
     mocks.resolveRunWorkspaceId.mockResolvedValue(undefined);
     mocks.sandboxService.callTool.mockResolvedValue({
       result: {
@@ -244,7 +280,8 @@ describe('skillsRuntime', () => {
       isLhCommand: true,
       skipSkillLookup: true,
     });
-    mocks.resolveRunWorkspaceId.mockResolvedValueOnce('workspace-1');
+    mocks.isLhCommand.mockReturnValue(true);
+    mocks.resolveContentWorkspaceId.mockResolvedValueOnce('workspace-1');
 
     const { skillsRuntime } = await import('../skills');
     const runtime = await skillsRuntime.factory({
@@ -257,7 +294,7 @@ describe('skillsRuntime', () => {
 
     await runtime.runCommand({ command: 'lh agent edit agt_123 -s "new prompt"' });
 
-    expect(mocks.resolveRunWorkspaceId).toHaveBeenCalledWith(
+    expect(mocks.resolveContentWorkspaceId).toHaveBeenCalledWith(
       expect.objectContaining({ agentId: 'agent-1' }),
     );
     expect(mocks.preprocessLhCommand).toHaveBeenCalledWith(
@@ -265,6 +302,105 @@ describe('skillsRuntime', () => {
       'user-1',
       'workspace-1',
     );
+  });
+
+  // The client-side executor (routers/tools/market.ts) has always preprocessed
+  // execScript too; on Cloud, where gateway mode routes through this runtime
+  // instead, `lh` inside execScript reached the sandbox raw — no CLI, no
+  // credentials, no workspace scope.
+  it('preprocesses lh commands passed to execScript, not just runCommand', async () => {
+    mocks.preprocessLhCommand.mockResolvedValueOnce({
+      command:
+        'lh() { LOBEHUB_WORKSPACE_ID=\'workspace-1\' npx -y @lobehub/cli "$@"; }\nlh agent edit agt_123 -t x',
+      isLhCommand: true,
+      skipSkillLookup: true,
+    });
+
+    const { skillsRuntime } = await import('../skills');
+    const runtime = await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+      workspaceId: 'workspace-1',
+    });
+
+    await runtime.execScript({
+      activatedSkills: [],
+      command: 'lh agent edit agt_123 -t x',
+      description: 'Edit myself',
+    });
+
+    expect(mocks.preprocessLhCommand).toHaveBeenCalledWith(
+      'lh agent edit agt_123 -t x',
+      'user-1',
+      'workspace-1',
+    );
+    expect(mocks.sandboxService.callTool).toHaveBeenCalledWith(
+      'execScript',
+      expect.objectContaining({
+        command:
+          'lh() { LOBEHUB_WORKSPACE_ID=\'workspace-1\' npx -y @lobehub/cli "$@"; }\nlh agent edit agt_123 -t x',
+      }),
+    );
+  });
+
+  it('surfaces a preprocessing auth failure from execScript instead of running raw', async () => {
+    mocks.preprocessLhCommand.mockResolvedValueOnce({
+      command: 'lh agent list',
+      error: 'Failed to authenticate for CLI execution',
+      isLhCommand: true,
+      skipSkillLookup: true,
+    });
+
+    const { skillsRuntime } = await import('../skills');
+    const runtime = await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+    });
+
+    const result = await runtime.execScript({
+      activatedSkills: [],
+      command: 'lh agent list',
+      description: 'List agents',
+    });
+
+    expect(mocks.sandboxService.callTool).not.toHaveBeenCalled();
+    expect(result.state).toMatchObject({ success: false });
+  });
+
+  it('scopes device-routed execScript lh commands to the run workspace', async () => {
+    mocks.buildDeviceLhEnv.mockReturnValue({ LOBEHUB_WORKSPACE_ID: 'workspace-1' });
+    mocks.resolveContentWorkspaceId.mockResolvedValue('workspace-1');
+    mocks.executeToolCall.mockResolvedValue({
+      state: { exitCode: 0, stdout: 'ok', success: true },
+      success: true,
+    });
+
+    const { skillsRuntime } = await import('../skills');
+    const runtime = await skillsRuntime.factory({
+      activeDeviceId: 'device-1',
+      agentId: 'agent-1',
+      operationId: 'op-1',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+      workspaceId: 'workspace-1',
+    });
+
+    await runtime.execScript({
+      activatedSkills: [],
+      command: 'lh agent edit agt_123 -t x',
+      description: 'Edit myself',
+    });
+
+    const [, toolCall] = mocks.executeToolCall.mock.calls.at(-1)!;
+    expect(JSON.parse(toolCall.arguments).env).toEqual({ LOBEHUB_WORKSPACE_ID: 'workspace-1' });
+    // Auth stays with the device — the caller's token must not travel there.
+    expect(JSON.parse(toolCall.arguments).env).not.toHaveProperty('LOBEHUB_JWT');
   });
 
   describe('disabled skill enforcement', () => {
@@ -544,9 +680,9 @@ describe('skillsRuntime', () => {
       // Hold both prepares pending to prove the second RPC fires before the
       // first resolves (a sequential await chain would deadlock this test).
       const resolvers: ((value: { extractedDir: string; success: boolean }) => void)[] = [];
-      mocks.prepareSkillDirectory.mockImplementation(
-        () => new Promise((resolve) => resolvers.push(resolve)),
-      );
+      mocks.prepareSkillDirectory.mockImplementation(function () {
+        return new Promise((resolve) => resolvers.push(resolve));
+      });
       mocks.executeToolCall.mockResolvedValue({
         content: 'ok',
         state: { exitCode: 0, stdout: 'ok', success: true },
@@ -872,5 +1008,43 @@ describe('skillsRuntime', () => {
     expect(filterBuiltinSkills).toHaveBeenLastCalledWith(expect.anything(), {
       canExecuteOnDevice: true,
     });
+  });
+
+  // Regression guard for the split-sandbox bug: the sandbox session is keyed by
+  // the acting account, which is derived from the trusted-client token. Without
+  // `workspaceId` this runtime acted as the personal account while `lobe-creds`
+  // and `lobe-cloud-sandbox` (which pass it) acted as the workspace, so
+  // credentials injected for a workspace topic were invisible to every command
+  // run here.
+  it('scopes the market identity to the run workspace so sandbox calls share one session', async () => {
+    const { MarketService } = await import('@/server/services/market');
+    const { skillsRuntime } = await import('../skills');
+
+    await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+      workspaceId: 'workspace-1',
+    });
+
+    expect(MarketService).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        userInfo: { userId: 'user-1', workspaceId: 'workspace-1' },
+      }),
+    );
+
+    await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+    });
+
+    expect(MarketService).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        userInfo: { userId: 'user-1', workspaceId: undefined },
+      }),
+    );
   });
 });

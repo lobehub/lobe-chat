@@ -4,6 +4,34 @@ export default {
   'Plugins': 'Skills',
   'artifacts.display.code': 'Code',
   'artifacts.display.preview': 'Preview',
+  'artifacts.deploy.copy': 'Copy URL',
+  'artifacts.deploy.copySuccess': 'Deployment URL copied',
+  'artifacts.deploy.confirm.action': 'Publish artifact',
+  'artifacts.deploy.confirm.content':
+    'Anyone with the link can open this artifact. Before publishing, make sure it does not contain anything you would rather keep private, such as credentials, API keys, personal information, uploaded files, or images.',
+  'artifacts.deploy.confirm.note': 'You can unpublish it at any time.',
+  'artifacts.deploy.confirm.title': 'Before you publish this artifact',
+  'artifacts.deploy.failed': 'Deployment failed',
+  'artifacts.deploy.history': 'Revision history',
+  'artifacts.deploy.highestPlanCapacityLimitReached':
+    'Current self-service deployment capacity has been reached. Manage published projects or reduce deployment usage.',
+  'artifacts.deploy.highestPlanLimitReached':
+    'Public deployment limit reached ({{used}} / {{limit}}). Unpublish a project to free a slot.',
+  'artifacts.deploy.highestPlanSizeLimitReached':
+    'This site is {{actual}}, above the {{limit}} self-service limit. Reduce its assets before publishing.',
+  'artifacts.deploy.limitReached':
+    'Public deployment limit reached ({{used}} / {{limit}}). Unpublish a project or upgrade your plan.',
+  'artifacts.deploy.open': 'Open deployment',
+  'artifacts.deploy.outdated': 'Older version live',
+  'artifacts.deploy.publish': 'Publish',
+  'artifacts.deploy.publishNewVersion': 'Publish this version',
+  'artifacts.deploy.quotaUnavailable':
+    'Deployment quota validation is temporarily unavailable. Try again later.',
+  'artifacts.deploy.serviceOverloaded':
+    'Artifact hosting is temporarily overloaded. Try publishing again shortly.',
+  'artifacts.deploy.success': 'Published',
+  'artifacts.deploy.writeInProgress':
+    'Another deployment change is in progress. Try again shortly.',
   'artifacts.svg.copyAsImage': 'Copy as Image',
   'artifacts.svg.copyFail': 'Copy failed: {{error}}. Try again.',
   'artifacts.svg.copySuccess': 'Image copied successfully',

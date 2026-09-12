@@ -1,4 +1,5 @@
-import { Button, stopPropagation, Tooltip } from '@lobehub/ui';
+import { stopPropagation, Tooltip } from '@lobehub/ui';
+import { Button } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cx } from 'antd-style';
 import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon } from 'lucide-react';
@@ -61,19 +62,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
     background: ${cssVar.colorFillQuaternary};
   `,
-  markdownLoading: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 120px;
-    border-radius: ${cssVar.borderRadiusLG};
-
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
   markdownPreview: css`
     position: relative;
 
@@ -132,13 +120,12 @@ interface MarkdownFileItemProps {
   chunkCount?: number | null;
   chunkingError?: IAsyncTaskError | null;
   chunkingStatus?: AsyncTaskStatus | null;
+  contentPreview?: string | null;
   embeddingError?: IAsyncTaskError | null;
   embeddingStatus?: AsyncTaskStatus | null;
   fileType?: string;
   finishEmbedding?: boolean;
   id: string;
-  isLoadingMarkdown: boolean;
-  markdownContent: string;
   name: string;
   size: number;
 }
@@ -148,13 +135,12 @@ const MarkdownFileItem = memo<MarkdownFileItemProps>(
     chunkCount,
     chunkingError,
     chunkingStatus,
+    contentPreview,
     embeddingError,
     embeddingStatus,
     fileType,
     finishEmbedding,
     id,
-    isLoadingMarkdown,
-    markdownContent,
     name,
     size,
   }) => {
@@ -169,10 +155,8 @@ const MarkdownFileItem = memo<MarkdownFileItemProps>(
     return (
       <>
         <div style={{ position: 'relative' }}>
-          {isLoadingMarkdown ? (
-            <div className={styles.markdownLoading}>Loading preview...</div>
-          ) : markdownContent ? (
-            <div className={styles.markdownPreview}>{markdownContent}</div>
+          {contentPreview ? (
+            <div className={styles.markdownPreview}>{contentPreview}</div>
           ) : (
             <div className={styles.iconWrapper}>
               <FileIcon fileName={name} fileType={fileType} size={64} />

@@ -1,36 +1,66 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DiscoverService } from '@/server/services/discover';
+
 import { agentBuilderRuntime } from '../agentBuilder';
 
-const { mockGetAgentConfigById, mockUpdateConfig, mockFindById, mockCreatePlugin } = vi.hoisted(
-  () => ({
-    mockCreatePlugin: vi.fn(),
-    mockFindById: vi.fn(),
-    mockGetAgentConfigById: vi.fn(),
-    mockUpdateConfig: vi.fn(),
-  }),
-);
+const {
+  mockCreatePlugin,
+  mockFindById,
+  mockGetAgentConfigById,
+  mockGetAiProviderList,
+  mockGetAiProviderModelList,
+  mockGetHiddenBuiltinModelsForUser,
+  mockUpdateAgent,
+  mockUpdateConfig,
+} = vi.hoisted(() => ({
+  mockCreatePlugin: vi.fn(),
+  mockFindById: vi.fn(),
+  mockGetAgentConfigById: vi.fn(),
+  mockGetAiProviderList: vi.fn(),
+  mockGetAiProviderModelList: vi.fn(),
+  mockGetHiddenBuiltinModelsForUser: vi.fn(),
+  mockUpdateAgent: vi.fn(),
+  mockUpdateConfig: vi.fn(),
+}));
+
+vi.mock('@/business/server/aiProvider', () => ({
+  getHiddenBuiltinModelsForUser: mockGetHiddenBuiltinModelsForUser,
+  getModelRedirects: vi.fn(async () => ({})),
+}));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn(() => ({
-    getAgentConfigById: mockGetAgentConfigById,
-    updateConfig: mockUpdateConfig,
-  })),
+  AgentModel: vi.fn(function () {
+    return {
+      getAgentConfigById: mockGetAgentConfigById,
+      update: mockUpdateAgent,
+      updateConfig: mockUpdateConfig,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn(() => ({
-    create: mockCreatePlugin,
-    findById: mockFindById,
-  })),
+  PluginModel: vi.fn(function () {
+    return {
+      create: mockCreatePlugin,
+      findById: mockFindById,
+    };
+  }),
 }));
 
 vi.mock('@/database/repositories/aiInfra', () => ({
-  AiInfraRepos: vi.fn(() => ({})),
+  AiInfraRepos: vi.fn(function () {
+    return {
+      getAiProviderList: mockGetAiProviderList,
+      getAiProviderModelList: mockGetAiProviderModelList,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/discover', () => ({
-  DiscoverService: vi.fn(() => ({})),
+  DiscoverService: vi.fn(function () {
+    return {};
+  }),
 }));
 
 const createRuntime = () =>
@@ -41,9 +71,58 @@ const createRuntime = () =>
     userId: 'user-1',
   });
 
+const createWorkspaceRuntime = () =>
+  agentBuilderRuntime.factory({
+    editingAgentId: 'agent-1',
+    serverDB: {} as never,
+    toolManifestMap: {},
+    userId: 'user-1',
+    workspaceId: 'workspace-1',
+  });
+
 describe('agentBuilderRuntime', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetHiddenBuiltinModelsForUser.mockResolvedValue(undefined);
+  });
+
+  describe('getAvailableModels', () => {
+    it('does not query or expose models when access cannot be resolved', async () => {
+      mockGetAiProviderList.mockResolvedValue([{ enabled: true, id: 'lobehub', name: 'LobeHub' }]);
+
+      const result = await createRuntime().getAvailableModels({});
+
+      expect(result).toMatchObject({
+        state: { providers: [] },
+        success: true,
+      });
+      expect(mockGetAiProviderModelList).not.toHaveBeenCalled();
+    });
+
+    it('does not expose models hidden for the current user', async () => {
+      mockGetAiProviderList.mockResolvedValue([{ enabled: true, id: 'lobehub', name: 'LobeHub' }]);
+      mockGetAiProviderModelList.mockResolvedValue([
+        { displayName: 'Hidden Chat', id: 'hidden-chat' },
+        { displayName: 'Visible Chat', id: 'visible-chat' },
+      ]);
+      mockGetHiddenBuiltinModelsForUser.mockResolvedValue([
+        { id: 'hidden-chat', providerId: 'lobehub' },
+      ]);
+
+      const result = await createRuntime().getAvailableModels({});
+
+      expect(result).toMatchObject({
+        state: {
+          providers: [
+            {
+              id: 'lobehub',
+              models: [{ id: 'visible-chat', name: 'Visible Chat' }],
+            },
+          ],
+        },
+        success: true,
+      });
+    });
   });
 
   describe('updateConfig - togglePlugin', () => {
@@ -57,6 +136,7 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).toHaveBeenCalledWith('agent-1', {
         plugins: ['plugin-a', { identifier: 'plugin-b', mode: 'pinned' }],
       });
@@ -75,6 +155,7 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).toHaveBeenCalledWith('agent-1', {
         plugins: ['plugin-a', { identifier: 'plugin-b', mode: 'pinned' }],
       });
@@ -93,7 +174,78 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).toHaveBeenCalledWith('agent-1', { plugins: ['plugin-a'] });
+    });
+
+    it('returns the invocation target for a successful no-op', async () => {
+      mockGetAgentConfigById.mockResolvedValue({ id: 'agent-1', plugins: [] });
+
+      const runtime = createRuntime();
+      const result = await runtime.updateConfig(
+        {},
+        { editingAgentId: 'agent-1', toolManifestMap: {} },
+      );
+
+      expect(result).toMatchObject({
+        state: { agentId: 'agent-1', success: true },
+        success: true,
+      });
+    });
+
+    it('applies metadata nested under config instead of reporting a successful no-op', async () => {
+      mockGetAgentConfigById.mockResolvedValue({ id: 'agent-1', plugins: [] });
+
+      const runtime = createRuntime();
+      const params = {
+        config: {
+          meta: {
+            avatar: '🤖',
+            title: 'GitHub PR/Issue Manager',
+          },
+        },
+      } as unknown as Parameters<typeof runtime.updateConfig>[0];
+      const result = await runtime.updateConfig(params, {
+        editingAgentId: 'agent-1',
+        toolManifestMap: {},
+      });
+
+      expect(result).toMatchObject({
+        state: { agentId: 'agent-1', success: true },
+        success: true,
+      });
+      expect(mockUpdateAgent).toHaveBeenCalledWith('agent-1', {
+        avatar: '🤖',
+        title: 'GitHub PR/Issue Manager',
+      });
+      expect(mockUpdateConfig).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePrompt', () => {
+    it('writes and returns the editing agent captured by the invocation', async () => {
+      const runtime = createRuntime();
+      const result = await runtime.updatePrompt(
+        { prompt: 'run-scoped prompt' },
+        {
+          agentId: 'builder-agent',
+          editingAgentId: 'target-agent',
+          toolManifestMap: {},
+        },
+      );
+
+      expect(mockUpdateAgent).toHaveBeenCalledWith('target-agent', {
+        editorData: null,
+        systemRole: 'run-scoped prompt',
+      });
+      expect(result).toMatchObject({
+        state: {
+          agentId: 'target-agent',
+          newPrompt: 'run-scoped prompt',
+          success: true,
+        },
+        success: true,
+      });
     });
   });
 
@@ -111,6 +263,7 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).toHaveBeenCalledWith('agent-1', {
         plugins: [{ identifier: 'lobe-web-browsing', mode: 'pinned' }],
       });
@@ -129,6 +282,7 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).not.toHaveBeenCalled();
     });
 
@@ -146,8 +300,32 @@ describe('agentBuilderRuntime', () => {
       );
 
       expect(result.success).toBe(true);
+      expect(result.state).toMatchObject({ agentId: 'agent-1' });
       expect(mockUpdateConfig).toHaveBeenCalledWith('agent-1', {
         plugins: [{ identifier: 'market-plugin', mode: 'pinned' }],
+      });
+    });
+  });
+
+  // Regression guard for `searchMarketTools` returning `unauthorized`: built
+  // without an identity, DiscoverService signs no trusted-client token, so every
+  // server-executed market search failed — which the model reports as a plain
+  // tool failure and silently works around, leaving the built agent with no
+  // market tool.
+  describe('market identity', () => {
+    it('passes the run identity to DiscoverService', () => {
+      createRuntime();
+
+      expect(DiscoverService).toHaveBeenCalledWith({
+        userInfo: { userId: 'user-1', workspaceId: undefined },
+      });
+    });
+
+    it('scopes the market identity to the run workspace', () => {
+      createWorkspaceRuntime();
+
+      expect(DiscoverService).toHaveBeenCalledWith({
+        userInfo: { userId: 'user-1', workspaceId: 'workspace-1' },
       });
     });
   });

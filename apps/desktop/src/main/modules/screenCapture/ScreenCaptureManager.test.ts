@@ -37,7 +37,9 @@ const {
 
   return {
     mockBrowserWindow,
-    MockBrowserWindow: vi.fn(() => mockBrowserWindow),
+    MockBrowserWindow: vi.fn(function () {
+      return mockBrowserWindow;
+    }),
     mockCaptureRect: vi.fn(),
     mockCaptureWindow: vi.fn(),
     mockDialogShowMessageBox: vi.fn(async () => ({ response: 0 })),
@@ -72,15 +74,6 @@ vi.mock('@/const/env', () => ({
   get isMac() {
     return mockIsMac.value;
   },
-}));
-
-vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  }),
 }));
 
 vi.mock('@/utils/permissions', () => ({
@@ -149,6 +142,42 @@ describe('ScreenCaptureManager', () => {
     expect(mockBrowserWindow.show).toHaveBeenCalled();
     expect(mockBrowserWindow.focus).toHaveBeenCalled();
     expect(mockBrowserWindow.moveTop).toHaveBeenCalled();
+  });
+
+  describe('permission caching', () => {
+    it('queries screen capture status only once across sessions when granted', async () => {
+      const manager = new ScreenCaptureManager(createApp());
+
+      await manager.startSession();
+      manager.close();
+      await manager.startSession();
+
+      expect(mockGetScreenCaptureStatus).toHaveBeenCalledTimes(1);
+    });
+
+    it('skips the status query in startSession after prewarm', async () => {
+      const manager = new ScreenCaptureManager(createApp());
+
+      manager.prewarmPermissionCheck();
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      expect(mockGetScreenCaptureStatus).toHaveBeenCalledTimes(1);
+
+      await manager.startSession();
+
+      expect(mockGetScreenCaptureStatus).toHaveBeenCalledTimes(1);
+      expect(mockBrowserWindow.show).toHaveBeenCalled();
+    });
+
+    it('re-queries status on each session while permission is not granted', async () => {
+      mockGetScreenCaptureStatus.mockReturnValue('denied');
+      mockDialogShowMessageBox.mockResolvedValue({ response: 1 });
+      const manager = new ScreenCaptureManager(createApp());
+
+      await manager.startSession();
+      await manager.startSession();
+
+      expect(mockGetScreenCaptureStatus).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('blocks quick composer and prompts for permission when screen recording is unavailable', async () => {

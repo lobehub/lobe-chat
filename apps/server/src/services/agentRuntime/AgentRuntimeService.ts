@@ -5,9 +5,13 @@ import type {
   AgentRuntimeContext,
   AgentState,
   GeneralAgentConfig,
+  ToolCallHookEvent,
+  ToolForwardingRequest,
+  ToolRunResult,
 } from '@lobechat/agent-runtime';
 import {
   AgentRuntime,
+  extractActivatedToolIdsFromMessages,
   findInMessages,
   GeneralChatAgent,
   isParkedStatus,
@@ -28,15 +32,24 @@ import {
   invokeAgentSpanName,
   tracer as agentRuntimeTracer,
 } from '@lobechat/observability-otel/modules/agent-runtime';
+import { ssrfSafeFetch } from '@lobechat/ssrf-safe-fetch';
 import {
   type ChatToolPayload,
+  type EvalToolForwardingConfig,
   type ExecSubAgentParams,
+  type ExecSubAgentResult,
   type ExecVirtualSubAgentParams,
   type UIChatMessage,
 } from '@lobechat/types';
+import { RequestTrigger } from '@lobechat/types';
+import { isRecord } from '@lobechat/utils/object';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
+import {
+  deriveAgentInterventionQueueDeduplicationId,
+  matchesAgentInterventionContinuationProvenance,
+} from '@/business/server/agent-run/agentInterventionIdentity';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { MessageModel } from '@/database/models/message';
 import { type LobeChatDatabase } from '@/database/type';
@@ -59,10 +72,20 @@ import { QueueService } from '@/server/services/queue';
 import { LocalQueueServiceImpl } from '@/server/services/queue/impls';
 import { ToolExecutionService } from '@/server/services/toolExecution';
 import { BuiltinToolsExecutor } from '@/server/services/toolExecution/builtin';
+import { stateHasEntityFileEdits } from '@/server/services/workRegistration';
 
 import { isAbortError, throwIfAborted } from './abort';
-import { CompletionLifecycle } from './CompletionLifecycle';
-import { hookDispatcher } from './hooks';
+import {
+  CompletionLifecycle,
+  CriticalAgentInterventionPersistenceError,
+  extractTextFromMessage,
+  findLastAssistantMessage,
+  isAgentShareRun,
+  isSuccessLikeCompletionReason,
+  normalizeCompletionMessages,
+} from './CompletionLifecycle';
+import { logToolCallPc } from './formalObservation';
+import { type AgentHook, hookDispatcher } from './hooks';
 import { HumanInterventionHandler } from './HumanInterventionHandler';
 import { OperationTraceRecorder } from './OperationTraceRecorder';
 import { createDefaultSnapshotStore } from './snapshotStore';
@@ -86,8 +109,9 @@ import {
 } from './types';
 
 if (process.env.VERCEL) {
-  // eslint-disable-next-line no-console
-  debug.log = console.log.bind(console);
+  // Route debug output to stdout (`console.info`) instead of stderr, which
+  // Vercel would otherwise surface as error-level logs.
+  debug.log = console.info.bind(console);
 }
 
 const log = debug('lobe-server:agent-runtime-service');
@@ -115,7 +139,115 @@ const ASYNC_TOOL_VERIFY_MAX_ATTEMPTS = 5;
 const ASYNC_TOOL_VERIFY_MAX_DELAY_MS = 240_000;
 
 const STEP_LOCK_TTL_SECONDS = 120;
+/**
+ * How often a live step re-reads its own operation state to notice an
+ * interrupt. Interrupts are persisted by a different invocation, so this poll
+ * is the only way a running tool learns it should stop.
+ */
+const STEP_ABORT_POLL_INTERVAL_MS = 2_000;
+/**
+ * Temporary compatibility cadence for interrupts written by pre-sentinel
+ * workers during a rolling deployment. Remove after every worker writes the
+ * sentinel; keeping this much slower than the sentinel poll preserves most of
+ * the Redis bandwidth reduction in the meantime.
+ */
+const LEGACY_INTERRUPT_STATE_POLL_INTERVAL_MS = 30_000;
+/** Cap on the exponential backoff multiplier after consecutive poll failures. */
+const STEP_ABORT_POLL_MAX_BACKOFF = 8;
 const STEP_LOCK_HEARTBEAT_MS = 30_000;
+const DURABLE_LEASE_HEARTBEAT_EVERY_TICKS = 3;
+const EVAL_TOOL_FORWARDING_HOOK_ID = 'eval-tool-forwarding';
+const INTERVENTION_LIFECYCLE_CHECKPOINT_KEY = '_agentInterventionLifecycle';
+
+interface InterventionLifecycleCheckpoint {
+  state: 'completed' | 'pending';
+  stepIndex: number;
+}
+
+const toToolForwardingFailure = (error?: unknown): ToolRunResult => ({
+  content: error === undefined ? 'Tool forwarding failed' : String(error),
+  error,
+  success: false,
+});
+
+export const createEvalToolForwardingHook = (
+  toolForwarding: EvalToolForwardingConfig,
+  caseId?: string,
+): AgentHook => ({
+  handler: async (event) => {
+    const { apiName, args, callIndex, identifier, mock, operationId, stepIndex } =
+      event as unknown as ToolCallHookEvent;
+    const target = toolForwarding[identifier];
+    if (!target) return;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), target.timeoutMs ?? 15_000);
+
+    try {
+      const payload: ToolForwardingRequest = {
+        data: { apiName, args, identifier },
+        metadata: { ...(caseId && { caseId }), callIndex, operationId, stepIndex },
+        type: 'toolCall',
+      };
+      const response = await ssrfSafeFetch(target.endpoint, {
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        signal: controller.signal,
+      });
+      if (!response.ok) throw `Tool forwarding server responded with HTTP ${response.status}`;
+
+      const body: unknown = await response.json();
+      if (!isRecord(body)) throw new Error('Invalid tool forwarding response');
+
+      if (body.success === true) {
+        const result = body.data;
+        if (
+          isRecord(result) &&
+          typeof result.content === 'string' &&
+          typeof result.success === 'boolean'
+        ) {
+          mock({ ...result, content: result.content, success: result.success });
+        } else {
+          mock({ content: 'No tool result', success: true });
+        }
+      } else {
+        mock(toToolForwardingFailure(body.error));
+      }
+    } catch (error) {
+      mock(toToolForwardingFailure(error));
+    } finally {
+      clearTimeout(timeout);
+    }
+  },
+  id: EVAL_TOOL_FORWARDING_HOOK_ID,
+  type: 'beforeToolCall',
+});
+
+/**
+ * How many times a delivery that lost the operation lock re-queues itself
+ * before giving up and falling back to a retryable response.
+ */
+const STEP_LOCK_RETRY_MAX_ATTEMPTS = 12;
+/** Base delay for the first lock-conflict re-delivery. */
+const STEP_LOCK_RETRY_BASE_DELAY_MS = 15_000;
+/**
+ * Ceiling on a single lock-conflict backoff. Together with the base delay,
+ * {@link STEP_LOCK_RETRY_MAX_ATTEMPTS} attempts span ~20 minutes — comfortably
+ * longer than the platform's hard step ceiling, so a step that legitimately
+ * holds the lock for minutes no longer strands the delivery waiting behind it.
+ */
+const STEP_LOCK_RETRY_MAX_DELAY_MS = 120_000;
+
+/**
+ * Exponential backoff for the Nth (1-based) lock-conflict re-delivery:
+ * 15s, 30s, 60s, 120s, then capped at {@link STEP_LOCK_RETRY_MAX_DELAY_MS}.
+ */
+const stepLockRetryDelayMs = (attempt: number): number =>
+  Math.min(
+    STEP_LOCK_RETRY_BASE_DELAY_MS * 2 ** (Math.max(1, attempt) - 1),
+    STEP_LOCK_RETRY_MAX_DELAY_MS,
+  );
 
 /**
  * Exponential backoff delay for the Nth (1-based) watchdog re-check:
@@ -201,13 +333,32 @@ export interface AgentRuntimeDelegate {
    * (AiAgentService.execSubAgent → execAgent: agent-config resolution, tool
    * engine, context engineering, createOperation).
    */
-  execSubAgent?: (params: ExecSubAgentParams) => Promise<unknown>;
+  execSubAgent?: (params: ExecSubAgentParams) => Promise<ExecSubAgentResult>;
   /**
    * Fork a `lobe-agent.callSubAgent` virtual child run. The child is marked as a
    * sub-agent and owns the completion bridge that backfills the parent tool
    * placeholder before resuming the parked parent operation.
    */
-  execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<unknown>;
+  execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
+  /**
+   * Re-check that an Agent Share visitor run is STILL authorized to continue,
+   * called on EVERY step. Without it, a revocation that lands mid-run (link →
+   * private, share disabled, agent deleted) would only stop NEW requests: the
+   * already-created operation keeps its tool snapshot and gateway channel and
+   * keeps running under the CREATOR's credentials and budget, unstoppable by
+   * the visitor (whose Stop button re-resolves the now-private share and gets
+   * `FORBIDDEN`). Re-checking at every step boundary means a revocation always
+   * takes effect within one step, with no durable interrupt-retry machinery.
+   *
+   * Implemented by AiAgentService via `AgentShareModel.isRunStillAuthorized`.
+   * Returns `false` (not a throw) for an ordinary "no longer authorized"
+   * outcome; the caller treats a THROWN error the same as `false` — fail
+   * closed, never fail open.
+   */
+  verifyShareRunStillAuthorized?: (params: {
+    agentId: string;
+    shareId: string;
+  }) => Promise<boolean>;
 }
 
 export interface AgentRuntimeServiceOptions {
@@ -230,6 +381,13 @@ export interface AgentRuntimeServiceOptions {
    * circular import.
    */
   delegate?: AgentRuntimeDelegate;
+  /**
+   * Opt IN to agent-share visitor rows for the models this service owns.
+   * Reserved for share-runtime entry points that drive a visitor turn under
+   * the CREATOR's `userId`. Defaults to false. See
+   * {@link import('@/database/models/message').MessageModelOptions}.
+   */
+  includeShareVisitor?: boolean;
   /**
    * Custom QueueService
    * Set to null to disable queue scheduling (for synchronous execution tests)
@@ -271,6 +429,7 @@ export interface AgentRuntimeServiceOptions {
  * ```
  */
 export class AgentRuntimeService {
+  private agentOperationModel: AgentOperationModel;
   private agentFactory?: (config: GeneralAgentConfig) => Agent;
   private completionLifecycle: CompletionLifecycle;
   private coordinator: AgentRuntimeCoordinator;
@@ -330,8 +489,14 @@ export class AgentRuntimeService {
     this.userId = userId;
     this.workspaceId = options?.workspaceId;
     const workspaceId = this.workspaceId;
-    this.messageModel = new MessageModel(db, this.userId, workspaceId);
-    this.completionLifecycle = new CompletionLifecycle(db, userId, workspaceId);
+    const includeShareVisitor = options?.includeShareVisitor ?? false;
+    this.agentOperationModel = new AgentOperationModel(db, this.userId, workspaceId);
+    this.messageModel = new MessageModel(db, this.userId, workspaceId, undefined, {
+      includeShareVisitor,
+    });
+    this.completionLifecycle = new CompletionLifecycle(db, userId, workspaceId, {
+      includeShareVisitor,
+    });
     this.humanIntervention = new HumanInterventionHandler(db, this.messageModel);
 
     // Initialize ToolExecutionService with dependencies
@@ -351,13 +516,28 @@ export class AgentRuntimeService {
     stepIndex: number,
     ownerId: string,
   ): () => void {
+    let heartbeatTick = 0;
     const timer = setInterval(() => {
-      this.coordinator
-        .refreshStepLock(operationId, stepIndex, STEP_LOCK_TTL_SECONDS, ownerId)
-        .then((refreshed) => {
+      heartbeatTick += 1;
+      const refreshDurableLease = heartbeatTick % DURABLE_LEASE_HEARTBEAT_EVERY_TICKS === 0;
+
+      Promise.all([
+        this.coordinator.refreshStepLock(operationId, stepIndex, STEP_LOCK_TTL_SECONDS, ownerId),
+        refreshDurableLease
+          ? this.agentOperationModel.touchRunning(operationId)
+          : Promise.resolve(true),
+      ])
+        .then(([refreshed, leaseRefreshed]) => {
           if (!refreshed) {
             log(
               '[%s][%d] Step lock heartbeat did not refresh; ownership may have changed',
+              operationId,
+              stepIndex,
+            );
+          }
+          if (!leaseRefreshed) {
+            log(
+              '[%s][%d] Durable operation lease was lost; terminal persistence will be rejected',
               operationId,
               stepIndex,
             );
@@ -411,6 +591,17 @@ export class AgentRuntimeService {
       return false;
     }
 
+    // Sentinel FIRST: the poller and the step-boundary check read only the
+    // sentinel, so it must become visible no later than the interrupted
+    // state — otherwise a boundary check landing between the two writes
+    // reads false and the following saveStepResult clobbers the
+    // interruption. Writing it first also keeps failure atomic: if the
+    // sentinel write throws, the state below is never marked either, so the
+    // two never diverge. A sentinel that lands without the state save
+    // (crash between the writes) only stops the op earlier than the record
+    // shows — the step-boundary check then persists the interrupted state.
+    await this.coordinator.markInterrupted(operationId);
+
     await this.coordinator.saveAgentState(operationId, {
       ...state,
       lastModified: new Date().toISOString(),
@@ -421,6 +612,236 @@ export class AgentRuntimeService {
     return true;
   }
 
+  /** Load the authoritative runtime state for a deterministic intervention continuation. */
+  async loadInterventionContinuationState(operationId: string): Promise<AgentState | null> {
+    return this.coordinator.loadAgentState(operationId);
+  }
+
+  /**
+   * Re-enqueue a continuation whose durable state was written but whose first
+   * queue delivery may have been lost with the resolving HTTP process. The
+   * operation id and step index are stable, so the ordinary distributed step
+   * lock de-duplicates concurrent/repeated schedules.
+   */
+  async ensureInterventionContinuationStarted(
+    operationId: string,
+  ): Promise<'already_started' | 'missing' | 'scheduled'> {
+    const state = await this.coordinator.loadAgentState(operationId);
+    if (!state) return 'missing';
+
+    const provenance = state.metadata?.agentInterventionContinuation as
+      | {
+          resolutionRequestId?: unknown;
+          sourceOperationId?: unknown;
+          sourceToolMessageIds?: unknown;
+        }
+      | undefined;
+    const preparation = state.metadata?.agentInterventionPreparation as
+      | {
+          deduplicationId?: unknown;
+          resolutionRequestId?: unknown;
+          state?: unknown;
+          stepIndex?: unknown;
+        }
+      | undefined;
+    if (
+      typeof provenance?.resolutionRequestId !== 'string' ||
+      typeof provenance.sourceOperationId !== 'string' ||
+      !Array.isArray(provenance.sourceToolMessageIds) ||
+      !provenance.sourceToolMessageIds.every((id) => typeof id === 'string')
+    ) {
+      throw new Error(`Intervention continuation provenance missing: ${operationId}`);
+    }
+    if (
+      preparation?.state !== 'ready' ||
+      preparation.resolutionRequestId !== provenance.resolutionRequestId ||
+      typeof preparation.stepIndex !== 'number' ||
+      !Number.isSafeInteger(preparation.stepIndex) ||
+      preparation.stepIndex < 0
+    ) {
+      throw new Error(`Intervention continuation is not ready to schedule: ${operationId}`);
+    }
+    const stepIndex = preparation.stepIndex;
+    const deduplicationId = deriveAgentInterventionQueueDeduplicationId(operationId, stepIndex);
+    if (preparation.deduplicationId !== deduplicationId) {
+      throw new Error(`Intervention continuation dedupe provenance conflict: ${operationId}`);
+    }
+    const operation = await this.agentOperationModel.findById(operationId);
+    if (
+      !operation ||
+      !matchesAgentInterventionContinuationProvenance(
+        operation.metadata?.agentInterventionContinuation,
+        provenance as {
+          resolutionRequestId: string;
+          sourceOperationId: string;
+          sourceToolMessageIds: string[];
+        },
+      )
+    ) {
+      throw new Error(`Intervention continuation durable provenance conflict: ${operationId}`);
+    }
+    const durablePreparation = operation.metadata?.agentInterventionPreparation as
+      | {
+          deduplicationId?: unknown;
+          resolutionRequestId?: unknown;
+          state?: unknown;
+          stepIndex?: unknown;
+        }
+      | undefined;
+    if (
+      durablePreparation &&
+      (durablePreparation.state !== 'ready' ||
+        durablePreparation.resolutionRequestId !== provenance.resolutionRequestId ||
+        durablePreparation.stepIndex !== stepIndex ||
+        durablePreparation.deduplicationId !== deduplicationId)
+    ) {
+      throw new Error(`Intervention continuation durable preparation conflict: ${operationId}`);
+    }
+    if (!durablePreparation) {
+      const persisted = await this.agentOperationModel.recordAgentInterventionPreparation(
+        operationId,
+        {
+          deduplicationId,
+          resolutionRequestId: provenance.resolutionRequestId,
+          state: 'ready',
+          stepIndex,
+        },
+      );
+      if (!persisted) {
+        throw new Error(`Failed to backfill intervention preparation: ${operationId}`);
+      }
+    }
+    const dispatchMarker = operation.metadata?.agentInterventionDispatch as
+      | {
+          deduplicationId?: unknown;
+          messageId?: unknown;
+          resolutionRequestId?: unknown;
+          state?: unknown;
+        }
+      | undefined;
+    if (dispatchMarker) {
+      if (
+        dispatchMarker.state !== 'scheduled' ||
+        dispatchMarker.resolutionRequestId !== provenance.resolutionRequestId ||
+        dispatchMarker.deduplicationId !== deduplicationId
+      ) {
+        throw new Error(`Intervention continuation dispatch marker conflict: ${operationId}`);
+      }
+      return 'already_started';
+    }
+    if (!this.queueService) {
+      throw new Error(`Cannot schedule intervention continuation ${operationId}`);
+    }
+
+    // Missing provider ACK is never inferred from `state.status`: a worker may
+    // have raced the HTTP response and advanced this state to running/terminal.
+    // Re-publish with the same provider dedupe key to recover the ACK without a
+    // second actual delivery, then persist the authoritative dispatch marker.
+    const messageId = await this.queueService.scheduleMessage({
+      context: (state as AgentState & { initialContext: AgentRuntimeContext }).initialContext,
+      deduplicationId,
+      delay: 0,
+      endpoint: `${this.baseURL}/run`,
+      operationId,
+      priority: 'high',
+      retryDelay:
+        typeof state.metadata?.queueRetryDelay === 'string'
+          ? state.metadata.queueRetryDelay
+          : undefined,
+      retries:
+        typeof state.metadata?.queueRetries === 'number' ? state.metadata.queueRetries : undefined,
+      stepIndex,
+    });
+    await this.persistInterventionDispatchAck({
+      deduplicationId,
+      messageId,
+      operationId,
+      resolutionRequestId: provenance.resolutionRequestId,
+    });
+
+    return 'scheduled';
+  }
+
+  private async persistInterventionDispatchAck(params: {
+    deduplicationId: string;
+    messageId: string;
+    operationId: string;
+    resolutionRequestId: string;
+  }): Promise<void> {
+    const marker = {
+      deduplicationId: params.deduplicationId,
+      messageId: params.messageId,
+      resolutionRequestId: params.resolutionRequestId,
+      scheduledAt: new Date().toISOString(),
+      state: 'scheduled' as const,
+    };
+    const persisted = await this.agentOperationModel.recordAgentInterventionDispatch(
+      params.operationId,
+      marker,
+    );
+    if (!persisted) {
+      throw new Error(`Failed to persist intervention queue ACK: ${params.operationId}`);
+    }
+  }
+
+  /**
+   * Terminate an Agent Share visitor run whose authorization was revoked
+   * mid-flight (see the per-step check in `executeStep`).
+   *
+   * Persists `interrupted` onto the already-loaded state — the same terminal
+   * status a visitor's own Stop produces — so the client's stream settles
+   * normally instead of hanging. Falls back to `interruptOperation` when no
+   * state was readable. A persistence failure is logged, never rethrown: the
+   * run must stop regardless of whether the terminal status could be written.
+   *
+   * The completion lifecycle (`emitSignalEvents` + `dispatchHooks`) must run
+   * here too: this abort short-circuits `executeStep` before `runtime.step()`,
+   * so no downstream path is left to persist the terminal status. Without it
+   * `saveAgentState` would only update the runtime-state cache and publish the
+   * terminal stream event, leaving `agent_operations` stuck on `running` —
+   * which `TopicModel.tryReserveTaskCallback` then reads as a live run and
+   * blocks the visitor's next send on that topic for the abandoned-run TTL.
+   */
+  private async buildShareAbortResult(
+    operationId: string,
+    state: AgentState | null | undefined,
+  ): Promise<AgentExecutionResult> {
+    log('[%s] Aborting share visitor run — the share is no longer authorized', operationId);
+
+    try {
+      if (state) {
+        const interruptedState: AgentState = {
+          ...state,
+          lastModified: new Date().toISOString(),
+          status: 'interrupted',
+        };
+        await this.coordinator.saveAgentState(operationId, interruptedState);
+
+        await this.completionLifecycle.emitSignalEvents(
+          operationId,
+          interruptedState,
+          'interrupted',
+        );
+        await this.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
+      } else {
+        await this.interruptOperation(operationId);
+      }
+    } catch (error) {
+      log(
+        '[%s] Failed to persist interrupted state for an aborted share run: %O',
+        operationId,
+        error,
+      );
+    }
+
+    return {
+      nextStepScheduled: false,
+      state: { status: 'interrupted' },
+      stepResult: null,
+      success: false,
+    };
+  }
+
   // ==================== Operation Management ====================
 
   /**
@@ -429,26 +850,34 @@ export class AgentRuntimeService {
   async createOperation(params: OperationCreationParams): Promise<OperationCreationResult> {
     const {
       activeDeviceId,
+      activeDeviceScope,
       operationId,
       initialContext,
       agentConfig,
       agentGroup,
+      agentShareVisitor,
       modelRuntimeConfig,
       userId,
       autoStart = true,
       stream,
       initialMessages = [],
+      interventionResolution,
+      onInterventionPrepared,
       appContext,
       toolSet,
       hooks,
       userInterventionConfig,
       queueRetries,
       queueRetryDelay,
+      searchDecision,
       botContext,
       botPlatformContext,
       deviceAccessPolicy,
       discordContext,
       evalContext,
+      evalRuntime,
+      enableExpertise,
+      expertise,
       executionPlan,
       maxSteps,
       userMemory,
@@ -465,13 +894,14 @@ export class AgentRuntimeService {
     // ends of the persistence lifecycle (start row here, terminal update
     // in dispatchHooks) and swallows DB errors so runtime startup is never
     // blocked.
-    await this.completionLifecycle.recordStart({
+    const operationStartPersisted = await this.completionLifecycle.recordStart({
       agentId: appContext?.agentId ?? null,
       appContext: {
         defaultTaskAssigneeAgentId: appContext?.defaultTaskAssigneeAgentId,
         documentId: appContext?.documentId,
         groupId: appContext?.groupId,
         scope: appContext?.scope,
+        sessionId: appContext?.sessionId,
         sourceMessageId: appContext?.sourceMessageId,
       },
       chatGroupId: appContext?.groupId ?? null,
@@ -479,7 +909,16 @@ export class AgentRuntimeService {
       // Persist the Agent Signal run marker on the operation row so server-side
       // self-iteration tools can read it back (metadata.agentSignal) at tool-call
       // time — the trimmed appContext above intentionally drops it.
-      ...(appContext?.agentSignal ? { metadata: { agentSignal: appContext.agentSignal } } : {}),
+      ...(appContext?.agentSignal || interventionResolution
+        ? {
+            metadata: {
+              ...(appContext?.agentSignal ? { agentSignal: appContext.agentSignal } : {}),
+              ...(interventionResolution
+                ? { agentInterventionContinuation: interventionResolution }
+                : {}),
+            },
+          }
+        : {}),
       model: modelRuntimeConfig?.model,
       modelRuntimeConfig,
       operationId,
@@ -490,6 +929,22 @@ export class AgentRuntimeService {
       topicId: appContext?.topicId ?? null,
       trigger: appContext?.trigger,
     });
+    if (interventionResolution && !operationStartPersisted) {
+      throw new Error(
+        `Failed to durably persist intervention continuation ${operationId} before dispatch`,
+      );
+    }
+
+    if (interventionResolution) {
+      const durableOperation = await this.agentOperationModel.findById(operationId);
+      const persistedProvenance = durableOperation?.metadata?.agentInterventionContinuation;
+      if (
+        !durableOperation ||
+        !matchesAgentInterventionContinuationProvenance(persistedProvenance, interventionResolution)
+      ) {
+        throw new Error(`Intervention continuation operation identity conflict: ${operationId}`);
+      }
+    }
 
     const operationToolSet = toolSet;
     let operationCreated = false;
@@ -514,8 +969,24 @@ export class AgentRuntimeService {
       );
 
       // Initialize operation state - create state before saving
+      const activatableToolIds = new Set(operationToolSet.activatableToolIds ?? []);
+      const restoredActivatedToolIds = extractActivatedToolIdsFromMessages(initialMessages)?.filter(
+        (id) => activatableToolIds.has(id),
+      );
+      const activatedStepTools = restoredActivatedToolIds?.length
+        ? restoredActivatedToolIds.map((id) => ({
+            activatedAtStep: initialStepCount,
+            id,
+            manifest: operationToolSet.manifestMap[id],
+            source: 'discovery' as const,
+          }))
+        : undefined;
+
       const initialState = {
+        activatedStepTools,
         createdAt: new Date().toISOString(),
+        enableExpertise,
+        expertise,
         // Store initialContext for executeSync to use
         initialContext,
         lastModified: new Date().toISOString(),
@@ -523,19 +994,26 @@ export class AgentRuntimeService {
         messages: initialMessages,
         metadata: {
           activeDeviceId,
+          activeDeviceScope,
           agentConfig,
           agentGroup,
+          agentShareVisitor,
           botContext,
           botPlatformContext,
           deviceAccessPolicy,
           deviceSystemInfo,
           discordContext,
           evalContext,
+          evalRuntime,
           executionPlan,
+          ...(interventionResolution
+            ? { agentInterventionContinuation: interventionResolution }
+            : {}),
           // need be removed
           modelRuntimeConfig,
           queueRetries,
           queueRetryDelay,
+          ...(searchDecision && { searchDecision }),
           stream,
           operationSkillSet,
           userId,
@@ -570,8 +1048,20 @@ export class AgentRuntimeService {
         appContext?.orchestrationRole === 'member' ? (parentOperationId ?? undefined) : undefined;
       await this.coordinator.createAgentOperation(operationId, {
         agentConfig,
+        // Persisted so a queue worker that never ran this op's init still
+        // applies the owner-configured visitor redaction policy instead of the
+        // fail-closed full strip. See `gatewayVisitorRedaction.ts`.
+        visitorRedaction: agentShareVisitor
+          ? {
+              showErrorDetails: agentShareVisitor.showErrorDetails,
+              showModelInfo: agentShareVisitor.showModelInfo,
+            }
+          : undefined,
         mirrorToOperationId,
         modelRuntimeConfig,
+        // Share-visitor runs execute as the creator (`userId`) but stream only
+        // to the visitor — the gateway registers the WS channel under this id.
+        streamOwnerUserId: agentShareVisitor?.visitorUserId,
         userId,
         workspaceId: this.workspaceId,
       });
@@ -601,17 +1091,55 @@ export class AgentRuntimeService {
         }
       }
 
+      if (interventionResolution) {
+        const preparedState = await this.coordinator.loadAgentState(operationId);
+        if (!preparedState) {
+          throw new Error(`Intervention continuation state disappeared: ${operationId}`);
+        }
+        const preparation = {
+          deduplicationId: deriveAgentInterventionQueueDeduplicationId(
+            operationId,
+            initialStepCount,
+          ),
+          resolutionRequestId: interventionResolution.resolutionRequestId,
+          state: 'ready' as const,
+          stepIndex: initialStepCount,
+        };
+        await this.coordinator.saveAgentState(operationId, {
+          ...preparedState,
+          metadata: {
+            ...preparedState.metadata,
+            agentInterventionPreparation: preparation,
+          },
+        });
+        const preparationPersisted =
+          await this.agentOperationModel.recordAgentInterventionPreparation(
+            operationId,
+            preparation,
+          );
+        if (!preparationPersisted) {
+          throw new Error(
+            `Failed to persist intervention continuation preparation: ${operationId}`,
+          );
+        }
+        onInterventionPrepared?.();
+      }
+
       throwIfAborted(signal, 'Agent execution aborted before first step scheduling');
 
       let messageId: string | undefined;
       let autoStarted = false;
 
       if (autoStart && this.queueService) {
+        const deduplicationId = interventionResolution
+          ? deriveAgentInterventionQueueDeduplicationId(operationId, initialStepCount)
+          : undefined;
         // Both local and queue modes use scheduleMessage
         // LocalQueueServiceImpl uses setTimeout + callback mechanism
         // QStashQueueServiceImpl schedules HTTP requests
         messageId = await this.queueService.scheduleMessage({
           context: initialContext,
+          deduplicationId,
           delay: 50, // Short delay for startup
           endpoint: `${this.baseURL}/run`,
           operationId,
@@ -620,6 +1148,14 @@ export class AgentRuntimeService {
           retries: queueRetries,
           stepIndex: initialStepCount,
         });
+        if (interventionResolution && deduplicationId) {
+          await this.persistInterventionDispatchAck({
+            deduplicationId,
+            messageId,
+            operationId,
+            resolutionRequestId: interventionResolution.resolutionRequestId,
+          });
+        }
         autoStarted = true;
         log('[%s] Scheduled first step (messageId: %s)', operationId, messageId);
       }
@@ -662,17 +1198,50 @@ export class AgentRuntimeService {
    * bootstrap before the topic row has been committed) so callers can skip
    * the `uiMessages` field entirely instead of pushing an empty array.
    */
-  async queryUiMessages(agentState: AgentState): Promise<UIChatMessage[] | undefined> {
+  async queryUiMessages(
+    agentState: AgentState,
+    options?: {
+      /**
+       * Skip the Work-summary assembly for mid-stream (step_start) snapshots —
+       * each step would otherwise re-run the per-type Work queries. Terminal
+       * (agent_runtime_end) snapshots keep works so the settled message list
+       * carries the round's Work chips. The client preserves previously
+       * rendered works when applying a skipped snapshot (`preserveWorks`).
+       */
+      skipWorks?: boolean;
+    },
+  ): Promise<UIChatMessage[] | undefined> {
     const agentId: string | undefined = agentState?.metadata?.agentId;
     const topicId: string | undefined = agentState?.metadata?.topicId;
     // groupId scopes group conversations. Without it the query falls into the
     // standard branch (`groupId IS NULL`) and returns ZERO group messages, so
     // the step_start uiMessages snapshot would be empty and clobber the client.
     const groupId: string | undefined = agentState?.metadata?.groupId;
+    // threadId scopes a subtopic run. Without it the snapshot is the topic's
+    // MAIN conversation, and the client writes that into the thread's bucket at
+    // step_start / agent_runtime_end — wiping the turn the run just produced, so
+    // the subtopic panel falls back to showing the main conversation.
+    const threadId: string | undefined = agentState?.metadata?.threadId ?? undefined;
     if (!agentId || !topicId) return undefined;
 
     try {
-      return await this.messageService.queryMessages({ agentId, groupId, topicId });
+      return await this.messageService.queryMessages(
+        {
+          agentId,
+          groupId,
+          skipWorks: options?.skipWorks,
+          threadId,
+          topicId,
+        },
+        // The run's own topic is already resolved and authorized; an agent-share
+        // visitor run executes under the CREATOR's identity, so without this the
+        // creator-facing exclusion in `MessageModel.query()` returns an EMPTY
+        // snapshot for the visitor's topic, and the client applies it as the
+        // terminal Source of Truth — wiping the conversation the run just
+        // produced. Visitor-facing redaction of the pushed snapshot happens in
+        // `GatewayStreamNotifier`.
+        { allowShareVisitor: true },
+      );
     } catch (error) {
       // Stream events must never fail the step. If the DB hiccups, fall back
       // to letting the client refresh as before.
@@ -700,6 +1269,7 @@ export class AgentRuntimeService {
       verifyAsyncToolBarrier,
       asyncToolVerifyAttempt,
       externalRetryCount = 0,
+      lockRetryAttempt = 0,
     } = params;
 
     // Group member timeout watchdog: enforce a member's deadline without claiming
@@ -707,6 +1277,40 @@ export class AgentRuntimeService {
     // and bridge a `timeout` completion so the parked supervisor resumes/finishes.
     if (groupMemberTimeout) {
       return this.handleGroupMemberTimeout(groupMemberTimeout);
+    }
+
+    // Redis keeps the resumable step state, but the durable operation row is
+    // the authority for cancellation/recovery. A queued QStash delivery can
+    // outlive a crashed process and arrive after Goal recovery has atomically
+    // marked that operation interrupted. ACK it without touching the old
+    // topic; otherwise the abandoned attempt can finish concurrently with its
+    // replacement and submit a second Acceptance run.
+    try {
+      const durableOperation = await this.agentOperationModel.findById(operationId);
+      if (
+        durableOperation &&
+        ['done', 'error', 'interrupted', 'abandoned'].includes(durableOperation.status)
+      ) {
+        log(
+          '[%s][%d] Skipping delivery for terminal durable operation (%s)',
+          operationId,
+          stepIndex,
+          durableOperation.status,
+        );
+        return {
+          nextStepScheduled: false,
+          state: {
+            status:
+              durableOperation.status === 'abandoned' ? 'interrupted' : durableOperation.status,
+          },
+          stepResult: null,
+          success: true,
+        };
+      }
+    } catch (error) {
+      // Preserve runtime availability when the durable store has a transient
+      // read failure. The step lock and normal persistence path still apply.
+      log('[%s][%d] Durable operation status check failed: %O', operationId, stepIndex, error);
     }
 
     // Watchdog re-check for a parked async-tool wait: re-run the barrier + CAS
@@ -758,6 +1362,26 @@ export class AgentRuntimeService {
 
       const currentStepCount = currentState?.stepCount;
       if (currentState && typeof currentStepCount === 'number' && currentStepCount > stepIndex) {
+        if (
+          this.shouldReplayPendingInterventionLifecycle(currentState, stepIndex, externalRetryCount)
+        ) {
+          // This is a retry of a completed human-approval step whose Review
+          // lifecycle did not finish. Do not ACK it while another delivery still
+          // owns the step lock: once that owner releases the lock, QStash must
+          // redeliver so the lifecycle-only replay below can publish the Review.
+          log(
+            '[%s][%d] Pending intervention lifecycle retry is still locked; requesting redelivery',
+            operationId,
+            stepIndex,
+          );
+          return {
+            locked: true,
+            nextStepScheduled: false,
+            state: currentState,
+            success: false,
+          };
+        }
+
         log(
           '[%s][%d] Step lock conflict is stale (stepCount=%d), skipping',
           operationId,
@@ -770,6 +1394,81 @@ export class AgentRuntimeService {
           stepResult: null,
           success: true,
         };
+      }
+
+      // The lock is held by a live step of this operation, and this delivery is
+      // not a stale duplicate — it still has to run once the holder is done.
+      //
+      // Don't lean on the queue's own retry budget for that wait: the lock is
+      // heartbeat-refreshed for as long as the holding step runs (unbounded),
+      // while the budget is a handful of fixed-delay retries. A step that runs
+      // longer than the budget therefore exhausts it and the delivery is
+      // dead-lettered — the step it carried is then never executed. Re-queue a
+      // fresh delivery on our own bounded backoff instead, and ACK this one.
+      //
+      // The re-delivery has to carry this delivery's own resume/intervention
+      // payload: a human-intervention resume (`processHumanIntervention`) or an
+      // async-tool resume (`tryResumeParentFromAsyncTool`) can lose the lock
+      // race too, and re-queueing only the retry counter would run a plain step
+      // once the lock clears — silently dropping the approval / human input, or
+      // leaving a parked operation parked forever. Undefined fields drop out of
+      // the JSON body, so unrelated deliveries still send just the counter.
+      const nextLockRetryAttempt = lockRetryAttempt + 1;
+      if (this.queueService && nextLockRetryAttempt <= STEP_LOCK_RETRY_MAX_ATTEMPTS) {
+        const delay = stepLockRetryDelayMs(nextLockRetryAttempt);
+        log(
+          '[%s][%d] Step lock conflict — re-queueing attempt %d/%d in %dms',
+          operationId,
+          stepIndex,
+          nextLockRetryAttempt,
+          STEP_LOCK_RETRY_MAX_ATTEMPTS,
+          delay,
+        );
+
+        try {
+          await this.queueService.scheduleMessage({
+            context,
+            delay,
+            endpoint: `${this.baseURL}/run`,
+            operationId,
+            payload: {
+              approvedToolCall,
+              finishAfterAsyncTool,
+              humanInput,
+              lockRetryAttempt: nextLockRetryAttempt,
+              rejectAndContinue,
+              rejectionReason,
+              resumeAsyncTool,
+              toolMessageId,
+            },
+            priority: 'high',
+            retryDelay:
+              typeof currentState?.metadata?.queueRetryDelay === 'string'
+                ? currentState.metadata.queueRetryDelay
+                : undefined,
+            retries:
+              typeof currentState?.metadata?.queueRetries === 'number'
+                ? currentState.metadata.queueRetries
+                : undefined,
+            stepIndex,
+          });
+
+          return {
+            locked: true,
+            lockRescheduled: true,
+            nextStepScheduled: true,
+            state: {},
+            success: true,
+          };
+        } catch (error) {
+          // Fall through to the retryable response so the delivery isn't lost.
+          log(
+            '[%s][%d] Failed to re-queue after step lock conflict: %O',
+            operationId,
+            stepIndex,
+            error,
+          );
+        }
       }
 
       log(
@@ -785,11 +1484,22 @@ export class AgentRuntimeService {
       };
     }
 
+    await this.agentOperationModel.touchRunning(operationId).catch((error) => {
+      log('[%s][%d] Operation lease refresh failed: %O', operationId, stepIndex, error);
+    });
     const stopStepLockHeartbeat = this.startStepLockHeartbeat(
       operationId,
       stepIndex,
       stepLockOwner,
     );
+
+    // Hoisted so the shared `finally` can stop it on every exit path — an
+    // orphaned interval would keep polling Redis for a step that is long gone.
+    let stepAbortPoll: ReturnType<typeof setTimeout> | undefined;
+    // Clearing the timeout is not enough: a poll already awaiting the state read
+    // would schedule the next one after the step is gone, leaking a loop that
+    // re-reads the store forever for a finished operation.
+    let stepAbortPollStopped = false;
 
     // Hoisted so the error-path snapshot finalize can record an
     // approximate startedAt for the failing step. The inner `startAt` at the
@@ -822,7 +1532,46 @@ export class AgentRuntimeService {
           throw new Error(`Agent state not found for operation ${operationId}`);
         }
 
-        const stepStartUiMessages = await this.queryUiMessages(agentState);
+        // A parked approval step is already durable before its generic Review
+        // is published. When that final Review write fails, the request returns
+        // non-2xx and QStash retries this SAME step with `upstash-retried > 0`.
+        // The runtime state now has stepCount > stepIndex, so the ordinary stale
+        // delivery guard below would ACK it and permanently strand the Review.
+        // Replay only the idempotent completion lifecycle: never run beforeStep,
+        // runtime.step (LLM/tools), afterStep, or saveStepResult again.
+        if (
+          agentState.stepCount > stepIndex &&
+          this.shouldReplayPendingInterventionLifecycle(agentState, stepIndex, externalRetryCount)
+        ) {
+          agentState.metadata = {
+            ...agentState.metadata,
+            externalRetryCount,
+          };
+
+          const reason = 'waiting_for_human' as const;
+          const completionSignalEvents = await this.completionLifecycle.emitSignalEvents(
+            operationId,
+            agentState,
+            reason,
+          );
+          await this.completionLifecycle.dispatchHooks(operationId, agentState, reason);
+          await this.recordInterventionLifecycleCompletion(operationId, agentState, stepIndex);
+          await this.traceRecorder.finalize(operationId, {
+            appendEventsToLastStep: completionSignalEvents,
+            completionReason: reason,
+            state: agentState,
+          });
+
+          log('[%s][%d] Replayed pending intervention lifecycle', operationId, stepIndex);
+          return {
+            nextStepScheduled: false,
+            state: agentState,
+            stepResult: null,
+            success: true,
+          };
+        }
+
+        const stepStartUiMessages = await this.queryUiMessages(agentState, { skipWorks: true });
         await this.streamManager.publishStreamEvent(operationId, {
           data: {
             ...(stepStartUiMessages !== undefined && { uiMessages: stepStartUiMessages }),
@@ -912,32 +1661,76 @@ export class AgentRuntimeService {
           };
         }
 
+        // Agent Share: re-prove this visitor run's authorization on EVERY step.
+        // A revocation only flips the `agent_shares` row — nothing tears down
+        // an operation that was already created, so without this the run keeps
+        // going under the creator's credentials/budget for the rest of its
+        // (potentially very long) lifetime, and the visitor's own Stop button
+        // has already stopped working (it re-resolves the now-private share and
+        // gets FORBIDDEN). Re-checking here means a revocation cannot survive a
+        // step boundary. See `AgentShareModel.isRunStillAuthorized`'s JSDoc for
+        // why one query covers every revocation path (visibility flip — which
+        // is what turning sharing off does — share delete, agent delete).
+        if (this.delegate.verifyShareRunStillAuthorized) {
+          const shareMarker = agentState.metadata?.agentShareVisitor as
+            { agentId?: string; shareId?: string } | undefined;
+          if (shareMarker?.agentId && shareMarker.shareId) {
+            let stillAuthorized = false;
+            try {
+              stillAuthorized = await this.delegate.verifyShareRunStillAuthorized({
+                agentId: shareMarker.agentId,
+                shareId: shareMarker.shareId,
+              });
+            } catch (error) {
+              // Fail closed: a read failure must not be read as "still
+              // authorized". Falls through to the abort below with
+              // `stillAuthorized` left `false`.
+              log(
+                '[%s][%d] Share run authorization re-check failed: %O',
+                operationId,
+                stepIndex,
+                error,
+              );
+            }
+            if (!stillAuthorized) {
+              return this.buildShareAbortResult(operationId, agentState);
+            }
+          }
+        }
+
         let beforeStepSignalEvents: Array<{ [key: string]: unknown; type: string }> = [];
 
         // Dispatch beforeStep hooks
         try {
           const beforeStepMetadata = agentState?.metadata || {};
-          const beforeStepSignalEmission = await emitAgentSignalSourceEvent(
-            {
-              payload: {
-                agentId: beforeStepMetadata?.agentId,
-                operationId,
-                serializedContext: undefined,
-                stepIndex,
-                topicId: beforeStepMetadata?.topicId,
-                turnCount: agentState?.stepCount || 0,
-              },
-              sourceId: `${operationId}:before:${stepIndex}`,
-              sourceType: 'runtime.before_step',
-            },
-            {
-              agentId: beforeStepMetadata?.agentId,
-              db: this.serverDB,
-              userId: beforeStepMetadata?.userId || this.userId,
-              workspaceId: this.workspaceId,
-            },
-            { ignoreError: true },
-          );
+          // Agent Share visitor runs execute AS the creator, so this
+          // `userId`-scoped source event would record creator-owned Agent
+          // Signal state for a turn an anonymous link visitor triggered — same
+          // reasoning (and same predicate) as the completion-signal guard in
+          // `CompletionLifecycle.emitSignalEvents`.
+          const beforeStepSignalEmission = isAgentShareRun(beforeStepMetadata)
+            ? undefined
+            : await emitAgentSignalSourceEvent(
+                {
+                  payload: {
+                    agentId: beforeStepMetadata?.agentId,
+                    operationId,
+                    serializedContext: undefined,
+                    stepIndex,
+                    topicId: beforeStepMetadata?.topicId,
+                    turnCount: agentState?.stepCount || 0,
+                  },
+                  sourceId: `${operationId}:before:${stepIndex}`,
+                  sourceType: 'runtime.before_step',
+                },
+                {
+                  agentId: beforeStepMetadata?.agentId,
+                  db: this.serverDB,
+                  userId: beforeStepMetadata?.userId || this.userId,
+                  workspaceId: this.workspaceId,
+                },
+                { ignoreError: true },
+              );
           beforeStepSignalEvents = toAgentSignalSnapshotEvents(beforeStepSignalEmission);
           await hookDispatcher.dispatch(
             operationId,
@@ -970,7 +1763,58 @@ export class AgentRuntimeService {
         // Create Agent and Runtime instances
         // Use agentState.metadata which contains the full app context (topicId, agentId, etc.)
         // operationMetadata only contains basic fields (agentConfig, modelRuntimeConfig, userId)
+        // Interrupts arrive as a sentinel key beside the persisted state — the
+        // request that asked for the stop runs in a different invocation, so
+        // there is no in-process controller to share. Poll while the step is alive
+        // and cancel locally, otherwise a multi-minute tool would keep running
+        // long after the user asked it to stop.
+        const stepAbortController = new AbortController();
+        // Serialized on purpose: `setInterval` would fire a new read without
+        // waiting for the last one, so a slow or failing state store turns every
+        // concurrent run into a growing pile of overlapping requests — the load
+        // spikes exactly when the store is already struggling. Each read is
+        // scheduled only after the previous one settles, and failures back off.
+        let abortPollFailures = 0;
+        let lastLegacyInterruptStatePollAt = Date.now();
+        const pollForAbort = async () => {
+          try {
+            // Prefer the sentinel. During the first rolling deployment, an old
+            // worker can still write only the authoritative state, so sample
+            // that large blob at a much lower cadence until all writers have
+            // sentinel support.
+            let interrupted = await this.coordinator.isInterrupted(operationId);
+            const now = Date.now();
+            if (
+              !interrupted &&
+              now - lastLegacyInterruptStatePollAt >= LEGACY_INTERRUPT_STATE_POLL_INTERVAL_MS
+            ) {
+              lastLegacyInterruptStatePollAt = now;
+              interrupted =
+                (await this.coordinator.loadAgentState(operationId))?.status === 'interrupted';
+            }
+            abortPollFailures = 0;
+            if (interrupted) {
+              stepAbortController.abort();
+              return;
+            }
+          } catch (error) {
+            abortPollFailures += 1;
+            log('[%s][%d] Abort poll failed: %O', operationId, stepIndex, error);
+          }
+
+          if (stepAbortPollStopped || stepAbortController.signal.aborted) return;
+
+          stepAbortPoll = setTimeout(
+            pollForAbort,
+            STEP_ABORT_POLL_INTERVAL_MS *
+              Math.min(2 ** abortPollFailures, STEP_ABORT_POLL_MAX_BACKOFF),
+          );
+        };
+        stepAbortPoll = setTimeout(pollForAbort, STEP_ABORT_POLL_INTERVAL_MS);
+
         const { runtime } = await this.createAgentRuntime({
+          abortSignal: stepAbortController.signal,
+          agentState,
           metadata: agentState?.metadata,
           operationId,
           stepIndex,
@@ -1067,7 +1911,11 @@ export class AgentRuntimeService {
 
         // Execute step (skipped when force-finishing a parked supervisor op).
         const startAt = Date.now();
-        const stepResult = forcedFinishState
+        logToolCallPc(operationId, stepIndex, 'post.runtime_step_entered', () => ({
+          forcedFinish: Boolean(forcedFinishState),
+          stateStatus: currentState.status,
+        }));
+        let stepResult = forcedFinishState
           ? { events: [], newState: forcedFinishState, nextContext: undefined }
           : await runtime.step(currentState, currentContext);
 
@@ -1079,14 +1927,95 @@ export class AgentRuntimeService {
         if (stepResult.newState.error) {
           stepResult.newState.error = formatErrorForState(stepResult.newState.error);
         }
+        logToolCallPc(operationId, stepIndex, 'post.runtime_step_returned', () => ({
+          errorCategory: stepResult.newState.error?.category ?? null,
+          errorRetryable: stepResult.newState.error?.retryable ?? null,
+          nextContextPresent: stepResult.nextContext !== undefined,
+          stateStatus: stepResult.newState.status,
+        }));
 
         // Check if the operation was interrupted while the step was executing
-        // (e.g., user clicked abort during a long LLM call)
-        const latestState = await this.coordinator.loadAgentState(operationId);
-        if (latestState?.status === 'interrupted') {
+        // (e.g., user clicked abort during a long LLM call). Prefer the tiny
+        // sentinel, but fall back to the state once at the step boundary while
+        // old workers that only write `status: 'interrupted'` may still be
+        // running during a rolling deployment.
+        const sentinelInterrupted = await this.coordinator.isInterrupted(operationId);
+        const wasInterrupted = sentinelInterrupted
+          ? true
+          : (await this.coordinator.loadAgentState(operationId))?.status === 'interrupted';
+        logToolCallPc(operationId, stepIndex, 'post.latest_state_loaded', () => ({
+          interrupted: wasInterrupted,
+        }));
+        if (wasInterrupted) {
+          // Stop can be persisted after a client-tool executor's last local
+          // signal check but before this reconciliation read. If that executor
+          // just returned a parked state, run the agent's existing abort path
+          // once so every pending tool call gets a terminal row before the
+          // interrupted state is saved.
+          if (
+            stepResult.newState.status === 'waiting_for_async_tool' &&
+            stepResult.newState.pendingToolsCalling?.length &&
+            currentContext
+          ) {
+            const interruptedState = structuredClone(stepResult.newState);
+            interruptedState.status = 'interrupted';
+            const abortContext: AgentRuntimeContext = {
+              ...currentContext,
+              payload: {
+                ...(currentContext.payload as Record<string, unknown>),
+                hasToolsCalling: true,
+                toolsCalling: interruptedState.pendingToolsCalling,
+              },
+              phase: 'llm_result',
+            };
+            const abortResult = await runtime.step(interruptedState, abortContext);
+            stepResult = {
+              ...abortResult,
+              events: [...stepResult.events, ...abortResult.events],
+            };
+          }
+
           stepResult.newState.status = 'interrupted';
           stepResult.newState.lastModified = new Date().toISOString();
           log('[%s][%d] Operation was interrupted during step execution', operationId, stepIndex);
+        }
+
+        // Decide whether to schedule next step (hoisted above the save: it also
+        // gates the pre-snapshot file-Work registration below)
+        const shouldContinue = this.shouldContinueExecution(
+          stepResult.newState,
+          stepResult.nextContext,
+        );
+
+        // Register entity-file Works BEFORE the terminal save: `saveStepResult`
+        // publishes `agent_runtime_end`, whose `uiMessages` snapshot the client
+        // adopts as the settled message list — the Work rows must exist by then
+        // or the file-Work card stays absent until a manual refresh. Perceived
+        // loading is not extended: for runs with entity edits the early
+        // `visible_output_end` is suppressed (see `createAgentRuntime`), so
+        // loading covers this export window by design. Idempotent — the
+        // dispatchHooks backstop below no-ops via the state marker.
+        if (!shouldContinue) {
+          const preSaveReason = this.determineCompletionReason(stepResult.newState);
+          if (preSaveReason === 'waiting_for_human') {
+            stepResult.newState.metadata = {
+              ...stepResult.newState.metadata,
+              [INTERVENTION_LIFECYCLE_CHECKPOINT_KEY]: {
+                state: 'pending',
+                stepIndex,
+              } satisfies InterventionLifecycleCheckpoint,
+            };
+          }
+
+          // Success-like reasons ONLY — a `waiting_for_human` park must NOT
+          // register because it is not a completed deliverable boundary. The
+          // fresh approval continuation sees the complete authoritative
+          // history and performs the terminal scan after the decision runs;
+          // registering here would freeze pre-approval content too early.
+          if (isSuccessLikeCompletionReason(preSaveReason)) {
+            await this.completionLifecycle.registerFileWorks(operationId, stepResult.newState);
+            logToolCallPc(operationId, stepIndex, 'post.file_works_registered', () => ({}));
+          }
         }
 
         // Save state, coordinator will handle event sending automatically
@@ -1095,12 +2024,11 @@ export class AgentRuntimeService {
           executionTime: Date.now() - startAt,
           stepIndex, // placeholder
         });
+        logToolCallPc(operationId, stepIndex, 'post.step_result_saved', () => ({
+          stateStatus: stepResult.newState.status,
+          stateStepCount: stepResult.newState.stepCount,
+        }));
 
-        // Decide whether to schedule next step
-        const shouldContinue = this.shouldContinueExecution(
-          stepResult.newState,
-          stepResult.nextContext,
-        );
         let nextStepScheduled = false;
 
         // Publish step complete event
@@ -1113,6 +2041,9 @@ export class AgentRuntimeService {
           stepIndex,
           type: 'step_complete',
         });
+        logToolCallPc(operationId, stepIndex, 'post.step_complete_published', () => ({}));
+
+        await this.publishSubAgentProgress(stepResult.newState, stepIndex);
 
         // Build enhanced step completion log & presentation data
         const { presentation: stepPresentationData, summary: stepSummary } = buildStepPresentation(
@@ -1146,27 +2077,31 @@ export class AgentRuntimeService {
             : undefined;
           const stepLabel = metadata?._stepLabel;
 
+          // See the `runtime.before_step` guard above — same share-visitor
+          // suppression at the sibling per-step emission.
           afterStepSignalEvents = toAgentSignalSnapshotEvents(
-            await emitAgentSignalSourceEvent(
-              {
-                payload: {
-                  agentId: metadata?.agentId,
-                  operationId,
-                  serializedContext: undefined,
-                  stepIndex,
-                  topicId: metadata?.topicId,
-                  turnCount: stepResult.newState?.stepCount || 0,
-                },
-                sourceId: `${operationId}:after:${stepIndex}`,
-                sourceType: 'runtime.after_step',
-              },
-              {
-                agentId: metadata?.agentId,
-                db: this.serverDB,
-                userId: metadata?.userId || this.userId,
-              },
-              { ignoreError: true },
-            ),
+            isAgentShareRun(metadata)
+              ? undefined
+              : await emitAgentSignalSourceEvent(
+                  {
+                    payload: {
+                      agentId: metadata?.agentId,
+                      operationId,
+                      serializedContext: undefined,
+                      stepIndex,
+                      topicId: metadata?.topicId,
+                      turnCount: stepResult.newState?.stepCount || 0,
+                    },
+                    sourceId: `${operationId}:after:${stepIndex}`,
+                    sourceType: 'runtime.after_step',
+                  },
+                  {
+                    agentId: metadata?.agentId,
+                    db: this.serverDB,
+                    userId: metadata?.userId || this.userId,
+                  },
+                  { ignoreError: true },
+                ),
           );
 
           await hookDispatcher.dispatch(
@@ -1225,6 +2160,13 @@ export class AgentRuntimeService {
         const hasAfterStepHooks = stepResult.newState.metadata?._hooks?.some(
           (h: { type: string }) => h.type === 'afterStep',
         );
+        logToolCallPc(operationId, stepIndex, 'post.trace_appended', () => ({}));
+        logToolCallPc(operationId, stepIndex, 'post.route_selected', () => ({
+          hasAfterStepHooks,
+          nextContextPresent: stepResult.nextContext !== undefined,
+          queueAvailable: Boolean(this.queueService),
+          shouldContinue,
+        }));
         if (hasAfterStepHooks && stepResult.newState.metadata) {
           const prevTracking = stepResult.newState.metadata._stepTracking || {};
           const newTotalToolCalls =
@@ -1246,6 +2188,7 @@ export class AgentRuntimeService {
           // Persist tracking state for next step
           stepResult.newState.metadata._stepTracking = updatedTracking;
           await this.coordinator.saveAgentState(operationId, stepResult.newState);
+          logToolCallPc(operationId, stepIndex, 'post.step_tracking_saved', () => ({}));
         }
 
         if (shouldContinue && stepResult.nextContext && this.queueService) {
@@ -1270,6 +2213,9 @@ export class AgentRuntimeService {
             stepIndex: nextStepIndex,
           });
           nextStepScheduled = true;
+          logToolCallPc(operationId, stepIndex, 'post.next_step_scheduled', () => ({
+            nextStepIndex,
+          }));
 
           log('[%s][%d] Scheduled next step %d', operationId, stepIndex, nextStepIndex);
         }
@@ -1297,9 +2243,19 @@ export class AgentRuntimeService {
             stepResult.newState,
             reason,
           );
+          logToolCallPc(operationId, stepIndex, 'post.completion_signals', () => ({ reason }));
 
           // Dispatch completion hooks
           await this.completionLifecycle.dispatchHooks(operationId, stepResult.newState, reason);
+          logToolCallPc(operationId, stepIndex, 'post.completion_hooks', () => ({ reason }));
+
+          if (reason === 'waiting_for_human') {
+            await this.recordInterventionLifecycleCompletion(
+              operationId,
+              stepResult.newState,
+              stepIndex,
+            );
+          }
 
           // Park-time self-check: sub-agents are dispatched mid-step, so a
           // fast child can complete BEFORE this op's parked state/row were
@@ -1346,6 +2302,7 @@ export class AgentRuntimeService {
               : undefined,
             state: stepResult.newState,
           });
+          logToolCallPc(operationId, stepIndex, 'post.trace_finalized', () => ({ reason }));
         }
 
         return {
@@ -1356,16 +2313,37 @@ export class AgentRuntimeService {
         };
       });
     } catch (error) {
+      const isInterventionPersistenceFailure =
+        error instanceof CriticalAgentInterventionPersistenceError;
       invokeAgentSpan.recordException(error as Error);
       invokeAgentSpan.setStatus({
         code: SpanStatusCode.ERROR,
         message: error instanceof Error ? error.message : String(error),
       });
       invokeAgentSpan.setAttributes(
-        buildInvokeAgentResultAttributes({ completionReason: 'error' }),
+        buildInvokeAgentResultAttributes({
+          completionReason: isInterventionPersistenceFailure ? 'waiting_for_human' : 'error',
+        }),
       );
 
       log('Step %d failed for operation %s: %O', stepIndex, operationId, error);
+
+      // The runtime step and its waiting_for_human state are already durable;
+      // only the idempotent generic Review publication failed. Turning this
+      // infrastructure failure into an agent error would overwrite the parked
+      // state/operation row and make the QStash redelivery terminal-short-circuit.
+      // Preserve the parked state and propagate non-2xx so the completed-step
+      // lifecycle replay above can retry Review persistence without repeating
+      // any LLM or tool side effects.
+      if (isInterventionPersistenceFailure) {
+        log(
+          '[%s][%d] Intervention Review persistence failed; keeping operation parked for retry',
+          operationId,
+          stepIndex,
+        );
+        throw error;
+      }
+
       const formattedError = formatErrorForState(error);
 
       // Build error state — try loading current state from coordinator, but if that
@@ -1421,9 +2399,11 @@ export class AgentRuntimeService {
       }
 
       await this.completionLifecycle.emitSignalEvents(operationId, finalStateWithError, 'error');
+      logToolCallPc(operationId, stepIndex, 'post.completion_signals', () => ({ reason: 'error' }));
 
       // Dispatch onComplete + onError hooks
       await this.completionLifecycle.dispatchHooks(operationId, finalStateWithError, 'error');
+      logToolCallPc(operationId, stepIndex, 'post.completion_hooks', () => ({ reason: 'error' }));
 
       // Finalize the partial snapshot into the canonical S3 path so the
       // failed op is observable in the same place as a successful run.
@@ -1459,10 +2439,13 @@ export class AgentRuntimeService {
         },
         state: finalStateWithError,
       });
+      logToolCallPc(operationId, stepIndex, 'post.trace_finalized', () => ({ reason: 'error' }));
 
       throw error;
     } finally {
       invokeAgentSpan.end();
+      stepAbortPollStopped = true;
+      if (stepAbortPoll) clearTimeout(stepAbortPoll);
       stopStepLockHeartbeat();
       await this.coordinator.releaseStepLock(operationId, stepIndex, stepLockOwner);
     }
@@ -1681,6 +2664,10 @@ export class AgentRuntimeService {
 
       if (currentState.status === 'error') {
         throw new Error(`Operation ${operationId} is in error state`);
+      }
+
+      if (currentState.status === 'interrupted') {
+        throw new Error(`Operation ${operationId} is interrupted`);
       }
 
       // Build execution context
@@ -2019,6 +3006,50 @@ export class AgentRuntimeService {
   }
 
   /**
+   * Stream a `callSubAgent` child's running totals to the client, once per step.
+   *
+   * Addressed to the PARENT's operationId, not the child's: the client opens one
+   * WebSocket per operation and never subscribes to the child's channel. The
+   * parent's channel is still live because parking at `waiting_for_async_tool`
+   * deliberately does not publish a stream-end event (see
+   * `AgentRuntimeCoordinator.STREAM_END_STATUSES`).
+   *
+   * Rides `step_complete` rather than a new event type because `AgentStreamEventType`
+   * is a closed union shared with the out-of-repo gateway worker; `phase` is the
+   * established discriminator and unknown phases are ignored by older clients.
+   *
+   * The three stat fields are read from exactly the same state paths that
+   * `completeSubAgentBridge` uses for its final backfill, so the live numbers
+   * converge on the persisted ones instead of jumping when the run ends.
+   *
+   * Best-effort: a publish failure must not fail the sub-agent's step.
+   */
+  private async publishSubAgentProgress(state: AgentState, stepIndex: number): Promise<void> {
+    const anchor = state?.metadata?.subAgentProgress as
+      { parentOperationId: string; toolMessageId: string } | undefined;
+    if (!anchor?.parentOperationId || !anchor.toolMessageId) return;
+
+    try {
+      await this.streamManager.publishStreamEvent(anchor.parentOperationId, {
+        data: {
+          model: state?.modelRuntimeConfig?.model,
+          phase: 'subagent_progress',
+          toolMessageId: anchor.toolMessageId,
+          totalCost: state?.cost?.total,
+          totalInputTokens: state?.usage?.llm?.tokens?.input,
+          totalOutputTokens: state?.usage?.llm?.tokens?.output,
+          totalTokens: state?.usage?.llm?.tokens?.total,
+          totalToolCalls: state?.usage?.tools?.totalCalls,
+        },
+        stepIndex,
+        type: 'step_complete',
+      });
+    } catch (error) {
+      log('[%s] failed to publish sub-agent progress (non-fatal): %O', state?.operationId, error);
+    }
+  }
+
+  /**
    * Sub-agent completion bridge for the server `callSubAgent` deferred-tool
    * path. Runs when a child sub-agent op reaches a terminal state — invoked
    * in-process by the child's `onComplete` hook handler (local mode) or via
@@ -2063,31 +3094,55 @@ export class AgentRuntimeService {
     //
     // A state loaded via the fallback above arrives without `messages` (the
     // persisted Redis blob no longer carries them — see
-    // AgentStateManager.serializeStateForPersist), so rehydrate from the DB
-    // before reading the sub-agent's final answer. An in-process
-    // params.finalState already carries them and skips this.
+    // AgentStateManager.serializeStateForPersist). Resolve the final leaf from
+    // the parsed DB conversation, then recover the original row by id so its
+    // serialized content stays paired with metadata.isMultimodal. An in-process
+    // params.finalState already carries messages and skips this query.
+    let lastAssistant: unknown;
     if (!failed && finalState && !Array.isArray(finalState.messages)) {
       try {
-        finalState.messages = await this.refreshMessagesFromDB(finalState);
+        lastAssistant = await this.resolveLastAssistantMessageFromDB(finalState);
       } catch (error) {
         console.error(
-          '[%s] sub-agent bridge: failed to refresh messages from DB: %O',
+          '[%s] sub-agent bridge: failed to resolve final assistant from DB: %O',
           operationId,
           error,
         );
       }
     }
     const messages = Array.isArray(finalState?.messages) ? finalState.messages : [];
-    const lastAssistant = [...messages]
-      .reverse()
-      .find((m: { role?: string }) => m?.role === 'assistant');
+    lastAssistant ??= findLastAssistantMessage(normalizeCompletionMessages(messages));
+    let lastAssistantContent = extractTextFromMessage(lastAssistant);
+
+    // Gated on `!finalState`, not merely an empty `lastAssistantContent`: a
+    // real (authoritative) final state whose last turn is legitimately
+    // textless (image-only, or the "preserve an empty leaf" case in
+    // `normalizeCompletionMessages`) must keep the stub below, not go dig
+    // through the thread's own message history — a lagging read could
+    // surface an EARLIER real reply from the same thread and silently show
+    // stale text instead of the correct empty-answer signal. `!finalState`
+    // is exactly the case this fallback exists for: heterogeneous (CLI-driven)
+    // children never populate it at all (see
+    // `resolveLastAssistantContentFromThread`'s doc comment), so there is no
+    // authoritative signal here to override.
+    if (!failed && !finalState && threadId) {
+      try {
+        lastAssistantContent = await this.resolveLastAssistantContentFromThread(threadId);
+      } catch (error) {
+        console.error(
+          '[%s] sub-agent bridge: failed to resolve content from thread %s: %O',
+          operationId,
+          threadId,
+          error,
+        );
+      }
+    }
     const errorReason = failed ? formatSubAgentErrorReason(finalState?.error) : undefined;
     const content = failed
       ? errorReason
         ? `Sub-agent did not complete (${reason}): ${errorReason}`
         : `Sub-agent did not complete (${reason}).`
-      : (lastAssistant?.content as string | undefined) ||
-        'Sub-agent completed without a textual answer.';
+      : lastAssistantContent || 'Sub-agent completed without a textual answer.';
 
     const backfill = await this.messageModel.updateToolMessage(toolMessageId, {
       content,
@@ -2096,6 +3151,14 @@ export class AgentRuntimeService {
         model: finalState?.modelRuntimeConfig?.model,
         status: failed ? 'error' : 'completed',
         threadId,
+        // The child's spend rides on this anchor row so the parent's usage tray can
+        // account for it. The tray sums per-MESSAGE usage, and the child's own
+        // assistant messages live in an isolation thread the parent never loads —
+        // this row is the only place the child's cost surfaces in the parent's own
+        // message list.
+        totalCost: finalState?.cost?.total,
+        totalInputTokens: finalState?.usage?.llm?.tokens?.input,
+        totalOutputTokens: finalState?.usage?.llm?.tokens?.output,
         totalToolCalls: finalState?.usage?.tools?.totalCalls,
         totalTokens: finalState?.usage?.llm?.tokens?.total,
       },
@@ -2250,23 +3313,44 @@ export class AgentRuntimeService {
     // The member's textual answer is only read in delegate mode below; a state
     // loaded via the fallback above arrives without `messages` (dropped from
     // the persisted Redis blob — see AgentStateManager.serializeStateForPersist),
-    // so rehydrate from the DB when we actually need them. An in-process
-    // params.finalState already carries them and skips this.
+    // so resolve the original final leaf from the DB when we actually need it.
+    // Keeping the original row preserves the exact content/metadata pairing
+    // that conversation-flow display grouping intentionally aggregates.
+    let lastAssistant: unknown;
     if (!failed && mode !== 'in_group' && finalState && !Array.isArray(finalState.messages)) {
       try {
-        finalState.messages = await this.refreshMessagesFromDB(finalState);
+        lastAssistant = await this.resolveLastAssistantMessageFromDB(finalState);
       } catch (error) {
         console.error(
-          '[%s] group-member bridge: failed to refresh messages from DB: %O',
+          '[%s] group-member bridge: failed to resolve final assistant from DB: %O',
           operationId,
           error,
         );
       }
     }
     const messages = Array.isArray(finalState?.messages) ? finalState.messages : [];
-    const lastAssistant = [...messages]
-      .reverse()
-      .find((m: { role?: string }) => m?.role === 'assistant');
+    lastAssistant ??= findLastAssistantMessage(normalizeCompletionMessages(messages));
+    let lastAssistantContent = extractTextFromMessage(lastAssistant);
+
+    // Gated on `!finalState`, not merely an empty `lastAssistantContent` —
+    // see the identical guard (and its full rationale) in
+    // `completeSubAgentBridge`. A real final state whose last turn is
+    // legitimately textless must keep the stub below, not risk surfacing a
+    // stale earlier reply from the thread's own history. `!finalState` is
+    // exactly the heterogeneous-isolated-member case this fallback exists
+    // for: it never populates `finalState` at all.
+    if (!failed && mode !== 'in_group' && !finalState && threadId) {
+      try {
+        lastAssistantContent = await this.resolveLastAssistantContentFromThread(threadId);
+      } catch (error) {
+        console.error(
+          '[%s] group-member bridge: failed to resolve content from thread %s: %O',
+          operationId,
+          threadId,
+          error,
+        );
+      }
+    }
     const agentLabel = (finalState?.metadata?.agentId as string | undefined) ?? 'member';
     const memberErrorReason = failed ? formatSubAgentErrorReason(finalState?.error) : undefined;
     const anchorContent = failed
@@ -2275,8 +3359,7 @@ export class AgentRuntimeService {
         : `Agent member did not complete (${reason}).`
       : mode === 'in_group'
         ? `Agent ${agentLabel} responded in the group.`
-        : (lastAssistant?.content as string | undefined) ||
-          'Agent member completed without a textual answer.';
+        : lastAssistantContent || 'Agent member completed without a textual answer.';
 
     const anchorBackfill = await this.messageModel.updateToolMessage(anchorMessageId, {
       content: anchorContent,
@@ -2285,6 +3368,14 @@ export class AgentRuntimeService {
         model: finalState?.modelRuntimeConfig?.model,
         status: failed ? 'error' : 'completed',
         threadId,
+        // The child's spend rides on this anchor row so the parent's usage tray can
+        // account for it. The tray sums per-MESSAGE usage, and the child's own
+        // assistant messages live in an isolation thread the parent never loads —
+        // this row is the only place the child's cost surfaces in the parent's own
+        // message list.
+        totalCost: finalState?.cost?.total,
+        totalInputTokens: finalState?.usage?.llm?.tokens?.input,
+        totalOutputTokens: finalState?.usage?.llm?.tokens?.output,
         totalToolCalls: finalState?.usage?.tools?.totalCalls,
         totalTokens: finalState?.usage?.llm?.tokens?.total,
       },
@@ -2416,12 +3507,7 @@ export class AgentRuntimeService {
     return { nextStepScheduled: resumed, state: {}, success: true };
   }
 
-  /**
-   * Reload the conversation messages from the database and flatten them for the
-   * runtime. Used when resuming a parked op so the next LLM step sees tool
-   * results written out-of-band (e.g. by a sub-agent completion bridge).
-   */
-  private async refreshMessagesFromDB(state: AgentState): Promise<AgentState['messages']> {
+  private async queryMessagesFromDB(state: AgentState) {
     let postProcessUrl: ((path: string | null) => Promise<string>) | undefined;
     try {
       const fileService = new FileService(this.serverDB, this.userId);
@@ -2430,7 +3516,7 @@ export class AgentRuntimeService {
       postProcessUrl = undefined;
     }
 
-    const dbMessages = await this.messageModel.query(
+    return this.messageModel.query(
       {
         agentId: state.metadata?.agentId,
         // Group runs must pass groupId, else the query filters `groupId IS NULL`
@@ -2440,11 +3526,67 @@ export class AgentRuntimeService {
         threadId: state.metadata?.threadId,
         topicId: state.metadata?.topicId,
       },
-      { postProcessUrl },
+      // The run's own topic is already resolved and authorized; an agent-share
+      // visitor run executes under the CREATOR's identity, so it must opt out
+      // of `query()`'s creator-facing agent-share exclusion.
+      { allowShareVisitor: true, postProcessUrl },
     );
+  }
+
+  /**
+   * Reload the conversation messages from the database and flatten them for the
+   * runtime. Used when resuming a parked op so the next LLM step sees tool
+   * results written out-of-band (e.g. by a sub-agent completion bridge).
+   */
+  private async refreshMessagesFromDB(state: AgentState): Promise<AgentState['messages']> {
+    const dbMessages = await this.queryMessagesFromDB(state);
 
     const { flatList } = parse(dbMessages);
     return flatList as AgentState['messages'];
+  }
+
+  /**
+   * Use conversation-flow to select the active final assistant leaf, then
+   * recover that leaf from the original query result. FlatListBuilder moves
+   * child metadata onto its display-only group/first child, so the parsed leaf
+   * alone cannot reliably identify serialized multimodal content.
+   */
+  private async resolveLastAssistantMessageFromDB(state: AgentState): Promise<unknown> {
+    const dbMessages = await this.queryMessagesFromDB(state);
+    const { flatList } = parse(dbMessages);
+    const lastAssistant = findLastAssistantMessage(normalizeCompletionMessages(flatList));
+    const lastAssistantId = typeof lastAssistant?.id === 'string' ? lastAssistant.id : undefined;
+
+    return (
+      (lastAssistantId
+        ? dbMessages.find((message) => message.id === lastAssistantId)
+        : undefined) ?? lastAssistant
+    );
+  }
+
+  /**
+   * Fallback content resolution for a heterogeneous (CLI-driven) sub-agent
+   * child in queue mode. `coordinator.loadAgentState`/`finalState` is always
+   * empty here: a hetero run never writes into the Redis-backed runtime state
+   * this class's step loop maintains (only `saveAgentState` calls under the
+   * homogeneous step loop populate it), and the completion webhook's
+   * `eventFields` deliberately excludes `lastAssistantContent` to keep the
+   * QStash payload lean (see `createSubAgentBridgeHook`'s doc comment) —
+   * `heteroFinish` already resolves the real answer server-side before
+   * dispatching, but that resolution never reaches this callback.
+   *
+   * The child's own conversation is queryable directly by its isolation
+   * `threadId` regardless — the same source `heteroFinish` itself reads via
+   * `heteroCurrentMsgId` before completion. Scoping by `threadId` alone is
+   * sufficient: thread ids are unique, so no `agentId`/`topicId` is needed to
+   * disambiguate.
+   */
+  private async resolveLastAssistantContentFromThread(
+    threadId: string,
+  ): Promise<string | undefined> {
+    const messages = await this.messageModel.query({ threadId }, { allowShareVisitor: true });
+    const lastAssistant = findLastAssistantMessage(normalizeCompletionMessages(messages));
+    return extractTextFromMessage(lastAssistant) || undefined;
   }
 
   /**
@@ -2541,11 +3683,22 @@ export class AgentRuntimeService {
    * Create Agent Runtime instance
    */
   private async createAgentRuntime({
+    abortSignal,
+    agentState,
     metadata,
     operationId,
     stepIndex,
     tracingContextEngine,
   }: {
+    /** Cancels in-flight tool work when this step's operation is interrupted. */
+    abortSignal?: AbortSignal;
+    /**
+     * Current runtime state, when the caller has it. Only consulted to decide
+     * whether the early final-answer `visible_output_end` must be suppressed
+     * (entity-file edits ⇒ completion still has to export + register file
+     * Works, so loading should cover that window).
+     */
+    agentState?: any;
     metadata?: any;
     operationId: string;
     stepIndex: number;
@@ -2573,14 +3726,40 @@ export class AgentRuntimeService {
       userId: metadata?.userId,
     };
 
+    if (
+      metadata?.trigger === RequestTrigger.Eval &&
+      metadata.evalRuntime?.toolForwarding &&
+      !hookDispatcher.hasHook(operationId, EVAL_TOOL_FORWARDING_HOOK_ID)
+    ) {
+      hookDispatcher.register(operationId, [
+        createEvalToolForwardingHook(
+          metadata.evalRuntime.toolForwarding,
+          metadata.evalRuntime.caseId,
+        ),
+      ]);
+    }
+
     const agent = this.agentFactory
       ? this.agentFactory(generalConfig)
       : new GeneralChatAgent(generalConfig);
 
     // Create streaming executor context
     const executorContext: RuntimeExecutorContext = {
+      abortSignal,
       agentConfig: metadata?.agentConfig,
-      allowEarlyFinalAnswerVisibleOutputEnd: !this.agentFactory,
+      // The factory may be a Graph-aware dispatcher that still returns the
+      // default agent for ordinary conversations. Keep the early visible
+      // output end behavior tied to the actual agent, not factory presence.
+      //
+      // Additionally suppressed once the run edited entity-format files:
+      // completion still exports + registers them as `file` Works BEFORE the
+      // terminal snapshot (see `CompletionLifecycle.registerFileWorks`), and
+      // an early hint would end the visible loading seconds before that card
+      // can exist. Deferring to the terminal `visible_output_end` lets loading
+      // cover the export and the card land with `agent_runtime_end`.
+      agentShareVisitor: metadata?.agentShareVisitor,
+      allowEarlyFinalAnswerVisibleOutputEnd:
+        agent instanceof GeneralChatAgent && !stateHasEntityFileEdits(agentState),
       botContext: metadata?.botContext,
       botPlatformContext: metadata?.botPlatformContext,
       discordContext: metadata?.discordContext,
@@ -2592,7 +3771,9 @@ export class AgentRuntimeService {
       hookDispatcher,
       loadAgentState: this.coordinator.loadAgentState.bind(this.coordinator),
       messageModel: this.messageModel,
+      modelRuntimeConfig: metadata?.modelRuntimeConfig,
       operationId,
+      searchDecision: metadata?.searchDecision,
       serverDB: this.serverDB,
       stepIndex,
       stream: metadata?.stream,
@@ -2618,14 +3799,17 @@ export class AgentRuntimeService {
    */
   private async computeDeviceContext(state: any) {
     try {
-      const dbMessages = await this.messageModel.query({
-        agentId: state.metadata?.agentId,
-        // Group runs need groupId or the query returns no group messages
-        // (standard branch filters `groupId IS NULL`), losing the device context.
-        groupId: state.metadata?.groupId,
-        threadId: state.metadata?.threadId,
-        topicId: state.metadata?.topicId,
-      });
+      const dbMessages = await this.messageModel.query(
+        {
+          agentId: state.metadata?.agentId,
+          // Group runs need groupId or the query returns no group messages
+          // (standard branch filters `groupId IS NULL`), losing the device context.
+          groupId: state.metadata?.groupId,
+          threadId: state.metadata?.threadId,
+          topicId: state.metadata?.topicId,
+        },
+        { allowShareVisitor: true },
+      );
 
       return findInMessages(
         dbMessages,
@@ -2680,6 +3864,68 @@ export class AgentRuntimeService {
     if (!context) return false;
 
     return true;
+  }
+
+  /**
+   * Identify a provider redelivery that must replay a completed approval
+   * lifecycle instead of being acknowledged as an ordinary stale step.
+   *
+   * `pendingApprovalBatch` is the durable, sealed runtime marker written before
+   * Review publication. The QStash retry header distinguishes a failed request
+   * redelivery from a benign duplicate that arrived after a successful ACK.
+   */
+  private shouldReplayPendingInterventionLifecycle(
+    state: AgentState,
+    stepIndex: number,
+    externalRetryCount: number,
+  ): boolean {
+    const checkpoint = state.metadata?.[INTERVENTION_LIFECYCLE_CHECKPOINT_KEY] as
+      InterventionLifecycleCheckpoint | undefined;
+
+    return (
+      externalRetryCount > 0 &&
+      state.status === 'waiting_for_human' &&
+      state.pendingApprovalBatch?.sealed === true &&
+      // A missing checkpoint is a rollout-compatible pending state. Once a
+      // successful lifecycle writes `completed`, a lost HTTP response can be
+      // ACKed without publishing the Review or onComplete hook a second time.
+      (!checkpoint || (checkpoint.stepIndex === stepIndex && checkpoint.state === 'pending'))
+    );
+  }
+
+  /**
+   * Checkpoint a fully delivered Review + onComplete lifecycle before the step
+   * request returns. This closes the common response-loss window: QStash may
+   * redeliver, but the stale-step guard can ACK a completed checkpoint without
+   * duplicating either side effect. The Review itself remains batch-idempotent
+   * for the smaller crash window before this checkpoint is saved.
+   */
+  private async recordInterventionLifecycleCompletion(
+    operationId: string,
+    state: AgentState,
+    stepIndex: number,
+  ): Promise<void> {
+    state.metadata = {
+      ...state.metadata,
+      [INTERVENTION_LIFECYCLE_CHECKPOINT_KEY]: {
+        state: 'completed',
+        stepIndex,
+      } satisfies InterventionLifecycleCheckpoint,
+    };
+
+    try {
+      await this.coordinator.saveAgentState(operationId, state);
+    } catch (error) {
+      // The Review and hook are already delivered. Do not turn a best-effort
+      // dedup checkpoint failure into an agent error; a rare later redelivery
+      // safely retries the batch-idempotent Review and at-least-once hook.
+      log(
+        '[%s][%d] Failed to save intervention lifecycle checkpoint: %O',
+        operationId,
+        stepIndex,
+        error,
+      );
+    }
   }
 
   /**

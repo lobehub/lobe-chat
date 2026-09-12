@@ -71,10 +71,18 @@ describe('runScheduleTick', () => {
     vi.clearAllMocks();
     mockSelectTask.mockResolvedValue([]);
     mockBriefModel.hasUnresolvedUrgentByTask.mockResolvedValue(false);
-    (TaskModel as any).mockImplementation(() => mockTaskModel);
-    (TaskTopicModel as any).mockImplementation(() => mockTaskTopicModel);
-    (BriefModel as any).mockImplementation(() => mockBriefModel);
-    (TaskRunnerService as any).mockImplementation(() => mockRunner);
+    (TaskModel as any).mockImplementation(function () {
+      return mockTaskModel;
+    });
+    (TaskTopicModel as any).mockImplementation(function () {
+      return mockTaskTopicModel;
+    });
+    (BriefModel as any).mockImplementation(function () {
+      return mockBriefModel;
+    });
+    (TaskRunnerService as any).mockImplementation(function () {
+      return mockRunner;
+    });
   });
 
   it('skips not-found tasks', async () => {
@@ -126,7 +134,7 @@ describe('runScheduleTick', () => {
     const outcome = await runScheduleTick(taskId, userId);
 
     expect(outcome).toEqual({ ran: true, taskIdentifier: 'T-1' });
-    // Quota counts only scheduled ticks, not ad-hoc manual runs (LOBE-11391).
+    // Quota counts only scheduled ticks, not ad-hoc manual runs.
     expect(mockTaskTopicModel.countByTask).toHaveBeenCalledWith(taskId, {
       since: new Date('2026-05-01T00:00:00Z'),
       triggers: ['schedule'],

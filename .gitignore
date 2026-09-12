@@ -60,6 +60,8 @@ bun.lockb
 dist/
 public/_spa/
 public/_spa-auth/
+public/_spa-share/
+public/_spa-workbench/
 public/spa/
 es/
 lib/
@@ -94,6 +96,8 @@ public/swe-worker*
 # Generated files
 src/app/spa/[variants]/[[...path]]/spaHtmlTemplates.ts
 src/app/spa-auth/authHtmlTemplate.ts
+src/app/spa-share/shareHtmlTemplate.ts
+src/app/spa-workbench/workbenchHtmlTemplate.ts
 public/*.js
 robots.txt
 
@@ -124,6 +128,7 @@ CLAUDE.local.md
 docker-compose/dev/data/
 
 # Migration scripts data
+.elasticsearch-reindex/
 scripts/clerk-to-betterauth/test/*.csv
 scripts/clerk-to-betterauth/test/*.json
 scripts/clerk-to-betterauth/prod/*.csv
@@ -138,8 +143,10 @@ e2e/reports
 out
 i18n-unused-keys-report.json
 .vitest-reports
+.vitest/
 
 pnpm-lock.yaml
+!apps/desktop/pnpm-lock.yaml
 .turbo
 spaHtmlTemplates.ts
 
@@ -154,3 +161,11 @@ docs/superpowers/
 
 # Kagura agent runtime
 .kagura/
+
+# AUV computer-use runtime: run records plus captured screenshots, written
+# relative to whatever directory the CLI was invoked from, so this can appear
+# at the repo root or inside an app.
+.auv/
+
+# Amp agent runtime
+.amp/

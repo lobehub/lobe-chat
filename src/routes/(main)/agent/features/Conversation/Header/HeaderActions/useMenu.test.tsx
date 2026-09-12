@@ -2,8 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { act, render, renderHook, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useMenu } from './useMenu';
 
@@ -29,21 +28,24 @@ vi.mock('@/const/version', () => ({
   isDesktop: true,
 }));
 
-vi.mock('@lobehub/ui', () => ({
-  Block: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Flexbox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Icon: () => null,
-  Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
+vi.mock('@/features/Conversation/useAgentContext', () => ({
+  useAgentContext: () => ({ agentId: 'agent-1', topicId: 'topic-1' }),
 }));
 
-vi.mock('antd', () => ({
-  App: {
-    useApp: () => ({
-      message: { success: messageSuccessMock },
-      modal: { confirm: modalConfirmMock },
-    }),
-  },
-}));
+vi.mock('antd', async (importOriginal) => {
+  const actual = await importOriginal<{ App: Record<string, unknown> } & Record<string, unknown>>();
+
+  return {
+    ...actual,
+    App: {
+      ...actual.App,
+      useApp: () => ({
+        message: { success: messageSuccessMock },
+        modal: { confirm: modalConfirmMock },
+      }),
+    },
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -58,8 +60,8 @@ vi.mock('react-router', () => ({
 
 vi.mock('@/store/chat/selectors', () => ({
   topicSelectors: {
-    currentActiveTopic: (state: Record<string, unknown>) => state.activeTopic,
-    currentTopicWorkingDirectory: (state: Record<string, unknown>) => state.workingDirectory,
+    getTopicById: (id: string) => (state: { topics: Record<string, unknown> }) => state.topics[id],
+    getTopicWorkingDirectory: () => (state: Record<string, unknown>) => state.workingDirectory,
   },
 }));
 
@@ -67,12 +69,19 @@ vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
       activeAgentId: 'agent-1',
-      activeTopic: {
-        favorite: false,
-        id: 'topic-1',
-        title: 'Topic 1',
-        updatedAt: '2026-05-27T00:15:00.000Z',
-        userId: 'user-1',
+      activeTopicId: 'topic-other-pane',
+      topics: {
+        'topic-1': {
+          favorite: false,
+          id: 'topic-1',
+          title: 'Topic 1',
+          updatedAt: '2026-05-27T00:15:00.000Z',
+          userId: 'user-1',
+        },
+        'topic-other-pane': {
+          id: 'topic-other-pane',
+          title: 'Other pane topic',
+        },
       },
       autoRenameTopicTitle: autoRenameTopicTitleMock,
       favoriteTopic: favoriteTopicMock,
@@ -106,14 +115,40 @@ const isActionItem = (
 } => !!item && typeof item === 'object' && 'key' in item;
 
 describe('Conversation header action menu', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(document, 'execCommand');
+  });
+
+  it('copies the displayed topic ID without the Clipboard API', async () => {
+    useLocationMock.mockReturnValue({ pathname: '/agent/agent-1' });
+    vi.spyOn(navigator, 'clipboard', 'get').mockReturnValue(undefined as never);
+    let copiedText: string | undefined;
+    const copy = vi.fn(() => {
+      copiedText = (document.activeElement as HTMLTextAreaElement).value;
+      return true;
+    });
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: copy });
+    const { result } = renderHook(() => useMenu());
+    const item = result.current
+      .menuItems()
+      .find((item) => isActionItem(item) && item.key === 'copySessionId');
+    if (!isActionItem(item)) throw new Error('Expected copy action');
+
+    await item.onClick?.();
+
+    expect(copy).toHaveBeenCalledWith('copy');
+    expect(copiedText).toBe('topic-1');
+    expect(document.querySelector('textarea')).toBeNull();
+  });
   it('includes the desktop popup-window action for the active topic', () => {
     useLocationMock.mockReturnValue({ pathname: '/agent/agent-1' });
 
     const { result } = renderHook(() => useMenu());
 
-    const popupItem = result.current.menuItems.find(
-      (item) => isActionItem(item) && item.key === 'openInPopupWindow',
-    );
+    const popupItem = result.current
+      .menuItems()
+      .find((item) => isActionItem(item) && item.key === 'openInPopupWindow');
 
     expect(popupItem).toBeDefined();
     if (!isActionItem(popupItem)) {
@@ -133,9 +168,9 @@ describe('Conversation header action menu', () => {
 
     const { result } = renderHook(() => useMenu());
 
-    const popupItem = result.current.menuItems.find(
-      (item) => isActionItem(item) && item.key === 'openInPopupWindow',
-    );
+    const popupItem = result.current
+      .menuItems()
+      .find((item) => isActionItem(item) && item.key === 'openInPopupWindow');
 
     expect(popupItem).toBeUndefined();
   });
@@ -145,9 +180,9 @@ describe('Conversation header action menu', () => {
 
     const { result } = renderHook(() => useMenu());
 
-    const topicInfoItem = result.current.menuItems.find(
-      (item) => isActionItem(item) && item.key === 'topic-info',
-    );
+    const topicInfoItem = result.current
+      .menuItems()
+      .find((item) => isActionItem(item) && item.key === 'topic-info');
 
     expect(topicInfoItem).toBeUndefined();
     expect(result.current.menuHeader).toBeDefined();

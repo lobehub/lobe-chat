@@ -1,7 +1,8 @@
 import { type ChatToolPayloadWithResult } from '@lobechat/types';
-import { Accordion, AccordionItem, ActionIcon, Block, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Accordion, AccordionItem, Block, Flexbox, Icon } from '@lobehub/ui';
+import { ActionIcon, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
-import { AlertTriangle, Check, HandIcon, Maximize2, Minimize2, X } from 'lucide-react';
+import { Check, HandIcon, Maximize2, Minimize2, X } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
 import { type Key, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,8 +46,7 @@ export type WorkflowExpandLevel = 'collapsed' | 'semi' | 'full';
  *  should differ — e.g. heterogeneous agents want full while streaming but
  *  still collapse once a turn finishes. A plain string applies to both. */
 export type WorkflowExpandLevelDefault =
-  | WorkflowExpandLevel
-  | { completion?: WorkflowExpandLevel; streaming?: WorkflowExpandLevel };
+  WorkflowExpandLevel | { completion?: WorkflowExpandLevel; streaming?: WorkflowExpandLevel };
 
 interface WorkflowCollapseProps {
   /** Assistant group message id (for generation state) */
@@ -61,6 +61,14 @@ interface WorkflowCollapseProps {
    */
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
   disableEditing?: boolean;
+  /**
+   * Skip the completion auto-collapse (semi → collapsed, an animated Accordion
+   * height transition) because the parent is about to fold the whole workflow
+   * into `ProcessFold` in a single commit. Collapsing twice — once as a
+   * multi-frame animation, once as the fold swap — is what makes the
+   * conversation visibly jitter when a turn with tool calls finishes.
+   */
+  suppressAutoCollapse?: boolean;
   workflowChromeComplete?: boolean;
 }
 
@@ -140,6 +148,7 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
     blocks,
     defaultWorkflowExpandLevel,
     disableEditing,
+    suppressAutoCollapse = false,
     workflowChromeComplete = false,
   }) => {
     const { t } = useTranslation('chat');
@@ -186,10 +195,13 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
     );
     const userOpenedRef = useRef(false);
     const prevCompleteRef = useRef(allComplete);
+    const prevSuppressRef = useRef(suppressAutoCollapse);
 
     useEffect(() => {
       const wasComplete = prevCompleteRef.current;
       prevCompleteRef.current = allComplete;
+      const wasSuppressed = prevSuppressRef.current;
+      prevSuppressRef.current = suppressAutoCollapse;
 
       if (!allComplete && wasComplete) {
         userOpenedRef.current = false;
@@ -197,10 +209,28 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
         return;
       }
 
-      if (allComplete && !wasComplete && !userOpenedRef.current && allTools.length > 0) {
+      const autoCollapsable = !userOpenedRef.current && allTools.length > 0;
+
+      if (allComplete && !wasComplete) {
+        if (!suppressAutoCollapse && autoCollapsable) setExpandLevel(completionInitialLevel);
+        return;
+      }
+
+      // Late release: suppression is held while the turn's operation is still
+      // active, so it can lift *after* completion already happened. That is the
+      // path where the parent ends up NOT folding into ProcessFold (e.g. a
+      // tool-only turn with no final answer), so nothing else will collapse this
+      // workflow — apply the completion level now instead.
+      if (allComplete && wasSuppressed && !suppressAutoCollapse && autoCollapsable) {
         setExpandLevel(completionInitialLevel);
       }
-    }, [allComplete, allTools.length, streamingInitialLevel, completionInitialLevel]);
+    }, [
+      allComplete,
+      allTools.length,
+      streamingInitialLevel,
+      completionInitialLevel,
+      suppressAutoCollapse,
+    ]);
 
     const streaming = !allComplete;
     const forceExpanded = streaming && pendingInterventionPresent;
@@ -362,30 +392,7 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
           return wrapInBlock(<Icon color={cssVar.colorError} icon={X} />);
         }
         case 'partial': {
-          // Mix of success + failure: show success as the primary state and
-          // surface a small warning badge slightly inset from the bottom-right
-          // so the overall turn still reads as "done" rather than "broken".
-          return (
-            <div style={{ flex: 'none', position: 'relative' }}>
-              {wrapInBlock(<Icon color={cssVar.colorSuccess} icon={Check} />)}
-              <div
-                style={{
-                  alignItems: 'center',
-                  background: cssVar.colorBgContainer,
-                  borderRadius: '50%',
-                  bottom: 2,
-                  display: 'flex',
-                  height: 10,
-                  justifyContent: 'center',
-                  position: 'absolute',
-                  right: 2,
-                  width: 10,
-                }}
-              >
-                <Icon color={cssVar.colorWarning} icon={AlertTriangle} size={8} />
-              </div>
-            </div>
-          );
+          return wrapInBlock(<Icon color={cssVar.colorSuccess} icon={Check} />);
         }
         default: {
           return wrapInBlock(<Icon color={cssVar.colorSuccess} icon={Check} />);
@@ -440,7 +447,6 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
             style={{
               minHeight: WORKFLOW_STREAMING_TITLE_MIN_HEIGHT_PX,
               minWidth: 0,
-              overflow: 'hidden',
             }}
           >
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
@@ -462,6 +468,7 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
                     style={{
                       color: pendingInterventionPresent ? cssVar.colorInfo : undefined,
                       overflow: 'hidden',
+                      paddingBlock: 1,
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                     }}
@@ -479,12 +486,13 @@ const WorkflowCollapse = memo<WorkflowCollapseProps>(
             )}
           </Flexbox>
         ) : (
-          <Flexbox horizontal align="center" gap={6} style={{ minWidth: 0, overflow: 'hidden' }}>
+          <Flexbox horizontal align="center" gap={6} style={{ minWidth: 0 }}>
             <Text
               type="secondary"
               style={{
                 minWidth: 0,
                 overflow: 'hidden',
+                paddingBlock: 1,
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               }}

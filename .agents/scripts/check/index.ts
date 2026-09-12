@@ -19,8 +19,10 @@
  * mounting this repo provides its own entry that adds its root pipelines and
  * mounts this repo's via `pipelines.ts`.
  */
+import { findNewComponentTestAdvisories } from './advisories';
 import { collectAutofixDiffs, snapshot, writeFullDiff } from './autofix';
 import { collectFromGit, normalizeArgs } from './collect';
+import { assertCheckRoot } from './delegate';
 import { run } from './exec';
 import { lintGroup } from './lint';
 import { existsInRepo, setConfig } from './paths';
@@ -58,6 +60,11 @@ export const runCli = async (config: CheckConfig) => {
     console.error(`✗ unknown flag: ${unknownFlags.join(' ')}\n${USAGE}`);
     process.exit(2);
   }
+
+  await assertCheckRoot(
+    config.rootDir,
+    config.repos.map((repo) => repo.dir),
+  );
 
   const wantLint = rawArgs.includes('--lint');
   const wantTest = rawArgs.includes('--test');
@@ -126,6 +133,8 @@ export const runCli = async (config: CheckConfig) => {
     tests = await runTestGroups(testFiles);
   }
 
+  const advisories = await findNewComponentTestAdvisories([...new Set([...files, ...testFiles])]);
+
   /* ---- Type check ---- */
   let typeOutput: string | null = null;
   if (runType) {
@@ -135,6 +144,7 @@ export const runCli = async (config: CheckConfig) => {
 
   const fullDiffPath = diffs.length > 0 ? await writeFullDiff(diffs) : null;
   const { failed } = printReport({
+    advisories,
     diffs,
     fatal,
     fileCount: files.length,

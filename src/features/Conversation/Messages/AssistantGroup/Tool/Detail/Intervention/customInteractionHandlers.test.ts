@@ -1,3 +1,8 @@
+import { LobeAgentApiName, LobeAgentIdentifier } from '@lobechat/builtin-tool-lobe-agent';
+import {
+  UserInteractionApiName,
+  UserInteractionIdentifier,
+} from '@lobechat/builtin-tool-user-interaction';
 import {
   WebOnboardingApiName,
   WebOnboardingIdentifier,
@@ -7,6 +12,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { installMarketplaceAgents } from '@/services/installMarketplaceAgents';
 
 import {
+  isCustomInteractionIdentifier,
   prepareCustomInteractionSubmit,
   recordCustomInteractionResolution,
 } from './customInteractionHandlers';
@@ -77,6 +83,34 @@ describe('customInteractionHandlers', () => {
     });
     expect(result.options?.createUserMessage).toBe(false);
   });
+
+  it.each([
+    [LobeAgentIdentifier, LobeAgentApiName.askUserQuestion],
+    [UserInteractionIdentifier, UserInteractionApiName.askUserQuestion],
+  ])('persists structured ask-user answers for %s', async (identifier, apiName) => {
+    const payload = {
+      'How broad should this pass be?': 'Focused',
+      'Which surfaces?': ['Chat', 'Settings'],
+      '__supplement__': 'Keep the existing behavior.',
+    };
+
+    const result = await prepareCustomInteractionSubmit(identifier, payload, { apiName });
+
+    expect(result).toEqual({
+      // createUserMessage must stay false: the completed tool card already
+      // renders the answers, so a synthetic user message would duplicate them
+      // in the client runtime.
+      options: { createUserMessage: false, pluginState: { askUserAnswers: payload } },
+      payload,
+    });
+  });
+
+  it.each(['devin', 'droid', 'qoder'])(
+    'routes %s tools through the heterogeneous custom flow',
+    (type) => {
+      expect(isCustomInteractionIdentifier(type, 'askUserQuestion')).toBe(true);
+    },
+  );
 
   it('persists skipped marketplace picks from the original tool arguments', async () => {
     await recordCustomInteractionResolution(

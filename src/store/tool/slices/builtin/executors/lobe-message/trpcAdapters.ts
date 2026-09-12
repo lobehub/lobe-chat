@@ -200,6 +200,14 @@ export const trpcBotProvider: BotProviderQuery = {
       tenantId: params.tenantId,
     });
   },
+
+  sendMessengerPush: async (params) => {
+    return lambdaClient.messenger.sendMessengerPush.mutate({
+      content: params.content,
+      platform: params.platform,
+      tenantId: params.tenantId,
+    });
+  },
 };
 
 // ────────────────────────────────────────────────────────────────────────
@@ -251,6 +259,10 @@ export const trpcMessageService: MessageRuntimeService = {
 
   readMessages: async (params) => {
     return lambdaClient.botMessage.readMessages.query(await buildTrpcInput(params)) as any;
+  },
+
+  readDocument: async (params) => {
+    return lambdaClient.botMessage.readDocument.query(await buildTrpcInput(params)) as any;
   },
 
   editMessage: async (params) => {

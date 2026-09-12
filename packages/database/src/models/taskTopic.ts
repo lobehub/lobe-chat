@@ -66,7 +66,7 @@ export class TaskTopicModel {
     params: {
       operationId?: string;
       seq: number;
-      trigger?: 'manual' | 'schedule' | 'heartbeat';
+      trigger?: 'manual' | 'schedule' | 'heartbeat' | 'goal';
     },
   ): Promise<void> {
     const visibility = await this.getTaskVisibility(taskId);
@@ -117,6 +117,34 @@ export class TaskTopicModel {
     const updated = result.length > 0;
     if (updated) await this.markTopicEnded(topicId, 'canceled');
     return updated;
+  }
+
+  /**
+   * Cancel every still-running topic under the given tasks in one statement,
+   * returning the rows that were actually flipped. Used by the family status
+   * cascade so a topic that started after the caller's snapshot is still
+   * marked canceled inside the same transaction as the status update.
+   */
+  async cancelRunningByTaskIds(taskIds: string[]): Promise<TaskTopicItem[]> {
+    if (taskIds.length === 0) return [];
+
+    const canceled = await this.db
+      .update(taskTopics)
+      .set({ status: 'canceled' })
+      .where(
+        and(
+          inArray(taskTopics.taskId, taskIds),
+          eq(taskTopics.status, 'running'),
+          this.ownership(),
+        ),
+      )
+      .returning();
+
+    for (const topic of canceled) {
+      if (topic.topicId) await this.markTopicEnded(topic.topicId, 'canceled');
+    }
+
+    return canceled;
   }
 
   async updateOperationId(taskId: string, topicId: string, operationId?: string): Promise<void> {
@@ -221,13 +249,13 @@ export class TaskTopicModel {
    * source.
    *
    * `triggers` filters on the `trigger` column so the maxExecutions quota can
-   * count only automation ticks and ignore ad-hoc manual runs (LOBE-11391).
+   * count only automation ticks and ignore ad-hoc manual runs.
    * Legacy rows have a NULL trigger; they are excluded whenever `triggers` is
    * passed (they predate the column and can't be attributed to a schedule).
    */
   async countByTask(
     taskId: string,
-    options?: { since?: Date; triggers?: Array<'manual' | 'schedule' | 'heartbeat'> },
+    options?: { since?: Date; triggers?: Array<'manual' | 'schedule' | 'heartbeat' | 'goal'> },
   ): Promise<number> {
     const conditions = [eq(taskTopics.taskId, taskId), this.ownership()];
     if (options?.since) conditions.push(gte(taskTopics.createdAt, options.since));
@@ -296,6 +324,7 @@ export class TaskTopicModel {
         // assignee (which changes when the task is reassigned).
         agentId: topics.agentId,
         completedAt: topics.completedAt,
+        totalCost: topics.totalCost,
         createdAt: taskTopics.createdAt,
         handoff: taskTopics.handoff,
         metadata: topics.metadata,
@@ -304,12 +333,62 @@ export class TaskTopicModel {
         status: taskTopics.status,
         title: topics.title,
         topicId: taskTopics.topicId,
+        trigger: taskTopics.trigger,
       })
       .from(taskTopics)
       .leftJoin(topics, eq(taskTopics.topicId, topics.id))
       .where(and(eq(taskTopics.taskId, taskId), this.ownership()))
       .orderBy(desc(taskTopics.seq))
       .limit(limit);
+  }
+
+  /**
+   * A goal's spend and round count in one aggregate: how many runs those tasks
+   * produced and what they cost.
+   *
+   * The Goal page renders these numbers and the coordinator enforces the budget
+   * against them, so both read them from here — a second definition of "what
+   * this goal has spent" would let the header disagree with the move that
+   * parks the goal on `budget_exhausted`.
+   *
+   * `topics.totalCost` is NULL for a run that has not settled yet; those count
+   * as a round but contribute nothing to the sum.
+   */
+  async sumRunCostByTaskIds(taskIds: string[]): Promise<{
+    byTask: { runs: number; taskId: string; totalCost: number; totalTokens: number }[];
+    runs: number;
+    totalCost: number;
+    totalTokens: number;
+  }> {
+    if (taskIds.length === 0) return { byTask: [], runs: 0, totalCost: 0, totalTokens: 0 };
+
+    // Grouped once, then folded — one round trip serves both the enforced
+    // total and the per-Task breakdown the cost panel lists.
+    const rows = await this.db
+      .select({
+        runs: count(),
+        taskId: taskTopics.taskId,
+        totalCost: sql<string>`coalesce(sum(${topics.totalCost}), 0)`,
+        totalTokens: sql<string>`coalesce(sum(${topics.totalTokens}), 0)`,
+      })
+      .from(taskTopics)
+      .leftJoin(topics, eq(taskTopics.topicId, topics.id))
+      .where(and(inArray(taskTopics.taskId, taskIds), this.ownership()))
+      .groupBy(taskTopics.taskId);
+
+    const byTask = rows.map((row) => ({
+      runs: row.runs,
+      taskId: row.taskId,
+      totalCost: Number(row.totalCost ?? 0),
+      totalTokens: Number(row.totalTokens ?? 0),
+    }));
+
+    return {
+      byTask,
+      runs: byTask.reduce((sum, row) => sum + row.runs, 0),
+      totalCost: byTask.reduce((sum, row) => sum + row.totalCost, 0),
+      totalTokens: byTask.reduce((sum, row) => sum + row.totalTokens, 0),
+    };
   }
 
   async findWithHandoffByTaskIds(taskIds: string[], limit: number) {
@@ -322,6 +401,7 @@ export class TaskTopicModel {
         // assignee (which changes when the task is reassigned).
         agentId: topics.agentId,
         completedAt: topics.completedAt,
+        totalCost: topics.totalCost,
         createdAt: taskTopics.createdAt,
         handoff: taskTopics.handoff,
         metadata: topics.metadata,
@@ -334,6 +414,7 @@ export class TaskTopicModel {
         status: taskTopics.status,
         title: topics.title,
         topicId: taskTopics.topicId,
+        trigger: taskTopics.trigger,
       })
       .from(taskTopics)
       .innerJoin(tasks, eq(taskTopics.taskId, tasks.id))

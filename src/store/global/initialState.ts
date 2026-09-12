@@ -4,6 +4,7 @@ import { type MigrationSQL, type MigrationTableItem } from '@/types/clientDB';
 import { DatabaseLoadingState } from '@/types/clientDB';
 import { type LocaleMode } from '@/types/locale';
 import { SessionDefaultGroup } from '@/types/session';
+import { type TopicGroupMode } from '@/types/topic';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 export enum SidebarTabKey {
@@ -36,7 +37,18 @@ export enum GroupSettingsTabs {
   Settings = 'settings',
 }
 
-export type WorkingSidebarTab = 'files' | 'params' | 'resources' | 'review';
+// business builds may register extra sidebar tabs, so any string key is accepted
+export type WorkingSidebarTab =
+  | 'browser'
+  | 'comments'
+  | 'documents'
+  | 'files'
+  | 'overview'
+  | 'params'
+  | 'review'
+  | 'skills'
+  | 'web'
+  | (string & {});
 
 export const DEFAULT_RESOURCE_MANAGER_COLUMN_WIDTHS = {
   date: 160,
@@ -59,15 +71,18 @@ export enum SettingsTabs {
   Common = 'common',
   Connector = 'connector',
   Credits = 'credits',
-  Creds = 'creds',
+  Creds = 'credential',
   Devices = 'devices',
   Hotkey = 'hotkey',
   /** @deprecated Use ServiceModel instead */
   Image = 'image',
+  Labels = 'labels',
+  Labs = 'labs',
   LLM = 'llm',
   Memory = 'memory',
   Messenger = 'messenger',
   Notification = 'notification',
+  OAuthApps = 'oauth-apps',
   // business
   Plans = 'plans',
   Profile = 'profile',
@@ -99,6 +114,7 @@ export enum ProfileTabs {
 }
 
 export const MODEL_DETAIL_PANEL_EXPANDED_KEYS = [
+  'rating',
   'context',
   'abilities',
   'pricing',
@@ -107,10 +123,22 @@ export const MODEL_DETAIL_PANEL_EXPANDED_KEYS = [
 
 export type ModelDetailPanelExpandedKey = (typeof MODEL_DETAIL_PANEL_EXPANDED_KEYS)[number];
 
-export const DEFAULT_MODEL_DETAIL_PANEL_EXPANDED_KEYS = [
+/**
+ * Expandable sections of the ModelDetailPanel Accordion, all expanded by default.
+ *
+ * Persistence stores the COLLAPSED keys (`modelDetailPanelCollapsedKeys`) instead of the
+ * expanded ones: an expanded-keys array persisted before a section shipped would keep that
+ * section collapsed forever (this happened to `rating`), while a collapsed-keys array lets
+ * newly added sections default to expanded automatically.
+ */
+export const MODEL_DETAIL_PANEL_EXPANDABLE_KEYS = [
+  'rating',
+  'abilities',
   'pricing',
   'config',
 ] as const satisfies readonly ModelDetailPanelExpandedKey[];
+
+export type TaskViewMode = 'kanban' | 'list';
 
 export const DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS = ['recents', 'agent', 'private'];
 
@@ -120,10 +148,42 @@ export interface SystemStatus {
    */
   agentBuilderPanelWidth?: number;
   /**
+   * Expanded group keys of the agent view-all page. Expanded (not collapsed)
+   * keys are persisted because groups default to COLLAPSED (mirrors Linear) —
+   * newly appearing groups start collapsed until explicitly opened.
+   */
+  agentListExpandedGroupKeys?: string[];
+  /**
+   * Whether the "in sidebar" overview section of the agent view-all page is
+   * collapsed. Defaults to expanded so the section is discoverable.
+   */
+  agentListSidebarSectionCollapsed?: boolean;
+  /**
+   * View mode of the agent view-all page (card grid vs table list)
+   */
+  agentListViewMode?: 'card' | 'list';
+  /**
+   * Display options of the agent view-all page (grouping / ordering / hidden-agent visibility)
+   */
+  agentListViewOptions?: {
+    groupBy: 'author' | 'label' | 'none';
+    orderBy: 'author' | 'title' | 'updatedAt';
+    orderDirection: 'asc' | 'desc';
+    showSidebarHidden: boolean;
+  };
+  /**
    * number of agents (defaultList) to display
    */
   agentPageSize?: number;
   chatInputHeight?: number;
+  /**
+   * Which topicGroups are collapsed, bucketed by group mode. We persist the
+   * collapsed keys rather than the expanded ones so a group that shows up later
+   * (a new project directory, a new month bucket) starts expanded; and bucketing
+   * per mode keeps `project:*` keys from leaking into byTime, where nothing would
+   * match and every group would render collapsed.
+   */
+  collapsedTopicGroupKeysByMode?: Partial<Record<TopicGroupMode, string[]>>;
   disabledModelProvidersSortType?: string;
   disabledModelsSortType?: string;
   /**
@@ -142,14 +202,13 @@ export interface SystemStatus {
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
-  // which topicGroup should expand
-  expandTopicGroupKeys?: string[];
   fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   /**
    * Group Agent Builder panel width
    */
   groupAgentBuilderPanelWidth?: number;
+  hiddenHomeWidgets?: string[];
   /**
    * Hidden sidebar sections
    */
@@ -158,10 +217,18 @@ export interface SystemStatus {
   hideThreadLimitAlert?: boolean;
   hideTopicSharePrivacyWarning?: boolean;
   /**
+   * Home rail: the goals card folded to its title. Persisted, because a card
+   * you deliberately put away must stay away across reloads — otherwise the
+   * affordance is only a scroll trick.
+   */
+  homeGoalsCollapsed?: boolean;
+  homeRecentsCount?: number;
+  /**
    * Agent picked from the home AgentSelect dropdown. When unset the home page
    * falls back to the inbox agent. Persisted so the choice survives reloads.
    */
   homeSelectedAgentId?: string;
+  homeTaskCount?: number;
   imagePanelWidth: number;
   imageTopicPanelWidth?: number;
   imageTopicViewMode?: 'grid' | 'list';
@@ -187,11 +254,13 @@ export interface SystemStatus {
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   /**
-   * Persisted expanded keys of the ModelDetailPanel Accordion
-   * (Pricing / Context / Abilities / Model Config). Single shared preference
+   * Persisted collapsed keys of the ModelDetailPanel Accordion
+   * (Rating / Abilities / Pricing / Model Config). Single shared preference
    * across all entries (model picker submenu, ChatInput extend-params popover).
+   * Collapsed (not expanded) keys are stored so new sections default to expanded
+   * — see MODEL_DETAIL_PANEL_EXPANDABLE_KEYS.
    */
-  modelDetailPanelExpandedKeys?: ModelDetailPanelExpandedKey[];
+  modelDetailPanelCollapsedKeys?: ModelDetailPanelExpandedKey[];
   /**
    * ModelSwitchPanel grouping mode
    */
@@ -206,7 +275,15 @@ export interface SystemStatus {
    * number of pages (documents) to display per page
    */
   pagePageSize?: number;
+  /**
+   * @deprecated legacy shared portal width, kept as the fallback for views that
+   * have no entry in `portalWidths` yet
+   */
   portalWidth: number;
+  /**
+   * portal width remembered per view type, see `PortalWidths`
+   */
+  portalWidths?: Record<string, number>;
   /**
    * number of private agents (ungrouped) to display in the Private sidebar bucket
    */
@@ -232,12 +309,12 @@ export interface SystemStatus {
   showAgentBuilderPanel?: boolean;
   showCommandMenu?: boolean;
   showFilePanel?: boolean;
+  showHomePortrait?: boolean;
   /**
-   * Collapse state of the nav panel while the Fleet (Observation Mode) view is active.
-   * Persisted independently from `showLeftPanel` so collapsing the running-task list
-   * does not carry over to / from the standard chat nav rail (and vice versa).
+   * Visibility of the Home dashboard's activity and recommendations rail.
+   * Independent from `showRightPanel` so Home preferences do not affect chat pages.
    */
-  showFleetPanel?: boolean;
+  showHomeRail?: boolean;
   showHotkeyHelper?: boolean;
   showImagePanel?: boolean;
   showImageTopicPanel?: boolean;
@@ -255,12 +332,18 @@ export interface SystemStatus {
    */
   showTaskAgentPanel?: boolean;
   /**
+   * Visibility of the chat bottom terminal panel (desktop-only, Labs gated).
+   */
+  showTerminalPanel?: boolean;
+  /**
    * Visibility of the Verify workspace left-side report-list panel.
    * Independent from the nav rail so collapsing the report list does not affect other pages.
    */
   showVerifyReportPanel?: boolean;
   showVideoPanel?: boolean;
   showVideoTopicPanel?: boolean;
+  /** Visibility of the lightweight chat overview card. Independent from the workspace panel. */
+  showWorkingOverview?: boolean;
   /**
    * Flat ordered list of sidebar items.
    */
@@ -286,14 +369,25 @@ export interface SystemStatus {
    * Whether the right-side "Hidden columns" panel on the Kanban board is collapsed.
    */
   taskKanbanHiddenPanelCollapsed?: boolean;
+  /**
+   * Display mode for the tasks page. Persisted so a manually selected board or
+   * list view survives navigation and page reloads.
+   */
+  taskListViewMode?: TaskViewMode;
   taskListViewOptions?: {
-    groupBy: 'assignee' | 'none' | 'priority' | 'status';
+    groupBy: 'assignee' | 'member' | 'none' | 'priority' | 'status';
     hideCompleted: boolean;
+    nestedSubTasks: boolean;
     orderBy: 'assignee' | 'createdAt' | 'priority' | 'status' | 'title' | 'updatedAt';
     orderCompletedByRecency: boolean;
     orderDirection: 'asc' | 'desc';
-    subGroupBy: 'assignee' | 'none' | 'priority' | 'status';
+    showSubTasks: boolean;
+    subGroupBy: 'assignee' | 'member' | 'none' | 'priority' | 'status';
   };
+  /**
+   * Height of the chat bottom terminal panel. Persisted so resizing survives remounts.
+   */
+  terminalPanelHeight?: number;
   /**
    * Whether to display tokens in short format
    */
@@ -309,6 +403,17 @@ export interface SystemStatus {
   videoPanelWidth: number;
   videoTopicPanelWidth?: number;
   videoTopicViewMode?: 'grid' | 'list';
+  /**
+   * One-shot navigation request for the WorkingSidebar browser tab, so external
+   * triggers (e.g. web-browsing search results) can open a URL in the in-app
+   * browser. The pane clears it (to `null`) the moment it navigates: this status
+   * is persisted, and the pane remounts whenever the browser session key changes
+   * (i.e. on every topic switch), so a request left lying around would be
+   * re-consumed and would drag that topic's page off whatever the agent had
+   * loaded. `null` rather than `undefined` because `updateSystemStatus` merges
+   * with lodash, which skips undefined.
+   */
+  workingSidebarBrowserRequest?: { nonce: number; url: string } | null;
   workingSidebarRevealRequest?: { nonce: number; path: string };
   /**
    * Active tab inside the agent chat right-side WorkingSidebar.
@@ -316,6 +421,17 @@ export interface SystemStatus {
    * can switch the panel to "review" when revealing the right panel.
    */
   workingSidebarTab?: WorkingSidebarTab;
+  /**
+   * One-shot request to reveal a WorkingSidebar tab. The nonce makes repeated
+   * requests for the already-selected tab observable, so a closed on-demand tab
+   * can be reopened by Git/File/Browser entry points.
+   */
+  workingSidebarTabRequest?: { nonce: number; tab: WorkingSidebarTab };
+  /**
+   * Width of the agent chat right-side WorkingSidebar (space / params / files / …).
+   * Persisted so resizing survives remounts when navigating away and back.
+   */
+  workingSidebarWidth?: number;
   /**
    * Workspace-mode overlay for sidebar layout/visibility preferences.
    * When the user is inside a workspace (see `useActiveWorkspaceId`), reads
@@ -387,6 +503,15 @@ export interface GlobalState {
 
 export const INITIAL_STATUS = {
   agentBuilderPanelWidth: 360,
+  agentListExpandedGroupKeys: [] as string[],
+  agentListSidebarSectionCollapsed: false,
+  agentListViewMode: 'list' as const,
+  agentListViewOptions: {
+    groupBy: 'none' as const,
+    orderBy: 'updatedAt' as const,
+    orderDirection: 'desc' as const,
+    showSidebarHidden: true,
+  },
   agentPageSize: 5,
   privateAgentPageSize: 5,
   chatInputHeight: 64,
@@ -394,11 +519,14 @@ export const INITIAL_STATUS = {
   taskListViewOptions: {
     groupBy: 'status',
     hideCompleted: true,
+    nestedSubTasks: true,
     orderBy: 'updatedAt',
     orderCompletedByRecency: true,
     orderDirection: 'asc',
+    showSubTasks: false,
     subGroupBy: 'none',
   },
+  taskListViewMode: 'list' as const,
   taskKanbanHiddenColumns: ['done', 'canceled'],
   taskKanbanHiddenPanelCollapsed: false,
   disabledModelProvidersSortType: 'default',
@@ -409,28 +537,34 @@ export const INITIAL_STATUS = {
   fileManagerViewMode: 'list' as const,
   filePanelWidth: 320,
   groupAgentBuilderPanelWidth: 360,
+  hiddenHomeWidgets: [],
   hidePWAInstaller: false,
   hideThreadLimitAlert: false,
   hideTopicSharePrivacyWarning: false,
+  homeGoalsCollapsed: false,
+  homeRecentsCount: 8,
+  homeTaskCount: 8,
   imagePanelWidth: 320,
   imageTopicViewMode: 'grid' as const,
   imageTopicPanelWidth: 80,
   knowledgeBaseModalViewMode: 'list' as const,
   leftPanelWidth: 280,
   mobileShowTopic: false,
-  modelDetailPanelExpandedKeys: [...DEFAULT_MODEL_DETAIL_PANEL_EXPANDED_KEYS],
+  modelDetailPanelCollapsedKeys: [],
   modelSwitchPanelGroupMode: 'byProvider',
   modelSwitchPanelWidth: 460,
   noWideScreen: true,
   pageAgentPanelWidth: 360,
   pagePageSize: 20,
   portalWidth: 400,
+  portalWidths: {},
   readNotificationSlugs: [],
   resourceManagerColumnWidths: DEFAULT_RESOURCE_MANAGER_COLUMN_WIDTHS,
   showCommandMenu: false,
   showFilePanel: true,
-  showFleetPanel: true,
+  showHomePortrait: true,
   showHotkeyHelper: false,
+  showHomeRail: true,
   showImagePanel: true,
   showImageTopicPanel: true,
   showAgentBuilderPanel: false,
@@ -439,18 +573,58 @@ export const INITIAL_STATUS = {
   showRightPanel: false,
   showSystemRole: false,
   showTaskAgentPanel: false,
+  showTerminalPanel: false,
   showVerifyReportPanel: true,
   showVideoPanel: true,
   showVideoTopicPanel: true,
   sidebarExpandedKeys: [...DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS],
   systemRoleExpandedMap: {},
+  terminalPanelHeight: 320,
   tokenDisplayFormatShort: true,
   topicPageSize: 20,
   verifyReportPanelWidth: 300,
   videoPanelWidth: 320,
   videoTopicViewMode: 'grid' as const,
   videoTopicPanelWidth: 80,
+  workingSidebarWidth: 360,
 } satisfies SystemStatus;
+
+const statusStorage = new AsyncLocalStorage<SystemStatus>('LOBE_SYSTEM_STATUS');
+
+/**
+ * Restore the shell-defining preferences before React's first render. The
+ * remaining system status still follows the existing async initialization path,
+ * but these must not briefly render their default value after a page reload —
+ * the boot shell reads them synchronously to draw a shell that lines up with
+ * the real layout, and `NavPanelDraggable` would otherwise size its
+ * pre-hydration placeholder to the default width.
+ */
+export const createInitialSystemStatus = (): SystemStatus => {
+  const persistedStatus = statusStorage.getFromLocalStorageSync();
+
+  return {
+    ...INITIAL_STATUS,
+    hiddenHomeWidgets: Array.isArray(persistedStatus.hiddenHomeWidgets)
+      ? persistedStatus.hiddenHomeWidgets
+      : INITIAL_STATUS.hiddenHomeWidgets,
+    leftPanelWidth:
+      typeof persistedStatus.leftPanelWidth === 'number'
+        ? persistedStatus.leftPanelWidth
+        : INITIAL_STATUS.leftPanelWidth,
+    showHomePortrait:
+      typeof persistedStatus.showHomePortrait === 'boolean'
+        ? persistedStatus.showHomePortrait
+        : INITIAL_STATUS.showHomePortrait,
+    showHomeRail:
+      typeof persistedStatus.showHomeRail === 'boolean'
+        ? persistedStatus.showHomeRail
+        : INITIAL_STATUS.showHomeRail,
+    showLeftPanel:
+      typeof persistedStatus.showLeftPanel === 'boolean'
+        ? persistedStatus.showLeftPanel
+        : INITIAL_STATUS.showLeftPanel,
+  };
+};
 
 export const initialState: GlobalState = {
   initClientDBStage: DatabaseLoadingState.Idle,
@@ -458,6 +632,6 @@ export const initialState: GlobalState = {
   isStatusInit: false,
   navigationRef: createNavigationRef(),
   sidebarKey: SidebarTabKey.Chat,
-  status: INITIAL_STATUS,
-  statusStorage: new AsyncLocalStorage('LOBE_SYSTEM_STATUS'),
+  status: createInitialSystemStatus(),
+  statusStorage,
 };

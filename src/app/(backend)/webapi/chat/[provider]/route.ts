@@ -1,3 +1,4 @@
+import { REQUEST_TOPIC_ID_HEADER } from '@lobechat/const';
 import { type ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { AGENT_RUNTIME_ERROR_SET } from '@lobechat/model-runtime';
 import { ChatErrorType } from '@lobechat/types';
@@ -38,6 +39,7 @@ export const POST = checkAuth(async (req: Request, { params, userId, serverDB })
     return await modelRuntime.chat(data, {
       user: userId,
       ...traceOptions,
+      metadata: { topicId: req.headers.get(REQUEST_TOPIC_ID_HEADER) ?? undefined },
       signal: req.signal,
     });
   } catch (e) {
@@ -49,10 +51,12 @@ export const POST = checkAuth(async (req: Request, { params, userId, serverDB })
 
     const error = errorContent || e;
 
-    const logMethod = AGENT_RUNTIME_ERROR_SET.has(errorType as string) ? 'warn' : 'error';
     // track the error at server side
-    // eslint-disable-next-line no-console
-    console[logMethod](`Route: [${provider}] ${errorType}:`, error);
+    if (AGENT_RUNTIME_ERROR_SET.has(errorType as string)) {
+      console.warn(`Route: [${provider}] ${errorType}:`, error);
+    } else {
+      console.error(`Route: [${provider}] ${errorType}:`, error);
+    }
 
     return createErrorResponse(errorType, { error, ...res, provider });
   }

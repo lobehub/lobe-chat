@@ -1,51 +1,79 @@
 import { useCallback, useMemo } from 'react';
 
-import { useEventCallback } from '@/hooks/useEventCallback';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
+import { useIsWorkspaceOwner } from '@/business/client/hooks/useIsWorkspaceOwner';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import {
   getExplorerSelectAllUiState,
   getExplorerSelectedCount,
   isExplorerItemSelected,
-} from '@/routes/(main)/resource/features/store/selectors';
+} from '@/features/ResourceManager/store/selectors';
+import { useEventCallback } from '@/hooks/useEventCallback';
 import { useFileStore } from '@/store/file';
 
 interface ExplorerSelectionOptions {
-  data: Array<{ id: string }>;
+  data: ExplorerSelectableItem[];
   hasMore: boolean;
 }
 
+interface ExplorerSelectableItem {
+  id: string;
+}
+
+export const isExplorerItemSelectable = (_item?: ExplorerSelectableItem) => true;
+
+export const useExplorerSelectionEligibility = () => {
+  const isWorkspaceOwner = useIsWorkspaceOwner();
+
+  return {
+    isItemSelectable: isExplorerItemSelectable,
+    isWorkspaceOwner,
+  };
+};
+
 export const useExplorerSelectionSummary = ({ data, hasMore }: ExplorerSelectionOptions) => {
-  const [selectAllState, selectedFileIds] = useResourceManagerStore((s) => [
+  const [selectAllState, selectedFileIds, selectionTotal] = useResourceManagerStore((s) => [
     s.selectAllState,
     s.selectedFileIds,
+    s.selectionTotal,
   ]);
+  const { isItemSelectable, isWorkspaceOwner } = useExplorerSelectionEligibility();
+  const selectableData = useMemo(() => data.filter(isItemSelectable), [data, isItemSelectable]);
   const total = useFileStore((s) => s.total);
+  const effectiveTotal = selectionTotal ?? total;
   const selectedCount = useMemo(
-    () => getExplorerSelectedCount({ selectAllState, selectedIds: selectedFileIds, total }),
-    [selectAllState, selectedFileIds, total],
+    () =>
+      getExplorerSelectedCount({
+        selectAllState,
+        selectedIds: selectedFileIds,
+        total: effectiveTotal,
+      }),
+    [effectiveTotal, selectAllState, selectedFileIds],
   );
 
   const uiState = useMemo(
     () =>
       getExplorerSelectAllUiState({
-        data,
+        data: selectableData,
         hasMore,
         selectAllState,
         selectedIds: selectedFileIds,
       }),
-    [data, hasMore, selectAllState, selectedFileIds],
+    [hasMore, selectableData, selectAllState, selectedFileIds],
   );
 
   return {
     ...uiState,
+    hasSelectableItems: selectableData.length > 0,
+    isWorkspaceOwner,
+    selectableCount: selectableData.length,
     selectedCount,
     selectAllState,
     selectedFileIds,
-    total,
+    total: effectiveTotal,
   };
 };
 
-export const useExplorerSelectionActions = (data: Array<{ id: string }>) => {
+export const useExplorerSelectionActions = (data: ExplorerSelectableItem[]) => {
   const [
     clearSelectAllState,
     selectAllLoadedResources,
@@ -61,12 +89,14 @@ export const useExplorerSelectionActions = (data: Array<{ id: string }>) => {
     s.selectedFileIds,
     s.selectAllState,
   ]);
+  const { isItemSelectable } = useExplorerSelectionEligibility();
+  const selectableData = useMemo(() => data.filter(isItemSelectable), [data, isItemSelectable]);
 
   const handleSelectAll = useEventCallback((checked?: boolean) => {
     const store = useResourceManagerStore.getState();
     const allLoadedSelected =
-      data.length > 0 &&
-      data.every((item) =>
+      selectableData.length > 0 &&
+      selectableData.every((item) =>
         isExplorerItemSelected({
           id: item.id,
           selectAllState: store.selectAllState,
@@ -80,7 +110,7 @@ export const useExplorerSelectionActions = (data: Array<{ id: string }>) => {
     }
 
     if (store.selectAllState === 'all') {
-      const loadedIds = new Set(data.map((item) => item.id));
+      const loadedIds = new Set(selectableData.map((item) => item.id));
       const nextExcludedIds = store.selectedFileIds.filter((id) => !loadedIds.has(id));
 
       if (nextExcludedIds.length !== store.selectedFileIds.length) {
@@ -90,15 +120,18 @@ export const useExplorerSelectionActions = (data: Array<{ id: string }>) => {
       return;
     }
 
-    selectAllLoadedResources(data.map((item) => item.id));
+    selectAllLoadedResources(selectableData.map((item) => item.id));
   });
 
-  const handleSelectAllResources = useCallback(() => {
-    selectAllResources();
+  const handleSelectAllResources = useCallback(async () => {
+    await selectAllResources();
   }, [selectAllResources]);
 
   const toggleItemSelection = useCallback(
     (id: string, checked: boolean) => {
+      const item = data.find((entry) => entry.id === id);
+      if (!item || !isItemSelectable(item)) return;
+
       const { selectAllState: currentSelectAllState, selectedFileIds: currentSelected } =
         useResourceManagerStore.getState();
 
@@ -124,13 +157,14 @@ export const useExplorerSelectionActions = (data: Array<{ id: string }>) => {
 
       setSelectedFileIds(currentSelected.filter((item) => item !== id));
     },
-    [clearSelectAllState, setSelectedFileIds],
+    [clearSelectAllState, data, isItemSelectable, setSelectedFileIds],
   );
 
   return {
     clearSelectAllState,
     handleSelectAll,
     handleSelectAllResources,
+    isItemSelectable,
     selectAllState,
     selectedFileIds,
     setSelectedFileIds,

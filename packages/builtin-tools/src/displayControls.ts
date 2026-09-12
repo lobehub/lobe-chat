@@ -1,10 +1,10 @@
-import {
-  ClaudeCodeIdentifier,
-  resolveClaudeCodeRenderDisplayControl,
-} from '@lobechat/builtin-tool-claude-code/client';
+import { ClaudeCodeIdentifier } from '@lobechat/builtin-tool-claude-code';
+import { resolveClaudeCodeRenderDisplayControl } from '@lobechat/builtin-tool-claude-code/client/displayControls';
 import { type RenderDisplayControl } from '@lobechat/types';
 
 import { CodexRenderDisplayControls } from './codex/displayControls';
+
+const QODER_IDENTIFIER = 'qoder';
 
 // Kept separate from `./renders` so consumers that only need display-control
 // fallbacks (e.g. the tool store selector) don't pull in every builtin tool's
@@ -28,6 +28,7 @@ const getDynamicRenderDisplayControlResolvers = (): Record<
 > => {
   return {
     [ClaudeCodeIdentifier]: resolveClaudeCodeRenderDisplayControl,
+    [QODER_IDENTIFIER]: resolveClaudeCodeRenderDisplayControl,
   };
 };
 

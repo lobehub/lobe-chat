@@ -1,5 +1,4 @@
 import type { ModelTokensUsage, ModelUsage } from '@lobechat/types';
-import { isRecord } from '@lobechat/utils/object';
 import debug from 'debug';
 import type { Pricing } from 'model-bank';
 import type OpenAI from 'openai';
@@ -10,7 +9,8 @@ import { withUsageCost } from './utils/withUsageCost';
 const log = debug('lobe-cost:convertOpenAIUsage');
 
 // Keep the reference implementation's behavior of filtering out zero/falsy values,
-// except for inputCacheMissTokens where 0 is semantically meaningful for fully cached prompts.
+// except for fields where 0 is semantically meaningful. `inputAudioTokens` must preserve an
+// explicitly reported zero so callers can distinguish it from a provider omission.
 // `!!value` would filter out 0, which is often desired for token counts.
 const shouldKeepUsageValue = (key: string, value: unknown) => {
   if (value === undefined || value === null) return false;
@@ -19,21 +19,29 @@ const shouldKeepUsageValue = (key: string, value: unknown) => {
 
   if (value !== 0) return true;
 
-  return key === 'inputCacheMissTokens';
+  return key === 'inputAudioTokens' || key === 'inputCacheMissTokens';
 };
 
 /**
- * OpenAI GPT-5.6+ reports cache writes as `cache_write_tokens` under usage details.
- * The field is not yet in all openai SDK type snapshots, so read it defensively.
- *
+ * OpenAI GPT-5.6+ reports cache writes as `cache_write_tokens` under usage details,
+ * a field not yet present in the openai SDK type snapshots — extend the SDK detail
+ * shapes locally until the SDK catches up.
+ */
+type CacheWriteUsageDetails =
+  | (NonNullable<OpenAI.Completions.CompletionUsage['prompt_tokens_details']> & {
+      cache_write_tokens?: number;
+    })
+  | (NonNullable<OpenAI.Responses.ResponseUsage['input_tokens_details']> & {
+      cache_write_tokens?: number;
+    });
+
+/**
  * Billing note: write tokens are a subset of total input tokens and are charged at
  * 1.25× uncached input. They must be excluded from the uncached (1×) miss bucket so
  * computeChatCost does not double-charge textInput + textInput_cacheWrite.
  */
-const readCacheWriteTokens = (details: unknown): number | undefined => {
-  if (!isRecord(details)) return undefined;
-
-  const value = details.cache_write_tokens;
+const readCacheWriteTokens = (details: CacheWriteUsageDetails | undefined): number | undefined => {
+  const value = details?.cache_write_tokens;
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
 };
 
@@ -62,12 +70,18 @@ export const convertOpenAIUsage = (
   payload?: ChatPayloadForTransformStream,
 ): ModelUsage => {
   // Currently only pplx has citation_tokens
-  const inputTextTokens = usage.prompt_tokens || 0;
+  const inputAudioTokens = usage.prompt_tokens_details?.audio_tokens;
+  // OpenAI prompt_tokens is the aggregate input count. Keep modality buckets disjoint so a
+  // dedicated audioInput pricing unit cannot charge the same tokens again as textInput.
+  const inputTextTokens = Math.max(0, (usage.prompt_tokens || 0) - (inputAudioTokens ?? 0));
   const inputCitationTokens = (usage as any).citation_tokens || 0;
-  const totalInputTokens = inputCitationTokens + inputTextTokens;
+  const totalInputTokens = inputCitationTokens + (usage.prompt_tokens || 0);
 
   const cachedTokens =
     (usage as any).prompt_cache_hit_tokens || usage.prompt_tokens_details?.cached_tokens;
+  // OpenAI reports aggregate cached prompt tokens, but does not identify how many cached tokens
+  // are audio. Do not infer inputCachedAudioTokens from overlapping aggregate counters; callers
+  // can handle the unavailable modality split without receiving fabricated usage.
   const inputWriteCacheTokens = readCacheWriteTokens(usage.prompt_tokens_details);
 
   const inputCacheMissTokens = resolveOpenAIInputCacheMissTokens({
@@ -94,7 +108,7 @@ export const convertOpenAIUsage = (
 
   const data = {
     acceptedPredictionTokens: usage.completion_tokens_details?.accepted_prediction_tokens,
-    inputAudioTokens: usage.prompt_tokens_details?.audio_tokens,
+    inputAudioTokens,
     inputCacheMissTokens,
     inputCachedTokens: cachedTokens,
     inputCitationTokens,

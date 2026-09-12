@@ -1,5 +1,5 @@
 import type { DeviceGitWorktreeListItem } from '@lobechat/types';
-import { Icon, Input, Tooltip } from '@lobehub/ui';
+import { copyToClipboard, Icon, Input, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
   DropdownMenuItem,
@@ -13,6 +13,7 @@ import {
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import {
   CheckIcon,
+  CopyIcon,
   GitBranchIcon,
   GitBranchPlusIcon,
   GitForkIcon,
@@ -54,6 +55,16 @@ const styles = createStaticStyles(({ css }) => ({
     display: inline-flex;
     flex: none;
   `,
+  /* See WorktreeSwitcher.triggerFill — keeps a full-row custom trigger's hover
+     background aligned with the popup-open background. */
+  triggerFill: css`
+    display: flex;
+    width: 100%;
+
+    > * {
+      flex: 1;
+    }
+  `,
   container: css`
     display: flex;
     flex-direction: column;
@@ -82,12 +93,14 @@ const styles = createStaticStyles(({ css }) => ({
     gap: 8px;
     align-items: center;
 
-    padding-block: 2px;
+    height: auto;
+    min-height: 32px;
+    padding-block: 4px;
     padding-inline: 8px;
     border-radius: 4px;
 
-    font-size: 13px;
-    line-height: 1.3;
+    font-size: 14px;
+    line-height: 20px;
     color: ${cssVar.colorText};
 
     /* Swap the checkmark for the row actions while hovering the row. */
@@ -145,8 +158,8 @@ const styles = createStaticStyles(({ css }) => ({
     min-width: 0;
   `,
   itemMeta: css`
-    margin-block-start: 1px;
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 16px;
     color: ${cssVar.colorTextTertiary};
   `,
   list: css`
@@ -230,6 +243,8 @@ interface BranchSwitcherProps {
   onOptimisticCheckout?: (branch: string) => void;
   open: boolean;
   path: string;
+  /** Dropdown placement — the runtime bar opens upward, embedding panels open downward. */
+  placement?: 'topLeft' | 'bottomLeft' | 'bottomRight';
   /** The repo the conversation is anchored to (worktrees hang off it). */
   sourcePath: string;
   /** Used to route a checkout into the worktree that already holds the branch. */
@@ -248,6 +263,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     onAfterCheckout,
     onExternalRefresh,
     onOptimisticCheckout,
+    placement = 'topLeft',
     sourcePath,
     worktrees,
     children,
@@ -432,6 +448,19 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
       [deviceId, onAfterCheckout, onOpenChange, path, t],
     );
 
+    const handleCopy = useCallback(
+      async (event: MouseEvent, branch: string) => {
+        event.stopPropagation();
+        try {
+          await copyToClipboard(branch);
+          toast.success(tCommon('copySuccess'));
+        } catch {
+          toast.error(tCommon('copyFail'));
+        }
+      },
+      [tCommon],
+    );
+
     // Delete a branch behind a destructive confirm. git rejects deleting the
     // checked-out branch, so the action is hidden for the current branch.
     const handleDelete = useCallback(
@@ -459,10 +488,10 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     return (
       <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
         <DropdownMenuTrigger className={styles.triggerAnchor}>
-          <div>{children}</div>
+          <div className={styles.triggerFill}>{children}</div>
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuPositioner placement="topLeft" sideOffset={8}>
+          <DropdownMenuPositioner placement={placement} sideOffset={8}>
             <DropdownMenuPopup>
               <div className={styles.container}>
                 <div className={styles.searchBar}>
@@ -552,6 +581,16 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
                           />
                         )}
                         <div className={cx('branch-row-actions', styles.rowActions)}>
+                          <Tooltip title={tCommon('copy')}>
+                            <div
+                              aria-label={tCommon('copy')}
+                              className={styles.rowAction}
+                              role="button"
+                              onClick={(e) => void handleCopy(e, branch.name)}
+                            >
+                              <Icon icon={CopyIcon} size={13} />
+                            </div>
+                          </Tooltip>
                           <Tooltip title={t('workingDirectory.renameBranchAction')}>
                             <div
                               className={styles.rowAction}

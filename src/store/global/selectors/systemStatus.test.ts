@@ -5,9 +5,9 @@ import { merge } from '@/utils/merge';
 import type { GlobalState } from '../initialState';
 import {
   DEFAULT_HOME_SIDEBAR_EXPANDED_KEYS,
-  DEFAULT_MODEL_DETAIL_PANEL_EXPANDED_KEYS,
   INITIAL_STATUS,
   initialState,
+  MODEL_DETAIL_PANEL_EXPANDABLE_KEYS,
 } from '../initialState';
 import {
   DEFAULT_SIDEBAR_ITEMS,
@@ -90,6 +90,24 @@ describe('systemStatusSelectors', () => {
       expect(systemStatusSelectors.portalWidth(noPortalWidth)).toBe(400);
     });
 
+    it('should return workingSidebarWidth from status, defaulting to 360', () => {
+      expect(
+        systemStatusSelectors.workingSidebarWidth(
+          merge(initialState, {
+            status: { workingSidebarWidth: 520 },
+          }),
+        ),
+      ).toBe(520);
+
+      expect(
+        systemStatusSelectors.workingSidebarWidth(
+          merge(initialState, {
+            status: { workingSidebarWidth: undefined },
+          }),
+        ),
+      ).toBe(360);
+    });
+
     it('should clamp persisted left panel width to the draggable panel bounds', () => {
       expect(
         systemStatusSelectors.leftPanelWidth(
@@ -118,28 +136,68 @@ describe('systemStatusSelectors', () => {
   });
 
   describe('modelDetailPanelExpandedKeys', () => {
-    it('should expand pricing and config by default', () => {
+    it('should expand every section by default', () => {
       const s: GlobalState = {
         ...initialState,
         status: {
           ...initialState.status,
-          modelDetailPanelExpandedKeys: undefined,
+          modelDetailPanelCollapsedKeys: undefined,
         },
       };
 
       expect(systemStatusSelectors.modelDetailPanelExpandedKeys(s)).toEqual(
-        DEFAULT_MODEL_DETAIL_PANEL_EXPANDED_KEYS,
+        MODEL_DETAIL_PANEL_EXPANDABLE_KEYS,
       );
     });
 
-    it('should return stored user preference when set', () => {
+    it('should exclude collapsed keys stored by the user', () => {
       const s: GlobalState = merge(initialState, {
         status: {
-          modelDetailPanelExpandedKeys: ['pricing'],
+          modelDetailPanelCollapsedKeys: ['abilities', 'config'],
         },
       });
 
-      expect(systemStatusSelectors.modelDetailPanelExpandedKeys(s)).toEqual(['pricing']);
+      expect(systemStatusSelectors.modelDetailPanelExpandedKeys(s)).toEqual(['rating', 'pricing']);
+    });
+
+    it('should ignore a legacy persisted expanded-keys array and keep new sections expanded', () => {
+      // before the collapsed-keys migration, an expanded-keys array persisted prior to the
+      // rating section shipping kept it collapsed forever — the legacy field must be inert
+      const s: GlobalState = merge(initialState, {
+        status: {
+          modelDetailPanelExpandedKeys: ['pricing', 'config'],
+        } as never,
+      });
+
+      expect(systemStatusSelectors.modelDetailPanelExpandedKeys(s)).toEqual(
+        MODEL_DETAIL_PANEL_EXPANDABLE_KEYS,
+      );
+    });
+  });
+
+  describe('taskListViewMode', () => {
+    it('should restore the persisted task board view', () => {
+      const s: GlobalState = {
+        ...initialState,
+        status: {
+          ...initialState.status,
+          taskListViewMode: 'kanban',
+        },
+      };
+
+      expect(systemStatusSelectors.taskListViewMode(s)).toBe('kanban');
+    });
+
+    it('should default legacy status without a task view mode to list', () => {
+      const s: GlobalState = {
+        ...initialState,
+        status: {
+          ...initialState.status,
+          taskListViewMode: undefined,
+        },
+      };
+
+      expect(systemStatusSelectors.taskListViewMode(s)).toBe('list');
     });
   });
 
@@ -169,6 +227,7 @@ describe('systemStatusSelectors', () => {
         'private',
         'agent',
         'recents',
+        'project',
         SIDEBAR_SPACER_ID,
         'pages',
         'tasks',
@@ -182,6 +241,7 @@ describe('systemStatusSelectors', () => {
     it('should preserve a canonically-positioned spacer', () => {
       const stored = [
         'pages',
+        'project',
         'recents',
         'private',
         'agent',
@@ -220,6 +280,7 @@ describe('systemStatusSelectors', () => {
         'tasks',
         'pages',
         'recents',
+        'project',
         'private',
         'agent',
         SIDEBAR_SPACER_ID,
@@ -243,13 +304,15 @@ describe('systemStatusSelectors', () => {
       expect(items).toContain('resource');
       expect(items).toContain('memory');
       // accordion block is flush against the spacer, in stored order
-      expect(items[spacerIdx - 2]).toBe('agent');
-      expect(items[spacerIdx - 1]).toBe('recents');
+      expect(items[spacerIdx - 3]).toBe('agent');
+      expect(items[spacerIdx - 2]).toBe('recents');
+      expect(items[spacerIdx - 1]).toBe('project');
       // missing top-group defaults slot in just before the accordion
-      expect(items.indexOf('tasks')).toBeLessThan(spacerIdx - 2);
-      expect(items.indexOf('pages')).toBeLessThan(spacerIdx - 2);
+      expect(items.indexOf('tasks')).toBeLessThan(spacerIdx - 3);
+      expect(items.indexOf('resource')).toBeLessThan(spacerIdx - 3);
       // missing bottom-group defaults sit after the spacer
       expect(items.indexOf('image')).toBeGreaterThan(spacerIdx);
+      expect(items.indexOf('pages')).toBeGreaterThan(spacerIdx);
     });
 
     it('should migrate legacy `sidebarSectionOrder` accordion order into the default layout', () => {
@@ -261,14 +324,15 @@ describe('systemStatusSelectors', () => {
       // the legacy state was saved) is backfilled at the head of the block.
       expect(items).toEqual([
         'tasks',
-        'pages',
+        'resource',
         'private',
         'agent',
         'recents',
+        'project',
         SIDEBAR_SPACER_ID,
         'image',
         'community',
-        'resource',
+        'pages',
         'memory',
       ]);
     });
@@ -282,14 +346,15 @@ describe('systemStatusSelectors', () => {
       // backfilled at the head of the block; recents/agent keep legacy order.
       expect(items).toEqual([
         'tasks',
-        'pages',
+        'resource',
         'private',
         'recents',
+        'project',
         'agent',
         SIDEBAR_SPACER_ID,
         'image',
         'community',
-        'resource',
+        'pages',
         'memory',
       ]);
     });
@@ -601,6 +666,22 @@ describe('systemStatusSelectors', () => {
           },
         });
       });
+    });
+  });
+
+  describe('homeGoalsCollapsed', () => {
+    // The goals card opens by default: a first-time viewer must see the goals,
+    // not an unexplained folded header.
+    it('reads as open when the viewer has never folded the card', () => {
+      const s: GlobalState = merge(initialState, { status: {} });
+
+      expect(systemStatusSelectors.homeGoalsCollapsed(s)).toBe(false);
+    });
+
+    it('keeps the card folded once the viewer put it away', () => {
+      const s: GlobalState = merge(initialState, { status: { homeGoalsCollapsed: true } });
+
+      expect(systemStatusSelectors.homeGoalsCollapsed(s)).toBe(true);
     });
   });
 });

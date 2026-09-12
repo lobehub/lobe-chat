@@ -1,16 +1,35 @@
-import { and, count, desc, eq, inArray, isNull, notInArray, sum } from 'drizzle-orm';
+import { AGENT_ARTIFACT_SOURCE_TYPES } from '@lobechat/const';
+import { and, asc, count, desc, eq, inArray, isNull, ne, notInArray, or, sum } from 'drizzle-orm';
 
 import type { DocumentItem, NewDocument } from '../schemas';
-import { DOCUMENT_FOLDER_TYPE, documents, files } from '../schemas';
+import {
+  DOCUMENT_FOLDER_TYPE,
+  documentCommentMentions,
+  documentComments,
+  documentLikes,
+  documents,
+  files,
+  knowledgeBaseFiles,
+  works,
+} from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
 export interface QueryDocumentParams {
   current?: number;
+  /**
+   * Knowledge-base ids whose documents must be dropped from the listing —
+   * restricted (member No-access) libraries. Applied inside the query so
+   * pagination and totals stay correct.
+   */
+  excludeKnowledgeBaseIds?: string[];
   fileTypes?: string[];
   pageSize?: number;
   sourceTypes?: string[];
 }
+
+export const DOCUMENT_TRANSFER_FOREIGN_ROWS =
+  'Document subtree contains content created by other users';
 
 export class DocumentModel {
   private userId: string;
@@ -77,9 +96,7 @@ export class DocumentModel {
   create = async (params: Omit<NewDocument, 'userId'>): Promise<DocumentItem> => {
     // Workspace-mode default for visibility:
     //   - explicit visibility wins
-    //   - else if parentId set: inherit parent's visibility (tree invariant —
-    //     a child must never have a visibility different from its root)
-    //   - else top-level user-authored Pages (`sourceType: 'api'`): default to
+    //   - user-authored Pages (`sourceType: 'api'`) default to
     //     `'private'` so workspace members start drafts in their own space and
     //     publish when ready
     //   - all other top-level rows (web crawls, file ingests, topic snapshots,
@@ -88,13 +105,8 @@ export class DocumentModel {
     //     draft / publish lifecycle and were workspace-shared from day one
     // Personal mode leaves it to the schema default; the filter ignores it.
     let visibility = params.visibility;
-    if (!visibility && this.workspaceId) {
-      if (params.parentId) {
-        const parent = await this.findById(params.parentId);
-        visibility = parent?.visibility ?? 'private';
-      } else if (params.sourceType === 'api') {
-        visibility = 'private';
-      }
+    if (!visibility && this.workspaceId && params.sourceType === 'api') {
+      visibility = 'private';
     }
 
     const result = (await this.db
@@ -121,6 +133,7 @@ export class DocumentModel {
   query = async ({
     current = 0,
     pageSize = 9999,
+    excludeKnowledgeBaseIds,
     fileTypes,
     sourceTypes,
   }: QueryDocumentParams = {}): Promise<{
@@ -134,6 +147,27 @@ export class DocumentModel {
       conditions.push(inArray(documents.fileType, fileTypes));
     }
 
+    if (excludeKnowledgeBaseIds?.length) {
+      conditions.push(
+        or(
+          isNull(documents.knowledgeBaseId),
+          notInArray(documents.knowledgeBaseId, excludeKnowledgeBaseIds),
+        )!,
+        // Parsed-file documents leave `knowledgeBaseId` null — their KB
+        // membership lives on `fileId` → `knowledge_base_files`.
+        or(
+          isNull(documents.fileId),
+          notInArray(
+            documents.fileId,
+            this.db
+              .select({ fileId: knowledgeBaseFiles.fileId })
+              .from(knowledgeBaseFiles)
+              .where(inArray(knowledgeBaseFiles.knowledgeBaseId, excludeKnowledgeBaseIds)),
+          ),
+        )!,
+      );
+    }
+
     if (sourceTypes?.length) {
       conditions.push(
         inArray(
@@ -142,7 +176,7 @@ export class DocumentModel {
         ),
       );
     } else {
-      conditions.push(notInArray(documents.sourceType, ['agent', 'agent-signal']));
+      conditions.push(notInArray(documents.sourceType, [...AGENT_ARTIFACT_SOURCE_TYPES]));
     }
 
     const whereCondition = and(...conditions);
@@ -204,8 +238,21 @@ export class DocumentModel {
     });
   };
 
+  findByIds = async (ids: string[]): Promise<DocumentItem[]> => {
+    if (ids.length === 0) return [];
+    return this.db.query.documents.findMany({
+      where: and(this.ownership(), inArray(documents.id, ids)),
+    });
+  };
+
   findByFileId = async (fileId: string) => {
     return this.db.query.documents.findFirst({
+      // A file can legitimately own more than one document: `parseDocument`
+      // writes a page-editor copy next to the parse cache `parseFile` writes.
+      // Pick the oldest one explicitly instead of leaving the choice to the
+      // query plan, so repeated lookups keep returning the same content.
+      // `created_at` carries no uniqueness guarantee, so `id` breaks ties.
+      orderBy: [asc(documents.createdAt), asc(documents.id)],
       where: and(this.ownership(), eq(documents.fileId, fileId)),
     });
   };
@@ -242,24 +289,6 @@ export class DocumentModel {
     // incoming value so callers can't sneak around the one-way rule.
     const { visibility: _ignored, ...patch } = value;
 
-    // Workspace-mode parent-id guard: a tree's whole subtree shares one
-    // visibility (P1 strong consistency), so moving a node under a parent with
-    // a different visibility would create a mixed subtree. Refuse the move and
-    // point the caller at the proper one-way publish path when relevant.
-    if (this.workspaceId && patch.parentId !== undefined) {
-      const current = await this.findById(id);
-      if (current && patch.parentId !== null) {
-        const parent = await this.findById(patch.parentId);
-        if (parent && parent.visibility !== current.visibility) {
-          throw new Error(
-            current.visibility === 'private'
-              ? 'Cannot move a private document under a workspace document; use publishToWorkspace instead.'
-              : 'Cannot move a workspace document under a private document; demoting to private is not allowed.',
-          );
-        }
-      }
-    }
-
     return this.db
       .update(documents)
       .set({ ...patch, updatedAt: new Date() })
@@ -267,69 +296,51 @@ export class DocumentModel {
   };
 
   /**
-   * Publish a private document subtree into the workspace. Convenience wrapper
+   * Publish one private document into the workspace. Convenience wrapper
    * around `setVisibility(rootId, 'public')`; kept as a named method for the
    * TRPC `publishDocumentToWorkspace` procedure and existing callers.
    *
-   * @returns the ids of the documents that were re-published.
+   * @returns the id of the document that was re-published.
    */
   publishToWorkspace = async (rootId: string): Promise<{ documentIds: string[] }> => {
     return this.setVisibility(rootId, 'public');
   };
 
   /**
-   * Flip a document subtree's `visibility`. Bidirectional companion to
-   * `publishToWorkspace`; both directions cascade the whole subtree so the
-   * P1 tree-consistency invariant (private/public do not mix inside one tree)
-   * holds after the transition.
-   *
-   * The `eq(user_id)` + `eq(visibility, fromVisibility)` guards keep the
-   * operation creator-only and idempotent against rows that already sit at the
-   * target visibility. Rows created by other workspace members inside the
-   * subtree (rare — happens if a public tree gets nested workspace edits) are
-   * intentionally left untouched: only the caller's own rows flip.
-   *
-   * Unpublishing is safe by design — after the flip, `buildWorkspaceWhere`
-   * hides those rows from other members immediately; already-loaded content in
-   * their client stays until they refresh.
+   * Flip one document's `visibility`. Documents do not inherit ACL or
+   * visibility from their parent: a parent may be used purely for navigation.
    */
   setVisibility = async (
     rootId: string,
     visibility: 'private' | 'public',
   ): Promise<{ documentIds: string[] }> => {
-    const fromVisibility = visibility === 'public' ? 'private' : 'public';
-
     return this.db.transaction(async (trx) => {
-      const scopedTrx = new DocumentModel(
-        trx as LobeChatDatabase,
-        this.userId,
-        this.workspaceId,
-        this.callerAgentVisibility,
-      );
-      const subtree = await scopedTrx.collectSubtree(rootId, trx as LobeChatDatabase);
-      if (subtree.length === 0) throw new Error('Document not found');
-
-      const ids = subtree.map((d) => d.id);
-
-      await (trx as LobeChatDatabase)
+      const result = await (trx as LobeChatDatabase)
         .update(documents)
         .set({ updatedAt: new Date(), visibility })
+        .where(and(eq(documents.id, rootId), this.ownership(), eq(documents.userId, this.userId)))
+        .returning({ id: documents.id });
+
+      if (result.length === 0) throw new Error('Document not found');
+
+      // Mirror visibility onto existing Work projections in the same
+      // transaction. Scope without works.visibility so a promotion can
+      // update rows that are currently private.
+      await (trx as LobeChatDatabase)
+        .update(works)
+        .set({ visibility })
         .where(
           and(
-            inArray(documents.id, ids),
-            eq(documents.userId, this.userId),
-            eq(documents.visibility, fromVisibility),
+            eq(works.resourceType, 'document'),
+            eq(works.resourceId, rootId),
+            buildWorkspaceWhere(
+              { userId: this.userId, workspaceId: this.workspaceId },
+              { userId: works.userId, workspaceId: works.workspaceId },
+            ),
           ),
         );
 
-      // No child-table cascade needed here — Pages (`sourceType: 'api'`) hold
-      // content inline in `documents.content` / `documents.pages`, and the
-      // `document_chunks` junction has no read consumers on the RAG hot path
-      // (that lane goes through `chunks` + `fileChunks` + `files`).
-      // A future `document_chunks` visibility mirror + RAG filter will add
-      // cascade when that lane is built.
-
-      return { documentIds: ids };
+      return { documentIds: [rootId] };
     });
   };
 
@@ -387,11 +398,73 @@ export class DocumentModel {
    * Files anchored to documents in the subtree are also re-homed so the
    * resource manager view stays consistent.
    */
+  /**
+   * Whether the subtree (documents + anchored files + comments + likes)
+   * contains rows created by someone else. Transfers rehome every cascaded row, so non-owner
+   * members must not move a folder that carries teammates' content. Comments
+   * with a deleted author count as foreign because they do not belong to the
+   * caller and may otherwise be moved or deleted by a personal-scope transfer.
+   */
+  subtreeHasForeignRows = async (documentId: string): Promise<boolean> => {
+    const subtree = await this.collectSubtree(documentId, this.db);
+    return this.hasForeignRows(subtree, this.db);
+  };
+
+  /**
+   * Shared predicate behind {@link subtreeHasForeignRows} and the in-transaction
+   * recheck of {@link transferTo}: the router's preflight alone is a TOCTOU —
+   * a teammate's comment/like committed between the preflight and the transfer
+   * transaction would otherwise be rehomed or deleted past the owner-only guard.
+   */
+  private hasForeignRows = async (
+    subtree: { id: string; userId: string }[],
+    runner: LobeChatDatabase,
+  ): Promise<boolean> => {
+    if (subtree.some((doc) => doc.userId !== this.userId)) return true;
+
+    const ids = subtree.map((doc) => doc.id);
+    if (ids.length === 0) return false;
+
+    const [foreignComment] = await runner
+      .select({ id: documentComments.id })
+      .from(documentComments)
+      .where(
+        and(
+          inArray(documentComments.documentId, ids),
+          or(ne(documentComments.authorUserId, this.userId), isNull(documentComments.authorUserId)),
+        ),
+      )
+      .limit(1);
+    if (foreignComment) return true;
+
+    const [foreignLike] = await runner
+      .select({ id: documentLikes.id })
+      .from(documentLikes)
+      .where(and(inArray(documentLikes.documentId, ids), ne(documentLikes.userId, this.userId)))
+      .limit(1);
+    if (foreignLike) return true;
+
+    const [foreignFile] = await runner
+      .select({ id: files.id })
+      .from(files)
+      .where(and(inArray(files.parentId, ids), ne(files.userId, this.userId)))
+      .limit(1);
+    return !!foreignFile;
+  };
+
   transferTo = async (
     documentId: string,
     targetWorkspaceId: string | null,
     targetUserId: string,
     targetVisibility?: 'private' | 'public',
+    options?: {
+      /**
+       * Re-assert inside the transaction that the subtree carries no rows
+       * created by someone else (non-owner transfers). Throws
+       * {@link DOCUMENT_TRANSFER_FOREIGN_ROWS} when violated.
+       */
+      forbidForeignRows?: boolean;
+    },
   ): Promise<{ documentIds: string[] }> => {
     return this.db.transaction(async (trx) => {
       const scopedTrx = new DocumentModel(trx as LobeChatDatabase, this.userId, this.workspaceId);
@@ -399,10 +472,27 @@ export class DocumentModel {
       if (subtree.length === 0) throw new Error('Document not found');
 
       const ids = subtree.map((d) => d.id);
+
+      // Lock every subtree document row first: concurrent comment/like writers
+      // take FOR UPDATE on the document row before stamping a workspace, so
+      // they either commit before this point (and are seen by the recheck
+      // below) or block until this transfer commits and then re-validate.
+      await (trx as LobeChatDatabase)
+        .select({ id: documents.id })
+        .from(documents)
+        .where(inArray(documents.id, ids))
+        .for('update');
+
+      if (
+        options?.forbidForeignRows &&
+        (await scopedTrx.hasForeignRows(subtree, trx as LobeChatDatabase))
+      ) {
+        throw new Error(DOCUMENT_TRANSFER_FOREIGN_ROWS);
+      }
       const ownershipUpdate = { userId: targetUserId, workspaceId: targetWorkspaceId };
       // Visibility only applies when landing in a workspace — personal scope
-      // treats every row as implicitly private. Children mirror the parent's
-      // visibility so the whole subtree flips together.
+      // treats every row as implicitly private. Transfer still moves the
+      // selected tree as one operation, while ordinary visibility changes do not cascade.
       const visibilityUpdate =
         targetWorkspaceId && targetVisibility ? { visibility: targetVisibility } : {};
 
@@ -428,6 +518,44 @@ export class DocumentModel {
         .update(documents)
         .set({ ...ownershipUpdate, ...visibilityUpdate, updatedAt: new Date() })
         .where(inArray(documents.id, ids));
+
+      if (targetWorkspaceId) {
+        await (trx as LobeChatDatabase)
+          .update(documentComments)
+          // A scope transfer is not an author edit. Preserve updatedAt to bypass
+          // the schema's Drizzle $onUpdate hook.
+          .set({ updatedAt: documentComments.updatedAt, workspaceId: targetWorkspaceId })
+          .where(inArray(documentComments.documentId, ids));
+
+        await (trx as LobeChatDatabase)
+          .update(documentCommentMentions)
+          .set({ workspaceId: targetWorkspaceId })
+          .where(
+            inArray(
+              documentCommentMentions.commentId,
+              (trx as LobeChatDatabase)
+                .select({ id: documentComments.id })
+                .from(documentComments)
+                .where(inArray(documentComments.documentId, ids)),
+            ),
+          );
+
+        await (trx as LobeChatDatabase)
+          .update(documentLikes)
+          .set({ workspaceId: targetWorkspaceId })
+          .where(inArray(documentLikes.documentId, ids));
+      } else {
+        // Comments are Workspace assets and cannot follow a document into personal scope.
+        // Mention rows are removed by the comment FK cascade.
+        await (trx as LobeChatDatabase)
+          .delete(documentComments)
+          .where(inArray(documentComments.documentId, ids));
+
+        // Likes are Workspace reactions too; a personal document has no like surface.
+        await (trx as LobeChatDatabase)
+          .delete(documentLikes)
+          .where(inArray(documentLikes.documentId, ids));
+      }
 
       // Move files anchored to these documents; their visibility mirrors the
       // document subtree in workspace scope.

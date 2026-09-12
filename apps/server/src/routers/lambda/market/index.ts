@@ -4,6 +4,7 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { marketDeploymentsRouter } from '@/business/server/lambda-routers/marketDeployments';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { marketUserInfo, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
@@ -58,6 +59,9 @@ export const marketRouter = router({
 
   // ============================== Credential Management ==============================
   creds: credsRouter,
+
+  // ============================== Artifact Deployments (business) ==============================
+  deployments: marketDeploymentsRouter,
 
   // ============================== Skill Management ==============================
   skill: skillRouter,
@@ -162,6 +166,7 @@ export const marketRouter = router({
           category: z.string().optional(),
           connectionType: z.nativeEnum(McpConnectionType).optional(),
           includeAgentGroup: z.boolean().optional(),
+          includeCategoryCounts: z.boolean().optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
           ownerId: z.string().optional(),
@@ -777,7 +782,7 @@ export const marketRouter = router({
         errorMessage: z.string().optional(),
         identifier: z.string(),
         isCustomPlugin: z.boolean().optional(),
-        metadata: z.record(z.any()).optional(),
+        metadata: z.record(z.string(), z.any()).optional(),
         methodName: z.string(),
         methodType: z.enum(['tool', 'prompt', 'resource']),
         platform: z.string().optional(),

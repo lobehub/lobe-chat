@@ -7,10 +7,20 @@ import type {
   ToolExecutor,
   ToolSource,
 } from '@lobechat/context-engine';
-import type { ChatTopicBotContext, UserInterventionConfig } from '@lobechat/types';
+import type {
+  AgentShareVisitorContext,
+  ChatTopicBotContext,
+  EvalToolForwardingConfig,
+  ExpertiseContextSnapshot,
+  UserInterventionConfig,
+} from '@lobechat/types';
+import type { SearchDecision } from 'model-bank';
 
 import type { ExecutionPlan } from '@/helpers/executionTarget';
-import { type ServerUserMemoryConfig } from '@/server/modules/Mecha/ContextEngineering/types';
+import type {
+  EvalContext,
+  ServerUserMemoryConfig,
+} from '@/server/modules/Mecha/ContextEngineering/types';
 import type { AgentSignalOperationMarker } from '@/server/services/agentSignal/operationMarker';
 import type { DeviceAccessReason } from '@/server/services/aiAgent/deviceAccessPolicy';
 
@@ -19,6 +29,8 @@ import { type AgentHook } from './hooks/types';
 // ==================== Operation Tool Set ====================
 
 export interface OperationToolSet {
+  /** Tool IDs that may be restored from historical explicit activations for this run. */
+  activatableToolIds?: string[];
   enabledToolIds?: string[];
   executorMap?: Record<string, ToolExecutor>;
   manifestMap: Record<string, LobeToolManifest>;
@@ -147,6 +159,13 @@ export interface AgentExecutionParams {
    */
   groupMemberTimeout?: GroupMemberTimeoutParams;
   humanInput?: any;
+  /**
+   * 1-based attempt number carried by a re-delivery that a previous attempt
+   * re-queued after losing the operation lock. Lets the bounded backoff stop
+   * after a fixed number of tries instead of re-queueing forever. Absent
+   * (treated as attempt 0) on the original delivery.
+   */
+  lockRetryAttempt?: number;
   operationId: string;
   /**
    * Whether a rejection should resume execution by treating the rejected tool
@@ -185,6 +204,13 @@ export interface AgentExecutionResult {
    * this response retryable so fresh deliveries can run after the lock clears.
    */
   locked?: boolean;
+  /**
+   * Set alongside `locked` when this delivery re-queued itself for a later
+   * attempt. The caller should ACK (2xx) rather than returning a retryable
+   * status: the redelivery is already scheduled, so letting the queue retry on
+   * top of it only amplifies the conflict and burns the retry budget.
+   */
+  lockRescheduled?: boolean;
   nextStepScheduled: boolean;
   state: any;
   stepResult?: any;
@@ -317,6 +343,13 @@ export interface ExecGroupMemberResult {
 
 export interface OperationCreationParams {
   activeDeviceId?: string;
+  /**
+   * Principal pool the routed `activeDeviceId` lives in. `personal` when a
+   * workspace run was routed to the caller's own device via a per-user
+   * `local` override — device runtimes must then address it through the
+   * personal `(userId, deviceId)` pool instead of the `workspace:<id>` pool.
+   */
+  activeDeviceScope?: 'personal' | 'workspace';
   agentConfig?: any;
   /**
    * Multi-agent group (or bot-conversation fallback) context, resolved once at
@@ -325,6 +358,14 @@ export interface OperationCreationParams {
    * `agt_*` IDs) — no per-step DB lookup, mirroring `botContext`.
    */
   agentGroup?: AgentGroupConfig;
+  /**
+   * Shared-agent visitor marker. Persisted to
+   * `state.metadata.agentShareVisitor` so every later step can re-derive the
+   * share's restrictions without re-reading the share, and so
+   * `AgentRuntimeService.executeStep` can re-prove the run's authorization at
+   * each step boundary.
+   */
+  agentShareVisitor?: AgentShareVisitorContext;
   appContext: {
     agentId?: string;
     /**
@@ -333,6 +374,12 @@ export interface OperationCreationParams {
      * read on the completion path to project receipts.
      */
     agentSignal?: AgentSignalOperationMarker;
+    /**
+     * Client IP of the originating request. Spread onto `state.metadata.clientIp`
+     * so downstream LLM-call metadata can carry it for auditing and spend
+     * attribution.
+     */
+    clientIp?: string;
     defaultTaskAssigneeAgentId?: string;
     documentId?: string | null;
     groupId?: string | null;
@@ -345,12 +392,33 @@ export interface OperationCreationParams {
      */
     orchestrationRole?: 'supervisor' | 'member';
     scope?: string | null;
+    /** Conversation/session locator used to rebuild an authenticated Review route. */
+    sessionId?: string;
     /** Source user message ID used for same-turn Agent Signal procedure suppression. */
     sourceMessageId?: string;
+    /**
+     * Live-progress anchor for a `callSubAgent` child, spread onto
+     * `state.metadata.subAgentProgress`.
+     *
+     * The child runs on its own operationId, but the client only ever subscribes
+     * to the PARENT's gateway channel — which stays open across the sub-agent run
+     * because `waiting_for_async_tool` is excluded from `STREAM_END_STATUSES`.
+     * So the child's step loop publishes its running totals onto the parent's
+     * channel, addressed at the placeholder tool message by `toolMessageId`.
+     * Without this the client sees nothing until `completeSubAgentBridge`
+     * backfills `pluginState` at the very end.
+     */
+    subAgentProgress?: { parentOperationId: string; toolMessageId: string };
     taskId?: string;
     threadId?: string | null;
     topicId?: string | null;
     trigger?: string;
+    /**
+     * User agent of the originating request. Spread onto
+     * `state.metadata.userAgent` so downstream LLM-call metadata can carry it for
+     * auditing and spend attribution.
+     */
+    userAgent?: string;
   };
   autoStart?: boolean;
   /**
@@ -372,7 +440,12 @@ export interface OperationCreationParams {
   deviceSystemInfo?: Record<string, string>;
   /** Discord context for injecting channel/guild info into agent system message */
   discordContext?: any;
-  evalContext?: any;
+  /** Whether ContextEngine may inject the operation expertise snapshot. */
+  enableExpertise?: boolean;
+  /** Evaluation prompt data consumed by Context Engine. */
+  evalContext?: EvalContext;
+  /** Evaluation execution controls consumed by Agent Runtime. */
+  evalRuntime?: EvalRuntimeContext;
   /**
    * Resolved execution plan for the run (see `resolveExecutionPlan`).
    * Forwarded into `state.metadata.executionPlan` so step-level layers (the
@@ -380,6 +453,8 @@ export interface OperationCreationParams {
    * device capability from raw config.
    */
   executionPlan?: ExecutionPlan;
+  /** Immutable expertise resolved once before the operation is persisted. */
+  expertise?: ExpertiseContextSnapshot;
   /**
    * External lifecycle hooks
    * Registered once, auto-adapt to local (in-memory) or production (webhook) mode
@@ -389,8 +464,21 @@ export interface OperationCreationParams {
   initialMessages?: any[];
   /** Initial step count offset for resumed operations (accumulated from previous runs) */
   initialStepCount?: number;
+  /**
+   * Server-authored provenance for a continuation created from a durable human
+   * intervention claim. It is persisted in both agent_operations.metadata and
+   * runtime state so a retry can distinguish this exact continuation from an
+   * unrelated operation that happens to reuse an id. Never client-passable.
+   */
+  interventionResolution?: {
+    resolutionRequestId: string;
+    sourceOperationId: string;
+    sourceToolMessageIds: string[];
+  };
   maxSteps?: number;
   modelRuntimeConfig?: any;
+  /** Marks the source claim non-rollbackable once deterministic runtime state is durable. */
+  onInterventionPrepared?: () => void;
   operationId: string;
   /** Operation-level skill set for SkillResolver */
   operationSkillSet?: OperationSkillSet;
@@ -403,6 +491,8 @@ export interface OperationCreationParams {
   parentOperationId?: string;
   queueRetries?: number;
   queueRetryDelay?: string;
+  /** Search route resolved once before the operation starts. */
+  searchDecision?: SearchDecision;
   /** Abort startup before the first step is scheduled */
   signal?: AbortSignal;
   /**
@@ -498,4 +588,8 @@ export interface StartExecutionResult {
   operationId: string;
   scheduled: boolean;
   success: boolean;
+}
+export interface EvalRuntimeContext {
+  caseId?: string;
+  toolForwarding?: EvalToolForwardingConfig;
 }

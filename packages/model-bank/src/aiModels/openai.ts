@@ -13,6 +13,72 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_050_000,
+    description:
+      'OpenAI’s most capable model for complex reasoning, coding, computer use, research, and document creation.',
+    displayName: 'GPT-6 Astra',
+    enabled: true,
+    id: 'gpt-6-astra',
+    maxOutput: 128_000,
+    /** @see https://developers.openai.com/api/docs/models/gpt-6-astra */
+    pricing: {
+      units: [
+        {
+          name: 'textInput',
+          unit: 'millionTokens',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 10, upTo: 272_000 },
+            { rate: 20, upTo: 'infinity' },
+          ],
+        },
+        {
+          name: 'textInput_cacheRead',
+          unit: 'millionTokens',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1, upTo: 272_000 },
+            { rate: 2, upTo: 'infinity' },
+          ],
+        },
+        {
+          name: 'textInput_cacheWrite',
+          unit: 'millionTokens',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 12.5, upTo: 272_000 },
+            { rate: 25, upTo: 'infinity' },
+          ],
+        },
+        {
+          name: 'textOutput',
+          unit: 'millionTokens',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 50, upTo: 272_000 },
+            { rate: 75, upTo: 'infinity' },
+          ],
+        },
+      ],
+    },
+    releasedAt: '2026-09-03',
+    settings: {
+      extendParams: ['gpt6ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+    family: 'gpt',
+    generation: 'gpt-6',
+    knowledgeCutoff: '2026-04',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
       structuredOutput: true,
       vision: true,
@@ -46,7 +112,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_050_000,
     description:
-      "GPT-5.6 Sol is OpenAI's frontier model for complex reasoning, coding, and long-horizon agentic work. The gpt-5.6 alias routes to Sol.",
+      "GPT-5.6 Sol is OpenAI's latest flagship and most capable model, the top choice in the GPT family for coding and agentic work.",
     displayName: 'GPT-5.6 Sol',
     enabled: true,
     family: 'gpt',
@@ -60,8 +126,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput',
           strategy: 'tiered',
           tiers: [
-            { rate: 5, upTo: 272_000 },
-            { rate: 10, upTo: 'infinity' },
+            { rate: 4, upTo: 272_000 },
+            { rate: 8, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -69,8 +135,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheRead',
           strategy: 'tiered',
           tiers: [
-            { rate: 0.5, upTo: 272_000 },
-            { rate: 1, upTo: 'infinity' },
+            { rate: 0.4, upTo: 272_000 },
+            { rate: 0.8, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -78,8 +144,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheWrite',
           strategy: 'tiered',
           tiers: [
-            { rate: 6.25, upTo: 272_000 },
-            { rate: 12.5, upTo: 'infinity' },
+            { rate: 5, upTo: 272_000 },
+            { rate: 10, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -87,8 +153,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textOutput',
           strategy: 'tiered',
           tiers: [
-            { rate: 30, upTo: 272_000 },
-            { rate: 45, upTo: 'infinity' },
+            { rate: 20, upTo: 272_000 },
+            { rate: 30, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -125,8 +191,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput',
           strategy: 'tiered',
           tiers: [
-            { rate: 2.5, upTo: 272_000 },
-            { rate: 5, upTo: 'infinity' },
+            { rate: 2, upTo: 272_000 },
+            { rate: 4, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -134,8 +200,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheRead',
           strategy: 'tiered',
           tiers: [
-            { rate: 0.25, upTo: 272_000 },
-            { rate: 0.5, upTo: 'infinity' },
+            { rate: 0.2, upTo: 272_000 },
+            { rate: 0.4, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -143,8 +209,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheWrite',
           strategy: 'tiered',
           tiers: [
-            { rate: 3.125, upTo: 272_000 },
-            { rate: 6.25, upTo: 'infinity' },
+            { rate: 2.5, upTo: 272_000 },
+            { rate: 5, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -152,8 +218,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textOutput',
           strategy: 'tiered',
           tiers: [
-            { rate: 15, upTo: 272_000 },
-            { rate: 22.5, upTo: 'infinity' },
+            { rate: 12, upTo: 272_000 },
+            { rate: 18, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -190,8 +256,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput',
           strategy: 'tiered',
           tiers: [
-            { rate: 1, upTo: 272_000 },
-            { rate: 2, upTo: 'infinity' },
+            { rate: 0.2, upTo: 272_000 },
+            { rate: 0.4, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -199,8 +265,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheRead',
           strategy: 'tiered',
           tiers: [
-            { rate: 0.1, upTo: 272_000 },
-            { rate: 0.2, upTo: 'infinity' },
+            { rate: 0.02, upTo: 272_000 },
+            { rate: 0.04, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -208,8 +274,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textInput_cacheWrite',
           strategy: 'tiered',
           tiers: [
-            { rate: 1.25, upTo: 272_000 },
-            { rate: 2.5, upTo: 'infinity' },
+            { rate: 0.25, upTo: 272_000 },
+            { rate: 0.5, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -217,8 +283,8 @@ export const openaiChatModels: AIChatModelCard[] = [
           name: 'textOutput',
           strategy: 'tiered',
           tiers: [
-            { rate: 6, upTo: 272_000 },
-            { rate: 9, upTo: 'infinity' },
+            { rate: 1.2, upTo: 272_000 },
+            { rate: 1.8, upTo: 'infinity' },
           ],
           unit: 'millionTokens',
         },
@@ -240,9 +306,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_050_000,
-    description: 'GPT-5.5 is our newest frontier model for the most complex professional work.',
+    description:
+      "GPT-5.5 is OpenAI's previous-generation frontier model for complex professional work.",
     displayName: 'GPT-5.5',
-    enabled: true,
     family: 'gpt',
     generation: 'gpt-5.5',
     id: 'gpt-5.5',
@@ -251,39 +317,30 @@ export const openaiChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 5,
-              '[0.272, infinity]': 10,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 5, upTo: 272_000 },
+            { rate: 10, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 0.5,
-              '[0.272, infinity]': 1,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput_cacheRead',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 272_000 },
+            { rate: 1, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 30,
-              '[0.272, infinity]': 45,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 30, upTo: 272_000 },
+            { rate: 45, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -347,7 +404,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-5.4 is the frontier model for complex professional work with highest reasoning capability.',
     displayName: 'GPT-5.4',
-    enabled: true,
     family: 'gpt',
     generation: 'gpt-5.4',
     id: 'gpt-5.4',
@@ -356,39 +412,30 @@ export const openaiChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 2.5,
-              '[0.272, infinity]': 5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 2.5, upTo: 272_000 },
+            { rate: 5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 0.25,
-              '[0.272, infinity]': 0.5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput_cacheRead',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.25, upTo: 272_000 },
+            { rate: 0.5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 15,
-              '[0.272, infinity]': 22.5,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 15, upTo: 272_000 },
+            { rate: 22.5, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -419,27 +466,21 @@ export const openaiChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 30,
-              '[0.272, infinity]': 60,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textInput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 30, upTo: 272_000 },
+            { rate: 60, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
         {
-          lookup: {
-            prices: {
-              '[0, 0.272]': 180,
-              '[0.272, infinity]': 270,
-            },
-            pricingParams: ['textInput'],
-          },
           name: 'textOutput',
-          strategy: 'lookup',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 180, upTo: 272_000 },
+            { rate: 270, upTo: 'infinity' },
+          ],
           unit: 'millionTokens',
         },
       ],
@@ -463,7 +504,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       "GPT-5.4 mini is OpenAI's strongest mini model for coding, computer use, and subagents.",
     displayName: 'GPT-5.4 mini',
-    enabled: true,
     family: 'gpt',
     generation: 'gpt-5.4',
     id: 'gpt-5.4-mini',
@@ -606,37 +646,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
-      structuredOutput: true,
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      'GPT-5.2-Codex is an upgraded GPT-5.2 variant optimized for long-horizon, agentic coding tasks.',
-    displayName: 'GPT-5.2 Codex',
-    family: 'gpt',
-    generation: 'gpt-5.2',
-    id: 'gpt-5.2-codex',
-    knowledgeCutoff: '2025-08',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.75, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.175, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-12-18',
-    settings: {
-      extendParams: ['codexMaxReasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -718,119 +727,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 128_000,
-    description: 'GPT-5.1 Chat: the ChatGPT variant of GPT-5.1, built for chat scenarios.',
-    displayName: 'GPT-5.1 Chat',
-    family: 'gpt',
-    generation: 'gpt-5.1',
-    id: 'gpt-5.1-chat-latest',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-11-13',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      "GPT-5.1 Codex Max: OpenAI's most intelligent coding model, optimized for long-horizon agentic coding tasks, supports reasoning tokens.",
-    displayName: 'GPT-5.1 Codex Max',
-    family: 'gpt',
-    generation: 'gpt-5.1',
-    id: 'gpt-5.1-codex-max',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-12-04',
-    settings: {
-      extendParams: ['codexMaxReasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      'GPT-5.1 Codex: a GPT-5.1 variant optimized for agentic coding tasks, for complex code/agent workflows in the Responses API.',
-    displayName: 'GPT-5.1 Codex',
-    family: 'gpt',
-    generation: 'gpt-5.1',
-    id: 'gpt-5.1-codex',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-11-13',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      'GPT-5.1 Codex mini: a smaller, lower-cost Codex variant optimized for agentic coding tasks.',
-    displayName: 'GPT-5.1 Codex mini',
-    family: 'gpt',
-    generation: 'gpt-5.1',
-    id: 'gpt-5.1-codex-mini',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-11-13',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -853,36 +749,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-10-06',
     settings: {
       extendParams: ['textVerbosity'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      'GPT-5 Codex is a GPT-5 variant optimized for agentic coding tasks in Codex-like environments.',
-    displayName: 'GPT-5 Codex',
-    family: 'gpt',
-    generation: 'gpt-5',
-    id: 'gpt-5-codex',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2024-09-15',
-    settings: {
-      extendParams: ['gpt5ReasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -979,29 +845,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 400_000,
-    description:
-      'The GPT-5 model used in ChatGPT, combining strong understanding and generation for conversational applications.',
-    displayName: 'GPT-5 Chat',
-    family: 'gpt',
-    generation: 'gpt-5',
-    id: 'gpt-5-chat-latest',
-    knowledgeCutoff: '2024-09',
-    maxOutput: 128_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-08-07',
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       reasoning: true,
       search: true,
@@ -1024,36 +867,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-17',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o4-mini-deep-research is a faster, more affordable deep research model for complex multi-step research. It can search the web and also access your data via MCP connectors.',
-    displayName: 'o4-mini Deep Research',
-    family: 'o-series',
-    generation: 'o4',
-    id: 'o4-mini-deep-research',
-    knowledgeCutoff: '2024-06',
-    maxOutput: 100_000,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-06-26',
     settings: {
       extendParams: ['reasoningEffort'],
       searchImpl: 'params',
@@ -1113,36 +926,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-16',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o3-deep-research is our most advanced deep research model for complex multi-step tasks. It can search the web and access your data via MCP connectors.',
-    displayName: 'o3 Deep Research',
-    family: 'o-series',
-    generation: 'o3',
-    id: 'o3-deep-research',
-    knowledgeCutoff: '2024-06',
-    maxOutput: 100_000,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-06-26',
     settings: {
       extendParams: ['reasoningEffort'],
       searchImpl: 'params',
@@ -1340,31 +1123,6 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'GPT-4o mini Search Preview is trained to understand and execute web search queries via the Chat Completions API. Web search is billed per tool call in addition to token costs.',
-    displayName: 'GPT-4o mini Search Preview',
-    family: 'gpt',
-    generation: 'gpt-4o',
-    id: 'gpt-4o-mini-search-preview',
-    knowledgeCutoff: '2023-10',
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-03-11',
-    settings: {
-      searchImpl: 'internal',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       search: true,
       vision: true,
@@ -1387,31 +1145,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2024-05-13',
     settings: {
       searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'GPT-4o Search Preview is trained to understand and execute web search queries via the Chat Completions API. Web search is billed per tool call in addition to token costs.',
-    displayName: 'GPT-4o Search Preview',
-    family: 'gpt',
-    generation: 'gpt-4o',
-    id: 'gpt-4o-search-preview',
-    knowledgeCutoff: '2023-10',
-    maxOutput: 16_384,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-03-11',
-    settings: {
-      searchImpl: 'internal',
     },
     type: 'chat',
   },
@@ -1470,6 +1203,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      audio: true,
       functionCall: true,
     },
     contextWindowTokens: 128_000,
@@ -1653,32 +1387,6 @@ export const openaiChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 8192,
-    description:
-      'computer-use-preview is a specialized model for the "computer use tool," trained to understand and execute computer-related tasks.',
-    displayName: 'Computer Use Preview',
-    family: 'gpt',
-    id: 'computer-use-preview',
-    knowledgeCutoff: '2023-10',
-    maxOutput: 1024,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-03-11',
-    settings: {
-      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },

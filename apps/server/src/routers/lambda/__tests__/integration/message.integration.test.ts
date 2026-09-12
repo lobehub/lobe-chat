@@ -10,17 +10,21 @@ import { cleanupTestUser, createTestContext, createTestUser } from './setup';
 
 // Mock FileService to avoid S3 initialization issues in tests
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn().mockImplementation(() => ({
-    getFullFileUrl: vi.fn().mockResolvedValue('mock-url'),
-    deleteFile: vi.fn().mockResolvedValue(undefined),
-    deleteFiles: vi.fn().mockResolvedValue(undefined),
-  })),
+  FileService: vi.fn().mockImplementation(function () {
+    return {
+      getFullFileUrl: vi.fn().mockResolvedValue('mock-url'),
+      deleteFile: vi.fn().mockResolvedValue(undefined),
+      deleteFiles: vi.fn().mockResolvedValue(undefined),
+    };
+  }),
 }));
 
 // We need to mock getServerDB to return our test database instance
 let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => testDB),
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
 }));
 
 /**
@@ -627,6 +631,126 @@ describe('Message Router Integration Tests', () => {
         const page2Ids = page2.map((m) => m.id);
         expect(page1Ids).not.toEqual(page2Ids);
       }
+    });
+
+    it('should return workspace topic messages via topicShareId for a link share', async () => {
+      const { topicShares, workspaces } = await import('@/database/schemas');
+
+      const [workspace] = await serverDB
+        .insert(workspaces)
+        .values({
+          name: 'Share Test Workspace',
+          primaryOwnerId: userId,
+          slug: `share-test-ws-${userId.slice(0, 8)}`,
+        })
+        .returning();
+
+      const [wsTopic] = await serverDB
+        .insert(topics)
+        .values({ title: 'Workspace Topic', userId, workspaceId: workspace.id })
+        .returning();
+
+      await serverDB.insert(messages).values([
+        {
+          content: 'workspace message 1',
+          id: 'ws-share-msg-1',
+          role: 'user',
+          topicId: wsTopic.id,
+          userId,
+          workspaceId: workspace.id,
+        },
+        {
+          content: 'workspace message 2',
+          id: 'ws-share-msg-2',
+          role: 'assistant',
+          topicId: wsTopic.id,
+          userId,
+          workspaceId: workspace.id,
+        },
+      ]);
+
+      const [share] = await serverDB
+        .insert(topicShares)
+        .values({
+          topicId: wsTopic.id,
+          userId,
+          visibility: 'link',
+          workspaceId: workspace.id,
+        })
+        .returning();
+
+      // Visitor (not the owner, not a workspace member) opens the share link
+      const visitorId = await createTestUser(serverDB);
+      const caller = messageRouter.createCaller(createTestContext(visitorId));
+
+      const result = await caller.getMessages({ topicShareId: share.id });
+
+      expect(result).toHaveLength(2);
+      expect(result.map((m) => m.id)).toEqual(
+        expect.arrayContaining(['ws-share-msg-1', 'ws-share-msg-2']),
+      );
+
+      await cleanupTestUser(serverDB, visitorId);
+    });
+
+    it('rejects everyone but the creator for a PRIVATE share, even workspace members', async () => {
+      const { topicShares, workspaceMembers, workspaces } = await import('@/database/schemas');
+
+      const [workspace] = await serverDB
+        .insert(workspaces)
+        .values({
+          name: 'Private Share WS',
+          primaryOwnerId: userId,
+          slug: `priv-share-ws-${userId.slice(0, 8)}`,
+        })
+        .returning();
+
+      const [wsTopic] = await serverDB
+        .insert(topics)
+        .values({ title: 'Private Share Topic', userId, workspaceId: workspace.id })
+        .returning();
+      await serverDB.insert(messages).values({
+        content: 'member-visible message',
+        id: 'ws-priv-share-msg-1',
+        role: 'user',
+        topicId: wsTopic.id,
+        userId,
+        workspaceId: workspace.id,
+      });
+      const [share] = await serverDB
+        .insert(topicShares)
+        .values({
+          topicId: wsTopic.id,
+          userId,
+          visibility: 'private',
+          workspaceId: workspace.id,
+        })
+        .returning();
+
+      // The creator can read messages through their own private share link
+      const creatorCaller = messageRouter.createCaller(createTestContext(userId));
+      const creatorResult = await creatorCaller.getMessages({ topicShareId: share.id });
+      expect(creatorResult.map((m) => m.id)).toEqual(['ws-priv-share-msg-1']);
+
+      // A workspace member (viewer role) is rejected — private is creator-only
+      const memberId = await createTestUser(serverDB);
+      await serverDB
+        .insert(workspaceMembers)
+        .values({ role: 'viewer', userId: memberId, workspaceId: workspace.id });
+      const memberCaller = messageRouter.createCaller(createTestContext(memberId));
+      await expect(memberCaller.getMessages({ topicShareId: share.id })).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
+
+      // A non-member stays FORBIDDEN as well
+      const outsiderId = await createTestUser(serverDB);
+      const outsiderCaller = messageRouter.createCaller(createTestContext(outsiderId));
+      await expect(outsiderCaller.getMessages({ topicShareId: share.id })).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
+
+      await cleanupTestUser(serverDB, memberId);
+      await cleanupTestUser(serverDB, outsiderId);
     });
 
     it('should return messages filtered by groupId', async () => {
@@ -1302,6 +1426,28 @@ describe('Message Router Integration Tests', () => {
       expect(ttsRecord).toBeDefined();
       expect(ttsRecord.voice).toBe('en-US-neural');
       expect(ttsRecord.fileId).toBe(file.id);
+    });
+
+    it('should ignore empty TTS updates for an existing record', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msg = await caller.createMessage({
+        content: 'Message with existing TTS',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      await caller.updateTTS({
+        id: msg.id,
+        value: { voice: 'en-US-neural' },
+      });
+
+      await expect(caller.updateTTS({ id: msg.id, value: {} })).resolves.toBeUndefined();
+
+      const { messageTTS } = await import('@/database/schemas');
+      const [ttsRecord] = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, msg.id));
+
+      expect(ttsRecord.voice).toBe('en-US-neural');
     });
 
     it('should delete TTS when value is false', async () => {

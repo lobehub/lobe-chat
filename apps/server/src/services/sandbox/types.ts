@@ -47,7 +47,11 @@ export interface SandboxService extends ISandboxService {
 }
 
 export interface SandboxFileExporter {
-  exportAndUploadFile: (path: string, filename: string) => Promise<SandboxExportFileResult>;
+  exportAndUploadFile: (
+    path: string,
+    filename: string,
+    options?: { storageName?: string },
+  ) => Promise<SandboxExportFileResult>;
 }
 
 export interface SandboxProviderFileExportRequest {
@@ -68,6 +72,8 @@ export interface SandboxProviderFileExportResult {
 export interface SandboxCommandResult {
   exitCode: number;
   output: string;
+  /** The provider recreated the workspace before executing this command. */
+  sessionExpiredAndRecreated?: boolean;
   stderr?: string;
   success: boolean;
 }

@@ -1,5 +1,7 @@
 // @vitest-environment node
 import { CURRENT_ONBOARDING_VERSION } from '@lobechat/const';
+import { OnboardingUnderstandingRepository } from '@lobechat/database';
+import type { OnboardingUnderstandingSession } from '@lobechat/types';
 import { SaveUserQuestionInputSchema } from '@lobechat/types';
 import { merge } from '@lobechat/utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,8 +12,11 @@ import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
 import { AgentService } from '@/server/services/agent';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
+import { UnderstandingSourceStore } from '@/server/services/understanding/sourceStore';
 
 import { OnboardingService } from './index';
+
+const AGENT_ONBOARDING_VERSION = 1;
 
 vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(),
@@ -35,6 +40,14 @@ vi.mock('@/server/services/agent', () => ({
 
 vi.mock('@/server/services/agentDocuments', () => ({
   AgentDocumentsService: vi.fn(),
+}));
+
+vi.mock('@lobechat/database', () => ({
+  OnboardingUnderstandingRepository: vi.fn(),
+}));
+
+vi.mock('@/server/services/understanding/sourceStore', () => ({
+  UnderstandingSourceStore: vi.fn(),
 }));
 
 describe('OnboardingService', () => {
@@ -63,10 +76,17 @@ describe('OnboardingService', () => {
   let mockTopicModel: {
     create: ReturnType<typeof vi.fn>;
     findById: ReturnType<typeof vi.fn>;
+    findOwnTopicById: ReturnType<typeof vi.fn>;
     updateMetadata: ReturnType<typeof vi.fn>;
   };
   let persistedUserState: any;
   let persistedTopics: Record<string, any>;
+  let mockSourceStore: {
+    deleteSession: ReturnType<typeof vi.fn>;
+  };
+  let mockUnderstandingRepository: {
+    removeForReset: ReturnType<typeof vi.fn>;
+  };
   let mockUserModel: {
     getUserSettings: ReturnType<typeof vi.fn>;
     getUserState: ReturnType<typeof vi.fn>;
@@ -92,19 +112,27 @@ describe('OnboardingService', () => {
     transactionUpdateCalls = [];
 
     mockDb = {
-      delete: vi.fn(() => ({ where: vi.fn(async () => undefined) })),
+      delete: vi.fn(function () {
+        return { where: vi.fn(async () => undefined) };
+      }),
       execute: vi.fn(async () => undefined),
-      select: vi.fn(() => ({
-        from: vi.fn(() => ({
-          where: vi.fn(async () => [{ count: 0 }]),
-        })),
-      })),
+      select: vi.fn(function () {
+        return {
+          from: vi.fn(function () {
+            return {
+              where: vi.fn(async () => [{ count: 0 }]),
+            };
+          }),
+        };
+      }),
       transaction: vi.fn(async (callback) =>
         callback({
           execute: vi.fn(async () => undefined),
-          update: vi.fn((table) => {
+          update: vi.fn(function (table) {
             const where = vi.fn(async () => undefined);
-            const set = vi.fn(() => ({ where }));
+            const set = vi.fn(function () {
+              return { where };
+            });
 
             transactionUpdateCalls.push({ set, table, where });
 
@@ -155,6 +183,12 @@ describe('OnboardingService', () => {
         return topic;
       }),
       findById: vi.fn(async (id: string) => persistedTopics[id]),
+      findOwnTopicById: vi.fn(async (id: string) => {
+        const topic = persistedTopics[id];
+        // Mirror the real predicate: creator-facing lookup hides share-visitor topics.
+        if (!topic || topic.senderId) return undefined;
+        return topic;
+      }),
       updateMetadata: vi.fn(async (id: string, metadata: any) => {
         const existing = persistedTopics[id] ?? { id, metadata: undefined };
         const nextTopic = {
@@ -182,13 +216,37 @@ describe('OnboardingService', () => {
       getAgentDocuments: vi.fn(async () => []),
       upsertDocument: vi.fn(async () => undefined),
     };
+    mockSourceStore = {
+      deleteSession: vi.fn(async () => undefined),
+    };
+    mockUnderstandingRepository = {
+      removeForReset: vi.fn(async () => undefined),
+    };
 
-    vi.mocked(AgentModel).mockImplementation(() => mockAgentModel as any);
-    vi.mocked(AgentDocumentsService).mockImplementation(() => mockAgentDocumentsService as any);
-    vi.mocked(MessageModel).mockImplementation(() => mockMessageModel as any);
-    vi.mocked(UserModel).mockImplementation(() => mockUserModel as any);
-    vi.mocked(TopicModel).mockImplementation(() => mockTopicModel as any);
-    vi.mocked(AgentService).mockImplementation(() => mockAgentService as any);
+    vi.mocked(AgentModel).mockImplementation(function () {
+      return mockAgentModel as any;
+    });
+    vi.mocked(AgentDocumentsService).mockImplementation(function () {
+      return mockAgentDocumentsService as any;
+    });
+    vi.mocked(MessageModel).mockImplementation(function () {
+      return mockMessageModel as any;
+    });
+    vi.mocked(UserModel).mockImplementation(function () {
+      return mockUserModel as any;
+    });
+    vi.mocked(TopicModel).mockImplementation(function () {
+      return mockTopicModel as any;
+    });
+    vi.mocked(AgentService).mockImplementation(function () {
+      return mockAgentService as any;
+    });
+    vi.mocked(UnderstandingSourceStore).mockImplementation(function () {
+      return mockSourceStore as any;
+    });
+    vi.mocked(OnboardingUnderstandingRepository).mockImplementation(function () {
+      return mockUnderstandingRepository as any;
+    });
   });
 
   afterEach(() => {
@@ -302,6 +360,138 @@ describe('OnboardingService', () => {
     expect(context.finished).toBe(false);
   });
 
+  it('resets the active Understanding session and its temporary source data', async () => {
+    persistedUserState.agentOnboarding = {
+      activeTopicId: 'topic-1',
+      version: CURRENT_ONBOARDING_VERSION,
+    };
+    const understandingSession: OnboardingUnderstandingSession = {
+      id: 'understanding-session',
+      sources: {
+        github: {
+          errors: [],
+          failedCount: 0,
+          revision: 1,
+          status: 'completed',
+          succeededCount: 1,
+        },
+      },
+    };
+    mockUnderstandingRepository.removeForReset.mockResolvedValue(understandingSession);
+
+    const service = new OnboardingService(mockDb, userId);
+    const result = await service.reset();
+
+    expect(mockUnderstandingRepository.removeForReset).toHaveBeenCalledWith('topic-1');
+    expect(mockUnderstandingRepository.removeForReset.mock.invocationCallOrder[0]).toBeLessThan(
+      mockUserModel.updateUser.mock.invocationCallOrder[0],
+    );
+    expect(mockSourceStore.deleteSession).toHaveBeenCalledWith({
+      sessionId: understandingSession.id,
+      userId,
+    });
+    expect(result).toEqual({ version: AGENT_ONBOARDING_VERSION });
+    expect(persistedUserState.agentOnboarding.activeTopicId).toBeUndefined();
+  });
+
+  /** @example Advancing from Learn Your World to Profile preserves generated Understanding. */
+  it('keeps Understanding data during normal step navigation', async () => {
+    persistedUserState.agentOnboarding = {
+      activeTopicId: 'topic-1',
+      version: AGENT_ONBOARDING_VERSION,
+    };
+    persistedUserState.onboarding = {
+      currentStep: 3,
+      version: CURRENT_ONBOARDING_VERSION,
+    };
+
+    const service = new OnboardingService(mockDb, userId);
+    await service.updateOnboarding({ currentStep: 4, version: CURRENT_ONBOARDING_VERSION });
+
+    expect(mockUnderstandingRepository.removeForReset).not.toHaveBeenCalled();
+    expect(persistedUserState.onboarding).toEqual({
+      currentStep: 4,
+      version: CURRENT_ONBOARDING_VERSION,
+    });
+  });
+
+  /** @example Resetting the classic flow to Welcome invalidates generated session data. */
+  it('cleans Understanding data when onboarding restarts at the welcome step', async () => {
+    persistedUserState.agentOnboarding = {
+      activeTopicId: 'topic-1',
+      version: AGENT_ONBOARDING_VERSION,
+    };
+    persistedUserState.onboarding = {
+      currentStep: 7,
+      version: CURRENT_ONBOARDING_VERSION,
+    };
+    mockUnderstandingRepository.removeForReset.mockResolvedValue({
+      id: 'understanding-session',
+      sources: {},
+    });
+
+    const service = new OnboardingService(mockDb, userId);
+
+    // ROOT CAUSE:
+    //
+    // The classic update API previously changed only users.onboarding. The active topic retained a
+    // completed Understanding session without task recommendations, so restarting reused that
+    // session and had no pending provider capable of triggering recommendation generation.
+    //
+    // We fixed this by clearing generated topic state before persisting the reset cursor.
+    await service.updateOnboarding({ currentStep: 1, version: CURRENT_ONBOARDING_VERSION });
+
+    expect(mockUnderstandingRepository.removeForReset).toHaveBeenCalledWith('topic-1');
+    expect(mockSourceStore.deleteSession).toHaveBeenCalledWith({
+      sessionId: 'understanding-session',
+      userId,
+    });
+    expect(persistedUserState.onboarding).toEqual({
+      currentStep: 1,
+      version: CURRENT_ONBOARDING_VERSION,
+    });
+  });
+
+  /** @example Upgrading the onboarding version invalidates data generated by the previous flow. */
+  it('cleans Understanding data when onboarding version changes', async () => {
+    persistedUserState.agentOnboarding = {
+      activeTopicId: 'topic-1',
+      version: AGENT_ONBOARDING_VERSION,
+    };
+    persistedUserState.onboarding = { currentStep: 1, version: 1 };
+
+    const service = new OnboardingService(mockDb, userId);
+    await service.updateOnboarding({ currentStep: 2, version: CURRENT_ONBOARDING_VERSION });
+
+    expect(mockUnderstandingRepository.removeForReset).toHaveBeenCalledWith('topic-1');
+    expect(persistedUserState.onboarding).toEqual({
+      currentStep: 2,
+      version: CURRENT_ONBOARDING_VERSION,
+    });
+  });
+
+  it('still resets onboarding when Understanding external cleanup fails', async () => {
+    persistedUserState.agentOnboarding = {
+      activeTopicId: 'topic-1',
+      version: CURRENT_ONBOARDING_VERSION,
+    };
+    mockUnderstandingRepository.removeForReset.mockResolvedValue({
+      id: 'understanding-session',
+      sources: {},
+    });
+    mockSourceStore.deleteSession.mockRejectedValue(new Error('redis unavailable'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {
+      return undefined;
+    });
+
+    const service = new OnboardingService(mockDb, userId);
+    await expect(service.reset()).resolves.toEqual({ version: AGENT_ONBOARDING_VERSION });
+
+    expect(persistedUserState.agentOnboarding.activeTopicId).toBeUndefined();
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
   it('creates a topic during onboarding bootstrap without persisting a welcome message', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-04-17T08:00:00.000Z'));
@@ -319,7 +509,7 @@ describe('OnboardingService', () => {
       lastActiveAt: '2026-04-17T08:00:00.000Z',
       phase: 'agent_identity',
       startedAt: '2026-04-17T08:00:00.000Z',
-      version: CURRENT_ONBOARDING_VERSION,
+      version: AGENT_ONBOARDING_VERSION,
     });
   });
 
@@ -469,6 +659,34 @@ describe('OnboardingService', () => {
     });
   });
 
+  it('does not transfer a visitor topic pointed at by activeTopicId', async () => {
+    // Regression: `updateAgentOnboarding` lets a creator set any topic id as
+    // `activeTopicId`. If that id is a share-visitor topic (creator's userId
+    // but non-null senderId), finishing onboarding must NOT re-parent it into
+    // the creator's inbox.
+    const visitorTopicId = 'visitor-topic';
+    persistedUserState.agentOnboarding = {
+      activeTopicId: visitorTopicId,
+      version: CURRENT_ONBOARDING_VERSION,
+    };
+    persistedTopics[visitorTopicId] = {
+      agentId: 'shared-agent-1',
+      id: visitorTopicId,
+      metadata: {},
+      senderId: 'visitor-user-1',
+    };
+
+    const service = new OnboardingService(mockDb, userId);
+    const result = await service.finishOnboarding();
+
+    expect(result.success).toBe(true);
+    // The transfer transaction must not have fired for the visitor topic.
+    expect(mockDb.transaction).not.toHaveBeenCalled();
+    expect(transactionUpdateCalls).toHaveLength(0);
+    // Topic is untouched — agentId still the visitor-facing shared agent.
+    expect(persistedTopics[visitorTopicId]?.agentId).toBe('shared-agent-1');
+  });
+
   it('writes onboarding milestones only once as phase advances', async () => {
     vi.useFakeTimers();
     persistedUserState.agentOnboarding = {
@@ -486,7 +704,7 @@ describe('OnboardingService', () => {
       lastActiveAt: '2026-04-17T08:00:00.000Z',
       phase: 'agent_identity',
       startedAt: '2026-04-17T08:00:00.000Z',
-      version: CURRENT_ONBOARDING_VERSION,
+      version: AGENT_ONBOARDING_VERSION,
     });
 
     mockAgentModel.getBuiltinAgent.mockResolvedValue({
@@ -526,9 +744,11 @@ describe('OnboardingService', () => {
     persistedUserState.interests = ['AI tooling'];
     persistedUserState.agentOnboarding.discoveryStartUserMessageCount = 0;
     mockDb.select.mockReturnValue({
-      from: vi.fn(() => ({
-        where: vi.fn(async () => [{ count: 5 }]),
-      })),
+      from: vi.fn(function () {
+        return {
+          where: vi.fn(async () => [{ count: 5 }]),
+        };
+      }),
     });
 
     vi.setSystemTime(new Date('2026-04-17T13:00:00.000Z'));
@@ -560,9 +780,11 @@ describe('OnboardingService', () => {
 
     // 3 user messages total, baseline was 3 → 0 discovery exchanges (< MIN_DISCOVERY_USER_MESSAGES=1)
     mockDb.select.mockReturnValue({
-      from: vi.fn(() => ({
-        where: vi.fn(async () => [{ count: 3 }]),
-      })),
+      from: vi.fn(function () {
+        return {
+          where: vi.fn(async () => [{ count: 3 }]),
+        };
+      }),
     });
 
     const service = new OnboardingService(mockDb, userId);
@@ -590,9 +812,11 @@ describe('OnboardingService', () => {
 
     // 8 user messages total, baseline was 3 → 5 discovery exchanges (>= MIN_DISCOVERY_USER_MESSAGES=1)
     mockDb.select.mockReturnValue({
-      from: vi.fn(() => ({
-        where: vi.fn(async () => [{ count: 8 }]),
-      })),
+      from: vi.fn(function () {
+        return {
+          where: vi.fn(async () => [{ count: 8 }]),
+        };
+      }),
     });
 
     const service = new OnboardingService(mockDb, userId);
@@ -616,9 +840,11 @@ describe('OnboardingService', () => {
 
     // 3 user messages at discovery entry
     mockDb.select.mockReturnValue({
-      from: vi.fn(() => ({
-        where: vi.fn(async () => [{ count: 3 }]),
-      })),
+      from: vi.fn(function () {
+        return {
+          where: vi.fn(async () => [{ count: 3 }]),
+        };
+      }),
     });
 
     const service = new OnboardingService(mockDb, userId);
@@ -643,9 +869,11 @@ describe('OnboardingService', () => {
 
     // Now 6 user messages
     mockDb.select.mockReturnValue({
-      from: vi.fn(() => ({
-        where: vi.fn(async () => [{ count: 6 }]),
-      })),
+      from: vi.fn(function () {
+        return {
+          where: vi.fn(async () => [{ count: 6 }]),
+        };
+      }),
     });
 
     const service = new OnboardingService(mockDb, userId);
@@ -714,9 +942,11 @@ describe('OnboardingService', () => {
         title: 'Inbox',
       });
       mockDb.select.mockReturnValue({
-        from: vi.fn(() => ({
-          where: vi.fn(async () => [{ count: 4 }]),
-        })),
+        from: vi.fn(function () {
+          return {
+            where: vi.fn(async () => [{ count: 4 }]),
+          };
+        }),
       });
 
       const service = new OnboardingService(mockDb, userId);
@@ -770,7 +1000,13 @@ describe('OnboardingService', () => {
       mockDb.transaction = vi.fn(async (callback: any) =>
         callback({
           execute: executeSpy,
-          update: vi.fn(() => ({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) })),
+          update: vi.fn(function () {
+            return {
+              set: vi.fn(function () {
+                return { where: vi.fn(async () => undefined) };
+              }),
+            };
+          }),
         }),
       );
       mockMessageModel.query.mockResolvedValueOnce([]);

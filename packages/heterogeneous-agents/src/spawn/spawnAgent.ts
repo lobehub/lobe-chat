@@ -1,25 +1,39 @@
 import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
+import path from 'node:path';
+import { PassThrough } from 'node:stream';
 
 import type { AgentStreamEvent } from '@lobechat/agent-gateway-client';
 
+import type { AskUserBridge } from '../askUser/AskUserBridge';
+import { resolveHeterogeneousAgentCommand } from '../config';
 import { AgentStreamPipeline, type UploadHeterogeneousImage } from './agentStreamPipeline';
-import { resolveCliSpawnPlan } from './cliSpawn';
+import { isPathLikeCommand, resolveCliSpawnPlan } from './cliSpawn';
 import { readCodexSessionModel, resolveCodexInitialModel } from './codexModel';
+import { buildCursorAcpPrompt, CursorAcpSession } from './cursorAcpSession';
+import { buildDroidAcpPrompt, DroidAcpSession } from './droidAcpSession';
+import { buildDevinAcpPrompt, DevinAcpSession } from './devinAcpSession';
+import { buildGrokAcpPrompt, GrokAcpSession } from './grokAcpSession';
 import type { AgentPromptInput, BuildAgentInputOptions } from './input';
 import { buildAgentInput } from './input';
+import { buildTraeAcpPrompt, TraeAcpSession } from './traeAcpSession';
+import { assertSpawnableWorkingDirectory } from './workingDirectory';
 
 export interface SpawnAgentOptions {
-  /** Agent type key (`'claude-code'` | `'codex'`). */
+  /** Registered local heterogeneous-agent type key. */
   agentType: string;
+  /** Bridge for bidirectional question requests emitted by ACP agents. */
+  askUserBridge?: AskUserBridge;
   /**
-   * Override the CLI binary name. Defaults to `'claude'` for `claude-code`,
-   * `'codex'` for `codex`. Use this when the binary lives at a non-default
+   * Override the CLI binary name. Defaults to the agent's standard executable.
+   * Use this when the binary lives at a non-default
    * path or is wrapped by a launcher.
    */
   command?: string;
   /** Working directory for the spawned child. Defaults to `process.cwd()`. */
   cwd?: string;
+  /** Create a dedicated Unix process group. Disable beneath a detached wrapper. */
+  detached?: boolean;
   /** Extra environment variables merged on top of `process.env`. */
   env?: Record<string, string>;
   /** Extra CLI arguments appended after the agent's preset flags. */
@@ -31,6 +45,8 @@ export interface SpawnAgentOptions {
    * connected client renders live token streaming.
    */
   includePartialMessages?: boolean;
+  /** Initial model selected through the agent protocol after session setup (Droid/TRAE ACP). */
+  initialModel?: string;
   /**
    * Image normalization options (URL fetch + on-disk cache + path
    * materialization). Forwarded to `buildAgentInput`. When `prompt` is a
@@ -53,6 +69,8 @@ export interface SpawnAgentOptions {
    * events still carry the conventional shape.
    */
   operationId: string;
+  /** (Devin ACP only) Global `--permission-mode` value, placed before `acp`. */
+  permissionMode?: string;
   /**
    * User prompt. A plain string is sugar for a single text block; the array
    * form supports mixed text + image content blocks (URL / path / base64).
@@ -88,9 +106,9 @@ export interface SpawnAgentHandle {
    */
   exit: Promise<{ code: number | null; signal: NodeJS.Signals | null }>;
   /**
-   * Send a signal to the child. On Unix, the child is spawned with
-   * `detached: true` so the whole process group can be signaled via
-   * `process.kill(-pid, signal)`; this helper does that automatically.
+   * Send a signal to the child. A dedicated Unix process group is signaled as
+   * a tree; inherited-group children receive a direct signal because their
+   * outer wrapper owns group-level cancellation.
    */
   kill: (signal?: NodeJS.Signals) => void;
   /** Spawned child PID, undefined if spawn failed pre-PID. */
@@ -135,6 +153,24 @@ export const CLAUDE_CODE_BASE_ARGS = [
   CLAUDE_CODE_DISALLOWED_TOOLS.join(','),
 ] as const;
 
+/**
+ * Headless CodeBuddy stream-json flags shared by desktop and `lh hetero exec`.
+ * Interactive questions and background monitoring cannot be serviced reliably
+ * by a one-shot print-mode process, so disable both tools.
+ */
+const CODEBUDDY_DISALLOWED_TOOLS = ['AskUserQuestion', 'Monitor'] as const;
+
+export const CODEBUDDY_BASE_ARGS = [
+  '-p',
+  '--input-format',
+  'stream-json',
+  '--output-format',
+  'stream-json',
+  '--verbose',
+  '--disallowedTools',
+  CODEBUDDY_DISALLOWED_TOOLS.join(','),
+] as const;
+
 // bypassPermissions is blocked when running as root (e.g. cloud sandbox).
 // Fall back to acceptEdits + pre-approved tools so the agent can still run
 // headlessly without interactive permission prompts.
@@ -158,6 +194,36 @@ export const CODEX_EXECUTION_MODE_FLAGS = [
   CODEX_BYPASS_APPROVALS_AND_SANDBOX_ARG,
   '--sandbox',
   '-s',
+] as const;
+
+/**
+ * Headless, private AMP execution flags shared by desktop and `lh hetero exec`.
+ * AMP's stream-json protocol reports terminal failures as JSON even when the
+ * process exits with code 0, so the dedicated adapter owns result validation.
+ */
+export const AMP_BASE_ARGS = [
+  '--execute',
+  '--stream-json-thinking',
+  '--stream-json-input',
+  '--visibility',
+  'private',
+  '--no-ide',
+  '--no-notifications',
+  '--no-archive-after-execute',
+] as const;
+
+export const OPENCODE_BASE_ARGS = ['run', '--format', 'json', '--thinking', '--auto'] as const;
+export const PI_BASE_ARGS = ['--mode', 'json'] as const;
+export const KIMI_CODE_BASE_ARGS = ['--output-format', 'stream-json'] as const;
+export const QODER_BASE_ARGS = [
+  '-p',
+  '--input-format',
+  'stream-json',
+  '--output-format',
+  'stream-json',
+  '--include-partial-messages',
+  '--permission-mode',
+  'bypass_permissions',
 ] as const;
 
 const hasAnyFlag = (args: string[], flags: readonly string[]) =>
@@ -189,6 +255,21 @@ const buildClaudeCodeArgs = ({
   ...extraArgs,
 ];
 
+const buildCodeBuddyArgs = ({
+  extraArgs,
+  includePartialMessages,
+  inputArgs,
+  resumeSessionId,
+}: BuildSpawnArgsParams) => [
+  ...CODEBUDDY_BASE_ARGS,
+  ...(includePartialMessages ? ['--include-partial-messages'] : []),
+  '--permission-mode',
+  'bypassPermissions',
+  ...(resumeSessionId ? ['--resume', resumeSessionId] : []),
+  ...inputArgs,
+  ...extraArgs,
+];
+
 const buildCodexArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArgsParams) => {
   const executionModeArgs = hasAnyFlag(extraArgs, CODEX_EXECUTION_MODE_FLAGS)
     ? []
@@ -200,13 +281,77 @@ const buildCodexArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArg
     : ['exec', ...optionArgs];
 };
 
+const buildAmpArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArgsParams) => {
+  const executionArgs = [...AMP_BASE_ARGS, ...inputArgs, ...extraArgs];
+
+  return resumeSessionId
+    ? ['threads', 'continue', resumeSessionId, ...executionArgs]
+    : executionArgs;
+};
+
+const buildOpenCodeArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArgsParams) => [
+  ...OPENCODE_BASE_ARGS,
+  ...(resumeSessionId ? ['--session', resumeSessionId] : []),
+  ...inputArgs,
+  ...extraArgs,
+];
+
+const buildPiArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArgsParams) => [
+  ...PI_BASE_ARGS,
+  ...(resumeSessionId ? ['--session-id', resumeSessionId] : []),
+  ...inputArgs,
+  ...extraArgs,
+];
+
+const buildKimiCodeArgs = ({ extraArgs, inputArgs, resumeSessionId }: BuildSpawnArgsParams) => [
+  ...KIMI_CODE_BASE_ARGS,
+  ...(resumeSessionId ? ['--session', resumeSessionId] : []),
+  ...extraArgs,
+  ...inputArgs,
+];
+
+export interface QoderSpawnArgsOptions {
+  extraArgs?: string[];
+  inputArgs?: string[];
+  resumeSessionId?: string;
+}
+
+export const buildQoderArgs = ({
+  extraArgs = [],
+  inputArgs = [],
+  resumeSessionId,
+}: QoderSpawnArgsOptions): string[] => [
+  ...QODER_BASE_ARGS,
+  ...(resumeSessionId ? ['--resume', resumeSessionId] : []),
+  ...extraArgs,
+  ...inputArgs,
+];
+
 const buildSpawnArgs = (params: BuildSpawnArgsParams): string[] => {
   switch (params.agentType) {
+    case 'amp': {
+      return buildAmpArgs(params);
+    }
     case 'claude-code': {
       return buildClaudeCodeArgs(params);
     }
+    case 'codebuddy': {
+      return buildCodeBuddyArgs(params);
+    }
     case 'codex': {
       return buildCodexArgs(params);
+    }
+    case 'kimi-code': {
+      return buildKimiCodeArgs(params);
+    }
+    case 'opencode': {
+      return buildOpenCodeArgs(params);
+    }
+    case 'pi': {
+      return buildPiArgs(params);
+    }
+    case 'qoder': {
+      return buildQoderArgs(params);
     }
     default: {
       throw new Error(`spawnAgent: unsupported agent type "${params.agentType}"`);
@@ -214,9 +359,7 @@ const buildSpawnArgs = (params: BuildSpawnArgsParams): string[] => {
   }
 };
 
-const defaultCommand = (agentType: string): string => (agentType === 'codex' ? 'codex' : 'claude');
-
-const killProcessTree = (proc: ChildProcess, signal: NodeJS.Signals): void => {
+const killProcessTree = (proc: ChildProcess, signal: NodeJS.Signals, detached: boolean): void => {
   if (!proc.pid || proc.killed) return;
 
   // On Windows the spawn `detached` flag has different semantics; fall back
@@ -232,20 +375,283 @@ const killProcessTree = (proc: ChildProcess, signal: NodeJS.Signals): void => {
     return;
   }
 
-  try {
-    process.kill(-proc.pid, signal);
-  } catch {
+  if (detached) {
     try {
-      proc.kill(signal);
+      process.kill(-proc.pid, signal);
+      return;
     } catch {
-      // already gone
+      // Fall through to a direct signal when the process group is gone.
     }
+  }
+
+  try {
+    proc.kill(signal);
+  } catch {
+    // already gone
   }
 };
 
+/** Guarded raw-stdout tee: diagnostic sink failures must not affect the ACP run. */
+const teeAcpRawStdout =
+  (onRawStdout?: (chunk: Buffer) => void) =>
+  (line: string): void => {
+    if (!onRawStdout) return;
+    try {
+      onRawStdout(Buffer.from(line));
+    } catch {
+      // raw dump is diagnostic-only; never let it disrupt the run
+    }
+  };
+
 /**
- * Spawn an external agent CLI (Claude Code or Codex) and yield its stream as
- * unified `AgentStreamEvent`s. Used by `lh hetero exec` for both standalone
+ * Bridge a bidirectional ACP session onto the ordinary `SpawnAgentHandle`
+ * contract shared by the one-shot CLI spawns.
+ *
+ * Exit/error policy (uniform for every ACP agent):
+ * - Host kills resolve `exit` as `{ code: null, signal }`.
+ * - ACP request failures are first adapted into a terminal error event and
+ *   then reject the session's run() promise. Once that structured event is
+ *   queued, the iterable ends normally so callers can apply their error
+ *   policy; transport failures with no terminal event still throw from the
+ *   iterator.
+ */
+const createAcpSpawnBridge = () => {
+  const stderr = new PassThrough();
+  const queue: AgentStreamEvent[] = [];
+  let emittedTerminalError = false;
+  let hostSignal: NodeJS.Signals | null = null;
+  let streamEnded = false;
+  let streamError: Error | undefined;
+  let wakeup: (() => void) | undefined;
+
+  const wake = () => {
+    const resolve = wakeup;
+    wakeup = undefined;
+    resolve?.();
+  };
+  const getHostExit = (): { code: null; signal: NodeJS.Signals } | undefined =>
+    hostSignal ? { code: null, signal: hostSignal } : undefined;
+
+  const onEvents = (events: AgentStreamEvent[]): void => {
+    if (events.some(({ type }) => type === 'error')) emittedTerminalError = true;
+    queue.push(...events);
+    wake();
+  };
+  const onStderr = (data: string): void => {
+    stderr.write(data);
+  };
+
+  const events: AsyncIterable<AgentStreamEvent> = {
+    [Symbol.asyncIterator]() {
+      return {
+        async next(): Promise<IteratorResult<AgentStreamEvent>> {
+          while (true) {
+            const event = queue.shift();
+            if (event) return { done: false, value: event };
+            if (streamError) throw streamError;
+            if (streamEnded) return { done: true, value: undefined };
+            await new Promise<void>((resolve) => {
+              wakeup = resolve;
+            });
+          }
+        },
+      };
+    },
+  };
+
+  const attach = (session: {
+    close: (signal?: NodeJS.Signals) => void;
+    interrupt: () => void;
+    run: () => Promise<void>;
+  }): Pick<SpawnAgentHandle, 'exit' | 'kill'> => {
+    const exit: SpawnAgentHandle['exit'] = session
+      .run()
+      .then(() => getHostExit() ?? { code: 0, signal: null })
+      .catch((error) => {
+        const hostExit = getHostExit();
+        if (hostExit) return hostExit;
+
+        if (!emittedTerminalError) {
+          streamError = error instanceof Error ? error : new Error(String(error));
+        }
+        return { code: 1, signal: null };
+      })
+      .finally(() => {
+        streamEnded = true;
+        stderr.end();
+        wake();
+      });
+
+    const kill = (signal: NodeJS.Signals = 'SIGINT'): void => {
+      hostSignal = signal;
+      if (signal === 'SIGINT') session.interrupt();
+      else session.close(signal);
+    };
+    return { exit, kill };
+  };
+
+  return { attach, events, onEvents, onStderr, stderr };
+};
+
+interface AcpSpawnSession {
+  close: (signal?: NodeJS.Signals) => void;
+  interrupt: () => void;
+  pid?: number;
+  run: () => Promise<void>;
+  sessionId?: string;
+}
+
+const createAcpSpawnHandle = (
+  bridge: ReturnType<typeof createAcpSpawnBridge>,
+  session: AcpSpawnSession,
+  getSessionId: () => string | undefined = () => session.sessionId,
+): SpawnAgentHandle => {
+  const { exit, kill } = bridge.attach(session);
+
+  return {
+    events: bridge.events,
+    exit,
+    kill,
+    get pid() {
+      return session.pid;
+    },
+    get sessionId() {
+      return getSessionId();
+    },
+    stderr: bridge.stderr,
+  };
+};
+
+const spawnGrokAcpAgent = async (
+  options: SpawnAgentOptions,
+  command: string,
+  cwd: string,
+): Promise<SpawnAgentHandle> => {
+  const prompt = await buildGrokAcpPrompt(options.prompt, options.inputOptions);
+  const bridge = createAcpSpawnBridge();
+  const session = new GrokAcpSession({
+    args: options.extraArgs ?? [],
+    clientVersion: 'lobehub-cli',
+    commandPath: command,
+    cwd,
+    detached: options.detached,
+    env: { ...process.env, ...options.env },
+    onEvents: bridge.onEvents,
+    onRawMessage: teeAcpRawStdout(options.onRawStdout),
+    onRuntimeStatus: () => {},
+    onSessionId: () => {},
+    onStderr: bridge.onStderr,
+    operationId: options.operationId,
+    prompt,
+    resumeSessionId: options.resumeSessionId,
+    sessionId: options.operationId,
+  });
+  return createAcpSpawnHandle(bridge, session);
+};
+
+const spawnCursorAcpAgent = async (
+  options: SpawnAgentOptions,
+  command: string,
+  cwd: string,
+): Promise<SpawnAgentHandle> => {
+  const prompt = buildCursorAcpPrompt(options.prompt);
+  const bridge = createAcpSpawnBridge();
+  const session = new CursorAcpSession({
+    args: options.extraArgs ?? [],
+    askUserBridge: options.askUserBridge,
+    clientVersion: 'lobehub-cli',
+    commandPath: command,
+    cwd,
+    detached: options.detached,
+    env: { ...process.env, ...options.env },
+    onEvents: bridge.onEvents,
+    onRawMessage: teeAcpRawStdout(options.onRawStdout),
+    onRuntimeStatus: () => {},
+    onSessionId: () => {},
+    onStderr: bridge.onStderr,
+    operationId: options.operationId,
+    prompt,
+    resumeSessionId: options.resumeSessionId,
+    sessionId: options.operationId,
+  });
+  return createAcpSpawnHandle(bridge, session);
+};
+
+const spawnDroidAcpAgent = async (
+  options: SpawnAgentOptions,
+  command: string,
+  cwd: string,
+): Promise<SpawnAgentHandle> => {
+  const prompt = await buildDroidAcpPrompt(options.prompt, options.inputOptions);
+  const bridge = createAcpSpawnBridge();
+  const session = new DroidAcpSession({
+    args: options.extraArgs ?? [],
+    askUserBridge: options.askUserBridge,
+    clientVersion: 'lobehub-cli',
+    commandPath: command,
+    cwd,
+    env: { ...process.env, ...options.env },
+    initialModel: options.initialModel,
+    onEvents: bridge.onEvents,
+    onRawMessage: teeAcpRawStdout(options.onRawStdout),
+    onRuntimeStatus: () => {},
+    onSessionId: () => {},
+    onStderr: bridge.onStderr,
+    operationId: options.operationId,
+    prompt,
+    resumeSessionId: options.resumeSessionId,
+    sessionId: options.operationId,
+  });
+  const { exit, kill } = bridge.attach(session);
+
+  return {
+    events: bridge.events,
+    exit,
+    kill,
+    get pid() {
+      return session.pid;
+    },
+    get sessionId() {
+      return session.nativeSessionId;
+    },
+    stderr: bridge.stderr,
+  };
+};
+
+const spawnDevinAcpAgent = async (
+  options: SpawnAgentOptions,
+  command: string,
+  cwd: string,
+): Promise<SpawnAgentHandle> => {
+  const prompt = await buildDevinAcpPrompt(options.prompt, options.inputOptions);
+  const bridge = createAcpSpawnBridge();
+  const session = new DevinAcpSession({
+    args: options.extraArgs ?? [],
+    askUserBridge: options.askUserBridge,
+    clientVersion: 'lobehub-cli',
+    commandPath: command,
+    cwd,
+    detached: options.detached,
+    env: { ...process.env, ...options.env },
+    initialModel: options.initialModel,
+    onEvents: bridge.onEvents,
+    permissionMode: options.permissionMode,
+    onRawMessage: teeAcpRawStdout(options.onRawStdout),
+    onRuntimeStatus: () => {},
+    onSessionId: () => {},
+    onStderr: bridge.onStderr,
+    operationId: options.operationId,
+    prompt,
+    resumeSessionId: options.resumeSessionId,
+    sessionId: options.operationId,
+  });
+  return createAcpSpawnHandle(bridge, session);
+};
+
+/**
+ * Spawn an external agent CLI (Amp, Claude Code, CodeBuddy, Codex, Cursor,
+ * Factory Droid, Kimi Code, OpenCode, Pi, Qoder, or TRAE) and yield its stream as unified
+ * `AgentStreamEvent`s. Used by `lh hetero exec` for both standalone
  * terminal runs and (later) sandbox-driven runs that ingest into the server.
  *
  * Stays minimal on purpose — no on-disk tracing, no proxy env composition,
@@ -258,7 +664,24 @@ const killProcessTree = (proc: ChildProcess, signal: NodeJS.Signals): void => {
  * failed image fetch surfaces before the child starts.
  */
 export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgentHandle> => {
-  const command = options.command || defaultCommand(options.agentType);
+  if (options.agentType === 'trae') return spawnTraeAcpAgent(options);
+
+  const command = resolveHeterogeneousAgentCommand(options.agentType, options.command);
+  const cwd = options.cwd || process.cwd();
+  assertSpawnableWorkingDirectory(cwd);
+  if (options.agentType === 'devin') {
+    return spawnDevinAcpAgent(options, command, cwd);
+  }
+  if (options.agentType === 'grok-build') {
+    return spawnGrokAcpAgent(options, command, cwd);
+  }
+  if (options.agentType === 'cursor') {
+    return spawnCursorAcpAgent(options, command, cwd);
+  }
+  if (options.agentType === 'droid') {
+    return spawnDroidAcpAgent(options, command, cwd);
+  }
+
   const inputPlan = await buildAgentInput(options.agentType, options.prompt, options.inputOptions);
   const args = buildSpawnArgs({
     agentType: options.agentType,
@@ -267,8 +690,11 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     inputArgs: inputPlan.args,
     resumeSessionId: options.resumeSessionId,
   });
-  const cwd = options.cwd || process.cwd();
-  const childEnv = { ...process.env, ...options.env };
+  const childEnv = {
+    ...process.env,
+    ...(options.agentType === 'codebuddy' ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' } : {}),
+    ...options.env,
+  };
   const initialModel =
     options.agentType === 'codex'
       ? (await resolveCodexInitialModel({ args, env: childEnv }))?.model
@@ -280,9 +706,10 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   const initialCumulativeUsage = resumedCodexSession?.cumulativeUsage;
 
   const cliSpawnPlan = await resolveCliSpawnPlan(command, args);
+  const detached = process.platform !== 'win32' && (options.detached ?? true);
   const proc = spawn(cliSpawnPlan.command, cliSpawnPlan.args, {
     cwd,
-    detached: process.platform !== 'win32',
+    detached,
     env: childEnv,
     stdio: ['pipe', 'pipe', 'pipe'],
   });
@@ -303,6 +730,7 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   // wakeup promise — keeps backpressure simple and avoids a third-party
   // dependency.
   const queue: AgentStreamEvent[] = [];
+  let killedByUs = false;
   let streamEnded = false;
   let streamError: Error | undefined;
   let wakeup: (() => void) | undefined;
@@ -367,6 +795,10 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
       try {
         const events = await pipeline.flush();
         for (const event of events) queue.push(event);
+        const { code } = await exit;
+        if (code === 0 && !killedByUs) {
+          for (const event of pipeline.validateCompletion()) queue.push(event);
+        }
       } catch (err) {
         streamError = err instanceof Error ? err : new Error(String(err));
       } finally {
@@ -423,11 +855,56 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   return {
     events,
     exit,
-    kill: (signal: NodeJS.Signals = 'SIGINT') => killProcessTree(proc, signal),
+    kill: (signal: NodeJS.Signals = 'SIGINT') => {
+      killedByUs = true;
+      killProcessTree(proc, signal, detached);
+    },
     pid: proc.pid,
     get sessionId() {
       return pipeline.sessionId;
     },
     stderr,
   };
+};
+
+/** Spawn TRAE's bidirectional ACP runtime behind the ordinary SpawnAgentHandle contract. */
+export const spawnTraeAcpAgent = async (options: SpawnAgentOptions): Promise<SpawnAgentHandle> => {
+  const requestedCommand = resolveHeterogeneousAgentCommand('trae', options.command);
+  const cwd = options.cwd || process.cwd();
+  assertSpawnableWorkingDirectory(cwd);
+  const command =
+    isPathLikeCommand(requestedCommand) && !path.isAbsolute(requestedCommand)
+      ? path.resolve(cwd, requestedCommand)
+      : requestedCommand;
+  const childEnv = { ...process.env, ...options.env };
+  const { detectHeterogeneousCliCommand } = await import('./resolveCliCommand');
+  const commandStatus = await detectHeterogeneousCliCommand('trae', command, childEnv);
+  if (!commandStatus.available || !commandStatus.path) {
+    throw new Error(`TRAE command does not expose the required ACP runtime: ${requestedCommand}`);
+  }
+
+  const prompt = await buildTraeAcpPrompt(options.prompt, options.inputOptions);
+  const bridge = createAcpSpawnBridge();
+  const session = new TraeAcpSession({
+    args: options.extraArgs ?? [],
+    clientVersion: '1.0.0',
+    commandPath: commandStatus.path,
+    cwd,
+    detached: options.detached,
+    env: {
+      ...childEnv,
+      ...(commandStatus.resolvedPathEnv ? { PATH: commandStatus.resolvedPathEnv } : {}),
+    },
+    initialModel: options.initialModel,
+    onEvents: bridge.onEvents,
+    onRawMessage: teeAcpRawStdout(options.onRawStdout),
+    onRuntimeStatus: () => {},
+    onSessionId: () => {},
+    onStderr: bridge.onStderr,
+    operationId: options.operationId,
+    prompt,
+    resumeSessionId: options.resumeSessionId,
+    sessionId: options.operationId,
+  });
+  return createAcpSpawnHandle(bridge, session, () => session.nativeSessionId);
 };

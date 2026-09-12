@@ -17,6 +17,7 @@ import { today } from '@/utils/time';
 import type { NewUser, UserItem, UserSettingsItem } from '../schemas';
 import { messages, nextauthAccounts, topics, users, userSettings } from '../schemas';
 import type { LobeChatDatabase } from '../type';
+import { AGENT_TRANSFER_PENDING_OWNER_DELETE, AgentTransferJobModel } from './agentTransferJob';
 
 type DecryptUserKeyVaults = (
   encryptKeyVaultsStr: string | null,
@@ -278,6 +279,100 @@ export class UserModel {
       });
   };
 
+  /**
+   * Atomically merge a partial humanIntervention config into the `tool` settings
+   * column in ONE SQL statement. A JS-side read-merge-write would race: two
+   * concurrent calls (e.g. one tab changing `approvalMode` while another appends
+   * to the allow list) could both read the same snapshot and the last write
+   * would silently drop the other change. Doing the merge inside the
+   * INSERT ... ON CONFLICT DO UPDATE expression serializes concurrent calls on
+   * the row, so both changes land regardless of interleaving.
+   */
+  mergeToolInterventionSetting = async (value: {
+    appendAllowList?: string[];
+    approvalMode?: 'auto-run' | 'allow-list' | 'manual';
+  }) => {
+    const appendAllowList = [...new Set(value.appendAllowList ?? [])];
+
+    const initialIntervention: Record<string, unknown> = {};
+    if (value.approvalMode) initialIntervention.approvalMode = value.approvalMode;
+    if (appendAllowList.length > 0) initialIntervention.allowList = appendAllowList;
+
+    const storedAllowList = sql`coalesce(${userSettings.tool}->'humanIntervention'->'allowList', '[]'::jsonb)`;
+
+    const approvalModePatch = value.approvalMode
+      ? sql`jsonb_build_object('approvalMode', ${value.approvalMode}::text)`
+      : sql`'{}'::jsonb`;
+
+    // Append only the entries the stored list does not already contain,
+    // preserving both the stored order and the append order.
+    const allowListPatch =
+      appendAllowList.length > 0
+        ? sql`jsonb_build_object(
+            'allowList',
+            ${storedAllowList} || (
+              SELECT coalesce(jsonb_agg(to_jsonb(t.v) ORDER BY t.ord), '[]'::jsonb)
+              FROM jsonb_array_elements_text(${JSON.stringify(appendAllowList)}::jsonb) WITH ORDINALITY AS t(v, ord)
+              WHERE NOT (${storedAllowList} ? t.v)
+            )
+          )`
+        : sql`'{}'::jsonb`;
+
+    return this.db
+      .insert(userSettings)
+      .values({ id: this.userId, tool: { humanIntervention: initialIntervention } })
+      .onConflictDoUpdate({
+        set: {
+          tool: sql`coalesce(${userSettings.tool}, '{}'::jsonb) || jsonb_build_object(
+            'humanIntervention',
+            coalesce(${userSettings.tool}->'humanIntervention', '{}'::jsonb) || ${approvalModePatch} || ${allowListPatch}
+          )`,
+        },
+        target: userSettings.id,
+      });
+  };
+
+  /**
+   * Atomically replace the uninstalled-builtin-tools list for one scope
+   * (personal, or one workspace's slot) inside the `tool` column, leaving every
+   * other key — `humanIntervention`, the other scope's lists — untouched. Same
+   * rationale as `mergeToolInterventionSetting`: a JS-side whole-column write
+   * built from a snapshot races with concurrent tool-column writers and can
+   * revert their changes (e.g. flip approvalMode back).
+   */
+  replaceUninstalledBuiltinToolsSetting = async (value: {
+    uninstalledBuiltinTools: string[];
+    workspaceId?: string | null;
+  }) => {
+    const list = JSON.stringify(value.uninstalledBuiltinTools);
+
+    const initialTool = value.workspaceId
+      ? {
+          uninstalledBuiltinToolsByWorkspace: {
+            [value.workspaceId]: value.uninstalledBuiltinTools,
+          },
+        }
+      : { uninstalledBuiltinTools: value.uninstalledBuiltinTools };
+
+    const toolPatch = value.workspaceId
+      ? sql`jsonb_build_object(
+          'uninstalledBuiltinToolsByWorkspace',
+          coalesce(${userSettings.tool}->'uninstalledBuiltinToolsByWorkspace', '{}'::jsonb)
+          || jsonb_build_object(${value.workspaceId}::text, ${list}::jsonb)
+        )`
+      : sql`jsonb_build_object('uninstalledBuiltinTools', ${list}::jsonb)`;
+
+    return this.db
+      .insert(userSettings)
+      .values({ id: this.userId, tool: initialTool })
+      .onConflictDoUpdate({
+        set: {
+          tool: sql`coalesce(${userSettings.tool}, '{}'::jsonb) || ${toolPatch}`,
+        },
+        target: userSettings.id,
+      });
+  };
+
   updatePreference = async (value: Partial<UserPreference>) => {
     const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
     if (!user) return;
@@ -342,8 +437,32 @@ export class UserModel {
     return { duplicate: false, user };
   };
 
+  /**
+   * Deletes a user account and their agent-share visitor conversations.
+   *
+   * Agent-share visitor topics are stored under the CREATOR's userId (for
+   * billing/data attribution) and linked to the visitor only via
+   * `topics.senderId`, which has no FK. That means the `users` cascade cannot
+   * reach them — deleting the visitor's account would otherwise orphan every
+   * conversation they had inside someone else's shared agent. We explicitly
+   * drop `topics` where `senderId = id`; messages, threads, and topic
+   * documents cascade from `topics.id`, so the topic delete is enough.
+   */
   static deleteUser = async (db: LobeChatDatabase, id: string) => {
-    return db.delete(users).where(eq(users.id, id));
+    // A pending agent-TRANSFER backfill means message rows moved to (or from)
+    // this user still carry the other side's scope snapshot; cascading the
+    // delete now would destroy history the transfer already re-homed. Transfer
+    // is admin-initiated and drains in minutes — the delete can simply be
+    // retried afterwards. Pending `copy` jobs do not block: they duplicate
+    // rather than move, and both sides self-heal (see `isPendingTransfer`).
+    if (await AgentTransferJobModel.hasPendingJobTouchingUser(db, id)) {
+      throw new Error(AGENT_TRANSFER_PENDING_OWNER_DELETE);
+    }
+    return db.transaction(async (tx) => {
+      // Purge share-visitor topics authored by this user under any creator.
+      await tx.delete(topics).where(eq(topics.senderId, id));
+      return tx.delete(users).where(eq(users.id, id));
+    });
   };
 
   static findById = async (db: LobeChatDatabase, id: string) => {
@@ -364,6 +483,49 @@ export class UserModel {
   static findByIds = async (db: LobeChatDatabase, ids: string[]) => {
     if (ids.length === 0) return [];
     return db.query.users.findMany({ where: inArray(users.id, ids) });
+  };
+
+  /**
+   * Lean batch lookup of the display fields (name + avatar) for a set of user
+   * ids. Used to attribute a connector/tool to the member who authorized it —
+   * both the profile "authorized by X" tag and the runtime credential-ownership
+   * note resolve the same way. Selects only public-facing columns (never
+   * settings / key vaults). Callers must pass ids they are already authorized to
+   * see (e.g. userIds harvested from workspace-scoped connector rows).
+   */
+  static getDisplayInfoByIds = async (
+    db: LobeChatDatabase,
+    ids: string[],
+  ): Promise<
+    Array<{ avatar: string | null; fullName: string | null; id: string; username: string | null }>
+  > => {
+    if (ids.length === 0) return [];
+    return db
+      .select({
+        avatar: users.avatar,
+        fullName: users.fullName,
+        id: users.id,
+        username: users.username,
+      })
+      .from(users)
+      .where(inArray(users.id, ids));
+  };
+
+  /**
+   * Emails for a set of users. Deliberately separate from
+   * {@link UserModel.getDisplayInfoByIds}, whose contract is display-only and
+   * must never leak email — call this only where the audience is allowed to
+   * see addresses (e.g. workspace members resolving a teammate to assign).
+   */
+  static getEmailsByIds = async (
+    db: LobeChatDatabase,
+    ids: string[],
+  ): Promise<Array<{ email: string | null; id: string }>> => {
+    if (ids.length === 0) return [];
+    return db
+      .select({ email: users.email, id: users.id })
+      .from(users)
+      .where(inArray(users.id, ids));
   };
 
   static getUserApiKeys = async (

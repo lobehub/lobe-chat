@@ -67,10 +67,14 @@ const getManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
 
   if (s.pluginInstallLoading[id]) return 'loading';
 
+  if (s.pluginInstallErrors[id]) return 'error';
+
   if (!manifest) return 'error';
 
   if (!!manifest) return 'success';
 };
+
+const getPluginInstallError = (id: string) => (s: ToolStoreState) => s.pluginInstallErrors[id];
 
 const isToolHasUI = (id: string) => (s: ToolStoreState) => {
   const manifest = getManifestById(id)(s);
@@ -163,6 +167,16 @@ const availableToolsForDiscovery = (s: ToolStoreState): AvailableToolForDiscover
   // 3. Composio MCP servers (connected only)
   const composioItems = (s.composioServers || [])
     .filter((server) => server.status === ComposioServerStatus.ACTIVE && server.tools?.length)
+    // A connector identifier can have legacy Composio and current LobeHub
+    // connections at the same time. Tool discovery is identifier-based, so the
+    // canonical LobeHub connection must own the single visible entry.
+    .filter(
+      (server) =>
+        !s.lobehubSkillServers?.some(
+          (item) =>
+            item.identifier === server.identifier && item.status === LobehubSkillStatus.CONNECTED,
+        ),
+    )
     .map((server) => {
       const config = getComposioAppByIdentifier(server.identifier);
       return {
@@ -192,6 +206,7 @@ export const toolSelectors = {
   discoverableMetaList,
   getManifestById,
   getManifestLoadingStatus,
+  getPluginInstallError,
   getMetaById,
   getRenderDisplayControl,
   isToolHasUI,

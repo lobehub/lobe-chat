@@ -1,7 +1,10 @@
 /**
  * Tools Engineering - Unified tools processing using ToolsEngine
  */
+import { AuvManifest } from '@lobechat/builtin-tool-auv';
+import { BrowserManifest } from '@lobechat/builtin-tool-browser';
 import { CloudSandboxManifest } from '@lobechat/builtin-tool-cloud-sandbox';
+import { ImageGenerationManifest } from '@lobechat/builtin-tool-image-generation';
 import { KnowledgeBaseManifest } from '@lobechat/builtin-tool-knowledge-base';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
@@ -18,10 +21,12 @@ import {
 } from '@lobechat/types';
 
 import type { ConnectorToolPermission } from '@/database/schemas';
+import { applyToolNameMaxLength } from '@/helpers/applyToolNameMaxLength';
 import { isToolAvailableInCurrentEnv } from '@/helpers/toolAvailability';
 import { patchManifestWithPermissions } from '@/libs/mcp/patchManifestPermissions';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { aiModelSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getToolStoreState } from '@/store/tool';
 import {
   composioStoreSelectors,
@@ -112,6 +117,11 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
     manifestContext,
   } = config;
 
+  // Push the deployment's `TOOL_NAME_MAX_LENGTH` in before any tool name is
+  // generated — the client mirror of `createServerToolsEngine`. Without it a
+  // deployment setting `0` would still get `MD5HASH_…` names on this path.
+  applyToolNameMaxLength();
+
   const toolStoreState = getToolStoreState();
 
   // Get custom connector manifests (user-added MCP servers). Connectors take
@@ -186,10 +196,13 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   // enableChecker rules) — a plugin, skill, connector, or user-toggleable
   // builtin tool the agent has explicitly disabled must not be discoverable/
   // activatable at all, matching the server-side (aiAgent gateway) treatment.
-  const allManifests =
-    disabledPluginIds.length === 0
-      ? combinedManifests
-      : combinedManifests.filter((m) => !disabledPluginIds.includes(m.identifier));
+  // Explicit activation bypasses enable rules; a plain Web client must not
+  // acquire the Electron IPC executor. Gateway execution uses the server engine.
+  const allManifests = combinedManifests.filter(
+    (m) =>
+      !disabledPluginIds.includes(m.identifier) &&
+      (m.identifier !== AuvManifest.identifier || isToolAvailableInCurrentEnv(m.identifier)),
+  );
 
   return new ToolsEngine({
     defaultToolIds,
@@ -225,8 +238,20 @@ export const createAgentToolsEngine = (
     agentChatConfigSelectors.currentChatConfig(agentState).memory?.enabled ??
     settingsSelectors.memoryEnabled(useUserStore.getState());
   const webBrowsingEnabled = searchConfig.useApplicationBuiltinSearchTool;
+  // Chat mode no longer auto-injects image generation (token cost + unwanted
+  // tool calls). Users opt in by pinning `lobe-image-generation`. Models with
+  // native imageOutput still skip the fallback tool entirely.
+  const imageGenerationCapable =
+    isCanUseFC(workingModel.model, workingModel.provider) &&
+    !aiModelSelectors.isModelSupportImageOutput(
+      workingModel.model,
+      workingModel.provider,
+    )(getAiInfraStoreState());
+  const imageGenerationEnabled =
+    imageGenerationCapable && userPlugins.includes(ImageGenerationManifest.identifier);
 
   const chatModeRules = {
+    [ImageGenerationManifest.identifier]: imageGenerationEnabled,
     [KnowledgeBaseManifest.identifier]: kbEnabled,
     [MemoryManifest.identifier]: memoryEnabled,
     [WebBrowsingManifest.identifier]: webBrowsingEnabled,
@@ -241,6 +266,9 @@ export const createAgentToolsEngine = (
     // Always-on builtin tools
     ...Object.fromEntries(alwaysOnToolIds.map((id) => [id, true])),
     // System-level rules (may override user selection for specific tools)
+    // Browser rides the same local-runtime gate as local-system because the
+    // control IPC only exists in the desktop main process.
+    [BrowserManifest.identifier]: agentChatConfigSelectors.isLocalSystemEnabled(agentState),
     [CloudSandboxManifest.identifier]: agentChatConfigSelectors.isCloudSandboxEnabled(agentState),
     [KnowledgeBaseManifest.identifier]: kbEnabled,
     [LocalSystemManifest.identifier]: agentChatConfigSelectors.isLocalSystemEnabled(agentState),

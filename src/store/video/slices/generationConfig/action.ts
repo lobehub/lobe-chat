@@ -1,11 +1,11 @@
+import { type AIVideoModelCard } from 'model-bank/aiModel';
 import {
-  type AIVideoModelCard,
   extractVideoDefaultValues,
   type RuntimeVideoGenParams,
   type RuntimeVideoGenParamsKeys,
   type RuntimeVideoGenParamsValue,
   type VideoModelParamsSchema,
-} from 'model-bank';
+} from 'model-bank/standardParameters';
 
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
@@ -56,7 +56,14 @@ function preserveVideoInputParams(
     'endImageUrl',
   ]);
 
-  return normalizeImageInputOnSchemaSwitch(previousParameters, nextSchema, result);
+  const normalized = normalizeImageInputOnSchemaSwitch(previousParameters, nextSchema, result);
+  const maxImageCount = nextSchema.imageUrls?.maxCount;
+
+  if (Array.isArray(normalized.imageUrls) && typeof maxImageCount === 'number') {
+    normalized.imageUrls = normalized.imageUrls.slice(0, maxImageCount);
+  }
+
+  return normalized;
 }
 
 type Setter = StoreSetter<VideoStore>;

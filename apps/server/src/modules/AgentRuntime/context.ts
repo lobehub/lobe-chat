@@ -1,6 +1,12 @@
 import { type AgentState } from '@lobechat/agent-runtime';
 import { type BotPlatformContext } from '@lobechat/context-engine';
-import { type ExecSubAgentParams, type ExecVirtualSubAgentParams } from '@lobechat/types';
+import {
+  type AgentShareVisitorContext,
+  type ExecSubAgentParams,
+  type ExecSubAgentResult,
+  type ExecVirtualSubAgentParams,
+} from '@lobechat/types';
+import type { SearchDecision } from 'model-bank';
 
 import { type MessageModel } from '@/database/models/message';
 import { type LobeChatDatabase } from '@/database/type';
@@ -15,7 +21,22 @@ import { type ToolExecutionService } from '@/server/services/toolExecution';
 import { type IStreamEventManager } from './types';
 
 export interface RuntimeExecutorContext {
+  /**
+   * Cancels tool work that is still in flight for this step. Driven by the
+   * persisted interruption flag (the step runs in its own invocation, so there
+   * is no in-process controller to share with whoever requested the stop).
+   */
+  abortSignal?: AbortSignal;
   agentConfig?: any;
+  /**
+   * Shared-agent visitor marker, read back from
+   * `state.metadata.agentShareVisitor`. Present ONLY for a share-visitor run;
+   * its presence alone is the signal every per-step consumer keys off. Forwarded
+   * into `ToolExecutionContext.agentShareVisitor` so
+   * `BuiltinToolsExecutor.execute` can re-check the visitor's grants right
+   * before dispatch — see `isShareBlockedDataToolCall` in `shareGate.ts`.
+   */
+  agentShareVisitor?: AgentShareVisitorContext;
   /**
    * Allows call_llm to publish visible_output_end immediately after a no-tool
    * LLM stream_end. Only the default GeneralChatAgent treats no-tool llm_result
@@ -38,17 +59,19 @@ export interface RuntimeExecutorContext {
    * Injected by AiAgentService so exec_sub_agent / exec_sub_agents executors
    * can dispatch callAgent-triggered runs without a circular import.
    */
-  execSubAgent?: (params: ExecSubAgentParams) => Promise<unknown>;
+  execSubAgent?: (params: ExecSubAgentParams) => Promise<ExecSubAgentResult>;
   /**
    * Callback to fork a `lobe-agent.callSubAgent` virtual child run. Unlike
    * execSubAgent, this path installs the async completion bridge and marks the
    * child operation as a sub-agent.
    */
-  execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<unknown>;
+  execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
   hookDispatcher?: HookDispatcher;
   loadAgentState?: (operationId: string) => Promise<AgentState | null>;
   messageModel: MessageModel;
+  modelRuntimeConfig?: AgentState['modelRuntimeConfig'];
   operationId: string;
+  searchDecision?: SearchDecision;
   serverDB: LobeChatDatabase;
   stepIndex: number;
   stream?: boolean;

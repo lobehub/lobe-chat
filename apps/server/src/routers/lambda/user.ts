@@ -3,13 +3,26 @@ import {
   formatWebOnboardingStateMessage,
 } from '@lobechat/builtin-tool-web-onboarding/utils';
 import { isDesktop } from '@lobechat/const';
+import { hasApiKeyScope, isFullAccessApiKey } from '@lobechat/const/apiKeyScope';
 import { applyMarkdownPatch, formatMarkdownPatchError } from '@lobechat/markdown-patch';
-import {
-  type UserInitializationState,
-  type UserPreference,
-  type UserSettings,
+import type {
+  ConfirmOnboardingUnderstandingInput,
+  ConfirmOnboardingUnderstandingResult,
+  CreateOnboardingTasksInput,
+  OnboardingTaskRecommendationPollingResult,
+  OnboardingTaskRecommendationTopicInput,
+  OnboardingUnderstandingPollingResult,
+  OnboardingUnderstandingTopicInput,
+  RetryOnboardingUnderstandingProviderInput,
+  ReviseOnboardingUnderstandingInput,
+  StartOnboardingUnderstandingInput,
+  UserInitializationState,
+  UserPreference,
+  UserSettings,
 } from '@lobechat/types';
 import {
+  MAX_COLLECTION_COUNT,
+  MAX_UNDERSTANDING_FEEDBACK_LENGTH,
   Plans,
   SaveUserQuestionInputSchema,
   UserAgentOnboardingSchema,
@@ -18,8 +31,8 @@ import {
   UserPreferenceSchema,
   UserSettingsSchema,
 } from '@lobechat/types';
-import { TRPCError } from '@trpc/server';
-import { after } from 'next/server';
+import { errorCauseFrom } from '@lobechat/utils';
+import { tracked, TRPCError } from '@trpc/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
@@ -37,9 +50,25 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { FileS3 } from '@/server/modules/S3';
+import {
+  mapTaskRecommendationTRPCError,
+  mapUnderstandingTRPCError,
+} from '@/server/routers/lambda/_helpers/onboardingError';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { FileService } from '@/server/services/file';
 import { OnboardingService } from '@/server/services/onboarding';
+import {
+  onboardingProgressEventId,
+  projectOnboardingGenerationProgress,
+  subscribeToOnboardingGenerationProgress,
+} from '@/server/services/onboardingProgress';
+import {
+  createTaskRecommendationService,
+  TaskRecommendationNotFoundError,
+} from '@/server/services/taskRecommendation/service';
+import { understandingProviders } from '@/server/services/understanding/providers';
+import { createUnderstandingService } from '@/server/services/understanding/service';
+import { after } from '@/server/utils/scheduleAfterResponse';
 
 const usernameSchema = z
   .string()
@@ -47,6 +76,95 @@ const usernameSchema = z
   .min(1, { message: 'USERNAME_REQUIRED' })
   .max(64, { message: 'USERNAME_TOO_LONG' })
   .regex(/^\w+$/, { message: 'USERNAME_INVALID' });
+
+const understandingIdSchema = z.string().trim().min(1).max(512);
+const onboardingUnderstandingTopicInputSchema = z
+  .object({ topicId: understandingIdSchema })
+  .strict() satisfies z.ZodType<OnboardingUnderstandingTopicInput>;
+const startOnboardingUnderstandingInputSchema = z
+  .object({
+    providerIds: z
+      .array(
+        z
+          .string()
+          .trim()
+          .min(1)
+          .max(64)
+          .regex(/^[\w-]+$/),
+      )
+      .max(16)
+      .optional(),
+    responseLanguage: z
+      .string()
+      .trim()
+      .min(2)
+      .max(64)
+      .regex(/^[A-Z]{2,3}(?:-[A-Z0-9]{2,8})*$/i),
+    topicId: understandingIdSchema,
+  })
+  .strict() satisfies z.ZodType<StartOnboardingUnderstandingInput>;
+const retryOnboardingUnderstandingSourceInputSchema = z
+  .object({
+    providerId: understandingIdSchema,
+    responseLanguage: z
+      .string()
+      .trim()
+      .min(2)
+      .max(64)
+      .regex(/^[A-Z]{2,3}(?:-[A-Z0-9]{2,8})*$/i),
+    sessionId: understandingIdSchema,
+    topicId: understandingIdSchema,
+  })
+  .strict() satisfies z.ZodType<RetryOnboardingUnderstandingProviderInput>;
+const confirmOnboardingUnderstandingInputSchema = z
+  .object({
+    resultId: understandingIdSchema,
+    sessionId: understandingIdSchema,
+    topicId: understandingIdSchema,
+  })
+  .strict() satisfies z.ZodType<ConfirmOnboardingUnderstandingInput>;
+const reviseOnboardingUnderstandingInputSchema = z
+  .object({
+    expectedFeedbackRevision: z.number().int().nonnegative().max(MAX_COLLECTION_COUNT).optional(),
+    feedback: z.string().trim().min(1).max(MAX_UNDERSTANDING_FEEDBACK_LENGTH).optional(),
+    providerIds: z
+      .array(
+        z
+          .string()
+          .trim()
+          .min(1)
+          .max(64)
+          .regex(/^[\w-]+$/),
+      )
+      .max(16),
+    responseLanguage: z
+      .string()
+      .trim()
+      .min(2)
+      .max(64)
+      .regex(/^[A-Z]{2,3}(?:-[A-Z0-9]{2,8})*$/i),
+    sessionId: understandingIdSchema,
+    topicId: understandingIdSchema,
+  })
+  .strict() satisfies z.ZodType<ReviseOnboardingUnderstandingInput>;
+const onboardingTaskRecommendationTopicInputSchema = z
+  .object({ topicId: understandingIdSchema })
+  .strict() satisfies z.ZodType<OnboardingTaskRecommendationTopicInput>;
+const onboardingGenerationProgressInputSchema = z
+  .object({
+    // tRPC injects this tracked cursor into reconnection inputs. It is intentionally not trusted
+    // as application state; polling remains the durable source of truth.
+    lastEventId: z.string().trim().min(1).max(4096).optional(),
+    topicId: understandingIdSchema,
+  })
+  .strict();
+const createOnboardingTasksInputSchema = z
+  .object({
+    recommendationIds: z.array(z.string().trim().min(1).max(128)).max(48),
+    sessionId: understandingIdSchema,
+    topicId: understandingIdSchema,
+  })
+  .strict() satisfies z.ZodType<CreateOnboardingTasksInput>;
 
 const AVATAR_WEBAPI_PREFIX = '/webapi/';
 const OWNER_SETTING_KEYS = ['defaultAgent', 'image', 'memory', 'systemAgent', 'tts'] as const;
@@ -90,16 +208,211 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
       // only feed `getUserState`'s user-lifetime onboarding gates (hasConversation /
       // canEnablePWAGuide / canEnableTrace), which are per-user, not per-workspace.
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      createOnboardingService: () => new OnboardingService(ctx.serverDB, ctx.userId),
       sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
 });
 
+const personalOnboardingProcedure = userProcedure.use(async ({ ctx, next }) => {
+  if (ctx.workspaceId) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Onboarding is available only in personal scope',
+    });
+  }
+  return next();
+});
+const understandingServiceProcedure = personalOnboardingProcedure
+  .use(async ({ next }) => {
+    const result = await next();
+    if (!result.ok) {
+      throw mapUnderstandingTRPCError(errorCauseFrom(result.error) ?? result.error);
+    }
+    return result;
+  })
+  .use(async ({ ctx, next }) => {
+    const understandingService = await createUnderstandingService({
+      db: ctx.serverDB,
+      userId: ctx.userId,
+    });
+
+    return next({ ctx: { understandingService } });
+  });
+const taskRecommendationServiceProcedure = personalOnboardingProcedure.use(
+  async ({ ctx, next }) => {
+    const taskRecommendationService = await createTaskRecommendationService({
+      db: ctx.serverDB,
+      userId: ctx.userId,
+    });
+    const result = await next({ ctx: { taskRecommendationService } });
+    if (!result.ok) {
+      throw mapTaskRecommendationTRPCError(errorCauseFrom(result.error) ?? result.error);
+    }
+    return result;
+  },
+);
+const onboardingGenerationProgressProcedure = personalOnboardingProcedure.use(
+  async ({ ctx, next }) => {
+    const [understandingService, taskRecommendationService] = await Promise.all([
+      createUnderstandingService({ db: ctx.serverDB, userId: ctx.userId }),
+      createTaskRecommendationService({ db: ctx.serverDB, userId: ctx.userId }),
+    ]);
+    const result = await next({ ctx: { taskRecommendationService, understandingService } });
+    if (!result.ok) {
+      throw mapUnderstandingTRPCError(errorCauseFrom(result.error) ?? result.error);
+    }
+    return result;
+  },
+);
+
+const INITIAL_PROGRESS_RECOVERY_DELAY = 3_000;
+const MAX_PROGRESS_RECOVERY_DELAY = 30_000;
+
+const waitForProgressRecovery = (delay: number, signal: AbortSignal | undefined) =>
+  new Promise<void>((resolve) => {
+    const timer = setTimeout(resolve, delay);
+    signal?.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(timer);
+        resolve();
+      },
+      { once: true },
+    );
+  });
+
 export const userRouter = router({
   getUserActivitySummary: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserActivitySummary();
   }),
+
+  confirmOnboardingUnderstanding: understandingServiceProcedure
+    .input(confirmOnboardingUnderstandingInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { personaVersion } = await ctx.understandingService.confirm(input);
+
+      return {
+        confirmed: true,
+        personaVersion,
+        resultId: input.resultId,
+        sessionId: input.sessionId,
+      } satisfies ConfirmOnboardingUnderstandingResult;
+    }),
+
+  createOnboardingTasks: taskRecommendationServiceProcedure
+    .input(createOnboardingTasksInputSchema)
+    .mutation(async ({ ctx, input }): Promise<Record<string, string>> => {
+      return ctx.taskRecommendationService.createTasks(input);
+    }),
+
+  getOnboardingUnderstanding: understandingServiceProcedure
+    .input(onboardingUnderstandingTopicInputSchema)
+    .query(async ({ ctx, input }): Promise<OnboardingUnderstandingPollingResult> => {
+      return ctx.understandingService.get(input.topicId);
+    }),
+
+  getOnboardingTaskRecommendations: taskRecommendationServiceProcedure
+    .input(onboardingTaskRecommendationTopicInputSchema)
+    .query(async ({ ctx, input }): Promise<OnboardingTaskRecommendationPollingResult> => {
+      return ctx.taskRecommendationService.get(input.topicId);
+    }),
+
+  watchOnboardingGenerationProgress: onboardingGenerationProgressProcedure
+    .input(onboardingGenerationProgressInputSchema)
+    .subscription(async function* ({ ctx, input, signal }) {
+      let lastEventId = input.lastEventId;
+      const readPersistedProgress = async () => {
+        const understanding = await ctx.understandingService.get(input.topicId);
+        const taskRecommendations = await ctx.taskRecommendationService
+          .get(input.topicId)
+          .catch((error: unknown) => {
+            if (error instanceof TaskRecommendationNotFoundError) return undefined;
+            throw error;
+          });
+        const eventId = onboardingProgressEventId(understanding, taskRecommendations);
+        const progress = projectOnboardingGenerationProgress(understanding, taskRecommendations);
+        return { eventId, progress };
+      };
+
+      const initial = await readPersistedProgress();
+      if (initial.eventId !== lastEventId) {
+        lastEventId = initial.eventId;
+        yield tracked(initial.eventId, initial.progress);
+      }
+      if (
+        initial.progress.phase === 'completed' ||
+        initial.progress.phase === 'failed' ||
+        initial.progress.phase === 'partial'
+      ) {
+        return;
+      }
+
+      const subscription = await subscribeToOnboardingGenerationProgress(input.topicId);
+      if (subscription) {
+        try {
+          while (!signal?.aborted) {
+            const notification = await subscription.next(signal);
+            if (!notification) return;
+
+            if (notification.eventId !== lastEventId) {
+              lastEventId = notification.eventId;
+              yield tracked(notification.eventId, notification.progress);
+            }
+            if (
+              notification.progress.phase === 'completed' ||
+              notification.progress.phase === 'failed' ||
+              notification.progress.phase === 'partial'
+            ) {
+              return;
+            }
+          }
+        } finally {
+          await subscription.unsubscribe();
+        }
+        return;
+      }
+
+      let recoveryDelay = INITIAL_PROGRESS_RECOVERY_DELAY;
+      while (!signal?.aborted) {
+        await waitForProgressRecovery(recoveryDelay, signal);
+        if (signal?.aborted) return;
+
+        const { eventId, progress } = await readPersistedProgress();
+        if (eventId !== lastEventId) {
+          lastEventId = eventId;
+          yield tracked(eventId, progress);
+        }
+
+        if (
+          progress.phase === 'completed' ||
+          progress.phase === 'failed' ||
+          progress.phase === 'partial'
+        ) {
+          return;
+        }
+        recoveryDelay = Math.min(recoveryDelay * 2, MAX_PROGRESS_RECOVERY_DELAY);
+      }
+    }),
+
+  getSupportedUnderstandingProviders: understandingServiceProcedure.query(
+    async ({
+      ctx,
+    }): Promise<{
+      connectionSources: Record<string, 'composio' | 'lobehub'>;
+      providerIds: string[];
+      sourceProviderIds: string[];
+    }> => {
+      return {
+        connectionSources: Object.fromEntries(
+          understandingProviders.map((provider) => [provider.id, provider.connectionSource]),
+        ),
+        providerIds: understandingProviders.map((provider) => provider.id),
+        sourceProviderIds: await ctx.understandingService.listSourceProviderIds(),
+      };
+    },
+  ),
 
   getUserRegistrationDuration: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserRegistrationDuration();
@@ -172,7 +485,12 @@ export const userRouter = router({
       lastName: state.lastName,
       onboarding: state.onboarding,
       preference: state.preference as UserPreference,
-      settings: state.settings,
+      // restricted API keys must not read decrypted provider/tool credentials
+      // or Marketplace OAuth tokens
+      settings:
+        ctx.apiKeyScopes !== undefined && !isFullAccessApiKey(ctx.apiKeyScopes)
+          ? { ...state.settings, keyVaults: undefined, market: undefined }
+          : state.settings,
       userId: ctx.userId,
       username: state.username,
 
@@ -190,6 +508,26 @@ export const userRouter = router({
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
     return ctx.userModel.deleteSetting();
   }),
+
+  reviseOnboardingUnderstanding: understandingServiceProcedure
+    .input(reviseOnboardingUnderstandingInputSchema)
+    .mutation(async ({ ctx, input }): Promise<OnboardingUnderstandingPollingResult> => {
+      return ctx.understandingService.revise(input);
+    }),
+
+  retryOnboardingUnderstandingSource: understandingServiceProcedure
+    .input(retryOnboardingUnderstandingSourceInputSchema)
+    .mutation(async ({ ctx, input }): Promise<OnboardingUnderstandingPollingResult> => {
+      return ctx.understandingService.retry(input);
+    }),
+
+  startOnboardingUnderstanding: understandingServiceProcedure
+    .input(startOnboardingUnderstandingInputSchema)
+    .mutation(async ({ ctx, input }): Promise<OnboardingUnderstandingPollingResult> => {
+      return input.providerIds
+        ? ctx.understandingService.start(input.topicId, input.responseLanguage, input.providerIds)
+        : ctx.understandingService.start(input.topicId, input.responseLanguage);
+    }),
 
   updateAvatar: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     assertSafeAvatarInput(input, ctx.userId);
@@ -488,9 +826,7 @@ export const userRouter = router({
     }),
 
   resetAgentOnboarding: userProcedure.mutation(async ({ ctx }) => {
-    const onboardingService = new OnboardingService(ctx.serverDB, ctx.userId);
-
-    return onboardingService.reset();
+    return ctx.createOnboardingService().reset();
   }),
 
   updateAgentOnboarding: userProcedure
@@ -500,7 +836,7 @@ export const userRouter = router({
     }),
 
   updateOnboarding: userProcedure.input(UserOnboardingSchema).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updateUser({ onboarding: input });
+    return ctx.createOnboardingService().updateOnboarding(input);
   }),
 
   updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {
@@ -509,6 +845,27 @@ export const userRouter = router({
 
   updateSettings: userProcedure.input(UserSettingsSchema).mutation(async ({ ctx, input }) => {
     const { keyVaults, ...res } = input as Partial<UserSettings>;
+    // presence, not truthiness: `keyVaults: null` is an explicit credential clear
+    const hasKeyVaultsUpdate = 'keyVaults' in (input as Partial<UserSettings>);
+
+    // credential-bearing settings: `keyVaults` holds provider/tool credentials,
+    // `market` holds Marketplace OAuth access/refresh tokens. A restricted key
+    // needs `model:write` on top of the namespace's `user:write` to touch (or
+    // clear) either; full-access keys pass through.
+    const touchedCredentialFields = ['keyVaults', 'market'].filter(
+      (field) => field in (input as Partial<UserSettings>),
+    );
+    if (
+      touchedCredentialFields.length > 0 &&
+      ctx.apiKeyScopes !== undefined &&
+      !isFullAccessApiKey(ctx.apiKeyScopes) &&
+      !hasApiKeyScope(ctx.apiKeyScopes, 'model:write')
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: `This API key cannot update credential settings ('${touchedCredentialFields.join("', '")}'): missing required scope 'model:write'.`,
+      });
+    }
 
     if (ctx.workspaceId && (hasOwnerSettingChange(res) || hasMemberSettingChange(res))) {
       const rbac = new RbacModel(ctx.serverDB, ctx.userId);
@@ -528,21 +885,98 @@ export const userRouter = router({
       }
     }
 
-    // Encrypt keyVaults
-    let encryptedKeyVaults: string | null = null;
+    // Encrypt keyVaults; only touch the column when the caller sent the field,
+    // so a settings update without `keyVaults` no longer clears stored creds
+    const nextValue: Record<string, unknown> = { ...res };
 
-    if (keyVaults) {
-      // TODO: better to add a validation
-      const data = JSON.stringify(keyVaults);
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+    if (hasKeyVaultsUpdate) {
+      let encryptedKeyVaults: string | null = null;
 
-      encryptedKeyVaults = await gateKeeper.encrypt(data);
+      if (keyVaults) {
+        // TODO: better to add a validation
+        const data = JSON.stringify(keyVaults);
+        const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+
+        encryptedKeyVaults = await gateKeeper.encrypt(data);
+      }
+
+      nextValue.keyVaults = encryptedKeyVaults;
     }
-
-    const nextValue = { ...res, keyVaults: encryptedKeyVaults };
 
     return ctx.userModel.updateSetting(nextValue);
   }),
+
+  updateToolIntervention: userProcedure
+    .input(
+      z
+        .object({
+          appendAllowList: z.array(z.string().trim().min(1).max(256)).max(64).optional(),
+          approvalMode: z.enum(['auto-run', 'allow-list', 'manual']).optional(),
+        })
+        .strict(),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // `tool` is a member-scope workspace setting — same RBAC gate as updateSettings
+      if (ctx.workspaceId) {
+        const rbac = new RbacModel(ctx.serverDB, ctx.userId);
+        const allowed = await rbac.hasAnyPermission([...WORKSPACE_CONTENT_PERMISSIONS], {
+          workspaceId: ctx.workspaceId,
+        });
+
+        if (!allowed) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'You do not have permission to perform this action.',
+          });
+        }
+      }
+
+      // Server-side merge on the `tool` column: each browser tab fetches user
+      // state once and can hold hours-stale settings, so a whole-column `tool`
+      // replace built from client memory clobbers changes made from other tabs
+      // (e.g. reverts approvalMode). The model merges atomically in one SQL
+      // statement, so even two concurrent calls cannot drop each other's change.
+      return ctx.userModel.mergeToolInterventionSetting(input);
+    }),
+
+  updateUninstalledBuiltinTools: userProcedure
+    .input(
+      z
+        .object({
+          uninstalledBuiltinTools: z.array(z.string().trim().min(1).max(256)).max(256),
+          // The client pins the scope it computed the list for. Deriving the slot
+          // from the request's dynamic workspace header instead would let a
+          // workspace switch during the action write scope A's list into scope B.
+          workspaceId: z.string().trim().min(1).max(128).nullable(),
+        })
+        .strict(),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // `tool` is a member-scope workspace setting — same RBAC gate as
+      // updateSettings, checked against the TARGET workspace slot
+      if (input.workspaceId) {
+        const rbac = new RbacModel(ctx.serverDB, ctx.userId);
+        const allowed = await rbac.hasAnyPermission([...WORKSPACE_CONTENT_PERMISSIONS], {
+          workspaceId: input.workspaceId,
+        });
+
+        if (!allowed) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'You do not have permission to perform this action.',
+          });
+        }
+      }
+
+      // The model patches only the pinned scope's slot atomically — a
+      // whole-column write built from a client snapshot would race with
+      // concurrent tool-column writers (e.g. an approvalMode change) and could
+      // revert them.
+      return ctx.userModel.replaceUninstalledBuiltinToolsSetting({
+        uninstalledBuiltinTools: input.uninstalledBuiltinTools,
+        workspaceId: input.workspaceId,
+      });
+    }),
 
   updateUsername: userProcedure.input(usernameSchema).mutation(async ({ ctx, input }) => {
     const existedUser = await UserModel.findByUsername(ctx.serverDB, input);

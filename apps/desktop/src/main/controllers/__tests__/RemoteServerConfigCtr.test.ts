@@ -14,16 +14,6 @@ vi.mock('@/utils/net-fetch', () => ({
   netFetch: mockFetch,
 }));
 
-// Mock logger
-vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  }),
-}));
-
 // Mock electron
 vi.mock('electron', () => ({
   app: {
@@ -181,6 +171,30 @@ describe('RemoteServerConfigCtr', () => {
           refreshToken: 'refresh-token',
         }),
       );
+    });
+  });
+
+  describe('getDesktopBootstrapIdentity', () => {
+    const createAccessToken = (sub: string) =>
+      ['header', Buffer.from(JSON.stringify({ sub })).toString('base64url'), 'signature'].join('.');
+
+    it('returns the OIDC subject without requesting full user state', async () => {
+      await controller.saveTokens(createAccessToken('user-bootstrap'), 'refresh-token');
+
+      expect(controller.getDesktopBootstrapIdentity()).toEqual({
+        isIdentityResolved: true,
+        userId: 'user-bootstrap',
+      });
+    });
+
+    it('resolves to signed-out when no encrypted token exists', () => {
+      expect(controller.getDesktopBootstrapIdentity()).toEqual({ isIdentityResolved: true });
+    });
+
+    it('keeps the cache scope untrusted when the stored token cannot identify a subject', async () => {
+      await controller.saveTokens('not-a-jwt', 'refresh-token');
+
+      expect(controller.getDesktopBootstrapIdentity()).toEqual({ isIdentityResolved: false });
     });
   });
 
@@ -510,7 +524,11 @@ describe('RemoteServerConfigCtr', () => {
       );
     });
 
-    it('should handle refresh failure', async () => {
+    it.each([
+      { error: 'invalid_grant' },
+      { error: 'invalid_grant', error_description: 'grant request is invalid' },
+      { error: 'invalid_client', error_description: 'client authentication failed' },
+    ])('should classify refresh failure as non-retryable: %j', async (errorData) => {
       const { safeStorage } = await import('electron');
       vi.mocked(safeStorage.isEncryptionAvailable).mockReturnValue(true);
       vi.mocked(safeStorage.decryptString).mockImplementation((buffer: Buffer) =>
@@ -531,7 +549,7 @@ describe('RemoteServerConfigCtr', () => {
       await controller.saveTokens('old-access', 'old-refresh');
 
       mockFetch.mockResolvedValue({
-        json: () => Promise.resolve({ error: 'invalid_grant' }),
+        json: () => Promise.resolve(errorData),
         ok: false,
         status: 400,
         statusText: 'Bad Request',
@@ -541,6 +559,11 @@ describe('RemoteServerConfigCtr', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Token refresh failed');
+      expect(result.error).toContain(errorData.error);
+      if (errorData.error_description) {
+        expect(result.error).toContain(errorData.error_description);
+      }
+      expect(controller.isNonRetryableError(result.error)).toBe(true);
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
@@ -651,6 +674,7 @@ describe('RemoteServerConfigCtr', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Network error');
+      expect(controller.isNonRetryableError(result.error)).toBe(false);
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
   });

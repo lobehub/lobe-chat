@@ -65,6 +65,32 @@ describe('MessageModel Statistics Tests', () => {
       expect(result).toBe(2);
     });
 
+    it('excludes messages inside an agent-share visitor topic', async () => {
+      // Agent-share visitor topics keep the creator's userId, but a non-null
+      // topics.senderId marks the topic (and its messages) as visitor traffic
+      // that must not count toward the creator's own analytics.
+      await serverDB.insert(topics).values({
+        id: 'topic-visitor-count',
+        userId,
+        senderId: 'visitor-user-x',
+        title: 'visitor topic',
+      });
+      await serverDB.insert(messages).values([
+        {
+          id: 'visitor-msg-1',
+          userId,
+          role: 'user',
+          content: 'visitor message',
+          topicId: 'topic-visitor-count',
+        },
+        { id: 'creator-msg-1', userId, role: 'user', content: 'creator message' },
+      ]);
+
+      const result = await messageModel.count();
+
+      expect(result).toBe(1);
+    });
+
     describe('count with date filters', () => {
       beforeEach(async () => {
         // Create test data with messages on different dates
@@ -147,6 +173,61 @@ describe('MessageModel Statistics Tests', () => {
         });
         expect(result3).toBe(1);
       });
+    });
+  });
+
+  describe('countApproximate', () => {
+    it('returns the exact count when under the cap', async () => {
+      await serverDB.insert(messages).values([
+        { id: 'approx-1', userId, role: 'user', content: 'message 1' },
+        { id: 'approx-2', userId, role: 'user', content: 'message 2' },
+        { id: 'approx-3', userId: otherUserId, role: 'user', content: 'message 3' },
+      ]);
+
+      const result = await messageModel.countApproximate();
+
+      expect(result).toBe(2);
+    });
+
+    it('excludes agent-share visitor messages like count does', async () => {
+      await serverDB.insert(topics).values({
+        id: 'topic-visitor-approx',
+        userId,
+        senderId: 'visitor-user-y',
+        title: 'visitor topic',
+      });
+      await serverDB.insert(messages).values([
+        {
+          id: 'approx-visitor-1',
+          userId,
+          role: 'user',
+          content: 'visitor message',
+          topicId: 'topic-visitor-approx',
+        },
+        { id: 'approx-creator-1', userId, role: 'user', content: 'creator message' },
+      ]);
+
+      const result = await messageModel.countApproximate();
+
+      expect(result).toBe(1);
+    });
+
+    it('falls back to a planner estimate once past the cap', async () => {
+      await serverDB.insert(messages).values(
+        Array.from({ length: 8 }, (_, i) => ({
+          id: `approx-cap-${i}`,
+          userId,
+          role: 'user',
+          content: `message ${i}`,
+        })),
+      );
+
+      const result = await messageModel.countApproximate(undefined, { cap: 5 });
+
+      // The estimate itself depends on planner statistics; what must hold is
+      // that it never reports fewer rows than the capped scan already saw.
+      expect(result).toBeGreaterThanOrEqual(6);
+      expect(Number.isFinite(result)).toBe(true);
     });
   });
 
@@ -630,6 +711,51 @@ describe('MessageModel Statistics Tests', () => {
       expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.every((item) => item.count === 0 && item.level === 0)).toBe(true);
     });
+
+    it('counts everything except duplicated transcripts', async () => {
+      vi.useFakeTimers();
+      const fixedDate = new Date('2023-04-07T13:00:00Z');
+      vi.setSystemTime(fixedDate);
+
+      const today = dayjs(fixedDate);
+      const dayKey = today.subtract(2, 'day').format('YYYY-MM-DD');
+      const createdAt = today.subtract(2, 'day').toDate();
+
+      await serverDB.insert(messages).values([
+        // no metadata at all — the shape the predicate must not drop
+        { createdAt, id: 'c1', role: 'assistant', usage: { totalTokens: 10 } as any, userId },
+        // metadata without the marker
+        {
+          createdAt,
+          id: 'c2',
+          metadata: { usage: { totalTokens: 20 } },
+          role: 'assistant',
+          userId,
+        },
+        // explicitly not a copy
+        {
+          createdAt,
+          id: 'c3',
+          metadata: { copied: false, usage: { totalTokens: 40 } },
+          role: 'assistant',
+          userId,
+        },
+        // a copy: its tokens were spent in the source scope
+        {
+          createdAt,
+          id: 'c4',
+          metadata: { copied: true, usage: { totalTokens: 8000 } },
+          role: 'assistant',
+          userId,
+        },
+      ]);
+
+      const result = await messageModel.getTokenHeatmaps();
+      const day = result.find((item) => item.date === dayKey);
+      expect(day?.count).toBe(70);
+
+      vi.useRealTimers();
+    });
   });
 
   describe('rankModels', () => {
@@ -699,6 +825,37 @@ describe('MessageModel Statistics Tests', () => {
       expect(result[0]).toEqual({ id: 'gpt-3.5', count: 3 }); // most used
       expect(result[1]).toEqual({ id: 'claude', count: 1 });
       expect(result[2]).toEqual({ id: 'gpt-4', count: 1 });
+    });
+
+    it('excludes messages inside an agent-share visitor topic', async () => {
+      await serverDB.insert(topics).values({
+        id: 'topic-visitor-rank',
+        userId,
+        senderId: 'visitor-user-x',
+        title: 'visitor topic',
+      });
+      await serverDB.insert(messages).values([
+        {
+          id: 'visitor-rank-1',
+          userId,
+          role: 'assistant',
+          content: 'visitor message',
+          model: 'gpt-4',
+          topicId: 'topic-visitor-rank',
+        },
+        {
+          id: 'creator-rank-1',
+          userId,
+          role: 'assistant',
+          content: 'creator message',
+          model: 'gpt-3.5',
+        },
+      ]);
+
+      const result = await messageModel.rankModels();
+
+      // The visitor's gpt-4 usage must not surface; only the creator's gpt-3.5 does
+      expect(result).toEqual([{ id: 'gpt-3.5', count: 1 }]);
     });
   });
 
@@ -801,10 +958,12 @@ describe('MessageModel Statistics Tests', () => {
         { id: 's-t3', count: 3 },
         { id: 's-t4', count: 4 },
       ];
-      await serverDB.insert(topics).values([
-        ...topicRows.map((t) => ({ id: t.id, userId, agentId, title: t.id })),
-        { id: 's-other', userId, agentId: otherAgentId, title: 'other' },
-      ]);
+      await serverDB
+        .insert(topics)
+        .values([
+          ...topicRows.map((t) => ({ id: t.id, userId, agentId, title: t.id })),
+          { id: 's-other', userId, agentId: otherAgentId, title: 'other' },
+        ]);
 
       const msgRows = topicRows.flatMap((t) =>
         Array.from({ length: t.count }).map((_, i) => ({
@@ -821,7 +980,14 @@ describe('MessageModel Statistics Tests', () => {
         // assistant messages in agentId topics — excluded by role=user
         { id: 's-t1-a', userId, role: 'assistant', content: 'a', agentId, topicId: 's-t1' },
         // other agent's topic
-        { id: 's-other-u', userId, role: 'user', content: 'x', agentId: otherAgentId, topicId: 's-other' },
+        {
+          id: 's-other-u',
+          userId,
+          role: 'user',
+          content: 'x',
+          agentId: otherAgentId,
+          topicId: 's-other',
+        },
         // other user must not leak
         { id: 's-leak', userId: otherUserId, role: 'user', content: 'leak', topicId: 's-t1' },
       ]);

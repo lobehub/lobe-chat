@@ -1,6 +1,10 @@
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { loadSettings, saveSettings } from '../settings';
+import { log } from '../utils/logger';
+import { registerStatusCommand } from './status';
+
 // Mock resolveToken
 vi.mock('../auth/resolveToken', () => ({
   resolveToken: vi.fn().mockResolvedValue({
@@ -14,16 +18,6 @@ vi.mock('../settings', () => ({
   loadSettings: vi.fn().mockReturnValue(null),
   normalizeUrl: vi.fn((url?: string) => (url ? url.replace(/\/$/, '') : undefined)),
   saveSettings: vi.fn(),
-}));
-
-vi.mock('../utils/logger', () => ({
-  log: {
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  },
-  setVerbose: vi.fn(),
 }));
 
 // Track event handlers registered on GatewayClient instances
@@ -47,13 +41,6 @@ vi.mock('@lobechat/device-gateway-client', () => ({
     };
   }),
 }));
-
-// eslint-disable-next-line import-x/first
-import { loadSettings, saveSettings } from '../settings';
-// eslint-disable-next-line import-x/first
-import { log } from '../utils/logger';
-// eslint-disable-next-line import-x/first
-import { registerStatusCommand } from './status';
 
 describe('status command', () => {
   let exitSpy: ReturnType<typeof vi.spyOn>;

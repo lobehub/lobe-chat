@@ -43,6 +43,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     color: ${cssVar.colorTextDescription};
   `,
   statusIcon: css`
+    flex-shrink: 0;
     margin-inline-start: 4px;
   `,
   terminalIcon: css`
@@ -96,16 +97,16 @@ export const RunCommandInspector = memo<RunCommandInspectorProps>(
     if (isArgumentsStreaming) {
       if (!description)
         return (
-          <div className={cx(inspectorTextStyles.root, shinyTextStyles.shinyText)}>
+          <div className={inspectorTextStyles.root}>
             {leading}
-            <span>{t(translationKey as any)}</span>
+            <span className={shinyTextStyles.shinyText}>{t(translationKey as any)}</span>
           </div>
         );
 
       return (
-        <div className={cx(inspectorTextStyles.root, shinyTextStyles.shinyText)}>
+        <div className={inspectorTextStyles.root}>
           {leading}
-          <span>{t(translationKey as any)}:</span>
+          <span className={shinyTextStyles.shinyText}>{t(translationKey as any)}:</span>
           <span className={styles.chip}>
             {chipIcon}
             <span className={styles.command}>{description}</span>
@@ -117,9 +118,11 @@ export const RunCommandInspector = memo<RunCommandInspectorProps>(
     const isSuccess = pluginState?.success || pluginState?.exitCode === 0;
 
     return (
-      <div className={cx(inspectorTextStyles.root, isLoading && shinyTextStyles.shinyText)}>
+      <div className={inspectorTextStyles.root}>
         {leading}
-        <span>{t(translationKey as any)}:</span>
+        <span className={cx(isLoading && shinyTextStyles.shinyText)}>
+          {t(translationKey as any)}:
+        </span>
         {description && (
           <span className={styles.chip}>
             {chipIcon}

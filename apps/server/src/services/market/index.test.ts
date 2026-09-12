@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { CacheRevalidate, CacheTag } from '@lobechat/types';
 import { MarketSDK } from '@lobehub/market-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,55 +9,59 @@ import { extractAccessToken, LOBEHUB_SKILL_DISCOVERY_TIMEOUT_MS, MarketService }
 
 // Mock dependencies before importing the module under test
 vi.mock('@lobehub/market-sdk', () => {
-  const MarketSDK = vi.fn().mockImplementation(() => ({
-    agentGroups: {
-      getAgentGroupDetail: vi.fn(),
-      getAgentGroupList: vi.fn(),
-    },
-    agents: {
-      createEvent: vi.fn(),
-      getAgentDetail: vi.fn(),
-      getAgentList: vi.fn(),
-      increaseInstallCount: vi.fn(),
-    },
-    auth: {
-      exchangeOAuthToken: vi.fn(),
-      getOAuthHandoff: vi.fn(),
-      getUserInfo: vi.fn(),
-    },
-    connect: {
-      listConnections: vi.fn(),
-    },
-    feedback: {
-      submitFeedback: vi.fn(),
-    },
-    fetchM2MToken: vi.fn(),
-    headers: {},
-    marketSkills: {
-      downloadSkill: vi.fn(),
-      getCategories: vi.fn(),
-      getDownloadUrl: vi.fn(),
-      getSkillDetail: vi.fn(),
-      getSkillList: vi.fn(),
-    },
-    plugins: {
-      callCloudGateway: vi.fn(),
-      createEvent: vi.fn(),
-      getPluginManifest: vi.fn(),
-      reportCall: vi.fn(),
-      reportInstallation: vi.fn(),
-      runBuildInTool: vi.fn(),
-    },
-    skills: {
-      callTool: vi.fn(),
-      listLiveTools: vi.fn(),
-      listTools: vi.fn(),
-    },
-    user: {
-      getUserInfo: vi.fn(),
-      register: vi.fn(),
-    },
-  }));
+  const MarketSDK = vi.fn(function () {
+    return {
+      agentGroups: {
+        getAgentGroupDetail: vi.fn(),
+        getAgentGroupList: vi.fn(),
+      },
+      agents: {
+        createEvent: vi.fn(),
+        getAgentDetail: vi.fn(),
+        getAgentList: vi.fn(),
+        increaseInstallCount: vi.fn(),
+      },
+      auth: {
+        exchangeOAuthToken: vi.fn(),
+        getOAuthHandoff: vi.fn(),
+        getUserInfo: vi.fn(),
+      },
+      connect: {
+        listConnections: vi.fn(),
+      },
+      feedback: {
+        submitFeedback: vi.fn(),
+      },
+      fetchM2MToken: vi.fn(),
+      headers: {},
+      marketSkills: {
+        downloadSkill: vi.fn(),
+        getCategories: vi.fn(),
+        getComments: vi.fn(),
+        getDownloadUrl: vi.fn(),
+        getRatingDistribution: vi.fn(),
+        getSkillDetail: vi.fn(),
+        getSkillList: vi.fn(),
+      },
+      plugins: {
+        callCloudGateway: vi.fn(),
+        createEvent: vi.fn(),
+        getPluginManifest: vi.fn(),
+        reportCall: vi.fn(),
+        reportInstallation: vi.fn(),
+        runBuildInTool: vi.fn(),
+      },
+      skills: {
+        callTool: vi.fn(),
+        listLiveTools: vi.fn(),
+        listTools: vi.fn(),
+      },
+      user: {
+        getUserInfo: vi.fn(),
+        register: vi.fn(),
+      },
+    };
+  });
   return { MarketSDK };
 });
 
@@ -191,6 +196,57 @@ describe('MarketService', () => {
     });
   });
 
+  describe('proxyOAuthRequest', () => {
+    /** @example A trusted server request reaches the provider proxy without exposing OAuth tokens. */
+    it('forwards provider path, parameters, body, and trusted identity to Market', async () => {
+      const fetchMock = vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ data: { viewer: { login: 'octocat' } } }), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200,
+        }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+      vi.mocked(generateTrustedClientToken).mockReturnValue('trusted-user-token');
+
+      try {
+        const service = new MarketService({ userInfo: { userId: 'user-1' } });
+        await expect(
+          service.proxyOAuthRequest({
+            body: { query: 'query { viewer { login } }' },
+            endpoint: '/graphql',
+            method: 'POST',
+            parameters: [
+              { in: 'header', name: 'Accept', value: 'application/vnd.github+json' },
+              { in: 'header', name: 'x-lobe-trust-token', value: 'untrusted-override' },
+              { in: 'query', name: 'preview', value: 1 },
+            ],
+            provider: 'github',
+          }),
+        ).resolves.toEqual({
+          data: { data: { viewer: { login: 'octocat' } } },
+          status: 200,
+        });
+
+        const [url, init] = fetchMock.mock.calls[0];
+        expect(String(url)).toBe(
+          'https://market.lobehub.com/api/v1/proxy/github/graphql?preview=1',
+        );
+        expect(init).toEqual({
+          body: JSON.stringify({ query: 'query { viewer { login } }' }),
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Accept-Encoding': 'identity',
+            'Content-Type': 'application/json',
+            'x-lobe-trust-token': 'trusted-user-token',
+          },
+          method: 'POST',
+        });
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+  });
+
   describe('submitFeedback', () => {
     it('should pass params to market SDK without screenshot', async () => {
       const service = new MarketService();
@@ -261,10 +317,14 @@ describe('MarketService', () => {
         toolName: 'search',
       });
 
-      expect(mockCallTool).toHaveBeenCalledWith('my-provider', {
-        args: { query: 'test' },
-        tool: 'search',
-      });
+      expect(mockCallTool).toHaveBeenCalledWith(
+        'my-provider',
+        {
+          args: { query: 'test' },
+          tool: 'search',
+        },
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      );
       expect(result).toEqual({ content: 'tool result', success: true });
     });
 
@@ -300,6 +360,42 @@ describe('MarketService', () => {
         error: { code: 'LOBEHUB_SKILL_ERROR', message: 'Network error' },
         success: false,
       });
+    });
+
+    it('should abort and return an error when skill execution times out', async () => {
+      vi.useFakeTimers();
+      const service = new MarketService();
+      let signal: AbortSignal | undefined;
+      const mockCallTool = vi
+        .fn()
+        .mockImplementation((_provider: string, _params: unknown, options?: RequestInit) => {
+          signal = options?.signal ?? undefined;
+          return new Promise(() => {});
+        });
+      (service as any).market.skills.callTool = mockCallTool;
+
+      try {
+        const resultPromise = service.executeLobehubSkill({
+          args: {},
+          provider: 'github',
+          timeoutMs: 1000,
+          toolName: 'runCommand',
+        });
+
+        await vi.advanceTimersByTimeAsync(1000);
+
+        await expect(resultPromise).resolves.toEqual({
+          content: 'LobeHub Skill execution timed out after 1000ms',
+          error: {
+            code: 'LOBEHUB_SKILL_TIMEOUT',
+            message: 'LobeHub Skill execution timed out after 1000ms',
+          },
+          success: false,
+        });
+        expect(signal?.aborted).toBe(true);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('should return error result when the skill call response is unsuccessful', async () => {
@@ -514,9 +610,9 @@ describe('MarketService', () => {
         identifier: 'twitter',
         meta: {
           avatar: '🐦',
-          description: 'LobeHub Skill: X (Twitter)',
+          description: 'LobeHub Skill: X',
           tags: ['lobehub-skill', 'twitter'],
-          title: 'X (Twitter)',
+          title: 'X',
         },
         type: 'builtin',
       });
@@ -671,11 +767,73 @@ describe('MarketService', () => {
     });
   });
 
+  describe('skill comments & ratings', () => {
+    it('getSkillComments delegates to marketSkills.getComments with params', async () => {
+      const service = new MarketService();
+      const response = { currentPage: 1, items: [], pageSize: 10, totalCount: 0, totalPages: 0 };
+      (service.market.marketSkills.getComments as any).mockResolvedValue(response);
+
+      const result = await service.getSkillComments('github.acme.skill-a', {
+        page: 2,
+        sort: 'upvotes',
+      });
+
+      expect(service.market.marketSkills.getComments).toHaveBeenCalledWith('github.acme.skill-a', {
+        page: 2,
+        sort: 'upvotes',
+      });
+      expect(result).toEqual(response);
+    });
+
+    it('getSkillRatingDistribution delegates to marketSkills.getRatingDistribution', async () => {
+      const service = new MarketService();
+      const distribution = { 1: 0, 2: 0, 3: 1, 4: 2, 5: 3, totalCount: 6 };
+      (service.market.marketSkills.getRatingDistribution as any).mockResolvedValue(distribution);
+
+      const result = await service.getSkillRatingDistribution('github.acme.skill-a');
+
+      expect(service.market.marketSkills.getRatingDistribution).toHaveBeenCalledWith(
+        'github.acme.skill-a',
+      );
+      expect(result).toEqual(distribution);
+    });
+  });
+
   describe('getSDK', () => {
     it('should return the underlying MarketSDK instance', () => {
       const service = new MarketService();
       const sdk = service.getSDK();
       expect(sdk).toBe((service as any).market);
     });
+  });
+});
+
+describe('MarketService.searchSkill', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  /**
+   * The skill store was the one browse surface hitting Market on every open and
+   * every page, so it alone went down when the upstream was throttled or a
+   * credential went stale — the MCP tab looked healthy through the same
+   * incidents only because it was served from this cache.
+   */
+  it('caches the catalogue like every other discover list', async () => {
+    const service = new MarketService();
+    const getSkillList = service.market.marketSkills.getSkillList as ReturnType<typeof vi.fn>;
+    getSkillList.mockResolvedValue({ currentPage: 1, items: [], totalPages: 1 });
+
+    await service.searchSkill({ page: 1, sort: 'installCount' });
+
+    expect(getSkillList).toHaveBeenCalledWith(
+      { page: 1, sort: 'installCount' },
+      expect.objectContaining({
+        next: expect.objectContaining({
+          revalidate: CacheRevalidate.List,
+          tags: expect.arrayContaining([CacheTag.Discover, CacheTag.Skills]),
+        }),
+      }),
+    );
   });
 });

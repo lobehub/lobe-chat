@@ -1,10 +1,10 @@
 'use client';
 
-import { Alert, Flexbox, Tag } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Flexbox } from '@lobehub/ui';
+import { Alert, Button, Tag } from '@lobehub/ui/base-ui';
 import { Form as AntdForm, type FormInstance } from 'antd';
 import { createStaticStyles } from 'antd-style';
-import { RefreshCw, Save, Trash2 } from 'lucide-react';
+import { RefreshCw, Trash2 } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -55,8 +55,10 @@ interface FooterProps {
   disabled?: boolean;
   form: FormInstance<ChannelFormValues>;
   hasConfig: boolean;
+  isDirty: boolean;
   onCopied: () => void;
   onDelete: () => void;
+  onDiscard: () => void;
   onSave: () => void;
   onTestConnection: () => void;
   platformDef: SerializedPlatformDefinition;
@@ -73,6 +75,7 @@ const Footer = memo<FooterProps>(
     currentConfig,
     form,
     hasConfig,
+    isDirty,
     connectResult,
     connecting,
     disabled,
@@ -83,6 +86,7 @@ const Footer = memo<FooterProps>(
     writeDisabled,
     onSave,
     onDelete,
+    onDiscard,
     onTestConnection,
     onCopied,
   }) => {
@@ -153,9 +157,13 @@ const Footer = memo<FooterProps>(
                 {t('channel.testConnection')}
               </Button>
             )}
+            {isDirty && (
+              <Button disabled={writeDisabled || saving || connecting} onClick={onDiscard}>
+                {t('channel.discard')}
+              </Button>
+            )}
             <Button
               disabled={writeDisabled}
-              icon={<Save size={16} />}
               loading={saving || connecting}
               type="primary"
               onClick={onSave}
@@ -263,7 +271,7 @@ const Footer = memo<FooterProps>(
               showIcon
               type="info"
               message={
-                <Trans
+                <Trans<'channel.endpointUrlHint', 'agent'>
                   components={{ bold: <strong /> }}
                   i18nKey="channel.endpointUrlHint"
                   ns="agent"

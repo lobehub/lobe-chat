@@ -3,6 +3,8 @@ import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
+import { useEffectiveAgentModePreference } from './effectiveAgentModePreference';
+
 export type ChatInputMode = 'agent' | 'chat';
 
 interface ResolveEffectiveAgentModeParams {
@@ -43,13 +45,18 @@ export const resolveEffectiveAgentMode = ({
 };
 
 export const useEffectiveAgentMode = (agentId: string) => {
-  const [enableAgentMode, model, provider] = useAgentStore((s) => [
-    agentByIdSelectors.getAgentEnableModeById(agentId)(s),
+  const [model, provider] = useAgentStore((s) => [
     agentByIdSelectors.getAgentModelById(agentId)(s),
     agentByIdSelectors.getAgentModelProviderById(agentId)(s),
   ]);
+  const { enableAgentMode, isPreferenceLoading, usesWorkspaceMemberMode } =
+    useEffectiveAgentModePreference(agentId);
   const supportToolUse = useModelSupportToolUse(model, provider);
   const isModelListReady = useAiInfraStore(aiProviderSelectors.isInitAiProviderRuntimeState);
 
-  return resolveEffectiveAgentMode({ enableAgentMode, isModelListReady, supportToolUse });
+  return {
+    ...resolveEffectiveAgentMode({ enableAgentMode, isModelListReady, supportToolUse }),
+    isPreferenceLoading,
+    usesWorkspaceMemberMode,
+  };
 };

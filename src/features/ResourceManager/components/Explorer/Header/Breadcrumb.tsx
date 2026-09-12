@@ -1,12 +1,13 @@
-import { Flexbox, Skeleton } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { Skeleton } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cx } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 
+import { useFolderPath } from '@/features/ResourceManager/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useFolderPath } from '@/routes/(main)/resource/features/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 import { FilesTabs } from '@/types/files';
@@ -117,7 +118,7 @@ const Breadcrumb = memo<BreadcrumbProps>(({ category, fileName }) => {
         {knowledgeBaseName ? (
           knowledgeBaseName
         ) : (
-          <Skeleton.Button active size="small" style={{ height: 14, minWidth: 80, width: 80 }} />
+          <Skeleton style={{ height: 14, minWidth: 80, width: 80 }} />
         )}
       </span>
 

@@ -1,34 +1,24 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import DocumentBody from './Body';
 
-vi.mock('antd-style', () => ({
-  createStaticStyles: () => ({
-    content: 'content',
-  }),
-  cssVar: {
-    colorBgContainer: 'var(--color-bg-container)',
-    colorBorderSecondary: 'var(--color-border-secondary)',
-    colorTextSecondary: 'var(--color-text-secondary)',
-    fontFamilyCode: 'monospace',
-  },
-}));
+vi.mock('antd-style', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
-vi.mock('@lobehub/ui', () => ({
-  ActionIcon: () => null,
-  Button: ({ children }: { children: ReactNode }) => <button>{children}</button>,
-  Flexbox: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  Text: ({ children }: { children: ReactNode }) => <span>{children}</span>,
-  TextArea: () => <textarea />,
-}));
+  return {
+    ...actual,
+    createStaticStyles: () => ({
+      content: 'content',
+    }),
+    cssVar: {
+      colorBgContainer: 'var(--color-bg-container)',
+      colorBorderSecondary: 'var(--color-border-secondary)',
+      colorTextSecondary: 'var(--color-text-secondary)',
+      fontFamilyCode: 'monospace',
+    },
+  };
+});
 
 vi.mock('@/components/CodeEditorPane', () => ({
   default: ({

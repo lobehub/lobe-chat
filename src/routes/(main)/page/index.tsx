@@ -1,18 +1,17 @@
 'use client';
 
-import { memo, Suspense } from 'react';
+import { Suspense } from 'react';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+import { delayed } from '@/components/Skeleton/Delayed';
+import SurfaceSkeleton from '@/components/Skeleton/Surface';
 import PageExplorerPlaceholder from '@/features/PageExplorer/PageExplorerPlaceholder';
 
-const PagesPage = memo(() => {
+const PagesPage = () => {
   return (
-    <Suspense fallback={<Loading debugId="PagesPage" />}>
+    <Suspense fallback={delayed(<SurfaceSkeleton variant={'editor'} />)}>
       <PageExplorerPlaceholder />
     </Suspense>
   );
-});
-
-PagesPage.displayName = 'PagesPage';
+};
 
 export default PagesPage;

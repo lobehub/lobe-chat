@@ -1,10 +1,12 @@
+import { isDesktop } from '@lobechat/const';
 import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import { type ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { AgentRuntimeErrorType, getErrorCodeSpec } from '@lobechat/model-runtime';
 import { type ChatMessageError, type ErrorType, type IToolErrorType } from '@lobechat/types';
 import { ChatErrorType } from '@lobechat/types';
-import { type AlertProps } from '@lobehub/ui';
-import { Block, Highlighter, Skeleton } from '@lobehub/ui';
+import { isRecord } from '@lobechat/utils/object';
+import { Block, Highlighter } from '@lobehub/ui';
+import { type AlertProps, Skeleton } from '@lobehub/ui/base-ui';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,12 +14,17 @@ import useBusinessErrorAlertConfig from '@/business/client/hooks/useBusinessErro
 import useBusinessErrorContent from '@/business/client/hooks/useBusinessErrorContent';
 import useRenderBusinessChatErrorMessageExtra from '@/business/client/hooks/useRenderBusinessChatErrorMessageExtra';
 import ErrorContent from '@/features/Conversation/ChatItem/components/ErrorContent';
+import { useConversationResourceAccess } from '@/features/Conversation/hooks/useConversationResourceAccess';
 import { dataSelectors, useConversationStore } from '@/features/Conversation/store';
 import HeterogeneousAgentStatusGuide from '@/features/Electron/HeterogeneousAgent/StatusGuide';
+import type { HeterogeneousAgentScheduleState } from '@/features/Electron/HeterogeneousAgent/StatusGuide/types';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
 import { useProviderName } from '@/hooks/useProviderName';
 import dynamic from '@/libs/next/dynamic';
+import { binaryService } from '@/services/electron/binary';
+import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { getRuntimeErrorMessage } from '@/utils/locale/runtimeErrorMessage';
 
@@ -54,6 +61,17 @@ const getRawErrorMessage = (error?: ChatMessageError | null) => {
   return;
 };
 
+const getErrorDetails = (error?: ChatMessageError | null) => {
+  if (!error) return;
+
+  const rawErrorMessage = getRawErrorMessage(error);
+  if (!rawErrorMessage) return error.body;
+  if (isRecord(error.body)) return { ...error.body, message: rawErrorMessage };
+  if (error.body !== undefined) return { body: error.body, message: rawErrorMessage };
+
+  return { message: rawErrorMessage };
+};
+
 const loading = () => (
   <Block
     align={'center'}
@@ -65,7 +83,7 @@ const loading = () => (
       width: '100%',
     }}
   >
-    <Skeleton.Button active block />
+    <Skeleton height={36} />
   </Block>
 );
 
@@ -196,7 +214,11 @@ export const useErrorContent = (error: any) => {
   const { t } = useTranslation(['error', 'modelRuntime']);
   const providerName = useProviderName(error?.body?.provider || '');
   const businessAlertConfig = useBusinessErrorAlertConfig(error?.type);
-  const { errorType: businessErrorType, hideMessage } = useBusinessErrorContent(error?.type);
+  const {
+    errorType: businessErrorType,
+    hideMessage,
+    message: businessMessage,
+  } = useBusinessErrorContent(error);
 
   return useMemo<AlertProps | undefined>(() => {
     if (!error) return;
@@ -222,10 +244,18 @@ export const useErrorContent = (error: any) => {
       : getRuntimeErrorMessage(t, finalErrorType, { provider: providerName });
 
     return {
-      message: translatedMessage || rawErrorMessage,
+      message: businessMessage || translatedMessage || rawErrorMessage,
       ...alertConfig,
     };
-  }, [businessAlertConfig, businessErrorType, error, hideMessage, providerName, t]);
+  }, [
+    businessAlertConfig,
+    businessErrorType,
+    businessMessage,
+    error,
+    hideMessage,
+    providerName,
+    t,
+  ]);
 };
 
 interface ErrorExtraProps {
@@ -245,24 +275,46 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
   ({ error: alertError, data, onRegenerate, retryScopeId }) => {
     const error = data.error;
     const navigate = useWorkspaceAwareNavigate();
-    const businessChatErrorMessageExtra = useRenderBusinessChatErrorMessageExtra(error, data.id);
     const enableBusinessFeatures = useServerConfigStore(
       serverConfigSelectors.enableBusinessFeatures,
     );
-    const { allowed: canCreate } = usePermission('create_content');
+    const { allowed: canCreateContent } = usePermission('create_content');
+    // Retry re-sends into the shared conversation — requires use-level General
+    // access on top of the workspace-role capability.
+    const { canUseResource } = useConversationResourceAccess();
+    const canCreate = canCreateContent && canUseResource;
     const sessionErrorBody = error?.body;
-    const rawErrorMessage = getRawErrorMessage(error) || alertError?.message;
+    const rawErrorMessage = getRawErrorMessage(error);
+    const errorDetails = getErrorDetails(error);
+    const localizedErrorMessage = hasLocalizedErrorMessage(error?.type)
+      ? alertError?.message
+      : undefined;
+    const displayMessage = localizedErrorMessage ?? rawErrorMessage ?? alertError?.message;
 
     const delAndRegenerateMessage = useConversationStore((s) => s.delAndRegenerateMessage);
+    const updateMessageError = useConversationStore((s) => s.updateMessageError);
     const resetHeteroOverloadRetry = useConversationStore((s) => s.resetHeteroOverloadRetry);
+    // `data.id`'s own parent user message. Only present when `data.id` is a
+    // top-level displayMessage that hangs off a user turn — which is exactly the
+    // condition for the self-contained retry below to be able to do anything.
+    const ownParentId = useConversationStore(
+      (s) => dataSelectors.getDisplayMessageById(data.id)(s)?.parentId,
+    );
     // Standalone surface: data.id is the top-level assistant message, so its
     // parentId is the user message. Group surface passes retryScopeId directly.
-    const resolvedScopeId = useConversationStore(
-      (s) => retryScopeId ?? dataSelectors.getDisplayMessageById(data.id)(s)?.parentId,
-    );
+    const resolvedScopeId = retryScopeId ?? ownParentId;
+
+    // The standalone surfaces (Assistant / Task / AgentCouncil) render this card
+    // through `customErrorRender` WITHOUT an `onRegenerate`, so gating the retry
+    // affordance on that prop left their error cards with no way to retry at all
+    // — while the very same error inside an assistantGroup offered one. Fall back
+    // to retrying this message on our own, but only advertise it when that can
+    // actually run: a block that isn't a top-level displayMessage, or one with no
+    // parent user turn, would delete itself and regenerate nothing.
+    const canRetry = canCreate && (!!onRegenerate || !!ownParentId);
 
     const handleRetryAgentMessage = useCallback(() => {
-      if (!canCreate) return;
+      if (!canRetry) return;
       if (onRegenerate) {
         onRegenerate();
         return;
@@ -272,7 +324,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
       // branches. Regenerate-first would switch the branch away before the
       // delete, leaving the failed attempt behind on each retry.
       void delAndRegenerateMessage(data.id);
-    }, [canCreate, data.id, delAndRegenerateMessage, onRegenerate]);
+    }, [canRetry, data.id, delAndRegenerateMessage, onRegenerate]);
 
     // A human-initiated retry restarts the auto-retry budget so the user isn't
     // stuck on the manual card after the cap was reached automatically.
@@ -281,6 +333,37 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
       handleRetryAgentMessage();
     }, [handleRetryAgentMessage, resetHeteroOverloadRetry, resolvedScopeId]);
 
+    const handleHeterogeneousRetry = useCallback(async () => {
+      if (
+        isDesktop &&
+        isHeterogeneousAgentStatusGuideError(sessionErrorBody) &&
+        sessionErrorBody.code === HeterogeneousAgentSessionErrorCode.CliDetectionTimeout &&
+        sessionErrorBody.agentType &&
+        sessionErrorBody.command
+      ) {
+        const { agentType, command } = sessionErrorBody;
+
+        try {
+          await binaryService.detectHeterogeneousAgentCommand({
+            agentType,
+            command,
+          });
+        } catch (error) {
+          console.error(error);
+          return;
+        }
+      }
+
+      handleManualRetry();
+    }, [handleManualRetry, sessionErrorBody]);
+
+    // Business cards get the surface-resolved retry rather than deriving one
+    // from `data.id`: on the group surface that id is a nested content block,
+    // so message-level store actions can't resolve it and silently no-op.
+    const businessChatErrorMessageExtra = useRenderBusinessChatErrorMessageExtra(error, data.id, {
+      onRetry: canRetry ? handleManualRetry : undefined,
+    });
+
     const autoRetry = useHeterogeneousAutoRetry({
       // Must be an actual heterogeneous-agent (CC / Codex) overloaded error —
       // not just any ChatMessageError whose body happens to carry
@@ -288,12 +371,55 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
       // the guide render below, so without it a provider/tool error rendering
       // the normal card could be silently retried.
       enabled:
-        canCreate &&
+        canRetry &&
         isHeterogeneousAgentStatusGuideError(sessionErrorBody) &&
         sessionErrorBody.code === HeterogeneousAgentSessionErrorCode.Overloaded,
       onRetry: handleRetryAgentMessage,
       scopeId: resolvedScopeId,
     });
+
+    // Rate-limit waits are hours, not seconds, so instead of auto-retrying we let
+    // the user hand the continuation off to the backend (topic `scheduled`). All
+    // orchestration lives in the conversation store; this only binds the actions.
+    const scheduleHeteroContinuation = useConversationStore((s) => s.scheduleHeteroContinuation);
+    const cancelHeteroContinuation = useConversationStore((s) => s.cancelHeteroContinuation);
+    const activeTopicScheduled = useChatStore(
+      (s) => topicSelectors.currentActiveTopic(s)?.status === 'scheduled',
+    );
+    const activeAgentId = useChatStore((s) => s.activeAgentId);
+    const scheduledResetsAt = useChatStore((s) => {
+      const scheduledRun = topicSelectors.currentActiveTopic(s)?.metadata?.scheduledRun;
+      return scheduledRun?.kind === 'resume_after_rate_limit'
+        ? scheduledRun.rateLimit?.resetsAt
+        : undefined;
+    });
+
+    const isRateLimitError =
+      canCreate &&
+      isHeterogeneousAgentStatusGuideError(sessionErrorBody) &&
+      sessionErrorBody.code === HeterogeneousAgentSessionErrorCode.RateLimit;
+    const rateLimitInfo = isHeterogeneousAgentStatusGuideError(sessionErrorBody)
+      ? sessionErrorBody.rateLimitInfo
+      : undefined;
+
+    const schedule: HeterogeneousAgentScheduleState | undefined = isRateLimitError
+      ? {
+          isScheduled: activeTopicScheduled,
+          onCancel: () => void cancelHeteroContinuation(),
+          // Same fallback as the retry button: `onRegenerate` is absent on the
+          // standalone surfaces, where a bare `onRegenerate?.()` was a no-op.
+          onRunNow: handleManualRetry,
+          onSchedule: () =>
+            void scheduleHeteroContinuation({
+              failedAssistantMessageId: data.id,
+              rateLimit: {
+                rateLimitType: rateLimitInfo?.rateLimitType,
+                resetsAt: rateLimitInfo?.resetsAt,
+              },
+            }),
+          resetsAt: scheduledResetsAt ?? rateLimitInfo?.resetsAt,
+        }
+      : undefined;
 
     if (isHeterogeneousAgentStatusGuideError(sessionErrorBody)) {
       return (
@@ -301,8 +427,18 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
           agentType={sessionErrorBody.agentType}
           autoRetry={autoRetry}
           error={sessionErrorBody}
-          onOpenSystemTools={() => navigate('/settings/system-tools')}
-          onRetry={handleManualRetry}
+          schedule={schedule}
+          onDismiss={() => void updateMessageError(data.id, null)}
+          onRetry={() => void handleHeterogeneousRetry()}
+          onOpenSystemTools={() =>
+            navigate(
+              isDesktop
+                ? '/settings/system-tools'
+                : activeAgentId
+                  ? `/agent/${activeAgentId}/profile`
+                  : '/settings/credential',
+            )
+          }
         />
       );
     }
@@ -336,7 +472,10 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
 
       case AgentRuntimeErrorType.QuotaLimitReached:
       case AgentRuntimeErrorType.RateLimitExceeded: {
-        if (enableBusinessFeatures) return <QuotaLimitError id={data.id} />;
+        if (enableBusinessFeatures)
+          return (
+            <QuotaLimitError id={data.id} onRetry={canRetry ? handleManualRetry : undefined} />
+          );
         break;
       }
 
@@ -365,8 +504,20 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
 
     // Show a report action for unknown or fallback-bucket traceable errors.
     // Specific known error types keep their dedicated localized message below.
-    if (enableBusinessFeatures && shouldShowTraceIdError(error)) {
-      return <TraceIdError id={data.id} traceId={error.body.traceId} />;
+    if (
+      enableBusinessFeatures &&
+      (error?.type === ChatErrorType.InternalServerError || shouldShowTraceIdError(error))
+    ) {
+      const traceId =
+        typeof error?.body?.traceId === 'string' ? (error.body.traceId as string) : undefined;
+
+      return (
+        <TraceIdError
+          id={data.id}
+          traceId={traceId}
+          onRetry={canRetry ? handleManualRetry : undefined}
+        />
+      );
     }
 
     return (
@@ -374,19 +525,19 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         id={data.id}
         error={{
           ...alertError,
-          ...(rawErrorMessage ? { message: rawErrorMessage } : {}),
-          extra: data.error?.body ? (
+          message: displayMessage,
+          extra: errorDetails ? (
             <Highlighter
               actionIconSize={'small'}
               language={'json'}
               padding={8}
               variant={'borderless'}
             >
-              {JSON.stringify(data.error?.body, null, 2)}
+              {JSON.stringify(errorDetails, null, 2)}
             </Highlighter>
           ) : undefined,
         }}
-        onRegenerate={canCreate ? onRegenerate : undefined}
+        onRegenerate={canRetry ? handleManualRetry : undefined}
       />
     );
   },

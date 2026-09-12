@@ -6,7 +6,9 @@
  * - Pre-instantiated runtimes (e.g., WebBrowsing - no per-request context needed)
  * - Per-request runtimes (e.g., CloudSandbox - needs topicId, userId)
  */
+
 import type { ToolExecutionContext } from '../types';
+import { acceptanceEvidenceRuntime } from './acceptanceEvidence';
 import { activatorRuntime } from './activator';
 import { agentBuilderRuntime } from './agentBuilder';
 import { agentDocumentsRuntime } from './agentDocuments';
@@ -15,14 +17,19 @@ import { agentSignalFeedbackIntentRuntime } from './agentSignalFeedbackIntent';
 import { agentSignalReflectionRuntime } from './agentSignalReflection';
 import { agentSignalReviewRuntime } from './agentSignalReview';
 import { agentSignalSkillManagementRuntime } from './agentSignalSkillManagement';
+import { auvRuntime } from './auv';
 import { briefRuntime } from './brief';
+import { browserRuntime } from './browser';
 import { calculatorRuntime } from './calculator';
 import { cloudSandboxRuntime } from './cloudSandbox';
 import { credsRuntime } from './creds';
+import { goalRuntime } from './goal';
+import { goalSupervisorRuntime } from './goalSupervisor';
+import { groupAgentBuilderRuntime } from './groupAgentBuilder';
 import { groupManagementRuntime } from './groupManagement';
+import { imageGenerationRuntime } from './imageGeneration';
 import { knowledgeBaseRuntime } from './knowledgeBase';
 import { lobeAgentRuntime } from './lobeAgent';
-import { lobeDeliveryCheckerRuntime } from './lobeDeliveryChecker';
 import { localSystemRuntime } from './localSystem';
 import { memoryRuntime } from './memory';
 import { messageRuntime } from './message';
@@ -57,6 +64,8 @@ const registerRuntimes = (runtimes: ServerRuntimeRegistration[]) => {
 
 // Register all server runtimes
 registerRuntimes([
+  acceptanceEvidenceRuntime,
+  auvRuntime,
   agentBuilderRuntime,
   webBrowsingRuntime,
   cloudSandboxRuntime,
@@ -71,13 +80,18 @@ registerRuntimes([
   activatorRuntime,
   messageRuntime,
   localSystemRuntime,
+  browserRuntime,
   remoteDeviceRuntime,
   briefRuntime,
   taskRuntime,
   topicReferenceRuntime,
   userInteractionRuntime,
   credsRuntime,
+  groupAgentBuilderRuntime,
   groupManagementRuntime,
+  goalRuntime,
+  goalSupervisorRuntime,
+  imageGenerationRuntime,
   knowledgeBaseRuntime,
   webOnboardingRuntime,
   lobeAgentRuntime,
@@ -88,7 +102,6 @@ registerRuntimes([
   agentSignalFeedbackIntentRuntime,
   pageAgentRuntime,
   verifyResultRuntime,
-  lobeDeliveryCheckerRuntime,
 ]);
 
 // ==================== Registry API ====================

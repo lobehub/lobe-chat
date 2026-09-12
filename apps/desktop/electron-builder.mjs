@@ -11,11 +11,12 @@ import {
   getExternalRuntimeModulesFilesConfig,
 } from './external-runtime-deps.config.mjs';
 import {
-  copyNativeModules,
+  buildFirstPartyNativeAddons,
   copyNativeModulesToSource,
   getAsarUnpackPatterns,
   getNativeModulesFilesConfig,
 } from './native-deps.config.mjs';
+import { verifyFontListSignature } from './scripts/verifyFontListSigning.mjs';
 
 dotenv.config();
 
@@ -26,6 +27,46 @@ const packageJSON = JSON.parse(await fs.readFile(path.join(__dirname, 'package.j
 const channel = process.env.UPDATE_CHANNEL;
 const arch = os.arch();
 const hasAppleCertificate = Boolean(process.env.CSC_LINK);
+
+const macAppId = 'com.lobehub.lobehub-desktop';
+// Communication notifications need the restricted
+// `com.apple.developer.usernotifications.communication` entitlement, and
+// macOS refuses to launch an app carrying it without a provisioning profile
+// that authorizes it — so both must be applied together, and only when a
+// profile is provided.
+const macProvisioningProfile = process.env.MAC_PROVISIONING_PROFILE;
+const macTeamId = process.env.APPLE_TEAM_ID;
+const macCommunicationEntitlements =
+  macProvisioningProfile && macTeamId
+    ? path.join(__dirname, 'build', 'entitlements.mac.comm.generated.plist')
+    : undefined;
+
+if (macProvisioningProfile && !macTeamId) {
+  console.warn(
+    '⚠️ MAC_PROVISIONING_PROFILE is set but APPLE_TEAM_ID is missing — building without communication notification entitlements',
+  );
+}
+
+if (macCommunicationEntitlements) {
+  const baseEntitlements = await fs.readFile(
+    path.join(__dirname, 'build', 'entitlements.mac.plist'),
+    'utf8',
+  );
+  const communicationKeys = [
+    '    <key>com.apple.application-identifier</key>',
+    `    <string>${macTeamId}.${macAppId}</string>`,
+    '    <key>com.apple.developer.team-identifier</key>',
+    `    <string>${macTeamId}</string>`,
+    '    <key>com.apple.developer.usernotifications.communication</key>',
+    '    <true/>',
+    '  </dict>',
+  ].join('\n');
+  await fs.writeFile(
+    macCommunicationEntitlements,
+    baseEntitlements.replace('</dict>', communicationKeys),
+  );
+  console.info('🔔 Communication notification entitlements + provisioning profile enabled');
+}
 
 // 自定义更新服务器 URL (用于 stable 频道)
 const updateServerUrl = process.env.UPDATE_SERVER_URL;
@@ -72,10 +113,6 @@ const getPublishConfig = () => {
   ];
 };
 
-// Keep only these Electron Framework localization folders (*.lproj)
-// (aligned with previous Electron Forge build config)
-const keepLanguages = new Set(['en', 'en_GB', 'en-US', 'en_US']);
-
 // https://www.electron.build/code-signing-mac#how-to-disable-code-signing-during-the-build-process-on-macos
 if (!hasAppleCertificate) {
   // Disable auto discovery to keep electron-builder from searching unavailable signing identities
@@ -109,8 +146,21 @@ const config = {
    * This ensures native modules are properly included in the asar archive.
    */
   beforePack: async () => {
+    buildFirstPartyNativeAddons();
+
     await copyNativeModulesToSource();
     await copyExternalRuntimeModulesToSource();
+
+    // Keep the AUV daemon version locked to @auv-js/sdk. The CLI package
+    // resolves the platform-specific executable without running postinstall,
+    // then we stage that real file outside app.asar for child_process.spawn().
+    const { binaryPath: resolveAuvBinaryPath } = await import('@auv-js/cli/binary');
+    const auvSource = resolveAuvBinaryPath();
+    const auvExecutable = process.platform === 'win32' ? 'auv.exe' : 'auv';
+    const auvDestination = path.resolve(__dirname, 'resources/bin', auvExecutable);
+    await fs.mkdir(path.dirname(auvDestination), { recursive: true });
+    await fs.copyFile(auvSource, auvDestination);
+    if (process.platform !== 'win32') await fs.chmod(auvDestination, 0o755);
 
     // agent-browser is no longer bundled in the installer — BinaryManager
     // lazily downloads it on first use into the per-user cache dir. See
@@ -138,72 +188,27 @@ const config = {
     console.info('✅ CLI bundle copied to resources/bin/lobe-cli.js');
   },
   /**
-   * AfterPack hook for post-processing:
-   * 1. Copy native modules to asar.unpacked (resolving pnpm symlinks)
-   * 2. Copy Liquid Glass Assets.car for macOS 26+
-   * 3. Remove unused Electron Framework localizations
+   * AfterPack hook for copying Liquid Glass Assets.car on macOS 26+.
    *
    * @see https://github.com/electron-userland/electron-builder/issues/9254
    * @see https://github.com/MultiboxLabs/flow-browser/pull/159
-   * @see https://github.com/electron/packager/pull/1806
    */
   afterPack: async (context) => {
     const isMac = ['darwin', 'mas'].includes(context.electronPlatformName);
 
-    // Determine resources path based on platform
-    let resourcesPath;
-    if (isMac) {
-      resourcesPath = path.join(
-        context.appOutDir,
-        `${context.packager.appInfo.productFilename}.app`,
-        'Contents',
-        'Resources',
-      );
-    } else {
-      // Windows and Linux: resources is directly in appOutDir
-      resourcesPath = path.join(context.appOutDir, 'resources');
-    }
-
-    // Copy native modules to asar.unpacked, resolving pnpm symlinks
-    const unpackedNodeModules = path.join(resourcesPath, 'app.asar.unpacked', 'node_modules');
-    await copyNativeModules(unpackedNodeModules);
-
-    // macOS-specific post-processing
     if (!isMac) {
       return;
     }
 
-    const iconFileName = getIconFileName();
-    const assetsCarSource = path.join(__dirname, 'build', `${iconFileName}.Assets.car`);
-    const assetsCarDest = path.join(resourcesPath, 'Assets.car');
-
-    // Remove unused Electron Framework localizations to reduce app size
-    const frameworkResourcePath = path.join(
+    const resourcesPath = path.join(
       context.appOutDir,
       `${context.packager.appInfo.productFilename}.app`,
       'Contents',
-      'Frameworks',
-      'Electron Framework.framework',
-      'Versions',
-      'A',
       'Resources',
     );
-
-    try {
-      const entries = await fs.readdir(frameworkResourcePath);
-      await Promise.all(
-        entries.map(async (file) => {
-          if (!file.endsWith('.lproj')) return;
-
-          const lang = file.split('.')[0];
-          if (keepLanguages.has(lang)) return;
-
-          await fs.rm(path.join(frameworkResourcePath, file), { force: true, recursive: true });
-        }),
-      );
-    } catch {
-      // Non-critical: folder may not exist depending on packaging details
-    }
+    const iconFileName = getIconFileName();
+    const assetsCarSource = path.join(__dirname, 'build', `${iconFileName}.Assets.car`);
+    const assetsCarDest = path.join(resourcesPath, 'Assets.car');
 
     try {
       await fs.access(assetsCarSource);
@@ -215,9 +220,15 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  appId: 'com.lobehub.lobehub-desktop',
+  afterSign: verifyFontListSignature,
+  appId: macAppId,
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
+  },
+
+  // Only explicitly selected native binaries should live outside app.asar.
+  asar: {
+    smartUnpack: false,
   },
 
   // Native modules must be unpacked from asar to work correctly
@@ -247,6 +258,9 @@ const config = {
   electronDownload: {
     mirror: 'https://npmmirror.com/mirrors/electron/',
   },
+  // Electron uses underscores for macOS .lproj directories and hyphens for
+  // Windows/Linux locale packs. Keep the English variants on every platform.
+  electronLanguages: ['en', 'en_GB', 'en_US', 'en-GB', 'en-US'],
 
   files: [
     'dist',
@@ -254,6 +268,13 @@ const config = {
     'dist/renderer/**/*',
     '!resources/locales',
     '!resources/dmg.png',
+    // NOTICE:
+    // AUV must execute from the external bin directory, so its ASAR copy is unnecessary.
+    // The resources glob otherwise duplicates the binary copied by extraResources below.
+    // Source: PR #19051 ASAR Size Gate; resources/bin is staged in beforePack above.
+    // Remove these exclusions only if AUV no longer ships through extraResources.
+    '!resources/bin/auv',
+    '!resources/bin/auv.exe',
     // Exclude all node_modules first
     '!node_modules',
     // Then explicitly include native modules using object form (handles pnpm symlinks)
@@ -269,8 +290,18 @@ const config = {
     target: ['AppImage', 'snap', 'deb', 'rpm', 'tar.gz'],
   },
   mac: {
+    binaries: [
+      'Contents/Resources/app.asar.unpacked/node_modules/font-list/libs/darwin/fontlist',
+      'Contents/Resources/bin/auv',
+    ],
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
+    ...(macCommunicationEntitlements
+      ? {
+          entitlements: macCommunicationEntitlements,
+          provisioningProfile: macProvisioningProfile,
+        }
+      : {}),
     extendInfo: {
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
@@ -289,6 +320,7 @@ const config = {
       NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
       NSScreenCaptureUsageDescription:
         'Application requests access to record and analyze screen content for AI assistance.',
+      NSUserActivityTypes: ['INSendMessageIntent'],
     },
     gatekeeperAssess: false,
     hardenedRuntime: hasAppleCertificate,
@@ -329,6 +361,29 @@ const config = {
   extraResources: [
     { from: 'resources/bin', to: 'bin' },
     { from: 'resources/cli-package.json', to: 'package.json' },
+    // Local Sandbox helper binaries. The sandbox spawns these by path, so they
+    // must be real files — not entries inside app.asar, and not something the
+    // user is expected to install separately.
+    //
+    // Shipped as a resource rather than by externalizing
+    // `@anthropic-ai/sandbox-runtime`: its JavaScript bundles into the main
+    // process perfectly well, and making it a production dependency instead
+    // drags four transitive packages into electron-builder's node_modules
+    // traversal, which pnpm's layout does not satisfy (`@pondwader/socks5-server
+    // not found`). Only the binaries need to exist on disk.
+    {
+      from: 'node_modules/@anthropic-ai/sandbox-runtime/vendor',
+      to: 'sandbox-runtime/vendor',
+    },
+    // Carried alongside the binaries so the staging directory stays keyed on the
+    // backend's real version. Without it the version lookup falls back to the
+    // binary's size — which still works, but would defeat the per-version
+    // isolation in exactly the case it exists for: an installed app being
+    // updated.
+    {
+      from: 'node_modules/@anthropic-ai/sandbox-runtime/package.json',
+      to: 'sandbox-runtime/package.json',
+    },
   ],
 
   win: {

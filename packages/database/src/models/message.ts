@@ -1,16 +1,21 @@
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import { parse } from '@lobechat/conversation-flow';
 import type {
+  AssistantContentBlock,
   ChatAudioItem,
   ChatFileItem,
   ChatImageItem,
+  ChatMessageError,
+  ChatMessageExtra,
   ChatToolPayload,
   ChatTranslate,
   ChatTTS,
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  HeterogeneousToolStateSnapshot,
   IThreadType,
+  MessageMetadata,
   MessagePluginItem,
   ModelRankItem,
   ModelUsage,
@@ -19,16 +24,25 @@ import type {
   TaskDetail,
   ThreadStatus,
   UIChatMessage,
+  UISignalCallbacksBlock,
   UpdateMessageParams,
   UpdateMessageRAGParams,
+  WorkSummaryItem,
 } from '@lobechat/types';
-import { MessageGroupType, ThreadType } from '@lobechat/types';
+import {
+  AgentRuntimeErrorType,
+  ChatErrorType,
+  MessageGroupType,
+  ThreadType,
+} from '@lobechat/types';
 import type { TimingSink } from '@lobechat/utils';
 import {
   getDurationMs,
   logTimingSink as logTiming,
+  readAudioDurationMs,
   runTimedSinkStage as runTimedStage,
 } from '@lobechat/utils';
+import { isPlainRecord } from '@lobechat/utils/object';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
 import type { SQL } from 'drizzle-orm';
@@ -38,22 +52,27 @@ import {
   count,
   desc,
   eq,
+  getTableColumns,
   gt,
   gte,
   inArray,
   isNotNull,
   isNull,
   lte,
+  ne,
   not,
   or,
   sql,
 } from 'drizzle-orm';
 
+import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
 import { merge } from '@/utils/merge';
 import { sanitizeNullBytes } from '@/utils/sanitizeNullBytes';
 import { today } from '@/utils/time';
 
+import type { FtsSearchCandidateSource } from '../repositories/ftsSearch';
 import {
+  agents,
   agentsToSessions,
   chunks,
   documents,
@@ -69,23 +88,112 @@ import {
   messageTranslates,
   messageTTS,
   threads,
+  topics,
   users,
 } from '../schemas';
 import type { LobeChatDatabase, Transaction } from '../type';
 import { sanitizeBm25Query } from '../utils/bm25';
+import { notCopiedTranscript } from '../utils/copiedTranscript';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
+import { inJsonStringArray } from '../utils/inJsonStringArray';
+import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
+import { WorkModel } from './work';
+
+const createChatImageItem = ({
+  id,
+  metadata,
+  name,
+  url,
+}: {
+  id: string;
+  metadata: unknown;
+  name: string;
+  url: string;
+}): ChatImageItem => {
+  const imageMetadata = isPlainRecord(metadata) ? metadata : {};
+  const height =
+    typeof imageMetadata.height === 'number' &&
+    Number.isFinite(imageMetadata.height) &&
+    imageMetadata.height > 0
+      ? imageMetadata.height
+      : undefined;
+  const ratio =
+    typeof imageMetadata.ratio === 'number' &&
+    Number.isFinite(imageMetadata.ratio) &&
+    imageMetadata.ratio > 0
+      ? imageMetadata.ratio
+      : undefined;
+  const width =
+    typeof imageMetadata.width === 'number' &&
+    Number.isFinite(imageMetadata.width) &&
+    imageMetadata.width > 0
+      ? imageMetadata.width
+      : undefined;
+
+  return {
+    alt: name,
+    ...(height && { height }),
+    id,
+    ...(ratio && { ratio }),
+    url,
+    ...(width && { width }),
+  };
+};
+
+export class HumanApprovalAlreadyResolvedError extends Error {
+  constructor(messageId: string) {
+    super(`Human approval is no longer pending for tool message ${messageId}`);
+    this.name = 'HumanApprovalAlreadyResolvedError';
+  }
+}
+
+export interface HumanApprovalResolution {
+  /** Conditional owner checked by rollback; never accepted as client authority. */
+  claimedResolutionRequestId?: string;
+  content?: string;
+  id: string;
+  intervention: Record<string, unknown>;
+  pluginState?: Record<string, unknown> | null;
+  replacePluginState?: boolean;
+}
+
+/**
+ * Read the operation-final Work root id stamped on a message's metadata by the
+ * Work registry (`metadata.work.rootOperationId`). Mirrors the client-side
+ * `getOperationFinalRootId` without importing from the app layer.
+ */
+const getMessageWorkRootId = (metadata: unknown): string | undefined => {
+  const rootOperationId = (metadata as { work?: { rootOperationId?: unknown } } | null)?.work
+    ?.rootOperationId;
+  return typeof rootOperationId === 'string' && rootOperationId ? rootOperationId : undefined;
+};
 
 /**
  * Options for querying messages with relations
  */
 export interface QueryMessagesOptions {
   /**
+   * Opt IN to agent-share visitor rows for this call, overriding the default
+   * `ownership()` visitor exclusion. Combined via OR with the instance's
+   * `includeShareVisitor` flag, so an instance already opted in stays opted
+   * in and a default-scoped instance can still be widened per-call (this is
+   * how {@link MessageModel.queryForVisitor} works before the share-runtime
+   * routers switch to constructing the model with `{ includeShareVisitor:
+   * true }`).
+   */
+  allowShareVisitor?: boolean;
+  /**
    * Current page number (0-indexed)
    */
   current?: number;
+  /**
+   * Opt-in for `file` work summaries in the payload (see
+   * `QueryMessageParams.includeFileWorks`).
+   */
+  includeFileWorks?: boolean;
   /**
    * Number of messages per page
    */
@@ -97,6 +205,10 @@ export interface QueryMessagesOptions {
     path: string | null,
     file: { fileType: string; id?: string | null },
   ) => Promise<string>;
+  /**
+   * Skip the Work-summary assembly (see `QueryMessageParams.skipWorks`).
+   */
+  skipWorks?: boolean;
   timing?: ModelTimingContext;
   /**
    * Topic ID for MessageGroup aggregation queries
@@ -108,16 +220,57 @@ export interface QueryMessagesOptions {
   where?: SQL;
 }
 
+export interface TopicTranscriptMessage {
+  content: string | null;
+  createdAt: Date;
+  id: string;
+  messageGroupId: string | null;
+  parentId: string | null;
+  role: string;
+  threadId: string | null;
+  tools: ChatToolPayload[] | null;
+}
+
+export interface TopicTranscriptResult {
+  items: TopicTranscriptMessage[];
+  total: number;
+}
+
 export interface ModelTimingContext extends TimingSink {}
 
 interface MessageRelatedFile {
   fileType: string | null;
   id: string;
   messageId: string;
+  metadata: unknown;
   name: string | null;
   size: number | null;
   url: string;
 }
+
+const materializeChatAudioItem = ({
+  fileType,
+  id,
+  metadata,
+  name,
+  url,
+}: MessageRelatedFile): ChatAudioItem => {
+  const value = isPlainRecord(metadata) ? metadata : {};
+  const durationMs = readAudioDurationMs(metadata);
+
+  return {
+    alt: name!,
+    ...(typeof value.codec === 'string' ? { codec: value.codec } : {}),
+    ...(durationMs === undefined ? {} : { durationMs }),
+    id,
+    ...(typeof value.mimeType === 'string'
+      ? { mimeType: value.mimeType }
+      : fileType
+        ? { mimeType: fileType }
+        : {}),
+    url,
+  };
+};
 
 interface MessageChunkRelation {
   fileId: string;
@@ -145,6 +298,14 @@ interface MessageThreadRelation {
   title: string | null;
 }
 
+interface ActiveBranchSnapshot {
+  activeBranchId?: string;
+  activeBranchIndex: number;
+  metadata: Record<PropertyKey, unknown>;
+  parentId: string;
+  wasOptimistic: boolean;
+}
+
 interface MessageFileRelations {
   documentsMap: Record<string, string>;
   relatedFileList: MessageRelatedFile[];
@@ -156,6 +317,19 @@ interface CreateUserAndAssistantMessagesParams {
 }
 
 interface CreateUserAndAssistantMessagesOptions {
+  /**
+   * Ids minted by the caller (the client) for the pair. Either side may be
+   * omitted, in which case this model mints that one — an older client that
+   * sends no ids keeps working unchanged.
+   *
+   * Honouring a caller-supplied id is what lets the UI render the pair under
+   * its final ids immediately, instead of showing placeholders and re-keying
+   * them once this insert returns.
+   */
+  ids?: {
+    assistantMessageId?: string;
+    userMessageId?: string;
+  };
   timing?: ModelTimingContext;
 }
 
@@ -298,19 +472,519 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
   };
 };
 
+// **************** Agent Share (visitor-scoped projections) *************** //
+
+/**
+ * Opt-in escape hatch for the write paths that legitimately act on agent-share
+ * visitor rows. Visitor messages are stored under the creator's `userId`, so
+ * ownership alone cannot tell a creator action apart from a runtime action;
+ * mutation entry points therefore fail closed and only the agent runtime (which
+ * drives visitor turns under the creator's identity) passes this.
+ */
+export interface ShareVisitorWriteOptions {
+  includeShareVisitor?: boolean;
+}
+
+/**
+ * Constructor options for {@link MessageModel} — mirrors the twin flag on
+ * {@link import('./topic').TopicModelOptions}. When `includeShareVisitor` is
+ * true, the instance's `ownership()` predicate no longer excludes agent-share
+ * visitor messages; the escape hatch that per-call {@link ShareVisitorWriteOptions}
+ * used to be the only way to grant. Share-only surfaces should set this at
+ * construction and stop threading per-call opt-ins through their code.
+ */
+export interface MessageModelOptions {
+  includeShareVisitor?: boolean;
+}
+
+/**
+ * Per-share switches that relax {@link toVisitorMessage}'s default redaction.
+ * Both default to `false` (strip everything), so a caller that forgets to pass
+ * options gets the fail-closed projection.
+ */
+export interface VisitorRedactionOptions {
+  /**
+   * `AgentShareConfig.showErrorDetails`. When false, a run failure is
+   * projected down to a generic classified `type` (see
+   * {@link sanitizeVisitorError}) instead of the raw
+   * message/provider/budget/upstream-body payload `formatErrorForState`
+   * builds.
+   */
+  showErrorDetails?: boolean;
+  /**
+   * `AgentShareConfig.showModelInfo`. When false, the creator's model /
+   * provider choice and the token/cost snapshot are stripped everywhere they
+   * appear, at any nesting depth.
+   */
+  showModelInfo?: boolean;
+}
+
+/**
+ * Fields on {@link UIChatMessage} that are safe to forward to an agent-share
+ * visitor verbatim: the message's OWN presentational content (text,
+ * attachments, tool activity, RAG citations) and structural links WITHIN the
+ * same shared topic (thread/group/parent ids). None of these describe the
+ * creator's account, billing, or model/provider choice.
+ *
+ * This is an ALLOWLIST, not a denylist, and that direction is deliberate:
+ * `UIChatMessage` is a ~40-field DTO shared with the normal (non-share) chat
+ * read path, so new fields land on it regularly as chat features ship. A
+ * denylist fails OPEN on every such addition — a new field reaches visitors by
+ * default until someone remembers to also strip it here. An allowlist fails
+ * CLOSED: a new field is absent from the visitor DTO until a human
+ * deliberately adds it below.
+ *
+ * Deliberately included despite being an id: `agentId` (the visitor already
+ * knows which agent they are talking to — that's the whole premise of the
+ * share link), `sessionId`/`traceId`/`observationId` (opaque ids scoped to
+ * THIS execution of the visitor's OWN turn, reused by client actions such as
+ * translate/regenerate that the share UI shares with normal chat).
+ */
+const VISITOR_MESSAGE_ALLOWED_KEYS = [
+  'id',
+  'role',
+  'content',
+  'createdAt',
+  'updatedAt',
+  'editorData',
+  'fileList',
+  'files',
+  'imageList',
+  'videoList',
+  'audioList',
+  'chunksList',
+  'plugin',
+  'pluginIntervention',
+  'tool_call_id',
+  'tools',
+  'reasoning',
+  'search',
+  'ragQuery',
+  'ragQueryId',
+  'ragRawQuery',
+  'parentId',
+  'threadId',
+  'topicId',
+  'groupId',
+  'targetId',
+  'agentId',
+  'sessionId',
+  'quotaId',
+  'branch',
+  'tasks',
+  'performance',
+  'observationId',
+  'traceId',
+] as const satisfies readonly (keyof UIChatMessage)[];
+
+type VisitorAllowedKey = (typeof VISITOR_MESSAGE_ALLOWED_KEYS)[number];
+
+const pickAllowedKeys = (message: UIChatMessage): Pick<UIChatMessage, VisitorAllowedKey> => {
+  const picked = {} as Pick<UIChatMessage, VisitorAllowedKey>;
+  for (const key of VISITOR_MESSAGE_ALLOWED_KEYS) {
+    if (key in message) (picked as Record<string, unknown>)[key] = message[key];
+  }
+  return picked;
+};
+
+/** Keep translate/TTS (visitor-facing rendering), drop the model snapshot. */
+const sanitizeVisitorExtra = (extra: ChatMessageExtra | undefined): ChatMessageExtra | undefined =>
+  extra ? { translate: extra.translate, tts: extra.tts } : extra;
+
+/**
+ * Shape shared by `pinnedMessages` entries and `compareGroup.children` entries
+ * (`queryMessageGroupNodes` builds them with this exact narrow projection,
+ * then casts the whole node `as unknown as UIChatMessage`, so
+ * `UIChatMessage['pinnedMessages']` / `UIChatMessage['children']`'s declared
+ * types do not describe them at runtime). Neither carries `sender`/`usage`,
+ * only the model snapshot needs stripping.
+ *
+ * NOTE: on a `compressedGroup` node, `children` is NOT this narrow shape — it
+ * lives inside `compressedMessages[].children` (an `AssistantContentBlock[]`
+ * produced by `FlatListBuilder`) and carries `usage`, `error`, `tools`,
+ * `metadata`, `performance`, and possibly nested `council` messages with
+ * `sender`. See `toVisitorMessage` for the recursion that sanitizes those.
+ */
+interface VisitorGroupSnapshotProjection {
+  content: string | null;
+  createdAt: Date | number;
+  id: string;
+  model: string | null;
+  provider: string | null;
+  role: string;
+}
+
+const sanitizeVisitorGroupSnapshots = (
+  items: VisitorGroupSnapshotProjection[],
+): VisitorGroupSnapshotProjection[] =>
+  items.map((item) => ({ ...item, model: null, provider: null }));
+
+/** Cost/token figures are the same class of creator spend data as `usage`. */
+const sanitizeVisitorTaskDetail = (taskDetail: TaskDetail | undefined): TaskDetail | undefined => {
+  if (!taskDetail) return taskDetail;
+  const {
+    totalCost: _totalCost,
+    totalTokens: _totalTokens,
+    totalToolCalls: _totalToolCalls,
+    ...rest
+  } = taskDetail;
+  return rest;
+};
+
+/**
+ * Key names that identify the CREATOR's model/provider choice or spend/token
+ * data wherever they occur inside an unbounded per-tool blob
+ * (`pluginState`/`pluginError`, live Gateway event payloads). A builtin tool's
+ * server runtime writes whatever shape it wants into `state`/error payloads —
+ * e.g. `lobe-agent`'s `analyzeMedia` writes `{ model, provider, usage }`
+ * straight into it — so unlike a short, fully enumerable list of top-level
+ * `UIChatMessage` fields there is no finite set of "every tool's state shape"
+ * to allowlist by hand: a new tool, or a new field on an existing tool's
+ * `state`, must be safe BY DEFAULT. Recursing this fixed key set is the
+ * fail-closed trade-off.
+ */
+const CREATOR_PRIVATE_BLOB_KEYS = new Set([
+  'model',
+  'provider',
+  'usage',
+  'cost',
+  'totalCost',
+  'totalTokens',
+  'promptTokens',
+  'completionTokens',
+  'inputTokens',
+  'outputTokens',
+  // `AgentRuntimeService.publishSubAgentProgress`'s live `step_complete`
+  // (`subagent_progress` phase) reads these off `state.usage.llm.tokens` under
+  // the `total*` spelling rather than `inputTokens`/`outputTokens` — same
+  // class of creator token-spend data, different key name.
+  'totalInputTokens',
+  'totalOutputTokens',
+]);
+
+/**
+ * Recursively strip {@link CREATOR_PRIVATE_BLOB_KEYS} from an unbounded
+ * JSON-like value at ANY nesting depth. Only descends into plain
+ * objects/arrays (`isPlainRecord` already excludes `Date`/`Error`/class
+ * instances) — anything else is returned as-is, since it cannot itself carry a
+ * nested creator-identity field.
+ *
+ * Exported so `GatewayStreamNotifier`'s live Gateway-push chokepoint can apply
+ * the SAME key set to `stream_start` (`model`/`provider`), `tool_end`
+ * (`result`/`payload`, which can carry a tool's `state`), and `step_complete`
+ * (`subagent_progress`'s sibling `model`/`totalCost`/token fields) — the live
+ * WS payload equivalents of the persisted blobs this function was written for.
+ */
+export const redactCreatorPrivateBlob = <T>(value: T): T => {
+  if (Array.isArray(value)) return value.map((item) => redactCreatorPrivateBlob(item)) as T;
+  if (!isPlainRecord(value)) return value;
+
+  const result: Record<string, unknown> = {};
+  for (const [key, nested] of Object.entries(value)) {
+    if (CREATOR_PRIVATE_BLOB_KEYS.has(key)) continue;
+    result[key] = redactCreatorPrivateBlob(nested);
+  }
+  return result as T;
+};
+
+/**
+ * `ChatMessageError.type` codes that are safe to forward to a visitor
+ * VERBATIM, `message` included — because they are purpose-built,
+ * business-level codes whose throw sites already write a clean, generic
+ * `message` (never string-concatenated from a raw upstream payload) and whose
+ * NAME itself says nothing about the creator's provider/model/account: "this
+ * shared agent hit its per-topic turn cap", not "OpenAI rejected key sk-…".
+ * Every other code — including the LEGITIMATE quota/rate-limit codes, whose
+ * `message`/`body` are still built by `formatErrorForState` from the raw
+ * upstream error — is projected to {@link VISITOR_PUBLIC_ERROR_TYPE}. Kept as
+ * a narrow allowlist (fail closed) rather than an exclude list of "known
+ * provider-identifying codes": some codes leak the provider through the TYPE
+ * NAME alone (`OllamaServiceUnavailable`, `InvalidBedrockCredentials`, …), so
+ * a denylist would need to enumerate those and would miss the next one a
+ * model-runtime change adds.
+ */
+const VISITOR_SAFE_ERROR_TYPES = new Set<string>([
+  ChatErrorType.ShareTurnLimitExceeded,
+  ChatErrorType.ShareTopicLimitExceeded,
+  ChatErrorType.ShareSpendLimitExceeded,
+  ChatErrorType.ShareHeterogeneousAgentUnsupported,
+  ChatErrorType.AgentShareProviderNotSupported,
+]);
+
+/**
+ * Public fallback `type` for any `ChatMessageError` whose code is not in
+ * {@link VISITOR_SAFE_ERROR_TYPES}. Reuses the existing generic
+ * `AgentRuntimeError` bucket (already localized) rather than minting a new
+ * code: the visitor only needs "the run failed, retry or contact the creator",
+ * never which of the ~60 specific runtime codes fired.
+ */
+const VISITOR_PUBLIC_ERROR_TYPE = AgentRuntimeErrorType.AgentRuntimeError;
+
+/**
+ * Sanitize a `ChatMessageError` for a visitor — PROJECTION, not the recursive
+ * {@link redactCreatorPrivateBlob} used for `pluginState`/`pluginError`.
+ * `body` has no stable set of key names to strip: it is free-form per error
+ * source and `formatErrorForState` deliberately copies `provider`, `budget`,
+ * and the raw upstream diagnostic onto it for exactly the failures a visitor
+ * can trigger on demand (bad key, exhausted quota, upstream 500) — so
+ * recursing a fixed key set would miss the next shape a new error source
+ * introduces. Dropping `body` wholesale and keeping only a classified `type`
+ * (+ `message` for the allowlisted codes) fails closed instead: the client
+ * re-derives its localized copy, alert styling, and error-card variant from
+ * `type` alone.
+ *
+ * Bypassed entirely when the share sets `showErrorDetails` — the creator has
+ * then explicitly opted into showing visitors the raw failure.
+ */
+export const sanitizeVisitorError = (
+  error: ChatMessageError | null | undefined,
+  options: VisitorRedactionOptions = {},
+): ChatMessageError | null | undefined => {
+  if (!error) return error;
+  if (options.showErrorDetails) return error;
+
+  const type = error.type as unknown;
+  if (typeof type === 'string' && VISITOR_SAFE_ERROR_TYPES.has(type)) {
+    return { message: error.message, type: error.type };
+  }
+
+  return { type: VISITOR_PUBLIC_ERROR_TYPE };
+};
+
+/**
+ * `signalCallbacks[].callbacks[]` is a denormalized per-callback snapshot built
+ * by `FlatListBuilder`, carrying a bare `model`/`provider` pair per callback
+ * turn — same leak class as `pinnedMessages`/`children`'s group-node
+ * snapshots.
+ */
+const sanitizeVisitorSignalCallbacks = (
+  signalCallbacks: UISignalCallbacksBlock[] | undefined,
+): UISignalCallbacksBlock[] | undefined =>
+  signalCallbacks?.map((block) => ({
+    ...block,
+    callbacks: block.callbacks.map((callback) => ({
+      ...callback,
+      model: undefined,
+      provider: undefined,
+    })),
+  }));
+
+/**
+ * `taskCompletions[]` blocks are denormalized post-task-summary snapshots built
+ * by `FlatListBuilder`, each carrying its own `usage` — the same class of
+ * creator spend data as the top-level `usage` field.
+ */
+const sanitizeVisitorTaskCompletions = (
+  taskCompletions: AssistantContentBlock[] | undefined,
+): AssistantContentBlock[] | undefined =>
+  taskCompletions?.map(({ usage: _usage, ...rest }) => rest);
+
+/**
+ * `metadata.usage` / `metadata.cost` are the pre-migration duplicates of the
+ * (denied) top-level `usage` field — kept on the type only so legacy rows
+ * written before the dedicated `usage` column still type-check.
+ * `queryWithWhere` itself falls back to `metadata.usage` for those rows, so
+ * leaving `metadata` unsanitized would let the exact spend snapshot back in
+ * through a legacy row's `metadata` blob. Every other `metadata` field is this
+ * message's own presentational state and passes through untouched.
+ */
+const sanitizeVisitorMetadata = (
+  metadata: MessageMetadata | null | undefined,
+): MessageMetadata | null | undefined => {
+  if (!metadata) return metadata;
+  const { usage: _usage, cost: _cost, ...rest } = metadata;
+  return rest;
+};
+
+/**
+ * Strip creator-only fields from a message row before it reaches an
+ * agent-share visitor. Creator account identity never crosses the share
+ * boundary; the creator's model/provider/spend choices cross it only when the
+ * share sets `showModelInfo`, and raw error payloads only when it sets
+ * `showErrorDetails` ({@link VisitorRedactionOptions}).
+ *
+ * Built from {@link VISITOR_MESSAGE_ALLOWED_KEYS} plus explicit handling for
+ * the fields that need transformation rather than a plain allow/deny.
+ */
+export const toVisitorMessage = (
+  message: UIChatMessage,
+  options: VisitorRedactionOptions = {},
+): UIChatMessage => {
+  const stripModelInfo = !options.showModelInfo;
+
+  return {
+    ...pickAllowedKeys(message),
+    // `sender` is the CREATOR's account identity — never gated by any config
+    // flag, since no share setting is about exposing whose account runs the
+    // agent.
+    sender: null,
+    extra: stripModelInfo ? sanitizeVisitorExtra(message.extra) : message.extra,
+    metadata: stripModelInfo ? sanitizeVisitorMetadata(message.metadata) : message.metadata,
+    // Unbounded per-tool blobs: a tool runtime controls everything inside
+    // them, so a fixed field allowlist can't classify their contents — the
+    // creator-identity key set is recursed out instead.
+    pluginError: stripModelInfo
+      ? redactCreatorPrivateBlob(message.pluginError)
+      : message.pluginError,
+    pluginState: stripModelInfo
+      ? redactCreatorPrivateBlob(message.pluginState)
+      : message.pluginState,
+    // Projected, not redacted — see `sanitizeVisitorError`.
+    error: sanitizeVisitorError(message.error, options),
+    ...(stripModelInfo
+      ? {
+          model: undefined,
+          provider: undefined,
+          signalCallbacks: sanitizeVisitorSignalCallbacks(message.signalCallbacks),
+          taskCompletions: sanitizeVisitorTaskCompletions(message.taskCompletions),
+          taskDetail: sanitizeVisitorTaskDetail(message.taskDetail),
+          usage: undefined,
+        }
+      : {
+          model: message.model,
+          provider: message.provider,
+          signalCallbacks: message.signalCallbacks,
+          taskCompletions: message.taskCompletions,
+          taskDetail: message.taskDetail,
+          usage: message.usage,
+        }),
+    // Work summaries join live task/version state under the CREATOR's account
+    // — never served to a visitor surface regardless of share config.
+    works: undefined,
+    // A compacted topic nests raw rows under the group node, and group chat
+    // nests member messages, so anything less than a full recursive sanitize
+    // would leave the creator's identity on everything inside it.
+    ...(message.compressedMessages && {
+      compressedMessages: message.compressedMessages.map((nested) =>
+        toVisitorMessage(nested, options),
+      ),
+    }),
+    ...(message.members && {
+      members: message.members.map((nested) => toVisitorMessage(nested, options)),
+    }),
+    // `pinnedMessages` is only ever the narrow group-node projection (see
+    // `queryMessageGroupNodes` in the Compression branch). Emit it in both
+    // modes — sanitized when the model snapshot is not shared, otherwise
+    // untouched.
+    ...(message.pinnedMessages && {
+      pinnedMessages: stripModelInfo
+        ? (sanitizeVisitorGroupSnapshots(
+            message.pinnedMessages as unknown as VisitorGroupSnapshotProjection[],
+          ) as unknown as UIChatMessage['pinnedMessages'])
+        : message.pinnedMessages,
+    }),
+    // `children` is polymorphic: a `compareGroup` node carries the same bare
+    // {id, role, model, provider, content, createdAt} snapshot as
+    // `pinnedMessages`; an `assistantGroup` node (produced inside
+    // `compressedMessages` by `FlatListBuilder`) carries full
+    // `AssistantContentBlock[]` with `usage`, `tools`, `error`, `metadata`,
+    // `performance`, and possibly nested `council` messages with `sender` —
+    // so a compareGroup-only narrow sanitize would let all of those through
+    // for an assistantGroup child. Route by the PARENT `role` and recurse
+    // assistantGroup children through `toVisitorMessage` itself so the
+    // allowlist / error projection / usage & metadata stripping / council
+    // recursion all apply.
+    ...(message.children && {
+      children:
+        message.role === 'compareGroup'
+          ? stripModelInfo
+            ? (sanitizeVisitorGroupSnapshots(
+                message.children as unknown as VisitorGroupSnapshotProjection[],
+              ) as unknown as UIChatMessage['children'])
+            : message.children
+          : ((message.children as unknown as UIChatMessage[]).map((child) =>
+              toVisitorMessage(child, options),
+            ) as unknown as UIChatMessage['children']),
+    }),
+    // `AssistantContentBlock.council` on a nested assistantGroup child is a
+    // `Message[]` of the supervisor's broadcast members, each carrying its
+    // own `sender` / model / usage. `pickAllowedKeys` drops `council`
+    // outright (fail closed), so re-attach a recursively sanitized copy
+    // whenever the source carried one.
+    ...((message as unknown as { council?: unknown }).council !== undefined &&
+      ({
+        council: ((message as unknown as { council?: UIChatMessage[] }).council ?? []).map(
+          (member) => toVisitorMessage(member, options),
+        ),
+      } as unknown as Partial<UIChatMessage>)),
+  } as UIChatMessage;
+};
+
 export class MessageModel {
   private userId: string;
   private db: LobeChatDatabase;
+  private ftsSearchCandidateSource?: FtsSearchCandidateSource;
   private workspaceId?: string;
+  /**
+   * When true, {@link ownership} (and by extension every creator-scoped
+   * read/write below) stops ANDing {@link notShareVisitorMessage}. Reserved
+   * for surfaces that are share-runtime by design (agent-share visitor
+   * router, share-scoped abuse guards) and for the agent runtime paths that
+   * persist or clean up a visitor turn under the CREATOR's identity.
+   * Defaults to false so every ordinary creator-facing caller fails closed.
+   */
+  private includeShareVisitor: boolean;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    ftsSearchCandidateSource?: FtsSearchCandidateSource,
+    options: MessageModelOptions = {},
+  ) {
     this.userId = userId;
     this.db = db;
     this.workspaceId = workspaceId;
+    this.ftsSearchCandidateSource = ftsSearchCandidateSource;
+    this.includeShareVisitor = options.includeShareVisitor ?? false;
   }
 
-  private ownership = () =>
+  /**
+   * Raw workspace/user scope, WITHOUT the visitor exclusion. Backing store
+   * for {@link ownership} and the escape hatch for methods that resolve the
+   * effective visitor gate per-call ({@link deleteMessage},
+   * {@link deleteMessages}, {@link query} via `allowShareVisitor`, …).
+   */
+  private workspaceScope = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages);
+
+  /**
+   * Default visitor exclusion applied by {@link ownership} — see
+   * `notShareVisitorMessage` in `../utils/shareVisitor`. Returns `undefined`
+   * when the instance was constructed with `includeShareVisitor: true`.
+   */
+  private notShareVisitor = () => (this.includeShareVisitor ? undefined : notShareVisitorMessage());
+
+  private ownership = () => and(this.workspaceScope(), this.notShareVisitor());
+
+  /**
+   * One indexed lookup of a topic's `senderId` in this user/workspace scope
+   * (`buildWorkspaceWhere` on `topics`). Returned once and reused: every row
+   * that belongs to a topic shares that topic's visitor/creator identity, so
+   * once the topic itself has been classified the per-row NOT EXISTS predicate
+   * from {@link notShareVisitorMessage} is redundant for the rest of the same
+   * call. Callers pass the resolved verdict downstream (as
+   * `allowShareVisitor: true` for a verified creator topic) to swap the
+   * relevant `ownership()` sites over to plain `workspaceScope()`.
+   *
+   * Fails closed: returns `'visitor'` when the topic doesn't exist under this
+   * scope OR carries a non-null `senderId`, so an unauthorized topicId gets
+   * the same empty result as before.
+   */
+  private resolveTopicVisitorScope = async (topicId: string): Promise<'creator' | 'visitor'> => {
+    const rows = await this.db
+      .select({ senderId: topics.senderId })
+      .from(topics)
+      .where(
+        and(
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+          eq(topics.id, topicId),
+        ),
+      )
+      .limit(1);
+    if (rows.length === 0) return 'visitor';
+    return rows[0].senderId === null ? 'creator' : 'visitor';
+  };
 
   private pluginsOwnership = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messagePlugins);
@@ -327,6 +1001,40 @@ export class MessageModel {
   // **************** Query *************** //
 
   /**
+   * The newest user message of each given topic, keyed by topic id. Used to
+   * pre-inject recent same-channel history for IM platforms that can't read
+   * chat history at runtime (e.g. WeChat). Only `role = 'user'` rows with
+   * non-empty text are considered.
+   */
+  queryLastUserMessageByTopics = async (topicIds: string[]): Promise<Map<string, string>> => {
+    if (topicIds.length === 0) return new Map();
+
+    const rows = await this.db
+      .selectDistinctOn([messages.topicId], {
+        content: messages.content,
+        topicId: messages.topicId,
+      })
+      .from(messages)
+      .where(
+        and(
+          this.ownership(),
+          inArray(messages.topicId, topicIds),
+          eq(messages.role, 'user'),
+          isNotNull(messages.content),
+          ne(messages.content, ''),
+        ),
+      )
+      .orderBy(messages.topicId, desc(messages.createdAt));
+
+    const result = new Map<string, string>();
+    for (const row of rows) {
+      const content = (row.content ?? '').trim();
+      if (row.topicId && content) result.set(row.topicId, content);
+    }
+    return result;
+  };
+
+  /**
    * Query messages by params (high-level API)
    *
    * This is the main query method that handles common query patterns.
@@ -336,13 +1044,24 @@ export class MessageModel {
     {
       agentId,
       current = 0,
+      includeFileWorks,
       pageSize = 1000,
       sessionId,
+      skipWorks,
       topicId,
       groupId,
       threadId,
     }: QueryMessageParams = {},
     options: {
+      /**
+       * Opt IN to agent-share visitor messages. Visitor conversations persist
+       * under the CREATOR's `userId` (only `topics.senderId` marks them), so
+       * `this.ownership()` alone lets a creator read a visitor's full transcript
+       * by passing its `topicId` — bypassing `allowCreatorViewSessions=false`.
+       * Defaults to false so every creator-facing caller fails closed; only the
+       * share-scoped read path ({@link MessageModel.queryForVisitor}) sets it.
+       */
+      allowShareVisitor?: boolean;
       postProcessUrl?: (
         path: string | null,
         file: { fileType: string; id?: string | null },
@@ -351,7 +1070,41 @@ export class MessageModel {
     } = {},
   ) => {
     const queryStartedAt = Date.now();
+    // Effective visitor gate: per-call `allowShareVisitor` OR the instance's
+    // `includeShareVisitor`. Combined so `queryForVisitor(...)` still works
+    // on a default-scoped instance (its explicit param overrides), AND a
+    // share-runtime instance stops needing the param at every call site.
+    const includeVisitor = options.allowShareVisitor || this.includeShareVisitor;
     const timing = options.timing;
+
+    // Topic-scope shortcut: when the caller pins a `topicId` and hasn't opted
+    // in to visitor rows, resolve the topic's `senderId` ONCE and either fail
+    // closed (visitor topic) or drop the per-row NOT EXISTS predicate that
+    // `queryWithWhere` / `queryMessageGroupNodes` would otherwise re-check for
+    // every message in the topic. Every row inside a topic shares its parent
+    // topic's visitor/creator identity, so a single indexed topic lookup is
+    // strictly stronger than the correlated subquery repeated per row.
+    let topicScopeVerified = false;
+    if (topicId && !includeVisitor) {
+      const scope = await this.resolveTopicVisitorScope(topicId);
+      if (scope === 'visitor') {
+        logTiming(timing, 'db.message.query:done', {
+          messageCount: 0,
+          stageMs: getDurationMs(queryStartedAt),
+        });
+        return [];
+      }
+      topicScopeVerified = true;
+    }
+    // `queryWithWhere` already ANDs `notShareVisitorMessage()` via
+    // `ownership()`, so the previous per-branch `shareVisitorCondition` in
+    // the `where` was pure duplication — dropped. When `topicScopeVerified`
+    // is true the predicate is redundant altogether (the topic has been
+    // classified once), and we pass that verdict downstream via
+    // `allowShareVisitor: effectiveIncludeVisitor` so `queryWithWhere` swaps
+    // its scope from `ownership()` to `workspaceScope()` and skips the
+    // per-row NOT EXISTS.
+    const effectiveIncludeVisitor = includeVisitor || topicScopeVerified;
     logTiming(timing, 'db.message.query:start', {
       current,
       hasAgentId: !!agentId,
@@ -383,13 +1136,19 @@ export class MessageModel {
         () => this.buildThreadQueryCondition(threadId),
         { hasThreadId: true },
       );
+      // A topic thread may contain replies from delegated agents. When the topic is known,
+      // scope the complete thread to it instead of filtering those replies by the parent agent.
+      const threadScopeCondition = topicId ? this.matchTopic(topicId) : agentCondition;
       const messageItems = await this.queryWithWhere({
+        allowShareVisitor: effectiveIncludeVisitor,
         current,
+        includeFileWorks,
         pageSize,
         postProcessUrl: options.postProcessUrl,
+        skipWorks,
         timing,
-        // Thread queries optionally add agent/session scope if provided
-        where: agentCondition ? and(agentCondition, threadCondition) : threadCondition,
+        topicId: topicId ?? undefined,
+        where: and(threadScopeCondition, threadCondition),
       });
       logTiming(timing, 'db.message.query:done', {
         messageCount: messageItems.length,
@@ -409,9 +1168,12 @@ export class MessageModel {
       );
 
       const messageItems = await this.queryWithWhere({
+        allowShareVisitor: effectiveIncludeVisitor,
         current,
+        includeFileWorks,
         pageSize,
         postProcessUrl: options.postProcessUrl,
+        skipWorks,
         timing,
         topicId: topicId ?? undefined,
         where: whereCondition,
@@ -423,18 +1185,27 @@ export class MessageModel {
       return messageItems;
     }
 
-    // Standard query with session/topic/group filters
+    // A concrete topic is the conversation boundary and may legitimately
+    // contain messages from multiple agents (for example callAgent replies).
+    // Inbox queries have no topic, so they still require agent/session scope.
+    const conversationCondition = topicId
+      ? this.matchTopic(topicId)
+      : and(agentCondition ?? this.matchSession(sessionId), this.matchTopic(topicId));
+
+    // Standard query with conversation/topic/group filters
     const whereCondition = and(
-      agentCondition ?? this.matchSession(sessionId),
-      this.matchTopic(topicId),
+      conversationCondition,
       this.matchGroup(groupId),
       this.matchThread(threadId),
     );
 
     const messageItems = await this.queryWithWhere({
+      allowShareVisitor: effectiveIncludeVisitor,
       current,
+      includeFileWorks,
       pageSize,
       postProcessUrl: options.postProcessUrl,
+      skipWorks,
       timing,
       topicId: topicId ?? undefined,
       where: whereCondition,
@@ -444,6 +1215,112 @@ export class MessageModel {
       stageMs: getDurationMs(queryStartedAt),
     });
     return messageItems;
+  };
+
+  // **************** Agent Share (visitor-scoped) *************** //
+
+  /**
+   * Visitor-facing twin of {@link query} for agent-share reads.
+   *
+   * Share messages persist under the CREATOR's account (see `shareChat.ts`),
+   * so `query()`'s joined `sender` and the billing/model-snapshot fields
+   * describe the creator, not the visitor reading them. `redaction` carries the
+   * share's own `showModelInfo` / `showErrorDetails` switches; omitting it
+   * strips everything (fail closed).
+   */
+  queryForVisitor = async (
+    params: QueryMessageParams = {},
+    options: {
+      postProcessUrl?: (
+        path: string | null,
+        file: { fileType: string; id?: string | null },
+      ) => Promise<string>;
+      redaction?: VisitorRedactionOptions;
+      timing?: ModelTimingContext;
+    } = {},
+  ): Promise<UIChatMessage[]> => {
+    // The only caller allowed past `query()`'s visitor guard: the topic was
+    // already resolved and authorized as this visitor's own share topic.
+    const messageItems = await this.query(params, { ...options, allowShareVisitor: true });
+    return messageItems.map((message) => toVisitorMessage(message, options.redaction));
+  };
+
+  /**
+   * Exact per-topic turn count for one role, used by `maxTurnsPerTopic`.
+   *
+   * MUST NOT reuse {@link MessageModel.count}: its `analyticsConditions()` ANDs
+   * in `notShareVisitorMessage()`, which excludes every message whose topic has
+   * a non-null `senderId` — i.e. every agent-share visitor topic. That
+   * predicate is correct for personal analytics (visitor usage is reported
+   * separately), but it would make `count()` return 0 forever for a share
+   * topic, silently disabling the turn cap.
+   *
+   * Safe without a visitor/ownership check here: the caller (shareChat router /
+   * `reserveShareVisitorTurn`) already resolved and authorized the topic, and
+   * `this.ownership()` matches because share messages carry the creator's
+   * `userId` (the model is constructed with `share.ownerId`).
+   */
+  countByTopic = async ({ role, topicId }: { role: string; topicId: string }): Promise<number> => {
+    const result = await this.db
+      .select({ count: count(messages.id) })
+      .from(messages)
+      .where(and(this.ownership(), eq(messages.topicId, topicId), eq(messages.role, role)));
+
+    return result[0].count;
+  };
+
+  /**
+   * Return a lightweight, ownership-scoped transcript for a topic.
+   *
+   * Unlike the conversation query, this intentionally does not infer missing
+   * session, group, or thread filters as `IS NULL`, and it does not replace raw
+   * message-group members with synthetic nodes. Consumers such as the CLI need
+   * the complete persisted transcript and exact database pagination.
+   */
+  queryTopicTranscript = async ({
+    limit,
+    offset,
+    topicId,
+  }: {
+    limit: number;
+    offset: number;
+    topicId: string;
+  }): Promise<TopicTranscriptResult> => {
+    // Creator-facing only (CLI / topic transcript router): agent-share visitor
+    // messages live under the creator's `userId`, so ownership alone would hand
+    // the creator a visitor's full transcript from a raw topic id.
+    const where = and(this.ownership(), eq(messages.topicId, topicId), notShareVisitorMessage());
+
+    const [items, totalResult] = await Promise.all([
+      this.db
+        .select({
+          content: messages.content,
+          createdAt: messages.createdAt,
+          id: messages.id,
+          messageGroupId: messages.messageGroupId,
+          parentId: messages.parentId,
+          role: messages.role,
+          threadId: messages.threadId,
+          tools: messages.tools,
+        })
+        .from(messages)
+        .where(where)
+        .orderBy(asc(messages.createdAt), asc(messages.id))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ count: count(messages.id) })
+        .from(messages)
+        .where(where),
+    ]);
+
+    return {
+      items: items.map(({ tools, ...message }) => ({
+        ...message,
+        tools: Array.isArray(tools) ? (tools as ChatToolPayload[]) : null,
+      })),
+      total: totalResult[0]?.count ?? 0,
+    };
   };
 
   /**
@@ -490,9 +1367,23 @@ export class MessageModel {
    * @returns Messages with all related data, including MessageGroup nodes
    */
   queryWithWhere = async (options: QueryMessagesOptions = {}): Promise<UIChatMessage[]> => {
-    const { where, current = 0, pageSize = 1000, postProcessUrl, topicId, timing } = options;
+    const {
+      where,
+      current = 0,
+      includeFileWorks,
+      pageSize = 1000,
+      postProcessUrl,
+      skipWorks,
+      topicId,
+      timing,
+      allowShareVisitor,
+    } = options;
     const totalStartedAt = Date.now();
     const offset = current * pageSize;
+    // See {@link QueryMessagesOptions.allowShareVisitor}. Combined with the
+    // instance's `includeShareVisitor` so either widens the scope.
+    const scope =
+      allowShareVisitor || this.includeShareVisitor ? this.workspaceScope() : this.ownership();
 
     // 1. get basic messages with joins, excluding messages that belong to MessageGroups
     const result = await runTimedStage(
@@ -528,9 +1419,13 @@ export class MessageModel {
             targetId: messages.targetId,
 
             sender: {
+              // `id` MUST be the first selected field: drizzle decides whether a
+              // left-joined nested selection is null from its first column, so
+              // leading with a nullable column (avatar) collapsed every
+              // avatar-less sender to `sender: null`.
+              id: users.id,
               avatar: users.avatar,
               fullName: users.fullName,
-              id: users.id,
               username: users.username,
             },
 
@@ -561,7 +1456,7 @@ export class MessageModel {
           .from(messages)
           .where(
             and(
-              this.ownership(),
+              scope,
               // Filter out messages that belong to MessageGroups
               isNull(messages.messageGroupId),
               where,
@@ -571,16 +1466,51 @@ export class MessageModel {
           .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
           .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
           .leftJoin(users, eq(users.id, messages.userId))
-          .orderBy(asc(messages.createdAt))
+          // Page from the NEWEST messages, not the oldest. `desc` + limit/offset
+          // fetches the most recent `pageSize` rows, so a topic with more than
+          // `pageSize` mainline messages keeps its latest turns (including the
+          // final answer) instead of silently dropping them — the previous
+          // `asc + limit` truncated exactly the newest batch, which is the worst
+          // possible slice for a chat transcript. The page is reversed back to
+          // ascending immediately below, so every downstream consumer is
+          // unaffected; only *which* rows are fetched changed. See.
+          .orderBy(desc(messages.createdAt), desc(messages.id))
           .limit(pageSize)
           .offset(offset),
       { current, pageSize },
     );
     logTiming(timing, 'db.message.queryWithWhere.baseSelect:rows', { rowCount: result.length });
 
+    // Restore ascending (createdAt, id) order so downstream assembly — the
+    // MessageGroup time window, work-summary anchoring, and the final merge sort —
+    // behaves exactly as before the newest-first fetch above.
+    result.reverse();
+
+    // When the newest page is truncated (it filled `pageSize`), its oldest rows
+    // may sit mid-round. The renderer roots a slice at a single parent, so a slice
+    // cut inside a round can strand sibling chains and drop them from the screen.
+    // Align the lower boundary to a round start — a mainline `user` message — so
+    // the slice is one contiguous chain. Never trim to empty: an oversized single
+    // round with no user message in view is kept whole (the proper fix for those
+    // is lazy step loading). Thread queries pass no `topicId` and are untouched.
+    //
+    // Scope: this only serves the single "most recent page" load (`current === 0`),
+    // which is the only page the chat read path ever requests — `current`/`pageSize`
+    // offset paging is dead code here (the very premise of). The trim is
+    // deliberately NOT offset-exact: the rows it drops from page 0 also fall outside
+    // page 1's `offset = pageSize` window, so a hypothetical offset walk would skip
+    // them. That is acceptable because nothing offset-walks this path; loading older
+    // history is round-cursor based (see the follow-up), which supersedes offset
+    // paging entirely and closes that gap by construction.
+    if (topicId && current === 0 && result.length >= pageSize) {
+      const firstRoundStart = result.findIndex((message) => message.role === 'user');
+      if (firstRoundStart > 0) result.splice(0, firstRoundStart);
+    }
+
     const messageIds = result.map((message) => message.id as string);
 
     const messageGroupNodesPromise = this.queryMessageGroupNodesForPage({
+      allowShareVisitor: allowShareVisitor || this.includeShareVisitor,
       current,
       postProcessUrl,
       result,
@@ -600,12 +1530,16 @@ export class MessageModel {
       chunksList,
       messageQueriesList,
       threadData,
+      worksByMessageId,
     ] = await Promise.all([
       messageGroupNodesPromise,
       this.queryMessageFileRelations(messageIds, postProcessUrl, timing),
       this.queryMessageChunkRelations(messageIds, timing),
       this.queryMessageQueryRelations(messageIds, timing),
       this.queryMessageThreadRelations(taskMessageIds, timing),
+      skipWorks
+        ? ({} as Record<string, WorkSummaryItem[]>)
+        : this.queryMessageWorkSummaries(result, includeFileWorks, timing),
     ]);
 
     if (messageIds.length === 0 && messageGroupNodes.length === 0) {
@@ -678,18 +1612,26 @@ export class MessageModel {
               fileList: fileList
                 .filter((relation) => relation.messageId === item.id)
 
-                .map<ChatFileItem>(({ id, url, size, fileType, name }) => ({
-                  content: documentsMap[id],
-                  fileType: fileType!,
-                  id,
-                  name: name!,
-                  size: size!,
-                  url,
-                })),
+                .map<ChatFileItem>(({ id, url, size, fileType, name }) =>
+                  // Nulled by the visibility guard: the viewer lost access to
+                  // the referenced file. Emit a tombstone (id only) so the UI
+                  // renders a no-access placeholder.
+                  name === null
+                    ? { fileType: '', id, inaccessible: true, name: '', size: 0, url: '' }
+                    : {
+                        content: documentsMap[id],
+                        fileType: fileType!,
+                        id,
+                        name,
+                        size: size!,
+                        url,
+                      },
+                ),
               imageList: imageList
                 .filter((relation) => relation.messageId === item.id)
-
-                .map<ChatImageItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+                .map(({ id, metadata, name, url }) =>
+                  createChatImageItem({ id, metadata, name: name!, url }),
+                ),
 
               model,
 
@@ -706,10 +1648,12 @@ export class MessageModel {
                 .filter((relation) => relation.messageId === item.id)
 
                 .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+              // Work summaries for this message's root operation, resolved
+              // server-side (attached only to the round's anchor message).
+              works: worksByMessageId[item.id as string],
               audioList: audioList
                 .filter((relation) => relation.messageId === item.id)
-
-                .map<ChatAudioItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+                .map<ChatAudioItem>(materializeChatAudioItem),
             } as unknown as UIChatMessage;
           },
         ),
@@ -740,12 +1684,23 @@ export class MessageModel {
   };
 
   private queryMessageGroupNodesForPage = async ({
+    allowShareVisitor,
     current,
     postProcessUrl,
     result,
     timing,
     topicId,
   }: {
+    /**
+     * Effective visitor gate resolved by the caller (per-call
+     * `allowShareVisitor` OR the instance's `includeShareVisitor`). Threaded
+     * through so the underlying `messageGroups` where-clause fails closed on
+     * a creator's default read of a visitor topic — otherwise a bare
+     * workspace/topicId filter would still surface the group's synthetic
+     * `compressedGroup`/`compareGroup` nodes (with content summaries) even
+     * though the row query returned nothing.
+     */
+    allowShareVisitor?: boolean;
     current: number;
     postProcessUrl?: (
       path: string | null,
@@ -763,7 +1718,10 @@ export class MessageModel {
       return runTimedStage(
         timing,
         'db.message.queryWithWhere.messageGroups',
-        () => this.queryMessageGroupNodes(topicId, undefined, postProcessUrl, timing),
+        () =>
+          this.queryMessageGroupNodes(topicId, undefined, postProcessUrl, timing, {
+            allowShareVisitor,
+          }),
         { current, hasMessages: false, topicId },
       );
     }
@@ -772,7 +1730,10 @@ export class MessageModel {
       return runTimedStage(
         timing,
         'db.message.queryWithWhere.messageGroups',
-        () => this.queryMessageGroupNodes(topicId, undefined, postProcessUrl, timing),
+        () =>
+          this.queryMessageGroupNodes(topicId, undefined, postProcessUrl, timing, {
+            allowShareVisitor,
+          }),
         { current, hasMessages: true, topicId },
       );
     }
@@ -792,6 +1753,7 @@ export class MessageModel {
           },
           postProcessUrl,
           timing,
+          { allowShareVisitor },
         ),
       { current, hasMessages: true, topicId },
     );
@@ -813,12 +1775,25 @@ export class MessageModel {
             fileType: files.fileType,
             id: messagesFiles.fileId,
             messageId: messagesFiles.messageId,
+            metadata: files.metadata,
             name: files.name,
             size: files.size,
             url: files.url,
           })
           .from(messagesFiles)
-          .leftJoin(files, eq(files.id, messagesFiles.fileId))
+          // Guard the referenced file, not just the relation: in a shared
+          // conversation (chat group / workspace task) the message is visible
+          // to every member, but a file its owner switched back to private
+          // must degrade to a tombstone (id only) instead of leaking
+          // name/size/url. Same anti-leak join pattern as the agent knowledge
+          // reads in agent.ts.
+          .leftJoin(
+            files,
+            and(
+              eq(files.id, messagesFiles.fileId),
+              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, files),
+            ),
+          )
           .where(inArray(messagesFiles.messageId, messageIds)),
       { messageCount: messageIds.length },
     );
@@ -831,20 +1806,29 @@ export class MessageModel {
       'db.message.queryWithWhere.relatedFiles.postProcess',
       () =>
         Promise.all(
-          rawRelatedFileList.map(async (file) => ({
-            ...file,
-            url: postProcessUrl
-              ? await postProcessUrl(
-                  file.url,
-                  file as unknown as { fileType: string; id?: string | null },
-                )
-              : (file.url as string),
-          })),
+          rawRelatedFileList.map(async (file) => {
+            // Tombstoned by the visibility guard above — nothing to presign.
+            if (file.name === null) return { ...file, url: '' };
+            return {
+              ...file,
+              url: postProcessUrl
+                ? await postProcessUrl(
+                    file.url,
+                    file as unknown as { fileType: string; id?: string | null },
+                  )
+                : (file.url as string),
+            };
+          }),
         ),
       { fileCount: rawRelatedFileList.length },
     );
 
-    const fileIds = relatedFileList.map((file) => file.id).filter(Boolean);
+    // Exclude tombstoned files — their parsed document content must not leak
+    // through the unguarded documents join below.
+    const fileIds = relatedFileList
+      .filter((file) => file.name !== null)
+      .map((file) => file.id)
+      .filter(Boolean);
 
     if (fileIds.length === 0) return { documentsMap: {}, relatedFileList };
 
@@ -897,7 +1881,17 @@ export class MessageModel {
           .from(messageQueryChunks)
           .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
           .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
-          .innerJoin(files, eq(fileChunks.fileId, files.id))
+          // Guard the referenced file like queryMessageFileRelations: in a
+          // shared conversation, RAG reference chunks of a file its owner
+          // switched back to private must not leak filename/url/text to other
+          // members. The inner join drops those chunk rows entirely.
+          .innerJoin(
+            files,
+            and(
+              eq(fileChunks.fileId, files.id),
+              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, files),
+            ),
+          )
           .where(inArray(messageQueryChunks.messageId, messageIds)),
       { messageCount: messageIds.length },
     );
@@ -906,6 +1900,50 @@ export class MessageModel {
     });
 
     return chunksList;
+  };
+
+  /**
+   * Resolve Work summaries for a page of messages and key them by anchor
+   * message id — the LAST message (rows are createdAt-asc, so last occurrence)
+   * carrying each `metadata.work.rootOperationId`. Works ride the message-list
+   * payload so the in-message Works chips and the sidebar summary read from one
+   * source instead of a dedicated work-summary fetch. Attaching only to the
+   * round's last message (not every row sharing the operation) keeps the
+   * payload flat — the client re-keys by `rootOperationId`, so which row
+   * physically carries it doesn't matter.
+   */
+  private queryMessageWorkSummaries = async (
+    rows: { id: unknown; metadata: unknown }[],
+    includeFileWorks?: boolean,
+    timing?: ModelTimingContext,
+  ): Promise<Record<string, WorkSummaryItem[]>> => {
+    const anchorByRootId = new Map<string, string>();
+    for (const row of rows) {
+      const rootOperationId = getMessageWorkRootId(row.metadata);
+      if (rootOperationId) anchorByRootId.set(rootOperationId, row.id as string);
+    }
+    if (anchorByRootId.size === 0) return {};
+
+    const summaryMap = await runTimedStage(
+      timing,
+      'db.message.queryWithWhere.workSummaries',
+      () =>
+        new WorkModel(this.db, this.userId, this.workspaceId).listSummariesByRootOperations({
+          includeFileWorks,
+          rootOperationIds: Array.from(anchorByRootId.keys()),
+        }),
+      { rootOperationCount: anchorByRootId.size },
+    );
+
+    const worksByMessageId: Record<string, WorkSummaryItem[]> = {};
+    for (const [rootOperationId, messageId] of anchorByRootId) {
+      const works = summaryMap[rootOperationId];
+      if (works && works.length > 0) worksByMessageId[messageId] = works;
+    }
+    logTiming(timing, 'db.message.queryWithWhere.workSummaries:rows', {
+      messageCount: Object.keys(worksByMessageId).length,
+    });
+    return worksByMessageId;
   };
 
   private queryMessageQueryRelations = async (
@@ -999,6 +2037,15 @@ export class MessageModel {
   queryByIds = async (
     messageIds: string[],
     options: {
+      /**
+       * Opt IN to agent-share visitor rows. Reserved for internal callers
+       * (`queryMessageGroupNodes`) that already resolved and authorized the
+       * parent topic via {@link resolveTopicVisitorScope}; every row shares
+       * that topic's visitor/creator identity, so the per-row NOT EXISTS
+       * predicate baked into `this.ownership()` is redundant once the topic
+       * itself has been classified. External callers must leave this false.
+       */
+      allowShareVisitor?: boolean;
       postProcessUrl?: (
         path: string | null,
         file: { fileType: string; id?: string | null },
@@ -1008,6 +2055,10 @@ export class MessageModel {
     if (messageIds.length === 0) return [];
 
     const { postProcessUrl } = options;
+    const scope =
+      options.allowShareVisitor || this.includeShareVisitor
+        ? this.workspaceScope()
+        : this.ownership();
 
     // 1. Query messages with joins
     const result = await this.db
@@ -1038,6 +2089,15 @@ export class MessageModel {
         agentId: messages.agentId,
         targetId: messages.targetId,
 
+        sender: {
+          // `id` MUST be the first selected field — see queryWithWhere's sender
+          // selection for why (drizzle left-join nested-object nullification).
+          id: users.id,
+          avatar: users.avatar,
+          fullName: users.fullName,
+          username: users.username,
+        },
+
         tools: messages.tools,
         tool_call_id: messagePlugins.toolCallId,
 
@@ -1063,10 +2123,11 @@ export class MessageModel {
         ttsVoice: messageTTS.voice,
       })
       .from(messages)
-      .where(and(this.ownership(), inArray(messages.id, messageIds)))
+      .where(and(scope, inArray(messages.id, messageIds)))
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
       .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
       .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
+      .leftJoin(users, eq(users.id, messages.userId))
       .orderBy(asc(messages.createdAt));
 
     if (result.length === 0) return [];
@@ -1081,31 +2142,25 @@ export class MessageModel {
           fileType: files.fileType,
           id: messagesFiles.fileId,
           messageId: messagesFiles.messageId,
+          metadata: files.metadata,
           name: files.name,
           size: files.size,
           url: files.url,
         })
         .from(messagesFiles)
-        .leftJoin(files, eq(files.id, messagesFiles.fileId))
+        // Same anti-leak guard as queryMessageFileRelations: tombstone files
+        // the viewer lost access to instead of leaking name/size/url.
+        .leftJoin(
+          files,
+          and(
+            eq(files.id, messagesFiles.fileId),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, files),
+          ),
+        )
         .where(inArray(messagesFiles.messageId, messageIds)),
 
-      // 2b. Get related file chunks
-      this.db
-        .select({
-          fileId: files.id,
-          fileType: files.fileType,
-          fileUrl: files.url,
-          filename: files.name,
-          id: chunks.id,
-          messageId: messageQueryChunks.messageId,
-          similarity: messageQueryChunks.similarity,
-          text: chunks.text,
-        })
-        .from(messageQueryChunks)
-        .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
-        .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
-        .innerJoin(files, eq(fileChunks.fileId, files.id))
-        .where(inArray(messageQueryChunks.messageId, messageIds)),
+      // 2b. Get related file chunks (visibility-guarded like queryWithWhere)
+      this.queryMessageChunkRelations(messageIds),
 
       // 2c. Get related message queries (RAG)
       this.db
@@ -1143,19 +2198,27 @@ export class MessageModel {
 
     // 3. Process file results
     const relatedFileList = await Promise.all(
-      rawRelatedFileList.map(async (file) => ({
-        ...file,
-        url: postProcessUrl
-          ? await postProcessUrl(
-              file.url,
-              file as unknown as { fileType: string; id?: string | null },
-            )
-          : (file.url as string),
-      })),
+      rawRelatedFileList.map(async (file) => {
+        // Tombstoned by the visibility guard above — nothing to presign.
+        if (file.name === null) return { ...file, url: '' };
+        return {
+          ...file,
+          url: postProcessUrl
+            ? await postProcessUrl(
+                file.url,
+                file as unknown as { fileType: string; id?: string | null },
+              )
+            : (file.url as string),
+        };
+      }),
     );
 
-    // Get associated document content
-    const fileIds = relatedFileList.map((file) => file.id).filter(Boolean);
+    // Get associated document content. Exclude tombstoned files — their parsed
+    // document content must not leak through the unguarded documents join.
+    const fileIds = relatedFileList
+      .filter((file) => file.name !== null)
+      .map((file) => file.id)
+      .filter(Boolean);
 
     let documentsMap: Record<string, string> = {};
 
@@ -1210,10 +2273,23 @@ export class MessageModel {
 
     // 6. Transform messages to UIChatMessage format
     return result.map(
-      ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
+      ({
+        model,
+        provider,
+        translate,
+        ttsId,
+        ttsFile,
+        ttsContentMd5,
+        ttsVoice,
+        sender,
+        ...item
+      }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
           ...item,
+          // Same presence contract as queryWithWhere: collapse a null-id sender
+          // (deleted account) to `null` so clients can rely on `sender?.id`.
+          sender: sender?.id ? sender : null,
           chunksList: chunksList
             .filter((relation) => relation.messageId === item.id)
             .map((c) => ({
@@ -1235,17 +2311,26 @@ export class MessageModel {
           },
           fileList: fileList
             .filter((relation) => relation.messageId === item.id)
-            .map<ChatFileItem>(({ id, url, size, fileType, name }) => ({
-              content: documentsMap[id],
-              fileType: fileType!,
-              id,
-              name: name!,
-              size: size!,
-              url,
-            })),
+            .map<ChatFileItem>(({ id, url, size, fileType, name }) =>
+              // Nulled by the visibility guard: the viewer lost access to the
+              // referenced file. Emit a tombstone (id only) so the UI renders
+              // a no-access placeholder.
+              name === null
+                ? { fileType: '', id, inaccessible: true, name: '', size: 0, url: '' }
+                : {
+                    content: documentsMap[id],
+                    fileType: fileType!,
+                    id,
+                    name,
+                    size: size!,
+                    url,
+                  },
+            ),
           imageList: imageList
             .filter((relation) => relation.messageId === item.id)
-            .map<ChatImageItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+            .map(({ id, metadata, name, url }) =>
+              createChatImageItem({ id, metadata, name: name!, url }),
+            ),
 
           model,
 
@@ -1263,7 +2348,7 @@ export class MessageModel {
             .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
           audioList: audioList
             .filter((relation) => relation.messageId === item.id)
-            .map<ChatAudioItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+            .map<ChatAudioItem>(materializeChatAudioItem),
         } as unknown as UIChatMessage;
       },
     );
@@ -1285,11 +2370,20 @@ export class MessageModel {
       file: { fileType: string; id?: string | null },
     ) => Promise<string>,
     timing?: ModelTimingContext,
+    options: { allowShareVisitor?: boolean } = {},
   ): Promise<UIChatMessage[]> => {
+    // Effective visitor gate — see `queryMessageGroupNodesForPage`. Absent
+    // this predicate, a creator's default `query({ topicId })` on a visitor
+    // topic returns no messages but still returns the group's synthetic
+    // `compressedGroup` node (with its `content` summary) or `compareGroup`
+    // node, leaking the visitor conversation shape.
+    const includeVisitor = options.allowShareVisitor || this.includeShareVisitor;
+
     // 1. Query MessageGroups for this topic, optionally filtered by time range
     const whereConditions = [
       buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messageGroups),
       eq(messageGroups.topicId, topicId),
+      ...(includeVisitor ? [] : [notShareVisitorTopicRef(messageGroups.topicId)]),
     ];
 
     // Add time range filter if provided (for pagination)
@@ -1329,7 +2423,17 @@ export class MessageModel {
             messageGroupId: messages.messageGroupId,
           })
           .from(messages)
-          .where(and(this.ownership(), inArray(messages.messageGroupId, groupIds)))
+          .where(
+            and(
+              // The parent topic has already been classified by the caller
+              // (via `resolveTopicVisitorScope`) or the model was constructed
+              // as a share-runtime instance — either way, the per-row NOT
+              // EXISTS predicate baked into `ownership()` is redundant for
+              // messages that belong to a group inside a verified topic.
+              includeVisitor ? this.workspaceScope() : this.ownership(),
+              inArray(messages.messageGroupId, groupIds),
+            ),
+          )
           .orderBy(asc(messages.createdAt)),
       { groupCount: groupIds.length },
     );
@@ -1342,7 +2446,7 @@ export class MessageModel {
     const fullMessages = await runTimedStage(
       timing,
       'db.message.messageGroups.queryByIds',
-      () => this.queryByIds(allMessageIds, { postProcessUrl }),
+      () => this.queryByIds(allMessageIds, { allowShareVisitor: includeVisitor, postProcessUrl }),
       { messageCount: allMessageIds.length },
     );
 
@@ -1485,6 +2589,57 @@ export class MessageModel {
   };
 
   /**
+   * Ids among `ids` that resolve to an agent-share VISITOR message under this
+   * owner — the inverse of the `notShareVisitorMessage()` predicate every
+   * creator-facing read applies.
+   *
+   * Creator-facing write entry points use this to reject visitor targets
+   * (see `assertCreatorMessageTargets` in the server router helpers). Ids that
+   * match no row at all are NOT reported, so callers keep their existing no-op
+   * behaviour for stale/foreign ids and only fail on rows that really belong to
+   * a visitor's conversation.
+   */
+  findShareVisitorMessageIds = async (ids: string[]): Promise<string[]> => {
+    if (ids.length === 0) return [];
+
+    const rows = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      // Explicitly scoped visitor-inclusive: this method's whole job is to
+      // return visitor ids so the router-level `assertCreatorMessageTargets`
+      // can reject them, so bypass the instance's visitor exclusion.
+      .where(and(inArray(messages.id, ids), this.workspaceScope(), not(notShareVisitorMessage())));
+
+    return rows.map((row) => row.id);
+  };
+
+  findByClientId = async (clientId: string) => {
+    return this.db.query.messages.findFirst({
+      where: and(eq(messages.clientId, clientId), this.ownership()),
+    });
+  };
+
+  findLatestAssistantMessageByThread = async ({
+    agentId,
+    threadId,
+    topicId,
+  }: {
+    agentId: string;
+    threadId: string;
+    topicId: string;
+  }) =>
+    this.db.query.messages.findFirst({
+      orderBy: [desc(messages.createdAt), desc(messages.id)],
+      where: and(
+        this.ownership(),
+        eq(messages.agentId, agentId),
+        eq(messages.topicId, topicId),
+        eq(messages.threadId, threadId),
+        eq(messages.role, 'assistant'),
+      ),
+    });
+
+  /**
    * Resolve the `role='verify'` delivery-checker card for an Agent Run (created
    * with `metadata.verifyOperationId = operationId`). Used by auto-repair to
    * persist the failure feedback onto the card it belongs to.
@@ -1495,6 +2650,34 @@ export class MessageModel {
         eq(messages.userId, this.userId),
         eq(messages.role, 'verify'),
         sql`${messages.metadata}->>'verifyOperationId' = ${operationId}`,
+      ),
+      orderBy: [desc(messages.createdAt)],
+    });
+  };
+
+  /**
+   * Resolve the newest assistant row an Agent Run produced, by the creation
+   * provenance `call_llm` stamps on every assistant row it creates or reuses
+   * (`metadata.operationId`). Scoped by `topicId` so the JSONB predicate runs
+   * inside the topic's own (indexed) rows rather than across the whole table.
+   *
+   * Used by the completion lifecycle to recover the run's real final reply
+   * when the runtime state no longer carries this run's messages — the
+   * topic-wide "latest assistant" would be an earlier turn's reply.
+   */
+  findLatestAssistantByOperationId = async ({
+    operationId,
+    topicId,
+  }: {
+    operationId: string;
+    topicId: string;
+  }) => {
+    return this.db.query.messages.findFirst({
+      where: and(
+        eq(messages.userId, this.userId),
+        eq(messages.topicId, topicId),
+        eq(messages.role, 'assistant'),
+        sql`${messages.metadata}->>'operationId' = ${operationId}`,
       ),
       orderBy: [desc(messages.createdAt)],
     });
@@ -1580,26 +2763,47 @@ export class MessageModel {
     return result[0];
   };
 
-  queryAll = async (params?: { current?: number; pageSize?: number }) => {
-    const { current = 0, pageSize = 100 } = params ?? {};
+  /**
+   * Full creator-facing message dump (`getAllMessages` / CLI export), so
+   * agent-share visitor messages must be excluded like every other
+   * creator-facing listing. The exclusion rides on
+   * {@link MessageModel.analyticsConditions}, which already ANDs
+   * `notShareVisitorMessage()` — see `../utils/shareVisitor`.
+   */
+  queryAll = async (params?: MessageAnalyticsFilters & { current?: number; pageSize?: number }) => {
+    const { current = 0, pageSize = 100, ...filters } = params ?? {};
     const offset = current * pageSize;
 
     const result = await this.db
-      .select()
+      .select({
+        ...getTableColumns(messages),
+        agentName: agents.name,
+        agentTitle: agents.title,
+      })
       .from(messages)
-      .where(and(this.ownership()))
+      .leftJoin(agents, eq(messages.agentId, agents.id))
+      .where(genWhere(this.analyticsConditions(filters)))
       .orderBy(desc(messages.createdAt))
       .limit(pageSize)
       .offset(offset);
 
-    return result as DBMessageItem[];
+    return result as (DBMessageItem & {
+      agentName: string | null;
+      agentTitle: string | null;
+    })[];
   };
 
+  // Plain select builder instead of `db.query...findMany`: the relational
+  // query API re-qualifies raw SQL fragments to the outer table alias, which
+  // breaks the `topics`-referencing NOT EXISTS inside `notShareVisitorMessage`.
   queryBySessionId = async (sessionId?: string | null) => {
-    const result = await this.db.query.messages.findMany({
-      orderBy: [asc(messages.createdAt)],
-      where: and(this.ownership(), this.matchSession(sessionId)),
-    });
+    const result = await this.db
+      .select()
+      .from(messages)
+      // Visitor messages have no sessionId, so the null-session (inbox) branch
+      // would otherwise sweep them in.
+      .where(and(this.ownership(), this.matchSession(sessionId), notShareVisitorMessage()))
+      .orderBy(asc(messages.createdAt));
 
     return result as DBMessageItem[];
   };
@@ -1608,10 +2812,27 @@ export class MessageModel {
     if (!keyword.trim()) return [];
 
     const bm25Query = sanitizeBm25Query(keyword);
+    const candidateResult = this.ftsSearchCandidateSource?.ftsSearchCandidateEnabled
+      ? await this.ftsSearchCandidateSource.ftsSearchCandidates({
+          entity: 'messages',
+          filters: {},
+          pagination: {},
+          query: { fields: ['content'], text: keyword },
+        })
+      : undefined;
+    const candidateIds = candidateResult?.candidates.map(({ id }) => id);
     const result = await this.db
       .select()
       .from(messages)
-      .where(and(this.ownership(), sql`${messages.content} @@@ ${bm25Query}`))
+      .where(
+        and(
+          this.ownership(),
+          notShareVisitorMessage(),
+          candidateIds
+            ? inJsonStringArray(messages.id, candidateIds)
+            : sql`${messages.content} @@@ ${bm25Query}`,
+        ),
+      )
       .orderBy(desc(messages.createdAt));
 
     return result as DBMessageItem[];
@@ -1621,9 +2842,16 @@ export class MessageModel {
    * Ownership-scoped analytics filter conditions, shared by count /
    * countGroupByTopic / topicMessageStats. The first entry is always the
    * `userId × workspace` ownership predicate; later entries are optional.
+   * Agent-share visitor messages carry the creator's `userId`, so personal
+   * analytics must exclude them (visitor usage is reported separately by the
+   * share usage center) — see `notShareVisitorMessage` in `../utils/shareVisitor`.
+   *
+   * MUST NOT be applied to {@link countByTopic} — see that method's JSDoc for
+   * why exact per-topic turn counting needs the visitor topic's own messages.
    */
   private analyticsConditions = (params?: MessageAnalyticsFilters) => [
     this.ownership(),
+    notShareVisitorMessage(),
     params?.agentId ? eq(messages.agentId, params.agentId) : undefined,
     params?.topicId ? eq(messages.topicId, params.topicId) : undefined,
     params?.role ? eq(messages.role, params.role) : undefined,
@@ -1647,6 +2875,63 @@ export class MessageModel {
       .where(genWhere(this.analyticsConditions(params)));
 
     return result[0].count;
+  };
+
+  /**
+   * Approximate variant of {@link count} for dashboard totals. An exact
+   * COUNT over `messages` heap-fetches every row the user owns (tens of
+   * seconds for accounts with 100k+ messages), which no stats card needs.
+   *
+   * Strategy: ask the planner for a row estimate first (EXPLAIN, a few ms).
+   * Accounts the estimate marks as clearly heavy get the estimate, rounded
+   * to 3 significant digits so the number reads as the approximation it is.
+   * Everyone else — the vast majority — gets an exact count capped at
+   * `cap + 1` rows, which is cheap at that size. A user the planner
+   * underestimates still can't get a value below what the capped scan saw.
+   * Parallel workers are disabled for the EXPLAIN because parallel plans
+   * report per-worker row estimates, not totals.
+   */
+  countApproximate = async (
+    params?: MessageAnalyticsFilters,
+    { cap = 10_000 }: { cap?: number } = {},
+  ): Promise<number> => {
+    const where = genWhere(this.analyticsConditions(params));
+
+    const roundEstimate = (estimate: number) => {
+      const magnitude = 10 ** Math.max(0, Math.floor(Math.log10(estimate)) - 2);
+      return Math.round(estimate / magnitude) * magnitude;
+    };
+
+    let estimate: number | undefined;
+    try {
+      const estimateQuery = this.db.select({ id: messages.id }).from(messages).where(where);
+      const result = await this.db.transaction(async (trx) => {
+        await trx.execute(sql`SET LOCAL max_parallel_workers_per_gather = 0`);
+        return trx.execute(sql`EXPLAIN (FORMAT JSON) ${estimateQuery.getSQL()}`);
+      });
+      const rawPlan = result.rows[0]?.['QUERY PLAN'];
+      const parsed = typeof rawPlan === 'string' ? JSON.parse(rawPlan) : rawPlan;
+      const parsedRows = Number((parsed as any)?.[0]?.['Plan']?.['Plan Rows']);
+      if (Number.isFinite(parsedRows)) estimate = parsedRows;
+    } catch (error) {
+      // Best-effort — fall through to the capped exact count, but surface the
+      // degradation: past-cap accounts will all read as `cap + 1` until fixed.
+      console.error('countApproximate: planner estimate failed, using capped count only:', error);
+    }
+
+    if (estimate !== undefined && estimate > cap * 2) return roundEstimate(estimate);
+
+    const cappedRows = this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(where)
+      .limit(cap + 1)
+      .as('capped');
+    const capped = await this.db.select({ count: count() }).from(cappedRows);
+    const exact = capped[0].count;
+    if (exact <= cap) return exact;
+
+    return Math.max(estimate === undefined ? 0 : roundEstimate(estimate), exact);
   };
 
   /**
@@ -1722,6 +3007,7 @@ export class MessageModel {
       .where(
         genWhere([
           this.ownership(),
+          notShareVisitorMessage(),
           params?.range
             ? genRangeWhere(params.range, messages.createdAt, (date) => date.toDate())
             : undefined,
@@ -1744,7 +3030,14 @@ export class MessageModel {
         id: messages.model,
       })
       .from(messages)
-      .where(and(this.ownership(), isNotNull(messages.model)))
+      .where(
+        and(
+          this.ownership(),
+          notShareVisitorMessage(),
+          isNotNull(messages.model),
+          notCopiedTranscript(),
+        ),
+      )
       .having(({ count }) => gt(count, 0))
       .groupBy(messages.model)
       .orderBy(desc(sql`count`), asc(messages.model))
@@ -1764,6 +3057,7 @@ export class MessageModel {
       .where(
         genWhere([
           this.ownership(),
+          notShareVisitorMessage(),
           genRangeWhere(
             [startDate.format('YYYY-MM-DD'), endDate.add(1, 'day').format('YYYY-MM-DD')],
             messages.createdAt,
@@ -1831,7 +3125,9 @@ export class MessageModel {
       .where(
         genWhere([
           this.ownership(),
+          notShareVisitorMessage(),
           eq(messages.role, 'assistant'),
+          notCopiedTranscript(),
           genRangeWhere(
             [startDate.format('YYYY-MM-DD'), endDate.add(1, 'day').format('YYYY-MM-DD')],
             messages.createdAt,
@@ -1939,6 +3235,8 @@ export class MessageModel {
   ) => {
     // Ensure group message does not populate sessionId
     const normalizedMessage = message.groupId ? { ...message, sessionId: null } : message;
+    const { usage: legacyUsage, ...metadata } =
+      (normalizedMessage.metadata as Record<string, any> | undefined) || {};
 
     return buildWorkspacePayload(
       { userId: this.userId, workspaceId: this.workspaceId },
@@ -1949,14 +3247,13 @@ export class MessageModel {
         // TODO: remove this when the client is updated
         createdAt: createdAt ? new Date(createdAt) : undefined,
         id,
+        metadata: normalizedMessage.metadata ? metadata : undefined,
         model: fromModel,
         provider: fromProvider,
         updatedAt: updatedAt ? new Date(updatedAt) : undefined,
         // Promote token usage into the dedicated `usage` column, preferring a
         // top-level `usage` over the legacy `metadata.usage`.
-        usage:
-          normalizedMessage.usage ??
-          (normalizedMessage.metadata as { usage?: ModelUsage } | undefined)?.usage,
+        usage: normalizedMessage.usage ?? (legacyUsage as ModelUsage | undefined),
       },
     );
   };
@@ -1980,10 +3277,10 @@ export class MessageModel {
     if (message.role === 'tool') {
       await runTimedStage(timing, `${timingPrefix}.plugin.insert`, () =>
         trx.insert(messagePlugins).values({
-          apiName: plugin?.apiName,
+          apiName: clampToolIdentifier(plugin?.apiName),
           arguments: sanitizeNullBytes(plugin?.arguments),
           id,
-          identifier: plugin?.identifier,
+          identifier: clampToolIdentifier(plugin?.identifier),
           intervention: pluginIntervention,
           state: sanitizeNullBytes(pluginState),
           toolCallId: message.tool_call_id,
@@ -2088,10 +3385,10 @@ export class MessageModel {
 
   createUserAndAssistantMessages = async (
     { userMessage, assistantMessage }: CreateUserAndAssistantMessagesParams,
-    { timing }: CreateUserAndAssistantMessagesOptions = {},
+    { ids, timing }: CreateUserAndAssistantMessagesOptions = {},
   ): Promise<{ assistantMessage: DBMessageItem; userMessage: DBMessageItem }> => {
-    const userMessageId = this.genId();
-    const assistantMessageId = this.genId();
+    const userMessageId = ids?.userMessageId ?? this.genId();
+    const assistantMessageId = ids?.assistantMessageId ?? this.genId();
     const createdAt = Date.now();
     const defaultUserCreatedAt = createdAt;
     const defaultAssistantCreatedAt = createdAt + 1;
@@ -2200,19 +3497,15 @@ export class MessageModel {
     { imageList, metadata, usage, ...message }: Partial<UpdateMessageParams>,
     timing?: ModelTimingContext,
   ): Promise<{ success: boolean }> => {
-    // Promote token usage into the dedicated `usage` column. Prefer a top-level
-    // `usage` payload, falling back to `metadata.usage` so existing writers
-    // (Gateway / hetero-agent executors) keep populating the column without
-    // changes. `metadata.usage` is still written for backward-compatible reads.
-    const usageToWrite = usage ?? (metadata as { usage?: ModelUsage } | undefined)?.usage;
-    // Keep `metadata.usage` dual-written even when usage arrives as a top-level
-    // param (with no metadata payload) — legacy readers / rollback paths still
-    // consume it during the transition. Folding the resolved usage into the
-    // patch also keeps it consistent with the column when both are sent.
-    const metadataPatch =
-      metadata || usageToWrite
-        ? { ...metadata, ...(usageToWrite && { usage: usageToWrite }) }
-        : undefined;
+    // Accept legacy callers that still send `metadata.usage`, but persist usage
+    // exclusively in the dedicated top-level column.
+    const { usage: legacyUsage, ...metadataPatch } = (metadata as Record<string, any>) || {};
+    const usageToWrite = usage ?? (legacyUsage as ModelUsage | undefined);
+    const shouldUpdateMetadata = !!metadata || !!usageToWrite;
+    // A patch that matches no row is a lost write, not a no-op: the caller asked
+    // to persist content onto `id` and it went nowhere. Batched writers key their
+    // retry ledger off this flag, so reporting success here silently drops data.
+    let matchedRow = false;
     try {
       await runTimedStage(
         timing,
@@ -2237,10 +3530,10 @@ export class MessageModel {
               );
             }
 
-            // 2. Handle metadata merge if there's a metadata payload or a
-            // top-level usage to fold back into `metadata.usage`.
+            // 2. Merge non-usage metadata. A usage-bearing update also removes
+            // any legacy `metadata.usage` left on the existing row.
             let mergedMetadata: Record<string, any> | undefined;
-            if (metadataPatch) {
+            if (shouldUpdateMetadata) {
               const [existingMessage] = await runTimedStage(
                 timing,
                 'db.message.update.metadata.select',
@@ -2251,7 +3544,9 @@ export class MessageModel {
                     .where(and(eq(messages.id, id), this.ownership())),
               );
               mergedMetadata = merge(existingMessage?.metadata || {}, metadataPatch);
+              if (usageToWrite && mergedMetadata) delete mergedMetadata.usage;
             }
+            const metadataToWrite = mergedMetadata;
 
             const [updated] = await runTimedStage(
               timing,
@@ -2261,13 +3556,15 @@ export class MessageModel {
                   .update(messages)
                   .set({
                     ...message,
-                    ...(mergedMetadata && { metadata: mergedMetadata }),
+                    ...(metadataToWrite && { metadata: metadataToWrite }),
                     ...(usageToWrite && { usage: usageToWrite }),
                   })
                   .where(and(eq(messages.id, id), this.ownership()))
                   .returning({ topicId: messages.topicId }),
               { hasMetadata: !!metadataPatch, valueKeys: Object.keys(message) },
             );
+
+            matchedRow = !!updated;
 
             if (
               updated?.topicId && // When this write carries token usage (assistant finalize / hetero
@@ -2286,10 +3583,15 @@ export class MessageModel {
           }),
         {
           hasImageList: !!imageList?.length,
-          hasMetadata: !!metadataPatch,
+          hasMetadata: shouldUpdateMetadata,
           valueKeys: Object.keys(message),
         },
       );
+
+      if (!matchedRow) {
+        console.error(`Update message error: no message matched id ${id}`);
+        return { success: false };
+      }
 
       return { success: true };
     } catch (error) {
@@ -2305,10 +3607,9 @@ export class MessageModel {
 
     if (!item) return;
 
-    const mergedMetadata = merge(item.metadata || {}, metadata);
-    // Keep the dedicated `usage` column in sync when the merged metadata carries
-    // token usage, preferring it over the existing column value.
-    const usageToWrite = (metadata as { usage?: ModelUsage } | undefined)?.usage;
+    const { usage: usageToWrite, ...metadataPatch } = metadata as Record<string, any>;
+    const mergedMetadata = merge(item.metadata || {}, metadataPatch);
+    if (usageToWrite) delete mergedMetadata.usage;
 
     return this.db
       .update(messages)
@@ -2317,15 +3618,17 @@ export class MessageModel {
   };
 
   updatePluginState = async (id: string, state: Record<string, any>): Promise<void> => {
-    const item = await this.db.query.messagePlugins.findFirst({
-      where: and(eq(messagePlugins.id, id), this.pluginsOwnership()),
-    });
-    if (!item) throw new Error('Plugin not found');
-
-    await this.db
+    const updated = await this.db
       .update(messagePlugins)
-      .set({ state: merge(item.state || {}, state) })
-      .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()));
+      .set({
+        // Plugin-state patches own complete top-level keys. Merge them in SQL so
+        // concurrent writers of different keys cannot overwrite each other.
+        state: sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(state)}::jsonb`,
+      })
+      .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()))
+      .returning({ id: messagePlugins.id });
+
+    if (updated.length === 0) throw new Error('Plugin not found');
   };
 
   updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {
@@ -2336,8 +3639,136 @@ export class MessageModel {
 
     return this.db
       .update(messagePlugins)
-      .set(value)
+      .set({
+        ...value,
+        apiName: clampToolIdentifier(value.apiName),
+        identifier: clampToolIdentifier(value.identifier),
+      })
       .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()));
+  };
+
+  /**
+   * Resolve an approval batch at one row-locking boundary. Every target is
+   * checked before any write, so Web, Mobile, Stop, and notification actions
+   * cannot each win a subset of the same assistant turn.
+   */
+  resolveHumanApproval = async (
+    resolutions: HumanApprovalResolution[],
+  ): Promise<'applied' | 'idempotent'> => {
+    if (resolutions.length === 0) return 'idempotent';
+
+    const ids = resolutions.map(({ id }) => id);
+    if (new Set(ids).size !== ids.length) {
+      throw new Error('Human approval batch contains duplicate tool messages');
+    }
+
+    return this.db.transaction(async (trx) => {
+      const lockedRows = await trx
+        .select({
+          id: messagePlugins.id,
+          intervention: messagePlugins.intervention,
+          state: messagePlugins.state,
+        })
+        .from(messagePlugins)
+        .where(and(inArray(messagePlugins.id, ids), this.pluginsOwnership()))
+        .for('update');
+      const lockedById = new Map(lockedRows.map((row) => [row.id, row]));
+
+      const rowStates = resolutions.map((resolution) => {
+        const row = lockedById.get(resolution.id);
+        if (!row) throw new Error(`Plugin not found: ${resolution.id}`);
+        if (row.intervention?.status === 'pending') return 'pending' as const;
+
+        const sameRequest =
+          Boolean(resolution.intervention.resolutionRequestId) &&
+          row.intervention?.resolutionRequestId === resolution.intervention.resolutionRequestId;
+        const sameDecision = Object.entries(resolution.intervention).every(
+          ([key, value]) =>
+            JSON.stringify(row.intervention?.[key as keyof typeof row.intervention]) ===
+            JSON.stringify(value),
+        );
+        if (sameRequest && sameDecision) return 'idempotent' as const;
+        throw new HumanApprovalAlreadyResolvedError(resolution.id);
+      });
+      const pendingCount = rowStates.filter((state) => state === 'pending').length;
+      if (pendingCount === 0) return 'idempotent';
+      if (pendingCount !== resolutions.length) {
+        throw new Error('Human approval batch contains a partial idempotent claim');
+      }
+
+      for (const resolution of resolutions) {
+        const row = lockedById.get(resolution.id)!;
+        if (resolution.content !== undefined) {
+          const [updatedMessage] = await trx
+            .update(messages)
+            .set({ content: resolution.content })
+            .where(and(eq(messages.id, resolution.id), this.ownership()))
+            .returning({ id: messages.id });
+          if (!updatedMessage) throw new Error(`Message not found: ${resolution.id}`);
+        }
+
+        const [updatedPlugin] = await trx
+          .update(messagePlugins)
+          .set({
+            // Status/result is a claim patch, not a replacement. Preserve the
+            // authoritative operation/batch/item identity stamped when the
+            // parked tool row was created so subsequent source reads, Stop,
+            // and rollback still address the same sealed batch.
+            intervention: merge(row.intervention || {}, resolution.intervention),
+            ...(resolution.pluginState !== undefined && {
+              state: resolution.replacePluginState
+                ? resolution.pluginState
+                : merge(row.state || {}, resolution.pluginState || {}),
+            }),
+          })
+          .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()))
+          .returning({ id: messagePlugins.id });
+        if (!updatedPlugin) throw new Error(`Plugin not found: ${resolution.id}`);
+      }
+
+      return 'applied';
+    });
+  };
+
+  /** Restore the exact pre-claim snapshot when continuation startup fails. */
+  restoreHumanApproval = async (resolutions: HumanApprovalResolution[]): Promise<void> => {
+    if (resolutions.length === 0) return;
+
+    await this.db.transaction(async (trx) => {
+      const ids = resolutions.map(({ id }) => id);
+      const lockedRows = await trx
+        .select({ id: messagePlugins.id, intervention: messagePlugins.intervention })
+        .from(messagePlugins)
+        .where(and(inArray(messagePlugins.id, ids), this.pluginsOwnership()))
+        .for('update');
+      const lockedById = new Map(lockedRows.map((row) => [row.id, row]));
+
+      for (const resolution of resolutions) {
+        const locked = lockedById.get(resolution.id);
+        if (!locked) throw new Error(`Plugin not found: ${resolution.id}`);
+        if (
+          resolution.claimedResolutionRequestId &&
+          locked.intervention?.resolutionRequestId !== resolution.claimedResolutionRequestId
+        ) {
+          continue;
+        }
+        if (resolution.content !== undefined) {
+          const [updatedMessage] = await trx
+            .update(messages)
+            .set({ content: resolution.content })
+            .where(and(eq(messages.id, resolution.id), this.ownership()))
+            .returning({ id: messages.id });
+          if (!updatedMessage) throw new Error(`Message not found: ${resolution.id}`);
+        }
+        await trx
+          .update(messagePlugins)
+          .set({
+            intervention: resolution.intervention,
+            ...(resolution.pluginState !== undefined && { state: resolution.pluginState }),
+          })
+          .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()));
+      }
+    });
   };
 
   /**
@@ -2377,7 +3808,9 @@ export class MessageModel {
    * This is used by onboarding analytics to reconstruct successful assistant
    * creation results before the topic is moved into inbox.
    */
-  listMessagePluginsByTopic = async (topicId: string): Promise<MessagePluginItem[]> => {
+  listMessagePluginsByTopic = async (
+    topicId: string,
+  ): Promise<Array<MessagePluginItem & { metadata?: MessageMetadata }>> => {
     const rows = await this.db
       .select({
         apiName: messagePlugins.apiName,
@@ -2387,6 +3820,7 @@ export class MessageModel {
         id: messagePlugins.id,
         identifier: messagePlugins.identifier,
         intervention: messagePlugins.intervention,
+        metadata: messages.metadata,
         state: messagePlugins.state,
         toolCallId: messagePlugins.toolCallId,
         type: messagePlugins.type,
@@ -2405,11 +3839,247 @@ export class MessageModel {
       id: row.id,
       identifier: row.identifier ?? undefined,
       intervention: row.intervention ?? undefined,
+      metadata: row.metadata ?? undefined,
       state: row.state ?? undefined,
       toolCallId: row.toolCallId ?? undefined,
       type: row.type ?? 'default',
       userId: row.userId,
     }));
+  };
+
+  /**
+   * List the tool/plugin rows produced by ONE agent operation, for the
+   * per-operation file-edit scan.
+   *
+   * An operation has no direct foreign key on `message_plugins`, so its rows are
+   * bracketed two ways, OR-ed together:
+   * 1. Time window — same `topicId` + `threadId`, with the owning message's
+   *    `createdAt` inside `[startedAt, completedAt]` (`completedAt` falls back to
+   *    now for an op still finalizing). The primary path for in-process runs.
+   * 2. Heterogeneous match — the message carries
+   *    `metadata.heterogeneousToolStateOperationId === operationId` directly,
+   *    which a CLI-backed run stamps regardless of when the row lands. Mirrors
+   *    the jsonb predicate in {@link findVerifyMessageByOperationId}.
+   *
+   * TRADE-OFF (v1): the time window is racy — two operations running
+   * concurrently in the SAME topic+thread can bleed each other's tool calls into
+   * the window. Accepted for now; the heterogeneous path is exact where it
+   * applies. Rows carry `createdAt` so the caller can globally order tool calls
+   * merged across an operation tree before folding them.
+   */
+  listMessagePluginsForOperation = async (params: {
+    completedAt?: Date | null;
+    operationId: string;
+    startedAt: Date;
+    threadId?: string | null;
+    topicId: string;
+  }): Promise<Array<MessagePluginItem & { content?: string; createdAt: Date }>> => {
+    const completedAt = params.completedAt ?? new Date();
+
+    const withinWindow = and(
+      eq(messages.topicId, params.topicId),
+      params.threadId ? eq(messages.threadId, params.threadId) : isNull(messages.threadId),
+      gte(messages.createdAt, params.startedAt),
+      lte(messages.createdAt, completedAt),
+    );
+
+    // The two branches are resolved SEPARATELY — never OR-ed into one WHERE (an
+    // `... AND (withinWindow OR heteroMatch)` is unindexable and seq-scans every
+    // plugin row the user owns). They are also SHAPED differently on purpose:
+    //
+    // - Time window: one index-friendly range scan joined to its plugin rows.
+    // - Heterogeneous match: resolved id-FIRST, not as a plugin JOIN. The
+    //   `metadata->>'heterogeneousToolStateOperationId'` predicate carries a 0.5%
+    //   default selectivity estimate, so joining it to `message_plugins` makes the
+    //   planner scan / nested-loop the user's ENTIRE plugin history (100k+ rows,
+    //   100s+ per call for heavy users — it returns ~0 rows but pays the full scan
+    //   every time, since most ops never stamp the key). Looking up the few
+    //   matching message ids in a JOIN-free query first, then fetching those rows
+    //   by primary key, leaves the planner no join to mis-order: the lookup is
+    //   single-table (index-served once the metadata expression is indexed; a
+    //   bounded scan otherwise) and the fetch is a pure PK access. Kept
+    //   topic-agnostic to preserve the prior behaviour exactly — a late CLI row
+    //   can land outside the op's window (and, rarely, its topic).
+    const projection = {
+      apiName: messagePlugins.apiName,
+      arguments: messagePlugins.arguments,
+      clientId: messagePlugins.clientId,
+      // The tool message's text body. Heterogeneous CLI adapters (claude-code
+      // Bash) persist the command's stdout here rather than in a structured
+      // `state` field, and the completion-time github Work scan reads the gh
+      // CLI's printed entity URL from it.
+      content: messages.content,
+      createdAt: messages.createdAt,
+      error: messagePlugins.error,
+      id: messagePlugins.id,
+      identifier: messagePlugins.identifier,
+      intervention: messagePlugins.intervention,
+      state: messagePlugins.state,
+      toolCallId: messagePlugins.toolCallId,
+      type: messagePlugins.type,
+      userId: messagePlugins.userId,
+    };
+
+    const scan = (condition: SQL | undefined) =>
+      this.db
+        .select(projection)
+        .from(messagePlugins)
+        .innerJoin(messages, eq(messagePlugins.id, messages.id))
+        .where(and(this.ownership(), this.pluginsOwnership(), condition));
+
+    const fetchHeterogeneous = async () => {
+      const idRows = await this.db
+        .select({ id: messages.id })
+        .from(messages)
+        .where(
+          and(
+            this.ownership(),
+            sql`${messages.metadata}->>'heterogeneousToolStateOperationId' = ${params.operationId}`,
+          ),
+        );
+      const ids = idRows.map((row) => row.id);
+      if (ids.length === 0) return [];
+      return scan(inArray(messagePlugins.id, ids));
+    };
+
+    const [windowRows, heterogeneousRows] = await Promise.all([
+      scan(withinWindow),
+      fetchHeterogeneous(),
+    ]);
+
+    const byId = new Map<string, (typeof windowRows)[number]>();
+    for (const row of windowRows) byId.set(row.id, row);
+    for (const row of heterogeneousRows) if (!byId.has(row.id)) byId.set(row.id, row);
+
+    const rows = [...byId.values()].sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime() || a.id.localeCompare(b.id),
+    );
+
+    return rows.map((row) => ({
+      apiName: row.apiName ?? undefined,
+      arguments: row.arguments ?? undefined,
+      clientId: row.clientId ?? undefined,
+      content: row.content ?? undefined,
+      createdAt: row.createdAt,
+      error: row.error ?? undefined,
+      id: row.id,
+      identifier: row.identifier ?? undefined,
+      intervention: row.intervention ?? undefined,
+      state: row.state ?? undefined,
+      toolCallId: row.toolCallId ?? undefined,
+      type: row.type ?? 'default',
+      userId: row.userId,
+    }));
+  };
+
+  /**
+   * Load specific tool-call rows by their message ids, ownership-scoped and
+   * pinned to one topic. Serves the LOCAL hetero run work scan
+   * (`work.registerShellWorksForRun`): a desktop-local CLI run has no
+   * `agent_operations` row, so the client reports the exact tool message ids it
+   * persisted instead of the server reconstructing an operation window. The
+   * topic pin means a caller can never scan rows outside the conversation it
+   * claims to complete.
+   */
+  listMessagePluginsByIds = async (params: {
+    ids: string[];
+    topicId: string;
+  }): Promise<Array<MessagePluginItem & { content?: string; createdAt: Date }>> => {
+    if (params.ids.length === 0) return [];
+
+    const rows = await this.db
+      .select({
+        apiName: messagePlugins.apiName,
+        arguments: messagePlugins.arguments,
+        clientId: messagePlugins.clientId,
+        // The tool message's text body — claude-code Bash persists the
+        // command's stdout here (see listMessagePluginsForOperation).
+        content: messages.content,
+        createdAt: messages.createdAt,
+        error: messagePlugins.error,
+        id: messagePlugins.id,
+        identifier: messagePlugins.identifier,
+        intervention: messagePlugins.intervention,
+        state: messagePlugins.state,
+        toolCallId: messagePlugins.toolCallId,
+        type: messagePlugins.type,
+        userId: messagePlugins.userId,
+      })
+      .from(messagePlugins)
+      .innerJoin(messages, eq(messagePlugins.id, messages.id))
+      .where(
+        and(
+          inArray(messagePlugins.id, params.ids),
+          eq(messages.topicId, params.topicId),
+          this.ownership(),
+          this.pluginsOwnership(),
+          // A desktop-local hetero run never happens inside an agent-share
+          // visitor topic, so excluding them costs nothing and stops a creator
+          // from surfacing a visitor's tool calls as their own Work cards.
+          notShareVisitorMessage(),
+        ),
+      );
+
+    const sorted = [...rows].sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime() || a.id.localeCompare(b.id),
+    );
+
+    return sorted.map((row) => ({
+      apiName: row.apiName ?? undefined,
+      arguments: row.arguments ?? undefined,
+      clientId: row.clientId ?? undefined,
+      content: row.content ?? undefined,
+      createdAt: row.createdAt,
+      error: row.error ?? undefined,
+      id: row.id,
+      identifier: row.identifier ?? undefined,
+      intervention: row.intervention ?? undefined,
+      state: row.state ?? undefined,
+      toolCallId: row.toolCallId ?? undefined,
+      type: row.type ?? 'default',
+      userId: row.userId,
+    }));
+  };
+
+  /**
+   * Resolve the tool result message id for a toolCallId — the stable identifier
+   * the model emitted for the call. Lets server-side services push async state
+   * onto a tool card when all they hold is the call id recorded at creation
+   * time (e.g. the goal loop updating the `createGoal` card via
+   * `task.context.origin.toolCallId`).
+   */
+  findToolMessageIdByToolCallId = async (
+    toolCallId: string,
+    /**
+     * Restrict the match to calls made by one assistant message.
+     *
+     * `tool_call_id` is provider-supplied and only unique in practice — the
+     * column carries a plain index, not a unique constraint. Callers that act
+     * on the row (rather than just reading it) should scope the match, or a
+     * reused id from another turn resolves to an unrelated historical result.
+     */
+    parentId?: string,
+  ): Promise<string | null> => {
+    const rows = parentId
+      ? await this.db
+          .select({ id: messagePlugins.id })
+          .from(messagePlugins)
+          .innerJoin(messages, eq(messages.id, messagePlugins.id))
+          .where(
+            and(
+              eq(messagePlugins.toolCallId, toolCallId),
+              eq(messages.parentId, parentId),
+              this.pluginsOwnership(),
+            ),
+          )
+          .limit(1)
+      : await this.db
+          .select({ id: messagePlugins.id })
+          .from(messagePlugins)
+          .where(and(eq(messagePlugins.toolCallId, toolCallId), this.pluginsOwnership()))
+          .limit(1);
+
+    return rows[0]?.id ?? null;
   };
 
   /**
@@ -2420,70 +4090,134 @@ export class MessageModel {
     id: string,
     params: {
       content?: string;
+      heterogeneousToolState?: HeterogeneousToolStateSnapshot;
       metadata?: Record<string, any>;
       pluginError?: any;
       pluginState?: Record<string, any>;
     },
-  ): Promise<{ success: boolean }> => {
-    const { content, metadata, pluginState, pluginError } = params;
+  ): Promise<{ applied: boolean; snapshotSeq?: number; success: boolean }> => {
+    const { content, heterogeneousToolState, metadata, pluginState, pluginError } = params;
+
+    // `undefined` while no branch has looked for the row yet; see `update` above
+    // for why a write that matches nothing must not report success.
+    let matchedRow: boolean | undefined;
+    let applied = true;
+    let snapshotSeq: number | undefined;
 
     try {
       await this.db.transaction(async (trx) => {
+        let existingMetadata: Record<string, any> | undefined;
+
+        if (metadata !== undefined || heterogeneousToolState !== undefined) {
+          const baseQuery = trx
+            .select({ metadata: messages.metadata })
+            .from(messages)
+            .where(and(eq(messages.id, id), this.ownership()))
+            .limit(1);
+          const [existingMessage] = heterogeneousToolState
+            ? await baseQuery.for('update')
+            : await baseQuery;
+
+          matchedRow = !!existingMessage;
+          if (!existingMessage) return;
+
+          existingMetadata = (existingMessage.metadata ?? {}) as Record<string, any>;
+
+          if (heterogeneousToolState) {
+            const currentOperationId = existingMetadata.heterogeneousToolStateOperationId;
+            const rawCurrentSeq = existingMetadata.heterogeneousToolStateSeq;
+            const currentSeq =
+              currentOperationId === heterogeneousToolState.operationId &&
+              typeof rawCurrentSeq === 'number' &&
+              Number.isFinite(rawCurrentSeq)
+                ? rawCurrentSeq
+                : 0;
+
+            if (heterogeneousToolState.snapshotSeq <= currentSeq) {
+              applied = false;
+              snapshotSeq = currentSeq;
+              return;
+            }
+
+            snapshotSeq = heterogeneousToolState.snapshotSeq;
+          }
+        }
+
         // Update messages table (content, metadata)
-        if (content !== undefined || metadata !== undefined) {
+        if (
+          content !== undefined ||
+          metadata !== undefined ||
+          heterogeneousToolState !== undefined
+        ) {
           const messageUpdateData: Record<string, any> = {};
 
           if (content !== undefined) {
             messageUpdateData.content = content;
           }
 
-          if (metadata !== undefined) {
-            // Need to merge with existing metadata
-            const existingMessage = await trx.query.messages.findFirst({
-              where: and(eq(messages.id, id), this.ownership()),
-            });
-            messageUpdateData.metadata = merge(existingMessage?.metadata || {}, metadata);
+          if (metadata !== undefined || heterogeneousToolState !== undefined) {
+            const mergedMetadata = merge(existingMetadata || {}, metadata || {});
+            messageUpdateData.metadata = heterogeneousToolState
+              ? merge(mergedMetadata, {
+                  heterogeneousToolStateOperationId: heterogeneousToolState.operationId,
+                  heterogeneousToolStateSeq: heterogeneousToolState.snapshotSeq,
+                })
+              : mergedMetadata;
           }
 
           if (Object.keys(messageUpdateData).length > 0) {
-            await trx
+            const [updated] = await trx
               .update(messages)
               .set(messageUpdateData)
-              .where(and(eq(messages.id, id), this.ownership()));
+              .where(and(eq(messages.id, id), this.ownership()))
+              .returning({ id: messages.id });
+
+            matchedRow = !!updated;
           }
         }
 
         // Update messagePlugins table (pluginState, pluginError)
         if (pluginState !== undefined || pluginError !== undefined) {
-          const pluginItem = await trx.query.messagePlugins.findFirst({
-            where: and(eq(messagePlugins.id, id), this.pluginsOwnership()),
-          });
+          const pluginUpdateData: Record<string, any> = {};
 
-          if (pluginItem) {
-            const pluginUpdateData: Record<string, any> = {};
+          if (pluginState !== undefined) {
+            // Snapshot writes replace the whole runtime state. Ordinary patches
+            // own complete top-level keys and merge inside the UPDATE so an
+            // answer write cannot race away an intervention-terminal write.
+            pluginUpdateData.state = heterogeneousToolState
+              ? pluginState
+              : sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(pluginState)}::jsonb`;
+          }
 
-            if (pluginState !== undefined) {
-              pluginUpdateData.state = merge(pluginItem.state || {}, pluginState);
-            }
+          if (pluginError !== undefined) {
+            pluginUpdateData.error = pluginError;
+          }
 
-            if (pluginError !== undefined) {
-              pluginUpdateData.error = pluginError;
-            }
+          const [updatedPlugin] = await trx
+            .update(messagePlugins)
+            .set(pluginUpdateData)
+            .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()))
+            .returning({ id: messagePlugins.id });
 
-            if (Object.keys(pluginUpdateData).length > 0) {
-              await trx
-                .update(messagePlugins)
-                .set(pluginUpdateData)
-                .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()));
-            }
+          // A plugin-only patch never touches `messages`, so the plugin row is
+          // the only evidence the tool message exists.
+          if (matchedRow === undefined) matchedRow = !!updatedPlugin;
+
+          if (!updatedPlugin && heterogeneousToolState) {
+            throw new Error(`No tool plugin matched id ${id}`);
           }
         }
       });
 
-      return { success: true };
+      if (matchedRow === false) {
+        console.error(`Update tool message error: no tool message matched id ${id}`);
+        return { applied: false, success: false };
+      }
+
+      return { applied, snapshotSeq, success: true };
     } catch (error) {
       console.error('Update tool message error:', error);
-      return { success: false };
+      return { applied: false, success: false };
     }
   };
 
@@ -2585,6 +4319,41 @@ export class MessageModel {
     this.getLatestSpineMessageId({ topicId, threadId: null });
 
   /**
+   * Whether `descendantId` belongs to the branch rooted at `ancestorId`.
+   *
+   * Used when reconciling a client-selected conversation tail with the latest
+   * server row: a newer row may be a sibling from a historical callback fork,
+   * not an advancement of the branch the user is viewing.
+   */
+  isMessageDescendantOf = async ({
+    ancestorId,
+    descendantId,
+    topicId,
+  }: {
+    ancestorId: string;
+    descendantId: string;
+    topicId: string;
+  }): Promise<boolean> => {
+    const result = await this.db.execute(sql`
+      WITH RECURSIVE ancestors(id, parent_id) AS (
+        SELECT id, parent_id
+        FROM messages
+        WHERE id = ${descendantId}
+          AND topic_id = ${topicId}
+          AND ${this.ownership()}
+        UNION
+        SELECT parent.id, parent.parent_id
+        FROM messages parent
+        JOIN ancestors child ON parent.id = child.parent_id
+        WHERE parent.topic_id = ${topicId}
+      )
+      SELECT 1 AS hit FROM ancestors WHERE id = ${ancestorId} LIMIT 1
+    `);
+
+    return result.rows.length > 0;
+  };
+
+  /**
    * Thread-aware variant of {@link getLastMainThreadSpineMessageId}: the id of
    * the latest "spine" message (the most recent message that is NOT a tool and
    * NOT a signal-tagged reactive turn) in a topic, scoped to the main thread
@@ -2654,7 +4423,7 @@ export class MessageModel {
    * persist the new turn with `parentId: undefined` — a second root that forks
    * the conversation tree. The renderer walks that forest depth-first, so an
    * earlier root's long-running subtree gets emitted before a later root and the
-   * newest reply surfaces ABOVE older messages (LOBE-11489).
+   * newest reply surfaces ABOVE older messages.
    *
    * `role:'tool'` stays excluded: tool results are inline children of their
    * assistant turn, and anchoring a normal turn onto one orphans it under the
@@ -2707,18 +4476,22 @@ export class MessageModel {
   };
 
   updateTTS = async (id: string, tts: Partial<ChatTTS>) => {
+    const { contentMd5, file, voice } = tts;
+    // Older clients sent an empty payload when starting TTS, so keep this backward-compatible.
+    if ([contentMd5, file, voice].every((value) => value === undefined)) return;
+
     const result = await this.db.query.messageTTS.findFirst({
       where: and(eq(messageTTS.id, id), this.ttsOwnership()),
     });
 
-    // If the message does not exist in the translate table, insert it
+    // If the message does not exist in the TTS table, insert it
     if (!result) {
       return this.db.insert(messageTTS).values({
-        contentMd5: tts.contentMd5,
-        fileId: tts.file,
+        contentMd5,
+        fileId: file,
         id,
         userId: this.userId,
-        voice: tts.voice,
+        voice,
         workspaceId: this.workspaceId ?? null,
       });
     }
@@ -2726,7 +4499,7 @@ export class MessageModel {
     // or just update the existing one
     return this.db
       .update(messageTTS)
-      .set({ contentMd5: tts.contentMd5, fileId: tts.file, voice: tts.voice })
+      .set({ contentMd5, fileId: file, voice })
       .where(and(eq(messageTTS.id, id), this.ttsOwnership()));
   };
 
@@ -2745,24 +4518,145 @@ export class MessageModel {
 
   // **************** Delete *************** //
 
-  deleteMessage = async (id: string) => {
+  /**
+   * Preserve the selected branch by identity across a deletion. Branch metadata
+   * stores a positional index, while deleting or reparenting children can change
+   * that index space. If the selected branch itself is deleted, remove the stale
+   * index so conversation-flow can infer the remaining active branch instead of
+   * mistaking `index === branchCount` for an optimistic branch creation.
+   */
+  private captureActiveBranchSnapshots = async (
+    tx: Transaction,
+    parentIds: string[],
+  ): Promise<ActiveBranchSnapshot[]> => {
+    const uniqueParentIds = [...new Set(parentIds)];
+    if (uniqueParentIds.length === 0) return [];
+
+    const parentRows = await tx
+      .select({ id: messages.id, metadata: messages.metadata })
+      .from(messages)
+      .where(and(this.ownership(), inArray(messages.id, uniqueParentIds)));
+    const branchIdsByParent = await this.queryDirectBranchIds(tx, uniqueParentIds);
+    const snapshots: ActiveBranchSnapshot[] = [];
+
+    for (const parent of parentRows) {
+      if (!isPlainRecord(parent.metadata)) continue;
+
+      const activeBranchIndex = parent.metadata.activeBranchIndex;
+      if (typeof activeBranchIndex !== 'number' || activeBranchIndex < 0) continue;
+
+      const branchIds = branchIdsByParent.get(parent.id) ?? [];
+      snapshots.push({
+        activeBranchId: branchIds[activeBranchIndex],
+        activeBranchIndex,
+        metadata: parent.metadata,
+        parentId: parent.id,
+        wasOptimistic: activeBranchIndex === branchIds.length,
+      });
+    }
+
+    return snapshots;
+  };
+
+  private queryDirectBranchIds = async (tx: Transaction, parentIds: string[]) => {
+    const branchRows = await tx
+      .select({ id: messages.id, parentId: messages.parentId })
+      .from(messages)
+      .where(
+        and(
+          this.ownership(),
+          inArray(messages.parentId, parentIds),
+          not(eq(messages.role, 'tool')),
+        ),
+      )
+      .orderBy(asc(messages.createdAt), asc(messages.id));
+    const branchIdsByParent = new Map<string, string[]>();
+
+    for (const branch of branchRows) {
+      if (!branch.parentId) continue;
+      const branchIds = branchIdsByParent.get(branch.parentId) ?? [];
+      branchIds.push(branch.id);
+      branchIdsByParent.set(branch.parentId, branchIds);
+    }
+
+    return branchIdsByParent;
+  };
+
+  private reconcileActiveBranchSnapshots = async (
+    tx: Transaction,
+    snapshots: ActiveBranchSnapshot[],
+  ) => {
+    if (snapshots.length === 0) return;
+
+    const branchIdsByParent = await this.queryDirectBranchIds(
+      tx,
+      snapshots.map((snapshot) => snapshot.parentId),
+    );
+
+    for (const snapshot of snapshots) {
+      const branchIds = branchIdsByParent.get(snapshot.parentId) ?? [];
+      const survivingBranchIndex = snapshot.activeBranchId
+        ? branchIds.indexOf(snapshot.activeBranchId)
+        : -1;
+      const activeBranchIndex = snapshot.wasOptimistic
+        ? branchIds.length
+        : survivingBranchIndex >= 0
+          ? survivingBranchIndex
+          : undefined;
+
+      if (activeBranchIndex === snapshot.activeBranchIndex) continue;
+
+      const metadata = { ...snapshot.metadata };
+      delete metadata.activeBranchIndex;
+      if (activeBranchIndex !== undefined) metadata.activeBranchIndex = activeBranchIndex;
+
+      await tx
+        .update(messages)
+        .set({ metadata })
+        .where(and(eq(messages.id, snapshot.parentId), this.ownership()));
+    }
+  };
+
+  /**
+   * Delete one message (plus the tool messages it owns).
+   *
+   * Agent-share visitor messages live under the creator's `userId`, so plain
+   * ownership matches them: by default this refuses to touch them, which keeps
+   * the creator-facing `message.removeMessage` from destroying a visitor's
+   * conversation even when the creator obtained a raw visitor message id (e.g.
+   * through data export). The agent runtime — which also runs visitor turns
+   * under the creator's identity and must clean up its own placeholders — opts
+   * back in with `includeShareVisitor`.
+   */
+  deleteMessage = async (id: string, options?: ShareVisitorWriteOptions) => {
+    // Effective visitor gate: per-call `true` OR the instance flag widens the
+    // scope. Uses `workspaceScope()` (raw) so an instance-default caller can
+    // still opt in per-call without `ownership()` re-adding the exclusion.
+    const includeVisitor = options?.includeShareVisitor || this.includeShareVisitor;
+    const scope = includeVisitor ? this.workspaceScope() : this.ownership();
+
     return this.db.transaction(async (tx) => {
       // 1. Query the complete information of the message to be deleted
       const message = await tx
         .select()
         .from(messages)
-        .where(and(eq(messages.id, id), this.ownership()))
+        .where(and(eq(messages.id, id), scope))
         .limit(1);
 
       // If the message to be deleted is not found, return directly
       if (message.length === 0) return;
+
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(
+        tx,
+        message[0].parentId ? [message[0].parentId] : [],
+      );
 
       // 2. Update child messages' parentId to the current message's parentId
       // This preserves the tree structure when deleting a node
       await tx
         .update(messages)
         .set({ parentId: message[0].parentId })
-        .where(and(eq(messages.parentId, id), this.ownership()));
+        .where(and(eq(messages.parentId, id), scope));
 
       // 3. Check if the message contains tools
       const toolCallIds = (message[0].tools as ChatToolPayload[])
@@ -2785,9 +4679,9 @@ export class MessageModel {
       const messageIdsToDelete = [id, ...relatedMessageIds];
 
       // 6. Delete all related messages
-      await tx
-        .delete(messages)
-        .where(and(this.ownership(), inArray(messages.id, messageIdsToDelete)));
+      await tx.delete(messages).where(and(scope, inArray(messages.id, messageIdsToDelete)));
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
 
       // 7. Keep the topic's usage rollup in sync (pure derived — a removed
       // assistant message must drop out of the topic totals).
@@ -2797,15 +4691,22 @@ export class MessageModel {
     });
   };
 
-  deleteMessages = async (ids: string[]) => {
+  /**
+   * Batch twin of {@link MessageModel.deleteMessage} — same agent-share visitor
+   * rule: visitor messages are skipped unless the caller explicitly opts in.
+   */
+  deleteMessages = async (ids: string[], options?: ShareVisitorWriteOptions) => {
     if (ids.length === 0) return;
+
+    const includeVisitor = options?.includeShareVisitor || this.includeShareVisitor;
+    const scope = includeVisitor ? this.workspaceScope() : this.ownership();
 
     return this.db.transaction(async (tx) => {
       // 1. Query all messages to be deleted with their parentId
       const toDelete = await tx
         .select({ id: messages.id, parentId: messages.parentId, topicId: messages.topicId })
         .from(messages)
-        .where(and(this.ownership(), inArray(messages.id, ids)));
+        .where(and(scope, inArray(messages.id, ids)));
 
       if (toDelete.length === 0) return;
 
@@ -2845,13 +4746,16 @@ export class MessageModel {
         findFinalAncestor(id);
       }
 
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(
+        tx,
+        [...new Set(finalAncestorMap.values())].filter((id): id is string => id !== null),
+      );
+
       // 4. Query child messages whose parentId points to messages being deleted
       const children = await tx
         .select({ id: messages.id, parentId: messages.parentId })
         .from(messages)
-        .where(
-          and(this.ownership(), inArray(messages.parentId, ids), not(inArray(messages.id, ids))),
-        );
+        .where(and(scope, inArray(messages.parentId, ids), not(inArray(messages.id, ids))));
 
       // 5. Update each child's parentId to the final ancestor
       for (const child of children) {
@@ -2859,11 +4763,14 @@ export class MessageModel {
         await tx
           .update(messages)
           .set({ parentId: newParentId })
-          .where(and(eq(messages.id, child.id), this.ownership()));
+          .where(and(eq(messages.id, child.id), scope));
       }
 
-      // 6. Delete the messages
-      await tx.delete(messages).where(and(this.ownership(), inArray(messages.id, ids)));
+      // 6. Delete the messages. Deletes the ids that survived the step-1
+      // filter, not the raw input, so a mixed batch drops only the visitor rows.
+      await tx.delete(messages).where(and(scope, inArray(messages.id, [...deleteSet])));
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
 
       // 7. Recompute the usage rollup for every affected topic (pure derived).
       const affectedTopicIds = [
@@ -2881,6 +4788,12 @@ export class MessageModel {
    */
   addFiles = async (messageId: string, fileIds: string[]): Promise<{ success: boolean }> => {
     if (fileIds.length === 0) return { success: true };
+
+    // The insert below has no ownership predicate of its own, so verify the
+    // target message is actually visible to this user/workspace first —
+    // otherwise a caller could attach files to another tenant's message.
+    const message = await this.findById(messageId);
+    if (!message) return { success: false };
 
     try {
       await this.db.insert(messagesFiles).values(
@@ -2919,24 +4832,50 @@ export class MessageModel {
         ),
       );
 
+  /**
+   * Creator-facing "clear this session/topic/group" sweep.
+   *
+   * Agent-share visitor messages live under the creator's `userId` but are
+   * hidden from every creator-facing listing (see `notShareVisitorMessage` in
+   * `../utils/shareVisitor`), so an id-less sweep must not destroy them —
+   * same rule as {@link deleteAllMessages}. Runtime cleanup opts back in via
+   * `includeShareVisitor`.
+   */
   deleteMessagesBySession = async (
     sessionId?: string | null,
     topicId?: string | null,
     groupId?: string | null,
-  ) =>
-    this.db
+    options?: ShareVisitorWriteOptions,
+  ) => {
+    const includeVisitor = options?.includeShareVisitor || this.includeShareVisitor;
+    const scope = includeVisitor ? this.workspaceScope() : this.ownership();
+
+    return this.db
       .delete(messages)
       .where(
         and(
-          this.ownership(),
+          scope,
           this.matchSession(sessionId),
           this.matchTopic(topicId),
           this.matchGroup(groupId),
         ),
       );
+  };
 
+  /**
+   * Creator-facing "clear all my messages".
+   *
+   * Agent-share visitor messages are stored under the creator's `userId` but
+   * are hidden from every creator-facing listing (see `notShareVisitorMessage`
+   * in `../utils/shareVisitor`), so an id-less sweep must not destroy them —
+   * "clear all" can only mean the rows the creator can actually see. Id-targeted
+   * deletes ({@link MessageModel.deleteMessage}, {@link MessageModel.deleteMessages})
+   * apply the same guard by default — a creator can obtain visitor ids out of
+   * band (data export), so "the caller named the id" is not proof the row is
+   * theirs to delete. Runtime cleanup opts back in via `includeShareVisitor`.
+   */
   deleteAllMessages = async () => {
-    return this.db.delete(messages).where(and(this.ownership()));
+    return this.db.delete(messages).where(and(this.ownership(), notShareVisitorMessage()));
   };
 
   /**
@@ -2944,6 +4883,11 @@ export class MessageModel {
    * This will delete messages that have either:
    * 1. Direct agentId match (new data)
    * 2. SessionId match via agentsToSessions lookup (legacy data)
+   *
+   * This is the creator's "clear this agent's messages" action, so visitor
+   * messages are excluded (see {@link deleteAllMessages}). Deleting the agent
+   * itself is a different path: `messages.agent_id` / `topics.agent_id` cascade
+   * at the DB level, so visitor rows do go away with the agent.
    */
   batchDeleteByAgentId = async (agentId: string) => {
     // Get the associated sessionId for backward compatibility with legacy data
@@ -2960,7 +4904,9 @@ export class MessageModel {
       ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
       : eq(messages.agentId, agentId);
 
-    return this.db.delete(messages).where(and(this.ownership(), agentCondition));
+    return this.db
+      .delete(messages)
+      .where(and(this.ownership(), agentCondition, notShareVisitorMessage()));
   };
 
   // **************** Helper *************** //

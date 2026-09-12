@@ -15,12 +15,16 @@ export const AgentDocumentsApiName = {
 export interface CreateDocumentArgs {
   content: string;
   hintIsSkill?: boolean;
+  /** Parent folder's underlying `documents.id`, as returned by listDocuments.documentId. */
+  parentId?: string;
   scope?: 'agent' | 'currentTopic';
   title: string;
 }
 
 export interface CreateDocumentState {
   agentDocumentId?: string;
+  /** Owning agent id — used to attribute the created document's Work. */
+  agentId?: string;
   documentId?: string;
 }
 
@@ -42,6 +46,13 @@ export interface ReplaceDocumentContentArgs {
 }
 
 export interface ReplaceDocumentContentState {
+  /** The `agentDocuments` association row id. */
+  agentDocumentId?: string;
+  /** Owning agent id — used to attribute the document's Work. */
+  agentId?: string;
+  /** The backing `documents` table row id — the Work resource identity. */
+  documentId?: string;
+  /** @deprecated Prefer {@link agentDocumentId}; same-meaning alias kept for historical states. */
   id: string;
   updated: boolean;
 }
@@ -69,9 +80,7 @@ export interface ModifyDocumentRemoveOperation {
 }
 
 export type ModifyDocumentOperation =
-  | ModifyDocumentInsertOperation
-  | ModifyDocumentRemoveOperation
-  | ModifyDocumentUpdateOperation;
+  ModifyDocumentInsertOperation | ModifyDocumentRemoveOperation | ModifyDocumentUpdateOperation;
 
 export interface ModifyDocumentNodesArgs {
   id: string;
@@ -79,6 +88,13 @@ export interface ModifyDocumentNodesArgs {
 }
 
 export interface ModifyDocumentNodesState {
+  /** The `agentDocuments` association row id. */
+  agentDocumentId?: string;
+  /** Owning agent id — used to attribute the document's Work. */
+  agentId?: string;
+  /** The backing `documents` table row id — the Work resource identity. */
+  documentId?: string;
+  /** @deprecated Prefer {@link agentDocumentId}; same-meaning alias kept for historical states. */
   id: string;
   results: Array<{
     action: 'insert' | 'remove' | 'modify';
@@ -93,7 +109,14 @@ export interface RemoveDocumentArgs {
 }
 
 export interface RemoveDocumentState {
+  /** The `agentDocuments` association row id. */
+  agentDocumentId?: string;
+  /** Owning agent id — used to attribute the document's Work. */
+  agentId?: string;
   deleted: boolean;
+  /** The backing `documents` table row id — the Work resource identity. */
+  documentId?: string;
+  /** @deprecated Prefer {@link agentDocumentId}; same-meaning alias kept for historical states. */
   id: string;
 }
 
@@ -103,6 +126,13 @@ export interface RenameDocumentArgs {
 }
 
 export interface RenameDocumentState {
+  /** The `agentDocuments` association row id. */
+  agentDocumentId?: string;
+  /** Owning agent id — used to attribute the document's Work. */
+  agentId?: string;
+  /** The backing `documents` table row id — the Work resource identity. */
+  documentId?: string;
+  /** @deprecated Prefer {@link agentDocumentId}; same-meaning alias kept for historical states. */
   id: string;
   newTitle: string;
   renamed: boolean;
@@ -114,7 +144,15 @@ export interface CopyDocumentArgs {
 }
 
 export interface CopyDocumentState {
+  /** The new copy's `agentDocuments` association row id. */
+  agentDocumentId?: string;
+  /** Owning agent id — used to attribute the copied document's Work. */
+  agentId?: string;
+  /** Source document's `agentDocuments` row id (NOT the new copy). */
   copiedFromId: string;
+  /** The new copy's backing `documents` table row id — the Work resource identity. */
+  documentId?: string;
+  /** @deprecated Prefer {@link agentDocumentId}; same-meaning alias kept for historical states. */
   newDocumentId?: string;
 }
 

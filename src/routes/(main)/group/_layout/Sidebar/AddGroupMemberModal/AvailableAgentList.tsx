@@ -1,6 +1,8 @@
 'use client';
 
-import { Flexbox, SearchBar, Skeleton, Text } from '@lobehub/ui';
+import { agentDisplayName } from '@lobechat/types';
+import { Flexbox, SearchBar } from '@lobehub/ui';
+import { Skeleton, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { type ChangeEvent } from 'react';
@@ -51,13 +53,15 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
   // store so we can bucket the modal's flat list into private/workspace
   // sections without changing the shared `AvailableAgentItem` payload.
   const privateGroups = useHomeStore(homeAgentListSelectors.privateAgentGroups, isEqual);
+  const privatePinned = useHomeStore(homeAgentListSelectors.privatePinnedAgents, isEqual);
   const privateUngrouped = useHomeStore(homeAgentListSelectors.privateUngroupedAgents, isEqual);
   const privateAgentIds = useMemo(() => {
     const ids = new Set<string>();
     for (const g of privateGroups) for (const a of g.items) ids.add(a.id);
+    for (const a of privatePinned) ids.add(a.id);
     for (const a of privateUngrouped) ids.add(a.id);
     return ids;
-  }, [privateGroups, privateUngrouped]);
+  }, [privateGroups, privatePinned, privateUngrouped]);
 
   const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -69,7 +73,7 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
 
     const searchLower = searchTerm.toLowerCase();
     return agents.filter((agent) => {
-      const title = agent.title || '';
+      const title = agentDisplayName(agent) ?? '';
       const description = agent.description || '';
       return (
         title.toLowerCase().includes(searchLower) || description.toLowerCase().includes(searchLower)
@@ -109,9 +113,9 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
       <Flexbox flex={1} style={{ minHeight: 0 }}>
         {isLoading ? (
           <Flexbox gap={8} padding={8}>
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
+            <Skeleton.Text rows={1} />
+            <Skeleton.Text rows={1} />
+            <Skeleton.Text rows={1} />
           </Flexbox>
         ) : filteredAgents.length === 0 ? (
           <AgentSelectionEmpty

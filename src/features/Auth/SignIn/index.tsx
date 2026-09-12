@@ -1,5 +1,6 @@
 'use client';
 
+import DevSeedSignIn from './DevSeedSignIn';
 import { SignInEmailSentStep } from './SignInEmailSentStep';
 import { SignInEmailStep } from './SignInEmailStep';
 import { SignInPasswordStep } from './SignInPasswordStep';
@@ -23,6 +24,7 @@ const SignIn = () => {
     loading,
     oAuthSSOProviders,
     sending,
+    sessionExpired,
     sentInfo,
     serverConfigInit,
     socialLoading,
@@ -54,21 +56,25 @@ const SignIn = () => {
     );
 
   return (
-    <SignInEmailStep
-      disableEmailPassword={disableEmailPassword}
-      form={form as any}
-      isSocialOnly={isSocialOnly}
-      lastAuthProvider={lastAuthProvider}
-      loading={loading}
-      oAuthSSOProviders={oAuthSSOProviders}
-      serverConfigInit={serverConfigInit}
-      socialLoading={socialLoading}
-      onCheckUser={handleCheckUser}
-      onGoToSignup={handleGoToSignup}
-      onResetEmail={handleBackToEmail}
-      onSetPassword={handleForgotPassword}
-      onSocialSignIn={handleSocialSignIn}
-    />
+    <>
+      <SignInEmailStep
+        disableEmailPassword={disableEmailPassword}
+        form={form as any}
+        isSocialOnly={isSocialOnly}
+        lastAuthProvider={lastAuthProvider}
+        loading={loading}
+        oAuthSSOProviders={oAuthSSOProviders}
+        serverConfigInit={serverConfigInit}
+        sessionExpired={sessionExpired}
+        socialLoading={socialLoading}
+        onCheckUser={handleCheckUser}
+        onGoToSignup={handleGoToSignup}
+        onResetEmail={handleBackToEmail}
+        onSetPassword={handleForgotPassword}
+        onSocialSignIn={handleSocialSignIn}
+      />
+      <DevSeedSignIn />
+    </>
   );
 };
 

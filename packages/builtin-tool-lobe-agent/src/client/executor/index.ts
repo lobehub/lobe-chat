@@ -6,8 +6,21 @@ import { notebookService } from '@/services/notebook';
 import { useNotebookStore } from '@/store/notebook';
 
 import { LobeAgentManifest } from '../../manifest';
+import type { MediaFileItem } from '../../media';
+import {
+  buildAnalyzeMediaContent,
+  createMediaFileItemsFromMessage,
+  createUrlMediaFileItems,
+  formatMediaUrlValidationError,
+  getUnexpectedAnalyzeMediaArgumentKeys,
+  hasAnalyzableMediaFiles,
+  hasUserMediaFiles,
+  normalizeAnalyzeMediaInput,
+  selectMediaFileItems,
+  validateMediaUrls,
+} from '../../media';
 import type {
-  AnalyzeVisualMediaParams,
+  AnalyzeMediaParams,
   AskUserQuestionArgs,
   CallSubAgentParams,
   ClearTodosParams,
@@ -15,28 +28,18 @@ import type {
   CreateTodosParams,
   UpdatePlanParams,
   UpdateTodosParams,
+  VentParams,
+  VentState,
 } from '../../types';
-import { LobeAgentApiName } from '../../types';
-import type { VisualFileItem } from '../../visualMedia';
-import {
-  buildAnalyzeVisualMediaContent,
-  createUrlVisualFileItems,
-  createVisualFileItems,
-  formatVisualMediaUrlValidationError,
-  getUnexpectedAnalyzeVisualMediaArgumentKeys,
-  hasUserVisualFiles,
-  normalizeAnalyzeVisualMediaInput,
-  selectVisualFileItems,
-  validateVisualMediaUrls,
-} from '../../visualMedia';
+import { LobeAgentApiName, VENT_CATEGORIES, VENT_SEVERITIES } from '../../types';
 import {
   type PlanDocument,
   PlanExecutionRuntime,
   type PlanRuntimeContext,
   type PlanRuntimeService,
-} from './PlanRuntime';
+} from '../../PlanRuntime';
 import { getTodosFromContext } from './planTodoHelper';
-import { resolveClientVisualMediaPayloadItems } from './resolveVisualMediaUris';
+import { resolveClientMediaPayloadItems } from './resolveMediaUris';
 
 const PLAN_DOC_TYPE = 'agent/plan';
 
@@ -110,16 +113,16 @@ const toPlanRuntimeContext = (ctx: BuiltinToolContext): PlanRuntimeContext => ({
   topicId: ctx.topicId ?? undefined,
 });
 
-interface VisualSourceMessage {
+interface ParentMessage {
   parentId?: string;
 }
 
-const getVisualUnderstandingConfig = async () => {
+const getMultimodalUnderstandingConfig = async () => {
   const { getServerConfigStoreState, serverConfigSelectors } = await import('@/store/serverConfig');
   const serverConfigState = getServerConfigStoreState();
 
   return serverConfigState
-    ? serverConfigSelectors.visualUnderstanding(serverConfigState)
+    ? serverConfigSelectors.multimodalUnderstanding(serverConfigState)
     : undefined;
 };
 
@@ -136,7 +139,7 @@ const createAbortController = (signal?: AbortSignal) => {
   return abortController;
 };
 
-const isVisualSourceMessage = (message: unknown): message is VisualSourceMessage =>
+const isParentMessage = (message: unknown): message is ParentMessage =>
   !!message && typeof message === 'object';
 
 const nestedSubAgentDisabledResult = (): BuiltinToolResult => ({
@@ -181,18 +184,60 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
   clearTodos = (params: ClearTodosParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> =>
     this.planRuntime.clearTodos(params, toPlanRuntimeContext(ctx));
 
-  // ==================== Visual ====================
+  // ==================== Vent ====================
 
-  analyzeVisualMedia = async (
-    params: AnalyzeVisualMediaParams,
+  /**
+   * Privately flag platform friction. The report's durable record is the
+   * persisted tool-call message itself; this just validates the input and
+   * surfaces a settled state for the inspector.
+   */
+  vent = async (params: VentParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+    if (!VENT_CATEGORIES.includes(params?.category)) {
+      const message = 'vent requires a valid category.';
+      return {
+        content: message,
+        error: { message, type: 'InvalidArguments' },
+        state: { recorded: false, reason: 'invalid_category' } satisfies VentState,
+        success: false,
+      };
+    }
+
+    if (!VENT_SEVERITIES.includes(params?.severity)) {
+      const message = 'vent requires a valid severity.';
+      return {
+        content: message,
+        error: { message, type: 'InvalidArguments' },
+        state: { recorded: false, reason: 'invalid_severity' } satisfies VentState,
+        success: false,
+      };
+    }
+
+    const ventId = ctx.toolCallId ? `vent:${ctx.toolCallId}` : null;
+
+    return {
+      content: 'Flagged platform friction for the builders.',
+      state: {
+        category: params.category,
+        recorded: true,
+        severity: params.severity,
+        ventId,
+      } satisfies VentState,
+      success: true,
+    };
+  };
+
+  // ==================== Media Analysis ====================
+
+  analyzeMedia = async (
+    params: AnalyzeMediaParams,
     ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    const config = await getVisualUnderstandingConfig();
+    const config = await getMultimodalUnderstandingConfig();
 
     if (!config?.provider || !config.model) {
       return {
         error: {
-          message: 'Visual understanding model is not configured',
+          message: 'Multimodal understanding model is not configured',
           type: 'PluginSettingsInvalid',
         },
         success: false,
@@ -206,11 +251,11 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       };
     }
 
-    const { requestedRefs, requestedUrls } = normalizeAnalyzeVisualMediaInput(
+    const { requestedRefs, requestedUrls } = normalizeAnalyzeMediaInput(
       params as unknown as Record<PropertyKey, unknown>,
     );
     if (requestedRefs.length === 0 && requestedUrls.length === 0) {
-      const unexpectedKeys = getUnexpectedAnalyzeVisualMediaArgumentKeys(
+      const unexpectedKeys = getUnexpectedAnalyzeMediaArgumentKeys(
         params as unknown as Record<PropertyKey, unknown>,
       );
       const aliasHint =
@@ -218,15 +263,15 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
 
       return {
         error: {
-          message: `Either \`refs\` or \`urls\` is required and must include at least one visual file ref or media URL.${aliasHint}`,
+          message: `Either \`refs\` or \`urls\` is required and must include at least one media file ref or media URL.${aliasHint}`,
           type: 'InvalidToolArguments',
         },
         success: false,
       };
     }
 
-    const urlValidation = validateVisualMediaUrls(requestedUrls);
-    const urlValidationError = formatVisualMediaUrlValidationError(urlValidation);
+    const urlValidation = validateMediaUrls(requestedUrls);
+    const urlValidationError = formatMediaUrlValidationError(urlValidation);
     if (urlValidationError) {
       return {
         error: {
@@ -237,8 +282,8 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       };
     }
 
-    const selectedUrls = createUrlVisualFileItems(urlValidation.validUrls);
-    let selectedRefs: VisualFileItem[] = [];
+    const selectedUrls = createUrlMediaFileItems(urlValidation.validUrls);
+    let selectedRefs: MediaFileItem[] = [];
 
     if (requestedRefs.length > 0) {
       const [{ getChatStoreState }, { dbMessageSelectors }] = await Promise.all([
@@ -251,48 +296,46 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
         ctx.sourceMessageId && dbMessageSelectors.getDbMessageById(ctx.sourceMessageId)(chatState);
       const toolMessage = dbMessageSelectors.getDbMessageById(ctx.messageId)(chatState);
       const assistantMessage =
-        isVisualSourceMessage(toolMessage) &&
+        isParentMessage(toolMessage) &&
         toolMessage.parentId &&
         dbMessageSelectors.getDbMessageById(toolMessage.parentId)(chatState);
       const parentUserMessage =
-        isVisualSourceMessage(assistantMessage) &&
+        isParentMessage(assistantMessage) &&
         assistantMessage.parentId &&
         dbMessageSelectors.getDbMessageById(assistantMessage.parentId)(chatState);
-      const sourceMessage = hasUserVisualFiles(sourceCandidate)
+      const sourceMessage = hasUserMediaFiles(sourceCandidate)
         ? sourceCandidate
-        : hasUserVisualFiles(parentUserMessage)
+        : hasUserMediaFiles(parentUserMessage)
           ? parentUserMessage
           : dbMessageSelectors.latestUserMessage(chatState);
-      const activeVisualMessages = dbMessageSelectors
+      const activeMediaMessages = dbMessageSelectors
         .activeDbMessages(chatState)
-        .filter(hasUserVisualFiles);
-      const visualMessages = [
-        ...(hasUserVisualFiles(sourceMessage) ? [sourceMessage] : []),
-        ...activeVisualMessages.filter((message) => message.id !== sourceMessage?.id),
+        .filter(hasAnalyzableMediaFiles);
+      const mediaMessages = [
+        ...(hasAnalyzableMediaFiles(sourceMessage) ? [sourceMessage] : []),
+        ...activeMediaMessages.filter((message) => message.id !== sourceMessage?.id),
       ];
-      const files = visualMessages.flatMap((message) =>
-        createVisualFileItems(message, message.imageList, message.videoList),
-      );
+      const files = mediaMessages.flatMap((message) => createMediaFileItemsFromMessage(message));
 
       if (files.length === 0) {
         return {
           error: {
-            message: 'No visual files are available in the current message',
-            type: 'VisualFilesNotFound',
+            message: 'No media files are available in the current message',
+            type: 'MediaFilesNotFound',
           },
           success: false,
         };
       }
 
       const selectableFiles = files;
-      const { invalidRefs, selected } = selectVisualFileItems(selectableFiles, requestedRefs);
+      const { invalidRefs, selected } = selectMediaFileItems(selectableFiles, requestedRefs);
 
       if (invalidRefs?.length) {
         const availableRefs = selectableFiles.map((file) => file.ref);
 
         return {
           content: `Unknown file refs: ${invalidRefs.join(', ')}. Available refs: ${availableRefs.join(', ')}`,
-          error: { message: 'Unknown visual file refs', type: 'InvalidToolArguments' },
+          error: { message: 'Unknown media file refs', type: 'InvalidToolArguments' },
           state: { availableFiles: selectableFiles, invalidRefs },
           success: false,
         };
@@ -305,12 +348,12 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
 
     if (selectedItems.length === 0) {
       return {
-        error: { message: 'No visual files selected', type: 'InvalidToolArguments' },
+        error: { message: 'No media files selected', type: 'InvalidToolArguments' },
         success: false,
       };
     }
 
-    const payloadItems = await resolveClientVisualMediaPayloadItems({ selectedRefs, selectedUrls });
+    const payloadItems = await resolveClientMediaPayloadItems({ selectedRefs, selectedUrls });
 
     let content = '';
     let error: { message?: string } | undefined;
@@ -322,7 +365,7 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       max_tokens: 2000,
       messages: [
         {
-          content: buildAnalyzeVisualMediaContent(payloadItems, params.question, {
+          content: buildAnalyzeMediaContent(payloadItems, params.question, {
             includeFallbackInstruction: true,
             includeFileSummary: true,
           }),
@@ -345,7 +388,7 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       onMessageHandle: (chunk) => {
         if (chunk.type === 'text') content += chunk.text || '';
       },
-      metadata: { trigger: RequestTrigger.VisualAnalysis },
+      metadata: { trigger: RequestTrigger.MultimodalAnalysis },
       signal: abortController.signal,
     });
 
@@ -357,7 +400,7 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       return {
         error: {
           body: error,
-          message: error.message ?? 'Visual understanding request failed',
+          message: error.message ?? 'Multimodal understanding request failed',
           type: 'PluginServerError',
         },
         success: false,
@@ -370,7 +413,7 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
         files: selectedItems,
         model: config.model,
         provider: config.provider,
-        trigger: RequestTrigger.VisualAnalysis,
+        trigger: RequestTrigger.MultimodalAnalysis,
         usage,
       },
       success: true,
@@ -402,22 +445,45 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
       return { content: 'Sub-agent execution is not available in this runtime.', success: false };
     }
 
-    const { result, threadId, success, error, model, totalToolCalls, totalTokens } =
-      await ctx.subAgent.run({
-        description,
-        inheritMessages,
-        instruction,
-        timeout,
-        toolMessageId: ctx.messageId,
-      });
+    const {
+      result,
+      threadId,
+      success,
+      error,
+      model,
+      totalCost,
+      totalInputTokens,
+      totalOutputTokens,
+      totalToolCalls,
+      totalTokens,
+    } = await ctx.subAgent.run({
+      description,
+      inheritMessages,
+      instruction,
+      timeout,
+      toolMessageId: ctx.messageId,
+    });
 
     if (!success) {
       return { content: error ?? 'Sub-agent execution failed.', success: false };
     }
 
+    // Cost + the token split are persisted alongside the totals because this row is
+    // where the parent's usage tray reads a sub-agent's spend — the child's own
+    // messages sit in an isolation thread the parent never loads, so anything left
+    // off here is invisible to the parent's ledger. Mirrors the shape the server
+    // path's completion bridge backfills.
     return {
       content: result,
-      state: { model, threadId, totalToolCalls, totalTokens },
+      state: {
+        model,
+        threadId,
+        totalCost,
+        totalInputTokens,
+        totalOutputTokens,
+        totalToolCalls,
+        totalTokens,
+      },
       success: true,
     };
   };

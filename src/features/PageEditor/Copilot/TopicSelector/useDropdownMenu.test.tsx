@@ -6,28 +6,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useDropdownMenu } from './useDropdownMenu';
 
-const confirmModalMock = vi.hoisted(() => vi.fn());
+const confirmRemoveTopicMock = vi.hoisted(() => vi.fn());
 const removeTopicMock = vi.hoisted(() => vi.fn());
 const permissionMock = vi.hoisted(() => ({
   create_content: true,
   edit_own_content: true,
 }));
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
+vi.mock('@/features/DeleteTopicConfirm', () => ({
+  confirmRemoveTopic: confirmRemoveTopicMock,
 }));
 
-vi.mock('@lobehub/ui', () => ({
-  Icon: () => null,
-}));
-
-vi.mock('@lobehub/ui/base-ui', () => ({
-  confirmModal: confirmModalMock,
-}));
-
-vi.mock('antd', () => ({
+vi.mock('antd', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   App: {
     useApp: () => ({
       message: {
@@ -101,7 +92,7 @@ const getMenuItem = (
 
 describe('PageEditor Copilot TopicSelector useDropdownMenu', () => {
   beforeEach(() => {
-    confirmModalMock.mockReset();
+    confirmRemoveTopicMock.mockReset();
     removeTopicMock.mockReset();
     permissionMock.create_content = true;
     permissionMock.edit_own_content = true;
@@ -180,11 +171,16 @@ describe('PageEditor Copilot TopicSelector useDropdownMenu', () => {
       }),
     );
 
-    getMenuItem(result.current(), 'delete')?.onClick?.();
-    const config = confirmModalMock.mock.calls[0][0];
-    await config.onOk();
+    confirmRemoveTopicMock.mockImplementation(async ({ onConfirm }) => onConfirm(true));
 
-    expect(removeTopicMock).toHaveBeenCalledWith('topic-1');
+    getMenuItem(result.current(), 'delete')?.onClick?.();
+    await vi.waitFor(() => {
+      expect(removeTopicMock).toHaveBeenCalledWith('topic-1', true);
+    });
+
+    expect(confirmRemoveTopicMock).toHaveBeenCalledWith(
+      expect.objectContaining({ topicIds: ['topic-1'] }),
+    );
     expect(onDelete).toHaveBeenCalledWith('topic-1');
     expect(onClose).toHaveBeenCalled();
   });

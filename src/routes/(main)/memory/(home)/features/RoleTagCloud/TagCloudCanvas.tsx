@@ -8,6 +8,8 @@ import * as THREE from 'three';
 import { type QueryTagsResult } from '@/database/models/userMemory';
 import UserAvatar from '@/features/User/UserAvatar';
 
+import { retainActiveConnections } from './retainActiveConnections';
+
 // Configuration constants
 const CONFIG = {
   // Connection line count ratio (actual count = tag count * ratio)
@@ -267,6 +269,7 @@ const ConnectionLine = memo<ConnectionLineProps>(
   },
 );
 
+// Connection animation updates must not rerender the DOM avatar mounted through Html.
 const CenterAvatar = memo(() => {
   return (
     <Html
@@ -411,7 +414,7 @@ const Cloud = memo<CloudProps>(({ tags, radius = 20 }) => {
 
       setConnections((prev) => {
         // Filter out expired connections
-        const active = prev.filter((conn) => time - conn.birthTime < conn.duration);
+        const active = retainActiveConnections(prev, time);
 
         // If there are not enough connections, randomly add new ones
         const needed = connectionCount - active.length;

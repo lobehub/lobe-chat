@@ -51,6 +51,14 @@ jobs:
       - name: Install deps
         run: pnpm install
 
+      - name: Install CLI deps
+        run: pnpm install
+        working-directory: apps/cli
+
+      - name: Test CLI build configuration
+        run: bunx vitest run --config vitest.config.mts --silent='passed-only' tsdown.config.test.ts
+        working-directory: apps/cli
+
       - name: Test packages with coverage
         run: |
           for package in $PACKAGES; do
@@ -138,14 +146,14 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --shard=${{ matrix.shard }}/2 --exclude '**/apps/server/**'
+        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --project app --shard=${{ matrix.shard }}/2
 
       - name: Upload blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v6
         with:
           name: blob-report-${{ matrix.shard }}
-          path: .vitest-reports
+          path: .vitest/blob
           include-hidden-files: true
           retention-days: 1
 
@@ -175,7 +183,7 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v7
         with:
-          path: .vitest-reports
+          path: .vitest/blob
           pattern: blob-report-*
           merge-multiple: true
 
@@ -188,6 +196,31 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/app/lcov.info
           flags: app
+
+  # Windows-only verification of the local shell execution strategy.
+  # The unit tests mock process.platform and fs.existsSync, so they prove
+  # nothing about real Windows behaviour: argument tokenization by the Windows
+  # CRT, Windows PowerShell 5.1 (which lacks `&&`), and the pwsh/5.1/cmd
+  # detection cascade against real install paths. The driver script only needs
+  # node builtins, so this job skips the monorepo install entirely.
+  test-windows-shell:
+    needs: check-duplicate-run
+    if: needs.check-duplicate-run.outputs.should_skip != 'true'
+    name: Test Windows Shell
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.2'
+
+      - name: Verify Windows shell strategy
+        run: bun run packages/local-file-shell/scripts/verify-windows-shell.ts
 
   test-desktop:
     needs: check-duplicate-run
@@ -213,6 +246,14 @@ jobs:
       - name: Install deps
         run: pnpm install
         working-directory: apps/desktop
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+
+      # pnpm 12 writes broken relative symlinks for workspace members outside the desktop
+      # workspace root (../../packages/*). Installing the root workspace relinks them so
+      # tsgo can resolve sibling packages from source.
+      - name: Relink root workspace members
+        run: pnpm install --ignore-scripts
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 
@@ -259,14 +300,14 @@ jobs:
         run: pnpm install
 
       - name: Test Server Coverage
-        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --coverage.reportsDirectory=./apps/server/coverage --dir apps/server --shard=${{ matrix.shard }}/2
+        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --coverage.reportsDirectory=./apps/server/coverage --project server --shard=${{ matrix.shard }}/2
 
       - name: Upload blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v6
         with:
           name: server-blob-report-${{ matrix.shard }}
-          path: .vitest-reports
+          path: .vitest/blob
           include-hidden-files: true
           retention-days: 1
 
@@ -296,7 +337,7 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v7
         with:
-          path: .vitest-reports
+          path: .vitest/blob
           pattern: server-blob-report-*
           merge-multiple: true
 
@@ -324,7 +365,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
-
 
         ports:
           - 5432:5432

@@ -4,6 +4,7 @@ export const systemPrompt = `You have access to Task management tools. Use them 
 - **createTasks**: Create multiple tasks in one call. Prefer this when you are about to create more than one task in a row (e.g. all subtasks under one parent, or all chapters of an outline) — it cuts the number of tool calls and keeps the batch atomic from the user's perspective
 - **listTasks**: List tasks. With no filters, defaults to top-level unfinished tasks of the current agent in normal agent conversations, or top-level unfinished tasks across all agents in task manager conversations. If you provide any filter, omitted filters are not applied implicitly
 - **viewTask**: View details of a specific task. Omitting identifier only works when there is a current task context
+- **listWorkspaceMembers**: List the workspace members a task can be assigned to, with their user ids, emails and, where available, linked IM identities. Call it before assigning a task to a person so the name or IM handle the user gave is resolved to a real id — an exact im/email match (e.g. a Discord @handle or a raw <@platformUserId> mention) beats name similarity. Pass query (name, @handle, email or platform id) to narrow a large directory; the result is capped, so refine the query instead of paging
 - **addTaskComment / updateTaskComment / deleteTaskComment**: Record, revise, or remove task comments. Use viewTask to inspect existing comments and their comment ids
 - **editTask**: Modify a task's fields (name, description, instruction, priority), parent (parentIdentifier), or dependencies (addDependencies/removeDependencies, batch). Use parentIdentifier=null to move a task to the top level. For status changes use updateTaskStatus; for schedule configuration use setTaskSchedule
 - **setTaskSchedule**: Configure (or clear) the recurring schedule of a task. Use this to turn a task into a periodically running one, switch automation modes, or disable automation. See "Schedule fields" below for the supported params
@@ -19,6 +20,10 @@ Schedule fields (setTaskSchedule):
 - **heartbeatInterval**: seconds between ticks; used by heartbeat mode (recommend ≥600s). Pass 0 to clear
 - **maxExecutions**: cap on total scheduled runs; null means unlimited
 
+After configuring a cron-based schedule (automationMode="schedule") on a task that is neither currently running nor already scheduled, start its schedule by default with updateTaskStatus(identifier, "scheduled") so it waits for the next scheduled run. When the user explicitly asks to keep it paused or as a draft, call updateTaskStatus(identifier, "paused") instead — a schedule-mode task left in any other non-terminal status is still picked up by the cron dispatcher. Never call updateTaskStatus on a currently running task just to arm the schedule — that interrupts the in-flight run, and the task returns to "scheduled" automatically once the run completes. A task already in "scheduled" stays armed after schedule edits — re-calling updateTaskStatus would reset its execution-count window. Do NOT call runTask just to start the schedule — runTask executes the task immediately.
+
+An automation task (automationMode 'heartbeat' or 'schedule') is a recurring loop: each triggered run is one tick, and a tick with nothing to do is still a SUCCESSFUL tick — not a reason to close the task. When the task you are currently executing is an automation task, NEVER call updateTaskStatus with "completed" (or any other terminal status) on it: a terminal status cancels the in-flight run and permanently disarms the loop — no future tick will ever fire, and nothing recovers it automatically. Simply finish your turn; the scheduler parks the task back at 'scheduled' and arms the next tick on its own. Instructions like "end this run normally" or "treat as completed" refer to the current tick, not the task. Only the user retires a recurring task — either by doing it themselves or by explicitly asking you to stop the recurring task for good.
+
 Verify fields (setTaskVerify):
 - **enabled**: true to require a verify gate when the task completes, false to disable, null to clear
 - **requirement**: a one-sentence description of what "done" means for the task; the server synthesizes acceptance criteria from it. This is usually all you need
@@ -29,8 +34,17 @@ Verify fields (setTaskVerify):
 
 When you dispatch an executable task to another agent (you set assigneeAgentId, then runTask), do NOT trust its self-reported "done" blindly — set a verify gate so the result is independently checked. Right after creating such a task, call setTaskVerify(identifier, enabled=true, requirement="<one sentence acceptance criteria>") before runTask. Skip verify only for trivial or non-deliverable tasks (e.g. pure status bookkeeping).
 
+Assigning a task to a person (assigneeUserId):
+- A task has two independent assignees that can coexist: assigneeAgentId is the agent that executes it, assigneeUserId is the workspace member who owns the outcome. Setting one never clears the other — pass null explicitly to clear a side
+- When the user asks to assign a task to a person, first call listWorkspaceMembers and pick the matching member's id. Never guess or fabricate a user id; if no member matches (or several do), ask the user which one instead of assigning
+
+Task creation and execution are separate user intents:
+- When the user describes new work without explicitly asking to start, run, execute, or do it now, create the task in backlog and stop. Do not call runTask or runTasks.
+- Call runTask or runTasks only when the user explicitly requests execution.
+- If the wording is genuinely ambiguous about whether execution should begin, ask one concise clarification question before running it.
+
 When planning work:
 1. Create tasks for each major piece of work (use parentIdentifier to organize as subtasks)
 2. Use editTask with addDependencies to control execution order
 3. For executable tasks dispatched to an agent, use setTaskVerify to attach acceptance criteria before running them
-4. Use updateTaskStatus to mark the current task as completed when you finish all work`;
+4. Use updateTaskStatus to mark the current task as completed when you finish all work — unless it is an automation (heartbeat/schedule) task, which must stay non-terminal so its loop keeps running`;

@@ -1,9 +1,70 @@
+/** One prior topic (session) from the same IM channel. */
+export interface RecentChannelTopic {
+  /** Topic creation time as a UTC ISO-8601 string. */
+  createdAt?: string;
+  /** Topic description / summary, if any. */
+  description?: string;
+  /** Topic id — lets the model fetch the full transcript via `lh topic view <id>`. */
+  id: string;
+  /** The last user message in this topic (pre-truncated upstream). */
+  lastUserMessage?: string;
+  name: string;
+}
+
+/**
+ * Compact cross-session history from the same IM channel, pre-injected for
+ * platforms that can't read chat history at runtime (e.g. WeChat). Topics are
+ * most-recent-first.
+ */
+export interface RecentChannelHistory {
+  /** Recent topics from the same channel, most-recent first. */
+  topics: RecentChannelTopic[];
+}
+
+/**
+ * Identity of the conversation the bot is currently replying in, expressed in
+ * the exact terms the `lobe-message` tool takes.
+ *
+ * Without this the model holds a `readMessages` tool whose `channelId` is a
+ * required parameter it has no way to fill: most platforms have no
+ * `listChannels` to discover it with, so it ends up asking the user to paste a
+ * chat ID (the Feishu "你方便拿一下群 ID 吗" case).
+ */
+export interface CurrentBotChannel {
+  /** Channel / chat / conversation id, as `readMessages.channelId` expects it. */
+  id: string;
+  /** Platform id for the tool's `platform` enum (e.g. `lark`, not `Lark`). */
+  platformId: string;
+}
+
 export interface BotPlatformInfo {
+  /**
+   * Whether the platform can read chat history at runtime via `readMessages`.
+   * When false (e.g. WeChat), the AI is not told to call `readMessages`, and any
+   * `recentChannelHistory` is what it must rely on for prior context. Defaults
+   * to true.
+   */
+  canReadHistory?: boolean;
+  /** Identifiers of the conversation this run is replying in. */
+  currentChannel?: CurrentBotChannel;
   platformName: string;
+  /** Pre-injected recent same-channel history (cross-session). */
+  recentChannelHistory?: RecentChannelHistory;
   supportsMarkdown: boolean;
   /** Non-fatal warnings from message processing (e.g. file too large, parse failure) */
   warnings?: string[];
 }
+
+/**
+ * Sanitize user-controlled text before embedding it in the XML-ish prompt, so
+ * titles / message bodies / channel ids containing tags or quotes can't break
+ * out or inject.
+ */
+const sanitize = (text: string) =>
+  text.replaceAll(
+    /[<>&"']/g,
+    (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[ch]!,
+  );
 
 /**
  * Format bot platform context into a system-level instruction.
@@ -12,7 +73,10 @@ export interface BotPlatformInfo {
  * When the platform does not support Markdown, instructs the AI to use plain text only.
  */
 export const formatBotPlatformContext = ({
+  canReadHistory = true,
+  currentChannel,
   platformName,
+  recentChannelHistory,
   supportsMarkdown,
   warnings,
 }: BotPlatformInfo): string => {
@@ -22,8 +86,18 @@ export const formatBotPlatformContext = ({
     '',
     '<behavior>',
     '- Act like a knowledgeable group member: respond naturally, stay on topic, and match the conversational tone.',
-    '- When the user\'s message references prior context you don\'t have (e.g. "what do you think?", "summarize this", "look at that"), use `readMessages` IMMEDIATELY to fetch recent chat history before responding. Never ask the user to repeat what was already said in the channel.',
-    '- When you lack enough context to give a useful answer, silently read more history rather than asking clarifying questions — the answer is usually already in the chat.',
+    // On platforms that can read history, tell the model to fetch it on demand.
+    // Platforms without a history-read API (e.g. WeChat) instead get the
+    // `recent_topics` block below — telling them to call a tool that
+    // isn't in their manifest just wastes a turn and ends in an apology.
+    ...(canReadHistory
+      ? [
+          '- When the user\'s message references prior context you don\'t have (e.g. "what do you think?", "summarize this", "look at that"), use `readMessages` IMMEDIATELY to fetch recent chat history before responding. Never ask the user to repeat what was already said in the channel.',
+          '- When you lack enough context to give a useful answer, silently read more history rather than asking clarifying questions — the answer is usually already in the chat.',
+        ]
+      : [
+          '- When the user references prior context you don\'t have, use the `recent_topics` below (if present). This platform has no history-read API, so do NOT claim you "can\'t read history" — work from what you have and ask a brief clarifying question only if the topics block is absent or insufficient.',
+        ]),
     '- Keep responses concise and conversational — IM platforms have character limits and small viewports. Avoid long preambles or formal structure unless the question demands it.',
     '- Do NOT reference UI elements from other environments (e.g. "check the sidebar", "click the button above").',
     '</behavior>',
@@ -34,6 +108,30 @@ export const formatBotPlatformContext = ({
     '`sendMessage` / `sendDirectMessage` should ONLY be used when the user explicitly asks you to send a message to a DIFFERENT channel or user.',
     '</message_delivery>',
   ];
+
+  // The identifiers of the conversation we're standing in. `readMessages` takes
+  // `channelId` as a REQUIRED parameter, and most platforms have no
+  // `listChannels` for the model to discover it with — without this block it
+  // can only ask the user to paste a chat ID, which is exactly the failure this
+  // exists to prevent. Rendered whenever we know the channel, including on
+  // platforms without history-read (the id still serves reactions / channel info).
+  if (currentChannel?.id) {
+    lines.push(
+      '',
+      `<current_conversation platform="${sanitize(currentChannel.platformId)}" channelId="${sanitize(currentChannel.id)}">`,
+      'These are the EXACT argument values for any `lobe-message` call that targets the conversation you are currently in:',
+      `- \`platform\`: "${sanitize(currentChannel.platformId)}"`,
+      `- \`channelId\`: "${sanitize(currentChannel.id)}"`,
+      '',
+      ...(canReadHistory
+        ? [
+            'You already have everything `readMessages` needs. Call it with these two values the moment you need prior context.',
+          ]
+        : []),
+      'NEVER ask the user for a chat / channel / group ID, and never call `listChannels` to look up the current one — it is right here.',
+      '</current_conversation>',
+    );
+  }
 
   if (!supportsMarkdown) {
     lines.push(
@@ -52,15 +150,36 @@ export const formatBotPlatformContext = ({
     );
   }
 
-  if (warnings && warnings.length > 0) {
-    // Sanitize warning text to prevent prompt injection via user-controlled content
-    // (e.g. filenames containing XML tags or special characters)
-    const sanitize = (text: string) =>
-      text.replaceAll(
-        /[<>&"']/g,
-        (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[ch]!,
+  const recentTopics = recentChannelHistory?.topics?.filter((t) => t?.id) ?? [];
+  if (recentTopics.length > 0) {
+    lines.push(
+      '',
+      '<recent_topics>',
+      'Prior sessions from THIS channel (most recent first). Use them for continuity; do not treat them as the current turn.',
+      'To read the full conversation of a topic, run `lh topic view <topic-id>` with the `id` below.',
+    );
+    for (const topic of recentTopics) {
+      const attrs = [
+        `id="${sanitize(topic.id)}"`,
+        `name="${sanitize(topic.name)}"`,
+        topic.createdAt ? `createdAt="${sanitize(topic.createdAt)}"` : undefined,
+      ]
+        .filter(Boolean)
+        .join(' ');
+      lines.push(
+        '',
+        `<topic ${attrs}>`,
+        ...(topic.description?.trim() ? [sanitize(topic.description.trim())] : []),
+        ...(topic.lastUserMessage?.trim()
+          ? [`<last_user_message>${sanitize(topic.lastUserMessage.trim())}</last_user_message>`]
+          : []),
+        '</topic>',
       );
+    }
+    lines.push('</recent_topics>');
+  }
 
+  if (warnings && warnings.length > 0) {
     lines.push(
       '',
       '<processing_warnings>',

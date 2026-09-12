@@ -1,36 +1,49 @@
 import { createIoRedisState } from '@chat-adapter/state-ioredis';
-import {
-  Chat,
-  ConsoleLogger,
-  type Message,
-  type MessageContext,
-  type SlashCommandEvent,
-} from 'chat';
+import { agentDisplayName } from '@lobechat/types';
+import type { Message, MessageContext, SlashCommandEvent, WebhookOptions } from 'chat';
+import { Chat, ConsoleLogger } from 'chat';
 import debug from 'debug';
 
+import { getBotFeatureAccessState } from '@/business/server/bot/featureAccess';
 import type { MessengerPlatform } from '@/config/messenger';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { AgentModel } from '@/database/models/agent';
+import type { SafeMessengerAccountLink } from '@/database/models/messengerAccountLink';
 import { MessengerAccountLinkModel } from '@/database/models/messengerAccountLink';
 import { WorkspaceModel } from '@/database/models/workspace';
-import type { MessengerAccountLinkItem } from '@/database/schemas';
+import { WorkspaceUserSettingsModel } from '@/database/models/workspaceUserSettings';
 import type { LobeChatDatabase } from '@/database/type';
+import { resolveToolMode } from '@/helpers/executionTarget';
 import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFlags';
 import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AgentBridgeService } from '@/server/services/bot/AgentBridgeService';
 import { buildBotContext } from '@/server/services/bot/buildBotContext';
+import { replayDeferredBotMessages } from '@/server/services/bot/deferredMessages';
 import { submitBotFeedback } from '@/server/services/bot/feedbackSubmit';
+import {
+  buildReplayMessages,
+  getSameSenderMessages,
+  mergeBotMessages,
+} from '@/server/services/bot/mergeMessages';
+import { patchSenderBatches } from '@/server/services/bot/patchSenderBatches';
 import type { PlatformClient } from '@/server/services/bot/platforms';
+import { getBotReplyLocale } from '@/server/services/bot/platforms/const';
+// Leaf module, not the `./platforms` barrel: the barrel instantiates every
+// platform definition (and its ClientFactory) at import time.
+import { resolveBotConcurrency } from '@/server/services/bot/platforms/utils';
 import {
   renderCommandReply,
   renderFeedbackSubmitted,
   renderInlineError,
+  renderModeStatus,
 } from '@/server/services/bot/replyTemplate';
+import { isResourceAuthorOrAdmin } from '@/server/services/resourcePermission';
 
 import { getInstallationStore } from './installations';
 import type { InstallationCredentials } from './installations/types';
 import { messengerPlatformRegistry } from './platforms';
+import { getMessengerSystemStrings } from './systemReply';
 import type {
   AgentPickerEntry,
   CallbackAcknowledgement,
@@ -47,8 +60,11 @@ const log = debug('lobe-server:messenger:router');
  * are generated nanoids, so they never collide with this literal.
  */
 const PERSONAL_SCOPE_ID = 'personal';
+const WECHAT_UNSUPPORTED_COMMANDS = new Set(['start']);
 
 interface RegisteredMessengerBot {
+  /** Chat SDK adapters keyed by platform id, as passed to the `Chat` config. */
+  adapters: Record<string, any>;
   binder: MessengerPlatformBinder;
   chatBot: Chat<any>;
   client: PlatformClient;
@@ -63,6 +79,9 @@ interface CommandMatch {
 
 interface AgentSummary {
   id: string;
+  /** The caller's own private agent inside a workspace scope (always false in
+   *  the personal scope, where every agent is implicitly private). */
+  isPrivate: boolean;
   title: string;
 }
 
@@ -91,11 +110,13 @@ interface MessengerCommandContext {
    *  follow-up webhook, otherwise Discord shows "Thinking..." indefinitely
    *  and eventually flips to "The application did not respond". */
   interaction?: { applicationId: string; token: string };
+  /** Whether this invocation can receive a follow-up interactive picker. */
+  interactiveReplies: boolean;
   /** True when the command was invoked from a 1:1 DM. Commands that surface
    *  user-private UI (e.g. `/agents` picker) widen private replies into
    *  ephemerals when this is false so the channel doesn't see them. */
   isDM: boolean;
-  link: MessengerAccountLinkItem | undefined;
+  link: SafeMessengerAccountLink | undefined;
   message?: Message;
   platform: MessengerPlatform;
   /** Platform-aware reply: ephemeral on Slack slash, DM on Discord slash,
@@ -125,16 +146,6 @@ interface MessengerCommand {
     required?: boolean;
   }>;
 }
-
-const HELP_TEXT = [
-  'Commands:',
-  '• /start — bind (or rebind) your LobeHub account',
-  '• /switch — switch the active scope (personal or a workspace)',
-  '• /agents — list your agents and switch the active one',
-  '• /new — start a new conversation',
-  '• /stop — stop the current execution',
-  '• /feedback <message> — send feedback to the LobeHub team (no AI reply)',
-].join('\n');
 
 /**
  * Pull the Discord interaction id + token off a chat-sdk slash event so
@@ -231,10 +242,32 @@ export class MessengerRouter {
   private bots = new Map<string, RegisteredMessengerBot>();
   private loadingPromises = new Map<string, Promise<RegisteredMessengerBot | null>>();
 
-  /** Static command registry — reused across every install since command
-   *  logic is platform-agnostic. Handlers reach platform-specific reply
-   *  surfaces through `ctx.reply` and `ctx.binder`. */
+  /** Static command registry. Platform capability filters are applied when
+   *  commands are registered and dispatched (WeChat, for example, binds via
+   *  web QR and therefore does not expose `/start`). */
   private readonly commands: MessengerCommand[] = this.buildCommands();
+
+  /**
+   * Drop the cached Chat SDK bot for an install so the next webhook rebuilds
+   * it from freshly resolved credentials. Must be called whenever an install's
+   * credential bundle is replaced or removed (e.g. a WeChat rescan rotates the
+   * QR-issued bot token / baseUrl) — otherwise this process keeps replying
+   * through the stale client until restart.
+   */
+  invalidateBot(installationKey: string): void {
+    this.bots.delete(installationKey);
+  }
+
+  // Proactive DMs deliberately do NOT live here — see `messenger/outbound.ts`.
+  // Loading a bot through this class runs `registerHandlers`, which needs
+  // `AgentBridgeService`; that is correct for inbound traffic but would make
+  // every function that can merely reach an outbound send carry the whole
+  // agent runtime.
+
+  private getCommandsForPlatform(platform: MessengerPlatform): MessengerCommand[] {
+    if (platform !== 'wechat') return this.commands;
+    return this.commands.filter((command) => !WECHAT_UNSUPPORTED_COMMANDS.has(command.name));
+  }
 
   /**
    * Webhook handler for `/api/agent/messenger/webhooks/[platform]`. The flow:
@@ -251,8 +284,10 @@ export class MessengerRouter {
    *      that chat-sdk doesn't surface
    *   6. Otherwise hand the (reconstructed) request to chat-sdk's webhook handler
    */
-  getWebhookHandler(platform: string): (req: Request) => Promise<Response> {
-    return async (req: Request) => {
+  getWebhookHandler(
+    platform: string,
+  ): (req: Request, options?: WebhookOptions) => Promise<Response> {
+    return async (req: Request, options?: WebhookOptions) => {
       const definition = messengerPlatformRegistry.getPlatform(platform);
       if (!definition) {
         return new Response(`Unknown messenger platform: ${platform}`, { status: 404 });
@@ -309,7 +344,7 @@ export class MessengerRouter {
         try {
           const action = await bot.binder.extractCallbackAction(reconstructRequest(req, rawBody));
           if (action) {
-            await this.handleCallbackAction(bot.binder, creds, action);
+            await this.handleCallbackAction(bot.binder, creds, action, bot.chatBot);
             return new Response('OK', { status: 200 });
           }
         } catch (error) {
@@ -322,7 +357,7 @@ export class MessengerRouter {
       if (!handler) {
         return new Response(`Messenger ${platform} webhook unavailable`, { status: 500 });
       }
-      return handler(reconstructRequest(req, rawBody));
+      return handler(reconstructRequest(req, rawBody), options);
     };
   }
 
@@ -375,9 +410,10 @@ export class MessengerRouter {
     await chatBot.initialize();
 
     if (client.registerBotCommands) {
+      const commands = this.getCommandsForPlatform(creds.platform);
       client
         .registerBotCommands(
-          this.commands.map((cmd) => ({
+          commands.map((cmd) => ({
             command: cmd.name,
             description: cmd.description,
             // Forward the option schema so Discord/Slack surface required
@@ -394,17 +430,53 @@ export class MessengerRouter {
         );
     }
 
-    const registered: RegisteredMessengerBot = { binder, chatBot, client, creds };
+    const registered: RegisteredMessengerBot = { adapters, binder, chatBot, client, creds };
     this.bots.set(creds.installationKey, registered);
 
     log('loadBot: registered messenger %s bot', creds.installationKey);
     return registered;
   }
 
+  /**
+   * Re-dispatch the messages `AgentBridgeService` parked while the thread's
+   * topic was still running (see `BotMessageRouter.replayDeferredMessages`).
+   * `applicationId` is the synthetic per-install id the bridge used when
+   * deferring (`messenger-<platform>[-<tenant>]`).
+   */
+  async replayDeferredMessages(
+    installationKey: string,
+    applicationId: string,
+    platformThreadId: string,
+  ): Promise<void> {
+    await replayDeferredBotMessages(applicationId, platformThreadId, async (entries) => {
+      const platform = installationKey.split(':')[0] as MessengerPlatform;
+      const store = getInstallationStore(platform);
+      const creds = await store?.resolveByKey(installationKey);
+      const bot = creds ? await this.getOrCreateBot(creds) : null;
+      const adapter = bot?.adapters[platform];
+      if (!bot || !adapter) throw new Error(`Messenger adapter unavailable for ${platform}`);
+      const results = await Promise.allSettled(
+        buildReplayMessages(entries).map((message) =>
+          bot.chatBot.processMessage(adapter, platformThreadId, message),
+        ),
+      );
+      const failure = results.find((result) => result.status === 'rejected');
+      if (failure?.status === 'rejected') throw failure.reason;
+    });
+  }
+
   private createChatBot(adapters: Record<string, any>, creds: InstallationCredentials): Chat<any> {
     const config: any = {
       adapters,
-      concurrency: 'queue',
+      // Messenger installs carry no per-channel settings, so this is purely the
+      // platform's own answer: WeChat collects a burst window because it splits
+      // one turn across several messages, everything else keeps the plain queue.
+      // Shared with `BotMessageRouter` so both paths agree on which platforms
+      // need collecting.
+      concurrency: (() => {
+        const { debounceMs, strategy } = resolveBotConcurrency(creds.platform, undefined);
+        return strategy === 'queue' ? 'queue' : { debounceMs, strategy };
+      })(),
       // Per-install Chat SDK identity so the queue / state / debounce keys
       // never overlap across workspaces.
       userName: `messenger-bot-${creds.installationKey}`,
@@ -420,7 +492,13 @@ export class MessengerRouter {
       });
     }
 
-    return new Chat(config);
+    const bot = new Chat(config);
+    const commands = this.getCommandsForPlatform(creds.platform);
+    patchSenderBatches(bot, (message) => {
+      const parsed = parseCommand(message.text);
+      return !!parsed && commands.some((command) => command.name === parsed.name);
+    });
+    return bot;
   }
 
   private registerHandlers(
@@ -432,6 +510,8 @@ export class MessengerRouter {
   ): void {
     const platform = creds.platform;
     const tenantId = creds.tenantId;
+    const commands = this.getCommandsForPlatform(platform);
+    const systemStrings = getMessengerSystemStrings(platform);
 
     const handle = async (
       thread: any,
@@ -454,6 +534,25 @@ export class MessengerRouter {
       // the platform's thread anchor (Slack: `slack:<channel>:<threadTs>`)
       // which the binder splits when posting in-thread.
       const isChannelMention = thread.isDM === false;
+      const channelThreadTs = isChannelMention ? String(thread.id).split(':')[2] : undefined;
+      const isOneShotMessage = binder.isOneShotMessage?.(message) === true;
+      let oneShotReplySent = false;
+      const replyToSender = (text: string): Promise<void> => {
+        if (isOneShotMessage && binder.replyToMessage) {
+          if (oneShotReplySent) return Promise.resolve();
+          oneShotReplySent = true;
+          return binder.replyToMessage(message, text);
+        }
+        if (isChannelMention && binder.replyEphemeral) {
+          return binder.replyEphemeral({
+            channelId: chatId,
+            text,
+            threadTs: channelThreadTs,
+            userId: senderId,
+          });
+        }
+        return binder.sendDmText(chatId, text);
+      };
       const link = await MessengerAccountLinkModel.findByPlatformUser(
         serverDB,
         platform,
@@ -464,7 +563,7 @@ export class MessengerRouter {
       try {
         const parsed = parseCommand(message.text);
         if (parsed) {
-          const command = this.commands.find((c) => c.name === parsed.name);
+          const command = commands.find((c) => c.name === parsed.name);
           if (command) {
             // Text-path command reply: in a DM `chat.postMessage` is fine
             // (the conversation is private already). In a channel `@mention`
@@ -474,28 +573,18 @@ export class MessengerRouter {
             // mention's thread (Slack `thread_ts`) so the response sits next
             // to the trigger. Platforms without `replyEphemeral` (Telegram)
             // fall back to the regular DM path.
-            const channelThreadTs = isChannelMention ? String(thread.id).split(':')[2] : undefined;
-            const reply =
-              isChannelMention && binder.replyEphemeral
-                ? (text: string) =>
-                    binder.replyEphemeral!({
-                      channelId: chatId,
-                      text,
-                      threadTs: channelThreadTs,
-                      userId: senderId,
-                    })
-                : (text: string) => binder.sendDmText(chatId, text);
             await command.handler({
               args: parsed.args,
               authorUserId: senderId,
               authorUserName: message.author.userName,
               binder,
               chatId,
+              interactiveReplies: !isOneShotMessage,
               isDM: !isChannelMention,
               link,
               message,
               platform,
-              reply,
+              reply: replyToSender,
               serverDB,
               source: 'text',
               tenantId,
@@ -526,18 +615,7 @@ export class MessengerRouter {
         // In a channel, route the prompt ephemerally so the entire channel
         // doesn't see the system message.
         if (!link.activeAgentId) {
-          const noAgentText = 'No active agent selected. Send /agents to pick one.';
-          if (isChannelMention && binder.replyEphemeral) {
-            const threadTs = String(thread.id).split(':')[2];
-            await binder.replyEphemeral({
-              channelId: chatId,
-              text: noAgentText,
-              threadTs,
-              userId: senderId,
-            });
-          } else {
-            await binder.sendDmText(chatId, noAgentText);
-          }
+          await replyToSender(systemStrings.noActiveAgent);
           return;
         }
 
@@ -548,19 +626,42 @@ export class MessengerRouter {
           link.workspaceId &&
           !(await userIsWorkspaceMember(serverDB, link.userId, link.workspaceId))
         ) {
-          const staleScopeText =
-            'Your active workspace is no longer available. Send /switch to choose another scope.';
-          if (isChannelMention && binder.replyEphemeral) {
-            const threadTs = String(thread.id).split(':')[2];
-            await binder.replyEphemeral({
-              channelId: chatId,
-              text: staleScopeText,
-              threadTs,
-              userId: senderId,
-            });
-          } else {
-            await binder.sendDmText(chatId, staleScopeText);
-          }
+          await replyToSender(systemStrings.staleScope);
+          return;
+        }
+
+        // Re-validate the active agent for the same reason: `activeAgentId` is
+        // a long-lived binding that goes stale when the agent is deleted or
+        // moved out of the active scope. Without this the run reaches the
+        // agent runtime, `resolveAgentConfigOrThrow` throws `Agent not found`,
+        // and the user gets a bare "Agent Execution Failed" with no operation
+        // id and no way to recover — on every single message.
+        if (
+          !(await new AgentModel(serverDB, link.userId, link.workspaceId ?? undefined).existsById(
+            link.activeAgentId,
+          ))
+        ) {
+          log(
+            'handle: active agent %s no longer resolves for user=%s workspace=%s',
+            link.activeAgentId,
+            link.userId,
+            link.workspaceId,
+          );
+          await replyToSender(systemStrings.staleAgent);
+          return;
+        }
+
+        const featureAccess = await getBotFeatureAccessState({
+          action: 'runtime',
+          platform,
+          userId: link.userId,
+          workspaceId: link.workspaceId ?? undefined,
+        });
+        if (!featureAccess.allowed) {
+          await replyToSender(
+            featureAccess.blockedMessage ??
+              'This messenger connection requires a paid plan. Upgrade in LobeHub Settings to continue.',
+          );
           return;
         }
 
@@ -576,7 +677,9 @@ export class MessengerRouter {
       } catch (error) {
         log('handle: handler error: %O', error);
         try {
-          await thread.post(renderInlineError('Something went wrong'));
+          await thread.post(
+            renderInlineError(systemStrings.genericError, getBotReplyLocale(platform)),
+          );
         } catch {
           /* ignore */
         }
@@ -648,17 +751,30 @@ export class MessengerRouter {
       return { count: participants.length + 1, isNewParticipant: true };
     };
 
-    bot.onSubscribedMessage(async (thread, message, _context?: MessageContext) => {
+    bot.onSubscribedMessage(async (thread, message, context?: MessageContext) => {
       log('onSubscribedMessage: install=%s, msgId=%s', creds.installationKey, (message as any).id);
+
+      // Fold in whatever the SDK collected while the previous handler ran (or
+      // during a `burst` window) so the agent sees the whole user turn — text
+      // and media alike — instead of only its last message.
+      const merged = mergeBotMessages(message, context?.skipped);
 
       // DM short-circuit — always 1:1 with the bot, no participant gating.
       if (thread.isDM) {
-        await handle(thread, message, 'handleSubscribedMessage');
+        await handle(thread, merged, 'handleSubscribedMessage');
         return;
       }
 
-      const isMention = message.isMention === true;
-      const { count } = await trackThreadParticipant(thread, message);
+      // A mention anywhere in the collected turn addresses the bot; the last
+      // message of a burst often carries the question without the `@`.
+      const isMention =
+        message.isMention === true ||
+        getSameSenderMessages(message, context?.skipped).some((m) => m.isMention === true) === true;
+      let count = 0;
+      for (const source of [...(context?.skipped ?? []), message]) {
+        const participant = await trackThreadParticipant(thread, source);
+        count = Math.max(count, participant.count);
+      }
 
       // Single-human thread → respond without `@`. Multi-human thread →
       // only @mention triggers a reply, so the bot doesn't insert itself
@@ -690,7 +806,7 @@ export class MessengerRouter {
       // subscribed channel thread). `handleSubscribedMessage` reads the
       // cached topicId from chat-sdk thread state and continues that topic;
       // it falls back to `handleMention` internally if no topicId is cached.
-      await handle(thread, message, 'handleSubscribedMessage');
+      await handle(thread, merged, 'handleSubscribedMessage');
     });
 
     // First-touch entry point for any non-subscribed conversation:
@@ -701,27 +817,35 @@ export class MessengerRouter {
     // thread state, and (for subscribable platforms / threads — see
     // `client.shouldSubscribe`) subscribes the thread so subsequent
     // messages route through `onSubscribedMessage` and continue the topic.
-    bot.onNewMention(async (thread, message, _context?: MessageContext) => {
+    bot.onNewMention(async (thread, message, context?: MessageContext) => {
       log(
         'onNewMention: install=%s, msgId=%s, threadId=%s',
         creds.installationKey,
         (message as any).id,
         thread.id,
       );
+      const merged = mergeBotMessages(message, context?.skipped);
       // Record the original @mentioner so the participant count starts at 1
       // (not 0) when their first follow-up lands in `onSubscribedMessage`.
       // Without this the follow-up looks like a "new participant" instead
       // of the same person continuing.
-      await trackThreadParticipant(thread, message);
-      await handle(thread, message, 'handleMention');
+      for (const source of [...(context?.skipped ?? []), message]) {
+        await trackThreadParticipant(thread, source);
+      }
+      await handle(thread, merged, 'handleMention');
     });
 
-    // Native slash commands — wired only for platforms that opt in by
-    // exposing `replyPrivately` (Slack, Discord). The full set of command
-    // names comes from the shared registry so every native-slash platform
-    // surfaces the same menu.
-    if (binder.replyPrivately) {
-      const slashPaths = this.commands.map((cmd) => `/${cmd.name}`);
+    // Native slash commands. chat-adapter routes a leading `/command` to the
+    // slash-command channel (NOT onNewMention / onSubscribedMessage), so any
+    // platform that surfaces slash commands MUST register here or the command
+    // is silently dropped. Slack / Discord reply via `replyPrivately`; the
+    // Telegram binder does not implement that helper, so register it explicitly
+    // and fall back to `sendDmText` in the dispatcher. The full set of command
+    // names comes from the shared registry so every platform surfaces the same menu.
+    const supportsNativeSlashCommands =
+      binder.replyPrivately !== undefined || creds.platform === 'telegram';
+    if (supportsNativeSlashCommands) {
+      const slashPaths = commands.map((cmd) => `/${cmd.name}`);
       bot.onSlashCommand(slashPaths, async (event) => {
         await this.handleSlashCommand({ binder, bot, client, creds, event, serverDB });
       });
@@ -736,7 +860,7 @@ export class MessengerRouter {
         try {
           const action = binder.extractActionFromEvent!(event, client);
           if (!action) return;
-          await this.handleCallbackAction(binder, creds, action);
+          await this.handleCallbackAction(binder, creds, action, bot);
         } catch (error) {
           log('onAction handler error: %O', error);
         }
@@ -776,6 +900,7 @@ export class MessengerRouter {
       {
         description: 'Bind your account to LobeHub',
         handler: async (ctx) => {
+          const strings = getMessengerSystemStrings(ctx.platform);
           // Already-linked short-circuit: re-running `/start` while bound
           // would issue a fresh verify-im token and, on completion,
           // overwrite the user's `messenger_account_links` row via
@@ -784,9 +909,7 @@ export class MessengerRouter {
           // active agent and the conversation hangs at "typing…" with no
           // reply. Treat `/start` as the unbound-only onboarding command.
           if (ctx.link) {
-            await ctx.reply(
-              'Your account is already linked to LobeHub. Send /agents to switch the active agent, or /new to start a fresh conversation.',
-            );
+            await ctx.reply(strings.accountAlreadyLinked);
             return;
           }
           // The verify-im URL is one-shot and account-binding; it must reach
@@ -795,8 +918,9 @@ export class MessengerRouter {
           //   • Slack — `chat.postEphemeral` in the channel is invoker-only
           //     and keeps the link flow inline (no DM context switch).
           //   • Discord — no text-channel ephemeral primitive for non-
-          //     interaction messages, so we still open a DM. Telegram has no
-          //     channel slash surface today, falls through to DM as well.
+          //     interaction messages, so we still open a DM.
+          // Telegram group `/start` is intercepted by `handleSlashCommand`
+          // before this handler and gets a safe prompt to open the bot DM.
           // Detection key: presence of `binder.replyEphemeral`, which is what
           // the @mention path also uses to decide ephemeral-vs-DM.
           const canEphemeralInChannel = !ctx.isDM && !!ctx.binder.replyEphemeral;
@@ -817,8 +941,8 @@ export class MessengerRouter {
           // Only nudge the user toward DM when the link actually went there.
           // For the Slack ephemeral path the prompt is already inline, a
           // second "check your DM" would be misleading.
-          if (!ctx.isDM && !canEphemeralInChannel) {
-            await ctx.reply('Check your DM with LobeHub for the link button.');
+          if (!ctx.isDM && !canEphemeralInChannel && ctx.interactiveReplies) {
+            await ctx.reply(strings.checkDirectMessage);
           }
         },
         name: 'start',
@@ -849,44 +973,137 @@ export class MessengerRouter {
       {
         description: 'Start a new conversation',
         handler: async (ctx) => {
+          const strings = getMessengerSystemStrings(ctx.platform);
           if (!ctx.link) {
-            await ctx.reply('You need to /start to bind your account first.');
+            await ctx.reply(strings.needLink);
             return;
           }
           if (!ctx.thread) {
             // Slash dispatch has no chat-sdk Thread; setState lives on the
             // thread instance, so direct the user back to the DM where the
             // text path can pick the command up.
-            await ctx.reply('Open your direct message with the LobeHub bot and send `/new` there.');
+            await ctx.reply(strings.newDirectMessageOnly);
             return;
           }
           // Drop the cached topicId so the next message starts a fresh topic.
-          // Mirrors `/new` in the bot router (BotMessageRouter.buildCommands).
+          // Mirrors `/new` in the bot router (BotMessageRouter.buildCommands):
+          // `replace: true` is what reliably clears topicId (a merged
+          // `undefined` is dropped by the JSON round-trip), while the `/mode`
+          // choice is carried over — it's a conversation preference, and
+          // starting a new topic shouldn't silently revert it.
           try {
-            await ctx.thread.setState({ topicId: undefined }, { replace: true });
+            const toolMode = (await ctx.thread.state)?.toolMode;
+            await ctx.thread.setState(
+              toolMode ? { toolMode, topicId: undefined } : { topicId: undefined },
+              { replace: true },
+            );
           } catch (error) {
             log('command /new: setState failed: %O', error);
           }
-          await ctx.reply('Started a new conversation. Your next message begins a fresh topic.');
+          await ctx.reply(strings.newStarted);
         },
         name: 'new',
       },
       {
-        description: 'Stop the current execution',
+        description: 'Show or switch the conversation mode (agent | chat)',
+        // Declared so Discord/Slack surface a `/mode <mode>` argument in the
+        // slash picker; the no-arg form shows the current mode.
+        options: [
+          {
+            description: "Target mode: 'agent' or 'chat'; omit to show the current mode",
+            name: 'mode',
+            required: false,
+          },
+        ],
         handler: async (ctx) => {
+          const replyLocale = getBotReplyLocale(ctx.platform);
+          const strings = getMessengerSystemStrings(ctx.platform);
           if (!ctx.link) {
-            await ctx.reply('You need to /start to bind your account first.');
+            await ctx.reply(strings.needLink);
             return;
           }
           if (!ctx.thread) {
-            await ctx.reply(
-              'Open your direct message with the LobeHub bot and send `/stop` there.',
-            );
+            // Mode lives in chat-sdk thread state; without a resolved DM
+            // thread there is nothing to read or write. Mirrors `/new`.
+            await ctx.reply(strings.modeDirectMessageOnly);
+            return;
+          }
+          const arg = ctx.args.trim().toLowerCase();
+          if (!arg) {
+            let override: 'agent' | 'chat' | undefined;
+            try {
+              const state = await ctx.thread.state;
+              override =
+                state?.toolMode === 'agent' || state?.toolMode === 'chat'
+                  ? state.toolMode
+                  : undefined;
+            } catch (error) {
+              log('command /mode: read state failed: %O', error);
+            }
+            // No explicit override → surface the EFFECTIVE mode (the active
+            // agent's configured default) so the picker always carries a
+            // current-mode mark instead of showing two unmarked buttons.
+            const current = override ?? (await this.resolveDefaultMode(ctx.serverDB, ctx.link));
+            // Tap-to-switch picker on platforms with button support (mirrors
+            // /agents); buttons emit `messenger:mode:<agent|chat>`. Platforms
+            // without a picker fall back to the text status + usage reply.
+            // Only offered where a tap writes the same thread this invocation
+            // resolved: DMs, and slash dispatches (whose ctx.thread IS the
+            // canonical DM that handleModeCallback writes via openDM). A
+            // channel text mention resolves the CHANNEL thread — picker taps
+            // would write the DM while this channel's next run reads its own
+            // state — so it gets the text status instead.
+            if (
+              ctx.interactiveReplies &&
+              ctx.binder.sendAgentPicker &&
+              (ctx.isDM || ctx.source === 'slash')
+            ) {
+              await ctx.binder.sendAgentPicker(ctx.chatId, {
+                action: 'mode',
+                entries: MessengerRouter.modePickerEntries(current, strings),
+                // Channel invocation → ephemeral so the picker doesn't
+                // broadcast; DMs stay non-ephemeral so it persists in history.
+                ephemeralTo: ctx.isDM ? undefined : ctx.authorUserId,
+                interaction: ctx.interaction,
+                text: strings.modePicker,
+              });
+              return;
+            }
+            await ctx.reply(renderModeStatus(current, replyLocale));
+            return;
+          }
+          if (arg !== 'agent' && arg !== 'chat') {
+            await ctx.reply(renderCommandReply('cmdModeUsage', replyLocale));
+            return;
+          }
+          try {
+            await ctx.thread.setState({ toolMode: arg });
+          } catch (error) {
+            log('command /mode: setState failed: %O', error);
+            await ctx.reply(strings.genericError);
+            return;
+          }
+          await ctx.reply(
+            renderCommandReply(arg === 'agent' ? 'cmdModeSetAgent' : 'cmdModeSetChat', replyLocale),
+          );
+        },
+        name: 'mode',
+      },
+      {
+        description: 'Stop the current execution',
+        handler: async (ctx) => {
+          const strings = getMessengerSystemStrings(ctx.platform);
+          if (!ctx.link) {
+            await ctx.reply(strings.needLink);
+            return;
+          }
+          if (!ctx.thread) {
+            await ctx.reply(strings.stopDirectMessageOnly);
             return;
           }
           const isActive = AgentBridgeService.isThreadActive(ctx.thread.id);
           if (!isActive) {
-            await ctx.reply('No active execution to stop.');
+            await ctx.reply(strings.stopNotActive);
             return;
           }
           const operationId = AgentBridgeService.getActiveOperationId(ctx.thread.id);
@@ -898,14 +1115,14 @@ export class MessengerRouter {
               const result = await aiAgentService.interruptTask({ operationId });
               if (!result.success) {
                 log('command /stop: runtime interrupt rejected for op=%s', operationId);
-                await ctx.reply('Unable to stop the current execution.');
+                await ctx.reply(strings.stopUnable);
                 return;
               }
               AgentBridgeService.clearActiveThread(ctx.thread.id);
               log('command /stop: interrupted op=%s', operationId);
             } catch (error) {
               log('command /stop: interruptTask failed: %O', error);
-              await ctx.reply('Unable to stop the current execution.');
+              await ctx.reply(strings.stopUnable);
               return;
             }
           } else {
@@ -914,7 +1131,7 @@ export class MessengerRouter {
             AgentBridgeService.requestStop(ctx.thread.id);
             log('command /stop: queued deferred stop for thread=%s', ctx.thread.id);
           }
-          await ctx.reply('Stop requested.');
+          await ctx.reply(strings.stopRequested);
         },
         name: 'stop',
       },
@@ -931,16 +1148,18 @@ export class MessengerRouter {
           },
         ],
         handler: async (ctx) => {
+          const replyLocale = getBotReplyLocale(ctx.platform);
+          const strings = getMessengerSystemStrings(ctx.platform);
           // Feedback is tied to a LobeHub account so the team can follow up;
           // an unbound user has no email/identity to attach. Mirror the
           // `/new` / `/stop` "you need to /start" guard for consistency.
           if (!ctx.link) {
-            await ctx.reply('You need to /start to bind your account first.');
+            await ctx.reply(strings.needLink);
             return;
           }
           const body = ctx.args.trim();
           if (!body) {
-            await ctx.reply(renderCommandReply('cmdFeedbackUsage'));
+            await ctx.reply(renderCommandReply('cmdFeedbackUsage', replyLocale));
             return;
           }
           const result = await submitBotFeedback(ctx.serverDB, {
@@ -950,17 +1169,17 @@ export class MessengerRouter {
             userId: ctx.link.userId,
           });
           if (!result.success) {
-            await ctx.reply(renderCommandReply('cmdFeedbackError'));
+            await ctx.reply(renderCommandReply('cmdFeedbackError', replyLocale));
             return;
           }
-          await ctx.reply(renderFeedbackSubmitted(result.issueUrl));
+          await ctx.reply(renderFeedbackSubmitted(result.issueUrl, replyLocale));
         },
         name: 'feedback',
       },
       {
         description: 'Show usage',
         handler: async (ctx) => {
-          await ctx.reply(HELP_TEXT);
+          await ctx.reply(getMessengerSystemStrings(ctx.platform).help);
         },
         name: 'help',
       },
@@ -988,12 +1207,6 @@ export class MessengerRouter {
       return;
     }
 
-    const replyPrivately = binder.replyPrivately;
-    if (!replyPrivately) {
-      log('handleSlashCommand: binder for %s has no replyPrivately', creds.platform);
-      return;
-    }
-
     // `event.command` is the literal `/foo` the platform sent.
     const cmdName = event.command.replace(/^\//, '').toLowerCase();
     // chat-sdk wraps the raw channel id with the platform prefix
@@ -1001,12 +1214,21 @@ export class MessengerRouter {
     // the bare id so direct platform API calls see what they expect.
     const chatId = client.extractChatId((event.channel as any).id as string);
     const args = event.text?.trim() ?? '';
+    const isTelegramGroup = creds.platform === 'telegram' && chatId.startsWith('-');
+    const replyChatId = isTelegramGroup ? senderId : chatId;
 
-    const reply = (text: string) => replyPrivately.call(binder, event.channel, event.user, text);
+    // Slack / Discord reply privately (ephemeral / DM); Telegram has no
+    // `replyPrivately`, so fall back to a direct message in the slash
+    // command's chat. Both keep the reply scoped to the invoker.
+    const replyPrivately = binder.replyPrivately;
+    const reply = replyPrivately
+      ? (text: string) => replyPrivately.call(binder, event.channel, event.user, text)
+      : (text: string) => binder.sendDmText(replyChatId, text);
+    const systemStrings = getMessengerSystemStrings(creds.platform);
 
-    const command = this.commands.find((c) => c.name === cmdName);
+    const command = this.getCommandsForPlatform(creds.platform).find((c) => c.name === cmdName);
     if (!command) {
-      await reply(`Unknown command: /${cmdName}`);
+      await reply(systemStrings.unknownCommand(cmdName));
       return;
     }
 
@@ -1016,6 +1238,16 @@ export class MessengerRouter {
       senderId,
       creds.tenantId,
     );
+
+    // Telegram bots cannot initiate a private conversation with a user. A
+    // first-time user invoking `/start` from a group therefore cannot receive
+    // the account-link button at `senderId`. Keep the one-shot link out of the
+    // group and post only a safe instruction back to the originating chat (or
+    // forum topic); the user can then open the bot DM and retry `/start`.
+    if (isTelegramGroup && cmdName === 'start' && !link) {
+      await event.channel.post(systemStrings.startDirectMessageOnly);
+      return;
+    }
 
     // Slash command events have no chat-sdk Thread attached (slash isn't
     // posted into any specific thread). Worse, chat-sdk's
@@ -1043,7 +1275,9 @@ export class MessengerRouter {
     // group DMs, `C` is public). For other platforms (Discord today) the
     // chat-sdk flag is reliable so we keep that path too.
     const isDmChannel =
-      event.channel.isDM === true || (creds.platform === 'slack' && chatId.startsWith('D'));
+      event.channel.isDM === true ||
+      (creds.platform === 'slack' && chatId.startsWith('D')) ||
+      (creds.platform === 'telegram' && !isTelegramGroup);
 
     // Discord slash commands arrive as deferred interactions (the
     // `patchDiscordForwardedInteractions` patch ack's them with type 5
@@ -1060,8 +1294,9 @@ export class MessengerRouter {
         authorUserId: senderId,
         authorUserName: event.user.userName,
         binder,
-        chatId,
+        chatId: replyChatId,
         interaction,
+        interactiveReplies: true,
         // `isDM` lets handlers like `/agents` keep the picker public in
         // DMs (so it stays in history) and widen to an ephemeral when
         // the slash was typed from a public channel.
@@ -1077,7 +1312,7 @@ export class MessengerRouter {
     } catch (error) {
       log('handleSlashCommand: handler error for /%s: %O', cmdName, error);
       try {
-        await reply('Something went wrong.');
+        await reply(systemStrings.genericError);
       } catch {
         /* ignore */
       }
@@ -1089,45 +1324,67 @@ export class MessengerRouter {
    * active one — on platforms that implement `sendAgentPicker` the bot replies
    * with a tap-to-switch keyboard. Platforms without keyboard support fall
    * back to a numbered text list + `/agents <n>` syntax for switching.
+   *
+   * Use when:
+   * - A registered /agents text or slash command reaches the router.
+   *
+   * Expects:
+   * - The context identifies whether Telegram can send interactive replies.
+   *
+   * Returns:
+   * - A private selection response, or a safe DM instruction for Guest Mode.
+   *
+   * Triggering workflow / Call stack:
+   *
+   * {@link registerHandlers} / {@link handleSlashCommand}
+   *   -> {@link buildCommands} (`/agents`)
+   *     -> {@link runAgentsCommand}
+   *       -> {@link MessengerCommandContext.reply} / {@link MessengerPlatformBinder.sendAgentPicker}
    */
   private async runAgentsCommand(ctx: MessengerCommandContext): Promise<void> {
     const { binder, chatId, link, serverDB } = ctx;
+    const strings = getMessengerSystemStrings(ctx.platform);
+
+    // Telegram Guest replies are visible in the originating chat. Redirect
+    // before fetching personal data or switching state, including /agents <n>.
+    if (ctx.platform === 'telegram' && !ctx.interactiveReplies) {
+      await ctx.reply(strings.agentsDirectMessageOnly);
+      return;
+    }
 
     if (!link) {
-      await ctx.reply('You need to /start to bind your account first.');
+      await ctx.reply(strings.needLink);
       return;
     }
 
     const userAgents = await this.fetchUserAgents(serverDB, link.userId, link.workspaceId);
     if (userAgents.length === 0) {
-      await ctx.reply('You have no agents yet. Create one in LobeHub, then come back to /agents.');
+      await ctx.reply(strings.agentsEmpty);
       return;
     }
 
     // Text-fallback path: `/agents 2` switches without needing the keyboard,
     // for platforms (or clients) where tap-buttons aren't available.
     const args = ctx.args.trim();
-    if (args && !binder.sendAgentPicker) {
+    if (args && (!binder.sendAgentPicker || !ctx.interactiveReplies)) {
       const index = Number.parseInt(args, 10);
       if (!Number.isInteger(index) || index < 1 || index > userAgents.length) {
-        await ctx.reply(`Usage: /agents <n>, where n is between 1 and ${userAgents.length}.`);
+        await ctx.reply(strings.agentsUsage(userAgents.length));
         return;
       }
       const target = userAgents[index - 1];
       if (link.activeAgentId === target.id) {
-        await ctx.reply(`${target.title} is already the active agent.`);
+        await ctx.reply(strings.activeAgentAlready(target.title));
         return;
       }
       await MessengerAccountLinkModel.setActiveAgentById(serverDB, link.id, target.id);
-      await ctx.reply(
-        `Switched active agent to: ${target.title}. Your next message will go there.`,
-      );
+      await ctx.reply(strings.activeAgentChanged(target.title));
       return;
     }
 
-    if (binder.sendAgentPicker) {
+    if (binder.sendAgentPicker && ctx.interactiveReplies) {
       await binder.sendAgentPicker(chatId, {
-        entries: this.toPickerEntries(userAgents, link.activeAgentId),
+        entries: this.toPickerEntries(userAgents, link.activeAgentId, strings),
         // Channel invocation → render ephemeral so only the invoker sees
         // their personal agent list (otherwise `/agents` from a public
         // channel would broadcast everyone's `LobeAI / Claude Code / …`
@@ -1137,19 +1394,53 @@ export class MessengerRouter {
         // complete the deferred reply via the follow-up webhook. Without
         // this, Discord keeps "Thinking..." until it times out.
         interaction: ctx.interaction,
-        text: 'Tap an agent to make it the active one:',
+        text: strings.agentsPicker,
       });
       return;
     }
 
     // Final fallback: numbered list + usage hint for `/agents <n>`.
-    const lines = userAgents.map((agent, i) => {
-      const marker = link.activeAgentId === agent.id ? ' (active)' : '';
+    await ctx.reply(this.renderAgentsList(userAgents, link.activeAgentId, strings));
+  }
+
+  /**
+   * Render the numbered `/agents` text list. In a workspace scope where both
+   * shared workspace agents and the caller's private agents are present, the
+   * list splits into two headed sections (workspace first — matching the
+   * `fetchUserAgents` partition) while keeping numbering continuous, so
+   * `/agents <n>` still maps 1:1 onto the fetched array.
+   */
+  private renderAgentsList(
+    userAgents: AgentSummary[],
+    activeAgentId: string | null | undefined,
+    strings: ReturnType<typeof getMessengerSystemStrings>,
+  ): string {
+    const line = (agent: AgentSummary, i: number) => {
+      const marker = activeAgentId === agent.id ? ` (${strings.activeMarker})` : '';
       return `${i + 1}. ${agent.title}${marker}`;
-    });
-    await ctx.reply(
-      `Your agents:\n${lines.join('\n')}\n\nReply with /agents <n> to switch the active agent.`,
-    );
+    };
+
+    const privateCount = userAgents.filter((agent) => agent.isPrivate).length;
+    const grouped = privateCount > 0 && privateCount < userAgents.length;
+
+    if (!grouped) {
+      const lines = userAgents.map((agent, i) => line(agent, i));
+      return `${strings.agentsHeading}\n${lines.join('\n')}\n\n${strings.agentsHint}`;
+    }
+
+    // `fetchUserAgents` already partitioned workspace-first, so the two
+    // sections are contiguous slices and the shared numbering stays in order.
+    const workspaceLines: string[] = [];
+    const privateLines: string[] = [];
+    for (const [i, agent] of userAgents.entries()) {
+      (agent.isPrivate ? privateLines : workspaceLines).push(line(agent, i));
+    }
+
+    return [
+      `${strings.agentsWorkspaceHeading}\n${workspaceLines.join('\n')}`,
+      `${strings.agentsPrivateHeading}\n${privateLines.join('\n')}`,
+      strings.agentsHint,
+    ].join('\n\n');
   }
 
   /**
@@ -1162,36 +1453,60 @@ export class MessengerRouter {
    * replies with a tap-to-switch keyboard (buttons emit `messenger:scope:<id>`
    * so the callback path can tell them apart from agent switches). Platforms
    * without keyboard support fall back to a numbered text list + `/switch <n>`.
+   *
+   * Use when:
+   * - A registered /switch text or slash command reaches the router.
+   *
+   * Expects:
+   * - The context identifies whether Telegram can send interactive replies.
+   *
+   * Returns:
+   * - A private selection response, or a safe DM instruction for Guest Mode.
+   *
+   * Triggering workflow / Call stack:
+   *
+   * {@link registerHandlers} / {@link handleSlashCommand}
+   *   -> {@link buildCommands} (`/switch`)
+   *     -> {@link runSwitchCommand}
+   *       -> {@link MessengerCommandContext.reply} / {@link MessengerPlatformBinder.sendAgentPicker}
    */
   private async runSwitchCommand(ctx: MessengerCommandContext): Promise<void> {
     const { binder, chatId, link, serverDB } = ctx;
+    const strings = getMessengerSystemStrings(ctx.platform);
+
+    // Telegram Guest replies are visible in the originating chat. Redirect
+    // before fetching personal data or switching state, including /switch <n>.
+    if (ctx.platform === 'telegram' && !ctx.interactiveReplies) {
+      await ctx.reply(strings.switchDirectMessageOnly);
+      return;
+    }
     if (!link) {
-      await ctx.reply('You need to /start to bind your account first.');
+      await ctx.reply(strings.needLink);
       return;
     }
 
-    const scopes = await this.fetchUserScopes(serverDB, link.userId);
+    const scopes = await this.fetchUserScopes(serverDB, link.userId, ctx.platform);
 
     // Text-fallback path: `/switch 2` switches without needing the keyboard,
     // for platforms (or clients) where tap-buttons aren't available.
     const arg = ctx.args.trim();
-    if (arg && !binder.sendAgentPicker) {
+    if (arg && (!binder.sendAgentPicker || !ctx.interactiveReplies)) {
       const index = Number.parseInt(arg, 10);
       if (!Number.isInteger(index) || index < 1 || index > scopes.length) {
-        await ctx.reply(`Usage: /switch <n>, where n is between 1 and ${scopes.length}.`);
+        await ctx.reply(strings.scopesUsage(scopes.length));
         return;
       }
       const target = scopes[index - 1];
       if ((link.workspaceId ?? null) === target.id) {
-        await ctx.reply(`You're already in ${target.name}.`);
+        await ctx.reply(strings.scopeAlready(target.name));
         return;
       }
       const defaultAgent = await this.applyScopeSwitch(serverDB, link.id, link.userId, target);
-      await ctx.reply(this.scopeSwitchedText(target.name, defaultAgent?.title));
+      await ctx.reply(strings.scopeSwitched(target.name, defaultAgent?.title));
       return;
     }
 
-    if (binder.sendAgentPicker) {
+    if (binder.sendAgentPicker && ctx.interactiveReplies) {
       await binder.sendAgentPicker(chatId, {
         action: 'scope',
         entries: this.toScopeEntries(scopes, link.workspaceId ?? null),
@@ -1201,17 +1516,17 @@ export class MessengerRouter {
         // Discord-only: forward the slash interaction so the binder can
         // complete the deferred reply via the follow-up webhook.
         interaction: ctx.interaction,
-        text: 'Tap a scope to switch:',
+        text: strings.scopePicker,
       });
       return;
     }
 
     // Final fallback: numbered list + usage hint for `/switch <n>`.
     const lines = scopes.map((scope, i) => {
-      const marker = (link.workspaceId ?? null) === scope.id ? ' (current)' : '';
+      const marker = (link.workspaceId ?? null) === scope.id ? ` (${strings.currentMarker})` : '';
       return `${i + 1}. ${scope.name}${marker}`;
     });
-    await ctx.reply(`Scopes:\n${lines.join('\n')}\n\nReply with /switch <n> to switch scope.`);
+    await ctx.reply(`${strings.scopesHeading}\n${lines.join('\n')}\n\n${strings.scopesHint}`);
   }
 
   /**
@@ -1221,11 +1536,13 @@ export class MessengerRouter {
   private async fetchUserScopes(
     serverDB: LobeChatDatabase,
     userId: string,
+    platform: MessengerPlatform,
   ): Promise<{ id: string | null; name: string }[]> {
-    if (!(await isWorkspaceFeatureEnabledForUser(userId))) return [{ id: null, name: 'Personal' }];
+    const personalScope = { id: null, name: getMessengerSystemStrings(platform).personalScope };
+    if (!(await isWorkspaceFeatureEnabledForUser(userId))) return [personalScope];
 
     const workspaces = await new WorkspaceModel(serverDB, userId).listUserWorkspaces();
-    return [{ id: null, name: 'Personal' }, ...workspaces.map((w) => ({ id: w.id, name: w.name }))];
+    return [personalScope, ...workspaces.map((w) => ({ id: w.id, name: w.name }))];
   }
 
   /**
@@ -1251,12 +1568,6 @@ export class MessengerRouter {
     return defaultAgent;
   }
 
-  private scopeSwitchedText(scopeName: string, defaultAgentTitle?: string): string {
-    return defaultAgentTitle
-      ? `Switched to ${scopeName}. Now chatting with ${defaultAgentTitle}. Send /agents to change.`
-      : `Switched to ${scopeName}. No agents here yet — create one in LobeHub, then /agents.`;
-  }
-
   private toScopeEntries(
     scopes: { id: string | null; name: string }[],
     currentScopeId: string | null,
@@ -1268,14 +1579,24 @@ export class MessengerRouter {
     }));
   }
 
+  /**
+   * Button grids can't render section headings, so the workspace/private
+   * distinction rides on the button label instead: private agents get a
+   * localized suffix (e.g. `（私人）`). Only applied when the list actually
+   * mixes both groups — an all-private or all-workspace list needs no marker.
+   */
   private toPickerEntries(
     userAgents: AgentSummary[],
     activeAgentId: string | null | undefined,
+    strings: ReturnType<typeof getMessengerSystemStrings>,
   ): AgentPickerEntry[] {
+    const privateCount = userAgents.filter((agent) => agent.isPrivate).length;
+    const marked = privateCount > 0 && privateCount < userAgents.length;
+
     return userAgents.map((agent) => ({
       id: agent.id,
       isActive: agent.id === activeAgentId,
-      title: agent.title,
+      title: marked && agent.isPrivate ? `${agent.title}${strings.privateSuffix}` : agent.title,
     }));
   }
 
@@ -1386,18 +1707,21 @@ export class MessengerRouter {
    * (Slack/Telegram) or chat-sdk's `onAction` event (Discord). Both paths
    * normalize to the same `InboundCallbackAction` shape and delegate the
    * outbound ack (toast + picker re-render) to `binder.acknowledgeCallback`.
-   * Recognizes `messenger:switch:<agentId>` (agent picker) and
-   * `messenger:scope:<scopeId>` (scope picker); new actions can be added by
-   * extending the dispatch below.
+   * Recognizes `messenger:switch:<agentId>` (agent picker),
+   * `messenger:scope:<scopeId>` (scope picker) and
+   * `messenger:mode:<agent|chat>` (conversation-mode picker); new actions can
+   * be added by extending the dispatch below.
    */
   private async handleCallbackAction(
     binder: MessengerPlatformBinder,
     creds: InstallationCredentials,
     action: InboundCallbackAction,
+    chatBot?: Chat<any>,
   ): Promise<void> {
     if (!binder.acknowledgeCallback) return;
 
     const ack = binder.acknowledgeCallback.bind(binder, action);
+    const strings = getMessengerSystemStrings(creds.platform);
 
     const scopeMatch = action.data.match(/^messenger:scope:(.+)$/);
     if (scopeMatch) {
@@ -1405,9 +1729,15 @@ export class MessengerRouter {
       return;
     }
 
+    const modeMatch = action.data.match(/^messenger:mode:(agent|chat)$/);
+    if (modeMatch) {
+      await this.handleModeCallback(creds, action, modeMatch[1] as 'agent' | 'chat', ack, chatBot);
+      return;
+    }
+
     const switchMatch = action.data.match(/^messenger:switch:(.+)$/);
     if (!switchMatch) {
-      await ack({ toast: 'Unknown action.' });
+      await ack({ toast: strings.unknownAction });
       return;
     }
 
@@ -1420,28 +1750,191 @@ export class MessengerRouter {
       creds.tenantId,
     );
     if (!link) {
-      await ack({ toast: 'Not linked. Send /start first.' });
+      await ack({ toast: strings.notLinked });
       return;
     }
 
     const userAgents = await this.fetchUserAgents(serverDB, link.userId, link.workspaceId);
     const target = userAgents.find((agent) => agent.id === targetAgentId);
     if (!target) {
-      await ack({ toast: 'Agent not found.' });
+      await ack({ toast: strings.agentNotFound });
       return;
     }
 
     if (link.activeAgentId === targetAgentId) {
-      await ack({ toast: `${target.title} is already active.` });
+      await ack({ toast: strings.activeAgentAlreadyToast(target.title) });
       return;
     }
 
     await MessengerAccountLinkModel.setActiveAgentById(serverDB, link.id, targetAgentId);
     await ack({
-      toast: `Switched to ${target.title}.`,
+      toast: strings.activeAgentChangedToast(target.title),
       updatedPicker: {
-        entries: this.toPickerEntries(userAgents, targetAgentId),
-        text: 'Pick an agent to receive your messages:',
+        entries: this.toPickerEntries(userAgents, targetAgentId, strings),
+        text: strings.receiveMessagesPicker,
+      },
+    });
+  }
+
+  /**
+   * Effective mode for a conversation with no explicit `/mode` override: the
+   * active agent's chatConfig default, with the caller's workspace member-mode
+   * override layered on top — the same preference path `execAgent` resolves at
+   * execution time, so the picker mark matches what the next bot turn actually
+   * runs. `custom` keeps tools enabled (a hand-picked set), so the binary
+   * picker surfaces it on the Agent side. Best-effort: any lookup failure
+   * falls back to `agent` (the product default) rather than blocking the
+   * picker.
+   */
+  private async resolveDefaultMode(
+    serverDB: LobeChatDatabase,
+    link: SafeMessengerAccountLink,
+  ): Promise<'agent' | 'chat'> {
+    if (!link.activeAgentId) return 'agent';
+    try {
+      const agent = await new AgentModel(
+        serverDB,
+        link.userId,
+        link.workspaceId ?? undefined,
+      ).getAgentConfigById(link.activeAgentId);
+      const chatConfig = (agent as any)?.chatConfig ?? undefined;
+      const effectiveChatConfig =
+        (await this.resolveMemberModeChatConfig(serverDB, link, agent)) ?? chatConfig;
+      return resolveToolMode(effectiveChatConfig) === 'chat' ? 'chat' : 'agent';
+    } catch (error) {
+      log('resolveDefaultMode: falling back to agent default: %O', error);
+      return 'agent';
+    }
+  }
+
+  /**
+   * Mirror `execAgent`'s workspace member-mode resolution: a non-manager's
+   * `agentModeOverrides` entry patches `enableAgentMode` over the shared
+   * chatConfig (an explicit `chatConfig.toolMode` still wins inside
+   * `resolveToolMode`, exactly as at execution time). Returns undefined when
+   * no override applies — including on lookup failure, where the shared
+   * config is a better fallback than the product default.
+   */
+  private async resolveMemberModeChatConfig(
+    serverDB: LobeChatDatabase,
+    link: SafeMessengerAccountLink,
+    agent: unknown,
+  ): Promise<Record<string, unknown> | undefined> {
+    if (!link.workspaceId || !link.activeAgentId) return undefined;
+    try {
+      const preference = await new WorkspaceUserSettingsModel(
+        serverDB,
+        link.userId,
+        link.workspaceId,
+      ).getPreference();
+      const memberModeOverride = preference.agentModeOverrides?.[link.activeAgentId];
+      if (memberModeOverride === undefined) return undefined;
+
+      const agentRow = agent as
+        | {
+            chatConfig?: Record<string, unknown>;
+            userId?: string;
+            visibility?: string;
+            workspaceId?: string;
+          }
+        | undefined;
+      // Managers run the shared config and ignore their own stale overrides.
+      // Fail-closed like execAgent: a permission-lookup error keeps applying
+      // member policy rather than granting shared-config semantics.
+      let canManage = agentRow?.userId === link.userId;
+      const agentWorkspaceId = agentRow?.workspaceId ?? link.workspaceId;
+      // Unknown author → skip the lookup and stay fail-closed (member policy
+      // applies), matching the catch branch below.
+      if (!canManage && agentRow?.userId && agentRow.visibility !== 'private') {
+        try {
+          canManage = await isResourceAuthorOrAdmin({
+            db: serverDB,
+            meta: {
+              userId: agentRow.userId,
+              visibility: agentRow.visibility ?? 'public',
+              workspaceId: agentWorkspaceId,
+            },
+            resourceType: 'agent',
+            userId: link.userId,
+            workspaceId: agentWorkspaceId,
+          });
+        } catch (error) {
+          log('resolveMemberModeChatConfig: permission lookup failed (fail-closed): %O', error);
+        }
+      }
+      if (canManage) return undefined;
+      return { ...agentRow?.chatConfig, enableAgentMode: memberModeOverride };
+    } catch (error) {
+      log('resolveMemberModeChatConfig: falling back to shared config: %O', error);
+      return undefined;
+    }
+  }
+
+  /** Entries for the `/mode` tap picker — the active mark shows the effective
+   *  mode (explicit override, or the agent's configured default). */
+  private static modePickerEntries(
+    current: 'agent' | 'chat' | undefined,
+    strings: ReturnType<typeof getMessengerSystemStrings>,
+  ): AgentPickerEntry[] {
+    return [
+      { id: 'agent', isActive: current === 'agent', title: strings.modeAgentLabel },
+      { id: 'chat', isActive: current === 'chat', title: strings.modeChatLabel },
+    ];
+  }
+
+  /**
+   * Handle a tap on a `/mode` button (`messenger:mode:<agent|chat>`). The
+   * mode lives in chat-sdk thread state, so the write targets the user's
+   * canonical DM conversation via `openDM` — the same thread the slash-path
+   * `/mode` writes and the runtime reads (openDM is idempotent; see
+   * `handleSlashCommand`). Re-renders the picker with the new active mark.
+   */
+  private async handleModeCallback(
+    creds: InstallationCredentials,
+    action: InboundCallbackAction,
+    mode: 'agent' | 'chat',
+    ack: (ack: CallbackAcknowledgement) => Promise<void>,
+    chatBot?: Chat<any>,
+  ): Promise<void> {
+    const strings = getMessengerSystemStrings(creds.platform);
+    const serverDB = await getServerDB();
+    const link = await MessengerAccountLinkModel.findByPlatformUser(
+      serverDB,
+      creds.platform,
+      action.fromUserId,
+      creds.tenantId,
+    );
+    if (!link) {
+      await ack({ toast: strings.notLinked });
+      return;
+    }
+
+    let thread: any | undefined;
+    try {
+      thread = await chatBot?.openDM(action.fromUserId);
+    } catch (error) {
+      log('handleModeCallback: openDM(%s) failed: %O', action.fromUserId, error);
+    }
+    if (!thread) {
+      await ack({ toast: strings.genericError });
+      return;
+    }
+
+    try {
+      await thread.setState({ toolMode: mode });
+    } catch (error) {
+      log('handleModeCallback: setState failed: %O', error);
+      await ack({ toast: strings.genericError });
+      return;
+    }
+
+    const label = mode === 'agent' ? strings.modeAgentLabel : strings.modeChatLabel;
+    await ack({
+      toast: strings.modeChangedToast(label),
+      updatedPicker: {
+        action: 'mode',
+        entries: MessengerRouter.modePickerEntries(mode, strings),
+        text: strings.modePicker,
       },
     });
   }
@@ -1458,6 +1951,7 @@ export class MessengerRouter {
     scopeToken: string,
     ack: (ack: CallbackAcknowledgement) => Promise<void>,
   ): Promise<void> {
+    const strings = getMessengerSystemStrings(creds.platform);
     const serverDB = await getServerDB();
     const link = await MessengerAccountLinkModel.findByPlatformUser(
       serverDB,
@@ -1466,30 +1960,30 @@ export class MessengerRouter {
       creds.tenantId,
     );
     if (!link) {
-      await ack({ toast: 'Not linked. Send /start first.' });
+      await ack({ toast: strings.notLinked });
       return;
     }
 
     const targetScopeId = scopeToken === PERSONAL_SCOPE_ID ? null : scopeToken;
-    const scopes = await this.fetchUserScopes(serverDB, link.userId);
+    const scopes = await this.fetchUserScopes(serverDB, link.userId, creds.platform);
     const target = scopes.find((scope) => scope.id === targetScopeId);
     if (!target) {
-      await ack({ toast: 'Scope not found.' });
+      await ack({ toast: strings.scopeNotFound });
       return;
     }
 
     if ((link.workspaceId ?? null) === target.id) {
-      await ack({ toast: `You're already in ${target.name}.` });
+      await ack({ toast: strings.scopeAlready(target.name) });
       return;
     }
 
     const defaultAgent = await this.applyScopeSwitch(serverDB, link.id, link.userId, target);
     await ack({
-      toast: this.scopeSwitchedText(target.name, defaultAgent?.title),
+      toast: strings.scopeSwitched(target.name, defaultAgent?.title),
       updatedPicker: {
         action: 'scope',
         entries: this.toScopeEntries(scopes, target.id),
-        text: 'Tap a scope to switch:',
+        text: strings.scopePicker,
       },
     });
   }
@@ -1510,22 +2004,36 @@ export class MessengerRouter {
   ): Promise<AgentSummary[]> {
     // The filter, ordering, pinning, and title fallback all live in the model.
     // This text-only channel has no client-side i18n default, so it asks the
-    // model to fill blank titles with a generic "Custom Agent" label.
+    // model to fill blank titles with a generic "Custom Agent" label, then
+    // resolves name-over-title itself — there is no renderer downstream to do it.
     const rows = await new AgentModel(
       serverDB,
       userId,
       workspaceId ?? undefined,
     ).listMessengerBindableAgents({ fallbackTitle: 'Custom Agent' });
 
-    // `fallbackTitle` guarantees a non-null title for every row.
-    return rows.map((row) => ({ id: row.id, title: row.title! }));
+    // `fallbackTitle` guarantees a non-null label for every row.
+    const summaries = rows.map((row) => ({
+      id: row.id,
+      isPrivate: row.isPrivate,
+      title: agentDisplayName(row, 'Custom Agent'),
+    }));
+
+    // Workspace scope: stable-partition shared workspace agents ahead of the
+    // caller's private ones so every surface (text list, pickers, the default
+    // agent picked on scope switch) presents the two groups consistently.
+    // Personal scope is untouched — `isPrivate` is always false there.
+    return [
+      ...summaries.filter((agent) => !agent.isPrivate),
+      ...summaries.filter((agent) => agent.isPrivate),
+    ];
   }
 
   private async dispatchToAgent(
     thread: any,
     message: Message,
     client: PlatformClient,
-    link: MessengerAccountLinkItem,
+    link: SafeMessengerAccountLink,
     agentId: string,
     platform: MessengerPlatform,
     bridgeMethod: 'handleMention' | 'handleSubscribedMessage',

@@ -1,23 +1,28 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { ActionIcon, Flexbox, Popover, Tooltip } from '@lobehub/ui';
+import { Flexbox, Popover, Tooltip } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ToggleLeftPanelButton from '@/features/NavPanel/ToggleLeftPanelButton';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { electronSystemService } from '@/services/electron/system';
+import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import type { GlobalState } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { getHomeStoreState } from '@/store/home';
 import { electronStylish } from '@/styles/electron';
 import { isMacOS } from '@/utils/platform';
 
 import { useNavigationHistory } from '../navigation/useNavigationHistory';
 import { getMacTrafficLightPadding } from './layout';
 import RecentlyViewed from './RecentlyViewed';
+import { useTrayMenuSync } from './TrayMenu/useTrayMenuSync';
 
 const isMac = isMacOS();
 
@@ -45,15 +50,26 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const NavigationBar = memo(() => {
+  useTrayMenuSync();
   const { t } = useTranslation('electron');
+  const navigate = useWorkspaceAwareNavigate();
   const { canGoBack, canGoForward, goBack, goForward } = useNavigationHistory();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [isWindowFullScreen, setIsWindowFullScreen] = useState(false);
+  const activeRecentScope = useElectronStore((state) => state.activeRecentScope);
 
   const leftPanelWidth = useNavPanelWidth();
 
   useWatchBroadcast('windowFullscreenChanged', ({ isFullScreen }) => {
     if (isMac) setIsWindowFullScreen(isFullScreen);
+  });
+
+  useWatchBroadcast('openRecentlyViewed', () => setHistoryOpen(true));
+
+  useWatchBroadcast('openAllAgents', () => {
+    const homePath = activeRecentScope.type === 'workspace' ? `/${activeRecentScope.slug}` : '/';
+    navigate(homePath, { escape: true });
+    getHomeStoreState().openAllAgentsDrawer();
   });
 
   useEffect(() => {

@@ -8,7 +8,6 @@ import { type Redis } from 'ioredis';
 
 import { hasNonPersistedMessage } from './messagePersistence';
 import { getAgentRuntimeRedisClient } from './redis';
-import { stripFinalStateInEventData } from './StreamEventManager';
 
 const log = debug('lobe-server:agent-runtime:agent-state-manager');
 
@@ -39,9 +38,24 @@ export interface AgentOperationMetadata {
   mirrorToOperationId?: string;
   modelRuntimeConfig?: any;
   status: AgentState['status'];
+  /**
+   * Gateway WS channel owner when it differs from the executing user. For
+   * shared-agent visitor runs the operation EXECUTES as the creator
+   * (`userId`), but only the visitor may subscribe to its stream — the
+   * gateway registers the channel under this id and rejects other subs.
+   */
+  streamOwnerUserId?: string;
   totalCost: number;
   totalSteps: number;
   userId?: string;
+  /**
+   * Visitor-facing redaction policy for a shared-agent visitor run, mirrored
+   * from the share's `AgentShareConfig`. Persisted alongside
+   * {@link streamOwnerUserId} so a queue worker that never ran this op's init
+   * can still apply the OWNER-configured policy instead of falling back to the
+   * fail-closed full strip.
+   */
+  visitorRedaction?: { showErrorDetails?: boolean; showModelInfo?: boolean };
   /**
    * Workspace the operation runs in (null/undefined = personal). Persisted so
    * queue workers (e.g. QStash `runStep`) can reconstruct a workspace-scoped
@@ -56,7 +70,7 @@ export class AgentStateManager {
   private readonly STATE_PREFIX = 'agent_runtime_state';
   private readonly STEPS_PREFIX = 'agent_runtime_steps';
   private readonly METADATA_PREFIX = 'agent_runtime_meta';
-  private readonly EVENTS_PREFIX = 'agent_runtime_events';
+  private readonly INTERRUPT_PREFIX = 'agent_runtime_interrupt';
   private readonly DEFAULT_TTL = 2 * 3600; // 2h
 
   constructor() {
@@ -149,6 +163,24 @@ export class AgentStateManager {
   }
 
   /**
+   * Set the interrupt sentinel. The full state blob can run to hundreds of
+   * KB (tool manifests, user memory, …), so the step-abort poller checks
+   * this tiny key instead of re-downloading the blob every interval — the
+   * blob's `status: 'interrupted'` stays the authoritative record.
+   */
+  async markInterrupted(operationId: string): Promise<void> {
+    await this.redis.setex(`${this.INTERRUPT_PREFIX}:${operationId}`, this.DEFAULT_TTL, '1');
+  }
+
+  /**
+   * Check the interrupt sentinel without loading the state blob.
+   */
+  async isInterrupted(operationId: string): Promise<boolean> {
+    const exists = await this.redis.exists(`${this.INTERRUPT_PREFIX}:${operationId}`);
+    return exists === 1;
+  }
+
+  /**
    * Save step execution result
    */
   async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
@@ -178,21 +210,10 @@ export class AgentStateManager {
       pipeline.ltrim(stepsKey, 0, 199); // Keep most recent 200 steps
       pipeline.expire(stepsKey, this.DEFAULT_TTL);
 
-      // Save step event sequence to agent_runtime_events
-      if (stepResult.events && stepResult.events.length > 0) {
-        const eventsKey = `${this.EVENTS_PREFIX}:${operationId}`;
-
-        // A terminal `done` event carries the full `finalState` (incl. messages
-        // + tool-set), so strip those reconstructible fields before persisting —
-        // same chokepoint the stream path uses — otherwise this lpush is a
-        // second route to Upstash's 10MB limit on long topics.
-        pipeline.lpush(
-          eventsKey,
-          JSON.stringify(stepResult.events.map(stripFinalStateInEventData)),
-        );
-        pipeline.ltrim(eventsKey, 0, 199); // Keep events from most recent 200 steps
-        pipeline.expire(eventsKey, this.DEFAULT_TTL);
-      }
+      // `stepResult.events` is intentionally NOT persisted: nothing ever read
+      // the `agent_runtime_events` list back — the same events already reach
+      // clients through the live stream and land durably in the operation
+      // trace, so the list only duplicated every streamed byte into Redis.
 
       // Update operation metadata
       const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
@@ -207,12 +228,7 @@ export class AgentStateManager {
 
       await pipeline.exec();
 
-      log(
-        '[%s:%d] Saved step result with %d events',
-        operationId,
-        stepResult.stepIndex,
-        stepResult.events?.length || 0,
-      );
+      log('[%s:%d] Saved step result', operationId, stepResult.stepIndex);
     } catch (error) {
       console.error('Failed to save step result:', error);
       throw error;
@@ -249,6 +265,9 @@ export class AgentStateManager {
 
       return {
         agentConfig: metadata.agentConfig ? JSON.parse(metadata.agentConfig) : undefined,
+        visitorRedaction: metadata.visitorRedaction
+          ? JSON.parse(metadata.visitorRedaction)
+          : undefined,
         createdAt: metadata.createdAt,
         lastActiveAt: metadata.lastActiveAt,
         modelRuntimeConfig: metadata.modelRuntimeConfig
@@ -256,6 +275,7 @@ export class AgentStateManager {
           : undefined,
         mirrorToOperationId: metadata.mirrorToOperationId || undefined,
         status: metadata.status as AgentState['status'],
+        streamOwnerUserId: metadata.streamOwnerUserId || undefined,
         totalCost: parseFloat(metadata.totalCost) || 0,
         totalSteps: parseInt(metadata.totalSteps) || 0,
         userId: metadata.userId,
@@ -274,8 +294,10 @@ export class AgentStateManager {
     operationId: string,
     data: {
       agentConfig?: any;
+      visitorRedaction?: { showErrorDetails?: boolean; showModelInfo?: boolean };
       mirrorToOperationId?: string;
       modelRuntimeConfig?: any;
+      streamOwnerUserId?: string;
       userId?: string;
       workspaceId?: string;
     },
@@ -285,11 +307,13 @@ export class AgentStateManager {
     try {
       const metadata: AgentOperationMetadata = {
         agentConfig: data.agentConfig,
+        visitorRedaction: data.visitorRedaction,
         createdAt: new Date().toISOString(),
         lastActiveAt: new Date().toISOString(),
         mirrorToOperationId: data.mirrorToOperationId,
         modelRuntimeConfig: data.modelRuntimeConfig,
         status: 'idle',
+        streamOwnerUserId: data.streamOwnerUserId,
         totalCost: 0,
         totalSteps: 0,
         userId: data.userId,
@@ -306,12 +330,15 @@ export class AgentStateManager {
       };
 
       if (metadata.userId) redisData.userId = metadata.userId;
+      if (metadata.streamOwnerUserId) redisData.streamOwnerUserId = metadata.streamOwnerUserId;
       if (metadata.workspaceId) redisData.workspaceId = metadata.workspaceId;
       if (metadata.mirrorToOperationId)
         redisData.mirrorToOperationId = metadata.mirrorToOperationId;
       if (metadata.modelRuntimeConfig)
         redisData.modelRuntimeConfig = JSON.stringify(metadata.modelRuntimeConfig);
       if (metadata.agentConfig) redisData.agentConfig = JSON.stringify(metadata.agentConfig);
+      if (metadata.visitorRedaction)
+        redisData.visitorRedaction = JSON.stringify(metadata.visitorRedaction);
 
       await this.redis.hmset(metaKey, redisData);
       await this.redis.expire(metaKey, this.DEFAULT_TTL);
@@ -362,7 +389,7 @@ export class AgentStateManager {
       `${this.STATE_PREFIX}:${operationId}`,
       `${this.STEPS_PREFIX}:${operationId}`,
       `${this.METADATA_PREFIX}:${operationId}`,
-      `${this.EVENTS_PREFIX}:${operationId}`,
+      `${this.INTERRUPT_PREFIX}:${operationId}`,
     ];
 
     try {

@@ -3,153 +3,130 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useSelectExecutionTarget } from './useSelectExecutionTarget';
 
-const testState = vi.hoisted(() => ({
-  agent: {
-    agencyConfig: undefined as
-      | {
-          boundDeviceId?: string;
-          executionTarget?: string;
-          heterogeneousProvider?: { type: string };
-        }
-      | undefined,
-    agentMap: {} as Record<string, { workspaceId?: string | null }>,
-    isHetero: false,
-    updateAgentConfigById: vi.fn(),
+const state = vi.hoisted(() => ({
+  config: {
+    agencyConfig: { executionTarget: 'local', boundDeviceId: 'device-a' },
+    canSelectExecutionTarget: true,
   },
-  electron: {
-    gatewayDeviceInfo: undefined as { deviceId?: string } | undefined,
+  chat: {
+    activeAgentId: 'agent',
+    activeTopicId: 'topic-a' as string | undefined,
+    createTopic: vi.fn(),
+    updateTopicMetadata: vi.fn(),
+    switchTopic: vi.fn(),
   },
-  getDeviceInfo: vi.fn(),
-  isDesktop: false,
+  desktop: true,
+  deviceInfo: vi.fn(),
+  toast: vi.fn(),
 }));
-
 vi.mock('@lobechat/const', () => ({
   get isDesktop() {
-    return testState.isDesktop;
+    return state.desktop;
   },
 }));
-
-vi.mock('@/services/electron/gatewayConnection', () => ({
-  gatewayConnectionService: {
-    getDeviceInfo: () => testState.getDeviceInfo(),
-  },
+vi.mock('@lobehub/ui/base-ui', () => ({ toast: { error: state.toast } }));
+vi.mock('i18next', () => ({ t: (key: string) => key }));
+vi.mock('@/hooks/useTopicAgencyConfig', () => ({ useTopicAgencyConfig: () => state.config }));
+vi.mock('@/store/chat', () => ({
+  useChatStore: Object.assign(
+    (selector: (s: typeof state.chat) => unknown) => selector(state.chat),
+    { getState: () => state.chat },
+  ),
 }));
-
-vi.mock('@/store/agent', () => ({
-  useAgentStore: (selector: (s: typeof testState.agent) => unknown) => selector(testState.agent),
-}));
-
-vi.mock('@/store/agent/selectors', () => ({
-  agentByIdSelectors: {
-    getAgencyConfigById: () => (s: typeof testState.agent) => s.agencyConfig,
-    isAgentHeterogeneousById: () => (s: typeof testState.agent) => s.isHetero,
-  },
-}));
-
 vi.mock('@/store/electron', () => ({
-  useElectronStore: (selector: (s: typeof testState.electron) => unknown) =>
-    selector(testState.electron),
+  useElectronStore: (selector: (s: object) => unknown) =>
+    selector({ gatewayDeviceInfo: undefined }),
+}));
+vi.mock('@/services/electron/gatewayConnection', () => ({
+  gatewayConnectionService: { getDeviceInfo: state.deviceInfo },
 }));
 
-describe('useSelectExecutionTarget', () => {
+describe('Topic execution selection', () => {
   beforeEach(() => {
-    testState.agent.agencyConfig = undefined;
-    testState.agent.agentMap = {};
-    testState.agent.isHetero = false;
-    testState.agent.updateAgentConfigById = vi.fn();
-    testState.electron.gatewayDeviceInfo = undefined;
-    testState.getDeviceInfo = vi.fn();
-    testState.isDesktop = false;
+    vi.clearAllMocks();
+    state.chat.activeTopicId = 'topic-a';
+    state.chat.activeAgentId = 'agent';
+    state.config.canSelectExecutionTarget = true;
+    state.chat.createTopic.mockResolvedValue('new-topic');
+    state.chat.updateTopicMetadata.mockResolvedValue(undefined);
   });
-
-  it('persists the target as-is when switching to sandbox, keeping any existing boundDeviceId', async () => {
-    testState.agent.agencyConfig = { boundDeviceId: 'device-1', executionTarget: 'local' };
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
+  it('saves only the selected Topic and clears its device for sandbox', async () => {
+    const { result } = renderHook(() => useSelectExecutionTarget('agent'));
     await result.current('sandbox');
-
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'device-1', executionTarget: 'sandbox' },
+    expect(state.chat.updateTopicMetadata).toHaveBeenCalledWith('topic-a', {
+      executionConfig: {
+        executionTarget: 'sandbox',
+        inheritWorkspaceScope: false,
+        boundDeviceId: undefined,
+        localSandbox: undefined,
+        localSandboxNetwork: undefined,
+      },
+    });
+    expect(state.config.agencyConfig).toEqual({
+      executionTarget: 'local',
+      boundDeviceId: 'device-a',
     });
   });
-
-  it('pins the given deviceId when switching to a specific device', async () => {
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('device', 'device-2');
-
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'device-2', executionTarget: 'device' },
-    });
+  it('does not write B when device discovery finishes after switching away from A', async () => {
+    let resolve!: (value: { deviceId: string }) => void;
+    state.deviceInfo.mockReturnValue(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
+    const { result } = renderHook(() => useSelectExecutionTarget('agent'));
+    const selection = result.current('local');
+    state.chat.activeTopicId = 'topic-b';
+    resolve({ deviceId: 'device-a' });
+    await selection;
+    expect(state.chat.updateTopicMetadata).toHaveBeenCalledWith(
+      'topic-a',
+      expect.objectContaining({
+        executionConfig: expect.objectContaining({ boundDeviceId: 'device-a' }),
+      }),
+    );
   });
-
-  it('reuses this desktop machine gateway deviceId when switching to local', async () => {
-    testState.isDesktop = true;
-    testState.electron.gatewayDeviceInfo = { deviceId: 'this-machine' };
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('local');
-
-    expect(testState.getDeviceInfo).not.toHaveBeenCalled();
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'this-machine', executionTarget: 'local' },
-    });
+  it('creates a Topic for an explicit choice in the empty composer', async () => {
+    state.chat.activeTopicId = undefined;
+    const { result } = renderHook(() => useSelectExecutionTarget('agent'));
+    await result.current('none');
+    expect(state.chat.updateTopicMetadata).toHaveBeenCalledWith('new-topic', expect.anything());
+    expect(state.chat.switchTopic).toHaveBeenCalledWith('new-topic');
   });
-
-  it('falls back to the gateway connection service when no gateway deviceId is cached yet', async () => {
-    testState.isDesktop = true;
-    testState.getDeviceInfo.mockResolvedValue({ deviceId: 'resolved-device' });
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('local');
-
-    expect(testState.getDeviceInfo).toHaveBeenCalled();
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'resolved-device', executionTarget: 'local' },
-    });
+  it('does not create a Topic for automatic defaults or bypass fixed policy', async () => {
+    state.chat.activeTopicId = undefined;
+    const { result } = renderHook(() => useSelectExecutionTarget('agent'));
+    await result.current('local', undefined, { silent: true });
+    state.config.canSelectExecutionTarget = false;
+    const fixed = renderHook(() => useSelectExecutionTarget('agent'));
+    await fixed.result.current('sandbox');
+    expect(state.chat.createTopic).not.toHaveBeenCalled();
+    expect(state.chat.updateTopicMetadata).not.toHaveBeenCalled();
   });
-
-  it('keeps the previous boundDeviceId when the local device cannot be resolved for a non-hetero agent', async () => {
-    testState.agent.agencyConfig = { boundDeviceId: 'stale-device', executionTarget: 'sandbox' };
-    testState.getDeviceInfo.mockRejectedValue(new Error('no gateway'));
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('local');
-
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'stale-device', executionTarget: 'local' },
-    });
+  it('surfaces a failed save without navigating to another topic', async () => {
+    state.chat.updateTopicMetadata.mockRejectedValue(new Error('network'));
+    const { result } = renderHook(() => useSelectExecutionTarget('agent'));
+    await result.current('sandbox');
+    expect(state.toast).toHaveBeenCalled();
+    expect(state.chat.switchTopic).not.toHaveBeenCalled();
   });
+});
 
-  it('does not switch a heterogeneous agent to local when no device can be resolved', async () => {
-    testState.agent.isHetero = true;
-    testState.getDeviceInfo.mockRejectedValue(new Error('no gateway'));
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('local');
-
-    expect(testState.agent.updateAgentConfigById).not.toHaveBeenCalled();
-  });
-
-  it('refuses local for a workspace agent — its personal deviceId can never pass the workspace device guard', async () => {
-    testState.isDesktop = true;
-    testState.electron.gatewayDeviceInfo = { deviceId: 'this-machine' };
-    testState.agent.agentMap = { 'agent-id': { workspaceId: 'ws-1' } };
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('local');
-
-    expect(testState.agent.updateAgentConfigById).not.toHaveBeenCalled();
-  });
-
-  it('still persists a device pick for a workspace agent', async () => {
-    testState.agent.agentMap = { 'agent-id': { workspaceId: 'ws-1' } };
-    const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
-
-    await result.current('device', 'ws-device-1');
-
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { boundDeviceId: 'ws-device-1', executionTarget: 'device' },
-    });
-  });
+it('does not reparent another Topic messages after leaving an empty composer', async () => {
+  state.chat.activeTopicId = undefined;
+  state.chat.activeAgentId = 'agent';
+  state.config.canSelectExecutionTarget = true;
+  state.chat.createTopic.mockClear();
+  let resolve!: (value: { deviceId: string }) => void;
+  state.deviceInfo.mockReturnValue(
+    new Promise((r) => {
+      resolve = r;
+    }),
+  );
+  const { result } = renderHook(() => useSelectExecutionTarget('agent'));
+  const selection = result.current('local');
+  state.chat.activeTopicId = 'topic-b';
+  resolve({ deviceId: 'device-a' });
+  await selection;
+  expect(state.chat.createTopic).not.toHaveBeenCalled();
 });

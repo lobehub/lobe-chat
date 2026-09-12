@@ -1,13 +1,11 @@
-import { ActionIcon, copyToClipboard, type DropdownItem, DropdownMenu, Icon } from '@lobehub/ui';
-import { confirmModal } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
+import { copyToClipboard, type DropdownItem, DropdownMenu, Icon } from '@lobehub/ui';
+import { ActionIcon, confirmModal, toast } from '@lobehub/ui/base-ui';
 import { CopyIcon, EyeOffIcon, LinkIcon, MoreHorizontal, Trash, UsersIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
-import { useIsWorkspaceOwner } from '@/business/client/hooks/useIsWorkspaceOwner';
 import { useTaskTransferMenuItem } from '@/business/client/hooks/useTaskTransferMenuItem';
 import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -23,7 +21,7 @@ import { taskDetailPath } from '../shared/taskDetailPath';
 
 const TaskDetailHeaderActions = memo(() => {
   const { t } = useTranslation(['chat', 'common']);
-  const { message } = App.useApp();
+
   const navigate = useWorkspaceAwareNavigate();
   const appOrigin = useAppOrigin();
   const activeWorkspaceId = useActiveWorkspaceId();
@@ -34,7 +32,6 @@ const TaskDetailHeaderActions = memo(() => {
   const visibility = useTaskStore(taskDetailSelectors.activeTaskVisibility);
   const createdByUserId = useTaskStore(taskDetailSelectors.activeTaskCreatedByUserId);
   const currentUserId = useUserStore(userProfileSelectors.userId);
-  const isWorkspaceOwner = useIsWorkspaceOwner();
   const deleteTask = useTaskStore((s) => s.deleteTask);
   const updateTaskVisibility = useTaskStore((s) => s.updateTaskVisibility);
   const transferItems = useTaskTransferMenuItem(taskId) as DropdownItem[] | null;
@@ -91,7 +88,7 @@ const TaskDetailHeaderActions = memo(() => {
       onOk: async () => {
         try {
           await updateTaskVisibility(taskId, 'private');
-          message.success(t('makePrivate.success', { ns: 'common' }));
+          toast.success(t('makePrivate.success', { ns: 'common' }));
         } catch {
           // store action already surfaced a targeted toast; swallow so the
           // confirm modal doesn't bubble a second error to base-ui.
@@ -99,7 +96,7 @@ const TaskDetailHeaderActions = memo(() => {
       },
       title: t('makePrivate.confirm.title', { ns: 'common' }),
     });
-  }, [canEditTask, taskId, t, message, updateTaskVisibility]);
+  }, [canEditTask, taskId, t, updateTaskVisibility]);
 
   const menuItems = useMemo<DropdownItem[]>(() => {
     if (!taskId) return [];
@@ -116,7 +113,7 @@ const TaskDetailHeaderActions = memo(() => {
         label: t('taskList.contextMenu.copyId'),
         onClick: async () => {
           await copyToClipboard(taskId);
-          message.success(t('taskList.contextMenu.copyIdSuccess'));
+          toast.success(t('taskList.contextMenu.copyIdSuccess'));
         },
       },
       {
@@ -125,7 +122,7 @@ const TaskDetailHeaderActions = memo(() => {
         label: t('taskList.contextMenu.copyLink'),
         onClick: async () => {
           await copyToClipboard(taskUrl);
-          message.success(t('taskList.contextMenu.copyLinkSuccess'));
+          toast.success(t('taskList.contextMenu.copyLinkSuccess'));
         },
       },
       { type: 'divider' },
@@ -152,11 +149,12 @@ const TaskDetailHeaderActions = memo(() => {
           }
         : null;
 
-    // Inverse transition (LOBE-11551): only the task creator or a workspace
-    // owner can pull a published task back to private; other members don't see
-    // the entry at all (the server enforces the same rule as a backstop).
-    const canMakePrivate =
-      isWorkspaceOwner || (!!currentUserId && createdByUserId === currentUserId);
+    // Inverse transition: only the task creator can pull a
+    // published task back to private ( — an owner demoting another
+    // member's task would appropriate it into the creator's private list);
+    // everyone else doesn't see the entry at all (the server enforces the
+    // same rule as a backstop).
+    const canMakePrivate = !!currentUserId && createdByUserId === currentUserId;
     const makePrivateItem: DropdownItem | null =
       activeWorkspaceId && visibility === 'public' && canMakePrivate
         ? {
@@ -189,9 +187,7 @@ const TaskDetailHeaderActions = memo(() => {
     visibility,
     createdByUserId,
     currentUserId,
-    isWorkspaceOwner,
     t,
-    message,
     triggerDelete,
     triggerPublish,
     triggerMakePrivate,

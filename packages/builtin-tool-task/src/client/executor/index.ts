@@ -1,3 +1,5 @@
+import { canWorkspaceRoleBeTaskAssignee } from '@lobechat/const/rbac';
+import type { TaskAssignableMember } from '@lobechat/prompts';
 import {
   formatDependencyAdded,
   formatDependencyRemoved,
@@ -7,6 +9,7 @@ import {
   formatTaskEdited,
   formatTaskList,
   formatTasksCreated,
+  formatWorkspaceMembers,
   priorityLabel,
 } from '@lobechat/prompts';
 import type {
@@ -20,18 +23,23 @@ import { BaseExecutor } from '@lobechat/types';
 import debug from 'debug';
 
 import { getActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
+import { getWorkspaceMembers } from '@/business/client/hooks/useWorkspaceMembers';
 import { taskService } from '@/services/task';
 import { getChatStoreState } from '@/store/chat';
 import { getTaskStoreState } from '@/store/task';
 import { findSubtaskParentId } from '@/store/task/slices/detail/reducer';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { normalizeListTasksParams } from '../../listTasks';
+import { selectAssignableMembers } from '../../listWorkspaceMembers';
 import { TaskIdentifier } from '../../manifest';
 import type {
   AddTaskCommentParams,
   CreateTaskParams,
   CreateTasksItemResult,
   DeleteTaskCommentParams,
+  ListWorkspaceMembersParams,
   RunTasksItemResult,
   UpdateTaskCommentParams,
 } from '../../types';
@@ -71,6 +79,14 @@ const DETAIL_MUTATING_APIS = new Set<string>([
   TaskApiName.updateTaskStatus,
   TaskApiName.viewTask,
 ]);
+
+// "Alice (usr_1)" for tool output; falls back to the bare id when the member
+// directory has no profile for it (personal mode, or a stale store).
+const memberLabel = (userId: string): string => {
+  const member = getWorkspaceMembers().find((m) => m.userId === userId);
+  const name = member?.user?.fullName?.trim() || member?.user?.username?.trim();
+  return name ? `${name} (${userId})` : userId;
+};
 
 const extractIdentifier = (params: unknown, result: BuiltinToolResult): string | undefined => {
   const fromState = (result.state as { identifier?: unknown } | undefined)?.identifier;
@@ -174,10 +190,18 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
     }
   };
 
-  createTask = async (
+  /**
+   * Shared single-task create used by both `createTask` and the `createTasks`
+   * batch loop. Returns the raw {@link BuiltinToolResult}; Work registration is
+   * driven by the manifest `work` config at the tool-execution dispatch layer
+   * (`invokeExecutor`), not here.
+   */
+  #createTask = async (
     params: {
       instruction: string;
       assigneeAgentId?: string;
+      assigneeUserId?: string;
+      // Bind a goal entity to the created task (see TaskService.createTask).
       name: string;
       parentIdentifier?: string;
       priority?: number;
@@ -189,9 +213,13 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       log('[TaskExecutor] createTask - params:', params);
       const parentIdentifier = params.parentIdentifier?.trim() || undefined;
 
+      // Executing agent and human owner are independent, coexisting sides (the
+      // member owns the outcome, the agent executes) — a member owner does not
+      // suppress the usual current-agent default.
       const task = await getTaskStoreState().createTask({
         assigneeAgentId:
           params.assigneeAgentId ?? (ctx?.scope === 'task' ? undefined : ctx?.agentId),
+        assigneeUserId: params.assigneeUserId,
         createdByAgentId: ctx?.agentId,
         instruction: params.instruction,
         name: params.name,
@@ -209,6 +237,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
 
       return {
         content: formatTaskCreated({
+          assigneeLabel: task.assigneeUserId ? memberLabel(task.assigneeUserId) : undefined,
           baseUrl: taskLinkBaseUrl(),
           identifier: task.identifier,
           instruction: params.instruction,
@@ -228,6 +257,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
           priority: task.priority,
           status: task.status as TaskStatus,
           success: true,
+          taskId: task.id,
         },
         success: true,
       };
@@ -244,6 +274,19 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       };
     }
   };
+
+  createTask = async (
+    params: {
+      instruction: string;
+      assigneeAgentId?: string;
+      assigneeUserId?: string;
+      name: string;
+      parentIdentifier?: string;
+      priority?: number;
+      sortOrder?: number;
+    },
+    ctx?: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => this.#createTask(params, ctx);
 
   createTasks = async (
     params: { tasks: CreateTaskParams[] },
@@ -263,16 +306,13 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
     const results: CreateTasksItemResult[] = [];
 
     for (const item of items) {
-      const result = await this.createTask(item, ctx);
+      const result = await this.#createTask(item, ctx);
       const success = result.success === true;
-      const identifier =
-        success && result.state && typeof result.state.identifier === 'string'
-          ? (result.state.identifier as string)
-          : undefined;
       const error = success
         ? undefined
         : result.error?.message ||
           (typeof result.content === 'string' ? result.content : 'Unknown error');
+      const identifier = (result.state as { identifier?: string } | undefined)?.identifier;
 
       results.push({ error, identifier, name: item.name, success });
     }
@@ -303,7 +343,11 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
 
       return {
         content: formatTaskDeleted(label, deleted?.name),
-        state: { identifier: label, success: true },
+        // Surface the deleted task's internal id so the manifest-driven dispatch
+        // layer (`work: { action: 'delete' }`) can delete its Work + refresh the
+        // conversation caches — the task row is gone, so the Work can only be
+        // located by `works.resourceId = taskId`.
+        state: { identifier: label, success: true, taskId: deleted?.id },
         success: true,
       };
     } catch (error) {
@@ -345,6 +389,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
     params: {
       addDependencies?: string[];
       assigneeAgentId?: string | null;
+      assigneeUserId?: string | null;
       description?: string;
       identifier: string;
       instruction?: string;
@@ -353,7 +398,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       priority?: number;
       removeDependencies?: string[];
     },
-    _ctx?: BuiltinToolContext,
+    ctx?: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
     try {
       log('[TaskExecutor] editTask - params:', params);
@@ -366,6 +411,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       const updateData: {
         description?: string;
         assigneeAgentId?: string | null;
+        assigneeUserId?: string | null;
         instruction?: string;
         name?: string;
         parentTaskId?: string | null;
@@ -381,6 +427,16 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
           params.assigneeAgentId
             ? `assignee agent → ${params.assigneeAgentId}`
             : 'assignee cleared',
+        );
+      }
+      // Independent of the agent side: the member is the human owner and the
+      // two assignees coexist, so touching one never clears the other.
+      if (params.assigneeUserId !== undefined) {
+        updateData.assigneeUserId = params.assigneeUserId;
+        changes.push(
+          params.assigneeUserId
+            ? `assignee member → ${memberLabel(params.assigneeUserId)}`
+            : 'assignee member cleared',
         );
       }
       if (params.instruction !== undefined) {
@@ -402,7 +458,18 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       }
 
       if (Object.keys(updateData).length > 0) {
-        ops.push(store.updateTask(identifier, updateData));
+        // `external` is the default, but keep it explicit because editTask must
+        // bump the mounted editor's content revision rather than look like an
+        // autosave echo.
+        ops.push(
+          store.updateTask(identifier, updateData, {
+            // Client-first runtime: name the agent so the feed does not credit
+            // the user for what the agent did (the gateway path carries it
+            // server-side instead).
+            ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
+            source: 'external',
+          }),
+        );
       }
 
       if (addDependencies?.length) {
@@ -445,7 +512,7 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       schedulePattern?: string | null;
       scheduleTimezone?: string | null;
     },
-    _ctx?: BuiltinToolContext,
+    ctx?: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
     try {
       log('[TaskExecutor] setTaskSchedule - params:', params);
@@ -497,7 +564,12 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
         );
       }
       if (Object.keys(scheduleUpdate).length > 0) {
-        ops.push(taskService.update(identifier, scheduleUpdate));
+        ops.push(
+          taskService.update(identifier, {
+            ...scheduleUpdate,
+            ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
+          }),
+        );
       }
 
       // maxExecutions lives in `tasks.config.schedule.maxExecutions` (JSONB);
@@ -642,6 +714,55 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
       return {
         content: `Failed to set task verify config: ${message}`,
         error: { message, type: 'SetTaskVerifyFailed' },
+        success: false,
+      };
+    }
+  };
+
+  listWorkspaceMembers = async (
+    params: ListWorkspaceMembersParams = {},
+  ): Promise<BuiltinToolResult> => {
+    try {
+      const selfId = userProfileSelectors.userId(useUserStore.getState());
+      const inWorkspace = !!getActiveWorkspaceSlug();
+
+      // Personal mode: the caller is the only human a task can be assigned to
+      // (the server enforces the same rule). The client directory carries
+      // profile fields only — linked IM identities are a server-runtime extra.
+      const directory: TaskAssignableMember[] = inWorkspace
+        ? getWorkspaceMembers()
+            .filter((m) => canWorkspaceRoleBeTaskAssignee(m.role))
+            .map((m) => ({
+              email: m.user?.email,
+              id: m.userId,
+              isSelf: m.userId === selfId,
+              name: m.user?.fullName,
+              role: m.role,
+              username: m.user?.username,
+            }))
+        : selfId
+          ? [
+              {
+                id: selfId,
+                isSelf: true,
+                name: userProfileSelectors.displayUserName(useUserStore.getState()),
+              },
+            ]
+          : [];
+      // Same bounded `query` / `limit` contract as the server runtime.
+      const { members, query, total } = selectAssignableMembers(directory, params);
+
+      return {
+        content: formatWorkspaceMembers(members, { inWorkspace, query, total }),
+        state: { count: members.length, query, success: true, total },
+        success: true,
+      };
+    } catch (error) {
+      log('[TaskExecutor] listWorkspaceMembers - error:', error);
+      const message = error instanceof Error ? error.message : 'Failed to list members';
+      return {
+        content: `Failed to list workspace members: ${message}`,
+        error: { message, type: 'ListWorkspaceMembersFailed' },
         success: false,
       };
     }
@@ -822,8 +943,12 @@ class TaskExecutor extends BaseExecutor<typeof TaskApiName> {
 
       const identifier = params.identifier ?? ctx?.taskId ?? undefined;
       const id = await getTaskStoreState().updateTaskStatus(identifier, params.status, {
+        ...(ctx?.agentId ? { actorAgentId: ctx.agentId } : {}),
         error: params.error,
       });
+      // Work chips read live task status via the message-list summary join;
+      // settle-time refresh (WorksSection / gateway tool_end) picks it up —
+      // avoid a full `message:list` revalidate on every status tool call.
 
       return {
         content:

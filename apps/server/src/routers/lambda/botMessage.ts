@@ -56,14 +56,40 @@ const botMessageWriteProcedure = botMessageProcedure.use(withScopedPermission('m
  * three procedures stay in lockstep — the platform-specific helpers
  * downstream only see one shape.
  */
-const attachmentsInputSchema = z.array(
-  z.object({
-    data: z.string().optional(),
-    fetchUrl: z.string().url().optional(),
-    mimeType: z.string().optional(),
-    name: z.string().optional(),
-    type: z.enum(['image', 'file', 'video', 'audio']),
-  }),
+const attachmentsInputSchema = z
+  .array(
+    z.object({
+      data: z.string().optional(),
+      fetchUrl: z.string().url().optional(),
+      mimeType: z.string().optional(),
+      name: z.string().optional(),
+      type: z.enum(['image', 'file', 'video', 'audio']),
+    }),
+  )
+  // Bounded like the push path: an unmeasured `fetchUrl` costs a size probe
+  // before anything is sent, so an unbounded array is unbounded latency inside
+  // one serverless request.
+  .max(10);
+
+const embedsInputSchema = z.array(
+  z
+    .object({
+      author: z
+        .object({ icon_url: z.string().optional(), name: z.string(), url: z.string().optional() })
+        .optional(),
+      color: z.union([z.number(), z.string()]).optional(),
+      description: z.string().optional(),
+      fields: z
+        .array(z.object({ inline: z.boolean().optional(), name: z.string(), value: z.string() }))
+        .optional(),
+      footer: z.object({ icon_url: z.string().optional(), text: z.string() }).optional(),
+      image: z.object({ url: z.string() }).optional(),
+      thumbnail: z.object({ url: z.string() }).optional(),
+      timestamp: z.string().optional(),
+      title: z.string().optional(),
+      url: z.string().optional(),
+    })
+    .passthrough(),
 );
 
 // ── Service Factory ──────────────────────────────────────
@@ -112,7 +138,9 @@ const createServiceForCredentials = (
     }
     case 'wechat': {
       return new WechatMessageService(
-        new WechatApiClient(credentials.botToken, credentials.botId),
+        // `baseUrl` is issued during QR confirmation and must be honored when
+        // it differs from the default endpoint (see wechat/protocol-spec.md).
+        new WechatApiClient(credentials.botToken, credentials.botId, credentials.baseUrl),
         applicationId,
       );
     }
@@ -158,12 +186,7 @@ const resolveBot = async (
   };
 };
 
-/**
- * Resolve a system-bot messenger installation row into a runnable
- * `MessageRuntimeService`. Authorization: only the user who installed the
- * row can target it — workspace admins who installed under a different
- * LobeHub account need their own session.
- */
+/** Resolve a user-owned System Bot connection into a runnable service. */
 const resolveMessengerInstall = async (
   ctx: { serverDB: any; userId: string },
   installationId: string,
@@ -205,6 +228,28 @@ const resolveMessengerInstall = async (
   }
 
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey().catch(() => undefined);
+  const wechatLink = await new MessengerAccountLinkModel(
+    ctx.serverDB,
+    ctx.userId,
+  ).findByIdWithCredentials(installationId, 'wechat', gateKeeper);
+  if (wechatLink) {
+    if (!wechatLink.applicationId || typeof wechatLink.credentials.botToken !== 'string') {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `WeChat connection credentials are unavailable: ${installationId}`,
+      });
+    }
+    return {
+      platform: 'wechat',
+      service: createServiceForCredentials(
+        'wechat',
+        wechatLink.applicationId,
+        wechatLink.credentials,
+      ),
+      settings: {},
+    };
+  }
+
   const row = await MessengerInstallationModel.findById(ctx.serverDB, installationId, gateKeeper);
   if (!row) {
     throw new TRPCError({
@@ -273,6 +318,7 @@ export const botMessageRouter = router({
           attachments: attachmentsInputSchema.optional(),
           botId: z.string().optional(),
           content: z.string(),
+          embeds: embedsInputSchema.optional(),
           messengerInstallationId: z.string().optional(),
           userId: z.string(),
         })
@@ -291,6 +337,7 @@ export const botMessageRouter = router({
       return service.sendDirectMessage({
         attachments: input.attachments,
         content: input.content,
+        embeds: input.embeds,
         platform,
         userId: input.userId,
       });
@@ -306,7 +353,7 @@ export const botMessageRouter = router({
           botId: z.string().optional(),
           channelId: z.string(),
           content: z.string(),
-          embeds: z.array(z.record(z.unknown())).optional(),
+          embeds: embedsInputSchema.optional(),
           messengerInstallationId: z.string().optional(),
           replyTo: z.string().optional(),
         })
@@ -360,6 +407,33 @@ export const botMessageRouter = router({
         limit: input.limit ?? defaultLimit,
         platform,
         startTime: input.startTime,
+      });
+    }),
+
+  readDocument: botMessageProcedure
+    .input(
+      z
+        .object({
+          botId: z.string(),
+          documentId: z.string().optional(),
+          url: z.string().optional(),
+        })
+        .refine((v) => !!v.url || !!v.documentId, {
+          message: 'Either url or documentId is required',
+        }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { service, platform } = await resolveBot(ctx.agentBotProviderModel, input.botId);
+      if (!service.readDocument) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `readDocument is not supported on ${platform}`,
+        });
+      }
+      return service.readDocument({
+        documentId: input.documentId,
+        platform,
+        url: input.url,
       });
     }),
 
@@ -607,6 +681,7 @@ export const botMessageRouter = router({
           attachments: attachmentsInputSchema.optional(),
           botId: z.string().optional(),
           content: z.string(),
+          embeds: embedsInputSchema.optional(),
           messengerInstallationId: z.string().optional(),
           threadId: z.string(),
         })
@@ -619,6 +694,7 @@ export const botMessageRouter = router({
       return service.replyToThread({
         attachments: input.attachments,
         content: input.content,
+        embeds: input.embeds,
         platform,
         threadId: input.threadId,
       });

@@ -38,6 +38,12 @@ const makeDeps = (): DeviceControlDeps => ({
     root: '',
     source: 'glob' as const,
   })),
+  copyAssetForPublish: vi.fn(async () => ({ success: true })),
+  readExternalAssetForPublish: vi.fn(async () => ({
+    base64: 'AQID',
+    contentType: 'image/png',
+    success: true,
+  })),
   searchProjectFiles: vi.fn(async () => ({
     entries: [],
     root: '',
@@ -140,6 +146,60 @@ describe('executeDeviceRpc', () => {
     expect(result.isDirectory).toBe(true);
   });
 
+  it('browses one directory level with pagination and excludes files and hidden folders', async () => {
+    const browseRoot = await mkdtemp(path.join(tmpdir(), 'device-control-browse-'));
+    try {
+      await mkdir(path.join(browseRoot, '.hidden'));
+      await mkdir(path.join(browseRoot, 'alpha'));
+      await mkdir(path.join(browseRoot, 'beta'));
+      await writeFile(path.join(browseRoot, 'notes.txt'), 'not a directory');
+
+      const first = (await executeDeviceRpc(
+        'browseDirectory',
+        { limit: 1, path: browseRoot },
+        makeDeps(),
+      )) as { entries: { name: string }[]; nextCursor?: string; truncated: boolean };
+      expect(first.entries.map((entry) => entry.name)).toEqual(['alpha']);
+      expect(first.truncated).toBe(true);
+
+      const second = (await executeDeviceRpc(
+        'browseDirectory',
+        { cursor: first.nextCursor, limit: 1, path: browseRoot },
+        makeDeps(),
+      )) as { entries: { name: string }[]; truncated: boolean };
+      expect(second.entries.map((entry) => entry.name)).toEqual(['beta']);
+      expect(second.truncated).toBe(false);
+    } finally {
+      await rm(browseRoot, { force: true, recursive: true });
+    }
+  });
+
+  it('routes heterogeneous agent model discovery to the execution host', async () => {
+    const deps = makeDeps();
+    deps.listHeterogeneousAgentModels = vi.fn(async () => ({
+      models: [{ id: 'openai/gpt-5.6', modelId: 'gpt-5.6', providerId: 'openai' }],
+      status: 'success' as const,
+      updatedAt: 1,
+    }));
+    const params = {
+      args: ['--feature=test'],
+      command: '/custom/traecli',
+      cwd: root,
+      type: 'trae' as const,
+    };
+
+    const result = await executeDeviceRpc('listHeterogeneousAgentModels', params, deps);
+
+    expect(deps.listHeterogeneousAgentModels).toHaveBeenCalledWith(params);
+    expect(result).toMatchObject({ status: 'success' });
+  });
+
+  it('reports model discovery as unsupported when the device client is too old', async () => {
+    await expect(
+      executeDeviceRpc('listHeterogeneousAgentModels', { type: 'opencode' }, makeDeps()),
+    ).rejects.toThrow('does not support heterogeneous agent model discovery');
+  });
+
   it('delegates project file and preview methods to injected deps', async () => {
     const deps = makeDeps();
     await executeDeviceRpc('getProjectFileIndex', { scope: root }, deps);
@@ -151,6 +211,17 @@ describe('executeDeviceRpc', () => {
     const previewParams = { path: path.join(root, 'AGENTS.md'), workingDirectory: root };
     await executeDeviceRpc('getLocalFilePreview', previewParams, deps);
     expect(deps.getLocalFilePreview).toHaveBeenCalledWith(previewParams);
+
+    await executeDeviceRpc('readExternalAssetForPublish', previewParams, deps);
+    expect(deps.readExternalAssetForPublish).toHaveBeenCalledWith(previewParams);
+
+    const copyParams = {
+      from: previewParams.path,
+      to: path.join(root, 'copy.md'),
+      workingDirectory: root,
+    };
+    await executeDeviceRpc('copyAssetForPublish', copyParams, deps);
+    expect(deps.copyAssetForPublish).toHaveBeenCalledWith(copyParams);
   });
 
   it('routes a git method (listGitBranches) without touching deps', async () => {

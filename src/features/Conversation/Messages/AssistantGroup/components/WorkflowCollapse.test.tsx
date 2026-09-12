@@ -11,7 +11,8 @@ import WorkflowCollapse from './WorkflowCollapse';
 
 let mockIsGenerating = true;
 
-vi.mock('@lobehub/ui', () => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   Accordion: ({
     children,
     expandedKeys,
@@ -64,8 +65,6 @@ vi.mock('@lobehub/ui', () => ({
       {IconComponent ? <IconComponent /> : null}
     </button>
   ),
-  Block: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Flexbox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
   Icon: ({ icon: IconComponent }: { icon?: ComponentType }) =>
     IconComponent ? (
       <div
@@ -77,8 +76,11 @@ vi.mock('@lobehub/ui', () => ({
     ) : (
       <div />
     ),
-  ShikiLobeTheme: {},
-  Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
+}));
+
+vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import('~base-ui-stubs')).baseUiStubs,
 }));
 
 vi.mock('motion/react', () => ({
@@ -219,6 +221,74 @@ describe('WorkflowCollapse', () => {
 
     expect(getExpandedKeys()).toBe('["workflow"]');
     expect(screen.getByRole('button', { name: 'Collapse' })).toBeInTheDocument();
+  });
+
+  it('auto-collapses on completion by default', () => {
+    const { rerender } = render(
+      <WorkflowCollapse assistantMessageId="msg-1" blocks={makeBlocks()} />,
+    );
+
+    expect(getExpandedKeys()).toBe('["workflow"]');
+
+    mockIsGenerating = false;
+    rerender(
+      <WorkflowCollapse
+        assistantMessageId="msg-1"
+        blocks={makeBlocks({ result: { content: 'ok' } })}
+      />,
+    );
+
+    expect(getExpandedKeys()).toBe('[]');
+  });
+
+  it('skips the completion auto-collapse while suppressAutoCollapse is set', () => {
+    // Regression: the animated semi → collapsed transition used to run right
+    // before the parent folded the whole workflow into ProcessFold, shrinking
+    // the layout twice and making the conversation visibly jitter.
+    const { rerender } = render(
+      <WorkflowCollapse suppressAutoCollapse assistantMessageId="msg-1" blocks={makeBlocks()} />,
+    );
+
+    expect(getExpandedKeys()).toBe('["workflow"]');
+
+    mockIsGenerating = false;
+    rerender(
+      <WorkflowCollapse
+        suppressAutoCollapse
+        assistantMessageId="msg-1"
+        blocks={makeBlocks({ result: { content: 'ok' } })}
+      />,
+    );
+
+    expect(getExpandedKeys()).toBe('["workflow"]');
+  });
+
+  it('collapses late when suppressAutoCollapse is released after completion', () => {
+    // The turn ended but never folded (e.g. tool-only turn with no final
+    // answer), so nothing else collapses the workflow — the late release must.
+    const { rerender } = render(
+      <WorkflowCollapse suppressAutoCollapse assistantMessageId="msg-1" blocks={makeBlocks()} />,
+    );
+
+    mockIsGenerating = false;
+    rerender(
+      <WorkflowCollapse
+        suppressAutoCollapse
+        assistantMessageId="msg-1"
+        blocks={makeBlocks({ result: { content: 'ok' } })}
+      />,
+    );
+    expect(getExpandedKeys()).toBe('["workflow"]');
+
+    rerender(
+      <WorkflowCollapse
+        assistantMessageId="msg-1"
+        blocks={makeBlocks({ result: { content: 'ok' } })}
+        suppressAutoCollapse={false}
+      />,
+    );
+
+    expect(getExpandedKeys()).toBe('[]');
   });
 
   it('auto expands and switches the header when confirmation is pending', async () => {
@@ -387,7 +457,7 @@ describe('WorkflowCollapse', () => {
     expect(icon).toHaveAttribute('data-icon', 'Check');
   });
 
-  it('shows check with a warning badge when some tools fail after completion', () => {
+  it('shows only a check when some tools fail after completion', () => {
     mockIsGenerating = false;
     const blocks: AssistantContentBlock[] = [
       {
@@ -418,7 +488,7 @@ describe('WorkflowCollapse', () => {
     const icons = screen.getAllByTestId('icon');
     const iconNames = icons.map((node) => node.getAttribute('data-icon'));
     expect(iconNames).toContain('Check');
-    expect(iconNames).toContain('TriangleAlert');
+    expect(iconNames).not.toContain('TriangleAlert');
   });
 
   it('shows red x when all tools fail after completion', () => {

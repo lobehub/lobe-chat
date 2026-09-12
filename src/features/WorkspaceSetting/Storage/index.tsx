@@ -2,8 +2,8 @@
 
 import { BRANDING_NAME } from '@lobechat/business-const';
 import type { FormGroupItemType } from '@lobehub/ui';
-import { Button, Form, Icon } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Form, Icon } from '@lobehub/ui';
+import { Button, Switch } from '@lobehub/ui/base-ui';
 import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,17 +49,6 @@ const WorkspaceStorageContent = memo(() => {
         ),
         desc: t('workspaceSetting.storage.comingSoon'),
         label: t('storage.actions.export.title'),
-        layout: 'horizontal',
-        minWidth: undefined,
-      },
-      {
-        children: (
-          <Button danger disabled type={'primary'}>
-            {t('danger.reset.action')}
-          </Button>
-        ),
-        desc: t('workspaceSetting.storage.danger.reset.desc'),
-        label: t('workspaceSetting.storage.danger.reset.title'),
         layout: 'horizontal',
         minWidth: undefined,
       },

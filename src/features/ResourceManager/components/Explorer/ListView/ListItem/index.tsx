@@ -1,12 +1,13 @@
-import { Avatar, Center, Checkbox, ContextMenuTrigger, Flexbox, Tooltip } from '@lobehub/ui';
+import { Center, ContextMenuTrigger, Flexbox, Tooltip } from '@lobehub/ui';
+import { Avatar, Checkbox } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { isEqual } from 'es-toolkit';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
-import { isExplorerItemSelected } from '@/routes/(main)/resource/features/store/selectors';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import { isExplorerItemSelected } from '@/features/ResourceManager/store/selectors';
 import { fileManagerSelectors, getChunkTargetId, useFileStore } from '@/store/file';
 import type { FileListItem as FileListItemType } from '@/types/files';
 import { formatSize } from '@/utils/format';
@@ -125,6 +126,7 @@ interface FileListItemProps extends FileListItemType {
   };
   index: number;
   onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
+  selectable?: boolean;
   selected?: boolean;
   showUploader?: boolean;
   slug?: string | null;
@@ -146,6 +148,7 @@ const FileListItem = ({
   metadata,
   name,
   onSelectedChange,
+  selectable = true,
   selected,
   showUploader = true,
   size,
@@ -234,11 +237,13 @@ const FileListItem = ({
     slug,
   });
   const { menuItems } = useFileItemDropdown({
+    fileId,
     fileType,
     filename: name,
     id,
     libraryId: resourceManagerState.libraryId,
     onRenameStart: isFolder ? handleRenameStart : undefined,
+    size,
     sourceType,
     url,
     userId,
@@ -248,9 +253,10 @@ const FileListItem = ({
   const handleCheckboxClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      if (!selectable) return;
       onSelectedChange(id, !isSelected, e.shiftKey, index);
     },
-    [id, index, isSelected, onSelectedChange],
+    [id, index, isSelected, onSelectedChange, selectable],
   );
 
   const handleCheckboxPointerDown = useCallback((e: React.PointerEvent) => {
@@ -293,11 +299,12 @@ const FileListItem = ({
       >
         <Center
           height={40}
-          style={{ paddingInline: 4 }}
+          style={{ cursor: selectable ? 'pointer' : 'not-allowed', paddingInline: 4 }}
+          title={selectable ? undefined : t('FileManager.selection.onlyOwn')}
           onClick={handleCheckboxClick}
           onPointerDown={handleCheckboxPointerDown}
         >
-          <Checkbox checked={isSelected} />
+          <Checkbox checked={isSelected} disabled={!selectable} />
         </Center>
         <Flexbox
           horizontal

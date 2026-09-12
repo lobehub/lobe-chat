@@ -1,7 +1,10 @@
 // @vitest-environment node
+import { Chat } from 'chat';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MessengerRouter } from './MessengerRouter';
+
+const mockGetBotFeatureAccessState = vi.hoisted(() => vi.fn());
 
 vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn().mockResolvedValue({}),
@@ -9,6 +12,14 @@ vi.mock('@/database/core/db-adaptor', () => ({
 
 vi.mock('@/server/modules/AgentRuntime/redis', () => ({
   getAgentRuntimeRedisClient: vi.fn().mockReturnValue(null),
+}));
+
+vi.mock('@/business/server/bot/featureAccess', () => ({
+  getBotFeatureAccessState: mockGetBotFeatureAccessState,
+}));
+
+vi.mock('@/envs/gateway', () => ({
+  gatewayEnv: { MESSAGE_GATEWAY_SERVICE_TOKEN: 'gateway-service-token' },
 }));
 
 const mockResolveByPayload = vi.fn();
@@ -59,6 +70,7 @@ const mockSetIfNotExists = vi.fn();
 const mockGetList = vi.fn();
 const mockAppendToList = vi.fn();
 const mockChatBot = {
+  dispatchToHandlers: vi.fn(),
   getState: vi.fn(() => ({
     appendToList: (...args: any[]) => mockAppendToList(...args),
     getList: (...args: any[]) => mockGetList(...args),
@@ -75,10 +87,13 @@ const mockChatBot = {
   webhooks: {
     slack: mockWebhookHandler,
     telegram: mockWebhookHandler,
+    wechat: mockWebhookHandler,
   },
 };
 vi.mock('chat', () => ({
-  Chat: vi.fn().mockImplementation(() => mockChatBot),
+  Chat: vi.fn(function () {
+    return mockChatBot;
+  }),
   ConsoleLogger: vi.fn(),
 }));
 vi.mock('@chat-adapter/state-ioredis', () => ({
@@ -110,11 +125,31 @@ vi.mock('@/server/services/bot/AgentBridgeService', () => ({
   },
 }));
 
+// `fetchUserAgents` constructs an AgentModel directly; stub the class so the
+// partition test can feed it rows without standing up drizzle. AgentModel's
+// methods are instance arrow-function fields, so prototype spies don't work.
+const mockListMessengerBindableAgents = vi.fn();
+const mockAgentExistsById = vi.fn();
+const mockAgentModelConstructor = vi.fn();
+const mockGetAgentConfigById = vi.fn();
+vi.mock('@/database/models/agent', () => ({
+  AgentModel: class {
+    constructor(...args: unknown[]) {
+      mockAgentModelConstructor(...args);
+    }
+    existsById = (...args: any[]) => mockAgentExistsById(...args);
+    getAgentConfigById = (...args: any[]) => mockGetAgentConfigById(...args);
+    listMessengerBindableAgents = (...args: any[]) => mockListMessengerBindableAgents(...args);
+  },
+}));
+
 const mockFindLink = vi.fn();
+const mockSetActiveAgentById = vi.fn();
 const mockSetActiveScope = vi.fn();
 vi.mock('@/database/models/messengerAccountLink', () => ({
   MessengerAccountLinkModel: {
     findByPlatformUser: (...args: any[]) => mockFindLink(...args),
+    setActiveAgentById: (...args: unknown[]) => mockSetActiveAgentById(...args),
     setActiveScope: (...args: any[]) => mockSetActiveScope(...args),
   },
 }));
@@ -131,8 +166,31 @@ vi.mock('@/database/models/workspace', () => ({
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: class {},
 }));
+
+// `/mode` status parity with execAgent: the effective-mode lookup layers the
+// caller's workspace member-mode override over the shared agent config.
+const mockGetWorkspaceUserPreference = vi.fn();
+vi.mock('@/database/models/workspaceUserSettings', () => ({
+  WorkspaceUserSettingsModel: class {
+    getPreference = (...args: any[]) => mockGetWorkspaceUserPreference(...args);
+  },
+}));
+const mockIsResourceAuthorOrAdmin = vi.fn();
+vi.mock('@/server/services/resourcePermission', () => ({
+  isResourceAuthorOrAdmin: (...args: any[]) => mockIsResourceAuthorOrAdmin(...args),
+}));
 vi.mock('@/server/services/bot/replyTemplate', () => ({
+  renderCommandReply: (key: string) => {
+    if (key === 'cmdModeSetAgent') return 'Switched to Agent Mode';
+    if (key === 'cmdModeSetChat') return 'Switched to Chat Mode';
+    if (key === 'cmdModeUsage') return 'Usage: /mode agent | chat';
+    return key;
+  },
   renderInlineError: (msg: string) => msg,
+  renderModeStatus: (mode?: 'agent' | 'chat') =>
+    mode
+      ? `Current mode: ${mode === 'agent' ? 'Agent Mode' : 'Chat Mode'}`
+      : 'Current mode: default',
 }));
 
 // Stub the binder classes (leaf modules) so the real platform definitions +
@@ -161,20 +219,45 @@ const mockSlackBinder = {
   sendDmText: vi.fn(),
 };
 vi.mock('./platforms/slack/binder', () => ({
-  MessengerSlackBinder: vi.fn().mockImplementation(() => mockSlackBinder),
+  MessengerSlackBinder: vi.fn(function () {
+    return mockSlackBinder;
+  }),
 }));
 
+const mockTelegramBinder = {
+  createClient: () => ({
+    createAdapter: () => ({}),
+    // Telegram thread ids are `telegram:<chatId>[:<messageThreadId>]`.
+    extractChatId: (id: string) =>
+      id.startsWith('telegram:guest:') ? (id.split(':')[2] ?? id) : (id.split(':')[1] ?? id),
+  }),
+  handleUnlinkedMessage: vi.fn(),
+  isOneShotMessage: vi.fn().mockReturnValue(false),
+  notifyLinkSuccess: vi.fn(),
+  registerWebhook: vi.fn(),
+  replyToMessage: vi.fn(),
+  sendAgentPicker: vi.fn(),
+  sendDmText: vi.fn(),
+};
 vi.mock('./platforms/telegram/binder', () => ({
-  MessengerTelegramBinder: vi.fn().mockImplementation(() => ({
-    createClient: () => ({
-      createAdapter: () => ({}),
-      extractChatId: (id: string) => id,
-    }),
-    handleUnlinkedMessage: vi.fn(),
-    notifyLinkSuccess: vi.fn(),
-    registerWebhook: vi.fn(),
-    sendDmText: vi.fn(),
-  })),
+  MessengerTelegramBinder: vi.fn(function () {
+    return mockTelegramBinder;
+  }),
+}));
+
+const mockWechatBinder = {
+  createClient: () => ({
+    createAdapter: () => ({}),
+    extractChatId: (id: string) => id.split(':').at(-1) ?? id,
+  }),
+  handleUnlinkedMessage: vi.fn(),
+  notifyLinkSuccess: vi.fn(),
+  sendDmText: vi.fn(),
+};
+vi.mock('./platforms/wechat/binder', () => ({
+  MessengerWechatBinder: vi.fn(function () {
+    return mockWechatBinder;
+  }),
 }));
 
 const buildSlackRequest = (body: string, headers: Record<string, string> = {}): Request =>
@@ -199,13 +282,36 @@ const slackCreds = (tenantId: string) => ({
   tenantId,
 });
 
+const telegramCreds = {
+  applicationId: 'telegram:singleton',
+  botToken: 'tg-token',
+  installationKey: 'telegram:singleton',
+  metadata: {},
+  platform: 'telegram' as const,
+  tenantId: '',
+};
+
+const wechatCreds = {
+  applicationId: 'wechat-bot',
+  baseUrl: 'https://ilink.example.com',
+  botId: 'wechat-bot',
+  botToken: 'wechat-token',
+  installationKey: 'wechat:wechat-user',
+  metadata: {},
+  platform: 'wechat' as const,
+  tenantId: 'wechat-user',
+};
+
 beforeEach(() => {
+  mockChatBot.dispatchToHandlers = vi.fn();
   mockVerifySignature.mockReturnValue(true);
   mockChatBot.webhooks = {
     slack: mockWebhookHandler,
     telegram: mockWebhookHandler,
+    wechat: mockWebhookHandler,
   };
   mockFindLink.mockReset();
+  mockSetActiveAgentById.mockReset();
   mockSetActiveScope.mockReset();
   mockListUserWorkspaces.mockReset();
   mockListUserWorkspaces.mockResolvedValue([
@@ -213,6 +319,13 @@ beforeEach(() => {
   ]);
   mockGetServerFeatureFlagsStateFromRuntimeConfig.mockReset();
   mockGetServerFeatureFlagsStateFromRuntimeConfig.mockResolvedValue({ enableWorkspace: true });
+  mockGetBotFeatureAccessState.mockReset();
+  mockGetBotFeatureAccessState.mockResolvedValue({ allowed: true });
+  mockAgentModelConstructor.mockReset();
+  mockAgentExistsById.mockReset();
+  // Default: the bound active agent still resolves. Tests that exercise the
+  // stale-binding path override this.
+  mockAgentExistsById.mockResolvedValue(true);
   mockAgentBridgeConstructor.mockReset();
   mockHandleMention.mockReset();
   mockHandleSubscribed.mockReset();
@@ -228,6 +341,14 @@ beforeEach(() => {
   mockSlackBinder.replyPrivately.mockReset();
   mockSlackBinder.sendAgentPicker.mockReset();
   mockSlackBinder.sendDmText.mockReset();
+  mockTelegramBinder.handleUnlinkedMessage.mockReset();
+  mockTelegramBinder.isOneShotMessage.mockReset();
+  mockTelegramBinder.isOneShotMessage.mockReturnValue(false);
+  mockTelegramBinder.replyToMessage.mockReset();
+  mockTelegramBinder.sendAgentPicker.mockReset();
+  mockTelegramBinder.sendDmText.mockReset();
+  mockWechatBinder.handleUnlinkedMessage.mockReset();
+  mockWechatBinder.sendDmText.mockReset();
 });
 
 afterEach(() => {
@@ -356,13 +477,15 @@ describe('MessengerRouter.getWebhookHandler', () => {
       event: { type: 'message' },
       type: 'event_callback',
     });
-    const res = await router.getWebhookHandler('slack')(buildSlackRequest(body));
+    const options = { waitUntil: vi.fn() };
+    const res = await router.getWebhookHandler('slack')(buildSlackRequest(body), options);
     expect(res.status).toBe(200);
     expect(mockWebhookHandler).toHaveBeenCalledTimes(1);
     // Reconstructed request preserves the body (raw bytes are still readable).
-    const calls = mockWebhookHandler.mock.calls as unknown as Request[][];
+    const calls = mockWebhookHandler.mock.calls as unknown as Array<[Request, typeof options]>;
     const passedReq = calls[0][0];
     expect(await passedReq.text()).toBe(body);
+    expect(calls[0][1]).toBe(options);
   });
 
   it('skips signature verification for telegram (no headers required)', async () => {
@@ -411,6 +534,29 @@ const loadSlackBot = async (): Promise<void> => {
   );
 };
 
+const loadTelegramBot = async (): Promise<void> => {
+  mockResolveByPayload.mockResolvedValue(telegramCreds);
+  const router = new MessengerRouter();
+  await router.getWebhookHandler('telegram')(
+    new Request('https://app.example.com/api/agent/messenger/webhooks/telegram', {
+      body: JSON.stringify({ message: { text: 'hi' } }),
+      method: 'POST',
+    }),
+  );
+};
+
+const loadWechatBot = async (): Promise<void> => {
+  mockResolveByPayload.mockResolvedValue(wechatCreds);
+  const router = new MessengerRouter();
+  await router.getWebhookHandler('wechat')(
+    new Request('https://app.example.com/api/agent/messenger/webhooks/wechat', {
+      body: '{}',
+      headers: { authorization: 'Bearer gateway-service-token' },
+      method: 'POST',
+    }),
+  );
+};
+
 const fakeMessage = (overrides: Partial<any> = {}): any => ({
   author: { isBot: false, userId: 'U_ALICE', userName: 'alice' },
   id: 'm1',
@@ -431,6 +577,50 @@ const fakeDmThread = (): any => ({
   isDM: true,
   post: vi.fn(),
   subscribe: vi.fn(),
+});
+
+const fakeWechatDmThread = (): any => ({
+  id: 'wechat:dm:wechat-user',
+  isDM: true,
+  post: vi.fn(),
+  subscribe: vi.fn(),
+});
+
+describe('MessengerRouter collected commands', () => {
+  it.each([
+    ['/new', 'question'],
+    ['question', '/new'],
+  ])('preserves command and content order for %s then %s', async (first, second) => {
+    const events: string[] = [];
+    const thread = {
+      ...fakeWechatDmThread(),
+      state: Promise.resolve({ topicId: 'old-topic' }),
+      setState: vi.fn(async () => {
+        events.push('reset');
+      }),
+    };
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link',
+      platformUserId: 'U_ALICE',
+      userId: 'user_alice',
+    });
+    mockHandleSubscribed.mockImplementation(async (_thread, message) => {
+      events.push(message.text);
+    });
+    mockChatBot.dispatchToHandlers = vi.fn(async (_adapter, _threadId, message, context) => {
+      const handler = mockChatBot.onSubscribedMessage.mock.calls.at(-1)![0];
+      await handler(thread, message, context);
+    });
+    await loadWechatBot();
+    await mockChatBot.dispatchToHandlers({}, thread.id, fakeMessage({ text: second }), {
+      skipped: [fakeMessage({ text: first })],
+      totalSinceLastHandler: 2,
+    });
+    expect(events).toEqual([first, second].map((text) => (text === '/new' ? 'reset' : text)));
+    expect(thread.setState).toHaveBeenCalledTimes(1);
+    expect(mockHandleSubscribed).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('MessengerRouter channel @mention', () => {
@@ -463,12 +653,80 @@ describe('MessengerRouter channel @mention', () => {
       'user_alice',
       'workspace-1',
     );
+    expect(mockGetBotFeatureAccessState).toHaveBeenCalledWith({
+      action: 'runtime',
+      platform: 'slack',
+      userId: 'user_alice',
+      workspaceId: 'workspace-1',
+    });
     expect(mockHandleMention.mock.calls[0][2]).toMatchObject({ agentId: 'agt_main' });
     expect(mockHandleSubscribed).not.toHaveBeenCalled();
     // We deliberately do NOT subscribe channel threads — see comment in
     // `onNewMention`.
     expect(thread.subscribe).not.toHaveBeenCalled();
     expect(mockSlackBinder.handleUnlinkedMessage).not.toHaveBeenCalled();
+    expect(mockSlackBinder.replyEphemeral).not.toHaveBeenCalled();
+  });
+
+  it('sends the feature-gate denial ephemerally for a public channel mention', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    mockGetBotFeatureAccessState.mockResolvedValueOnce({
+      allowed: false,
+      blockedMessage: 'Upgrade to continue.',
+    });
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeChannelThread(), fakeMessage({ isMention: true }));
+
+    expect(mockGetBotFeatureAccessState).toHaveBeenCalledWith({
+      action: 'runtime',
+      platform: 'slack',
+      userId: 'user_alice',
+    });
+    expect(mockHandleMention).not.toHaveBeenCalled();
+    expect(mockSlackBinder.replyEphemeral).toHaveBeenCalledWith({
+      channelId: 'C_GENERAL',
+      text: 'Upgrade to continue.',
+      threadTs: '1715000000.000100',
+      userId: 'U_ALICE',
+    });
+    expect(mockSlackBinder.sendDmText).not.toHaveBeenCalled();
+  });
+
+  it('sends the feature-gate denial normally in a private conversation', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    mockGetBotFeatureAccessState.mockResolvedValueOnce({
+      allowed: false,
+      blockedMessage: 'Upgrade to continue.',
+    });
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeDmThread(), fakeMessage({ isMention: true }));
+
+    expect(mockHandleMention).not.toHaveBeenCalled();
+    expect(mockSlackBinder.sendDmText).toHaveBeenCalledWith('D_DM', 'Upgrade to continue.');
     expect(mockSlackBinder.replyEphemeral).not.toHaveBeenCalled();
   });
 
@@ -499,6 +757,95 @@ describe('MessengerRouter channel @mention', () => {
       channelId: 'C_GENERAL',
       userId: 'U_ALICE',
     });
+  });
+
+  it('skips dispatch and prompts /agents when the active agent no longer exists', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_deleted',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    // The bound agent was deleted (or moved out of the active scope).
+    mockAgentExistsById.mockResolvedValue(false);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeDmThread(), fakeMessage({ isMention: true }));
+
+    // Without this guard the run reaches the agent runtime and the user gets a
+    // bare "Agent Execution Failed" with no operation id.
+    expect(mockHandleMention).not.toHaveBeenCalled();
+    expect(mockAgentExistsById).toHaveBeenCalledWith('agt_deleted');
+    expect(mockAgentModelConstructor).toHaveBeenCalledWith({}, 'user_alice', undefined);
+    expect(mockSlackBinder.sendDmText).toHaveBeenCalledWith(
+      'D_DM',
+      expect.stringContaining('/agents'),
+    );
+  });
+
+  it('answers linked Telegram Guest recovery prompts through the one-shot reply', async () => {
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: null,
+      id: 'link_1',
+      platformUserId: '123',
+      tenantId: '',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    mockTelegramBinder.isOneShotMessage.mockReturnValue(true);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    const message = fakeMessage({
+      author: { isBot: false, userId: '123', userName: 'alice' },
+      isMention: true,
+      raw: { guest_query_id: 'gq-linked' },
+    });
+    await handler(
+      {
+        id: 'telegram:guest:-100123:bot:999:message:55',
+        isDM: false,
+        post: vi.fn(),
+      },
+      message,
+    );
+
+    expect(mockTelegramBinder.replyToMessage).toHaveBeenCalledWith(
+      message,
+      expect.stringContaining('No active agent'),
+    );
+    expect(mockTelegramBinder.sendDmText).not.toHaveBeenCalled();
+    expect(mockTelegramBinder.sendAgentPicker).not.toHaveBeenCalled();
+  });
+
+  it('scopes the active-agent check to the linked workspace', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: 'workspace-1',
+    });
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeDmThread(), fakeMessage({ isMention: true }));
+
+    expect(mockAgentModelConstructor).toHaveBeenCalledWith({}, 'user_alice', 'workspace-1');
+    expect(mockHandleMention).toHaveBeenCalledTimes(1);
   });
 
   it('routes an unlinked channel mention through handleUnlinkedMessage with channelMentionThreadId', async () => {
@@ -702,8 +1049,8 @@ describe('MessengerRouter slash command dispatch', () => {
   // simply ignore the spy.
   beforeEach(() => {
     vi.spyOn(MessengerRouter.prototype as any, 'fetchUserAgents').mockResolvedValue([
-      { id: 'agt_a', title: 'A' },
-      { id: 'agt_b', title: 'B' },
+      { id: 'agt_a', isPrivate: false, title: 'A' },
+      { id: 'agt_b', isPrivate: false, title: 'B' },
     ]);
   });
 
@@ -713,6 +1060,80 @@ describe('MessengerRouter slash command dispatch', () => {
     text: '',
     user: { userId: 'U_ALICE', userName: 'alice' },
     ...overrides,
+  });
+
+  const fakeTelegramSlashEvent = (overrides: Partial<any> = {}): any => ({
+    channel: { id: 'telegram:123', isDM: false, post: vi.fn() },
+    command: '/start',
+    text: '',
+    user: { userId: '123', userName: 'alice' },
+    ...overrides,
+  });
+
+  it('registers Telegram slash commands and routes private /start to the link flow', async () => {
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue(null);
+
+    const [paths, handler] = mockChatBot.onSlashCommand.mock.calls[0] as [
+      string[],
+      (event: any) => Promise<void>,
+    ];
+    expect(paths).toContain('/start');
+
+    await handler(fakeTelegramSlashEvent());
+
+    expect(mockTelegramBinder.handleUnlinkedMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authorUserId: '123',
+        chatId: '123',
+        channelMentionThreadId: undefined,
+      }),
+    );
+    expect(mockTelegramBinder.sendDmText).not.toHaveBeenCalled();
+  });
+
+  it('keeps an unlinked Telegram group /start visible without leaking a link token', async () => {
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue(null);
+    const post = vi.fn();
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(
+      fakeTelegramSlashEvent({ channel: { id: 'telegram:-100123:42', isDM: false, post } }),
+    );
+
+    expect(post).toHaveBeenCalledWith(expect.stringContaining('send `/start` there'));
+    expect(mockTelegramBinder.handleUnlinkedMessage).not.toHaveBeenCalled();
+    expect(mockTelegramBinder.sendDmText).not.toHaveBeenCalled();
+    expect(mockOpenDM).not.toHaveBeenCalled();
+  });
+
+  it('routes a linked Telegram group /agents picker to the invoker DM', async () => {
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_a',
+      id: 'link_1',
+      platformUserId: '123',
+      tenantId: '',
+      userId: 'user_alice',
+    });
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(
+      fakeTelegramSlashEvent({
+        channel: { id: 'telegram:-100123', isDM: false, post: vi.fn() },
+        command: '/agents',
+      }),
+    );
+
+    expect(mockTelegramBinder.sendAgentPicker).toHaveBeenCalledWith(
+      '123',
+      expect.objectContaining({
+        ephemeralTo: '123',
+        text: expect.stringContaining('Tap an agent'),
+      }),
+    );
+    expect(mockTelegramBinder.sendDmText).not.toHaveBeenCalled();
   });
 
   it('renders the picker as ephemeral when /agents is invoked from a public channel', async () => {
@@ -791,6 +1212,332 @@ describe('MessengerRouter slash command dispatch', () => {
 
     expect(mockOpenDM).toHaveBeenCalledWith('U_ALICE');
     expect(dmThread.setState).toHaveBeenCalledWith({ topicId: undefined }, { replace: true });
+  });
+
+  it('/mode chat writes the DM thread state and confirms', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve(null),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(
+      fakeSlashEvent({
+        channel: { id: 'slack:D_DM', isDM: false },
+        command: '/mode',
+        text: 'chat',
+      }),
+    );
+
+    // Merge write (NOT replace) — switching mode must not clobber topicId.
+    expect(dmThread.setState).toHaveBeenCalledWith({ toolMode: 'chat' });
+    expect(mockSlackBinder.replyPrivately).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.stringContaining('Chat Mode'),
+    );
+  });
+
+  it('/mode without args renders the tap picker with the current mode marked', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve({ toolMode: 'agent', topicId: 'topic-1' }),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ channel: { id: 'slack:D_DM', isDM: false }, command: '/mode' }));
+
+    expect(dmThread.setState).not.toHaveBeenCalled();
+    expect(mockSlackBinder.sendAgentPicker).toHaveBeenCalledWith(
+      'D_DM',
+      expect.objectContaining({
+        action: 'mode',
+        entries: [
+          { id: 'agent', isActive: true, title: 'Agent Mode' },
+          { id: 'chat', isActive: false, title: 'Chat Mode' },
+        ],
+      }),
+    );
+  });
+
+  it('/mode without args marks the agent-config default when no override is set', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    // Active agent configured as chat-mode (enableAgentMode=false) — the
+    // picker must mark Chat Mode even though the thread has no override yet.
+    mockGetAgentConfigById.mockResolvedValue({ chatConfig: { enableAgentMode: false } });
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve(null),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ channel: { id: 'slack:D_DM', isDM: false }, command: '/mode' }));
+
+    expect(mockGetAgentConfigById).toHaveBeenCalledWith('agt_main');
+    expect(mockSlackBinder.sendAgentPicker).toHaveBeenCalledWith(
+      'D_DM',
+      expect.objectContaining({
+        action: 'mode',
+        entries: [
+          { id: 'agent', isActive: false, title: 'Agent Mode' },
+          { id: 'chat', isActive: true, title: 'Chat Mode' },
+        ],
+      }),
+    );
+  });
+
+  it('/mode without args applies the workspace member-mode override for non-managers', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: 'workspace-1',
+    });
+    // Shared workspace agent defaults to Agent Mode, but this member turned it
+    // off via their per-user override — the picker must mark Chat Mode, the
+    // mode execAgent will actually run for them.
+    mockGetAgentConfigById.mockResolvedValue({
+      chatConfig: { enableAgentMode: true },
+      userId: 'user_owner',
+      visibility: 'public',
+      workspaceId: 'workspace-1',
+    });
+    mockGetWorkspaceUserPreference.mockResolvedValue({
+      agentModeOverrides: { agt_main: false },
+    });
+    mockIsResourceAuthorOrAdmin.mockResolvedValue(false);
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve(null),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ channel: { id: 'slack:D_DM', isDM: false }, command: '/mode' }));
+
+    expect(mockSlackBinder.sendAgentPicker).toHaveBeenCalledWith(
+      'D_DM',
+      expect.objectContaining({
+        action: 'mode',
+        entries: [
+          { id: 'agent', isActive: false, title: 'Agent Mode' },
+          { id: 'chat', isActive: true, title: 'Chat Mode' },
+        ],
+      }),
+    );
+  });
+
+  it('/mode without args ignores a manager-stale member override (shared config wins)', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: 'workspace-1',
+    });
+    // The caller manages this agent — execAgent ignores their own stale
+    // override, so the picker must too.
+    mockGetAgentConfigById.mockResolvedValue({
+      chatConfig: { enableAgentMode: true },
+      userId: 'user_owner',
+      visibility: 'public',
+      workspaceId: 'workspace-1',
+    });
+    mockGetWorkspaceUserPreference.mockResolvedValue({
+      agentModeOverrides: { agt_main: false },
+    });
+    mockIsResourceAuthorOrAdmin.mockResolvedValue(true);
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve(null),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ channel: { id: 'slack:D_DM', isDM: false }, command: '/mode' }));
+
+    expect(mockSlackBinder.sendAgentPicker).toHaveBeenCalledWith(
+      'D_DM',
+      expect.objectContaining({
+        action: 'mode',
+        entries: [
+          { id: 'agent', isActive: true, title: 'Agent Mode' },
+          { id: 'chat', isActive: false, title: 'Chat Mode' },
+        ],
+      }),
+    );
+  });
+
+  it('/mode from a channel text mention replies text status instead of the picker', async () => {
+    // A channel text mention resolves the CHANNEL thread, but picker taps
+    // write the canonical DM (handleModeCallback → openDM) — the channel's
+    // next run would still read its own state. So no picker here: text
+    // status via the ephemeral reply instead.
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    mockGetAgentConfigById.mockResolvedValue({ chatConfig: { enableAgentMode: true } });
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    const channelThread = { ...fakeChannelThread(), state: Promise.resolve(null) };
+    await handler(channelThread, fakeMessage({ isMention: true, text: '/mode' }));
+
+    expect(mockSlackBinder.sendAgentPicker).not.toHaveBeenCalled();
+    expect(mockSlackBinder.replyEphemeral).toHaveBeenCalledWith(
+      expect.objectContaining({
+        channelId: 'C_GENERAL',
+        text: expect.stringContaining('Current mode'),
+        userId: 'U_ALICE',
+      }),
+    );
+  });
+
+  it('mode picker tap writes toolMode to the DM thread and re-renders the picker', async () => {
+    const router = new MessengerRouter();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    const dmThread = { id: 'slack:D_DM:', isDM: true, setState: vi.fn() };
+    const chatBot = { openDM: vi.fn().mockResolvedValue(dmThread) };
+    const acknowledgeCallback = vi.fn();
+    const binder = { ...mockSlackBinder, acknowledgeCallback };
+
+    await (router as any).handleCallbackAction(
+      binder,
+      slackCreds('T_ACME'),
+      { chatId: 'D_DM', data: 'messenger:mode:chat', fromUserId: 'U_ALICE', messageId: '1' },
+      chatBot,
+    );
+
+    expect(chatBot.openDM).toHaveBeenCalledWith('U_ALICE');
+    expect(dmThread.setState).toHaveBeenCalledWith({ toolMode: 'chat' });
+    expect(acknowledgeCallback).toHaveBeenCalledWith(
+      expect.objectContaining({ data: 'messenger:mode:chat' }),
+      expect.objectContaining({
+        toast: expect.stringContaining('Chat Mode'),
+        updatedPicker: expect.objectContaining({
+          action: 'mode',
+          entries: [
+            { id: 'agent', isActive: false, title: 'Agent Mode' },
+            { id: 'chat', isActive: true, title: 'Chat Mode' },
+          ],
+        }),
+      }),
+    );
+  });
+
+  it('mode picker tap from an unlinked user acks with the not-linked toast', async () => {
+    const router = new MessengerRouter();
+    mockFindLink.mockResolvedValue(null);
+    const chatBot = { openDM: vi.fn() };
+    const acknowledgeCallback = vi.fn();
+    const binder = { ...mockSlackBinder, acknowledgeCallback };
+
+    await (router as any).handleCallbackAction(
+      binder,
+      slackCreds('T_ACME'),
+      { chatId: 'D_DM', data: 'messenger:mode:agent', fromUserId: 'U_NOBODY', messageId: '1' },
+      chatBot,
+    );
+
+    expect(chatBot.openDM).not.toHaveBeenCalled();
+    expect(acknowledgeCallback).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ toast: expect.stringContaining('/start') }),
+    );
+  });
+
+  it('/mode from an unlinked user asks them to /start first', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue(null);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ command: '/mode', text: 'chat' }));
+
+    expect(mockSlackBinder.replyPrivately).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.stringContaining('/start'),
+    );
+  });
+
+  it('/new slash preserves the /mode choice while clearing topicId', async () => {
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    const dmThread = {
+      id: 'slack:D_DM:',
+      isDM: true,
+      setState: vi.fn(),
+      state: Promise.resolve({ toolMode: 'chat', topicId: 'topic-1' }),
+    };
+    mockOpenDM.mockResolvedValue(dmThread);
+
+    const handler = mockChatBot.onSlashCommand.mock.calls[0][1] as (event: any) => Promise<void>;
+    await handler(fakeSlashEvent({ channel: { id: 'slack:D_DM', isDM: false }, command: '/new' }));
+
+    expect(dmThread.setState).toHaveBeenCalledWith(
+      { toolMode: 'chat', topicId: undefined },
+      { replace: true },
+    );
   });
 
   it('renders the picker as a regular DM message when /agents is invoked from a DM', async () => {
@@ -1026,6 +1773,190 @@ describe('MessengerRouter onSubscribedMessage gating', () => {
   });
 });
 
+describe('MessengerRouter WeChat system commands', () => {
+  const personalLink = {
+    activeAgentId: 'agt_main',
+    id: 'link_wechat',
+    platformUserId: 'wechat-user',
+    tenantId: 'wechat-user',
+    userId: 'user_alice',
+    workspaceId: null,
+  };
+
+  it('always renders /switch instructions in Chinese', async () => {
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(personalLink);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ isMention: true, text: '/switch' }));
+
+    expect(mockWechatBinder.sendDmText).toHaveBeenCalledWith(
+      'wechat-user',
+      expect.stringMatching(/可切换空间：[\s\S]*个人账号 \(当前\)[\s\S]*\/switch <序号>/),
+    );
+  });
+
+  it('omits /start from WeChat help', async () => {
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(personalLink);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ isMention: true, text: '/help' }));
+
+    const helpText = mockWechatBinder.sendDmText.mock.calls[0][1];
+    expect(helpText).toContain('可用命令：');
+    expect(helpText).not.toContain('/start');
+  });
+
+  it('does not intercept /start as a WeChat system command', async () => {
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(personalLink);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ isMention: true, text: '/start' }));
+
+    expect(mockWechatBinder.sendDmText).not.toHaveBeenCalled();
+    expect(mockHandleMention).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('MessengerRouter /agents private vs workspace grouping', () => {
+  const workspaceLink = {
+    activeAgentId: 'agt_shared',
+    id: 'link_wechat',
+    platformUserId: 'wechat-user',
+    tenantId: 'wechat-user',
+    userId: 'user_alice',
+    workspaceId: 'workspace-1',
+  };
+
+  it('splits the text list into workspace/private sections with continuous numbering', async () => {
+    vi.spyOn(MessengerRouter.prototype as any, 'fetchUserAgents').mockResolvedValue([
+      { id: 'agt_shared', isPrivate: false, title: 'Lobo' },
+      { id: 'agt_shared2', isPrivate: false, title: 'LobeBuilder' },
+      { id: 'agt_private', isPrivate: true, title: '私人助理' },
+    ]);
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(workspaceLink);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ isMention: true, text: '/agents' }));
+
+    const text = mockWechatBinder.sendDmText.mock.calls[0][1];
+    expect(text).toMatch(
+      /工作区 Agent：\n1\. Lobo \(当前\)\n2\. LobeBuilder\n\n私人 Agent：\n3\. 私人助理/,
+    );
+    expect(text).not.toContain('你的 Agent：');
+  });
+
+  it('keeps the flat heading when the list has no private agents', async () => {
+    vi.spyOn(MessengerRouter.prototype as any, 'fetchUserAgents').mockResolvedValue([
+      { id: 'agt_shared', isPrivate: false, title: 'Lobo' },
+    ]);
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(workspaceLink);
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ isMention: true, text: '/agents' }));
+
+    const text = mockWechatBinder.sendDmText.mock.calls[0][1];
+    expect(text).toContain('你的 Agent：');
+    expect(text).not.toContain('工作区 Agent：');
+    expect(text).not.toContain('私人 Agent：');
+  });
+
+  it('suffixes private agents on picker entries when the list mixes both groups', async () => {
+    vi.spyOn(MessengerRouter.prototype as any, 'fetchUserAgents').mockResolvedValue([
+      { id: 'agt_shared', isPrivate: false, title: 'Shared' },
+      { id: 'agt_private', isPrivate: true, title: 'Mine' },
+    ]);
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_shared',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+      workspaceId: 'workspace-1',
+    });
+
+    const handler = mockChatBot.onNewMention.mock.calls[0][0] as (
+      thread: any,
+      msg: any,
+    ) => Promise<void>;
+    await handler(fakeDmThread(), fakeMessage({ isMention: true, text: '/agents' }));
+
+    const params = mockSlackBinder.sendAgentPicker.mock.calls[0][1];
+    expect(params.entries).toEqual([
+      { id: 'agt_shared', isActive: true, title: 'Shared' },
+      { id: 'agt_private', isActive: false, title: 'Mine (private)' },
+    ]);
+  });
+
+  it('partitions workspace agents ahead of private ones in fetchUserAgents', async () => {
+    // Earlier tests spy fetchUserAgents on the prototype; undo that so this
+    // test exercises the real implementation.
+    const maybeSpy = (MessengerRouter.prototype as any).fetchUserAgents;
+    if (vi.isMockFunction(maybeSpy)) maybeSpy.mockRestore();
+
+    mockListMessengerBindableAgents.mockResolvedValue([
+      {
+        avatar: null,
+        backgroundColor: null,
+        id: 'p1',
+        isInbox: false,
+        isPrivate: true,
+        title: 'P1',
+      },
+      {
+        avatar: null,
+        backgroundColor: null,
+        id: 'w1',
+        isInbox: false,
+        isPrivate: false,
+        title: 'W1',
+      },
+      {
+        avatar: null,
+        backgroundColor: null,
+        id: 'p2',
+        isInbox: false,
+        isPrivate: true,
+        title: 'P2',
+      },
+      {
+        avatar: null,
+        backgroundColor: null,
+        id: 'w2',
+        isInbox: false,
+        isPrivate: false,
+        title: 'W2',
+      },
+    ]);
+
+    const router = new MessengerRouter();
+    const result = await (router as any).fetchUserAgents({} as any, 'user_alice', 'workspace-1');
+
+    // Stable partition: relative order inside each group is preserved.
+    expect(result.map((r: any) => r.id)).toEqual(['w1', 'w2', 'p1', 'p2']);
+  });
+});
+
 describe('MessengerRouter /switch', () => {
   const personalLink = {
     activeAgentId: 'agt_main',
@@ -1117,7 +2048,7 @@ describe('MessengerRouter /switch', () => {
     ]);
     // `fetchUserAgents` pins the inbox/LobeAI first; the switch lands on it.
     vi.spyOn(MessengerRouter.prototype as any, 'fetchUserAgents').mockResolvedValue([
-      { id: 'agt_inbox', title: 'LobeAI' },
+      { id: 'agt_inbox', isPrivate: false, title: 'LobeAI' },
     ]);
 
     const router = new MessengerRouter();
@@ -1153,5 +2084,253 @@ describe('MessengerRouter /switch', () => {
         }),
       }),
     );
+  });
+});
+
+/**
+ * @example Guest /agents and /switch replies contain only a DM instruction.
+ */
+describe('MessengerRouter Telegram Guest command privacy', () => {
+  // ROOT CAUSE:
+  //
+  // Guest Mode disables interactive pickers, so runAgentsCommand and
+  // runSwitchCommand fell through to text lists and selection confirmations.
+  // replyToMessage publishes those replies in the originating chat, revealing
+  // private names and the active selection to other chat participants.
+  // The fix redirects Guest commands before reading lists or changing state.
+  /**
+   * @example /agents 2 in a Guest chat must not switch or expose Private Agent B.
+   * @example /switch in a Guest chat must not list Private Workspace.
+   */
+  it.each([
+    '/agents',
+    '/agents 1',
+    '/agents 2',
+    '/agents 99',
+    '/switch',
+    '/switch 1',
+    '/switch 2',
+    '/switch 99',
+  ])('redirects Guest %s to DM without exposing or changing personal state', async (text) => {
+    // Restore earlier grouping spies so these cases exercise real list rendering
+    // against the database boundary mocks when run on the unfixed source.
+    const fetchUserAgents = Reflect.get(MessengerRouter.prototype, 'fetchUserAgents');
+    if (vi.isMockFunction(fetchUserAgents)) fetchUserAgents.mockRestore();
+    mockListMessengerBindableAgents.mockResolvedValue([
+      { id: 'agt_a', isPrivate: true, title: 'Private Agent A' },
+      { id: 'agt_b', isPrivate: true, title: 'Private Agent B' },
+    ]);
+    mockListUserWorkspaces.mockResolvedValue([
+      { id: 'workspace-1', name: 'Private Workspace', role: 'owner' },
+    ]);
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_a',
+      id: 'link_1',
+      platformUserId: '123',
+      tenantId: '',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    mockTelegramBinder.isOneShotMessage.mockReturnValue(true);
+    const handler = mockChatBot.onNewMention.mock.calls[0][0];
+    const message = fakeMessage({
+      author: { isBot: false, userId: '123', userName: 'alice' },
+      isMention: true,
+      raw: { guest_query_id: 'gq-private-command' },
+      text,
+    });
+    await handler(
+      { id: 'telegram:guest:-100123:bot:999:message:55', isDM: false, post: vi.fn() },
+      message,
+    );
+
+    /** @example Exactly one safe reply, without lists, active markers or selection feedback. */
+    expect(mockTelegramBinder.replyToMessage.mock.calls).toEqual([
+      [
+        message,
+        `Open your direct message with the LobeHub bot and send \`${text.split(' ')[0]}\` there.`,
+      ],
+    ]);
+    /** @example No picker or extra DM is sent while answering the Guest query. */
+    expect(mockTelegramBinder.sendAgentPicker).not.toHaveBeenCalled();
+    /** @example The user opens the DM explicitly; the bot does not initiate one. */
+    expect(mockTelegramBinder.sendDmText).not.toHaveBeenCalled();
+    /** @example /agents 2 cannot change the user's active agent from a Guest chat. */
+    expect(mockSetActiveAgentById).not.toHaveBeenCalled();
+    /** @example /switch 2 cannot change the user's active workspace from a Guest chat. */
+    expect(mockSetActiveScope).not.toHaveBeenCalled();
+  });
+
+  /** @example Ordinary Telegram bot DMs continue showing the requested picker. */
+  it.each(['/agents', '/switch'])('keeps %s available in an ordinary Telegram DM', async (text) => {
+    const fetchUserAgents = Reflect.get(MessengerRouter.prototype, 'fetchUserAgents');
+    if (vi.isMockFunction(fetchUserAgents)) fetchUserAgents.mockRestore();
+    mockListMessengerBindableAgents.mockResolvedValue([
+      { id: 'agt_a', isPrivate: true, title: 'Private Agent A' },
+    ]);
+    await loadTelegramBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_a',
+      id: 'link_1',
+      platformUserId: '123',
+      tenantId: '',
+      userId: 'user_alice',
+      workspaceId: null,
+    });
+    const handler = mockChatBot.onNewMention.mock.calls[0][0];
+    await handler(
+      { id: 'telegram:123', isDM: true, post: vi.fn() },
+      fakeMessage({ author: { isBot: false, userId: '123', userName: 'alice' }, text }),
+    );
+
+    /** @example The picker remains usable and visible only inside the DM. */
+    expect(mockTelegramBinder.sendAgentPicker).toHaveBeenCalledWith(
+      '123',
+      expect.objectContaining({ ephemeralTo: undefined }),
+    );
+    /** @example Ordinary DM commands never consume a Guest query. */
+    expect(mockTelegramBinder.replyToMessage).not.toHaveBeenCalled();
+  });
+});
+
+describe('MessengerRouter overlapping messages', () => {
+  const wechatLink = {
+    activeAgentId: 'agt_main',
+    id: 'link_wechat',
+    platformUserId: 'wechat-user',
+    tenantId: 'wechat-user',
+    userId: 'user_alice',
+    workspaceId: null,
+  };
+
+  const chatConfig = () => (Chat as unknown as { mock: { calls: any[][] } }).mock.calls.at(-1)![0];
+
+  it('collects a burst window on WeChat instead of dispatching each message alone', async () => {
+    // WeChat sends an image and the sentence about it as two webhooks a few
+    // hundred ms apart. Without the window the picture starts its own run and
+    // the sentence arrives while that run still owns the topic.
+    await loadWechatBot();
+
+    expect(chatConfig().concurrency).toEqual({
+      debounceMs: expect.any(Number),
+      strategy: 'burst',
+    });
+  });
+
+  it('keeps the plain queue on platforms that send media together with its caption', async () => {
+    await loadSlackBot();
+
+    expect(chatConfig().concurrency).toBe('queue');
+  });
+
+  it('folds the collected messages into the single turn handed to the agent', async () => {
+    await loadWechatBot();
+    mockFindLink.mockResolvedValue(wechatLink);
+
+    const handler = mockChatBot.onSubscribedMessage.mock.calls.at(-1)![0] as (
+      thread: any,
+      msg: any,
+      context?: any,
+    ) => Promise<void>;
+    await handler(fakeWechatDmThread(), fakeMessage({ id: 'm2', text: '参考这个风格说话' }), {
+      skipped: [fakeMessage({ attachments: [{ type: 'image' }], id: 'm1', text: '' })],
+      totalSinceLastHandler: 2,
+    });
+
+    expect(mockHandleSubscribed).toHaveBeenCalledTimes(1);
+    const dispatched = mockHandleSubscribed.mock.calls[0][1];
+    expect(dispatched.text).toBe('参考这个风格说话');
+    // The image rides along instead of being answered as its own turn, and each
+    // source stays reachable so its media can still be downloaded.
+    expect(dispatched.attachments).toEqual([{ type: 'image' }]);
+    expect(dispatched.sourceMessages.map((m: any) => m.id)).toEqual(['m1', 'm2']);
+  });
+
+  it.each(['onSubscribedMessage', 'onNewMention'] as const)(
+    '%s never dispatches another sender content under the linked owner',
+    async (entry) => {
+      await loadSlackBot();
+      mockFindLink.mockResolvedValue({
+        activeAgentId: 'agt_main',
+        id: 'link_1',
+        platformUserId: 'U_ALICE',
+        tenantId: 'T_ACME',
+        userId: 'user_alice',
+      });
+      const handler = mockChatBot[entry].mock.calls.at(-1)![0];
+      await handler(
+        fakeChannelThread(),
+        fakeMessage({ id: 'owner', isMention: true, text: 'owner request' }),
+        {
+          skipped: [
+            fakeMessage({
+              author: { isBot: false, userId: 'U_OTHER', userName: 'other' },
+              id: 'other',
+              isMention: true,
+              text: 'untrusted instruction',
+              attachments: [{ type: 'image' }],
+            }),
+          ],
+          totalSinceLastHandler: 2,
+        },
+      );
+      const dispatch = entry === 'onSubscribedMessage' ? mockHandleSubscribed : mockHandleMention;
+      expect(dispatch).toHaveBeenCalledTimes(1);
+      expect(dispatch.mock.calls[0][1].text).toBe('owner request');
+      expect(dispatch.mock.calls[0][1].attachments ?? []).toEqual([]);
+      expect(mockAppendToList).toHaveBeenCalledWith(
+        expect.any(String),
+        'U_OTHER',
+        expect.any(Object),
+      );
+    },
+  );
+
+  it('does not use another sender mention to wake an unmentioned owner turn', async () => {
+    await loadSlackBot();
+    mockGetList.mockResolvedValue(['U_ALICE', 'U_OTHER']);
+    const handler = mockChatBot.onSubscribedMessage.mock.calls.at(-1)![0];
+    await handler(
+      fakeChannelThread(),
+      fakeMessage({ id: 'owner', isMention: false, text: 'owner chatter' }),
+      {
+        skipped: [
+          fakeMessage({
+            author: { isBot: false, userId: 'U_OTHER', userName: 'other' },
+            id: 'other',
+            isMention: true,
+          }),
+        ],
+        totalSinceLastHandler: 2,
+      },
+    );
+    expect(mockHandleSubscribed).not.toHaveBeenCalled();
+    expect(mockFindLink).not.toHaveBeenCalled();
+  });
+
+  it('treats a mention anywhere in the collected turn as addressed to the bot', async () => {
+    // The last message of a burst usually carries the question without the `@`.
+    await loadSlackBot();
+    mockFindLink.mockResolvedValue({
+      activeAgentId: 'agt_main',
+      id: 'link_1',
+      platformUserId: 'U_ALICE',
+      tenantId: 'T_ACME',
+      userId: 'user_alice',
+    });
+    mockGetList.mockResolvedValue(['U_ALICE', 'U_BOB']);
+
+    const handler = mockChatBot.onSubscribedMessage.mock.calls.at(-1)![0] as (
+      thread: any,
+      msg: any,
+      context?: any,
+    ) => Promise<void>;
+    await handler(fakeChannelThread(), fakeMessage({ id: 'm2', isMention: false }), {
+      skipped: [fakeMessage({ id: 'm1', isMention: true, text: '<@U_BOT> 看看这个' })],
+      totalSinceLastHandler: 2,
+    });
+
+    expect(mockHandleSubscribed).toHaveBeenCalledTimes(1);
   });
 });

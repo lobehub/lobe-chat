@@ -1,18 +1,9 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import type { DeviceListItem } from '@lobechat/types';
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  Flexbox,
-  Icon,
-  Input,
-  SortableList,
-  Tag,
-  Text,
-} from '@lobehub/ui';
+import type { DeviceListItem, DeviceWorkspaceShare } from '@lobechat/types';
+import { Flexbox, Icon, Input, SortableList } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, confirmModal, Tag, Text, toast } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import dayjs from 'dayjs';
 import { FolderOpenIcon, FolderPlusIcon, LockIcon, XIcon } from 'lucide-react';
@@ -21,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
-import { lambdaQuery } from '@/libs/trpc/client';
+import { createWorkspaceLambdaClient, lambdaQuery } from '@/libs/trpc/client';
 import { deviceService } from '@/services/device';
 import { electronSystemService } from '@/services/electron/system';
 import { nextWorkingDirs } from '@/store/device';
@@ -37,7 +28,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   dot: css`
     flex: none;
-
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -166,9 +156,7 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
   };
 
   const handleAddRecent = async () => {
-    // This machine: browse natively. A remote / non-current device isn't
-    // browsable from here, so fall back to manual absolute-path entry (the same
-    // modal the chat control bar uses), statting the path on the target device.
+    // Browse this machine natively; other devices use the shared remote browser.
     if (canBrowse) {
       const result = await electronSystemService.selectFolder({
         title: t('devices.detail.addDir'),
@@ -178,6 +166,8 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
     }
 
     openAddWorkingDirModal({
+      defaultPath: device.defaultCwd || undefined,
+      deviceId: device.deviceId,
       onSubmit: async (path) => {
         const result = await deviceService.statPath(device.deviceId, path);
         if (result) {
@@ -197,6 +187,31 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
       workingDirs: device.workingDirs.filter((d) => d.path !== path),
     });
   };
+
+  // Revoke one workspace share of a personal device. The share
+  // entry's `deviceId` is the workspace-scoped twin, removed via the
+  // workspace-scoped mutation under an explicitly pinned workspace client —
+  // the personal settings page has no active workspace context to inherit.
+  const handleRevokeShare = (share: DeviceWorkspaceShare) =>
+    confirmModal({
+      content: t('devices.share.revokeConfirmDesc'),
+      okButtonProps: { danger: true },
+      okText: t('devices.share.revoke'),
+      onOk: async () => {
+        try {
+          await createWorkspaceLambdaClient(share.workspaceId).device.removeWorkspaceDevice.mutate({
+            deviceId: share.deviceId,
+          });
+          refreshDeviceList();
+        } catch (error) {
+          toast.error((error as Error).message);
+          throw error;
+        }
+      },
+      title: t('devices.share.revokeConfirmTitle', {
+        name: share.workspaceName ?? share.workspaceId,
+      }),
+    });
 
   const handleReorderRecent = (items: { id: string }[]) => {
     // SortableList items are keyed by path; map ids back to their entries so the
@@ -219,7 +234,9 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
           </Text>
           <Flexbox horizontal align={'center'} gap={8}>
             <Tag color={online ? 'success' : 'default'} size={'small'}>
-              {online ? t('devices.status.online') : t('devices.status.offline')}
+              {online
+                ? t('devices.status.onlineConnections', { count: channels.length })
+                : t('devices.status.offline')}
             </Tag>
             {isCurrent && <Tag size={'small'}>{t('devices.currentBadge')}</Tag>}
           </Flexbox>
@@ -252,6 +269,31 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
                 t('workspaceSetting.devices.unknownEnroller')}
             </Text>
           </Flexbox>
+        </Flexbox>
+      )}
+
+      {/* ─── Shared to workspaces (personal only) ─── */}
+      {device.scope === 'personal' && !!device.sharedWorkspaces?.length && (
+        <Flexbox gap={8}>
+          <FieldLabel>{t('devices.share.detailLabel')}</FieldLabel>
+          {device.sharedWorkspaces.map((share) => (
+            <Flexbox horizontal align={'center'} gap={8} key={share.workspaceId}>
+              <Text ellipsis style={{ flex: 1, minWidth: 0 }}>
+                {share.workspaceName ?? share.workspaceId}
+              </Text>
+              <Tag size={'small'}>
+                {share.visibility === 'private'
+                  ? t('devices.share.visibilityTag.private')
+                  : t('devices.share.visibilityTag.public')}
+              </Tag>
+              <ActionIcon
+                icon={XIcon}
+                size={'small'}
+                title={t('devices.share.revoke')}
+                onClick={() => handleRevokeShare(share)}
+              />
+            </Flexbox>
+          ))}
         </Flexbox>
       )}
 

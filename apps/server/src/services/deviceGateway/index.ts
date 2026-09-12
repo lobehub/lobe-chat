@@ -1,14 +1,19 @@
 import { type DeviceAttachment } from '@lobechat/builtin-tool-remote-device';
 import {
+  describeGatewayRequestFailure,
   type DeviceMessageApiResult,
   type DeviceStatusResult,
   type DeviceSystemInfo,
   type DeviceToolCallResult,
   GatewayHttpClient,
-  type GatewayMcpStdioParams,
+  type GatewayMcpParams,
 } from '@lobechat/device-gateway-client';
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
+import type { ClaudeCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
 import type {
+  DeviceCopyAssetForPublishResult,
+  DeviceDirectoryBrowseResult,
+  DeviceExternalAssetForPublishResult,
   DeviceGitAddWorktreeResult,
   DeviceGitAheadBehind,
   DeviceGitBranchDiffPatches,
@@ -30,10 +35,13 @@ import type {
   DeviceLocalFilePreviewResult,
   DeviceMoveProjectFileItem,
   DeviceMoveProjectFileResultItem,
+  DeviceProjectDirectoryListResult,
   DeviceProjectFileIndexResult,
   DeviceProjectFileSearchResult,
   DeviceRenameProjectFileResult,
+  DeviceUnavailableErrorData,
   DeviceWriteProjectFileResult,
+  HeterogeneousAgentModelCatalog,
   ProjectSkillMeta,
   WorkspaceInitResult,
 } from '@lobechat/types';
@@ -82,8 +90,48 @@ const assertPathsWithinWorkspace = (
 
 export type { DeviceAttachment, DeviceStatusResult, DeviceSystemInfo };
 
+/** One extra attempt for a device read; see `readDevices`. */
+const DEVICE_READ_ATTEMPTS = 2;
+const DEVICE_READ_RETRY_DELAY_MS = 250;
+
 export class DeviceGateway {
   private client: GatewayHttpClient | null = null;
+
+  /**
+   * Run a device READ, retrying once and reporting the fallback out loud.
+   *
+   * These reads decide which devices a run may reach, and the fallback value is
+   * indistinguishable from a legitimately empty pool: a single dropped
+   * connection therefore reads as "every device is offline", which sends a
+   * device-bound run to the cloud sandbox instead. Retrying absorbs the blip,
+   * and the warning leaves the breadcrumb that was missing entirely — the old
+   * bare `catch {}` made this failure invisible in every log.
+   */
+  private async readDevices<T>(
+    label: string,
+    context: { userId: string; workspaceId?: string },
+    read: () => Promise<T>,
+    fallback: T,
+  ): Promise<T> {
+    for (let attempt = 1; attempt <= DEVICE_READ_ATTEMPTS; attempt++) {
+      try {
+        return await read();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (attempt < DEVICE_READ_ATTEMPTS) {
+          await new Promise((resolve) => setTimeout(resolve, DEVICE_READ_RETRY_DELAY_MS));
+          continue;
+        }
+        console.warn(`[DeviceGateway] ${label} failed; treating the online set as empty`, {
+          attempts: attempt,
+          error: message,
+          userId: context.userId,
+          workspaceId: context.workspaceId,
+        });
+      }
+    }
+    return fallback;
+  }
 
   get isConfigured(): boolean {
     return !!gatewayEnv.DEVICE_GATEWAY_URL;
@@ -93,11 +141,12 @@ export class DeviceGateway {
     const client = this.getClient();
     if (!client) return { deviceCount: 0, online: false };
 
-    try {
-      return await client.queryDeviceStatus(userId, workspaceId);
-    } catch {
-      return { deviceCount: 0, online: false };
-    }
+    return this.readDevices(
+      'queryDeviceStatus',
+      { userId, workspaceId },
+      () => client.queryDeviceStatus(userId, workspaceId),
+      { deviceCount: 0, online: false },
+    );
   }
 
   // Pass a `workspaceId` to address a workspace-owned device pool (the gateway
@@ -106,28 +155,43 @@ export class DeviceGateway {
     const client = this.getClient();
     if (!client) return [];
 
-    try {
-      const devices = await client.queryDeviceList(userId, workspaceId);
-      // The gateway already dedupes to one entry per physical device, with its
-      // live connections nested as `channels`. Map to the runtime shape; every
-      // returned device has at least one channel, so it's online.
-      return devices.map((d) => ({
-        // `channels` may be absent if the gateway worker deploy lags behind the
-        // server (separate Cloudflare deploy); tolerate the legacy flat shape.
-        channels: (d.channels ?? []).map((c) => ({
-          channel: c.channel,
-          connectedAt: new Date(c.connectedAt).toISOString(),
-          connectionId: c.connectionId,
-        })),
-        deviceId: d.deviceId,
-        hostname: d.hostname,
-        lastSeen: new Date(d.connectedAt).toISOString(),
-        online: true,
-        platform: d.platform,
-      }));
-    } catch {
-      return [];
-    }
+    return this.readDevices(
+      'queryDeviceList',
+      { userId, workspaceId },
+      async () => {
+        const devices = await client.queryDeviceList(userId, workspaceId);
+        // The gateway already dedupes to one entry per physical device, with its
+        // live connections nested as `channels`. Map to the runtime shape; every
+        // returned device has at least one channel, so it's online.
+        return devices.map((d) => ({
+          // `channels` may be absent if the gateway worker deploy lags behind the
+          // server (separate Cloudflare deploy); tolerate the legacy flat shape.
+          //
+          // Sorted newest-first because every consumer reads `channels[0]` as
+          // "this device's current connection" — the settings row's
+          // "Connected {time}", a ghost row's `lastSeen`, its hostname/platform
+          // fallback — while `sortDevicesByActivity` ranks by the FRESHEST
+          // channel. The gateway promises no order, so leaving it raw lets a
+          // multi-channel device rank by one connection and get labelled with
+          // another. Normalising here (the single entry point both `listDevices`
+          // and `getScopedOnlineDevices` pull channels through) makes
+          // `channels[0]` mean the same thing everywhere.
+          channels: (d.channels ?? [])
+            .map((c) => ({
+              channel: c.channel,
+              connectedAt: new Date(c.connectedAt).toISOString(),
+              connectionId: c.connectionId,
+            }))
+            .sort((a, b) => Date.parse(b.connectedAt) - Date.parse(a.connectedAt)),
+          deviceId: d.deviceId,
+          hostname: d.hostname,
+          lastSeen: new Date(d.connectedAt).toISOString(),
+          online: true,
+          platform: d.platform,
+        }));
+      },
+      [],
+    );
   }
 
   async queryDeviceSystemInfo(
@@ -247,11 +311,103 @@ export class DeviceGateway {
   }
 
   /**
-   * Generic helper for the granular git read RPCs (branch / PR / working-tree /
-   * ahead-behind). Returns `undefined` when the gateway is unconfigured, the
-   * device is offline, or the call fails — callers treat that as "unknown".
+   * Instruct an ONLINE personal device to enroll itself into a workspace: the
+   * device derives its workspace-scoped deviceId and opens a second gateway
+   * connection under the `workspace:<id>` principal using the short-lived
+   * `token` (a signed workspace-device connect token), then returns the derived
+   * identity so the caller can register the workspace row server-side. Rides
+   * the generic device RPC relay over the PERSONAL pool (no `workspaceId` in
+   * the address — the workspace connection doesn't exist yet). Failures are
+   * RETURNED with their reason — the share flow must tell the user why the
+   * device couldn't enroll (offline, outdated client) instead of silently
+   * doing nothing.
    */
-  private async invokeGitRead<T>(
+  async enrollWorkspace(params: {
+    deviceId: string;
+    /**
+     * Dry-run: the device only derives and returns its workspace identity,
+     * without opening a share connection or persisting enrollment state.
+     * Older clients ignore the flag and enroll on the probe (pre-flag
+     * behaviour), so callers must treat the probe as possibly-enrolling.
+     */
+    identityOnly?: boolean;
+    timeout?: number;
+    token: string;
+    userId: string;
+    workspaceId: string;
+  }): Promise<{
+    error?: string;
+    identity?: { deviceId: string; identitySource: 'fallback' | 'machine-id' };
+    success: boolean;
+  }> {
+    const { deviceId, identityOnly, timeout = 30_000, token, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device Gateway is not configured', success: false };
+
+    try {
+      const result = await client.invokeRpc<{
+        deviceId: string;
+        identitySource: 'fallback' | 'machine-id';
+      }>(
+        { deviceId, timeout, userId },
+        {
+          method: 'enrollWorkspace',
+          params: { ...(identityOnly ? { identityOnly } : {}), token, workspaceId },
+        },
+      );
+
+      if (!result.success || !result.data) {
+        return { error: result.error || 'enrollWorkspace failed', success: false };
+      }
+
+      return { identity: result.data, success: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      log('enrollWorkspace: error for deviceId=%s — %s', deviceId, message);
+      return { error: message, success: false };
+    }
+  }
+
+  /**
+   * Instruct an ONLINE workspace device to drop its enrollment: close the
+   * workspace-principal connection and clear any persisted auto-reconnect state
+   * on the machine. Addressed over the WORKSPACE pool (the connection being
+   * killed), so it works regardless of who enrolled the device or whether a
+   * personal connection exists. Best-effort — callers delete the DB row either
+   * way, so an offline device simply loses its row and stops resolving.
+   */
+  async unenrollWorkspace(params: {
+    deviceId: string;
+    timeout?: number;
+    userId: string;
+    workspaceId: string;
+  }): Promise<{ error?: string; success: boolean }> {
+    const { deviceId, timeout = 10_000, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device Gateway is not configured', success: false };
+
+    try {
+      const result = await client.invokeRpc<{ success: boolean }>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'unenrollWorkspace', params: { workspaceId } },
+      );
+      if (!result.success)
+        return { error: result.error || 'unenrollWorkspace failed', success: false };
+      return { success: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      log('unenrollWorkspace: error for deviceId=%s — %s', deviceId, message);
+      return { error: message, success: false };
+    }
+  }
+
+  /**
+   * Generic helper for granular device read RPCs (git branch / PR /
+   * working-tree / ahead-behind / Claude quota). Returns `undefined` when the
+   * gateway is unconfigured, the device is offline, or the call fails —
+   * callers treat that as "unknown".
+   */
+  private async invokeDeviceRead<T>(
     method: string,
     params: { deviceId: string; timeout?: number; userId: string; workspaceId?: string },
     rpcParams: Record<string, unknown>,
@@ -280,7 +436,9 @@ export class DeviceGateway {
 
   /** Branch name + detached flag for a directory on a remote device. */
   gitBranch(params: { deviceId: string; path: string; userId: string; workspaceId?: string }) {
-    return this.invokeGitRead<DeviceGitBranchInfo>('getGitBranch', params, { path: params.path });
+    return this.invokeDeviceRead<DeviceGitBranchInfo>('getGitBranch', params, {
+      path: params.path,
+    });
   }
 
   /** The GitHub PR linked to a branch in a directory on a remote device. */
@@ -292,7 +450,7 @@ export class DeviceGateway {
     userId: string;
     workspaceId?: string;
   }) {
-    return this.invokeGitRead<DeviceGitLinkedPullRequestResult>('getLinkedPullRequest', params, {
+    return this.invokeDeviceRead<DeviceGitLinkedPullRequestResult>('getLinkedPullRequest', params, {
       branch: params.branch,
       path: params.path,
       pullRequestNumber: params.pullRequestNumber,
@@ -306,15 +464,34 @@ export class DeviceGateway {
     userId: string;
     workspaceId?: string;
   }) {
-    return this.invokeGitRead<DeviceGitWorkingTreeStatus>('getGitWorkingTreeStatus', params, {
+    return this.invokeDeviceRead<DeviceGitWorkingTreeStatus>('getGitWorkingTreeStatus', params, {
       path: params.path,
     });
   }
 
   /** Ahead/behind commit counts for a directory on a remote device. */
   gitAheadBehind(params: { deviceId: string; path: string; userId: string; workspaceId?: string }) {
-    return this.invokeGitRead<DeviceGitAheadBehind>('getGitAheadBehind', params, {
+    return this.invokeDeviceRead<DeviceGitAheadBehind>('getGitAheadBehind', params, {
       path: params.path,
+    });
+  }
+
+  /**
+   * Claude Code subscription quota of the login on a remote device. The device
+   * samples the Anthropic usage API with its local credentials — same sampler
+   * as the desktop IPC path. `undefined` also covers older device clients that
+   * don't know this RPC yet.
+   */
+  claudeCodeQuota(params: {
+    deviceId: string;
+    env?: Record<string, string>;
+    force?: boolean;
+    userId: string;
+    workspaceId?: string;
+  }) {
+    return this.invokeDeviceRead<ClaudeCodeQuotaSnapshot>('getClaudeCodeQuota', params, {
+      env: params.env,
+      force: params.force,
     });
   }
 
@@ -325,9 +502,78 @@ export class DeviceGateway {
     userId: string;
     workspaceId?: string;
   }) {
-    return this.invokeGitRead<DeviceGitWorktreeListItem[]>('listGitWorktrees', params, {
+    return this.invokeDeviceRead<DeviceGitWorktreeListItem[]>('listGitWorktrees', params, {
       path: params.path,
     });
+  }
+
+  /** Query a heterogeneous CLI's model catalog on the device that will execute it. */
+  async listHeterogeneousAgentModels(params: {
+    args?: string[];
+    command?: string;
+    cwd?: string;
+    deviceId: string;
+    env?: Record<string, string>;
+    timeout?: number;
+    type:
+      | 'codebuddy'
+      | 'cursor'
+      | 'devin'
+      | 'droid'
+      | 'grok-build'
+      | 'opencode'
+      | 'pi'
+      | 'qoder'
+      | 'trae';
+    userId: string;
+    workspaceId?: string;
+  }): Promise<HeterogeneousAgentModelCatalog> {
+    const {
+      args,
+      command,
+      cwd,
+      deviceId,
+      env,
+      timeout = 20_000,
+      type,
+      userId,
+      workspaceId,
+    } = params;
+    const client = this.getClient();
+    const unavailable = (message: string): HeterogeneousAgentModelCatalog => ({
+      error: { code: 'device_unavailable', message },
+      status: 'error',
+      updatedAt: Date.now(),
+    });
+    if (!client) return unavailable('Device gateway is not configured');
+
+    try {
+      const result = await client.invokeRpc<HeterogeneousAgentModelCatalog>(
+        { deviceId, timeout, userId, workspaceId },
+        {
+          method: 'listHeterogeneousAgentModels',
+          params: { args, command, cwd, env, type },
+        },
+      );
+
+      if (!result.success || !result.data) {
+        const message = result.error || 'The device did not return a model catalog';
+        const unsupported =
+          message.includes('does not support heterogeneous agent model discovery') ||
+          message.includes('Unknown device RPC method');
+        log('listHeterogeneousAgentModels: failed for deviceId=%s — %s', deviceId, message);
+        return {
+          error: { code: unsupported ? 'unsupported_client' : 'device_unavailable', message },
+          status: 'error',
+          updatedAt: Date.now(),
+        };
+      }
+
+      return result.data;
+    } catch (error) {
+      log('listHeterogeneousAgentModels: error for deviceId=%s — %O', deviceId, error);
+      return unavailable(error instanceof Error ? error.message : 'Device model discovery failed');
+    }
   }
 
   /**
@@ -739,12 +985,92 @@ export class DeviceGateway {
   }
 
   /**
+   * Children of one directory inside a project on a remote device via the
+   * `listProjectDirectory` device RPC — expands a row the index collapsed.
+   */
+  async listProjectDirectory(params: {
+    deviceId: string;
+    relativePath: string;
+    root: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceProjectDirectoryListResult | undefined> {
+    const { userId, deviceId, relativePath, root, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceProjectDirectoryListResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'listProjectDirectory', params: { relativePath, root } },
+      );
+
+      if (!result.success || !result.data) {
+        log('listProjectDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+        return undefined;
+      }
+
+      return result.data;
+    } catch (error) {
+      log('listProjectDirectory: error for deviceId=%s — %O', deviceId, error);
+      return undefined;
+    }
+  }
+
+  /** List one directory level on a remote execution device for folder pickers. */
+  async browseDirectory(params: {
+    cursor?: string;
+    deviceId: string;
+    limit?: number;
+    path?: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceDirectoryBrowseResult | undefined> {
+    const {
+      cursor,
+      deviceId,
+      limit,
+      path: directoryPath,
+      timeout = 10_000,
+      userId,
+      workspaceId,
+    } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceDirectoryBrowseResult>(
+        { deviceId, timeout, userId, workspaceId },
+        {
+          method: 'browseDirectory',
+          params: { cursor, limit, path: directoryPath },
+        },
+      );
+
+      if (!result.success || !result.data) {
+        log('browseDirectory: failed for deviceId=%s', deviceId);
+        return undefined;
+      }
+
+      return result.data;
+    } catch (error) {
+      const errorType = error instanceof Error ? error.name : typeof error;
+      log('browseDirectory: error for deviceId=%s (%s)', deviceId, errorType);
+      return undefined;
+    }
+  }
+
+  /**
    * Project file search for a directory on a remote device via the
    * `searchProjectFiles` device RPC. The device performs matching and returns a
    * compact tree subset with ancestor directories.
    */
   async searchProjectFiles(params: {
+    changedOnly?: boolean;
     deviceId: string;
+    excludeIgnored?: boolean;
     limit?: number;
     query: string;
     scope: string;
@@ -752,14 +1078,27 @@ export class DeviceGateway {
     userId: string;
     workspaceId?: string;
   }): Promise<DeviceProjectFileSearchResult | undefined> {
-    const { userId, deviceId, limit, query, scope, timeout = 30_000, workspaceId } = params;
+    const {
+      changedOnly,
+      userId,
+      deviceId,
+      excludeIgnored,
+      limit,
+      query,
+      scope,
+      timeout = 30_000,
+      workspaceId,
+    } = params;
     const client = this.getClient();
     if (!client) return undefined;
 
     try {
       const result = await client.invokeRpc<DeviceProjectFileSearchResult>(
         { deviceId, timeout, userId, workspaceId },
-        { method: 'searchProjectFiles', params: { limit, query, scope } },
+        {
+          method: 'searchProjectFiles',
+          params: { changedOnly, excludeIgnored, limit, query, scope },
+        },
       );
 
       if (!result.success || !result.data) {
@@ -817,6 +1156,63 @@ export class DeviceGateway {
       return result.data;
     } catch (error) {
       log('getLocalFilePreview: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async copyAssetForPublish(params: {
+    deviceId: string;
+    from: string;
+    timeout?: number;
+    to: string;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCopyAssetForPublishResult> {
+    const { userId, deviceId, from, to, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    assertPathsWithinWorkspace(workingDirectory, [to]);
+
+    try {
+      const result = await client.invokeRpc<DeviceCopyAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'copyAssetForPublish', params: { from, to, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to copy publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('copyAssetForPublish: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async readExternalAssetForPublish(params: {
+    deviceId: string;
+    path: string;
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceExternalAssetForPublishResult> {
+    const { userId, deviceId, path, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    try {
+      const result = await client.invokeRpc<DeviceExternalAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'readExternalAssetForPublish', params: { path, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to read external publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('readExternalAssetForPublish: error for deviceId=%s — %O', deviceId, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -1085,6 +1481,7 @@ export class DeviceGateway {
 
   async dispatchAgentRun(params: {
     agentType: HeterogeneousAgentType;
+    assistantMessageId: string;
     /** Resolved `lh hetero exec` wrapper args. */
     args?: string[];
     cwd?: string;
@@ -1094,12 +1491,15 @@ export class DeviceGateway {
     jwt: string;
     operationId: string;
     prompt: string;
+    resumeFallbackSystemContext?: string;
     resumeSessionId?: string;
     systemContext?: string;
     topicId: string;
     userId: string;
     workspaceId?: string;
-  }): Promise<{ error?: string; success: boolean }> {
+    /** Topic/run workspace forwarded to the device for hetero ingest. */
+    ingestWorkspaceId?: string;
+  }): Promise<{ error?: string; errorData?: DeviceUnavailableErrorData; success: boolean }> {
     const client = this.getClient();
     if (!client) return { error: 'GATEWAY_NOT_CONFIGURED', success: false };
 
@@ -1149,14 +1549,19 @@ export class DeviceGateway {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log('executeToolCall: error — %s', message);
-      return { content: `Device tool call error: ${message}`, error: message, success: false };
+      // Backstop for anything the http client did not already describe. A raw
+      // `TimeoutError` / driver message here reads to the model as if the tool
+      // itself blew up; name the failing hop and its recovery instead.
+      const failure = describeGatewayRequestFailure(error, 'tool call');
+      return { content: failure.content, error: failure.error, success: false };
     }
   }
 
   /**
-   * Tunnel a stdio MCP tool call to a connected device. The cloud server can't
-   * spawn the user's local MCP binary, so the command/args/env are forwarded
-   * to the device, which spawns the stdio server and runs the call locally.
+   * Tunnel an MCP tool call to a connected device, for MCP servers only the
+   * device can reach: stdio (the cloud can't spawn the user's local binary)
+   * and localhost / LAN HTTP endpoints (the cloud's fetch can't reach them).
+   * The connection params are forwarded so the device runs the call locally.
    */
   async executeMcpCall(
     mcpCall: {
@@ -1164,7 +1569,7 @@ export class DeviceGateway {
       arguments: string;
       deviceId: string;
       identifier: string;
-      params: GatewayMcpStdioParams;
+      params: GatewayMcpParams;
       userId: string;
       workspaceId?: string;
     },
@@ -1192,7 +1597,8 @@ export class DeviceGateway {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log('executeMcpCall: error — %s', message);
-      return { content: `Device MCP call error: ${message}`, error: message, success: false };
+      const failure = describeGatewayRequestFailure(error, 'tool call');
+      return { content: failure.content, error: failure.error, success: false };
     }
   }
 

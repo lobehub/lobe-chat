@@ -42,22 +42,13 @@ vi.mock('electron', () => ({
   protocol: mockProtocol,
 }));
 
-vi.mock('fs-extra', () => ({
-  pathExistsSync: mockPathExistsSync,
+vi.mock('node:fs', () => ({
+  existsSync: mockPathExistsSync,
 }));
 
 vi.mock('node:fs/promises', () => ({
   readFile: mockReadFile,
   stat: mockStat,
-}));
-
-vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  }),
 }));
 
 describe('RendererProtocolManager + StaticRendererFallback', () => {

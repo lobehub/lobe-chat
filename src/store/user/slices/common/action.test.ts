@@ -6,6 +6,7 @@ import type * as SWRLib from '@/libs/swr';
 import { taskTemplateKeys, userKeys } from '@/libs/swr/keys';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
+import { readUserDisplaySnapshot, writeUserDisplaySnapshot } from '@/store/user/displaySnapshot';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { type GlobalServerConfig } from '@/types/serverConfig';
 import { type UserInitializationState, type UserPreference } from '@/types/user';
@@ -16,8 +17,6 @@ import { isTaskTemplateRecommendationKey } from './action';
 const swrMocks = vi.hoisted(() => ({
   mutate: vi.fn(),
 }));
-
-vi.mock('zustand/traditional');
 
 vi.mock('@/libs/swr', async (importOriginal) => {
   const actual = await importOriginal<typeof SWRLib>();
@@ -37,6 +36,7 @@ vi.mock('swr', async (importOriginal) => {
 });
 
 beforeEach(() => {
+  localStorage.clear();
   swrMocks.mutate.mockReset();
   swrMocks.mutate.mockResolvedValue(undefined);
 });
@@ -268,6 +268,50 @@ describe('createCommonSlice', () => {
       });
     });
 
+    it('should persist the authoritative avatar and preference for the returned user', async () => {
+      const { result } = renderHook(() => useUserStore());
+      const mockUserState: UserInitializationState = {
+        avatar: 'avatar-a',
+        preference: { lab: { enableProjects: true } },
+        settings: {},
+        userId: 'user-a',
+      };
+
+      vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
+
+      renderHook(() => result.current.useInitUserState(true, mockServerConfig), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(readUserDisplaySnapshot('user-a')).toEqual({
+          avatar: 'avatar-a',
+          preference: { lab: { enableProjects: true } },
+        });
+      });
+      expect(readUserDisplaySnapshot('user-b')).toBeUndefined();
+    });
+
+    it('should clear a previously cached avatar when the authoritative state has none', async () => {
+      const { result } = renderHook(() => useUserStore());
+      const mockUserState: UserInitializationState = {
+        preference: { lab: { enableProjects: true } },
+        settings: {},
+        userId: 'user-a',
+      };
+
+      vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
+
+      writeUserDisplaySnapshot('user-a', { avatar: 'stale-avatar' });
+      renderHook(() => result.current.useInitUserState(true, mockServerConfig), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(readUserDisplaySnapshot('user-a')?.avatar).toBe('');
+      });
+    });
+
     it('should handle the case when user state have avatar', async () => {
       const { result } = renderHook(() => useUserStore());
       const mockUserState: UserInitializationState = {
@@ -303,8 +347,7 @@ describe('createCommonSlice', () => {
       const mockUserState: UserInitializationState = {
         userId: 'user-id',
         isOnboard: false,
-        // No onboarding.finishedAt and no agentOnboarding.finishedAt:
-        // user is still in the shared-prefix flow.
+        // No onboarding.finishedAt: user is still in the onboarding flow.
         preference: {} as any,
         settings: { general: { fontSize: 14 } },
       };

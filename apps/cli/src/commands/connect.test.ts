@@ -1,5 +1,22 @@
+import { GatewayClient } from '@lobechat/device-gateway-client';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { resolveToken } from '../auth/resolveToken';
+import { removeStatus, spawnDaemon, stopDaemon, writeStatus } from '../daemon/manager';
+import type * as DeviceRegister from '../device/register';
+import { loadSettings, saveSettings } from '../settings';
+import { executeToolCall } from '../tools';
+import { cleanupAllProcesses } from '../tools/shell';
+import { log, setVerbose } from '../utils/logger';
+import { registerConnectCommand } from './connect';
+
+const registerDeviceMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+
+vi.mock('../device/register', async (importOriginal) => {
+  const actual = await importOriginal<typeof DeviceRegister>();
+  return { ...actual, registerDevice: registerDeviceMock };
+});
 
 vi.mock('../auth/refresh', () => ({
   getValidToken: vi.fn().mockResolvedValue({
@@ -15,22 +32,14 @@ vi.mock('../auth/resolveToken', () => ({
   }),
 }));
 vi.mock('../settings', () => ({
+  addWorkspaceEnrollment: vi.fn(),
   loadOrCreateConnectionId: vi.fn().mockReturnValue('test-connection-id'),
   loadSettings: vi.fn().mockReturnValue(null),
+  // Default: no persisted workspace shares, so runConnect skips the restore path.
+  loadWorkspaceEnrollments: vi.fn().mockReturnValue([]),
   normalizeUrl: vi.fn((url?: string) => (url ? url.replace(/\/$/, '') : undefined)),
+  removeWorkspaceEnrollment: vi.fn(),
   saveSettings: vi.fn(),
-}));
-
-vi.mock('../utils/logger', () => ({
-  log: {
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    toolCall: vi.fn(),
-    toolResult: vi.fn(),
-    warn: vi.fn(),
-  },
-  setVerbose: vi.fn(),
 }));
 
 vi.mock('../tools/shell', () => ({
@@ -47,6 +56,7 @@ vi.mock('../daemon/manager', () => ({
   readStatus: vi.fn().mockImplementation(() => mockStatus),
   removePid: vi.fn(),
   removeStatus: vi.fn(),
+  reportDaemonStartupReady: vi.fn().mockResolvedValue(undefined),
   spawnDaemon: vi.fn().mockImplementation(() => {
     mockSpawnedPid = 99999;
     return mockSpawnedPid;
@@ -100,24 +110,6 @@ vi.mock('@lobechat/device-gateway-client', () => ({
     };
   }),
 }));
-
-// eslint-disable-next-line import-x/first
-import { GatewayClient } from '@lobechat/device-gateway-client';
-
-// eslint-disable-next-line import-x/first
-import { resolveToken } from '../auth/resolveToken';
-// eslint-disable-next-line import-x/first
-import { removeStatus, spawnDaemon, stopDaemon, writeStatus } from '../daemon/manager';
-// eslint-disable-next-line import-x/first
-import { loadSettings, saveSettings } from '../settings';
-// eslint-disable-next-line import-x/first
-import { executeToolCall } from '../tools';
-// eslint-disable-next-line import-x/first
-import { cleanupAllProcesses } from '../tools/shell';
-// eslint-disable-next-line import-x/first
-import { log, setVerbose } from '../utils/logger';
-// eslint-disable-next-line import-x/first
-import { registerConnectCommand } from './connect';
 
 describe('connect command', () => {
   let exitSpy: ReturnType<typeof vi.spyOn>;
@@ -226,11 +218,22 @@ describe('connect command', () => {
       type: 'tool_call_request',
     });
 
-    expect(executeToolCall).toHaveBeenCalledWith('readLocalFile', '{"path":"/test"}');
+    expect(executeToolCall).toHaveBeenCalledWith('readLocalFile', '{"path":"/test"}', undefined);
     expect(lastSentToolResponse).toEqual({
       requestId: 'req-1',
-      result: { content: 'tool result', error: undefined, success: true },
+      result: {
+        content: 'tool result',
+        error: undefined,
+        // Timed on this machine's clock, so the value is whatever the mock took
+        // — what matters is that the device reports one at all: the server can
+        // only observe the round trip, and cannot otherwise tell a slow tool
+        // from slow transport.
+        executionTimeMs: expect.any(Number),
+        state: undefined,
+        success: true,
+      },
     });
+    expect(lastSentToolResponse.result.executionTimeMs).toBeGreaterThanOrEqual(0);
   });
 
   it('should handle system info requests', async () => {
@@ -261,15 +264,15 @@ describe('connect command', () => {
   });
 
   it('should retry auth_failed with token refresh when new token available', async () => {
+    const program = createProgram();
+    await program.parseAsync(['node', 'test', 'connect']);
+
     vi.mocked(resolveToken).mockResolvedValueOnce({
       serverUrl: 'https://app.lobehub.com',
       token: 'refreshed-token',
       tokenType: 'jwt',
       userId: 'test-user',
     });
-
-    const program = createProgram();
-    await program.parseAsync(['node', 'test', 'connect']);
 
     const mockClient = vi.mocked(GatewayClient).mock.results[0].value;
 
@@ -280,22 +283,26 @@ describe('connect command', () => {
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
-  it('should handle auth_expired', async () => {
+  it('should refresh token on auth_expired', async () => {
+    const program = createProgram();
+    await program.parseAsync(['node', 'test', 'connect']);
+
     vi.mocked(resolveToken).mockResolvedValueOnce({
       serverUrl: 'https://app.lobehub.com',
-      token: 'new-tok',
+      token: 'new-token',
       tokenType: 'jwt',
       userId: 'user',
     });
 
-    const program = createProgram();
-    await program.parseAsync(['node', 'test', 'connect']);
+    const mockClient = vi.mocked(GatewayClient).mock.results[0].value;
 
     await clientEventHandlers['auth_expired']?.();
 
-    expect(log.error).toHaveBeenCalledWith(expect.stringContaining('expired'));
-    expect(cleanupAllProcesses).toHaveBeenCalled();
-    expect(exitSpy).toHaveBeenCalledWith(1);
+    expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Token refreshed'));
+    expect(mockClient.updateToken).toHaveBeenCalledWith('new-token');
+    expect(mockClient.reconnect).toHaveBeenCalled();
+    expect(cleanupAllProcesses).not.toHaveBeenCalled();
+    expect(exitSpy).not.toHaveBeenCalled();
   });
 
   it('should ignore auth_expired for api key auth', async () => {

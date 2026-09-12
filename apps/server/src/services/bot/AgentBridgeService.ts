@@ -1,4 +1,6 @@
-import type { ChatTopicBotContext, ExecAgentResult } from '@lobechat/types';
+import { MessageApiName } from '@lobechat/builtin-tool-message';
+import type { BotPlatformContext } from '@lobechat/context-engine';
+import type { BotSenderMetadata, ChatTopicBotContext, ExecAgentResult } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 import type { Message, SentMessage, Thread } from 'chat';
 import debug from 'debug';
@@ -10,24 +12,32 @@ import { UserModel } from '@/database/models/user';
 import type { LobeChatDatabase } from '@/database/type';
 import { createAbortError, isAbortError } from '@/server/services/agentRuntime/abort';
 import { AiAgentService } from '@/server/services/aiAgent';
+import type { AttachmentSource } from '@/server/services/aiAgent/ingestAttachment';
 import { GatewayService } from '@/server/services/gateway';
 import { getMessageGatewayClient } from '@/server/services/gateway/MessageGatewayClient';
 import { isQueueAgentRuntimeEnabled } from '@/server/services/queue/impls';
 import { SystemAgentService } from '@/server/services/systemAgent';
 
-import { formatPrompt as formatPromptUtil } from './formatPrompt';
+import { createBotCompletionWebhook } from './createBotCompletionHook';
+import { deferBotMessages, isDeferredMessagesAvailable } from './deferredMessages';
+import { runDeferredReplay, scheduleDeferredReplay } from './deferredReplay';
+import { buildBotSender, formatPrompt as formatPromptUtil } from './formatPrompt';
+import { getSourceMessages } from './mergeMessages';
 import type { BotReplyLocale, PlatformClient } from './platforms';
 import {
   getBotReplyLocale,
   getStepReactionEmoji,
+  platformFromThreadId,
   platformRegistry,
   RECEIVED_REACTION_EMOJI,
   THINKING_REACTION_EMOJI,
 } from './platforms';
+import { resolveUnsupportedMessageApis } from './platforms/messageCapabilities';
 import { clearReactionState, saveReactionState } from './reactionState';
+import { buildRecentChannelHistory } from './recentChannelHistory';
+import { renderThrownAgentError } from './renderThrownError';
 import {
   renderAgentError,
-  renderError,
   renderErrorWithDetails,
   renderFinalReply,
   renderStart,
@@ -37,6 +47,12 @@ import {
 } from './replyTemplate';
 
 const log = debug('lobe-server:bot:agent-bridge');
+
+/**
+ * `acquireTopicStartReservation` gives up with this message when the topic's
+ * `runningOperation` stayed alive through its bounded backoff.
+ */
+const isTopicBusyError = (errMsg: string): boolean => errMsg.includes('remained busy');
 
 /**
  * Convert hook-event JSON-safe attachments (`{ data?: base64, fetchUrl? }`)
@@ -141,8 +157,48 @@ interface DiscordChannelContext {
   thread?: { id: string; name?: string };
 }
 
+/**
+ * Resolve the `{ platform, channelId }` pair the `lobe-message` tool needs to
+ * act on the conversation this run is replying in.
+ *
+ * `PlatformClient.extractChatId` is the decoder each platform already uses for
+ * its own outbound calls, so what it returns is by construction what that
+ * platform's message service accepts as `channelId` — Feishu/Lark `oc_…`,
+ * Discord channel-or-thread id, Telegram chat id. A platform whose history
+ * read cannot be scoped that precisely (a Slack reply thread decodes to its
+ * parent channel) overrides `extractConversationId` and returns undefined, and
+ * the block is omitted rather than pointing the model at the wrong history.
+ *
+ * Returns undefined when we have no bot context or no client (e.g. a run that
+ * didn't originate from an IM thread) — the prompt block is then simply omitted.
+ */
+function resolveCurrentChannel(
+  botContext: ChatTopicBotContext | undefined,
+  client: PlatformClient | undefined,
+): { id: string; platformId: string } | undefined {
+  if (!botContext?.platformThreadId || !client) return undefined;
+  try {
+    const id = client.extractConversationId
+      ? client.extractConversationId(botContext.platformThreadId)
+      : client.extractChatId(botContext.platformThreadId);
+    if (!id) return undefined;
+    return { id, platformId: botContext.platform };
+  } catch (error) {
+    // A malformed/legacy threadId must never break the run — the model just
+    // loses the shortcut and falls back to asking, which is today's behavior.
+    log('resolveCurrentChannel: failed to extract chat id (non-fatal): %O', error);
+    return undefined;
+  }
+}
+
 interface ThreadState {
   channelContext?: DiscordChannelContext;
+  /**
+   * Per-conversation execution mode set via the `/mode` command. When present
+   * it overrides the agent's own `chatConfig.toolMode` for every run in this
+   * thread; absent means "follow the agent's configured default".
+   */
+  toolMode?: 'agent' | 'chat';
   topicId?: string;
 }
 
@@ -403,10 +459,14 @@ export class AgentBridgeService {
 
     AgentBridgeService.clearActiveThread(thread.id);
 
+    // Classify before rendering so a startup failure lands on curated copy
+    // (harness / provider / user tier) instead of a bare "Agent Execution
+    // Failed" that tells the user nothing — especially when the run died
+    // before it had an operation id to show.
     const errorContent = {
       markdown: stopped
         ? renderStopped(errorMessage, replyLocale)
-        : renderError(operationId, replyLocale),
+        : renderThrownAgentError(error, operationId, replyLocale),
     };
 
     if (progressMessage) {
@@ -520,7 +580,7 @@ export class AgentBridgeService {
         const operationId = AgentBridgeService.activeOperations.get(thread.id);
         log('handleMention error: operationId=%s, %O', operationId, error);
         try {
-          await thread.post({ markdown: renderError(operationId, replyLocale) });
+          await thread.post({ markdown: renderThrownAgentError(error, operationId, replyLocale) });
         } catch (postError) {
           log('handleMention: failed to post error message: %O', postError);
         }
@@ -574,24 +634,65 @@ export class AgentBridgeService {
       return;
     }
 
-    // Check if the topic is stale (no activity for 4+ hours).
-    // If so, clear the cached topicId and start a fresh conversation.
+    // Validate the cached topic before reusing it. Three reset triggers, all
+    // resolved the same way — clear the cached topicId and start a fresh
+    // conversation via handleMention:
+    //   1. the topic row is gone (deleted directly, cascade-deleted with its
+    //      agent, or out of the current user/workspace ownership scope after a
+    //      scope switch) — running with it would fail at the topic-start
+    //      reservation with a bare "Agent Execution Failed" and no way out;
+    //   2. the topic belongs to a different agent than the active one — the
+    //      user switched agents via /agents, so continuing the old agent's
+    //      topic would be wrong even when it still exists;
+    //   3. the topic is stale (no activity for 4+ hours).
     // Wrapped in try/catch so transient DB errors fall through to the
     // existing topicId rather than rejecting before the guarded section.
     try {
       const topicModel = new TopicModel(this.db, this.userId, this.workspaceId);
       const existingTopic = await topicModel.findById(topicId);
-      if (existingTopic) {
-        const elapsed = Date.now() - new Date(existingTopic.updatedAt).getTime();
-        if (elapsed > TOPIC_STALE_THRESHOLD) {
-          log(
-            'handleSubscribedMessage: topic=%s is stale (%.1fh since last activity), creating new topic',
-            topicId,
-            elapsed / (60 * 60 * 1000),
-          );
-          await thread.setState({ ...threadState, topicId: undefined });
-          return this.handleMention(thread, message, opts);
-        }
+      if (!existingTopic) {
+        log(
+          'handleSubscribedMessage: cached topic=%s no longer exists, creating new topic',
+          topicId,
+        );
+        await thread.setState({ ...threadState, topicId: undefined });
+        return this.handleMention(thread, message, opts);
+      }
+      if (existingTopic.agentId && existingTopic.agentId !== agentId) {
+        log(
+          'handleSubscribedMessage: cached topic=%s belongs to agent=%s but active agent is %s, creating new topic',
+          topicId,
+          existingTopic.agentId,
+          agentId,
+        );
+        await thread.setState({ ...threadState, topicId: undefined });
+        return this.handleMention(thread, message, opts);
+      }
+      const elapsed = Date.now() - new Date(existingTopic.updatedAt).getTime();
+      if (elapsed > TOPIC_STALE_THRESHOLD) {
+        log(
+          'handleSubscribedMessage: topic=%s is stale (%.1fh since last activity), creating new topic',
+          topicId,
+          elapsed / (60 * 60 * 1000),
+        );
+        await thread.setState({ ...threadState, topicId: undefined });
+        return this.handleMention(thread, message, opts);
+      }
+
+      // In queue mode the previous run may still be executing on the job
+      // queue even though the thread lock and `activeThreads` were released
+      // at handoff. Starting a second run now would lose the topic-start
+      // reservation race and surface as "Agent Execution Failed" — the
+      // WeChat "one image + one sentence" case. Park the message instead;
+      // the completion callback replays it once the topic is idle.
+      const runningOperation = existingTopic.metadata?.runningOperation;
+      if (
+        runningOperation &&
+        isQueueAgentRuntimeEnabled() &&
+        (await topicModel.isRunningOperationAlive(this.db, runningOperation))
+      ) {
+        const deferred = await this.deferWhileTopicBusy(thread, message, botContext, topicId);
+        if (deferred) return;
       }
     } catch (error) {
       log(
@@ -648,7 +749,11 @@ export class AgentBridgeService {
         const isFKViolation =
           cause?.code === PG_FOREIGN_KEY_VIOLATION && cause?.constraint?.includes('topic_id');
         const errMsg = error instanceof Error ? error.message : String(error);
-        if (isFKViolation) {
+        // "Topic not found" comes from the topic-start reservation when the
+        // cached topic row is gone (same stale-topic class as the FK
+        // violation, just surfaced from a different layer).
+        const isStaleTopic = isFKViolation || errMsg.includes('Topic not found');
+        if (isStaleTopic) {
           log(
             'handleSubscribedMessage: stale topicId=%s, resetting and retrying as new mention',
             topicId,
@@ -656,6 +761,15 @@ export class AgentBridgeService {
           AgentBridgeService.activeThreads.delete(thread.id);
           await thread.setState({ ...threadState, topicId: undefined });
           return this.handleMention(thread, message, opts);
+        }
+
+        // The pre-flight liveness check above and the reservation are not
+        // atomic: a run that started between them still makes the
+        // reservation give up with "remained busy". Same remedy — park the
+        // message for replay instead of telling the user the agent failed.
+        if (queueMode && isTopicBusyError(errMsg)) {
+          const deferred = await this.deferWhileTopicBusy(thread, message, botContext, topicId);
+          if (deferred) return;
         }
 
         const operationId = AgentBridgeService.activeOperations.get(thread.id);
@@ -702,10 +816,27 @@ export class AgentBridgeService {
     const platformDef = opts.botContext?.platform
       ? platformRegistry.getPlatform(opts.botContext.platform)
       : undefined;
-    const botPlatformContext:
-      | { platformName: string; supportsMarkdown: boolean; warnings?: string[] }
-      | undefined = platformDef
+    // Platforms whose runtime rejects `readMessages` (e.g. WeChat) can't fetch
+    // history on demand. We flag that so the prompt stops telling the model to
+    // call `readMessages`, and instead pre-inject recent same-channel history
+    // below (see `buildRecentChannelHistory`). Guest Telegram summons use the
+    // guest overlay (no channel tools, including history).
+    const canReadHistory = !resolveUnsupportedMessageApis(
+      opts.botContext?.platform,
+      opts.botContext?.platformThreadId,
+    )?.includes(MessageApiName.readMessages);
+    // The `channelId` the model must pass to `lobe-message` to act on THIS
+    // conversation. `extractChatId` is the same decoder each platform client
+    // already uses for its own outbound calls, so the injected value is exactly
+    // what the message service expects (Feishu `oc_…`, Discord channel/thread
+    // id, Slack channel id). Without it `readMessages` — whose `channelId` is
+    // required, and which most platforms have no `listChannels` to discover —
+    // is unusable, and the model falls back to asking the user for a group ID.
+    const currentChannel = resolveCurrentChannel(opts.botContext, opts.client);
+    const botPlatformContext: BotPlatformContext | undefined = platformDef
       ? {
+          canReadHistory,
+          ...(currentChannel && { currentChannel }),
           platformName: platformDef.name,
           supportsMarkdown: platformDef.supportsMarkdown !== false,
         }
@@ -731,11 +862,58 @@ export class AgentBridgeService {
       trigger,
     } = opts;
 
+    // For platforms that can't read history at runtime, surface a compact
+    // cross-session summary of this channel (recent topics, each with its last
+    // user message) so a fresh topic still knows what was just discussed.
+    //
+    // Only injected when this run OPENS a new topic (`topicId` is absent —
+    // a fresh mention, or a follow-up whose topic went stale). Once the
+    // conversation continues inside that topic, its own messages are the
+    // context; re-injecting prior sessions every turn just burns tokens and
+    // competes with the live history. Scoped to the channel via
+    // `platformThreadId`; best-effort — never block the reply.
+    if (botPlatformContext && !canReadHistory && !topicId && botContext?.platformThreadId) {
+      try {
+        botPlatformContext.recentChannelHistory = await buildRecentChannelHistory(
+          this.db,
+          this.userId,
+          this.workspaceId,
+          { platformThreadId: botContext.platformThreadId },
+        );
+      } catch (error) {
+        log('executeWithWebhooks: buildRecentChannelHistory failed (non-fatal): %O', error);
+      }
+    }
+
+    // Per-conversation mode switch (`/mode agent|chat`). Read from thread
+    // state on every run so both fresh mentions and follow-ups honour it;
+    // best-effort — a transient state-store error falls back to the agent's
+    // configured default rather than blocking the reply.
+    let toolModeOverride: ThreadState['toolMode'];
+    try {
+      toolModeOverride = (await thread.state)?.toolMode;
+    } catch (error) {
+      log('executeWithCallback: failed to read thread state for toolMode: %O', error);
+    }
+
     const queueMode = isQueueAgentRuntimeEnabled();
     const aiAgentService = new AiAgentService(this.db, this.userId, {
       workspaceId: this.workspaceId,
     });
     const timezone = await this.loadTimezone();
+
+    // Make sure the person who triggered the run is a member of the reply
+    // thread, so the platform notifies them when the reply lands (
+    // Discord's auto-created mention threads never add the mentioning user,
+    // and pill rendering on the origin message proved unreliable — replies
+    // were delivered but nobody was told). Fire-and-forget; never blocks.
+    const senderPlatformId = userMessage.author?.userId;
+    if (client?.ensureThreadMember && botContext?.platformThreadId && senderPlatformId) {
+      void safeSideEffect(
+        () => client.ensureThreadMember!(botContext.platformThreadId!, senderPlatformId),
+        'ensureThreadMember (executeWithCallback)',
+      );
+    }
 
     // When the message-gateway is configured AND the platform supports typing
     // indicators, skip the ack/progress message and rely on the gateway's
@@ -744,7 +922,8 @@ export class AgentBridgeService {
     // gateway typing makes ack redundant as user feedback.
     // For platforms without typing support (no triggerTyping on messenger), the
     // gateway typing is invisible, so we still send an ack message as user feedback.
-    const gwClient = getMessageGatewayClient();
+    const botPlatform = platformFromThreadId(botContext?.platformThreadId);
+    const gwClient = getMessageGatewayClient(botPlatform);
     const platformSupportsTyping =
       client && botContext?.platformThreadId
         ? !!client.getMessenger(botContext.platformThreadId).triggerTyping
@@ -762,7 +941,7 @@ export class AgentBridgeService {
       // Start gateway typing immediately so the alarm keeps it alive through
       // the entire AI generation (platform typing expires after ~10s).
       if (botContext?.platformThreadId && botContext?.applicationId) {
-        const platform = botContext.platformThreadId.split(':')[0];
+        const platform = platformFromThreadId(botContext.platformThreadId);
         try {
           if (botContext.messengerInstallationKey) {
             // Messenger run: shard typing by `(platform, lobeUserId)` so each
@@ -826,6 +1005,9 @@ export class AgentBridgeService {
 
     const { files, warnings: fileWarnings } = await this.resolveFiles(userMessage, client);
     const prompt = this.formatPrompt(userMessage, client);
+    const botSender = botContext?.platform
+      ? buildBotSender(userMessage as any, botContext.platform)
+      : undefined;
 
     // Attach file warnings to botPlatformContext for injection via context engine
     if (fileWarnings?.length && botPlatformContext) {
@@ -875,6 +1057,7 @@ export class AgentBridgeService {
         agentId,
         botContext,
         botPlatformContext,
+        botSender,
         callbackUrl,
         channelContext,
         client,
@@ -882,6 +1065,7 @@ export class AgentBridgeService {
         progressMessage,
         prompt,
         replyLocale,
+        toolModeOverride,
         topicId,
         trigger,
         webhookBody,
@@ -893,6 +1077,7 @@ export class AgentBridgeService {
       agentId,
       botContext,
       botPlatformContext,
+      botSender,
       callbackUrl,
       charLimit,
       channelContext,
@@ -903,6 +1088,7 @@ export class AgentBridgeService {
       progressMessage,
       prompt,
       replyLocale,
+      toolModeOverride,
       topicId,
       trigger,
       userMessage,
@@ -920,7 +1106,8 @@ export class AgentBridgeService {
     opts: {
       agentId: string;
       botContext?: ChatTopicBotContext;
-      botPlatformContext?: { platformName: string; supportsMarkdown: boolean };
+      botPlatformContext?: BotPlatformContext;
+      botSender?: BotSenderMetadata;
       callbackUrl: string;
       channelContext?: DiscordChannelContext;
       client?: PlatformClient;
@@ -928,6 +1115,7 @@ export class AgentBridgeService {
       progressMessage?: SentMessage;
       prompt: string;
       replyLocale: BotReplyLocale;
+      toolModeOverride?: ThreadState['toolMode'];
       topicId?: string;
       trigger?: string;
       webhookBody: Record<string, unknown>;
@@ -937,6 +1125,7 @@ export class AgentBridgeService {
       agentId,
       botContext,
       botPlatformContext,
+      botSender,
       callbackUrl,
       channelContext,
       client,
@@ -944,6 +1133,7 @@ export class AgentBridgeService {
       progressMessage,
       prompt,
       replyLocale,
+      toolModeOverride,
       topicId,
       trigger,
       webhookBody,
@@ -958,6 +1148,7 @@ export class AgentBridgeService {
           autoStart: true,
           botContext,
           botPlatformContext,
+          botSender,
           discordContext: channelContext
             ? {
                 channel: channelContext.channel,
@@ -985,16 +1176,25 @@ export class AgentBridgeService {
               },
               id: 'bot-completion',
               type: 'onComplete',
-              webhook: {
-                body: { ...webhookBody, type: 'completion', userPrompt: prompt },
-                delivery: 'qstash',
-                url: callbackUrl,
-              },
+              webhook: botContext
+                ? createBotCompletionWebhook({
+                    body: { ...webhookBody, userPrompt: prompt },
+                    botContext,
+                    userId: this.userId,
+                    workspaceId: this.workspaceId,
+                  })
+                : {
+                    body: { ...webhookBody, type: 'completion', userPrompt: prompt },
+                    delivery: 'qstash',
+                    fallback: 'none',
+                    url: callbackUrl,
+                  },
             },
           ],
           prompt,
           signal,
           title: '',
+          toolModeOverride,
           trigger,
           userInterventionConfig: { approvalMode: 'headless' },
         }),
@@ -1004,6 +1204,20 @@ export class AgentBridgeService {
 
       const errMsg = error instanceof Error ? error.message : String(error);
       if (errMsg.includes('Failed query') && errMsg.includes('topic_id')) {
+        throw error;
+      }
+      // A cached topicId whose row vanished between the pre-flight check and
+      // the topic-start reservation (delete race) surfaces as a plain
+      // "Topic not found" error. Rethrow so handleSubscribedMessage can clear
+      // the stale topicId and retry as a fresh mention instead of posting a
+      // bare "Agent Execution Failed" with no operation id.
+      if (errMsg.includes('Topic not found')) {
+        throw error;
+      }
+      // The topic-start reservation lost against a still-running operation.
+      // Rethrow so handleSubscribedMessage can defer the message for replay
+      // after that run completes instead of posting a failure.
+      if (isTopicBusyError(errMsg)) {
         throw error;
       }
 
@@ -1066,7 +1280,8 @@ export class AgentBridgeService {
     opts: {
       agentId: string;
       botContext?: ChatTopicBotContext;
-      botPlatformContext?: { platformName: string; supportsMarkdown: boolean };
+      botPlatformContext?: BotPlatformContext;
+      botSender?: BotSenderMetadata;
       callbackUrl: string;
       charLimit?: number;
       channelContext?: DiscordChannelContext;
@@ -1077,6 +1292,7 @@ export class AgentBridgeService {
       progressMessage?: SentMessage;
       prompt: string;
       replyLocale: BotReplyLocale;
+      toolModeOverride?: ThreadState['toolMode'];
       topicId?: string;
       trigger?: string;
       userMessage?: Message;
@@ -1087,6 +1303,7 @@ export class AgentBridgeService {
       agentId,
       botContext,
       botPlatformContext,
+      botSender,
       callbackUrl,
       charLimit,
       channelContext,
@@ -1096,6 +1313,7 @@ export class AgentBridgeService {
       gatewayConnectionId,
       prompt,
       replyLocale,
+      toolModeOverride,
       topicId,
       trigger,
       userMessage,
@@ -1112,7 +1330,7 @@ export class AgentBridgeService {
 
     const stopGatewayTyping = () => {
       if (gatewayConnectionId && botContext?.platformThreadId) {
-        const gwClient = getMessageGatewayClient();
+        const gwClient = getMessageGatewayClient(platformFromThreadId(botContext.platformThreadId));
         gwClient.stopTyping(gatewayConnectionId, botContext.platformThreadId).catch((err) => {
           log('executeWithCallback[local]: gateway stopTyping failed: %O', err);
         });
@@ -1136,6 +1354,7 @@ export class AgentBridgeService {
           autoStart: true,
           botContext,
           botPlatformContext,
+          botSender,
           discordContext: channelContext
             ? {
                 channel: channelContext.channel,
@@ -1230,6 +1449,7 @@ export class AgentBridgeService {
                       event.operationId,
                       replyLocale,
                       event.errorAttribution,
+                      event.errorBudget,
                     );
                     // Wrap in `{ markdown }` so the Chat SDK adapter sets the
                     // platform's markdown parse_mode (e.g. Telegram `Markdown`,
@@ -1351,6 +1571,7 @@ export class AgentBridgeService {
                           );
                           const title = await systemAgent.generateTopicTitle({
                             lastAssistantContent,
+                            topicId: resolvedTopicId,
                             userPrompt: prompt,
                           });
                           if (!title) return;
@@ -1375,16 +1596,25 @@ export class AgentBridgeService {
               },
               id: 'bot-completion',
               type: 'onComplete' as const,
-              webhook: {
-                body: { ...webhookBody, type: 'completion', userPrompt: prompt },
-                delivery: 'qstash' as const,
-                url: callbackUrl,
-              },
+              webhook: botContext
+                ? createBotCompletionWebhook({
+                    body: { ...webhookBody, userPrompt: prompt },
+                    botContext,
+                    userId: this.userId,
+                    workspaceId: this.workspaceId,
+                  })
+                : {
+                    body: { ...webhookBody, type: 'completion', userPrompt: prompt },
+                    delivery: 'qstash' as const,
+                    fallback: 'none' as const,
+                    url: callbackUrl,
+                  },
             },
           ],
           prompt,
           signal,
           title: '',
+          toolModeOverride,
           trigger,
           userInterventionConfig: { approvalMode: 'headless' },
         }),
@@ -1405,7 +1635,7 @@ export class AgentBridgeService {
             if (progressMessage) {
               try {
                 await progressMessage.edit({
-                  markdown: renderError(result.operationId, replyLocale),
+                  markdown: renderThrownAgentError(result.error, result.operationId, replyLocale),
                 });
               } catch (error) {
                 log('executeWithCallback[local]: failed to edit startup error: %O', error);
@@ -1458,11 +1688,16 @@ export class AgentBridgeService {
 
           log('executeWithCallback[local]: startup error: %s', extractErrorMessage(error));
 
-          // Stale topic_id FK violation: propagate so handleSubscribedMessage can
-          // clear thread state and retry as a fresh mention. Queue mode does the
-          // same bailout in executeWithHooksQueueMode.
+          // Stale cached topic: propagate so handleSubscribedMessage can clear
+          // thread state and retry as a fresh mention. Queue mode does the same
+          // bailout in executeWithHooksQueueMode — both the FK-violation form
+          // ("Failed query" on topic_id) and the topic-start reservation form
+          // ("Topic not found", a delete race after the pre-flight check).
           const errMsg = error instanceof Error ? error.message : String(error);
-          if (errMsg.includes('Failed query') && errMsg.includes('topic_id')) {
+          if (
+            (errMsg.includes('Failed query') && errMsg.includes('topic_id')) ||
+            errMsg.includes('Topic not found')
+          ) {
             stopGatewayTyping();
             reject(error);
             return;
@@ -1477,7 +1712,7 @@ export class AgentBridgeService {
           if (progressMessage) {
             try {
               await progressMessage.edit({
-                markdown: renderError(fallbackOperationId, replyLocale),
+                markdown: renderThrownAgentError(error, fallbackOperationId, replyLocale),
               });
             } catch (editError) {
               log('executeWithCallback[local]: failed to edit startup error: %O', editError);
@@ -1587,10 +1822,91 @@ export class AgentBridgeService {
     }>;
     warnings?: string[];
   }> {
-    const result = await client?.extractFiles?.(message);
-    if (!result) return {};
-    if (Array.isArray(result)) return { files: result };
-    return { files: result.files, warnings: result.warnings };
+    if (!client?.extractFiles) return {};
+
+    // A merged message (Chat SDK queue/debounce `skipped` context, or a
+    // deferred-message replay) carries only the LAST message's `raw`, but
+    // every platform's `extractFiles` reads media descriptors from `raw`. Walk
+    // each source message so an image that arrived one message before the
+    // text is still downloaded.
+    const sources = getSourceMessages(message);
+    const files: AttachmentSource[] = [];
+    const warnings: string[] = [];
+    let sawResult = false;
+
+    for (const source of sources) {
+      const result = await client.extractFiles(source);
+      if (!result) continue;
+      sawResult = true;
+      if (Array.isArray(result)) {
+        files.push(...result);
+        continue;
+      }
+      if (result.files) files.push(...result.files);
+      if (result.warnings) warnings.push(...result.warnings);
+    }
+
+    if (!sawResult) return {};
+    return {
+      files,
+      ...(warnings.length > 0 ? { warnings } : {}),
+    };
+  }
+
+  /**
+   * Park an inbound follow-up whose topic is still running so the completion
+   * callback can replay it. Returns `false` when deferral is impossible (no
+   * bot context, no Redis) — the caller then keeps the previous behavior.
+   */
+  private async deferWhileTopicBusy(
+    thread: Thread<ThreadState>,
+    message: Message,
+    botContext: ChatTopicBotContext | undefined,
+    topicId: string,
+  ): Promise<boolean> {
+    if (!botContext?.applicationId) return false;
+    if (!isDeferredMessagesAvailable()) return false;
+
+    // Store the individual sources of a merged message so each keeps its own
+    // `raw` (media descriptors) across the Redis round-trip.
+    const deferred = await deferBotMessages(
+      botContext.applicationId,
+      thread.id,
+      getSourceMessages(message),
+    );
+    if (!deferred) return false;
+
+    // Completion may have drained the queue between the initial liveness
+    // check and this write. Recheck after enqueueing and initiate replay when
+    // no live operation remains; the callback covers completion after this check.
+    const target = {
+      applicationId: botContext.applicationId,
+      messengerInstallationKey: botContext.messengerInstallationKey,
+      platform: botContext.platform,
+      platformThreadId: thread.id,
+    };
+    try {
+      const topicModel = new TopicModel(this.db, this.userId, this.workspaceId);
+      const topic = await topicModel.findById(topicId);
+      const running = topic?.metadata?.runningOperation;
+      if (!running || !(await topicModel.isRunningOperationAlive(this.db, running))) {
+        await runDeferredReplay(target);
+      }
+    } catch (error) {
+      log('Post-enqueue replay failed for thread=%s: %O', thread.id, error);
+      try {
+        await scheduleDeferredReplay(target, `defer:${message.id}`);
+      } catch (scheduleError) {
+        log('Could not schedule deferred replay for thread=%s: %O', thread.id, scheduleError);
+      }
+    }
+
+    log(
+      'handleSubscribedMessage: topic busy, deferred message=%s on thread=%s until the running operation completes',
+      message.id,
+      thread.id,
+    );
+    return true;
   }
 
   /**
@@ -1613,8 +1929,7 @@ export class AgentBridgeService {
       const userModel = new UserModel(this.db, this.userId);
       const settings = await userModel.getUserSettings();
       this.timezone = (settings?.general as Record<string, unknown>)?.timezone as
-        | string
-        | undefined;
+        string | undefined;
     } catch {
       // Fall back to server time if settings can't be loaded
     }

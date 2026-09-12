@@ -2,6 +2,7 @@ import { type LobeChatDatabase } from '@lobechat/database';
 import { CompressionRepository } from '@lobechat/database';
 import {
   type CreateMessageParams,
+  type HeterogeneousToolStateSnapshot,
   type QueryMessageParams,
   type UIChatMessage,
   type UpdateMessageParams,
@@ -37,6 +38,25 @@ const logMessageTiming = (
 const createModelTiming = (options: QueryOptions | undefined, prefix: string) =>
   createPrefixedTimingContext(toTimingContext(options), prefix);
 
+/**
+ * Reduce a failed write to something the caller can act on. Drizzle wraps driver
+ * errors in a generic `Failed query: insert into ...` whose message is the whole
+ * statement plus its params — too noisy to return, and it may carry message
+ * content. The driver error underneath (`cause`) holds the actionable part: the
+ * SQLSTATE and the violated constraint.
+ */
+const describeBatchMutateError = (error: unknown): string => {
+  const cause = (error as { cause?: unknown } | undefined)?.cause;
+  const driverError = (cause ?? error) as
+    { code?: string; constraint?: string; message?: string } | undefined;
+
+  const detail = [driverError?.constraint, driverError?.code, driverError?.message]
+    .filter(Boolean)
+    .join(' | ');
+
+  return (detail || String(error)).slice(0, 300);
+};
+
 interface CreateMessageResult {
   id: string;
   messages: any[];
@@ -57,6 +77,7 @@ export type MessageBatchOperation =
       type: 'updateToolMessage';
       value: {
         content?: string;
+        heterogeneousToolState?: HeterogeneousToolStateSnapshot;
         metadata?: Record<string, any>;
         pluginError?: any;
         pluginState?: Record<string, any>;
@@ -142,8 +163,22 @@ export class MessageService {
    * so server-internal callers (e.g. agent runtime stream events) can push
    * the same payload the client would otherwise fetch.
    */
-  async queryMessages(params: QueryMessageParams): Promise<UIChatMessage[]> {
-    return this.messageModel.query(params, this.getQueryOptions());
+  async queryMessages(
+    params: QueryMessageParams,
+    options?: {
+      /**
+       * Include agent-share visitor rows. `MessageModel.query()` hides them by
+       * default (they live under the creator's account but belong to the
+       * visitor); only run-execution seams whose topic is already resolved and
+       * authorized may opt in.
+       */
+      allowShareVisitor?: boolean;
+    },
+  ): Promise<UIChatMessage[]> {
+    return this.messageModel.query(params, {
+      ...this.getQueryOptions(),
+      ...(options?.allowShareVisitor && { allowShareVisitor: true }),
+    });
   }
 
   /**
@@ -153,6 +188,7 @@ export class MessageService {
    */
   async batchMutate(operations: MessageBatchOperation[]): Promise<{
     results: {
+      error?: string;
       id?: string;
       index: number;
       success: boolean;
@@ -161,6 +197,7 @@ export class MessageService {
     success: boolean;
   }> {
     const results: {
+      error?: string;
       id?: string;
       index: number;
       success: boolean;
@@ -186,6 +223,7 @@ export class MessageService {
       } catch (error) {
         console.error('[MessageService] batchMutate operation failed:', error);
         results.push({
+          error: describeBatchMutateError(error),
           id: operation.type === 'createMessage' ? operation.message.id : operation.id,
           index,
           success: false,
@@ -338,6 +376,7 @@ export class MessageService {
     id: string,
     value: {
       content?: string;
+      heterogeneousToolState?: HeterogeneousToolStateSnapshot;
       metadata?: Record<string, any>;
       pluginError?: any;
       pluginState?: Record<string, any>;
@@ -455,14 +494,20 @@ export class MessageService {
     params: {
       agentId: string;
       groupId?: string | null;
+      sourceGroupIds?: string[];
       threadId?: string | null;
       topicId: string;
     },
   ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
-    const { agentId, groupId, threadId, topicId } = params;
+    const { agentId, groupId, sourceGroupIds, threadId, topicId } = params;
 
-    // 1. Update compression group with actual content
-    await this.compressionRepository.updateCompressionContent(messageGroupId, content);
+    // 1. Update the new group and atomically replace prior compression groups.
+    await this.compressionRepository.finalizeCompressionGroup({
+      content,
+      groupId: messageGroupId,
+      sourceGroupIds,
+      topicId,
+    });
 
     // 2. Query final messages
     const queryOptions = { agentId, groupId, threadId, topicId };

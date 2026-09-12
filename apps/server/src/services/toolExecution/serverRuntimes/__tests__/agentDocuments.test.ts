@@ -5,6 +5,7 @@ import { TaskModel } from '@/database/models/task';
 import { WorkspaceModel } from '@/database/models/workspace';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 
+import type { ToolExecutionContext } from '../../types';
 import { agentDocumentsRuntime } from '../agentDocuments';
 
 const agentDocumentToolOutcomeMocks = vi.hoisted(() => ({
@@ -67,9 +68,15 @@ describe('agentDocumentsRuntime auto-pin to task', () => {
     pinDocument = vi.fn().mockResolvedValue(undefined);
     findWorkspaceById = vi.fn().mockResolvedValue({ slug: 'lobe-team' });
 
-    vi.mocked(AgentDocumentsService).mockImplementation(() => serviceImpl as any);
-    vi.mocked(TaskModel).mockImplementation(() => ({ pinDocument }) as any);
-    vi.mocked(WorkspaceModel).mockImplementation(() => ({ findById: findWorkspaceById }) as any);
+    vi.mocked(AgentDocumentsService).mockImplementation(function () {
+      return serviceImpl as any;
+    });
+    vi.mocked(TaskModel).mockImplementation(function () {
+      return { pinDocument } as any;
+    });
+    vi.mocked(WorkspaceModel).mockImplementation(function () {
+      return { findById: findWorkspaceById } as any;
+    });
   });
 
   const buildContext = (taskId?: string, workspaceId?: string) => {
@@ -226,6 +233,87 @@ describe('agentDocumentsRuntime auto-pin to task', () => {
   });
 });
 
+describe('agentDocumentsRuntime Work registration state', () => {
+  // Work registration is now manifest-driven: the runtime no longer emits intents
+  // via `context.onWorkRegistration`. Instead every mutating API stamps a uniform
+  // identity block (`agentDocumentId` / `agentId` / `documentId`) into its result
+  // `state`, which the generic dispatch-layer resolver reads. These tests assert
+  // the runtime surfaces that block (create + delete-via-pre-read) and does NOT
+  // call the legacy sink.
+  const newDoc = {
+    documentId: 'documents-row-id',
+    filename: 'daily-brief',
+    id: 'agent-doc-assoc-id',
+    title: 'Daily Brief',
+  };
+
+  let serviceImpl: Record<string, ReturnType<typeof vi.fn>>;
+
+  beforeEach(() => {
+    agentDocumentToolOutcomeMocks.emitAgentDocumentToolOutcomeSafely.mockClear();
+    serviceImpl = {
+      createDocument: vi.fn().mockResolvedValue(newDoc),
+      getDocumentSnapshotById: vi.fn().mockResolvedValue(newDoc),
+      removeDocumentById: vi.fn().mockResolvedValue(true),
+    };
+    vi.mocked(AgentDocumentsService).mockImplementation(function () {
+      return serviceImpl as any;
+    });
+    vi.mocked(TaskModel).mockImplementation(function () {
+      return { pinDocument: vi.fn() } as any;
+    });
+    vi.mocked(WorkspaceModel).mockImplementation(function () {
+      return { findById: vi.fn().mockResolvedValue({ slug: 'lobe-team' }) } as any;
+    });
+  });
+
+  const buildContext = (onWorkRegistration?: ToolExecutionContext['onWorkRegistration']) => ({
+    onWorkRegistration,
+    serverDB: {} as never,
+    toolManifestMap: {},
+    userId: 'user-1',
+    workspaceId: 'workspace-1',
+  });
+
+  it('surfaces the document identity block in create state without emitting an intent', async () => {
+    const onWorkRegistration = vi.fn();
+    const runtime = agentDocumentsRuntime.factory(buildContext(onWorkRegistration));
+
+    const result = await runtime.createDocument(
+      { content: 'body', title: 'Daily Brief' },
+      { agentId: 'agent-1' },
+    );
+
+    expect(result.state).toMatchObject({
+      agentDocumentId: 'agent-doc-assoc-id',
+      agentId: 'agent-1',
+      documentId: 'documents-row-id',
+    });
+    expect(onWorkRegistration).not.toHaveBeenCalled();
+  });
+
+  it('surfaces the document identity block in remove state via the pre-read', async () => {
+    const runtime = agentDocumentsRuntime.factory(buildContext());
+
+    const result = await runtime.removeDocument(
+      { id: 'agent-doc-assoc-id' },
+      { agentId: 'agent-1' },
+    );
+
+    expect(serviceImpl.getDocumentSnapshotById).toHaveBeenCalledWith(
+      'agent-doc-assoc-id',
+      'agent-1',
+    );
+    expect(result.success).toBe(true);
+    expect(result.state).toMatchObject({
+      agentDocumentId: 'agent-doc-assoc-id',
+      agentId: 'agent-1',
+      deleted: true,
+      documentId: 'documents-row-id',
+    });
+  });
+});
+
 describe('AgentDocumentsExecutionRuntime.createDocument', () => {
   const makeStub = () => ({
     copyDocument: vi.fn(),
@@ -259,7 +347,31 @@ describe('AgentDocumentsExecutionRuntime.createDocument', () => {
     expect(result.success).toBe(true);
     expect(result.state).toEqual({
       agentDocumentId: 'agent-doc-assoc-id',
+      agentId: 'agent-1',
       documentId: 'documents-row-id',
+    });
+  });
+
+  it('forwards parentId when creating a document in a folder', async () => {
+    const stub = makeStub();
+    stub.createDocument.mockResolvedValue({
+      documentId: 'documents-row-id',
+      filename: 'daily-brief',
+      id: 'agent-doc-assoc-id',
+      title: 'Daily Brief',
+    });
+
+    const runtime = new AgentDocumentsExecutionRuntime(stub);
+    await runtime.createDocument(
+      { content: 'body', parentId: 'folder-doc-id', title: 'Daily Brief' },
+      { agentId: 'agent-1' },
+    );
+
+    expect(stub.createDocument).toHaveBeenCalledWith({
+      agentId: 'agent-1',
+      content: 'body',
+      parentId: 'folder-doc-id',
+      title: 'Daily Brief',
     });
   });
 
@@ -318,6 +430,7 @@ describe('AgentDocumentsExecutionRuntime.createDocument', () => {
     expect(result.success).toBe(true);
     expect(result.state).toEqual({
       agentDocumentId: 'agent-doc-assoc-id',
+      agentId: 'agent-1',
       documentId: 'documents-row-id',
     });
     expect(stub.createTopicDocument).toHaveBeenCalledWith({

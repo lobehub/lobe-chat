@@ -1,10 +1,14 @@
 import { type LobeToolManifest } from '@lobechat/context-engine';
 import { type LobeChatDatabase } from '@lobechat/database';
 import {
+  type AgentShareVisitorContext,
   type ChatToolPayload,
   type ClientSecretPayload,
+  type DeviceUnavailableErrorData,
   type ExecSubAgentParams,
   type StepActivatedSkill,
+  type StepContextTodoItem,
+  type WorkRegistrationIntent,
 } from '@lobechat/types';
 
 export interface ToolExecutionMemoryEmbeddingRuntime {
@@ -46,6 +50,14 @@ export interface ServerSubAgentRunResult {
   subOperationId?: string;
   /** The isolation thread holding the sub-agent's full message trace. */
   threadId: string;
+  /**
+   * The placeholder tool message the child was anchored to. Surfaced back up to
+   * the runtime so the `pauseForTools` chunk can carry `toolMessageIds` — that is
+   * what makes the client refetch and actually put this row in its store, which
+   * in turn is what lets live sub-agent progress patch onto it while the parent
+   * is parked.
+   */
+  toolMessageId?: string;
 }
 
 /**
@@ -127,6 +139,15 @@ export interface ToolExecutionContext {
   activatedSkills?: StepActivatedSkill[];
   /** Target device ID for device proxy tool calls */
   activeDeviceId?: string;
+  /**
+   * Principal pool `activeDeviceId` lives in. `personal` when a workspace run
+   * was routed to the caller's own device via a per-user `local` override —
+   * `resolveRunWorkspaceId` then addresses gateway calls through the personal
+   * `(userId, deviceId)` pool instead of the `workspace:<id>` pool, where that
+   * device has no connection. Absent on runs without a run-start device (a
+   * mid-run activation always picks from the workspace pool).
+   */
+  activeDeviceScope?: 'personal' | 'workspace';
   /** Agent ID executing the tool call */
   agentId?: string;
   /**
@@ -136,6 +157,26 @@ export interface ToolExecutionContext {
    * result; the member barrier backfills + resumes/finishes the parked supervisor.
    */
   agentMember?: ServerAgentMemberRunner;
+  /**
+   * Shared-agent visitor marker, forwarded from
+   * `RuntimeExecutorContext.agentShareVisitor` (see
+   * `modules/AgentRuntime/context.ts`). Present ONLY for a share-visitor run.
+   * `BuiltinToolsExecutor.execute` re-checks every builtin dispatch against
+   * `isShareBlockedBuiltinDispatch` with these permissions — the unbypassable
+   * counterpart of the assembly-time tool-set trim, which only shapes what the
+   * model is OFFERED, not what the executor will run. That gate is strictly
+   * wider than a plain data-tool check: master default-deny allowlist, the
+   * owner's `toolGrants` picker, and humanIntervention policy, and it
+   * internally delegates to `isShareBlockedDataToolCall` for the per-API
+   * data-tool rules.
+   *
+   * Tool runtimes that trigger their own billed work (e.g. image generation)
+   * project it with `toAgentShareVisitorIds` into a `spendOrigin` payload so
+   * the resulting spend log is attributed to the shared agent, exactly like the
+   * LLM path. Only those ids may be projected; never forward this object as a
+   * whole, since its permission fields have no place in billing metadata.
+   */
+  agentShareVisitor?: AgentShareVisitorContext;
   /**
    * Visibility of the agent executing this tool call. Resolved once per tool
    * call in the runtime executor. Tool runtimes that persist agent side-effects
@@ -153,6 +194,17 @@ export interface ToolExecutionContext {
    * `messageId`.
    */
   assistantMessageId?: string;
+  /** Originating request IP propagated through the operation metadata. */
+  clientIp?: string;
+  /**
+   * Todo items as of this tool call, reconstructed from the operation's message
+   * history by the runtime executors — the tool-execution counterpart of what
+   * `serverCallLlmContextBuilder` feeds the prompt. The lobe-agent runtime needs
+   * it because its own store (the topic's plan document) only exists after
+   * `createPlan`, so an agent that only ever calls `createTodos` would otherwise
+   * read back an empty list on every subsequent call.
+   */
+  currentTodos?: StepContextTodoItem[];
   /**
    * Whether the run's execution plan is device-capable (`device` or
    * `device-unrouted`) — derived from `state.metadata.executionPlan` by the
@@ -172,6 +224,12 @@ export interface ToolExecutionContext {
    */
   editingAgentId?: string;
   /**
+   * When scope is 'group_agent_builder', the ID of the group being edited. Kept
+   * separate from `groupId` so the builder's own conversation is not treated as
+   * a group chat turn; only GroupAgentBuilder tool methods read this.
+   */
+  editingGroupId?: string;
+  /**
    * Legacy agent invocation callback forwarded from RuntimeExecutorContext.
    * Kept for tool runtimes that still dispatch through exec_sub_agent style
    * flows; `lobe-agent.callSubAgent` uses the per-call `subAgent` runner below.
@@ -184,6 +242,22 @@ export interface ToolExecutionContext {
   /** Whether this tool call is executing inside an isolated sub-agent run. */
   isSubAgent?: boolean;
   /**
+   * The run resolved to a local device AND the owner asked for the device
+   * sandbox (`agencyConfig.localSandbox`). The Local System device-proxy passes
+   * it to `runCommand` so the desktop confines the spawned command.
+   *
+   * Resolved once against the run's effective execution target — never
+   * re-derived downstream from the raw flag, which says nothing about where the
+   * run actually landed.
+   */
+  localSandbox?: boolean;
+  /**
+   * The sandboxed run may reach the package-registry allowlist
+   * (`agencyConfig.localSandboxNetwork`). Meaningless without
+   * {@link localSandbox}.
+   */
+  localSandboxNetwork?: boolean;
+  /**
    * Optional server-owned embedding runtime for memory search.
    *
    * Use when the acting user is synthetic and should not read user key vaults.
@@ -193,6 +267,16 @@ export interface ToolExecutionContext {
   memoryToolPermission?: 'read-only' | 'read-write';
   /** Source user message ID used by Agent Signal procedure suppression. */
   messageId?: string;
+  /**
+   * Sink for a Work-registration intent produced as a side-effect inside a tool
+   * runtime (e.g. the agentDocuments runtime, whose registration is decoupled
+   * from the returned tool result). The builtin executor installs this collector
+   * before dispatching the runtime call and hoists whatever intent the runtime
+   * emits onto {@link ToolExecutionResult.workRegistration}, so it reaches
+   * `callTool` / `callToolsBatch` and the Work version is inserted ONCE with cost
+   * — the same one-shot path task/skill tools use directly on the result.
+   */
+  onWorkRegistration?: (intent: WorkRegistrationIntent) => void;
   /** Agent runtime operation ID for structured tool outcome identity. */
   operationId?: string;
   /**
@@ -201,6 +285,8 @@ export interface ToolExecutionContext {
    * device gateway. Derived from the operation's skill set.
    */
   projectSkills?: { location: string; name: string; source?: 'device' | 'project' }[];
+  /** Root AI runtime operation ID used to aggregate artifacts produced by one run. */
+  rootOperationId?: string;
   /** Conversation scope captured when the operation was created */
   scope?: string | null;
   /** Server database for LobeHub Skills execution */
@@ -221,6 +307,8 @@ export interface ToolExecutionContext {
   /** Stable LLM tool call ID for structured tool outcome identity. */
   toolCallId?: string;
   toolManifestMap: Record<string, LobeToolManifest>;
+  /** Source tool result message ID, when it already exists. */
+  toolMessageId?: string;
   /**
    * Maximum length for tool execution result content (in characters)
    * @default 6000
@@ -259,11 +347,30 @@ export interface ToolExecutionResult {
    */
   deferred?: boolean;
   error?: any;
+  /** Structured unavailable-device context preserved through the runtime error envelope. */
+  errorData?: DeviceUnavailableErrorData;
   state?: Record<string, any>;
   success: boolean;
+  /**
+   * Transient Work-registration intent produced by the executor and consumed by
+   * the agent runtime (`callTool` / `callToolsBatch`) once the tool call's
+   * cumulative cost is known, so the Work version is inserted ONCE with its
+   * cost. In-memory only: it rides through the in-process executor→runtime
+   * boundary and is deliberately NOT persisted with the tool message (which
+   * stores only `content` / `state` / `error`) nor length-truncated (unlike
+   * `content`), so skill identity in the untruncated payload survives.
+   */
+  workRegistration?: WorkRegistrationIntent;
 }
 
 export interface ToolExecutionResultResponse extends ToolExecutionResult {
+  /**
+   * Wall time the tool took on the DEVICE, by the device's own clock, when the
+   * call was dispatched to one. Paired with the server-observed
+   * `executionTime`, the difference is pure dispatch overhead — the number that
+   * decides whether moving the agent loop onto the device is worth it.
+   */
+  deviceExecutionTime?: number;
   executionTime: number;
 }
 

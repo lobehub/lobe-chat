@@ -13,23 +13,16 @@ const permissionMock = vi.hoisted(() => ({
 
 const CURRENT_USER_ID = vi.hoisted(() => 'user-1');
 
+const useDocumentTransferMenuItemMock = vi.hoisted(() => vi.fn(() => []));
+
 const storeMock = vi.hoisted(() => ({
   activeWorkspaceId: undefined as string | undefined,
   document: undefined as
     { id: string; userId?: string; visibility?: 'private' | 'public' | null } | undefined,
 }));
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
-vi.mock('@lobehub/ui', () => ({
-  Icon: () => null,
-}));
-
-vi.mock('antd', () => ({
+vi.mock('antd', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   App: {
     useApp: () => ({
       message: {
@@ -111,7 +104,7 @@ vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
 }));
 
 vi.mock('@/business/client/hooks/useDocumentTransferMenuItem', () => ({
-  useDocumentTransferMenuItem: () => [],
+  useDocumentTransferMenuItem: useDocumentTransferMenuItemMock,
 }));
 
 const getMenuItem = (
@@ -121,10 +114,19 @@ const getMenuItem = (
 
 describe('Page list item dropdown menu', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     permissionMock.create_content = true;
     permissionMock.edit_own_content = true;
     storeMock.activeWorkspaceId = undefined;
     storeMock.document = undefined;
+  });
+
+  it('labels the page transfer action as Move', () => {
+    renderHook(() => useDropdownMenu({ pageId: 'page-1', toggleEditing: vi.fn() }));
+
+    expect(useDocumentTransferMenuItemMock).toHaveBeenCalledWith('page-1', {
+      transferLabel: 'pageEditor.menu.move',
+    });
   });
 
   it('disables page management actions for workspace viewers', () => {
@@ -139,6 +141,17 @@ describe('Page list item dropdown menu', () => {
     expect(getMenuItem(items, 'rename')).toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'duplicate')).toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'delete')).toMatchObject({ disabled: true });
+  });
+
+  it("lets a workspace editor delete another member's page", () => {
+    storeMock.activeWorkspaceId = 'ws-1';
+    storeMock.document = { id: 'page-1', userId: 'another-member', visibility: 'public' };
+
+    const { result } = renderHook(() =>
+      useDropdownMenu({ pageId: 'page-1', toggleEditing: vi.fn() }),
+    );
+
+    expect(getMenuItem(result.current(), 'delete')).toMatchObject({ disabled: false });
   });
 
   it('exposes "publish to workspace" for private pages in workspace mode', () => {

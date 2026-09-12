@@ -31,13 +31,18 @@ import type { LobeChatDatabase } from '@/database/type';
 import { filterBuiltinSkills } from '@/helpers/skillFilters';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { deviceGateway } from '@/server/services/deviceGateway';
+import { executeAuthorizedDeviceToolCall } from '@/server/services/deviceGateway/authorizedToolCall';
 import { FileService } from '@/server/services/file';
 import { MarketService } from '@/server/services/market';
 import { createSandboxService, normalizeSandboxCommandResult } from '@/server/services/sandbox';
 import { SkillResourceService } from '@/server/services/skill/resource';
-import { preprocessLhCommand } from '@/server/services/toolExecution/preprocessLhCommand';
+import {
+  buildDeviceLhEnv,
+  isLhCommand,
+  preprocessLhCommand,
+} from '@/server/services/toolExecution/preprocessLhCommand';
 
-import { resolveRunWorkspaceId } from './resolveWorkspaceScope';
+import { resolveContentWorkspaceId, resolveRunWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
 
 const log = debug('lobe-server:skills-runtime');
@@ -94,10 +99,6 @@ const LEGACY_DEVICE_CLIENT = Symbol('legacy-device-client');
  */
 const LEGACY_FALLBACK_NOTE =
   "Note: the user's device client is outdated and does not support on-device skill execution, so this command ran in the cloud sandbox instead. Tell the user to update their LobeHub app to run skills on their device.";
-
-const LH_COMMAND_PATTERN = /(?:^|&&|\|\||;)\s*lh(?:\s|$)/;
-
-const isLhCommand = (command: string) => LH_COMMAND_PATTERN.test(command);
 
 class SkillServerRuntimeService implements SkillRuntimeService {
   private agentId?: string;
@@ -162,11 +163,32 @@ class SkillServerRuntimeService implements SkillRuntimeService {
   };
 
   private resolveWorkspaceId = async (): Promise<string | undefined> => {
-    return resolveRunWorkspaceId({
+    return resolveContentWorkspaceId({
       agentId: this.agentId,
       serverDB: this.serverDB,
       workspaceId: this.workspaceId,
     });
+  };
+
+  /**
+   * Rewrite an `lh` command for sandbox execution: prepend the auth +
+   * workspace-scope prelude so the CLI runs as this user, against this run's
+   * workspace. Shared by `runCommand` and `execScript` — the model picks
+   * between them by manifest wording alone (`execScript` is the one described
+   * as "run the CLI commands a skill's instructions tell you to"), so a hole in
+   * either one is a hole in the whole `lh` surface.
+   */
+  private preprocessSandboxCommand = async (
+    command: string,
+  ): Promise<{ command: string; error?: string }> => {
+    const workspaceId =
+      this.workspaceId ?? (isLhCommand(command) ? await this.resolveWorkspaceId() : undefined);
+    // No `shareVisitorBlocked` guard needed here: `lobe-skills` is absent from
+    // `AGENT_SHARE_ALLOWED_BUILTIN_IDENTIFIERS`, so this runtime is never
+    // constructed for an Agent Share visitor's run in the first place.
+    const result = await preprocessLhCommand(command, this.userId, workspaceId);
+
+    return { command: result.command, error: result.error };
   };
 
   readResource = async (id: string, path: string): Promise<SkillResourceContent> => {
@@ -196,11 +218,8 @@ class SkillServerRuntimeService implements SkillRuntimeService {
       throw new Error('topicId is required for runCommand');
     }
 
-    // Preprocess lh commands: rewrite to npx @lobehub/cli + inject auth env vars
-    const workspaceId =
-      this.workspaceId ??
-      (isLhCommand(options.command) ? await this.resolveWorkspaceId() : undefined);
-    const lhResult = await preprocessLhCommand(options.command, this.userId, workspaceId);
+    // Preprocess lh commands: resolve `lh` to the CLI + inject auth/workspace env
+    const lhResult = await this.preprocessSandboxCommand(options.command);
     if (lhResult.error) {
       return {
         executionEnv: 'sandbox',
@@ -393,7 +412,12 @@ class SkillServerRuntimeService implements SkillRuntimeService {
       }
 
       const cwd = runDir ?? device.workingDirectory;
-      const response = await deviceGateway.executeToolCall(
+      // Content scope, NOT the gateway-addressing scope resolved above: a
+      // workspace agent routed to the caller's own machine is still editing
+      // workspace content.
+      const deviceLhEnv = buildDeviceLhEnv(await this.resolveWorkspaceId());
+      const response = await executeAuthorizedDeviceToolCall(
+        this.serverDB,
         {
           deviceId: device.deviceId,
           operationId: device.operationId,
@@ -408,6 +432,9 @@ class SkillServerRuntimeService implements SkillRuntimeService {
           arguments: JSON.stringify({
             command,
             ...(cwd && { cwd }),
+            // Keep `lh` on the device in this run's workspace instead of the
+            // device credentials' personal scope.
+            ...(deviceLhEnv && { env: deviceLhEnv }),
             ...(device.executionTimeoutMs && { timeout: device.executionTimeoutMs }),
           }),
           identifier: LocalSystemIdentifier,
@@ -427,11 +454,13 @@ class SkillServerRuntimeService implements SkillRuntimeService {
         success?: boolean;
       };
 
-      // `response.success` is the delivery envelope only: the device-side
-      // ComputerRuntime reports service failures (spawn error, shell lost,
-      // missing params) as `success: true` with `state.success: false` and no
-      // exitCode (`errorOutput`) — without this check they'd fall through to
-      // the still-running branch below and read as a successful run.
+      // `response.success` is the delivery envelope. Device-side service
+      // failures (spawn error, shell lost, missing params) now come back with
+      // `success: false`, but desktop builds predating that fix report them as
+      // `success: true` with `state.success: false` and no exitCode — and a
+      // device runs whatever version the user has installed. Keep testing both
+      // or those runs fall through to the still-running branch below and read
+      // as a successful run.
       if (!response.success || state.success === false) {
         return fail(
           state.stderr ||
@@ -505,10 +534,24 @@ class SkillServerRuntimeService implements SkillRuntimeService {
       throw new Error('topicId is required for execScript');
     }
 
+    // Same `lh` handling as runCommand — the client-side executor
+    // (`routers/tools/market.ts`) has always preprocessed both tools, and
+    // gateway runs must not behave differently.
+    const lhResult = await this.preprocessSandboxCommand(command);
+    if (lhResult.error) {
+      return {
+        executionEnv: 'sandbox',
+        exitCode: 1,
+        output: '',
+        stderr: lhResult.error,
+        success: false,
+      };
+    }
+
     try {
       const enhancedParams: Record<string, unknown> = {
         activatedSkills,
-        command,
+        command: lhResult.command,
         description,
       };
 
@@ -642,9 +685,16 @@ export const skillsRuntime: ServerRuntimeRegistration = {
       context.userId,
       context.workspaceId,
     );
+    /**
+     * `workspaceId` decides which sandbox session this runtime reaches: the
+     * session is keyed by the acting account, so a token without it acts as the
+     * personal account while `lobe-creds` and `lobe-cloud-sandbox` — which do
+     * pass it — act as the workspace. Omitting it split one workspace topic
+     * across two sandboxes, leaving injected credentials invisible here.
+     */
     const marketService = new MarketService({
       accessToken: marketAccessToken,
-      userInfo: { userId: context.userId },
+      userInfo: { userId: context.userId, workspaceId: context.workspaceId },
     });
     const fileService = new FileService(context.serverDB, context.userId, context.workspaceId);
     const fileModel = new FileModel(context.serverDB, context.userId, context.workspaceId);
@@ -730,8 +780,13 @@ export const skillsRuntime: ServerRuntimeRegistration = {
       const userId = context.userId;
       deviceFileAccess = {
         listFiles: async (dir: string) => {
-          const result = await deviceGateway.executeToolCall(
-            { deviceId: activeDeviceId, userId },
+          const result = await executeAuthorizedDeviceToolCall(
+            context.serverDB,
+            {
+              deviceId: activeDeviceId,
+              userId,
+              workspaceId: await resolveRunWorkspaceId(context),
+            },
             {
               apiName: LocalSystemApiName.globFiles,
               // `**/*` matches every regular file recursively under `dir`.
@@ -759,8 +814,13 @@ export const skillsRuntime: ServerRuntimeRegistration = {
             .map((f) => (f.startsWith(dir) ? f.slice(dir.length).replace(/^[/\\]+/, '') : f));
         },
         readFile: async (filePath: string) => {
-          const result = await deviceGateway.executeToolCall(
-            { deviceId: activeDeviceId, userId },
+          const result = await executeAuthorizedDeviceToolCall(
+            context.serverDB,
+            {
+              deviceId: activeDeviceId,
+              userId,
+              workspaceId: await resolveRunWorkspaceId(context),
+            },
             {
               apiName: LocalSystemApiName.readFile,
               // Read the whole file; SKILL.md and references are small.

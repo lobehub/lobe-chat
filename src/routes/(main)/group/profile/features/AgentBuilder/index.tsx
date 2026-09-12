@@ -1,9 +1,9 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { DraggablePanel } from '@lobehub/ui';
+import { DraggablePanel } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import { memo } from 'react';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+import ConversationSegmentSkeleton from '@/components/Skeleton/Conversation/Segment';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -51,7 +51,7 @@ const AgentBuilder = memo(() => {
           <AgentBuilderConversation agentId={groupAgentBuilderId} />
         </AgentBuilderProvider>
       ) : (
-        <Loading debugId="GroupAgentBuilder > Init" />
+        <ConversationSegmentSkeleton />
       )}
     </DraggablePanel>
   );

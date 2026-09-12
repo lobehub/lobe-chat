@@ -13,16 +13,7 @@ import Group from './Group';
 let mockIsCollapsed = false;
 let mockIsGenerating = false;
 let mockDbMessages: { createdAt?: Date | number | string | null; id: string }[] = [];
-
-vi.mock('@lobehub/ui', () => ({
-  Flexbox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-}));
-
-vi.mock('antd-style', () => ({
-  createStaticStyles: () => ({
-    container: 'group-container',
-  }),
-}));
+let mockOperations: { metadata: Record<string, unknown>; status: string }[] = [];
 
 vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (state: unknown) => unknown) => selector({}),
@@ -30,7 +21,7 @@ vi.mock('@/store/chat', () => ({
 
 vi.mock('@/store/chat/slices/operation/selectors', () => ({
   operationSelectors: {
-    getOperationsByMessage: () => () => [],
+    getOperationsByMessage: () => () => mockOperations,
   },
 }));
 
@@ -49,6 +40,10 @@ vi.mock('../../../store', () => ({
   },
   useConversationStore: (selector: (state: unknown) => unknown) =>
     selector({ dbMessages: mockDbMessages }),
+}));
+
+vi.mock('./SteerMessage', () => ({
+  default: ({ id }: { id: string }) => <div data-id={id} data-testid="steer-message" />,
 }));
 
 vi.mock('./CollapsedMessage', () => ({
@@ -179,6 +174,7 @@ describe('Group', () => {
     mockIsCollapsed = false;
     mockIsGenerating = false;
     mockDbMessages = [];
+    mockOperations = [];
   });
 
   it('keeps a long mixed single-tool block inline in its natural order', () => {
@@ -354,6 +350,65 @@ describe('Group', () => {
     ]);
   });
 
+  it('breaks an image-bearing tool out between two workflow folds', () => {
+    const { container } = render(
+      <Group
+        isLatestItem
+        id="assistant-1"
+        messageIndex={0}
+        blocks={[
+          blk({
+            content: 'Inspecting.',
+            id: 'block-1',
+            tools: [
+              { apiName: 'Bash', id: 'tool-0', identifier: 'claude-code' } as any,
+              { apiName: 'Bash', id: 'tool-1', identifier: 'claude-code' } as any,
+              {
+                apiName: 'Read',
+                id: 'tool-2',
+                identifier: 'claude-code',
+                result: {
+                  content: 'ok',
+                  id: 'r2',
+                  state: { images: [{ url: 'https://x/a.png' }] },
+                },
+              } as any,
+              { apiName: 'Bash', id: 'tool-3', identifier: 'claude-code' } as any,
+            ],
+          }),
+          blk({
+            content: 'Continuing.',
+            id: 'block-2',
+            tools: [{ apiName: 'Bash', id: 'tool-4', identifier: 'claude-code' } as any],
+          }),
+        ]}
+      />,
+    );
+
+    const sequence = Array.from(container.querySelectorAll('[data-testid]')).map((node) =>
+      node.getAttribute('data-testid'),
+    );
+    expect(sequence).toEqual(['workflow-segment', 'answer-segment', 'workflow-segment']);
+
+    const [first, second] = screen
+      .getAllByTestId('workflow-segment')
+      .map((node) => JSON.parse(node.getAttribute('data-blocks') || '[]'));
+    expect(first).toEqual([
+      expect.objectContaining({
+        contentOverride: 'Inspecting.',
+        domId: 'block-1__tool-0__workflow',
+        toolCount: 2,
+      }),
+    ]);
+    expect(second).toEqual([
+      expect.objectContaining({ domId: 'block-1__tool-3__workflow', toolCount: 1 }),
+      expect.objectContaining({ content: 'Continuing.', toolCount: 1 }),
+    ]);
+    expect(parseAnswerSegment()).toEqual(
+      expect.objectContaining({ domId: 'block-1__tool-2__workflow', id: 'block-1', toolCount: 1 }),
+    );
+  });
+
   it('does not fold the latest process behind a non-renderable final answer placeholder', () => {
     render(
       <Group
@@ -407,6 +462,62 @@ describe('Group', () => {
     // sibling for every turn, latest or not — never swallowed into the fold.
     expect(fold.contains(answer)).toBe(false);
     expect(fold.contains(screen.getByTestId('workflow-segment'))).toBe(true);
+    expect(fold).toHaveAttribute('data-step-count', '2');
+  });
+
+  it('folds as soon as the operation’s visible output ends, before terminal completion', () => {
+    // After `visible_output_end` the op stays `running` for seconds of terminal
+    // bookkeeping (persistence, agent_runtime_end, completeRun). Folding must
+    // key off the visible end, not the terminal status flip.
+    mockOperations = [{ metadata: { visibleLoadingDone: true }, status: 'running' }];
+
+    render(
+      <Group
+        enableProcessFold
+        isLatestItem
+        id="assistant-1"
+        messageIndex={0}
+        blocks={[
+          blk({
+            content: 'Running the checks.',
+            id: 'block-1',
+            tools: [
+              { apiName: 'bash', id: 'tool-1', result: { content: 'ok' } } as any,
+              { apiName: 'bash', id: 'tool-2', result: { content: 'ok' } } as any,
+            ],
+          }),
+          blk({ content: 'Here is the final answer.', id: 'block-2' }),
+        ]}
+      />,
+    );
+
+    expect(screen.getByTestId('process-fold')).toBeInTheDocument();
+  });
+
+  it('does not fold while the operation is still visibly running', () => {
+    mockOperations = [{ metadata: {}, status: 'running' }];
+
+    render(
+      <Group
+        enableProcessFold
+        isLatestItem
+        id="assistant-1"
+        messageIndex={0}
+        blocks={[
+          blk({
+            content: 'Running the checks.',
+            id: 'block-1',
+            tools: [
+              { apiName: 'bash', id: 'tool-1', result: { content: 'ok' } } as any,
+              { apiName: 'bash', id: 'tool-2', result: { content: 'ok' } } as any,
+            ],
+          }),
+          blk({ content: 'Here is the final answer.', id: 'block-2' }),
+        ]}
+      />,
+    );
+
+    expect(screen.queryByTestId('process-fold')).not.toBeInTheDocument();
   });
 
   it('keeps the latest finished turn’s final answer visible outside the fold', () => {
@@ -533,6 +644,55 @@ describe('Group', () => {
             id: 'block-1',
             tools: [{ apiName: 'bash', id: 'tool-1', result: { content: 'done' } } as any],
           }),
+        ]}
+      />,
+    );
+
+    expect(screen.getByTestId('tail-running')).toHaveAttribute('data-id', 'assistant-1');
+  });
+
+  it('does not add a tail indicator when the inline segment ends on a LOADING_FLAT placeholder', () => {
+    // The settled tool is followed by a LOADING_FLAT placeholder that stays
+    // inside the inline segment; that block mounts MessageContent and renders
+    // its OWN running line, so the tail must NOT stack a second identical one.
+    mockIsGenerating = true;
+    render(
+      <Group
+        isLatestItem
+        id="assistant-1"
+        messageIndex={0}
+        blocks={[
+          blk({
+            content: '',
+            id: 'block-1',
+            tools: [{ apiName: 'bash', id: 'tool-1', result: { content: 'done' } } as any],
+          }),
+          blk({ content: LOADING_FLAT, id: 'block-2' }),
+        ]}
+      />,
+    );
+
+    expect(screen.queryByTestId('tail-running')).not.toBeInTheDocument();
+  });
+
+  it('keeps the tail indicator when the trailing block is a blank content:"" shell', () => {
+    // The gateway emits an empty `content: ''` assistant shell on stream_start.
+    // ContentBlock does NOT mount MessageContent for it (no text/LOADING_FLAT/
+    // tools), so it renders no running line of its own — the tail must stay to
+    // fill the gap after the settled tool until the first content chunk lands.
+    mockIsGenerating = true;
+    render(
+      <Group
+        isLatestItem
+        id="assistant-1"
+        messageIndex={0}
+        blocks={[
+          blk({
+            content: '',
+            id: 'block-1',
+            tools: [{ apiName: 'bash', id: 'tool-1', result: { content: 'done' } } as any],
+          }),
+          blk({ content: '', id: 'block-2' }),
         ]}
       />,
     );
@@ -717,5 +877,112 @@ describe('Group', () => {
     expect(screen.getByTestId('workflow-segment').getAttribute('data-chrome-complete')).toBe(
       'false',
     );
+  });
+
+  describe('steered continuations', () => {
+    const chain1 = [
+      blk({
+        content: 'Looking into it.',
+        id: 'a1',
+        tools: [{ apiName: 'search', id: 't1' } as any],
+      }),
+      blk({ content: 'Turn one answer.', id: 'a2' }),
+    ];
+    const chain2 = [
+      blk({ content: '', id: 'b1', tools: [{ apiName: 'readFile', id: 't2' } as any] }),
+      blk({ content: 'Final answer.', id: 'b2' }),
+    ];
+
+    it('renders steer bubbles inline between chains while streaming', () => {
+      mockIsGenerating = true;
+
+      const { container } = render(
+        <Group
+          isLatestItem
+          blocks={chain1}
+          continuations={[{ blocks: chain2, id: 'group-2', steerUserId: 'steer-1' }]}
+          id="group-1"
+          messageIndex={0}
+        />,
+      );
+
+      const sequence = Array.from(container.querySelectorAll('[data-testid]')).map((node) =>
+        node.getAttribute('data-testid'),
+      );
+      expect(sequence).toEqual([
+        'answer-segment',
+        'answer-segment',
+        'steer-message',
+        'answer-segment',
+        'answer-segment',
+      ]);
+      expect(screen.getByTestId('steer-message').getAttribute('data-id')).toBe('steer-1');
+      expect(screen.queryByTestId('process-fold')).not.toBeInTheDocument();
+    });
+
+    it('folds each turn separately and keeps the steer bubble between the folds', () => {
+      mockOperations = [];
+
+      const { container } = render(
+        <Group
+          enableProcessFold
+          isLatestItem
+          blocks={chain1}
+          continuations={[{ blocks: chain2, id: 'group-2', steerUserId: 'steer-1' }]}
+          id="group-1"
+          messageIndex={0}
+        />,
+      );
+
+      const folds = screen.getAllByTestId('process-fold');
+      expect(folds.map((fold) => fold.getAttribute('data-step-count'))).toEqual(['2', '2']);
+
+      const steer = screen.getByTestId('steer-message');
+      expect(
+        folds[0]!.compareDocumentPosition(steer) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(
+        steer.compareDocumentPosition(folds[1]!) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(folds.some((fold) => fold.contains(steer))).toBe(false);
+
+      const idsIn = (root: Element) =>
+        Array.from(root.querySelectorAll('[data-testid="answer-segment"]')).map(
+          (node) => JSON.parse(node.getAttribute('data-block') || '{}').id,
+        );
+      expect(idsIn(folds[0]!)).toEqual(['a1', 'a2']);
+      expect(idsIn(folds[1]!)).toEqual(['b1']);
+
+      const outside = Array.from(container.querySelectorAll('[data-testid="answer-segment"]'))
+        .filter((node) => !folds.some((fold) => fold.contains(node)))
+        .map((node) => JSON.parse(node.getAttribute('data-block') || '{}').id);
+      expect(outside).toEqual(['b2']);
+    });
+
+    it('skips the fold for a continuation whose whole output is the final answer', () => {
+      mockOperations = [];
+
+      render(
+        <Group
+          enableProcessFold
+          isLatestItem
+          blocks={chain1}
+          id="group-1"
+          messageIndex={0}
+          continuations={[
+            {
+              blocks: [blk({ content: 'Final answer.', id: 'b2' })],
+              id: 'group-2',
+              steerUserId: 'steer-1',
+            },
+          ]}
+        />,
+      );
+
+      const folds = screen.getAllByTestId('process-fold');
+      expect(folds).toHaveLength(1);
+      expect(folds[0]!.getAttribute('data-step-count')).toBe('2');
+      expect(screen.getByTestId('steer-message')).toBeInTheDocument();
+    });
   });
 });

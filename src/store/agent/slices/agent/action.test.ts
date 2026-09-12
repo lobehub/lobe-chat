@@ -1,19 +1,22 @@
 import { CHAT_GROUP_SESSION_ID_PREFIX } from '@lobechat/types';
+import { toast } from '@lobehub/ui/base-ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { createElement, type PropsWithChildren } from 'react';
+import { SWRConfig, unstable_serialize } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { message } from '@/components/AntdStaticMethods';
+import * as activeWorkspaceModule from '@/business/client/hooks/useActiveWorkspaceId';
 import { setScopedMutate } from '@/libs/swr';
-import { agentConfigKeys } from '@/libs/swr/keys';
+import { agentConfigKeys, builtinAgentKeys } from '@/libs/swr/keys';
+import * as cacheScopeModule from '@/libs/swr/useCacheScope';
 import { agentService } from '@/services/agent';
 import { agentDocumentService } from '@/services/agentDocument';
+import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import { type LobeAgentConfig } from '@/types/agent';
 import { withSWR } from '~test-utils';
 
 import { useAgentStore } from '../../store';
-
-// Mock zustand/traditional for store testing
-vi.mock('zustand/traditional');
 
 // Mock agentService
 vi.mock('@/services/agent', () => ({
@@ -21,6 +24,7 @@ vi.mock('@/services/agent', () => ({
   agentService: {
     createAgent: vi.fn(),
     getAgentConfigById: vi.fn(),
+    getBuiltinAgent: vi.fn(),
     getSessionConfig: vi.fn(),
     queryAgents: vi.fn(),
     updateAgentConfig: vi.fn(),
@@ -39,10 +43,9 @@ vi.mock('@/services/agentDocument', () => ({
   resolveAgentDocumentsContext: vi.fn(),
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: {
-    error: vi.fn(),
-  },
+vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import('~base-ui-stubs')).baseUiStubs,
 }));
 
 // Mock sessionStore
@@ -65,6 +68,9 @@ vi.mock('swr', async (importOriginal) => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.spyOn(cacheScopeModule, 'useCacheScope').mockImplementation(() =>
+    cacheScopeModule.getCacheScope(),
+  );
   setScopedMutate(vi.fn() as any);
   useAgentStore.setState({
     activeAgentId: undefined,
@@ -73,6 +79,10 @@ beforeEach(() => {
     availableAgents: undefined,
     updateAgentConfigSignal: undefined,
     agentDocumentsMap: {},
+    streamingSystemRole: undefined,
+    streamingSystemRoleAgentId: undefined,
+    streamingSystemRoleGeneration: 0,
+    streamingSystemRoleInProgress: false,
     updateAgentMetaSignal: undefined,
   });
 });
@@ -82,6 +92,267 @@ afterEach(() => {
 });
 
 describe('AgentSlice Actions', () => {
+  describe('builtin agent cache hydration', () => {
+    it('does not apply an old user response after switching personal accounts', async () => {
+      let scope = 'user-a:personal';
+      vi.spyOn(cacheScopeModule, 'getCacheScope').mockImplementation(() => scope);
+      let resolveOld!: (value: Awaited<ReturnType<typeof agentService.getBuiltinAgent>>) => void;
+      vi.mocked(agentService.getBuiltinAgent).mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            if (scope === 'user-a:personal') resolveOld = resolve;
+          }),
+      );
+      const cachedUserB = { id: 'inbox-b', name: 'Chief B' };
+      const cache = new Map([
+        [
+          unstable_serialize(builtinAgentKeys.init('inbox', 'user-b:personal')),
+          { data: cachedUserB },
+        ],
+      ]);
+      const wrapper = ({ children }: PropsWithChildren) =>
+        createElement(SWRConfig, { value: { provider: () => cache } }, children);
+      const hook = renderHook(
+        () => useAgentStore.getState().useInitBuiltinAgent('inbox', { isLogin: true }),
+        { wrapper },
+      );
+      await waitFor(() => expect(resolveOld).toBeDefined());
+      scope = 'user-b:personal';
+      hook.rerender();
+      expect(useAgentStore.getState().builtinAgentIdMap.inbox).toBe('inbox-b');
+
+      await act(async () => {
+        resolveOld({ id: 'inbox-a', name: 'Chief A' } as Awaited<
+          ReturnType<typeof agentService.getBuiltinAgent>
+        >);
+      });
+      expect(useAgentStore.getState().builtinAgentIdMap.inbox).toBe('inbox-b');
+      expect(useAgentStore.getState().agentMap['inbox-a']).toBeUndefined();
+      hook.unmount();
+    });
+
+    it('seeds the startup snapshot without refetching after changing the builtin agent name', async () => {
+      const scopedMutate = vi.fn().mockResolvedValue(undefined);
+      setScopedMutate(scopedMutate);
+      useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
+      const updatedAgent = {
+        id: 'inbox-1',
+        name: 'Renamed chief',
+        profile: { fullBodyArtwork: '/custom-chief.webp' },
+      } as LobeAgentConfig;
+      vi.mocked(agentService.updateAgentMeta).mockResolvedValue({
+        agent: updatedAgent,
+        success: true,
+      });
+
+      await useAgentStore
+        .getState()
+        .optimisticUpdateAgentMeta('inbox-1', { name: 'Renamed chief' });
+
+      expect(agentService.getBuiltinAgent).not.toHaveBeenCalled();
+      expect(scopedMutate).toHaveBeenCalledWith(agentConfigKeys.config('inbox-1'), updatedAgent, {
+        revalidate: false,
+      });
+      expect(scopedMutate).toHaveBeenCalledWith(
+        builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope()),
+        updatedAgent,
+        { revalidate: false },
+      );
+    });
+
+    it('does not seed a metadata response into a changed cache scope', async () => {
+      let scope = 'user-a:personal';
+      vi.spyOn(cacheScopeModule, 'getCacheScope').mockImplementation(() => scope);
+      const scopedMutate = vi.fn().mockResolvedValue(undefined);
+      setScopedMutate(scopedMutate);
+      useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
+
+      let resolveUpdate!: (value: any) => void;
+      vi.mocked(agentService.updateAgentMeta).mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveUpdate = resolve;
+          }),
+      );
+
+      let save!: Promise<void>;
+      act(() => {
+        save = useAgentStore
+          .getState()
+          .optimisticUpdateAgentMeta('inbox-1', { name: 'Renamed chief' });
+      });
+      await waitFor(() => expect(resolveUpdate).toBeDefined());
+
+      scope = 'user-b:personal';
+      useAgentStore.setState({ agentMap: {}, builtinAgentIdMap: {} });
+      await act(async () => {
+        resolveUpdate({
+          agent: { id: 'inbox-1', name: 'Renamed chief' } as LobeAgentConfig,
+          success: true,
+        });
+        await save;
+      });
+
+      expect(useAgentStore.getState().agentMap['inbox-1']).toBeUndefined();
+      expect(
+        scopedMutate.mock.calls.some(
+          ([key]) =>
+            JSON.stringify(key) === JSON.stringify(agentConfigKeys.config('inbox-1')) ||
+            JSON.stringify(key) ===
+              JSON.stringify(builtinAgentKeys.init('inbox', 'user-b:personal')),
+        ),
+      ).toBe(false);
+    });
+
+    it('keeps the network refresh for an explicit builtin config refresh', async () => {
+      const scopedMutate = vi.fn().mockResolvedValue(undefined);
+      setScopedMutate(scopedMutate);
+      useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
+      vi.mocked(agentService.getBuiltinAgent).mockResolvedValue({
+        id: 'inbox-1',
+      } as Awaited<ReturnType<typeof agentService.getBuiltinAgent>>);
+
+      await act(async () => {
+        await useAgentStore.getState().internal_refreshAgentConfig('inbox-1');
+      });
+
+      expect(agentService.getBuiltinAgent).toHaveBeenCalledWith('inbox');
+    });
+
+    it('restores the inbox identity and custom artwork while revalidation is pending', () => {
+      const data = {
+        id: 'cached-inbox',
+        name: 'Custom chief',
+        profile: { fullBodyArtwork: 'https://example.com/custom-chief.webp' },
+      };
+      vi.mocked(agentService.getBuiltinAgent).mockImplementation(() => new Promise(() => {}));
+      const cache = new Map([
+        [
+          unstable_serialize(builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope())),
+          { data },
+        ],
+      ]);
+      const wrapper = ({ children }: PropsWithChildren) =>
+        createElement(SWRConfig, { value: { provider: () => cache } }, children);
+
+      const hook = renderHook(
+        () => useAgentStore.getState().useInitBuiltinAgent('inbox', { isLogin: true }),
+        { wrapper },
+      );
+
+      expect(useAgentStore.getState().builtinAgentIdMap.inbox).toBe('cached-inbox');
+      expect(useAgentStore.getState().agentMap['cached-inbox']).toMatchObject(data);
+      hook.unmount();
+    });
+
+    it('reads the workspace inbox cache instead of the personal inbox cache', () => {
+      vi.spyOn(activeWorkspaceModule, 'useActiveWorkspaceId').mockReturnValue('workspace-1');
+      vi.mocked(agentService.getBuiltinAgent).mockImplementation(() => new Promise(() => {}));
+      const cache = new Map([
+        [
+          unstable_serialize(builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope())),
+          { data: { id: 'personal-inbox' } },
+        ],
+        [
+          unstable_serialize([
+            ...builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope()),
+            'workspace-1',
+          ]),
+          { data: { id: 'workspace-inbox' } },
+        ],
+      ]);
+      const wrapper = ({ children }: PropsWithChildren) =>
+        createElement(SWRConfig, { value: { provider: () => cache } }, children);
+      const hook = renderHook(
+        () => useAgentStore.getState().useInitBuiltinAgent('inbox', { isLogin: true }),
+        { wrapper },
+      );
+
+      expect(useAgentStore.getState().builtinAgentIdMap.inbox).toBe('workspace-inbox');
+      expect(useAgentStore.getState().agentMap['personal-inbox']).toBeUndefined();
+      hook.unmount();
+    });
+  });
+
+  describe('system role streaming', () => {
+    it('accepts chunks and lets only the stream owner clear the visual buffer', async () => {
+      const { result } = renderHook(() => useAgentStore());
+      const persistPrompt = vi
+        .spyOn(result.current, 'optimisticUpdateAgentConfig')
+        .mockResolvedValue(undefined);
+
+      let generation = 0;
+      act(() => {
+        generation = result.current.startStreamingSystemRole('agent-a');
+        result.current.appendStreamingSystemRole('agent-b', generation, 'wrong');
+        result.current.appendStreamingSystemRole('agent-a', generation, 'owned');
+      });
+
+      expect(result.current).toMatchObject({
+        streamingSystemRole: 'owned',
+        streamingSystemRoleAgentId: 'agent-a',
+        streamingSystemRoleGeneration: generation,
+        streamingSystemRoleInProgress: true,
+      });
+
+      await act(async () => {
+        await result.current.finishStreamingSystemRole('agent-b', generation);
+      });
+
+      expect(persistPrompt).not.toHaveBeenCalled();
+      expect(result.current.streamingSystemRoleAgentId).toBe('agent-a');
+
+      await act(async () => {
+        await result.current.finishStreamingSystemRole('agent-a', generation);
+      });
+
+      expect(persistPrompt).not.toHaveBeenCalled();
+      expect(result.current).toMatchObject({
+        streamingSystemRole: undefined,
+        streamingSystemRoleAgentId: undefined,
+        streamingSystemRoleInProgress: false,
+      });
+    });
+
+    it('does not let a stale finish clear a newer stream for the same agent', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      let oldGeneration = 0;
+      act(() => {
+        oldGeneration = result.current.startStreamingSystemRole('agent-a');
+        result.current.appendStreamingSystemRole('agent-a', oldGeneration, 'old stream');
+      });
+
+      let newGeneration = 0;
+      act(() => {
+        newGeneration = result.current.startStreamingSystemRole('agent-a');
+        result.current.appendStreamingSystemRole('agent-a', oldGeneration, 'stale chunk');
+        result.current.appendStreamingSystemRole('agent-a', newGeneration, 'new stream');
+      });
+
+      await act(async () => {
+        await result.current.finishStreamingSystemRole('agent-a', oldGeneration);
+      });
+
+      expect(result.current).toMatchObject({
+        streamingSystemRole: 'new stream',
+        streamingSystemRoleAgentId: 'agent-a',
+        streamingSystemRoleGeneration: newGeneration,
+        streamingSystemRoleInProgress: true,
+      });
+
+      await act(async () => {
+        await result.current.finishStreamingSystemRole('agent-a', newGeneration);
+      });
+
+      expect(result.current).toMatchObject({
+        streamingSystemRole: undefined,
+        streamingSystemRoleAgentId: undefined,
+        streamingSystemRoleInProgress: false,
+      });
+    });
+  });
+
   describe('createAgent', () => {
     it('should invalidate cached available agents after creating an agent', async () => {
       vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
@@ -95,6 +366,7 @@ describe('AgentSlice Actions', () => {
               backgroundColor: null,
               description: 'stale',
               id: 'agent-1',
+              name: null,
               title: 'Stale Agent',
             },
           ],
@@ -106,6 +378,136 @@ describe('AgentSlice Actions', () => {
       });
 
       expect(result.current.availableAgents).toBeUndefined();
+    });
+
+    it('should seed a personal name matching the user language', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      const status = useGlobalStore.getState().status;
+      useGlobalStore.setState({ status: { ...status, language: 'zh-CN' } });
+      const { result } = renderHook(() => useAgentStore());
+
+      try {
+        await act(async () => {
+          await result.current.createAgent({ config: { title: '健康助手' } });
+        });
+
+        const config = vi.mocked(agentService.createAgent).mock.calls[0][0].config!;
+        expect(config.title).toBe('健康助手');
+        expect(config.name).toMatch(/^\p{Script=Han}+$/u);
+      } finally {
+        useGlobalStore.setState({ status });
+      }
+    });
+
+    it('uses the product title as a personal heterogeneous agent name', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      const userState = useUserStore.getState();
+      useUserStore.setState({
+        isSignedIn: true,
+        user: { fullName: 'Max', id: 'user-1' } as any,
+      });
+      const { result } = renderHook(() => useAgentStore());
+
+      try {
+        await act(async () => {
+          await result.current.createAgent({
+            config: {
+              agencyConfig: { heterogeneousProvider: { command: 'claude', type: 'claude-code' } },
+              title: 'Claude Code',
+            },
+          });
+        });
+
+        expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe(
+          'Claude Code',
+        );
+      } finally {
+        useUserStore.setState({ isSignedIn: userState.isSignedIn, user: userState.user });
+      }
+    });
+
+    it('uses a stable English owner-qualified name for a shared workspace agent', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      vi.spyOn(activeWorkspaceModule, 'getActiveWorkspaceId').mockReturnValue('workspace-1');
+      const userState = useUserStore.getState();
+      const status = useGlobalStore.getState().status;
+      useUserStore.setState({
+        isSignedIn: true,
+        user: { fullName: 'Max', id: 'user-1' } as any,
+      });
+      useGlobalStore.setState({ status: { ...status, language: 'zh-CN' } });
+      const { result } = renderHook(() => useAgentStore());
+
+      try {
+        await act(async () => {
+          await result.current.createAgent({
+            config: {
+              agencyConfig: { heterogeneousProvider: { command: 'claude', type: 'claude-code' } },
+              title: 'Claude Code',
+            },
+          });
+        });
+
+        expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe(
+          'Max’s Claude Code',
+        );
+      } finally {
+        useUserStore.setState({ isSignedIn: userState.isSignedIn, user: userState.user });
+        useGlobalStore.setState({ status });
+      }
+    });
+
+    it('uses the product title as a workspace-private heterogeneous agent name', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      vi.spyOn(activeWorkspaceModule, 'getActiveWorkspaceId').mockReturnValue('workspace-1');
+      const { result } = renderHook(() => useAgentStore());
+
+      await act(async () => {
+        await result.current.createAgent({
+          config: {
+            agencyConfig: { heterogeneousProvider: { command: 'claude', type: 'claude-code' } },
+            title: 'Claude Code',
+          },
+          visibility: 'private',
+        });
+      });
+
+      expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe('Claude Code');
+    });
+
+    it('uses the product title as a personal heterogeneous agent name for an anonymous owner', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      const userState = useUserStore.getState();
+      useUserStore.setState({ isSignedIn: false, user: undefined });
+      const { result } = renderHook(() => useAgentStore());
+
+      try {
+        await act(async () => {
+          await result.current.createAgent({
+            config: {
+              agencyConfig: { heterogeneousProvider: { command: 'claude', type: 'claude-code' } },
+              title: 'Claude Code',
+            },
+          });
+        });
+
+        expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe(
+          'Claude Code',
+        );
+      } finally {
+        useUserStore.setState({ isSignedIn: userState.isSignedIn, user: userState.user });
+      }
+    });
+
+    it('should keep a name the caller already provided', async () => {
+      vi.mocked(agentService.createAgent).mockResolvedValue({ agentId: 'agent-2' });
+      const { result } = renderHook(() => useAgentStore());
+
+      await act(async () => {
+        await result.current.createAgent({ config: { name: 'Ada', title: 'Math Tutor' } });
+      });
+
+      expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe('Ada');
     });
   });
 
@@ -142,6 +544,7 @@ describe('AgentSlice Actions', () => {
           backgroundColor: null,
           description: 'Helps with setup',
           id: 'agent-1',
+          name: null,
           title: 'Setup',
         },
       ]);
@@ -157,6 +560,7 @@ describe('AgentSlice Actions', () => {
             backgroundColor: null,
             description: 'Helps with setup',
             id: 'agent-1',
+            name: null,
             title: 'Setup',
           },
         ]);
@@ -205,6 +609,35 @@ describe('AgentSlice Actions', () => {
       // The background fetch only populates agentMap; it must not steal the active agent.
       expect(result.current.activeAgentId).toBe('routed-agent');
     });
+
+    it('replaces a stale profile snapshot so omitted editorData is cleared', async () => {
+      useAgentStore.setState({
+        activeAgentId: 'agent-1',
+        agentMap: {
+          'agent-1': {
+            editorData: { root: { children: [{ text: 'Old prompt' }] } },
+            id: 'agent-1',
+            systemRole: 'Old prompt',
+          } as any,
+        },
+      });
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValue({
+        id: 'agent-1',
+        systemRole: 'New prompt from Agent Builder',
+      } as any);
+
+      renderHook(() => useAgentStore().useFetchAgentConfig(true, 'agent-1'), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(useAgentStore.getState().agentMap['agent-1']).toEqual({
+          id: 'agent-1',
+          systemRole: 'New prompt from Agent Builder',
+        });
+      });
+      expect(useAgentStore.getState().agentMap['agent-1']).not.toHaveProperty('editorData');
+    });
   });
 
   describe('invalidateAvailableAgents', () => {
@@ -219,6 +652,7 @@ describe('AgentSlice Actions', () => {
               backgroundColor: null,
               description: 'stale',
               id: 'agent-1',
+              name: null,
               title: 'Stale Agent',
             },
           ],
@@ -398,6 +832,40 @@ describe('AgentSlice Actions', () => {
       );
     });
 
+    it('does not abort an in-flight save when another agent is updated', async () => {
+      const { result } = renderHook(() => useAgentStore());
+      let resolveAgentA: ((value: any) => void) | undefined;
+
+      vi.mocked(agentService.updateAgentConfig).mockImplementation((agentId) => {
+        if (agentId === 'agent-a') {
+          return new Promise((resolve) => {
+            resolveAgentA = resolve;
+          });
+        }
+
+        return Promise.resolve({ agent: { id: agentId } as any, success: true });
+      });
+
+      let saveAgentA!: Promise<void>;
+      act(() => {
+        saveAgentA = result.current.updateAgentConfigById('agent-a', { model: 'model-a' });
+      });
+      await waitFor(() => expect(agentService.updateAgentConfig).toHaveBeenCalledTimes(1));
+
+      const agentASignal = vi.mocked(agentService.updateAgentConfig).mock.calls[0][2];
+
+      await act(async () => {
+        await result.current.updateAgentConfigById('agent-b', { model: 'model-b' });
+      });
+
+      expect(agentASignal?.aborted).toBe(false);
+
+      await act(async () => {
+        resolveAgentA?.({ agent: { id: 'agent-a' } as any, success: true });
+        await saveAgentA;
+      });
+    });
+
     it('should surface the failure and roll back to server truth when the save is rejected', async () => {
       const { result } = renderHook(() => useAgentStore());
 
@@ -418,9 +886,29 @@ describe('AgentSlice Actions', () => {
         });
       });
 
-      expect(message.error).toHaveBeenCalled();
+      expect(toast.error).toHaveBeenCalled();
       // Optimistic value must not survive a rejected write — refetch server truth.
       expect(refreshSpy).toHaveBeenCalledWith('agent-1');
+      expect(result.current.saveStatus).toBe('idle');
+    });
+
+    it('should let a scoped editor own config failure feedback', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      vi.mocked(agentService.updateAgentConfig).mockRejectedValue(new Error('save failed'));
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await act(async () => {
+        await expect(
+          result.current.updateAgentConfigById(
+            'agent-1',
+            { editorData: {}, systemRole: 'draft' },
+            { rethrow: true, showErrorMessage: false },
+          ),
+        ).rejects.toThrow('save failed');
+      });
+
+      expect(toast.error).not.toHaveBeenCalled();
       expect(result.current.saveStatus).toBe('idle');
     });
   });
@@ -483,6 +971,40 @@ describe('AgentSlice Actions', () => {
         expect.any(AbortSignal),
       );
     });
+
+    it('keeps in-flight metadata saves isolated by agent', async () => {
+      const { result } = renderHook(() => useAgentStore());
+      let resolveAgentA: ((value: any) => void) | undefined;
+
+      vi.mocked(agentService.updateAgentMeta).mockImplementation((agentId) => {
+        if (agentId === 'agent-a') {
+          return new Promise((resolve) => {
+            resolveAgentA = resolve;
+          });
+        }
+
+        return Promise.resolve({ agent: { id: agentId } as any, success: true });
+      });
+
+      let saveAgentA!: Promise<void>;
+      act(() => {
+        saveAgentA = result.current.updateAgentMetaById('agent-a', { title: 'Agent A' });
+      });
+      await waitFor(() => expect(agentService.updateAgentMeta).toHaveBeenCalledTimes(1));
+
+      const agentASignal = vi.mocked(agentService.updateAgentMeta).mock.calls[0][2];
+
+      await act(async () => {
+        await result.current.updateAgentMetaById('agent-b', { title: 'Agent B' });
+      });
+
+      expect(agentASignal?.aborted).toBe(false);
+
+      await act(async () => {
+        resolveAgentA?.({ agent: { id: 'agent-a' } as any, success: true });
+        await saveAgentA;
+      });
+    });
   });
 
   describe('updateAgentChatConfig', () => {
@@ -519,6 +1041,30 @@ describe('AgentSlice Actions', () => {
         { chatConfig: { historyCount: 10 } },
         expect.any(AbortSignal),
       );
+    });
+
+    // automatic corrections must not trigger phantom save-error toasts: some chatConfig writes are automatic corrections (e.g. forcing
+    // `searchMode: 'auto'` for a model whose builtin search can't be turned off).
+    // A rejected correction must not toast "your change was not applied" for a
+    // change the user never made, so the option has to reach the write funnel.
+    it('should forward update options through the chatConfig wrapper', async () => {
+      const { result } = renderHook(() => useAgentStore());
+
+      vi.mocked(agentService.updateAgentConfig).mockRejectedValue(new Error('save failed'));
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      act(() => {
+        useAgentStore.setState({ activeAgentId: 'agent-1' });
+      });
+
+      await act(async () => {
+        await result.current.updateAgentChatConfig(
+          { searchMode: 'auto' },
+          { showErrorMessage: false },
+        );
+      });
+
+      expect(toast.error).not.toHaveBeenCalled();
     });
   });
 
@@ -670,6 +1216,7 @@ describe('AgentSlice Actions', () => {
               backgroundColor: null,
               description: 'Old Desc',
               id: 'agent-1',
+              name: null,
               title: 'Old Title',
             },
           ],
@@ -775,6 +1322,55 @@ describe('AgentSlice Actions', () => {
 
       expect(useAgentStore.getState().agentConfigErrorMap['agent-1']).toBeUndefined();
     });
+
+    it('should mark agentNotFoundMap when the fetch resolves to null (no access / deleted)', async () => {
+      // The backend resolves a cross-user private agent to null (not an error).
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(null as any);
+
+      renderHook(() => useAgentStore().useFetchAgentConfig(true, 'agent-private'), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() =>
+        expect(useAgentStore.getState().agentNotFoundMap['agent-private']).toBe(true),
+      );
+      // Settled — not an error, not loading, and never lands in agentMap.
+      expect(useAgentStore.getState().agentConfigErrorMap['agent-private']).toBeUndefined();
+      expect(useAgentStore.getState().agentMap['agent-private']).toBeUndefined();
+    });
+
+    it('should drop the cached config when a previously loaded agent turns not-found', async () => {
+      // Loaded once, then the owner flips it back to private: the stale
+      // title/avatar in agentMap must not outlive the 404 state.
+      useAgentStore.setState({
+        agentMap: { 'agent-private': { model: 'gpt-4' } },
+      });
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(null as any);
+
+      renderHook(() => useAgentStore().useFetchAgentConfig(true, 'agent-private'), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() =>
+        expect(useAgentStore.getState().agentNotFoundMap['agent-private']).toBe(true),
+      );
+      expect(useAgentStore.getState().agentMap['agent-private']).toBeUndefined();
+    });
+
+    it('should clear agentNotFoundMap once a later fetch succeeds (agent made public again)', async () => {
+      useAgentStore.setState({ agentNotFoundMap: { 'agent-1': true } });
+
+      const mockAgentConfig = { id: 'agent-1', model: 'gpt-4' } as LobeAgentConfig;
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(mockAgentConfig as any);
+
+      const { result } = renderHook(() => useAgentStore().useFetchAgentConfig(true, 'agent-1'), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => expect(result.current.data).toEqual(mockAgentConfig));
+
+      expect(useAgentStore.getState().agentNotFoundMap['agent-1']).toBeUndefined();
+    });
   });
 
   describe('useHydrateAgentConfig', () => {
@@ -797,6 +1393,18 @@ describe('AgentSlice Actions', () => {
       expect(agentService.getAgentConfigById).toHaveBeenCalledWith('agent-1');
       expect(useAgentStore.getState().activeAgentId).toBe('agent-current');
       expect(useAgentStore.getState().agentMap['agent-1']).toBeDefined();
+    });
+
+    it('should mark agentNotFoundMap when the hydrate fetch resolves to null', async () => {
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(null as any);
+
+      renderHook(() => useAgentStore().useHydrateAgentConfig(true, 'agent-private'), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() =>
+        expect(useAgentStore.getState().agentNotFoundMap['agent-private']).toBe(true),
+      );
     });
   });
 });

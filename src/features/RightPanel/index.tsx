@@ -1,9 +1,8 @@
-import { type DraggablePanelProps } from '@lobehub/ui';
-import { DraggablePanel } from '@lobehub/ui';
+import { DraggablePanel, type DraggablePanelProps } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import { memo, Suspense, useState } from 'react';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+import SurfaceSkeleton from '@/components/Skeleton/Surface';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -77,7 +76,9 @@ const RightPanel = memo<RightPanelProps>(
         }}
         {...rest}
       >
-        <Suspense fallback={<Loading debugId={'RightPanel'} />}>{children}</Suspense>
+        <Suspense fallback={<SurfaceSkeleton header={false} variant={'list'} />}>
+          {children}
+        </Suspense>
       </DraggablePanel>
     );
   },

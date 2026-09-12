@@ -4,7 +4,9 @@ import {
   DEFAULT_DISCOVER_ASSISTANT_ITEM,
   DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
+  discoverUrl,
   isDesktop,
+  OFFICIAL_SITE,
 } from '@lobechat/const';
 import {
   type AgentStatus,
@@ -593,9 +595,7 @@ export class DiscoverService {
           : [],
         forkCount: (data as any).forkCount,
         forkedFromAgentId: (data as any).forkedFromAgentId,
-        homepage:
-          (data as any).homepage ||
-          `https://lobehub.com/discover/assistant/${(data as any).identifier}`,
+        homepage: (data as any).homepage || discoverUrl('assistant', (data as any).identifier),
         identifier: (data as any).identifier,
         isValidated: (data as any).isValidated,
         knowledgeCount:
@@ -669,7 +669,10 @@ export class DiscoverService {
     }
   };
 
-  getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
+  getAssistantList = async (
+    params: AssistantQueryParams = {},
+    options: { throwOnError?: boolean } = {},
+  ): Promise<AssistantListResponse> => {
     log('getAssistantList: params=%O', params);
     const { source, ...rest } = params;
     if (this.isLegacySource(source)) {
@@ -686,6 +689,7 @@ export class DiscoverService {
       sort = AssistantSorts.Recommended,
       ownerId,
       includeAgentGroup,
+      includeCategoryCounts,
     } = rest;
     const shouldOmitCategory = [AssistantCategory.All, AssistantCategory.Discover].includes(
       category as AssistantCategory,
@@ -726,6 +730,7 @@ export class DiscoverService {
         haveSkills,
         // includeAgentGroup may not be in SDK type definition yet, using 'as any'
         includeAgentGroup,
+        includeCategoryCounts,
         locale: normalizedLocale,
         order,
         ownerId,
@@ -748,7 +753,7 @@ export class DiscoverService {
           createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
           description: item.description || item.summary || '',
           forkCount: item.forkCount,
-          homepage: item.homepage || `https://lobehub.com/discover/assistant/${item.identifier}`,
+          homepage: item.homepage || discoverUrl('assistant', item.identifier),
           identifier: item.identifier,
           installCount: item.installCount,
           knowledgeCount: item.knowledgeCount ?? item.config?.knowledgeBases?.length ?? 0,
@@ -764,6 +769,7 @@ export class DiscoverService {
       });
 
       const result: AssistantListResponse = {
+        ...((data as any).categoryCounts ? { categoryCounts: (data as any).categoryCounts } : {}),
         currentPage: data.currentPage || page,
         items: transformedItems,
         pageSize: data.pageSize || pageSize,
@@ -780,6 +786,8 @@ export class DiscoverService {
       return result;
     } catch (error) {
       log('getAssistantList: error fetching from market SDK: %O', error);
+      if (options.throwOnError) throw error;
+
       return {
         currentPage: page,
         items: [],
@@ -961,7 +969,7 @@ export class DiscoverService {
           config: {} as any,
           createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
           description: item.description || '',
-          homepage: `https://lobehub.com/discover/assistant/${item.identifier}`,
+          homepage: discoverUrl('assistant', item.identifier),
           identifier: item.identifier,
           installCount: item.installCount,
           knowledgeCount: item.knowledgeCount || 0,
@@ -1152,7 +1160,7 @@ export class DiscoverService {
         category: undefined,
         createdAt: '',
         description: builtinTool.manifest.meta.description || '',
-        homepage: 'https://lobehub.com',
+        homepage: OFFICIAL_SITE,
         identifier: builtinTool.identifier,
         manifest: undefined,
         related: [],
@@ -1841,7 +1849,7 @@ export class DiscoverService {
         createdAt: agent.createdAt,
         description: agent.description || '',
         forkCount: agent.forkCount,
-        homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
+        homepage: discoverUrl('assistant', agent.identifier),
         identifier: agent.identifier,
         installCount: agent.installCount,
         isValidated: agent.isValidated,
@@ -1862,7 +1870,7 @@ export class DiscoverService {
         createdAt: group.createdAt,
         description: group.description || '',
         forkCount: group.forkCount,
-        homepage: `https://lobehub.com/discover/group_agent/${group.identifier}`,
+        homepage: discoverUrl('group_agent', group.identifier),
         identifier: group.identifier,
         installCount: group.installCount || 0,
         isFeatured: group.isFeatured || false,
@@ -1887,7 +1895,7 @@ export class DiscoverService {
           description: agent.description || '',
           forkCount: agent.forkCount || 0,
           forkedFromAgentId: agent.forkedFromAgentId || null,
-          homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
+          homepage: discoverUrl('assistant', agent.identifier),
           identifier: agent.identifier,
           installCount: agent.installCount,
           isValidated: agent.isValidated,
@@ -1910,7 +1918,7 @@ export class DiscoverService {
         description: group.description || '',
         forkCount: group.forkCount || 0,
         forkedFromGroupId: group.forkedFromGroupId || null,
-        homepage: `https://lobehub.com/discover/group_agent/${group.identifier}`,
+        homepage: discoverUrl('group_agent', group.identifier),
         identifier: group.identifier,
         installCount: group.installCount || 0,
         isFeatured: group.isFeatured || false,
@@ -1935,7 +1943,7 @@ export class DiscoverService {
           description: agent.description || '',
           forkCount: agent.forkCount || 0,
           forkedFromAgentId: agent.forkedFromAgentId || null,
-          homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
+          homepage: discoverUrl('assistant', agent.identifier),
           identifier: agent.identifier,
           installCount: agent.installCount,
           isValidated: agent.isValidated,
@@ -1958,7 +1966,7 @@ export class DiscoverService {
         description: group.description || '',
         forkCount: group.forkCount || 0,
         forkedFromGroupId: group.forkedFromGroupId || null,
-        homepage: `https://lobehub.com/discover/group_agent/${group.identifier}`,
+        homepage: discoverUrl('group_agent', group.identifier),
         identifier: group.identifier,
         installCount: group.installCount || 0,
         isFeatured: group.isFeatured || false,
@@ -2004,7 +2012,7 @@ export class DiscoverService {
         category: plugin.category,
         createdAt: plugin.createdAt,
         description: plugin.description || '',
-        homepage: `https://lobehub.com/discover/plugin/${plugin.identifier}`,
+        homepage: discoverUrl('plugin', plugin.identifier),
         identifier: plugin.identifier,
         installCount: plugin.installCount || 0,
         isClaimed: plugin.isClaimed || false,

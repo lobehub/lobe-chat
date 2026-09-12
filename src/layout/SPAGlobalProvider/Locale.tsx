@@ -1,4 +1,5 @@
 import { ConfigProvider } from 'antd';
+import enUS from 'antd/locale/en_US';
 import dayjs from 'dayjs';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState } from 'react';
@@ -63,6 +64,24 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
     if (defaultLang) updateDayjs(defaultLang);
   }, [defaultLang]);
 
+  // Load the antd locale for the initial language too — `languageChanged` can fire
+  // before the listener below is registered, leaving ConfigProvider without a locale
+  // (antd then falls back to en_US, and pro-components intl to zh-CN)
+  useEffect(() => {
+    if (locale || !defaultLang) return;
+    let canceled = false;
+    getAntdLocale(defaultLang)
+      .then((initialLocale) => {
+        if (!canceled) setLocale((prev: any) => prev ?? initialLocale);
+      })
+      .catch((error) => {
+        console.error(`antd locale for ${defaultLang} not found`, error);
+      });
+    return () => {
+      canceled = true;
+    };
+  }, [defaultLang, locale]);
+
   if (!i18n.instance.isInitialized)
     i18n.init().then(async () => {
       const resolvedLang = i18n.instance.language || defaultLang;
@@ -88,7 +107,10 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
   return (
     <ConfigProvider
       direction={documentDir}
-      locale={locale}
+      // antd only wraps children in `LocaleProvider` when `locale` is truthy. Going
+      // from undefined to a resolved locale therefore inserts a node into the tree and
+      // remounts every provider below — the whole app boots twice. Keep the shape stable.
+      locale={locale ?? enUS}
       theme={{
         components: {
           Button: {

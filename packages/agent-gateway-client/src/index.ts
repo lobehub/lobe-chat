@@ -1,18 +1,27 @@
 export { AgentStreamClient } from './client';
+export { sanitizeAgentInterventionRequestForReview } from './intervention';
 export type {
+  AgentInterventionInteractionKind,
+  AgentInterventionProvider,
+  AgentInterventionRenderArguments,
+  AgentInterventionRenderOption,
+  AgentInterventionRenderQuestion,
   AgentInterventionRequestData,
   AgentInterventionResponseData,
   AgentStreamClientEvents,
   AgentStreamClientOptions,
   AgentStreamEvent,
   AgentStreamEventType,
+  AgentStreamSessionCompletion,
   ConnectionStatus,
   StepCompleteData,
   StreamChunkData,
   StreamChunkType,
   StreamStartData,
+  SubAgentProgressData,
   ToolEndData,
   ToolExecuteData,
   ToolResultMessage,
   ToolStartData,
+  ToolStateChunkData,
 } from './types';

@@ -1,7 +1,8 @@
 import { getBuiltinRender } from '@lobechat/builtin-tools/renders';
 import { getBuiltinStreaming } from '@lobechat/builtin-tools/streamings';
 import { LOADING_FLAT } from '@lobechat/const';
-import { AccordionItem, Flexbox, Skeleton } from '@lobehub/ui';
+import { AccordionItem, Flexbox } from '@lobehub/ui';
+import { Skeleton } from '@lobehub/ui/base-ui';
 import { Divider } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useEffect, useState } from 'react';
@@ -18,12 +19,12 @@ import Actions from './Actions';
 import Inspectors from './Inspector';
 
 const Debug = dynamic(() => import('./Debug'), {
-  loading: () => <Skeleton.Block active height={300} width={'100%'} />,
+  loading: () => <Skeleton height={300} width={'100%'} />,
   ssr: false,
 });
 
 const Detail = dynamic(() => import('./Detail'), {
-  loading: () => <Skeleton.Block active height={120} width={'100%'} />,
+  loading: () => <Skeleton height={120} width={'100%'} />,
   ssr: false,
 });
 
@@ -96,7 +97,9 @@ const Tool = memo<GroupToolProps>(({ assistantMessageId, disableEditing, id }) =
   const looksLikeWaitingForToolResult = !hasError && !isArgumentsStreaming && !hasFinishedResult;
   const isToolCallingFallback = looksLikeWaitingForToolResult && isAssistantMessageBusy;
   const isToolCalling = !hasFinishedResult && (isToolCallingFromOperation || isToolCallingFallback);
-  const toolCallStartTime = useChatStore(operationSelectors.getRunningToolCallStartTime(id));
+  const toolCallStartTime = useConversationStore(
+    dataSelectors.getToolMessageCreatedAt(toolMessageId),
+  );
 
   const hasCustomRender = !!getBuiltinRender(identifier, apiName);
   // Only allow toggle when has custom render and not in pending/reject/abort state
@@ -152,6 +155,7 @@ const Tool = memo<GroupToolProps>(({ assistantMessageId, disableEditing, id }) =
           identifier={identifier}
           intervention={intervention}
           isArgumentsStreaming={isArgumentsStreaming}
+          isExpanded={isToolDetailExpand}
           isToolCalling={isToolCalling}
           result={result}
           toolCallId={id}

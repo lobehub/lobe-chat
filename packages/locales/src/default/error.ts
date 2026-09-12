@@ -170,10 +170,28 @@ export default {
     'Repeated content policy rejections detected. Please revise your prompt before retrying.',
   'response.ProviderImageContentModerationWarning':
     'Repeated image safety rejections detected. Similar prompts may temporarily pause image generation.',
+  'response.ProviderImageContentModerationCooldown':
+    'Image generation is temporarily paused due to repeated safety rejections. Try again later with safer prompts.',
+  'response.ProviderImageContentModerationCooldownUntil':
+    'Image generation is temporarily paused due to repeated safety rejections and is expected to resume at {{time}}. Revise your prompt before retrying.',
+  'response.ProviderImageContentModerationCooldownExpired':
+    'This generation was paused due to content safety restrictions. Its waiting period has ended. Revise your prompt and try again.',
+  'response.DeviceGatewayNotConfigured':
+    "Couldn't reach a run device for this agent. Connect a device, or configure the device gateway on the server, then try again.",
+  'response.RemoteServerOffline':
+    'You appear to be offline. This is a problem with your local network, not the app — please check your internet connection and try again.',
+  'response.RemoteServerTimeout':
+    'The connection to the server timed out. This usually indicates a local network problem — please check your network quality, proxy, or VPN settings and try again.',
+  'response.RemoteServerDNSFailed':
+    'The server address could not be resolved. This usually indicates a local network or DNS problem — please check your network, DNS, or VPN settings and try again.',
+  'response.RemoteServerConnectionRefused':
+    'The connection to the server was refused or reset. This usually indicates a local network problem — please check your firewall, proxy, or VPN settings and try again.',
+  'response.RemoteServerCertInvalid':
+    'A secure connection to the server could not be established due to a certificate problem. Please check your system clock, or whether a proxy/firewall is intercepting the connection.',
+  'response.RemoteServerUnreachable':
+    'The server could not be reached. This usually indicates a local network problem — please check your internet connection, proxy, or VPN settings and try again.',
   'response.ServerAgentRuntimeError':
     'Sorry, the Agent service is currently unavailable. Please try again later or contact us via email for support.',
-  'response.SubscriptionKeyMismatch':
-    'We apologize for the inconvenience. Due to a temporary system malfunction, your current subscription usage is inactive. Please click the button below to restore your subscription, or contact us via email for support.',
   'response.SubscriptionPlanLimit':
     'Your subscription points have been exhausted, and you cannot use this feature. Please upgrade to a higher plan or configure a custom model API to continue using it.',
   'response.SubscriptionPlanLimitUltimate':
@@ -184,6 +202,8 @@ export default {
     'The model "{{model}}" is no longer available. Please pick a current model from the model selector.',
   'response.UnknownChatFetchError':
     'Sorry, an unknown request error occurred. Please check the information below or try again.',
+  'response.UnreadableServerResponse':
+    'The server returned a response the app could not read. This is usually a temporary network or gateway problem — please try again in a moment.',
   'response.WorkspaceAgentRequiresWorkspaceDevice':
     'This agent lives in a workspace, so it can only bind devices the whole team can reach. Personal devices stay with the user who registered them — pick a workspace device instead, or enroll this device to the workspace first.',
   'response.WorkspaceFrozenByAdmin':
@@ -221,14 +241,32 @@ export default {
     'The group host is unable to function. Please check your host configuration to ensure the correct model, API Key, and API endpoint are set.',
   'testConnectionFailed': 'Test connection failed: {{error}}',
   'tts.responseError': 'Service request failed, please check the configuration or try again',
+  'transfer.agentOwnedByGroup':
+    'This agent belongs to a chat group and cannot be moved on its own. Move the group instead, or remove the agent from it first.',
+  'transfer.groupHasInaccessibleMember':
+    'This group includes a member you do not have access to. Ask its owner to share it with the workspace, or remove it from the group, then try again.',
   'transfer.noPermission': "You don't have permission to move this resource.",
   'transfer.ownerOnly': 'Only workspace owners can transfer resources created by other members.',
   'transfer.resourceNotFound':
     'This resource no longer exists or you no longer have access. Refresh and try again.',
+  'transfer.copyInProgress':
+    'A previous copy of this agent is still duplicating its history. Try again once it finishes.',
+  'transfer.transferInProgress':
+    'A previous move of this resource is still migrating its history. Try again once it finishes.',
+  'transfer.sharedTransferBlocked': 'This agent has a share link, so its owner cannot be changed.',
   'transfer.sameWorkspace':
     'This resource is already in the selected workspace. Choose another target.',
+  'transfer.targetIsCurrentOwner': 'This agent already belongs to that member. Pick someone else.',
   'transfer.targetNoWriteAccess':
     'You need Member or Owner access to move resources into the target workspace.',
+  'transfer.targetNotWorkspaceMember':
+    'The selected recipient is not an active member of this workspace. Refresh the member list and try again.',
+  'transfer.transferRequestPending':
+    'This agent already has a pending transfer request. Withdraw it or wait for the recipient to respond.',
+  'transfer.transferRequestExpired':
+    'This transfer request has expired. Ask for a new one to be sent.',
+  'transfer.transferRequestStale':
+    'The agent changed since this request was created, so it can no longer complete.',
   'unlock.addProxyUrl': 'Add OpenAI proxy URL (optional)',
   'unlock.apiKey.description': 'Enter your {{name}} API Key to start the session',
   'unlock.apiKey.imageGenerationDescription': 'Enter your {{name}} API Key to start generating',
@@ -257,6 +295,7 @@ export default {
     "Please check your network connection and ensure that the file storage service's cross-origin configuration is correct.",
   'upload.storageBlock.billingUnavailable':
     'Your subscription billing status cannot be verified. Please try again later or update your billing details.',
+  'upload.storageBlock.cleanupFiles': 'Free up space',
   'upload.storageBlock.monthlyCapReached': 'Your monthly storage spending cap has been reached.',
   'upload.storageBlock.noPaymentMethod': 'Please add a payment method to continue uploading.',
   'upload.storageBlock.viewUsage': 'View storage usage',

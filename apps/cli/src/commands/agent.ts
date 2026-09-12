@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
-import { ReasoningGraphSchema } from '@lobechat/types';
-import type { Command } from 'commander';
+import { AgentGraphSchema } from '@lobechat/types/agent/graph';
+import { type Command, InvalidArgumentError } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../api/client';
@@ -17,20 +17,38 @@ import { confirm, outputJson, printTable, truncate } from '../utils/format';
 import { log, setVerbose } from '../utils/logger';
 import { resolveAgentId } from './agent/resolveAgentId';
 import { registerAgentSpaceFsCommand } from './agent/spaceFs';
+import { resolveAppUrlBuilder } from './task/url';
 
 const readGraphConfig = async (graphFile: string): Promise<unknown> => {
   const content = await readFile(graphFile, 'utf8');
   const graph = JSON.parse(content);
-  const result = ReasoningGraphSchema.safeParse(graph);
+  const result = AgentGraphSchema.safeParse(graph);
 
   if (!result.success) {
     const issue = result.error.issues[0];
     const path = issue?.path.length ? `${issue.path.join('.')}: ` : '';
-    throw new Error(`Invalid ReasoningGraph: ${path}${issue?.message ?? 'unknown error'}`);
+    throw new Error(`Invalid AgentGraph: ${path}${issue?.message ?? 'unknown error'}`);
   }
 
   return result.data;
 };
+
+const readJsonObjectFile = async (
+  filePath: string,
+  label: string,
+): Promise<Record<string, unknown>> => {
+  const content = await readFile(filePath, 'utf8');
+  const parsed = JSON.parse(content);
+
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error(`${label} JSON must be a plain object`);
+  }
+
+  return parsed as Record<string, unknown>;
+};
+
+const readAgencyConfig = (agencyConfigFile: string): Promise<Record<string, unknown>> =>
+  readJsonObjectFile(agencyConfigFile, 'agencyConfig');
 
 export function registerAgentCommand(program: Command) {
   const agent = program.command('agent').description('Manage agents');
@@ -140,6 +158,7 @@ export function registerAgentCommand(program: Command) {
         title?: string;
       }) => {
         const client = await getTrpcClient();
+        const buildUrl = await resolveAppUrlBuilder(client);
 
         const config: Record<string, any> = {};
         if (options.title) config.title = options.title;
@@ -153,8 +172,11 @@ export function registerAgentCommand(program: Command) {
 
         const result = await client.agent.createAgent.mutate(input as any);
         const r = result as any;
-        console.log(`${pc.green('✓')} Created agent ${pc.bold(r.agentId || r.id)}`);
+        const agentId = r.agentId || r.id;
+        const url = buildUrl(`/agent/${encodeURIComponent(agentId)}`);
+        console.log(`${pc.green('✓')} Created agent ${pc.bold(agentId)}`);
         if (r.sessionId) console.log(`  Session: ${r.sessionId}`);
+        console.log(`${pc.bold('agent')}: ${url}`);
       },
     );
 
@@ -169,17 +191,29 @@ export function registerAgentCommand(program: Command) {
     .option('-m, --model <model>', 'New model ID')
     .option('-p, --provider <provider>', 'New provider ID')
     .option('-s, --system-role <role>', 'New system role prompt')
-    .option('--graph-file <path>', 'ReasoningGraph JSON file')
+    .option('--graph-file <path>', 'AgentGraph JSON file')
     .option('--enable-graph', 'Enable graph runtime')
     .option('--disable-graph', 'Disable graph runtime')
+    .option(
+      '--agency-config-file <path>',
+      'agencyConfig JSON file, deep-merged into the agent (send `null` to clear a nested key)',
+    )
+    .option(
+      '--config-file <path>',
+      'Agent config JSON file for fields without a dedicated flag (openingMessage, openingQuestions, tags, avatar, params, chatConfig, …). Deep-merged server-side; identity fields (id/slug/userId/workspaceId/visibility) are rejected. Explicit flags win over this file.',
+    )
+    .option('--json [fields]', 'Output the updated agent as JSON, optionally selecting fields')
     .action(
       async (
         agentIdArg: string | undefined,
         options: {
+          agencyConfigFile?: string;
+          configFile?: string;
           description?: string;
           disableGraph?: boolean;
           enableGraph?: boolean;
           graphFile?: string;
+          json?: string | boolean;
           model?: string;
           provider?: string;
           slug?: string;
@@ -188,6 +222,19 @@ export function registerAgentCommand(program: Command) {
         },
       ) => {
         const value: Record<string, any> = {};
+
+        // Read first so the explicit flags below overwrite it — the file is the
+        // broad brush, the flags are the precise correction.
+        if (options.configFile) {
+          try {
+            Object.assign(value, await readJsonObjectFile(options.configFile, 'agent config'));
+          } catch (error) {
+            log.error(`Failed to read agent config JSON: ${(error as Error).message}`);
+            process.exit(1);
+            return;
+          }
+        }
+
         if (options.title) value.title = options.title;
         if (options.description) value.description = options.description;
         if (options.model) value.model = options.model;
@@ -200,23 +247,44 @@ export function registerAgentCommand(program: Command) {
           return;
         }
 
-        const chatConfig: Record<string, any> = {};
-        if (options.enableGraph) chatConfig.enableGraphMode = true;
-        if (options.disableGraph) chatConfig.enableGraphMode = false;
+        // agencyConfig is deep-merged server-side, so a nested key is removed by
+        // sending it as `null` (e.g. `{ "heterogeneousProvider": null }`); omitted keys are kept.
+        if (options.agencyConfigFile) {
+          try {
+            value.agencyConfig = await readAgencyConfig(options.agencyConfigFile);
+          } catch (error) {
+            log.error(`Failed to read agencyConfig JSON: ${(error as Error).message}`);
+            process.exit(1);
+            return;
+          }
+        }
+
+        // Graph Agent flags live on the agency config (the agent's behavior
+        // body), not the chat config. Merged, not replaced: `--config-file` /
+        // `--agency-config-file` may carry other agencyConfig keys and the
+        // graph flags should only override the ones they own.
+        const graphAgencyConfig: Record<string, any> = {};
+        if (options.enableGraph) graphAgencyConfig.enableGraphMode = true;
+        if (options.disableGraph) graphAgencyConfig.enableGraphMode = false;
         if (options.graphFile) {
           try {
-            chatConfig.graph = await readGraphConfig(options.graphFile);
+            graphAgencyConfig.graph = await readGraphConfig(options.graphFile);
           } catch (error) {
             log.error(`Failed to read graph JSON: ${(error as Error).message}`);
             process.exit(1);
             return;
           }
         }
-        if (Object.keys(chatConfig).length > 0) value.chatConfig = chatConfig;
+        if (Object.keys(graphAgencyConfig).length > 0) {
+          value.agencyConfig = {
+            ...(value.agencyConfig as object | undefined),
+            ...graphAgencyConfig,
+          };
+        }
 
         if (Object.keys(value).length === 0) {
           log.error(
-            'No changes specified. Use --title, --description, --model, --provider, --system-role, --graph-file, --enable-graph, or --disable-graph.',
+            'No changes specified. Use --title, --description, --model, --provider, --system-role, --graph-file, --enable-graph, --disable-graph, --agency-config-file, or --config-file.',
           );
           process.exit(1);
           return;
@@ -224,7 +292,14 @@ export function registerAgentCommand(program: Command) {
 
         const client = await getTrpcClient();
         const agentId = await resolveAgentId(client, { agentId: agentIdArg, slug: options.slug });
-        await client.agent.updateAgentConfig.mutate({ agentId, value });
+        const result: any = await client.agent.updateAgentConfig.mutate({ agentId, value });
+
+        if (options.json !== undefined) {
+          const fields = typeof options.json === 'string' ? options.json : undefined;
+          outputJson(result?.agent ?? result, fields);
+          return;
+        }
+
         console.log(`${pc.green('✓')} Updated agent ${pc.bold(agentId)}`);
       },
     );
@@ -656,6 +731,53 @@ export function registerAgentCommand(program: Command) {
         if (r.error) console.log(`  Error:  ${pc.red(r.error)}`);
         if (r.createdAt) console.log(`  Started: ${r.createdAt}`);
         if (r.completedAt) console.log(`  Ended:   ${r.completedAt}`);
+      },
+    );
+
+  // ── interrupt ──────────────────────────────────────────
+
+  // Mirrors the server's InterruptTaskSchema: all three ids are optional, but
+  // at least one of operationId / threadId must be provided.
+  agent
+    .command('interrupt')
+    .description('Interrupt a running agent operation')
+    .option('--operation-id <id>', 'Operation ID to interrupt')
+    .option('--thread-id <id>', 'Thread ID (resolves the operation from thread metadata)')
+    .option('--topic-id <id>', 'Topic ID (enables remote device cancellation when applicable)')
+    .option('--json', 'Output JSON envelope')
+    .action(
+      async (options: {
+        json?: boolean;
+        operationId?: string;
+        threadId?: string;
+        topicId?: string;
+      }) => {
+        if (!options.operationId && !options.threadId) {
+          throw new InvalidArgumentError('Either --thread-id or --operation-id must be provided');
+        }
+
+        const client = await getTrpcClient();
+        const input: Record<string, any> = {};
+        if (options.operationId) input.operationId = options.operationId;
+        if (options.threadId) input.threadId = options.threadId;
+        if (options.topicId) input.topicId = options.topicId;
+
+        const result = await client.aiAgent.interruptTask.mutate(input as any);
+
+        if (options.json) {
+          outputJson(result);
+          return;
+        }
+
+        const r = result as any;
+        const label = r?.operationId ?? options.operationId ?? options.threadId;
+        if (r?.success) {
+          console.log(`${pc.green('OK')} Interrupted operation ${pc.bold(label)}`);
+        } else {
+          console.log(
+            `${pc.yellow('!')} Interrupt not acknowledged for ${pc.bold(label)} (already finished?)`,
+          );
+        }
       },
     );
 }

@@ -1,4 +1,18 @@
 export default {
+  'workingDirectory.addFolderFailed': 'Could not add this folder. Please try again.',
+  'workingDirectory.browseDescription': 'Choose a folder on the connected device.',
+  'workingDirectory.browseFolders': 'Browse folders',
+  'workingDirectory.enterPathManually': 'Enter path manually',
+  'workingDirectory.folderUnreadable': 'No permission to open this folder',
+  'workingDirectory.foldersEmpty': 'No subfolders. You can select this folder.',
+  'workingDirectory.foldersLoadFailed':
+    'Could not load folders. Check the device connection and folder permissions, then retry or enter a path manually.',
+  'workingDirectory.foldersLoading': 'Loading folders…',
+  'workingDirectory.home': 'Home folder',
+  'workingDirectory.loadMoreFolders': 'Load more folders',
+  'workingDirectory.openPath': 'Open',
+  'workingDirectory.parentFolder': 'Parent folder',
+  'workingDirectory.useFolder': 'Use this folder',
   'workingDirectory.addFolder': 'Add folder…',
   'workingDirectory.addFolderDesc':
     'Enter an absolute path on the target device, e.g. /Users/name/projects',
@@ -18,6 +32,7 @@ export default {
   'workingDirectory.checkoutFailed': 'Checkout failed',
   'workingDirectory.chooseDifferentFolder': 'Choose a folder...',
   'workingDirectory.clear': 'Reset to default',
+  'workingDirectory.clearDefault': 'Clear default',
   'workingDirectory.clean': 'clean',
   'workingDirectory.createBranchAction': 'Checkout new branch…',
   'workingDirectory.createBranchTitle': 'Create new branch',
@@ -27,6 +42,7 @@ export default {
   'workingDirectory.createWorktreeTitle': 'Create new worktree',
   'workingDirectory.current': 'Current working directory',
   'workingDirectory.defaultBadge': 'Default',
+  'workingDirectory.defaultUpdateFailed': 'Couldn’t update the default working directory',
   'workingDirectory.deleteBranchAction': 'Delete branch',
   'workingDirectory.deleteBranchConfirm':
     'Delete branch “{{name}}”? This permanently removes it, including any unmerged commits.',
@@ -64,7 +80,7 @@ export default {
   'workingDirectory.pushInProgress': 'Pushing…',
   'workingDirectory.pushNoop': 'Everything up-to-date',
   'workingDirectory.pushSuccess': 'Pushed successfully',
-  'workingDirectory.recent': 'Working directories',
+  'workingDirectory.recent': 'Working directory',
   'workingDirectory.refreshGitStatus': 'Refresh branch & PR status',
   'workingDirectory.removeRecent': 'Remove from recent',
   'workingDirectory.removed': 'Removed “{{name}}”',
@@ -74,6 +90,11 @@ export default {
   'workingDirectory.searchPlaceholder': 'Search directories',
   'workingDirectory.selectFolder': 'Select folder',
   'workingDirectory.setDefault': 'Set as default',
+  'workingDirectory.staleResetToSource': 'Switch back to {{name}}',
+  'workingDirectory.staleSnapshot':
+    'The directory recorded for this conversation no longer exists — showing the Git snapshot saved on the topic.',
+  'workingDirectory.staleWorktreeSnapshot':
+    'The worktree “{{name}}” recorded for this conversation no longer exists — showing the Git snapshot saved on the topic.',
   'workingDirectory.title': 'Working Directory',
   'workingDirectory.undo': 'Undo',
   'workingDirectory.topicDescription': 'Override Agent default for this conversation only',

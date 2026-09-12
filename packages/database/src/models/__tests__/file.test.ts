@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { FilesTabs, SortType } from '@lobechat/types';
+import { FileSource, FilesTabs, SortType } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -288,6 +288,84 @@ describe('FileModel', () => {
         where: inArray(asyncTasks.id, [chunkTask!.id, embeddingTask!.id]),
       });
       expect(remainingTasks).toHaveLength(0);
+    });
+  });
+
+  describe('deleteUnreferenced', () => {
+    it('deletes an owned file that has no message or session references', async () => {
+      await fileModel.createGlobalFile({
+        creator: userId,
+        fileType: 'audio/webm',
+        hashId: 'voice-unreferenced',
+        size: 100,
+        url: 'voice/unreferenced.webm',
+      });
+      const { id } = await fileModel.create({
+        fileHash: 'voice-unreferenced',
+        fileType: 'audio/webm',
+        name: 'voice.webm',
+        size: 100,
+        url: 'voice/unreferenced.webm',
+      });
+
+      const deleted = await fileModel.deleteUnreferenced(id);
+
+      expect(deleted).toMatchObject({ id, url: 'voice/unreferenced.webm' });
+      await expect(
+        serverDB.query.files.findFirst({ where: eq(files.id, id) }),
+      ).resolves.toBeUndefined();
+    });
+
+    it('preserves a file attached to a persisted message', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'audio/webm',
+        name: 'voice.webm',
+        size: 100,
+        url: 'voice/message.webm',
+      });
+      await serverDB.insert(messages).values({ id: 'voice-message', role: 'user', userId });
+      await serverDB
+        .insert(messagesFiles)
+        .values({ fileId: id, messageId: 'voice-message', userId });
+
+      await expect(fileModel.deleteUnreferenced(id)).resolves.toBeUndefined();
+      await expect(
+        serverDB.query.files.findFirst({ where: eq(files.id, id) }),
+      ).resolves.toBeDefined();
+    });
+
+    it('preserves a file attached to a session', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'audio/webm',
+        name: 'voice.webm',
+        size: 100,
+        url: 'voice/session.webm',
+      });
+      await serverDB.insert(sessions).values({ id: 'voice-session', userId });
+      await serverDB
+        .insert(filesToSessions)
+        .values({ fileId: id, sessionId: 'voice-session', userId });
+
+      await expect(fileModel.deleteUnreferenced(id)).resolves.toBeUndefined();
+      await expect(
+        serverDB.query.files.findFirst({ where: eq(files.id, id) }),
+      ).resolves.toBeDefined();
+    });
+
+    it("does not delete another user's unreferenced file", async () => {
+      await serverDB.insert(files).values({
+        fileType: 'audio/webm',
+        id: 'other-user-voice',
+        name: 'voice.webm',
+        size: 100,
+        url: 'voice/other.webm',
+        userId: 'user2',
+      });
+
+      await expect(fileModel.deleteUnreferenced('other-user-voice')).resolves.toBeUndefined();
+      await expect(
+        serverDB.query.files.findFirst({ where: eq(files.id, 'other-user-voice') }),
+      ).resolves.toBeDefined();
     });
   });
 
@@ -701,6 +779,51 @@ describe('FileModel', () => {
       it('should include all files when showFilesInKnowledgeBase is true', async () => {
         const result = await fileModel.query({ showFilesInKnowledgeBase: true });
         expect(result).toHaveLength(2);
+      });
+    });
+
+    describe('Hidden sources', () => {
+      beforeEach(async () => {
+        await serverDB.insert(files).values([
+          {
+            id: 'plain-file',
+            name: 'notes.txt',
+            userId,
+            fileType: 'text/plain',
+            size: 100,
+            url: 'plain-url',
+          },
+          {
+            id: 'acceptance-file',
+            name: 'payload-execution.txt',
+            userId,
+            fileType: 'text/plain',
+            size: 100,
+            source: FileSource.Acceptance,
+            url: 'acceptance-url',
+          },
+          {
+            id: 'generation-file',
+            name: 'generated.png',
+            userId,
+            fileType: 'image/png',
+            size: 100,
+            source: FileSource.ImageGeneration,
+            url: 'generation-url',
+          },
+        ]);
+      });
+
+      it('should exclude acceptance evidence and keep every other source', async () => {
+        const result = await fileModel.query();
+
+        expect(result.map((f) => f.id).sort()).toEqual(['generation-file', 'plain-file']);
+      });
+
+      it('should still find acceptance evidence by id', async () => {
+        const result = await fileModel.findById('acceptance-file');
+
+        expect(result?.name).toBe('payload-execution.txt');
       });
     });
   });
@@ -1288,12 +1411,9 @@ describe('FileModel', () => {
       expect(result[0].id).toBe('page-file');
     });
 
-    it('should handle Pages category (should use text/html like Websites)', async () => {
-      // FilesTabs.Pages is not explicitly handled in switch, falls to default
-      // which returns empty string, so it won't filter by file type
+    it('should handle Pages category (derived pages never live in the files table)', async () => {
       const result = await fileModel.query({ category: FilesTabs.Pages });
-      // Should return all files since default case returns empty string
-      expect(result.length).toBeGreaterThan(0);
+      expect(result).toHaveLength(0);
     });
 
     it('should handle unknown file category', async () => {
@@ -1688,6 +1808,192 @@ describe('FileModel', () => {
         .values({ fileId: 'sf-user2', messageId: 'sandbox-msg-other', userId: 'user2' });
 
       const result = await fileModel.findFilesToInitInSandbox(topicId);
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('hasFilesByTopicIds', () => {
+    const sessionId = 'has-topic-files-session';
+    const topicId = 'has-topic-files-topic';
+
+    beforeEach(async () => {
+      await serverDB.insert(sessions).values({ id: sessionId, userId });
+      await serverDB.insert(topics).values({ id: topicId, sessionId, userId });
+      await serverDB
+        .insert(messages)
+        .values({ id: 'has-topic-files-message', role: 'user', topicId, userId });
+    });
+
+    it('returns false when no topic ids are provided', async () => {
+      await expect(fileModel.hasFilesByTopicIds([])).resolves.toBe(false);
+    });
+
+    it('returns false when the topics have no message files', async () => {
+      await expect(fileModel.hasFilesByTopicIds([topicId])).resolves.toBe(false);
+    });
+
+    it('returns true when any selected topic has a message file', async () => {
+      await serverDB.insert(files).values({
+        fileType: 'image/png',
+        id: 'has-topic-files-image',
+        name: 'image.png',
+        size: 1,
+        url: 'has-topic-files-image-key',
+        userId,
+      });
+      await serverDB.insert(messagesFiles).values({
+        fileId: 'has-topic-files-image',
+        messageId: 'has-topic-files-message',
+        userId,
+      });
+
+      await expect(fileModel.hasFilesByTopicIds(['topic-without-files', topicId])).resolves.toBe(
+        true,
+      );
+    });
+
+    it("does not expose another user's topic files", async () => {
+      await serverDB
+        .insert(sessions)
+        .values({ id: 'has-topic-files-other-session', userId: 'user2' });
+      await serverDB.insert(topics).values({
+        id: 'has-topic-files-other-topic',
+        sessionId: 'has-topic-files-other-session',
+        userId: 'user2',
+      });
+      await serverDB.insert(messages).values({
+        id: 'has-topic-files-other-message',
+        role: 'user',
+        topicId: 'has-topic-files-other-topic',
+        userId: 'user2',
+      });
+      await serverDB.insert(files).values({
+        fileType: 'image/png',
+        id: 'has-topic-files-other-image',
+        name: 'other.png',
+        size: 1,
+        url: 'has-topic-files-other-image-key',
+        userId: 'user2',
+      });
+      await serverDB.insert(messagesFiles).values({
+        fileId: 'has-topic-files-other-image',
+        messageId: 'has-topic-files-other-message',
+        userId: 'user2',
+      });
+
+      await expect(fileModel.hasFilesByTopicIds(['has-topic-files-other-topic'])).resolves.toBe(
+        false,
+      );
+    });
+  });
+
+  describe('findDeletableFilesByTopicId', () => {
+    const sessionId = 'topic-files-session-1';
+    const topicId = 'topic-files-topic-1';
+
+    beforeEach(async () => {
+      await serverDB.insert(sessions).values({ id: sessionId, userId });
+      await serverDB.insert(topics).values([
+        { id: topicId, sessionId, userId },
+        { id: 'topic-files-topic-2', sessionId, userId },
+      ]);
+      await serverDB.insert(messages).values([
+        { id: 'tf-msg-1', role: 'user', topicId, userId },
+        { id: 'tf-msg-1b', role: 'user', topicId, userId },
+        { id: 'tf-msg-2', role: 'user', topicId: 'topic-files-topic-2', userId },
+      ]);
+      await serverDB.insert(files).values([
+        { fileType: 'text/csv', id: 'tf-msg', name: 'msg.csv', size: 1, url: 'k-msg', userId },
+        {
+          fileType: 'application/pdf',
+          id: 'tf-shared',
+          name: 'shared.pdf',
+          size: 2,
+          url: 'k-shared',
+          userId,
+        },
+        { fileType: 'text/plain', id: 'tf-sess', name: 's.txt', size: 3, url: 'k-sess', userId },
+        { fileType: 'text/plain', id: 'tf-other', name: 'o.txt', size: 4, url: 'k-other', userId },
+      ]);
+    });
+
+    it('returns only files attached exclusively inside the topic, de-duped', async () => {
+      await serverDB.insert(messagesFiles).values([
+        { fileId: 'tf-msg', messageId: 'tf-msg-1', userId },
+        // same file attached to another message in the topic → must be de-duped
+        { fileId: 'tf-msg', messageId: 'tf-msg-1b', userId },
+        // attached only to a different topic → not a candidate
+        { fileId: 'tf-other', messageId: 'tf-msg-2', userId },
+      ]);
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual(['tf-msg']);
+    });
+
+    it('preserves a file still attached to a message in another topic', async () => {
+      await serverDB.insert(messagesFiles).values([
+        { fileId: 'tf-msg', messageId: 'tf-msg-1', userId },
+        // tf-shared lives in both the deleted topic and another topic
+        { fileId: 'tf-shared', messageId: 'tf-msg-1', userId },
+        { fileId: 'tf-shared', messageId: 'tf-msg-2', userId },
+      ]);
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual(['tf-msg']);
+    });
+
+    it('preserves a file still attached to a message with no topic', async () => {
+      await serverDB.insert(messages).values({ id: 'tf-msg-inbox', role: 'user', userId });
+      await serverDB.insert(messagesFiles).values([
+        { fileId: 'tf-shared', messageId: 'tf-msg-1', userId },
+        // also attached to an inbox message (topicId = null) → must be preserved
+        { fileId: 'tf-shared', messageId: 'tf-msg-inbox', userId },
+      ]);
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual([]);
+    });
+
+    it('preserves a file still attached at the session level', async () => {
+      await serverDB
+        .insert(messagesFiles)
+        .values({ fileId: 'tf-sess', messageId: 'tf-msg-1', userId });
+      // also bound to the session → survives a single-topic deletion
+      await serverDB.insert(filesToSessions).values({ fileId: 'tf-sess', sessionId, userId });
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual([]);
+    });
+
+    it('returns an empty array when the topic has no message files', async () => {
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+      expect(result).toEqual([]);
+    });
+
+    it('does not return files belonging to another user', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tf-msg-other',
+        role: 'user',
+        topicId,
+        userId: 'user2',
+      });
+      await serverDB.insert(files).values({
+        fileType: 'text/plain',
+        id: 'tf-user2',
+        name: 'u2.txt',
+        size: 5,
+        url: 'k-u2',
+        userId: 'user2',
+      });
+      await serverDB
+        .insert(messagesFiles)
+        .values({ fileId: 'tf-user2', messageId: 'tf-msg-other', userId: 'user2' });
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
       expect(result).toEqual([]);
     });
   });

@@ -3,7 +3,10 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
+import {
+  requireWorkspaceRoleWhenScoped,
+  wsCompatProcedure,
+} from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentSkillModel } from '@/database/models/agentSkill';
 import { FileModel } from '@/database/models/file';
 import { UserModel } from '@/database/models/user';
@@ -82,6 +85,11 @@ const marketToolProcedure = wsCompatProcedure
     });
   });
 
+// Execution mutations (sandbox runs, cloud MCP calls, file exports) have side
+// effects and spend quota — workspace viewers (read-only) are gated out while
+// personal mode passes through unrestricted.
+const marketToolWriteProcedure = marketToolProcedure.use(requireWorkspaceRoleWhenScoped('member'));
+
 // ============================== LobeHub Skill Procedures ==============================
 /**
  * LobeHub Skill procedure with SDK and optional auth
@@ -119,10 +127,23 @@ const metaSchema = z
 
 // Schema for sandbox tool execution request
 const execInSandboxSchema = z.object({
-  params: z.record(z.any()),
+  params: z.record(z.string(), z.any()),
   toolName: z.string(),
   topicId: z.string(),
-  userId: z.string().optional(), // Optional: fallback to ctx.userId if not provided
+  /**
+   * SECURITY: accepted for backward compatibility with older clients (the SPA
+   * and desktop still send it, see `src/services/cloudSandbox.ts`) but
+   * ALWAYS IGNORED by the handler — the effective identity is `ctx.userId`.
+   *
+   * It used to override `ctx.userId`, which let any authenticated caller mint
+   * and read another user's JWT: `preprocessLhCommand` signs a user JWT and
+   * inlines it into the shell command run inside a sandbox the caller fully
+   * controls (`declare -f lh` prints the injected token back). The same forged
+   * id also selected the AgentSkill/File rows and the sandbox session.
+   *
+   * @deprecated Ignored by the server; will be dropped once no client sends it.
+   */
+  userId: z.string().optional(),
 });
 
 // Schema for export and upload file (combined operation)
@@ -134,7 +155,7 @@ const exportAndUploadFileSchema = z.object({
 
 // Schema for cloud MCP endpoint call
 const callCloudMcpEndpointSchema = z.object({
-  apiParams: z.record(z.any()),
+  apiParams: z.record(z.string(), z.any()),
   identifier: z.string(),
   meta: metaSchema,
   toolName: z.string(),
@@ -183,7 +204,19 @@ const execInSandboxHandler = async ({
   input: ExecInSandboxInput;
 }): Promise<CallToolResult> => {
   const { toolName, params, topicId } = input;
-  const userId = input?.userId || ctx.userId;
+  // SECURITY: never trust `input.userId` — see the JSDoc on `execInSandboxSchema`.
+  // Everything downstream (JWT minting, skill/file lookups, sandbox session
+  // isolation) is keyed off this id, so it must come from the authenticated
+  // context only.
+  const userId = ctx.userId;
+
+  if (input?.userId && input.userId !== ctx.userId) {
+    log(
+      'execInSandbox: ignored deprecated input.userId=%s (differs from ctx.userId=%s)',
+      input.userId,
+      ctx.userId,
+    );
+  }
 
   log('execInSandbox: tool=%s, topicId=%s', toolName, topicId);
 
@@ -191,6 +224,12 @@ const execInSandboxHandler = async ({
     let enhancedParams = params;
 
     // Preprocess lh commands: rewrite to npx @lobehub/cli + inject auth env vars
+    //
+    // The minted credential is always scoped to `ctx.userId`, i.e. the caller
+    // themselves. This route is an `authedProcedure` invoked directly by a
+    // client, so it carries no `agentShareVisitor` context; a visitor reaching
+    // it can therefore only ever act as (and spend as) their own account, which
+    // is why no `shareVisitorBlocked` guard is applied here.
     if ((toolName === 'execScript' || toolName === 'runCommand') && params.command) {
       const lhResult = await preprocessLhCommand(
         params.command,
@@ -301,7 +340,7 @@ const execInSandboxHandler = async ({
 // ============================== Router ==============================
 export const marketRouter = router({
   // ============================== Cloud MCP Gateway ==============================
-  callCloudMcpEndpoint: marketToolProcedure
+  callCloudMcpEndpoint: marketToolWriteProcedure
     .input(callCloudMcpEndpointSchema)
     .mutation(async ({ input, ctx }) => {
       log('callCloudMcpEndpoint input: %O', input);
@@ -392,12 +431,12 @@ export const marketRouter = router({
     }),
 
   /** @deprecated Use execInSandbox instead. Will be removed in a future version. */
-  callCodeInterpreterTool: marketToolProcedure
+  callCodeInterpreterTool: marketToolWriteProcedure
     .input(execInSandboxSchema)
     .mutation(({ input, ctx }) => execInSandboxHandler({ ctx, input })),
 
   // ============================== Sandbox Execution ==============================
-  execInSandbox: marketToolProcedure
+  execInSandbox: marketToolWriteProcedure
     .input(execInSandboxSchema)
     .mutation(({ input, ctx }) => execInSandboxHandler({ ctx, input })),
 
@@ -408,7 +447,7 @@ export const marketRouter = router({
   connectCallTool: lobehubSkillAuthProcedure
     .input(
       z.object({
-        args: z.record(z.any()).optional(),
+        args: z.record(z.string(), z.any()).optional(),
         provider: z.string(),
         toolName: z.string(),
         topicId: z.string().optional(),
@@ -671,7 +710,7 @@ export const marketRouter = router({
    * This combines the previous getExportFileUploadUrl + execInSandbox + createFileRecord flow
    * Returns a permanent /f/:id URL instead of a temporary pre-signed URL
    */
-  exportAndUploadFile: marketToolProcedure
+  exportAndUploadFile: marketToolWriteProcedure
     .input(exportAndUploadFileSchema)
     .mutation(async ({ input, ctx }) => {
       const { path, filename, topicId } = input;

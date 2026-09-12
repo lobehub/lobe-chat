@@ -3,21 +3,26 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AiAgentService } from '../index';
 
-const { mockCreateOperation, mockCreateServerAgentToolsEngine, mockMessageCreate } = vi.hoisted(
-  () => ({
-    mockCreateOperation: vi.fn(),
-    mockCreateServerAgentToolsEngine: vi.fn().mockReturnValue({
-      generateToolsDetailed: vi.fn().mockReturnValue({ enabledToolIds: [], tools: [] }),
-      getEnabledPluginManifests: vi.fn().mockReturnValue(new Map()),
-    }),
-    mockMessageCreate: vi.fn(),
+const {
+  mockCreateOperation,
+  mockCreateServerAgentToolsEngine,
+  mockMessageCreate,
+  mockMessageUpdate,
+} = vi.hoisted(() => ({
+  mockCreateOperation: vi.fn(),
+  mockCreateServerAgentToolsEngine: vi.fn().mockReturnValue({
+    generateToolsDetailed: vi.fn().mockReturnValue({ enabledToolIds: [], tools: [] }),
+    getEnabledPluginManifests: vi.fn().mockReturnValue(new Map()),
   }),
-);
+  mockMessageCreate: vi.fn(),
+  mockMessageUpdate: vi.fn(),
+}));
 
 const { mockDeviceProxy } = vi.hoisted(() => ({
   mockDeviceProxy: {
     isConfigured: false,
     queryDeviceList: vi.fn().mockResolvedValue([]),
+    queryDeviceSystemInfo: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -28,91 +33,113 @@ vi.mock('@/libs/trusted-client', () => ({
 }));
 
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({
-    create: mockMessageCreate,
-    getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
-    getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
-    query: vi.fn().mockResolvedValue([]),
-    update: vi.fn().mockResolvedValue({}),
-  })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {
+      create: mockMessageCreate,
+      getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
+      getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
+      query: vi.fn().mockResolvedValue([]),
+      update: mockMessageUpdate,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn().mockImplementation(() => ({
-    getAgentConfig: vi.fn().mockResolvedValue({
-      chatConfig: {},
-      files: [],
-      id: 'agent-1',
-      knowledgeBases: [],
-      model: 'gpt-4',
-      plugins: [],
-      provider: 'openai',
-      systemRole: 'You are a helpful assistant',
-    }),
-    queryAgents: vi.fn().mockResolvedValue([]),
-  })),
+  AgentModel: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfig: vi.fn().mockResolvedValue({
+        chatConfig: {},
+        files: [],
+        id: 'agent-1',
+        knowledgeBases: [],
+        model: 'gpt-4',
+        plugins: [],
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant',
+      }),
+      queryAgents: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/agent', () => ({
-  AgentService: vi.fn().mockImplementation(() => ({
-    getAgentConfig: vi.fn().mockResolvedValue({
-      chatConfig: {},
-      files: [],
-      id: 'agent-1',
-      knowledgeBases: [],
-      model: 'gpt-4',
-      plugins: [],
-      provider: 'openai',
-      systemRole: 'You are a helpful assistant',
-    }),
-  })),
+  AgentService: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfig: vi.fn().mockResolvedValue({
+        chatConfig: {},
+        files: [],
+        id: 'agent-1',
+        knowledgeBases: [],
+        model: 'gpt-4',
+        plugins: [],
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant',
+      }),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  PluginModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 const topicMock = {
   create: vi.fn().mockResolvedValue({ id: 'topic-1', metadata: undefined }),
   findById: vi.fn().mockResolvedValue(undefined),
+  releaseTaskCallbackReservation: vi.fn().mockResolvedValue(undefined),
+  tryReserveTaskCallback: vi.fn().mockResolvedValue(true),
   updateMetadata: vi.fn().mockResolvedValue(undefined),
 };
 vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn().mockImplementation(() => topicMock),
+  TopicModel: vi.fn().mockImplementation(function () {
+    return topicMock;
+  }),
 }));
 
 vi.mock('@/database/models/thread', () => ({
-  ThreadModel: vi.fn().mockImplementation(() => ({
-    create: vi.fn(),
-    findById: vi.fn(),
-    update: vi.fn(),
-  })),
+  ThreadModel: vi.fn().mockImplementation(function () {
+    return {
+      create: vi.fn(),
+      findById: vi.fn(),
+      update: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/agentRuntime', () => ({
-  AgentRuntimeService: vi.fn().mockImplementation(() => ({
-    createOperation: mockCreateOperation,
-  })),
+  AgentRuntimeService: vi.fn().mockImplementation(function () {
+    return {
+      createOperation: mockCreateOperation,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn().mockImplementation(() => ({
-    getLobehubSkillManifests: vi.fn().mockResolvedValue([]),
-  })),
+  MarketService: vi.fn().mockImplementation(function () {
+    return {
+      getLobehubSkillManifests: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/composio', () => ({
-  ComposioService: vi.fn().mockImplementation(() => ({
-    getComposioManifests: vi.fn().mockResolvedValue([]),
-  })),
+  ComposioService: vi.fn().mockImplementation(function () {
+    return {
+      getComposioManifests: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn().mockImplementation(() => ({
-    uploadFromUrl: vi.fn(),
-  })),
+  FileService: vi.fn().mockImplementation(function () {
+    return {
+      uploadFromUrl: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/modules/Mecha', () => ({
@@ -149,6 +176,7 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
     topicMock.findById.mockResolvedValue(undefined);
     topicMock.updateMetadata.mockResolvedValue(undefined);
     mockMessageCreate.mockResolvedValue({ id: 'msg-1' });
+    mockMessageUpdate.mockResolvedValue({});
     mockCreateOperation.mockResolvedValue({
       autoStarted: true,
       messageId: 'queue-msg-1',
@@ -187,22 +215,21 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
   // grabs a device — so the auto-activation specs opt in explicitly.
   const useAgencyConfig = async (agencyConfig: Record<string, unknown>) => {
     const { AgentService } = await import('@/server/services/agent');
-    vi.mocked(AgentService).mockImplementation(
-      () =>
-        ({
-          getAgentConfig: vi.fn().mockResolvedValue({
-            agencyConfig,
-            chatConfig: {},
-            files: [],
-            id: 'agent-1',
-            knowledgeBases: [],
-            model: 'gpt-4',
-            plugins: [],
-            provider: 'openai',
-            systemRole: 'You are a helpful assistant',
-          }),
-        }) as any,
-    );
+    vi.mocked(AgentService).mockImplementation(function () {
+      return {
+        getAgentConfig: vi.fn().mockResolvedValue({
+          agencyConfig,
+          chatConfig: {},
+          files: [],
+          id: 'agent-1',
+          knowledgeBases: [],
+          model: 'gpt-4',
+          plugins: [],
+          provider: 'openai',
+          systemRole: 'You are a helpful assistant',
+        }),
+      } as any;
+    });
     service = new AiAgentService(mockDb, userId);
   };
 
@@ -381,22 +408,21 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
   describe('executionTarget gating (none / sandbox never route to a device)', () => {
     const overrideAgencyConfig = async (agencyConfig: Record<string, unknown>) => {
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              agencyConfig,
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            agencyConfig,
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
       service = new AiAgentService(mockDb, userId);
     };
 
@@ -442,22 +468,21 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
 
       // Override the agent config mock to include boundDeviceId
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              agencyConfig: { boundDeviceId: 'device-001' },
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            agencyConfig: { boundDeviceId: 'device-001' },
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
 
       service = new AiAgentService(mockDb, userId);
 
@@ -476,22 +501,21 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
       mockDeviceProxy.queryDeviceList.mockResolvedValue([]);
 
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              agencyConfig: { boundDeviceId: 'device-001' },
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            agencyConfig: { boundDeviceId: 'device-001' },
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
 
       service = new AiAgentService(mockDb, userId);
 
@@ -507,28 +531,117 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
   });
 
   describe('topic and explicit device binding', () => {
+    it('uses the shared fixed device even when the request asks for another device', async () => {
+      mockDeviceProxy.isConfigured = true;
+      mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice, onlineDevice2]);
+      await useAgencyConfig({
+        boundDeviceId: 'device-001',
+        executionTargetSelectionPolicy: 'fixed',
+        executionTarget: 'device',
+      });
+      service = new AiAgentService(mockDb, userId, { workspaceId: 'workspace-1' });
+
+      await service.execAgent({
+        agentId: 'agent-1',
+        deviceId: 'device-002',
+        prompt: 'Run a command',
+      });
+
+      expect(mockCreateOperation.mock.calls[0][0].activeDeviceId).toBe('device-001');
+      expect(topicMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: expect.objectContaining({ boundDeviceId: 'device-001' }),
+        }),
+        undefined,
+      );
+    });
+
+    it('keeps a fixed sandbox target when the request asks for a device', async () => {
+      mockDeviceProxy.isConfigured = true;
+      mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice]);
+      await useAgencyConfig({
+        executionTarget: 'sandbox',
+        executionTargetSelectionPolicy: 'fixed',
+      });
+      service = new AiAgentService(mockDb, userId, { workspaceId: 'workspace-1' });
+
+      await service.execAgent({
+        agentId: 'agent-1',
+        deviceId: 'device-001',
+        prompt: 'Run a command',
+      });
+
+      expect(mockCreateOperation.mock.calls[0][0].activeDeviceId).toBeUndefined();
+      expect(topicMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: {
+            boundDeviceId: undefined,
+            executionConfig: {
+              boundDeviceId: undefined,
+              executionTarget: 'sandbox',
+              inheritWorkspaceScope: true,
+            },
+          },
+        }),
+        undefined,
+      );
+    });
+
+    it('fails before operation creation when the shared fixed device is offline', async () => {
+      mockDeviceProxy.isConfigured = true;
+      mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice2]);
+      await useAgencyConfig({
+        boundDeviceId: 'device-001',
+        executionTargetSelectionPolicy: 'fixed',
+        executionTarget: 'device',
+      });
+      service = new AiAgentService(mockDb, userId, { workspaceId: 'workspace-1' });
+
+      await expect(
+        service.execAgent({ agentId: 'agent-1', prompt: 'Run a command' }),
+      ).rejects.toMatchObject({
+        cause: {
+          data: {
+            code: 'DEVICE_NOT_FOUND',
+            deviceId: 'device-001',
+            retryable: true,
+            scope: 'workspace',
+            workspaceId: 'workspace-1',
+          },
+        },
+        code: 'PRECONDITION_FAILED',
+      });
+
+      expect(mockCreateOperation).not.toHaveBeenCalled();
+      expect(mockMessageUpdate).toHaveBeenCalledWith(
+        'msg-1',
+        expect.objectContaining({
+          error: expect.objectContaining({ message: 'Fixed agent device unavailable' }),
+        }),
+      );
+    });
+
     it('should prefer explicit deviceId over topic and agent bindings when online', async () => {
       mockDeviceProxy.isConfigured = true;
       mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice, onlineDevice2]);
       topicMock.findById.mockResolvedValue({ metadata: { boundDeviceId: 'device-002' } });
 
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              agencyConfig: { boundDeviceId: 'device-002' },
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            agencyConfig: { boundDeviceId: 'device-002' },
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
 
       service = new AiAgentService(mockDb, userId);
 
@@ -589,6 +702,7 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
         expect.objectContaining({
           metadata: expect.objectContaining({ boundDeviceId: 'device-001' }),
         }),
+        undefined,
       );
     });
   });
@@ -715,22 +829,21 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
       mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice]);
 
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              agencyConfig: { boundDeviceId: 'device-001' },
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            agencyConfig: { boundDeviceId: 'device-001' },
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
 
       service = new AiAgentService(mockDb, userId);
       await service.execAgent({
@@ -748,21 +861,20 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
 
       // Restore default AgentService mock (previous test overrides with boundDeviceId)
       const { AgentService } = await import('@/server/services/agent');
-      vi.mocked(AgentService).mockImplementation(
-        () =>
-          ({
-            getAgentConfig: vi.fn().mockResolvedValue({
-              chatConfig: {},
-              files: [],
-              id: 'agent-1',
-              knowledgeBases: [],
-              model: 'gpt-4',
-              plugins: [],
-              provider: 'openai',
-              systemRole: 'You are a helpful assistant',
-            }),
-          }) as any,
-      );
+      vi.mocked(AgentService).mockImplementation(function () {
+        return {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            chatConfig: {},
+            files: [],
+            id: 'agent-1',
+            knowledgeBases: [],
+            model: 'gpt-4',
+            plugins: [],
+            provider: 'openai',
+            systemRole: 'You are a helpful assistant',
+          }),
+        } as any;
+      });
       service = new AiAgentService(mockDb, userId);
 
       await service.execAgent({

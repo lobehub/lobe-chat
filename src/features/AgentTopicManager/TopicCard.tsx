@@ -2,14 +2,16 @@
 
 import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import { formatPrice, formatTokenNumber } from '@lobechat/utils/format';
-import { Block, Checkbox, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon } from '@lobehub/ui';
+import { Checkbox, Tag, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { CircleDollarSign, FolderIcon, MessageSquare, Star, Zap } from 'lucide-react';
 import { memo, type MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActivityTime } from '@/hooks/useActivityTime';
+import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
 import type { ChatTopic } from '@/types/topic';
 
 import StatusDot from './StatusDot';
@@ -72,6 +74,11 @@ const styles = createStaticStyles(({ css }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
   `,
+  /* Reserve space for the absolutely positioned checkbox (18px + gap)
+     so long titles don't run underneath it. */
+  titleRow: css`
+    padding-inline-end: 28px;
+  `,
 }));
 
 interface TopicCardProps {
@@ -81,7 +88,7 @@ interface TopicCardProps {
 
 const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
   const { t } = useTranslation('topic');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
 
   const selectMode = useTopicsViewStore((s) => s.selectMode);
   const selected = useTopicsViewStore((s) => s.selectedIds.includes(topic.id));
@@ -111,6 +118,9 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
 
   const projectLabel = getProjectLabel(topic);
   const status = topic.status ?? 'active';
+  // Bot source platform icon (same identity mark as the sidebar topic item).
+  const botPlatform = topic.metadata?.bot?.platform;
+  const BotPlatformIcon = botPlatform ? getPlatformIcon(botPlatform) : undefined;
   // Preview priority: user-written description → AI history summary → first user
   // message (sliced server-side when neither richer field exists).
   const preview =
@@ -138,9 +148,16 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
         />
       </div>
 
-      <Flexbox horizontal align={'center'} gap={6}>
+      <Flexbox horizontal align={'center'} className={styles.titleRow} gap={6}>
         {topic.favorite && (
           <Icon icon={Star} size={13} style={{ color: cssVar.colorWarning, flexShrink: 0 }} />
+        )}
+        {BotPlatformIcon && (
+          <BotPlatformIcon
+            color={cssVar.colorTextDescription}
+            size={14}
+            style={{ flexShrink: 0 }}
+          />
         )}
         <Text className={styles.title} fontSize={14} weight={600}>
           {topic.title || t('defaultTitle')}
@@ -154,7 +171,7 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
       )}
 
       {projectLabel && (
-        <Tag bordered={false} icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
+        <Tag icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
           {projectLabel}
         </Tag>
       )}

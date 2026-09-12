@@ -4,6 +4,21 @@ export const OFFICIAL_URL = 'https://app.lobehub.com';
 export const OFFICIAL_SITE = 'https://lobehub.com';
 export const OFFICIAL_DOMAIN = 'lobehub.com';
 
+export const OFFICIAL_CLOUD_URL = OFFICIAL_SITE;
+
+export const isOfficialCloudServer = (url?: string): boolean => {
+  if (!url) return false;
+  try {
+    const { hostname } = new URL(url);
+    return hostname === OFFICIAL_DOMAIN || hostname.endsWith(`.${OFFICIAL_DOMAIN}`);
+  } catch {
+    return false;
+  }
+};
+
+export const OFFICIAL_DEVICE_GATEWAY_URL = 'https://device-gateway.lobehub.com';
+export const OFFICIAL_AGENT_GATEWAY_URL = 'https://agent-gateway.lobehub.com';
+
 export const OG_URL = '/og/og.webp?v=1';
 
 export const LobeHubPath = {
@@ -36,6 +51,8 @@ export const TERMS_URL = urlJoin(OFFICIAL_SITE, '/terms');
 
 export const PLUGINS_INDEX_URL = 'https://chat-plugins.lobehub.com';
 
+export const OPS_ASSETS_BASE_URL = 'https://chat-cloud.lobeobjects.space/dc/ops-assets';
+
 export const MORE_MODEL_PROVIDER_REQUEST_URL =
   'https://github.com/lobehub/lobe-chat/discussions/6157';
 
@@ -45,6 +62,7 @@ export const MORE_FILE_PREVIEW_REQUEST_URL =
 export const AGENTS_INDEX_GITHUB = 'https://github.com/lobehub/lobe-chat-agents';
 export const AGENTS_INDEX_GITHUB_ISSUE = urlJoin(AGENTS_INDEX_GITHUB, 'issues/new');
 export const AGENTS_OFFICIAL_URL = 'https://lobehub.com/agent';
+export const WORKSPACE_OFFICIAL_URL = 'https://lobehub.com/workspace';
 
 export const AGENT_CHAT_URL = (agentId: string, mobile?: boolean) => {
   if (mobile) return `/agent/${agentId}`;
@@ -70,7 +88,7 @@ export const GROUP_CHAT_TOPIC_URL = (groupId: string, topicId: string) =>
 
 export const LIBRARY_URL = (id: string) => urlJoin('/resource/library', id);
 
-export const imageUrl = (filename: string) => `/images/${filename}`;
+export const imageUrl = (filename: string) => `/app-images/${filename}`;
 
 export const LOBE_URL_IMPORT_NAME = 'settings';
 
@@ -88,3 +106,8 @@ export const DOWNLOAD_URL = {
   mobile: urlJoin(OFFICIAL_SITE, '/mobile'),
   ios: 'https://testflight.apple.com/join/2ZbjX4Qp',
 } as const;
+
+export const channelDocUrl = (platform: string) => urlJoin(USAGE_DOCUMENTS, 'channels', platform);
+
+export const discoverUrl = (type: string, identifier: string) =>
+  urlJoin(OFFICIAL_SITE, 'discover', type, identifier);

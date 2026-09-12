@@ -1,10 +1,12 @@
-import type { ModelExtendParams } from '@lobechat/model-runtime';
 import {
   applyModelExtendParams,
+  type ModelExtendParams,
   resolveDefaultEnableAdaptiveThinkingForModel,
   resolveDefaultThinkingLevelForModel,
-} from '@lobechat/model-runtime';
+  resolveEffectiveReasoningChatConfig,
+} from '@lobechat/model-runtime/utils/modelExtendParams';
 import type { LobeAgentChatConfig } from '@lobechat/types';
+import type { AiModelReasoningConfig } from 'model-bank';
 
 import { aiModelSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 
@@ -18,17 +20,33 @@ export interface ModelParamsContext {
   chatConfig: LobeAgentChatConfig;
   model: string;
   provider: string;
+  /**
+   * Raw sub-agent chatConfig override; explicit reasoning fields set here win
+   * over the user's model-instance defaults.
+   */
+  subAgentChatConfigOverride?: Partial<LobeAgentChatConfig>;
+  /**
+   * Reasoning config pinned to the topic for exactly this model
+   * (`topicSelectors.getTopicReasoningConfigForModel`). Wins over the
+   * user-level model-instance config; absent → user-level applies.
+   */
+  topicReasoningConfig?: AiModelReasoningConfig;
 }
 
 /**
  * Resolves extended parameters for model runtime based on model capabilities and chat config.
  *
  * Looks up the model's supported `extendParams` from the aiInfra store, then delegates the
- * actual resolution to the shared `applyModelExtendParams` (in `@lobechat/model-runtime`) so the
- * client chat service and the server-side agent runtime stay in sync.
+ * actual resolution to the shared `applyModelExtendParams` so the client chat service and the
+ * server-side agent runtime stay in sync.
+ *
+ * Reasoning fields (effort family + reasoningMode) resolve as topic pin → user-level
+ * model-instance setting: same-named agent chatConfig values are ignored and the topic's
+ * pinned config (or, without one, the personal-scope config from the aiInfra store)
+ * applies instead — except explicit sub-agent overrides, which stay honored.
  */
 export const resolveModelExtendParams = (ctx: ModelParamsContext): ModelExtendParams => {
-  const { model, provider, chatConfig } = ctx;
+  const { model, provider, chatConfig, subAgentChatConfigOverride, topicReasoningConfig } = ctx;
 
   const aiInfraStoreState = getAiInfraStoreState();
 
@@ -43,5 +61,17 @@ export const resolveModelExtendParams = (ctx: ModelParamsContext): ModelExtendPa
 
   const modelExtendParams = aiModelSelectors.modelExtendParams(model, provider)(aiInfraStoreState);
 
-  return applyModelExtendParams({ chatConfig, extendParams: modelExtendParams, model });
+  const effectiveChatConfig = resolveEffectiveReasoningChatConfig({
+    agentChatConfig: chatConfig,
+    modelReasoningConfig:
+      topicReasoningConfig ??
+      aiModelSelectors.modelReasoningConfig(model, provider)(aiInfraStoreState),
+    subAgentReasoningOverrides: subAgentChatConfigOverride,
+  });
+
+  return applyModelExtendParams({
+    chatConfig: effectiveChatConfig,
+    extendParams: modelExtendParams,
+    model,
+  });
 };

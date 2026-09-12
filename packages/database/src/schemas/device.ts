@@ -11,9 +11,9 @@ import { workspaces } from './workspace';
  *
  * `deviceId` is derived from a machine-level identifier
  * (`sha256(machineUUID + userId + salt)`), so it survives LobeHub reinstalls
- * and desktop upgrades. Online status is NOT stored here — it lives in the
- * DeviceGatewayDO in-memory WS attachments; this table only records "ever
- * seen" so offline devices stay visible and bindable.
+ * and desktop upgrades. Online status is NOT stored here — it belongs to the
+ * device gateway's live connection state; this table only records "ever seen"
+ * so offline devices stay visible and bindable.
  */
 export const devices = pgTable(
   'devices',
@@ -35,6 +35,27 @@ export const devices = pgTable(
     //     distinct `deviceId` per principal (the hash mixes in userId /
     //     `workspace:<id>`), so personal and workspace rows never collide.
     workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'cascade' }),
+
+    // Visibility WITHIN a workspace (same contract as agents/documents/files):
+    //   - 'public'  → every workspace member sees and can use the device.
+    //   - 'private' → only the enrolling member (`userId`) sees it; other
+    //     members' device lists / pickers / agent runs never surface it.
+    // Defaults to 'private' — exposing a machine to the whole workspace is an
+    // explicit opt-in (rows that predate the column were backfilled 'public'
+    // to preserve their then-current everyone-visible behaviour). Ignored for
+    // personal rows (`workspace_id IS NULL` — implicitly private to their
+    // owner). Filtered via `buildWorkspaceWhere`.
+    visibility: text('visibility', { enum: ['private', 'public'] })
+      .default('private')
+      .notNull(),
+
+    // Workspace rows enrolled remotely from the owner's personal device list
+    // ("share this device to a workspace") record the PERSONAL deviceId they
+    // were shared from. deviceIds are one-way hashes of (machine, principal),
+    // so without this link the server cannot correlate a personal row with its
+    // workspace twins. NULL for personal rows and for devices enrolled directly
+    // on the machine (`lh connect --workspace`).
+    sharedFromDeviceId: varchar('shared_from_device_id', { length: 64 }),
 
     /** Machine-derived id (sha256 truncated to 32 chars; 64 leaves room for fallback randomUUID) */
     deviceId: varchar('device_id', { length: 64 }).notNull(),
@@ -78,6 +99,7 @@ export const devices = pgTable(
       .where(sql`${t.workspaceId} IS NOT NULL`),
     index('devices_user_id_idx').on(t.userId),
     index('devices_workspace_id_idx').on(t.workspaceId),
+    index('devices_workspace_visibility_idx').on(t.workspaceId, t.visibility, t.userId),
   ],
 );
 

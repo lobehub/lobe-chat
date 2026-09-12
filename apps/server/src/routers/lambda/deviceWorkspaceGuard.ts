@@ -71,3 +71,37 @@ export const assertWorkspaceRootApproved = async (
     });
   }
 };
+
+/**
+ * Enforce the workspace device-visibility boundary for RPC routes.
+ *
+ * The gateway pool is addressed by workspace principal + deviceId and knows
+ * nothing about visibility, so filtering the LIST paths is not enough — a
+ * member holding another member's private deviceId (cached response,
+ * pre-demotion state) could still drive tool/git/file RPCs against that
+ * machine. Called once from `deviceProcedure` for every route that takes a
+ * `deviceId` input: a workspace-scoped call against a device hidden from the
+ * caller fails closed with the same NOT_FOUND an unknown device produces.
+ *
+ * The visible registry row is also the workspace execution authority. A live
+ * Gateway connection without that row can be a stale process that missed an
+ * Unshare RPC, so it must fail exactly like an unknown or private device.
+ *
+ * Use when:
+ * - A workspace-scoped RPC accepts a client-supplied logical device ID
+ *
+ * Expects:
+ * - `deviceModel` is already scoped to the authorized workspace and caller
+ *
+ * Returns:
+ * - Nothing for a visible registered device; otherwise throws `NOT_FOUND`
+ */
+export const assertWorkspaceDeviceVisible = async (
+  deviceModel: DeviceModel,
+  deviceId: string,
+): Promise<void> => {
+  const device = await deviceModel.findWorkspaceDeviceById(deviceId);
+  if (!device) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
+  }
+};

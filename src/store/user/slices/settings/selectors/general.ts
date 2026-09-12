@@ -2,6 +2,7 @@ import { isDesktop } from '@lobechat/const';
 
 import { DEFAULT_LANG } from '@/const/locale';
 import { type Locales, normalizeLocale } from '@/locales/resources';
+import { getSystemLanguage } from '@/utils/client/systemLanguage';
 import { isOnServerSide } from '@/utils/env';
 
 import { type UserStore } from '../../../store';
@@ -28,12 +29,14 @@ const currentResponseLanguage = (s: UserStore): Locales => {
   if (locale) return normalizeLocale(locale);
   if (isOnServerSide) return DEFAULT_LANG;
 
-  return normalizeLocale(navigator.language);
+  return normalizeLocale(getSystemLanguage());
 };
 const telemetry = (s: UserStore) => generalConfig(s).telemetry;
 const enableAutoScrollOnStreaming = (s: UserStore) =>
   generalConfig(s).enableAutoScrollOnStreaming ?? true;
 const enableMessageLinkIcon = (s: UserStore) => generalConfig(s).enableMessageLinkIcon ?? true;
+const workflowStreamingExpandLevel = (s: UserStore) =>
+  generalConfig(s).expandWorkflowWhileStreaming ? 'semi' : 'collapsed';
 
 export const userGeneralSettingsSelectors = {
   animationMode,
@@ -50,4 +53,5 @@ export const userGeneralSettingsSelectors = {
   responseLanguage,
   telemetry,
   transitionMode,
+  workflowStreamingExpandLevel,
 };

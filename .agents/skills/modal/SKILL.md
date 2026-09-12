@@ -1,6 +1,6 @@
 ---
 name: modal
-description: 'LobeHub imperative modal conventions. Use when creating or migrating modals, dialogs, popups, confirm flows, ModalHost wiring, createModal, confirmModal, useModalContext, or base-ui modal APIs.'
+description: 'Use for modals, dialogs and confirmations with createModal, confirmModal, ModalHost or base-ui modal APIs.'
 user-invocable: false
 ---
 
@@ -97,6 +97,33 @@ return <Button onClick={handleOpen}>Open</Button>;
 
 ```tsx
 const { close, setCanDismissByClickOutside } = useModalContext();
+```
+
+### Closing: which callback actually fires
+
+`close()` — from `useModalContext()` inside the content, or from the returned
+`ModalInstance` — only flips the stack entry to `open: false`. It does **not** go
+through base-ui's dismissal path, so:
+
+| callback               | user dismissal (Esc / backdrop / header ✕) | `close()` from content or instance |
+| ---------------------- | ------------------------------------------ | ---------------------------------- |
+| `onOpenChange`         | fires                                      | **does not fire**                  |
+| `onOpenChangeComplete` | fires with `false`                         | fires with `false`                 |
+
+Put caller-side cleanup (clearing an editing flag, resetting the provider's
+`open` state) on **`onOpenChangeComplete`**. Wiring it to `onOpenChange` looks
+correct until a footer button closes the modal, and then the caller never learns
+it went away — typically leaving a flag set so the modal cannot be reopened.
+
+`createModal` only ever completes with `false` (the imperative renderer supplies
+the argument itself and never forwards the prop to base-ui), but still guard on
+it — other base-ui primitives such as `DropdownMenu` do report both directions,
+and the guard keeps the call site from depending on that difference:
+
+```tsx
+onOpenChangeComplete: (open) => {
+  if (!open) onClosed?.();
+},
 ```
 
 ### Common options (base-ui)

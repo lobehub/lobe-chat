@@ -1,33 +1,54 @@
 import { type GoogleGenAIOptions } from '@google/genai';
+import type { ServerDefaultHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import {
+  isServerDefaultHeterogeneousProfileModel,
+  SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG,
+  SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES,
+} from '@lobechat/heterogeneous-agents';
+import {
+  AgentRuntimeError,
   mergeModelRuntimeHooks,
   ModelRuntime,
   type ModelRuntimeHooks,
 } from '@lobechat/model-runtime';
+import { parseClaudeModelId } from '@lobechat/model-runtime/providers/anthropic/modelId';
+import { isResponsesAPIModel } from '@lobechat/model-runtime/providers/openai/modelId';
 import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 import {
   type AWSBedrockKeyVault,
   type AzureOpenAIKeyVault,
+  ChatErrorType,
   type ClientSecretPayload,
   type CloudflareKeyVault,
   type ComfyUIKeyVault,
   type GithubCopilotKeyVault,
+  type OAuthDeviceFlowKeyVault,
   type OpenAICompatibleKeyVault,
+  type SuperGrokKeyVault,
   type VertexAIKeyVault,
 } from '@lobechat/types';
+import { isCodexServerDefaultCustomModel } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
-import { ModelProvider } from 'model-bank';
+import type { AiFullModelCard } from 'model-bank';
+import { isAiModelVisible, ModelProvider } from 'model-bank';
+import { AiProviderBaseURLSchema } from 'model-bank/aiProvider';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 
+import { loadModels } from '@/business/client/model-bank/loadModels';
 import { getBusinessModelRuntimeHooks } from '@/business/server/model-runtime';
 import { AiProviderModel } from '@/database/models/aiProvider';
 import { type LobeChatDatabase } from '@/database/type';
 import { getLLMConfig } from '@/envs/llm';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { createLLMGenerationTracingHook } from '@/server/services/llmGenerationTracing/hook';
+import { ensureFreshOAuthToken } from '@/server/services/oauthDeviceFlow/refresh';
 
 import { KeyVaultsGateKeeper } from '../KeyVaultsEncrypt';
 import apiKeyManager from './apiKeyManager';
 
 export * from './trace';
+export type { ServerDefaultHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
+export { SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES } from '@lobechat/heterogeneous-agents';
 
 /**
  * Combined KeyVaults type for all providers
@@ -38,6 +59,8 @@ type ProviderKeyVaults = OpenAICompatibleKeyVault &
   CloudflareKeyVault &
   ComfyUIKeyVault &
   GithubCopilotKeyVault &
+  OAuthDeviceFlowKeyVault &
+  SuperGrokKeyVault &
   VertexAIKeyVault;
 
 /**
@@ -143,6 +166,24 @@ export const buildPayloadFromKeyVaults = (
           ? Number(keyVaults.bearerTokenExpiresAt)
           : undefined,
         oauthAccessToken: keyVaults.oauthAccessToken,
+        runtimeProvider,
+      };
+    }
+
+    case ModelProvider.SuperGrok: {
+      // OAuth-only provider: the (already refreshed) access token IS the
+      // bearer credential for api.x.ai — expose it as apiKey so the runtime
+      // stays a stateless OpenAI-compatible client.
+      return {
+        apiKey: keyVaults.oauthAccessToken,
+        runtimeProvider,
+      };
+    }
+
+    case ModelProvider.ChatGPT: {
+      return {
+        apiKey: keyVaults.oauthAccessToken,
+        chatgptAccountId: keyVaults.oauthAccountId,
         runtimeProvider,
       };
     }
@@ -256,6 +297,18 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
         bearerToken: payload.bearerToken,
         bearerTokenExpiresAt: payload.bearerTokenExpiresAt,
         oauthAccessToken: payload.oauthAccessToken,
+      };
+    }
+
+    case ModelProvider.SuperGrok: {
+      // OAuth-only: never fall back to env API keys
+      return { apiKey: payload.apiKey };
+    }
+
+    case ModelProvider.ChatGPT: {
+      return {
+        apiKey: payload.apiKey,
+        chatgptAccountId: payload.chatgptAccountId,
       };
     }
 
@@ -375,6 +428,17 @@ export const initModelRuntimeWithUserPayload = (
 ) => {
   const runtimeProvider = payload.runtimeProvider ?? provider;
 
+  /**
+   * User-configured endpoints can come from older clients or persisted rows that predate
+   * input validation. Reject them before an SDK appends a request path and throws an
+   * unclassified ERR_INVALID_URL, which would otherwise surface as a server-side 500.
+   */
+  if (payload.baseURL && !AiProviderBaseURLSchema.safeParse(payload.baseURL).success) {
+    throw AgentRuntimeError.createError(ChatErrorType.BadRequest, {
+      message: 'Invalid provider baseURL',
+    });
+  }
+
   if (runtimeProvider === ModelProvider.VertexAI) {
     const vertexOptions = buildVertexOptions(payload, params);
     const runtime = LobeVertexAI.initFromVertexAI(vertexOptions);
@@ -432,7 +496,27 @@ export const initModelRuntimeFromDB = async (
 
   // 3. Build ClientSecretPayload from keyVaults based on runtimeProvider
   // This ensures provider-specific fields (e.g., cloudflareBaseURLOrAccountID) are included
-  const keyVaults = (providerConfig?.keyVaults || {}) as ProviderKeyVaults;
+  let keyVaults = (providerConfig?.keyVaults || {}) as ProviderKeyVaults;
+
+  // 3.5. OAuth device-flow providers with rotating refresh tokens (e.g.
+  // SuperGrok): proactively refresh + persist the token pair before building
+  // the payload. Mounted here because every server-side LLM call path (webapi
+  // chat, agent runtime transport, async image/video, lambda routers)
+  // converges on this function.
+  const oauthDeviceFlowConfig = DEFAULT_MODEL_PROVIDER_LIST.find((p) => p.id === provider)?.settings
+    ?.oauthDeviceFlow;
+  if (oauthDeviceFlowConfig?.refreshTokenGrant) {
+    const freshKeyVaults = await ensureFreshOAuthToken({
+      config: oauthDeviceFlowConfig,
+      db,
+      keyVaults,
+      providerId: provider,
+      userId,
+      workspaceId,
+    });
+    keyVaults = { ...keyVaults, ...freshKeyVaults } as ProviderKeyVaults;
+  }
+
   const payload = buildPayloadFromKeyVaults(keyVaults, runtimeProvider);
 
   // 4. Get business hooks (billing in cloud, undefined in OSS)
@@ -444,5 +528,159 @@ export const initModelRuntimeFromDB = async (
   const hooks = mergeModelRuntimeHooks(businessHooks, tracingHooks);
 
   // 6. Initialize ModelRuntime with the payload and hooks
-  return initModelRuntimeWithUserPayload(provider, payload, { userId }, hooks);
+  return initModelRuntimeWithUserPayload(provider, payload, { userId, workspaceId }, hooks);
+};
+
+export interface ServerDefaultHeterogeneousModelReference {
+  model: string;
+}
+
+export type ServerDefaultHeterogeneousModels = Record<
+  ServerDefaultHeterogeneousAgentType,
+  ServerDefaultHeterogeneousModelReference[]
+>;
+
+/**
+ * Every supported CLI uses the single LobeHub relay provider. `lobehub` is a
+ * deployment-owned router slot, not a hosted-only upstream: official and
+ * private distributions provide their own model catalog and RouterRuntime
+ * behind it.
+ *
+ * The shared agent matrix selects either the Anthropic Messages or OpenAI
+ * Responses ingress. Both translate the wire protocol in both directions
+ * rather than proxying it, and every CLI addresses the relay as
+ * `lobehub/${catalogId}`. The operation token remains the source of truth and
+ * the request must match that selection.
+ *
+ * Legacy agent policies accept any tool-capable chat model; the
+ * `parseClaudeModelId` arm keeps Claude ids eligible in deployments whose
+ * catalog omits `abilities`. Profile-attested agents instead require a tested
+ * client payload/continuation contract. Codex retains its narrower policy: it
+ * accepts native Responses models plus an explicit set of tool-capable relay
+ * models configured through its custom model-catalog path.
+ */
+const supportsServerDefaultHeterogeneousAgent = (
+  agentType: ServerDefaultHeterogeneousAgentType,
+  model: Pick<AiFullModelCard, 'abilities' | 'agentCompatibility' | 'id' | 'visible'>,
+) => {
+  if (!isAiModelVisible(model)) return false;
+
+  const config = SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG[agentType];
+  const { modelPolicy } = config;
+  if (modelPolicy === 'tool-capable') {
+    return parseClaudeModelId(model.id) !== undefined || model.abilities?.functionCall === true;
+  }
+  if (modelPolicy === 'profile-attested') {
+    if (model.abilities?.functionCall === false) return false;
+    const deploymentProfiles = model.agentCompatibility?.serverDefaultHeterogeneousProfiles;
+    return deploymentProfiles
+      ? deploymentProfiles.includes(config.compatibilityProfile)
+      : isServerDefaultHeterogeneousProfileModel(config.compatibilityProfile, model.id);
+  }
+
+  return (
+    isResponsesAPIModel(model.id) ||
+    (isCodexServerDefaultCustomModel(model.id) && model.abilities?.functionCall === true)
+  );
+};
+
+const getEnabledServerChatModels = async (provider: ModelProvider) => {
+  const providerConfig = (await getServerGlobalConfig()).aiProvider[provider];
+  if (!providerConfig?.enabled) return [];
+
+  const models =
+    providerConfig.serverModelLists ??
+    (await loadModels()).filter((model) => model.providerId === provider);
+
+  return models.filter((model) => model.enabled && model.type === 'chat');
+};
+
+const findEnabledServerChatModel = async (provider: string, model: string) => {
+  if (!Object.values(ModelProvider).includes(provider as ModelProvider)) {
+    throw new Error('Deployment-level custom providers are not supported for server agents');
+  }
+  const modelConfig = (await getEnabledServerChatModels(provider as ModelProvider)).find(
+    (item) => item.id === model,
+  );
+  if (!modelConfig) {
+    throw new Error('The selected server model is not available');
+  }
+
+  return modelConfig;
+};
+
+const toServerModelSelection = (provider: string, modelConfig: AiFullModelCard) => ({
+  ...(modelConfig.config?.deploymentName && {
+    deploymentName: modelConfig.config.deploymentName,
+  }),
+  model: modelConfig.id,
+  provider,
+});
+
+/** Return compatible models from the single deployment-owned relay provider. */
+export const getServerDefaultHeterogeneousModels = async () => {
+  const models = {} as ServerDefaultHeterogeneousModels;
+  for (const agentType of SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES) {
+    models[agentType] = [];
+  }
+
+  for (const model of await getEnabledServerChatModels(ModelProvider.LobeHub)) {
+    for (const agentType of SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES) {
+      if (supportsServerDefaultHeterogeneousAgent(agentType, model)) {
+        models[agentType].push({ model: model.id });
+      }
+    }
+  }
+
+  return models;
+};
+
+/** Resolve a user selection against the deployment-owned, enabled chat model catalog. */
+export const resolveServerModel = async (provider: string, model: string) =>
+  toServerModelSelection(provider, await findEnabledServerChatModel(provider, model));
+
+/** Resolve a model only when it belongs to the selected CLI's relay runtime path. */
+export const resolveServerDefaultHeterogeneousModel = async (
+  agentType: ServerDefaultHeterogeneousAgentType,
+  model: string,
+) => {
+  const modelConfig = await findEnabledServerChatModel(ModelProvider.LobeHub, model);
+  if (!supportsServerDefaultHeterogeneousAgent(agentType, modelConfig)) {
+    throw new Error('The selected server model is not compatible with this heterogeneous agent');
+  }
+
+  return {
+    ...toServerModelSelection(ModelProvider.LobeHub, modelConfig),
+    supportsAdaptiveThinking:
+      modelConfig.settings?.extendParams?.includes('enableAdaptiveThinking') === true,
+  };
+};
+
+/**
+ * Initialize the deployment's single relay directly.
+ *
+ * Do not resolve `DEFAULT_AGENT_CONFIG` here or translate this into OpenAI /
+ * Anthropic environment credentials. Those names describe the two CLI ingress
+ * protocols only; the deployment-owned LobeHub RouterRuntime owns the one
+ * upstream endpoint, credentials, model routing, fallback, and billing policy.
+ */
+export const initModelRuntimeFromServerConfig = async (params: {
+  actorUserId: string;
+  workspaceId?: string;
+}): Promise<ModelRuntime> => {
+  const businessHooks = getBusinessModelRuntimeHooks(
+    params.actorUserId,
+    ModelProvider.LobeHub,
+    params.workspaceId,
+  );
+  const tracingHooks = createLLMGenerationTracingHook(
+    params.actorUserId,
+    ModelProvider.LobeHub,
+    params.workspaceId,
+  );
+  return ModelRuntime.initializeWithProvider(
+    ModelProvider.LobeHub,
+    { userId: params.actorUserId, workspaceId: params.workspaceId },
+    mergeModelRuntimeHooks(businessHooks, tracingHooks),
+  );
 };

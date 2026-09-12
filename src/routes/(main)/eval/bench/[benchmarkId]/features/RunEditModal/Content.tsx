@@ -2,16 +2,18 @@
 
 import { AGENT_PROFILE_URL, DEFAULT_INBOX_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
 import type { AgentEvalRunStatus, EvalRunInputConfig } from '@lobechat/types';
-import { Accordion, AccordionItem, ActionIcon, Avatar, Flexbox } from '@lobehub/ui';
-import { Select, useModalContext } from '@lobehub/ui/base-ui';
-import { App, Form, Input, InputNumber, Space } from 'antd';
+import { Accordion, AccordionItem, Flexbox } from '@lobehub/ui';
+import { ActionIcon, Avatar, Select, toast, useModalContext } from '@lobehub/ui/base-ui';
+import { Form, Input, InputNumber, Space } from 'antd';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
+import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { agentService } from '@/services/agent';
 import { useEvalStore } from '@/store/eval';
 
@@ -56,8 +58,9 @@ const RunEditContent: FC<RunEditContentProps> = ({ formId, onLoadingChange, run 
   const { t } = useTranslation('eval');
   const { t: tChat } = useTranslation('chat');
   const { close } = useModalContext();
-  const { message } = App.useApp();
+
   const navigate = useWorkspaceAwareNavigate();
+  const activeWorkspaceSlug = useActiveWorkspaceSlug();
   const { benchmarkId } = useParams<{ benchmarkId: string }>();
   const updateRun = useEvalStore((s) => s.updateRun);
   const datasetList = useEvalStore((s) => s.datasetList);
@@ -107,42 +110,38 @@ const RunEditContent: FC<RunEditContentProps> = ({ formId, onLoadingChange, run 
 
   const allAgents = useMemo(() => [inboxAgent, ...agents], [inboxAgent, agents]);
 
-  const agentMap = useMemo(() => new Map(allAgents.map((agent) => [agent.id, agent])), [allAgents]);
-
   const agentOptions = useMemo(
     () =>
       allAgents.map((agent) => ({
-        label: agent.title || agent.id,
+        label: (
+          <span style={{ alignItems: 'center', display: 'inline-flex', gap: 8 }}>
+            <Avatar
+              avatar={agent.avatar || undefined}
+              background={agent.backgroundColor || undefined}
+              size={20}
+              title={agent.title || ''}
+            />
+            <span>{agent.title}</span>
+          </span>
+        ),
         title: agent.title || '',
         value: agent.id,
       })),
     [allAgents],
   );
 
-  const renderAgentLabel = useCallback(
-    (agentId: string, fallback: React.ReactNode) => {
-      const agent = agentMap.get(agentId);
-
-      return (
-        <span style={{ alignItems: 'center', display: 'inline-flex', gap: 8 }}>
-          <Avatar
-            avatar={agent?.avatar || undefined}
-            background={agent?.backgroundColor || undefined}
-            size={20}
-            title={agent?.title || String(fallback)}
-          />
-          <span>{agent?.title || fallback}</span>
-        </span>
+  const handleOpenAgent = useCallback(
+    (agentId: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      window.open(
+        buildWorkspaceAwarePath(AGENT_PROFILE_URL(agentId), activeWorkspaceSlug),
+        `agent_${agentId}`,
+        'noopener,noreferrer',
       );
     },
-    [agentMap],
+    [activeWorkspaceSlug],
   );
-
-  const handleOpenAgent = useCallback((agentId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    window.open(AGENT_PROFILE_URL(agentId), `agent_${agentId}`, 'noopener,noreferrer');
-  }, []);
 
   const handleFinish = async (values: any) => {
     onLoadingChange?.(true);
@@ -160,10 +159,10 @@ const RunEditContent: FC<RunEditContentProps> = ({ formId, onLoadingChange, run 
         name: values.name,
         targetAgentId: canChangeConfig ? values.targetAgentId : undefined,
       });
-      message.success(t('run.edit.success'));
+      toast.success(t('run.edit.success'));
       close();
     } catch {
-      message.error(t('run.edit.error'));
+      toast.error(t('run.edit.error'));
     } finally {
       onLoadingChange?.(false);
     }
@@ -204,7 +203,6 @@ const RunEditContent: FC<RunEditContentProps> = ({ formId, onLoadingChange, run 
             allowClear
             showSearch
             className={styles.agentSelect}
-            labelRender={(option) => renderAgentLabel(String(option.value), option.label)}
             loading={loadingAgents}
             options={agentOptions}
             placeholder={t('run.create.agent.placeholder')}
@@ -218,7 +216,7 @@ const RunEditContent: FC<RunEditContentProps> = ({ formId, onLoadingChange, run 
                   justifyContent: 'space-between',
                 }}
               >
-                {renderAgentLabel(String(option.value), option.label)}
+                {option.label}
                 <ActionIcon
                   icon={SquareArrowOutUpRight}
                   size="small"

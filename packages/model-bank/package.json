@@ -2,8 +2,14 @@
   "name": "model-bank",
   "version": "1.0.0",
   "private": true,
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./knowledgeCutoff": "./src/const/knowledgeCutoff.ts",
+    "./utils": "./src/utils.ts",
+    "./aiModel": "./src/types/aiModel.ts",
+    "./aiProvider": "./src/types/aiProvider.ts",
+    "./modelProvider": "./src/const/modelProvider.ts",
     "./modelProviders": "./src/modelProviders/index.ts",
     "./modelProviders/lobehub": "./src/modelProviders/lobehub.ts",
     "./ai21": "./src/aiModels/ai21.ts",
@@ -20,6 +26,7 @@
     "./bedrock": "./src/aiModels/bedrock.ts",
     "./bfl": "./src/aiModels/bfl.ts",
     "./cerebras": "./src/aiModels/cerebras.ts",
+    "./chatGPT": "./src/aiModels/chatGPT.ts",
     "./cloudflare": "./src/aiModels/cloudflare.ts",
     "./cohere": "./src/aiModels/cohere.ts",
     "./cometapi": "./src/aiModels/cometapi.ts",
@@ -42,6 +49,7 @@
     "./kimiCodingPlan": "./src/aiModels/kimiCodingPlan.ts",
     "./lmstudio": "./src/aiModels/lmstudio.ts",
     "./longcat": "./src/aiModels/longcat.ts",
+    "./meta": "./src/aiModels/meta.ts",
     "./minimax": "./src/aiModels/minimax.ts",
     "./minimaxCodingPlan": "./src/aiModels/minimaxCodingPlan.ts",
     "./mistral": "./src/aiModels/mistral.ts",
@@ -71,9 +79,11 @@
     "./stepfun": "./src/aiModels/stepfun.ts",
     "./straico": "./src/aiModels/straico.ts",
     "./streamlake": "./src/aiModels/streamlake.ts",
+    "./superGrok": "./src/aiModels/superGrok.ts",
     "./taichu": "./src/aiModels/taichu.ts",
     "./tencentcloud": "./src/aiModels/tencentcloud.ts",
     "./togetherai": "./src/aiModels/togetherai.ts",
+    "./unsloth": "./src/aiModels/unsloth.ts",
     "./upstage": "./src/aiModels/upstage.ts",
     "./v0": "./src/aiModels/v0.ts",
     "./vercelaigateway": "./src/aiModels/vercelaigateway.ts",
@@ -88,6 +98,7 @@
     "./zenmux": "./src/aiModels/zenmux.ts",
     "./zeroone": "./src/aiModels/zeroone.ts",
     "./zhipu": "./src/aiModels/zhipu.ts",
+    "./standardParameters": "./src/standard-parameters/index.ts",
     "./types": "./src/types/index.ts"
   },
   "scripts": {
@@ -104,6 +115,6 @@
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   }
 }

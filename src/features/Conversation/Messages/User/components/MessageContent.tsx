@@ -1,13 +1,13 @@
 import { Flexbox } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 
+import CollapsibleContent from '@/components/CollapsibleContent';
 import MarkdownMessage from '@/features/Conversation/Markdown';
 import { cleanSpeakerTag } from '@/store/chat/utils/cleanSpeakerTag';
 import { type UIChatMessage } from '@/types/index';
 
 import { useMarkdown } from '../useMarkdown';
 import AudioFileListViewer from './AudioFileListViewer';
-import CollapsibleContent from './CollapsibleContent';
 import FileListViewer from './FileListViewer';
 import ImageFileListViewer from './ImageFileListViewer';
 import PageSelections from './PageSelections';
@@ -37,7 +37,9 @@ const UserMessageContent = memo<UIChatMessage>(
         {textBody && <CollapsibleContent>{textBody}</CollapsibleContent>}
         {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
         {videoList && videoList?.length > 0 && <VideoFileListViewer items={videoList} />}
-        {audioList && audioList?.length > 0 && <AudioFileListViewer items={audioList} />}
+        {audioList && audioList?.length > 0 && (
+          <AudioFileListViewer items={audioList} messageId={id} />
+        )}
         {fileList && fileList?.length > 0 && <FileListViewer items={fileList} />}
       </Flexbox>
     );

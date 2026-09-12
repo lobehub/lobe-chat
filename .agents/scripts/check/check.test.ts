@@ -4,8 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import { findNewComponentTestAdvisories } from './advisories';
 import { diffStat, renderDiffsForStdout } from './autofix';
-import { hostRootFromGitdir } from './delegate';
 import { lobehubPipelines } from './pipelines';
 import {
   findVitestConfigDir,
@@ -132,6 +132,31 @@ describe('relatedTestCandidates', () => {
   });
 });
 
+describe('findNewComponentTestAdvisories', () => {
+  it('warns only for new .test.tsx files', async () => {
+    const advisories = await findNewComponentTestAdvisories(
+      ['src/New.test.tsx', 'src/Existing.test.tsx', 'src/useFeature.test.ts'],
+      async (file) => ({
+        baseRef: 'origin/canary',
+        exists: file.includes('Existing'),
+      }),
+    );
+
+    expect(advisories).toEqual([
+      expect.stringContaining('src/New.test.tsx: new .test.tsx file relative to origin/canary'),
+    ]);
+    expect(advisories[0]).toContain(
+      '.agents/skills/testing/SKILL.md (Core Principles: "No new component tests")',
+    );
+  });
+
+  it('skips the warning when the configured base cannot be inspected', async () => {
+    await expect(
+      findNewComponentTestAdvisories(['src/New.test.tsx'], async () => undefined),
+    ).resolves.toEqual([]);
+  });
+});
+
 describe('findVitestConfigDir', () => {
   const configs = new Set([
     'vitest.config.mts',
@@ -154,17 +179,6 @@ describe('findVitestConfigDir', () => {
     await expect(
       findVitestConfigDir('somewhere/deep/file.test.ts', async () => false),
     ).resolves.toBe('.');
-  });
-});
-
-describe('hostRootFromGitdir', () => {
-  it('extracts the superproject root from a submodule gitdir', () => {
-    expect(hostRootFromGitdir('/work/host/.git/modules/vendor/sub')).toBe('/work/host');
-  });
-
-  it('returns null for standalone clones and linked worktrees', () => {
-    expect(hostRootFromGitdir('/work/repo/.git')).toBeNull();
-    expect(hostRootFromGitdir('/work/repo/.git/worktrees/feature')).toBeNull();
   });
 });
 

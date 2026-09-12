@@ -180,6 +180,40 @@ describe('TaskTopicModel', () => {
     });
   });
 
+  describe('cancelRunningByTaskIds', () => {
+    it('cancels running topics across the given tasks and stamps completedAt', async () => {
+      const taskModel = new TaskModel(serverDB, userId);
+      const topicModel = new TaskTopicModel(serverDB, userId);
+      const taskA = await taskModel.create({ instruction: 'A' });
+      const taskB = await taskModel.create({ instruction: 'B' });
+      const taskOutside = await taskModel.create({ instruction: 'Outside' });
+      await createTopic('tpc_bulk_a');
+      await createTopic('tpc_bulk_b');
+      await createTopic('tpc_bulk_done');
+      await createTopic('tpc_bulk_outside');
+
+      await topicModel.add(taskA.id, 'tpc_bulk_a', { seq: 1 });
+      await topicModel.add(taskB.id, 'tpc_bulk_b', { seq: 1 });
+      await topicModel.add(taskB.id, 'tpc_bulk_done', { seq: 2 });
+      await topicModel.updateStatus(taskB.id, 'tpc_bulk_done', 'completed');
+      await topicModel.add(taskOutside.id, 'tpc_bulk_outside', { seq: 1 });
+
+      const canceled = await topicModel.cancelRunningByTaskIds([taskA.id, taskB.id]);
+
+      expect(canceled.map(({ topicId }) => topicId).sort()).toEqual(['tpc_bulk_a', 'tpc_bulk_b']);
+      expect((await getTopic('tpc_bulk_a')).completedAt).toBeInstanceOf(Date);
+      expect((await getTopic('tpc_bulk_b')).completedAt).toBeInstanceOf(Date);
+
+      const outside = await topicModel.findByTaskId(taskOutside.id);
+      expect(outside[0]!.status).toBe('running');
+    });
+
+    it('returns an empty list for an empty id set', async () => {
+      const topicModel = new TaskTopicModel(serverDB, userId);
+      await expect(topicModel.cancelRunningByTaskIds([])).resolves.toEqual([]);
+    });
+  });
+
   describe('timeoutRunning', () => {
     it('should timeout running topics only', async () => {
       const taskModel = new TaskModel(serverDB, userId);
@@ -274,7 +308,7 @@ describe('TaskTopicModel', () => {
     });
 
     it('only counts the requested triggers, excluding manual + legacy-null rows', async () => {
-      // LOBE-11391: the maxExecutions quota must count scheduled ticks only —
+      // the maxExecutions quota must count scheduled ticks only —
       // manual "run now" invocations and legacy rows (null trigger) don't count.
       const taskModel = new TaskModel(serverDB, userId);
       const topicModel = new TaskTopicModel(serverDB, userId);
@@ -320,7 +354,7 @@ describe('TaskTopicModel', () => {
   });
 
   describe('findWithHandoff', () => {
-    it('should return completedAt joined from topics', async () => {
+    it('should return completedAt and totalCost joined from topics', async () => {
       const taskModel = new TaskModel(serverDB, userId);
       const topicModel = new TaskTopicModel(serverDB, userId);
       const task = await taskModel.create({ instruction: 'Test' });
@@ -330,12 +364,15 @@ describe('TaskTopicModel', () => {
       await topicModel.add(task.id, 'tpc_h1', { seq: 1 });
       await topicModel.add(task.id, 'tpc_h2', { seq: 2 });
       await topicModel.updateStatus(task.id, 'tpc_h1', 'completed');
+      await serverDB.update(topics).set({ totalCost: 0.0123 }).where(eq(topics.id, 'tpc_h1'));
 
       const rows = await topicModel.findWithHandoff(task.id, 10);
       const h1 = rows.find((r) => r.topicId === 'tpc_h1');
       const h2 = rows.find((r) => r.topicId === 'tpc_h2');
       expect(h1?.completedAt).toBeInstanceOf(Date);
+      expect(Number(h1?.totalCost)).toBeCloseTo(0.0123);
       expect(h2?.completedAt).toBeNull();
+      expect(h2?.totalCost).toBeNull();
     });
 
     it('should return source task metadata when querying multiple task ids', async () => {

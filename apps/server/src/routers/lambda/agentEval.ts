@@ -8,6 +8,7 @@ import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceA
 import {
   AgentEvalBenchmarkModel,
   AgentEvalDatasetModel,
+  AgentEvalExperimentModel,
   AgentEvalRunModel,
   AgentEvalRunTopicModel,
   AgentEvalTestCaseModel,
@@ -16,7 +17,10 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentEvalRunService } from '@/server/services/agentEvalRun';
 import { FileService } from '@/server/services/file';
+import { FileUploadService } from '@/server/services/fileUpload';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
+
+import { evalRunInputConfigSchema } from './evalRunConfig.schema';
 
 const rubricTypeSchema = z.enum([
   'equals',
@@ -41,15 +45,89 @@ const rubricTypeSchema = z.enum([
 
 const evalConfigSchema = z.object({ judgePrompt: z.string().optional() }).passthrough();
 
-const evalRunInputConfigSchema = z.object({
-  k: z.number().min(1).max(10).optional(),
-  maxConcurrency: z.number().min(1).max(20).optional(),
-  maxSteps: z.number().min(1).max(1000).optional(),
-  timeout: z
-    .number()
-    .min(60_000)
-    .max(6 * 3_600_000)
-    .optional(),
+const evalCaseEnvironmentSchema = z
+  .object({
+    envPrompt: z.string().optional(),
+    toolForwarding: z
+      .record(
+        z.string().trim().min(1),
+        z
+          .object({
+            endpoint: z.string().url(),
+            timeoutMs: z.number().int().positive().optional(),
+          })
+          .strict(),
+      )
+      .optional(),
+  })
+  .strict();
+
+const dateValueSchema = z.union([
+  z.number().finite(),
+  z.string().refine((value) => !Number.isNaN(Date.parse(value)), 'Invalid timestamp'),
+]);
+
+const recordSchema = z.record(z.string(), z.unknown());
+
+const evalTestCaseMessagesSchema = z
+  .array(
+    z
+      .object({
+        content: z.string(),
+        createdAt: dateValueSchema.optional(),
+        error: recordSchema.optional(),
+        id: z.string().min(1).optional(),
+        metadata: recordSchema.optional(),
+        model: z.string().optional(),
+        parentId: z.string().min(1).nullable().optional(),
+        plugin: recordSchema.optional(),
+        pluginError: recordSchema.optional(),
+        pluginIntervention: recordSchema.optional(),
+        pluginState: recordSchema.optional(),
+        provider: z.string().optional(),
+        reasoning: recordSchema.optional(),
+        role: z.enum(['user', 'assistant', 'system', 'tool']),
+        search: recordSchema.optional(),
+        tool_call_id: z.string().optional(),
+        tools: z.array(recordSchema).optional(),
+        traceId: z.string().optional(),
+        updatedAt: dateValueSchema.optional(),
+      })
+      .strict(),
+  )
+  .superRefine((messages, ctx) => {
+    const ids = new Set<string>();
+
+    for (const [index, message] of messages.entries()) {
+      if (!message.id) continue;
+      if (ids.has(message.id)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Message ids must be unique',
+          path: [index, 'id'],
+        });
+      }
+      ids.add(message.id);
+    }
+
+    for (const [index, message] of messages.entries()) {
+      if (message.parentId && !ids.has(message.parentId)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Message parentId must reference a message in the same sequence',
+          path: [index, 'parentId'],
+        });
+      }
+    }
+  });
+
+const evalTestCaseContentSchema = z.object({
+  category: z.string().optional(),
+  choices: z.array(z.string()).optional(),
+  environment: evalCaseEnvironmentSchema.optional(),
+  expected: z.string().optional(),
+  input: z.string(),
+  messages: evalTestCaseMessagesSchema.optional(),
 });
 
 const log = debug('lobe-lambda-router:agent-eval');
@@ -62,11 +140,13 @@ const agentEvalProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts
     ctx: {
       benchmarkModel: new AgentEvalBenchmarkModel(ctx.serverDB, ctx.userId, wsId),
       datasetModel: new AgentEvalDatasetModel(ctx.serverDB, ctx.userId, wsId),
+      experimentModel: new AgentEvalExperimentModel(ctx.serverDB, ctx.userId, wsId),
       runModel: new AgentEvalRunModel(ctx.serverDB, ctx.userId, wsId),
       runService: new AgentEvalRunService(ctx.serverDB, ctx.userId, wsId),
       runTopicModel: new AgentEvalRunTopicModel(ctx.serverDB, ctx.userId, wsId),
       testCaseModel: new AgentEvalTestCaseModel(ctx.serverDB, ctx.userId, wsId),
       fileService: new FileService(ctx.serverDB, ctx.userId, wsId),
+      fileUploadService: new FileUploadService(ctx.serverDB, ctx.userId, wsId),
     },
   });
 });
@@ -88,7 +168,7 @@ export const agentEvalRouter = router({
         description: z.string().optional(),
         rubrics: z.array(z.any()).optional().default([]), // EvalBenchmarkRubric[]
         referenceUrl: z.string().optional(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
         isSystem: z.boolean().default(false),
       }),
     )
@@ -141,7 +221,7 @@ export const agentEvalRouter = router({
         description: z.string().optional(),
         rubrics: z.array(z.any()).optional(),
         referenceUrl: z.string().optional(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -178,18 +258,109 @@ export const agentEvalRouter = router({
     }),
 
   // ============================================
+  // Experiment Operations
+  // ============================================
+  createExperiment: agentEvalProcedureWrite
+    .input(
+      z.object({
+        // Optional caller-supplied id for cross-server idempotent creation.
+        id: z.string().optional(),
+        name: z.string(),
+        description: z.string().optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
+        benchmarkIds: z.array(z.string()).min(1),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const data = await ctx.experimentModel.create(input);
+      return { data, success: true };
+    }),
+
+  listExperiments: agentEvalProcedure.query(async ({ ctx }) => {
+    const data = await ctx.experimentModel.query();
+    return { data, success: true };
+  }),
+
+  getExperiment: agentEvalProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const experiment = await ctx.experimentModel.findById(input.id);
+      if (!experiment) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Experiment not found' });
+      }
+
+      // Enrich runs with target agent display info (batched) and dataset name
+      // (mapped from the datasets already fetched — no extra queries).
+      const agentIds = [
+        ...new Set(experiment.runs.map((run) => run.targetAgentId).filter(Boolean)),
+      ] as string[];
+      const agents = await Promise.all(
+        agentIds.map((id) => ctx.runService.getAgentDisplayInfo(id)),
+      );
+      const agentMap = Object.fromEntries(agents.filter(Boolean).map((a) => [a!.id, a!]));
+      const datasetNameMap = new Map(experiment.datasets.map((d) => [d.id, d.name]));
+
+      const runs = experiment.runs.map((run) => ({
+        ...run,
+        datasetName: datasetNameMap.get(run.datasetId) || undefined,
+        targetAgent: run.targetAgentId ? agentMap[run.targetAgentId] : undefined,
+      }));
+
+      return { data: { ...experiment, runs }, success: true };
+    }),
+
+  updateExperiment: agentEvalProcedureWrite
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
+        benchmarkIds: z.array(z.string()).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, ...data } = input;
+      const result = await ctx.experimentModel.update(id, data);
+      if (!result) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Experiment not found' });
+      }
+      return { data: result, success: true };
+    }),
+
+  deleteExperiment: agentEvalProcedureWrite
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const result = await ctx.experimentModel.delete(input.id);
+        if (result.rowCount === 0) {
+          return { success: false, error: 'Experiment not found' };
+        }
+        return { success: true };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Failed to delete experiment',
+        };
+      }
+    }),
+
+  // ============================================
   // Dataset Operations
   // ============================================
   createDataset: agentEvalProcedureWrite
     .input(
       z.object({
-        benchmarkId: z.string(),
+        // Optional: a dataset accumulated from captured cases belongs to no
+        // published benchmark.
+        benchmarkId: z.string().optional(),
         identifier: z.string(),
         name: z.string(),
         description: z.string().optional(),
         evalMode: rubricTypeSchema.optional(),
         evalConfig: evalConfigSchema.optional(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
+        sourceExperimentId: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -227,7 +398,7 @@ export const agentEvalRouter = router({
   listDatasets: agentEvalProcedure
     .input(z.object({ benchmarkId: z.string().optional() }).optional())
     .query(async ({ ctx, input }) => {
-      return ctx.datasetModel.query(input?.benchmarkId);
+      return ctx.datasetModel.query({ benchmarkId: input?.benchmarkId });
     }),
 
   getDataset: agentEvalProcedure
@@ -248,7 +419,7 @@ export const agentEvalRouter = router({
         description: z.string().optional(),
         evalMode: rubricTypeSchema.nullish(),
         evalConfig: evalConfigSchema.nullish(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -293,15 +464,15 @@ export const agentEvalRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const upload = await ctx.fileUploadService.assertActiveOrLegacy(input.pathname);
       const format = input.format || 'auto';
       const resolvedFilename = input.filename || input.pathname;
       const isXlsx = format === 'xlsx' || resolvedFilename?.match(/\.xlsx?$/i);
 
-      const content = isXlsx
-        ? await ctx.fileService.getFileByteArray(input.pathname)
-        : await ctx.fileService.getFileContent(input.pathname);
-
       try {
+        const content = isXlsx
+          ? await ctx.fileService.getFileByteArray(input.pathname)
+          : await ctx.fileService.getFileContent(input.pathname);
         const result = parseDataset(content, {
           filename: resolvedFilename,
           format: format === 'auto' ? undefined : format,
@@ -315,6 +486,7 @@ export const agentEvalRouter = router({
           format: result.format,
         };
       } catch (error: any) {
+        if (upload) await ctx.fileUploadService.releaseBestEffort(input.pathname);
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: `Failed to parse file: ${error.message}`,
@@ -335,104 +507,113 @@ export const agentEvalRouter = router({
           expectedDelimiter: z.string().optional(),
           choices: z.string().optional(),
           category: z.string().optional(),
-          metadata: z.record(z.string()).optional(),
+          metadata: z.record(z.string(), z.string()).optional(),
           sortOrder: z.string().optional(),
         }),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const format = input.format || 'auto';
-      const resolvedFilename = input.filename || input.pathname;
-      const isXlsx = format === 'xlsx' || resolvedFilename?.match(/\.xlsx?$/i);
+      const upload = await ctx.fileUploadService.assertActiveOrLegacy(input.pathname);
+      let imported = false;
 
-      const content = isXlsx
-        ? await ctx.fileService.getFileByteArray(input.pathname)
-        : await ctx.fileService.getFileContent(input.pathname);
-
-      let parsed;
       try {
-        parsed = parseDataset(content, {
-          filename: resolvedFilename,
-          format: format === 'auto' ? undefined : format,
+        const format = input.format || 'auto';
+        const resolvedFilename = input.filename || input.pathname;
+        const isXlsx = format === 'xlsx' || resolvedFilename?.match(/\.xlsx?$/i);
+
+        let parsed;
+        try {
+          const content = isXlsx
+            ? await ctx.fileService.getFileByteArray(input.pathname)
+            : await ctx.fileService.getFileContent(input.pathname);
+          parsed = parseDataset(content, {
+            filename: resolvedFilename,
+            format: format === 'auto' ? undefined : format,
+          });
+        } catch (error: any) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Failed to parse file: ${error.message}`,
+          });
+        }
+
+        const { fieldMapping } = input;
+
+        // Get the current max sortOrder so new imports continue from there
+        const existingCount = await ctx.testCaseModel.countByDatasetId(input.datasetId);
+
+        const testCases = parsed.rows.map((row, index) => {
+          let expectedStr: string | undefined;
+
+          if (fieldMapping.expected) {
+            const raw = row[fieldMapping.expected];
+            if (raw != null) {
+              // Split multi-candidate answers by delimiter
+              if (fieldMapping.expectedDelimiter) {
+                const candidates = String(raw)
+                  .split(fieldMapping.expectedDelimiter)
+                  .map((s: string) => s.trim())
+                  .filter(Boolean);
+                expectedStr = candidates.length > 1 ? JSON.stringify(candidates) : String(raw);
+              } else {
+                expectedStr = String(raw);
+              }
+            }
+          }
+
+          // Handle choices field (array or JSON string)
+          let choices: string[] | undefined;
+          if (fieldMapping.choices) {
+            const rawChoices = row[fieldMapping.choices];
+            if (Array.isArray(rawChoices)) {
+              choices = rawChoices.map(String);
+            } else if (typeof rawChoices === 'string') {
+              try {
+                const parsed = JSON.parse(rawChoices);
+                if (Array.isArray(parsed)) choices = parsed.map(String);
+              } catch {
+                // Not JSON, skip
+              }
+            }
+          }
+
+          // Compute sortOrder: use CSV column value if mapped, otherwise auto-increment from 1
+          let sortOrder: number;
+          if (fieldMapping.sortOrder) {
+            const raw = Number(row[fieldMapping.sortOrder]);
+            sortOrder = Number.isFinite(raw) ? raw : existingCount + index + 1;
+          } else {
+            sortOrder = existingCount + index + 1;
+          }
+
+          return {
+            datasetId: input.datasetId,
+            content: {
+              input: String(row[fieldMapping.input] ?? ''),
+              expected: expectedStr,
+              choices,
+              category: fieldMapping.category ? String(row[fieldMapping.category]) : undefined,
+            },
+            metadata: fieldMapping.metadata
+              ? Object.fromEntries(
+                  Object.entries(fieldMapping.metadata).map(([key, col]) => [
+                    key,
+                    row[col as string],
+                  ]),
+                )
+              : {},
+            sortOrder,
+          };
         });
-      } catch (error: any) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: `Failed to parse file: ${error.message}`,
-        });
+
+        const result = await ctx.testCaseModel.batchCreate(testCases);
+        imported = true;
+
+        return { count: result.length, data: result };
+      } finally {
+        if (upload) await ctx.fileUploadService.releaseBestEffort(input.pathname);
+        else if (imported) await ctx.fileService.deleteFile(input.pathname);
       }
-
-      const { fieldMapping } = input;
-
-      // Get the current max sortOrder so new imports continue from there
-      const existingCount = await ctx.testCaseModel.countByDatasetId(input.datasetId);
-
-      const testCases = parsed.rows.map((row, index) => {
-        let expectedStr: string | undefined;
-
-        if (fieldMapping.expected) {
-          const raw = row[fieldMapping.expected];
-          if (raw != null) {
-            // Split multi-candidate answers by delimiter
-            if (fieldMapping.expectedDelimiter) {
-              const candidates = String(raw)
-                .split(fieldMapping.expectedDelimiter)
-                .map((s: string) => s.trim())
-                .filter(Boolean);
-              expectedStr = candidates.length > 1 ? JSON.stringify(candidates) : String(raw);
-            } else {
-              expectedStr = String(raw);
-            }
-          }
-        }
-
-        // Handle choices field (array or JSON string)
-        let choices: string[] | undefined;
-        if (fieldMapping.choices) {
-          const rawChoices = row[fieldMapping.choices];
-          if (Array.isArray(rawChoices)) {
-            choices = rawChoices.map(String);
-          } else if (typeof rawChoices === 'string') {
-            try {
-              const parsed = JSON.parse(rawChoices);
-              if (Array.isArray(parsed)) choices = parsed.map(String);
-            } catch {
-              // Not JSON, skip
-            }
-          }
-        }
-
-        // Compute sortOrder: use CSV column value if mapped, otherwise auto-increment from 1
-        let sortOrder: number;
-        if (fieldMapping.sortOrder) {
-          const raw = Number(row[fieldMapping.sortOrder]);
-          sortOrder = Number.isFinite(raw) ? raw : existingCount + index + 1;
-        } else {
-          sortOrder = existingCount + index + 1;
-        }
-
-        return {
-          datasetId: input.datasetId,
-          content: {
-            input: String(row[fieldMapping.input] ?? ''),
-            expected: expectedStr,
-            choices,
-            category: fieldMapping.category ? String(row[fieldMapping.category]) : undefined,
-          },
-          metadata: fieldMapping.metadata
-            ? Object.fromEntries(
-                Object.entries(fieldMapping.metadata).map(([key, col]) => [
-                  key,
-                  row[col as string],
-                ]),
-              )
-            : {},
-          sortOrder,
-        };
-      });
-
-      const result = await ctx.testCaseModel.batchCreate(testCases);
-      return { count: result.length, data: result };
     }),
 
   // ============================================
@@ -442,15 +623,10 @@ export const agentEvalRouter = router({
     .input(
       z.object({
         datasetId: z.string(),
-        content: z.object({
-          input: z.string(),
-          expected: z.string().optional(),
-          choices: z.array(z.string()).optional(),
-          category: z.string().optional(),
-        }),
+        content: evalTestCaseContentSchema,
         evalMode: rubricTypeSchema.optional(),
         evalConfig: evalConfigSchema.optional(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
         sortOrder: z.number().optional(),
       }),
     )
@@ -485,13 +661,8 @@ export const agentEvalRouter = router({
         datasetId: z.string(),
         cases: z.array(
           z.object({
-            content: z.object({
-              input: z.string(),
-              expected: z.string().optional(),
-              choices: z.array(z.string()).optional(),
-              category: z.string().optional(),
-            }),
-            metadata: z.record(z.unknown()).optional(),
+            content: evalTestCaseContentSchema,
+            metadata: z.record(z.string(), z.unknown()).optional(),
             sortOrder: z.number().optional(),
           }),
         ),
@@ -526,20 +697,23 @@ export const agentEvalRouter = router({
         id: z.string(),
         content: z
           .object({
-            input: z.string(),
+            input: z.string().optional(),
             expected: z.string().optional(),
+            choices: z.array(z.string()).optional(),
             category: z.string().optional(),
+            environment: evalCaseEnvironmentSchema.optional(),
+            messages: evalTestCaseMessagesSchema.optional(),
           })
           .optional(),
         evalMode: rubricTypeSchema.nullish(),
         evalConfig: evalConfigSchema.nullish(),
-        metadata: z.record(z.unknown()).optional(),
+        metadata: z.record(z.string(), z.unknown()).optional(),
         sortOrder: z.number().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
-      const result = await ctx.testCaseModel.update(id, data);
+      const result = await ctx.testCaseModel.update(id, data as any);
       if (!result) {
         throw new TRPCError({
           code: 'NOT_FOUND',
@@ -606,6 +780,10 @@ export const agentEvalRouter = router({
         targetAgentId: z.string().optional(),
         name: z.string().optional(),
         config: evalRunInputConfigSchema.optional(),
+        experimentId: z.string().optional(),
+        parentRunId: z.string().optional(),
+        // 'external': create claimable (pending) run with no pre-created topics.
+        mode: z.enum(['internal', 'external']).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -620,6 +798,13 @@ export const agentEvalRouter = router({
         return result;
       } catch (error: any) {
         const pgError = error?.cause || error;
+
+        if (pgError?.message === 'Experiment not found') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Experiment not found' });
+        }
+        if (pgError?.message === 'Parent run not found') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Parent run not found' });
+        }
 
         // Check for foreign key violation (dataset not found)
         if (pgError?.code === '23503' && pgError?.constraint?.includes('dataset')) {
@@ -637,6 +822,7 @@ export const agentEvalRouter = router({
       z.object({
         benchmarkId: z.string().optional(),
         datasetId: z.string().optional(),
+        experimentId: z.string().optional(),
         status: z
           .enum(['idle', 'pending', 'running', 'completed', 'failed', 'aborted', 'external'])
           .optional(),
@@ -648,6 +834,7 @@ export const agentEvalRouter = router({
       const data = await ctx.runModel.query({
         benchmarkId: input.benchmarkId,
         datasetId: input.datasetId,
+        experimentId: input.experimentId,
         status: input.status,
         limit: input.limit,
         offset: input.offset,
@@ -813,7 +1000,18 @@ export const agentEvalRouter = router({
         });
       }
 
-      await ctx.runService.retrySingleCase(input.runId, input.testCaseId);
+      try {
+        await ctx.runService.retrySingleCase(input.runId, input.testCaseId);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Cannot retry case';
+        if (message.startsWith('Cannot retry: case is')) {
+          throw new TRPCError({ code: 'CONFLICT', message });
+        }
+        if (message === 'RunTopic not found') {
+          throw new TRPCError({ code: 'NOT_FOUND', message });
+        }
+        throw error;
+      }
 
       await AgentEvalRunWorkflow.triggerExecuteTestCase({
         runId: input.runId,
@@ -979,7 +1177,7 @@ export const agentEvalRouter = router({
           averageScore: z.number(),
           passRate: z.number(),
           duration: z.number().optional(),
-          rubricScores: z.record(z.number()).optional(),
+          rubricScores: z.record(z.string(), z.number()).optional(),
         }),
       }),
     )

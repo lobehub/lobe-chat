@@ -11,6 +11,18 @@ const permissionMock = vi.hoisted(() => ({
   edit_own_content: true,
 }));
 
+const resourcePermissionMock = vi.hoisted(() => ({
+  canManage: false,
+  workspaceId: undefined as string | undefined,
+}));
+const wsNavigateMock = vi.hoisted(() => vi.fn());
+const menuActionMocks = vi.hoisted(() => ({
+  handleCopyLink: vi.fn(),
+  handleDelete: vi.fn(),
+  setRightPanelMode: vi.fn(),
+  togglePageAgentPanel: vi.fn(),
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
@@ -26,15 +38,12 @@ vi.mock('@lobechat/const', () => ({
   isDesktop: false,
 }));
 
-vi.mock('@lobehub/ui', () => ({
-  Icon: () => null,
-}));
-
 vi.mock('@lobehub/ui/base-ui', () => ({
   confirmModal: vi.fn(),
 }));
 
-vi.mock('antd', () => ({
+vi.mock('antd', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   App: {
     useApp: () => ({
       message: {
@@ -48,18 +57,8 @@ vi.mock('antd', () => ({
   },
 }));
 
-vi.mock('antd-style', () => ({
-  createStaticStyles: () => ({}),
-  cssVar: {
-    colorTextTertiary: 'colorTextTertiary',
-  },
-  cx: (...args: unknown[]) => args.filter(Boolean).join(' '),
-  keyframes: () => '',
-  useResponsive: () => ({ lg: true }),
-}));
-
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
-  useActiveWorkspaceId: () => undefined,
+  useActiveWorkspaceId: () => resourcePermissionMock.workspaceId,
 }));
 
 vi.mock('@/business/client/hooks/useAuthorInfo', () => ({
@@ -72,6 +71,21 @@ vi.mock('@/business/client/hooks/useDocumentTransferMenuItem', () => ({
 
 vi.mock('@/features/VisibilityConfirmContent', () => ({
   default: () => null,
+}));
+
+vi.mock('@/features/ResourcePermission/useResourcePermission', () => ({
+  useResourcePermission: (_type: string, resourceId?: string) => ({
+    data: resourceId ? { canManage: resourcePermissionMock.canManage } : undefined,
+    error: undefined,
+    isLoading: false,
+    mutate: vi.fn(),
+    setAccessLevel: vi.fn(),
+    updating: false,
+  }),
+}));
+
+vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
+  useWorkspaceAwareNavigate: () => wsNavigateMock,
 }));
 
 vi.mock('@/hooks/usePermission', () => ({
@@ -120,7 +134,7 @@ vi.mock('@/store/file', () => ({
 vi.mock('@/store/global', () => ({
   useGlobalStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
-      togglePageAgentPanel: vi.fn(),
+      togglePageAgentPanel: menuActionMocks.togglePageAgentPanel,
       toggleWideScreen: vi.fn(),
       wideScreen: false,
     }),
@@ -136,15 +150,15 @@ vi.mock('../store', () => ({
   usePageEditorStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
       documentId: 'doc-1',
-      setRightPanelMode: vi.fn(),
+      setRightPanelMode: menuActionMocks.setRightPanelMode,
     }),
   useStoreApi: () => ({
     getState: () => ({
       editor: {
         getDocument: () => '# Hello',
       },
-      handleCopyLink: vi.fn(),
-      handleDelete: vi.fn(),
+      handleCopyLink: menuActionMocks.handleCopyLink,
+      handleDelete: menuActionMocks.handleDelete,
       title: 'Hello',
     }),
   }),
@@ -157,6 +171,30 @@ describe('PageEditor header menu', () => {
   beforeEach(() => {
     permissionMock.create_content = true;
     permissionMock.edit_own_content = true;
+    resourcePermissionMock.canManage = false;
+    resourcePermissionMock.workspaceId = undefined;
+    vi.clearAllMocks();
+  });
+
+  it('places the member-permission page entry in the overflow menu for managers', () => {
+    resourcePermissionMock.workspaceId = 'ws-1';
+    resourcePermissionMock.canManage = true;
+
+    const { result } = renderHook(() => useMenu());
+
+    const item = getMenuItem(result.current.menuItems, 'member-permissions');
+    expect(item).toMatchObject({ label: 'permission.page.entry' });
+    (item as { onClick: () => void }).onClick();
+    expect(wsNavigateMock).toHaveBeenCalledWith('/page/doc-1/permission');
+  });
+
+  it('hides the member-permission entry for non-managers', () => {
+    resourcePermissionMock.workspaceId = 'ws-1';
+    resourcePermissionMock.canManage = false;
+
+    const { result } = renderHook(() => useMenu());
+
+    expect(getMenuItem(result.current.menuItems, 'member-permissions')).toBeUndefined();
   });
 
   it('disables mutating page actions for workspace viewers', () => {
@@ -173,5 +211,25 @@ describe('PageEditor header menu', () => {
     expect(getMenuItem(items, 'copy-link')).not.toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'version-history')).not.toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'export')).not.toMatchObject({ disabled: true });
+  });
+
+  it('uses surface-specific actions when provided', async () => {
+    const onCopyLink = vi.fn();
+    const onDeleted = vi.fn();
+    const onOpenHistory = vi.fn();
+    const { result } = renderHook(() => useMenu({ onCopyLink, onDeleted, onOpenHistory }));
+
+    (getMenuItem(result.current.menuItems, 'copy-link') as { onClick: () => void }).onClick();
+    (getMenuItem(result.current.menuItems, 'version-history') as { onClick: () => void }).onClick();
+    await (
+      getMenuItem(result.current.menuItems, 'delete') as { onClick: () => Promise<void> }
+    ).onClick();
+
+    expect(onCopyLink).toHaveBeenCalledOnce();
+    expect(menuActionMocks.handleCopyLink).not.toHaveBeenCalled();
+    expect(menuActionMocks.setRightPanelMode).toHaveBeenCalledWith('history');
+    expect(onOpenHistory).toHaveBeenCalledOnce();
+    expect(menuActionMocks.togglePageAgentPanel).not.toHaveBeenCalled();
+    expect(menuActionMocks.handleDelete).toHaveBeenCalledWith(expect.any(Function), onDeleted);
   });
 });

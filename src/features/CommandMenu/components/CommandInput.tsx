@@ -1,10 +1,12 @@
 import { DEFAULT_AVATAR } from '@lobechat/const';
-import { Avatar, Tag } from '@lobehub/ui';
+import { agentDisplayName } from '@lobechat/types';
+import { Tag } from '@lobehub/ui/base-ui';
 import { Command } from 'cmdk';
 import { ArrowLeft, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Avatar from '@/components/Avatar';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
@@ -13,7 +15,12 @@ import { styles } from '../styles';
 import { useCommandMenu } from '../useCommandMenu';
 import { type ValidSearchType } from '../utils/queryParser';
 
-const CommandInput = memo(() => {
+interface CommandInputProps {
+  onInputChange: (value: string) => void;
+  onTypeFilterChange: () => void;
+}
+
+const CommandInput = memo<CommandInputProps>(({ onInputChange, onTypeFilterChange }) => {
   const { t } = useTranslation('common');
 
   const { handleBack } = useCommandMenu();
@@ -47,7 +54,7 @@ const CommandInput = memo(() => {
 
   const getPlaceholder = () => {
     if (hasSelectedAgent) {
-      return t('cmdk.askAgentPlaceholder', { agent: selectedAgent.title });
+      return t('cmdk.askAgentPlaceholder', { agent: agentDisplayName(selectedAgent) });
     }
     if (page === 'ask-ai') {
       return t('cmdk.aiModePlaceholder');
@@ -67,12 +74,13 @@ const CommandInput = memo(() => {
                   emojiScaleWithBackground
                   avatar={activeAgentMeta?.avatar || DEFAULT_AVATAR}
                   background={activeAgentMeta?.backgroundColor}
+                  name={agentDisplayName(activeAgentMeta, t('defaultAgent'))}
                   shape="square"
                   size={14}
                 />
               }
             >
-              {activeAgentMeta?.title || t('defaultAgent')}
+              {agentDisplayName(activeAgentMeta, t('defaultAgent'))}
             </Tag>
           ) : (
             menuContext !== 'general' && <Tag className={styles.contextTag}>{contextName}</Tag>
@@ -81,7 +89,10 @@ const CommandInput = memo(() => {
             <Tag
               className={styles.backTag}
               icon={<X size={12} />}
-              onClick={() => setTypeFilter(undefined)}
+              onClick={() => {
+                onTypeFilterChange();
+                setTypeFilter(undefined);
+              }}
             >
               {getTypeLabel(typeFilter)}
             </Tag>
@@ -99,13 +110,14 @@ const CommandInput = memo(() => {
               <Avatar
                 emojiScaleWithBackground
                 avatar={selectedAgent.avatar}
+                name={agentDisplayName(selectedAgent)}
                 shape="square"
                 size={14}
               />
             }
             onClose={() => setSelectedAgent(undefined)}
           >
-            {selectedAgent.title}
+            {agentDisplayName(selectedAgent)}
           </Tag>
         )}
         <Command.Input
@@ -113,7 +125,10 @@ const CommandInput = memo(() => {
           maxLength={500}
           placeholder={getPlaceholder()}
           value={search}
-          onValueChange={setSearch}
+          onValueChange={(value) => {
+            onInputChange(value);
+            setSearch(value);
+          }}
         />
         {page !== 'ask-ai' && !hasSelectedAgent && search.trim() ? (
           <>

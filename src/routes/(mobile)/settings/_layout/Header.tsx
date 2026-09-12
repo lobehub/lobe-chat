@@ -4,7 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
+import { useMatch, useParams, useSearchParams } from 'react-router';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
@@ -20,6 +20,7 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 const TAB_TITLE_KEY: Partial<Record<SettingsTabs, string>> = {
   [SettingsTabs.Billing]: 'subscription:tab.billing',
   [SettingsTabs.Credits]: 'subscription:tab.credits',
+  [SettingsTabs.Labs]: 'labs:title',
   [SettingsTabs.Plans]: 'subscription:tab.plans',
   [SettingsTabs.Profile]: 'auth:profile.title',
   [SettingsTabs.Referral]: 'subscription:tab.referral',
@@ -28,27 +29,47 @@ const TAB_TITLE_KEY: Partial<Record<SettingsTabs, string>> = {
   [SettingsTabs.SystemTools]: 'setting:tab.systemTools',
 };
 
+const WORKSPACE_TAB_TITLE_KEY: Record<string, string> = {
+  budget: 'subscription:tab.budget',
+  general: 'setting:workspaceSetting.tab.general',
+  members: 'setting:workspaceSetting.tab.members',
+};
+
 const Header = memo(() => {
-  const { t } = useTranslation(['setting', 'auth', 'subscription']);
+  const { t } = useTranslation(['setting', 'auth', 'labs', 'subscription']);
   const showMobileWorkspace = useShowMobileWorkspace();
   const navigate = useWorkspaceAwareNavigate();
   const params = useParams<{ providerId?: string; tab?: string }>();
+  const [searchParams] = useSearchParams();
+  const workspaceSettingsMatch = useMatch('/:workspaceSlug/settings/:workspaceTab/*');
 
   const isSessionActive = useSessionStore((s) => !!s.activeId);
-  const isProvider = params.providerId && params.providerId !== 'all';
+  // Personal provider details carry the id in the path; the workspace provider
+  // page canonicalizes it into the `provider` query param instead.
+  const queryProvider = searchParams.get('provider');
+  const providerId =
+    params.providerId ?? (queryProvider && queryProvider !== 'all' ? queryProvider : undefined);
+  const isProvider = providerId && providerId !== 'all';
 
   const handleBackClick = () => {
     if (isSessionActive && showMobileWorkspace) {
       navigate('/agent');
-    } else if (isProvider) {
+    } else if (params.providerId && params.providerId !== 'all') {
       navigate('/settings/provider/all', { escape: true });
+    } else if (isProvider) {
+      // Query-selected provider (workspace form): back to the workspace
+      // provider list instead of escaping to personal settings.
+      navigate('/settings/provider');
     } else {
       navigate('/me/settings', { escape: true });
     }
   };
 
-  const tab = params.tab as SettingsTabs | undefined;
-  const tabTitleKey = tab ? (TAB_TITLE_KEY[tab] ?? `setting:tab.${tab}`) : 'setting:tab.all';
+  const workspaceTab = workspaceSettingsMatch?.params.workspaceTab;
+  const tab = (params.tab ?? workspaceTab) as SettingsTabs | undefined;
+  const tabTitleKey = tab
+    ? (WORKSPACE_TAB_TITLE_KEY[workspaceTab ?? ''] ?? TAB_TITLE_KEY[tab] ?? `setting:tab.${tab}`)
+    : 'setting:tab.all';
   // i18next's strict key union rejects dynamic strings. `Parameters<typeof t>[0]` would push TS
   // onto the wrong overload and infer the return as `unknown`, so we fall back to `as any`.
   // Unknown keys surface visibly as raw text, which is acceptable.
@@ -62,7 +83,7 @@ const Header = memo(() => {
         <ChatHeader.Title
           title={
             <Flexbox horizontal align={'center'} gap={8}>
-              <span style={{ lineHeight: 1.2 }}>{isProvider ? params.providerId : tabTitle}</span>
+              <span style={{ lineHeight: 1.2 }}>{isProvider ? providerId : tabTitle}</span>
             </Flexbox>
           }
         />

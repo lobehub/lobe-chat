@@ -7,33 +7,35 @@ import { AsyncTaskStatus } from '@/types/asyncTask';
 // ---- hoisted mocks (available inside vi.mock factories) ----
 
 const {
-  mockAfter,
   mockCreateVideo,
   mockFindUserById,
   mockGenerationTopicFindById,
   mockIsLobeHubModelAvailable,
   mockProcessBackgroundVideoPolling,
   mockResolveBusinessModelMapping,
+  mockAfter,
   mockServerDB,
   mockTransaction,
 } = vi.hoisted(() => {
   const mockTransaction = vi.fn();
   const mockServerDB = { transaction: mockTransaction };
   const mockCreateVideo = vi.fn();
-  const mockAfter = vi.fn((cb: () => void) => cb());
+  const mockAfter = vi.fn(function (cb: () => void) {
+    return cb();
+  });
   const mockFindUserById = vi.fn();
   const mockGenerationTopicFindById = vi.fn();
   const mockIsLobeHubModelAvailable = vi.fn();
   const mockProcessBackgroundVideoPolling = vi.fn().mockResolvedValue(undefined);
   const mockResolveBusinessModelMapping = vi.fn();
   return {
-    mockAfter,
     mockCreateVideo,
     mockFindUserById,
     mockGenerationTopicFindById,
     mockIsLobeHubModelAvailable,
     mockProcessBackgroundVideoPolling,
     mockResolveBusinessModelMapping,
+    mockAfter,
     mockServerDB,
     mockTransaction,
   };
@@ -43,9 +45,11 @@ const {
 
 vi.mock('@/database/models/asyncTask');
 vi.mock('@/database/models/generationTopic', () => ({
-  GenerationTopicModel: vi.fn(() => ({
-    findById: mockGenerationTopicFindById,
-  })),
+  GenerationTopicModel: vi.fn(function () {
+    return {
+      findById: mockGenerationTopicFindById,
+    };
+  }),
 }));
 vi.mock('@/server/services/file');
 vi.mock('@/database/models/user', () => ({
@@ -86,14 +90,20 @@ vi.mock('@lobechat/business-model-bank/model-config', () => ({
 vi.mock('@/business/server/video-generation/getVideoFreeQuota', () => ({
   getVideoFreeQuota: vi.fn().mockResolvedValue({ remaining: 10 }),
 }));
-vi.mock('next/server', () => ({ after: (cb: () => void) => mockAfter(cb) }));
+vi.mock('@/server/utils/scheduleAfterResponse', () => ({
+  after: (cb: () => void) => mockAfter(cb),
+}));
 vi.mock('@/server/services/generation/videoBackgroundPolling', () => ({
   processBackgroundVideoPolling: mockProcessBackgroundVideoPolling,
 }));
 vi.mock('@/envs/app', () => ({
   appEnv: { APP_URL: 'https://app.example.com' },
 }));
-vi.mock('debug', () => ({ default: vi.fn(() => vi.fn()) }));
+vi.mock('debug', () => ({
+  default: vi.fn(function () {
+    return vi.fn();
+  }),
+}));
 
 // ---- helpers ----
 
@@ -135,14 +145,15 @@ const mockDbUpdate = vi.fn().mockReturnValue({
 function setupMocks() {
   const mockUpdate = vi.fn().mockResolvedValue(undefined);
 
-  vi.mocked(AsyncTaskModel).mockImplementation(() => ({ update: mockUpdate }) as any);
-  vi.mocked(FileService).mockImplementation(
-    () =>
-      ({
-        getFullFileUrl: vi.fn().mockResolvedValue(null),
-        getKeyFromFullUrl: vi.fn().mockResolvedValue(null),
-      }) as any,
-  );
+  vi.mocked(AsyncTaskModel).mockImplementation(function () {
+    return { update: mockUpdate } as any;
+  });
+  vi.mocked(FileService).mockImplementation(function () {
+    return {
+      getFullFileUrl: vi.fn().mockResolvedValue(null),
+      getKeyFromFullUrl: vi.fn().mockResolvedValue(null),
+    } as any;
+  });
 
   const mockInsert = createInsertChain();
   mockTransaction.mockImplementation(async (cb: any) =>
@@ -270,7 +281,7 @@ describe('videoRouter', () => {
         inferenceId: 'inf-2',
         status: AsyncTaskStatus.Processing,
       });
-      // Polling: should trigger background polling via after()
+      // Polling: should trigger background polling after the response.
       expect(mockAfter).toHaveBeenCalled();
       expect(mockProcessBackgroundVideoPolling).toHaveBeenCalled();
     });

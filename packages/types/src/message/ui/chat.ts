@@ -1,5 +1,6 @@
 import type { GroundingSearch } from '../../search';
 import type { ThreadStatus } from '../../topic/thread';
+import type { WorkSummaryItem } from '../../work';
 import type {
   ChatImageItem,
   ChatMessageError,
@@ -37,8 +38,17 @@ export type UIMessageRoleType =
 
 export interface ChatFileItem {
   content?: string;
+  /** Stable application proxy URL used for browser-native downloads. */
+  downloadUrl?: string;
   fileType: string;
   id: string;
+  /**
+   * The viewer lost access to the referenced file (e.g. its owner switched a
+   * workspace-shared file back to private after it was used in a shared
+   * conversation). The server tombstones the row — id only, no name/url — and
+   * the UI renders a no-access placeholder card instead of the file card.
+   */
+  inaccessible?: boolean;
   name: string;
   size: number;
   url: string;
@@ -338,4 +348,12 @@ export interface UIChatMessage {
    */
   usage?: ModelUsage;
   videoList?: ChatVideoItem[];
+  /**
+   * Work summaries produced by this message's root operation, resolved
+   * server-side and attached by `metadata.work.rootOperationId`. Rides the
+   * message-list payload so the in-message Works chips and the sidebar's
+   * summary view read from one source instead of a separate work-summary
+   * fetch. Empty/omitted when the message produced no Work.
+   */
+  works?: WorkSummaryItem[];
 }

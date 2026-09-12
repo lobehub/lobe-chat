@@ -4,6 +4,7 @@ import { getAgentProfile } from './getAgentProfile';
 import { cancelHeteroTask, runHeteroTask } from './heteroTask';
 import { executeToolCallInWorker, shouldRunInWorker } from './isolatedWorker';
 import { runLocalSystemTool } from './localSystemRuntime';
+import { scanHeterogeneousAgents } from './scanHeterogeneousAgents';
 
 /**
  * CLI-only tools (platform agents). File/shell tools are handled separately by
@@ -15,6 +16,7 @@ const methodMap: Record<string, (args: any) => Promise<unknown>> = {
   checkPlatformCapability,
   getAgentProfile,
   runHeteroTask,
+  scanHeterogeneousAgents,
 };
 
 export async function executeToolCall(
@@ -67,6 +69,18 @@ export async function executeToolCall(
 
     const result = await handler(finalArgs);
     const content = typeof result === 'string' ? result : JSON.stringify(result);
+
+    if (apiName === 'cancelHeteroTask') {
+      const state = (typeof result === 'string' ? JSON.parse(content) : result) as {
+        exited?: boolean;
+        success?: boolean;
+      };
+      return {
+        content,
+        state,
+        success: state.success !== false && state.exited !== false,
+      };
+    }
 
     return { content, success: true };
   } catch (error) {

@@ -1,11 +1,15 @@
 import type {
+  AgentInterventionRequestData,
+  AgentInterventionResponseData,
   AgentStreamEvent,
   StepCompleteData,
   StreamChunkData,
   StreamStartData,
+  SubAgentProgressData,
   ToolEndData,
   ToolExecuteData,
   ToolStartData,
+  ToolStateChunkData,
 } from '@lobechat/agent-gateway-client';
 import type {
   BuiltinToolResult,
@@ -17,14 +21,17 @@ import { AgentRuntimeErrorType } from '@lobechat/types';
 import { isRecord, pickNonEmptyString, toRecord } from '@lobechat/utils/object';
 
 import { messageService } from '@/services/message';
+import { didToolMutateWorkView, workService } from '@/services/work';
 import { emitClientAgentSignalSourceEvent } from '@/store/chat/slices/agentRun/actions/lifecycle/agentSignalBridge';
 import type {
   AgentRunLifecycle,
   RunScope,
 } from '@/store/chat/slices/agentRun/actions/lifecycle/types';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
+import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import type { ChatStore } from '@/store/chat/store';
 import { notifyDesktopHumanApprovalRequired } from '@/store/chat/utils/desktopNotification';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 // `agent_runtime_end` reasons that are NOT a clean completion: a mid-stream
 // cancel and a deferred-tool park. These must NOT mark the topic unread, and
@@ -47,6 +54,7 @@ export const isCompletedRuntimeEnd = (reason?: string | null): boolean =>
 //   mid-evaluation, so the class binding is undefined.
 const loadGetExecutor = async () => {
   const mod = await import('@/store/tool/slices/builtin/executors');
+  await mod.registerBuiltinToolExecutors();
   return mod.getExecutor;
 };
 
@@ -54,10 +62,39 @@ const loadGetExecutor = async () => {
  * Fetch messages from DB and replace them in the chat store's dbMessagesMap.
  * This updates the ConversationArea component via React subscription:
  *   dbMessagesMap → ConversationArea (messages prop) → ConversationStore → UI
+ *
+ * `snapshotGeneration` drops a fetch that lost the race against a newer
+ * snapshot on the same handler (unqueued `step_start` vs in-flight `tool_end`).
+ * Last-write-wins would otherwise paint the older list over the next step.
+ *
+ * A dropped fetch returns `undefined` so callers that resolve an assistant id
+ * from the result (hetero / old-server `stream_start`) keep the current id
+ * instead of steering later chunks onto a row the store no longer has.
  */
-const fetchAndReplaceMessages = async (get: () => ChatStore, context: ConversationContext) => {
-  const messages = await messageService.getMessages(context);
-  get().replaceMessages(messages, { context });
+const fetchAndReplaceMessages = async (
+  get: () => ChatStore,
+  context: ConversationContext,
+  options?: {
+    /**
+     * Mid-stream refetches (stream_start / tool_end / step_complete) skip the
+     * server-side Work-summary assembly — each tool round would otherwise
+     * re-run the per-type Work queries. `preserveWorks` grafts the
+     * already-rendered works back so chips don't flicker; the terminal
+     * agent_runtime_end refetch recomputes them for real.
+     */
+    skipWorks?: boolean;
+    snapshotGeneration?: { current: number };
+  },
+): Promise<UIChatMessage[] | undefined> => {
+  const skipWorks = options?.skipWorks;
+  const snapshotGeneration = options?.snapshotGeneration;
+  const started = snapshotGeneration?.current;
+  const messages = await messageService.getMessages(
+    skipWorks ? { ...context, skipWorks } : context,
+  );
+  if (snapshotGeneration && snapshotGeneration.current !== started) return undefined;
+  if (snapshotGeneration) snapshotGeneration.current += 1;
+  get().replaceMessages(messages, { context, preserveWorks: skipWorks });
   return messages;
 };
 
@@ -71,6 +108,16 @@ const getToolId = (tool: unknown): string | undefined =>
 
 const getToolResultMessageId = (tool: unknown): string | undefined =>
   isRecord(tool) ? pickNonEmptyString(tool.result_msg_id) : undefined;
+
+const isToolStateChunkData = (data: unknown): data is ToolStateChunkData =>
+  isRecord(data) &&
+  data.chunkType === 'tool_state' &&
+  data.snapshotMode === 'replace' &&
+  typeof data.toolCallId === 'string' &&
+  data.toolCallId.length > 0 &&
+  Number.isInteger(data.snapshotSeq) &&
+  (data.snapshotSeq as number) > 0 &&
+  isRecord(data.pluginState);
 
 const preserveToolResultMessageIds = (
   toolsCalling: unknown[],
@@ -166,7 +213,7 @@ const dispatchOnBeforeCall = async (
 /**
  * Real gateway `tool_end` events ship `data.payload` as the
  * `{ parentMessageId, toolCalling }` wrapper, NOT a flat `ChatToolPayload`
- * (see `src/server/modules/AgentRuntime/RuntimeExecutors.ts` — both the
+ * (see `apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts` — both the
  * single-tool and batch publish sites). Unwrap defensively, falling back to
  * the flat shape so we tolerate test fixtures / future emission paths that
  * pass the payload directly.
@@ -196,9 +243,15 @@ const dispatchOnAfterCall = async (
   const executor = getExecutor(identity.identifier);
   if (!executor?.onAfterCall) return;
 
+  const result = (data?.result ?? {}) as BuiltinToolResult;
+
   await executor.onAfterCall({
     ...identity,
-    result: (data?.result ?? {}) as BuiltinToolResult,
+    // Gateway/hetero tool_end events carry the terminal outcome beside
+    // `result`, while client-tool results already include `result.success`.
+    // Normalize both shapes so hook-only heterogeneous executors do not treat
+    // a successful shell command as failed and skip git/worktree side effects.
+    result: { ...result, success: result.success ?? data?.isSuccess },
     topicId,
   });
 };
@@ -378,6 +431,16 @@ export const createGatewayEventHandler = (
   const gatewayOperationId = params.gatewayOperationId ?? operationId;
   const runtimeType = params.runtimeType ?? 'gateway';
 
+  /**
+   * Agent self-iteration signals are an owner-side feature: the agentSignal
+   * lambda resolves the agent in the caller's own scope, so a share visitor's
+   * emission 404s with "Agent not found". Drop them for share-visitor runs.
+   */
+  const emitAgentSignal: typeof emitClientAgentSignalSourceEvent = async (input) => {
+    if (context.agentShareId) return undefined;
+    return emitClientAgentSignalSourceEvent(input);
+  };
+
   const runScope: RunScope = context.scope === 'sub_agent' ? 'sub_agent' : 'top_level';
   const lifecycleEventBase = {
     context,
@@ -393,10 +456,21 @@ export const createGatewayEventHandler = (
   // Mutable — switches to new assistant message ID on each stream_start
   let currentAssistantMessageId = params.assistantMessageId;
   let terminalState: 'completed' | 'error' | undefined;
+  let shouldRefreshWorkViews = false;
 
   // Accumulated content from stream chunks (reset on each stream_start)
   let accumulatedContent = '';
   let accumulatedReasoning = '';
+  // Last applied `replace`-snapshot seqs. Operation-monotonic (the producer
+  // never resets them across messages), so unlike the accumulators they are
+  // NOT reset on stream boundaries — a seq ≤ these is a redelivered duplicate.
+  let lastTextSnapshotSeq = 0;
+  let lastReasoningSnapshotSeq = 0;
+  const latestToolStateByCallId = new Map<string, ToolStateChunkData & { operationId: string }>();
+  const toolStateBootstrapPromiseByCallId = new Map<string, Promise<void>>();
+  const lastAppliedToolStateSeqByCallId = new Map<string, number>();
+  const completedToolStateCallIds = new Set<string>();
+  const pendingInterventionToolCallIds = new Set<string>();
 
   // Tracks whether any server-confirmed state has actually arrived
   // (server-assigned assistant id, streamed text/reasoning/tools, or a SoT
@@ -434,8 +508,150 @@ export const createGatewayEventHandler = (
   // Sequential processing queue — ensures stream_chunk waits for stream_start's fetch
   let processingChain: Promise<void> = Promise.resolve();
 
-  const enqueue = (fn: () => Promise<void> | void): void => {
+  const enqueue = (fn: () => Promise<void> | void): Promise<void> => {
     processingChain = processingChain.then(fn, fn);
+    return processingChain;
+  };
+
+  // Bumped on every snapshot this handler applies. `step_start` is not queued,
+  // so an earlier `tool_end` getMessages can still resolve after it and would
+  // otherwise last-write-wins the older list over the next step.
+  const snapshotGeneration = { current: 0 };
+
+  const refreshMessagesFromDb = (options?: { skipWorks?: boolean }) =>
+    fetchAndReplaceMessages(get, context, { ...options, snapshotGeneration });
+
+  const applyPushedSnapshot = (
+    messages: UIChatMessage[],
+    params: { action?: string; preserveWorks?: boolean },
+  ) => {
+    snapshotGeneration.current += 1;
+    get().replaceMessages(messages, { context, ...params });
+  };
+
+  const writeTopicStatus = (status: 'running' | 'waitingForHuman') => {
+    if (!context.topicId) return;
+    const statusWrite = get().updateTopicStatus?.({
+      agentId: context.agentId,
+      groupId: context.groupId,
+      ...(context.scope === 'group' || context.scope === 'group_agent'
+        ? { scope: context.scope }
+        : {}),
+      status,
+      topicId: context.topicId,
+    });
+    void statusWrite?.catch((error) => {
+      console.error('[gatewayEventHandler] updateTopicStatus failed:', error);
+    });
+  };
+
+  const getToolMessageByCallId = (toolCallId: string): UIChatMessage | undefined => {
+    const messages = get().dbMessagesMap[messageMapKey(context)] ?? [];
+    // Tool-call ids are operation-scoped, not topic-global. Codex can reuse an
+    // id in a later run while that run's newly persisted tool row has not yet
+    // reached the store. Parent scoping prevents us from mistaking the prior
+    // run's row for the current one and skipping the bootstrap refetch.
+    return messages.findLast(
+      (message) =>
+        message.tool_call_id === toolCallId && message.parentId === currentAssistantMessageId,
+    );
+  };
+
+  const applyLatestToolState = (toolCallId: string, reapplyAfterRefetch = false): boolean => {
+    const latest = latestToolStateByCallId.get(toolCallId);
+    if (terminalState || completedToolStateCallIds.has(toolCallId)) return true;
+    const toolMessage = getToolMessageByCallId(toolCallId);
+    if (!latest || !toolMessage) return false;
+
+    const storedSeq =
+      toolMessage.metadata?.heterogeneousToolStateOperationId === latest.operationId &&
+      typeof toolMessage.metadata.heterogeneousToolStateSeq === 'number'
+        ? toolMessage.metadata.heterogeneousToolStateSeq
+        : 0;
+    const inMemorySeq = lastAppliedToolStateSeqByCallId.get(toolCallId) ?? 0;
+
+    // A bootstrap refetch can replace an optimistic seq=4 with DB seq=3. In
+    // that path the message's own watermark, not the in-memory map, decides
+    // whether the cached latest snapshot must be re-applied.
+    if (latest.snapshotSeq <= storedSeq) {
+      lastAppliedToolStateSeqByCallId.set(toolCallId, Math.max(inMemorySeq, storedSeq));
+      return true;
+    }
+    if (!reapplyAfterRefetch && latest.snapshotSeq <= inMemorySeq) return true;
+
+    lastAppliedToolStateSeqByCallId.set(toolCallId, latest.snapshotSeq);
+    get().internal_dispatchMessage(
+      {
+        id: toolMessage.id,
+        metadata: {
+          heterogeneousToolStateOperationId: latest.operationId,
+          heterogeneousToolStateSeq: latest.snapshotSeq,
+        },
+        type: 'replaceMessagePluginState',
+        value: latest.pluginState,
+      },
+      dispatchContext,
+    );
+    return true;
+  };
+
+  const scheduleToolState = (
+    data: ToolStateChunkData,
+    eventOperationId: string | undefined,
+    bootstrapRetry = false,
+  ): void => {
+    if (completedToolStateCallIds.has(data.toolCallId)) return;
+
+    const stateOperationId = eventOperationId || gatewayOperationId;
+    const previous = latestToolStateByCallId.get(data.toolCallId);
+    if (!bootstrapRetry) {
+      if (previous?.operationId === stateOperationId && data.snapshotSeq <= previous.snapshotSeq) {
+        return;
+      }
+
+      // Cache synchronously. A later seq can now overtake an in-flight bootstrap
+      // read; the bootstrap completion always reapplies this map's newest value.
+      latestToolStateByCallId.set(data.toolCallId, { ...data, operationId: stateOperationId });
+    }
+
+    if (getToolMessageByCallId(data.toolCallId)) {
+      enqueue(() => {
+        applyLatestToolState(data.toolCallId);
+      });
+      return;
+    }
+
+    if (toolStateBootstrapPromiseByCallId.has(data.toolCallId)) return;
+
+    let reconciled = false;
+    const bootstrapSnapshotSeq = data.snapshotSeq;
+    // Bootstrap reconciliation is part of the same queue as tool_end. If this
+    // read finishes late, the terminal refresh must still run after it so an
+    // intermediate DB snapshot can never become the last store replacement.
+    const bootstrapPromise = enqueue(async () => {
+      // A preceding queued tools_calling handler may have brought the row in.
+      if (!getToolMessageByCallId(data.toolCallId)) {
+        await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
+      }
+      reconciled = applyLatestToolState(data.toolCallId, true);
+    });
+    const trackedBootstrapPromise = bootstrapPromise.finally(() => {
+      toolStateBootstrapPromiseByCallId.delete(data.toolCallId);
+
+      const latest = latestToolStateByCallId.get(data.toolCallId);
+      // A newer snapshot may have arrived while a failed/empty bootstrap was
+      // in flight. Retry for that newer state, but never spin on the same seq.
+      if (
+        !reconciled &&
+        !terminalState &&
+        !completedToolStateCallIds.has(data.toolCallId) &&
+        latest &&
+        latest.snapshotSeq > bootstrapSnapshotSeq
+      ) {
+        scheduleToolState(latest, latest.operationId, true);
+      }
+    });
+    toolStateBootstrapPromiseByCallId.set(data.toolCallId, trackedBootstrapPromise);
   };
 
   return (event: AgentStreamEvent) => {
@@ -447,6 +663,11 @@ export const createGatewayEventHandler = (
     // mid-stream until the terminal fetch corrects it. The local executor drops
     // them before forwarding; the gateway path doesn't. (DB is unaffected.)
     if ((event.data as { subagent?: unknown } | undefined)?.subagent) return;
+
+    if (event.type === 'stream_chunk' && isToolStateChunkData(event.data)) {
+      scheduleToolState(event.data, event.operationId);
+      return;
+    }
 
     if (event.type === 'agent_runtime_end' || event.type === 'error') {
       terminalState = event.type === 'error' ? 'error' : 'completed';
@@ -474,7 +695,7 @@ export const createGatewayEventHandler = (
             // dispatches on a missing id are silent no-ops, so without an
             // insert here the whole step renders nothing until the next DB
             // refetch — and the final step has none before agent_runtime_end,
-            // which is how "loading cleared but no text" happened (LOBE-11501).
+            // which is how "loading cleared but no text" happened.
             const stored = dbMessageSelectors.getDbMessageById(newAssistantMessageId)(get());
             if (!stored) {
               const seed = data?.assistantMessage;
@@ -503,7 +724,7 @@ export const createGatewayEventHandler = (
                 // Older servers send only `{ id }` — fall back to a DB read.
                 // The row is inserted before stream_start is published, so the
                 // fetch is guaranteed to bring it into the store.
-                await fetchAndReplaceMessages(get, context).catch(console.error);
+                await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
               }
             }
           }
@@ -532,7 +753,9 @@ export const createGatewayEventHandler = (
           // dispatch to it, and (b) resolves the next-step assistant id for
           // the `newStep` fallback.
           if (!newAssistantMessageId) {
-            const messages = await fetchAndReplaceMessages(get, context).catch((error) => {
+            const messages = await refreshMessagesFromDb({
+              skipWorks: true,
+            }).catch((error) => {
               console.error(error);
               return undefined;
             });
@@ -550,7 +773,7 @@ export const createGatewayEventHandler = (
             }
           }
 
-          void emitClientAgentSignalSourceEvent({
+          void emitAgentSignal({
             payload: {
               agentId: context.agentId,
               ...(currentAssistantMessageId
@@ -571,38 +794,73 @@ export const createGatewayEventHandler = (
       }
 
       case 'stream_chunk': {
-        enqueue(() => {
+        enqueue(async () => {
           const data = event.data as StreamChunkData | undefined;
           if (!data) return;
 
           if (data.chunkType === 'text' && data.content) {
-            // Text after reasoning marks the end of the thinking pass — see
-            // `StreamingHandler.handleText` for the same transition.
-            endReasoningIfNeeded();
-            accumulatedContent += data.content;
-            hasStreamedContent = true;
-            get().internal_dispatchMessage(
-              {
-                id: currentAssistantMessageId,
-                type: 'updateMessage',
-                value: { content: accumulatedContent },
-              },
-              dispatchContext,
-            );
+            // `lh hetero exec` coalesces main-agent text into full-text
+            // `replace` snapshots; native gateway runs stream plain deltas.
+            const snapshotSeq =
+              data.snapshotMode === 'replace' && typeof data.snapshotSeq === 'number'
+                ? data.snapshotSeq
+                : undefined;
+
+            if (snapshotSeq !== undefined && snapshotSeq <= lastTextSnapshotSeq) {
+              // Redelivered snapshot (producer batch retry / duplicate on the
+              // stream) — already applied, appending it would duplicate text.
+            } else {
+              // Text after reasoning marks the end of the thinking pass — see
+              // `StreamingHandler.handleText` for the same transition.
+              endReasoningIfNeeded();
+              if (snapshotSeq === undefined) {
+                accumulatedContent += data.content;
+              } else {
+                lastTextSnapshotSeq = snapshotSeq;
+                accumulatedContent = data.content;
+              }
+              hasStreamedContent = true;
+              get().internal_dispatchMessage(
+                {
+                  id: currentAssistantMessageId,
+                  type: 'updateMessage',
+                  value: { content: accumulatedContent },
+                },
+                dispatchContext,
+              );
+            }
           }
 
           if (data.chunkType === 'reasoning' && data.reasoning) {
-            startReasoningIfNeeded();
-            accumulatedReasoning += data.reasoning;
-            hasStreamedContent = true;
-            get().internal_dispatchMessage(
-              {
-                id: currentAssistantMessageId,
-                type: 'updateMessage',
-                value: { reasoning: { content: accumulatedReasoning } },
-              },
-              dispatchContext,
-            );
+            // Same snapshot semantics as text above: `lh hetero exec`
+            // coalesces reasoning into `replace` snapshots; redelivered seqs
+            // are dropped instead of appended (which would duplicate the
+            // thinking text on a server-side batch retry).
+            const snapshotSeq =
+              data.snapshotMode === 'replace' && typeof data.snapshotSeq === 'number'
+                ? data.snapshotSeq
+                : undefined;
+
+            if (snapshotSeq !== undefined && snapshotSeq <= lastReasoningSnapshotSeq) {
+              // Redelivered snapshot — already applied.
+            } else {
+              startReasoningIfNeeded();
+              if (snapshotSeq === undefined) {
+                accumulatedReasoning += data.reasoning;
+              } else {
+                lastReasoningSnapshotSeq = snapshotSeq;
+                accumulatedReasoning = data.reasoning;
+              }
+              hasStreamedContent = true;
+              get().internal_dispatchMessage(
+                {
+                  id: currentAssistantMessageId,
+                  type: 'updateMessage',
+                  value: { reasoning: { content: accumulatedReasoning } },
+                },
+                dispatchContext,
+              );
+            }
           }
 
           if (data.chunkType === 'tools_calling' && data.toolsCalling) {
@@ -629,12 +887,17 @@ export const createGatewayEventHandler = (
             );
 
             // If the server attached a `toolMessageIds` map, it has persisted
-            // pending tool messages (human approval path). Fetch the latest
-            // messages so ApprovalActions can read them by id instead of
-            // waiting for `agent_runtime_end` (which won't fire while paused
-            // in `waiting_for_human`).
+            // pending tool messages (human approval, deferred async tools).
+            // Fetch the latest messages so ApprovalActions can read them by id
+            // instead of waiting for `agent_runtime_end` (which won't fire while
+            // paused in `waiting_for_human` / `waiting_for_async_tool`).
+            //
+            // AWAITED so the fetch is actually part of the queued work. Anything
+            // enqueued behind this chunk addresses rows that only exist once it
+            // lands — a fire-and-forget fetch would let the next event overtake
+            // it and dispatch onto a message the store doesn't have yet.
             if ((data as any).toolMessageIds) {
-              fetchAndReplaceMessages(get, context).catch(console.error);
+              await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
             }
           }
         });
@@ -672,7 +935,7 @@ export const createGatewayEventHandler = (
           // Guard: only clear visible loading when the streamed content has
           // actually landed in the store. If the message shell is missing (or
           // text streamed but never applied), clearing here would show
-          // "loading done" with the answer still invisible (LOBE-11501) —
+          // "loading done" with the answer still invisible —
           // skip the hint instead and let agent_runtime_end reconcile content
           // and loading in the same frame, i.e. the pre-early-hint behavior.
           const stored = dbMessageSelectors.getDbMessageById(currentAssistantMessageId)(get());
@@ -698,8 +961,92 @@ export const createGatewayEventHandler = (
         // Server creates tool messages in DB.
         // Loading is already active from stream_start (not cleared by stream_end).
         const data = event.data as ToolStartData | undefined;
+        const startedToolCallId =
+          getToolId(data?.toolCalling) ||
+          (isRecord(data) ? pickNonEmptyString(data.toolCallId) : undefined);
+        // A producer may reuse a call id within one operation. A new lifecycle
+        // re-opens state delivery while the seq watermark remains monotonic, so
+        // delayed snapshots from the previous lifecycle are still rejected.
+        if (startedToolCallId) completedToolStateCallIds.delete(startedToolCallId);
         enqueue(async () => {
           await dispatchOnBeforeCall(data, context.topicId ?? undefined).catch(console.error);
+        });
+        break;
+      }
+
+      case 'agent_intervention_request': {
+        const data = event.data as AgentInterventionRequestData | undefined;
+        if (!data?.toolCallId) break;
+
+        pendingInterventionToolCallIds.add(data.toolCallId);
+        writeTopicStatus('waitingForHuman');
+        void notifyDesktopHumanApprovalRequired(get, context);
+
+        // Server persistence runs before stream publish. Reconcile from DB so
+        // both the inline tool and global InterventionBar see `pending`, even
+        // when this request raced ahead of the provider's tools_calling event.
+        enqueue(async () => {
+          await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
+          hasStreamedContent = true;
+        });
+        break;
+      }
+
+      case 'agent_intervention_response': {
+        const data = event.data as AgentInterventionResponseData | undefined;
+        if (!data?.toolCallId) break;
+
+        // A modern submit response is a producer-delivery leg, not completion.
+        // Keep the topic/card waiting until the producer echoes producerAck.
+        // Older responses had no request id and remain terminal-compatible.
+        if (data.resolutionRequestId && data.producerAck !== true) {
+          pendingInterventionToolCallIds.add(data.toolCallId);
+          writeTopicStatus('waitingForHuman');
+          enqueue(async () => {
+            const toolMessage = getToolMessageByCallId(data.toolCallId);
+            if (!toolMessage) return;
+            const intervention = {
+              ...toolMessage.pluginIntervention,
+              resolving: true,
+              status: 'pending' as const,
+            };
+
+            // The inline parent tool reads plugin.intervention, while the
+            // global approval collector reads the durable tool row's top-level
+            // pluginIntervention. Update both local projections immediately so
+            // every subscribed surface becomes non-actionable. Do not persist
+            // this subscriber hint: a slow write could overwrite a later
+            // producer-ACK terminal state.
+            get().internal_dispatchMessage(
+              {
+                id: toolMessage.id,
+                type: 'updateMessage',
+                value: { pluginIntervention: intervention },
+              },
+              { context },
+            );
+            if (toolMessage.parentId && toolMessage.tool_call_id) {
+              get().internal_dispatchMessage(
+                {
+                  id: toolMessage.parentId,
+                  tool_call_id: toolMessage.tool_call_id,
+                  type: 'updateMessageTools',
+                  value: { intervention },
+                },
+                { context },
+              );
+            }
+          });
+          break;
+        }
+
+        pendingInterventionToolCallIds.delete(data.toolCallId);
+        enqueue(async () => {
+          // Successful Web submits, explicit cancellation, producer timeout,
+          // and session teardown all converge on the durable tool row before
+          // this refresh. Do not infer the terminal state from identifier.
+          await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
+          if (pendingInterventionToolCallIds.size === 0) writeTopicStatus('running');
         });
         break;
       }
@@ -725,27 +1072,19 @@ export const createGatewayEventHandler = (
         // assistant placeholder while DB fan-out is still in flight, which
         // clobbers the in-memory streamed assistantGroup.
         if (Array.isArray(data?.uiMessages)) {
-          get().replaceMessages(data.uiMessages, { action: 'gateway/step_start', context });
+          // step_start snapshots are fetched with `skipWorks` server-side —
+          // graft the already-rendered works back so chips don't flicker.
+          applyPushedSnapshot(data.uiMessages, {
+            action: 'gateway/step_start',
+            preserveWorks: true,
+          });
         }
 
         if (data?.phase === 'human_approval' && data.requiresApproval && data.pendingToolsCalling) {
           void notifyDesktopHumanApprovalRequired(get, context);
           // Persist the explicit "needs user input" marker so the sidebar swaps
           // the running spinner for the hand icon across reloads.
-          if (context.topicId) {
-            const statusWrite = get().updateTopicStatus?.({
-              agentId: context.agentId,
-              groupId: context.groupId,
-              ...(context.scope === 'group' || context.scope === 'group_agent'
-                ? { scope: context.scope }
-                : {}),
-              status: 'waitingForHuman',
-              topicId: context.topicId,
-            });
-            void statusWrite?.catch((error) => {
-              console.error('[gatewayEventHandler] updateTopicStatus failed:', error);
-            });
-          }
+          writeTopicStatus('waitingForHuman');
         }
 
         break;
@@ -762,20 +1101,47 @@ export const createGatewayEventHandler = (
         // — NOT the local `operationId` used for `dispatchContext`.
         const data = event.data as ToolExecuteData | undefined;
         if (!data) break;
-        void get().internal_executeClientTool(data, { operationId: gatewayOperationId });
+        void get().internal_executeClientTool(data, {
+          localOperationId: operationId,
+          operationId: gatewayOperationId,
+        });
         break;
       }
 
       case 'tool_end': {
         const data = event.data as ToolEndData | undefined;
+        const completedToolCallId =
+          getToolId(unwrapToolPayload(data?.payload)) ||
+          (isRecord(data) ? pickNonEmptyString(data.toolCallId) : undefined);
+        if (completedToolCallId) {
+          completedToolStateCallIds.add(completedToolCallId);
+          latestToolStateByCallId.delete(completedToolCallId);
+        }
         enqueue(async () => {
           const maybeRefresh = shouldSkipMessageFetch(event, runtimeType)
             ? Promise.resolve()
-            : fetchAndReplaceMessages(get, context).catch(console.error);
+            : refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
+          const payload = unwrapToolPayload(data?.payload);
+          const result = data?.result as
+            { state?: unknown; workRegistration?: unknown } | undefined;
+          if (
+            didToolMutateWorkView({
+              apiName: typeof payload?.apiName === 'string' ? payload.apiName : undefined,
+              identifier: typeof payload?.identifier === 'string' ? payload.identifier : undefined,
+              result,
+              succeeded: data?.isSuccess === true,
+              workRegistration: Boolean(result?.workRegistration),
+            })
+          ) {
+            shouldRefreshWorkViews = true;
+          }
+
           await Promise.all([
             maybeRefresh,
             dispatchOnAfterCall(data, context.topicId ?? undefined).catch(console.error),
           ]);
+          // Message-backed summaries refresh with the normal tool payload. Lazy
+          // Work views settle once at runtime-end when a mutating tool was seen.
         });
         break;
       }
@@ -783,10 +1149,48 @@ export const createGatewayEventHandler = (
       case 'step_complete': {
         const data = event.data as StepCompleteData | undefined;
 
+        // A parked `callSubAgent` child reporting its running totals. Patch them
+        // onto the placeholder tool message in memory only — the persisted values
+        // are written once, by `completeSubAgentBridge`, when the child finishes.
+        // Kept under a `progress` key so a DB refetch can never leave a stale live
+        // number sitting where the authoritative one belongs.
+        //
+        // ENQUEUED, not dispatched inline: the placeholder row only enters the
+        // store via the `toolMessageIds` refetch that the preceding `tools_calling`
+        // chunk queued. A fast child can emit its first progress event while that
+        // fetch is still in flight, and `updatePluginState` against a row the store
+        // doesn't have is a silent no-op — for a single-step sub-agent that lone
+        // sample is the whole live readout, so there is nothing later to self-heal
+        // it. Queueing puts this behind the fetch that creates its target.
+        if (data?.phase === 'subagent_progress') {
+          const progress = event.data as SubAgentProgressData;
+          if (progress.toolMessageId) {
+            enqueue(() => {
+              get().internal_dispatchMessage(
+                {
+                  id: progress.toolMessageId,
+                  key: 'progress',
+                  type: 'updatePluginState',
+                  value: {
+                    model: progress.model,
+                    totalCost: progress.totalCost,
+                    totalInputTokens: progress.totalInputTokens,
+                    totalOutputTokens: progress.totalOutputTokens,
+                    totalTokens: progress.totalTokens,
+                    totalToolCalls: progress.totalToolCalls,
+                  },
+                },
+                dispatchContext,
+              );
+            });
+          }
+          break;
+        }
+
         // Refresh on execution_complete to ensure final step state is consistent
         if (data?.phase === 'execution_complete') {
           enqueue(async () => {
-            void emitClientAgentSignalSourceEvent({
+            void emitAgentSignal({
               payload: {
                 agentId: context.agentId,
                 operationId,
@@ -797,7 +1201,7 @@ export const createGatewayEventHandler = (
               sourceType: 'client.gateway.step_complete',
             });
             if (!shouldSkipMessageFetch(event, runtimeType)) {
-              await fetchAndReplaceMessages(get, context).catch(console.error);
+              await refreshMessagesFromDb({ skipWorks: true }).catch(console.error);
             }
           });
         }
@@ -808,7 +1212,7 @@ export const createGatewayEventHandler = (
         enqueue(async () => {
           const data = event.data as { reason?: string; uiMessages?: UIChatMessage[] } | undefined;
 
-          void emitClientAgentSignalSourceEvent({
+          void emitAgentSignal({
             payload: {
               agentId: context.agentId,
               ...(currentAssistantMessageId
@@ -837,12 +1241,22 @@ export const createGatewayEventHandler = (
           // pushes the canonical snapshot directly on this event. Fall back
           // to a DB refetch only if the snapshot is absent (older server
           // builds, or push-event delivery edge cases).
+          const isSuperseded = operationSelectors.hasNewerConversationOperation(
+            operationId,
+            context,
+          )(get());
           if (Array.isArray(data?.uiMessages)) {
             terminalMessages = data.uiMessages;
-            get().replaceMessages(data.uiMessages, {
-              action: 'gateway/agent_runtime_end',
-              context,
-            });
+            // `visible_output_end` lets a follow-up start before this terminal
+            // event arrives. Once that happens, this run's snapshot is no longer
+            // the conversation SoT: replacing the list would erase the newer
+            // turn's optimistic rows until refresh. Keep terminalMessages for
+            // this run's notification, but do not mutate its successor's store.
+            if (!isSuperseded) {
+              applyPushedSnapshot(data.uiMessages, {
+                action: 'gateway/agent_runtime_end',
+              });
+            }
           } else if (
             (data?.reason === 'interrupted' || data?.reason === 'waiting_for_async_tool') &&
             hasStreamedContent
@@ -865,8 +1279,14 @@ export const createGatewayEventHandler = (
             // arrives BEFORE any stream activity, the optimistic `tmp_*`
             // messages are the only in-memory state and they need the
             // refetch to be reconciled with the server-side rows.
-          } else {
-            await fetchAndReplaceMessages(get, context).catch(console.error);
+          } else if (!isSuperseded) {
+            await refreshMessagesFromDb().catch(console.error);
+          }
+
+          if (runtimeType === 'gateway' && shouldRefreshWorkViews) {
+            await workService
+              .refreshConversationViews(context.topicId, context.threadId)
+              .catch(console.error);
           }
 
           // Terminal run lifecycle. `isCompletedRuntimeEnd` is the clean-vs-not
@@ -930,7 +1350,7 @@ export const createGatewayEventHandler = (
         // Remote hetero agent (openclaw / hermes) wrote a message to DB via
         // `lh notify`. DB is the source of truth — just refresh the message list.
         enqueue(async () => {
-          await fetchAndReplaceMessages(get, context).catch(console.error);
+          await refreshMessagesFromDb().catch(console.error);
         });
         break;
       }
@@ -940,7 +1360,7 @@ export const createGatewayEventHandler = (
           const messageError = toChatMessageError(event.data);
           const errorMessage = messageError.message;
 
-          void emitClientAgentSignalSourceEvent({
+          void emitAgentSignal({
             payload: {
               agentId: context.agentId,
               errorMessage,
@@ -967,20 +1387,29 @@ export const createGatewayEventHandler = (
             get().completeOperation(operationId);
           }
 
-          const updateResult = await messageService
-            .updateMessageError(currentAssistantMessageId, messageError, {
-              agentId: context.agentId,
-              groupId: context.groupId,
-              threadId: context.threadId,
-              topicId: context.topicId,
-            })
-            .catch(console.error);
+          // Share visitors must not persist through the owner-scoped
+          // `message.update`: it resolves rows in the CALLER's scope, so the
+          // visitor call "succeeds" with 0 rows updated and its response
+          // messages (queried as the visitor) come back empty — replacing the
+          // bucket with [] and leaving the inline error overlay nothing to
+          // attach to. Fall through to the share-aware refetch + overlay;
+          // server-side error persistence for share runs is a known v1 gap.
+          const updateResult = context.agentShareId
+            ? undefined
+            : await messageService
+                .updateMessageError(currentAssistantMessageId, messageError, {
+                  agentId: context.agentId,
+                  groupId: context.groupId,
+                  threadId: context.threadId,
+                  topicId: context.topicId,
+                })
+                .catch(console.error);
 
           if (updateResult?.success && updateResult.messages) {
             get().replaceMessages(updateResult.messages, { context });
           } else {
             // Fallback when the mutation response doesn't include messages.
-            await fetchAndReplaceMessages(get, context).catch(console.error);
+            await refreshMessagesFromDb().catch(console.error);
           }
 
           // Then overlay the inline error. This ensures the UI always shows the
