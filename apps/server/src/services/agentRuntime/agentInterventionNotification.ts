@@ -224,6 +224,7 @@ export const buildRuntimeInterventionNotification = async ({
   const batch = state?.pendingApprovalBatch;
   const toolMessageIds = state?.pendingToolMessageIds;
   const metadata = state?.metadata ?? {};
+  const origin = state?.origin ?? {};
 
   if (
     state?.status !== 'waiting_for_human' ||
@@ -358,7 +359,7 @@ export const buildRuntimeInterventionNotification = async ({
   }
 
   return {
-    agentId: boundedString(metadata.agentId),
+    agentId: boundedString(origin.agentId),
     approvalMode: resolvedApprovalMode,
     batch: {
       activityKey: deriveAgentInterventionActivityKey({
@@ -374,17 +375,17 @@ export const buildRuntimeInterventionNotification = async ({
       stepIndex: batch.stepIndex,
     },
     context: {
-      agentId: boundedString(metadata.agentId),
+      agentId: boundedString(origin.agentId),
       assistantMessageId: batch.assistantMessageId,
-      groupId: boundedString(metadata.groupId),
+      groupId: boundedString(origin.groupId),
       operationId,
-      pageId: boundedString(metadata.documentId),
-      scope: messageMapScope(metadata.scope),
-      sessionId: boundedString(metadata.sessionId),
-      taskId: boundedString(metadata.taskId),
-      threadId: boundedString(metadata.threadId),
-      topicId: boundedString(metadata.topicId),
-      triggerMessageId: boundedString(metadata.sourceMessageId),
+      pageId: boundedString(origin.documentId),
+      scope: messageMapScope(origin.scope),
+      sessionId: boundedString(origin.sessionId),
+      taskId: boundedString(origin.taskId),
+      threadId: boundedString(origin.threadId),
+      topicId: boundedString(origin.topicId),
+      triggerMessageId: boundedString(origin.sourceMessageId),
       workspaceId,
     },
     items,

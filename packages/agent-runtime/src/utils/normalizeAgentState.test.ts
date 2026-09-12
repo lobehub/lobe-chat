@@ -18,7 +18,7 @@ const baseState = (): AgentState =>
 
 describe('normalizeAgentState', () => {
   it('returns the same object when metadata carries no legacy keys', () => {
-    const state = { ...baseState(), metadata: { userId: 'u1', _hooks: [] } };
+    const state = { ...baseState(), metadata: { _hooks: [], queueRetries: 2 } };
     expect(normalizeAgentState(state)).toBe(state);
   });
 
@@ -62,7 +62,8 @@ describe('normalizeAgentState', () => {
     expect(normalized.binding).toEqual({
       device: { id: 'dev_1', platform: 'darwin', systemInfo: { workingDirectory: '/tmp' } },
     });
-    expect(normalized.metadata).toEqual({ userId: 'u1' });
+    expect(normalized.origin).toEqual({ userId: 'u1' });
+    expect(normalized.metadata).toEqual({});
     // Input is not mutated.
     expect(state.metadata.agentConfig).toEqual({ systemRole: 'hi' });
   });
@@ -79,6 +80,71 @@ describe('normalizeAgentState', () => {
 
     expect(normalized.world?.agent).toEqual({ systemRole: 'new' });
     expect(normalized.binding?.device?.id).toBe('dev_new');
+    expect(normalized.metadata).toEqual({});
+  });
+
+  it('lifts identity, trigger and lineage keys into origin', () => {
+    const state = {
+      ...baseState(),
+      metadata: {
+        _hooks: [],
+        agentId: 'agent-1',
+        agentInterventionContinuation: {
+          resolutionRequestId: 'r1',
+          sourceOperationId: 'op-0',
+          sourceToolMessageIds: ['t1'],
+        },
+        agentSignal: { kind: 'memory' },
+        groupId: null,
+        isSubAgent: true,
+        orchestrationRole: 'member',
+        sourceMessageId: 'msg-1',
+        subAgentProgress: { parentOperationId: 'op-0', toolMessageId: 't1' },
+        threadId: undefined,
+        topicId: 'topic-1',
+        trigger: 'chat',
+        userId: 'u1',
+        workspaceId: 'ws-1',
+      },
+    };
+
+    const normalized = normalizeAgentState(state);
+
+    expect(normalized.origin).toEqual({
+      agentId: 'agent-1',
+      continuation: {
+        resolutionRequestId: 'r1',
+        sourceOperationId: 'op-0',
+        sourceToolMessageIds: ['t1'],
+      },
+      lineage: {
+        isSubAgent: true,
+        orchestrationRole: 'member',
+        progressAnchor: { parentOperationId: 'op-0', toolMessageId: 't1' },
+      },
+      signal: { kind: 'memory' },
+      sourceMessageId: 'msg-1',
+      topicId: 'topic-1',
+      trigger: 'chat',
+      userId: 'u1',
+      workspaceId: 'ws-1',
+    });
+    // `null` / `undefined` legacy values are absent, not carried as null.
+    expect('groupId' in normalized.origin!).toBe(false);
+    expect('threadId' in normalized.origin!).toBe(false);
+    expect(normalized.metadata).toEqual({ _hooks: [] });
+  });
+
+  it('merges lifted origin keys into an existing origin without overriding it', () => {
+    const state = {
+      ...baseState(),
+      metadata: { agentId: 'agent-old', topicId: 'topic-1' },
+      origin: { agentId: 'agent-new' },
+    };
+
+    const normalized = normalizeAgentState(state);
+
+    expect(normalized.origin).toEqual({ agentId: 'agent-new', topicId: 'topic-1' });
     expect(normalized.metadata).toEqual({});
   });
 

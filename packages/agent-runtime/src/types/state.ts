@@ -12,6 +12,7 @@ import type {
   UserMemoryConfig,
 } from '@lobechat/context-engine';
 import type {
+  AgentSignalOperationMarker,
   ChatToolPayload,
   ExpertiseContextSnapshot,
   LobeAgentChatConfig,
@@ -21,6 +22,79 @@ import type {
 } from '@lobechat/types';
 
 import type { Cost, CostLimit, Usage } from './usage';
+
+/**
+ * The run's position in the run tree.
+ */
+export interface AgentRunLineage {
+  /** True for any child run (callSubAgent child or isolated group member). */
+  isSubAgent?: boolean;
+  /**
+   * Group orchestration role. Tells an isolated group member (`'member'`,
+   * resumed via the group K=N bridge) apart from a genuine callSubAgent child,
+   * which also carries `isSubAgent: true`.
+   */
+  orchestrationRole?: 'supervisor' | 'member';
+  /** Operation that spawned this run, when it is a child. */
+  parentOperationId?: string;
+  /**
+   * Live-progress anchor for a callSubAgent child. The child runs on its own
+   * operation, but the client only subscribes to the parent's channel, so the
+   * child's step loop publishes its running totals there, addressed at the
+   * placeholder tool message.
+   */
+  progressAnchor?: { parentOperationId: string; toolMessageId: string };
+}
+
+/**
+ * Server-authored provenance for a continuation created from a durable human
+ * intervention claim. Lets a retry tell this exact continuation apart from an
+ * unrelated operation that happens to reuse an id.
+ */
+export interface InterventionContinuation {
+  resolutionRequestId: string;
+  sourceOperationId: string;
+  sourceToolMessageIds: string[];
+}
+
+/**
+ * Where this run came from: who asked for it, on which conversation node,
+ * and where it sits in the run tree.
+ *
+ * Written by the caller and the orchestrator when the run is requested and
+ * frozen from then on. Mirrors the durable operation row (which stays the
+ * authority) so the runtime can hang its output on the right conversation
+ * node without a lookup.
+ */
+export interface AgentRunOrigin {
+  // --- Conversation node ---
+  /** Effective message owner for this run (the group member when applicable). */
+  agentId?: string;
+  /** Set when this run continues a durable human-intervention claim. */
+  continuation?: InterventionContinuation;
+  // --- Trigger ---
+  /** Default assignee for tasks the run creates. */
+  defaultTaskAssigneeAgentId?: string;
+  documentId?: string;
+  groupId?: string;
+  // --- Run tree ---
+  lineage?: AgentRunLineage;
+  scope?: string;
+  sessionId?: string;
+  /** Run-scoped Agent Signal marker for background self-iteration / memory runs. */
+  signal?: AgentSignalOperationMarker;
+  /** Source user message that started the turn. */
+  sourceMessageId?: string;
+
+  taskId?: string;
+  threadId?: string;
+  topicId?: string;
+  /** Request trigger (chat, eval, bot, …). */
+  trigger?: string;
+  userId?: string;
+
+  workspaceId?: string;
+}
 
 /**
  * Search route resolved once before the run starts. Declared here rather than
@@ -177,7 +251,7 @@ export interface AgentState {
 
   /**
    * Un-converged run context. Keys that have a business home live in the
-   * typed slots (`world`, `binding`, …); anything left here is either host
+   * typed slots (`origin`, `world`, `binding`, …); anything left here is either host
    * plumbing the runtime does not interpret or context that has not been
    * placed yet. `normalizeAgentState` lifts legacy keys out on load.
    */
@@ -208,10 +282,17 @@ export interface AgentState {
       provider: string;
     };
   };
-  operationId: string;
 
+  operationId: string;
   /** Operation-level tool set snapshot (immutable after creation) */
   operationToolSet?: OperationToolSet;
+
+  // --- Origin ---
+  /**
+   * Where this run came from and where it sits in the run tree. Frozen when
+   * the operation is created.
+   */
+  origin?: AgentRunOrigin;
   pendingApprovalBatch?: {
     assistantMessageId: string;
     id: string;

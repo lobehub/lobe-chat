@@ -96,7 +96,7 @@ export class HumanInterventionHandler {
           action: 'approve',
           operationId: state.metadata?.operationId ?? '',
           toolCallId: approvedToolCall.id,
-          userId: state.metadata?.userId,
+          userId: state.origin?.userId,
         },
         state.metadata?._hooks,
       )
@@ -180,7 +180,7 @@ export class HumanInterventionHandler {
           operationId: state.metadata?.operationId ?? '',
           rejectionReason,
           toolCallId: rejectedToolCallId,
-          userId: state.metadata?.userId,
+          userId: state.origin?.userId,
         },
         state.metadata?._hooks,
       )
@@ -213,7 +213,7 @@ export class HumanInterventionHandler {
           operationId: state.metadata?.operationId ?? '',
           rejectionReason,
           toolCallId: rejectedToolCallId,
-          userId: state.metadata?.userId,
+          userId: state.origin?.userId,
         },
         state.metadata?._hooks,
       )

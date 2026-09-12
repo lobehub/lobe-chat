@@ -414,7 +414,7 @@ export interface OperationCreationParams {
     agentId?: string;
     /**
      * Run-scoped Agent Signal marker. Stamped at dispatch for background
-     * self-iteration / memory runs; lands in `state.metadata.agentSignal` and is
+     * self-iteration / memory runs; lands in `state.origin.signal` and is
      * read on the completion path to project receipts.
      */
     agentSignal?: AgentSignalOperationMarker;
@@ -429,7 +429,7 @@ export interface OperationCreationParams {
     groupId?: string | null;
     isSubAgent?: boolean;
     /**
-     * Group orchestration role, spread onto `state.metadata.orchestrationRole`.
+     * Group orchestration role, stored on `state.origin.lineage.orchestrationRole`.
      * Lets the inactivity-watchdog abandon path tell an isolated group member
      * (`'member'`, resumed via the group K=N bridge) apart from a genuine
      * callSubAgent child (which shares `isSubAgent: true`).
@@ -441,8 +441,8 @@ export interface OperationCreationParams {
     /** Source user message ID used for same-turn Agent Signal procedure suppression. */
     sourceMessageId?: string;
     /**
-     * Live-progress anchor for a `callSubAgent` child, spread onto
-     * `state.metadata.subAgentProgress`.
+     * Live-progress anchor for a `callSubAgent` child, stored on
+     * `state.origin.lineage.progressAnchor`.
      *
      * The child runs on its own operationId, but the client only ever subscribes
      * to the PARENT's gateway channel — which stays open across the sub-agent run
@@ -569,7 +569,7 @@ export interface OperationCreationParams {
   /**
    * Workspace ID propagated down from the originating chat/task router so
    * tool executions (createBrief / pinTask / etc.) ownership-filter to the
-   * caller's workspace. Stored on `state.metadata.workspaceId`.
+   * caller's workspace. Stored on `state.origin.workspaceId`.
    */
   workspaceId?: string;
 }

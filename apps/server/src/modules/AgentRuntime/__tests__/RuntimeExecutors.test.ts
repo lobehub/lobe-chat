@@ -335,7 +335,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -1288,7 +1288,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           },
           { content: 'created', id: 'tool-msg-1', role: 'tool', tool_call_id: 'call_1' },
         ] as any,
-        metadata: {
+        origin: {
           agentId: 'agent-123',
           sourceMessageId: 'user-msg-1',
           threadId: 'thread-123',
@@ -1333,7 +1333,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           { content: 'old result', id: 'old-tool-msg', role: 'tool', tool_call_id: 'old_call' },
           { content: 'What model are you?', id: 'user-msg-2', role: 'user' },
         ] as any,
-        metadata: {
+        origin: {
           agentId: 'agent-123',
           sourceMessageId: 'user-msg-2',
           threadId: 'thread-123',
@@ -1621,7 +1621,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       });
       const state = createMockState({
         messages: [{ content: 'history', role: 'user' }],
-        metadata: {
+        origin: {
           agentId: 'agent-123',
         },
       });
@@ -2340,7 +2340,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
 
         const content = await callWithMessages(
           [{ content: 'Continue', role: 'user' }],
-          stateWithLobeAgent({ metadata: { agentId: 'agent-123' } }),
+          stateWithLobeAgent({ origin: { agentId: 'agent-123' } }),
           { topicId: 'context-topic' },
         );
 
@@ -2884,8 +2884,10 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
             group: agentGroup,
           },
           metadata: {
-            agentId: 'agent-support',
             botContext: ctxWithConfig.botContext,
+          },
+          origin: {
+            agentId: 'agent-support',
             topicId: 'topic-123',
           },
         });
@@ -3233,7 +3235,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -3760,7 +3762,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           role: 'assistant',
         } as any,
       ],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -3970,7 +3972,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -4570,7 +4572,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
     it('should query messages with correct metadata fields when state.metadata is defined', async () => {
       const executors = createRuntimeExecutors(ctx);
       const state = createMockState({
-        metadata: {
+        origin: {
           agentId: 'agent-abc',
           threadId: 'thread-xyz',
           topicId: 'topic-abc-123',
@@ -4711,9 +4713,12 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           { content: 'Response', role: 'assistant', tool_calls: [] },
         ],
         metadata: {
+          // topicId is undefined
+        },
+        origin: {
           agentId: 'agent-123',
           threadId: 'thread-123',
-          topicId: undefined, // topicId is undefined
+          topicId: undefined,
         },
       });
 
@@ -4889,7 +4894,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
             },
           },
         },
-        metadata: {
+        origin: {
           agentId: 'agent-123',
           threadId: 'thread-123',
           topicId: 'topic-123',
@@ -4926,7 +4931,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
     it('should pass agentId from runtime metadata to executeTool', async () => {
       const executors = createRuntimeExecutors(ctx);
       const state = createMockState({
-        metadata: {
+        origin: {
           agentId: 'agent-docs-123',
           threadId: 'thread-123',
           topicId: 'topic-123',
@@ -4963,8 +4968,10 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       const executors = createRuntimeExecutors(ctx);
       const state = createMockState({
         metadata: {
-          agentId: 'agent-123',
           clientIp: '203.0.113.7',
+        },
+        origin: {
+          agentId: 'agent-123',
           threadId: 'thread-123',
           topicId: 'topic-123',
         },
@@ -4999,7 +5006,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
     it('should pass Agent Signal procedure identity fields to executeTool', async () => {
       const executors = createRuntimeExecutors(ctx);
       const state = createMockState({
-        metadata: {
+        origin: {
           agentId: 'agent-docs-123',
           sourceMessageId: 'user-msg-123',
           threadId: 'thread-123',
@@ -5043,7 +5050,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -5111,7 +5118,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -5381,7 +5388,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'agent-123',
         threadId: 'thread-123',
         topicId: 'topic-123',
@@ -5917,7 +5924,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: { agentId: 'agent-123', topicId: 'topic-123' },
+      origin: { agentId: 'agent-123', topicId: 'topic-123' },
       operationId: 'op-123',
       status: 'running',
       stepCount: 0,
@@ -6186,7 +6193,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
         };
         const executors = createRuntimeExecutors(ctxWithHooks);
 
-        const state = createToolState({ metadata: { agentId: 'agent-123', topicId: 'topic-123' } });
+        const state = createToolState({ origin: { agentId: 'agent-123', topicId: 'topic-123' } });
 
         const instruction = {
           payload: {
@@ -6260,7 +6267,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       lastModified: new Date().toISOString(),
       maxSteps: 100,
       messages: [],
-      metadata: {
+      origin: {
         agentId: 'parent-agent-id',
         topicId: 'topic-123',
       },
@@ -6470,10 +6477,10 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
 
       const executors = createRuntimeExecutors(ctxWithCallback);
       const state = createMockState({
-        metadata: {
+        origin: {
           agentId: 'parent-agent-id',
-          isSubAgent: true,
           topicId: 'topic-123',
+          lineage: { isSubAgent: true },
         },
       });
 
