@@ -1,3 +1,4 @@
+import { VERIFICATION_UNJUDGEABLE_ERROR } from '@lobechat/const/goal';
 import type { GoalGraphNode, GoalGraphSnapshot, TaskItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
@@ -10,6 +11,7 @@ import {
   needsBudget,
   needsMetricCriteria,
   selectFrontier,
+  VERIFICATION_ERRORED_ERROR,
   VERIFICATION_FAILED_ERROR,
 } from './decideNextMove';
 
@@ -177,9 +179,29 @@ describe('decideNextMove', () => {
         }).branch,
       ).toBe('recover_verification');
 
+      // A verifier that crashed never judged the delivery, so it recovers like a
+      // rejection instead of stopping the goal on a verdict nobody reached.
+      expect(
+        decide(snapshot, {
+          frontierTask: task({ error: VERIFICATION_ERRORED_ERROR, status: 'paused' }),
+        }),
+      ).toMatchObject({
+        branch: 'recover_verification',
+        message: 'Verification could not run for Task T-1',
+      });
+
       expect(
         decide(snapshot, { frontierTask: task({ error: 'Device offline', status: 'failed' }) }),
       ).toMatchObject({ branch: 'failure_decision', message: 'Device offline' });
+
+      // A criterion the review cannot settle by reading is NOT recoverable: the
+      // builder would re-deliver the same artifacts against the same unprovable
+      // check, so this one belongs to a person on the first occurrence.
+      expect(
+        decide(snapshot, {
+          frontierTask: task({ error: VERIFICATION_UNJUDGEABLE_ERROR, status: 'paused' }),
+        }),
+      ).toMatchObject({ branch: 'failure_decision', outcome: 'waiting_human' });
     });
 
     it('treats a plain pause as waiting on a person and a run as waiting on the world', () => {

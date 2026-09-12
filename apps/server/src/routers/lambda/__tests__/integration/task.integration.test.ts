@@ -20,7 +20,9 @@ import {
 // Mock getServerDB
 let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => testDB),
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
 }));
 
 // Mock AiAgentService
@@ -31,24 +33,30 @@ const mockExecAgent = vi.fn().mockResolvedValue({
 });
 const mockInterruptTask = vi.fn().mockResolvedValue({ success: true });
 vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({
-    execAgent: mockExecAgent,
-    interruptTask: mockInterruptTask,
-  })),
+  AiAgentService: vi.fn().mockImplementation(function () {
+    return {
+      execAgent: mockExecAgent,
+      interruptTask: mockInterruptTask,
+    };
+  }),
 }));
 
 // Mock TaskLifecycleService
 vi.mock('@/server/services/taskLifecycle', () => ({
-  TaskLifecycleService: vi.fn().mockImplementation(() => ({
-    onTopicComplete: vi.fn(),
-  })),
+  TaskLifecycleService: vi.fn().mockImplementation(function () {
+    return {
+      onTopicComplete: vi.fn(),
+    };
+  }),
 }));
 
 // Mock TaskReviewService
 vi.mock('@/server/services/taskReview', () => ({
-  TaskReviewService: vi.fn().mockImplementation(() => ({
-    review: vi.fn(),
-  })),
+  TaskReviewService: vi.fn().mockImplementation(function () {
+    return {
+      review: vi.fn(),
+    };
+  }),
 }));
 
 // Mock initModelRuntimeFromDB
@@ -952,6 +960,42 @@ describe('Task Router Integration', () => {
       expect(found.data.status).toBe('paused');
       expect(found.data.error).toContain('LLM failed');
     });
+
+    it('does not book a running topic when execAgent reports a dispatch failure', async () => {
+      // A heterogeneous dispatch or operation startup failure comes back as a
+      // result (`success: false`) rather than a throw: the topic and its error
+      // bubble already exist. Booking that dead operation as a running run left
+      // the Task in flight forever, with a goal coordinator recording a start.
+      mockExecAgent.mockResolvedValueOnce({
+        error:
+          'Heterogeneous agent provider binding is only supported for Desktop local execution.',
+        message: 'Heterogeneous agent provider binding requires Desktop local execution',
+        operationId: 'op_dead',
+        status: 'error',
+        success: false,
+        topicId: testTopicId,
+      });
+
+      const task = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'Test',
+      });
+
+      await expect(caller.run({ id: task.data.id })).rejects.toThrow();
+
+      const found = await caller.find({ id: task.data.id });
+      expect(found.data.status).toBe('paused');
+      expect(found.data.error).toContain('Desktop local execution');
+
+      // The attempt stays visible, but as a failed run — never a running one.
+      const runs = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runs.map((run) => [run.topicId, run.operationId, run.status])).toEqual([
+        [testTopicId, 'op_dead', 'failed'],
+      ]);
+      // ...so a fresh run is allowed instead of "already has a running topic".
+      await caller.run({ id: task.data.id });
+      expect((await caller.detail({ id: task.data.id })).data?.status).toBe('running');
+    });
   });
 
   describe('clearAll', () => {
@@ -1089,7 +1133,7 @@ describe('Task Router Integration', () => {
       expect(mockInterruptTask).not.toHaveBeenCalled();
     });
 
-    it('should skip cancellation when interrupt fails', async () => {
+    it('rejects the status change and retains running work when interrupt fails', async () => {
       const task = await caller.create({
         assigneeAgentId: testAgentId,
         instruction: 'Test interrupt failure',
@@ -1100,13 +1144,12 @@ describe('Task Router Integration', () => {
       // Make interruptTask fail
       mockInterruptTask.mockRejectedValueOnce(new Error('network error'));
 
-      // Transition task from running → paused
-      await caller.updateStatus({ id: task.data.id, status: 'paused' });
-
-      // The topic should still be running because interrupt failed
-      // so re-running should hit CONFLICT
-      await caller.updateStatus({ id: task.data.id, status: 'backlog' });
-      await expect(caller.run({ id: task.data.id })).rejects.toThrow(/already has a running topic/);
+      await expect(caller.updateStatus({ id: task.data.id, status: 'paused' })).rejects.toThrow(
+        'Failed to update status',
+      );
+      expect((await caller.find({ id: task.data.id })).data.status).toBe('running');
+      const runningTopics = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runningTopics.some((topic) => topic.status === 'running')).toBe(true);
     });
   });
 

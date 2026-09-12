@@ -176,6 +176,14 @@ export const topicCommentKeys = {
   ]),
 };
 
+// ---- acceptance comment -------------------------------------------------
+export const acceptanceCommentKeys = {
+  list: def('acceptanceComment:list', (acceptanceId: string) => [
+    'acceptanceComment:list',
+    acceptanceId,
+  ]),
+};
+
 // ---- document comment ---------------------------------------------------
 export const documentCommentKeys = {
   detail: def('documentComment:detail', (workspaceId: string | null, commentId: string) => [
@@ -1482,6 +1490,7 @@ export const swrKeys = {
   tool: toolKeys,
   topic: topicKeys,
   topicComment: topicCommentKeys,
+  acceptanceComment: acceptanceCommentKeys,
   documentComment: documentCommentKeys,
   documentLike: documentLikeKeys,
   topicAction: topicActionKeys,

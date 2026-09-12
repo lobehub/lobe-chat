@@ -59,6 +59,8 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
 
 type OnboardingSessionMetadataPatch = Partial<NonNullable<ChatTopicMetadata['onboardingSession']>>;
+type RunningOperation = NonNullable<ChatTopicMetadata['runningOperation']>;
+type RunningOperationPatch = Omit<Partial<RunningOperation>, 'childOperations' | 'operationId'>;
 type TopicMetadataPatch = Omit<Partial<ChatTopicMetadata>, 'onboardingSession'> & {
   onboardingSession?: OnboardingSessionMetadataPatch;
 };
@@ -1889,7 +1891,11 @@ export class TopicModel {
    * Update topic metadata with merge logic
    * This method merges new metadata with existing metadata instead of replacing it
    */
-  updateMetadata = async (id: string, metadata: TopicMetadataPatch) => {
+  updateMetadata = async (
+    id: string,
+    metadata: TopicMetadataPatch,
+    options?: { executionConfigIfAbsent?: boolean },
+  ) => {
     // Merge into the existing metadata under a row lock so concurrent writers
     // can't lose each other's keys. The old read-then-write was a non-atomic
     // read-modify-write: a hetero run seeds `metadata.runningOperation` while
@@ -1921,6 +1927,9 @@ export class TopicModel {
       const mergedMetadata = {
         ...existing.metadata,
         ...metadata,
+        ...(options?.executionConfigIfAbsent && existing.metadata?.executionConfig
+          ? { executionConfig: existing.metadata.executionConfig }
+          : {}),
         ...(mergedOnboardingSession && { onboardingSession: mergedOnboardingSession }),
       } as ChatTopicMetadata;
 
@@ -1980,7 +1989,7 @@ export class TopicModel {
   appendRunningOperationChild = async (
     id: string,
     parentOperationId: string,
-    child: NonNullable<ChatTopicMetadata['runningOperation']>,
+    child: RunningOperation,
   ): Promise<boolean> =>
     this.db.transaction(async (tx) => {
       const [existing] = await tx
@@ -2006,6 +2015,43 @@ export class TopicModel {
               ],
             },
           },
+        })
+        .where(and(eq(topics.id, id), this.ownership()));
+      return true;
+    });
+
+  patchRunningOperation = async (
+    id: string,
+    operationId: string,
+    patch: RunningOperationPatch,
+  ): Promise<boolean> =>
+    this.db.transaction(async (tx) => {
+      const [existing] = await tx
+        .select({ metadata: topics.metadata })
+        .from(topics)
+        .where(and(eq(topics.id, id), this.ownership()))
+        .for('update');
+      const runningOperation = existing?.metadata?.runningOperation;
+      if (!existing || !runningOperation) return false;
+
+      let nextRunningOperation: RunningOperation;
+      if (runningOperation.operationId === operationId) {
+        nextRunningOperation = { ...runningOperation, ...patch };
+      } else {
+        let matched = false;
+        const childOperations = runningOperation.childOperations?.map((child) => {
+          if (child.operationId !== operationId) return child;
+          matched = true;
+          return { ...child, ...patch };
+        });
+        if (!matched) return false;
+        nextRunningOperation = { ...runningOperation, childOperations };
+      }
+
+      await tx
+        .update(topics)
+        .set({
+          metadata: { ...existing.metadata, runningOperation: nextRunningOperation },
         })
         .where(and(eq(topics.id, id), this.ownership()));
       return true;

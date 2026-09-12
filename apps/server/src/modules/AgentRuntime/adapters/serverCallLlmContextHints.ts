@@ -22,6 +22,7 @@ import { TopicModel } from '@/database/models/topic';
 
 import type { RuntimeExecutorContext } from '../context';
 import { log } from '../executorHelpers';
+import { resolveModelMediaCapabilities } from '../resolveModelMediaCapabilities';
 
 interface ResolveServerCallLlmContextHintsInput {
   ctx: RuntimeExecutorContext;
@@ -311,21 +312,40 @@ export const resolveServerCallLlmContextHints = async ({
     ? (llmPayload.messages as UIChatMessage[])
     : stripAssistantReasoningForReplay(llmPayload.messages as UIChatMessage[]);
 
-  const findModelInfo = (targetModel: string, targetProvider: string) =>
-    builtinModels.find((item) => item.id === targetModel && item.providerId === targetProvider) ??
-    builtinModels.find((item) => item.id === targetModel);
+  const findMediaCapabilities = (targetModel: string, targetProvider: string) => {
+    const snapshot = ctx.modelRuntimeConfig;
+    // Tool discovery is fixed for the operation; keep native inputs on the same
+    // snapshot across retries, settings edits, and subsequent worker invocations.
+    if (
+      snapshot?.model === targetModel &&
+      snapshot.provider === targetProvider &&
+      snapshot.mediaCapabilities
+    ) {
+      return snapshot.mediaCapabilities;
+    }
+
+    // Older operations have no snapshot. Preserve their existing lookup path.
+    return resolveModelMediaCapabilities({
+      builtinModels,
+      model: targetModel,
+      provider: targetProvider,
+      // This row belongs only to the active attempt, never to another model/provider.
+      userAbilities:
+        targetModel === model && targetProvider === provider ? userModelRow?.abilities : undefined,
+    });
+  };
 
   return {
     capabilities: {
       isCanUseAudio: (targetModel, targetProvider) =>
-        findModelInfo(targetModel, targetProvider)?.abilities?.audio ?? false,
+        findMediaCapabilities(targetModel, targetProvider)?.audio ?? false,
       isCanUseFC: (targetModel, targetProvider) =>
         builtinModels.find((item) => item.id === targetModel && item.providerId === targetProvider)
           ?.abilities?.functionCall ?? true,
       isCanUseVideo: (targetModel, targetProvider) =>
-        findModelInfo(targetModel, targetProvider)?.abilities?.video ?? false,
+        findMediaCapabilities(targetModel, targetProvider)?.video ?? false,
       isCanUseVision: (targetModel, targetProvider) =>
-        findModelInfo(targetModel, targetProvider)?.abilities?.vision ?? false,
+        findMediaCapabilities(targetModel, targetProvider)?.vision ?? false,
     },
     messagesForContext,
     modelDisplayName,

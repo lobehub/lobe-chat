@@ -63,6 +63,11 @@ when sources are incomplete. Look for missing boundaries, ambiguous
 criteria, and probes that cannot distinguish success from failure. Check how
 fixtures/fault injections will be proven effective. Also identify duplicate or
 out-of-scope cases; review must not only expand scope.
+Check that groups reflect independently reviewable user tasks and that each check
+can be accepted or rejected on its own. For flow plans, inspect flow titles as
+the resulting default checklist categories: flag an umbrella PR group that hides
+distinct journeys. Check entry-to-outcome reading order, real transitions, and
+expectations duplicated across groups; coverage alone does not make a plan ready.
 
 Checker output:
 

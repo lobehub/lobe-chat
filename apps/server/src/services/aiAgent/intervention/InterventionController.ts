@@ -182,6 +182,14 @@ export class InterventionController {
             cancelResult.state,
             cancelResult.error,
           );
+          // Preserve the runtime and topic's device identity until the writer
+          // actually exits, so a retry can still address the same process.
+          return {
+            deviceCancellationConfirmed,
+            operationId: resolvedOperationId,
+            success: false,
+            threadId: thread?.id,
+          };
         }
       }
     }
@@ -195,7 +203,21 @@ export class InterventionController {
       resolvedOperationId,
     );
 
-    if (!interrupted) {
+    // Device CLI runs have no native AgentRuntime state to interrupt. Their
+    // acknowledged process exit is authoritative; settle only the owned old
+    // operation and its matching marker, preserving any newer run/outcome.
+    if (deviceCancellationConfirmed === true) {
+      await this.deps.agentOperationModel.settleRunning(resolvedOperationId, 'interrupted');
+      if (resolvedTopicId) {
+        await this.deps.topicModel.settleRunningOperation(
+          resolvedTopicId,
+          resolvedOperationId,
+          'active',
+        );
+      }
+    }
+
+    if (!interrupted && deviceCancellationConfirmed !== true) {
       const alreadyCancelled = thread?.status === ThreadStatus.Cancel;
 
       return {

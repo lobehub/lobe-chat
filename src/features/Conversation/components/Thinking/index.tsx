@@ -65,15 +65,6 @@ const Thinking = memo<ThinkingProps>((props) => {
           disableContentFit
           scrollFade
           className={styles.scrollRoot}
-          contentProps={{
-            style: {
-              color: 'inherit',
-              display: 'block',
-              fontSize: 'inherit',
-              gap: 0,
-              lineHeight: 'inherit',
-            },
-          }}
           viewportProps={{
             className: styles.contentScroll,
             ref: ref as RefObject<HTMLDivElement>,

@@ -63,11 +63,13 @@ vi.mock('@/server/modules/ModelRuntime', () => ({
 }));
 
 vi.mock('@/server/services/message', () => ({
-  MessageService: vi.fn().mockImplementation(() => ({
-    cancelCompression: mockCancelCompression,
-    createCompressionGroup: mockCreateCompressionGroup,
-    finalizeCompression: mockFinalizeCompression,
-  })),
+  MessageService: vi.fn().mockImplementation(function () {
+    return {
+      cancelCompression: mockCancelCompression,
+      createCompressionGroup: mockCreateCompressionGroup,
+      finalizeCompression: mockFinalizeCompression,
+    };
+  }),
 }));
 
 // @lobechat/model-runtime resolves to @cloud/business-model-runtime which has
@@ -87,7 +89,9 @@ vi.mock('@lobechat/model-runtime', async () => {
   return {
     // The executor resolves extend params via this helper; an empty result keeps
     // the runtime payload unchanged, matching this suite's pre-existing behavior.
-    applyModelExtendParams: vi.fn(() => ({})),
+    applyModelExtendParams: vi.fn(function () {
+      return {};
+    }),
     resolveEffectiveReasoningChatConfig,
     consumeStreamUntilDone: vi.fn().mockResolvedValue(undefined),
     // `llmErrorClassification.ts` reads these at module-load time; an empty
@@ -142,10 +146,12 @@ vi.mock('@/envs/file', () => ({
 // `mockUploadBase64` is the spy multimodal-image tests assert against.
 const { mockUploadBase64 } = vi.hoisted(() => ({ mockUploadBase64: vi.fn() }));
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn().mockImplementation(() => ({
-    getFileAccessUrl: vi.fn().mockResolvedValue('https://files.example/access'),
-    uploadBase64: mockUploadBase64,
-  })),
+  FileService: vi.fn().mockImplementation(function () {
+    return {
+      getFileAccessUrl: vi.fn().mockResolvedValue('https://files.example/access'),
+      uploadBase64: mockUploadBase64,
+    };
+  }),
 }));
 
 const {
@@ -162,20 +168,24 @@ const {
   mockRegisterTask: vi.fn(),
 }));
 vi.mock('@/database/models/work', () => ({
-  WorkModel: vi.fn().mockImplementation(() => ({
-    deleteDocumentWork: mockDeleteDocumentWork,
-    deleteTaskWork: mockDeleteTaskWork,
-    handleSkillToolResult: mockHandleSkillToolResult,
-    registerDocument: mockRegisterDocument,
-    registerTask: mockRegisterTask,
-  })),
+  WorkModel: vi.fn().mockImplementation(function () {
+    return {
+      deleteDocumentWork: mockDeleteDocumentWork,
+      deleteTaskWork: mockDeleteTaskWork,
+      handleSkillToolResult: mockHandleSkillToolResult,
+      registerDocument: mockRegisterDocument,
+      registerTask: mockRegisterTask,
+    };
+  }),
 }));
 
 const { mockFindPlanDocuments } = vi.hoisted(() => ({ mockFindPlanDocuments: vi.fn() }));
 vi.mock('@/database/models/topicDocument', () => ({
-  TopicDocumentModel: vi.fn().mockImplementation(() => ({
-    findByTopicId: mockFindPlanDocuments,
-  })),
+  TopicDocumentModel: vi.fn().mockImplementation(function () {
+    return {
+      findByTopicId: mockFindPlanDocuments,
+    };
+  }),
 }));
 
 describe('RuntimeExecutors', { timeout: 60_000 }, () => {
@@ -3926,7 +3936,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
     beforeEach(() => {
       // Reset mock to return unique IDs for each call
       let callCount = 0;
-      mockMessageModel.create.mockImplementation(() => {
+      mockMessageModel.create.mockImplementation(function () {
         callCount++;
         return Promise.resolve({ id: `tool-msg-${callCount}` });
       });
@@ -4000,8 +4010,8 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       // Each executor result carries a task registration intent; the batch
       // persists it ONCE per tool, stamping that call's cumulative cost and the
       // just-created tool message as the source — no cost-less insert + backfill.
-      mockToolExecutionService.executeTool.mockImplementation((payload: any) =>
-        Promise.resolve({
+      mockToolExecutionService.executeTool.mockImplementation(function (payload: any) {
+        return Promise.resolve({
           content: 'ok',
           error: null,
           executionTime: 100,
@@ -4021,8 +4031,8 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
                   targets: [{ taskId: 'task_2', taskIdentifier: 'T-2' }],
                   type: 'task',
                 },
-        }),
-      );
+        });
+      });
 
       const executors = createRuntimeExecutors(ctx);
       const state = createMockState();
@@ -4078,7 +4088,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
     it('should apply retry policy per tool in batch mode', async () => {
       const attemptsByTool: Record<string, number> = {};
 
-      mockToolExecutionService.executeTool.mockImplementation((payload: any) => {
+      mockToolExecutionService.executeTool.mockImplementation(function (payload: any) {
         const toolId = payload.id as string;
         const nextAttempt = (attemptsByTool[toolId] || 0) + 1;
         attemptsByTool[toolId] = nextAttempt;
@@ -4220,7 +4230,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
 
     it('anchors the next turn on the calling assistant, not the last tool message', async () => {
       let callCount = 0;
-      mockMessageModel.create.mockImplementation(() => {
+      mockMessageModel.create.mockImplementation(function () {
         callCount++;
         return Promise.resolve({ id: `created-tool-msg-${callCount}` });
       });
@@ -4628,19 +4638,20 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
       // the query can still find messages by agentId scope.
 
       // Mock: query returns messages when agentId is provided (regardless of topicId)
-      mockMessageModel.query = vi
-        .fn()
-        .mockImplementation((params: { agentId?: string; topicId?: string }) => {
-          // With the fix, agentId is always passed, so we can find messages
-          if (params.agentId) {
-            return Promise.resolve([
-              { id: 'msg-1', content: 'Hello', role: 'user' },
-              { id: 'msg-2', content: 'Response', role: 'assistant', tool_calls: [] },
-            ]);
-          }
-          // Without agentId (old buggy behavior), return empty
-          return Promise.resolve([]);
-        });
+      mockMessageModel.query = vi.fn().mockImplementation(function (params: {
+        agentId?: string;
+        topicId?: string;
+      }) {
+        // With the fix, agentId is always passed, so we can find messages
+        if (params.agentId) {
+          return Promise.resolve([
+            { id: 'msg-1', content: 'Hello', role: 'user' },
+            { id: 'msg-2', content: 'Response', role: 'assistant', tool_calls: [] },
+          ]);
+        }
+        // Without agentId (old buggy behavior), return empty
+        return Promise.resolve([]);
+      });
 
       const executors = createRuntimeExecutors(ctx);
       // State with undefined topicId but has agentId

@@ -19,7 +19,9 @@ import {
 vi.mock('@lobechat/model-runtime', () => ({
   // RuntimeExecutors (loaded transitively) resolves extend params via this
   // helper; an empty result keeps the runtime payload unchanged.
-  applyModelExtendParams: vi.fn(() => ({})),
+  applyModelExtendParams: vi.fn(function () {
+    return {};
+  }),
   getModelPropertyWithFallback: vi.fn(),
   // `llmErrorClassification.ts` reads these at module-load time; an empty
   // spec map is fine here because this suite never exercises the runtime
@@ -41,37 +43,47 @@ vi.mock('@/libs/trusted-client', () => ({
 
 // Mock database and models
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn().mockImplementation(() => ({
-    getAgentConfigById: vi.fn(),
-  })),
+  AgentModel: vi.fn().mockImplementation(function () {
+    return {
+      getAgentConfigById: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/database/models/plugin', () => ({
-  PluginModel: vi.fn().mockImplementation(() => ({
-    query: vi.fn().mockResolvedValue([]),
-  })),
+  PluginModel: vi.fn().mockImplementation(function () {
+    return {
+      query: vi.fn().mockResolvedValue([]),
+    };
+  }),
 }));
 
 // Mock ModelRuntime to avoid server-side env access
 vi.mock('@/server/modules/ModelRuntime', () => ({
   initializeRuntimeOptions: vi.fn(),
-  ApiKeyManager: vi.fn().mockImplementation(() => ({
-    getApiKey: vi.fn(),
-    getAllApiKeys: vi.fn(),
-  })),
+  ApiKeyManager: vi.fn().mockImplementation(function () {
+    return {
+      getApiKey: vi.fn(),
+      getAllApiKeys: vi.fn(),
+    };
+  }),
 }));
 
 // Mock search service to avoid server-side env access
 vi.mock('@/server/services/search', () => ({
-  SearchService: vi.fn().mockImplementation(() => ({
-    search: vi.fn(),
-  })),
+  SearchService: vi.fn().mockImplementation(function () {
+    return {
+      search: vi.fn(),
+    };
+  }),
   searchService: {
     search: vi.fn(),
   },
@@ -110,16 +122,20 @@ vi.mock('@/server/modules/AgentRuntime', async (importOriginal) => {
 // so this mock survives future executor migrations without edits.
 vi.mock('@lobechat/agent-runtime', async (importOriginal) => ({
   ...((await importOriginal()) as Record<string, unknown>),
-  AgentRuntime: vi.fn().mockImplementation((_agent, _options) => ({
-    step: vi.fn(),
-  })),
+  AgentRuntime: vi.fn().mockImplementation(function (_agent, _options) {
+    return {
+      step: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/queue', () => ({
-  QueueService: vi.fn().mockImplementation(() => ({
-    getImpl: vi.fn().mockReturnValue(null),
-    scheduleMessage: vi.fn(),
-  })),
+  QueueService: vi.fn().mockImplementation(function () {
+    return {
+      getImpl: vi.fn().mockReturnValue(null),
+      scheduleMessage: vi.fn(),
+    };
+  }),
 }));
 
 // Mock Mecha module
@@ -1097,18 +1113,19 @@ describe('AgentRuntimeService', () => {
       };
 
       try {
-        vi.spyOn(service as any, 'createAgentRuntime').mockImplementation((...args: unknown[]) => {
+        vi.spyOn(service as any, 'createAgentRuntime').mockImplementation(function (
+          ...args: unknown[]
+        ) {
           const { abortSignal } = args[0] as { abortSignal: AbortSignal };
           return {
             runtime: {
-              step: vi.fn(
-                () =>
-                  new Promise((resolve) => {
-                    abortSignal.addEventListener('abort', () => resolve(mockStepResult), {
-                      once: true,
-                    });
-                  }),
-              ),
+              step: vi.fn(function () {
+                return new Promise((resolve) => {
+                  abortSignal.addEventListener('abort', () => resolve(mockStepResult), {
+                    once: true,
+                  });
+                });
+              }),
             },
           };
         });

@@ -69,8 +69,8 @@ vi.mock('@/features/ChatInput/hooks/useChatInputResourceAccess', () => ({
   }),
 }));
 
-vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
-  useEffectiveAgencyConfig: () => ({
+vi.mock('@/hooks/useTopicAgencyConfig', () => ({
+  useTopicAgencyConfig: () => ({
     agencyConfig: effectiveAgencyConfig.current,
     workspaceScoped: effectiveAgencyConfig.workspaceScoped,
   }),

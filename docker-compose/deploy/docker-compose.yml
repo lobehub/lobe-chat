@@ -18,6 +18,7 @@ services:
       - 'KEY_VAULTS_SECRET=${KEY_VAULTS_SECRET}'
       - 'AUTH_SECRET=${AUTH_SECRET}'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
+      - 'ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex'
       - 'INTERNAL_APP_URL=http://localhost:3210'
       - 'S3_ENDPOINT=${S3_ENDPOINT}'
       - 'S3_BUCKET=${RUSTFS_LOBE_BUCKET}'
@@ -33,6 +34,8 @@ services:
       - 'REDIS_TLS=0'
     env_file:
       - .env
+    volumes:
+      - 'fts-search-reindex-state:/app/.elasticsearch-reindex'
     restart: always
     networks:
       - lobe-network

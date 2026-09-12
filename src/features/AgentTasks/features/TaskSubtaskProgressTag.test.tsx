@@ -16,15 +16,20 @@ vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
   DropdownMenu: ({
     children,
     items,
+    onOpenChange,
     open,
   }: {
     children: ReactNode;
     items?: Array<{ key: string; onClick?: () => void }>;
+    onOpenChange?: (open: boolean) => void;
     open?: boolean;
   }) => (
     <div>
       {children}
       <span data-testid="dropdown-open">{String(open)}</span>
+      <button data-testid="dropdown-hover" type="button" onClick={() => onOpenChange?.(true)}>
+        hover
+      </button>
       {items?.map((item) => (
         <button
           data-testid={`subtask-${item.key}`}
@@ -130,6 +135,22 @@ describe('TaskSubtaskProgressTag', () => {
     expect(onParentClick).not.toHaveBeenCalled();
     await waitFor(() => expect(onRequestSubtasks).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(screen.getByTestId('dropdown-open')).toHaveTextContent('true'));
+  });
+
+  it('keeps a hover-opened static menu open when the tag is clicked', async () => {
+    render(
+      <TaskSubtaskProgressTag
+        subtasks={[{ identifier: 'T-2', name: 'Child task', status: 'backlog' }]}
+        onSubtaskClick={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId('dropdown-hover'));
+    await waitFor(() => expect(screen.getByTestId('dropdown-open')).toHaveTextContent('true'));
+
+    fireEvent.click(screen.getByText('0/1'));
+
+    expect(screen.getByTestId('dropdown-open')).toHaveTextContent('true');
   });
 
   it('closes an open subtask menu without refreshing it again', async () => {

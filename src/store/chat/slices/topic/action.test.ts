@@ -38,6 +38,14 @@ vi.mock('@/libs/swr', async () => {
   };
 });
 
+vi.mock('swr', async () => {
+  const actual = await vi.importActual('swr');
+  return {
+    ...(actual as any),
+    mutate: vi.fn(),
+  };
+});
+
 // Mock topicService 和 messageService
 vi.mock('@/services/topic', () => ({
   topicService: {
@@ -243,15 +251,6 @@ describe('topic action', () => {
     });
   });
   describe('refreshTopic', () => {
-    beforeEach(() => {
-      vi.mock('swr', async () => {
-        const actual = await vi.importActual('swr');
-        return {
-          ...(actual as any),
-          mutate: vi.fn(),
-        };
-      });
-    });
     afterEach(() => {
       // 在每个测试用例开始前恢复到实际的 SWR 实现
       vi.resetAllMocks();
@@ -3496,5 +3495,51 @@ describe('topic action', () => {
       expect(next.excludeTriggers).toEqual(['cron', 'eval']);
       expect(next.items.map((i) => i.id)).toEqual(['topic-2']);
     });
+  });
+});
+
+describe('Topic execution save failures', () => {
+  const key = topicMapKey({ agentId: 'agent-execution' });
+  const previous = {
+    executionConfig: { executionTarget: 'device' as const, boundDeviceId: 'device-a' },
+  };
+  const selected = { executionConfig: { executionTarget: 'sandbox' as const } };
+  const setup = () => {
+    useChatStore.setState({
+      activeAgentId: 'agent-execution',
+      topicDataMap: {
+        [key]: {
+          items: [
+            {
+              id: 'topic-execution',
+              title: 'A',
+              createdAt: 1,
+              updatedAt: 1,
+              favorite: false,
+              metadata: previous,
+            },
+          ],
+          currentPage: 1,
+          hasMore: false,
+          pageSize: 20,
+          total: 1,
+        },
+      },
+    });
+    vi.spyOn(useChatStore.getState(), 'refreshTopic').mockRejectedValue(new Error('offline'));
+  };
+  it('restores the saved target if the mutation fails while offline', async () => {
+    setup();
+    vi.spyOn(topicService, 'updateTopicMetadata').mockRejectedValueOnce(new Error('offline'));
+    await expect(
+      useChatStore.getState().updateTopicMetadata('topic-execution', selected),
+    ).rejects.toThrow('offline');
+    expect(useChatStore.getState().topicDataMap[key].items[0].metadata).toEqual(previous);
+  });
+  it('keeps the saved selection if only revalidation fails', async () => {
+    setup();
+    vi.spyOn(topicService, 'updateTopicMetadata').mockResolvedValueOnce([]);
+    await useChatStore.getState().updateTopicMetadata('topic-execution', selected);
+    expect(useChatStore.getState().topicDataMap[key].items[0].metadata).toEqual(selected);
   });
 });

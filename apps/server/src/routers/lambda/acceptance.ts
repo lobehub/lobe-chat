@@ -22,6 +22,7 @@ import { ProjectModel } from '@/database/models/project';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
+import { users } from '@/database/schemas';
 import type { AcceptanceItem } from '@/database/schemas/verify';
 import { acceptances } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
@@ -203,6 +204,25 @@ const applyAcceptanceStatus = async (
 };
 
 export const acceptanceRouter = router({
+  regroupChecks: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        expectedVersion: z.number().int().nonnegative(),
+        groups: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1).max(200),
+              checkItemIds: z.array(z.string().min(1)).min(1).max(1000),
+            }),
+          )
+          .max(100),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { service } = await resolveAcceptanceForWrite(ctx, input.id);
+      return service.regroupChecks(input.id, input.groups, input.expectedVersion);
+    }),
   publishFlow: acceptanceWriteProcedure
     .input(
       z.object({
@@ -220,6 +240,17 @@ export const acceptanceRouter = router({
         input.flowId,
         input.expectedHash,
       );
+    }),
+  deleteFlow: acceptanceWriteProcedure
+    .input(z.object({ id: z.string().uuid(), flowId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
+      const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).delete(
+        input.id,
+        input.flowId,
+      );
+      await service.recomputeStatus(input.id);
+      return result;
     }),
   startFlow: acceptanceWriteProcedure
     .input(
@@ -522,10 +553,23 @@ export const acceptanceRouter = router({
         acceptance.workspaceId ?? undefined,
       );
 
-      const [subject, { evidence, reports, results, runs }] = await Promise.all([
+      const [subject, { evidence, reports, results, runs }, authorRows] = await Promise.all([
         ownerService.resolveSubject(acceptance),
         ownerService.loadRounds(acceptance.id),
+        // Who delivered this, the way a pull request names its author. A
+        // shared link lands on someone else's record, and a record with no
+        // name on it reads as nobody's.
+        ctx.serverDB
+          .select({
+            avatar: users.avatar,
+            fullName: users.fullName,
+            id: users.id,
+            username: users.username,
+          })
+          .from(users)
+          .where(eq(users.id, acceptance.userId)),
       ]);
+      const author = authorRows[0] ?? null;
 
       const flowData = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).list(
         acceptance.id,
@@ -547,6 +591,7 @@ export const acceptanceRouter = router({
 
       const checks = buildAcceptanceCheckUnion(
         runs.map((run) => ({ results: resultsByRun.get(run.id) ?? [], run })),
+        acceptance.metadata?.checkGrouping?.groups,
       );
 
       // Enrich the evidence backing every executed timeline step — the final
@@ -701,6 +746,7 @@ export const acceptanceRouter = router({
       }
 
       return {
+        author,
         flows: flowData.map((flow) => ({
           ...flow,
           versions: flow.versions.map((version) => ({

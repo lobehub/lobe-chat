@@ -39,6 +39,13 @@ const performanceRestrictedImportPaths = [
   },
   {
     allowTypeImports: true,
+    importNames: ['motion'],
+    message:
+      'The app runs under <LazyMotion features={domMax}>; `motion` bundles every feature again. Use `m` from "motion/react" (or "motion/react-m").',
+    name: 'motion/react',
+  },
+  {
+    allowTypeImports: true,
     message:
       'Do not import the model-bank root barrel; it re-exports the full aiModels catalog (1.4 MB raw). Use a subpath such as "model-bank/aiModel", "model-bank/modelProvider", "model-bank/standardParameters" or "model-bank/utils".',
     name: 'model-bank',

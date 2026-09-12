@@ -1,6 +1,7 @@
-import { normalizeVerifySurface } from '@lobechat/const/verify';
+import { isDraftVerifyRun, normalizeVerifySurface } from '@lobechat/const/verify';
 import type {
   AcceptanceAttachment,
+  AcceptanceCheckGroup,
   AcceptanceCheckReviewAction,
   AcceptanceConfig,
   AcceptanceRejectIntent,
@@ -143,7 +144,10 @@ const itemSurface = (item: VerifyCheckItem | undefined): VerifySurface | null =>
  *   item's iteration timeline, so a semantically-dead older wording stops
  *   showing up as its own row.
  */
-export const buildAcceptanceCheckUnion = (rounds: RoundInput[]): AcceptanceCheckRow[] => {
+export const buildAcceptanceCheckUnion = (
+  rounds: RoundInput[],
+  groups: AcceptanceCheckGroup[] = [],
+): AcceptanceCheckRow[] => {
   const ordered = [...rounds].sort((a, b) => (a.run.roundIndex ?? 0) - (b.run.roundIndex ?? 0));
 
   const rows = new Map<string, AcceptanceCheckRow>();
@@ -263,7 +267,16 @@ export const buildAcceptanceCheckUnion = (rounds: RoundInput[]): AcceptanceCheck
     }
   }
 
-  return [...rows.values()];
+  // Organization belongs to the current acceptance, not its immutable execution
+  // snapshots. Preserve IDs, numbering and result references when a check moves.
+  const grouped = new Map<string, AcceptanceCheckRow>();
+  for (const group of groups) {
+    for (const id of group.checkItemIds) {
+      const row = rows.get(id);
+      if (row) grouped.set(id, { ...row, category: group.title });
+    }
+  }
+  return [...grouped.values(), ...[...rows.values()].filter((row) => !grouped.has(row.id))];
 };
 
 // ============================================
@@ -675,6 +688,24 @@ export class AcceptanceService {
 
     await this.assertPlanLeavesAcceptedChecksAlone(existing, acceptanceId);
 
+    // A round that is still only planned has nothing to preserve: the incoming
+    // run folds into it instead of pushing the ledger to yet another number.
+    // Only the newest round counts — `listByAcceptance` is ascending, and an
+    // older draft the chain has moved past is an abandoned ledger position.
+    const latest = (await this.runModel.listByAcceptance(acceptanceId)).at(-1);
+    const draft = latest && isDraftVerifyRun(latest) ? latest : undefined;
+    if (draft) {
+      const folded = await this.runModel.foldIntoRound(runId, draft.id);
+      await this.recomputeStatus(acceptanceId);
+      log(
+        'run %s folded into draft round %d of acceptance %s',
+        runId,
+        folded.roundIndex,
+        acceptanceId,
+      );
+      return folded;
+    }
+
     // Rounds inherit the aggregate's visibility so a private acceptance's new
     // round never leaks through its own report URL.
     const run = await this.runModel.attachToAcceptance(runId, acceptanceId, acceptance.visibility);
@@ -763,6 +794,41 @@ export class AcceptanceService {
   latestRound = async (acceptanceId: string) => {
     const runs = await this.runModel.listByAcceptance(acceptanceId);
     return runs.at(-1) ?? null;
+  };
+
+  regroupChecks = async (
+    acceptanceId: string,
+    groups: AcceptanceCheckGroup[],
+    expectedVersion: number,
+  ) => {
+    const acceptance = await this.acceptanceModel.findById(acceptanceId);
+    if (!acceptance) throw new Error('Acceptance not found');
+    const { results, runs } = await this.loadRounds(acceptanceId);
+    const resultsByRun = new Map<string, VerifyCheckResultItem[]>();
+    for (const result of results) {
+      const bucket = resultsByRun.get(result.verifyRunId!) ?? [];
+      bucket.push(result);
+      resultsByRun.set(result.verifyRunId!, bucket);
+    }
+    const checks = buildAcceptanceCheckUnion(
+      runs.map((run) => ({ results: resultsByRun.get(run.id) ?? [], run })),
+    );
+    const known = new Set(checks.map((check) => check.id));
+    const assigned = new Set<string>();
+    const titles = new Set<string>();
+    const normalized = groups.map((group) => {
+      const title = group.title.trim();
+      if (!title || titles.has(title) || group.checkItemIds.length === 0)
+        throw new Error('Check groups need unique, non-empty titles and members');
+      titles.add(title);
+      for (const id of group.checkItemIds) {
+        if (!known.has(id)) throw new Error(`Unknown check item: ${id}`);
+        if (assigned.has(id)) throw new Error(`Check assigned to multiple groups: ${id}`);
+        assigned.add(id);
+      }
+      return { ...group, title };
+    });
+    return this.acceptanceModel.setCheckGroups(acceptanceId, normalized, expectedVersion);
   };
 
   /**

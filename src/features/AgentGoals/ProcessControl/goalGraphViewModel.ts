@@ -132,6 +132,19 @@ export const hasReviewableResult = (view: GoalNodeView): boolean => {
   return view.node.status === 'resolved' || view.isVerifying;
 };
 
+/**
+ * Whether a node reads as "running" on the map — the animated ring, the chip
+ * and the elapsed clock all hang off this.
+ *
+ * A question is excluded: an open question is not work in flight, its state is
+ * whether it has an answer yet, and the card already says that. A "Running"
+ * chip on a question that nobody is working promises activity that isn't there.
+ */
+export const isRunningNode = (view: GoalNodeView): boolean => {
+  if (view.node.kind === 'problem') return false;
+  return view.node.status === 'active' && !view.isStale;
+};
+
 export type FrontierItemKind = 'gate' | 'stale' | 'verifying' | 'running' | 'ready' | 'done';
 
 export interface FrontierItem {

@@ -153,12 +153,16 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
       async (event: MouseEvent<HTMLElement>) => {
         event.stopPropagation();
 
+        // Only the lazy path owns open state; static menus leave toggling to
+        // the dropdown trigger so a click never fights its own open.
+        if (!onRequestSubtasks) return;
+
         if (open) {
           setOpen(false);
           return;
         }
 
-        if (!onRequestSubtasks || requesting) return;
+        if (requesting) return;
 
         setRequesting(true);
         try {
@@ -224,7 +228,7 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
       <DropdownMenu
         items={navigationItems}
         open={open}
-        trigger={'both'}
+        trigger={'click'}
         onOpenChange={handleOpenChange}
       >
         {tag}

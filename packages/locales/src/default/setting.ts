@@ -1,4 +1,19 @@
 export default {
+  'marketSubmission.entry': 'Publish',
+  'marketSubmission.title': 'Publish to Market',
+  'marketSubmission.submit': 'Publish',
+  'marketSubmission.confirm':
+    '“{{name}}” will become a public agent when published to Market. Make sure its profile and prompt contain no private information or secrets.',
+  'marketSubmission.required': 'Add an agent name and prompt before publishing.',
+  'marketSubmission.success':
+    'Submitted. Your agent is under review and will appear in Market after approval.',
+  'marketSubmission.failed': 'Could not submit. Please try again.',
+  'marketSubmission.linkFailed':
+    'Submitted, but could not save the Market link locally ({{identifier}}). Keep this identifier and avoid resubmitting as a new agent.',
+  'marketPublish.status.published': 'Published',
+  'marketPublish.status.unpublished': 'Unpublished',
+  'marketPublish.status.archived': 'Archived',
+  'marketPublish.status.deprecated': 'Deprecated',
   'completionSound.title': 'In-app completion sound',
   'completionSound.enabled': 'Play completion sound',
   'completionSound.desc':
@@ -682,6 +697,8 @@ export default {
   'devices.share.visibilityTag.public': 'Workspace',
   'devices.status.offline': 'Offline',
   'devices.status.online': 'Online',
+  'devices.status.onlineConnections_one': 'Online · {{count}} connection',
+  'devices.status.onlineConnections_other': 'Online · {{count}} connections',
   'devices.title': 'My Devices',
   'devices.visibility.publish': 'Publish to Workspace',
   'devices.visibility.publishConfirmTitle': 'Publish this device to the workspace?',
@@ -724,6 +741,7 @@ export default {
   'group.aiConfig': 'Agent',
   'group.common': 'General',
   'group.developer': 'Developer',
+  'group.personal': 'Personal',
   'group.profile': 'Account',
   'group.subscription': 'Plans',
   'group.system': 'System',
@@ -1067,6 +1085,14 @@ export default {
     'System fonts could not be loaded. System Default remains available.',
   'settingAppearance.font.fontFamily.title': 'Interface Font',
   'settingAppearance.font.fontFamily.unavailable': '{{font}} (Unavailable on this device)',
+  'settingAppearance.font.fallback.add': 'Add fallback font',
+  'settingAppearance.font.fallback.desc':
+    'When the interface font is missing a glyph, these fonts are tried in order. A common pairing is a Latin font first and a CJK font second.',
+  'settingAppearance.font.fallback.limit': 'Up to {{count}} fallback fonts',
+  'settingAppearance.font.fallback.needPrimary': 'Choose an interface font first.',
+  'settingAppearance.font.fallback.placeholder': 'Choose a fallback font',
+  'settingAppearance.font.fallback.remove': 'Remove fallback font',
+  'settingAppearance.font.fallback.title': 'Fallback Fonts',
   'settingAppearance.font.monospace.default': 'System Default',
   'settingAppearance.font.monospace.desc':
     'Used by code blocks and the built-in terminal. Choose a monospaced font installed on this device.',
@@ -1074,6 +1100,10 @@ export default {
     'System fonts could not be loaded. System Default remains available.',
   'settingAppearance.font.monospace.title': 'Monospace Font',
   'settingAppearance.font.monospace.unavailable': '{{font}} (Unavailable on this device)',
+  'settingAppearance.font.monospaceFallback.desc':
+    'Tried in order after the monospace font, for code blocks and the built-in terminal.',
+  'settingAppearance.font.monospaceFallback.needPrimary': 'Choose a monospace font first.',
+  'settingAppearance.font.monospaceFallback.title': 'Monospace Fallback Fonts',
   'settingAppearance.font.title': 'Font',
   'settingAppearance.neutralColor.desc': 'Custom grayscale with different color tendencies',
   'settingAppearance.neutralColor.title': 'Neutral Color',
@@ -3308,7 +3338,7 @@ When I am ___, I need ___
   'workspaceSetting.devices.unknownEnroller': 'an unknown member',
   'workspaceSetting.group.admin': 'Admin',
   'workspaceSetting.group.agent': 'Agent',
-  'workspaceSetting.group.general': 'General',
+  'workspaceSetting.group.workspace': 'Workspace',
   'workspaceSetting.labels.actions.archive': 'Archive',
   'workspaceSetting.labels.actions.create': 'New label',
   'workspaceSetting.labels.actions.unarchive': 'Restore',

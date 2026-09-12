@@ -11,7 +11,7 @@ import { useAgentStore } from '@/store/agent';
 import { resolveWorkspaceSurface, useWorkspaceSurface } from '../useWorkspaceSurface';
 
 // The EFFECTIVE config (shared row + this member's per-user device override),
-// as `useEffectiveAgencyConfig` would resolve it. The raw shared row lives in
+// as `useTopicAgencyConfig` would resolve it. The raw shared row lives in
 // the real agent store so store-derived selectors see what they see in prod.
 const effective = vi.hoisted(() => ({
   agencyConfig: undefined as LobeAgentAgencyConfig | undefined,
@@ -28,8 +28,8 @@ vi.mock('@/helpers/gatewayMode', () => ({
   useIsGatewayModeEnabled: () => true,
 }));
 
-vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
-  useEffectiveAgencyConfig: () => ({
+vi.mock('@/hooks/useTopicAgencyConfig', () => ({
+  useTopicAgencyConfig: () => ({
     agencyConfig: effective.agencyConfig,
     workspaceScoped: effective.workspaceScoped,
   }),

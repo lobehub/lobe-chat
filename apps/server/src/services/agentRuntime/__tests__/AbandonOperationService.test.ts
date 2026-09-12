@@ -31,37 +31,47 @@ const buildCoordinator = (
 
 const messageUpdateMock = vi.fn().mockResolvedValue({ success: true });
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({ update: messageUpdateMock })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return { update: messageUpdateMock };
+  }),
 }));
 
 const findOperationMock = vi.fn().mockResolvedValue(null);
 const recordCompletionMock = vi.fn().mockResolvedValue(undefined);
 vi.mock('@/database/models/agentOperation', () => ({
-  AgentOperationModel: vi.fn().mockImplementation(() => ({
-    findById: findOperationMock,
-    recordCompletion: recordCompletionMock,
-  })),
+  AgentOperationModel: vi.fn().mockImplementation(function () {
+    return {
+      findById: findOperationMock,
+      recordCompletion: recordCompletionMock,
+    };
+  }),
 }));
 
 const dispatchHooksMock = vi.fn().mockResolvedValue(undefined);
 vi.mock('../CompletionLifecycle', () => ({
-  CompletionLifecycle: vi.fn().mockImplementation(() => ({
-    dispatchHooks: dispatchHooksMock,
-  })),
+  CompletionLifecycle: vi.fn().mockImplementation(function () {
+    return {
+      dispatchHooks: dispatchHooksMock,
+    };
+  }),
 }));
 
 const findThreadMock = vi.fn().mockResolvedValue(null);
 vi.mock('@/database/models/thread', () => ({
-  ThreadModel: vi.fn().mockImplementation(() => ({ findById: findThreadMock })),
+  ThreadModel: vi.fn().mockImplementation(function () {
+    return { findById: findThreadMock };
+  }),
 }));
 
 const topicSettleRunningOperationMock = vi
   .fn()
   .mockResolvedValue({ assistantMessageId: undefined, status: 'missing' });
 vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn().mockImplementation(() => ({
-    settleRunningOperation: topicSettleRunningOperationMock,
-  })),
+  TopicModel: vi.fn().mockImplementation(function () {
+    return {
+      settleRunningOperation: topicSettleRunningOperationMock,
+    };
+  }),
 }));
 
 const stateWith = (overrides: Record<string, any> = {}) => ({

@@ -6,7 +6,9 @@ import type * as MessageModelModule from '@/database/models/message';
 import { createContextInner } from '@/libs/trpc/lambda/context';
 
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => ({})),
+  getServerDB: vi.fn(function () {
+    return {};
+  }),
 }));
 
 // Pin the cloud-only capability open so the visitor procedures under test are
@@ -54,12 +56,14 @@ const mockFindById = vi.fn();
 const mockCountBySender = vi.fn();
 const mockQueryBySender = vi.fn();
 const mockIsRunningOperationAlive = vi.fn();
-const TopicModelMock = vi.fn(() => ({
-  countBySender: mockCountBySender,
-  findById: mockFindById,
-  isRunningOperationAlive: mockIsRunningOperationAlive,
-  queryBySender: mockQueryBySender,
-}));
+const TopicModelMock = vi.fn(function () {
+  return {
+    countBySender: mockCountBySender,
+    findById: mockFindById,
+    isRunningOperationAlive: mockIsRunningOperationAlive,
+    queryBySender: mockQueryBySender,
+  };
+});
 vi.mock('@/database/models/topic', () => ({
   TopicModel: TopicModelMock,
 }));
@@ -75,30 +79,38 @@ vi.mock('@/database/models/message', async (importOriginal) => {
   const actual = await importOriginal<typeof MessageModelModule>();
   return {
     ...actual,
-    MessageModel: vi.fn(() => ({
-      countByTopic: mockMessageCountByTopic,
-      query: mockMessageQuery,
-      queryForVisitor: mockMessageQueryForVisitor,
-    })),
+    MessageModel: vi.fn(function () {
+      return {
+        countByTopic: mockMessageCountByTopic,
+        query: mockMessageQuery,
+        queryForVisitor: mockMessageQueryForVisitor,
+      };
+    }),
   };
 });
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: vi.fn(() => ({ getUserSettings: vi.fn().mockResolvedValue({}) })),
+  UserModel: vi.fn(function () {
+    return { getUserSettings: vi.fn().mockResolvedValue({}) };
+  }),
 }));
 
 const mockExecAgent = vi.fn();
 const mockInterruptTask = vi.fn();
-const AiAgentServiceMock = vi.fn(() => ({
-  execAgent: mockExecAgent,
-  interruptTask: mockInterruptTask,
-}));
+const AiAgentServiceMock = vi.fn(function () {
+  return {
+    execAgent: mockExecAgent,
+    interruptTask: mockInterruptTask,
+  };
+});
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: AiAgentServiceMock,
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => ({ getFileAccessUrl: vi.fn() })),
+  FileService: vi.fn(function () {
+    return { getFileAccessUrl: vi.fn() };
+  }),
 }));
 
 const mockSpendGate = vi.fn();
@@ -579,26 +591,30 @@ describe('shareChatRouter', () => {
       expect(mockAccessCheck).not.toHaveBeenCalled();
     });
 
-    it('rejects every procedure when the agent share flag is off for this visitor', async () => {
-      mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare: false });
-      const caller = await createCaller();
+    it.each([false, undefined])(
+      'admits visitor procedures when the agent share flag is %s',
+      async (enableAgentShare) => {
+        mockGetFeatureFlagsState.mockResolvedValue({ enableAgentShare });
+        mockMessageQueryForVisitor.mockResolvedValue([]);
+        const caller = await createCaller();
 
-      await expect(caller.getTopics({ shareId: 'share-1' })).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-      });
-      await expect(
-        caller.getMessages({ shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      await expect(caller.execAgent({ prompt: 'hi', shareId: 'share-1' })).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-      });
-      await expect(
-        caller.interruptTask({ operationId: 'op-1', shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      await expect(
-        caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      expect(mockAccessCheck).not.toHaveBeenCalled();
-    });
+        await expect(caller.getTopics({ shareId: 'share-1' })).resolves.toEqual([]);
+        await expect(
+          caller.getMessages({ shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toEqual([]);
+        await expect(caller.execAgent({ prompt: 'hi', shareId: 'share-1' })).resolves.toMatchObject(
+          {
+            success: true,
+          },
+        );
+        await expect(
+          caller.interruptTask({ operationId: 'op-1', shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toMatchObject({ success: true });
+        await expect(
+          caller.refreshGatewayToken({ shareId: 'share-1', topicId: 'tpc_visitor' }),
+        ).resolves.toEqual({ token: 'visitor-jwt' });
+        expect(mockGetFeatureFlagsState).not.toHaveBeenCalled();
+      },
+    );
   });
 });

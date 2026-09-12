@@ -13,7 +13,9 @@ import {
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type { ClaudeCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
 import type {
+  DeviceCopyAssetForPublishResult,
   DeviceDirectoryBrowseResult,
+  DeviceExternalAssetForPublishResult,
   DeviceGitAddWorktreeResult,
   DeviceGitAheadBehind,
   DeviceGitBranchDiffPatches,
@@ -35,9 +37,11 @@ import type {
   DeviceLocalFilePreviewResult,
   DeviceMoveProjectFileItem,
   DeviceMoveProjectFileResultItem,
+  DeviceProjectDirectoryListResult,
   DeviceProjectFileIndexResult,
   DeviceProjectFileSearchResult,
   DeviceRenameProjectFileResult,
+  DeviceUnavailableErrorData,
   DeviceWriteProjectFileResult,
   HeterogeneousAgentModelCatalog,
   ProjectSkillMeta,
@@ -512,7 +516,16 @@ export class DeviceGateway {
     deviceId: string;
     env?: Record<string, string>;
     timeout?: number;
-    type: 'codebuddy' | 'cursor' | 'droid' | 'grok-build' | 'opencode' | 'pi' | 'qoder' | 'trae';
+    type:
+      | 'codebuddy'
+      | 'cursor'
+      | 'devin'
+      | 'droid'
+      | 'grok-build'
+      | 'opencode'
+      | 'pi'
+      | 'qoder'
+      | 'trae';
     userId: string;
     workspaceId?: string;
   }): Promise<HeterogeneousAgentModelCatalog> {
@@ -972,6 +985,40 @@ export class DeviceGateway {
     }
   }
 
+  /**
+   * Children of one directory inside a project on a remote device via the
+   * `listProjectDirectory` device RPC — expands a row the index collapsed.
+   */
+  async listProjectDirectory(params: {
+    deviceId: string;
+    relativePath: string;
+    root: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceProjectDirectoryListResult | undefined> {
+    const { userId, deviceId, relativePath, root, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceProjectDirectoryListResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'listProjectDirectory', params: { relativePath, root } },
+      );
+
+      if (!result.success || !result.data) {
+        log('listProjectDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+        return undefined;
+      }
+
+      return result.data;
+    } catch (error) {
+      log('listProjectDirectory: error for deviceId=%s — %O', deviceId, error);
+      return undefined;
+    }
+  }
+
   /** List one directory level on a remote execution device for folder pickers. */
   async browseDirectory(params: {
     cursor?: string;
@@ -1110,6 +1157,63 @@ export class DeviceGateway {
       return result.data;
     } catch (error) {
       log('getLocalFilePreview: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async copyAssetForPublish(params: {
+    deviceId: string;
+    from: string;
+    timeout?: number;
+    to: string;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCopyAssetForPublishResult> {
+    const { userId, deviceId, from, to, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    assertPathsWithinWorkspace(workingDirectory, [to]);
+
+    try {
+      const result = await client.invokeRpc<DeviceCopyAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'copyAssetForPublish', params: { from, to, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to copy publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('copyAssetForPublish: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async readExternalAssetForPublish(params: {
+    deviceId: string;
+    path: string;
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceExternalAssetForPublishResult> {
+    const { userId, deviceId, path, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    try {
+      const result = await client.invokeRpc<DeviceExternalAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'readExternalAssetForPublish', params: { path, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to read external publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('readExternalAssetForPublish: error for deviceId=%s — %O', deviceId, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -1396,7 +1500,7 @@ export class DeviceGateway {
     workspaceId?: string;
     /** Topic/run workspace forwarded to the device for hetero ingest. */
     ingestWorkspaceId?: string;
-  }): Promise<{ error?: string; success: boolean }> {
+  }): Promise<{ error?: string; errorData?: DeviceUnavailableErrorData; success: boolean }> {
     const client = this.getClient();
     if (!client) return { error: 'GATEWAY_NOT_CONFIGURED', success: false };
 

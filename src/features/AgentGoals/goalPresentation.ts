@@ -1,5 +1,5 @@
 import type { GoalStatus } from '@lobechat/const/goal';
-import type { GoalSpend, TaskStatus } from '@lobechat/types';
+import type { GoalConfig, GoalSpend, TaskStatus } from '@lobechat/types';
 
 /** Goal lifecycle state → i18n status key (goal list vocabulary). */
 const goalStatusKeyMap = {
@@ -78,4 +78,13 @@ export const summarizeGoalBudget = (
   if (goal.maxTotalCost !== null) return { cap: goal.maxTotalCost, kind: 'cost', spent: totalCost };
   if (goal.maxRounds !== null) return { cap: goal.maxRounds, kind: 'rounds', runs };
   return { kind: 'uncapped', spent: totalCost };
+};
+
+/** The planner's persistent conversation belongs to the creator, not the task assignee. */
+export const goalManagerConversation = (
+  config: GoalConfig | null | undefined,
+): { agentId: string; topicId: string } | undefined => {
+  const agentId = config?.manager?.agentId;
+  const topicId = config?.managerState?.topicId;
+  return agentId && topicId ? { agentId, topicId } : undefined;
 };

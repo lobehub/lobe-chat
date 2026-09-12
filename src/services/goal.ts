@@ -1,6 +1,6 @@
 import type { GoalStatus } from '@lobechat/const/goal';
 import type {
-  GoalConfig,
+  GoalCreateConfig,
   GoalGraphSnapshot,
   GoalMetricCriterion,
   GoalNodeKind,
@@ -28,7 +28,7 @@ class GoalService {
   /** Create a goal and seed its graph with a problem node and the given Work. */
   create = async (params: {
     agentId?: string;
-    config?: GoalConfig;
+    config?: GoalCreateConfig;
     /** Set by the `/goal` tool so the seeded graph is authored by the agent. */
     createdByAgentId?: string;
     /** Structured acceptance criteria — persisted rows that gate the terminal acceptance. */

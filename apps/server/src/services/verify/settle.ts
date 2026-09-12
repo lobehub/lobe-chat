@@ -1,3 +1,8 @@
+import {
+  VERIFICATION_ERRORED_ERROR,
+  VERIFICATION_FAILED_ERROR,
+  VERIFICATION_UNJUDGEABLE_ERROR,
+} from '@lobechat/const/goal';
 import debug from 'debug';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
@@ -108,7 +113,9 @@ export const driveTaskFromVerify = async (
         ? 'failed'
         : goalReview?.status === 'errored'
           ? 'errored'
-          : run.status;
+          : goalReview?.status === 'unjudgeable'
+            ? 'unjudgeable'
+            : run.status;
 
     if (outcome === 'passed') {
       // Verify and, for Goal tasks, Acceptance review must pass before completing
@@ -130,19 +137,27 @@ export const driveTaskFromVerify = async (
         log('verify passed → task %s completed', taskOperation.taskId);
       }
     } else {
-      // Two non-pass outcomes, kept distinct so an infra error never reads as a
+      // Three non-pass outcomes, kept distinct so an infra error never reads as a
       // rejected delivery:
-      // - failed:  the verifier ran and judged the delivery short of the criteria.
-      // - errored: the verifier could not run (infra) — the delivery was NOT
-      //   evaluated, so we must not claim it "did not pass".
+      // - failed:      the verifier ran and judged the delivery short of the criteria.
+      // - errored:     the verifier could not run (infra) — the delivery was NOT
+      //                evaluated, so we must not claim it "did not pass".
+      // - unjudgeable: the review read the evidence and the criterion turned out
+      //                undecidable from it. Another attempt would re-deliver the
+      //                same artifacts against the same unprovable criterion, so
+      //                this one routes to a person instead of a retry.
       const isErrored = outcome === 'errored';
 
-      // `Delivery did not pass verification.` is a contract string, not just
-      // copy: the Goal coordinator matches on it to decide whether a paused
-      // Goal Task should start another attempt or open a decision gate.
-      const pauseSummary = isErrored
-        ? 'Verification could not run (internal error); the delivery was not evaluated.'
-        : 'Delivery did not pass verification.';
+      // All three summaries are contract strings, not copy: the Goal coordinator
+      // matches on them to decide whether a paused Goal Task starts another
+      // attempt or opens a decision gate. They live in `@lobechat/const/goal`
+      // so the writer and the reader cannot drift apart.
+      const pauseSummary =
+        outcome === 'unjudgeable'
+          ? VERIFICATION_UNJUDGEABLE_ERROR
+          : isErrored
+            ? VERIFICATION_ERRORED_ERROR
+            : VERIFICATION_FAILED_ERROR;
       if (task.automationMode) {
         // Mirror of the pass branch: verify judges THIS tick, not the lifetime
         // schedule. Pausing here would permanently disarm the cron (the
@@ -176,7 +191,9 @@ export const driveTaskFromVerify = async (
           ? 'Delivery did not pass verification.'
           : outcome === 'errored'
             ? 'Verification could not be completed due to an internal error; the delivery was not evaluated. Please retry or review it manually.'
-            : undefined;
+            : outcome === 'unjudgeable'
+              ? 'Acceptance review could not judge this delivery from the captured evidence. Review it manually, or restate the check so evidence can settle it.'
+              : undefined;
       await new TaskResultBridgeService(db, userId, workspaceId).deliver({
         operationId,
         reason: outcome === 'passed' ? 'done' : 'error',
