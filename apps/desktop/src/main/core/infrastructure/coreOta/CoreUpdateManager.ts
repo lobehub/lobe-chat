@@ -31,6 +31,7 @@ const logger = createLogger('core:CoreUpdateManager');
 const BOOT_CHECK_TIMEOUT = 15_000;
 const COLD_BOOT_CHECK_TIMEOUT = 60_000;
 const FETCH_TIMEOUT = 60_000;
+const DOWNLOAD_TIMEOUT = 15 * 60 * 1000;
 const LOAD_PING_TIMEOUT = 3000;
 const MAX_BOOT_CRASHES = 2;
 const CHECK_INTERVAL = 60 * 60 * 1000;
@@ -92,9 +93,11 @@ export class CoreUpdateManager {
     this.shell = options.shell ?? shellInfo;
     this.fetchImpl =
       options.fetchImpl ??
-      ((url, init) => net.fetch(url, { ...init, signal: AbortSignal.timeout(FETCH_TIMEOUT) }));
+      ((url, init) => net.fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT), ...init }));
     this.otaRoot = path.join(electronApp.getPath('userData'), 'core-ota');
-    this.store = new CoreStore(this.otaRoot, (url) => this.fetchImpl(url));
+    this.store = new CoreStore(this.otaRoot, (url) =>
+      this.fetchImpl(url, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) }),
+    );
     this.builtinManifest = this.shell ? readBuiltinManifest(this.shell) : null;
     this.activeChannel = this.coreChannel(
       coerceStoredUpdateChannel(this.app.storeManager.get('updateChannel') as string | undefined) ||
