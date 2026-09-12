@@ -63,7 +63,8 @@ const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIden
   const { data } = useAcceptanceBundle(acceptanceId);
   if (!data) return null;
 
-  const { acceptance, checks, origin, rounds, subject } = data;
+  const { acceptance, author, checks, origin, rounds, subject } = data;
+  const authorName = author?.fullName || author?.username;
   const currentRound = rounds.at(-1);
   const scope = acceptanceCodingScope(rounds);
   const pullRequest = scope?.pullRequest;
@@ -86,6 +87,15 @@ const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIden
     <Flexbox gap={10}>
       <Flexbox horizontal align={'center'} className={styles.statusRow} gap={10} wrap={'wrap'}>
         {statusSlot ?? <AcceptanceStatusPill status={acceptance.status} />}
+        {/* Who delivered this, right after its state — the same place a pull
+            request names its author. A shared record with no name on it reads
+            as nobody's, and the status alone never says whose work it is. */}
+        {authorName && (
+          <Flexbox horizontal align={'center'} gap={6}>
+            <Avatar avatar={author?.avatar || authorName.slice(0, 1)} size={18} />
+            <Text fontSize={12}>{authorName}</Text>
+          </Flexbox>
+        )}
         <Text fontSize={12} type={'secondary'}>
           {[countsText, latestAt].filter(Boolean).join(' · ')}
         </Text>
