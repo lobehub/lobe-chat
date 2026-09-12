@@ -14,15 +14,15 @@ import {
 import { useElectronStore } from '@/store/electron';
 
 vi.mock('../../hooks/useCategory', () => ({
-  SettingsGroupKey: { General: 'general' },
+  SettingsGroupKey: { Account: 'account', General: 'general' },
   useCategory: () => [
     {
       items: [
         { icon: () => null, key: 'profile', label: 'Profile' },
         { icon: () => null, key: 'appearance', label: 'Appearance' },
       ],
-      key: 'general',
-      title: 'General',
+      key: 'account',
+      title: 'Account',
     },
   ],
 }));

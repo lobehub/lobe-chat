@@ -4,6 +4,8 @@ import {
   documentCommentMentions,
   documentComments,
   documents,
+  knowledgeBases,
+  resourcePermissions,
   workspaceMembers,
   workspaces,
 } from '@lobechat/database/schemas';
@@ -18,7 +20,11 @@ import { cleanupTestUser, createTestUser } from './setup';
 
 let testDB: LobeChatDatabase;
 const notifyDocumentCommentActivity = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: vi.fn(() => testDB) }));
+vi.mock('@/database/core/db-adaptor', () => ({
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
+}));
 vi.mock('@/business/server/document-comment/notifyActivity', () => ({
   notifyDocumentCommentActivity,
 }));
@@ -347,6 +353,57 @@ describe('documentCommentRouter integration', () => {
     await flushAfterResponse();
     expect(privateReply.comment.replyTo?.author.id).toBe(memberId);
     expect(notifyDocumentCommentActivity).toHaveBeenCalledTimes(1);
+  });
+
+  it('notifies only recipients who can browse the document knowledge base', async () => {
+    const [knowledgeBase] = await db
+      .insert(knowledgeBases)
+      .values({ name: 'Restricted content', userId: ownerId, visibility: 'public', workspaceId })
+      .returning();
+    await db.insert(resourcePermissions).values({
+      accessLevel: 'use',
+      resourceId: knowledgeBase.id,
+      resourceType: 'knowledgeBase',
+      workspaceId,
+    });
+    await db
+      .update(documents)
+      .set({ knowledgeBaseId: knowledgeBase.id })
+      .where(eq(documents.id, documentId));
+    const owner = documentCommentRouter.createCaller(context(ownerId, workspaceId));
+
+    await owner.create({
+      clientId: 'restricted-mentions',
+      content: 'Member and admin',
+      documentId,
+      editorData: mentionEditorData(memberId, adminId),
+    });
+    await flushAfterResponse();
+
+    expect(notifyDocumentCommentActivity).toHaveBeenCalledTimes(1);
+    expect(notifyDocumentCommentActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: 'mentioned', recipientUserId: adminId }),
+    );
+
+    await db.insert(resourcePermissions).values({
+      accessLevel: 'edit',
+      resourceId: knowledgeBase.id,
+      resourceType: 'knowledgeBase',
+      userId: memberId,
+      workspaceId,
+    });
+    await owner.create({
+      clientId: 'collaborator-mention',
+      content: 'Now a collaborator',
+      documentId,
+      editorData: mentionEditorData(memberId),
+    });
+    await flushAfterResponse();
+
+    expect(notifyDocumentCommentActivity).toHaveBeenCalledTimes(2);
+    expect(notifyDocumentCommentActivity).toHaveBeenLastCalledWith(
+      expect.objectContaining({ kind: 'mentioned', recipientUserId: memberId }),
+    );
   });
 
   it('fans a reply out to the direct target and the other thread participants', async () => {

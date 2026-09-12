@@ -1,3 +1,4 @@
+import { agentDisplayName } from '@lobechat/types';
 import { Flexbox, Popover } from '@lobehub/ui';
 import { ActionIcon, Text } from '@lobehub/ui/base-ui';
 import { Clock3Icon, PanelRightCloseIcon, PlusIcon } from 'lucide-react';
@@ -8,6 +9,9 @@ import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import { conversationSelectors, useConversationStore } from '@/features/Conversation';
 import NavHeader from '@/features/NavHeader';
 import TopicItem from '@/features/PageEditor/Copilot/TopicSelector/TopicItem';
+import { useFetchAgentChatTopics } from '@/hooks/useFetchChatTopics';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
@@ -21,7 +25,11 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
   const agentId = useConversationStore(conversationSelectors.agentId);
 
-  useChatStore((s) => s.useFetchTopics)(true, { agentId });
+  const agentTitle = useAgentStore((s) =>
+    agentDisplayName(agentSelectors.getAgentMetaById(agentId)(s)),
+  );
+
+  useFetchAgentChatTopics(agentId);
 
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
@@ -45,7 +53,7 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
             tooltipWhenOverflow: true,
           }}
         >
-          {topicTitle}
+          {agentTitle ? `${agentTitle} · ${topicTitle}` : topicTitle}
         </Text>
       }
       right={

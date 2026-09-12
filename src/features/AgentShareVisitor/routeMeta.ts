@@ -1,15 +1,16 @@
 import { MessageSquareShareIcon } from 'lucide-react';
+import { lazy } from 'react';
 
-import ConversationLayoutSkeleton from '@/components/Skeleton/Conversation/Layout';
+import AgentShareVisitorSkeleton from '@/components/Skeleton/AgentShareVisitor';
 import { routeMeta } from '@/spa/router/routeMeta';
 
 /**
- * Agent-share visitor surface (`/agent/:slugOrId`). The shared agent's
- * name only becomes known after `getSharedAgent` resolves, so the tab title
- * stays on the generic share label rather than flashing a placeholder name.
+ * Keep visitor data fetching out of the initial router chunk. The static share
+ * label remains the fallback until the visitor-facing metadata is available.
  */
 export const agentShareVisitorRouteMeta = routeMeta({
+  DynamicMeta: lazy(() => import('./useAgentShareVisitorRouteMeta')),
   icon: MessageSquareShareIcon,
-  Skeleton: ConversationLayoutSkeleton,
+  Skeleton: AgentShareVisitorSkeleton,
   titleKey: 'navigation.sharedAgent',
 });

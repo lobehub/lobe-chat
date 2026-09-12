@@ -4,6 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { buildAssistantListQuery } from '@/features/CommunityAgentList/assistantListQuery';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
@@ -17,7 +18,7 @@ import List from './features/List';
 const AssistantPage = memo(() => {
   const query = useQuery() as AssistantQueryParams;
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
-  const { data, error, mutate } = useAssistantList(buildAssistantListQuery(query));
+  const { data, error, isLoading, mutate } = useAssistantList(buildAssistantListQuery(query));
 
   const items = data?.items ?? [];
 
@@ -28,6 +29,8 @@ const AssistantPage = memo(() => {
       error={error}
       errorVariant={'page'}
       isEmpty={items.length === 0}
+      isLoading={isLoading}
+      loading={<RouteLoading />}
       onRetry={() => mutate()}
     >
       {data && (

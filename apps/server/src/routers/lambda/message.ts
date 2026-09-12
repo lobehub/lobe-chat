@@ -248,9 +248,17 @@ export const messageRouter = router({
       return ctx.messageModel.queryAll(input);
     }),
 
-  count: messageProcedure.input(messageAnalyticsSchema.optional()).query(async ({ ctx, input }) => {
-    return ctx.messageModel.count(input);
-  }),
+  count: messageProcedure
+    .input(messageAnalyticsSchema.extend({ approximate: z.boolean().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const { approximate, ...filters } = input ?? {};
+
+      // Dashboard totals tolerate an estimate; an exact COUNT over a heavy
+      // account's messages takes tens of seconds.
+      if (approximate) return ctx.messageModel.countApproximate(filters);
+
+      return ctx.messageModel.count(filters);
+    }),
 
   /**
    * Count messages grouped by topic (server-side GROUP BY), sorted by count

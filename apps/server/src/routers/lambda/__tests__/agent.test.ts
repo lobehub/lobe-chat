@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentModel } from '@/database/models/agent';
-import { AgentShareModel } from '@/database/models/agentShare';
 import { ChatGroupModel } from '@/database/models/chatGroup';
 import { FileModel } from '@/database/models/file';
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
@@ -49,10 +48,6 @@ vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(),
 }));
 
-vi.mock('@/database/models/agentShare', () => ({
-  AgentShareModel: { findBySlugOrId: vi.fn() },
-}));
-
 vi.mock('@/database/models/session', () => ({
   SessionModel: vi.fn(),
 }));
@@ -93,31 +88,41 @@ vi.mock('@/server/services/workspacePermission', () => ({
 // The serverDatabase middleware replaces ctx.serverDB with this. The chain is
 // awaitable-empty so the restricted-KB lookups resolve to "no restrictions".
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => ({
-    select: vi.fn(() => ({
-      from: vi.fn(() => {
-        const whereResult = () => Promise.resolve([]);
+  getServerDB: vi.fn(function () {
+    return {
+      select: vi.fn(function () {
         return {
-          innerJoin: vi.fn(() => ({ where: vi.fn(whereResult) })),
-          where: vi.fn(whereResult),
+          from: vi.fn(function () {
+            const whereResult = () => Promise.resolve([]);
+            return {
+              innerJoin: vi.fn(function () {
+                return { where: vi.fn(whereResult) };
+              }),
+              where: vi.fn(whereResult),
+            };
+          }),
         };
       }),
-    })),
-  })),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/resourcePermission', () => ({
   assertCanEditResource: vi.fn(),
   assertCanPerformResourceAction: vi.fn(),
-  buildResourcePermissionState: vi.fn((params: any) => ({
-    ...params,
-    generalAccess: params.accessLevel === 'edit' ? 'editor' : 'viewer',
-  })),
+  buildResourcePermissionState: vi.fn(function (params: any) {
+    return {
+      ...params,
+      generalAccess: params.accessLevel === 'edit' ? 'editor' : 'viewer',
+    };
+  }),
   canPerformResourceAction: vi.fn(),
   getResourceMeta: vi.fn(),
   // `resourceConfigGuard` classifies collaborative builtins to exempt them from the
   // parent-group cap; without this export the guard throws before any assertion.
-  isCollaborativeBuiltinAgent: vi.fn(() => false),
+  isCollaborativeBuiltinAgent: vi.fn(function () {
+    return false;
+  }),
 }));
 
 describe('agentRouter', () => {
@@ -148,12 +153,16 @@ describe('agentRouter', () => {
       removeAll: vi.fn(),
       setAccessLevel: vi.fn(),
     };
-    vi.mocked(ResourcePermissionModel).mockImplementation(() => resourcePermissionModelMock);
+    vi.mocked(ResourcePermissionModel).mockImplementation(function () {
+      return resourcePermissionModelMock;
+    });
     workspaceUserSettingsModelMock = {
       getPreference: vi.fn().mockResolvedValue({}),
       updatePreference: vi.fn(),
     };
-    vi.mocked(WorkspaceUserSettingsModel).mockImplementation(() => workspaceUserSettingsModelMock);
+    vi.mocked(WorkspaceUserSettingsModel).mockImplementation(function () {
+      return workspaceUserSettingsModelMock;
+    });
 
     agentModelMock = {
       createAgentFiles: vi.fn(),
@@ -171,37 +180,51 @@ describe('agentRouter', () => {
       toggleKnowledgeBase: vi.fn(),
       update: vi.fn(),
     };
-    vi.mocked(AgentModel).mockImplementation(() => agentModelMock);
+    vi.mocked(AgentModel).mockImplementation(function () {
+      return agentModelMock;
+    });
 
     taskModelMock = {
       countTasksBlockingAgentDemotion: vi.fn().mockResolvedValue(0),
     };
-    vi.mocked(TaskModel).mockImplementation(() => taskModelMock);
+    vi.mocked(TaskModel).mockImplementation(function () {
+      return taskModelMock;
+    });
 
     chatGroupModelMock = {
       countGroupsBlockingAgentDemotion: vi.fn().mockResolvedValue(0),
     };
-    vi.mocked(ChatGroupModel).mockImplementation(() => chatGroupModelMock);
+    vi.mocked(ChatGroupModel).mockImplementation(function () {
+      return chatGroupModelMock;
+    });
 
     sessionModelMock = {
       findByIdOrSlug: vi.fn(),
     };
-    vi.mocked(SessionModel).mockImplementation(() => sessionModelMock);
+    vi.mocked(SessionModel).mockImplementation(function () {
+      return sessionModelMock;
+    });
 
     fileModelMock = {
       query: vi.fn(),
     };
-    vi.mocked(FileModel).mockImplementation(() => fileModelMock);
+    vi.mocked(FileModel).mockImplementation(function () {
+      return fileModelMock;
+    });
 
     knowledgeBaseModelMock = {
       query: vi.fn(),
     };
-    vi.mocked(KnowledgeBaseModel).mockImplementation(() => knowledgeBaseModelMock);
+    vi.mocked(KnowledgeBaseModel).mockImplementation(function () {
+      return knowledgeBaseModelMock;
+    });
 
     agentServiceMock = {
       createInbox: vi.fn(),
     };
-    vi.mocked(AgentService).mockImplementation(() => agentServiceMock);
+    vi.mocked(AgentService).mockImplementation(function () {
+      return agentServiceMock;
+    });
 
     mockCtx = {
       userId,
@@ -1027,92 +1050,28 @@ describe('agentRouter', () => {
     });
   });
 
-  describe('resolveAgentRoute', () => {
-    const findBySlugOrIdMock = vi.mocked(AgentShareModel.findBySlugOrId);
-
+  describe('resolveAgentRoute (released-client compatibility)', () => {
     it('treats an id-shaped param as an own agent without touching the database', async () => {
       const caller = agentRouter.createCaller(mockCtx);
       const result = await caller.resolveAgentRoute({ slugOrId: 'agt_abc123' });
 
       expect(result).toEqual({ agentId: 'agt_abc123', kind: 'own' });
       expect(agentModelMock.resolveIdBySlug).not.toHaveBeenCalled();
-      expect(findBySlugOrIdMock).not.toHaveBeenCalled();
     });
 
-    it('resolves an own agent slug to its id, without a share lookup', async () => {
+    it('resolves an own agent slug to its id', async () => {
       agentModelMock.resolveIdBySlug.mockResolvedValue('agt_from_slug');
 
       const caller = agentRouter.createCaller(mockCtx);
       const result = await caller.resolveAgentRoute({ slugOrId: 'my-bot' });
 
       expect(result).toEqual({ agentId: 'agt_from_slug', kind: 'own' });
-      expect(findBySlugOrIdMock).not.toHaveBeenCalled();
     });
 
-    it('falls back to an agent share when no own agent claims the slug', async () => {
+    // The lookup is ownership-scoped, so a stranger's slug is indistinguishable
+    // from a missing one and this resolver cannot become a slug oracle.
+    it('reports not found when no agent of the caller claims the slug', async () => {
       agentModelMock.resolveIdBySlug.mockResolvedValue(null);
-      findBySlugOrIdMock.mockResolvedValue({
-        ownerId: 'someone-else',
-        shareId: 'share-1',
-        visibility: 'link',
-      } as any);
-
-      const caller = agentRouter.createCaller(mockCtx);
-
-      expect(await caller.resolveAgentRoute({ slugOrId: 'shared-bot' })).toEqual({ kind: 'share' });
-    });
-
-    it('sends the creator following their OWN share link to the agent, not the visitor surface', async () => {
-      agentModelMock.resolveIdBySlug.mockResolvedValue(null);
-      findBySlugOrIdMock.mockResolvedValue({
-        agentId: 'agt_mine',
-        ownerId: mockCtx.userId,
-        shareId: 'share-1',
-      } as any);
-
-      const caller = agentRouter.createCaller(mockCtx);
-
-      expect(await caller.resolveAgentRoute({ slugOrId: 'my-share-slug' })).toEqual({
-        agentId: 'agt_mine',
-        kind: 'ownShare',
-      });
-    });
-
-    // Same rule as `assertShareAccess`: a paused share must look exactly like
-    // a missing one to a stranger, or this resolver becomes a slug oracle.
-    it('reports a stranger’s private share as not found', async () => {
-      agentModelMock.resolveIdBySlug.mockResolvedValue(null);
-      findBySlugOrIdMock.mockResolvedValue({
-        ownerId: 'someone-else',
-        shareId: 'share-1',
-        visibility: 'private',
-      } as any);
-
-      const caller = agentRouter.createCaller(mockCtx);
-
-      expect(await caller.resolveAgentRoute({ slugOrId: 'private-bot' })).toEqual({
-        kind: 'notFound',
-      });
-    });
-
-    it('routes a stranger’s link share to the share surface', async () => {
-      agentModelMock.resolveIdBySlug.mockResolvedValue(null);
-      findBySlugOrIdMock.mockResolvedValue({
-        ownerId: 'someone-else',
-        shareId: 'share-1',
-        visibility: 'link',
-      } as any);
-
-      const caller = agentRouter.createCaller(mockCtx);
-
-      expect(await caller.resolveAgentRoute({ slugOrId: 'open-bot' })).toEqual({
-        kind: 'share',
-      });
-    });
-
-    it('reports not found when the slug matches neither an agent nor a share', async () => {
-      agentModelMock.resolveIdBySlug.mockResolvedValue(null);
-      findBySlugOrIdMock.mockResolvedValue(null);
 
       const caller = agentRouter.createCaller(mockCtx);
 

@@ -8,6 +8,8 @@ import * as THREE from 'three';
 import { type QueryTagsResult } from '@/database/models/userMemory';
 import UserAvatar from '@/features/User/UserAvatar';
 
+import { retainActiveConnections } from './retainActiveConnections';
+
 // Configuration constants
 const CONFIG = {
   // Connection line count ratio (actual count = tag count * ratio)
@@ -26,31 +28,6 @@ const CONFIG = {
   // Check interval (seconds)
   UPDATE_INTERVAL: 0.1,
 } as const;
-
-interface ConnectionState {
-  birthTime: number;
-  duration: number;
-  end: THREE.Vector3;
-  id: string;
-  start: THREE.Vector3;
-}
-
-export const updateConnections = (
-  previous: ConnectionState[],
-  time: number,
-  connectionCount: number,
-  createConnection: (time: number) => ConnectionState | null,
-  random: () => number = Math.random,
-): ConnectionState[] => {
-  const active = previous.filter((connection) => time - connection.birthTime < connection.duration);
-
-  if (connectionCount > active.length && random() < CONFIG.SPAWN_PROBABILITY) {
-    const connection = createConnection(time);
-    if (connection) return [...active, connection];
-  }
-
-  return active.length === previous.length ? previous : active;
-};
 
 interface WordProps {
   position: THREE.Vector3;
@@ -292,6 +269,7 @@ const ConnectionLine = memo<ConnectionLineProps>(
   },
 );
 
+// Connection animation updates must not rerender the DOM avatar mounted through Html.
 const CenterAvatar = memo(() => {
   return (
     <Html
@@ -306,8 +284,6 @@ const CenterAvatar = memo(() => {
     </Html>
   );
 });
-
-CenterAvatar.displayName = 'CenterAvatar';
 
 interface CloudProps {
   radius?: number;
@@ -352,6 +328,15 @@ const Cloud = memo<CloudProps>(({ tags, radius = 20 }) => {
     if (wordsData.length < 2) return 0;
     return Math.min(Math.floor(wordsData.length * CONFIG.CONNECTION_RATIO), CONFIG.MAX_CONNECTIONS);
   }, [wordsData.length]);
+
+  // Dynamic connection line state
+  interface ConnectionState {
+    birthTime: number;
+    duration: number;
+    end: THREE.Vector3;
+    id: string;
+    start: THREE.Vector3;
+  }
 
   const [connections, setConnections] = useState<ConnectionState[]>([]);
   const lastUpdateTime = useRef(0);
@@ -427,9 +412,24 @@ const Cloud = memo<CloudProps>(({ tags, radius = 20 }) => {
     if (time - lastUpdateTime.current > CONFIG.UPDATE_INTERVAL) {
       lastUpdateTime.current = time;
 
-      setConnections((previous) =>
-        updateConnections(previous, time, connectionCount, generateRandomConnection),
-      );
+      setConnections((prev) => {
+        // Filter out expired connections
+        const active = retainActiveConnections(prev, time);
+
+        // If there are not enough connections, randomly add new ones
+        const needed = connectionCount - active.length;
+        if (
+          needed > 0 && // Randomly decide whether to add a new connection this time
+          Math.random() < CONFIG.SPAWN_PROBABILITY
+        ) {
+          const newConnection = generateRandomConnection(time);
+          if (newConnection) {
+            return [...active, newConnection];
+          }
+        }
+
+        return active;
+      });
     }
 
     // Auto-rotation animation

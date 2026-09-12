@@ -35,12 +35,14 @@ import {
 import debug from 'debug';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
+import { getTopicAgencyConfig } from '@/helpers/topicExecutionConfig';
 import { aiAgentService } from '@/services/aiAgent';
 import { isCanUseAudio, isCanUseVideo, isCanUseVision } from '@/services/chat/helper';
 import { type ResolvedAgentConfig } from '@/services/chat/mecha';
 import { composeEnabledTools, resolveAgentConfig } from '@/services/chat/mecha';
 import { localFileService } from '@/services/electron/localFileService';
 import { messageService } from '@/services/message';
+import { workService } from '@/services/work';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
@@ -183,6 +185,11 @@ export class StreamingExecutorActionImpl {
       isSubAgent, // Filter out lobe-agent in sub-agent context
       scope, // Pass scope from operation context
     });
+
+    resolvedAgentConfig.agentConfig = {
+      ...resolvedAgentConfig.agentConfig,
+      agencyConfig: getTopicAgencyConfig(resolvedAgentConfig.agentConfig.agencyConfig, topicId),
+    };
 
     // Resolve the effective model/provider, in precedence order:
     // 1. `modelOverride` — forced by the spawn site (see runClientSubAgent); not
@@ -376,6 +383,7 @@ export class StreamingExecutorActionImpl {
         agentId,
         groupId,
         scope,
+        sourceMessageId: baseState.metadata?.sourceMessageId ?? parentMessageId,
         subAgentId: paramSubAgentId,
         threadId,
         topicId,
@@ -911,6 +919,32 @@ export class StreamingExecutorActionImpl {
       state.status,
       stepCount,
     );
+
+    // Registered Works survive message folding; anchor them before refreshing
+    // the message list so its summary query can attach them to the final reply.
+    const finalAssistantId = state.metadata?.workAssistantMessageId;
+    if (state.status === 'done' && typeof finalAssistantId === 'string') {
+      try {
+        const works = await workService.listByRootOperation({
+          limit: 1,
+          rootOperationId: operationId,
+        });
+        if (works.length > 0) {
+          await messageService.updateMessageMetadata(
+            finalAssistantId,
+            {
+              work: {
+                rootOperationId: operationId,
+                userMessageId: state.metadata?.sourceMessageId,
+              },
+            },
+            context,
+          );
+        }
+      } catch (error) {
+        log('[executeClientAgent] Failed to persist Work anchor: %O', error);
+      }
+    }
 
     // Runtime message transports persist through quiet batch mutations. Reconcile
     // once at the run boundary instead of replacing the full list after every write.

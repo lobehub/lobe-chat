@@ -8,7 +8,6 @@ import { type Redis } from 'ioredis';
 
 import { hasNonPersistedMessage } from './messagePersistence';
 import { getAgentRuntimeRedisClient } from './redis';
-import { stripFinalStateInEventData } from './StreamEventManager';
 
 const log = debug('lobe-server:agent-runtime:agent-state-manager');
 
@@ -71,7 +70,7 @@ export class AgentStateManager {
   private readonly STATE_PREFIX = 'agent_runtime_state';
   private readonly STEPS_PREFIX = 'agent_runtime_steps';
   private readonly METADATA_PREFIX = 'agent_runtime_meta';
-  private readonly EVENTS_PREFIX = 'agent_runtime_events';
+  private readonly INTERRUPT_PREFIX = 'agent_runtime_interrupt';
   private readonly DEFAULT_TTL = 2 * 3600; // 2h
 
   constructor() {
@@ -164,6 +163,24 @@ export class AgentStateManager {
   }
 
   /**
+   * Set the interrupt sentinel. The full state blob can run to hundreds of
+   * KB (tool manifests, user memory, …), so the step-abort poller checks
+   * this tiny key instead of re-downloading the blob every interval — the
+   * blob's `status: 'interrupted'` stays the authoritative record.
+   */
+  async markInterrupted(operationId: string): Promise<void> {
+    await this.redis.setex(`${this.INTERRUPT_PREFIX}:${operationId}`, this.DEFAULT_TTL, '1');
+  }
+
+  /**
+   * Check the interrupt sentinel without loading the state blob.
+   */
+  async isInterrupted(operationId: string): Promise<boolean> {
+    const exists = await this.redis.exists(`${this.INTERRUPT_PREFIX}:${operationId}`);
+    return exists === 1;
+  }
+
+  /**
    * Save step execution result
    */
   async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
@@ -193,21 +210,10 @@ export class AgentStateManager {
       pipeline.ltrim(stepsKey, 0, 199); // Keep most recent 200 steps
       pipeline.expire(stepsKey, this.DEFAULT_TTL);
 
-      // Save step event sequence to agent_runtime_events
-      if (stepResult.events && stepResult.events.length > 0) {
-        const eventsKey = `${this.EVENTS_PREFIX}:${operationId}`;
-
-        // A terminal `done` event carries the full `finalState` (incl. messages
-        // + tool-set), so strip those reconstructible fields before persisting —
-        // same chokepoint the stream path uses — otherwise this lpush is a
-        // second route to Upstash's 10MB limit on long topics.
-        pipeline.lpush(
-          eventsKey,
-          JSON.stringify(stepResult.events.map(stripFinalStateInEventData)),
-        );
-        pipeline.ltrim(eventsKey, 0, 199); // Keep events from most recent 200 steps
-        pipeline.expire(eventsKey, this.DEFAULT_TTL);
-      }
+      // `stepResult.events` is intentionally NOT persisted: nothing ever read
+      // the `agent_runtime_events` list back — the same events already reach
+      // clients through the live stream and land durably in the operation
+      // trace, so the list only duplicated every streamed byte into Redis.
 
       // Update operation metadata
       const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
@@ -222,12 +228,7 @@ export class AgentStateManager {
 
       await pipeline.exec();
 
-      log(
-        '[%s:%d] Saved step result with %d events',
-        operationId,
-        stepResult.stepIndex,
-        stepResult.events?.length || 0,
-      );
+      log('[%s:%d] Saved step result', operationId, stepResult.stepIndex);
     } catch (error) {
       console.error('Failed to save step result:', error);
       throw error;
@@ -388,7 +389,7 @@ export class AgentStateManager {
       `${this.STATE_PREFIX}:${operationId}`,
       `${this.STEPS_PREFIX}:${operationId}`,
       `${this.METADATA_PREFIX}:${operationId}`,
-      `${this.EVENTS_PREFIX}:${operationId}`,
+      `${this.INTERRUPT_PREFIX}:${operationId}`,
     ];
 
     try {

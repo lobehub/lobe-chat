@@ -6,8 +6,10 @@ import {
   type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
+  type ReactNode,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UNSAFE_LocationContext } from 'react-router';
@@ -28,6 +30,7 @@ import {
   syncTabRouters,
   type TabRouter,
 } from './tabRouterManager';
+import { useTabPreviewCapture } from './useTabPreviewCapture';
 
 interface TabHostProps {
   createRouter?: (url: string) => TabRouter;
@@ -88,6 +91,44 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+interface TabPaneProps {
+  children: ReactNode;
+  isActive: boolean;
+  isVisible: boolean;
+  onFocusPane: () => void;
+  pane: 'primary' | 'secondary' | 'single';
+  style: CSSProperties;
+  tabId: string;
+}
+
+const TabPane = ({
+  children,
+  isActive,
+  isVisible,
+  onFocusPane,
+  pane,
+  style,
+  tabId,
+}: TabPaneProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useTabPreviewCapture(tabId, isVisible, ref);
+
+  return (
+    <div
+      className={styles.pane}
+      data-focused={isActive ? 'true' : undefined}
+      data-pane={pane}
+      ref={ref}
+      style={style}
+      onFocusCapture={onFocusPane}
+      onPointerDownCapture={onFocusPane}
+    >
+      {children}
+    </div>
+  );
+};
+
 const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
   const { t } = useTranslation('electron');
   const tabs = useElectronStore((s) => s.tabs);
@@ -117,6 +158,7 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
   const liveIds = useMemo(
     () =>
       resolveLiveTabIds(
+        // Persisted tabs are cold until first shown; only retain already-created routers.
         tabs.filter((tab) => visibleTabIds.includes(tab.id) || getTabRouter(tab.id)),
         activeTabId,
         MAX_LIVE_TAB_ROUTERS,
@@ -176,26 +218,26 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
             <Activity key={tab.id} mode={isVisible ? 'visible' : 'hidden'} name={`Tab:${tab.id}`}>
               {/* Activity preserves state but doesn't visually hide the DOM in this React
                 version, so force-hide the inactive slot (mirrors home/_layout). */}
-              <div
-                className={styles.pane}
-                data-focused={tab.id === activeTabId ? 'true' : undefined}
-                data-pane={effectiveSplitView ? (isPrimary ? 'primary' : 'secondary') : 'single'}
+              <TabPane
+                isActive={tab.id === activeTabId}
+                isVisible={isVisible}
+                pane={effectiveSplitView ? (isPrimary ? 'primary' : 'secondary') : 'single'}
                 style={isVisible ? paneStyle : hiddenSlotStyle}
-                onFocusCapture={() => focusTabPane(tab.id)}
-                onPointerDownCapture={() => focusTabPane(tab.id)}
+                tabId={tab.id}
+                onFocusPane={() => focusTabPane(tab.id)}
               >
                 <TabIdContext value={tab.id}>
                   {/* react-router forbids a data <RouterProvider> inside another Router
                       (useInRouterContext invariant). Reset LocationContext so each per-tab
                       router mounts as a root; nothing renders between the reset and the
-                  provider, so no consumer can observe the null gap. */}
+                      provider, so no consumer can observe the null gap. */}
                   <UNSAFE_LocationContext value={null as never}>
                     <RouterStoreProvider router={router} scopeId={tab.id}>
                       <RouterProvider router={router} />
                     </RouterStoreProvider>
                   </UNSAFE_LocationContext>
                 </TabIdContext>
-              </div>
+              </TabPane>
             </Activity>
           );
         })}

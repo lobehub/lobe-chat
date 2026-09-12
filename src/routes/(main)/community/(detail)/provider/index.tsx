@@ -3,6 +3,8 @@
 import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useParams } from '@/libs/router/navigation';
 import { useDiscoverStore } from '@/store/discover';
 
@@ -20,8 +22,12 @@ const ProviderDetailPage = memo<ProviderDetailPageProps>(({ mobile }) => {
   const identifier = decodeURIComponent(params.slug ?? '');
 
   const useProviderDetail = useDiscoverStore((s) => s.useProviderDetail);
-  const { data } = useProviderDetail({ identifier, withReadme: true });
-  if (!data) return <NotFound />;
+  const { data, error, isLoading, mutate } = useProviderDetail({ identifier, withReadme: true });
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+    return <NotFound />;
+  }
 
   return (
     <DetailProvider config={data}>

@@ -21,20 +21,25 @@ import {
 } from '@lobechat/local-file-shell/git';
 
 import { getClaudeCodeQuota, type GetClaudeCodeQuotaParams } from './claudeCodeQuota';
+import { defaultReadExternalAssetForPublish } from './filePreview';
+import { defaultListProjectDirectory } from './projectFileIndex';
 import { prepareSkillDirectory } from './skillDirectory';
 import type {
+  BrowseDirectoryParams,
   DeviceControlDeps,
   EnrollWorkspaceParams,
+  ExternalAssetForPublishParams,
   InitWorkspaceParams,
   ListHeterogeneousAgentModelsParams,
   ListProjectSkillsParams,
   LocalFilePreviewUrlParams,
   PrepareSkillDirectoryParams,
+  ProjectDirectoryListParams,
   ProjectFileIndexParams,
   ProjectFileSearchParams,
   UnenrollWorkspaceParams,
 } from './types';
-import { initWorkspace, listProjectSkills, statPath } from './workspace';
+import { browseDirectory, initWorkspace, listProjectSkills, statPath } from './workspace';
 
 /**
  * Every method name the device-control RPC dispatcher understands. Mirrors the
@@ -50,10 +55,13 @@ export const DEVICE_RPC_METHODS = [
   'getClaudeCodeQuota',
   'listProjectSkills',
   'prepareSkillDirectory',
+  'browseDirectory',
   'statPath',
   'getProjectFileIndex',
+  'listProjectDirectory',
   'searchProjectFiles',
   'getLocalFilePreview',
+  'readExternalAssetForPublish',
   'moveLocalFiles',
   'renameLocalFile',
   'writeLocalFile',
@@ -134,6 +142,10 @@ export const executeDeviceRpc = async (
       return prepareSkillDirectory(params as PrepareSkillDirectoryParams, deps);
     }
 
+    case 'browseDirectory': {
+      return browseDirectory(params as BrowseDirectoryParams);
+    }
+
     case 'statPath': {
       return statPath(params as { path: string });
     }
@@ -142,12 +154,22 @@ export const executeDeviceRpc = async (
       return deps.getProjectFileIndex(params as ProjectFileIndexParams);
     }
 
+    case 'listProjectDirectory': {
+      return defaultListProjectDirectory(params as ProjectDirectoryListParams);
+    }
+
     case 'searchProjectFiles': {
       return deps.searchProjectFiles(params as ProjectFileSearchParams);
     }
 
     case 'getLocalFilePreview': {
       return deps.getLocalFilePreview(params as LocalFilePreviewUrlParams);
+    }
+
+    case 'readExternalAssetForPublish': {
+      return (deps.readExternalAssetForPublish ?? defaultReadExternalAssetForPublish)(
+        params as ExternalAssetForPublishParams,
+      );
     }
 
     case 'moveLocalFiles': {

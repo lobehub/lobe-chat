@@ -11,10 +11,12 @@ import { TASK_STATUS_VISUALS } from '@/components/ExecutionStatus';
 import RunningGlyph from '@/features/Home/components/RunningGlyph';
 import { shinyTextStyles } from '@/styles';
 
+import type { GoalGraphNodeKind } from '../../Experiments/model';
 import { coordinatorNodeTitleKey } from '../coordinatorCopy';
 import type { GoalNodeView } from '../goalGraphViewModel';
 import { KIND_COLOR, KIND_ICON } from '../shared';
 import { useElapsed } from '../useElapsed';
+import { experimentStatusVisual } from './experimentStatus';
 
 /**
  * A graph card: leading kind icon on a tinted square, title plus a one-line
@@ -26,6 +28,8 @@ import { useElapsed } from '../useElapsed';
 export interface GraphNodeData extends Record<string, unknown> {
   dim: boolean;
   isGate: boolean;
+  kind?: GoalGraphNodeKind;
+  memberCount?: number;
   running: boolean;
   selected: boolean;
   stale: boolean;
@@ -193,6 +197,11 @@ const useStateChip = (data: GraphNodeData): StateChip | null => {
   const { isGate, running, stale, view } = data;
   const { node } = view;
 
+  if (node.kind === 'experiment')
+    return {
+      ...experimentStatusVisual(node.status),
+      text: t(`goalExperiment.status.${node.status}`),
+    };
   if (isGate)
     return {
       color: TASK_STATUS_VISUALS.paused.color,
@@ -257,7 +266,8 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
   const { dim, isGate, running, selected, stale, subtitle, view } = nodeData;
   const { node } = view;
   const chip = useStateChip(nodeData);
-  const palette = KIND_COLOR[node.kind];
+  const kind = nodeData.kind ?? node.kind;
+  const palette = KIND_COLOR[kind];
   const isTask = node.kind === 'task';
   const attempts = view.attempts.length;
   // Coordinator-authored node titles are English; recognized ones localize.
@@ -284,6 +294,11 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
             clock riding right behind it (review: bottom placements read poorly). */}
         {(chip || view.humanTouches.length > 0) && (
           <div className={styles.statusRow}>
+            {kind === 'experiment' && (
+              <span className={styles.chipText} style={{ color: palette.line }}>
+                {t('goalExperiment.number', { number: view.seq })}
+              </span>
+            )}
             {chip && (
               <Flexbox horizontal align={'center'} gap={5}>
                 {chip.icon ? (
@@ -315,7 +330,7 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
         )}
         <div className={styles.head}>
           <div className={styles.glyph} style={{ background: palette.soft, color: palette.line }}>
-            <Icon icon={KIND_ICON[node.kind]} size={16} />
+            <Icon icon={KIND_ICON[kind]} size={16} />
           </div>
           <Flexbox gap={2} style={{ flex: 1, minWidth: 0 }}>
             <span className={styles.title}>
@@ -324,6 +339,12 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
             {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
           </Flexbox>
         </div>
+        {node.kind === 'experiment' && (
+          <div className={styles.metrics}>
+            {t('goalExperiment.members', { count: nodeData.memberCount ?? 0 })} ·{' '}
+            {t('goalExperiment.enter')}
+          </div>
+        )}
         {isTask && (
           <div className={styles.metrics}>
             <Tooltip title={t('goalProcess.node.attemptsTooltip', { count: attempts })}>
@@ -332,13 +353,13 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
                 {attempts}
               </span>
             </Tooltip>
-            {view.artifactCount > 0 && (
+            {view.artifacts.length > 0 && (
               <Tooltip
-                title={t('goalProcess.node.artifactsTooltip', { count: view.artifactCount })}
+                title={t('goalProcess.node.artifactsTooltip', { count: view.artifacts.length })}
               >
                 <span className={styles.metric}>
                   <Icon icon={FileBox} size={13} />
-                  {view.artifactCount}
+                  {view.artifacts.length}
                 </span>
               </Tooltip>
             )}

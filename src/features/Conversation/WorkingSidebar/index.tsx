@@ -1,4 +1,5 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
+import { getWorkingDirEffectivePath } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { Flexbox, Icon, type IconProps } from '@lobehub/ui';
 import { ActionIcon, type DropdownItem, DropdownMenu, Skeleton } from '@lobehub/ui/base-ui';
@@ -22,6 +23,7 @@ import {
   SquareTerminalIcon,
   XIcon,
 } from 'lucide-react';
+import { AnimatePresence, m } from 'motion/react';
 import {
   Activity,
   lazy,
@@ -48,17 +50,19 @@ import RightPanel from '@/features/RightPanel';
 import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
+import { getWorkingDirectoryPathString } from '@/helpers/workingDirectoryPath';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
-import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
+import { useTopicAgencyConfig } from '@/hooks/useTopicAgencyConfig';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, portalThreadSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, portalThreadSelectors, topicSelectors } from '@/store/chat/selectors';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -67,6 +71,7 @@ import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget 
 import Files from './Files';
 import { sidebarWidthBudget } from './fitsBesidePortal';
 import Overview from './Overview';
+import OverviewSlot from './OverviewSlot';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
 import WorkspaceTab from './WorkspaceTab';
@@ -120,10 +125,10 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   overviewPanel: css`
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
-    align-self: flex-start;
 
-    width: min(340px, calc(100% - 32px));
     max-height: calc(100% - 32px);
     margin: 16px;
     border: 1px solid ${cssVar.colorBorderSecondary};
@@ -131,6 +136,18 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgContainer};
     box-shadow: ${cssVar.boxShadowTertiary};
+  `,
+  overviewSlot: css`
+    overflow: hidden;
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-start;
+
+    height: 100%;
+
+    @container agent-chat-layout (min-width: 1200px) {
+      padding-block-start: 44px;
+    }
   `,
   overviewTitle: css`
     overflow: hidden;
@@ -170,6 +187,13 @@ const styles = createStaticStyles(({ css }) => ({
 const REVIEW_TREE_STORAGE_KEY = 'lobechat-review-tree';
 const OPEN_TABS_STORAGE_KEY = 'lobechat-working-sidebar-open-tabs-v1';
 const PINNED_TABS_STORAGE_KEY = 'lobechat-working-sidebar-pinned-tabs-v1';
+const OVERVIEW_PANEL_WIDTH = 340;
+const OVERVIEW_SLOT_TRANSITION = { bounce: 0.1, duration: 0.4, type: 'spring' } as const;
+const OVERVIEW_CARD_TRANSITION = {
+  opacity: { bounce: 0, duration: 0.2, type: 'spring' },
+  scale: { bounce: 0.15, duration: 0.45, type: 'spring' },
+} as const;
+const OVERVIEW_CARD_EXIT_TRANSITION = { bounce: 0, duration: 0.15, type: 'spring' } as const;
 const MIN_PANEL_WIDTH = 300;
 const MAX_PANEL_WIDTH = 1200;
 // Two-pane Review (diff list + file-tree rail) is cramped below this.
@@ -304,12 +328,37 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const workingDirectory = useEffectiveWorkingDirectory(activeAgentId);
   // Effective target device for git ops — bound device for remote agents, this
   // machine otherwise. Resolved the same way WorkingDirectoryPicker / GitStatus do.
-  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(activeAgentId);
+  const { agencyConfig, workspaceScoped } = useTopicAgencyConfig(activeAgentId);
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const targetDeviceId = resolveTargetDeviceId(agencyConfig, currentDeviceId, {
     workspaceScoped,
   });
   const repoType = useRepoType(workingDirectory, targetDeviceId);
+  // The SOURCE repo, not the checkout — same fallback chain as
+  // WorkingDirectorySection: a persisted-worktree topic has no matching
+  // `workingDirs` entry, and committing the worktree path as sourcePath would
+  // rewrite the topic's repo source (see that component's comment).
+  const topicWorkingDirectoryConfig = useChatStore(
+    (s) => topicSelectors.currentTopicMetadata(s)?.workingDirectoryConfig,
+  );
+  const deviceDirs = useDeviceStore(deviceSelectors.getDeviceWorkingDirs(targetDeviceId));
+  const sourceWorkingDirectory = useMemo(() => {
+    if (!workingDirectory) return undefined;
+    const currentEntry = deviceDirs.find(
+      (entry) =>
+        (getWorkingDirectoryPathString(entry.git?.activeWorktree) ??
+          getWorkingDirectoryPathString(entry.path)) === workingDirectory,
+    );
+    const persistedConfig =
+      getWorkingDirEffectivePath(topicWorkingDirectoryConfig) === workingDirectory
+        ? topicWorkingDirectoryConfig
+        : undefined;
+    return (
+      getWorkingDirectoryPathString(currentEntry?.path) ??
+      getWorkingDirectoryPathString(persistedConfig?.path) ??
+      workingDirectory
+    );
+  }, [deviceDirs, topicWorkingDirectoryConfig, workingDirectory]);
   const deviceRoutingAvailable = useIsGatewayModeEnabled(activeAgentId);
   const effectiveTarget = resolveExecutionTarget(agencyConfig, {
     clientExecutionAvailable: isDesktop,
@@ -882,45 +931,53 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     toggleTerminalPanel,
   ]);
 
-  const overviewPanel = showWorkingOverview && overviewFits && (
-    <Flexbox className={styles.overviewPanel} role={'complementary'}>
-      <Flexbox
-        horizontal
-        align={'center'}
-        className={styles.overviewHeader}
-        gap={8}
-        justify={'space-between'}
-      >
-        <span className={styles.overviewTitle}>{t('workingPanel.overview.title')}</span>
-        <ActionIcon
-          aria-label={t('workingPanel.tabs.closePanel')}
-          icon={XIcon}
-          size={DESKTOP_HEADER_ICON_SMALL_SIZE}
-          title={t('workingPanel.tabs.closePanel')}
-          onClick={() => updateSystemStatus({ showWorkingOverview: false })}
-        />
-      </Flexbox>
-      <Flexbox className={styles.overviewBody}>
-        {!contentReady && <SkeletonList paddingBlock={8} paddingInline={8} rows={6} />}
-        {contentReady && (
-          <Overview
-            active
-            deviceId={remoteDeviceId}
-            environmentAvailable={filesystemEnvironmentAvailable}
-            repoType={environmentRepoType}
-            workingDirectory={environmentWorkingDirectory}
-            onOpenTab={openTab}
-          />
+  const overviewWidth = Math.min(OVERVIEW_PANEL_WIDTH, widthBudget - 32);
+  const overviewPanel = (
+    <OverviewSlot>
+      <AnimatePresence initial={false}>
+        {showWorkingOverview && overviewFits && (
+          <m.div
+            animate={{ width: overviewWidth + 32 }}
+            className={styles.overviewSlot}
+            exit={{ width: 0 }}
+            initial={{ width: 0 }}
+            transition={OVERVIEW_SLOT_TRANSITION}
+          >
+            <m.div
+              animate={{ opacity: 1, scale: 1 }}
+              className={styles.overviewPanel}
+              exit={{ opacity: 0, scale: 0.8, transition: OVERVIEW_CARD_EXIT_TRANSITION }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              role={'complementary'}
+              style={{ transformOrigin: 'top right', width: overviewWidth }}
+              transition={OVERVIEW_CARD_TRANSITION}
+            >
+              <Flexbox horizontal align={'center'} className={styles.overviewHeader} gap={8}>
+                <span className={styles.overviewTitle}>{t('workingPanel.overview.title')}</span>
+              </Flexbox>
+              <Flexbox className={styles.overviewBody}>
+                <Overview
+                  active
+                  agentId={activeAgentId}
+                  deviceId={remoteDeviceId}
+                  environmentAvailable={filesystemEnvironmentAvailable}
+                  repoType={environmentRepoType}
+                  sourcePath={sourceWorkingDirectory}
+                  workingDirectory={environmentWorkingDirectory}
+                  onOpenTab={openTab}
+                />
+              </Flexbox>
+            </m.div>
+          </m.div>
         )}
-      </Flexbox>
-    </Flexbox>
+      </AnimatePresence>
+    </OverviewSlot>
   );
 
   return (
     <>
       {overviewPanel}
       <RightPanel
-        stableLayout
         collapseThreshold={320}
         defaultWidth={renderWidth}
         expand={Boolean(showRightPanel) && fits}
@@ -930,8 +987,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
         width={renderWidth}
         onSizeChange={(size) => {
           if (!size?.width) return;
-          // DraggablePanel emits width as a `"420px"` string on drag-stop; parse it so
-          // the controlled width actually updates (otherwise the panel snaps back).
+          // The size type allows a string on either axis, so narrow before storing.
           const w = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
           if (!Number.isFinite(w) || w === storedWidth) return;
           updateSystemStatus({ workingSidebarWidth: w });

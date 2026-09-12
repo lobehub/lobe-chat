@@ -50,6 +50,25 @@ export const resolveBlockedTools =
       );
     }
 
+    // Unresolvable names never made it into the parent assistant's `tools`,
+    // because resolution produced nothing to persist. Put them there before the
+    // rows exist: every step rebuilds `state.messages` from the DB, and
+    // conversation-flow only collects a tool row whose parent lists the call, so
+    // an unadvertised rejection is dropped on the way back in and the model
+    // never learns its tool name was wrong.
+    if (payload.unresolvedToolNames) {
+      try {
+        await transports.messages.update(payload.parentMessageId, {
+          tools: payload.toolsCalling,
+        });
+      } catch (error) {
+        await publishPersistError(host, error);
+        throw error;
+      }
+
+      newState.unresolvedToolFeedbackRounds = (state.unresolvedToolFeedbackRounds ?? 0) + 1;
+    }
+
     for (const toolPayload of payload.toolsCalling) {
       const result: ToolRunResult = {
         content: blockedContent,

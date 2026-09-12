@@ -5,6 +5,7 @@ import { type FC } from 'react';
 import { memo, Suspense } from 'react';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { delayed } from '@/components/Skeleton/Delayed';
 import ProfileSkeleton from '@/components/Skeleton/Profile';
 import AgentBuilder from '@/features/AgentBuilder';
 import ResourceConfigAccessGate from '@/features/ResourcePermission/ResourceConfigAccessGate';
@@ -103,7 +104,7 @@ const AgentProfile: FC = () => {
   const { aid } = useParams<{ aid: string }>('aid');
 
   return (
-    <Suspense fallback={<ProfileSkeleton />}>
+    <Suspense fallback={delayed(<ProfileSkeleton />)}>
       <ResourceConfigAccessGate
         loading={<ProfileSkeleton />}
         redirectPath={`/agent/${aid ?? ''}`}

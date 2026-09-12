@@ -12,12 +12,13 @@ import {
   agentSignalReviewManifest,
   agentSignalSkillManagementManifest,
 } from '@lobechat/builtin-tool-agent-signal';
+import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { BriefManifest } from '@lobechat/builtin-tool-brief';
 import { BrowserManifest } from '@lobechat/builtin-tool-browser';
 import { CalculatorManifest } from '@lobechat/builtin-tool-calculator/manifest';
 import { CloudSandboxManifest } from '@lobechat/builtin-tool-cloud-sandbox';
 import { CredsManifest } from '@lobechat/builtin-tool-creds';
-import { GoalManifest } from '@lobechat/builtin-tool-goal';
+import { GoalManifest, GoalSupervisorManifest } from '@lobechat/builtin-tool-goal';
 import { GroupAgentBuilderManifest } from '@lobechat/builtin-tool-group-agent-builder';
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
 import { ImageGenerationManifest } from '@lobechat/builtin-tool-image-generation';
@@ -355,6 +356,13 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
   {
     discoverable: isDesktop,
     hidden: true,
+    identifier: AuvManifest.identifier,
+    manifest: AuvManifest,
+    type: 'builtin',
+  },
+  {
+    discoverable: isDesktop,
+    hidden: true,
     identifier: LocalSystemManifest.identifier,
     manifest: LocalSystemManifest,
     resolveManifest: resolveLocalSystemManifest,
@@ -475,6 +483,13 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
     hidden: true,
     identifier: UserInteractionManifest.identifier,
     manifest: UserInteractionManifest,
+    type: 'builtin',
+  },
+  {
+    discoverable: false,
+    hidden: true,
+    identifier: GoalSupervisorManifest.identifier,
+    manifest: GoalSupervisorManifest,
     type: 'builtin',
   },
   {

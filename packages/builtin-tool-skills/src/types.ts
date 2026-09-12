@@ -54,6 +54,8 @@ export interface ExecScriptState {
    */
   exitCode?: number;
   outputFiles?: CommandResult['outputFiles'];
+  /** The sandbox workspace was recreated before this command. */
+  sessionExpiredAndRecreated?: boolean;
   /**
    * Shell handle for a still-running command, pollable via
    * `local-system.getCommandOutput`.
@@ -88,6 +90,8 @@ export interface CommandResult {
     stderr?: { path: string; size?: number; truncated?: boolean };
     stdout?: { path: string; size?: number; truncated?: boolean };
   };
+  /** The sandbox workspace was recreated before this command. */
+  sessionExpiredAndRecreated?: boolean;
   /**
    * Shell handle for a still-running command, pollable via
    * `local-system.getCommandOutput`.

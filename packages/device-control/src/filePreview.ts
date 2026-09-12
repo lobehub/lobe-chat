@@ -2,9 +2,19 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
+import { WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES } from '@lobechat/html-artifact/limits';
 import { getMimeType, resolveMimeType } from '@lobechat/utils/mimeType';
 
-import type { LocalFilePreview, LocalFilePreviewResult, LocalFilePreviewUrlParams } from './types';
+import type {
+  ExternalAssetForPublishParams,
+  ExternalAssetForPublishResult,
+  LocalFilePreview,
+  LocalFilePreviewResult,
+  LocalFilePreviewUrlParams,
+} from './types';
+
+/** Device-side ceiling for a single publish asset, shared with the Electron main process. */
+export const EXTERNAL_PUBLISH_ASSET_MAX_BYTES = WORKSPACE_HTML_ARTIFACT_MAX_FILE_BYTES;
 
 const TEXT_PREVIEW_MIME_TYPES = new Set([
   'application/graphql',
@@ -145,6 +155,36 @@ export const defaultGetLocalFilePreview = async (
     }
 
     return { preview: serializePreviewFile(buffer, contentType), success: true };
+  } catch (error) {
+    return { error: (error as Error).message, success: false };
+  }
+};
+
+export const defaultReadExternalAssetForPublish = async ({
+  path: filePath,
+  workingDirectory,
+}: ExternalAssetForPublishParams): Promise<ExternalAssetForPublishResult> => {
+  try {
+    if (!workingDirectory) return { error: 'Missing working directory', success: false };
+    const expandedPath = expandHomePath(filePath);
+    const resolvedPath = path.isAbsolute(expandedPath)
+      ? expandedPath
+      : path.resolve(expandHomePath(workingDirectory), expandedPath);
+    const realFile = await realpath(resolvedPath);
+    const stats = await stat(realFile);
+    if (!stats.isFile()) return { error: 'Path is not a file', success: false };
+    // Reject by size before reading: the renderer's limit check only runs after
+    // the whole file has been read and base64-encoded into a gateway response.
+    if (stats.size > EXTERNAL_PUBLISH_ASSET_MAX_BYTES) {
+      return { error: 'File is too large to publish', success: false };
+    }
+
+    const buffer = await readFile(realFile);
+    return {
+      base64: buffer.toString('base64'),
+      contentType: await resolveMimeType(realFile, buffer),
+      success: true,
+    };
   } catch (error) {
     return { error: (error as Error).message, success: false };
   }

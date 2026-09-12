@@ -11,7 +11,7 @@ import { useAgentStore } from '@/store/agent';
 import { resolveWorkspaceSurface, useWorkspaceSurface } from '../useWorkspaceSurface';
 
 // The EFFECTIVE config (shared row + this member's per-user device override),
-// as `useEffectiveAgencyConfig` would resolve it. The raw shared row lives in
+// as `useTopicAgencyConfig` would resolve it. The raw shared row lives in
 // the real agent store so store-derived selectors see what they see in prod.
 const effective = vi.hoisted(() => ({
   agencyConfig: undefined as LobeAgentAgencyConfig | undefined,
@@ -28,8 +28,8 @@ vi.mock('@/helpers/gatewayMode', () => ({
   useIsGatewayModeEnabled: () => true,
 }));
 
-vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
-  useEffectiveAgencyConfig: () => ({
+vi.mock('@/hooks/useTopicAgencyConfig', () => ({
+  useTopicAgencyConfig: () => ({
     agencyConfig: effective.agencyConfig,
     workspaceScoped: effective.workspaceScoped,
   }),
@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 describe('useWorkspaceSurface (desktop)', () => {
-  // Regression for LOBE-13771: a workspace member's "Local device" pick lives in
+  // Regression: a workspace member's "Local device" pick lives in
   // their per-user override, never in the shared row. The surface must follow
   // the effective target — a shared-row-only runtime mode can never be `local`
   // for a workspace agent, which hid the directory picker.

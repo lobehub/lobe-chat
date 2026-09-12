@@ -2,11 +2,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => ({})),
+  getServerDB: vi.fn(function () {
+    return {};
+  }),
 }));
 
 vi.mock('@/business/server/trpc-middlewares/rbacPermission', () => ({
-  withScopedPermission: vi.fn(() => (opts: any) => opts.next({ ctx: opts.ctx })),
+  withScopedPermission: vi.fn(function () {
+    return (opts: any) => opts.next({ ctx: opts.ctx });
+  }),
 }));
 
 vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async () => {
@@ -19,28 +23,41 @@ const mockModel = {
   delete: vi.fn(),
   ensure: vi.fn(),
   findById: vi.fn(),
+  findByKeys: vi.fn(),
   findBySubject: vi.fn(),
+  firstPointsByMetricIds: vi.fn(),
   latestPoint: vi.fn(),
   listPoints: vi.fn(),
+  recentPoints: vi.fn(),
   update: vi.fn(),
 };
 
 vi.mock('@/database/models/metric', () => ({
-  MetricModel: vi.fn(() => mockModel),
+  MetricModel: vi.fn(function () {
+    return mockModel;
+  }),
 }));
 
 const mockGoalFindById = vi.fn();
 vi.mock('@/database/models/goal', () => ({
-  GoalModel: vi.fn(() => ({ findById: mockGoalFindById })),
+  GoalModel: vi.fn(function () {
+    return { findById: mockGoalFindById };
+  }),
 }));
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn(() => ({ existsById: vi.fn().mockResolvedValue(false) })),
+  AgentModel: vi.fn(function () {
+    return { existsById: vi.fn().mockResolvedValue(false) };
+  }),
 }));
 vi.mock('@/database/models/project', () => ({
-  ProjectModel: vi.fn(() => ({ findById: vi.fn().mockResolvedValue(null) })),
+  ProjectModel: vi.fn(function () {
+    return { findById: vi.fn().mockResolvedValue(null) };
+  }),
 }));
 vi.mock('@/database/models/task', () => ({
-  TaskModel: vi.fn(() => ({ findById: vi.fn().mockResolvedValue(null) })),
+  TaskModel: vi.fn(function () {
+    return { findById: vi.fn().mockResolvedValue(null) };
+  }),
 }));
 
 const { metricRouter } = await import('../metric');
@@ -143,13 +160,55 @@ describe('metricRouter', () => {
       ['listPoints', () => caller.listPoints({ id: 'mtr_1' })],
       ['addPoint', () => caller.addPoint({ id: 'mtr_1', value: 1 })],
       ['listSeries', () => caller.listSeries({ subjectId: 'goal_1', subjectType: 'goal' })],
+      [
+        'listSeriesWithPoints',
+        () =>
+          caller.listSeriesWithPoints({ keys: ['k'], subjectId: 'goal_1', subjectType: 'goal' }),
+      ],
     ])('%s refuses a series whose subject the caller cannot see', async (_name, run) => {
       mockGoalFindById.mockResolvedValue(undefined);
 
       await expect(run()).rejects.toMatchObject({ code: 'NOT_FOUND' });
       expect(mockModel.findBySubject).not.toHaveBeenCalled();
+      expect(mockModel.findByKeys).not.toHaveBeenCalled();
       expect(mockModel.listPoints).not.toHaveBeenCalled();
       expect(mockModel.addPoint).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('listSeriesWithPoints', () => {
+    it('bundles named series, their recent windows and true first points in one call', async () => {
+      // The per-series alternative amplifies to 1+N RPCs on a polled surface;
+      // this is the whole read in one request, restricted to declared keys.
+      mockModel.findByKeys.mockResolvedValue([
+        { config: null, id: 'mtr_1', key: 'followers', kind: 'gauge', title: '粉丝', unit: null },
+      ]);
+      mockModel.firstPointsByMetricIds.mockResolvedValue(
+        new Map([['mtr_1', { metricId: 'mtr_1', value: 1200 }]]),
+      );
+      mockModel.recentPoints.mockResolvedValue([{ value: 8800 }]);
+
+      const result = await caller.listSeriesWithPoints({
+        keys: ['followers'],
+        subjectId: 'goal_1',
+        subjectType: 'goal',
+      });
+
+      expect(mockModel.findByKeys).toHaveBeenCalledWith('goal', 'goal_1', ['followers']);
+      expect(result.data).toEqual([
+        expect.objectContaining({
+          firstPoint: expect.objectContaining({ value: 1200 }),
+          key: 'followers',
+          points: [{ value: 8800 }],
+        }),
+      ]);
+    });
+
+    it('rejects an empty key list instead of scanning every series', async () => {
+      await expect(
+        caller.listSeriesWithPoints({ keys: [], subjectId: 'goal_1', subjectType: 'goal' }),
+      ).rejects.toThrow();
+      expect(mockModel.findByKeys).not.toHaveBeenCalled();
     });
   });
 

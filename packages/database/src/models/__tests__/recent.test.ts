@@ -686,7 +686,9 @@ describe('RecentModel', () => {
         await serverDB
           .insert(workspaces)
           .values({ id: workspaceId, name: 'ws', primaryOwnerId: userId, slug: workspaceId });
-        await serverDB.insert(agents).values({ id: 'agent-ws', userId, slug: 'inbox' });
+        await serverDB
+          .insert(agents)
+          .values({ id: 'agent-ws', userId, slug: 'inbox', workspaceId });
         await serverDB.insert(topics).values([
           {
             agentId: 'agent-ws',
@@ -720,6 +722,129 @@ describe('RecentModel', () => {
         expect(result.map((r) => r.id)).toEqual(['topic-ws-mine']);
         expect(result[0].userId).toBe(userId);
       });
+
+      it.each(['agent', 'group'] as const)(
+        'never exposes personal or foreign-workspace %s conversations in the team feed',
+        async (kind) => {
+          const foreignWorkspaceId = 'recent-foreign-workspace';
+          await serverDB.insert(workspaces).values({
+            id: foreignWorkspaceId,
+            name: 'Other workspace',
+            primaryOwnerId: otherUserId,
+            slug: foreignWorkspaceId,
+          });
+          const resources = [
+            { id: 'personal-resource', userId: otherUserId, workspaceId: null },
+            {
+              id: 'foreign-resource',
+              userId: otherUserId,
+              workspaceId: foreignWorkspaceId,
+            },
+          ];
+          // Personal scope must be enforced even if visibility is public (the
+          // default on legacy/personal rows). It is independent of private.
+          if (kind === 'agent') await serverDB.insert(agents).values(resources);
+          else await serverDB.insert(chatGroups).values(resources);
+
+          const conversations = resources.flatMap((resource) =>
+            [resource.workspaceId, workspaceId].map((topicWorkspaceId, index) => ({
+              agentId: kind === 'agent' ? resource.id : null,
+              description: 'Confidential conversation summary',
+              groupId: kind === 'group' ? resource.id : null,
+              id: `${resource.id}-topic-${index}`,
+              title: 'Confidential conversation title',
+              updatedAt: minutesAgo(-10),
+              userId: otherUserId,
+              // Cover both correctly scoped personal topics and legacy rows
+              // stamped with the team workspace despite a personal parent.
+              workspaceId: topicWorkspaceId,
+            })),
+          );
+          await serverDB.insert(topics).values(conversations);
+          await serverDB.insert(messages).values(
+            conversations.map((topic) => ({
+              content: 'Confidential assistant reply',
+              role: 'assistant' as const,
+              topicId: topic.id,
+              userId: otherUserId,
+              workspaceId: topic.workspaceId,
+            })),
+          );
+
+          for (const viewerId of [userId, otherUserId]) {
+            const viewer = new RecentModel(serverDB, viewerId, workspaceId);
+            const result = await viewer.queryRecent(2, ['topic'], true, false);
+            expect(result.map((row) => row.id)).toEqual(['topic-ws-mine', 'topic-ws-other']);
+            expect(result.every((row) => row.description === null)).toBe(true);
+            expect(result.every((row) => row.lastAssistantMessage === null)).toBe(true);
+          }
+
+          const personalModel = new RecentModel(serverDB, otherUserId);
+          const personal = await personalModel.queryRecent(2, ['topic'], true);
+          expect(personal.map((row) => row.id)).toEqual(['personal-resource-topic-0']);
+          expect(personal[0].lastAssistantMessage).toBe('Confidential assistant reply');
+        },
+      );
+
+      it.each(['agent', 'group'] as const)(
+        'filters private %s topics by resource owner before pagination and preview loading',
+        async (kind) => {
+          const resources = [
+            { id: 'recent-private-mine', userId, visibility: 'private' as const, workspaceId },
+            {
+              id: 'recent-private-other',
+              userId: otherUserId,
+              visibility: 'private' as const,
+              workspaceId,
+            },
+            {
+              id: 'recent-public-other',
+              userId: otherUserId,
+              visibility: 'public' as const,
+              workspaceId,
+            },
+          ];
+          if (kind === 'agent') await serverDB.insert(agents).values(resources);
+          else await serverDB.insert(chatGroups).values(resources);
+
+          await serverDB.insert(topics).values(
+            resources.map((resource, index) => ({
+              agentId: kind === 'agent' ? resource.id : null,
+              groupId: kind === 'group' ? resource.id : null,
+              id: `topic-${resource.id}`,
+              title: resource.id,
+              updatedAt: minutesAgo(-10 + index),
+              // Access follows the resource owner, not the topic author.
+              userId,
+              workspaceId,
+            })),
+          );
+          await serverDB.insert(messages).values({
+            content: 'Private reply',
+            role: 'assistant',
+            topicId: 'topic-recent-private-other',
+            userId: otherUserId,
+            workspaceId,
+          });
+
+          for (const mineOnly of [false, true]) {
+            const result = await workspaceModel.queryRecent(2, ['topic'], true, mineOnly);
+            expect(result.map((row) => row.id)).toEqual([
+              'topic-recent-private-mine',
+              'topic-recent-public-other',
+            ]);
+            expect(result.every((row) => row.lastAssistantMessage === null)).toBe(true);
+          }
+
+          const otherModel = new RecentModel(serverDB, otherUserId, workspaceId);
+          const result = await otherModel.queryRecent(2, ['topic'], true);
+          expect(result.map((row) => row.id)).toEqual([
+            'topic-recent-private-other',
+            'topic-recent-public-other',
+          ]);
+          expect(result[0].lastAssistantMessage).toBe('Private reply');
+        },
+      );
     });
   });
 });

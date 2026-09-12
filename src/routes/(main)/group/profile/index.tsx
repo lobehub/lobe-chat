@@ -4,6 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { type FC } from 'react';
 import { memo, Suspense } from 'react';
 
+import { delayed } from '@/components/Skeleton/Delayed';
 import ProfileSkeleton from '@/components/Skeleton/Profile';
 import ResourceConfigAccessGate from '@/features/ResourcePermission/ResourceConfigAccessGate';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -55,7 +56,7 @@ const GroupProfile: FC = () => {
   const { gid } = useParams<{ gid: string }>('gid');
 
   return (
-    <Suspense fallback={<ProfileSkeleton variant={'group'} />}>
+    <Suspense fallback={delayed(<ProfileSkeleton variant={'group'} />)}>
       <ResourceConfigAccessGate
         loading={<ProfileSkeleton variant={'group'} />}
         redirectPath={`/group/${gid ?? ''}`}

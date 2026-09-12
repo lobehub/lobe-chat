@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { openAgentSettingsModal } from '@/routes/(main)/agent/profile/features/AgentSettings';
 import { useAgentStore } from '@/store/agent';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 
@@ -17,7 +16,9 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Ope
       return () => navigate(`/agent/${activeAgentId}/settings?showMobileWorkspace=true`);
 
     return () => {
-      openAgentSettingsModal();
+      void import('@/routes/(main)/agent/profile/features/AgentSettings').then((m) =>
+        m.openAgentSettingsModal(),
+      );
     };
   }, [activeAgentId, navigate, tab, isMobile]);
 };

@@ -131,6 +131,7 @@ const updateSchema = z.object({
   priority: z.number().min(0).max(4).optional(),
   schedulePattern: z.string().nullish(),
   scheduleTimezone: z.string().nullish(),
+  status: z.enum(TASK_STATUSES).optional(),
 });
 
 const listSchema = z.object({
@@ -335,6 +336,37 @@ async function assertAssigneeAgentBelongsToUser(
     }
     throw error;
   }
+}
+
+/**
+ * Who an activity row is attributed to.
+ *
+ * A server-side caller (the gateway task runtime) carries the agent in
+ * `ctx.actingAgentId`, which no HTTP request can set — that is the trusted
+ * path and always wins. The client-first runtime (gateway off, self-hosted)
+ * has no such channel: its task tools are ordinary TRPC calls from the
+ * browser, so it names the agent in the payload — the same contract
+ * `addComment.authorAgentId` already uses — and the claim is honoured only
+ * for an agent the caller can use. That bounds any misattribution to the
+ * caller's own agents rather than letting a request pin a change on anyone.
+ */
+async function resolveActivityActor(
+  ctx: {
+    actingAgentId?: string | null;
+    serverDB: LobeChatDatabase;
+    userId: string;
+    workspaceId?: string | null;
+  },
+  claimedAgentId?: string,
+): Promise<{ agentId?: string | null; userId: string }> {
+  if (ctx.actingAgentId) return { agentId: ctx.actingAgentId, userId: ctx.userId };
+  if (claimedAgentId) {
+    await assertAgentUsableBy(ctx.serverDB, claimedAgentId, {
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId ?? undefined,
+    });
+  }
+  return { agentId: claimedAgentId ?? null, userId: ctx.userId };
 }
 
 async function resolveSafeParentTaskId(
@@ -1414,94 +1446,115 @@ export const taskRouter = router({
       }
     }),
 
-  update: taskProcedureWrite.input(idInput.merge(updateSchema)).mutation(async ({ input, ctx }) => {
-    const { id, parentTaskId, ...data } = input;
-    try {
-      const model = ctx.taskModel;
-      await assertAssigneeAgentBelongsToUser(
-        ctx.serverDB,
-        { userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
-        data.assigneeAgentId,
-      );
-      const resolved = await resolveOrThrow(model, id);
+  update: taskProcedureWrite
+    .input(idInput.merge(updateSchema).extend({ actorAgentId: z.string().optional() }))
+    .mutation(async ({ input, ctx }) => {
+      const { actorAgentId, id, parentTaskId, status, ...data } = input;
+      try {
+        const model = ctx.taskModel;
+        const actor = await resolveActivityActor(ctx, actorAgentId);
+        await assertAssigneeAgentBelongsToUser(
+          ctx.serverDB,
+          { userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+          data.assigneeAgentId,
+        );
+        const resolved = await resolveOrThrow(model, id);
 
-      // Collaborative edit lock: reject writes to a workspace task another member
-      // is actively editing. Inert until a client acquires the lock.
-      if (ctx.workspaceId) {
-        const blockedBy = await ctx.editLockService.getBlockingHolder('task', resolved.id);
-        if (blockedBy) {
-          throw new TRPCError({
-            cause: { data: { code: 'DocumentLocked' } },
-            code: 'CONFLICT',
-            message: 'Task is being edited by another user',
-          });
+        // Collaborative edit lock: reject writes to a workspace task another member
+        // is actively editing. Inert until a client acquires the lock.
+        if (ctx.workspaceId) {
+          const blockedBy = await ctx.editLockService.getBlockingHolder('task', resolved.id);
+          if (blockedBy) {
+            throw new TRPCError({
+              cause: { data: { code: 'DocumentLocked' } },
+              code: 'CONFLICT',
+              message: 'Task is being edited by another user',
+            });
+          }
         }
+
+        // Reject changing the assignee to a private agent on a public task —
+        // a public task must never be assigned to a private agent.
+        // `undefined` means "no change"; `null` clears the assignee and is
+        // always safe.
+        if (data.assigneeAgentId) {
+          const agentVisibility = await ctx.agentModel.getAgentVisibility(data.assigneeAgentId);
+          ctx.taskService.assertAgentVisibilityCompat(resolved.visibility, agentVisibility);
+        }
+
+        // A private task can only be assigned to its creator — the assignee
+        // would otherwise never see the task. `null` clears and is always safe.
+        ctx.taskService.assertAssigneeUserVisibilityCompat(
+          resolved.visibility,
+          data.assigneeUserId,
+          resolved.createdByUserId,
+        );
+
+        const resolvedParentTaskId =
+          parentTaskId === undefined
+            ? undefined
+            : await resolveSafeParentTaskId(model, resolved.id, parentTaskId);
+
+        // Reparenting a public task under a private one breaks the parent
+        // visibility invariant — a subtask cannot be more public than its
+        // parent (otherwise workspace members would still see the child while
+        // its new parent is hidden). `undefined` means "no change"; `null`
+        // clears the parent and is always safe.
+        if (resolvedParentTaskId) {
+          const newParent = await model.findById(resolvedParentTaskId);
+          ctx.taskService.assertParentVisibilityCompat(resolved.visibility, newParent?.visibility);
+        }
+
+        const updateData =
+          parentTaskId === undefined ? data : { ...data, parentTaskId: resolvedParentTaskId };
+        // `instruction` is the markdown source of truth while `editorData` is its
+        // rich-text mirror. Text-only callers (for example the editTask builtin)
+        // cannot produce Lexical JSON, so discard the stale mirror and let the
+        // editor rebuild from markdown. Callers that provide both fields keep
+        // their explicit editor state.
+        const normalizedUpdateData =
+          updateData.instruction !== undefined && updateData.editorData === undefined
+            ? { ...updateData, editorData: null }
+            : updateData;
+        // Agent attribution comes from `resolveActivityActor` above. The
+        // assignment activity is written inside this update's own transaction
+        // (see `TaskModel.updateWithLog`), so a concurrent reassignment cannot
+        // interleave between reading the old assignee and recording it.
+        const task = status
+          ? await ctx.serverDB.transaction(async (tx) => {
+              const taskService = new TaskService(tx, ctx.userId, ctx.workspaceId ?? undefined);
+              const updated = await taskService.updateTaskWithAssigneeLock(
+                resolved.id,
+                normalizedUpdateData,
+                actor,
+              );
+              if (!updated) return null;
+
+              const result = await taskService.updateStatus({ id: resolved.id, status }, actor);
+              return result.task;
+            })
+          : await ctx.taskService.updateTaskWithAssigneeLock(
+              resolved.id,
+              normalizedUpdateData,
+              actor,
+            );
+        if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
+        // Only an actual assignee change notifies — re-saving the same assignee
+        // stays silent (self-assignment is filtered inside the helper).
+        if (task.assigneeUserId !== resolved.assigneeUserId) {
+          notifyAssignedBestEffort(ctx, task);
+        }
+        return { data: task, message: 'Task updated', success: true };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error('[task:update]', error);
+        throw new TRPCError({
+          cause: error,
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update task',
+        });
       }
-
-      // Reject changing the assignee to a private agent on a public task —
-      // a public task must never be assigned to a private agent.
-      // `undefined` means "no change"; `null` clears the assignee and is
-      // always safe.
-      if (data.assigneeAgentId) {
-        const agentVisibility = await ctx.agentModel.getAgentVisibility(data.assigneeAgentId);
-        ctx.taskService.assertAgentVisibilityCompat(resolved.visibility, agentVisibility);
-      }
-
-      // A private task can only be assigned to its creator — the assignee
-      // would otherwise never see the task. `null` clears and is always safe.
-      ctx.taskService.assertAssigneeUserVisibilityCompat(
-        resolved.visibility,
-        data.assigneeUserId,
-        resolved.createdByUserId,
-      );
-
-      const resolvedParentTaskId =
-        parentTaskId === undefined
-          ? undefined
-          : await resolveSafeParentTaskId(model, resolved.id, parentTaskId);
-
-      // Reparenting a public task under a private one breaks the parent
-      // visibility invariant — a subtask cannot be more public than its
-      // parent (otherwise workspace members would still see the child while
-      // its new parent is hidden). `undefined` means "no change"; `null`
-      // clears the parent and is always safe.
-      if (resolvedParentTaskId) {
-        const newParent = await model.findById(resolvedParentTaskId);
-        ctx.taskService.assertParentVisibilityCompat(resolved.visibility, newParent?.visibility);
-      }
-
-      const updateData =
-        parentTaskId === undefined ? data : { ...data, parentTaskId: resolvedParentTaskId };
-      // `instruction` is the markdown source of truth while `editorData` is its
-      // rich-text mirror. Text-only callers (for example the editTask builtin)
-      // cannot produce Lexical JSON, so discard the stale mirror and let the
-      // editor rebuild from markdown. Callers that provide both fields keep
-      // their explicit editor state.
-      const normalizedUpdateData =
-        updateData.instruction !== undefined && updateData.editorData === undefined
-          ? { ...updateData, editorData: null }
-          : updateData;
-      const task = await ctx.taskService.updateTaskWithAssigneeLock(
-        resolved.id,
-        normalizedUpdateData,
-      );
-      if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
-      // Only an actual assignee change notifies — re-saving the same assignee
-      // stays silent (self-assignment is filtered inside the helper).
-      if (task.assigneeUserId !== resolved.assigneeUserId) {
-        notifyAssignedBestEffort(ctx, task);
-      }
-      return { data: task, message: 'Task updated', success: true };
-    } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      console.error('[task:update]', error);
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to update task',
-      });
-    }
-  }),
+    }),
 
   updateVisibility: taskProcedureWrite
     .input(idInput.merge(z.object({ visibility: z.enum(['private', 'public']) })))
@@ -1705,14 +1758,19 @@ export const taskRouter = router({
   updateStatus: taskProcedureWrite
     .input(
       z.object({
+        actorAgentId: z.string().optional(),
         error: z.string().optional(),
         id: z.string(),
         status: z.enum(TASK_STATUSES),
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const { actorAgentId, ...statusInput } = input;
       try {
-        const result = await ctx.taskService.updateStatus(input);
+        // A person (or their agent) changed it: record who. System
+        // transitions call the service without an actor and stay silent.
+        const actor = await resolveActivityActor(ctx, actorAgentId);
+        const result = await ctx.taskService.updateStatus(statusInput, actor);
         const { task, unlocked, paused, checkpointTriggered, allSubtasksDone, parentTaskId } =
           result;
         return {
@@ -1731,6 +1789,31 @@ export const taskRouter = router({
           cause: error,
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to update status',
+        });
+      }
+    }),
+
+  updateStatusCascade: taskProcedureWrite
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.enum(['canceled', 'completed']),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const result = await ctx.taskService.updateStatusCascade(
+          input,
+          await resolveActivityActor(ctx),
+        );
+        return { data: result, message: `Task family ${input.status}`, success: true };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error('[task:updateStatusCascade]', error);
+        throw new TRPCError({
+          cause: error,
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update task family status',
         });
       }
     }),

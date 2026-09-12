@@ -3,6 +3,8 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useCommunityWorkspaceProfile } from '@/business/client/hooks/useCommunityWorkspaceProfile';
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { type MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
@@ -33,7 +35,7 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
     useMarketAuth();
 
   const useUserProfile = useDiscoverStore((s) => s.useUserProfile);
-  const { data, mutate } = useUserProfile({ username });
+  const { data, error, isLoading, mutate } = useUserProfile({ username });
 
   // When inside a workspace scope, /community/user/:slug and /community/org/:slug are not the
   // right surface — redirect to the dedicated workspace community page.
@@ -120,6 +122,10 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
       user,
     };
   }, [data, handleEditProfile, handleStatusChange, isOwner, mobile]);
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+  }
   if (!contextConfig) return <NotFound />;
 
   return (

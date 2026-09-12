@@ -9,6 +9,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useParams } from '@/libs/router/navigation';
 import { runSelectors, useEvalStore } from '@/store/eval';
 
@@ -81,7 +82,7 @@ const RunDetail = memo(() => {
 
   const pollingConfig = { refreshInterval: isActive ? POLLING_INTERVAL : 0 };
 
-  const { error, mutate } = useFetchRunDetail(runId!, pollingConfig);
+  const { error, isLoading, mutate } = useFetchRunDetail(runId!, pollingConfig);
   useFetchRunResults(runId!, pollingConfig);
 
   const hasResults = !!runResults?.results?.length;
@@ -112,6 +113,8 @@ const RunDetail = memo(() => {
       error={error}
       errorVariant={'page'}
       isEmpty={!runDetail}
+      isLoading={isLoading}
+      loading={<RouteLoading />}
       onRetry={() => mutate()}
     >
       {runDetail && (

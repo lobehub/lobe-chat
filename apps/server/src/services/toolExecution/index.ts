@@ -14,6 +14,7 @@ import {
   getConnectorToolPermission,
 } from '@/libs/mcp/connectorPermissionCheck';
 import { deviceGateway } from '@/server/services/deviceGateway';
+import { resolveDeviceDispatchAuthorizationFailure } from '@/server/services/deviceGateway/dispatchAuthorization';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 import { contentBlocksToString } from '@/server/services/mcp/contentProcessor';
 import {
@@ -152,7 +153,7 @@ export class ToolExecutionService {
         return {
           ...data,
           content: truncatedContent,
-          error: normalizeExecutionError(data.error, data.content),
+          error: normalizeExecutionError(data.errorData ?? data.error, data.content),
           executionTime,
         };
       }
@@ -355,6 +356,21 @@ export class ToolExecutionService {
   ): Promise<ToolExecutionResult> {
     const { identifier, apiName, arguments: args } = payload;
 
+    const authorizationError = await resolveDeviceDispatchAuthorizationFailure(
+      context.serverDB,
+      context.userId!,
+      target.deviceId,
+      target.workspaceId,
+    );
+    if (authorizationError) {
+      return {
+        content: 'The workspace device is no longer registered or visible for this run.',
+        error: 'DEVICE_NOT_FOUND',
+        errorData: authorizationError,
+        success: false,
+      };
+    }
+
     log(
       'Executing %s MCP tool via device: %s:%s (device=%s, workspace=%s)',
       mcpParams.type,
@@ -406,10 +422,11 @@ export class ToolExecutionService {
     if (!result.success) {
       return {
         content: result.content,
-        error: {
+        error: result.errorData ?? {
           code: 'MCP_DEVICE_EXECUTION_ERROR',
           message: result.error || result.content,
         },
+        errorData: result.errorData,
         success: false,
       };
     }

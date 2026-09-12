@@ -1,9 +1,10 @@
 'use client';
 
-import { useAnalytics } from '@lobehub/analytics/react';
 import { memo, useEffect } from 'react';
 
 import { routerSelectors, useRouterStore } from '@/store/router';
+
+import { useAnalytics } from '@/libs/analytics/client';
 
 const HomePageTracker = memo(() => {
   const { analytics } = useAnalytics();

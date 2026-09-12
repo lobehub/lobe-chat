@@ -1,4 +1,3 @@
-import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { type SharedAgentData, type SharedTopicData } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
@@ -23,22 +22,14 @@ export const shareRouter = router({
    * link → any authed viewer) gate runs on the resolved row via the shared
    * `assertShareAccess` helper, so no second lookup is needed.
    *
-   * Gated in two layers matching `_helpers/agentShareFeatureGate.ts`:
-   * `ENABLE_BUSINESS_FEATURES` applies unconditionally (even to the OWNER
-   * previewing their own share — an OSS deployment has no agent-share surface
-   * at all), while the `enableAgentShare` grayscale flag only ever applies to
-   * OTHER visitors, never the owner.
+   * Deployment support applies to every viewer, including owner previews.
+   * The rollout flag only gates publishing, never access to an existing share.
    */
   getSharedAgent: authedProcedure
     .use(serverDatabase)
     .input(z.object({ slugOrId: z.string().trim().min(1) }))
     .query(async ({ input, ctx }): Promise<SharedAgentData> => {
-      if (!ENABLE_BUSINESS_FEATURES) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Agent sharing is not available on this deployment',
-        });
-      }
+      assertAgentShareVisitorEnabled();
 
       const share = await AgentShareModel.findBySlugOrId(ctx.serverDB, input.slugOrId);
 
@@ -51,11 +42,6 @@ export const shareRouter = router({
       const isOwner = share.ownerId === ctx.userId;
 
       if (!isOwner) {
-        // The owner previewing their own (possibly unpublished) share must
-        // always be able to see it — the grayscale rollout only narrows OTHER
-        // visitors' admission.
-        await assertAgentShareVisitorEnabled(ctx.userId);
-
         // Owner previews are not counted: userViewCount tracks visitor page
         // views (PV, not deduplicated visitors). The counter is analytics
         // only, so it is best-effort: a failed increment must never turn an

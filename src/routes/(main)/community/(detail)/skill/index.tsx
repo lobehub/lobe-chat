@@ -3,6 +3,8 @@
 import { Flexbox } from '@lobehub/ui';
 import { memo, useCallback } from 'react';
 
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { SkillDetailView, SkillNavKey } from '@/features/CommunitySkillDetail';
 import { useQuery } from '@/hooks/useQuery';
 import { useParams, useSearchParams } from '@/libs/router/navigation';
@@ -48,8 +50,12 @@ const SkillDetailPage = memo<SkillDetailPageProps>(({ mobile }) => {
   );
 
   const useSkillDetail = useDiscoverStore((s) => s.useFetchSkillDetail);
-  const { data } = useSkillDetail({ identifier, version });
-  if (!data) return <NotFound />;
+  const { data, error, isLoading, mutate } = useSkillDetail({ identifier, version });
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+    return <NotFound />;
+  }
 
   return (
     <Flexbox data-testid="skill-detail-content" gap={16}>

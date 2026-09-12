@@ -36,11 +36,13 @@ const Body = memo(() => {
       <Accordion
         gap={8}
         defaultExpandedKeys={[
+          WorkspaceSettingsGroupKey.Account,
           WorkspaceSettingsGroupKey.General,
           WorkspaceSettingsGroupKey.Subscription,
           WorkspaceSettingsGroupKey.Agent,
-          WorkspaceSettingsGroupKey.Developer,
           WorkspaceSettingsGroupKey.Admin,
+          WorkspaceSettingsGroupKey.System,
+          WorkspaceSettingsGroupKey.Developer,
         ]}
       >
         {groups.map((group) => (

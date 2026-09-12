@@ -111,9 +111,7 @@ export class ElectronRemoteServerActionImpl {
 
   useDataSyncConfig = (): SWRResponse => {
     return useSWR<DataSyncConfig>(
-      // Desktop-only IPC: on web there is no electronAPI, and under a
-      // suspense-mode SWRConfig a rejected fetch throws into the route
-      // boundary instead of staying in `error` — so never fetch off-desktop.
+      // Desktop-only IPC: on web there is no electronAPI, so never fetch off-desktop.
       isDesktop ? electronKeys.remoteServerConfig() : null,
       async () => {
         try {
@@ -141,7 +139,6 @@ export class ElectronRemoteServerActionImpl {
 
           this.#set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
         },
-        suspense: false,
       },
     );
   };

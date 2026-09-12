@@ -5,6 +5,7 @@ import { memo, useLayoutEffect } from 'react';
 import NotFound from '@/components/404';
 import AsyncError from '@/components/AsyncError';
 import NProgress from '@/components/NProgress';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import Container from '@/features/ResourceLibrary/Container';
 import ResourceManager from '@/features/ResourceManager';
 import { useInitFileCheck } from '@/features/ResourceManager/hooks/useInitFileCheck';
@@ -54,7 +55,9 @@ const MainContent = memo(() => {
       />
     );
 
-  if (!isLoading && !data) return <NotFound />;
+  if (isLoading) return <RouteLoading />;
+
+  if (!data) return <NotFound />;
 
   return <ResourceManager />;
 });
