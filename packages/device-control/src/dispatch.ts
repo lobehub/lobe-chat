@@ -22,6 +22,7 @@ import {
 
 import { getClaudeCodeQuota, type GetClaudeCodeQuotaParams } from './claudeCodeQuota';
 import { defaultReadExternalAssetForPublish } from './filePreview';
+import { defaultListProjectDirectory } from './projectFileIndex';
 import { prepareSkillDirectory } from './skillDirectory';
 import type {
   BrowseDirectoryParams,
@@ -33,6 +34,7 @@ import type {
   ListProjectSkillsParams,
   LocalFilePreviewUrlParams,
   PrepareSkillDirectoryParams,
+  ProjectDirectoryListParams,
   ProjectFileIndexParams,
   ProjectFileSearchParams,
   UnenrollWorkspaceParams,
@@ -56,6 +58,7 @@ export const DEVICE_RPC_METHODS = [
   'browseDirectory',
   'statPath',
   'getProjectFileIndex',
+  'listProjectDirectory',
   'searchProjectFiles',
   'getLocalFilePreview',
   'readExternalAssetForPublish',
@@ -149,6 +152,10 @@ export const executeDeviceRpc = async (
 
     case 'getProjectFileIndex': {
       return deps.getProjectFileIndex(params as ProjectFileIndexParams);
+    }
+
+    case 'listProjectDirectory': {
+      return defaultListProjectDirectory(params as ProjectDirectoryListParams);
     }
 
     case 'searchProjectFiles': {
