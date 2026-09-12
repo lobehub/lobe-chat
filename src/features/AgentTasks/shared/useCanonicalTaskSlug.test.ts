@@ -90,6 +90,18 @@ describe('useCanonicalTaskSlug', () => {
     expect(mocks.navigate).toHaveBeenCalledWith('/task/T-1', { replace: true });
   });
 
+  it('collapses the URL once the title is cleared', () => {
+    // Regression: an empty title is a resolved state, not an unloaded one —
+    // clearing the input persists `name: ''`. Treating the two alike pinned the
+    // URL to the slug of the title that had just been deleted.
+    mocks.params = { slug: 'ship-the-thing' };
+    setTaskName('');
+
+    renderHook(() => useCanonicalTaskSlug('T-1'));
+
+    expect(mocks.navigate).toHaveBeenCalledWith('/task/T-1', { replace: true });
+  });
+
   it('leaves the URL alone while the title is still unknown', () => {
     mocks.params = { slug: 'an-incoming-slug' };
 

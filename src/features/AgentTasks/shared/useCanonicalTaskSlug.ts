@@ -32,12 +32,17 @@ export const useCanonicalTaskSlug = (taskId?: string) => {
   const { aid, slug, workspaceSlug } = useActiveRouteParams<CanonicalTaskSlugParams>();
   const { hash, search } = useLocation();
   const navigate = useWorkspaceAwareNavigate();
+  // Loaded-ness and the title are read separately: an empty title is a real,
+  // resolved state (clearing the input persists `name: ''`), and folding it in
+  // with "not loaded yet" would pin the URL to the slug of the old title.
+  const isLoaded = useTaskStore((s) => (taskId ? Boolean(s.taskDetailMap[taskId]) : false));
   const name = useTaskStore((s) => (taskId ? s.taskDetailMap[taskId]?.name : undefined));
 
   useEffect(() => {
     // Before the detail resolves the title is unknown — leaving the URL alone
-    // beats stripping a slug the incoming link already carried.
-    if (!taskId || !name) return;
+    // beats stripping a slug the incoming link already carried. Once it has
+    // resolved an empty title is honoured, collapsing the URL to `/task/:id`.
+    if (!taskId || !isLoaded) return;
 
     const expected = taskTitleSlug(name);
     if ((slug ?? '') === expected) return;
@@ -50,5 +55,5 @@ export const useCanonicalTaskSlug = (taskId?: string) => {
       escape: true,
       replace: true,
     });
-  }, [aid, hash, name, navigate, search, slug, taskId, workspaceSlug]);
+  }, [aid, hash, isLoaded, name, navigate, search, slug, taskId, workspaceSlug]);
 };
