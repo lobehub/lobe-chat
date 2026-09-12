@@ -581,17 +581,12 @@ describe('runStep inline step loop', () => {
       success: true,
     });
 
-    const { ctx, getCaptures } = buildContext({
-      body: { ...validBody, humanInput: 'yes' },
-    });
+    const { ctx, getCaptures } = buildContext({ body: validBody });
     await runStep(ctx);
 
     const params = mockExecuteStep.mock.calls[0][0];
     expect(params.stepIndex).toBe(7);
     expect(params.context).toEqual(parked.context);
-    // A resumed run is a later iteration of a dead loop, so the delivery's
-    // one-shot payload must not ride along.
-    expect(params.humanInput).toBeUndefined();
     expect(getCaptures()[0].body).toMatchObject({ stepIndex: 7 });
   });
 
@@ -629,6 +624,43 @@ describe('runStep inline step loop', () => {
     expect(res.status).toBe(500);
     expect(mockExecuteStep).not.toHaveBeenCalled();
     errorSpy.mockRestore();
+  });
+
+  it('never redirects a purpose-carrying delivery to a parked envelope', async () => {
+    // The group-member timeout watchdog is scheduled on the member operation at
+    // stepIndex 0, so any envelope would be "ahead" of it. Redirecting it would
+    // drop the watchdog payload AND delete the running loop's recovery pointer.
+    // Same reasoning for approvals, resumes and barrier probes.
+    const purposeful = [
+      { approvedToolCall: { id: 'call-1' } },
+      { finishAfterAsyncTool: true },
+      { groupMemberTimeout: { memberOperationId: 'op-member' } },
+      { humanInput: 'yes' },
+      { rejectAndContinue: true },
+      { rejectionReason: 'nope' },
+      { resumeAsyncTool: true },
+      { toolMessageId: 'msg-1' },
+      { verifyAsyncToolBarrier: true },
+    ];
+    mockLoadInlineResume.mockResolvedValue(continuationFor(7));
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: doneState,
+      success: true,
+    });
+
+    for (const payload of purposeful) {
+      mockExecuteStep.mockClear();
+      mockClearInlineResume.mockClear();
+
+      const { ctx } = buildContext({ body: { ...validBody, ...payload } });
+      await runStep(ctx);
+
+      expect(mockExecuteStep.mock.calls[0][0]).toMatchObject({ stepIndex: 2, ...payload });
+      // The envelope belongs to whoever is actually looping; this delivery must
+      // not clear it on the way past.
+      expect(mockClearInlineResume).not.toHaveBeenCalled();
+    }
   });
 
   it('ignores a parked envelope that is not ahead of the delivered step', async () => {

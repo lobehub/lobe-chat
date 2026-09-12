@@ -180,6 +180,24 @@ export async function runStep(c: Context): Promise<Response> {
     // resumed from one, or a step handed back a continuation (which parks one).
     let touchedEnvelope = false;
 
+    // Only a plain "run the next step" delivery may be redirected to a parked
+    // envelope. Anything carrying its own purpose — an approval, a resume, a
+    // watchdog probe — has to run as itself: redirecting it would drop that
+    // payload and silently turn it into an ordinary step. The group-member
+    // timeout is the sharp edge, because it is always scheduled at stepIndex 0
+    // on the member operation, so any envelope at all would swallow it and take
+    // the running loop's recovery pointer down with it.
+    const isPlainStepDelivery =
+      humanInput === undefined &&
+      approvedToolCall === undefined &&
+      rejectionReason === undefined &&
+      toolMessageId === undefined &&
+      !rejectAndContinue &&
+      !resumeAsyncTool &&
+      !finishAfterAsyncTool &&
+      !verifyAsyncToolBarrier &&
+      !groupMemberTimeout;
+
     // Deliberately not gated on `inlineEnabled`: switching the flag off while
     // operations are mid-loop must not strand the ones that already have an
     // envelope parked and nothing queued behind them.
@@ -189,7 +207,9 @@ export async function runStep(c: Context): Promise<Response> {
     // ahead with the delivered index instead would hit the `stepCount >
     // stepIndex` stale-delivery guard, get ACKed, and strand the operation with
     // nothing queued behind it.
-    const parked = await coordinator.loadInlineResume<AgentStepContinuation>(operationId);
+    const parked = isPlainStepDelivery
+      ? await coordinator.loadInlineResume<AgentStepContinuation>(operationId)
+      : null;
     const resumeFrom = parked && parked.stepIndex > stepIndex ? parked : undefined;
     if (resumeFrom) {
       log(
