@@ -2,9 +2,37 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const SAMPLE_RATE = 24_000;
-const DURATION = 0.8;
 const PEAK = 0.72;
 const FADE_OUT = 0.012;
+const ROOT = 698.5;
+
+interface Partial {
+  amp: number;
+  decay: number;
+  ratio: number;
+}
+
+interface Note {
+  gain: number;
+  ratio: number;
+  start: number;
+}
+
+interface Instrument {
+  attack?: number;
+  body: Partial[];
+  mallet?: { cutoff: number; decay: number; gain: number };
+  shimmer?: {
+    attack: number;
+    delay: number;
+    gain: number;
+    mul: number;
+    partials: Partial[];
+    tail: number;
+  };
+  tail: number;
+  transpose: number;
+}
 
 /** Rosewood marimba bar: the second partial is tuned to the 4th harmonic, not a whole ratio. */
 const WOOD: Partial[] = [
@@ -19,16 +47,73 @@ const GLASS: Partial[] = [
   { amp: 0.12, decay: 8, ratio: 3.02 },
 ];
 
-const NOTES = [
-  { freq: 698.5, gain: 1, seed: 7, start: 0 },
-  { freq: 1046.5, gain: 0.88, seed: 11, start: 0.09 },
+const MARIMBA: Instrument = {
+  body: WOOD,
+  mallet: { cutoff: 1800, decay: 260, gain: 0.14 },
+  shimmer: { attack: 0.02, delay: 0.02, gain: 0.14, mul: 2, partials: GLASS, tail: 0.95 },
+  tail: 0.7,
+  transpose: 1,
+};
+
+const GLASS_BELL: Instrument = {
+  attack: 0.005,
+  body: [
+    { amp: 1, decay: 2.8, ratio: 1 },
+    { amp: 0.35, decay: 4.5, ratio: 2.01 },
+    { amp: 0.15, decay: 7, ratio: 3.02 },
+    { amp: 0.07, decay: 10, ratio: 4.2 },
+  ],
+  mallet: { cutoff: 4000, decay: 400, gain: 0.05 },
+  tail: 1.4,
+  transpose: 1.5,
+};
+
+const SOFT_TONE: Instrument = {
+  attack: 0.012,
+  body: [
+    { amp: 1, decay: 5, ratio: 1 },
+    { amp: 0.08, decay: 8, ratio: 2 },
+  ],
+  tail: 0.8,
+  transpose: 1,
+};
+
+/** Hard-mallet xylophone bar, quint-tuned (1 : 3 : 6), pitched a fifth below the others. */
+const XYLOPHONE: Instrument = {
+  body: [
+    { amp: 1, decay: 16, ratio: 1 },
+    { amp: 0.4, decay: 30, ratio: 3 },
+    { amp: 0.15, decay: 45, ratio: 6.02 },
+  ],
+  mallet: { cutoff: 3500, decay: 300, gain: 0.22 },
+  tail: 0.45,
+  transpose: 1,
+};
+
+const RISE: Note[] = [
+  { gain: 1, ratio: 1, start: 0 },
+  { gain: 0.88, ratio: 1046.5 / 698.5, start: 0.09 },
+];
+const KNOCK: Note[] = [
+  { gain: 1, ratio: 1, start: 0 },
+  { gain: 0.8, ratio: 1, start: 0.13 },
+];
+const ARPEGGIO: Note[] = [
+  { gain: 1, ratio: 1, start: 0 },
+  { gain: 0.9, ratio: 1.26, start: 0.09 },
+  { gain: 0.85, ratio: 1.498, start: 0.18 },
+];
+const DOORBELL: Note[] = [
+  { gain: 1, ratio: 1.26, start: 0 },
+  { gain: 0.9, ratio: 1, start: 0.28 },
 ];
 
-interface Partial {
-  amp: number;
-  decay: number;
-  ratio: number;
-}
+const SOUNDS: Record<string, { duration: number; instrument: Instrument; notes: Note[] }> = {
+  'chat-complete': { duration: 0.8, instrument: MARIMBA, notes: RISE },
+  'glass-bell': { duration: 1.5, instrument: GLASS_BELL, notes: KNOCK },
+  'soft-tone': { duration: 1, instrument: SOFT_TONE, notes: ARPEGGIO },
+  'xylophone': { duration: 0.75, instrument: XYLOPHONE, notes: DOORBELL },
+};
 
 const mulberry32 = (seed: number) => () => {
   seed = (seed + 0x6d_2b_79_f5) | 0;
@@ -68,37 +153,55 @@ const addVoice = (
   }
 };
 
-const addMallet = (buffer: Float64Array, start: number, gain: number, seed: number) => {
+const addMallet = (
+  buffer: Float64Array,
+  start: number,
+  gain: number,
+  seed: number,
+  { cutoff, decay }: { cutoff: number; decay: number },
+) => {
   const random = mulberry32(seed);
   const offset = Math.round(SAMPLE_RATE * start);
-  const coefficient = 1800 / SAMPLE_RATE;
+  const coefficient = cutoff / SAMPLE_RATE;
   let lowpass = 0;
   for (let i = 0; i < Math.round(SAMPLE_RATE * 0.02); i += 1) {
     lowpass += coefficient * (random() - lowpass);
-    buffer[offset + i] += gain * lowpass * Math.exp((-260 * i) / SAMPLE_RATE);
+    buffer[offset + i] += gain * lowpass * Math.exp((-decay * i) / SAMPLE_RATE);
   }
 };
 
-const render = () => {
-  const buffer = new Float64Array(Math.round(SAMPLE_RATE * DURATION));
+const render = (instrument: Instrument, notes: Note[], duration: number) => {
+  const buffer = new Float64Array(Math.round(SAMPLE_RATE * duration));
 
-  for (const { freq, gain, seed, start } of NOTES) {
-    addVoice(buffer, { freq, gain, partials: WOOD, start, tail: 0.7 });
-    addMallet(buffer, start, 0.14 * gain, seed);
+  for (const [index, { gain, ratio, start }] of notes.entries()) {
+    const freq = ROOT * ratio * instrument.transpose;
     addVoice(buffer, {
-      attack: 0.02,
-      freq: freq * 2,
-      gain: 0.14 * gain,
-      partials: GLASS,
-      start: start + 0.02,
-      tail: 0.95,
+      attack: instrument.attack,
+      freq,
+      gain,
+      partials: instrument.body,
+      start,
+      tail: instrument.tail,
     });
+    if (instrument.mallet)
+      addMallet(buffer, start, instrument.mallet.gain * gain, 7 + 4 * index, instrument.mallet);
+    if (instrument.shimmer) {
+      const { attack, delay, gain: shimmerGain, mul, partials, tail } = instrument.shimmer;
+      addVoice(buffer, {
+        attack,
+        freq: freq * mul,
+        gain: shimmerGain * gain,
+        partials,
+        start: start + delay,
+        tail,
+      });
+    }
   }
 
   let peak = 0;
   for (const value of buffer) peak = Math.max(peak, Math.abs(value));
 
-  // The glass tail is still audible at the cut; the fade only kills the step, a longer
+  // The tail is still audible at the cut; the fade only kills the step, a longer
   // taper would swallow the bloom that gives the chime its depth.
   const fadeLength = Math.round(SAMPLE_RATE * FADE_OUT);
   const fadeStart = buffer.length - fadeLength;
@@ -159,15 +262,17 @@ const toWav = (samples: Int16Array) => {
   return Buffer.concat([header, data]);
 };
 
-const samples = render();
-const outputs: [string, Buffer][] = [
-  ['public/sounds/chat-complete.wav', toWav(samples)],
-  ['apps/desktop/resources/sounds/lobehub-complete.aiff', toAiff(samples)],
-];
+const outputs: [string, Buffer][] = [];
+for (const [name, { duration, instrument, notes }] of Object.entries(SOUNDS)) {
+  const samples = render(instrument, notes, duration);
+  outputs.push([`public/sounds/${name}.wav`, toWav(samples)]);
+  if (name === 'chat-complete')
+    outputs.push(['apps/desktop/resources/sounds/lobehub-complete.aiff', toAiff(samples)]);
+}
 
 for (const [file, content] of outputs) {
   const output = path.resolve(process.cwd(), file);
   mkdirSync(path.dirname(output), { recursive: true });
   writeFileSync(output, content);
-  console.log(`Wrote ${output} (${DURATION}s, ${SAMPLE_RATE}Hz mono)`);
+  console.log(`Wrote ${output} (${content.length} bytes, ${SAMPLE_RATE}Hz mono)`);
 }
