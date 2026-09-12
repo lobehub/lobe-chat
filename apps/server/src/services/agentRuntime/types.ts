@@ -397,7 +397,7 @@ export interface OperationCreationParams {
   agentConfig?: any;
   /**
    * Multi-agent group (or bot-conversation fallback) context, resolved once at
-   * op creation and forwarded into `state.metadata.agentGroup`. The per-step
+   * op creation and forwarded into `state.world.group`. The per-step
    * context engine reads it back to inject the participant roster (with real
    * `agt_*` IDs) — no per-step DB lookup, mirroring `botContext`.
    */
