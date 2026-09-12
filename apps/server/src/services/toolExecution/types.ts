@@ -332,7 +332,7 @@ export interface ToolExecutionContext {
    * Workspace ID that scopes ownership for any model/service the runtime
    * instantiates. When unset the runtime falls back to personal mode
    * (`workspace_id IS NULL`). Threaded from the chat/task router through
-   * `state.metadata.workspaceId` so tool side-effects (createBrief, pinTask,
+   * `state.origin.workspaceId` so tool side-effects (createBrief, pinTask,
    * etc.) land in the same workspace the request originated from.
    */
   workspaceId?: string;

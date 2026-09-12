@@ -339,8 +339,8 @@ export class ServerLLMTransport implements LLMTransport {
       agentShareVisitorIds: input.state.metadata?.agentShareVisitor
         ? toAgentShareVisitorIds(input.state.metadata.agentShareVisitor)
         : undefined,
-      topicId: input.state.metadata?.topicId,
-      trigger: input.state.metadata?.trigger,
+      topicId: input.state.origin?.topicId,
+      trigger: input.state.origin?.trigger,
       userAgent: input.state.metadata?.userAgent,
     });
 

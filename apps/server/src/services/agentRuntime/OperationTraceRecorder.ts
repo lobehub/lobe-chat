@@ -160,9 +160,10 @@ export class OperationTraceRecorder {
       }
 
       const metadata = (params.state?.metadata ?? {}) as any;
+      const origin = params.state?.origin ?? {};
       const finalizedSteps = (partial.steps ?? []).sort((a, b) => a.stepIndex - b.stepIndex);
       const snapshot = {
-        agentId: metadata?.agentId,
+        agentId: origin.agentId,
         completedAt: Date.now(),
         completionReason: params.completionReason,
         error: params.error,
@@ -177,7 +178,7 @@ export class OperationTraceRecorder {
           typeof metadata?.queueRetryDelay === 'string' ? metadata.queueRetryDelay : undefined,
         startedAt: partial.startedAt ?? Date.now(),
         steps: finalizedSteps,
-        topicId: metadata?.topicId,
+        topicId: origin.topicId,
         totalCost: params.state?.cost?.total ?? 0,
         // Trust the finalized step array over `state.stepCount`: on the error
         // path stepCount comes from Redis and reflects the last completed
@@ -185,7 +186,7 @@ export class OperationTraceRecorder {
         totalSteps: finalizedSteps.length || (params.state?.stepCount ?? 0),
         totalTokens: params.state?.usage?.llm?.tokens?.total ?? 0,
         traceId: operationId,
-        userId: metadata?.userId,
+        userId: origin.userId,
       };
 
       await this.store.save(snapshot as any);

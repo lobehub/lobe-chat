@@ -92,6 +92,8 @@ describe('Hooks integration — afterStep event carries step presentation data',
       messages: [{ content: 'Hello', role: 'user' }],
       metadata: {
         _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
+      },
+      origin: {
         agentId: 'agent-1',
         userId: 'user-1',
       },
@@ -114,6 +116,8 @@ describe('Hooks integration — afterStep event carries step presentation data',
         ],
         metadata: {
           _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
+        },
+        origin: {
           agentId: 'agent-1',
           topicId: 'topic-1',
           userId: 'user-1',
@@ -194,6 +198,8 @@ describe('Hooks integration — afterStep event carries step presentation data',
       metadata: {
         _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
         _stepTracking: { lastLLMContent: 'previous content', totalToolCalls: 1 },
+      },
+      origin: {
         agentId: 'agent-1',
         userId: 'user-1',
       },
@@ -211,6 +217,8 @@ describe('Hooks integration — afterStep event carries step presentation data',
         metadata: {
           _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
           _stepTracking: { lastLLMContent: 'previous content', totalToolCalls: 1 },
+        },
+        origin: {
           agentId: 'agent-1',
           userId: 'user-1',
         },
@@ -282,7 +290,7 @@ describe('Hooks integration — onComplete event for early-terminal states', () 
         { content: 'Hello', role: 'user' },
         { content: 'I was working on it...', role: 'assistant' },
       ],
-      metadata: { agentId: 'agent-1', userId: 'user-1' },
+      origin: { agentId: 'agent-1', userId: 'user-1' },
       status: 'interrupted',
       stepCount: 3,
       usage: { llm: { apiCalls: 2, tokens: { total: 500 } }, tools: { totalCalls: 1 } },
@@ -326,6 +334,8 @@ describe('Hooks integration — afterStep event is compatible with renderStepPro
       messages: [],
       metadata: {
         _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
+      },
+      origin: {
         agentId: 'agent-1',
         userId: 'user-1',
       },
@@ -341,6 +351,8 @@ describe('Hooks integration — afterStep event is compatible with renderStepPro
         messages: [{ content: 'Result', role: 'assistant' }],
         metadata: {
           _hooks: [{ id: 'bot-step', type: 'afterStep', webhook: { url: '/test' } }],
+        },
+        origin: {
           agentId: 'agent-1',
           userId: 'user-1',
         },
