@@ -392,11 +392,11 @@ describe('workspace Vite graph', () => {
     expect((await hash()).mainHash).not.toBe(call.mainHash);
   });
 
-  it('rejects bundled npm code resolved outside the frozen Desktop installation', async () => {
+  it('requires bundled npm code to be pinned by the Desktop lockfile', async () => {
     await mkdir(path.join(root, 'apps/desktop/node_modules'), { recursive: true });
     await put(
       'node_modules/floating/package.json',
-      '{"name":"floating","type":"module","main":"index.js"}',
+      '{"name":"floating","version":"1.0.0","type":"module","main":"index.js"}',
     );
     await put('node_modules/floating/index.js', 'export const value = 1;');
     await put(
@@ -412,7 +412,11 @@ describe('workspace Vite graph', () => {
       },
       ssr: { noExternal: true },
     });
-    await expect(hash({ graph: [graph] })).rejects.toThrow("outside Desktop's locked installation");
+    await expect(hash({ graph: [graph] })).rejects.toThrow(
+      'not pinned by apps/desktop/pnpm-lock.yaml: floating@1.0.0',
+    );
+    await put('apps/desktop/pnpm-lock.yaml', 'lockfileVersion: 9\npackages:\n  floating@1.0.0:\n');
+    expect((await hash({ graph: [graph] })).mainHash).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('tracks star forwarding, cycles and CommonJS without dropping runtime dependencies', async () => {
