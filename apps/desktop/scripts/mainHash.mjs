@@ -436,9 +436,9 @@ export async function computeMainHash() {
   return manifest.mainHash;
 }
 
-export async function resolveMainHash() {
+export async function resolveMainHash(mode) {
   if (process.env[collectEnv] === '1') return MAIN_HASH_PLACEHOLDER;
-  if (!process.env.MAIN_HASH) return computeMainHash();
+  if (!process.env.MAIN_HASH) return mode === 'development' ? '' : computeMainHash();
   if (!/^[0-9a-f]{64}$/.test(process.env.MAIN_HASH)) {
     throw new Error('MAIN_HASH must be a 64-character lowercase SHA-256');
   }
