@@ -118,11 +118,6 @@ const styles = createStaticStyles(({ css }) => ({
     overflow-y: auto;
     min-height: 0;
   `,
-  overviewHeader: css`
-    flex-shrink: 0;
-    padding-block: 6px;
-    padding-inline: 12px 8px;
-  `,
   overviewPanel: css`
     overflow: hidden;
     display: flex;
@@ -132,7 +127,7 @@ const styles = createStaticStyles(({ css }) => ({
     max-height: calc(100% - 32px);
     margin: 16px;
     border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 20px;
+    border-radius: 16px;
 
     background: ${cssVar.colorBgContainer};
     box-shadow: ${cssVar.boxShadowTertiary};
@@ -148,15 +143,6 @@ const styles = createStaticStyles(({ css }) => ({
     @container agent-chat-layout (min-width: 1200px) {
       padding-block-start: 44px;
     }
-  `,
-  overviewTitle: css`
-    overflow: hidden;
-    flex: 1;
-
-    font-size: 14px;
-    font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   `,
   tabs: css`
     overflow-anchor: none;
@@ -952,9 +938,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
               style={{ transformOrigin: 'top right', width: overviewWidth }}
               transition={OVERVIEW_CARD_TRANSITION}
             >
-              <Flexbox horizontal align={'center'} className={styles.overviewHeader} gap={8}>
-                <span className={styles.overviewTitle}>{t('workingPanel.overview.title')}</span>
-              </Flexbox>
               <Flexbox className={styles.overviewBody}>
                 <Overview
                   active

@@ -25,11 +25,7 @@ export default defineConfig(async (env) => {
   const isDev = mode === 'development';
   const updateChannel = process.env.UPDATE_CHANNEL;
   const isCloudDesktop = isCloudDesktopBuild();
-  // OTA is off in dev unless forced, so the lockfile-pinned hash only has to resolve there.
-  const mainHash =
-    isDev && !process.env.MAIN_HASH && process.env.RENDERER_OTA_FORCE !== '1'
-      ? ''
-      : await resolveMainHash();
+  const mainHash = await resolveMainHash(mode);
   const externalNavigationHosts =
     process.env.DESKTOP_EXTERNAL_NAVIGATION_HOSTS ?? (isCloudDesktop ? 'stripe.com' : '');
 

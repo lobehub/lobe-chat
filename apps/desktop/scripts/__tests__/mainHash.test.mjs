@@ -141,6 +141,32 @@ describe('source main hash', () => {
     }
   });
 
+  it('canonicalizes graph paths before walking package boundaries', async () => {
+    await put('package.json', '{"private":true}');
+    const node = (id) => ({
+      configFiles: [],
+      defines: {},
+      nodes: new Map([
+        [
+          id,
+          {
+            ast: undefined,
+            dynamicImports: [],
+            entry: false,
+            external: false,
+            id,
+            imports: [],
+            retained: false,
+          },
+        ],
+      ]),
+    });
+    const canonical = await hash({ graph: [node(path.join(root, 'package.json'))] });
+    const relative = `${root}/apps/desktop/src/main/../../../../package.json`;
+
+    expect((await hash({ graph: [node(relative)] })).mainHash).toBe(canonical.mainHash);
+  });
+
   it('tracks Cloud runtime sources and dependency declarations without the whole Cloud revision', async () => {
     const cloud = `${root}-cloud`;
     try {

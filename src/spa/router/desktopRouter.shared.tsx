@@ -32,7 +32,6 @@ import {
   BusinessResourceRoutes,
 } from '@/business/client/BusinessDesktopRoutes';
 import BrandTextLoading from '@/components/Loading/BrandTextLoading';
-import AgentShareVisitorSkeleton from '@/components/Skeleton/AgentShareVisitor';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityHomeSkeleton from '@/components/Skeleton/CommunityHome';
 import CommunityListSkeleton from '@/components/Skeleton/CommunityList';
@@ -47,8 +46,6 @@ import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
 import { agentDocumentRouteMeta } from '@/features/AgentDocumentPage/routeMeta';
 import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/routeMeta';
-import { agentShareVisitorRouteMeta } from '@/features/AgentShareVisitor/routeMeta';
-import { AGENT_SHARE_VISITOR_PATH } from '@/features/AgentShareVisitor/visitorPath';
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
@@ -1653,21 +1650,6 @@ export const createSharedDesktopRoutes = ({
     }),
     errorElement: <ErrorBoundary />,
     path: '/',
-  },
-  {
-    // The agent-share visitor page. A sibling of the main layout, not a child:
-    // a visitor has no business with the creator's nav rail, workspace scope,
-    // or command palette, and the page draws its own product bar. Outside
-    // `withSegmentFallback`, so the skeleton is passed explicitly — the same
-    // one the page shows while the share itself loads.
-    element: dynamicElement(
-      () => import('@/features/AgentShareVisitor/Page'),
-      'Desktop > Share > Agent',
-      { fallback: delayed(<AgentShareVisitorSkeleton />) },
-    ),
-    errorElement: <ErrorBoundary />,
-    handle: { meta: agentShareVisitorRouteMeta },
-    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:topicId?`,
   },
   ...BusinessDesktopRoutesWithoutMainLayout,
   ...platformRoutes,

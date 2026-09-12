@@ -45,6 +45,9 @@ import { openRenameBranchModal } from './RenameBranchModal';
 import { useSwitchWorktree } from './useSwitchWorktree';
 import { findWorktreeForBranch, getPathName } from './worktreeHelpers';
 
+// ponytail: each row mounts three Tooltips, so 800+ branches take seconds to open; cap and let search reach the rest
+const BRANCH_RENDER_CAP = 100;
+
 const styles = createStaticStyles(({ css }) => ({
   branchLabel: css`
     overflow: hidden;
@@ -283,7 +286,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     } = useSWR(
       open ? deviceKeys.gitBranches(deviceId ?? 'local', path) : null,
       () => gitService.listGitBranches({ deviceId, path }),
-      { revalidateOnFocus: false, shouldRetryOnError: false },
+      { keepPreviousData: true, revalidateOnFocus: false, shouldRetryOnError: false },
     );
     const { data: workingStatus, mutate: mutateWorkingStatus } = useFetchGitWorkingTreeStatus(
       deviceId,
@@ -340,6 +343,8 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
       if (!query) return branches;
       return branches.filter((b) => b.name.toLowerCase().includes(query));
     }, [branches, search]);
+    const visibleBranches = filtered.slice(0, BRANCH_RENDER_CAP);
+    const hiddenCount = filtered.length - visibleBranches.length;
 
     const handleCheckout = useCallback(
       async (branch: string, create = false) => {
@@ -537,7 +542,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
                     </div>
                   )}
 
-                  {filtered.map((branch) => {
+                  {visibleBranches.map((branch) => {
                     const isCurrent = branch.name === currentBranch;
                     const isBusy = busyBranch === branch.name;
                     // A branch another worktree holds can't be checked out here
@@ -615,6 +620,11 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
                       </DropdownMenuItem>
                     );
                   })}
+                  {hiddenCount > 0 && (
+                    <div className={styles.emptyState}>
+                      {t('workingDirectory.branchesTruncated', { count: hiddenCount })}
+                    </div>
+                  )}
                 </div>
 
                 <div className={styles.createItemWrapper}>

@@ -461,7 +461,7 @@ describe('CompletionLifecycle.buildLifecycleEvent', () => {
   it('carries the budget context of an exhausted allowance onto the event', () => {
     // Without this the bot reply can only say "not enough credits": which
     // allowance ran out, and by how much, lived in the error body and stopped
-    // at the lifecycle boundary (LOBE-13726).
+    // at the lifecycle boundary.
     const state = {
       error: {
         budget: {

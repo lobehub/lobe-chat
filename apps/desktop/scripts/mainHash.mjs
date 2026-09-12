@@ -292,7 +292,7 @@ export async function collectSourceInputs({
       const file = sourceFile(id);
       if (slash(id).includes('/node_modules/') || node.external) continue;
       if (path.isAbsolute(file)) {
-        let dir = path.dirname(file);
+        let dir = path.dirname(await realpath(file));
         const owner = roots.find(([, root]) => inside(root, dir));
         if (!owner) throw new Error(`Main hash input is outside the source roots: ${file}`);
         while (dir !== owner[1]) {
@@ -436,9 +436,9 @@ export async function computeMainHash() {
   return manifest.mainHash;
 }
 
-export async function resolveMainHash() {
+export async function resolveMainHash(mode) {
   if (process.env[collectEnv] === '1') return MAIN_HASH_PLACEHOLDER;
-  if (!process.env.MAIN_HASH) return computeMainHash();
+  if (!process.env.MAIN_HASH) return mode === 'development' ? '' : computeMainHash();
   if (!/^[0-9a-f]{64}$/.test(process.env.MAIN_HASH)) {
     throw new Error('MAIN_HASH must be a 64-character lowercase SHA-256');
   }
