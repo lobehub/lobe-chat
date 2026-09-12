@@ -171,30 +171,55 @@ export async function runStep(c: Context): Promise<Response> {
     let inlinedSteps = 0;
     let result: AgentExecutionResult;
 
+    // A previous invocation may have died part-way through its own inline loop.
+    // It parks the envelope for each step before running it, so an envelope
+    // ahead of the delivered index means exactly that: resume from there. Going
+    // ahead with the delivered index instead would hit the `stepCount >
+    // stepIndex` stale-delivery guard, get ACKed, and strand the operation with
+    // nothing queued behind it.
+    const parked = await coordinator.loadInlineResume<AgentStepContinuation>(operationId);
+    const resumeFrom = parked && parked.stepIndex > stepIndex ? parked : undefined;
+    if (resumeFrom) {
+      log(
+        `[${operationId}] Delivered step ${stepIndex} is behind a parked inline step ${resumeFrom.stepIndex}; resuming there`,
+      );
+      currentStepIndex = resumeFrom.stepIndex;
+    }
+
     try {
       // The first iteration carries this delivery's one-shot payload (human
       // input, approvals, resume flags, retry counters). Later iterations are
-      // plain steps, so they must not replay any of it.
-      result = await aiAgentService.executeStep({
-        approvedToolCall,
-        asyncToolVerifyAttempt,
-        context,
-        externalRetryCount,
-        finishAfterAsyncTool,
-        groupMemberTimeout,
-        humanInput,
-        inlineContinuation: true,
-        lockRetryAttempt,
-        operationId,
-        rejectAndContinue,
-        rejectionReason,
-        resumeAsyncTool,
-        retainStepLock: true,
-        stepIndex,
-        stepLockOwner,
-        toolMessageId,
-        verifyAsyncToolBarrier,
-      });
+      // plain steps, so they must not replay any of it. A resumed run is a later
+      // iteration of a dead loop, so it carries none of it either.
+      result = resumeFrom
+        ? await aiAgentService.executeStep({
+            context: resumeFrom.context,
+            inlineContinuation: true,
+            operationId,
+            retainStepLock: true,
+            stepIndex: resumeFrom.stepIndex,
+            stepLockOwner,
+          })
+        : await aiAgentService.executeStep({
+            approvedToolCall,
+            asyncToolVerifyAttempt,
+            context,
+            externalRetryCount,
+            finishAfterAsyncTool,
+            groupMemberTimeout,
+            humanInput,
+            inlineContinuation: true,
+            lockRetryAttempt,
+            operationId,
+            rejectAndContinue,
+            rejectionReason,
+            resumeAsyncTool,
+            retainStepLock: true,
+            stepIndex,
+            stepLockOwner,
+            toolMessageId,
+            verifyAsyncToolBarrier,
+          });
       pendingContinuation = result.continuation;
 
       while (pendingContinuation) {
@@ -230,6 +255,10 @@ export async function runStep(c: Context): Promise<Response> {
       // resumes in a fresh invocation.
       if (pendingContinuation) {
         await aiAgentService.scheduleContinuation(pendingContinuation);
+        // The queue owns this step again, so the parked envelope is no longer a
+        // recovery pointer — leaving it would let a late redelivery run the step
+        // a second time from here.
+        await coordinator.clearInlineResume(operationId);
         result = { ...result, nextStepScheduled: true };
         pendingContinuation = undefined;
       }

@@ -2219,6 +2219,12 @@ export class AgentRuntimeService {
             // queue round-trip for it. The caller either runs it in this same
             // invocation or publishes it via `scheduleContinuation` when its
             // time budget runs out, so the step is never dropped.
+            // Park the envelope before handing it over. The caller is about to
+            // run this step in-process with nothing queued behind it; if that
+            // invocation dies mid-step, the only way back is for a redelivery to
+            // find this pointer — the stale-delivery guard would otherwise ACK
+            // the (now older) delivered step and strand the operation.
+            await this.coordinator.saveInlineResume(operationId, next);
             continuation = next;
             logToolCallPc(operationId, stepIndex, 'post.next_step_inlined', () => ({
               nextStepIndex,
@@ -2233,6 +2239,12 @@ export class AgentRuntimeService {
 
             log('[%s][%d] Scheduled next step %d', operationId, stepIndex, nextStepIndex);
           }
+        }
+
+        // Nothing left to run inline: drop any envelope parked by an earlier
+        // step so a late redelivery doesn't resurrect a finished operation.
+        if (inlineContinuation && !continuation) {
+          await this.coordinator.clearInlineResume(operationId);
         }
 
         // Record final agent-level usage on the invoke_agent span. Done on every

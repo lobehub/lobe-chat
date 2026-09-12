@@ -6,6 +6,8 @@ import { AiAgentService } from '@/server/services/aiAgent';
 import { runStep, runStepHealth } from '../runStep';
 
 const mockGetOperationMetadata = vi.fn();
+const mockLoadInlineResume = vi.fn();
+const mockClearInlineResume = vi.fn();
 const mockExecuteStep = vi.fn();
 const mockScheduleContinuation = vi.fn();
 const mockReleaseOperationLock = vi.fn();
@@ -14,7 +16,9 @@ const mockGetServerDB = vi.hoisted(() => vi.fn());
 vi.mock('@/server/modules/AgentRuntime', () => ({
   AgentRuntimeCoordinator: vi.fn().mockImplementation(function () {
     return {
+      clearInlineResume: mockClearInlineResume,
       getOperationMetadata: mockGetOperationMetadata,
+      loadInlineResume: mockLoadInlineResume,
     };
   }),
 }));
@@ -86,6 +90,9 @@ const validBody = {
 describe('runStep handler', () => {
   beforeEach(() => {
     mockGetOperationMetadata.mockReset();
+    mockLoadInlineResume.mockReset();
+    mockLoadInlineResume.mockResolvedValue(null);
+    mockClearInlineResume.mockReset();
     mockExecuteStep.mockReset();
     mockScheduleContinuation.mockReset();
     mockReleaseOperationLock.mockReset();
@@ -541,6 +548,74 @@ describe('runStep inline step loop', () => {
     expect(res.status).toBe(500);
     expect(mockReleaseOperationLock).toHaveBeenCalledWith('op-1', 'op-1:owner');
     errorSpy.mockRestore();
+  });
+
+  it('resumes from a parked envelope left behind by a dead inline loop', async () => {
+    // Without this the delivered (older) step index hits the stepCount > stepIndex
+    // stale-delivery guard, gets ACKed, and the operation stalls forever with
+    // nothing queued behind it — the inline loop never published a message.
+    const parked = continuationFor(7);
+    mockLoadInlineResume.mockResolvedValue(parked);
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: doneState,
+      success: true,
+    });
+
+    const { ctx, getCaptures } = buildContext({
+      body: { ...validBody, humanInput: 'yes' },
+    });
+    await runStep(ctx);
+
+    const params = mockExecuteStep.mock.calls[0][0];
+    expect(params.stepIndex).toBe(7);
+    expect(params.context).toEqual(parked.context);
+    // A resumed run is a later iteration of a dead loop, so the delivery's
+    // one-shot payload must not ride along.
+    expect(params.humanInput).toBeUndefined();
+    expect(getCaptures()[0].body).toMatchObject({ stepIndex: 7 });
+  });
+
+  it('ignores a parked envelope that is not ahead of the delivered step', async () => {
+    // After a deadline hand-off the queued message carries the same index the
+    // envelope named. That delivery is authoritative, payload and all.
+    mockLoadInlineResume.mockResolvedValue(continuationFor(2));
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: doneState,
+      success: true,
+    });
+
+    const { ctx } = buildContext({ body: { ...validBody, humanInput: 'yes' } });
+    await runStep(ctx);
+
+    expect(mockExecuteStep.mock.calls[0][0]).toMatchObject({
+      humanInput: 'yes',
+      stepIndex: 2,
+    });
+  });
+
+  it('drops the parked envelope when the pending step goes back to the queue', async () => {
+    // Otherwise the envelope and the queued message both point at the same step,
+    // and a late redelivery could run it a second time.
+    let clock = Date.now();
+    const nowSpy = vi.spyOn(Date, 'now').mockImplementation(() => clock);
+    mockExecuteStep.mockImplementation(async () => {
+      clock += 600_000;
+      return {
+        continuation: continuationFor(3),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      };
+    });
+
+    const { ctx } = buildContext({ body: validBody });
+    await runStep(ctx);
+
+    expect(mockScheduleContinuation).toHaveBeenCalledTimes(1);
+    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1');
+    nowSpy.mockRestore();
   });
 
   it('stops the loop and reports success when another worker takes the lock mid-run', async () => {

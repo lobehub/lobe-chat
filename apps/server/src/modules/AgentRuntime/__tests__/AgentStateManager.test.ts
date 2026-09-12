@@ -271,7 +271,38 @@ describe('AgentStateManager', () => {
         'agent_runtime_steps:op-del',
         'agent_runtime_meta:op-del',
         'agent_runtime_interrupt:op-del',
+        'agent_runtime_inline_resume:op-del',
       );
+    });
+  });
+
+  describe('inline resume envelope', () => {
+    it('parks the envelope under the operation TTL', async () => {
+      await stateManager.saveInlineResume('op-resume', '{"stepIndex":4}');
+
+      expect(redisMock.setex).toHaveBeenCalledWith(
+        'agent_runtime_inline_resume:op-resume',
+        2 * 3600,
+        '{"stepIndex":4}',
+      );
+    });
+
+    it('reads and clears the envelope', async () => {
+      redisMock.get.mockResolvedValue('{"stepIndex":4}');
+      await expect(stateManager.loadInlineResume('op-resume')).resolves.toBe('{"stepIndex":4}');
+
+      await stateManager.clearInlineResume('op-resume');
+      expect(redisMock.del).toHaveBeenCalledWith('agent_runtime_inline_resume:op-resume');
+    });
+
+    it('degrades to null rather than throwing when Redis is unavailable', async () => {
+      // A read failure must not break the delivery: without the envelope the
+      // handler simply runs the step it was given.
+      redisMock.get.mockRejectedValue(new Error('redis down'));
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
+
+      await expect(stateManager.loadInlineResume('op-resume')).resolves.toBeNull();
+      errorSpy.mockRestore();
     });
   });
 });

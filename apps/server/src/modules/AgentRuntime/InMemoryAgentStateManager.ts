@@ -15,6 +15,7 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
   private steps: Map<string, any[]> = new Map();
   private metadata: Map<string, AgentOperationMetadata> = new Map();
   private stepLocks: Map<string, { expiresAt: number; ownerId: string }> = new Map();
+  private inlineResumes: Map<string, string> = new Map();
   private interrupted: Set<string> = new Set();
 
   private executionLockKey(operationId: string): string {
@@ -147,6 +148,7 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     this.steps.delete(operationId);
     this.metadata.delete(operationId);
     this.interrupted.delete(operationId);
+    this.inlineResumes.delete(operationId);
     log('Deleted operation %s', operationId);
   }
 
@@ -216,6 +218,18 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     }
 
     return stats;
+  }
+
+  async saveInlineResume(operationId: string, serialized: string): Promise<void> {
+    this.inlineResumes.set(operationId, serialized);
+  }
+
+  async loadInlineResume(operationId: string): Promise<null | string> {
+    return this.inlineResumes.get(operationId) ?? null;
+  }
+
+  async clearInlineResume(operationId: string): Promise<void> {
+    this.inlineResumes.delete(operationId);
   }
 
   async tryClaimStep(

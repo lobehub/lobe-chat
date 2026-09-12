@@ -86,6 +86,7 @@ export class AgentStateManager {
   private readonly STEPS_PREFIX = 'agent_runtime_steps';
   private readonly METADATA_PREFIX = 'agent_runtime_meta';
   private readonly INTERRUPT_PREFIX = 'agent_runtime_interrupt';
+  private readonly INLINE_RESUME_PREFIX = 'agent_runtime_inline_resume';
   private readonly DEFAULT_TTL = 2 * 3600; // 2h
 
   constructor() {
@@ -405,6 +406,7 @@ export class AgentStateManager {
       `${this.STEPS_PREFIX}:${operationId}`,
       `${this.METADATA_PREFIX}:${operationId}`,
       `${this.INTERRUPT_PREFIX}:${operationId}`,
+      `${this.INLINE_RESUME_PREFIX}:${operationId}`,
     ];
 
     try {
@@ -512,6 +514,41 @@ export class AgentStateManager {
         errorOperations: 0,
         totalOperations: 0,
       };
+    }
+  }
+
+  /**
+   * The inline step loop's envelope for the step it is about to run. This is the
+   * queue message that would otherwise be in flight — parked here instead, so a
+   * redelivery arriving after the loop died can pick the operation back up from
+   * where it actually stopped rather than from the delivered (older) step index.
+   */
+  async saveInlineResume(operationId: string, serialized: string): Promise<void> {
+    try {
+      await this.redis.setex(
+        `${this.INLINE_RESUME_PREFIX}:${operationId}`,
+        this.DEFAULT_TTL,
+        serialized,
+      );
+    } catch (error) {
+      console.error('Failed to save inline resume pointer:', error);
+    }
+  }
+
+  async loadInlineResume(operationId: string): Promise<null | string> {
+    try {
+      return await this.redis.get(`${this.INLINE_RESUME_PREFIX}:${operationId}`);
+    } catch (error) {
+      console.error('Failed to load inline resume pointer:', error);
+      return null;
+    }
+  }
+
+  async clearInlineResume(operationId: string): Promise<void> {
+    try {
+      await this.redis.del(`${this.INLINE_RESUME_PREFIX}:${operationId}`);
+    } catch (error) {
+      console.error('Failed to clear inline resume pointer:', error);
     }
   }
 
