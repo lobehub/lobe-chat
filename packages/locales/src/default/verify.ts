@@ -242,6 +242,7 @@ export default {
   'acceptance.comments.author.former': 'Former member',
   'acceptance.comments.author.deactivated': 'Deactivated',
   'acceptance.comments.loadFailed': 'Failed to load the discussion. Please refresh.',
+  'acceptance.comments.copyLinkHint': '{{time}} · click to copy this comment’s link',
   'acceptance.comments.createFailed': 'Failed to post the comment. Please try again.',
   'acceptance.comments.deleteFailed': 'Failed to delete the comment. Please try again.',
   'acceptance.comments.updateFailed': 'Failed to update the comment. Please try again.',

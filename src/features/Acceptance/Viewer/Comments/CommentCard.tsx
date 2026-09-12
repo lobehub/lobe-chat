@@ -12,6 +12,7 @@ import {
   Text,
   toast,
 } from '@lobehub/ui/base-ui';
+import { cx } from 'antd-style';
 import { Link2, MoreHorizontal, Trash2 } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -88,6 +89,16 @@ const CommentCard = memo<CommentCardProps>(
     const viewerId = useUserStore(userProfileSelectors.userId);
     const own = Boolean(viewerId) && comment.authorUserId === viewerId;
 
+    const copyAnchor = async () => {
+      try {
+        await navigator.clipboard.writeText(commentAnchorUrl(comment.id));
+        toast.success(t('acceptance.comments.linkCopied'));
+      } catch (cause) {
+        console.error('[acceptance:comments]', cause);
+        toast.error(t('acceptance.comments.updateFailed'));
+      }
+    };
+
     const menuItems: DropdownItem[] = [
       ...(anchored
         ? [
@@ -95,15 +106,7 @@ const CommentCard = memo<CommentCardProps>(
               icon: <Icon icon={Link2} />,
               key: 'copy-link',
               label: t('acceptance.comments.copyLink'),
-              onClick: async () => {
-                try {
-                  await navigator.clipboard.writeText(commentAnchorUrl(comment.id));
-                  toast.success(t('acceptance.comments.linkCopied'));
-                } catch (cause) {
-                  console.error('[acceptance:comments]', cause);
-                  toast.error(t('acceptance.comments.updateFailed'));
-                }
-              },
+              onClick: copyAnchor,
             } satisfies DropdownItem,
           ]
         : []),
@@ -165,9 +168,30 @@ const CommentCard = memo<CommentCardProps>(
           {comment.author.status !== 'active' && (
             <Tag size={'small'}>{t(`acceptance.comments.author.${comment.author.status}`)}</Tag>
           )}
-          <span className={styles.meta} title={time.title}>
-            {nameOverride ? time.text : t('acceptance.comments.commented', { time: time.text })}
-          </span>
+          {anchored ? (
+            /*
+             * The timestamp IS the permalink, the way every threaded discussion
+             * has trained people to expect: it is the one part of a remark that
+             * belongs to that remark alone. Clicking copies its address instead
+             * of navigating — the reader is already looking at it, and what they
+             * want is the link to paste somewhere else.
+             */
+            <button
+              className={cx(styles.meta, styles.timeLink)}
+              title={t('acceptance.comments.copyLinkHint', { time: time.title })}
+              type={'button'}
+              onClick={(event) => {
+                event.stopPropagation();
+                void copyAnchor();
+              }}
+            >
+              {nameOverride ? time.text : t('acceptance.comments.commented', { time: time.text })}
+            </button>
+          ) : (
+            <span className={styles.meta} title={time.title}>
+              {nameOverride ? time.text : t('acceptance.comments.commented', { time: time.text })}
+            </span>
+          )}
           {badges}
           {menuItems.length > 0 && (
             <div data-comment-actions className={styles.rowActions}>
