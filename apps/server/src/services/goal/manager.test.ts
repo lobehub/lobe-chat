@@ -832,6 +832,34 @@ describe('takeover submissions', () => {
   });
 
   /**
+   * Accepting the plan is not the same as the Goal moving. The inherited node
+   * stayed nonterminal, so the next tick's frontier reached it before the new
+   * corrective node and routed straight back to the Gate — the advertised action
+   * committed and changed nothing.
+   */
+  it('retires the replaced work so the corrective task actually runs', async () => {
+    const { goalId, state, taskId, turn } = await stuckGoal();
+    await operationCaller(turn.id).submitOperationPlan({
+      id: goalId,
+      operationId: turn.id,
+      plan: {
+        action: 'tasks',
+        reason: 'The previous run captured no evidence at all',
+        tasks: [{ description: 'Rerun the scoring and register the report', title: 'Redo it' }],
+      },
+      token: state.token,
+    });
+    await db.update(agentOperations).set({ status: 'done' }).where(eq(agentOperations.id, turn.id));
+    await service().tick(goalId);
+
+    const graph = await service().graph(goalId);
+    expect(graph.nodes.find((node) => node.taskId === taskId)!.status).toBe('retired');
+    const moved = await service().tick(goalId);
+    expect(moved.outcome).not.toBe('waiting_human');
+    expect((await service().graph(goalId)).decisions).toHaveLength(0);
+  });
+
+  /**
    * "Task attempt budget was exhausted" is the same sentence for every task that
    * reaches it. Keying the already-answered check on the reason alone made a second
    * task skip its own takeover and inherit the first task's diagnosis in its gate.

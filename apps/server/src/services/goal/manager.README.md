@@ -54,6 +54,13 @@ is waived for an invited turn: it exists to stop an uninvited one from double
 planning the frontier, while a takeover's inherited Task is stuck by definition.
 `retry` remains limited to recognised transport failures, and the prompt says so
 rather than advertising a move that will be refused.
+
+A `tasks` or `verify` plan from a takeover turn also RETIRES the node it inherited,
+because accepting a plan is not the same as the Goal moving: a nonterminal blocked
+node is reached by the next tick's frontier before the corrective node, which routes
+straight back to the Gate, and terminal verification cannot start while it is
+unfinished. Retiring is the same move the human Gate offers under "Retire task",
+scoped to the single node the turn was invited about and attributed to the Agent.
 which puts the Gate back with its original reason, one turn later and with the
 Agent's diagnosis appended to the question. An escalation from a takeover turn
 deliberately does NOT pause the Goal the way an ordinary planning turn's does: the

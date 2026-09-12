@@ -230,6 +230,9 @@ export interface GoalManagerState {
    * over twice.
    */
   problem?: string;
+  /** The blocked task that problem belongs to, so accepting a plan that replaces
+   *  it can retire exactly that node without parsing the key. */
+  problemTaskId?: string;
   readyForAcceptance?: boolean;
   reviewSnapshot?: string;
   snapshot: string;

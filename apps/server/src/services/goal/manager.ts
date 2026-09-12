@@ -417,7 +417,12 @@ export class GoalManagerService {
         ).id;
       const reviews = await this.reviews(current, db);
       const next: GoalManagerState = {
-        ...(problem ? { problem: problemKey(problem) } : {}),
+        ...(problem
+          ? {
+              problem: problemKey(problem),
+              ...(problem.taskId && { problemTaskId: problem.taskId }),
+            }
+          : {}),
         reviewSnapshot: reviews.hash,
         topicId,
         turns: (state?.turns ?? 0) + 1,
@@ -529,6 +534,23 @@ export class GoalManagerService {
         id: goal.config.manager.agentId,
         type: 'agent',
       });
+      // Accepting a plan that REPLACES the inherited work has to settle it too.
+      // Validation alone was not enough: the blocked node stayed nonterminal, so
+      // the next tick's frontier reached it before the corrective node and routed
+      // straight back to the Gate, and terminal verification could not start at
+      // all. Retiring is the same move the human Gate offers, scoped to the one
+      // node this turn was invited about and attributed to the Agent.
+      if (
+        state.problem &&
+        state.problemTaskId &&
+        (plan.action === 'tasks' || plan.action === 'verify')
+      ) {
+        const inherited = graph.nodes.find(
+          (n) => n.kind === 'task' && n.taskId === state.problemTaskId,
+        );
+        if (inherited && !terminalNodes.has(inherited.status))
+          await authored.updateNodeStatus(goalId, inherited.id, 'retired', plan.reason);
+      }
       if (plan.action === 'tasks') {
         const problem = graph.nodes.find((n) => n.kind === 'problem');
         for (const task of plan.tasks) {
