@@ -122,6 +122,11 @@ export const styles = createStaticStyles(({ css }) => ({
    * the dot, which read as a smudge rather than as a node on the line.
    */
   eventDot: css`
+    /* Same reason as the message box: the rail is the entry's absolutely
+       positioned pseudo-element, so an unpositioned dot paints under it and the
+       line cuts straight across the circle. */
+    position: relative;
+
     display: inline-flex;
     flex: none;
     align-items: center;
