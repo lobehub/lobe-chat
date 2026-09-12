@@ -8,7 +8,7 @@ vi.mock('@/const/shell', () => ({ shellInfo: { markHealthy } }));
 
 const makeCtr = () => {
   const handleBootPing = vi.fn();
-  const ctr = new RendererOtaCtr({ rendererUpdateManager: { handleBootPing } } as never);
+  const ctr = new RendererOtaCtr({ coreUpdateManager: { handleBootPing } } as never);
   return { ctr, handleBootPing };
 };
 
