@@ -78,6 +78,16 @@ export const managerSnapshot = (graph: GoalGraphSnapshot) => {
 };
 
 /** Durable wakeups around ordinary CLI-capable Agent runs. No supervisor builtin tools. */
+/**
+ * The problem a settled takeover turn escalated, when it escalated one. Reading it
+ * is how the coordinator tells "nobody has looked at this yet" from "the main
+ * Agent looked and says a human is required".
+ */
+export const escalatedProblem = (state?: GoalManagerState) =>
+  state?.consumed && state.problem && state.submitted?.action === 'escalate'
+    ? state.problem
+    : undefined;
+
 export class GoalManagerService {
   constructor(
     private readonly db: LobeChatDatabase,
@@ -239,6 +249,10 @@ export class GoalManagerService {
     problem: { reason: string; taskId?: string },
   ): Promise<GoalTickResult | null> => {
     if (!this.eligible(graph)) return null;
+    // Already answered: a takeover turn that escalated THIS problem said a human
+    // is required, so handing the same reason over again would loop on it instead
+    // of asking. `escalatedProblem` is what the caller attaches to the gate.
+    if (escalatedProblem(graph.goal.config?.managerState) === problem.reason) return null;
     const settled = await this.settleInFlight(graph);
     if (settled) return settled;
     return this.startTurn(graph, problem);
@@ -318,6 +332,12 @@ export class GoalManagerService {
   ) => {
     const failed = tasks.find((t) => t.status === 'failed');
     if (!failed) return unfinished.length > 0;
+    // Supervision owns recognised transport failures, and it is both cheaper than
+    // a planning turn and stricter about who authored the status. Claiming one
+    // uninvited would reverse that order and spend a turn on a failure the
+    // supervisor recovers on its own; whatever it declines reaches
+    // `gateOrTakeOver`, which invites this Agent properly.
+    if (graph.goal.config?.supervision?.enabled) return true;
     const runs = await new TaskTopicModel(this.db, this.userId, this.workspaceId).findByTaskId(
       failed.id,
     );
@@ -386,6 +406,7 @@ export class GoalManagerService {
         ).id;
       const reviews = await this.reviews(current, db);
       const next: GoalManagerState = {
+        ...(problem ? { problem: problem.reason } : {}),
         reviewSnapshot: reviews.hash,
         topicId,
         turns: (state?.turns ?? 0) + 1,
@@ -533,7 +554,11 @@ export class GoalManagerService {
           ))
         )
           throw new TRPCError({ code: 'CONFLICT', message: 'Task changed before retry' });
-      } else if (plan.action === 'escalate') {
+      } else if (plan.action === 'escalate' && !state.problem) {
+        // Only an ORDINARY planning turn pauses the Goal here. A takeover turn has
+        // a gate waiting behind it for this exact problem, and the coordinator
+        // opens that gate on the next tick — a paused Goal would stop the tick from
+        // ever reaching it, leaving the escalation with no answerable question.
         await model.updateStatus(goalId, 'paused');
         await authored.recordGoalStatus(goalId, goal.status, 'paused', plan.reason);
       }

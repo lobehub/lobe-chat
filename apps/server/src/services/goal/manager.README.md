@@ -41,13 +41,20 @@ the ordinary path and the main Agent only starts a turn when the coordinator is
 about to stop the Goal on a person — the failure matched no recovery branch, the
 attempt budget ran out, or the reason could not be classified. That handover point
 is `gateOrTakeOver`, and the ladder there is supervision first (known transport
-failures), then the main Agent, then the human Gate. A turn already in flight is
+failures), then the main Agent, then the human Gate. An uninvited turn never
+claims a failure on a Goal with supervision enabled, or it would reach that
+failure before the supervisor does and spend a planning turn on something the
+supervisor recovers on its own. A turn already in flight is
 settled on every tick regardless of who leads, or its plan would never land.
 
 A takeover turn is told which problem it inherited and is expected to answer with
 a corrective Task, independent verification, a diagnosed retry, or `escalate` —
-which puts the Gate back with its original reason, one turn later and with a
-diagnosis attached. An invited turn with no turn budget left declines rather than
+which puts the Gate back with its original reason, one turn later and with the
+Agent's diagnosis appended to the question. An escalation from a takeover turn
+deliberately does NOT pause the Goal the way an ordinary planning turn's does: the
+coordinator opens that Gate on the next tick, and a paused Goal would never reach
+it. The same problem is never handed over twice — `managerState.problem` records
+what a turn was invited for, so an escalation is an answer, not a loop. An invited turn with no turn budget left declines rather than
 pausing, so the Gate keeps carrying the real question. Execution, delivery
 verification and human Gates remain coordinator-owned.
 Read `config.managerState` in the Goal graph for the current receipt and Topic.

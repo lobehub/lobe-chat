@@ -688,3 +688,89 @@ describe('planner precedence', () => {
     expect(gated.goal.status).not.toBe('paused');
   });
 });
+
+/**
+ * Codex review on #19477 caught both of these: the newly allowed combinations
+ * each broke an ordering the PR itself documented.
+ */
+describe('takeover ordering', () => {
+  /**
+   * Supervision is cheaper than a planning turn and stricter about who authored a
+   * status. Allowing `manager` + `supervision` without `exploration` made `tick`
+   * start an uninvited turn on a recognised transport failure before
+   * `reviewFailure` could ever run, reversing the documented ladder.
+   */
+  it('consults supervision before starting a main Agent turn', async () => {
+    const graph = await service().create({
+      config: { manager: { maxTurns: 4 }, supervision: { enabled: true } },
+      createdByAgentId: agentId,
+      tasks: ['Collect the baseline'],
+      title: 'Supervised research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.updateStatus(created.taskId!, 'failed', { error: 'fetch failed' });
+
+    await service().tick(graph.goal.id);
+
+    // Before this, `tick` claimed the recognised transport failure with an
+    // UNINVITED turn and returned early, so `decideNextMove` never reached the
+    // `failure_decision` branch and the supervisor never saw it. The turn that
+    // runs now is an invited one, which is only reachable through that branch —
+    // `problem` is the receipt that it came down the documented ladder.
+    expect((await model().findById(graph.goal.id))!.config!.managerState).toMatchObject({
+      problem: 'fetch failed',
+    });
+  });
+
+  /**
+   * The takeover contract says `escalate` puts the Gate back one turn later. The
+   * escalate branch only paused the Goal, so no answerable question existed and
+   * later ticks sat on `goal_paused` forever.
+   */
+  it('turns a takeover escalation into the Gate it was holding', async () => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 4 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      tasks: ['Measure ranking ability on the frozen holdout'],
+      title: 'Explored research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+    await service().tick(graph.goal.id);
+
+    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+    expect(state.problem).toBe('Task attempt budget was exhausted');
+    const turn = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    await operationCaller(turn!.id).submitOperationPlan({
+      id: graph.goal.id,
+      operationId: turn!.id,
+      plan: { action: 'escalate', reason: 'The reproducibility criterion needs a human judge' },
+      token: state.token,
+    });
+    // A takeover escalation must not park the Goal: the gate is opened by the tick
+    // that follows, and a paused Goal never reaches it.
+    expect((await model().findById(graph.goal.id))!.status).not.toBe('paused');
+    await db
+      .update(agentOperations)
+      .set({ status: 'done' })
+      .where(eq(agentOperations.id, turn!.id));
+    await service().tick(graph.goal.id);
+
+    expect(await service().tick(graph.goal.id)).toMatchObject({ outcome: 'waiting_human' });
+    const gated = await service().graph(graph.goal.id);
+    expect(gated.decisions).toHaveLength(1);
+    expect(gated.decisions[0].question).toContain('needs a human judge');
+  });
+});
