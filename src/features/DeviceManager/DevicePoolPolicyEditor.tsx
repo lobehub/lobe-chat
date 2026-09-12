@@ -10,7 +10,8 @@ import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Button, Select, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { Plus, Trash2Icon } from 'lucide-react';
-import { AnimatePresence, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, useReducedMotion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
