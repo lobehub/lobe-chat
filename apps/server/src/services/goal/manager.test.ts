@@ -719,7 +719,7 @@ describe('takeover ordering', () => {
     // runs now is an invited one, which is only reachable through that branch —
     // `problem` is the receipt that it came down the documented ladder.
     expect((await model().findById(graph.goal.id))!.config!.managerState).toMatchObject({
-      problem: 'fetch failed',
+      problem: `${created.taskId}::fetch failed`,
     });
   });
 
@@ -748,7 +748,7 @@ describe('takeover ordering', () => {
     await service().tick(graph.goal.id);
 
     const state = (await model().findById(graph.goal.id))!.config!.managerState!;
-    expect(state.problem).toBe('Task attempt budget was exhausted');
+    expect(state.problem).toBe(`${created.taskId}::Task attempt budget was exhausted`);
     const turn = await ops().findByTopicSourceMessage(
       state.topicId,
       `msg_goal_manager_${state.token}`,
@@ -772,5 +772,105 @@ describe('takeover ordering', () => {
     const gated = await service().graph(graph.goal.id);
     expect(gated.decisions).toHaveLength(1);
     expect(gated.decisions[0].question).toContain('needs a human judge');
+  });
+});
+
+/**
+ * Codex review round 2 on #19477. Both findings were about the takeover contract
+ * promising more than the code would accept.
+ */
+describe('takeover submissions', () => {
+  const stuckGoal = async (title = 'Explored research') => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 4 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      tasks: ['Measure ranking ability on the frozen holdout'],
+      title,
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+    await service().tick(graph.goal.id);
+    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+    const turn = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    return { goalId: graph.goal.id, state, taskId: created.taskId!, turn: turn! };
+  };
+
+  /**
+   * The prompt advertises a corrective task, verification, a retry and escalation.
+   * `submit` refused `tasks` and `verify` whenever any task node was unfinished —
+   * which a takeover's inherited task always is — so only `escalate` could ever
+   * commit and the other three were a contract the code broke.
+   */
+  it('accepts the corrective task a takeover was invited to plan', async () => {
+    const { goalId, state, turn } = await stuckGoal();
+    await expect(
+      operationCaller(turn.id).submitOperationPlan({
+        id: goalId,
+        operationId: turn.id,
+        plan: {
+          action: 'tasks',
+          reason: 'The previous run captured no evidence at all',
+          tasks: [{ description: 'Rerun the scoring and register the report', title: 'Redo it' }],
+        },
+        token: state.token,
+      }),
+    ).resolves.toMatchObject({ success: true });
+    expect((await service().graph(goalId)).nodes.some((node) => node.title === 'Redo it')).toBe(
+      true,
+    );
+  });
+
+  /**
+   * "Task attempt budget was exhausted" is the same sentence for every task that
+   * reaches it. Keying the already-answered check on the reason alone made a second
+   * task skip its own takeover and inherit the first task's diagnosis in its gate.
+   */
+  it('gives a second task its own takeover despite an identical reason', async () => {
+    const first = await stuckGoal('First research');
+    await operationCaller(first.turn.id).submitOperationPlan({
+      id: first.goalId,
+      operationId: first.turn.id,
+      plan: { action: 'escalate', reason: 'Needs a human judge' },
+      token: first.state.token,
+    });
+    await db
+      .update(agentOperations)
+      .set({ status: 'done' })
+      .where(eq(agentOperations.id, first.turn.id));
+    await service().tick(first.goalId);
+
+    // A different Goal and task reaching the same wording must not be read as the
+    // problem that was already answered.
+    const second = await stuckGoal('Second research');
+    expect(second.state.problem).toBe(`${second.taskId}::Task attempt budget was exhausted`);
+    expect(second.state.problem).not.toBe(first.state.problem);
+  });
+
+  it('stops handing the same problem over once its turn has answered', async () => {
+    const { goalId, state, turn } = await stuckGoal();
+    await operationCaller(turn.id).submitOperationPlan({
+      id: goalId,
+      operationId: turn.id,
+      plan: { action: 'escalate', reason: 'Needs a human judge' },
+      token: state.token,
+    });
+    await db.update(agentOperations).set({ status: 'done' }).where(eq(agentOperations.id, turn.id));
+    await service().tick(goalId);
+
+    expect(await service().tick(goalId)).toMatchObject({ outcome: 'waiting_human' });
+    const gated = await service().graph(goalId);
+    expect(gated.decisions).toHaveLength(1);
+    expect(gated.decisions[0].question).toContain('Needs a human judge');
   });
 });

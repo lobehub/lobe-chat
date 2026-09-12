@@ -54,7 +54,7 @@ import {
   TERMINAL_NODE_STATUSES,
 } from './decideNextMove';
 import { experimentResults, exploreGraph } from './exploreGraph';
-import { escalatedProblem, GoalManagerService } from './manager';
+import { answeredProblem, GoalManagerService, problemKey } from './manager';
 import {
   resolveMaxConcurrentTasks,
   resolveOperationLeaseTimeout,
@@ -2401,17 +2401,17 @@ export class GoalService {
       { reason, taskId },
     );
     if (takeover) return takeover;
-    // When the main Agent already looked at this problem and escalated, the gate
-    // carries its diagnosis: the person answering it should see why the Agent
-    // decided they were needed, not just the coordinator's own reason.
-    const state = graph.goal.config?.managerState;
-    const escalated =
-      escalatedProblem(state) === reason ? state?.submitted?.reason?.slice(0, 600) : undefined;
+    // When the main Agent already looked at THIS problem, the gate carries what it
+    // said: the person answering should see the Agent's reasoning, not just the
+    // coordinator's own reason for stopping.
+    const answered = answeredProblem(graph.goal.config?.managerState);
+    const diagnosis =
+      answered?.key === problemKey({ reason, taskId }) ? answered.reason.slice(0, 600) : undefined;
     return this.openFailureDecision(
       graph,
       nodeId,
       taskId,
-      escalated ? `${reason} — main Agent: ${escalated}` : reason,
+      diagnosis ? `${reason} — main Agent: ${diagnosis}` : reason,
       effects,
     );
   };

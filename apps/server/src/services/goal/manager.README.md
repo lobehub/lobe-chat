@@ -49,12 +49,22 @@ settled on every tick regardless of who leads, or its plan would never land.
 
 A takeover turn is told which problem it inherited and is expected to answer with
 a corrective Task, independent verification, a diagnosed retry, or `escalate` —
+and all four can actually commit. The unfinished-work guard on `tasks` / `verify`
+is waived for an invited turn: it exists to stop an uninvited one from double
+planning the frontier, while a takeover's inherited Task is stuck by definition.
+`retry` remains limited to recognised transport failures, and the prompt says so
+rather than advertising a move that will be refused.
 which puts the Gate back with its original reason, one turn later and with the
 Agent's diagnosis appended to the question. An escalation from a takeover turn
 deliberately does NOT pause the Goal the way an ordinary planning turn's does: the
 coordinator opens that Gate on the next tick, and a paused Goal would never reach
-it. The same problem is never handed over twice — `managerState.problem` records
-what a turn was invited for, so an escalation is an answer, not a loop. An invited turn with no turn budget left declines rather than
+it. The same problem is never handed over twice — `managerState.problem` records what a
+turn was invited for, keyed by **task and reason together**, because
+"Task attempt budget was exhausted" is the same sentence for every Task that
+reaches it and a reason-only key made the next Task inherit the previous one's
+answer. Any committed plan counts as an answer, not just `escalate`: if the Agent's
+move did not unstick the Goal, handing the same problem back only buys the same
+move, so the Gate is the honest next step and the Agent's reasoning rides on it. An invited turn with no turn budget left declines rather than
 pausing, so the Gate keeps carrying the real question. Execution, delivery
 verification and human Gates remain coordinator-owned.
 Read `config.managerState` in the Goal graph for the current receipt and Topic.

@@ -78,14 +78,25 @@ export const managerSnapshot = (graph: GoalGraphSnapshot) => {
 };
 
 /** Durable wakeups around ordinary CLI-capable Agent runs. No supervisor builtin tools. */
+/** A takeover problem is identified by the task it blocked, not by its wording
+ *  alone: "Task attempt budget was exhausted" is the same sentence for every task
+ *  that reaches it, so a reason-only key makes the second task inherit the first
+ *  one's answer. */
+export const problemKey = (problem: { reason: string; taskId?: string }) =>
+  `${problem.taskId ?? 'goal'}::${problem.reason}`;
+
 /**
- * The problem a settled takeover turn escalated, when it escalated one. Reading it
- * is how the coordinator tells "nobody has looked at this yet" from "the main
- * Agent looked and says a human is required".
+ * The problem a settled takeover turn already answered, with the answer.
+ *
+ * Reading it is how the coordinator tells "nobody has looked at this yet" from
+ * "the main Agent looked and this is what it said". Any committed answer counts,
+ * not just `escalate`: if the Agent's plan did not unstick the Goal, handing the
+ * same problem over again only buys the same plan, so the Gate is the honest next
+ * step and the Agent's reasoning rides along on it.
  */
-export const escalatedProblem = (state?: GoalManagerState) =>
-  state?.consumed && state.problem && state.submitted?.action === 'escalate'
-    ? state.problem
+export const answeredProblem = (state?: GoalManagerState) =>
+  state?.consumed && state.problem && state.submitted
+    ? { key: state.problem, reason: state.submitted.reason }
     : undefined;
 
 export class GoalManagerService {
@@ -249,10 +260,10 @@ export class GoalManagerService {
     problem: { reason: string; taskId?: string },
   ): Promise<GoalTickResult | null> => {
     if (!this.eligible(graph)) return null;
-    // Already answered: a takeover turn that escalated THIS problem said a human
-    // is required, so handing the same reason over again would loop on it instead
-    // of asking. `escalatedProblem` is what the caller attaches to the gate.
-    if (escalatedProblem(graph.goal.config?.managerState) === problem.reason) return null;
+    // Already answered: a takeover turn that ran for THIS problem has had its say,
+    // so handing it over again would buy the same plan instead of asking a person.
+    // `answeredProblem` is what the caller attaches to the gate.
+    if (answeredProblem(graph.goal.config?.managerState)?.key === problemKey(problem)) return null;
     const settled = await this.settleInFlight(graph);
     if (settled) return settled;
     return this.startTurn(graph, problem);
@@ -406,7 +417,7 @@ export class GoalManagerService {
         ).id;
       const reviews = await this.reviews(current, db);
       const next: GoalManagerState = {
-        ...(problem ? { problem: problem.reason } : {}),
+        ...(problem ? { problem: problemKey(problem) } : {}),
         reviewSnapshot: reviews.hash,
         topicId,
         turns: (state?.turns ?? 0) + 1,
@@ -498,9 +509,15 @@ export class GoalManagerService {
       const unfinished = graph.nodes.filter(
         (n) => n.kind === 'task' && !terminalNodes.has(n.status),
       );
+      // The unfinished-work guard asks whether an UNINVITED turn may plan while
+      // work is in flight; it would double-plan the frontier. A takeover turn
+      // inherits work that is stuck by definition — the coordinator only handed it
+      // over because nothing else moves it — so a corrective task is the answer
+      // rather than the thing to forbid. Without this exemption the prompt
+      // advertises four actions and only `escalate` can ever commit.
       if (
         (plan.action === 'tasks' || plan.action === 'verify') &&
-        (unfinished.length ||
+        ((unfinished.length && !state.problem) ||
           (plan.action === 'verify' &&
             !graph.nodes.some((n) => n.kind === 'task' && n.status === 'resolved')))
       )
