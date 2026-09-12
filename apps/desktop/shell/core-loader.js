@@ -102,14 +102,21 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
     }
   };
 
-  const verified = {};
+  const verified = new Map();
   const verify = (version) => {
     if (typeof version !== 'string' || !VERSION_NAME.test(version) || /^\.\.?$/.test(version))
       throw new Error(`invalid core version name ${JSON.stringify(version)}`);
     if (blacklist.includes(version)) throw new Error('blacklisted');
     const dir = path.join(otaRoot, 'cores', version);
-    verified[version] ??= verifyCandidate(dir, { abi, publicKey });
-    return { dir, manifest: verified[version] };
+    if (!verified.has(version)) verified.set(version, verifyCandidate(dir, { abi, publicKey }));
+    return { dir, manifest: verified.get(version) };
+  };
+  const verifies = (version) => {
+    try {
+      return Boolean(verify(version));
+    } catch {
+      return false;
+    }
   };
 
   if (pointer.staged) {
@@ -127,8 +134,9 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
     const failures = boot.version === version ? Number(boot.failures) || 0 : 0;
     if (failures >= MAX_BOOT_FAILURES) {
       log.push(`core ${version} blacklisted after ${failures} boot failures`);
-      blacklist.push(version);
-      savePointer({ current: candidates[index + 1] ?? null, previous: null });
+      if (!blacklist.includes(version)) blacklist.push(version);
+      const next = candidates[index + 1];
+      savePointer({ current: verifies(next) ? next : null, previous: null });
       continue;
     }
     try {

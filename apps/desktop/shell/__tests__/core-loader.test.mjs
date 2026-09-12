@@ -177,6 +177,33 @@ describe('resolveCore', () => {
     });
   });
 
+  it('nulls current after 3 boot failures when previous is unverifiable', () => {
+    writeExternal('1.1.0');
+    writePointer({ current: '1.1.0', previous: '1.0.5' });
+    writeJson(path.join(otaRoot(), 'boot.json'), { failures: 3, version: '1.1.0' });
+    expect(resolve().source).toBe('builtin');
+    expect(readPointer()).toEqual({
+      abi: ABI,
+      blacklist: ['1.1.0'],
+      current: null,
+      previous: null,
+      staged: null,
+    });
+  });
+
+  it.each(['__proto__', 'constructor', 'toString'])(
+    'never treats prototype key %s as a verified core',
+    (version) => {
+      const dir = path.join(otaRoot(), 'cores', version);
+      fs.mkdirSync(path.join(dir, 'dist/main'), { recursive: true });
+      fs.writeFileSync(path.join(dir, 'dist/main/index.js'), 'unsigned');
+      writePointer({ current: version });
+      const core = resolve();
+      expect(core.source).toBe('builtin');
+      expect(core.log.join('\n')).toMatch(/rejected/);
+    },
+  );
+
   it('nulls current and blacklists after 3 boot failures without previous', () => {
     writeExternal('1.1.0');
     writePointer({ current: '1.1.0' });
