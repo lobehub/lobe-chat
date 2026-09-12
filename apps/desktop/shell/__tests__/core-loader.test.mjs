@@ -36,6 +36,7 @@ const writeCore = (dir, version, { shellAbi = ABI, mutate } = {}) => {
     'dist/preload/index.js': '// preload',
     'dist/renderer/index.html': '<html/>',
     'node_modules/electron-log/main.js': 'log',
+    'package.json': '{"type":"commonjs"}',
   };
   const tree = Object.entries(files).map(([filePath, content]) => {
     fs.mkdirSync(path.join(dir, path.dirname(filePath)), { recursive: true });
@@ -121,7 +122,7 @@ describe('resolveCore', () => {
     expect(resolve().source).toBe('external');
   });
 
-  it.each(['node_modules/electron-log/main.js', 'cli/lobe-cli.js'])(
+  it.each(['node_modules/electron-log/main.js', 'cli/lobe-cli.js', 'package.json'])(
     'rejects a core whose %s hash mismatches',
     (file) => {
       writeExternal('1.1.0', {
