@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   document: vi.fn(),
   file: vi.fn(),
   content: vi.fn(),
+  url: vi.fn(),
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
   VerifyCheckResultModel: vi.fn(function () {
@@ -46,7 +47,7 @@ vi.mock('@/database/models/file', () => ({
 }));
 vi.mock('@/server/services/file', () => ({
   FileService: vi.fn(function () {
-    return { getFileContent: mocks.content };
+    return { getFileAccessUrl: mocks.url, getFileContent: mocks.content };
   }),
 }));
 vi.mock('@/server/services/aiGeneration', () => ({
@@ -140,6 +141,33 @@ describe('Goal review evidence', () => {
     expect(JSON.stringify(mocks.generate.mock.calls[0][0].messages)).toContain(
       'rerun log, byte-identical to round 1',
     );
+  });
+
+  /**
+   * Regression: frames past the cap were dropped silently, so the model judged a
+   * five-frame check on three frames believing that was all of it — and its
+   * rejection cited evidence that had been withheld from the request.
+   */
+  it('tells the reviewer which frames the request held back, and records it', async () => {
+    mocks.evidence.mockResolvedValue([
+      ...['s1', 's2', 's3', 's4'].map((id) => ({ fileId: id, id, type: 'screenshot' })),
+      { content: 'exit=0', id: 't1', type: 'text' },
+    ]);
+    mocks.file.mockImplementation(async (id: string) => ({ id, size: 10, url: `key-${id}` }));
+    mocks.url.mockImplementation(async ({ id }: { id: string }) => `https://x/${id}`);
+
+    const prediction = await review().predict({ ...params, includeTextEvidence: true });
+    const payload = JSON.stringify(mocks.generate.mock.calls[0][0].messages);
+    expect(payload).toContain('Withheld from this request');
+    expect(payload).toContain('1 more frame(s)');
+    // The caveat rides on the judged row: "rejected blind" and "rejected having
+    // seen everything" are otherwise the same verdict in the agreement stats.
+    expect(prediction?.statusReason).toContain('1 more frame(s)');
+  });
+
+  it('leaves no caveat on a check whose evidence was fully shown', async () => {
+    const prediction = await review().predict({ ...params, includeTextEvidence: true });
+    expect(prediction?.statusReason).toBeUndefined();
   });
 
   it.each([

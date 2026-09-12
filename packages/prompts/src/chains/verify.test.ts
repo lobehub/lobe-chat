@@ -28,6 +28,36 @@ describe('REVIEW_PREDICTION_ACTIONS', () => {
 });
 
 describe('chainVerifyReviewPrediction', () => {
+  /**
+   * Regression: frames past the cap, unreadable media and unresolved payloads were
+   * dropped without a word, so the model rejected checks for "evidence that does
+   * not show it" while the artifact existed and was held back from the request.
+   */
+  it('declares withheld artifacts and forbids rejecting for their absence', () => {
+    const { messages } = chainVerifyReviewPrediction({
+      title: 'Multimodal inputs were integrated',
+      visuals: [{ accessUrl: 'https://example.com/a.png' }],
+      withheldEvidence: '2 more frame(s) exist on this check but were not attached',
+    });
+    const [userPart] = messages[1].content as { text: string }[];
+    expect(userPart.text).toContain('## Withheld from this request');
+    expect(userPart.text).toContain('2 more frame(s) exist');
+    expect(messages[0].content).toContain(
+      'Evidence you were not shown is not evidence nobody captured',
+    );
+    expect(messages[0].content).toContain('reject because it is absent from the evidence below');
+  });
+
+  it('omits the withheld section when the reviewer saw everything', () => {
+    const { messages } = chainVerifyReviewPrediction({
+      title: 'Table totals',
+      visuals: [{ accessUrl: 'https://example.com/a.png' }],
+    });
+    // The system rule names the section, so only the user turn can be asserted on.
+    const [userPart] = messages[1].content as { text: string }[];
+    expect(userPart.text).not.toContain('Withheld from this request');
+  });
+
   it('keeps the undecidable verdict from becoming an escape hatch for thin evidence', () => {
     const system = buildSystemPrompt();
     expect(system).toContain('could SOME capture the builder is able to produce settle this check');
@@ -80,9 +110,10 @@ describe('chainVerifyReviewPrediction', () => {
   /**
    * Bumped whenever the judging rules change, because agreement statistics are
    * grouped by (provider, model, promptVersion) and a silent edit would pool two
-   * different reviewers into one cohort. v4 added the undecidable verdict.
+   * different reviewers into one cohort. v4 added the undecidable verdict; v5
+   * started declaring the artifacts a request had to withhold.
    */
   it('uses a new prompt cohort for the stricter evidence contract', () => {
-    expect(REVIEW_PREDICT_PROMPT_VERSION).toBe('v4');
+    expect(REVIEW_PREDICT_PROMPT_VERSION).toBe('v5');
   });
 });

@@ -12,7 +12,7 @@ export const VERIFY_REPORT_PROMPT_VERSION = 'v1';
  * run write a NEW opinion instead of overwriting the old one — which is what
  * keeps two prompt versions comparable on the same checks.
  */
-export const REVIEW_PREDICT_PROMPT_VERSION = 'v4';
+export const REVIEW_PREDICT_PROMPT_VERSION = 'v5';
 
 export const VERIFY_VERIFIER_TYPES = ['program', 'agent', 'llm'] as const;
 export const VERIFY_ON_FAIL_ACTIONS = ['manual', 'auto_repair'] as const;
@@ -435,6 +435,12 @@ export interface ReviewPredictPromptInput {
   verdict?: string;
   /** Captions for the attached artifacts, indexed to match the image order. */
   visuals: { accessUrl: string; description?: string | null }[];
+  /**
+   * Artifacts the check carries that this request could not show the model —
+   * frames past the cap, unreadable media, unresolved payloads. Without it the
+   * model reads "withheld from me" as "never captured".
+   */
+  withheldEvidence?: string;
 }
 
 /**
@@ -476,6 +482,15 @@ Reject when the verifier reasoning or cited evidence says the target could not b
 Missing, invalid, or insufficient evidence is a failed acceptance check even when it does not prove a product defect. Say that verification must be re-run or recaptured; do not invent a product fix.
 Use confidence to express certainty about your reject reason, never to turn a lack of proof into an accept.
 
+## Evidence you were not shown is not evidence nobody captured
+The request may list artifacts under "Withheld from this request". Those exist on
+this check; you simply cannot open them here. Never cite one as missing, and never
+reject because it is absent from the evidence below — that reject would ask the
+builder to recapture something already captured.
+If your verdict turns on a withheld artifact, answer \`unjudgeable\` and say which
+one you would have to open. If the evidence you CAN read already settles the
+check, judge it normally.
+
 ## When the check cannot be settled by reading
 Some checks ask for something no reader can confirm: re-running the delivered scripts, reproducing numbers yourself, building the project, driving a live system, or comparing against state you have no access to. You inspect the captured evidence; you execute nothing.
 Answer \`unjudgeable\` only in that case, and name in \`comment\` the action the check requires and who has to perform it.
@@ -505,6 +520,7 @@ Answer in the language the check is written in. Set confidence honestly: it is r
     input.toulmin?.reasoning ? `Its reasoning: ${input.toulmin.reasoning}` : '',
     input.toulmin?.evidence ? `What it cited: ${input.toulmin.evidence}` : '',
     `\n## Attached evidence\n${visualBlock}`,
+    input.withheldEvidence ? `\n## Withheld from this request\n${input.withheldEvidence}` : '',
     input.textEvidence ? `\n## Original text evidence\n${input.textEvidence}` : '',
     '\nRe-judge the check against the attached evidence.',
   ]

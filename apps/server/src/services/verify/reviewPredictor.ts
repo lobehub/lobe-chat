@@ -14,17 +14,20 @@ import { FileModel } from '@/database/models/file';
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
-import type { VerifyCheckResultItem } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 
 import type { ReviewEvidenceRow } from './reviewEvidence';
 import { formatTextEvidence, TEXT_EVIDENCE_TYPES } from './reviewEvidence';
+import { describeWithheldEvidence } from './reviewInspection';
 import type { RawReviewPrediction } from './schema';
 import { ReviewPredictionSchema } from './schema';
 
 const log = debug('lobe-server:verify-review-predictor');
+
+/** Exactly what the model hands back, so the three readers cannot drift. */
+type CheckEvidenceRows = Awaited<ReturnType<VerifyEvidenceModel['listByCheckResult']>>;
 
 /** Media a still frame can actually carry a judgement about. */
 const VISUAL_EVIDENCE_TYPES = new Set(['screenshot', 'gif']);
@@ -180,13 +183,24 @@ export class VerifyReviewPredictorService {
       return null;
     }
 
-    const visuals = await this.collectVisuals(result);
+    // One read of the check's evidence feeds all three decisions below — which
+    // frames to attach, which payloads to inline, and what the request had to
+    // hold back — so they cannot disagree about what the check carries.
+    const evidence = await this.evidenceModel.listByCheckResult(result.id);
+    const visuals = await this.resolveVisuals(evidence);
     // Nothing to look at means nothing this reviewer can honestly say. A
     // text-only opinion here would be the model paraphrasing the verifier's own
     // reasoning back at the user, which is worse than silence.
-    const textEvidence = params.includeTextEvidence
-      ? await this.collectTextEvidence(result.id)
+    const collected = params.includeTextEvidence
+      ? await this.collectTextEvidence(evidence)
       : undefined;
+    const textEvidence = collected?.text;
+    const withheldEvidence = describeWithheldEvidence({
+      attachedVisualIds: new Set(visuals.map((visual) => visual.evidenceId)),
+      evidence,
+      includedTextIds: collected?.includedIds ?? new Set(),
+      textLaneEnabled: Boolean(params.includeTextEvidence),
+    });
     if (visuals.length === 0 && !textEvidence) {
       log('predict: %s has no readable evidence, skipping', checkResultId);
       return this.record(
@@ -212,6 +226,7 @@ export class VerifyReviewPredictorService {
         { evidence?: string; reasoning?: string } | undefined,
       verdict: result.verdict ?? undefined,
       visuals,
+      withheldEvidence,
     });
 
     const startedAt = Date.now();
@@ -272,6 +287,10 @@ export class VerifyReviewPredictorService {
       promptVersion: REVIEW_PREDICT_PROMPT_VERSION,
       rationale: prediction.rationale ?? undefined,
       status: 'judged',
+      // Persisted on a judged row too: "rejected having seen everything" and
+      // "rejected while three frames were held back" are the same verdict in the
+      // agreement statistics unless the caveat is stored with it.
+      statusReason: withheldEvidence,
     });
   }
 
@@ -291,15 +310,14 @@ export class VerifyReviewPredictorService {
     });
   }
 
-  private async collectTextEvidence(resultId: string) {
-    const evidence = await this.evidenceModel.listByCheckResult(resultId);
+  private async collectTextEvidence(evidence: CheckEvidenceRows) {
     const rows: ReviewEvidenceRow[] = [];
     for (const row of evidence) {
       if (!TEXT_EVIDENCE_TYPES.has(row.type)) continue;
       const content = await this.resolveEvidenceContent(row);
       if (content) rows.push({ content, description: row.description, id: row.id, type: row.type });
     }
-    return formatTextEvidence(rows);
+    return { includedIds: new Set(rows.map((row) => row.id)), text: formatTextEvidence(rows) };
   }
 
   /**
@@ -331,8 +349,7 @@ export class VerifyReviewPredictorService {
    * in this array, and that index is how a region gets bound back to the
    * evidence row it was drawn on.
    */
-  private async collectVisuals(result: VerifyCheckResultItem) {
-    const evidence = await this.evidenceModel.listByCheckResult(result.id);
+  private async resolveVisuals(evidence: CheckEvidenceRows) {
     const visual = evidence
       .filter((row) => VISUAL_EVIDENCE_TYPES.has(row.type) && row.fileId)
       .slice(0, MAX_VISUALS);
