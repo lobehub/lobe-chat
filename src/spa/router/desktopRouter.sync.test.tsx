@@ -20,6 +20,7 @@ import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import SettingsPageSkeleton from '@/components/Skeleton/Settings/Page';
 import TasksSkeleton from '@/components/Skeleton/Tasks';
 import TopicsSkeleton from '@/components/Skeleton/Topics';
+import TaskDetailSkeleton from '@/features/AgentTasks/AgentTaskDetail/TaskDetailSkeleton';
 import { WORKSPACE_SETTINGS_TABS } from '@/features/Workspace/workspaceAwarePath';
 import AppShellSkeleton from '@/spa/BootShell/AppShellSkeleton';
 import { createTabRouter } from '@/spa/router/tabRouter';
@@ -413,6 +414,7 @@ describe('desktop router shared definition', () => {
     for (const [pathname, expectedSkeleton] of [
       ['/agent/agent-1/topics', TopicsSkeleton],
       ['/agent/agent-1/tasks', TasksSkeleton],
+      ['/agent/agent-1/task/task-1', TaskDetailSkeleton],
       ['/agent/agent-1/goals', GoalSkeleton],
       ['/agent/agent-1/goal/goal-1', GoalDetailSkeleton],
       ['/agent/agent-1/profile', ProfileSkeleton],
