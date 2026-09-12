@@ -285,6 +285,40 @@ describe('QueueService', () => {
       warn.mockRestore();
     });
 
+    /**
+     * Fragmented oversize: the MCP contract keeps every raw content block in
+     * `state`, so a body can pass the quota through hundreds of mid-sized
+     * strings that a single generous clamp pass would leave untouched.
+     */
+    it('tightens the clamp until a fragmented oversized body actually fits', async () => {
+      qstashMocks.publishJSON.mockResolvedValue({ messageId: 'msg-test' });
+
+      const { QStashQueueServiceImpl } = await import('../impls/qstash');
+      const impl = new QStashQueueServiceImpl({ qstashToken: 'test-qstash-token' });
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const blocks = Array.from({ length: 525 }, () => ({ text: 'y'.repeat(20_000) }));
+
+      await impl.scheduleMessage({
+        context: { payload: { state: { content: blocks } }, phase: 'llm_result' } as any,
+        delay: 0,
+        endpoint: 'https://example.com/api/agent/run',
+        operationId: 'op-fragmented',
+        priority: 'normal',
+        stepIndex: 3,
+      });
+
+      const request = qstashMocks.publishJSON.mock.calls[0][0];
+      expect(Buffer.byteLength(JSON.stringify(request.body), 'utf8')).toBeLessThan(9 * 1024 * 1024);
+      expect(request.body.context.payload.state.content).toHaveLength(525);
+      expect(request.body.context.payload.state.content[0].text).toContain(
+        'characters omitted so the step could be scheduled',
+      );
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('"stringKeep":4000'));
+
+      warn.mockRestore();
+    });
+
     it('encodes logical deduplication keys as stable QStash-safe opaque IDs', async () => {
       qstashMocks.publishJSON.mockResolvedValue({ messageId: 'msg-test' });
 
