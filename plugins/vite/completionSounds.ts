@@ -1,5 +1,7 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+
+import type { Plugin } from 'vite';
 
 const SAMPLE_RATE = 24_000;
 const PEAK = 0.72;
@@ -78,7 +80,7 @@ const SOFT_TONE: Instrument = {
   transpose: 1,
 };
 
-/** Hard-mallet xylophone bar, quint-tuned (1 : 3 : 6), pitched a fifth below the others. */
+/** Hard-mallet xylophone bar, quint-tuned (1 : 3 : 6). */
 const XYLOPHONE: Instrument = {
   body: [
     { amp: 1, decay: 16, ratio: 1 },
@@ -114,6 +116,10 @@ const SOUNDS: Record<string, { duration: number; instrument: Instrument; notes: 
   'soft-tone': { duration: 1, instrument: SOFT_TONE, notes: ARPEGGIO },
   'xylophone': { duration: 0.75, instrument: XYLOPHONE, notes: DOORBELL },
 };
+
+// UNNotificationSound resolves names only from ~/Library/Sounds, and only AIFF — a WAV
+// there silently falls back to the system alert sound.
+export const BANNER_SOUND = { aiff: 'lobehub-complete.aiff', source: 'chat-complete' };
 
 const mulberry32 = (seed: number) => () => {
   seed = (seed + 0x6d_2b_79_f5) | 0;
@@ -214,8 +220,6 @@ const render = (instrument: Instrument, notes: Note[], duration: number) => {
   return samples;
 };
 
-// UNNotificationSound resolves names only from ~/Library/Sounds, and only AIFF — a WAV
-// there silently falls back to the system alert sound.
 const toAiff = (samples: Int16Array) => {
   const data = Buffer.alloc(samples.length * 2);
   for (const [i, sample] of samples.entries()) data.writeInt16BE(sample, i * 2);
@@ -262,17 +266,59 @@ const toWav = (samples: Int16Array) => {
   return Buffer.concat([header, data]);
 };
 
-const outputs: [string, Buffer][] = [];
-for (const [name, { duration, instrument, notes }] of Object.entries(SOUNDS)) {
-  const samples = render(instrument, notes, duration);
-  outputs.push([`public/sounds/${name}.wav`, toWav(samples)]);
-  if (name === 'chat-complete')
-    outputs.push(['apps/desktop/resources/sounds/lobehub-complete.aiff', toAiff(samples)]);
-}
+let rendered: { aiff: Buffer; wavs: Record<string, Buffer> } | undefined;
 
-for (const [file, content] of outputs) {
-  const output = path.resolve(process.cwd(), file);
-  mkdirSync(path.dirname(output), { recursive: true });
-  writeFileSync(output, content);
-  console.log(`Wrote ${output} (${content.length} bytes, ${SAMPLE_RATE}Hz mono)`);
-}
+export const renderCompletionSounds = () => {
+  if (rendered) return rendered;
+  const samples = Object.fromEntries(
+    Object.entries(SOUNDS).map(([name, { duration, instrument, notes }]) => [
+      name,
+      render(instrument, notes, duration),
+    ]),
+  );
+  rendered = {
+    aiff: toAiff(samples[BANNER_SOUND.source]),
+    wavs: Object.fromEntries(Object.entries(samples).map(([name, s]) => [name, toWav(s)])),
+  };
+  return rendered;
+};
+
+const writeIfChanged = async (file: string, content: Buffer) => {
+  const existing = await readFile(file).catch(() => undefined);
+  if (existing?.equals(content)) return;
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, content);
+};
+
+export const writeCompletionSounds = async ({
+  aiffDir,
+  wavDir,
+}: {
+  aiffDir?: string;
+  wavDir?: string;
+}) => {
+  const { aiff, wavs } = renderCompletionSounds();
+  const writes = [];
+  if (wavDir)
+    for (const [name, wav] of Object.entries(wavs))
+      writes.push(writeIfChanged(path.join(wavDir, `${name}.wav`), wav));
+  if (aiffDir) writes.push(writeIfChanged(path.join(aiffDir, BANNER_SOUND.aiff), aiff));
+  await Promise.all(writes);
+};
+
+/**
+ * The chimes are synthesized rather than checked in: the renderer gets WAVs under
+ * `<publicDir>/sounds`, the desktop main build gets the AIFF the macOS banner installs.
+ */
+export const viteCompletionSounds = (options: { aiffDir?: string } = {}): Plugin => {
+  let wavDir: string | undefined;
+  return {
+    async buildStart() {
+      await writeCompletionSounds({ aiffDir: options.aiffDir, wavDir });
+    },
+    configResolved(config) {
+      if (config.publicDir) wavDir = path.join(config.publicDir, 'sounds');
+    },
+    name: 'lobe-completion-sounds',
+  };
+};
