@@ -93,6 +93,6 @@ runs:
       if: steps.core.outputs.platform != ''
       uses: actions/upload-artifact@v6
       with:
-        name: core-ota-${{ steps.core.outputs.platform }}-${{ runner.arch }}
+        name: core-r0-${{ steps.core.outputs.platform }}-${{ runner.arch }}
         path: apps/desktop/release/core-ota
         retention-days: ${{ inputs.retention-days }}

@@ -55,7 +55,7 @@ on:
 
 concurrency:
   group: desktop-core-ota-${{ inputs.channel }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions: read-all
 
@@ -153,7 +153,13 @@ jobs:
           set -euo pipefail
           MAX_SEQ=-1
           for p in darwin win32 linux; do
-            SEQ=$(curl -sf --connect-timeout 10 --max-time 30 "$FEED_BASE_URL/$CHANNEL/core/$p/latest.json" | jq -r '.seq // -1' || echo -1)
+            HTTP_STATUS=$(curl -sS --connect-timeout 10 --max-time 30 \
+              -o "$RUNNER_TEMP/latest-$p.json" -w '%{http_code}' "$FEED_BASE_URL/$CHANNEL/core/$p/latest.json")
+            case "$HTTP_STATUS" in
+              200) SEQ=$(jq -er '.seq | select(type == "number")' "$RUNNER_TEMP/latest-$p.json") ;;
+              404) SEQ=-1 ;;
+              *) echo "::error::$p latest.json fetch failed: HTTP $HTTP_STATUS"; exit 1 ;;
+            esac
             echo "$p latest seq: $SEQ"
             if [ "$SEQ" -gt "$MAX_SEQ" ]; then MAX_SEQ=$SEQ; fi
           done
@@ -234,13 +240,19 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
         run: |
           set -euo pipefail
-          if curl -sf --connect-timeout 10 --max-time 30 "$FEED_BASE_URL/$CHANNEL/core/$PLATFORM/latest.json" -o "$RUNNER_TEMP/previous-core.json"; then
-            echo "Previous core: $(jq -r '.version' "$RUNNER_TEMP/previous-core.json")"
-            echo "args=--previous-manifest=$RUNNER_TEMP/previous-core.json" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::no previous core manifest for $PLATFORM; publishing without patches"
-            echo "args=" >> "$GITHUB_OUTPUT"
-          fi
+          HTTP_STATUS=$(curl -sS --connect-timeout 10 --max-time 30 \
+            -o "$RUNNER_TEMP/previous-core.json" -w '%{http_code}' "$FEED_BASE_URL/$CHANNEL/core/$PLATFORM/latest.json")
+          case "$HTTP_STATUS" in
+            200)
+              echo "Previous core: $(jq -er '.version' "$RUNNER_TEMP/previous-core.json")"
+              echo "args=--previous-manifest=$RUNNER_TEMP/previous-core.json" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "::warning::no previous core manifest for $PLATFORM; publishing without patches"
+              echo "args=" >> "$GITHUB_OUTPUT"
+              ;;
+            *) echo "::error::previous latest.json fetch failed: HTTP $HTTP_STATUS"; exit 1 ;;
+          esac
 
       - name: Build core release
         id: core
@@ -295,6 +307,7 @@ jobs:
         with:
           kind: core-build
           channel: ${{ inputs.channel }}
+          suffix: ${{ matrix.platform }}
           steps-json: ${{ toJSON(steps) }}
           job-status: ${{ job.status }}
 
@@ -344,6 +357,8 @@ jobs:
       - name: Report core publish result
         if: always()
         uses: ./.github/actions/desktop-ota-diagnostics
+        env:
+          APP_VERSION: ${{ needs.gate.outputs.version }}
         with:
           kind: core-publish
           channel: ${{ inputs.channel }}

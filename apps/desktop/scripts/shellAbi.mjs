@@ -15,7 +15,9 @@ const TRACKED_INPUTS = [
   'apps/desktop/module-deps.config.mjs',
   'apps/desktop/external-runtime-deps.config.mjs',
 ];
-const EXCLUDED = /^apps\/desktop\/shell\/(?:abi\.json$|__tests__\/)/;
+// set-desktop-version copies icon-<channel>.* over these before packaging; the variants stay hashed.
+const EXCLUDED =
+  /^apps\/desktop\/(?:shell\/(?:abi\.json$|__tests__\/)|build\/(?:icon\.png|icon\.ico|Icon\.icns)$)/;
 
 const sha256 = (data) => createHash('sha256').update(data).digest('hex');
 

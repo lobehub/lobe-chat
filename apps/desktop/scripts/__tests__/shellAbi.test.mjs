@@ -58,6 +58,8 @@ beforeEach(() => {
   write('apps/desktop/shell/abi.json', '{"shellAbi":"x"}');
   write('apps/desktop/shell/__tests__/x.test.mjs', 'test');
   write('apps/desktop/build/icon.png', 'png');
+  write('apps/desktop/build/icon-beta.png', 'beta-png');
+  write('apps/desktop/build/Icon.Assets.car', 'car');
   write('apps/desktop/electron-builder.mjs', 'export default {}');
   write('packages/native/binding.gyp', '{}');
   write('packages/native/src/a.cc', 'int main() {}');
@@ -101,6 +103,19 @@ describe('computeShellAbi', () => {
     write('packages/pure/index.js', 'changed');
     write('apps/desktop/pnpm-lock.yaml', LOCK.replace('sha512-unrelated', 'sha512-unrelated2'));
     expect(abi()).toBe(base);
+  });
+
+  it('ignores the channel-swapped icon targets but not their variants', () => {
+    const base = abi();
+    write('apps/desktop/build/icon.png', 'beta-png');
+    write('apps/desktop/build/Icon.icns', 'beta-icns');
+    write('apps/desktop/build/icon.ico', 'beta-ico');
+    expect(abi()).toBe(base);
+    write('apps/desktop/build/icon-beta.png', 'changed');
+    expect(abi()).not.toBe(base);
+    write('apps/desktop/build/icon-beta.png', 'beta-png');
+    write('apps/desktop/build/Icon.Assets.car', 'changed');
+    expect(abi()).not.toBe(base);
   });
 
   it('normalizes CRLF and whitespace in the public key', () => {

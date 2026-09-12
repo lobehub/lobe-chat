@@ -13,6 +13,10 @@ inputs:
   job-status:
     description: Caller job status before diagnostics
     required: true
+  suffix:
+    description: Extra artifact-name segment for matrix legs sharing job id, os and arch
+    required: false
+    default: ''
 outputs:
   published:
     description: Whether a core release was published
@@ -43,7 +47,7 @@ runs:
       if: always()
       uses: actions/upload-artifact@v6
       with:
-        name: desktop-ota-diagnostics-${{ github.job }}-${{ runner.os }}-${{ runner.arch }}-${{ github.run_attempt }}
+        name: desktop-ota-diagnostics-${{ github.job }}-${{ runner.os }}-${{ runner.arch }}${{ inputs.suffix && format('-{0}', inputs.suffix) || '' }}-${{ github.run_attempt }}
         if-no-files-found: warn
         retention-days: 14
         path: |
