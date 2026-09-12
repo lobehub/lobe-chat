@@ -6,6 +6,12 @@ vi.mock('debug', () => ({
   default: () => vi.fn(),
 }));
 
+const mockDecrypt = vi.hoisted(() => vi.fn());
+
+vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
+  KeyVaultsGateKeeper: { initWithEnvKey: async () => ({ decrypt: mockDecrypt }) },
+}));
+
 const createSelectDb = (rows: any[]) => {
   const chain = {
     from: vi.fn(() => chain),
@@ -84,6 +90,27 @@ describe('OIDCAdapter (DrizzleAdapter)', () => {
       const result = await adapter.find('lca_client_1');
 
       expect(result).toBeUndefined();
+    });
+
+    it('hands oidc-provider the decrypted client secret', async () => {
+      mockDecrypt.mockResolvedValue({ plaintext: 'lcs_plain', wasAuthentic: true });
+      const db = createSelectDb([{ ...clientRow, clientSecret: 'iv:tag:cipher' }]);
+      const adapter = new DrizzleAdapter('Client', db as any);
+
+      const result = (await adapter.find('lca_client_1')) as Record<string, unknown>;
+
+      expect(mockDecrypt).toHaveBeenCalledWith('iv:tag:cipher');
+      expect(result.client_secret).toBe('lcs_plain');
+    });
+
+    it('drops a client secret that fails to decrypt instead of passing ciphertext through', async () => {
+      mockDecrypt.mockResolvedValue({ plaintext: '', wasAuthentic: false });
+      const db = createSelectDb([{ ...clientRow, clientSecret: 'iv:tag:cipher' }]);
+      const adapter = new DrizzleAdapter('Client', db as any);
+
+      const result = (await adapter.find('lca_client_1')) as Record<string, unknown>;
+
+      expect(result).not.toHaveProperty('client_secret');
     });
 
     it('omits null optional fields so oidc-provider client schema accepts the metadata', async () => {

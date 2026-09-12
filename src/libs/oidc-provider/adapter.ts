@@ -12,6 +12,8 @@ import {
 import debug from 'debug';
 import { eq, sql } from 'drizzle-orm';
 
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+
 // Create adapter logging namespace
 const log = debug('lobe-oidc:adapter');
 
@@ -28,6 +30,34 @@ const log = debug('lobe-oidc:adapter');
  * Default: 180 seconds (3 minutes)
  */
 const REFRESH_TOKEN_GRACE_PERIOD_SECONDS = 180;
+
+/**
+ * Client secrets of user-created OAuth apps are stored encrypted (see
+ * `OidcClientModel`), but oidc-provider compares them in plaintext at the token
+ * endpoint, so they are decrypted on the way out.
+ *
+ * A secret that fails to decrypt is dropped rather than passed through: handing
+ * over ciphertext would make it the thing clients have to present. Dropping it
+ * fails the request as `invalid_client`, which is the honest outcome.
+ */
+const decryptClientSecret = async (clientId: string, stored: string | null) => {
+  if (!stored) return stored;
+
+  try {
+    const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+    const { plaintext, wasAuthentic } = await gateKeeper.decrypt(stored);
+
+    if (!wasAuthentic) {
+      log('[Client] Failed to decrypt the client secret of %s', clientId);
+      return null;
+    }
+
+    return plaintext;
+  } catch (error) {
+    log('[Client] Error while decrypting the client secret of %s: %O', clientId, error);
+    return null;
+  }
+};
 
 class OIDCAdapter {
   private db: LobeChatDatabase;
@@ -301,7 +331,7 @@ class OIDCAdapter {
         const clientMetadata: Record<string, any> = {
           application_type: model.applicationType,
           client_id: model.id,
-          client_secret: model.clientSecret,
+          client_secret: await decryptClientSecret(model.id, model.clientSecret),
           client_uri: model.clientUri,
           grant_types: model.grants,
           isFirstParty: model.isFirstParty,
