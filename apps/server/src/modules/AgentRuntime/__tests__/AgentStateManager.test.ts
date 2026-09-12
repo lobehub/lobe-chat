@@ -309,14 +309,13 @@ describe('AgentStateManager', () => {
       errorSpy.mockRestore();
     });
 
-    it('degrades to null rather than throwing when Redis is unavailable', async () => {
-      // A read failure must not break the delivery: without the envelope the
-      // handler simply runs the step it was given.
+    it('surfaces a read failure instead of reporting no envelope', async () => {
+      // "No envelope" means run the delivered step; "could not read the
+      // envelope" may mean an operation is mid-loop with nothing queued behind
+      // it. Collapsing the two would ACK that delivery as stale and strand it.
       redisMock.get.mockRejectedValue(new Error('redis down'));
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
 
-      await expect(stateManager.loadInlineResume('op-resume')).resolves.toBeNull();
-      errorSpy.mockRestore();
+      await expect(stateManager.loadInlineResume('op-resume')).rejects.toThrow('redis down');
     });
   });
 });

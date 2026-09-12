@@ -539,15 +539,22 @@ export class AgentStateManager {
     }
   }
 
+  /**
+   * Deliberately not wrapped in a try/catch. "No envelope" and "could not read
+   * the envelope" have opposite consequences: the first means run the delivered
+   * step, the second means an operation may be mid-loop with nothing queued
+   * behind it. Swallowing the error would ACK that delivery as stale and strand
+   * the run, so the failure propagates and the queue retries instead.
+   */
   async loadInlineResume(operationId: string): Promise<null | string> {
-    try {
-      return await this.redis.get(`${this.INLINE_RESUME_PREFIX}:${operationId}`);
-    } catch (error) {
-      console.error('Failed to load inline resume pointer:', error);
-      return null;
-    }
+    return this.redis.get(`${this.INLINE_RESUME_PREFIX}:${operationId}`);
   }
 
+  /**
+   * Best-effort, unlike the read: a stale envelope is harmless. It only ever
+   * resumes a step whose index is ahead of the delivered one, and the next step
+   * to park overwrites it — worst case it expires with the operation's TTL.
+   */
   async clearInlineResume(operationId: string): Promise<void> {
     try {
       await this.redis.del(`${this.INLINE_RESUME_PREFIX}:${operationId}`);

@@ -201,12 +201,19 @@ export async function runStep(c: Context): Promise<Response> {
 
     try {
       // The first iteration carries this delivery's one-shot payload (human
-      // input, approvals, resume flags, retry counters). Later iterations are
-      // plain steps, so they must not replay any of it. A resumed run is a later
-      // iteration of a dead loop, so it carries none of it either.
+      // input, approvals, resume flags). Later iterations are plain steps, so
+      // they must not replay any of it, and neither must a resumed run — it
+      // stands in for a later iteration of a dead loop, not for the original
+      // message.
+      //
+      // `externalRetryCount` is the exception, because it describes this
+      // delivery rather than the step's payload. A parked approval whose Review
+      // failed to persist is only replayed when the count is nonzero, so
+      // dropping it here would leave that approval permanently unavailable.
       result = resumeFrom
         ? await aiAgentService.executeStep({
             context: resumeFrom.context,
+            externalRetryCount,
             inlineContinuation: inlineEnabled,
             operationId,
             retainStepLock: true,

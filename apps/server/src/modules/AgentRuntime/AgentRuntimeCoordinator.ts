@@ -329,8 +329,12 @@ export class AgentRuntimeCoordinator {
   }
 
   /**
-   * Read a parked inline envelope. Returns null when there is none, or when the
-   * stored value no longer parses.
+   * Read a parked inline envelope. Returns null when there is none.
+   *
+   * A read failure propagates, so the delivery is retried rather than treated as
+   * "no envelope" — see `loadInlineResume` on the state manager. A value that no
+   * longer parses is different: retrying cannot fix it, so it is reported and
+   * treated as absent instead of looping the delivery into the DLQ.
    */
   async loadInlineResume<T>(operationId: string): Promise<null | T> {
     const serialized = await this.stateManager.loadInlineResume(operationId);
@@ -338,7 +342,8 @@ export class AgentRuntimeCoordinator {
 
     try {
       return JSON.parse(serialized) as T;
-    } catch {
+    } catch (error) {
+      console.error(`Unparseable inline resume envelope for ${operationId}:`, error);
       return null;
     }
   }

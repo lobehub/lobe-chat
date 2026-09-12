@@ -595,6 +595,42 @@ describe('runStep inline step loop', () => {
     expect(getCaptures()[0].body).toMatchObject({ stepIndex: 7 });
   });
 
+  it('keeps the delivery retry count when resuming a parked step', async () => {
+    // A step that parked for approval but failed to persist its Review is only
+    // replayed while `externalRetryCount > 0`. Dropping it on the resume path
+    // lets the stale-delivery guard ACK the step, and the approval never
+    // becomes available.
+    mockLoadInlineResume.mockResolvedValue(continuationFor(7));
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: doneState,
+      success: true,
+    });
+
+    const { ctx } = buildContext({ body: validBody, retried: '2' });
+    await runStep(ctx);
+
+    expect(mockExecuteStep.mock.calls[0][0]).toMatchObject({
+      externalRetryCount: 2,
+      stepIndex: 7,
+    });
+  });
+
+  it('fails the delivery when the parked envelope cannot be read', async () => {
+    // Treating an unreadable envelope as an absent one would run the delivered
+    // (older) step, get ACKed as stale, and strand the operation. A 500 lets the
+    // queue retry instead.
+    mockLoadInlineResume.mockRejectedValue(new Error('redis down'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
+
+    const { ctx } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(500);
+    expect(mockExecuteStep).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
   it('ignores a parked envelope that is not ahead of the delivered step', async () => {
     // After a deadline hand-off the queued message carries the same index the
     // envelope named. That delivery is authoritative, payload and all.
