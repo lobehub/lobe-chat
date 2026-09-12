@@ -30,6 +30,50 @@ const toQStashDelaySeconds = (delayMs: number): number | undefined => {
 };
 
 /**
+ * QStash rejects any single message above 10 MiB (`quota maxMessageSize
+ * exceeded`) with a 500, so an oversized body used to fail the publish, throw
+ * out of `executeStep` and kill the whole operation at a step boundary. The
+ * budget leaves headroom for the envelope QStash adds around the body.
+ */
+const QSTASH_MAX_BODY_BYTES = 10 * 1024 * 1024;
+const QSTASH_BODY_BUDGET_BYTES = 9 * 1024 * 1024;
+
+/** What a single string may keep once the body has to be shrunk to fit. */
+const OVERSIZED_STRING_KEEP = 25_000;
+
+const byteLength = (value: unknown): number =>
+  Buffer.byteLength(JSON.stringify(value) ?? '', 'utf8');
+
+/**
+ * Shrink a too-large message body by clamping its long strings, depth-first.
+ * Oversized bodies are always one or a few runaway strings — a tool result or
+ * an error message carrying raw command output — never many small fields, so
+ * clamping strings recovers the body while keeping its shape intact for the
+ * worker that receives it.
+ */
+const clampOversizedStrings = (value: unknown): unknown => {
+  if (typeof value === 'string') {
+    if (value.length <= OVERSIZED_STRING_KEEP) return value;
+    const omitted = value.length - OVERSIZED_STRING_KEEP;
+
+    return `${value.slice(0, OVERSIZED_STRING_KEEP)}\n\n[Truncated: ${omitted.toLocaleString()} characters omitted so the step could be scheduled. Original length: ${value.length.toLocaleString()} characters]`;
+  }
+
+  if (Array.isArray(value)) return value.map(clampOversizedStrings);
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        clampOversizedStrings(entry),
+      ]),
+    );
+  }
+
+  return value;
+};
+
+/**
  * QStash queue service implementation
  */
 export class QStashQueueServiceImpl implements QueueServiceImpl {
@@ -82,7 +126,7 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
         retries,
         url: endpoint,
       };
-      const response = await qstashClient.publishJSON(request);
+      const response = await qstashClient.publishJSON(this.fitBodyToQuota(request, operationId));
 
       log(
         `[${operationId}] Scheduled step %d to %s with %dms delay (messageId: %s)`,
@@ -97,6 +141,33 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
       log('Failed to schedule step %d for operation %s: %O', stepIndex, operationId, error);
       throw error;
     }
+  }
+
+  /**
+   * Keep a step schedulable when its body outgrew the QStash message quota:
+   * clamp the long strings rather than let the publish 500 and take the whole
+   * operation down. The step still runs — it just sees a truncated copy of
+   * whatever ran away (see `clampOversizedStrings`).
+   */
+  private fitBodyToQuota<T extends { body: unknown }>(request: T, operationId: string): T {
+    const size = byteLength(request.body);
+    if (size <= QSTASH_BODY_BUDGET_BYTES) return request;
+
+    const body = clampOversizedStrings(request.body);
+    const clampedSize = byteLength(body);
+
+    console.warn(
+      JSON.stringify({
+        bytes: size,
+        clampedBytes: clampedSize,
+        event: 'agent.queue.oversized_message_clamped',
+        fitsAfterClamp: clampedSize <= QSTASH_BODY_BUDGET_BYTES,
+        limitBytes: QSTASH_MAX_BODY_BYTES,
+        operationId,
+      }),
+    );
+
+    return { ...request, body };
   }
 
   async scheduleBatchMessages(messages: QueueMessage[]): Promise<string[]> {
