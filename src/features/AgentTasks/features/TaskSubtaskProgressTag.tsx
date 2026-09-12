@@ -153,9 +153,8 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
       async (event: MouseEvent<HTMLElement>) => {
         event.stopPropagation();
 
-        // Static menus open on hover too (trigger "both"), so a manual toggle
-        // here would close the menu the pointer just opened. Only the lazy
-        // path owns open state; the dropdown's own trigger handles the rest.
+        // Only the lazy path owns open state; static menus leave toggling to
+        // the dropdown trigger so a click never fights its own open.
         if (!onRequestSubtasks) return;
 
         if (open) {
@@ -229,7 +228,7 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
       <DropdownMenu
         items={navigationItems}
         open={open}
-        trigger={'both'}
+        trigger={'click'}
         onOpenChange={handleOpenChange}
       >
         {tag}
