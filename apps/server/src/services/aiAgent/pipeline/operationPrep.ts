@@ -3,7 +3,7 @@ import { extractActivatedToolIdsFromMessages } from '@lobechat/agent-runtime';
 import { builtinSkills } from '@lobechat/builtin-skills';
 import { getShellSyntaxGuidance } from '@lobechat/builtin-tool-local-system';
 import { builtinTools } from '@lobechat/builtin-tools';
-import type { AgentManagementContext } from '@lobechat/context-engine';
+import type { AgentManagementContext, ProjectInstructionFile } from '@lobechat/context-engine';
 import { buildExpertiseContextSnapshot, SkillEngine } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { buildTaskManagerDefaultsPrompt, resourcesTreePrompt } from '@lobechat/prompts';
@@ -199,6 +199,12 @@ export interface OperationPrepResult {
   expertise?: Awaited<ReturnType<typeof buildExpertiseContextSnapshot>>;
   initialContext: AgentRuntimeContext;
   operationSkillSet?: ReturnType<SkillEngine['generate']>;
+  /**
+   * A project's root instruction files. Run context, not agent config — it
+   * travels on the operation like `expertise` does, and the context engine
+   * injects it.
+   */
+  projectInstructions?: ProjectInstructionFile[];
   userMemory?: ServerUserMemoryConfig;
 }
 
@@ -324,17 +330,18 @@ const resolveWorkspaceInit = async (
  * (bound cwd + project instructions), the OperationSkillSet, and the learned
  * expertise snapshot.
  *
- * Side effects, all order-preserving with the pre-extraction code: stamps the
- * project instructions onto `ctx.agentConfig.projectInstructions` for the
- * context engine to inject, writes the bound cwd onto the returned
- * `deviceSystemInfo`, pins the topic working directory, and merges attachment
- * warnings into `botPlatformContext`.
+ * Side effects, all order-preserving with the pre-extraction code: writes the
+ * bound cwd onto the returned `deviceSystemInfo`, pins the topic working
+ * directory, and merges attachment warnings into `botPlatformContext`. The
+ * project instructions come back on the result instead.
  */
 export const prepareOperation = async (
   deps: OperationPrepDeps,
   ctx: ExecRunContext,
   input: OperationPrepInput,
 ): Promise<OperationPrepResult> => {
+  /** Filled by the workspace branch below; returned as run context. */
+  let projectInstructions: ProjectInstructionFile[] | undefined;
   const {
     agentConfig,
     appContext,
@@ -922,16 +929,15 @@ export const prepareOperation = async (
       );
     }
 
-    // Hand the project-root agent instructions (AGENTS.md / CLAUDE.md) to the
-    // context engine, which assembles the system message and injects them
-    // directly after the persona — where this code used to concatenate them.
-    // Passing the files instead of a rendered block is the point: composing the
-    // prompt out here is what made `agentConfig` a mutable channel three
-    // pipeline stages wide.
+    // Collected for the context engine, which assembles the system message and
+    // injects these directly after the persona — where this code used to
+    // concatenate them. Returning them rather than stamping `agentConfig` keeps
+    // run context off the agent's configuration.
     if (workspaceInit.workspace.instructions.length) {
-      agentConfig.projectInstructions = workspaceInit.workspace.instructions.map(
-        ({ content, source }) => ({ content, source }),
-      );
+      projectInstructions = workspaceInit.workspace.instructions.map(({ content, source }) => ({
+        content,
+        source,
+      }));
       log(
         'execAgent: injected %d project instruction file(s): %s',
         workspaceInit.workspace.instructions.length,
@@ -1017,6 +1023,7 @@ export const prepareOperation = async (
     expertise,
     initialContext,
     operationSkillSet,
+    projectInstructions,
     userMemory,
   };
 };

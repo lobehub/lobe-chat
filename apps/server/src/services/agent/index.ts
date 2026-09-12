@@ -1,7 +1,6 @@
 import { type BuiltinAgentSlug } from '@lobechat/builtin-agents';
 import { BUILTIN_AGENTS } from '@lobechat/builtin-agents';
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
-import type { ProjectInstructionFile } from '@lobechat/context-engine';
 import { type LobeChatDatabase } from '@lobechat/database';
 import { type AgentItem, type LobeAgentChatConfig, type LobeAgentConfig } from '@lobechat/types';
 import { cleanObject, merge } from '@lobechat/utils';
@@ -39,20 +38,6 @@ export type AgentConfigWithId = LobeAgentConfig &
      * sub-agent reasoning choices over the user's model-instance defaults.
      */
     subAgentChatConfigOverride?: Partial<LobeAgentChatConfig>;
-    /**
-     * Borrowed-connector attribution, rendered during tool discovery because
-     * naming the authorizers needs a user lookup. Carried here rather than
-     * concatenated onto `systemRole`: the context engine owns assembling the
-     * system message, and a string appended mid-pipeline made the final
-     * prompt's composition readable only by following three files in
-     * execution order.
-     */
-    connectorOwnershipNote?: string;
-    /**
-     * A project's root instruction files, collected during operation prep.
-     * Rendered by the context engine — see `connectorOwnershipNote`.
-     */
-    projectInstructions?: ProjectInstructionFile[];
   };
 
 interface AgentWelcomeData {

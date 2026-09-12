@@ -1,5 +1,5 @@
 import { type AgentState } from '@lobechat/agent-runtime';
-import { type BotPlatformContext } from '@lobechat/context-engine';
+import type { type BotPlatformContext, ProjectInstructionFile } from '@lobechat/context-engine';
 import {
   type AgentShareVisitorContext,
   type ExecSubAgentParams,
@@ -46,6 +46,8 @@ export interface RuntimeExecutorContext {
   allowEarlyFinalAnswerVisibleOutputEnd?: boolean;
   botContext?: unknown;
   botPlatformContext?: BotPlatformContext;
+  /** Borrowed-connector attribution, injected into the system message. */
+  connectorOwnershipNote?: string;
   discordContext?: any;
   evalContext?: EvalContext;
   /**
@@ -71,6 +73,8 @@ export interface RuntimeExecutorContext {
   messageModel: MessageModel;
   modelRuntimeConfig?: AgentState['modelRuntimeConfig'];
   operationId: string;
+  /** A project's root instruction files, injected into the system message. */
+  projectInstructions?: ProjectInstructionFile[];
   searchDecision?: SearchDecision;
   serverDB: LobeChatDatabase;
   stepIndex: number;

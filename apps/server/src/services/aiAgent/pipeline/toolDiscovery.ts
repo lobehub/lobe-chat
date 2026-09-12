@@ -135,6 +135,11 @@ export interface ToolDiscoveryResult {
   builtinModels: Awaited<ReturnType<typeof loadModels>>;
   composioManifests: LobeToolManifest[];
   connectorManifests: ReturnType<typeof buildConnectorManifests>;
+  /**
+   * Tells the model whose connected account each borrowed tool runs on. Run
+   * context: it travels on the operation and the context engine injects it.
+   */
+  connectorOwnershipNote?: string;
   executionPlan?: ExecutionPlan;
   hasAgentDocuments: boolean;
   hasEnabledKnowledgeBases: boolean;
@@ -164,15 +169,16 @@ export interface ToolDiscoveryResult {
  * Short-circuits when `disableTools` is set (only the client function tools
  * are honored), matching the pre-extraction behavior.
  *
- * Side effect: stamps `ctx.agentConfig.connectorOwnershipNote` (connector
- * credential ownership) for the context engine to inject — `createOperation`
- * downstream must see that write.
+ * Returns the connector credential ownership note as run context when the run
+ * borrows connectors other members authorized; the context engine injects it.
  */
 export const discoverTools = async (
   deps: ToolDiscoveryDeps,
   ctx: ExecRunContext,
   input: ToolDiscoveryInput,
 ): Promise<ToolDiscoveryResult> => {
+  /** Filled below when the run borrows connectors; returned as run context. */
+  let connectorOwnershipNote: string | undefined;
   const {
     agentConfig,
     appContext,
@@ -360,9 +366,9 @@ export const discoverTools = async (
         );
         const note = buildConnectorOwnershipPrompt(borrowed, displayMap);
         if (note) {
-          // Handed to the context engine rather than concatenated here — see
-          // `AgentConfigWithId.connectorOwnershipNote`.
-          agentConfig.connectorOwnershipNote = note;
+          // Returned as run context for the context engine to inject, rather
+          // than concatenated onto the agent's systemRole here.
+          connectorOwnershipNote = note;
           log(
             'execAgent: injected tool credential ownership note for %d connector(s)',
             borrowed.length,
@@ -1177,6 +1183,7 @@ export const discoverTools = async (
     builtinModels,
     composioManifests,
     connectorManifests,
+    connectorOwnershipNote,
     executionPlan,
     hasAgentDocuments,
     hasEnabledKnowledgeBases,
