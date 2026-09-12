@@ -169,3 +169,7 @@ docs/superpowers/
 
 # Amp agent runtime
 .amp/
+
+# synthesized by plugins/vite/completionSounds.ts
+public/sounds/
+apps/desktop/resources/sounds/
