@@ -38,15 +38,13 @@ export const readPointerAbi = (otaRoot: string): string | null => {
 export const readPointer = (otaRoot: string, abi: string): CorePointer => {
   const raw = readRaw(otaRoot);
   if (raw?.abi === abi) {
-    {
-      return {
-        abi,
-        blacklist: Array.isArray(raw.blacklist) ? raw.blacklist.filter(versionOrNull) : [],
-        current: versionOrNull(raw.current),
-        previous: versionOrNull(raw.previous),
-        staged: versionOrNull(raw.staged),
-      };
-    }
+    return {
+      abi,
+      blacklist: Array.isArray(raw.blacklist) ? raw.blacklist.filter(versionOrNull) : [],
+      current: versionOrNull(raw.current),
+      previous: versionOrNull(raw.previous),
+      staged: versionOrNull(raw.staged),
+    };
   }
   return emptyPointer(abi);
 };

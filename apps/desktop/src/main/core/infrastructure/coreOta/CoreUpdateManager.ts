@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
 import type { UpdateChannel } from '@lobechat/electron-client-ipc';
@@ -29,6 +29,8 @@ import { cleanupLegacy, CoreStore } from './store';
 const logger = createLogger('core:CoreUpdateManager');
 
 const BOOT_CHECK_TIMEOUT = 15_000;
+const COLD_BOOT_CHECK_TIMEOUT = 60_000;
+const FETCH_TIMEOUT = 60_000;
 const LOAD_PING_TIMEOUT = 3000;
 const MAX_BOOT_CRASHES = 2;
 const CHECK_INTERVAL = 60 * 60 * 1000;
@@ -75,6 +77,7 @@ export class CoreUpdateManager {
   private rollbackRendererDir: string | null = null;
   private pendingBootCheck = false;
   private coldBootCheck = false;
+  private mountedSeen = false;
   private bootCrashCount = 0;
   private bootCheckTimer: NodeJS.Timeout | null = null;
   private loadPingTimer: NodeJS.Timeout | null = null;
@@ -87,7 +90,9 @@ export class CoreUpdateManager {
   constructor(app: App, options: Options = {}) {
     this.app = app;
     this.shell = options.shell ?? shellInfo;
-    this.fetchImpl = options.fetchImpl ?? ((url, init) => net.fetch(url, init));
+    this.fetchImpl =
+      options.fetchImpl ??
+      ((url, init) => net.fetch(url, { ...init, signal: AbortSignal.timeout(FETCH_TIMEOUT) }));
     this.otaRoot = path.join(electronApp.getPath('userData'), 'core-ota');
     this.store = new CoreStore(this.otaRoot, (url) => this.fetchImpl(url));
     this.builtinManifest = this.shell ? readBuiltinManifest(this.shell) : null;
@@ -143,21 +148,41 @@ export class CoreUpdateManager {
     writePointer(this.otaRoot, this.pointer);
     logger.info('Core OTA boot state', this.pointer);
     this.gc(abiChanged);
-    // Cold boot has no baseline for the 3s load ping (window not created yet); only the mounted timeout guards it.
-    if (this.runningVersion) this.armBootCheck({ cold: true });
   };
 
   private reconcilePointer(pointer: CorePointer): CorePointer {
     const running = this.runningVersion;
-    if (!running && pointer.current) return { ...pointer, current: null, previous: null };
+    if (!running && pointer.current) {
+      const rejected = existsSync(path.join(this.coreDirOf(pointer.current), 'manifest.json'));
+      return {
+        ...pointer,
+        blacklist: rejected
+          ? [...new Set([...pointer.blacklist, pointer.current])]
+          : pointer.blacklist,
+        current: null,
+        previous: null,
+      };
+    }
     if (running && pointer.current !== running) {
       return { ...pointer, current: running, previous: null };
     }
     return pointer;
   }
 
+  private isFirstBootOfRunningCore() {
+    try {
+      const boot = JSON.parse(readFileSync(path.join(this.otaRoot, 'boot.json'), 'utf8'));
+      return boot?.version === this.runningVersion && boot?.failures === 1;
+    } catch {
+      return false;
+    }
+  }
+
   startScheduledChecks = () => {
     if (!this.enabled) return;
+    if (this.runningVersion && !this.mountedSeen && this.isFirstBootOfRunningCore()) {
+      this.armBootCheck({ cold: true });
+    }
     electronApp.on('browser-window-blur', this.handleWindowBlur);
     electronApp.on('browser-window-focus', this.clearIdleTimer);
     this.scheduleChecks();
@@ -181,6 +206,7 @@ export class CoreUpdateManager {
   };
 
   handleBootPing = (stage?: 'loaded' | 'mounted') => {
+    if (stage !== 'loaded') this.mountedSeen = true;
     if (!this.pendingBootCheck) return;
     if (stage === 'loaded') {
       this.clearLoadPingTimer();
@@ -355,8 +381,12 @@ export class CoreUpdateManager {
     return `${FEED_BASE_URL}/${this.activeChannel}/core/${process.platform}`;
   }
 
+  private coreDirOf(version: string) {
+    return path.join(this.otaRoot, 'cores', version);
+  }
+
   private rendererDirOf(version: string) {
-    return path.join(this.otaRoot, 'cores', version, RENDERER_ROOT);
+    return path.join(this.coreDirOf(version), RENDERER_ROOT);
   }
 
   private savePointer(patch: Partial<CorePointer>) {
@@ -430,7 +460,10 @@ export class CoreUpdateManager {
       this.loadPingTimer = setTimeout(() => this.failBootCheck('load-timeout'), LOAD_PING_TIMEOUT);
       this.loadPingTimer.unref?.();
     }
-    this.bootCheckTimer = setTimeout(() => this.failBootCheck('boot-timeout'), BOOT_CHECK_TIMEOUT);
+    this.bootCheckTimer = setTimeout(
+      () => this.failBootCheck('boot-timeout'),
+      cold ? COLD_BOOT_CHECK_TIMEOUT : BOOT_CHECK_TIMEOUT,
+    );
     this.bootCheckTimer.unref?.();
   }
 

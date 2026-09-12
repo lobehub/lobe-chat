@@ -255,15 +255,29 @@ describe('CoreUpdateManager initialize', () => {
     expect(existsSync(path.join(storeDir(), 'f'.repeat(64)))).toBe(true);
   });
 
-  it('clears pointer.current when the shell fell back to builtin', async () => {
+  it('clears pointer.current when the shell fell back to builtin and the core dir is gone', async () => {
     pointerAt({ current: '1.0.1', previous: '0.9.0' });
 
     const { manager } = await loadManager();
 
-    expect(readPointer(otaRoot(), ABI)).toMatchObject({ current: null, previous: null });
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({
+      blacklist: [],
+      current: null,
+      previous: null,
+    });
     serveLatest(rendererOnly('1.0.1', 1));
     await manager.checkForUpdates();
     expect(manager.getStatus().staged).toBe('1.0.1');
+  });
+
+  it('blacklists pointer.current when the shell rejected a core that still exists', async () => {
+    const v1 = rendererOnly('1.0.1', 1);
+    materialize(coreDir('1.0.1'), BASE_FILES, v1);
+    pointerAt({ current: '1.0.1' });
+
+    await loadManager();
+
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: ['1.0.1'], current: null });
   });
 
   it('realigns pointer.current with the running external core', async () => {
@@ -288,28 +302,66 @@ describe('CoreUpdateManager initialize', () => {
     expect(loader).toContain(`const VERSION_NAME = ${SAFE_VERSION};`);
   });
 
-  it('rolls back and relaunches when an external core never mounts at cold boot', async () => {
-    vi.useFakeTimers();
-    try {
+  describe('cold-boot check for an external core', () => {
+    const bootExternal = async (bootJson: unknown) => {
       const v1Files = { ...BASE_FILES, 'dist/renderer/assets/index.js': 'index-1.0.1' };
       const v1 = buildManifest('1.0.1', 1, v1Files);
       materialize(coreDir('1.0.1'), v1Files, v1);
       pointerAt({ current: '1.0.1', previous: null });
-      const { app } = await loadManager(
+      writeFileSync(path.join(otaRoot(), 'boot.json'), JSON.stringify(bootJson));
+      return loadManager(
         makeApp(),
         makeShell({ coreDir: coreDir('1.0.1'), manifest: v1, source: 'external' }),
       );
+    };
 
-      vi.advanceTimersByTime(4000);
-      expect(electronMock.app.relaunch).not.toHaveBeenCalled();
-      vi.advanceTimersByTime(12_000);
+    it('rolls back and relaunches when the first boot of a version never mounts', async () => {
+      vi.useFakeTimers();
+      try {
+        const { app, manager } = await bootExternal({ failures: 1, version: '1.0.1' });
+        manager.startScheduledChecks();
 
-      expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: ['1.0.1'], current: null });
-      expect(electronMock.app.relaunch).toHaveBeenCalled();
-      expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
-    } finally {
-      vi.useRealTimers();
-    }
+        vi.advanceTimersByTime(30_000);
+        expect(electronMock.app.relaunch).not.toHaveBeenCalled();
+        vi.advanceTimersByTime(31_000);
+
+        expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: ['1.0.1'], current: null });
+        expect(electronMock.app.relaunch).toHaveBeenCalled();
+        expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('does not arm when the renderer already mounted before scheduling', async () => {
+      vi.useFakeTimers();
+      try {
+        const { manager } = await bootExternal({ failures: 1, version: '1.0.1' });
+        manager.handleBootPing('mounted');
+        manager.startScheduledChecks();
+
+        vi.advanceTimersByTime(120_000);
+
+        expect(electronMock.app.relaunch).not.toHaveBeenCalled();
+        expect(readPointer(otaRoot(), ABI).blacklist).toEqual([]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('does not arm on later boots of an already-confirmed version', async () => {
+      vi.useFakeTimers();
+      try {
+        const { manager } = await bootExternal({ failures: 0, version: '1.0.1' });
+        manager.startScheduledChecks();
+
+        vi.advanceTimersByTime(120_000);
+
+        expect(electronMock.app.relaunch).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 });
 
