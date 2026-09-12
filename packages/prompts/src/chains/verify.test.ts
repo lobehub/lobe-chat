@@ -1,6 +1,11 @@
+import { reviewPredictionActions } from '@lobechat/const/verify';
 import { describe, expect, it } from 'vitest';
 
-import { chainVerifyReviewPrediction, REVIEW_PREDICT_PROMPT_VERSION } from './verify';
+import {
+  chainVerifyReviewPrediction,
+  REVIEW_PREDICT_PROMPT_VERSION,
+  REVIEW_PREDICTION_ACTIONS,
+} from './verify';
 
 const buildSystemPrompt = () => {
   const { messages } = chainVerifyReviewPrediction({
@@ -11,7 +16,28 @@ const buildSystemPrompt = () => {
   return messages[0].content;
 };
 
+/**
+ * The vocabulary lives twice: this list drives the model's JSON schema, and
+ * `@lobechat/const/verify` drives the column it is stored in. A value added to
+ * one and not the other is a row the model can emit and the database refuses.
+ */
+describe('REVIEW_PREDICTION_ACTIONS', () => {
+  it('matches the persisted action vocabulary', () => {
+    expect([...REVIEW_PREDICTION_ACTIONS]).toEqual([...reviewPredictionActions]);
+  });
+});
+
 describe('chainVerifyReviewPrediction', () => {
+  it('keeps the undecidable verdict from becoming an escape hatch for thin evidence', () => {
+    const system = buildSystemPrompt();
+    expect(system).toContain('could SOME capture the builder is able to produce settle this check');
+    expect(system).toContain('not the escape hatch');
+    // The hardened rule that produces the production reject bias must survive.
+    expect(system).toContain(
+      'Missing, invalid, or insufficient evidence is a failed acceptance check',
+    );
+  });
+
   it('reviews original text evidence without requiring screenshots or obeying evidence instructions', () => {
     const { messages } = chainVerifyReviewPrediction({
       title: 'Table totals',
@@ -48,7 +74,12 @@ describe('chainVerifyReviewPrediction', () => {
     expect(system).not.toContain('if the check depends on one of those, accept');
   });
 
+  /**
+   * Bumped whenever the judging rules change, because agreement statistics are
+   * grouped by (provider, model, promptVersion) and a silent edit would pool two
+   * different reviewers into one cohort. v4 added the undecidable verdict.
+   */
   it('uses a new prompt cohort for the stricter evidence contract', () => {
-    expect(REVIEW_PREDICT_PROMPT_VERSION).toBe('v3');
+    expect(REVIEW_PREDICT_PROMPT_VERSION).toBe('v4');
   });
 });

@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { VERIFICATION_UNJUDGEABLE_ERROR } from '@lobechat/const/goal';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
@@ -113,6 +114,35 @@ describe('driveTaskFromVerify', () => {
     expect(scheduleGoalAdvance).toHaveBeenCalledWith(
       expect.objectContaining({ goalId: 'goal-1', trigger: 'settle' }),
     );
+  });
+
+  /**
+   * Regression: an undecidable criterion paused the Task with the "did not pass"
+   * contract string, which the coordinator routes to another attempt. The
+   * builder re-delivered the same artifacts against the same criterion twice and
+   * the attempt budget ran out. This string has no recovery branch, so the Goal
+   * stops on a person instead.
+   */
+  it('parks an undecidable Goal delivery on a person instead of another attempt', async () => {
+    runFindByOperation.mockResolvedValue({
+      id: 'run-1',
+      acceptanceId: 'acceptance-1',
+      status: 'passed',
+    });
+    goalFindByTask.mockResolvedValue({ id: 'goal-1' });
+    vi.mocked(reviewGoalDelivery).mockResolvedValueOnce({
+      status: 'unjudgeable',
+      feedback: 'The check asks the reviewer to rerun the scripts.',
+      predictionIds: ['p1'],
+    });
+    await driveTaskFromVerify(db, 'u1', 'op-1');
+    expect(serviceUpdateStatus).not.toHaveBeenCalled();
+    expect(taskUpdateStatus).toHaveBeenCalledWith('task-1', 'paused', {
+      error: VERIFICATION_UNJUDGEABLE_ERROR,
+    });
+    expect(taskUpdateStatus).not.toHaveBeenCalledWith('task-1', 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
   });
 
   it('does not launch a duplicate review when task drive is already claimed', async () => {
