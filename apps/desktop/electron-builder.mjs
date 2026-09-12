@@ -1,5 +1,4 @@
 import { execSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -170,11 +169,10 @@ const config = {
     console.info('📦 Building CLI for embedding...');
     execSync('npm run build:cli', { stdio: 'inherit', cwd: __dirname });
 
-    const abiFile = path.join(__dirname, 'shell/abi.json');
-    if (!existsSync(abiFile)) {
-      execSync('node scripts/shellAbi.mjs --write', { stdio: 'inherit', cwd: __dirname });
-    }
-    const { shellAbi } = JSON.parse(await fs.readFile(abiFile, 'utf8'));
+    execSync('node scripts/shellAbi.mjs --write', { stdio: 'inherit', cwd: __dirname });
+    const { shellAbi } = JSON.parse(
+      await fs.readFile(path.join(__dirname, 'shell/abi.json'), 'utf8'),
+    );
     const corePlatform =
       context.electronPlatformName === 'mas' ? 'darwin' : context.electronPlatformName;
     execSync('node scripts/assembleCore.mjs', { stdio: 'inherit', cwd: __dirname });
