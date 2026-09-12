@@ -30,7 +30,6 @@ import { createStaticStyles, cssVar, cx } from 'antd-style';
 import {
   CheckIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
   LoaderCircleIcon,
   RefreshCwIcon,
   SearchIcon,
@@ -72,7 +71,7 @@ const styles = createStaticStyles(({ css }) => ({
     display: flex;
     flex-direction: column;
 
-    width: 340px;
+    min-width: 220px;
     max-height: 430px;
   `,
   search: css`
@@ -159,6 +158,24 @@ const getCatalogErrorKey = (name: string) => {
     }
   }
 };
+
+/**
+ * Match the submenu arrow glyph that @lobehub/ui's own submenu rows draw, so a
+ * catalog model row sits next to the reasoning-effort row without a mismatched
+ * arrow. The library keeps the glyph private, so it is re-drawn here.
+ */
+const SubmenuArrow = () => (
+  <svg
+    aria-hidden
+    fill="currentColor"
+    stroke="currentColor"
+    strokeLinejoin="round"
+    strokeWidth={1.5}
+    viewBox="0 0 16 16"
+  >
+    <path d="M6 5l4 3-4 3z" />
+  </svg>
+);
 
 interface ModelCatalogSelectorProps {
   agentId?: string;
@@ -404,10 +421,7 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
           onOpenChange={handleOpenChange}
           onOpenChangeComplete={handleOpenChangeComplete}
         >
-          <DropdownMenuSubmenuTrigger
-            label={t('heteroAgent.modelSelector.model')}
-            openOnHover={false}
-          >
+          <DropdownMenuSubmenuTrigger label={t('heteroAgent.modelSelector.model')}>
             <DropdownMenuItemContent>
               <DropdownMenuItemLabel className={styles.submenuLabel}>
                 {t('heteroAgent.modelSelector.model')}
@@ -418,7 +432,7 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
                   : currentModel}
               </DropdownMenuItemExtra>
               <DropdownMenuSubmenuArrow>
-                <Icon icon={ChevronRightIcon} size={12} />
+                <SubmenuArrow />
               </DropdownMenuSubmenuArrow>
             </DropdownMenuItemContent>
           </DropdownMenuSubmenuTrigger>
