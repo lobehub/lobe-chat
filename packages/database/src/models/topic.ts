@@ -55,6 +55,7 @@ import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../
 import { idGenerator } from '../utils/idGenerator';
 import { inJsonStringArray } from '../utils/inJsonStringArray';
 import { notShareVisitorTopic } from '../utils/shareVisitor';
+import { notTrashed } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
 
@@ -501,13 +502,15 @@ export class TopicModel {
     const firstUserMessageSubquery = this.db
       .select({ value: messages.content })
       .from(messages)
-      .where(and(eq(messages.topicId, topics.id), eq(messages.role, 'user')))
+      .where(
+        and(eq(messages.topicId, topics.id), eq(messages.role, 'user'), this.messageOwnership()),
+      )
       .orderBy(asc(messages.createdAt))
       .limit(1);
     const messageCountSubquery = this.db
       .select({ value: sql<number>`count(*)::int` })
       .from(messages)
-      .where(eq(messages.topicId, topics.id));
+      .where(and(eq(messages.topicId, topics.id), this.messageOwnership()));
     const latestMessageAtSubquery = this.db
       .select({ value: messages.updatedAt })
       .from(messages)
@@ -2673,6 +2676,7 @@ export class TopicModel {
       .where(
         and(
           eq(topics.status, 'scheduled'),
+          notTrashed(topics.isDeleted),
           or(
             // `''` is the absent-runAt sentinel, and it never satisfies this pair —
             // an absent gate must not read as "due now", which is what keeps a

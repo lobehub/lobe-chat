@@ -940,13 +940,28 @@ export class MessageModel {
   }
 
   /**
-   * Raw workspace/user scope, WITHOUT the visitor exclusion. Backing store
-   * for {@link ownership} and the escape hatch for methods that resolve the
+   * Workspace/user scope plus the live parent-topic fence, WITHOUT the visitor
+   * exclusion. Topic-less rows remain valid. Backing store for
+   * {@link ownership} and the escape hatch for methods that resolve the
    * effective visitor gate per-call ({@link deleteMessage},
    * {@link deleteMessages}, {@link query} via `allowShareVisitor`, …).
    */
   private workspaceScope = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages);
+    and(
+      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages),
+      or(
+        isNull(messages.topicId),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+            ),
+        ),
+      ),
+    );
 
   /**
    * Default visitor exclusion applied by {@link ownership} — see
@@ -2633,7 +2648,18 @@ export class MessageModel {
       where: and(
         this.ownership(),
         eq(messages.agentId, agentId),
-        eq(messages.topicId, topicId),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              and(
+                eq(topics.id, topicId),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            ),
+        ),
         eq(messages.threadId, threadId),
         eq(messages.role, 'assistant'),
       ),
@@ -2647,7 +2673,7 @@ export class MessageModel {
   findVerifyMessageByOperationId = async (operationId: string) => {
     return this.db.query.messages.findFirst({
       where: and(
-        eq(messages.userId, this.userId),
+        this.ownership(),
         eq(messages.role, 'verify'),
         sql`${messages.metadata}->>'verifyOperationId' = ${operationId}`,
       ),
@@ -2674,8 +2700,19 @@ export class MessageModel {
   }) => {
     return this.db.query.messages.findFirst({
       where: and(
-        eq(messages.userId, this.userId),
-        eq(messages.topicId, topicId),
+        this.ownership(),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              and(
+                eq(topics.id, topicId),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            ),
+        ),
         eq(messages.role, 'assistant'),
         sql`${messages.metadata}->>'operationId' = ${operationId}`,
       ),

@@ -18,6 +18,7 @@ import type {
 import { agents, agentShares } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { normalizeInboxAgentAvatar, normalizeInboxAgentTitle } from '../utils/inboxAgent';
+import { notTrashed } from '../utils/softDelete';
 import { isUuid } from '../utils/uuid';
 
 const DEFAULT_AGENT_SHARE_CONFIG = {
@@ -98,6 +99,7 @@ export class AgentShareModel {
             eq(agents.id, agentShares.agentId),
             eq(agents.userId, this.userId),
             isNull(agents.workspaceId),
+            notTrashed(agents.isDeleted),
           ),
         ),
     );
@@ -121,7 +123,14 @@ export class AgentShareModel {
     const [agent] = await tx
       .select({ id: agents.id, slug: agents.slug })
       .from(agents)
-      .where(and(eq(agents.id, agentId), eq(agents.userId, ownerId), isNull(agents.workspaceId)))
+      .where(
+        and(
+          eq(agents.id, agentId),
+          eq(agents.userId, ownerId),
+          isNull(agents.workspaceId),
+          notTrashed(agents.isDeleted),
+        ),
+      )
       .for('update');
 
     return agent ?? null;
@@ -461,7 +470,13 @@ export class AgentShareModel {
       .select({ id: agentShares.id, visibility: agentShares.visibility })
       .from(agentShares)
       .innerJoin(agents, eq(agentShares.agentId, agents.id))
-      .where(and(eq(agentShares.agentId, params.agentId), isNull(agents.workspaceId)))
+      .where(
+        and(
+          eq(agentShares.agentId, params.agentId),
+          isNull(agents.workspaceId),
+          notTrashed(agents.isDeleted),
+        ),
+      )
       .limit(1);
 
     return !!share && share.id === params.shareId && share.visibility === 'link';
@@ -494,7 +509,9 @@ export class AgentShareModel {
       })
       .from(agentShares)
       .innerJoin(agents, eq(agentShares.agentId, agents.id))
-      .where(and(eq(agentShares.id, shareId), isNull(agents.workspaceId)))
+      .where(
+        and(eq(agentShares.id, shareId), isNull(agents.workspaceId), notTrashed(agents.isDeleted)),
+      )
       .limit(1);
 
     if (!share) return null;

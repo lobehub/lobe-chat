@@ -29,6 +29,7 @@ import {
 import type { LobeChatDatabase } from '../../../type';
 import { normalizeInboxAgentMeta, normalizeInboxAgentTitle } from '../../../utils/inboxAgent';
 import { notShareVisitorMessage, notShareVisitorTopic } from '../../../utils/shareVisitor';
+import { notTrashed } from '../../../utils/softDelete';
 import { buildWorkspaceWhere } from '../../../utils/workspace';
 import type {
   FtsSearchAgentResult,
@@ -110,6 +111,7 @@ export const hydrateUserMemories = async (
           hits.map(({ id }) => id),
         ),
         eq(userMemories.userId, scope.userId),
+        notTrashed(userMemories.isDeleted),
       ),
     );
 

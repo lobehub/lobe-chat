@@ -1,5 +1,5 @@
 import { LIBRARY_HIDDEN_FILE_SOURCES } from '@lobechat/types';
-import { and, desc, eq, inArray, isNull, ne, notInArray, or, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, isNull, ne, notInArray, or, sql } from 'drizzle-orm';
 
 import {
   agents,
@@ -282,10 +282,15 @@ export async function searchMessages(
     })
     .from(hits)
     .leftJoin(agents, eq(hits.agentId, agents.id))
+    // Keep parent visibility outside the isolated BM25 scan so ParadeDB can
+    // still use TopN. A topic-less message is valid; a topic-backed message is
+    // visible only when its ownership-scoped parent remains live.
+    .leftJoin(topics, and(eq(hits.topicId, topics.id), buildWorkspaceWhere(context.scope, topics)))
     .where(
       and(
         context.liftedScopeWhere(hits.workspaceId),
         agentId ? eq(hits.agentId, agentId) : undefined,
+        or(isNull(hits.topicId), isNotNull(topics.id)),
       ),
     )
     .orderBy(desc(hits.score))
