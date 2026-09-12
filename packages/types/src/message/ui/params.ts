@@ -242,6 +242,23 @@ export const CreateNewMessageParamsSchema = z
     // front so parentId chains resolve without a create→backfill round-trip).
     // Omitted → the DB generates one.
     id: z.string().optional(),
+    /**
+     * Caller-supplied creation time, epoch milliseconds. Omitted → the server
+     * stamps it on arrival.
+     *
+     * Exists for write-behind producers, where arrival time is the wrong answer:
+     * a device running an agent locally replicates its messages in background
+     * batches, so a retry or an offline stretch would record an hour of work as
+     * one cluster of timestamps at flush time. `MessageModel.create` has always
+     * honoured this field for in-process callers; this only stops the router
+     * schema from stripping it.
+     *
+     * Only bounded to a positive integer. A device whose clock runs ahead is
+     * ordinary, and rejecting it would leave that device unable to replicate at
+     * all — a worse outcome than a transcript a few minutes out, on data scoped
+     * to its own owner.
+     */
+    createdAt: z.number().int().positive().optional(),
     // agentId is required, but can be resolved from sessionId in the router
     agentId: z.string().optional(),
     /**

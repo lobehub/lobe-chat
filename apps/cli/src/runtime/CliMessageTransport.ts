@@ -44,6 +44,12 @@ export interface CliMessageTransportOptions {
  * create return without waiting: the id the executor anchors its follow-up
  * writes to is already known, and the same id is what the replica is
  * eventually written under, so a replay rewrites rather than duplicates.
+ *
+ * Creation timestamps travel with the id, for the same reason. Replication runs
+ * behind the agent, so the server's arrival time records when a batch was
+ * flushed rather than when the work happened — a retry or an offline stretch
+ * would collapse a long run into one cluster. Sending the local time keeps the
+ * replica's transcript describing the run instead of the sync.
  */
 export class CliMessageTransport implements MessageTransport {
   readonly store: LocalMessageStore;
@@ -69,7 +75,7 @@ export class CliMessageTransport implements MessageTransport {
     // must not be told to create it twice.
     if (this.store.size > before) {
       await this.queue?.enqueue({
-        message: { ...withClientId, id: message.id },
+        message: { ...withClientId, createdAt: message.createdAt, id: message.id },
         type: 'createMessage',
       });
     }
@@ -79,7 +85,10 @@ export class CliMessageTransport implements MessageTransport {
 
   async createToolMessage(params: CreateMessageParams): Promise<RuntimeMessageRef> {
     const message = this.store.insert(params, nanoid());
-    await this.queue?.enqueue({ message: { ...params, id: message.id }, type: 'createMessage' });
+    await this.queue?.enqueue({
+      message: { ...params, createdAt: message.createdAt, id: message.id },
+      type: 'createMessage',
+    });
     return toRef(message);
   }
 
