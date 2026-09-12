@@ -90,6 +90,7 @@
   "channel.endpointUrl": "Webhook URL",
   "channel.endpointUrlHint": "Please copy this URL and paste it into the <bold>{{fieldName}}</bold> field in the {{name}} Developer Portal.",
   "channel.exportConfig": "Export Configuration",
+  "channel.exportContainsCredentials": "This file contains bot credentials in plain text — store it somewhere safe.",
   "channel.feishu.description": "Connect this agent to Feishu for private and group chats.",
   "channel.feishu.fetchOwnerId": "Fetch from app info",
   "channel.feishu.fetchOwnerIdAutoSuccess": "Filled in the app owner’s Open ID — check it is you, then save",

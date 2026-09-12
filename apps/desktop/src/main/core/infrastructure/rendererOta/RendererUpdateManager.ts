@@ -80,7 +80,8 @@ export class RendererUpdateManager {
   }
 
   private get otaDir() {
-    return path.join(this.otaRootDir, this.activeChannel);
+    // Patch numbers restart at r0 for each full release, even when mainHash is unchanged.
+    return path.join(this.otaRootDir, this.activeChannel, APP_VERSION);
   }
 
   private get disabledReasons() {

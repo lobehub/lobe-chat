@@ -1009,4 +1009,42 @@ describe('skillsRuntime', () => {
       canExecuteOnDevice: true,
     });
   });
+
+  // Regression guard for the split-sandbox bug: the sandbox session is keyed by
+  // the acting account, which is derived from the trusted-client token. Without
+  // `workspaceId` this runtime acted as the personal account while `lobe-creds`
+  // and `lobe-cloud-sandbox` (which pass it) acted as the workspace, so
+  // credentials injected for a workspace topic were invisible to every command
+  // run here.
+  it('scopes the market identity to the run workspace so sandbox calls share one session', async () => {
+    const { MarketService } = await import('@/server/services/market');
+    const { skillsRuntime } = await import('../skills');
+
+    await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+      workspaceId: 'workspace-1',
+    });
+
+    expect(MarketService).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        userInfo: { userId: 'user-1', workspaceId: 'workspace-1' },
+      }),
+    );
+
+    await skillsRuntime.factory({
+      serverDB: {} as never,
+      toolManifestMap: {},
+      topicId: 'topic-1',
+      userId: 'user-1',
+    });
+
+    expect(MarketService).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        userInfo: { userId: 'user-1', workspaceId: undefined },
+      }),
+    );
+  });
 });

@@ -86,6 +86,8 @@ export default {
   'channel.messengerPromo.dismiss': 'Dismiss',
   'channel.messengerPromo.title': 'Skip the setup',
   'channel.exportConfig': 'Export Configuration',
+  'channel.exportContainsCredentials':
+    'This file contains bot credentials in plain text — store it somewhere safe.',
   'channel.importConfig': 'Import Configuration',
   'channel.importSuccess': 'Configuration imported successfully',
   'channel.importFailed': 'Failed to import configuration',

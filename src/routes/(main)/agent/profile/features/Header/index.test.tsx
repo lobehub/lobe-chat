@@ -152,14 +152,6 @@ vi.mock('react-router', () => ({
   useNavigate: () => mocks.navigate,
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: {
-    error: vi.fn(),
-    success: vi.fn(),
-    warning: vi.fn(),
-  },
-}));
-
 vi.mock('@/const/layoutTokens', () => ({
   DESKTOP_HEADER_ICON_SMALL_SIZE: 24,
 }));

@@ -241,8 +241,8 @@ vi.mock('@/features/ChatInput/ControlBar/useRepoType', async () => {
 vi.mock('@/hooks/useEffectiveWorkingDirectory', () => ({
   useEffectiveWorkingDirectory: () => reviewState.workingDirectory,
 }));
-vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
-  useEffectiveAgencyConfig: () => ({
+vi.mock('@/hooks/useTopicAgencyConfig', () => ({
+  useTopicAgencyConfig: () => ({
     agencyConfig: effectiveConfig.agencyConfig,
     workspaceScoped: effectiveConfig.workspaceScoped,
   }),

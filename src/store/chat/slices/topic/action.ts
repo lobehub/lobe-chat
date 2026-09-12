@@ -425,7 +425,13 @@ export class ChatTopicActionImpl {
 
   updateTopicMetadata = async (id: string, metadata: Partial<ChatTopicMetadata>): Promise<void> => {
     const topic = topicSelectors.getTopicById(id)(this.#get());
-    if (!topic) return;
+    if (!topic) {
+      await topicService.updateTopicMetadata(id, metadata);
+      await this.#get()
+        .refreshTopic()
+        .catch(() => undefined);
+      return;
+    }
 
     // Optimistic update with merged metadata
     const mergedMetadata = { ...topic.metadata, ...metadata };
@@ -435,8 +441,19 @@ export class ChatTopicActionImpl {
       value: { metadata: mergedMetadata },
     });
 
-    await topicService.updateTopicMetadata(id, metadata);
-    await this.#get().refreshTopic();
+    try {
+      await topicService.updateTopicMetadata(id, metadata);
+    } catch (error) {
+      this.#get().internal_dispatchTopic({
+        type: 'updateTopic',
+        id,
+        value: { metadata: topic.metadata },
+      });
+      throw error;
+    }
+    await this.#get()
+      .refreshTopic()
+      .catch(() => undefined);
   };
 
   updateTopicTitle = async (id: string, title: string): Promise<void> => {

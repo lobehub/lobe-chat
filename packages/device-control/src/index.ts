@@ -4,7 +4,11 @@ export {
   defaultReadExternalAssetForPublish,
   EXTERNAL_PUBLISH_ASSET_MAX_BYTES,
 } from './filePreview';
-export { defaultGetProjectFileIndex, defaultSearchProjectFiles } from './projectFileIndex';
+export {
+  defaultGetProjectFileIndex,
+  defaultListProjectDirectory,
+  defaultSearchProjectFiles,
+} from './projectFileIndex';
 export { defaultSkillCacheRoot, prepareSkillDirectory } from './skillDirectory';
 export * from './types';
 export { browseDirectory, initWorkspace, listProjectSkills, statPath } from './workspace';

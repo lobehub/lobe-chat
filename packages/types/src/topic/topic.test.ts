@@ -173,3 +173,15 @@ describe('parseTopicScheduledRun', () => {
     expect(parseTopicScheduledRun(null)).toBeNull();
   });
 });
+
+it('preserves execution selection alongside reasoning when creating a topic', () => {
+  const metadata = {
+    executionConfig: {
+      executionTarget: 'device',
+      boundDeviceId: 'selected-device',
+      inheritWorkspaceScope: false,
+    },
+    reasoningConfig: { gpt5ReasoningEffort: 'high' },
+  };
+  expect(chatTopicCreateMetadataSchema.parse(metadata)).toEqual(metadata);
+});

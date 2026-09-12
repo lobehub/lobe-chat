@@ -36,6 +36,7 @@ import type {
   DeviceLocalFilePreviewResult,
   DeviceMoveProjectFileItem,
   DeviceMoveProjectFileResultItem,
+  DeviceProjectDirectoryListResult,
   DeviceProjectFileIndexResult,
   DeviceProjectFileSearchResult,
   DeviceRenameProjectFileResult,
@@ -979,6 +980,40 @@ export class DeviceGateway {
       return result.data;
     } catch (error) {
       log('getProjectFileIndex: error for deviceId=%s — %O', deviceId, error);
+      return undefined;
+    }
+  }
+
+  /**
+   * Children of one directory inside a project on a remote device via the
+   * `listProjectDirectory` device RPC — expands a row the index collapsed.
+   */
+  async listProjectDirectory(params: {
+    deviceId: string;
+    relativePath: string;
+    root: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceProjectDirectoryListResult | undefined> {
+    const { userId, deviceId, relativePath, root, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceProjectDirectoryListResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'listProjectDirectory', params: { relativePath, root } },
+      );
+
+      if (!result.success || !result.data) {
+        log('listProjectDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+        return undefined;
+      }
+
+      return result.data;
+    } catch (error) {
+      log('listProjectDirectory: error for deviceId=%s — %O', deviceId, error);
       return undefined;
     }
   }

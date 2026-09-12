@@ -126,6 +126,7 @@ export default defineConfig(async (env) => {
     publicDir: false,
     resolve: {
       alias: mainProcessAlias,
+      dedupe: ['@sentry/electron'],
       conditions: ['node'],
       mainFields: ['module', 'jsnext:main', 'jsnext'],
     },

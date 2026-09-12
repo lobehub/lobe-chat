@@ -1584,6 +1584,7 @@
   "signalCallbacks.empty": "没有回调消息",
   "signalCallbacks.expand": "显示详情",
   "signalCallbacks.title": "{{tool}} · {{count}} 条回调更新",
+  "steer.tag": "追加指令",
   "stt.action": "语音输入",
   "stt.loading": "识别中…",
   "stt.prettifying": "润色中…",

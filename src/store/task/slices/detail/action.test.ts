@@ -34,11 +34,6 @@ vi.mock('@/libs/swr', () => ({
   useClientDataSWR: vi.fn(),
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  modal: { confirm: vi.fn() },
-  notification: { error: vi.fn() },
-}));
-
 vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   ...(await import('~base-ui-stubs')).baseUiStubs,
