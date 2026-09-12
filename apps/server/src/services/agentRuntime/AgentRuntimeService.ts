@@ -93,6 +93,7 @@ import { buildStepPresentation, formatTokenCount } from './stepPresentation';
 import {
   type AgentExecutionParams,
   type AgentExecutionResult,
+  type AgentStepContinuation,
   type ExecGroupMemberParams,
   type ExecGroupMemberResult,
   type GroupActionMemberBridgeParams,
@@ -1274,6 +1275,9 @@ export class AgentRuntimeService {
       asyncToolVerifyAttempt,
       externalRetryCount = 0,
       lockRetryAttempt = 0,
+      inlineContinuation = false,
+      retainStepLock = false,
+      stepLockOwner: providedStepLockOwner,
     } = params;
 
     // Group member timeout watchdog: enforce a member's deadline without claiming
@@ -1344,7 +1348,7 @@ export class AgentRuntimeService {
     }
 
     // ===== Distributed lock: prevent duplicate execution from QStash retries =====
-    const stepLockOwner = createStepLockOwner(operationId, stepIndex);
+    const stepLockOwner = providedStepLockOwner ?? createStepLockOwner(operationId, stepIndex);
     const claimed = await this.coordinator.tryClaimStep(
       operationId,
       stepIndex,
@@ -2034,6 +2038,7 @@ export class AgentRuntimeService {
         }));
 
         let nextStepScheduled = false;
+        let continuation: AgentStepContinuation | undefined;
 
         // Publish step complete event
         await this.streamManager.publishStreamEvent(operationId, {
@@ -2197,31 +2202,62 @@ export class AgentRuntimeService {
 
         if (shouldContinue && stepResult.nextContext && this.queueService) {
           const nextStepIndex = stepIndex + 1;
-          const delay = this.calculateStepDelay(stepResult);
-          const priority = this.calculatePriority(stepResult);
-
-          await this.queueService.scheduleMessage({
+          const next: AgentStepContinuation = {
             context: stepResult.nextContext,
-            delay,
-            endpoint: `${this.baseURL}/run`,
+            delay: this.calculateStepDelay(stepResult),
             operationId,
-            priority,
-            retryDelay:
-              typeof stepResult.newState.metadata?.queueRetryDelay === 'string'
-                ? stepResult.newState.metadata.queueRetryDelay
-                : undefined,
+            priority: this.calculatePriority(stepResult),
             retries:
               typeof stepResult.newState.metadata?.queueRetries === 'number'
                 ? stepResult.newState.metadata.queueRetries
                 : undefined,
+            retryDelay:
+              typeof stepResult.newState.metadata?.queueRetryDelay === 'string'
+                ? stepResult.newState.metadata.queueRetryDelay
+                : undefined,
             stepIndex: nextStepIndex,
-          });
-          nextStepScheduled = true;
-          logToolCallPc(operationId, stepIndex, 'post.next_step_scheduled', () => ({
-            nextStepIndex,
-          }));
+          };
 
-          log('[%s][%d] Scheduled next step %d', operationId, stepIndex, nextStepIndex);
+          // Park the envelope before handing it over. The caller is about to run
+          // this step in-process with nothing queued behind it; if that
+          // invocation dies mid-step, the only way back is for a redelivery to
+          // find this envelope — the stale-delivery guard would otherwise ACK
+          // the (now older) delivered step and strand the operation.
+          //
+          // Inlining is therefore conditional on the park succeeding. When it
+          // doesn't, fall back to the ordinary queue round-trip: slower by a
+          // step boundary, but it keeps the recovery path the queue provides.
+          const parked = inlineContinuation
+            ? await this.coordinator.saveInlineResume(operationId, next)
+            : false;
+
+          if (!parked && inlineContinuation) {
+            log(
+              '[%s][%d] Could not park the inline envelope; falling back to the queue',
+              operationId,
+              stepIndex,
+            );
+          }
+
+          if (parked) {
+            // Hand the next step back to the caller instead of paying a full
+            // queue round-trip for it. The caller either runs it in this same
+            // invocation or publishes it via `scheduleContinuation` when its
+            // time budget runs out, so the step is never dropped.
+            continuation = next;
+            logToolCallPc(operationId, stepIndex, 'post.next_step_inlined', () => ({
+              nextStepIndex,
+            }));
+            log('[%s][%d] Next step %d deferred to caller', operationId, stepIndex, nextStepIndex);
+          } else {
+            await this.queueService.scheduleMessage({ ...next, endpoint: `${this.baseURL}/run` });
+            nextStepScheduled = true;
+            logToolCallPc(operationId, stepIndex, 'post.next_step_scheduled', () => ({
+              nextStepIndex,
+            }));
+
+            log('[%s][%d] Scheduled next step %d', operationId, stepIndex, nextStepIndex);
+          }
         }
 
         // Record final agent-level usage on the invoke_agent span. Done on every
@@ -2310,6 +2346,7 @@ export class AgentRuntimeService {
         }
 
         return {
+          continuation,
           nextStepScheduled,
           state: stepResult.newState,
           stepResult,
@@ -2451,8 +2488,49 @@ export class AgentRuntimeService {
       stepAbortPollStopped = true;
       if (stepAbortPoll) clearTimeout(stepAbortPoll);
       stopStepLockHeartbeat();
-      await this.coordinator.releaseStepLock(operationId, stepIndex, stepLockOwner);
+      // The inline step loop keeps the lock across step boundaries — releasing
+      // here would open a window for a stale redelivery to claim it mid-run.
+      // Its caller releases once, in a `finally`, for the whole invocation.
+      if (!retainStepLock) {
+        await this.coordinator.releaseStepLock(operationId, stepIndex, stepLockOwner);
+      }
     }
+  }
+
+  /**
+   * Publish a continuation that `executeStep` handed back instead of queueing.
+   * The inline step loop calls this when it runs out of invocation budget, so
+   * the remaining steps resume in a fresh invocation.
+   */
+  async scheduleContinuation(continuation: AgentStepContinuation): Promise<void> {
+    if (!this.queueService) {
+      throw new Error(
+        `Cannot schedule continuation for ${continuation.operationId}: no queue service`,
+      );
+    }
+
+    await this.queueService.scheduleMessage({
+      ...continuation,
+      endpoint: `${this.baseURL}/run`,
+    });
+
+    log('[%s] Handed step %d back to the queue', continuation.operationId, continuation.stepIndex);
+  }
+
+  /**
+   * Release a lock that was retained across an inline step loop. Owner-scoped,
+   * so it is a no-op when this invocation never held the lock.
+   */
+  async releaseOperationLock(operationId: string, stepLockOwner: string): Promise<void> {
+    await this.coordinator.releaseStepLock(operationId, 0, stepLockOwner);
+  }
+
+  /**
+   * Mint a lock owner for an inline step loop. Unique per invocation, which is
+   * what makes re-entering the same lock on the next step safe.
+   */
+  createOperationLockOwner(operationId: string): string {
+    return createStepLockOwner(operationId, 0);
   }
 
   /**
