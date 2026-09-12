@@ -35,7 +35,7 @@ const styles = createStaticStyles(({ css }) => ({
        is layered over a solid surface rather than over the edge running
        underneath, which would otherwise strike the text through. */
     background-color: ${cssVar.colorBgContainer};
-    background-image: linear-gradient(${cssVar.colorFillTertiary}, ${cssVar.colorFillTertiary});
+    background-image: linear-gradient(${cssVar.colorFillQuaternary}, ${cssVar.colorFillQuaternary});
   `,
 }));
 
