@@ -408,14 +408,6 @@ export default {
   'acceptance.roundStatus.repairing': 'Repairing',
   'acceptance.roundStatus.uncertain': 'Verify uncertain',
   'acceptance.roundStatus.verifying': 'In progress',
-  'acceptance.sharedNotice.commentableDescription':
-    'You can browse every check and its evidence and join the discussion, but only the author can act on this acceptance.',
-  'acceptance.sharedNotice.readOnlyDescription':
-    'You can browse every check and its evidence, but only the author can act on this acceptance.',
-  'acceptance.sharedNotice.reviewableDescription':
-    'You can browse every check and its evidence, and review them on behalf of your workspace.',
-  'acceptance.sharedNotice.title': 'Shared with you',
-  'acceptance.sharedNotice.titleWithName': 'Shared by {{name}}',
   'acceptance.stats.failed': '{{count}} failed',
   'acceptance.stats.notExecuted': '{{count}} not executed',
   'acceptance.stats.passed': '{{count}} passed',
@@ -470,7 +462,6 @@ export default {
   'acceptance.surface.other': 'Other',
   'acceptance.titleFallback': 'Acceptance',
   'acceptance.verdict.inProgress': 'Acceptance in progress',
-  'acceptance.verdict.latestAt': 'last verified {{time}}',
   'acceptance.viewFullReport': 'View full report',
   'acceptance.workspace.actions.delete': 'Delete',
   'acceptance.workspace.actions.markAccepted': 'Mark as accepted',
