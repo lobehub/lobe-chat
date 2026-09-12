@@ -164,8 +164,9 @@ export interface ToolDiscoveryResult {
  * Short-circuits when `disableTools` is set (only the client function tools
  * are honored), matching the pre-extraction behavior.
  *
- * Side effect: appends to `ctx.agentConfig.systemRole` (connector credential
- * ownership note) — `createOperation` downstream must see that write.
+ * Side effect: stamps `ctx.agentConfig.connectorOwnershipNote` (connector
+ * credential ownership) for the context engine to inject — `createOperation`
+ * downstream must see that write.
  */
 export const discoverTools = async (
   deps: ToolDiscoveryDeps,
@@ -359,9 +360,9 @@ export const discoverTools = async (
         );
         const note = buildConnectorOwnershipPrompt(borrowed, displayMap);
         if (note) {
-          agentConfig.systemRole = agentConfig.systemRole
-            ? `${agentConfig.systemRole}\n\n${note}`
-            : note;
+          // Handed to the context engine rather than concatenated here — see
+          // `AgentConfigWithId.connectorOwnershipNote`.
+          agentConfig.connectorOwnershipNote = note;
           log(
             'execAgent: injected tool credential ownership note for %d connector(s)',
             borrowed.length,

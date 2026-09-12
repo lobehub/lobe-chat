@@ -324,10 +324,11 @@ const resolveWorkspaceInit = async (
  * (bound cwd + project instructions), the OperationSkillSet, and the learned
  * expertise snapshot.
  *
- * Side effects, all order-preserving with the pre-extraction code: appends
- * project instructions to `ctx.agentConfig.systemRole`, writes the bound cwd
- * onto the returned `deviceSystemInfo`, pins the topic working directory, and
- * merges attachment warnings into `botPlatformContext`.
+ * Side effects, all order-preserving with the pre-extraction code: stamps the
+ * project instructions onto `ctx.agentConfig.projectInstructions` for the
+ * context engine to inject, writes the bound cwd onto the returned
+ * `deviceSystemInfo`, pins the topic working directory, and merges attachment
+ * warnings into `botPlatformContext`.
  */
 export const prepareOperation = async (
   deps: OperationPrepDeps,
@@ -921,20 +922,16 @@ export const prepareOperation = async (
       );
     }
 
-    // Inject the project-root agent instructions (AGENTS.md / CLAUDE.md) as
-    // trailing blocks on the system role — after the agent's persona and any
-    // page/task/additional instructions. `agentConfig` is read by
-    // `createOperation` below, so appending here still reaches the LLM.
+    // Hand the project-root agent instructions (AGENTS.md / CLAUDE.md) to the
+    // context engine, which assembles the system message and injects them
+    // directly after the persona — where this code used to concatenate them.
+    // Passing the files instead of a rendered block is the point: composing the
+    // prompt out here is what made `agentConfig` a mutable channel three
+    // pipeline stages wide.
     if (workspaceInit.workspace.instructions.length) {
-      const block = workspaceInit.workspace.instructions
-        .map(
-          ({ content, source }) =>
-            `<project_instructions source="${source}">\n${content}\n</project_instructions>`,
-        )
-        .join('\n\n');
-      agentConfig.systemRole = agentConfig.systemRole
-        ? `${agentConfig.systemRole}\n\n${block}`
-        : block;
+      agentConfig.projectInstructions = workspaceInit.workspace.instructions.map(
+        ({ content, source }) => ({ content, source }),
+      );
       log(
         'execAgent: injected %d project instruction file(s): %s',
         workspaceInit.workspace.instructions.length,

@@ -727,6 +727,8 @@ export const buildServerCallLlmContext = async ({
     modelKnowledgeCutoff,
     provider,
     ...(planTodo && { planTodo }),
+    connectorOwnershipNote: agentConfig.connectorOwnershipNote ?? undefined,
+    projectInstructions: agentConfig.projectInstructions ?? undefined,
     systemRole: agentConfig.systemRole ?? undefined,
     toolDiscoveryConfig,
     toolsConfig: {

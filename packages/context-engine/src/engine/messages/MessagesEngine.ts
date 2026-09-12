@@ -37,6 +37,7 @@ import {
   AgentIdentityInjector,
   AgentManagementContextInjector,
   BotPlatformContextInjector,
+  ConnectorOwnershipInjector,
   ContextSelectionsInjector,
   DiscordContextProvider,
   EvalContextSystemInjector,
@@ -55,6 +56,7 @@ import {
   PageEditorContextInjector,
   PageSelectionsInjector,
   PlanInjector,
+  ProjectInstructionsInjector,
   RuntimeAdditionalContextProvider,
   selectActivatedSkills,
   SelectedSkillInjector,
@@ -176,7 +178,9 @@ export class MessagesEngine {
       botPlatformContext,
       workspaceContext,
       discordContext,
+      connectorOwnershipNote,
       evalContext,
+      projectInstructions,
       onboardingContext,
       agentManagementContext,
       groupAgentBuilderContext,
@@ -289,6 +293,13 @@ export class MessagesEngine {
       new AgentDocumentBeforeSystemInjector(agentDocConfig),
       // Agent's system role (creates the initial system message)
       new SystemRoleInjector({ systemRole }),
+      // Project instructions and borrowed-connector attribution sit directly
+      // after the persona because that is exactly where they used to be: the
+      // server concatenated both onto `agentConfig.systemRole` several pipeline
+      // stages before the engine ran. Keeping the position keeps the prompt
+      // byte-identical; moving them later would silently reorder it.
+      new ProjectInstructionsInjector({ instructions: projectInstructions }),
+      new ConnectorOwnershipInjector({ note: connectorOwnershipNote }),
       // Agent identity (name/title) — lets the model answer "who are you?"
       // with the user-given name. Group chat establishes identity through
       // GroupContextInjector instead, so it is suppressed there.
