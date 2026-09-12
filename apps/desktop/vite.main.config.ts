@@ -58,6 +58,7 @@ export default defineConfig(async (env) => {
         ],
         output: {
           assetFileNames: 'chunks/[name]-[hash].[ext]',
+          dynamicImportInCjs: false,
           // Rolldown hoists chunk requires above any entry statement, so the V8
           // compile cache has to be switched on from a banner to cover `main-app`.
           banner: (chunk) =>
