@@ -306,8 +306,12 @@ export async function runStep(c: Context): Promise<Response> {
       // would let a late redelivery re-run a step someone else already owns.
       // Skipped when nothing was ever parked, to keep the flag-off path free of
       // an extra Redis round-trip.
+      //
+      // Scoped to our lock owner, because "done with it" is only true while we
+      // still hold the operation. A delivery that read an envelope and then lost
+      // the lock race must not delete the newer one the live worker parked.
       if (touchedEnvelope) {
-        await coordinator.clearInlineResume(operationId);
+        await coordinator.clearInlineResume(operationId, stepLockOwner);
       }
     } finally {
       // Owner-scoped, so this is a no-op when the first step never claimed the

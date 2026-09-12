@@ -289,12 +289,25 @@ describe('AgentStateManager', () => {
       );
     });
 
-    it('reads and clears the envelope', async () => {
+    it('reads the envelope', async () => {
       redisMock.get.mockResolvedValue('{"stepIndex":4}');
       await expect(stateManager.loadInlineResume('op-resume')).resolves.toBe('{"stepIndex":4}');
+    });
 
-      await stateManager.clearInlineResume('op-resume');
-      expect(redisMock.del).toHaveBeenCalledWith('agent_runtime_inline_resume:op-resume');
+    it('clears the envelope only for the current lock owner', async () => {
+      // An unconditional DEL lets a worker that lost the lock race delete the
+      // newer envelope a live worker just parked, stranding it if it then dies.
+      redisMock.eval.mockResolvedValue(1);
+
+      await stateManager.clearInlineResume('op-resume', 'owner-1');
+
+      const [script, keyCount, lockKey, resumeKey, owner] = redisMock.eval.mock.calls[0];
+      expect(script).toContain("redis.call('get', KEYS[1]) == ARGV[1]");
+      expect(script).toContain("redis.call('del', KEYS[2])");
+      expect(keyCount).toBe(2);
+      expect(lockKey).toBe('agent_runtime_operation_lock:op-resume');
+      expect(resumeKey).toBe('agent_runtime_inline_resume:op-resume');
+      expect(owner).toBe('owner-1');
     });
 
     it('reports a failed park so the caller can fall back to the queue', async () => {

@@ -663,6 +663,23 @@ describe('runStep inline step loop', () => {
     }
   });
 
+  it('scopes the envelope clear to this invocation lock owner', async () => {
+    // A delivery can read envelope k, stall while the live worker finishes k and
+    // parks k+1, then be told its step is stale. Clearing unconditionally there
+    // would delete the live worker's newer recovery pointer.
+    mockLoadInlineResume.mockResolvedValue(continuationFor(7));
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: doneState,
+      success: true,
+    });
+
+    const { ctx } = buildContext({ body: validBody });
+    await runStep(ctx);
+
+    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1', 'op-1:owner');
+  });
+
   it('ignores a parked envelope that is not ahead of the delivered step', async () => {
     // After a deadline hand-off the queued message carries the same index the
     // envelope named. That delivery is authoritative, payload and all.
@@ -701,7 +718,7 @@ describe('runStep inline step loop', () => {
     await runStep(ctx);
 
     expect(mockScheduleContinuation).toHaveBeenCalledTimes(1);
-    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1');
+    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1', 'op-1:owner');
     nowSpy.mockRestore();
   });
 
@@ -742,7 +759,7 @@ describe('runStep inline step loop', () => {
       stepIndex: 7,
     });
     // The queue owns the next step again, so the envelope must not linger.
-    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1');
+    expect(mockClearInlineResume).toHaveBeenCalledWith('op-1', 'op-1:owner');
   });
 
   it('leaves Redis alone when nothing was ever parked', async () => {

@@ -348,9 +348,13 @@ export class AgentRuntimeCoordinator {
     }
   }
 
-  /** Drop a parked inline envelope once the queue owns the next step again. */
-  async clearInlineResume(operationId: string): Promise<void> {
-    return this.stateManager.clearInlineResume(operationId);
+  /**
+   * Drop a parked inline envelope once the queue owns the next step again.
+   * Scoped to the lock owner, so a worker that lost the race cannot delete the
+   * envelope of the worker that is still running.
+   */
+  async clearInlineResume(operationId: string, ownerId: string): Promise<void> {
+    return this.stateManager.clearInlineResume(operationId, ownerId);
   }
 
   /**

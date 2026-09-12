@@ -13,6 +13,19 @@ const log = debug('lobe-server:agent-runtime:agent-state-manager');
 
 const REFRESH_OWNED_LOCK_SCRIPT =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('expire', KEYS[1], ARGV[2]) else return 0 end";
+/**
+ * Drop the inline envelope only while this worker still owns the operation lock.
+ *
+ * An unconditional DEL is unsafe: a redelivery can read envelope k, stall while
+ * the active worker finishes k and parks k+1, then lose the lock race and be
+ * told its step is stale. Clearing there would delete a live worker's newer
+ * recovery pointer. Ownership of the lock is exactly the right predicate —
+ * whoever holds it is the worker whose envelope this is.
+ *
+ * KEYS[1] = operation lock, KEYS[2] = inline resume envelope, ARGV[1] = owner.
+ */
+const CLEAR_OWNED_INLINE_RESUME_SCRIPT =
+  "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[2]) else return 0 end";
 const RELEASE_OWNED_LOCK_SCRIPT =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 /**
@@ -551,13 +564,21 @@ export class AgentStateManager {
   }
 
   /**
-   * Best-effort, unlike the read: a stale envelope is harmless. It only ever
-   * resumes a step whose index is ahead of the delivered one, and the next step
-   * to park overwrites it — worst case it expires with the operation's TTL.
+   * Owner-scoped, and best-effort on failure: a stale envelope is harmless. It
+   * only ever resumes a step whose index is ahead of the delivered one, and the
+   * next step to park overwrites it — worst case it expires with the
+   * operation's TTL. Deleting someone else's envelope is not harmless, hence
+   * the ownership check.
    */
-  async clearInlineResume(operationId: string): Promise<void> {
+  async clearInlineResume(operationId: string, ownerId: string): Promise<void> {
     try {
-      await this.redis.del(`${this.INLINE_RESUME_PREFIX}:${operationId}`);
+      await this.redis.eval(
+        CLEAR_OWNED_INLINE_RESUME_SCRIPT,
+        2,
+        this.executionLockKey(operationId),
+        `${this.INLINE_RESUME_PREFIX}:${operationId}`,
+        ownerId,
+      );
     } catch (error) {
       console.error('Failed to clear inline resume pointer:', error);
     }

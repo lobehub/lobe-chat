@@ -229,7 +229,13 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     return this.inlineResumes.get(operationId) ?? null;
   }
 
-  async clearInlineResume(operationId: string): Promise<void> {
+  async clearInlineResume(operationId: string, ownerId: string): Promise<void> {
+    // Mirrors CLEAR_OWNED_INLINE_RESUME_SCRIPT: only the current lock owner may
+    // drop the envelope, so a worker that lost the race cannot delete a live
+    // worker's recovery pointer.
+    const lock = this.stepLocks.get(this.executionLockKey(operationId));
+    if (lock?.ownerId !== ownerId) return;
+
     this.inlineResumes.delete(operationId);
   }
 

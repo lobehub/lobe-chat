@@ -29,8 +29,8 @@ export interface IAgentStateManager {
    */
   cleanupExpiredOperations: () => Promise<number>;
 
-  /** Drop the inline step loop's parked envelope. */
-  clearInlineResume: (operationId: string) => Promise<void>;
+  /** Drop the inline step loop's parked envelope, if this owner still holds the lock. */
+  clearInlineResume: (operationId: string, ownerId: string) => Promise<void>;
 
   /**
    * Create new operation metadata
