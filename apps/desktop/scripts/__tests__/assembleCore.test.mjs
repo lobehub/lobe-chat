@@ -76,10 +76,14 @@ describe('assembleCore', () => {
       'dist/renderer/index.html',
       'node_modules/electron-log/main.js',
       'node_modules/electron-log/package.json',
+      'package.json',
       'resources/sounds/ping.mp3',
       'resources/tray.png',
     ]);
     expect(await readFile(path.join(options.out, 'cli/lobe-cli.js'), 'utf8')).toBe('cli');
+    expect(JSON.parse(await readFile(path.join(options.out, 'package.json'), 'utf8'))).toEqual({
+      type: 'commonjs',
+    });
     expect(JSON.parse(await readFile(path.join(options.out, 'cli/package.json'), 'utf8'))).toEqual({
       name: '@lobehub/cli',
       type: 'module',

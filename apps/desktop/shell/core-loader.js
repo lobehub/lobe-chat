@@ -1,10 +1,12 @@
 const { createHash, verify } = require('node:crypto');
 const fs = require('node:fs');
+const Module = require('node:module');
 const path = require('node:path');
 
 const MAX_BOOT_FAILURES = 3;
 const VERSION_NAME = /^[\w.-]+$/;
-const VERIFIED_PREFIX = /^dist\/(?:main|preload)\//;
+const VERIFIED_PREFIX = /^(?:dist\/(?:main|preload)|node_modules|cli)\//;
+const UNSAFE_SEGMENT = /^\.\.?$/;
 const MAIN_ENTRY = 'dist/main/index.js';
 
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
@@ -51,6 +53,15 @@ const verifyCandidate = (dir, version, { abi, boot, publicKey }) => {
   if (manifest.shellAbi !== abi) throw new Error(`shellAbi ${manifest.shellAbi} != ${abi}`);
   if (boot.version === version && boot.failures >= MAX_BOOT_FAILURES)
     throw new Error(`boot failed ${boot.failures}x`);
+  for (const entry of manifest.tree) {
+    if (
+      typeof entry.path !== 'string' ||
+      path.isAbsolute(entry.path) ||
+      entry.path.includes('\\') ||
+      entry.path.split('/').some((segment) => UNSAFE_SEGMENT.test(segment))
+    )
+      throw new Error(`unsafe tree path ${JSON.stringify(entry.path)}`);
+  }
   const files = manifest.tree.filter((entry) => VERIFIED_PREFIX.test(entry.path));
   if (!files.some((entry) => entry.path === MAIN_ENTRY))
     throw new Error(`${MAIN_ENTRY} not in tree`);
@@ -97,4 +108,23 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
   return { dir: builtinDir, log, manifest, markHealthy() {}, source: 'builtin' };
 }
 
-module.exports = { canonicalJson, resolveCore, verifyManifestSignature };
+const packageName = (request) =>
+  request.startsWith('@') ? request.split('/').slice(0, 2).join('/') : request.split('/')[0];
+
+function installShellResolver(shellNodeModules) {
+  const original = Module._resolveFilename;
+  Module._resolveFilename = function (request, parent, isMain, options) {
+    const bare = !/^(?:\.|node:)/.test(request) && !path.isAbsolute(request);
+    if (bare && fs.existsSync(path.join(shellNodeModules, packageName(request))))
+      return original.call(this, request, parent, isMain, {
+        ...options,
+        paths: [shellNodeModules],
+      });
+    return original.apply(this, arguments);
+  };
+  return () => {
+    Module._resolveFilename = original;
+  };
+}
+
+module.exports = { canonicalJson, installShellResolver, resolveCore, verifyManifestSignature };

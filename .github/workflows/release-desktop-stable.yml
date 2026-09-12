@@ -208,11 +208,6 @@ jobs:
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.check-stable.outputs.version }} stable
 
-      - name: Write shell ABI
-        env:
-          RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
-        run: node apps/desktop/scripts/shellAbi.mjs --write
-
       # macOS 构建前清理 (修复 hdiutil 问题 https://github.com/electron-userland/electron-builder/issues/8415)
       - name: Clean previous build artifacts (macOS)
         if: runner.os == 'macOS'
@@ -240,6 +235,7 @@ jobs:
           UPDATE_CHANNEL: stable
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           RELEASE_NOTES: ${{ needs.check-stable.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
@@ -264,6 +260,7 @@ jobs:
           UPDATE_CHANNEL: stable
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           RELEASE_NOTES: ${{ needs.check-stable.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
@@ -282,6 +279,7 @@ jobs:
           UPDATE_CHANNEL: stable
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           RELEASE_NOTES: ${{ needs.check-stable.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'

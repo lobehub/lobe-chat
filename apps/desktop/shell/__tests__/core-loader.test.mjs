@@ -31,9 +31,11 @@ const writeJson = (file, value) => {
 
 const writeCore = (dir, version, { shellAbi = ABI, mutate } = {}) => {
   const files = {
+    'cli/lobe-cli.js': 'cli',
     'dist/main/index.js': `module.exports = ${JSON.stringify(version)};`,
     'dist/preload/index.js': '// preload',
     'dist/renderer/index.html': '<html/>',
+    'node_modules/electron-log/main.js': 'log',
   };
   const tree = Object.entries(files).map(([filePath, content]) => {
     fs.mkdirSync(path.join(dir, path.dirname(filePath)), { recursive: true });
@@ -118,6 +120,36 @@ describe('resolveCore', () => {
     writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
     expect(resolve().source).toBe('external');
   });
+
+  it.each(['node_modules/electron-log/main.js', 'cli/lobe-cli.js'])(
+    'rejects a core whose %s hash mismatches',
+    (file) => {
+      writeExternal('1.1.0', {
+        mutate: (dir) => fs.writeFileSync(path.join(dir, file), 'tampered'),
+      });
+      writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+      const core = resolve();
+      expect(core.source).toBe('builtin');
+      expect(core.log.join('\n')).toContain(`hash mismatch ${file}`);
+    },
+  );
+
+  it.each(['../x', 'dist/main/../x', './x', '/x', 'dist\\main\\x'])(
+    'rejects a signed manifest whose tree contains %s',
+    (unsafe) => {
+      writeExternal('1.1.0', {
+        mutate: (_, manifest) => {
+          delete manifest.signature;
+          manifest.tree.push({ path: unsafe, sha256: sha256(''), size: 0 });
+          Object.assign(manifest, signManifest(manifest));
+        },
+      });
+      writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+      const core = resolve();
+      expect(core.source).toBe('builtin');
+      expect(core.log.join('\n')).toMatch(/unsafe tree path/);
+    },
+  );
 
   it('falls back to previous after 3 boot failures of current', () => {
     writeExternal('1.1.0');

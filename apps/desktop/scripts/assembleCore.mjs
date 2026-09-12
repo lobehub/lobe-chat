@@ -37,6 +37,7 @@ export function assembleCore({
     (src) => !RESOURCES_EXCLUDED.has(path.relative(inputs.resources, src).split(path.sep)[0]),
   );
   copy(inputs['node_modules/electron-log'], 'node_modules/electron-log');
+  writeFileSync(path.join(out, 'package.json'), JSON.stringify({ type: 'commonjs' }));
 
   mkdirSync(path.join(out, 'cli'), { recursive: true });
   cpSync(inputs['apps/cli/dist/index.js'], path.join(out, 'cli/lobe-cli.js'));

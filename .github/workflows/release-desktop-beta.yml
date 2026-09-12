@@ -115,11 +115,6 @@ jobs:
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.check-beta.outputs.version }} beta
 
-      - name: Write shell ABI
-        env:
-          RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
-        run: node apps/desktop/scripts/shellAbi.mjs --write
-
       - name: Prepare macOS provisioning profile
         if: runner.os == 'macOS'
         env:
@@ -139,6 +134,7 @@ jobs:
           UPDATE_CHANNEL: beta
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
@@ -160,6 +156,7 @@ jobs:
           UPDATE_CHANNEL: beta
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
@@ -177,6 +174,7 @@ jobs:
           UPDATE_CHANNEL: beta
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+          RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='

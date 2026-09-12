@@ -6,10 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 import dotenv from 'dotenv';
 
-import {
-  copyExternalRuntimeModulesToSource,
-  getExternalRuntimeModulesFilesConfig,
-} from './external-runtime-deps.config.mjs';
+import { copyExternalRuntimeModulesToSource } from './external-runtime-deps.config.mjs';
+import { getModuleFilesConfig } from './module-deps.config.mjs';
 import {
   buildFirstPartyNativeAddons,
   copyNativeModulesToSource,
@@ -264,8 +262,8 @@ const config = {
     '!node_modules',
     // Then explicitly include native modules using object form (handles pnpm symlinks)
     ...getNativeModulesFilesConfig(),
-    // Include non-native runtime modules that are intentionally externalized from Vite.
-    ...getExternalRuntimeModulesFilesConfig(),
+    // electron-log ships in the core (assembleCore), a shell copy would shadow it via the resolver shim
+    ...getModuleFilesConfig(['font-list']),
   ],
   generateUpdatesFilesForAllChannels: true,
   linux: {
