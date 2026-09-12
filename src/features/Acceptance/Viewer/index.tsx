@@ -3,7 +3,8 @@
 import { Flexbox } from '@lobehub/ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+
+import { useParams } from '@/libs/router/navigation';
 
 import { extractUuid } from '../utils';
 import { AcceptanceOverview } from './AcceptanceOverview';
@@ -58,7 +59,7 @@ const AcceptancePage = ({
   acceptanceId: explicitAcceptanceId,
   onDraftToComposer,
 }: AcceptancePageProps) => {
-  const params = useParams<{ acceptanceId: string; checkId: string }>();
+  const params = useParams<{ acceptanceId: string; checkId: string }>('acceptanceId', 'checkId');
   const acceptanceId = explicitAcceptanceId ?? extractUuid(params.acceptanceId);
   const [flowPanelHost, setFlowPanelHostContext] = useState<HTMLDivElement | null>(null);
   const embedded = Boolean(explicitAcceptanceId);

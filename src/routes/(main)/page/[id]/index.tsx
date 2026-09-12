@@ -2,18 +2,18 @@
 
 import { useUnmount } from 'ahooks';
 import { memo, Suspense } from 'react';
-import { useParams } from 'react-router';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { delayed } from '@/components/Skeleton/Delayed';
 import SurfaceSkeleton from '@/components/Skeleton/Surface';
 import PageExplorer from '@/features/PageExplorer';
+import { useParams } from '@/libs/router/navigation';
 import { usePageStore } from '@/store/page';
 import { getIdFromIdentifier } from '@/utils/identifier';
 
 const PagesPage = memo(() => {
   const storeUpdater = createStoreUpdater(usePageStore);
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>('id');
 
   const pageId = getIdFromIdentifier(params.id ?? '', 'docs');
 

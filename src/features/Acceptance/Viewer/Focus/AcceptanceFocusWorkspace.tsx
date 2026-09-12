@@ -2,11 +2,13 @@
 
 import { toast } from '@lobehub/ui/base-ui';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
+import { useParams, useSearchParams } from '@/libs/router/navigation';
 import { mutate as globalMutate } from '@/libs/swr';
 import { isAcceptanceListKey } from '@/libs/swr/keys';
 import { verifyService } from '@/services/verify';
+import { useRouterStore } from '@/store/router';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { openAddCheckModal } from '../Checks/AddCheckModal';
@@ -20,10 +22,10 @@ import AcceptanceFocusReview from './AcceptanceFocusReview';
 const AcceptanceFocusWorkspace = () => {
   const { t } = useTranslation('verify');
   const navigate = useNavigate();
-  const location = useLocation();
+  const locationState = useRouterStore((state) => state.location.state);
   const [searchParams] = useSearchParams();
   const query = searchParams.toString() ? `?${searchParams}` : '';
-  const params = useParams<{ checkId?: string }>();
+  const params = useParams<{ checkId?: string }>('checkId');
   const { acceptanceId } = useAcceptanceScope();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
   const { turn } = useAcceptanceTurn();
@@ -60,7 +62,7 @@ const AcceptanceFocusWorkspace = () => {
       // pops that entry — replacing it would leave a duplicate overview behind
       // and make the system back button look broken.
       onBack={() =>
-        (location.state as { fromCheckList?: boolean } | null)?.fromCheckList
+        (locationState as { fromCheckList?: boolean } | null)?.fromCheckList
           ? navigate(-1)
           : navigate(acceptanceOverviewPath(acceptanceId) + query, { replace: true })
       }
@@ -69,7 +71,7 @@ const AcceptanceFocusWorkspace = () => {
       onSelectCheck={(id) =>
         navigate(acceptanceCheckPath(acceptanceId, id) + query, {
           replace: true,
-          state: location.state,
+          state: locationState,
         })
       }
       // Checklist authoring writes through the subject — creator-only until that

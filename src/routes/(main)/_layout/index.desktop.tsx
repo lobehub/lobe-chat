@@ -25,6 +25,7 @@ import {
 } from '@/features/Electron/shell';
 import ZoomHUD from '@/features/Electron/system/ZoomHUD';
 import { TabHost, useSeedTabsOnBoot } from '@/features/Electron/TabHost';
+import ActiveTabRouterStoreProvider from '@/features/Electron/TabHost/ActiveTabRouterStoreProvider';
 import TabCacheBridges from '@/features/Electron/titlebar/TabBar/TabCacheBridges';
 import TitleBar from '@/features/Electron/titlebar/TitleBar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
@@ -44,7 +45,7 @@ const GlobalApprovalNotification = dynamic(() => import('@/features/GlobalApprov
 
 const tabHostContainer: CSSProperties = { position: 'relative' };
 
-const Layout: FC = () => {
+const LayoutContent: FC = () => {
   const { isPWA } = usePlatform();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
@@ -99,5 +100,11 @@ const Layout: FC = () => {
     </HotkeysProvider>
   );
 };
+
+const Layout = () => (
+  <ActiveTabRouterStoreProvider>
+    <LayoutContent />
+  </ActiveTabRouterStoreProvider>
+);
 
 export default Layout;

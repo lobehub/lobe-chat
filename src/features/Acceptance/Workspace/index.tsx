@@ -6,10 +6,11 @@ import { createStaticStyles, cssVar } from 'antd-style';
 import { Menu, PanelLeftOpen } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 
 import { ShellTopBar } from '@/features/PageShell';
 import { RouteMetaBridge } from '@/features/RouteMeta';
+import { useParams, useSearchParams } from '@/libs/router/navigation';
 
 import { useAcceptanceList } from '../hooks';
 import { acceptanceHomePath } from '../Viewer/routes';
@@ -83,7 +84,10 @@ const AcceptanceWorkspace = memo<AcceptanceWorkspaceProps>(({ projectId }) => {
   const navigate = useNavigate();
   const panel = useReportPanelExpand();
   const projectActionItems = useAcceptanceProjectActionItems();
-  const { acceptanceId, checkId } = useParams<{ acceptanceId: string; checkId: string }>();
+  const { acceptanceId, checkId } = useParams<{ acceptanceId: string; checkId: string }>(
+    'acceptanceId',
+    'checkId',
+  );
   const [searchParams] = useSearchParams();
   const hasFocusedCheck = Boolean(checkId || searchParams.get('check'));
 

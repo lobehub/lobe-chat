@@ -3,9 +3,10 @@
 import { Text } from '@lobehub/ui/base-ui';
 import { type FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useMatch } from 'react-router';
+import { Outlet } from 'react-router';
 
 import NavHeader from '@/features/NavHeader';
+import { useMatch } from '@/libs/router/navigation';
 import { RouteSkeletonChromeProvider } from '@/spa/router/routeSkeletonChrome';
 import { WorkspaceSettingsTabs } from '@/types/workspaceSettings';
 

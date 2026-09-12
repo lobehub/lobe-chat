@@ -3,11 +3,11 @@
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { AgentGoalsPage } from '@/features/AgentGoals';
-import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
+import { useParams } from '@/libs/router/navigation';
 import { useProjectStore } from '@/store/project';
 
 const ProjectGoals = () => {
-  const { projectId } = useActiveRouteParams<{ projectId: string }>();
+  const { projectId } = useParams<{ projectId: string }>('projectId');
   const { data, error, isLoading, mutate } = useProjectStore((s) => s.useFetchProjectDetail)(
     projectId,
   );

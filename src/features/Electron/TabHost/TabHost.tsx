@@ -17,6 +17,7 @@ import { RouterProvider } from 'react-router/dom';
 
 import { createTabRouter } from '@/spa/router/tabRouter';
 import { useElectronStore } from '@/store/electron';
+import { RouterStoreProvider } from '@/store/router';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
@@ -211,6 +212,7 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
                   width: `${(1 - effectiveSplitView.ratio) * 100}%`,
                 }
             : slotStyle;
+          const router = getOrCreateTabRouter(tab.id, tab.url, createRouter);
 
           return (
             <Activity key={tab.id} mode={isVisible ? 'visible' : 'hidden'} name={`Tab:${tab.id}`}>
@@ -230,7 +232,9 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
                       router mounts as a root; nothing renders between the reset and the
                       provider, so no consumer can observe the null gap. */}
                   <UNSAFE_LocationContext value={null as never}>
-                    <RouterProvider router={getOrCreateTabRouter(tab.id, tab.url, createRouter)} />
+                    <RouterStoreProvider router={router} scopeId={tab.id}>
+                      <RouterProvider router={router} />
+                    </RouterStoreProvider>
                   </UNSAFE_LocationContext>
                 </TabIdContext>
               </TabPane>

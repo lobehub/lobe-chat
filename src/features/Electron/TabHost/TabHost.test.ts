@@ -1,17 +1,20 @@
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { createMemoryRouter, Outlet, RouterProvider, useParams } from 'react-router';
+import { createMemoryRouter, Outlet, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type TabItem } from '@/features/Electron/titlebar/TabBar/types';
+import { useParams, usePathname } from '@/libs/router/navigation';
 import { useElectronStore } from '@/store/electron';
 import { initialState } from '@/store/electron/initialState';
 import { useUserStore } from '@/store/user';
 
+import ActiveTabRouterStoreProvider from './ActiveTabRouterStoreProvider';
 import { MAX_LIVE_TAB_ROUTERS } from './resolveLiveTabIds';
 import TabHost from './TabHost';
 import TabLocationReporter from './TabLocationReporter';
 import {
+  getOrCreateTabRouter,
   getTabHistorySnapshot,
   getTabRouter,
   resetTabRouterManager,
@@ -19,7 +22,7 @@ import {
 } from './tabRouterManager';
 
 const TestRoute = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id?: string }>('id');
   return React.createElement('div', { 'data-testid': `param-${id}` }, id);
 };
 
@@ -100,6 +103,47 @@ afterEach(() => {
 });
 
 describe('TabHost', () => {
+  it('keeps the shell mounted while boot switches from the outer router to the active tab', async () => {
+    const lifecycle = { cleanups: 0, mounts: 0 };
+    const ShellProbe = () => {
+      const pathname = usePathname();
+
+      React.useEffect(() => {
+        lifecycle.mounts += 1;
+        return () => {
+          lifecycle.cleanups += 1;
+        };
+      }, []);
+
+      return React.createElement('div', { 'data-testid': 'shell-pathname' }, pathname);
+    };
+    const outerRouter = createMemoryRouter(
+      [
+        {
+          element: React.createElement(
+            ActiveTabRouterStoreProvider,
+            null,
+            React.createElement(ShellProbe),
+          ),
+          path: '*',
+        },
+      ],
+      { initialEntries: ['/'] },
+    );
+
+    getOrCreateTabRouter('a', '/item/a', createTestRouter);
+    render(React.createElement(RouterProvider, { router: outerRouter }));
+
+    expect(await screen.findByTestId('shell-pathname')).toHaveTextContent('/');
+
+    act(() => {
+      setStore([{ id: 'a', lastVisited: 1, url: '/item/a' }], 'a');
+    });
+
+    await waitFor(() => expect(screen.getByTestId('shell-pathname')).toHaveTextContent('/item/a'));
+    expect(lifecycle).toEqual({ cleanups: 0, mounts: 1 });
+  });
+
   it('creates only the visible router when restoring many persisted tabs', async () => {
     setStore(
       Array.from({ length: 14 }, (_, i) => ({
@@ -162,6 +206,7 @@ describe('TabHost', () => {
     expect(screen.queryByTestId('param-b')).not.toBeInTheDocument();
     act(() => useElectronStore.setState({ activeTabId: 'b' }));
     expect(await screen.findByTestId('param-b')).toHaveTextContent('b');
+    expect(screen.getByTestId('param-a')).toHaveTextContent('a');
   });
 
   it('toggles slot visibility when the active tab changes without unmounting the deactivated tab', async () => {

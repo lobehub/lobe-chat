@@ -17,10 +17,10 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
+import { useParams } from '@/libs/router/navigation';
 import { runSelectors, useEvalStore } from '@/store/eval';
 
 import BenchmarkHeader from './features/BenchmarkHeader';
@@ -73,7 +73,7 @@ const styles = createStaticStyles(({ css }) => ({
 
 const BenchmarkDetail = memo(() => {
   const { t } = useTranslation('eval');
-  const { benchmarkId } = useParams<{ benchmarkId: string }>();
+  const { benchmarkId } = useParams<{ benchmarkId: string }>('benchmarkId');
   const systemIcon = useMemo(
     () => (benchmarkId ? getSystemIcon(benchmarkId) : Server),
     [benchmarkId],

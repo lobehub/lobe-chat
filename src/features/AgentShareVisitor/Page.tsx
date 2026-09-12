@@ -8,11 +8,12 @@ import { cssVar } from 'antd-style';
 import { PanelLeftOpen } from 'lucide-react';
 import { memo, type PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { RouteMetaBridge } from '@/features/RouteMeta';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useParams } from '@/libs/router/navigation';
 import { useRouteSkeleton } from '@/spa/router/useRouteSkeleton';
 
 import { resolveShareAccessState, SHARE_ACCESS_ERROR_KEYS } from './resolveShareAccessState';
@@ -61,7 +62,10 @@ const VisitorShell = ({
  */
 const AgentShareVisitorPage = memo(() => {
   const { t } = useTranslation('agent');
-  const { slugOrId, topicId } = useParams<{ slugOrId: string; topicId: string }>();
+  const { slugOrId, topicId } = useParams<{ slugOrId: string; topicId: string }>(
+    'slugOrId',
+    'topicId',
+  );
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const RouteSkeleton = useRouteSkeleton();

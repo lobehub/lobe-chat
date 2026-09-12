@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useLocation } from 'react-router';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -11,7 +10,6 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Ope
 
   const isMobile = useIsMobile();
   const navigate = useWorkspaceAwareNavigate();
-  const location = useLocation();
 
   return useMemo(() => {
     if (isMobile)
@@ -22,5 +20,5 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Ope
         m.openAgentSettingsModal(),
       );
     };
-  }, [activeAgentId, navigate, location.pathname, tab, isMobile]);
+  }, [activeAgentId, navigate, tab, isMobile]);
 };

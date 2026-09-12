@@ -3,7 +3,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { type FC } from 'react';
 import { memo, Suspense } from 'react';
-import { useParams } from 'react-router';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import { delayed } from '@/components/Skeleton/Delayed';
@@ -12,6 +11,7 @@ import AgentBuilder from '@/features/AgentBuilder';
 import ResourceConfigAccessGate from '@/features/ResourcePermission/ResourceConfigAccessGate';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import { usePermission } from '@/hooks/usePermission';
+import { useParams } from '@/libs/router/navigation';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { StyleSheet } from '@/utils/styles';
@@ -101,7 +101,7 @@ const AgentBuilderSlot = memo(() => {
 });
 
 const AgentProfile: FC = () => {
-  const { aid } = useParams<{ aid: string }>();
+  const { aid } = useParams<{ aid: string }>('aid');
 
   return (
     <Suspense fallback={delayed(<ProfileSkeleton />)}>

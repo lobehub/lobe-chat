@@ -34,8 +34,9 @@ const workspaceState: WorkspaceMock = {
   workspaces: [{ id: 'workspace-1', slug: 'lobe-team' }],
 };
 
-vi.mock('react-router', () => ({
-  useLocation: () => ({ pathname }),
+vi.mock('@/store/router', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  useRouterStore: () => pathname,
 }));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({

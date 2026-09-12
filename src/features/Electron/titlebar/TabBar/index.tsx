@@ -23,11 +23,11 @@ import { useTranslation } from 'react-i18next';
 
 import { captureVisibleTabPreviews } from '@/features/Electron/TabHost';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
-import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useRegisterDesktopTabHotkeys } from '@/hooks/useHotkeys/desktopTabScope';
 import { usePermission } from '@/hooks/usePermission';
 import { electronSystemService } from '@/services/electron/system';
 import { useElectronStore } from '@/store/electron';
+import { routerSelectors, useRouterStore } from '@/store/router';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 import { electronStylish } from '@/styles/electron';
@@ -56,7 +56,7 @@ const restrictToHorizontalAxis: Modifier = ({ transform }) => ({ ...transform, y
 
 const TabBar = () => {
   const styles = useStyles;
-  const location = useActiveLocation();
+  const currentUrl = useRouterStore(routerSelectors.url);
   useRegisterDesktopTabHotkeys();
   const { t } = useTranslation('electron');
   const { allowed: canCreate, reason } = usePermission('create_content');
@@ -127,11 +127,11 @@ const TabBar = () => {
   }, [total, dividerX, targetTotal, targetDividerX]);
 
   const newTabUrl = useMemo(() => {
-    const scope = resolveTabScope(location.pathname + location.search);
+    const scope = resolveTabScope(currentUrl);
     const activeSlug = scope.type === 'workspace' ? scope.slug : null;
 
     return buildWorkspaceAwarePath(NEW_TAB_URL, activeSlug);
-  }, [location.pathname, location.search]);
+  }, [currentUrl]);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {

@@ -4,10 +4,10 @@ import { Center } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
+import { useParams } from '@/libs/router/navigation';
 import { useEvalStore } from '@/store/eval';
 import { isTrpcErrorCode } from '@/utils/trpcError';
 
@@ -15,7 +15,7 @@ import TestCaseDetail from '../../features/TestCaseDetail';
 
 const Page = memo(() => {
   const { t } = useTranslation('eval');
-  const { caseId } = useParams<{ caseId: string }>();
+  const { caseId } = useParams<{ caseId: string }>('caseId');
 
   const useFetchTestCase = useEvalStore((s) => s.useFetchTestCase);
   const useFetchDatasetDetail = useEvalStore((s) => s.useFetchDatasetDetail);

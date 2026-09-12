@@ -1,7 +1,6 @@
 'use client';
 
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useParams } from 'react-router';
 
 import { useCommunityWorkspaceProfile } from '@/business/client/hooks/useCommunityWorkspaceProfile';
 import AsyncError from '@/components/AsyncError';
@@ -9,7 +8,9 @@ import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { type MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
+import { useParams } from '@/libs/router/navigation';
 import { useDiscoverStore } from '@/store/discover';
+import { routerSelectors, useRouterStore } from '@/store/router';
 
 import NotFound from '../components/NotFound';
 import { resolveWorkspaceCommunityProfileRedirect } from '../workspace/features/resolveWorkspaceProfileEdit';
@@ -23,8 +24,9 @@ interface UserDetailPageProps {
 }
 
 const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
-  const params = useParams<{ slug: string }>();
-  const location = useLocation();
+  const params = useParams<{ slug: string }>('slug');
+  const pathname = useRouterStore(routerSelectors.pathname);
+  const search = useRouterStore(routerSelectors.search);
   const username = decodeURIComponent(params.slug ?? '');
   const navigate = useWorkspaceAwareNavigate();
   const { isWorkspaceScope } = useCommunityWorkspaceProfile();
@@ -40,11 +42,11 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   useEffect(() => {
     const redirectTo = resolveWorkspaceCommunityProfileRedirect({
       isWorkspaceScope,
-      pathname: location.pathname,
-      search: location.search,
+      pathname,
+      search,
     });
     if (redirectTo) navigate(redirectTo, { replace: true });
-  }, [isWorkspaceScope, location.pathname, location.search, navigate]);
+  }, [isWorkspaceScope, navigate, pathname, search]);
 
   const currentUser = getCurrentUserInfo();
   const { data: currentUserProfile } = useMarketUserProfile(currentUser?.sub);

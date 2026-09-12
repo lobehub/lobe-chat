@@ -11,12 +11,13 @@ import { ArrowLeft, X } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router';
 
 import NavHeader from '@/features/NavHeader';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useParams } from '@/libs/router/navigation';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
+import { routerSelectors, useRouterStore } from '@/store/router';
 
 const Header = memo<{
   paddingInline?: number;
@@ -24,9 +25,9 @@ const Header = memo<{
   title: ReactNode;
 }>(({ paddingInline = 8, rightExtra, title }) => {
   const { t } = useTranslation('common');
-  const location = useLocation();
+  const pathname = useRouterStore(routerSelectors.pathname);
   const navigate = useWorkspaceAwareNavigate();
-  const params = useParams<{ aid?: string; topicId?: string }>();
+  const params = useParams<{ aid?: string; topicId?: string }>('aid', 'topicId');
   const [canGoBack, goBack, clearPortalStack] = useChatStore((s) => [
     chatPortalSelectors.canGoBack(s),
     s.goBack,
@@ -35,7 +36,7 @@ const Header = memo<{
   const isTopicPageRoute =
     !!params.aid &&
     !!params.topicId &&
-    location.pathname.startsWith(AGENT_CHAT_TOPIC_PAGE_URL(params.aid, params.topicId));
+    pathname.startsWith(AGENT_CHAT_TOPIC_PAGE_URL(params.aid, params.topicId));
 
   return (
     <NavHeader

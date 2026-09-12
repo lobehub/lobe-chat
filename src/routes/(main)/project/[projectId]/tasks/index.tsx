@@ -3,11 +3,11 @@
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { AgentTasksPage } from '@/features/AgentTasks';
-import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
+import { useParams } from '@/libs/router/navigation';
 import { useProjectStore } from '@/store/project';
 
 const ProjectTasks = () => {
-  const { projectId } = useActiveRouteParams<{ projectId: string }>();
+  const { projectId } = useParams<{ projectId: string }>('projectId');
   const { data, error, isLoading, mutate } = useProjectStore((s) => s.useFetchProjectDetail)(
     projectId,
   );

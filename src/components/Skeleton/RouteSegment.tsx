@@ -13,7 +13,6 @@ import { markSkeletonVisible } from './skeletonHandover';
 export const RouteLoading = () => {
   const Skeleton = useRouteSkeleton();
   const chrome = useRouteSkeletonChrome();
-
   useLayoutEffect(() => {
     if (!Skeleton) return;
     markSkeletonVisible();

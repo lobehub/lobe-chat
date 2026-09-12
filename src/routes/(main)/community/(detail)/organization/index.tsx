@@ -1,13 +1,14 @@
 'use client';
 
 import { memo, useEffect, useMemo } from 'react';
-import { useLocation, useParams } from 'react-router';
 
 import { useCommunityWorkspaceProfile } from '@/business/client/hooks/useCommunityWorkspaceProfile';
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useParams } from '@/libs/router/navigation';
 import { useDiscoverStore } from '@/store/discover';
+import { routerSelectors, useRouterStore } from '@/store/router';
 
 import NotFound from '../components/NotFound';
 import { resolveWorkspaceCommunityProfileRedirect } from '../workspace/features/resolveWorkspaceProfileEdit';
@@ -20,8 +21,9 @@ interface OrganizationDetailPageProps {
 }
 
 const OrganizationDetailPage = memo<OrganizationDetailPageProps>(({ mobile }) => {
-  const params = useParams<{ slug: string }>();
-  const location = useLocation();
+  const params = useParams<{ slug: string }>('slug');
+  const pathname = useRouterStore(routerSelectors.pathname);
+  const search = useRouterStore(routerSelectors.search);
   const username = decodeURIComponent(params.slug ?? '');
   const navigate = useWorkspaceAwareNavigate();
   const { isWorkspaceScope } = useCommunityWorkspaceProfile();
@@ -32,11 +34,11 @@ const OrganizationDetailPage = memo<OrganizationDetailPageProps>(({ mobile }) =>
   useEffect(() => {
     const redirectTo = resolveWorkspaceCommunityProfileRedirect({
       isWorkspaceScope,
-      pathname: location.pathname,
-      search: location.search,
+      pathname,
+      search,
     });
     if (redirectTo) navigate(redirectTo, { replace: true });
-  }, [isWorkspaceScope, location.pathname, location.search, navigate]);
+  }, [isWorkspaceScope, navigate, pathname, search]);
 
   const contextConfig = useMemo(() => {
     if (!data?.user || data.user.type !== 'organization') return null;

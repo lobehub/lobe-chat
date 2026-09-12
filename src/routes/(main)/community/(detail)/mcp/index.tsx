@@ -2,7 +2,6 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
@@ -10,6 +9,7 @@ import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useQuery } from '@/hooks/useQuery';
+import { useParams } from '@/libs/router/navigation';
 import { useDiscoverStore } from '@/store/discover';
 
 import NotFound from '../components/NotFound';
@@ -21,7 +21,7 @@ interface McpDetailPageProps {
 }
 
 const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
-  const params = useParams<{ slug: string }>();
+  const params = useParams<{ slug: string }>('slug');
   const identifier = params.slug ?? '';
 
   const { version } = useQuery() as { version?: string };
