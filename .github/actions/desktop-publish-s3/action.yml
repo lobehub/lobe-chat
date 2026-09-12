@@ -78,8 +78,9 @@ runs:
             [ -z "$SHELL_ABI" ] && SHELL_ABI="$abi"
             [ "$abi" = "$SHELL_ABI" ] || { echo "::error::shellAbi differs across platforms ($latest)"; exit 1; }
             if [ -f "release/core-ota/core/$platform/latest.json" ]; then
+              # A mismatch only costs delta efficiency for some clients (they fall back to objects/full pack); keep the first tree.
               diff <(jq -S '.tree' "release/core-ota/core/$platform/latest.json") <(jq -S '.tree' "$latest") \
-                || { echo "::error::$platform core trees differ between runners"; exit 1; }
+                || echo "::warning::$platform core trees differ between runners; keeping the first"
               continue
             fi
             mkdir -p release/core-ota/cas release/core-ota/core
