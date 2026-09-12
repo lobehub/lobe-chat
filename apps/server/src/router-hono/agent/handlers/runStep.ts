@@ -6,6 +6,7 @@ import { getServerDB } from '@/database/core/db-adaptor';
 import { agentOperations } from '@/database/schemas/agentOperations';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime';
 import type { AgentExecutionResult, AgentStepContinuation } from '@/server/services/agentRuntime';
+import { isInlineAgentStepsEnabledForUser } from '@/server/services/agentRuntime/inlineStepsGate';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 const log = debug('lobe-server:agent:run-step');
@@ -165,12 +166,23 @@ export async function runStep(c: Context): Promise<Response> {
     // round-trip per step. One lock owner spans the whole loop: the operation
     // lock is re-entrant for its owner, so a redelivery from the queue still
     // loses the race the same way it does for a single step.
+    // Rollout switch, resolved once per invocation from RuntimeConfig (Redis,
+    // cached ~5s per instance). Off means exactly one step per delivery, which
+    // is what the worker has always done.
+    const inlineEnabled = await isInlineAgentStepsEnabledForUser(metadata.userId);
+
     const stepLockOwner = aiAgentService.createOperationLockOwner(operationId);
     let pendingContinuation: AgentStepContinuation | undefined;
     let currentStepIndex = stepIndex;
     let inlinedSteps = 0;
     let result: AgentExecutionResult;
+    // True once this invocation has an envelope to account for: either it
+    // resumed from one, or a step handed back a continuation (which parks one).
+    let touchedEnvelope = false;
 
+    // Deliberately not gated on `inlineEnabled`: switching the flag off while
+    // operations are mid-loop must not strand the ones that already have an
+    // envelope parked and nothing queued behind them.
     // A previous invocation may have died part-way through its own inline loop.
     // It parks the envelope for each step before running it, so an envelope
     // ahead of the delivered index means exactly that: resume from there. Going
@@ -184,6 +196,7 @@ export async function runStep(c: Context): Promise<Response> {
         `[${operationId}] Delivered step ${stepIndex} is behind a parked inline step ${resumeFrom.stepIndex}; resuming there`,
       );
       currentStepIndex = resumeFrom.stepIndex;
+      touchedEnvelope = true;
     }
 
     try {
@@ -194,7 +207,7 @@ export async function runStep(c: Context): Promise<Response> {
       result = resumeFrom
         ? await aiAgentService.executeStep({
             context: resumeFrom.context,
-            inlineContinuation: true,
+            inlineContinuation: inlineEnabled,
             operationId,
             retainStepLock: true,
             stepIndex: resumeFrom.stepIndex,
@@ -208,7 +221,7 @@ export async function runStep(c: Context): Promise<Response> {
             finishAfterAsyncTool,
             groupMemberTimeout,
             humanInput,
-            inlineContinuation: true,
+            inlineContinuation: inlineEnabled,
             lockRetryAttempt,
             operationId,
             rejectAndContinue,
@@ -221,6 +234,7 @@ export async function runStep(c: Context): Promise<Response> {
             verifyAsyncToolBarrier,
           });
       pendingContinuation = result.continuation;
+      touchedEnvelope ||= Boolean(pendingContinuation);
 
       while (pendingContinuation) {
         const elapsed = Date.now() - startTime;
@@ -237,7 +251,7 @@ export async function runStep(c: Context): Promise<Response> {
 
         result = await aiAgentService.executeStep({
           context: next.context,
-          inlineContinuation: true,
+          inlineContinuation: inlineEnabled,
           operationId,
           retainStepLock: true,
           stepIndex: next.stepIndex,
@@ -245,6 +259,7 @@ export async function runStep(c: Context): Promise<Response> {
         });
         inlinedSteps += 1;
         pendingContinuation = result.continuation;
+        touchedEnvelope ||= Boolean(pendingContinuation);
 
         // A lock conflict mid-loop means another worker took over this
         // operation. Stop rather than fight it — that worker owns the rest.
@@ -255,12 +270,17 @@ export async function runStep(c: Context): Promise<Response> {
       // resumes in a fresh invocation.
       if (pendingContinuation) {
         await aiAgentService.scheduleContinuation(pendingContinuation);
-        // The queue owns this step again, so the parked envelope is no longer a
-        // recovery pointer — leaving it would let a late redelivery run the step
-        // a second time from here.
-        await coordinator.clearInlineResume(operationId);
         result = { ...result, nextStepScheduled: true };
         pendingContinuation = undefined;
+      }
+
+      // Drop the envelope once this invocation is done with it: either the queue
+      // owns the next step again, or the operation stopped. Leaving it behind
+      // would let a late redelivery re-run a step someone else already owns.
+      // Skipped when nothing was ever parked, to keep the flag-off path free of
+      // an extra Redis round-trip.
+      if (touchedEnvelope) {
+        await coordinator.clearInlineResume(operationId);
       }
     } finally {
       // Owner-scoped, so this is a no-op when the first step never claimed the

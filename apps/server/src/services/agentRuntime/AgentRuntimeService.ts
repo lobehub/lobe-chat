@@ -2256,12 +2256,6 @@ export class AgentRuntimeService {
           }
         }
 
-        // Nothing left to run inline: drop any envelope parked by an earlier
-        // step so a late redelivery doesn't resurrect a finished operation.
-        if (inlineContinuation && !continuation) {
-          await this.coordinator.clearInlineResume(operationId);
-        }
-
         // Record final agent-level usage on the invoke_agent span. Done on every
         // step so partial trees (e.g. interrupted runs) still carry the
         // last-known token counters.
