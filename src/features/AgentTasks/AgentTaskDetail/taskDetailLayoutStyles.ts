@@ -24,15 +24,10 @@ export const taskDetailLayoutStyles = createStaticStyles(({ css }) => ({
       column-gap: 40px;
     }
   `,
-  // Grid items stretch by default, which hands the title textarea a definite
-  // column height; antd's autosize then loses its own height to flex-shrink
-  // whenever the title rewraps. Sizing both cells to content sidesteps that.
   main: css`
-    align-self: start;
     min-width: 0;
   `,
   side: css`
-    align-self: start;
     min-width: 0;
 
     @container task-detail (width >= ${TASK_DETAIL_SIDEBAR_MIN_WIDTH}px) {

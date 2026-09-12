@@ -5,8 +5,6 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     &.ant-input {
       resize: none;
 
-      flex: 1;
-
       min-height: auto;
       padding: 0;
 
