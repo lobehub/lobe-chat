@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { canonicalJson, resolveCore } from '../core-loader.js';
 
@@ -23,7 +23,9 @@ let tmp;
 let userData;
 let builtinDir;
 const otaRoot = () => path.join(userData, 'core-ota');
+const pointerFile = () => path.join(otaRoot(), 'pointer.json');
 const readBoot = () => JSON.parse(fs.readFileSync(path.join(otaRoot(), 'boot.json'), 'utf8'));
+const readPointer = () => JSON.parse(fs.readFileSync(pointerFile(), 'utf8'));
 const writeJson = (file, value) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(value));
@@ -48,6 +50,8 @@ const writeCore = (dir, version, { shellAbi = ABI, mutate } = {}) => {
   writeJson(path.join(dir, 'manifest.json'), manifest);
 };
 
+const writePointer = (pointer) => writeJson(pointerFile(), { abi: ABI, ...pointer });
+
 const writeExternal = (version, opts) =>
   writeCore(path.join(otaRoot(), 'cores', version), version, opts);
 
@@ -60,7 +64,10 @@ beforeEach(() => {
   writeCore(builtinDir, '1.0.0');
 });
 
-afterEach(() => fs.rmSync(tmp, { force: true, recursive: true }));
+afterEach(() => {
+  vi.unstubAllEnvs();
+  fs.rmSync(tmp, { force: true, recursive: true });
+});
 
 describe('resolveCore', () => {
   it('falls back to builtin when there is no pointer', () => {
@@ -80,7 +87,7 @@ describe('resolveCore', () => {
 
   it('loads a valid current core and bumps boot failures', () => {
     writeExternal('1.1.0');
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('external');
     expect(core.dir).toBe(path.join(otaRoot(), 'cores', '1.1.0'));
@@ -90,7 +97,7 @@ describe('resolveCore', () => {
 
   it('rejects a core whose shellAbi differs', () => {
     writeExternal('1.1.0', { shellAbi: 'b'.repeat(64) });
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/shellAbi/);
@@ -98,7 +105,7 @@ describe('resolveCore', () => {
 
   it('rejects a core with a bad signature', () => {
     writeExternal('1.1.0', { mutate: (_, manifest) => (manifest.version = '9.9.9') });
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/signature/);
@@ -108,7 +115,7 @@ describe('resolveCore', () => {
     writeExternal('1.1.0', {
       mutate: (dir) => fs.writeFileSync(path.join(dir, 'dist/main/index.js'), 'tampered'),
     });
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/dist\/main\/index\.js/);
@@ -118,7 +125,7 @@ describe('resolveCore', () => {
     writeExternal('1.1.0', {
       mutate: (dir) => fs.writeFileSync(path.join(dir, 'dist/renderer/index.html'), 'changed'),
     });
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     expect(resolve().source).toBe('external');
   });
 
@@ -128,7 +135,7 @@ describe('resolveCore', () => {
       writeExternal('1.1.0', {
         mutate: (dir) => fs.writeFileSync(path.join(dir, file), 'tampered'),
       });
-      writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+      writePointer({ current: '1.1.0' });
       const core = resolve();
       expect(core.source).toBe('builtin');
       expect(core.log.join('\n')).toContain(`hash mismatch ${file}`);
@@ -145,7 +152,7 @@ describe('resolveCore', () => {
           Object.assign(manifest, signManifest(manifest));
         },
       });
-      writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+      writePointer({ current: '1.1.0' });
       const core = resolve();
       expect(core.source).toBe('builtin');
       expect(core.log.join('\n')).toMatch(/unsafe tree path/);
@@ -155,22 +162,103 @@ describe('resolveCore', () => {
   it('falls back to previous after 3 boot failures of current', () => {
     writeExternal('1.1.0');
     writeExternal('1.0.5');
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0', previous: '1.0.5' });
+    writePointer({ current: '1.1.0', previous: '1.0.5' });
     writeJson(path.join(otaRoot(), 'boot.json'), { failures: 3, version: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('external');
     expect(core.manifest.version).toBe('1.0.5');
     expect(readBoot()).toEqual({ failures: 1, version: '1.0.5' });
+    expect(readPointer()).toEqual({
+      abi: ABI,
+      blacklist: ['1.1.0'],
+      current: '1.0.5',
+      previous: null,
+      staged: null,
+    });
+  });
+
+  it('nulls current and blacklists after 3 boot failures without previous', () => {
+    writeExternal('1.1.0');
+    writePointer({ current: '1.1.0' });
+    writeJson(path.join(otaRoot(), 'boot.json'), { failures: 3, version: '1.1.0' });
+    expect(resolve().source).toBe('builtin');
+    expect(readPointer()).toEqual({
+      abi: ABI,
+      blacklist: ['1.1.0'],
+      current: null,
+      previous: null,
+      staged: null,
+    });
+  });
+
+  it('ignores a pointer written by another shell abi and leaves it untouched', () => {
+    writeExternal('1.1.0');
+    writePointer({ abi: 'b'.repeat(64), current: '1.1.0' });
+    const raw = fs.readFileSync(pointerFile(), 'utf8');
+    const core = resolve();
+    expect(core.source).toBe('builtin');
+    expect(core.log.join('\n')).toMatch(/abi/);
+    expect(fs.readFileSync(pointerFile(), 'utf8')).toBe(raw);
+  });
+
+  it('promotes a valid staged core on cold boot and writes the pointer back', () => {
+    writeExternal('1.1.0');
+    writeExternal('1.2.0');
+    writePointer({ blacklist: [], current: '1.1.0', previous: null, staged: '1.2.0' });
+    const core = resolve();
+    expect(core.source).toBe('external');
+    expect(core.manifest.version).toBe('1.2.0');
+    expect(readBoot()).toEqual({ failures: 1, version: '1.2.0' });
+    expect(readPointer()).toEqual({
+      abi: ABI,
+      blacklist: [],
+      current: '1.2.0',
+      previous: '1.1.0',
+      staged: null,
+    });
+  });
+
+  it('keeps current when staged fails verification', () => {
+    writeExternal('1.1.0');
+    writeExternal('1.2.0', {
+      mutate: (dir) => fs.writeFileSync(path.join(dir, 'dist/main/index.js'), 'tampered'),
+    });
+    writePointer({ current: '1.1.0', staged: '1.2.0' });
+    const raw = fs.readFileSync(pointerFile(), 'utf8');
+    const core = resolve();
+    expect(core.manifest.version).toBe('1.1.0');
+    expect(core.log.join('\n')).toMatch(/staged 1\.2\.0/);
+    expect(fs.readFileSync(pointerFile(), 'utf8')).toBe(raw);
+  });
+
+  it('skips blacklisted versions', () => {
+    writeExternal('1.1.0');
+    writeExternal('1.0.5');
+    writePointer({ blacklist: ['1.1.0'], current: '1.1.0', previous: '1.0.5' });
+    const core = resolve();
+    expect(core.manifest.version).toBe('1.0.5');
+    expect(core.log.join('\n')).toMatch(/1\.1\.0 rejected: blacklisted/);
+  });
+
+  it('verifies every tree entry when LOBE_CORE_VERIFY=full', () => {
+    vi.stubEnv('LOBE_CORE_VERIFY', 'full');
+    writeExternal('1.1.0', {
+      mutate: (dir) => fs.writeFileSync(path.join(dir, 'dist/renderer/index.html'), 'changed'),
+    });
+    writePointer({ current: '1.1.0' });
+    const core = resolve();
+    expect(core.source).toBe('builtin');
+    expect(core.log.join('\n')).toContain('hash mismatch dist/renderer/index.html');
   });
 
   it('rejects version names with path separators', () => {
     writeCore(path.join(tmp, 'evil'), '1.1.0');
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '../../evil' });
+    writePointer({ current: '../../evil' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/version/);
 
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '..' });
+    writePointer({ current: '..' });
     expect(resolve().source).toBe('builtin');
   });
 
@@ -182,7 +270,7 @@ describe('resolveCore', () => {
         Object.assign(manifest, signManifest(manifest));
       },
     });
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/dist\/main\/index\.js/);
@@ -190,7 +278,7 @@ describe('resolveCore', () => {
 
   it('markHealthy resets failures for external and is a no-op for builtin', () => {
     writeExternal('1.1.0');
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    writePointer({ current: '1.1.0' });
     writeJson(path.join(otaRoot(), 'boot.json'), { failures: 2, version: '1.1.0' });
     const core = resolve();
     expect(readBoot()).toEqual({ failures: 3, version: '1.1.0' });
@@ -211,7 +299,7 @@ describe('resolveCore', () => {
     fs.mkdirSync(otaRoot(), { recursive: true });
     fs.writeFileSync(path.join(otaRoot(), 'pointer.json'), '{not json');
     expect(resolve().source).toBe('builtin');
-    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '9.9.9' });
+    writePointer({ current: '9.9.9' });
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/9\.9\.9/);

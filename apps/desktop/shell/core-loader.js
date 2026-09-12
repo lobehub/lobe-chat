@@ -44,15 +44,16 @@ const readJson = (file) => {
   }
 };
 
-const writeJson = (file, value) => fs.writeFileSync(file, JSON.stringify(value));
+const writeJson = (file, value) => {
+  fs.writeFileSync(`${file}.tmp`, JSON.stringify(value));
+  fs.renameSync(`${file}.tmp`, file);
+};
 
-const verifyCandidate = (dir, version, { abi, boot, publicKey }) => {
+const verifyCandidate = (dir, { abi, publicKey }) => {
   const manifest = readJson(path.join(dir, 'manifest.json'));
   if (!manifest) throw new Error('manifest missing or unreadable');
   if (!verifyManifestSignature(manifest, publicKey)) throw new Error('bad signature');
   if (manifest.shellAbi !== abi) throw new Error(`shellAbi ${manifest.shellAbi} != ${abi}`);
-  if (boot.version === version && boot.failures >= MAX_BOOT_FAILURES)
-    throw new Error(`boot failed ${boot.failures}x`);
   for (const entry of manifest.tree) {
     if (
       typeof entry.path !== 'string' ||
@@ -62,7 +63,10 @@ const verifyCandidate = (dir, version, { abi, boot, publicKey }) => {
     )
       throw new Error(`unsafe tree path ${JSON.stringify(entry.path)}`);
   }
-  const files = manifest.tree.filter((entry) => VERIFIED_PREFIX.test(entry.path));
+  const files =
+    process.env.LOBE_CORE_VERIFY === 'full'
+      ? manifest.tree
+      : manifest.tree.filter((entry) => VERIFIED_PREFIX.test(entry.path));
   if (!files.some((entry) => entry.path === MAIN_ENTRY))
     throw new Error(`${MAIN_ENTRY} not in tree`);
   for (const file of files) {
@@ -75,20 +79,60 @@ const verifyCandidate = (dir, version, { abi, boot, publicKey }) => {
 function resolveCore({ userData, builtinDir, abi, publicKey }) {
   const otaRoot = path.join(userData, 'core-ota');
   const bootFile = path.join(otaRoot, 'boot.json');
-  const pointer = readJson(path.join(otaRoot, 'pointer.json')) ?? {};
+  const pointerFile = path.join(otaRoot, 'pointer.json');
+  const stored = readJson(pointerFile);
+  const pointer = stored?.abi === abi ? stored : {};
   const boot = readJson(bootFile) ?? {};
+  const blacklist = Array.isArray(pointer.blacklist) ? pointer.blacklist : [];
   const log = [];
+  if (stored && stored !== pointer) log.push(`pointer abi ${stored.abi} != ${abi}, ignored`);
 
-  for (const version of [pointer.current, pointer.previous]) {
+  const savePointer = (patch) => {
+    Object.assign(pointer, patch);
+    try {
+      writeJson(pointerFile, {
+        abi,
+        blacklist,
+        current: pointer.current ?? null,
+        previous: pointer.previous ?? null,
+        staged: pointer.staged ?? null,
+      });
+    } catch (error) {
+      log.push(`pointer write failed: ${error.message}`);
+    }
+  };
+
+  const verified = {};
+  const verify = (version) => {
+    if (typeof version !== 'string' || !VERSION_NAME.test(version) || /^\.\.?$/.test(version))
+      throw new Error(`invalid core version name ${JSON.stringify(version)}`);
+    if (blacklist.includes(version)) throw new Error('blacklisted');
+    const dir = path.join(otaRoot, 'cores', version);
+    verified[version] ??= verifyCandidate(dir, { abi, publicKey });
+    return { dir, manifest: verified[version] };
+  };
+
+  if (pointer.staged) {
+    try {
+      verify(pointer.staged);
+      savePointer({ current: pointer.staged, previous: pointer.current ?? null, staged: null });
+    } catch (error) {
+      log.push(`staged ${pointer.staged} rejected: ${error.message}`);
+    }
+  }
+
+  const candidates = [pointer.current, pointer.previous];
+  for (const [index, version] of candidates.entries()) {
     if (!version) continue;
-    if (typeof version !== 'string' || !VERSION_NAME.test(version) || /^\.\.?$/.test(version)) {
-      log.push(`invalid core version name ${JSON.stringify(version)}`);
+    const failures = boot.version === version ? Number(boot.failures) || 0 : 0;
+    if (failures >= MAX_BOOT_FAILURES) {
+      log.push(`core ${version} blacklisted after ${failures} boot failures`);
+      blacklist.push(version);
+      savePointer({ current: candidates[index + 1] ?? null, previous: null });
       continue;
     }
-    const dir = path.join(otaRoot, 'cores', version);
     try {
-      const manifest = verifyCandidate(dir, version, { abi, boot, publicKey });
-      const failures = boot.version === version ? Number(boot.failures) || 0 : 0;
+      const { dir, manifest } = verify(version);
       writeJson(bootFile, { failures: failures + 1, version });
       const markHealthy = () => {
         try {
