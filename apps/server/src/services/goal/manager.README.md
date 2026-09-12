@@ -34,10 +34,22 @@ stale input and unrelated operations reject writes. Work is not dispatched until
 the main turn's terminal operation is observed. A backend losing the dispatch
 response adopts the operation through its stable source-message identity.
 
-The main Agent owns initial and subsequent planning. Manager mode cannot be
-combined with seed Tasks, exploration or the legacy opt-in supervisor. Neither
-the old decomposition model nor exploration planner runs during its planning
-turns. Execution, delivery verification and human Gates remain coordinator-owned.
+The main Agent may be combined with seed Tasks, exploration and supervision; they
+are ordered layers, not rivals. On a Goal that has no exploration planner the main
+Agent leads planning as before. On a Goal that has one, the system planner owns
+the ordinary path and the main Agent only starts a turn when the coordinator is
+about to stop the Goal on a person — the failure matched no recovery branch, the
+attempt budget ran out, or the reason could not be classified. That handover point
+is `gateOrTakeOver`, and the ladder there is supervision first (known transport
+failures), then the main Agent, then the human Gate. A turn already in flight is
+settled on every tick regardless of who leads, or its plan would never land.
+
+A takeover turn is told which problem it inherited and is expected to answer with
+a corrective Task, independent verification, a diagnosed retry, or `escalate` —
+which puts the Gate back with its original reason, one turn later and with a
+diagnosis attached. An invited turn with no turn budget left declines rather than
+pausing, so the Gate keeps carrying the real question. Execution, delivery
+verification and human Gates remain coordinator-owned.
 Read `config.managerState` in the Goal graph for the current receipt and Topic.
 
 Wakeups use the existing Goal scheduler (queued mode for restart durability).

@@ -2,7 +2,12 @@ import { createHash, randomUUID } from 'node:crypto';
 
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
 import { buildGoalManagerPrompt } from '@lobechat/prompts';
-import type { GoalGraphSnapshot, GoalManagerState, GoalTickResult } from '@lobechat/types';
+import type {
+  GoalGraphSnapshot,
+  GoalManagerState,
+  GoalTickResult,
+  TaskItem,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
@@ -198,15 +203,61 @@ export class GoalManagerService {
       });
   };
 
-  advance = async (graph: GoalGraphSnapshot): Promise<GoalTickResult | null> => {
+  /**
+   * Advance the goal through its main Agent.
+   *
+   * `mayStartTurn` is what orders the two planners. The system's own
+   * exploration planner owns the ordinary path; a main Agent is the fallback for
+   * problems that planner cannot express, so on a Goal that has exploration
+   * configured this only settles a turn already in flight and otherwise declines.
+   * A Goal whose only planner IS the main Agent keeps starting turns here.
+   */
+  advance = async (
+    graph: GoalGraphSnapshot,
+    options?: { mayStartTurn?: boolean },
+  ): Promise<GoalTickResult | null> => {
+    if (!this.eligible(graph)) return null;
+    const settled = await this.settleInFlight(graph);
+    if (settled) return settled;
+    if (options?.mayStartTurn === false) return null;
+    return this.startTurn(graph);
+  };
+
+  /**
+   * Hand a problem the coordinator could not route to the main Agent, instead of
+   * stopping the Goal on a person.
+   *
+   * The invitation IS the authorization: the caller has already decided it would
+   * otherwise open a human gate, so the ordinary "is there unfinished work" and
+   * "is this a recognised transport failure" narrowings do not apply — those
+   * exist to stop an uninvited turn from preempting running work. Turn limits,
+   * budgets and the compare-and-swap claim still hold, and a main Agent that
+   * cannot help answers `escalate`, which puts the gate back.
+   */
+  takeOver = async (
+    graph: GoalGraphSnapshot,
+    problem: { reason: string; taskId?: string },
+  ): Promise<GoalTickResult | null> => {
+    if (!this.eligible(graph)) return null;
+    const settled = await this.settleInFlight(graph);
+    if (settled) return settled;
+    return this.startTurn(graph, problem);
+  };
+
+  /** Shared entry conditions: a policy, an active Goal, and nobody waiting on a person. */
+  private eligible = (graph: GoalGraphSnapshot) =>
+    Boolean(
+      graph.goal.config?.manager &&
+      activeStatuses.has(graph.goal.status) &&
+      !graph.decisions.some((d) => d.status === 'pending'),
+    );
+
+  /**
+   * Poll a dispatched turn. Runs on every tick regardless of who leads planning:
+   * a turn already paid for has to be settled, or its plan would never land.
+   */
+  private settleInFlight = async (graph: GoalGraphSnapshot): Promise<GoalTickResult | null> => {
     const { goal } = graph;
-    const policy = goal.config?.manager;
-    if (
-      !policy ||
-      !activeStatuses.has(goal.status) ||
-      graph.decisions.some((d) => d.status === 'pending')
-    )
-      return null;
     const state = goal.config?.managerState;
     if (state && !state.consumed) {
       const operation = await new AgentOperationModel(
@@ -252,27 +303,59 @@ export class GoalManagerService {
           : 'Main Agent exited without a plan; a new bounded turn will reread durable state',
       };
     }
+    return null;
+  };
+
+  /**
+   * Whether an UNINVITED turn must stand down. A main Agent that nobody asked for
+   * may only plan when the graph is quiet, or recover a failure the transport
+   * whitelist recognises — anything else is work in flight that it would preempt.
+   */
+  private uninvitedTurnBlocked = async (
+    graph: GoalGraphSnapshot,
+    unfinished: GoalGraphSnapshot['nodes'],
+    tasks: TaskItem[],
+  ) => {
+    const failed = tasks.find((t) => t.status === 'failed');
+    if (!failed) return unfinished.length > 0;
+    const runs = await new TaskTopicModel(this.db, this.userId, this.workspaceId).findByTaskId(
+      failed.id,
+    );
+    const op = runs[0]?.operationId
+      ? await new AgentOperationModel(this.db, this.userId, this.workspaceId).findById(
+          runs[0].operationId,
+        )
+      : undefined;
+    return !recoveryEligibility(graph, failed, op).eligible;
+  };
+
+  private startTurn = async (
+    graph: GoalGraphSnapshot,
+    problem?: { reason: string; taskId?: string },
+  ): Promise<GoalTickResult | null> => {
+    const { goal } = graph;
+    const policy = goal.config!.manager!;
+    const state = goal.config?.managerState;
     const nodes = graph.nodes.filter((n) => n.kind === 'task');
     if (state?.readyForAcceptance || nodes.some((n) => n.title === GOAL_ACCEPTANCE_TASK_TITLE))
       return null;
     const unfinished = nodes.filter((n) => !terminalNodes.has(n.status));
-    const tasks = await new TaskModel(this.db, this.userId, this.workspaceId).findByIds(
-      unfinished.flatMap((n) => (n.taskId ? [n.taskId] : [])),
-    );
-    const failed = tasks.find((t) => t.status === 'failed');
-    // Only confirmed recoverable failures enter autonomous diagnosis; all other failures keep the normal Gate path.
-    if (failed) {
-      const runs = await new TaskTopicModel(this.db, this.userId, this.workspaceId).findByTaskId(
-        failed.id,
+    // An invited turn skips the checks below. They ask "should an uninvited main
+    // Agent interrupt what is running", and the caller has already answered a
+    // harder question: the coordinator is out of moves and the alternative is
+    // stopping the Goal on a person.
+    if (!problem) {
+      const tasks = await new TaskModel(this.db, this.userId, this.workspaceId).findByIds(
+        unfinished.flatMap((n) => (n.taskId ? [n.taskId] : [])),
       );
-      const op = runs[0]?.operationId
-        ? await new AgentOperationModel(this.db, this.userId, this.workspaceId).findById(
-            runs[0].operationId,
-          )
-        : undefined;
-      if (!recoveryEligibility(graph, failed, op).eligible) return null;
-    } else if (unfinished.length) return null;
+      const blocked = await this.uninvitedTurnBlocked(graph, unfinished, tasks);
+      if (blocked) return null;
+    }
     if ((state?.turns ?? 0) >= (policy.maxTurns ?? 12) || (await this.budgetBlocked(graph))) {
+      // An invited turn declines instead of pausing. The caller was about to open
+      // a gate carrying the actual problem; pausing here would replace that
+      // question with "the main Agent is out of turns" and lose it.
+      if (problem) return null;
       return this.pause(goal.id, 'Goal or main Agent turn budget exhausted');
     }
     const claimed = await this.db.transaction(async (db) => {
@@ -331,6 +414,7 @@ export class GoalManagerService {
           instruction: policy.instruction,
           token: claimed.token,
           feedback: claimed.reviewNotes,
+          problem: problem?.reason,
         }),
       });
       await this.db.transaction(async (db) => {

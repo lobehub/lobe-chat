@@ -553,16 +553,138 @@ describe('CLI main Agent planning', () => {
     expect((await model().findById(id))!.config!.managerState!.readyForAcceptance).not.toBe(true);
   });
 
-  it('does not mix planning owners', async () => {
-    await expect(
-      service().create({
-        title: 'Mixed',
-        createdByAgentId: agentId,
-        config: {
-          manager: {},
-          exploration: { instruction: 'Other planner', maxExperiments: 2 },
-        },
-      }),
-    ).rejects.toThrow('do not combine');
+  it('accepts a main Agent alongside the system planner', async () => {
+    // Previously rejected outright. The two are layers now: the system planner
+    // leads and the main Agent is handed what it cannot route, so configuring
+    // both is the supported shape rather than a conflict.
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Other planner', maxExperiments: 2 },
+        manager: {},
+      },
+      createdByAgentId: agentId,
+      title: 'Mixed',
+    });
+    expect(graph.goal.config).toMatchObject({
+      exploration: { maxExperiments: 2 },
+      manager: { agentId },
+    });
+  });
+});
+
+/**
+ * The two planners are ordered, not exclusive: the system's exploration planner
+ * owns the ordinary path and a main Agent is the fallback for problems that
+ * planner cannot express. Before this, `tick` asked the main Agent first and
+ * returned early, so exploration never got a turn on a Goal that had both — and
+ * the main Agent was never asked about a problem outside the transport
+ * whitelist, which is why a Goal could park on a person for hours with a main
+ * Agent configured and idle.
+ */
+describe('planner precedence', () => {
+  const explored = (maxTurns = 4) =>
+    service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns },
+      },
+      createdByAgentId: agentId,
+      title: 'Explored research',
+    });
+
+  it('leaves the ordinary path to the system planner', async () => {
+    const graph = await explored();
+    await service().tick(graph.goal.id);
+    expect((await model().findById(graph.goal.id))!.config!.managerState).toBeUndefined();
+  });
+
+  it('still settles a main Agent turn already in flight', async () => {
+    const { id, state, op } = await start();
+    const caller = operationCaller(op.id);
+    await caller.submitOperationPlan({
+      id,
+      operationId: op.id,
+      token: state.token,
+      plan: taskPlan,
+    });
+    await db.update(agentOperations).set({ status: 'done' }).where(eq(agentOperations.id, op.id));
+    const current = (await model().findById(id))!.config!;
+    await model().update(id, {
+      config: {
+        ...current,
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+      },
+    });
+    // The turn was already paid for; declining to settle it would lose its plan.
+    expect(
+      await manager().advance((await service().graph(id))!, { mayStartTurn: false }),
+    ).toMatchObject({ outcome: 'advanced' });
+    expect((await model().findById(id))!.config!.managerState!.consumed).toBe(true);
+  });
+
+  it('hands the problem over instead of opening the gate', async () => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 4 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      tasks: ['Measure ranking ability on the frozen holdout'],
+      title: 'Explored research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+
+    await service().tick(graph.goal.id);
+
+    expect((await model().findById(graph.goal.id))!.config!.managerState).toMatchObject({
+      turns: 1,
+    });
+    expect((await service().graph(graph.goal.id)).decisions).toHaveLength(0);
+  });
+
+  it('opens the gate once the main Agent has had its turn and the block remains', async () => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 1 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      tasks: ['Measure ranking ability on the frozen holdout'],
+      title: 'Explored research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+
+    // Its one turn is handed over, then exits without changing anything.
+    await service().tick(graph.goal.id);
+    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+    const turn = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    await db
+      .update(agentOperations)
+      .set({ status: 'done' })
+      .where(eq(agentOperations.id, turn!.id));
+    await service().tick(graph.goal.id);
+
+    // Out of turns, so the block goes back to its owner carrying the original
+    // reason rather than "the main Agent is out of turns".
+    expect(await service().tick(graph.goal.id)).toMatchObject({ outcome: 'waiting_human' });
+    const gated = await service().graph(graph.goal.id);
+    expect(gated.decisions).toHaveLength(1);
+    expect(gated.decisions[0].question).toContain('Task attempt budget was exhausted');
+    expect(gated.goal.status).not.toBe('paused');
   });
 });
