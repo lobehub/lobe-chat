@@ -5,7 +5,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { zstdDecompressSync } from 'node:zlib';
+import { zstdCompressSync, zstdDecompressSync } from 'node:zlib';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -192,6 +192,66 @@ describe('buildCore', () => {
     await expect(
       buildCore(options(pkgOnly, { previousManifest, seq: 2, version: '1.0.1' })),
     ).rejects.toThrow(EmptyReleaseError);
+  });
+
+  describe('previous base resolved through fetchImpl', () => {
+    const oldContent = baseFiles()['dist/renderer/es-AAAAAAAA.js'];
+    const v2Files = () => {
+      const files = { ...baseFiles() };
+      delete files['dist/renderer/es-AAAAAAAA.js'];
+      files['dist/renderer/es-BBBBBBBB.js'] = oldContent.replace('line 7 ', 'line 7! ');
+      return files;
+    };
+    const response = (body, ok = true) => ({
+      arrayBuffer: async () => body,
+      ok,
+      status: ok ? 200 : 404,
+    });
+
+    const run = async (fetchImpl) => {
+      const v1 = await writeCore('v1', baseFiles());
+      await buildCore(options(v1, { outDir: path.join(root, 'out-v1') }));
+      const previousManifest = JSON.parse(
+        await readFile(path.join(root, 'out-v1/core/darwin/latest.json'), 'utf8'),
+      );
+      const v2 = await writeCore('v2', v2Files());
+      const urls = [];
+      const { manifest } = await buildCore(
+        options(v2, {
+          fetchImpl: async (url) => {
+            urls.push(url);
+            return fetchImpl(url);
+          },
+          previousManifest,
+          seq: 2,
+          version: '1.0.1',
+        }),
+      );
+      return { manifest, urls };
+    };
+
+    it('patches when the object is served', async () => {
+      const { manifest, urls } = await run(async () => response(zstdCompressSync(oldContent)));
+      expect(urls).toEqual([`https://cdn.example.com/cas/objects/${sha256(oldContent)}.zst`]);
+      expect(manifest.patches).toHaveLength(1);
+    });
+
+    it('skips the patch on non-ok, thrown fetch, or sha mismatch', async () => {
+      for (const fetchImpl of [
+        async () => response(null, false),
+        async () => {
+          throw new Error('network');
+        },
+        async () => response(zstdCompressSync(Buffer.from(`${oldContent}tampered`))),
+      ]) {
+        const { manifest } = await run(fetchImpl);
+        expect(manifest.patches).toEqual([]);
+        expect(manifest.applyMode).toBe('reload');
+        await rm(root, { force: true, recursive: true });
+        root = await mkdtemp(path.join(tmpdir(), 'build-core-'));
+        outDir = path.join(root, 'out');
+      }
+    });
   });
 
   it('exits 3 with "empty release" from the CLI', async () => {

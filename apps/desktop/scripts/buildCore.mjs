@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { constants, zstdCompressSync, zstdDecompressSync } from 'node:zlib';
@@ -42,11 +42,22 @@ const changedPaths = (fromTree, toTree) => {
 };
 
 const previousObject = async (sha256, outDir, objectsBaseUrl, fetchImpl) => {
-  const local = path.join(outDir, 'cas/objects', `${sha256}.zst`);
-  if (existsSync(local)) return zstdDecompressSync(readFileSync(local));
-  const response = await fetchImpl(`${objectsBaseUrl}/objects/${sha256}.zst`);
-  if (!response.ok) return null;
-  return zstdDecompressSync(Buffer.from(await response.arrayBuffer()));
+  try {
+    const local = path.join(outDir, 'cas/objects', `${sha256}.zst`);
+    let content;
+    if (existsSync(local)) {
+      content = zstdDecompressSync(readFileSync(local));
+    } else {
+      const response = await fetchImpl(`${objectsBaseUrl}/objects/${sha256}.zst`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      content = zstdDecompressSync(Buffer.from(await response.arrayBuffer()));
+    }
+    if (sha256Of(content) !== sha256) throw new Error('sha256 mismatch');
+    return content;
+  } catch (error) {
+    console.error(`patch skipped ${sha256}: ${error.message}`);
+    return null;
+  }
 };
 
 const buildPatches = async ({ fetchImpl, objects, objectsBaseUrl, outDir, previousTree, tree }) => {
@@ -103,9 +114,15 @@ export async function buildCore({
   let objectsWritten = 0;
   let objectBytes = 0;
   for (const [sha256, content] of objects) {
+    const file = path.join(outDir, 'cas/objects', `${sha256}.zst`);
+    if (existsSync(file)) {
+      objectBytes += statSync(file).size;
+      continue;
+    }
     const zst = zstdCompressSync(content, ZSTD_LEVEL);
     objectBytes += zst.byteLength;
-    if (writeIfMissing(path.join(outDir, 'cas/objects', `${sha256}.zst`), zst)) objectsWritten += 1;
+    writeIfMissing(file, zst);
+    objectsWritten += 1;
   }
 
   if (previousManifest) {
