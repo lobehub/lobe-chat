@@ -56,6 +56,7 @@ vi.mock('../daemon/manager', () => ({
   readStatus: vi.fn().mockImplementation(() => mockStatus),
   removePid: vi.fn(),
   removeStatus: vi.fn(),
+  reportDaemonStartupReady: vi.fn().mockResolvedValue(undefined),
   spawnDaemon: vi.fn().mockImplementation(() => {
     mockSpawnedPid = 99999;
     return mockSpawnedPid;
@@ -220,8 +221,19 @@ describe('connect command', () => {
     expect(executeToolCall).toHaveBeenCalledWith('readLocalFile', '{"path":"/test"}', undefined);
     expect(lastSentToolResponse).toEqual({
       requestId: 'req-1',
-      result: { content: 'tool result', error: undefined, success: true },
+      result: {
+        content: 'tool result',
+        error: undefined,
+        // Timed on this machine's clock, so the value is whatever the mock took
+        // — what matters is that the device reports one at all: the server can
+        // only observe the round trip, and cannot otherwise tell a slow tool
+        // from slow transport.
+        executionTimeMs: expect.any(Number),
+        state: undefined,
+        success: true,
+      },
     });
+    expect(lastSentToolResponse.result.executionTimeMs).toBeGreaterThanOrEqual(0);
   });
 
   it('should handle system info requests', async () => {

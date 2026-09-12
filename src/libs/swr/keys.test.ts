@@ -4,10 +4,12 @@ import { describe, expect, it } from 'vitest';
 import {
   agentBuilderKeys,
   documentCommentKeys,
+  isAcceptanceListKey,
   isDocumentCommentKeyForEvent,
   recentKeys,
   resourceKeys,
   taskKeys,
+  verifyKeys,
   workKeys,
 } from './keys';
 import { CACHE_TIERS } from './localStorageProvider';
@@ -59,6 +61,25 @@ describe('recentKeys', () => {
     );
 
     expect(persisted).toBe(true);
+  });
+});
+
+describe('isAcceptanceListKey', () => {
+  it('matches every Acceptance list variant without matching detail keys', () => {
+    expect(isAcceptanceListKey(['verify:acceptances', '', '', 'active'])).toBe(true);
+    expect(isAcceptanceListKey(['verify:acceptances', '100', 'needle', 'all', 'workspace-1'])).toBe(
+      true,
+    );
+    expect(isAcceptanceListKey(['verify:acceptanceBundle', 'acceptance-1'])).toBe(false);
+  });
+
+  it('keeps project-scoped acceptance feeds in separate cache entries', () => {
+    expect(verifyKeys.acceptances(undefined, undefined, 'all', 'project-1')).not.toEqual(
+      verifyKeys.acceptances(undefined, undefined, 'all', 'project-2'),
+    );
+    expect(verifyKeys.acceptancePage('workspace-1', 'all', 'project-1')).not.toEqual(
+      verifyKeys.acceptancePage('workspace-1', 'all', 'project-2'),
+    );
   });
 });
 
@@ -131,9 +152,16 @@ describe('isDocumentCommentKeyForEvent', () => {
         event,
       ),
     ).toBe(true);
+    // Pinned deep-link details revalidate on any comment event in the workspace.
+    expect(
+      isDocumentCommentKeyForEvent(documentCommentKeys.detail('workspace-1', 'reply-9'), event),
+    ).toBe(true);
   });
 
   it('does not invalidate other documents, workspaces, or reply threads', () => {
+    expect(
+      isDocumentCommentKeyForEvent(documentCommentKeys.detail('workspace-2', 'root-1'), event),
+    ).toBe(false);
     expect(
       isDocumentCommentKeyForEvent(documentCommentKeys.threads('workspace-2', 'document-1'), event),
     ).toBe(false);

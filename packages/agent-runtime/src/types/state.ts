@@ -81,6 +81,15 @@ export interface AgentState {
    * Used as fallback when call_llm instruction doesn't specify model/provider
    */
   modelRuntimeConfig?: {
+    /**
+     * Immutable operation snapshot shared by tool discovery and context processing.
+     * Optional for operations created before this snapshot was introduced.
+     */
+    mediaCapabilities?: {
+      audio?: boolean;
+      video?: boolean;
+      vision?: boolean;
+    };
     model: string;
     provider: string;
     /**
@@ -163,6 +172,14 @@ export interface AgentState {
   stepCount: number;
 
   systemRole?: string;
+  /**
+   * Consecutive LLM turns that emitted the same normalized tool calls.
+   * Only signatures present in the latest tool-calling turn are retained.
+   */
+  toolCallRepeatGuard?: {
+    counts: Record<string, number>;
+  };
+
   /** Tool executor map for routing tool execution between server and client */
   toolExecutorMap?: Record<string, ToolExecutor>;
 
@@ -172,6 +189,15 @@ export interface AgentState {
 
   /** Tool source map for routing tool execution to correct handler */
   toolSourceMap?: Record<string, ToolSource>;
+
+  /**
+   * How many times this operation has answered unresolvable tool calls with a
+   * rejected tool result. Operation-scoped on purpose: the same rejection rows
+   * are also readable from the message history, but that history is rehydrated
+   * from the DB on every step and carries earlier operations' rejections, so
+   * counting rows there would spend a new operation's budget before it starts.
+   */
+  unresolvedToolFeedbackRounds?: number;
   // --- Usage and Cost Tracking ---
   /**
    * Accumulated usage statistics for this session.

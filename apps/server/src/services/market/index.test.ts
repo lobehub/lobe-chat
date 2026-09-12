@@ -9,57 +9,59 @@ import { extractAccessToken, LOBEHUB_SKILL_DISCOVERY_TIMEOUT_MS, MarketService }
 
 // Mock dependencies before importing the module under test
 vi.mock('@lobehub/market-sdk', () => {
-  const MarketSDK = vi.fn().mockImplementation(() => ({
-    agentGroups: {
-      getAgentGroupDetail: vi.fn(),
-      getAgentGroupList: vi.fn(),
-    },
-    agents: {
-      createEvent: vi.fn(),
-      getAgentDetail: vi.fn(),
-      getAgentList: vi.fn(),
-      increaseInstallCount: vi.fn(),
-    },
-    auth: {
-      exchangeOAuthToken: vi.fn(),
-      getOAuthHandoff: vi.fn(),
-      getUserInfo: vi.fn(),
-    },
-    connect: {
-      listConnections: vi.fn(),
-    },
-    feedback: {
-      submitFeedback: vi.fn(),
-    },
-    fetchM2MToken: vi.fn(),
-    headers: {},
-    marketSkills: {
-      downloadSkill: vi.fn(),
-      getCategories: vi.fn(),
-      getComments: vi.fn(),
-      getDownloadUrl: vi.fn(),
-      getRatingDistribution: vi.fn(),
-      getSkillDetail: vi.fn(),
-      getSkillList: vi.fn(),
-    },
-    plugins: {
-      callCloudGateway: vi.fn(),
-      createEvent: vi.fn(),
-      getPluginManifest: vi.fn(),
-      reportCall: vi.fn(),
-      reportInstallation: vi.fn(),
-      runBuildInTool: vi.fn(),
-    },
-    skills: {
-      callTool: vi.fn(),
-      listLiveTools: vi.fn(),
-      listTools: vi.fn(),
-    },
-    user: {
-      getUserInfo: vi.fn(),
-      register: vi.fn(),
-    },
-  }));
+  const MarketSDK = vi.fn(function () {
+    return {
+      agentGroups: {
+        getAgentGroupDetail: vi.fn(),
+        getAgentGroupList: vi.fn(),
+      },
+      agents: {
+        createEvent: vi.fn(),
+        getAgentDetail: vi.fn(),
+        getAgentList: vi.fn(),
+        increaseInstallCount: vi.fn(),
+      },
+      auth: {
+        exchangeOAuthToken: vi.fn(),
+        getOAuthHandoff: vi.fn(),
+        getUserInfo: vi.fn(),
+      },
+      connect: {
+        listConnections: vi.fn(),
+      },
+      feedback: {
+        submitFeedback: vi.fn(),
+      },
+      fetchM2MToken: vi.fn(),
+      headers: {},
+      marketSkills: {
+        downloadSkill: vi.fn(),
+        getCategories: vi.fn(),
+        getComments: vi.fn(),
+        getDownloadUrl: vi.fn(),
+        getRatingDistribution: vi.fn(),
+        getSkillDetail: vi.fn(),
+        getSkillList: vi.fn(),
+      },
+      plugins: {
+        callCloudGateway: vi.fn(),
+        createEvent: vi.fn(),
+        getPluginManifest: vi.fn(),
+        reportCall: vi.fn(),
+        reportInstallation: vi.fn(),
+        runBuildInTool: vi.fn(),
+      },
+      skills: {
+        callTool: vi.fn(),
+        listLiveTools: vi.fn(),
+        listTools: vi.fn(),
+      },
+      user: {
+        getUserInfo: vi.fn(),
+        register: vi.fn(),
+      },
+    };
+  });
   return { MarketSDK };
 });
 
@@ -191,6 +193,57 @@ describe('MarketService', () => {
 
       const service = await MarketService.createFromRequest(req);
       expect(service).toBeInstanceOf(MarketService);
+    });
+  });
+
+  describe('proxyOAuthRequest', () => {
+    /** @example A trusted server request reaches the provider proxy without exposing OAuth tokens. */
+    it('forwards provider path, parameters, body, and trusted identity to Market', async () => {
+      const fetchMock = vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ data: { viewer: { login: 'octocat' } } }), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200,
+        }),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+      vi.mocked(generateTrustedClientToken).mockReturnValue('trusted-user-token');
+
+      try {
+        const service = new MarketService({ userInfo: { userId: 'user-1' } });
+        await expect(
+          service.proxyOAuthRequest({
+            body: { query: 'query { viewer { login } }' },
+            endpoint: '/graphql',
+            method: 'POST',
+            parameters: [
+              { in: 'header', name: 'Accept', value: 'application/vnd.github+json' },
+              { in: 'header', name: 'x-lobe-trust-token', value: 'untrusted-override' },
+              { in: 'query', name: 'preview', value: 1 },
+            ],
+            provider: 'github',
+          }),
+        ).resolves.toEqual({
+          data: { data: { viewer: { login: 'octocat' } } },
+          status: 200,
+        });
+
+        const [url, init] = fetchMock.mock.calls[0];
+        expect(String(url)).toBe(
+          'https://market.lobehub.com/api/v1/proxy/github/graphql?preview=1',
+        );
+        expect(init).toEqual({
+          body: JSON.stringify({ query: 'query { viewer { login } }' }),
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Accept-Encoding': 'identity',
+            'Content-Type': 'application/json',
+            'x-lobe-trust-token': 'trusted-user-token',
+          },
+          method: 'POST',
+        });
+      } finally {
+        vi.unstubAllGlobals();
+      }
     });
   });
 

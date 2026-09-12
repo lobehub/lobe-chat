@@ -1,5 +1,10 @@
 /* eslint-disable perfectionist/sort-interfaces */
-import type { FileContent, KnowledgeBaseInfo, PageContentContext } from '@lobechat/prompts';
+import type {
+  AgentIdentityContext,
+  FileContent,
+  KnowledgeBaseInfo,
+  PageContentContext,
+} from '@lobechat/prompts';
 import type {
   ExpertiseContextSnapshot,
   RuntimeAdditionalContextFragment,
@@ -26,6 +31,7 @@ import type { SkillMeta } from '../../providers/SkillContextProvider';
 import type { TodoList } from '../../providers/TodoInjector';
 import type { ToolDiscoveryMeta } from '../../providers/ToolDiscoveryProvider';
 import type { TopicReferenceItem } from '../../providers/TopicReferenceContextInjector';
+import type { WorkspaceContext } from '../../providers/WorkspaceContextInjector';
 import type { PipelineContextMetadata } from '../../types';
 import type { LobeToolManifest } from '../tools/types';
 
@@ -254,6 +260,12 @@ export interface MessagesEngineParams {
   inputTemplate?: string;
   /** System role */
   systemRole?: string;
+  /**
+   * The agent's identity (personal `name` + role `title`), appended to the
+   * system message so the model can introduce itself by the name the user gave
+   * it. Ignored in group chat, where GroupContextInjector owns identity.
+   */
+  agentIdentity?: AgentIdentityContext;
   /** Agent-materialized presentation contexts for this LLM call */
   additionalContexts?: readonly RuntimeAdditionalContextFragment[];
   /** Immutable expertise captured when the operation started. */
@@ -296,6 +308,11 @@ export interface MessagesEngineParams {
   agentBuilderContext?: AgentBuilderContext;
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
+  /**
+   * Where the conversation lives (app origin + workspace slug), so the model
+   * writes in-app links that resolve to the right scope.
+   */
+  workspaceContext?: WorkspaceContext;
   /** Discord context for injecting channel/guild info into system injection message */
   discordContext?: DiscordContext;
   /** Eval context for injecting environment prompts into system message */
@@ -372,5 +389,6 @@ export { type SkillMeta } from '../../providers/SkillContextProvider';
 export { type TodoItem, type TodoList } from '../../providers/TodoInjector';
 export { type ToolDiscoveryMeta } from '../../providers/ToolDiscoveryProvider';
 export { type TopicReferenceItem } from '../../providers/TopicReferenceContextInjector';
+export { type WorkspaceContext } from '../../providers/WorkspaceContextInjector';
 export { type OpenAIChatMessage, type UIChatMessage } from '@/types/index';
 export { type FileContent, type KnowledgeBaseInfo } from '@lobechat/prompts';

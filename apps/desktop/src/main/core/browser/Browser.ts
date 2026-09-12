@@ -13,6 +13,7 @@ import { backendProxyProtocolManager } from '@/core/infrastructure/BackendProxyP
 import { appendVercelCookie, setResponseHeader } from '@/utils/http-headers';
 import { createLogger } from '@/utils/logger';
 import { getSystemLanguage, resolveUILocale } from '@/utils/system-language';
+import { LOADING_SCREEN_PAINTED_CHANNEL } from '~common/loadingScreen';
 import { SYSTEM_LANGUAGE_ARG_PREFIX } from '~common/systemLanguage';
 
 import type { App } from '../App';
@@ -193,6 +194,7 @@ export default class Browser {
         contextIsolation: true,
         preload: path.join(preloadDir, 'index.js'),
         sandbox: false,
+        scrollBounce: true,
         webviewTag: true,
       },
       width: resolvedState.width,
@@ -335,17 +337,24 @@ export default class Browser {
 
   private setupReadyToShowListener(browserWindow: BrowserWindow): void {
     logger.debug(`[${this.identifier}] Setting up 'ready-to-show' event listener.`);
+    // `ready-to-show` only fires with the `load` event here, ~150-250ms after the
+    // loading screen was actually painted (measured with --trace-startup). The
+    // preload reports that first paint directly; `ready-to-show` stays as fallback.
+    browserWindow.webContents.ipc.once(LOADING_SCREEN_PAINTED_CHANNEL, () => {
+      logger.debug(`[${this.identifier}] Loading screen painted.`);
+      this.presentFirstFrame();
+    });
     browserWindow.once('ready-to-show', () => {
       logger.debug(`[${this.identifier}] Window 'ready-to-show' event fired.`);
-      this.hasPresentedFirstFrame = true;
-      this.resolveFirstFrame();
-      if (this.options.showOnInit) {
-        logger.debug(`Showing window ${this.identifier} because showOnInit is true.`);
-        this.show();
-      } else {
-        logger.debug(`Window ${this.identifier} not shown because showOnInit is false.`);
-      }
+      this.presentFirstFrame();
     });
+  }
+
+  private presentFirstFrame(): void {
+    if (this.hasPresentedFirstFrame) return;
+    this.hasPresentedFirstFrame = true;
+    this.resolveFirstFrame();
+    if (this.options.showOnInit) this.show();
   }
 
   private setupCloseListener(browserWindow: BrowserWindow): void {

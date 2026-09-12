@@ -85,15 +85,7 @@ export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
     useGatewayReconnect(topicId, runningOperation, agentId);
 
     const itemContent = useCallback(
-      (index: number, id: string) => (
-        <MessageItem
-          disableEditing
-          defaultWorkflowExpandLevel="full"
-          id={id}
-          index={index}
-          key={id}
-        />
-      ),
+      (index: number, id: string) => <MessageItem disableEditing id={id} index={index} key={id} />,
       [],
     );
 
@@ -336,7 +328,10 @@ const TopicChatDrawer = memo(() => {
         body: { padding: 0 },
         panel: {
           background: cssVar.colorBgContainer,
-          maxHeight: 'calc(100dvh - 16px)',
+          // Leave room for whatever the panel reserves when it yields the
+          // bottom edge to a toast; the library's own cap assumes a 16px
+          // offset and this panel sits at 8.
+          maxHeight: 'calc(100dvh - 16px - var(--floating-panel-reserve-block-end, 0px))',
         },
         title: {
           boxSizing: 'border-box',

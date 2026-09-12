@@ -13,6 +13,9 @@ vi.mock('@/server/services/deviceGateway', () => ({
     queryDeviceList: vi.fn().mockResolvedValue([]),
   },
 }));
+vi.mock('@/server/services/deviceGateway/dispatchAuthorization', () => ({
+  resolveDeviceDispatchAuthorizationFailure: vi.fn().mockResolvedValue(undefined),
+}));
 // The tunnel fallback must use the visibility-aware scoped helper, never the
 // raw (visibility-blind) gateway pool — see resolveMcpTunnelTarget.
 vi.mock('@/server/services/deviceGateway/scopedDevices', () => ({
@@ -78,6 +81,47 @@ describe('ToolExecutionService', () => {
 
     expect(result.content).toContain('01234');
     expect(result.content).toContain('Content truncated');
+  });
+
+  /** @example A missing remote device remains machine-readable to the calling agent runtime. */
+  it('preserves structured unavailable-device data in the normalized error envelope', async () => {
+    const builtinToolsExecutor = {
+      execute: vi.fn().mockResolvedValue({
+        content: 'The requested device is not connected.',
+        error: 'DEVICE_NOT_FOUND',
+        errorData: {
+          code: 'DEVICE_NOT_FOUND',
+          deviceId: 'device-1',
+          retryable: true,
+          scope: 'workspace',
+          workspaceId: 'workspace-1',
+        },
+        success: false,
+      }),
+    };
+    const service = new ToolExecutionService({
+      builtinToolsExecutor: builtinToolsExecutor as any,
+      mcpService: {} as any,
+    });
+
+    const result = await service.executeTool(
+      {
+        apiName: 'readFile',
+        arguments: '{}',
+        id: 'tool-call-1',
+        identifier: 'lobe-local-system',
+        type: 'builtin',
+      },
+      { toolManifestMap: {} },
+    );
+
+    expect(result.error).toMatchObject({
+      code: 'DEVICE_NOT_FOUND',
+      deviceId: 'device-1',
+      retryable: true,
+      scope: 'workspace',
+      workspaceId: 'workspace-1',
+    });
   });
 
   // Device-only MCP servers (stdio / localhost / LAN) can't be called from the

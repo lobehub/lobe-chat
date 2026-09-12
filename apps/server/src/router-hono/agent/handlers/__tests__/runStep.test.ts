@@ -10,15 +10,19 @@ const mockExecuteStep = vi.fn();
 const mockGetServerDB = vi.hoisted(() => vi.fn());
 
 vi.mock('@/server/modules/AgentRuntime', () => ({
-  AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({
-    getOperationMetadata: mockGetOperationMetadata,
-  })),
+  AgentRuntimeCoordinator: vi.fn().mockImplementation(function () {
+    return {
+      getOperationMetadata: mockGetOperationMetadata,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({
-    executeStep: mockExecuteStep,
-  })),
+  AiAgentService: vi.fn().mockImplementation(function () {
+    return {
+      executeStep: mockExecuteStep,
+    };
+  }),
 }));
 
 vi.mock('@/database/core/db-adaptor', () => ({
@@ -27,13 +31,15 @@ vi.mock('@/database/core/db-adaptor', () => ({
 
 function buildOperationDiagnosticDB(row?: any) {
   return {
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        where: vi.fn(() => ({
-          limit: vi.fn().mockResolvedValue(row ? [row] : []),
+    select: vi.fn(function () {
+      return {
+        from: vi.fn(() => ({
+          where: vi.fn(() => ({
+            limit: vi.fn().mockResolvedValue(row ? [row] : []),
+          })),
         })),
-      })),
-    })),
+      };
+    }),
   };
 }
 
@@ -109,7 +115,7 @@ describe('runStep handler', () => {
         traceS3Key: null,
       }),
     );
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(function () {});
     const { ctx, getCaptures } = buildContext({ body: validBody });
 
     const res = await runStep(ctx);
@@ -137,7 +143,7 @@ describe('runStep handler', () => {
   it('includes QStash retry and message IDs in missing metadata diagnostics', async () => {
     mockGetOperationMetadata.mockResolvedValue({});
     mockGetServerDB.mockResolvedValue(buildOperationDiagnosticDB());
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(function () {});
     const { ctx } = buildContext({
       body: validBody,
       messageId: 'msg-123',
@@ -184,10 +190,37 @@ describe('runStep handler', () => {
     expect(AiAgentService).toHaveBeenCalledWith(
       expect.anything(),
       'user-1',
-      expect.objectContaining({ workspaceId: 'ws-1' }),
+      expect.objectContaining({ includeShareVisitor: false, workspaceId: 'ws-1' }),
     );
     expect(mockExecuteStep).toHaveBeenCalledWith(
       expect.objectContaining({ operationId: 'op-1', stepIndex: 2 }),
+    );
+  });
+
+  it('opts the AiAgentService into visitor rows when metadata carries streamOwnerUserId', async () => {
+    // A shared-agent visitor run: the op executes as the creator `userId`
+    // (`user-owner`) but the visitor (`visitor-1`) owns the stream. The step
+    // worker must set `includeShareVisitor: true` so the runtime's
+    // MessageModel / TopicModel can still read the visitor-scoped rows that
+    // `MessageModel` / `TopicModel` gate out by default.
+    mockGetOperationMetadata.mockResolvedValue({
+      streamOwnerUserId: 'visitor-1',
+      userId: 'user-owner',
+      workspaceId: 'ws-1',
+    });
+    mockExecuteStep.mockResolvedValue({
+      nextStepScheduled: false,
+      state: { cost: { total: 0 }, status: 'done', stepCount: 1 },
+      success: true,
+    });
+
+    const { ctx } = buildContext({ body: validBody });
+    await runStep(ctx);
+
+    expect(AiAgentService).toHaveBeenCalledWith(
+      expect.anything(),
+      'user-owner',
+      expect.objectContaining({ includeShareVisitor: true, workspaceId: 'ws-1' }),
     );
   });
 

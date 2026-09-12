@@ -16,9 +16,11 @@ vi.mock('@/envs/app', () => ({
 }));
 
 vi.mock('@/libs/qstash', () => ({
-  OtelQstashClient: qstashMocks.client.mockImplementation(() => ({
-    publishJSON: qstashMocks.publishJSON,
-  })),
+  OtelQstashClient: qstashMocks.client.mockImplementation(function () {
+    return {
+      publishJSON: qstashMocks.publishJSON,
+    };
+  }),
 }));
 
 describe('QueueService', () => {

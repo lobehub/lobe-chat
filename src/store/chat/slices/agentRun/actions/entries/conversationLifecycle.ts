@@ -21,12 +21,17 @@ import {
   getWorkingDirEffectivePath,
   getWorkingDirSourcePath,
   resolveAgentAgencyConfig,
+  snapshotTopicExecutionConfig,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
 import { toast } from '@lobehub/ui/base-ui';
 import { t } from 'i18next';
 
 import { type ChatInputEditor } from '@/features/ChatInput';
+import {
+  ensureAgentManagementAccess,
+  getRuntimeCanManageAgent,
+} from '@/helpers/agentManagementAccess';
 import {
   resolveAgentWorkingDirectory,
   resolveAgentWorkingDirectoryConfig,
@@ -38,6 +43,7 @@ import {
   resolveWorkspaceScoped,
 } from '@/helpers/executionTarget';
 import { globalAgentContextManager } from '@/helpers/GlobalAgentContextManager';
+import { getTopicAgencyConfig, getTopicWorkspaceScoped } from '@/helpers/topicExecutionConfig';
 import { agentService } from '@/services/agent';
 import { aiAgentService } from '@/services/aiAgent';
 import { aiChatService } from '@/services/aiChat';
@@ -76,6 +82,7 @@ import {
 } from '@/store/chat/slices/operation/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
+import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import {
   mergeAgentRuntimeInitialContexts,
@@ -88,7 +95,7 @@ import {
 } from '@/store/chat/utils/compression';
 import { isLocalOnlyMessage } from '@/store/chat/utils/localMessages';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { snapshotAgentModel } from '@/store/chat/utils/snapshotAgentModel';
+import { snapshotAgentModel, snapshotAgentReasoning } from '@/store/chat/utils/snapshotAgentModel';
 import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { deviceSelectors, getDeviceStoreState } from '@/store/device';
 import { getElectronStoreState } from '@/store/electron';
@@ -407,21 +414,49 @@ export class ConversationLifecycleActionImpl {
     }
     const agent = agentByIdSelectors.getAgentById(agentId)(agentState);
     const currentUserId = userProfileSelectors.userId(getUserStoreState());
-    const isAuthor = !!currentUserId && agent?.userId === currentUserId;
-    const usesWorkspaceMemberSelection =
-      !!agent?.workspaceId && agent.visibility !== 'private' && !isAuthor;
-    const deviceOverride = usesWorkspaceMemberSelection
-      ? getUserStoreState().workspaceUserPreference.agentDeviceOverrides?.[agentId]
-      : undefined;
-    const workspaceScoped = resolveWorkspaceScoped(usesWorkspaceMemberSelection, deviceOverride);
-    // Runtime selection must use the same per-user device override as the
-    // switcher. A workspace-local pick is intentionally private to this member
-    // and is therefore safe to execute in-process on their desktop.
-    const agencyConfig = resolveAgentAgencyConfig(agentConfig?.agencyConfig, deviceOverride, {
-      canManage: isAuthor,
+    // Author-or-admin, mirroring the picker (`useAgentManagementAccess`) and
+    // the server (`isResourceAuthorOrAdmin`) — an admin's own override must
+    // survive a `fixed` selection policy just like the author's does. On a
+    // cold load or a direct mention the picker's hook may never have run, so
+    // resolve access from the server first (no-op for authors and members
+    // whose answer is already cached).
+    await ensureAgentManagementAccess({
+      agentId,
+      agentUserId: agent?.userId,
+      currentUserId,
       visibility: agent?.visibility,
       workspaceId: agent?.workspaceId,
     });
+    const canManage = getRuntimeCanManageAgent({
+      agentId,
+      agentUserId: agent?.userId,
+      currentUserId,
+    });
+    const usesWorkspaceMemberSelection =
+      !!agent?.workspaceId && agent.visibility !== 'private' && !canManage;
+    // Every workspace caller's override matters — a manager's / private owner's
+    // `local` pick also lives in `agentDeviceOverrides` (the shared row must
+    // never reference a personal device); `resolveAgentAgencyConfig` decides
+    // how it applies per role.
+    const deviceOverride = agent?.workspaceId
+      ? getUserStoreState().workspaceUserPreference.agentDeviceOverrides?.[agentId]
+      : undefined;
+    const workspaceScoped = getTopicWorkspaceScoped(
+      agentConfig?.agencyConfig,
+      context.topicId,
+      resolveWorkspaceScoped(usesWorkspaceMemberSelection, deviceOverride),
+    );
+    // Runtime selection must use the same per-user device override as the
+    // switcher. A workspace-local pick is intentionally private to this member
+    // and is therefore safe to execute in-process on their desktop.
+    const agencyConfig = getTopicAgencyConfig(
+      resolveAgentAgencyConfig(agentConfig?.agencyConfig, deviceOverride, {
+        canManage,
+        visibility: agent?.visibility,
+        workspaceId: agent?.workspaceId,
+      }),
+      context.topicId,
+    );
     const isGatewayMode = this.#get().isGatewayModeEnabled(agentId);
     // Legacy agents may only carry `model: '<cli-type>'`. Keep gateway routing
     // unchanged when it is available, but recover the provider before the
@@ -756,7 +791,7 @@ export class ConversationLifecycleActionImpl {
                   : undefined,
             ...(merged.forceRuntime ? { forceRuntime: merged.forceRuntime } : {}),
             message: merged.content,
-            metadata: merged.metadata,
+            metadata: { ...merged.metadata, steer: true },
           })
           .catch((error: unknown) => {
             console.error('[sendMessage] restarting queued content after Stop failed:', error);
@@ -924,6 +959,7 @@ export class ConversationLifecycleActionImpl {
     const tempImages: ChatImageItem[] = filesForPreview
       .filter((f) => f.file?.type?.startsWith('image'))
       .map((f) => ({
+        ...f.dimensions,
         id: f.id,
         url: f.fileUrl || f.base64Url || f.previewUrl || '',
         alt: f.file?.name || f.id,
@@ -1167,7 +1203,10 @@ export class ConversationLifecycleActionImpl {
         : [];
     // Example: a pending repo topic without this metadata renders under "No
     // directory" until the server row lands.
-    const optimisticTopicMetadata: ChatTopicMetadata | undefined =
+    const newTopicReasoningSnapshot = newTopicModelSnapshot
+      ? await snapshotAgentReasoning(operationContext.agentId, newTopicModelSnapshot)
+      : undefined;
+    const workingDirectoryMetadata: ChatTopicMetadata | undefined =
       pendingTopicRepos.length > 0
         ? {
             repos: pendingTopicRepos,
@@ -1180,6 +1219,12 @@ export class ConversationLifecycleActionImpl {
               ...(workingDirectoryConfig ? { workingDirectoryConfig } : {}),
             }
           : undefined;
+    /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
+    const optimisticTopicMetadata: ChatTopicMetadata = {
+      ...workingDirectoryMetadata,
+      ...newTopicReasoningSnapshot,
+      executionConfig: snapshotTopicExecutionConfig(agencyConfig),
+    };
 
     // The sidebar row was already inserted (title + model) before the awaits
     // above; the cwd/repos metadata only resolves here, so patch it on now.
@@ -1338,12 +1383,7 @@ export class ConversationLifecycleActionImpl {
               ? {
                   // Same id the optimistic sidebar row already uses.
                   id: optimisticTopic?.id,
-                  metadata: workingDirectory
-                    ? {
-                        workingDirectory,
-                        ...(workingDirectoryConfig ? { workingDirectoryConfig } : {}),
-                      }
-                    : undefined,
+                  metadata: optimisticTopicMetadata,
                   ...newTopicModelSnapshot,
                   title: newTopicTitle,
                   topicMessageIds: messages.map((m) => m.id),
@@ -1591,7 +1631,7 @@ export class ConversationLifecycleActionImpl {
         }
         const effectiveHeterogeneousProvider = applyTopicModelToHeterogeneousProvider(
           heterogeneousProvider,
-          topic?.model ? { model: topic.model, provider: topic.provider || '' } : undefined,
+          resolveTopicHeteroPin(topic),
         );
 
         await executeHeterogeneousAgent(() => this.#get(), {

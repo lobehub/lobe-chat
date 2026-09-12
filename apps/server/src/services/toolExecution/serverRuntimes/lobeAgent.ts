@@ -3,6 +3,8 @@ import type {
   CallSubAgentParams,
   MediaFileItem,
   MediaSourceMessage,
+  VentParams,
+  VentState,
 } from '@lobechat/builtin-tool-lobe-agent';
 import {
   buildAnalyzeMediaContent,
@@ -22,16 +24,25 @@ import type { ChatStreamPayload } from '@lobechat/model-runtime';
 import { consumeStreamUntilDone } from '@lobechat/model-runtime';
 import type { BuiltinServerRuntimeOutput } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import { parseDataUri } from '@lobechat/utils/uriParser';
 
 import { MessageModel } from '@/database/models/message';
 import { toolsEnv } from '@/envs/tools';
 import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
 import { FileService } from '@/server/services/file';
+import { createVentService, formatVentResultContent } from '@/server/services/vent';
 
 import type { ToolExecutionContext } from '../types';
+import { normalizeMultimodalImageItems } from './lobeAgentImage';
 import { createServerPlanRuntimeService } from './lobeAgentPlan';
 import type { ServerRuntimeRegistration } from './types';
+
+// The durable record of a vent is the persisted vent tool-call message itself.
+// This shared service only validates input, assigns a stable id, and enforces
+// per-scope rate limits. Module-scoped so the rate-limit state survives across
+// per-request runtime instances.
+const sharedVentService = createVentService({ nextToolCallId: () => nanoid() });
 
 interface LobeAgentRuntimeContext {
   agentId?: string | null;
@@ -59,7 +70,6 @@ const buildError = (content: string, code: string): BuiltinServerRuntimeOutput =
 
 const BASE64_CONTENT_PATTERN = /^[A-Z\d+/]+={0,2}$/i;
 const MAX_INLINE_IMAGE_PIXELS = 25_000_000;
-
 /**
  * Decode inline images before the provider boundary. Protocol and header checks
  * are insufficient because a PNG can retain a valid signature while its pixel
@@ -91,7 +101,10 @@ const findInvalidInlineImageIndexes = async (urls: string[]) => {
 
     try {
       const buffer = Buffer.from(base64, 'base64');
-      await sharp(buffer, { failOn: 'error', limitInputPixels: MAX_INLINE_IMAGE_PIXELS }).stats();
+      await sharp(buffer, {
+        failOn: 'error',
+        limitInputPixels: MAX_INLINE_IMAGE_PIXELS,
+      }).stats();
     } catch {
       invalidIndexes.push(index + 1);
     }
@@ -249,6 +262,53 @@ class LobeAgentExecutionRuntime {
       state: { status: 'pending', subOperationId, threadId, toolMessageId },
       success: true,
     };
+  };
+
+  // ==================== Vent ====================
+
+  vent = async (
+    params: VentParams,
+    context: { operationId?: string; toolCallId?: string } = {},
+  ): Promise<BuiltinServerRuntimeOutput> => {
+    if (!this.agentId || !this.userId || !this.topicId) {
+      const state: VentState = { recorded: false, reason: 'missing_context' };
+      return { content: formatVentResultContent(state), state, success: false };
+    }
+
+    try {
+      const result = await sharedVentService.recordVent({
+        agentId: this.agentId,
+        input: params,
+        topicId: this.topicId,
+        userId: this.userId,
+        ...(context.operationId ? { operationId: context.operationId } : {}),
+        ...(context.toolCallId ? { toolCallId: context.toolCallId } : {}),
+      });
+
+      const state: VentState = {
+        category: params.category,
+        reason: result.reason ?? null,
+        recorded: result.recorded,
+        severity: params.severity,
+        ventId: result.ventId ?? null,
+      };
+
+      return { content: formatVentResultContent(state), state, success: true };
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Unknown vent error';
+      const state: VentState = {
+        category: params.category,
+        reason: 'runtime_error',
+        recorded: false,
+        severity: params.severity,
+      };
+      return {
+        content: `vent failed with error detail: ${message}`,
+        error: { message },
+        state,
+        success: false,
+      };
+    }
   };
 
   private queryScopeMessages = (
@@ -413,13 +473,31 @@ class LobeAgentExecutionRuntime {
       );
     }
 
+    let modelItems = selectedItems;
+    if (hasImages) {
+      try {
+        modelItems = await normalizeMultimodalImageItems(
+          selectedItems,
+          toolsEnv.MULTIMODAL_UNDERSTANDING_IMAGE_FORMATS,
+        );
+      } catch (error) {
+        console.error('Failed to prepare images for multimodal understanding:', {
+          name: error instanceof Error ? error.name : 'UnknownError',
+        });
+        return buildError(
+          'Failed to prepare one or more images for the configured multimodal understanding model.',
+          'MULTIMODAL_IMAGE_PREPARATION_FAILED',
+        );
+      }
+    }
+
     let content = '';
     let usage: unknown;
     const runtime = await initModelRuntimeFromDB(this.db, this.userId, provider, this.workspaceId);
     const payload = {
       messages: [
         {
-          content: buildAnalyzeMediaContent(selectedItems, params.question),
+          content: buildAnalyzeMediaContent(modelItems, params.question),
           role: 'user' as const,
         },
       ],
