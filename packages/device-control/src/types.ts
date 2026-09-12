@@ -97,6 +97,17 @@ export interface LocalFilePreviewUrlParams {
   workingDirectory: string;
 }
 
+export interface CopyAssetForPublishParams {
+  from: string;
+  to: string;
+  workingDirectory: string;
+}
+
+export interface CopyAssetForPublishResult {
+  error?: string;
+  success: boolean;
+}
+
 export interface ExternalAssetForPublishParams {
   path: string;
   workingDirectory: string;
@@ -262,6 +273,8 @@ export interface WorkspaceScanDeps {
  *   (`defaultGetLocalFilePreview`, `defaultGetProjectFileIndex`).
  */
 export interface DeviceControlDeps extends SkillDirectoryDeps, WorkspaceScanDeps {
+  /** Copy a publish asset (possibly outside the workspace) to a path inside the workspace. */
+  copyAssetForPublish?: (params: CopyAssetForPublishParams) => Promise<CopyAssetForPublishResult>;
   /**
    * Enroll this machine into a workspace pool: derive the workspace-scoped
    * deviceId and open a second gateway connection authenticated with `token`

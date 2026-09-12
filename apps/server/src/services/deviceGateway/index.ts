@@ -13,6 +13,7 @@ import {
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type { ClaudeCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
 import type {
+  DeviceCopyAssetForPublishResult,
   DeviceDirectoryBrowseResult,
   DeviceExternalAssetForPublishResult,
   DeviceGitAddWorktreeResult,
@@ -1156,6 +1157,36 @@ export class DeviceGateway {
       return result.data;
     } catch (error) {
       log('getLocalFilePreview: error for deviceId=%s — %O', deviceId, error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  async copyAssetForPublish(params: {
+    deviceId: string;
+    from: string;
+    timeout?: number;
+    to: string;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCopyAssetForPublishResult> {
+    const { userId, deviceId, from, to, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { error: 'Device gateway not configured', success: false };
+
+    assertPathsWithinWorkspace(workingDirectory, [to]);
+
+    try {
+      const result = await client.invokeRpc<DeviceCopyAssetForPublishResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'copyAssetForPublish', params: { from, to, workingDirectory } },
+      );
+      if (!result.success || !result.data) {
+        return { error: result.error || 'Failed to copy publish asset', success: false };
+      }
+      return result.data;
+    } catch (error) {
+      log('copyAssetForPublish: error for deviceId=%s — %O', deviceId, error);
       return { error: (error as Error).message, success: false };
     }
   }

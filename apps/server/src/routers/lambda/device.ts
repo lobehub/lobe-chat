@@ -716,6 +716,19 @@ export const deviceRouter = router({
       });
     }),
 
+  copyAssetForPublish: workspaceFileProcedure
+    .input(z.object({ from: z.string(), to: z.string() }))
+    .mutation(async ({ ctx, input }) =>
+      deviceGateway.copyAssetForPublish({
+        deviceId: input.deviceId,
+        from: input.from,
+        to: input.to,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+        workingDirectory: input.workingDirectory,
+      }),
+    ),
+
   readExternalAssetForPublish: workspaceFileProcedure
     .input(z.object({ path: z.string() }))
     .query(async ({ ctx, input }) =>

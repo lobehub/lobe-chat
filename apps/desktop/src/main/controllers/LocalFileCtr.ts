@@ -4,6 +4,8 @@ import { access, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 import type {
+  CopyAssetForPublishParams,
+  CopyAssetForPublishResult,
   ExternalAssetForPublishParams,
   ExternalAssetForPublishResult,
   SkillDirectoryDeps,
@@ -608,6 +610,27 @@ export default class LocalFileCtr extends ControllerModule {
       };
     } catch (error) {
       logger.error('Failed to read external publish asset:', error);
+      return { error: (error as Error).message, success: false };
+    }
+  }
+
+  @IpcMethod()
+  async copyAssetForPublish({
+    from,
+    to,
+    workingDirectory,
+  }: CopyAssetForPublishParams): Promise<CopyAssetForPublishResult> {
+    try {
+      const copied = await this.app.localFileProtocolManager.copyExternalFileForPublish({
+        filePath: from,
+        targetPath: to,
+        workspaceRoot: workingDirectory,
+      });
+      return copied
+        ? { success: true }
+        : { error: 'Failed to copy publish asset into the workspace', success: false };
+    } catch (error) {
+      logger.error('Failed to copy publish asset:', error);
       return { error: (error as Error).message, success: false };
     }
   }

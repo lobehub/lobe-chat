@@ -722,6 +722,11 @@ export interface DeviceLocalFilePreviewResult {
   success: boolean;
 }
 
+export interface DeviceCopyAssetForPublishResult {
+  error?: string;
+  success: boolean;
+}
+
 export interface DeviceExternalAssetForPublishResult {
   base64?: string;
   contentType?: string;
