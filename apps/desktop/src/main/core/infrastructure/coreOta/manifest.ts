@@ -53,8 +53,8 @@ export const coreManifestSchema = z
   .object({
     applyMode: z.enum(['reload', 'relaunch']).nullable(),
     channel: z.enum(['stable', 'beta', 'canary', 'nightly']),
-    full: rendererArtifactSchema.optional(),
-    objectsBaseUrl: z.url().optional(),
+    full: rendererArtifactSchema,
+    objectsBaseUrl: z.url(),
     patches: z.array(corePatchSchema),
     platform: z.enum(['darwin', 'win32', 'linux']),
     previous: z.string().nullable(),

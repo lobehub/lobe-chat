@@ -10,7 +10,11 @@ import {
   coreManifestSchema,
   verifyManifestSignature,
 } from '../../src/main/core/infrastructure/coreOta/manifest';
-import { buildCoreManifest } from '../buildCoreManifest.mjs';
+import {
+  buildCoreManifest,
+  PLACEHOLDER_FULL,
+  PLACEHOLDER_OBJECTS_BASE_URL,
+} from '../buildCoreManifest.mjs';
 
 const shellLoader = createRequire(import.meta.url)('../../shell/core-loader.js');
 
@@ -84,7 +88,7 @@ describe('buildCoreManifest', () => {
       shellAbi: 'a'.repeat(64),
       version: '2.3.0',
     });
-    expect(manifest).not.toHaveProperty('full');
+    expect(manifest.full).toEqual(PLACEHOLDER_FULL);
     expect(coreManifestSchema.safeParse(manifest).success).toBe(true);
     expect(JSON.parse(await readFile(path.join(root, 'manifest.json'), 'utf8'))).toEqual(manifest);
   });
@@ -106,7 +110,7 @@ describe('buildCoreManifest', () => {
     await setup();
     const manifest = await buildCoreManifest(options());
     expect(manifest.signature).toBe('');
-    expect(manifest).not.toHaveProperty('objectsBaseUrl');
+    expect(manifest.objectsBaseUrl).toBe(PLACEHOLDER_OBJECTS_BASE_URL);
   });
 
   it('rejects a manifest whose shellAbi is not a sha256', async () => {
