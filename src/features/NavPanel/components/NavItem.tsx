@@ -16,26 +16,48 @@ const ACTION_CLASS_NAME = 'nav-item-actions';
 
 const styles = createStaticStyles(({ css }) => ({
   container: css`
+    --nav-item-fill: transparent;
+
     user-select: none;
     overflow: hidden;
     min-width: 32px;
 
-    .${ACTION_CLASS_NAME} {
-      width: 0;
-      margin-inline-end: 2px;
-      opacity: 0;
-      transition: opacity 0.2s ${cssVar.motionEaseOut};
+    &:hover {
+      --nav-item-fill: ${cssVar.colorFillTertiary};
 
-      &:has([data-popup-open]),
-      &:focus-within {
-        width: unset;
+      .${ACTION_CLASS_NAME} {
+        pointer-events: auto;
         opacity: 1;
       }
     }
 
-    &:hover {
-      .${ACTION_CLASS_NAME} {
-        width: unset;
+    &[data-active='true'] {
+      --nav-item-fill: ${cssVar.colorFillTertiary};
+
+      &:hover {
+        --nav-item-fill: ${cssVar.colorFillSecondary};
+      }
+    }
+
+    /* Overlay instead of in-flow so revealing the actions never re-truncates the
+       title. The gradient fades the covered text into the row background. */
+    .${ACTION_CLASS_NAME} {
+      pointer-events: none;
+
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: 0;
+
+      padding-inline: 24px 6px;
+
+      opacity: 0;
+      background:
+        linear-gradient(to right, transparent 0, var(--nav-item-fill) 24px),
+        linear-gradient(to right, transparent 0, ${cssVar.colorBgLayout} 24px);
+
+      &:has([data-popup-open]),
+      &:focus-within {
+        pointer-events: auto;
         opacity: 1;
       }
     }
@@ -151,6 +173,7 @@ const NavItem = memo<NavItemProps>(
         align={'center'}
         className={cx(styles.container, className)}
         clickable={!disabled}
+        data-active={active}
         gap={8}
         height={description ? undefined : 36}
         paddingBlock={description ? 8 : undefined}
@@ -210,9 +233,26 @@ const NavItem = memo<NavItemProps>(
               {title}
             </Text>
           )}
+          {extra && (
+            <Flexbox
+              horizontal
+              align={'center'}
+              gap={2}
+              justify={'flex-end'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {extra}
+            </Flexbox>
+          )}
+        </Flexbox>
+        {actions && (
           <Flexbox
             horizontal
             align={'center'}
+            className={ACTION_CLASS_NAME}
             gap={2}
             justify={'flex-end'}
             onClick={(e) => {
@@ -220,24 +260,9 @@ const NavItem = memo<NavItemProps>(
               e.stopPropagation();
             }}
           >
-            {extra}
-            {actions && (
-              <Flexbox
-                horizontal
-                align={'center'}
-                className={ACTION_CLASS_NAME}
-                gap={2}
-                justify={'flex-end'}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                {renderedActions}
-              </Flexbox>
-            )}
+            {renderedActions}
           </Flexbox>
-        </Flexbox>
+        )}
       </Block>
     );
     if (!contextMenuItems) return Content;

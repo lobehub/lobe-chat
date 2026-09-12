@@ -19,12 +19,14 @@ export default {
   'completionSound.desc':
     'Play a chime when a chat finishes while LobeHub is in the foreground. The sound, volume and imports stay on this device and are not synced.',
   'completionSound.sound': 'Sound',
-  'completionSound.default': 'LobeHub chime',
-  'completionSound.import': 'Import sound',
+  'completionSound.builtin.lobehub': 'LobeHub chime',
+  'completionSound.builtin.glassBell': 'Glass bell',
+  'completionSound.builtin.softTone': 'Soft tone',
+  'completionSound.builtin.xylophone': 'Xylophone',
+  'completionSound.import': 'Import sound…',
   'completionSound.importHint':
     'Choose WAV, MP3 or OGG (up to 1 MB), or openpeon.json from an extracted OpenPeon pack. Only task completion sounds are imported.',
   'completionSound.preview': 'Preview',
-  'completionSound.reset': 'Use default',
   'completionSound.volume': 'Volume',
   'completionSound.error':
     'Could not load, save or play the sound. Check the audio file or OpenPeon pack and try again.',
