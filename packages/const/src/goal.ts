@@ -64,3 +64,15 @@ export const VERIFICATION_FAILED_ERROR = 'Delivery did not pass verification.';
 /** The verifier itself could not run, so the delivery was never evaluated. */
 export const VERIFICATION_ERRORED_ERROR =
   'Verification could not run (internal error); the delivery was not evaluated.';
+/**
+ * The review read the evidence and found the criterion undecidable from it — it
+ * asks for an action the review layer cannot perform (re-running the delivered
+ * scripts, building, driving a live system).
+ *
+ * Deliberately has NO recovery branch, so it falls through to the human gate.
+ * Another attempt cannot help: the builder would re-deliver the same artifacts
+ * against the same unprovable criterion, which is how one such check ate an
+ * entire attempt budget before this outcome existed.
+ */
+export const VERIFICATION_UNJUDGEABLE_ERROR =
+  'Acceptance review could not judge the delivery from evidence alone; the criterion needs a judge that can act on the system.';
