@@ -525,6 +525,29 @@ describe('AgentRuntimeService', () => {
       );
     });
 
+    it('should persist the system-message context in metadata', async () => {
+      mockQueueService.scheduleMessage.mockResolvedValueOnce('message-123');
+
+      const projectInstructions = [{ content: 'Use bun.', source: 'AGENTS.md' }];
+      const connectorOwnershipNote = 'Gmail runs on Alice’s account.';
+      await service.createOperation({
+        ...mockParams,
+        connectorOwnershipNote,
+        projectInstructions,
+      });
+
+      // `metadata` is assembled from an explicit field list, so a value not
+      // named there is dropped without a word — and steps can be claimed by
+      // another worker, so anything the context engine needs has to survive on
+      // the operation rather than in memory.
+      expect(mockCoordinator.saveAgentState).toHaveBeenCalledWith(
+        'test-operation-1',
+        expect.objectContaining({
+          metadata: expect.objectContaining({ connectorOwnershipNote, projectInstructions }),
+        }),
+      );
+    });
+
     it('should persist the operation expertise snapshot in runtime state', async () => {
       mockQueueService.scheduleMessage.mockResolvedValueOnce('message-123');
       const expertise = {
