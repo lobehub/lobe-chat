@@ -994,22 +994,23 @@ export class AgentRuntimeService {
         lastModified: new Date().toISOString(),
         // Use the passed initial messages
         messages: initialMessages,
+        // Late-bound execution facts. The device may be unrouted here and get
+        // bound at a later step boundary (`computeDeviceContext`).
+        ...((activeDeviceId || deviceSystemInfo) && {
+          binding: {
+            device: {
+              ...(activeDeviceId && { id: activeDeviceId }),
+              ...(deviceSystemInfo && { systemInfo: deviceSystemInfo }),
+            },
+          },
+        }),
         metadata: {
-          activeDeviceId,
           activeDeviceScope,
-          agentConfig,
-          agentGroup,
           agentShareVisitor,
           botContext,
-          botPlatformContext,
-          connectorOwnershipNote,
           deviceAccessPolicy,
-          deviceSystemInfo,
-          discordContext,
-          evalContext,
           evalRuntime,
           executionPlan,
-          projectInstructions,
           ...(interventionResolution
             ? { agentInterventionContinuation: interventionResolution }
             : {}),
@@ -1017,12 +1018,9 @@ export class AgentRuntimeService {
           modelRuntimeConfig,
           queueRetries,
           queueRetryDelay,
-          ...(searchDecision && { searchDecision }),
           stream,
           operationSkillSet,
           userId,
-          userMemory,
-          userTimezone,
           workingDirectory: agentConfig?.chatConfig?.runtimeEnv?.workingDirectory,
           workspaceId,
           ...appContext,
@@ -1038,6 +1036,21 @@ export class AgentRuntimeService {
         toolExecutorMap: operationToolSet.executorMap,
         toolManifestMap: operationToolSet.manifestMap,
         toolSourceMap: operationToolSet.sourceMap,
+        // What the model is told about the run's world — frozen from here on;
+        // the context engine reads it on every step.
+        world: {
+          agent: agentConfig,
+          ...((botPlatformContext || discordContext) && {
+            channel: { botPlatform: botPlatformContext, discord: discordContext },
+          }),
+          connectorOwnershipNote,
+          eval: evalContext,
+          group: agentGroup,
+          projectInstructions,
+          searchDecision,
+          userMemory,
+          userTimezone,
+        },
         tools: operationToolSet.tools,
         // User intervention config for headless mode in async tasks
         userInterventionConfig,
@@ -1599,7 +1612,7 @@ export class AgentRuntimeService {
         await this.rehydrateStateMessagesFromDB(agentState);
 
         // Enrich invoke_agent span with agent identity now that state is loaded.
-        const stateAgentConfig = agentState.metadata?.agentConfig as
+        const stateAgentConfig = agentState.world?.agent as
           { description?: string | null; title?: string | null } | undefined;
         const stateModel =
           agentState.modelRuntimeConfig?.model ?? agentState.metadata?.modelRuntimeConfig?.model;
@@ -1898,12 +1911,17 @@ export class AgentRuntimeService {
 
         // Pre-step computation: extract device context from DB messages
         // Follows front-end computeStepContext pattern — computed at step boundary, not inside executors
-        if (!currentState.metadata?.activeDeviceId) {
+        if (!currentState.binding?.device?.id) {
           const deviceContext = await this.computeDeviceContext(currentState);
-          if (deviceContext && currentState.metadata) {
-            currentState.metadata.activeDeviceId = deviceContext.activeDeviceId;
-            currentState.metadata.devicePlatform = deviceContext.devicePlatform;
-            currentState.metadata.deviceSystemInfo = deviceContext.deviceSystemInfo;
+          if (deviceContext) {
+            currentState.binding = {
+              ...currentState.binding,
+              device: {
+                id: deviceContext.activeDeviceId,
+                platform: deviceContext.devicePlatform,
+                systemInfo: deviceContext.deviceSystemInfo,
+              },
+            };
             log(
               '[%s][%d] Pre-step: device context computed from messages (deviceId: %s)',
               operationId,
@@ -3717,11 +3735,13 @@ export class AgentRuntimeService {
           )
         : undefined;
 
+    const world = (agentState as AgentState | undefined)?.world;
+
     // Create Agent instance — use custom factory if provided, otherwise default to GeneralChatAgent
     const generalConfig = {
-      agentConfig: metadata?.agentConfig,
+      agentConfig: world?.agent,
       compressionConfig: {
-        enabled: metadata?.agentConfig?.chatConfig?.enableContextCompression ?? true,
+        enabled: world?.agent?.chatConfig?.enableContextCompression ?? true,
         maxWindowToken: contextWindowTokens ?? undefined,
       },
       dynamicInterventionAudits,
@@ -3750,7 +3770,6 @@ export class AgentRuntimeService {
     // Create streaming executor context
     const executorContext: RuntimeExecutorContext = {
       abortSignal,
-      agentConfig: metadata?.agentConfig,
       // The factory may be a Graph-aware dispatcher that still returns the
       // default agent for ordinary conversations. Keep the early visible
       // output end behavior tied to the actual agent, not factory presence.
@@ -3765,12 +3784,6 @@ export class AgentRuntimeService {
       allowEarlyFinalAnswerVisibleOutputEnd:
         agent instanceof GeneralChatAgent && !stateHasEntityFileEdits(agentState),
       botContext: metadata?.botContext,
-      botPlatformContext: metadata?.botPlatformContext,
-      connectorOwnershipNote: metadata?.connectorOwnershipNote,
-      discordContext: metadata?.discordContext,
-      userTimezone: metadata?.userTimezone,
-      evalContext: metadata?.evalContext,
-      projectInstructions: metadata?.projectInstructions,
       execSubAgent: this.delegate.execSubAgent,
       execVirtualSubAgent: this.delegate.execVirtualSubAgent,
       execGroupMember: this.delegate.execGroupMember,
@@ -3779,7 +3792,6 @@ export class AgentRuntimeService {
       messageModel: this.messageModel,
       modelRuntimeConfig: metadata?.modelRuntimeConfig,
       operationId,
-      searchDecision: metadata?.searchDecision,
       serverDB: this.serverDB,
       stepIndex,
       stream: metadata?.stream,
