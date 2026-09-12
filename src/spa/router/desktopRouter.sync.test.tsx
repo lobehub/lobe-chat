@@ -283,11 +283,12 @@ describe('desktop router shared definition', () => {
     // `/share/*` moved to the standalone Share app (apps/share).
     expect(webPaths).not.toContain('/share/t');
     expect(webPaths).not.toContain('/share/page');
-    // …and the agent-share visitor surface lives at `/a/:slugOrId`, a sibling
-    // of the main layout on every platform (Web, Electron, and the mobile
-    // router — see mobileRouter.test.tsx).
-    expect(webPaths).toContain('/a/:slugOrId/:topicId?');
-    expect(electronPaths).toContain('/a/:slugOrId/:topicId?');
+    // …and the agent-share visitor surface is no longer defined here: it runs
+    // a visitor's conversation on the creator's account, so it ships with the
+    // deployment that does that accounting and registers itself through
+    // `BusinessDesktopRoutesWithoutMainLayout`.
+    expect(webPaths).not.toContain('/a/:slugOrId/:topicId?');
+    expect(electronPaths).not.toContain('/a/:slugOrId/:topicId?');
     expect(webPaths).not.toContain('/verify');
     expect(webPaths).toContain('/acceptance');
     expect(webPaths).toContain('/onboarding');
@@ -548,20 +549,12 @@ describe('desktop router shared definition', () => {
   it.each([
     ['Web', webDesktopRoutes],
     ['Electron', electronDesktopRoutes],
-  ])(
-    '%s serves the agent-share visitor page on /a/:slugOrId outside the main layout',
-    (_, routes) => {
-      const matches = matchRoutes(routes, '/a/my-bot');
-
-      expect(matches).toHaveLength(1);
-      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
-      expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-bot' });
-
-      const topicMatches = matchRoutes(routes, '/a/my-bot/tpc_saved');
-      expect(topicMatches).toHaveLength(1);
-      expect(topicMatches?.[0]?.params).toEqual({ slugOrId: 'my-bot', topicId: 'tpc_saved' });
-    },
-  );
+  ])('%s leaves the agent-share visitor surface to the business routes', (_, routes) => {
+    // The open-source tree no longer defines `/a/*`; a deployment that offers
+    // agent sharing contributes it through the business slot, so the path
+    // falls through to not-found here.
+    expect(matchRoutes(routes, '/a/my-bot')?.at(-1)?.route.path).toBe('*');
+  });
 
   it('keeps business resource and task routes in the shared definition', async () => {
     const [sharedSource] = await readRouterSources();
