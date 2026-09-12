@@ -21,10 +21,9 @@ const styles = createStaticStyles(({ css }) => ({
 
     max-width: 200px;
     max-height: 94px;
-    padding-block: 4px;
-    padding-inline: 6px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 6px;
+    padding-block: 5px;
+    padding-inline: 8px;
+    border-radius: 8px;
 
     font-size: 12px;
     line-height: 18px;
@@ -32,7 +31,11 @@ const styles = createStaticStyles(({ css }) => ({
     overflow-wrap: anywhere;
     white-space: normal;
 
-    background: ${cssVar.colorBgContainer};
+    /* Filled, and opaque in both themes: the fill token is translucent, so it
+       is layered over a solid surface rather than over the edge running
+       underneath, which would otherwise strike the text through. */
+    background-color: ${cssVar.colorBgContainer};
+    background-image: linear-gradient(${cssVar.colorFillSecondary}, ${cssVar.colorFillSecondary});
   `,
 }));
 
