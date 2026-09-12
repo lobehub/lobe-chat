@@ -156,7 +156,7 @@ export class ServerToolTransport implements ToolTransport {
           userId &&
           (await new DevicePoolAccessService(serverDB, userId).isEnabled())
         ) {
-          const deviceId = resolveRunActiveDeviceId(context.state.metadata);
+          const deviceId = resolveRunActiveDeviceId(context.state);
           const failure =
             deviceId &&
             (await resolveDeviceDispatchAuthorizationFailure(

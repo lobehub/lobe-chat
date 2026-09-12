@@ -672,7 +672,7 @@ export const deviceRouter = router({
    * tree calls this when the user expands a directory the index collapsed
    * (a fully git-ignored folder). Returns `null` when offline.
    */
-  listProjectDirectory: deviceProcedure
+  listProjectDirectory: deviceExecutionProcedure
     .input(z.object({ deviceId: z.string(), relativePath: z.string(), root: z.string() }))
     .query(async ({ ctx, input }) => {
       const result = await deviceGateway.listProjectDirectory({
