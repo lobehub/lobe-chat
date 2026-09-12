@@ -16,7 +16,6 @@
   "devDependencies": {
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/types": "workspace:*",
-    "model-bank": "workspace:*",
     "openai": "^6.45.0"
   }
 }

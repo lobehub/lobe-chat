@@ -19,9 +19,21 @@ import type {
   SecurityBlacklistConfig,
   UserInterventionConfig,
 } from '@lobechat/types';
-import type { SearchDecision } from 'model-bank';
 
 import type { Cost, CostLimit, Usage } from './usage';
+
+/**
+ * Search route resolved once before the run starts. Declared here rather than
+ * imported so the runtime package does not depend on the model catalog;
+ * structurally identical to the resolver output in `model-bank`.
+ */
+export interface SearchDecisionSnapshot {
+  enabledSearch: boolean;
+  isModelHasBuiltinSearch: boolean;
+  isProviderHasBuiltinSearch: boolean;
+  useApplicationBuiltinSearchTool: boolean;
+  useModelSearch: boolean;
+}
 
 /**
  * The agent definition as the host resolved it for this run.
@@ -69,7 +81,7 @@ export interface AgentWorldSnapshot {
   /** Root instruction files of the bound project. */
   projectInstructions?: ProjectInstructionFile[];
   /** Search route resolved before the run started. */
-  searchDecision?: SearchDecision;
+  searchDecision?: SearchDecisionSnapshot;
   /** User memory the model may recall from. */
   userMemory?: UserMemoryConfig;
   /** IANA timezone used to render "now" for the model. */
