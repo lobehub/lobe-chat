@@ -1492,10 +1492,14 @@ export class ConversationLifecycleActionImpl {
           resolveOptimisticTopic(heteroData.topicId, newTopicTitle);
           void Promise.resolve(this.#get().refreshTopic()).catch(console.error);
         }
-        await this.#get().switchTopic(heteroData.topicId, {
-          clearNewKey: true,
-          skipRefreshMessage: true,
-        });
+        if (context.isolatedTopic) {
+          await onTopicCreated?.(heteroData.topicId);
+        } else {
+          await this.#get().switchTopic(heteroData.topicId, {
+            clearNewKey: true,
+            skipRefreshMessage: true,
+          });
+        }
       }
 
       let directMentionThreadId: string | undefined;
@@ -1548,6 +1552,7 @@ export class ConversationLifecycleActionImpl {
       if (abortController.signal.aborted) {
         return {
           assistantMessageId: heteroData.assistantMessageId,
+          createdTopicId: heteroData.isCreateNewTopic ? heteroData.topicId : undefined,
           userMessageId: heteroData.userMessageId,
         };
       }
@@ -1689,6 +1694,7 @@ export class ConversationLifecycleActionImpl {
 
       return {
         assistantMessageId: heteroData.assistantMessageId,
+        createdTopicId: heteroData.isCreateNewTopic ? heteroData.topicId : undefined,
         userMessageId: heteroData.userMessageId,
       };
     }

@@ -29,6 +29,12 @@ const mockFailOperation = vi.fn();
 const mockExecuteClientAgent = vi.fn();
 const mockIsGatewayModeEnabled = vi.fn(() => false);
 const mockExecuteGatewayAgent = vi.fn();
+const mockUpdateTopicMetadata = vi.fn();
+const mockUpdateTopicStatus = vi.fn();
+const mockSourceTopic = {
+  status: 'scheduled',
+  metadata: { scheduledRun: { kind: 'resume_after_rate_limit' } },
+};
 
 vi.mock('@/store/chat', () => ({
   useChatStore: {
@@ -40,6 +46,8 @@ vi.mock('@/store/chat', () => ({
           { id: 'msg-2', role: 'assistant', content: 'Hi there', parentId: 'msg-1' },
         ],
       },
+      topicDataMap: {},
+      topicDetailMap: { 'source-topic': mockSourceTopic },
       operations: {},
       operationsByMessage: {},
 
@@ -58,6 +66,8 @@ vi.mock('@/store/chat', () => ({
       executeClientAgent: mockExecuteClientAgent,
       isGatewayModeEnabled: mockIsGatewayModeEnabled,
       executeGatewayAgent: mockExecuteGatewayAgent,
+      updateTopicMetadata: mockUpdateTopicMetadata,
+      updateTopicStatus: mockUpdateTopicStatus,
     })),
     setState: vi.fn(),
   },
@@ -66,10 +76,37 @@ vi.mock('@/store/chat', () => ({
 describe('Generation Actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSourceTopic.status = 'scheduled';
   });
 
   afterEach(() => {
     vi.clearAllTimers();
+  });
+
+  describe('cancelHeteroContinuation', () => {
+    it('does not overwrite a source topic that has already started running', async () => {
+      mockSourceTopic.status = 'running';
+      const store = createStore({
+        context: { agentId: 'target-agent', topicId: 'target-topic', threadId: null },
+      });
+      await store.getState().cancelHeteroContinuation('source-topic');
+      expect(mockUpdateTopicStatus).not.toHaveBeenCalled();
+      expect(mockUpdateTopicMetadata).not.toHaveBeenCalled();
+    });
+
+    it('cancels the captured source topic after navigation changes the conversation context', async () => {
+      const store = createStore({
+        context: { agentId: 'target-agent', threadId: null, topicId: 'target-topic' },
+      });
+
+      await store.getState().cancelHeteroContinuation('source-topic');
+
+      expect(mockUpdateTopicStatus).toHaveBeenCalledWith({
+        status: 'failed',
+        topicId: 'source-topic',
+      });
+      expect(mockUpdateTopicMetadata).toHaveBeenCalledWith('source-topic', { scheduledRun: null });
+    });
   });
 
   describe('stopGenerating', () => {
