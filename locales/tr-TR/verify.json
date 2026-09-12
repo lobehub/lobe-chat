@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} takip edildi",
   "acceptance.tray.trackSection": "Takip",
   "acceptance.verdict.inProgress": "Kabul işlemi devam ediyor",
-  "acceptance.verdict.latestAt": "son doğrulama {{time}}",
   "acceptance.viewFullReport": "Tam raporu görüntüle",
   "acceptance.workspace.actions.delete": "Sil",
   "acceptance.workspace.actions.markAccepted": "Kabul edildi olarak işaretle",

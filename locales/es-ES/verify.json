@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} rastreados",
   "acceptance.tray.trackSection": "Seguimiento",
   "acceptance.verdict.inProgress": "Aceptación en progreso",
-  "acceptance.verdict.latestAt": "última verificación {{time}}",
   "acceptance.viewFullReport": "Ver informe completo",
   "acceptance.workspace.actions.delete": "Eliminar",
   "acceptance.workspace.actions.markAccepted": "Marcar como aceptado",

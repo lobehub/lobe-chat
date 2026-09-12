@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} acompanhados",
   "acceptance.tray.trackSection": "Acompanhamento",
   "acceptance.verdict.inProgress": "Aceitação em andamento",
-  "acceptance.verdict.latestAt": "última verificação em {{time}}",
   "acceptance.viewFullReport": "Ver relatório completo",
   "acceptance.workspace.actions.delete": "Excluir",
   "acceptance.workspace.actions.markAccepted": "Marcar como aceito",

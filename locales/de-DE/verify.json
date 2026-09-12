@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} verfolgt",
   "acceptance.tray.trackSection": "Verfolgung",
   "acceptance.verdict.inProgress": "Akzeptanz läuft",
-  "acceptance.verdict.latestAt": "zuletzt überprüft {{time}}",
   "acceptance.viewFullReport": "Vollständigen Bericht anzeigen",
   "acceptance.workspace.actions.delete": "Löschen",
   "acceptance.workspace.actions.markAccepted": "Als akzeptiert markieren",

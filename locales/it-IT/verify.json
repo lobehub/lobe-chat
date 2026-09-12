@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} monitorati",
   "acceptance.tray.trackSection": "Monitoraggio",
   "acceptance.verdict.inProgress": "Accettazione in corso",
-  "acceptance.verdict.latestAt": "ultimo verificato {{time}}",
   "acceptance.viewFullReport": "Visualizza rapporto completo",
   "acceptance.workspace.actions.delete": "Elimina",
   "acceptance.workspace.actions.markAccepted": "Contrassegna come accettato",

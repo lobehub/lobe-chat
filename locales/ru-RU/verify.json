@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} отслеживается",
   "acceptance.tray.trackSection": "Отслеживание",
   "acceptance.verdict.inProgress": "Принятие в процессе",
-  "acceptance.verdict.latestAt": "последняя проверка {{time}}",
   "acceptance.viewFullReport": "Просмотреть полный отчет",
   "acceptance.workspace.actions.delete": "Удалить",
   "acceptance.workspace.actions.markAccepted": "Отметить как принятое",

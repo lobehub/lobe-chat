@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} 件を追跡中",
   "acceptance.tray.trackSection": "追跡",
   "acceptance.verdict.inProgress": "承認進行中",
-  "acceptance.verdict.latestAt": "最終検証 {{time}}",
   "acceptance.viewFullReport": "完全なレポートを表示",
   "acceptance.workspace.actions.delete": "削除",
   "acceptance.workspace.actions.markAccepted": "承認済みにマーク",

@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} được theo dõi",
   "acceptance.tray.trackSection": "Theo dõi",
   "acceptance.verdict.inProgress": "Đang tiến hành chấp nhận",
-  "acceptance.verdict.latestAt": "xác minh lần cuối vào {{time}}",
   "acceptance.viewFullReport": "Xem báo cáo đầy đủ",
   "acceptance.workspace.actions.delete": "Xóa",
   "acceptance.workspace.actions.markAccepted": "Đánh dấu là đã chấp nhận",

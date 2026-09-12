@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} متتبع",
   "acceptance.tray.trackSection": "التتبع",
   "acceptance.verdict.inProgress": "القبول قيد التقدم",
-  "acceptance.verdict.latestAt": "تم التحقق آخر مرة في {{time}}",
   "acceptance.viewFullReport": "عرض التقرير الكامل",
   "acceptance.workspace.actions.delete": "حذف",
   "acceptance.workspace.actions.markAccepted": "وضع علامة كتم القبول",

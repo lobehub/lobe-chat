@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} 項已追蹤",
   "acceptance.tray.trackSection": "追蹤",
   "acceptance.verdict.inProgress": "接受進行中",
-  "acceptance.verdict.latestAt": "最後驗證於 {{time}}",
   "acceptance.viewFullReport": "查看完整報告",
   "acceptance.workspace.actions.delete": "刪除",
   "acceptance.workspace.actions.markAccepted": "標記為已接受",

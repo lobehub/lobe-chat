@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} проследени",
   "acceptance.tray.trackSection": "Проследяване",
   "acceptance.verdict.inProgress": "Приемането е в процес",
-  "acceptance.verdict.latestAt": "последно проверено {{time}}",
   "acceptance.viewFullReport": "Вижте пълния доклад",
   "acceptance.workspace.actions.delete": "Изтрий",
   "acceptance.workspace.actions.markAccepted": "Маркирай като прието",

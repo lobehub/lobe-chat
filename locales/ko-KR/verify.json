@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}}개 추적됨",
   "acceptance.tray.trackSection": "추적",
   "acceptance.verdict.inProgress": "승인 진행 중",
-  "acceptance.verdict.latestAt": "마지막 검증 {{time}}",
   "acceptance.viewFullReport": "전체 보고서 보기",
   "acceptance.workspace.actions.delete": "삭제",
   "acceptance.workspace.actions.markAccepted": "승인으로 표시",

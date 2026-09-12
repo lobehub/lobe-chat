@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} پیگیری شده",
   "acceptance.tray.trackSection": "پیگیری",
   "acceptance.verdict.inProgress": "پذیرش در حال انجام",
-  "acceptance.verdict.latestAt": "آخرین تأیید شده در {{time}}",
   "acceptance.viewFullReport": "مشاهده گزارش کامل",
   "acceptance.workspace.actions.delete": "حذف",
   "acceptance.workspace.actions.markAccepted": "علامت‌گذاری به‌عنوان پذیرفته‌شده",

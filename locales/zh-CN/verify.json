@@ -333,7 +333,6 @@
   "acceptance.tray.trackCount": "· {{count}} 项跟踪",
   "acceptance.tray.trackSection": "目标跟踪",
   "acceptance.verdict.inProgress": "验收进行中",
-  "acceptance.verdict.latestAt": "最近验证 {{time}}",
   "acceptance.viewFullReport": "查看完整报告",
   "acceptance.workspace.actions.delete": "删除",
   "acceptance.workspace.actions.markAccepted": "标记为已验收",

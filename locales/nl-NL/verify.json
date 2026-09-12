@@ -324,7 +324,6 @@
   "acceptance.tray.trackCount": "· {{count}} gevolgd",
   "acceptance.tray.trackSection": "Volgen",
   "acceptance.verdict.inProgress": "Acceptatie bezig",
-  "acceptance.verdict.latestAt": "laatst gecontroleerd {{time}}",
   "acceptance.viewFullReport": "Bekijk volledig rapport",
   "acceptance.workspace.actions.delete": "Verwijderen",
   "acceptance.workspace.actions.markAccepted": "Markeren als geaccepteerd",
