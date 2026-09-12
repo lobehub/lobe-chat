@@ -33,7 +33,7 @@ const FULL_FALLBACK_THRESHOLD = 400;
 const CONCURRENCY = 8;
 const PACK_ENTRY = /^objects\/([0-9a-f]{64})$/;
 const DIR_MODE = 0o700;
-const SAFE_VERSION = /^[\w.+-]{1,64}$/;
+export const SAFE_VERSION = /^[\w.+-]{1,64}$/;
 
 const zstdDecompressAsync = promisify(zstdDecompress);
 
@@ -174,7 +174,7 @@ export class CoreStore {
     return { dir, downloaded, fallbackFull } satisfies StageResult;
   }
 
-  async gc(keep: string[]) {
+  async gc(keep: string[], { keepStore = false } = {}) {
     await rm(path.join(this.otaRoot, 'staging'), { force: true, recursive: true });
     const referenced = new Set<string>();
     for (const name of await readDirNames(this.coresDir)) {
@@ -186,6 +186,7 @@ export class CoreStore {
       const manifest = await this.readManifest(dir);
       for (const file of manifest?.tree ?? []) referenced.add(file.sha256);
     }
+    if (keepStore) return;
     for (const name of await readDirNames(this.storeDir)) {
       if (!referenced.has(name)) await rm(path.join(this.storeDir, name), { force: true });
     }

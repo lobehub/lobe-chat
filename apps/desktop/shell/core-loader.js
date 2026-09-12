@@ -4,7 +4,7 @@ const Module = require('node:module');
 const path = require('node:path');
 
 const MAX_BOOT_FAILURES = 3;
-const VERSION_NAME = /^[\w.-]+$/;
+const VERSION_NAME = /^[\w.+-]{1,64}$/;
 const VERIFIED_PREFIX = /^(?:(?:dist\/(?:main|preload)|node_modules|cli)\/|package\.json$)/;
 const UNSAFE_SEGMENT = /^\.\.?$/;
 const MAIN_ENTRY = 'dist/main/index.js';

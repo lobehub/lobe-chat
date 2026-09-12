@@ -17,7 +17,13 @@ import { createLogger } from '@/utils/logger';
 import type { App } from '../../App';
 import { type ApplyMode, computeApplyMode } from './applyMode';
 import { type CoreManifest, coreManifestSchema, verifyManifestSignature } from './manifest';
-import { type CorePointer, emptyPointer, readPointer, writePointer } from './pointer';
+import {
+  type CorePointer,
+  emptyPointer,
+  readPointer,
+  readPointerAbi,
+  writePointer,
+} from './pointer';
 import { cleanupLegacy, CoreStore } from './store';
 
 const logger = createLogger('core:CoreUpdateManager');
@@ -68,6 +74,7 @@ export class CoreUpdateManager {
   private unloadPrevented = false;
   private rollbackRendererDir: string | null = null;
   private pendingBootCheck = false;
+  private coldBootCheck = false;
   private bootCrashCount = 0;
   private bootCheckTimer: NodeJS.Timeout | null = null;
   private loadPingTimer: NodeJS.Timeout | null = null;
@@ -75,6 +82,7 @@ export class CoreUpdateManager {
   private checkInterval: NodeJS.Timeout | null = null;
   private idleTimer: NodeJS.Timeout | null = null;
   private gcTask: Promise<void> = Promise.resolve();
+  private checkTask: Promise<void> = Promise.resolve();
 
   constructor(app: App, options: Options = {}) {
     this.app = app;
@@ -129,11 +137,24 @@ export class CoreUpdateManager {
     cleanupLegacy(electronApp.getPath('userData')).catch((error) =>
       logger.warn('Legacy renderer OTA cleanup failed:', error),
     );
-    this.pointer = readPointer(this.otaRoot, this.shell!.abi);
+    const abiChanged = readPointerAbi(this.otaRoot) !== this.shell!.abi;
+    const stored = readPointer(this.otaRoot, this.shell!.abi);
+    this.pointer = this.reconcilePointer(stored);
     writePointer(this.otaRoot, this.pointer);
     logger.info('Core OTA boot state', this.pointer);
-    this.gc();
+    this.gc(abiChanged);
+    // Cold boot has no baseline for the 3s load ping (window not created yet); only the mounted timeout guards it.
+    if (this.runningVersion) this.armBootCheck({ cold: true });
   };
+
+  private reconcilePointer(pointer: CorePointer): CorePointer {
+    const running = this.runningVersion;
+    if (!running && pointer.current) return { ...pointer, current: null, previous: null };
+    if (running && pointer.current !== running) {
+      return { ...pointer, current: running, previous: null };
+    }
+    return pointer;
+  }
 
   startScheduledChecks = () => {
     if (!this.enabled) return;
@@ -150,6 +171,9 @@ export class CoreUpdateManager {
     if (!this.enabled) return;
     this.checkGeneration += 1;
     this.busy = false;
+    if (this.staged?.applyMode === 'relaunch') {
+      this.savePointer({ current: this.pointer.previous, previous: null });
+    }
     this.staged = null;
     if (this.pointer.staged) this.savePointer({ staged: null });
     this.gc();
@@ -179,6 +203,11 @@ export class CoreUpdateManager {
 
   handleUnloadPrevented = () => {
     this.unloadPrevented = true;
+    if (!this.pendingBootCheck || this.coldBootCheck) return;
+    logger.info('Reload cancelled by renderer, cancelling boot check');
+    this.clearBootTimers();
+    this.pendingBootCheck = false;
+    this.rollbackRendererDir = null;
   };
 
   applyStagedNow = () => {
@@ -189,8 +218,19 @@ export class CoreUpdateManager {
     }
     const { version } = this.staged;
     logger.info(`Applying core ${version} renderer now`);
+    const rendererDir = this.rendererDirOf(version);
     this.rollbackRendererDir = this.app.rendererUrlManager.getActiveRendererDir();
-    this.app.rendererUrlManager.setActiveRendererDir(this.rendererDirOf(version));
+    this.app.rendererUrlManager.setActiveRendererDir(rendererDir);
+    if (this.app.rendererUrlManager.getActiveRendererDir() !== rendererDir) {
+      this.app.rendererUrlManager.setActiveRendererDir(this.rollbackRendererDir);
+      this.rollbackRendererDir = null;
+      this.savePointer({
+        blacklist: [...new Set([...this.pointer.blacklist, version])],
+        staged: null,
+      });
+      this.staged = null;
+      return false;
+    }
     this.savePointer({ current: version, previous: this.pointer.current, staged: null });
     this.staged = null;
     this.clearIdleTimer();
@@ -210,7 +250,12 @@ export class CoreUpdateManager {
     staged: this.staged?.version ?? null,
   });
 
-  checkForUpdates = async () => {
+  checkForUpdates = () => {
+    this.checkTask = this.checkTask.catch(() => {}).then(() => this.runCheck());
+    return this.checkTask;
+  };
+
+  private async runCheck() {
     if (!this.enabled || this.busy || this.staged) {
       logger.info('Core OTA check skipped', {
         reason: !this.enabled ? 'disabled' : this.busy ? 'busy' : 'already-staged',
@@ -259,6 +304,7 @@ export class CoreUpdateManager {
         version,
       });
       this.gc();
+      if (applyMode === 'reload') this.handleWindowBlur();
       outcome = 'staged';
     } catch (error) {
       if (error instanceof SkipCheck) {
@@ -268,12 +314,14 @@ export class CoreUpdateManager {
       outcome = 'failed';
       this.lastError = error instanceof Error ? error.message : String(error);
       logger.error('Core OTA check failed:', error);
-      rmSync(path.join(this.otaRoot, 'staging'), { force: true, recursive: true });
+      if (generation === this.checkGeneration) {
+        rmSync(path.join(this.otaRoot, 'staging'), { force: true, recursive: true });
+      }
     } finally {
       if (generation === this.checkGeneration) this.busy = false;
       logger.info('Core OTA check finished', { channel: this.activeChannel, outcome });
     }
-  };
+  }
 
   private async fetchRemote(feedUrl: string, generation: number): Promise<CoreManifest | null> {
     const res = await this.fetchImpl(`${feedUrl}/latest.json`, { cache: 'no-store' });
@@ -355,26 +403,34 @@ export class CoreUpdateManager {
   private failBootCheck(reason: string) {
     this.clearBootTimers();
     const bad = this.pointer.current;
-    logger.warn('Core OTA rolled back', { failedVersion: bad, reason });
+    const coldBoot = this.coldBootCheck;
+    logger.warn('Core OTA rolled back', { coldBoot, failedVersion: bad, reason });
     this.pendingBootCheck = false;
-    this.app.rendererUrlManager.setActiveRendererDir(this.rollbackRendererDir);
-    this.rollbackRendererDir = null;
     this.savePointer({
       blacklist: bad ? [...new Set([...this.pointer.blacklist, bad])] : this.pointer.blacklist,
       current: this.pointer.previous,
       previous: null,
     });
+    if (coldBoot) {
+      this.relaunchIntoCore();
+      return;
+    }
+    this.app.rendererUrlManager.setActiveRendererDir(this.rollbackRendererDir);
+    this.rollbackRendererDir = null;
     this.gc();
     this.reloadAllWindows();
   }
 
-  private armBootCheck() {
+  private armBootCheck({ cold = false } = {}) {
     this.pendingBootCheck = true;
+    this.coldBootCheck = cold;
     this.bootCrashCount = 0;
     this.clearBootTimers();
-    this.loadPingTimer = setTimeout(() => this.failBootCheck('load-timeout'), LOAD_PING_TIMEOUT);
+    if (!cold) {
+      this.loadPingTimer = setTimeout(() => this.failBootCheck('load-timeout'), LOAD_PING_TIMEOUT);
+      this.loadPingTimer.unref?.();
+    }
     this.bootCheckTimer = setTimeout(() => this.failBootCheck('boot-timeout'), BOOT_CHECK_TIMEOUT);
-    this.loadPingTimer.unref?.();
     this.bootCheckTimer.unref?.();
   }
 
@@ -397,9 +453,9 @@ export class CoreUpdateManager {
     });
   }
 
-  private gc() {
+  private gc(keepStore = false) {
     this.gcTask = this.gcTask
-      .then(() => this.store.gc(this.keepVersions))
+      .then(() => this.store.gc(this.keepVersions, { keepStore }))
       .catch((error) => logger.warn('Core OTA gc failed:', error));
   }
 }

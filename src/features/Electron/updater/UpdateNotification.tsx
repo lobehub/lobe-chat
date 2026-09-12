@@ -187,7 +187,13 @@ export const UpdateNotification: React.FC = () => {
   };
   const installNow = () => {
     setIsInstalling(true);
-    if (isCoreRelaunch) rendererOtaService.applyNow().catch(() => setIsInstalling(false));
+    if (isCoreRelaunch)
+      rendererOtaService
+        .applyNow()
+        .then((applied) => {
+          if (!applied) setIsInstalling(false);
+        })
+        .catch(() => setIsInstalling(false));
     else autoUpdateService.installNow();
   };
 

@@ -1,5 +1,13 @@
 import { generateKeyPairSync, sign } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { constants, zstdCompressSync } from 'node:zlib';
@@ -11,6 +19,7 @@ import type { ShellGlobal } from '@/const/shell';
 
 import { canonicalJson, type CoreManifest, sha256File } from '../manifest';
 import { readPointer, writePointer } from '../pointer';
+import { SAFE_VERSION } from '../store';
 
 const { privateKey, publicKey } = generateKeyPairSync('ed25519');
 const PUBLIC_KEY_PEM = publicKey.export({ format: 'pem', type: 'spki' }).toString();
@@ -144,6 +153,16 @@ const fetchImpl = vi.fn(async (url: string) =>
 );
 
 const otaRoot = () => path.join(userDataDir, 'core-ota');
+const storeDir = () => path.join(otaRoot(), 'store');
+const pointerAt = (patch: Partial<ReturnType<typeof readPointer>>) =>
+  writePointer(otaRoot(), {
+    abi: ABI,
+    blacklist: [],
+    current: null,
+    previous: null,
+    staged: null,
+    ...patch,
+  });
 const coreDir = (version: string) => path.join(otaRoot(), 'cores', version);
 
 const makeShell = (overrides: Partial<ShellGlobal> = {}): ShellGlobal => ({
@@ -223,6 +242,74 @@ describe('CoreUpdateManager initialize', () => {
     expect(manager.getStatus().current).toBeNull();
     expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: [], current: null });
     expect(existsSync(coreDir('0.9.0'))).toBe(false);
+  });
+
+  it('keeps store objects across an abi reset', async () => {
+    mkdirSync(storeDir(), { recursive: true });
+    writeFileSync(path.join(storeDir(), 'f'.repeat(64)), 'blob');
+    pointerAt({ abi: 'b'.repeat(64) } as never);
+
+    await loadManager();
+    await flushGc();
+
+    expect(existsSync(path.join(storeDir(), 'f'.repeat(64)))).toBe(true);
+  });
+
+  it('clears pointer.current when the shell fell back to builtin', async () => {
+    pointerAt({ current: '1.0.1', previous: '0.9.0' });
+
+    const { manager } = await loadManager();
+
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({ current: null, previous: null });
+    serveLatest(rendererOnly('1.0.1', 1));
+    await manager.checkForUpdates();
+    expect(manager.getStatus().staged).toBe('1.0.1');
+  });
+
+  it('realigns pointer.current with the running external core', async () => {
+    const v1Files = { ...BASE_FILES, 'dist/renderer/assets/index.js': 'index-1.0.1' };
+    const v1 = buildManifest('1.0.1', 1, v1Files);
+    materialize(coreDir('1.0.1'), v1Files, v1);
+    pointerAt({ current: '1.0.2', previous: '1.0.1' });
+
+    await loadManager(
+      makeApp(),
+      makeShell({ coreDir: coreDir('1.0.1'), manifest: v1, source: 'external' }),
+    );
+
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({ current: '1.0.1', previous: null });
+  });
+
+  it('shares the version-name rule with the shell loader', () => {
+    const loader = readFileSync(
+      path.join(__dirname, '../../../../../../shell/core-loader.js'),
+      'utf8',
+    );
+    expect(loader).toContain(`const VERSION_NAME = ${SAFE_VERSION};`);
+  });
+
+  it('rolls back and relaunches when an external core never mounts at cold boot', async () => {
+    vi.useFakeTimers();
+    try {
+      const v1Files = { ...BASE_FILES, 'dist/renderer/assets/index.js': 'index-1.0.1' };
+      const v1 = buildManifest('1.0.1', 1, v1Files);
+      materialize(coreDir('1.0.1'), v1Files, v1);
+      pointerAt({ current: '1.0.1', previous: null });
+      const { app } = await loadManager(
+        makeApp(),
+        makeShell({ coreDir: coreDir('1.0.1'), manifest: v1, source: 'external' }),
+      );
+
+      vi.advanceTimersByTime(4000);
+      expect(electronMock.app.relaunch).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(12_000);
+
+      expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: ['1.0.1'], current: null });
+      expect(electronMock.app.relaunch).toHaveBeenCalled();
+      expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
@@ -419,6 +506,140 @@ describe('CoreUpdateManager checkForUpdates', () => {
       staged: '1.0.2',
     });
     expect(readdirSync(path.join(otaRoot(), 'cores')).sort()).toEqual(['0.9.5', '1.0.1', '1.0.2']);
+  });
+
+  it('cancels the boot check instead of blacklisting when the renderer vetoes reload', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { manager } = await loadManager();
+      await manager.checkForUpdates();
+      manager.applyStagedNow();
+
+      manager.handleUnloadPrevented();
+      vi.advanceTimersByTime(20_000);
+
+      expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: [], current: '1.0.1' });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('rolls back on load timeout', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { manager } = await loadManager();
+      await manager.checkForUpdates();
+      manager.applyStagedNow();
+
+      vi.advanceTimersByTime(3500);
+
+      expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: ['1.0.1'], current: null });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('refuses to apply when the staged renderer dir is unusable', async () => {
+    serveLatest(rendererOnly('1.0.1', 1));
+    const { app, manager } = await loadManager();
+    await manager.checkForUpdates();
+    rmSync(path.join(coreDir('1.0.1'), 'dist/renderer/apps/desktop/index.html'));
+    app.rendererUrlManager.setActiveRendererDir = vi.fn(function (
+      this: { activeDir: string | null },
+      dir,
+    ) {
+      this.activeDir = dir && existsSync(path.join(dir, 'apps/desktop/index.html')) ? dir : null;
+    });
+
+    expect(manager.applyStagedNow()).toBe(false);
+
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({
+      blacklist: ['1.0.1'],
+      current: null,
+      staged: null,
+    });
+    expect(manager.getStatus().staged).toBeNull();
+  });
+
+  it('reverts pointer.current when the channel switches after a relaunch stage', async () => {
+    serveLatest(mainChanged('1.0.1', 1));
+    const { manager } = await loadManager();
+    await manager.checkForUpdates();
+    expect(readPointer(otaRoot(), ABI).current).toBe('1.0.1');
+
+    manager.switchChannel('canary');
+    await flushGc();
+
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({ current: null, previous: null });
+    expect(existsSync(coreDir('1.0.1'))).toBe(false);
+  });
+
+  it('auto-applies a reload-mode stage after five idle minutes, even when staged while idle', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { app, manager } = await loadManager();
+      manager.startScheduledChecks();
+      await manager.checkForUpdates();
+
+      vi.advanceTimersByTime(5 * 60 * 1000 - 1);
+      expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1);
+
+      expect(app.rendererUrlManager.setActiveRendererDir).toHaveBeenCalledWith(
+        path.join(coreDir('1.0.1'), 'dist/renderer'),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not auto-apply while focused or after an unload veto', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { app, manager } = await loadManager();
+      manager.startScheduledChecks();
+      await manager.checkForUpdates();
+      const focus = electronMock.app.on.mock.calls.find(
+        ([name]) => name === 'browser-window-focus',
+      )![1];
+      const blur = electronMock.app.on.mock.calls.find(
+        ([name]) => name === 'browser-window-blur',
+      )![1];
+
+      focus();
+      vi.advanceTimersByTime(6 * 60 * 1000);
+      expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
+
+      manager.handleUnloadPrevented();
+      blur();
+      vi.advanceTimersByTime(6 * 60 * 1000);
+      expect(app.rendererUrlManager.setActiveRendererDir).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('records a stage failure and clears staging', async () => {
+    const remote = rendererOnly('1.0.1', 1);
+    serveLatest({ ...remote, signature: remote.signature });
+    served.delete(`${SERVER}/stable/core/${PLATFORM}/${remote.full.path}`);
+    for (const key of served.keys()) if (key.startsWith(OBJECTS)) served.delete(key);
+    const { manager } = await loadManager();
+
+    await manager.checkForUpdates();
+
+    expect(manager.getStatus().lastError).toMatch(/fetch failed/);
+    expect(existsSync(path.join(otaRoot(), 'staging'))).toBe(false);
+    serveLatest(null);
+    await manager.checkForUpdates();
+    expect(fetchImpl).toHaveBeenLastCalledWith(
+      expect.stringContaining('latest.json'),
+      expect.anything(),
+    );
   });
 
   it('drops the staged version when the channel switches', async () => {

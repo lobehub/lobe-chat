@@ -22,10 +22,23 @@ export const emptyPointer = (abi: string): CorePointer => ({
   staged: null,
 });
 
-export const readPointer = (otaRoot: string, abi: string): CorePointer => {
+const readRaw = (otaRoot: string) => {
   try {
-    const raw = JSON.parse(readFileSync(path.join(otaRoot, 'pointer.json'), 'utf8'));
-    if (raw?.abi === abi) {
+    return JSON.parse(readFileSync(path.join(otaRoot, 'pointer.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+};
+
+export const readPointerAbi = (otaRoot: string): string | null => {
+  const abi = readRaw(otaRoot)?.abi;
+  return typeof abi === 'string' ? abi : null;
+};
+
+export const readPointer = (otaRoot: string, abi: string): CorePointer => {
+  const raw = readRaw(otaRoot);
+  if (raw?.abi === abi) {
+    {
       return {
         abi,
         blacklist: Array.isArray(raw.blacklist) ? raw.blacklist.filter(versionOrNull) : [],
@@ -34,7 +47,7 @@ export const readPointer = (otaRoot: string, abi: string): CorePointer => {
         staged: versionOrNull(raw.staged),
       };
     }
-  } catch {}
+  }
   return emptyPointer(abi);
 };
 
