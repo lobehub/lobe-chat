@@ -1,9 +1,14 @@
+import {
+  AGENT_SHARE_DEFAULT_MAX_TOPICS_PER_VISITOR,
+  AGENT_SHARE_DEFAULT_MAX_TURNS_PER_TOPIC,
+} from '@lobechat/const';
 import { type SharedAgentData, type SharedTopicData } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
 import { AgentShareModel } from '@/database/models/agentShare';
+import { TopicModel } from '@/database/models/topic';
 import { TopicShareModel } from '@/database/models/topicShare';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -53,6 +58,19 @@ export const shareRouter = router({
         }
       }
 
+      // Reach numbers are scoped to the SHARE OWNER, not the caller: visitor
+      // topics live under the creator's account, so the counter has to run as
+      // them. Best-effort — analytics must never turn a valid share page into
+      // an error.
+      let stats = { conversations: 0, visitors: 0 };
+      try {
+        const topicModel = new TopicModel(ctx.serverDB, share.ownerId);
+        const counts = await topicModel.countShareVisitors({ agentId: share.agentId });
+        stats = { conversations: counts.topicCount, visitors: counts.visitorCount };
+      } catch (error) {
+        log('failed to count share visitors for %s: %O', share.shareId, error);
+      }
+
       return {
         agentId: share.agentId,
         agentMeta: {
@@ -60,11 +78,28 @@ export const shareRouter = router({
           backgroundColor: share.agentBackgroundColor,
           description: share.agentDescription,
           name: share.agentName,
+          openingQuestions: share.agentOpeningQuestions ?? [],
+          tags: share.agentTags ?? [],
           title: share.agentTitle,
+        },
+        creator: {
+          avatar: share.ownerAvatar ?? null,
+          name: share.ownerFullName ?? share.ownerUsername ?? null,
         },
         isOwner,
         shareId: share.shareId,
         slug: share.shareConfig.slug ?? null,
+        stats: { ...stats, views: share.userViewCount },
+        terms: {
+          allowCreatorViewSessions: share.shareConfig.allowCreatorViewSessions ?? false,
+          maxTopicsPerVisitor:
+            share.shareConfig.maxTopicsPerVisitor ?? AGENT_SHARE_DEFAULT_MAX_TOPICS_PER_VISITOR,
+          maxTurnsPerTopic:
+            share.shareConfig.maxTurnsPerTopic ?? AGENT_SHARE_DEFAULT_MAX_TURNS_PER_TOPIC,
+        },
+        // Identifiers only. The granted API list is owner-facing configuration
+        // and must not reach a visitor.
+        toolGrants: (share.shareConfig.toolGrants ?? []).map((grant) => grant.identifier),
         // TODO(cloud budget gate): the spend gate itself is already enforced —
         // `shareChat.execAgent` checks `checkAgentShareSpendAllowance` before
         // dispatching a run. This READ-ONLY endpoint just doesn't yet expose
