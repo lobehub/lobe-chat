@@ -541,8 +541,24 @@ export abstract class ComputerRuntime {
   // ==================== Helpers ====================
 
   protected handleError(error: unknown): BuiltinServerRuntimeOutput {
+    const diagnostics =
+      error && typeof error === 'object' ? (error as ServiceResult['error']) : undefined;
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return { content: errorMessage, error, success: false };
+    // A transport error cannot prove that a file or command operation had no
+    // side effects. Keep the failure visible without automatically replaying it.
+    return {
+      content: errorMessage,
+      error: {
+        code: diagnostics?.code,
+        doc_url: diagnostics?.doc_url,
+        hint: diagnostics?.hint,
+        kind: 'stop',
+        message: errorMessage,
+        name: diagnostics?.name,
+        status: diagnostics?.status,
+      },
+      success: false,
+    };
   }
 
   private errorOutput(result: ServiceResult, state: any): BuiltinServerRuntimeOutput {
@@ -582,16 +598,18 @@ export abstract class ComputerRuntime {
       // unset a failed edit had neither a diff nor an error to draw and
       // rendered as an empty card.
       //
-      // What the model sees is unchanged: `ToolMessageReorder` prefers a
-      // non-empty `content` over `pluginError.message`, and `content` still
-      // carries the same text.
-      //
-      // Deliberately a fresh `{ message }` rather than forwarding
-      // `result.error`: `executeToolWithRetry` escalates on
-      // `error.kind === 'retry'`, and these failures were never retried while
-      // they claimed success. Flipping the flag should not quietly enrol them
-      // in the retry loop.
-      error: { message: errorText },
+      // Preserve service diagnostics for the common tool-result formatter,
+      // but do not forward arbitrary fields such as `kind: 'retry'` that
+      // could silently enroll a side-effecting failure in the retry loop.
+      error: {
+        code: result.error?.code,
+        doc_url: result.error?.doc_url,
+        hint: result.error?.hint,
+        kind: 'stop',
+        message: errorText,
+        name: result.error?.name,
+        status: result.error?.status,
+      },
       state,
       success: false,
     };
