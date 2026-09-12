@@ -112,9 +112,12 @@ export class AbandonOperationService {
     result.found = true;
 
     const metadata = (state.metadata ?? {}) as {
+      agentId?: string;
       assistantMessageId?: string;
       isSubAgent?: boolean;
+      model?: string;
       orchestrationRole?: 'supervisor' | 'member';
+      provider?: string;
       /** Present only for shared-agent visitor runs (visitor owns the stream). */
       streamOwnerUserId?: string;
       threadId?: string | null;
@@ -166,19 +169,57 @@ export class AbandonOperationService {
     // path must opt in when this flag is present.
     const includeShareVisitor = Boolean(metadata.streamOwnerUserId);
 
-    if (metadata.userId && metadata.assistantMessageId) {
+    if (metadata.userId) {
+      const messageModel = new MessageModel(
+        this.db,
+        metadata.userId,
+        metadata.workspaceId,
+        undefined,
+        { includeShareVisitor },
+      );
+
       try {
-        const messageModel = new MessageModel(
-          this.db,
-          metadata.userId,
-          metadata.workspaceId,
-          undefined,
-          { includeShareVisitor },
-        );
-        await messageModel.update(metadata.assistantMessageId, { error });
-        result.assistantMessageUpdated = true;
+        if (metadata.assistantMessageId) {
+          // The dying step got as far as creating its placeholder, so the
+          // failure belongs on exactly that row.
+          await messageModel.update(metadata.assistantMessageId, { error });
+          result.assistantMessageUpdated = true;
+        } else if (metadata.topicId) {
+          // No placeholder: the step was killed before its first token, which
+          // is the usual shape when the host is recycled mid-LLM-call. The
+          // turn would otherwise carry no error anywhere, and the client keys
+          // its failure banner and retry action off `message.error` — that
+          // silence is exactly why an abandoned turn renders as frozen rather
+          // than failed.
+          //
+          // A fresh assistant row rather than marking the conversation tail:
+          // the tail here is either the user's own turn, whose renderer reads
+          // `error` for nothing but the double-click-to-edit guard and so
+          // would show the user nothing at all, or a *previous* assistant turn
+          // that genuinely succeeded and must not be relabelled as failed.
+          await messageModel.create({
+            agentId: metadata.agentId,
+            content: '',
+            error,
+            parentId: await this.resolveTailMessageId(
+              {
+                threadId: metadata.threadId,
+                topicId: metadata.topicId,
+                userId: metadata.userId,
+                workspaceId: metadata.workspaceId,
+              },
+              includeShareVisitor,
+            ),
+            model: metadata.model,
+            provider: metadata.provider,
+            role: 'assistant',
+            threadId: metadata.threadId ?? null,
+            topicId: metadata.topicId,
+          });
+          result.assistantMessageUpdated = true;
+        }
       } catch (e) {
-        log('[%s] assistant message update failed (non-fatal): %O', operationId, e);
+        log('[%s] assistant failure row write failed (non-fatal): %O', operationId, e);
       }
     }
 
@@ -206,6 +247,32 @@ export class AbandonOperationService {
         });
       } catch (e) {
         log('[%s] abandoned op lifecycle dispatch failed (non-fatal): %O', operationId, e);
+      }
+    }
+
+    // Safety net for the durable row. `dispatchHooks` owns the rich terminal
+    // write (step count, usage, cost, traceS3Key) via `persistCompletion`, but
+    // it only runs behind the guard above: a sub-agent, a missing
+    // `metadata.userId`, or a state whose `status` is not one of
+    // running/waiting_* (e.g. a step boundary persisted as `idle`) all skip it
+    // silently, and a throw inside it is swallowed as non-fatal. Any of those
+    // used to leave the operation `running` forever — nothing else retires a
+    // non-Goal op, so it stayed live on the dashboard and blocked its own
+    // recovery. `settleRunning` is idempotent and only matches rows still in
+    // `running`, so it cannot overwrite the richer outcome when the dispatch
+    // did happen.
+    if (metadata.userId) {
+      try {
+        const settled = await new AgentOperationModel(
+          this.db,
+          metadata.userId,
+          metadata.workspaceId,
+        ).settleRunning(operationId, 'error');
+        if (settled) {
+          log('[%s] durable row settled by abandon safety net', operationId);
+        }
+      } catch (e) {
+        log('[%s] abandon safety-net settle failed (non-fatal): %O', operationId, e);
       }
     }
 
@@ -340,6 +407,32 @@ export class AbandonOperationService {
       result.assistantMessageUpdated = true;
     } catch (e) {
       log('[%s] no-state abandon: assistant message update failed (non-fatal): %O', operationId, e);
+    }
+  }
+
+  /**
+   * Anchor for an abandonment error when the dying step never created its own
+   * assistant placeholder: the latest main-chain message of the run.
+   *
+   * Reuses the same spine query the runtime itself uses to pick a turn's
+   * continuation point, so the error lands on the node the client is actually
+   * rendering as the tail rather than on a tool child or a stale fork.
+   */
+  private async resolveTailMessageId(
+    params: { threadId?: string | null; topicId: string; userId: string; workspaceId?: string },
+    includeShareVisitor: boolean,
+  ): Promise<string | undefined> {
+    try {
+      const messageModel = new MessageModel(this.db, params.userId, params.workspaceId, undefined, {
+        includeShareVisitor,
+      });
+      return await messageModel.getLatestSpineMessageId({
+        threadId: params.threadId ?? null,
+        topicId: params.topicId,
+      });
+    } catch (e) {
+      log('[%s] tail message lookup failed (non-fatal): %O', params.topicId, e);
+      return undefined;
     }
   }
 
