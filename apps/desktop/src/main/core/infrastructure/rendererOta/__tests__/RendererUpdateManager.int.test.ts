@@ -614,6 +614,21 @@ describe('RendererUpdateManager V2 lifecycle', () => {
     });
   });
 
+  it('stays disabled in production builds now that MAIN_HASH is no longer injected', async () => {
+    const manager = await loadManager(makeApp());
+    delete process.env.MAIN_HASH;
+    vi.resetModules();
+    const { RendererUpdateManager } = await import('../RendererUpdateManager');
+    const noHash = new RendererUpdateManager(makeApp() as never);
+    expect(manager.enabled).toBe(true);
+    expect(noHash.enabled).toBe(false);
+    await noHash.checkForUpdates();
+    expect(loggerMock.info).toHaveBeenCalledWith(
+      'Renderer OTA check finished',
+      expect.objectContaining({ reason: 'disabled', disabledReasons: ['missing-main-hash'] }),
+    );
+  });
+
   it('explains disabled, busy and superseded checks without reporting an update', async () => {
     updaterConfigMock.isDev = true;
     const disabled = await loadManager(makeApp());
