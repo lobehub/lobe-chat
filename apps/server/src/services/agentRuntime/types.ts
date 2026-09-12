@@ -4,6 +4,7 @@ import type {
   BotPlatformContext,
   LobeToolManifest,
   OperationSkillSet,
+  ProjectInstructionFile,
   ToolExecutor,
   ToolSource,
 } from '@lobechat/context-engine';
@@ -430,6 +431,11 @@ export interface OperationCreationParams {
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
   /**
+   * Borrowed-connector attribution, resolved once during tool discovery. Run
+   * context for the context engine to inject — see `expertise`.
+   */
+  connectorOwnershipNote?: string;
+  /**
    * Device-access policy decision computed once per turn by
    * `resolveDeviceAccessPolicy`. Forwarded into `state.metadata.deviceAccessPolicy`
    * so the dispatch site can include `reason` in the audit entry without
@@ -489,6 +495,11 @@ export interface OperationCreationParams {
    * sub-tree back to its root.
    */
   parentOperationId?: string;
+  /**
+   * A project's root instruction files, collected once during operation prep.
+   * Run context for the context engine to inject — see `expertise`.
+   */
+  projectInstructions?: ProjectInstructionFile[];
   queueRetries?: number;
   queueRetryDelay?: string;
   /** Search route resolved once before the operation starts. */
