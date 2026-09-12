@@ -21,8 +21,10 @@ const styles = createStaticStyles(({ css }) => ({
     overflow: hidden;
     min-width: 32px;
 
+    /* focus-visible, not focus-within: closing a dropdown hands focus back to its
+       trigger, which would pin the actions open after the pointer has left. */
     &:hover,
-    &:has(.${ACTION_CLASS_NAME}:focus-within),
+    &:has(.${ACTION_CLASS_NAME} :focus-visible),
     &:has([data-popup-open]) {
       .${ACTION_CLASS_NAME} {
         pointer-events: auto;
