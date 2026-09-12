@@ -136,6 +136,23 @@ describe('resolveCore', () => {
     const core = resolve();
     expect(core.source).toBe('builtin');
     expect(core.log.join('\n')).toMatch(/version/);
+
+    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '..' });
+    expect(resolve().source).toBe('builtin');
+  });
+
+  it('rejects a signed manifest whose tree omits dist/main/index.js', () => {
+    writeExternal('1.1.0', {
+      mutate: (_, manifest) => {
+        delete manifest.signature;
+        manifest.tree = manifest.tree.filter((entry) => entry.path !== 'dist/main/index.js');
+        Object.assign(manifest, signManifest(manifest));
+      },
+    });
+    writeJson(path.join(otaRoot(), 'pointer.json'), { current: '1.1.0' });
+    const core = resolve();
+    expect(core.source).toBe('builtin');
+    expect(core.log.join('\n')).toMatch(/dist\/main\/index\.js/);
   });
 
   it('markHealthy resets failures for external and is a no-op for builtin', () => {

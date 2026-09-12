@@ -5,6 +5,7 @@ const path = require('node:path');
 const MAX_BOOT_FAILURES = 3;
 const VERSION_NAME = /^[\w.-]+$/;
 const VERIFIED_PREFIX = /^dist\/(?:main|preload)\//;
+const MAIN_ENTRY = 'dist/main/index.js';
 
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 
@@ -50,7 +51,10 @@ const verifyCandidate = (dir, version, { abi, boot, publicKey }) => {
   if (manifest.shellAbi !== abi) throw new Error(`shellAbi ${manifest.shellAbi} != ${abi}`);
   if (boot.version === version && boot.failures >= MAX_BOOT_FAILURES)
     throw new Error(`boot failed ${boot.failures}x`);
-  for (const file of manifest.tree.filter((entry) => VERIFIED_PREFIX.test(entry.path))) {
+  const files = manifest.tree.filter((entry) => VERIFIED_PREFIX.test(entry.path));
+  if (!files.some((entry) => entry.path === MAIN_ENTRY))
+    throw new Error(`${MAIN_ENTRY} not in tree`);
+  for (const file of files) {
     if (sha256(fs.readFileSync(path.join(dir, file.path))) !== file.sha256)
       throw new Error(`hash mismatch ${file.path}`);
   }
@@ -66,7 +70,7 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
 
   for (const version of [pointer.current, pointer.previous]) {
     if (!version) continue;
-    if (typeof version !== 'string' || !VERSION_NAME.test(version)) {
+    if (typeof version !== 'string' || !VERSION_NAME.test(version) || /^\.\.?$/.test(version)) {
       log.push(`invalid core version name ${JSON.stringify(version)}`);
       continue;
     }
