@@ -12,6 +12,7 @@ import type {
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
+import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
@@ -21,6 +22,7 @@ import {
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentOperationModel } from '@/database/models/agentOperation';
+import { DocumentModel } from '@/database/models/document';
 import { LlmGenerationTracingModel } from '@/database/models/llmGenerationTracing';
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyCriterionModel } from '@/database/models/verifyCriterion';
@@ -110,6 +112,7 @@ const rubricConfigSchema = z.object({
 });
 
 const checkItemSchema = z.object({
+  definition: verifyCheckDefinitionSchema.optional(),
   category: z.string().optional(),
   description: z.string().optional(),
   id: z.string(),
@@ -270,6 +273,7 @@ const verifyProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
   return opts.next({
     ctx: {
       criterionModel: new VerifyCriterionModel(ctx.serverDB, ctx.userId, workspaceId),
+      documentModel: new DocumentModel(ctx.serverDB, ctx.userId, workspaceId),
       evidenceModel: new VerifyEvidenceModel(ctx.serverDB, ctx.userId, workspaceId),
       executorService: new VerifyExecutorService(ctx.serverDB, ctx.userId, workspaceId),
       tracingModel: new LlmGenerationTracingModel(ctx.serverDB, ctx.userId, workspaceId),
@@ -336,6 +340,9 @@ export const verifyRouter = router({
   createCriterion: verifyWriteProcedure
     .input(
       z.object({
+        definition: verifyCheckDefinitionSchema.optional(),
+        tags: z.array(z.string()).max(50).optional(),
+        description: z.string().optional(),
         documentId: z.string().optional(),
         onFail: onFailSchema.optional(),
         required: z.boolean().optional(),
@@ -360,13 +367,64 @@ export const verifyRouter = router({
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => ctx.criterionModel.forkRubricCriteria(input.ids)),
 
-  listCriteria: verifyProcedure.query(async ({ ctx }) => ctx.criterionModel.query()),
+  /**
+   * Resolve a specific criteria id list (e.g. the ones bound to a goal), in
+   * input order. Each row carries `instruction` resolved from its linked
+   * document — the judge rule must be inspectable and editable where the
+   * criteria are shown, not an invisible value edits would silently replace.
+   */
+  getCriteria: verifyProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .query(async ({ ctx, input }) => {
+      if (input.ids.length === 0) return [];
+      const rows = await ctx.criterionModel.findByIds(input.ids);
+      const documentIds = [
+        ...new Set(rows.flatMap((row) => (row.documentId ? [row.documentId] : []))),
+      ];
+      const documents = await Promise.all(documentIds.map((id) => ctx.documentModel.findById(id)));
+      const contentByDocId = new Map(
+        documents.flatMap((doc) => (doc ? [[doc.id, doc.content ?? undefined] as const] : [])),
+      );
+      const byId = new Map(
+        rows.map((row) => [
+          row.id,
+          {
+            ...row,
+            instruction: row.documentId ? contentByDocId.get(row.documentId) : undefined,
+          },
+        ]),
+      );
+      return input.ids.map((id) => byId.get(id)).filter(Boolean);
+    }),
+
+  listCriteria: verifyProcedure
+    .input(
+      z
+        .object({
+          search: z.string().optional(),
+          tags: z.array(z.string()).optional(),
+          includeArchived: z.boolean().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => ctx.criterionModel.query(input)),
+
+  getCriterionResults: verifyProcedure
+    .input(z.object({ id: z.string().uuid(), limit: z.number().int().min(1).max(100).optional() }))
+    .query(async ({ ctx, input }) => {
+      if (!(await ctx.criterionModel.findById(input.id)))
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Check asset not found' });
+      return ctx.resultModel.listByCriterion(input.id, input.limit);
+    }),
 
   updateCriterion: verifyWriteProcedure
     .input(
       z.object({
         id: z.string(),
         value: z.object({
+          definition: verifyCheckDefinitionSchema.nullish(),
+          tags: z.array(z.string()).max(50).optional(),
+          archivedAt: z.coerce.date().nullish(),
           description: z.string().nullish(),
           documentId: z.string().nullish(),
           onFail: onFailSchema.optional(),
@@ -642,6 +700,9 @@ export const verifyRouter = router({
       ),
       identifier: skill.identifier,
       name: skill.name,
+      // The skill's own declared version, so an installer can compare a copy
+      // already on disk against the latest bundle.
+      version: skill.version,
     };
   }),
 

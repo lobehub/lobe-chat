@@ -5,6 +5,7 @@ import { PassThrough } from 'node:stream';
 
 import type { LocalHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import { HETEROGENEOUS_AGENT_CONFIGS } from '@lobechat/heterogeneous-agents';
+import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
 import type * as HeteroSpawn from '@lobechat/heterogeneous-agents/spawn';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -34,11 +35,6 @@ vi.mock('@lobechat/heterogeneous-agents/resolveCliCommand', () => ({
 
 vi.mock('../api/client', () => ({
   getTrpcClient: mockGetTrpcClient,
-}));
-
-vi.mock('../utils/logger', () => ({
-  log: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
-  setVerbose: vi.fn(),
 }));
 
 /**
@@ -130,6 +126,7 @@ describe('hetero exec command', () => {
     exitSpy.mockRestore();
     stdoutSpy.mockRestore();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   /** Build a fresh program with the hetero command registered. */
@@ -154,6 +151,26 @@ describe('hetero exec command', () => {
       throw err;
     }
   };
+
+  it('reports a failed CLI exit when terminal delivery is rejected', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle({ exitCode: 0 }));
+    mockHeteroFinishMutate.mockRejectedValue(
+      Object.assign(new Error('Denied'), { data: { code: 'UNAUTHORIZED' } }),
+    );
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'kimi-code',
+      '--prompt',
+      'hi',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-1',
+    ]);
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
 
   it('supports exactly the local agent descriptor types', () => {
     expect([...SUPPORTED_AGENT_TYPES].toSorted()).toEqual(
@@ -202,6 +219,52 @@ describe('hetero exec command', () => {
     });
     // operationId auto-generated when omitted (uuid v4 shape)
     expect(call.operationId).toMatch(/^[0-9a-f-]{36}$/i);
+  });
+
+  it('keeps the agent in the detached wrapper process group when requested by dispatch', async () => {
+    vi.stubEnv(HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV, '1');
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd(['hetero', 'exec', '--type', 'codex', '--prompt', 'do thing']);
+
+    expect(mockSpawnAgent).toHaveBeenCalledWith(expect.objectContaining({ detached: false }));
+  });
+
+  it('does not duplicate Unix group signals inside an inherited wrapper group', async () => {
+    vi.stubEnv(HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV, '1');
+    let sigintHandler: (() => void) | undefined;
+    vi.spyOn(process, 'on').mockImplementation(((event: string, listener: () => void) => {
+      if (event === 'SIGINT') sigintHandler = listener;
+      return process;
+    }) as typeof process.on);
+
+    let resolveExit:
+      ((result: { code: number | null; signal: NodeJS.Signals | null }) => void) | undefined;
+    const stderr = new PassThrough();
+    setImmediate(() => stderr.end());
+    const kill = vi.fn();
+    mockSpawnAgent.mockResolvedValue({
+      events: {
+        [Symbol.asyncIterator]: () => ({
+          next: async () => ({ done: true, value: undefined }),
+        }),
+      },
+      exit: new Promise((resolve) => {
+        resolveExit = resolve;
+      }),
+      kill,
+      pid: 12_345,
+      stderr,
+    });
+
+    const command = runCmd(['hetero', 'exec', '--type', 'codex', '--prompt', 'hi']);
+    for (let i = 0; i < 20 && !sigintHandler; i += 1) await Promise.resolve();
+
+    sigintHandler?.();
+    expect(kill).not.toHaveBeenCalled();
+
+    resolveExit?.({ code: null, signal: 'SIGINT' });
+    await command;
   });
 
   it('runs Qoder with its default command and forwards model and effort', async () => {
@@ -258,6 +321,35 @@ describe('hetero exec command', () => {
     );
   });
 
+  it('runs Devin through ACP with its selected model and native arguments', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'devin',
+      '--prompt',
+      'do thing',
+      '--model',
+      'claude-sonnet-4-6-thinking',
+      '--agent-arg=--agent-type',
+      '--agent-arg=coding',
+    ]);
+
+    expect(mockResolveHeteroSpawnCommand).toHaveBeenCalledWith('devin', undefined);
+    expect(mockSpawnAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'devin',
+        command: 'devin',
+        extraArgs: ['--agent-type', 'coding', '--model', 'claude-sonnet-4-6-thinking'],
+        initialModel: 'claude-sonnet-4-6-thinking',
+        permissionMode: 'bypass',
+        prompt: 'do thing',
+      }),
+    );
+  });
+
   it('runs TRAE Enterprise with ACP model selection and only native provider arguments', async () => {
     mockResolveHeteroSpawnCommand.mockResolvedValue({ command: 'traecli' });
     mockSpawnAgent.mockReturnValue(createFakeHandle());
@@ -281,6 +373,36 @@ describe('hetero exec command', () => {
         agentType: 'trae',
         command: 'traecli',
         extraArgs: ['--feature', 'test'],
+        initialModel: 'gpt-5.4',
+        prompt: 'do thing',
+      }),
+    );
+  });
+
+  it('runs Factory Droid with ACP model selection and safe native provider arguments', async () => {
+    mockResolveHeteroSpawnCommand.mockResolvedValue({ command: 'droid' });
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'droid',
+      '--prompt',
+      'do thing',
+      '--model',
+      'gpt-5.4',
+      '--agent-arg=--tag',
+      '--agent-arg=lobe',
+    ]);
+
+    expect(mockResolveHeteroSpawnCommand).toHaveBeenCalledWith('droid', undefined);
+    expect(mockSpawnAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'droid',
+        askUserBridge: undefined,
+        command: 'droid',
+        extraArgs: ['--tag', 'lobe'],
         initialModel: 'gpt-5.4',
         prompt: 'do thing',
       }),
@@ -567,6 +689,33 @@ describe('hetero exec command', () => {
       expect.objectContaining({
         agentType: 'cursor',
         askUserBridge: expect.objectContaining({ pending: expect.any(Function) }),
+      }),
+    );
+  });
+
+  it('passes an intervention bridge to server-ingest Devin runs', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'devin',
+      '--prompt',
+      'do thing',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-devin-server',
+      '--render',
+      'none',
+    ]);
+
+    expect(mockSpawnAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'devin',
+        askUserBridge: expect.objectContaining({ pending: expect.any(Function) }),
+        permissionMode: 'bypass',
       }),
     );
   });
@@ -1178,6 +1327,8 @@ describe('hetero exec command', () => {
           'cc-stale',
           '--operation-id',
           'op-fallback',
+          '--topic',
+          'topic-fallback',
         ]);
       } finally {
         await rm(dir, { force: true, recursive: true });
@@ -1190,6 +1341,13 @@ describe('hetero exec command', () => {
       });
       expect(mockSpawnAgent.mock.calls[1][0]).toMatchObject({ prompt: fallbackPrompt });
       expect(mockSpawnAgent.mock.calls[1][0].resumeSessionId).toBeUndefined();
+      expect(mockHeteroFinishMutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          operationId: 'op-fallback',
+          resumeSessionInvalidated: true,
+          topicId: 'topic-fallback',
+        }),
+      );
     });
 
     it('does not consume the recovery prompt when native resume succeeds', async () => {

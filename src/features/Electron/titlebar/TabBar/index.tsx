@@ -21,6 +21,7 @@ import * as m from 'motion/react-m';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { captureVisibleTabPreviews } from '@/features/Electron/TabHost';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useRegisterDesktopTabHotkeys } from '@/hooks/useHotkeys/desktopTabScope';
@@ -200,15 +201,18 @@ const TabBar = () => {
     }
   });
 
-  const handleNewTab = useCallback(() => {
-    if (!canCreate) return;
+  const handleNewTab = useCallback(
+    (path?: string) => {
+      if (!canCreate) return;
 
-    // Always open a fresh Home tab, even if a Home tab already exists.
-    addNewTab(newTabUrl);
-  }, [canCreate, addNewTab, newTabUrl]);
+      // Always open a fresh tab, even if one with the same target already exists.
+      addNewTab(path ?? newTabUrl);
+    },
+    [canCreate, addNewTab, newTabUrl],
+  );
 
-  useWatchBroadcast('createNewTab', () => {
-    handleNewTab();
+  useWatchBroadcast('createNewTab', (data) => {
+    handleNewTab(data?.path);
   });
 
   const overflowItems = useCallback((): DropdownItem[] => {
@@ -227,7 +231,14 @@ const TabBar = () => {
   if (tabs.length === 0) return null;
 
   return (
-    <Flexbox horizontal align={'center'} className={styles.container} gap={TAB_GAP} ref={stripRef}>
+    <Flexbox
+      horizontal
+      align={'center'}
+      className={styles.container}
+      gap={TAB_GAP}
+      ref={stripRef}
+      onPointerEnter={captureVisibleTabPreviews}
+    >
       <DndContext
         collisionDetection={closestCenter}
         modifiers={[restrictToHorizontalAxis]}
@@ -285,7 +296,7 @@ const TabBar = () => {
         icon={Plus}
         size="small"
         title={canCreate ? t('tab.newTab') : reason}
-        onClick={canCreate ? handleNewTab : undefined}
+        onClick={canCreate ? () => handleNewTab() : undefined}
       />
       {layout.hiddenCount > 0 && (
         <DropdownMenu items={overflowItems} placement={'bottomRight'}>

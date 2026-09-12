@@ -20,7 +20,9 @@ const { getSupportedModels, initRuntime, resolveModel, signOperationToken } = vi
 }));
 
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => testDB),
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
 }));
 
 vi.mock('@/server/modules/ModelRuntime', () => ({
@@ -33,6 +35,7 @@ vi.mock('@/server/modules/ModelRuntime', () => ({
     'grok-build',
     'kimi-code',
     'pi',
+    'trae',
   ],
 }));
 
@@ -69,6 +72,7 @@ describe('server-default heterogeneous operation control', () => {
       'grok-build': [{ model: 'kimi-k2.6' }],
       'kimi-code': [{ model: 'kimi-k2.6' }],
       'pi': [{ model: 'kimi-k2.6' }],
+      'trae': [{ model: 'kimi-k2.6' }],
     });
     resolveModel.mockResolvedValue({ model: 'gpt-5.4', provider: 'lobehub' });
     initRuntime.mockResolvedValue({});
@@ -204,10 +208,10 @@ describe('server-default heterogeneous operation control', () => {
 
     await expect(
       caller().finishServerDefaultHeterogeneousOperation({ operationId, result: 'done' }),
-    ).resolves.toEqual({ success: true });
+    ).resolves.toEqual({ relayInvocation: null, success: true });
     await expect(
       caller().finishServerDefaultHeterogeneousOperation({ operationId, result: 'done' }),
-    ).resolves.toEqual({ success: true });
+    ).resolves.toEqual({ relayInvocation: null, success: true });
     await expect(
       caller().beginServerDefaultHeterogeneousOperation(operationInput(operationId)),
     ).rejects.toMatchObject({ code: 'CONFLICT' });
@@ -218,6 +222,62 @@ describe('server-default heterogeneous operation control', () => {
       .where(eq(agentOperations.id, operationId));
     expect(operation.status).toBe('done');
     expect(signOperationToken).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the durable official-relay attestation on repeated finish calls', async () => {
+    const operationId = 'desktop-operation-attested';
+    const relayInvocation = {
+      acceptedAt: '2026-09-01T00:00:00.000Z',
+      agentType: 'codex',
+      ingress: 'openai-responses',
+      model: 'gpt-5.4',
+      operationId,
+      provider: 'lobehub',
+    };
+    await caller().beginServerDefaultHeterogeneousOperation(operationInput(operationId));
+    await testDB
+      .update(agentOperations)
+      .set({
+        metadata: {
+          agentType: 'codex',
+          serverDefaultHeterogeneous: true,
+          serverDefaultRelayInvocation: relayInvocation,
+        },
+      })
+      .where(eq(agentOperations.id, operationId));
+
+    await expect(
+      caller().finishServerDefaultHeterogeneousOperation({ operationId, result: 'done' }),
+    ).resolves.toEqual({ relayInvocation, success: true });
+    await expect(
+      caller().finishServerDefaultHeterogeneousOperation({ operationId, result: 'done' }),
+    ).resolves.toEqual({ relayInvocation, success: true });
+  });
+
+  it('rejects an attestation without a persisted string agent type', async () => {
+    const operationId = 'desktop-operation-missing-agent-type';
+    const relayInvocation = {
+      acceptedAt: '2026-09-01T00:00:00.000Z',
+      agentType: 'codex',
+      ingress: 'openai-responses',
+      model: 'gpt-5.4',
+      operationId,
+      provider: 'lobehub',
+    };
+    await caller().beginServerDefaultHeterogeneousOperation(operationInput(operationId));
+    await testDB
+      .update(agentOperations)
+      .set({
+        metadata: {
+          serverDefaultHeterogeneous: true,
+          serverDefaultRelayInvocation: relayInvocation,
+        },
+      })
+      .where(eq(agentOperations.id, operationId));
+
+    await expect(
+      caller().finishServerDefaultHeterogeneousOperation({ operationId, result: 'done' }),
+    ).resolves.toEqual({ relayInvocation: null, success: true });
   });
 
   it('does not settle an unrelated operation owned by the same user', async () => {

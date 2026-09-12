@@ -37,7 +37,9 @@ const {
 
   return {
     mockBrowserWindow,
-    MockBrowserWindow: vi.fn(() => mockBrowserWindow),
+    MockBrowserWindow: vi.fn(function () {
+      return mockBrowserWindow;
+    }),
     mockCaptureRect: vi.fn(),
     mockCaptureWindow: vi.fn(),
     mockDialogShowMessageBox: vi.fn(async () => ({ response: 0 })),
@@ -72,15 +74,6 @@ vi.mock('@/const/env', () => ({
   get isMac() {
     return mockIsMac.value;
   },
-}));
-
-vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  }),
 }));
 
 vi.mock('@/utils/permissions', () => ({

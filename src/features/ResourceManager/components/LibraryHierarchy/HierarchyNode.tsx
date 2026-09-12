@@ -8,7 +8,7 @@ import { Input } from 'antd';
 import { cx } from 'antd-style';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
 import * as m from 'motion/react-m';
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import FileIcon from '@/components/FileIcon';
 import { PAGE_FILE_TYPE } from '@/features/ResourceManager/constants';
@@ -25,9 +25,19 @@ import { useTreeStore } from '@/store/tree';
 
 import { useFileItemClick } from '../Explorer/hooks/useFileItemClick';
 import { useFileItemDropdown } from '../Explorer/ItemDropdown/useFileItemDropdown';
+import FolderAddButton from './FolderAddButton';
+import HierarchyNodeMenuButton from './HierarchyNodeMenuButton';
+import { isHierarchyNodeActive, resolveDeletedFolderRedirect } from './selection';
 import { styles } from './styles';
 
 interface HierarchyNodeProps {
+  /**
+   * Flat rendering for the sidebar search results: no expand caret (the row
+   * is not part of the loaded tree, so there is nothing to expand inline) and
+   * no drag source (its parent folder may not be loaded, so a drop could not
+   * be reconciled).
+   */
+  flat?: boolean;
   isExpanded: boolean;
   isLoading: boolean;
   item: TreeItem;
@@ -38,10 +48,14 @@ interface HierarchyNodeProps {
 }
 
 export const HierarchyNode = memo<HierarchyNodeProps>(
-  ({ item, level = 0, isExpanded, isLoading, onToggle, selectedKey, parentKey }) => {
+  ({ item, level = 0, flat, isExpanded, isLoading, onToggle, selectedKey, parentKey }) => {
     const navigate = useWorkspaceAwareNavigate();
 
     const [setMode, libraryId] = useResourceManagerStore((s) => [s.setMode, s.libraryId]);
+    const [pendingTreeRenameItemId, setPendingTreeRenameItemId] = useResourceManagerStore((s) => [
+      s.pendingTreeRenameItemId,
+      s.setPendingTreeRenameItemId,
+    ]);
 
     const renameItem = useTreeStore((s) => s.renameItem);
 
@@ -49,7 +63,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
     const [renamingValue, setRenamingValue] = useState(item.name);
     const inputRef = useRef<any>(null);
 
-    const { itemKey, isPage, emoji } = useMemo(() => {
+    const { isPage, emoji } = useMemo(() => {
       const lowerFileType = item.fileType?.toLowerCase();
       const lowerName = item.name?.toLowerCase();
       const isPDF = lowerFileType === 'pdf' || lowerName?.endsWith('.pdf');
@@ -69,9 +83,8 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
       return {
         emoji: pageMatch ? item.metadata?.emoji : null,
         isPage: pageMatch,
-        itemKey: item.slug || item.id,
       };
-    }, [item.slug, item.id, item.fileType, item.sourceType, item.name, item.metadata?.emoji]);
+    }, [item.fileType, item.sourceType, item.name, item.metadata?.emoji]);
 
     const handleRenameStart = useCallback(() => {
       setIsRenaming(true);
@@ -103,10 +116,68 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
       }
     }, [item.id, item.name, parentKey, renamingValue, renameItem]);
 
+    // A folder freshly created from the tree's per-folder "+" enters inline
+    // rename as soon as its row mounts (the parent was expanded/revalidated by
+    // the creating button).
+    useEffect(() => {
+      if (!item.isFolder || pendingTreeRenameItemId !== item.id) return;
+      setPendingTreeRenameItemId(null);
+      handleRenameStart();
+    }, [
+      handleRenameStart,
+      item.id,
+      item.isFolder,
+      pendingTreeRenameItemId,
+      setPendingTreeRenameItemId,
+    ]);
+
     const handleRenameCancel = useCallback(() => {
       setIsRenaming(false);
       setRenamingValue(item.name);
     }, [item.name]);
+
+    /**
+     * Where the explorer sits right now, as of the last commit. The delete is
+     * async, so `handleDeleted` can run long after the context menu captured
+     * its closure — by then the user may have opened another folder or another
+     * library, and the captured values would send them back to a folder they
+     * have already left.
+     */
+    const live = useRef({ isMounted: true, libraryId, selectedKey });
+    useEffect(() => {
+      live.current.libraryId = libraryId;
+      live.current.selectedKey = selectedKey;
+    });
+    useEffect(
+      () => () => {
+        live.current.isMounted = false;
+      },
+      [],
+    );
+
+    /**
+     * Deleting a folder the explorer is sitting inside — the folder itself, or
+     * any ancestor of where it is parked — would leave it on a route that no
+     * longer resolves: an empty list under a breadcrumb naming a folder that
+     * was just removed. Step out to the deleted row's own parent instead.
+     *
+     * Runs before the tree purge, so the subtree is still walkable here. An
+     * unmounted row means the user navigated away mid-delete, which is reason
+     * enough to leave them alone.
+     */
+    const handleDeleted = useCallback(() => {
+      if (!live.current.isMounted) return;
+
+      const redirect = resolveDeletedFolderRedirect({
+        children: useTreeStore.getState().children,
+        item,
+        libraryId: live.current.libraryId,
+        parentKey,
+        selectedKey: live.current.selectedKey,
+      });
+
+      if (redirect) navigate(redirect);
+    }, [item, parentKey, navigate]);
 
     const { menuItems } = useFileItemDropdown({
       fileId: item.fileId,
@@ -114,7 +185,9 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
       filename: item.name,
       id: item.id,
       libraryId,
+      onDeleted: handleDeleted,
       onRenameStart: item.isFolder ? handleRenameStart : undefined,
+      parentId: parentKey,
       size: item.size,
       sourceType: item.sourceType,
       url: item.url,
@@ -196,11 +269,11 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
         setMode('explorer');
       },
-      [libraryId, navigate],
+      [libraryId, navigate, setMode],
     );
 
     if (item.isFolder) {
-      const isActive = selectedKey === itemKey;
+      const isActive = isHierarchyNodeActive(item, selectedKey);
 
       const handleToggle = () => {
         onToggle(item.id);
@@ -210,11 +283,11 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
         <Flexbox gap={2}>
           <Block
             clickable
-            draggable
             horizontal
             align={'center'}
             data-drop-target-id={item.id}
             data-is-folder={String(item.isFolder)}
+            draggable={!flat}
             gap={8}
             height={36}
             paddingInline={4}
@@ -238,7 +311,9 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
               showContextMenu(menuItems());
             }}
           >
-            {isLoading ? (
+            {flat ? (
+              <div style={{ width: 20 }} />
+            ) : isLoading ? (
               <ActionIcon spin icon={LoadingOutlined as any} size={'small'} style={{ width: 20 }} />
             ) : (
               <m.div
@@ -298,23 +373,27 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
                 </span>
               )}
             </Flexbox>
+            <Flexbox horizontal align={'center'}>
+              {!flat && <FolderAddButton folderId={item.id} />}
+              <HierarchyNodeMenuButton menuItems={menuItems} />
+            </Flexbox>
           </Block>
         </Flexbox>
       );
     }
 
     // Render as file
-    const isActive = selectedKey === itemKey;
+    const isActive = isHierarchyNodeActive(item, selectedKey);
     return (
       <Flexbox gap={2}>
         <Block
           clickable
-          draggable
           horizontal
           align={'center'}
           className={cx(styles.treeItem, isDragging && styles.dragging)}
           data-drop-target-id={item.id}
           data-is-folder={false}
+          draggable={!flat}
           gap={8}
           height={36}
           paddingInline={4}
@@ -358,6 +437,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
               {item.name}
             </span>
           </Flexbox>
+          <HierarchyNodeMenuButton menuItems={menuItems} />
         </Block>
       </Flexbox>
     );

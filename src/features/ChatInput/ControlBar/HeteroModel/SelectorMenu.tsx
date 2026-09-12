@@ -18,10 +18,10 @@ import {
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { buildSelectorSubmenu } from './buildSelectorSubmenu';
+import { buildSelectorSubmenu } from '../../components/buildSelectorSubmenu';
+import Trigger from '../../components/SelectorTrigger';
 import { ModelCatalogSelector } from './ModelCatalogSelector';
 import { buildSelectorView, resolveModelSwitchSelection } from './selectorView';
-import Trigger from './Trigger';
 
 interface SelectorMenuProps {
   agentId?: string;
@@ -75,10 +75,9 @@ const SelectorMenu = memo<SelectorMenuProps>(
         <DropdownMenuTrigger nativeButton={false}>
           <Trigger
             ariaLabel={view.ariaLabel}
-            effortLabel={view.effortLabel}
             fast={view.isFastSpeed}
-            modelLabel={view.modelLabel}
-            text={view.triggerText}
+            secondaryText={view.triggerLabel.secondaryText}
+            text={view.triggerLabel.text}
           />
         </DropdownMenuTrigger>
         <DropdownMenuPortal>

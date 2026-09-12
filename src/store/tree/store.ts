@@ -38,11 +38,13 @@ useFileStore.subscribe((state) => {
     parentKey,
     resourceList.map((item) =>
       toTreeItem({
+        createdAt: item.createdAt,
         fileId: item.fileId,
         fileType: item.fileType,
         id: item.id,
         metadata: item.metadata,
         name: item.name,
+        parentId: item.parentId,
         size: item.size,
         slug: item.slug,
         sourceType: item.sourceType,

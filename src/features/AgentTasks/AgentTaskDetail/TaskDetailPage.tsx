@@ -108,7 +108,7 @@ const TaskDetailPage = memo<TaskDetailPageProps>(({ taskId, showTaskAgentPanelTo
             centered reading column rather than the list page's full-bleed rows,
             whose value is the horizontal room for their metadata columns. */}
         <WideScreenContainer>
-          {isInitialLoading ? <TaskDetailSkeleton /> : <TaskDetailSections />}
+          {isInitialLoading ? <TaskDetailSkeleton chrome={'body'} /> : <TaskDetailSections />}
         </WideScreenContainer>
       </Flexbox>
       <TopicChatDrawer />
