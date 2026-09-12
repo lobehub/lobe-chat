@@ -72,9 +72,6 @@ export default {
   'flow.diff.fields.condition': 'Condition',
   'flow.diff.fields.required': 'Required',
 
-  'flow.viewResults': 'View results',
-  'flow.viewPlan': 'View steps',
-  'flow.results': 'Verification results',
   'flow.closeResults': 'Close results',
   'flow.resultHistory': '{{count}} verification records',
   'flow.latestResult': 'Latest result',
