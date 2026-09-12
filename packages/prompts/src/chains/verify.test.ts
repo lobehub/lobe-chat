@@ -32,6 +32,9 @@ describe('chainVerifyReviewPrediction', () => {
     const system = buildSystemPrompt();
     expect(system).toContain('could SOME capture the builder is able to produce settle this check');
     expect(system).toContain('not the escape hatch');
+    // Without naming this trigger the pinned model never reached for the verdict
+    // at all — it read "the reviewer must log in and compare" as missing evidence.
+    expect(system).toContain('names YOU as the actor');
     // The hardened rule that produces the production reject bias must survive.
     expect(system).toContain(
       'Missing, invalid, or insufficient evidence is a failed acceptance check',

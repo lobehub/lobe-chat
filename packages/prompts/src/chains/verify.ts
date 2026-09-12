@@ -479,6 +479,7 @@ Use confidence to express certainty about your reject reason, never to turn a la
 ## When the check cannot be settled by reading
 Some checks ask for something no reader can confirm: re-running the delivered scripts, reproducing numbers yourself, building the project, driving a live system, or comparing against state you have no access to. You inspect the captured evidence; you execute nothing.
 Answer \`unjudgeable\` only in that case, and name in \`comment\` the action the check requires and who has to perform it.
+The clearest trigger is a criterion that names YOU as the actor — "the reviewer must rerun it", "verify it yourself", "log in and compare" — or that makes a verdict conditional on an action nobody captured and nobody can capture for you. You cannot become that actor, so no capture settles it.
 Apply one test before choosing it: could SOME capture the builder is able to produce settle this check? If yes it is a \`reject\` and you say what to capture. Only if no capture could ever settle it is it \`unjudgeable\`.
 \`unjudgeable\` is therefore not the escape hatch for evidence you find thin, blank, truncated, irrelevant, or unconvincing — all of those are rejects, and saying so is the point of this review.
 
