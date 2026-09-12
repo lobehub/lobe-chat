@@ -24,6 +24,11 @@ import {
 } from '@/server/services/bot/agentBotProviderSettings';
 import { getBotMessageRouter } from '@/server/services/bot/BotMessageRouter';
 import {
+  containsMaskedCredential,
+  maskCredentials,
+  resolveMaskedCredentials,
+} from '@/server/services/bot/credentialMasking';
+import {
   type BotProviderFieldValues,
   collectFieldFormatViolations,
   formatFieldFormatViolations,
@@ -188,6 +193,15 @@ export const agentBotProviderRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      // A new binding has no stored secret for a mask to stand in for, so this
+      // can only be a form that submitted what it read back.
+      if (containsMaskedCredential(input.credentials)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Enter the real credential value — the masked placeholder cannot be saved.',
+        });
+      }
+
       await assertBotFeatureAccess({
         action: 'manage',
         applicationId: input.applicationId,
@@ -286,6 +300,10 @@ export const agentBotProviderRouter = router({
 
       return providers.map((p, i) => ({
         ...p,
+        // The detail surface needs to show which credentials are configured,
+        // never what they are. `update` resolves the mask back to the stored
+        // secret, so an edit form can round-trip this safely.
+        credentials: maskCredentials(p.platform, p.credentials),
         runtimeStatus: statuses[i].status,
         // Show the strategy the runtime will actually use. A channel created
         // before `burst` existed still stores `queue`, which its platform no
@@ -295,6 +313,35 @@ export const agentBotProviderRouter = router({
           p.platform,
           p.settings as Record<string, unknown> | undefined,
         ),
+      }));
+    }),
+
+  /**
+   * The one read that returns credentials in the clear, for taking a channel
+   * somewhere else.
+   *
+   * Everything else masks, because an ambient read handing out secrets to
+   * anyone who can see the channel is what made a workspace's tokens
+   * collectable. Export is not ambient: it is a deliberate act, it sits behind
+   * the write gate so viewers cannot reach it, and each row still has to pass
+   * the creator / workspace-owner check. The file it produces holds real
+   * secrets — the caller is told so.
+   */
+  exportByAgentId: agentBotProviderProcedureWrite
+    .input(z.object({ agentId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const providers = await ctx.agentBotProviderModel.findByAgentId(input.agentId);
+
+      for (const provider of providers) {
+        assertWorkspaceRowManageable(ctx, provider.userId, 'bot provider');
+      }
+
+      return providers.map((p) => ({
+        applicationId: p.applicationId,
+        credentials: p.credentials,
+        enabled: p.enabled,
+        platform: p.platform,
+        settings: p.settings,
       }));
     }),
 
@@ -335,8 +382,11 @@ export const agentBotProviderRouter = router({
         providers.map((p) => getBotRuntimeStatus(p.platform, p.applicationId)),
       );
 
-      return providers.map((p, i) => ({
+      return providers.map(({ credentials: _credentials, ...p }, i) => ({
         ...p,
+        // A list is an inventory, not a place to hand out secrets — not even
+        // the caller's own. Read one channel through `getByAgentId` to see
+        // which credentials are set.
         runtimeStatus: statuses[i].status,
         // Show the strategy the runtime will actually use. A channel created
         // before `burst` existed still stores `queue`, which its platform no
@@ -536,6 +586,15 @@ export const agentBotProviderRouter = router({
       // Load existing record to get platform + applicationId for cache invalidation
       const existing = await ctx.agentBotProviderModel.findById(id);
       if (existing) assertWorkspaceRowManageable(ctx, existing.userId, 'bot provider');
+      // The detail surface hands out masks, so an untouched field comes back as
+      // one. Resolve each mask to the secret it stood for before anything else
+      // looks at the value: the model replaces the credential blob wholesale,
+      // so dropping the masked keys would delete those secrets instead, and the
+      // format check below would reject the mask outright.
+      if (value.credentials) {
+        value.credentials = resolveMaskedCredentials(value.credentials, existing?.credentials);
+      }
+
       const targetPlatform = value.platform ?? existing?.platform;
       const targetApplicationId = value.applicationId ?? existing?.applicationId;
       const isDisableOnly =

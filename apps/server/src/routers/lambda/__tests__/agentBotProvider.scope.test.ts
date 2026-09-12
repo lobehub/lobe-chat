@@ -31,7 +31,23 @@ vi.mock('@/server/services/bot/platforms', () => ({
   collectFieldFormatViolations: vi.fn(() => []),
   formatFieldFormatViolations: vi.fn(() => ''),
   mergeWithDefaults: vi.fn((_p: string, s: unknown) => s),
-  platformRegistry: { getPlatform: vi.fn(() => undefined) },
+  // Shaped like the real feishu entry so the masking helper can tell the
+  // secret apart from the identifier.
+  platformRegistry: {
+    getPlatform: vi.fn(() => ({
+      schema: [
+        {
+          key: 'credentials',
+          properties: [
+            { key: 'appSecret', type: 'password' },
+            { key: 'appId', type: 'string' },
+          ],
+          type: 'object',
+        },
+      ],
+    })),
+  },
+  withResolvedConcurrencySettings: vi.fn((_p: string, s: unknown) => s),
 }));
 
 const mockStopClient = vi.fn(async () => {});
@@ -62,6 +78,9 @@ vi.mock('@/database/models/workspaceMember', () => ({
 }));
 
 const mockCreate = vi.fn();
+const mockQuery = vi.fn();
+const mockFindByAgentId = vi.fn();
+const mockUpdate = vi.fn();
 const mockFindById = vi.fn();
 const mockDelete = vi.fn();
 const mockFindByIdAcrossScopes = vi.fn();
@@ -74,8 +93,11 @@ vi.mock('@/database/models/agentBotProvider', () => {
       create: mockCreate,
       delete: mockDelete,
       deleteAcrossScopes: mockDeleteAcrossScopes,
+      findByAgentId: mockFindByAgentId,
       findById: mockFindById,
       findByIdAcrossScopes: mockFindByIdAcrossScopes,
+      query: mockQuery,
+      update: mockUpdate,
     };
   });
   AgentBotProviderModel.findByPlatformAndAppId = mockFindByPlatformAndAppId;
@@ -83,6 +105,7 @@ vi.mock('@/database/models/agentBotProvider', () => {
 });
 
 const { agentBotProviderRouter } = await import('../agentBotProvider');
+const { CREDENTIAL_MASK } = await import('@/server/services/bot/credentialMasking');
 
 /** Shaped like the driver error drizzle surfaces, nested behind `cause`. */
 const uniqueViolation = () => {
@@ -113,6 +136,9 @@ beforeEach(() => {
   mockFindByIdAcrossScopes.mockResolvedValue(undefined);
   mockDeleteAcrossScopes.mockResolvedValue([{ id: BOT_ID }]);
   mockGetMember.mockResolvedValue({ role: 'member' });
+  mockQuery.mockResolvedValue([]);
+  mockFindByAgentId.mockResolvedValue([]);
+  mockUpdate.mockResolvedValue([]);
 });
 
 describe('agentBotProviderRouter · bindings stranded outside the active scope', () => {
@@ -244,5 +270,101 @@ describe('agentBotProviderRouter · bindings stranded outside the active scope',
         message: expect.stringContaining('Retry'),
       });
     });
+  });
+});
+
+describe('agentBotProviderRouter · credentials never leave through a list', () => {
+  const row = {
+    agentId: 'agt_1',
+    applicationId: 'cli_app',
+    credentials: { appId: 'cli_app', appSecret: 'real-secret' },
+    enabled: true,
+    id: BOT_ID,
+    platform: 'feishu',
+    settings: {},
+    userId: 'user-1',
+    workspaceId: 'ws-1',
+  };
+
+  it('omits the credentials field from list entirely', async () => {
+    mockQuery.mockResolvedValue([row]);
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    const [entry] = await caller.list();
+
+    expect(entry).not.toHaveProperty('credentials');
+    expect(JSON.stringify(entry)).not.toContain('real-secret');
+  });
+
+  it('masks the secret but keeps the identifier on the detail read', async () => {
+    mockFindByAgentId.mockResolvedValue([row]);
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    const [entry] = await caller.getByAgentId({ agentId: 'agt_1' });
+
+    expect(entry.credentials).toEqual({ appId: 'cli_app', appSecret: CREDENTIAL_MASK });
+  });
+
+  it('restores the stored secret when an edit hands the mask back', async () => {
+    mockFindById.mockResolvedValue(row);
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    await caller.update({
+      credentials: { appId: 'cli_app', appSecret: CREDENTIAL_MASK },
+      id: BOT_ID,
+    });
+
+    expect(mockUpdate).toHaveBeenCalledWith(
+      BOT_ID,
+      expect.objectContaining({ credentials: { appId: 'cli_app', appSecret: 'real-secret' } }),
+    );
+  });
+
+  it('persists a genuinely rotated secret', async () => {
+    mockFindById.mockResolvedValue(row);
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    await caller.update({ credentials: { appSecret: 'rotated' }, id: BOT_ID });
+
+    expect(mockUpdate).toHaveBeenCalledWith(
+      BOT_ID,
+      expect.objectContaining({ credentials: { appSecret: 'rotated' } }),
+    );
+  });
+
+  it('hands back real credentials on the export read', async () => {
+    // The one read that discloses, so a channel can be moved somewhere else.
+    // It sits behind the write gate, which is what keeps viewers out.
+    mockFindByAgentId.mockResolvedValue([row]);
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    const [entry] = await caller.exportByAgentId({ agentId: 'agt_1' });
+
+    expect(entry.credentials).toEqual({ appId: 'cli_app', appSecret: 'real-secret' });
+    // Row identity stays out of the file: it is re-created on import.
+    expect(entry).not.toHaveProperty('id');
+  });
+
+  it('will not export a workspace teammate’s channel to a non-owner', async () => {
+    mockFindByAgentId.mockResolvedValue([{ ...row, userId: 'someone-else' }]);
+    const caller = agentBotProviderRouter.createCaller({ ...ctx, workspaceRole: 'member' });
+
+    await expect(caller.exportByAgentId({ agentId: 'agt_1' })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+  });
+
+  it('refuses to create a binding whose secret is the placeholder', async () => {
+    const caller = agentBotProviderRouter.createCaller(ctx);
+
+    await expect(
+      caller.create({
+        agentId: 'agt_1',
+        applicationId: 'cli_app',
+        credentials: { appSecret: CREDENTIAL_MASK },
+        platform: 'feishu',
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 });
