@@ -21,8 +21,11 @@ export interface FlowGraphView {
   version: FlowVersion;
 }
 
-/** The gutter between two columns. Branch captions live in it, so it has to fit prose. */
-const COLUMN_GAP = 208;
+/**
+ * The gutter between two columns. A branch caption sits in the middle of it, so
+ * it has to fit prose AND leave the caption clear of the cards on either side.
+ */
+const COLUMN_GAP = 248;
 const ROW_GAP = 64;
 /** A business flow with a single state is its own header — a group box around it says nothing. */
 const isSoloState = (view: FlowGraphView) =>

@@ -22,7 +22,7 @@ const styles = createStaticStyles(({ css }) => ({
     max-width: 200px;
     max-height: 94px;
     padding-block: 5px;
-    padding-inline: 8px;
+    padding-inline: 10px;
     border-radius: 8px;
 
     font-size: 12px;
@@ -35,7 +35,7 @@ const styles = createStaticStyles(({ css }) => ({
        is layered over a solid surface rather than over the edge running
        underneath, which would otherwise strike the text through. */
     background-color: ${cssVar.colorBgContainer};
-    background-image: linear-gradient(${cssVar.colorFillSecondary}, ${cssVar.colorFillSecondary});
+    background-image: linear-gradient(${cssVar.colorFillTertiary}, ${cssVar.colorFillTertiary});
   `,
 }));
 

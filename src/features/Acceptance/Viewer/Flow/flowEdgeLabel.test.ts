@@ -22,9 +22,11 @@ describe('forward branch labels', () => {
     expect(label.x + label.maxWidth / 2).toBeLessThan(branch.targetX);
   });
 
-  it('spends the whole gutter on the caption so a branch condition stays readable', () => {
-    expect(getFlowEdgeLabelLayout({ ...branch, targetX: 468 }).maxWidth).toBe(192);
-    expect(getFlowEdgeLabelLayout({ ...branch, targetX: 900 }).maxWidth).toBe(200);
+  it('spends the gutter on the caption but keeps it clear of the cards beside it', () => {
+    expect(getFlowEdgeLabelLayout({ ...branch, targetX: 508 }).maxWidth).toBe(200);
+    const tight = getFlowEdgeLabelLayout({ ...branch, targetX: 468 });
+    expect(tight.maxWidth).toBe(160);
+    expect(tight.x - tight.maxWidth / 2 - branch.sourceX).toBe(24);
   });
 
   it('separates captions for branches with different destinations', () => {
