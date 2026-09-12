@@ -1,11 +1,18 @@
+import { shellInfo } from '@/const/shell';
+
 import { ControllerModule, IpcMethod } from './index';
 
 export default class RendererOtaCtr extends ControllerModule {
   static override readonly groupName = 'rendererOta';
 
+  private coreMarkedHealthy = false;
+
   @IpcMethod()
   async bootPing(stage?: 'loaded' | 'mounted') {
     this.app.rendererUpdateManager.handleBootPing(stage);
+    if (stage === 'loaded' || this.coreMarkedHealthy) return;
+    this.coreMarkedHealthy = true;
+    shellInfo?.markHealthy();
   }
 
   @IpcMethod()

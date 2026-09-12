@@ -9,6 +9,7 @@ import { app, ipcMain, nativeTheme, protocol } from 'electron';
 import { name } from '@/../../package.json';
 import { binDir, buildDir } from '@/const/dir';
 import { isDev } from '@/const/env';
+import { shellInfo } from '@/const/shell';
 import type { IControlModule } from '@/controllers';
 import AuthCtr from '@/controllers/AuthCtr';
 import RemoteServerConfigCtr from '@/controllers/RemoteServerConfigCtr';
@@ -98,6 +99,8 @@ export class App {
     logger.info(`PATH: ${app.getAppPath()}`);
     logger.info(` lng: ${app.getLocale()}`);
     logger.info(` res: ${binDir}`);
+    logger.info(`core: ${shellInfo?.source} ${shellInfo?.coreDir} abi=${shellInfo?.abi}`);
+    for (const line of shellInfo?.log ?? []) logger.info(`shell: ${line}`);
     logger.info('----------------------------------------------');
     logger.info('Starting LobeHub...');
 
