@@ -1,5 +1,5 @@
 import { execFile, execFileSync } from 'node:child_process';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -196,6 +196,33 @@ describe('defaultListProjectDirectory', () => {
     await expect(defaultListProjectDirectory({ relativePath: '../', root: dir })).rejects.toThrow(
       'outside the project root',
     );
+  });
+
+  it('refuses to follow a symlink that points outside the project root', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-symlink-'));
+    const outside = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-outside-'));
+    cleanup.push(dir, outside);
+    await writeFile(path.join(outside, 'SECRET.txt'), 'must stay unreachable\n');
+    // A lexical prefix check passes here: the link itself lives inside the root.
+    await symlink(outside, path.join(dir, 'escape-link'), 'dir');
+
+    await expect(
+      defaultListProjectDirectory({ relativePath: 'escape-link', root: dir }),
+    ).rejects.toThrow('outside the project root');
+  });
+
+  it('still lists a symlink that stays inside the project root', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-list-dir-inner-link-'));
+    cleanup.push(dir);
+    await mkdir(path.join(dir, 'real'), { recursive: true });
+    await writeFile(path.join(dir, 'real', 'kept.txt'), 'reachable\n');
+    await symlink(path.join(dir, 'real'), path.join(dir, 'inner-link'), 'dir');
+
+    const result = await defaultListProjectDirectory({ relativePath: 'inner-link', root: dir });
+
+    // Ids stay anchored to the path the caller asked for, not the link target,
+    // so the tree can still attach these rows under the row that was expanded.
+    expect(result.entries.map((entry) => entry.relativePath)).toEqual(['inner-link/kept.txt']);
   });
 });
 

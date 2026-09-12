@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { readdir } from 'node:fs/promises';
+import { readdir, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
@@ -187,8 +187,15 @@ export const defaultListProjectDirectory = async ({
   const resolvedRoot = path.resolve(root);
   const target = path.resolve(resolvedRoot, relativePath);
 
-  // Never step outside the project the caller already has access to.
-  if (target !== resolvedRoot && !target.startsWith(`${resolvedRoot}${path.sep}`)) {
+  // Never step outside the project the caller already has access to. The check
+  // runs on real paths: `path.resolve` does not follow links, so a symlink
+  // inside the project pointing outside it would pass a lexical prefix check
+  // and then have its target enumerated. Entries are still built from the
+  // lexical path below, so their ids stay anchored to the path the caller
+  // asked for rather than wherever a link happened to land.
+  const realRoot = await realpath(resolvedRoot);
+  const realTarget = await realpath(target);
+  if (realTarget !== realRoot && !realTarget.startsWith(`${realRoot}${path.sep}`)) {
     throw new Error('Directory is outside the project root');
   }
 

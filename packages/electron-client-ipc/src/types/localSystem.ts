@@ -320,8 +320,22 @@ export interface TrashLocalFilesParams {
   paths: string[];
 }
 
-export interface TrashLocalFilesResult {
+export interface TrashLocalFilesResultItem {
+  /** Error message if this specific path failed. */
   error?: string;
+  /** The path as it was requested, so the caller can reconcile its own rows. */
+  path: string;
+  success: boolean;
+}
+
+export interface TrashLocalFilesResult {
+  /**
+   * Per-path outcome, in request order. A batch is not atomic: an earlier path
+   * can already be in the trash when a later one fails, so the caller needs
+   * this to reconcile its tree and to retry only what is left.
+   */
+  items: TrashLocalFilesResultItem[];
+  /** True only when every path was trashed. */
   success: boolean;
 }
 

@@ -54,6 +54,7 @@ import {
   type ShowSaveDialogResult,
   type TrashLocalFilesParams,
   type TrashLocalFilesResult,
+  type TrashLocalFilesResultItem,
   type WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import {
@@ -750,21 +751,26 @@ export default class LocalFileCtr extends ControllerModule {
    */
   @IpcMethod()
   async trashLocalFiles({ paths }: TrashLocalFilesParams): Promise<TrashLocalFilesResult> {
-    if (paths.length === 0) return { error: 'No path to delete', success: false };
+    if (paths.length === 0) return { items: [], success: false };
 
     logger.debug('Trashing local files', { count: paths.length });
 
+    // Every path is attempted and reported. Stopping at the first failure would
+    // leave the caller unable to tell which earlier paths are already in the
+    // trash, so it could neither refresh its tree nor safely retry the batch.
+    const items: TrashLocalFilesResultItem[] = [];
     for (const rawPath of paths) {
       const targetPath = expandTilde(rawPath) ?? rawPath;
       try {
         await shell.trashItem(targetPath);
+        items.push({ path: rawPath, success: true });
       } catch (error) {
         logger.error('Failed to trash local file:', error);
-        return { error: (error as Error).message, success: false };
+        items.push({ error: (error as Error).message, path: rawPath, success: false });
       }
     }
 
-    return { success: true };
+    return { items, success: items.every((item) => item.success) };
   }
 
   /**
