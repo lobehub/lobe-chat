@@ -136,6 +136,16 @@ describe('oauthAppRouter', () => {
       ).rejects.toThrow();
       expect(mockUpdate).not.toHaveBeenCalled();
     });
+
+    it('refuses to strip a web app of every callback', async () => {
+      await expect(
+        caller().update({ id: 'lca_app', value: { redirectUris: [] } }),
+      ).rejects.toThrow();
+      await expect(
+        caller().update({ id: 'lca_app', value: { redirectUris: ['   '] } }),
+      ).rejects.toThrow();
+      expect(mockUpdate).not.toHaveBeenCalled();
+    });
   });
 
   describe('rotateSecret', () => {

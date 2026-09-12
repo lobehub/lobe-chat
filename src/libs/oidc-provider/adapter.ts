@@ -40,6 +40,19 @@ const REFRESH_TOKEN_GRACE_PERIOD_SECONDS = 180;
  * over ciphertext would make it the thing clients have to present. Dropping it
  * fails the request as `invalid_client`, which is the honest outcome.
  */
+/**
+ * Keeps the write side symmetric with `decryptClientSecret`: whatever this
+ * adapter stores, it must be able to read back. Encryption failures throw
+ * rather than fall back to plaintext, because a secret written in the clear
+ * would read back as an undecryptable one and silently break the client.
+ */
+const encryptClientSecret = async (plaintext?: string | null) => {
+  if (!plaintext) return plaintext;
+
+  const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+  return gateKeeper.encrypt(plaintext);
+};
+
 const decryptClientSecret = async (clientId: string, stored: string | null) => {
   if (!stored) return stored;
 
@@ -141,11 +154,13 @@ class OIDCAdapter {
       // Special handling for client model, directly use the passed data
       log('[Client] Upserting client record');
       try {
+        const clientSecret = await encryptClientSecret(payload.client_secret);
+
         await this.db
           .insert(table)
           .values({
             applicationType: payload.application_type,
-            clientSecret: payload.client_secret,
+            clientSecret,
             clientUri: payload.client_uri,
             description: payload.description,
             grants: payload.grant_types || [],
@@ -167,7 +182,9 @@ class OIDCAdapter {
           .onConflictDoUpdate({
             set: {
               applicationType: payload.application_type,
-              clientSecret: payload.clientSecret,
+              // Left untouched when the payload carries no secret, so an update
+              // that omits it cannot wipe the stored one.
+              ...(clientSecret ? { clientSecret } : {}),
               clientUri: payload.client_uri,
               description: payload.description,
               grants: payload.grant_types || [],

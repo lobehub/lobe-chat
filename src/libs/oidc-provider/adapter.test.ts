@@ -7,9 +7,12 @@ vi.mock('debug', () => ({
 }));
 
 const mockDecrypt = vi.hoisted(() => vi.fn());
+const mockEncrypt = vi.hoisted(() => vi.fn());
 
 vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
-  KeyVaultsGateKeeper: { initWithEnvKey: async () => ({ decrypt: mockDecrypt }) },
+  KeyVaultsGateKeeper: {
+    initWithEnvKey: async () => ({ decrypt: mockDecrypt, encrypt: mockEncrypt }),
+  },
 }));
 
 const createSelectDb = (rows: any[]) => {
@@ -135,6 +138,34 @@ describe('OIDCAdapter (DrizzleAdapter)', () => {
         client_id: 'lca_client_1',
         token_endpoint_auth_method: 'none',
       });
+    });
+  });
+
+  describe('upsert Client', () => {
+    it('encrypts the secret on the way in so find can read it back', async () => {
+      mockEncrypt.mockResolvedValue('iv:tag:cipher');
+      const { db } = createUpsertDb();
+      const insertChain = (db.insert as any)();
+      const adapter = new DrizzleAdapter('Client', db as any);
+
+      await adapter.upsert('lca_client_1', { client_secret: 'plain' }, 0);
+
+      expect(mockEncrypt).toHaveBeenCalledWith('plain');
+      expect(insertChain.values).toHaveBeenCalledWith(
+        expect.objectContaining({ clientSecret: 'iv:tag:cipher' }),
+      );
+    });
+
+    it('leaves the stored secret alone when the payload carries none', async () => {
+      const { db } = createUpsertDb();
+      const insertChain = (db.insert as any)();
+      const adapter = new DrizzleAdapter('Client', db as any);
+
+      await adapter.upsert('lca_client_1', { client_id: 'lca_client_1' }, 0);
+
+      expect(mockEncrypt).not.toHaveBeenCalled();
+      const [{ set }] = insertChain.onConflictDoUpdate.mock.calls.at(-1);
+      expect(set).not.toHaveProperty('clientSecret');
     });
   });
 

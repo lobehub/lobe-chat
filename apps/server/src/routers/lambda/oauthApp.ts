@@ -41,6 +41,10 @@ const redirectUrisSchema = z
   .max(MAX_OAUTH_REDIRECT_URIS)
   .transform(normalizeRedirectUris)
   .superRefine((uris, ctx) => {
+    // An authorization-code client with no callback can never complete a login,
+    // so a list that normalizes to empty is rejected wherever one is supplied.
+    if (uris.length === 0) ctx.addIssue({ code: 'custom', message: 'redirectUri.required' });
+
     for (const uri of uris) {
       const issue = validateRedirectUri(uri);
       if (issue) ctx.addIssue({ code: 'custom', message: `redirectUri.${issue}`, params: { uri } });
