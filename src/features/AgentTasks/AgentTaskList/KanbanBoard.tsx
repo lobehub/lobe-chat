@@ -32,6 +32,7 @@ import { taskDetailPath } from '../shared/taskDetailPath';
 import HiddenColumnsPanel from './HiddenColumnsPanel';
 import {
   buildKanbanColumns,
+  buildKanbanGroupQuery,
   canDropTaskIntoKanbanColumn,
   getKanbanAssigneeUpdate,
   getKanbanTaskPatch,
@@ -61,7 +62,8 @@ interface KanbanBoardProps {
   emptyDescription?: string;
   /**
    * "My tasks" board: narrows the server groups to the caller's own slice of
-   * the workspace, matching what that tab's list view fetches.
+   * the workspace, matching what that tab's list view fetches — including its
+   * lack of an automation filter.
    */
   myTaskScope?: 'assigned' | 'created';
   options: TaskListViewOptions;
@@ -80,13 +82,7 @@ const KanbanBoard = memo<KanbanBoardProps>((props) => {
   const useFetchTaskGroupList = useTaskStore((s) => s.useFetchTaskGroupList);
   // Keep the SWR handle only for `error` + `mutate` (the error/Retry state).
   const { error, isLoading, isQueryScopeCurrent, mutate } = useFetchTaskGroupList(
-    myTaskScope
-      ? { automated: false, excludeStatuses, groupBy, scope: myTaskScope }
-      : projectId
-        ? { automated: false, excludeStatuses, groupBy, projectId }
-        : agentId
-          ? { agentId, automated: false, excludeStatuses, groupBy }
-          : { allAgents: true, automated: false, excludeStatuses, groupBy },
+    buildKanbanGroupQuery({ agentId, excludeStatuses, groupBy, myTaskScope, projectId }),
   );
   // Drive the loading/empty boundary off the store's own init flag, NOT SWR's
   // per-key `data`. On a scope or visibility switch the store resets
