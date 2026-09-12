@@ -615,6 +615,50 @@ describe('DocumentModel.setVisibility — the library mirror file follows', () =
     expect(await readFileVisibility(fileId)).toBe('public');
   });
 
+  it('leaves the uploader’s file alone when another member’s page points at it', async () => {
+    // Regression: `fileId` is a plain foreign key, so parsing another member's
+    // shared file yields a caller-owned document that keeps the original
+    // `fileId`. The workspace scope alone matched every member's file, so
+    // taking that derived page private hid the uploader's original from the
+    // whole workspace.
+    const [uploaderFile] = await serverDB
+      .insert(files)
+      .values({
+        fileType: 'text/markdown',
+        name: 'uploaded-by-a.md',
+        size: 10,
+        url: 'internal://document/placeholder',
+        userId: userA,
+        visibility: 'public',
+        workspaceId,
+      })
+      .returning();
+
+    const [derived] = await serverDB
+      .insert(documents)
+      .values({
+        fileId: uploaderFile.id,
+        fileType: 'text/markdown',
+        source: 'document',
+        sourceType: 'api',
+        title: 'parsed by b',
+        totalCharCount: 0,
+        totalLineCount: 0,
+        userId: userB,
+        visibility: 'public',
+        workspaceId,
+      })
+      .returning();
+
+    const callerB = new DocumentModel(serverDB, userB, workspaceId);
+
+    await expect(callerB.setVisibility(derived.id, 'private')).resolves.toMatchObject({
+      documentIds: [derived.id],
+    });
+
+    expect(await readFileVisibility(uploaderFile.id)).toBe('public');
+  });
+
   it('is a no-op for a page with no mirror file', async () => {
     await insertDocument({ id: 'no-mirror', userId: userA, visibility: 'private', workspaceId });
     const callerA = new DocumentModel(serverDB, userA, workspaceId);

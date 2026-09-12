@@ -331,6 +331,14 @@ export class DocumentModel {
       // Same transaction, and scoped without `files.visibility` for the same
       // reason as `works` below — a promotion has to reach rows that are still
       // private.
+      //
+      // `files.userId` is required on top of the workspace scope: `fileId` is a
+      // plain foreign key, and a document can point at a file somebody else
+      // uploaded (parsing another member's shared file yields a caller-owned
+      // document that keeps the original `fileId`). Without the owner check the
+      // workspace scope alone matches every member's file, so taking such a
+      // derived page private would hide the uploader's original from everyone.
+      // The paired row this mirrors is always the caller's own.
       const fileId = result[0].fileId;
       if (fileId) {
         await (trx as LobeChatDatabase)
@@ -339,6 +347,7 @@ export class DocumentModel {
           .where(
             and(
               eq(files.id, fileId),
+              eq(files.userId, this.userId),
               buildWorkspaceWhere(
                 { userId: this.userId, workspaceId: this.workspaceId },
                 { userId: files.userId, workspaceId: files.workspaceId },
