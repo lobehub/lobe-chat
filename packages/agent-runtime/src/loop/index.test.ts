@@ -69,7 +69,11 @@ describe('runAgentLoop', () => {
       };
     };
 
-    const result = await runAgentLoop({ initialContext: context('start'), state: createState(), step });
+    const result = await runAgentLoop({
+      initialContext: context('start'),
+      state: createState(),
+      step,
+    });
 
     expect(seen).toEqual(['start', 'after-0', 'after-1']);
     expect(result.stepCount).toBe(3);
@@ -164,9 +168,10 @@ describe('runAgentLoop', () => {
 
     const result = await runAgentLoop({
       initialContext: context(),
-      resolveStop: (state, ctx) => (state.stepCount >= 0 && ctx?.phase === 'tool_result'
-        ? 'interrupted'
-        : resolveStopReason(state, ctx)),
+      resolveStop: (state, ctx) =>
+        state.stepCount >= 0 && ctx?.phase === 'tool_result'
+          ? 'interrupted'
+          : resolveStopReason(state, ctx),
       state: createState(),
       step: step as AgentLoopStep,
     });

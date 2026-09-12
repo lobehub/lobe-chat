@@ -1,9 +1,9 @@
-import {
-  type GatheredWorkspaceHtmlResource,
-  isPathInsideWorkspace,
-  type WorkspaceHtmlArtifactPublisher,
-  type WorkspaceHtmlArtifactPublishResult,
+import type {
+  GatheredWorkspaceHtmlResource,
+  WorkspaceHtmlArtifactPublisher,
+  WorkspaceHtmlArtifactPublishResult,
 } from '@lobechat/html-artifact';
+import { isPathInsideWorkspace } from '@lobechat/html-artifact';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import debug from 'debug';
 import { useEffect, useRef, useState } from 'react';
