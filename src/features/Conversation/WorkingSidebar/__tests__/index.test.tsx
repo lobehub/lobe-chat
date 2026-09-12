@@ -729,7 +729,7 @@ describe('AgentWorkingSidebar — tab strip', () => {
 
     render(<AgentWorkingSidebar />);
 
-    expect(screen.getByRole('complementary')).toHaveTextContent('workingPanel.overview.title');
+    expect(screen.getByRole('complementary')).toHaveTextContent('Open Review from Overview');
     expect(screen.getByTestId('right-panel')).not.toBeVisible();
     expect(
       screen.queryByRole('button', { name: 'workingPanel.resources.filter.skills' }),
@@ -756,7 +756,7 @@ describe('AgentWorkingSidebar — tab strip', () => {
 
     render(<AgentWorkingSidebar />);
 
-    expect(screen.getByRole('complementary')).toHaveTextContent('workingPanel.overview.title');
+    expect(screen.getByRole('complementary')).toHaveTextContent('Open Review from Overview');
     expect(screen.getByRole('button', { name: 'workingPanel.openMenu.title' })).toBeInTheDocument();
     expect(screen.getByTestId('params-loading')).toBeInTheDocument();
   });
