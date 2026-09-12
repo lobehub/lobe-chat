@@ -1,5 +1,5 @@
 import { type AgentState } from '@lobechat/agent-runtime';
-import type { type BotPlatformContext, ProjectInstructionFile } from '@lobechat/context-engine';
+import type { BotPlatformContext, ProjectInstructionFile } from '@lobechat/context-engine';
 import {
   type AgentShareVisitorContext,
   type ExecSubAgentParams,
