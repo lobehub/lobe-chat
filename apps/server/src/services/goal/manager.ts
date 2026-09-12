@@ -368,14 +368,17 @@ export class GoalManagerService {
     const policy = goal.config!.manager!;
     const state = goal.config?.managerState;
     const nodes = graph.nodes.filter((n) => n.kind === 'task');
-    if (state?.readyForAcceptance || nodes.some((n) => n.title === GOAL_ACCEPTANCE_TASK_TITLE))
-      return null;
     const unfinished = nodes.filter((n) => !terminalNodes.has(n.status));
     // An invited turn skips the checks below. They ask "should an uninvited main
     // Agent interrupt what is running", and the caller has already answered a
     // harder question: the coordinator is out of moves and the alternative is
-    // stopping the Goal on a person.
+    // stopping the Goal on a person. The acceptance guard belongs to that set too:
+    // it means "verification exists, stop planning more work", which is right for an
+    // uninvited turn and wrong for a takeover invited BECAUSE the terminal
+    // acceptance is the thing that failed.
     if (!problem) {
+      if (state?.readyForAcceptance || nodes.some((n) => n.title === GOAL_ACCEPTANCE_TASK_TITLE))
+        return null;
       const tasks = await new TaskModel(this.db, this.userId, this.workspaceId).findByIds(
         unfinished.flatMap((n) => (n.taskId ? [n.taskId] : [])),
       );
@@ -548,7 +551,16 @@ export class GoalManagerService {
         const inherited = graph.nodes.find(
           (n) => n.kind === 'task' && n.taskId === state.problemTaskId,
         );
-        if (inherited && !terminalNodes.has(inherited.status))
+        // Never the terminal acceptance node. `decideWithoutFrontier` finds that task
+        // by TITLE regardless of status, so retiring it does not hand the Goal a
+        // fresh acceptance — it parks the Goal on `no_progress` with no Gate and no
+        // verdict. Failing the Goal is the human Gate's `retire` answer, and it is
+        // coupled to that option, not to this node's status.
+        if (
+          inherited &&
+          inherited.title !== GOAL_ACCEPTANCE_TASK_TITLE &&
+          !terminalNodes.has(inherited.status)
+        )
           await authored.updateNodeStatus(goalId, inherited.id, 'retired', plan.reason);
       }
       if (plan.action === 'tasks') {

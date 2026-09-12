@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -900,5 +901,71 @@ describe('takeover submissions', () => {
     const gated = await service().graph(goalId);
     expect(gated.decisions).toHaveLength(1);
     expect(gated.decisions[0].question).toContain('Needs a human judge');
+  });
+});
+
+/**
+ * Codex review round 4. The acceptance guard was written for uninvited turns
+ * ("verification exists, stop planning more work") but sat above the invited
+ * branch, so a takeover invited BECAUSE the terminal acceptance failed could never
+ * start and the Goal still reached a bare Gate with a main Agent idle.
+ */
+describe('takeover on a failed terminal acceptance', () => {
+  const failedAcceptance = async () => {
+    const graph = await service().create({
+      config: {
+        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+        manager: { maxTurns: 4 },
+        recovery: { maxAttemptsPerTask: 1 },
+      },
+      createdByAgentId: agentId,
+      requirement: 'Return a defensible training recommendation.',
+      tasks: [GOAL_ACCEPTANCE_TASK_TITLE],
+      title: 'Explored research',
+    });
+    const created = await service().tick(graph.goal.id);
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.update(created.taskId!, { totalTopics: 1 });
+    await taskModel.updateStatus(created.taskId!, 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+    await service().tick(graph.goal.id);
+    return { goalId: graph.goal.id, taskId: created.taskId! };
+  };
+
+  it('hands a failed terminal acceptance to the main Agent', async () => {
+    const { goalId, taskId } = await failedAcceptance();
+    expect((await model().findById(goalId))!.config!.managerState).toMatchObject({
+      problemTaskId: taskId,
+    });
+    expect((await service().graph(goalId)).decisions).toHaveLength(0);
+  });
+
+  /**
+   * `decideWithoutFrontier` finds the acceptance task by TITLE regardless of status,
+   * so retiring that node parks the Goal on `no_progress` with neither a Gate nor a
+   * verdict. Failing the Goal belongs to the Gate's own `retire` answer.
+   */
+  it('never retires the acceptance node itself', async () => {
+    const { goalId, taskId } = await failedAcceptance();
+    const state = (await model().findById(goalId))!.config!.managerState!;
+    const turn = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    await operationCaller(turn!.id).submitOperationPlan({
+      id: goalId,
+      operationId: turn!.id,
+      plan: {
+        action: 'tasks',
+        reason: 'The judge read evidence it was never shown',
+        tasks: [{ description: 'Recapture the evidence and redeliver', title: 'Recapture' }],
+      },
+      token: state.token,
+    });
+
+    const graph = await service().graph(goalId);
+    expect(graph.nodes.find((node) => node.taskId === taskId)!.status).not.toBe('retired');
+    expect(graph.nodes.some((node) => node.title === 'Recapture')).toBe(true);
   });
 });

@@ -61,6 +61,16 @@ node is reached by the next tick's frontier before the corrective node, which ro
 straight back to the Gate, and terminal verification cannot start while it is
 unfinished. Retiring is the same move the human Gate offers under "Retire task",
 scoped to the single node the turn was invited about and attributed to the Agent.
+
+The terminal acceptance node is excluded from that retirement.
+`decideWithoutFrontier` finds the acceptance task by TITLE regardless of status, so
+retiring it parks the Goal on `no_progress` with neither a Gate nor a verdict;
+failing the Goal belongs to the Gate's own `retire` answer, which is coupled to that
+option rather than to the node's status. A takeover invited for a FAILED terminal
+acceptance does start — the acceptance guard is uninvited-only — so the Agent can
+diagnose an incorrect judge and put that diagnosis on the Gate, or plan corrective
+work. Making corrective work supersede a failed acceptance on its own needs the
+acceptance lifecycle to allow superseding, which is a separate change.
 which puts the Gate back with its original reason, one turn later and with the
 Agent's diagnosis appended to the question. An escalation from a takeover turn
 deliberately does NOT pause the Goal the way an ordinary planning turn's does: the
