@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { resolveToken } from '../auth/resolveToken';
 import {
   removeStatus,
+  reportDaemonStartupError,
   reportDaemonStartupReady,
   spawnDaemon,
   stopDaemon,
@@ -179,6 +180,29 @@ describe('connect command', () => {
     clientEventHandlers.connected?.();
 
     expect(reportDaemonStartupReady).toHaveBeenCalledOnce();
+  });
+
+  it('should exit a spawned daemon once the startup failure reached its parent', async () => {
+    vi.mocked(reportDaemonStartupError).mockResolvedValueOnce(true);
+
+    const program = createProgram();
+    await program.parseAsync(['node', 'test', 'connect', '--daemon-child']);
+
+    clientEventHandlers.error?.(new Error('ECONNRESET'));
+
+    await vi.waitFor(() => expect(exitSpy).toHaveBeenCalledWith(1));
+  });
+
+  it('should let a service child auto-reconnect instead of exiting on a startup error', async () => {
+    const program = createProgram();
+    await program.parseAsync(['node', 'test', 'connect', '--service-child']);
+
+    clientEventHandlers.error?.(new Error('ECONNRESET'));
+
+    await vi.waitFor(() => expect(reportDaemonStartupError).toHaveBeenCalled());
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(exitSpy).not.toHaveBeenCalled();
   });
 
   it('should connect to gateway', async () => {

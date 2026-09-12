@@ -777,7 +777,13 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   const reportDaemonStartupFailure = (message: string) => {
     if (!isDaemonChild || daemonStartupReported) return;
     daemonStartupReported = true;
-    void reportDaemonStartupError(message).finally(() => {
+    void reportDaemonStartupError(message).then((delivered) => {
+      // Only a spawned daemon has a parent waiting on the readiness report, so
+      // exiting is the signal it needs. A `--service-child` run has no parent:
+      // the unit lists exit 1 in SuccessExitStatus, so exiting here would make
+      // systemd treat the failure as success and never restart the service.
+      // Leave the client auto-reconnecting instead.
+      if (!delivered) return;
       cleanup();
       process.exit(1);
     });
