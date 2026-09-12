@@ -33,6 +33,7 @@ const FULL_FALLBACK_THRESHOLD = 400;
 const CONCURRENCY = 8;
 const PACK_ENTRY = /^objects\/([0-9a-f]{64})$/;
 const DIR_MODE = 0o700;
+const SAFE_VERSION = /^[\w.+-]{1,64}$/;
 
 const zstdDecompressAsync = promisify(zstdDecompress);
 
@@ -67,6 +68,9 @@ const readDirNames = async (dir: string): Promise<string[]> => {
     throw error;
   }
 };
+
+export const isSafeVersion = (version: string): boolean =>
+  SAFE_VERSION.test(version) && version !== '.' && version !== '..';
 
 export const indexLocal = (coreDir: string, manifest: CoreManifest): Map<string, string> =>
   new Map(manifest.tree.map((file) => [file.sha256, path.join(coreDir, file.path)]));
@@ -107,6 +111,7 @@ export class CoreStore {
   }
 
   async stage({ builtin, current, objectsBaseUrl, packsBaseUrl, remote }: StageInput) {
+    if (!isSafeVersion(remote.version)) throw new Error(`Unsafe version: ${remote.version}`);
     await mkdir(this.storeDir, { mode: DIR_MODE, recursive: true });
     await mkdir(this.coresDir, { mode: DIR_MODE, recursive: true });
 
@@ -212,7 +217,7 @@ export class CoreStore {
   }
 
   private async assemble(remote: CoreManifest, byHash: Map<string, string>): Promise<string> {
-    const finalDir = path.join(this.coresDir, remote.version);
+    const finalDir = resolveInside(this.coresDir, remote.version);
     const tmpDir = `${finalDir}.tmp`;
     await rm(tmpDir, { force: true, recursive: true });
     await mkdir(tmpDir, { mode: DIR_MODE, recursive: true });

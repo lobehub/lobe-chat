@@ -9,7 +9,7 @@ import { zipSync } from 'fflate';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type CoreManifest, sha256File } from '../manifest';
-import { cleanupLegacy, CoreStore, indexLocal } from '../store';
+import { cleanupLegacy, CoreStore, indexLocal, isSafeVersion } from '../store';
 
 vi.mock('node:fs/promises', async (importOriginal) => {
   const actual = await importOriginal<typeof fsp>();
@@ -242,6 +242,19 @@ describe('CoreStore.stage', () => {
     expect(existsSync(path.join(root, 'escape.js'))).toBe(false);
   });
 
+  it('rejects an unsafe version before touching the filesystem', async () => {
+    const builtin = await localCore('builtin', ENTRY_FILES);
+    await materialize(root, { 'evil/keep.txt': 'x' });
+    const remote = manifestFor('../../evil', { ...ENTRY_FILES, 'cli/x.js': 'new' });
+
+    await expect(stage(remote, null, builtin)).rejects.toThrow(/Unsafe version/);
+
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(existsSync(path.join(root, 'evil/keep.txt'))).toBe(true);
+    expect(existsSync(path.join(root, 'evil.tmp'))).toBe(false);
+    expect(existsSync(path.join(root, 'ota/cores'))).toBe(false);
+  });
+
   it('hard-links assembled files and copies when link fails', async () => {
     const builtin = await localCore('builtin', ENTRY_FILES);
     const remote = manifestFor('1.1.0', { ...ENTRY_FILES, 'cli/x.js': 'new' });
@@ -283,6 +296,15 @@ describe('CoreStore.gc', () => {
     expect(readdirSync(path.join(ota, 'store')).sort()).toEqual(
       [...new Set(kept.tree.map((file) => file.sha256))].sort(),
     );
+  });
+});
+
+describe('isSafeVersion', () => {
+  it('accepts plain version segments only', () => {
+    expect(['1.2.3', '1.2.3-beta.1+build', 'v1_2']).toEqual(
+      ['1.2.3', '1.2.3-beta.1+build', 'v1_2'].filter(isSafeVersion),
+    );
+    expect(['', '.', '..', '../x', 'a/b', 'a\\b', 'x'.repeat(65)].some(isSafeVersion)).toBe(false);
   });
 });
 
