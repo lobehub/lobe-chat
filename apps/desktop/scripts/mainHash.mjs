@@ -292,7 +292,7 @@ export async function collectSourceInputs({
       const file = sourceFile(id);
       if (slash(id).includes('/node_modules/') || node.external) continue;
       if (path.isAbsolute(file)) {
-        let dir = path.dirname(file);
+        let dir = path.dirname(await realpath(file));
         const owner = roots.find(([, root]) => inside(root, dir));
         if (!owner) throw new Error(`Main hash input is outside the source roots: ${file}`);
         while (dir !== owner[1]) {
