@@ -186,17 +186,35 @@ describe('AgentStateManager', () => {
 
   describe('step execution lock', () => {
     it('claims an operation-scoped lock with the provided owner token', async () => {
-      redisMock.set.mockResolvedValue('OK');
+      redisMock.eval.mockResolvedValue(1);
 
       await expect(stateManager.tryClaimStep('op-lock', 3, 120, 'owner-1')).resolves.toBe(true);
 
-      expect(redisMock.set).toHaveBeenCalledWith(
-        'agent_runtime_operation_lock:op-lock',
-        'owner-1',
-        'EX',
-        120,
-        'NX',
-      );
+      const [script, keyCount, key, owner, ttl] = redisMock.eval.mock.calls[0];
+      expect(script).toContain("'NX'");
+      expect(keyCount).toBe(1);
+      expect(key).toBe('agent_runtime_operation_lock:op-lock');
+      expect(owner).toBe('owner-1');
+      expect(ttl).toBe('120');
+    });
+
+    it('re-enters a lock the same owner already holds', async () => {
+      // The inline step loop runs several steps under one lock. Re-entry keeps
+      // the lock unbroken across step boundaries; owner tokens carry a random
+      // UUID, so only the invocation that took the lock can present its token.
+      redisMock.eval.mockResolvedValue(1);
+
+      await expect(stateManager.tryClaimStep('op-lock', 4, 120, 'owner-1')).resolves.toBe(true);
+
+      const script = redisMock.eval.mock.calls[0][0] as string;
+      expect(script).toContain("redis.call('get', KEYS[1]) == ARGV[1]");
+      expect(script).toContain("redis.call('expire', KEYS[1], ARGV[2])");
+    });
+
+    it('refuses a lock held by a different owner', async () => {
+      redisMock.eval.mockResolvedValue(0);
+
+      await expect(stateManager.tryClaimStep('op-lock', 5, 120, 'owner-2')).resolves.toBe(false);
     });
 
     it('refreshes only the lock owned by the caller', async () => {

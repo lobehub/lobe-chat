@@ -160,6 +160,13 @@ export interface AgentExecutionParams {
   groupMemberTimeout?: GroupMemberTimeoutParams;
   humanInput?: any;
   /**
+   * Run the next step in this same invocation instead of publishing it to the
+   * queue. When set and the operation wants to continue, `executeStep` returns
+   * a `continuation` and leaves `nextStepScheduled` false — the caller decides
+   * whether to loop or hand the continuation back to the queue.
+   */
+  inlineContinuation?: boolean;
+  /**
    * 1-based attempt number carried by a re-delivery that a previous attempt
    * re-queued after losing the operation lock. Lets the bounded backoff stop
    * after a fixed number of tries instead of re-queueing forever. Absent
@@ -180,7 +187,20 @@ export interface AgentExecutionParams {
    * via `tryResumeParentFromAsyncTool`.
    */
   resumeAsyncTool?: boolean;
+  /**
+   * Keep the operation lock held after this step returns. Used by the inline
+   * step loop so the lock spans the whole invocation rather than being dropped
+   * and re-claimed at every boundary — the caller becomes responsible for
+   * releasing it via `releaseOperationLock`.
+   */
+  retainStepLock?: boolean;
   stepIndex: number;
+  /**
+   * Reuse an existing lock owner instead of minting one per step. The inline
+   * step loop passes a single owner for the whole invocation so every iteration
+   * re-enters the same lock.
+   */
+  stepLockOwner?: string;
   /** ID of the pending tool message targeted by the intervention. */
   toolMessageId?: string;
   /**
@@ -197,7 +217,30 @@ export interface AgentExecutionParams {
   verifyAsyncToolBarrier?: boolean;
 }
 
+/**
+ * A next step that was computed but deliberately not published, because the
+ * caller asked for `inlineContinuation`. Carries everything `scheduleMessage`
+ * needs so the caller can still hand it to the queue when it runs out of
+ * invocation budget.
+ */
+export interface AgentStepContinuation {
+  context: AgentRuntimeContext;
+  delay: number;
+  operationId: string;
+  priority: 'high' | 'low' | 'normal';
+  retries?: number;
+  retryDelay?: string;
+  stepIndex: number;
+}
+
 export interface AgentExecutionResult {
+  /**
+   * Present only when `inlineContinuation` was requested and the operation has
+   * a next step ready to run now. Absent for every terminal outcome and for
+   * every park (waiting_for_human, pending approval, async-tool wait), so an
+   * inline loop can simply stop when it is missing.
+   */
+  continuation?: AgentStepContinuation;
   /**
    * When true, the step was already being executed by another instance (lock conflict).
    * Stale duplicates are handled before returning this; callers should keep

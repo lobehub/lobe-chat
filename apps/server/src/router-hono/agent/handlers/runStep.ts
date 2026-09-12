@@ -5,9 +5,26 @@ import type { Context } from 'hono';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { agentOperations } from '@/database/schemas/agentOperations';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime';
+import type { AgentExecutionResult, AgentStepContinuation } from '@/server/services/agentRuntime';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 const log = debug('lobe-server:agent:run-step');
+
+/**
+ * Latest point in an invocation at which a new step may START, in ms.
+ *
+ * Every step boundary used to cost a full queue round-trip — measured at ~2.9s
+ * p50 across production traces, which is 13% of all agent-run wall time and
+ * more than a quarter of it for multi-step operations. Running consecutive
+ * steps inside one invocation removes that cost; this deadline is what keeps
+ * the invocation inside the platform's function timeout.
+ *
+ * It must stay comfortably below the route's `maxDuration`, because a step that
+ * starts just under the deadline still runs to completion — production LLM
+ * steps are ~42s at p90 and ~125s at p99. Once past it, the pending step goes
+ * back to the queue and a fresh invocation picks it up.
+ */
+const INLINE_STEP_START_DEADLINE_MS = Number(process.env.AGENT_INLINE_STEP_DEADLINE_MS ?? 550_000);
 
 const toIsoString = (value: Date | string | null | undefined): null | string => {
   if (!value) return null;
@@ -140,27 +157,92 @@ export async function runStep(c: Context): Promise<Response> {
       workspaceId: metadata.workspaceId,
     });
 
-    const result = await aiAgentService.executeStep({
-      approvedToolCall,
-      asyncToolVerifyAttempt,
-      context,
-      externalRetryCount,
-      humanInput,
-      finishAfterAsyncTool,
-      groupMemberTimeout,
-      lockRetryAttempt,
-      operationId,
-      rejectAndContinue,
-      rejectionReason,
-      resumeAsyncTool,
-      stepIndex,
-      toolMessageId,
-      verifyAsyncToolBarrier,
-    });
+    // ===== Inline step loop =====
+    // Keep stepping inside this invocation for as long as the operation has a
+    // next step ready and the deadline allows, instead of paying a queue
+    // round-trip per step. One lock owner spans the whole loop: the operation
+    // lock is re-entrant for its owner, so a redelivery from the queue still
+    // loses the race the same way it does for a single step.
+    const stepLockOwner = aiAgentService.createOperationLockOwner(operationId);
+    let pendingContinuation: AgentStepContinuation | undefined;
+    let currentStepIndex = stepIndex;
+    let inlinedSteps = 0;
+    let result: AgentExecutionResult;
+
+    try {
+      // The first iteration carries this delivery's one-shot payload (human
+      // input, approvals, resume flags, retry counters). Later iterations are
+      // plain steps, so they must not replay any of it.
+      result = await aiAgentService.executeStep({
+        approvedToolCall,
+        asyncToolVerifyAttempt,
+        context,
+        externalRetryCount,
+        finishAfterAsyncTool,
+        groupMemberTimeout,
+        humanInput,
+        inlineContinuation: true,
+        lockRetryAttempt,
+        operationId,
+        rejectAndContinue,
+        rejectionReason,
+        resumeAsyncTool,
+        retainStepLock: true,
+        stepIndex,
+        stepLockOwner,
+        toolMessageId,
+        verifyAsyncToolBarrier,
+      });
+      pendingContinuation = result.continuation;
+
+      while (pendingContinuation) {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= INLINE_STEP_START_DEADLINE_MS) {
+          log(
+            `[${operationId}] Inline budget spent after ${inlinedSteps} extra step(s) (${elapsed}ms), handing step ${pendingContinuation.stepIndex} back to the queue`,
+          );
+          break;
+        }
+
+        const next = pendingContinuation;
+        pendingContinuation = undefined;
+        currentStepIndex = next.stepIndex;
+
+        result = await aiAgentService.executeStep({
+          context: next.context,
+          inlineContinuation: true,
+          operationId,
+          retainStepLock: true,
+          stepIndex: next.stepIndex,
+          stepLockOwner,
+        });
+        inlinedSteps += 1;
+        pendingContinuation = result.continuation;
+
+        // A lock conflict mid-loop means another worker took over this
+        // operation. Stop rather than fight it — that worker owns the rest.
+        if (result.locked) break;
+      }
+
+      // Whatever is still pending goes back to the queue so the operation
+      // resumes in a fresh invocation.
+      if (pendingContinuation) {
+        await aiAgentService.scheduleContinuation(pendingContinuation);
+        result = { ...result, nextStepScheduled: true };
+        pendingContinuation = undefined;
+      }
+    } finally {
+      // Owner-scoped, so this is a no-op when the first step never claimed the
+      // lock (a conflicting delivery, a terminal operation, a watchdog probe).
+      await aiAgentService.releaseOperationLock(operationId, stepLockOwner);
+    }
 
     // A non-stale lock conflict means another delivery is still executing this
-    // operation.
-    if (result.locked) {
+    // operation. Once the inline loop has run steps of its own the delivery has
+    // already done real work and the conflict just means another worker picked
+    // up the rest, so report success instead of asking for a redelivery that the
+    // stale-step guard would drop anyway.
+    if (result.locked && inlinedSteps === 0) {
       // The runtime already re-queued this step on its own backoff, which can
       // outlast a step that holds the lock for minutes. ACK so QStash doesn't
       // retry on top of that and dead-letter the delivery once its (much
@@ -192,14 +274,15 @@ export async function runStep(c: Context): Promise<Response> {
       completed: result.state.status === 'done',
       error: result.state.status === 'error' ? result.state.error : undefined,
       executionTime,
-      nextStepIndex: result.nextStepScheduled ? stepIndex + 1 : undefined,
+      inlinedSteps,
+      nextStepIndex: result.nextStepScheduled ? currentStepIndex + 1 : undefined,
       nextStepScheduled: result.nextStepScheduled,
       operationId,
       pendingApproval: result.state.pendingToolsCalling,
       pendingPrompt: result.state.pendingHumanPrompt,
       pendingSelect: result.state.pendingHumanSelect,
       status: result.state.status,
-      stepIndex,
+      stepIndex: currentStepIndex,
       success: result.success,
       totalCost: result.state.cost?.total || 0,
       totalSteps: result.state.stepCount,
@@ -207,7 +290,7 @@ export async function runStep(c: Context): Promise<Response> {
     };
 
     log(
-      `[${operationId}] Step ${stepIndex} completed (${executionTime}ms, status: ${result.state.status})`,
+      `[${operationId}] Steps ${stepIndex}..${currentStepIndex} completed (${executionTime}ms, ${inlinedSteps} inlined, status: ${result.state.status})`,
     );
 
     return c.json(responseData);

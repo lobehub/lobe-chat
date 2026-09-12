@@ -15,6 +15,21 @@ const REFRESH_OWNED_LOCK_SCRIPT =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('expire', KEYS[1], ARGV[2]) else return 0 end";
 const RELEASE_OWNED_LOCK_SCRIPT =
   "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+/**
+ * Claim the lock, or re-enter it when this exact owner already holds it.
+ *
+ * Re-entry exists for the inline step loop, which runs several steps under one
+ * lock. Owner ids carry a random UUID (see `createStepLockOwner`), so only the
+ * invocation that took the lock can present its owner id — a redelivery from
+ * the queue always mints a different one and still loses the race.
+ */
+const CLAIM_OR_REENTER_LOCK_SCRIPT = `
+if redis.call('set', KEYS[1], ARGV[1], 'EX', ARGV[2], 'NX') then return 1 end
+if redis.call('get', KEYS[1]) == ARGV[1] then
+  redis.call('expire', KEYS[1], ARGV[2])
+  return 1
+end
+return 0`;
 
 export interface StepResult {
   events?: AgentEvent[];
@@ -511,15 +526,15 @@ export class AgentStateManager {
     ownerId: string = Date.now().toString(),
   ): Promise<boolean> {
     try {
-      const result = await this.redis.set(
+      const result = await this.redis.eval(
+        CLAIM_OR_REENTER_LOCK_SCRIPT,
+        1,
         this.executionLockKey(operationId),
         ownerId,
-        'EX',
-        ttlSeconds,
-        'NX',
+        ttlSeconds.toString(),
       );
 
-      return result === 'OK';
+      return result === 1;
     } catch (error) {
       // Fail-open: on Redis error, allow execution to proceed
       console.error('Failed to acquire step lock:', error);

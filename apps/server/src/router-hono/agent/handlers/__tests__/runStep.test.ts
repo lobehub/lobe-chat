@@ -7,6 +7,8 @@ import { runStep, runStepHealth } from '../runStep';
 
 const mockGetOperationMetadata = vi.fn();
 const mockExecuteStep = vi.fn();
+const mockScheduleContinuation = vi.fn();
+const mockReleaseOperationLock = vi.fn();
 const mockGetServerDB = vi.hoisted(() => vi.fn());
 
 vi.mock('@/server/modules/AgentRuntime', () => ({
@@ -20,7 +22,10 @@ vi.mock('@/server/modules/AgentRuntime', () => ({
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: vi.fn().mockImplementation(function () {
     return {
+      createOperationLockOwner: (operationId: string) => `${operationId}:owner`,
       executeStep: mockExecuteStep,
+      releaseOperationLock: mockReleaseOperationLock,
+      scheduleContinuation: mockScheduleContinuation,
     };
   }),
 }));
@@ -82,6 +87,8 @@ describe('runStep handler', () => {
   beforeEach(() => {
     mockGetOperationMetadata.mockReset();
     mockExecuteStep.mockReset();
+    mockScheduleContinuation.mockReset();
+    mockReleaseOperationLock.mockReset();
     mockGetServerDB.mockResolvedValue({} as any);
   });
 
@@ -389,5 +396,168 @@ describe('runStepHealth handler', () => {
       healthy: true,
       message: 'Agent execution service is running',
     });
+  });
+});
+
+describe('runStep inline step loop', () => {
+  const metadata = { userId: 'user-1', workspaceId: 'ws-1' };
+  const doneState = { cost: { total: 0 }, status: 'done', stepCount: 4 };
+
+  const continuationFor = (stepIndex: number) => ({
+    context: { phase: 'llm_result', step: stepIndex },
+    delay: 50,
+    operationId: 'op-1',
+    priority: 'normal' as const,
+    stepIndex,
+  });
+
+  beforeEach(() => {
+    mockGetOperationMetadata.mockResolvedValue(metadata);
+  });
+
+  it('runs consecutive steps in one invocation instead of re-queueing each one', async () => {
+    // The whole point of the loop: three steps, zero queue round-trips.
+    mockExecuteStep
+      .mockResolvedValueOnce({
+        continuation: continuationFor(3),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      })
+      .mockResolvedValueOnce({
+        continuation: continuationFor(4),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 4 },
+        success: true,
+      })
+      .mockResolvedValueOnce({
+        nextStepScheduled: false,
+        state: doneState,
+        success: true,
+      });
+
+    const { ctx, getCaptures } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(200);
+    expect(mockExecuteStep).toHaveBeenCalledTimes(3);
+    expect(mockScheduleContinuation).not.toHaveBeenCalled();
+    expect(getCaptures()[0].body).toMatchObject({
+      completed: true,
+      inlinedSteps: 2,
+      nextStepScheduled: false,
+      // The response reports the last step actually executed, not the delivered one.
+      stepIndex: 4,
+    });
+  });
+
+  it('carries the delivery payload on the first step only', async () => {
+    // Human input / approvals / retry counters describe THIS delivery. Replaying
+    // them on an inlined step would re-apply an approval that already ran.
+    mockExecuteStep
+      .mockResolvedValueOnce({
+        continuation: continuationFor(3),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      })
+      .mockResolvedValueOnce({ nextStepScheduled: false, state: doneState, success: true });
+
+    const { ctx } = buildContext({
+      body: { ...validBody, approvedToolCall: { id: 'call-1' }, humanInput: 'yes' },
+      retried: '2',
+    });
+    await runStep(ctx);
+
+    expect(mockExecuteStep.mock.calls[0][0]).toMatchObject({
+      approvedToolCall: { id: 'call-1' },
+      externalRetryCount: 2,
+      humanInput: 'yes',
+      stepIndex: 2,
+    });
+    const second = mockExecuteStep.mock.calls[1][0];
+    expect(second.approvedToolCall).toBeUndefined();
+    expect(second.humanInput).toBeUndefined();
+    expect(second.externalRetryCount).toBeUndefined();
+    expect(second.stepIndex).toBe(3);
+  });
+
+  it('holds one lock owner across every inlined step and releases it once', async () => {
+    mockExecuteStep
+      .mockResolvedValueOnce({
+        continuation: continuationFor(3),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      })
+      .mockResolvedValueOnce({ nextStepScheduled: false, state: doneState, success: true });
+
+    const { ctx } = buildContext({ body: validBody });
+    await runStep(ctx);
+
+    for (const [params] of mockExecuteStep.mock.calls) {
+      expect(params).toMatchObject({ retainStepLock: true, stepLockOwner: 'op-1:owner' });
+    }
+    expect(mockReleaseOperationLock).toHaveBeenCalledTimes(1);
+    expect(mockReleaseOperationLock).toHaveBeenCalledWith('op-1', 'op-1:owner');
+  });
+
+  it('hands the pending step back to the queue once the deadline passes', async () => {
+    let clock = Date.now();
+    const nowSpy = vi.spyOn(Date, 'now').mockImplementation(() => clock);
+    const pending = continuationFor(3);
+
+    mockExecuteStep.mockImplementation(async () => {
+      // Burn the whole inline budget inside the first step.
+      clock += 600_000;
+      return {
+        continuation: pending,
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      };
+    });
+
+    const { ctx, getCaptures } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(200);
+    expect(mockExecuteStep).toHaveBeenCalledTimes(1);
+    expect(mockScheduleContinuation).toHaveBeenCalledWith(pending);
+    expect(getCaptures()[0].body).toMatchObject({ nextStepScheduled: true, nextStepIndex: 3 });
+    expect(mockReleaseOperationLock).toHaveBeenCalledWith('op-1', 'op-1:owner');
+    nowSpy.mockRestore();
+  });
+
+  it('releases the lock when a step throws', async () => {
+    // Without this the operation stays locked for the full TTL and every
+    // redelivery bounces off it.
+    mockExecuteStep.mockRejectedValue(new Error('boom'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
+
+    const { ctx } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(500);
+    expect(mockReleaseOperationLock).toHaveBeenCalledWith('op-1', 'op-1:owner');
+    errorSpy.mockRestore();
+  });
+
+  it('stops the loop and reports success when another worker takes the lock mid-run', async () => {
+    mockExecuteStep
+      .mockResolvedValueOnce({
+        continuation: continuationFor(3),
+        nextStepScheduled: false,
+        state: { status: 'running', stepCount: 3 },
+        success: true,
+      })
+      .mockResolvedValueOnce({ locked: true, nextStepScheduled: false, state: {}, success: false });
+
+    const { ctx, getCaptures } = buildContext({ body: validBody });
+    const res = await runStep(ctx);
+
+    expect(res.status).toBe(200);
+    expect(mockScheduleContinuation).not.toHaveBeenCalled();
+    expect(getCaptures()[0].body).toMatchObject({ inlinedSteps: 1 });
   });
 });

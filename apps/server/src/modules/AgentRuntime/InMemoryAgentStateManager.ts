@@ -228,7 +228,10 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     const now = Date.now();
     const existing = this.stepLocks.get(key);
 
-    if (existing && existing.expiresAt > now) {
+    // Re-entrant for the owner that already holds it, so an inline step loop can
+    // run several steps without dropping the lock between them. Mirrors
+    // CLAIM_OR_REENTER_LOCK_SCRIPT in the Redis-backed manager.
+    if (existing && existing.expiresAt > now && existing.ownerId !== ownerId) {
       return false;
     }
 
