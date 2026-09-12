@@ -102,6 +102,12 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
     }
   };
 
+  const builtinManifest = readJson(path.join(builtinDir, 'manifest.json')) ?? null;
+  const builtinSeq = typeof builtinManifest?.seq === 'number' ? builtinManifest.seq : null;
+  // A full release ships a builtin core with a seq above every published core; older external cores must not outlive it.
+  const superseded = (manifest) =>
+    builtinSeq !== null && typeof manifest.seq === 'number' && manifest.seq <= builtinSeq;
+
   const verified = new Map();
   const verify = (version) => {
     if (typeof version !== 'string' || !VERSION_NAME.test(version) || /^\.\.?$/.test(version))
@@ -121,8 +127,15 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
 
   if (pointer.staged) {
     try {
-      verify(pointer.staged);
-      savePointer({ current: pointer.staged, previous: pointer.current ?? null, staged: null });
+      const { manifest } = verify(pointer.staged);
+      if (superseded(manifest)) {
+        log.push(
+          `staged ${pointer.staged} seq ${manifest.seq} superseded by builtin seq ${builtinSeq}`,
+        );
+        savePointer({ staged: null });
+      } else {
+        savePointer({ current: pointer.staged, previous: pointer.current ?? null, staged: null });
+      }
     } catch (error) {
       log.push(`staged ${pointer.staged} rejected: ${error.message}`);
     }
@@ -141,6 +154,11 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
     }
     try {
       const { dir, manifest } = verify(version);
+      if (superseded(manifest)) {
+        log.push(`core ${version} seq ${manifest.seq} superseded by builtin seq ${builtinSeq}`);
+        savePointer({ current: null, previous: null });
+        break;
+      }
       writeJson(bootFile, { failures: failures + 1, version });
       const markHealthy = () => {
         try {
@@ -155,9 +173,8 @@ function resolveCore({ userData, builtinDir, abi, publicKey }) {
     }
   }
 
-  const manifest = readJson(path.join(builtinDir, 'manifest.json')) ?? null;
-  if (!manifest) log.push(`builtin manifest missing at ${builtinDir}`);
-  return { dir: builtinDir, log, manifest, markHealthy() {}, source: 'builtin' };
+  if (!builtinManifest) log.push(`builtin manifest missing at ${builtinDir}`);
+  return { dir: builtinDir, log, manifest: builtinManifest, markHealthy() {}, source: 'builtin' };
 }
 
 const packageName = (request) =>

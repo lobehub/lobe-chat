@@ -31,7 +31,7 @@ const writeJson = (file, value) => {
   fs.writeFileSync(file, JSON.stringify(value));
 };
 
-const writeCore = (dir, version, { shellAbi = ABI, mutate } = {}) => {
+const writeCore = (dir, version, { shellAbi = ABI, seq, mutate } = {}) => {
   const files = {
     'cli/lobe-cli.js': 'cli',
     'dist/main/index.js': `module.exports = ${JSON.stringify(version)};`,
@@ -45,7 +45,7 @@ const writeCore = (dir, version, { shellAbi = ABI, mutate } = {}) => {
     fs.writeFileSync(path.join(dir, filePath), content);
     return { path: filePath, sha256: sha256(content), size: content.length };
   });
-  const manifest = signManifest({ shellAbi, tree, version });
+  const manifest = signManifest({ shellAbi, tree, version, ...(seq === undefined ? {} : { seq }) });
   mutate?.(dir, manifest);
   writeJson(path.join(dir, 'manifest.json'), manifest);
 };
@@ -243,6 +243,35 @@ describe('resolveCore', () => {
       previous: '1.1.0',
       staged: null,
     });
+  });
+
+  it('drops current and previous when the builtin core has a higher or equal seq', () => {
+    writeCore(builtinDir, '2.0.0', { seq: 5 });
+    writeExternal('1.1.0', { seq: 5 });
+    writeExternal('1.0.5', { seq: 4 });
+    writePointer({ blacklist: [], current: '1.1.0', previous: '1.0.5', staged: null });
+    const core = resolve();
+    expect(core.source).toBe('builtin');
+    expect(core.manifest.version).toBe('2.0.0');
+    expect(core.log).toContain('core 1.1.0 seq 5 superseded by builtin seq 5');
+    expect(readPointer()).toMatchObject({ blacklist: [], current: null, previous: null });
+    expect(fs.existsSync(path.join(otaRoot(), 'boot.json'))).toBe(false);
+  });
+
+  it('still loads an external core whose seq is above the builtin', () => {
+    writeCore(builtinDir, '2.0.0', { seq: 5 });
+    writeExternal('2.0.0-core.6', { seq: 6 });
+    writePointer({ current: '2.0.0-core.6' });
+    expect(resolve().manifest.version).toBe('2.0.0-core.6');
+  });
+
+  it('discards a staged core superseded by the builtin instead of promoting it', () => {
+    writeCore(builtinDir, '2.0.0', { seq: 5 });
+    writeExternal('1.2.0', { seq: 3 });
+    writePointer({ blacklist: [], current: null, previous: null, staged: '1.2.0' });
+    const core = resolve();
+    expect(core.source).toBe('builtin');
+    expect(readPointer()).toMatchObject({ current: null, previous: null, staged: null });
   });
 
   it('keeps current when staged fails verification', () => {

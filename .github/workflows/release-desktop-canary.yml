@@ -281,6 +281,13 @@ jobs:
           cloud-token: ${{ secrets.LOBEHUB_CLOUD_TOKEN }}
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Resolve core seq
+        id: core_seq
+        uses: ./.github/actions/desktop-core-seq
+        with:
+          channel: canary
+          update-server-url: ${{ secrets.UPDATE_SERVER_URL }}
+
       - name: Set package version
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.calculate-version.outputs.version }} canary
@@ -313,6 +320,7 @@ jobs:
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
           RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
+          CORE_SEQ: ${{ steps.core_seq.outputs.seq }}
           RELEASE_NOTES: ${{ needs.calculate-version.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
@@ -336,6 +344,7 @@ jobs:
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
           RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
+          CORE_SEQ: ${{ steps.core_seq.outputs.seq }}
           RELEASE_NOTES: ${{ needs.calculate-version.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
@@ -355,6 +364,7 @@ jobs:
           UPDATE_SERVER_URL: ${{ secrets.UPDATE_SERVER_URL }}
           RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
           RENDERER_OTA_PRIVATE_KEY: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
+          CORE_SEQ: ${{ steps.core_seq.outputs.seq }}
           RELEASE_NOTES: ${{ needs.calculate-version.outputs.release_notes }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'

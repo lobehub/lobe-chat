@@ -77,13 +77,13 @@ runs:
         case "$BASE" in
           */stable|*/nightly|*/canary|*/beta) BASE="${BASE%/*}" ;;
         esac
-        read -r PLATFORM CHANNEL VERSION SHELL_ABI < <(node -p "const m=require('./core-dist/manifest.json');[m.platform,m.channel,m.version,m.shellAbi].join(' ')")
+        read -r PLATFORM CHANNEL VERSION SEQ SHELL_ABI < <(node -p "const m=require('./core-dist/manifest.json');[m.platform,m.channel,m.version,m.seq,m.shellAbi].join(' ')")
         node scripts/buildCore.mjs \
           --core=core-dist \
           --platform="$PLATFORM" \
           --channel="$CHANNEL" \
           --version="$VERSION" \
-          --seq=0 \
+          --seq="$SEQ" \
           --shell-abi="$SHELL_ABI" \
           --objects-base-url="$BASE/cas" \
           --out=release/core-ota

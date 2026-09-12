@@ -175,7 +175,7 @@ const config = {
       context.electronPlatformName === 'mas' ? 'darwin' : context.electronPlatformName;
     execSync('node scripts/assembleCore.mjs', { stdio: 'inherit', cwd: __dirname });
     execSync(
-      `node scripts/buildCoreManifest.mjs --core=core-dist --platform=${corePlatform} --channel=${channel || 'stable'} --version=${packageJSON.version} --seq=0 --shell-abi=${shellAbi}`,
+      `node scripts/buildCoreManifest.mjs --core=core-dist --platform=${corePlatform} --channel=${channel || 'stable'} --version=${packageJSON.version} --seq=${process.env.CORE_SEQ || 0} --shell-abi=${shellAbi}`,
       { stdio: 'inherit', cwd: __dirname },
     );
   },
