@@ -36,6 +36,8 @@ const DEFAULT_PAGE_SIZE = 1000;
 
 export class LocalMessageStore {
   private readonly messages = new Map<string, UIChatMessage>();
+  /** Monotonic source for local creation timestamps — see `nextCreatedAt`. */
+  private lastCreatedAt = 0;
   /** `clientId` → message id, for idempotent re-creation of one logical step. */
   private readonly byClientId = new Map<string, string>();
   /**
@@ -58,7 +60,7 @@ export class LocalMessageStore {
       if (existing) return existing;
     }
 
-    const now = Date.now();
+    const now = this.nextCreatedAt();
     // `clientId` is the idempotency key, not a message field; `sessionId` is the
     // deprecated predecessor of `agentId` and has no place on `UIChatMessage`.
     // Both are still forwarded to the cloud replica by the transport, which
@@ -225,15 +227,10 @@ export class LocalMessageStore {
       });
     }
 
-    matches.sort((a, b) => {
-      if (a.createdAt !== b.createdAt) return a.createdAt - b.createdAt;
-      // By id, matching `queryWithWhere`'s `(createdAt, id)` ordering — not by
-      // local insertion order. A parallel tool batch writes several rows in the
-      // same millisecond, and ordering those by arrival would feed the next LLM
-      // step a different sequence than the persisted transcript, and a
-      // different one again after a restart re-hydrates them.
-      return a.id < b.id ? -1 : 1;
-    });
+    // `(createdAt, id)`, matching `queryWithWhere`. Local creation timestamps
+    // are monotonic (see `nextCreatedAt`), so the id tie-break only decides
+    // between hydrated rows that genuinely share a server timestamp.
+    this.sorted(matches);
 
     const page = this.paginate(matches, params);
 
@@ -243,9 +240,15 @@ export class LocalMessageStore {
     return flatList as unknown as UIChatMessage[];
   }
 
-  /** Every message, insertion-ordered. Used to seed a run from prior history. */
+  /**
+   * Every message held, ordered `(createdAt, id)`.
+   *
+   * Deliberately NOT routed through {@link query}: that applies the canonical
+   * newest-page limit, which would silently hand a history-seeding caller the
+   * most recent 1,000 rows while claiming to return everything.
+   */
   all(): UIChatMessage[] {
-    return this.query({}, {});
+    return this.sorted([...this.messages.values()]);
   }
 
   /** Seed prior conversation history fetched once at run start. */
@@ -255,6 +258,33 @@ export class LocalMessageStore {
 
   get size(): number {
     return this.messages.size;
+  }
+
+  /**
+   * A creation timestamp that never repeats or goes backwards.
+   *
+   * `Date.now()` has millisecond resolution, so a parallel tool batch stamps
+   * several rows identically and their order falls to the id tie-break — which
+   * is random, while the server assigns distinct timestamps in the order the
+   * queue delivers them. The live run would then read the batch in one order
+   * and a restart would re-read it in another.
+   *
+   * Nudging a collision forward by a millisecond makes local order equal
+   * creation order equal delivery order, which is the order the server ends up
+   * recording. The id tie-break below stays as the final fallback for
+   * hydrated rows that genuinely share a server timestamp.
+   */
+  private nextCreatedAt(): number {
+    const now = Date.now();
+    this.lastCreatedAt = now > this.lastCreatedAt ? now : this.lastCreatedAt + 1;
+    return this.lastCreatedAt;
+  }
+
+  private sorted(messages: UIChatMessage[]): UIChatMessage[] {
+    return messages.sort((a, b) => {
+      if (a.createdAt !== b.createdAt) return a.createdAt - b.createdAt;
+      return a.id < b.id ? -1 : 1;
+    });
   }
 
   private matchesScope(value: string | null | undefined, filter: string | undefined): boolean {

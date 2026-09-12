@@ -14,6 +14,22 @@ const MAX_BACKOFF_MS = 8_000;
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Narrow an existing artifact's permissions, ignoring one that is not there.
+ *
+ * Only ever tightens: a caller that has deliberately widened the directory is
+ * not the case being defended against, but leaving a legacy world-readable log
+ * in place is.
+ */
+const restrictMode = async (target: string, mode: number): Promise<void> => {
+  try {
+    const stat = await fs.stat(target);
+    if ((stat.mode & 0o777) !== mode) await fs.chmod(target, mode);
+  } catch {
+    // Not created yet — `mkdir`/`appendFile` will apply the mode themselves.
+  }
+};
+
 export interface MessageWriteQueueOptions {
   /** First retry delay; doubles up to {@link MAX_BACKOFF_MS}. Injectable so tests
    *  need not sit through the real schedule. */
@@ -240,7 +256,15 @@ export class MessageWriteQueue {
     if (!logPath) return;
 
     this.logWrites = this.logWrites.then(async () => {
-      await fs.mkdir(path.dirname(logPath), { mode: DIR_MODE, recursive: true });
+      const logDir = path.dirname(logPath);
+      await fs.mkdir(logDir, { mode: DIR_MODE, recursive: true });
+      // `mode` on mkdir/appendFile only applies when the artifact is CREATED.
+      // A log or directory left by an earlier version keeps its old, permissive
+      // mode indefinitely — and it holds unreplicated conversation content, so
+      // "until the next successful confirmation" is not a bound worth relying
+      // on. Tighten whatever is already there.
+      await restrictMode(logDir, DIR_MODE);
+      await restrictMode(logPath, FILE_MODE);
       // Owner-only. Every pending operation carries raw conversation content,
       // and a create may carry tool arguments and whatever they contain. The
       // default (0o666 less the umask, so usually 0o644) leaves that readable

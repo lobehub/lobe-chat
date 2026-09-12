@@ -235,6 +235,21 @@ describe('MessageWriteQueue', () => {
     await queue.drain();
   });
 
+  it('tightens a log left behind by an earlier version', async () => {
+    // An upgrade case: the file already exists at the old permissive mode, and
+    // `mode` on appendFile only applies when the file is created.
+    await fs.writeFile(logPath, '', { encoding: 'utf8', mode: 0o644 });
+    await fs.chmod(logPath, 0o644);
+
+    const queue = new MessageWriteQueue({
+      logPath,
+      sink: { flush: () => new Promise<void>(() => {}) },
+    });
+    await queue.enqueue(op('a'));
+
+    expect((await fs.stat(logPath)).mode & 0o777).toBe(0o600);
+  });
+
   it('recovers the intact entries when the last log line was truncated', async () => {
     // A process killed mid-append leaves a partial trailing line. The entries
     // before it are still deliverable and must not be thrown away with it.

@@ -96,22 +96,37 @@ describe('LocalMessageStore query scoping', () => {
     ).toEqual(['in thread']);
   });
 
-  it('breaks a timestamp tie by id, not by arrival order', () => {
+  it('orders a same-millisecond batch by creation, not by random id', () => {
     const store = new LocalMessageStore();
-    // Inserted out of id order, all in the same millisecond — what a parallel
-    // tool batch produces.
-    store.insert({ ...base, content: 'third' }, 'id-c');
-    store.insert({ ...base, content: 'first' }, 'id-a');
-    store.insert({ ...base, content: 'second' }, 'id-b');
+    // Ids descend while creation ascends — if ordering fell back to the id
+    // tie-break, these would come out reversed.
+    const created = ['c', 'b', 'a'].map((id, index) =>
+      store.insert({ ...base, content: `m${index}` }, `id-${id}`),
+    );
 
-    // `queryWithWhere` orders `(createdAt, id)`. Ordering by arrival instead
-    // would feed the next LLM step a different sequence than the persisted
-    // transcript — and a different one again after a restart re-hydrates them.
+    // `Date.now()` has millisecond resolution, so a parallel tool batch stamps
+    // rows identically. The server assigns distinct timestamps in delivery
+    // order, so a random tie-break would make the live run read one order and
+    // a restart read another.
     expect(store.query({ topicId: 'topic-1' }).map((m) => m.content)).toEqual([
-      'first',
-      'second',
-      'third',
+      'm0',
+      'm1',
+      'm2',
     ]);
+    expect(new Set(created.map((m) => m.createdAt)).size).toBe(3);
+  });
+
+  it('breaks a genuine timestamp tie by id', () => {
+    const store = new LocalMessageStore();
+    // Hydrated rows carry SERVER timestamps, which really can collide — this is
+    // what the id tie-break is for now that locally created rows get distinct,
+    // monotonic ones.
+    store.hydrate([
+      { ...base, content: 'second', createdAt: 500, id: 'id-b' },
+      { ...base, content: 'first', createdAt: 500, id: 'id-a' },
+    ] as never);
+
+    expect(store.query({ topicId: 'topic-1' }).map((m) => m.content)).toEqual(['first', 'second']);
   });
 
   it('survives a rehydration in the same order', () => {
@@ -165,6 +180,17 @@ describe('LocalMessageStore pagination', () => {
     expect(
       store.query({ current: 1, pageSize: 3, topicId: 'topic-1' }).map((m) => m.content),
     ).toEqual(['m4', 'm5', 'm6']);
+  });
+
+  it('keeps all() outside the page limit', () => {
+    const store = new LocalMessageStore();
+    fill(store, 1200);
+
+    // `all()` seeds a run from prior history. Routing it through the paged
+    // query would hand the caller the newest 1,000 while its name and doc
+    // promise everything — a silent truncation at exactly the wrong moment.
+    expect(store.all()).toHaveLength(1200);
+    expect(store.query({ topicId: 'topic-1' })).toHaveLength(1000);
   });
 
   it('returns nothing past the last page', () => {
