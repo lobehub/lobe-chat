@@ -143,6 +143,44 @@ runs:
         echo "📋 Files in s3://$S3_BUCKET/$CHANNEL/$VERSION/:"
         aws s3 ls "s3://$S3_BUCKET/$CHANNEL/$VERSION/" $ENDPOINT_ARG || true
 
+    - name: Download r0 core releases
+      uses: actions/download-artifact@v7
+      with:
+        path: release/core-ota
+        pattern: core-ota-*
+        merge-multiple: true
+
+    - name: Compose shell.json
+      id: shell
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        ls release/core-ota/core
+        FIRST=$(ls release/core-ota/core/*/latest.json | head -n 1)
+        SHELL_ABI=$(jq -er '.shellAbi' "$FIRST")
+        for f in release/core-ota/core/*/latest.json; do
+          [ "$(jq -r '.shellAbi' "$f")" = "$SHELL_ABI" ] || { echo "::error::shellAbi differs across platforms"; exit 1; }
+          [ "$(jq -r '.version' "$f")" = "$VERSION" ] || { echo "::error::core version in $f is not $VERSION"; exit 1; }
+        done
+        jq -n --arg shellAbi "$SHELL_ABI" --arg shellVersion "$VERSION" --arg publishedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          '{shellAbi: $shellAbi, shellVersion: $shellVersion, publishedAt: $publishedAt}' > release/shell.json
+        cat release/shell.json
+
+    - name: Publish shell.json and r0 core
+      id: base
+      uses: ./.github/actions/desktop-publish-core-ota
+      with:
+        channel: ${{ inputs.channel }}
+        release-dir: release/core-ota
+        shell-json: release/shell.json
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        s3-bucket: ${{ inputs.s3-bucket }}
+        s3-region: ${{ inputs.s3-region }}
+        s3-endpoint: ${{ inputs.s3-endpoint }}
+
     - name: Preserve release publication diagnostics
       if: always()
       uses: ./.github/actions/desktop-ota-diagnostics

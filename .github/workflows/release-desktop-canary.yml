@@ -8,6 +8,10 @@ name: Release Desktop Canary
 #      (可带任意 gitmoji)
 #   2. 手动触发 (workflow_dispatch)
 #
+# core-only 优先:
+#   先跑 release-desktop-core-ota.yml；只有 shellAbi 变了 (requires_full_release)
+#   或 core 没有变化 (skipped) 或手动 force_full 时才走全量打包。
+#
 # 并发策略:
 #   运行中的发布不会被后续 push 取消；等待队列仅保留最新一次运行
 #
@@ -25,6 +29,11 @@ on:
     inputs:
       force:
         description: 'Force build (skip commit message check)'
+        required: false
+        type: boolean
+        default: false
+      force_full:
+        description: 'Skip the core-only path and publish a full release'
         required: false
         type: boolean
         default: false
@@ -84,12 +93,26 @@ jobs:
           fi
 
   # ============================================
+  # core-only 发布（壳未变时不打全量包）
+  # ============================================
+  core-ota:
+    name: Core OTA
+    needs: [check-trigger]
+    if: needs.check-trigger.outputs.should_build == 'true' && !inputs.force_full
+    uses: ./.github/workflows/release-desktop-core-ota.yml
+    secrets: inherit
+    with:
+      channel: canary
+
+  # ============================================
   # 计算版本号
   # ============================================
   calculate-version:
     name: Calculate Canary Version
-    needs: [check-trigger]
-    if: needs.check-trigger.outputs.should_build == 'true'
+    needs: [check-trigger, core-ota]
+    if: |
+      always() && needs.check-trigger.outputs.should_build == 'true' &&
+      (inputs.force_full || needs.core-ota.outputs.requires_full_release == 'true' || needs.core-ota.outputs.skipped == 'true')
     runs-on: ubuntu-latest
     outputs:
       cloud_ref: ${{ steps.cloud-ref.outputs.cloud_ref }}
@@ -361,6 +384,8 @@ jobs:
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
+          update-server-url: ${{ secrets.UPDATE_SERVER_URL }}
+          core-signing-key: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
           retention-days: 3
 
       - name: Preserve desktop build diagnostics

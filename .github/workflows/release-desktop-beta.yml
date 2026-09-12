@@ -186,6 +186,8 @@ jobs:
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
+          update-server-url: ${{ secrets.UPDATE_SERVER_URL }}
+          core-signing-key: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
 
       - name: Preserve desktop build diagnostics
         if: always()
@@ -291,9 +293,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-renderer-base:
+  publish-core-base:
     needs: [check-beta, merge-mac-files]
-    name: Publish Beta Renderer Base
+    name: Publish Beta Shell and Core r0
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
