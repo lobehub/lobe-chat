@@ -9,7 +9,7 @@
     "url": "https://github.com/lobehub/lobehub.git"
   },
   "author": "LobeHub",
-  "main": "./dist/main/index.js",
+  "main": "./shell/main.js",
   "scripts": {
     "build:cli": "cd ../cli && cross-env MINIFY=1 bun run build",
     "build:main": "cross-env NODE_OPTIONS=--max-old-space-size=8192 npm run build:main:raw",
