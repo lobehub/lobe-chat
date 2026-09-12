@@ -99,6 +99,46 @@ beforeEach(() => {
   });
 });
 
+/**
+ * Covers the executor-context to engine-input link. Every failure this feature
+ * has had was a name dropped from an explicit field list rather than broken
+ * logic, and each one was silent: the injectors kept working, they just never
+ * received anything. So each link gets an assertion of its own.
+ */
+describe('buildServerCallLlmContext - system-message context reaches the engine', () => {
+  it('forwards the project instructions off the operation context', async () => {
+    const projectInstructions = [{ content: 'Use bun.', source: 'AGENTS.md' }];
+
+    await buildServerCallLlmContext({
+      ctx: createCtx({ projectInstructions }),
+      llmPayload,
+      model: 'gpt-4',
+      provider: 'openai',
+      state,
+      tooling,
+    });
+
+    expect(serverMessagesEngineMock).toHaveBeenCalledWith(
+      expect.objectContaining({ projectInstructions }),
+    );
+  });
+
+  it('forwards the connector ownership note off the operation context', async () => {
+    await buildServerCallLlmContext({
+      ctx: createCtx({ connectorOwnershipNote: 'Gmail runs on Alice’s account.' }),
+      llmPayload,
+      model: 'gpt-4',
+      provider: 'openai',
+      state,
+      tooling,
+    });
+
+    expect(serverMessagesEngineMock).toHaveBeenCalledWith(
+      expect.objectContaining({ connectorOwnershipNote: 'Gmail runs on Alice’s account.' }),
+    );
+  });
+});
+
 describe('buildServerCallLlmContext - {{username}}/{{language}} placeholder source', () => {
   it('resolves user info from the creator when the run is not a share-visitor run', async () => {
     await buildServerCallLlmContext({

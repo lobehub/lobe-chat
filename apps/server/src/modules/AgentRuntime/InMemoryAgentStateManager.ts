@@ -15,6 +15,7 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
   private steps: Map<string, any[]> = new Map();
   private metadata: Map<string, AgentOperationMetadata> = new Map();
   private stepLocks: Map<string, { expiresAt: number; ownerId: string }> = new Map();
+  private inlineResumes: Map<string, string> = new Map();
   private interrupted: Set<string> = new Set();
 
   private executionLockKey(operationId: string): string {
@@ -147,6 +148,7 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     this.steps.delete(operationId);
     this.metadata.delete(operationId);
     this.interrupted.delete(operationId);
+    this.inlineResumes.delete(operationId);
     log('Deleted operation %s', operationId);
   }
 
@@ -218,6 +220,25 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     return stats;
   }
 
+  async saveInlineResume(operationId: string, serialized: string): Promise<boolean> {
+    this.inlineResumes.set(operationId, serialized);
+    return true;
+  }
+
+  async loadInlineResume(operationId: string): Promise<null | string> {
+    return this.inlineResumes.get(operationId) ?? null;
+  }
+
+  async clearInlineResume(operationId: string, ownerId: string): Promise<void> {
+    // Mirrors CLEAR_OWNED_INLINE_RESUME_SCRIPT: only the current lock owner may
+    // drop the envelope, so a worker that lost the race cannot delete a live
+    // worker's recovery pointer.
+    const lock = this.stepLocks.get(this.executionLockKey(operationId));
+    if (lock?.ownerId !== ownerId) return;
+
+    this.inlineResumes.delete(operationId);
+  }
+
   async tryClaimStep(
     operationId: string,
     _stepIndex: number,
@@ -228,7 +249,10 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     const now = Date.now();
     const existing = this.stepLocks.get(key);
 
-    if (existing && existing.expiresAt > now) {
+    // Re-entrant for the owner that already holds it, so an inline step loop can
+    // run several steps without dropping the lock between them. Mirrors
+    // CLAIM_OR_REENTER_LOCK_SCRIPT in the Redis-backed manager.
+    if (existing && existing.expiresAt > now && existing.ownerId !== ownerId) {
       return false;
     }
 
