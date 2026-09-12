@@ -1,5 +1,6 @@
 name: Release Desktop Renderer OTA
 
+# 已停用: renderer 热更已被 core OTA 取代 (Phase 1 门禁 if: false)，Phase 3 删除此文件。
 # ============================================
 # Renderer 热更 patch 发布
 # ============================================
@@ -56,6 +57,7 @@ env:
 jobs:
   publish-renderer-patch:
     name: Publish Renderer Patch (${{ inputs.channel }})
+    if: ${{ false }}
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.result.outputs.published }}

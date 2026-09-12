@@ -71,15 +71,6 @@ jobs:
           fi
           echo "cloud_ref=$cloud_ref" >> "$GITHUB_OUTPUT"
 
-  renderer-ota:
-    name: Publish Renderer OTA
-    needs: [check-beta]
-    if: needs.check-beta.outputs.is_beta == 'true'
-    uses: ./.github/workflows/release-desktop-renderer-ota.yml
-    with:
-      channel: beta
-    secrets: inherit
-
   test:
     name: Code quality check
     needs: [check-beta]
@@ -123,6 +114,11 @@ jobs:
       - name: Set package version
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.check-beta.outputs.version }} beta
+
+      - name: Write shell ABI
+        env:
+          RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+        run: node apps/desktop/scripts/shellAbi.mjs --write
 
       - name: Prepare macOS provisioning profile
         if: runner.os == 'macOS'
@@ -192,9 +188,6 @@ jobs:
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
-          renderer-ota-private-key: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
-          renderer-ota-public-key: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
-          update-channel: beta
 
       - name: Preserve desktop build diagnostics
         if: always()
@@ -238,9 +231,6 @@ jobs:
           path: release
           pattern: release-*
           merge-multiple: true
-
-      - name: Validate platform renderer hashes
-        run: node apps/desktop/scripts/validateMainHash.mjs release release-macos-latest release-macos-15-intel release-windows-2025 release-ubuntu-latest
 
       # 列出下载的构建产物
       - name: List downloaded artifacts

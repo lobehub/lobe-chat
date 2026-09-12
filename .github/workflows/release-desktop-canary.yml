@@ -83,22 +83,13 @@ jobs:
             echo "⏭️ Commit type is not style/feat/fix/perf/refactor/release, skipping: $commit_msg"
           fi
 
-  renderer-ota:
-    name: Publish Renderer OTA
-    needs: [check-trigger]
-    if: needs.check-trigger.outputs.should_build == 'true'
-    uses: ./.github/workflows/release-desktop-renderer-ota.yml
-    with:
-      channel: canary
-    secrets: inherit
-
   # ============================================
-  # OTA 无法覆盖当前 main 时，计算完整发布版本
+  # 计算版本号
   # ============================================
   calculate-version:
     name: Calculate Canary Version
-    needs: [check-trigger, renderer-ota]
-    if: needs.check-trigger.outputs.should_build == 'true' && (github.event_name == 'workflow_dispatch' || needs.renderer-ota.outputs.requires_full_release == 'true')
+    needs: [check-trigger]
+    if: needs.check-trigger.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     outputs:
       cloud_ref: ${{ steps.cloud-ref.outputs.cloud_ref }}
@@ -271,6 +262,11 @@ jobs:
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.calculate-version.outputs.version }} canary
 
+      - name: Write shell ABI
+        env:
+          RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+        run: node apps/desktop/scripts/shellAbi.mjs --write
+
       # macOS 构建前清理 (修复 hdiutil 问题)
       - name: Clean previous build artifacts (macOS)
         if: runner.os == 'macOS'
@@ -367,10 +363,7 @@ jobs:
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.os }}
-          renderer-ota-private-key: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
-          renderer-ota-public-key: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
           retention-days: 3
-          update-channel: canary
 
       - name: Preserve desktop build diagnostics
         if: always()
@@ -405,9 +398,6 @@ jobs:
           path: release
           pattern: release-*
           merge-multiple: true
-
-      - name: Validate platform renderer hashes
-        run: node apps/desktop/scripts/validateMainHash.mjs release release-macos-15 release-macos-15-intel release-windows-2025 release-ubuntu-latest
 
       - name: List downloaded artifacts
         run: ls -R release

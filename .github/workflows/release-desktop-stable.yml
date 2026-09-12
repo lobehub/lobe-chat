@@ -137,15 +137,6 @@ jobs:
           fi
           echo "cloud_ref=$cloud_ref" >> "$GITHUB_OUTPUT"
 
-  renderer-ota:
-    name: Publish Renderer OTA
-    needs: [check-stable]
-    if: ${{ needs.check-stable.outputs.is_stable == 'true' && (github.event_name != 'workflow_dispatch' || !inputs.skip_s3_upload) }}
-    uses: ./.github/workflows/release-desktop-renderer-ota.yml
-    with:
-      channel: stable
-    secrets: inherit
-
   # ============================================
   # 配置构建矩阵 (检查自托管 Runner)
   # ============================================
@@ -216,6 +207,11 @@ jobs:
       - name: Set package version
         id: app_version
         run: npm run workflow:set-desktop-version ${{ needs.check-stable.outputs.version }} stable
+
+      - name: Write shell ABI
+        env:
+          RENDERER_OTA_PUBLIC_KEY: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
+        run: node apps/desktop/scripts/shellAbi.mjs --write
 
       # macOS 构建前清理 (修复 hdiutil 问题 https://github.com/electron-userland/electron-builder/issues/8415)
       - name: Clean previous build artifacts (macOS)
@@ -298,9 +294,6 @@ jobs:
         uses: ./.github/actions/desktop-upload-artifacts
         with:
           artifact-name: release-${{ matrix.name }}
-          renderer-ota-private-key: ${{ secrets.RENDERER_OTA_PRIVATE_KEY }}
-          renderer-ota-public-key: ${{ secrets.RENDERER_OTA_PUBLIC_KEY }}
-          update-channel: stable
 
       - name: Preserve desktop build diagnostics
         if: always()
@@ -335,17 +328,6 @@ jobs:
           path: release
           pattern: release-*
           merge-multiple: true
-
-      - name: Validate platform renderer hashes
-        env:
-          BUILD_MATRIX: ${{ needs.configure-build.outputs.matrix }}
-        run: |
-          node --input-type=module <<'NODE'
-          import { validateReleaseInputs } from './apps/desktop/scripts/validateMainHash.mjs';
-          const expected = JSON.parse(process.env.BUILD_MATRIX).include.map(({ name }) => `release-${name}`);
-          const manifest = await validateReleaseInputs('release', expected);
-          console.log(`Validated ${expected.length} platform hashes: ${manifest.mainHash}`);
-          NODE
 
       - name: List downloaded artifacts
         run: ls -R release
