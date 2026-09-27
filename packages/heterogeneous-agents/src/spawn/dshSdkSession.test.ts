@@ -139,6 +139,47 @@ describe('spawnDshSdkSession', () => {
     }
   }, 20_000);
 
+  it('rejects instead of crashing the host when the runtime command cannot spawn', async () => {
+    await expect(
+      spawnDshSdkSession({
+        args: [],
+        command: path.join(tmpdir(), 'lobehub-dsh-missing-runtime-binary'),
+        cwd: process.cwd(),
+        model: 'deepseek-chat',
+        provider: 'deepseek-official',
+        sessionId: 'live-1',
+        timeoutMs: 5000,
+      }),
+    ).rejects.toThrow(/failed to start/);
+  }, 10_000);
+
+  it('times out a runtime that never answers initialize', async () => {
+    await expect(
+      spawnDshSdkSession({
+        // Reads stdin forever and never replies.
+        args: ['-e', `process.stdin.on('data', () => {})`],
+        command: process.execPath,
+        cwd: process.cwd(),
+        model: 'deepseek-chat',
+        provider: 'deepseek-official',
+        sessionId: 'live-1',
+        timeoutMs: 300,
+      }),
+    ).rejects.toThrow(/did not answer initialize within 300ms/);
+  }, 10_000);
+
+  it('streams a second prompt on the same handle to its own idle', async () => {
+    const session = await startFake();
+    try {
+      await collect(session, 'first');
+      const second = await collect(session, 'second');
+
+      expect(second.at(-1)?.type).toBe('agent_runtime_end');
+    } finally {
+      await session.dispose();
+    }
+  }, 20_000);
+
   it('surfaces a runtime that dies instead of hanging on the prompt', async () => {
     const session = await spawnDshSdkSession({
       // Answers `initialize`, then exits on any later request.

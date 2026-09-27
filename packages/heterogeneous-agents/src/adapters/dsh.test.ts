@@ -294,7 +294,84 @@ describe('DshAdapter', () => {
         chunk: { index: 0, text: ' more', type: 'text-delta' },
       }),
     );
-    expect((second[0].data as any).subagent).toEqual({ parentToolCallId: 'call_task_1' });
+    expect((second[0].data as any).subagent).toEqual({
+      parentToolCallId: 'call_task_1',
+      subagentMessageId: 'dsh:child:0',
+    });
+  });
+
+  const linkChild = (adapter: DshAdapter) => {
+    adapter.adapt(sessionEvent('parent', 'step/start', { step: 1, turn: 1 }));
+    adapter.adapt(
+      sessionEvent('parent', 'tool/call', {
+        arguments: '{"task":"audit"}',
+        callId: 'call_task_1',
+        name: 'subagent',
+      }),
+    );
+    adapter.adapt(
+      notify('subagent.started', { childSessionId: 'child', parentSessionId: 'parent' }),
+    );
+  };
+
+  it('stamps each child model step with its own subagent message id', () => {
+    const adapter = new DshAdapter('parent');
+    linkChild(adapter);
+
+    adapter.adapt(sessionEvent('child', 'step/start', { step: 1, turn: 1 }));
+    const toolCall = adapter.adapt(
+      sessionEvent('child', 'tool/call', { arguments: '{}', callId: 'child_c1', name: 'read' }),
+    );
+    adapter.adapt(sessionEvent('child', 'step/start', { step: 2, turn: 1 }));
+    const answer = adapter.adapt(
+      sessionEvent('child', 'assistant/chunk', {
+        chunk: { index: 0, text: 'done', type: 'text-delta' },
+      }),
+    );
+
+    const firstId = (toolCall[0].data as any).subagent.subagentMessageId;
+    const secondId = (answer[0].data as any).subagent.subagentMessageId;
+    // The shared subagent reducer cuts a new in-thread assistant only when this
+    // id changes, so a multi-step child needs a distinct id per step.
+    expect(firstId).toBeTruthy();
+    expect(secondId).toBeTruthy();
+    expect(secondId).not.toBe(firstId);
+  });
+
+  it('emits delegated step usage stamped with the child context', () => {
+    const adapter = new DshAdapter('parent');
+    linkChild(adapter);
+    adapter.adapt(sessionEvent('child', 'step/start', { step: 1, turn: 1 }));
+    adapter.adapt(
+      sessionEvent('child', 'assistant/chunk', {
+        chunk: { index: 0, text: 'hi', type: 'text-delta' },
+      }),
+    );
+
+    const events = adapter.adapt(
+      sessionEvent('child', 'assistant/message', {
+        message: { content: [] },
+        usage: { inputTokens: 10, outputTokens: 4 },
+      }),
+    );
+
+    expect(events).toHaveLength(1);
+    expect(events[0].type).toBe('step_complete');
+    expect(events[0].data).toMatchObject({
+      phase: 'turn_metadata',
+      provider: 'deepseek-harness',
+      subagent: { parentToolCallId: 'call_task_1', subagentMessageId: 'dsh:child:1' },
+      usage: { totalInputTokens: 10, totalOutputTokens: 4, totalTokens: 14 },
+    });
+  });
+
+  it('reports idle again for the next prompt after beginRun', () => {
+    const adapter = new DshAdapter('s1');
+    const idle = notify('session.status', { sessionId: 's1', status: 'idle' });
+
+    expect(adapter.adapt(idle).map(({ type }) => type)).toEqual(['agent_runtime_end']);
+    adapter.beginRun();
+    expect(adapter.adapt(idle).map(({ type }) => type)).toEqual(['agent_runtime_end']);
   });
 
   it('does not open a second main stream for a subagent step', () => {

@@ -92,6 +92,11 @@ interface SubagentLink {
   /** Cleared once the spawn metadata has ridden out on the first child event. */
   pendingSpawn: boolean;
   spawnMetadata?: { description?: string; prompt?: string; subagentType?: string };
+  /**
+   * The child's model steps seen so far. One child step is one in-thread
+   * assistant message, so it keys the per-step `subagentMessageId`.
+   */
+  step: number;
 }
 
 /**
@@ -169,6 +174,20 @@ export class DshAdapter implements AgentEventAdapter {
     }
   }
 
+  /**
+   * Reset per-run terminal state before the next prompt on a reused runtime.
+   * Without it the previous run's idle leaves `finished` set, the next idle is
+   * swallowed, and the session layer waits out its timeout on a completed turn.
+   */
+  beginRun(): void {
+    this.finished = false;
+    this.terminalErrorEmitted = false;
+    this.pendingStream = false;
+    this.streamOpen = false;
+    this.stepCounter = 0;
+    this.stepIndex = 0;
+  }
+
   flush(): HeterogeneousAgentEvent[] {
     const events: HeterogeneousAgentEvent[] = this.closeStream();
     if (!this.finished) {
@@ -186,6 +205,12 @@ export class DshAdapter implements AgentEventAdapter {
     if (!this.sessionId) this.sessionId = sessionId;
 
     const isRoot = sessionId === this.sessionId;
+    // Advance the child's step BEFORE stamping, so the step's own output
+    // carries the new per-step message id and the reducer cuts a new turn.
+    if (!isRoot && event.type === 'step/start') {
+      const link = this.subagentByChildSession.get(sessionId);
+      if (link) link.step += 1;
+    }
     const subagent = isRoot ? undefined : this.subagentContextFor(sessionId);
     // A session that is neither the root nor a linked child belongs to another
     // client of the same runtime.
@@ -383,7 +408,21 @@ export class DshAdapter implements AgentEventAdapter {
     data: any,
     subagent?: SubagentEventContext,
   ): HeterogeneousAgentEvent[] {
-    if (subagent) return [];
+    const usage = toUsageData(data?.usage);
+
+    // A delegated step's usage lands on its in-thread assistant via the
+    // subagent coordinator; it must not touch the main stream.
+    if (subagent) {
+      if (!usage) return [];
+      const stepComplete: StepCompleteData & { subagent: SubagentEventContext } = {
+        model: this.route?.model,
+        phase: 'turn_metadata',
+        provider: DSH_IDENTIFIER,
+        subagent,
+        usage,
+      };
+      return [this.makeEvent('step_complete', stepComplete)];
+    }
 
     // A content-less step (a `max-tokens` cut-off still records its usage)
     // produces no chunk, so the stream may still be pending here.
@@ -392,7 +431,6 @@ export class DshAdapter implements AgentEventAdapter {
       ...this.closeStream(),
     ];
 
-    const usage = toUsageData(data?.usage);
     const stepComplete: StepCompleteData = {
       model: this.route?.model,
       phase: 'turn_metadata',
@@ -484,6 +522,7 @@ export class DshAdapter implements AgentEventAdapter {
     this.subagentByChildSession.set(childSessionId, {
       parentToolCallId,
       pendingSpawn: true,
+      step: 0,
       spawnMetadata: {
         // Provisional title from the delegating call; a `subagent/descriptor`
         // on the child replaces it with the harness-side label when one lands.
@@ -496,7 +535,10 @@ export class DshAdapter implements AgentEventAdapter {
   private subagentContextFor(sessionId: string): SubagentEventContext | undefined {
     const link = this.subagentByChildSession.get(sessionId);
     if (!link) return undefined;
-    return { parentToolCallId: link.parentToolCallId };
+    return {
+      parentToolCallId: link.parentToolCallId,
+      subagentMessageId: `dsh:${sessionId}:${link.step}`,
+    };
   }
 
   private attachSpawnMetadata(sessionId: string, event: HeterogeneousAgentEvent): void {

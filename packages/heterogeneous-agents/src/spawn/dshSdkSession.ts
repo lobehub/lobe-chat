@@ -41,9 +41,27 @@ export interface DshSdkSessionOptions {
    * resolves `--import` loader specifiers against the process cwd.
    */
   spawnCwd?: string;
-  /** Wall-clock ceiling for the whole run. */
+  /**
+   * Wall-clock ceiling for the whole run. Also bounds the `initialize`
+   * handshake, so a runtime that never answers cannot stall the spawn.
+   */
   timeoutMs?: number;
 }
+
+/** How long `dispose` waits for a `shutdown` reply before killing the runtime. */
+const SHUTDOWN_TIMEOUT_MS = 2000;
+
+/**
+ * Settle `promise` or reject after `ms`. The timer is cleared either way so a
+ * settled race leaves no handle keeping the event loop alive.
+ */
+const withTimeout = <T>(promise: Promise<T>, ms: number, message: string): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(message)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+};
 
 export interface DshRuntimeLaunch {
   args: string[];
@@ -94,6 +112,8 @@ interface PendingRequest {
 /** Frames a JSON-RPC line stream and resolves responses against pending requests. */
 class JsonRpcStdio {
   private buffer = '';
+  /** Set once the transport is gone; later requests fail immediately. */
+  private closed?: Error;
   private nextId = 1;
   private pending = new Map<number, PendingRequest>();
 
@@ -108,13 +128,18 @@ class JsonRpcStdio {
     const id = this.nextId;
     this.nextId += 1;
     return new Promise((resolve, reject) => {
+      if (this.closed) {
+        reject(this.closed);
+        return;
+      }
       this.pending.set(id, { reject, resolve });
       this.child.stdin.write(`${JSON.stringify({ id, jsonrpc: '2.0', method, params })}\n`);
     });
   }
 
-  /** Fail every in-flight request; the runtime will send no more responses. */
+  /** Fail every in-flight and future request; the runtime will send no more responses. */
   rejectAll(error: Error): void {
+    this.closed ??= error;
     for (const { reject } of this.pending.values()) reject(error);
     this.pending.clear();
   }
@@ -189,6 +214,18 @@ export const spawnDshSdkSession = async (
 
   const rpc = new JsonRpcStdio(child, (frame) => push(adapter.adapt(frame)));
 
+  // A missing / non-executable command or an invalid cwd surfaces as an
+  // `error` event, not `exit`; without a listener Node rethrows it and takes
+  // down the host process. Fail the handshake and any in-flight turn instead.
+  child.on('error', (error) => {
+    exited ??= new Error(`harness runtime failed to start: ${error.message}`);
+    rpc.rejectAll(exited);
+    wake?.();
+  });
+  // Writing to a runtime that already died emits EPIPE on stdin; the exit /
+  // error handlers own reporting that, so the stream error is only swallowed.
+  child.stdin.on('error', () => {});
+
   child.on('exit', (code, signal) => {
     // Only a clean exit may synthesize a terminal event. Flushing on a crash
     // would close the stream with `agent_runtime_end` and make a dead runtime
@@ -206,23 +243,44 @@ export const spawnDshSdkSession = async (
     wake?.();
   });
 
-  await rpc.request('initialize', {
+  const isAlive = () => child.exitCode === null && child.signalCode === null;
+
+  const initialize = rpc.request('initialize', {
     cwd: options.cwd,
     model: options.model,
     provider: options.provider,
     ...(options.maxTokens === undefined ? {} : { maxTokens: options.maxTokens }),
   });
+  try {
+    await (options.timeoutMs === undefined
+      ? initialize
+      : withTimeout(
+          initialize,
+          options.timeoutMs,
+          `harness runtime did not answer initialize within ${options.timeoutMs}ms`,
+        ));
+  } catch (error) {
+    // A runtime that never finished the handshake is useless to the caller,
+    // and nobody else holds a handle to kill it.
+    if (isAlive()) child.kill('SIGTERM');
+    throw error;
+  }
 
   const dispose = async (): Promise<void> => {
-    if (child.exitCode !== null || child.signalCode !== null) return;
-    // `shutdown` is best-effort: a runtime already tearing down never answers,
-    // and the kill below is the real settlement.
-    await rpc.request('shutdown').catch(() => {});
-    child.kill('SIGTERM');
+    if (!isAlive()) return;
+    // `shutdown` is best-effort and bounded: a runtime already tearing down
+    // never answers, and the kill below is the real settlement.
+    await withTimeout(rpc.request('shutdown'), SHUTDOWN_TIMEOUT_MS, 'shutdown timed out').catch(
+      () => {},
+    );
+    if (child.exitCode === null && child.signalCode === null) child.kill('SIGTERM');
   };
 
   async function* prompt(text: string): AsyncGenerator<HeterogeneousAgentEvent> {
     const deadline = options.timeoutMs === undefined ? undefined : Date.now() + options.timeoutMs;
+    // The handle is reusable: a previous prompt's whole-agent idle must not
+    // mark this one as already finished.
+    adapter.beginRun();
 
     void rpc
       .request('session/prompt', {
