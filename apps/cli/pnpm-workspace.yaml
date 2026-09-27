@@ -37,7 +37,10 @@ publicHoistPattern:
   - '*stylelint*'
 
 allowBuilds:
+  '@deepseek-ai/dsh-subprocess-local': true
   esbuild: true
+  koffi: false
+  node-pty: true
 
 overrides:
   '@types/react': 19.2.13

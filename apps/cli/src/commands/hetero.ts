@@ -32,6 +32,8 @@ import {
   createFileStoreImageUploader,
   isHeteroStatusGuideErrorData,
   spawnAgent,
+  spawnDshSdkSession,
+  toStreamEvent,
 } from '@lobechat/heterogeneous-agents/spawn';
 import { isRecord } from '@lobechat/utils/object';
 import type { Command } from 'commander';
@@ -45,7 +47,13 @@ import { createOperationTokenRenewal } from '../utils/OperationTokenRenewal';
 import { createLocalTraceStore } from '../utils/traceStore';
 import { TrpcIngestSink } from '../utils/TrpcIngestSink';
 
-export const SUPPORTED_AGENT_TYPES = new Set<string>(LOCAL_HETEROGENEOUS_AGENT_TYPES);
+const DSH_AGENT_TYPE = 'deepseek-harness';
+const DSH_DEFAULT_MODEL = 'deepseek-chat';
+const DSH_PROVIDER = 'deepseek-official';
+export const SUPPORTED_AGENT_TYPES = new Set<string>([
+  ...LOCAL_HETEROGENEOUS_AGENT_TYPES,
+  DSH_AGENT_TYPE,
+]);
 
 /**
  * Extra env for the spawned agent process.
@@ -73,7 +81,10 @@ export const buildAgentProcessEnv = ({
   };
   return Object.keys(env).length > 0 ? env : undefined;
 };
-const SUPPORTED_AGENT_TITLES = HETEROGENEOUS_AGENT_CONFIGS.map(({ title }) => title).join(' / ');
+const SUPPORTED_AGENT_TITLES = [
+  ...HETEROGENEOUS_AGENT_CONFIGS.map(({ title }) => title),
+  'DeepSeek Harness',
+].join(' / ');
 const SUPPORTED_AGENT_COMMANDS = HETEROGENEOUS_AGENT_CONFIGS.map(
   ({ defaultCommand }) => `\`${defaultCommand}\``,
 ).join(', ');
@@ -465,7 +476,7 @@ class RawStreamDump {
 }
 
 const exec = async (options: ExecOptions): Promise<void> => {
-  if (!isLocalHeterogeneousType(options.type)) {
+  if (!SUPPORTED_AGENT_TYPES.has(options.type)) {
     log.error(
       `Unsupported --type "${options.type}". Supported: ${[...SUPPORTED_AGENT_TYPES].join(', ')}`,
     );
@@ -591,6 +602,89 @@ const exec = async (options: ExecOptions): Promise<void> => {
             (await getTrpcClient()).aiAgent.refreshHeteroOperationToken.mutate({ operationId: id }),
         })
       : undefined;
+
+  // DSH exposes a bidirectional JSON-RPC server rather than a one-way CLI
+  // transcript. Keep it on the same public `hetero exec` surface, but drive
+  // the SDK session directly instead of passing it through `spawnAgent`.
+  if (agentType === DSH_AGENT_TYPE) {
+    const hasImages =
+      typeof resolved.prompt !== 'string' &&
+      resolved.prompt.some((block) => block.type === 'image');
+    if (hasImages) {
+      log.error('DeepSeek Harness currently accepts text prompts only.');
+      process.exit(2);
+    }
+    if (!options.command && options.agentArg?.length) {
+      log.error('--agent-arg requires --command for DeepSeek Harness.');
+      process.exit(2);
+    }
+
+    const prompt =
+      typeof resolved.prompt === 'string'
+        ? resolved.prompt
+        : resolved.prompt
+            .map((block) => (block.type === 'text' ? block.text : ''))
+            .filter(Boolean)
+            .join('\n');
+    const sessionId = options.resume || randomUUID();
+    let session: Awaited<ReturnType<typeof spawnDshSdkSession>> | undefined;
+    let exitCode = 0;
+
+    try {
+      session = await spawnDshSdkSession({
+        ...(options.command ? { args: options.agentArg, command: options.command } : {}),
+        cwd: options.cwd || process.cwd(),
+        model: options.model || DSH_DEFAULT_MODEL,
+        provider: DSH_PROVIDER,
+        sessionId,
+      });
+
+      let terminalError: string | undefined;
+      for await (const rawEvent of session.prompt(prompt)) {
+        const event = toStreamEvent(rawEvent, operationId);
+        if (event.type === 'error') {
+          const data = event.data as Record<string, unknown> | undefined;
+          terminalError = String(data?.message ?? data?.error ?? '') || 'DSH execution failed';
+        }
+        if (emitJsonl) process.stdout.write(`${JSON.stringify(event)}\n`);
+        operationHeartbeat?.observe(event);
+        serverIngester?.push(event);
+      }
+
+      operationHeartbeat?.stop();
+      await serverIngester?.drain();
+      if (sink) {
+        await sink.finish({
+          error: terminalError ? { message: terminalError, type: 'AgentRuntimeError' } : undefined,
+          result: terminalError ? 'error' : 'success',
+          sessionId,
+        });
+      }
+      if (terminalError) exitCode = 1;
+    } catch (error) {
+      exitCode = 1;
+      const message = error instanceof Error ? error.message : String(error);
+      log.error('DeepSeek Harness execution failed:', message);
+      operationHeartbeat?.stop();
+      if (sink) {
+        await serverIngester?.drain().catch(() => {});
+        await sink
+          .finish({ error: { message, type: 'AgentRuntimeError' }, result: 'error', sessionId })
+          .catch(() => {});
+      }
+    } finally {
+      operationTokenRenewal?.stop();
+      await session?.dispose().catch(() => {});
+    }
+
+    process.exit(exitCode);
+  }
+
+  // The public set also contains runtime-backed providers such as DSH. Past
+  // this branch the existing spawn pipeline requires a descriptor-backed CLI.
+  if (!isLocalHeterogeneousType(agentType)) {
+    throw new TypeError(`Unsupported CLI-backed heterogeneous agent type: ${agentType}`);
+  }
 
   // ─── AskUserQuestion MCP — remote Human-in-the-loop ────────────────────────
   //
@@ -1310,7 +1404,7 @@ export function registerHeteroCommand(program: Command) {
     )
     .option(
       '-c, --command <bin>',
-      `Override the agent CLI binary name (defaults: ${SUPPORTED_AGENT_COMMANDS})`,
+      `Override the agent runtime binary (CLI defaults: ${SUPPORTED_AGENT_COMMANDS}; DeepSeek Harness uses LobeHub's bundled runtime)`,
     )
     .option(
       '--operation-id <id>',

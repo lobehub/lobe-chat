@@ -46,6 +46,7 @@ minimumReleaseAgeExclude:
 childConcurrency: 1
 
 allowBuilds:
+  '@deepseek-ai/dsh-subprocess-local': true
   '@google/genai': true
   '@lobehub/editor': true
   '@sentry/cli': true
@@ -55,6 +56,8 @@ allowBuilds:
   es5-ext: false
   esbuild: false
   ffmpeg-static: true
+  koffi: false
+  node-pty: true
   protobufjs: false
   sharp: false
   unrs-resolver: false

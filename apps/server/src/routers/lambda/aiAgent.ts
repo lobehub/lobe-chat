@@ -18,7 +18,7 @@ import {
   entityIdPattern,
   initialTopicMetadataSchema,
   isServerDefaultHeterogeneousRelayInvocation,
-  LocalHeterogeneousAgentTypeSchema,
+  LocalExecutionHeterogeneousAgentTypeSchema,
   RequestTrigger,
   ThreadStatus,
   ThreadType,
@@ -1731,6 +1731,7 @@ const AgentStreamEventSchema = z.object({
     'stream_end',
     'visible_output_end',
     'stream_retry',
+    'session_title',
     'tool_start',
     'tool_end',
     'tool_execute',
@@ -1752,7 +1753,7 @@ const AgentStreamEventSchema = z.object({
  * → topic reverse-lookup is unreliable per design decision).
  */
 const HeteroIngestSchema = z.object({
-  agentType: LocalHeterogeneousAgentTypeSchema,
+  agentType: LocalExecutionHeterogeneousAgentTypeSchema,
   /** Initial assistant placeholder message id forwarded from the sandbox env var.
    * When present, `loadOrCreateState` uses it directly and skips the DB read of
    * topic.metadata.runningOperation, eliminating the replica-lag race condition. */
@@ -1769,7 +1770,7 @@ const HeteroIngestSchema = z.object({
  * (CC's per-cwd id), kept here so the server can resume next time.
  */
 const HeteroFinishSchema = z.object({
-  agentType: LocalHeterogeneousAgentTypeSchema,
+  agentType: LocalExecutionHeterogeneousAgentTypeSchema,
   /** Initial assistant placeholder forwarded by the producer. Unlike the live
    * ingest path, finish may arrive after gateway session completion has already
    * cleared topic.metadata.runningOperation, so this is the durable fallback

@@ -47,6 +47,7 @@ publicHoistPattern:
   - 'pdfjs-dist'
 
 allowBuilds:
+  '@deepseek-ai/dsh-subprocess-local': true
   '@sentry/cli': true
   electron: true
   electron-builder: true
@@ -54,7 +55,9 @@ allowBuilds:
   electron-winstaller: false
   esbuild: false
   get-windows: false
+  koffi: false
   node-mac-permissions: true
+  node-pty: true
   protobufjs: false
 
 overrides:
