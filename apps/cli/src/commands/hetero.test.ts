@@ -10,6 +10,7 @@ import type * as HeteroSpawn from '@lobechat/heterogeneous-agents/spawn';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { HeteroTraceRecorder } from '../utils/HeteroTraceRecorder';
 import { registerHeteroCommand, SUPPORTED_AGENT_TYPES } from './hetero';
 
 const {
@@ -541,6 +542,75 @@ describe('hetero exec command', () => {
     expect(mockSpawnAgent).not.toHaveBeenCalled();
     expect(exitSpy).toHaveBeenCalledWith(0);
   });
+
+  it('records and finalizes the local trace for a DeepSeek Harness run', async () => {
+    const observe = vi.spyOn(HeteroTraceRecorder.prototype, 'observe').mockImplementation(() => {});
+    const finalize = vi
+      .spyOn(HeteroTraceRecorder.prototype, 'finalize')
+      .mockResolvedValue(undefined);
+    mockSpawnDshSdkSession.mockResolvedValue({
+      dispose: vi.fn().mockResolvedValue(undefined),
+      prompt: vi.fn(async function* () {
+        yield { data: {}, operationId: 'op-dsh', type: 'stream_start' };
+        yield { data: {}, operationId: 'op-dsh', type: 'agent_runtime_end' };
+      }),
+    });
+
+    await runCmd(['hetero', 'exec', '--type', 'deepseek-harness', '--prompt', 'say hi']);
+
+    expect(observe.mock.calls.map(([event]) => event.type)).toEqual([
+      'stream_start',
+      'agent_runtime_end',
+    ]);
+    expect(finalize).toHaveBeenCalledWith({ error: undefined, result: 'success' });
+    expect(exitSpy).toHaveBeenCalledWith(0);
+  });
+
+  it('stops a DeepSeek Harness run as soon as the server discards its output', async () => {
+    vi.spyOn(HeteroTraceRecorder.prototype, 'finalize').mockResolvedValue(undefined);
+    mockHeteroIngestMutate.mockResolvedValue({ accepted: false, reason: 'stale-operation' });
+
+    let markKilled!: () => void;
+    const killed = new Promise<void>((resolve) => {
+      markKilled = resolve;
+    });
+    const dispose = vi.fn(async () => markKilled());
+    mockSpawnDshSdkSession.mockResolvedValue({
+      dispose,
+      // A long-running harness: one event, then nothing until it is disposed.
+      prompt: vi.fn(async function* () {
+        yield {
+          data: { chunkType: 'text', content: 'working' },
+          operationId: 'op-1',
+          type: 'stream_chunk',
+        };
+        await killed;
+        throw new Error('harness runtime exited (code null, signal SIGTERM)');
+      }),
+    });
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'deepseek-harness',
+      '--prompt',
+      'hi',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-1',
+    ]);
+
+    expect(dispose).toHaveBeenCalled();
+    expect(mockHeteroFinishMutate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.objectContaining({ message: expect.stringContaining('stale-operation') }),
+        result: 'error',
+      }),
+    );
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  }, 10_000);
 
   it('runs Kimi Code with its default command and forwards model but not effort', async () => {
     mockSpawnAgent.mockReturnValue(createFakeHandle());

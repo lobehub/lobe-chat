@@ -629,6 +629,16 @@ const exec = async (options: ExecOptions): Promise<void> => {
     const sessionId = options.resume || randomUUID();
     let session: Awaited<ReturnType<typeof spawnDshSdkSession>> | undefined;
     let exitCode = 0;
+    // Same contract as `runOneAgent`: once the server discards this run's
+    // output, stop the harness instead of letting it keep calling the model
+    // and running tools until natural idle.
+    let ingestLoss: Error | undefined;
+    abortForIngestLoss = (error) => {
+      if (ingestLoss) return;
+      ingestLoss = error;
+      log.error('Server is discarding this run output, stopping the agent:', error.message);
+      void session?.dispose().catch(() => {});
+    };
 
     try {
       session = await spawnDshSdkSession({
@@ -638,6 +648,8 @@ const exec = async (options: ExecOptions): Promise<void> => {
         provider: DSH_PROVIDER,
         sessionId,
       });
+      // The loss may have landed (via the heartbeat) while the runtime booted.
+      if (ingestLoss) throw ingestLoss;
 
       let terminalError: string | undefined;
       for await (const rawEvent of session.prompt(prompt)) {
@@ -648,24 +660,41 @@ const exec = async (options: ExecOptions): Promise<void> => {
         }
         if (emitJsonl) process.stdout.write(`${JSON.stringify(event)}\n`);
         operationHeartbeat?.observe(event);
+        traceRecorder.observe(event);
         serverIngester?.push(event);
+        if (ingestLoss) break;
       }
+      if (ingestLoss) throw ingestLoss;
 
       operationHeartbeat?.stop();
       await serverIngester?.drain();
+      const finishError = terminalError
+        ? { message: terminalError, type: 'AgentRuntimeError' }
+        : undefined;
+      // Before the sink, so a failing server call still leaves a snapshot.
+      await traceRecorder.finalize({
+        error: finishError,
+        result: terminalError ? 'error' : 'success',
+      });
       if (sink) {
         await sink.finish({
-          error: terminalError ? { message: terminalError, type: 'AgentRuntimeError' } : undefined,
+          error: finishError,
           result: terminalError ? 'error' : 'success',
           sessionId,
         });
       }
       if (terminalError) exitCode = 1;
-    } catch (error) {
+    } catch (caught) {
       exitCode = 1;
+      // A killed runtime reports its own exit; the ingest loss is the real cause.
+      const error = ingestLoss ?? caught;
       const message = error instanceof Error ? error.message : String(error);
       log.error('DeepSeek Harness execution failed:', message);
       operationHeartbeat?.stop();
+      await traceRecorder.finalize({
+        error: { message, type: 'AgentRuntimeError' },
+        result: 'error',
+      });
       if (sink) {
         await serverIngester?.drain().catch(() => {});
         await sink
@@ -673,6 +702,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
           .catch(() => {});
       }
     } finally {
+      abortForIngestLoss = undefined;
       operationTokenRenewal?.stop();
       await session?.dispose().catch(() => {});
     }
