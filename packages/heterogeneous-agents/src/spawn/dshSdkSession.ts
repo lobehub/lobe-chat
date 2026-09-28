@@ -26,6 +26,13 @@ export interface DshSdkSessionOptions {
    */
   cwd: string;
   env?: Record<string, string>;
+  /**
+   * Ceiling for the `initialize` handshake. Always applied — callers that set
+   * no run timeout still must not hang on a runtime that boots but never
+   * answers. Defaults to {@link DSH_INITIALIZE_TIMEOUT_MS}; a smaller
+   * {@link timeoutMs} wins.
+   */
+  initializeTimeoutMs?: number;
   maxTokens?: number;
   model: string;
   provider: string;
@@ -41,15 +48,22 @@ export interface DshSdkSessionOptions {
    * resolves `--import` loader specifiers against the process cwd.
    */
   spawnCwd?: string;
-  /**
-   * Wall-clock ceiling for the whole run. Also bounds the `initialize`
-   * handshake, so a runtime that never answers cannot stall the spawn.
-   */
+  /** Wall-clock ceiling for the whole run. */
   timeoutMs?: number;
 }
 
-/** How long `dispose` waits for a `shutdown` reply before killing the runtime. */
+/** Default bound on the `initialize` handshake (boot + plugin load). */
+export const DSH_INITIALIZE_TIMEOUT_MS = 60_000;
+
+/** How long `dispose` waits for a `shutdown` reply before signalling the runtime. */
 const SHUTDOWN_TIMEOUT_MS = 2000;
+
+/**
+ * How long a SIGTERM'd runtime gets to run its async fiber disposal before it
+ * is SIGKILLed. Disposal must not resolve while the old runtime (and the tools
+ * it spawned) can still write to the workspace.
+ */
+const TERMINATE_GRACE_MS = 5000;
 
 /**
  * Settle `promise` or reject after `ms`. The timer is cleared either way so a
@@ -98,7 +112,10 @@ export const resolveDshRuntimeLaunch = (): DshRuntimeLaunch => {
 };
 
 export interface DshSdkSessionHandle {
-  /** Terminate the runtime; safe to call more than once. */
+  /**
+   * Terminate the runtime and resolve only once its process has exited
+   * (escalating to SIGKILL after a grace period); safe to call more than once.
+   */
   dispose: () => Promise<void>;
   /** Stream events for one prompt, ending after the harness reports whole-agent idle. */
   prompt: (text: string) => AsyncGenerator<HeterogeneousAgentEvent>;
@@ -244,6 +261,36 @@ export const spawnDshSdkSession = async (
   });
 
   const isAlive = () => child.exitCode === null && child.signalCode === null;
+  const exitPromise = new Promise<void>((resolve) => {
+    child.once('exit', () => resolve());
+    // A child that never spawned emits `error` and never `exit`.
+    child.once('error', () => {
+      if (child.pid === undefined) resolve();
+    });
+  });
+
+  /** SIGTERM, wait out the grace period, then SIGKILL; resolves on exit. */
+  let terminating: Promise<void> | undefined;
+  const terminate = (): Promise<void> => {
+    terminating ??= (async () => {
+      if (!isAlive() || child.pid === undefined) return;
+      child.kill('SIGTERM');
+      const exitedInGrace = await withTimeout(exitPromise, TERMINATE_GRACE_MS, 'grace').then(
+        () => true,
+        () => false,
+      );
+      if (exitedInGrace || !isAlive()) return;
+      child.kill('SIGKILL');
+      // SIGKILL cannot be caught; the bound only guards a zombie reap stall.
+      await withTimeout(exitPromise, SHUTDOWN_TIMEOUT_MS, 'kill').catch(() => {});
+    })();
+    return terminating;
+  };
+
+  const initializeTimeoutMs = Math.min(
+    options.initializeTimeoutMs ?? DSH_INITIALIZE_TIMEOUT_MS,
+    options.timeoutMs ?? Number.POSITIVE_INFINITY,
+  );
 
   const initialize = rpc.request('initialize', {
     cwd: options.cwd,
@@ -252,17 +299,15 @@ export const spawnDshSdkSession = async (
     ...(options.maxTokens === undefined ? {} : { maxTokens: options.maxTokens }),
   });
   try {
-    await (options.timeoutMs === undefined
-      ? initialize
-      : withTimeout(
-          initialize,
-          options.timeoutMs,
-          `harness runtime did not answer initialize within ${options.timeoutMs}ms`,
-        ));
+    await withTimeout(
+      initialize,
+      initializeTimeoutMs,
+      `harness runtime did not answer initialize within ${initializeTimeoutMs}ms`,
+    );
   } catch (error) {
     // A runtime that never finished the handshake is useless to the caller,
     // and nobody else holds a handle to kill it.
-    if (isAlive()) child.kill('SIGTERM');
+    void terminate();
     throw error;
   }
 
@@ -273,7 +318,7 @@ export const spawnDshSdkSession = async (
     await withTimeout(rpc.request('shutdown'), SHUTDOWN_TIMEOUT_MS, 'shutdown timed out').catch(
       () => {},
     );
-    if (child.exitCode === null && child.signalCode === null) child.kill('SIGTERM');
+    await terminate();
   };
 
   async function* prompt(text: string): AsyncGenerator<HeterogeneousAgentEvent> {

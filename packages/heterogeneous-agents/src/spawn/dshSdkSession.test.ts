@@ -1,10 +1,11 @@
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
+  DSH_INITIALIZE_TIMEOUT_MS,
   resolveDshRuntimeCommand,
   resolveDshRuntimeLaunch,
   spawnDshSdkSession,
@@ -167,6 +168,56 @@ describe('spawnDshSdkSession', () => {
       }),
     ).rejects.toThrow(/did not answer initialize within 300ms/);
   }, 10_000);
+
+  it('bounds initialize even when the caller sets no run timeout', async () => {
+    // Production launch paths (desktop, CLI) pass no `timeoutMs`; a runtime
+    // that boots but never answers must still fail the spawn.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const spawned = spawnDshSdkSession({
+        args: ['-e', `process.stdin.on('data', () => {})`],
+        command: process.execPath,
+        cwd: process.cwd(),
+        model: 'deepseek-chat',
+        provider: 'deepseek-official',
+        sessionId: 'live-1',
+      });
+      const settled = spawned.then(
+        () => 'resolved',
+        (error: Error) => error.message,
+      );
+
+      await vi.advanceTimersByTimeAsync(DSH_INITIALIZE_TIMEOUT_MS + 1);
+
+      await expect(settled).resolves.toMatch(/did not answer initialize/);
+    } finally {
+      vi.useRealTimers();
+    }
+  }, 20_000);
+
+  it('does not resolve dispose until a SIGTERM-ignoring runtime is gone', async () => {
+    const pidFile = path.join(await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-pid-')), 'pid');
+    const session = await spawnDshSdkSession({
+      // Answers initialize, never answers shutdown, and ignores SIGTERM — a
+      // runtime whose async teardown is stuck.
+      args: [
+        '-e',
+        `require('fs').writeFileSync(process.env.PID_FILE, String(process.pid));process.on('SIGTERM', () => {});let b='';process.stdin.on('data',c=>{b+=c;const ls=b.split('\\n');b=ls.pop();for(const l of ls){if(!l.trim())continue;const f=JSON.parse(l);if(f.method==='initialize')process.stdout.write(JSON.stringify({id:f.id,jsonrpc:'2.0',result:{}})+'\\n');}})`,
+      ],
+      command: process.execPath,
+      cwd: process.cwd(),
+      env: { PID_FILE: pidFile },
+      model: 'deepseek-chat',
+      provider: 'deepseek-official',
+      sessionId: 'live-1',
+    });
+    const pid = Number(await readFile(pidFile, 'utf8'));
+    expect(pid).toBeGreaterThan(0);
+
+    await session.dispose();
+
+    expect(() => process.kill(pid, 0)).toThrow();
+  }, 20_000);
 
   it('streams a second prompt on the same handle to its own idle', async () => {
     const session = await startFake();
