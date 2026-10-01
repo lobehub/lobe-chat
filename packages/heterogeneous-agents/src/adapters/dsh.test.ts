@@ -152,6 +152,24 @@ describe('DshAdapter', () => {
     });
   });
 
+  it('keeps the error as the terminal event when the runtime then goes idle', () => {
+    const adapter = new DshAdapter('s1');
+    adapter.adapt(sessionEvent('s1', 'step/start', { step: 1, turn: 1 }));
+    adapter.adapt(
+      sessionEvent('s1', 'turn/end', {
+        reason: { error: { code: 'AUTH', message: 'bad key' }, kind: 'error' },
+        turn: 1,
+      }),
+    );
+
+    // Consumers keep a single terminal event; a trailing success would
+    // overwrite the failure and drop its error card.
+    const idle = adapter.adapt(notify('session.status', { sessionId: 's1', status: 'idle' }));
+    expect(idle).toEqual([]);
+    expect(adapter.flush().map(({ type }) => type)).not.toContain('agent_runtime_end');
+    expect(adapter.isRunFinished()).toBe(true);
+  });
+
   it('reports a retried request as stream_retry, not a run failure', () => {
     const adapter = new DshAdapter();
     adapter.adapt(sessionEvent('s1', 'step/start', { step: 1, turn: 1 }));

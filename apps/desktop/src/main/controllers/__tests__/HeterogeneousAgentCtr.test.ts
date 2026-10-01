@@ -1383,6 +1383,8 @@ describe('HeterogeneousAgentCtr', () => {
           env: expect.objectContaining({ DEEPSEEK_API_KEY: 'test-key' }),
           model: 'deepseek-chat',
           provider: 'deepseek-official',
+          // Transcripts live in app state, not the project directory.
+          sessionRoot: path.join('/fake/userData', 'dsh-sessions'),
         }),
       );
       expect(dshPromptMock).toHaveBeenCalledWith('follow project rules\n\nhello');
@@ -1395,6 +1397,40 @@ describe('HeterogeneousAgentCtr', () => {
       );
       expect(send).toHaveBeenCalledWith('heteroAgentSessionComplete', { sessionId });
       expect(dshDisposeMock).toHaveBeenCalledOnce();
+    });
+
+    it('does not prompt when Stop lands while the runtime is initializing', async () => {
+      const send = vi.fn();
+      mockGetAllWindows.mockReturnValue([{ isDestroyed: () => false, webContents: { send } }]);
+      const ctr = new HeterogeneousAgentCtr({
+        appStoragePath,
+        storeManager: { get: vi.fn() },
+      } as any);
+      const { sessionId } = await ctr.startSession({
+        agentType: 'deepseek-harness',
+        command: '',
+        cwd: '/workspace',
+        initialModel: 'deepseek-chat',
+      });
+
+      let finishInit!: () => void;
+      dshSpawnMock.mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finishInit = () => resolve({ dispose: dshDisposeMock, prompt: dshPromptMock });
+          }),
+      );
+
+      const sending = ctr.sendPrompt({ operationId: 'op-dsh', prompt: 'hello', sessionId });
+      await vi.waitFor(() => expect(dshSpawnMock).toHaveBeenCalled());
+      // No handle exists yet, so cancel can only record the intent.
+      await ctr.cancelSession({ sessionId });
+      finishInit();
+      await sending;
+
+      expect(dshPromptMock).not.toHaveBeenCalled();
+      expect(dshDisposeMock).toHaveBeenCalledOnce();
+      expect(send).toHaveBeenCalledWith('heteroAgentSessionComplete', { sessionId });
     });
   });
 

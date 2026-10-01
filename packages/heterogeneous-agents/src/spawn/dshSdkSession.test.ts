@@ -1,5 +1,5 @@
 import { mkdtemp, readFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
@@ -8,6 +8,7 @@ import {
   DSH_INITIALIZE_TIMEOUT_MS,
   resolveDshRuntimeCommand,
   resolveDshRuntimeLaunch,
+  resolveDshSessionRoot,
   spawnDshSdkSession,
 } from './dshSdkSession';
 
@@ -37,6 +38,11 @@ process.stdin.on('data', (chunk) => {
     } else if (frame.method === 'session/prompt') {
       send({ id: frame.id, jsonrpc: '2.0', result: { messageId: 'm1' } });
       event('step/start', { step: 1, turn: 1 });
+      if (frame.params.contentBlocks[0].text === 'fail') {
+        event('turn/end', { reason: { error: { code: 'AUTH', message: 'bad key' }, kind: 'error' }, turn: 1 });
+        send({ jsonrpc: '2.0', method: 'session.status', params: { sessionId: 'live-1', status: 'idle' } });
+        continue;
+      }
       event('request/header', { header: { config: { model: 'deepseek-chat', provider: 'deepseek-official' } }, reason: 'initial' });
       event('assistant/chunk', { chunk: { index: 0, text: 'hi', type: 'text-delta' } });
       // A sibling session in the same runtime must not reach the caller.
@@ -127,6 +133,24 @@ describe('spawnDshSdkSession', () => {
     }
   }, 20_000);
 
+  it('ends a failed turn on its error when the runtime goes idle', async () => {
+    const session = await startFake();
+    try {
+      const events = await collect(session, 'fail');
+
+      // The run ends at idle without a trailing success that would overwrite
+      // the error terminal.
+      expect(events.map(({ type }) => type)).toEqual([
+        'stream_start',
+        'error',
+        'stream_end',
+        'visible_output_end',
+      ]);
+    } finally {
+      await session.dispose();
+    }
+  }, 20_000);
+
   it('binds the prompted session so a sibling session is filtered out', async () => {
     const session = await startFake();
     try {
@@ -194,6 +218,44 @@ describe('spawnDshSdkSession', () => {
       vi.useRealTimers();
     }
   }, 20_000);
+
+  it('keeps transcripts out of the workspace when no session root is configured', async () => {
+    vi.stubEnv('DSH_SESSION_ROOT', undefined);
+    const dir = await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-root-'));
+    const workspace = path.join(dir, 'project');
+    const rootFile = path.join(dir, 'root');
+    try {
+      // Records the transcript root the runtime was launched with.
+      const session = await spawnDshSdkSession({
+        args: [
+          '-e',
+          `require('fs').writeFileSync(process.env.ROOT_FILE, process.env.DSH_SESSION_ROOT ?? '');let b='';process.stdin.on('data',c=>{b+=c;const ls=b.split('\\n');b=ls.pop();for(const l of ls){if(!l.trim())continue;const f=JSON.parse(l);process.stdout.write(JSON.stringify({id:f.id,jsonrpc:'2.0',result:{}})+'\\n');}})`,
+        ],
+        command: process.execPath,
+        cwd: workspace,
+        env: { ROOT_FILE: rootFile },
+        model: 'deepseek-chat',
+        provider: 'deepseek-official',
+        sessionId: 'live-1',
+        spawnCwd: process.cwd(),
+      });
+      await session.dispose();
+
+      const root = await readFile(rootFile, 'utf8');
+      expect(root).toBe(path.join(homedir(), '.lobehub', 'dsh-sessions'));
+      expect(root.startsWith(workspace)).toBe(false);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  }, 20_000);
+
+  it('prefers the caller session root over inherited configuration', () => {
+    expect(
+      resolveDshSessionRoot({ env: { DSH_SESSION_ROOT: '/env' }, sessionRoot: '/app/state' }, {}),
+    ).toBe('/app/state');
+    expect(resolveDshSessionRoot({ env: { DSH_SESSION_ROOT: '/env' } }, {})).toBe('/env');
+    expect(resolveDshSessionRoot({}, { DSH_SESSION_ROOT: '/process' })).toBe('/process');
+  });
 
   it('does not resolve dispose until a SIGTERM-ignoring runtime is gone', async () => {
     const pidFile = path.join(await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-pid-')), 'pid');

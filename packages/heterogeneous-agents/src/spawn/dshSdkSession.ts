@@ -1,5 +1,7 @@
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { homedir } from 'node:os';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { DshAdapter } from '../adapters/dsh';
@@ -43,6 +45,13 @@ export interface DshSdkSessionOptions {
    */
   sessionId: string;
   /**
+   * Where the runtime persists session transcripts (`DSH_SESSION_ROOT`).
+   * Transcripts hold prompts and tool output, so they must never default into
+   * the agent workspace; falls back to an explicit `DSH_SESSION_ROOT` and then
+   * {@link defaultDshSessionRoot}.
+   */
+  sessionRoot?: string;
+  /**
    * Child process working directory, when it must differ from the workspace.
    * The packaged runtime needs no override; a source launch does, because Node
    * resolves `--import` loader specifiers against the process cwd.
@@ -76,6 +85,23 @@ const withTimeout = <T>(promise: Promise<T>, ms: number, message: string): Promi
   });
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 };
+
+/** Per-user state directory for DSH transcripts when the caller names none. */
+export const defaultDshSessionRoot = (): string => path.join(homedir(), '.lobehub', 'dsh-sessions');
+
+/**
+ * Resolve the transcript directory handed to the runtime. Always explicit:
+ * the bundled composition otherwise falls back to `./.sessions` under the
+ * child's cwd, which is the user's project.
+ */
+export const resolveDshSessionRoot = (
+  options: Pick<DshSdkSessionOptions, 'env' | 'sessionRoot'>,
+  env: Record<string, string | undefined> = process.env,
+): string =>
+  options.sessionRoot ??
+  options.env?.DSH_SESSION_ROOT ??
+  env.DSH_SESSION_ROOT ??
+  defaultDshSessionRoot();
 
 export interface DshRuntimeLaunch {
   args: string[];
@@ -209,7 +235,12 @@ export const spawnDshSdkSession = async (
       : { args: options.args ?? [], command: options.command };
   const child = spawn(runtime.command, runtime.args, {
     cwd: options.spawnCwd ?? options.cwd,
-    env: { ...process.env, ...runtime.env, ...options.env } as NodeJS.ProcessEnv,
+    env: {
+      ...process.env,
+      ...runtime.env,
+      ...options.env,
+      DSH_SESSION_ROOT: resolveDshSessionRoot(options),
+    } as NodeJS.ProcessEnv,
     stdio: ['pipe', 'pipe', 'pipe'],
   }) as ChildProcessWithoutNullStreams;
 
@@ -348,6 +379,9 @@ export const spawnDshSdkSession = async (
           if (event.type === 'agent_runtime_end') return;
         }
       }
+      // A run that failed ends on its `error` event with no `agent_runtime_end`
+      // after it; the adapter still marks the idle as the run boundary.
+      if (adapter.isRunFinished()) return;
 
       if (exited) throw exited;
       if (deadline !== undefined && Date.now() > deadline) {

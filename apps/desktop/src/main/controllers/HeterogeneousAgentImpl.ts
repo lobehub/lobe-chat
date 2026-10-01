@@ -2117,9 +2117,20 @@ export default class HeterogeneousAgentCtr {
         model: session.model || 'deepseek-chat',
         provider: 'deepseek-official',
         sessionId: session.agentSessionId || session.sessionId,
+        // Transcripts carry prompts and tool output; keep them in app state,
+        // never in the user's project directory.
+        sessionRoot: path.join(electronApp.getPath('userData'), 'dsh-sessions'),
       });
       session.dshSession = dshSession;
       session.agentSessionId ||= session.sessionId;
+
+      // Stop pressed while the runtime was still initializing found no handle
+      // to dispose; honour it now, before any model or filesystem work starts.
+      // The `finally` below disposes the runtime.
+      if (session.cancelledByUs) {
+        this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
+        return;
+      }
 
       for await (const event of dshSession.prompt(prompt)) {
         this.broadcast('heteroAgentEvent', {

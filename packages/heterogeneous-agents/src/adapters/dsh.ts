@@ -189,12 +189,28 @@ export class DshAdapter implements AgentEventAdapter {
   }
 
   flush(): HeterogeneousAgentEvent[] {
-    const events: HeterogeneousAgentEvent[] = this.closeStream();
-    if (!this.finished) {
-      this.finished = true;
-      events.push(this.makeEvent('agent_runtime_end', {}));
-    }
-    return events;
+    return [...this.closeStream(), ...this.finishRun()];
+  }
+
+  /**
+   * Whether the current run reached its terminal state. A run that already
+   * reported an `error` ends without `agent_runtime_end`, so the session layer
+   * reads this rather than waiting for that event.
+   */
+  isRunFinished(): boolean {
+    return this.finished;
+  }
+
+  /**
+   * Mark the run finished. The terminal event is `agent_runtime_end` unless an
+   * `error` terminal was already emitted — consumers keep a single terminal
+   * event, so a trailing success would overwrite the failure.
+   */
+  private finishRun(): HeterogeneousAgentEvent[] {
+    if (this.finished) return [];
+    this.finished = true;
+    if (this.terminalErrorEmitted) return [];
+    return [this.makeEvent('agent_runtime_end', {})];
   }
 
   private handleSessionEvent(params: any): HeterogeneousAgentEvent[] {
@@ -499,9 +515,7 @@ export class DshAdapter implements AgentEventAdapter {
    */
   private handleStatus(params: any): HeterogeneousAgentEvent[] {
     if (params?.sessionId !== this.sessionId || params?.status !== 'idle') return [];
-    if (this.finished) return [];
-    this.finished = true;
-    return [this.makeEvent('agent_runtime_end', {})];
+    return this.finishRun();
   }
 
   /**
