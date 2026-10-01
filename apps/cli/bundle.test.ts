@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 import { build } from 'tsdown';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { cliConfig as config } from './tsdown.config';
+import config from './tsdown.config';
 
 const execFileAsync = promisify(execFile);
 

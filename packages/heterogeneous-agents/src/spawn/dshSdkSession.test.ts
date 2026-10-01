@@ -1,14 +1,13 @@
-import { mkdtemp, readFile } from 'node:fs/promises';
-import { homedir, tmpdir } from 'node:os';
+import { chmod, mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  DSH_COMMAND,
   DSH_INITIALIZE_TIMEOUT_MS,
-  resolveDshRuntimeCommand,
-  resolveDshRuntimeLaunch,
-  resolveDshSessionRoot,
+  DSH_SDK_PROFILE_ARGS,
   spawnDshSdkSession,
 } from './dshSdkSession';
 
@@ -75,42 +74,45 @@ const collect = async (handle: Awaited<ReturnType<typeof startFake>>, text: stri
 };
 
 describe('spawnDshSdkSession', () => {
-  it('resolves the LobeHub-owned runtime entry without a DSH checkout', () => {
-    const launch = resolveDshRuntimeLaunch();
+  // The runtime is the official DSH CLI's `sdk` profile, found on PATH — no
+  // LobeHub-composed harness and no bundled `@deepseek-ai/*` packages.
+  it('launches the installed `dsh` CLI with its sdk profile by default', async () => {
+    expect(DSH_COMMAND).toBe('dsh');
+    expect(DSH_SDK_PROFILE_ARGS).toEqual(['--profile', 'sdk']);
+    if (process.platform === 'win32') return;
 
-    expect(launch.command).toBe(process.execPath);
-    expect(launch.args.at(-1)).toMatch(/dshRuntimeEntry\.(?:js|ts)$/);
-    expect(launch.args.join(' ')).not.toContain('dsh-sdk-jsonrpc-demo');
-  });
+    const dir = await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-bin-'));
+    const argsFile = path.join(dir, 'args');
+    // A `dsh` on PATH that records its argv and answers the handshake.
+    await writeFile(
+      path.join(dir, 'dsh'),
+      `#!${process.execPath}\nrequire('fs').writeFileSync(process.env.ARGS_FILE, JSON.stringify(process.argv.slice(2)));let b='';process.stdin.on('data',c=>{b+=c;const ls=b.split('\\n');b=ls.pop();for(const l of ls){if(!l.trim())continue;const f=JSON.parse(l);process.stdout.write(JSON.stringify({id:f.id,jsonrpc:'2.0',result:{}})+'\\n');}})\n`,
+    );
+    await chmod(path.join(dir, 'dsh'), 0o755);
 
-  it('launches the DSH runtime with Node when the parent CLI runs under Bun', () => {
-    expect(
-      resolveDshRuntimeCommand({ bun: '1.3.11' } as unknown as NodeJS.ProcessVersions, '/bun'),
-    ).toBe('node');
-    expect(
-      resolveDshRuntimeCommand(
-        { bun: '1.3.11', electron: '40.0.0' } as unknown as NodeJS.ProcessVersions,
-        '/Electron',
-      ),
-    ).toBe('/Electron');
-  });
-
-  it('boots the bundled composition and completes the JSON-RPC handshake', async () => {
-    const workspace = await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-smoke-'));
     const session = await spawnDshSdkSession({
-      cwd: workspace,
-      env: {
-        DSH_CWD: workspace,
-        DSH_SESSION_ROOT: path.join(workspace, '.sessions'),
-      },
+      cwd: process.cwd(),
+      env: { ARGS_FILE: argsFile, PATH: `${dir}${path.delimiter}${process.env.PATH ?? ''}` },
       model: 'deepseek-chat',
       provider: 'deepseek-official',
-      sessionId: 'smoke',
-      timeoutMs: 60_000,
+      sessionId: 'live-1',
     });
-
     await session.dispose();
-  }, 60_000);
+
+    expect(JSON.parse(await readFile(argsFile, 'utf8'))).toEqual(['--profile', 'sdk']);
+  }, 20_000);
+
+  it('explains how to install the CLI when `dsh` is missing', async () => {
+    await expect(
+      spawnDshSdkSession({
+        command: path.join(tmpdir(), 'lobehub-no-such-dsh'),
+        cwd: process.cwd(),
+        model: 'deepseek-chat',
+        provider: 'deepseek-official',
+        sessionId: 'live-1',
+      }),
+    ).rejects.toThrow(/npm i -g @deepseek-ai\/dsh/);
+  }, 20_000);
 
   it('completes the handshake and streams one turn to whole-agent idle', async () => {
     const session = await startFake();
@@ -218,44 +220,6 @@ describe('spawnDshSdkSession', () => {
       vi.useRealTimers();
     }
   }, 20_000);
-
-  it('keeps transcripts out of the workspace when no session root is configured', async () => {
-    vi.stubEnv('DSH_SESSION_ROOT', undefined);
-    const dir = await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-root-'));
-    const workspace = path.join(dir, 'project');
-    const rootFile = path.join(dir, 'root');
-    try {
-      // Records the transcript root the runtime was launched with.
-      const session = await spawnDshSdkSession({
-        args: [
-          '-e',
-          `require('fs').writeFileSync(process.env.ROOT_FILE, process.env.DSH_SESSION_ROOT ?? '');let b='';process.stdin.on('data',c=>{b+=c;const ls=b.split('\\n');b=ls.pop();for(const l of ls){if(!l.trim())continue;const f=JSON.parse(l);process.stdout.write(JSON.stringify({id:f.id,jsonrpc:'2.0',result:{}})+'\\n');}})`,
-        ],
-        command: process.execPath,
-        cwd: workspace,
-        env: { ROOT_FILE: rootFile },
-        model: 'deepseek-chat',
-        provider: 'deepseek-official',
-        sessionId: 'live-1',
-        spawnCwd: process.cwd(),
-      });
-      await session.dispose();
-
-      const root = await readFile(rootFile, 'utf8');
-      expect(root).toBe(path.join(homedir(), '.lobehub', 'dsh-sessions'));
-      expect(root.startsWith(workspace)).toBe(false);
-    } finally {
-      vi.unstubAllEnvs();
-    }
-  }, 20_000);
-
-  it('prefers the caller session root over inherited configuration', () => {
-    expect(
-      resolveDshSessionRoot({ env: { DSH_SESSION_ROOT: '/env' }, sessionRoot: '/app/state' }, {}),
-    ).toBe('/app/state');
-    expect(resolveDshSessionRoot({ env: { DSH_SESSION_ROOT: '/env' } }, {})).toBe('/env');
-    expect(resolveDshSessionRoot({}, { DSH_SESSION_ROOT: '/process' })).toBe('/process');
-  });
 
   it('does not resolve dispose until a SIGTERM-ignoring runtime is gone', async () => {
     const pidFile = path.join(await mkdtemp(path.join(tmpdir(), 'lobehub-dsh-pid-')), 'pid');

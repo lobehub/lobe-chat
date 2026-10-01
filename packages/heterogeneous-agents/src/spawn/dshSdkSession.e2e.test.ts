@@ -11,8 +11,9 @@ import { spawnDshSdkSession } from './dshSdkSession';
  * End-to-end against a REAL DeepSeek Harness runtime — real model calls, real
  * tool execution, real subagent delegation.
  *
- * Self-skips without `DEEPSEEK_API_KEY`. The runtime and its composition are
- * owned by this package, so the suite needs no DeepSeek Harness checkout.
+ * Self-skips without `DEEPSEEK_API_KEY`. Requires the official DeepSeek Harness
+ * CLI (`npm i -g @deepseek-ai/dsh`) on PATH, or `DSH_BIN` pointing at
+ * another install.
  *
  * These cases exist because the replay fixtures cannot cover them: the recorded
  * snapshots normalize every session id to one value, so parent/child routing is
@@ -21,15 +22,12 @@ import { spawnDshSdkSession } from './dshSdkSession';
  */
 
 const runnable = Boolean(process.env.DEEPSEEK_API_KEY);
+const dshBin = process.env.DSH_BIN;
 
 const start = async (workspace: string) =>
   spawnDshSdkSession({
+    ...(dshBin ? { command: dshBin } : {}),
     cwd: workspace,
-    env: {
-      DSH_CWD: workspace,
-      DSH_SESSION_ROOT: path.join(workspace, '.sessions'),
-      DSH_SYSTEM_PROMPT: 'You are a terse coding agent. Use tools when asked to.',
-    },
     maxTokens: 2048,
     model: 'deepseek-chat',
     provider: 'deepseek-official',

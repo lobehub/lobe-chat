@@ -36,13 +36,7 @@ export default defineConfig(async (env) => {
       copyPublicDir: false,
       emptyOutDir: true,
       lib: {
-        entry: {
-          dshRuntimeEntry: path.resolve(
-            __dirname,
-            '../../packages/heterogeneous-agents/src/spawn/dshRuntimeEntry.ts',
-          ),
-          index: path.resolve(__dirname, 'src/main/index.ts'),
-        },
+        entry: path.resolve(__dirname, 'src/main/index.ts'),
         formats: ['cjs'],
       },
       minify: !isDev,

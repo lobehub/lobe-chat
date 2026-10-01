@@ -414,7 +414,12 @@ export interface RemoteHeterogeneousAgentDescriptor {
   type: string;
 }
 
-/** A runtime bundled with LobeHub Desktop; no external binary installation is required. */
+/**
+ * A runtime LobeHub drives over a protocol instead of parsing a CLI's JSONL
+ * dialect — the DeepSeek Harness CLI (`dsh`) serving its SDK profile over
+ * stdio JSON-RPC. The `dsh` executable is user-installed; nothing ships with
+ * LobeHub.
+ */
 export interface LocalRuntimeHeterogeneousAgentDescriptor {
   defaultModel: string;
   defaultTopicGroupMode?: TopicGroupMode;
@@ -437,7 +442,7 @@ export const LOCAL_RUNTIME_HETEROGENEOUS_AGENT_CONFIGS = [
 
 /**
  * Every agent type that runs on the producer's machine and streams through
- * `heteroIngest` / `heteroFinish`: descriptor-backed CLIs plus bundled runtimes.
+ * `heteroIngest` / `heteroFinish`: descriptor-backed CLIs plus protocol-driven runtimes.
  */
 export const LocalExecutionHeterogeneousAgentTypeSchema = z.enum([
   ...LOCAL_HETEROGENEOUS_AGENT_TYPES,

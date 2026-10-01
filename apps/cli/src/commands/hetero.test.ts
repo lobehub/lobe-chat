@@ -500,7 +500,7 @@ describe('hetero exec command', () => {
     );
   });
 
-  it('runs DeepSeek Harness through its bundled JSON-RPC session', async () => {
+  it('runs DeepSeek Harness through its dsh CLI sdk-profile session', async () => {
     const dispose = vi.fn().mockResolvedValue(undefined);
     const prompt = vi.fn(async function* () {
       yield {

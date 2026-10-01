@@ -196,6 +196,7 @@ const {
   devinAcpSessionConstructMock,
   devinAcpSessionInterruptMock,
   devinAcpSessionRunMock,
+  dshDetectMock,
   dshDisposeMock,
   dshPromptMock,
   dshSpawnMock,
@@ -239,6 +240,7 @@ const {
   devinAcpSessionConstructMock: vi.fn(),
   devinAcpSessionInterruptMock: vi.fn(),
   devinAcpSessionRunMock: vi.fn(),
+  dshDetectMock: vi.fn(),
   dshDisposeMock: vi.fn(),
   dshPromptMock: vi.fn(),
   dshSpawnMock: vi.fn(),
@@ -261,6 +263,11 @@ const { ensureResumeTranscriptMock, readClaudeCodeSessionCostMock } = vi.hoisted
   ensureResumeTranscriptMock: vi.fn(async () => ({ path: '', written: false })),
   readClaudeCodeSessionCostMock: vi.fn(async (): Promise<number | undefined> => undefined),
 }));
+
+vi.mock('@lobechat/heterogeneous-agents/resolveCliCommand', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return { ...actual, detectValidatedCommand: dshDetectMock };
+});
 
 vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
@@ -792,6 +799,13 @@ describe('HeterogeneousAgentCtr', () => {
     devinAcpSessionConstructMock.mockReset();
     devinAcpSessionInterruptMock.mockReset();
     devinAcpSessionRunMock.mockReset();
+    dshDetectMock.mockReset();
+    dshDetectMock.mockResolvedValue({
+      available: true,
+      path: '/usr/local/bin/dsh',
+      resolvedPathEnv: '/usr/local/bin:/usr/bin',
+      version: '0.2.0-rc.2',
+    });
     dshDisposeMock.mockReset();
     dshDisposeMock.mockResolvedValue(undefined);
     dshPromptMock.mockReset();
@@ -1355,7 +1369,7 @@ describe('HeterogeneousAgentCtr', () => {
   });
 
   describe('sendPrompt (deepseek-harness)', () => {
-    it('runs the bundled JSON-RPC runtime and broadcasts unified stream events', async () => {
+    it('drives the installed dsh CLI sdk profile and broadcasts unified stream events', async () => {
       const send = vi.fn();
       mockGetAllWindows.mockReturnValue([{ isDestroyed: () => false, webContents: { send } }]);
       const ctr = new HeterogeneousAgentCtr({
@@ -1377,16 +1391,26 @@ describe('HeterogeneousAgentCtr', () => {
         systemContext: 'follow project rules',
       });
 
+      // An empty renderer command falls back to the `dsh` binary, resolved
+      // through the login-shell PATH a GUI launch otherwise lacks.
+      expect(dshDetectMock).toHaveBeenCalledWith(
+        'dsh',
+        expect.objectContaining({ validatePattern: expect.any(RegExp) }),
+        expect.objectContaining({ DEEPSEEK_API_KEY: 'test-key' }),
+      );
       expect(dshSpawnMock).toHaveBeenCalledWith(
         expect.objectContaining({
+          command: '/usr/local/bin/dsh',
           cwd: '/workspace',
-          env: expect.objectContaining({ DEEPSEEK_API_KEY: 'test-key' }),
+          env: expect.objectContaining({
+            DEEPSEEK_API_KEY: 'test-key',
+            PATH: '/usr/local/bin:/usr/bin',
+          }),
           model: 'deepseek-chat',
           provider: 'deepseek-official',
-          // Transcripts live in app state, not the project directory.
-          sessionRoot: path.join('/fake/userData', 'dsh-sessions'),
         }),
       );
+      expect(dshSpawnMock.mock.calls[0][0]).not.toHaveProperty('sessionRoot');
       expect(dshPromptMock).toHaveBeenCalledWith('follow project rules\n\nhello');
       expect(send).toHaveBeenCalledWith(
         'heteroAgentEvent',
@@ -1397,6 +1421,27 @@ describe('HeterogeneousAgentCtr', () => {
       );
       expect(send).toHaveBeenCalledWith('heteroAgentSessionComplete', { sessionId });
       expect(dshDisposeMock).toHaveBeenCalledOnce();
+    });
+
+    it('fails the turn with an install hint when the dsh CLI is missing', async () => {
+      const send = vi.fn();
+      mockGetAllWindows.mockReturnValue([{ isDestroyed: () => false, webContents: { send } }]);
+      dshDetectMock.mockResolvedValueOnce({ available: false, error: 'not found' });
+      const ctr = new HeterogeneousAgentCtr({
+        appStoragePath,
+        storeManager: { get: vi.fn() },
+      } as any);
+      const { sessionId } = await ctr.startSession({
+        agentType: 'deepseek-harness',
+        command: '',
+        cwd: '/workspace',
+        initialModel: 'deepseek-chat',
+      });
+
+      await expect(
+        ctr.sendPrompt({ operationId: 'op-dsh', prompt: 'hello', sessionId }),
+      ).rejects.toThrow(/npm i -g @deepseek-ai\/dsh/);
+      expect(dshSpawnMock).not.toHaveBeenCalled();
     });
 
     it('does not prompt when Stop lands while the runtime is initializing', async () => {
@@ -5638,6 +5683,41 @@ describe('HeterogeneousAgentCtr', () => {
       event.preventDefault.mockClear();
       beforeQuit(event);
       expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('before-quit waits for a running DSH runtime to dispose before quitting', async () => {
+      const electron = (await import('electron')) as any;
+      electron.app.on.mockClear();
+      electron.app.quit.mockClear();
+      const ctr = new HeterogeneousAgentCtr({
+        appStoragePath,
+        storeManager: { get: vi.fn() },
+      } as any);
+      const { sessionId } = await ctr.startSession({
+        agentType: 'deepseek-harness',
+        command: '',
+        cwd: '/workspace',
+      });
+      const session = (ctr as any).sessions.get(sessionId);
+      let finishDispose!: () => void;
+      const dispose = vi.fn(
+        () =>
+          new Promise<void>((resolve) => {
+            finishDispose = resolve;
+          }),
+      );
+      session.dshSession = { dispose, prompt: dshPromptMock };
+
+      ctr.afterAppReady();
+      const beforeQuit = captureRegisteredHandler(electron.app.on, 'before-quit');
+      beforeQuit({ preventDefault: vi.fn() });
+
+      expect(dispose).toHaveBeenCalledOnce();
+      expect(session.cancelledByUs).toBe(true);
+      await Promise.resolve();
+      expect(electron.app.quit).not.toHaveBeenCalled();
+      finishDispose();
+      await vi.waitFor(() => expect(electron.app.quit).toHaveBeenCalledOnce());
     });
 
     it('before-quit closes a running TRAE ACP session', async () => {

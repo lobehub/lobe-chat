@@ -57,7 +57,10 @@ import {
   QuotaSnapshotCache,
   readClaudeCodeIdentity,
 } from '@lobechat/heterogeneous-agents/quota-sampler';
-import { isLoginShellTimeoutStatus } from '@lobechat/heterogeneous-agents/resolveCliCommand';
+import {
+  detectValidatedCommand,
+  isLoginShellTimeoutStatus,
+} from '@lobechat/heterogeneous-agents/resolveCliCommand';
 import {
   type PiRpcImage,
   PiRpcSession,
@@ -92,6 +95,7 @@ import {
   CursorAcpSession,
   DevinAcpSession,
   DroidAcpSession,
+  DSH_COMMAND,
   ensureClaudeCodeResumeTranscript,
   getCodexAppServerUnsupportedArgs,
   GrokAcpSession,
@@ -186,6 +190,9 @@ import { createLogger } from '@/utils/logger';
 
 import BrowserControlCtr from './BrowserControlCtr';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
+
+/** `dsh --version` prints a bare semantic version (e.g. `0.2.0-rc.2`). */
+const DSH_VERSION_PATTERN = /^v?\d+\.\d+\.\d+(?:[-+][\dA-Za-z.-]+)?$/;
 
 const logger = createLogger('controllers:HeterogeneousAgentCtr');
 
@@ -1681,7 +1688,7 @@ export default class HeterogeneousAgentCtr {
   async startSession(params: StartSessionParams): Promise<StartSessionResult> {
     const sessionId = randomUUID();
     const agentType = params.agentType || 'claude-code';
-    // Bundled local runtimes (DeepSeek Harness) have no CLI driver and no
+    // Protocol-driven runtimes (DeepSeek Harness) have no CLI driver and no
     // provider-binding support; they authenticate through their own env.
     const driver = isLocalRuntimeHeterogeneousType(agentType)
       ? undefined
@@ -2106,20 +2113,33 @@ export default class HeterogeneousAgentCtr {
 
     const cwd = this.resolveSessionWorkingDirectory(session);
     const env = this.buildSessionSpawnEnv(session) as Record<string, string>;
+    // DSH is the user-installed DeepSeek Harness CLI, served through its `sdk`
+    // profile. A GUI-launched app inherits a lean PATH, so resolve it the way
+    // the other CLI agents are resolved (login-shell PATH fallback) and spawn
+    // with the PATH it was found under.
+    const dsh = await detectValidatedCommand(
+      session.command?.trim() || DSH_COMMAND,
+      { validatePattern: DSH_VERSION_PATTERN },
+      env,
+    );
+    if (!dsh.available || !dsh.path) {
+      throw new Error(
+        `DeepSeek Harness CLI (dsh) not found${dsh.error ? `: ${dsh.error}` : ''}. Install it with: npm i -g @deepseek-ai/dsh`,
+      );
+    }
+    if (dsh.resolvedPathEnv) env.PATH = dsh.resolvedPathEnv;
     const prompt = params.systemContext
       ? `${params.systemContext}\n\n${params.prompt}`
       : params.prompt;
 
     try {
       const dshSession = await spawnDshSdkSession({
+        command: dsh.path,
         cwd,
         env,
         model: session.model || 'deepseek-chat',
         provider: 'deepseek-official',
         sessionId: session.agentSessionId || session.sessionId,
-        // Transcripts carry prompts and tool output; keep them in app state,
-        // never in the user's project directory.
-        sessionRoot: path.join(electronApp.getPath('userData'), 'dsh-sessions'),
       });
       session.dshSession = dshSession;
       session.agentSessionId ||= session.sessionId;
@@ -4300,6 +4320,14 @@ export default class HeterogeneousAgentCtr {
         if (session.sdkSession) {
           session.cancelledByUs = true;
           session.sdkSession.close();
+        }
+        // A plain-spawned DSH runtime is not reaped with its parent, and stdin
+        // EOF alone starts an unbounded disposal — wait for its bounded
+        // shutdown → SIGTERM → SIGKILL so its tools stop writing to the workspace.
+        if (session.dshSession) {
+          session.cancelledByUs = true;
+          piClosing.push(session.dshSession.dispose());
+          session.dshSession = undefined;
         }
         if (session.process && !session.process.killed) {
           session.cancelledByUs = true;

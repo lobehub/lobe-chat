@@ -1434,7 +1434,7 @@ export function registerHeteroCommand(program: Command) {
     )
     .option(
       '-c, --command <bin>',
-      `Override the agent runtime binary (CLI defaults: ${SUPPORTED_AGENT_COMMANDS}; DeepSeek Harness uses LobeHub's bundled runtime)`,
+      `Override the agent runtime binary (CLI defaults: ${SUPPORTED_AGENT_COMMANDS}; DeepSeek Harness defaults to 'dsh --profile sdk')`,
     )
     .option(
       '--operation-id <id>',

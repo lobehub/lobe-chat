@@ -1,15 +1,20 @@
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
-import { createRequire } from 'node:module';
-import { homedir } from 'node:os';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { DshAdapter } from '../adapters/dsh';
 import type { HeterogeneousAgentEvent } from '../types';
+import { resolveCliSpawnPlan } from './cliSpawn';
 
 /**
- * Drives a DeepSeek Harness SDK runtime (`@deepseek-ai/dsh-sdk-jsonrpc-server`) over
- * newline-delimited JSON-RPC on stdio.
+ * Drives a DeepSeek Harness SDK runtime over newline-delimited JSON-RPC on
+ * stdio — the `@deepseek-ai/dsh-sdk-protocol` wire (`initialize`,
+ * `session/prompt`, `shutdown`; `session.event` / `session.status`
+ * notifications).
+ *
+ * The runtime is the official DeepSeek Harness CLI (`@deepseek-ai/dsh`)
+ * launched with its shipped `sdk` profile, the same peer the official
+ * `@deepseek-ai/dsh-sdk-client` spawns. LobeHub does not compose or bundle a
+ * harness of its own: like Claude Code or Codex, DSH is a user-installed CLI,
+ * so no `@deepseek-ai/*` package ships in the desktop core or the CLI bundle.
  *
  * This is the bidirectional counterpart to `spawnAgent`: the harness is a
  * server we send requests to (`initialize`, `session/prompt`, `shutdown`), not
@@ -17,14 +22,14 @@ import type { HeterogeneousAgentEvent } from '../types';
  * fit. Its stdout carries protocol frames only.
  */
 export interface DshSdkSessionOptions {
-  /** Arguments for a custom runtime binary. Omit with {@link command} to use LobeHub's runtime. */
+  /** Runtime arguments. Defaults to {@link DSH_SDK_PROFILE_ARGS}. */
   args?: string[];
-  /** Custom runtime binary. Omit to launch LobeHub's bundled DSH composition. */
+  /** The `dsh` executable (name on PATH or absolute path). Defaults to {@link DSH_COMMAND}. */
   command?: string;
   /**
    * Agent workspace. Sent as the harness session `cwd`, which is what the
    * filesystem tools resolve relative paths against, and used as the child's
-   * working directory unless {@link spawnCwd} overrides it.
+   * working directory (the CLI's default workspace root).
    */
   cwd: string;
   env?: Record<string, string>;
@@ -44,19 +49,6 @@ export interface DshSdkSessionOptions {
    * sibling sessions in the same runtime are filtered out.
    */
   sessionId: string;
-  /**
-   * Where the runtime persists session transcripts (`DSH_SESSION_ROOT`).
-   * Transcripts hold prompts and tool output, so they must never default into
-   * the agent workspace; falls back to an explicit `DSH_SESSION_ROOT` and then
-   * {@link defaultDshSessionRoot}.
-   */
-  sessionRoot?: string;
-  /**
-   * Child process working directory, when it must differ from the workspace.
-   * The packaged runtime needs no override; a source launch does, because Node
-   * resolves `--import` loader specifiers against the process cwd.
-   */
-  spawnCwd?: string;
   /** Wall-clock ceiling for the whole run. */
   timeoutMs?: number;
 }
@@ -86,56 +78,15 @@ const withTimeout = <T>(promise: Promise<T>, ms: number, message: string): Promi
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 };
 
-/** Per-user state directory for DSH transcripts when the caller names none. */
-export const defaultDshSessionRoot = (): string => path.join(homedir(), '.lobehub', 'dsh-sessions');
+/** The official DeepSeek Harness CLI executable (`npm i -g @deepseek-ai/dsh`). */
+export const DSH_COMMAND = 'dsh';
 
 /**
- * Resolve the transcript directory handed to the runtime. Always explicit:
- * the bundled composition otherwise falls back to `./.sessions` under the
- * child's cwd, which is the user's project.
+ * Select the CLI's shipped `sdk` profile, which serves the SDK JSON-RPC
+ * protocol on stdio until `shutdown` or stdin EOF. Transcripts persist under
+ * the CLI's own `$DSH_HOME`, never in the agent workspace.
  */
-export const resolveDshSessionRoot = (
-  options: Pick<DshSdkSessionOptions, 'env' | 'sessionRoot'>,
-  env: Record<string, string | undefined> = process.env,
-): string =>
-  options.sessionRoot ??
-  options.env?.DSH_SESSION_ROOT ??
-  env.DSH_SESSION_ROOT ??
-  defaultDshSessionRoot();
-
-export interface DshRuntimeLaunch {
-  args: string[];
-  command: string;
-  env?: Record<string, string>;
-}
-
-export const resolveDshRuntimeCommand = (
-  versions: NodeJS.ProcessVersions,
-  execPath: string,
-): string => ('bun' in versions && !versions.electron ? 'node' : execPath);
-
-/** Resolve the source entry through tsx in development and compiled JS in production. */
-export const resolveDshRuntimeLaunch = (): DshRuntimeLaunch => {
-  const currentPath = fileURLToPath(import.meta.url);
-  const sourceMode = currentPath.endsWith('.ts');
-  const entryUrl = new URL(
-    sourceMode ? './dshRuntimeEntry.ts' : './dshRuntimeEntry.js',
-    import.meta.url,
-  );
-  const env = process.versions.electron ? { ELECTRON_RUN_AS_NODE: '1' } : undefined;
-  // `lh` is commonly launched through Bun in development. DSH and tsx are
-  // Node runtimes; reusing Bun's `process.execPath` makes the loader resolve
-  // CommonJS internals through Bun and fail before JSON-RPC initialization.
-  const command = resolveDshRuntimeCommand(process.versions, process.execPath);
-
-  if (!sourceMode) return { args: [fileURLToPath(entryUrl)], command, env };
-
-  return {
-    args: ['--import', createRequire(import.meta.url).resolve('tsx'), fileURLToPath(entryUrl)],
-    command,
-    env,
-  };
-};
+export const DSH_SDK_PROFILE_ARGS: readonly string[] = ['--profile', 'sdk'];
 
 export interface DshSdkSessionHandle {
   /**
@@ -226,21 +177,17 @@ class JsonRpcStdio {
 export const spawnDshSdkSession = async (
   options: DshSdkSessionOptions,
 ): Promise<DshSdkSessionHandle> => {
-  if (options.command === undefined && options.args !== undefined) {
-    throw new TypeError('DSH runtime args require an explicit command');
-  }
-  const runtime: DshRuntimeLaunch =
-    options.command === undefined
-      ? resolveDshRuntimeLaunch()
-      : { args: options.args ?? [], command: options.command };
+  const env = { ...process.env, ...options.env } as NodeJS.ProcessEnv;
+  // npm installs `dsh` as a `.cmd` shim on Windows, which `spawn` cannot run
+  // without a shell; resolve it to its node target like the other CLI agents.
+  const runtime = await resolveCliSpawnPlan(
+    options.command ?? DSH_COMMAND,
+    [...(options.args ?? DSH_SDK_PROFILE_ARGS)],
+    env,
+  );
   const child = spawn(runtime.command, runtime.args, {
-    cwd: options.spawnCwd ?? options.cwd,
-    env: {
-      ...process.env,
-      ...runtime.env,
-      ...options.env,
-      DSH_SESSION_ROOT: resolveDshSessionRoot(options),
-    } as NodeJS.ProcessEnv,
+    cwd: options.cwd,
+    env,
     stdio: ['pipe', 'pipe', 'pipe'],
   }) as ChildProcessWithoutNullStreams;
 
@@ -265,8 +212,12 @@ export const spawnDshSdkSession = async (
   // A missing / non-executable command or an invalid cwd surfaces as an
   // `error` event, not `exit`; without a listener Node rethrows it and takes
   // down the host process. Fail the handshake and any in-flight turn instead.
-  child.on('error', (error) => {
-    exited ??= new Error(`harness runtime failed to start: ${error.message}`);
+  child.on('error', (error: NodeJS.ErrnoException) => {
+    const hint =
+      error.code === 'ENOENT'
+        ? ' (install the DeepSeek Harness CLI: npm i -g @deepseek-ai/dsh)'
+        : '';
+    exited ??= new Error(`harness runtime failed to start: ${error.message}${hint}`);
     rpc.rejectAll(exited);
     wake?.();
   });

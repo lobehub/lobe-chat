@@ -1,6 +1,6 @@
-import { defineConfig, type UserConfig } from 'tsdown';
+import { defineConfig } from 'tsdown';
 
-export const cliConfig: UserConfig = {
+export default defineConfig({
   banner: { js: '#!/usr/bin/env node' },
   clean: true,
   deps: {
@@ -45,31 +45,4 @@ export const cliConfig: UserConfig = {
   // Matches the `engines.node` floor: reading a compressed trace snapshot needs
   // `node:zlib` zstd, which lands in 22.15. Node 20 went EOL in April 2026.
   target: 'node22',
-};
-
-/**
- * The DeepSeek Harness runtime runs in its own Node child process, launched by
- * `spawnDshSdkSession` from a sibling `dshRuntimeEntry.js` next to the CLI
- * bundle. The CLI bundle is a single file without code splitting, so that
- * entry has to be emitted explicitly or every packaged `lh hetero` DSH run dies
- * at spawn with a missing-module error.
- *
- * The harness packages stay external: the runtime loads its plugins by name
- * from its YAML composition (no static import the bundler could follow), and
- * `dsh-subprocess-local` pulls in the native `node-pty` addon, so they resolve
- * from `node_modules` at runtime exactly as they do for the desktop app.
- */
-export const dshRuntimeConfig: UserConfig = {
-  clean: false,
-  deps: { neverBundle: [/^@deepseek-ai\//, 'node-pty'] },
-  entry: {
-    dshRuntimeEntry: '../../packages/heterogeneous-agents/src/spawn/dshRuntimeEntry.ts',
-  },
-  fixedExtension: false,
-  format: ['esm'],
-  minify: !!process.env.MINIFY,
-  platform: 'node',
-  target: 'node22',
-};
-
-export default defineConfig([cliConfig, dshRuntimeConfig]);
+});

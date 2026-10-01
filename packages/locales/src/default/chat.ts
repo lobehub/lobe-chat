@@ -1284,7 +1284,7 @@ export default {
   'connectAgent.create.done': 'Done',
   'connectAgent.providerDesc.claude-code': 'Anthropic coding agent CLI',
   'connectAgent.providerDesc.deepseek-harness':
-    'Built-in DeepSeek agent runtime with tools and subagents',
+    'DeepSeek Harness agent (dsh CLI) with tools and subagents',
   'connectAgent.providerDesc.codebuddy': 'Tencent coding agent CLI',
   'connectAgent.providerDesc.codex': 'OpenAI coding agent CLI',
   'connectAgent.providerDesc.cursor': 'Cursor coding agent CLI',
