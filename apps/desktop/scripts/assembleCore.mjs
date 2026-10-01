@@ -12,6 +12,7 @@ export function assembleCore({
   out = path.join(DESKTOP_DIR, 'core-dist'),
 } = {}) {
   const inputs = {
+    'apps/cli/dist/dshRuntimeEntry.js': path.join(cliDir, 'dist/dshRuntimeEntry.js'),
     'apps/cli/dist/index.js': path.join(cliDir, 'dist/index.js'),
     'dist/main': path.join(desktopDir, 'dist/main'),
     'dist/preload': path.join(desktopDir, 'dist/preload'),
@@ -41,6 +42,12 @@ export function assembleCore({
 
   mkdirSync(path.join(out, 'cli/dist'), { recursive: true });
   cpSync(inputs['apps/cli/dist/index.js'], path.join(out, 'cli/dist/index.js'));
+  // `spawnDshSdkSession` launches the DSH runtime from a sibling of the CLI
+  // bundle, so the entry must sit next to `index.js` under its own name.
+  cpSync(
+    inputs['apps/cli/dist/dshRuntimeEntry.js'],
+    path.join(out, 'cli/dist/dshRuntimeEntry.js'),
+  );
   const { name, version } = JSON.parse(readFileSync(path.join(cliDir, 'package.json'), 'utf8'));
   writeFileSync(
     path.join(out, 'cli/package.json'),

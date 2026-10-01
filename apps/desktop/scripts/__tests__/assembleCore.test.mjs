@@ -46,6 +46,7 @@ const setup = async () => {
     path.join(root, 'desktop/node_modules/electron-log'),
   );
   await write('cli/dist/index.js', 'cli');
+  await write('cli/dist/dshRuntimeEntry.js', 'dsh');
   await write(
     'cli/package.json',
     JSON.stringify({ name: '@lobehub/cli', version: '1.2.3', bin: {} }),
@@ -68,6 +69,7 @@ describe('assembleCore', () => {
     assembleCore(options);
 
     expect(await listFiles(options.out)).toEqual([
+      'cli/dist/dshRuntimeEntry.js',
       'cli/dist/index.js',
       'cli/package.json',
       'dist/main/chunk.js',
@@ -82,6 +84,10 @@ describe('assembleCore', () => {
       'resources/tray.png',
     ]);
     expect(await readFile(path.join(options.out, 'cli/dist/index.js'), 'utf8')).toBe('cli');
+    // The CLI spawns the DSH runtime from a sibling file of its bundle.
+    expect(await readFile(path.join(options.out, 'cli/dist/dshRuntimeEntry.js'), 'utf8')).toBe(
+      'dsh',
+    );
     expect(JSON.parse(await readFile(path.join(options.out, 'package.json'), 'utf8'))).toEqual({
       type: 'commonjs',
     });
@@ -104,6 +110,12 @@ describe('assembleCore', () => {
         encoding: 'utf8',
       }).trim(),
     ).toBe('1.2.3');
+  });
+
+  it('throws when the CLI DSH runtime entry is missing', async () => {
+    const options = await setup();
+    await rm(path.join(options.cliDir, 'dist/dshRuntimeEntry.js'));
+    expect(() => assembleCore(options)).toThrow(/dshRuntimeEntry\.js/);
   });
 
   it('throws when dist/main is missing', async () => {
