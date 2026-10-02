@@ -80,12 +80,15 @@ describe('AgentSettings Content', () => {
     mocks.userState.preference.lab.enableAgentGraphConfig = false;
   });
 
-  it('opens on the opening tab', () => {
+  it('opens on the opening tab, with identity next to it', () => {
     render(<Content />);
 
     const layout = screen.getByTestId('layout');
     expect(layout).toHaveAttribute('data-active', ChatSettingsTabs.Opening);
-    expect(layout).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+    expect(layout).toHaveAttribute(
+      'data-tabs',
+      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity}`,
+    );
     expect(screen.getByTestId('agent-settings-content')).toHaveAttribute(
       'data-tab',
       ChatSettingsTabs.Opening,
@@ -100,7 +103,7 @@ describe('AgentSettings Content', () => {
 
     expect(screen.getByTestId('layout')).toHaveAttribute(
       'data-tabs',
-      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Graph}`,
+      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity},${ChatSettingsTabs.Graph}`,
     );
   });
 
@@ -109,6 +112,9 @@ describe('AgentSettings Content', () => {
 
     render(<Content />);
 
-    expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+    expect(screen.getByTestId('layout')).toHaveAttribute(
+      'data-tabs',
+      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity}`,
+    );
   });
 });

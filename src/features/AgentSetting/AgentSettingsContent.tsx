@@ -9,6 +9,7 @@ import { labPreferSelectors } from '@/store/user/selectors';
 
 import AgentConnectors from './AgentConnectors';
 import AgentGraphRuntime from './AgentGraphRuntime';
+import AgentIdentity from './AgentIdentity';
 import AgentOpening from './AgentOpening';
 
 export interface AgentSettingsContentProps {
@@ -25,6 +26,7 @@ const AgentSettingsContent = memo<AgentSettingsContentProps>(({ tab, loadingSkel
   return (
     <>
       {tab === ChatSettingsTabs.Opening && <AgentOpening />}
+      {tab === ChatSettingsTabs.Identity && <AgentIdentity />}
       {enableAgentGraphConfigLab && tab === ChatSettingsTabs.Graph && <AgentGraphRuntime />}
       {tab === ChatSettingsTabs.Connector && <AgentConnectors />}
     </>
