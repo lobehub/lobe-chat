@@ -332,6 +332,7 @@ export const discoverTools = async (
 
     hasAgentDocuments = await toolReads.agentDocuments;
     const hasOversizedFiles = await toolReads.oversizedFiles;
+    const hasIdentityAccount = await toolReads.hasIdentityAccount;
 
     log('execAgent: isBotConversation=%s', isBotConversation);
 
@@ -483,6 +484,7 @@ export const discoverTools = async (
       executionPlan,
       globalMemoryEnabled,
       hasEnabledKnowledgeBases,
+      hasIdentityAccount,
       hasOversizedFiles,
       isBotConversation,
       isGroupSupervisor,
