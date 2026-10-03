@@ -432,9 +432,9 @@ const readHasIdentityAccount = async (
     deps.userId,
     undefined,
     deps.workspaceId,
-  ).query({ agentId: ctx.resolvedAgentId });
+  ).query({ agentId: ctx.resolvedAgentId, liveOnly: true });
 
-  return accounts.some((account) => account.status !== 'revoked');
+  return accounts.length > 0;
 };
 
 /**
