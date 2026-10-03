@@ -16,7 +16,8 @@ const mocks = vi.hoisted(() => ({
     optimisticUpdateAgentConfig: vi.fn(),
     optimisticUpdateAgentMeta: vi.fn(),
   },
-  userState: { preference: { lab: { enableAgentGraphConfig: false } } },
+  serverState: { serverConfig: { agentIdentityProviders: [] as string[] } },
+  userState: { preference: { lab: { enableAgentGraphConfig: false, enableAgentIdentity: false } } },
 }));
 
 vi.mock('@/features/AgentSetting', () => ({
@@ -42,6 +43,9 @@ vi.mock('@/features/AgentSetting', () => ({
   ),
 }));
 
+const accountService = vi.hoisted(() => ({ list: vi.fn(async () => [] as unknown[]) }));
+vi.mock('@/services/agentAccount', () => ({ agentAccountService: accountService }));
+
 vi.mock('@/store/agent', () => {
   const useAgentStore = (selector: (state: typeof mocks.agentState) => unknown) =>
     selector(mocks.agentState);
@@ -62,6 +66,18 @@ vi.mock('@/store/agent/selectors', () => ({
   },
 }));
 
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: (selector: (state: typeof mocks.serverState) => unknown) =>
+    selector(mocks.serverState),
+}));
+
+vi.mock('@/store/serverConfig/selectors', () => ({
+  serverConfigSelectors: {
+    agentIdentityProviders: (state: typeof mocks.serverState) =>
+      state.serverConfig.agentIdentityProviders,
+  },
+}));
+
 vi.mock('@/store/user', () => ({
   useUserStore: (selector: (state: typeof mocks.userState) => unknown) => selector(mocks.userState),
 }));
@@ -70,6 +86,8 @@ vi.mock('@/store/user/selectors', () => ({
   labPreferSelectors: {
     enableAgentGraphConfig: (state: typeof mocks.userState) =>
       state.preference.lab.enableAgentGraphConfig,
+    enableAgentIdentity: (state: typeof mocks.userState) =>
+      state.preference.lab.enableAgentIdentity,
   },
 }));
 
@@ -78,17 +96,16 @@ describe('AgentSettings Content', () => {
     mocks.agentState.isInbox = true;
     mocks.agentState.isCurrentAgentHeterogeneous = false;
     mocks.userState.preference.lab.enableAgentGraphConfig = false;
+    mocks.userState.preference.lab.enableAgentIdentity = false;
+    mocks.serverState.serverConfig.agentIdentityProviders = [];
   });
 
-  it('opens on the opening tab, with identity next to it', () => {
+  it('opens on the opening tab', () => {
     render(<Content />);
 
     const layout = screen.getByTestId('layout');
     expect(layout).toHaveAttribute('data-active', ChatSettingsTabs.Opening);
-    expect(layout).toHaveAttribute(
-      'data-tabs',
-      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity}`,
-    );
+    expect(layout).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
     expect(screen.getByTestId('agent-settings-content')).toHaveAttribute(
       'data-tab',
       ChatSettingsTabs.Opening,
@@ -103,7 +120,7 @@ describe('AgentSettings Content', () => {
 
     expect(screen.getByTestId('layout')).toHaveAttribute(
       'data-tabs',
-      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity},${ChatSettingsTabs.Graph}`,
+      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Graph}`,
     );
   });
 
@@ -112,9 +129,30 @@ describe('AgentSettings Content', () => {
 
     render(<Content />);
 
+    expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+  });
+
+  it('shows identity only with the Labs toggle on and a provider configured', () => {
+    mocks.serverState.serverConfig.agentIdentityProviders = ['agent-mail'];
+
+    const { unmount } = render(<Content />);
+    // A configured provider alone does not surface the experiment.
+    expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+    unmount();
+
+    mocks.userState.preference.lab.enableAgentIdentity = true;
+    render(<Content />);
     expect(screen.getByTestId('layout')).toHaveAttribute(
       'data-tabs',
       `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity}`,
     );
+  });
+
+  it('hides identity when the deployment has no identity provider, even in Labs', () => {
+    mocks.userState.preference.lab.enableAgentIdentity = true;
+
+    render(<Content />);
+
+    expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
   });
 });
