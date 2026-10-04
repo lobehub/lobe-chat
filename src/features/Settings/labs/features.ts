@@ -63,7 +63,7 @@ const ALL_LAB_FEATURES: LabFeatureItem[] = [
   {
     flag: 'enableAgentIdentity',
     i18nKey: 'agentIdentity',
-    searchKeywords: ['agent identity', 'agent mail', 'agent phone', 'inbox', 'address'],
+    searchKeywords: ['agent identity', 'agent mail', 'inbox', 'address'],
     stage: 'alpha',
   },
   {
