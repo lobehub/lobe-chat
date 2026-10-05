@@ -393,7 +393,15 @@ export class AgentAccountService {
       return { accountId, event, outcome: 'ignored', reason: 'receive-disabled' };
     }
 
-    const message = await provider.normalizeInbound(event, ref);
+    let message: AgentAccountInboundMessage | null;
+    try {
+      message = await provider.normalizeInbound(event, ref);
+    } catch (error) {
+      // Verified and claimed but not processed: give the event id back so the
+      // provider's retry is handled instead of acknowledged as a duplicate.
+      await provider.releaseInbound?.(event.eventId)?.catch(() => undefined);
+      throw error;
+    }
     if (!message) return { accountId, event, outcome: 'ignored', reason: 'filtered' };
 
     return { accountId, event, message, outcome: 'delivered' };
