@@ -399,6 +399,15 @@ export class AgentAccountService {
     return { accountId, event, message, outcome: 'delivered' };
   };
 
+  /**
+   * Release the replay claim of a delivery whose handling failed after
+   * {@link handleInbound} accepted it, so the provider's retry is processed
+   * instead of acknowledged as a duplicate.
+   */
+  releaseInbound = async (providerName: string, eventId: string): Promise<void> => {
+    await this.options.registry.get(providerName).releaseInbound?.(eventId);
+  };
+
   // --------------- Internals ---------------
 
   /**
