@@ -1077,7 +1077,17 @@ export const executeHeterogeneousAgent = async (
     try {
       await get().optimisticUpdateMessagePlugin(
         toolMsgId,
-        { intervention: { status: 'pending' } },
+        {
+          intervention: {
+            ...(data.identifier === 'codex'
+              ? {
+                  arguments: data.arguments,
+                  interventionId: data.interventionId ?? data.toolCallId,
+                }
+              : {}),
+            status: 'pending',
+          },
+        },
         { operationId },
       );
       // Sidebar topic row swaps the running spinner for a hand icon
@@ -1107,6 +1117,15 @@ export const executeHeterogeneousAgent = async (
     if (!toolMsgId) return false;
 
     await messageWriteBatcher.flush('before-intervention-response');
+    const activeInterventionId =
+      dbMessageSelectors.getDbMessageById(toolMsgId)(get())?.pluginIntervention?.interventionId;
+    if (
+      data.interventionId &&
+      activeInterventionId &&
+      data.interventionId !== activeInterventionId
+    ) {
+      return true;
+    }
 
     try {
       await get().optimisticUpdateMessagePlugin(
@@ -2051,6 +2070,8 @@ export const executeHeterogeneousAgent = async (
         adapterType === 'deepseek-harness'
           ? ''
           : resolveHeterogeneousAgentCommand(adapterType, heterogeneousProvider.command),
+      codexPermissionMode:
+        adapterType === 'codex' ? heterogeneousProvider.permissionMode : undefined,
       cwd: workingDirectory,
       env: sessionEnv,
       initialModel:
