@@ -1,6 +1,8 @@
+import { llmRelayChannelScope } from '@lobechat/agent-gateway-client';
 import type { SubAgentExecutionResult, SubAgentTransport } from '@lobechat/agent-runtime';
 import type { ExecSubAgentParams, ExecVirtualSubAgentParams } from '@lobechat/types';
 
+import { getBusinessTrpcHeaders } from '@/business/client/trpc-headers';
 import type { ExecSubAgentTaskParams } from '@/services/aiAgent';
 import { aiAgentService } from '@/services/aiAgent';
 import { buildLlmExecutorDeclaration, oneShotRelay } from '@/services/llmRelay';
@@ -58,6 +60,10 @@ export class ClientSubAgentTransport implements SubAgentTransport {
    * loaded, so a mention sent right after the page opens still stands by.
    */
   private async execute(params: ExecSubAgentParams): Promise<SubAgentExecutionResult> {
+    // The server accepts only a channel bound to the workspace it runs the
+    // dispatch in — the one the business headers name.
+    const workspaceId = (await getBusinessTrpcHeaders())['X-Workspace-Id'];
+
     return oneShotRelay.run(
       () => buildLlmExecutorDeclaration()?.providers ?? [],
       async (relay) => {
@@ -76,6 +82,7 @@ export class ClientSubAgentTransport implements SubAgentTransport {
             .catch(() => undefined);
         }
       },
+      { scope: llmRelayChannelScope(workspaceId) },
     );
   }
 

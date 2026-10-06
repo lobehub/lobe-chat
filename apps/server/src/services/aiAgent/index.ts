@@ -1713,11 +1713,11 @@ export class AiAgentService {
       llmRelay?: SubAgentLlmRelayRequest;
     } = {},
   ): Promise<ExecSubAgentResult> => {
-    const llmExecutor = await openSubAgentLlmRelay(
-      options.llmRelay,
-      this.userId,
-      createStreamEventManager(),
-    );
+    const llmExecutor = await openSubAgentLlmRelay(options.llmRelay, {
+      streamManager: createStreamEventManager(),
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
 
     return execAgentThreadRun(this.subAgentRunDeps, params, {
       isSubAgent: false,

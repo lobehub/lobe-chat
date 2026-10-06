@@ -1,4 +1,4 @@
-import { isOwnLlmRelayChannelId } from '@lobechat/agent-gateway-client';
+import { isOwnLlmRelayChannelId, isScopedLlmRelayChannelId } from '@lobechat/agent-gateway-client';
 import type { AgentRunLlmExecutor } from '@lobechat/agent-runtime';
 import type { ExecAgentLlmExecutor } from '@lobechat/types';
 import debug from 'debug';
@@ -21,6 +21,12 @@ export interface SubAgentLlmRelayRequest {
   executor: ExecAgentLlmExecutor;
 }
 
+export interface SubAgentLlmRelayScope {
+  streamManager: IStreamEventManager;
+  userId: string;
+  workspaceId?: string;
+}
+
 /**
  * Open the requested channel on the gateway and return the executor the child
  * run carries: the tab's declaration, relaying on that channel. `undefined`
@@ -29,14 +35,14 @@ export interface SubAgentLlmRelayRequest {
  */
 export const openSubAgentLlmRelay = async (
   request: SubAgentLlmRelayRequest | undefined,
-  userId: string,
-  streamManager: IStreamEventManager,
+  { streamManager, userId, workspaceId }: SubAgentLlmRelayScope,
 ): Promise<AgentRunLlmExecutor | undefined> => {
   if (!request) return;
-  // Only the caller's own channels: anything else could name a real run's
-  // operation or another user's channel, which the gateway would re-own.
-  if (!isOwnLlmRelayChannelId(request.channel, userId)) {
-    log('ignoring relay channel %s not owned by %s', request.channel, userId);
+  // Only the caller's own channels, bound to the workspace this request runs
+  // in: anything else could name a real run's operation, another user's
+  // channel, or the user's tab of another workspace, whose providers differ.
+  if (!isScopedLlmRelayChannelId(request.channel, userId, workspaceId)) {
+    log('ignoring relay channel %s outside %s / %s', request.channel, userId, workspaceId);
     return;
   }
   if (!streamManager.openLlmRelayChannel || !streamManager.sendLlmExecute) {

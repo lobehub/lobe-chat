@@ -145,7 +145,7 @@ describe('aiAgentRouter.execSubAgentTask', () => {
         clientId: 'tab-1',
         providers: ['ollama'],
       };
-      const channel = `llmcall:${userId}:nonce-12345678`;
+      const channel = `llmcall:${userId}:personal-3f2a9c1d8e7b4a60`;
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 

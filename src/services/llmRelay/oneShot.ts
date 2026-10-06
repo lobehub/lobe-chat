@@ -132,7 +132,14 @@ export class OneShotRelay {
   async run<T>(
     provider: string | string[] | (() => string[]) | undefined,
     request: (relay?: OneShotRelayHandle) => Promise<T>,
-    { signal }: { signal?: AbortSignal } = {},
+    {
+      scope,
+      signal,
+    }: {
+      /** Bind the channel to a scope (`llmRelayChannelScope`), for a server that checks it. */
+      scope?: string;
+      signal?: AbortSignal;
+    } = {},
   ): Promise<T> {
     const providersLoading =
       provider && this.deps.isAvailable() ? this.deps.whenProvidersKnown?.() : undefined;
@@ -146,7 +153,10 @@ export class OneShotRelay {
     const providers = Array.isArray(resolved) ? resolved : [resolved];
     if (!providers.some((item) => this.needsRelay(item))) return request();
 
-    const channel = buildLlmRelayChannelId(this.deps.userId()!, randomNonce());
+    const channel = buildLlmRelayChannelId(
+      this.deps.userId()!,
+      scope ? `${scope}-${randomNonce().replaceAll('-', '')}` : randomNonce(),
+    );
     const operationIds = new Set<string>();
     const subscribing = this.deps.subscribe(channel, (event) => {
       if (event.type === 'llm_execute') {

@@ -175,6 +175,18 @@ describe('OneShotRelay', () => {
     expect(await result).toBe('ok');
   });
 
+  it('binds the channel to a scope when asked', async () => {
+    const { deps, markReady, relay } = createRelay();
+
+    const result = relay.run('ollama', async () => 'ok', { scope: 'ws_a1b2c3d4e5f6' });
+    await vi.waitFor(() => expect(deps.subscribe).toHaveBeenCalled());
+    markReady();
+    await result;
+
+    const [channel] = vi.mocked(deps.subscribe).mock.calls[0];
+    expect(channel).toMatch(/^llmcall:user-1:ws_a1b2c3d4e5f6-[\da-f]{32}$/);
+  });
+
   it('stands by for a list of providers when any of them needs this tab', async () => {
     const { deps, markReady, relay } = createRelay();
     const request = vi.fn(async () => 'ok');

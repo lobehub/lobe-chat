@@ -16,6 +16,10 @@ vi.mock('@/services/aiAgent', () => ({
   },
 }));
 
+vi.mock('@/business/client/trpc-headers', () => ({
+  getBusinessTrpcHeaders: vi.fn(async () => ({ 'X-Workspace-Id': 'ws_a1b2c3d4e5f6' })),
+}));
+
 vi.mock('@/services/llmRelay', () => ({
   buildLlmExecutorDeclaration: vi.fn(),
   oneShotRelay: { run: vi.fn() },
@@ -203,13 +207,15 @@ describe('ClientSubAgentTransport', () => {
       clientId: 'tab-1',
       providers: ['ollama', 'openai'],
     };
-    const channel = 'llmcall:user-1:nonce-12345678';
+    const channel = 'llmcall:user-1:ws_a1b2c3d4e5f6-3f2a9c1d8e7b4a60';
     let standingBy = false;
     vi.mocked(buildLlmExecutorDeclaration).mockImplementation(() =>
       // The provider runtime state loads after the transport is called.
       vi.mocked(oneShotRelay.run).mock.calls.length > 0 ? llmExecutor : undefined,
     );
-    vi.mocked(oneShotRelay.run).mockImplementation(async (provider, request) => {
+    vi.mocked(oneShotRelay.run).mockImplementation(async (provider, request, options) => {
+      // Bound to the workspace the dispatch runs in.
+      expect(options).toMatchObject({ scope: 'ws_a1b2c3d4e5f6' });
       // The providers are read when the relay asks for them, after the
       // provider runtime state has loaded — not snapshotted at dispatch.
       expect(typeof provider === 'function' ? provider() : provider).toEqual(['ollama', 'openai']);

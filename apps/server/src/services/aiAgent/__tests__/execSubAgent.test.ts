@@ -810,7 +810,8 @@ describe('AiAgentService.execSubAgent', () => {
   });
 
   describe('a sub-agent the tab dispatches itself (direct @mention)', () => {
-    const channel = 'llmcall:test-user-id:nonce-12345678';
+    // Bound to the personal scope the service runs in (`personal-<random>`).
+    const channel = 'llmcall:test-user-id:personal-3f2a9c1d8e7b4a60';
     const executor = {
       capabilities: ['llm_relay@1'],
       clientId: 'tab-1',
@@ -856,6 +857,39 @@ describe('AiAgentService.execSubAgent', () => {
 
       expect(mockStreamManager.openLlmRelayChannel).not.toHaveBeenCalled();
       expect(execAgentSpy.mock.calls[0][0]).not.toHaveProperty('llmExecutor');
+    });
+
+    it('ignores a channel bound to no workspace or another one', async () => {
+      const execAgentSpy = vi
+        .spyOn(service, 'execAgent')
+        .mockResolvedValue({ operationId: 'op-child', success: true } as any);
+
+      // A request's one-shot channel (no scope), and the user's channel of another workspace.
+      for (const other of [
+        'llmcall:test-user-id:3f2a9c1d-8e7b-4a60-9c1d-8e7b4a603f2a',
+        'llmcall:test-user-id:ws_other12345-3f2a9c1d8e7b4a60',
+      ]) {
+        await service.execSubAgent(params, { llmRelay: { channel: other, executor } });
+      }
+
+      expect(mockStreamManager.openLlmRelayChannel).not.toHaveBeenCalled();
+      for (const [call] of execAgentSpy.mock.calls) expect(call).not.toHaveProperty('llmExecutor');
+    });
+
+    it('accepts a channel bound to the workspace the request runs in', async () => {
+      const wsService = new AiAgentService(mockDb, userId, { workspaceId: 'ws_a1b2c3d4e5f6' });
+      const execAgentSpy = vi
+        .spyOn(wsService, 'execAgent')
+        .mockResolvedValue({ operationId: 'op-child', success: true } as any);
+      const wsChannel = 'llmcall:test-user-id:ws_a1b2c3d4e5f6-3f2a9c1d8e7b4a60';
+
+      await wsService.execSubAgent(params, { llmRelay: { channel, executor } });
+      expect(execAgentSpy.mock.calls[0][0]).not.toHaveProperty('llmExecutor');
+
+      await wsService.execSubAgent(params, { llmRelay: { channel: wsChannel, executor } });
+      expect(execAgentSpy.mock.calls[1][0]).toMatchObject({
+        llmExecutor: { ...executor, channelOperationId: wsChannel },
+      });
     });
 
     it('runs the child without an executor when the gateway does not open the channel', async () => {
