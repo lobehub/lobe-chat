@@ -37,6 +37,12 @@ export interface OneShotChannelSubscription {
 
 export interface OneShotRelayDeps {
   clientId?: () => string;
+  /**
+   * Stop what a run relayed on this channel left running here, once the
+   * channel is released. A sub-agent's calls name the child run, not the
+   * channel, so its in-flight call would otherwise outlive the wait.
+   */
+  endOperation?: (operationId: string) => void;
   /** The deployment can relay: `agent_llm_relay` is on and an Agent Gateway is configured. */
   isAvailable: () => boolean;
   /** Whether calls to `provider` leave from this device (shared `fetchOnClient` rule). */
@@ -139,9 +145,13 @@ export class OneShotRelay {
     if (!providers.some((item) => this.needsRelay(item))) return request();
 
     const channel = buildLlmRelayChannelId(this.deps.userId()!, randomNonce());
+    const operationIds = new Set<string>();
     const subscribing = this.deps.subscribe(channel, (event) => {
-      if (event.type === 'llm_execute') this.deps.onExecute(event.data as LlmExecuteData);
-      else if (event.type === 'llm_cancel') this.deps.onCancel(event.data as LlmCancelData);
+      if (event.type === 'llm_execute') {
+        const data = event.data as LlmExecuteData;
+        if (data.operationId) operationIds.add(data.operationId);
+        this.deps.onExecute(data);
+      } else if (event.type === 'llm_cancel') this.deps.onCancel(event.data as LlmCancelData);
     });
 
     try {
@@ -166,6 +176,7 @@ export class OneShotRelay {
         },
       });
     } finally {
+      for (const operationId of operationIds) this.deps.endOperation?.(operationId);
       // A subscription that lands after the request settled is released too.
       subscribing.then(
         (subscription) => subscription.close(),

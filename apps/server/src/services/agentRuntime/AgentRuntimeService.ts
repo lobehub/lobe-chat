@@ -814,6 +814,9 @@ export class AgentRuntimeService {
    * executor names the channel its tab does listen on: the parent's, or the
    * one the parent already inherited. The parent stays subscribed meanwhile: it
    * is parked (`waiting_for_async_tool`) or supervising its members.
+   * Only the caller's own parent counts: a client can name any
+   * `parentOperationId`, and a foreign run's executor would hand this child's
+   * LLM payload to another user's tab.
    * Best-effort: an expired parent leaves the child without one.
    */
   private async resolveLlmExecutor(
@@ -823,7 +826,16 @@ export class AgentRuntimeService {
     if (declared) return declared;
     if (!parentOperationId) return;
 
-    const inherited = await this.getLlmExecutor(parentOperationId);
+    let parent: AgentState | null | undefined;
+    try {
+      parent = await this.coordinator.loadAgentState(parentOperationId);
+    } catch (error) {
+      log('[%s] Failed to read the parent relay executor: %O', parentOperationId, error);
+      return;
+    }
+    if (parent?.origin?.userId !== this.userId) return;
+
+    const inherited = parent.host?.llmExecutor;
     if (!inherited) return;
 
     return {

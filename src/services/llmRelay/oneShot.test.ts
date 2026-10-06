@@ -131,6 +131,23 @@ describe('OneShotRelay', () => {
     expect(close).toHaveBeenCalledTimes(1);
   });
 
+  it('stops the calls a run relayed on the channel left running once it is released', async () => {
+    const endOperation = vi.fn();
+    const { close, emit, markReady, relay } = createRelay({ endOperation });
+
+    const result = relay.run('ollama', async () => {
+      // A sub-agent's call names the child run, not the channel.
+      emit({ data: { callId: 'c1', operationId: 'child-op' }, type: 'llm_execute' } as any);
+      return 'given up';
+    });
+    await vi.waitFor(() => expect(endOperation).not.toHaveBeenCalled());
+    markReady();
+
+    expect(await result).toBe('given up');
+    expect(endOperation).toHaveBeenCalledWith('child-op');
+    expect(close).toHaveBeenCalledTimes(1);
+  });
+
   it('stands by for a list of providers when any of them needs this tab', async () => {
     const { deps, markReady, relay } = createRelay();
     const request = vi.fn(async () => 'ok');
