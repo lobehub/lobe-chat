@@ -24,6 +24,7 @@ import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 
+import { CodexPermissionControl } from '../CodexPermissionControl';
 import { ClaudeCodeQuotaMenu, CodexQuotaMenu, KimiCodeQuotaMenu } from './QuotaMenu';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -317,7 +318,16 @@ const HeteroControlBar = memo(() => {
           <ClaudeCodeQuotaMenu deviceId={quotaDeviceId} env={heteroProvider?.env} />
         )}
         {sdkRuntimeBadge}
-        <Tooltip title={tChat('heteroAgent.fullAccess.tooltip')}>{fullAccessBadge}</Tooltip>
+        {heteroProvider?.type === 'codex' ? (
+          <CodexPermissionControl
+            agentId={agentId}
+            canConfigure={canConfigureResource}
+            isLocalExecution={isLocalHeteroExecution && heteroProvider.authMode !== 'api'}
+            provider={heteroProvider}
+          />
+        ) : (
+          <Tooltip title={tChat('heteroAgent.fullAccess.tooltip')}>{fullAccessBadge}</Tooltip>
+        )}
       </Flexbox>
     </Flexbox>
   );
