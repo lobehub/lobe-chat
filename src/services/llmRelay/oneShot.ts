@@ -119,10 +119,11 @@ export class OneShotRelay {
    * to `provider`: `request` gets the headers to send, and the channel is
    * released once it settles (`signal`: an aborted caller stops waiting for
    * the subscription). A provider the server reaches itself runs
-   * `request` as-is, without a channel.
+   * `request` as-is, without a channel. A list stands by when any of them
+   * needs this tab — for a request whose provider only the server resolves.
    */
   async run<T>(
-    provider: string | undefined,
+    provider: string | string[] | undefined,
     request: (relay?: OneShotRelayHandle) => Promise<T>,
     { signal }: { signal?: AbortSignal } = {},
   ): Promise<T> {
@@ -134,7 +135,8 @@ export class OneShotRelay {
       await withTimeout(providersLoading, undefined, signal);
       if (signal?.aborted) return request();
     }
-    if (!this.needsRelay(provider)) return request();
+    const providers = Array.isArray(provider) ? provider : [provider];
+    if (!providers.some((item) => this.needsRelay(item))) return request();
 
     const channel = buildLlmRelayChannelId(this.deps.userId()!, randomNonce());
     const subscribing = this.deps.subscribe(channel, (event) => {
@@ -154,7 +156,7 @@ export class OneShotRelay {
         // An aborted caller has nothing to wait for: its request settles at once.
         signal,
       );
-      log('channel %s for %s: subscription %s', channel, provider, outcome);
+      log('channel %s for %o: subscription %s', channel, provider, outcome);
 
       return await request({
         channel,

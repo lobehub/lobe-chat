@@ -128,6 +128,17 @@ vi.mock('@/server/modules/ModelRuntime', () => ({
   initModelRuntimeFromDB: vi.fn(),
 }));
 
+const mockStreamManager = {
+  closeLlmRelayChannel: vi.fn(),
+  openLlmRelayChannel: vi.fn(),
+  sendLlmExecute: vi.fn(),
+};
+
+vi.mock('@/server/modules/AgentRuntime/factory', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  createStreamEventManager: () => mockStreamManager,
+}));
+
 describe('AiAgentService.execSubAgent', () => {
   let service: AiAgentService;
   const mockDb = {} as any;
@@ -795,6 +806,78 @@ describe('AiAgentService.execSubAgent', () => {
         'thread-old',
         expect.objectContaining({ status: ThreadStatus.Failed }),
       );
+    });
+  });
+
+  describe('a sub-agent the tab dispatches itself (direct @mention)', () => {
+    const channel = 'llmcall:test-user-id:nonce-12345678';
+    const executor = {
+      capabilities: ['llm_relay@1'],
+      clientId: 'tab-1',
+      providers: ['ollama'],
+    };
+    const params = {
+      agentId: 'agent-1',
+      instruction: 'Summarize',
+      // The tab's own, client-local operation: no server run to inherit from.
+      parentMessageId: 'parent-msg-1',
+      parentOperationId: 'client-local-op',
+      topicId: 'topic-1',
+    };
+
+    beforeEach(() => {
+      mockStreamManager.openLlmRelayChannel.mockResolvedValue(undefined);
+      mockStreamManager.closeLlmRelayChannel.mockResolvedValue(undefined);
+    });
+
+    it('relays the child on the channel the tab stands by on', async () => {
+      const execAgentSpy = vi
+        .spyOn(service, 'execAgent')
+        .mockResolvedValue({ operationId: 'op-child', success: true } as any);
+
+      await service.execSubAgent(params, { llmRelay: { channel, executor } });
+
+      expect(mockStreamManager.openLlmRelayChannel).toHaveBeenCalledWith(channel, userId);
+      expect(execAgentSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          llmExecutor: { ...executor, channelOperationId: channel },
+        }),
+      );
+    });
+
+    it('ignores a channel that is not the caller own', async () => {
+      const execAgentSpy = vi
+        .spyOn(service, 'execAgent')
+        .mockResolvedValue({ operationId: 'op-child', success: true } as any);
+
+      await service.execSubAgent(params, {
+        llmRelay: { channel: 'llmcall:someone-else:nonce-12345678', executor },
+      });
+
+      expect(mockStreamManager.openLlmRelayChannel).not.toHaveBeenCalled();
+      expect(execAgentSpy.mock.calls[0][0]).not.toHaveProperty('llmExecutor');
+    });
+
+    it('runs the child without an executor when the gateway does not open the channel', async () => {
+      mockStreamManager.openLlmRelayChannel.mockRejectedValue(new Error('gateway down'));
+      const execAgentSpy = vi
+        .spyOn(service, 'execAgent')
+        .mockResolvedValue({ operationId: 'op-child', success: true } as any);
+
+      await service.execSubAgent(params, { llmRelay: { channel, executor } });
+
+      expect(execAgentSpy.mock.calls[0][0]).not.toHaveProperty('llmExecutor');
+    });
+
+    it('ends only the caller own channel once the tab releases it', async () => {
+      expect(await service.releaseSubAgentLlmRelay(channel)).toEqual({ success: true });
+      expect(mockStreamManager.closeLlmRelayChannel).toHaveBeenCalledWith(channel);
+
+      mockStreamManager.closeLlmRelayChannel.mockClear();
+      expect(await service.releaseSubAgentLlmRelay('llmcall:someone-else:nonce-12345678')).toEqual({
+        success: false,
+      });
+      expect(mockStreamManager.closeLlmRelayChannel).not.toHaveBeenCalled();
     });
   });
 });

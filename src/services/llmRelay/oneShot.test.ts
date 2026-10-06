@@ -131,6 +131,22 @@ describe('OneShotRelay', () => {
     expect(close).toHaveBeenCalledTimes(1);
   });
 
+  it('stands by for a list of providers when any of them needs this tab', async () => {
+    const { deps, markReady, relay } = createRelay();
+    const request = vi.fn(async () => 'ok');
+
+    expect(await relay.run(['openai'], request)).toBe('ok');
+    expect(deps.subscribe).not.toHaveBeenCalled();
+
+    const result = relay.run(['openai', 'ollama'], request);
+    await vi.waitFor(() => expect(deps.subscribe).toHaveBeenCalled());
+    markReady();
+    expect(await result).toBe('ok');
+    expect(request).toHaveBeenLastCalledWith(
+      expect.objectContaining({ channel: expect.stringMatching(/^llmcall:user-1:/) }),
+    );
+  });
+
   it('releases the channel when the request fails', async () => {
     const { close, markReady, relay } = createRelay();
     const result = relay.run('ollama', async () => {
