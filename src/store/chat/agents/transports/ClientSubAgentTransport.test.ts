@@ -205,8 +205,14 @@ describe('ClientSubAgentTransport', () => {
     };
     const channel = 'llmcall:user-1:nonce-12345678';
     let standingBy = false;
-    vi.mocked(buildLlmExecutorDeclaration).mockReturnValue(llmExecutor);
-    vi.mocked(oneShotRelay.run).mockImplementation(async (_provider, request) => {
+    vi.mocked(buildLlmExecutorDeclaration).mockImplementation(() =>
+      // The provider runtime state loads after the transport is called.
+      vi.mocked(oneShotRelay.run).mock.calls.length > 0 ? llmExecutor : undefined,
+    );
+    vi.mocked(oneShotRelay.run).mockImplementation(async (provider, request) => {
+      // The providers are read when the relay asks for them, after the
+      // provider runtime state has loaded — not snapshotted at dispatch.
+      expect(typeof provider === 'function' ? provider() : provider).toEqual(['ollama', 'openai']);
       standingBy = true;
       try {
         return await request({ channel, headers: {} });
@@ -224,7 +230,6 @@ describe('ClientSubAgentTransport', () => {
       params,
     );
 
-    expect(oneShotRelay.run).toHaveBeenCalledWith(['ollama', 'openai'], expect.any(Function));
     expect(aiAgentService.execSubAgentTask).toHaveBeenCalledWith({
       ...params,
       llmExecutor,

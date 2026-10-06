@@ -54,26 +54,29 @@ export class ClientSubAgentTransport implements SubAgentTransport {
    * relay channel of its own for as long as it waits on the child, and names
    * it in the dispatch; the server relays the child's LLM calls on it. Which
    * model the child uses is the server's call, so any device provider this tab
-   * runs is reason enough.
+   * runs is reason enough. Both are read once the provider runtime state has
+   * loaded, so a mention sent right after the page opens still stands by.
    */
   private async execute(params: ExecSubAgentParams): Promise<SubAgentExecutionResult> {
-    const llmExecutor = buildLlmExecutorDeclaration();
+    return oneShotRelay.run(
+      () => buildLlmExecutorDeclaration()?.providers ?? [],
+      async (relay) => {
+        const llmExecutor = relay && buildLlmExecutorDeclaration();
+        if (!relay || !llmExecutor) return this.dispatchAndWait(params);
 
-    return oneShotRelay.run(llmExecutor?.providers, async (relay) => {
-      if (!relay || !llmExecutor) return this.dispatchAndWait(params);
-
-      try {
-        return await this.dispatchAndWait({
-          ...params,
-          llmExecutor,
-          llmRelayChannel: relay.channel,
-        });
-      } finally {
-        void aiAgentService
-          .releaseSubAgentLlmRelay({ channel: relay.channel })
-          .catch(() => undefined);
-      }
-    });
+        try {
+          return await this.dispatchAndWait({
+            ...params,
+            llmExecutor,
+            llmRelayChannel: relay.channel,
+          });
+        } finally {
+          void aiAgentService
+            .releaseSubAgentLlmRelay({ channel: relay.channel })
+            .catch(() => undefined);
+        }
+      },
+    );
   }
 
   private async dispatchAndWait(params: ExecSubAgentTaskParams): Promise<SubAgentExecutionResult> {

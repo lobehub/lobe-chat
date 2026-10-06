@@ -148,6 +148,33 @@ describe('OneShotRelay', () => {
     expect(close).toHaveBeenCalledTimes(1);
   });
 
+  it('reads a lazy provider list only once the provider runtime state is known', async () => {
+    let enabled: string[] = [];
+    let markKnown!: () => void;
+    const { deps, markReady, relay } = createRelay({
+      whenProvidersKnown: () =>
+        new Promise<void>((resolve) => {
+          markKnown = () => {
+            enabled = ['openai', 'ollama'];
+            resolve();
+          };
+        }),
+    });
+
+    // Read too early, the list would be empty and no channel would open.
+    const result = relay.run(
+      () => enabled,
+      async () => 'ok',
+    );
+    await Promise.resolve();
+    expect(deps.subscribe).not.toHaveBeenCalled();
+
+    markKnown();
+    await vi.waitFor(() => expect(deps.subscribe).toHaveBeenCalled());
+    markReady();
+    expect(await result).toBe('ok');
+  });
+
   it('stands by for a list of providers when any of them needs this tab', async () => {
     const { deps, markReady, relay } = createRelay();
     const request = vi.fn(async () => 'ok');

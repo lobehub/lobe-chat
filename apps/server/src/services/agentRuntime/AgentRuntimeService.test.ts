@@ -671,6 +671,24 @@ describe('AgentRuntimeService', () => {
         expect(savedState.host).not.toHaveProperty('llmExecutor');
       });
 
+      it("does not inherit the executor of the user's run in another workspace", async () => {
+        // The same user's run elsewhere relays with that workspace's providers.
+        await mockCoordinator.saveAgentState('other-workspace-op', {
+          host: { llmExecutor: executor },
+          origin: { userId: mockUserId, workspaceId: 'ws-other' },
+        });
+        mockCoordinator.saveAgentState.mockClear();
+
+        await service.createOperation({
+          ...mockParams,
+          appContext: { ...mockParams.appContext, isSubAgent: true },
+          autoStart: false,
+          parentOperationId: 'other-workspace-op',
+        });
+        const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
+        expect(savedState.host).not.toHaveProperty('llmExecutor');
+      });
+
       it('carries no executor for a run nobody declared one for', async () => {
         await service.createOperation({ ...mockParams, autoStart: false });
         const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
