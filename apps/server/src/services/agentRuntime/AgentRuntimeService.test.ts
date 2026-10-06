@@ -586,10 +586,13 @@ describe('AgentRuntimeService', () => {
           parentOperationId: 'parent-op',
         });
         const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
-        expect(savedState.host.llmExecutor).toEqual(executor);
+        expect(savedState.host.llmExecutor).toEqual({
+          ...executor,
+          channelOperationId: 'parent-op',
+        });
       });
 
-      it("keeps a genuine sub-agent, streaming on its own channel, off the parent's executor", async () => {
+      it("lets an independent sub-agent inherit the parent's executor, relaying on the parent's channel", async () => {
         await mockCoordinator.saveAgentState('parent-op', { host: { llmExecutor: executor } });
         mockCoordinator.saveAgentState.mockClear();
 
@@ -600,7 +603,47 @@ describe('AgentRuntimeService', () => {
           parentOperationId: 'parent-op',
         });
         const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
-        expect(savedState.host).not.toHaveProperty('llmExecutor');
+        // The tab only subscribes to the parked parent's channel, so the
+        // child's `llm_execute` has to ride that one.
+        expect(savedState.host.llmExecutor).toEqual({
+          ...executor,
+          channelOperationId: 'parent-op',
+        });
+      });
+
+      it("keeps a nested child on the channel the executor's tab subscribed to", async () => {
+        await mockCoordinator.saveAgentState('parent-op', {
+          host: { llmExecutor: { ...executor, channelOperationId: 'root-op' } },
+        });
+        mockCoordinator.saveAgentState.mockClear();
+
+        await service.createOperation({
+          ...mockParams,
+          appContext: { ...mockParams.appContext, isSubAgent: true },
+          autoStart: false,
+          parentOperationId: 'parent-op',
+        });
+        const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
+        expect(savedState.host.llmExecutor).toEqual({
+          ...executor,
+          channelOperationId: 'root-op',
+        });
+      });
+
+      it('relays on its own channel when the client declared the executor itself', async () => {
+        await mockCoordinator.saveAgentState('parent-op', { host: { llmExecutor: executor } });
+        mockCoordinator.saveAgentState.mockClear();
+
+        const own = { ...executor, clientId: 'tab-b' };
+        await service.createOperation({
+          ...mockParams,
+          appContext: { ...mockParams.appContext, isSubAgent: true },
+          autoStart: false,
+          llmExecutor: own,
+          parentOperationId: 'parent-op',
+        });
+        const savedState = mockCoordinator.saveAgentState.mock.calls[0][1];
+        expect(savedState.host.llmExecutor).toEqual(own);
       });
 
       it('carries no executor for a run nobody declared one for', async () => {

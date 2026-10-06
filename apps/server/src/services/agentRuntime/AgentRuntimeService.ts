@@ -806,23 +806,30 @@ export class AgentRuntimeService {
   }
 
   /**
-   * The relay executor a new run carries: the one its client declared, else —
-   * for a group member, whose stream is mirrored onto its parent's channel —
-   * its parent's, so a member on the same local model reaches the same device.
-   * A genuine sub-agent publishes `llm_execute` on its own channel, which no
-   * client subscribes to, so it inherits nothing and fails fast as
-   * `no_executor` instead of waiting out the claim. Best-effort: an expired
-   * parent leaves the member without one.
+   * The relay executor a new run carries: the one its client declared, else
+   * its parent's, so a child run (group member, `callSubAgent` / `callAgent`
+   * sub-agent) on the same local model reaches the same device. No client
+   * subscribes to the child's own channel — the gateway only hands
+   * `llm_execute` to subscribers of the op it is sent on — so the inherited
+   * executor names the channel its tab does listen on: the parent's, or the
+   * one the parent already inherited. The parent stays subscribed meanwhile: it
+   * is parked (`waiting_for_async_tool`) or supervising its members.
+   * Best-effort: an expired parent leaves the child without one.
    */
   private async resolveLlmExecutor(
     declared: AgentRunLlmExecutor | undefined,
     parentOperationId: string | undefined,
-    streamsOnParentChannel: boolean,
   ): Promise<AgentRunLlmExecutor | undefined> {
     if (declared) return declared;
-    if (!parentOperationId || !streamsOnParentChannel) return;
+    if (!parentOperationId) return;
 
-    return this.getLlmExecutor(parentOperationId);
+    const inherited = await this.getLlmExecutor(parentOperationId);
+    if (!inherited) return;
+
+    return {
+      ...inherited,
+      channelOperationId: inherited.channelOperationId ?? parentOperationId,
+    };
   }
 
   /**
@@ -1359,11 +1366,7 @@ export class AgentRuntimeService {
           }))
         : undefined;
 
-      const llmExecutor = await this.resolveLlmExecutor(
-        params.llmExecutor,
-        parentOperationId,
-        appContext?.orchestrationRole === 'member',
-      );
+      const llmExecutor = await this.resolveLlmExecutor(params.llmExecutor, parentOperationId);
       // A member's pushes reach the supervisor's client, so it renders what
       // that client declared.
       const fileWorksAccepted =
