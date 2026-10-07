@@ -543,6 +543,35 @@ describe('hetero exec command', () => {
     expect(exitSpy).toHaveBeenCalledWith(0);
   });
 
+  it('passes the conversation identity into a server-ingest DeepSeek Harness run', async () => {
+    vi.spyOn(HeteroTraceRecorder.prototype, 'finalize').mockResolvedValue(undefined);
+    mockSpawnDshSdkSession.mockResolvedValue({
+      dispose: vi.fn().mockResolvedValue(undefined),
+      prompt: vi.fn(async function* () {
+        yield { data: {}, operationId: 'op-1', type: 'agent_runtime_end' };
+      }),
+    });
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'deepseek-harness',
+      '--prompt',
+      'hi',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-1',
+    ]);
+
+    expect(mockSpawnDshSdkSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        env: { LOBEHUB_OPERATION_ID: 'op-1', LOBEHUB_TOPIC_ID: 'topic-1' },
+      }),
+    );
+  });
+
   it('records and finalizes the local trace for a DeepSeek Harness run', async () => {
     const observe = vi.spyOn(HeteroTraceRecorder.prototype, 'observe').mockImplementation(() => {});
     const finalize = vi

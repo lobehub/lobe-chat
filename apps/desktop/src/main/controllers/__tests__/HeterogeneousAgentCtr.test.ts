@@ -1411,7 +1411,9 @@ describe('HeterogeneousAgentCtr', () => {
         }),
       );
       expect(dshSpawnMock.mock.calls[0][0]).not.toHaveProperty('sessionRoot');
-      expect(dshPromptMock).toHaveBeenCalledWith('follow project rules\n\nhello');
+      expect(dshPromptMock).toHaveBeenCalledWith(
+        `follow project rules\n\n${lobeHubCliGuide}\n\nhello`,
+      );
       expect(send).toHaveBeenCalledWith(
         'heteroAgentEvent',
         expect.objectContaining({
@@ -1421,6 +1423,30 @@ describe('HeterogeneousAgentCtr', () => {
       );
       expect(send).toHaveBeenCalledWith('heteroAgentSessionComplete', { sessionId });
       expect(dshDisposeMock).toHaveBeenCalledOnce();
+    });
+
+    it('does not re-send the session introduction when resuming a dsh session', async () => {
+      mockGetAllWindows.mockReturnValue([]);
+      const ctr = new HeterogeneousAgentCtr({
+        appStoragePath,
+        storeManager: { get: vi.fn() },
+      } as any);
+      const { sessionId } = await ctr.startSession({
+        agentType: 'deepseek-harness',
+        command: '',
+        cwd: '/workspace',
+        resumeSessionId: 'dsh-prev',
+      });
+
+      await ctr.sendPrompt({
+        operationId: 'op-dsh',
+        prompt: 'next turn',
+        sessionId,
+        systemContext: 'follow project rules',
+      });
+
+      expect(dshSpawnMock).toHaveBeenCalledWith(expect.objectContaining({ sessionId: 'dsh-prev' }));
+      expect(dshPromptMock).toHaveBeenCalledWith('follow project rules\n\nnext turn');
     });
 
     it('fails the turn with an install hint when the dsh CLI is missing', async () => {

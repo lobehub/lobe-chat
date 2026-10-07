@@ -81,6 +81,9 @@ const withTimeout = <T>(promise: Promise<T>, ms: number, message: string): Promi
 /** The official DeepSeek Harness CLI executable (`npm i -g @deepseek-ai/dsh`). */
 export const DSH_COMMAND = 'dsh';
 
+/** `dsh --version` prints a bare semantic version (e.g. `0.2.0-rc.2`). */
+export const DSH_VERSION_PATTERN = /^v?\d+\.\d+\.\d+(?:[-+][\dA-Za-z.-]+)?$/;
+
 /**
  * Select the CLI's shipped `sdk` profile, which serves the SDK JSON-RPC
  * protocol on stdio until `shutdown` or stdin EOF. Transcripts persist under

@@ -96,6 +96,7 @@ import {
   DevinAcpSession,
   DroidAcpSession,
   DSH_COMMAND,
+  DSH_VERSION_PATTERN,
   ensureClaudeCodeResumeTranscript,
   getCodexAppServerUnsupportedArgs,
   GrokAcpSession,
@@ -190,9 +191,6 @@ import { createLogger } from '@/utils/logger';
 
 import BrowserControlCtr from './BrowserControlCtr';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-
-/** `dsh --version` prints a bare semantic version (e.g. `0.2.0-rc.2`). */
-const DSH_VERSION_PATTERN = /^v?\d+\.\d+\.\d+(?:[-+][\dA-Za-z.-]+)?$/;
 
 const logger = createLogger('controllers:HeterogeneousAgentCtr');
 
@@ -2128,9 +2126,15 @@ export default class HeterogeneousAgentCtr {
       );
     }
     if (dsh.resolvedPathEnv) env.PATH = dsh.resolvedPathEnv;
-    const prompt = params.systemContext
-      ? `${params.systemContext}\n\n${params.prompt}`
-      : params.prompt;
+    // Same semantic prompt as every other transport: session-scoped context
+    // (the `lh` guide) only opens a new session, never a resumed one.
+    const prompt = buildHeterogeneousPrompt({
+      isNewSession: this.needsSessionIntroduction(session),
+      prompt: params.prompt,
+      systemContext: params.systemContext,
+    })
+      .flatMap((block) => (block.type === 'text' ? [block.text] : []))
+      .join('\n\n');
 
     try {
       const dshSession = await spawnDshSdkSession({

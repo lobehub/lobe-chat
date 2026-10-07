@@ -644,6 +644,12 @@ const exec = async (options: ExecOptions): Promise<void> => {
       session = await spawnDshSdkSession({
         ...(options.command ? { args: options.agentArg, command: options.command } : {}),
         cwd: options.cwd || process.cwd(),
+        // Same identity echo as the CLI agents, so `lh` commands the harness
+        // runs for this conversation can name its operation and topic.
+        env: buildAgentProcessEnv({
+          operationId: serverIngest ? operationId : undefined,
+          topicId: options.topic,
+        }),
         model: options.model || DSH_DEFAULT_MODEL,
         provider: DSH_PROVIDER,
         sessionId,

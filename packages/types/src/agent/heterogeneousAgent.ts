@@ -421,6 +421,8 @@ export interface RemoteHeterogeneousAgentDescriptor {
  * LobeHub.
  */
 export interface LocalRuntimeHeterogeneousAgentDescriptor {
+  /** Executable the user installs; probed before the runtime is offered. */
+  defaultCommand: string;
   defaultModel: string;
   defaultTopicGroupMode?: TopicGroupMode;
   iconId: string;
@@ -431,6 +433,7 @@ export interface LocalRuntimeHeterogeneousAgentDescriptor {
 
 export const LOCAL_RUNTIME_HETEROGENEOUS_AGENT_CONFIGS = [
   {
+    defaultCommand: 'dsh',
     defaultModel: 'deepseek-chat',
     defaultTopicGroupMode: 'byProject',
     iconId: 'DeepSeek',

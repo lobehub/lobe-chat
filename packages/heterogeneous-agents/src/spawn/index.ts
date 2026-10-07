@@ -110,6 +110,7 @@ export {
 export {
   DSH_COMMAND,
   DSH_SDK_PROFILE_ARGS,
+  DSH_VERSION_PATTERN,
   type DshSdkSessionHandle,
   type DshSdkSessionOptions,
   spawnDshSdkSession,
