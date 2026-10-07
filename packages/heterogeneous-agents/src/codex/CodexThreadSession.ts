@@ -94,6 +94,13 @@ export interface CodexThreadSessionOptions {
   initialThreadId?: string;
   onEvents: (events: AgentStreamEvent[]) => Promise<void> | void;
   onModel?: (model: string) => void;
+  /** Receives only the native permission fields after successful start/resume validation. */
+  onPermissionProfile?: (
+    profile: Pick<
+      ThreadStartResponse,
+      'approvalPolicy' | 'approvalsReviewer' | 'sandbox' | 'cwd'
+    > & { threadId: string },
+  ) => void;
   onRuntimeStatus: (status: HeterogeneousAgentRuntimeStatus) => void;
   onSessionId: (sessionId: string) => void;
   sessionId: string;
@@ -417,10 +424,15 @@ export class CodexThreadSession {
     operationId: string,
     interventionId: string,
     decision: CodexApprovalDecision,
+    response?: {
+      cancelReason?: 'timeout' | 'user_cancelled' | 'session_ended';
+      cancelled?: boolean;
+      resolutionRequestId?: string;
+    },
   ): boolean {
     const activeTurn = this.activeTurn;
     if (!activeTurn || activeTurn.operationId !== operationId) return false;
-    return activeTurn.approvalBridge.resolve(interventionId, decision);
+    return activeTurn.approvalBridge.resolve(interventionId, decision, response);
   }
 
   private async handleServerRequest(
@@ -456,6 +468,7 @@ export class CodexThreadSession {
         arguments: request,
         interventionId: request.itemId,
         toolCallId: request.itemId,
+        toolContext: activeTurn.adapter.getApprovalToolContext(request.itemId),
       });
       return { decision };
     }
@@ -496,6 +509,13 @@ export class CodexThreadSession {
         { phase: 'thread-start' },
       );
     }
+    this.options.onPermissionProfile?.({
+      approvalPolicy: response.approvalPolicy,
+      approvalsReviewer: response.approvalsReviewer,
+      cwd: response.cwd,
+      sandbox: response.sandbox,
+      threadId: response.thread.id,
+    });
   }
 
   private requestInterrupt(activeTurn: ActiveTurn): Promise<void> {
