@@ -151,6 +151,12 @@ export class DshAdapter implements AgentEventAdapter {
   private lastToolCallBySession = new Map<string, string>();
   private subagentByChildSession = new Map<string, SubagentLink>();
   private toolPayloadById = new Map<string, ToolCallPayload>();
+  /**
+   * Sessions whose current step already delivered live `assistant/chunk`
+   * frames. The official `dsh --profile sdk` logs none: the step's chunks
+   * arrive only inside the final `assistant/message`, as its `stream`.
+   */
+  private liveChunkSessions = new Set<string>();
 
   adapt(raw: any): HeterogeneousAgentEvent[] {
     if (!raw || typeof raw !== 'object') return [];
@@ -186,6 +192,7 @@ export class DshAdapter implements AgentEventAdapter {
     this.streamOpen = false;
     this.stepCounter = 0;
     this.stepIndex = 0;
+    this.liveChunkSessions.clear();
   }
 
   flush(): HeterogeneousAgentEvent[] {
@@ -251,10 +258,11 @@ export class DshAdapter implements AgentEventAdapter {
   ): HeterogeneousAgentEvent[] {
     switch (type) {
       case 'assistant/chunk': {
+        this.liveChunkSessions.add(sessionId);
         return this.handleChunk(data.chunk, subagent);
       }
       case 'assistant/message': {
-        return this.handleAssistantMessage(data, subagent);
+        return this.handleAssistantMessage(data, sessionId, subagent);
       }
       // Every request logs its header inside the step before dispatch, so this
       // is the reliable route source. `request/context` repeats the pair but is
@@ -285,6 +293,7 @@ export class DshAdapter implements AgentEventAdapter {
         ];
       }
       case 'step/start': {
+        this.liveChunkSessions.delete(sessionId);
         return this.handleStepStart(subagent);
       }
       // The harness titles its own sessions, so the consumer can skip its own
@@ -420,16 +429,42 @@ export class DshAdapter implements AgentEventAdapter {
     return [this.makeEvent('session_title', payload)];
   }
 
+  /**
+   * The step's chunks recorded on its final message, for a runtime that did not
+   * deliver them live. Without this the reply, its reasoning, and its tool-call
+   * blocks never reach the conversation.
+   */
+  private replayRecordedChunks(
+    data: any,
+    sessionId: string,
+    subagent?: SubagentEventContext,
+  ): HeterogeneousAgentEvent[] {
+    if (this.liveChunkSessions.has(sessionId) || !Array.isArray(data?.stream)) return [];
+    // The recorded stream packs deltas into `text-chunks` batches, but every
+    // block's `block-end` carries its assembled content, so replay from those.
+    return data.stream
+      .filter((entry: any) => entry?.type === 'chunk')
+      .flatMap((entry: any) => {
+        const block = entry.chunk?.type === 'block-end' ? entry.chunk.block : undefined;
+        if (block?.type === 'text' || block?.type === 'reasoning') {
+          return this.handleChunk({ text: block.text, type: `${block.type}-delta` }, subagent);
+        }
+        return this.handleChunk(entry.chunk, subagent);
+      });
+  }
+
   private handleAssistantMessage(
     data: any,
+    sessionId: string,
     subagent?: SubagentEventContext,
   ): HeterogeneousAgentEvent[] {
     const usage = toUsageData(data?.usage);
+    const replayed = this.replayRecordedChunks(data, sessionId, subagent);
 
-    // A delegated step's usage lands on its in-thread assistant via the
-    // subagent coordinator; it must not touch the main stream.
+    // A delegated step's output and usage land on its in-thread assistant via
+    // the subagent coordinator; they must not touch the main stream.
     if (subagent) {
-      if (!usage) return [];
+      if (!usage) return replayed;
       const stepComplete: StepCompleteData & { subagent: SubagentEventContext } = {
         model: this.route?.model,
         phase: 'turn_metadata',
@@ -437,12 +472,13 @@ export class DshAdapter implements AgentEventAdapter {
         subagent,
         usage,
       };
-      return [this.makeEvent('step_complete', stepComplete)];
+      return [...replayed, this.makeEvent('step_complete', stepComplete)];
     }
 
     // A content-less step (a `max-tokens` cut-off still records its usage)
     // produces no chunk, so the stream may still be pending here.
     const events: HeterogeneousAgentEvent[] = [
+      ...replayed,
       ...this.openStreamIfPending(),
       ...this.closeStream(),
     ];
@@ -475,12 +511,17 @@ export class DshAdapter implements AgentEventAdapter {
   }
 
   private handleToolResult(data: any, subagent?: SubagentEventContext): HeterogeneousAgentEvent[] {
-    const block = data?.message?.content?.[0];
-    const toolCallId = block?.toolCallId ?? data?.callId;
+    // Older runtimes wrap the result in a `tool-result` block of a user
+    // message; the official sdk profile logs a `tool` message whose own
+    // content is the result.
+    const message = data?.message;
+    const wrapped = message?.content?.[0]?.type === 'tool-result' ? message.content[0] : undefined;
+    const result = wrapped ?? (message?.role === 'tool' ? message : undefined);
+    const toolCallId = result?.toolCallId ?? message?.source?.callId ?? data?.callId;
     if (!toolCallId) return [];
 
-    const isError = Boolean(block?.isError ?? data?.error);
-    const content = flattenBlocks(block?.content);
+    const isError = Boolean(result?.isError ?? data?.error);
+    const content = flattenBlocks(result?.content);
 
     const resultData: ToolResultData = { content, toolCallId, ...(isError ? { isError } : {}) };
     if (subagent) resultData.subagent = subagent;

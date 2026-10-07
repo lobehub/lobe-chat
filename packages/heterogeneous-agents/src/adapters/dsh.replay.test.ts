@@ -185,6 +185,54 @@ describe('DshAdapter — recorded harness streams', () => {
     expect(countOf(events, 'stream_start')).toBe(2);
   });
 
+  // `sdk-*` frames were recorded from the official `dsh --profile sdk`
+  // (@deepseek-ai/dsh 0.2.0-rc.2) with request schemas and runtime-context
+  // messages trimmed. That runtime logs no live `assistant/chunk`: each step's
+  // chunks ride only on its final `assistant/message`.
+  it('recovers the reply from the official sdk profile, which streams no live chunks', async () => {
+    const events = replay(await load('sdk-text-turn'));
+    const text = events
+      .filter((e) => e.type === 'stream_chunk' && (e.data as any).chunkType === 'text')
+      .map((e) => (e.data as any).content)
+      .join('');
+
+    expect(text).toBe('SDK profile OK');
+    expect(shape(events)).toEqual([
+      'stream_start',
+      'stream_end',
+      'step_complete',
+      'visible_output_end',
+      'agent_runtime_end',
+    ]);
+  });
+
+  it('recovers tool-call blocks and the final answer from the official sdk profile', async () => {
+    const events = replay(await load('sdk-bash-tool'));
+
+    expect(shape(events)).toEqual([
+      'stream_start',
+      'stream_chunk:tools_calling',
+      'stream_end',
+      'step_complete',
+      'tool_start',
+      'tool_result',
+      'tool_end',
+      'stream_start',
+      'stream_end',
+      'step_complete',
+      'visible_output_end',
+      'agent_runtime_end',
+    ]);
+    expect(events.find((e) => e.type === 'tool_result')?.data).toMatchObject({
+      content: 'dsh-sdk-proof-0207\n',
+    });
+    const text = events
+      .filter((e) => e.type === 'stream_chunk' && (e.data as any).chunkType === 'text')
+      .map((e) => (e.data as any).content)
+      .join('');
+    expect(text).toBe('dsh-sdk-proof-0207');
+  });
+
   it('never emits a terminal error for a healthy recorded run', async () => {
     for (const name of ['text-turn', 'bash-tool', 'persistent-tools', 'subagent-spawn']) {
       const events = replay(await load(name));
