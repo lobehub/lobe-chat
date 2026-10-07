@@ -68,7 +68,7 @@ import {
 } from '@lobechat/heterogeneous-agents/rpc';
 import type {
   AgentStreamEvent,
-  DshSdkSessionHandle,
+  DshAcpSessionHandle,
   UsageData,
 } from '@lobechat/heterogeneous-agents/spawn';
 import {
@@ -110,8 +110,7 @@ import {
   resolveClaudeCodeTranscriptPath,
   resolveCliSpawnPlan,
   resolveCodexInitialModel,
-  spawnDshSdkSession,
-  toStreamEvent,
+  spawnDshAcpSession,
   TraeAcpSession,
 } from '@lobechat/heterogeneous-agents/spawn';
 import {
@@ -496,7 +495,7 @@ interface AgentSession {
   cwd?: string;
   devinAcpSession?: DevinAcpSession;
   droidAcpSession?: DroidAcpSession;
-  dshSession?: DshSdkSessionHandle;
+  dshSession?: DshAcpSessionHandle;
   env?: Record<string, string>;
   grokAcpSession?: GrokAcpSession;
   hostedProviderBinding?: HostedProviderBinding;
@@ -2111,7 +2110,7 @@ export default class HeterogeneousAgentCtr {
 
     const cwd = this.resolveSessionWorkingDirectory(session);
     const env = this.buildSessionSpawnEnv(session) as Record<string, string>;
-    // DSH is the user-installed DeepSeek Harness CLI, served through its `sdk`
+    // DSH is the user-installed DeepSeek Harness CLI, served through its `acp`
     // profile. A GUI-launched app inherits a lean PATH, so resolve it the way
     // the other CLI agents are resolved (login-shell PATH fallback) and spawn
     // with the PATH it was found under.
@@ -2137,30 +2136,30 @@ export default class HeterogeneousAgentCtr {
       .join('\n\n');
 
     try {
-      const dshSession = await spawnDshSdkSession({
+      const dshSession = spawnDshAcpSession({
+        clientVersion: electronApp.getVersion(),
         command: dsh.path,
         cwd,
         env,
-        model: session.model || 'deepseek-chat',
-        provider: 'deepseek-official',
-        sessionId: session.agentSessionId || session.sessionId,
+        model: session.model,
+        onSessionId: (agentSessionId) => {
+          session.agentSessionId = agentSessionId;
+        },
+        operationId: params.operationId,
+        // A resumed topic continues its persisted harness session.
+        resumeSessionId: session.agentSessionId,
       });
       session.dshSession = dshSession;
-      session.agentSessionId ||= session.sessionId;
 
-      // Stop pressed while the runtime was still initializing found no handle
-      // to dispose; honour it now, before any model or filesystem work starts.
-      // The `finally` below disposes the runtime.
+      // Stop pressed before launch: nothing has spawned yet. The `finally`
+      // below still disposes the handle.
       if (session.cancelledByUs) {
         this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
         return;
       }
 
       for await (const event of dshSession.prompt(prompt)) {
-        this.broadcast('heteroAgentEvent', {
-          event: toStreamEvent(event, params.operationId),
-          sessionId: session.sessionId,
-        });
+        this.broadcast('heteroAgentEvent', { event, sessionId: session.sessionId });
       }
 
       this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });

@@ -7,7 +7,7 @@ export { CursorAdapter } from './cursor';
 export { CursorAcpAdapter } from './cursorAcp';
 export { DevinAcpAdapter } from './devinAcp';
 export { DroidAcpAdapter } from './droidAcp';
-export { DshAdapter } from './dsh';
+export { DshAcpAdapter } from './dshAcp';
 export { GrokBuildAdapter } from './grokBuild';
 export { KimiCodeAdapter } from './kimiCode';
 export { OpenCodeAdapter } from './opencode';

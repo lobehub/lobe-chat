@@ -32,8 +32,7 @@ import {
   createFileStoreImageUploader,
   isHeteroStatusGuideErrorData,
   spawnAgent,
-  spawnDshSdkSession,
-  toStreamEvent,
+  spawnDshAcpSession,
 } from '@lobechat/heterogeneous-agents/spawn';
 import { isRecord } from '@lobechat/utils/object';
 import type { Command } from 'commander';
@@ -48,8 +47,6 @@ import { createLocalTraceStore } from '../utils/traceStore';
 import { TrpcIngestSink } from '../utils/TrpcIngestSink';
 
 const DSH_AGENT_TYPE = 'deepseek-harness';
-const DSH_DEFAULT_MODEL = 'deepseek-chat';
-const DSH_PROVIDER = 'deepseek-official';
 export const SUPPORTED_AGENT_TYPES = new Set<string>([
   ...LOCAL_HETEROGENEOUS_AGENT_TYPES,
   DSH_AGENT_TYPE,
@@ -603,19 +600,15 @@ const exec = async (options: ExecOptions): Promise<void> => {
         })
       : undefined;
 
-  // DSH exposes a bidirectional JSON-RPC server rather than a one-way CLI
-  // transcript. Keep it on the same public `hetero exec` surface, but drive
-  // the SDK session directly instead of passing it through `spawnAgent`.
+  // DSH is a protocol runtime (its `acp` profile) with no CLI descriptor. Keep
+  // it on the same public `hetero exec` surface, but drive its ACP session
+  // directly instead of passing it through `spawnAgent`.
   if (agentType === DSH_AGENT_TYPE) {
     const hasImages =
       typeof resolved.prompt !== 'string' &&
       resolved.prompt.some((block) => block.type === 'image');
     if (hasImages) {
       log.error('DeepSeek Harness currently accepts text prompts only.');
-      process.exit(2);
-    }
-    if (!options.command && options.agentArg?.length) {
-      log.error('--agent-arg requires --command for DeepSeek Harness.');
       process.exit(2);
     }
 
@@ -626,8 +619,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
             .map((block) => (block.type === 'text' ? block.text : ''))
             .filter(Boolean)
             .join('\n');
-    const sessionId = options.resume || randomUUID();
-    let session: Awaited<ReturnType<typeof spawnDshSdkSession>> | undefined;
+    let session: ReturnType<typeof spawnDshAcpSession> | undefined;
     let exitCode = 0;
     // Same contract as `runOneAgent`: once the server discards this run's
     // output, stop the harness instead of letting it keep calling the model
@@ -641,8 +633,10 @@ const exec = async (options: ExecOptions): Promise<void> => {
     };
 
     try {
-      session = await spawnDshSdkSession({
-        ...(options.command ? { args: options.agentArg, command: options.command } : {}),
+      session = spawnDshAcpSession({
+        args: options.agentArg,
+        clientVersion: 'lobehub-cli',
+        command: options.command,
         cwd: options.cwd || process.cwd(),
         // Same identity echo as the CLI agents, so `lh` commands the harness
         // runs for this conversation can name its operation and topic.
@@ -650,16 +644,16 @@ const exec = async (options: ExecOptions): Promise<void> => {
           operationId: serverIngest ? operationId : undefined,
           topicId: options.topic,
         }),
-        model: options.model || DSH_DEFAULT_MODEL,
-        provider: DSH_PROVIDER,
-        sessionId,
+        model: options.model,
+        operationId,
+        // `--resume` continues the persisted harness session.
+        resumeSessionId: options.resume,
       });
-      // The loss may have landed (via the heartbeat) while the runtime booted.
+      // The loss may have landed (via the heartbeat) before the turn started.
       if (ingestLoss) throw ingestLoss;
 
       let terminalError: string | undefined;
-      for await (const rawEvent of session.prompt(prompt)) {
-        const event = toStreamEvent(rawEvent, operationId);
+      for await (const event of session.prompt(prompt)) {
         if (event.type === 'error') {
           const data = event.data as Record<string, unknown> | undefined;
           terminalError = String(data?.message ?? data?.error ?? '') || 'DSH execution failed';
@@ -686,7 +680,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
         await sink.finish({
           error: finishError,
           result: terminalError ? 'error' : 'success',
-          sessionId,
+          sessionId: session.sessionId,
         });
       }
       if (terminalError) exitCode = 1;
@@ -704,7 +698,11 @@ const exec = async (options: ExecOptions): Promise<void> => {
       if (sink) {
         await serverIngester?.drain().catch(() => {});
         await sink
-          .finish({ error: { message, type: 'AgentRuntimeError' }, result: 'error', sessionId })
+          .finish({
+            error: { message, type: 'AgentRuntimeError' },
+            result: 'error',
+            sessionId: session?.sessionId ?? options.resume,
+          })
           .catch(() => {});
       }
     } finally {
@@ -1440,7 +1438,7 @@ export function registerHeteroCommand(program: Command) {
     )
     .option(
       '-c, --command <bin>',
-      `Override the agent runtime binary (CLI defaults: ${SUPPORTED_AGENT_COMMANDS}; DeepSeek Harness defaults to 'dsh --profile sdk')`,
+      `Override the agent runtime binary (CLI defaults: ${SUPPORTED_AGENT_COMMANDS}; DeepSeek Harness defaults to 'dsh --profile acp')`,
     )
     .option(
       '--operation-id <id>',

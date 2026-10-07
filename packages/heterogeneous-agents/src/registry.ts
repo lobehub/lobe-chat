@@ -15,7 +15,7 @@ import {
   CursorAdapter,
   DevinAcpAdapter,
   DroidAcpAdapter,
-  DshAdapter,
+  DshAcpAdapter,
   GrokBuildAdapter,
   KimiCodeAdapter,
   OpenCodeAdapter,
@@ -84,12 +84,12 @@ const runtimeAdapterRegistry = {
     createAdapter: () => new DroidAcpAdapter(),
   },
   /**
-   * DeepSeek Harness SDK runtime. Registered here rather than in
-   * `localAgentRegistry` because it is a JSON-RPC server, not a CLI that prints
-   * a JSONL dialect, so it carries no local CLI install/auth descriptor.
+   * DeepSeek Harness over its `acp` profile. Registered here rather than in
+   * `localAgentRegistry` because it carries no local CLI install/auth
+   * descriptor: LobeHub drives the user-installed `dsh` as a protocol runtime.
    */
   'deepseek-harness': {
-    createAdapter: () => new DshAdapter(),
+    createAdapter: () => new DshAcpAdapter(),
   },
 } satisfies Record<string, AgentRegistryEntry>;
 

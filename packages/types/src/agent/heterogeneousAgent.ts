@@ -416,8 +416,8 @@ export interface RemoteHeterogeneousAgentDescriptor {
 
 /**
  * A runtime LobeHub drives over a protocol instead of parsing a CLI's JSONL
- * dialect — the DeepSeek Harness CLI (`dsh`) serving its SDK profile over
- * stdio JSON-RPC. The `dsh` executable is user-installed; nothing ships with
+ * dialect — the DeepSeek Harness CLI (`dsh`) serving its `acp` profile over
+ * stdio. The `dsh` executable is user-installed; nothing ships with
  * LobeHub.
  */
 export interface LocalRuntimeHeterogeneousAgentDescriptor {
@@ -434,7 +434,7 @@ export interface LocalRuntimeHeterogeneousAgentDescriptor {
 export const LOCAL_RUNTIME_HETEROGENEOUS_AGENT_CONFIGS = [
   {
     defaultCommand: 'dsh',
-    defaultModel: 'deepseek-chat',
+    defaultModel: 'deepseek-v4-flash',
     defaultTopicGroupMode: 'byProject',
     iconId: 'DeepSeek',
     kind: 'local-runtime',
