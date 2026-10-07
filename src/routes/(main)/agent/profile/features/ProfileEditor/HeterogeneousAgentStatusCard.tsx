@@ -962,9 +962,9 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
 
       return (
         <div className={styles.detailRow}>
-          <Text className={styles.detailLabel}>
+          <span className={styles.detailLabel}>
             {t('heterogeneousStatus.codexPermission.label')}
-          </Text>
+          </span>
           <div className={styles.detailContent}>
             <Tooltip title={permissionTooltip}>
               <Select
