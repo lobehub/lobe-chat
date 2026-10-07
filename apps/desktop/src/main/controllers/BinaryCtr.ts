@@ -10,9 +10,8 @@ import {
   isLocalRuntimeHeterogeneousType,
   isRemoteHeterogeneousType,
 } from '@lobechat/heterogeneous-agents';
-import { detectValidatedCommand } from '@lobechat/heterogeneous-agents/resolveCliCommand';
 import { resolveRemotePlatformCommand } from '@lobechat/heterogeneous-agents/scanHost';
-import { DSH_COMMAND, DSH_VERSION_PATTERN } from '@lobechat/heterogeneous-agents/spawn';
+import { detectDshCommand, DSH_COMMAND } from '@lobechat/heterogeneous-agents/spawn';
 
 import type { BinaryCategory, BinaryStatus } from '@/core/infrastructure/BinaryManager';
 import { detectHeterogeneousCliCommand, invalidateLoginShellPathCache } from '@/modules/binaries';
@@ -56,9 +55,7 @@ export default class BinaryCtr extends ControllerModule {
       // launch path does, so the wizard never offers an agent that cannot run;
       // drop the cached login-shell PATH so a Rescan sees a fresh install.
       invalidateLoginShellPathCache();
-      return detectValidatedCommand(params.command?.trim() || DSH_COMMAND, {
-        validatePattern: DSH_VERSION_PATTERN,
-      });
+      return detectDshCommand(params.command?.trim() || DSH_COMMAND);
     }
     if (isRemoteHeterogeneousType(params.agentType)) {
       return resolveRemotePlatformCommand(params.agentType);

@@ -108,8 +108,10 @@ export {
   parseDroidAcpModelCatalog,
 } from './droidAcpSession';
 export {
+  detectDshCommand,
   DSH_ACP_PROFILE_ARGS,
   DSH_COMMAND,
+  DSH_MIN_VERSION,
   DSH_VERSION_PATTERN,
   DshAcpSession,
   type DshAcpSessionHandle,

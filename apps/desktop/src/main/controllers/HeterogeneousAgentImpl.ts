@@ -57,10 +57,7 @@ import {
   QuotaSnapshotCache,
   readClaudeCodeIdentity,
 } from '@lobechat/heterogeneous-agents/quota-sampler';
-import {
-  detectValidatedCommand,
-  isLoginShellTimeoutStatus,
-} from '@lobechat/heterogeneous-agents/resolveCliCommand';
+import { isLoginShellTimeoutStatus } from '@lobechat/heterogeneous-agents/resolveCliCommand';
 import {
   type PiRpcImage,
   PiRpcSession,
@@ -93,10 +90,10 @@ import {
   CodexThreadSession,
   createFileStoreImageUploader,
   CursorAcpSession,
+  detectDshCommand,
   DevinAcpSession,
   DroidAcpSession,
   DSH_COMMAND,
-  DSH_VERSION_PATTERN,
   ensureClaudeCodeResumeTranscript,
   getCodexAppServerUnsupportedArgs,
   GrokAcpSession,
@@ -2114,14 +2111,13 @@ export default class HeterogeneousAgentCtr {
     // profile. A GUI-launched app inherits a lean PATH, so resolve it the way
     // the other CLI agents are resolved (login-shell PATH fallback) and spawn
     // with the PATH it was found under.
-    const dsh = await detectValidatedCommand(
-      session.command?.trim() || DSH_COMMAND,
-      { validatePattern: DSH_VERSION_PATTERN },
-      env,
-    );
+    const dsh = await detectDshCommand(session.command?.trim() || DSH_COMMAND, env);
     if (!dsh.available || !dsh.path) {
+      // A CLI that was found but rejected (too old) carries its own reason.
       throw new Error(
-        `DeepSeek Harness CLI (dsh) not found${dsh.error ? `: ${dsh.error}` : ''}. Install it with: npm i -g @deepseek-ai/dsh`,
+        dsh.path && dsh.error
+          ? dsh.error
+          : `DeepSeek Harness CLI (dsh) not found${dsh.error ? `: ${dsh.error}` : ''}. Install it with: npm i -g @deepseek-ai/dsh`,
       );
     }
     if (dsh.resolvedPathEnv) env.PATH = dsh.resolvedPathEnv;

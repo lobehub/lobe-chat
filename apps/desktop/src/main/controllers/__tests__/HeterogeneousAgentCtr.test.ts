@@ -264,11 +264,6 @@ const { ensureResumeTranscriptMock, readClaudeCodeSessionCostMock } = vi.hoisted
   readClaudeCodeSessionCostMock: vi.fn(async (): Promise<number | undefined> => undefined),
 }));
 
-vi.mock('@lobechat/heterogeneous-agents/resolveCliCommand', async (importOriginal) => {
-  const actual = await importOriginal<Record<string, unknown>>();
-  return { ...actual, detectValidatedCommand: dshDetectMock };
-});
-
 vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
 
@@ -622,6 +617,7 @@ vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
     CursorAcpSession: MockCursorAcpSession,
     DroidAcpSession: MockDroidAcpSession,
     DevinAcpSession: MockDevinAcpSession,
+    detectDshCommand: dshDetectMock,
     spawnDshAcpSession: dshSpawnMock,
     isCodexAppServerCompatibilityError: (error: Error) =>
       error.name === 'CodexAppServerConnectionError',
@@ -1396,7 +1392,6 @@ describe('HeterogeneousAgentCtr', () => {
       // through the login-shell PATH a GUI launch otherwise lacks.
       expect(dshDetectMock).toHaveBeenCalledWith(
         'dsh',
-        expect.objectContaining({ validatePattern: expect.any(RegExp) }),
         expect.objectContaining({ DEEPSEEK_API_KEY: 'test-key' }),
       );
       expect(dshSpawnMock).toHaveBeenCalledWith(
@@ -1502,6 +1497,30 @@ describe('HeterogeneousAgentCtr', () => {
       await expect(
         ctr.sendPrompt({ operationId: 'op-dsh', prompt: 'hello', sessionId }),
       ).rejects.toThrow(/npm i -g @deepseek-ai\/dsh/);
+      expect(dshSpawnMock).not.toHaveBeenCalled();
+    });
+
+    it('fails the turn with the update hint when the installed dsh is too old', async () => {
+      mockGetAllWindows.mockReturnValue([]);
+      dshDetectMock.mockResolvedValueOnce({
+        available: false,
+        error: 'DeepSeek Harness CLI 0.0.1 is too old; LobeHub needs 0.2.0 or newer.',
+        path: '/Users/me/.local/bin/dsh',
+        version: '0.0.1',
+      });
+      const ctr = new HeterogeneousAgentCtr({
+        appStoragePath,
+        storeManager: { get: vi.fn() },
+      } as any);
+      const { sessionId } = await ctr.startSession({
+        agentType: 'deepseek-harness',
+        command: '',
+        cwd: '/workspace',
+      });
+
+      await expect(
+        ctr.sendPrompt({ operationId: 'op-dsh', prompt: 'hello', sessionId }),
+      ).rejects.toThrow('DeepSeek Harness CLI 0.0.1 is too old; LobeHub needs 0.2.0 or newer.');
       expect(dshSpawnMock).not.toHaveBeenCalled();
     });
 

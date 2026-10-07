@@ -9,6 +9,8 @@ import {
 } from './acpAgentSession';
 import type { AcpRpcMessage } from './acpStdioClient';
 import { AcpServerRequestError } from './acpStdioClient';
+import type { CliCommandStatus } from './resolveCliCommand';
+import { detectValidatedCommand } from './resolveCliCommand';
 
 /**
  * DeepSeek Harness over the Agent Client Protocol.
@@ -25,6 +27,45 @@ export const DSH_COMMAND = 'dsh';
 
 /** `dsh --version` prints a bare semantic version (e.g. `0.2.0-rc.2`). */
 export const DSH_VERSION_PATTERN = /^v?\d+\.\d+\.\d+(?:[-+][\dA-Za-z.-]+)?$/;
+
+/** First release whose CLI ships the `acp` profile with `session/resume`. */
+export const DSH_MIN_VERSION = '0.2.0';
+
+/** Compare release numbers only, so `0.2.0-rc.2` already counts as 0.2. */
+const isSupportedDshVersion = (version: string | undefined): boolean => {
+  const parts = version
+    ?.match(/(\d+)\.(\d+)\.(\d+)/)
+    ?.slice(1)
+    .map(Number);
+  if (!parts) return false;
+  const minimum = DSH_MIN_VERSION.split('.').map(Number);
+  for (const [index, part] of parts.entries()) {
+    if (part !== minimum[index]) return part > minimum[index];
+  }
+  return true;
+};
+
+/**
+ * Find a `dsh` that can run LobeHub turns. An older CLI still answers
+ * `--version` but has no `acp` profile, so it is reported unavailable here
+ * rather than failing every turn after the agent was created.
+ */
+export const detectDshCommand = async (
+  command: string = DSH_COMMAND,
+  env?: NodeJS.ProcessEnv,
+): Promise<CliCommandStatus> => {
+  const status = await detectValidatedCommand(
+    command,
+    { validatePattern: DSH_VERSION_PATTERN },
+    env,
+  );
+  if (!status.available || isSupportedDshVersion(status.version)) return status;
+  return {
+    ...status,
+    available: false,
+    error: `DeepSeek Harness CLI ${status.version} is too old; LobeHub needs ${DSH_MIN_VERSION} or newer. Update it with: npm i -g @deepseek-ai/dsh`,
+  };
+};
 
 /** Select the CLI's shipped ACP profile, served on stdio until disconnect. */
 export const DSH_ACP_PROFILE_ARGS: readonly string[] = ['--profile', 'acp'];
