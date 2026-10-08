@@ -1,4 +1,5 @@
 // cspell:ignore tokenx
+import { filesPrompts } from '@lobechat/prompts';
 import type { AssistantContentBlock, UIChatMessage } from '@lobechat/types';
 import { estimateTokenCount } from 'tokenx';
 
@@ -17,6 +18,7 @@ export const DEFAULT_DRIFT_MULTIPLIER = 1.25;
 
 const ZERO_BY_SOURCE = (): Record<TokenSourceType, number> => ({
   content: 0,
+  fileContext: 0,
   reasoning: 0,
   thoughtSignature: 0,
   toolCallId: 0,
@@ -39,6 +41,33 @@ const bumpSource = (
   bySource[key] = (bySource[key] ?? 0) + amount;
 };
 
+/**
+ * MessageContentProcessor appends the parsed text of every user attachment to
+ * that message's content as a `<files_info>` block, on every turn the message
+ * stays in history. Render the same block so the count follows the inline vs.
+ * preview decision (`FILE_INLINE_MAX_CHARS`) without duplicating it. Visual
+ * and audio payloads (image_url parts, etc.) are not estimated here.
+ *
+ * `canReadAttachment` only changes the preview notice wording, so the default
+ * is close enough for budgeting.
+ */
+const countFileContext = (msg: UIChatMessage): number => {
+  const fileList = msg.fileList ?? [];
+  const imageList = msg.imageList ?? [];
+  const videoList = msg.videoList ?? [];
+  const audioList = msg.audioList ?? [];
+
+  if (
+    fileList.length === 0 &&
+    imageList.length === 0 &&
+    videoList.length === 0 &&
+    audioList.length === 0
+  )
+    return 0;
+
+  return estimate(filesPrompts({ audioList, fileList, imageList, messageId: msg.id, videoList }));
+};
+
 type AssistantTokenBlock =
   | AssistantContentBlock
   | Pick<UIChatMessage, 'content' | 'metadata' | 'reasoning' | 'tools' | 'usage'>;
@@ -51,6 +80,7 @@ type AssistantTokenBlock =
  * | source             | field on UIChatMessage                                     | sent to provider as              |
  * |--------------------|------------------------------------------------------------|----------------------------------|
  * | `content`          | `msg.content`                                              | `message.content`                |
+ * | `fileContext`      | user `fileList` / `imageList` / `videoList` / `audioList`  | `<files_info>` block in content  |
  * | `toolCalls`        | `msg.tools[]` (lobe internal, not OpenAI's `tool_calls`)   | `message.tool_calls`             |
  * | `thoughtSignature` | `msg.tools[N].thoughtSignature` (Gemini-specific)          | echoed back per tool call        |
  * | `reasoning`        | `msg.reasoning.content` / `msg.reasoning` (string variant) | echoed back next turn (thinking) |
@@ -76,7 +106,7 @@ type AssistantTokenBlock =
  * harness stores but doesn't ship to the provider:
  *
  *   `plugin`, `pluginState`, `pluginIntervention`, `pluginError`, `chunksList`,
- *   `editorData`, `extra`, `fileList`, `imageList`, `videoList`, `metadata`
+ *   `editorData`, `extra`, `metadata`
  *   (other than `metadata.usage.totalOutputTokens` shortcut for assistant and
  *   `metadata.instruction` for `task` messages, which ship in the template)
  * Also NOT counted: in-bubble `council` blocks (`AssistantContentBlock.council`)
@@ -274,6 +304,8 @@ export const countContextTokens = ({
         countAssistant(msg);
       } else {
         bumpSource(bySource, 'content', estimate(msg.content));
+
+        if (msg.role === 'user') bumpSource(bySource, 'fileContext', countFileContext(msg));
 
         const reasoning = msg.reasoning;
         if (reasoning) {
