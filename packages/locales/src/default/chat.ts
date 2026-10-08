@@ -245,6 +245,7 @@ export default {
   'agentProfile.runtime': 'Runs on {{name}}',
   'agentProfile.skills_one': '{{count}} skill',
   'agentProfile.skills_other': '{{count}} skills',
+  'agentSender.sourceTopic': 'Source topic',
   'agentSignal.receipts.agentSignalLabel': 'Agent Signal',
   'agentSignal.receipts.memory.detail': 'Saved this for future replies',
   'agentSignal.receipts.memory.openInMemory': 'Open in Memory',
