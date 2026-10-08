@@ -49,7 +49,10 @@ const bumpSource = (
  * and audio payloads (image_url parts, etc.) are not estimated here.
  *
  * `canReadAttachment` only changes the preview notice wording, so the default
- * is close enough for budgeting.
+ * is close enough for budgeting. URLs are left out because Desktop ships the
+ * block without them (`includeFileUrl: false`), and a local or base64 media URL
+ * could otherwise push a single attachment over the compression threshold; on
+ * Web this undercounts by one short URL per attachment.
  */
 const countFileContext = (msg: UIChatMessage): number => {
   const fileList = msg.fileList ?? [];
@@ -65,7 +68,9 @@ const countFileContext = (msg: UIChatMessage): number => {
   )
     return 0;
 
-  return estimate(filesPrompts({ audioList, fileList, imageList, messageId: msg.id, videoList }));
+  return estimate(
+    filesPrompts({ addUrl: false, audioList, fileList, imageList, messageId: msg.id, videoList }),
+  );
 };
 
 type AssistantTokenBlock =

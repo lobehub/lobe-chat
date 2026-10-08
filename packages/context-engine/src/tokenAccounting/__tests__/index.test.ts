@@ -438,7 +438,9 @@ describe('countContextTokens', () => {
 
       const r = countContextTokens({ messages: [msg] });
 
-      const expected = estimateTokenCount(filesPrompts({ fileList, messageId: 'msg-1' }));
+      const expected = estimateTokenCount(
+        filesPrompts({ addUrl: false, fileList, messageId: 'msg-1' }),
+      );
       expect(r.messages[0].bySource.fileContext).toBe(expected);
       expect(r.bySource.fileContext).toBe(expected);
       expect(r.rawTotal).toBe(estimateTokenCount('summarize') + expected);
@@ -463,6 +465,24 @@ describe('countContextTokens', () => {
       });
 
       expect(countContextTokens({ messages: [msg] }).bySource.fileContext).toBeGreaterThan(0);
+    });
+
+    // Desktop sends the block without URLs, so a base64 image URL must not
+    // inflate the estimate past the compression threshold.
+    it('does not count attachment URLs', () => {
+      const dataUrl = `data:image/png;base64,${'A'.repeat(200_000)}`;
+      const withDataUrl = mkMsg({
+        imageList: [{ alt: 'chart.png', id: 'img-1', url: dataUrl }],
+        role: 'user',
+      });
+      const withShortUrl = mkMsg({
+        imageList: [{ alt: 'chart.png', id: 'img-1', url: 'https://example.com/chart.png' }],
+        role: 'user',
+      });
+
+      expect(countContextTokens({ messages: [withDataUrl] }).bySource.fileContext).toBe(
+        countContextTokens({ messages: [withShortUrl] }).bySource.fileContext,
+      );
     });
 
     it('adds nothing for user messages without attachments', () => {
