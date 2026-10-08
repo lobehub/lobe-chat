@@ -71,6 +71,7 @@ describe('MessageMetadataSchema', () => {
         name: 'Coco',
         title: 'Product Agent',
         topicId: 'tpc_source',
+        topicTitle: 'Release risk review',
       },
       unknown: 'stripped',
     });
@@ -82,6 +83,7 @@ describe('MessageMetadataSchema', () => {
         name: 'Coco',
         title: 'Product Agent',
         topicId: 'tpc_source',
+        topicTitle: 'Release risk review',
       },
     });
   });
