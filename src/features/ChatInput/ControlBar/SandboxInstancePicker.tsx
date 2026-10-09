@@ -367,10 +367,12 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
 
     const renderEnvironment = (environment: (typeof environments)[number]) => {
       const isCreator = canEdit(environment);
+      const kind = environmentKind(environment);
       const row = describeEnvironmentRow({
         boundInstanceId,
         copies: copiesOf(environment.id),
         isCreator,
+        kind,
       });
 
       return (
@@ -380,7 +382,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
           environment={environment}
           isCreator={isCreator}
           key={environment.id}
-          kind={environmentKind(environment)}
+          kind={kind}
           repository={repositoryPath(environment.configuration)}
           row={row}
           stopping={stopping.has}

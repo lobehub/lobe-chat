@@ -110,7 +110,11 @@ export interface EnvironmentRowState<T extends PickerCopy> {
   copies: T[];
   /** The copy whose state the row shows: the one a click binds, else the default. */
   displayed?: T;
-  /** Only with several copies: one copy needs no second menu to choose it. */
+  /**
+   * Only for a code environment with several copies: one copy needs no second
+   * menu to choose it, and a files environment is one folder for one
+   * conversation at a time — the click still lands on the copy it is bound to.
+   */
   hasSubmenu: boolean;
   /**
    * No copy yet, and the person may make one: an environment from before every
@@ -134,10 +138,12 @@ export const describeEnvironmentRow = <T extends PickerCopy>({
   boundInstanceId,
   copies,
   isCreator,
+  kind,
 }: {
   boundInstanceId?: string;
   copies: readonly T[];
   isCreator: boolean;
+  kind: EnvironmentKind;
 }): EnvironmentRowState<T> => {
   const sorted = sortCopies(copies);
   const picked = pickCopyForEnvironment(sorted, boundInstanceId);
@@ -156,7 +162,7 @@ export const describeEnvironmentRow = <T extends PickerCopy>({
   return {
     copies: sorted,
     displayed: picked ?? sorted[0],
-    hasSubmenu: sorted.length > 1,
+    hasSubmenu: kind === 'code' && sorted.length > 1,
     lazyCreate: false,
     picked,
     selectable: Boolean(picked),

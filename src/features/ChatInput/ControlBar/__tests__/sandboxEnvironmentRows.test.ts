@@ -71,7 +71,11 @@ describe('pickCopyForEnvironment', () => {
 
 describe('describeEnvironmentRow', () => {
   it('shows a single copy as one row with no second menu', () => {
-    const row = describeEnvironmentRow({ copies: [copy('only', 0)], isCreator: true });
+    const row = describeEnvironmentRow({
+      copies: [copy('only', 0)],
+      isCreator: true,
+      kind: 'code',
+    });
 
     expect(row).toMatchObject({ hasSubmenu: false, lazyCreate: false, selectable: true });
     expect(row.picked?.id).toBe('only');
@@ -81,16 +85,31 @@ describe('describeEnvironmentRow', () => {
     const row = describeEnvironmentRow({
       copies: [copy('second', 5), copy('default', 0)],
       isCreator: false,
+      kind: 'code',
     });
 
     expect(row.hasSubmenu).toBe(true);
     expect(row.copies.map((item) => item.id)).toEqual(['default', 'second']);
   });
 
+  it('never offers a second menu on a files environment, however many copies it has', () => {
+    const row = describeEnvironmentRow({
+      boundInstanceId: 'second',
+      copies: [copy('default', 0), copy('second', 5)],
+      isCreator: true,
+      kind: 'files',
+    });
+
+    expect(row.hasSubmenu).toBe(false);
+    // The conversation stays on the copy it is already bound to.
+    expect(row.picked?.id).toBe('second');
+  });
+
   it('cannot be picked when every copy is taken, and shows the default copy state', () => {
     const row = describeEnvironmentRow({
       copies: [copy('default', 0, busy), copy('second', 5, busy)],
       isCreator: true,
+      kind: 'code',
     });
 
     expect(row.selectable).toBe(false);
@@ -102,6 +121,7 @@ describe('describeEnvironmentRow', () => {
     const row = describeEnvironmentRow({
       copies: [copy('default', 0, busy), copy('second', 5, { status: 'error' })],
       isCreator: true,
+      kind: 'code',
     });
 
     expect(row.displayed?.id).toBe('second');
@@ -109,13 +129,13 @@ describe('describeEnvironmentRow', () => {
   });
 
   it('creates the copy on first pick for the creator of an environment with none', () => {
-    const row = describeEnvironmentRow({ copies: [], isCreator: true });
+    const row = describeEnvironmentRow({ copies: [], isCreator: true, kind: 'code' });
 
     expect(row).toMatchObject({ hasSubmenu: false, lazyCreate: true, selectable: true });
   });
 
   it('leaves a colleague unable to pick a published environment with no copy', () => {
-    const row = describeEnvironmentRow({ copies: [], isCreator: false });
+    const row = describeEnvironmentRow({ copies: [], isCreator: false, kind: 'code' });
 
     expect(row).toMatchObject({ lazyCreate: false, selectable: false });
   });
