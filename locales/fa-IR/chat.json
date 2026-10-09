@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "هنگام بازیافت سندباکس پاک می‌شود",
   "sandboxStorage.instanceBusy": "{{name}} در حال اجرا در مکالمه دیگری است. این یکی آن را نگه می‌دارد و وقتی آن اجرا به پایان رسید، آن را انتخاب می‌کند.",
   "sandboxStorage.manage": "مدیریت",
-  "sandboxStorage.noInstances": "ایجاد یک نمونه",
-  "sandboxStorage.noInstancesDesc": "محیط‌های شما هنوز هیچ نسخه کاری ندارند",
   "sandboxStorage.persistentUpsell": "دایرکتوری کاری پایدار",
   "sandboxStorage.persistentUpsellDesc": "نگهداری فایل‌ها در بین اجراها و موضوعات",
   "sandboxStorage.pickerInfoTooltip": "یک محیط توصیف می‌کند که یک اجرا به چه چیزی در اطراف خود نیاز دارد — مخازن، تنظیمات، متغیرها. یک نمونه یک نسخه کاری از آن است، با پوشه و بسته‌های نصب‌شده خود؛ مکالمات در داخل یک نمونه اجرا می‌شوند و آنچه را که در آنجا باقی می‌گذارند نگه می‌دارند.",

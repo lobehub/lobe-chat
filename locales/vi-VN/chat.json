@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Được dọn dẹp khi sandbox được tái chế",
   "sandboxStorage.instanceBusy": "{{name}} đang chạy trong một cuộc trò chuyện khác. Cuộc trò chuyện này sẽ giữ nó và tiếp tục khi chạy đó kết thúc.",
   "sandboxStorage.manage": "Quản lý",
-  "sandboxStorage.noInstances": "Tạo một phiên bản",
-  "sandboxStorage.noInstancesDesc": "Môi trường của bạn chưa có bản sao làm việc",
   "sandboxStorage.persistentUpsell": "Thư mục làm việc cố định",
   "sandboxStorage.persistentUpsellDesc": "Giữ tệp qua các lần chạy và chủ đề",
   "sandboxStorage.pickerInfoTooltip": "Một môi trường mô tả những gì một lần chạy cần xung quanh nó — kho lưu trữ, thiết lập, biến số. Một phiên bản là một bản sao làm việc của nó, với thư mục riêng và các gói đã cài đặt riêng; các cuộc trò chuyện chạy bên trong một phiên bản và giữ những gì chúng để lại ở đó.",

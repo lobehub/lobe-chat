@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Wordt opgeruimd wanneer de sandbox wordt gerecycled",
   "sandboxStorage.instanceBusy": "{{name}} draait in een ander gesprek. Dit gesprek houdt het vast en pakt het op wanneer die run eindigt.",
   "sandboxStorage.manage": "Beheren",
-  "sandboxStorage.noInstances": "Maak een instantie",
-  "sandboxStorage.noInstancesDesc": "Jouw omgevingen hebben nog geen werkende kopie",
   "sandboxStorage.persistentUpsell": "Persistente werkmap",
   "sandboxStorage.persistentUpsellDesc": "Bewaar bestanden tussen runs en onderwerpen",
   "sandboxStorage.pickerInfoTooltip": "Een omgeving beschrijft wat een run nodig heeft — repositories, setup, variabelen. Een instantie is één werkende kopie ervan, met zijn eigen map en geïnstalleerde pakketten; gesprekken draaien binnen een instantie en bewaren wat ze daar achterlaten.",

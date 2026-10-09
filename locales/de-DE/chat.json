@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Wird bereinigt, wenn die Sandbox recycelt wird",
   "sandboxStorage.instanceBusy": "{{name}} wird in einem anderen Gespräch ausgeführt. Dieses behält es und übernimmt es, wenn dieser Lauf endet.",
   "sandboxStorage.manage": "Verwalten",
-  "sandboxStorage.noInstances": "Eine Instanz erstellen",
-  "sandboxStorage.noInstancesDesc": "Ihre Umgebungen haben noch keine Arbeitskopie",
   "sandboxStorage.persistentUpsell": "Persistentes Arbeitsverzeichnis",
   "sandboxStorage.persistentUpsellDesc": "Dateien über Läufe und Themen hinweg behalten",
   "sandboxStorage.pickerInfoTooltip": "Eine Umgebung beschreibt, was ein Lauf um sich herum benötigt — Repositories, Einrichtung, Variablen. Eine Instanz ist eine Arbeitskopie davon, mit eigenem Ordner und installierten Paketen; Gespräche laufen innerhalb einer Instanz und behalten, was sie dort hinterlassen.",

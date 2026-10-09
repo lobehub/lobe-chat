@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Nettoyé lorsque le bac à sable est recyclé",
   "sandboxStorage.instanceBusy": "{{name}} est en cours d'exécution dans une autre conversation. Celle-ci le conserve et le reprend lorsque cette exécution se termine.",
   "sandboxStorage.manage": "Gérer",
-  "sandboxStorage.noInstances": "Créer une instance",
-  "sandboxStorage.noInstancesDesc": "Vos environnements n'ont pas encore de copie de travail",
   "sandboxStorage.persistentUpsell": "Répertoire de travail persistant",
   "sandboxStorage.persistentUpsellDesc": "Conservez les fichiers entre les exécutions et les sujets",
   "sandboxStorage.pickerInfoTooltip": "Un environnement décrit ce dont une exécution a besoin autour d'elle — dépôts, configuration, variables. Une instance est une copie de travail de cet environnement, avec son propre dossier et ses propres packages installés ; les conversations s'exécutent à l'intérieur d'une instance et conservent ce qu'elles y laissent.",

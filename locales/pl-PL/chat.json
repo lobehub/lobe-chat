@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Czyszczony, gdy piaskownica jest odświeżana",
   "sandboxStorage.instanceBusy": "{{name}} działa w innej rozmowie. Ta zachowuje go i przejmuje, gdy tamto uruchomienie się zakończy.",
   "sandboxStorage.manage": "Zarządzaj",
-  "sandboxStorage.noInstances": "Utwórz instancję",
-  "sandboxStorage.noInstancesDesc": "Twoje środowiska nie mają jeszcze kopii roboczej",
   "sandboxStorage.persistentUpsell": "Trwały katalog roboczy",
   "sandboxStorage.persistentUpsellDesc": "Zachowaj pliki między uruchomieniami i tematami",
   "sandboxStorage.pickerInfoTooltip": "Środowisko opisuje, czego potrzebuje uruchomienie — repozytoria, konfigurację, zmienne. Instancja to jedna kopia robocza środowiska, z własnym folderem i zainstalowanymi pakietami; rozmowy działają wewnątrz instancji i zachowują to, co tam zostawiają.",

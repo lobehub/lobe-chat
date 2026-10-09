@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Pulita quando il sandbox viene riciclato",
   "sandboxStorage.instanceBusy": "{{name}} è in esecuzione in un'altra conversazione. Questa la mantiene e la riprende quando quell'esecuzione termina.",
   "sandboxStorage.manage": "Gestisci",
-  "sandboxStorage.noInstances": "Crea un'istanza",
-  "sandboxStorage.noInstancesDesc": "I tuoi ambienti non hanno ancora una copia di lavoro",
   "sandboxStorage.persistentUpsell": "Directory di lavoro persistente",
   "sandboxStorage.persistentUpsellDesc": "Mantieni i file tra esecuzioni e argomenti",
   "sandboxStorage.pickerInfoTooltip": "Un ambiente descrive ciò di cui un'esecuzione ha bisogno intorno a sé — repository, configurazioni, variabili. Un'istanza è una copia di lavoro di esso, con la propria cartella e i propri pacchetti installati; le conversazioni si svolgono all'interno di un'istanza e mantengono ciò che lasciano lì.",

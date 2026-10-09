@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "サンドボックスが再利用されるとクリーンアップされます",
   "sandboxStorage.instanceBusy": "{{name}} は別の会話で実行中です。この会話はそれを保持し、その実行が終了すると引き継ぎます。",
   "sandboxStorage.manage": "管理",
-  "sandboxStorage.noInstances": "インスタンスを作成",
-  "sandboxStorage.noInstancesDesc": "環境にはまだ作業コピーがありません",
   "sandboxStorage.persistentUpsell": "永続的な作業ディレクトリ",
   "sandboxStorage.persistentUpsellDesc": "実行やトピックをまたいでファイルを保持",
   "sandboxStorage.pickerInfoTooltip": "環境は実行に必要な周囲の設定を記述します — リポジトリ、セットアップ、変数など。インスタンスはその環境の1つの作業コピーであり、独自のフォルダとインストールされたパッケージを持ちます。会話はインスタンス内で実行され、そこに残されたものを保持します。",

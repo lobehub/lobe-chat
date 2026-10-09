@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "沙盒回收時清理",
   "sandboxStorage.instanceBusy": "{{name}} 正在另一個對話中運行。此對話保留它，並在該運行結束時接管。",
   "sandboxStorage.manage": "管理",
-  "sandboxStorage.noInstances": "創建一個實例",
-  "sandboxStorage.noInstancesDesc": "您的環境尚無工作副本",
   "sandboxStorage.persistentUpsell": "持久工作目錄",
   "sandboxStorage.persistentUpsellDesc": "在運行和主題之間保留文件",
   "sandboxStorage.pickerInfoTooltip": "環境描述運行所需的周圍設置——倉庫、設置、變量。實例是其中的一個工作副本，擁有自己的文件夾和已安裝的包；對話在實例內運行並保留其留下的內容。",

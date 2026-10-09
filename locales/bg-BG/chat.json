@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Изчиства се, когато пясъчникът се рециклира",
   "sandboxStorage.instanceBusy": "{{name}} работи в друг разговор. Този го запазва и го поема, когато това изпълнение приключи.",
   "sandboxStorage.manage": "Управлявай",
-  "sandboxStorage.noInstances": "Създайте инстанция",
-  "sandboxStorage.noInstancesDesc": "Вашите среди все още нямат работно копие",
   "sandboxStorage.persistentUpsell": "Постоянна работна директория",
   "sandboxStorage.persistentUpsellDesc": "Запазете файловете между изпълнения и теми",
   "sandboxStorage.pickerInfoTooltip": "Средата описва какво е необходимо за изпълнение — хранилища, настройки, променливи. Инстанцията е едно работно копие на нея, със собствена папка и инсталирани пакети; разговорите се изпълняват в инстанция и запазват това, което оставят там.",

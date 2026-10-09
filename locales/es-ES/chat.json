@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Se limpia cuando se recicla el sandbox",
   "sandboxStorage.instanceBusy": "{{name}} está en ejecución en otra conversación. Esta lo mantiene y lo retoma cuando esa ejecución termina.",
   "sandboxStorage.manage": "Gestionar",
-  "sandboxStorage.noInstances": "Crear una instancia",
-  "sandboxStorage.noInstancesDesc": "Tus entornos aún no tienen una copia de trabajo",
   "sandboxStorage.persistentUpsell": "Directorio de trabajo persistente",
   "sandboxStorage.persistentUpsellDesc": "Mantén archivos entre ejecuciones y temas",
   "sandboxStorage.pickerInfoTooltip": "Un entorno describe lo que una ejecución necesita a su alrededor: repositorios, configuración, variables. Una instancia es una copia de trabajo de este, con su propia carpeta y paquetes instalados; las conversaciones se ejecutan dentro de una instancia y mantienen lo que dejan allí.",

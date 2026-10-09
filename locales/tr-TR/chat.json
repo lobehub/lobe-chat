@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "Kum havuzu geri dönüştürüldüğünde temizlenir",
   "sandboxStorage.instanceBusy": "{{name}} başka bir sohbette çalışıyor. Bu sohbet onu tutar ve o çalıştırma sona erdiğinde devralır.",
   "sandboxStorage.manage": "Yönet",
-  "sandboxStorage.noInstances": "Bir örnek oluştur",
-  "sandboxStorage.noInstancesDesc": "Ortamlarınızın henüz bir çalışma kopyası yok",
   "sandboxStorage.persistentUpsell": "Kalıcı çalışma dizini",
   "sandboxStorage.persistentUpsellDesc": "Çalıştırmalar ve konular arasında dosyaları saklayın",
   "sandboxStorage.pickerInfoTooltip": "Bir ortam, bir çalıştırmanın çevresinde neye ihtiyaç duyduğunu tanımlar — depolar, kurulum, değişkenler. Bir örnek, kendi klasörü ve kendi kurulu paketleriyle bir çalışma kopyasıdır; sohbetler bir örnek içinde çalışır ve orada bıraktıklarını saklar.",

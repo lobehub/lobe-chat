@@ -1900,8 +1900,6 @@
   "sandboxStorage.ephemeralDesc": "يتم تنظيفه عند إعادة تدوير الصندوق",
   "sandboxStorage.instanceBusy": "{{name}} يعمل في محادثة أخرى. يحتفظ هذا به، ويلتقطه عند انتهاء التشغيل.",
   "sandboxStorage.manage": "إدارة",
-  "sandboxStorage.noInstances": "إنشاء نسخة",
-  "sandboxStorage.noInstancesDesc": "لا تحتوي بيئاتك على نسخة عمل حتى الآن",
   "sandboxStorage.persistentUpsell": "دليل عمل دائم",
   "sandboxStorage.persistentUpsellDesc": "احتفظ بالملفات عبر التشغيلات والمواضيع",
   "sandboxStorage.pickerInfoTooltip": "تصف البيئة ما يحتاجه التشغيل حوله — المستودعات، الإعداد، المتغيرات. النسخة هي نسخة عمل واحدة منها، مع مجلدها الخاص وحزمها المثبتة الخاصة؛ تعمل المحادثات داخل نسخة وتحتفظ بما تتركه هناك.",
