@@ -30,7 +30,12 @@ import { sandboxStorageService } from '@/services/sandboxStorage';
 
 import OptionRow from './OptionRow';
 import SandboxEnvironmentRow from './SandboxEnvironmentRow';
-import { copyChipLabel, describeEnvironmentRow } from './sandboxEnvironmentRows';
+import {
+  copyChipLabel,
+  describeEnvironmentRow,
+  isCopyBuilding,
+  isCopyOccupied,
+} from './sandboxEnvironmentRows';
 import { useCreateCopy } from './useCreateCopy';
 import { usePendingIds } from './usePendingIds';
 import type { SandboxSelection } from './useSandboxMode';
@@ -477,8 +482,10 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
 
         {/* This conversation's own instance, held by another one. It stays
             bound — the lease may well be free again by the next message — but
-            saying nothing would leave a 409 to do the explaining. */}
-        {current && !currentBlocked && current.inUse && !current.inUseByThisTopic && (
+            saying nothing would leave a 409 to do the explaining. A copy that
+            is still building holds the same lease, but no conversation is
+            running in it: its row already says "Building". */}
+        {current && !currentBlocked && isCopyOccupied(current) && !isCopyBuilding(current) && (
           <Text className={styles.blockedNotice}>
             {t('sandboxStorage.instanceBusy', { name: current.name })}
           </Text>
@@ -566,7 +573,14 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
         open={open}
         placement={'topLeft'}
         trigger={'click'}
-        onOpenChange={setOpen}
+        onOpenChange={(next) => {
+          setOpen(next);
+          // Occupancy moves on its own — a run ends, a build releases its
+          // lease — and the list is not refetched on focus. Re-read it each
+          // time the menu opens, so a copy is not offered or refused on a
+          // stale answer. A Redis read on the server, never a sandbox.
+          if (next && data) void refreshInstances();
+        }}
       >
         <div>
           <Tooltip
