@@ -449,7 +449,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return entry?.pending.length ? entry.base : port.read(key);
   };
 
-  const hydrate = async (params: TParams, scope = resource.scope.get()) => {
+  const hydrate = async (
+    params: TParams,
+    scope = resource.scope.get(),
+    { overwrite = false }: { overwrite?: boolean } = {},
+  ) => {
     if (!resource.storage) return false;
     // An identity-less runtime reads network-only: its scope is a guess, so
     // hydrating it could paint another session's private rows.
@@ -493,6 +497,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return dispatch({
       data,
       key,
+      overwrite,
       params,
       query,
       scope,
@@ -629,14 +634,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     if (rowCleared && isRemoved(scope, key) && port.read(key) === undefined) return false;
     return dispatch({ key, scope, type: 'remove' });
   };
-
-  /**
-   * Drop an entry's in-memory value and its painted view, keeping the persisted
-   * row. A key reused for another query (a navigation) must be emptied first:
-   * `hydrate` only fills an empty slot, so without this the new query's
-   * persisted page could never load.
-   */
-  const reset = (key: string) => dispatch({ key, scope: resource.scope.get(), type: 'reset' });
 
   /**
    * Persist the confirmed value of an entry as it is now — the flush after a
@@ -998,7 +995,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     remove,
     removeEntity,
     replace,
-    reset,
     resource,
     revalidate,
     update,
