@@ -54,7 +54,7 @@ const bumpSource = (
  * could otherwise push a single attachment over the compression threshold; on
  * Web this undercounts by one short URL per attachment.
  */
-const countFileContext = (msg: UIChatMessage): number => {
+const countFileContext = (msg: UIChatMessage, previewFileIds?: ReadonlySet<string>): number => {
   const fileList = msg.fileList ?? [];
   const imageList = msg.imageList ?? [];
   const videoList = msg.videoList ?? [];
@@ -69,7 +69,15 @@ const countFileContext = (msg: UIChatMessage): number => {
     return 0;
 
   return estimate(
-    filesPrompts({ addUrl: false, audioList, fileList, imageList, messageId: msg.id, videoList }),
+    filesPrompts({
+      addUrl: false,
+      audioList,
+      fileList,
+      imageList,
+      messageId: msg.id,
+      previewFileIds,
+      videoList,
+    }),
   );
 };
 
@@ -160,6 +168,7 @@ export const countContextTokens = ({
   options,
 }: CountContextTokensParams): ContextTokenAccounting => {
   const driftMultiplier = options?.driftMultiplier ?? DEFAULT_DRIFT_MULTIPLIER;
+  const previewFileIds = options?.previewFileIds;
 
   const messageBreakdowns: MessageTokenBreakdown[] = messages.map((msg, index) => {
     const bySource: Partial<Record<TokenSourceType, number>> = {};
@@ -310,7 +319,8 @@ export const countContextTokens = ({
       } else {
         bumpSource(bySource, 'content', estimate(msg.content));
 
-        if (msg.role === 'user') bumpSource(bySource, 'fileContext', countFileContext(msg));
+        if (msg.role === 'user')
+          bumpSource(bySource, 'fileContext', countFileContext(msg, previewFileIds));
 
         const reasoning = msg.reasoning;
         if (reasoning) {

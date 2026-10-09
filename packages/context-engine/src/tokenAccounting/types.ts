@@ -96,6 +96,11 @@ export interface CountContextTokensParams {
      * @default 1.25
      */
     driftMultiplier?: number;
+    /**
+     * Attachments sent as a preview instead of their full text, as planned by
+     * `planAttachmentPreviews`.
+     */
+    previewFileIds?: ReadonlySet<string>;
   };
   /**
    * Top-level tool definitions sent to the provider in the same request. Pass
