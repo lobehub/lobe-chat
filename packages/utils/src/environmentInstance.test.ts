@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   derivedInstanceDirectory,
   isDefaultInstance,
+  markDefaultInstances,
   pickDefaultInstance,
 } from './environmentInstance';
 
@@ -63,5 +64,23 @@ describe('derivedInstanceDirectory', () => {
     expect(derivedInstanceDirectory('Python 数据分析', 1)).toBe('python-数据分析');
     expect(derivedInstanceDirectory('Python 数据分析', 2)).toBe('python-数据分析-2');
     expect(derivedInstanceDirectory('...', 3)).toBe('environment-3');
+  });
+});
+
+describe('markDefaultInstances', () => {
+  it('flags one default per environment and keeps the list order', () => {
+    const early = at('2026-01-01T00:00:00Z');
+    const late = at('2026-02-01T00:00:00Z');
+    const marked = markDefaultInstances([
+      { createdAt: late, environmentId: 'env-a', id: 'a-late' },
+      { createdAt: early, environmentId: 'env-b', id: 'b-only' },
+      { createdAt: early, environmentId: 'env-a', id: 'a-early' },
+    ]);
+
+    expect(marked.map((instance) => [instance.id, instance.isDefault])).toEqual([
+      ['a-late', false],
+      ['b-only', true],
+      ['a-early', true],
+    ]);
   });
 });

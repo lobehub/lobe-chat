@@ -102,3 +102,30 @@ export const isDefaultInstance = (
   instance: Pick<DefaultInstanceCandidate, 'id'>,
   instances: readonly DefaultInstanceCandidate[],
 ): boolean => pickDefaultInstance(instances)?.id === instance.id;
+
+/**
+ * Marks each instance with whether it is its environment's default, for a list
+ * that may span several environments. The client reads the flag rather than
+ * re-deriving the rule, so the picker, the settings page and the server's
+ * delete guard all agree on which copy is the default.
+ */
+export const markDefaultInstances = <
+  T extends DefaultInstanceCandidate & { environmentId: string },
+>(
+  instances: readonly T[],
+): (T & { isDefault: boolean })[] => {
+  const byEnvironment = new Map<string, T[]>();
+  for (const instance of instances) {
+    const group = byEnvironment.get(instance.environmentId);
+    if (group) group.push(instance);
+    else byEnvironment.set(instance.environmentId, [instance]);
+  }
+
+  const defaults = new Set<string>();
+  for (const group of byEnvironment.values()) {
+    const picked = pickDefaultInstance(group);
+    if (picked) defaults.add(picked.id);
+  }
+
+  return instances.map((instance) => ({ ...instance, isDefault: defaults.has(instance.id) }));
+};
