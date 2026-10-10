@@ -29,6 +29,7 @@ import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { FileService } from '@/server/services/file';
 import { redisService } from '@/server/services/redis';
+import { UserSkillService } from '@/server/services/userSkill';
 import { afterUnscoped } from '@/server/utils/scheduleAfterResponse';
 
 import { pruneRegeneratedBranch } from '../pruneRegeneratedBranch';
@@ -840,6 +841,22 @@ export const prepareOperation = async (
       name: skill.name,
     }));
 
+    // The user's own skill library: listed to every run, and injected up front
+    // when the agent pins one or the run names it in its plugins — a goal
+    // batch's unit runs name the batch's plan skill that way.
+    const runPluginIds = new Set(agentPlugins ?? []);
+    const userSkillMetas = (
+      await new UserSkillService(deps.db, deps.userId, deps.workspaceId).listRuntimeSkills()
+    ).map((skill) => ({
+      content:
+        pinnedSkillIds.has(skill.identifier) || runPluginIds.has(skill.identifier)
+          ? skill.content
+          : undefined,
+      description: skill.description,
+      identifier: skill.identifier,
+      name: skill.name,
+    }));
+
     const projectMetas = workspaceInit.workspace.skills.map((s) => ({
       description: s.description ?? '',
       identifier: `${s.scope === 'device' ? 'device' : 'project'}:${s.name}`,
@@ -884,7 +901,7 @@ export const prepareOperation = async (
     // load time.
     const shareAllowedSkillIds = shareGate
       ? filterSkillsByShareGate(
-          [...projectMetas, ...dbMetas, ...agentSkillMetas, ...builtinMetas].map(
+          [...projectMetas, ...dbMetas, ...agentSkillMetas, ...userSkillMetas, ...builtinMetas].map(
             (skill) => skill.identifier,
           ),
           shareGate,
@@ -911,7 +928,7 @@ export const prepareOperation = async (
     // command execution is gated at the device tool layer.
     operationSkillSet = assembleSkillPool(
       {
-        agentSkills: agentSkillMetas,
+        agentSkills: [...agentSkillMetas, ...userSkillMetas],
         builtin: builtinMetas,
         db: dbMetas,
         project: projectMetas,
