@@ -264,6 +264,12 @@ export class GoalStartService {
       createdByAgentId: goal.agentId ?? undefined,
       goalId: goal.id,
       goalModel: new GoalModel(db, this.userId, this.workspaceId),
+      planSkillOwner: {
+        db,
+        goalTitle: goal.title,
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      },
       policy,
       problemId: problem.id,
       probes: probeDrafts,

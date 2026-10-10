@@ -4,10 +4,21 @@ import {
   GOAL_BATCH_TITLE,
   ROLLOUT_WAVE_SIZE_DEFAULT,
 } from '@lobechat/const/goal';
-import type { GoalRolloutPolicy, GoalRolloutState, GoalRolloutVariantAxis } from '@lobechat/types';
+import type { LobeChatDatabase } from '@lobechat/database';
+import type {
+  GoalRolloutPlanSkill,
+  GoalRolloutPolicy,
+  GoalRolloutState,
+  GoalRolloutVariantAxis,
+} from '@lobechat/types';
+import debug from 'debug';
 
 import type { GoalModel } from '@/database/models/goal';
 import type { GoalGraphModel } from '@/database/models/goalGraph';
+
+import { BatchPlanSkillService, planUnitBrief } from './batchPlanSkill';
+
+const log = debug('lobe-server:goal-rollout');
 
 /** Upper bound on a batch roster; a planner that over-lists cannot swamp the config. */
 export const MAX_ROLLOUT_ROSTER = 60;
@@ -63,22 +74,19 @@ export const carriedUnitBrief = (node: { description?: string | null; title: str
  * recipe applied to this unit — the probes carry the full first-hand brief, the
  * units promoted later reuse what the Template already proved. A unit that came
  * with its own notes (an agent-declared roster), or a re-opened unit, also keeps
- * that brief.
+ * that brief. With a plan skill the brief names the skill rather than copying
+ * the plan.
  */
 export const createRecipeUnitTask = async (
   writer: GoalGraphModel,
   goalId: string,
   batchNodeId: string,
   title: string,
-  recipeOutline?: string,
+  plan: { outline?: string; skill?: GoalRolloutPlanSkill },
   unitBrief?: string,
 ): Promise<string | undefined> => {
   const node = await writer.createNode(goalId, {
-    description: [
-      recipeOutline,
-      `Unit: ${title}`,
-      unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`,
-    ]
+    description: [planUnitBrief(title, plan), unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`]
       .filter(Boolean)
       .join('\n\n'),
     kind: 'task',
@@ -102,6 +110,18 @@ export interface MaterializeRolloutBatchInput {
   createdByAgentId?: string;
   goalId: string;
   goalModel: GoalModel;
+  /**
+   * Where the batch's plan is written as a skill in the user's library (v1 of
+   * it): the caller's transaction and owner. Units then load the skill rather
+   * than copy the plan; without it, or when writing fails, they carry the
+   * outline as before.
+   */
+  planSkillOwner?: {
+    db: LobeChatDatabase;
+    goalTitle: string;
+    userId: string;
+    workspaceId?: string;
+  };
   /** The policy the caller already chose (trigger, sizes); persisted underneath. */
   policy?: GoalRolloutPolicy;
   probes: RolloutBatchProbe[];
@@ -131,6 +151,7 @@ export const materializeRolloutBatch = async ({
   createdByAgentId,
   goalId,
   goalModel,
+  planSkillOwner,
   policy,
   problemId,
   probes,
@@ -159,6 +180,30 @@ export const materializeRolloutBatch = async ({
     title: GOAL_BATCH_TEMPLATE_TITLE,
   });
   if (!template) throw new Error('Failed to create a batch template');
+
+  // The plan as a skill in the user's library: units load it rather than copy
+  // it, and it stays reusable after the goal. A savepoint keeps a failed write
+  // from aborting the batch; the units then fall back to the copied outline.
+  let planSkill: GoalRolloutPlanSkill | undefined;
+  const outline = recipeOutline?.trim();
+  if (outline && planSkillOwner) {
+    try {
+      planSkill = await planSkillOwner.db.transaction((savepoint) =>
+        new BatchPlanSkillService(
+          savepoint as unknown as LobeChatDatabase,
+          planSkillOwner.userId,
+          planSkillOwner.workspaceId,
+        ).create({
+          batchNodeId: batch.id,
+          goalId,
+          goalTitle: planSkillOwner.goalTitle,
+          plan: outline,
+        }),
+      );
+    } catch (error) {
+      log('rollout batch: plan skill not written: %O', error);
+    }
+  }
 
   // The Assay is the gate. It is a `decision` node so a failed gate has
   // somewhere to hang the human question, but it carries NO pending
@@ -218,7 +263,7 @@ export const materializeRolloutBatch = async ({
         goalId,
         batch.id,
         title,
-        recipeOutline,
+        { outline: recipeOutline, skill: planSkill },
         unitBriefs?.[title],
       );
       if (nodeId) massNodeIds.push(nodeId);
@@ -230,6 +275,7 @@ export const materializeRolloutBatch = async ({
     assayNodeId: assay?.id,
     massNodeIds: massNodeIds.length ? massNodeIds : undefined,
     phase: trigger === 'full' ? 'mass' : 'probe',
+    planSkill,
     probeNodeIds: probeIds,
     releasedCount: probeIds.length + massNodeIds.length,
     templateNodeId: template.id,

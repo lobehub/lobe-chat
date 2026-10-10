@@ -32,6 +32,7 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
+  GoalRolloutPlanSkill,
   GoalRolloutState,
   GoalStatus,
   GoalTickResult,
@@ -48,6 +49,7 @@ import { sql } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
+import type { ExpertiseCarrier } from '@/database/models/expertise';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { MetricModel } from '@/database/models/metric';
@@ -66,6 +68,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
+import { BatchPlanSkillService, planSkillIdentifier, planUnitBrief } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
   compareMetric,
@@ -2790,9 +2793,22 @@ export class GoalService {
       ]
         .filter(Boolean)
         .join('\n\n');
+      // A batch unit loads the batch's plan skill on every run, and is judged
+      // by every rule the batch's breaks have taught.
+      const rollout = graph.goal.config?.rolloutState;
+      const batchUnit = frontier.kind === 'task' && this.isBatchMember(graph, frontier.id);
+      const planSkill = batchUnit ? rollout?.planSkill : undefined;
+      const learnedCriteriaIds = batchUnit
+        ? (rollout?.learnings ?? []).flatMap((learning) =>
+            learning.criterionId ? [learning.criterionId] : [],
+          )
+        : [];
       task = await this.taskService.createTask({
         assigneeAgentId: await this.resolveTaskAssignee(graph.goal),
-        config: { checkpoint: { topic: { after: false } } },
+        config: {
+          checkpoint: { topic: { after: false } },
+          ...(planSkill ? { skills: [planSkillIdentifier(planSkill)] } : {}),
+        },
         description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
         instruction: this.buildTaskInstruction(graph, frontier.title, description),
         name: frontier.title,
@@ -2805,7 +2821,9 @@ export class GoalService {
       const goalCriteriaIds =
         frontier.title === GOAL_ACCEPTANCE_TASK_TITLE
           ? graph.goal.config?.acceptance?.criteriaIds
-          : undefined;
+          : learnedCriteriaIds.length
+            ? learnedCriteriaIds
+            : undefined;
       const acceptance = await this.acceptanceService.ensureForSubject('task', task.id, {
         config: {
           enabled: true,
@@ -3804,6 +3822,12 @@ export class GoalService {
             canarySize,
             goalId,
             goalModel,
+            planSkillOwner: {
+              db: tx,
+              goalTitle: graph.goal.title,
+              userId: this.userId,
+              workspaceId: this.workspaceId,
+            },
             policy: existingRollout,
             problemId: currentProblem.id,
             probes: draftTasks,
@@ -4009,7 +4033,7 @@ export class GoalService {
           goalId,
           state.batchNodeId,
           title,
-          policy.spec?.recipeOutline,
+          { outline: policy.spec?.recipeOutline, skill: state.planSkill },
           policy.unitBriefs?.[title],
         );
         if (nodeId) {
@@ -4275,6 +4299,82 @@ export class GoalService {
         await writer.createEdge(goalId, template.id, state.templateNodeId, 'revises');
       }
 
+      // The plan skill takes the revision as its next version, and the break
+      // teaches the batch: a rule the executor reads, compiled into a criterion
+      // the verifier judges every later unit by. A fork starts a new class of
+      // units — its correction describes them, it is not a rule for the old
+      // ones. Each runs in its own savepoint: a failure there costs the skill
+      // version or the lesson, never the round the answer opens.
+      const inSavepoint = <T>(label: string, run: (db: typeof tx) => Promise<T>) =>
+        tx.transaction(run).catch((error) => {
+          log('restartRolloutLoop: %s failed: %O', label, error);
+          return undefined;
+        });
+      let planSkill = state.planSkill;
+      if (planSkill && revisedOutline) {
+        const skill = planSkill;
+        await inSavepoint('plan skill revision', (db) =>
+          new BatchPlanSkillService(db, this.userId, this.workspaceId).revise(skill, {
+            goalId,
+            guidance: correction || undefined,
+            plan: revisedOutline,
+            revision,
+          }),
+        );
+      } else if (!planSkill && revisedOutline) {
+        // A batch from before plans were skills moves into one now, carrying
+        // every earlier version of its plan.
+        const inBatch = new Set(
+          graph.edges
+            .filter((edge) => edge.kind === 'contains' && edge.sourceNodeId === batchId)
+            .map((edge) => edge.targetNodeId),
+        );
+        const earlier = graph.nodes
+          .filter(
+            (node) =>
+              node.kind === 'finding' &&
+              node.title === GOAL_BATCH_TEMPLATE_TITLE &&
+              inBatch.has(node.id),
+          )
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          .map((node) => node.description?.trim() ?? '');
+        planSkill = await inSavepoint('plan skill adoption', (db) =>
+          new BatchPlanSkillService(db, this.userId, this.workspaceId).adopt({
+            batchNodeId: batchId,
+            goalId,
+            goalTitle: graph.goal.title,
+            versions: [...earlier, revisedOutline],
+          }),
+        );
+      }
+      // Mounted where the batch's units run — the goal's project, else its
+      // executing agent — so the rules reach those runs and not every chat.
+      const carrierAgentId = goalTaskAgentId(graph.goal);
+      const carrier: ExpertiseCarrier = graph.goal.projectId
+        ? { id: graph.goal.projectId, type: 'project' }
+        : carrierAgentId
+          ? { id: carrierAgentId, type: 'agent' }
+          : { type: 'user' };
+      const learned =
+        correction && optionId !== 'new_class'
+          ? await inSavepoint('break learning', (db) =>
+              new BatchPlanSkillService(db, this.userId, this.workspaceId).learn({
+                carrier,
+                domainId: state.learningDomainId,
+                // What the gate found: this round's latest hold, in its own words.
+                found:
+                  state.gateLog?.findLast(
+                    (entry) =>
+                      entry.outcome === 'blocked' && entry.revision === state.templateRevision,
+                  )?.message ?? 'the release gate held',
+                goalTitle: graph.goal.title,
+                guidance: correction,
+                planSkill,
+                revision: state.templateRevision,
+              }),
+            )
+          : undefined;
+
       // 2. Retire the members that broke or were superseded, never delete them —
       // the new round is `derived_from` them (decision #4). A member an earlier
       // round already re-opened is history, not a unit to re-open again.
@@ -4368,7 +4468,7 @@ export class GoalService {
           goalId,
           batchId,
           unit.title,
-          revisedOutline || baseOutline,
+          { outline: revisedOutline || baseOutline, skill: planSkill },
           unit.brief,
         );
         if (!nodeId) continue;
@@ -4402,6 +4502,9 @@ export class GoalService {
         phase: 'probe',
         probeNodeIds: probeIds,
         releasedCount: opened.length,
+        learningDomainId: learned?.domainId ?? state.learningDomainId,
+        learnings: learned ? [...(state.learnings ?? []), learned.learning] : state.learnings,
+        planSkill,
         templateNodeId: template?.id ?? state.templateNodeId,
         templateRevision: state.templateRevision + 1,
         unitTitles: remaining,

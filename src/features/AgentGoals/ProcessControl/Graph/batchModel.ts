@@ -7,7 +7,9 @@ import type {
   GoalRolloutGateCheck,
   GoalRolloutGateCheckKey,
   GoalRolloutGateEvaluation,
+  GoalRolloutLearning,
   GoalRolloutPhase,
+  GoalRolloutPlanSkill,
 } from '@lobechat/types';
 import { experimentMembers } from '@lobechat/utils/goalGraph';
 
@@ -101,7 +103,11 @@ export interface BatchModel {
   decisionIds: string[];
   /** What the gate checks, for a round no verdict has reached yet. */
   gateChecks: BatchGateCheck[];
+  /** What the batch's breaks taught it, oldest first. */
+  learnings: GoalRolloutLearning[];
   phase?: GoalRolloutPhase;
+  /** The execution plan as a skill in the user's library; round N is its version N. */
+  planSkill?: GoalRolloutPlanSkill;
   rounds: BatchRound[];
   /**
    * The round (1-based revision) each wave belongs to. A released wave belongs
@@ -335,7 +341,9 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     batchId,
     decisionIds,
     gateChecks,
+    learnings: state?.learnings ?? [],
     phase: state?.phase,
+    planSkill: state?.planSkill,
     rounds,
     waveRounds,
     waves,

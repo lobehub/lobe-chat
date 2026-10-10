@@ -1687,6 +1687,12 @@ export class GoalManagerService {
       createdByAgentId: agentId,
       goalId: goal.id,
       goalModel: new GoalModel(db, this.userId, this.workspaceId),
+      planSkillOwner: {
+        db,
+        goalTitle: goal.title,
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      },
       policy,
       problemId: problemId!,
       probes: plan.tasks.map((task) => ({ instruction: task.description, title: task.title })),
