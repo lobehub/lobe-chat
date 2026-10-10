@@ -490,28 +490,6 @@ export const discoverKeys = {
     userId,
     params,
   ]),
-  groupAgentCategories: def('discover:groupAgentCategories', (locale: string, params: unknown) => [
-    'discover:groupAgentCategories',
-    locale,
-    params,
-  ]),
-  groupAgentDetail: def(
-    'discover:groupAgentDetail',
-    (locale: string, identifier: string, version?: string) => [
-      'discover:groupAgentDetail',
-      locale,
-      identifier,
-      version,
-    ],
-  ),
-  groupAgentIdentifiers: def('discover:groupAgentIdentifiers', () => [
-    'discover:groupAgentIdentifiers',
-  ]),
-  groupAgentList: def('discover:groupAgentList', (locale: string, params: unknown) => [
-    'discover:groupAgentList',
-    locale,
-    params,
-  ]),
   modelCategories: def('discover:modelCategories', (params: unknown) => [
     'discover:modelCategories',
     params,
