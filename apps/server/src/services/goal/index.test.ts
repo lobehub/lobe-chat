@@ -2178,6 +2178,48 @@ describe('GoalService', () => {
     expect(next.wavesReleased).toBe(3);
   });
 
+  it('numbers a release after the waves a batch released before the counter existed, across a restart', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate stores' });
+    await service.tick(graph.goal.id);
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    for (const id of state.probeNodeIds)
+      await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
+    // A rollout from before this change, restarted once: `waveIndex` reset to 0,
+    // no counter, no log — but 20 roster units beyond the first canary are out.
+    await goalModel.updateRolloutState(graph.goal.id, {
+      ...state,
+      gateLog: undefined,
+      phase: 'mass',
+      releasedCount: state.releasedCount! + 20,
+      waveIndex: 0,
+      wavesReleased: undefined,
+    });
+
+    await service.tick(graph.goal.id);
+    const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    // 20 units at the default wave size of 5 are four waves; this one is the fifth.
+    expect(next.gateLog?.at(-1)).toMatchObject({ outcome: 'released', wave: 5 });
+    expect(next.wavesReleased).toBe(5);
+  });
+
   it('records each gate verdict — the release and the hold — with what it checked', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',
