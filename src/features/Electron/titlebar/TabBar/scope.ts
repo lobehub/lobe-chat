@@ -16,13 +16,19 @@ export interface ScopedTabTarget {
 
 const FIRST_SEGMENT_REGEX = /^\/([^/?#]+)/;
 
+// Every top-level segment mounted in `sharedMainAreaChildren` (mirrored under
+// `/:workspaceSlug`) plus the personal-only roots. Anything missing here is
+// treated as a workspace slug, so a route like `/project/...` would spawn a
+// phantom `workspace:project` tab bucket.
 const PERSONAL_TOP_LEVEL_SEGMENTS = new Set([
   'agent',
+  'agents',
   'apps',
   'community',
   'desktop-onboarding',
   'devtools',
   'eval',
+  'goal',
   'group',
   'image',
   'invite',
@@ -30,6 +36,8 @@ const PERSONAL_TOP_LEVEL_SEGMENTS = new Set([
   'memory',
   'onboarding',
   'page',
+  'project',
+  'projects',
   'resource',
   'settings',
   'share',

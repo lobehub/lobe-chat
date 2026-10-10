@@ -44,7 +44,6 @@ import ProviderSettingsSkeleton, {
 import { createSettingsSectionsSkeleton } from '@/components/Skeleton/Settings/Sections';
 import { WORKSPACE_SETTINGS_SECTION_SHAPES } from '@/components/Skeleton/Settings/sectionShapes';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
-import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
 import { agentDocumentRouteMeta } from '@/features/AgentDocumentPage/routeMeta';
 import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/routeMeta';
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
@@ -53,6 +52,7 @@ import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/ro
 import DevicesPageSkeleton from '@/features/DeviceManager/Skeleton';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import {
+  projectAcceptanceRouteMeta,
   projectConversationRouteMeta,
   projectDirectoriesRouteMeta,
   projectsRouteMeta,
@@ -1148,7 +1148,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           () => import('@/routes/(main)/project/[projectId]/acceptance'),
           'Desktop > Project Acceptance',
         ),
-        handle: { meta: acceptanceRouteMeta },
+        handle: { meta: projectAcceptanceRouteMeta },
         path: 'acceptance',
       },
     ],
