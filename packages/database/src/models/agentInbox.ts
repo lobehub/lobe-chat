@@ -343,6 +343,12 @@ export class AgentInboxModel {
   list = async (params?: {
     accountId?: string;
     agentId?: string;
+    /**
+     * Keyset cursor for newest-first paging: only items strictly older than
+     * this (receivedAt, id) pair, so pages never overlap or skip an item that
+     * shares a timestamp.
+     */
+    before?: { id: string; receivedAt: Date };
     limit?: number;
     /** Only items received at or after this instant. */
     receivedAfter?: Date;
@@ -350,6 +356,15 @@ export class AgentInboxModel {
     unreadOnly?: boolean;
   }): Promise<AgentInboxEntry[]> => {
     const conditions = [this.ownership()];
+    if (params?.before) {
+      const { id, receivedAt } = params.before;
+      conditions.push(
+        or(
+          lt(agentInboxMessages.receivedAt, receivedAt),
+          and(eq(agentInboxMessages.receivedAt, receivedAt), lt(agentInboxMessages.id, id)),
+        )!,
+      );
+    }
     if (params?.agentId) conditions.push(eq(agentInboxMessages.agentId, params.agentId));
     if (params?.accountId) conditions.push(eq(agentInboxMessages.accountId, params.accountId));
     if (params?.threadKey) conditions.push(eq(agentInboxMessages.threadKey, params.threadKey));
@@ -359,7 +374,7 @@ export class AgentInboxModel {
 
     return this.selectEntries()
       .where(and(...conditions))
-      .orderBy(desc(agentInboxMessages.receivedAt))
+      .orderBy(desc(agentInboxMessages.receivedAt), desc(agentInboxMessages.id))
       .limit(params?.limit ?? 20);
   };
 

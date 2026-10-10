@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { SWRConfig } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -154,5 +155,26 @@ describe('AgentSettings Content', () => {
     render(<Content />);
 
     expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+  });
+
+  it('keeps identity reachable for an agent that already owns an address, even with no provider', async () => {
+    mocks.userState.preference.lab.enableAgentIdentity = true;
+    accountService.list.mockResolvedValueOnce([
+      { id: 'acc_1', identifier: 'toby@lobe.id', status: 'active' },
+    ]);
+
+    render(
+      <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>
+        <Content />
+      </SWRConfig>,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('layout')).toHaveAttribute(
+        'data-tabs',
+        `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Identity}`,
+      ),
+    );
+    expect(accountService.list).toHaveBeenCalledWith({ agentId: 'inbox-agent' });
   });
 });
