@@ -31,6 +31,7 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
+  GoalRolloutPlanSkill,
   GoalRolloutState,
   GoalStatus,
   GoalTickResult,
@@ -47,6 +48,7 @@ import { sql } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
+import type { ExpertiseCarrier } from '@/database/models/expertise';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { MetricModel } from '@/database/models/metric';
@@ -65,6 +67,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
+import { BatchPlanSkillService, planSkillIdentifier, unitBrief } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
   compareMetric,
@@ -177,17 +180,18 @@ const normalizeRolloutRoster = (
 /**
  * Materialize one roster unit as a Task inside a batch. The brief is the shared
  * recipe applied to this unit — the probes carry the full first-hand brief, the
- * units promoted later reuse what the Template already proved.
+ * units promoted later reuse what the Template already proved. With a plan
+ * skill the brief names the skill rather than copying the plan.
  */
 const createRecipeUnitTask = async (
   writer: GoalGraphModel,
   goalId: string,
   batchNodeId: string,
   title: string,
-  recipeOutline?: string,
+  plan: { outline?: string; skill?: GoalRolloutPlanSkill },
 ): Promise<string | undefined> => {
   const node = await writer.createNode(goalId, {
-    description: [recipeOutline, `Unit: ${title}`].filter(Boolean).join('\n\n'),
+    description: unitBrief(title, plan),
     kind: 'task',
     scopeId: batchNodeId,
     title,
@@ -2778,9 +2782,22 @@ export class GoalService {
       ]
         .filter(Boolean)
         .join('\n\n');
+      // A batch unit loads the batch's plan skill on every run, and is judged
+      // by every rule the batch's breaks have taught.
+      const rollout = graph.goal.config?.rolloutState;
+      const batchUnit = frontier.kind === 'task' && this.isBatchMember(graph, frontier.id);
+      const planSkill = batchUnit ? rollout?.planSkill : undefined;
+      const learnedCriteriaIds = batchUnit
+        ? (rollout?.learnings ?? []).flatMap((learning) =>
+            learning.criterionId ? [learning.criterionId] : [],
+          )
+        : [];
       task = await this.taskService.createTask({
         assigneeAgentId: await this.resolveTaskAssignee(graph.goal),
-        config: { checkpoint: { topic: { after: false } } },
+        config: {
+          checkpoint: { topic: { after: false } },
+          ...(planSkill ? { skills: [planSkillIdentifier(planSkill)] } : {}),
+        },
         description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
         instruction: this.buildTaskInstruction(graph, frontier.title, description),
         name: frontier.title,
@@ -2793,7 +2810,9 @@ export class GoalService {
       const goalCriteriaIds =
         frontier.title === GOAL_ACCEPTANCE_TASK_TITLE
           ? graph.goal.config?.acceptance?.criteriaIds
-          : undefined;
+          : learnedCriteriaIds.length
+            ? learnedCriteriaIds
+            : undefined;
       const acceptance = await this.acceptanceService.ensureForSubject('task', task.id, {
         config: {
           enabled: true,
@@ -3789,6 +3808,26 @@ export class GoalService {
           });
           if (!template) throw new Error('Failed to create a batch template');
 
+          // The plan as a skill in the user's library: units load it rather
+          // than copy it, and it stays reusable after the goal. Without one
+          // the units fall back to the copied outline.
+          let planSkill: GoalRolloutPlanSkill | undefined;
+          const outline = rolloutClaim.recipeOutline?.trim();
+          if (outline) {
+            try {
+              planSkill = await new BatchPlanSkillService(tx, this.userId, this.workspaceId).create(
+                {
+                  batchNodeId: batch.id,
+                  goalId,
+                  goalTitle: graph.goal.title,
+                  plan: outline,
+                },
+              );
+            } catch (error) {
+              log('decomposition rollout: plan skill not written: %O', error);
+            }
+          }
+
           // The Assay is the gate. It is a `decision` node so a failed gate has
           // somewhere to hang the human question, but it carries NO pending
           // decision yet — opening one now would park the goal before a probe ran.
@@ -3842,13 +3881,10 @@ export class GoalService {
           const massNodeIds: string[] = [];
           if (rolloutTrigger === 'full') {
             for (const title of roster.slice(probeIds.length)) {
-              const nodeId = await createRecipeUnitTask(
-                writer,
-                goalId,
-                batch.id,
-                title,
-                rolloutClaim.recipeOutline,
-              );
+              const nodeId = await createRecipeUnitTask(writer, goalId, batch.id, title, {
+                outline: rolloutClaim.recipeOutline,
+                skill: planSkill,
+              });
               if (nodeId) massNodeIds.push(nodeId);
             }
           }
@@ -3858,6 +3894,7 @@ export class GoalService {
             assayNodeId: assay?.id,
             massNodeIds: massNodeIds.length ? massNodeIds : undefined,
             phase: rolloutTrigger === 'full' ? 'mass' : 'probe',
+            planSkill,
             probeNodeIds: probeIds,
             releasedCount: probeIds.length + massNodeIds.length,
             templateNodeId: template.id,
@@ -4045,6 +4082,12 @@ export class GoalService {
       return { goalId, message: 'Batch roster exhausted', outcome: 'advanced' };
     }
 
+    // Without a plan skill a unit copies the plan — the current revision, not
+    // the first outline.
+    const currentPlan =
+      (state.templateNodeId &&
+        graph.nodes.find((node) => node.id === state.templateNodeId)?.description) ||
+      policy.spec?.recipeOutline;
     const newIds: string[] = [];
     for (const title of wave) {
       const nodeId = await createRecipeUnitTask(
@@ -4052,7 +4095,7 @@ export class GoalService {
         goalId,
         state.batchNodeId,
         title,
-        policy.spec?.recipeOutline,
+        { outline: currentPlan, skill: state.planSkill },
       );
       if (nodeId) {
         newIds.push(nodeId);
@@ -4243,6 +4286,82 @@ export class GoalService {
       await this.coordinatorGraph.createEdge(goalId, template.id, state.templateNodeId, 'revises');
     }
 
+    // The plan skill takes the revision as its next version, and the break
+    // teaches the batch: a rule the executor reads, compiled into a criterion
+    // the verifier judges every later unit by. A fork starts a new class of
+    // units — its guidance describes them, it is not a rule for the old ones.
+    const planService = new BatchPlanSkillService(this.db, this.userId, this.workspaceId);
+    let planSkill = state.planSkill;
+    if (planSkill && revisedOutline) {
+      await planService
+        .revise(planSkill, {
+          goalId,
+          guidance: correction || undefined,
+          plan: revisedOutline,
+          revision,
+        })
+        .catch((error) => log('restartRolloutLoop: plan skill not revised: %O', error));
+    } else if (!planSkill && revisedOutline) {
+      // A batch from before plans were skills moves into one now, carrying
+      // every earlier version of its plan.
+      const inBatch = new Set(
+        graph.edges
+          .filter((edge) => edge.kind === 'contains' && edge.sourceNodeId === batchId)
+          .map((edge) => edge.targetNodeId),
+      );
+      const earlier = graph.nodes
+        .filter(
+          (node) =>
+            node.kind === 'finding' &&
+            node.title === GOAL_BATCH_TEMPLATE_TITLE &&
+            inBatch.has(node.id) &&
+            node.id !== template?.id,
+        )
+        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+        .map((node) => node.description?.trim() ?? '');
+      planSkill = await planService
+        .adopt({
+          batchNodeId: batchId,
+          goalId,
+          goalTitle: graph.goal.title,
+          versions: [...earlier, revisedOutline],
+        })
+        .catch((error) => {
+          log('restartRolloutLoop: plan skill not adopted: %O', error);
+          return undefined;
+        });
+    }
+    const carrierAgentId = goalTaskAgentId(graph.goal);
+    // Mounted where the batch's units run — the goal's project, else its
+    // executing agent — so the rules reach those runs and not every chat.
+    const carrier: ExpertiseCarrier = graph.goal.projectId
+      ? { id: graph.goal.projectId, type: 'project' }
+      : carrierAgentId
+        ? { id: carrierAgentId, type: 'agent' }
+        : { type: 'user' };
+    const learned =
+      correction && optionId !== 'new_class'
+        ? await planService
+            .learn({
+              carrier,
+              domainId: state.learningDomainId,
+              // What the gate found: this round's latest hold, in its own words.
+              found:
+                state.gateLog?.findLast(
+                  (entry) =>
+                    entry.outcome === 'blocked' && entry.revision === state.templateRevision,
+                )?.message ?? 'the release gate held',
+              goalTitle: graph.goal.title,
+              guidance: correction,
+              planSkill,
+              revision: state.templateRevision,
+            })
+            .catch((error) => {
+              log('restartRolloutLoop: break not learned: %O', error);
+              return undefined;
+            })
+        : undefined;
+
     // 2. Retire the members that broke or were superseded, never delete them —
     // the new round is `derived_from` them (decision #4). A member an earlier
     // round already re-opened is history, not a unit to re-open again.
@@ -4312,7 +4431,7 @@ export class GoalService {
         goalId,
         batchId,
         unit.title,
-        revisedOutline || baseOutline,
+        { outline: revisedOutline || baseOutline, skill: planSkill },
       );
       if (!nodeId) continue;
       probeIds.push(nodeId);
@@ -4347,6 +4466,9 @@ export class GoalService {
       phase: 'probe',
       probeNodeIds: probeIds,
       releasedCount: opened.length,
+      learningDomainId: learned?.domainId ?? state.learningDomainId,
+      learnings: learned ? [...(state.learnings ?? []), learned.learning] : state.learnings,
+      planSkill,
       templateNodeId: template?.id ?? state.templateNodeId,
       templateRevision: state.templateRevision + 1,
       unitTitles: remaining,
