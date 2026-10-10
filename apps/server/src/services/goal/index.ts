@@ -4215,12 +4215,22 @@ export class GoalService {
     const batchId = state.batchNodeId;
     const roster = state.unitTitles ?? [];
     const released = state.releasedCount ?? state.probeNodeIds.length;
-    // The correction the person wrote, appended to the outline that failed:
-    // later waves only ever read `policy.spec.recipeOutline`, so a note kept
-    // solely on the Template would never reach the tasks meant to test it.
+    // The correction the person wrote. A revision carries the plan forward and
+    // appends it as its own section, so each version reads whole and diffs
+    // against the last one; a fork starts again from the batch's outline. The
+    // result is the new recipe: later waves only ever read
+    // `policy.spec.recipeOutline`, so a note kept solely on the Template would
+    // never reach the tasks meant to test it.
     const baseOutline = policy.spec?.recipeOutline?.trim() ?? '';
     const correction = (resolution ?? '').trim();
-    const revisedOutline = [baseOutline, correction].filter(Boolean).join('\n\n');
+    const revision = state.templateRevision + 1;
+    const previousPlan = state.templateNodeId
+      ? graph.nodes.find((node) => node.id === state.templateNodeId)?.description?.trim()
+      : undefined;
+    const basePlan = optionId === 'new_class' ? baseOutline : previousPlan || baseOutline;
+    const revisedOutline = [basePlan, correction && `### v${revision}\n${correction}`]
+      .filter(Boolean)
+      .join('\n\n');
 
     // 1. A new recipe revision, or a forked new class (no `revises` chain).
     const template = await this.coordinatorGraph.createNode(goalId, {

@@ -2473,6 +2473,10 @@ describe('GoalService', () => {
     expect(next.releasedCount).toBe(next.probeNodeIds.length);
     expect(next.unitTitles).toContain('Unit 50');
     expect(new Set(next.unitTitles).size).toBe(next.unitTitles!.length);
+    // The revised plan carries v1 forward and appends what changed, so the two
+    // versions diff as "v1 + the v2 section", not as a replacement.
+    const plan = after.nodes.find((n) => n.id === next.templateNodeId)!;
+    expect(plan.description).toBe('把 store 换成 replica 支撑的实现\n\n### v2\n补上冷启动这一步');
     // The new canary is a fresh round: the old wave's retired member no longer
     // counts against its gate (it would re-open the same break at once).
     expect(next.massNodeIds).toBeUndefined();
