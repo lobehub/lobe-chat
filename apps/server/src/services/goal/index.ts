@@ -4076,6 +4076,10 @@ export class GoalService {
     }
 
     const message = `Batch gate passed; released wave ${state.waveIndex + 1} (${newIds.length} unit${newIds.length === 1 ? '' : 's'})`;
+    // Older batches predate the counter: their kept releases are the best floor.
+    const waveNumber =
+      (state.wavesReleased ??
+        (state.gateLog ?? []).filter((entry) => entry.outcome === 'released').length) + 1;
     const next: GoalRolloutState = withGateVerdict(
       {
         ...state,
@@ -4083,6 +4087,7 @@ export class GoalService {
         phase: 'mass',
         releasedCount: released + newIds.length,
         waveIndex: state.waveIndex + 1,
+        wavesReleased: waveNumber,
       },
       {
         checks: gate?.checks ?? [],
@@ -4091,6 +4096,7 @@ export class GoalService {
         releasedCount: newIds.length,
         revision: state.templateRevision,
         trigger: 'gate',
+        wave: waveNumber,
         waveIndex: state.waveIndex + 1,
       },
     );
