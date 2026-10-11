@@ -1,6 +1,6 @@
 import { appEnv } from '@/envs/app';
 import { redisEnv } from '@/envs/redis';
-import { isRedisDisabledByEnv } from '@/libs/redis';
+import { isRedisDisabledByEnv } from '@/server/modules/Redis';
 
 /**
  * Whether this deployment can relay an LLM call to a browser tab: it pushes to

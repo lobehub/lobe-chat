@@ -208,6 +208,7 @@ const legacyRawRedisClientConsumers = [
   'apps/server/src/modules/AgentRuntime/StreamEventManager.ts',
   'apps/server/src/modules/AgentRuntime/adapters/ServerLLMTransport.ts',
   'apps/server/src/modules/AgentRuntime/dispatchClientTool.ts',
+  'apps/server/src/modules/AgentRuntime/llmRelay/deployment.ts',
   'apps/server/src/modules/AgentRuntime/factory.ts',
   'apps/server/src/router-hono/agent/handlers/gatewayCron.ts',
   'apps/server/src/router-hono/agent/handlers/llmRelay.ts',
