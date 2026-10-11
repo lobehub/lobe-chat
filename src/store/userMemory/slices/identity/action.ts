@@ -9,7 +9,6 @@ import { type AddIdentityEntryResult } from '@/database/models/userMemory';
 import {
   cacheScope,
   createReplicaSlice,
-  mapPagedItem,
   type ReplicaLens,
   type ReplicaSyncResult,
 } from '@/libs/replica';
@@ -32,9 +31,6 @@ import {
 const n = setNamespace('userMemory/identity');
 
 const GLOBAL_IDENTITIES_PARAMS = {} as Record<string, never>;
-
-/** Paging identity of the list, for the row helpers below. */
-const IDENTITY_PAGING = { getId: (item: IdentityListItem) => item.id };
 
 /**
  * The identities list keeps its long-standing flat array (`identities`) as the
@@ -119,23 +115,23 @@ export class IdentityActionImpl {
   };
 
   /**
-   * Delete one identity. The row leaves the list immediately (a failed call
-   * rolls it back), then the head page is revalidated so the persisted copy
-   * matches the server.
+   * Delete one identity. The row leaves every loaded list entry immediately (a
+   * failed call rolls it back). Once the server confirms, the entity-level
+   * removal drops it from every persisted search/filter variant too and keeps a
+   * hydrate already in flight from bringing it back; then the head page is
+   * revalidated so the persisted copy matches the server.
    */
   deleteIdentity = async (id: string): Promise<void> => {
-    await this.#identities.optimistic(
-      IDENTITY_LIST_KEY,
-      (data) =>
-        mapPagedItem<IdentityListItem, number, IdentityListView>(
-          data,
-          id,
-          () => undefined,
-          IDENTITY_PAGING,
-        ),
-      () => memoryCRUDService.deleteIdentity(id),
-      { revalidate: true },
-    );
+    const tokens = this.#identities.beginEntityOptimistic<IdentityListItem>(id, () => undefined);
+    try {
+      await memoryCRUDService.deleteIdentity(id);
+    } catch (error) {
+      for (const token of tokens) token.rollback();
+      throw error;
+    }
+    for (const token of tokens) token.commit();
+    this.#identities.removeEntity(id);
+    await this.refreshIdentities();
   };
 
   /**

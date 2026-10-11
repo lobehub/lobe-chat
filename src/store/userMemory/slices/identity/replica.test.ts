@@ -248,6 +248,39 @@ describe('identity list replica', () => {
     expect((stored?.data as IdentityListView).items.map((item) => item.id)).toEqual(['i2']);
   });
 
+  it('removes a deleted identity from every persisted query, not only the one on screen', async () => {
+    const FILTERED = { ...PARAMS, q: 'mentor' };
+    const fetchSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValue(responseOf([identity('i1'), identity('i2')]));
+    vi.spyOn(memoryCRUDService, 'deleteIdentity').mockResolvedValue(undefined);
+
+    // Visit the unfiltered list (persisted), then search: the user deletes from
+    // the search, so the unfiltered variant is no longer the loaded one.
+    const { rerender } = renderHook(
+      ({ params }) => useUserMemoryStore((s) => s.useFetchIdentities)(params),
+      { initialProps: { params: PARAMS as typeof FILTERED | typeof PARAMS }, wrapper },
+    );
+    await waitFor(async () => {
+      const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+      expect((stored?.data as IdentityListView | undefined)?.items).toHaveLength(2);
+    });
+    fetchSpy.mockResolvedValue(responseOf([identity('i1')]));
+    rerender({ params: FILTERED });
+    await waitFor(() => expect(listState().identities.map((item) => item.id)).toEqual(['i1']));
+
+    fetchSpy.mockResolvedValue(responseOf([]));
+    await act(async () => {
+      await listState().deleteIdentity('i1');
+    });
+
+    expect(listState().identities).toEqual([]);
+    await waitFor(async () => {
+      const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+      expect((stored?.data as IdentityListView).items.map((item) => item.id)).toEqual(['i2']);
+    });
+  });
+
   it('patches one row in the list view and persists it', async () => {
     vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(
       responseOf([identity('i1', { description: 'old' })]),
