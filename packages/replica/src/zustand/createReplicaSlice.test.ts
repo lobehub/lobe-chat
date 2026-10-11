@@ -89,6 +89,15 @@ const setup = ({
 const wrapper = ({ children }: PropsWithChildren) =>
   createElement(SWRConfig, { value: { dedupingInterval: 0, provider: () => new Map() } }, children);
 
+/**
+ * SWR's default cache, shared across renders and reached by the test driver's
+ * `mutate` (like the app's scoped mutate). Pair it with a unique `version` so
+ * cached reads never leak between tests.
+ */
+const sharedCacheWrapper = ({ children }: PropsWithChildren) =>
+  createElement(SWRConfig, { value: { dedupingInterval: 0 } }, children);
+let sharedCacheVersion = 1000;
+
 beforeEach(() => {
   scopeState.canHydrate = true;
   scopeState.current = 'user-1:personal';
@@ -642,15 +651,35 @@ describe('createReplicaSlice', () => {
       });
       expect(store.getState().lists.a).toEqual(['cached']);
     });
+    it('keeps once-per-key hydration on an ordinary remount', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['cached'], updatedAt: 1 });
+      const get = vi.spyOn(storage.storage, 'get');
+      const fetcher = vi.fn(() => new Promise<string[]>(() => {}));
+      const { slice, store } = setup({ fetcher, storage, version: ++sharedCacheVersion });
+
+      const first = renderHook(() => slice.useSync({ id: 'a' }), { wrapper: sharedCacheWrapper });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
+      const reads = get.mock.calls.length;
+      first.unmount();
+
+      // Same query, entry still in memory: no second storage read.
+      renderHook(() => slice.useSync({ id: 'a' }), { wrapper: sharedCacheWrapper });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      });
+      expect(get.mock.calls.length).toBe(reads);
+    });
+
     it('re-arms hydration so returning to a reset query repaints its saved row', async () => {
       const storage = createMemoryStorage();
       storage.rows.set('user-1:personal|a', { data: ['cached'], updatedAt: 1 });
       const fetcher = vi.fn(() => new Promise<string[]>(() => {}));
-      const { slice, store } = setup({ fetcher, storage });
+      const { slice, store } = setup({ fetcher, storage, version: ++sharedCacheVersion });
 
       const hook = renderHook((props: { id: string }) => slice.useSync({ id: props.id }), {
         initialProps: { id: 'a' },
-        wrapper,
+        wrapper: sharedCacheWrapper,
       });
       await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
 
