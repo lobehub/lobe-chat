@@ -78,6 +78,7 @@ import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces'
 import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
+import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
@@ -784,6 +785,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
         handle: {
           meta: routeMeta({ icon: BrainCircuit, titleKey: 'navigation.memoryPreferences' }),
         },
+        loader: preferenceListLoader,
         path: 'preferences',
       },
       {

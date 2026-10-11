@@ -14,8 +14,8 @@ import { experienceInitialState } from './slices/experience/initialState';
 import { homeInitialState, type HomeSliceState } from './slices/home/initialState';
 import { type IdentitySliceState } from './slices/identity';
 import { identityInitialState } from './slices/identity';
-import { type PreferenceSliceState } from './slices/preference';
-import { preferenceInitialState } from './slices/preference';
+import { type PreferenceSliceState } from './slices/preference/initialState';
+import { preferenceInitialState } from './slices/preference/initialState';
 
 export type { PersonaData } from './slices/home/projection';
 

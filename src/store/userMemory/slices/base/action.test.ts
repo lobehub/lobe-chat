@@ -39,13 +39,21 @@ const preferenceMemory = {
 beforeEach(() => {
   vi.clearAllMocks();
 
+  const page = {
+    currentPage: 0,
+    hasMore: false,
+    items: [preferenceMemory],
+    pageSize: 12,
+    total: 1,
+  };
   useUserMemoryStore.setState(
     {
       ...initialState,
+      preferenceListData: page,
+      preferenceListEntries: { [initialState.preferenceListKey]: page },
       preferences: [preferenceMemory],
       preferencesInit: true,
       preferencesPage: 1,
-      preferencesSearchLoading: false,
       preferencesTotal: 1,
     },
     false,
@@ -74,13 +82,15 @@ describe('userMemory base actions', () => {
         );
       });
 
-      expect(result.current.preferences).toEqual([
-        {
-          ...preferenceMemory,
-          conclusionDirectives: 'Prefer concise answers with examples.',
-        },
+      const edited = {
+        ...preferenceMemory,
+        conclusionDirectives: 'Prefer concise answers with examples.',
+      };
+      expect(result.current.preferences).toEqual([edited]);
+      // The canonical replica value carries the edit, not only the flat mirror.
+      expect(result.current.preferenceListEntries[result.current.preferenceListKey].items).toEqual([
+        edited,
       ]);
-      expect(result.current.preferencesSearchLoading).toBe(false);
       expect(memoryCRUDService.updatePreference).toHaveBeenCalledWith('preference-1', {
         conclusionDirectives: 'Prefer concise answers with examples.',
       });
@@ -89,6 +99,31 @@ describe('userMemory base actions', () => {
         userMemoryKeys.memoryDetail(LayersEnum.Preference, 'preference-1'),
       );
     });
+  });
+});
+
+describe('purgeAllMemories', () => {
+  it('clears the preference replica through the engine right after deleting', async () => {
+    const order: string[] = [];
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      order.push('deleteAll');
+      return undefined as never;
+    });
+    const internal_clearPreferenceList = vi.fn(async () => {
+      order.push('clearPreferenceList');
+      return true;
+    });
+    useUserMemoryStore.setState({ internal_clearPreferenceList });
+    vi.mocked(mutate).mockImplementation(async () => {
+      order.push('revalidate');
+    });
+
+    await useUserMemoryStore.getState().purgeAllMemories();
+
+    expect(internal_clearPreferenceList).toHaveBeenCalledTimes(1);
+    expect(order.slice(0, 3)).toEqual(['deleteAll', 'clearPreferenceList', 'revalidate']);
+    // The replica-owned fields are not overwritten by `preferenceInitialState`.
+    expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
   });
 });
 

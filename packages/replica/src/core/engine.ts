@@ -148,6 +148,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   let mutationSeq = 0;
   /** Keys with a `loadMore` request in flight (the only valid `isLoadingMore`). */
   const loadingMore = new Set<string>();
+  /**
+   * Per-key pagination epoch. A `loadMore` request captures it and only merges
+   * its page while the epoch is unchanged. A structural change to the loaded
+   * pages — `collapse` — bumps it, so a next page built on the pre-change state
+   * is dropped even when the change itself left the view identical (a collapse
+   * to a head that was already alone), which the depth/query checks cannot see.
+   */
+  const paginationEpoch = new Map<string, number>();
+  const paginationEpochOf = (key: string) => paginationEpoch.get(key) ?? 0;
+  const bumpPaginationEpoch = (key: string) => paginationEpoch.set(key, paginationEpochOf(key) + 1);
 
   // ---- removal guard ----------------------------------------------------
   // An explicit removal (a deleted / unauthorized aggregate, or a subject whose
@@ -836,6 +846,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const query = entry?.query;
     const scope = resource.scope.get();
     const depth = current.currentPage;
+    const epoch = paginationEpochOf(key);
+    const generation = clearGeneration(scope);
     const setLoading = (patch: object) =>
       update(key, (data) => data && ({ ...data, ...patch } as TData), { persist: false });
 
@@ -845,8 +857,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       const latest = port.read(key) as ReplicaPagedData<unknown, unknown> | undefined;
       return (
         resource.scope.get() === scope &&
+        // A `clear()` drops every row: a page started before it must not merge
+        // into the fresh head that recreates this key at depth zero.
+        clearGeneration(scope) === generation &&
         getSlot().entries[key]?.query === query &&
-        latest?.currentPage === depth
+        latest?.currentPage === depth &&
+        paginationEpochOf(key) === epoch
       );
     };
     try {
@@ -875,13 +891,19 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         })
       : false;
 
-  /** Drop loaded pages, keeping the head (e.g. after an edit inside older pages). */
-  const collapse = (key: string) =>
-    paging
-      ? update(key, (data) => data && (collapseToHead(data as any, paging) as TData), {
-          persist: false,
-        })
-      : false;
+  /**
+   * Drop loaded pages, keeping the head (e.g. after an edit inside older pages).
+   * Bumps the pagination epoch first: a next page in flight was built on the
+   * pre-collapse pages and must not land, even when the collapse is a no-op
+   * because the head was already alone.
+   */
+  const collapse = (key: string) => {
+    if (!paging) return false;
+    bumpPaginationEpoch(key);
+    return update(key, (data) => data && (collapseToHead(data as any, paging) as TData), {
+      persist: false,
+    });
+  };
 
   // ---- entity propagation -----------------------------------------------
 

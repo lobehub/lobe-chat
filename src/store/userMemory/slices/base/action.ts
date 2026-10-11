@@ -17,7 +17,6 @@ import { createMemorySearchParams } from '../../utils/searchParams';
 import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
 import { identityInitialState } from '../identity/initialState';
-import { preferenceInitialState } from '../preference/initialState';
 import {
   type MemoryDetailDisplay,
   memoryDetailKey,
@@ -195,6 +194,7 @@ export class BaseActionImpl {
     ];
     await this.#get().internal_clearHomeReplicas();
     await this.#get().internal_clearExperienceList();
+    await this.#get().internal_clearPreferenceList();
 
     this.#set(
       produce((draft) => {
@@ -204,7 +204,6 @@ export class BaseActionImpl {
         draft.experiencesSort = undefined;
         draft.experiencesSearchError = undefined;
         Object.assign(draft, identityInitialState);
-        Object.assign(draft, preferenceInitialState);
 
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
@@ -348,14 +347,12 @@ export class BaseActionImpl {
       }
       case LayersEnum.Preference: {
         await memoryCRUDService.updatePreference(id, { conclusionDirectives: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.preferences.find((memory) => memory.id === id);
-            if (item) item.conclusionDirectives = content;
-          }),
-          false,
-          n('updateMemory/preference'),
-        );
+        // The preference list is replica-backed: patch every page set and its
+        // persisted rows together (the flat `preferences` field mirrors it).
+        this.#get().internal_updatePreferenceEntity(id, (item) => ({
+          ...item,
+          conclusionDirectives: content,
+        }));
         listKeyRoot = userMemoryKeys.preferences.root;
         break;
       }
