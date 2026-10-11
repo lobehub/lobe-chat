@@ -155,7 +155,13 @@ const styles = createStaticStyles(({ css }) => ({
     flex: 1;
     min-height: 0;
   `,
+  // The base popup only becomes a flex column once the virtual list mounts;
+  // force it so the loading / empty placeholder can fill the list slot too.
   popup: css`
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
     width: 300px;
     height: 360px;
   `,
