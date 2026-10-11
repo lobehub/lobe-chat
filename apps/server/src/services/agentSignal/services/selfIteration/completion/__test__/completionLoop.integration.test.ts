@@ -266,7 +266,8 @@ describe('S2 completion loop (policy → handler → projection → persist)', (
       const brief = writeDailyBrief.mock.calls[0][0];
       expect(brief).toMatchObject({
         agentId: 'agent_user_1',
-        title: 'Dream notes',
+        summary: 'User keeps asking for shorter answers',
+        title: 'Dream note: Shorter answers',
         trigger: 'agent-signal:nightly-review',
         type: 'insight',
       });

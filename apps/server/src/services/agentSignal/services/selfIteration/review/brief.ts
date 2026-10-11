@@ -1,3 +1,4 @@
+import { getSelfReviewBriefDetails } from '@lobechat/agent-signal/brief';
 import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import { tracer } from '@lobechat/observability-otel/modules/agent-signal';
 import type { BriefArtifactDocument, BriefMetadata } from '@lobechat/types';
@@ -415,6 +416,17 @@ const collectActionSummaries = (
   return summaries;
 };
 
+/**
+ * A proposal-level summary exists only when every proposed action carries the
+ * same one (the `createSelfReviewProposal` tool stamps its summary on each
+ * action). Distinct per-action summaries describe actions, not the proposal.
+ */
+const getSharedProposalSummary = (summaries: string[]) => {
+  const unique = new Set(summaries);
+
+  return unique.size === 1 ? [...unique][0] : undefined;
+};
+
 const collectBriefArtifactDocuments = ({
   ideas = [],
   proposal,
@@ -534,12 +546,7 @@ export const createBriefSelfReviewService = () => ({
 
     if (!outcome) return;
 
-    const copy = createSelfReviewBriefText({
-      actionCounts,
-      actionSummaries: collectActionSummaries(input.result, input.plan),
-      outcome,
-      t: input.t,
-    });
+    const actionSummaries = collectActionSummaries(input.result, input.plan);
     const proposal =
       outcome === 'proposal' && input.plan
         ? buildSelfReviewProposalFromPlan({
@@ -549,21 +556,32 @@ export const createBriefSelfReviewService = () => ({
             now: input.reviewWindowEnd,
             plan: input.plan,
             results: input.result.actions,
+            summary: getSharedProposalSummary(actionSummaries.proposed),
           })
         : undefined;
+    const metadata = createNightlySelfReviewBriefMetadata({
+      actionCounts,
+      evidenceRefs: input.evidenceRefs ?? [],
+      input,
+      outcome,
+      proposal,
+    });
+    // Read the details back from the metadata the card will also read, so the
+    // persisted text and the inline card describe the proposal identically.
+    const copy = createSelfReviewBriefText({
+      actionCounts,
+      actionSummaries,
+      details: getSelfReviewBriefDetails(metadata),
+      outcome,
+      t: input.t,
+    });
     const artifacts = createBriefArtifacts({ ideas: input.ideas, proposal });
 
     return {
       ...(proposal ? { actions: AGENT_SIGNAL_PROPOSAL_BRIEF_ACTIONS } : {}),
       agentId: input.agentId,
       ...(artifacts ? { artifacts } : {}),
-      metadata: createNightlySelfReviewBriefMetadata({
-        actionCounts,
-        evidenceRefs: input.evidenceRefs ?? [],
-        input,
-        outcome,
-        proposal,
-      }),
+      metadata,
       priority: copy.priority,
       summary: copy.summary,
       title: copy.title,
