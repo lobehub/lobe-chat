@@ -10,6 +10,8 @@ import {
   type ReplicaLens,
   type ReplicaPageResult,
 } from '@/libs/replica';
+import { mutate } from '@/libs/swr';
+import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { LayersEnum } from '@/types/userMemory';
@@ -212,10 +214,17 @@ export class PreferenceActionImpl {
     // next-page cursor would step over the row that slid into the deleted row's
     // place. Collapse to the head and refetch it, so the next page continues
     // from a fresh, contiguous head instead of a stale offset.
-    const key = this.#get().preferenceListKey;
-    this.#list.collapse(key);
-    await this.#list.revalidate(key);
+    this.#list.collapse(this.#get().preferenceListKey);
+    await this.#revalidateList();
   };
+
+  /**
+   * Revalidate the mounted preference list. The resource syncs under the custom
+   * `userMemoryKeys.preferences(...)` SWR key, which the replica's own
+   * `revalidate()` (it matches `replica:sync` keys only) never reaches.
+   */
+  #revalidateList = (): Promise<unknown> =>
+    mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root);
 
   /**
    * Wipe every preference page set — every search / sort, in memory and in

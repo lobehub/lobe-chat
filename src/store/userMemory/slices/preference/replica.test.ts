@@ -600,6 +600,47 @@ describe('preferenceList replica', () => {
     );
   });
 
+  it('refetches the head after deleting from it when only the head is loaded', async () => {
+    // Only page 1 is loaded: without a head refetch the local head keeps 11
+    // rows while the server's page 2 starts one row later, skipping r12.
+    let server = Array.from({ length: 30 }, (_, i) => rawItem(`r${i}`));
+    fetchSpy.mockImplementation(
+      async ({ page = 1, pageSize = 12 }: { page?: number; pageSize?: number } = {}) => {
+        const start = (page - 1) * pageSize;
+        return listPage(server.slice(start, start + pageSize), server.length);
+      },
+    );
+    vi.spyOn(memoryCRUDService, 'deletePreference').mockResolvedValue(undefined as never);
+
+    const hook = renderHook(
+      () => ({
+        loadMore: useUserMemoryStore((s) => s.loadMorePreferences),
+        sync: useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }),
+      }),
+      { wrapper },
+    );
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(12));
+
+    server = [...server.slice(0, 5), ...server.slice(6)];
+    await act(async () => {
+      await useUserMemoryStore.getState().deletePreference('r5');
+    });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 12).map((raw) => raw.memory.id),
+      ),
+    );
+
+    await act(async () => {
+      hook.result.current.loadMore();
+    });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 24).map((raw) => raw.memory.id),
+      ),
+    );
+  });
+
   it('shows the list footer while the next page is loading', async () => {
     let resolvePage: ((value: ReturnType<typeof listPage>) => void) | undefined;
     fetchSpy
