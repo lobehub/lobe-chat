@@ -27,6 +27,7 @@ import IdentityRightPanel from './features/IdentityRightPanel';
 import { type IdentityType } from './features/List';
 import List from './features/List';
 import SegmentedBar from './features/SegmentedBar';
+import { identityListBoundary } from './identityListBoundary';
 import { showIdentityControls } from './showIdentityControls';
 
 const IdentitiesArea = memo(() => {
@@ -57,11 +58,9 @@ const IdentitiesArea = memo(() => {
   // replica keeps the previous query's rows until the new head page lands, so
   // the boundary must not read them as this query's (empty) result.
   const isStaleQuery = !isIdentityQueryCurrent(identitiesMeta, requestedQuery);
-  // The replica is the source of truth once it has painted: a failed background
-  // revalidation must not blow away rows the local copy already holds. Only an
-  // empty list predates the error, so only then is it a full-surface failure.
-  const showError = !identitiesInit && Boolean(error);
-  const isResetting = isStaleQuery && !error;
+  // A failed revalidation of the painted query keeps its rows; a failed new
+  // query surfaces the failure instead of the previous query's rows.
+  const boundary = identityListBoundary({ error, init: identitiesInit, isStaleQuery });
 
   // Handle search and type changes
   const handleSearch = useCallback(
@@ -118,11 +117,11 @@ const IdentitiesArea = memo(() => {
             </Flexbox>
           )}
           <MemoryListBoundary
-            data={identitiesInit && !isResetting ? identities : undefined}
-            error={showError ? error : undefined}
+            data={boundary.showRows ? identities : undefined}
+            error={boundary.error}
             isInitialized={identitiesInit}
             isLoading={isValidating}
-            isResetting={isResetting}
+            isResetting={boundary.isResetting}
             loading={<Loading viewMode={viewMode} />}
             onRetry={() => void revalidate()}
           >

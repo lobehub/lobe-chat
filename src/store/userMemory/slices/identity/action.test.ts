@@ -177,21 +177,58 @@ describe('identity slice actions', () => {
     await waitFor(() => expect(state().identities).toHaveLength(1));
     await waitFor(() => expect(state().globalIdentities).toHaveLength(1));
 
+    // The purge emptied the server; the clear itself is synchronous.
+    vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(pageOf([]));
+    vi.spyOn(userMemoryService, 'queryIdentitiesForInjection').mockResolvedValue([]);
+    let reset!: Promise<boolean>;
     act(() => {
-      state().resetIdentities();
+      reset = state().resetIdentities();
     });
 
     expect(state().identities).toEqual([]);
     expect(state().globalIdentities).toEqual([]);
     expect(identitySelectors.identitiesTotal(state())).toBe(0);
-    // The removals are queued behind the write queue; wait for them to land.
-    await waitFor(async () => {
-      await expect(
-        identityListResource.storage!.get({ queryKey: LIST_KEY, scope }),
-      ).resolves.toBeUndefined();
-      await expect(
-        globalIdentitiesResource.storage!.get({ queryKey: INJECTION_KEY, scope }),
-      ).resolves.toBeUndefined();
+    await act(async () => {
+      await expect(reset).resolves.toBe(true);
     });
+    // The deleted rows are gone from the persisted copies.
+    const list = await identityListResource.storage!.get({ queryKey: LIST_KEY, scope });
+    expect((list?.data as { items: unknown[] } | undefined)?.items ?? []).toEqual([]);
+    const injected = await globalIdentitiesResource.storage!.get({
+      queryKey: INJECTION_KEY,
+      scope,
+    });
+    expect(injected?.data ?? []).toEqual([]);
+  });
+
+  it('revalidates both identity views after a reset (clear() does not refetch)', async () => {
+    const listSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValue(pageOf([identity('i1')]));
+    const injectionSpy = vi
+      .spyOn(userMemoryService, 'queryIdentitiesForInjection')
+      .mockResolvedValue([injection('i1')]);
+
+    renderHook(
+      () => ({
+        list: useUserMemoryStore((s) => s.useFetchIdentities)(PARAMS),
+        injection: useUserMemoryStore((s) => s.useInitIdentities)(true),
+      }),
+      { wrapper },
+    );
+    await waitFor(() => expect(state().identities).toHaveLength(1));
+    await waitFor(() => expect(state().globalIdentities).toHaveLength(1));
+
+    // The purge emptied the server.
+    listSpy.mockResolvedValue(pageOf([]));
+    injectionSpy.mockResolvedValue([]);
+    await act(async () => {
+      await state().resetIdentities();
+    });
+
+    await waitFor(() => expect(state().identitiesInit).toBe(true));
+    await waitFor(() => expect(state().globalIdentitiesInit).toBe(true));
+    expect(state().identities).toEqual([]);
+    expect(state().globalIdentities).toEqual([]);
   });
 });

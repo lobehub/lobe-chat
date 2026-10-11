@@ -27,6 +27,14 @@ export const identitySelectors = {
   identitiesHasMore: (state: UserMemoryStoreState): boolean =>
     state.identitiesMeta?.hasMore ?? false,
 
+  /** Whether a "load more" request for the next identity page is in flight. */
+  identitiesIsLoadingMore: (state: UserMemoryStoreState): boolean =>
+    state.identitiesMeta?.isLoadingMore ?? false,
+
+  /** Failure of the last "load more" request, cleared by the next attempt. */
+  identitiesLoadMoreError: (state: UserMemoryStoreState): unknown =>
+    state.identitiesMeta?.loadMoreError,
+
   /** Row count of the *current* query, not the whole collection. */
   identitiesTotal: (state: UserMemoryStoreState): number => state.identitiesMeta?.total ?? 0,
 };

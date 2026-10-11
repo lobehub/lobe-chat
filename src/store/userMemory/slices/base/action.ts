@@ -92,10 +92,6 @@ export class BaseActionImpl {
       n('purgeAllMemories'),
     );
 
-    // The identity slices are replica-backed: their views (and persisted rows)
-    // are cleared through the engine, not by assigning `initialState`.
-    this.#get().resetIdentities();
-
     await Promise.all([
       mutate(
         (key) => Array.isArray(key) && key[0] === userMemoryKeys.memoryDetail.root,
@@ -111,7 +107,10 @@ export class BaseActionImpl {
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root, undefined, {
         revalidate: true,
       }),
-      this.#get().refreshIdentities(),
+      // Replica-backed slices are cleared through the engine — every persisted
+      // query variant, not only the one on screen — then revalidated. Assigning
+      // `initialState` would leave their persisted rows to repaint on reload.
+      this.#get().resetIdentities(),
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root, undefined, {
         revalidate: true,
       }),

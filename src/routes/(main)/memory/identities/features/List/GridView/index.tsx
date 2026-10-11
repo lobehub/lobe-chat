@@ -15,12 +15,15 @@ interface GridViewProps {
 const IdentityGridView = memo<GridViewProps>(({ identities, isLoading, onClick }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore(identitySelectors.identitiesHasMore);
+  const isLoadingMore = useUserMemoryStore(identitySelectors.identitiesIsLoadingMore);
+  const loadMoreError = useUserMemoryStore(identitySelectors.identitiesLoadMoreError);
 
   return (
     <GridView
       hasMore={identitiesHasMore}
-      isLoading={isLoading}
+      isLoading={isLoading || isLoadingMore}
       items={identities}
+      loadMoreError={loadMoreError}
       renderItem={(identity) => (
         <IdentityCard identity={identity} onClick={() => onClick?.(identity)} />
       )}

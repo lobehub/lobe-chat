@@ -174,13 +174,18 @@ export class IdentityActionImpl {
   };
 
   /**
-   * Drop every identity replica (list + injection) and its persisted copies.
-   * Used by the memory purge: the views must go through the engine, not be
-   * overwritten by an `initialState` assignment.
+   * Drop every identity replica (list + injection) and every persisted copy —
+   * each search/filter query of the list is its own persisted row, so this
+   * `clear()`s the resources rather than removing the query on screen. Used by
+   * the memory purge: the views must go through the engine, not be overwritten
+   * by an `initialState` assignment. `clear()` does not refetch, so mounted
+   * views are revalidated afterwards. Resolves `true` once storage is purged.
    */
-  resetIdentities = (): void => {
-    this.#identities.remove(IDENTITY_LIST_KEY);
-    this.#globalIdentities.remove(GLOBAL_IDENTITIES_KEY);
+  resetIdentities = async (): Promise<boolean> => {
+    const purged = Promise.all([this.#identities.clear(), this.#globalIdentities.clear()]);
+    await Promise.all([this.#identities.revalidate(), this.#globalIdentities.revalidate()]);
+    const [list, injection] = await purged;
+    return list && injection;
   };
 
   updateIdentity = async (id: string, data: UpdateUserMemoryIdentity): Promise<boolean> => {

@@ -89,6 +89,42 @@ describe('userMemory base actions', () => {
         userMemoryKeys.memoryDetail(LayersEnum.Preference, 'preference-1'),
       );
     });
+
+    it('patches and revalidates an identity edit without clearing the identity replicas', async () => {
+      vi.spyOn(memoryCRUDService, 'updateIdentity').mockResolvedValue(true);
+      const patchIdentityInList = vi.fn();
+      const refreshIdentities = vi.fn().mockResolvedValue(undefined);
+      const resetIdentities = vi.fn().mockResolvedValue(true);
+      useUserMemoryStore.setState({ patchIdentityInList, refreshIdentities, resetIdentities });
+
+      await act(async () => {
+        await useUserMemoryStore
+          .getState()
+          .updateMemory('identity-1', 'New description', LayersEnum.Identity);
+      });
+
+      expect(patchIdentityInList).toHaveBeenCalledWith('identity-1', {
+        description: 'New description',
+      });
+      expect(refreshIdentities).toHaveBeenCalledTimes(1);
+      expect(resetIdentities).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('purgeAllMemories', () => {
+    it('clears the identity replicas (every persisted query) through the engine', async () => {
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue(undefined as never);
+      const refreshIdentities = vi.fn().mockResolvedValue(undefined);
+      const resetIdentities = vi.fn().mockResolvedValue(true);
+      useUserMemoryStore.setState({ refreshIdentities, resetIdentities });
+
+      await act(async () => {
+        await useUserMemoryStore.getState().purgeAllMemories();
+      });
+
+      expect(memoryCRUDService.deleteAll).toHaveBeenCalled();
+      expect(resetIdentities).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

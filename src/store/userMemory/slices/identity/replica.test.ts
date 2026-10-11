@@ -173,6 +173,41 @@ describe('identity list replica', () => {
     expect(fetchSpy).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, pageSize: 12 }));
   });
 
+  it('exposes load-more progress and failure so the list can show them and retry', async () => {
+    const head = Array.from({ length: 12 }, (_, i) => identity(`i${i}`));
+    const fetchSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValue(responseOf(head, { total: 24 }));
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchIdentities)(PARAMS), { wrapper });
+    await waitFor(() => expect(listState().identities).toHaveLength(12));
+
+    let fail!: (error: Error) => void;
+    fetchSpy.mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          fail = reject;
+        }),
+    );
+    let loading!: Promise<void>;
+    act(() => {
+      loading = listState().loadMoreIdentities();
+    });
+    expect(identitySelectors.identitiesIsLoadingMore(listState())).toBe(true);
+    expect(identitySelectors.identitiesLoadMoreError(listState())).toBeUndefined();
+
+    const failure = new Error('offline');
+    await act(async () => {
+      fail(failure);
+      await loading.catch(() => {});
+    });
+
+    expect(identitySelectors.identitiesIsLoadingMore(listState())).toBe(false);
+    expect(identitySelectors.identitiesLoadMoreError(listState())).toBe(failure);
+    // The rows already on screen stay; only the next page is missing.
+    expect(listState().identities).toHaveLength(12);
+  });
+
   it('removes a row optimistically and rolls it back when the server rejects', async () => {
     vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(
       responseOf([identity('i1'), identity('i2')]),
@@ -252,23 +287,68 @@ describe('identity list replica', () => {
   });
 
   it('clears the view (and the persisted row) when told to reset', async () => {
-    vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(responseOf([identity('i1')]));
+    const fetchSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValue(responseOf([identity('i1')]));
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchIdentities)(PARAMS), { wrapper });
     await waitFor(() => expect(listState().identities).toHaveLength(1));
 
+    // The purge emptied the server; the clear itself is synchronous.
+    fetchSpy.mockResolvedValue(responseOf([]));
+    let reset!: Promise<boolean>;
     act(() => {
-      listState().resetIdentities();
+      reset = listState().resetIdentities();
     });
 
     expect(listState().identities).toEqual([]);
     expect(identitySelectors.identitiesTotal(listState())).toBe(0);
-    // The removal is queued behind the write queue; wait for it to land.
+    await act(async () => {
+      await expect(reset).resolves.toBe(true);
+    });
+    // The deleted row is gone from the persisted copy (at most the refetched empty page remains).
+    const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+    expect((stored?.data as IdentityListView | undefined)?.items ?? []).toEqual([]);
+    expect(IDENTITY_LIST_KEY).toBe('all');
+  });
+
+  it('clears every persisted query of the list on reset, not only the one on screen', async () => {
+    const FILTERED = { ...PARAMS, q: 'mentor' };
+    const FILTERED_KEY = identityListResource.storageKey(FILTERED);
+    const fetchSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValue(responseOf([identity('i1')]));
+
+    // Visit the unfiltered list, then switch to a search: two persisted rows.
+    const { rerender } = renderHook(
+      ({ params }) => useUserMemoryStore((s) => s.useFetchIdentities)(params),
+      { initialProps: { params: PARAMS as typeof FILTERED | typeof PARAMS }, wrapper },
+    );
     await waitFor(async () => {
       await expect(
         identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope }),
-      ).resolves.toBeUndefined();
+      ).resolves.toBeDefined();
     });
-    expect(IDENTITY_LIST_KEY).toBe('all');
+    fetchSpy.mockResolvedValue(responseOf([identity('i2')]));
+    rerender({ params: FILTERED });
+    await waitFor(async () => {
+      await expect(
+        identityListResource.storage!.get({ queryKey: FILTERED_KEY, scope }),
+      ).resolves.toBeDefined();
+    });
+
+    // The purge deleted everything server-side; the mounted query refetches.
+    fetchSpy.mockResolvedValue(responseOf([]));
+    await act(async () => {
+      await listState().resetIdentities();
+    });
+
+    // The unfiltered projection must not survive to pre-hydrate after a reload.
+    await expect(
+      identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope }),
+    ).resolves.toBeUndefined();
+    // The query on screen holds at most the server's (empty) answer.
+    const filtered = await identityListResource.storage!.get({ queryKey: FILTERED_KEY, scope });
+    expect((filtered?.data as IdentityListView | undefined)?.items ?? []).toEqual([]);
   });
 });
