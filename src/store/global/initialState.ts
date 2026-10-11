@@ -195,6 +195,12 @@ export interface SystemStatus {
    */
   dismissedBannerIds?: string[];
   /**
+   * Keys of goal asks (clarification rounds, gates, sign-offs) the user waved
+   * off the approval island. Only the island honours them — the same ask stays
+   * in the Home inbox. Append-only and capped, see `appendDismissedIslandKey`.
+   */
+  dismissedIslandItemKeys?: string[];
+  /**
    * Per-agent expanded state of the agent sidebar's top-level sections
    * (Tasks / Topic), keyed by agentId. Lets each agent remember its own
    * collapse/expand state so switching agents doesn't share one accordion.
