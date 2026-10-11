@@ -98,7 +98,10 @@ export class DocumentActionImpl {
     this.#get = get;
     this.#detail = createReplicaSlice(documentDetailResource, {
       actionPrefix: n('documentDetail'),
-      fetcher: async (id) => ({ document: (await documentService.getDocumentById(id)) ?? null }),
+      fetcher: async (id) =>
+        this.#keepNewerDetail(id, {
+          document: (await documentService.getDocumentById(id)) ?? null,
+        }),
       get,
       set,
       stateKey: 'documentDetailReplica',
@@ -131,6 +134,25 @@ export class DocumentActionImpl {
       delete documents[id];
     }
     return { ...detailLens.clear(state), documents };
+  };
+
+  /**
+   * Order a fetched detail against the entry it is about to replace.
+   *
+   * A focus / SSE revalidation that started before a save but answers after it
+   * carries the pre-save row. The save already adopted the newer revision into
+   * the replica, so landing the late response would regress the projection and
+   * its IndexedDB row — and a later offline reload would hydrate the pre-save
+   * body. Keep the entry when the response is strictly older; a not-found answer
+   * and any equal-or-newer revision still win.
+   */
+  #keepNewerDetail = (documentId: string, fetched: DocumentDetail): DocumentDetail => {
+    const current = this.#get().documentDetailMap[documentId]?.document;
+    const next = fetched.document;
+    if (!current?.updatedAt || !next?.updatedAt) return fetched;
+    return new Date(next.updatedAt).getTime() < new Date(current.updatedAt).getTime()
+      ? { document: current }
+      : fetched;
   };
 
   cancelDebouncedSave = (documentId: string): void => {

@@ -504,6 +504,50 @@ describe('document detail replica', () => {
     });
   });
 
+  it('does not let a sync that started before a save revert the saved detail', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
+    vi.mocked(documentService.updateDocument).mockResolvedValue({
+      historyAppended: false,
+      id: 'doc-1',
+      updatedAt: '2026-01-08T00:00:00.000Z',
+    } as any);
+
+    const { result } = renderDocument('doc-1', createEditor());
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-1']).toBeDefined());
+
+    // A focus / SSE revalidation starts and reads the pre-save row…
+    let resolveFetch!: (value: unknown) => void;
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      () => new Promise((resolve) => (resolveFetch = resolve)) as any,
+    );
+    let revalidation!: Promise<unknown>;
+    act(() => {
+      revalidation = result.current.mutate();
+    });
+    await waitFor(() => expect(resolveFetch).toBeDefined());
+
+    // …the save lands while it is in flight…
+    act(() => useDocumentStore.getState().handleContentChange());
+    await act(async () => {
+      await useDocumentStore.getState().performSave('doc-1');
+    });
+
+    // …and the late response carries the older row.
+    await act(async () => {
+      resolveFetch(documentRow());
+      await revalidation;
+    });
+
+    const saved = expect.objectContaining({
+      content: '# Draft',
+      updatedAt: new Date('2026-01-08T00:00:00.000Z'),
+    });
+    expect(useDocumentStore.getState().documentDetailMap['doc-1']).toEqual({ document: saved });
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data).toEqual({ document: saved }),
+    );
+  });
+
   it('does not let a late prefetch overwrite the entry a sync already settled', async () => {
     const stale = documentRow({ id: 'doc-2', content: '# Stale prefetch' });
     let resolvePrefetch!: (value: unknown) => void;
