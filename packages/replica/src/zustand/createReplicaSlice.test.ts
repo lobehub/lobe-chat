@@ -143,7 +143,11 @@ describe('createReplicaSlice', () => {
       // The callback also receives the key/scope the failing read was captured
       // under, so a terminal removal can be bound to the right scope.
       await waitFor(() =>
-        expect(onError).toHaveBeenCalledWith(failure, { key: 'b', scope: 'user-1:personal' }),
+        expect(onError).toHaveBeenCalledWith(failure, {
+          isActive: true,
+          key: 'b',
+          scope: 'user-1:personal',
+        }),
       );
       expect(failing.store.getState().lists.b).toBeUndefined();
     });
@@ -497,9 +501,11 @@ describe('createReplicaSlice', () => {
       expect(store.getState().lists.a).toBeUndefined();
 
       // A failure is still handed over, bound to the scope it was captured
-      // under, so the caller can purge that scope's row (see below).
+      // under and flagged as no longer active, so the caller can purge that
+      // scope's row (see below) without repainting the current view.
       act(() => captured.onError(new Error('stale')));
       expect(onError).toHaveBeenCalledWith(expect.any(Error), {
+        isActive: false,
         key: 'a',
         scope: 'user-1:personal',
       });
@@ -535,11 +541,17 @@ describe('createReplicaSlice', () => {
       });
 
       scopeState.current = 'user-1:personal';
+      const contexts: { isActive: boolean; key: string | undefined; scope: string }[] = [];
       renderHook(
         () =>
           slice.useSync(
             { id: 'a' },
-            { onError: (_error, { key, scope: captured }) => key && slice.remove(key, captured) },
+            {
+              onError: (_error, context) => {
+                contexts.push(context);
+                if (context.key) slice.remove(context.key, context.scope);
+              },
+            },
           ),
         { wrapper },
       );
@@ -551,6 +563,9 @@ describe('createReplicaSlice', () => {
 
       act(() => request.onError(new Error('NOT_FOUND')));
 
+      // The callback still runs, flagged as belonging to a scope left behind, so
+      // the consumer can purge that scope without repainting the current one.
+      expect(contexts[0]).toMatchObject({ isActive: false, key: 'a', scope: 'user-1:personal' });
       // The scope on screen keeps its entry; the denied scope's row is purged.
       expect(store.getState().lists.a).toEqual(['b-value']);
       await waitFor(() => expect(memory.rows.get('user-1:personal|a')).toBeUndefined());
@@ -600,7 +615,7 @@ describe('createReplicaSlice', () => {
         throw new Error('not found');
       });
       const { slice } = setup({ fetcher });
-      const contexts: { key: string | undefined; scope: string }[] = [];
+      const contexts: { isActive: boolean; key: string | undefined; scope: string }[] = [];
 
       scopeState.current = 'user-1:personal';
       renderHook(
@@ -609,7 +624,7 @@ describe('createReplicaSlice', () => {
       );
 
       await waitFor(() => expect(contexts.length).toBeGreaterThan(0));
-      expect(contexts[0]).toEqual({ key: 'a', scope: 'user-1:personal' });
+      expect(contexts[0]).toEqual({ isActive: true, key: 'a', scope: 'user-1:personal' });
     });
 
     it('a version bump ignores rows written by the previous version', async () => {
@@ -1259,7 +1274,11 @@ describe('createReplicaSlice', () => {
 
       const failure = new Error('search failed');
       act(() => search.onError(failure));
-      expect(onError).toHaveBeenCalledWith(failure, { key: 'a', scope: 'user-1:personal' });
+      expect(onError).toHaveBeenCalledWith(failure, {
+        isActive: true,
+        key: 'a',
+        scope: 'user-1:personal',
+      });
     });
   });
 

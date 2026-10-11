@@ -240,7 +240,14 @@ export class CommonActionImpl {
       refreshWhenOffline: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onError: (error) => {
+      onError: (error, { isActive }) => {
+        // The replica forwards a failed bootstrap even after an identity /
+        // workspace switch, so its captured scope can still clean up. This
+        // resource is memory-only, so there is nothing of the previous identity
+        // to purge — and `isActive: false` means the failure belongs to that
+        // previous identity, which must not paint the current one's error state
+        // (`isUserStateInitError`) over its loading state.
+        if (!isActive) return;
         // Record the init failure so gated tabs (Advanced / ServiceModel) can
         // render error + Retry instead of a permanent skeleton.
         this.#set({ isUserStateInitError: error }, false, n('initUserState/error'));
