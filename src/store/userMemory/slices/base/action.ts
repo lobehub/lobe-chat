@@ -206,18 +206,6 @@ export class BaseActionImpl {
 
     this.#set(
       produce((draft) => {
-        draft.contextsQuery = undefined;
-        draft.contextsSearchError = undefined;
-        draft.contextsSearchLoading = undefined;
-        draft.contextsSort = undefined;
-        draft.experiencesQuery = undefined;
-        draft.experiencesSort = undefined;
-        draft.experiencesSearchError = undefined;
-        draft.activitiesQuery = undefined;
-        draft.activitiesSearchError = undefined;
-        draft.activitiesSearchLoading = undefined;
-        draft.activitiesSort = undefined;
-
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
         draft.editingMemoryContent = undefined;

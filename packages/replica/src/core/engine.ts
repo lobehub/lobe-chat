@@ -148,16 +148,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   let mutationSeq = 0;
   /** Keys with a `loadMore` request in flight (the only valid `isLoadingMore`). */
   const loadingMore = new Set<string>();
-  /**
-   * Per-key pagination epoch. A `loadMore` request captures it and only merges
-   * its page while the epoch is unchanged. A structural change to the loaded
-   * pages — `collapse` — bumps it, so a next page built on the pre-change state
-   * is dropped even when the change itself left the view identical (a collapse
-   * to a head that was already alone), which the depth/query checks cannot see.
-   */
-  const paginationEpoch = new Map<string, number>();
-  const paginationEpochOf = (key: string) => paginationEpoch.get(key) ?? 0;
-  const bumpPaginationEpoch = (key: string) => paginationEpoch.set(key, paginationEpochOf(key) + 1);
 
   // ---- removal guard ----------------------------------------------------
   // An explicit removal (a deleted / unauthorized aggregate, or a subject whose
@@ -225,18 +215,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * never paint a row that survived it.
    */
   const scopePurges = new Map<string, Promise<boolean>>();
-
-  // ---- entry reset -------------------------------------------------------
-  // A query change (new filters / sort) drops the single entry so the NEXT
-  // query can hydrate from its own cached head, but a read of the PREVIOUS
-  // query started before the reset still holds that query's row. The persisted
-  // rows are kept (unlike `remove`), so the removal guard cannot mark it; a
-  // per-(scope, key) generation instead marks every read that started before
-  // the reset as stale, so a superseded hydrate can never repaint the slot.
-  const resetGenerations = new Map<string, number>();
-  const resetId = (scope: string, key: string) => `${scope}\u0000${key}`;
-  const resetGeneration = (scope: string, key: string) =>
-    resetGenerations.get(resetId(scope, key)) ?? 0;
 
   const getSlot = port.getState;
   const storageKey = (key: string, query?: string) => ({
@@ -531,23 +509,15 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const storage = resource.storage!;
     // A read started before a `clear()` of this scope holds a wiped row.
     const generation = clearGeneration(scope);
-    // A read started before a `reset()` of this entry belongs to a query the
-    // slot has moved past.
-    const reset = resetGeneration(scope, key);
     // After a `clear()`, read only once its row deletes landed.
     const purge = scopePurges.get(scope);
     if (purge && !(await purge)) return false;
     const query = resource.query(params);
     const cached = await storage.get({ ...storageKey(key, query), scope });
     if (!cached) return false;
-    // Re-check after the read: a removal, a clear or a reset that landed while
-    // it was in flight must not resurrect the row it just dropped.
-    if (
-      isRemoved(scope, key) ||
-      clearGeneration(scope) !== generation ||
-      resetGeneration(scope, key) !== reset
-    )
-      return false;
+    // Re-check after the read: a removal or a clear that landed while it was in
+    // flight must not resurrect the row it just dropped.
+    if (isRemoved(scope, key) || clearGeneration(scope) !== generation) return false;
     if (options.isHydratable && !options.isHydratable(cached.data, params)) return false;
     // Entities deleted while the read was in flight may still be in the row.
     const stored = withoutRemovedEntities(scope, cached.data);
@@ -695,25 +665,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   };
 
   /**
-   * Drop the entry (metadata + view) without deleting persisted rows and without
-   * arming the removal guard. Use it when the params behind a single entry
-   * change (a new search filter or sort): unlike `remove`, the previous query's
-   * cached row is kept for a switch back, and unlike `update`, the entry leaves
-   * no stale metadata to block the NEXT query's hydrate — its own cached head
-   * can then paint on the first frame (see the `hydrate` reducer guard).
-   *
-   * Reads of the superseded query already in flight are invalidated by the
-   * generation bump, so a late hydrate cannot repaint the slot.
-   */
-  const reset = (key: string, scope: string = resource.scope.get()): boolean => {
-    // An off-scope reset must not touch the entry on screen (the active scope
-    // owns it), and there is nothing else to do for a foreign scope.
-    if (scope !== resource.scope.get()) return false;
-    resetGenerations.set(resetId(scope, key), resetGeneration(scope, key) + 1);
-    return dispatch({ key, scope, type: 'discard' });
-  };
-
-  /**
    * Persist the confirmed value of an entry as it is now — the flush after a
    * burst of in-memory `update(..., { persist: false })` writes (a stream).
    */
@@ -846,8 +797,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const query = entry?.query;
     const scope = resource.scope.get();
     const depth = current.currentPage;
-    const epoch = paginationEpochOf(key);
-    const generation = clearGeneration(scope);
     const setLoading = (patch: object) =>
       update(key, (data) => data && ({ ...data, ...patch } as TData), { persist: false });
 
@@ -857,12 +806,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       const latest = port.read(key) as ReplicaPagedData<unknown, unknown> | undefined;
       return (
         resource.scope.get() === scope &&
-        // A `clear()` drops every row: a page started before it must not merge
-        // into the fresh head that recreates this key at depth zero.
-        clearGeneration(scope) === generation &&
         getSlot().entries[key]?.query === query &&
-        latest?.currentPage === depth &&
-        paginationEpochOf(key) === epoch
+        latest?.currentPage === depth
       );
     };
     try {
@@ -891,19 +836,13 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         })
       : false;
 
-  /**
-   * Drop loaded pages, keeping the head (e.g. after an edit inside older pages).
-   * Bumps the pagination epoch first: a next page in flight was built on the
-   * pre-collapse pages and must not land, even when the collapse is a no-op
-   * because the head was already alone.
-   */
-  const collapse = (key: string) => {
-    if (!paging) return false;
-    bumpPaginationEpoch(key);
-    return update(key, (data) => data && (collapseToHead(data as any, paging) as TData), {
-      persist: false,
-    });
-  };
+  /** Drop loaded pages, keeping the head (e.g. after an edit inside older pages). */
+  const collapse = (key: string) =>
+    paging
+      ? update(key, (data) => data && (collapseToHead(data as any, paging) as TData), {
+          persist: false,
+        })
+      : false;
 
   // ---- entity propagation -----------------------------------------------
 
@@ -1151,7 +1090,6 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     remove,
     removeEntity,
     replace,
-    reset,
     resource,
     revalidate,
     update,

@@ -1,4 +1,10 @@
-import { cacheScope, definePagedReplica, defineReplica, type ReplicaScope } from '@/libs/replica';
+import {
+  cacheScope,
+  definePagedReplica,
+  defineReplica,
+  type ReplicaScope,
+  stableQueryKey,
+} from '@/libs/replica';
 
 /**
  * The identity half of a cache scope (`${userId}:${workspaceId}`), with the
@@ -48,3 +54,16 @@ export const clearReplicas = async (...clears: (() => Promise<boolean>)[]): Prom
   }
   return cleared;
 };
+
+/**
+ * Entry key of one memory list page set: the query (search, sort, filters)
+ * without the page size. Every query is its own replica entry, so a query
+ * switch never overwrites another query's pages and each query hydrates its
+ * own persisted head page (the reducer only hydrates an empty entry). With no
+ * separate replica `query`, the persisted row key equals the entry key.
+ */
+export const memoryListKey = <T extends { pageSize?: number; q?: string }>({
+  pageSize: _pageSize,
+  q,
+  ...filters
+}: T): string => stableQueryKey({ ...filters, q: q || undefined });

@@ -14,6 +14,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { clearReplicas } from '../../utils/replica';
+import { OffsetListPager } from '../utils/offsetListPager';
 import {
   DEFAULT_IDENTITY_LIST_PAGE_SIZE,
   GLOBAL_IDENTITIES_KEY,
@@ -76,6 +77,8 @@ export class IdentityActionImpl {
   readonly #globalIdentities;
   /** The identity list is a paged replica; the engine owns its paging. */
   readonly #identities;
+  /** Delete / load more / purge with the offset repair shared by every memory list. */
+  readonly #pager: OffsetListPager;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
     void _api;
@@ -102,6 +105,11 @@ export class IdentityActionImpl {
       stateKey: 'globalIdentitiesReplica',
       view: globalIdentitiesLens,
     });
+    this.#pager = new OffsetListPager({
+      keys: () => (get().identitiesMeta ? [IDENTITY_LIST_KEY] : []),
+      refreshHead: () => this.refreshIdentities(),
+      slice: this.#identities,
+    });
   }
 
   createIdentity = async (data: NewUserMemoryIdentity): Promise<AddIdentityEntryResult> => {
@@ -111,32 +119,16 @@ export class IdentityActionImpl {
   };
 
   /**
-   * Delete one identity. The row leaves every loaded list entry immediately (a
-   * failed call rolls it back). Once the server confirms, the entity-level
-   * removal drops it from every persisted search/filter variant too and keeps a
-   * hydrate already in flight from bringing it back; then the head page is
-   * revalidated so the persisted copy matches the server.
+   * Delete one identity: optimistic (rolled back if the server rejects), then
+   * the offset repair shared by every memory list — the row leaves every
+   * persisted search/filter variant, the list collapses to a refreshed head,
+   * and "load more" waits for that head (see `OffsetListPager`).
    */
-  deleteIdentity = async (id: string): Promise<void> => {
-    const tokens = this.#identities.beginEntityOptimistic<IdentityListItem>(id, () => undefined);
-    try {
-      await memoryCRUDService.deleteIdentity(id);
-    } catch (error) {
-      for (const token of tokens) token.rollback();
-      throw error;
-    }
-    for (const token of tokens) token.commit();
-    this.#identities.removeEntity(id);
-    await this.refreshIdentities();
-  };
+  deleteIdentity = (id: string): Promise<void> =>
+    this.#pager.delete(id, () => memoryCRUDService.deleteIdentity(id));
 
-  /**
-   * Append the next page of the identities list. The engine reads the loaded
-   * head params and de-dupes by id, so a shifted offset never repeats a row.
-   */
-  loadMoreIdentities = async (): Promise<void> => {
-    await this.#identities.loadMore(IDENTITY_LIST_KEY);
-  };
+  /** Append the next page of the identities list, once its head is trustworthy. */
+  loadMoreIdentities = (): Promise<void> => this.#pager.loadMore(IDENTITY_LIST_KEY);
 
   /**
    * Apply a confirmed edit to one identity (an inline edit elsewhere in the
@@ -168,7 +160,7 @@ export class IdentityActionImpl {
    * once the persisted rows are gone.
    */
   internal_clearIdentityList = (): Promise<boolean> =>
-    clearReplicas(this.#identities.clear, this.#globalIdentities.clear);
+    this.#pager.clear(() => clearReplicas(this.#identities.clear, this.#globalIdentities.clear));
 
   updateIdentity = async (id: string, data: UpdateUserMemoryIdentity): Promise<boolean> => {
     const result = await memoryCRUDService.updateIdentity(id, data);
@@ -182,7 +174,12 @@ export class IdentityActionImpl {
    * store, never from this hook.
    */
   useFetchIdentities = (params: IdentityListParams): ReplicaSyncResult =>
-    this.#identities.useSync(params, { revalidateOnFocus: false });
+    this.#identities.useSync(params, {
+      onError: (error) => this.#pager.headFailed(IDENTITY_LIST_KEY, error),
+      // A landed head makes the list's offsets the server's again.
+      onSuccess: () => this.#pager.headLanded(IDENTITY_LIST_KEY),
+      revalidateOnFocus: false,
+    });
 
   /**
    * Fetch orchestration for the self identities injected into the chat context.

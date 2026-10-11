@@ -197,7 +197,7 @@ describe('identity list replica', () => {
     act(() => {
       loading = listState().loadMoreIdentities();
     });
-    expect(identitySelectors.identitiesIsLoadingMore(listState())).toBe(true);
+    await waitFor(() => expect(identitySelectors.identitiesIsLoadingMore(listState())).toBe(true));
     expect(identitySelectors.identitiesLoadMoreError(listState())).toBeUndefined();
 
     const failure = new Error('offline');
@@ -231,6 +231,40 @@ describe('identity list replica', () => {
     expect(deleteSpy).toHaveBeenCalledWith('i1');
     // Rolled back to the confirmed page, nothing lost.
     expect(listState().identities.map((item) => item.id)).toEqual(['i1', 'i2']);
+  });
+
+  it('keeps offset paging contiguous after a delete (collapse + fresh head first)', async () => {
+    let server = Array.from({ length: 30 }, (_, i) => identity(`r${i}`));
+    vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(
+      async ({ page = 1, pageSize = 12 }: { page?: number; pageSize?: number } = {}) =>
+        responseOf(server.slice((page - 1) * pageSize, page * pageSize), {
+          page,
+          total: server.length,
+        }),
+    );
+    vi.spyOn(memoryCRUDService, 'deleteIdentity').mockResolvedValue(undefined);
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchIdentities)(PARAMS), { wrapper });
+    await waitFor(() => expect(listState().identities).toHaveLength(12));
+    await act(async () => {
+      await listState().loadMoreIdentities();
+    });
+    await waitFor(() => expect(listState().identities).toHaveLength(24));
+
+    server = server.filter((item) => item.id !== 'r5');
+    await act(async () => {
+      await listState().deleteIdentity('r5');
+    });
+    await act(async () => {
+      await listState().loadMoreIdentities();
+    });
+
+    // Without the collapse, the stale page-2 offset would skip r12.
+    await waitFor(() =>
+      expect(listState().identities.map((item) => item.id)).toEqual(
+        server.slice(0, 24).map((item) => item.id),
+      ),
+    );
   });
 
   it('removes a deleted row from the view and the persisted copy', async () => {

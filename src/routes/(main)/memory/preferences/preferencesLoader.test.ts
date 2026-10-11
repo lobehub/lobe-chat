@@ -13,7 +13,7 @@ describe('preferenceListLoader', () => {
 
   it('pre-hydrates the query the route URL encodes', async () => {
     const preHydrate = vi
-      .spyOn(useUserMemoryStore.getState(), 'preHydrate')
+      .spyOn(useUserMemoryStore.getState(), 'preHydratePreferences')
       .mockResolvedValue(true);
 
     await expect(
@@ -25,7 +25,7 @@ describe('preferenceListLoader', () => {
 
   it('pre-hydrates the unfiltered query for a bare URL', async () => {
     const preHydrate = vi
-      .spyOn(useUserMemoryStore.getState(), 'preHydrate')
+      .spyOn(useUserMemoryStore.getState(), 'preHydratePreferences')
       .mockResolvedValue(true);
 
     await preferenceListLoader(argsOf('https://app.lobehub.com/memory/preferences'));

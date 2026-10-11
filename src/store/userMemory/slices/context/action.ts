@@ -1,10 +1,7 @@
 import { type ContextMemorySimple, type UserMemoryItemSimple } from '@lobechat/types';
-import { useMemo } from 'react';
 import { type SWRResponse } from 'swr';
 
 import { type DisplayContextMemory } from '@/database/repositories/userMemory';
-import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
-import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
@@ -12,48 +9,32 @@ import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
-import { clearReplicas } from '../../utils/replica';
+import { type MemoryListPageResult, MemoryQueryList } from '../utils/memoryQueryList';
 import {
-  CONTEXT_LIST_KEY,
   CONTEXT_LIST_PAGE_SIZE,
   type ContextListData,
   type ContextListParams,
   contextListResource,
-  type ContextListSort,
 } from './projection';
 
 const n = setNamespace('userMemory/context');
 
-export interface ContextQueryParams {
+export interface ContextQueryParams extends Partial<ContextListParams> {
   page?: number;
-  pageSize?: number;
-  q?: string;
-  sort?: ContextListSort;
 }
 
-/**
- * The context list keeps its long-standing flat fields (`contexts`,
- * `contextsTotal`, `contextsPage`, `contextsHasMore`, `contextsInit`) as derived
- * mirrors of the `contextList` replica view, so no consumer changes. The
- * canonical paged value lives in `contextListData` and is persisted to
- * IndexedDB by the replica engine.
- */
-const contextListLens: ReplicaLens<UserMemoryStore, ContextListData> = {
-  clear: () => ({
-    contextListData: undefined,
-    contexts: [],
-    contextsHasMore: true,
-    contextsInit: false,
-    contextsPage: 1,
-    // A scope switch / wipe must not keep showing the previous scope's error.
-    contextsSearchError: undefined,
-    contextsSearchLoading: undefined,
-    contextsTotal: 0,
-  }),
-  get: (state) => state.contextListData,
-  set: (_state, _key, data) => {
-    if (!data) {
-      return {
+/** Flat mirrors of one page set (`undefined` = the active query has no view yet). */
+const mirrorsOf = (data: ContextListData | undefined): Partial<UserMemoryStore> =>
+  data
+    ? {
+        contextListData: data,
+        contexts: data.items,
+        contextsHasMore: data.hasMore,
+        contextsInit: true,
+        contextsPage: data.currentPage + 1,
+        contextsTotal: data.total ?? data.items.length,
+      }
+    : {
         contextListData: undefined,
         contexts: [],
         contextsHasMore: true,
@@ -61,20 +42,6 @@ const contextListLens: ReplicaLens<UserMemoryStore, ContextListData> = {
         contextsPage: 1,
         contextsTotal: 0,
       };
-    }
-    return {
-      contextListData: data,
-      contexts: data.items,
-      contextsHasMore: data.hasMore,
-      contextsInit: true,
-      contextsPage: data.currentPage + 1,
-      // A landed page settles the search: clear the reset/error flags.
-      contextsSearchError: undefined,
-      contextsSearchLoading: false,
-      contextsTotal: data.total ?? data.items.length,
-    };
-  },
-};
 
 /**
  * Flatten a `queryMemories` row into the display shape the context list
@@ -91,227 +58,78 @@ export const createContextSlice = (set: Setter, get: () => UserMemoryStore, _api
   new ContextActionImpl(set, get, _api);
 
 /**
- * The user-memory context list.
- *
- * Server state is one `@lobechat/replica` paged resource (`contextList`): the
- * persisted head page paints on the first frame and the network confirms it in
- * the background. The domain store exposes the same flat fields and the same
- * action surface it always has, backed by the replica view, so the memory
- * context page and its components are untouched.
+ * The user-memory context list: one `MemoryQueryList` (shared with the other
+ * offset-paged memory lists) behind the slice's long-standing action names.
  */
 export class ContextActionImpl {
-  readonly #get: () => UserMemoryStore;
-  /** A delete and its head revalidation in flight; paging waits for it (see `deleteContext`). */
-  #headRefresh: Promise<void> | undefined;
-  /**
-   * Set once a delete lands on the server, cleared when a head page lands: the
-   * loaded next-page offset is stale until then (see `#loadMore`).
-   */
-  #headStale = false;
-  readonly #list;
-  readonly #set: Setter;
+  readonly #list: MemoryQueryList<ContextListParams, DisplayContextMemory, ContextListData>;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
     void _api;
-    this.#set = set;
-    this.#get = get;
-    this.#list = createReplicaSlice(contextListResource, {
+    this.#list = new MemoryQueryList({
       actionPrefix: n('contextList'),
-      fetcher: (params, cursor) => this.#fetchPage(params, cursor),
+      activeKeyField: 'contextListKey',
+      entriesField: 'contextListEntries',
+      fetchPage: async (params, page) => {
+        const response = await userMemoryService.queryMemories({
+          layer: LayersEnum.Context,
+          page,
+          pageSize: params.pageSize,
+          q: params.q,
+          sort: params.sort,
+        });
+        return { items: response.items.map(toDisplayContext), total: response.total };
+      },
       get,
+      mirror: mirrorsOf,
+      queryFields: ({ q, sort }) => ({ contextsQuery: q || undefined, contextsSort: sort }),
+      replicaField: 'contextListReplica',
+      resource: contextListResource,
+      rootKey: userMemoryKeys.contexts.root,
       set,
-      stateKey: 'contextListReplica',
-      view: contextListLens,
-      // Keep the painted page set self-describing (which query it answers).
-      viewFields: ({ q, sort }) => ({ q: q || undefined, sort }),
+      useStore: (selector) => useUserMemoryStore(selector),
     });
   }
 
-  /** One page of the context list; `cursor` is the page index (0 = head). */
-  #fetchPage = async (
-    params: ContextListParams,
-    cursor?: number,
-  ): Promise<ReplicaPageResult<DisplayContextMemory, number>> => {
-    const response = await userMemoryService.queryMemories({
-      layer: LayersEnum.Context,
-      page: (cursor ?? 0) + 1,
-      pageSize: params.pageSize,
-      q: params.q,
-      sort: params.sort,
-    });
+  /** Delete one context: optimistic, then the offset repair (see `OffsetListPager`). */
+  deleteContext = (id: string): Promise<void> =>
+    this.#list.delete(id, () => memoryCRUDService.deleteContext(id));
 
-    return { items: response.items.map(toDisplayContext), total: response.total };
-  };
+  /** Purge for "delete all memories" (every query, memory + IndexedDB). */
+  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
 
-  /** Clear the surfaced error once a head page lands. */
-  #clearListError = (): void => {
-    if (this.#get().contextsSearchError === undefined) return;
-    this.#set({ contextsSearchError: undefined }, false, n('contextList/clearError'));
-  };
-
-  /**
-   * Surface a failed head/refresh fetch only when there is no settled content
-   * to keep (initial load or a reset). A background refresh failure must not
-   * replace an already-painted list with an error.
-   */
-  #surfaceListError = (error: unknown): void => {
-    const { contextsInit, contextsSearchLoading } = this.#get();
-    const surface = Boolean(contextsSearchLoading) || !contextsInit;
-    this.#set(
-      {
-        contextsSearchError: surface ? error : undefined,
-        contextsSearchLoading: false,
-      },
-      false,
-      n('contextList/failList'),
-    );
-  };
-
-  /**
-   * Revalidate every mounted context query. The list syncs under the legacy
-   * `userMemory:contexts` SWR key (see `projection.ts`), so the replica's own
-   * `revalidate()` (which matches `replica:sync` keys) would not reach it.
-   */
-  #revalidateList = (): Promise<unknown> =>
-    mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root);
-
-  /**
-   * Wipe the context list for "delete all memories": the in-memory view, every
-   * persisted query variant of the user and reads started before the wipe.
-   * The caller (`purgeAllMemories`) revalidates afterwards.
-   */
-  internal_clearContextList = (): Promise<boolean> => clearReplicas(this.#list.clear);
-
-  /**
-   * Confirmed patch of one context in the loaded view and in persisted rows
-   * of query variants that are not loaded, so an edit survives a reload even
-   * when no mounted list revalidates afterwards.
-   */
+  /** Confirmed edit of one context in every loaded and persisted query. */
   internal_updateContextEntity = (
     id: string,
     fn: (item: DisplayContextMemory) => DisplayContextMemory,
   ): void => {
-    this.#list.updateEntity<DisplayContextMemory>(id, fn);
+    this.#list.updateEntity(id, fn);
   };
 
-  deleteContext = async (id: string): Promise<void> => {
-    // Paging waits for the whole delete (see `#loadMore`): a page fetched while
-    // the server shifts its offsets would skip a row.
-    const pending = this.#deleteAndRefreshHead(id);
-    this.#headRefresh = pending;
-    try {
-      await pending;
-    } finally {
-      if (this.#headRefresh === pending) this.#headRefresh = undefined;
-    }
-  };
-
-  #deleteAndRefreshHead = async (id: string): Promise<void> => {
-    await memoryCRUDService.deleteContext(id);
-    this.#headStale = true;
-    // Drop the row from every loaded/persisted list, including reads in flight.
-    this.#list.removeEntity(id);
-    // The list is offset-paged: once a row is gone the server shifts the rows
-    // after it one slot up, so the loaded next-page offset would skip one.
-    // Collapse to the head page and revalidate it before paging again.
-    this.#list.collapse(CONTEXT_LIST_KEY);
-    await this.#revalidateList();
-  };
-
-  /**
-   * Next page, once the head is trustworthy. After a delete the loaded offset
-   * is only valid when a fresh head page has landed; if that refresh failed,
-   * retry it first and page only once it succeeds.
-   */
-  #loadMore = async (): Promise<void> => {
-    if (this.#headRefresh) await this.#headRefresh.catch(() => undefined);
-    if (this.#headStale) {
-      await this.#revalidateList();
-      if (this.#headStale) return;
-    }
-    await this.#list.loadMore(CONTEXT_LIST_KEY);
-  };
-
-  /**
-   * Append the next page of the context list. The engine reads the loaded head
-   * params, dedupes by id and keeps `hasMore` honest.
-   */
+  /** Append the next page of the query on screen. */
   loadMoreContexts = (): void => {
-    void this.#loadMore();
+    void this.#list.loadMore();
   };
 
-  /**
-   * Drop the painted page set for a new search/sort so the previous query's rows
-   * never show under the new one. A no-op when the query is unchanged, so a
-   * remount keeps the in-memory + persisted view (the replica's first-frame
-   * paint). The persisted rows are left alone.
-   */
+  /** Seed the persisted head page of a query before its route paints. */
+  preHydrateContexts = (query?: Omit<ContextQueryParams, 'page' | 'pageSize'>): Promise<boolean> =>
+    this.#list.preHydrate({ ...query, pageSize: CONTEXT_LIST_PAGE_SIZE, q: query?.q || undefined });
+
+  /** Point the list at another search / sort (no page set is dropped). */
   resetContextsList = (params?: Omit<ContextQueryParams, 'page' | 'pageSize'>): void => {
-    const { contextsQuery, contextsSort } = this.#get();
-    const nextQuery = params?.q;
-    const nextSort = params?.sort;
-    if (contextsQuery === nextQuery && contextsSort === nextSort) return;
-
-    this.#set(
-      {
-        contextsQuery: nextQuery,
-        contextsSearchError: undefined,
-        contextsSearchLoading: true,
-        contextsSort: nextSort,
-      },
-      false,
-      n('resetContextsList'),
-    );
-    this.#list.update(CONTEXT_LIST_KEY, () => undefined, { persist: false });
+    this.#list.select({ ...params, q: params?.q || undefined });
   };
 
-  /**
-   * Fetch orchestration for the memory context list. Returns an
-   * `SWRResponse`-shaped result — `data` reads the replica view — so the
-   * existing consumers (which pass it to `MemoryListBoundary`) are untouched;
-   * the rows land in the store mirrors, never in this return value.
-   */
-  useFetchContexts = (params: ContextQueryParams): SWRResponse<any> => {
-    const sync = this.#list.useSync(
-      {
-        pageSize: params.pageSize ?? CONTEXT_LIST_PAGE_SIZE,
-        q: params.q,
-        sort: params.sort,
-      },
-      {
-        onError: (error) => this.#surfaceListError(error),
-        onSuccess: () => {
-          // A landed head page makes the paging offset trustworthy again.
-          this.#headStale = false;
-          this.#clearListError();
-        },
-      },
-    );
-
-    const view = useUserMemoryStore((state) => state.contextListData);
-    const data = useMemo(
-      () =>
-        view
-          ? {
-              items: view.items,
-              page: view.currentPage + 1,
-              pageSize: view.pageSize,
-              total: view.total ?? view.items.length,
-            }
-          : undefined,
-      [view],
-    );
-
-    return {
-      data,
-      // A failed "load more" is the list's error too (the head error wins).
-      error: sync.error ?? view?.loadMoreError,
-      // Later pages report loading so the list footer shows it; the boundary
-      // keeps settled rows mounted while a page loads.
-      isLoading: (!data && (sync.isValidating || !sync.isHydrated)) || Boolean(view?.isLoadingMore),
-      isValidating: sync.isValidating,
-      mutate: sync.revalidate,
-    } as unknown as SWRResponse<any>;
+  /** Fetch orchestration for the context list page (see `MemoryQueryList.useFetch`). */
+  useFetchContexts = (
+    params: ContextQueryParams,
+  ): SWRResponse<MemoryListPageResult<DisplayContextMemory>> => {
+    const { page: _page, ...query } = params;
+    return this.#list.useFetch({
+      ...query,
+      pageSize: params.pageSize ?? CONTEXT_LIST_PAGE_SIZE,
+      q: params.q || undefined,
+    });
   };
 }
 

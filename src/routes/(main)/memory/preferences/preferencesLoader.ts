@@ -19,7 +19,10 @@ import { useUserMemoryStore } from '@/store/userMemory';
 export const preferenceListLoader = async ({ request }: LoaderFunctionArgs): Promise<null> => {
   const q = new URL(request.url).searchParams.get('q') || undefined;
 
-  await settleWithin(useUserMemoryStore.getState().preHydrate({ q }), PRE_PAINT_HYDRATE_TIMEOUT);
+  await settleWithin(
+    useUserMemoryStore.getState().preHydratePreferences({ q }),
+    PRE_PAINT_HYDRATE_TIMEOUT,
+  );
 
   return null;
 };

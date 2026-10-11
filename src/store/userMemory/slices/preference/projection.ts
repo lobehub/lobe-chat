@@ -2,26 +2,17 @@ import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory
 import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
 
-import { defineUserMemoryPagedReplica } from '../../utils/replica';
+import { defineUserMemoryPagedReplica, memoryListKey } from '../../utils/replica';
+
+/** Server-side ordering of the preference list (`QueryUserMemoriesSort`). */
+export type PreferenceListSort = 'capturedAt' | 'scorePriority';
 
 /** Page size the memory preference list asks for when the caller does not name one. */
 export const PREFERENCE_LIST_PAGE_SIZE = 12;
 
 /**
- * Entry key of one page set: each search / sort is its own replica entry, so a
- * query switch never overwrites another query's pages and every query hydrates
- * its own persisted head page (the reducer only hydrates an empty entry).
- */
-export const preferenceListKey = ({ q, sort }: Pick<PreferenceListParams, 'q' | 'sort'>) =>
-  `q=${q || ''}&sort=${sort || ''}`;
-
-/** Server-side ordering of the preference list (`QueryUserMemoriesSort`). */
-export type PreferenceListSort = 'capturedAt' | 'scorePriority';
-
-/**
- * Query identity of one page set. `page` is NOT here — it is the paging cursor,
- * owned by the replica. `q` / `sort` change the rows the server returns, so a
- * projection taken under other values never paints.
+ * Query of one page set. `page` is NOT here — it is the paging cursor, owned by
+ * the replica. Everything but `pageSize` is the entry key (`memoryListKey`).
  */
 export interface PreferenceListParams {
   pageSize: number;
@@ -29,31 +20,20 @@ export interface PreferenceListParams {
   sort?: PreferenceListSort;
 }
 
-/**
- * The preference list view: the generic local-first paged data plus the query
- * descriptors it was fetched with, so the surface can tell whether the painted
- * page set still answers the request on screen.
- */
+/** One page set of the preference list, tagged with the query it answers. */
 export interface PreferenceListData extends ReplicaPagedData<DisplayPreferenceMemory, number> {
   q?: string;
   sort?: PreferenceListSort;
 }
 
 /**
- * The user-memory preference list (`userMemories.queryMemories` with the
- * preference layer): a local-first paged replica, so the memory page paints the
- * persisted head page on the first frame, the network confirms it, and "load
- * more" appends further pages through the engine instead of a hand-rolled page
- * accumulator.
+ * The user-memory preference list: a local-first, offset-paged replica with one
+ * entry per search / sort (see `MemoryQueryList`). Each query paints its
+ * persisted head page on the first frame and the network confirms it.
  *
- * It adopts the long-standing `userMemory:preferences` SWR key as its network
- * sync key, so other slices that already revalidate that list by its key root
- * (e.g. `base/action.ts` after an edit or a purge) keep working unchanged.
- *
- * The entry key already carries `q` / `sort`, and no separate replica `query`
- * is set: the persisted row key equals the entry key, so the storage index
- * holds entry keys and the bounded recent-query window can seed from it across
- * sessions (see `MAX_RECENT_PREFERENCE_QUERIES`).
+ * It adopts the long-standing `userMemory:preferences` SWR key as its sync key, so
+ * code that revalidates the list by its key root (`purgeAllMemories`,
+ * `updateMemory`) reaches it.
  */
 export const preferenceListResource = defineUserMemoryPagedReplica<
   PreferenceListParams,
@@ -61,7 +41,7 @@ export const preferenceListResource = defineUserMemoryPagedReplica<
   number,
   PreferenceListData
 >({
-  key: preferenceListKey,
+  key: memoryListKey,
   name: 'preferenceList',
   paging: {
     direction: 'forward',

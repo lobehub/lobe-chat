@@ -1,35 +1,34 @@
 import { type DisplayContextMemory } from '@/database/repositories/userMemory';
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 
+import { memoryListKey } from '../../utils/replica';
 import { type ContextListData, type ContextListSort } from './projection';
 
 /**
- * The context list is a `@lobechat/replica` paged resource. Its canonical value
- * lives in `contextListData`; the long-standing flat fields (`contexts`,
- * `contextsTotal`, `contextsPage`, `contextsHasMore`, `contextsInit`) are
- * derived mirrors of that view so every existing consumer keeps reading the
- * place it always has.
+ * The context list is a `@lobechat/replica` paged resource with one page set
+ * per search / sort (`contextListEntries`). The long-standing flat fields
+ * (`contextListData`, `contexts`, `contextsTotal`, `contextsPage`,
+ * `contextsHasMore`, `contextsInit`) mirror the active query's entry so every
+ * existing consumer keeps reading the place it always has.
  */
 export interface ContextSliceState {
-  /**
-   * Canonical replica view of the context list — the single source of truth
-   * behind every `contexts*` field below. Engine-owned; readers use the flat
-   * mirrors.
-   */
+  /** View of the active query's page set. Mirror of `contextListEntries[contextListKey]`. */
   contextListData?: ContextListData;
-  /** Local-first bookkeeping for `contextListData`. */
+  /** Canonical replica views, one page set per query. Engine-owned. */
+  contextListEntries: Record<string, ContextListData>;
+  /** Entry key of the query on screen (see `memoryListKey`). */
+  contextListKey: string;
+  /** Local-first bookkeeping for `contextListEntries`. */
   contextListReplica: ReplicaState<ContextListData>;
-  /** Rows of the loaded page set. Mirror of `contextListData.items`. */
+  /** Rows of the active page set. Mirror of `contextListData.items`. */
   contexts: DisplayContextMemory[];
   /** Mirror of `contextListData.hasMore`. */
   contextsHasMore: boolean;
-  /** Whether the replica view exists (persisted row hydrated or a page landed). */
+  /** Whether the active query has a view (persisted row hydrated or a page landed). */
   contextsInit: boolean;
   /** Mirror of `contextListData.currentPage + 1`. */
   contextsPage: number;
   contextsQuery?: string;
-  contextsSearchError?: unknown;
-  contextsSearchLoading?: boolean;
   contextsSort?: ContextListSort;
   /** Mirror of `contextListData.total`. */
   contextsTotal: number;
@@ -41,10 +40,10 @@ export const contextInitialState: ContextSliceState = {
   contextsInit: false,
   contextsPage: 1,
   contextsQuery: undefined,
-  contextsSearchError: undefined,
-  contextsSearchLoading: undefined,
   contextsSort: undefined,
   contextsTotal: 0,
   contextListData: undefined,
+  contextListEntries: {},
+  contextListKey: memoryListKey({}),
   contextListReplica: createReplicaState<ContextListData>(),
 };
