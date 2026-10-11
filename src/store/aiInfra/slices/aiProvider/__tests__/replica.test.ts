@@ -11,6 +11,7 @@ import type {
 
 import { initialAIProviderState } from '../initialState';
 import {
+  AI_PROVIDER_LIST_KEY,
   aiProviderDetailResource,
   aiProviderListResource,
   aiProviderRuntimeStateQueryKey,
@@ -22,6 +23,7 @@ vi.mock('@/services/aiProvider', () => ({
     getAiProviderDetail: vi.fn(),
     getAiProviderList: vi.fn(),
     getAiProviderRuntimeState: vi.fn(),
+    deleteAiProvider: vi.fn(async () => undefined),
     toggleProviderEnabled: vi.fn(async () => undefined),
   },
 }));
@@ -68,11 +70,25 @@ const resetStore = () =>
     ...initialAIModelState,
   });
 
-beforeEach(() => {
+const SCOPE = 'test-scope';
+const readPersistedList = async () =>
+  (await aiProviderListResource.storage!.get({ queryKey: AI_PROVIDER_LIST_KEY, scope: SCOPE }))
+    ?.data;
+
+beforeEach(async () => {
   vi.clearAllMocks();
   authLoaded = true;
   resetStore();
+  await aiProviderListResource.storage!.remove({ queryKey: AI_PROVIDER_LIST_KEY, scope: SCOPE });
 });
+
+/** Confirm a server list through the mounted sync, which also persists it. */
+const confirmList = async (list: AiProviderListItem[]) => {
+  renderHook(() => useStore.getState().useFetchAiProviderList());
+  const [call] = await syncCalls('aiProviderList');
+  act(() => call.config.onSuccess!(list));
+  await vi.waitFor(async () => expect(await readPersistedList()).toEqual(list));
+};
 
 /** The replica network syncs registered with the SWR driver, per resource name. */
 const syncCalls = async (
@@ -142,6 +158,34 @@ describe('AiProviderSlice (replica)', () => {
       const { aiProviderService } = await import('@/services/aiProvider');
       expect(aiProviderService.toggleProviderEnabled).toHaveBeenCalledWith('acme', false);
       expect(aiProviderSelectors.enabledAiProviderList(useStore.getState())).toHaveLength(0);
+    });
+  });
+
+  describe('confirmed list writes', () => {
+    it('persists a confirmed enable toggle even when the list refresh does not land', async () => {
+      await confirmList([makeProvider('acme'), makeProvider('other')]);
+
+      // The refresh is a no-op here (the SWR driver is a recorder), standing in
+      // for a revalidation that fails after the server confirmed the toggle.
+      await useStore.getState().toggleProviderEnabled('acme', false);
+
+      await vi.waitFor(async () =>
+        expect(await readPersistedList()).toEqual([
+          { ...makeProvider('acme'), enabled: false },
+          makeProvider('other'),
+        ]),
+      );
+    });
+
+    it('drops a deleted provider from the persisted list', async () => {
+      await confirmList([makeProvider('acme'), makeProvider('other')]);
+
+      await useStore.getState().deleteAiProvider('acme');
+
+      expect(useStore.getState().aiProviderList.map((item) => item.id)).toEqual(['other']);
+      await vi.waitFor(async () =>
+        expect(await readPersistedList()).toEqual([makeProvider('other')]),
+      );
     });
   });
 

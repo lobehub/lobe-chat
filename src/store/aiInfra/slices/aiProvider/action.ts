@@ -15,6 +15,7 @@ import { isAiModelVisible } from 'model-bank/aiModel';
 import { useLayoutEffect } from 'react';
 
 import {
+  arrayEntity,
   createReplicaSlice,
   recordLens,
   type ReplicaLens,
@@ -584,6 +585,7 @@ export class AiProviderActionImpl {
     this.#get = get;
     this.#list = createReplicaSlice(aiProviderListResource, {
       actionPrefix: n('list'),
+      entity: arrayEntity<AiProviderListItem>((item) => item.id),
       fetcher: () => aiProviderService.getAiProviderList(),
       get,
       set,
@@ -615,9 +617,11 @@ export class AiProviderActionImpl {
   deleteAiProvider = async (id: string): Promise<void> => {
     await aiProviderService.deleteAiProvider(id);
 
-    // Drop the cached detail: a deleted provider must not stay readable from
-    // the in-memory entry map.
+    // Drop the cached detail (a deleted provider must not stay readable from the
+    // in-memory entry map) and the persisted list row, so a failed refresh or a
+    // reload cannot paint the deleted provider again.
     this.#detail.remove(id);
+    this.#list.removeEntity(id);
     await this.#get().refreshAiProviderList();
   };
 
@@ -691,6 +695,7 @@ export class AiProviderActionImpl {
   removeAiProvider = async (id: string): Promise<void> => {
     await aiProviderService.deleteAiProvider(id);
     this.#detail.remove(id);
+    this.#list.removeEntity(id);
     await this.#get().refreshAiProviderList();
   };
 
@@ -698,12 +703,12 @@ export class AiProviderActionImpl {
     this.#get().internal_toggleAiProviderLoading(id, true);
     await aiProviderService.toggleProviderEnabled(id, enabled);
 
-    // Immediately reflect the change in the list view so the switch does not
-    // wait for the refresh round trip; the refresh then confirms and persists it.
-    this.#list.update(
-      AI_PROVIDER_LIST_KEY,
-      (items) => items?.map((item) => (item.id === id ? { ...item, enabled } : item)),
-      { persist: false },
+    // The server confirmed the toggle: write it to the list (memory and the
+    // persisted projection, which holds no credentials) before the refresh, so
+    // the switch does not wait for the round trip and a failed refresh cannot
+    // leave a reload painting the old enabled state.
+    this.#list.update(AI_PROVIDER_LIST_KEY, (items) =>
+      items?.map((item) => (item.id === id ? { ...item, enabled } : item)),
     );
 
     await this.#get().refreshAiProviderList();
