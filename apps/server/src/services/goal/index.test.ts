@@ -1,6 +1,7 @@
 // @vitest-environment node
 import {
   DEVICE_OFFLINE_RUN_STATUS,
+  GOAL_BATCH_ASSAY_TITLE,
   GOAL_COORDINATOR_ACTOR_ID,
   GOAL_MACHINE_GATE_TITLE,
   QUOTA_LIMITED_RUN_STATUS,
@@ -2398,6 +2399,108 @@ describe('GoalService', () => {
     expect(restarted.probeNodeIds).toHaveLength(5);
     expect(restarted.releasedCount).toBe(5);
     expect(restarted.unitTitles).toHaveLength(50);
+  });
+
+  it('opens one gate when two advances see a full rollout break together', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: { rollout: { trigger: 'full' } },
+      title: 'Migrate stores',
+    });
+    await service.tick(graph.goal.id);
+    const before = await service.graph(graph.goal.id);
+    const openGate = (
+      service as unknown as {
+        openPatternBreakGate: (g: unknown, message: string, effects: unknown[]) => Promise<unknown>;
+      }
+    ).openPatternBreakGate.bind(service);
+
+    // Both read the same snapshot with no Assay yet.
+    await Promise.all([
+      openGate(before, 'Unit 1 did not pass', []),
+      openGate(before, 'Unit 2 did not pass', []),
+    ]);
+
+    // One Assay, one pending question, and it is the one the state records.
+    const after = await service.graph(graph.goal.id);
+    const next = after.goal.config!.rolloutState!;
+    const assays = after.nodes.filter(
+      (n) => n.kind === 'decision' && n.title === GOAL_BATCH_ASSAY_TITLE,
+    );
+    expect(assays).toHaveLength(1);
+    const pending = after.decisions.filter((item) => item.status === 'pending');
+    expect(pending.map((item) => item.nodeId)).toEqual([next.assayNodeId]);
+  });
+
+  it('judges the final wave like any other before closing the batch', async () => {
+    const rollout = {
+      recipeOutline: '把 store 换成 replica 支撑的实现',
+      repeatable: true,
+      unitCount: 7,
+      units: Array.from({ length: 7 }, (_, i) => `Unit ${i + 1}`),
+      variants: [],
+    };
+    const tasks = Array.from({ length: 5 }, (_, i) => ({
+      dependsOn: [],
+      instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+      title: `Unit ${i + 1}`,
+    }));
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 7 个同构的 store 迁移到 replica',
+      rollout,
+      tasks,
+    });
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const service = new GoalService(serverDB, userId);
+
+    const releaseFinalWave = async (title: string) => {
+      const graph = await service.create({
+        config: {
+          rollout: { canarySize: 5, minHomogeneousUnits: 5, trigger: 'canary', waveSize: 7 },
+        },
+        title,
+      });
+      await service.tick(graph.goal.id);
+      const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
+      for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
+      await service.tick(graph.goal.id);
+      const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      // The last two units went out, and the batch is not closed on release.
+      expect(state.massNodeIds).toHaveLength(2);
+      expect(state.phase).toBe('mass');
+      return { goalId: graph.goal.id, finalWave: state.massNodeIds! };
+    };
+
+    // A unit retired from the final wave stops the batch, as in any earlier wave.
+    const held = await releaseFinalWave('Final wave with a retired unit');
+    await service.retireNodes(held.goalId, [held.finalWave[0]], 'not needed');
+    await graphModel.updateNodeStatus(held.goalId, held.finalWave[1], 'resolved');
+    await service.tick(held.goalId);
+    expect((await service.graph(held.goalId)).goal.config!.rolloutState!.phase).toBe(
+      'pattern_break',
+    );
+
+    // A clean final wave closes it.
+    const clean = await releaseFinalWave('Final wave delivered');
+    for (const id of clean.finalWave)
+      await graphModel.updateNodeStatus(clean.goalId, id, 'resolved');
+    await service.tick(clean.goalId);
+    expect((await service.graph(clean.goalId)).goal.config!.rolloutState!.phase).toBe('done');
   });
 
   it('routes a batch unit out of verification retries through the batch gate', async () => {

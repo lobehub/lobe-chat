@@ -4051,20 +4051,19 @@ export class GoalService {
   /**
    * Judge a repeated batch's gate, but only once the wave it released has fully
    * settled. Returns undefined when there is nothing to judge: no batch, a batch
-   * that has released its whole roster, a batch already parked on a pattern
-   * break, or a wave still running (the ordinary frontier owns that tick).
+   * already through its gate or parked on a pattern break, or a wave still
+   * running (the ordinary frontier owns that tick). The final wave is judged
+   * like every other — a unit retired or broken in it must stop the batch the
+   * same way — and a pass with the roster exhausted closes the batch.
    */
   private collectRolloutGate = (graph: GoalGraphSnapshot): RolloutGateResult | undefined => {
     const policy = graph.goal.config?.rollout;
     const state = graph.goal.config?.rolloutState;
     if (!policy || !state || state.phase === 'done' || state.phase === 'pattern_break')
       return undefined;
-    const roster = state.unitTitles ?? [];
-    const released = state.releasedCount ?? state.probeNodeIds.length;
     const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
     const materialized = graph.nodes.filter((node) => materializedIds.has(node.id));
     if (materialized.some((node) => !TERMINAL_NODE_STATUSES.has(node.status))) return undefined;
-    if (released >= roster.length) return undefined;
     return evaluateRolloutGate({ graph, policy, state });
   };
 
@@ -4163,10 +4162,9 @@ export class GoalService {
           waveIndex: state.waveIndex + 1,
         },
       );
-      await goalModel.updateRolloutState(
-        goalId,
-        next.releasedCount! >= roster.length ? { ...next, phase: 'done' } : next,
-      );
+      // Even the final wave stays `mass`: the gate still judges it once it
+      // settles, and only a pass with the roster exhausted closes the batch.
+      await goalModel.updateRolloutState(goalId, next);
       return message;
     });
 
@@ -4199,69 +4197,91 @@ export class GoalService {
     const state = graph.goal.config?.rolloutState;
     if (!state) return { goalId, message, outcome: 'waiting_human' };
 
-    // The gate hangs on the Assay. A `full` rollout never created one — it skips
-    // the probe gate — but a break still needs a `decision` node for the human
-    // question and, later, for the restart. Materialize one on demand (a
-    // `batch` node cannot carry a decision) and record it, so the gate target is
-    // stable no matter which trigger opened it.
-    let gateNodeId = state.assayNodeId;
-    if (!gateNodeId) {
-      const assay = await this.coordinatorGraph.createNode(goalId, {
-        description:
-          'Whether this repeated batch can be delivered without further human decisions.',
-        kind: 'decision',
-        scopeId: state.batchNodeId,
-        status: 'proposed',
-        title: GOAL_BATCH_ASSAY_TITLE,
-      });
-      if (!assay) return { goalId, message, outcome: 'waiting_human' };
-      gateNodeId = assay.id;
-    }
     const reason = `${PATTERN_BREAK_PAUSE_REASON}: ${message}`;
-    // The ids are the stable vocabulary; the human-facing labels and their
-    // consequences live in the locale files and are resolved by option id on the
-    // client (like the retry/retire/fail gates), so no English copy is persisted
-    // into a gate a non-English reader has to answer.
-    const decision = await this.coordinatorGraph.createDecision(goalId, gateNodeId, {
-      authority: 'user',
-      options: [
-        {
-          id: GOAL_BATCH_BREAK_OPTION.revise,
-          label: 'Revise the recipe and re-probe',
-        },
-        {
-          // One batch carries one roster and one gate, so this is not a second
-          // batch running in parallel: it forks the recipe (no `revises`
-          // chain) for the units that broke, inside this same batch.
-          id: GOAL_BATCH_BREAK_OPTION.newClass,
-          label: 'Fork a fresh recipe',
-        },
-      ],
-      question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
-      requestedUserId: this.userId,
+    // Overlapping advances can both see the batch break. Claim it under the
+    // goal row's lock: the first opens the gate — materializing the Assay a
+    // `full` rollout never created — and records it in the same transaction;
+    // the rest find the break already open and reuse its gate instead of
+    // opening a second assay and decision that would re-park the goal later.
+    const claim = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (!current) return undefined;
+      if (current.phase === 'pattern_break')
+        return { gateNodeId: current.assayNodeId, opened: false as const };
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+
+      // The gate hangs on the Assay. A `full` rollout never created one — it
+      // skips the probe gate — but a break still needs a `decision` node for the
+      // human question and, later, for the restart (a `batch` node cannot carry
+      // a decision), so the gate target is stable whichever trigger opened it.
+      let gateNodeId = current.assayNodeId;
+      if (!gateNodeId) {
+        const assay = await writer.createNode(goalId, {
+          description:
+            'Whether this repeated batch can be delivered without further human decisions.',
+          kind: 'decision',
+          scopeId: current.batchNodeId,
+          status: 'proposed',
+          title: GOAL_BATCH_ASSAY_TITLE,
+        });
+        if (!assay) return undefined;
+        gateNodeId = assay.id;
+      }
+      // The ids are the stable vocabulary; the human-facing labels and their
+      // consequences live in the locale files and are resolved by option id on
+      // the client (like the retry/retire/fail gates), so no English copy is
+      // persisted into a gate a non-English reader has to answer.
+      const decision = await writer.createDecision(goalId, gateNodeId, {
+        authority: 'user',
+        options: [
+          {
+            id: GOAL_BATCH_BREAK_OPTION.revise,
+            label: 'Revise the recipe and re-probe',
+          },
+          {
+            // One batch carries one roster and one gate, so this is not a second
+            // batch running in parallel: it forks the recipe (no `revises`
+            // chain) for the units that broke, inside this same batch.
+            id: GOAL_BATCH_BREAK_OPTION.newClass,
+            label: 'Fork a fresh recipe',
+          },
+        ],
+        question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
+        requestedUserId: this.userId,
+      });
+      await writer.updateNodeStatus(goalId, gateNodeId, 'waiting', reason);
+      await goalModel.updateRolloutState(
+        goalId,
+        withGateVerdict(
+          { ...current, assayNodeId: gateNodeId, phase: 'pattern_break' },
+          {
+            checks: cause.gate?.checks ?? [],
+            message,
+            nodeId: cause.unitId,
+            outcome: 'blocked',
+            revision: current.templateRevision,
+            trigger: cause.unitId ? 'unit' : 'gate',
+            waveIndex: current.waveIndex,
+          },
+        ),
+      );
+      return { decisionId: decision?.id, gateNodeId, opened: true as const };
     });
-    await this.coordinatorGraph.updateNodeStatus(goalId, gateNodeId, 'waiting', reason);
+    if (!claim) return { goalId, message, outcome: 'waiting_human' };
+    // Another advance opened this break; it parks the goal.
+    if (!claim.opened)
+      return { goalId, message, nodeId: claim.gateNodeId, outcome: 'waiting_human' };
+    const gateNodeId = claim.gateNodeId;
     effects.push({
       detail: message,
       nodeId: gateNodeId,
-      targetId: decision?.id ?? gateNodeId,
+      targetId: claim.decisionId ?? gateNodeId,
       type: 'opened_decision',
     });
-    await this.goalModel.updateRolloutState(
-      goalId,
-      withGateVerdict(
-        { ...state, assayNodeId: gateNodeId, phase: 'pattern_break' },
-        {
-          checks: cause.gate?.checks ?? [],
-          message,
-          nodeId: cause.unitId,
-          outcome: 'blocked',
-          revision: state.templateRevision,
-          trigger: cause.unitId ? 'unit' : 'gate',
-          waveIndex: state.waveIndex,
-        },
-      ),
-    );
     await this.setPauseReason(goalId, 'pattern_break');
     await this.transitionStatus(graph.goal, 'paused', reason);
     effects.push({ type: 'goal_status', detail: 'paused: pattern_break' });
