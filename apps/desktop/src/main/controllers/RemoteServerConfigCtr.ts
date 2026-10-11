@@ -52,20 +52,17 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Normalize legacy config that used local storageMode.
    * Local mode has been removed; fall back to cloud.
+   * Persistence belongs to explicit configuration updates, not reads.
    */
   private normalizeConfig = (config: DataSyncConfig): DataSyncConfig => {
     // Use type assertion to handle legacy 'local' value from stored data
     if ((config.storageMode as string) !== 'local') return config;
 
-    const nextConfig: DataSyncConfig = {
+    return {
       ...config,
       remoteServerUrl: config.remoteServerUrl || OFFICIAL_CLOUD_SERVER,
       storageMode: 'cloud',
     };
-
-    this.app.storeManager.set('dataSyncConfig', nextConfig);
-
-    return nextConfig;
   };
 
   /**
