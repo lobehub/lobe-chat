@@ -191,6 +191,7 @@ export class BaseActionImpl {
     const replicaPurges: boolean[] = [
       // One line per replica-backed slice.
       await this.#get().internal_clearMemoryReplicas(),
+      await this.#get().internal_clearTopicMemories(),
     ];
     await this.#get().internal_clearHomeReplicas();
     await this.#get().internal_clearExperienceList();
