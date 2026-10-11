@@ -10,6 +10,7 @@ import {
   Monitor,
   MousePointer2,
   ScanLine,
+  Settings,
   TextCursorInput,
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const activityIcons = {
   keyboard: Keyboard,
   operate: MousePointer2,
   preview: ClipboardCheck,
+  setup: Settings,
 };
 
 // Presentation only: this does not validate argv or claim command support.
@@ -33,6 +35,7 @@ function getActivity(argv: string[] = []): keyof typeof activityIcons {
   const options = separator < 0 ? argv : argv.slice(0, separator);
   if (options.includes('--help') || options.includes('-h')) return 'help';
   if (options.includes('--dry-run')) return 'preview';
+  if (argv[0] === 'setup') return 'setup';
   const command = argv[0] === 'invoke' ? (argv[1] ?? '') : '';
   if (['display.capture', 'window.capture', 'screen.captureRegion'].includes(command))
     return 'capture';

@@ -57,7 +57,7 @@ are called images because the read-file result does not identify screenshot prov
 
 ## Runtime and compatibility
 
-Desktop ships matching `@auv-js/cli` and `@auv-js/sdk` 0.0.16. The existing device
+Desktop ships matching `@auv-js/cli` and `@auv-js/sdk` versions. The existing device
 system-info response advertises `supportedTools: ['lobe-computer-use']`; the server
 filters discovery/activation and checks again before forwarding a call. Older
 Gateway clients omit this field and do not receive Computer Use. Standalone Electron
@@ -71,3 +71,19 @@ from `exitCode === 0`. Spawn and timeout errors remain host execution errors.
 An exit code of zero does not verify the intended UI effect: preserve AUV's
 `succeeded`, `verified`, and focus metadata and inspect the resulting application
 state when semantic completion matters. The host does not retry input operations.
+
+## macOS helper
+
+macOS Desktop builds embed `LobeHub Computer Use.app`, the LobeHub-branded AUV helper from
+[lobehub/lobehub-auv](https://github.com/lobehub/lobehub-auv), at
+`LobeHub.app/Contents/Library/Helpers`. The desktop service passes its path to the AUV daemon,
+so the daemon trusts this helper instead of the official AUV Helper. The helper only locks
+and unlocks an existing login session. Ordinary input and screen capture use the
+Accessibility and Screen Recording permissions of LobeHub itself.
+
+`runCommand` also accepts `["setup", "macos-helper", <command>]` on macOS, where `<command>` is
+`status`, `install`, `uninstall`, `open-accessibility-settings` or
+`open-background-items-settings`. The desktop service adds the helper path and `--json`;
+argv cannot select another helper app. Installation registers a Login Item. The user must
+approve it and turn on the helper in System Settings > Privacy & Security > Accessibility.
+The system prompt tells the agent how to guide the user through these steps.

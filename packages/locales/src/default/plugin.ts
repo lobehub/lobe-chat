@@ -24,6 +24,8 @@ export default {
   'builtins.lobe-computer-use.inspector.operate.loading': 'Using computer…',
   'builtins.lobe-computer-use.inspector.preview': 'Check computer action',
   'builtins.lobe-computer-use.inspector.preview.loading': 'Checking computer action…',
+  'builtins.lobe-computer-use.inspector.setup': 'Set up Computer Use',
+  'builtins.lobe-computer-use.inspector.setup.loading': 'Setting up Computer Use…',
   'builtins.lobe-computer-use.title': 'Computer Use',
   'builtins.lobe-local-system.inspector.viewImage': 'View image',
   'builtins.lobe-local-system.inspector.viewImage.loading': 'Viewing image…',

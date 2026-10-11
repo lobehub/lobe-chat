@@ -51,6 +51,17 @@ export const lobeAuv = defineFixtures({
         pluginState: { argv: ['invoke', '--help'], output: 'Available commands: display.list' },
       },
       {
+        args: {
+          argv: ['setup', 'macos-helper', 'install'],
+          reasoning: 'Install the LobeHub Computer Use helper',
+        },
+        label: 'macOS helper setup',
+        pluginState: {
+          argv: ['setup', 'macos-helper', 'install', '--json'],
+          output: { helper_embedded: true, state: 'requires-approval' },
+        },
+      },
+      {
         args: {},
         label: 'Waiting for arguments',
         partialArgs: {},
