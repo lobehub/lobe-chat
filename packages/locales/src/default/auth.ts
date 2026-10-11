@@ -312,8 +312,8 @@ export default {
     'Point your OAuth / OIDC client at these URLs. Most libraries only need the issuer or the discovery URL.',
   'oauthApp.integration.deviceAuthorization': 'Device authorization endpoint',
   'oauthApp.integration.discovery': 'Discovery URL',
+  'oauthApp.integration.endpoints': 'Endpoint URLs',
   'oauthApp.integration.issuer': 'Issuer',
-  'oauthApp.integration.manual': 'Manual setup',
   'oauthApp.integration.oneClick': 'One-prompt integration',
   'oauthApp.integration.oneClickDesc':
     'Paste this prompt into a coding agent such as Claude Code or Codex to add LobeHub sign-in to your project.',

@@ -258,7 +258,6 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
         onRotateSecret={handleRotateSecret}
       />
-      <ManualSetupCard applicationType={detail.applicationType} />
       {isWebApp && (
         <RedirectUrisCard
           canEdit={canEdit}
@@ -267,6 +266,8 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
           onSubmit={handleUpdate}
         />
       )}
+      {/* Reference material for configuring a client by hand: last, folded. */}
+      <ManualSetupCard applicationType={detail.applicationType} />
     </>
   );
 
