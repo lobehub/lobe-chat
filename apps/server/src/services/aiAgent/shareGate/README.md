@@ -134,8 +134,11 @@ absence of a known exploit.
   Never picked by the owner: any tool grant implies it, scoped to
   `activateTools` (`shareGate/grants.ts:132`, which also overrides a stored entry so
   nothing widens it to the runtime's unlisted `activateSkill`), and assembly
-  drops it again when no granted tool is left to activate
-  (`shareGate/toolSet.ts:154`).
+  drops it again when no granted tool is left to activate, counting restored
+  historical activations as already enabled (`shareGate/toolSet.ts:164`). A
+  kept activator gets the share-visitor `systemRole`
+  (`systemPromptForShareVisitor`), which omits the default prompt's push to
+  activate `lobe-skill-store` / `lobe-creds` first; both stay denied above.
 
   1. What it can see. `<available_tools>` is the operation's `manifestMap`
      minus enabled tools (`apps/server/src/modules/AgentRuntime/executorHelpers.ts:586`), and

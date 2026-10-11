@@ -1,4 +1,9 @@
-import { ActivatorApiName, LobeActivatorIdentifier } from '@lobechat/builtin-tool-activator';
+import {
+  ActivatorApiName,
+  LobeActivatorIdentifier,
+  systemPrompt as activatorSystemPrompt,
+  systemPromptForShareVisitor as activatorSystemPromptForShareVisitor,
+} from '@lobechat/builtin-tool-activator';
 import {
   AgentDocumentsApiName,
   AgentDocumentsIdentifier,
@@ -695,6 +700,42 @@ describe('applyShareGateToToolSet — lobe-activator', () => {
     expect(toolSet.tools!.map((tool: any) => tool.function.name)).toContain(
       toolName(LobeActivatorIdentifier, ActivatorApiName.activateTools),
     );
+  });
+
+  it('pins the share-visitor system prompt on a kept activator', () => {
+    const toolSet = buildActivatorToolSet();
+    toolSet.manifestMap[LobeActivatorIdentifier].systemRole = activatorSystemPrompt;
+
+    applyShareGateToToolSet(
+      toolSet,
+      buildGate({
+        toolGrants: [{ identifier: 'mcp-github' }, { identifier: CalculatorIdentifier }],
+      }),
+    );
+
+    const { systemRole } = toolSet.manifestMap[LobeActivatorIdentifier];
+    expect(systemRole).toBe(activatorSystemPromptForShareVisitor);
+    // Both are denied to visitors, so the prompt must not send the model there.
+    expect(systemRole).not.toContain('lobe-skill-store');
+    expect(systemRole).not.toContain('lobe-creds');
+  });
+
+  it('drops the activator when the only tool left was restored from an earlier activation', () => {
+    // Next visitor turn after activating Calculator: `AgentRuntimeService`
+    // restores it from `activatableToolIds`, so `<available_tools>` is empty.
+    const toolSet = buildActivatorToolSet();
+    toolSet.activatableToolIds.push(CalculatorIdentifier);
+
+    applyShareGateToToolSet(
+      toolSet,
+      buildGate({
+        toolGrants: [{ identifier: 'mcp-github' }, { identifier: CalculatorIdentifier }],
+      }),
+    );
+
+    expect(toolSet.manifestMap[LobeActivatorIdentifier]).toBeUndefined();
+    expect(toolSet.enabledToolIds).toEqual(['mcp-github']);
+    expect(toolSet.activatableToolIds).toEqual([CalculatorIdentifier]);
   });
 
   it('drops the activator when every granted tool is already enabled', () => {
