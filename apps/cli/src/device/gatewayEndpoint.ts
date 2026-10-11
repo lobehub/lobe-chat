@@ -11,13 +11,13 @@ import {
 import { createPublicLambdaClient } from '../api/client';
 import { CLI_PRIMARY_BIN } from '../constants/identity';
 import { OFFICIAL_GATEWAY_URL } from '../constants/urls';
-import { redactUrlCredentials, redactUrlsInMessage } from '../doctor/redact';
+import { redactUrlCredentials, scrubText } from '../doctor/redact';
 import { loadDeviceGatewayUrl, saveDeviceGatewayUrl } from '../settings';
 import { formatError, isTransientNetworkError } from '../utils/error';
 
-/** A config read that hangs must not hold `connect` / `status` / `doctor` forever. */
+/** Total discovery budget, including retries, leaving room in the 30s daemon startup window. */
 const DISCOVERY_TIMEOUT_MS = 10_000;
-/** Same budget as the workspace token mint: ride out a blip, still fail before startup times out. */
+/** Retry quick transient failures against the same server within the total budget. */
 const DISCOVERY_RETRY_DELAYS_MS = [250, 1000, 2500];
 
 export type DeviceGatewayFailure = Extract<DeviceGatewayResolution, { ok: false }>;
@@ -29,24 +29,43 @@ export type DeviceGatewayFailure = Extract<DeviceGatewayResolution, { ok: false 
  * from a server that simply advertises nothing.
  */
 export async function discoverDeviceGateway(serverUrl: string): Promise<DeviceGatewayDiscovery> {
-  const client = createPublicLambdaClient(serverUrl);
+  const controller = new AbortController();
+  const deadline = Date.now() + DISCOVERY_TIMEOUT_MS;
+  const timeout = setTimeout(() => {
+    controller.abort(new Error('Device gateway discovery timed out'));
+  }, DISCOVERY_TIMEOUT_MS);
 
-  for (let attempt = 0; ; attempt += 1) {
-    try {
-      const config = await client.config.getGlobalConfig.query(undefined, {
-        signal: AbortSignal.timeout(DISCOVERY_TIMEOUT_MS),
-      });
-      return parseDeviceGatewayDiscovery(config);
-    } catch (error) {
-      // Retry the same server only; a failure never moves on to another gateway.
-      const delay = DISCOVERY_RETRY_DELAYS_MS[attempt];
-      if (delay !== undefined && isTransientNetworkError(error)) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-        continue;
+  try {
+    const client = createPublicLambdaClient(serverUrl);
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        const config = await client.config.getGlobalConfig.query(undefined, {
+          signal: controller.signal,
+        });
+        return parseDeviceGatewayDiscovery(config);
+      } catch (error) {
+        // Retry the same server only; never start a delay beyond the shared deadline.
+        const delay = DISCOVERY_RETRY_DELAYS_MS[attempt];
+        if (
+          delay !== undefined &&
+          !controller.signal.aborted &&
+          delay < deadline - Date.now() &&
+          isTransientNetworkError(error)
+        ) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          continue;
+        }
+        // Preserve the cause chain while removing URL credentials before any caller logs it.
+        return {
+          reason: scrubText(
+            formatError(controller.signal.aborted ? controller.signal.reason : error),
+          ),
+          status: 'failed',
+        };
       }
-      // The whole cause chain: "fetch failed" alone does not say refused vs DNS vs TLS.
-      return { reason: redactUrlsInMessage(formatError(error)), status: 'failed' };
     }
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

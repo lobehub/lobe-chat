@@ -449,6 +449,7 @@ describe('GatewayConnectionCtr', () => {
       const options = MockGatewayClient.lastOptions;
       expect(options).not.toBeNull();
       expect(options.token).toBe('mock-access-token');
+      expect(options.serverUrl).toBe(SERVER_URL);
       expect(options.deviceId).toBe('stored-device-id');
       expect(options.gatewayUrl).toBe(SERVER_GATEWAY_URL);
       expect(options.logger).toBeDefined();
@@ -1023,6 +1024,7 @@ describe('GatewayConnectionCtr', () => {
 
         expect(MockGatewayClient.lastOptions).toMatchObject({
           gatewayUrl: SERVER_GATEWAY_URL,
+          serverUrl: SERVER_URL,
           token: 'ws-token',
           workspaceId: 'ws-1',
         });

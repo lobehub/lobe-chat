@@ -4,6 +4,7 @@ import { createPublicLambdaClient } from '../api/client';
 import { OFFICIAL_GATEWAY_URL } from '../constants/urls';
 import { loadDeviceGatewayUrl, saveDeviceGatewayUrl } from '../settings';
 import {
+  describeDeviceGatewayFailure,
   discoverDeviceGateway,
   rememberGatewayOverride,
   resolveCliDeviceGateway,
@@ -68,6 +69,77 @@ describe('discoverDeviceGateway', () => {
       status: 'failed',
     });
     expect(getGlobalConfig).toHaveBeenCalledTimes(4);
+  });
+
+  it('bounds all attempts by one deadline, including a hanging retry', async () => {
+    getGlobalConfig
+      .mockImplementationOnce(
+        () => new Promise((_, reject) => setTimeout(() => reject(refused()), 8000)),
+      )
+      .mockImplementationOnce(
+        (_, { signal }: { signal: AbortSignal }) =>
+          new Promise((_, reject) =>
+            signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
+          ),
+      );
+
+    let result: Awaited<ReturnType<typeof discoverDeviceGateway>> | undefined;
+    const discovery = discoverDeviceGateway('https://self.example.com').then((value) => {
+      result = value;
+    });
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(result).toMatchObject({
+      status: 'failed',
+      reason: expect.stringContaining('timed out'),
+    });
+    expect(getGlobalConfig).toHaveBeenCalledTimes(2);
+    expect(vi.getTimerCount()).toBe(0);
+    await discovery;
+  });
+
+  it('does not start a retry whose delay would exceed the deadline', async () => {
+    getGlobalConfig.mockImplementation(
+      () => new Promise((_, reject) => setTimeout(() => reject(refused()), 9900)),
+    );
+
+    let result: Awaited<ReturnType<typeof discoverDeviceGateway>> | undefined;
+    const discovery = discoverDeviceGateway('https://self.example.com').then((value) => {
+      result = value;
+    });
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(result).toMatchObject({
+      status: 'failed',
+      reason: expect.stringContaining('ConnectionRefused'),
+    });
+    expect(getGlobalConfig).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+    await discovery;
+  });
+
+  it('redacts HTTP credentials throughout the cause chain before displaying discovery errors', async () => {
+    const serverUrl = 'https://test-user:test-password@self.example.com';
+    getGlobalConfig.mockRejectedValue(
+      new Error(`Request failed (${serverUrl}/trpc/lambda): invalid URL`, {
+        cause: new Error('HTTPS://encoded%40user:encoded%3Apassword@proxy.example.com blocked'),
+      }),
+    );
+    vi.mocked(loadDeviceGatewayUrl).mockReturnValue(undefined);
+
+    const result = await resolveCliDeviceGateway({ serverUrl });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error('Expected failed discovery');
+    const output = JSON.stringify({
+      result,
+      display: describeDeviceGatewayFailure(result, serverUrl),
+    });
+    for (const secret of ['test-user', 'test-password', 'encoded%40user', 'encoded%3Apassword']) {
+      expect(output).not.toContain(secret);
+    }
+    expect(output).toContain('self.example.com/trpc/lambda');
+    expect(output).toContain('proxy.example.com');
+    expect(output).toContain('invalid URL');
   });
 
   it('does not retry an error answer', async () => {
