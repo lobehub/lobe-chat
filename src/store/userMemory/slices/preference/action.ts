@@ -5,6 +5,7 @@ import { type SWRResponse } from 'swr';
 import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory';
 import {
   createReplicaSlice,
+  readReplicaStoredKeys,
   recordLens,
   type ReplicaLens,
   type ReplicaPageResult,
@@ -25,6 +26,14 @@ import {
 } from './projection';
 
 const n = setNamespace('userMemory/preference');
+
+/**
+ * How many distinct search / sort query entries keep a replica page set. The
+ * query on screen is always the most recent, so bounding the window bounds
+ * memory and IndexedDB together: searching all day cannot grow either without
+ * limit, and the queries just used still paint from their own rows.
+ */
+export const MAX_RECENT_PREFERENCE_QUERIES = 8;
 
 export interface PreferenceQueryParams {
   page?: number;
@@ -100,6 +109,12 @@ export class PreferenceActionImpl {
   readonly #get: () => UserMemoryStore;
   readonly #list;
   readonly #set: Setter;
+  /** Entry keys used, oldest first (see `#trackRecentQuery`). */
+  #recentQueries: string[] = [];
+  /** Identity the recency list belongs to (see `#seedRecentQueries`). */
+  #recentScope?: string;
+  /** Whether the persisted keys are already folded into the recency list. */
+  #recentsSeeded = false;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
     void _api;
@@ -133,11 +148,73 @@ export class PreferenceActionImpl {
     return { items: response.items.map(toDisplayPreference), total: response.total };
   };
 
+  /** Drop the oldest query page sets past {@link MAX_RECENT_PREFERENCE_QUERIES}. */
+  #evictOldQueries = (): void => {
+    while (this.#recentQueries.length > MAX_RECENT_PREFERENCE_QUERIES) {
+      const oldest = this.#recentQueries.shift();
+      // Drops the entry (memory) and every persisted row of that query, so the
+      // store and IndexedDB stay bounded together.
+      if (oldest) this.#list.remove(oldest);
+    }
+  };
+
+  /**
+   * Fold the keys an earlier session persisted into the recency list, once per
+   * scope. {@link MAX_RECENT_PREFERENCE_QUERIES} only bounds what the list knows
+   * about, and a list that starts empty on every page load bounds nothing
+   * across reloads: each session would persist up to the cap again while the
+   * rows of every session before it stayed in IndexedDB.
+   */
+  #seedRecentQueries = (): void => {
+    const scope = preferenceListResource.scope.get();
+    if (this.#recentScope !== scope) {
+      // Another identity owns the partition: the keys this list learned stood
+      // for the previous scope's rows, so start the window over for this one.
+      this.#recentQueries = [];
+      this.#recentScope = scope;
+      this.#recentsSeeded = false;
+    }
+    if (this.#recentsSeeded) return;
+    this.#recentsSeeded = true;
+
+    void readReplicaStoredKeys(preferenceListResource).then((persisted) => {
+      // A scope switch while the index was read voids this seed.
+      if (this.#recentScope !== scope) return;
+      // The index is append-ordered (oldest first); prepending keeps that order,
+      // so eviction — which takes from the front — drops the least recently used
+      // persisted query first.
+      for (const persistedKey of [...persisted].reverse()) {
+        if (!this.#recentQueries.includes(persistedKey)) this.#recentQueries.unshift(persistedKey);
+      }
+      this.#evictOldQueries();
+    });
+  };
+
+  /**
+   * Remember the query the user is looking at, dropping the oldest ones past
+   * {@link MAX_RECENT_PREFERENCE_QUERIES}. Called from a layout effect, never
+   * during render.
+   */
+  #trackRecentQuery = (key: string): void => {
+    this.#seedRecentQueries();
+    const existing = this.#recentQueries.indexOf(key);
+    if (existing !== -1) this.#recentQueries.splice(existing, 1);
+    this.#recentQueries.push(key);
+    this.#evictOldQueries();
+  };
+
   deletePreference = async (id: string): Promise<void> => {
     await memoryCRUDService.deletePreference(id);
     // Drop the row from every loaded page set and persisted projection, and
     // keep a hydrate already in flight from bringing it back.
     this.#list.removeEntity(id);
+    // An offset-paged list shifts on the server once a row is gone, so the local
+    // next-page cursor would step over the row that slid into the deleted row's
+    // place. Collapse to the head and refetch it, so the next page continues
+    // from a fresh, contiguous head instead of a stale offset.
+    const key = this.#get().preferenceListKey;
+    this.#list.collapse(key);
+    await this.#list.revalidate(key);
   };
 
   /**
@@ -203,14 +280,20 @@ export class PreferenceActionImpl {
    * `error` is the failure of the request for the query on screen (a
    * superseded search settles under its own key), and only while that query has
    * nothing painted: a failed background revalidation keeps its rows.
+   *
+   * `isLoading` covers both phases the list views draw a footer for: a head load
+   * that has no rows yet, and a "load more" whose rows stay mounted under an
+   * incremental footer (the active view's `isLoadingMore`).
    */
   useFetchPreferences = (params: PreferenceQueryParams): SWRResponse<any> => {
     const q = params.q || undefined;
     const sort = params.sort;
+    const key = preferenceListKey({ q, sort });
 
     // Select the query before paint, so a frame never shows another query's rows.
     useLayoutEffect(() => {
       this.resetPreferencesList({ q, sort });
+      this.#trackRecentQuery(preferenceListKey({ q, sort }));
     }, [q, sort]);
 
     const sync = this.#list.useSync({
@@ -219,7 +302,6 @@ export class PreferenceActionImpl {
       sort,
     });
 
-    const key = preferenceListKey({ q, sort });
     const view = useUserMemoryStore((state) => state.preferenceListEntries[key]);
     const data = useMemo(
       () =>
@@ -237,7 +319,7 @@ export class PreferenceActionImpl {
     return {
       data,
       error: data ? undefined : sync.error,
-      isLoading: !data && (sync.isValidating || !sync.isHydrated),
+      isLoading: !data ? sync.isValidating || !sync.isHydrated : Boolean(view?.isLoadingMore),
       isValidating: sync.isValidating,
       mutate: sync.revalidate,
     } as unknown as SWRResponse<any>;

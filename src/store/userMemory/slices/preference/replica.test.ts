@@ -17,13 +17,14 @@ import { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory';
-import { cacheScope } from '@/libs/replica';
+import { cacheScope, REPLICA_INDEX_KEY } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { MAX_RECENT_PREFERENCE_QUERIES } from './action';
 import {
   type PreferenceListData,
   preferenceListKey,
@@ -501,7 +502,10 @@ describe('preferenceList replica', () => {
   });
 
   it('drops a deleted preference from the view and the persisted row', async () => {
-    fetchSpy.mockResolvedValue(listPage([rawItem('a'), rawItem('b')], 2));
+    // The head is refetched after a delete, so the mock answers from a server
+    // list that already lost the row.
+    let server = [rawItem('a'), rawItem('b')];
+    fetchSpy.mockImplementation(async () => listPage(server, server.length));
     vi.spyOn(memoryCRUDService, 'deletePreference').mockResolvedValue(undefined as never);
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }), {
@@ -511,6 +515,7 @@ describe('preferenceList replica', () => {
       expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a', 'b']),
     );
 
+    server = [rawItem('b')];
     await act(async () => {
       await useUserMemoryStore.getState().deletePreference('a');
     });
@@ -541,5 +546,185 @@ describe('preferenceList replica', () => {
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps offset pagination contiguous after deleting from a loaded page', async () => {
+    // 30 rows; deleting r5 shifts every later row one position earlier, so an
+    // unchanged next-page cursor would step over the row that slid into its
+    // place and omit it from the list.
+    let server = Array.from({ length: 30 }, (_, i) => rawItem(`r${i}`));
+    fetchSpy.mockImplementation(
+      async ({ page = 1, pageSize = 12 }: { page?: number; pageSize?: number } = {}) => {
+        const start = (page - 1) * pageSize;
+        return listPage(server.slice(start, start + pageSize), server.length);
+      },
+    );
+    vi.spyOn(memoryCRUDService, 'deletePreference').mockResolvedValue(undefined as never);
+
+    const hook = renderHook(
+      () => ({
+        loadMore: useUserMemoryStore((s) => s.loadMorePreferences),
+        sync: useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }),
+      }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(12));
+    await act(async () => {
+      hook.result.current.loadMore();
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(24));
+
+    server = [...server.slice(0, 5), ...server.slice(6)];
+    await act(async () => {
+      await useUserMemoryStore.getState().deletePreference('r5');
+    });
+
+    // The head was collapsed and refetched, so it paints 12 rows again.
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 12).map((raw) => raw.memory.id),
+      ),
+    );
+
+    await act(async () => {
+      hook.result.current.loadMore();
+    });
+
+    // Exactly the first 24 rows of the post-delete server list: no row skipped
+    // at the page boundary, and none dropped by the stale offset.
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 24).map((raw) => raw.memory.id),
+      ),
+    );
+  });
+
+  it('shows the list footer while the next page is loading', async () => {
+    let resolvePage: ((value: ReturnType<typeof listPage>) => void) | undefined;
+    fetchSpy
+      .mockResolvedValueOnce(listPage(rawItemsOf(12), 24))
+      .mockImplementationOnce(() => new Promise((resolve) => (resolvePage = resolve)));
+
+    const hook = renderHook(
+      () => ({
+        loadMore: useUserMemoryStore((s) => s.loadMorePreferences),
+        sync: useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }),
+      }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(12));
+    expect(hook.result.current.sync.isLoading).toBe(false);
+
+    act(() => {
+      hook.result.current.loadMore();
+    });
+
+    // The rows stay mounted, but the footer is on while the page is in flight.
+    await waitFor(() => expect(hook.result.current.sync.isLoading).toBe(true));
+    expect(useUserMemoryStore.getState().preferences).toHaveLength(12);
+
+    await act(async () => {
+      resolvePage!(listPage(rawItemsOf(12, 12), 24));
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(24));
+    expect(hook.result.current.sync.isLoading).toBe(false);
+  });
+
+  it('bounds how many query page sets are kept', async () => {
+    fetchSpy.mockImplementation(({ q }: { q?: string } = {}) =>
+      Promise.resolve(listPage([rawItem(`${q}-hit`)], 1)),
+    );
+
+    const queries = Array.from({ length: MAX_RECENT_PREFERENCE_QUERIES + 2 }, (_, i) => `q-${i}`);
+    const params = (q: string) => ({ pageSize: 12, q });
+    const entry = (q: string) =>
+      useUserMemoryStore.getState().preferenceListEntries[preferenceListKey(params(q))];
+
+    const hook = renderHook(
+      (props: { q: string }) => useUserMemoryStore((s) => s.useFetchPreferences)(params(props.q)),
+      { initialProps: { q: queries[0] }, wrapper },
+    );
+
+    for (const q of queries.slice(1)) {
+      hook.rerender({ q });
+      await waitFor(() => expect(entry(q)).toBeDefined());
+    }
+
+    expect(Object.keys(useUserMemoryStore.getState().preferenceListEntries)).toHaveLength(
+      MAX_RECENT_PREFERENCE_QUERIES,
+    );
+    // The first keyword fell out of the bounded recent-query window.
+    expect(entry(queries[0])).toBeUndefined();
+    expect(entry(queries.at(-1)!)).toBeDefined();
+  });
+
+  it('bounds the window across reloads, from the queries an earlier session persisted', async () => {
+    // Emulate a page that persisted MORE queries than the window before this
+    // store instance existed: the rows, plus the engine's index of them. The
+    // in-memory recency list alone cannot see these, so without seeding it the
+    // window would start empty and persist another cap on top of them.
+    const previous = Array.from(
+      { length: MAX_RECENT_PREFERENCE_QUERIES + 2 },
+      (_, i) => `old-${i}`,
+    );
+    const paramsOf = (q: string): PreferenceListParams => ({ pageSize: 12, q });
+    for (const q of previous) {
+      await preferenceListResource.storage!.set(
+        { queryKey: preferenceListResource.storageKey(paramsOf(q)), scope },
+        {
+          data: {
+            currentPage: 0,
+            hasMore: false,
+            items: [item(`${q}-hit`)],
+            pageSize: 12,
+            total: 1,
+          } satisfies PreferenceListData,
+          updatedAt: 1,
+        },
+      );
+    }
+    // The engine's index holds the storage keys it persisted; with no replica
+    // `query`, those are the entry keys themselves.
+    await preferenceListResource.storage!.set(
+      { queryKey: REPLICA_INDEX_KEY, scope },
+      { data: previous.map((q) => preferenceListResource.storageKey(paramsOf(q))), updatedAt: 1 },
+    );
+
+    const remove = vi.spyOn(preferenceListResource.storage!, 'remove');
+    fetchSpy.mockImplementation(({ q }: { q?: string } = {}) =>
+      Promise.resolve(listPage([rawItem(`${q}-hit`)], 1)),
+    );
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchPreferences)(paramsOf('fresh')), {
+      wrapper,
+    });
+
+    // Seeding put the persisted queries ahead of this session's own entry, so
+    // eviction reached the oldest of THEM — the bound now spans sessions.
+    const evicted = (q: string) => preferenceListResource.storageKey(paramsOf(q));
+    await waitFor(() =>
+      expect(remove.mock.calls.map(([key]) => key.queryKey)).toEqual(
+        previous.slice(0, previous.length - MAX_RECENT_PREFERENCE_QUERIES + 1).map(evicted),
+      ),
+    );
+    expect(remove).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: evicted('fresh') }),
+    );
+
+    // The evicted keys must leave the persisted index too: they were never
+    // written by this instance, and a leftover entry would survive every reload.
+    await waitFor(async () => {
+      const index = await preferenceListResource.storage!.get({
+        queryKey: REPLICA_INDEX_KEY,
+        scope,
+      });
+      const stored = (index?.data as unknown as string[] | undefined) ?? [];
+      expect(stored).toHaveLength(MAX_RECENT_PREFERENCE_QUERIES);
+      for (const q of previous.slice(0, previous.length - MAX_RECENT_PREFERENCE_QUERIES + 1)) {
+        expect(stored).not.toContain(evicted(q));
+      }
+    });
   });
 });

@@ -47,6 +47,11 @@ export interface PreferenceListData extends ReplicaPagedData<DisplayPreferenceMe
  * It adopts the long-standing `userMemory:preferences` SWR key as its network
  * sync key, so other slices that already revalidate that list by its key root
  * (e.g. `base/action.ts` after an edit or a purge) keep working unchanged.
+ *
+ * The entry key already carries `q` / `sort`, and no separate replica `query`
+ * is set: the persisted row key equals the entry key, so the storage index
+ * holds entry keys and the bounded recent-query window can seed from it across
+ * sessions (see `MAX_RECENT_PREFERENCE_QUERIES`).
  */
 export const preferenceListResource = definePagedReplica<
   PreferenceListParams,
@@ -63,7 +68,6 @@ export const preferenceListResource = definePagedReplica<
     // A reload repaints what the first network page would show, never a stale tail.
     persist: { pages: 1 },
   },
-  query: ({ pageSize, q, sort }) => ({ pageSize, q: q || undefined, sort }),
   storage: 'indexedDB',
   syncKey: (params) => userMemoryKeys.preferences(params),
   version: 1,
