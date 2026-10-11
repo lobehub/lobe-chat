@@ -363,7 +363,7 @@ export default class AuvService extends ServiceModule {
       daemon = await sdk.startAuv({
         binaryPath,
         listeners: [privateIpc.listener],
-        noDiscovery: true,
+        noRegister: true,
         storeRoot: path.join(auvRoot, 'store'),
       });
 
