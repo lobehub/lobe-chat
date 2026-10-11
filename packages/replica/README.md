@@ -49,6 +49,8 @@ slice.optimistic(key, apply, serverCall);
 
 A persisted read is asynchronous, so a list hydrated only by `useSync` paints its loading state for a few frames on a cold start. When that list must paint without a skeleton, seed it from the route loader before the route commits: `slice.ensureScope(scope)` + `slice.hydrate(params, scope)`, bounded by `settleWithin(…, PRE_PAINT_HYDRATE_TIMEOUT)` from `@/libs/replica/prePaint`. A later `useSync` hydrate is a no-op once the slot is filled.
 
+A persisted row is only rewritten when its value changes: a persist whose value is deep-equal to what the engine last wrote to (or hydrated from) that row is skipped, so an unchanged revalidation costs no storage write. A failed write, a delete, an entity patch, an eviction or a `clear()` forgets what the row holds, so the next persist writes it again. The engine only tracks its own writes: a row changed behind it (another tab) is corrected by the next changed value or the next session.
+
 Inside LobeHub, use `@/libs/replica`. It presets the cache scope, IndexedDB / localStorage storage and the app's SWR driver.
 
 ## Invalidation
