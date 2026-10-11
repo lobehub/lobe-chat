@@ -64,7 +64,7 @@ export const NativeWidget = ({
       {saveStatus === 'failed' && (
         <Flexbox align="flex-start" gap={8}>
           <Alert title={t('builtins.lobe-interactive-ui.state.failed')} type="warning" />
-          <Button disabled={!writable} size="small" onClick={retrySave}>
+          <Button disabled={!writable} onClick={retrySave}>
             {t('builtins.lobe-interactive-ui.state.retry')}
           </Button>
         </Flexbox>

@@ -16,7 +16,9 @@ export default {
   'builtins.lobe-interactive-ui.title': 'Interactive UI',
   'builtins.lobe-interactive-ui.description':
     'Explore interactive calculators, comparisons, and visual explanations inside chat.',
-  'builtins.lobe-interactive-ui.invalid': 'This interactive UI could not be opened',
+  'builtins.lobe-interactive-ui.invalid':
+    'This interactive UI could not be opened. Ask the assistant to try again.',
+  'builtins.lobe-interactive-ui.details': 'Show details',
 
   'builtins.lobe-interactive-ui.review': 'Review the proposed follow-up',
   'builtins.lobe-interactive-ui.send': 'Send to this conversation',
