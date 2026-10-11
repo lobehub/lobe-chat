@@ -162,6 +162,34 @@ describe('preferenceList replica', () => {
     expect(useUserMemoryStore.getState().preferencesInit).toBe(true);
   });
 
+  it('pre-hydrates a non-default query into its own entry', async () => {
+    await preferenceListResource.storage!.set(
+      { queryKey: SEARCH_KEY, scope },
+      {
+        data: {
+          currentPage: 0,
+          hasMore: false,
+          items: [item('foo-1')],
+          pageSize: 12,
+          q: 'foo',
+          total: 1,
+        } satisfies PreferenceListData,
+        updatedAt: 1,
+      },
+    );
+    fetchSpy.mockImplementation(pending);
+
+    await expect(useUserMemoryStore.getState().preHydrate({ q: 'foo' })).resolves.toBe(true);
+
+    // The URL's query gets its own entry; the default entry stays unpainted.
+    expect(
+      ids(useUserMemoryStore.getState().preferenceListEntries[preferenceListKey({ q: 'foo' })]),
+    ).toEqual(['foo-1']);
+    expect(
+      useUserMemoryStore.getState().preferenceListEntries[preferenceListKey({})],
+    ).toBeUndefined();
+  });
+
   it('replaces the head page with the server response and persists it', async () => {
     fetchSpy.mockResolvedValue(listPage([rawItem('a'), rawItem('b')], 24));
 

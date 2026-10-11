@@ -182,6 +182,27 @@ describe('paged replica slice', () => {
     expect(store.getState().lists.o1).toMatchObject({ currentPage: 0, isLoadingMore: false });
   });
 
+  it('drops a next page that lands after the resource was cleared', async () => {
+    const pending = deferred<ReplicaPageResult<Row, number>>();
+    const { list, store } = setup(
+      vi.fn(async (p: Params, cursor?: number) => (cursor ? pending.promise : pageOf(p, cursor))),
+    );
+    list.replace(params, pageOf(params));
+    const loading = list.loadMore('o1');
+    expect(store.getState().lists.o1.isLoadingMore).toBe(true);
+
+    // clear() wipes every row; a fresh head then recreates the key at depth
+    // zero, so scope, query and depth all match the pre-clear request again.
+    await list.clear();
+    list.replace(params, pageOf(params));
+
+    // The pre-clear next page must still be dropped.
+    pending.resolve(pageOf(params, 1));
+    await loading;
+    expect(ids(store.getState().lists.o1)).toEqual(['a', 'b']);
+    expect(store.getState().lists.o1).toMatchObject({ currentPage: 0, isLoadingMore: false });
+  });
+
   it('a head refresh with no page in flight clears a stale loading flag', () => {
     const { list, store } = setup();
     list.replace(params, pageOf(params));

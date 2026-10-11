@@ -255,16 +255,19 @@ export class PreferenceActionImpl {
   };
 
   /**
-   * Fill the default query's slot from IndexedDB before the route commits, so a
-   * cold visit paints the cached rows instead of the loading skeleton (the read
-   * is async, and `useSync` only hydrates after mount). A later `useSync`
-   * hydrate is a no-op once the slot is filled.
+   * Fill one query's slot from IndexedDB before the route commits, so a cold
+   * visit paints the cached rows instead of the loading skeleton (the read is
+   * async, and `useSync` only hydrates after mount). The route loader passes the
+   * query its URL encodes; a later `useSync` hydrate is a no-op once filled.
    */
-  preHydrate = (): Promise<boolean> => {
+  preHydrate = (query?: Pick<PreferenceQueryParams, 'q' | 'sort'>): Promise<boolean> => {
     const scope = preferenceListResource.scope.get();
     // The slot may still hold the previous identity's rows; drop them before seeding.
     this.#list.ensureScope(scope);
-    return this.#list.hydrate({ pageSize: PREFERENCE_LIST_PAGE_SIZE }, scope);
+    return this.#list.hydrate(
+      { pageSize: PREFERENCE_LIST_PAGE_SIZE, q: query?.q || undefined, sort: query?.sort },
+      scope,
+    );
   };
 
   /**

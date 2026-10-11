@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import type { RouteObject } from 'react-router';
+import type { LoaderFunctionArgs, RouteObject } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { desktopRoutes } from './desktopRouter.config';
@@ -34,7 +34,11 @@ describe('preference list loader wiring', () => {
     const { preferenceListLoader: realLoader } =
       await import('@/routes/(main)/memory/preferences/preferencesLoader');
 
-    await expect(preferenceListLoader()).resolves.toBeNull();
-    expect(realLoader).toHaveBeenCalled();
+    const args = {
+      request: new Request('https://app.lobehub.com/memory/preferences?q=foo'),
+    } as LoaderFunctionArgs;
+
+    await expect(preferenceListLoader(args)).resolves.toBeNull();
+    expect(realLoader).toHaveBeenCalledWith(args);
   });
 });

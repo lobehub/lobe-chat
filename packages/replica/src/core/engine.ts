@@ -759,6 +759,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const scope = resource.scope.get();
     const depth = current.currentPage;
     const epoch = paginationEpochOf(key);
+    const generation = clearGeneration(scope);
     const setLoading = (patch: object) =>
       update(key, (data) => data && ({ ...data, ...patch } as TData), { persist: false });
 
@@ -768,6 +769,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       const latest = port.read(key) as ReplicaPagedData<unknown, unknown> | undefined;
       return (
         resource.scope.get() === scope &&
+        // A `clear()` drops every row: a page started before it must not merge
+        // into the fresh head that recreates this key at depth zero.
+        clearGeneration(scope) === generation &&
         getSlot().entries[key]?.query === query &&
         latest?.currentPage === depth &&
         paginationEpochOf(key) === epoch
