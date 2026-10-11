@@ -1,20 +1,24 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Skeleton, Text } from '@lobehub/ui/base-ui';
+import { Empty, Flexbox } from '@lobehub/ui';
+import { Skeleton } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
+import { AppWindowIcon } from 'lucide-react';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
+import AsyncError from '@/components/AsyncError';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useClientDataSWR } from '@/libs/swr';
 import { authKeys } from '@/libs/swr/keys';
 import { lambdaClient } from '@/libs/trpc/client';
 import { type OAuthAppItem } from '@/types/oauthApp';
 
+import { resolveAppListState } from '../appList';
 import AppDetail from './AppDetail';
 import AppItem from './AppItem';
+import CreateAppButton from './CreateAppButton';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   listCol: css`
@@ -36,7 +40,9 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
 
   const {
     data: apps,
+    error,
     isLoading,
+    isValidating,
     mutate,
   } = useClientDataSWR(authKeys.oauthAppList(), async () => {
     const list = await lambdaClient.oauthApp.list.query();
@@ -50,13 +56,19 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
       <AppDetail
         canEdit={canEdit}
         id={params.sub}
+        key={params.sub}
         onBack={() => navigate('/settings/oauth-apps')}
         onChanged={reload}
       />
     );
 
+  const listState = resolveAppListState({ count: apps?.length, error, isLoading });
+
+  if (listState === 'error')
+    return <AsyncError error={error} retrying={isValidating} variant={'block'} onRetry={reload} />;
+
   const renderRows = () => {
-    if (isLoading)
+    if (listState === 'loading')
       return (
         <Flexbox gap={12} padding={12}>
           <Skeleton.Text rows={2} />
@@ -64,11 +76,14 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
         </Flexbox>
       );
 
-    if (!apps?.length)
+    if (listState === 'empty' || !apps)
       return (
-        <Flexbox align={'center'} gap={12} paddingBlock={40}>
-          <Text type={'secondary'}>{t('oauthApp.list.empty')}</Text>
-        </Flexbox>
+        <Empty
+          action={canEdit && <CreateAppButton secondary />}
+          description={t('oauthApp.list.empty')}
+          icon={AppWindowIcon}
+          style={{ paddingBlock: 40 }}
+        />
       );
 
     return apps.map((app) => (

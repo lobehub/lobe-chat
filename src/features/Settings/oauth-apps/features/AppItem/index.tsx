@@ -1,7 +1,7 @@
 'use client';
 
 import { DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import {
@@ -17,7 +17,10 @@ import { useTranslation } from 'react-i18next';
 import { lambdaQuery } from '@/libs/trpc/client';
 import { type OAuthAppItem } from '@/types/oauthApp';
 
+import { appTypeLabelKey } from '../../appList';
+import AppLogo from '../AppLogo';
 import ClientIdDisplay from '../ClientIdDisplay';
+import { confirmDisableOAuthApp } from '../confirmDisable';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   chevron: css`
@@ -57,13 +60,14 @@ interface AppItemProps {
 }
 
 const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen }) => {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation(['auth', 'common']);
 
   const setEnabled = lambdaQuery.oauthApp.setEnabled.useMutation({ onSuccess: onChanged });
   const deleteApp = lambdaQuery.oauthApp.delete.useMutation({ onSuccess: onDeleted });
 
   const handleDelete = () =>
     confirmModal({
+      cancelText: t('cancel', { ns: 'common' }),
       content: t('oauthApp.deleteConfirm.content'),
       okButtonProps: { danger: true },
       okText: t('oauthApp.deleteConfirm.ok'),
@@ -93,7 +97,7 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
         }
       }}
     >
-      <Avatar avatar={app.logoUri || app.name} shape={'square'} size={36} title={app.name} />
+      <AppLogo logoUri={app.logoUri} name={app.name} size={36} />
 
       <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
         <Flexbox horizontal align={'center'} gap={8}>
@@ -106,7 +110,7 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
           <ClientIdDisplay clientId={app.id} />
         </span>
         <span className={styles.meta}>
-          {t('oauthApp.type.deviceFlow')} · {lastUsed}
+          {t(appTypeLabelKey(app.applicationType))} · {lastUsed}
         </span>
       </Flexbox>
 
@@ -119,7 +123,10 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
                     icon: <Icon icon={PowerOffIcon} />,
                     key: 'disable',
                     label: t('oauthApp.actions.disable'),
-                    onClick: () => setEnabled.mutate({ enabled: false, id: app.id }),
+                    onClick: () =>
+                      confirmDisableOAuthApp(() =>
+                        setEnabled.mutateAsync({ enabled: false, id: app.id }),
+                      ),
                   }
                 : {
                     icon: <Icon icon={PowerIcon} />,

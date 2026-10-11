@@ -330,16 +330,34 @@ key stays viewable — hides the missing one-time-reveal screen (the create resu
 only because the secret is wrongly re-viewable). The one-time reveal is also a §3.5
 persistent-result state, not a toast: the user must be able to copy before dismissing.
 
+**Where the reveal lives.** When creation navigates to the new entity's page, show the secret
+**inline on that page** — a highlighted panel at the top, next to the configuration the user
+is about to fill in — not a modal stacked over the page they just landed on. A modal blocks
+the very page the secret belongs to, is one ✕ / mask click from destroying the only copy, and
+forces "copy" and "look at the rest of the setup" into sequence. The inline panel stays until
+the user confirms ("I've saved it") or leaves the page, and its warning must name that real
+boundary ("once you leave this page"), not a modal's "before closing". Hand the plaintext to
+the destination through **memory only** — router state persists into `history.state` /
+session storage and outlives the page.
+
 > ❌ Settings **API Key**: `ApiKeyModel.query()` decrypts and returns the **full plaintext** on
 > every list fetch (`packages/database/src/models/apiKey.ts`), the table masks client-side only
 > with an eye-toggle that re-reveals at will, and create just closes the modal (result discarded)
 > — no one-time reveal. ✅ Hash at rest; return plaintext only from `createApiKey`; list returns
 > a masked prefix; on create, show a persistent reveal panel (full key + Copy + warning).
+>
+> ❌ Settings **OAuth Apps**, pre-fix: creating a web app navigated to its page and immediately
+> opened a "Your client secret" **modal** over it (`SecretModal`), dismissable by ✕ with no
+> confirmation, its copy saying "before closing". ✅ `FreshSecretCard` renders inline at the
+> top of the app page with Copy + "I've saved it"; the create flow hands the secret over via an
+> in-memory one-shot (`oauth-apps/freshSecret.ts`), and rotation reuses the same card.
 
 **Checklist**
 
 - [ ] A minted secret is shown in full exactly once at creation (persistent reveal + Copy + "won't see again"), not a toast. _(Meaningful・Certainty)_
 - [ ] Secret stored hashed at rest; list / detail return a masked prefix, never re-reveal plaintext. _(Certainty)_
+- [ ] When creation lands on the entity's page, the reveal is an inline panel there (dismissed by an explicit "I've saved it" or leaving), not a modal over the page; the warning names the real boundary. _(Natural・Certainty)_
+- [ ] The plaintext reaches the destination through memory only, never router state / URL / storage. _(Certainty)_
 
 ## 3.9 A store of data about the user owes correction, retain-without-use, export & undo・Meaningful・Certainty
 

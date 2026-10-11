@@ -1,0 +1,63 @@
+'use client';
+
+import { Icon } from '@lobehub/ui';
+import { Avatar } from '@lobehub/ui/base-ui';
+import { createStaticStyles, cx } from 'antd-style';
+import { AppWindowIcon } from 'lucide-react';
+import { memo } from 'react';
+
+const styles = createStaticStyles(({ css, cssVar }) => ({
+  dashed: css`
+    border: 1px dashed ${cssVar.colorBorder};
+  `,
+  placeholder: css`
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+
+    color: ${cssVar.colorTextTertiary};
+
+    background: ${cssVar.colorFillTertiary};
+  `,
+}));
+
+interface AppLogoPlaceholderProps {
+  /** Dashed outline, for slots where the placeholder is also an upload target. */
+  dashed?: boolean;
+  size: number;
+}
+
+/**
+ * Stand-in for an OAuth app without a logo. A letter avatar built from the app
+ * name renders CJK names as two oversized glyphs and reads as an unfinished
+ * state, so every surface falls back to the same app glyph instead.
+ */
+export const AppLogoPlaceholder = memo<AppLogoPlaceholderProps>(({ dashed, size }) => (
+  <span
+    className={cx(styles.placeholder, dashed && styles.dashed)}
+    style={{ borderRadius: Math.max(size / 6, 2), height: size, width: size }}
+  >
+    <Icon icon={AppWindowIcon} size={Math.round(size * 0.45)} />
+  </span>
+));
+
+AppLogoPlaceholder.displayName = 'AppLogoPlaceholder';
+
+interface AppLogoProps {
+  logoUri?: string | null;
+  name: string;
+  size: number;
+}
+
+const AppLogo = memo<AppLogoProps>(({ logoUri, name, size }) =>
+  logoUri ? (
+    <Avatar avatar={logoUri} shape={'square'} size={size} title={name} />
+  ) : (
+    <AppLogoPlaceholder size={size} />
+  ),
+);
+
+AppLogo.displayName = 'AppLogo';
+
+export default AppLogo;

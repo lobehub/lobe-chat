@@ -13,6 +13,9 @@ import AvatarUpload from '@/components/AvatarUpload';
 import { type CreateOAuthAppParams } from '@/types/oauthApp';
 
 import { useLogoUpload } from '../../useLogoUpload';
+import { AppLogoPlaceholder } from '../AppLogo';
+
+const LOGO_SIZE = 64;
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   typeCard: css`
@@ -22,7 +25,9 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
     flex: 1;
 
-    padding: 14px;
+    min-width: 0;
+    padding-block: 12px;
+    padding-inline: 12px 32px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -58,18 +63,19 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   typeDesc: css`
     font-size: 12px;
     line-height: 1.5;
-    color: ${cssVar.colorTextSecondary};
+    color: ${cssVar.colorTextTertiary};
   `,
   typeIcon: css`
     display: inline-flex;
+    flex: none;
     align-items: center;
     justify-content: center;
 
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: ${cssVar.borderRadius};
 
-    color: ${cssVar.colorText};
+    color: ${cssVar.colorTextSecondary};
 
     background: ${cssVar.colorFillTertiary};
   `,
@@ -97,7 +103,7 @@ const TypeSelect: FC<TypeSelectProps> = ({ onChange, options, value }) => (
         <Flexbox
           aria-checked={selected}
           className={cx(styles.typeCard, selected && styles.typeCardSelected)}
-          gap={10}
+          gap={8}
           key={option.value}
           role={'radio'}
           tabIndex={0}
@@ -109,10 +115,12 @@ const TypeSelect: FC<TypeSelectProps> = ({ onChange, options, value }) => (
             }
           }}
         >
-          <span className={styles.typeIcon}>
-            <Icon icon={option.icon} size={18} />
-          </span>
-          <Text weight={500}>{option.title}</Text>
+          <Flexbox horizontal align={'center'} gap={8}>
+            <span className={styles.typeIcon}>
+              <Icon icon={option.icon} size={16} />
+            </span>
+            <Text weight={500}>{option.title}</Text>
+          </Flexbox>
           <span className={styles.typeDesc}>{option.description}</span>
           {selected && <Icon className={styles.typeCheck} icon={CheckIcon} size={16} />}
         </Flexbox>
@@ -132,7 +140,7 @@ export interface CreateAppModalContentProps {
 }
 
 const CreateAppModalContent: FC<CreateAppModalContentProps> = ({ onSubmit }) => {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation(['auth', 'common']);
   const { close, setCanDismissByClickOutside } = useModalContext();
   const [loading, setLoading] = useState(false);
   const [logoUri, setLogoUri] = useState<string>();
@@ -180,32 +188,35 @@ const CreateAppModalContent: FC<CreateAppModalContentProps> = ({ onSubmit }) => 
   return (
     <Form form={form} layout={'vertical'}>
       <Flexbox gap={16}>
-        <Form.Field label={t('oauthApp.form.logo.label')} style={itemStyle}>
+        {/* The logo sits beside the name, the way the app will appear in lists
+            and on the consent screen, instead of taking a row of its own. */}
+        <Flexbox horizontal align={'flex-end'} gap={16}>
           <AvatarUpload
             allowDelete={!!logoUri}
             loading={logoUploading}
-            title={t('oauthApp.form.name.label')}
+            placeholder={<AppLogoPlaceholder dashed size={LOGO_SIZE} />}
+            size={LOGO_SIZE}
+            title={t('oauthApp.form.logo.label')}
             value={logoUri}
             onDelete={() => setLogoUri(undefined)}
             onUpload={handleUpload}
           />
-        </Form.Field>
-
-        <Form.Field
-          label={t('oauthApp.form.name.label')}
-          name={'name'}
-          required={t('oauthApp.validation.nameRequired')}
-          style={itemStyle}
-        >
-          <Input placeholder={t('oauthApp.form.name.placeholder')} />
-        </Form.Field>
+          <Form.Field
+            label={t('oauthApp.form.name.label')}
+            name={'name'}
+            required={t('oauthApp.validation.nameRequired')}
+            style={{ ...itemStyle, flex: 1, minWidth: 0 }}
+          >
+            <Input placeholder={t('oauthApp.form.name.placeholder')} />
+          </Form.Field>
+        </Flexbox>
 
         <Form.Field
           label={t('oauthApp.form.type.label')}
           name={'type'}
           style={itemStyle}
           extra={
-            <Flexbox gap={2} style={{ marginTop: 8 }}>
+            <Flexbox gap={2} style={{ fontSize: 12, marginTop: 8 }}>
               <span>{t('oauthApp.form.type.immutable')}</span>
               {type === 'web' && <span>{t('oauthApp.form.type.webNext')}</span>}
             </Flexbox>
@@ -234,18 +245,15 @@ const CreateAppModalContent: FC<CreateAppModalContentProps> = ({ onSubmit }) => 
           name={'description'}
           style={itemStyle}
         >
-          <TextArea placeholder={t('oauthApp.form.description.placeholder')} rows={3} />
+          <TextArea placeholder={t('oauthApp.form.description.placeholder')} rows={2} />
         </Form.Field>
 
-        <Button
-          block
-          disabled={logoUploading}
-          htmlType={'submit'}
-          loading={loading}
-          type={'primary'}
-        >
-          {t('oauthApp.form.submit')}
-        </Button>
+        <Flexbox horizontal gap={8} justify={'flex-end'} style={{ marginTop: 8 }}>
+          <Button onClick={close}>{t('cancel', { ns: 'common' })}</Button>
+          <Button disabled={logoUploading} htmlType={'submit'} loading={loading} type={'primary'}>
+            {t('oauthApp.form.submit')}
+          </Button>
+        </Flexbox>
       </Flexbox>
     </Form>
   );

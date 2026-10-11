@@ -11,7 +11,10 @@ import AvatarUpload from '@/components/AvatarUpload';
 import { type OAuthAppItem, type UpdateOAuthAppParams } from '@/types/oauthApp';
 
 import { useLogoUpload } from '../../useLogoUpload';
+import AppLogo, { AppLogoPlaceholder } from '../AppLogo';
 import SectionCard from './SectionCard';
+
+const LOGO_SIZE = 64;
 
 interface BasicInfoValues {
   description?: string;
@@ -96,32 +99,34 @@ const BasicInfoCard: FC<BasicInfoCardProps> = ({ canEdit, detail, onSubmit }) =>
       {editing ? (
         <Form form={form} layout={'vertical'}>
           <Flexbox gap={16}>
-            <Form.Field label={t('oauthApp.form.logo.label')} style={itemStyle}>
+            {/* Same logo-beside-name layout as the create modal. */}
+            <Flexbox horizontal align={'flex-end'} gap={16}>
               <AvatarUpload
                 allowDelete={!!logoUri}
                 loading={logoUploading}
-                title={detail.name}
+                placeholder={<AppLogoPlaceholder dashed size={LOGO_SIZE} />}
+                size={LOGO_SIZE}
+                title={t('oauthApp.form.logo.label')}
                 value={logoUri ?? undefined}
                 onDelete={handleDeleteLogo}
                 onUpload={handleUpload}
               />
-            </Form.Field>
-
-            <Form.Field
-              label={t('oauthApp.form.name.label')}
-              name={'name'}
-              required={t('oauthApp.validation.nameRequired')}
-              style={itemStyle}
-            >
-              <Input placeholder={t('oauthApp.form.name.placeholder')} />
-            </Form.Field>
+              <Form.Field
+                label={t('oauthApp.form.name.label')}
+                name={'name'}
+                required={t('oauthApp.validation.nameRequired')}
+                style={{ ...itemStyle, flex: 1, minWidth: 0 }}
+              >
+                <Input placeholder={t('oauthApp.form.name.placeholder')} />
+              </Form.Field>
+            </Flexbox>
 
             <Form.Field
               label={t('oauthApp.form.description.label')}
               name={'description'}
               style={itemStyle}
             >
-              <TextArea placeholder={t('oauthApp.form.description.placeholder')} rows={3} />
+              <TextArea placeholder={t('oauthApp.form.description.placeholder')} rows={2} />
             </Form.Field>
 
             <Flexbox horizontal gap={8} justify={'flex-end'}>
@@ -139,7 +144,7 @@ const BasicInfoCard: FC<BasicInfoCardProps> = ({ canEdit, detail, onSubmit }) =>
         </Form>
       ) : (
         <Flexbox horizontal align={'center'} gap={16}>
-          <AvatarUpload title={detail.name} value={detail.logoUri ?? undefined} />
+          <AppLogo logoUri={detail.logoUri} name={detail.name} size={LOGO_SIZE} />
           <Flexbox gap={4} style={{ minWidth: 0 }}>
             <Text strong style={{ fontSize: 16 }}>
               {detail.name}

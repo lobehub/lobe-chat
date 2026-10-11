@@ -553,3 +553,32 @@ material, not as the page.
 - [ ] An embedded document folds to a **titled row** (first meaningful line as label) that expands to full text — no first-N-px cropped preview with a fade. _(Natural)_
 - [ ] Quoted/embedded content is visually subordinated: a quiet container + capped heading scale, never sharing the host page's typographic hierarchy. _(Meaningful)_
 - [ ] A mask/fade helper's `size` unit is verified against its implementation (px vs %) before shipping — a wrong unit blanks real content. _(Certainty)_
+
+## 1.14 An entity without an image falls back to its type glyph, not a letter avatar・Certainty・Natural
+
+Entities that carry an optional image — an app logo, an agent avatar, a workspace icon — need
+a **no-image** rendering, and the generic letter-avatar (`<Avatar title={name} />` with no
+`avatar`) is the wrong default for most of them. It renders the first characters of the
+name at half the avatar's size: Latin names become a shouting "LO" monogram, CJK names
+become **two oversized glyphs** that overflow the tile, and the slot reads as an unfinished
+state rather than "no logo set". Worse, the `title` that feeds it is easy to wire to the
+wrong string: a **field label** passed as `title` makes every empty logo slot render that
+label ("名称") as its avatar. Fall back to a **type-semantic glyph** (an app-window icon for
+an OAuth app, the product's agent glyph for an agent) on a quiet fill, shared by every surface
+that shows the entity — list row, detail header, edit form, create form — so "no logo" looks
+the same everywhere. Where the same slot is also an **upload target**, the same glyph with a
+dashed outline signals "you can set one" without a second placeholder style.
+
+> ✅ OAuth apps: one `AppLogoPlaceholder` (app-window glyph, quiet fill) renders in the list
+> row, the detail header and — dashed — in the create / edit logo uploaders
+> (`features/Settings/oauth-apps/features/AppLogo`).
+> ❌ OAuth apps, pre-fix: the create modal passed the **name field's label** as the uploader's
+> `title`, so the empty logo rendered "名称" as two giant glyphs; the detail header rendered a
+> 72px "LO" monogram from the app name, and the list row fed `app.logoUri || app.name` straight
+> into `Avatar` (`AppItem.tsx`).
+
+**Checklist**
+
+- [ ] An entity with no image renders a shared type glyph placeholder, not a letter avatar of its name — check a CJK name. _(Certainty)_
+- [ ] A fallback `title` is the entity's own data, never a form label or other UI string. _(Certainty)_
+- [ ] The placeholder is identical across list, detail, create and edit; upload slots differ only by an outline. _(Natural)_
