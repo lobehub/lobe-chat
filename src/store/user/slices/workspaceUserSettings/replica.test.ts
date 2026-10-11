@@ -294,4 +294,30 @@ describe('workspace user preference replica', () => {
       ).toEqual({ a1: false }),
     );
   });
+
+  it('abandons a write when the active workspace changed during the pending local read', async () => {
+    vi.mocked(workspaceUserSettingsService.getPreference).mockImplementation(pending);
+    vi.mocked(workspaceUserSettingsService.updatePreference).mockResolvedValue(undefined);
+
+    // Nothing is loaded for ws-1, so the write waits on the local read; hold it.
+    let releaseRead!: () => void;
+    const readGate = new Promise<void>((resolve) => (releaseRead = resolve));
+    const storage = resource.storage!;
+    vi.spyOn(storage, 'get').mockImplementation(async () => {
+      await readGate;
+      return undefined;
+    });
+
+    const write = state().updateWorkspaceUserPreference({ agentModeOverrides: { a1: true } });
+
+    // The workspace switches before that read resolves.
+    active.id = 'ws-2';
+    releaseRead();
+    await write;
+
+    // The pick belonged to ws-1: it is not applied locally, and — the real
+    // hazard — the service call never carries it into ws-2.
+    expect(workspaceUserSettingsService.updatePreference).not.toHaveBeenCalled();
+    expect(state().workspaceUserPreference.agentModeOverrides).toBeUndefined();
+  });
 });

@@ -215,6 +215,14 @@ export class WorkspaceUserSettingsActionImpl {
     // that finds nothing loaded pays for the (local, IndexedDB) read.
     if (replica.getConfirmed(workspaceId) === undefined) {
       await replica.hydrate({ workspaceId });
+
+      // The active workspace can change while the (local, IndexedDB) read is
+      // pending. Everything after this point — the local seed/overlay and, above
+      // all, the service call, which carries the *current* workspace context —
+      // would then apply a preference picked in the previous workspace to the
+      // new one. Abandon the write: the pick belonged to the workspace that was
+      // active when it was made.
+      if (getActiveWorkspaceId() !== workspaceId) return;
     }
 
     // Seed the active entry when there is still nothing loaded (no local copy),
