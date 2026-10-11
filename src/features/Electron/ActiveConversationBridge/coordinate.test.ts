@@ -83,12 +83,28 @@ describe('active conversation coordinate', () => {
     );
   });
 
+  it('resolves the route root when the project slug is literally "project"', () => {
+    const coordinate = resolveActiveConversationCoordinate({
+      params: { projectId: 'project', topicId: 'tpc_1' },
+      url: '/project/project/conversation/tpc_1',
+    });
+
+    expect(coordinate).toMatchObject({
+      isConversation: true,
+      projectBasePath: '/project/project/conversation',
+      projectId: 'project',
+      topicId: 'tpc_1',
+    });
+    expect(buildActiveConversationUrl(coordinate, 'tpc_2', null)).toBe(
+      '/project/project/conversation/tpc_2',
+    );
+  });
+
   it('resolves a project conversation route without a topic id', () => {
     const coordinate = resolveActiveConversationCoordinate({
       params: { projectId: 'prj_1' },
       url: '/project/prj_1/conversation',
     });
-
     expect(coordinate).toMatchObject({
       isConversation: true,
       projectBasePath: '/project/prj_1/conversation',

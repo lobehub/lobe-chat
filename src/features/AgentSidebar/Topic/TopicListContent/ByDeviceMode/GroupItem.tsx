@@ -26,13 +26,14 @@ import { useProjectDirectories } from '@/store/projectWorkingDirectory';
 import TopicItem from '../../List/Item';
 import { useTopicListScope } from '../../TopicListScope';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
+import { findDeviceTopicDirectory, resolveDeviceGroupName } from './resolveDeviceGroup';
 
 const DEVICE_GROUP_PREFIX = 'device:';
 
 const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const { t } = useTranslation('topic');
   const { t: tProject } = useTranslation('project');
-  const { id, children } = group;
+  const { id, title, children } = group;
   const deviceId = id.startsWith(DEVICE_GROUP_PREFIX)
     ? id.slice(DEVICE_GROUP_PREFIX.length)
     : undefined;
@@ -47,25 +48,28 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   );
   const device = useDeviceStore(deviceSelectors.getDeviceById(deviceId));
 
-  const name =
-    directories.find((d) => d.deviceId === deviceId)?.deviceName ??
-    device?.friendlyName ??
-    device?.hostname ??
-    t('groupTitle.byDevice.unknown');
+  // A synthetic bucket (e.g. favorites) carries its own title; only real
+  // `device:` buckets resolve a name from the directory/device registries.
+  const name = resolveDeviceGroupName({
+    deviceName: directories.find((d) => d.deviceId === deviceId)?.deviceName,
+    friendlyName: device?.friendlyName,
+    hostname: device?.hostname,
+    title,
+    unknownLabel: t('groupTitle.byDevice.unknown'),
+  });
 
   // Preselect a directory on this device so the new topic starts where the
-  // group points; the modal's picker only lists instance-bound directories.
+  // group points; the modal's picker only lists instance-bound directories, so
+  // without one on this device the + would silently start work on another.
   const fallbackAgentId = scope?.coordinatorAgentId ?? activeAgentId;
-  const canAddTopic = !!scope && !!deviceId && !!fallbackAgentId;
+  const targetDirectory = findDeviceTopicDirectory(directories, deviceId);
+  const canAddTopic = !!scope && !!deviceId && !!fallbackAgentId && !!targetDirectory;
   const handleAddTopic = () => {
-    if (!scope || !deviceId || !fallbackAgentId) return;
-    const directory =
-      directories.find((d) => d.deviceId === deviceId && d.instanceId) ??
-      directories.find((d) => d.deviceId === deviceId);
+    if (!scope || !deviceId || !fallbackAgentId || !targetDirectory) return;
     openProjectTopicModal({
       coordinatorAgentId: fallbackAgentId,
       directories,
-      initialDirectoryId: directory?.id,
+      initialDirectoryId: targetDirectory.id,
       projectId: scope.projectId,
       title: tProject('sidebar.newConversation'),
     });

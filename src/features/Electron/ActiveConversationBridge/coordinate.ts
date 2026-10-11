@@ -39,7 +39,16 @@ export const resolveActiveConversationCoordinate = ({
     !!params.gid &&
     groupSegmentIndex >= 0 &&
     (groupSuffixLength === 0 || (groupSuffixLength === 1 && params.topicId !== undefined));
-  const projectSegmentIndex = params.projectId ? segments.lastIndexOf('project') : -1;
+  // Locate the route root structurally: a project slug may itself be named
+  // "project", so a plain lastIndexOf could land on the slug segment instead.
+  const projectSegmentIndex = params.projectId
+    ? segments.findIndex(
+        (segment, index) =>
+          segment === 'project' &&
+          segments[index + 1] === params.projectId &&
+          segments[index + 2] === 'conversation',
+      )
+    : -1;
   const projectSuffixLength =
     projectSegmentIndex < 0 || segments[projectSegmentIndex + 2] !== 'conversation'
       ? -1
