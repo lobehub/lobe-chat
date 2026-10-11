@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
 
 import LoadMoreFooter from '../LoadMoreFooter';
-import { canAutoLoadMore, resolveLoadMoreFooter } from '../loadMoreFooterState';
+import { autoLoadMoreProps, resolveLoadMoreFooter } from '../loadMoreFooterState';
 import { useScrollParent } from '../TimeLineView/useScrollParent';
 
 interface GridViewProps<T> {
@@ -64,8 +64,7 @@ function GridViewInner<T extends { id: string }>({
   return (
     <VirtuosoGrid
       customScrollParent={scrollParent}
-      data={items}
-      endReached={canAutoLoadMore({ hasMore, loadMoreError }) ? onLoadMore : undefined}
+      {...autoLoadMoreProps({ hasMore, items, loadMoreError, onLoadMore })}
       increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       overscan={48}
       style={{ minHeight: '100%' }}

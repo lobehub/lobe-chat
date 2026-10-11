@@ -9,7 +9,7 @@ import { GroupedVirtuoso } from 'react-virtuoso';
 import { useIsDark } from '@/hooks/useIsDark';
 
 import LoadMoreFooter from '../LoadMoreFooter';
-import { canAutoLoadMore, resolveLoadMoreFooter } from '../loadMoreFooterState';
+import { autoLoadMoreProps, resolveLoadMoreFooter } from '../loadMoreFooterState';
 import { useScrollParent } from './useScrollParent';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -150,7 +150,7 @@ function TimelineViewInner<
       <div className={cx(styles.timelineLine, isDarkMode && styles.timelineLine_dark)} />
       <GroupedVirtuoso
         customScrollParent={scrollParent}
-        endReached={canAutoLoadMore({ hasMore, loadMoreError }) ? onLoadMore : undefined}
+        {...autoLoadMoreProps({ hasMore, items: groupedItems, loadMoreError, onLoadMore })}
         groupCounts={groupCounts}
         increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
         overscan={24}

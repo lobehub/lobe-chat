@@ -33,3 +33,27 @@ export const canAutoLoadMore = ({
   hasMore?: boolean;
   loadMoreError?: unknown;
 }): boolean => Boolean(hasMore) && !loadMoreError;
+
+/**
+ * The end-of-list props of a paginated memory list's Virtuoso.
+ *
+ * Virtuoso only re-fires `endReached` when `[lastIndex, data]` changes. Without
+ * `data`, a page set collapsed back to its head page (after a delete) ends at
+ * the same index the head page already reported, so reaching the end again
+ * never requests the next page. Passing the rendered rows as `data` keys the
+ * trigger on the page set itself.
+ */
+export const autoLoadMoreProps = <T>({
+  hasMore,
+  items,
+  loadMoreError,
+  onLoadMore,
+}: {
+  hasMore?: boolean;
+  items: readonly T[];
+  loadMoreError?: unknown;
+  onLoadMore?: () => void;
+}): { data: readonly T[]; endReached?: () => void } => ({
+  data: items,
+  endReached: canAutoLoadMore({ hasMore, loadMoreError }) ? onLoadMore : undefined,
+});
