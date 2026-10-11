@@ -99,6 +99,60 @@ describe('userMemory base actions', () => {
         userMemoryKeys.memoryDetail(LayersEnum.Preference, 'preference-1'),
       );
     });
+
+    it('applies an identity edit through the replica and revalidates it', async () => {
+      vi.spyOn(memoryCRUDService, 'updateIdentity').mockResolvedValue(true);
+      const internal_updateIdentityEntity = vi.fn();
+      const internal_clearIdentityList = vi.fn().mockResolvedValue(true);
+      const refreshIdentities = vi.fn().mockResolvedValue(undefined);
+      useUserMemoryStore.setState({
+        internal_clearIdentityList,
+        internal_updateIdentityEntity,
+        refreshIdentities,
+      });
+
+      await act(async () => {
+        await useUserMemoryStore
+          .getState()
+          .updateMemory('identity-1', 'New description', LayersEnum.Identity);
+      });
+
+      expect(internal_updateIdentityEntity).toHaveBeenCalledWith(
+        'identity-1',
+        expect.any(Function),
+      );
+      const patch = internal_updateIdentityEntity.mock.calls[0][1];
+      expect(patch({ description: 'old', id: 'identity-1' })).toEqual({
+        description: 'New description',
+        id: 'identity-1',
+      });
+      expect(refreshIdentities).toHaveBeenCalledTimes(1);
+      expect(internal_clearIdentityList).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('purgeAllMemories', () => {
+    it('clears the identity replicas right after deleting, then revalidates them', async () => {
+      const order: string[] = [];
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+        order.push('deleteAll');
+        return undefined as never;
+      });
+      const internal_clearIdentityList = vi.fn(async () => {
+        order.push('clearIdentityList');
+        return true;
+      });
+      const refreshIdentities = vi.fn(async () => {
+        order.push('refreshIdentities');
+      });
+      useUserMemoryStore.setState({ internal_clearIdentityList, refreshIdentities });
+
+      await act(async () => {
+        await useUserMemoryStore.getState().purgeAllMemories();
+      });
+
+      expect(order).toEqual(['deleteAll', 'clearIdentityList', 'refreshIdentities']);
+    });
   });
 });
 

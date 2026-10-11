@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { type SWRResponse } from 'swr';
 
 import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
-import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
+import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
@@ -11,12 +11,10 @@ import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
-import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
 import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
-import { identityInitialState } from '../identity/initialState';
 import {
   type MemoryDetailDisplay,
   memoryDetailKey,
@@ -195,6 +193,7 @@ export class BaseActionImpl {
     await this.#get().internal_clearHomeReplicas();
     await this.#get().internal_clearExperienceList();
     await this.#get().internal_clearPreferenceList();
+    await this.#get().internal_clearIdentityList();
 
     this.#set(
       produce((draft) => {
@@ -203,7 +202,6 @@ export class BaseActionImpl {
         draft.experiencesQuery = undefined;
         draft.experiencesSort = undefined;
         draft.experiencesSearchError = undefined;
-        Object.assign(draft, identityInitialState);
 
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
@@ -230,13 +228,7 @@ export class BaseActionImpl {
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root, undefined, {
         revalidate: true,
       }),
-      mutate(
-        (key) => Array.isArray(key) && key[0] === userMemoryKeys.identityList.root,
-        undefined,
-        {
-          revalidate: true,
-        },
-      ),
+      this.#get().refreshIdentities(),
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root, undefined, {
         revalidate: true,
       }),
@@ -334,15 +326,12 @@ export class BaseActionImpl {
       }
       case LayersEnum.Identity: {
         await memoryCRUDService.updateIdentity(id, { description: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.identities.find((memory) => memory.id === id);
-            if (item) item.description = content;
-          }),
-          false,
-          n('updateMemory/identity'),
-        );
-        listKeyRoot = userMemoryKeys.identityList.root;
+        // The identity list is replica-backed: patch the view and its
+        // persisted rows together, then revalidate the head page.
+        this.#get().internal_updateIdentityEntity(id, (item) => ({
+          ...item,
+          description: content,
+        }));
         break;
       }
       case LayersEnum.Preference: {
@@ -363,6 +352,13 @@ export class BaseActionImpl {
     if (listKeyRoot) {
       await Promise.all([
         mutate((key) => Array.isArray(key) && key[0] === listKeyRoot),
+        mutate(userMemoryKeys.memoryDetail(layer, id)),
+      ]);
+    } else if (layer === LayersEnum.Identity) {
+      // Identity rows live in the replica; revalidate its head page (the local
+      // patch above already updated the view).
+      await Promise.all([
+        this.#get().refreshIdentities(),
         mutate(userMemoryKeys.memoryDetail(layer, id)),
       ]);
     }
@@ -418,31 +414,6 @@ export class BaseActionImpl {
       isValidating: sync.isValidating,
       mutate: sync.revalidate,
     } as unknown as SWRResponse<RetrieveMemoryResult>;
-  };
-
-  useInitIdentities = (isLogin: boolean): SWRResponse<any> => {
-    return useClientDataSWRWithSync<IdentityForInjection[]>(
-      isLogin ? userMemoryKeys.identities() : null,
-      // Use dedicated API that filters for self identities only
-      () => userMemoryService.queryIdentitiesForInjection({ limit: 25 }),
-      {
-        onSuccess: (data) => {
-          if (!data) return;
-
-          const fetchedAt = Date.now();
-
-          this.#set(
-            {
-              globalIdentities: data,
-              globalIdentitiesFetchedAt: fetchedAt,
-              globalIdentitiesInit: true,
-            },
-            false,
-            n('useInitIdentities/success', { count: data.length }),
-          );
-        },
-      },
-    );
   };
 }
 
