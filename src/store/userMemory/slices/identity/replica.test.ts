@@ -257,7 +257,7 @@ describe('identity list replica', () => {
     await waitFor(() => expect(listState().identities).toHaveLength(1));
 
     act(() => {
-      listState().patchIdentityInList('i1', { description: 'new' });
+      listState().internal_updateIdentityEntity('i1', (item) => ({ ...item, description: 'new' }));
     });
 
     expect(listState().identities[0].description).toBe('new');
@@ -298,7 +298,7 @@ describe('identity list replica', () => {
     fetchSpy.mockResolvedValue(responseOf([]));
     let reset!: Promise<boolean>;
     act(() => {
-      reset = listState().resetIdentities();
+      reset = listState().internal_clearIdentityList();
     });
 
     expect(listState().identities).toEqual([]);
@@ -340,7 +340,7 @@ describe('identity list replica', () => {
     // The purge deleted everything server-side; the mounted query refetches.
     fetchSpy.mockResolvedValue(responseOf([]));
     await act(async () => {
-      await listState().resetIdentities();
+      await listState().internal_clearIdentityList();
     });
 
     // The unfiltered projection must not survive to pre-hydrate after a reload.

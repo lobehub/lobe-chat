@@ -182,7 +182,7 @@ describe('identity slice actions', () => {
     vi.spyOn(userMemoryService, 'queryIdentitiesForInjection').mockResolvedValue([]);
     let reset!: Promise<boolean>;
     act(() => {
-      reset = state().resetIdentities();
+      reset = state().internal_clearIdentityList();
     });
 
     expect(state().identities).toEqual([]);
@@ -201,7 +201,7 @@ describe('identity slice actions', () => {
     expect(injected?.data ?? []).toEqual([]);
   });
 
-  it('revalidates both identity views after a reset (clear() does not refetch)', async () => {
+  it('revalidates both identity views on refresh (clear() does not refetch)', async () => {
     const listSpy = vi
       .spyOn(userMemoryService, 'queryIdentities')
       .mockResolvedValue(pageOf([identity('i1')]));
@@ -223,7 +223,8 @@ describe('identity slice actions', () => {
     listSpy.mockResolvedValue(pageOf([]));
     injectionSpy.mockResolvedValue([]);
     await act(async () => {
-      await state().resetIdentities();
+      await state().internal_clearIdentityList();
+      await state().refreshIdentities();
     });
 
     await waitFor(() => expect(state().identitiesInit).toBe(true));

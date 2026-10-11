@@ -147,44 +147,39 @@ export class IdentityActionImpl {
   };
 
   /**
-   * Patch one row in the list view in place (an inline edit elsewhere in the
-   * store). Goes through the replica so the persisted copy and any other holder
-   * of the entity stay in step.
+   * Apply a confirmed edit to one identity (an inline edit elsewhere in the
+   * store) in every loaded list entry and its persisted rows, so the replica
+   * value — not only the view — carries it across a reload.
    */
-  patchIdentityInList = (id: string, patch: Partial<IdentityListItem>): void => {
-    this.#identities.update(IDENTITY_LIST_KEY, (data) =>
-      data
-        ? mapPagedItem<IdentityListItem, number, IdentityListView>(
-            data,
-            id,
-            (item) => ({ ...item, ...patch }),
-            IDENTITY_PAGING,
-          )
-        : data,
-    );
+  internal_updateIdentityEntity = (
+    id: string,
+    fn: (item: IdentityListItem) => IdentityListItem | undefined,
+  ): void => {
+    this.#identities.updateEntity(id, fn);
   };
 
   /**
-   * Revalidate the identities list of the active scope. The replica scope
-   * carries the user + workspace, so this always refreshes the list the caller
-   * is in.
+   * Revalidate the identity replicas of the active scope: the list and the
+   * self identities injected into the chat context, which any identity write
+   * can change. The replica scope carries the user + workspace, so this always
+   * refreshes the lists the caller is in.
    */
   refreshIdentities = async (): Promise<void> => {
-    await this.#identities.revalidate();
+    await Promise.all([this.#identities.revalidate(), this.#globalIdentities.revalidate()]);
   };
 
   /**
-   * Drop every identity replica (list + injection) and every persisted copy —
-   * each search/filter query of the list is its own persisted row, so this
-   * `clear()`s the resources rather than removing the query on screen. Used by
-   * the memory purge: the views must go through the engine, not be overwritten
-   * by an `initialState` assignment. `clear()` does not refetch, so mounted
-   * views are revalidated afterwards. Resolves `true` once storage is purged.
+   * Wipe every identity replica (list + injection) through the engine: memory,
+   * every persisted search/filter variant (not only the query on screen) and
+   * reads in flight. Used by the memory purge; `clear()` does not refetch, so
+   * the caller revalidates afterwards (`refreshIdentities`). Resolves `true`
+   * once the persisted rows are gone.
    */
-  resetIdentities = async (): Promise<boolean> => {
-    const purged = Promise.all([this.#identities.clear(), this.#globalIdentities.clear()]);
-    await Promise.all([this.#identities.revalidate(), this.#globalIdentities.revalidate()]);
-    const [list, injection] = await purged;
+  internal_clearIdentityList = async (): Promise<boolean> => {
+    const [list, injection] = await Promise.all([
+      this.#identities.clear(),
+      this.#globalIdentities.clear(),
+    ]);
     return list && injection;
   };
 

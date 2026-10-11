@@ -68,6 +68,11 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
+    // Replica-backed lists own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearIdentityList();
+
     this.#set(
       produce((draft) => {
         Object.assign(draft, activityInitialState);
@@ -107,10 +112,7 @@ export class BaseActionImpl {
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root, undefined, {
         revalidate: true,
       }),
-      // Replica-backed slices are cleared through the engine — every persisted
-      // query variant, not only the one on screen — then revalidated. Assigning
-      // `initialState` would leave their persisted rows to repaint on reload.
-      this.#get().resetIdentities(),
+      this.#get().refreshIdentities(),
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root, undefined, {
         revalidate: true,
       }),
@@ -207,9 +209,12 @@ export class BaseActionImpl {
       }
       case LayersEnum.Identity: {
         await memoryCRUDService.updateIdentity(id, { description: content });
-        // The list is a replica: patch its view through the engine so the
-        // persisted copy stays in step, then revalidate the head page.
-        this.#get().patchIdentityInList(id, { description: content });
+        // The identity list is replica-backed: patch the view and its
+        // persisted rows together, then revalidate the head page.
+        this.#get().internal_updateIdentityEntity(id, (item) => ({
+          ...item,
+          description: content,
+        }));
         break;
       }
       case LayersEnum.Preference: {

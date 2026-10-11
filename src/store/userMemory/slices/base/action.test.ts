@@ -90,12 +90,16 @@ describe('userMemory base actions', () => {
       );
     });
 
-    it('patches and revalidates an identity edit without clearing the identity replicas', async () => {
+    it('applies an identity edit through the replica and revalidates it', async () => {
       vi.spyOn(memoryCRUDService, 'updateIdentity').mockResolvedValue(true);
-      const patchIdentityInList = vi.fn();
+      const internal_updateIdentityEntity = vi.fn();
+      const internal_clearIdentityList = vi.fn().mockResolvedValue(true);
       const refreshIdentities = vi.fn().mockResolvedValue(undefined);
-      const resetIdentities = vi.fn().mockResolvedValue(true);
-      useUserMemoryStore.setState({ patchIdentityInList, refreshIdentities, resetIdentities });
+      useUserMemoryStore.setState({
+        internal_clearIdentityList,
+        internal_updateIdentityEntity,
+        refreshIdentities,
+      });
 
       await act(async () => {
         await useUserMemoryStore
@@ -103,27 +107,41 @@ describe('userMemory base actions', () => {
           .updateMemory('identity-1', 'New description', LayersEnum.Identity);
       });
 
-      expect(patchIdentityInList).toHaveBeenCalledWith('identity-1', {
+      expect(internal_updateIdentityEntity).toHaveBeenCalledWith(
+        'identity-1',
+        expect.any(Function),
+      );
+      const patch = internal_updateIdentityEntity.mock.calls[0][1];
+      expect(patch({ description: 'old', id: 'identity-1' })).toEqual({
         description: 'New description',
+        id: 'identity-1',
       });
       expect(refreshIdentities).toHaveBeenCalledTimes(1);
-      expect(resetIdentities).not.toHaveBeenCalled();
+      expect(internal_clearIdentityList).not.toHaveBeenCalled();
     });
   });
 
   describe('purgeAllMemories', () => {
-    it('clears the identity replicas (every persisted query) through the engine', async () => {
-      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue(undefined as never);
-      const refreshIdentities = vi.fn().mockResolvedValue(undefined);
-      const resetIdentities = vi.fn().mockResolvedValue(true);
-      useUserMemoryStore.setState({ refreshIdentities, resetIdentities });
+    it('clears the identity replicas right after deleting, then revalidates them', async () => {
+      const order: string[] = [];
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+        order.push('deleteAll');
+        return undefined as never;
+      });
+      const internal_clearIdentityList = vi.fn(async () => {
+        order.push('clearIdentityList');
+        return true;
+      });
+      const refreshIdentities = vi.fn(async () => {
+        order.push('refreshIdentities');
+      });
+      useUserMemoryStore.setState({ internal_clearIdentityList, refreshIdentities });
 
       await act(async () => {
         await useUserMemoryStore.getState().purgeAllMemories();
       });
 
-      expect(memoryCRUDService.deleteAll).toHaveBeenCalled();
-      expect(resetIdentities).toHaveBeenCalledTimes(1);
+      expect(order).toEqual(['deleteAll', 'clearIdentityList', 'refreshIdentities']);
     });
   });
 });
