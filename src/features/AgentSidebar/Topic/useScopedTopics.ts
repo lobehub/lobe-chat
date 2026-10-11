@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { MAIN_SIDEBAR_EXCLUDE_TRIGGERS } from '@/const/topic';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { groupSidebarTopics, selectSidebarTopics } from '@/store/chat/slices/topic/selectors';
-import { useGlobalStore } from '@/store/global';
 import { useProjectDirectoryStore, useProjectTopics } from '@/store/projectWorkingDirectory';
 import type { ChatTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 
@@ -41,7 +40,12 @@ export const useScopedSidebarTopics = (
 ) => {
   const { scope, topics } = useScopedTopics();
   const { topicId } = useActiveRouteParams<{ topicId?: string }>();
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  // Project topics are already loaded in full, so "load more" only reveals more
+  // rows locally. It must not grow the global `topicPageSize`: that value is
+  // sent as `getTopics.pageSize`, which the server caps at 100, and pushing it
+  // past the cap broke every Agent's topic list until the user reset it.
+  const [extraRows, setExtraRows] = useState(0);
+  const visibleLimit = pageSize + extraRows;
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const visible = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
@@ -49,12 +53,12 @@ export const useScopedSidebarTopics = (
     );
     return selectSidebarTopics(
       list,
-      pageSize,
+      visibleLimit,
       sortBy,
       includeCompleted,
       list.find((topic) => topic.id === topicId),
     );
-  }, [topics, topicId, pageSize, sortBy, includeCompleted]);
+  }, [topics, topicId, visibleLimit, sortBy, includeCompleted]);
   const groups = useMemo(
     () => groupSidebarTopics(visible, groupMode, sortBy, running),
     [visible, groupMode, sortBy, running],
@@ -64,13 +68,13 @@ export const useScopedSidebarTopics = (
       (topic) =>
         (!topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger)) &&
         (includeCompleted || topic.status !== 'completed'),
-    ).length > pageSize;
+    ).length > visibleLimit;
   return {
     scope,
     topics: visible,
     groups,
     activeTopicId: topicId,
     hasMore,
-    loadMore: () => updateSystemStatus({ topicPageSize: pageSize + 20 }),
+    loadMore: () => setExtraRows((rows) => rows + 20),
   };
 };

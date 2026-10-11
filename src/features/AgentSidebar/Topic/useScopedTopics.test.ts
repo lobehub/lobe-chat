@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { createElement, type PropsWithChildren } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,6 +7,7 @@ import { TopicListScopeContext } from './TopicListScope';
 import { useScopedSidebarTopics } from './useScopedTopics';
 
 const fixture = vi.hoisted(() => ({ topicId: undefined as string | undefined }));
+const updateSystemStatus = vi.hoisted(() => vi.fn());
 const rows = [
   {
     id: 'old',
@@ -52,7 +53,9 @@ vi.mock('@/store/projectWorkingDirectory', () => ({
 }));
 vi.mock('@/hooks/useActiveRouteParams', () => ({ useActiveRouteParams: () => fixture }));
 vi.mock('@/store/chat', () => ({ useChatStore: () => new Set<string>() }));
-vi.mock('@/store/global', () => ({ useGlobalStore: () => vi.fn() }));
+vi.mock('@/store/global', () => ({
+  useGlobalStore: (selector: (s: unknown) => unknown) => selector({ updateSystemStatus }),
+}));
 vi.mock('i18next', () => ({ t: (key: string) => key }));
 
 const wrapper = ({ children }: PropsWithChildren) =>
@@ -61,6 +64,7 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('Project topics use the canonical Agent sidebar rules', () => {
   beforeEach(() => {
     fixture.topicId = undefined;
+    updateSystemStatus.mockClear();
   });
   it('pins favorites and orders the rest by the selected timestamp across Agents', () => {
     const { result, rerender } = renderHook(
@@ -105,5 +109,17 @@ describe('Project topics use the canonical Agent sidebar rules', () => {
     });
     expect(result.current.topics.map((topic) => topic.id)).toEqual(['star']);
     expect(result.current.hasMore).toBe(true);
+  });
+  // Growing the global `topicPageSize` past the server's `getTopics` cap of
+  // 100 made every Agent's topic list fail validation, so "load more" in a
+  // project only reveals more of the already-loaded rows.
+  it('loads more project topics without growing the global topic page size', () => {
+    const { result } = renderHook(() => useScopedSidebarTopics(1, 'updatedAt', 'flat', false), {
+      wrapper,
+    });
+    act(() => result.current.loadMore());
+    expect(result.current.topics.map((topic) => topic.id)).toEqual(['star', 'old', 'new']);
+    expect(result.current.hasMore).toBe(false);
+    expect(updateSystemStatus).not.toHaveBeenCalled();
   });
 });
