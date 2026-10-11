@@ -831,4 +831,108 @@ describe('resourceList replica', () => {
 
     expect(querySpy).toHaveBeenLastCalledWith(expect.objectContaining({ offset: 50 }));
   });
+
+  /** Persisted item ids of a query's row, `undefined` once the row is gone. */
+  const storedIds = async (params: ResourceListParams) => {
+    const stored = await resourceListResource.storage!.get({
+      queryKey: resourceListResource.storageKey(params),
+      scope,
+    });
+    return (stored?.data.items as ResourceItem[] | undefined)?.map((item) => item.id);
+  };
+
+  it.each([
+    ['a direct delete', () => useFileStore.getState().deleteResource('gone')],
+    ['a bulk delete', () => useFileStore.getState().deleteResources(['gone'])],
+  ])('drops %s from every persisted query variant', async (_label, runDelete) => {
+    // The same row is cached under another sort the user is not viewing.
+    const sorted = normalizeResourceListParams({ ...BASE_INPUT, sorter: 'name', sortType: 'asc' })!;
+    await seedPersisted(sorted, [row('gone'), row('keep')]);
+
+    querySpy.mockResolvedValue(page([row('gone'), row('keep')], 2));
+    vi.spyOn(resourceService, 'deleteResource').mockResolvedValue(undefined as never);
+    vi.spyOn(resourceService, 'deleteResources').mockResolvedValue(undefined as never);
+
+    renderHook(() => useFileStore((s) => s.useFetchResources)(BASE_INPUT), { wrapper });
+    await waitFor(() => expect(ids()).toEqual(['gone', 'keep']));
+
+    await act(async () => {
+      await runDelete();
+    });
+
+    expect(ids()).toEqual(['keep']);
+    // A reload / offline visit of the other sort must not repaint the row.
+    await waitFor(async () => expect(await storedIds(sorted)).toEqual(['keep']));
+  });
+
+  it('evicts every persisted list variant after a select-all deletion by query', async () => {
+    const sorted = normalizeResourceListParams({ ...BASE_INPUT, sorter: 'name', sortType: 'asc' })!;
+    await seedPersisted(sorted, [row('gone')]);
+
+    // The head answers once; the revalidation after the deletion fails.
+    querySpy.mockResolvedValueOnce(page([row('gone')], 1)).mockRejectedValue(new Error('offline'));
+    vi.spyOn(resourceService, 'deleteResourcesByQuery').mockResolvedValue({ count: 1 } as never);
+    const { useTreeStore } = await import('@/store/tree');
+    vi.spyOn(useTreeStore.getState(), 'revalidate').mockResolvedValue(undefined as never);
+    const { useResourceManagerStore } = await import('@/features/ResourceManager/store');
+
+    renderHook(() => useFileStore((s) => s.useFetchResources)(BASE_INPUT), { wrapper });
+    await waitFor(() => expect(ids()).toEqual(['gone']));
+    await waitFor(async () => expect(await storedIds(BASE_PARAMS)).toEqual(['gone']));
+
+    useResourceManagerStore.setState({ selectAllState: 'all', selectedFileIds: [] });
+    await act(async () => {
+      await useResourceManagerStore.getState().onActionClick('delete');
+    });
+
+    // Neither the mounted query's row nor another variant's survives to be
+    // hydrated by a reload or an offline visit.
+    expect(ids()).toEqual([]);
+    await waitFor(async () => expect(await storedIds(BASE_PARAMS)).toBeUndefined());
+    expect(await storedIds(sorted)).toBeUndefined();
+  });
+
+  it('does not collapse the folder the user navigated to while a move was in flight', async () => {
+    querySpy.mockImplementation(async (params) => {
+      if (params.parentId === 'folder-b') {
+        return params.offset === 0 ? page(rows(50, 200), 120) : page(rows(50, 250), 120);
+      }
+      return page(rows(50), 120);
+    });
+    let releaseMove!: (value: ResourceItem) => void;
+    vi.spyOn(resourceService, 'moveResource').mockImplementation(
+      () => new Promise((resolve) => (releaseMove = resolve)) as never,
+    );
+
+    const hook = renderHook(
+      (props: { parentId: string }) =>
+        useFileStore((s) => s.useFetchResources)({ parentId: props.parentId }),
+      { initialProps: { parentId: 'folder-a' }, wrapper },
+    );
+    await waitFor(() => expect(ids()[0]).toBe('resource-0'));
+
+    // Move a row out of folder A ...
+    let moving!: Promise<void>;
+    act(() => {
+      moving = useFileStore.getState().moveResource('resource-0', 'folder-c');
+    });
+    await waitFor(() => expect(releaseMove).toBeDefined());
+
+    // ... then open folder B and page it past its head while the move runs.
+    hook.rerender({ parentId: 'folder-b' });
+    await waitFor(() => expect(ids()[0]).toBe('resource-200'));
+    await act(async () => {
+      await useFileStore.getState().loadMoreResources();
+    });
+    expect(useFileStore.getState().resourceList).toHaveLength(100);
+
+    await act(async () => {
+      releaseMove({ ...row('resource-0'), parentId: 'folder-c' });
+      await moving;
+    });
+
+    // Folder B's offsets were not shifted by the move: its loaded depth stays.
+    expect(useFileStore.getState().resourceList).toHaveLength(100);
+    expect(ids()[0]).toBe('resource-200');
+  });
 });

@@ -576,6 +576,21 @@ export class ResourceActionImpl {
     this.#resourceList.update(RESOURCE_LIST_KEY, () => undefined, { persist: false });
   };
 
+  /**
+   * Evict every cached explorer list after a deletion only the server can
+   * enumerate (select-all "delete by query"). The deleted set is unknown here,
+   * and folder deletions reach into other folders' lists, so any persisted
+   * variant — another sort, view mode, filter or folder — may hold a deleted
+   * row. `clear()` drops memory and every persisted row of the active scope and
+   * discards reads started before it; the revalidation then repaints whatever
+   * survived. Unlike `clearCurrentQueryResources`, a failed refetch can no
+   * longer leave a pre-deletion page behind for a reload or an offline visit.
+   */
+  evictResourceLists = async (): Promise<void> => {
+    await this.#resourceList.clear();
+    await this.#revalidateListQuietly('evictResourceLists');
+  };
+
   // ---- create / update / delete ------------------------------------------
 
   createResource = async (params: CreateResourceParams): Promise<string> => {
@@ -632,6 +647,12 @@ export class ResourceActionImpl {
       throw error;
     }
 
+    // The overlay only settles the mounted query. The row may also sit in other
+    // persisted variants (another sort, view mode, filter or folder), which an
+    // offline visit or a reload would hydrate again: drop it from all of them
+    // and guard hydrates already in flight.
+    this.#resourceList.removeEntity(id);
+
     // The file manager's by-id detail replica persists, so a confirmed deletion
     // has to evict it as well: otherwise a direct visit to the deleted id
     // repaints it until a NOT_FOUND answer arrives, and offline it never does.
@@ -651,6 +672,9 @@ export class ResourceActionImpl {
       token?.rollback();
       throw error;
     }
+
+    // See `deleteResource`: evict the rows from every persisted query variant.
+    for (const id of ids) this.#resourceList.removeEntity(id);
 
     // See `deleteResource`: the detail replica persists by id, so it must be
     // evicted here too.
@@ -732,6 +756,12 @@ export class ResourceActionImpl {
     };
     const shouldKeepVisible =
       !queryParams || this.#isResourceVisibleInCurrentQuery(movedOptimistic);
+    // The list the move starts from: the collapse below must only touch it,
+    // never a folder (or workspace) the user navigated to while in flight.
+    const originList = {
+      scope: resourceListResource.scope.get(),
+      storageKey: this.#requestedListStorageKey,
+    };
 
     const applyMove = (data: ResourceListValue, resource: ResourceItem) =>
       shouldKeepVisible
@@ -751,8 +781,17 @@ export class ResourceActionImpl {
 
     // A row that left the mounted folder shifts the loaded offsets, so the next
     // "load more" would skip the row that moved up into the gap: drop the loaded
-    // depth to the head before confirming.
-    if (!shouldKeepVisible) this.#resourceList.collapse(RESOURCE_LIST_KEY);
+    // depth to the head before confirming. Only while that folder is still the
+    // one on screen — the singleton entry may now hold another folder's pages,
+    // whose offsets the move did not shift.
+    if (
+      !shouldKeepVisible &&
+      originList.storageKey !== undefined &&
+      originList.storageKey === this.#requestedListStorageKey &&
+      originList.scope === resourceListResource.scope.get()
+    ) {
+      this.#resourceList.collapse(RESOURCE_LIST_KEY);
+    }
 
     // The server accepted the move, so a reconciliation failure must not undo it
     // or report the operation as failed (the caller — the tree's optimistic
