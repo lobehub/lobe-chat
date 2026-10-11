@@ -128,8 +128,9 @@ export const agentSignalRouter = router({
     .input(
       z.object({
         agentDocumentId: z.string().min(1).optional(),
-        documentId: z.string().min(1),
-        historyId: z.string().min(1),
+        // Skill receipts only; memory receipts resolve their target from the stored receipt.
+        documentId: z.string().min(1).optional(),
+        historyId: z.string().min(1).optional(),
         receiptId: z.string().min(1),
       }),
     )

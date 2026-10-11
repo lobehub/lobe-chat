@@ -114,12 +114,98 @@ describe('buildSelfIterationReceipts', () => {
       localDate: '2026-05-30',
       sourceType: 'agent.execution.completed',
     });
+    // The summary is the description, not a stand-in title: an untitled target leaves the title
+    // to the client's localized fallback.
     expect(memory.target).toEqual({
       id: 'mem_1',
       summary: 'Saved tone preference',
-      title: 'Saved tone preference',
       type: 'memory',
     });
+  });
+
+  it('never writes the English default title into an untitled memory target', () => {
+    const [, memory] = buildSelfIterationReceipts({
+      ...baseInput,
+      mutations: [
+        {
+          apiName: 'writeMemory',
+          data: {
+            kind: 'mutation',
+            status: 'applied',
+            target: { memoryLayer: LayersEnum.Preference, operation: 'create', type: 'memory' },
+          },
+          kind: 'mutation',
+          toolCallId: 'call_untitled',
+        },
+      ],
+    });
+
+    expect(memory.title).toBe('Memory saved');
+    expect(memory.target).toEqual({
+      memoryLayer: LayersEnum.Preference,
+      operation: 'create',
+      type: 'memory',
+    });
+    // No layer row id to delete, so undo is not offered.
+    expect(memory.metadata?.rollbackStatus).toBeUndefined();
+  });
+
+  it('offers undo for a memory the run created', () => {
+    const [, memory] = buildSelfIterationReceipts({
+      ...baseInput,
+      mutations: [
+        {
+          apiName: 'writeMemory',
+          data: {
+            kind: 'mutation',
+            resourceId: 'pref_1',
+            status: 'applied',
+            summary: 'Use concise implementation notes.',
+            target: {
+              id: 'pref_1',
+              memoryId: 'mem_1',
+              memoryLayer: LayersEnum.Preference,
+              operation: 'create',
+              title: 'Prefers concise implementation notes',
+              type: 'memory',
+            },
+          },
+          kind: 'mutation',
+          toolCallId: 'call_create',
+        },
+      ],
+    });
+
+    expect(memory.metadata?.rollbackStatus).toBe('available');
+    expect(memory.target).toMatchObject({ id: 'pref_1', operation: 'create' });
+  });
+
+  it('does not offer undo for a memory update', () => {
+    const [, memory] = buildSelfIterationReceipts({
+      ...baseInput,
+      mutations: [
+        {
+          apiName: 'writeMemory',
+          data: {
+            kind: 'mutation',
+            resourceId: 'identity_1',
+            status: 'applied',
+            target: {
+              id: 'identity_1',
+              memoryLayer: LayersEnum.Identity,
+              operation: 'update',
+              title: 'Senior engineer',
+              type: 'memory',
+            },
+          },
+          kind: 'mutation',
+          toolCallId: 'call_update',
+        },
+      ],
+    });
+
+    expect(memory.metadata?.rollbackStatus).toBeUndefined();
+    expect(memory.target?.operation).toBe('update');
   });
 
   it('preserves structured memory target metadata for layer-specific navigation', () => {

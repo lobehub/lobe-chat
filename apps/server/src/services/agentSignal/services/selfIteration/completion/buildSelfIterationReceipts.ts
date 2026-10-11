@@ -36,6 +36,11 @@ const SUCCESS_STATUS_BY_API: Record<string, AgentSignalReceipt['status']> = {
   writeMemory: 'applied',
 };
 
+/**
+ * English fallback copy for the receipt's top-level `title` (API / CLI consumers). The web
+ * client never renders it for known kinds: it localizes by `kind` and shows the resource's own
+ * `target.title` when one was captured, so none of these strings leak into `target`.
+ */
 const DEFAULT_TITLE_BY_API: Record<string, string> = {
   closeSelfReviewProposal: 'Self-review proposal closed',
   createSelfReviewProposal: 'Self-review proposal created',
@@ -47,6 +52,11 @@ const DEFAULT_TITLE_BY_API: Record<string, string> = {
 };
 
 const ROLLBACK_CAPABLE_APIS = new Set(['replaceSkillContentCAS']);
+
+const MEMORY_OPERATIONS = new Set(['create', 'remove', 'update']);
+
+const isMemoryOperation = (value: unknown): value is 'create' | 'remove' | 'update' =>
+  typeof value === 'string' && MEMORY_OPERATIONS.has(value);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -190,6 +200,8 @@ export const buildSelfIterationReceipts = (
     const memoryId = kind === 'memory' ? str(target?.memoryId) : undefined;
     const memoryLayer =
       kind === 'memory' && isMemoryLayer(target?.memoryLayer) ? target.memoryLayer : undefined;
+    const memoryOperation =
+      kind === 'memory' && isMemoryOperation(target?.operation) ? target.operation : undefined;
     const rollbackAgentDocumentId = str(data.agentDocumentId);
     const rollbackDocumentId = str(data.documentId);
     const rollbackExpectedCurrentDocumentUpdatedAt = str(data.expectedCurrentDocumentUpdatedAt);
@@ -198,12 +210,21 @@ export const buildSelfIterationReceipts = (
     const targetTitle = str(target?.title);
     const title =
       targetTitle ?? summaryText ?? DEFAULT_TITLE_BY_API[apiName] ?? 'Agent Signal action';
-    const rollbackAvailable =
+    const skillRollbackAvailable =
       rollbackDocumentId &&
       rollbackExpectedCurrentDocumentUpdatedAt &&
       rollbackHistoryId &&
       status === 'applied' &&
       ROLLBACK_CAPABLE_APIS.has(apiName);
+    // Undo deletes the memory the run created. Updates / removals have no prior snapshot to
+    // restore, so they stay non-undoable.
+    const memoryRollbackAvailable =
+      kind === 'memory' &&
+      status === 'applied' &&
+      memoryOperation === 'create' &&
+      Boolean(targetId) &&
+      Boolean(memoryLayer);
+    const rollbackAvailable = skillRollbackAvailable || memoryRollbackAvailable;
 
     return [
       {
@@ -234,8 +255,10 @@ export const buildSelfIterationReceipts = (
                 ...(targetId ? { id: targetId } : {}),
                 ...(memoryId ? { memoryId } : {}),
                 ...(memoryLayer ? { memoryLayer } : {}),
+                ...(memoryOperation ? { operation: memoryOperation } : {}),
                 ...(summaryText ? { summary: summaryText } : {}),
-                title,
+                // Only the resource's own title: a missing one is localized by the client.
+                ...(targetTitle ? { title: targetTitle } : {}),
                 type: kind,
               },
             }),

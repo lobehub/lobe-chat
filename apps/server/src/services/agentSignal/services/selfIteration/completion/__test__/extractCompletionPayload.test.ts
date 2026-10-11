@@ -122,6 +122,7 @@ describe('extractSelfIterationCompletionPayload', () => {
       id: 'pref_1',
       memoryId: 'mem_1',
       memoryLayer: LayersEnum.Preference,
+      operation: 'create',
       summary: 'Prefer direct implementation with focused tests.',
       title: 'Prefers direct implementation',
       type: 'memory',
@@ -156,7 +157,7 @@ describe('extractSelfIterationCompletionPayload', () => {
     expect(result?.mutations).toHaveLength(1);
     expect((result?.mutations[0].data as { target?: Record<string, unknown> }).target).toEqual({
       memoryLayer: LayersEnum.Preference,
-      title: 'Memory saved',
+      operation: 'create',
       type: 'memory',
     });
   });
