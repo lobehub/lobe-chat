@@ -123,6 +123,8 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   const [name, setName] = useState(device.friendlyName ?? '');
   const [editingName, setEditingName] = useState(false);
   const [cwd, setCwd] = useState(device.defaultCwd ?? '');
+  // Normalized once: every read and write below goes through this local.
+  const workingDirs = device.workingDirs ?? [];
 
   // Workspace devices commit via the self-or-owner-gated, workspace-scoped
   // mutation; personal devices stay userId-scoped. Route by the device's own
@@ -179,8 +181,8 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
       deviceId: device.deviceId,
       // Setting a default cwd also seeds the working-dirs list.
       workingDirs: trimmed
-        ? nextWorkingDirs({ path: trimmed, repoType }, device.workingDirs)
-        : device.workingDirs,
+        ? nextWorkingDirs({ path: trimmed, repoType }, workingDirs)
+        : workingDirs,
     });
   };
 
@@ -203,7 +205,7 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   const addRecent = (entry: { path: string; repoType?: 'git' | 'github' }) => {
     update.mutate({
       deviceId: device.deviceId,
-      workingDirs: nextWorkingDirs(entry, device.workingDirs),
+      workingDirs: nextWorkingDirs(entry, workingDirs),
     });
   };
 
@@ -236,14 +238,14 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   const handleRemoveRecent = (path: string) => {
     update.mutate({
       deviceId: device.deviceId,
-      workingDirs: device.workingDirs.filter((d) => d.path !== path),
+      workingDirs: workingDirs.filter((d) => d.path !== path),
     });
   };
 
   const handleReorderRecent = (items: { id: string }[]) => {
     // SortableList items are keyed by path; map ids back to their entries so the
     // detected repoType survives a reorder.
-    const byPath = new Map(device.workingDirs.map((d) => [d.path, d]));
+    const byPath = new Map(workingDirs.map((d) => [d.path, d]));
     update.mutate({
       deviceId: device.deviceId,
       workingDirs: items.map((item) => byPath.get(item.id) ?? { path: item.id }),
@@ -406,13 +408,13 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
               >
                 {t('devices.detail.recentDirs')}
               </FieldLabel>
-              {device.workingDirs.length === 0 ? (
+              {workingDirs.length === 0 ? (
                 <Text fontSize={12} type={'secondary'}>
                   {t('devices.detail.noRecent')}
                 </Text>
               ) : canEdit ? (
                 <SortableList
-                  items={device.workingDirs.map((d) => ({ id: d.path, repoType: d.repoType }))}
+                  items={workingDirs.map((d) => ({ id: d.path, repoType: d.repoType }))}
                   renderItem={(item: { id: string; repoType?: 'git' | 'github' }) => (
                     <SortableList.Item
                       className={styles.recentItem}
@@ -436,7 +438,7 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
               ) : (
                 // Read-only listing: same row layout minus the drag handle and the
                 // remove button. Keeps the path + repo type icon visible for context.
-                device.workingDirs.map((d) => (
+                workingDirs.map((d) => (
                   <Flexbox
                     horizontal
                     align={'center'}
