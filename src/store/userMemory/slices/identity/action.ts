@@ -21,7 +21,6 @@ import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { clearReplicas, clearUserReplicas, memoryListKey } from '../../utils/replica';
 import { OffsetListPager } from '../utils/offsetListPager';
-import { RecentQueryWindow } from '../utils/recentQueryWindow';
 import {
   DEFAULT_IDENTITY_LIST_PAGE_SIZE,
   GLOBAL_IDENTITIES_KEY,
@@ -102,8 +101,6 @@ export class IdentityActionImpl {
   readonly #get: () => UserMemoryStore;
   /** Delete / load more / purge with the offset repair shared by every memory list. */
   readonly #pager: OffsetListPager;
-  /** Bounds how many identity query page sets survive (memory + IndexedDB). */
-  readonly #recent: RecentQueryWindow;
   readonly #set: Setter;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
@@ -138,10 +135,6 @@ export class IdentityActionImpl {
       read: (key) => get().identityListEntries[key],
       refreshHead: () => this.refreshIdentities(),
       slice: this.#identities,
-    });
-    this.#recent = new RecentQueryWindow({
-      evict: this.#identities.remove,
-      resource: identityListResource,
     });
   }
 
@@ -230,7 +223,6 @@ export class IdentityActionImpl {
     // Select the query before paint, so a frame never shows another query's rows.
     useLayoutEffect(() => {
       this.#selectQuery(key);
-      this.#recent.track(key);
     }, [key]);
 
     return this.#identities.useSync(params, {

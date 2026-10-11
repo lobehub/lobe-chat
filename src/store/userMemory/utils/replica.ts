@@ -33,6 +33,21 @@ export const userMemoryIdentityScope: ReplicaScope = {
   use: () => identityScopeOf(cacheScope.use()),
 };
 
+/**
+ * How many distinct search / sort page sets each memory list keeps persisted
+ * (`persist.maxEntries`). The query on screen is pinned by its mounted
+ * `useSync`, so it is never evicted; older queries leave IndexedDB and memory
+ * together, least recently used first, across reloads too.
+ */
+export const MAX_RECENT_MEMORY_QUERIES = 8;
+
+/**
+ * How many topic memory bundles stay persisted (`persist.maxEntries`). Every
+ * visited topic gets its own row; deleted and long-unvisited topics fall out
+ * instead of accumulating until a full purge.
+ */
+export const MAX_RECENT_TOPIC_MEMORIES = 32;
+
 /** `defineReplica` for a userMemory resource: always scoped per user. */
 export const defineUserMemoryReplica: typeof defineReplica = (options) =>
   defineReplica({ ...options, scope: userMemoryIdentityScope });

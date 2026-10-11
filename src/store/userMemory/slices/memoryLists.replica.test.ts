@@ -22,12 +22,11 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../initialState';
 import { useUserMemoryStore } from '../store';
-import { identityScopeOf, memoryListKey } from '../utils/replica';
+import { identityScopeOf, MAX_RECENT_MEMORY_QUERIES, memoryListKey } from '../utils/replica';
 import { activityListResource } from './activity/projection';
 import { contextListResource } from './context/projection';
 import { experienceListResource } from './experience/projection';
 import { preferenceListResource } from './preference/projection';
-import { MAX_RECENT_MEMORY_QUERIES } from './utils/memoryQueryList';
 
 type Row = { id: string; title?: string };
 type ListData = ReplicaPagedData<Row, number> & { q?: string; sort?: string };
@@ -661,5 +660,53 @@ describe.each(CASES)('$name list replica', (list) => {
 
     expect(Object.keys(state()[`${list.s}ListEntries`])).toHaveLength(MAX_RECENT_MEMORY_QUERIES);
     expect(entry({ q: queries[0] })).toBeUndefined();
+    // Evicted from IndexedDB too, not only from memory.
+    await waitFor(async () => expect(await stored({ q: queries[0] })).toBeUndefined());
+    expect(await stored({ q: queries.at(-1) })).toBeDefined();
+  });
+
+  it('never evicts the query on screen, however many others are visited', async () => {
+    fetchSpy.mockImplementation(async ({ q }: { q?: string } = {}) => page([list.raw(`${q}`)], 1));
+    const queries = Array.from({ length: MAX_RECENT_MEMORY_QUERIES + 3 }, (_, i) => `other-${i}`);
+    for (const q of [...queries, 'pinned']) storageKey({ q });
+
+    // The pinned query stays mounted (oldest of all) while the others cycle.
+    renderHook(() => useFetch({ q: 'pinned' }), { wrapper });
+    await waitFor(async () => expect(await stored({ q: 'pinned' })).toBeDefined());
+    const other = renderHook((props: { q: string }) => useFetch({ q: props.q }), {
+      initialProps: { q: queries[0] },
+      wrapper,
+    });
+    for (const q of queries) {
+      other.rerender({ q });
+      await waitFor(async () => expect(await stored({ q })).toBeDefined());
+    }
+
+    expect(entry({ q: 'pinned' })).toBeDefined();
+    expect(await stored({ q: 'pinned' })).toBeDefined();
+    await waitFor(async () => expect(await stored({ q: queries[0] })).toBeUndefined());
+  });
+
+  it('keeps the cap across reloads, from the queries an earlier session persisted', async () => {
+    // An earlier session persisted the cap's worth of queries (index oldest first).
+    const previous = Array.from({ length: MAX_RECENT_MEMORY_QUERIES }, (_, i) => `old-${i}`);
+    for (const q of previous) {
+      await persist({ q }, { currentPage: 0, hasMore: false, items: [flat(q)], pageSize: 12, q });
+    }
+    await list.resource.storage.set(
+      { queryKey: REPLICA_INDEX_KEY, scope: rowScope },
+      { data: previous.map((q) => storageKey({ q })), updatedAt: 1 },
+    );
+    fetchSpy.mockImplementation(async ({ q }: { q?: string } = {}) => page([list.raw(`${q}`)], 1));
+    storageKey({ q: 'fresh' });
+
+    renderHook(() => useFetch({ q: 'fresh' }), { wrapper });
+    await waitFor(async () => expect(await stored({ q: 'fresh' })).toBeDefined());
+
+    // The least recently used persisted query made room; the others stay.
+    await waitFor(async () => expect(await stored({ q: 'old-0' })).toBeUndefined());
+    expect(await stored({ q: 'old-1' })).toBeDefined();
+    const index = await list.resource.storage.get({ queryKey: REPLICA_INDEX_KEY, scope: rowScope });
+    expect(index?.data as string[]).toHaveLength(MAX_RECENT_MEMORY_QUERIES);
   });
 });

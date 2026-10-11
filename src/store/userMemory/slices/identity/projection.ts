@@ -7,6 +7,7 @@ import { type IdentityForInjection } from '../../types';
 import {
   defineUserMemoryPagedReplica,
   defineUserMemoryReplica,
+  MAX_RECENT_MEMORY_QUERIES,
   memoryListKey,
 } from '../../utils/replica';
 
@@ -91,7 +92,7 @@ export const identityListResource = defineUserMemoryPagedReplica<
   },
   // One entry per search / filter / sort (see `memoryListKey`): each query
   // hydrates its own persisted head page, and the recent-query window bounds
-  // how many survive (see `RecentQueryWindow`).
+  // how many survive (`persist.maxEntries`; the query on screen is pinned).
   key: memoryListKey,
   name: 'identityList',
   paging: {
@@ -101,6 +102,7 @@ export const identityListResource = defineUserMemoryPagedReplica<
     // A reload repaints what the first network page would show, never a stale tail.
     persist: { pages: 1 },
   },
+  persist: { maxEntries: MAX_RECENT_MEMORY_QUERIES },
   storage: 'indexedDB',
   version: 1,
 });

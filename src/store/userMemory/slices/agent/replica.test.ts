@@ -22,8 +22,7 @@ import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { initialState as userMemoryInitialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
-import { identityScopeOf } from '../../utils/replica';
-import { MAX_RECENT_TOPIC_MEMORIES } from './action';
+import { identityScopeOf, MAX_RECENT_TOPIC_MEMORIES } from '../../utils/replica';
 import { topicMemoriesResource } from './projection';
 import { agentMemorySelectors } from './selectors';
 

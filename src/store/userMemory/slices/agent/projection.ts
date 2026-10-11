@@ -1,6 +1,6 @@
 import { type RetrieveMemoryResult } from '@/types/userMemory';
 
-import { defineUserMemoryReplica } from '../../utils/replica';
+import { defineUserMemoryReplica, MAX_RECENT_TOPIC_MEMORIES } from '../../utils/replica';
 
 /**
  * The memories retrieved for one topic (`topicMemoriesMap[topicId]`), injected
@@ -16,6 +16,7 @@ import { defineUserMemoryReplica } from '../../utils/replica';
 export const topicMemoriesResource = defineUserMemoryReplica<string, RetrieveMemoryResult>({
   key: (topicId) => topicId,
   name: 'userMemoryTopicMemories',
+  persist: { maxEntries: MAX_RECENT_TOPIC_MEMORIES },
   storage: 'indexedDB',
   version: 1,
 });

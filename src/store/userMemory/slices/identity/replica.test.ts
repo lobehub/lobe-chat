@@ -21,8 +21,7 @@ import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { identitySelectors, useUserMemoryStore } from '@/store/userMemory';
 
-import { identityScopeOf } from '../../utils/replica';
-import { MAX_RECENT_MEMORY_QUERIES } from '../utils/recentQueryWindow';
+import { identityScopeOf, MAX_RECENT_MEMORY_QUERIES } from '../../utils/replica';
 import { identityInitialState } from './initialState';
 import { identityListResource, type IdentityListView } from './projection';
 

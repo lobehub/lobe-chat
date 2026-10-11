@@ -2,7 +2,11 @@ import { type DisplayContextMemory } from '@/database/repositories/userMemory';
 import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
 
-import { defineUserMemoryPagedReplica, memoryListKey } from '../../utils/replica';
+import {
+  defineUserMemoryPagedReplica,
+  MAX_RECENT_MEMORY_QUERIES,
+  memoryListKey,
+} from '../../utils/replica';
 
 /** Server-side ordering of the context list. */
 export type ContextListSort = 'capturedAt' | 'scoreImpact' | 'scoreUrgency';
@@ -50,6 +54,9 @@ export const contextListResource = defineUserMemoryPagedReplica<
     // A reload repaints what the first network page would show, never a stale tail.
     persist: { pages: 1 },
   },
+  // Bounded: least recently used queries leave IndexedDB and memory together;
+  // the query on screen is pinned by its mounted `useSync`.
+  persist: { maxEntries: MAX_RECENT_MEMORY_QUERIES },
   storage: 'indexedDB',
   syncKey: (params) => userMemoryKeys.contexts(params),
   version: 1,

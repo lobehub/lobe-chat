@@ -16,9 +16,6 @@ import { type StoreSetter } from '@/store/types';
 import { type UserMemoryStore } from '../../store';
 import { clearReplicas, clearUserReplicas, memoryListKey } from '../../utils/replica';
 import { OffsetListPager } from './offsetListPager';
-import { RecentQueryWindow } from './recentQueryWindow';
-
-export { MAX_RECENT_MEMORY_QUERIES } from './recentQueryWindow';
 
 /** Query of one memory list page set; `pageSize` is not part of its identity. */
 export interface MemoryListParams {
@@ -81,7 +78,7 @@ export interface MemoryQueryListOptions<TParams extends MemoryListParams, TItem,
  *   (`memoryListKey`), so a query switch keeps the previous query's pages and
  *   persisted row, and every query paints its own cached head on the first
  *   frame. The flat store fields mirror the active query's entry.
- * - **Bounded.** At most {@link MAX_RECENT_MEMORY_QUERIES} query page sets
+ * - **Bounded.** At most `MAX_RECENT_MEMORY_QUERIES` query page sets
  *   survive, in memory and in IndexedDB, across reloads too.
  * - **Delete / load more / purge** go through {@link OffsetListPager}.
  * - **Edits** patch every loaded and persisted query (`linkReplicaEntity`).
@@ -95,7 +92,6 @@ export class MemoryQueryList<
   readonly #list;
   readonly #options: MemoryQueryListOptions<TParams, TItem, TData>;
   readonly #pager: OffsetListPager;
-  readonly #recent: RecentQueryWindow;
 
   constructor(options: MemoryQueryListOptions<TParams, TItem, TData>) {
     this.#options = options;
@@ -135,7 +131,6 @@ export class MemoryQueryList<
       refreshHead: this.#revalidate,
       slice: this.#list,
     });
-    this.#recent = new RecentQueryWindow({ evict: this.#list.remove, resource });
   }
 
   #activeKey = (): string => this.#options.get()[this.#options.activeKeyField] as string;
@@ -226,7 +221,6 @@ export class MemoryQueryList<
     // Select the query before paint, so a frame never shows another query's rows.
     useLayoutEffect(() => {
       this.select(query as Omit<TParams, 'pageSize'>);
-      this.#recent.track(key);
     }, [key]);
 
     const sync = this.#list.useSync(params, {

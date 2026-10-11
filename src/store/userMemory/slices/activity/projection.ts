@@ -3,7 +3,11 @@ import { type ActivityListItem } from '@lobechat/types';
 import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
 
-import { defineUserMemoryPagedReplica, memoryListKey } from '../../utils/replica';
+import {
+  defineUserMemoryPagedReplica,
+  MAX_RECENT_MEMORY_QUERIES,
+  memoryListKey,
+} from '../../utils/replica';
 
 /** Server-side ordering of the activity list (`ActivityListSort`). */
 export type ActivityListSort = 'capturedAt' | 'startsAt';
@@ -53,6 +57,9 @@ export const activityListResource = defineUserMemoryPagedReplica<
     // A reload repaints what the first network page would show, never a stale tail.
     persist: { pages: 1 },
   },
+  // Bounded: least recently used queries leave IndexedDB and memory together;
+  // the query on screen is pinned by its mounted `useSync`.
+  persist: { maxEntries: MAX_RECENT_MEMORY_QUERIES },
   storage: 'indexedDB',
   syncKey: (params) => userMemoryKeys.activities(params),
   version: 1,
