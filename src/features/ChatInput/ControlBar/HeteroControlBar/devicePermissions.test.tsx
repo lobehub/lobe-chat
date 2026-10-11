@@ -58,7 +58,10 @@ vi.mock('@lobehub/ui/base-ui', () => ({
   ),
 }));
 
-vi.mock('@lobechat/const', () => ({ isDesktop: false }));
+vi.mock('@lobechat/const', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  isDesktop: false,
+}));
 vi.mock('@lobechat/electron-client-ipc', () => ({ useWatchBroadcast: () => {} }));
 vi.mock('@/features/ChatInput/hooks/useAgentId', () => ({ useAgentId: () => 'agent' }));
 vi.mock('@/features/ChatInput/hooks/useChatInputResourceAccess', () => ({
