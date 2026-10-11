@@ -295,15 +295,17 @@ const createTargetFromToolArguments = (
   };
 };
 
-export const resolveMemoryActionTargetFromState = (
-  state: AgentState,
-): MemoryActionTarget | undefined => {
+/**
+ * Every confirmed memory write in the run, in call order. A writer may save
+ * several memories (e.g. a context and a preference) from one piece of feedback;
+ * each gets its own receipt.
+ */
+export const resolveMemoryActionTargetsFromState = (state: AgentState): MemoryActionTarget[] => {
   const resultIds = getMemoryToolResultIds(state);
+  const targets: MemoryActionTarget[] = [];
 
-  for (const message of [...(state.messages ?? [])].reverse()) {
-    const toolCalls = getToolCallsFromMessage(message).reverse();
-
-    for (const toolCall of toolCalls) {
+  for (const message of state.messages ?? []) {
+    for (const toolCall of getToolCallsFromMessage(message)) {
       if (!isMemoryWriteToolCall(toolCall)) continue;
       if (!toolCall.id) continue;
 
@@ -314,9 +316,18 @@ export const resolveMemoryActionTargetFromState = (
       if (!args) continue;
 
       const target = createTargetFromToolArguments(args, toolCall, confirmedResultIds);
-      if (target) return target;
+      if (target) targets.push(target);
     }
   }
+
+  return targets;
+};
+
+export const resolveMemoryActionTargetFromState = (
+  state: AgentState,
+): MemoryActionTarget | undefined => {
+  const targets = resolveMemoryActionTargetsFromState(state);
+  if (targets.length > 0) return targets.at(-1);
 
   const targetConfig = getSuccessfulMemoryWriteTargetConfig(state);
   if (!targetConfig) return;

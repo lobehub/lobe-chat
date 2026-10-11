@@ -579,6 +579,38 @@ export class CompletionLifecycle {
           );
         }
       }
+      // The runtime keeps the run's messages in the DB, not on the terminal state,
+      // so a memory-writer run's state has no tool calls to read the written
+      // memory's id / title from. Re-read the run's own thread so the receipt can
+      // name the memory and offer undo instead of a generic "Memory saved".
+      if (
+        selfIteration?.marker.kind === 'memory' &&
+        !(Array.isArray(state?.messages) && state.messages.length > 0) &&
+        runOrigin.threadId
+      ) {
+        try {
+          const messages = await this.messageModel.query(
+            {
+              agentId: runOrigin.agentId,
+              threadId: runOrigin.threadId,
+              topicId: runOrigin.topicId,
+            },
+            { allowShareVisitor: true },
+          );
+          selfIteration =
+            extractSelfIterationCompletionPayload({
+              ...state,
+              messages,
+              origin: { ...runOrigin, signal: selfIteration.marker, userId: selfIteration.userId },
+            }) ?? selfIteration;
+        } catch (error) {
+          log(
+            '[completion-lifecycle] failed to load memory-writer messages op=%s: %O',
+            operationId,
+            error,
+          );
+        }
+      }
       if (reason !== 'error') {
         log(
           '[completion-lifecycle] emit agent.execution.completed op=%s userId=%s assistant=%s metaAssistant=%s selfIteration=%s',
