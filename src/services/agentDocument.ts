@@ -310,6 +310,30 @@ class AgentDocumentService {
     }
   };
 
+  /** Tool-oriented: create a folder by name under the root or a parent folder id. */
+  createFolderById = async (params: {
+    agentId: string;
+    parentId?: string | null;
+    title: string;
+  }) => {
+    const result = await lambdaClient.agentDocument.createFolder.mutate(params);
+    await revalidateAgentDocuments(params.agentId);
+
+    return result;
+  };
+
+  /** Tool-oriented: move documents/folders by id into a folder, or to the root with null. */
+  moveDocumentsById = async (params: {
+    agentId: string;
+    ids: string[];
+    parentId: string | null;
+  }) => {
+    const result = await lambdaClient.agentDocument.moveDocuments.mutate(params);
+    await revalidateAgentDocuments(params.agentId);
+
+    return result;
+  };
+
   createFolder = async (params: { agentId: string; path: string; recursive?: boolean }) => {
     const result = await lambdaClient.agentDocument.mkdirDocumentByPath.mutate(params);
     await revalidateAgentDocuments(params.agentId);

@@ -909,6 +909,8 @@ export class AgentDocumentModel {
    * - `filename` is already validated as a single VFS path segment
    * - `parentId` points to a document row owned by the same user, or `null` for root
    * - Duplicate filenames are allowed; path-style callers resolve visible duplicates separately
+   * - `title` defaults to `filename` (path-style rename); id-based moves pass the current title
+   *   so relocating a document never rewrites what the user sees
    *
    * Returns:
    * - The same agent document binding after the backing document row is moved
@@ -916,7 +918,7 @@ export class AgentDocumentModel {
    */
   async movePath(
     documentId: string,
-    params: { filename: string; parentId: string | null },
+    params: { filename: string; parentId: string | null; title?: string },
   ): Promise<AgentDocument | undefined> {
     const existing = await this.findById(documentId);
     if (!existing) return undefined;
@@ -933,7 +935,7 @@ export class AgentDocumentModel {
           filename,
           parentId: params.parentId,
           source,
-          title: filename,
+          title: params.title ?? filename,
         })
         .where(and(eq(documents.id, existing.documentId), this.documentOwnership()));
     });

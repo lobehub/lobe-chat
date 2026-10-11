@@ -14,9 +14,11 @@ export const MAX_READ_DOCUMENT_CONTENT_CHARS = 200_000;
 
 export const AgentDocumentsApiName = {
   createDocument: 'createDocument',
+  createFolder: 'createFolder',
   copyDocument: 'copyDocument',
   listDocuments: 'listDocuments',
   modifyNodes: 'modifyNodes',
+  moveDocuments: 'moveDocuments',
   readDocument: 'readDocument',
   removeDocument: 'removeDocument',
   renameDocument: 'renameDocument',
@@ -223,18 +225,60 @@ export interface AgentDocumentReference {
 }
 
 export interface ListDocumentsArgs {
-  /**
-   * Restrict the listing to the direct children of this folder document
-   * (the folder's `documentId`). The progressive index collapses folders and
-   * surfaces this id so the model can expand a folder on demand.
-   */
   /** Page size; defaults to {@link LIST_DOCUMENTS_DEFAULT_LIMIT}. */
   limit?: number;
   /** Number of documents to skip, for paging past the first page. */
   offset?: number;
+  /**
+   * Restrict the listing to the direct children of this folder. Either id of the
+   * folder works; the progressive index surfaces its `documentId`.
+   */
   parentId?: string;
   scope?: 'agent' | 'currentTopic';
   sourceType?: 'all' | 'file' | 'web';
+  /** Case-insensitive substring filter on the title, applied before paging. */
+  titleContains?: string;
+}
+
+export interface CreateFolderArgs {
+  /** Parent folder id (either id of the folder); omit to create at the root. */
+  parentId?: string;
+  title: string;
+}
+
+export interface CreateFolderState {
+  agentDocumentId?: string;
+  agentId?: string;
+  /** False when a folder with this name already existed and was reused. */
+  created: boolean;
+  documentId?: string;
+  title: string;
+}
+
+/** Upper bound on ids per moveDocuments call. */
+export const MOVE_DOCUMENTS_MAX_IDS = 200;
+
+export interface MoveDocumentsArgs {
+  /** Documents or folders to move; either id of each works. */
+  ids: string[];
+  /** Destination folder id (either id of the folder), or null to move to the root. */
+  parentId: string | null;
+}
+
+export interface MoveDocumentResultItem {
+  documentId?: string;
+  error?: string;
+  id: string;
+  status: 'failed' | 'moved' | 'unchanged';
+  title?: string;
+}
+
+export interface MoveDocumentsState {
+  agentId?: string;
+  failedCount: number;
+  movedCount: number;
+  parentId: string | null;
+  results: MoveDocumentResultItem[];
 }
 
 /**
@@ -251,5 +295,17 @@ export interface ListDocumentsState {
    * and a count is all it shows.
    */
   documentCount?: number;
-  documents: { documentId?: string; filename: string; id: string; title?: string }[];
+  documents: ListedAgentDocument[];
+}
+
+export interface ListedAgentDocument {
+  documentId?: string;
+  filename: string;
+  id: string;
+  /** Folder `documentId` this entry sits in; null at the root. */
+  parentId?: string | null;
+  title?: string;
+  type?: 'file' | 'folder';
+  /** ISO timestamp of the last change. */
+  updatedAt?: string;
 }

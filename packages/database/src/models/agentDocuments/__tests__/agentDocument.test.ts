@@ -719,6 +719,26 @@ describe('AgentDocumentModel', () => {
       expect(doc?.source).toBe(`agent-document://${agentId}/${encodeURIComponent('new.md')}`);
     });
 
+    it('should keep the title when a move passes it explicitly', async () => {
+      const folder = await agentDocumentModel.create(agentId, 'keep-title-folder', '', {
+        fileType: DOCUMENT_FOLDER_TYPE,
+        title: 'keep-title-folder',
+      });
+      const created = await agentDocumentModel.create(agentId, 'daily-report', 'body', {
+        title: 'Daily Report — 2026/10/10',
+      });
+
+      const moved = await agentDocumentModel.movePath(created.id, {
+        filename: created.filename,
+        parentId: folder.documentId,
+        title: created.title,
+      });
+
+      expect(moved?.parentId).toBe(folder.documentId);
+      expect(moved?.filename).toBe('daily-report');
+      expect(moved?.title).toBe('Daily Report — 2026/10/10');
+    });
+
     it('should allow moving a document over an existing live sibling filename', async () => {
       const folder = await agentDocumentModel.create(agentId, 'move-folder', '', {
         fileType: DOCUMENT_FOLDER_TYPE,

@@ -45,6 +45,25 @@ import {
 } from './headlessEditor';
 
 const MAX_UNIQUE_FILENAME_ATTEMPTS = 1000;
+/** Guards the ancestor walk against a corrupt parent cycle. */
+const MAX_FOLDER_DEPTH = 64;
+
+export type MoveAgentDocumentStatus = 'failed' | 'moved' | 'unchanged';
+
+export interface MoveAgentDocumentResult {
+  documentId?: string;
+  error?: string;
+  /** The agent-document row id when resolved, otherwise the reference the caller passed. */
+  id: string;
+  status: MoveAgentDocumentStatus;
+  title?: string;
+}
+
+export interface CreateAgentFolderResult {
+  /** False when a folder with the same name already existed under the same parent. */
+  created: boolean;
+  folder: AgentDocument;
+}
 const appendFilenameSuffix = (filename: string, suffix: number): string => {
   const dotIndex = filename.lastIndexOf('.');
 
@@ -638,13 +657,9 @@ export class AgentDocumentsService {
     content: string,
     options: CreateAgentDocumentOptions = {},
   ) {
-    if (options.parentId) {
-      const parent = await this.agentDocumentModel.findByDocumentId(agentId, options.parentId);
-      if (!parent) throw new Error(`Parent folder not found: ${options.parentId}`);
-      if (parent.fileType !== DOCUMENT_FOLDER_TYPE) {
-        throw new Error(`Parent document is not a folder: ${options.parentId}`);
-      }
-    }
+    const parentId = options.parentId
+      ? (await this.resolveFolder(agentId, options.parentId)).documentId
+      : undefined;
 
     // The caller's explicit title wins; a leading H1 only names untitled documents.
     // The leading H1 is always dropped from the body: the document title renders
@@ -665,8 +680,142 @@ export class AgentDocumentsService {
 
     return this.createWithUniqueFilename(agentId, finalTitle, finalContent, {
       ...(metadata ? { metadata } : {}),
-      ...(options.parentId ? { parentId: options.parentId } : {}),
+      ...(parentId ? { parentId } : {}),
     });
+  }
+
+  /**
+   * Resolve a folder from either of its ids: the backing `documentId` (`docs_…`,
+   * which listDocuments and the context index show) or the agent-document row id
+   * (uuid). Models routinely pass the other id of the pair, and a miss used to
+   * read back as an empty folder, so an unknown or non-folder reference throws.
+   */
+  async resolveFolder(agentId: string, folderRef: string): Promise<AgentDocument> {
+    const folder = await this.findReadableDocumentById(folderRef, agentId);
+    if (!folder) throw new AgentDocumentVfsError(`Folder not found: ${folderRef}`, 'NOT_FOUND');
+    if (folder.fileType !== DOCUMENT_FOLDER_TYPE) {
+      throw new AgentDocumentVfsError(
+        `Not a folder: ${folderRef} ("${folder.title}" is a document)`,
+        'BAD_REQUEST',
+      );
+    }
+
+    return folder;
+  }
+
+  /**
+   * Create a folder by name under the root or under an existing folder. Idempotent
+   * like `mkdir -p`: an existing folder with the same name is returned as-is so a
+   * scheduled task can call this on every run.
+   */
+  async createFolder(
+    agentId: string,
+    title: string,
+    parentRef?: string | null,
+  ): Promise<CreateAgentFolderResult> {
+    const name = typeof title === 'string' ? title.trim() : '';
+    if (!name || /[\\/]/.test(name)) {
+      throw new AgentDocumentVfsError(
+        'Folder name must be non-empty and cannot contain "/" or "\\".',
+        'BAD_REQUEST',
+      );
+    }
+
+    const parentId = parentRef ? (await this.resolveFolder(agentId, parentRef)).documentId : null;
+    const existing = await this.agentDocumentModel.findByParentAndFilename(agentId, parentId, name);
+    if (existing) {
+      if (existing.fileType === DOCUMENT_FOLDER_TYPE) return { created: false, folder: existing };
+
+      throw new AgentDocumentVfsError(
+        `A document named "${name}" already exists in that location.`,
+        'CONFLICT',
+      );
+    }
+
+    const folder = await this.agentDocumentModel.create(agentId, name, '', {
+      fileType: DOCUMENT_FOLDER_TYPE,
+      parentId,
+      title: name,
+    });
+
+    return { created: true, folder };
+  }
+
+  /**
+   * Move documents or folders into a folder (or to the root with `null`). Each
+   * entry is applied and reported on its own so one bad id does not abort a bulk
+   * reorganisation. Titles, ids, history and load rules are kept.
+   */
+  async moveDocuments(
+    agentId: string,
+    refs: string[],
+    parentRef: string | null,
+  ): Promise<MoveAgentDocumentResult[]> {
+    const target = parentRef ? await this.resolveFolder(agentId, parentRef) : undefined;
+    const targetParentId = target?.documentId ?? null;
+    const blockedIds = target
+      ? await this.collectFolderLineage(agentId, target)
+      : new Set<string>();
+    const results: MoveAgentDocumentResult[] = [];
+
+    for (const ref of new Set(refs)) {
+      const doc = await this.findReadableDocumentById(ref, agentId);
+      if (!doc) {
+        results.push({ error: `Document not found: ${ref}`, id: ref, status: 'failed' });
+        continue;
+      }
+
+      const base = { documentId: doc.documentId, id: doc.id, title: doc.title };
+      const fail = (error: string) => results.push({ ...base, error, status: 'failed' });
+
+      if (isManagedSkillDocument(doc) || doc.fileType.startsWith('skills/')) {
+        fail('Skill documents cannot be moved.');
+        continue;
+      }
+      if ((doc.parentId ?? null) === targetParentId) {
+        results.push({ ...base, status: 'unchanged' });
+        continue;
+      }
+      if (blockedIds.has(doc.documentId)) {
+        fail('Cannot move a folder into itself or one of its subfolders.');
+        continue;
+      }
+
+      const clash = await this.agentDocumentModel.findByParentAndFilename(
+        agentId,
+        targetParentId,
+        doc.filename,
+      );
+      if (clash && clash.id !== doc.id) {
+        fail(`"${doc.filename}" already exists in the destination folder.`);
+        continue;
+      }
+
+      const moved = await this.agentDocumentModel.movePath(doc.id, {
+        filename: doc.filename,
+        parentId: targetParentId,
+        title: doc.title,
+      });
+      if (moved) results.push({ ...base, status: 'moved' });
+      else fail('Move failed.');
+    }
+
+    return results;
+  }
+
+  /** The target folder plus every ancestor; moving any of them into the target would loop. */
+  private async collectFolderLineage(agentId: string, folder: AgentDocument) {
+    const lineage = new Set<string>([folder.documentId]);
+    let parentId = folder.parentId;
+
+    for (let depth = 0; parentId && depth < MAX_FOLDER_DEPTH; depth += 1) {
+      if (lineage.has(parentId)) break;
+      lineage.add(parentId);
+      parentId =
+        (await this.agentDocumentModel.findByDocumentId(agentId, parentId))?.parentId ?? null;
+    }
+
+    return lineage;
   }
 
   async createForTopic(
@@ -809,9 +958,12 @@ export class AgentDocumentsService {
     sourceType?: AgentDocumentListSourceType,
     options?: { excludeWeb?: boolean; includeArchivedToolResults?: boolean; parentId?: string },
   ) {
+    const parentId = options?.parentId
+      ? (await this.resolveFolder(agentId, options.parentId)).documentId
+      : undefined;
     const docs = await this.agentDocumentModel.listByAgent(agentId, {
       excludeWeb: options?.excludeWeb,
-      parentId: options?.parentId,
+      parentId,
       sourceType,
     });
 

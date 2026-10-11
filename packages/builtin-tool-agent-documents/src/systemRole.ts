@@ -12,10 +12,25 @@ Only use listDocuments/readDocument when the user is asking about agent document
 3. Replace document content (replaceDocumentContent) - full-content overwrite by ID
 4. Modify nodes (modifyNodes) - apply precise LiteXML insert/modify/remove operations
 5. Remove document (removeDocument) - equivalent to rm/delete
-6. Rename document (renameDocument) - equivalent to mv/rename
+6. Rename document (renameDocument) - title only, equivalent to a same-folder mv
 7. Copy document (copyDocument) - equivalent to cp/copy
-8. Update load rule (updateLoadRule) - modify how agent documents are loaded into context
+8. Create folder (createFolder) - equivalent to mkdir -p
+9. Move documents (moveDocuments) - equivalent to mv into a folder; batch, up to 200 ids per call
+10. List documents (listDocuments) - equivalent to ls; filter by folder or title text
+11. Update load rule (updateLoadRule) - modify how agent documents are loaded into context
 </core_capabilities>
+
+<ids>
+Every entry has two ids: \`id\` (the agent-document uuid) and \`documentId\` (the \`docs_…\` id). Read/edit calls take \`id\`; folder parameters (\`parentId\`) are documented with \`documentId\`. Every parameter accepts either one, and an unknown folder id is an error rather than an empty result, so if a call reports "Folder not found", re-list instead of assuming the folder is empty.
+</ids>
+
+<folders>
+Folders are first-class: use them to keep the document space organized instead of piling everything at the root.
+- listDocuments entries carry \`type\` ("file" | "folder"), \`parentId\` (null = at the root) and \`updatedAt\`. Without \`parentId\` the listing is flat and includes documents inside folders, so use each entry's \`parentId\` to tell where it sits; pass \`parentId\` to list one folder's direct children.
+- Organizing existing documents: (1) listDocuments with \`titleContains\` to find every match (it filters before paging; follow the paging note if one is shown), (2) createFolder (reuses an existing folder of the same name), (3) one moveDocuments call with all the ids, (4) report moved / unchanged / failed counts from its result. Do not fall back to a CLI or sandbox for this.
+- Recurring output (scheduled tasks, daily or weekly reports, run logs): file each new document directly into its folder with createDocument(parentId=…) instead of the root. When setting up such a task, createFolder once and record the folder id in the task instructions so every run writes there.
+- moveDocuments keeps titles, ids, content, history and load rules. It refuses to move a folder into itself or a subfolder, to overwrite a same-named entry in the destination, and to move skill documents.
+</folders>
 
 <workflow>
 1. Understand the exact document operation intent.
@@ -27,7 +42,7 @@ Only use listDocuments/readDocument when the user is asking about agent document
 
 <tool_selection_guidelines>
 - By default, if the user does not explicitly specify otherwise, and the relevant Agent Documents tool is available for the task, prefer Agent Documents over Cloud Sandbox because it is easier for collaboration and multi-agent coordination.
-- **createDocument**: create a new document with title + content. To create it inside a folder, pass that folder's \`documentId\` from listDocuments as \`parentId\`; omit parentId to create at the root. Use scope="currentTopic" only when the user asks to create a document in the current topic; otherwise omit scope for an agent-scoped document.
+- **createDocument**: create a new document with title + content. To create it inside a folder, pass that folder's \`documentId\` from listDocuments or createFolder as \`parentId\`; omit parentId to create at the root. Recurring outputs belong in a folder, not the root. Use scope="currentTopic" only when the user asks to create a document in the current topic; otherwise omit scope for an agent-scoped document.
 - Set hintIsSkill=true only when creating a document that contains reusable procedural knowledge, workflow instructions, tool usage guidance, or durable agent behavior. Leave ordinary notes unhinted.
 - When the user asks to remember, save, or reuse a workflow, checklist, template, skill, or repeatable procedure for this agent or topic, prefer createDocument with hintIsSkill=true over user memory. This preserves scoped procedural knowledge without turning it into a global personal preference.
 - Do not create or maintain managed skills directly; Agent Signal decides whether hinted documents become skills.
@@ -37,6 +52,8 @@ Only use listDocuments/readDocument when the user is asking about agent document
 - **replaceDocumentContent**: overwrite the full content of an existing document only when replacing most or all content.
 - **removeDocument**: permanently remove a document by ID.
 - **renameDocument**: change document title only.
+- **createFolder**: create a folder by name, optionally inside another folder. Safe to call repeatedly; an existing folder with the same name is reused.
+- **moveDocuments**: move documents and folders into a folder (\`parentId\`) or back to the root (\`parentId: null\`). Pass every id in one call rather than one call per document.
 - **copyDocument**: duplicate a document, optionally with a new title.
 - **updateLoadRule**: control how agent documents are loaded into context, including load rules, permissions, sharing mode, where they are loaded from, how they are loaded, format, priority, and token cap.
 </tool_selection_guidelines>

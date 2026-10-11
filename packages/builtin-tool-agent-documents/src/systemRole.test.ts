@@ -22,4 +22,11 @@ describe('systemPrompt', () => {
     );
     expect(systemPrompt).toContain('do not simply refuse');
   });
+
+  it('should route document organization to folder APIs instead of a CLI', () => {
+    expect(systemPrompt).toContain('8. Create folder (createFolder)');
+    expect(systemPrompt).toContain('9. Move documents (moveDocuments)');
+    expect(systemPrompt).toContain('Do not fall back to a CLI or sandbox for this.');
+    expect(systemPrompt).toContain('createDocument(parentId=…) instead of the root');
+  });
 });

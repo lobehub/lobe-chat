@@ -3,6 +3,7 @@ import {
   DocumentLoadFormat,
   DocumentLoadRule,
 } from '@lobechat/agent-templates';
+import { MOVE_DOCUMENTS_MAX_IDS } from '@lobechat/builtin-tool-agent-documents';
 import { AGENT_DOCUMENT_CATEGORY } from '@lobechat/const';
 import { TRPCError } from '@trpc/server';
 import matter from 'gray-matter';
@@ -528,25 +529,34 @@ export const agentDocumentRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { excludeWeb, includeArchivedToolResults, parentId } = input;
-      if (input.scope === 'currentTopic') {
-        if (!input.topicId) throw new Error('topicId is required to list current topic documents');
+      try {
+        if (input.scope === 'currentTopic') {
+          if (!input.topicId) {
+            throw new Error('topicId is required to list current topic documents');
+          }
 
-        const docs = await ctx.agentDocumentService.listDocumentsForTopic(
-          input.agentId,
-          input.topicId,
-          input.sourceType,
-          { includeArchivedToolResults },
-        );
-        // Topic listing joins through topic associations rather than the agent
-        // folder tree, so the folder filter is applied in-memory here.
-        return parentId ? docs.filter((d) => d.parentId === parentId) : docs;
+          const docs = await ctx.agentDocumentService.listDocumentsForTopic(
+            input.agentId,
+            input.topicId,
+            input.sourceType,
+            { includeArchivedToolResults },
+          );
+          if (!parentId) return docs;
+
+          // Topic listing joins through topic associations rather than the agent
+          // folder tree, so the folder filter is applied in-memory here.
+          const folder = await ctx.agentDocumentService.resolveFolder(input.agentId, parentId);
+          return docs.filter((d) => d.parentId === folder.documentId);
+        }
+
+        return await ctx.agentDocumentService.listDocuments(input.agentId, input.sourceType, {
+          excludeWeb,
+          includeArchivedToolResults,
+          parentId,
+        });
+      } catch (error) {
+        return handleAgentDocumentVfsError(error);
       }
-
-      return ctx.agentDocumentService.listDocuments(input.agentId, input.sourceType, {
-        excludeWeb,
-        includeArchivedToolResults,
-        parentId,
-      });
     }),
 
   /**
@@ -1299,6 +1309,52 @@ export const agentDocumentRouter = router({
         );
 
         return doc;
+      } catch (error) {
+        handleAgentDocumentVfsError(error);
+      }
+    }),
+
+  /**
+   * Tool-oriented: create a folder by name, under the root or a parent folder id
+   */
+  createFolder: agentDocumentProcedureWrite
+    .input(
+      z.object({
+        agentId: z.string(),
+        parentId: z.string().nullish(),
+        title: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.agentDocumentService.createFolder(
+          input.agentId,
+          input.title,
+          input.parentId,
+        );
+      } catch (error) {
+        handleAgentDocumentVfsError(error);
+      }
+    }),
+
+  /**
+   * Tool-oriented: move documents/folders by id into a folder, or to the root with `null`
+   */
+  moveDocuments: agentDocumentProcedureWrite
+    .input(
+      z.object({
+        agentId: z.string(),
+        ids: z.array(z.string()).min(1).max(MOVE_DOCUMENTS_MAX_IDS),
+        parentId: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.agentDocumentService.moveDocuments(
+          input.agentId,
+          input.ids,
+          input.parentId,
+        );
       } catch (error) {
         handleAgentDocumentVfsError(error);
       }

@@ -81,6 +81,24 @@ const stashDocumentRegisterIntent = (input: {
   });
 };
 
+const toListedDocument = (d: {
+  documentId: string;
+  filename: string;
+  fileType: string;
+  id: string;
+  parentId: string | null;
+  title: string;
+  updatedAt: Date;
+}) => ({
+  documentId: d.documentId,
+  filename: d.filename,
+  fileType: d.fileType,
+  id: d.id,
+  parentId: d.parentId,
+  title: d.title,
+  updatedAt: d.updatedAt,
+});
+
 const runtime = new AgentDocumentsExecutionRuntime(
   {
     copyDocument: async ({ agentId, id, newTitle, toolContext, trigger }) => {
@@ -131,6 +149,11 @@ const runtime = new AgentDocumentsExecutionRuntime(
       });
       return doc;
     },
+    createFolder: async ({ agentId, parentId, title }) => {
+      const result = await agentDocumentService.createFolderById({ agentId, parentId, title });
+      if (!result) throw new Error(`Failed to create folder "${title}".`);
+      return result;
+    },
     createTopicDocument: async ({
       agentId,
       content,
@@ -171,12 +194,7 @@ const runtime = new AgentDocumentsExecutionRuntime(
         parentId,
         sourceType,
       });
-      return docs.map((d) => ({
-        documentId: d.documentId,
-        filename: d.filename,
-        id: d.id,
-        title: d.title,
-      }));
+      return docs.map(toListedDocument);
     },
     listTopicDocuments: async ({ agentId, parentId, sourceType, topicId }) => {
       const docs = await agentDocumentService.listDocuments({
@@ -187,13 +205,10 @@ const runtime = new AgentDocumentsExecutionRuntime(
         sourceType,
         topicId,
       });
-      return docs.map((d) => ({
-        documentId: d.documentId,
-        filename: d.filename,
-        id: d.id,
-        title: d.title,
-      }));
+      return docs.map(toListedDocument);
     },
+    moveDocuments: async ({ agentId, ids, parentId }) =>
+      (await agentDocumentService.moveDocumentsById({ agentId, ids, parentId })) ?? [],
     modifyNodes: async ({ agentId, id, operations, toolContext, trigger }) => {
       const doc = await agentDocumentService.modifyNodes({
         agentId,
