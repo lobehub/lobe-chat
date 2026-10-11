@@ -68,6 +68,9 @@ export class AssistantActionImpl {
     this.#detail = createReplicaSlice(assistantDetailResource, {
       actionPrefix: n('detail'),
       get,
+      // The market no longer has this assistant: drop the entry and its
+      // persisted row rather than keep serving the cached copy.
+      isMissing: (detail) => detail === null,
       set,
       stateKey: 'assistantDetailReplica',
       view: recordLens<DiscoverStore, DiscoverAssistantDetail>('assistantDetailMap'),

@@ -170,6 +170,33 @@ describe('AssistantSlice (replica)', () => {
       expect(new Set(result.current.map((sync) => sync.queryKey)).size).toBe(3);
     });
 
+    it('drops a cached detail once the market reports the assistant gone', async () => {
+      const { discoverService } = await import('@/services/discover');
+
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchAssistantDetail({ identifier: 'lobe-chat' }),
+      );
+      const key = result.current.queryKey!;
+      const [call] = await syncCalls('assistantDetail');
+
+      vi.mocked(discoverService.getAssistantDetail).mockResolvedValueOnce({
+        identifier: 'lobe-chat',
+      } as any);
+      const cached = await call.fetcher();
+      act(() => call.config.onSuccess!(cached));
+      expect(assistantSelectors.assistantDetail(key)(useStore.getState())).toEqual({
+        identifier: 'lobe-chat',
+      });
+
+      // The market removed the assistant: the service answers `undefined`.
+      vi.mocked(discoverService.getAssistantDetail).mockResolvedValueOnce(undefined);
+      const missing = await call.fetcher();
+      act(() => call.config.onSuccess!(missing));
+
+      expect(assistantSelectors.assistantDetail(key)(useStore.getState())).toBeUndefined();
+      expect(useStore.getState().assistantDetailMap[key]).toBeUndefined();
+    });
+
     it('keys the detail by the locale, so a language switch refetches', () => {
       const { result, rerender } = renderHook(() =>
         useStore.getState().useFetchAssistantDetail({ identifier: 'lobe-chat' }),
