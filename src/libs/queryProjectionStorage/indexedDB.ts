@@ -26,16 +26,16 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
     }
   };
 
-  /**
-   * Rejects when the delete did not land, unlike reads and writes: a caller
-   * that removes a row the user deleted must be able to retry it.
-   */
   /** Like `get`, but rejects when the row could not be read (see `ReplicaStorage.getStrict`). */
   getStrict = async (key: QueryProjectionKey): Promise<QueryProjection<T> | undefined> => {
     await localDatabase.initialize();
     return localDatabase.get<QueryProjection<T>>(COLLECTION, this.#key(key));
   };
 
+  /**
+   * Rejects when the delete did not land, unlike reads and writes: a caller
+   * that removes a row the user deleted must be able to retry it.
+   */
   remove = async (key: QueryProjectionKey): Promise<void> => {
     await localDatabase.initialize();
     await localDatabase.delete(COLLECTION, this.#key(key));
