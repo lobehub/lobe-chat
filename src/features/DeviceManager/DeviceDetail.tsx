@@ -3,7 +3,7 @@
 import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem } from '@lobechat/types';
 import { CopyButton, Flexbox, Icon, SortableList } from '@lobehub/ui';
-import { ActionIcon, Button, Input, Tabs, Tag, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Button, Input, Tabs, Tag, Text, toast } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   ArrowLeftIcon,
@@ -108,11 +108,16 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   // Workspace devices commit via the self-or-owner-gated, workspace-scoped
   // mutation; personal devices stay userId-scoped. Route by the device's own
   // scope.
+  // Edits save without a Save button, so a failed write must say so — otherwise
+  // the prop-backed value silently snaps back.
   const onUpdateSuccess = () => refreshDeviceList();
+  const onUpdateError = (error: { message: string }) => toast.error(error.message);
   const updatePersonal = lambdaQuery.device.updateDevice.useMutation({
+    onError: onUpdateError,
     onSuccess: onUpdateSuccess,
   });
   const updateWorkspace = lambdaQuery.device.updateWorkspaceDevice.useMutation({
+    onError: onUpdateError,
     onSuccess: onUpdateSuccess,
   });
   const update = device.scope === 'workspace' ? updateWorkspace : updatePersonal;
@@ -127,11 +132,20 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   // Every edit persists immediately — there is no Save button. Name and the
   // default cwd commit on blur; recent-dir add / remove / reorder commit on the
   // spot.
+  // The editor closes only once the rename lands, so a failed save keeps the
+  // draft on screen for another try.
   const commitName = () => {
-    setEditingName(false);
+    // Enter then blur would otherwise send the same rename twice.
+    if (update.isPending) return;
     const next = name.trim() || null;
-    if (next === (device.friendlyName ?? null)) return;
-    update.mutate({ deviceId: device.deviceId, friendlyName: next });
+    if (next === (device.friendlyName ?? null)) {
+      setEditingName(false);
+      return;
+    }
+    update.mutate(
+      { deviceId: device.deviceId, friendlyName: next },
+      { onSuccess: () => setEditingName(false) },
+    );
   };
 
   const cancelName = () => {

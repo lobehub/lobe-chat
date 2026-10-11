@@ -55,7 +55,7 @@ import {
   projectsRouteMeta,
 } from '@/features/Projects/routeMeta';
 import ResourceCategorySkeleton from '@/features/ResourceHome/Skeleton';
-import { settingsRouteMeta } from '@/features/Settings/features/routeMeta';
+import { createSettingsRouteMeta, settingsRouteMeta } from '@/features/Settings/features/routeMeta';
 import { workspaceHomeRouteMeta } from '@/features/Workspace/routeMeta';
 import WorkspaceProviderRedirect from '@/features/WorkspaceSetting/ProviderRedirect';
 import {
@@ -1297,6 +1297,36 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
       {
         element: redirectElement('/settings/credential'),
         path: 'creds',
+      },
+      // Devices list and detail get their own page-shaped skeletons; the generic
+      // `:tab` routes below would load them under the form-shaped settings one.
+      {
+        element: dynamicElement(
+          () => import('@/routes/(main)/settings'),
+          'Desktop > Settings > Devices',
+        ),
+        handle: {
+          meta: createSettingsRouteMeta({
+            Skeleton: createSurfaceSkeleton('grid'),
+            tab: SettingsTabs.Devices,
+          }),
+          settingsTab: SettingsTabs.Devices,
+        },
+        path: 'devices',
+      },
+      {
+        element: dynamicElement(
+          () => import('@/routes/(main)/settings'),
+          'Desktop > Settings > Devices > Detail',
+        ),
+        handle: {
+          meta: createSettingsRouteMeta({
+            Skeleton: createSurfaceSkeleton('detail'),
+            tab: SettingsTabs.Devices,
+          }),
+          settingsTab: SettingsTabs.Devices,
+        },
+        path: 'devices/:sub',
       },
       // Other settings tabs
       {

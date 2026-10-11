@@ -255,6 +255,27 @@ describe('desktop router shared definition', () => {
     },
   );
 
+  it.each(mainAreaVariants)(
+    '%s personal devices list and detail use their own skeletons, not the settings form',
+    (_, factory) => {
+      for (const [url, leaf] of [
+        ['/settings/devices', 'devices'],
+        ['/settings/devices/device-1', 'devices/:sub'],
+      ] as const) {
+        const matches = matchRoutes(createMainAreaRoutes(factory), url);
+        const handle = matches?.at(-1)?.route.handle as {
+          meta?: { Skeleton?: unknown };
+          settingsTab?: string;
+        };
+
+        expect(matches?.at(-1)?.route.path).toBe(leaf);
+        expect(handle.settingsTab).toBe('devices');
+        expect(handle.meta?.Skeleton).toBeDefined();
+        expect(handle.meta?.Skeleton).not.toBe(SettingsPageSkeleton);
+      }
+    },
+  );
+
   it('generates identical main-area path and nesting behavior for Web and Electron', () => {
     expect(routeShape(createElectronMainAreaChildren())).toEqual(
       routeShape(createWebMainAreaChildren()),
