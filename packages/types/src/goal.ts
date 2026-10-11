@@ -470,7 +470,13 @@ export interface GoalRolloutState {
   templateNodeId?: string;
   /** Current Template revision; incremented each time the recipe is revised. */
   templateRevision: number;
-  /** Roster of every homogeneous unit, in delivery order; probes come first. */
+  /**
+   * The class still to deliver, in delivery order; probes come first. Starts as
+   * the full roster. A pattern break re-cuts it to what is still owed — the
+   * re-opened probes, the broken units past the canary size, then whatever was
+   * never released — so waves deliver only the remainder and units already
+   * delivered under the old recipe drop out.
+   */
   unitTitles?: string[];
   /** How many mass waves have been released. */
   waveIndex: number;

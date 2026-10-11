@@ -10,7 +10,7 @@ import { ExperimentDetail } from '@/features/AgentGoals/Experiments/Detail';
 import { isExperiment } from '@/features/AgentGoals/Experiments/model';
 import {
   coordinatorGateReason,
-  coordinatorReasonCopy,
+  coordinatorReasonCopies,
   viewGateKind,
 } from '@/features/AgentGoals/ProcessControl/coordinatorCopy';
 import {
@@ -161,9 +161,9 @@ const Body = memo(() => {
   // Coordinator gates localize; arbitrary gates keep their stored copy.
   const gateKind = node.kind === 'decision' ? viewGateKind(nodeView) : undefined;
   const rawGateReason = gateKind ? coordinatorGateReason(nodeView.decision?.question) : undefined;
-  const gateReasonCopy = coordinatorReasonCopy(rawGateReason);
-  const gateReasonText = gateReasonCopy
-    ? t(gateReasonCopy.key as any, gateReasonCopy.params)
+  const gateReasonCopies = coordinatorReasonCopies(rawGateReason);
+  const gateReasonText = gateReasonCopies
+    ? gateReasonCopies.map((copy) => t(copy.key as any, copy.params)).join('; ')
     : rawGateReason;
 
   return (

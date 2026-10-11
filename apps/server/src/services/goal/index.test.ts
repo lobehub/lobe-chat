@@ -2258,7 +2258,11 @@ describe('GoalService', () => {
     const restarted = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     expect(restarted.phase).toBe('probe');
     expect(restarted.templateRevision).toBe(next.templateRevision + 1);
-    expect(restarted.probeNodeIds.length).toBeGreaterThan(0);
+    // The break must not redispatch the whole 50-unit rollout at once: only a
+    // canary re-probes, and the rest stay owed on the re-cut roster for waves.
+    expect(restarted.probeNodeIds).toHaveLength(5);
+    expect(restarted.releasedCount).toBe(5);
+    expect(restarted.unitTitles).toHaveLength(50);
   });
 
   it('re-opens the broken unit as a new task when the canary loop restarts', async () => {
@@ -2329,8 +2333,12 @@ describe('GoalService', () => {
           e.kind === 'derived_from' && e.sourceNodeId === reopened.id && e.targetNodeId === broken,
       ),
     ).toBe(true);
-    // Re-opening is not a new release: the roster cursor stays where it was.
-    expect(next.releasedCount).toBe(state.releasedCount);
+    // Re-opening is not a new release: the roster is re-cut to what is still
+    // owed, so the cursor counts the re-opened probes over the shorter roster,
+    // and the units the class still owes stay queued for the waves.
+    expect(next.releasedCount).toBe(next.probeNodeIds.length);
+    expect(next.unitTitles).toContain('Unit 50');
+    expect(new Set(next.unitTitles).size).toBe(next.unitTitles!.length);
     // The new canary is a fresh round: the old wave's retired member no longer
     // counts against its gate (it would re-open the same break at once).
     expect(next.massNodeIds).toBeUndefined();

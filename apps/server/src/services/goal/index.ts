@@ -4241,18 +4241,24 @@ export class GoalService {
 
     // 4. The new canary re-opens the units that broke, as new tasks that
     // supersede the retired ones (decision #4: new task + retire, never move).
-    // Only a gate that blocked with every member resolved has nothing to
-    // re-open; it re-probes the next roster slice instead.
+    // Cap it at the canary size: a break in a large wave — or a `full` rollout
+    // that released the whole class — must not redispatch every member at once.
+    // The broken units beyond the canary stay owed, and the waves after the gate
+    // re-deliver them under the revised recipe. Only a gate that blocked with
+    // every member resolved has nothing to re-open; it re-probes the next slice.
     const canarySize = Math.max(
       2,
       Math.min(policy.canarySize ?? ROLLOUT_CANARY_SIZE_DEFAULT, ROLLOUT_MAX_CANARY_SIZE),
     );
+    const reOpen = broken.slice(0, canarySize);
+    const deferred = broken.slice(canarySize).map((unit) => unit.title);
     const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
     const units = [
-      ...broken.map((unit) => ({ from: unit.id, title: unit.title })),
-      ...fresh.map((title) => ({ from: undefined, title })),
+      ...reOpen.map((unit) => ({ from: unit.id, title: unit.title })),
+      ...fresh.map((title) => ({ from: undefined as string | undefined, title })),
     ];
     const probeIds: string[] = [];
+    const opened: { from: string | undefined; title: string }[] = [];
     for (const unit of units) {
       const nodeId = await createRecipeUnitTask(
         this.coordinatorGraph,
@@ -4263,6 +4269,7 @@ export class GoalService {
       );
       if (!nodeId) continue;
       probeIds.push(nodeId);
+      opened.push(unit);
       if (unit.from) {
         await this.coordinatorGraph
           .createEdge(goalId, nodeId, unit.from, 'derived_from')
@@ -4273,7 +4280,17 @@ export class GoalService {
       await this.coordinatorGraph.createEdge(goalId, assay.id, probeId, 'depends_on');
     }
 
-    // 5. Back to canary, on the new revision.
+    // 5. Back to canary, on the new revision. The roster is re-cut to what is
+    // still owed — the new probes first, then the broken units not re-probed,
+    // then whatever was never released — so the waves deliver only the
+    // remainder and units already delivered under the old recipe drop out.
+    const remaining = Array.from(
+      new Set([
+        ...opened.map((unit) => unit.title),
+        ...deferred,
+        ...roster.slice(released + fresh.length),
+      ]),
+    );
     await this.goalModel.updateRolloutState(goalId, {
       ...state,
       assayNodeId: assay.id,
@@ -4282,10 +4299,10 @@ export class GoalService {
       massNodeIds: undefined,
       phase: 'probe',
       probeNodeIds: probeIds,
-      // A re-opened unit was already counted when it was first released.
-      releasedCount: released + fresh.length,
+      releasedCount: opened.length,
       templateNodeId: template?.id ?? state.templateNodeId,
       templateRevision: state.templateRevision + 1,
+      unitTitles: remaining,
       waveIndex: 0,
     });
     await this.setPauseReason(goalId, undefined);

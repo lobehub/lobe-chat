@@ -2305,6 +2305,14 @@ export default {
   'goalProcess.gate.reason.transientRetriesSpent':
     'The run failed the same way {{count}} times over {{duration}} ({{error}}). Check the device, its network and the agent gateway.',
   'goalProcess.gate.reason.runError': 'The run stopped with an error ({{code}})',
+  'goalProcess.gate.reason.batchUnsettled': '{{count}} unit(s) have not settled',
+  'goalProcess.gate.reason.batchBroken': '{{count}} unit(s) did not succeed',
+  'goalProcess.gate.reason.batchOpenDecision': 'a human decision is still open in this batch',
+  'goalProcess.gate.reason.batchTemplateIncomplete': 'the batch template is incomplete',
+  'goalProcess.gate.reason.batchChecksNotEvaluated':
+    'the declared external checks have not been evaluated',
+  'goalProcess.gate.reason.batchChecksFailed': 'external check(s) failed: {{titles}}',
+  'goalProcess.gate.reason.batchUntestedAxes': 'untested axes: {{axes}}',
   'goalProcess.gate.recommended': 'recommended',
   'goalProcess.gate.noteLabel': 'Extra guidance',
   'goalProcess.gate.notePlaceholder': 'Optional — goes into the next attempt instructions',

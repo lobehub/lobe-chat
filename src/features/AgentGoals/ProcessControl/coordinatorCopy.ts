@@ -9,11 +9,6 @@ import {
   GOAL_MANAGER_QUESTION_TITLE,
 } from '@lobechat/const/goal';
 import type { GoalDecisionOption, GoalGraphDecision } from '@lobechat/types';
-import {
-  coordinatorGateReason,
-  coordinatorReasonCopy,
-  type LocalizedCopyRef,
-} from '@lobechat/utils/goalCopy';
 
 import type { GoalNodeView } from './goalGraphViewModel';
 
@@ -120,4 +115,9 @@ export const coordinatorNodeTitleKey = (view: GoalNodeView): string | undefined 
   return undefined;
 };
 
-export { coordinatorGateReason, coordinatorReasonCopy, type LocalizedCopyRef };
+export {
+  coordinatorGateReason,
+  coordinatorReasonCopies,
+  coordinatorReasonCopy,
+  type LocalizedCopyRef,
+} from '@lobechat/utils/goalCopy';
