@@ -11,6 +11,8 @@ const m = vi.hoisted(() => ({
   resultUpdateByCheckItem: vi.fn(),
   claimVerifying: vi.fn(),
   markRepairing: vi.fn(),
+  claimRepairing: vi.fn(),
+  updateStatus: vi.fn(),
 }));
 
 vi.mock('@/database/models/agentOperation', () => ({
@@ -35,7 +37,11 @@ vi.mock('@/database/models/verifyRubric', () => ({
 }));
 vi.mock('@/database/models/verifyRun', () => ({
   VerifyRunModel: vi.fn(function () {
-    return { findByOperation: m.runFindByOperation };
+    return {
+      findByOperation: m.runFindByOperation,
+      claimRepairing: m.claimRepairing,
+      updateStatus: m.updateStatus,
+    };
   }),
 }));
 vi.mock('../statusService', () => ({
@@ -104,6 +110,8 @@ const failedRun = {
 describe('VerifyRepairService.triggerAutoRepair', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+    m.updateStatus.mockResolvedValue(undefined);
   });
 
   it('spawns a repair round when the run is settled and failures exist', async () => {
@@ -121,7 +129,10 @@ describe('VerifyRepairService.triggerAutoRepair', () => {
 
     expect(result).toEqual({ repairOperationId: 'op-repair' });
     expect(spawner).toHaveBeenCalledOnce();
+    // The claim lands BEFORE the spawn and covers the same run.
+    expect(m.claimRepairing).toHaveBeenCalledWith('run-1', 'failed');
     expect(m.markRepairing).toHaveBeenCalledWith('op-1');
+    expect(m.updateStatus).not.toHaveBeenCalled();
   });
 
   it('does not spawn a second repair round while one is already in flight', async () => {
@@ -138,7 +149,66 @@ describe('VerifyRepairService.triggerAutoRepair', () => {
 
     expect(result).toBeNull();
     expect(spawner).not.toHaveBeenCalled();
+    expect(m.claimRepairing).not.toHaveBeenCalled();
     expect(m.markRepairing).not.toHaveBeenCalled();
+  });
+
+  it('drops out when it loses the repair-round claim to a concurrent caller', async () => {
+    // P1 regression: the read-only guard let two concurrent settlement calls
+    // both observe a non-`repairing` run and both spawn. The atomic claim must
+    // hand the round to exactly one of them.
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.claimRepairing.mockResolvedValue(null);
+
+    const spawner = vi.fn().mockResolvedValue({ repairOperationId: 'op-repair' });
+
+    const service = new VerifyRepairService(db, 'user-1');
+    const result = await service.triggerAutoRepair('op-1', spawner);
+
+    expect(result).toBeNull();
+    expect(spawner).not.toHaveBeenCalled();
+    expect(m.markRepairing).not.toHaveBeenCalled();
+    expect(m.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it('releases the claim when the spawner returns nothing, so a later attempt can re-enter', async () => {
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.findVerifyMessage.mockResolvedValue(null);
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+
+    const spawner = vi.fn().mockResolvedValue(null);
+
+    const service = new VerifyRepairService(db, 'user-1');
+    const result = await service.triggerAutoRepair('op-1', spawner);
+
+    expect(result).toBeNull();
+    expect(m.updateStatus).toHaveBeenCalledWith('run-1', 'failed');
+  });
+
+  it('releases the claim and rethrows when the spawner throws', async () => {
+    // A throwing spawn must not strand the run in `repairing` — the release
+    // keeps the claim re-enterable, and the original error propagates.
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.findVerifyMessage.mockResolvedValue(null);
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+    m.updateStatus.mockRejectedValue(new Error('release write failed'));
+
+    const spawner = vi.fn().mockRejectedValue(new Error('agent runtime exploded'));
+
+    const service = new VerifyRepairService(db, 'user-1');
+    await expect(service.triggerAutoRepair('op-1', spawner)).rejects.toThrow(
+      'agent runtime exploded',
+    );
+    expect(m.updateStatus).toHaveBeenCalledWith('run-1', 'failed');
   });
 
   it('returns null when there is nothing to repair', async () => {
@@ -154,5 +224,6 @@ describe('VerifyRepairService.triggerAutoRepair', () => {
 
     expect(result).toBeNull();
     expect(spawner).not.toHaveBeenCalled();
+    expect(m.claimRepairing).not.toHaveBeenCalled();
   });
 });

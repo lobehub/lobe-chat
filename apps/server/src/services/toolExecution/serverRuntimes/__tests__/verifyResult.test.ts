@@ -258,7 +258,8 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     // write lands; the atomic pending-guard update must return no rows for the
     // loser, which then reports the persisted verdict instead of overwriting.
     mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
-    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1' });
+    // First findByOperation (post-write settlement): run settled normally.
+    mocks.runFindByOperation.mockResolvedValueOnce({ id: 'run-1', status: 'failed' });
     // First read (fast path): row still pending → passes the terminal check.
     mocks.resultListByRun.mockResolvedValueOnce([
       { checkItemId: 'check-1', status: 'pending', verdict: null },
@@ -268,6 +269,8 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     mocks.resultListByRun.mockResolvedValueOnce([
       { checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' },
     ]);
+    mocks.statusRecompute.mockResolvedValue('failed');
+    mocks.finalizeVerifyRun.mockResolvedValue(undefined);
 
     const result = await runtime.submitVerifyResult({
       checkItemId: 'check-1',
@@ -278,7 +281,77 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     expect(result.success).toBe(true);
     expect(result.content).toContain('already recorded');
     expect(result.content).toContain('"uncertain"');
-    // The loser must not touch rollup/finalization — the winner owns those.
+    // The loser skips writing (winner owns the verdict) but must still run the
+    // idempotent settlement tail — the winner's own settlement may have failed.
+    expect(mocks.resultUpdateByCheckItemIfPending).toHaveBeenCalled();
+    expect(mocks.statusRecompute).toHaveBeenCalledWith('op-parent');
+    expect(mocks.finalizeVerifyRun).toHaveBeenCalled();
+  });
+
+  it('retries settlement after losing the race when the winner left the run unsettled', async () => {
+    // P1 regression: the winner persisted its verdict, then its settlement
+    // threw; the loser used to acknowledge success without recomputing or
+    // finalizing, leaving the run terminal-but-unsettled where the sweep
+    // cannot recover it.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'failed' });
+    mocks.resultListByRun
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'pending', verdict: null }])
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' }]);
+    mocks.resultUpdateByCheckItemIfPending.mockResolvedValue([]);
+    mocks.statusRecompute.mockResolvedValue('failed');
+    mocks.finalizeVerifyRun.mockResolvedValue(undefined);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.statusRecompute).toHaveBeenCalledWith('op-parent');
+    expect(mocks.finalizeVerifyRun).toHaveBeenCalled();
+  });
+
+  it('loud-fails after losing the race when the settlement retry itself fails', async () => {
+    // The race-lost path must surface settlement failure through the same
+    // SETTLEMENT_INCOMPLETE receipt as the terminal fast path — never a
+    // success ack over an unsettled run.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'failed' });
+    mocks.resultListByRun
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'pending', verdict: null }])
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' }]);
+    mocks.resultUpdateByCheckItemIfPending.mockResolvedValue([]);
+    mocks.statusRecompute.mockRejectedValue(new Error('rollup write failed'));
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('SETTLEMENT_INCOMPLETE');
+    expect(result.content).toContain('already recorded');
+    expect(result.content).toContain('settlement did not complete');
+  });
+
+  it('skips the settlement tail after losing the race while a repair round is in flight', async () => {
+    // status "repairing" owns settlement from here on; the race-lost duplicate
+    // must not touch the rollup or finalizer any more than the fast path.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'repairing' });
+    mocks.resultListByRun
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'pending', verdict: null }])
+      .mockResolvedValueOnce([{ checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' }]);
+    mocks.resultUpdateByCheckItemIfPending.mockResolvedValue([]);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.content).toContain('already recorded');
     expect(mocks.statusRecompute).not.toHaveBeenCalled();
     expect(mocks.finalizeVerifyRun).not.toHaveBeenCalled();
   });

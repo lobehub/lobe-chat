@@ -119,19 +119,8 @@ class VerifyResultExecutionRuntime {
         this.workspaceId,
       ).findByOperation(targetOperationId);
       if (freshRun && freshRun.status !== 'repairing') {
-        try {
-          await new VerifyStatusService(this.db, this.userId, this.workspaceId).recompute(
-            targetOperationId,
-          );
-          await finalizeVerifyRun(this.db, this.userId, targetOperationId, {}, this.workspaceId);
-        } catch (error) {
-          log('settlement retry failed for op %s: %O', targetOperationId, error);
-          return {
-            content: `Verdict "${reported}" was already recorded for this check, but run settlement did not complete. Retry the submission to finish settlement.`,
-            error: 'SETTLEMENT_INCOMPLETE',
-            success: false,
-          };
-        }
+        const incomplete = await this.settleOrReportIncomplete(targetOperationId, reported);
+        if (incomplete) return incomplete;
       }
       return {
         content: `Verdict "${reported}" was already recorded for this check; the duplicate submission was ignored.`,
@@ -166,6 +155,21 @@ class VerifyResultExecutionRuntime {
         await new VerifyCheckResultModel(this.db, this.userId, this.workspaceId).listByRun(run.id)
       ).find((result) => result.checkItemId === params.checkItemId);
       const reported = landed?.verdict ?? landed?.status ?? params.verdict;
+      // Race-lost duplicates go through the same settlement tail as the
+      // terminal fast path above: the winner may have persisted its verdict
+      // and then thrown during settlement, leaving the run terminal-but-
+      // unsettled. The loser must not acknowledge success while the winner's
+      // own receipt already surfaced the failure — both callers re-run the
+      // idempotent settlement until it completes.
+      const freshRun = await new VerifyRunModel(
+        this.db,
+        this.userId,
+        this.workspaceId,
+      ).findByOperation(targetOperationId);
+      if (freshRun && freshRun.status !== 'repairing') {
+        const incomplete = await this.settleOrReportIncomplete(targetOperationId, reported);
+        if (incomplete) return incomplete;
+      }
       return {
         content: `Verdict "${reported}" was already recorded for this check; the duplicate submission was ignored.`,
         success: true,
@@ -190,6 +194,36 @@ class VerifyResultExecutionRuntime {
       content: `Recorded verdict "${params.verdict}" for the check. Verification complete.`,
       success: true,
     };
+  };
+
+  /**
+   * Re-run the idempotent settlement tail for a run whose verdict already
+   * landed, surfacing a loud `SETTLEMENT_INCOMPLETE` receipt when it fails.
+   * Shared by both duplicate paths: the terminal fast path (a re-submission
+   * after the verdict is recorded) and the race-lost path (this caller lost
+   * the atomic pending-guard to a concurrent winner that may itself have
+   * failed settlement).
+   *
+   * @returns an error receipt when settlement threw, or null when it completed.
+   */
+  private settleOrReportIncomplete = async (
+    targetOperationId: string,
+    reported: string,
+  ): Promise<{ content: string; error: string; success: false } | null> => {
+    try {
+      await new VerifyStatusService(this.db, this.userId, this.workspaceId).recompute(
+        targetOperationId,
+      );
+      await finalizeVerifyRun(this.db, this.userId, targetOperationId, {}, this.workspaceId);
+    } catch (error) {
+      log('settlement retry failed for op %s: %O', targetOperationId, error);
+      return {
+        content: `Verdict "${reported}" was already recorded for this check, but run settlement did not complete. Retry the submission to finish settlement.`,
+        error: 'SETTLEMENT_INCOMPLETE',
+        success: false,
+      };
+    }
+    return null;
   };
 }
 

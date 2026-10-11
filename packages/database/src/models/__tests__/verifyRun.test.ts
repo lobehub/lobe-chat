@@ -135,6 +135,74 @@ describe('VerifyRunModel.claimVerifying', () => {
   });
 });
 
+describe('VerifyRunModel.claimRepairing', () => {
+  it('claims a settled run via CAS and flips it to repairing', async () => {
+    const runId = await buildRun('op-claim-repair-1');
+    await new VerifyRunModel(serverDB, userId).updateStatus(runId, 'failed');
+
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'failed'),
+    ).resolves.toBe(true);
+    expect(await statusOf(runId)).toBe('repairing');
+  });
+
+  it('refuses a second claim while a repair round is in flight', async () => {
+    const runId = await buildRun('op-claim-repair-2');
+    await new VerifyRunModel(serverDB, userId).updateStatus(runId, 'failed');
+
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'failed'),
+    ).resolves.toBe(true);
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'failed'),
+    ).resolves.toBe(false);
+    expect(await statusOf(runId)).toBe('repairing');
+  });
+
+  it('claims a run with a NULL status — SQL = must not exclude it', async () => {
+    const runId = await buildRun('op-claim-repair-3');
+    await serverDB.update(verifyRuns).set({ status: null }).where(eq(verifyRuns.id, runId));
+
+    await expect(new VerifyRunModel(serverDB, userId).claimRepairing(runId, null)).resolves.toBe(
+      true,
+    );
+    expect(await statusOf(runId)).toBe('repairing');
+  });
+
+  it('misses the CAS when the status moved since the read', async () => {
+    // Two overlapping callers read the same `failed` run; the first claim
+    // flips it, so the second caller's identical CAS matches nothing.
+    const runId = await buildRun('op-claim-repair-4');
+    await new VerifyRunModel(serverDB, userId).updateStatus(runId, 'failed');
+
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'failed'),
+    ).resolves.toBe(true);
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'failed'),
+    ).resolves.toBe(false);
+  });
+
+  it('misses the CAS when the expected status differs from the row', async () => {
+    const runId = await buildRun('op-claim-repair-5');
+    await new VerifyRunModel(serverDB, userId).updateStatus(runId, 'failed');
+
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'passed'),
+    ).resolves.toBe(false);
+    expect(await statusOf(runId)).toBe('failed');
+  });
+
+  it('never claims another owner’s run', async () => {
+    const runId = await buildRun('op-claim-repair-6', otherUserId);
+
+    await expect(
+      new VerifyRunModel(serverDB, userId).claimRepairing(runId, 'planned'),
+    ).resolves.toBe(false);
+    expect(await statusOf(runId)).toBe('planned');
+  });
+});
+
 /**
  * `findStuckVerifying` is deliberately global — no user or workspace scope, since
  * it backs a cross-owner cron. The test database is shared with every other suite,

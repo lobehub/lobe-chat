@@ -8,7 +8,20 @@ import type {
   VerifyRunSource,
   VerifyRunStatus,
 } from '@lobechat/types';
-import { and, asc, desc, eq, gt, ilike, inArray, isNotNull, lt, or, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import { agentOperations } from '../schemas/agentOperations';
 import type { NewVerifyRun, VerifyRunItem } from '../schemas/verify';
@@ -642,6 +655,40 @@ export class VerifyRunModel {
       .update(verifyRuns)
       .set({ status: 'collecting_evidence' })
       .where(and(eq(verifyRuns.id, runId), eq(verifyRuns.status, 'planned'), this.ownership()))
+      .returning({ id: verifyRuns.id });
+
+    return claimed.length > 0;
+  };
+
+  /**
+   * Atomically claim the repair round: flip the run to `repairing` in one
+   * conditional UPDATE that only fires while the status still equals the
+   * caller's freshly-read expectation, so exactly one of two overlapping
+   * settlement calls can spawn a repair against the same failures.
+   *
+   * PostgreSQL's UPDATE ... RETURNING hands back the NEW row, so the
+   * pre-claim status can't be read out of the claim itself — the caller
+   * passes the status it just read (`fromStatus`) as the CAS expectation and
+   * keeps it for the release path. If the status moved since the read
+   * (another claimer won, a rollup recompute landed, a repair round finished),
+   * the UPDATE matches nothing and the caller drops out; the next settlement
+   * retry or sweep re-enters with a fresh read.
+   *
+   * @returns true when this caller owns the repair round, false otherwise.
+   */
+  claimRepairing = async (runId: string, fromStatus: VerifyRunStatus | null): Promise<boolean> => {
+    const claimed = await this.db
+      .update(verifyRuns)
+      .set({ status: 'repairing' })
+      .where(
+        and(
+          eq(verifyRuns.id, runId),
+          // SQL's `= / <>` never match NULL rows, so a run with no status yet
+          // needs an explicit IS NULL branch to stay claimable.
+          fromStatus === null ? isNull(verifyRuns.status) : eq(verifyRuns.status, fromStatus),
+          this.ownership(),
+        ),
+      )
       .returning({ id: verifyRuns.id });
 
     return claimed.length > 0;
