@@ -31,6 +31,7 @@ const createStorage = ({ strict = true }: { strict?: boolean } = {}) => {
   const rows = new Map<string, ReplicaRow<any>>();
   const failReads = new Set<string>();
   const failRemoves = new Set<string>();
+  const failSets = new Set<string>();
   const writes: string[] = [];
   const id = ({ queryKey, scope }: { queryKey: string; scope: string }) => `${scope}|${queryKey}`;
   const storage: ReplicaStorage<any> = {
@@ -40,6 +41,7 @@ const createStorage = ({ strict = true }: { strict?: boolean } = {}) => {
       rows.delete(id(key));
     },
     set: async (key, row) => {
+      if (failSets.has(key.queryKey)) throw new Error('write failed');
       writes.push(key.queryKey);
       rows.set(id(key), row);
     },
@@ -55,7 +57,7 @@ const createStorage = ({ strict = true }: { strict?: boolean } = {}) => {
       .filter((key) => !key.endsWith(REPLICA_INDEX_KEY))
       .map((key) => key.slice(SCOPE.length + 1))
       .sort();
-  return { dataKeys, failReads, failRemoves, index, rows, storage, writes };
+  return { dataKeys, failReads, failRemoves, failSets, index, rows, storage, writes };
 };
 
 /** Minimal host: a record of views plus the bookkeeping slot. */
@@ -203,5 +205,89 @@ describe('removeEntity keeps its guard until the persisted patch lands', () => {
     fresh.engine.removeEntity('1');
     await flush();
     expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([item('2')]);
+  });
+});
+
+describe('redundant persist writes', () => {
+  const rowWrites = (storage: ReturnType<typeof createStorage>, queryKey: string) =>
+    storage.writes.filter((key) => key === queryKey).length;
+
+  it('skips a revalidation whose value equals what this session persisted', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    // A fresh but deep-equal response.
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    expect(rowWrites(storage, 'a?{}')).toBe(1);
+
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+    expect(rowWrites(storage, 'a?{}')).toBe(2);
+  });
+
+  it('skips a revalidation equal to the row it hydrated, and writes one that differs', async () => {
+    resetScope();
+    const storage = createStorage();
+    storage.rows.set(`${SCOPE}|a?{}`, { data: [item('1')], updatedAt: 1 });
+    storage.rows.set(`${SCOPE}|b?{}`, { data: [item('old')], updatedAt: 1 });
+    const { engine } = setupList(storage);
+    await engine.hydrate({ id: 'a' });
+    await engine.hydrate({ id: 'b' });
+
+    engine.replace({ id: 'a' }, [item('1')]);
+    engine.replace({ id: 'b' }, [item('new')]);
+    await flush();
+    expect(rowWrites(storage, 'a?{}')).toBe(0);
+    expect(rowWrites(storage, 'b?{}')).toBe(1);
+  });
+
+  it('writes again after a failed write, a removal or a clear', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine } = setupList(storage);
+    storage.failSets.add('a?{}');
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    storage.failSets.delete('a?{}');
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1')]);
+
+    engine.remove('a');
+    await flush();
+    expect(storage.rows.has(`${SCOPE}|a?{}`)).toBe(false);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1')]);
+
+    expect(await engine.clear()).toBe(true);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1')]);
+  });
+
+  it('writes again after an entity patch rewrote the row behind it', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    // The entry moves on to another query: the first row is no longer loaded.
+    engine.replace({ id: 'a', q: 'x' }, [item('2')]);
+    await flush();
+
+    engine.updateEntity<Item>('1', () => ({ id: '1', renamed: true }) as Item);
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([
+      { id: '1', renamed: true },
+      item('2'),
+    ]);
+
+    // Back to the first query with the original value: the row must be rewritten.
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1'), item('2')]);
   });
 });

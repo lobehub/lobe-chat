@@ -250,6 +250,29 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return seq;
   };
 
+  // ---- last persisted value per row ---------------------------------------
+  // What this session knows a row holds in storage: the value it queued (until
+  // that write fails) or read back by a hydrate no write raced. A persist of a
+  // deep-equal value is skipped — an unchanged revalidation must not rewrite
+  // the same row. Every path that may change a row behind it (a delete, a
+  // patch, a clear, an eviction) forgets the row, so the next persist writes.
+  const storedValues = new Map<string, Map<string, unknown>>();
+  const rememberStored = (scope: string, queryKey: string, data: unknown) => {
+    const rows = storedValues.get(scope) ?? new Map<string, unknown>();
+    storedValues.set(scope, rows);
+    rows.set(queryKey, data);
+  };
+  const forgetStored = (scope: string, queryKeys: Iterable<string>) => {
+    const rows = storedValues.get(scope);
+    if (!rows) return;
+    for (const queryKey of queryKeys) rows.delete(queryKey);
+    if (rows.size === 0) storedValues.delete(scope);
+  };
+  const isStored = (scope: string, queryKey: string, data: unknown) => {
+    const rows = storedValues.get(scope);
+    return !!rows?.has(queryKey) && isEqual(rows.get(queryKey), data);
+  };
+
   /** Record a persisted row in the index (queued after the row write). */
   const trackStorageKey = (scope: string, queryKey: string) => {
     if (!writeQueue) return;
@@ -319,6 +342,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    */
   const deleteRows = (scope: string, queryKeys: string[]): Promise<boolean> => {
     const queue = writeQueue!;
+    forgetStored(scope, queryKeys);
     const queued = queryKeys.map((queryKey) => {
       const seq = noteWrite(scope, queryKey);
       return queue
@@ -390,7 +414,14 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         void deleteRows(effect.scope, [key.queryKey]);
         continue;
       }
-      writeQueue.set(key, { data, updatedAt: Date.now() });
+      // The row already holds this value: an unchanged revalidation is no write.
+      if (isStored(effect.scope, key.queryKey, data)) continue;
+      rememberStored(effect.scope, key.queryKey, data);
+      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
+        // A failed write leaves the row as it was: the next persist must retry.
+        if (!written && storedValues.get(effect.scope)?.get(key.queryKey) === data)
+          forgetStored(effect.scope, [key.queryKey]);
+      });
       trackStorageKey(effect.scope, key.queryKey);
     }
   };
@@ -424,6 +455,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const writes: ReplicaViewWrite<TData>[] = [];
     const read = (key: string) => readThrough(writes, key);
     if (slot.scope !== undefined && slot.scope !== activeScope) {
+      // Memory moves to another identity; what we knew of its rows can go.
+      storedValues.delete(slot.scope);
       const reset = replicaReducer(slot, { scope: activeScope, type: 'resetScope' }, read);
       writes.push(...reset.writes);
       slot = reset.state;
@@ -518,11 +551,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const purge = scopePurges.get(scope);
     if (purge && !(await purge)) return false;
     const query = resource.query(params);
-    const cached = await storage.get({ ...storageKey(key, query), scope });
+    const { queryKey } = storageKey(key, query);
+    const writesBefore = writeCounter;
+    const cached = await storage.get({ queryKey, scope });
     if (!cached) return false;
     // Re-check after the read: a removal or a clear that landed while it was in
     // flight must not resurrect the row it just dropped.
     if (isRemoved(scope, key) || clearGeneration(scope) !== generation) return false;
+    // The row holds what was read, unless a write was queued while reading.
+    if (writeCounter === writesBefore && !storedValues.get(scope)?.has(queryKey))
+      rememberStored(scope, queryKey, cached.data);
     if (options.isHydratable && !options.isHydratable(cached.data, params)) return false;
     // Entities deleted while the read was in flight may still be in the row.
     const stored = withoutRemovedEntities(scope, cached.data);
@@ -693,6 +731,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const scope = resource.scope.get();
     clearGenerations.set(scope, clearGeneration(scope) + 1);
     port.commit([{ type: 'clear' }], { entries: {}, scope }, `${prefix}/clear`);
+    storedValues.delete(scope);
     const purge = purgeScope(scope);
     scopePurges.set(scope, purge);
     return purge;
@@ -942,6 +981,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
       const seq = noteWrite(scope, queryKey);
+      forgetStored(scope, [queryKey]);
       let dropped = false;
       const patch = writeQueue
         .update(
@@ -1004,6 +1044,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
       const seq = noteWrite(scope, queryKey);
+      forgetStored(scope, [queryKey]);
       let dropped = false;
       const patch = writeQueue
         .update(
