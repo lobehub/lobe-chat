@@ -106,6 +106,32 @@ describe('contextList replica', () => {
     vi.clearAllMocks();
   });
 
+  /** A server list the fetch spy pages through by offset, like `queryMemories`. */
+  const serveList = (rows: UserMemoryItemSimple[]) =>
+    fetchSpy.mockImplementation(async (params: { page?: number; pageSize?: number } = {}) => {
+      const pageSize = params.pageSize ?? 12;
+      const start = ((params.page ?? 1) - 1) * pageSize;
+      return {
+        items: rows.slice(start, start + pageSize),
+        page: params.page ?? 1,
+        pageSize,
+        total: rows.length,
+      };
+    });
+
+  /** `deleteContext` that also drops the row server-side. */
+  const deleteOnServer = (rows: UserMemoryItemSimple[]) =>
+    vi.spyOn(memoryCRUDService, 'deleteContext').mockImplementation(async (id: string) => {
+      rows.splice(
+        rows.findIndex((row) => (row as any).memory.id === id),
+        1,
+      );
+      return undefined as never;
+    });
+
+  const contextIds = (length: number, offset = 0) =>
+    Array.from({ length }, (_, i) => `context-${i + offset}`);
+
   it('reads the list from a single scope entry', () => {
     expect(CONTEXT_LIST_KEY).toBe('all');
   });
@@ -307,8 +333,9 @@ describe('contextList replica', () => {
   });
 
   it('drops a deleted context from the view and the persisted row', async () => {
-    fetchSpy.mockResolvedValue(listPage([rawItem('a'), rawItem('b')], 2));
-    vi.spyOn(memoryCRUDService, 'deleteContext').mockResolvedValue(undefined as never);
+    const server = [rawItem('a'), rawItem('b')];
+    serveList(server);
+    deleteOnServer(server);
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12 }), {
       wrapper,
@@ -328,6 +355,153 @@ describe('contextList replica', () => {
       const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope });
       expect(ids(row?.data as ContextListData)).toEqual(['b']);
     });
+  });
+
+  it('does not skip the row that shifts onto the head after a delete', async () => {
+    const server = rawItemsOf(36);
+    serveList(server);
+    deleteOnServer(server);
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(12));
+    act(() => useUserMemoryStore.getState().loadMoreContexts());
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(24));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().deleteContext('context-0');
+    });
+
+    // The loaded depth collapses to the revalidated head page.
+    const head = useUserMemoryStore.getState().contextListData!;
+    expect(head.currentPage).toBe(0);
+    expect(ids(head)).toEqual(contextIds(12, 1));
+
+    act(() => useUserMemoryStore.getState().loadMoreContexts());
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(24));
+    act(() => useUserMemoryStore.getState().loadMoreContexts());
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(35));
+
+    // Every remaining server row is listed exactly once, in order.
+    expect(useUserMemoryStore.getState().contexts.map((c) => c.id)).toEqual(contextIds(35, 1));
+  });
+
+  it('waits for the post-delete head revalidation before loading more', async () => {
+    const server = rawItemsOf(36);
+    serveList(server);
+    deleteOnServer(server);
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(12));
+
+    let deleted!: Promise<void>;
+    act(() => {
+      deleted = useUserMemoryStore.getState().deleteContext('context-3');
+      // Paging while the delete and its head revalidation are in flight.
+      useUserMemoryStore.getState().loadMoreContexts();
+    });
+    await act(async () => {
+      await deleted;
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(24));
+
+    expect(useUserMemoryStore.getState().contexts.map((c) => c.id)).toEqual(
+      server.slice(0, 24).map((row) => (row as any).memory.id),
+    );
+  });
+
+  it('reports a page being loaded and a failed page through the compatibility response', async () => {
+    let failPage!: (error: Error) => void;
+    fetchSpy
+      .mockResolvedValueOnce(listPage(rawItemsOf(12), 24))
+      .mockImplementationOnce(() => new Promise<never>((_, reject) => (failPage = reject)));
+
+    const hook = renderHook(() => useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(12));
+    expect(hook.result.current.isLoading).toBe(false);
+
+    act(() => useUserMemoryStore.getState().loadMoreContexts());
+    await waitFor(() => expect(hook.result.current.isLoading).toBe(true));
+    expect(hook.result.current.data?.items).toHaveLength(12);
+
+    const error = new Error('page 2 failed');
+    await act(async () => failPage(error));
+
+    await waitFor(() => expect(hook.result.current.isLoading).toBe(false));
+    expect(hook.result.current.error).toBe(error);
+    // A failed later page never replaces the settled list with an error.
+    expect(useUserMemoryStore.getState().contextsSearchError).toBeUndefined();
+    expect(useUserMemoryStore.getState().contexts).toHaveLength(12);
+  });
+
+  it('ignores a late failure of a superseded query', async () => {
+    const rejectByQuery = new Map<string, (error: Error) => void>();
+    fetchSpy.mockImplementation(
+      (params: { q?: string } = {}) =>
+        new Promise<never>((_, reject) => rejectByQuery.set(params.q ?? '', reject)),
+    );
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(rejectByQuery.has('')).toBe(true));
+
+    act(() => useUserMemoryStore.getState().resetContextsList({ q: 'foo' }));
+    hook.rerender({ q: 'foo' });
+    await waitFor(() => expect(rejectByQuery.has('foo')).toBe(true));
+
+    await act(async () => {
+      rejectByQuery.get('')!(new Error('superseded'));
+    });
+
+    // The new query is still resetting and shows no error of the old one.
+    expect(useUserMemoryStore.getState().contextsSearchError).toBeUndefined();
+    expect(useUserMemoryStore.getState().contextsSearchLoading).toBe(true);
+  });
+
+  it('wipes every persisted query variant when all memories are purged', async () => {
+    const server = [rawItem('a'), rawItem('b')];
+    serveList(server);
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      server.length = 0;
+      return undefined as never;
+    });
+
+    // A search the user visited earlier leaves its own persisted row behind.
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({});
+    await waitFor(async () =>
+      expect(
+        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    expect(ids(useUserMemoryStore.getState().contextListData)).toEqual(['a', 'b']);
+
+    await act(async () => {
+      await useUserMemoryStore.getState().purgeAllMemories();
+    });
+
+    // The inactive search's row is gone too: a reload on it cannot paint deleted memories.
+    expect(await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope })).toBeFalsy();
+    // The mounted query revalidates against the emptied server.
+    await waitFor(() => expect(ids(useUserMemoryStore.getState().contextListData)).toEqual([]));
+    expect(useUserMemoryStore.getState().contexts).toEqual([]);
   });
 
   it('does not fetch another page when the head page is the last one', async () => {

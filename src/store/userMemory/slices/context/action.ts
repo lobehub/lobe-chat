@@ -4,6 +4,8 @@ import { type SWRResponse } from 'swr';
 
 import { type DisplayContextMemory } from '@/database/repositories/userMemory';
 import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
+import { mutate } from '@/libs/swr';
+import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { LayersEnum } from '@/types/userMemory';
@@ -96,6 +98,8 @@ export const createContextSlice = (set: Setter, get: () => UserMemoryStore, _api
  */
 export class ContextActionImpl {
   readonly #get: () => UserMemoryStore;
+  /** A delete and its head revalidation in flight; paging waits for it (see `deleteContext`). */
+  #headRefresh: Promise<unknown> | undefined;
   readonly #list;
   readonly #set: Setter;
 
@@ -155,19 +159,72 @@ export class ContextActionImpl {
     );
   };
 
+  /**
+   * Revalidate every mounted context query. The list syncs under the legacy
+   * `userMemory:contexts` SWR key (see `projection.ts`), so the replica's own
+   * `revalidate()` (which matches `replica:sync` keys) would not reach it.
+   */
+  #revalidateList = (): Promise<unknown> =>
+    mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root);
+
+  /**
+   * Wipe the context list for "delete all memories": the in-memory view and
+   * every persisted query variant of the active scope, dropping reads that
+   * started before the wipe. The caller revalidates afterwards.
+   */
+  clearContextList = async (): Promise<void> => {
+    const purged = this.#list.clear();
+    this.#set(
+      {
+        contextsQuery: undefined,
+        contextsSearchError: undefined,
+        contextsSearchLoading: undefined,
+        contextsSort: undefined,
+      },
+      false,
+      n('clearContextList'),
+    );
+    await purged;
+  };
+
   deleteContext = async (id: string): Promise<void> => {
+    // Paging waits for the whole delete (see `loadMoreContexts`): a page
+    // fetched while the server shifts its offsets would skip a row.
+    const run = this.#deleteAndRefreshHead(id);
+    this.#headRefresh = run;
+    try {
+      await run;
+    } finally {
+      if (this.#headRefresh === run) this.#headRefresh = undefined;
+    }
+  };
+
+  #deleteAndRefreshHead = async (id: string): Promise<void> => {
     await memoryCRUDService.deleteContext(id);
-    // Drop the row from the in-memory view and the persisted projection right
-    // away; the list resyncs on its next revalidation (focus / remount).
-    this.#list.updateEntity(id, () => undefined);
+    // Drop the row from every loaded/persisted list, including reads in flight.
+    this.#list.removeEntity(id);
+    // The list is offset-paged: once a row is gone the server shifts the rows
+    // after it one slot up, so the loaded next-page offset would skip one.
+    // Collapse to the head page and revalidate it before paging again.
+    this.#list.collapse(CONTEXT_LIST_KEY);
+    await this.#revalidateList();
   };
 
   /**
    * Append the next page of the context list. The engine reads the loaded head
-   * params, dedupes by id and keeps `hasMore` honest.
+   * params, dedupes by id and keeps `hasMore` honest. After a delete it waits
+   * for the head revalidation so the next offset is the server's.
    */
   loadMoreContexts = (): void => {
-    void this.#list.loadMore(CONTEXT_LIST_KEY);
+    const refresh = this.#headRefresh;
+    if (!refresh) {
+      void this.#list.loadMore(CONTEXT_LIST_KEY);
+      return;
+    }
+    void refresh.then(
+      () => this.#list.loadMore(CONTEXT_LIST_KEY),
+      () => this.#list.loadMore(CONTEXT_LIST_KEY),
+    );
   };
 
   /**
@@ -230,8 +287,11 @@ export class ContextActionImpl {
 
     return {
       data,
-      error: sync.error,
-      isLoading: !data && (sync.isValidating || !sync.isHydrated),
+      // A failed "load more" is the list's error too (the head error wins).
+      error: sync.error ?? view?.loadMoreError,
+      // Later pages report loading so the list footer shows it; the boundary
+      // keeps settled rows mounted while a page loads.
+      isLoading: (!data && (sync.isValidating || !sync.isHydrated)) || Boolean(view?.isLoadingMore),
       isValidating: sync.isValidating,
       mutate: sync.revalidate,
     } as unknown as SWRResponse<any>;
