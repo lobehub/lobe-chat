@@ -57,7 +57,7 @@ const syncCalls = async (name: string) => {
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
@@ -69,6 +69,31 @@ const fold = async (name: string, data: unknown) => {
 };
 
 describe('SocialSlice (replica)', () => {
+  it('does not revalidate any social read on window focus', async () => {
+    renderHook(() => {
+      const state = useStore.getState();
+      state.useFollowStatus(1);
+      state.useFollowCounts(1);
+      state.useFollowers(1);
+      state.useFollowing(1);
+      state.useFavoriteAgents(1);
+      state.useFavoritePlugins(1);
+    });
+
+    for (const name of [
+      'discoverFollowStatus',
+      'discoverFollowCounts',
+      'discoverFollowers',
+      'discoverFollowing',
+      'discoverFavoriteAgents',
+      'discoverFavoritePlugins',
+    ]) {
+      const calls = await syncCalls(name);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const call of calls) expect(call.config.revalidateOnFocus).toBe(false);
+    }
+  });
+
   describe('useFollowStatus', () => {
     it('requests the viewer-relative status for the target user', async () => {
       renderHook(() => useStore.getState().useFollowStatus(42));

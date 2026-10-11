@@ -143,7 +143,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const params = userParams(userId ?? 0);
     const queryKey = socialUserKey(params);
-    const sync = this.#followStatus.useSync(active ? params : null, { enabled: active });
+    const sync = this.#followStatus.useSync(active ? params : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
@@ -160,7 +163,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const params = userParams(userId ?? 0);
     const queryKey = socialUserKey(params);
-    const sync = this.#followCounts.useSync(active ? params : null, { enabled: active });
+    const sync = this.#followCounts.useSync(active ? params : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
@@ -177,7 +183,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const normalized = listParams(userId ?? 0, params);
     const queryKey = socialListKey(normalized);
-    const sync = this.#followers.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#followers.useSync(active ? normalized : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
@@ -194,7 +203,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const normalized = listParams(userId ?? 0, params);
     const queryKey = socialListKey(normalized);
-    const sync = this.#following.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#following.useSync(active ? normalized : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
@@ -211,7 +223,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const normalized = listParams(userId ?? 0, params);
     const queryKey = socialListKey(normalized);
-    const sync = this.#favoriteAgents.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#favoriteAgents.useSync(active ? normalized : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
@@ -228,7 +243,10 @@ export class SocialActionImpl {
     const active = typeof userId === 'number';
     const normalized = listParams(userId ?? 0, params);
     const queryKey = socialListKey(normalized);
-    const sync = this.#favoritePlugins.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#favoritePlugins.useSync(active ? normalized : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
     return toSyncResult(
       sync,
       queryKey,
