@@ -390,24 +390,43 @@ describe('OidcClientModel', () => {
       expect(client.isFirstParty).toBe(false);
     });
 
-    it('should not issue a secret at creation; the owner generates it on demand', async () => {
+    it('should not issue a secret at creation unless asked; the owner generates it on demand', async () => {
       const result = await oidcClientModel.create({
         name: 'Develop Center',
         redirectUris,
         type: 'web',
       });
 
-      expect(result).not.toHaveProperty('secret');
+      expect(result.secret).toBeUndefined();
       expect(result.client.clientSecret).toBeNull();
     });
 
+    it('should issue the secret at creation when asked, stored encrypted', async () => {
+      const { client, secret } = await oidcClientModel.create({
+        issueSecret: true,
+        name: 'Develop Center',
+        redirectUris,
+        type: 'web',
+      });
+
+      expect(secret).toMatch(/^lcs_[\w-]{43}$/);
+      expect(client.clientSecret).not.toBe(secret);
+
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+      const { plaintext } = await gateKeeper.decrypt(client.clientSecret!);
+
+      expect(plaintext).toBe(secret);
+    });
+
     it('should not give a device app a secret or redirect uris', async () => {
-      const { client } = await oidcClientModel.create({
+      const { client, secret } = await oidcClientModel.create({
+        issueSecret: true,
         name: 'My CLI',
         redirectUris,
         type: 'device',
       });
 
+      expect(secret).toBeUndefined();
       expect(client.clientSecret).toBeNull();
       expect(client.redirectUris).toEqual([]);
     });

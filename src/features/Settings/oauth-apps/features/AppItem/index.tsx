@@ -4,13 +4,7 @@ import { DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { ActionIcon, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import {
-  ChevronRightIcon,
-  MoreVerticalIcon,
-  PowerIcon,
-  PowerOffIcon,
-  Trash2Icon,
-} from 'lucide-react';
+import { MoreVerticalIcon, PowerIcon, PowerOffIcon, Trash2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,17 +13,13 @@ import { type OAuthAppItem } from '@/types/oauthApp';
 
 import { appTypeLabelKey } from '../../appList';
 import AppLogo from '../AppLogo';
-import ClientIdDisplay from '../ClientIdDisplay';
 import { confirmDisableOAuthApp } from '../confirmDisable';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
-  chevron: css`
-    flex: none;
-    color: ${cssVar.colorTextQuaternary};
-  `,
   meta: css`
+    flex: none;
     font-size: ${cssVar.fontSizeSM};
-    color: ${cssVar.colorTextSecondary};
+    color: ${cssVar.colorTextTertiary};
   `,
   row: css`
     cursor: pointer;
@@ -99,6 +89,7 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
     >
       <AppLogo logoUri={app.logoUri} name={app.name} size={36} />
 
+      {/* The client ID lives on the app page; the row only identifies the app. */}
       <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
         <Flexbox horizontal align={'center'} gap={8}>
           <Text ellipsis weight={500}>
@@ -106,13 +97,16 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
           </Text>
           {!app.enabled && <Tag>{t('oauthApp.item.disabledTag')}</Tag>}
         </Flexbox>
-        <span style={{ alignSelf: 'flex-start' }} onClick={(e) => e.stopPropagation()}>
-          <ClientIdDisplay clientId={app.id} />
-        </span>
-        <span className={styles.meta}>
-          {t(appTypeLabelKey(app.applicationType))} · {lastUsed}
-        </span>
+        {app.description && (
+          <Text ellipsis style={{ fontSize: 12 }} type={'secondary'}>
+            {app.description}
+          </Text>
+        )}
       </Flexbox>
+
+      <span className={styles.meta}>
+        {t(appTypeLabelKey(app.applicationType))} · {lastUsed}
+      </span>
 
       {canEdit && (
         <span style={{ flex: 'none' }} onClick={(e) => e.stopPropagation()}>
@@ -147,8 +141,6 @@ const AppItem = memo<AppItemProps>(({ app, canEdit, onChanged, onDeleted, onOpen
           </DropdownMenu>
         </span>
       )}
-
-      <Icon className={styles.chevron} icon={ChevronRightIcon} size={'small'} />
     </Flexbox>
   );
 });

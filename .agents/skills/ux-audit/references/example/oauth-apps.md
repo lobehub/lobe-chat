@@ -179,6 +179,21 @@ fix:
   type cards also lost the 32px right gutter that had been reserved for the check mark, which
   wrapped the description early; the check now sits in the title row.
 
+**⑮ Owner review of the second round** _fixed_
+
+- **The reveal surface.** The in-row reveal was rejected. The owner wants a focused modal, but
+  only as the response to their own Generate / Rotate click, with neutral styling instead of the
+  first version's yellow alert. → ux Act §3.8 rewritten.
+- **Detail page structure.** Three tabs: Basic Info / Credentials / Advanced, with the danger
+  zone under Advanced and the tab in `?tab=`. The disabled banner now heads the page above the
+  title. Integration leads with a **one-prompt integration**: a ready-to-paste instruction for a
+  coding agent, filled with this app's client ID and endpoints. The raw URLs follow as
+  "Manual setup".
+- **List rows.** The client ID no longer shows in the row (it belongs on the app page). Type and
+  last-used moved right, before the ⋮ menu. The chevron was removed.
+- **Fills.** The selected type card loses its fill and keeps only the border. The edit form uses
+  `filled` inputs.
+
 ## 4 — Skill feedback
 
 - **New rule landed — Read §1.14** (gap ④): an entity with no image falls back to a shared

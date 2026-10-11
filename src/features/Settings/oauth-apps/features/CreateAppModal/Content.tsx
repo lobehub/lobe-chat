@@ -44,10 +44,9 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `,
   // LobeHub's primary is a near-black neutral, so the selection rides a
-  // text-colored border and a light fill instead of `colorPrimaryBg`.
+  // text-colored border alone — no fill, which read as a disabled block.
   typeCardSelected: css`
     border-color: ${cssVar.colorText};
-    background: ${cssVar.colorFillQuaternary};
 
     &:hover {
       border-color: ${cssVar.colorText};

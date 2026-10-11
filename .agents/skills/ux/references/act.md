@@ -335,15 +335,16 @@ thing (an API key, a personal access token: the user created it to get the value
 credential that _belongs to_ a larger entity (an OAuth app's client secret, a webhook's signing
 secret). For the first, the reveal is the create result. For the second, don't mint the secret
 as a side effect of creating the entity: the user has just landed on a page with other setup
-to do and is not ready to store it. Give the credential row a **Generate** action instead, and
-mint and reveal the secret **in place, in that row**, when the user asks. Once one exists, the
-row shows it masked with **Rotate** (confirmed, since rotating breaks live deployments). The
-reveal is part of the row, not a separate surface: no modal stacked over the page (it blocks
-the page the secret belongs to, and one ✕ destroys the only copy), and no warning-coloured
-banner (the reveal is routine, not an alarm; the "won't see it again" line carries the
-urgency). It stays until the user confirms ("I've saved it") or leaves, and its copy names that
-boundary ("once you leave this page"). An entity whose secret has not been generated yet must
-be unusable server-side, not half-configured.
+to do and is not ready to store it. Give the credential row a **Generate** action instead; once
+one exists the row shows it masked with **Rotate** (confirmed, since rotating breaks live
+deployments). The reveal that follows the user's own Generate / Rotate click is a **focused
+modal** — the user asked for exactly this value and must copy it before doing anything else —
+with Copy, a neutral "you won't see it again after closing" line (no warning-coloured block:
+the reveal is routine, not an alarm), an explicit "I've saved it", and no mask-click dismiss.
+What the modal must never do is open unprompted over a page the user just navigated to. An
+entity whose secret has not been generated yet must be unusable server-side, not half-configured.
+Changing when a server issues a secret is a contract change: keep the old behaviour as the
+default for clients that don't ask for the new one.
 
 > ❌ Settings **API Key**: `ApiKeyModel.query()` decrypts and returns the **full plaintext** on
 > every list fetch (`packages/database/src/models/apiKey.ts`), the table masks client-side only
@@ -365,7 +366,8 @@ be unusable server-side, not half-configured.
 - [ ] A minted secret is shown in full exactly once at creation (persistent reveal + Copy + "won't see again"), not a toast. _(Meaningful・Certainty)_
 - [ ] Secret stored hashed at rest; list / detail return a masked prefix, never re-reveal plaintext. _(Certainty)_
 - [ ] A credential that belongs to a larger entity is generated on demand from its own row, not minted at entity creation; the entity is unusable until it exists. _(Natural・Certainty)_
-- [ ] The reveal happens in that row in neutral styling (no modal, no warning banner), stays until "I've saved it" or leaving, and names that boundary. _(Natural・Certainty)_
+- [ ] The reveal follows the user's own Generate / Rotate click in a focused, neutral modal (Copy, "I've saved it", no mask dismiss) — never a modal popped unprompted on page arrival. _(Natural・Certainty)_
+- [ ] Changing when the server issues a secret keeps the old behaviour as the default for clients that don't opt in. _(Certainty)_
 
 ## 3.9 A store of data about the user owes correction, retain-without-use, export & undo・Meaningful・Certainty
 

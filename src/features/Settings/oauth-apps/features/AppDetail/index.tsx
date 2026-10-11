@@ -7,6 +7,7 @@ import {
   Button,
   confirmModal,
   Skeleton,
+  Tabs,
   Tag,
   Text,
   toast,
@@ -14,8 +15,9 @@ import {
 import { createStaticStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ArrowLeftIcon, PowerIcon, PowerOffIcon, Trash2Icon } from 'lucide-react';
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 
 import OAuthAppStats from '@/business/client/OAuthAppStats';
 import AsyncError from '@/components/AsyncError';
@@ -26,6 +28,7 @@ import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
 import { type OAuthAppItem } from '@/types/oauthApp';
 
 import { confirmDisableOAuthApp } from '../confirmDisable';
+import { showClientSecretModal } from '../SecretModal';
 import BasicInfoCard from './BasicInfoCard';
 import CredentialsCard from './CredentialsCard';
 import IntegrationCard from './IntegrationCard';
@@ -72,6 +75,8 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+const TAB_KEYS = ['basic', 'credentials', 'advanced'] as const;
+
 interface AppDetailProps {
   canEdit: boolean;
   id: string;
@@ -88,9 +93,18 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
   );
   const detail = data as OAuthAppItem | undefined;
 
-  // A secret generated or rotated on this page, shown once until the user
-  // dismisses it or leaves.
-  const [freshSecret, setFreshSecret] = useState<string>();
+  // The active tab lives in the URL so a reload or shared link keeps it.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = TAB_KEYS.find((key) => key === searchParams.get('tab')) ?? 'basic';
+  const setTab = (key: string) =>
+    setSearchParams(
+      (params) => {
+        if (key === 'basic') params.delete('tab');
+        else params.set('tab', key);
+        return params;
+      },
+      { replace: true },
+    );
 
   // Only a settled "no such app" goes back to the list; a failed load stays here
   // with Retry instead of silently bouncing the user away.
@@ -113,7 +127,7 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
   const rotateSecretMutation = lambdaQuery.oauthApp.rotateSecret.useMutation({
     onSuccess: ({ clientSecret }) => {
       revalidate();
-      setFreshSecret(clientSecret);
+      showClientSecretModal({ clientSecret });
     },
   });
   const deleteMutation = lambdaQuery.oauthApp.delete.useMutation({
@@ -195,8 +209,108 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
       : t('oauthApp.list.neverUsed'),
   ].join(' · ');
 
+  const banner = isDisabled && (
+    <Alert
+      showIcon
+      message={t('oauthApp.disabled.banner')}
+      type={'warning'}
+      action={
+        canEdit && (
+          <Button loading={enabledMutation.isPending} size={'small'} onClick={handleEnable}>
+            {t('oauthApp.actions.enable')}
+          </Button>
+        )
+      }
+    />
+  );
+
+  const basicTab = (
+    <>
+      <BasicInfoCard
+        canEdit={canEdit}
+        detail={detail}
+        key={`basic-${detail.id}`}
+        onSubmit={handleUpdate}
+      />
+      <div className={styles.statsCard}>
+        <OAuthAppStats clientId={detail.id} />
+      </div>
+    </>
+  );
+
+  // Credentials first, then the one-prompt integration (which tells the
+  // developer the callback URL to register), then the redirect URIs.
+  const credentialsTab = (
+    <>
+      <CredentialsCard
+        canEdit={canEdit}
+        detail={detail}
+        secretPending={rotateSecretMutation.isPending}
+        onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
+        onRotateSecret={handleRotateSecret}
+      />
+      <IntegrationCard
+        applicationType={detail.applicationType}
+        clientId={detail.id}
+        name={detail.name}
+      />
+      {isWebApp && (
+        <RedirectUrisCard
+          canEdit={canEdit}
+          detail={detail}
+          key={`redirect-${detail.id}`}
+          onSubmit={handleUpdate}
+        />
+      )}
+    </>
+  );
+
+  const advancedTab = (
+    <Flexbox className={styles.dangerCard} gap={16}>
+      <Text weight={500}>{t('oauthApp.detail.dangerZone')}</Text>
+
+      <div className={styles.dangerRow}>
+        <Flexbox gap={2}>
+          <Text>{t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}</Text>
+          <span className={styles.dangerDesc}>
+            {t(isDisabled ? 'oauthApp.detail.enableDesc' : 'oauthApp.detail.disableDesc')}
+          </span>
+        </Flexbox>
+        <Button
+          disabled={!canEdit}
+          icon={isDisabled ? <PowerIcon size={16} /> : <PowerOffIcon size={16} />}
+          loading={enabledMutation.isPending}
+          style={{ flex: 'none' }}
+          onClick={isDisabled ? handleEnable : handleDisable}
+        >
+          {t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}
+        </Button>
+      </div>
+
+      <div className={styles.dangerRow}>
+        <Flexbox gap={2}>
+          <Text>{t('oauthApp.detail.delete')}</Text>
+          <span className={styles.dangerDesc}>{t('oauthApp.detail.deleteDesc')}</span>
+        </Flexbox>
+        <Button
+          danger
+          disabled={!canEdit}
+          icon={<Trash2Icon size={16} />}
+          loading={deleteMutation.isPending}
+          style={{ flex: 'none' }}
+          onClick={handleDelete}
+        >
+          {t('oauthApp.detail.delete')}
+        </Button>
+      </div>
+    </Flexbox>
+  );
+
   return (
     <Flexbox gap={20}>
+      {/* The disabled state is about the whole app, so it heads the page. */}
+      {banner}
+
       <Flexbox gap={4}>
         <Flexbox horizontal align={'center'} gap={8}>
           <ActionIcon
@@ -216,91 +330,19 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         </span>
       </Flexbox>
 
-      {isDisabled && (
-        <Alert
-          showIcon
-          message={t('oauthApp.disabled.banner')}
-          type={'warning'}
-          action={
-            canEdit && (
-              <Button loading={enabledMutation.isPending} size={'small'} onClick={handleEnable}>
-                {t('oauthApp.actions.enable')}
-              </Button>
-            )
-          }
-        />
-      )}
-
-      <BasicInfoCard
-        canEdit={canEdit}
-        detail={detail}
-        key={`basic-${detail.id}`}
-        onSubmit={handleUpdate}
+      <Tabs
+        activeKey={tab}
+        items={[
+          { key: 'basic', label: t('oauthApp.detail.tabs.basic') },
+          { key: 'credentials', label: t('oauthApp.detail.tabs.credentials') },
+          { key: 'advanced', label: t('oauthApp.detail.tabs.advanced') },
+        ]}
+        onChange={setTab}
       />
 
-      <CredentialsCard
-        canEdit={canEdit}
-        detail={detail}
-        freshSecret={freshSecret}
-        secretPending={rotateSecretMutation.isPending}
-        onDismissFreshSecret={() => setFreshSecret(undefined)}
-        onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
-        onRotateSecret={handleRotateSecret}
-      />
-
-      {isWebApp && (
-        <RedirectUrisCard
-          canEdit={canEdit}
-          detail={detail}
-          key={`redirect-${detail.id}`}
-          onSubmit={handleUpdate}
-        />
-      )}
-
-      <IntegrationCard applicationType={detail.applicationType} />
-
-      <div className={styles.statsCard}>
-        <OAuthAppStats clientId={detail.id} />
-      </div>
-
-      <Flexbox className={styles.dangerCard} gap={16}>
-        <Text weight={500}>{t('oauthApp.detail.dangerZone')}</Text>
-
-        <div className={styles.dangerRow}>
-          <Flexbox gap={2}>
-            <Text>{t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}</Text>
-            <span className={styles.dangerDesc}>
-              {t(isDisabled ? 'oauthApp.detail.enableDesc' : 'oauthApp.detail.disableDesc')}
-            </span>
-          </Flexbox>
-          <Button
-            disabled={!canEdit}
-            icon={isDisabled ? <PowerIcon size={16} /> : <PowerOffIcon size={16} />}
-            loading={enabledMutation.isPending}
-            style={{ flex: 'none' }}
-            onClick={isDisabled ? handleEnable : handleDisable}
-          >
-            {t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}
-          </Button>
-        </div>
-
-        <div className={styles.dangerRow}>
-          <Flexbox gap={2}>
-            <Text>{t('oauthApp.detail.delete')}</Text>
-            <span className={styles.dangerDesc}>{t('oauthApp.detail.deleteDesc')}</span>
-          </Flexbox>
-          <Button
-            danger
-            disabled={!canEdit}
-            icon={<Trash2Icon size={16} />}
-            loading={deleteMutation.isPending}
-            style={{ flex: 'none' }}
-            onClick={handleDelete}
-          >
-            {t('oauthApp.detail.delete')}
-          </Button>
-        </div>
-      </Flexbox>
+      {tab === 'basic' && basicTab}
+      {tab === 'credentials' && credentialsTab}
+      {tab === 'advanced' && advancedTab}
     </Flexbox>
   );
 };

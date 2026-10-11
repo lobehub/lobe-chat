@@ -24,7 +24,11 @@ const CreateAppButton = () => {
     if (!canEdit) return;
     createOAuthAppModal({
       onSubmit: async (values) => {
-        const created = await lambdaClient.oauthApp.create.mutate(values);
+        // The secret is generated on demand on the app page, not at creation.
+        const created = await lambdaClient.oauthApp.create.mutate({
+          ...values,
+          issueSecret: false,
+        });
         navigate(`/settings/oauth-apps/${created.id}`);
       },
     });

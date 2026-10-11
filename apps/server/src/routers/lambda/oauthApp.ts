@@ -29,8 +29,8 @@ const oauthAppWriteProcedure = oauthAppProcedure.use(requireWorkspaceRoleWhenSco
 /**
  * The stored secret is encrypted and is never a useful thing to ship to a
  * browser, so every read path replaces it with a boolean. The plaintext is
- * returned exactly once, by `rotateSecret` — which also issues a web app's
- * first secret, since `create` issues none.
+ * returned exactly once: by `rotateSecret` (which also issues a web app's
+ * first secret on demand), or by `create` when the caller asks for it.
  */
 const stripSecret = <T extends { clientSecret?: string | null }>(client: T) => {
   const { clientSecret, ...rest } = client;
@@ -77,6 +77,12 @@ export const oauthAppRouter = router({
       // added, and the provider refuses any unregistered redirect in the meantime.
       z.object({
         description: z.string().max(500).optional(),
+        // Defaults to the original contract: a web app's secret is issued at
+        // creation and returned once. Clients released before generate-on-demand
+        // (cached PWA tabs, shipped desktop builds) omit this and can only obtain
+        // a first secret from this response — their detail page offers rotation
+        // only once a secret exists. The current UI sends `false`.
+        issueSecret: z.boolean().default(true),
         logoUri: logoUriSchema.optional(),
         name: z.string().min(1).max(64),
         redirectUris: redirectUrisSchema.optional(),
@@ -84,9 +90,9 @@ export const oauthAppRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { client } = await ctx.oidcClientModel.create(input);
+      const { client, secret } = await ctx.oidcClientModel.create(input);
 
-      return stripSecret(client);
+      return { ...stripSecret(client), clientSecret: secret };
     }),
 
   delete: oauthAppWriteProcedure

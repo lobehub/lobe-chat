@@ -199,7 +199,6 @@ const RedirectUrisCard: FC<RedirectUrisCardProps> = ({ canEdit, detail, onSubmit
             disabled={!canEdit}
             icon={<PlusIcon size={14} />}
             style={{ flex: 'none' }}
-            type={'primary'}
             onClick={startEditing}
           >
             {t('oauthApp.redirectUris.add')}

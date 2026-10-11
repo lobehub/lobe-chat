@@ -104,7 +104,7 @@ const BasicInfoCard: FC<BasicInfoCardProps> = ({ canEdit, detail, onSubmit }) =>
               <AvatarUpload
                 allowDelete={!!logoUri}
                 loading={logoUploading}
-                placeholder={<AppLogoPlaceholder dashed size={LOGO_SIZE} />}
+                placeholder={<AppLogoPlaceholder size={LOGO_SIZE} />}
                 size={LOGO_SIZE}
                 title={t('oauthApp.form.logo.label')}
                 value={logoUri ?? undefined}
@@ -117,7 +117,7 @@ const BasicInfoCard: FC<BasicInfoCardProps> = ({ canEdit, detail, onSubmit }) =>
                 required={t('oauthApp.validation.nameRequired')}
                 style={{ ...itemStyle, flex: 1, minWidth: 0 }}
               >
-                <Input placeholder={t('oauthApp.form.name.placeholder')} />
+                <Input placeholder={t('oauthApp.form.name.placeholder')} variant={'filled'} />
               </Form.Field>
             </Flexbox>
 
@@ -126,7 +126,11 @@ const BasicInfoCard: FC<BasicInfoCardProps> = ({ canEdit, detail, onSubmit }) =>
               name={'description'}
               style={itemStyle}
             >
-              <TextArea placeholder={t('oauthApp.form.description.placeholder')} rows={2} />
+              <TextArea
+                placeholder={t('oauthApp.form.description.placeholder')}
+                rows={2}
+                variant={'filled'}
+              />
             </Form.Field>
 
             <Flexbox horizontal gap={8} justify={'flex-end'}>

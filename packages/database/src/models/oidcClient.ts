@@ -17,6 +17,8 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
 interface CreateOidcClientParams {
   description?: string | null;
+  /** Issue a `web` app's client secret at creation. Ignored for `device` apps. */
+  issueSecret?: boolean;
   logoUri?: string | null;
   name: string;
   /** Required for `web` apps, ignored for `device` apps. */
@@ -85,18 +87,22 @@ export class OidcClientModel {
   };
 
   /**
-   * Creates an app. No secret is issued here, for either type.
+   * Creates an app and, for a `web` app when `issueSecret` is set, issues its
+   * client secret, returned once as `secret`.
    *
    * `device` apps stay public clients with no secret: the device flow has no
    * confidential channel to keep one in. `web` apps are confidential clients
    * (the only consumer that can use a redirect flow here is a server that can
-   * hold a secret), but their secret is minted only when the owner asks for
-   * it through `rotateSecret`, so the plaintext is shown at the moment the
-   * owner is ready to store it rather than as a side effect of creation.
-   * Until then the provider treats the client as unusable (see the adapter).
+   * hold a secret). Without `issueSecret` their secret is minted later through
+   * `rotateSecret`, when the owner is ready to store it; until then the
+   * provider treats the client as unusable (see the adapter).
    */
   create = async (params: CreateOidcClientParams) => {
     const isWeb = params.type === 'web';
+    const { encrypted, secret } =
+      isWeb && params.issueSecret
+        ? await this.issueClientSecret()
+        : { encrypted: null, secret: undefined };
 
     const [result] = await this.db
       .insert(oidcClients)
@@ -105,7 +111,7 @@ export class OidcClientModel {
           { userId: this.userId, workspaceId: this.workspaceId },
           {
             applicationType: isWeb ? 'web' : 'native',
-            clientSecret: null,
+            clientSecret: encrypted,
             description: params.description,
             grants: isWeb ? WEB_FLOW_GRANTS : DEVICE_FLOW_GRANTS,
             id: generateClientId(),
@@ -121,7 +127,7 @@ export class OidcClientModel {
       )
       .returning();
 
-    return { client: result };
+    return { client: result, secret };
   };
 
   /**
