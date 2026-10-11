@@ -142,11 +142,18 @@ export const uncoveredAxisValues = (
  * listed every one of them in the roster, listed more than one probe, and the
  * probes really read as one mould after masking. Any failure keeps the ordinary
  * one-unit-per-task decomposition and records why.
+ *
+ * `maxUnits` is the batch roster's ceiling (the caller's config bound). A claim
+ * above it is refused here rather than batched, so the roster a batch carries is
+ * always the whole one: the coordinator waves it out unit by unit, and a cap
+ * applied at creation would silently leave the tail undelivered. The refused
+ * claim falls back to the ordinary decomposition, which materializes every unit
+ * the planner listed.
  */
 export const evaluateHomogeneity = (
   spec: BatchSpecDraft,
   briefs: ProbeBrief[],
-  options: { minUnits?: number } = {},
+  options: { maxUnits?: number; minUnits?: number } = {},
 ): HomogeneityVerdict => {
   const minUnits = options.minUnits ?? ROLLOUT_MIN_HOMOGENEOUS_UNITS;
   const reasons: string[] = [];
@@ -164,6 +171,8 @@ export const evaluateHomogeneity = (
   );
   if (Number.isFinite(spec.unitCount) && roster.size < spec.unitCount)
     reasons.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
+  if (options.maxUnits !== undefined && roster.size > options.maxUnits)
+    reasons.push(`roster lists ${roster.size} units, above the batch cap of ${options.maxUnits}`);
   if (briefs.length < 2) reasons.push('fewer than two probe units');
 
   if (briefs.length >= 2 && minPairwiseSimilarity(briefs) < HOMOGENEITY_MIN_SIMILARITY)

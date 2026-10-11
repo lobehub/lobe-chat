@@ -2079,6 +2079,66 @@ describe('GoalService', () => {
     expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(12);
   });
 
+  it('materializes a fallback roster above the batch cap without trimming it', async () => {
+    const units = Array.from({ length: 64 }, (_, i) => `Unit ${i + 1}`);
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 64 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 64,
+        units,
+        variants: [],
+      },
+      tasks: Array.from({ length: 3 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: { rollout: { trigger: 'off' } },
+      title: 'Migrate stores, no batch',
+    });
+    await service.tick(graph.goal.id);
+
+    const after = await service.graph(graph.goal.id);
+    expect(after.nodes.filter((n) => n.kind === 'batch')).toHaveLength(0);
+    // Every one of the 64 units is planned: the batch config's 60-unit roster
+    // cap must never trim the ordinary decomposition.
+    expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(64);
+  });
+
+  it('refuses to batch a roster above the cap instead of silently trimming it', async () => {
+    const units = Array.from({ length: 64 }, (_, i) => `Unit ${i + 1}`);
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 64 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 64,
+        units,
+        variants: [],
+      },
+      tasks: Array.from({ length: 3 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate stores' });
+    await service.tick(graph.goal.id);
+
+    const after = await service.graph(graph.goal.id);
+    // A roster the batch cannot carry whole is refused, not truncated: the goal
+    // still delivers all 64 units, as plain tasks.
+    expect(after.nodes.filter((n) => n.kind === 'batch')).toHaveLength(0);
+    expect(after.goal.config?.rolloutState).toBeUndefined();
+    expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(64);
+  });
+
   it('restarts the canary loop when a person answers a broken batch gate', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',
@@ -2133,6 +2193,72 @@ describe('GoalService', () => {
     // A fresh gate and a fresh probe batch: the class is proved again.
     expect(next.assayNodeId).not.toBe(assayId);
     expect(next.probeNodeIds.length).toBeGreaterThan(0);
+
+    // The correction is folded into the batch's recipe and briefs the re-opened
+    // probes — later waves only read `policy.spec.recipeOutline`, so a note kept
+    // only on the Template would never reach the tasks meant to test it.
+    expect(after.goal.config!.rollout!.spec?.recipeOutline).toContain('补上 SSR 播种这一步');
+    const openedProbe = after.nodes.find((n) => next.probeNodeIds.includes(n.id))!;
+    expect(openedProbe.description).toContain('补上 SSR 播种这一步');
+  });
+
+  it('materializes and answers a pattern-break gate on a full rollout', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: { rollout: { trigger: 'full' } },
+      title: 'Migrate stores',
+    });
+    await service.tick(graph.goal.id);
+
+    const before = await service.graph(graph.goal.id);
+    const state = before.goal.config!.rolloutState!;
+    // A `full` rollout creates no Assay — it skips the probe gate.
+    expect(state.assayNodeId).toBeUndefined();
+
+    // A break still has to be answerable: the coordinator must open the question
+    // on a `decision` node even though this trigger made none.
+    const openGate = (
+      service as unknown as {
+        openPatternBreakGate: (g: unknown, message: string, effects: unknown[]) => Promise<unknown>;
+      }
+    ).openPatternBreakGate.bind(service);
+    await openGate(before, 'Unit 1 did not pass', []);
+
+    const after = await service.graph(graph.goal.id);
+    const next = after.goal.config!.rolloutState!;
+    expect(next.phase).toBe('pattern_break');
+    const gateNode = after.nodes.find((n) => n.id === next.assayNodeId);
+    expect(gateNode?.kind).toBe('decision');
+    const decision = after.decisions.find(
+      (item) => item.nodeId === next.assayNodeId && item.status === 'pending',
+    );
+    expect(decision).toBeDefined();
+    // The options carry ids only; labels and consequences are localized on the
+    // client by id, so nothing English is persisted into the gate payload.
+    expect(decision!.options?.map((option) => option.id)).toEqual(['revise', 'new_class']);
+    expect(decision!.options?.every((option) => option.description === undefined)).toBe(true);
+
+    // Answering it restarts the class, rather than leaving the goal parked.
+    await service.decide(graph.goal.id, decision!.id, 'revise', '补上冷启动这一步');
+    const restarted = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    expect(restarted.phase).toBe('probe');
+    expect(restarted.templateRevision).toBe(next.templateRevision + 1);
+    expect(restarted.probeNodeIds.length).toBeGreaterThan(0);
   });
 
   it('re-opens the broken unit as a new task when the canary loop restarts', async () => {

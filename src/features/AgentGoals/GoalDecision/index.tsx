@@ -1,5 +1,6 @@
 'use client';
 
+import { GOAL_BATCH_BREAK_OPTION } from '@lobechat/const/goal';
 import type { GoalDecisionOption } from '@lobechat/types';
 import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { Avatar, Text } from '@lobehub/ui/base-ui';
@@ -118,6 +119,15 @@ export const useGateOptionCopy = () => {
           }
           case 'fail': {
             return t('goalProcess.decision.effect.fail');
+          }
+          // A batch pattern break keeps only its option ids on the payload; the
+          // consequences are written here, in the reader's language, rather than
+          // persisted as English copy the server cannot translate.
+          case GOAL_BATCH_BREAK_OPTION.revise: {
+            return t('goalProcess.decision.effect.reviseBatch');
+          }
+          case GOAL_BATCH_BREAK_OPTION.newClass: {
+            return t('goalProcess.decision.effect.newClassBatch');
           }
           default: {
             return undefined;

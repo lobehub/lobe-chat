@@ -51,6 +51,20 @@ describe('evaluateHomogeneity', () => {
     expect(evaluateHomogeneity(spec, probes).batch).toBe(true);
   });
 
+  it('accepts a roster within the caller’s batch cap', () => {
+    expect(evaluateHomogeneity(spec, probes, { maxUnits: 60 }).batch).toBe(true);
+  });
+
+  it('refuses a roster above the batch cap so nothing is silently trimmed', () => {
+    const verdict = evaluateHomogeneity(
+      { ...spec, unitCount: 65, units: Array.from({ length: 65 }, (_, i) => `Migrate ${i + 1}`) },
+      probes,
+      { maxUnits: 60 },
+    );
+    expect(verdict.batch).toBe(false);
+    expect(verdict.reasons.join(' ')).toContain('above the batch cap of 60');
+  });
+
   it('refuses a claim that is not repeatable', () => {
     expect(evaluateHomogeneity({ ...spec, repeatable: false }, probes).batch).toBe(false);
   });

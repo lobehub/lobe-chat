@@ -2343,6 +2343,10 @@ export default {
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',
   'goalProcess.decision.effect.abandonAcceptance':
     'Stop acceptance and end the goal without a verdict.',
+  'goalProcess.decision.effect.reviseBatch':
+    'Revise the recipe from this failure, then re-probe this batch.',
+  'goalProcess.decision.effect.newClassBatch':
+    'Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.',
   'goalProcess.signOff.islandSubtitle': 'is done and waiting for your sign-off',
   'goalProcess.signOff.question': 'Do you accept what this goal delivered?',
   'goalProcess.signOff.description': 'Goal-level acceptance passed. Your sign-off closes the goal.',
