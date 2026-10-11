@@ -52,6 +52,29 @@ describe('listProjectDeviceTargets', () => {
     expect(targets).toEqual([]);
   });
 
+  it('only allows the device a fixed agent is pinned to', () => {
+    const targets = listProjectDeviceTargets(
+      [directory('dir-a', 'dev-a'), directory('dir-c', 'dev-c')],
+      devices,
+      'dir-a',
+      'dev-a',
+    );
+    // Listed so the user sees where the project lives, but the move would be refused.
+    expect(targets.map((t) => [t.label, t.allowed])).toEqual([
+      ['Device A', true],
+      ['Device C', false],
+    ]);
+  });
+
+  it('allows every project device when the agent is not fixed', () => {
+    const targets = listProjectDeviceTargets(
+      [directory('dir-a', 'dev-a'), directory('dir-c', 'dev-c')],
+      devices,
+      'dir-a',
+    );
+    expect(targets.every((t) => t.allowed)).toBe(true);
+  });
+
   it('names a device the list does not know by its directory row', () => {
     const [target] = listProjectDeviceTargets(
       [directory('dir-x', 'dev-x', { deviceName: 'Build box' })],

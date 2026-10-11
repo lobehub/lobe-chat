@@ -185,6 +185,21 @@ export const projectWorkingDirectoryRouter = router({
         { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
         [input.topicId],
       );
+      // Same reachability gate as `startTopic`: the move drops the session that
+      // only holds on the old machine, so a destination the device cannot see
+      // must fail here, while the existing binding and session are still intact.
+      const directory = await ctx.directoryModel.resolve(input.directoryId);
+      const stat = await deviceGateway.statPath({
+        deviceId: directory.deviceId,
+        path: directory.path,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      if (!stat?.exists || !stat.isDirectory)
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'Device is offline or working directory is unavailable',
+        });
       return {
         data: await ctx.directoryRepo.moveTopic(input.topicId, input.directoryId),
         success: true,

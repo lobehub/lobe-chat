@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
 import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
+import { useAgentStore } from '@/store/agent';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 
@@ -42,6 +44,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 interface ProjectDeviceSwitcherProps {
+  agentId: string;
   topicId: string;
 }
 
@@ -53,7 +56,7 @@ interface ProjectDeviceSwitcherProps {
  * Only devices the project has a directory on are offered; picking one moves
  * the conversation to that directory rather than to an arbitrary path.
  */
-const ProjectDeviceSwitcher = ({ topicId }: ProjectDeviceSwitcherProps) => {
+const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps) => {
   const { t } = useTranslation('chat');
   const [open, setOpen] = useState(false);
   const { canUseResource } = useChatInputResourceAccess();
@@ -61,10 +64,17 @@ const ProjectDeviceSwitcher = ({ topicId }: ProjectDeviceSwitcherProps) => {
   const { data: devices } = useDeviceList();
   const moveTopic = useProjectDirectoryStore((s) => s.moveTopic);
   const refreshTopic = useChatStore((s) => s.refreshTopic);
+  // The shared row, not the topic-pinned effective config: a fixed target is
+  // the author's setting, and it is what the server checks the move against.
+  const agencyConfig = useAgentStore(agentByIdSelectors.getAgencyConfigById(agentId));
+  const fixedDeviceId =
+    agencyConfig?.executionTargetSelectionPolicy === 'fixed'
+      ? agencyConfig.boundDeviceId
+      : undefined;
 
   if (!canUseResource) return null;
 
-  const targets = listProjectDeviceTargets(directories, devices, directoryId);
+  const targets = listProjectDeviceTargets(directories, devices, directoryId, fixedDeviceId);
 
   const handleSelect = ({ active, directory: target, label }: (typeof targets)[number]) => {
     setOpen(false);
@@ -91,29 +101,36 @@ const ProjectDeviceSwitcher = ({ topicId }: ProjectDeviceSwitcherProps) => {
   const content = (
     <Flexbox style={{ maxWidth: 320, minWidth: 280 }}>
       <div className={styles.title}>{t('heteroAgent.executionTarget.title')}</div>
-      {targets.map((target) => (
-        <OptionRow
-          active={target.active}
-          disabled={!target.online}
-          key={target.directory.id}
-          label={target.label}
-          tags={target.active ? [t('heteroAgent.executionTarget.topicTag')] : []}
-          desc={
-            <>
-              <span className={styles.desc}>{target.directory.path}</span>
-              <ExecutionTargetDeviceStatus
-                offlineLabel={t('heteroAgent.executionTarget.offline')}
-                online={target.online}
-                onlineLabel={t('heteroAgent.executionTarget.online')}
-              />
-            </>
-          }
-          icon={
-            <ExecutionTargetIcon devicePlatform={target.directory.platform} target={'device'} />
-          }
-          onClick={() => (target.online ? handleSelect(target) : undefined)}
-        />
-      ))}
+      {targets.map((target) => {
+        const selectable = target.online && target.allowed;
+        return (
+          <OptionRow
+            active={target.active}
+            disabled={!selectable}
+            key={target.directory.id}
+            label={target.label}
+            tags={target.active ? [t('heteroAgent.executionTarget.topicTag')] : []}
+            desc={
+              target.allowed ? (
+                <>
+                  <span className={styles.desc}>{target.directory.path}</span>
+                  <ExecutionTargetDeviceStatus
+                    offlineLabel={t('heteroAgent.executionTarget.offline')}
+                    online={target.online}
+                    onlineLabel={t('heteroAgent.executionTarget.online')}
+                  />
+                </>
+              ) : (
+                <span className={styles.desc}>{t('heteroAgent.executionTarget.fixedTip')}</span>
+              )
+            }
+            icon={
+              <ExecutionTargetIcon devicePlatform={target.directory.platform} target={'device'} />
+            }
+            onClick={() => (selectable ? handleSelect(target) : undefined)}
+          />
+        );
+      })}
       <div className={styles.hint}>{t('heteroAgent.executionTarget.projectDevicesHint')}</div>
     </Flexbox>
   );

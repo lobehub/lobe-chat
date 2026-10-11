@@ -106,7 +106,7 @@ const WorkspaceControls = memo<WorkspaceControlsProps>(
     return (
       <>
         {isProjectDirectoryTopic && activeTopicId ? (
-          <ProjectDeviceSwitcher topicId={activeTopicId} />
+          <ProjectDeviceSwitcher agentId={agentId} topicId={activeTopicId} />
         ) : (
           <HeteroDeviceSwitcher agentId={agentId} />
         )}
