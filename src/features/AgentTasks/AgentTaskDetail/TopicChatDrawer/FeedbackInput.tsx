@@ -1,9 +1,10 @@
+import { type IEditor } from '@lobehub/editor';
 import { ChatInput, ChatInputActionBar, SendButton, useEditor } from '@lobehub/editor/react';
 import { Flexbox } from '@lobehub/ui';
 import { Button } from '@lobehub/ui/base-ui';
 import { $getRoot } from 'lexical';
 import { ChevronDownIcon, MessageCirclePlus } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AttachmentUploadButton } from '@/features/AttachmentInput';
@@ -19,6 +20,10 @@ import {
 import { useEnterToSend } from '@/hooks/useEnterToSend';
 
 interface FeedbackInputProps {
+  /** Expand and focus the composer — the floating drawer opened by "Continue
+      chat" wants the input hot, while read-first surfaces keep the compact,
+      opt-in default. */
+  autoFocus?: boolean;
   /** Acceptance's in-flow topic rail starts with the composer visible. The
       floating Topic drawer keeps its compact, opt-in default. */
   defaultExpanded?: boolean;
@@ -28,7 +33,7 @@ interface FeedbackInputProps {
 }
 
 const FeedbackInput = memo<FeedbackInputProps>(
-  ({ defaultExpanded = false, disableCollapse = false }) => {
+  ({ autoFocus = false, defaultExpanded = false, disableCollapse = false }) => {
     const { t } = useTranslation('chat');
     const editor = useEditor();
     const sendMessage = useConversationStore((s) => s.sendMessage);
@@ -36,7 +41,10 @@ const FeedbackInput = memo<FeedbackInputProps>(
     const [submitting, setSubmitting] = useState(false);
     const [hasContent, setHasContent] = useState(false);
     const [hasAttachments, setHasAttachments] = useState(false);
-    const [expanded, setExpanded] = useState(defaultExpanded);
+    const [expanded, setExpanded] = useState(defaultExpanded || autoFocus);
+    // Only an explicit request to write (the expand click or `autoFocus`) takes
+    // focus; a host that merely pins the composer open must not steal it.
+    const focusOnInitRef = useRef(autoFocus);
     const shouldSendOnEnter = useEnterToSend();
     // Task follow-ups send into the shared agent's topic — view-only members
     // can watch the run but get no reply composer.
@@ -52,9 +60,26 @@ const FeedbackInput = memo<FeedbackInputProps>(
     const { placeholderVariant, showSendWhileGenerating, showStopButton } =
       useConversationChatInputUiState({ isInputEmpty: !canSubmit });
 
+    // Focus from the editor's own init callback: a mount-time `editor.focus()`
+    // runs before the lexical root attaches and is silently dropped, while
+    // `onInit` fires once the kernel is ready.
+    const handleEditorInit = useCallback((instance: IEditor) => {
+      if (focusOnInitRef.current) instance.focus?.();
+    }, []);
+
+    // "Continue chat" on a drawer that is already open for this topic keeps the
+    // body mounted, so the request has to reach the live composer too.
     useEffect(() => {
-      if (expanded) editor?.focus?.();
-    }, [expanded, editor]);
+      if (!autoFocus) return;
+      focusOnInitRef.current = true;
+      setExpanded(true);
+      editor?.focus?.();
+    }, [autoFocus, editor]);
+
+    const expand = useCallback(() => {
+      focusOnInitRef.current = true;
+      setExpanded(true);
+    }, []);
 
     const handleContentChange = useCallback(() => {
       const lexicalEditor = editor?.getLexicalEditor?.();
@@ -113,7 +138,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
       return (
         <Flexbox gap={8}>
           <OpStatusTray seamless />
-          <Button block icon={MessageCirclePlus} type={'fill'} onClick={() => setExpanded(true)}>
+          <Button block icon={MessageCirclePlus} type={'fill'} onClick={expand}>
             {t('taskDetail.sendFollowUp')}
           </Button>
         </Flexbox>
@@ -199,6 +224,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
                 : t('taskDetail.replyPlaceholder')
             }
             onContentChange={handleContentChange}
+            onInit={handleEditorInit}
             onPressEnter={({ event }) => {
               if (shouldSendOnEnter(event)) {
                 handleSubmit();

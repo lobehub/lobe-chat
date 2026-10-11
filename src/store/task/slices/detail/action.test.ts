@@ -64,6 +64,10 @@ beforeEach(() => {
   vi.resetAllMocks();
   useTaskStore.setState({
     activeTaskId: undefined,
+    activeTopicDrawerAgentId: undefined,
+    activeTopicDrawerAutoFocus: undefined,
+    activeTopicDrawerTitle: undefined,
+    activeTopicDrawerTopicId: undefined,
     isCreatingTask: false,
     isDeletingTask: false,
     taskDetailMap: {},
@@ -223,6 +227,31 @@ describe('TaskDetailSliceAction', () => {
       useTaskStore.getState().setActiveTaskId('T-1');
       // Should not trigger state change
       expect(spy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('topic drawer autoFocus', () => {
+    it('should record autoFocus when the drawer opens with conversational intent', () => {
+      useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1', autoFocus: true });
+
+      expect(taskDetailSelectors.topicDrawerAutoFocus(useTaskStore.getState())).toBe(true);
+    });
+
+    it('should upgrade an already-open drawer for the same topic to autoFocus', () => {
+      useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1' });
+      useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1', autoFocus: true });
+
+      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBe(true);
+    });
+
+    it('should clear autoFocus on close and when switching tasks', () => {
+      useTaskStore.getState().openTopicDrawer('tpc-1', { autoFocus: true });
+      useTaskStore.getState().closeTopicDrawer();
+      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBeUndefined();
+
+      useTaskStore.getState().openTopicDrawer('tpc-1', { autoFocus: true });
+      useTaskStore.getState().setActiveTaskId('T-2');
+      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBeUndefined();
     });
   });
 
