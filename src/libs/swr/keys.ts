@@ -1263,9 +1263,6 @@ export const resourceKeys = {
     ],
   ),
 };
-export const providerKeys = {
-  clientConfig: def('provider:clientConfig', (id: string) => ['provider:clientConfig', id]),
-};
 export const recommendationsKeys = {
   heteroDetections: def('recommendations:heteroDetections', () => [
     'recommendations:heteroDetections',
@@ -1347,7 +1344,6 @@ export const swrKeys = {
   onboarding: onboardingKeys,
   openInApp: openInAppKeys,
   portal: portalKeys,
-  provider: providerKeys,
   ragEval: ragEvalKeys,
   recent: recentKeys,
   recommendations: recommendationsKeys,
