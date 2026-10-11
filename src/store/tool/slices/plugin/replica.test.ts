@@ -432,6 +432,64 @@ describe('installed plugins replica', () => {
       expect(ids()).toEqual(['p2']);
     });
 
+    it('never lets a sync that started before an uninstall re-add the plugin', async () => {
+      const sync = await loadFromServer([plugin('p1'), plugin('p2')]);
+      await waitFor(async () => expect(await readPersisted()).toHaveLength(2));
+
+      // A focus / interval revalidation starts before the uninstall…
+      const stale = deferred<LobeTool[]>();
+      vi.mocked(pluginService.getInstalledPlugins).mockReturnValue(stale.promise);
+      void sync.result.current.revalidate();
+      await waitFor(() => expect(pluginService.getInstalledPlugins).toHaveBeenCalledTimes(2));
+
+      // …the uninstall lands, and its follow-up refresh is still in flight…
+      vi.mocked(pluginService.uninstallPlugin).mockResolvedValue(undefined);
+      vi.mocked(pluginService.getInstalledPlugins).mockImplementation(pending);
+      await act(async () => {
+        void useToolStore.getState().uninstallPlugin('p1');
+        await Promise.resolve();
+      });
+      await waitFor(() => expect(ids()).toEqual(['p2']));
+
+      // …then the pre-uninstall response settles with the old list.
+      await act(async () => {
+        stale.resolve([plugin('p1'), plugin('p2')]);
+        await stale.promise;
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      });
+
+      expect(ids()).toEqual(['p2']);
+      await waitFor(async () =>
+        expect((await readPersisted())?.map((p) => p.identifier)).toEqual(['p2']),
+      );
+    });
+
+    it('never lets a sync response overwrite a newer refresh', async () => {
+      const sync = await loadFromServer([plugin('p1')]);
+
+      const stale = deferred<LobeTool[]>();
+      vi.mocked(pluginService.getInstalledPlugins).mockReturnValueOnce(stale.promise);
+      void sync.result.current.revalidate();
+      await waitFor(() => expect(pluginService.getInstalledPlugins).toHaveBeenCalledTimes(2));
+
+      vi.mocked(pluginService.getInstalledPlugins).mockResolvedValueOnce([
+        plugin('p1'),
+        plugin('p2'),
+      ]);
+      await act(async () => {
+        await useToolStore.getState().refreshPlugins();
+      });
+      expect(ids()).toEqual(['p1', 'p2']);
+
+      await act(async () => {
+        stale.resolve([plugin('p1')]);
+        await stale.promise;
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      });
+
+      expect(ids()).toEqual(['p1', 'p2']);
+    });
+
     it('routes a custom-plugin uninstall through the same removal', async () => {
       await loadFromServer([plugin('custom-1')]);
       vi.mocked(pluginService.uninstallPlugin).mockResolvedValue(undefined);

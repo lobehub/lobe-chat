@@ -23,6 +23,7 @@ import {
   INSTALLED_PLUGINS_PARAMS,
   installedPluginsEntity,
   installedPluginsResource,
+  type InstalledPluginsResponse,
   toInstalledPluginsProjection,
 } from './projection';
 import { pluginSelectors } from './selectors';
@@ -52,9 +53,11 @@ export const createPluginSlice = (set: Setter, get: () => ToolStore, _api?: unkn
 
 export class PluginActionImpl {
   readonly #get: () => ToolStore;
+  /** Responses of requests started at or before this sequence are dropped. */
+  #droppedThroughSeq = 0;
+  /** Start sequence of the last fetch, shared by `useSync` and `refreshPlugins`. */
+  #fetchSeq = 0;
   readonly #installedPlugins;
-  /** Sequence of imperative refreshes; only the latest one may land. */
-  #refreshSeq = 0;
   readonly #set: Setter;
 
   constructor(set: Setter, get: () => ToolStore, _api?: unknown) {
@@ -64,8 +67,10 @@ export class PluginActionImpl {
     this.#installedPlugins = createReplicaSlice(installedPluginsResource, {
       actionPrefix: n('installedPlugins'),
       entity: installedPluginsEntity,
-      fetcher: () => pluginService.getInstalledPlugins(),
+      fetcher: () => this.#fetchInstalledPlugins(),
       get,
+      merge: (incoming) => incoming.plugins,
+      prepareHead: (incoming) => this.#admitResponse(incoming),
       set,
       stateKey: 'installedPluginsReplica',
       // Settings and connection parameters never reach IndexedDB.
@@ -102,6 +107,25 @@ export class PluginActionImpl {
       throw new Error('The installed plugins have not been loaded from the server');
   };
 
+  /** Every fetch path goes through here, so all responses share one order. */
+  #fetchInstalledPlugins = async (): Promise<InstalledPluginsResponse> => {
+    const seq = ++this.#fetchSeq;
+    const plugins = await pluginService.getInstalledPlugins();
+    return { plugins, seq };
+  };
+
+  /**
+   * Admit a response only when its request started after every response
+   * already applied and after the latest mutation refresh. A mounted sync that
+   * started before an uninstall must not re-add the plugin (and persist it)
+   * when it settles late; an older refresh must not overwrite a newer one.
+   */
+  #admitResponse = (incoming: InstalledPluginsResponse): InstalledPluginsResponse | undefined => {
+    if (incoming.seq <= this.#droppedThroughSeq) return undefined;
+    this.#droppedThroughSeq = incoming.seq;
+    return incoming;
+  };
+
   checkPluginsIsInstalled = async (_plugins: string[]): Promise<void> => {
     // Old plugin system has been deprecated, skip auto-installation
   };
@@ -115,16 +139,17 @@ export class PluginActionImpl {
    * is mounted, so revalidating the mounted sync queries would resolve without
    * fetching anything. The scope is captured before the request so a response
    * that lands after a workspace switch is dropped instead of written into the
-   * next scope, and only the latest refresh may land so an older response can
-   * never overwrite a newer one. Rejects when the fetch fails.
+   * next scope. Every mutation ends with this refresh, so it also retires the
+   * requests already in flight (sync or refresh): they started before the
+   * mutation and would paint the pre-mutation list. Rejects when the fetch
+   * fails.
    */
   refreshPlugins = async (): Promise<void> => {
     const scope = cacheScope.get();
-    const seq = ++this.#refreshSeq;
-    const plugins = await pluginService.getInstalledPlugins();
-    if (seq !== this.#refreshSeq) return;
+    this.#droppedThroughSeq = this.#fetchSeq;
+    const response = await this.#fetchInstalledPlugins();
 
-    this.#installedPlugins.replace(INSTALLED_PLUGINS_PARAMS, plugins, scope);
+    this.#installedPlugins.replace(INSTALLED_PLUGINS_PARAMS, response, scope);
   };
 
   /**
