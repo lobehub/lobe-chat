@@ -1,7 +1,12 @@
-import { and, asc, count, eq, inArray, ne } from 'drizzle-orm';
+import { and, asc, count, eq, inArray, isNull, ne } from 'drizzle-orm';
 
-import { type WorkspaceTeamItem, workspaceTeamMembers, workspaceTeams } from '../schemas/workspace';
-import type { LobeChatDatabase } from '../type';
+import {
+  workspaceMembers,
+  type WorkspaceTeamItem,
+  workspaceTeamMembers,
+  workspaceTeams,
+} from '../schemas/workspace';
+import type { LobeChatDatabase, Transaction } from '../type';
 
 export interface WorkspaceTeamWithMemberCount extends WorkspaceTeamItem {
   memberCount: number;
@@ -19,18 +24,20 @@ export const DEFAULT_TEAM_IDENTIFIER = 'TEAM';
 /**
  * Derive a team identifier from a name, Linear-style: initials of a
  * multi-word name ("Customer Support" → "CS"), otherwise the first three
- * characters ("Engineering" → "ENG"). Leading digits are dropped so the result
- * starts with a letter; returns '' when nothing usable remains.
+ * characters ("Engineering" → "ENG"). Leading digits are dropped before that
+ * so the result starts with a letter ("123Engineering" → "ENG"); returns ''
+ * when nothing usable remains.
  */
 export const deriveTeamIdentifier = (name: string): string => {
   const words = name
     .toUpperCase()
+    .replace(/^[^A-Z]+/, '')
     .split(/[^\dA-Z]+/)
     .filter(Boolean);
   if (words.length === 0) return '';
 
   const raw = words.length > 1 ? words.map((word) => word[0]).join('') : words[0].slice(0, 3);
-  return raw.replace(/^\d+/, '').slice(0, 7);
+  return raw.slice(0, 7);
 };
 
 /**
@@ -103,6 +110,28 @@ export class WorkspaceTeamModel {
     return !!row;
   };
 
+  /**
+   * The subset of `userIds` that are active members of this workspace, with
+   * their membership rows share-locked. Member removal soft-deletes that row
+   * before dropping team memberships, so the lock keeps a concurrent add from
+   * landing after that cleanup. Call only from an enclosing transaction.
+   */
+  private lockActiveMemberIds = async (tx: Transaction, userIds: string[]): Promise<string[]> => {
+    if (userIds.length === 0) return [];
+    const rows = await tx
+      .select({ userId: workspaceMembers.userId })
+      .from(workspaceMembers)
+      .where(
+        and(
+          eq(workspaceMembers.workspaceId, this.workspaceId),
+          inArray(workspaceMembers.userId, userIds),
+          isNull(workspaceMembers.deletedAt),
+        ),
+      )
+      .for('share');
+    return rows.map((row) => row.userId);
+  };
+
   create = async (params: {
     avatar?: string | null;
     createdBy: string;
@@ -124,7 +153,7 @@ export class WorkspaceTeamModel {
         })
         .returning();
 
-      const userIds = [...new Set(params.memberUserIds ?? [])];
+      const userIds = await this.lockActiveMemberIds(tx, [...new Set(params.memberUserIds ?? [])]);
       if (userIds.length > 0) {
         await tx
           .insert(workspaceTeamMembers)
@@ -194,17 +223,34 @@ export class WorkspaceTeamModel {
     return rows.map((row) => row.userId);
   };
 
-  /** Idempotent: users already in the team are skipped. Returns the newly added ids. */
+  /**
+   * Idempotent: users already in the team are skipped. Only active members of
+   * this workspace are added, and only to a team of this workspace. Returns the
+   * newly added ids.
+   */
   addMembers = async (teamId: string, userIds: string[]): Promise<string[]> => {
     const uniqueIds = [...new Set(userIds)];
     if (uniqueIds.length === 0) return [];
 
-    const inserted = await this.db
-      .insert(workspaceTeamMembers)
-      .values(uniqueIds.map((userId) => ({ teamId, userId, workspaceId: this.workspaceId })))
-      .onConflictDoNothing()
-      .returning({ userId: workspaceTeamMembers.userId });
-    return inserted.map((row) => row.userId);
+    return this.db.transaction(async (tx) => {
+      const [team] = await tx
+        .select({ id: workspaceTeams.id })
+        .from(workspaceTeams)
+        .where(
+          and(eq(workspaceTeams.workspaceId, this.workspaceId), eq(workspaceTeams.id, teamId)),
+        );
+      if (!team) return [];
+
+      const memberIds = await this.lockActiveMemberIds(tx, uniqueIds);
+      if (memberIds.length === 0) return [];
+
+      const inserted = await tx
+        .insert(workspaceTeamMembers)
+        .values(memberIds.map((userId) => ({ teamId, userId, workspaceId: this.workspaceId })))
+        .onConflictDoNothing()
+        .returning({ userId: workspaceTeamMembers.userId });
+      return inserted.map((row) => row.userId);
+    });
   };
 
   removeMember = async (teamId: string, userId: string): Promise<boolean> => {

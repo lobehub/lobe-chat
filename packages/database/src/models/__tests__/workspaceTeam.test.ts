@@ -2,7 +2,13 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { users, workspaces, workspaceTeamMembers, workspaceTeams } from '../../schemas';
+import {
+  users,
+  workspaceMembers,
+  workspaces,
+  workspaceTeamMembers,
+  workspaceTeams,
+} from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { deriveTeamIdentifier, WorkspaceTeamModel } from '../workspaceTeam';
 
@@ -13,13 +19,21 @@ const memberId = 'wt-member';
 const otherUserId = 'wt-other';
 const workspaceId = 'wt-workspace';
 const otherWorkspaceId = 'wt-other-workspace';
+const outsiderId = 'wt-outsider';
 
 beforeEach(async () => {
   await serverDB.delete(users);
-  await serverDB.insert(users).values([{ id: ownerId }, { id: memberId }, { id: otherUserId }]);
+  await serverDB
+    .insert(users)
+    .values([{ id: ownerId }, { id: memberId }, { id: otherUserId }, { id: outsiderId }]);
   await serverDB.insert(workspaces).values([
     { id: workspaceId, name: 'WS', primaryOwnerId: ownerId, slug: 'wt-ws' },
     { id: otherWorkspaceId, name: 'Other', primaryOwnerId: otherUserId, slug: 'wt-other-ws' },
+  ]);
+  await serverDB.insert(workspaceMembers).values([
+    { role: 'owner', userId: ownerId, workspaceId },
+    { role: 'member', userId: memberId, workspaceId },
+    { role: 'owner', userId: otherUserId, workspaceId: otherWorkspaceId },
   ]);
 });
 
@@ -161,16 +175,37 @@ describe('WorkspaceTeamModel', () => {
       expect(members.every((m) => m.role === 'member')).toBe(true);
     });
 
-    it('rejects a membership whose workspace differs from its team', async () => {
+    it('does not add members to a team of another workspace', async () => {
       const team = await new WorkspaceTeamModel(serverDB, workspaceId).create({
         createdBy: ownerId,
         identifier: 'ENG',
         name: 'Eng',
       });
 
-      await expect(
-        new WorkspaceTeamModel(serverDB, otherWorkspaceId).addMembers(team.id, [otherUserId]),
-      ).rejects.toThrow();
+      expect(
+        await new WorkspaceTeamModel(serverDB, otherWorkspaceId).addMembers(team.id, [otherUserId]),
+      ).toEqual([]);
+      expect(
+        await new WorkspaceTeamModel(serverDB, workspaceId).listMemberUserIds(team.id),
+      ).toEqual([]);
+    });
+
+    it('only adds active members of the workspace', async () => {
+      const model = new WorkspaceTeamModel(serverDB, workspaceId);
+      const team = await model.create({
+        createdBy: ownerId,
+        identifier: 'ENG',
+        // Outsiders are dropped at creation too.
+        memberUserIds: [ownerId, outsiderId],
+        name: 'Eng',
+      });
+      await serverDB
+        .update(workspaceMembers)
+        .set({ deletedAt: new Date() })
+        .where(eq(workspaceMembers.userId, memberId));
+
+      expect(await model.addMembers(team.id, [memberId, outsiderId, otherUserId])).toEqual([]);
+      expect(await model.listMemberUserIds(team.id)).toEqual([ownerId]);
     });
 
     it('removes a single member', async () => {
@@ -193,6 +228,7 @@ describe('WorkspaceTeamModel', () => {
       ['Engineering', 'ENG'],
       ['Customer Support', 'CS'],
       ['2024 Launch Squad', 'LS'],
+      ['123Engineering', 'ENG'],
       ['研发', ''],
     ])('%s → %s', (name, expected) => {
       expect(deriveTeamIdentifier(name)).toBe(expected);
