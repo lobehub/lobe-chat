@@ -4,6 +4,8 @@ import type { GroupAgentSliceState } from './slices/groupAgent/initialState';
 import { initialGroupAgentSliceState } from './slices/groupAgent/initialState';
 import type { MCPSliceState } from './slices/mcp/initialState';
 import { initialMCPSliceState } from './slices/mcp/initialState';
+import type { ModelSliceState } from './slices/model/initialState';
+import { initialModelSliceState } from './slices/model/initialState';
 import type { PluginSliceState } from './slices/plugin/initialState';
 import { initialPluginSliceState } from './slices/plugin/initialState';
 import type { ProviderSliceState } from './slices/provider/initialState';
@@ -17,12 +19,13 @@ import { initialUserSliceState } from './slices/user/initialState';
  * State of the discover (marketplace) store: the replica views of its slices,
  * plus each slice's bookkeeping. Slices add their own actions on top.
  */
-export type DiscoverStoreState = AssistantSliceState & GroupAgentSliceState & MCPSliceState & PluginSliceState & ProviderSliceState & SocialSliceState & UserSliceState;
+export type DiscoverStoreState = AssistantSliceState & GroupAgentSliceState & MCPSliceState & ModelSliceState & PluginSliceState & ProviderSliceState & SocialSliceState & UserSliceState;
 
 export const initialState: DiscoverStoreState = {
   ...initialAssistantSliceState,
   ...initialGroupAgentSliceState,
   ...initialMCPSliceState,
+  ...initialModelSliceState,
   ...initialPluginSliceState,
   ...initialProviderSliceState,
   ...initialSocialSliceState,
