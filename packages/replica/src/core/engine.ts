@@ -1,6 +1,6 @@
 import isEqual from 'fast-deep-equal';
 
-import { replicaStorageKey, stableQueryKey } from './defineReplica';
+import { isReplicaStorageKeyOf, replicaStorageKey, stableQueryKey } from './defineReplica';
 import {
   applyHeadPage,
   applyNextPage,
@@ -175,6 +175,47 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   const markPurged = (scope: string, key: string) => purgedEntries.add(scope, key);
   const isPurged = (scope: string, key: string) => purgedEntries.has(scope, key);
 
+  // ---- entity removal guards ---------------------------------------------
+  // A hydrate that read its row before `removeEntity` patched storage still
+  // holds the entity, so it is stripped from every value that hydrates while
+  // such a read may be pending. A guard's lifetime follows the hydrates, not a
+  // count: it is released once its storage patch landed (`releasedAt`) and is
+  // dropped as soon as no hydrate that started before that point is pending.
+  // So memory stays bounded by in-flight reads, and no guard a pending read
+  // still needs is ever evicted. A server value holding the entity again
+  // (restored) lifts it early.
+  /** Logical clock shared by hydrate starts and guard releases. */
+  let guardClock = 0;
+  /** Start ticks of the hydrates in flight, per scope. */
+  const pendingHydrates = new Map<string, Set<number>>();
+  /** Removed entity ids per scope; `releasedAt` is unset until the storage patch landed. */
+  const removedEntities = new Map<string, Map<string, { releasedAt?: number }>>();
+  const removedIds = (scope: string) => [...(removedEntities.get(scope)?.keys() ?? [])];
+
+  /** Drop the guards no pending hydrate of `scope` can still need. */
+  const pruneEntityGuards = (scope: string) => {
+    const guards = removedEntities.get(scope);
+    if (!guards) return;
+    let oldestPending = Infinity;
+    for (const start of pendingHydrates.get(scope) ?? [])
+      oldestPending = Math.min(oldestPending, start);
+    for (const [id, guard] of guards)
+      if (guard.releasedAt !== undefined && guard.releasedAt <= oldestPending) guards.delete(id);
+    if (guards.size === 0) removedEntities.delete(scope);
+  };
+
+  // ---- resource-wide clear ----------------------------------------------
+  /** Bumped by every `clear()` of a scope; reads started before it are stale. */
+  const clearGenerations = new Map<string, number>();
+  const clearGeneration = (scope: string) => clearGenerations.get(scope) ?? 0;
+  /**
+   * The persisted-row purge of the last `clear()` per scope: `true` once every
+   * row delete landed. A hydrate waits for it, and refuses to read while the
+   * purge failed (an untrusted scope, a storage error) so a wiped resource can
+   * never paint a row that survived it.
+   */
+  const scopePurges = new Map<string, Promise<boolean>>();
+
   const getSlot = port.getState;
   const storageKey = (key: string, query?: string) => ({
     queryKey: replicaStorageKey(key, query),
@@ -194,29 +235,126 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   /** Keys known to be in the index row, per scope (skips redundant index writes). */
   const indexed = new Map<string, Set<string>>();
 
-  const trackStorageKey = (scope: string, queryKey: string, present: boolean) => {
+  /**
+   * Latest queued write per row (`scope` + storage key), from one monotonic
+   * counter. A confirmed delete only takes its key out of the index when no
+   * later write re-created the row in the meantime.
+   */
+  const rowWrites = new Map<string, number>();
+  let writeCounter = 0;
+  const rowId = (scope: string, queryKey: string) => `${scope}\u0000${queryKey}`;
+  const noteWrite = (scope: string, queryKey: string) => {
+    const seq = ++writeCounter;
+    rowWrites.set(rowId(scope, queryKey), seq);
+    return seq;
+  };
+
+  /** Record a persisted row in the index (queued after the row write). */
+  const trackStorageKey = (scope: string, queryKey: string) => {
     if (!writeQueue) return;
+    noteWrite(scope, queryKey);
     const known = indexed.get(scope) ?? new Set<string>();
     indexed.set(scope, known);
-    // `known` only holds the keys THIS instance wrote. A row an earlier session
-    // persisted is absent from it yet still listed in the index, so an addition
-    // already made needs no second write, but a removal must always reach the
-    // index — the updater leaves it alone when the key is genuinely gone.
-    if (present && known.has(queryKey)) return;
-    if (present) known.add(queryKey);
-    else known.delete(queryKey);
+    if (known.has(queryKey)) return;
+    known.add(queryKey);
     writeQueue.update(indexKey(scope), (current) => {
       const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
-      if (keys.has(queryKey) === present) return undefined;
-      if (present) keys.add(queryKey);
-      else keys.delete(queryKey);
+      if (keys.has(queryKey)) return undefined;
+      keys.add(queryKey);
       return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
     });
   };
 
+  /**
+   * Read the index for a destructive pass (remove / clear / entity patch).
+   * Uses the storage's strict read when it has one, so an unreadable index
+   * rejects instead of looking empty — a purge must never report success for
+   * rows it could not enumerate.
+   */
   const readIndex = async (scope: string): Promise<string[]> => {
-    const row = await resource.storage?.get(indexKey(scope));
+    const storage = resource.storage!;
+    // Call through `storage`: a class-based storage needs its receiver.
+    const row = await (storage.getStrict
+      ? storage.getStrict(indexKey(scope))
+      : storage.get(indexKey(scope)));
     return (row?.data as unknown as string[] | undefined) ?? [];
+  };
+
+  /**
+   * Drop storage keys from the index (both the session's view of it and the
+   * persisted row, which may list keys this session never wrote).
+   */
+  const untrackStorageKeys = (scope: string, queryKeys: string[]) => {
+    if (!writeQueue || queryKeys.length === 0) return;
+    const known = indexed.get(scope);
+    for (const queryKey of queryKeys) known?.delete(queryKey);
+    const dropped = new Set(queryKeys);
+    writeQueue.update(indexKey(scope), (current) => {
+      const keys = (current?.data as unknown as string[] | undefined) ?? [];
+      const next = keys.filter((queryKey) => !dropped.has(queryKey));
+      if (!current || next.length === keys.length) return undefined;
+      return { data: next as unknown as TData, updatedAt: Date.now() };
+    });
+  };
+
+  /** Take rows whose delete landed out of the index, unless rewritten since. */
+  const confirmDeleted = (scope: string, deleted: [queryKey: string, seq: number][]) => {
+    const gone = deleted
+      .filter(([queryKey, seq]) => rowWrites.get(rowId(scope, queryKey)) === seq)
+      .map(([queryKey]) => queryKey);
+    for (const queryKey of gone) rowWrites.delete(rowId(scope, queryKey));
+    untrackStorageKeys(scope, gone);
+  };
+
+  /**
+   * Queue row deletes now (ordered before any later write to the same rows).
+   * A key leaves the index only once its delete is confirmed: a failed delete
+   * stays indexed, so the next `remove` / `clear` finds and retries it.
+   * Resolves `true` when every delete landed.
+   */
+  const deleteRows = (scope: string, queryKeys: string[]): Promise<boolean> => {
+    const queue = writeQueue!;
+    const queued = queryKeys.map((queryKey) => {
+      const seq = noteWrite(scope, queryKey);
+      return queue
+        .remove({ queryKey, scope })
+        .then((removed): [string, number] | undefined => (removed ? [queryKey, seq] : undefined));
+    });
+    return Promise.all(queued).then((results) => {
+      confirmDeleted(
+        scope,
+        results.filter((result): result is [string, number] => !!result),
+      );
+      return results.every(Boolean);
+    });
+  };
+
+  /**
+   * Delete every persisted row of entry `key` in `scope` — `current` (the row
+   * memory knows about, queued right away so it orders before any later write)
+   * plus every other query variant the index lists. Resolves `true` once all
+   * deletes landed.
+   */
+  const removeStoredVariants = (scope: string, key: string, current: string) => {
+    const first = deleteRows(scope, [current]);
+    const rest = readIndex(scope).then(
+      (persisted) => {
+        // A server value that superseded the removal while the index was read
+        // owns its (fresh) row: keep it, delete only the stale variants.
+        const slot = getSlot();
+        const live = !isRemoved(scope, key) && slot.scope === scope ? slot.entries[key] : undefined;
+        const liveKey = live && replicaStorageKey(key, live.query);
+        const variants = new Set(
+          [...(indexed.get(scope) ?? []), ...persisted].filter(
+            (queryKey) =>
+              queryKey !== current && queryKey !== liveKey && isReplicaStorageKeyOf(queryKey, key),
+          ),
+        );
+        return variants.size === 0 ? true : deleteRows(scope, [...variants]);
+      },
+      () => false,
+    );
+    return Promise.all([first, rest]).then((results) => results.every(Boolean));
   };
 
   const runEffects = (effects: ReplicaEffect<TData>[]) => {
@@ -232,10 +370,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         // the delete (a closed IndexedDB, a quota error) must leave the key
         // unpurged, so the next terminal answer retries it instead of letting a
         // stale row survive to hydrate again.
-        void writeQueue.remove(key).then((removed) => {
+        // Every query variant goes: a row persisted under other filters would
+        // otherwise hydrate the removed entry once the guard is superseded.
+        void removeStoredVariants(effect.scope, effect.key, key.queryKey).then((removed) => {
           if (removed) markPurged(effect.scope, effect.key);
         });
-        trackStorageKey(effect.scope, key.queryKey, false);
         continue;
       }
       const data = toPersisted(effect.data);
@@ -243,12 +382,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       if (data === null) {
         // Server-confirmed absence: remove the prior projection rather than
         // leaving it to be hydrated as if the value were still current.
-        writeQueue.remove(key);
-        trackStorageKey(effect.scope, key.queryKey, false);
+        void deleteRows(effect.scope, [key.queryKey]);
         continue;
       }
       writeQueue.set(key, { data, updatedAt: Date.now() });
-      trackStorageKey(effect.scope, key.queryKey, true);
+      trackStorageKey(effect.scope, key.queryKey);
     }
   };
 
@@ -321,15 +459,39 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     // A removed entry is not read back: only a later server value supersedes
     // the removal (see `replace`), so a stale row can never repaint it.
     if (isRemoved(scope, key)) return false;
+    // Pending until settled: entity guards outlive every read that may hold them.
+    const start = ++guardClock;
+    const pending = pendingHydrates.get(scope) ?? new Set<number>();
+    pendingHydrates.set(scope, pending);
+    pending.add(start);
+    try {
+      return await readAndHydrate(params, key, scope);
+    } finally {
+      pending.delete(start);
+      if (pending.size === 0) pendingHydrates.delete(scope);
+      pruneEntityGuards(scope);
+    }
+  };
+
+  const readAndHydrate = async (params: TParams, key: string, scope: string) => {
+    const storage = resource.storage!;
+    // A read started before a `clear()` of this scope holds a wiped row.
+    const generation = clearGeneration(scope);
+    // After a `clear()`, read only once its row deletes landed.
+    const purge = scopePurges.get(scope);
+    if (purge && !(await purge)) return false;
     const query = resource.query(params);
-    const cached = await resource.storage.get({ ...storageKey(key, query), scope });
+    const cached = await storage.get({ ...storageKey(key, query), scope });
     if (!cached) return false;
-    // Re-check after the read: a removal that landed while it was in flight must
-    // not resurrect the row it just dropped.
-    if (isRemoved(scope, key)) return false;
+    // Re-check after the read: a removal or a clear that landed while it was in
+    // flight must not resurrect the row it just dropped.
+    if (isRemoved(scope, key) || clearGeneration(scope) !== generation) return false;
     if (options.isHydratable && !options.isHydratable(cached.data, params)) return false;
+    // Entities deleted while the read was in flight may still be in the row.
+    const data = withoutRemovedEntities(scope, cached.data);
+    if (data === undefined) return false;
     return dispatch({
-      data: cached.data,
+      data,
       key,
       params,
       query,
@@ -390,7 +552,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const reset = entry
       ? entry.query !== query
       : paging !== undefined && !viewMatchesFields(port.read(key), params);
-    return dispatch({
+    const applied = dispatch({
       data: (confirmed) =>
         paging
           ? mergeHead(key, incoming, confirmed, params, reset)
@@ -403,6 +565,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       scope,
       type: 'replace',
     });
+    if (applied) forgetRestoredEntities(scope, getConfirmed(key));
+    return applied;
   };
 
   /** Confirmed local write: patches the view (and the base under any overlay). */
@@ -436,9 +600,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       return false;
     }
     if (!resource.scope.canPersist()) return false;
-    const target = { ...storageKey(key), scope };
-    trackStorageKey(scope, target.queryKey, false);
-    void writeQueue.remove(target).then((removed) => {
+    void removeStoredVariants(scope, key, storageKey(key).queryKey).then((removed) => {
       if (removed) markPurged(scope, key);
     });
     return true;
@@ -478,6 +640,44 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const data = getConfirmed(key);
     if (data === undefined) return;
     runEffects([{ data, key, query: getSlot().entries[key]?.query, scope, type: 'persist' }]);
+  };
+
+  /**
+   * Wipe the resource in the active scope: every entry leaves memory in one
+   * host commit, every persisted row (all keys, all query variants) and the
+   * index are deleted, and reads already in flight are dropped — a hydrate
+   * started before the clear never dispatches, and `useSync` discards head
+   * responses whose request started before it. Requests started afterwards
+   * apply normally. Resolves `true` once the persisted rows are gone.
+   */
+  const clear = (): Promise<boolean> => {
+    const scope = resource.scope.get();
+    clearGenerations.set(scope, clearGeneration(scope) + 1);
+    port.commit([{ type: 'clear' }], { entries: {}, scope }, `${prefix}/clear`);
+    const purge = purgeScope(scope);
+    scopePurges.set(scope, purge);
+    return purge;
+  };
+
+  /** Delete every persisted row of `scope` (see `clear`). */
+  const purgeScope = async (scope: string): Promise<boolean> => {
+    if (!writeQueue) return true;
+    // Until identity resolves the scope is a guess; never write into it.
+    if (!resource.scope.canPersist()) return false;
+    // Rows this session knows about are queued now, ahead of any later write.
+    const queued = deleteRows(scope, [...(indexed.get(scope) ?? [])]);
+    let persisted: string[];
+    try {
+      persisted = await readIndex(scope);
+    } catch {
+      return false;
+    }
+    // Keys this session tracks are already queued above, or were written by a
+    // newer response since the clear (their row is fresh): skip both.
+    const known = indexed.get(scope);
+    const stale = persisted.filter((queryKey) => !known?.has(queryKey));
+    const [first, rest] = await Promise.all([queued, deleteRows(scope, stale)]);
+    return first && rest;
   };
 
   const revalidate = (key?: string): Promise<unknown> =>
@@ -619,12 +819,43 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return entity.map(data, id, fn);
   };
 
+  /** Which of `ids` are held by `data`. */
+  const heldEntities = (data: TData, ids: string[]): string[] => {
+    if (paging) {
+      const items = (data as unknown as ReplicaPagedData<unknown, unknown>).items ?? [];
+      const present = new Set(items.map((item) => paging.getId(item)));
+      return ids.filter((id) => present.has(id));
+    }
+    const entity = options.entity;
+    return entity ? ids.filter((id) => entity.has(data, id)) : [];
+  };
+
+  /** Strip entities removed in `scope` from a value read back from storage. */
+  const withoutRemovedEntities = (scope: string, data: TData): TData | undefined => {
+    const removed = removedIds(scope);
+    if (removed.length === 0) return data;
+    let next: TData | undefined = data;
+    for (const id of heldEntities(data, removed)) {
+      next = mapEntity(next!, id, () => undefined);
+      if (next === undefined) break;
+    }
+    return next;
+  };
+
+  /** A server value holding a removed entity again (restored) lifts its guard. */
+  const forgetRestoredEntities = (scope: string, data: TData | undefined) => {
+    const removed = removedIds(scope);
+    if (removed.length === 0 || data === undefined) return;
+    const guards = removedEntities.get(scope)!;
+    for (const id of heldEntities(data, removed)) guards.delete(id);
+    if (guards.size === 0) removedEntities.delete(scope);
+  };
+
   /**
    * Apply an entity change to persisted rows that memory does not hold (the
    * memory path already persists loaded entries). Read-modify-write runs in
    * the per-key write queue, so it sees every earlier write; a missing row is
-   * never recreated. Resolves once the index has been read and the patches
-   * are queued.
+   * never recreated. Resolves once the patches have settled.
    */
   const patchStoredEntity = async <TItem>(
     id: string,
@@ -638,30 +869,48 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         ? Object.entries(slot.entries).map(([key, entry]) => storageKey(key, entry.query).queryKey)
         : [],
     );
-    const keys = await readIndex(scope);
+    let keys: string[];
+    try {
+      keys = await readIndex(scope);
+    } catch (error) {
+      // Rows cannot be enumerated: nothing to patch. Loaded entries are already
+      // updated, and a removal still guards later hydrates (`removeEntity`).
+      console.error(`[replica:${resource.name}] failed to read the persisted index`, error);
+      return;
+    }
     // Identity changed while reading the index: those rows are not ours to touch.
     if (resource.scope.get() !== scope) return;
+    const patches: Promise<void>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
-      writeQueue.update({ queryKey, scope }, (current) => {
-        if (!current) return undefined;
-        const next = mapEntity(current.data, id, fn);
-        if (next === current.data) return undefined;
-        if (next === undefined) {
-          trackStorageKey(scope, queryKey, false);
-          return null;
-        }
-        return { data: next, updatedAt: Date.now() };
-      });
+      const seq = noteWrite(scope, queryKey);
+      let dropped = false;
+      const patch = writeQueue
+        .update({ queryKey, scope }, (current) => {
+          if (!current) return undefined;
+          const next = mapEntity(current.data, id, fn);
+          if (next === current.data) return undefined;
+          if (next === undefined) {
+            dropped = true;
+            return null;
+          }
+          return { data: next, updatedAt: Date.now() };
+        })
+        .then((written) => {
+          if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
+        });
+      patches.push(patch);
     }
+    await Promise.all(patches);
   };
 
-  const updateEntity = <TItem>(
+  /** `updateEntity`, returning the persisted-row patch (if any) to wait on. */
+  const applyEntity = <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
     { persist = true }: { persist?: boolean } = {},
-  ) => {
-    if (persist) void patchStoredEntity(id, fn);
+  ): Promise<void> | undefined => {
+    const patch = persist ? patchStoredEntity(id, fn) : undefined;
     for (const key of entityKeys(id)) {
       const current = port.read(key);
       if (current === undefined) continue;
@@ -672,6 +921,40 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
           persist,
         });
     }
+    return patch;
+  };
+
+  const updateEntity = <TItem>(
+    id: string,
+    fn: (item: TItem) => TItem | undefined,
+    options?: { persist?: boolean },
+  ) => {
+    void applyEntity(id, fn, options);
+  };
+
+  /**
+   * Confirmed removal of one entity everywhere (see `updateEntity`). Unlike a
+   * plain mapper returning `undefined`, it is also remembered for this scope:
+   * a value hydrated afterwards — even by a read already in flight — comes
+   * back without the entity (see `removedEntities`).
+   */
+  const removeEntity = (id: string, options?: { persist?: boolean }) => {
+    const scope = resource.scope.get();
+    const guard: { releasedAt?: number } = {};
+    const guards = removedEntities.get(scope) ?? new Map<string, { releasedAt?: number }>();
+    removedEntities.set(scope, guards);
+    guards.set(id, guard);
+    const release = () => {
+      // A newer removal of the same id owns the slot now.
+      if (guards.get(id) !== guard) return;
+      guard.releasedAt = ++guardClock;
+      pruneEntityGuards(scope);
+    };
+    const patch = applyEntity(id, () => undefined, options);
+    // Without a storage patch (`persist: false`) only reads already in flight
+    // can hold the entity; with one, reads that start before it lands can too.
+    if (patch) void patch.then(release, release);
+    else release();
   };
 
   const beginEntityOptimistic = <TItem>(
@@ -690,6 +973,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   return {
     beginEntityOptimistic,
     beginOptimistic,
+    clear,
+    clearGeneration,
     collapse,
     dispatch,
     ensureScope,
@@ -703,6 +988,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     patchStoredEntity,
     persist,
     remove,
+    removeEntity,
     replace,
     resource,
     revalidate,
