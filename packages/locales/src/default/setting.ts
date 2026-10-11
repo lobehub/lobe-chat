@@ -962,6 +962,7 @@ export default {
   'notification.item.agent_cron_job_failed': 'Scheduled task failed',
   'notification.item.agent_run_completed': 'Agent task completed',
   'notification.item.agent_transfer_result': 'Transfer request result',
+  'notification.item.checkout_abandoned': 'Unfinished checkout reminders',
   'notification.item.credit_balance_low': 'Credit balance running low',
   'notification.item.image_generation_completed': 'Image generation completed',
   'notification.item.storage_overage_cap_reached': 'Storage pay-as-you-go cap reached',
