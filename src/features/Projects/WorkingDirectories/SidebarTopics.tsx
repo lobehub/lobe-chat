@@ -1,7 +1,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Text } from '@lobehub/ui/base-ui';
 import { PlusIcon } from 'lucide-react';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
@@ -13,7 +13,10 @@ import ByProjectMode from '@/features/AgentSidebar/Topic/TopicListContent/ByProj
 import ByStatusMode from '@/features/AgentSidebar/Topic/TopicListContent/ByStatusMode';
 import ByTimeMode from '@/features/AgentSidebar/Topic/TopicListContent/ByTimeMode';
 import FlatMode from '@/features/AgentSidebar/Topic/TopicListContent/FlatMode';
-import { TopicListScopeContext } from '@/features/AgentSidebar/Topic/TopicListScope';
+import {
+  TopicListRevealContext,
+  TopicListScopeContext,
+} from '@/features/AgentSidebar/Topic/TopicListScope';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import {
   useProjectDirectories,
@@ -25,9 +28,19 @@ import { openProjectTopicModal } from './StartDirectoryModal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
   const scope = useMemo(() => ({ projectId: props.projectId }), [props.projectId]);
+  // Keyed by project so switching projects starts from the first page again.
+  const [revealed, setRevealed] = useState({ projectId: props.projectId, rows: 0 });
+  const extraRows = revealed.projectId === props.projectId ? revealed.rows : 0;
+  const revealMore = useCallback(
+    () => setRevealed({ projectId: props.projectId, rows: extraRows + 20 }),
+    [props.projectId, extraRows],
+  );
+  const reveal = useMemo(() => ({ extraRows, revealMore }), [extraRows, revealMore]);
   return (
     <TopicListScopeContext value={scope}>
-      <ProjectTopicList {...props} />
+      <TopicListRevealContext value={reveal}>
+        <ProjectTopicList {...props} />
+      </TopicListRevealContext>
     </TopicListScopeContext>
   );
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { MAIN_SIDEBAR_EXCLUDE_TRIGGERS } from '@/const/topic';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
@@ -8,7 +8,7 @@ import { groupSidebarTopics, selectSidebarTopics } from '@/store/chat/slices/top
 import { useProjectDirectoryStore, useProjectTopics } from '@/store/projectWorkingDirectory';
 import type { ChatTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 
-import { useTopicListScope } from './TopicListScope';
+import { useTopicListReveal, useTopicListScope } from './TopicListScope';
 
 export const useScopedTopics = () => {
   const scope = useTopicListScope();
@@ -41,11 +41,9 @@ export const useScopedSidebarTopics = (
   const { scope, topics } = useScopedTopics();
   const { topicId } = useActiveRouteParams<{ topicId?: string }>();
   // Project topics are already loaded in full, so "load more" only reveals more
-  // rows locally. It must not grow the global `topicPageSize`: that value is
-  // sent as `getTopics.pageSize`, which the server caps at 100, and pushing it
-  // past the cap broke every Agent's topic list until the user reset it.
-  const [extraRows, setExtraRows] = useState(0);
-  const visibleLimit = pageSize + extraRows;
+  // rows through host-owned state (see `TopicListRevealContext`).
+  const reveal = useTopicListReveal();
+  const visibleLimit = pageSize + (reveal?.extraRows ?? 0);
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const visible = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
@@ -75,6 +73,6 @@ export const useScopedSidebarTopics = (
     groups,
     activeTopicId: topicId,
     hasMore,
-    loadMore: () => setExtraRows((rows) => rows + 20),
+    loadMore: () => reveal?.revealMore(),
   };
 };
