@@ -834,6 +834,24 @@ describe('goal set-requirement command', () => {
 
     expect(mockClient.goal.updateRequirement.mutate).not.toHaveBeenCalled();
   });
+
+  it('refuses to guess when an inline requirement and a file are both passed', async () => {
+    await expect(
+      createProgram().parseAsync([
+        'node',
+        'test',
+        'goal',
+        'set-requirement',
+        'goal-1',
+        '-r',
+        'inline text',
+        '--file',
+        'requirement.md',
+      ]),
+    ).rejects.toThrow('not both');
+
+    expect(mockClient.goal.updateRequirement.mutate).not.toHaveBeenCalled();
+  });
 });
 
 describe('goal delete', () => {

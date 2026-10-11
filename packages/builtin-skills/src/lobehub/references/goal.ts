@@ -7,12 +7,12 @@ across turns instead of ending when your turn does.
 
 ## When it applies
 
-Creating a goal — and binding an existing one to a conversation — is gated to a
-\`/goal\` run: the CLI only carries the \`goal:manage\` capability there, so an
-ordinary run that tries anyway gets a permission error it must not work around.
-Do not create a goal on your own initiative; if the user's ask is genuinely
+A goal is created for the user and then supervised by the agent that created it —
+the entry points are a \`/goal\` request or the goal UI, never your own initiative.
+Don't start one just because the work looks long; if the user's ask is genuinely
 long-horizon and should keep running past this turn, say so and tell them to send
-\`/goal\`. Everything below is for a goal you are already supervising.
+\`/goal\`. Everything below is for a goal you were asked to create, or one you are
+already supervising.
 
 ## Who is who
 

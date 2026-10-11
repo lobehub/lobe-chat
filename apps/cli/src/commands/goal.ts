@@ -336,7 +336,7 @@ export function registerGoalCommand(program: Command) {
     )
     .option(
       '--topic',
-      "Link the goal to the current topic. Use it whenever you create a goal for the user from a chat, not only for /goal: without it the goal is standalone and never shows on this topic's goal tray. This agent supervises the goal from this topic; the output carries a turnToken, so submit the first plan with `lh goal plan <id> --token <turnToken> --file <plan.json>`",
+      "Link the goal to the current topic. Use it whenever the goal is planned from this chat: without it the goal is standalone and never shows on this topic's goal tray. This agent supervises the goal from this topic; the output carries a turnToken, so submit the first plan with `lh goal plan <id> --token <turnToken> --file <plan.json>`",
     )
     // Former name of --topic, kept so existing prompts and scripts keep working.
     .addOption(new Option('--conversation').hideHelp())
@@ -694,6 +694,12 @@ export function registerGoalCommand(program: Command) {
       'Read the requirement from a file — use this for the long, multi-line text the goal page holds',
     )
     .action(async (id: string, options: { file?: string; requirement?: string }) => {
+      // These are alternatives, not a precedence order: a caller that passed both
+      // meant one of them, and silently picking one would rewrite the goal's
+      // acceptance bar on a guess.
+      if (options.file && options.requirement !== undefined) {
+        throw new Error('Pass either --requirement <text> or --file <path>, not both');
+      }
       // The requirement is usually a long, multi-line document, so a file is the
       // practical way to pass it; `-r` covers the one-line case without a temp file.
       const requirement = (
