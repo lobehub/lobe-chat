@@ -13,7 +13,6 @@ import { setNamespace } from '@/utils/storeDebug';
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
-import { contextInitialState } from '../context/initialState';
 import {
   type MemoryDetailDisplay,
   memoryDetailKey,
@@ -198,10 +197,14 @@ export class BaseActionImpl {
     await this.#get().internal_clearPreferenceList();
     await this.#get().internal_clearIdentityList();
     await this.#get().internal_clearActivityList(scope);
+    await this.#get().internal_clearContextList(scope);
 
     this.#set(
       produce((draft) => {
-        Object.assign(draft, contextInitialState);
+        draft.contextsQuery = undefined;
+        draft.contextsSearchError = undefined;
+        draft.contextsSearchLoading = undefined;
+        draft.contextsSort = undefined;
         draft.experiencesQuery = undefined;
         draft.experiencesSort = undefined;
         draft.experiencesSearchError = undefined;
@@ -304,14 +307,9 @@ export class BaseActionImpl {
       }
       case LayersEnum.Context: {
         await memoryCRUDService.updateContext(id, { description: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.contexts.find((memory) => memory.id === id);
-            if (item) item.description = content;
-          }),
-          false,
-          n('updateMemory/context'),
-        );
+        // The context list is replica-backed: patch the view and its persisted
+        // rows together (the flat `contexts` field mirrors it).
+        this.#get().internal_updateContextEntity(id, (item) => ({ ...item, description: content }));
         listKeyRoot = userMemoryKeys.contexts.root;
         break;
       }
