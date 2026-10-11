@@ -22,7 +22,6 @@ import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
-import { registerUserMemoryReplica } from '../../replicaRegistry';
 import { useUserMemoryStore } from '../../store';
 import {
   memoryDetailKey,
@@ -312,87 +311,6 @@ describe('userMemory base replica', () => {
       );
       await waitFor(() => expect(reloaded.result.current.isLoading).toBe(true));
       expect(useUserMemoryStore.getState().memoryMap[OTHER_RETRIEVE_KEY]).toBeUndefined();
-    });
-
-    it('clears every registered replica, and leaves owned layers to them', async () => {
-      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue({} as never);
-      const clear = vi.fn(async () => true);
-      const unregister = registerUserMemoryReplica(useUserMemoryStore.getState, 'activityTest', {
-        clear,
-        layer: LayersEnum.Activity,
-      });
-      renderHook(() => null, { wrapper });
-      const ownedActivities = [{ id: 'replica-owned' }] as never;
-      act(() =>
-        useUserMemoryStore.setState({
-          activities: ownedActivities,
-          contexts: [{ id: 'legacy' }] as never,
-        }),
-      );
-
-      try {
-        await act(async () => {
-          await useUserMemoryStore.getState().purgeAllMemories();
-        });
-
-        expect(clear).toHaveBeenCalledTimes(1);
-        // The replica owns the activity list: no legacy plain reset over its view.
-        expect(useUserMemoryStore.getState().activities).toBe(ownedActivities);
-        // Unmigrated layers keep the legacy reset.
-        expect(useUserMemoryStore.getState().contexts).toEqual([]);
-      } finally {
-        unregister();
-      }
-    });
-  });
-
-  describe('updateMemory', () => {
-    // Keep an SWR provider mounted for the legacy cache revalidation.
-    beforeEach(() => {
-      renderHook(() => null, { wrapper });
-    });
-
-    it('hands an edit of a replica-owned layer to its replica instead of a plain patch', async () => {
-      vi.spyOn(memoryCRUDService, 'updateActivity').mockResolvedValue({} as never);
-      const update = vi.fn();
-      const unregister = registerUserMemoryReplica(useUserMemoryStore.getState, 'activityTest', {
-        clear: async () => true,
-        layer: LayersEnum.Activity,
-        update,
-      });
-      const activities = [{ id: 'act-1', narrative: 'old' }] as never;
-      act(() => useUserMemoryStore.setState({ activities }));
-
-      try {
-        await act(async () => {
-          await useUserMemoryStore.getState().updateMemory('act-1', 'new', LayersEnum.Activity);
-        });
-
-        expect(update).toHaveBeenCalledWith({
-          content: 'new',
-          id: 'act-1',
-          layer: LayersEnum.Activity,
-        });
-        expect(useUserMemoryStore.getState().activities).toBe(activities);
-      } finally {
-        unregister();
-      }
-    });
-
-    it('patches an unmigrated layer through the legacy plain state', async () => {
-      vi.spyOn(memoryCRUDService, 'updateContext').mockResolvedValue({} as never);
-      act(() =>
-        useUserMemoryStore.setState({ contexts: [{ description: 'old', id: 'ctx-1' }] as never }),
-      );
-
-      await act(async () => {
-        await useUserMemoryStore.getState().updateMemory('ctx-1', 'new', LayersEnum.Context);
-      });
-
-      expect(memoryCRUDService.updateContext).toHaveBeenCalledWith('ctx-1', {
-        description: 'new',
-      });
-      expect(useUserMemoryStore.getState().contexts[0]).toMatchObject({ description: 'new' });
     });
   });
 

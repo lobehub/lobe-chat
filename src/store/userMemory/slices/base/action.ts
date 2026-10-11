@@ -10,12 +10,6 @@ import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@/types/us
 import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
-import {
-  clearUserMemoryReplicas,
-  getUserMemoryReplicaLayers,
-  registerUserMemoryReplica,
-  updateUserMemoryReplicas,
-} from '../../replicaRegistry';
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
@@ -34,39 +28,6 @@ import {
 } from './projection';
 
 const n = setNamespace('userMemory');
-
-/**
- * The legacy (plain-state + SWR) cache of each memory layer list. The base
- * actions reset / revalidate a layer through it only while no replica owns the
- * layer (see `replicaRegistry`), so slices migrate one at a time.
- */
-const legacyLayerCaches = [
-  {
-    initialState: activityInitialState,
-    layer: LayersEnum.Activity,
-    root: userMemoryKeys.activities.root,
-  },
-  {
-    initialState: contextInitialState,
-    layer: LayersEnum.Context,
-    root: userMemoryKeys.contexts.root,
-  },
-  {
-    initialState: experienceInitialState,
-    layer: LayersEnum.Experience,
-    root: userMemoryKeys.experiences.root,
-  },
-  {
-    initialState: identityInitialState,
-    layer: LayersEnum.Identity,
-    root: userMemoryKeys.identityList.root,
-  },
-  {
-    initialState: preferenceInitialState,
-    layer: LayersEnum.Preference,
-    root: userMemoryKeys.preferences.root,
-  },
-] as const;
 
 type MemoryContext = Parameters<typeof createMemorySearchParams>[0];
 
@@ -146,16 +107,6 @@ export class BaseActionImpl {
       stateKey: 'memoryRetrieveReplica',
       view: retrieveMapLens,
     });
-
-    for (const [name, slice] of [
-      ['memoryRetrieve', this.#retrieve],
-      ['memoryDetail', this.#detail],
-    ] as const) {
-      registerUserMemoryReplica(get, name, {
-        clear: () => slice.clear(),
-        revalidate: () => slice.revalidate(),
-      });
-    }
   }
 
   clearEditingMemory = (): void => {
@@ -217,21 +168,34 @@ export class BaseActionImpl {
     }
   };
 
+  /**
+   * Drop the retrieve map and every memory detail through their replicas:
+   * memory, every persisted row of the active scope (including query variants
+   * not loaded in memory) and reads in flight. Called by `purgeAllMemories`
+   * before it revalidates; resolves `true` once storage is purged.
+   */
+  internal_clearMemoryReplicas = async (): Promise<boolean> => {
+    const cleared = await Promise.all([this.#retrieve.clear(), this.#detail.clear()]);
+    return cleared.every(Boolean);
+  };
+
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
 
     await memoryCRUDService.deleteAll();
 
-    // Replica-backed caches (see `replicaRegistry`) drop their views and every
-    // persisted row through the engine; a plain `set` would leave the rows behind.
-    await clearUserMemoryReplicas(this.#get);
-
-    // Layers no replica owns yet keep the legacy plain-state + SWR reset.
-    const legacyLayers = this.#legacyLayerCaches();
+    // Replica-backed reads own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearMemoryReplicas();
 
     this.#set(
       produce((draft) => {
-        for (const { initialState } of legacyLayers) Object.assign(draft, initialState);
+        Object.assign(draft, activityInitialState);
+        Object.assign(draft, contextInitialState);
+        Object.assign(draft, experienceInitialState);
+        Object.assign(draft, identityInitialState);
+        Object.assign(draft, preferenceInitialState);
 
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
@@ -249,9 +213,33 @@ export class BaseActionImpl {
     );
 
     await Promise.all([
-      ...legacyLayers.map(({ root }) =>
-        mutate((key) => Array.isArray(key) && key[0] === root, undefined, { revalidate: true }),
+      mutate(
+        (key) => Array.isArray(key) && key[0] === userMemoryKeys.memoryDetail.root,
+        undefined,
+        { revalidate: true },
       ),
+      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.activities.root, undefined, {
+        revalidate: true,
+      }),
+      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root, undefined, {
+        revalidate: true,
+      }),
+      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root, undefined, {
+        revalidate: true,
+      }),
+      mutate(
+        (key) => Array.isArray(key) && key[0] === userMemoryKeys.identityList.root,
+        undefined,
+        {
+          revalidate: true,
+        },
+      ),
+      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root, undefined, {
+        revalidate: true,
+      }),
+      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.retrieve.root, undefined, {
+        revalidate: true,
+      }),
       mutate(userMemoryKeys.persona(), null, { revalidate: false }),
       mutate(
         userMemoryKeys.tags(),
@@ -298,86 +286,84 @@ export class BaseActionImpl {
   };
 
   updateMemory = async (id: string, content: string, layer: LayersEnum): Promise<void> => {
+    let listKeyRoot: string | undefined;
+
     switch (layer) {
       case LayersEnum.Activity: {
         await memoryCRUDService.updateActivity(id, { narrative: content });
+        this.#set(
+          produce((draft) => {
+            const item = draft.activities.find((memory) => memory.id === id);
+            if (item) item.narrative = content;
+          }),
+          false,
+          n('updateMemory/activity'),
+        );
+        listKeyRoot = userMemoryKeys.activities.root;
         break;
       }
       case LayersEnum.Context: {
         await memoryCRUDService.updateContext(id, { description: content });
+        this.#set(
+          produce((draft) => {
+            const item = draft.contexts.find((memory) => memory.id === id);
+            if (item) item.description = content;
+          }),
+          false,
+          n('updateMemory/context'),
+        );
+        listKeyRoot = userMemoryKeys.contexts.root;
         break;
       }
       case LayersEnum.Experience: {
         await memoryCRUDService.updateExperience(id, { keyLearning: content });
+        this.#set(
+          produce((draft) => {
+            const item = draft.experiences.find((memory) => memory.id === id);
+            if (item) item.keyLearning = content;
+          }),
+          false,
+          n('updateMemory/experience'),
+        );
+        listKeyRoot = userMemoryKeys.experiences.root;
         break;
       }
       case LayersEnum.Identity: {
         await memoryCRUDService.updateIdentity(id, { description: content });
+        this.#set(
+          produce((draft) => {
+            const item = draft.identities.find((memory) => memory.id === id);
+            if (item) item.description = content;
+          }),
+          false,
+          n('updateMemory/identity'),
+        );
+        listKeyRoot = userMemoryKeys.identityList.root;
         break;
       }
       case LayersEnum.Preference: {
         await memoryCRUDService.updatePreference(id, { conclusionDirectives: content });
+        this.#set(
+          produce((draft) => {
+            const item = draft.preferences.find((memory) => memory.id === id);
+            if (item) item.conclusionDirectives = content;
+          }),
+          false,
+          n('updateMemory/preference'),
+        );
+        listKeyRoot = userMemoryKeys.preferences.root;
         break;
       }
     }
 
-    // A layer owned by a replica patches its own rows (see `replicaRegistry`);
-    // the others keep the legacy plain-state patch + list revalidation.
-    const legacy = updateUserMemoryReplicas(this.#get, { content, id, layer })
-      ? undefined
-      : legacyLayerCaches.find((cache) => cache.layer === layer);
-
-    if (legacy) this.#patchLegacyLayer(id, content, layer);
-
     this.#get().clearEditingMemory();
 
-    await Promise.all([
-      legacy && mutate((key) => Array.isArray(key) && key[0] === legacy.root),
-      mutate(userMemoryKeys.memoryDetail(layer, id)),
-    ]);
-  };
-
-  /** The legacy layer caches no registered replica owns. */
-  #legacyLayerCaches = () => {
-    const owned = getUserMemoryReplicaLayers(this.#get);
-    return legacyLayerCaches.filter(({ layer }) => !owned.has(layer));
-  };
-
-  /** Plain-state patch of a layer list that is not replica-backed yet. */
-  #patchLegacyLayer = (id: string, content: string, layer: LayersEnum): void => {
-    this.#set(
-      produce((draft: UserMemoryStore) => {
-        switch (layer) {
-          case LayersEnum.Activity: {
-            const item = draft.activities.find((memory) => memory.id === id);
-            if (item) item.narrative = content;
-            break;
-          }
-          case LayersEnum.Context: {
-            const item = draft.contexts.find((memory) => memory.id === id);
-            if (item) item.description = content;
-            break;
-          }
-          case LayersEnum.Experience: {
-            const item = draft.experiences.find((memory) => memory.id === id);
-            if (item) item.keyLearning = content;
-            break;
-          }
-          case LayersEnum.Identity: {
-            const item = draft.identities.find((memory) => memory.id === id);
-            if (item) item.description = content;
-            break;
-          }
-          case LayersEnum.Preference: {
-            const item = draft.preferences.find((memory) => memory.id === id);
-            if (item) item.conclusionDirectives = content;
-            break;
-          }
-        }
-      }),
-      false,
-      n(`updateMemory/${layer}`),
-    );
+    if (listKeyRoot) {
+      await Promise.all([
+        mutate((key) => Array.isArray(key) && key[0] === listKeyRoot),
+        mutate(userMemoryKeys.memoryDetail(layer, id)),
+      ]);
+    }
   };
 
   /**
