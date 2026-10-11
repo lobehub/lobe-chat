@@ -81,6 +81,8 @@ const agentDetailId = (s: ChatStoreState): string | undefined => {
   return view?.agentId;
 };
 
+const memoryDetailView = (s: ChatStoreState) => getViewData(s, PortalViewType.MemoryDetail);
+
 // Artifact selectors
 const currentArtifact = (s: ChatStoreState): PortalArtifact | undefined => {
   const view = getViewData(s, PortalViewType.Artifact);
@@ -373,6 +375,9 @@ export const chatPortalSelectors = {
   localFilePath,
   localFileWorkingDirectory,
   openLocalFiles,
+
+  // Memory detail data
+  memoryDetailView,
 
   // Message detail data
   messageDetailId,
