@@ -804,7 +804,6 @@ export const toolKeys = {
     appSlug,
   ]),
   composioConnections: def('tool:composioConnections', () => ['tool:composioConnections']),
-  installedPlugins: def('tool:installedPlugins', () => ['tool:installedPlugins']),
 };
 
 // ---- global -------------------------------------------------------------
