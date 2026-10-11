@@ -1551,8 +1551,17 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/devices'),
                   'Desktop > Workspace > Settings > Devices',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('grid') }) },
                 path: 'devices',
+              },
+              // Device detail level — the page reads the device id from `sub`.
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/devices'),
+                  'Desktop > Workspace > Settings > Devices > Detail',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
+                path: 'devices/:sub',
               },
               {
                 element: dynamicElement(

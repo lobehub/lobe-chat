@@ -1,72 +1,52 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import type { DeviceListItem, DeviceWorkspaceShare } from '@lobechat/types';
-import { Flexbox, Icon, SortableList } from '@lobehub/ui';
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  confirmModal,
-  Input,
-  Tabs,
-  Tag,
-  Text,
-  toast,
-} from '@lobehub/ui/base-ui';
+import type { DeviceListItem } from '@lobechat/types';
+import { CopyButton, Flexbox, Icon, SortableList } from '@lobehub/ui';
+import { ActionIcon, Button, Input, Tabs, Tag, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { FolderOpenIcon, FolderPlusIcon, LockIcon, XIcon } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  BotIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  FolderPlusIcon,
+  InfoIcon,
+  LockIcon,
+  PencilIcon,
+  XIcon,
+} from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
-import { createWorkspaceLambdaClient, lambdaQuery } from '@/libs/trpc/client';
+import { lambdaQuery } from '@/libs/trpc/client';
 import { deviceService } from '@/services/device';
 import { electronSystemService } from '@/services/electron/system';
 import { nextWorkingDirs } from '@/store/device';
 
 import AgentRuntimes from './AgentRuntimes';
-import Connections from './Connections';
 import { refreshDeviceList } from './const';
-import DeviceHealth, { HealthLegend } from './DeviceHealth';
+import DeviceOverview from './DeviceOverview';
 import FieldLabel from './FieldLabel';
 import { getDeviceIcon } from './getDeviceIcon';
-import PresenceDot from './PresenceDot';
 import { useCanEditDevice, useCanOperateDevice } from './useCanEditDevice';
 
 const styles = createStaticStyles(({ css }) => ({
-  // Fills whatever host it lands in: inside a page-level rail the height is
-  // definite, so the body below the header scrolls on its own; inside the
-  // workspace list card the height is auto and the panel simply grows.
-  body: css`
-    overflow-y: auto;
-    flex: 1;
-
-    min-height: 0;
-    padding-block: 16px 24px;
-    padding-inline: 20px;
-  `,
-  container: css`
-    overflow: hidden;
-    height: 100%;
-    min-height: 0;
-  `,
-  header: css`
-    flex: none;
-    padding-block: 16px;
-    padding-inline: 20px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
+  // Presence badge on the icon tile's corner — same treatment as the card the
+  // user just clicked, so the page reads as that card opened up.
   iconTile: css`
+    position: relative;
+
     display: flex;
     flex: none;
     align-items: center;
     justify-content: center;
 
-    width: 32px;
-    height: 32px;
-    border-radius: ${cssVar.borderRadius};
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
 
     color: ${cssVar.colorTextSecondary};
 
@@ -84,26 +64,36 @@ const styles = createStaticStyles(({ css }) => ({
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
+  presence: css`
+    position: absolute;
+    inset-block-end: -3px;
+    inset-inline-end: -3px;
+
+    width: 14px;
+    height: 14px;
+    border: 2px solid ${cssVar.colorBgLayout};
+    border-radius: 50%;
+  `,
   recentItem: css`
     padding-block: 8px;
     padding-inline: 8px;
-  `,
-  tabs: css`
-    flex: none;
-    padding-block: 8px 0;
-    padding-inline: 14px;
   `,
 }));
 
 type DetailTab = 'agents' | 'files' | 'overview';
 
-interface DeviceDetailPanelProps {
+interface DeviceDetailProps {
   device: DeviceListItem;
   isCurrent?: boolean;
-  onClose: () => void;
+  onBack: () => void;
 }
 
-const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onClose }) => {
+/**
+ * Full-page device detail — the second level of the device settings routes
+ * (`/settings/devices/:sub`, `/:slug/settings/devices/:sub`). The list stays a
+ * plain card grid and every card opens here.
+ */
+const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => {
   const { t } = useTranslation(['setting', 'device']);
   const canEdit = useCanEditDevice()(device);
   const canOperate = useCanOperateDevice()(device);
@@ -112,6 +102,7 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
   const [tab, setTab] = useState<DetailTab>('overview');
 
   const [name, setName] = useState(device.friendlyName ?? '');
+  const [editingName, setEditingName] = useState(false);
   const [cwd, setCwd] = useState(device.defaultCwd ?? '');
 
   // Workspace devices commit via the self-or-owner-gated, workspace-scoped
@@ -137,9 +128,15 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
   // default cwd commit on blur; recent-dir add / remove / reorder commit on the
   // spot.
   const commitName = () => {
+    setEditingName(false);
     const next = name.trim() || null;
     if (next === (device.friendlyName ?? null)) return;
     update.mutate({ deviceId: device.deviceId, friendlyName: next });
+  };
+
+  const cancelName = () => {
+    setName(device.friendlyName ?? '');
+    setEditingName(false);
   };
 
   const commitCwd = (value: string, repoType?: 'git' | 'github') => {
@@ -210,31 +207,6 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
     });
   };
 
-  // Revoke one workspace share of a personal device. The share
-  // entry's `deviceId` is the workspace-scoped twin, removed via the
-  // workspace-scoped mutation under an explicitly pinned workspace client —
-  // the personal settings page has no active workspace context to inherit.
-  const handleRevokeShare = (share: DeviceWorkspaceShare) =>
-    confirmModal({
-      content: t('devices.share.revokeConfirmDesc'),
-      okButtonProps: { danger: true },
-      okText: t('devices.share.revoke'),
-      onOk: async () => {
-        try {
-          await createWorkspaceLambdaClient(share.workspaceId).device.removeWorkspaceDevice.mutate({
-            deviceId: share.deviceId,
-          });
-          refreshDeviceList();
-        } catch (error) {
-          toast.error((error as Error).message);
-          throw error;
-        }
-      },
-      title: t('devices.share.revokeConfirmTitle', {
-        name: share.workspaceName ?? share.workspaceId,
-      }),
-    });
-
   const handleReorderRecent = (items: { id: string }[]) => {
     // SortableList items are keyed by path; map ids back to their entries so the
     // detected repoType survives a reorder.
@@ -245,51 +217,100 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
     });
   };
 
+  const displayName = device.friendlyName || device.hostname || device.deviceId;
+
   return (
-    <Flexbox className={styles.container}>
-      {/* ─── Header ─── */}
-      <Flexbox horizontal align={'center'} className={styles.header} gap={12}>
-        <span className={styles.iconTile}>{getDeviceIcon(device.platform, 18)}</span>
-        <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
-          {/* Presence is a dot after the name; the connections below say which. */}
-          <Flexbox horizontal align={'baseline'} gap={8} style={{ minWidth: 0 }}>
-            <Text ellipsis weight={600}>
-              {device.friendlyName || device.hostname || device.deviceId}
-            </Text>
-            <Text style={{ flex: 'none' }}>
-              <PresenceDot
-                live={online}
-                title={
-                  online
-                    ? t('devices.status.onlineConnections', { count: channels.length })
-                    : t('devices.status.offline')
-                }
-              />
-            </Text>
-          </Flexbox>
-          {isCurrent && (
-            <Flexbox horizontal>
-              <Tag size={'small'}>{t('devices.currentBadge')}</Tag>
+    <Flexbox gap={24}>
+      <Flexbox horizontal>
+        <Button icon={<Icon icon={ArrowLeftIcon} />} size={'small'} type={'text'} onClick={onBack}>
+          {t('devices.detail.back')}
+        </Button>
+      </Flexbox>
+
+      {/* ─── Header: title (renamed in place), then the copyable device id ─── */}
+      <Flexbox horizontal align={'center'} gap={16}>
+        <span className={styles.iconTile}>
+          {getDeviceIcon(device.platform, 26)}
+          <span
+            className={styles.presence}
+            style={{ background: online ? cssVar.colorSuccess : cssVar.colorTextQuaternary }}
+            title={
+              online
+                ? t('devices.status.onlineConnections', { count: channels.length })
+                : t('devices.status.offline')
+            }
+          />
+        </span>
+        <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
+          {editingName ? (
+            <Input
+              autoFocus
+              placeholder={t('devices.edit.friendlyNamePlaceholder')}
+              style={{ fontSize: 18, fontWeight: 600, maxWidth: 480 }}
+              value={name}
+              onBlur={commitName}
+              onChange={(e) => setName(e.target.value)}
+              onPressEnter={commitName}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') cancelName();
+              }}
+            />
+          ) : (
+            <Flexbox horizontal align={'center'} gap={4} style={{ minWidth: 0 }}>
+              <Text ellipsis as={'h2'} fontSize={22} style={{ margin: 0 }} weight={600}>
+                {displayName}
+              </Text>
+              {canEdit && (
+                <ActionIcon
+                  aria-label={t('devices.detail.rename')}
+                  icon={PencilIcon}
+                  size={'small'}
+                  title={t('devices.detail.rename')}
+                  onClick={() => setEditingName(true)}
+                />
+              )}
             </Flexbox>
           )}
+          <Flexbox horizontal align={'center'} gap={6} wrap={'wrap'}>
+            <Flexbox horizontal align={'center'} gap={2} style={{ minWidth: 0 }}>
+              <span className={styles.path} title={device.deviceId}>
+                {device.deviceId}
+              </span>
+              <CopyButton content={device.deviceId} size={'small'} />
+            </Flexbox>
+            {isCurrent && <Tag size={'small'}>{t('devices.currentBadge')}</Tag>}
+            {device.scope === 'workspace' && device.visibility === 'private' && (
+              <Tag icon={<Icon icon={LockIcon} />} size={'small'}>
+                {t('devices.visibilityTabs.private')}
+              </Tag>
+            )}
+          </Flexbox>
         </Flexbox>
-        <ActionIcon icon={XIcon} size={'small'} onClick={onClose} />
       </Flexbox>
 
       <Tabs
         activeKey={tab}
-        className={styles.tabs}
-        size={'small'}
-        variant={'square'}
         items={[
-          { key: 'overview', label: t('devices.detail.tabs.overview') },
-          { key: 'files', label: t('devices.detail.tabs.files') },
-          { key: 'agents', label: t('devices.detail.tabs.agents') },
+          {
+            icon: <Icon icon={InfoIcon} />,
+            key: 'overview',
+            label: t('devices.detail.tabs.overview'),
+          },
+          {
+            icon: <Icon icon={FolderIcon} />,
+            key: 'files',
+            label: t('devices.detail.tabs.files'),
+          },
+          {
+            icon: <Icon icon={BotIcon} />,
+            key: 'agents',
+            label: t('devices.detail.tabs.agents'),
+          },
         ]}
         onChange={(key) => setTab(key as DetailTab)}
       />
 
-      <Flexbox className={styles.body} gap={20}>
+      <Flexbox gap={20}>
         {/* Visible hint when the caller can't mutate the row — explains why the
             fields below are read-only without the user needing to try and hit a
             403. Only renders for workspace devices that aren't the caller's own
@@ -303,78 +324,7 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
           </Flexbox>
         )}
 
-        {tab === 'overview' && (
-          <>
-            {/* ─── Name ─── */}
-            <Flexbox gap={8}>
-              <FieldLabel>{t('devices.edit.friendlyName')}</FieldLabel>
-              {canEdit ? (
-                <Input
-                  placeholder={t('devices.edit.friendlyNamePlaceholder')}
-                  value={name}
-                  onBlur={commitName}
-                  onChange={(e) => setName(e.target.value)}
-                  onPressEnter={commitName}
-                />
-              ) : device.friendlyName ? (
-                // Read-only: render the canonical value (not the local draft), so a
-                // value the caller can't actually commit never bleeds through.
-                <Text>{device.friendlyName}</Text>
-              ) : (
-                <Text type={'secondary'}>—</Text>
-              )}
-            </Flexbox>
-
-            {/* ─── Enrolled by (workspace only) ─── */}
-            {device.scope === 'workspace' && device.enroller && (
-              <Flexbox gap={8}>
-                <FieldLabel>{t('workspaceSetting.devices.enrolledByLabel')}</FieldLabel>
-                <Flexbox horizontal align={'center'} gap={8}>
-                  <Avatar avatar={device.enroller.avatar ?? undefined} size={24} />
-                  <Text>
-                    {device.enroller.fullName ||
-                      device.enroller.username ||
-                      t('workspaceSetting.devices.unknownEnroller')}
-                  </Text>
-                </Flexbox>
-              </Flexbox>
-            )}
-
-            {/* ─── Shared to workspaces (personal only) ─── */}
-            {device.scope === 'personal' && !!device.sharedWorkspaces?.length && (
-              <Flexbox gap={8}>
-                <FieldLabel>{t('devices.share.detailLabel')}</FieldLabel>
-                {device.sharedWorkspaces.map((share) => (
-                  <Flexbox horizontal align={'center'} gap={8} key={share.workspaceId}>
-                    <Text ellipsis style={{ flex: 1, minWidth: 0 }}>
-                      {share.workspaceName ?? share.workspaceId}
-                    </Text>
-                    <Tag size={'small'}>
-                      {share.visibility === 'private'
-                        ? t('devices.share.visibilityTag.private')
-                        : t('devices.share.visibilityTag.public')}
-                    </Tag>
-                    <ActionIcon
-                      icon={XIcon}
-                      size={'small'}
-                      title={t('devices.share.revoke')}
-                      onClick={() => handleRevokeShare(share)}
-                    />
-                  </Flexbox>
-                ))}
-              </Flexbox>
-            )}
-
-            {/* ─── Connections, each with its client version; desktop carries the update ─── */}
-            <Connections canEdit={canOperate} device={device} />
-
-            {/* ─── Machine health ─── */}
-            <Flexbox gap={8}>
-              <FieldLabel extra={<HealthLegend />}>{t('devices.health.title')}</FieldLabel>
-              <DeviceHealth deviceId={device.deviceId} />
-            </Flexbox>
-          </>
-        )}
+        {tab === 'overview' && <DeviceOverview canOperate={canOperate} device={device} />}
 
         {tab === 'agents' && <AgentRuntimes device={device} />}
 
@@ -476,6 +426,6 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
   );
 });
 
-DeviceDetailPanel.displayName = 'DeviceDetailPanel';
+DeviceDetail.displayName = 'DeviceDetail';
 
-export default DeviceDetailPanel;
+export default DeviceDetail;

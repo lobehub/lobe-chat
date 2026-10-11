@@ -3,7 +3,7 @@
 import { isDesktop } from '@lobechat/const';
 import type { DeviceScope, DeviceVisibility } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
+import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   ChevronRightIcon,
@@ -14,15 +14,13 @@ import {
   TerminalIcon,
   ZapIcon,
 } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
-import SharedListSkeleton from '@/components/ListSkeleton';
 import { useElectronStore } from '@/store/electron';
 
-import DeviceDetailPanel from './DeviceDetailPanel';
-import DeviceItem from './DeviceItem';
+import DeviceCard from './DeviceCard';
 import { useDeviceList } from './useDeviceList';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -63,8 +61,8 @@ const styles = createStaticStyles(({ css }) => ({
     border-radius: ${cssVar.borderRadiusLG};
     background: ${cssVar.colorBgContainer};
   `,
-  // The personal page renders inside a settings form card, so the list and the
-  // onboarding state drop their own card chrome — one frame, not two nested.
+  // The personal page renders inside a settings form card, so the onboarding
+  // state drops its own card chrome — one frame, not two nested.
   plainCol: css`
     overflow: hidden;
     min-width: 0;
@@ -131,31 +129,21 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorFillTertiary};
   `,
-  // ─── Master-detail surfaces ───
-  detailCol: css`
-    align-self: stretch;
-
-    min-width: 0;
+  // ─── Card grid ───
+  // Cards carry their own frame, so the grid sits bare in its host. 280px keeps
+  // three cards per row inside the 1024 settings column, reflowing to two and
+  // one as the column narrows.
+  skeletonCard: css`
+    padding: 20px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
-
     background: ${cssVar.colorBgContainer};
   `,
-  listCol: css`
-    overflow: hidden;
-
+  grid: css`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
     min-width: 0;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    background: ${cssVar.colorBgContainer};
-  `,
-  listScroll: css`
-    overflow-y: auto;
-
-    /* Cap the list so long fleets (servers / CLI agents) stay scrollable instead
-       of pushing the page — pairs with the detail panel sitting beside it. */
-    max-height: 480px;
   `,
 }));
 
@@ -242,27 +230,33 @@ const Capabilities = memo(() => {
   );
 });
 
-// Loading placeholder that reuses the list-card chrome and only skeletonises the
-// row text — loading → loaded is a content swap, not a relayout (ux §4.1).
-const ListSkeleton = memo<{ bordered?: boolean }>(({ bordered }) => (
-  <Flexbox className={bordered ? styles.listCol : styles.plainCol} flex={1}>
-    <Flexbox padding={bordered ? 4 : 0}>
-      <SharedListSkeleton />
-    </Flexbox>
-  </Flexbox>
+// Loading placeholder in the card grid's shape — loading → loaded is a content
+// swap, not a relayout (ux §4.1).
+const GridSkeleton = memo(() => (
+  <div className={styles.grid}>
+    {Array.from({ length: 2 }, (_, index) => (
+      <Flexbox className={styles.skeletonCard} gap={20} key={index}>
+        <Flexbox horizontal align={'center'} gap={16}>
+          <Skeleton.Avatar shape={'square'} size={48} />
+          <Flexbox flex={1} gap={8}>
+            <Skeleton height={16} width={160} />
+            <Skeleton height={12} width={100} />
+          </Flexbox>
+        </Flexbox>
+        <Skeleton height={36} width={'100%'} />
+        <Skeleton height={32} width={'100%'} />
+      </Flexbox>
+    ))}
+  </div>
 ));
 
 interface DeviceManagerProps {
-  /** Render the selected device in this manager. Disable when the host owns the detail pane. */
-  inlineDetail?: boolean;
   /** Open the enrollment wizard (the modal is owned by the route). */
   onConnect: (tab?: 'cli' | 'desktop') => void;
-  /** Called when the selected device changes. Providing it enables controlled selection. */
-  onSelectedDeviceChange?: (deviceId?: string) => void;
+  /** Open a device's detail page (the `devices/:sub` route is owned by the host). */
+  onOpenDevice: (deviceId: string) => void;
   /** Which device pool this surface manages. */
   scope: DeviceScope;
-  /** Controlled selection for hosts that render the detail pane outside the list surface. */
-  selectedDeviceId?: string;
   /**
    * Workspace scope only: narrow the list to one visibility tab — 'public'
    * (shared pool) or 'private' (the caller's own private enrollments). Omitted
@@ -272,20 +266,13 @@ interface DeviceManagerProps {
 }
 
 /**
- * Master-detail device manager shared by the personal (`/settings/devices`) and
- * workspace (`/:slug/settings/devices`) pages — list + detail panel + onboarding
- * empty state, filtered to the given `scope` (and, for workspace, the active
- * visibility tab).
+ * Device card grid shared by the personal (`/settings/devices`) and workspace
+ * (`/:slug/settings/devices`) pages — cards + onboarding empty state, filtered
+ * to the given `scope` (and, for workspace, the active visibility tab). A card
+ * opens the device's detail page; the host owns that route.
  */
 const DeviceManager = memo<DeviceManagerProps>((props) => {
-  const {
-    inlineDetail = true,
-    onConnect,
-    onSelectedDeviceChange,
-    scope,
-    selectedDeviceId,
-    visibility,
-  } = props;
+  const { onConnect, onOpenDevice, scope, visibility } = props;
   const { t } = useTranslation('setting');
   const isWorkspace = scope === 'workspace';
 
@@ -307,17 +294,6 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
   const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
   useFetchDeviceInfo();
   const currentDeviceId = !isWorkspace && isDesktop ? gatewayDeviceInfo?.deviceId : undefined;
-
-  const [internalSelectedId, setInternalSelectedId] = useState<string>();
-  const selectedId = onSelectedDeviceChange ? selectedDeviceId : internalSelectedId;
-  const setSelectedId = (deviceId?: string) => {
-    if (onSelectedDeviceChange) {
-      onSelectedDeviceChange(deviceId);
-      return;
-    }
-
-    setInternalSelectedId(deviceId);
-  };
 
   // ─── Empty state: onboarding hero + connect options + capabilities ───
   // Now gated by AsyncBoundary so a *failed* device fetch renders a failure +
@@ -376,7 +352,6 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
     </Flexbox>
   );
 
-  const selected = selectedId ? devices.find((d) => d.deviceId === selectedId) : undefined;
   const isCurrent = (id: string) => !!currentDeviceId && id === currentDeviceId;
 
   return (
@@ -387,46 +362,19 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
       errorVariant={'block'}
       isEmpty={devices.length === 0}
       isLoading={isLoading}
-      loading={<ListSkeleton bordered={isWorkspace} />}
+      loading={<GridSkeleton />}
       onRetry={() => mutate()}
     >
-      <Flexbox horizontal align={'flex-start'} gap={16}>
-        <Flexbox className={isWorkspace ? styles.listCol : styles.plainCol} flex={1}>
-          <Flexbox
-            className={styles.listScroll}
-            gap={2}
-            // The personal page's card already insets the rows evenly.
-            paddingBlock={isWorkspace ? 4 : 0}
-            paddingInline={isWorkspace ? 4 : 0}
-          >
-            {devices.map((device) => (
-              <DeviceItem
-                device={device}
-                isCurrent={isCurrent(device.deviceId)}
-                key={device.deviceId}
-                selected={device.deviceId === selectedId}
-                // The row preview stands in for the detail panel; once a panel is
-                // open the narrowed rows give that width back to the name.
-                showHealthPreview={!selectedId}
-                onSelect={() =>
-                  setSelectedId(selectedId === device.deviceId ? undefined : device.deviceId)
-                }
-              />
-            ))}
-          </Flexbox>
-        </Flexbox>
-        {inlineDetail && selected && (
-          <Flexbox className={styles.detailCol} flex={1}>
-            {/* keyed on deviceId so the form state resets when the selection changes */}
-            <DeviceDetailPanel
-              device={selected}
-              isCurrent={isCurrent(selected.deviceId)}
-              key={selected.deviceId}
-              onClose={() => setSelectedId()}
-            />
-          </Flexbox>
-        )}
-      </Flexbox>
+      <div className={styles.grid}>
+        {devices.map((device) => (
+          <DeviceCard
+            device={device}
+            isCurrent={isCurrent(device.deviceId)}
+            key={device.deviceId}
+            onOpen={() => onOpenDevice(device.deviceId)}
+          />
+        ))}
+      </div>
     </AsyncBoundary>
   );
 });
