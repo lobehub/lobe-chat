@@ -13,6 +13,7 @@ import {
   type SkillRatingDistribution,
 } from '@/types/discover';
 import { setNamespace } from '@/utils/storeDebug';
+import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import {
   type SkillCategoriesParams,
@@ -169,7 +170,22 @@ export class SkillActionImpl {
     };
     const queryKey = skillDetailQueryKey(normalized);
     const active = enabled && isMarketIdentifier;
-    const sync = this.#detail.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#detail.useSync(active ? normalized : null, {
+      enabled: active,
+      // A skill (or a pinned version) later removed from the market answers
+      // NOT_FOUND on every read, yet the hydrated IndexedDB row would keep the
+      // detail route painting it: that route only renders its error state once
+      // the map entry is gone (`skillDetail(queryKey) === undefined`), so the
+      // obsolete copy would survive reloads. NOT_FOUND is definitive — drop the
+      // entry (memory plus its persisted rows) and let the route settle on its
+      // 404. Any transient failure keeps the cached detail on screen. Bind the
+      // removal to the scope the failing request was captured under: an
+      // identity / workspace switch in flight must not delete the same
+      // identifier out of the scope that is active when the callback runs.
+      onError: (error, { key, scope }) => {
+        if (key && isTrpcErrorCode(error, 'NOT_FOUND')) this.#detail.remove(key, scope);
+      },
+    });
     return this.#toSyncResult(
       sync,
       queryKey,

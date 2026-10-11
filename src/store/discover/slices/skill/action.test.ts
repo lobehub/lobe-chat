@@ -83,7 +83,10 @@ const syncCalls = async (
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as {
+        onError?: (error: unknown) => void;
+        onSuccess?: (data: unknown) => void;
+      },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
@@ -215,6 +218,37 @@ describe('SkillSlice (replica)', () => {
       rerender();
 
       expect(result.current.queryKey).not.toBe(first);
+    });
+
+    it('evicts a hydrated detail when revalidation answers NOT_FOUND', async () => {
+      const key = skillDetailQueryKey({ identifier: 'github.acme.a', locale: 'en-US' });
+      // The persisted detail the detail route would keep painting: it only
+      // falls back to its error state once the map entry is gone.
+      useStore.setState({ skillDetailMap: { [key]: { identifier: 'github.acme.a' } as any } });
+
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchSkillDetail({ identifier: 'github.acme.a' }),
+      );
+      expect(result.current.isLoading).toBe(false);
+      expect(skillSelectors.skillDetail(key)(useStore.getState())).toBeDefined();
+
+      const [call] = await syncCalls('skillDetail');
+      act(() => call.config.onError!({ data: { code: 'NOT_FOUND' } }));
+
+      expect(skillSelectors.skillDetail(key)(useStore.getState())).toBeUndefined();
+    });
+
+    it('keeps the cached detail when revalidation fails transiently', async () => {
+      const key = skillDetailQueryKey({ identifier: 'github.acme.a', locale: 'en-US' });
+      const detail = { identifier: 'github.acme.a' } as any;
+      useStore.setState({ skillDetailMap: { [key]: detail } });
+
+      renderHook(() => useStore.getState().useFetchSkillDetail({ identifier: 'github.acme.a' }));
+
+      const [call] = await syncCalls('skillDetail');
+      act(() => call.config.onError!({ data: { code: 'INTERNAL_SERVER_ERROR' } }));
+
+      expect(skillSelectors.skillDetail(key)(useStore.getState())).toBe(detail);
     });
   });
 
