@@ -277,12 +277,14 @@ export const resourceDeletedField = sql<boolean>`case ${works.resourceType} when
  * - `document`: missing or in the recycle bin.
  * - `file`: the current version's persisted `fileId` is missing or trashed. A
  *   version without `fileId` was never uploaded, so there is nothing to check.
+ *   The null test is COALESCEd because a bare `->> IS NULL` crashes pg_search
+ *   planning (see jsonbNullTest.test.ts).
  * - `external`: remote state is unknown locally, so it is always kept.
  */
 export const resourceLiveFilter = sql<boolean>`case ${works.resourceType}
   when 'task' then ${tasks.id} is not null
   when 'document' then ${documents.id} is not null and ${documents.isDeleted} is not true
-  when 'file' then ${currentVersions.metadata} ->> 'fileId' is null or exists (
+  when 'file' then coalesce(${currentVersions.metadata} ->> 'fileId', '') = '' or exists (
     select 1 from ${files}
     where ${files.id} = ${currentVersions.metadata} ->> 'fileId' and ${files.isDeleted} is not true
   )
