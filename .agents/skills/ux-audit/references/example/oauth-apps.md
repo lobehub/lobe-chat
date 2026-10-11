@@ -194,6 +194,13 @@ fix:
 - **Fills.** The selected type card loses its fill and keeps only the border. The edit form uses
   `filled` inputs.
 
+**⑯ Owner review of the third round** _fixed_
+
+- The landing tab is **Overview**: basic info plus the integration (one-prompt + manual setup)
+  and usage stats. The Credentials tab keeps the client ID / secret and the redirect URIs.
+- Advanced splits the reversible from the irreversible. Enable / disable is a plain **Status**
+  section; only Delete stays in the danger zone.
+
 ## 4 — Skill feedback
 
 - **New rule landed — Read §1.14** (gap ④): an entity with no image falls back to a shared

@@ -33,6 +33,7 @@ import BasicInfoCard from './BasicInfoCard';
 import CredentialsCard from './CredentialsCard';
 import IntegrationCard from './IntegrationCard';
 import RedirectUrisCard from './RedirectUrisCard';
+import SectionCard from './SectionCard';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
@@ -75,7 +76,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
-const TAB_KEYS = ['basic', 'credentials', 'advanced'] as const;
+const TAB_KEYS = ['overview', 'credentials', 'advanced'] as const;
 
 interface AppDetailProps {
   canEdit: boolean;
@@ -95,11 +96,11 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
 
   // The active tab lives in the URL so a reload or shared link keeps it.
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = TAB_KEYS.find((key) => key === searchParams.get('tab')) ?? 'basic';
+  const tab = TAB_KEYS.find((key) => key === searchParams.get('tab')) ?? 'overview';
   const setTab = (key: string) =>
     setSearchParams(
       (params) => {
-        if (key === 'basic') params.delete('tab');
+        if (key === 'overview') params.delete('tab');
         else params.set('tab', key);
         return params;
       },
@@ -227,7 +228,8 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
     />
   );
 
-  const basicTab = (
+  // The landing tab: what the app is and how to wire it in.
+  const overviewTab = (
     <>
       <BasicInfoCard
         canEdit={canEdit}
@@ -235,14 +237,17 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         key={`basic-${detail.id}`}
         onSubmit={handleUpdate}
       />
+      <IntegrationCard
+        applicationType={detail.applicationType}
+        clientId={detail.id}
+        name={detail.name}
+      />
       <div className={styles.statsCard}>
         <OAuthAppStats clientId={detail.id} />
       </div>
     </>
   );
 
-  // Credentials first, then the one-prompt integration (which tells the
-  // developer the callback URL to register), then the redirect URIs.
   const credentialsTab = (
     <>
       <CredentialsCard
@@ -251,11 +256,6 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         secretPending={rotateSecretMutation.isPending}
         onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
         onRotateSecret={handleRotateSecret}
-      />
-      <IntegrationCard
-        applicationType={detail.applicationType}
-        clientId={detail.id}
-        name={detail.name}
       />
       {isWebApp && (
         <RedirectUrisCard
@@ -268,45 +268,50 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
     </>
   );
 
+  // Enable / disable is reversible, so it lives in its own section; only the
+  // irreversible delete sits in the danger zone.
   const advancedTab = (
-    <Flexbox className={styles.dangerCard} gap={16}>
-      <Text weight={500}>{t('oauthApp.detail.dangerZone')}</Text>
+    <>
+      <SectionCard title={t('oauthApp.detail.status')}>
+        <div className={styles.dangerRow}>
+          <Flexbox gap={2}>
+            <Text>{t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}</Text>
+            <span className={styles.dangerDesc}>
+              {t(isDisabled ? 'oauthApp.detail.enableDesc' : 'oauthApp.detail.disableDesc')}
+            </span>
+          </Flexbox>
+          <Button
+            disabled={!canEdit}
+            icon={isDisabled ? <PowerIcon size={16} /> : <PowerOffIcon size={16} />}
+            loading={enabledMutation.isPending}
+            style={{ flex: 'none' }}
+            onClick={isDisabled ? handleEnable : handleDisable}
+          >
+            {t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}
+          </Button>
+        </div>
+      </SectionCard>
 
-      <div className={styles.dangerRow}>
-        <Flexbox gap={2}>
-          <Text>{t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}</Text>
-          <span className={styles.dangerDesc}>
-            {t(isDisabled ? 'oauthApp.detail.enableDesc' : 'oauthApp.detail.disableDesc')}
-          </span>
-        </Flexbox>
-        <Button
-          disabled={!canEdit}
-          icon={isDisabled ? <PowerIcon size={16} /> : <PowerOffIcon size={16} />}
-          loading={enabledMutation.isPending}
-          style={{ flex: 'none' }}
-          onClick={isDisabled ? handleEnable : handleDisable}
-        >
-          {t(isDisabled ? 'oauthApp.actions.enable' : 'oauthApp.actions.disable')}
-        </Button>
-      </div>
-
-      <div className={styles.dangerRow}>
-        <Flexbox gap={2}>
-          <Text>{t('oauthApp.detail.delete')}</Text>
-          <span className={styles.dangerDesc}>{t('oauthApp.detail.deleteDesc')}</span>
-        </Flexbox>
-        <Button
-          danger
-          disabled={!canEdit}
-          icon={<Trash2Icon size={16} />}
-          loading={deleteMutation.isPending}
-          style={{ flex: 'none' }}
-          onClick={handleDelete}
-        >
-          {t('oauthApp.detail.delete')}
-        </Button>
-      </div>
-    </Flexbox>
+      <Flexbox className={styles.dangerCard} gap={16}>
+        <Text weight={500}>{t('oauthApp.detail.dangerZone')}</Text>
+        <div className={styles.dangerRow}>
+          <Flexbox gap={2}>
+            <Text>{t('oauthApp.detail.delete')}</Text>
+            <span className={styles.dangerDesc}>{t('oauthApp.detail.deleteDesc')}</span>
+          </Flexbox>
+          <Button
+            danger
+            disabled={!canEdit}
+            icon={<Trash2Icon size={16} />}
+            loading={deleteMutation.isPending}
+            style={{ flex: 'none' }}
+            onClick={handleDelete}
+          >
+            {t('oauthApp.detail.delete')}
+          </Button>
+        </div>
+      </Flexbox>
+    </>
   );
 
   return (
@@ -336,14 +341,14 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
       <Tabs
         activeKey={tab}
         items={[
-          { key: 'basic', label: t('oauthApp.detail.tabs.basic') },
+          { key: 'overview', label: t('oauthApp.detail.tabs.overview') },
           { key: 'credentials', label: t('oauthApp.detail.tabs.credentials') },
           { key: 'advanced', label: t('oauthApp.detail.tabs.advanced') },
         ]}
         onChange={setTab}
       />
 
-      {tab === 'basic' && basicTab}
+      {tab === 'overview' && overviewTab}
       {tab === 'credentials' && credentialsTab}
       {tab === 'advanced' && advancedTab}
     </Flexbox>

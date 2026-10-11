@@ -273,9 +273,10 @@ export default {
   'oauthApp.detail.noDescription': 'No description',
   'oauthApp.detail.save': 'Save Changes',
   'oauthApp.detail.saveSuccess': 'Changes saved',
+  'oauthApp.detail.status': 'Status',
   'oauthApp.detail.tabs.advanced': 'Advanced',
-  'oauthApp.detail.tabs.basic': 'Basic Info',
   'oauthApp.detail.tabs.credentials': 'Credentials',
+  'oauthApp.detail.tabs.overview': 'Overview',
   'oauthApp.detail.title': 'App Details',
   'oauthApp.detail.type': 'Type',
   'oauthApp.disableConfirm.content':
