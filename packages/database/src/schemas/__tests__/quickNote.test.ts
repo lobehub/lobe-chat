@@ -206,8 +206,10 @@ describe('Quick Note migration', () => {
         db.execute(sql`DELETE FROM document_histories WHERE id = 'qn-pin-current-history'`),
       ).rejects.toMatchObject({
         // PostgreSQL truncates the generated 64-character constraint name to 63 characters.
+        // PostgreSQL 18 reports an ON DELETE RESTRICT violation as 23001 (restrict_violation);
+        // earlier servers and PGlite report 23503 (foreign_key_violation).
         cause: {
-          code: '23503',
+          code: expect.stringMatching(/^(23001|23503)$/),
           constraint: expect.stringMatching(/^quick_note_proposals_current_history_id/),
         },
       });
