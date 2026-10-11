@@ -16,6 +16,7 @@ import MasonryItemWrapper from './Item/MasonryItemWrapper';
 import Loading from './Loading';
 import MasonrySkeleton from './MasonrySkeleton';
 import { resolvePickerScope } from './resolvePickerScope';
+import { useViewTransition } from './useViewTransition';
 import { type ViewMode } from './ViewSwitcher';
 import ViewSwitcher from './ViewSwitcher';
 import VisibilityTabs, { type PickerVisibility } from './VisibilityTabs';
@@ -52,12 +53,12 @@ export const List = memo(() => {
   const items = data ?? EMPTY_KNOWLEDGE;
 
   const [columnCount, setColumnCount] = useState(2);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const viewMode = useGlobalStore((s) => s.status.knowledgeBaseModalViewMode || 'list') as ViewMode;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const { isTransitioning, startTransition } = useViewTransition(viewMode);
   const setViewMode = (mode: ViewMode) => {
-    setIsTransitioning(true);
+    startTransition();
     updateSystemStatus({ knowledgeBaseModalViewMode: mode });
   };
 
@@ -83,18 +84,6 @@ export const List = memo(() => {
       return () => window.removeEventListener('resize', updateColumnCount);
     }
   }, [viewMode, updateColumnCount]);
-
-  // Handle view transition with a brief delay to show skeleton
-  React.useEffect(() => {
-    if (isTransitioning && data) {
-      requestAnimationFrame(() => {
-        const timer = setTimeout(() => {
-          setIsTransitioning(false);
-        }, 100);
-        return () => clearTimeout(timer);
-      });
-    }
-  }, [isTransitioning, viewMode, data]);
 
   const isEmpty = items.length === 0;
 
