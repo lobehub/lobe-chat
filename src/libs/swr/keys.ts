@@ -20,7 +20,7 @@
  */
 import { type ConversationContext } from '@lobechat/types';
 
-import { agentDocumentSWRKeys, documentSWRKeys } from '@/services/document/swrKeys';
+import { agentDocumentSWRKeys } from '@/services/document/swrKeys';
 
 type KeyFactory<A extends unknown[]> = ((...args: A) => readonly unknown[]) & { root: string };
 
@@ -1167,7 +1167,6 @@ export const swrKeys = {
   cron: cronKeys,
   device: deviceKeys,
   discover: discoverKeys,
-  document: documentSWRKeys,
   electron: electronKeys,
   eval: evalKeys,
   expertise: expertiseKeys,
