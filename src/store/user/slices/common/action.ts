@@ -233,6 +233,13 @@ export class CommonActionImpl {
 
     return this.#ensureUserState().useSync(USER_STATE_PARAMS, {
       enabled: !!isLogin || isDesktop,
+      // One-shot bootstrap, like the `useOnlyFetchOnceSWR` it replaced: focus or
+      // reconnect must not re-run the display snapshot, settings auto-detection
+      // and analytics identify below. Explicit refreshes go through
+      // `refreshUserState`.
+      refreshWhenOffline: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
       onError: (error) => {
         // Record the init failure so gated tabs (Advanced / ServiceModel) can
         // render error + Retry instead of a permanent skeleton.

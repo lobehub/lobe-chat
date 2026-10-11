@@ -119,6 +119,24 @@ describe('user bootstrap replica', () => {
     expect(useUserStore.getState().userState).toBeUndefined();
   });
 
+  it('fetches once: focus and reconnect never re-run the bootstrap', async () => {
+    const getUserState = vi.spyOn(userService, 'getUserState').mockResolvedValue(payload());
+    renderSync();
+    await waitFor(() => expect(useUserStore.getState().isUserStateInit).toBe(true));
+    expect(getUserState).toHaveBeenCalledTimes(1);
+
+    // Well past any focus throttle window.
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now + 60 * 60 * 1000);
+    await act(async () => {
+      window.dispatchEvent(new Event('focus'));
+      window.dispatchEvent(new Event('online'));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
+
+    expect(getUserState).toHaveBeenCalledTimes(1);
+  });
+
   it('records the init error and settles it once a retry succeeds', async () => {
     const getUserState = vi
       .spyOn(userService, 'getUserState')
