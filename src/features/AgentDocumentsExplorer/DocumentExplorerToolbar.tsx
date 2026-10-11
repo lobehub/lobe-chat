@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   toolbar: css`
-    margin-inline: 6px;
+    /* Title on the column of the panel tabs' icons; the + stays on the row edge. */
+    padding-inline-start: 6px;
     color: ${cssVar.colorTextSecondary};
   `,
   title: css`
