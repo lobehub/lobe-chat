@@ -26,6 +26,8 @@ import type { RuntimeGuardBackend } from './runtime/AgentSignalRuntime';
 import { createAgentSignalRuntime } from './runtime/AgentSignalRuntime';
 import { persistAgentSignalReceipts, projectAgentSignalReceipts } from './services/receiptService';
 import { createSelfIterationCompletionHandler } from './services/selfIteration/completion';
+import { createServerSelfReviewBriefWriter } from './services/selfIteration/review/brief';
+import { resolveSelfReviewBriefTextTranslator } from './services/selfIteration/review/briefTextTranslator';
 import { emitSourceEvent } from './sources';
 import { redisPolicyStateStore } from './store/adapters/redis/policyStateStore';
 import type { AgentSignalReceiptStore, AgentSignalSourceEventStore } from './store/types';
@@ -98,17 +100,27 @@ const createPolicyOptions = (
   options: ExecuteAgentSignalSourceEventOptions,
   procedurePolicyOptions: NonNullable<CreateDefaultAgentSignalPoliciesOptions['procedure']>,
 ): CreateDefaultAgentSignalPoliciesOptions => {
-  // Nightly review writes its Daily Brief in-run via the builtin review
-  // serverRuntime primitive, so the orchestrator no longer injects a brief
-  // writer default.
+  // Nightly review writes proposal Daily Briefs in-run via the builtin review
+  // serverRuntime primitive; the completion handler only writes the ideas brief.
   const policyOptions = options.policyOptions;
 
   return {
     completion: {
       onSelfIterationCompleted: async (input) => {
-        await createSelfIterationCompletionHandler(
-          options.receiptStore ? { receiptStore: options.receiptStore } : {},
-        )(input);
+        await createSelfIterationCompletionHandler({
+          // Idea-only nightly reviews get their Daily Brief from the completion
+          // path; proposal briefs are still written in-run by the review tool.
+          ideasBrief: {
+            resolveTranslator: () =>
+              resolveSelfReviewBriefTextTranslator(context.db, context.userId),
+            writer: createServerSelfReviewBriefWriter(
+              context.db,
+              context.userId,
+              context.workspaceId,
+            ),
+          },
+          ...(options.receiptStore ? { receiptStore: options.receiptStore } : {}),
+        })(input);
         await new ExpertiseIngestionService(
           context.db,
           context.userId,

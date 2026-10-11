@@ -45,6 +45,50 @@ describe('buildSelfIterationReceipts', () => {
     expect(summary.metadata?.actionCount).toBe(0);
   });
 
+  it('describes an ideas-only run by its captured ideas, not as zero writes', () => {
+    const [summary] = buildSelfIterationReceipts({
+      ...baseInput,
+      artifacts: [
+        {
+          apiName: 'recordSelfReviewIdea',
+          data: { idempotencyKey: 'a', rationale: 'A' },
+          kind: 'artifact',
+        },
+        {
+          apiName: 'recordSelfReviewIdea',
+          data: { idempotencyKey: 'b', rationale: 'B' },
+          kind: 'artifact',
+        },
+      ],
+    });
+
+    expect(summary.detail).toBe('Captured 2 idea(s).');
+    expect(summary.metadata?.selfIteration?.ideas).toHaveLength(2);
+  });
+
+  it('keeps the write count in the detail when the run also applied writes', () => {
+    const [summary] = buildSelfIterationReceipts({
+      ...baseInput,
+      artifacts: [
+        {
+          apiName: 'recordSelfReviewIdea',
+          data: { idempotencyKey: 'a', rationale: 'A' },
+          kind: 'artifact',
+        },
+      ],
+      mutations: [
+        {
+          apiName: 'writeMemory',
+          data: { resourceId: 'mem_1' },
+          kind: 'mutation',
+          toolCallId: 'c1',
+        },
+      ],
+    });
+
+    expect(summary.detail).toBe('Captured 1 idea(s) and applied 1 write(s).');
+  });
+
   it('projects a memory mutation into an applied memory receipt with a target', () => {
     const [, memory] = buildSelfIterationReceipts({
       ...baseInput,

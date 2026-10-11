@@ -537,6 +537,72 @@ describe('briefSelfReviewService', () => {
     expect(create).toHaveBeenCalledWith(brief);
   });
 
+  describe('ideas brief dedupe', () => {
+    const projectIdeasBrief = (localDate: string) => {
+      const brief = createBriefSelfReviewService().projectNightlyReviewBrief({
+        agentId: 'agent-1',
+        ideas: [{ evidenceRefs: [], idempotencyKey: 'idea-1', rationale: 'Try X', risk: Risk.Low }],
+        localDate,
+        result: {
+          actions: [],
+          sourceId: `nightly:${localDate}`,
+          status: ReviewRunStatus.Completed,
+        },
+        reviewWindowEnd: `${localDate}T14:30:00.000Z`,
+        reviewWindowStart: `${localDate}T00:00:00.000Z`,
+        timezone: 'UTC',
+        userId: 'user-1',
+      });
+      if (!brief) throw new Error('Expected projected ideas brief');
+      return brief;
+    };
+
+    /**
+     * @example
+     * A replayed idea-only completion for the same agent + local date reuses the existing brief.
+     */
+    it('reuses an unresolved ideas brief for the same agent and local date', async () => {
+      const existing = projectIdeasBrief('2026-05-04');
+      const existingRow = { ...existing, id: 'brief-ideas-1' } as unknown as Awaited<
+        ReturnType<BriefModel['create']>
+      >;
+      const list = vi
+        .spyOn(BriefModel.prototype, 'listUnresolvedByAgentAndTrigger')
+        .mockResolvedValue([existingRow]);
+      const create = vi.spyOn(BriefModel.prototype, 'create');
+      const writer = createServerSelfReviewBriefWriter({} as never, 'user-1');
+
+      await expect(writer.writeDailyBrief(projectIdeasBrief('2026-05-04'))).resolves.toBe(
+        existingRow,
+      );
+      expect(list).toHaveBeenCalledWith(
+        expect.objectContaining({ agentId: 'agent-1', trigger: 'agent-signal:nightly-review' }),
+      );
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    /**
+     * @example
+     * An ideas brief from another local date does not block today's ideas brief.
+     */
+    it('creates a new ideas brief when only another local date has one', async () => {
+      const existingRow = {
+        ...projectIdeasBrief('2026-05-03'),
+        id: 'brief-old',
+      } as unknown as Awaited<ReturnType<BriefModel['create']>>;
+      vi.spyOn(BriefModel.prototype, 'listUnresolvedByAgentAndTrigger').mockResolvedValue([
+        existingRow,
+      ]);
+      const created = { id: 'brief-new' } as Awaited<ReturnType<BriefModel['create']>>;
+      const create = vi.spyOn(BriefModel.prototype, 'create').mockResolvedValue(created);
+      const writer = createServerSelfReviewBriefWriter({} as never, 'user-1');
+      const brief = projectIdeasBrief('2026-05-04');
+
+      await expect(writer.writeDailyBrief(brief)).resolves.toBe(created);
+      expect(create).toHaveBeenCalledWith(brief);
+    });
+  });
+
   /**
    * @example
    * A compatible pending proposal refreshes the old brief instead of creating a duplicate.

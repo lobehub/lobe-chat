@@ -185,6 +185,35 @@ const findExistingProposalBrief = async ({
   });
 };
 
+/**
+ * Finds an unresolved ideas-only nightly brief already written for the same agent
+ * and user-local date, so a replayed completion reuses it instead of adding a
+ * duplicate. Mirrors {@link findExistingProposalBrief}'s bounded unresolved read.
+ */
+const findExistingIdeasBrief = async ({
+  agentId,
+  localDate,
+  model,
+  trigger,
+}: {
+  agentId: string;
+  localDate: string;
+  model: BriefModel;
+  trigger: typeof NIGHTLY_REVIEW_BRIEF_TRIGGER;
+}) => {
+  const rows = await model.listUnresolvedByAgentAndTrigger({
+    agentId,
+    limit: 20,
+    trigger,
+  });
+
+  return rows.find((row) => {
+    const metadata = getNightlySelfReviewBriefMetadata(row.metadata);
+
+    return metadata?.outcome === 'ideas' && metadata.localDate === localDate;
+  });
+};
+
 const updateProposalMetadata = async (
   model: BriefModel,
   brief: BriefItem,
@@ -555,7 +584,8 @@ export const createBriefSelfReviewService = () => ({
  * - `db` and `userId` belong to the source-event owner
  *
  * Returns:
- * - A writer whose `writeDailyBrief` method creates or refreshes proposal briefs
+ * - A writer whose `writeDailyBrief` method creates or refreshes proposal briefs, and
+ *   reuses an existing ideas brief for the same agent + local date
  */
 export const createServerSelfReviewBriefWriter = (
   db: LobeChatDatabase,
@@ -585,7 +615,28 @@ export const createServerSelfReviewBriefWriter = (
         },
         async (span) => {
           try {
-            if (!incomingProposal || !brief.agentId) return model.create(brief);
+            if (!brief.agentId) return model.create(brief);
+
+            if (!incomingProposal) {
+              const incomingMetadata = brief.metadata.agentSignal.nightlySelfReview;
+              if (incomingMetadata.outcome !== 'ideas') return model.create(brief);
+
+              // Ideas briefs are one per agent + local date: a replayed completion
+              // reuses the existing row instead of writing a duplicate.
+              const existingIdeasBrief = await findExistingIdeasBrief({
+                agentId: brief.agentId,
+                localDate: incomingMetadata.localDate,
+                model,
+                trigger: brief.trigger,
+              });
+              if (existingIdeasBrief) {
+                span.setAttribute('agent.signal.brief.deduped', true);
+
+                return existingIdeasBrief;
+              }
+
+              return model.create(brief);
+            }
 
             const now = incomingProposal.updatedAt;
             const existingBrief = await findExistingProposalBrief({

@@ -54,7 +54,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const str = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined;
 
-const getIdeas = (artifacts: ToolResultWithKind[]): Idea[] =>
+/** Reads the valid `recordSelfReviewIdea` ideas echoed into a run's artifact outputs. */
+export const getIdeas = (artifacts: ToolResultWithKind[]): Idea[] =>
   artifacts.flatMap((artifact) => {
     if (artifact.apiName !== 'recordSelfReviewIdea' || !isRecord(artifact.data)) return [];
     const value = isRecord(artifact.data.idea) ? artifact.data.idea : artifact.data;
@@ -64,7 +65,7 @@ const getIdeas = (artifacts: ToolResultWithKind[]): Idea[] =>
   });
 
 /** A `skipped_unsupported` / `skipped_stale` tool status collapses to `skipped`. */
-const isSkippedStatus = (status: unknown): boolean =>
+export const isSkippedStatus = (status: unknown): boolean =>
   typeof status === 'string' && status.startsWith('skipped');
 
 const isMemoryLayer = (value: unknown): value is LayersEnum =>
@@ -146,7 +147,12 @@ export const buildSelfIterationReceipts = (
 
   const summary: AgentSignalReceipt = {
     ...base,
-    detail: `Captured ${artifacts.length} idea(s) and applied ${mutations.length} write(s).`,
+    // An ideas-only run (no durable writes) must not read as "0 actions": surface
+    // what it did capture instead.
+    detail:
+      mutations.length === 0 && artifacts.length > 0
+        ? `Captured ${artifacts.length} idea(s).`
+        : `Captured ${artifacts.length} idea(s) and applied ${mutations.length} write(s).`,
     id: `${sourceId}:self-iteration-summary`,
     kind: 'review',
     metadata: {
