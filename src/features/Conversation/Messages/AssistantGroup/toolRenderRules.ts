@@ -68,3 +68,12 @@ export const isImageOutputTool = (tool: ChatToolPayloadWithResult): boolean => {
  */
 export const isImageBearingTool = (tool: ChatToolPayloadWithResult): boolean =>
   isImageOutputTool(tool) || hasUploadedImages(tool.result?.state);
+
+/** Native artifact state is deliberately small and retained on the transcript.
+ * Prefer that live value over the separate, possibly stale lazy body cache. */
+export const resolveToolResultState = <T>(
+  tool: ToolRenderRuleTarget,
+  liveState: T | undefined,
+  storedState: T | undefined,
+): T | undefined =>
+  isInteractiveUITool(tool) ? (liveState ?? storedState) : (storedState ?? liveState);

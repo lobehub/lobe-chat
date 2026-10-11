@@ -1,13 +1,13 @@
 import { Flexbox } from '@lobehub/ui';
-import { Alert, Button, TextArea } from '@lobehub/ui/base-ui';
+import { Alert, Button } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { RenderUIParams } from '../../types';
+import type { LegacyRenderUIParams } from '../../types';
 import { useInteractiveUIFollowUp } from '../hooks/useInteractiveUIFollowUp';
 import { useSandboxFrame } from '../hooks/useSandboxFrame';
-import { MAX_FOLLOW_UP_LENGTH } from '../submission';
+import { FollowUpReview } from './FollowUpReview';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   frame: css`
@@ -57,7 +57,7 @@ const RunningWidget = ({
   messageId,
   readOnly,
 }: {
-  source: RenderUIParams;
+  source: LegacyRenderUIParams;
   messageId: string;
   readOnly: boolean;
 }) => {
@@ -66,11 +66,7 @@ const RunningWidget = ({
     source,
     'complete',
   );
-  const { allowed, dismiss, pending, status, submit } = useInteractiveUIFollowUp(
-    messageId,
-    source.title,
-    readOnly,
-  );
+  const followUp = useInteractiveUIFollowUp(messageId, source.title, readOnly);
   return (
     <Flexbox gap={12}>
       {paused && <Alert title={t('builtins.lobe-interactive-ui.paused')} type="warning" />}
@@ -92,43 +88,12 @@ const RunningWidget = ({
         />
       )}
       {proposal && (
-        <Flexbox gap={8}>
-          <span>{t('builtins.lobe-interactive-ui.review')}</span>
-          <TextArea
-            aria-label={t('builtins.lobe-interactive-ui.review')}
-            disabled={status === 'sending' || status === 'sent' || status === 'uncertain'}
-            maxLength={MAX_FOLLOW_UP_LENGTH}
-            value={proposal.text}
-            onChange={(event) => setProposal({ ...proposal, text: event.target.value })}
-          />
-          <Flexbox horizontal gap={8} wrap="wrap">
-            <Button
-              disabled={!allowed || !proposal.text.trim() || status !== 'idle'}
-              loading={status === 'sending'}
-              type="primary"
-              onClick={(event) => {
-                void submit(proposal.requestId, proposal.text, event.isTrusted);
-              }}
-            >
-              {t('builtins.lobe-interactive-ui.send')}
-            </Button>
-            <Button
-              disabled={pending}
-              onClick={() => {
-                if (dismiss()) setProposal(undefined);
-              }}
-            >
-              {t('builtins.lobe-interactive-ui.dismiss')}
-            </Button>
-          </Flexbox>
-          {!allowed && status === 'idle' && (
-            <span className={styles.note}>{t('builtins.lobe-interactive-ui.readOnly')}</span>
-          )}
-          {status === 'sent' && <span role="status">{t('builtins.lobe-interactive-ui.sent')}</span>}
-          {status === 'uncertain' && (
-            <Alert title={t('builtins.lobe-interactive-ui.uncertain')} type="warning" />
-          )}
-        </Flexbox>
+        <FollowUpReview
+          followUp={followUp}
+          proposal={proposal}
+          onChange={setProposal}
+          onDismiss={() => setProposal(undefined)}
+        />
       )}
     </Flexbox>
   );
@@ -139,7 +104,7 @@ export const InteractiveWidget = ({
   messageId,
   readOnly,
 }: {
-  source: RenderUIParams;
+  source: LegacyRenderUIParams;
   messageId: string;
   readOnly: boolean;
 }) => {

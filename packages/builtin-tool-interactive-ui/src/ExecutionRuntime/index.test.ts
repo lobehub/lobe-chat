@@ -1,27 +1,39 @@
 import { describe, expect, it } from 'vitest';
 
+import plan from '../../examples/native-plan-comparison.json';
 import { InteractiveUIExecutionRuntime } from './index';
 
-const source = {
+const legacy = {
   css: '',
-  fallback: 'A: 60, B: 50, C: 65 at quantity 500.',
-  html: '<p>Compare plans</p>',
-  js: 'throw new Error("never execute on server")',
-  title: 'Plans',
+  fallback: 'Example',
+  html: '<p>Example</p>',
+  js: '',
+  title: 'Example',
   version: 1,
 };
 
 describe('InteractiveUIExecutionRuntime', () => {
-  it('validates and returns result metadata without executing or duplicating source', async () => {
-    const result = await new InteractiveUIExecutionRuntime().renderUI(source);
+  it('validates a native document and initializes only declared scalar result state', async () => {
+    const result = await new InteractiveUIExecutionRuntime().renderUI(plan);
     expect(result.success).toBe(true);
-    expect(result.state).toEqual({ status: 'ready', version: 1 });
-    expect(result.content).toContain(source.fallback);
-    expect(result.content).not.toContain(source.js);
+    expect(result.state).toEqual({
+      status: 'ready',
+      values: { quantity: 500, plan: 'B' },
+      version: 2,
+    });
+    expect(result.content).toContain(plan.fallback);
+    expect(result.content).toContain('autosave');
+    expect(result.state).not.toHaveProperty('body');
   });
 
-  it.each([null, {}, { ...source, version: 2 }, { ...source, js: 'x'.repeat(32_001) }])(
-    'rejects invalid artifacts with a recoverable text result',
+  it.each([
+    null,
+    {},
+    legacy,
+    { ...plan, js: 'fetch("https://example.com")' },
+    { ...plan, version: 3 },
+  ])(
+    'rejects invalid and legacy executable inputs with a recoverable text result',
     async (args) => {
       const result = await new InteractiveUIExecutionRuntime().renderUI(args);
       expect(result.success).toBe(false);

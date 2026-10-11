@@ -7,7 +7,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   canSubmitInteractiveUI,
   formatInteractiveUIFollowUp,
-  MAX_FOLLOW_UP_LENGTH,
+  getFollowUpDraftValidation,
 } from '../submission';
 
 /** The only send path lives in the host. The sandbox can only fill a reviewable proposal. */
@@ -32,7 +32,7 @@ export const useInteractiveUIFollowUp = (messageId: string, title: string, readO
 
   const submit = async (requestId: string, text: string, trusted: boolean) => {
     if (!trusted || inFlight.current || submitted.has(requestId)) return;
-    if (!text.trim() || text.length > MAX_FOLLOW_UP_LENGTH) return;
+    if (!getFollowUpDraftValidation(text).canSend) return;
     const state = store.getState();
     if (
       !canSubmitInteractiveUI({

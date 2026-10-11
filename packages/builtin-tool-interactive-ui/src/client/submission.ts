@@ -2,6 +2,11 @@ import { InteractiveUIApiName, InteractiveUIIdentifier } from '../types';
 
 export const MAX_FOLLOW_UP_LENGTH = 2_000;
 
+export const getFollowUpDraftValidation = (text: string) => ({
+  canSend: text.trim().length > 0 && text.length <= MAX_FOLLOW_UP_LENGTH,
+  tooLong: text.length > MAX_FOLLOW_UP_LENGTH,
+});
+
 interface SubmissionContext {
   busy: boolean;
   currentContextKey: string;

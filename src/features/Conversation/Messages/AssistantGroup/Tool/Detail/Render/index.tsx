@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useToolResultPayload } from '@/hooks/useToolResultPayload';
 
 import { dataSelectors, useConversationStore } from '../../../../../store';
+import { resolveToolResultState } from '../../../toolRenderRules';
 import CustomRender from './CustomRender';
 import { FallbackArgumentRender } from './FallbacktArgumentRender';
 
@@ -35,7 +36,11 @@ const ToolRender = memo<ToolRenderProps>(
     const { isLoading, payload } = useToolResultPayload(messageId, needsStoredPayload);
 
     const resolvedContent = payload?.content ?? content;
-    const resolvedState = payload?.pluginState ?? pluginState;
+    const resolvedState = resolveToolResultState(
+      { apiName: plugin?.apiName ?? '', identifier: plugin?.identifier ?? '' },
+      pluginState,
+      payload?.pluginState,
+    );
 
     if (needsStoredPayload && isLoading && !payload) {
       return (

@@ -1,47 +1,58 @@
 # Interactive UI (experimental)
 
-An opt-in `lobe-interactive-ui` builtin with one `renderUI` API. It adds an interactive answer artifact to the existing LobeHub tool-call/message pipeline. It does not replace the agent runtime, introduce CopilotKit/AG-UI, or call a separate visualization service.
+An opt-in `lobe-interactive-ui` builtin with one `renderUI` API. The main path is a **native interactive answer**: the model describes bounded components, state and pure calculations; LobeHub renders and links them. It uses the existing agent/tool/message pipeline, not a separate visualization service.
 
 ## Try it
 
-Enable **Interactive UI** for an agent through the existing tool picker, or ask an agent with tool discovery to activate `lobe-interactive-ui`. Use agent mode: this experiment is not added to the chat-mode allowlist or to every agent's defaults. Shared-agent visitors are not granted this tool by default.
+1. Use **Agent** mode (Chinese: **智能**) and a tool-capable model.
+2. In the chat input, choose **+ → Skills → Add skills… → LobeHub**. Search **Interactive UI** (Chinese: **交互界面**) and **Install**. This experiment is not installed or enabled for every agent by default. Existing accounts may already have it installed.
+3. Return to **+ → Skills**. Under **Auto**, find the skill, open its **…** menu and choose **Pin**. It moves to **Pinned**. Pinning makes it available to that agent; there is no separate UI-builder page.
+4. Ask for an interactive answer. It appears directly in the conversation when `renderUI` is called. Chat mode and shared-agent visitors do not gain this tool by default.
 
 Example prompt:
 
-> Build an interactive plan comparison using illustrative monthly prices A = 0.12 × quantity, B = 20 + 0.06 × quantity, C = 50 + 0.03 × quantity. Use quantity 10–1000, initially 500. Show each cost and a comparison bar, let me choose a plan, and prepare a follow-up with the current choice. Use the Interactive UI tool.
+> Use the Interactive UI tool to build a native interactive comparison of illustrative monthly plans A = 0.12 × quantity, B = 20 + 0.06 × quantity, C = 50 + 0.03 × quantity. Start at 500. Use a slider and number field, a line chart with the current quantity and intersection markers, selectable plan rows with current prices, and a follow-up proposal containing my selection. Keep chart and input ranges consistent. Do not return a code block.
 
-`examples/plan-comparison.json` is a deterministic `renderUI` argument fixture. At 500 its costs are 60 / 50 / 65; at 1000 they are 120 / 80 / 80. It is suitable for injecting a controlled model response at the model boundary; it is not a separate demo product or proof of end-to-end acceptance.
+`examples/native-plan-comparison.json` is a complete deterministic v2 tool-argument fixture: 500 gives 60 / 50 / 65; 1000 gives 120 / 80 / 80. `examples/native-curve-explorer.json` independently composes a quadratic curve with adjustable scale, offset and position. Neither is a hard-coded renderer template. These are controlled model-boundary fixtures, not separate demo products or proof of full-stack acceptance.
 
-## Contract and lifecycle
+## Native contract
 
-- Version 1: bounded `title`, `fallback`, `html`, `css`, and `js`; unknown fields/versions and oversized sources are rejected by both runtime and renderer. The total UTF-8 limit is 128 KB.
-- Streaming arguments produce a sanitized, script-free HTML/CSS preview. Partial or repaired JSON is never executed.
-- A successfully completed artifact starts an opaque-origin `srcdoc` iframe. Generated JavaScript executes only in a dedicated Worker; trusted frame code applies a finite set of scalar DOM updates.
-- JavaScript can use `lobeUI.on`, `setText`, `setValue`, `setStyle`, and `propose`, as documented in `src/systemRole.ts`. Native `document`, `window`, arbitrary attributes, HTML replacement, imports and host APIs are unavailable. This is intentionally a smaller API than a general browser app; the HTML/CSS layout and computation remain generated.
-- The source is stored in the existing persisted tool arguments. Result state contains only `{ status: 'ready', version: 1 }`. Reopening reconstructs the artifact, not arbitrary JavaScript state. Closing, restarting, refreshing, or virtualized unmounting resets controls and variables. No new database table or state-migration promise is introduced.
-- `renderUI` segments remain outside both workflow and completed-process folds, including mixed tool batches and steered continuations. Normal process steps still fold. Stable keys preserve an already-mounted widget across completion/fold transitions.
+Version 2: `{version, title, fallback, state, derived, body}`. The runtime accepts v2 only; the model-facing manifest and prompt no longer advertise HTML/CSS/JavaScript.
+
+- A registry composes **stack, grid, text, metric, slider, number, select, choices, chart and action** nodes from LobeHub primitives. Fonts, spacing, theme, focus and selected states belong to the host. There is no iframe, arbitrary prop spreading, generated markup or generated styling in this path.
+- `state` declares finite numbers (required min/max, optional positive step), bounded strings (optional enumerated choices), and booleans. Controls bind to named fields. Multiple controls, prices, choices and charts read the same local state without a model round trip.
+- `derived` expressions use scalar literals, exact `state.*`/`derived.*` references and a finite operation set: arithmetic, comparisons, conditional selection, string concatenation and fixed-point number formatting. `x` is only a bounded chart sampling variable. No eval, functions, imports, prototype/property traversal, recursion or general loops are exposed. Unknown references and derived cycles are rejected.
+- Components, nesting, expressions, options, strings, state fields, series, samples and total UTF-8 document bytes are bounded. Invalid math produces a missing value rather than NaN/Infinity. Chart discontinuities stay gaps.
+- Charts without a live cursor reuse `@lobehub/charts`. Its current API does not expose reference-line/dot hooks, so live-cursor charts use a trusted native SVG component with bounded geometry. Model strings never become SVG markup or attributes. The cursor and intersection dots use exact current values, even between sampled points.
+- Streaming shows a quiet native skeleton until a complete validated snapshot is available. Preview controls remain disabled. Incomplete JSON never receives actions or persistence.
+- `renderUI` stays outside completed-process/workflow folds, including mixed tool calls. Other process steps still fold. The answer has one title and content surface, without the execution accordion/header or legacy restart/close warning shell.
+
+See `src/native/types.ts`, `schema.ts` and `engine.ts` for the complete contract, and `src/systemRole.ts` for model instructions.
+
+## State and refresh
+
+The full document remains in persisted tool arguments. Result state is `{status:'ready', version:2, values:{...}}`, containing only declared scalar controls; derived values are recomputed.
+
+Host controls autosave through the existing authenticated tool-message state endpoint. Writes are serialized and rapid changes coalesce to the newest snapshot. Acknowledged values restore on refresh/reopening; restoration never sends a message or writes automatically. Unknown or corrupt saved values are discarded/normalized against the document. There is no new database table.
+
+A subtle saving/saved status describes confirmation. Failed saves leave the local selection visible and offer explicit retry. The browser warns before leaving while values are unsaved. Abrupt tab/process termination can still lose unconfirmed changes, and concurrent tabs use last-write-wins; this is not collaborative conflict resolution. Draft follow-up text and send request IDs are not persisted. Read-only surfaces cannot change saved values.
 
 ## Follow-ups and permissions
 
-`lobeUI.propose(text)` can only propose a bounded text message. The host displays it in an editable text area; generated code cannot send it. A trusted click on the host's **Send to this conversation** button is required. A pending proposal cannot be replaced by the widget while it is being reviewed.
+The only action is **propose**: a trusted user click evaluates bounded text and opens a host-owned editable review. A second explicit **Send to this conversation** click sends it. A proposal is frozen until dismissed, even if values change underneath it.
 
-The host rechecks the current writable composer, original conversation key, source tool message, and busy/read-only state at click time. The sandbox cannot choose an agent, topic, recipient, or tool. Sending uses the existing conversation action and server authorization, preserves any draft in the composer, and includes the source tool message in the resulting text. Double-clicks and repeated request IDs are suppressed for the mounted instance. An uncertain send is never automatically retried. This is not a new persistent cross-device idempotency protocol.
+The host rechecks the current writable composer, original conversation key, source tool identity, busy/read-only state and trusted event at send time. A document cannot choose a destination, invoke tools, fetch a URL or grant permissions. The existing conversation action and server authorization preserve composer drafts and add source-tool attribution. In-flight duplicates are suppressed; uncertain sends never replay automatically. This is not persistent cross-device send idempotency. State saves likewise use the source tool message and original conversation, with server creator/permission checks.
 
-## Isolation boundary
+## Historical sandbox compatibility
 
-- iframe sandbox permits scripts only: no same-origin, popups, forms, downloads, or parent navigation.
-- Strict CSP blocks network/resource loads, nested frames, objects, base URLs, inline event handlers and eval. Only trusted nonce-bearing bootstrap code runs in the iframe. Generated code is serialized into a Blob Worker, never inserted into the iframe's script context.
-- DOMPurify sanitizes inert template contents with a restrictive HTML/attribute allowlist. External resources, navigation, scripts, SVG/MathML namespaces, dangerous input types, and reserved host IDs are excluded. The original source never enters the host's live DOM.
-- Generated code has no native Window, so it cannot use the iframe self-navigation gap that a plain `sandbox="allow-scripts"` iframe would leave open. Worker CSP inheritance and actual browser behavior still require real-browser verification for each supported runtime.
-- Bridge handlers check exact source Window, opaque origin, per-mount token, message type/version, scalar limits, sequential request IDs and a finite proposal count. A valid message carries no user authorization.
-- Worker traffic, DOM fan-out, listeners, source sizes and lifetime are bounded. A watchdog terminates an unresponsive Worker. Host-owned localized error/pause messages and restart controls stay outside generated styling.
+Existing version-1 artifacts still reopen through the isolated legacy renderer; new tool execution rejects version 1. The legacy source has the original opaque-origin iframe + Worker, restrictive CSP/DOM sanitizer, bounded authenticated bridge, explicit host send, watchdog and resource limits. See `src/sandbox/README.md`. Its arbitrary JS state still resets on reopen; native scalar persistence does not migrate old JavaScript memory.
 
-This is defense in depth, not a claim that unit tests establish a security proof. Browsers still control process scheduling and memory; resource exhaustion, sanitizer/library bugs and browser bugs remain review concerns. Do not enter secrets or sensitive information. Arbitrary external resources, persistent state, canvas/SVG, cross-turn patching, tool access and navigation are out of scope.
+Legacy browser isolation is defense in depth, not a security proof. It does not become the default fallback for a rejected native document: rejection produces a useful plain-text alternative. General browser apps, external resources, network access, canvas, arbitrary host actions and cross-turn patching remain out of scope.
 
 ## Inspiration and license
 
-The artifact/streaming-preview approach was informed by [CopilotKit/OpenIntelligentUI](https://github.com/CopilotKit/OpenIntelligentUI) (reviewed at [`f6e4388b26a64b9a0714943b08a1ce622b924eec`](https://github.com/CopilotKit/OpenIntelligentUI/tree/f6e4388b26a64b9a0714943b08a1ce622b924eec), [MIT license](https://github.com/CopilotKit/OpenIntelligentUI/blob/f6e4388b26a64b9a0714943b08a1ce622b924eec/LICENSE)). This implementation is original; no upstream source was copied or vendored. Its renderer, CDN policy, follow-up bridge, CopilotKit/Python/AG-UI stack, and Jev routing are not imported.
+The initial artifact/streaming-preview approach was informed by [CopilotKit/OpenIntelligentUI](https://github.com/CopilotKit/OpenIntelligentUI) (reviewed at [`f6e4388b26a64b9a0714943b08a1ce622b924eec`](https://github.com/CopilotKit/OpenIntelligentUI/tree/f6e4388b26a64b9a0714943b08a1ce622b924eec), [MIT license](https://github.com/CopilotKit/OpenIntelligentUI/blob/f6e4388b26a64b9a0714943b08a1ce622b924eec/LICENSE)). This implementation is original; no upstream source was copied or vendored. Its renderer, CDN policy, CopilotKit/Python/AG-UI stack and Jev routing are not imported. Native v2 is an original host-controlled registry and finite expression interpreter.
 
 ## Verification
 
-Programmatic checks and browser/full-stack acceptance are reported separately in the Draft PR. Sanitizer tests use jsdom rather than happy-dom. A standalone sandbox harness can establish browser behavior, but cannot establish tool discovery, agent execution, persisted history, the host send path, or completed-answer presentation in the running product. These require the delivered branch's actual full-stack chat surface. No production debug proxy counts as acceptance.
+The Draft PR reports programmatic gates, independent light review and browser/full-stack acceptance separately. Pure formula/geometry tests and isolated renderers do not establish installation/discovery, real tool execution, persisted chat history, actual follow-up authorization or whole-answer layout. Those need the delivered branch's real chat surface. A production debug proxy or an older Vercel head never counts as acceptance for a new revision. Legacy sanitizer tests use jsdom rather than happy-dom.

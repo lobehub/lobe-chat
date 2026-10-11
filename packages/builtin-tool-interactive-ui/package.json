@@ -11,6 +11,7 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/utils": "workspace:*",
     "dompurify": "^3.4.11",
     "zod": "^4.4.3"
   },
@@ -19,6 +20,7 @@
     "jsdom": "^26.1.0"
   },
   "peerDependencies": {
+    "@lobehub/charts": "^5.4.0",
     "@lobehub/ui": "^5",
     "antd-style": "*",
     "react": "*",

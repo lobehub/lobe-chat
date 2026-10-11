@@ -9,7 +9,7 @@ export const INTERACTIVE_UI_LIMITS = {
   totalBytes: 128_000,
 } as const;
 
-export const RenderUIParamsSchema = z
+export const LegacyRenderUIParamsSchema = z
   .strictObject({
     css: z.string().max(INTERACTIVE_UI_LIMITS.css),
     fallback: z.string().trim().min(1).max(INTERACTIVE_UI_LIMITS.fallback),

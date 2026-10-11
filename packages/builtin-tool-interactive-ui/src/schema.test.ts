@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { getInteractiveUIPreview, INTERACTIVE_UI_LIMITS, RenderUIParamsSchema } from './schema';
+import {
+  getInteractiveUIPreview,
+  INTERACTIVE_UI_LIMITS,
+  LegacyRenderUIParamsSchema,
+} from './schema';
 
 export const validArtifact = {
   css: '',
@@ -13,24 +17,30 @@ export const validArtifact = {
 
 describe('interactive UI schema', () => {
   it('accepts a complete artifact and rejects unknown permissions and versions', () => {
-    expect(RenderUIParamsSchema.safeParse(validArtifact).success).toBe(true);
-    expect(RenderUIParamsSchema.safeParse({ ...validArtifact, network: true }).success).toBe(false);
-    expect(RenderUIParamsSchema.safeParse({ ...validArtifact, version: 2 }).success).toBe(false);
-    expect(RenderUIParamsSchema.safeParse({ ...validArtifact, js: undefined }).success).toBe(false);
+    expect(LegacyRenderUIParamsSchema.safeParse(validArtifact).success).toBe(true);
+    expect(LegacyRenderUIParamsSchema.safeParse({ ...validArtifact, network: true }).success).toBe(
+      false,
+    );
+    expect(LegacyRenderUIParamsSchema.safeParse({ ...validArtifact, version: 2 }).success).toBe(
+      false,
+    );
+    expect(LegacyRenderUIParamsSchema.safeParse({ ...validArtifact, js: undefined }).success).toBe(
+      false,
+    );
   });
 
   it('bounds individual fields and UTF-8 total source bytes', () => {
     expect(
-      RenderUIParamsSchema.safeParse({ ...validArtifact, title: 'x'.repeat(121) }).success,
+      LegacyRenderUIParamsSchema.safeParse({ ...validArtifact, title: 'x'.repeat(121) }).success,
     ).toBe(false);
     expect(
-      RenderUIParamsSchema.safeParse({
+      LegacyRenderUIParamsSchema.safeParse({
         ...validArtifact,
         js: 'x'.repeat(INTERACTIVE_UI_LIMITS.js + 1),
       }).success,
     ).toBe(false);
     expect(
-      RenderUIParamsSchema.safeParse({ ...validArtifact, html: '你'.repeat(45_000) }).success,
+      LegacyRenderUIParamsSchema.safeParse({ ...validArtifact, html: '你'.repeat(45_000) }).success,
     ).toBe(false);
   });
 

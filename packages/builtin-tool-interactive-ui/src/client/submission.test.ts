@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { canSubmitInteractiveUI, formatInteractiveUIFollowUp } from './submission';
+import {
+  canSubmitInteractiveUI,
+  formatInteractiveUIFollowUp,
+  getFollowUpDraftValidation,
+} from './submission';
 
 const context = {
   busy: false,
@@ -36,5 +40,15 @@ describe('interactive UI host submission', () => {
     expect(
       formatInteractiveUIFollowUp('Plans', 'tool-1', '  Quantity 500, plan B, cost 50  '),
     ).toBe('[Interactive UI: Plans; source tool message: tool-1]\nQuantity 500, plan B, cost 50');
+  });
+});
+
+describe('follow-up draft validation', () => {
+  it('keeps a long proposal editable and enables sending after it is shortened', () => {
+    let draft = 'x'.repeat(2001);
+    expect(getFollowUpDraftValidation(draft)).toEqual({ canSend: false, tooLong: true });
+    draft = draft.slice(0, 2000);
+    expect(getFollowUpDraftValidation(draft)).toEqual({ canSend: true, tooLong: false });
+    expect(getFollowUpDraftValidation('   ')).toEqual({ canSend: false, tooLong: false });
   });
 });

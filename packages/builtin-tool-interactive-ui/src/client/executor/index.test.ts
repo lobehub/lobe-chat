@@ -8,16 +8,16 @@ describe('interactive UI client executor', () => {
     const result = await interactiveUIExecutor.invoke(
       'renderUI',
       {
-        css: '',
+        body: [{ content: 'Example', id: 'intro', type: 'text' }],
+        derived: {},
+        state: {},
         fallback: 'Example',
-        html: '<p>Example</p>',
-        js: '',
         title: 'Example',
-        version: 1,
+        version: 2,
       },
       {} as BuiltinToolContext,
     );
     expect(result.success).toBe(true);
-    expect(result.state).toEqual({ status: 'ready', version: 1 });
+    expect(result.state).toEqual({ status: 'ready', values: {}, version: 2 });
   });
 });

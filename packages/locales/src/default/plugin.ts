@@ -1,4 +1,15 @@
 export default {
+  'builtins.lobe-interactive-ui.tooLong':
+    'Shorten this draft to {{limit}} characters before sending (currently {{count}}).',
+  'builtins.lobe-interactive-ui.chart.currentValue': 'Current {{label}}',
+  'builtins.lobe-interactive-ui.chart.empty': 'No valid chart values for these inputs',
+  'builtins.lobe-interactive-ui.state.saving': 'Saving selections…',
+  'builtins.lobe-interactive-ui.state.saved': 'Selections saved to this chat',
+  'builtins.lobe-interactive-ui.state.failed':
+    'Could not save these selections. Keep this chat open and try again.',
+  'builtins.lobe-interactive-ui.state.retry': 'Retry save',
+  'builtins.lobe-interactive-ui.generating': 'Building your interactive answer…',
+
   'builtins.lobe-interactive-ui.paused':
     'This widget paused. Use Restart to continue with its initial values.',
   'builtins.lobe-interactive-ui.apiName.renderUI': 'Create interactive UI',
@@ -6,8 +17,7 @@ export default {
   'builtins.lobe-interactive-ui.description':
     'Explore interactive calculators, comparisons, and visual explanations inside chat.',
   'builtins.lobe-interactive-ui.invalid': 'This interactive UI could not be opened',
-  'builtins.lobe-interactive-ui.generating':
-    'Building a static preview. Controls become active when generation is complete.',
+
   'builtins.lobe-interactive-ui.review': 'Review the proposed follow-up',
   'builtins.lobe-interactive-ui.send': 'Send to this conversation',
   'builtins.lobe-interactive-ui.dismiss': 'Dismiss',
