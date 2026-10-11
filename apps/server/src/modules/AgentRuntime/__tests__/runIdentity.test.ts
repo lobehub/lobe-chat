@@ -125,6 +125,21 @@ describe('resolveRunActor', () => {
     });
   });
 
+  it('refuses an ordinary snapshot naming someone other than the executing user', () => {
+    // Stream access and the Gateway channel go to an ordinary run's actor.
+    expect(
+      resolveRunActor(userSnapshot, { shareVisitorUserId: null, userId: 'creator_2' }),
+    ).toEqual({ ok: false, reason: 'conflict' });
+  });
+
+  it('reads an ordinary snapshot when the record names no executing user', () => {
+    expect(resolveRunActor(userSnapshot, { shareVisitorUserId: null })).toEqual({
+      actor: userSnapshot.actor,
+      ok: true,
+      source: 'snapshot',
+    });
+  });
+
   it('reads a version 1 snapshot carrying fields added by a newer build', () => {
     // Additive fields keep `version: 1`, so a worker still on this build keeps
     // reading runs a newer writer stamped during a rolling deploy.

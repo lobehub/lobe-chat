@@ -120,11 +120,15 @@ export const resolveRunActor = (
   if (!parsed.success) return { ok: false, reason: 'invalid' };
 
   const { actor } = parsed.data;
-  // Only the share marker is cross-checked: it is the fact readers acted on
-  // before the snapshot existed, and the one that decides redaction and
-  // visitor-row visibility.
+  // Cross-check the facts readers acted on before the snapshot existed. The
+  // share marker decides redaction and visitor-row visibility.
   const snapshotVisitor = actor.kind === 'shareVisitor' ? actor.userId : null;
   if (shareVisitorUserId !== undefined && (shareVisitorUserId || null) !== snapshotVisitor) {
+    return { ok: false, reason: 'conflict' };
+  }
+  // An ordinary run's actor is granted its stream and Gateway channel, so it
+  // must be the user the operation executes as.
+  if (actor.kind === 'user' && isNonEmptyString(userId) && actor.userId !== userId) {
     return { ok: false, reason: 'conflict' };
   }
 

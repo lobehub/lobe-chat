@@ -211,6 +211,23 @@ describe('/api/agent/stream route', () => {
       expect(mockStreamEventManager.getStreamHistory).not.toHaveBeenCalled();
     });
 
+    it('should return 404 when an ordinary run identity names someone other than the executing user', async () => {
+      // The caller matches the snapshot's actor, but the operation executes as
+      // another user, so the snapshot cannot be trusted.
+      mockAgentStateManager.getOperationMetadata.mockResolvedValue({
+        identity: buildRunIdentity({ userId: OWNER_USER_ID }),
+        userId: 'executor-user',
+      });
+
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+      const response = await GET(request);
+
+      expect(response.status).toBe(404);
+      expect(mockStreamEventManager.getStreamHistory).not.toHaveBeenCalled();
+    });
+
     it('should allow the actor of an ordinary run identity to read it', async () => {
       mockAgentStateManager.getOperationMetadata.mockResolvedValue({
         identity: buildRunIdentity({ userId: OWNER_USER_ID, workspaceId: 'ws-1' }),
