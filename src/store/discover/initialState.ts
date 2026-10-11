@@ -21,7 +21,15 @@ import { initialUserSliceState } from './slices/user/initialState';
  * State of the discover (marketplace) store: the replica views of its slices,
  * plus each slice's bookkeeping. Slices add their own actions on top.
  */
-export type DiscoverStoreState = AssistantSliceState & GroupAgentSliceState & MCPSliceState & ModelSliceState & PluginSliceState & ProviderSliceState & SkillSliceState & SocialSliceState & UserSliceState;
+export type DiscoverStoreState = AssistantSliceState &
+  GroupAgentSliceState &
+  MCPSliceState &
+  ModelSliceState &
+  PluginSliceState &
+  ProviderSliceState &
+  SkillSliceState &
+  SocialSliceState &
+  UserSliceState;
 
 export const initialState: DiscoverStoreState = {
   ...initialAssistantSliceState,
