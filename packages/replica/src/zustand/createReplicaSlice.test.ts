@@ -450,6 +450,56 @@ describe('createReplicaSlice', () => {
       expect(store.getState().lists.a).toBeUndefined();
     });
 
+    it("drops a settled request's callbacks once the store has left its scope", () => {
+      // A response can settle after an identity/workspace switch. The engine
+      // refuses the off-scope `replace`, but the caller's callbacks carry the
+      // previous identity's side effects, so they must not run either — and a
+      // switch to a scope reading the same key/query defeats both the
+      // moved-past-query and since-clear guards.
+      const requests: {
+        onError: (error: unknown) => void;
+        onSuccess: (data: string[]) => void;
+      }[] = [];
+      const useQuery = vi.fn((key: any, _fetcher: unknown, options: any) => {
+        if (key !== null) requests.push({ onError: options.onError, onSuccess: options.onSuccess });
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const resource = defineReplica<{ id: string }, string[]>({
+        fetcher: async () => ['server'],
+        key: ({ id }) => id,
+        name: 'staleScopeCallbacks',
+        scope,
+        version: 1,
+      });
+      const store = createStore<TestState>()(() => ({
+        lists: {},
+        listsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<TestState, { id: string }, string[]>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'listsReplica',
+        view: recordLens('lists'),
+      });
+
+      const onSuccess = vi.fn();
+      const onError = vi.fn();
+      renderHook(() => slice.useSync({ id: 'a' }, { onError, onSuccess }), { wrapper });
+
+      const captured = requests.find((request) => request)!;
+
+      // The identity/workspace switches while the request is still in flight.
+      scopeState.current = 'user-2:personal';
+
+      act(() => captured.onSuccess(['stale']));
+      expect(onSuccess).not.toHaveBeenCalled();
+      expect(store.getState().lists.a).toBeUndefined();
+
+      act(() => captured.onError(new Error('stale')));
+      expect(onError).not.toHaveBeenCalled();
+    });
+
     it('purges the captured scope row for a removal that lands after a scope switch', async () => {
       const storage = createMemoryStorage();
       storage.rows.set('user-1:personal|a', { data: ['revoked'], updatedAt: 1 });

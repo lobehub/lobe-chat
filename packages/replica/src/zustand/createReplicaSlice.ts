@@ -193,6 +193,17 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       requestGeneration.delete(id);
       return started === undefined || started === clearGeneration(scope);
     };
+    /**
+     * Whether the entry is still on the scope the request was captured under.
+     *
+     * A response can settle after an identity/workspace switch. `replace` drops
+     * it — the engine refuses off-scope actions — but the caller's callbacks must
+     * not run either: they carry the previous identity's side effects (onboarding
+     * redirect, display snapshot, analytics identify, settings writes). The
+     * captured key/scope is not enough on its own, because a switch to a scope
+     * that reads the same key/query satisfies both guards above.
+     */
+    const isActiveScope = () => resource.scope.get() === scope;
 
     const sync = driver.useQuery<TFetched>(
       syncKey,
@@ -205,17 +216,19 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         // A failure of a query the entry has moved past (or of a request from
         // before a clear) must not surface on the query now on screen. The
         // captured key/scope is bound so a late terminal removal cannot land in
-        // a scope that became active after the request.
+        // a scope that became active after the request, and off-scope failures
+        // are dropped outright.
         // Always installed, so a failed request's generation record is dropped
         // even when the caller has no error side effects.
         onError: (error: unknown) => {
-          if (!isSinceClear() || !isActiveQuery()) return;
+          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
           onError?.(error, { key, scope });
         },
         onSuccess: (data) => {
           // Discard a head response the entry has moved past (the newer query
-          // owns the view, see `headQuery`) or one that started before a clear.
-          if (!isSinceClear() || !isActiveQuery()) return;
+          // owns the view, see `headQuery`), one that started before a clear, or
+          // one captured under a scope the store has since left.
+          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
           replace(params!, data, scope);
           onSuccess?.(data);
         },
