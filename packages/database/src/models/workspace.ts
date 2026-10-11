@@ -123,8 +123,7 @@ export class WorkspaceModel {
         .values({
           createdBy: this.userId,
           identifier: deriveTeamIdentifier(params.name) || DEFAULT_TEAM_IDENTIFIER,
-          // Team names are capped at 100 characters by the API.
-          name: params.name.slice(0, 100),
+          name: params.name,
           workspaceId: workspace.id,
         })
         .returning({ id: workspaceTeams.id });

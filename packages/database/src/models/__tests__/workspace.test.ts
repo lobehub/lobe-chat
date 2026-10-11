@@ -116,6 +116,20 @@ describe('WorkspaceModel', () => {
     expect(team).toMatchObject({ identifier: 'TEAM', name: '研发中心' });
   });
 
+  it('names the seeded team after the full workspace name, however long', async () => {
+    const name = `Research ${'x'.repeat(200)}`;
+    const workspace = await new WorkspaceModel(serverDB, ownerId).create({
+      name,
+      slug: 'long-name',
+    });
+
+    const [team] = await serverDB
+      .select()
+      .from(workspaceTeams)
+      .where(eq(workspaceTeams.workspaceId, workspace.id));
+    expect(team.name).toBe(name);
+  });
+
   it('derives Admin access from membership.role — the single source of truth', async () => {
     const workspaceId = await createWorkspace();
 
