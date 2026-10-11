@@ -18,7 +18,6 @@ import { createMemorySearchParams } from '../../utils/searchParams';
 import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
 import { experienceInitialState } from '../experience/initialState';
-import { homeInitialState } from '../home/initialState';
 import { identityInitialState } from '../identity/initialState';
 import { preferenceInitialState } from '../preference/initialState';
 
@@ -66,12 +65,16 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
+    // Replica-backed reads own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearHomeReplicas();
+
     this.#set(
       produce((draft) => {
         Object.assign(draft, activityInitialState);
         Object.assign(draft, contextInitialState);
         Object.assign(draft, experienceInitialState);
-        Object.assign(draft, homeInitialState);
         Object.assign(draft, identityInitialState);
         Object.assign(draft, preferenceInitialState);
 

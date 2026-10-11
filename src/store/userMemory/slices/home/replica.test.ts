@@ -18,7 +18,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { cacheScope } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
-import { userMemoryService } from '@/services/userMemory';
+import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
@@ -245,6 +245,62 @@ describe('userMemory home replicas', () => {
       // Same server value -> the replica keeps the same view object.
       expect(useUserMemoryStore.getState().identityRolesData).toBe(first);
       expect(rolesSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+  describe('purge all memories', () => {
+    it('replaces the persisted home rows with empty values even when home is not mounted', async () => {
+      personaSpy.mockResolvedValue(persona);
+      rolesSpy.mockResolvedValue(roles);
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue(undefined as never);
+
+      const hook = renderHook(
+        () => {
+          useUserMemoryStore((s) => s.useFetchPersona)();
+          useUserMemoryStore((s) => s.useFetchTags)();
+        },
+        { wrapper },
+      );
+      await waitFor(async () => {
+        const personaRow = await personaResource.storage!.get({
+          queryKey: PERSONA_STORAGE_KEY,
+          scope,
+        });
+        expect(personaRow?.data).toEqual({ persona });
+        const rolesRow = await identityRolesResource.storage!.get({
+          queryKey: ROLES_STORAGE_KEY,
+          scope,
+        });
+        expect(rolesRow?.data).toEqual(roles);
+      });
+
+      // Purge from another memory route: no home fetcher is mounted to refresh.
+      hook.unmount();
+      renderHook(() => null, { wrapper });
+
+      await act(async () => {
+        await useUserMemoryStore.getState().purgeAllMemories();
+      });
+
+      const state = useUserMemoryStore.getState();
+      expect(state.persona).toBeUndefined();
+      expect(state.personaData).toEqual({ persona: null });
+      expect(state.personaInit).toBe(true);
+      expect(state.roles).toEqual([]);
+      expect(state.tags).toEqual([]);
+      expect(state.tagsInit).toBe(true);
+
+      await waitFor(async () => {
+        const personaRow = await personaResource.storage!.get({
+          queryKey: PERSONA_STORAGE_KEY,
+          scope,
+        });
+        expect(personaRow?.data).toEqual({ persona: null });
+        const rolesRow = await identityRolesResource.storage!.get({
+          queryKey: ROLES_STORAGE_KEY,
+          scope,
+        });
+        expect(rolesRow?.data).toEqual({ roles: [], tags: [] });
+      });
     });
   });
 });

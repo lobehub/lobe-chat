@@ -125,15 +125,34 @@ export class HomeActionImpl {
   });
 
   /**
-   * Drop the persona locally, then re-read server truth (now `null`). The
-   * persona delete flow calls this so the section disappears immediately
-   * instead of waiting for a network round trip.
+   * Wipe both home replicas after "delete all memories": memory, every
+   * persisted row and reads already in flight (`clear()`), then seed the
+   * server-confirmed empty values (no persona, no roles/tags) so the home shows
+   * its empty state right away — mounted or not — and a reload paints the same
+   * instead of the purged data.
+   */
+  internal_clearHomeReplicas = async (): Promise<void> => {
+    await Promise.all([this.#persona.clear(), this.#identityRoles.clear()]);
+    this.#persona.update(PERSONA_KEY, () => ({ persona: null }));
+    this.#identityRoles.update(IDENTITY_ROLES_KEY, () => ({ roles: [], tags: [] }));
+  };
+
+  /**
+   * Drop the persona locally (persisted), then re-read server truth (now
+   * `null`). The persona delete flow calls this after the DELETE succeeded, so
+   * the section disappears immediately instead of waiting for a network round
+   * trip. The re-read is best-effort: the deletion already happened, so a
+   * failed GET must not surface as a failed delete — the next sync confirms it.
    */
   refreshPersona = async (): Promise<void> => {
     this.#persona.update(PERSONA_KEY, () => ({ persona: null }), { persist: true });
     // The replica adopts `userMemory:persona` as its sync key, so revalidating
     // that key is what drives the network sync.
-    await mutate(userMemoryKeys.persona());
+    try {
+      await mutate(userMemoryKeys.persona());
+    } catch (error) {
+      console.error('[userMemory] failed to re-read the persona after deleting it', error);
+    }
   };
 
   /**

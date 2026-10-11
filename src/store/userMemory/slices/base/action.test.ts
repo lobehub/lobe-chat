@@ -113,6 +113,18 @@ describe('deletePersona', () => {
     expect(mutate).toHaveBeenCalledWith(userMemoryKeys.persona());
   });
 
+  it('resolves when the persona is deleted but the follow-up read fails', async () => {
+    vi.spyOn(memoryCRUDService, 'deletePersona').mockResolvedValue({ success: true });
+    vi.mocked(mutate).mockRejectedValueOnce(new Error('read failed'));
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(useUserMemoryStore.getState().deletePersona()).resolves.toBeUndefined();
+
+    expect(useUserMemoryStore.getState().persona).toBeUndefined();
+    expect(useUserMemoryStore.getState().personaData).toEqual({ persona: null });
+    expect(consoleError).toHaveBeenCalled();
+  });
+
   it('retains the persona and memories when deletion fails', async () => {
     vi.spyOn(memoryCRUDService, 'deletePersona').mockRejectedValue(new Error('offline'));
     await expect(useUserMemoryStore.getState().deletePersona()).rejects.toThrow('offline');
