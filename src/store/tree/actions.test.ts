@@ -476,6 +476,10 @@ describe('TreeActionImpl optimistic moves (destination and other mutations)', ()
     mockRefreshFileList.mockReset();
     mockResourceMove.mockReset();
     mockStoreMove.mockReset();
+    // Reset explicitly rather than relying on the runner's `clearMocks`: the
+    // rename tests assert both a patch call and the absence of one.
+    mockPatchSearchHit.mockReset();
+    mockUpdateResource.mockReset();
     fileStoreState.resourceMap = new Map();
     mockResourceMove.mockResolvedValue({});
     mockRefreshFileList.mockResolvedValue(undefined);
