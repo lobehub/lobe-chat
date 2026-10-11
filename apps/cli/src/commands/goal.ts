@@ -625,7 +625,9 @@ export function registerGoalCommand(program: Command) {
 
   goal
     .command('set-budget <id>')
-    .description('Update limits; pass "none" to remove a limit')
+    .description(
+      'Update limits; --max-rounds, --max-cost, --max-concurrent-tasks and --max-steps-per-run also accept "none" to remove that limit',
+    )
     .option('--max-rounds <n>')
     .option('--max-cost <usd>')
     .option('--max-experiments <n>', 'Exploration experiment cap (1–200)')

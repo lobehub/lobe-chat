@@ -36,7 +36,8 @@ already supervising.
 - \`lh goal run <id> [--max-ticks <n>] [--poll-ms <ms>] [--json]\` - Tick until the goal reaches a stop condition
 - \`lh goal tick <id> [--json]\` - Advance exactly one coordinator step (for inspecting a single move)
 - \`lh goal pause <id>\` / \`lh goal resume <id> [--confirm-exit]\` - Pause / resume coordination
-- \`lh goal set-budget <id> [--max-rounds <n>] [--max-cost <usd>] [--max-manager-turns <n>] [--max-concurrent-tasks <n>] [--max-attempts-per-task <n>]\` - Edit the limits after creation ("none" removes a limit)
+- \`lh goal set-budget <id> [--max-rounds <n>] [--max-cost <usd>] [--max-manager-turns <n>] [--max-concurrent-tasks <n>] [--max-attempts-per-task <n>] [--max-experiments <n>] [--max-steps-per-run <n>]\` - Edit the limits after creation
+  - Only \`--max-rounds\`, \`--max-cost\`, \`--max-concurrent-tasks\` and \`--max-steps-per-run\` accept \`none\` to remove that limit. The rest take a positive number, so \`--max-manager-turns none\` is rejected — raise or lower it instead of trying to clear it
 - \`lh goal set-requirement <id> -r <text> | --file <path>\` - Replace the requirement (what counts as done)
 - \`lh goal set-agent <id> <agent>\` - Hand the goal to a different supervising agent
 - \`lh goal set-task-agent <id> <agent|none>\` - Route the tasks to a dedicated executor; \`none\` hands them back to the goal agent
