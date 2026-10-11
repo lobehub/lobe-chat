@@ -38,8 +38,11 @@ const scope: ReplicaScope = {
 
 const createMemoryStorage = <T>() => {
   const rows = new Map<string, ReplicaRow<T>>();
+  const read: ReplicaStorage<T>['get'] = async ({ queryKey, scope }) =>
+    rows.get(`${scope}|${queryKey}`);
   const storage: ReplicaStorage<T> = {
-    get: async ({ queryKey, scope }) => rows.get(`${scope}|${queryKey}`),
+    get: read,
+    getStrict: read,
     remove: async ({ queryKey, scope }) => {
       rows.delete(`${scope}|${queryKey}`);
     },

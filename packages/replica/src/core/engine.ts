@@ -18,7 +18,7 @@ import type { ReplicaAction, ReplicaEffect, ReplicaViewWrite } from './reducer';
 import { replicaReducer } from './reducer';
 import { createTombstones } from './tombstones';
 import type { ReplicaResource, ReplicaState } from './types';
-import { ReplicaWriteQueue } from './writeQueue';
+import { readReplicaRowStrict, ReplicaWriteQueue } from './writeQueue';
 
 /** Reserved storage key of the per-scope index of persisted rows. */
 export const REPLICA_INDEX_KEY = '__replica:index';
@@ -257,12 +257,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     indexed.set(scope, known);
     if (known.has(queryKey)) return;
     known.add(queryKey);
-    writeQueue.update(indexKey(scope), (current) => {
-      const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
-      if (keys.has(queryKey)) return undefined;
-      keys.add(queryKey);
-      return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
-    });
+    void writeQueue
+      .update(indexKey(scope), (current) => {
+        const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
+        if (keys.has(queryKey)) return undefined;
+        keys.add(queryKey);
+        return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
+      })
+      // An unreadable index is left untouched (never rewritten as just this
+      // key); forget the key so the next write of the row retries the append.
+      .then((tracked) => {
+        if (!tracked) known.delete(queryKey);
+      });
   };
 
   /**
@@ -272,11 +278,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * rows it could not enumerate.
    */
   const readIndex = async (scope: string): Promise<string[]> => {
-    const storage = resource.storage!;
-    // Call through `storage`: a class-based storage needs its receiver.
-    const row = await (storage.getStrict
-      ? storage.getStrict(indexKey(scope))
-      : storage.get(indexKey(scope)));
+    // A storage without `getStrict` rejects here: its `get` cannot tell an
+    // unreadable index from an empty one.
+    const row = await readReplicaRowStrict(resource.storage!, indexKey(scope));
     return (row?.data as unknown as string[] | undefined) ?? [];
   };
 
@@ -935,16 +939,20 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       const seq = noteWrite(scope, queryKey);
       let dropped = false;
       const patch = writeQueue
-        .update({ queryKey, scope }, (current) => {
-          if (!current) return undefined;
-          const next = mapEntity(current.data, id, fn);
-          if (next === current.data) return undefined;
-          if (next === undefined) {
-            dropped = true;
-            return null;
-          }
-          return { data: next, updatedAt: Date.now() };
-        })
+        .update(
+          { queryKey, scope },
+          (current) => {
+            if (!current) return undefined;
+            const next = mapEntity(current.data, id, fn);
+            if (next === current.data) return undefined;
+            if (next === undefined) {
+              dropped = true;
+              return null;
+            }
+            return { data: next, updatedAt: Date.now() };
+          },
+          { strict: true },
+        )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
         });
@@ -985,16 +993,20 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       const seq = noteWrite(scope, queryKey);
       let dropped = false;
       const patch = writeQueue
-        .update({ queryKey, scope }, (current) => {
-          if (!current) return undefined;
-          const next = fn(current.data);
-          if (next === current.data || next === undefined) return undefined;
-          if (next === null) {
-            dropped = true;
-            return null;
-          }
-          return { data: next, updatedAt: Date.now() };
-        })
+        .update(
+          { queryKey, scope },
+          (current) => {
+            if (!current) return undefined;
+            const next = fn(current.data);
+            if (next === current.data || next === undefined) return undefined;
+            if (next === null) {
+              dropped = true;
+              return null;
+            }
+            return { data: next, updatedAt: Date.now() };
+          },
+          { strict: true },
+        )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
         });
