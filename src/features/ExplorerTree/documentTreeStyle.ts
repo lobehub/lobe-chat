@@ -61,6 +61,13 @@ const maskGlyph = (glyph: string) => `
     mask-size: ${iconSize}px ${iconSize}px;
 `;
 
+/**
+ * Label glyph for a document that has records nested under it: it sits in the
+ * tree as a container (chevron, children) but must still read as a document.
+ * Passed as ExplorerTree's `fileAppearanceCSS`.
+ */
+export const DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS = maskGlyph(FILE_TEXT_ICON_SVG);
+
 export const DOCUMENT_TREE_ICON_CSS = `
   [data-item-type='folder'] [data-item-section='content'] {
     display: flex;
@@ -147,6 +154,14 @@ const DOCUMENT_TREE_TRAILING_ELLIPSIS_CSS = `
 export const DOCUMENT_TREE_ROW_CSS = `
   [data-item-type='folder'] > [data-item-section='content'] {
     font-weight: 500;
+  }
+
+  /* The chevron glyph sits centered in its 16px slot, ~6px in from the slot's
+     edge. Starting rows with no leading padding puts that glyph on the same line
+     as the section title and the panel tabs above it, while the hover fill still
+     reaches the panel edge. The trailing padding (the action lane) stays. */
+  [data-type='item'] {
+    padding-inline-start: 0;
   }
 
 ${DOCUMENT_TREE_NO_FOCUS_BORDER_CSS}

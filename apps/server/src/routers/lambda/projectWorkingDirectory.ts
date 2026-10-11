@@ -24,6 +24,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewTopicTargets,
 } from './_helpers/conversationResourceGuard';
+import { assertCreatorTopicTargets } from './_helpers/shareVisitorTargetGuard';
 
 const procedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { serverDB, userId, workspaceId } = opts.ctx;
@@ -176,6 +177,41 @@ export const projectWorkingDirectoryRouter = router({
     );
     return { data, success: true };
   }),
+  /** Switch a project-directory conversation to its project's directory on another device. */
+  moveTopic: procedure
+    .use(withScopedPermission('topic:update'))
+    .input(z.object({ directoryId: z.string().uuid(), topicId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertCanUseTopicTargets(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        [input.topicId],
+      );
+      // Same visitor guard as `updateTopicMetadata`: a share-visitor topic is not
+      // the member's conversation to move.
+      await assertCreatorTopicTargets(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        [input.topicId],
+      );
+      // Same reachability gate as `startTopic`: the move drops the session that
+      // only holds on the old machine, so a destination the device cannot see
+      // must fail here, while the existing binding and session are still intact.
+      const directory = await ctx.directoryModel.resolve(input.directoryId);
+      const stat = await deviceGateway.statPath({
+        deviceId: directory.deviceId,
+        path: directory.path,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      if (!stat?.exists || !stat.isDirectory)
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'Device is offline or working directory is unavailable',
+        });
+      return {
+        data: await ctx.directoryRepo.moveTopic(input.topicId, input.directoryId),
+        success: true,
+      };
+    }),
   resolve: procedure.input(idInput).query(async ({ ctx, input }) => ({
     data: await ctx.directoryModel.resolve(input.id),
     success: true,

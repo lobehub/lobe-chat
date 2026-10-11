@@ -572,7 +572,8 @@ export class AiAgentService {
             this.messageModel,
             thread.id,
             thread.metadata?.startedAt ?? new Date().toISOString(),
-            thread.sourceMessageId,
+            // The recovered group-member bridge owns result publication.
+            undefined,
             'execVirtualSubAgent',
             pickThreadUsageBaseline(thread.metadata),
           );
@@ -1149,9 +1150,13 @@ export class AiAgentService {
       approvedToolEntries,
       batchApprovalAnchorId,
       resumeApprovalPlugin,
+      resolvedToolResult,
     } = await traceSendStage('approval_claim', () =>
       claimApprovalResume(
-        { messageModel: this.messageModel },
+        {
+          controlToolResult: (input) => this.agentRuntimeService.controlCompletedToolResult(input),
+          messageModel: this.messageModel,
+        },
         {
           appContext,
           approvalClaim,
@@ -1453,7 +1458,7 @@ export class AiAgentService {
       resumeApprovalPlugin,
       resumeApprovals,
       resumeFromHistory: runFromHistory,
-      resumeToolResult,
+      resumeToolResult: resolvedToolResult,
       runAttachments,
       selectedToolIds,
       topicBoundDeviceId: turn.topicBoundDeviceId,

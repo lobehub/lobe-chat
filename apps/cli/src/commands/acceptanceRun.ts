@@ -1161,7 +1161,7 @@ function withSubmitOptions(cmd: Command): Command {
     .option('--run <verifyRunId>', 'Target verification session (or use --operation)')
     .option('--operation <operationId>', 'Resolve the session from an Agent Run operation id')
     .requiredOption('--item <checkItemId>', 'Plan item id (checkItemId)')
-    .option('--type <type>', 'screenshot|gif|video|text|dom_snapshot|transcript')
+    .option('--type <type>', 'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript')
     .option('--file <path>', 'Local file to upload as the evidence artifact')
     .option('--content <text>', 'Inline text payload (instead of a file)')
     .option('--verdict <verdict>', 'passed|failed|uncertain')
@@ -1174,7 +1174,10 @@ function withSubmitOptions(cmd: Command): Command {
 function withEvidenceUploadOptions(cmd: Command): Command {
   return cmd
     .requiredOption('--check <checkResultId>', 'Target check result id')
-    .requiredOption('--type <type>', 'screenshot|gif|video|text|dom_snapshot|transcript')
+    .requiredOption(
+      '--type <type>',
+      'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript',
+    )
     .option('--file <path>', 'Local file to upload as the artifact')
     .option('--file-id <id>', 'Attach an already-uploaded file without uploading it again')
     .option('--content <text>', 'Inline text payload (instead of a file)')

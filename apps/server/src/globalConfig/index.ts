@@ -7,12 +7,15 @@ import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
 import { fileEnv } from '@/envs/file';
+import { gatewayEnv } from '@/envs/gateway';
 import { imageEnv } from '@/envs/image';
 import { knowledgeEnv } from '@/envs/knowledge';
 import { langfuseEnv } from '@/envs/langfuse';
+import { sandboxEnv } from '@/envs/sandbox';
 import { toolsEnv } from '@/envs/tools';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
+import { isLlmRelayDeploymentReady } from '@/server/modules/AgentRuntime/llmRelay/deployment';
 import { type GlobalServerConfig } from '@/types/serverConfig';
 import { cleanObject } from '@/utils/object';
 
@@ -124,6 +127,10 @@ export const getServerGlobalConfig = async () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
+    // Never fall back to the server-internal DEVICE_GATEWAY_URL.
+    ...(gatewayEnv.DEVICE_GATEWAY_PUBLIC_URL
+      ? { deviceGatewayUrl: gatewayEnv.DEVICE_GATEWAY_PUBLIC_URL }
+      : undefined),
     disableEmailPassword: authEnv.AUTH_DISABLE_EMAIL_PASSWORD,
     enableBusinessFeatures: ENABLE_BUSINESS_FEATURES,
     enableEmailVerification: authEnv.AUTH_EMAIL_VERIFICATION,
@@ -151,6 +158,9 @@ export const getServerGlobalConfig = async () => {
     // Expose Agent Gateway URL to client (used by hetero agents; also required for queue mode)
     ...(appEnv.AGENT_GATEWAY_URL ? { agentGatewayUrl: appEnv.AGENT_GATEWAY_URL } : undefined),
     agentGatewayProtocol: resolveAgentGatewayProtocol(),
+    // Whether the server can relay an LLM call to a tab (gateway + Redis): only
+    // then does the browser drop its own provider fallback for the one-shot relay.
+    llmRelayAvailable: isLlmRelayDeploymentReady(),
 
     image: cleanObject({
       defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
@@ -169,6 +179,10 @@ export const getServerGlobalConfig = async () => {
     // resolver's own function so both sides read the raw value identically —
     // unset/invalid stays `undefined`, i.e. the resolver's default 64.
     toolNameMaxLength: parseToolNameMaxLength(toolsEnv.TOOL_NAME_MAX_LENGTH),
+    // Lets the widget publish review match the sandbox's real egress contract:
+    // unless the Worker enforces per-host allowlists, declared hosts are
+    // advisory and the review must say any host is reachable.
+    widgetSandboxNetworkFormat: sandboxEnv.WIDGET_SANDBOX_NETWORK_FORMAT,
   };
 
   return config;

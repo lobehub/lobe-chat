@@ -27,6 +27,12 @@ export type IFeatureFlagsState = {
   enableAgentShare: boolean | undefined;
   enableAuthCaptcha: boolean | undefined;
   enableCheckUpdates: boolean | undefined;
+  /**
+   * Dashboards and the `lobe-dashboard` agent tool (`dashboard`). Off by
+   * default: the pages, Portal view, in-chat previews and the tool are hidden
+   * and the widget / dashboard APIs answer FORBIDDEN.
+   */
+  enableDashboard: boolean | undefined;
   enableDevDock: boolean | undefined;
   /**
    * Rollout gate for the multiplexed gateway socket. Necessary but not
@@ -122,6 +128,11 @@ export interface GlobalServerConfig {
   agentGatewayUrl?: string;
   aiProvider: ServerLanguageModel;
   defaultAgent?: PartialDeep<UserDefaultAgent>;
+  /**
+   * Public Device Gateway base URL (`DEVICE_GATEWAY_PUBLIC_URL`). Absent when not
+   * configured; clients then keep the address they manage themselves.
+   */
+  deviceGatewayUrl?: string;
   disableEmailPassword?: boolean;
   enableBusinessFeatures?: boolean;
   enableComposio?: boolean;
@@ -140,6 +151,11 @@ export interface GlobalServerConfig {
   enableMultimodalUnderstanding?: boolean;
   enableUploadFileToServer?: boolean;
   image?: PartialDeep<UserImageConfig>;
+  /**
+   * Whether the server can relay an LLM call to a browser tab (Agent Gateway
+   * with its service token + Redis). The one-shot relay is used only then.
+   */
+  llmRelayAvailable?: boolean;
   memory?: GlobalMemoryConfig;
   multimodalUnderstanding?: MultimodalUnderstandingConfig;
   oAuthSSOProviders?: string[];
@@ -156,6 +172,15 @@ export interface GlobalServerConfig {
    * Undefined means "not configured": the default (64) applies.
    */
   toolNameMaxLength?: number;
+  /**
+   * How the widget sandbox encodes the manifest's network allowlist
+   * (`WIDGET_SANDBOX_NETWORK_FORMAT`): `allowlist` when the Worker restricts
+   * egress to the declared hosts, `boolean` — or absent, the deployed
+   * Worker's only format — when the sandbox only gets an on/off switch and
+   * cannot enforce hosts. The publish review reads this to disclose
+   * unrestricted egress instead of presenting the allowlist as enforced.
+   */
+  widgetSandboxNetworkFormat?: 'allowlist' | 'boolean';
 }
 
 export interface GlobalBillboardItemLocaleFields {

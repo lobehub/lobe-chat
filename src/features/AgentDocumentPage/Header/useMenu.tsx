@@ -97,7 +97,13 @@ export const useMenu = ({
         okText: t('delete', { ns: 'common' }),
         onOk: async () => {
           try {
-            await agentDocumentService.removeDocument({ agentId, documentId, id: agentDocumentId });
+            await agentDocumentService.removeDocument({
+              agentId,
+              documentId,
+              id: agentDocumentId,
+              // Documents nested under it go with it, as a folder's contents do.
+              withChildren: true,
+            });
             toast.success(t('workingPanel.resources.deleteSuccess', { ns: 'chat' }));
             onDeleted();
           } catch (error) {

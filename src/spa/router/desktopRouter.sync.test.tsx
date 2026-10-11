@@ -2,12 +2,14 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { isValidElement, type ReactElement, Suspense } from 'react';
+import { renderToString } from 'react-dom/server';
 import type { RouteObject } from 'react-router';
-import { matchRoutes } from 'react-router';
+import { matchRoutes, MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
 import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import AppsSkeleton from '@/components/Skeleton/Apps';
+import AgentConversationLayoutSkeleton from '@/components/Skeleton/Conversation/AgentLayout';
 import ConversationLayoutSkeleton from '@/components/Skeleton/Conversation/Layout';
 import ConversationSegmentSkeleton from '@/components/Skeleton/Conversation/Segment';
 import DelayedFallback from '@/components/Skeleton/Delayed';
@@ -18,6 +20,9 @@ import ProfileSkeleton, { GroupProfileRouteSkeleton } from '@/components/Skeleto
 import ResourceHomeSkeleton from '@/components/Skeleton/ResourceHome';
 import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import SettingsPageSkeleton from '@/components/Skeleton/Settings/Page';
+import ProviderSettingsSkeleton, {
+  ProviderDetailSkeleton,
+} from '@/components/Skeleton/Settings/Provider';
 import TasksSkeleton from '@/components/Skeleton/Tasks';
 import TopicsSkeleton from '@/components/Skeleton/Topics';
 import TaskDetailSkeleton from '@/features/AgentTasks/AgentTaskDetail/TaskDetailSkeleton';
@@ -188,7 +193,7 @@ describe('desktop router shared definition', () => {
   });
 
   it.each(mainAreaVariants)(
-    '%s exposes project task, goal, and acceptance workspaces',
+    '%s exposes project task, goal, dashboard, and acceptance workspaces',
     (_, factory) => {
       const projectRoute = factory().find((route) => route.path === 'project/:projectId');
       const projectIndexRoute = projectRoute?.children?.find((route) => route.index);
@@ -201,6 +206,7 @@ describe('desktop router shared definition', () => {
         'tasks',
         'settings/:section?',
         'goals',
+        'dashboard',
         'acceptance',
       ]);
       for (const section of ['general', 'environments', 'directories']) {
@@ -215,6 +221,16 @@ describe('desktop router shared definition', () => {
       ).toBe('conversation');
     },
   );
+
+  it.each(mainAreaVariants)('%s matches project dashboard list and board pages', (_, factory) => {
+    const list = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/dashboard');
+    const board = matchRoutes(createMainAreaRoutes(factory), '/acme/project/prj_1/dashboard/d-1');
+
+    expect(list?.at(-1)?.route.index).toBe(true);
+    expect(list?.at(-1)?.route.handle).toMatchObject({ meta: expect.any(Object) });
+    expect(board?.at(-1)?.route.path).toBe(':dashboardId');
+    expect(board?.at(-1)?.params).toMatchObject({ dashboardId: 'd-1', projectId: 'prj_1' });
+  });
 
   it.each(mainAreaVariants)('%s exposes the projects view-all route', (_, factory) => {
     const personalMatches = matchRoutes(createMainAreaRoutes(factory), '/projects');
@@ -364,7 +380,13 @@ describe('desktop router shared definition', () => {
       expect(fallbacks.length).toBeGreaterThan(0);
       expect(fallbacks).not.toContain(BrandTextLoading);
       expect(new Set(fallbacks)).toEqual(
-        new Set([ConversationLayoutSkeleton, ConversationSegmentSkeleton, RouteSegmentSkeleton]),
+        new Set([
+          AgentConversationLayoutSkeleton,
+          ConversationLayoutSkeleton,
+          ConversationSegmentSkeleton,
+          ProviderDetailSkeleton,
+          RouteSegmentSkeleton,
+        ]),
       );
     },
   );
@@ -378,7 +400,7 @@ describe('desktop router shared definition', () => {
       for (const [pathname, expectedFallbacks] of [
         [
           '/agent/agent-1/topic-1',
-          [RouteSegmentSkeleton, ConversationLayoutSkeleton, ConversationSegmentSkeleton],
+          [RouteSegmentSkeleton, AgentConversationLayoutSkeleton, ConversationSegmentSkeleton],
         ],
         ['/group/group-1/topic-1', [RouteSegmentSkeleton, ConversationLayoutSkeleton]],
       ] as const) {
@@ -432,10 +454,12 @@ describe('desktop router shared definition', () => {
       ['/agent/agent-1/goals', GoalSkeleton],
       ['/agent/agent-1/goal/goal-1', GoalDetailSkeleton],
       ['/agent/agent-1/profile', ProfileSkeleton],
-      ['/agent/agent-1/topic-1', ConversationLayoutSkeleton],
+      ['/agent/agent-1/topic-1', AgentConversationLayoutSkeleton],
       ['/group/group-1/profile', GroupProfileRouteSkeleton],
       ['/group/group-1/topic-1', ConversationLayoutSkeleton],
       ['/settings/profile', SettingsPageSkeleton],
+      ['/settings/provider/all', ProviderSettingsSkeleton],
+      ['/settings/provider/openai', ProviderSettingsSkeleton],
       ['/apps', AppsSkeleton],
       ['/memory', MemorySkeleton],
       ['/resource', ResourceHomeSkeleton],
@@ -449,6 +473,42 @@ describe('desktop router shared definition', () => {
         pathname,
       ).toBe(expectedSkeleton);
     }
+  });
+
+  it.each([
+    ['Web', (_pathname: string) => webDesktopRoutes],
+    ['Electron', (pathname: string) => createTabRouter(pathname).routes],
+  ])(
+    '%s paints the resource skeleton on its first render, without a chunk wait',
+    (_, getRoutes) => {
+      const matches = matchRoutes(getRoutes('/resource/files'), '/resource/files');
+      const Skeleton = resolveRouteSkeleton(
+        matches?.map(({ route }) => ({ handle: route.handle })) ?? [],
+      );
+
+      const html = renderToString(
+        <MemoryRouter initialEntries={['/resource/files']}>
+          {Skeleton && <Skeleton />}
+        </MemoryRouter>,
+      );
+
+      expect(html).toContain('aria-busy');
+    },
+  );
+
+  it.each([
+    ['Web', (_pathname: string) => webDesktopRoutes],
+    ['Electron', (pathname: string) => createTabRouter(pathname).routes],
+  ])('%s keeps the provider detail chunk inside the provider layout skeleton', (_, getRoutes) => {
+    const matches = matchRoutes(
+      getRoutes('/settings/provider/openai'),
+      '/settings/provider/openai',
+    );
+    const detail = matches?.at(-1)?.route.element as
+      ReactElement<{ fallback?: ReactElement<{ children?: ReactElement }> }> | undefined;
+
+    expect(detail?.props.fallback?.type).toBe(DelayedFallback);
+    expect(detail?.props.fallback?.props.children?.type).toBe(ProviderDetailSkeleton);
   });
 
   it.each([

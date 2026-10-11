@@ -10,6 +10,9 @@ export interface QueryProjection<T> {
 
 export interface QueryProjectionStorage<T> {
   get: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
+  /** Like `get`, but rejects when the row could not be read (destructive passes). */
+  getStrict?: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
+  /** Rejects when the delete did not land (reads and writes stay best-effort). */
   remove: (key: QueryProjectionKey) => Promise<void>;
   set: (key: QueryProjectionKey, projection: QueryProjection<T>) => Promise<void>;
 }
