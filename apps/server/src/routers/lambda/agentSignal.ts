@@ -12,6 +12,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { rollbackAgentSignalReceipt } from '@/server/services/agentSignal/services/receiptRollbackService';
 import { listAgentSignalReceipts } from '@/server/services/agentSignal/services/receiptService';
+import { assertAgentSignalTriggerRateLimit } from '@/server/services/agentSignal/triggerRateLimit';
 import {
   AGENT_SIGNAL_TRIGGER_SOURCE_TYPES,
   buildTriggerSourceEvent,
@@ -58,7 +59,9 @@ export const agentSignalRouter = router({
         workspaceId: ctx.workspaceId ?? undefined,
       });
     }),
-  triggerSourceEvent: agentSignalProcedure
+  // Same RBAC gate as `emitSourceEvent` and the REST `/signals/trigger` route; API-key scopes
+  // (`agent:write` + `model:invoke`) are enforced by the namespace guard in `@lobechat/const`.
+  triggerSourceEvent: agentSignalWriteProcedure
     .input(
       z.object({
         agentId: z.string().optional(),
@@ -81,6 +84,8 @@ export const agentSignalRouter = router({
         topicId: input.topicId,
         userId: ctx.userId,
       });
+
+      await assertAgentSignalTriggerRateLimit(ctx.userId);
 
       log(
         'Triggering source event sourceType=%s sourceId=%s',

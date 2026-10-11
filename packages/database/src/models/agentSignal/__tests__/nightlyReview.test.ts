@@ -144,10 +144,10 @@ describe('AgentSignalNightlyReviewModel', () => {
      * review time — drifted later every day.
      *
      * The activity floor is a strict superset of every per-user review window, so narrowing on
-     * it can only skip a dispatch the local-window check would have skipped anyway. The window
-     * itself stays in the service layer, which resolves timezones through `Intl`; pushing it
-     * into SQL would make the scan depend on the database's tzdata build agreeing with `Intl`,
-     * and it buys little at the busiest hour anyway.
+     * it can only skip a dispatch the local-window check would have skipped anyway. The local
+     * window is also prefiltered here (see `listEligibleUsers local-hour prefilter`), but only as
+     * a widened superset: the exact window stays in the service layer, which resolves timezones
+     * through `Intl` and does not depend on the database's tzdata build.
      */
     const seedActivity = async () => {
       await serverDB.insert(users).values([
@@ -274,6 +274,89 @@ describe('AgentSignalNightlyReviewModel', () => {
       });
 
       expect(result.map((item) => item.id)).toEqual([otherUserId]);
+    });
+  });
+
+  describe('listEligibleUsers local-hour prefilter', () => {
+    /**
+     * ROOT CAUSE:
+     *
+     * Every hourly fire dispatched one QStash execute workflow per recently active user, and ~22
+     * of every 24 of those runs only discovered inside the workflow that the user's local clock
+     * was outside 02:00-04:00. The prefilter drops those rows before pagination fans out.
+     *
+     * At 2026-05-03T18:30Z it is 02:30 in Shanghai, 14:30 in New York and 18:30 in UTC.
+     */
+    const at = new Date('2026-05-03T18:30:00.000Z');
+    const shanghaiUserId = 'nightly-tz-shanghai';
+    const newYorkUserId = 'nightly-tz-new-york';
+    const missingTimezoneUserId = 'nightly-tz-missing';
+    const invalidTimezoneUserId = 'nightly-tz-invalid';
+
+    const seedTimezones = async () => {
+      await serverDB.insert(users).values([
+        { createdAt: new Date('2026-05-01T00:00:00.000Z'), id: shanghaiUserId },
+        { createdAt: new Date('2026-05-02T00:00:00.000Z'), id: newYorkUserId },
+        { createdAt: new Date('2026-05-03T00:00:00.000Z'), id: missingTimezoneUserId },
+        { createdAt: new Date('2026-05-04T00:00:00.000Z'), id: invalidTimezoneUserId },
+      ]);
+      await serverDB.insert(userSettings).values([
+        { general: { timezone: 'Asia/Shanghai' }, id: shanghaiUserId },
+        { general: { timezone: 'America/New_York' }, id: newYorkUserId },
+        { general: { timezone: 'Invalid/Zone' }, id: invalidTimezoneUserId },
+      ]);
+    };
+
+    it('keeps only users whose local hour is inside the window', async () => {
+      await seedTimezones();
+      const model = new AgentSignalNightlyReviewModel(serverDB);
+
+      const result = await model.listEligibleUsers({
+        localHourWindow: { at, endHourExclusive: 5, startHour: 1 },
+      });
+
+      // Shanghai is in-window; an unrecognised zone passes through for the exact check upstream;
+      // New York (14:30) and the UTC fallback (18:30) are dropped.
+      expect(result.map((item) => item.id)).toEqual([shanghaiUserId, invalidTimezoneUserId]);
+    });
+
+    it('evaluates a missing timezone as UTC', async () => {
+      await seedTimezones();
+      const model = new AgentSignalNightlyReviewModel(serverDB);
+
+      const result = await model.listEligibleUsers({
+        localHourWindow: {
+          at: new Date('2026-05-03T02:30:00.000Z'),
+          endHourExclusive: 4,
+          startHour: 2,
+        },
+      });
+
+      expect(result.map((item) => item.id)).toEqual([missingTimezoneUserId, invalidTimezoneUserId]);
+    });
+
+    it('keeps pagination stable across filtered rows', async () => {
+      await seedTimezones();
+      const model = new AgentSignalNightlyReviewModel(serverDB);
+
+      const firstPage = await model.listEligibleUsers({
+        limit: 1,
+        localHourWindow: { at, endHourExclusive: 5, startHour: 1 },
+      });
+      const secondPage = await model.listEligibleUsers({
+        cursor: firstPage[0],
+        limit: 1,
+        localHourWindow: { at, endHourExclusive: 5, startHour: 1 },
+      });
+      const thirdPage = await model.listEligibleUsers({
+        cursor: secondPage[0],
+        limit: 1,
+        localHourWindow: { at, endHourExclusive: 5, startHour: 1 },
+      });
+
+      expect(firstPage.map((item) => item.id)).toEqual([shanghaiUserId]);
+      expect(secondPage.map((item) => item.id)).toEqual([invalidTimezoneUserId]);
+      expect(thirdPage).toEqual([]);
     });
   });
 

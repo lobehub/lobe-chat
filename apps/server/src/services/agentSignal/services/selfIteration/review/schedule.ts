@@ -9,6 +9,7 @@ import { AgentSignalNightlyReviewModel } from '@/database/models/agentSignal/nig
 import type { LobeChatDatabase } from '@/database/type';
 import type { AgentSignalSourceEventInput } from '@/server/services/agentSignal/emitter';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal/emitter';
+import { isAgentSignalEnabledForUser } from '@/server/services/agentSignal/featureGate';
 
 import { buildNightlyReviewSourceId } from '../types';
 
@@ -29,6 +30,19 @@ const NIGHT_WINDOW_END_HOUR_EXCLUSIVE = 4;
 const ACTIVITY_LOOKBACK_HOURS = 30;
 
 const HOUR_IN_MS = 60 * 60 * 1000;
+
+/**
+ * Hours added on each side of the night window for the SQL local-hour prefilter.
+ *
+ * PostgreSQL resolves timezones with its own tzdata build, which can lag `Intl` by an offset
+ * change. Widening the SQL window keeps it a strict superset of the exact `Intl` window that
+ * {@link getLocalNightWindow} re-applies, so a tzdata disagreement can cost a skipped row in this
+ * page but never a missed review.
+ */
+const SQL_PREFILTER_SLACK_HOURS = 1;
+
+/** Concurrent feature-flag lookups per page; each lookup is one runtime-config read. */
+const FEATURE_GATE_CONCURRENCY = 10;
 
 /** Active agent target returned by the nightly review scheduler data boundary. */
 export interface NightlyReviewAgentTarget {
@@ -62,6 +76,19 @@ export interface ListNightlyReviewEligibleUsersInput {
   cursor?: NightlyReviewScheduleCursor;
   /** Maximum eligible users to return. */
   limit?: number;
+  /**
+   * Coarse local-hour prefilter pushed into the user scan.
+   *
+   * Always a superset of the exact night window; the service re-checks the exact window after.
+   */
+  localHourWindow?: {
+    /** UTC instant whose local hour is evaluated. */
+    at: Date;
+    /** Exclusive local hour upper bound. */
+    endHourExclusive: number;
+    /** Inclusive local hour lower bound. */
+    startHour: number;
+  };
   /** Optional allowlist for targeted backfills or tests. */
   whitelist?: string[];
 }
@@ -88,6 +115,16 @@ export interface NightlyReviewScheduleAdapters {
   enqueueSource: (
     input: AgentSignalSourceEventInput<'agent.nightly_review.requested'>,
   ) => Promise<unknown>;
+  /**
+   * Resolves whether the `enableAgentSelfIteration` rollout includes one user.
+   *
+   * Pagination drops users for whom this returns `false` before any execute workflow is
+   * triggered. The enqueue path re-checks the same gate, so this is a cost filter, not the
+   * authority.
+   *
+   * @default Server adapter uses {@link isAgentSignalEnabledForUser}; omitted means no filtering
+   */
+  isUserFeatureEnabled?: (userId: string) => Promise<boolean>;
   /** Lists active self-iteration agent targets for one user and review window. */
   listActiveAgentTargets: (
     input: ListNightlyReviewAgentTargetsInput,
@@ -162,11 +199,12 @@ export interface NightlyReviewScheduleService {
    * Expects:
    * - `limit` is a positive, externally bounded page size
    * - The adapter sorts users by `createdAt, id`
-   * - `requestedAt` narrows the scan to users with recent activity;
-   *   {@link dispatchNightlyReviewForUser} remains the only authority on the local window
+   * - `requestedAt` narrows the scan to users with recent activity whose local clock is inside
+   *   the night window; {@link dispatchNightlyReviewForUser} re-checks the window as a second gate
    *
    * Returns:
-   * - The current users and a next cursor only when the page is full
+   * - Only users inside their night window with the feature flag on, and a next cursor whenever
+   *   the scanned page was full (even if every scanned user was filtered out)
    */
   listEligibleUsersPage: (
     options: ListNightlyReviewEligibleUsersPageOptions,
@@ -209,6 +247,26 @@ const getLocalNightWindow = (now: Date, timezone: string | null | undefined): Lo
     withinWindow:
       localHour >= NIGHT_WINDOW_START_HOUR && localHour < NIGHT_WINDOW_END_HOUR_EXCLUSIVE,
   };
+};
+
+const filterFeatureEnabledUsers = async (
+  users: NightlyReviewEligibleUser[],
+  isUserFeatureEnabled: NightlyReviewScheduleAdapters['isUserFeatureEnabled'],
+): Promise<NightlyReviewEligibleUser[]> => {
+  if (!isUserFeatureEnabled || users.length === 0) return users;
+
+  const enabledUsers: NightlyReviewEligibleUser[] = [];
+
+  for (let index = 0; index < users.length; index += FEATURE_GATE_CONCURRENCY) {
+    const batch = users.slice(index, index + FEATURE_GATE_CONCURRENCY);
+    const enabled = await Promise.all(batch.map((user) => isUserFeatureEnabled(user.id)));
+
+    batch.forEach((user, batchIndex) => {
+      if (enabled[batchIndex]) enabledUsers.push(user);
+    });
+  }
+
+  return enabledUsers;
 };
 
 /**
@@ -316,24 +374,51 @@ export const createSelfReviewScheduleService = (
         },
         async (span) => {
           try {
-            const users = await adapters.listEligibleUsers({
+            const { requestedAt } = options;
+            const scannedUsers = await adapters.listEligibleUsers({
               ...options,
               // Without `requestedAt` the caller is a test or a legacy path; fall back to the
               // unnarrowed scan rather than inventing a floor from wall-clock time.
-              ...(options.requestedAt
+              ...(requestedAt
                 ? {
                     activeSince: new Date(
-                      options.requestedAt.getTime() - ACTIVITY_LOOKBACK_HOURS * HOUR_IN_MS,
+                      requestedAt.getTime() - ACTIVITY_LOOKBACK_HOURS * HOUR_IN_MS,
                     ),
+                    localHourWindow: {
+                      at: requestedAt,
+                      endHourExclusive: NIGHT_WINDOW_END_HOUR_EXCLUSIVE + SQL_PREFILTER_SLACK_HOURS,
+                      startHour: NIGHT_WINDOW_START_HOUR - SQL_PREFILTER_SLACK_HOURS,
+                    },
                   }
                 : {}),
             });
-            const lastUser = users.at(-1);
+            // The cursor follows the scanned rows, not the filtered ones: a page whose users are
+            // all filtered out must still hand the traversal on to the next page.
+            const lastUser = scannedUsers.at(-1);
             const nextCursor =
-              users.length === options.limit && lastUser
+              scannedUsers.length === options.limit && lastUser
                 ? { createdAt: lastUser.createdAt, id: lastUser.id }
                 : undefined;
 
+            const inWindowUsers = requestedAt
+              ? scannedUsers.filter(
+                  (user) => getLocalNightWindow(requestedAt, user.timezone).withinWindow,
+                )
+              : scannedUsers;
+            const users = await filterFeatureEnabledUsers(
+              inWindowUsers,
+              adapters.isUserFeatureEnabled,
+            );
+
+            span.setAttribute('agent.signal.nightly.scanned_user_count', scannedUsers.length);
+            span.setAttribute(
+              'agent.signal.nightly.outside_window_count',
+              scannedUsers.length - inWindowUsers.length,
+            );
+            span.setAttribute(
+              'agent.signal.nightly.feature_disabled_count',
+              inWindowUsers.length - users.length,
+            );
             span.setAttribute('agent.signal.nightly.user_count', users.length);
             span.setAttribute('agent.signal.nightly.has_next_page', Boolean(nextCursor));
             span.setStatus({ code: SpanStatusCode.OK });
@@ -383,6 +468,7 @@ export const createServerNightlyReviewScheduleService = (
         agentId: input.payload.agentId,
         userId: input.payload.userId,
       }),
+    isUserFeatureEnabled: (userId) => isAgentSignalEnabledForUser(db, userId),
     listActiveAgentTargets: ({ limit, userId, windowEnd, windowStart }) =>
       model.listActiveAgentTargets(userId, {
         limit,
@@ -394,6 +480,7 @@ export const createServerNightlyReviewScheduleService = (
         activeSince: input?.activeSince,
         cursor: input?.cursor,
         limit: input?.limit,
+        localHourWindow: input?.localHourWindow,
         whitelist: input?.whitelist,
       }),
   });

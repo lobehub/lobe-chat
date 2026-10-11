@@ -36,6 +36,25 @@ const cursorUsers = alias(users, 'nightly_review_cursor_users');
 const parseAggregateTimestamp = (value: Date | string) =>
   value instanceof Date ? value : new Date(value);
 
+/**
+ * Builds the SQL predicate that keeps users whose local hour at `at` is inside the window.
+ *
+ * `AT TIME ZONE` raises on an unknown zone name, which would fail the whole page, so the zone is
+ * checked against `pg_timezone_names` first and unknown zones pass through to the caller's exact
+ * check. Missing or empty timezones evaluate as UTC, matching the service-side fallback.
+ */
+const buildLocalHourCondition = (window: ListAgentSignalNightlyReviewUsersLocalHourWindow) => {
+  const timezone = sql`COALESCE(NULLIF(${userSettings.general}->>'timezone', ''), 'UTC')`;
+  const at = window.at.toISOString();
+
+  return sql`CASE
+    WHEN lower(${timezone}) IN (SELECT lower(name) FROM pg_timezone_names)
+      THEN EXTRACT(HOUR FROM (${at}::timestamptz AT TIME ZONE ${timezone})) >= ${window.startHour}
+        AND EXTRACT(HOUR FROM (${at}::timestamptz AT TIME ZONE ${timezone})) < ${window.endHourExclusive}
+    ELSE true
+  END`;
+};
+
 /** Cursor for stable user pagination in AgentSignal nightly review scheduling. */
 export interface ListAgentSignalNightlyReviewUsersCursor {
   /** User creation time retained in the serialized checkpoint for observability. */
@@ -59,8 +78,28 @@ export interface ListAgentSignalNightlyReviewUsersOptions {
   cursor?: ListAgentSignalNightlyReviewUsersCursor;
   /** Maximum users to return. */
   limit?: number;
+  /**
+   * Coarse local-hour prefilter evaluated in each user's stored timezone.
+   *
+   * Callers must pass a window that is a superset of the exact window they enforce afterwards:
+   * PostgreSQL's tzdata build can disagree with `Intl` by an offset change, so this is only a
+   * cheap way to drop the users who are clearly not in their night, never the final authority.
+   * A timezone PostgreSQL does not recognise is kept rather than evaluated, so a bad stored value
+   * can neither fail the page nor be decided here.
+   */
+  localHourWindow?: ListAgentSignalNightlyReviewUsersLocalHourWindow;
   /** Optional user allowlist for backfills, tests, and targeted runs. */
   whitelist?: string[];
+}
+
+/** Local-hour range used to prefilter nightly review candidates inside SQL. */
+export interface ListAgentSignalNightlyReviewUsersLocalHourWindow {
+  /** UTC instant whose local hour is evaluated for each user. */
+  at: Date;
+  /** Exclusive local hour upper bound, `startHour < endHourExclusive <= 24`. */
+  endHourExclusive: number;
+  /** Inclusive local hour lower bound, `0 <= startHour`. */
+  startHour: number;
 }
 
 /** One user candidate for AgentSignal nightly review scheduling. */
@@ -138,6 +177,8 @@ export class AgentSignalNightlyReviewModel {
    * - Missing user timezone falls back to UTC
    * - `activeSince` is supplied by the scheduler; it is a superset of the per-user review
    *   window re-applied downstream, and it is skipped for whitelist runs
+   * - `localHourWindow`, when supplied, is a superset of the exact local window the scheduler
+   *   re-checks; it applies to whitelist runs too, because those users would be skipped anyway
    *
    * Returns:
    * - Users sorted by `createdAt, id` for deterministic pagination
@@ -183,6 +224,10 @@ export class AgentSignalNightlyReviewModel {
             .as('nightly_review_active_users')
         : undefined;
 
+    const localHourCondition = options.localHourWindow
+      ? buildLocalHourCondition(options.localHourWindow)
+      : undefined;
+
     let query = this.db
       .select({
         createdAt: users.createdAt,
@@ -198,7 +243,7 @@ export class AgentSignalNightlyReviewModel {
 
     query = query
       .leftJoin(userSettings, eq(users.id, userSettings.id))
-      .where(and(cursorCondition, whitelistCondition))
+      .where(and(cursorCondition, whitelistCondition, localHourCondition))
       .orderBy(asc(users.createdAt), asc(users.id));
 
     return options.limit !== undefined ? query.limit(options.limit) : query;

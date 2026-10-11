@@ -6,6 +6,7 @@ import type {
 import type { LobeChatDatabase } from '@/database/type';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { listAgentSignalReceipts } from '@/server/services/agentSignal/services/receiptService';
+import { assertAgentSignalTriggerRateLimit } from '@/server/services/agentSignal/triggerRateLimit';
 import { buildTriggerSourceEvent } from '@/server/services/agentSignal/triggerSourceEvent';
 
 import { BaseService } from '../common/base.service';
@@ -50,6 +51,8 @@ export class AgentSignalRestService extends BaseService {
       topicId: input.topicId,
       userId: this.userId,
     });
+
+    await assertAgentSignalTriggerRateLimit(this.userId);
 
     return enqueueAgentSignalSourceEvent(sourceEvent, {
       agentId: input.agentId,

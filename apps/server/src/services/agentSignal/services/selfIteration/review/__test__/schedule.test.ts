@@ -17,6 +17,7 @@ import {
 
 const mocks = vi.hoisted(() => ({
   enqueueAgentSignalSourceEvent: vi.fn(),
+  isAgentSignalEnabledForUser: vi.fn(),
   listActiveAgentTargets: vi.fn(),
   listEligibleUsers: vi.fn(),
   modelConstructor: vi.fn(),
@@ -33,6 +34,10 @@ vi.mock('@/database/models/agentSignal/nightlyReview', () => ({
 
 vi.mock('@/server/services/agentSignal/emitter', () => ({
   enqueueAgentSignalSourceEvent: mocks.enqueueAgentSignalSourceEvent,
+}));
+
+vi.mock('@/server/services/agentSignal/featureGate', () => ({
+  isAgentSignalEnabledForUser: mocks.isAgentSignalEnabledForUser,
 }));
 
 const createDeps = () => ({
@@ -232,8 +237,74 @@ describe('nightlyReviewScheduleService', () => {
       expect(deps.listEligibleUsers).toHaveBeenCalledWith({
         activeSince: new Date('2026-05-02T12:05:00.000Z'),
         limit: 50,
+        // The SQL prefilter is the 02:00-04:00 window widened by one hour on each side.
+        localHourWindow: { at: requestedAt, endHourExclusive: 5, startHour: 1 },
         requestedAt,
       });
+    });
+
+    /**
+     * ROOT CAUSE:
+     *
+     * Pagination fanned every recently active user out to its own QStash execute workflow, and
+     * ~22 of 24 of those runs exited after discovering the user was outside the local 02:00-04:00
+     * window — or never had the `enableAgentSelfIteration` rollout at all. Both checks now run in
+     * the paginate step, so ineligible users never cost a message or a workflow run.
+     *
+     * At 2026-05-03T18:30Z: Shanghai is 02:30 (in), Tokyo is 03:30 (in), Bangkok is 01:30 (passes
+     * the widened SQL prefilter, out of the exact window), New York is 14:30 (out).
+     */
+    it('drops users outside the exact night window or without the feature flag', async () => {
+      const deps = createDeps();
+      const createdAt = new Date('2026-01-01T00:00:00.000Z');
+      deps.listEligibleUsers.mockResolvedValue([
+        { createdAt, id: 'shanghai-enabled', timezone: 'Asia/Shanghai' },
+        { createdAt, id: 'tokyo-disabled', timezone: 'Asia/Tokyo' },
+        { createdAt, id: 'bangkok-enabled', timezone: 'Asia/Bangkok' },
+        { createdAt, id: 'new-york-enabled', timezone: 'America/New_York' },
+      ]);
+      const isUserFeatureEnabled = vi.fn(async (userId: string) => !userId.endsWith('-disabled'));
+      const service = createSelfReviewScheduleService({ ...deps, isUserFeatureEnabled });
+
+      const page = await service.listEligibleUsersPage({
+        limit: 50,
+        requestedAt: new Date('2026-05-03T18:30:00.000Z'),
+      });
+
+      expect(page.users.map((user) => user.id)).toEqual(['shanghai-enabled']);
+      expect(page.nextCursor).toBeUndefined();
+      // Out-of-window users are dropped before the per-user flag lookup is paid for.
+      expect(isUserFeatureEnabled.mock.calls.map(([userId]) => userId)).toEqual([
+        'shanghai-enabled',
+        'tokyo-disabled',
+      ]);
+    });
+
+    /**
+     * Filtering must never truncate the traversal: the cursor follows the scanned rows, so a full
+     * page whose users were all filtered out still continues to the next page.
+     *
+     * @example
+     * expect(page).toEqual({ nextCursor: { createdAt, id: 'user-2' }, users: [] });
+     */
+    it('keeps the next cursor when every scanned user is filtered out', async () => {
+      const deps = createDeps();
+      const createdAt = new Date('2026-01-01T00:00:00.000Z');
+      deps.listEligibleUsers.mockResolvedValue([
+        { createdAt, id: 'user-1', timezone: 'America/New_York' },
+        { createdAt, id: 'user-2', timezone: 'Asia/Shanghai' },
+      ]);
+      const service = createSelfReviewScheduleService({
+        ...deps,
+        isUserFeatureEnabled: async () => false,
+      });
+
+      const page = await service.listEligibleUsersPage({
+        limit: 2,
+        requestedAt: new Date('2026-05-03T18:30:00.000Z'),
+      });
+
+      expect(page).toEqual({ nextCursor: { createdAt, id: 'user-2' }, users: [] });
     });
 
     /**
@@ -281,6 +352,7 @@ describe('nightlyReviewScheduleService', () => {
         },
       ]);
       mocks.listActiveAgentTargets.mockResolvedValue([{ agentId: 'agent-1' }]);
+      mocks.isAgentSignalEnabledForUser.mockResolvedValue(true);
       mocks.enqueueAgentSignalSourceEvent.mockResolvedValue({
         accepted: true,
         scopeKey: 'user-1:agent-1',
@@ -303,6 +375,7 @@ describe('nightlyReviewScheduleService', () => {
       expect(summary).toEqual({ enqueued: 1, skipped: 0 });
       expect(page.nextCursor).toBeUndefined();
       expect(mocks.modelConstructor).toHaveBeenCalledWith(db);
+      expect(mocks.isAgentSignalEnabledForUser).toHaveBeenCalledWith(db, 'user-1');
       expect(mocks.listEligibleUsers).toHaveBeenCalledWith({
         cursor: { createdAt: new Date('2026-01-01T00:00:00.000Z'), id: 'cursor-user' },
         limit: 10,
