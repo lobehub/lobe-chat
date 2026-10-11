@@ -41,6 +41,9 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
     agentSelectors.currentAgentPlugins(s).includes(identifier),
   ]);
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
+  // Painted from the local cache: settings and connection parameters only
+  // arrive with the server's records, so configuring waits for them.
+  const isConfirming = useToolStore(pluginSelectors.isInstalledPluginsCacheOnly);
 
   const [showModal, setModal] = useState(false);
 
@@ -49,9 +52,10 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
 
   const configureButton = (
     <Button
-      disabled={!canEdit}
+      disabled={!canEdit || isConfirming}
+      loading={isConfirming}
       onClick={() => {
-        if (!canEdit) return;
+        if (!canEdit || isConfirming) return;
         if (isCustomPlugin) {
           setModal(true);
         } else if (isCommunityMCP) {
