@@ -13,6 +13,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
+import { clearReplicas } from '../../utils/replica';
 import {
   DEFAULT_IDENTITY_LIST_PAGE_SIZE,
   GLOBAL_IDENTITIES_KEY,
@@ -166,13 +167,8 @@ export class IdentityActionImpl {
    * the caller revalidates afterwards (`refreshIdentities`). Resolves `true`
    * once the persisted rows are gone.
    */
-  internal_clearIdentityList = async (): Promise<boolean> => {
-    const [list, injection] = await Promise.all([
-      this.#identities.clear(),
-      this.#globalIdentities.clear(),
-    ]);
-    return list && injection;
-  };
+  internal_clearIdentityList = (): Promise<boolean> =>
+    clearReplicas(this.#identities.clear, this.#globalIdentities.clear);
 
   updateIdentity = async (id: string, data: UpdateUserMemoryIdentity): Promise<boolean> => {
     const result = await memoryCRUDService.updateIdentity(id, data);

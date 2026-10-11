@@ -12,6 +12,7 @@ import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
+import { clearReplicas } from '../../utils/replica';
 import {
   CONTEXT_LIST_KEY,
   CONTEXT_LIST_PAGE_SIZE,
@@ -179,7 +180,7 @@ export class ContextActionImpl {
    * persisted query variant of the user and reads started before the wipe.
    * The caller (`purgeAllMemories`) revalidates afterwards.
    */
-  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
+  internal_clearContextList = (): Promise<boolean> => clearReplicas(this.#list.clear);
 
   /**
    * Confirmed patch of one context in the loaded view and in persisted rows

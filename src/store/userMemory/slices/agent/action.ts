@@ -4,6 +4,7 @@ import { type StoreSetter } from '@/store/types';
 import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { type UserMemoryStore } from '../../store';
+import { clearReplicas } from '../../utils/replica';
 import { topicMemoriesResource } from './projection';
 
 type Setter = StoreSetter<UserMemoryStore>;
@@ -47,10 +48,9 @@ export class AgentMemoryActionImpl {
    * caller surfaces `false` instead of claiming a purge a reload would undo.
    */
   internal_clearTopicMemories = async (): Promise<boolean> => {
-    let cleared = false;
-    for (let attempt = 0; attempt < 2 && !cleared; attempt++) {
-      cleared = await this.#topicMemories.clear();
-    }
+    const cleared = await clearReplicas(this.#topicMemories.clear);
+    // The topic bundles sync under the replica's own keys, which the purge's
+    // legacy-key revalidation does not reach.
     void this.#topicMemories.revalidate();
     return cleared;
   };

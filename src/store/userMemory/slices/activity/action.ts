@@ -10,6 +10,7 @@ import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
+import { clearReplicas } from '../../utils/replica';
 import {
   ACTIVITY_LIST_KEY,
   ACTIVITY_LIST_PAGE_SIZE,
@@ -172,7 +173,7 @@ export class ActivityActionImpl {
    * persisted query variant of the user and reads started before the wipe.
    * The caller (`purgeAllMemories`) revalidates afterwards.
    */
-  internal_clearActivityList = (): Promise<boolean> => this.#list.clear();
+  internal_clearActivityList = (): Promise<boolean> => clearReplicas(this.#list.clear);
 
   /**
    * Confirmed patch of one activity in the loaded view and in persisted rows

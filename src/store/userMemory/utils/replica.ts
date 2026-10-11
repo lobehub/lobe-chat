@@ -32,3 +32,19 @@ export const defineUserMemoryReplica: typeof defineReplica = (options) =>
 /** `definePagedReplica` for a userMemory list: always scoped per user. */
 export const defineUserMemoryPagedReplica: typeof definePagedReplica = (options) =>
   definePagedReplica({ ...options, scope: userMemoryIdentityScope });
+
+/**
+ * Wipe a slice's replicas for "delete all memories": memory, every persisted
+ * row of the user and reads in flight (`clear()`). A storage failure leaves a
+ * row the next session would hydrate back, so a failed purge is retried once.
+ * Resolves `false` when a persisted row survived both attempts; the caller
+ * (`purgeAllMemories`) surfaces that after its in-memory reset.
+ */
+export const clearReplicas = async (...clears: (() => Promise<boolean>)[]): Promise<boolean> => {
+  let cleared = false;
+  for (let attempt = 0; attempt < 2 && !cleared; attempt++) {
+    const results = await Promise.all(clears.map((clear) => clear()));
+    cleared = results.every(Boolean);
+  }
+  return cleared;
+};

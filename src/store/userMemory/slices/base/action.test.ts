@@ -67,6 +67,48 @@ afterEach(() => {
 
 describe('userMemory base actions', () => {
   describe('updateMemory', () => {
+    it.each([
+      [LayersEnum.Activity, 'updateActivity', 'internal_updateActivityEntity', 'narrative'],
+      [LayersEnum.Context, 'updateContext', 'internal_updateContextEntity', 'description'],
+      [LayersEnum.Experience, 'updateExperience', 'internal_updateExperienceEntity', 'keyLearning'],
+      [LayersEnum.Identity, 'updateIdentity', 'internal_updateIdentityEntity', 'description'],
+      [
+        LayersEnum.Preference,
+        'updatePreference',
+        'internal_updatePreferenceEntity',
+        'conclusionDirectives',
+      ],
+    ] as const)(
+      'routes a %s edit through its replica entity patch, then revalidates list and detail',
+      async (layer, serviceMethod, entityAction, field) => {
+        vi.spyOn(memoryCRUDService, serviceMethod).mockResolvedValue(true as never);
+        const patchEntity = vi.fn();
+        const refreshIdentities = vi.fn().mockResolvedValue(undefined);
+        useUserMemoryStore.setState({
+          [entityAction]: patchEntity,
+          editingMemoryId: 'memory-1',
+          refreshIdentities,
+        });
+
+        await useUserMemoryStore.getState().updateMemory('memory-1', 'edited', layer);
+
+        expect(memoryCRUDService[serviceMethod]).toHaveBeenCalledWith('memory-1', {
+          [field]: 'edited',
+        });
+        expect(patchEntity).toHaveBeenCalledTimes(1);
+        const [id, patch] = patchEntity.mock.calls[0];
+        expect(id).toBe('memory-1');
+        expect(patch({ id: 'memory-1', [field]: 'old' })).toEqual({
+          id: 'memory-1',
+          [field]: 'edited',
+        });
+        expect(useUserMemoryStore.getState().editingMemoryId).toBeUndefined();
+        expect(mutate).toHaveBeenCalledWith(userMemoryKeys.memoryDetail(layer, 'memory-1'));
+        if (layer === LayersEnum.Identity) expect(refreshIdentities).toHaveBeenCalledTimes(1);
+        else expect(mutate).toHaveBeenCalledWith(expect.any(Function));
+      },
+    );
+
     it('updates a preference memory in place and revalidates related caches', async () => {
       const updatePreferenceResult = {} as Awaited<
         ReturnType<typeof memoryCRUDService.updatePreference>
@@ -182,12 +224,32 @@ describe('purgeAllMemories', () => {
 
     await useUserMemoryStore.getState().purgeAllMemories();
 
-    expect(order[0]).toBe('deleteAll');
-    expect(order.slice(1, REPLICA_CLEARS.length + 1)).toEqual(
-      expect.arrayContaining([...REPLICA_CLEARS]),
+    // Every slice purge runs right after the server delete, before any refetch.
+    expect(order.slice(0, REPLICA_CLEARS.length + 1)).toEqual(['deleteAll', ...REPLICA_CLEARS]);
+    expect(order.slice(REPLICA_CLEARS.length + 1).every((step) => step === 'revalidate')).toBe(
+      true,
     );
     // The replica-owned fields are not overwritten by `preferenceInitialState`.
     expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
+  });
+
+  it('surfaces a local purge failure after the in-memory reset and the refetch', async () => {
+    const order: string[] = [];
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue(undefined as never);
+    const spies = stubReplicaClears(order, { internal_clearContextList: false });
+    useUserMemoryStore.setState({ editingMemoryId: 'editing' });
+    vi.mocked(mutate).mockImplementation(async () => {
+      order.push('revalidate');
+    });
+
+    await expect(useUserMemoryStore.getState().purgeAllMemories()).rejects.toThrow(
+      'Failed to purge persisted memories from local storage',
+    );
+
+    // A failed slice does not stop the others, and the reset + refetch still ran.
+    for (const name of REPLICA_CLEARS) expect(spies[name]).toHaveBeenCalledTimes(1);
+    expect(useUserMemoryStore.getState().editingMemoryId).toBeUndefined();
+    expect(order).toContain('revalidate');
   });
 
   it('purges the same user’s replicas when the workspace switches mid-purge', async () => {

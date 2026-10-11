@@ -18,6 +18,7 @@ import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
+import { clearReplicas } from '../../utils/replica';
 import {
   PREFERENCE_LIST_PAGE_SIZE,
   type PreferenceListData,
@@ -232,7 +233,7 @@ export class PreferenceActionImpl {
    * refetch, so the caller revalidates afterwards. Resolves `true` once the
    * persisted rows are gone.
    */
-  internal_clearPreferenceList = (): Promise<boolean> => this.#list.clear();
+  internal_clearPreferenceList = (): Promise<boolean> => clearReplicas(this.#list.clear);
 
   /**
    * Apply a confirmed edit to one preference in every loaded page set and its

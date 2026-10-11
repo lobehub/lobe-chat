@@ -15,6 +15,7 @@ import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
+import { clearReplicas } from '../../utils/replica';
 import {
   EXPERIENCE_LIST_KEY,
   EXPERIENCE_LIST_PAGE_SIZE,
@@ -193,7 +194,7 @@ export class ExperienceActionImpl {
    * memories"; the caller revalidates afterwards. Resolves `true` once the
    * persisted rows are gone.
    */
-  internal_clearExperienceList = (): Promise<boolean> => this.#entity.clear();
+  internal_clearExperienceList = (): Promise<boolean> => clearReplicas(() => this.#entity.clear());
 
   /**
    * Confirmed patch of one experience in the loaded view and in persisted rows
