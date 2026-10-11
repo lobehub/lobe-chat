@@ -1,16 +1,26 @@
 const intro = `You have access to a Tools Activator that allows you to dynamically activate tools on demand. Not all tools are loaded by default — you must activate them before use.`;
 
-const howItWorks = `<how_it_works>
+const howItWorksSkill = `7. To activate a skill, use the \`activateSkill\` tool from lobe-skills — it returns instructions to follow
+`;
+
+const howItWorks = ({ withSkills }: { withSkills: boolean }) => `<how_it_works>
 1. Available tools are listed in an \`<available_tools>\` block injected into the conversation as system context
 2. Each entry shows the tool's identifier, name, and description
 3. To use a tool, first call \`activateTools\` with the tool identifiers you need
 4. After activation, the tool's full API schemas become available as native function calls in subsequent turns
 5. You can activate multiple tools at once by passing multiple identifiers
 6. Include the required concise \`reason\` field when calling \`activateTools\` so the user understands why activation is needed
-7. To activate a skill, use the \`activateSkill\` tool from lobe-skills — it returns instructions to follow
-</how_it_works>`;
+${withSkills ? howItWorksSkill : ''}</how_it_works>`;
 
-const toolSelectionGuidelines = `<tool_selection_guidelines>
+const toolSelectionSkill = `- **activateSkill** (provided by lobe-skills): Use this when the user's task matches one of the available skills
+  - **IMPORTANT**: If a skill's content is already provided in \`<selected_skill_context>\` within the user message, do NOT call activateSkill for that skill — its instructions are already loaded and ready to use
+`;
+
+const toolSelectionGuidelines = ({
+  withSkills,
+}: {
+  withSkills: boolean;
+}) => `<tool_selection_guidelines>
 - **activateTools**: Call this when you need to use a tool that isn't yet activated
   - Review the \`<available_tools>\` list to find relevant tools for the user's task
   - Provide an array of tool identifiers to activate
@@ -18,9 +28,7 @@ const toolSelectionGuidelines = `<tool_selection_guidelines>
   - After activation, the tools' APIs will be available for you to call directly
   - Tools that are already active will be noted in the response
   - If an identifier is not found, it will be reported in the response
-- **activateSkill** (provided by lobe-skills): Use this when the user's task matches one of the available skills
-  - **IMPORTANT**: If a skill's content is already provided in \`<selected_skill_context>\` within the user message, do NOT call activateSkill for that skill — its instructions are already loaded and ready to use
-</tool_selection_guidelines>`;
+${withSkills ? toolSelectionSkill : ''}</tool_selection_guidelines>`;
 
 const skillStoreDiscovery = `<skill_store_discovery>
 **CRITICAL: Always activate \`lobe-skill-store\` FIRST when ANY of the following conditions are met:**
@@ -127,9 +135,9 @@ ${withSkillStoreAndCreds ? bestPracticesSkillMarketplace : ''}- Only activate to
 
 export const systemPrompt = `${intro}
 
-${howItWorks}
+${howItWorks({ withSkills: true })}
 
-${toolSelectionGuidelines}
+${toolSelectionGuidelines({ withSkills: true })}
 
 ${skillStoreDiscovery}
 
@@ -142,13 +150,15 @@ ${bestPractices({ withSkillStoreAndCreds: true })}
  * Variant for Agent Share visitor runs. `lobe-skill-store` and `lobe-creds`
  * are never available to a visitor, so the sections that send the model to
  * activate them first would divert requests (skills, auth, GitHub/Notion…)
- * toward an impossible prerequisite instead of the granted tools.
+ * toward an impossible prerequisite instead of the granted tools. The
+ * `activateSkill` lines are kept only when the share grants skills, since
+ * `lobe-skills` is otherwise absent from the visitor's tool set.
  */
-export const systemPromptForShareVisitor = `${intro}
+export const getSystemPromptForShareVisitor = ({ withSkills }: { withSkills: boolean }) => `${intro}
 
-${howItWorks}
+${howItWorks({ withSkills })}
 
-${toolSelectionGuidelines}
+${toolSelectionGuidelines({ withSkills })}
 
 ${bestPractices({ withSkillStoreAndCreds: false })}
 `;

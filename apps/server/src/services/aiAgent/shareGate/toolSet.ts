@@ -1,7 +1,8 @@
 import {
+  getSystemPromptForShareVisitor as getActivatorSystemPromptForShareVisitor,
   LobeActivatorIdentifier,
-  systemPromptForShareVisitor as activatorSystemPromptForShareVisitor,
 } from '@lobechat/builtin-tool-activator';
+import { SkillsIdentifier } from '@lobechat/builtin-tool-skills';
 import { hasShareToolGrant, PLUGIN_SCHEMA_SEPARATOR, type ShareToolGrant } from '@lobechat/const';
 import { isDeviceOnlyMcpEndpoint } from '@lobechat/utils/mcpEndpoint';
 
@@ -159,7 +160,8 @@ export const applyShareGateToToolSet = (toolSet: ShareGateToolSet, gate: AgentSh
  *
  * A kept activator gets the share-visitor `systemRole`: the default one sends
  * the model to activate `lobe-skill-store` / `lobe-creds` first, which are
- * never in a visitor's set.
+ * never in a visitor's set, and its `activateSkill` lines stay only while
+ * `lobe-skills` itself survived the gate (a share with `skillGrants`).
  */
 const applyShareGateToActivator = (toolSet: ShareGateToolSet): void => {
   const manifest = toolSet.manifestMap[LobeActivatorIdentifier];
@@ -177,7 +179,9 @@ const applyShareGateToActivator = (toolSet: ShareGateToolSet): void => {
 
   toolSet.manifestMap[LobeActivatorIdentifier] = {
     ...manifest,
-    systemRole: activatorSystemPromptForShareVisitor,
+    systemRole: getActivatorSystemPromptForShareVisitor({
+      withSkills: !!toolSet.manifestMap[SkillsIdentifier],
+    }),
   };
 };
 

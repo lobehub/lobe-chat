@@ -1,8 +1,8 @@
 import {
   ActivatorApiName,
+  getSystemPromptForShareVisitor as getActivatorSystemPromptForShareVisitor,
   LobeActivatorIdentifier,
   systemPrompt as activatorSystemPrompt,
-  systemPromptForShareVisitor as activatorSystemPromptForShareVisitor,
 } from '@lobechat/builtin-tool-activator';
 import {
   AgentDocumentsApiName,
@@ -714,10 +714,40 @@ describe('applyShareGateToToolSet — lobe-activator', () => {
     );
 
     const { systemRole } = toolSet.manifestMap[LobeActivatorIdentifier];
-    expect(systemRole).toBe(activatorSystemPromptForShareVisitor);
+    expect(systemRole).toBe(getActivatorSystemPromptForShareVisitor({ withSkills: false }));
     // Both are denied to visitors, so the prompt must not send the model there.
     expect(systemRole).not.toContain('lobe-skill-store');
     expect(systemRole).not.toContain('lobe-creds');
+    // A tool-only share has no `lobe-skills`, so no `activateSkill` either.
+    expect(systemRole).not.toContain('activateSkill');
+  });
+
+  it('keeps the activateSkill guidance when the share grants skills', () => {
+    const toolSet = buildToolSet([
+      { apis: [{ name: ActivatorApiName.activateTools }], identifier: LobeActivatorIdentifier },
+      { apis: [{ name: 'activateSkill' }], identifier: SkillsIdentifier },
+      { apis: [{ name: 'calculate' }], identifier: CalculatorIdentifier },
+    ]);
+    toolSet.enabledToolIds.splice(
+      0,
+      toolSet.enabledToolIds.length,
+      LobeActivatorIdentifier,
+      SkillsIdentifier,
+    );
+    toolSet.activatableToolIds.splice(0, toolSet.activatableToolIds.length);
+
+    applyShareGateToToolSet(
+      toolSet,
+      buildGate({
+        skillGrants: ['pdf-report'],
+        toolGrants: [{ identifier: CalculatorIdentifier }],
+      }),
+    );
+
+    expect(toolSet.manifestMap[SkillsIdentifier]).toBeDefined();
+    expect(toolSet.manifestMap[LobeActivatorIdentifier].systemRole).toBe(
+      getActivatorSystemPromptForShareVisitor({ withSkills: true }),
+    );
   });
 
   it('drops the activator when the only tool left was restored from an earlier activation', () => {

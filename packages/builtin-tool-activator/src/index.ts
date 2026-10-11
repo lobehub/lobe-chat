@@ -1,5 +1,5 @@
 export { LobeActivatorManifest } from './manifest';
-export { systemPrompt, systemPromptForShareVisitor } from './systemRole';
+export { getSystemPromptForShareVisitor, systemPrompt } from './systemRole';
 export {
   type ActivatedToolInfo,
   type ActivateSkillParams,

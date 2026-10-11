@@ -135,23 +135,25 @@ absence of a known exploit.
   `activateTools` (`shareGate/grants.ts:132`, which also overrides a stored entry so
   nothing widens it to the runtime's unlisted `activateSkill`), and assembly
   drops it again when no granted tool is left to activate, counting restored
-  historical activations as already enabled (`shareGate/toolSet.ts:164`). A
+  historical activations as already enabled (`shareGate/toolSet.ts:166`). A
   kept activator gets the share-visitor `systemRole`
-  (`systemPromptForShareVisitor`), which omits the default prompt's push to
-  activate `lobe-skill-store` / `lobe-creds` first; both stay denied above.
+  (`getSystemPromptForShareVisitor`), which omits the default prompt's push
+  to activate `lobe-skill-store` / `lobe-creds` first (both stay denied
+  above) and keeps its `activateSkill` lines only when `lobe-skills` itself
+  survived the gate.
 
   1. What it can see. `<available_tools>` is the operation's `manifestMap`
-     minus enabled tools (`apps/server/src/modules/AgentRuntime/executorHelpers.ts:586`), and
+     minus enabled tools (`apps/server/src/modules/AgentRuntime/executorHelpers.ts:644`), and
      that map is the one `applyShareGateToToolSet` pruned in place
-     (`apps/server/src/services/aiAgent/pipeline/operationPrep.ts:558`). An ungranted MCP server or plugin
+     (`apps/server/src/services/aiAgent/pipeline/operationPrep.ts:559`). An ungranted MCP server or plugin
      contributes no name or description.
   2. What it can activate. `activateTools` only resolves ids present in
-     `context.toolManifestMap` (`apps/server/src/services/toolExecution/serverRuntimes/activator.ts:160`),
+     `context.toolManifestMap` (`apps/server/src/services/toolExecution/serverRuntimes/activator.ts:166`),
      which is the step's `effectiveManifestMap`
-     (`apps/server/src/modules/AgentRuntime/adapters/ServerToolTransport.ts:304`): the gated
+     (`apps/server/src/modules/AgentRuntime/adapters/ServerToolTransport.ts:310`): the gated
      operation map plus manifests of earlier activations, themselves copied
-     from the same map (`packages/agent-runtime/src/executors/tool.ts:113`,
-     `:535`). An ungranted id comes back as "Not found".
+     from the same map (`packages/agent-runtime/src/executors/tool.ts:117`,
+     `:567`). An ungranted id comes back as "Not found".
   3. Calls in the same step. The tool-call resolver only accepts a call the
      step offered, or one whose identifier and API exist in the step's
      prompt manifests (`packages/context-engine/src/engine/tools/ToolNameResolver.ts:284`);
@@ -163,7 +165,7 @@ absence of a known exploit.
   4. Activations restored from history. `operationPrep` re-derives them into
      `activatableToolIds` (`apps/server/src/services/aiAgent/pipeline/operationPrep.ts:535`) before the share
      gate prunes that list, and `AgentRuntimeService` restores only ids still
-     in it (`apps/server/src/services/agentRuntime/AgentRuntimeService.ts:1317`).
+     in it (`apps/server/src/services/agentRuntime/AgentRuntimeService.ts:1350`).
   5. Its skill fallback. `activateTools` retries a non-tool id as a skill
      name. That lookup re-checks `shareConfig.skillGrants` on every source it
      opens (`apps/server/src/services/toolExecution/serverRuntimes/activator.ts:97`), the same rule the
