@@ -47,4 +47,32 @@ describe('hashFileStream', () => {
       'cancelled',
     );
   });
+
+  it('stops for an empty file when the signal is already aborted', async () => {
+    const controller = new AbortController();
+    controller.abort(new Error('cancelled'));
+
+    await expect(hashFileStream(new File([], 'empty.bin'), controller.signal)).rejects.toThrow(
+      'cancelled',
+    );
+  });
+
+  it('stops when the signal aborts while the last slice is being read', async () => {
+    const controller = new AbortController();
+    const file = new File([new Uint8Array(1000)], 'a.bin');
+    const slice = file.slice.bind(file);
+    Object.defineProperty(file, 'slice', {
+      value: (...args: Parameters<File['slice']>) => {
+        const blob = slice(...args);
+        return {
+          arrayBuffer: () => {
+            controller.abort(new Error('cancelled'));
+            return blob.arrayBuffer();
+          },
+        };
+      },
+    });
+
+    await expect(hashFileStream(file, controller.signal)).rejects.toThrow('cancelled');
+  });
 });
