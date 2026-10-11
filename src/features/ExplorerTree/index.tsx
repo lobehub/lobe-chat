@@ -22,4 +22,5 @@ export type {
   ExplorerTreeProps,
   ExplorerTreeRowDecorationCtx,
 } from './types';
+export { isItemToggleEventPath } from './view/eventPath';
 export { default as ExplorerTree } from './view/ExplorerTree';

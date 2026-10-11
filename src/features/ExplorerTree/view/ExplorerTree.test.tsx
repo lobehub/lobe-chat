@@ -11,6 +11,7 @@ import { canGoNative } from '@/libs/contextMenu/canGoNative';
 import { toNativeTemplate } from '@/libs/contextMenu/toNativeTemplate';
 
 import type { ExplorerTreeHandle, ExplorerTreeNode } from '../types';
+import { isItemToggleEventPath } from './eventPath';
 import ExplorerTree, { buildFileAppearanceCSS, getItemPathFromEventPath } from './ExplorerTree';
 
 const showContextMenu = vi.hoisted(() => vi.fn());
@@ -434,5 +435,27 @@ describe('ExplorerTree file appearance', () => {
       />,
     );
     await waitFor(() => expect(style()).toBeNull());
+  });
+});
+
+describe('isItemToggleEventPath', () => {
+  const row = () => {
+    const el = document.createElement('div');
+    el.dataset.type = 'item';
+    el.dataset.itemPath = 'SOP/';
+    return el;
+  };
+  const section = (name: string) => {
+    const el = document.createElement('div');
+    el.dataset.itemSection = name;
+    return el;
+  };
+
+  // The chevron of a document holding records toggles; its title opens it.
+  it('is true only when the event passed through the row icon slot', () => {
+    const chevron = document.createElement('svg');
+    expect(isItemToggleEventPath([chevron, section('icon'), row()])).toBe(true);
+    expect(isItemToggleEventPath([section('content'), row()])).toBe(false);
+    expect(isItemToggleEventPath([row(), section('icon')])).toBe(false);
   });
 });

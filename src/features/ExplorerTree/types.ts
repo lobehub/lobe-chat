@@ -7,7 +7,8 @@ export interface ExplorerTreeNode<TData = unknown> {
   /**
    * Draw a node that holds children (`isFolder`) as a file — e.g. a document
    * with records nested under it. It keeps its chevron and accepts drops, but
-   * its label carries `fileAppearanceCSS` instead of the folder glyph.
+   * its label carries `fileAppearanceCSS` instead of the folder glyph, and a
+   * click on the row opens it rather than toggling: only the chevron expands it.
    */
   appearance?: 'file';
   children?: ExplorerTreeNode<TData>[];

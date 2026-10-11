@@ -10,6 +10,7 @@ import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ExplorerTreeNode } from '@/features/ExplorerTree';
+import type * as EventPathModule from '@/features/ExplorerTree/view/eventPath';
 
 import DocumentExplorerTree from './DocumentExplorerTree';
 import type { AgentDocumentItem } from './types';
@@ -78,7 +79,11 @@ vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
   useWorkspaceAwareNavigate: () => navigateMock,
 }));
 
-vi.mock('@/features/ExplorerTree', () => {
+vi.mock('@/features/ExplorerTree', async () => {
+  const { isItemToggleEventPath } = await vi.importActual<typeof EventPathModule>(
+    '@/features/ExplorerTree/view/eventPath',
+  );
+
   interface MockExplorerTreeProps {
     canDrag?: (node: ExplorerTreeNode<unknown>) => boolean;
     defaultExpandedIds?: string[];
@@ -120,6 +125,14 @@ vi.mock('@/features/ExplorerTree', () => {
                 data-testid={`tree-node-button-${node.id}`}
                 onClick={(event) => onNodeClick?.(node, event)}
               >
+                <span
+                  data-item-section="icon"
+                  data-testid={`tree-node-toggle-${node.id}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onNodeClick?.(node, event);
+                  }}
+                />
                 {node.name}
               </button>
               {node.isFolder && (
@@ -156,6 +169,7 @@ vi.mock('@/features/ExplorerTree', () => {
     DOCUMENT_TREE_ROW_CSS: '',
     DOCUMENT_TREE_ICON_CSS: '',
     DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS: '',
+    isItemToggleEventPath,
     DOCUMENT_TREE_LAYOUT: {
       fontSize: 14,
       iconGap: 8,
@@ -280,6 +294,9 @@ describe('DocumentExplorerTree', () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId('tree-node-run-row')).toHaveAttribute('data-appearance', 'default');
 
+    // The chevron only expands or collapses; the title opens the document.
+    fireEvent.click(screen.getByTestId('tree-node-toggle-sop-row'));
+    expect(onOpenDocument).not.toHaveBeenCalled();
     fireEvent.click(screen.getByTestId('tree-node-button-sop-row'));
     expect(onOpenDocument).toHaveBeenCalledWith('sop-doc', 'sop-row');
 

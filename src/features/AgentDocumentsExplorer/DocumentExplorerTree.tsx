@@ -2,8 +2,8 @@ import { AGENT_DOCUMENT_CATEGORY } from '@lobechat/const';
 import { Center, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import { createStaticStyles } from 'antd-style';
-import { FileTextIcon, Maximize2Icon, PenLineIcon, Trash2Icon } from 'lucide-react';
-import type { ChangeEvent, CSSProperties } from 'react';
+import { FilePlusIcon, FileTextIcon, Maximize2Icon, PenLineIcon, Trash2Icon } from 'lucide-react';
+import type { ChangeEvent, CSSProperties, MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { KeyedMutator } from 'swr';
@@ -23,6 +23,7 @@ import {
   ExplorerTree,
   getExplorerTreeStyleVars,
   HIDE_POINTER_FOCUS_RING_CSS,
+  isItemToggleEventPath,
 } from '@/features/ExplorerTree';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
@@ -295,10 +296,14 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
   );
 
   const handleNodeClick = useCallback(
-    (node: ExplorerTreeNode<AgentDocumentItem>) => {
+    (node: ExplorerTreeNode<AgentDocumentItem>, event: MouseEvent<HTMLElement>) => {
       const doc = node.data;
       // A parent document is a container in the tree but still opens on click.
       if (!doc || doc.isFolder) return;
+      // Its chevron only expands or collapses; the title opens the document.
+      if (node.appearance === 'file' && isItemToggleEventPath(event.nativeEvent.composedPath())) {
+        return;
+      }
       if (onOpenDocument) {
         onOpenDocument(doc.documentId, doc.id);
         return;
@@ -399,6 +404,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
       if (isPlainDocument && !isMulti) {
         items.push(
           {
+            icon: <FilePlusIcon size={14} />,
             key: 'new-sub-document',
             label: t('workingPanel.resources.tree.newSubDocument'),
             onClick: () => handleCreateDocument(node.id),

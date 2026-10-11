@@ -31,7 +31,7 @@ import type {
   ExplorerTreeProps,
 } from '../types';
 import { openExplorerContextMenu } from './ContextMenu';
-import { getItemPathFromEventPath } from './eventPath';
+import { getItemPathFromEventPath, isItemToggleEventPath } from './eventPath';
 import NameInputHint from './NameInputHint';
 import { type PendingCreate, useInlineNameEdit } from './useInlineNameEdit';
 
@@ -628,8 +628,6 @@ function ExplorerTreeInner<TData>(
   };
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
-    const onNodeClick = propsRef.current.onNodeClick;
-    if (!onNodeClick) return;
     const itemPath = getItemPathFromHostEvent(event);
     if (!itemPath) return;
     const a = adapterRef.current;
@@ -637,7 +635,17 @@ function ExplorerTreeInner<TData>(
     if (!id) return;
     const node = a.nodeById.get(id);
     if (!node) return;
-    onNodeClick(node, event);
+    // The tree toggles any container on a row click, before the click reaches
+    // this host listener. A file-appearance container opens on click instead, so
+    // only its chevron may expand or collapse it: undo the row-click toggle.
+    if (
+      node.isFolder &&
+      node.appearance === 'file' &&
+      !isItemToggleEventPath(getComposedPath(event))
+    ) {
+      asDirectory(getItemSafely(model, itemPath))?.toggle();
+    }
+    propsRef.current.onNodeClick?.(node, event);
   };
 
   const handleDropCapture = (event: DragEvent<HTMLElement>) => {
