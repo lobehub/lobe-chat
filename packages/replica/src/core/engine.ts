@@ -390,13 +390,17 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     known.add(queryKey);
     let picked: string[] = [];
     void writeQueue
-      .update(indexKey(scope), (current) => {
-        const keys = (current?.data as unknown as string[] | undefined) ?? [];
-        const next = [...keys.filter((key) => key !== queryKey), queryKey];
-        picked = pickEvictions(scope, next, queryKey);
-        if (keys.length === next.length && keys.at(-1) === queryKey) return undefined;
-        return { data: next as unknown as TData, updatedAt: Date.now() };
-      })
+      .update(
+        indexKey(scope),
+        (current) => {
+          const keys = (current?.data as unknown as string[] | undefined) ?? [];
+          const next = [...keys.filter((key) => key !== queryKey), queryKey];
+          picked = pickEvictions(scope, next, queryKey);
+          if (keys.length === next.length && keys.at(-1) === queryKey) return undefined;
+          return { data: next as unknown as TData, updatedAt: Date.now() };
+        },
+        { read: 'prefer-strict' },
+      )
       .then((touched) => {
         // Unreadable index: leave it untouched, retry the append on the next use.
         if (!touched) return void known.delete(queryKey);
@@ -414,12 +418,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     if (known.has(queryKey)) return;
     known.add(queryKey);
     void writeQueue
-      .update(indexKey(scope), (current) => {
-        const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
-        if (keys.has(queryKey)) return undefined;
-        keys.add(queryKey);
-        return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
-      })
+      .update(
+        indexKey(scope),
+        (current) => {
+          const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
+          if (keys.has(queryKey)) return undefined;
+          keys.add(queryKey);
+          return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
+        },
+        { read: 'prefer-strict' },
+      )
       // An unreadable index is left untouched (never rewritten as just this
       // key); forget the key so the next write of the row retries the append.
       .then((tracked) => {
@@ -449,12 +457,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const known = indexed.get(scope);
     for (const queryKey of queryKeys) known?.delete(queryKey);
     const dropped = new Set(queryKeys);
-    writeQueue.update(indexKey(scope), (current) => {
-      const keys = (current?.data as unknown as string[] | undefined) ?? [];
-      const next = keys.filter((queryKey) => !dropped.has(queryKey));
-      if (!current || next.length === keys.length) return undefined;
-      return { data: next as unknown as TData, updatedAt: Date.now() };
-    });
+    writeQueue.update(
+      indexKey(scope),
+      (current) => {
+        const keys = (current?.data as unknown as string[] | undefined) ?? [];
+        const next = keys.filter((queryKey) => !dropped.has(queryKey));
+        if (!current || next.length === keys.length) return undefined;
+        return { data: next as unknown as TData, updatedAt: Date.now() };
+      },
+      { read: 'prefer-strict' },
+    );
   };
 
   /** Take rows whose delete landed out of the index, unless rewritten since. */
@@ -1134,7 +1146,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
             }
             return { data: next, updatedAt: Date.now() };
           },
-          { strict: true },
+          { read: 'strict' },
         )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
@@ -1197,7 +1209,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
             }
             return { data: next, updatedAt: Date.now() };
           },
-          { strict: true },
+          { read: 'strict' },
         )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);

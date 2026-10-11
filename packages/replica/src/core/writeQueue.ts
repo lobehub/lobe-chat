@@ -43,21 +43,23 @@ export class ReplicaWriteQueue<T> {
    * write for this key. Return a projection to write it, `null` to remove the
    * row, or `undefined` to leave it untouched (a missing row stays missing).
    *
-   * The row is read through `getStrict` when the storage has one, so a read
-   * failure fails the update (resolves `false`) instead of passing for a missing
-   * row that `fn` would then overwrite. `strict` also refuses storages without
-   * `getStrict` — required for destructive passes (see `readReplicaRowStrict`).
+   * `read` picks how the row is read:
+   * - `'get'` (default): best-effort `get`, a failed read passes for a miss.
+   * - `'prefer-strict'`: `getStrict` when the storage has one, so a read failure
+   *   fails the update (resolves `false`) instead of passing for a missing row
+   *   that `fn` would then overwrite; `get` otherwise.
+   * - `'strict'`: `getStrict` only; a storage without it fails the update.
+   *   Required for destructive passes (see `readReplicaRowStrict`).
    */
   update = (
     key: ReplicaRowKey,
     fn: (current: ReplicaRow<T> | undefined) => ReplicaRow<T> | null | undefined,
-    { strict = false }: { strict?: boolean } = {},
+    { read = 'get' }: { read?: 'get' | 'prefer-strict' | 'strict' } = {},
   ): Promise<boolean> =>
     this.#enqueue(key, async () => {
       const storage = this.#storage;
-      const current = await (strict || storage.getStrict
-        ? readReplicaRowStrict(storage, key)
-        : storage.get(key));
+      const strict = read === 'strict' || (read === 'prefer-strict' && !!storage.getStrict);
+      const current = await (strict ? readReplicaRowStrict(storage, key) : storage.get(key));
       const next = fn(current);
       if (next === null) await this.#storage.remove(key);
       else if (next !== undefined) await this.#storage.set(key, next);
