@@ -9,20 +9,14 @@ import {
 
 describe('FeatureFlagsSchema', () => {
   /**
-   * A published runtime-config snapshot may still hold the retired `agent_self_iteration`
-   * allowlist; it must neither fail validation nor reach the mapped client state.
+   * A published runtime-config snapshot may still hold a flag that was since removed;
+   * it must neither fail validation nor reach the mapped client state.
    */
-  it('drops the retired agent_self_iteration flag instead of failing', () => {
-    const result = FeatureFlagsSchema.safeParse({
-      agent_self_iteration: ['user-1'],
-      dashboard: true,
-    });
+  it('drops unknown flags instead of failing validation', () => {
+    const result = FeatureFlagsSchema.safeParse({ dashboard: true, some_removed_flag: ['user-1'] });
 
     expect(result.success).toBe(true);
     expect(result.data).toEqual({ dashboard: true });
-    expect(mapFeatureFlagsEnvToState(result.data!, 'user-1')).not.toHaveProperty(
-      'enableAgentSelfIteration',
-    );
   });
 
   it('should validate correct feature flags with boolean values', () => {

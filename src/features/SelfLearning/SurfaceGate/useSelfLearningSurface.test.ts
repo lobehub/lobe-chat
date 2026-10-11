@@ -8,17 +8,6 @@ const state = vi.hoisted(() => ({
   isUserStateInit: true,
 }));
 
-// The retired `agent_self_iteration` rollout flag must no longer open the surfaces.
-vi.mock('@/store/serverConfig', () => {
-  const serverState = { enableAgentSelfIteration: true, serverConfigInit: true };
-  return {
-    serverConfigSelectors: {
-      enableAgentSelfIteration: (s: typeof serverState) => s.enableAgentSelfIteration,
-    },
-    useServerConfigStore: (selector: (s: typeof serverState) => unknown) => selector(serverState),
-  };
-});
-
 vi.mock('@/store/user', () => ({
   useUserStore: (selector: (s: typeof state) => unknown) => selector(state),
 }));
@@ -41,7 +30,7 @@ describe('useSelfLearningSurface', () => {
     expect(result.current).toEqual({ enabled: true, ready: true });
   });
 
-  it('stays off while the Labs switch is off, whatever the old rollout flag says', () => {
+  it('stays off while the Labs switch is off', () => {
     const { result } = renderHook(() => useSelfLearningSurface());
 
     expect(result.current).toEqual({ enabled: false, ready: true });

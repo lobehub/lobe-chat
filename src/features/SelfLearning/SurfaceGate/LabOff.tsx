@@ -18,9 +18,7 @@ const LabOff = () => {
         icon={FlaskConicalIcon}
         title={t('rules.labOff.title')}
       >
-        <Button size={'small'} onClick={() => navigate('/settings/labs')}>
-          {t('rules.labOff.open')}
-        </Button>
+        <Button onClick={() => navigate('/settings/labs')}>{t('rules.labOff.open')}</Button>
       </Empty>
     </Flexbox>
   );

@@ -63,13 +63,12 @@ const SelfReviewBriefDetails = ({ agentName, details }: SelfReviewBriefDetailsPr
 
   // The title line is cut to one line, so a lone titleless idea still repeats
   // its full rationale here.
+  const items = details.items ?? [];
   const lead =
-    getSelfReviewBriefLead(details) ??
-    (details.items.length === 1 ? details.items[0].description : undefined);
-  const showRows = details.items.length > 1;
-  const rows =
-    expanded || !showRows ? details.items : details.items.slice(0, SELF_REVIEW_VISIBLE_ROWS);
-  const hidden = details.items.length - rows.length;
+    getSelfReviewBriefLead(details) ?? (items.length === 1 ? items[0].description : undefined);
+  const showRows = items.length > 1;
+  const rows = expanded || !showRows ? items : items.slice(0, SELF_REVIEW_VISIBLE_ROWS);
+  const hidden = items.length - rows.length;
 
   return (
     <Flexbox gap={6}>

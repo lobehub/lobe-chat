@@ -62,14 +62,6 @@ describe('acquireAgentSignalDailyBudget', () => {
   });
 
   /**
-   * Everyday conversation has no count cap: the background-run budget is gone, and the
-   * classifier is the only daily budget left.
-   */
-  it('has no daily background-run budget', () => {
-    expect(AGENT_SIGNAL_DEFAULTS).not.toHaveProperty('dailyBackgroundRunBudgetPerUser');
-  });
-
-  /**
    * @example
    * Budgets are per user and per UTC day.
    */

@@ -220,8 +220,9 @@ export const formatSelfReviewBriefTitle = (
   details: SelfReviewBriefDetails,
   t: SelfReviewBriefDetailsTranslator,
 ) => {
-  const headline = formatSelfReviewItemHeadline(details.items[0], t);
-  const rest = details.items.length - 1;
+  const items = details.items ?? [];
+  const headline = formatSelfReviewItemHeadline(items[0], t);
+  const rest = items.length - 1;
 
   return rest > 0
     ? t(`${KEY_PREFIX}.title.more`, { count: String(rest), title: headline })
@@ -234,9 +235,10 @@ export const formatSelfReviewBriefTitle = (
  */
 export const getSelfReviewBriefLead = (details: SelfReviewBriefDetails) => {
   if (details.summary) return details.summary;
-  if (details.items.length !== 1) return;
+  const items = details.items ?? [];
+  if (items.length !== 1) return;
 
-  const [item] = details.items;
+  const [item] = items;
   // A titleless idea already used its rationale as the headline.
   if (item.kind === 'idea' && !item.target) return;
 
@@ -260,8 +262,9 @@ export const formatSelfReviewBriefSummary = (
   const lead = getSelfReviewBriefLead(details);
   const parts = lead ? [toSelfReviewOneLine(lead, SELF_REVIEW_DESCRIPTION_MAX_LENGTH)] : [];
 
-  if (details.items.length > 1) {
-    const shown = details.items.slice(0, SELF_REVIEW_LIST_MAX_ITEMS);
+  const items = details.items ?? [];
+  if (items.length > 1) {
+    const shown = items.slice(0, SELF_REVIEW_LIST_MAX_ITEMS);
     const lines = shown.map((item) => {
       const headline = formatSelfReviewItemHeadline(item, t);
       const description =
@@ -271,7 +274,7 @@ export const formatSelfReviewBriefSummary = (
 
       return `- **${headline}**${description}`;
     });
-    const hidden = details.items.length - shown.length;
+    const hidden = items.length - shown.length;
     if (hidden > 0) lines.push(`- ${t(`${KEY_PREFIX}.list.more`, { count: String(hidden) })}`);
 
     parts.push(lines.join('\n'));

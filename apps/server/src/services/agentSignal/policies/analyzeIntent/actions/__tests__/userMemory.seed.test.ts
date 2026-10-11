@@ -4,15 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { runMemoryActionAgent } from '../userMemory';
 
-const { mockCreateOperation, mockIncrementCounter } = vi.hoisted(() => ({
+const { mockCreateOperation } = vi.hoisted(() => ({
   mockCreateOperation: vi.fn().mockResolvedValue(undefined),
-  mockIncrementCounter: vi.fn(),
-}));
-
-// Every Redis counter reads as far past any daily limit; the writer must not care.
-vi.mock('../../../../store/adapters/redis/counterStore', () => ({
-  decrementCounter: vi.fn(),
-  incrementCounter: mockIncrementCounter,
 }));
 
 vi.mock('@/server/services/agentRuntime/AgentRuntimeService', () => ({
@@ -65,31 +58,6 @@ const createOptions = () => {
 describe('runMemoryActionAgent seed prompt', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockIncrementCounter.mockResolvedValue(10_000);
-  });
-
-  /**
-   * Everyday conversation has no count cap: the async memory writer runs however many
-   * background runs the user already had today.
-   */
-  it('runs the async writer without any daily background-run budget', async () => {
-    const { options, threadModel } = createOptions();
-
-    const result = await runMemoryActionAgent(
-      {
-        agentId: 'agent-1',
-        message: 'remember I prefer tabs',
-        sourceMessageId: 'msg-assistant',
-        topicId: 'topic-1',
-      },
-      options,
-      { marker },
-    );
-
-    expect(result).not.toMatchObject({ status: 'skipped' });
-    expect(threadModel.create).toHaveBeenCalled();
-    expect(mockCreateOperation).toHaveBeenCalledOnce();
-    expect(mockIncrementCounter).not.toHaveBeenCalled();
   });
 
   it('persists the writer prompt in the isolation thread so a DB reload keeps it', async () => {

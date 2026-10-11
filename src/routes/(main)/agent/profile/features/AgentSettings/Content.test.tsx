@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => ({
     optimisticUpdateAgentConfig: vi.fn(),
     optimisticUpdateAgentMeta: vi.fn(),
   },
-  userState: { preference: { lab: { enableAgentGraphConfig: false, enableSelfLearning: true } } },
+  userState: { preference: { lab: { enableAgentGraphConfig: false } } },
 }));
 
 vi.mock('@/features/AgentSetting', () => ({
@@ -73,25 +73,14 @@ vi.mock('@/store/user/selectors', () => ({
   },
 }));
 
-// A stale rollout flag must not bring the per-agent tab back.
-vi.mock('@/store/serverConfig', () => {
-  const state = { featureFlags: { enableAgentSelfIteration: true } };
-  return {
-    featureFlagsSelectors: (s: typeof state) => s.featureFlags,
-    useServerConfigStore: (selector: (s: typeof state) => unknown) => selector(state),
-  };
-});
-
-/**
- * There is no per-agent Self-Iteration tab any more: Labs → Self-evolving is the only control.
- */
 describe('AgentSettings Content', () => {
   beforeEach(() => {
     mocks.agentState.isInbox = true;
-    mocks.userState.preference.lab.enableSelfLearning = true;
+    mocks.agentState.isCurrentAgentHeterogeneous = false;
+    mocks.userState.preference.lab.enableAgentGraphConfig = false;
   });
 
-  it('shows no Self-Iteration tab for inbox even with Self-evolving on', () => {
+  it('opens on the opening tab', () => {
     render(<Content />);
 
     const layout = screen.getByTestId('layout');
@@ -103,8 +92,20 @@ describe('AgentSettings Content', () => {
     );
   });
 
-  it('shows no Self-Iteration tab for custom agents even with Self-evolving on', () => {
+  it('adds the graph tab for custom agents when its Labs switch is on', () => {
     mocks.agentState.isInbox = false;
+    mocks.userState.preference.lab.enableAgentGraphConfig = true;
+
+    render(<Content />);
+
+    expect(screen.getByTestId('layout')).toHaveAttribute(
+      'data-tabs',
+      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.Graph}`,
+    );
+  });
+
+  it('keeps the graph tab off for inbox even with its Labs switch on', () => {
+    mocks.userState.preference.lab.enableAgentGraphConfig = true;
 
     render(<Content />);
 
