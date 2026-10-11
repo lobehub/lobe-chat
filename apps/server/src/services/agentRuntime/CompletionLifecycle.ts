@@ -579,15 +579,15 @@ export class CompletionLifecycle {
           );
         }
       }
-      // The runtime keeps the run's messages in the DB, not on the terminal state,
-      // so a memory-writer run's state has no tool calls to read the written
-      // memory's id / title from. Re-read the run's own thread so the receipt can
-      // name the memory and offer undo instead of a generic "Memory saved".
-      if (
-        selfIteration?.marker.kind === 'memory' &&
-        !(Array.isArray(state?.messages) && state.messages.length > 0) &&
-        runOrigin.threadId
-      ) {
+      // A memory-writer run's terminal state may not carry the tool calls that
+      // name the written memory (messages live in the DB). When the receipt would
+      // fall back to a generic "Memory saved" with no id, re-read the run's own
+      // thread so it can name the memory and offer undo.
+      const memoryTargetUnresolved = selfIteration?.mutations.some((mutation) => {
+        const target = isRecord(mutation.data) ? mutation.data.target : undefined;
+        return !isRecord(target) || !target.id;
+      });
+      if (selfIteration?.marker.kind === 'memory' && memoryTargetUnresolved && runOrigin.threadId) {
         try {
           const messages = await this.messageModel.query(
             {

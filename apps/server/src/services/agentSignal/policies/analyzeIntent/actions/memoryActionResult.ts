@@ -157,11 +157,24 @@ interface MemoryToolCallSnapshot {
   identifier?: string;
 }
 
+/**
+ * Tool payloads on a message, including the flattened `assistantGroup` shape the
+ * runtime rebuilds `state.messages` into, where each block under `children`
+ * carries its own `tools` (with the result inlined).
+ */
+const getPersistedTools = (message: Record<string, unknown>): Record<string, unknown>[] => {
+  const blocks = Array.isArray(message.children) ? message.children.filter(isRecord) : [];
+
+  return [message, ...blocks].flatMap((item) =>
+    Array.isArray(item.tools) ? item.tools.filter(isRecord) : [],
+  );
+};
+
 const getToolCallsFromMessage = (message: unknown): MemoryToolCallSnapshot[] => {
   if (!isRecord(message)) return [];
 
   const toolCalls: MemoryToolCallSnapshot[] = [];
-  const persistedTools = Array.isArray(message.tools) ? message.tools : [];
+  const persistedTools = getPersistedTools(message);
 
   for (const tool of persistedTools) {
     if (!isRecord(tool)) continue;
@@ -248,6 +261,18 @@ const getMemoryToolResultIds = (state: AgentState) => {
     const ids = getMemoryIdsFromToolMessage(message);
 
     if (callId && ids) resultIds.set(callId, ids);
+
+    // Flattened groups inline each tool's result next to its call.
+    if (!isRecord(message)) continue;
+    for (const tool of getPersistedTools(message)) {
+      const toolCallId = getString(tool.id);
+      const result = isRecord(tool.result) ? tool.result : undefined;
+      const inlineIds =
+        result &&
+        getMemoryIdsFromToolMessage({ content: result.content, pluginState: result.state });
+
+      if (toolCallId && inlineIds) resultIds.set(toolCallId, inlineIds);
+    }
   }
 
   return resultIds;

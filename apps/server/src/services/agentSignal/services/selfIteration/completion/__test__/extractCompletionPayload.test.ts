@@ -218,6 +218,71 @@ describe('extractSelfIterationCompletionPayload', () => {
     ]);
   });
 
+  it('reads the memory written in a flattened assistantGroup state', () => {
+    const result = extractSelfIterationCompletionPayload(
+      buildState(
+        {
+          agentId: 'agent_user_1',
+          signal: { kind: 'memory', sourceId: 'mem-src_3' },
+          userId: 'user_1',
+        },
+        {
+          messages: [
+            { content: 'User feedback to analyze', id: 'msg_seed', role: 'user' },
+            {
+              children: [
+                {
+                  content: '',
+                  id: 'blk_1',
+                  tools: [
+                    {
+                      apiName: MemoryApiName.addPreferenceMemory,
+                      arguments: JSON.stringify({
+                        summary: 'Use one pot',
+                        title: 'One-pot recipes',
+                      }),
+                      id: 'call_flat',
+                      identifier: MemoryIdentifier,
+                      result: {
+                        content:
+                          'Preference memory saved with memoryId: "mem_flat" and preferenceId: "pref_flat"',
+                        id: 'tool_msg_1',
+                      },
+                      type: 'builtin',
+                    },
+                  ],
+                },
+              ],
+              content: '',
+              id: 'grp_1',
+              role: 'assistantGroup',
+            },
+          ],
+          status: 'finished',
+          usage: {
+            tools: {
+              byTool: [
+                {
+                  calls: 1,
+                  errors: 0,
+                  name: `${MemoryIdentifier}/${MemoryApiName.addPreferenceMemory}`,
+                },
+              ],
+            },
+          },
+        },
+      ),
+    );
+
+    expect(
+      (result?.mutations[0].data as { target?: Record<string, unknown> }).target,
+    ).toMatchObject({
+      id: 'pref_flat',
+      memoryId: 'mem_flat',
+      title: 'One-pot recipes',
+    });
+  });
+
   it('falls back to the successful memory tool api when finalState lacks tool call details', () => {
     const result = extractSelfIterationCompletionPayload(
       buildState(
