@@ -449,43 +449,6 @@ export const serverConfigKeys = {
 // (see localStorageProvider.ts) so this key-convergence introduces no new
 // persistence — they stay memory-only exactly as before.
 export const discoverKeys = {
-  skillCategories: def('discover:skillCategories', (locale: string, params: unknown) => [
-    'discover:skillCategories',
-    locale,
-    params,
-  ]),
-  skillComments: def('discover:skillComments', (identifier: string, params: unknown) => [
-    'discover:skillComments',
-    identifier,
-    params,
-  ]),
-  skillDetail: def(
-    'discover:skillDetail',
-    (locale: string, identifier: string, version?: string) => [
-      'discover:skillDetail',
-      locale,
-      identifier,
-      version,
-    ],
-  ),
-  skillList: def('discover:skillList', (locale: string, params: unknown) => [
-    'discover:skillList',
-    locale,
-    params,
-  ]),
-  skillRatingDistribution: def('discover:skillRatingDistribution', (identifier: string) => [
-    'discover:skillRatingDistribution',
-    identifier,
-  ]),
-  skillRelated: def(
-    'discover:skillRelated',
-    (locale: string, category: string, identifier: string) => [
-      'discover:skillRelated',
-      locale,
-      category,
-      identifier,
-    ],
-  ),
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [
     'discover:mcpAgents',
