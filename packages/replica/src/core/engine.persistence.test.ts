@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { defineReplica } from './defineReplica';
 import { createReplicaEngine, REPLICA_INDEX_KEY, type ReplicaStorePort } from './engine';
@@ -92,7 +92,7 @@ const setupList = (storage: ReturnType<typeof createStorage>) => {
     version: 1,
   });
   const host = createHost<Item[]>();
-  const engine = createReplicaEngine(resource, { entity: arrayEntity<Item>(), port: host.port });
+  const engine = createReplicaEngine(resource, { entity: arrayEntity<Item>((entry) => entry.id), port: host.port });
   return { engine, host, resource };
 };
 
@@ -156,5 +156,52 @@ describe('destructive passes need a strict read', () => {
     engine.replace({ id: 'c' }, [item('3'), item('4')]);
     await flush();
     expect(storage.index()).toEqual(['a?{}', 'b?{}', 'c?{}']);
+  });
+});
+
+describe('removeEntity keeps its guard until the persisted patch lands', () => {
+  /** A session that persisted `b` (holding entity `1`), then a fresh engine. */
+  const persistedB = async () => {
+    const storage = createStorage();
+    const first = setupList(storage);
+    first.engine.replace({ id: 'b' }, [item('1'), item('2')]);
+    await flush();
+    return { storage, ...setupList(storage) };
+  };
+
+  it('a failed index read keeps the guard, so a later hydrate strips the entity', async () => {
+    resetScope();
+    const { engine, host, storage } = await persistedB();
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+    storage.failReads.add(REPLICA_INDEX_KEY);
+
+    engine.removeEntity('1');
+    await flush();
+    // The unloaded row still holds the deleted entity…
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([item('1'), item('2')]);
+
+    // …but a hydrate that starts long after the failed patch never paints it.
+    expect(await engine.hydrate({ id: 'b' })).toBe(true);
+    expect(host.view().b).toEqual([item('2')]);
+    errors.mockRestore();
+  });
+
+  it('an untrusted scope keeps the guard, and a later successful removal releases it', async () => {
+    resetScope();
+    const { engine, host, storage } = await persistedB();
+    scopeState.trusted = false;
+
+    engine.removeEntity('1');
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([item('1'), item('2')]);
+    expect(await engine.hydrate({ id: 'b' })).toBe(true);
+    expect(host.view().b).toEqual([item('2')]);
+
+    // Once trusted, a repeated removal of an unloaded row lands its patch.
+    scopeState.trusted = true;
+    const fresh = setupList(storage);
+    fresh.engine.removeEntity('1');
+    await flush();
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([item('2')]);
   });
 });

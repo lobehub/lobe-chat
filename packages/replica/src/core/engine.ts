@@ -182,8 +182,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   // count: it is released once its storage patch landed (`releasedAt`) and is
   // dropped as soon as no hydrate that started before that point is pending.
   // So memory stays bounded by in-flight reads, and no guard a pending read
-  // still needs is ever evicted. A server value holding the entity again
-  // (restored) lifts it early.
+  // still needs is ever evicted. A patch that did not land is never released:
+  // the unloaded row still holds the entity, so every later hydrate needs the
+  // guard. A server value holding the entity again (restored) lifts it early.
   /** Logical clock shared by hydrate starts and guard releases. */
   let guardClock = 0;
   /** Start ticks of the hydrates in flight, per scope. */
@@ -908,13 +909,17 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * Apply an entity change to persisted rows that memory does not hold (the
    * memory path already persists loaded entries). Read-modify-write runs in
    * the per-key write queue, so it sees every earlier write; a missing row is
-   * never recreated. Resolves once the patches have settled.
+   * never recreated. Resolves once the patches have settled: `true` when every
+   * unloaded row is known to be patched (or nothing is persisted), `false` when
+   * a row may still hold the old entity (untrusted scope, unreadable index or
+   * row, a failed write, an identity switch mid-pass).
    */
-  const patchStoredEntity = async <TItem>(
+  const patchStoredEntityRows = async <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
-  ): Promise<void> => {
-    if (!writeQueue || !resource.scope.canPersist()) return;
+  ): Promise<boolean> => {
+    if (!writeQueue) return true;
+    if (!resource.scope.canPersist()) return false;
     const scope = resource.scope.get();
     const slot = getSlot();
     const loaded = new Set(
@@ -927,13 +932,13 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       keys = await readIndex(scope);
     } catch (error) {
       // Rows cannot be enumerated: nothing to patch. Loaded entries are already
-      // updated, and a removal still guards later hydrates (`removeEntity`).
+      // updated, and a removal keeps guarding later hydrates (`removeEntity`).
       console.error(`[replica:${resource.name}] failed to read the persisted index`, error);
-      return;
+      return false;
     }
     // Identity changed while reading the index: those rows are not ours to touch.
-    if (resource.scope.get() !== scope) return;
-    const patches: Promise<void>[] = [];
+    if (resource.scope.get() !== scope) return false;
+    const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
       const seq = noteWrite(scope, queryKey);
@@ -955,10 +960,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
+          return written;
         });
       patches.push(patch);
     }
-    await Promise.all(patches);
+    return (await Promise.all(patches)).every(Boolean);
+  };
+
+  const patchStoredEntity = async <TItem>(
+    id: string,
+    fn: (item: TItem) => TItem | undefined,
+  ): Promise<void> => {
+    await patchStoredEntityRows(id, fn);
   };
 
   /**
@@ -1015,13 +1028,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     await Promise.all(patches);
   };
 
-  /** `updateEntity`, returning the persisted-row patch (if any) to wait on. */
+  /**
+   * `updateEntity`, returning the persisted-row patch (if any) to wait on —
+   * `true` once every unloaded row is patched.
+   */
   const applyEntity = <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
     { persist = true }: { persist?: boolean } = {},
-  ): Promise<void> | undefined => {
-    const patch = persist ? patchStoredEntity(id, fn) : undefined;
+  ): Promise<boolean> | undefined => {
+    const patch = persist ? patchStoredEntityRows(id, fn) : undefined;
     for (const key of entityKeys(id)) {
       const current = port.read(key);
       if (current === undefined) continue;
@@ -1064,7 +1080,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const patch = applyEntity(id, () => undefined, options);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
-    if (patch) void patch.then(release, release);
+    // A patch that did not land (untrusted scope, unreadable index or row, a
+    // failed write, an identity switch) leaves the entity in an unloaded row:
+    // every later hydrate of that row could resurrect it, so the guard is kept
+    // — until a server value holds the entity again, or a later removal of the
+    // same id lands its patch.
+    if (patch)
+      void patch.then(
+        (patched) => {
+          if (patched) release();
+        },
+        () => undefined,
+      );
     else release();
   };
 
