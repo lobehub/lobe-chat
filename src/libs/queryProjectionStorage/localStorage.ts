@@ -61,23 +61,6 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     localStorage.removeItem(this.#key(key));
   };
 
-  /**
-   * Delete every row of this resource whose scope starts with `scopePrefix` —
-   * one identity's partitions (see `ReplicaStorage.purgeScopePrefix`). Rejects
-   * when a delete did not land (storage access denied), like `remove`.
-   */
-  purgeScopePrefix = async (scopePrefix: string): Promise<void> => {
-    if (typeof window === 'undefined') return;
-
-    const prefix = `${this.#namespace}:${encodeURIComponent(scopePrefix)}`;
-    const doomed: string[] = [];
-    for (let index = 0; index < localStorage.length; index++) {
-      const key = localStorage.key(index);
-      if (key?.startsWith(prefix)) doomed.push(key);
-    }
-    for (const key of doomed) localStorage.removeItem(key);
-  };
-
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     if (typeof window === 'undefined') return;
 

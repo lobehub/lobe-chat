@@ -72,10 +72,13 @@ export class BaseActionImpl {
 
     // Replica-backed reads own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
-    // revalidation below, so a reload never resurrects purged rows. The slice
-    // already retried; `false` means a persisted row survived a storage failure
-    // and the next session would hydrate it back into the chat context.
-    const replicaPurged = await this.#get().internal_clearTopicMemories();
+    // revalidation below, so a reload never resurrects purged rows. Each
+    // `internal_clear*` resolves `false` when a persisted row survived a storage
+    // failure (the next session would hydrate it back).
+    const replicaPurges: boolean[] = [
+      // One line per replica-backed slice.
+      await this.#get().internal_clearTopicMemories(),
+    ];
 
     this.#set(
       produce((draft) => {
@@ -144,8 +147,8 @@ export class BaseActionImpl {
     // The in-memory reset above already stands — the user must not keep seeing
     // purged memories. Surface the rows that survived locally instead of
     // reporting a purge the next session would silently undo.
-    if (!replicaPurged) {
-      throw new Error('Failed to purge persisted memory bundles from local storage');
+    if (!replicaPurges.every(Boolean)) {
+      throw new Error('Failed to purge persisted memories from local storage');
     }
   };
 

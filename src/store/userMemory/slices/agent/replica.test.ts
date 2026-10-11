@@ -22,7 +22,7 @@ import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { initialState as userMemoryInitialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
-import { topicMemoriesResource } from './projection';
+import { identityScopeOf, topicMemoriesResource } from './projection';
 import { agentMemorySelectors } from './selectors';
 
 vi.mock('@/services/userMemory', () => ({
@@ -66,9 +66,12 @@ const entry = (topicId: string) =>
 describe('userMemory topic memories replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** The storage partition of the topic memories: the identity, not the workspace. */
+  let rowScope = '';
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(next);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -105,7 +108,7 @@ describe('userMemory topic memories replica', () => {
   it('paints the persisted bundle before the network answers', async () => {
     const cached = bundle('cached');
     await topicMemoriesResource.storage!.set(
-      { queryKey: topicMemoriesResource.storageKey(TOPIC_A), scope },
+      { queryKey: topicMemoriesResource.storageKey(TOPIC_A), scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(pending);
@@ -134,7 +137,7 @@ describe('userMemory topic memories replica', () => {
         (
           await topicMemoriesResource.storage!.get({
             queryKey: topicMemoriesResource.storageKey(TOPIC_A),
-            scope,
+            scope: rowScope,
           })
         )?.data,
       ).toEqual(fresh),
@@ -160,7 +163,7 @@ describe('userMemory topic memories replica', () => {
       expect(
         await topicMemoriesResource.storage!.get({
           queryKey: topicMemoriesResource.storageKey(TOPIC_A),
-          scope,
+          scope: rowScope,
         }),
       ).toBeUndefined(),
     );
@@ -169,7 +172,7 @@ describe('userMemory topic memories replica', () => {
   it('purges every persisted bundle on purgeAllMemories, so a reload cannot restore them', async () => {
     const storageKeyOf = (topicId: string) => ({
       queryKey: topicMemoriesResource.storageKey(topicId),
-      scope,
+      scope: rowScope,
     });
     const resetMemory = () =>
       act(() =>
@@ -234,99 +237,64 @@ describe('userMemory topic memories replica', () => {
 
     const storage = topicMemoriesResource.storage!;
     const remove = storage.remove.bind(storage);
-    const purgeScopePrefix = storage.purgeScopePrefix!.bind(storage);
-    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
-    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope: rowScope };
+    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope: rowScope };
 
     // An earlier session's rows only — nothing is tracked in memory.
     await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
     await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
 
     // The first try aborts (a blocked IndexedDB upgrade); the retry lands.
-    let widenCalls = 0;
     let removeCalls = 0;
     vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
       if (++removeCalls === 1) throw new Error('IndexedDB transaction aborted');
       return remove(key);
     });
-    vi.spyOn(storage, 'purgeScopePrefix').mockImplementation(async (prefix) => {
-      if (++widenCalls === 1) throw new Error('IndexedDB transaction aborted');
-      return purgeScopePrefix(prefix);
-    });
 
     await act(() => useUserMemoryStore.getState().purgeAllMemories());
 
     expect(removeCalls).toBeGreaterThan(1);
-    expect(widenCalls).toBeGreaterThan(1);
     expect(await storage.get(rowKey)).toBeUndefined();
   });
 
-  it('purges the identity’s other workspaces, not only the active scope', async () => {
-    renderHook(() => null, { wrapper });
-
-    const storage = topicMemoriesResource.storage!;
+  it('purges the bundles cached in the identity’s other workspaces', async () => {
     const userId = scope.slice(0, scope.indexOf(':'));
     const otherWorkspace = `${userId}:workspace-b`;
-    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope: otherWorkspace };
+    const personal = scope;
 
-    // The user has a bundle cached in another workspace — the purge's server
-    // side deletes their memories globally, so this row must go too.
-    await storage.set(rowKey, { data: bundle('other-workspace'), updatedAt: 1 });
+    // A bundle fetched and persisted while the user was in another workspace.
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(
+      bundle('other-workspace'),
+    );
+    useScope(otherWorkspace);
+    const earlier = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B),
+      { wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        await topicMemoriesResource.storage!.get({
+          queryKey: topicMemoriesResource.storageKey(TOPIC_B),
+          scope: rowScope,
+        }),
+      ).toBeDefined(),
+    );
+    earlier.unmount();
 
+    // Back in the personal workspace, the user purges everything (server-side
+    // the delete is user-wide).
+    useScope(personal);
+    renderHook(() => null, { wrapper });
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(pending);
     await act(() => useUserMemoryStore.getState().purgeAllMemories());
 
-    // Switching to that workspace must not hydrate the purged bundle.
+    // Switching to the other workspace must not hydrate the purged bundle.
     useScope(otherWorkspace);
-    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(pending);
     const sync = renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B), {
       wrapper,
     });
-    await waitFor(() => expect(entry(TOPIC_B)).toBeUndefined());
-
+    await waitFor(() => expect(sync.result.current.isHydrated).toBe(true));
     expect(topicMemories(TOPIC_B)).toBeUndefined();
-    expect(await storage.get(rowKey)).toBeUndefined();
-    sync.unmount();
-  });
-
-  it('orders the widened purge after a sibling workspace’s queued write', async () => {
-    renderHook(() => null, { wrapper });
-
-    const storage = topicMemoriesResource.storage!;
-    const set = storage.set.bind(storage);
-    const userId = scope.slice(0, scope.indexOf(':'));
-    const siblingScope = `${userId}:workspace-b`;
-    const siblingRowKey = {
-      queryKey: topicMemoriesResource.storageKey(TOPIC_B),
-      scope: siblingScope,
-    };
-
-    // A finished fetch in the sibling workspace is still writing its row when
-    // the user switches away: the write is queued, not started.
-    let releaseWrite!: () => void;
-    const heldWrite = new Promise<void>((resolve) => (releaseWrite = resolve));
-    vi.spyOn(storage, 'set').mockImplementation(async (key, row) => {
-      if (key.scope === siblingScope) await heldWrite;
-      return set(key, row);
-    });
-
-    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(bundle('sibling'));
-    useScope(siblingScope);
-    const sync = renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B), {
-      wrapper,
-    });
-    await waitFor(() => expect(entry(TOPIC_B)?.source).toBe('server'));
-
-    // The user moves to another workspace and purges everything.
-    useScope(`${userId}:personal`);
-    sync.rerender();
-    const purging = useUserMemoryStore.getState().purgeAllMemories();
-    // Give the purge every chance to finish before the sibling write lands.
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    releaseWrite();
-    await act(() => purging);
-
-    // The queued write landed before the delete, so the row is still purged.
-    expect(await storage.get(siblingRowKey)).toBeUndefined();
     sync.unmount();
   });
 
@@ -335,9 +303,8 @@ describe('userMemory topic memories replica', () => {
 
     const storage = topicMemoriesResource.storage!;
     const remove = storage.remove.bind(storage);
-    const purgeScopePrefix = storage.purgeScopePrefix!.bind(storage);
-    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
-    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope: rowScope };
+    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope: rowScope };
 
     await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
     await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
@@ -346,10 +313,6 @@ describe('userMemory topic memories replica', () => {
     vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
       if (failDeletes) throw new Error('IndexedDB transaction aborted');
       return remove(key);
-    });
-    vi.spyOn(storage, 'purgeScopePrefix').mockImplementation(async (prefix) => {
-      if (failDeletes) throw new Error('IndexedDB transaction aborted');
-      return purgeScopePrefix(prefix);
     });
 
     try {

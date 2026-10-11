@@ -1,9 +1,4 @@
-import {
-  createReplicaSlice,
-  recordLens,
-  type ReplicaSyncResult,
-  scopeIdentityPrefix,
-} from '@/libs/replica';
+import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
 import { userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { type RetrieveMemoryResult } from '@/types/userMemory';
@@ -40,28 +35,22 @@ export class AgentMemoryActionImpl {
   };
 
   /**
-   * Drop every topic bundle — memory and every persisted row, including bundles
-   * an earlier session wrote in *any* workspace of this identity — then refetch
-   * the mounted topics. Called by `purgeAllMemories`, so a reload can never
-   * inject deleted memories into the next chat request.
+   * Drop every topic bundle — memory and every persisted row of the identity,
+   * including bundles an earlier session wrote in any workspace (the resource
+   * is scoped per user, see `topicMemoriesResource`) — then refetch the mounted
+   * topics. Called by `purgeAllMemories`, so a reload or a workspace switch can
+   * never inject deleted memories into the next chat request.
    *
-   * The server delete is identity-wide (`deleteAll` is user-scoped) while a
-   * replica scope is one workspace, so the purge is widened to the identity's
-   * sibling partitions: otherwise switching workspace after a purge would
-   * hydrate that partition's surviving bundle before revalidation.
-   *
-   * Resolves `true` once storage is purged. Memory is wiped synchronously, but
-   * a storage failure (a blocked IndexedDB upgrade, a closed connection) leaves
-   * a row behind, and the next session has no in-memory record of this clear —
-   * it would hydrate that row into the next chat request. Retry once, then
-   * report the outcome so the caller surfaces it instead of claiming a purge
-   * that a reload would undo.
+   * Memory is wiped synchronously. A storage failure (a blocked IndexedDB
+   * upgrade, a closed connection) leaves a row behind that the next session has
+   * no record of, so the purge is retried once and the outcome reported: the
+   * caller surfaces `false` instead of claiming a purge a reload would undo.
    */
   internal_clearTopicMemories = async (): Promise<boolean> => {
-    const identityPrefix = scopeIdentityPrefix(topicMemoriesResource.scope.get());
-    const cleared =
-      (await this.#topicMemories.clearScopes(identityPrefix)) ||
-      (await this.#topicMemories.clearScopes(identityPrefix));
+    let cleared = false;
+    for (let attempt = 0; attempt < 2 && !cleared; attempt++) {
+      cleared = await this.#topicMemories.clear();
+    }
     void this.#topicMemories.revalidate();
     return cleared;
   };
