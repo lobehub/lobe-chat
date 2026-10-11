@@ -1,10 +1,9 @@
-import { type IEditor } from '@lobehub/editor';
 import { ChatInput, ChatInputActionBar, SendButton, useEditor } from '@lobehub/editor/react';
 import { Flexbox } from '@lobehub/ui';
 import { Button } from '@lobehub/ui/base-ui';
 import { $getRoot } from 'lexical';
 import { ChevronDownIcon, MessageCirclePlus } from 'lucide-react';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AttachmentUploadButton } from '@/features/AttachmentInput';
@@ -18,6 +17,8 @@ import {
   insertFilesIntoEditor,
 } from '@/features/EditorCanvas/editorAttachments';
 import { useEnterToSend } from '@/hooks/useEnterToSend';
+
+import { useComposerFocus } from './useComposerFocus';
 
 interface FeedbackInputProps {
   /** Expand and focus the composer — the floating drawer opened by "Continue
@@ -41,10 +42,11 @@ const FeedbackInput = memo<FeedbackInputProps>(
     const [submitting, setSubmitting] = useState(false);
     const [hasContent, setHasContent] = useState(false);
     const [hasAttachments, setHasAttachments] = useState(false);
-    const [expanded, setExpanded] = useState(defaultExpanded || autoFocus);
-    // Only an explicit request to write (the expand click or `autoFocus`) takes
-    // focus; a host that merely pins the composer open must not steal it.
-    const focusOnInitRef = useRef(autoFocus);
+    const { collapse, expand, expanded, handleEditorInit } = useComposerFocus({
+      autoFocus,
+      defaultExpanded,
+      editor,
+    });
     const shouldSendOnEnter = useEnterToSend();
     // Task follow-ups send into the shared agent's topic — view-only members
     // can watch the run but get no reply composer.
@@ -59,27 +61,6 @@ const FeedbackInput = memo<FeedbackInputProps>(
     // follow-up was queued rather than started.
     const { placeholderVariant, showSendWhileGenerating, showStopButton } =
       useConversationChatInputUiState({ isInputEmpty: !canSubmit });
-
-    // Focus from the editor's own init callback: a mount-time `editor.focus()`
-    // runs before the lexical root attaches and is silently dropped, while
-    // `onInit` fires once the kernel is ready.
-    const handleEditorInit = useCallback((instance: IEditor) => {
-      if (focusOnInitRef.current) instance.focus?.();
-    }, []);
-
-    // "Continue chat" on a drawer that is already open for this topic keeps the
-    // body mounted, so the request has to reach the live composer too.
-    useEffect(() => {
-      if (!autoFocus) return;
-      focusOnInitRef.current = true;
-      setExpanded(true);
-      editor?.focus?.();
-    }, [autoFocus, editor]);
-
-    const expand = useCallback(() => {
-      focusOnInitRef.current = true;
-      setExpanded(true);
-    }, []);
 
     const handleContentChange = useCallback(() => {
       const lexicalEditor = editor?.getLexicalEditor?.();
@@ -157,12 +138,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
               left={
                 <Flexbox horizontal align={'center'} gap={2}>
                   {!disableCollapse && (
-                    <Button
-                      icon={ChevronDownIcon}
-                      size={'small'}
-                      type={'text'}
-                      onClick={() => setExpanded(false)}
-                    >
+                    <Button icon={ChevronDownIcon} size={'small'} type={'text'} onClick={collapse}>
                       {t('taskDetail.collapseReply')}
                     </Button>
                   )}
