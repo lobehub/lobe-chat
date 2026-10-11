@@ -10,6 +10,7 @@ import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type {
   VerifyCheckItem,
   VerifyCheckResultMetadata,
+  VerifyEvidenceType,
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
@@ -24,6 +25,7 @@ import {
 } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { DocumentModel } from '@/database/models/document';
+import { FileModel } from '@/database/models/file';
 import { LlmGenerationTracingModel } from '@/database/models/llmGenerationTracing';
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyCriterionModel } from '@/database/models/verifyCriterion';
@@ -47,6 +49,7 @@ import { GoalCriteriaGeneratorService } from '@/server/services/goal/criteriaGen
 import {
   AcceptanceService,
   createEvidenceFileResolver,
+  evidenceTypeForStoredFile,
   finalizeVerifyRun,
   purgeVerifyRun,
   resolveLiveRoundForItem,
@@ -264,6 +267,7 @@ const verifyProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
       criterionModel: new VerifyCriterionModel(ctx.serverDB, ctx.userId, workspaceId),
       documentModel: new DocumentModel(ctx.serverDB, ctx.userId, workspaceId),
       evidenceModel: new VerifyEvidenceModel(ctx.serverDB, ctx.userId, workspaceId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId, workspaceId),
       executorService: new VerifyExecutorService(ctx.serverDB, ctx.userId, workspaceId),
       tracingModel: new LlmGenerationTracingModel(ctx.serverDB, ctx.userId, workspaceId),
       feedbackService: new VerifyFeedbackService(ctx.serverDB, ctx.userId, workspaceId),
@@ -323,6 +327,14 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
+
+/** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
+const storedEvidenceType = async (
+  ctx: { fileModel: FileModel },
+  type: VerifyEvidenceType,
+  fileId?: string | null,
+): Promise<VerifyEvidenceType> =>
+  fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
 
 export const verifyRouter = router({
   // ---- criteria (reusable atomic standards) ----
@@ -961,6 +973,7 @@ export const verifyRouter = router({
       // Attaching evidence mutates another member's result — creator-scoped,
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
+      const type = await storedEvidenceType(ctx, input.type, input.fileId);
 
       return ctx.evidenceModel.create({
         capturedAt: new Date(),
@@ -969,8 +982,8 @@ export const verifyRouter = router({
         content: input.content ?? null,
         description: input.description ?? null,
         fileId: input.fileId ?? null,
-        metadata: normalizeEvidenceMetadata(input.metadata, input.type) ?? null,
-        type: input.type,
+        metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
+        type,
       });
     }),
 
@@ -1069,7 +1082,7 @@ export const verifyRouter = router({
 
       const evidence = input.evidence?.length
         ? await Promise.all(
-            input.evidence.map((e) =>
+            input.evidence.map(async (e) =>
               ctx.evidenceModel.create({
                 capturedAt: new Date(),
                 capturedBy: e.capturedBy ?? null,
@@ -1077,7 +1090,7 @@ export const verifyRouter = router({
                 content: e.content ?? null,
                 description: e.description ?? null,
                 fileId: e.fileId ?? null,
-                type: e.type,
+                type: await storedEvidenceType(ctx, e.type, e.fileId),
               }),
             ),
           )

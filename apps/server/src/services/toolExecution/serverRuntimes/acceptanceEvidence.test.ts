@@ -403,6 +403,27 @@ describe('acceptanceEvidenceRuntime', () => {
     ]);
   });
 
+  it('stores a GIF cited as a screenshot as a gif', async () => {
+    mocks.operationFindById.mockResolvedValue({ id: 'task-op', parentOperationId: null });
+    mocks.fileFindById.mockResolvedValue({ fileType: 'image/gif', id: 'files_gif', name: 'a.gif' });
+    const runtime = acceptanceEvidenceRuntime.factory({
+      operationId: 'task-op',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      userId: 'user-1',
+    });
+
+    const result = await runtime.submitEvidence({
+      checkItemId: 'criterion-1',
+      evidence: [{ content: 'Rename applied', fileId: 'files_gif', type: 'screenshot' }],
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.evidenceCreateMany).toHaveBeenCalledWith([
+      expect.objectContaining({ fileId: 'files_gif', type: 'gif' }),
+    ]);
+  });
+
   it('rejects a gif with no artifact behind it', async () => {
     mocks.operationFindById.mockResolvedValue({ id: 'task-op', parentOperationId: null });
     const runtime = acceptanceEvidenceRuntime.factory({
