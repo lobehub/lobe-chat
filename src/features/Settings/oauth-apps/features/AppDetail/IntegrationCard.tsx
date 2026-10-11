@@ -7,11 +7,15 @@ import { CopyIcon } from 'lucide-react';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { OIDC_ISSUER_PATH } from '@/libs/oidc-provider/routes';
+import { useAppOrigin } from '@/hooks/useAppOrigin';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
-import { getIntegrationEndpoints, type IntegrationEndpointKey } from '../../integrationEndpoints';
+import {
+  getIntegrationEndpoints,
+  type IntegrationEndpointKey,
+  resolveIssuer,
+} from '../../integrationEndpoints';
 import { integrationPromptKey, integrationPromptValues } from '../../integrationPrompt';
 import SectionCard from './SectionCard';
 
@@ -73,10 +77,11 @@ interface IntegrationCardProps {
 const IntegrationCard: FC<IntegrationCardProps> = ({ applicationType, clientId, name }) => {
   const { t } = useTranslation('auth');
   // The server's configured issuer (APP_URL), which also covers desktop and
-  // reverse-proxied deployments. The page origin is only a fallback for a
-  // server too old to send it.
+  // reverse-proxied deployments; the app origin (the connected server on
+  // desktop) is only a fallback for a server too old to send it.
   const configuredIssuer = useServerConfigStore(serverConfigSelectors.oidcIssuer);
-  const issuer = configuredIssuer || `${window.location.origin}${OIDC_ISSUER_PATH}`;
+  const appOrigin = useAppOrigin();
+  const issuer = resolveIssuer(configuredIssuer, appOrigin);
 
   const endpoints = useMemo(
     () => getIntegrationEndpoints(issuer, applicationType),

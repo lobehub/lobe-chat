@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getIntegrationEndpoints } from './integrationEndpoints';
+import { getIntegrationEndpoints, resolveIssuer } from './integrationEndpoints';
 
 describe('getIntegrationEndpoints', () => {
   it('gives a web app the authorization-code endpoints', () => {
@@ -34,5 +34,22 @@ describe('getIntegrationEndpoints', () => {
     expect(endpoints[0].url).toBe('https://example.com/lobe/oidc');
     expect(endpoints[1].url).toBe('https://example.com/lobe/oidc/.well-known/openid-configuration');
     expect(endpoints[3].url).toBe('https://example.com/lobe/oidc/token');
+  });
+});
+
+describe('resolveIssuer', () => {
+  it("prefers the server's configured issuer", () => {
+    expect(resolveIssuer('https://auth.example.com/lobe/oidc', 'app://renderer')).toBe(
+      'https://auth.example.com/lobe/oidc',
+    );
+  });
+
+  it('falls back to the app origin (the connected server on desktop) for an older server', () => {
+    expect(resolveIssuer(undefined, 'https://my-lobehub.example.com')).toBe(
+      'https://my-lobehub.example.com/oidc',
+    );
+    expect(resolveIssuer(undefined, 'https://my-lobehub.example.com/')).toBe(
+      'https://my-lobehub.example.com/oidc',
+    );
   });
 });

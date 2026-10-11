@@ -125,6 +125,9 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
   });
   const enabledMutation = lambdaQuery.oauthApp.setEnabled.useMutation({ onSuccess: revalidate });
   const rotateSecretMutation = lambdaQuery.oauthApp.rotateSecret.useMutation({
+    // Minting a credential must never fail silently: the user needs to know no
+    // secret is waiting for them and that they can try again.
+    onError: () => toast.error(t('oauthApp.secret.issueFailed')),
     onSuccess: ({ clientSecret }) => {
       revalidate();
       showClientSecretModal({ clientSecret });

@@ -340,6 +340,7 @@ export default {
   'oauthApp.secret.dismiss': "I've saved it",
   'oauthApp.secret.generate': 'Generate secret',
   'oauthApp.secret.hidden': 'Hidden once generated',
+  'oauthApp.secret.issueFailed': "The client secret couldn't be generated. Try again.",
   'oauthApp.secret.notGenerated': 'Not generated yet',
   'oauthApp.secret.onceWarning':
     "You won't be able to see this secret again after closing. Copy it now and store it somewhere safe.",

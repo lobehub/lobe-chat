@@ -5,6 +5,14 @@ import { OIDC_DISCOVERY_PATH, OIDC_ISSUER_PATH, OIDC_ROUTES } from '@/libs/oidc-
 export type IntegrationEndpointKey =
   'authorization' | 'deviceAuthorization' | 'discovery' | 'issuer' | 'token';
 
+/**
+ * The issuer to show: the server's configured one (`APP_URL` + `/oidc`), or —
+ * for a server too old to send it — the app origin, which on desktop is the
+ * connected server rather than the renderer's own `app://` origin.
+ */
+export const resolveIssuer = (configured: string | undefined, appOrigin: string) =>
+  configured || urlJoin(appOrigin, OIDC_ISSUER_PATH);
+
 export interface IntegrationEndpoint {
   key: IntegrationEndpointKey;
   url: string;
