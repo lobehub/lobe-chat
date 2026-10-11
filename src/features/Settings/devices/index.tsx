@@ -143,7 +143,8 @@ const Page = memo<PageProps>(({ mobile }) => {
       <NavHeader styles={{ center: { alignItems: 'center' } }}>
         <Text weight={500}>{t('devices.title')}</Text>
       </NavHeader>
-      <SettingContainer maxWidth={1024} paddingBlock={'24px 128px'} paddingInline={24}>
+      {/* Full width: the card grid adds columns as the pane widens. */}
+      <SettingContainer maxWidth={'100%'} paddingBlock={'24px 128px'} paddingInline={24}>
         {content}
       </SettingContainer>
       {connectModal}

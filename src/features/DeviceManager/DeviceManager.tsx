@@ -130,9 +130,9 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorFillTertiary};
   `,
   // ─── Card grid ───
-  // Cards carry their own frame, so the grid sits bare in its host. 280px keeps
-  // three cards per row inside the 1024 settings column, reflowing to two and
-  // one as the column narrows.
+  // Cards carry their own frame, so the grid sits bare in its host. The page
+  // is full width, so columns step by the host's own width — one on a phone,
+  // then two, three and four — keeping every card at least ~270px wide.
   skeletonCard: css`
     padding: 20px;
     border: 1px solid ${cssVar.colorBorderSecondary};
@@ -141,8 +141,25 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   grid: css`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
+    min-width: 0;
+
+    @container device-grid (min-width: 560px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @container device-grid (min-width: 880px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @container device-grid (min-width: 1200px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  `,
+  // Query container for the grid's column steps (a grid can't query itself).
+  gridHost: css`
+    container: device-grid / inline-size;
     min-width: 0;
   `,
 }));
@@ -233,20 +250,22 @@ const Capabilities = memo(() => {
 // Loading placeholder in the card grid's shape — loading → loaded is a content
 // swap, not a relayout (ux §4.1).
 const GridSkeleton = memo(() => (
-  <div className={styles.grid}>
-    {Array.from({ length: 2 }, (_, index) => (
-      <Flexbox className={styles.skeletonCard} gap={20} key={index}>
-        <Flexbox horizontal align={'center'} gap={16}>
-          <Skeleton.Avatar shape={'square'} size={48} />
-          <Flexbox flex={1} gap={8}>
-            <Skeleton height={16} width={160} />
-            <Skeleton height={12} width={100} />
+  <div className={styles.gridHost}>
+    <div className={styles.grid}>
+      {Array.from({ length: 2 }, (_, index) => (
+        <Flexbox className={styles.skeletonCard} gap={20} key={index}>
+          <Flexbox horizontal align={'center'} gap={16}>
+            <Skeleton.Avatar shape={'square'} size={48} />
+            <Flexbox flex={1} gap={8}>
+              <Skeleton height={16} width={160} />
+              <Skeleton height={12} width={100} />
+            </Flexbox>
           </Flexbox>
+          <Skeleton height={36} width={'100%'} />
+          <Skeleton height={32} width={'100%'} />
         </Flexbox>
-        <Skeleton height={36} width={'100%'} />
-        <Skeleton height={32} width={'100%'} />
-      </Flexbox>
-    ))}
+      ))}
+    </div>
   </div>
 ));
 
@@ -365,15 +384,17 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
       loading={<GridSkeleton />}
       onRetry={() => mutate()}
     >
-      <div className={styles.grid}>
-        {devices.map((device) => (
-          <DeviceCard
-            device={device}
-            isCurrent={isCurrent(device.deviceId)}
-            key={device.deviceId}
-            onOpen={() => onOpenDevice(device.deviceId)}
-          />
-        ))}
+      <div className={styles.gridHost}>
+        <div className={styles.grid}>
+          {devices.map((device) => (
+            <DeviceCard
+              device={device}
+              isCurrent={isCurrent(device.deviceId)}
+              key={device.deviceId}
+              onOpen={() => onOpenDevice(device.deviceId)}
+            />
+          ))}
+        </div>
       </div>
     </AsyncBoundary>
   );

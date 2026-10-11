@@ -20,8 +20,12 @@ import { healthViewState } from './viewState';
 
 export { HealthLegend } from './shared';
 
-/** Status-strip block width: wide enough to see and hover in the side panel. */
-const STRIP_BLOCK_MS = 15 * 60_000;
+/**
+ * Status-strip block span. The strip spans the full-width detail page, so a
+ * 5-minute block keeps each tick narrow there (~144 over 12 hours) instead of
+ * blowing 48 blocks up into large squares.
+ */
+const STRIP_BLOCK_MS = 5 * 60_000;
 
 interface MetricChartProps {
   ceiling: number;
@@ -107,11 +111,12 @@ const DeviceHealth = ({ deviceId }: { deviceId: string }) => {
   return (
     <Flexbox gap={16}>
       <Flexbox gap={6}>
-        {/* Blocks flex to an equal share of the panel — the default fixed
-            12px overflowed and clipped the newest hours. */}
+        {/* Blocks flex to an equal share of the width — the default fixed
+            12px overflowed and clipped the newest hours. Thin ticks with a 1px
+            gap match the usage bars above. */}
         <Tracker
-          blockGap={2}
-          blockHeight={16}
+          blockGap={1}
+          blockHeight={12}
           blockWidth={'100%'}
           width={'100%'}
           data={groupStripBlocks(

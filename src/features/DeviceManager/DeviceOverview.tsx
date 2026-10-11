@@ -70,10 +70,12 @@ const styles = createStaticStyles(({ css }) => ({
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
-  // Two info cards side by side, stacking once the column gets narrow.
+  // Two info cards side by side, stacking once the column gets narrow. The
+  // `min(100%, …)` floor lets a lone column shrink below it on a phone instead
+  // of overflowing the padded settings container.
   infoGrid: css`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 16px;
   `,
   row: css`
@@ -87,7 +89,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   statGrid: css`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 16px;
   `,
   statusPill: css`

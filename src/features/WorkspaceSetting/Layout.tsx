@@ -40,6 +40,12 @@ const COMPACT_HEADER_TABS = new Set<string>([
   WorkspaceSettingsTabs.Usage,
 ]);
 
+/**
+ * Tabs whose content spans the full pane instead of the centered 1024 column —
+ * card grids that add columns as the pane widens (Devices).
+ */
+const FULL_WIDTH_TABS = new Set<string>([WorkspaceSettingsTabs.Devices]);
+
 const outletContainerStyle: CSSProperties = { overflow: 'hidden', position: 'relative' };
 
 /**
@@ -83,7 +89,11 @@ const WorkspaceSettingsContentLayout: FC = memo(() => {
           ?.label;
 
   const content = (
-    <Container maxWidth={1024} paddingBlock={'24px 128px'} paddingInline={24}>
+    <Container
+      maxWidth={activeTab && FULL_WIDTH_TABS.has(activeTab) ? '100%' : 1024}
+      paddingBlock={'24px 128px'}
+      paddingInline={24}
+    >
       <Outlet />
     </Container>
   );

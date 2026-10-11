@@ -82,8 +82,6 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorFillQuaternary};
   `,
   iconTile: css`
-    position: relative;
-
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -102,16 +100,12 @@ const styles = createStaticStyles(({ css }) => ({
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 16px;
   `,
-  // Presence badge on the icon tile's corner; the ring in the card color
-  // separates it from the tile behind it.
+  // Presence dot leading the footer's status text, so "online" reads as one
+  // unit in the corner rather than a badge on the icon plus a label below.
   presence: css`
-    position: absolute;
-    inset-block-end: -3px;
-    inset-inline-end: -3px;
-
-    width: 12px;
-    height: 12px;
-    border: 2px solid ${cssVar.colorBgContainer};
+    flex: none;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
   `,
 }));
@@ -289,14 +283,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
     >
       <Flexbox className={styles.body} gap={20}>
         <Flexbox horizontal align={'flex-start'} gap={16}>
-          <div className={styles.iconTile}>
-            {getDeviceIcon(device.platform, 22)}
-            <span
-              className={styles.presence}
-              style={{ background: online ? cssVar.colorSuccess : cssVar.colorTextQuaternary }}
-              title={online ? t('devices.health.status.online') : undefined}
-            />
-          </div>
+          <div className={styles.iconTile}>{getDeviceIcon(device.platform, 22)}</div>
 
           <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
             <Text ellipsis fontSize={16} weight={600}>
@@ -392,11 +379,16 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
         </UsageMeterGroup>
       </Flexbox>
 
-      <div className={styles.footer}>
-        <Text ellipsis fontSize={13} type={'secondary'}>
+      <Flexbox horizontal align={'center'} className={styles.footer} gap={8}>
+        <span
+          aria-hidden
+          className={styles.presence}
+          style={{ background: online ? cssVar.colorSuccess : cssVar.colorTextQuaternary }}
+        />
+        <Text ellipsis fontSize={13} style={{ minWidth: 0 }} type={'secondary'}>
           {activityText}
         </Text>
-      </div>
+      </Flexbox>
     </div>
   );
 });
