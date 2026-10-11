@@ -263,10 +263,11 @@ describe('purgeAllMemories', () => {
 
     await useUserMemoryStore.getState().purgeAllMemories();
 
-    for (const name of REPLICA_CLEARS) expect(spies[name]).toHaveBeenCalledTimes(1);
+    // Same user: the ordinary (active-partition) purge.
+    for (const name of REPLICA_CLEARS) expect(spies[name]).toHaveBeenCalledWith('user-1:*');
   });
 
-  it('leaves another user’s replicas alone when the account switches mid-purge', async () => {
+  it('purges only the deleted user’s partition when the account switches mid-purge', async () => {
     const order: string[] = [];
     vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
       useCacheScope('user-2:personal');
@@ -274,12 +275,28 @@ describe('purgeAllMemories', () => {
     });
     const spies = stubReplicaClears(order);
     useUserMemoryStore.setState({ editingMemoryId: 'kept' });
+    vi.mocked(mutate).mockClear();
 
     await expect(useUserMemoryStore.getState().purgeAllMemories()).resolves.toBeUndefined();
 
-    for (const name of REPLICA_CLEARS) expect(spies[name]).not.toHaveBeenCalled();
+    // Every slice purges the user the server deleted, not the active one.
+    for (const name of REPLICA_CLEARS) expect(spies[name]).toHaveBeenCalledWith('user-1:*');
+    // The active user's state and mounted queries are left alone.
     expect(useUserMemoryStore.getState().editingMemoryId).toBe('kept');
     expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
+    expect(mutate).not.toHaveBeenCalled();
+  });
+
+  it('surfaces a failed purge of the deleted user’s partition after an account switch', async () => {
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      useCacheScope('user-2:personal');
+      return undefined as never;
+    });
+    stubReplicaClears([], { internal_clearTopicMemories: false });
+
+    await expect(useUserMemoryStore.getState().purgeAllMemories()).rejects.toThrow(
+      'Failed to purge persisted memories from local storage',
+    );
   });
 });
 

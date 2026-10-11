@@ -85,7 +85,7 @@ export class ActivityActionImpl {
     this.#list.delete(id, () => memoryCRUDService.deleteActivity(id));
 
   /** Purge for "delete all memories" (every query, memory + IndexedDB). */
-  internal_clearActivityList = (): Promise<boolean> => this.#list.clear();
+  internal_clearActivityList = (user?: string): Promise<boolean> => this.#list.clear(user);
 
   /** Confirmed edit of one activity in every loaded and persisted query. */
   internal_updateActivityEntity = (

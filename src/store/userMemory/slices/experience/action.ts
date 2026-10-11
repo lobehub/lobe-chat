@@ -83,7 +83,7 @@ export class ExperienceActionImpl {
     this.#list.delete(id, () => memoryCRUDService.deleteExperience(id));
 
   /** Purge for "delete all memories" (every query, memory + IndexedDB). */
-  internal_clearExperienceList = (): Promise<boolean> => this.#list.clear();
+  internal_clearExperienceList = (user?: string): Promise<boolean> => this.#list.clear(user);
 
   /** Confirmed edit of one experience in every loaded and persisted query. */
   internal_updateExperienceEntity = (

@@ -368,6 +368,40 @@ describe.each(CASES)('$name list replica', (list) => {
     await expect(stored({ q: 'foo' })).resolves.toBeUndefined();
   });
 
+  it('purges the deleted user’s persisted queries after an account switch, not the active user’s', async () => {
+    serve(() => ['a']);
+    const hook = renderHook((query: Record<string, unknown>) => useFetch(query), {
+      initialProps: {},
+      wrapper,
+    });
+    await waitFor(async () => expect(await stored()).toBeDefined());
+    hook.rerender({ q: 'foo' });
+    await waitFor(async () => expect(await stored({ q: 'foo' })).toBeDefined());
+    hook.unmount();
+    const deletedUser = rowScope;
+
+    // Another account becomes active and paints its own list.
+    useScope(`${list.name}-user-${randomUUID()}:personal`);
+    serve(() => ['b']);
+    renderHook(() => useFetch(), { wrapper });
+    await waitFor(() => expect(ids(view())).toEqual(['b']));
+    await waitFor(async () => expect(ids(await stored())).toEqual(['b']));
+
+    let cleared = false;
+    await act(async () => {
+      cleared = await state()[`internal_clear${list.S}List`](deletedUser);
+    });
+
+    expect(cleared).toBe(true);
+    const deletedRow = (query: Record<string, unknown>) =>
+      list.resource.storage.get({ queryKey: storageKey(query), scope: deletedUser });
+    await expect(deletedRow({})).resolves.toBeUndefined();
+    await expect(deletedRow({ q: 'foo' })).resolves.toBeUndefined();
+    // The active user's view and persisted row are untouched.
+    expect(ids(view())).toEqual(['b']);
+    expect(ids(await stored())).toEqual(['b']);
+  });
+
   it('removes a row optimistically and rolls it back when the server rejects', async () => {
     serve(() => ['a', 'b']);
     renderHook(() => useFetch(), { wrapper });

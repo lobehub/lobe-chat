@@ -4,7 +4,6 @@ import { type SWRResponse } from 'swr';
 import {
   createReplicaSlice,
   linkReplicaEntity,
-  readReplicaStoredKeys,
   recordLens,
   type ReplicaLens,
   type ReplicaPagedData,
@@ -15,16 +14,11 @@ import { mutate } from '@/libs/swr';
 import { type StoreSetter } from '@/store/types';
 
 import { type UserMemoryStore } from '../../store';
-import { clearReplicas, memoryListKey } from '../../utils/replica';
+import { clearReplicas, clearUserReplicas, memoryListKey } from '../../utils/replica';
 import { OffsetListPager } from './offsetListPager';
+import { RecentQueryWindow } from './recentQueryWindow';
 
-/**
- * How many distinct search / sort page sets a memory list keeps. The query on
- * screen is always the most recent, so bounding the window bounds memory and
- * IndexedDB together: searching all day cannot grow either without limit, and
- * the queries just used still paint from their own rows.
- */
-export const MAX_RECENT_MEMORY_QUERIES = 8;
+export { MAX_RECENT_MEMORY_QUERIES } from './recentQueryWindow';
 
 /** Query of one memory list page set; `pageSize` is not part of its identity. */
 export interface MemoryListParams {
@@ -101,12 +95,7 @@ export class MemoryQueryList<
   readonly #list;
   readonly #options: MemoryQueryListOptions<TParams, TItem, TData>;
   readonly #pager: OffsetListPager;
-  /** Entry keys used, oldest first (see `#trackRecentQuery`). */
-  #recentQueries: string[] = [];
-  /** Identity the recency list belongs to (see `#seedRecentQueries`). */
-  #recentScope?: string;
-  /** Whether the persisted keys are already folded into the recency list. */
-  #recentsSeeded = false;
+  readonly #recent: RecentQueryWindow;
 
   constructor(options: MemoryQueryListOptions<TParams, TItem, TData>) {
     this.#options = options;
@@ -145,6 +134,7 @@ export class MemoryQueryList<
       refreshHead: this.#revalidate,
       slice: this.#list,
     });
+    this.#recent = new RecentQueryWindow({ evict: this.#list.remove, resource });
   }
 
   #activeKey = (): string => this.#options.get()[this.#options.activeKeyField] as string;
@@ -158,58 +148,15 @@ export class MemoryQueryList<
   #revalidate = (): Promise<unknown> =>
     mutate((key) => Array.isArray(key) && key[0] === this.#options.rootKey);
 
-  /** Drop the oldest query page sets past {@link MAX_RECENT_MEMORY_QUERIES}. */
-  #evictOldQueries = (): void => {
-    while (this.#recentQueries.length > MAX_RECENT_MEMORY_QUERIES) {
-      const oldest = this.#recentQueries.shift();
-      // Drops the entry (memory) and its persisted row, so the store and
-      // IndexedDB stay bounded together.
-      if (oldest) this.#list.remove(oldest);
-    }
-  };
-
-  /**
-   * Fold the keys an earlier session persisted into the recency list, once per
-   * scope: a list that starts empty on every page load would bound nothing
-   * across reloads.
-   */
-  #seedRecentQueries = (): void => {
-    const { resource } = this.#options;
-    const scope = resource.scope.get();
-    if (this.#recentScope !== scope) {
-      // Another user owns the partition: start the window over.
-      this.#recentQueries = [];
-      this.#recentScope = scope;
-      this.#recentsSeeded = false;
-    }
-    if (this.#recentsSeeded) return;
-    this.#recentsSeeded = true;
-
-    void readReplicaStoredKeys(resource).then((persisted) => {
-      if (this.#recentScope !== scope) return;
-      // The index is append-ordered (oldest first); prepending keeps that order,
-      // so eviction drops the least recently used persisted query first.
-      for (const persistedKey of [...persisted].reverse()) {
-        if (!this.#recentQueries.includes(persistedKey)) this.#recentQueries.unshift(persistedKey);
-      }
-      this.#evictOldQueries();
-    });
-  };
-
-  #trackRecentQuery = (key: string): void => {
-    this.#seedRecentQueries();
-    const existing = this.#recentQueries.indexOf(key);
-    if (existing !== -1) this.#recentQueries.splice(existing, 1);
-    this.#recentQueries.push(key);
-    this.#evictOldQueries();
-  };
-
   /**
    * Purge for "delete all memories": every query page set, in memory and in
    * IndexedDB, after any page or delete in flight. Retried once; `false` when a
    * persisted row survived.
    */
-  clear = (): Promise<boolean> => this.#pager.clear(() => clearReplicas(this.#list.clear));
+  clear = (user?: string): Promise<boolean> =>
+    user === undefined || user === this.#options.resource.scope.get()
+      ? this.#pager.clear(() => clearReplicas(this.#list.clear))
+      : clearUserReplicas(user, this.#list);
 
   /** Optimistic delete with the offset repair (see `OffsetListPager`). */
   delete = (id: string, serverCall: () => Promise<unknown>): Promise<void> =>
@@ -278,7 +225,7 @@ export class MemoryQueryList<
     // Select the query before paint, so a frame never shows another query's rows.
     useLayoutEffect(() => {
       this.select(query as Omit<TParams, 'pageSize'>);
-      this.#trackRecentQuery(key);
+      this.#recent.track(key);
     }, [key]);
 
     const sync = this.#list.useSync(params, {

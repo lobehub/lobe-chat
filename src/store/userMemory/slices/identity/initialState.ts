@@ -3,7 +3,12 @@ import { type IdentityListItem } from '@lobechat/types';
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 
 import { type IdentityForInjection } from '../../types';
-import { type IdentityListMeta, type IdentityListView } from './projection';
+import { memoryListKey } from '../../utils/replica';
+import {
+  DEFAULT_IDENTITY_LIST_PAGE_SIZE,
+  type IdentityListMeta,
+  type IdentityListView,
+} from './projection';
 
 export interface IdentitySliceState {
   /**
@@ -29,10 +34,17 @@ export interface IdentitySliceState {
    * down while a new search resolves.
    */
   identitiesInit: boolean;
-  /** Paging bookkeeping of `identities` (part of the replica view). */
+  /** Paging bookkeeping of the active query's page set (mirror). */
   identitiesMeta?: IdentityListMeta;
-  /** Replica bookkeeping for `identityList`. */
+  /** Replica bookkeeping for `identityListEntries`. */
   identitiesReplica: ReplicaState<IdentityListView>;
+  /**
+   * Canonical replica views of the identity list, one page set per search /
+   * filter / sort. `identities` / `identitiesMeta` mirror the active one.
+   */
+  identityListEntries: Record<string, IdentityListView>;
+  /** Entry key of the query on screen (see `memoryListKey`). */
+  identityListKey: string;
 }
 
 export const identityInitialState: IdentitySliceState = {
@@ -43,4 +55,6 @@ export const identityInitialState: IdentitySliceState = {
   identitiesInit: false,
   identitiesMeta: undefined,
   identitiesReplica: createReplicaState(),
+  identityListEntries: {},
+  identityListKey: memoryListKey({ pageSize: DEFAULT_IDENTITY_LIST_PAGE_SIZE }),
 };

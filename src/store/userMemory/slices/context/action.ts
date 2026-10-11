@@ -96,7 +96,7 @@ export class ContextActionImpl {
     this.#list.delete(id, () => memoryCRUDService.deleteContext(id));
 
   /** Purge for "delete all memories" (every query, memory + IndexedDB). */
-  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
+  internal_clearContextList = (user?: string): Promise<boolean> => this.#list.clear(user);
 
   /** Confirmed edit of one context in every loaded and persisted query. */
   internal_updateContextEntity = (

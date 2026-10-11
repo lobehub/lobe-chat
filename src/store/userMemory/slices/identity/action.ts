@@ -4,22 +4,28 @@ import {
   type UpdateUserMemoryIdentity,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
+import { useLayoutEffect } from 'react';
 
 import { type AddIdentityEntryResult } from '@/database/models/userMemory';
-import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
+import {
+  createReplicaSlice,
+  recordLens,
+  type ReplicaLens,
+  type ReplicaSyncResult,
+} from '@/libs/replica';
 import { memoryCRUDService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
-import { clearReplicas } from '../../utils/replica';
+import { clearReplicas, clearUserReplicas, memoryListKey } from '../../utils/replica';
 import { OffsetListPager } from '../utils/offsetListPager';
+import { RecentQueryWindow } from '../utils/recentQueryWindow';
 import {
   DEFAULT_IDENTITY_LIST_PAGE_SIZE,
   GLOBAL_IDENTITIES_KEY,
   globalIdentitiesResource,
-  IDENTITY_LIST_KEY,
   type IdentityListParams,
   identityListResource,
   type IdentityListView,
@@ -29,23 +35,39 @@ const n = setNamespace('userMemory/identity');
 
 const GLOBAL_IDENTITIES_PARAMS = {} as Record<string, never>;
 
+const identityEntries = recordLens<UserMemoryStore, IdentityListView>('identityListEntries');
+
 /**
- * The identities list keeps its long-standing flat array (`identities`) as the
- * replica view, with the paging bookkeeping beside it in `identitiesMeta` — so
- * every existing reader (grid, timeline, card dropdown) keeps reading the same
- * place. `identitiesInit` is written with the first landing page and survives a
- * query change, so the page controls are not torn down while a search resolves.
+ * Flat mirrors of one identity page set (`undefined` = the active query has no
+ * view yet). `identitiesInit` is only ever set here: it survives a query
+ * change, so the page controls are not torn down while a search resolves.
+ */
+const identityMirrorsOf = (data: IdentityListView | undefined): Partial<UserMemoryStore> => {
+  if (!data) return { identities: [], identitiesMeta: undefined };
+  const { items, ...meta } = data;
+  return { identities: items, identitiesInit: true, identitiesMeta: meta };
+};
+
+/**
+ * The canonical value is one page set per search / filter / sort
+ * (`identityListEntries`). The long-standing flat array (`identities`) and its
+ * paging bookkeeping (`identitiesMeta`) mirror the active query's entry in the
+ * same commit, so every existing reader (grid, timeline, card dropdown, route
+ * boundary) keeps reading the same place.
  */
 const identityListLens: ReplicaLens<UserMemoryStore, IdentityListView> = {
-  clear: () => ({ identities: [], identitiesInit: false, identitiesMeta: undefined }),
-  get: (state) =>
-    state.identitiesMeta ? { ...state.identitiesMeta, items: state.identities } : undefined,
-  keys: (state) => (state.identitiesMeta ? [IDENTITY_LIST_KEY] : []),
-  set: (_state, _key, data) => {
-    if (!data) return { identities: [], identitiesMeta: undefined };
-    const { items, ...meta } = data;
-    return { identities: items, identitiesInit: true, identitiesMeta: meta };
-  },
+  clear: (state) => ({
+    ...identityEntries.clear(state),
+    identities: [],
+    identitiesInit: false,
+    identitiesMeta: undefined,
+  }),
+  get: identityEntries.get,
+  keys: identityEntries.keys,
+  set: (state, key, data) => ({
+    ...identityEntries.set(state, key, data),
+    ...(key === state.identityListKey ? identityMirrorsOf(data) : undefined),
+  }),
 };
 
 /** Single-slot view of the injection-identities replica. */
@@ -77,11 +99,17 @@ export class IdentityActionImpl {
   readonly #globalIdentities;
   /** The identity list is a paged replica; the engine owns its paging. */
   readonly #identities;
+  readonly #get: () => UserMemoryStore;
   /** Delete / load more / purge with the offset repair shared by every memory list. */
   readonly #pager: OffsetListPager;
+  /** Bounds how many identity query page sets survive (memory + IndexedDB). */
+  readonly #recent: RecentQueryWindow;
+  readonly #set: Setter;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
     void _api;
+    this.#get = get;
+    this.#set = set;
     this.#identities = createReplicaSlice(identityListResource, {
       actionPrefix: n('identities'),
       get,
@@ -106,9 +134,13 @@ export class IdentityActionImpl {
       view: globalIdentitiesLens,
     });
     this.#pager = new OffsetListPager({
-      keys: () => (get().identitiesMeta ? [IDENTITY_LIST_KEY] : []),
+      keys: () => Object.keys(get().identityListEntries),
       refreshHead: () => this.refreshIdentities(),
       slice: this.#identities,
+    });
+    this.#recent = new RecentQueryWindow({
+      evict: this.#identities.remove,
+      resource: identityListResource,
     });
   }
 
@@ -128,7 +160,23 @@ export class IdentityActionImpl {
     this.#pager.delete(id, () => memoryCRUDService.deleteIdentity(id));
 
   /** Append the next page of the identities list, once its head is trustworthy. */
-  loadMoreIdentities = (): Promise<void> => this.#pager.loadMore(IDENTITY_LIST_KEY);
+  loadMoreIdentities = (): Promise<void> => this.#pager.loadMore(this.#get().identityListKey);
+
+  /**
+   * Point the flat mirrors at another search / filter. Each query keeps its own
+   * entry, so this drops no page set: a query loaded before repaints from
+   * memory, one persisted before hydrates from storage, and a new one shows the
+   * loading state until its head lands. A no-op when the query is unchanged.
+   */
+  #selectQuery = (key: string): void => {
+    const state = this.#get();
+    if (state.identityListKey === key) return;
+    this.#set(
+      { identityListKey: key, ...identityMirrorsOf(state.identityListEntries[key]) },
+      false,
+      n('identities/select'),
+    );
+  };
 
   /**
    * Apply a confirmed edit to one identity (an inline edit elsewhere in the
@@ -159,8 +207,10 @@ export class IdentityActionImpl {
    * the caller revalidates afterwards (`refreshIdentities`). Resolves `true`
    * once the persisted rows are gone.
    */
-  internal_clearIdentityList = (): Promise<boolean> =>
-    this.#pager.clear(() => clearReplicas(this.#identities.clear, this.#globalIdentities.clear));
+  internal_clearIdentityList = (user?: string): Promise<boolean> =>
+    user === undefined || user === identityListResource.scope.get()
+      ? this.#pager.clear(() => clearReplicas(this.#identities.clear, this.#globalIdentities.clear))
+      : clearUserReplicas(user, this.#identities, this.#globalIdentities);
 
   updateIdentity = async (id: string, data: UpdateUserMemoryIdentity): Promise<boolean> => {
     const result = await memoryCRUDService.updateIdentity(id, data);
@@ -173,13 +223,22 @@ export class IdentityActionImpl {
    * page, then revalidates; the rows land in `identities` — read them from the
    * store, never from this hook.
    */
-  useFetchIdentities = (params: IdentityListParams): ReplicaSyncResult =>
-    this.#identities.useSync(params, {
-      onError: (error) => this.#pager.headFailed(IDENTITY_LIST_KEY, error),
-      // A landed head makes the list's offsets the server's again.
-      onSuccess: () => this.#pager.headLanded(IDENTITY_LIST_KEY),
+  useFetchIdentities = (params: IdentityListParams): ReplicaSyncResult => {
+    const key = memoryListKey(params);
+
+    // Select the query before paint, so a frame never shows another query's rows.
+    useLayoutEffect(() => {
+      this.#selectQuery(key);
+      this.#recent.track(key);
+    }, [key]);
+
+    return this.#identities.useSync(params, {
+      onError: (error) => this.#pager.headFailed(key, error),
+      // A landed head makes this page set's offsets the server's again.
+      onSuccess: () => this.#pager.headLanded(key),
       revalidateOnFocus: false,
     });
+  };
 
   /**
    * Fetch orchestration for the self identities injected into the chat context.

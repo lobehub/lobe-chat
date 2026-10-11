@@ -22,8 +22,9 @@ import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { identitySelectors, useUserMemoryStore } from '@/store/userMemory';
 
 import { identityScopeOf } from '../../utils/replica';
+import { MAX_RECENT_MEMORY_QUERIES } from '../utils/recentQueryWindow';
 import { identityInitialState } from './initialState';
-import { IDENTITY_LIST_KEY, identityListResource, type IdentityListView } from './projection';
+import { identityListResource, type IdentityListView } from './projection';
 
 const MutateBridge = () => {
   const { mutate } = useSWRConfig();
@@ -267,6 +268,77 @@ describe('identity list replica', () => {
     );
   });
 
+  it('paints a previously persisted search from storage when switching to it offline', async () => {
+    const SEARCH = { pageSize: 12, q: 'alice' };
+    await identityListResource.storage!.set(
+      { queryKey: identityListResource.storageKey(SEARCH), scope: rowScope },
+      {
+        data: {
+          currentPage: 0,
+          hasMore: false,
+          items: [identity('cached-alice')],
+          pageSize: 12,
+          q: 'alice',
+          total: 1,
+        } satisfies IdentityListView,
+        updatedAt: 1,
+      },
+    );
+    scopes.add(rowScope);
+    const fetchSpy = vi
+      .spyOn(userMemoryService, 'queryIdentities')
+      .mockResolvedValueOnce(responseOf([identity('i1')]));
+
+    const hook = renderHook(
+      (params: typeof PARAMS & { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchIdentities)(params),
+      { initialProps: PARAMS as typeof PARAMS & { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(listState().identities.map((item) => item.id)).toEqual(['i1']));
+
+    // Offline: the search never answers, only its persisted row can paint it.
+    fetchSpy.mockRejectedValue(new Error('offline'));
+    hook.rerender(SEARCH);
+
+    await waitFor(() =>
+      expect(listState().identities.map((item) => item.id)).toEqual(['cached-alice']),
+    );
+    expect(listState().identitiesMeta).toMatchObject({ q: 'alice' });
+    await identityListResource.storage!.remove({
+      queryKey: identityListResource.storageKey(SEARCH),
+      scope: rowScope,
+    });
+  });
+
+  it('bounds how many identity search variants are kept', async () => {
+    vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(async ({ q } = {}) =>
+      responseOf([identity(`${q}-hit`)]),
+    );
+    const queries = Array.from({ length: MAX_RECENT_MEMORY_QUERIES + 2 }, (_, i) => `q-${i}`);
+    const keyOf = (q: string) => identityListResource.storageKey({ ...PARAMS, q });
+
+    const hook = renderHook(
+      (props: { q: string }) =>
+        useUserMemoryStore((s) => s.useFetchIdentities)({ ...PARAMS, q: props.q }),
+      { initialProps: { q: queries[0] }, wrapper },
+    );
+    for (const q of queries) {
+      hook.rerender({ q });
+      await waitFor(() => expect(listState().identityListEntries[keyOf(q)]).toBeDefined());
+    }
+
+    expect(Object.keys(listState().identityListEntries)).toHaveLength(MAX_RECENT_MEMORY_QUERIES);
+    // The oldest searches left memory and IndexedDB together.
+    await waitFor(async () =>
+      expect(
+        await identityListResource.storage!.get({ queryKey: keyOf(queries[0]), scope: rowScope }),
+      ).toBeUndefined(),
+    );
+    for (const q of queries) {
+      await identityListResource.storage!.remove({ queryKey: keyOf(q), scope: rowScope });
+    }
+  });
+
   it('removes a deleted row from the view and the persisted copy', async () => {
     const fetchSpy = vi
       .spyOn(userMemoryService, 'queryIdentities')
@@ -413,7 +485,6 @@ describe('identity list replica', () => {
       scope: rowScope,
     });
     expect((stored?.data as IdentityListView | undefined)?.items ?? []).toEqual([]);
-    expect(IDENTITY_LIST_KEY).toBe('all');
   });
 
   it('clears every persisted query of the list on reset, not only the one on screen', async () => {

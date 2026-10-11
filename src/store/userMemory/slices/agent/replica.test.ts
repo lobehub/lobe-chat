@@ -342,6 +342,38 @@ describe('userMemory topic memories replica', () => {
     }
   });
 
+  it('purges the deleted user’s bundles after an account switch, so they are never injected later', async () => {
+    const rowOf = (topicId: string, scopeValue: string) =>
+      topicMemoriesResource.storage!.get({
+        queryKey: topicMemoriesResource.storageKey(topicId),
+        scope: scopeValue,
+      });
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(bundle('deleted'));
+    const first = renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_A), {
+      wrapper,
+    });
+    await waitFor(async () => expect((await rowOf(TOPIC_A, rowScope))?.data).toBeDefined());
+    first.unmount();
+    const deletedUser = rowScope;
+
+    // Another account becomes active and caches its own bundle.
+    useScope(`memory-user-${randomUUID()}:personal`);
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(bundle('active'));
+    renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B), { wrapper });
+    await waitFor(async () => expect((await rowOf(TOPIC_B, rowScope))?.data).toBeDefined());
+
+    let cleared = false;
+    await act(async () => {
+      cleared = await useUserMemoryStore.getState().internal_clearTopicMemories(deletedUser);
+    });
+
+    expect(cleared).toBe(true);
+    await expect(rowOf(TOPIC_A, deletedUser)).resolves.toBeUndefined();
+    // The active user's bundle (view and row) is untouched.
+    expect(topicMemories(TOPIC_B)).toEqual(bundle('active'));
+    expect((await rowOf(TOPIC_B, rowScope))?.data).toEqual(bundle('active'));
+  });
+
   it('does not fetch when there is no topic', async () => {
     renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(undefined), { wrapper });
 

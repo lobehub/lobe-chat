@@ -4,13 +4,11 @@ import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryService } from '@/services/userMemory';
 
 import { type IdentityForInjection } from '../../types';
-import { defineUserMemoryPagedReplica, defineUserMemoryReplica } from '../../utils/replica';
-
-/**
- * The identities page renders one global list, so its paged replica keeps a
- * single entry per scope and every reader finds the view under `identities`.
- */
-export const IDENTITY_LIST_KEY = 'all';
+import {
+  defineUserMemoryPagedReplica,
+  defineUserMemoryReplica,
+  memoryListKey,
+} from '../../utils/replica';
 
 /** Rows per page when the caller does not name one. */
 export const DEFAULT_IDENTITY_LIST_PAGE_SIZE = 12;
@@ -69,9 +67,8 @@ export const isIdentityQueryCurrent = (
  * network confirms it, and "load more" appends further pages through the
  * engine.
  *
- * Filters + sort + page size are the query identity: a projection taken under
- * another query never paints, and an un-loaded list never reads as an empty
- * one.
+ * Filters + sort are the entry key: a projection taken under another query
+ * never paints, and an un-loaded list never reads as an empty one.
  *
  * Offset paging, cursor = page index (0 = head): the endpoint pages 1-based and
  * reports the real `total`, so "is there more" stays the server's answer.
@@ -92,7 +89,10 @@ export const identityListResource = defineUserMemoryPagedReplica<
 
     return { items: result.items, total: result.total };
   },
-  key: () => IDENTITY_LIST_KEY,
+  // One entry per search / filter / sort (see `memoryListKey`): each query
+  // hydrates its own persisted head page, and the recent-query window bounds
+  // how many survive (see `RecentQueryWindow`).
+  key: memoryListKey,
   name: 'identityList',
   paging: {
     direction: 'forward',
@@ -101,7 +101,6 @@ export const identityListResource = defineUserMemoryPagedReplica<
     // A reload repaints what the first network page would show, never a stale tail.
     persist: { pages: 1 },
   },
-  query: (params) => params,
   storage: 'indexedDB',
   version: 1,
 });

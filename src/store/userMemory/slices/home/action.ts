@@ -15,7 +15,7 @@ import { setNamespace } from '@/utils/storeDebug';
 // passes to the slice, so this module never imports the store at runtime — the
 // store imports the slice, and a runtime import back would be a cycle.
 import { type UserMemoryStore } from '../../store';
-import { clearReplicas } from '../../utils/replica';
+import { clearUserReplicas } from '../../utils/replica';
 import {
   type HomeReplicaParams,
   IDENTITY_ROLES_KEY,
@@ -132,10 +132,13 @@ export class HomeActionImpl {
    * its empty state right away — mounted or not — and a reload paints the same
    * instead of the purged data.
    */
-  internal_clearHomeReplicas = async (): Promise<boolean> => {
-    const cleared = await clearReplicas(this.#persona.clear, this.#identityRoles.clear);
-    this.#persona.update(PERSONA_KEY, () => ({ persona: null }));
-    this.#identityRoles.update(IDENTITY_ROLES_KEY, () => ({ roles: [], tags: [] }));
+  internal_clearHomeReplicas = async (user?: string): Promise<boolean> => {
+    const active = user === undefined || user === personaResource.scope.get();
+    const cleared = await clearUserReplicas(user, this.#persona, this.#identityRoles);
+    if (active) {
+      this.#persona.update(PERSONA_KEY, () => ({ persona: null }));
+      this.#identityRoles.update(IDENTITY_ROLES_KEY, () => ({ roles: [], tags: [] }));
+    }
     return cleared;
   };
 

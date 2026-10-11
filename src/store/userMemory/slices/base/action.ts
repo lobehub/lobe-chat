@@ -12,7 +12,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
-import { clearReplicas, userMemoryIdentityScope } from '../../utils/replica';
+import { clearUserReplicas, userMemoryIdentityScope } from '../../utils/replica';
 import { createMemorySearchParams } from '../../utils/searchParams';
 import {
   type MemoryDetailDisplay,
@@ -166,8 +166,8 @@ export class BaseActionImpl {
    * no record of, so the purge is retried once; resolves `true` once storage
    * is purged.
    */
-  internal_clearMemoryReplicas = (): Promise<boolean> =>
-    clearReplicas(this.#retrieve.clear, this.#detail.clear);
+  internal_clearMemoryReplicas = (user?: string): Promise<boolean> =>
+    clearUserReplicas(user, this.#retrieve, this.#detail);
 
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
@@ -175,16 +175,9 @@ export class BaseActionImpl {
     // Every userMemory replica is partitioned per user (see
     // `userMemoryIdentityScope`), so a workspace switch while the request is in
     // flight changes nothing below.
-    const identity = userMemoryIdentityScope.get();
+    const user = userMemoryIdentityScope.get();
 
     await memoryCRUDService.deleteAll();
-
-    // An account switch while the server purge ran: the active partition, the
-    // views on screen and every mounted query belong to another user now.
-    // Clearing them would wipe that user's rows, so leave local state alone.
-    // The purged user's copy is replaced by the server's (empty) answer the
-    // next time they sign in.
-    if (userMemoryIdentityScope.get() !== identity) return;
 
     // Replica-backed reads own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
@@ -192,17 +185,30 @@ export class BaseActionImpl {
     // resurrects purged rows. Each `internal_clear*` retries once and resolves
     // `false` when a persisted row survived a storage failure (the next session
     // would hydrate it back). No slice resets its replica-owned fields here.
+    //
+    // `user` is the account whose memories the server deleted. If another
+    // account became active while the request ran, each slice purges only that
+    // user's persisted partition and leaves the active user's views and rows
+    // alone (`clearUserReplicas`).
     const replicaPurges: boolean[] = [
       // One line per replica-backed slice.
-      await this.#get().internal_clearMemoryReplicas(),
-      await this.#get().internal_clearTopicMemories(),
-      await this.#get().internal_clearHomeReplicas(),
-      await this.#get().internal_clearActivityList(),
-      await this.#get().internal_clearContextList(),
-      await this.#get().internal_clearExperienceList(),
-      await this.#get().internal_clearIdentityList(),
-      await this.#get().internal_clearPreferenceList(),
+      await this.#get().internal_clearMemoryReplicas(user),
+      await this.#get().internal_clearTopicMemories(user),
+      await this.#get().internal_clearHomeReplicas(user),
+      await this.#get().internal_clearActivityList(user),
+      await this.#get().internal_clearContextList(user),
+      await this.#get().internal_clearExperienceList(user),
+      await this.#get().internal_clearIdentityList(user),
+      await this.#get().internal_clearPreferenceList(user),
     ];
+    const purgeFailed = !replicaPurges.every(Boolean);
+
+    // An account switch: the active views, plain state and mounted queries all
+    // belong to the other user, so there is nothing to reset or refetch.
+    if (userMemoryIdentityScope.get() !== user) {
+      if (purgeFailed) throw new Error('Failed to purge persisted memories from local storage');
+      return;
+    }
 
     this.#set(
       produce((draft) => {
@@ -240,7 +246,7 @@ export class BaseActionImpl {
     // The in-memory reset above already stands — the user must not keep seeing
     // purged memories. Surface the rows that survived locally instead of
     // reporting a purge the next session would silently undo.
-    if (!replicaPurges.every(Boolean)) {
+    if (purgeFailed) {
       throw new Error('Failed to purge persisted memories from local storage');
     }
   };

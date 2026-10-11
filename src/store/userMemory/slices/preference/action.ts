@@ -100,7 +100,7 @@ export class PreferenceActionImpl {
     this.#list.delete(id, () => memoryCRUDService.deletePreference(id));
 
   /** Purge for "delete all memories" (every query, memory + IndexedDB). */
-  internal_clearPreferenceList = (): Promise<boolean> => this.#list.clear();
+  internal_clearPreferenceList = (user?: string): Promise<boolean> => this.#list.clear(user);
 
   /** Confirmed edit of one preference in every loaded and persisted query. */
   internal_updatePreferenceEntity = (
