@@ -43,6 +43,13 @@ export interface CreateReplicaSliceOptions<TStore, TParams, TData, TFetched> ext
  * callback runs (an identity / workspace switch in between).
  */
 export interface ReplicaSyncErrorContext {
+  /**
+   * Whether the captured `scope` is still the one the store is on. A failure
+   * with `isActive: false` belongs to an identity / workspace the store has
+   * left: surface it on the *current* view only when this is true, while still
+   * using the captured `key` / `scope` to clean up the scope it came from.
+   */
+  isActive: boolean;
   /** The entry key the read was for; `undefined` for a disabled read. */
   key: string | undefined;
   /** The cache scope the read was captured under. */
@@ -193,6 +200,17 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       requestGeneration.delete(id);
       return started === undefined || started === clearGeneration(scope);
     };
+    /**
+     * Whether the entry is still on the scope the request was captured under.
+     *
+     * A response can settle after an identity/workspace switch. `replace` drops
+     * it — the engine refuses off-scope actions — but the caller's `onSuccess`
+     * must not run either: it carries the previous identity's side effects
+     * (onboarding redirect, display snapshot, analytics identify, settings
+     * writes). The captured key/scope is not enough on its own, because a switch
+     * to a scope that reads the same key/query satisfies both guards above.
+     */
+    const isActiveScope = () => resource.scope.get() === scope;
 
     const sync = driver.useQuery<TFetched>(
       syncKey,
@@ -203,19 +221,26 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       {
         ...schedule,
         // A failure of a query the entry has moved past (or of a request from
-        // before a clear) must not surface on the query now on screen. The
-        // captured key/scope is bound so a late terminal removal cannot land in
-        // a scope that became active after the request.
+        // before a clear) must not surface on the query now on screen. Unlike
+        // success, an off-scope failure is still forwarded: the captured
+        // key/scope is bound so a late terminal answer (NOT_FOUND / FORBIDDEN)
+        // can purge *its own* scope's persisted row via `remove(key, scope)`
+        // without touching the scope now on screen — dropping it would leave
+        // that row to hydrate again when the user switches back.
         // Always installed, so a failed request's generation record is dropped
         // even when the caller has no error side effects.
         onError: (error: unknown) => {
           if (!isSinceClear() || !isActiveQuery()) return;
-          onError?.(error, { key, scope });
+          // Forwarded even off-scope: the captured `key`/`scope` lets a consumer
+          // purge that scope's row. `isActive` tells it whether the failure also
+          // belongs to the view on screen.
+          onError?.(error, { isActive: isActiveScope(), key, scope });
         },
         onSuccess: (data) => {
           // Discard a head response the entry has moved past (the newer query
-          // owns the view, see `headQuery`) or one that started before a clear.
-          if (!isSinceClear() || !isActiveQuery()) return;
+          // owns the view, see `headQuery`), one that started before a clear, or
+          // one captured under a scope the store has since left.
+          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
           replace(params!, data, scope);
           onSuccess?.(data);
         },

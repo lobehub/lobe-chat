@@ -143,7 +143,11 @@ describe('createReplicaSlice', () => {
       // The callback also receives the key/scope the failing read was captured
       // under, so a terminal removal can be bound to the right scope.
       await waitFor(() =>
-        expect(onError).toHaveBeenCalledWith(failure, { key: 'b', scope: 'user-1:personal' }),
+        expect(onError).toHaveBeenCalledWith(failure, {
+          isActive: true,
+          key: 'b',
+          scope: 'user-1:personal',
+        }),
       );
       expect(failing.store.getState().lists.b).toBeUndefined();
     });
@@ -450,6 +454,123 @@ describe('createReplicaSlice', () => {
       expect(store.getState().lists.a).toBeUndefined();
     });
 
+    it("drops a settled request's success side effects once the store has left its scope", () => {
+      // A response can settle after an identity/workspace switch. The engine
+      // refuses the off-scope `replace`, but the caller's callbacks carry the
+      // previous identity's side effects, so they must not run either — and a
+      // switch to a scope reading the same key/query defeats both the
+      // moved-past-query and since-clear guards.
+      const requests: {
+        onError: (error: unknown) => void;
+        onSuccess: (data: string[]) => void;
+      }[] = [];
+      const useQuery = vi.fn((key: any, _fetcher: unknown, options: any) => {
+        if (key !== null) requests.push({ onError: options.onError, onSuccess: options.onSuccess });
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const resource = defineReplica<{ id: string }, string[]>({
+        fetcher: async () => ['server'],
+        key: ({ id }) => id,
+        name: 'staleScopeCallbacks',
+        scope,
+        version: 1,
+      });
+      const store = createStore<TestState>()(() => ({
+        lists: {},
+        listsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<TestState, { id: string }, string[]>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'listsReplica',
+        view: recordLens('lists'),
+      });
+
+      const onSuccess = vi.fn();
+      const onError = vi.fn();
+      renderHook(() => slice.useSync({ id: 'a' }, { onError, onSuccess }), { wrapper });
+
+      const captured = requests.find((request) => request)!;
+
+      // The identity/workspace switches while the request is still in flight.
+      scopeState.current = 'user-2:personal';
+
+      act(() => captured.onSuccess(['stale']));
+      expect(onSuccess).not.toHaveBeenCalled();
+      expect(store.getState().lists.a).toBeUndefined();
+
+      // A failure is still handed over, bound to the scope it was captured
+      // under and flagged as no longer active, so the caller can purge that
+      // scope's row (see below) without repainting the current view.
+      act(() => captured.onError(new Error('stale')));
+      expect(onError).toHaveBeenCalledWith(expect.any(Error), {
+        isActive: false,
+        key: 'a',
+        scope: 'user-1:personal',
+      });
+    });
+
+    it('lets a late terminal error purge its captured scope through the sync callback', async () => {
+      const requests: { onError: (error: unknown) => void }[] = [];
+      const useQuery = vi.fn((key: any, _fetcher: unknown, options: any) => {
+        // The sync request carries the callbacks; the hydration read does not.
+        if (key !== null && options?.onError) requests.push({ onError: options.onError });
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const memory = createMemoryStorage();
+      memory.rows.set('user-1:personal|a', { data: ['revoked'], updatedAt: 1 });
+      const resource = defineReplica<{ id: string }, string[]>({
+        fetcher: async () => ['server'],
+        key: ({ id }) => id,
+        name: 'lateTerminalError',
+        scope,
+        storage: memory.storage,
+        version: 1,
+      });
+      const store = createStore<TestState>()(() => ({
+        lists: {},
+        listsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<TestState, { id: string }, string[]>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'listsReplica',
+        view: recordLens('lists'),
+      });
+
+      scopeState.current = 'user-1:personal';
+      const contexts: { isActive: boolean; key: string | undefined; scope: string }[] = [];
+      renderHook(
+        () =>
+          slice.useSync(
+            { id: 'a' },
+            {
+              onError: (_error, context) => {
+                contexts.push(context);
+                if (context.key) slice.remove(context.key, context.scope);
+              },
+            },
+          ),
+        { wrapper },
+      );
+      const request = requests.find((entry) => entry)!;
+
+      // The identity switches and loads its own entry before the denial lands.
+      scopeState.current = 'user-2:personal';
+      act(() => slice.replace({ id: 'a' }, ['b-value']));
+
+      act(() => request.onError(new Error('NOT_FOUND')));
+
+      // The callback still runs, flagged as belonging to a scope left behind, so
+      // the consumer can purge that scope without repainting the current one.
+      expect(contexts[0]).toMatchObject({ isActive: false, key: 'a', scope: 'user-1:personal' });
+      // The scope on screen keeps its entry; the denied scope's row is purged.
+      expect(store.getState().lists.a).toEqual(['b-value']);
+      await waitFor(() => expect(memory.rows.get('user-1:personal|a')).toBeUndefined());
+    });
+
     it('purges the captured scope row for a removal that lands after a scope switch', async () => {
       const storage = createMemoryStorage();
       storage.rows.set('user-1:personal|a', { data: ['revoked'], updatedAt: 1 });
@@ -494,7 +615,7 @@ describe('createReplicaSlice', () => {
         throw new Error('not found');
       });
       const { slice } = setup({ fetcher });
-      const contexts: { key: string | undefined; scope: string }[] = [];
+      const contexts: { isActive: boolean; key: string | undefined; scope: string }[] = [];
 
       scopeState.current = 'user-1:personal';
       renderHook(
@@ -503,7 +624,7 @@ describe('createReplicaSlice', () => {
       );
 
       await waitFor(() => expect(contexts.length).toBeGreaterThan(0));
-      expect(contexts[0]).toEqual({ key: 'a', scope: 'user-1:personal' });
+      expect(contexts[0]).toEqual({ isActive: true, key: 'a', scope: 'user-1:personal' });
     });
 
     it('evicts the persisted row when a response has nothing to persist', async () => {
@@ -1254,7 +1375,11 @@ describe('createReplicaSlice', () => {
 
       const failure = new Error('search failed');
       act(() => search.onError(failure));
-      expect(onError).toHaveBeenCalledWith(failure, { key: 'a', scope: 'user-1:personal' });
+      expect(onError).toHaveBeenCalledWith(failure, {
+        isActive: true,
+        key: 'a',
+        scope: 'user-1:personal',
+      });
     });
   });
 
