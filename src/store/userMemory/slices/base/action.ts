@@ -11,7 +11,6 @@ import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@/types/us
 import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { clearUserMemoryReplicas } from '../../replicaRegistry';
 import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
@@ -71,9 +70,10 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
-    // Replica-backed caches (see `replicaRegistry`) drop their views and every
-    // persisted row through the engine; a plain `set` would leave the rows behind.
-    await clearUserMemoryReplicas(this.#get);
+    // Replica-backed reads own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearTopicMemories();
 
     this.#set(
       produce((draft) => {

@@ -3,7 +3,6 @@ import { userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { type RetrieveMemoryResult } from '@/types/userMemory';
 
-import { registerUserMemoryReplica } from '../../replicaRegistry';
 import { type UserMemoryStore } from '../../store';
 import { topicMemoriesResource } from './projection';
 
@@ -28,17 +27,24 @@ export class AgentMemoryActionImpl {
       stateKey: 'topicMemoriesReplica',
       view: recordLens<UserMemoryStore, RetrieveMemoryResult>('topicMemoriesMap'),
     });
-    // `purgeAllMemories` clears every persisted bundle, so a reload cannot
-    // inject deleted memories into the next chat request.
-    registerUserMemoryReplica(get, 'topicMemories', {
-      clear: () => this.#topicMemories.clear(),
-      revalidate: () => this.#topicMemories.revalidate(),
-    });
   }
 
   /** Drop one topic's cached bundle (and its replica bookkeeping entry). */
   clearTopicMemories = (topicId: string): void => {
     this.#topicMemories.remove(topicId);
+  };
+
+  /**
+   * Drop every topic bundle — memory and every persisted row of the active
+   * scope, including bundles an earlier session wrote — then refetch the
+   * mounted topics. Called by `purgeAllMemories`, so a reload can never inject
+   * deleted memories into the next chat request. Resolves `true` once storage
+   * is purged.
+   */
+  internal_clearTopicMemories = async (): Promise<boolean> => {
+    const cleared = await this.#topicMemories.clear();
+    void this.#topicMemories.revalidate();
+    return cleared;
   };
 
   /**
