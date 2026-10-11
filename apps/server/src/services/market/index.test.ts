@@ -252,49 +252,6 @@ describe('MarketService', () => {
     });
   });
 
-  describe('runSandbox', () => {
-    it('posts the run to Market as the trusted user and surfaces Retry-After', async () => {
-      const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ error: 'rate_limited' }), {
-          headers: { 'Content-Type': 'application/json', 'Retry-After': '12' },
-          status: 429,
-        }),
-      );
-      vi.stubGlobal('fetch', fetchMock);
-      vi.mocked(generateTrustedClientToken).mockReturnValue('trusted-user-token');
-
-      try {
-        const service = new MarketService({ userInfo: { userId: 'user-1' } });
-        const request = {
-          egress: { allow: ['api.github.com'] },
-          runtime: 'node' as const,
-          scriptB64: 'Y29uc29sZS5sb2coMSk=',
-          scriptEncoding: 'base64' as const,
-          subject: { id: 'widget-1', kind: 'widget' as const },
-        };
-
-        await expect(service.runSandbox(request)).resolves.toEqual({
-          data: { error: 'rate_limited' },
-          retryAfterSeconds: 12,
-          status: 429,
-        });
-
-        const [url, init] = fetchMock.mock.calls[0];
-        expect(String(url)).toBe('https://market.lobehub.com/api/v1/sandbox/runs');
-        expect(init).toMatchObject({
-          body: JSON.stringify(request),
-          headers: {
-            'Content-Type': 'application/json',
-            'x-lobe-trust-token': 'trusted-user-token',
-          },
-          method: 'POST',
-        });
-      } finally {
-        vi.unstubAllGlobals();
-      }
-    });
-  });
-
   describe('submitFeedback', () => {
     it('should pass params to market SDK without screenshot', async () => {
       const service = new MarketService();

@@ -105,29 +105,6 @@ export interface MarketOAuthProxyResponse {
   status: number;
 }
 
-/**
- * Body of Market's `POST /api/v1/sandbox/runs` (one-shot script runs). Mirrors
- * `SandboxRunRequest` in `@lobehub/market-types`; switch to the SDK's
- * `sandbox.run` once a release ships it.
- */
-export interface MarketSandboxRunRequest {
-  egress?: { allow: string[] };
-  env?: Record<string, string>;
-  idempotencyKey?: string;
-  runtime: 'bash' | 'node' | 'python';
-  scriptB64: string;
-  scriptEncoding: 'base64';
-  subject: { id: string; kind: 'widget' };
-  timeoutMs?: number;
-}
-
-export interface MarketSandboxRunResponse {
-  data: unknown;
-  /** `Retry-After` seconds Market sent with a 429 / 503, if any. */
-  retryAfterSeconds?: number;
-  status: number;
-}
-
 export interface MarketServiceOptions {
   /** Access token from OIDC flow (user token) */
   accessToken?: string;
@@ -307,39 +284,6 @@ export class MarketService {
     });
 
     return { data: (await response.json()) as unknown, status: response.status };
-  };
-
-  /**
-   * Runs one script in a fresh sandbox through Market (`POST /api/v1/sandbox/runs`).
-   *
-   * Use when:
-   * - A server feature needs a one-shot, network-restricted script execution
-   *
-   * Expects:
-   * - The service was created with trusted-client authentication; Market only
-   *   accepts trusted clients on this route, and bills / rate limits the
-   *   account the token names
-   *
-   * Returns:
-   * - Market's parsed body and HTTP status; mapping errors is the caller's job
-   */
-  runSandbox = async (
-    request: MarketSandboxRunRequest,
-    { signal }: { signal?: AbortSignal } = {},
-  ): Promise<MarketSandboxRunResponse> => {
-    const response = await fetch(new URL('/api/v1/sandbox/runs', MARKET_BASE_URL), {
-      body: JSON.stringify(request),
-      headers: { ...this.oauthProxyHeaders, 'Content-Type': 'application/json' },
-      method: 'POST',
-      signal,
-    });
-    const retryAfter = Number(response.headers.get('retry-after'));
-
-    return {
-      data: (await response.json().catch(() => null)) as unknown,
-      retryAfterSeconds: Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined,
-      status: response.status,
-    };
   };
 
   // ============================== Feedback Methods ==============================

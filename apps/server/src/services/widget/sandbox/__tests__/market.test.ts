@@ -1,3 +1,4 @@
+import { MarketAPIError } from '@lobehub/market-sdk';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/server/services/market', () => ({ MarketService: vi.fn() }));
@@ -11,25 +12,33 @@ const request = {
   env: { REPO: 'lobehub/lobehub' },
   network: { allow: ['api.github.com'] },
   runtime: 'node' as const,
-  script: 'console.log("ok $HOME")',
+  script: 'console.log("ok")',
   subject: { id: 'widget-1', kind: 'widget' as const },
 };
 
-const setup = (response: { data: unknown; retryAfterSeconds?: number; status: number }) => {
-  const runSandbox = vi.fn(async () => response);
-  const forActor = vi.fn(() => runSandbox);
-  const runner = new MarketWidgetSandboxRunner({ isEnabled: () => true, runSandbox: forActor });
-  return { forActor, runSandbox, runner };
+const result = {
+  durationMs: 1800,
+  exitCode: 0,
+  runId: 'run-1',
+  stderr: '',
+  stdout: '{"type":"stat"}',
+  timedOut: false,
+  truncated: false,
 };
 
-const ran = {
-  data: { durationMs: 1800, exitCode: 0, stderr: '', stdout: '{"type":"stat"}', timedOut: false },
-  status: 200,
+const setup = (run: (...args: any[]) => Promise<unknown>) => {
+  const sandbox = { run: vi.fn(run) };
+  const sandboxFor = vi.fn(() => sandbox as any);
+  const runner = new MarketWidgetSandboxRunner({ isEnabled: () => true, sandboxFor });
+  return { runner, sandbox, sandboxFor };
 };
+
+const apiError = (status: number, body?: unknown) =>
+  new MarketAPIError(status, 'Error', body as any);
 
 describe('MarketWidgetSandboxRunner', () => {
-  it('forwards the run to Market as the widget actor and maps the result', async () => {
-    const { forActor, runSandbox, runner } = setup(ran);
+  it('runs through the Market SDK as the widget actor and maps the result', async () => {
+    const { runner, sandbox, sandboxFor } = setup(async () => result);
 
     await expect(runner.run(request)).resolves.toEqual({
       durationMs: 1800,
@@ -38,14 +47,13 @@ describe('MarketWidgetSandboxRunner', () => {
       stdout: '{"type":"stat"}',
       timedOut: false,
     });
-    expect(forActor).toHaveBeenCalledWith({ userId: 'user-1', workspaceId: 'ws-1' });
-    expect(runSandbox).toHaveBeenCalledWith(
+    expect(sandboxFor).toHaveBeenCalledWith({ userId: 'user-1', workspaceId: 'ws-1' });
+    expect(sandbox.run).toHaveBeenCalledWith(
       {
         egress: { allow: ['api.github.com'] },
         env: { REPO: 'lobehub/lobehub' },
         runtime: 'node',
-        scriptB64: Buffer.from(request.script).toString('base64'),
-        scriptEncoding: 'base64',
+        script: 'console.log("ok")',
         subject: { id: 'widget-1', kind: 'widget' },
         timeoutMs: WIDGET_SANDBOX_DEFAULT_TIMEOUT_MS,
       },
@@ -54,24 +62,21 @@ describe('MarketWidgetSandboxRunner', () => {
   });
 
   it('clamps the timeout and keeps non-zero exits and timeouts as results', async () => {
-    const { runSandbox, runner } = setup({
-      data: { durationMs: 2000, exitCode: 124, stderr: '', stdout: '', timedOut: true },
-      status: 200,
-    });
+    const { runner, sandbox } = setup(async () => ({ ...result, exitCode: 124, timedOut: true }));
 
     await expect(runner.run({ ...request, timeoutMs: 999_999 })).resolves.toMatchObject({
       exitCode: 124,
       timedOut: true,
     });
-    expect((runSandbox.mock.calls[0] as any)[0].timeoutMs).toBe(WIDGET_SANDBOX_MAX_TIMEOUT_MS);
+    expect(sandbox.run.mock.calls[0][0].timeoutMs).toBe(WIDGET_SANDBOX_MAX_TIMEOUT_MS);
   });
 
   it('fails as not configured without trusted-client credentials, without calling Market', async () => {
-    const forActor = vi.fn();
-    const runner = new MarketWidgetSandboxRunner({ isEnabled: () => false, runSandbox: forActor });
+    const sandboxFor = vi.fn();
+    const runner = new MarketWidgetSandboxRunner({ isEnabled: () => false, sandboxFor });
 
     await expect(runner.run(request)).rejects.toMatchObject({ code: 'SANDBOX_NOT_CONFIGURED' });
-    expect(forActor).not.toHaveBeenCalled();
+    expect(sandboxFor).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -79,35 +84,31 @@ describe('MarketWidgetSandboxRunner', () => {
     [401, { error: 'invalid_token' }, 'SANDBOX_UNAUTHORIZED'],
     [403, { error: 'forbidden_client' }, 'SANDBOX_UNAUTHORIZED'],
     [400, { error: 'invalid_request', error_description: 'bad host' }, 'SANDBOX_BAD_REQUEST'],
+    [422, { error: 'secret_unusable' }, 'SANDBOX_BAD_REQUEST'],
+    [429, { error: 'rate_limited' }, 'SANDBOX_ERROR'],
     [503, { error: 'sandbox_unavailable' }, 'SANDBOX_ERROR'],
-    [502, { error: 'sandbox_error' }, 'SANDBOX_ERROR'],
-    [500, null, 'SANDBOX_ERROR'],
-  ])('maps HTTP %d %j to %s', async (status, data, code) => {
-    const { runner } = setup({ data, status });
+    [500, undefined, 'SANDBOX_ERROR'],
+  ])('maps HTTP %d %j to %s', async (status, body, code) => {
+    const { runner } = setup(async () => {
+      throw apiError(status, body);
+    });
 
     await expect(runner.run(request)).rejects.toMatchObject({ code, name: 'WidgetSandboxError' });
   });
 
-  it('reports rate limiting with its retry hint', async () => {
-    const { runner } = setup({
-      data: { error: 'rate_limited' },
-      retryAfterSeconds: 30,
-      status: 429,
+  it('keeps Market’s error code and description in the message', async () => {
+    const { runner } = setup(async () => {
+      throw apiError(400, { error: 'invalid_request', error_description: 'bad host' });
     });
 
     await expect(runner.run(request)).rejects.toMatchObject({
-      code: 'SANDBOX_ERROR',
-      message: expect.stringContaining('retry after 30s'),
+      message: expect.stringContaining('invalid_request: bad host'),
     });
   });
 
   it('turns a network failure into SANDBOX_ERROR', async () => {
-    const runSandbox = vi.fn(async () => {
+    const { runner } = setup(async () => {
       throw new TypeError('fetch failed');
-    });
-    const runner = new MarketWidgetSandboxRunner({
-      isEnabled: () => true,
-      runSandbox: () => runSandbox,
     });
 
     await expect(runner.run(request)).rejects.toMatchObject({
