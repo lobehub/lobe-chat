@@ -69,16 +69,19 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
-    // Replica-backed lists own their memory and persisted (IndexedDB) rows: wipe
-    // them through their engine, never by assigning initial state, so no query
-    // variant hydrates the deleted memories on a later reload. The SWR mutations
-    // below then revalidate whatever is mounted. Every replica-backed userMemory
-    // slice adds its `clear*` action here.
-    await this.#get().clearContextList();
+    // Replica-backed lists own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows. Every
+    // replica-backed userMemory slice adds its `internal_clear*` call here.
+    await this.#get().internal_clearContextList();
 
     this.#set(
       produce((draft) => {
         Object.assign(draft, activityInitialState);
+        draft.contextsQuery = undefined;
+        draft.contextsSearchError = undefined;
+        draft.contextsSearchLoading = undefined;
+        draft.contextsSort = undefined;
         Object.assign(draft, experienceInitialState);
         Object.assign(draft, identityInitialState);
         Object.assign(draft, preferenceInitialState);
@@ -192,14 +195,9 @@ export class BaseActionImpl {
       }
       case LayersEnum.Context: {
         await memoryCRUDService.updateContext(id, { description: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.contexts.find((memory) => memory.id === id);
-            if (item) item.description = content;
-          }),
-          false,
-          n('updateMemory/context'),
-        );
+        // The context list is replica-backed: patch the view and its persisted
+        // rows together (the flat `contexts` field mirrors it).
+        this.#get().internal_updateContextEntity(id, (item) => ({ ...item, description: content }));
         listKeyRoot = userMemoryKeys.contexts.root;
         break;
       }

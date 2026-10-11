@@ -170,21 +170,21 @@ export class ContextActionImpl {
   /**
    * Wipe the context list for "delete all memories": the in-memory view and
    * every persisted query variant of the active scope, dropping reads that
-   * started before the wipe. The caller revalidates afterwards.
+   * started before the wipe. Resolves once the persisted rows are gone; the
+   * caller (`purgeAllMemories`) revalidates afterwards.
    */
-  clearContextList = async (): Promise<void> => {
-    const purged = this.#list.clear();
-    this.#set(
-      {
-        contextsQuery: undefined,
-        contextsSearchError: undefined,
-        contextsSearchLoading: undefined,
-        contextsSort: undefined,
-      },
-      false,
-      n('clearContextList'),
-    );
-    await purged;
+  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
+
+  /**
+   * Confirmed patch of one context in the loaded view and in persisted rows
+   * of query variants that are not loaded, so an edit survives a reload even
+   * when no mounted list revalidates afterwards.
+   */
+  internal_updateContextEntity = (
+    id: string,
+    fn: (item: DisplayContextMemory) => DisplayContextMemory,
+  ): void => {
+    this.#list.updateEntity<DisplayContextMemory>(id, fn);
   };
 
   deleteContext = async (id: string): Promise<void> => {

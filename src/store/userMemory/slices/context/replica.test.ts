@@ -504,6 +504,46 @@ describe('contextList replica', () => {
     expect(useUserMemoryStore.getState().contexts).toEqual([]);
   });
 
+  it('patches an edited context in the view and in persisted query variants', async () => {
+    const server = rawItemsOf(2);
+    serveList(server);
+    // The server holds the edit too, so the head revalidation confirms it.
+    vi.spyOn(memoryCRUDService, 'updateContext').mockImplementation(
+      async (id: string, data: object) => {
+        Object.assign((server.find((row) => (row as any).memory.id === id) as any).context, data);
+        return undefined as never;
+      },
+    );
+
+    // A search the user visited earlier keeps its own persisted row.
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({});
+    await waitFor(() => expect(useUserMemoryStore.getState().contexts).toHaveLength(2));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().updateMemory('context-0', 'edited', LayersEnum.Context);
+    });
+
+    const edited = (data?: ContextListData) =>
+      data?.items.find((entry) => entry.id === 'context-0') as Record<string, unknown> | undefined;
+    // The canonical view (not only the flat mirror) carries the edit.
+    expect(edited(useUserMemoryStore.getState().contextListData)?.description).toBe('edited');
+    // The unloaded search variant is patched too, so a reload on it shows the edit.
+    await waitFor(async () => {
+      const row = await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      expect(edited(row?.data as ContextListData)?.description).toBe('edited');
+    });
+  });
+
   it('does not fetch another page when the head page is the last one', async () => {
     fetchSpy.mockResolvedValue(listPage([rawItem('only')], 1));
 
