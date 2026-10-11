@@ -255,6 +255,19 @@ export class PreferenceActionImpl {
   };
 
   /**
+   * Fill the default query's slot from IndexedDB before the route commits, so a
+   * cold visit paints the cached rows instead of the loading skeleton (the read
+   * is async, and `useSync` only hydrates after mount). A later `useSync`
+   * hydrate is a no-op once the slot is filled.
+   */
+  preHydrate = (): Promise<boolean> => {
+    const scope = preferenceListResource.scope.get();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#list.ensureScope(scope);
+    return this.#list.hydrate({ pageSize: PREFERENCE_LIST_PAGE_SIZE }, scope);
+  };
+
+  /**
    * Point the flat mirrors at another search / sort. Each query keeps its own
    * entry, so this never drops a page set: a query loaded before repaints from
    * memory, one persisted before hydrates from storage, and a new one shows the

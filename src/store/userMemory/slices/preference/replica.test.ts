@@ -140,6 +140,28 @@ describe('preferenceList replica', () => {
     expect(useUserMemoryStore.getState().preferencesInit).toBe(true);
   });
 
+  it('pre-hydrates the default query before the route mounts', async () => {
+    const cached: PreferenceListData = {
+      currentPage: 0,
+      hasMore: false,
+      items: [item('cached-1')],
+      pageSize: 12,
+      total: 1,
+    };
+    await preferenceListResource.storage!.set(
+      { queryKey: BASE_KEY, scope },
+      { data: cached, updatedAt: 1 },
+    );
+    // Never resolves: only the route loader's pre-hydrate can paint, never useSync.
+    fetchSpy.mockImplementation(pending);
+
+    await expect(useUserMemoryStore.getState().preHydrate()).resolves.toBe(true);
+
+    expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['cached-1']);
+    expect(useUserMemoryStore.getState().preferences.map((p) => p.id)).toEqual(['cached-1']);
+    expect(useUserMemoryStore.getState().preferencesInit).toBe(true);
+  });
+
   it('replaces the head page with the server response and persists it', async () => {
     fetchSpy.mockResolvedValue(listPage([rawItem('a'), rawItem('b')], 24));
 
@@ -767,5 +789,66 @@ describe('preferenceList replica', () => {
         expect(stored).not.toContain(evicted(q));
       }
     });
+  });
+
+  it('drops an in-flight next page when a head row is deleted', async () => {
+    let resolvePage2: ((value: ReturnType<typeof listPage>) => void) | undefined;
+    let server = Array.from({ length: 24 }, (_, i) => rawItem(`r${i}`));
+    fetchSpy
+      .mockImplementationOnce(async () => listPage(server.slice(0, 12), server.length))
+      .mockImplementationOnce(() => new Promise((resolve) => (resolvePage2 = resolve)))
+      .mockImplementation(
+        async ({ page = 1, pageSize = 12 }: { page?: number; pageSize?: number } = {}) =>
+          listPage(server.slice((page - 1) * pageSize, page * pageSize), server.length),
+      );
+    vi.spyOn(memoryCRUDService, 'deletePreference').mockResolvedValue(undefined as never);
+
+    const hook = renderHook(
+      () => ({
+        loadMore: useUserMemoryStore((s) => s.loadMorePreferences),
+        sync: useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }),
+      }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(useUserMemoryStore.getState().preferences).toHaveLength(12));
+
+    // Start page 2 while only the head is loaded.
+    act(() => {
+      hook.result.current.loadMore();
+    });
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().preferenceListData?.isLoadingMore).toBe(true),
+    );
+
+    // Delete a head row while page 2 is in flight; the head is refetched.
+    server = [...server.slice(0, 5), ...server.slice(6)];
+    await act(async () => {
+      await useUserMemoryStore.getState().deletePreference('r5');
+    });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 12).map((raw) => raw.memory.id),
+      ),
+    );
+
+    // The pre-deletion page 2 lands late and must be dropped, not merged into
+    // the fresh head (which would advance the cursor and skip a row).
+    await act(async () => {
+      resolvePage2!(listPage(rawItemsOf(12, 12), 24));
+    });
+    expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+      server.slice(0, 12).map((raw) => raw.memory.id),
+    );
+
+    // The next page then continues contiguously from the fresh head.
+    await act(async () => {
+      hook.result.current.loadMore();
+    });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(
+        server.slice(0, 24).map((raw) => raw.memory.id),
+      ),
+    );
   });
 });
