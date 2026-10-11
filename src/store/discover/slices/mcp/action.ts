@@ -59,6 +59,9 @@ export class MCPActionImpl {
     this.#detail = createReplicaSlice(mcpDetailResource, {
       actionPrefix: n('detail'),
       get,
+      // The market no longer has this server: drop the entry and its persisted
+      // row rather than keep serving the cached copy.
+      isMissing: (detail) => detail === null,
       set,
       stateKey: 'mcpDetailReplica',
       view: recordLens<DiscoverStore, DiscoverMcpDetail>('mcpDetailMap'),
@@ -148,7 +151,9 @@ export class MCPActionImpl {
       locale: globalHelpers.getCurrentLanguage(),
     };
     const queryKey = mcpCategoriesQueryKey(normalized);
-    const sync = this.#categories.useSync(normalized, { enabled });
+    // Static, persisted counts: like the SWR hook it replaces, a window focus
+    // does not refetch them.
+    const sync = this.#categories.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().mcpCategoriesMap[queryKey], enabled);
   };
 }

@@ -57,7 +57,7 @@ const syncCalls = async (name: 'mcpCategories' | 'mcpDetail' | 'mcpList') => {
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
@@ -131,6 +131,29 @@ describe('MCPSlice (replica)', () => {
   });
 
   describe('useFetchMcpDetail', () => {
+    it('drops a cached detail once the market reports the server gone', async () => {
+      const { discoverService } = await import('@/services/discover');
+
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchMcpDetail({ identifier: 'mcp-1' }),
+      );
+      const key = result.current.queryKey!;
+      const [call] = await syncCalls('mcpDetail');
+
+      vi.mocked(discoverService.getMcpDetail).mockResolvedValueOnce({ identifier: 'mcp-1' } as any);
+      const cached = await call.fetcher();
+      act(() => call.config.onSuccess!(cached));
+      expect(mcpSelectors.mcpDetail(key)(useStore.getState())).toEqual({ identifier: 'mcp-1' });
+
+      // The market removed the server: the service answers `undefined`.
+      vi.mocked(discoverService.getMcpDetail).mockResolvedValueOnce(undefined as any);
+      const missing = await call.fetcher();
+      act(() => call.config.onSuccess!(missing));
+
+      expect(mcpSelectors.mcpDetail(key)(useStore.getState())).toBeUndefined();
+      expect(useStore.getState().mcpDetailMap[key]).toBeUndefined();
+    });
+
     it('requests the detail with identifier, version and locale', async () => {
       const { discoverService } = await import('@/services/discover');
 
@@ -199,6 +222,13 @@ describe('MCPSlice (replica)', () => {
   });
 
   describe('useMcpCategories', () => {
+    it('does not revalidate the categories on window focus', async () => {
+      renderHook(() => useStore.getState().useMcpCategories({ q: 'github' }));
+
+      const [call] = await syncCalls('mcpCategories');
+      expect(call.config.revalidateOnFocus).toBe(false);
+    });
+
     it('requests category counts with the search term and the locale', async () => {
       const { discoverService } = await import('@/services/discover');
 
