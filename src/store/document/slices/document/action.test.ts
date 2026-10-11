@@ -504,6 +504,34 @@ describe('document detail replica', () => {
     });
   });
 
+  it('mirrors a saved title and emoji into the persisted detail', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ filename: 'Old', metadata: { emoji: '📄' }, title: 'Old' }) as any,
+    );
+    vi.mocked(documentService.updateDocument).mockResolvedValue({
+      historyAppended: false,
+      id: 'doc-1',
+      updatedAt: '2026-01-08T00:00:00.000Z',
+    } as any);
+
+    renderDocument('doc-1', createEditor());
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-1']).toBeDefined());
+
+    await act(async () => {
+      await useDocumentStore.getState().performSave('doc-1', { emoji: '🚀', title: 'New' });
+    });
+
+    const saved = expect.objectContaining({
+      filename: 'New',
+      metadata: { emoji: '🚀' },
+      title: 'New',
+    });
+    expect(useDocumentStore.getState().documentDetailMap['doc-1']).toEqual({ document: saved });
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data).toEqual({ document: saved }),
+    );
+  });
+
   it('does not let a sync that started before a save revert the saved detail', async () => {
     vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
     vi.mocked(documentService.updateDocument).mockResolvedValue({

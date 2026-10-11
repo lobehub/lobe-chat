@@ -416,6 +416,14 @@ export class EditorActionImpl {
             ...cachedDetail,
             content: currentContent,
             editorData: currentEditorData,
+            // Mirror the metadata this save wrote, exactly as the server applies
+            // it (`title` also renames `filename`; `metadata` is replaced). A
+            // stale title / emoji here would be republished by the next body
+            // save and painted by a reload whose confirming read fails.
+            ...(metadata?.title !== undefined
+              ? { filename: metadata.title, title: metadata.title }
+              : {}),
+            ...(metadata?.emoji ? { metadata: { emoji: metadata.emoji } } : {}),
             updatedAt: savedAt ?? cachedDetail.updatedAt,
           },
           scope,
