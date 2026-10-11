@@ -128,7 +128,12 @@ const getGatewayRejection = (error: unknown): { content: string; code: string } 
     typeof raw._responseBody?.reason === 'string' ? raw._responseBody.reason : undefined;
   const message = typeof raw.message === 'string' ? raw.message : undefined;
 
-  if (errorType === undefined || (!reason && !message)) return;
+  // Numeric error types are part of the generic model-runtime error contract
+  // (429 rate limits, 4xx validation, provider-policy refusals). Only classify
+  // a failure as an account/gateway-level rejection when the gateway-specific
+  // response body is present — otherwise keep the existing rethrow behavior so
+  // ordinary structured errors stay transparent and retryable.
+  if (errorType === undefined || (provider === undefined && reason === undefined)) return;
 
   const parts = [
     `Media analysis was rejected by the platform model gateway (HTTP ${errorType}${provider ? `, provider: ${provider}` : ''}).`,

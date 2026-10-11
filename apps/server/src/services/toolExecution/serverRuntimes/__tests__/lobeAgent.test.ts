@@ -274,6 +274,34 @@ describe('lobeAgentRuntime', () => {
     ).rejects.toThrow('socket hang up');
   });
 
+  it('should rethrow ordinary structured HTTP errors without gateway response body', async () => {
+    mockChat.mockRejectedValueOnce({ errorType: 429, message: 'Rate limited' });
+    const runtime = lobeAgentRuntime.factory(baseContext);
+
+    await expect(
+      runtime.analyzeMedia({
+        question: 'what is this?',
+        urls: ['https://example.com/image.png'],
+      }),
+    ).rejects.toMatchObject({ errorType: 429, message: 'Rate limited' });
+  });
+
+  it('should classify a gateway rejection from the response body alone (no message needed)', async () => {
+    mockChat.mockRejectedValueOnce({
+      _responseBody: { provider: 'lobehub', reason: 'quota_exceeded' },
+      errorType: 402,
+    });
+    const runtime = lobeAgentRuntime.factory(baseContext);
+
+    const result = await runtime.analyzeMedia({
+      question: 'what is this?',
+      urls: ['https://example.com/image.png'],
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toMatchObject({ code: 'GATEWAY_QUOTA_EXCEEDED' });
+  });
+
   it('should reject loopback media urls before calling the multimodal model', async () => {
     const runtime = lobeAgentRuntime.factory(baseContext);
 
