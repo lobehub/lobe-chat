@@ -76,6 +76,7 @@ import type {
   WorkspaceInitResult,
 } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 import { isAbsolute, relative, resolve } from 'pathe';
 
 import { gatewayEnv } from '@/envs/gateway';
@@ -173,6 +174,8 @@ type TerminalRpcMethod =
 
 /** Live sockets whose provider-binding probe answered, bounded per server instance. */
 const PROVIDER_BINDING_CAPABILITY_CACHE_LIMIT = 1024;
+/** Concurrent capability probes per device; a device rarely has more live sockets. */
+const PROVIDER_BINDING_PROBE_CONCURRENCY = 4;
 
 export class DeviceGateway {
   /** Probe answers per live socket set; see {@link findProviderBindingChannel}. */
@@ -1951,10 +1954,12 @@ export class DeviceGateway {
     );
     if (cached) return cached.channel;
 
-    // Probe every unknown label at once, so one silent socket costs one timeout
-    // rather than one per label. Old clients reject this read-only RPC.
-    const available = await Promise.all(
-      candidates.map(async ({ cacheKey, channel }) => {
+    // Probe unknown labels concurrently, so one silent socket costs one timeout
+    // rather than one per label, while capping RPCs to a device with many
+    // sockets. Old clients reject this read-only RPC.
+    const available = await pMap(
+      candidates,
+      async ({ cacheKey, channel }) => {
         if (cacheKey && this.providerBindingCapability.has(cacheKey)) {
           return this.providerBindingCapability.get(cacheKey) === true;
         }
@@ -1973,7 +1978,8 @@ export class DeviceGateway {
           // One stale socket must not hide another compatible live connection.
           return false;
         }
-      }),
+      },
+      { concurrency: PROVIDER_BINDING_PROBE_CONCURRENCY },
     );
     // Channels arrive newest-first; prefer the newest compatible connection.
     return candidates.find((_, index) => available[index])?.channel;
