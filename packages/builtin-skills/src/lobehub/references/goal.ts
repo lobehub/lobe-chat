@@ -57,7 +57,10 @@ already supervising.
   server adopts that run as the goal's first planning turn.
 - Plan schema: \`{"action":"tasks","reason":"evidence-based rationale","tasks":[{"title":"specific task","description":"self-contained contract: inputs, output and acceptance"}]}\`
 - Supervising is not doing: do not execute, preview or self-check the goal's
-  tasks, mark them complete, change budgets, or claim it is achieved.
+  tasks, mark them complete, or claim it is achieved. Steering is the exception —
+  when the user asks, \`set-budget\` and \`restart\` are exactly the job (raising a
+  limit is how a goal stopped on it gets going again); just never steer on your own
+  initiative.
 - The requirement is usually long and multi-line — edit it with
   \`lh goal set-requirement <id> --file <path>\` (or \`-r\` for a one-liner), not by
   rewriting the goal.
