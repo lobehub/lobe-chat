@@ -54,6 +54,18 @@ export const cacheScope: ReplicaScope = {
   use: useCacheScope,
 };
 
+/**
+ * The identity partition a scope belongs to: `${userId}:`, shared by every
+ * workspace of that user (`buildCacheScope` never lets either half contain a
+ * `:`). A destructive operation whose server side is identity-wide — "purge all
+ * my memories" deletes the user's memories, not one workspace's — passes it to
+ * `clearScopes` so the purge reaches the sibling partitions' persisted rows too.
+ */
+export const scopeIdentityPrefix = (scope: string): string => {
+  const separator = scope.indexOf(':');
+  return separator === -1 ? `${scope}:` : scope.slice(0, separator + 1);
+};
+
 export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 
 type AppStorageOption<TData> = ReplicaStorageKind | ReplicaStorage<TData>;

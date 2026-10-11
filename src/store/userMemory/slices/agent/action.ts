@@ -1,4 +1,9 @@
-import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
+import {
+  createReplicaSlice,
+  recordLens,
+  type ReplicaSyncResult,
+  scopeIdentityPrefix,
+} from '@/libs/replica';
 import { userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { type RetrieveMemoryResult } from '@/types/userMemory';
@@ -35,10 +40,15 @@ export class AgentMemoryActionImpl {
   };
 
   /**
-   * Drop every topic bundle — memory and every persisted row of the active
-   * scope, including bundles an earlier session wrote — then refetch the
-   * mounted topics. Called by `purgeAllMemories`, so a reload can never inject
-   * deleted memories into the next chat request.
+   * Drop every topic bundle — memory and every persisted row, including bundles
+   * an earlier session wrote in *any* workspace of this identity — then refetch
+   * the mounted topics. Called by `purgeAllMemories`, so a reload can never
+   * inject deleted memories into the next chat request.
+   *
+   * The server delete is identity-wide (`deleteAll` is user-scoped) while a
+   * replica scope is one workspace, so the purge is widened to the identity's
+   * sibling partitions: otherwise switching workspace after a purge would
+   * hydrate that partition's surviving bundle before revalidation.
    *
    * Resolves `true` once storage is purged. Memory is wiped synchronously, but
    * a storage failure (a blocked IndexedDB upgrade, a closed connection) leaves
@@ -48,7 +58,10 @@ export class AgentMemoryActionImpl {
    * that a reload would undo.
    */
   internal_clearTopicMemories = async (): Promise<boolean> => {
-    const cleared = (await this.#topicMemories.clear()) || (await this.#topicMemories.clear());
+    const identityPrefix = scopeIdentityPrefix(topicMemoriesResource.scope.get());
+    const cleared =
+      (await this.#topicMemories.clearScopes(identityPrefix)) ||
+      (await this.#topicMemories.clearScopes(identityPrefix));
     void this.#topicMemories.revalidate();
     return cleared;
   };

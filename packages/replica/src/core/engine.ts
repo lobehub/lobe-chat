@@ -659,6 +659,33 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return purge;
   };
 
+  /**
+   * `clear()` widened to the identity behind `scopePrefix`: wipe the active
+   * scope's memory and rows, *and* delete every persisted row of this resource
+   * in the identity's other partitions.
+   *
+   * For a destructive operation whose server side is identity-wide while the
+   * replica scope is one partition of it — "purge all my memories" deletes the
+   * user's memories, not one workspace's — clearing only the active partition
+   * leaves a sibling partition holding a row the purge deleted, and a switch to
+   * that partition hydrates it before revalidation can replace it.
+   *
+   * Resolves `false` when any delete did not land, so the caller retries or
+   * surfaces it rather than reporting a purge a partition switch would undo.
+   */
+  const clearScopes = async (scopePrefix: string): Promise<boolean> => {
+    const active = clear();
+    const storage = resource.storage;
+    if (!storage?.purgeScopePrefix) return active;
+
+    const widened = storage.purgeScopePrefix(scopePrefix).then(
+      () => true,
+      () => false,
+    );
+    const [activeLanded, widenedLanded] = await Promise.all([active, widened]);
+    return activeLanded && widenedLanded;
+  };
+
   /** Delete every persisted row of `scope` (see `clear`). */
   const purgeScope = async (scope: string): Promise<boolean> => {
     if (!writeQueue) return true;
@@ -975,6 +1002,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     beginOptimistic,
     clear,
     clearGeneration,
+    clearScopes,
     collapse,
     dispatch,
     ensureScope,

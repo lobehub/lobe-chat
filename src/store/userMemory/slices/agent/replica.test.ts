@@ -228,12 +228,13 @@ describe('userMemory topic memories replica', () => {
     expect(topicMemories(TOPIC_B)).toBeUndefined();
   });
 
-  it('retries a purge whose row delete failed, so no earlier bundle survives', async () => {
+  it('retries a purge whose local deletes failed, so no earlier bundle survives', async () => {
     // `purgeAllMemories` revalidates through the app's scoped `mutate`.
     renderHook(() => null, { wrapper });
 
     const storage = topicMemoriesResource.storage!;
     const remove = storage.remove.bind(storage);
+    const purgeScopePrefix = storage.purgeScopePrefix!.bind(storage);
     const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
     const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
 
@@ -241,18 +242,50 @@ describe('userMemory topic memories replica', () => {
     await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
     await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
 
-    // The first delete aborts (a blocked IndexedDB upgrade); the retry lands.
+    // The first try aborts (a blocked IndexedDB upgrade); the retry lands.
+    let widenCalls = 0;
     let removeCalls = 0;
     vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
-      removeCalls += 1;
-      if (removeCalls === 1) throw new Error('IndexedDB transaction aborted');
+      if (++removeCalls === 1) throw new Error('IndexedDB transaction aborted');
       return remove(key);
+    });
+    vi.spyOn(storage, 'purgeScopePrefix').mockImplementation(async (prefix) => {
+      if (++widenCalls === 1) throw new Error('IndexedDB transaction aborted');
+      return purgeScopePrefix(prefix);
     });
 
     await act(() => useUserMemoryStore.getState().purgeAllMemories());
 
     expect(removeCalls).toBeGreaterThan(1);
+    expect(widenCalls).toBeGreaterThan(1);
     expect(await storage.get(rowKey)).toBeUndefined();
+  });
+
+  it('purges the identity’s other workspaces, not only the active scope', async () => {
+    renderHook(() => null, { wrapper });
+
+    const storage = topicMemoriesResource.storage!;
+    const userId = scope.slice(0, scope.indexOf(':'));
+    const otherWorkspace = `${userId}:workspace-b`;
+    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope: otherWorkspace };
+
+    // The user has a bundle cached in another workspace — the purge's server
+    // side deletes their memories globally, so this row must go too.
+    await storage.set(rowKey, { data: bundle('other-workspace'), updatedAt: 1 });
+
+    await act(() => useUserMemoryStore.getState().purgeAllMemories());
+
+    // Switching to that workspace must not hydrate the purged bundle.
+    useScope(otherWorkspace);
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(pending);
+    const sync = renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B), {
+      wrapper,
+    });
+    await waitFor(() => expect(entry(TOPIC_B)).toBeUndefined());
+
+    expect(topicMemories(TOPIC_B)).toBeUndefined();
+    expect(await storage.get(rowKey)).toBeUndefined();
+    sync.unmount();
   });
 
   it('surfaces a purge whose rows survive local storage, after the in-memory reset', async () => {
@@ -260,16 +293,21 @@ describe('userMemory topic memories replica', () => {
 
     const storage = topicMemoriesResource.storage!;
     const remove = storage.remove.bind(storage);
+    const purgeScopePrefix = storage.purgeScopePrefix!.bind(storage);
     const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
     const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
 
     await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
     await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
 
-    let failRemoves = true;
+    let failDeletes = true;
     vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
-      if (failRemoves) throw new Error('IndexedDB transaction aborted');
+      if (failDeletes) throw new Error('IndexedDB transaction aborted');
       return remove(key);
+    });
+    vi.spyOn(storage, 'purgeScopePrefix').mockImplementation(async (prefix) => {
+      if (failDeletes) throw new Error('IndexedDB transaction aborted');
+      return purgeScopePrefix(prefix);
     });
 
     try {
@@ -294,7 +332,7 @@ describe('userMemory topic memories replica', () => {
       expect(await storage.get(rowKey)).toBeDefined();
     } finally {
       // Let the suite's cleanup reach storage again.
-      failRemoves = false;
+      failDeletes = false;
     }
   });
 

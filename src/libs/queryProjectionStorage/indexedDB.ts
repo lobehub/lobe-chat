@@ -41,6 +41,20 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
     await localDatabase.delete(COLLECTION, this.#key(key));
   };
 
+  /**
+   * Delete every row of this resource whose scope starts with `scopePrefix` —
+   * one identity's partitions (see `ReplicaStorage.purgeScopePrefix`). The
+   * scope is encoded into the storage key, so the encoded prefix selects
+   * exactly those rows. Rejects when the delete did not land, like `remove`.
+   */
+  purgeScopePrefix = async (scopePrefix: string): Promise<void> => {
+    await localDatabase.initialize();
+    await localDatabase.deleteByPrefix(
+      COLLECTION,
+      `${this.#namespace}:${encodeURIComponent(scopePrefix)}`,
+    );
+  };
+
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     try {
       await localDatabase.initialize();

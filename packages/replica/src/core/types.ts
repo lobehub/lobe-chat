@@ -31,6 +31,18 @@ export interface ReplicaStorage<T> {
    */
   getStrict?: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
   /**
+   * Delete every row of this resource whose scope starts with `scopePrefix`
+   * (see `ReplicaEngine.clearScopes`).
+   *
+   * A destructive server-side operation is usually *identity*-wide while a
+   * replica scope is one partition of that identity (per workspace). Widening
+   * the purge past the active partition stops a later partition switch from
+   * hydrating a row the purge was meant to delete. Destructive, so it must
+   * **reject** when a delete did not land (same contract as `remove`).
+   * Optional: without it a purge can only reach the active scope.
+   */
+  purgeScopePrefix?: (scopePrefix: string) => Promise<void>;
+  /**
    * Delete a row. Must **reject** when the delete did not land (a closed
    * IndexedDB, a quota or security error): the engine keeps the row indexed
    * and the removal unpurged, so the next `remove` / `clear` retries it instead
