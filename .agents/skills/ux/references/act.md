@@ -317,7 +317,7 @@ per Feedback §4.2 and §3.1's confirm → in-progress(locked) → done/**error*
 - [ ] Unrecoverable / wide-blast action requires an explicit deliberate gesture (type-to-confirm / checkbox), not a one-click danger button. _(Certainty)_
 - [ ] The destructive run is wrapped so a partial failure is reported (what failed), never silent half-completion. _(Meaningful・Certainty)_
 
-## 3.8 Secrets are revealed once, stored hashed, masked thereafter・Certainty・Meaningful
+## 3.8 Secrets are revealed once, stored safely, masked thereafter・Certainty・Meaningful
 
 A surface that mints a **secret** — an API key, a personal access token, a webhook signing
 secret — carries a security-shaped class norm every mature product follows (GitHub / OpenAI /
@@ -329,6 +329,16 @@ turns every session (and every DB read) into a plaintext-exfiltration path, and 
 key stays viewable — hides the missing one-time-reveal screen (the create result feels fine
 only because the secret is wrongly re-viewable). The one-time reveal is also a §3.5
 persistent-result state, not a toast: the user must be able to copy before dismissing.
+
+**Hashed or encrypted depends on who checks the secret.** Hash a secret the product only ever
+_verifies_ by comparison (an API key, a personal access token: the server hashes the presented
+value and compares). A **protocol credential** the server must use in plaintext — an OAuth
+client secret that `oidc-provider` compares during client authentication, a webhook signing
+secret the server signs with — cannot be hashed; store it **reversibly encrypted** (key vault /
+KMS), decrypt only inside the component that needs it, and still never return it to a browser
+after the one-time reveal. Hashing a protocol credential breaks the flow; storing a
+verify-only key reversibly widens the blast radius. Pick by the consumer, not by the word
+"secret".
 
 **When to mint, and where the reveal lives.** Distinguish a secret that _is_ the created
 thing (an API key, a personal access token: the user created it to get the value) from a
@@ -364,7 +374,7 @@ default for clients that don't ask for the new one.
 **Checklist**
 
 - [ ] A minted secret is shown in full exactly once at creation (persistent reveal + Copy + "won't see again"), not a toast. _(Meaningful・Certainty)_
-- [ ] Secret stored hashed at rest; list / detail return a masked prefix, never re-reveal plaintext. _(Certainty)_
+- [ ] At rest: a verify-only secret (API key, PAT) is hashed; a protocol credential the server needs in plaintext (OAuth client secret, signing secret) is reversibly encrypted and decrypted only where used. Either way, list / detail return a masked value and never re-reveal plaintext. _(Certainty)_
 - [ ] A credential that belongs to a larger entity is generated on demand from its own row, not minted at entity creation; the entity is unusable until it exists. _(Natural・Certainty)_
 - [ ] The reveal follows the user's own Generate / Rotate click in a focused, neutral modal (Copy, "I've saved it", no mask dismiss) — never a modal popped unprompted on page arrival. _(Natural・Certainty)_
 - [ ] Changing when the server issues a secret keeps the old behaviour as the default for clients that don't opt in. _(Certainty)_

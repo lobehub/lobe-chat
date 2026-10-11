@@ -264,7 +264,7 @@ export default {
   'oauthApp.detail.dangerZone': 'Danger Zone',
   'oauthApp.detail.delete': 'Delete App',
   'oauthApp.detail.deleteDesc':
-    'Deletes the app and revokes every grant and token issued to it. This cannot be undone.',
+    'Deletes the app and its authorizations. They can no longer be renewed, and the app loses access once its current tokens expire. This cannot be undone.',
   'oauthApp.detail.disableDesc':
     "Users can't sign in with this app and its tokens stop refreshing until you enable it again.",
   'oauthApp.detail.edit': 'Edit',

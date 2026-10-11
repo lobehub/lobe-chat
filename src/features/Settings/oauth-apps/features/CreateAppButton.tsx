@@ -9,6 +9,7 @@ import { usePermission } from '@/hooks/usePermission';
 import { lambdaClient } from '@/libs/trpc/client';
 
 import { createOAuthAppModal } from './CreateAppModal';
+import { showClientSecretModal } from './SecretModal';
 
 const CreateAppButton = () => {
   const { t } = useTranslation('auth');
@@ -30,6 +31,11 @@ const CreateAppButton = () => {
           issueSecret: false,
         });
         navigate(`/settings/oauth-apps/${created.id}`);
+
+        // An older server ignores `issueSecret` and still mints a web app's
+        // secret, returning its only plaintext copy here. Reveal it rather than
+        // drop it, or the app could only ever be rotated.
+        if (created.clientSecret) showClientSecretModal({ clientSecret: created.clientSecret });
       },
     });
   };
