@@ -172,7 +172,9 @@ class AcceptanceEvidenceExecutionRuntime {
     // with no file, which renders on the acceptance as a visual check with
     // nothing behind it: strictly worse than an honest text note.
     const unbacked = params.evidence.find(
-      (item) => (item.type === 'screenshot' || item.type === 'video') && !item.fileId,
+      (item) =>
+        (item.type === 'gif' || item.type === 'screenshot' || item.type === 'video') &&
+        !item.fileId,
     );
     if (unbacked) {
       return {
