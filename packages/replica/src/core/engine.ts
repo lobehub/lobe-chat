@@ -216,6 +216,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    */
   const scopePurges = new Map<string, Promise<boolean>>();
 
+  // ---- entry reset -------------------------------------------------------
+  // A query change (new filters / sort) drops the single entry so the NEXT
+  // query can hydrate from its own cached head, but a read of the PREVIOUS
+  // query started before the reset still holds that query's row. The persisted
+  // rows are kept (unlike `remove`), so the removal guard cannot mark it; a
+  // per-(scope, key) generation instead marks every read that started before
+  // the reset as stale, so a superseded hydrate can never repaint the slot.
+  const resetGenerations = new Map<string, number>();
+  const resetId = (scope: string, key: string) => `${scope}\u0000${key}`;
+  const resetGeneration = (scope: string, key: string) =>
+    resetGenerations.get(resetId(scope, key)) ?? 0;
+
   const getSlot = port.getState;
   const storageKey = (key: string, query?: string) => ({
     queryKey: replicaStorageKey(key, query),
@@ -509,15 +521,23 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const storage = resource.storage!;
     // A read started before a `clear()` of this scope holds a wiped row.
     const generation = clearGeneration(scope);
+    // A read started before a `reset()` of this entry belongs to a query the
+    // slot has moved past.
+    const reset = resetGeneration(scope, key);
     // After a `clear()`, read only once its row deletes landed.
     const purge = scopePurges.get(scope);
     if (purge && !(await purge)) return false;
     const query = resource.query(params);
     const cached = await storage.get({ ...storageKey(key, query), scope });
     if (!cached) return false;
-    // Re-check after the read: a removal or a clear that landed while it was in
-    // flight must not resurrect the row it just dropped.
-    if (isRemoved(scope, key) || clearGeneration(scope) !== generation) return false;
+    // Re-check after the read: a removal, a clear or a reset that landed while
+    // it was in flight must not resurrect the row it just dropped.
+    if (
+      isRemoved(scope, key) ||
+      clearGeneration(scope) !== generation ||
+      resetGeneration(scope, key) !== reset
+    )
+      return false;
     if (options.isHydratable && !options.isHydratable(cached.data, params)) return false;
     // Entities deleted while the read was in flight may still be in the row.
     const stored = withoutRemovedEntities(scope, cached.data);
@@ -662,6 +682,25 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const rowCleared = !writeQueue || !resource.persistKey(key) || isPurged(scope, key);
     if (rowCleared && isRemoved(scope, key) && port.read(key) === undefined) return false;
     return dispatch({ key, scope, type: 'remove' });
+  };
+
+  /**
+   * Drop the entry (metadata + view) without deleting persisted rows and without
+   * arming the removal guard. Use it when the params behind a single entry
+   * change (a new search filter or sort): unlike `remove`, the previous query's
+   * cached row is kept for a switch back, and unlike `update`, the entry leaves
+   * no stale metadata to block the NEXT query's hydrate — its own cached head
+   * can then paint on the first frame (see the `hydrate` reducer guard).
+   *
+   * Reads of the superseded query already in flight are invalidated by the
+   * generation bump, so a late hydrate cannot repaint the slot.
+   */
+  const reset = (key: string, scope: string = resource.scope.get()): boolean => {
+    // An off-scope reset must not touch the entry on screen (the active scope
+    // owns it), and there is nothing else to do for a foreign scope.
+    if (scope !== resource.scope.get()) return false;
+    resetGenerations.set(resetId(scope, key), resetGeneration(scope, key) + 1);
+    return dispatch({ key, scope, type: 'discard' });
   };
 
   /**
@@ -1090,6 +1129,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     remove,
     removeEntity,
     replace,
+    reset,
     resource,
     revalidate,
     update,

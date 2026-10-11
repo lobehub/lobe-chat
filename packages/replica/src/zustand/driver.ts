@@ -39,6 +39,12 @@ export interface ReplicaQueryResult<T> {
  * the driver only decides when to ask. `createSWRDriver` adapts SWR.
  */
 export interface ReplicaSyncDriver {
+  /**
+   * Drop the cached result of every query whose key matches, without re-running
+   * it: a `once` query on that key runs again the next time it becomes active.
+   * Optional; without it a `once` query keeps its cached result.
+   */
+  forget?: (match: (key: unknown) => boolean) => Promise<unknown>;
   /** Re-run every mounted query whose key matches. */
   revalidate: (match: (key: unknown) => boolean) => Promise<unknown>;
   useQuery: <T>(
@@ -62,9 +68,15 @@ export const createSWRDriver = ({
   mutate,
   useSWR,
 }: {
-  mutate: (match: (key: any) => boolean) => Promise<unknown>;
+  mutate: (
+    match: (key: any) => boolean,
+    data?: undefined,
+    options?: { revalidate?: boolean },
+  ) => Promise<unknown>;
   useSWR: SWRLikeHook;
 }): ReplicaSyncDriver => ({
+  // Clearing the data also discards a request of that key still in flight.
+  forget: (match) => mutate(match, undefined, { revalidate: false }),
   revalidate: (match) => mutate(match),
   useQuery: (key, fetcher, { once, onError, onSuccess, ...schedule }) =>
     useSWR(key, fetcher, {

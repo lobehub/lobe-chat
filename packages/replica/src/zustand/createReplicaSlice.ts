@@ -151,6 +151,37 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   const requestGeneration = new Map<string, number>();
 
   /**
+   * Storage keys whose hydration read the driver has cached as done, per
+   * `scope + entry key`. `reset` drops the entry from memory but keeps the
+   * saved rows, so it must re-arm exactly these reads: returning to one of
+   * those queries then re-reads its row instead of staying blank until the
+   * network answers. Entries that were never reset keep once-per-key hydration.
+   */
+  const hydratedQueries = new Map<string, Set<string>>();
+  const entryId = (scope: string, key: string) => `${scope}\u0000${key}`;
+  const trackHydration = (scope: string, key: string, storageKey: string) => {
+    const id = entryId(scope, key);
+    const tracked = hydratedQueries.get(id) ?? new Set<string>();
+    tracked.add(storageKey);
+    hydratedQueries.set(id, tracked);
+  };
+  const forgetHydration = (scope: string, key: string) => {
+    const id = entryId(scope, key);
+    const tracked = hydratedQueries.get(id);
+    if (!tracked?.size || !driver.forget) return;
+    hydratedQueries.delete(id);
+    void driver.forget(
+      (queryKey) =>
+        Array.isArray(queryKey) &&
+        queryKey[0] === 'replica:hydrate' &&
+        queryKey[1] === resource.name &&
+        queryKey[2] === resource.version &&
+        queryKey[3] === scope &&
+        tracked.has(queryKey[4]),
+    );
+  };
+
+  /**
    * Hydrates the persisted row once per scope/key/query, then lets the driver
    * fetch and revalidate the head. Read the data from the store.
    */
@@ -179,9 +210,13 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         ? replicaKeys.hydrate(resource.name, resource.version, scope, resource.storageKey(params!))
         : null,
       async () => {
+        trackHydration(scope, key!, resource.storageKey(params!));
         await hydrate(params!, scope);
         return true;
       },
+      // Once per query key: a remount of a hydrated query does not re-read
+      // storage (its entry is still in memory). `reset` re-arms the queries it
+      // drops (see `forgetHydration`).
       { once: true },
     );
 
@@ -276,6 +311,22 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       // off-scope removal (see `engine.remove`) must not drop it.
       if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
       return engine.remove(key, scope);
+    },
+    /**
+     * Drop the entry and its view for a query change (see `engine.reset`) and
+     * forget the key's head-query marker too: a response for the superseded
+     * query must not pass the `onSuccess` guard and repaint the slot the reset
+     * just emptied. Persisted rows are kept, so the next query hydrates its own
+     * cached head.
+     */
+    reset: (key: string, scope?: string) => {
+      const active = resource.scope.get();
+      if (scope === undefined || scope === active) {
+        headQuery.delete(key);
+        // Re-arm the dropped queries' hydration (the saved rows are kept).
+        forgetHydration(active, key);
+      }
+      return engine.reset(key, scope);
     },
     useSync,
   };

@@ -89,6 +89,15 @@ const setup = ({
 const wrapper = ({ children }: PropsWithChildren) =>
   createElement(SWRConfig, { value: { dedupingInterval: 0, provider: () => new Map() } }, children);
 
+/**
+ * SWR's default cache, shared across renders and reached by the test driver's
+ * `mutate` (like the app's scoped mutate). Pair it with a unique `version` so
+ * cached reads never leak between tests.
+ */
+const sharedCacheWrapper = ({ children }: PropsWithChildren) =>
+  createElement(SWRConfig, { value: { dedupingInterval: 0 } }, children);
+let sharedCacheVersion = 1000;
+
 beforeEach(() => {
   scopeState.canHydrate = true;
   scopeState.current = 'user-1:personal';
@@ -800,6 +809,112 @@ describe('createReplicaSlice', () => {
       await act(async () => resolveFetch(['late']));
 
       expect(store.getState().lists.a).toBeUndefined();
+    });
+  });
+
+  describe('reset', () => {
+    it('drops the entry and the view but keeps the persisted row', async () => {
+      const storage = createMemoryStorage();
+      const { slice, store } = setup({ storage });
+
+      await act(async () => {
+        await slice.replace({ id: 'a' }, ['server']);
+      });
+      expect(store.getState().lists.a).toEqual(['server']);
+      await waitFor(() => expect(storage.rows.get('user-1:personal|a')?.data).toEqual(['server']));
+
+      act(() => slice.reset('a'));
+
+      expect(store.getState().lists.a).toBeUndefined();
+      expect(store.getState().listsReplica.entries.a).toBeUndefined();
+      // Unlike `remove`, the persisted row survives so a switch back is local-first.
+      expect(storage.rows.get('user-1:personal|a')?.data).toEqual(['server']);
+    });
+
+    it('drops a persisted read that started before the reset, and hydrates one started after', async () => {
+      const rows = new Map<string, ReplicaRow<string[]>>([
+        ['user-1:personal|a', { data: ['cached'], updatedAt: 1 }],
+      ]);
+      let releaseFirstRead!: () => void;
+      let defer = true;
+      const storage: ReplicaStorage<string[]> = {
+        get: async ({ queryKey, scope }) => {
+          const row = rows.get(`${scope}|${queryKey}`);
+          if (defer) {
+            defer = false;
+            await new Promise<void>((resolve) => (releaseFirstRead = resolve));
+          }
+          return row;
+        },
+        remove: async () => {},
+        set: async () => {},
+      };
+      const { slice, store } = setup({ storage: { storage } as never });
+
+      // A read of the previous query is in flight...
+      let inflight!: Promise<boolean>;
+      act(() => {
+        inflight = slice.hydrate({ id: 'a' });
+      });
+
+      // ...the query changes and the entry is reset...
+      act(() => slice.reset('a'));
+
+      // ...and the superseded read lands late: it must not repaint the slot.
+      await act(async () => {
+        releaseFirstRead();
+        await inflight;
+      });
+      expect(store.getState().lists.a).toBeUndefined();
+
+      // A read started after the reset still hydrates the new query's row.
+      await act(async () => {
+        await slice.hydrate({ id: 'a' });
+      });
+      expect(store.getState().lists.a).toEqual(['cached']);
+    });
+    it('keeps once-per-key hydration on an ordinary remount', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['cached'], updatedAt: 1 });
+      const get = vi.spyOn(storage.storage, 'get');
+      const fetcher = vi.fn(() => new Promise<string[]>(() => {}));
+      const { slice, store } = setup({ fetcher, storage, version: ++sharedCacheVersion });
+
+      const first = renderHook(() => slice.useSync({ id: 'a' }), { wrapper: sharedCacheWrapper });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
+      const reads = get.mock.calls.length;
+      first.unmount();
+
+      // Same query, entry still in memory: no second storage read.
+      renderHook(() => slice.useSync({ id: 'a' }), { wrapper: sharedCacheWrapper });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      });
+      expect(get.mock.calls.length).toBe(reads);
+    });
+
+    it('re-arms hydration so returning to a reset query repaints its saved row', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['cached'], updatedAt: 1 });
+      const fetcher = vi.fn(() => new Promise<string[]>(() => {}));
+      const { slice, store } = setup({ fetcher, storage, version: ++sharedCacheVersion });
+
+      const hook = renderHook((props: { id: string }) => slice.useSync({ id: props.id }), {
+        initialProps: { id: 'a' },
+        wrapper: sharedCacheWrapper,
+      });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
+
+      // Move on: the reset drops A's entry but keeps its saved row.
+      act(() => slice.reset('a'));
+      expect(store.getState().lists.a).toBeUndefined();
+      hook.rerender({ id: 'b' });
+      expect(store.getState().lists.b).toBeUndefined();
+
+      // Returning to A must re-read the saved row, not stay blank while the
+      // never-answering network is the only other source.
+      hook.rerender({ id: 'a' });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
     });
   });
 

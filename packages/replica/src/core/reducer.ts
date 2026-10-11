@@ -54,6 +54,7 @@ export type ReplicaAction<T> =
   | { confirm?: (data: T) => T; id: number; key: string; scope: string; type: 'commit' }
   | { id: number; key: string; scope: string; type: 'rollback' }
   | { key: string; scope: string; type: 'remove' }
+  | { key: string; scope: string; type: 'discard' }
   | { scope: string; type: 'resetScope' };
 
 export type ReplicaEffect<T> =
@@ -249,6 +250,19 @@ export const replicaReducer = <T>(
     case 'remove': {
       return {
         effects: [{ key: action.key, query: entry?.query, scope, type: 'remove' }],
+        state: withEntry(undefined),
+        writes: view === undefined ? [] : [{ data: undefined, key: action.key }],
+      };
+    }
+
+    case 'discard': {
+      // Drop the entry (its metadata and query) together with the view, but
+      // unlike `remove` keep every persisted row and arm no hydration guard.
+      // A query change must let the NEXT query hydrate its own cached head
+      // while the previous query's row stays cached for a switch back; the
+      // engine marks reads of the superseded query stale (see `reset`).
+      return {
+        effects: [],
         state: withEntry(undefined),
         writes: view === undefined ? [] : [{ data: undefined, key: action.key }],
       };

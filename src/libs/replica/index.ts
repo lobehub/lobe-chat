@@ -112,7 +112,7 @@ export const definePagedReplica = <
 // module in eagerly, and test suites that mock `@/libs/swr` partially must
 // still be able to import it.
 export const replicaSWRDriver = createSWRDriver({
-  mutate: (match) => mutate(match),
+  mutate: (match, ...rest) => mutate(match, ...rest),
   useSWR: (key, fetcher, config) => useClientDataSWR(key, fetcher, config),
 });
 
