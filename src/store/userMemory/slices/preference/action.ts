@@ -1,9 +1,14 @@
 import { type PreferenceMemorySimple, type UserMemoryItemSimple } from '@lobechat/types';
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { type SWRResponse } from 'swr';
 
 import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory';
-import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
+import {
+  createReplicaSlice,
+  recordLens,
+  type ReplicaLens,
+  type ReplicaPageResult,
+} from '@/libs/replica';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { LayersEnum } from '@/types/userMemory';
@@ -11,9 +16,9 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import {
-  PREFERENCE_LIST_KEY,
   PREFERENCE_LIST_PAGE_SIZE,
   type PreferenceListData,
+  preferenceListKey,
   type PreferenceListParams,
   preferenceListResource,
   type PreferenceListSort,
@@ -28,27 +33,18 @@ export interface PreferenceQueryParams {
   sort?: PreferenceListSort;
 }
 
-/**
- * The preference list keeps its long-standing flat fields (`preferences`,
- * `preferencesTotal`, `preferencesPage`, `preferencesHasMore`,
- * `preferencesInit`) as derived mirrors of the `preferenceList` replica view, so
- * no consumer changes. The canonical paged value lives in `preferenceListData`
- * and is persisted to IndexedDB by the replica engine.
- */
-const preferenceListLens: ReplicaLens<UserMemoryStore, PreferenceListData> = {
-  clear: () => ({
-    preferenceListData: undefined,
-    preferences: [],
-    preferencesHasMore: true,
-    preferencesInit: false,
-    preferencesPage: 1,
-    preferencesSearchLoading: undefined,
-    preferencesTotal: 0,
-  }),
-  get: (state) => state.preferenceListData,
-  set: (_state, _key, data) => {
-    if (!data) {
-      return {
+/** Flat mirrors of one page set (`undefined` = the active query has no view yet). */
+const mirrorsOf = (data: PreferenceListData | undefined): Partial<UserMemoryStore> =>
+  data
+    ? {
+        preferenceListData: data,
+        preferences: data.items,
+        preferencesHasMore: data.hasMore,
+        preferencesInit: true,
+        preferencesPage: data.currentPage + 1,
+        preferencesTotal: data.total ?? data.items.length,
+      }
+    : {
         preferenceListData: undefined,
         preferences: [],
         preferencesHasMore: true,
@@ -56,19 +52,25 @@ const preferenceListLens: ReplicaLens<UserMemoryStore, PreferenceListData> = {
         preferencesPage: 1,
         preferencesTotal: 0,
       };
-    }
-    return {
-      preferenceListData: data,
-      preferences: data.items,
-      preferencesHasMore: data.hasMore,
-      preferencesInit: true,
-      preferencesPage: data.currentPage + 1,
-      // A landed page settles the search: clear the reset/error flags.
-      preferencesSearchError: undefined,
-      preferencesSearchLoading: false,
-      preferencesTotal: data.total ?? data.items.length,
-    };
-  },
+
+const entriesLens = recordLens<UserMemoryStore, PreferenceListData>('preferenceListEntries');
+
+/**
+ * The canonical replica value is `preferenceListEntries` — one page set per
+ * search / sort (see `preferenceListKey`). The long-standing flat fields
+ * (`preferenceListData`, `preferences`, `preferencesTotal`, `preferencesPage`,
+ * `preferencesHasMore`, `preferencesInit`) mirror the entry of the active query
+ * (`preferenceListKey`), so no consumer changes and a write to any entry keeps
+ * the mirrors in the same commit.
+ */
+const preferenceListLens: ReplicaLens<UserMemoryStore, PreferenceListData> = {
+  clear: (state) => ({ ...entriesLens.clear(state), ...mirrorsOf(undefined) }),
+  get: entriesLens.get,
+  keys: entriesLens.keys,
+  set: (state, key, data) => ({
+    ...entriesLens.set(state, key, data),
+    ...(key === state.preferenceListKey ? mirrorsOf(data) : undefined),
+  }),
 };
 
 /**
@@ -88,11 +90,11 @@ export const createPreferenceSlice = (set: Setter, get: () => UserMemoryStore, _
 /**
  * The user-memory preference list.
  *
- * Server state is one `@lobechat/replica` paged resource (`preferenceList`):
- * the persisted head page paints on the first frame and the network confirms it
- * in the background. The domain store exposes the same flat fields and the same
- * action surface it always has, backed by the replica view, so the memory
- * preference page and its components are untouched.
+ * Server state is one `@lobechat/replica` paged resource (`preferenceList`)
+ * keyed per search / sort: each query paints its persisted head page on the
+ * first frame and the network confirms it in the background. The domain store
+ * exposes the same flat fields it always has, mirrored from the active query's
+ * entry, so the memory preference page and its components are untouched.
  */
 export class PreferenceActionImpl {
   readonly #get: () => UserMemoryStore;
@@ -131,90 +133,94 @@ export class PreferenceActionImpl {
     return { items: response.items.map(toDisplayPreference), total: response.total };
   };
 
-  /** Clear the surfaced error once a head page lands. */
-  #clearListError = (): void => {
-    if (this.#get().preferencesSearchError === undefined) return;
-    this.#set({ preferencesSearchError: undefined }, false, n('preferenceList/clearError'));
-  };
-
-  /**
-   * Surface a failed head/refresh fetch only when there is no settled content
-   * to keep (initial load or a reset). A background refresh failure must not
-   * replace an already-painted list with an error.
-   */
-  #surfaceListError = (error: unknown): void => {
-    const { preferencesInit, preferencesSearchLoading } = this.#get();
-    const surface = Boolean(preferencesSearchLoading) || !preferencesInit;
-    this.#set(
-      {
-        preferencesSearchError: surface ? error : undefined,
-        preferencesSearchLoading: false,
-      },
-      false,
-      n('preferenceList/failList'),
-    );
-  };
-
   deletePreference = async (id: string): Promise<void> => {
     await memoryCRUDService.deletePreference(id);
-    // Drop the row from the in-memory view and the persisted projection right
-    // away; the list resyncs on its next revalidation (focus / remount).
-    this.#list.updateEntity(id, () => undefined);
+    // Drop the row from every loaded page set and persisted projection, and
+    // keep a hydrate already in flight from bringing it back.
+    this.#list.removeEntity(id);
   };
 
   /**
-   * Append the next page of the preference list. The engine reads the loaded
-   * head params, dedupes by id and keeps `hasMore` honest.
+   * Wipe every preference page set — every search / sort, in memory and in
+   * IndexedDB — through the engine. Used by the memory purge; `clear()` does not
+   * refetch, so the caller revalidates afterwards. Resolves `true` once the
+   * persisted rows are gone.
+   */
+  internal_clearPreferenceList = (): Promise<boolean> => this.#list.clear();
+
+  /**
+   * Apply a confirmed edit to one preference in every loaded page set and its
+   * persisted projection, so the canonical replica value (not only the flat
+   * mirror) carries it across a later load-more, revalidation or reload.
+   */
+  internal_updatePreferenceEntity = (
+    id: string,
+    fn: (item: DisplayPreferenceMemory) => DisplayPreferenceMemory | undefined,
+  ): void => {
+    this.#list.updateEntity(id, fn);
+  };
+
+  /**
+   * Append the next page of the active query's list. The engine reads the
+   * loaded head params, dedupes by id and keeps `hasMore` honest.
    */
   loadMorePreferences = (): void => {
-    void this.#list.loadMore(PREFERENCE_LIST_KEY);
+    void this.#list.loadMore(this.#get().preferenceListKey);
   };
 
   /**
-   * Drop the painted page set for a new search/sort so the previous query's rows
-   * never show under the new one. A no-op when the query is unchanged, so a
-   * remount keeps the in-memory + persisted view (the replica's first-frame
-   * paint). The persisted rows are left alone.
+   * Point the flat mirrors at another search / sort. Each query keeps its own
+   * entry, so this never drops a page set: a query loaded before repaints from
+   * memory, one persisted before hydrates from storage, and a new one shows the
+   * loading state until its head page lands. A no-op when the query is
+   * unchanged.
    */
   resetPreferencesList = (params?: Omit<PreferenceQueryParams, 'page' | 'pageSize'>): void => {
-    const { preferencesQuery, preferencesSort } = this.#get();
-    const nextQuery = params?.q;
+    const nextQuery = params?.q || undefined;
     const nextSort = params?.sort;
-    if (preferencesQuery === nextQuery && preferencesSort === nextSort) return;
+    const key = preferenceListKey({ q: nextQuery, sort: nextSort });
+    const state = this.#get();
+    if (state.preferenceListKey === key) return;
 
     this.#set(
       {
+        preferenceListKey: key,
         preferencesQuery: nextQuery,
-        preferencesSearchError: undefined,
-        preferencesSearchLoading: true,
         preferencesSort: nextSort,
+        ...mirrorsOf(preferenceListLens.get(state, key)),
       },
       false,
       n('resetPreferencesList'),
     );
-    this.#list.update(PREFERENCE_LIST_KEY, () => undefined, { persist: false });
   };
 
   /**
    * Fetch orchestration for the memory preference list. Returns an
-   * `SWRResponse`-shaped result — `data` reads the replica view — so the
-   * existing consumers (which pass it to `MemoryListBoundary`) are untouched;
-   * the rows land in the store mirrors, never in this return value.
+   * `SWRResponse`-shaped result — `data` reads the active query's replica view —
+   * so the existing consumers (which pass it to `MemoryListBoundary`) are
+   * untouched; the rows land in the store mirrors, never in this return value.
+   *
+   * `error` is the failure of the request for the query on screen (a
+   * superseded search settles under its own key), and only while that query has
+   * nothing painted: a failed background revalidation keeps its rows.
    */
   useFetchPreferences = (params: PreferenceQueryParams): SWRResponse<any> => {
-    const sync = this.#list.useSync(
-      {
-        pageSize: params.pageSize ?? PREFERENCE_LIST_PAGE_SIZE,
-        q: params.q,
-        sort: params.sort,
-      },
-      {
-        onError: (error) => this.#surfaceListError(error),
-        onSuccess: () => this.#clearListError(),
-      },
-    );
+    const q = params.q || undefined;
+    const sort = params.sort;
 
-    const view = useUserMemoryStore((state) => state.preferenceListData);
+    // Select the query before paint, so a frame never shows another query's rows.
+    useLayoutEffect(() => {
+      this.resetPreferencesList({ q, sort });
+    }, [q, sort]);
+
+    const sync = this.#list.useSync({
+      pageSize: params.pageSize ?? PREFERENCE_LIST_PAGE_SIZE,
+      q,
+      sort,
+    });
+
+    const key = preferenceListKey({ q, sort });
+    const view = useUserMemoryStore((state) => state.preferenceListEntries[key]);
     const data = useMemo(
       () =>
         view
@@ -230,7 +236,7 @@ export class PreferenceActionImpl {
 
     return {
       data,
-      error: sync.error,
+      error: data ? undefined : sync.error,
       isLoading: !data && (sync.isValidating || !sync.isHydrated),
       isValidating: sync.isValidating,
       mutate: sync.revalidate,

@@ -1,35 +1,37 @@
 import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory';
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 
-import { type PreferenceListData, type PreferenceListSort } from './projection';
+import { type PreferenceListData, preferenceListKey, type PreferenceListSort } from './projection';
 
 /**
- * The preference list is a `@lobechat/replica` paged resource. Its canonical
- * value lives in `preferenceListData`; the long-standing flat fields
- * (`preferences`, `preferencesTotal`, `preferencesPage`, `preferencesHasMore`,
- * `preferencesInit`) are derived mirrors of that view so every existing
- * consumer keeps reading the place it always has.
+ * The preference list is a `@lobechat/replica` paged resource keyed per search
+ * / sort. Its canonical value lives in `preferenceListEntries`; the
+ * long-standing flat fields (`preferenceListData`, `preferences`,
+ * `preferencesTotal`, `preferencesPage`, `preferencesHasMore`,
+ * `preferencesInit`) are derived mirrors of the active query's entry so every
+ * existing consumer keeps reading the place it always has.
  */
 export interface PreferenceSliceState {
-  /**
-   * Canonical replica view of the preference list — the single source of truth
-   * behind every `preferences*` field above. Engine-owned; readers use the flat
-   * mirrors.
-   */
+  /** View of the active query's page set. Mirror of `preferenceListEntries[preferenceListKey]`. */
   preferenceListData?: PreferenceListData;
-  /** Local-first bookkeeping for `preferenceListData`. */
+  /**
+   * Canonical replica views, one page set per search / sort. Engine-owned;
+   * readers use the flat mirrors.
+   */
+  preferenceListEntries: Record<string, PreferenceListData>;
+  /** Entry key of the query on screen (see `preferenceListKey`). */
+  preferenceListKey: string;
+  /** Local-first bookkeeping for `preferenceListEntries`. */
   preferenceListReplica: ReplicaState<PreferenceListData>;
   /** Rows of the loaded page set. Mirror of `preferenceListData.items`. */
   preferences: DisplayPreferenceMemory[];
   /** Mirror of `preferenceListData.hasMore`. */
   preferencesHasMore: boolean;
-  /** Whether the replica view exists (persisted row hydrated or a page landed). */
+  /** Whether the active query has a view (persisted row hydrated or a page landed). */
   preferencesInit: boolean;
   /** Mirror of `preferenceListData.currentPage + 1`. */
   preferencesPage: number;
   preferencesQuery?: string;
-  preferencesSearchError?: unknown;
-  preferencesSearchLoading?: boolean;
   preferencesSort?: PreferenceListSort;
   /** Mirror of `preferenceListData.total`. */
   preferencesTotal: number;
@@ -41,10 +43,10 @@ export const preferenceInitialState: PreferenceSliceState = {
   preferencesInit: false,
   preferencesPage: 1,
   preferencesQuery: undefined,
-  preferencesSearchError: undefined,
-  preferencesSearchLoading: undefined,
   preferencesSort: undefined,
   preferencesTotal: 0,
   preferenceListData: undefined,
+  preferenceListEntries: {},
+  preferenceListKey: preferenceListKey({}),
   preferenceListReplica: createReplicaState<PreferenceListData>(),
 };

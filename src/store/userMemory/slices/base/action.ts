@@ -19,7 +19,6 @@ import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
 import { experienceInitialState } from '../experience/initialState';
 import { identityInitialState } from '../identity/initialState';
-import { preferenceInitialState } from '../preference/initialState';
 
 const n = setNamespace('userMemory');
 
@@ -70,13 +69,17 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
+    // Replica-backed lists own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearPreferenceList();
+
     this.#set(
       produce((draft) => {
         Object.assign(draft, activityInitialState);
         Object.assign(draft, contextInitialState);
         Object.assign(draft, experienceInitialState);
         Object.assign(draft, identityInitialState);
-        Object.assign(draft, preferenceInitialState);
 
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
@@ -226,14 +229,12 @@ export class BaseActionImpl {
       }
       case LayersEnum.Preference: {
         await memoryCRUDService.updatePreference(id, { conclusionDirectives: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.preferences.find((memory) => memory.id === id);
-            if (item) item.conclusionDirectives = content;
-          }),
-          false,
-          n('updateMemory/preference'),
-        );
+        // The preference list is replica-backed: patch every page set and its
+        // persisted rows together (the flat `preferences` field mirrors it).
+        this.#get().internal_updatePreferenceEntity(id, (item) => ({
+          ...item,
+          conclusionDirectives: content,
+        }));
         listKeyRoot = userMemoryKeys.preferences.root;
         break;
       }

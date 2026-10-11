@@ -5,8 +5,13 @@ import { userMemoryKeys } from '@/libs/swr/keys';
 /** Page size the memory preference list asks for when the caller does not name one. */
 export const PREFERENCE_LIST_PAGE_SIZE = 12;
 
-/** The preference list is never partitioned per container: one entry per scope. */
-export const PREFERENCE_LIST_KEY = 'all';
+/**
+ * Entry key of one page set: each search / sort is its own replica entry, so a
+ * query switch never overwrites another query's pages and every query hydrates
+ * its own persisted head page (the reducer only hydrates an empty entry).
+ */
+export const preferenceListKey = ({ q, sort }: Pick<PreferenceListParams, 'q' | 'sort'>) =>
+  `q=${q || ''}&sort=${sort || ''}`;
 
 /** Server-side ordering of the preference list (`QueryUserMemoriesSort`). */
 export type PreferenceListSort = 'capturedAt' | 'scorePriority';
@@ -49,7 +54,7 @@ export const preferenceListResource = definePagedReplica<
   number,
   PreferenceListData
 >({
-  key: () => PREFERENCE_LIST_KEY,
+  key: preferenceListKey,
   name: 'preferenceList',
   paging: {
     direction: 'forward',

@@ -25,8 +25,8 @@ import { LayersEnum } from '@/types/userMemory';
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
 import {
-  PREFERENCE_LIST_KEY,
   type PreferenceListData,
+  preferenceListKey,
   type PreferenceListParams,
   preferenceListResource,
 } from './projection';
@@ -107,8 +107,10 @@ describe('preferenceList replica', () => {
     vi.clearAllMocks();
   });
 
-  it('reads the list from a single scope entry', () => {
-    expect(PREFERENCE_LIST_KEY).toBe('all');
+  it('keeps one entry per search / sort', () => {
+    expect(preferenceListKey({})).toBe(preferenceListKey({ q: '' }));
+    expect(preferenceListKey({ q: 'foo' })).not.toBe(preferenceListKey({}));
+    expect(preferenceListKey({ sort: 'scorePriority' })).not.toBe(preferenceListKey({}));
   });
 
   it('paints the persisted head page before the network answers', async () => {
@@ -282,7 +284,7 @@ describe('preferenceList replica', () => {
     expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['foo-1']);
   });
 
-  it('drops the painted page set on reset but keeps the persisted row', async () => {
+  it('hides the previous query on a query switch but keeps its page set and persisted row', async () => {
     fetchSpy.mockResolvedValue(listPage([rawItem('a')], 1));
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }), {
@@ -302,9 +304,200 @@ describe('preferenceList replica', () => {
 
     expect(useUserMemoryStore.getState().preferenceListData).toBeUndefined();
     expect(useUserMemoryStore.getState().preferences).toEqual([]);
-    expect(useUserMemoryStore.getState().preferencesSearchLoading).toBe(true);
+    expect(useUserMemoryStore.getState().preferencesInit).toBe(false);
+    // The previous query's page set stays loaded for a switch back.
+    expect(ids(useUserMemoryStore.getState().preferenceListEntries[preferenceListKey({})])).toEqual(
+      ['a'],
+    );
     const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
     expect(ids(row?.data as PreferenceListData)).toEqual(['a']);
+  });
+
+  it('hydrates a previously persisted query when the list switches back to it', async () => {
+    // A search that was persisted in an earlier session.
+    await preferenceListResource.storage!.set(
+      { queryKey: SEARCH_KEY, scope },
+      {
+        data: {
+          currentPage: 0,
+          hasMore: false,
+          items: [item('cached-foo')],
+          pageSize: 12,
+          q: 'foo',
+        },
+        updatedAt: 1,
+      },
+    );
+    fetchSpy.mockResolvedValueOnce(listPage([rawItem('a')], 1)).mockImplementation(pending);
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a']),
+    );
+
+    // The network for the search never answers: only storage can paint it.
+    hook.rerender({ q: 'foo' });
+
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['cached-foo']),
+    );
+    expect(useUserMemoryStore.getState().preferences.map((p) => p.id)).toEqual(['cached-foo']);
+    expect(useUserMemoryStore.getState().preferencesInit).toBe(true);
+  });
+
+  it('repaints a query loaded earlier in the session when switching back to it', async () => {
+    fetchSpy
+      .mockResolvedValueOnce(listPage([rawItem('a')], 1))
+      .mockResolvedValueOnce(listPage([rawItem('foo-1')], 1))
+      .mockImplementation(pending);
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a']),
+    );
+    hook.rerender({ q: 'foo' });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['foo-1']),
+    );
+
+    // Back to the unfiltered list while its revalidation hangs.
+    hook.rerender({});
+
+    expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a']);
+    expect(hook.result.current.data).toBeDefined();
+  });
+
+  it('does not surface a superseded search’s failure on the query now on screen', async () => {
+    const rejectByQuery = new Map<string, (error: Error) => void>();
+    fetchSpy.mockImplementation(
+      (params: { q?: string } = {}) =>
+        new Promise((_, reject) => rejectByQuery.set(params.q ?? '', reject)),
+    );
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'a' } as { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(rejectByQuery.has('a')).toBe(true));
+
+    hook.rerender({ q: 'b' });
+    await waitFor(() => expect(rejectByQuery.has('b')).toBe(true));
+
+    // Search A fails after search B started.
+    await act(async () => {
+      rejectByQuery.get('a')!(new Error('stale failure'));
+    });
+
+    expect(hook.result.current.error).toBeUndefined();
+    expect(hook.result.current.isLoading).toBe(true);
+
+    // B's own failure is surfaced.
+    const failure = new Error('current failure');
+    await act(async () => {
+      rejectByQuery.get('b')!(failure);
+    });
+    await waitFor(() => expect(hook.result.current.error).toBe(failure));
+  });
+
+  it('keeps the painted rows when only their background revalidation fails', async () => {
+    fetchSpy.mockResolvedValueOnce(listPage([rawItem('a')], 1));
+
+    const hook = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }),
+      { wrapper },
+    );
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a']),
+    );
+
+    fetchSpy.mockRejectedValue(new Error('offline'));
+    await act(async () => {
+      await hook.result.current.mutate().catch(() => {});
+    });
+
+    expect(hook.result.current.error).toBeUndefined();
+    expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a']);
+  });
+
+  it('applies an edit to the canonical page sets and their persisted rows', async () => {
+    fetchSpy.mockResolvedValue(listPage([rawItem('a'), rawItem('b')], 2));
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().preferenceListData)).toEqual(['a', 'b']),
+    );
+    await waitFor(async () =>
+      expect(
+        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+
+    act(() => {
+      useUserMemoryStore.getState().internal_updatePreferenceEntity('a', (entry) => ({
+        ...entry,
+        conclusionDirectives: 'edited',
+      }));
+    });
+
+    const state = useUserMemoryStore.getState();
+    expect(state.preferenceListEntries[preferenceListKey({})].items[0].conclusionDirectives).toBe(
+      'edited',
+    );
+    expect(state.preferenceListData?.items[0].conclusionDirectives).toBe('edited');
+    expect(state.preferences[0].conclusionDirectives).toBe('edited');
+    await waitFor(async () => {
+      const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      expect((row?.data as PreferenceListData).items[0].conclusionDirectives).toBe('edited');
+    });
+  });
+
+  it('clears every persisted page set, not only the one on screen', async () => {
+    fetchSpy
+      .mockResolvedValueOnce(listPage([rawItem('a')], 1))
+      .mockResolvedValueOnce(listPage([rawItem('foo-1')], 1));
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchPreferences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({ q: 'foo' });
+    await waitFor(async () =>
+      expect(
+        (await preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+
+    let cleared = false;
+    await act(async () => {
+      cleared = await useUserMemoryStore.getState().internal_clearPreferenceList();
+    });
+
+    expect(cleared).toBe(true);
+    expect(useUserMemoryStore.getState().preferenceListEntries).toEqual({});
+    expect(useUserMemoryStore.getState().preferences).toEqual([]);
+    await expect(
+      preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }),
+    ).resolves.toBeUndefined();
+    await expect(
+      preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }),
+    ).resolves.toBeUndefined();
   });
 
   it('drops a deleted preference from the view and the persisted row', async () => {
