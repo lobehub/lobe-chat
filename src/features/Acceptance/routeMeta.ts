@@ -11,8 +11,8 @@ import { useAcceptanceBundle, useVerifyReportBundle } from './hooks';
 // Routes without an `:acceptanceId` (e.g. the `/acceptance` index) must not
 // publish the fallback — it would pin every such tab to the same static label.
 export const resolveAcceptanceDynamicTitle = (
-  subjectTitle: string | undefined,
-  acceptanceId: string | undefined,
+  subjectTitle: string | null | undefined,
+  acceptanceId: string | null | undefined,
   translate: (key: string) => string,
 ): string | undefined =>
   subjectTitle || (acceptanceId ? translate('acceptance.titleFallback') : undefined);
