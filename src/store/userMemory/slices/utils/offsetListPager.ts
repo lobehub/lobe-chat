@@ -1,4 +1,4 @@
-import { type ReplicaOptimisticToken } from '@/libs/replica';
+import { type ReplicaOptimisticToken, type ReplicaPagedData } from '@/libs/replica';
 
 /** The part of a paged replica slice the pager drives (structural, so any slice fits). */
 export interface OffsetPagedSlice {
@@ -15,6 +15,8 @@ export interface OffsetPagedSlice {
 interface OffsetListPagerOptions {
   /** Entry keys loaded in memory (every page set a delete may have shifted). */
   keys: () => string[];
+  /** The loaded page set of one entry (`undefined` = not loaded). */
+  read: (key: string) => ReplicaPagedData<unknown, unknown> | undefined;
   /**
    * Re-read the head page of the mounted query through the list's own SWR key
    * (the awaitable bare `mutate(matcher)` form). Resolves once the refetch
@@ -39,8 +41,10 @@ const staleHeadError = () => new Error('Failed to refresh the list before loadin
  *   back if the server rejects). Once the server confirms, `removeEntity` drops
  *   it from persisted rows too, every loaded page set collapses to its head
  *   and is marked *head-stale*, and the head is refreshed.
- * - **Head-stale guard**: "load more" on a head-stale page set first refreshes
- *   the head; it only fetches the next page once a fresh head landed
+ * - **Head-stale guard**: "load more" on a head-stale page set — marked by a
+ *   delete in this session, or *short* (fewer rows than its loaded pages hold,
+ *   e.g. a persisted variant the delete patched and a later visit hydrated) —
+ *   first refreshes the head; it only fetches the next page once a fresh head landed
  *   (`headLanded`). If the refresh fails, the footer shows the failure with a
  *   retry instead of paging from a stale offset.
  * - **Serialization**: deletes, pages and the purge run one after another, so
@@ -52,6 +56,7 @@ export class OffsetListPager {
   readonly #headErrors = new Map<string, unknown>();
   readonly #keys: () => string[];
   readonly #loadingMore = new Map<string, Promise<void>>();
+  readonly #read: OffsetListPagerOptions['read'];
   readonly #refreshHead: () => Promise<unknown>;
   readonly #slice: OffsetPagedSlice;
   readonly #staleHeads = new Set<string>();
@@ -60,8 +65,9 @@ export class OffsetListPager {
   /** Tail of the serialized paging work. */
   #tail: Promise<unknown> = Promise.resolve();
 
-  constructor({ keys, refreshHead, slice }: OffsetListPagerOptions) {
+  constructor({ keys, read, refreshHead, slice }: OffsetListPagerOptions) {
     this.#keys = keys;
+    this.#read = read;
     this.#refreshHead = refreshHead;
     this.#slice = slice;
   }
@@ -75,8 +81,22 @@ export class OffsetListPager {
     return run;
   };
 
+  /**
+   * Whether a page set lost rows under its loaded offsets: it still has more
+   * to load, yet holds fewer rows than its loaded pages hold on the server. A
+   * delete patches every persisted query variant (`removeEntity`), including
+   * ones this session never loaded — or a delete in an earlier session did — so
+   * a page set hydrated later can be short without this session having marked
+   * it. Its next offset would skip the row that shifted into its last page.
+   */
+  #isShort = (key: string): boolean => {
+    const data = this.#read(key);
+    if (!data?.hasMore) return false;
+    return data.items.length < (data.currentPage + 1) * data.pageSize;
+  };
+
   /** Whether `key` must refresh its head before paging again. */
-  isHeadStale = (key: string): boolean => this.#staleHeads.has(key);
+  isHeadStale = (key: string): boolean => this.#staleHeads.has(key) || this.#isShort(key);
 
   /** A head page of `key` landed: its offsets are the server's again. */
   headLanded = (key: string): void => {
@@ -121,7 +141,8 @@ export class OffsetListPager {
     if (running) return running;
 
     const run = this.#serialize(async () => {
-      if (this.#staleHeads.has(key)) {
+      if (this.isHeadStale(key)) {
+        this.#staleHeads.add(key);
         await this.#refreshHead();
         if (this.#staleHeads.has(key)) {
           const error = this.#headErrors.get(key) ?? staleHeadError();

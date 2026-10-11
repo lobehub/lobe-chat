@@ -131,6 +131,7 @@ export class MemoryQueryList<
     this.#entity = linkReplicaEntity<TItem>([this.#list]);
     this.#pager = new OffsetListPager({
       keys: () => Object.keys(get()[entriesField] as Record<string, TData>),
+      read: (key) => (get()[entriesField] as Record<string, TData>)[key],
       refreshHead: this.#revalidate,
       slice: this.#list,
     });

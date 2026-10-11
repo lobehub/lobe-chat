@@ -30,7 +30,12 @@ const setup = ({ refreshHead = vi.fn(async () => undefined) } = {}) => {
       views[key] = apply(views[key]);
     }),
   };
-  const pager = new OffsetListPager({ keys: () => ['all'], refreshHead, slice });
+  const pager = new OffsetListPager({
+    keys: () => ['all'],
+    read: (key) => views[key],
+    refreshHead,
+    slice,
+  });
   return { log, pager, refreshHead, slice, tokens, views };
 };
 
@@ -149,6 +154,35 @@ describe('OffsetListPager', () => {
     expect(clear).toHaveBeenCalledTimes(1);
     await expect(clearing).resolves.toBe(true);
     expect(clear).toHaveBeenCalledTimes(1);
+  });
+
+  it('treats a page set short of its loaded pages as head-stale, with no delete this session', async () => {
+    const refreshHead = vi.fn(async () => undefined);
+    const { pager, slice, views } = setup({ refreshHead });
+    // A persisted variant a delete patched: 11 of 12 head rows, more to load.
+    views.all = { currentPage: 0, hasMore: true, items: Array.from({ length: 11 }), pageSize: 12 };
+
+    expect(pager.isHeadStale('all')).toBe(true);
+    await pager.loadMore('all');
+
+    // The head is refreshed first; it failed, so no page from the stale offset.
+    expect(refreshHead).toHaveBeenCalledTimes(1);
+    expect(slice.loadMore).not.toHaveBeenCalled();
+    expect(views.all.loadMoreError).toBeInstanceOf(Error);
+  });
+
+  it('pages a full or final page set without refreshing the head', async () => {
+    const refreshHead = vi.fn(async () => undefined);
+    const { pager, slice, views } = setup({ refreshHead });
+    views.all = { currentPage: 0, hasMore: true, items: Array.from({ length: 12 }), pageSize: 12 };
+    expect(pager.isHeadStale('all')).toBe(false);
+    views.all = { currentPage: 1, hasMore: false, items: Array.from({ length: 15 }), pageSize: 12 };
+    expect(pager.isHeadStale('all')).toBe(false);
+
+    views.all = { currentPage: 0, hasMore: true, items: Array.from({ length: 12 }), pageSize: 12 };
+    await pager.loadMore('all');
+    expect(refreshHead).not.toHaveBeenCalled();
+    expect(slice.loadMore).toHaveBeenCalledTimes(1);
   });
 
   it('shares one run between concurrent load-more calls', async () => {

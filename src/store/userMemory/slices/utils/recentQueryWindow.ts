@@ -11,6 +11,8 @@ export const MAX_RECENT_MEMORY_QUERIES = 8;
 interface RecentQueryWindowOptions {
   /** Drop one query's entry and its persisted row (`slice.remove`). */
   evict: (key: string) => unknown;
+  /** Entries kept; defaults to {@link MAX_RECENT_MEMORY_QUERIES}. */
+  max?: number;
   /**
    * The list resource. Its entry keys must equal its storage keys (no replica
    * `query`), so the persisted index lists the entry keys.
@@ -26,6 +28,7 @@ interface RecentQueryWindowOptions {
  */
 export class RecentQueryWindow {
   readonly #evict: (key: string) => unknown;
+  readonly #max: number;
   /** Entry keys used, oldest first. */
   #recent: string[] = [];
   readonly #resource: RecentQueryWindowOptions['resource'];
@@ -34,13 +37,14 @@ export class RecentQueryWindow {
   /** Whether the persisted keys are already folded in. */
   #seeded = false;
 
-  constructor({ evict, resource }: RecentQueryWindowOptions) {
+  constructor({ evict, max = MAX_RECENT_MEMORY_QUERIES, resource }: RecentQueryWindowOptions) {
     this.#evict = evict;
+    this.#max = max;
     this.#resource = resource;
   }
 
   #evictOld = (): void => {
-    while (this.#recent.length > MAX_RECENT_MEMORY_QUERIES) {
+    while (this.#recent.length > this.#max) {
       const oldest = this.#recent.shift();
       if (oldest) this.#evict(oldest);
     }

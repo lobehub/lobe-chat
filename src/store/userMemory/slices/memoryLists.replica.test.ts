@@ -507,6 +507,58 @@ describe.each(CASES)('$name list replica', (list) => {
     expect(view()?.loadMoreError).toBeUndefined();
   });
 
+  it('never pages a persisted query a delete shortened, even after a reload, when its head refresh fails', async () => {
+    let server = rowsOf(30);
+    let headDown = false;
+    fetchSpy.mockImplementation(
+      async ({ page: pageNo = 1, pageSize = 12 }: { page?: number; pageSize?: number } = {}) => {
+        if (pageNo === 1 && headDown) throw new Error('head down');
+        const start = (pageNo - 1) * pageSize;
+        return page(server.slice(start, start + pageSize).map(list.raw), server.length);
+      },
+    );
+    vi.spyOn(memoryCRUDService, list.deleteMethod).mockResolvedValue(undefined as never);
+
+    // Query B (a search) was persisted earlier...
+    const search = renderHook(() => useFetch({ q: 'foo' }), { wrapper });
+    await waitFor(async () => expect((await stored({ q: 'foo' }))?.items).toHaveLength(12));
+    search.unmount();
+    // ...and a reload leaves it in storage only.
+    act(() => useUserMemoryStore.setState(initialState, false));
+
+    // Delete from query A: B's persisted row is patched (not loaded, not marked).
+    const base = renderHook(() => useFetch(), { wrapper });
+    await waitFor(() => expect(view()?.items).toHaveLength(12));
+    server = server.filter((id) => id !== 'r5');
+    await act(async () => {
+      await remove('r5');
+    });
+    await waitFor(async () => expect((await stored({ q: 'foo' }))?.items).toHaveLength(11));
+    base.unmount();
+
+    // Open B while its head revalidation fails: it paints the shortened row.
+    headDown = true;
+    const reopened = renderHook(() => useFetch({ q: 'foo' }), { wrapper });
+    await waitFor(() => expect(view()?.items).toHaveLength(11));
+
+    fetchSpy.mockClear();
+    await act(async () => {
+      await loadMore();
+    });
+
+    // No page 2 from the shifted offset (it would skip r12); the footer shows why.
+    expect(fetchSpy).not.toHaveBeenCalledWith(expect.objectContaining({ page: 2 }));
+    expect(view()?.loadMoreError).toBeInstanceOf(Error);
+
+    // Once the head is back, the retry pages contiguously.
+    headDown = false;
+    await act(async () => {
+      await loadMore();
+    });
+    await waitFor(() => expect(ids(view())).toEqual(server.slice(0, 24)));
+    reopened.unmount();
+  });
+
   it('makes a delete wait for a page in flight, so the page cannot land past the shift', async () => {
     let server = rowsOf(30);
     let releasePage!: () => void;

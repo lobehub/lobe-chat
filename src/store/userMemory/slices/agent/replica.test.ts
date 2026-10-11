@@ -23,6 +23,7 @@ import { type RetrieveMemoryResult } from '@/types/userMemory';
 import { initialState as userMemoryInitialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
 import { identityScopeOf } from '../../utils/replica';
+import { MAX_RECENT_TOPIC_MEMORIES } from './action';
 import { topicMemoriesResource } from './projection';
 import { agentMemorySelectors } from './selectors';
 
@@ -372,6 +373,44 @@ describe('userMemory topic memories replica', () => {
     // The active user's bundle (view and row) is untouched.
     expect(topicMemories(TOPIC_B)).toEqual(bundle('active'));
     expect((await rowOf(TOPIC_B, rowScope))?.data).toEqual(bundle('active'));
+  });
+
+  it('bounds the persisted topic bundles to the most recently visited topics', async () => {
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(async (topicId) =>
+      bundle(topicId),
+    );
+    const topics = Array.from({ length: MAX_RECENT_TOPIC_MEMORIES + 2 }, (_, i) => `topic-${i}`);
+    const rowOf = (topicId: string) =>
+      topicMemoriesResource.storage!.get({
+        queryKey: topicMemoriesResource.storageKey(topicId),
+        scope: rowScope,
+      });
+
+    const hook = renderHook(
+      (props: { topicId: string }) =>
+        useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(props.topicId),
+      { initialProps: { topicId: topics[0] }, wrapper },
+    );
+    for (const topicId of topics) {
+      hook.rerender({ topicId });
+      await waitFor(() => expect(topicMemories(topicId)).toEqual(bundle(topicId)));
+    }
+
+    // The oldest topics left memory and IndexedDB together; the recent ones stay.
+    expect(Object.keys(useUserMemoryStore.getState().topicMemoriesMap)).toHaveLength(
+      MAX_RECENT_TOPIC_MEMORIES,
+    );
+    expect(topicMemories(topics[0])).toBeUndefined();
+    await waitFor(async () => expect(await rowOf(topics[0])).toBeUndefined());
+    expect((await rowOf(topics.at(-1)!))?.data).toEqual(bundle(topics.at(-1)!));
+    await Promise.all(
+      topics.map((topicId) =>
+        topicMemoriesResource.storage!.remove({
+          queryKey: topicMemoriesResource.storageKey(topicId),
+          scope: rowScope,
+        }),
+      ),
+    );
   });
 
   it('does not fetch when there is no topic', async () => {

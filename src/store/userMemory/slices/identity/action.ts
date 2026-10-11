@@ -135,6 +135,7 @@ export class IdentityActionImpl {
     });
     this.#pager = new OffsetListPager({
       keys: () => Object.keys(get().identityListEntries),
+      read: (key) => get().identityListEntries[key],
       refreshHead: () => this.refreshIdentities(),
       slice: this.#identities,
     });

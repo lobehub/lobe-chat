@@ -1,3 +1,5 @@
+import { useLayoutEffect } from 'react';
+
 import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
 import { userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
@@ -5,7 +7,16 @@ import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { type UserMemoryStore } from '../../store';
 import { clearUserReplicas } from '../../utils/replica';
+import { RecentQueryWindow } from '../utils/recentQueryWindow';
 import { topicMemoriesResource } from './projection';
+
+/**
+ * How many topic bundles survive, in memory and in IndexedDB. Every visited
+ * topic gets its own entry; the topics just used still paint (and inject) from
+ * their own row, while deleted and long-unvisited topics fall out instead of
+ * accumulating until a full purge.
+ */
+export const MAX_RECENT_TOPIC_MEMORIES = 32;
 
 type Setter = StoreSetter<UserMemoryStore>;
 export const createAgentMemorySlice = (set: Setter, get: () => UserMemoryStore, _api?: unknown) =>
@@ -17,6 +28,8 @@ export class AgentMemoryActionImpl {
    * send path reads synchronously (see `resolveTopicMemories`).
    */
   readonly #topicMemories;
+  /** Bounds the persisted topic bundles (least recently used out first). */
+  readonly #recent: RecentQueryWindow;
 
   constructor(set: Setter, get: () => UserMemoryStore, _api?: unknown) {
     void _api;
@@ -27,6 +40,11 @@ export class AgentMemoryActionImpl {
       set,
       stateKey: 'topicMemoriesReplica',
       view: recordLens<UserMemoryStore, RetrieveMemoryResult>('topicMemoriesMap'),
+    });
+    this.#recent = new RecentQueryWindow({
+      evict: this.#topicMemories.remove,
+      max: MAX_RECENT_TOPIC_MEMORIES,
+      resource: topicMemoriesResource,
     });
   }
 
@@ -61,8 +79,14 @@ export class AgentMemoryActionImpl {
    * One replica entry per topic, so switching topics paints the persisted
    * bundle and the network only confirms it.
    */
-  useFetchMemoriesForTopic = (topicId?: string | null): ReplicaSyncResult =>
-    this.#topicMemories.useSync(topicId ?? null, { revalidateOnFocus: false });
+  useFetchMemoriesForTopic = (topicId?: string | null): ReplicaSyncResult => {
+    // The topic on screen is the most recent one in the bounded window.
+    useLayoutEffect(() => {
+      if (topicId) this.#recent.track(topicId);
+    }, [topicId]);
+
+    return this.#topicMemories.useSync(topicId ?? null, { revalidateOnFocus: false });
+  };
 }
 
 export type AgentMemoryAction = Pick<AgentMemoryActionImpl, keyof AgentMemoryActionImpl>;
