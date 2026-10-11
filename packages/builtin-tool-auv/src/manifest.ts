@@ -9,7 +9,7 @@ export const AuvManifest: BuiltinToolManifest = {
     {
       defaultTimeoutMs: 120_000,
       description:
-        'Use the computer by running a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Results include exitCode and parsed output, preserving structured failures on nonzero exits and artifacts[].file_path for captured images. A zero exit code does not verify the intended UI effect.',
+        'Use the computer by running a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Results include exitCode and parsed output, preserving structured failures on nonzero exits and artifacts[].file_path for captured images. A zero exit code does not verify the intended UI effect. On macOS, ["setup", "macos-helper", "status" | "install" | "uninstall" | "open-accessibility-settings" | "open-background-items-settings"] manages the LobeHub Computer Use helper used to lock and unlock the Mac.',
       humanIntervention: 'required',
       name: AuvApiName.runCommand,
       parameters: {
@@ -21,7 +21,7 @@ export const AuvManifest: BuiltinToolManifest = {
           },
           argv: {
             description:
-              'Arguments after the auv executable. The first argument must be "invoke". Do not include shell syntax or the executable name.',
+              'Arguments after the auv executable. The first argument must be "invoke", or "setup" for a macOS helper setup command. Do not include shell syntax or the executable name.',
             items: { type: 'string' },
             minItems: 2,
             type: 'array',

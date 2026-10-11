@@ -321,6 +321,8 @@
   "builtins.lobe-computer-use.inspector.operate.loading": "操作电脑中…",
   "builtins.lobe-computer-use.inspector.preview": "检查电脑操作",
   "builtins.lobe-computer-use.inspector.preview.loading": "检查电脑操作中…",
+  "builtins.lobe-computer-use.inspector.setup": "设置电脑操作",
+  "builtins.lobe-computer-use.inspector.setup.loading": "设置电脑操作中…",
   "builtins.lobe-computer-use.title": "使用电脑",
   "builtins.lobe-dashboard.apiName.addWidgetToDashboard": "添加组件到看板",
   "builtins.lobe-dashboard.apiName.createWidgetDraft": "创建组件草稿",

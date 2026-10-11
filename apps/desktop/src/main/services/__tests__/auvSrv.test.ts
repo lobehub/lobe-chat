@@ -21,7 +21,9 @@ const localRunnerClass = {
   supportedLifecycles: ['ephemeral', 'unless_idle', 'unless_shutdown'] as const,
 };
 
-function createHarness() {
+const HELPER_APP = '/Applications/LobeHub.app/Contents/Library/Helpers/LobeHub Computer Use.app';
+
+function createHarness({ platform = 'darwin' as NodeJS.Platform, shipsHelper = true } = {}) {
   const connection = {
     close: vi.fn().mockResolvedValue(undefined),
   } as unknown as AuvConnection;
@@ -65,7 +67,9 @@ function createHarness() {
     }),
     hostname: () => 'Nekos-MBP.lan',
     loadSdk: vi.fn().mockResolvedValue(sdk),
+    platform,
     resolveBinaryPath,
+    resolveMacosHelperApp: vi.fn().mockResolvedValue(shipsHelper ? HELPER_APP : undefined),
     runCli,
   });
 
@@ -87,6 +91,7 @@ describe('AuvService', () => {
       binaryPath: '/opt/lobehub/bin/auv',
       listeners: ['unix:///private/auv/session.sock'],
       noRegister: true,
+      platforms: { macos: { helperApp: HELPER_APP } },
       storeRoot: '/tmp/lobehub-storage/auv/store',
     });
     expect(daemon.connect).toHaveBeenCalledOnce();
@@ -184,6 +189,7 @@ describe('AuvService', () => {
       argv: ['invoke', 'display.capture', '--json'],
       binaryPath: '/opt/lobehub/bin/auv',
       endpoint: 'unix:///private/auv/session.sock',
+      macosHelperApp: HELPER_APP,
       storeRoot: '/tmp/lobehub-storage/auv/runs',
     });
     expect(result).toEqual({
@@ -242,8 +248,67 @@ describe('AuvService', () => {
     expect(result.output).toBe('Usage: auv invoke <COMMAND>');
   });
 
+  it('starts without a helper override when the build ships no Computer Use helper', async () => {
+    const { sdk, service } = createHarness({ shipsHelper: false });
+
+    await service.connect();
+
+    expect(vi.mocked(sdk.startAuv).mock.calls[0]![0]).not.toHaveProperty('platforms');
+  });
+
+  it('runs macOS helper setup for the shipped helper without the invoke run store', async () => {
+    const { runCli, service } = createHarness();
+    runCli.mockResolvedValueOnce({
+      stderr: '',
+      stdout: JSON.stringify({ helper_embedded: true, state: 'requires-approval' }),
+    });
+
+    const result = await service.runCommand({ argv: ['setup', 'macos-helper', 'install'] });
+
+    expect(runCli).toHaveBeenCalledWith({
+      argv: ['setup', 'macos-helper', 'install', '--json'],
+      binaryPath: '/opt/lobehub/bin/auv',
+      endpoint: 'unix:///private/auv/session.sock',
+      macosHelperApp: HELPER_APP,
+    });
+    expect(result.output).toEqual({ helper_embedded: true, state: 'requires-approval' });
+  });
+
+  it('opens System Settings panes without adding --json', async () => {
+    const { runCli, service } = createHarness();
+
+    await service.runCommand({ argv: ['setup', 'macos-helper', 'open-accessibility-settings'] });
+
+    expect(runCli).toHaveBeenCalledWith(
+      expect.objectContaining({ argv: ['setup', 'macos-helper', 'open-accessibility-settings'] }),
+    );
+  });
+
+  it('refuses helper setup when this build ships no Computer Use helper', async () => {
+    const { runCli, service } = createHarness({ shipsHelper: false });
+
+    await expect(service.runCommand({ argv: ['setup', 'macos-helper', 'status'] })).rejects.toThrow(
+      'LobeHub Computer Use.app is not bundled in this LobeHub build',
+    );
+    expect(runCli).not.toHaveBeenCalled();
+  });
+
+  it('refuses helper setup outside macOS', async () => {
+    const { runCli, service } = createHarness({ platform: 'win32' });
+
+    await expect(service.runCommand({ argv: ['setup', 'macos-helper', 'status'] })).rejects.toThrow(
+      'only available on macOS',
+    );
+    expect(runCli).not.toHaveBeenCalled();
+  });
+
   it.each([
-    [{ argv: ['serve', '--help'] }, 'Only "auv invoke" commands are allowed'],
+    [{ argv: ['serve', '--help'] }, 'Only "auv invoke" and "auv setup macos-helper" commands'],
+    [{ argv: ['setup', 'windows-helper', 'install'] }, 'AUV setup only supports'],
+    [
+      { argv: ['setup', 'macos-helper', 'install', '--helper-app', '/tmp/Other.app'] },
+      'Unsupported AUV setup option: --helper-app',
+    ],
     [
       { argv: ['invoke', 'display.capture', '--store-root', '/tmp/other'] },
       'AUV --store-root is managed by LobeHub',

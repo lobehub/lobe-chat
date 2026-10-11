@@ -61,7 +61,10 @@ export interface AuvCliExecutionOptions {
   argv: string[];
   binaryPath: string;
   endpoint: string;
-  storeRoot: string;
+  /** LobeHub Computer Use.app shipped in this build; setup and unlock trust only it. */
+  macosHelperApp?: string;
+  /** Run store for `invoke`; other commands do not accept `--store-root`. */
+  storeRoot?: string;
 }
 
 export interface AuvConnectionSnapshot {
@@ -76,7 +79,9 @@ export interface AuvRuntimeDependencies {
   createIpcListener: () => Promise<PrivateIpcListener>;
   hostname: () => string;
   loadSdk: () => Promise<AuvSdkRuntime>;
+  platform: NodeJS.Platform;
   resolveBinaryPath: () => Promise<string>;
+  resolveMacosHelperApp: () => Promise<string | undefined>;
   runCli: (options: AuvCliExecutionOptions) => Promise<{ stderr: string; stdout: string }>;
 }
 
@@ -119,17 +124,50 @@ const resolveAuvBinaryPath = async (): Promise<string> => {
   return binaryPath();
 };
 
+export const COMPUTER_USE_HELPER_APP_NAME = 'LobeHub Computer Use.app';
+
+/**
+ * Packaging embeds the notarized helper at
+ * `LobeHub.app/Contents/Library/Helpers` (see scripts/computerUseHelper.mjs).
+ * Development builds have none unless AUV_MACOS_HELPER_APP names one.
+ */
+const resolveMacosHelperApp = async (): Promise<string | undefined> => {
+  if (process.platform !== 'darwin') return undefined;
+  if (process.env.AUV_MACOS_HELPER_APP) return process.env.AUV_MACOS_HELPER_APP;
+  if (!process.resourcesPath) return undefined;
+
+  const helperApp = path.resolve(
+    process.resourcesPath,
+    '..',
+    'Library',
+    'Helpers',
+    COMPUTER_USE_HELPER_APP_NAME,
+  );
+  try {
+    await access(helperApp);
+    return helperApp;
+  } catch {
+    return undefined;
+  }
+};
+
 const execFileAsync = promisify(execFile);
 
 const runAuvCli = async ({
   argv,
   binaryPath,
   endpoint,
+  macosHelperApp,
   storeRoot,
 }: AuvCliExecutionOptions): Promise<{ stderr: string; stdout: string }> => {
-  const { stderr, stdout } = await execFileAsync(binaryPath, [...argv, '--store-root', storeRoot], {
+  const args = storeRoot ? [...argv, '--store-root', storeRoot] : argv;
+  const { stderr, stdout } = await execFileAsync(binaryPath, args, {
     encoding: 'utf8',
-    env: { ...process.env, AUV_ENDPOINT: endpoint },
+    env: {
+      ...process.env,
+      AUV_ENDPOINT: endpoint,
+      ...(macosHelperApp && { AUV_MACOS_HELPER_APP: macosHelperApp }),
+    },
     maxBuffer: 4 * 1024 * 1024,
     timeout: 120_000,
     windowsHide: true,
@@ -142,7 +180,9 @@ const defaultDependencies: AuvRuntimeDependencies = {
   createIpcListener: createPrivateIpcListener,
   hostname: os.hostname,
   loadSdk: () => import('@auv-js/sdk/node'),
+  platform: process.platform,
   resolveBinaryPath: resolveAuvBinaryPath,
+  resolveMacosHelperApp,
   runCli: runAuvCli,
 };
 
@@ -154,7 +194,48 @@ const MAX_CLI_ARGUMENTS = 128;
 const MAX_CLI_ARGUMENT_LENGTH = 16_384;
 const AUV_COMMAND_ID = /^[a-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)+$/;
 
-const normalizeCliArgv = (params: AuvRunCommandParams): string[] => {
+/**
+ * `auv setup macos-helper` subcommands the agent may run to install LobeHub
+ * Computer Use.app and open the System Settings panes the user must approve.
+ * LobeHub supplies the helper path; argv cannot select another app.
+ */
+const MACOS_HELPER_SETUP_COMMANDS = new Set([
+  'install',
+  'open-accessibility-settings',
+  'open-background-items-settings',
+  'status',
+  'uninstall',
+]);
+const MACOS_HELPER_JSON_COMMANDS = new Set(['install', 'status', 'uninstall']);
+
+type NormalizedCliArgv = { argv: string[]; kind: 'invoke' | 'macos-helper-setup' };
+
+const normalizeMacosHelperSetupArgv = (
+  argv: string[],
+  platform: NodeJS.Platform,
+): NormalizedCliArgv => {
+  if (platform !== 'darwin') throw new Error('AUV macOS helper setup is only available on macOS');
+  if (argv[1] !== 'macos-helper' || !MACOS_HELPER_SETUP_COMMANDS.has(argv[2] ?? '')) {
+    throw new Error(
+      `AUV setup only supports "setup macos-helper <${[...MACOS_HELPER_SETUP_COMMANDS].join('|')}>"`,
+    );
+  }
+  const options = argv.slice(3);
+  const unsupported = options.find((option) => !['--help', '--json', '-h'].includes(option));
+  if (unsupported) throw new Error(`Unsupported AUV setup option: ${unsupported}`);
+
+  const isHelp = options.includes('--help') || options.includes('-h');
+  const normalized = [...argv];
+  if (!isHelp && MACOS_HELPER_JSON_COMMANDS.has(argv[2]!) && !options.includes('--json')) {
+    normalized.push('--json');
+  }
+  return { argv: normalized, kind: 'macos-helper-setup' };
+};
+
+const normalizeCliArgv = (
+  params: AuvRunCommandParams,
+  platform: NodeJS.Platform,
+): NormalizedCliArgv => {
   if (!Array.isArray(params.argv)) throw new Error('AUV argv must be an array');
   if (params.argv.length < 2) {
     throw new Error('AUV argv must include "invoke" and a command or --help');
@@ -172,8 +253,9 @@ const normalizeCliArgv = (params: AuvRunCommandParams): string[] => {
     return argument;
   });
 
+  if (argv[0] === 'setup') return normalizeMacosHelperSetupArgv(argv, platform);
   if (argv[0] !== 'invoke') {
-    throw new Error('Only "auv invoke" commands are allowed');
+    throw new Error('Only "auv invoke" and "auv setup macos-helper" commands are allowed');
   }
   if (
     argv.some((argument) => argument === '--store-root' || argument.startsWith('--store-root='))
@@ -193,7 +275,7 @@ const normalizeCliArgv = (params: AuvRunCommandParams): string[] => {
 
   const isHelp = argv.includes('--help') || argv.includes('-h') || command === 'help';
   if (!isHelp && !argv.includes('--json')) argv.push('--json');
-  return argv;
+  return { argv, kind: 'invoke' };
 };
 
 const parseCliOutput = (stdout: string): unknown => {
@@ -220,6 +302,7 @@ export default class AuvService extends ServiceModule {
   private binaryPath: string | null = null;
   private ipcCleanup: (() => Promise<void>) | null = null;
   private ipcEndpoint: string | null = null;
+  private macosHelperApp: string | undefined;
   private snapshot: AuvConnectionSnapshot = {
     devices: [],
     runnerClasses: [],
@@ -268,6 +351,7 @@ export default class AuvService extends ServiceModule {
     this.binaryPath = null;
     this.ipcCleanup = null;
     this.ipcEndpoint = null;
+    this.macosHelperApp = undefined;
 
     const errors: unknown[] = [];
     try {
@@ -312,9 +396,13 @@ export default class AuvService extends ServiceModule {
    * -> private app-owned CLI invocation; preserve output on nonzero exits.
    */
   async runCommand(params: AuvRunCommandParams): Promise<AuvRunCommandResult> {
-    const argv = normalizeCliArgv(params);
+    const { argv, kind } = normalizeCliArgv(params, this.dependencies.platform);
     await this.getClient();
     if (!this.binaryPath || !this.ipcEndpoint) throw new Error('AUV is not connected');
+    // Without the shipped app, the CLI would manage the official AUV Helper instead.
+    if (kind === 'macos-helper-setup' && !this.macosHelperApp) {
+      throw new Error(`${COMPUTER_USE_HELPER_APP_NAME} is not bundled in this LobeHub build`);
+    }
 
     let stdout: string;
     let stderr: string;
@@ -324,7 +412,8 @@ export default class AuvService extends ServiceModule {
         argv,
         binaryPath: this.binaryPath,
         endpoint: this.ipcEndpoint,
-        storeRoot: path.join(this.app.appStoragePath, 'auv', 'runs'),
+        macosHelperApp: this.macosHelperApp,
+        ...(kind === 'invoke' && { storeRoot: path.join(this.app.appStoragePath, 'auv', 'runs') }),
       }));
     } catch (error) {
       // execFile rejects nonzero exits even when stdout contains AUV's structured
@@ -359,11 +448,14 @@ export default class AuvService extends ServiceModule {
       const binaryPath =
         process.env.AUV_BINARY_PATH || (await this.dependencies.resolveBinaryPath());
       const auvRoot = path.join(this.app.appStoragePath, 'auv');
+      const macosHelperApp = await this.dependencies.resolveMacosHelperApp();
       privateIpc = await this.dependencies.createIpcListener();
       daemon = await sdk.startAuv({
         binaryPath,
         listeners: [privateIpc.listener],
         noRegister: true,
+        // The daemon then trusts LobeHub Computer Use.app instead of AUV Helper.app.
+        ...(macosHelperApp && { platforms: { macos: { helperApp: macosHelperApp } } }),
         storeRoot: path.join(auvRoot, 'store'),
       });
 
@@ -381,6 +473,7 @@ export default class AuvService extends ServiceModule {
       this.binaryPath = binaryPath;
       this.ipcCleanup = privateIpc.cleanup ?? null;
       this.ipcEndpoint = privateIpc.listener;
+      this.macosHelperApp = macosHelperApp;
       this.client = client;
       this.snapshot = { devices: [], runnerClasses: [], status: 'connected', transport };
 
@@ -398,6 +491,7 @@ export default class AuvService extends ServiceModule {
       this.binaryPath = null;
       this.ipcCleanup = null;
       this.ipcEndpoint = null;
+      this.macosHelperApp = undefined;
       this.client = null;
       this.snapshot = {
         devices: [],
