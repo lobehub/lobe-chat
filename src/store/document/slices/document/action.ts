@@ -90,6 +90,12 @@ export class DocumentActionImpl {
   readonly #get: () => DocumentStore;
   readonly #set: Setter;
   readonly #debouncedSaves = new Map<string, ReturnType<typeof debounce>>();
+  /**
+   * Per-document count of server rows adopted outside a read (saves, CONFLICT
+   * reconciles). A read that saw the count change while in flight started
+   * before that row was written, so it must not replace it.
+   */
+  readonly #adoptions = new Map<string, number>();
   readonly #detail;
 
   constructor(set: Setter, get: () => DocumentStore, _api?: unknown) {
@@ -98,10 +104,16 @@ export class DocumentActionImpl {
     this.#get = get;
     this.#detail = createReplicaSlice(documentDetailResource, {
       actionPrefix: n('documentDetail'),
-      fetcher: async (id) =>
-        this.#keepNewerDetail(id, {
-          document: (await documentService.getDocumentById(id)) ?? null,
-        }),
+      fetcher: async (id) => {
+        const adoptedBefore = this.#adoptions.get(id) ?? 0;
+        const document = (await documentService.getDocumentById(id)) ?? null;
+        // A save (or CONFLICT reconcile) adopted a server row while this read was
+        // in flight: that row is newer than anything this read saw, even when an
+        // older server returned no `updatedAt` to compare. Keep it.
+        const current = this.#get().documentDetailMap[id];
+        if ((this.#adoptions.get(id) ?? 0) !== adoptedBefore && current) return current;
+        return this.#keepNewerDetail(id, { document });
+      },
       get,
       set,
       stateKey: 'documentDetailReplica',
@@ -459,14 +471,20 @@ export class DocumentActionImpl {
     // engine drops an action whose scope is no longer active.
     const scope = documentDetailResource.scope.get();
     try {
+      const before = this.#get().documentDetailMap[documentId];
       const document = await documentService.getDocumentById(documentId);
-      // A sync that started while this was in flight owns the entry now: it may
-      // hold a newer revision, or a confirmed absence. Never let a late
-      // prefetch regress it — e.g. resurrect the body of a document the sync has
-      // just settled as not-found. The entry is warmed on hover, so skipping
-      // when one already exists only drops a redundant write.
-      if (this.#get().documentDetailMap[documentId] !== undefined) return;
-      this.#detail.replace(documentId, { document: document ?? null }, scope);
+      // A sync or save that wrote the entry while this was in flight owns it
+      // now: it may hold a newer revision, or a confirmed absence. Never let a
+      // late prefetch regress it — e.g. resurrect the body of a document the
+      // sync has just settled as not-found.
+      if (this.#get().documentDetailMap[documentId] !== before) return;
+      // Otherwise the response refreshes the entry (a retained one may be stale
+      // from an earlier visit), unless it is strictly older than it.
+      this.#detail.replace(
+        documentId,
+        this.#keepNewerDetail(documentId, { document: document ?? null }),
+        scope,
+      );
     } catch (error) {
       console.error('[DocumentStore] Failed to prefetch document:', error);
     }
@@ -489,6 +507,7 @@ export class DocumentActionImpl {
     document: DocumentItem | null,
     scope?: string,
   ): void => {
+    this.#adoptions.set(documentId, (this.#adoptions.get(documentId) ?? 0) + 1);
     this.#detail.replace(documentId, { document }, scope);
   };
 }

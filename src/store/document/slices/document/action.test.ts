@@ -576,6 +576,79 @@ describe('document detail replica', () => {
     );
   });
 
+  it('does not let a sync that started before an unversioned save revert it', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
+    // An older server: the save result carries no `updatedAt`.
+    vi.mocked(documentService.updateDocument).mockResolvedValue({
+      historyAppended: false,
+      id: 'doc-1',
+    } as any);
+
+    const { result } = renderDocument('doc-1', createEditor());
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-1']).toBeDefined());
+
+    let resolveFetch!: (value: unknown) => void;
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      () => new Promise((resolve) => (resolveFetch = resolve)) as any,
+    );
+    let revalidation!: Promise<unknown>;
+    act(() => {
+      revalidation = result.current.mutate();
+    });
+    await waitFor(() => expect(resolveFetch).toBeDefined());
+
+    act(() => useDocumentStore.getState().handleContentChange());
+    await act(async () => {
+      await useDocumentStore.getState().performSave('doc-1');
+    });
+
+    // The late read carries the pre-save body with the very same timestamp.
+    await act(async () => {
+      resolveFetch(documentRow());
+      await revalidation;
+    });
+
+    const saved = expect.objectContaining({ content: '# Draft' });
+    expect(useDocumentStore.getState().documentDetailMap['doc-1']).toEqual({ document: saved });
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data).toEqual({ document: saved }),
+    );
+  });
+
+  it('refreshes an entry already in memory with a newer prefetched row', async () => {
+    act(() =>
+      useDocumentStore
+        .getState()
+        .internal_adoptDocumentDetail('doc-2', documentRow({ content: '# Old', id: 'doc-2' })),
+    );
+    const newer = documentRow({
+      content: '# Newer',
+      id: 'doc-2',
+      updatedAt: new Date('2026-01-09T00:00:00.000Z'),
+    });
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(newer as any);
+
+    await act(() => useDocumentStore.getState().prefetchDocument('doc-2'));
+
+    expect(useDocumentStore.getState().documentDetailMap['doc-2']).toEqual({ document: newer });
+  });
+
+  it('keeps a newer in-memory entry over an older prefetched row', async () => {
+    const current = documentRow({
+      content: '# Current',
+      id: 'doc-2',
+      updatedAt: new Date('2026-01-09T00:00:00.000Z'),
+    });
+    act(() => useDocumentStore.getState().internal_adoptDocumentDetail('doc-2', current));
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ content: '# Older', id: 'doc-2' }) as any,
+    );
+
+    await act(() => useDocumentStore.getState().prefetchDocument('doc-2'));
+
+    expect(useDocumentStore.getState().documentDetailMap['doc-2']).toEqual({ document: current });
+  });
+
   it('does not let a late prefetch overwrite the entry a sync already settled', async () => {
     const stale = documentRow({ id: 'doc-2', content: '# Stale prefetch' });
     let resolvePrefetch!: (value: unknown) => void;
