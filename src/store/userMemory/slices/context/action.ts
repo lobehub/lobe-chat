@@ -44,6 +44,8 @@ const contextListLens: ReplicaLens<UserMemoryStore, ContextListData> = {
     contextsHasMore: true,
     contextsInit: false,
     contextsPage: 1,
+    // A scope switch / wipe must not keep showing the previous scope's error.
+    contextsSearchError: undefined,
     contextsSearchLoading: undefined,
     contextsTotal: 0,
   }),

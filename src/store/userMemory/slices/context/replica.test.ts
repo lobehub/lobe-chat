@@ -544,6 +544,23 @@ describe('contextList replica', () => {
     });
   });
 
+  it('drops the previous scope error when the scope changes', async () => {
+    fetchSpy.mockRejectedValueOnce(new Error('old scope failed')).mockImplementation(pending);
+
+    const hook = renderHook(() => useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().contextsSearchError).toBeInstanceOf(Error),
+    );
+
+    useScope(`context-user-${randomUUID()}:personal`);
+    hook.rerender();
+
+    // The new scope shows its own loading state, not the old scope's error.
+    await waitFor(() => expect(useUserMemoryStore.getState().contextsSearchError).toBeUndefined());
+  });
+
   it('does not fetch another page when the head page is the last one', async () => {
     fetchSpy.mockResolvedValue(listPage([rawItem('only')], 1));
 
