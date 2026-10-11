@@ -508,12 +508,14 @@ export function registerGoalCommand(program: Command) {
           // admission before the error propagates: the bare message ("Stale
           // planning input") cannot say which precondition failed. The plan
           // travels with it — the read is only as specific as the plan it sees.
+          // stderr, not stdout: `--json` callers parse stdout, and a refusal
+          // must not turn it into prose.
           const explanation = await explainPlanRefusal(id, {
             operation: options.operation,
             plan,
             token: options.token,
           });
-          if (explanation) console.log(explanation);
+          if (explanation) console.error(explanation);
           throw error;
         }
       },

@@ -1045,6 +1045,7 @@ describe('goal plan refusal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -1053,9 +1054,14 @@ describe('goal plan refusal', () => {
   });
 
   const planArgs = ['node', 'test', 'goal', 'plan', 'goal-1', '--token', 'tok', '--file', 'p.json'];
-  const output = () =>
+  const stdout = () =>
     vi
       .mocked(console.log)
+      .mock.calls.map(([value]) => String(value))
+      .join('\n');
+  const output = () =>
+    vi
+      .mocked(console.error)
       .mock.calls.map(([value]) => String(value))
       .join('\n');
 
@@ -1084,6 +1090,22 @@ describe('goal plan refusal', () => {
     expect(text).toContain('Refused (stale_input)');
     expect(text).toContain('snapshot');
     expect(text).toContain('lh goal state goal-1');
+  });
+
+  it('keeps the refusal explanation off stdout under --json', async () => {
+    vi.stubEnv('LOBEHUB_OPERATION_ID', 'op-env');
+    mockClient.goal.submitPlan.mutate.mockRejectedValue(
+      new Error('Stale planning input; no plan applied'),
+    );
+    mockClient.goal.planContext.query.mockResolvedValue({ data: goalStateContext });
+
+    await expect(createProgram().parseAsync([...planArgs, '--json'])).rejects.toThrow(
+      'Stale planning input',
+    );
+
+    // Automation parses stdout as JSON; the human-readable verdict goes to stderr.
+    expect(stdout()).toBe('');
+    expect(output()).toContain('Refused (stale_input)');
   });
 
   it('never lets a failing diagnostic replace the original error', async () => {

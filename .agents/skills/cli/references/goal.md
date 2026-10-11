@@ -22,8 +22,8 @@ Every planning turn is handed a block with a `token` and the current
 gateway, sandbox) goes to `submitOperationPlan`, a user login to `submitPlan`.
 
 A refusal is a **verdict about the turn, not a transport blip** — do not retry
-the same token. On refusal the CLI now prints the server's own admission before
-the error propagates; `lh goal state <id>` reproduces that answer on demand.
+the same token. On refusal the CLI now prints the server's own admission to
+stderr (so `--json` stdout stays parseable) before the error propagates; `lh goal state <id>` reproduces that answer on demand.
 
 ## Reading state
 
