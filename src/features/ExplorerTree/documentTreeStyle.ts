@@ -156,6 +156,14 @@ export const DOCUMENT_TREE_ROW_CSS = `
     font-weight: 500;
   }
 
+  /* The chevron glyph sits centered in its 16px slot, ~6px in from the slot's
+     edge. Starting rows with no leading padding puts that glyph on the same line
+     as the section title and the panel tabs above it, while the hover fill still
+     reaches the panel edge. The trailing padding (the action lane) stays. */
+  [data-type='item'] {
+    padding-inline-start: 0;
+  }
+
 ${DOCUMENT_TREE_NO_FOCUS_BORDER_CSS}
 ${DOCUMENT_TREE_TRAILING_ELLIPSIS_CSS}
 `;

@@ -315,6 +315,8 @@ describe('DocumentExplorerTree', () => {
 
     expect(screen.getByTestId('tree-node-agent-doc-1')).toHaveAttribute('data-folder', 'false');
     expect(screen.getByTestId('tree-menu-agent-doc-1-new-sub-document')).toBeInTheDocument();
+    // A folder can be nested under a document too, e.g. to group a workflow's runs.
+    expect(screen.getByTestId('tree-menu-agent-doc-1-new-sub-folder')).toBeInTheDocument();
   });
 
   it('offers upload on a folder context menu', () => {

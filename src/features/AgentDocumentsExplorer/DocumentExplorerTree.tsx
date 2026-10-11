@@ -2,7 +2,15 @@ import { AGENT_DOCUMENT_CATEGORY } from '@lobechat/const';
 import { Center, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import { createStaticStyles } from 'antd-style';
-import { FilePlusIcon, FileTextIcon, Maximize2Icon, PenLineIcon, Trash2Icon } from 'lucide-react';
+import {
+  FilePlusIcon,
+  FileTextIcon,
+  FileUpIcon,
+  FolderPlusIcon,
+  Maximize2Icon,
+  PenLineIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import type { ChangeEvent, CSSProperties, MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,9 +95,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     --trees-level-gap-override: ${DOCUMENT_TREE_LAYOUT.levelGap}px;
     --trees-item-row-gap-override: ${DOCUMENT_TREE_LAYOUT.iconGap}px;
 
-    /* No horizontal gutter of its own: a row's hover fill spans the same edges
-       as the toolbar above it, so the 「文档」 label, every row and the + button
-       share one left and one right line. Only the row padding insets content. */
+    /* No horizontal gutter of its own: a row's hover fill spans the panel's
+       content edges. Rows start without leading padding (DOCUMENT_TREE_ROW_CSS)
+       so the chevron glyph lines up with the 「文档」 title, which in turn sits on
+       the column of the panel tabs (技能 / 文档) above. */
     --trees-item-padding-x-override: 6px;
     --trees-item-margin-x-override: 0px;
     --trees-padding-inline-override: 0px;
@@ -379,18 +388,21 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
       if (isFolder && !isSkill && !isMulti) {
         items.push(
           {
+            icon: <FolderPlusIcon size={14} />,
             key: 'new-folder',
             label: t('workingPanel.resources.tree.newFolder'),
             onClick: () => handleCreateFolder(targetParentId),
             sfSymbol: 'folder.badge.plus',
           },
           {
+            icon: <FilePlusIcon size={14} />,
             key: 'new-document',
             label: t('workingPanel.resources.tree.newDocument'),
             onClick: () => handleCreateDocument(targetParentId),
             sfSymbol: 'doc.badge.plus',
           },
           {
+            icon: <FileUpIcon size={14} />,
             key: 'upload-file',
             label: t('workingPanel.resources.tree.uploadFile'),
             onClick: () => openFolderFilePicker(targetParentId),
@@ -400,7 +412,8 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
         );
       }
 
-      // Any document can hold sub-documents, e.g. the run records of a workflow.
+      // Any document can hold sub-documents and folders, e.g. the run records
+      // of a workflow grouped under it.
       if (isPlainDocument && !isMulti) {
         items.push(
           {
@@ -409,6 +422,13 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
             label: t('workingPanel.resources.tree.newSubDocument'),
             onClick: () => handleCreateDocument(node.id),
             sfSymbol: 'doc.badge.plus',
+          },
+          {
+            icon: <FolderPlusIcon size={14} />,
+            key: 'new-sub-folder',
+            label: t('workingPanel.resources.tree.newFolder'),
+            onClick: () => handleCreateFolder(node.id),
+            sfSymbol: 'folder.badge.plus',
           },
           { key: 'div-sub', type: 'divider' },
         );
