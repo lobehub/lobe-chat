@@ -31,6 +31,7 @@ import {
 import { AgentService } from '@/server/services/agent';
 import type { AgentSignalOperationMarker } from '@/server/services/agentSignal/operationMarker';
 
+import { acquireAgentSignalDailyBudget, describeBudgetDenial } from '../../../budget';
 import type { RuntimeProcessorContext } from '../../../runtime/context';
 import { defineActionHandler } from '../../../runtime/middleware';
 import {
@@ -236,6 +237,20 @@ export const runMemoryActionAgent = async (
       detail: 'Missing runnable agent config for memory action.',
       status: 'failed',
     };
+  }
+
+  // The async writer is a background execAgent run billed to the user's provider:
+  // take one unit of the shared daily background-run budget before creating any
+  // thread, seed message, or operation.
+  if (dispatch) {
+    const budget = await acquireAgentSignalDailyBudget({
+      kind: 'background-run',
+      userId: options.userId,
+    });
+
+    if (!budget.allowed) {
+      return { detail: describeBudgetDenial(budget), status: 'skipped' };
+    }
   }
 
   const installedPlugins = (await pluginModel.query()) as InstalledPlugin[];

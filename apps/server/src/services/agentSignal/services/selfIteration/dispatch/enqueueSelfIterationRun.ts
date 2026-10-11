@@ -4,6 +4,8 @@ import { type AgentSignalOperationMarker, RequestTrigger, ThreadType } from '@lo
 import { ThreadModel } from '@/database/models/thread';
 import type { LobeChatDatabase } from '@/database/type';
 
+import { acquireAgentSignalDailyBudget, describeBudgetDenial } from '../../../budget';
+
 /** The builtin self-iteration agent slugs an execAgent run can dispatch to. */
 export type SelfIterationSlug =
   | typeof BUILTIN_AGENT_SLUGS.nightlyReview
@@ -115,4 +117,68 @@ export const enqueueSelfIterationRun = async (
     ...(threadId ? { threadId } : {}),
     topicId: result.topicId,
   };
+};
+
+/** Self-iteration slugs that count against the per-user daily background-run budget. */
+export type BudgetedSelfIterationSlug = Exclude<
+  SelfIterationSlug,
+  typeof BUILTIN_AGENT_SLUGS.nightlyReview
+>;
+
+/** Input for {@link enqueueBudgetedSelfIterationRun}; nightly review is excluded by type. */
+export interface EnqueueBudgetedSelfIterationRunInput extends Omit<
+  EnqueueSelfIterationRunInput,
+  'slug'
+> {
+  slug: BudgetedSelfIterationSlug;
+}
+
+/** Returned instead of an operation when the daily background-run budget denied the run. */
+export interface SelfIterationRunSkippedResult {
+  /** Human-readable skip detail for executor results and traces. */
+  detail: string;
+  reason: 'budget_exceeded' | 'budget_unavailable';
+  status: 'skipped';
+}
+
+export type EnqueueBudgetedSelfIterationRunResult =
+  EnqueueSelfIterationRunResult | SelfIterationRunSkippedResult;
+
+/** Narrows a budgeted dispatch result to the skipped variant. */
+export const isSelfIterationRunSkipped = (
+  result: EnqueueBudgetedSelfIterationRunResult,
+): result is SelfIterationRunSkippedResult =>
+  'status' in result && (result as SelfIterationRunSkippedResult).status === 'skipped';
+
+/**
+ * Dispatches a user-triggered self-iteration run (skill management, self-reflection,
+ * self-feedback intent) after taking one unit of the user's daily background-run budget.
+ *
+ * Use when:
+ * - A feedback or intent path wants an async self-iteration run billed to the user
+ *
+ * Expects:
+ * - Nightly review uses {@link enqueueSelfIterationRun} directly; its own nightly guard caps it
+ *
+ * Returns:
+ * - The enqueued operation, or a skipped result (never throws for budget denial) when the
+ *   budget is exhausted or cannot be enforced
+ */
+export const enqueueBudgetedSelfIterationRun = async (
+  input: EnqueueBudgetedSelfIterationRunInput,
+): Promise<EnqueueBudgetedSelfIterationRunResult> => {
+  const decision = await acquireAgentSignalDailyBudget({
+    kind: 'background-run',
+    userId: input.userId,
+  });
+
+  if (!decision.allowed) {
+    return {
+      detail: describeBudgetDenial(decision),
+      reason: decision.reason === 'exceeded' ? 'budget_exceeded' : 'budget_unavailable',
+      status: 'skipped',
+    };
+  }
+
+  return enqueueSelfIterationRun(input);
 };

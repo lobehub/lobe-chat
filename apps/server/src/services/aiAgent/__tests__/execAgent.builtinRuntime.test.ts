@@ -647,6 +647,20 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
 
       expect(calls).toHaveLength(1);
     });
+
+    it('marks the first message of a conversation as the conversation root', async () => {
+      const calls = await runWithAgent({ chatConfig: {}, slug: 'inbox' });
+
+      expect(calls[0][0].payload).toMatchObject({ isConversationRoot: true });
+    });
+
+    it('does not mark a message that follows an earlier turn as the conversation root', async () => {
+      mockMessageCreate.mockResolvedValue({ id: 'msg-1', parentId: 'msg-assistant-prev' });
+
+      const calls = await runWithAgent({ chatConfig: {}, slug: 'inbox' });
+
+      expect(calls[0][0].payload).not.toHaveProperty('isConversationRoot');
+    });
   });
 
   it('should inject page-agent runtime for regular agents in page scope', async () => {

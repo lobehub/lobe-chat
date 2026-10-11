@@ -132,6 +132,33 @@ describe('self-reflection source handler', () => {
     );
   });
 
+  /**
+   * @example
+   * An exhausted daily background-run budget turns the dispatch into a skipped result.
+   */
+  it('returns skipped with the budget detail when the daily background-run budget denies dispatch', async () => {
+    const deps = createDependencies({
+      dispatch: vi.fn(async () => ({
+        detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
+        reason: 'budget_exceeded' as const,
+        status: 'skipped' as const,
+      })),
+    });
+    const handler = createSelfReflectionSourceHandler(deps);
+
+    const result = await handler.handle(createReflectionSource());
+
+    expect(deps.dispatch).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(
+      expect.objectContaining({
+        detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
+        reason: 'budget_exceeded',
+        status: ReviewRunStatus.Skipped,
+      }),
+    );
+    expect(result).not.toHaveProperty('operationId');
+  });
+
   it('re-checks the gate then acquires the idempotency guard before dispatching', async () => {
     const deps = createDependencies();
     const handler = createSelfReflectionSourceHandler(deps);

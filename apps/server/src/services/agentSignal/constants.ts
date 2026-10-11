@@ -3,7 +3,10 @@ export const AGENT_SIGNAL_PREFIX = 'agent-signal:';
 
 /** Server-owned Redis key builders for AgentSignal adapters. */
 export const AGENT_SIGNAL_KEYS = {
+  dailyBudget: (budget: string, userId: string, utcDay: string) =>
+    `${AGENT_SIGNAL_PREFIX}budget:${budget}:user:${userId}:day:${utcDay}`,
   dedupe: (id: string) => `${AGENT_SIGNAL_PREFIX}dedupe:${id}`,
+  declarationLimit: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}declaration-limit:${scopeKey}`,
   lock: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}lock:${scopeKey}`,
   policy: (policyId: string, scopeKey: string) =>
     `${AGENT_SIGNAL_PREFIX}policy:${policyId}:${scopeKey}`,
@@ -18,10 +21,27 @@ export const AGENT_SIGNAL_KEYS = {
 
 /** Server-owned timing defaults for AgentSignal storage and generation. */
 export const AGENT_SIGNAL_DEFAULTS = {
+  /**
+   * Per-user, per-UTC-day ceiling on background `execAgent` runs Agent Signal may dispatch
+   * (memory writer, skill management, self-reflection, self-feedback intent). Nightly review
+   * is exempt; it has its own once-per-agent-per-night guard.
+   */
+  dailyBackgroundRunBudgetPerUser: 20,
+  /** TTL for the per-day budget counters; outlives one UTC day so the key never resets early. */
+  dailyBudgetTtlSeconds: 2 * 24 * 60 * 60,
+  /**
+   * Per-user, per-UTC-day ceiling on feedback satisfaction classifier calls. Each call is a
+   * mini-model request billed to the user's provider credentials.
+   */
+  dailyFeedbackClassifierBudgetPerUser: 200,
   generationLockTtlSeconds: 5,
   receiptTtlSeconds: 3 * 24 * 60 * 60,
   runtimeGuardTtlSeconds: 3600,
   runtimeWaypointTtlSeconds: 3600,
+  /** Max accepted self-feedback intent declarations per operation (or topic) scope. */
+  selfFeedbackIntentDeclarationLimitPerScope: 3,
+  /** TTL for the shared self-feedback intent declaration counter of one scope. */
+  selfFeedbackIntentDeclarationTtlSeconds: 24 * 60 * 60,
   signalDedupeTtlSeconds: 300,
   signalWindowTtlSeconds: 3600,
 } as const;

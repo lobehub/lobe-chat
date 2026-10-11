@@ -16,6 +16,7 @@ const mockRedis = {
   expire: vi.fn(),
   hgetall: vi.fn(),
   hset: vi.fn(),
+  incr: vi.fn(),
   set: vi.fn(),
 };
 
@@ -301,6 +302,7 @@ describe('emitAgentSignalSourceEvent integration', () => {
       mockRedis.hgetall.mockResolvedValue({});
       mockRedis.hset.mockResolvedValue(1);
       mockRedis.expire.mockResolvedValue(1);
+      mockRedis.incr.mockResolvedValue(1);
       const initModelRuntimeFromDB = vi.fn().mockResolvedValue({
         generateObject: vi.fn().mockResolvedValue({
           confidence: 0.91,
@@ -346,6 +348,46 @@ describe('emitAgentSignalSourceEvent integration', () => {
           record: expect.objectContaining({ sourceId: 'source_1' }),
         }),
       );
+    },
+  );
+  /**
+   * @example
+   * The 201st feedback message of the UTC day concludes without a classifier call.
+   */
+  it(
+    'skips the satisfaction classifier once the daily feedback-classifier budget is spent',
+    { timeout: 10_000 },
+    async () => {
+      (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
+        mockRedis;
+      mockRedis.set.mockResolvedValue('OK');
+      mockRedis.del.mockResolvedValue(1);
+      mockRedis.hgetall.mockResolvedValue({});
+      mockRedis.hset.mockResolvedValue(1);
+      mockRedis.expire.mockResolvedValue(1);
+      mockRedis.incr.mockResolvedValue(201);
+      const initModelRuntimeFromDB = vi.fn();
+
+      const { emitAgentSignalSourceEvent } = await loadIndexIntegrationModule({
+        mockInitModelRuntimeFromDB: initModelRuntimeFromDB,
+      });
+
+      const result = await emitAgentSignalSourceEvent(
+        {
+          payload: { message: 'That answer was wrong.', messageId: 'msg_budget' },
+          sourceId: 'source_budget',
+          sourceType: 'agent.user.message',
+        },
+        { agentId: 'agent_1', db: {} as never, userId: 'user_1' },
+      );
+
+      expect(result?.deduped).toBe(false);
+      expect(mockRedis.incr).toHaveBeenCalledWith(
+        expect.stringMatching(
+          /^agent-signal:budget:feedback-classifier:user:user_1:day:\d{4}-\d{2}-\d{2}$/,
+        ),
+      );
+      expect(initModelRuntimeFromDB).not.toHaveBeenCalled();
     },
   );
 });

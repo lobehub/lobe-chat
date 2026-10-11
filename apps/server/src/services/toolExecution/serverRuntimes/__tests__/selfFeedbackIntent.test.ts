@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 
@@ -7,6 +7,25 @@ import { selfFeedbackIntentRuntime } from '../selfFeedbackIntent';
 vi.mock('@/server/services/agentSignal', () => ({
   enqueueAgentSignalSourceEvent: vi.fn(),
 }));
+
+const counters = new Map<string, number>();
+const redis = {
+  decr: vi.fn(async (key: string) => {
+    const next = (counters.get(key) ?? 0) - 1;
+    counters.set(key, next);
+    return next;
+  }),
+  expire: vi.fn(async () => 1),
+  incr: vi.fn(async (key: string) => {
+    const next = (counters.get(key) ?? 0) + 1;
+    counters.set(key, next);
+    return next;
+  }),
+};
+
+interface AgentSignalRedisTestGlobal {
+  __agentSignalRedisClient?: typeof redis | null;
+}
 
 const createInput = () => ({
   action: 'refine' as const,
@@ -18,8 +37,14 @@ const createInput = () => ({
 });
 
 describe('selfFeedbackIntentRuntime', () => {
+  afterEach(() => {
+    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = undefined;
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    counters.clear();
+    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = redis;
     vi.mocked(enqueueAgentSignalSourceEvent).mockResolvedValue({
       accepted: true,
       scopeKey: 'topic:topic-1',
@@ -150,5 +175,45 @@ describe('selfFeedbackIntentRuntime', () => {
       strength: 'strong',
     });
     expect(enqueueAgentSignalSourceEvent).toHaveBeenCalledTimes(3);
+  });
+
+  /**
+   * @example
+   * The declaration limit is read from Redis, so it holds across server processes.
+   */
+  it('enforces the declaration limit from the shared Redis counter', async () => {
+    counters.set('agent-signal:declaration-limit:user-1:agent-1:topic:topic-shared', 3);
+    const runtime = selfFeedbackIntentRuntime.factory({ toolManifestMap: {} });
+
+    const result = await runtime.declareSelfFeedbackIntent(createInput(), {
+      agentId: 'agent-1',
+      toolCallId: 'tool-call-from-another-process',
+      toolManifestMap: {},
+      topicId: 'topic-shared',
+      userId: 'user-1',
+    });
+
+    expect(JSON.parse(result.content)).toMatchObject({ accepted: false, reason: 'rate_limited' });
+    expect(enqueueAgentSignalSourceEvent).not.toHaveBeenCalled();
+  });
+
+  /**
+   * @example
+   * Without Redis the limit cannot be enforced, so declarations are rejected (fail closed).
+   */
+  it('rejects declarations when Redis is unavailable', async () => {
+    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = null;
+    const runtime = selfFeedbackIntentRuntime.factory({ toolManifestMap: {} });
+
+    const result = await runtime.declareSelfFeedbackIntent(createInput(), {
+      agentId: 'agent-1',
+      toolCallId: 'tool-call-no-redis',
+      toolManifestMap: {},
+      topicId: 'topic-no-redis',
+      userId: 'user-1',
+    });
+
+    expect(JSON.parse(result.content)).toMatchObject({ accepted: false, reason: 'rate_limited' });
+    expect(enqueueAgentSignalSourceEvent).not.toHaveBeenCalled();
   });
 });

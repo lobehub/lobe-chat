@@ -12,6 +12,7 @@ import { createSourceEvent } from '@lobechat/agent-signal/source';
 
 import { ExpertiseIngestionService } from '@/server/services/expertise/ingestion';
 
+import { acquireAgentSignalDailyBudget } from './budget';
 import type {
   AgentSignalEmitOptions,
   AgentSignalExecutionContext,
@@ -135,6 +136,17 @@ const createPolicyOptions = (
       workspaceId: context.workspaceId,
     },
     feedbackSatisfactionJudge: {
+      // Every satisfaction call bills the user's provider; cap it per user per day.
+      // Store-injected runs (evals, isolated tests) avoid ambient Redis by contract.
+      ...(options.store
+        ? {}
+        : {
+            classifierBudget: () =>
+              acquireAgentSignalDailyBudget({
+                kind: 'feedback-classifier',
+                userId: context.userId,
+              }),
+          }),
       db: context.db,
       ...policyOptions?.feedbackSatisfactionJudge,
       userId: context.userId,

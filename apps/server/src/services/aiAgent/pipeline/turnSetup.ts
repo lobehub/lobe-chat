@@ -995,6 +995,11 @@ export const setupTurn = async (
       {
         payload: {
           agentId: resolvedAgentId,
+          // Lets the feedback classifier skip a first message: nothing came before
+          // it in the topic, so it cannot be feedback on an earlier reply.
+          ...(!userMessageRecord.parentId && !appContext?.threadId
+            ? { isConversationRoot: true }
+            : {}),
           message: prompt,
           messageId: userMessageRecord.id,
           threadId: appContext?.threadId ?? undefined,

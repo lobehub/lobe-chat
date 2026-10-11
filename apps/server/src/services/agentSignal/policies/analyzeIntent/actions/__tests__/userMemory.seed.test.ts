@@ -2,10 +2,17 @@
 import { MemoryIdentifier } from '@lobechat/builtin-tool-memory';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type * as BudgetModule from '../../../../budget';
 import { runMemoryActionAgent } from '../userMemory';
 
-const { mockCreateOperation } = vi.hoisted(() => ({
+const { mockAcquireBudget, mockCreateOperation } = vi.hoisted(() => ({
+  mockAcquireBudget: vi.fn(),
   mockCreateOperation: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('../../../../budget', async (importOriginal) => ({
+  ...(await importOriginal<typeof BudgetModule>()),
+  acquireAgentSignalDailyBudget: mockAcquireBudget,
 }));
 
 vi.mock('@/server/services/agentRuntime/AgentRuntimeService', () => ({
@@ -58,6 +65,42 @@ const createOptions = () => {
 describe('runMemoryActionAgent seed prompt', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockAcquireBudget.mockResolvedValue({ allowed: true, kind: 'background-run', limit: 20 });
+  });
+
+  /**
+   * @example
+   * Over the daily background-run budget, the async writer skips before any write.
+   */
+  it('skips the async writer without creating a thread or operation when over budget', async () => {
+    mockAcquireBudget.mockResolvedValue({
+      allowed: false,
+      count: 21,
+      kind: 'background-run',
+      limit: 20,
+      reason: 'exceeded',
+    });
+    const { messageModel, options, threadModel } = createOptions();
+
+    const result = await runMemoryActionAgent(
+      {
+        agentId: 'agent-1',
+        message: 'remember I prefer tabs',
+        sourceMessageId: 'msg-assistant',
+        topicId: 'topic-1',
+      },
+      options,
+      { marker },
+    );
+
+    expect(result).toEqual({
+      detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
+      status: 'skipped',
+    });
+    expect(mockAcquireBudget).toHaveBeenCalledWith({ kind: 'background-run', userId: 'user-1' });
+    expect(threadModel.create).not.toHaveBeenCalled();
+    expect(messageModel.create).not.toHaveBeenCalled();
+    expect(mockCreateOperation).not.toHaveBeenCalled();
   });
 
   it('persists the writer prompt in the isolation thread so a DB reload keeps it', async () => {

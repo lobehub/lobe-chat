@@ -7,7 +7,10 @@ import { isNonEmptyString } from '@lobechat/utils';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { defineSourceHandler } from '../../../runtime/middleware';
-import { enqueueSelfIterationRun } from '../dispatch/enqueueSelfIterationRun';
+import {
+  enqueueBudgetedSelfIterationRun,
+  isSelfIterationRunSkipped,
+} from '../dispatch/enqueueSelfIterationRun';
 import type { EvidenceRef } from '../types';
 import { buildSelfFeedbackIntentSourceId, ReviewRunStatus } from '../types';
 
@@ -16,11 +19,7 @@ export type SelfFeedbackIntentSourceScopeType = 'operation' | 'topic';
 
 /** Actions that an agent may declare as self-feedback intent. */
 export type SelfFeedbackIntentDeclaredAction =
-  | 'write'
-  | 'create'
-  | 'refine'
-  | 'consolidate'
-  | 'proposal';
+  'write' | 'create' | 'refine' | 'consolidate' | 'proposal';
 
 /** Self-feedback target category declared by the running agent. */
 export type SelfFeedbackIntentDeclaredKind = 'memory' | 'skill' | 'gap';
@@ -111,12 +110,14 @@ export interface SelfFeedbackIntentEvidenceEnrichment {
 export interface SelfFeedbackIntentSourceHandlerResult extends Record<string, unknown> {
   /** Stable agent id being reviewed when payload validation succeeds. */
   agentId?: string;
+  /** Human-readable skip detail, e.g. when the daily background-run budget denied the run. */
+  detail?: string;
   /** Stable guard key used for idempotency when payload validation succeeds. */
   guardKey?: string;
   /** Operation id of the enqueued background self-iteration run, when dispatched. */
   operationId?: string;
   /** Machine-readable skip reason for non-dispatched runs. */
-  reason?: 'gate_disabled' | 'invalid_payload';
+  reason?: 'budget_exceeded' | 'budget_unavailable' | 'gate_disabled' | 'invalid_payload';
   /** Runtime scope id reviewed by the run. */
   scopeId?: string;
   /** Runtime scope family reviewed by the run. */
@@ -142,7 +143,7 @@ export interface CreateSelfFeedbackIntentSourceHandlerDependencies {
   /** Postgres handle used by the dispatch helper to enqueue the execAgent run. */
   db: LobeChatDatabase;
   /** Enqueues the async self-iteration run. Overridable for tests. */
-  dispatch?: typeof enqueueSelfIterationRun;
+  dispatch?: typeof enqueueBudgetedSelfIterationRun;
   /** Adds topic or operation evidence without mutating shared resources. */
   enrichEvidence?: (
     input: EnrichSelfFeedbackIntentEvidenceInput,
@@ -391,8 +392,8 @@ export const createSelfFeedbackIntentSourceHandler = (
       window: { end: timestamp, start: timestamp },
     });
 
-    const dispatch = deps.dispatch ?? enqueueSelfIterationRun;
-    const { operationId } = await dispatch({
+    const dispatch = deps.dispatch ?? enqueueBudgetedSelfIterationRun;
+    const dispatchResult = await dispatch({
       agentId: payload.agentId,
       db: deps.db,
       marker: {
@@ -409,9 +410,18 @@ export const createSelfFeedbackIntentSourceHandler = (
       workspaceId: deps.workspaceId,
     });
 
+    if (isSelfIterationRunSkipped(dispatchResult)) {
+      return {
+        ...baseResult,
+        detail: dispatchResult.detail,
+        reason: dispatchResult.reason,
+        status: ReviewRunStatus.Skipped,
+      };
+    }
+
     return {
       ...baseResult,
-      operationId,
+      operationId: dispatchResult.operationId,
       status: ReviewRunStatus.Dispatched,
     };
   },

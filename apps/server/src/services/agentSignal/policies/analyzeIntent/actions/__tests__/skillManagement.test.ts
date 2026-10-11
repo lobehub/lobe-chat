@@ -72,6 +72,35 @@ describe('defineSkillManagementActionHandler', () => {
     expect(context.runtimeState.touchGuardState).toHaveBeenCalledTimes(1);
   });
 
+  /**
+   * @example
+   * Over the daily background-run budget, the action is skipped and stays retryable.
+   */
+  it('skips without marking idempotency when the daily background-run budget denies dispatch', async () => {
+    dispatch.mockResolvedValue({
+      detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
+      reason: 'budget_exceeded',
+      status: 'skipped',
+    });
+    const context = createContext();
+
+    const handler = defineSkillManagementActionHandler({
+      db: {} as never,
+      dispatch,
+      selfIterationEnabled: true,
+      userId: 'user_1',
+    });
+
+    const result = await handler.handle(skillAction, context);
+
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({
+      detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
+      status: 'skipped',
+    });
+    expect(context.runtimeState.touchGuardState).not.toHaveBeenCalled();
+  });
+
   it('forwards the workspaceId onto the dispatched run so the write stays workspace-scoped', async () => {
     dispatch.mockResolvedValue({ operationId: 'op_1', topicId: 'topic_1' });
 

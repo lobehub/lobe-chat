@@ -11,7 +11,10 @@ import type { AgentSignalOperationMarker } from '@/server/services/agentSignal/o
 
 import type { RuntimeProcessorContext } from '../../../runtime/context';
 import { defineActionHandler } from '../../../runtime/middleware';
-import { enqueueSelfIterationRun } from '../../../services/selfIteration/dispatch/enqueueSelfIterationRun';
+import {
+  enqueueBudgetedSelfIterationRun,
+  isSelfIterationRunSkipped,
+} from '../../../services/selfIteration/dispatch/enqueueSelfIterationRun';
 import type { ProcedureStateService } from '../../../services/types';
 import { hasAppliedActionIdempotency, markAppliedActionIdempotency } from '../../actionIdempotency';
 import type { ActionSkillManagementHandle } from '../../types';
@@ -21,9 +24,10 @@ export interface SkillManagementActionHandlerOptions {
   db: LobeChatDatabase;
   /**
    * Test seam: dispatch the async skill-management run. Defaults to the shared
-   * `enqueueSelfIterationRun` (execAgent queue under the skill-management slug).
+   * budgeted `enqueueBudgetedSelfIterationRun` (execAgent queue under the
+   * skill-management slug, capped by the user's daily background-run budget).
    */
-  dispatch?: typeof enqueueSelfIterationRun;
+  dispatch?: typeof enqueueBudgetedSelfIterationRun;
   /** Optional procedure state (unused by the async path; kept for wiring parity). */
   procedureState?: Pick<ProcedureStateService, 'skillIntentRecords'>;
   /** User-visible response language; reserved for prompt localisation. */
@@ -208,8 +212,8 @@ export const executeSkillManagementAction = async (
       ...(triggerMessageId ? { triggerMessageId } : {}),
     });
 
-    const dispatch = options.dispatch ?? enqueueSelfIterationRun;
-    await dispatch({
+    const dispatch = options.dispatch ?? enqueueBudgetedSelfIterationRun;
+    const dispatchResult = await dispatch({
       agentId,
       db: options.db,
       marker,
@@ -221,6 +225,12 @@ export const executeSkillManagementAction = async (
       userId: options.userId,
       ...(options.workspaceId ? { workspaceId: options.workspaceId } : {}),
     });
+
+    // Budget denial is a skip, not a failure: leave the idempotency key unmarked
+    // so the same feedback can still be applied once budget is available.
+    if (isSelfIterationRunSkipped(dispatchResult)) {
+      return toSkippedResult(action.actionId, dispatchResult.detail, startedAt);
+    }
 
     await markAppliedActionIdempotency(context, idempotencyKey);
 
