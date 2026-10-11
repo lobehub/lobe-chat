@@ -663,6 +663,21 @@ describe('GatewayConnectionCtr', () => {
       });
     });
 
+    it.each([
+      ['an older custom address', 'https://gw.self.example'],
+      ['an older official default', OFFICIAL_GATEWAY_URL],
+      ['an unusable older address', 'wss://gw.self.example'],
+    ])('reads %s without rewriting or deleting it on retries', async (_label, gatewayUrl) => {
+      useStore({ gatewayUrl });
+      await startCtr();
+      await ctr.getGatewayEndpoint();
+      await ctr.disconnect();
+      await ctr.connect();
+      expect(store.gatewayUrl).toBe(gatewayUrl);
+      expect(mockStoreSet.mock.calls.map(([key]) => key)).not.toContain('gatewayUrl');
+      expect(mockStoreDelete.mock.calls.map(([key]) => key)).not.toContain('gatewayUrl');
+    });
+
     it('keeps using a custom saved address on official cloud too', async () => {
       useStore({ gatewayUrl: 'http://localhost:8788' });
       vi.mocked(mockRemoteServerConfigCtr.getRemoteServerUrl).mockResolvedValue(
@@ -775,41 +790,6 @@ describe('GatewayConnectionCtr', () => {
       expect(lastBroadcast()?.error?.code).toBe('config_unavailable');
     });
 
-    it('reconnects through a saved address, and back to the server after clearing it', async () => {
-      await startCtr();
-      expect(MockGatewayClient.lastOptions.gatewayUrl).toBe(SERVER_GATEWAY_URL);
-
-      await expect(ctr.setGatewayManualUrl({ url: 'https://gw.pinned.example/' })).resolves.toEqual(
-        {
-          savedUrl: 'https://gw.pinned.example',
-          success: true,
-        },
-      );
-      await vi.advanceTimersByTimeAsync(0);
-
-      expect(store.gatewayUrl).toBe('https://gw.pinned.example');
-      expect(MockGatewayClient.lastOptions.gatewayUrl).toBe('https://gw.pinned.example');
-
-      await ctr.setGatewayManualUrl({ url: null });
-      await vi.advanceTimersByTimeAsync(0);
-
-      expect(store).not.toHaveProperty('gatewayUrl');
-      expect(MockGatewayClient.lastOptions.gatewayUrl).toBe(SERVER_GATEWAY_URL);
-    });
-
-    it('treats saving the official gateway as choosing nothing', async () => {
-      useStore({ gatewayUrl: 'https://gw.pinned.example' });
-      await startCtr();
-
-      await expect(
-        ctr.setGatewayManualUrl({ url: 'https://device-gateway.lobehub.com/' }),
-      ).resolves.toEqual({ success: true });
-      await vi.advanceTimersByTimeAsync(0);
-
-      expect(store).not.toHaveProperty('gatewayUrl');
-      expect(MockGatewayClient.lastOptions.gatewayUrl).toBe(SERVER_GATEWAY_URL);
-    });
-
     it.each([
       ['an advertised', { deviceGatewayUrl: SERVER_GATEWAY_URL }, SERVER_GATEWAY_URL],
       ['the default', {}, OFFICIAL_GATEWAY_URL],
@@ -825,16 +805,6 @@ describe('GatewayConnectionCtr', () => {
         expect(store).not.toHaveProperty('gatewayUrl');
       },
     );
-
-    it('rejects an unusable address without saving it', async () => {
-      await startCtr();
-
-      await expect(ctr.setGatewayManualUrl({ url: 'gateway.example' })).resolves.toEqual({
-        error: 'invalid_url',
-        success: false,
-      });
-      expect(store).not.toHaveProperty('gatewayUrl');
-    });
 
     it('rejects an advertised value that is not a gateway URL', async () => {
       netFetchMock.mockImplementation(async () => globalConfigResponse({ deviceGatewayUrl: null }));

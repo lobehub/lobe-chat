@@ -14,7 +14,6 @@ import type {
   GatewayConnectionState,
   GatewayConnectResult,
   GatewayEndpointInfo,
-  SetGatewayManualUrlResult,
 } from '@lobechat/electron-client-ipc';
 import type { HeterogeneousAgentCancellationSignal } from '@lobechat/heterogeneous-agents/protocol';
 import { stripInheritedRunIdentity } from '@lobechat/heterogeneous-agents/protocol';
@@ -274,20 +273,6 @@ export default class GatewayConnectionCtr extends ControllerModule {
   @IpcMethod()
   async getGatewayEndpoint(): Promise<GatewayEndpointInfo> {
     return this.service.getEndpointInfo();
-  }
-
-  /**
-   * Save the gateway address in settings (`null`, or the official gateway,
-   * clears it). It takes precedence over the server's own advertisement.
-   * Reconnects when the connection is on and depends on it.
-   */
-  @IpcMethod()
-  async setGatewayManualUrl({ url }: { url: string | null }): Promise<SetGatewayManualUrlResult> {
-    const { affectsConnection, ...result } = await this.service.setManualGatewayUrl(url);
-    if (result.success && affectsConnection && this.app.storeManager.get('gatewayEnabled')) {
-      void this.service.restart();
-    }
-    return result;
   }
 
   @IpcMethod()

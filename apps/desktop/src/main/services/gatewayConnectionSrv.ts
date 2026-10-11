@@ -23,7 +23,6 @@ import {
   type DeviceGatewayEndpoint,
   type DeviceGatewayResolutionWithDefault,
   deviceGatewayServerKey,
-  normalizeDeviceGatewayUrl,
   resolveDeviceGatewayEndpoint,
 } from '@lobechat/device-gateway-client/endpoint';
 import type { DeviceIdentity, IdentitySource } from '@lobechat/device-identity';
@@ -33,7 +32,6 @@ import type {
   GatewayConnectionStatus,
   GatewayConnectResult,
   GatewayEndpointInfo,
-  SetGatewayManualUrlResult,
 } from '@lobechat/electron-client-ipc';
 import { createRuntimeProbeCache } from '@lobechat/heterogeneous-agents/runtimeProbeCache';
 import { app, powerSaveBlocker } from 'electron';
@@ -1593,8 +1591,8 @@ export default class GatewayConnectionService extends ServiceModule {
 
   /**
    * The address saved in settings, or `undefined` when none is. Older installs
-   * persisted the official gateway as a default, and choosing it is the same as
-   * choosing nothing, so that exact value reads as unset: the server's own
+   * persisted the official gateway as a default, so that exact value reads as
+   * unset without rewriting the stored value: the server's own
    * address, then the official gateway, apply.
    */
   private getSavedGatewayUrl(): string | undefined {
@@ -1614,36 +1612,6 @@ export default class GatewayConnectionService extends ServiceModule {
       endpoint: session ? { ...session.endpoint } : undefined,
       manualUrl: this.getSavedGatewayUrl(),
       serverUrl,
-    };
-  }
-
-  /**
-   * Save (or clear, with `null`) the gateway address in settings. It beats
-   * whatever the server advertises. Saving the official gateway clears it:
-   * that is what the desktop uses anyway when the server advertises nothing.
-   *
-   * @returns whether the live connection depends on it, i.e. should reconnect
-   *   for the change to take effect.
-   */
-  async setManualGatewayUrl(
-    url: string | null,
-  ): Promise<SetGatewayManualUrlResult & { affectsConnection?: boolean }> {
-    const normalized = url === null || url.trim() === '' ? null : normalizeDeviceGatewayUrl(url);
-    if (normalized === undefined) return { error: 'invalid_url', success: false };
-
-    if (normalized === null || normalized === OFFICIAL_DEVICE_GATEWAY_URL) {
-      this.app.storeManager.delete('gatewayUrl');
-      logger.info('Cleared the saved device gateway address');
-    } else {
-      this.app.storeManager.set('gatewayUrl', normalized);
-      logger.info('Saved a device gateway address');
-    }
-
-    // Only DEVICE_GATEWAY_URL outranks a saved address.
-    return {
-      affectsConnection: this.session?.endpoint.source !== 'override',
-      savedUrl: this.getSavedGatewayUrl(),
-      success: true,
     };
   }
 

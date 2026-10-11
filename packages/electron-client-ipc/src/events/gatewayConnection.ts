@@ -42,13 +42,6 @@ export interface GatewayEndpointInfo {
   serverUrl?: string;
 }
 
-export interface SetGatewayManualUrlResult {
-  error?: 'invalid_url';
-  /** What is saved now; absent when cleared (saving the official gateway clears it). */
-  savedUrl?: string;
-  success: boolean;
-}
-
 export interface GatewayConnectionBroadcastEvents {
   gatewayConnectionStatusChanged: (params: GatewayConnectionState) => void;
 }

@@ -16,9 +16,9 @@ import { electronSyncSelectors } from '@/store/electron/selectors';
 
 /** Why the last attempt ended, phrased with the next step. */
 const ERROR_MESSAGE_KEYS = {
-  auth_failed: 'gateway.error.authFailed',
+  auth_failed: 'gateway.error.authRejected',
   config_unavailable: 'gateway.error.configUnavailable',
-  invalid_gateway_url: 'gateway.error.invalidUrl',
+  invalid_gateway_url: 'gateway.error.invalidAddress',
   not_signed_in: 'gateway.error.notSignedIn',
 } as const satisfies Record<GatewayConnectionErrorCode, string>;
 
@@ -180,12 +180,6 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
             {failure.code !== 'not_signed_in' && failure.code !== 'invalid_gateway_url' && (
               <Button outdent size="small" type="text" onClick={() => void connectGateway()}>
                 {t('gateway.retry')}
-              </Button>
-            )}
-            {/* A saved address beats the server's, so a wrong one is fixed there. */}
-            {(failure.code === 'invalid_gateway_url' || failure.code === 'auth_failed') && (
-              <Button outdent size="small" type="text" onClick={openDeviceSettings}>
-                {t('gateway.error.configure')}
               </Button>
             )}
           </Flexbox>

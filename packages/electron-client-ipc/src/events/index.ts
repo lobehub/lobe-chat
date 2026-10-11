@@ -46,7 +46,6 @@ export type {
   GatewayConnectResult,
   GatewayEndpointInfo,
   GatewayEndpointSource,
-  SetGatewayManualUrlResult,
 } from './gatewayConnection';
 export type {
   DetectAppsResult,
