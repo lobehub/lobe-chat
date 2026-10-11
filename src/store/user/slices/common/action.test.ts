@@ -53,6 +53,7 @@ beforeEach(() => {
   useUserStore.setState({
     ...initialCommonState,
     defaultSettings: DEFAULT_SETTINGS,
+    isUserStateInitError: undefined,
     onboarding: undefined,
     preference: DEFAULT_PREFERENCE,
     settings: {},
@@ -176,6 +177,49 @@ describe('createCommonSlice', () => {
       // 确保状态未被错误更新
       expect(useUserStore.getState().isUserStateInit).toBe(false);
       expect(result.current.isValidating).toBe(false);
+    });
+
+    it('records a bootstrap failure of the active scope as the init error', async () => {
+      const failure = new Error('bootstrap failed');
+      vi.spyOn(userService, 'getUserState').mockRejectedValue(failure);
+      const errorCallback = vi.fn();
+
+      renderHook(
+        () => useUserStore().useInitUserState(true, mockServerConfig, { onError: errorCallback }),
+        { wrapper: withSWR },
+      );
+
+      await waitFor(() => expect(useUserStore.getState().isUserStateInitError).toBe(failure));
+      expect(errorCallback).toHaveBeenCalledWith(failure);
+    });
+
+    it('ignores a bootstrap failure that settles after the scope switched away', async () => {
+      let rejectBootstrap!: (error: Error) => void;
+      vi.spyOn(userService, 'getUserState').mockImplementation(
+        () =>
+          new Promise<UserInitializationState>((_resolve, reject) => {
+            rejectBootstrap = reject;
+          }),
+      );
+      const errorCallback = vi.fn();
+
+      renderHook(
+        () => useUserStore().useInitUserState(true, mockServerConfig, { onError: errorCallback }),
+        { wrapper: withSWR },
+      );
+      await waitFor(() => expect(userService.getUserState).toHaveBeenCalled());
+
+      // Identity / workspace switch while the previous scope's bootstrap is in
+      // flight: its failure belongs to the scope left behind.
+      vi.mocked(cacheScope.get).mockReturnValue('user-common-test:other-workspace');
+      await act(async () => {
+        rejectBootstrap(new Error('previous identity failed'));
+      });
+
+      // Give a (wrongly) forwarded error time to land before asserting it did not.
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(useUserStore.getState().isUserStateInitError).toBeUndefined();
+      expect(errorCallback).not.toHaveBeenCalled();
     });
 
     it('should fetch user state correctly when user is login', async () => {
