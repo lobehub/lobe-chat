@@ -206,7 +206,7 @@ export class IdentityActionImpl {
    * later `useSync` hydrate is a no-op once the slot is filled.
    */
   preHydrateIdentities = (
-    params: Pick<IdentityListParams, 'pageSize'> = { pageSize: DEFAULT_IDENTITY_LIST_PAGE_SIZE },
+    params: IdentityListParams = { pageSize: DEFAULT_IDENTITY_LIST_PAGE_SIZE },
   ): Promise<boolean> => {
     const scope = cacheScope.get();
     this.#identities.ensureScope(scope);

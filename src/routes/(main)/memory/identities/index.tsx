@@ -12,11 +12,7 @@ import { useQueryState } from '@/hooks/useQueryParam';
 import ActionBar from '@/routes/(main)/memory/features/ActionBar';
 import CommonFilterBar from '@/routes/(main)/memory/features/FilterBar';
 import { identitySelectors, useUserMemoryStore } from '@/store/userMemory';
-import {
-  DEFAULT_IDENTITY_LIST_PAGE_SIZE,
-  isIdentityQueryCurrent,
-} from '@/store/userMemory/slices/identity/projection';
-import { type TypesEnum } from '@/types/userMemory';
+import { isIdentityQueryCurrent } from '@/store/userMemory/slices/identity/projection';
 
 import EditableModal from '../features/EditableModal';
 import Loading from '../features/Loading';
@@ -28,6 +24,7 @@ import { type IdentityType } from './features/List';
 import List from './features/List';
 import SegmentedBar from './features/SegmentedBar';
 import { identityListBoundary } from './identityListBoundary';
+import { identityListParamsOf } from './identityListParams';
 import { showIdentityControls } from './showIdentityControls';
 
 const IdentitiesArea = memo(() => {
@@ -44,15 +41,12 @@ const IdentitiesArea = memo(() => {
   const identitiesTotal = useUserMemoryStore(identitySelectors.identitiesTotal);
   const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
 
-  const requestedTypes = typeFilter === 'all' ? undefined : [typeFilter as TypesEnum];
-  const requestedQuery = { q: searchValue || undefined, types: requestedTypes };
+  // Same params the route loader pre-hydrated, so its row is this query's.
+  const requestedQuery = identityListParamsOf(searchValue, typeFilter);
 
   // Hydrate the persisted head page, then revalidate. The rows land in
   // `identities` — read them from the store, never from this hook.
-  const { error, isValidating, revalidate } = useFetchIdentities({
-    pageSize: DEFAULT_IDENTITY_LIST_PAGE_SIZE,
-    ...requestedQuery,
-  });
+  const { error, isValidating, revalidate } = useFetchIdentities(requestedQuery);
 
   // A page painted for another filter set is not the answer on screen yet: the
   // replica keeps the previous query's rows until the new head page lands, so
