@@ -92,6 +92,8 @@ export const createExperienceSlice = (set: Setter, get: () => UserMemoryStore, _
 export class ExperienceActionImpl {
   readonly #entity;
   readonly #get: () => UserMemoryStore;
+  /** A delete and its head revalidation in flight; paging waits for it (see `deleteExperience`). */
+  #headRefresh: Promise<unknown> | undefined;
   readonly #list;
   readonly #set: Setter;
 
@@ -152,6 +154,18 @@ export class ExperienceActionImpl {
   };
 
   deleteExperience = async (id: string): Promise<void> => {
+    // Paging waits for the whole delete (see `loadMoreExperiences`): a page
+    // fetched while the server shifts its offsets would skip a row.
+    const run = this.#deleteAndRefreshHead(id);
+    this.#headRefresh = run;
+    try {
+      await run;
+    } finally {
+      if (this.#headRefresh === run) this.#headRefresh = undefined;
+    }
+  };
+
+  #deleteAndRefreshHead = async (id: string): Promise<void> => {
     await memoryCRUDService.deleteExperience(id);
     // Drop the row from the in-memory view and the persisted projection right
     // away (and from any read already in flight).
@@ -168,11 +182,9 @@ export class ExperienceActionImpl {
     // `userMemory:experiences` key, so the replica's own sync-key matcher does
     // not recognise it — the same way `base/action.ts` revalidates this list.
     this.#list.collapse(EXPERIENCE_LIST_KEY);
-    await mutate(
-      (key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root,
-      undefined,
-      { revalidate: true },
-    );
+    // A bare matcher (no data argument) resolves only once the refetch lands,
+    // which is what `loadMoreExperiences` waits on.
+    await mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root);
   };
 
   /**
@@ -197,10 +209,21 @@ export class ExperienceActionImpl {
 
   /**
    * Append the next page of the experience list. The engine reads the loaded
-   * head params, dedupes by id and keeps `hasMore` honest.
+   * head params, dedupes by id and keeps `hasMore` honest. After a delete it
+   * waits for the head revalidation so the next offset is the server's.
    */
   loadMoreExperiences = (): void => {
-    void this.#list.loadMore(EXPERIENCE_LIST_KEY);
+    const refresh = this.#headRefresh;
+    if (!refresh) {
+      void this.#list.loadMore(EXPERIENCE_LIST_KEY);
+      return;
+    }
+    // After a delete, wait for the head revalidation so the next offset is the
+    // server's, whether or not the delete succeeded.
+    void refresh.then(
+      () => this.#list.loadMore(EXPERIENCE_LIST_KEY),
+      () => this.#list.loadMore(EXPERIENCE_LIST_KEY),
+    );
   };
 
   /**

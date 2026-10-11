@@ -591,6 +591,56 @@ describe('experienceList replica', () => {
     expect(useUserMemoryStore.getState().experiences.map((e) => e.id)).toContain('experience-12');
   });
 
+  it('waits for the post-delete head refresh before loading the next page', async () => {
+    let deleted = false;
+    let releaseHead: (() => void) | undefined;
+    const order: string[] = [];
+    fetchSpy.mockImplementation(async (params: { page?: number } = {}) => {
+      const page = params.page ?? 1;
+      if (page === 1 && deleted) {
+        // Hold the post-delete head refresh until the test releases it.
+        await new Promise<void>((resolve) => (releaseHead = resolve));
+        order.push('head');
+        return listPage(idsOf(12, 1), 24);
+      }
+      if (page === 1) return listPage(idsOf(12), 24);
+      order.push('page-2');
+      return listPage(idsOf(12, 13), 24);
+    });
+    vi.spyOn(memoryCRUDService, 'deleteExperience').mockImplementation(async () => {
+      deleted = true;
+      return undefined as never;
+    });
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().experiences).toHaveLength(12));
+
+    let deletion: Promise<void> | undefined;
+    act(() => {
+      deletion = useUserMemoryStore.getState().deleteExperience('experience-0');
+    });
+    await waitFor(() => expect(releaseHead).toBeDefined());
+
+    // "Load more" while the head is still being re-read: it must not page from
+    // the stale offset.
+    act(() => useUserMemoryStore.getState().loadMoreExperiences());
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(order).toEqual([]);
+
+    await act(async () => {
+      releaseHead!();
+      await deletion;
+    });
+
+    await waitFor(() => expect(useUserMemoryStore.getState().experiences).toHaveLength(24));
+    expect(order).toEqual(['head', 'page-2']);
+    expect(useUserMemoryStore.getState().experiences.map((e) => e.id)).toContain('experience-12');
+  });
+
   it('does not fetch another page when the head page is the last one', async () => {
     fetchSpy.mockResolvedValue(listPage([item('only')], 1));
 
