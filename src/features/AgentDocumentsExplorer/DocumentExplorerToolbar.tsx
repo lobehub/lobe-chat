@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   toolbar: css`
-    margin-inline: 6px;
     color: ${cssVar.colorTextSecondary};
   `,
   title: css`

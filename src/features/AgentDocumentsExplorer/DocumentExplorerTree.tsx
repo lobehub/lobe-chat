@@ -85,9 +85,13 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     --trees-font-size-override: ${DOCUMENT_TREE_LAYOUT.fontSize}px;
     --trees-level-gap-override: ${DOCUMENT_TREE_LAYOUT.levelGap}px;
     --trees-item-row-gap-override: ${DOCUMENT_TREE_LAYOUT.iconGap}px;
-    --trees-item-padding-x-override: 8px;
-    --trees-item-margin-x-override: 4px;
-    --trees-padding-inline-override: 4px;
+
+    /* No horizontal gutter of its own: a row's hover fill spans the same edges
+       as the toolbar above it, so the 「文档」 label, every row and the + button
+       share one left and one right line. Only the row padding insets content. */
+    --trees-item-padding-x-override: 6px;
+    --trees-item-margin-x-override: 0px;
+    --trees-padding-inline-override: 0px;
     --trees-border-radius-override: 8px;
 
     /* Consumed by DOCUMENT_TREE_ICON_CSS inside the shadow root. */
