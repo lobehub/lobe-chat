@@ -1467,6 +1467,8 @@ export default {
   'floatingChatPanel.collapse': 'Collapse chat',
   'floatingChatPanel.expand': 'Expand chat',
   'globalApproval.collapse': 'Collapse',
+  'globalApproval.dismiss': 'Dismiss (stays on Home)',
+  'globalApproval.dismissed': 'Dismissed. You can still handle it from Home.',
   'globalApproval.goToConversation': 'Open conversation',
   'globalApproval.moreCount_one': '{{count}} more pending',
   'globalApproval.moreCount_other': '{{count}} more pending',

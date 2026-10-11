@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, toast } from '@lobehub/ui/base-ui';
-import { ArrowUpRight, ChevronUp } from 'lucide-react';
+import { ArrowUpRight, ChevronUp, EyeOff } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,6 +26,8 @@ import type { IslandGoalItem } from './usePendingGoalDecisions';
 interface GoalDecisionCardProps {
   item: IslandGoalItem;
   onCollapse?: () => void;
+  /** Hide this ask from the island; it keeps waiting in the Home inbox. */
+  onDismiss?: () => void;
 }
 
 const SIGN_OFF = { accept: 'signOff', requestChanges: 'requestChanges' } as const;
@@ -35,7 +37,7 @@ const SIGN_OFF = { accept: 'signOff', requestChanges: 'requestChanges' } as cons
  * page asks, answerable from wherever the user is. The goal's own title leads,
  * the way a run approval leads with its agent — several goals can be waiting.
  */
-const GoalDecisionCard = ({ item, onCollapse }: GoalDecisionCardProps) => {
+const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps) => {
   const { t } = useTranslation('chat');
   const navigate = useWorkspaceAwareNavigate();
   const decideGoal = useGoalStore((s) => s.decideGoal);
@@ -127,6 +129,14 @@ const GoalDecisionCard = ({ item, onCollapse }: GoalDecisionCardProps) => {
           title={t('goalProcess.clarify.openGoal')}
           onClick={openGoal}
         />
+        {onDismiss && (
+          <ActionIcon
+            icon={EyeOff}
+            size="small"
+            title={t('globalApproval.dismiss')}
+            onClick={onDismiss}
+          />
+        )}
         {onCollapse && (
           <ActionIcon
             icon={ChevronUp}

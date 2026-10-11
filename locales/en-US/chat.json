@@ -424,6 +424,8 @@
   "gatewayMode.cardTitle": "Agent Gateway Mode",
   "gatewayMode.desc": "Run agents in the cloud through LobeHub's Agent Gateway. Tasks keep running even after you close the page.",
   "globalApproval.collapse": "Collapse",
+  "globalApproval.dismiss": "Dismiss (stays on Home)",
+  "globalApproval.dismissed": "Dismissed. You can still handle it from Home.",
   "globalApproval.goToConversation": "Open conversation",
   "globalApproval.moreCount_one": "{{count}} more pending",
   "globalApproval.moreCount_other": "{{count}} more pending",
