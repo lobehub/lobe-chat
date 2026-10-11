@@ -15,16 +15,25 @@ export interface IntegrationEndpoint {
  * they need them. Each app type gets only the endpoints its flow uses: a web
  * app redirects users to the authorization endpoint, a CLI / device app starts
  * at the device authorization endpoint instead.
+ *
+ * Everything derives from the provider's configured `issuer`, never from the
+ * page's own origin: strict clients reject a discovery document whose issuer
+ * differs from the one they were given, and the page origin differs behind a
+ * reverse proxy or on desktop.
  */
 export const getIntegrationEndpoints = (
-  origin: string,
+  issuer: string,
   applicationType?: string | null,
 ): IntegrationEndpoint[] => {
-  const url = (path: string) => urlJoin(origin, path);
+  const normalizedIssuer = issuer.replace(/\/+$/, '');
+  const base = normalizedIssuer.endsWith(OIDC_ISSUER_PATH)
+    ? normalizedIssuer.slice(0, -OIDC_ISSUER_PATH.length)
+    : normalizedIssuer;
+  const url = (path: string) => urlJoin(base, path);
   const isWeb = applicationType === 'web';
 
   return [
-    { key: 'issuer', url: url(OIDC_ISSUER_PATH) },
+    { key: 'issuer', url: normalizedIssuer },
     { key: 'discovery', url: url(OIDC_DISCOVERY_PATH) },
     isWeb
       ? { key: 'authorization', url: url(OIDC_ROUTES.authorization) }

@@ -30,5 +30,6 @@ export const serverConfigSelectors = {
     s.serverConfig.widgetSandboxNetworkFormat === 'allowlist',
   isMobile: (s: ServerConfigStore) => s.isMobile || false,
   oAuthSSOProviders: (s: ServerConfigStore) => s.serverConfig.oAuthSSOProviders,
+  oidcIssuer: (s: ServerConfigStore) => s.serverConfig.oidcIssuer,
   multimodalUnderstanding: (s: ServerConfigStore) => s.serverConfig.multimodalUnderstanding,
 };

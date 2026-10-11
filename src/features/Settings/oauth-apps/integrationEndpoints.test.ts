@@ -4,7 +4,7 @@ import { getIntegrationEndpoints } from './integrationEndpoints';
 
 describe('getIntegrationEndpoints', () => {
   it('gives a web app the authorization-code endpoints', () => {
-    expect(getIntegrationEndpoints('https://app.lobehub.com', 'web')).toEqual([
+    expect(getIntegrationEndpoints('https://app.lobehub.com/oidc', 'web')).toEqual([
       { key: 'issuer', url: 'https://app.lobehub.com/oidc' },
       {
         key: 'discovery',
@@ -16,11 +16,23 @@ describe('getIntegrationEndpoints', () => {
   });
 
   it('gives a device app the device authorization endpoint instead', () => {
-    const keys = getIntegrationEndpoints('http://localhost:3010/', 'native').map((e) => e.key);
+    const endpoints = getIntegrationEndpoints('http://localhost:3010/oidc/', 'native');
 
-    expect(keys).toEqual(['issuer', 'discovery', 'deviceAuthorization', 'token']);
-    expect(getIntegrationEndpoints('http://localhost:3010/', 'native')[2].url).toBe(
-      'http://localhost:3010/oidc/device/auth',
-    );
+    expect(endpoints.map((e) => e.key)).toEqual([
+      'issuer',
+      'discovery',
+      'deviceAuthorization',
+      'token',
+    ]);
+    expect(endpoints[0].url).toBe('http://localhost:3010/oidc');
+    expect(endpoints[2].url).toBe('http://localhost:3010/oidc/device/auth');
+  });
+
+  it('keeps the configured issuer verbatim, including a reverse-proxy path prefix', () => {
+    const endpoints = getIntegrationEndpoints('https://example.com/lobe/oidc', 'web');
+
+    expect(endpoints[0].url).toBe('https://example.com/lobe/oidc');
+    expect(endpoints[1].url).toBe('https://example.com/lobe/oidc/.well-known/openid-configuration');
+    expect(endpoints[3].url).toBe('https://example.com/lobe/oidc/token');
   });
 });

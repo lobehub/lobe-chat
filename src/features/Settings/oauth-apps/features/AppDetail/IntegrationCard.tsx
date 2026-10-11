@@ -1,14 +1,14 @@
 'use client';
 
-import { isDesktop } from '@lobechat/const';
 import { CopyButton, Flexbox } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useElectronStore } from '@/store/electron';
-import { electronSyncSelectors } from '@/store/electron/selectors';
+import { OIDC_ISSUER_PATH } from '@/libs/oidc-provider/routes';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import { getIntegrationEndpoints, type IntegrationEndpointKey } from '../../integrationEndpoints';
 import SectionCard from './SectionCard';
@@ -49,14 +49,15 @@ interface IntegrationCardProps {
  */
 const IntegrationCard: FC<IntegrationCardProps> = ({ applicationType }) => {
   const { t } = useTranslation('auth');
-  // The desktop renderer runs on its own origin; the provider lives on the
-  // server it is connected to.
-  const remoteServerUrl = useElectronStore(electronSyncSelectors.remoteServerUrl);
-  const origin = (isDesktop && remoteServerUrl) || window.location.origin;
+  // The server's configured issuer (APP_URL), which also covers desktop and
+  // reverse-proxied deployments. The page origin is only a fallback for a
+  // server too old to send it.
+  const configuredIssuer = useServerConfigStore(serverConfigSelectors.oidcIssuer);
+  const issuer = configuredIssuer || `${window.location.origin}${OIDC_ISSUER_PATH}`;
 
   const endpoints = useMemo(
-    () => getIntegrationEndpoints(origin, applicationType),
-    [origin, applicationType],
+    () => getIntegrationEndpoints(issuer, applicationType),
+    [issuer, applicationType],
   );
 
   return (
