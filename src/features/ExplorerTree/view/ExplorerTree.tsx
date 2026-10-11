@@ -139,6 +139,7 @@ function ExplorerTreeInner<TData>(
 
     return {
       density: props.density,
+      flattenEmptyDirectories: props.flattenEmptyDirectories,
       dragAndDrop: {
         canDrag: (paths) => {
           const fn = propsRef.current.canDrag;

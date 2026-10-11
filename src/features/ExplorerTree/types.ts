@@ -105,6 +105,12 @@ export interface ExplorerTreeProps<TData = unknown> {
    * folder glyph `unsafeCSS` draws).
    */
   fileAppearanceCSS?: string;
+  /**
+   * Collapse a chain of single-child folders into one row (`a/b/c`). On by
+   * default, as in the code trees; a document tree turns it off because a
+   * document holding a single folder would otherwise vanish into that row.
+   */
+  flattenEmptyDirectories?: boolean;
   /** Menu for a right click that lands on no row (the blank area under the rows). */
   getBlankContextMenuItems?: () => NativeContextMenuItem[];
   getContextMenuItems?: (node: ExplorerTreeNode<TData>) => NativeContextMenuItem[];

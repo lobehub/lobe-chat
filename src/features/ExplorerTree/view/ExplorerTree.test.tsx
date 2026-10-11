@@ -459,3 +459,23 @@ describe('isItemToggleEventPath', () => {
     expect(isItemToggleEventPath([row(), section('icon')])).toBe(false);
   });
 });
+
+describe('ExplorerTree flattenEmptyDirectories', () => {
+  // A document holding only a folder is a single-child chain; flattened, the
+  // document would disappear into a combined "SOP/Runs" row.
+  it('keeps each container on its own row when flattening is off', async () => {
+    const nodes: ExplorerTreeNode[] = [
+      { appearance: 'file', id: 'sop', isFolder: true, name: 'SOP', parentId: null },
+      { id: 'runs', isFolder: true, name: 'Runs', parentId: 'sop' },
+      { id: 'run', name: 'Run 1', parentId: 'runs' },
+    ];
+    const view = render(
+      <ExplorerTree defaultExpandedIds={['sop']} flattenEmptyDirectories={false} nodes={nodes} />,
+    );
+    const root = () => getHost(view.container).shadowRoot;
+
+    await waitFor(() => expect(root()?.querySelector('[data-item-path="SOP/"]')).not.toBeNull());
+    expect(root()?.querySelector('[data-item-path="SOP/Runs/"]')).not.toBeNull();
+    expect(root()?.querySelector('[data-item-flattened-subitems]')).toBeNull();
+  });
+});

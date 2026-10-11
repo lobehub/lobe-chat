@@ -533,6 +533,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
           canDrop={canDrop}
           canRename={canRename}
           fileAppearanceCSS={DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS}
+          flattenEmptyDirectories={false}
           getContextMenuItems={getContextMenuItems}
           header={toolbar}
           iconSet="complete"
