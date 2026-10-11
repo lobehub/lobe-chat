@@ -12,8 +12,8 @@ import { type LayersEnum } from '@/types/userMemory';
  * registered handles:
  *
  * - `purgeAllMemories` calls `clear()` (memory + every persisted row of the
- *   active scope) on every handle, then `revalidate()` so mounted views settle
- *   on the server's (now empty) answer instead of loading forever.
+ *   active scope) on every handle, then starts `revalidate()` so mounted views
+ *   settle on the server's (now empty) answer instead of loading forever.
  * - `updateMemory` hands the saved content to the handles whose `layer` matches,
  *   so the owning replica patches its rows (`updateEntity`) instead of the base
  *   slice writing a plain `set` into the replica view.
@@ -78,13 +78,15 @@ export const getUserMemoryReplicaLayers = (owner: RegistryOwner): Set<LayersEnum
   new Set(handlesOf(owner).flatMap((handle) => (handle.layer ? [handle.layer] : [])));
 
 /**
- * Clear every registered replica, then revalidate them. One failing replica
- * does not stop the others. Resolves `true` when every persisted row is purged.
+ * Clear every registered replica, then start their revalidation without waiting
+ * on the network (the caller still has its own state to reset). One failing
+ * replica does not stop the others. Resolves `true` when every persisted row is
+ * purged.
  */
 export const clearUserMemoryReplicas = async (owner: RegistryOwner): Promise<boolean> => {
   const handles = handlesOf(owner);
   const cleared = await Promise.allSettled(handles.map((handle) => handle.clear()));
-  await Promise.allSettled(handles.map((handle) => handle.revalidate?.()));
+  void Promise.allSettled(handles.map((handle) => handle.revalidate?.()));
 
   return cleared.every((result) => result.status === 'fulfilled' && result.value);
 };
