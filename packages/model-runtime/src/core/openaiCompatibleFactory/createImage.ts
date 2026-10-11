@@ -1,4 +1,3 @@
-import { imageUrlToBase64 } from '@lobechat/utils';
 import { cleanObject } from '@lobechat/utils/object';
 import createDebug from 'debug';
 import type { RuntimeImageGenParamsValue } from 'model-bank';
@@ -10,6 +9,7 @@ import type {
   CreateImageResponse,
 } from '../../types/image';
 import { getModelPricing } from '../../utils/getModelPricing';
+import { referenceImageUrlToBase64 } from '../../utils/referenceImageCache';
 import { parseDataUri } from '../../utils/uriParser';
 import { convertImageUrlToFile } from '../contextBuilders/openai';
 import { convertOpenAIImageUsage } from '../usageConverters/openai';
@@ -167,7 +167,7 @@ async function processImageUrlForChat(imageUrl: string): Promise<string> {
     return `data:${mimeType || 'image/png'};base64,${base64}`;
   } else if (type === 'url') {
     // For URL type, convert to base64 first
-    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+    const { base64: urlBase64, mimeType: urlMimeType } = await referenceImageUrlToBase64(imageUrl);
     return `data:${urlMimeType};base64,${urlBase64}`;
   } else {
     throw new TypeError(`Currently we don't support image url: ${imageUrl}`);
