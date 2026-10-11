@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, toast } from '@lobehub/ui/base-ui';
-import { ArrowUpRight, ChevronUp, EyeOff } from 'lucide-react';
+import { ActionIcon, Button, toast } from '@lobehub/ui/base-ui';
+import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -129,14 +129,6 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
           title={t('goalProcess.clarify.openGoal')}
           onClick={openGoal}
         />
-        {onDismiss && (
-          <ActionIcon
-            icon={EyeOff}
-            size="small"
-            title={t('globalApproval.dismiss')}
-            onClick={onDismiss}
-          />
-        )}
         {onCollapse && (
           <ActionIcon
             icon={ChevronUp}
@@ -187,7 +179,19 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
         )}
       </div>
 
-      <div className={styles.actions} ref={setActionsPortalTarget} />
+      <div className={styles.goalActions}>
+        {onDismiss && (
+          <Button
+            size="small"
+            title={t('globalApproval.dismissHint')}
+            type="text"
+            onClick={onDismiss}
+          >
+            {t('globalApproval.dismiss')}
+          </Button>
+        )}
+        <div className={styles.goalActionsSlot} ref={setActionsPortalTarget} />
+      </div>
     </div>
   );
 };
