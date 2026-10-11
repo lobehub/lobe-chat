@@ -177,6 +177,25 @@ describe('dataset replica', () => {
     expect(agentEvalService.getDataset).toHaveBeenCalledWith(DETAIL_ID);
   });
 
+  it('keeps the detail reference when a revalidation answers an unchanged dataset', async () => {
+    const getDataset = vi
+      .spyOn(agentEvalService, 'getDataset')
+      .mockResolvedValue({ id: DETAIL_ID, name: 'MMLU' } as any);
+
+    renderDetail(DETAIL_ID);
+    await waitFor(() =>
+      expect(useEvalStore.getState().datasetDetailMap[DETAIL_ID]?.name).toBe('MMLU'),
+    );
+    const before = useEvalStore.getState().datasetDetailMap[DETAIL_ID];
+
+    // Same content, fresh object — what every TRPC response is.
+    getDataset.mockResolvedValue({ id: DETAIL_ID, name: 'MMLU' } as any);
+    await act(() => useEvalStore.getState().refreshDatasetDetail(DETAIL_ID));
+    await waitFor(() => expect(getDataset).toHaveBeenCalledTimes(2));
+
+    expect(useEvalStore.getState().datasetDetailMap[DETAIL_ID]).toBe(before);
+  });
+
   it('keeps embedded test cases out of the stored and persisted detail', async () => {
     vi.spyOn(agentEvalService, 'getDataset').mockResolvedValue({
       id: DETAIL_ID,

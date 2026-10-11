@@ -1,4 +1,5 @@
 import type { AgentEvalDataset, AgentEvalDatasetListItem } from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
 
 import {
   arrayEntity,
@@ -81,6 +82,9 @@ export class DatasetActionImpl {
       entity: singleEntity<AgentEvalDataset>((dataset) => dataset.id),
       fetcher: async (id) => toDatasetDetail(await agentEvalService.getDataset(id)),
       get,
+      // Every response is a fresh object: an unchanged revalidation (focus,
+      // reconnect, manual refresh) must not repaint the detail view.
+      merge: (incoming, confirmed) => (isEqual(incoming, confirmed) ? undefined : incoming),
       set,
       stateKey: 'datasetDetailReplica',
       view: recordLens<EvalStore, AgentEvalDataset>('datasetDetailMap'),
