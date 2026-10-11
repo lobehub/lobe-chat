@@ -7,10 +7,11 @@ import { type DiscoverUserProfile } from '@/types/discover';
  * is resolved in the viewer's language, so a locale switch is a different
  * entry — exactly like the SWR key it replaces (`[locale, username]`).
  *
- * The server answers `undefined` for a handle it does not know (a 404 profile),
- * so the fetched value is `DiscoverUserProfile | undefined`: a miss keeps the
- * entry absent instead of writing an empty row, and the surface falls back to
- * "not found" once the sync settles.
+ * The server answers `undefined` for a handle it does not know (a 404 profile).
+ * The fetcher turns that into `null` so the slice's `isMissing` drops the entry
+ * (memory and persisted row) — a deleted or renamed handle stops painting its
+ * cached profile — and the surface falls back to "not found" once the sync
+ * settles.
  */
 export interface UserProfileParams {
   /** Current UI language; part of the entry so a locale switch refetches. */
@@ -25,9 +26,9 @@ export const userProfileQueryKey = (params: UserProfileParams): string => stable
 export const userProfileResource = defineReplica<
   UserProfileParams,
   DiscoverUserProfile,
-  DiscoverUserProfile | undefined
+  DiscoverUserProfile | null
 >({
-  fetcher: ({ username }) => discoverService.getUserInfo({ username }),
+  fetcher: async ({ username }) => (await discoverService.getUserInfo({ username })) ?? null,
   key: userProfileQueryKey,
   name: 'discoverUserProfile',
   storage: 'indexedDB',

@@ -57,7 +57,7 @@ const syncCalls = async (name: string) => {
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
@@ -136,6 +136,31 @@ describe('UserSlice (replica)', () => {
       await fold('discoverUserProfile', undefined);
 
       expect(userSelectors.userProfile(entryKey('ghost'))(useStore.getState())).toBeUndefined();
+    });
+
+    it('drops a cached profile once the server no longer knows the handle', async () => {
+      renderHook(() => useStore.getState().useUserProfile({ username: 'alice' }));
+      const [call] = await syncCalls('discoverUserProfile');
+
+      vi.mocked(discoverService.getUserInfo).mockResolvedValueOnce(profile);
+      const cached = await call.fetcher();
+      act(() => call.config.onSuccess!(cached));
+      expect(userSelectors.userProfile(entryKey('alice'))(useStore.getState())).toEqual(profile);
+
+      // The handle was deleted or renamed: the service answers `undefined`.
+      vi.mocked(discoverService.getUserInfo).mockResolvedValueOnce(undefined);
+      const missing = await call.fetcher();
+      act(() => call.config.onSuccess!(missing));
+
+      expect(userSelectors.userProfile(entryKey('alice'))(useStore.getState())).toBeUndefined();
+      expect(useStore.getState().userProfileMap[entryKey('alice')]).toBeUndefined();
+    });
+
+    it('does not revalidate the profile on window focus', async () => {
+      renderHook(() => useStore.getState().useUserProfile({ username: 'alice' }));
+
+      const [call] = await syncCalls('discoverUserProfile');
+      expect(call.config.revalidateOnFocus).toBe(false);
     });
 
     it('reads undefined for a disabled entry', () => {

@@ -38,6 +38,9 @@ export class UserActionImpl {
     this.#profile = createReplicaSlice(userProfileResource, {
       actionPrefix: n('profile'),
       get,
+      // The server no longer knows this handle: drop the entry and its
+      // persisted row rather than keep serving the cached profile.
+      isMissing: (profile) => profile === null,
       set,
       stateKey: 'userProfileReplica',
       view: recordLens<DiscoverStore, DiscoverUserProfile>('userProfileMap'),
@@ -56,7 +59,10 @@ export class UserActionImpl {
       username: params.username,
     };
     const queryKey = userProfileQueryKey(normalized);
-    const sync = this.#profile.useSync(active ? normalized : null, { enabled: active });
+    const sync = this.#profile.useSync(active ? normalized : null, {
+      enabled: active,
+      revalidateOnFocus: false,
+    });
 
     return {
       ...sync,
