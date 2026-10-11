@@ -159,6 +159,21 @@ describe('agentGroup store replica', () => {
     getSpy.mockRestore();
   });
 
+  // A stalled IndexedDB read must not hold back an authoritative response that
+  // already arrived: creation flows await `loadGroups()` before navigating.
+  it('applies the list response even when the hydration read stalls', async () => {
+    createScope();
+    getGroups.mockResolvedValue([groupRow('g1')]);
+    const storage = agentGroupListResource.storage!;
+    const getSpy = vi.spyOn(storage, 'get').mockImplementation(pending);
+
+    await useAgentGroupStore.getState().loadGroups();
+
+    expect(useAgentGroupStore.getState().groups.map((group) => group.id)).toEqual(['g1']);
+    expect(useAgentGroupStore.getState().groupMap.g1?.title).toBe('Group g1');
+    getSpy.mockRestore();
+  });
+
   it('replaces the list with the server response, persists it and seeds groupMap', async () => {
     const scope = createScope();
     getGroups.mockResolvedValue([groupRow('g1', 'Server group')]);
@@ -346,6 +361,9 @@ describe('agentGroup store replica', () => {
     expect(useAgentGroupStore.getState().groupMap.g1?.config).toEqual({
       systemPrompt: 'authoritative',
     });
+    // The list row is fresher than the persisted detail: its metadata (the
+    // renamed title) survives the hydrate instead of regressing to storage's.
+    expect(useAgentGroupStore.getState().groupMap.g1?.title).toBe('List row');
     session.unmount();
   });
 

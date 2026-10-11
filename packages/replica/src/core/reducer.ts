@@ -148,20 +148,24 @@ export const replicaReducer = <T>(
       } else if (!entry && view !== undefined) {
         return noop(state);
       }
-      // Confirmed writes made over the seed are replayed onto the stored value,
-      // so storage cannot clobber them. The result is a confirmed local value.
+      // The writes made over the seed are replayed onto the stored value, so
+      // storage cannot clobber them: the seed's own (fresher) fields — a list
+      // row's renamed title — and any confirmed edit made before storage
+      // answered. Only a confirmed edit makes the result a local value (and
+      // persists it); seed writes stay in-memory.
       const patches = (provisionalSeed && entry.seedPatches) || [];
       const data = patches.reduce((value, patch) => patch.apply(value) ?? value, action.data);
+      const confirmedPatches = patches.filter((patch) => !patch.seed);
       return {
-        effects: patches.some((patch) => patch.persist)
+        effects: confirmedPatches.some((patch) => patch.persist)
           ? [{ data, key: action.key, query: action.query, scope, type: 'persist' }]
           : [],
         state: withEntry({
           params: action.params,
           pending: [],
           query: action.query,
-          source: patches.length ? 'local' : 'storage',
-          updatedAt: patches.length ? now : (action.updatedAt ?? now),
+          source: confirmedPatches.length ? 'local' : 'storage',
+          updatedAt: confirmedPatches.length ? now : (action.updatedAt ?? now),
         }),
         writes: [{ data, key: action.key }],
       };
@@ -211,11 +215,20 @@ export const replicaReducer = <T>(
       const source: ReplicaSource =
         entry?.source ?? (view === undefined ? (action.source ?? 'local') : 'local');
       const persist = action.persist && source !== 'seed';
-      // A confirmed write over a seed keeps the seed provisional, but is
-      // remembered so a hydrate replacing the seed replays it (see `hydrate`).
+      // Every write while the entry is a seed is remembered so a hydrate that
+      // replaces the seed replays it (see `hydrate`): a confirmed write keeps
+      // the seed provisional, and a seed write carries fresher fields.
+      const isSeedWrite = action.source === 'seed';
       const seedPatches =
-        source === 'seed' && action.source !== 'seed'
-          ? [...(entry?.seedPatches ?? []), { apply: action.apply, persist: action.persist }]
+        source === 'seed'
+          ? [
+              ...(entry?.seedPatches ?? []),
+              {
+                apply: action.apply,
+                persist: !isSeedWrite && action.persist,
+                ...(isSeedWrite && { seed: true }),
+              },
+            ]
           : entry?.seedPatches;
       return {
         effects:

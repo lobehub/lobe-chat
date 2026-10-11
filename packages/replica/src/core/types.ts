@@ -99,10 +99,11 @@ export interface ReplicaEntryMeta<T> {
   /** Stable query identity beyond the key (filters, page size). */
   query?: string;
   /**
-   * Confirmed (non-seed) writes made while the entry is still a `seed`. The seed
-   * stays provisional (persisting it would clobber the stored detail), so a
-   * hydrate that replaces it replays these onto the stored value — a confirmed
-   * edit made before storage answered is not lost, and then persists.
+   * Every write made while the entry is still a `seed`, in order — the seed
+   * writes themselves and the confirmed writes made over them. A hydrate that
+   * replaces the seed replays them onto the stored value: the seed's fresher
+   * fields (a list row's renamed title) and a confirmed edit made before
+   * storage answered both survive, instead of storage painting older values.
    */
   seedPatches?: ReplicaSeedPatch<T>[];
   source: ReplicaSource;
@@ -110,8 +111,14 @@ export interface ReplicaEntryMeta<T> {
 }
 
 export interface ReplicaSeedPatch<T> {
+  /**
+   * Replayed onto the stored value, so a seed write must merge the fields it
+   * owns into its input rather than ignore it (its first run sees `undefined`).
+   */
   apply: (data: T | undefined) => T | undefined;
   persist: boolean;
+  /** A provisional seed write: replayed, but never makes the result confirmed. */
+  seed?: boolean;
 }
 
 /** Bookkeeping slot a replica keeps inside its domain store. */

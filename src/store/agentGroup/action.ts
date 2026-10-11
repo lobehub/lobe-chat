@@ -11,6 +11,7 @@ import {
   type ReplicaLens,
   type ReplicaSyncResult,
 } from '@/libs/replica';
+import { PRE_PAINT_HYDRATE_TIMEOUT, settleWithin } from '@/libs/replica/prePaint';
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
 import { type ChatGroupStore } from '@/store/agentGroup/store';
@@ -45,6 +46,28 @@ const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
     ...group,
     agents: [],
   }) as AgentGroupDetail;
+
+/**
+ * Fold a list row into a group detail: the row's metadata (title, avatar, …)
+ * wins, while a loaded roster (`agents`) and an authoritative `config` are kept.
+ *
+ * Every list seed goes through this merge, and the detail replica replays it
+ * when the persisted detail hydrates over the seed — so a fresher list row's
+ * metadata is not regressed to the persisted detail's, and the persisted roster
+ * and config are not dropped for the row's empty ones.
+ */
+const mergeListRow = (
+  existing: AgentGroupDetail | undefined,
+  group: ChatGroupItem,
+): AgentGroupDetail =>
+  existing
+    ? ({
+        ...existing,
+        ...group,
+        agents: existing.agents,
+        config: existing.config || group.config,
+      } as AgentGroupDetail)
+    : toAgentGroupDetail(group);
 
 /**
  * The group list keeps its long-standing flat `groups` field as the replica
@@ -254,7 +277,7 @@ class ChatGroupInternalAction implements ResetableStore {
     this.#groupList.update(AGENT_GROUP_LIST_KEY, (items) => [...(items ?? []), group], {
       persist: false,
     });
-    this.#groupDetail.update(group.id, () => toAgentGroupDetail(group), {
+    this.#groupDetail.update(group.id, (existing) => mergeListRow(existing, group), {
       persist: false,
       source: 'seed',
     });
@@ -286,19 +309,7 @@ class ChatGroupInternalAction implements ResetableStore {
   internal_updateGroupMaps = (groups: ChatGroupItem[]) => {
     this.#groupDetail.updateMany(
       groups.map((group) => ({
-        apply: (existing) =>
-          existing
-            ? ({
-                ...existing,
-                ...group,
-
-                // Preserve existing agents data
-                agents: existing.agents,
-
-                // Keep existing config (authoritative) if present; do not overwrite
-                config: existing.config || group.config,
-              } as AgentGroupDetail)
-            : toAgentGroupDetail(group),
+        apply: (existing) => mergeListRow(existing, group),
         key: group.id,
       })),
       { persist: false, source: 'seed' },
@@ -339,8 +350,9 @@ class ChatGroupInternalAction implements ResetableStore {
    * The request is started before the hydration read is awaited: the two are
    * independent, and a caller such as `sendAsGroup` awaits `loadGroups()` before
    * it navigates, so serializing them only delays both. Hydration still paints
-   * the persisted list as soon as it resolves; `await hydration` before the
-   * replace keeps that paint ahead of the network's.
+   * the persisted list as soon as it resolves; a bounded wait for it before the
+   * replace keeps that paint ahead of the network's without letting a stalled
+   * storage read block the response.
    *
    * The scope is captured before the first await and threaded through the
    * writes, so a response that resolves after an identity switch is dropped
@@ -358,7 +370,11 @@ class ChatGroupInternalAction implements ResetableStore {
       ? undefined
       : this.#groupList.hydrate(LIST_PARAMS, scope);
     const groups = await chatGroupService.getGroups();
-    await hydration;
+    // Let a hydrate that is about to land paint first, but never let a stalled
+    // storage read hold back an authoritative response that already arrived:
+    // creation flows await `loadGroups()` before they navigate. A hydrate that
+    // lands after the replace is a no-op (it only fills an empty slot).
+    if (hydration) await settleWithin(hydration, PRE_PAINT_HYDRATE_TIMEOUT);
     if (!this.#isStillInScope(scope)) return;
 
     this.#groupList.replace(LIST_PARAMS, groups, scope);
