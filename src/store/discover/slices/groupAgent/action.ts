@@ -68,6 +68,9 @@ export class GroupAgentActionImpl {
     this.#detail = createReplicaSlice(groupAgentDetailResource, {
       actionPrefix: n('detail'),
       get,
+      // The market no longer has this group: drop the entry and its persisted
+      // row rather than keep serving the cached copy.
+      isMissing: (detail) => detail === null,
       set,
       stateKey: 'groupAgentDetailReplica',
       view: recordLens<DiscoverStore, DiscoverGroupAgentDetail>('groupAgentDetailMap'),
@@ -118,7 +121,7 @@ export class GroupAgentActionImpl {
       pageSize: params.pageSize ? Number(params.pageSize) : 20,
     };
     const queryKey = groupAgentListQueryKey(normalized);
-    const sync = this.#list.useSync(normalized, { enabled });
+    const sync = this.#list.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().groupAgentListMap[queryKey], enabled);
   };
 
@@ -138,7 +141,7 @@ export class GroupAgentActionImpl {
       version: params.version,
     };
     const queryKey = groupAgentDetailQueryKey(normalized);
-    const sync = this.#detail.useSync(normalized, { enabled });
+    const sync = this.#detail.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -161,7 +164,7 @@ export class GroupAgentActionImpl {
       locale: globalHelpers.getCurrentLanguage(),
     };
     const queryKey = groupAgentCategoriesQueryKey(normalized);
-    const sync = this.#categories.useSync(normalized, { enabled });
+    const sync = this.#categories.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -175,7 +178,7 @@ export class GroupAgentActionImpl {
     const { enabled = true } = options;
     const params: GroupAgentIdentifiersParams = {};
     const queryKey = groupAgentIdentifiersQueryKey(params);
-    const sync = this.#identifiers.useSync(params, { enabled });
+    const sync = this.#identifiers.useSync(params, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,

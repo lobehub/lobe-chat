@@ -78,16 +78,18 @@ export const groupAgentListResource = defineReplica<GroupAgentListParams, GroupA
 
 /**
  * One group-agent detail by identifier / version (`groupAgentDetailMap[key]`).
- * The fetcher answers `undefined` for an identifier the market no longer has;
- * the default merge keeps whatever is already cached in that case, and an empty
- * slot stays empty so the page can render "not found" once the sync settles.
+ * The service answers `undefined` for an identifier the market no longer has;
+ * the fetcher turns that into `null` so the slice's `isMissing` drops the entry
+ * (memory and persisted row) instead of letting the engine skip the write and
+ * keep painting a stale cached copy across reloads. The page then reaches "not
+ * found" once the sync settles.
  */
 export const groupAgentDetailResource = defineReplica<
   GroupAgentDetailParams,
   DiscoverGroupAgentDetail,
-  DiscoverGroupAgentDetail | undefined
+  DiscoverGroupAgentDetail | null
 >({
-  fetcher: (params) => discoverService.getGroupAgentDetail(params),
+  fetcher: async (params) => (await discoverService.getGroupAgentDetail(params)) ?? null,
   key: groupAgentDetailQueryKey,
   name: 'groupAgentDetail',
   storage: 'indexedDB',

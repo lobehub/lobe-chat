@@ -65,13 +65,34 @@ const syncCalls = async (
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
 };
 
 describe('GroupAgentSlice (replica)', () => {
+  it('does not revalidate any group-agent read on window focus', async () => {
+    renderHook(() => {
+      const state = useStore.getState();
+      state.useFetchGroupAgentList();
+      state.useFetchGroupAgentDetail({ identifier: 'group-1' });
+      state.useFetchGroupAgentCategories();
+      state.useFetchGroupAgentIdentifiers();
+    });
+
+    for (const name of [
+      'groupAgentList',
+      'groupAgentDetail',
+      'groupAgentCategories',
+      'groupAgentIdentifiers',
+    ] as const) {
+      const calls = await syncCalls(name);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const call of calls) expect(call.config.revalidateOnFocus).toBe(false);
+    }
+  });
+
   describe('useFetchGroupAgentList', () => {
     it('requests the list with normalized page / pageSize and the locale', async () => {
       const { discoverService } = await import('@/services/discover');
@@ -156,6 +177,33 @@ describe('GroupAgentSlice (replica)', () => {
         locale: 'en-US',
         version: '1.0.0',
       });
+    });
+
+    it('drops a cached detail once the market reports the group gone', async () => {
+      const { discoverService } = await import('@/services/discover');
+
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchGroupAgentDetail({ identifier: 'group-1' }),
+      );
+      const key = result.current.queryKey!;
+      const [call] = await syncCalls('groupAgentDetail');
+
+      vi.mocked(discoverService.getGroupAgentDetail).mockResolvedValueOnce({
+        identifier: 'group-1',
+      } as any);
+      const cached = await call.fetcher();
+      act(() => call.config.onSuccess!(cached));
+      expect(groupAgentSelectors.groupAgentDetail(key)(useStore.getState())).toEqual({
+        identifier: 'group-1',
+      });
+
+      // The listing was deleted: the service answers `undefined`.
+      vi.mocked(discoverService.getGroupAgentDetail).mockResolvedValueOnce(undefined);
+      const missing = await call.fetcher();
+      act(() => call.config.onSuccess!(missing));
+
+      expect(groupAgentSelectors.groupAgentDetail(key)(useStore.getState())).toBeUndefined();
+      expect(useStore.getState().groupAgentDetailMap[key]).toBeUndefined();
     });
 
     it('keys the detail by identifier and version', () => {
