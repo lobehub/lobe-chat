@@ -174,10 +174,28 @@ const normalizeRolloutRoster = (
   return [...probeTitles, ...rest];
 };
 
+/** Heads the brief a unit carries over from its first run when it is re-opened. */
+const UNIT_BRIEF_HEADING = 'Unit brief (from its first run):';
+
+/**
+ * The per-unit brief a re-opened unit must keep: the first-hand probe brief
+ * (which may be the only place its variant assignment is stated), or the one a
+ * previous re-open already carried over. A unit briefed only from the shared
+ * recipe has none of its own.
+ */
+const carriedUnitBrief = (node: { description?: string | null; title: string }) => {
+  const description = node.description?.trim();
+  if (!description) return undefined;
+  const carried = description.indexOf(UNIT_BRIEF_HEADING);
+  if (carried >= 0) return description.slice(carried + UNIT_BRIEF_HEADING.length).trim();
+  return description.endsWith(`Unit: ${node.title}`) ? undefined : description;
+};
+
 /**
  * Materialize one roster unit as a Task inside a batch. The brief is the shared
  * recipe applied to this unit — the probes carry the full first-hand brief, the
- * units promoted later reuse what the Template already proved.
+ * units promoted later reuse what the Template already proved. A re-opened unit
+ * also keeps its own first-hand brief.
  */
 const createRecipeUnitTask = async (
   writer: GoalGraphModel,
@@ -185,9 +203,16 @@ const createRecipeUnitTask = async (
   batchNodeId: string,
   title: string,
   recipeOutline?: string,
+  unitBrief?: string,
 ): Promise<string | undefined> => {
   const node = await writer.createNode(goalId, {
-    description: [recipeOutline, `Unit: ${title}`].filter(Boolean).join('\n\n'),
+    description: [
+      recipeOutline,
+      `Unit: ${title}`,
+      unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n'),
     kind: 'task',
     scopeId: batchNodeId,
     title,
@@ -1621,6 +1646,52 @@ export class GoalService {
         };
 
   /**
+   * Stop the Tasks bound to nodes already fenced as `retired`, so a retired
+   * node cannot keep spending or deliver into the Goal afterwards. Bound Tasks
+   * are read after the fence so a Task bound just before it is included.
+   * Returns the graph as read after the fence.
+   */
+  private stopFencedTasks = async (goalId: string, targetIds: ReadonlySet<string>) => {
+    const fenced = await this.requireGraph(goalId);
+    const taskIds = fenced.nodes.flatMap((node) =>
+      targetIds.has(node.id) && node.taskId ? [node.taskId] : [],
+    );
+    if (taskIds.length > 0) {
+      // The caller may be a workspace owner retiring a colleague's goal (the
+      // router authorizes that). The nodes' Tasks were created by the goal's
+      // coordinator, which runs as the goal's owner — and may be `private`,
+      // inherited from that owner's private agent — so reads under the caller's
+      // visibility would miss them and leave them running. Stop them under the
+      // goal owner's principal instead, limited to the Tasks bound to the nodes
+      // being retired.
+      const { taskModel, taskService, taskTopicModel } = this.goalOwnerTaskScope(fenced.goal);
+      const cancelTasks = async () => {
+        for (const id of taskIds) {
+          // CAS against the status just read; a runner flipping the Task to
+          // `running` in between makes it miss, so re-read and try again.
+          for (let attempt = 0; attempt < 3; attempt++) {
+            const [task] = await taskModel.findByIds([id]);
+            if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) break;
+            if (await taskModel.updateStatusIfCurrent(id, task.status, 'canceled')) break;
+          }
+        }
+      };
+      // Cancel the Tasks FIRST: that is the fence a run still being dispatched
+      // checks under the Task's row lock before recording its operation, so a
+      // run started from here on stops itself (TaskRunnerService.runTask).
+      // Runs recorded before the fence are then found and stopped below.
+      await cancelTasks();
+      for (const topic of await taskTopicModel.findRunningByTaskIds(taskIds)) {
+        if (topic.topicId) await taskService.cancelTopic(topic.topicId);
+      }
+      // `cancelTopic` parks its Task as `paused`; settle them back to canceled.
+      await cancelTasks();
+    }
+
+    return fenced;
+  };
+
+  /**
    * Retire Task nodes a person no longer wants run — a duplicated plan branch,
    * work that landed elsewhere. Without this a stray node that never got a Task
    * stays unfinished forever and the coordinator can never reach acceptance.
@@ -1695,43 +1766,8 @@ export class GoalService {
     }
 
     // Stop what the nodes are still running, so a retired node cannot keep
-    // spending or deliver into the Goal afterwards. Bound Tasks are read after
-    // the fence so a Task bound just before it is included.
-    const fenced = await this.requireGraph(goalId);
-    const taskIds = fenced.nodes.flatMap((node) =>
-      targetIds.has(node.id) && node.taskId ? [node.taskId] : [],
-    );
-    if (taskIds.length > 0) {
-      // The caller may be a workspace owner retiring a colleague's goal (the
-      // router authorizes that). The nodes' Tasks were created by the goal's
-      // coordinator, which runs as the goal's owner — and may be `private`,
-      // inherited from that owner's private agent — so reads under the caller's
-      // visibility would miss them and leave them running. Stop them under the
-      // goal owner's principal instead, limited to the Tasks bound to the nodes
-      // being retired.
-      const { taskModel, taskService, taskTopicModel } = this.goalOwnerTaskScope(fenced.goal);
-      const cancelTasks = async () => {
-        for (const id of taskIds) {
-          // CAS against the status just read; a runner flipping the Task to
-          // `running` in between makes it miss, so re-read and try again.
-          for (let attempt = 0; attempt < 3; attempt++) {
-            const [task] = await taskModel.findByIds([id]);
-            if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) break;
-            if (await taskModel.updateStatusIfCurrent(id, task.status, 'canceled')) break;
-          }
-        }
-      };
-      // Cancel the Tasks FIRST: that is the fence a run still being dispatched
-      // checks under the Task's row lock before recording its operation, so a
-      // run started from here on stops itself (TaskRunnerService.runTask).
-      // Runs recorded before the fence are then found and stopped below.
-      await cancelTasks();
-      for (const topic of await taskTopicModel.findRunningByTaskIds(taskIds)) {
-        if (topic.topicId) await taskService.cancelTopic(topic.topicId);
-      }
-      // `cancelTopic` parks its Task as `paused`; settle them back to canceled.
-      await cancelTasks();
-    }
+    // spending or deliver into the Goal afterwards.
+    const fenced = await this.stopFencedTasks(goalId, targetIds);
 
     // A pending recovery gate on a retired node asks a question nobody needs
     // answered any more; left pending it keeps the Goal parked in review.
@@ -2945,6 +2981,22 @@ export class GoalService {
         : recovery.outcome === 'exhausted-rounds'
           ? 'Task attempt budget was exhausted'
           : 'Automatic recovery could not start the next attempt';
+    // R6: a batch member that ran out of attempts to pass its own check breaks
+    // the class, like one that failed outright — revise the recipe and re-probe,
+    // not a standalone retry/retire gate (retiring a last-wave member would let
+    // the goal head for acceptance with the unit undone). A spent goal budget
+    // and a run that never started are not the recipe's fault: those keep the
+    // ordinary gate.
+    if (
+      recovery.outcome !== 'exhausted-cost' &&
+      recovery.outcome !== 'spawn-failed' &&
+      this.isBatchMember(graph, nodeId)
+    ) {
+      const title = graph.nodes.find((node) => node.id === nodeId)?.title ?? task.identifier;
+      return this.openPatternBreakGate(graph, `${title}: ${exhaustedReason}`, effects, {
+        unitId: nodeId,
+      });
+    }
     return this.gateOrTakeOver(graph, nodeId, task.id, exhaustedReason, effects, {
       machine: recovery.outcome === 'spawn-failed',
     });
@@ -4045,58 +4097,86 @@ export class GoalService {
       return { goalId, message: 'Batch roster exhausted', outcome: 'advanced' };
     }
 
-    const newIds: string[] = [];
-    for (const title of wave) {
-      const nodeId = await createRecipeUnitTask(
-        this.coordinatorGraph,
-        goalId,
-        state.batchNodeId,
-        title,
-        policy.spec?.recipeOutline,
-      );
-      if (nodeId) {
-        newIds.push(nodeId);
-        effects.push({ detail: title, nodeId, type: 'created_node' });
+    // Advances overlap — two settling tasks can each queue one — and both
+    // would read the same cursor and release the same wave twice. Claim it:
+    // under the goal row's lock, release only if the cursor is still where this
+    // advance read it.
+    const created: GoalAdvanceEffect[] = [];
+    const message = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (
+        !current ||
+        current.phase !== state.phase ||
+        current.waveIndex !== state.waveIndex ||
+        (current.releasedCount ?? current.probeNodeIds.length) !== released
+      )
+        return undefined;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+
+      const newIds: string[] = [];
+      for (const title of wave) {
+        const nodeId = await createRecipeUnitTask(
+          writer,
+          goalId,
+          state.batchNodeId,
+          title,
+          policy.spec?.recipeOutline,
+        );
+        if (nodeId) {
+          newIds.push(nodeId);
+          created.push({ detail: title, nodeId, type: 'created_node' });
+        }
       }
-    }
 
-    const message = `Batch gate passed; released wave ${state.waveIndex + 1} (${newIds.length} unit${newIds.length === 1 ? '' : 's'})`;
-    // A batch that predates the counter has no `gateLog` either, and a restart
-    // resets `waveIndex`; the roster position still says how many waves are out:
-    // everything released beyond the first canary went out a wave at a time.
-    const waveNumber =
-      (state.wavesReleased ??
-        Math.max(
-          state.waveIndex,
-          (state.gateLog ?? []).filter((entry) => entry.outcome === 'released').length,
-          Math.ceil(Math.max(0, released - (policy.canarySize ?? 0)) / waveSize),
-        )) + 1;
-    const next: GoalRolloutState = withGateVerdict(
-      {
-        ...state,
-        massNodeIds: [...(state.massNodeIds ?? []), ...newIds],
-        phase: 'mass',
-        releasedCount: released + newIds.length,
-        waveIndex: state.waveIndex + 1,
-        wavesReleased: waveNumber,
-      },
-      {
-        checks: gate?.checks ?? [],
-        message,
-        outcome: 'released',
-        releasedCount: newIds.length,
-        revision: state.templateRevision,
-        trigger: 'gate',
-        wave: waveNumber,
-        waveIndex: state.waveIndex + 1,
-      },
-    );
-    await this.goalModel.updateRolloutState(goalId, next);
+      const message = `Batch gate passed; released wave ${state.waveIndex + 1} (${newIds.length} unit${newIds.length === 1 ? '' : 's'})`;
+      // A batch that predates the counter has no `gateLog` either, and a restart
+      // resets `waveIndex`; the roster position still says how many waves are out:
+      // everything released beyond the first canary went out a wave at a time.
+      const waveNumber =
+        (state.wavesReleased ??
+          Math.max(
+            state.waveIndex,
+            (state.gateLog ?? []).filter((entry) => entry.outcome === 'released').length,
+            Math.ceil(Math.max(0, released - (policy.canarySize ?? 0)) / waveSize),
+          )) + 1;
+      const next: GoalRolloutState = withGateVerdict(
+        {
+          ...state,
+          massNodeIds: [...(state.massNodeIds ?? []), ...newIds],
+          phase: 'mass',
+          releasedCount: released + newIds.length,
+          waveIndex: state.waveIndex + 1,
+          wavesReleased: waveNumber,
+        },
+        {
+          checks: gate?.checks ?? [],
+          message,
+          outcome: 'released',
+          releasedCount: newIds.length,
+          revision: state.templateRevision,
+          trigger: 'gate',
+          wave: waveNumber,
+          waveIndex: state.waveIndex + 1,
+        },
+      );
+      await goalModel.updateRolloutState(
+        goalId,
+        next.releasedCount! >= roster.length ? { ...next, phase: 'done' } : next,
+      );
+      return message;
+    });
 
-    if (next.releasedCount! >= roster.length) {
-      await this.goalModel.updateRolloutState(goalId, { ...next, phase: 'done' });
-    }
-
+    if (!message)
+      return {
+        goalId,
+        message: 'Another advance already released this wave',
+        outcome: 'no_progress',
+      };
+    effects.push(...created);
     return { goalId, message, outcome: 'advanced' };
   };
 
@@ -4250,11 +4330,11 @@ export class GoalService {
     const reopenedIds = new Set(
       graph.edges.filter((edge) => edge.kind === 'derived_from').map((edge) => edge.targetNodeId),
     );
-    const broken: { id: string; title: string }[] = [];
+    const broken: { brief?: string; id: string; title: string }[] = [];
     for (const node of graph.nodes) {
       if (!memberIds.has(node.id) || node.status === 'resolved' || reopenedIds.has(node.id))
         continue;
-      broken.push({ id: node.id, title: node.title });
+      broken.push({ brief: carriedUnitBrief(node), id: node.id, title: node.title });
       if (!TERMINAL_NODE_STATUSES.has(node.status)) {
         await this.coordinatorGraph.updateNodeStatus(
           goalId,
@@ -4264,6 +4344,10 @@ export class GoalService {
         );
       }
     }
+    // A sibling still running when the gate was answered would keep spending —
+    // and could deliver — beside the probe that replaces it. The nodes are
+    // fenced above; stop the Tasks behind them.
+    if (broken.length) await this.stopFencedTasks(goalId, new Set(broken.map((unit) => unit.id)));
 
     // 3. A fresh gate for the fresh round.
     const assay = await this.coordinatorGraph.createNode(goalId, {
@@ -4301,8 +4385,12 @@ export class GoalService {
     const deferred = broken.slice(canarySize).map((unit) => unit.title);
     const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
     const units = [
-      ...reOpen.map((unit) => ({ from: unit.id, title: unit.title })),
-      ...fresh.map((title) => ({ from: undefined as string | undefined, title })),
+      ...reOpen.map((unit) => ({ brief: unit.brief, from: unit.id, title: unit.title })),
+      ...fresh.map((title) => ({
+        brief: undefined as string | undefined,
+        from: undefined as string | undefined,
+        title,
+      })),
     ];
     const probeIds: string[] = [];
     const opened: { from: string | undefined; title: string }[] = [];
@@ -4313,6 +4401,7 @@ export class GoalService {
         batchId,
         unit.title,
         revisedOutline || baseOutline,
+        unit.brief,
       );
       if (!nodeId) continue;
       probeIds.push(nodeId);

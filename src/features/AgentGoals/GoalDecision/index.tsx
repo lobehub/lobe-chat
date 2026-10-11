@@ -16,8 +16,8 @@ import ClarificationQuestions, {
 
 import {
   coordinatorGateReason,
-  coordinatorReasonCopy,
   gateOptionLabelKey,
+  localizedCoordinatorReason,
 } from '../ProcessControl/coordinatorCopy';
 import {
   type GoalGateCategory,
@@ -299,8 +299,8 @@ const GoalDecisionCase = ({
   // The coordinator's English reason renders in the reader's language when
   // recognized; an Agent's question is already in the goal's language.
   const rawReason = coordinatorGateReason(decision.question) ?? decision.question;
-  const reasonCopy = coordinatorReasonCopy(rawReason);
-  const questionText = reasonCopy ? t(reasonCopy.key as any, reasonCopy.params) : rawReason;
+  // Every blocker of a compound batch reason, not just a single one.
+  const questionText = localizedCoordinatorReason(rawReason, t as any);
   const basisText = basis && basis.trim() !== rawReason.trim() ? basis.trim() : undefined;
 
   const questions = useMemo(

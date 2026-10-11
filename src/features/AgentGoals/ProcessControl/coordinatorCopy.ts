@@ -9,6 +9,7 @@ import {
   GOAL_MANAGER_QUESTION_TITLE,
 } from '@lobechat/const/goal';
 import type { GoalDecisionOption, GoalGraphDecision } from '@lobechat/types';
+import { coordinatorReasonCopies } from '@lobechat/utils/goalCopy';
 
 import type { GoalNodeView } from './goalGraphViewModel';
 
@@ -113,6 +114,19 @@ export const coordinatorNodeTitleKey = (view: GoalNodeView): string | undefined 
     if (kind) return gateTitleKey(kind);
   }
   return undefined;
+};
+
+/**
+ * A stored coordinator reason in the reader's language: every blocker of a
+ * compound batch reason localized and rejoined, or the stored text when it is
+ * not (wholly) coordinator-authored.
+ */
+export const localizedCoordinatorReason = <R extends string | null | undefined>(
+  reason: R,
+  t: (key: string, params?: Record<string, unknown>) => string,
+): string | R => {
+  const copies = coordinatorReasonCopies(reason);
+  return copies ? copies.map((copy) => t(copy.key, copy.params)).join('; ') : reason;
 };
 
 export {
