@@ -1,6 +1,8 @@
 import { type DisplayPreferenceMemory } from '@/database/repositories/userMemory';
-import { definePagedReplica, type ReplicaPagedData } from '@/libs/replica';
+import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
+
+import { defineUserMemoryPagedReplica } from '../../utils/replica';
 
 /** Page size the memory preference list asks for when the caller does not name one. */
 export const PREFERENCE_LIST_PAGE_SIZE = 12;
@@ -53,7 +55,7 @@ export interface PreferenceListData extends ReplicaPagedData<DisplayPreferenceMe
  * holds entry keys and the bounded recent-query window can seed from it across
  * sessions (see `MAX_RECENT_PREFERENCE_QUERIES`).
  */
-export const preferenceListResource = definePagedReplica<
+export const preferenceListResource = defineUserMemoryPagedReplica<
   PreferenceListParams,
   DisplayPreferenceMemory,
   number,

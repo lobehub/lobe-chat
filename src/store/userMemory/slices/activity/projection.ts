@@ -1,7 +1,9 @@
 import { type ActivityListItem } from '@lobechat/types';
 
-import { definePagedReplica, type ReplicaPagedData } from '@/libs/replica';
+import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
+
+import { defineUserMemoryPagedReplica } from '../../utils/replica';
 
 /** Page size the memory activity list asks for when the caller does not name one. */
 export const ACTIVITY_LIST_PAGE_SIZE = 12;
@@ -45,7 +47,7 @@ export interface ActivityListData extends ReplicaPagedData<ActivityListItem, num
  * sync key, so other slices that already revalidate that list by its key root
  * (e.g. `base/action.ts` after an edit or a purge) keep working unchanged.
  */
-export const activityListResource = definePagedReplica<
+export const activityListResource = defineUserMemoryPagedReplica<
   ActivityListParams,
   ActivityListItem,
   number,

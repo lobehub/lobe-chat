@@ -24,6 +24,7 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import {
   CONTEXT_LIST_KEY,
   type ContextListData,
@@ -76,11 +77,14 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('contextList replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let fetchSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -145,7 +149,7 @@ describe('contextList replica', () => {
       total: 24,
     };
     await contextListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     fetchSpy.mockImplementation(pending);
@@ -185,7 +189,7 @@ describe('contextList replica', () => {
     expect(fetchSpy).toHaveBeenCalledWith(expect.objectContaining({ layer: LayersEnum.Context }));
 
     await waitFor(async () => {
-      const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
       expect(ids(row?.data as ContextListData)).toEqual(['a', 'b']);
     });
   });
@@ -319,7 +323,7 @@ describe('contextList replica', () => {
     await waitFor(() => expect(ids(useUserMemoryStore.getState().contextListData)).toEqual(['a']));
     await waitFor(async () =>
       expect(
-        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
 
@@ -328,7 +332,7 @@ describe('contextList replica', () => {
     expect(useUserMemoryStore.getState().contextListData).toBeUndefined();
     expect(useUserMemoryStore.getState().contexts).toEqual([]);
     expect(useUserMemoryStore.getState().contextsSearchLoading).toBe(true);
-    const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope });
+    const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
     expect(ids(row?.data as ContextListData)).toEqual(['a']);
   });
 
@@ -352,7 +356,7 @@ describe('contextList replica', () => {
     expect(useUserMemoryStore.getState().contexts.map((c) => c.id)).toEqual(['b']);
 
     await waitFor(async () => {
-      const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
       expect(ids(row?.data as ContextListData)).toEqual(['b']);
     });
   });
@@ -482,13 +486,13 @@ describe('contextList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     hook.rerender({});
     await waitFor(async () =>
       expect(
-        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     expect(ids(useUserMemoryStore.getState().contextListData)).toEqual(['a', 'b']);
@@ -498,7 +502,9 @@ describe('contextList replica', () => {
     });
 
     // The inactive search's row is gone too: a reload on it cannot paint deleted memories.
-    expect(await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope })).toBeFalsy();
+    expect(
+      await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }),
+    ).toBeFalsy();
     // The mounted query revalidates against the emptied server.
     await waitFor(() => expect(ids(useUserMemoryStore.getState().contextListData)).toEqual([]));
     expect(useUserMemoryStore.getState().contexts).toEqual([]);
@@ -523,7 +529,7 @@ describe('contextList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     hook.rerender({});
@@ -539,7 +545,7 @@ describe('contextList replica', () => {
     expect(edited(useUserMemoryStore.getState().contextListData)?.description).toBe('edited');
     // The unloaded search variant is patched too, so a reload on it shows the edit.
     await waitFor(async () => {
-      const row = await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      const row = await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope });
       expect(edited(row?.data as ContextListData)?.description).toBe('edited');
     });
   });
@@ -599,55 +605,6 @@ describe('contextList replica', () => {
     expect(useUserMemoryStore.getState().contexts.map((row) => row.id)).toEqual(
       server.map((row) => (row as any).memory.id),
     );
-  });
-
-  it('purges the scope the delete-all started in when the scope switches meanwhile', async () => {
-    const server = rawItemsOf(2);
-    serveList(server);
-    let finishDelete!: () => void;
-    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(
-      () => new Promise<never>((resolve) => (finishDelete = () => resolve(undefined as never))),
-    );
-
-    // The initiating scope persisted a search variant and the base list.
-    const hook = renderHook(
-      (props: { q?: string }) =>
-        useUserMemoryStore((s) => s.useFetchContexts)({ pageSize: 12, q: props.q }),
-      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
-    );
-    await waitFor(async () =>
-      expect(
-        (await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
-      ).toBeDefined(),
-    );
-    hook.rerender({});
-    await waitFor(async () =>
-      expect(
-        (await contextListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
-      ).toBeDefined(),
-    );
-    const initiating = scope;
-
-    let purged!: Promise<void>;
-    act(() => {
-      purged = useUserMemoryStore.getState().purgeAllMemories();
-    });
-    await waitFor(() => expect(finishDelete).toBeTypeOf('function'));
-    // The user switches workspace while the server deletes.
-    useScope(`context-user-${randomUUID()}:personal`);
-    await act(async () => {
-      finishDelete();
-      await purged;
-    });
-
-    await waitFor(async () => {
-      expect(
-        await contextListResource.storage!.get({ queryKey: SEARCH_KEY, scope: initiating }),
-      ).toBeFalsy();
-      expect(
-        await contextListResource.storage!.get({ queryKey: BASE_KEY, scope: initiating }),
-      ).toBeFalsy();
-    });
   });
 
   it('does not fetch another page when the head page is the last one', async () => {

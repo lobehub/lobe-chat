@@ -23,6 +23,7 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import {
   ACTIVITY_LIST_KEY,
   type ActivityListData,
@@ -69,11 +70,14 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('activityList replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let fetchSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -125,7 +129,7 @@ describe('activityList replica', () => {
       total: 24,
     };
     await activityListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     fetchSpy.mockImplementation(pending);
@@ -157,7 +161,7 @@ describe('activityList replica', () => {
     expect(useUserMemoryStore.getState().activitiesHasMore).toBe(true);
 
     await waitFor(async () => {
-      const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
       expect(ids(row?.data as ActivityListData)).toEqual(['a', 'b']);
     });
   });
@@ -262,7 +266,7 @@ describe('activityList replica', () => {
     await waitFor(() => expect(ids(useUserMemoryStore.getState().activityListData)).toEqual(['a']));
     await waitFor(async () =>
       expect(
-        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
 
@@ -271,7 +275,7 @@ describe('activityList replica', () => {
     expect(useUserMemoryStore.getState().activityListData).toBeUndefined();
     expect(useUserMemoryStore.getState().activities).toEqual([]);
     expect(useUserMemoryStore.getState().activitiesSearchLoading).toBe(true);
-    const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope });
+    const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
     expect(ids(row?.data as ActivityListData)).toEqual(['a']);
   });
 
@@ -301,7 +305,7 @@ describe('activityList replica', () => {
     expect(useUserMemoryStore.getState().activities.map((a) => a.id)).toEqual(['b']);
 
     await waitFor(async () => {
-      const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
       expect(ids(row?.data as ActivityListData)).toEqual(['b']);
     });
   });
@@ -448,7 +452,8 @@ describe('activityList replica', () => {
     // the new request settles (its own `onSuccess` never runs while pending).
     act(() => {
       scope = `activity-user-${randomUUID()}:personal`;
-      scopes.add(scope);
+      rowScope = identityScopeOf(scope);
+      scopes.add(rowScope);
     });
     hook.rerender();
 
@@ -476,13 +481,13 @@ describe('activityList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     hook.rerender({});
     await waitFor(async () =>
       expect(
-        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     expect(ids(useUserMemoryStore.getState().activityListData)).toEqual(['a', 'b']);
@@ -492,7 +497,9 @@ describe('activityList replica', () => {
     });
 
     // The inactive search's row is gone too: a reload on it cannot paint deleted memories.
-    expect(await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope })).toBeFalsy();
+    expect(
+      await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }),
+    ).toBeFalsy();
     // The mounted query revalidates against the emptied server.
     await waitFor(() => expect(ids(useUserMemoryStore.getState().activityListData)).toEqual([]));
     expect(useUserMemoryStore.getState().activities).toEqual([]);
@@ -520,7 +527,7 @@ describe('activityList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     hook.rerender({});
@@ -536,7 +543,10 @@ describe('activityList replica', () => {
     expect(edited(useUserMemoryStore.getState().activityListData)?.narrative).toBe('edited');
     // The unloaded search variant is patched too, so a reload on it shows the edit.
     await waitFor(async () => {
-      const row = await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      const row = await activityListResource.storage!.get({
+        queryKey: SEARCH_KEY,
+        scope: rowScope,
+      });
       expect(edited(row?.data as ActivityListData)?.narrative).toBe('edited');
     });
   });
@@ -579,55 +589,6 @@ describe('activityList replica', () => {
     expect(useUserMemoryStore.getState().activities.map((row) => row.id)).toEqual(
       server.map((row) => row.id),
     );
-  });
-
-  it('purges the scope the delete-all started in when the scope switches meanwhile', async () => {
-    const server = idsOf(2);
-    serveList(server);
-    let finishDelete!: () => void;
-    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(
-      () => new Promise<never>((resolve) => (finishDelete = () => resolve(undefined as never))),
-    );
-
-    // The initiating scope persisted a search variant and the base list.
-    const hook = renderHook(
-      (props: { q?: string }) =>
-        useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12, q: props.q }),
-      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
-    );
-    await waitFor(async () =>
-      expect(
-        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
-      ).toBeDefined(),
-    );
-    hook.rerender({});
-    await waitFor(async () =>
-      expect(
-        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
-      ).toBeDefined(),
-    );
-    const initiating = scope;
-
-    let purged!: Promise<void>;
-    act(() => {
-      purged = useUserMemoryStore.getState().purgeAllMemories();
-    });
-    await waitFor(() => expect(finishDelete).toBeTypeOf('function'));
-    // The user switches workspace while the server deletes.
-    useScope(`activity-user-${randomUUID()}:personal`);
-    await act(async () => {
-      finishDelete();
-      await purged;
-    });
-
-    await waitFor(async () => {
-      expect(
-        await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope: initiating }),
-      ).toBeFalsy();
-      expect(
-        await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: initiating }),
-      ).toBeFalsy();
-    });
   });
 
   it('does not fetch another page when the head page is the last one', async () => {

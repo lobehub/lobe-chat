@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
+import { cacheScope } from '@/libs/replica';
 import type * as SwrLib from '@/libs/swr';
 import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
@@ -130,53 +131,92 @@ describe('userMemory base actions', () => {
       expect(internal_clearIdentityList).not.toHaveBeenCalled();
     });
   });
-
-  describe('purgeAllMemories', () => {
-    it('clears the identity replicas right after deleting, then revalidates them', async () => {
-      const order: string[] = [];
-      vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
-        order.push('deleteAll');
-        return undefined as never;
-      });
-      const internal_clearIdentityList = vi.fn(async () => {
-        order.push('clearIdentityList');
-        return true;
-      });
-      const refreshIdentities = vi.fn(async () => {
-        order.push('refreshIdentities');
-      });
-      useUserMemoryStore.setState({ internal_clearIdentityList, refreshIdentities });
-
-      await act(async () => {
-        await useUserMemoryStore.getState().purgeAllMemories();
-      });
-
-      expect(order).toEqual(['deleteAll', 'clearIdentityList', 'refreshIdentities']);
-    });
-  });
 });
 
+/** Every replica-backed slice's purge action (see `purgeAllMemories`). */
+const REPLICA_CLEARS = [
+  'internal_clearMemoryReplicas',
+  'internal_clearTopicMemories',
+  'internal_clearHomeReplicas',
+  'internal_clearActivityList',
+  'internal_clearContextList',
+  'internal_clearExperienceList',
+  'internal_clearIdentityList',
+  'internal_clearPreferenceList',
+] as const;
+
+/** Replace every slice purge with a spy that records its call and resolves `result`. */
+const stubReplicaClears = (order: string[], results: Partial<Record<string, boolean>> = {}) => {
+  const spies = Object.fromEntries(
+    REPLICA_CLEARS.map((name) => [
+      name,
+      vi.fn(async () => {
+        order.push(name);
+        return results[name] ?? true;
+      }),
+    ]),
+  );
+  useUserMemoryStore.setState(spies);
+  return spies;
+};
+
 describe('purgeAllMemories', () => {
-  it('clears the preference replica through the engine right after deleting', async () => {
+  const useCacheScope = (value: string) => {
+    vi.spyOn(cacheScope, 'get').mockReturnValue(value);
+  };
+
+  beforeEach(() => {
+    useCacheScope('user-1:personal');
+  });
+
+  it('clears every replica right after deleting, then revalidates', async () => {
     const order: string[] = [];
     vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
       order.push('deleteAll');
       return undefined as never;
     });
-    const internal_clearPreferenceList = vi.fn(async () => {
-      order.push('clearPreferenceList');
-      return true;
-    });
-    useUserMemoryStore.setState({ internal_clearPreferenceList });
+    stubReplicaClears(order);
     vi.mocked(mutate).mockImplementation(async () => {
       order.push('revalidate');
     });
 
     await useUserMemoryStore.getState().purgeAllMemories();
 
-    expect(internal_clearPreferenceList).toHaveBeenCalledTimes(1);
-    expect(order.slice(0, 3)).toEqual(['deleteAll', 'clearPreferenceList', 'revalidate']);
+    expect(order[0]).toBe('deleteAll');
+    expect(order.slice(1, REPLICA_CLEARS.length + 1)).toEqual(
+      expect.arrayContaining([...REPLICA_CLEARS]),
+    );
     // The replica-owned fields are not overwritten by `preferenceInitialState`.
+    expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
+  });
+
+  it('purges the same user’s replicas when the workspace switches mid-purge', async () => {
+    const order: string[] = [];
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      // Memories are per user: another workspace of the same user is the same partition.
+      useCacheScope('user-1:ws-2');
+      return undefined as never;
+    });
+    const spies = stubReplicaClears(order);
+
+    await useUserMemoryStore.getState().purgeAllMemories();
+
+    for (const name of REPLICA_CLEARS) expect(spies[name]).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves another user’s replicas alone when the account switches mid-purge', async () => {
+    const order: string[] = [];
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      useCacheScope('user-2:personal');
+      return undefined as never;
+    });
+    const spies = stubReplicaClears(order);
+    useUserMemoryStore.setState({ editingMemoryId: 'kept' });
+
+    await expect(useUserMemoryStore.getState().purgeAllMemories()).resolves.toBeUndefined();
+
+    for (const name of REPLICA_CLEARS) expect(spies[name]).not.toHaveBeenCalled();
+    expect(useUserMemoryStore.getState().editingMemoryId).toBe('kept');
     expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
   });
 });

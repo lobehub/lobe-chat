@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { type SWRResponse } from 'swr';
 
-import { cacheScope, createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
+import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
 import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
@@ -12,6 +12,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
+import { userMemoryIdentityScope } from '../../utils/replica';
 import { createMemorySearchParams } from '../../utils/searchParams';
 import {
   type MemoryDetailDisplay,
@@ -177,11 +178,19 @@ export class BaseActionImpl {
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
 
-    // The scope whose memories are deleted: a switch while the request is in
-    // flight must not leave its persisted rows behind (or wipe the new scope).
-    const scope = cacheScope.get();
+    // Every userMemory replica is partitioned per user (see
+    // `userMemoryIdentityScope`), so a workspace switch while the request is in
+    // flight changes nothing below.
+    const identity = userMemoryIdentityScope.get();
 
     await memoryCRUDService.deleteAll();
+
+    // An account switch while the server purge ran: the active partition, the
+    // views on screen and every mounted query belong to another user now.
+    // Clearing them would wipe that user's rows, so leave local state alone.
+    // The purged user's copy is replaced by the server's (empty) answer the
+    // next time they sign in.
+    if (userMemoryIdentityScope.get() !== identity) return;
 
     // Replica-backed reads own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
@@ -197,8 +206,8 @@ export class BaseActionImpl {
     await this.#get().internal_clearExperienceList();
     await this.#get().internal_clearPreferenceList();
     await this.#get().internal_clearIdentityList();
-    await this.#get().internal_clearActivityList(scope);
-    await this.#get().internal_clearContextList(scope);
+    await this.#get().internal_clearActivityList();
+    await this.#get().internal_clearContextList();
 
     this.#set(
       produce((draft) => {

@@ -19,6 +19,7 @@ import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { identitySelectors, useUserMemoryStore } from '@/store/userMemory';
 
+import { identityScopeOf } from '../../utils/replica';
 import { identityInitialState } from './initialState';
 import { globalIdentitiesResource, identityListResource } from './projection';
 
@@ -76,10 +77,13 @@ const state = () => useUserMemoryStore.getState();
 describe('identity slice actions', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
 
   beforeEach(() => {
     scope = `identity-action-${randomUUID()}:personal`;
-    scopes.add(scope);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -192,11 +196,11 @@ describe('identity slice actions', () => {
       await expect(reset).resolves.toBe(true);
     });
     // The deleted rows are gone from the persisted copies.
-    const list = await identityListResource.storage!.get({ queryKey: LIST_KEY, scope });
+    const list = await identityListResource.storage!.get({ queryKey: LIST_KEY, scope: rowScope });
     expect((list?.data as { items: unknown[] } | undefined)?.items ?? []).toEqual([]);
     const injected = await globalIdentitiesResource.storage!.get({
       queryKey: INJECTION_KEY,
-      scope,
+      scope: rowScope,
     });
     expect(injected?.data ?? []).toEqual([]);
   });

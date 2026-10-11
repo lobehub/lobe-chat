@@ -6,12 +6,7 @@ import {
 import isEqual from 'fast-deep-equal';
 
 import { type AddIdentityEntryResult } from '@/database/models/userMemory';
-import {
-  cacheScope,
-  createReplicaSlice,
-  type ReplicaLens,
-  type ReplicaSyncResult,
-} from '@/libs/replica';
+import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
 import { memoryCRUDService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
@@ -208,7 +203,7 @@ export class IdentityActionImpl {
   preHydrateIdentities = (
     params: IdentityListParams = { pageSize: DEFAULT_IDENTITY_LIST_PAGE_SIZE },
   ): Promise<boolean> => {
-    const scope = cacheScope.get();
+    const scope = identityListResource.scope.get();
     this.#identities.ensureScope(scope);
 
     return this.#identities.hydrate(params, scope);

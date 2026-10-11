@@ -22,7 +22,8 @@ import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { initialState as userMemoryInitialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
-import { identityScopeOf, topicMemoriesResource } from './projection';
+import { identityScopeOf } from '../../utils/replica';
+import { topicMemoriesResource } from './projection';
 import { agentMemorySelectors } from './selectors';
 
 vi.mock('@/services/userMemory', () => ({

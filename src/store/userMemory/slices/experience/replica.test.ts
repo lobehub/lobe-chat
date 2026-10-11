@@ -23,6 +23,7 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import {
   EXPERIENCE_LIST_KEY,
   type ExperienceListData,
@@ -69,11 +70,14 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('experienceList replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let fetchSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -102,10 +106,10 @@ describe('experienceList replica', () => {
   /** Persist a row for a query variant that is not loaded, indexed like the engine does. */
   const seedSearchRow = async (data: ExperienceListData) => {
     await experienceListResource.storage!.set(
-      { queryKey: SEARCH_KEY, scope },
+      { queryKey: SEARCH_KEY, scope: rowScope },
       { data, updatedAt: 1 },
     );
-    await experienceListResource.storage!.set({ queryKey: REPLICA_INDEX_KEY, scope }, {
+    await experienceListResource.storage!.set({ queryKey: REPLICA_INDEX_KEY, scope: rowScope }, {
       data: [SEARCH_KEY],
       updatedAt: 1,
     } as never);
@@ -124,7 +128,7 @@ describe('experienceList replica', () => {
       total: 24,
     };
     await experienceListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     fetchSpy.mockImplementation(pending);
@@ -156,7 +160,10 @@ describe('experienceList replica', () => {
     expect(useUserMemoryStore.getState().experiencesHasMore).toBe(true);
 
     await waitFor(async () => {
-      const row = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await experienceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect(ids(row?.data as ExperienceListData)).toEqual(['a', 'b']);
     });
   });
@@ -263,7 +270,7 @@ describe('experienceList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
 
@@ -272,7 +279,7 @@ describe('experienceList replica', () => {
     expect(useUserMemoryStore.getState().experienceListData).toBeUndefined();
     expect(useUserMemoryStore.getState().experiences).toEqual([]);
     expect(useUserMemoryStore.getState().experiencesSearchLoading).toBe(true);
-    const row = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+    const row = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
     expect(ids(row?.data as ExperienceListData)).toEqual(['a']);
   });
 
@@ -295,7 +302,7 @@ describe('experienceList replica', () => {
       total: 1,
     };
     await experienceListResource.storage!.set(
-      { queryKey: SEARCH_KEY, scope },
+      { queryKey: SEARCH_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
 
@@ -321,7 +328,7 @@ describe('experienceList replica', () => {
       total: 1,
     };
     await experienceListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cachedA, updatedAt: 1 },
     );
     fetchSpy.mockImplementation(pending);
@@ -359,7 +366,7 @@ describe('experienceList replica', () => {
       total: 1,
     };
     await experienceListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cachedBase, updatedAt: 1 },
     );
 
@@ -424,7 +431,10 @@ describe('experienceList replica', () => {
     expect(useUserMemoryStore.getState().experiences.map((e) => e.id)).toEqual(['b']);
 
     await waitFor(async () => {
-      const row = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await experienceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect(ids(row?.data as ExperienceListData)).toEqual(['b']);
     });
   });
@@ -507,9 +517,15 @@ describe('experienceList replica', () => {
       'new',
     );
     await waitFor(async () => {
-      const base = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const base = await experienceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect(keyLearningOf(base?.data as ExperienceListData)).toBe('new');
-      const search = await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      const search = await experienceListResource.storage!.get({
+        queryKey: SEARCH_KEY,
+        scope: rowScope,
+      });
       expect(keyLearningOf(search?.data as ExperienceListData)).toBe('new');
     });
   });
@@ -532,7 +548,7 @@ describe('experienceList replica', () => {
     await waitFor(async () =>
       expect(
         ids(
-          (await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope }))
+          (await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))
             ?.data as ExperienceListData,
         ),
       ).toEqual(['a']),
@@ -548,10 +564,10 @@ describe('experienceList replica', () => {
     expect(useUserMemoryStore.getState().experienceListData).toBeUndefined();
     expect(useUserMemoryStore.getState().experiences).toEqual([]);
     expect(
-      await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope }),
+      await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }),
     ).toBeUndefined();
     expect(
-      await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }),
+      await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }),
     ).toBeUndefined();
   });
 

@@ -1,9 +1,10 @@
 import { type IdentityListItem, type IdentityListSort } from '@lobechat/types';
 
-import { definePagedReplica, defineReplica, type ReplicaPagedData } from '@/libs/replica';
+import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryService } from '@/services/userMemory';
 
 import { type IdentityForInjection } from '../../types';
+import { defineUserMemoryPagedReplica, defineUserMemoryReplica } from '../../utils/replica';
 
 /**
  * The identities page renders one global list, so its paged replica keeps a
@@ -75,7 +76,7 @@ export const isIdentityQueryCurrent = (
  * Offset paging, cursor = page index (0 = head): the endpoint pages 1-based and
  * reports the real `total`, so "is there more" stays the server's answer.
  */
-export const identityListResource = definePagedReplica<
+export const identityListResource = defineUserMemoryPagedReplica<
   IdentityListParams,
   IdentityListItem,
   number,
@@ -114,7 +115,7 @@ export const GLOBAL_IDENTITIES_KEY = 'all';
  * `identitySelectors.globalIdentities`; persisted so the injection survives a
  * reload from the local copy while the network confirms it.
  */
-export const globalIdentitiesResource = defineReplica<
+export const globalIdentitiesResource = defineUserMemoryReplica<
   Record<string, never>,
   IdentityForInjection[]
 >({

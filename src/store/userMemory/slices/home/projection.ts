@@ -1,6 +1,7 @@
 import { type QueryIdentityRolesResult } from '@/database/models/userMemory';
-import { defineReplica } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
+
+import { defineUserMemoryReplica } from '../../utils/replica';
 
 /**
  * The persona is a single row per scope; the key never varies, so one entry
@@ -56,7 +57,7 @@ export type IdentityRolesData = QueryIdentityRolesResult;
  * existing revalidation by that key (the persona delete flow) still lands in
  * the replica.
  */
-export const personaResource = defineReplica<HomeReplicaParams, PersonaReplicaData>({
+export const personaResource = defineUserMemoryReplica<HomeReplicaParams, PersonaReplicaData>({
   key: () => PERSONA_KEY,
   name: 'userMemoryPersona',
   storage: 'indexedDB',
@@ -73,7 +74,7 @@ export const personaResource = defineReplica<HomeReplicaParams, PersonaReplicaDa
  * existing revalidation by that key (a memory purge) still lands in the
  * replica.
  */
-export const identityRolesResource = defineReplica<HomeReplicaParams, IdentityRolesData>({
+export const identityRolesResource = defineUserMemoryReplica<HomeReplicaParams, IdentityRolesData>({
   key: () => IDENTITY_ROLES_KEY,
   name: 'userMemoryIdentityRoles',
   storage: 'indexedDB',

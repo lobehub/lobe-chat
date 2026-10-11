@@ -21,6 +21,7 @@ import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { identitySelectors, useUserMemoryStore } from '@/store/userMemory';
 
+import { identityScopeOf } from '../../utils/replica';
 import { identityInitialState } from './initialState';
 import { IDENTITY_LIST_KEY, identityListResource, type IdentityListView } from './projection';
 
@@ -86,10 +87,13 @@ const listState = () => useUserMemoryStore.getState();
 describe('identity list replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -114,7 +118,7 @@ describe('identity list replica', () => {
 
   it('paints the persisted head page before the network answers', async () => {
     await identityListResource.storage!.set(
-      { queryKey: STORAGE_KEY, scope },
+      { queryKey: STORAGE_KEY, scope: rowScope },
       { data: pageOf([identity('i1', { title: 'Cached' })]), updatedAt: 1 },
     );
     vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(pending);
@@ -130,7 +134,7 @@ describe('identity list replica', () => {
 
   it('seeds the persisted head page before the route commits', async () => {
     await identityListResource.storage!.set(
-      { queryKey: STORAGE_KEY, scope },
+      { queryKey: STORAGE_KEY, scope: rowScope },
       { data: pageOf([identity('i1', { title: 'Seeded' })]), updatedAt: 1 },
     );
     vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(pending);
@@ -244,7 +248,10 @@ describe('identity list replica', () => {
     });
 
     await waitFor(() => expect(listState().identities.map((item) => item.id)).toEqual(['i2']));
-    const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+    const stored = await identityListResource.storage!.get({
+      queryKey: STORAGE_KEY,
+      scope: rowScope,
+    });
     expect((stored?.data as IdentityListView).items.map((item) => item.id)).toEqual(['i2']);
   });
 
@@ -262,7 +269,10 @@ describe('identity list replica', () => {
       { initialProps: { params: PARAMS as typeof FILTERED | typeof PARAMS }, wrapper },
     );
     await waitFor(async () => {
-      const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+      const stored = await identityListResource.storage!.get({
+        queryKey: STORAGE_KEY,
+        scope: rowScope,
+      });
       expect((stored?.data as IdentityListView | undefined)?.items).toHaveLength(2);
     });
     fetchSpy.mockResolvedValue(responseOf([identity('i1')]));
@@ -276,7 +286,10 @@ describe('identity list replica', () => {
 
     expect(listState().identities).toEqual([]);
     await waitFor(async () => {
-      const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+      const stored = await identityListResource.storage!.get({
+        queryKey: STORAGE_KEY,
+        scope: rowScope,
+      });
       expect((stored?.data as IdentityListView).items.map((item) => item.id)).toEqual(['i2']);
     });
   });
@@ -295,12 +308,15 @@ describe('identity list replica', () => {
 
     expect(listState().identities[0].description).toBe('new');
     await waitFor(async () => {
-      const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+      const stored = await identityListResource.storage!.get({
+        queryKey: STORAGE_KEY,
+        scope: rowScope,
+      });
       expect((stored?.data as IdentityListView).items[0].description).toBe('new');
     });
   });
 
-  it('drops the previous scope’s list on a cache-scope switch', async () => {
+  it('drops the previous user’s list on an account switch', async () => {
     vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(
       responseOf([identity('i1', { title: 'Personal' })]),
     );
@@ -310,13 +326,31 @@ describe('identity list replica', () => {
     });
     await waitFor(() => expect(listState().identities).toHaveLength(1));
 
-    // Switch identity: the new scope's list is still in flight.
-    useScope(`${scope.split(':')[0]}:ws-1`);
+    // Switch account: the new user's list is still in flight.
+    useScope(`identity-user-${randomUUID()}:personal`);
     vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(pending);
     rerender();
 
     expect(listState().identities).toEqual([]);
     expect(listState().identitiesInit).toBe(false);
+  });
+
+  it('keeps the user’s list across a workspace switch (memories are per user)', async () => {
+    vi.spyOn(userMemoryService, 'queryIdentities').mockResolvedValue(
+      responseOf([identity('i1', { title: 'Personal' })]),
+    );
+
+    const { rerender } = renderHook(() => useUserMemoryStore((s) => s.useFetchIdentities)(PARAMS), {
+      wrapper,
+    });
+    await waitFor(() => expect(listState().identities).toHaveLength(1));
+
+    useScope(`${scope.split(':')[0]}:ws-1`);
+    vi.spyOn(userMemoryService, 'queryIdentities').mockImplementation(pending);
+    rerender();
+
+    expect(listState().identities.map((item) => item.id)).toEqual(['i1']);
+    expect(listState().identitiesInit).toBe(true);
   });
 
   it('clears the view (and the persisted row) when told to reset', async () => {
@@ -340,7 +374,10 @@ describe('identity list replica', () => {
       await expect(reset).resolves.toBe(true);
     });
     // The deleted row is gone from the persisted copy (at most the refetched empty page remains).
-    const stored = await identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope });
+    const stored = await identityListResource.storage!.get({
+      queryKey: STORAGE_KEY,
+      scope: rowScope,
+    });
     expect((stored?.data as IdentityListView | undefined)?.items ?? []).toEqual([]);
     expect(IDENTITY_LIST_KEY).toBe('all');
   });
@@ -359,14 +396,14 @@ describe('identity list replica', () => {
     );
     await waitFor(async () => {
       await expect(
-        identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope }),
+        identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope: rowScope }),
       ).resolves.toBeDefined();
     });
     fetchSpy.mockResolvedValue(responseOf([identity('i2')]));
     rerender({ params: FILTERED });
     await waitFor(async () => {
       await expect(
-        identityListResource.storage!.get({ queryKey: FILTERED_KEY, scope }),
+        identityListResource.storage!.get({ queryKey: FILTERED_KEY, scope: rowScope }),
       ).resolves.toBeDefined();
     });
 
@@ -378,10 +415,13 @@ describe('identity list replica', () => {
 
     // The unfiltered projection must not survive to pre-hydrate after a reload.
     await expect(
-      identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope }),
+      identityListResource.storage!.get({ queryKey: STORAGE_KEY, scope: rowScope }),
     ).resolves.toBeUndefined();
     // The query on screen holds at most the server's (empty) answer.
-    const filtered = await identityListResource.storage!.get({ queryKey: FILTERED_KEY, scope });
+    const filtered = await identityListResource.storage!.get({
+      queryKey: FILTERED_KEY,
+      scope: rowScope,
+    });
     expect((filtered?.data as IdentityListView | undefined)?.items ?? []).toEqual([]);
   });
 });

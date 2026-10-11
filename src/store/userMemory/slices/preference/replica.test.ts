@@ -24,6 +24,7 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import { MAX_RECENT_PREFERENCE_QUERIES } from './action';
 import {
   type PreferenceListData,
@@ -78,11 +79,14 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('preferenceList replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let fetchSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -123,7 +127,7 @@ describe('preferenceList replica', () => {
       total: 24,
     };
     await preferenceListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     fetchSpy.mockImplementation(pending);
@@ -149,7 +153,7 @@ describe('preferenceList replica', () => {
       total: 1,
     };
     await preferenceListResource.storage!.set(
-      { queryKey: BASE_KEY, scope },
+      { queryKey: BASE_KEY, scope: rowScope },
       { data: cached, updatedAt: 1 },
     );
     // Never resolves: only the route loader's pre-hydrate can paint, never useSync.
@@ -164,7 +168,7 @@ describe('preferenceList replica', () => {
 
   it('pre-hydrates a non-default query into its own entry', async () => {
     await preferenceListResource.storage!.set(
-      { queryKey: SEARCH_KEY, scope },
+      { queryKey: SEARCH_KEY, scope: rowScope },
       {
         data: {
           currentPage: 0,
@@ -211,7 +215,10 @@ describe('preferenceList replica', () => {
     );
 
     await waitFor(async () => {
-      const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await preferenceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect(ids(row?.data as PreferenceListData)).toEqual(['a', 'b']);
     });
   });
@@ -347,7 +354,7 @@ describe('preferenceList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
 
@@ -360,14 +367,14 @@ describe('preferenceList replica', () => {
     expect(ids(useUserMemoryStore.getState().preferenceListEntries[preferenceListKey({})])).toEqual(
       ['a'],
     );
-    const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+    const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope });
     expect(ids(row?.data as PreferenceListData)).toEqual(['a']);
   });
 
   it('hydrates a previously persisted query when the list switches back to it', async () => {
     // A search that was persisted in an earlier session.
     await preferenceListResource.storage!.set(
-      { queryKey: SEARCH_KEY, scope },
+      { queryKey: SEARCH_KEY, scope: rowScope },
       {
         data: {
           currentPage: 0,
@@ -490,7 +497,7 @@ describe('preferenceList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
 
@@ -508,7 +515,10 @@ describe('preferenceList replica', () => {
     expect(state.preferenceListData?.items[0].conclusionDirectives).toBe('edited');
     expect(state.preferences[0].conclusionDirectives).toBe('edited');
     await waitFor(async () => {
-      const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await preferenceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect((row?.data as PreferenceListData).items[0].conclusionDirectives).toBe('edited');
     });
   });
@@ -525,13 +535,14 @@ describe('preferenceList replica', () => {
     );
     await waitFor(async () =>
       expect(
-        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+        (await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }))?.data,
       ).toBeDefined(),
     );
     hook.rerender({ q: 'foo' });
     await waitFor(async () =>
       expect(
-        (await preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+        (await preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }))
+          ?.data,
       ).toBeDefined(),
     );
 
@@ -544,10 +555,10 @@ describe('preferenceList replica', () => {
     expect(useUserMemoryStore.getState().preferenceListEntries).toEqual({});
     expect(useUserMemoryStore.getState().preferences).toEqual([]);
     await expect(
-      preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope }),
+      preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope: rowScope }),
     ).resolves.toBeUndefined();
     await expect(
-      preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }),
+      preferenceListResource.storage!.get({ queryKey: SEARCH_KEY, scope: rowScope }),
     ).resolves.toBeUndefined();
   });
 
@@ -576,7 +587,10 @@ describe('preferenceList replica', () => {
     expect(useUserMemoryStore.getState().preferences.map((p) => p.id)).toEqual(['b']);
 
     await waitFor(async () => {
-      const row = await preferenceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      const row = await preferenceListResource.storage!.get({
+        queryKey: BASE_KEY,
+        scope: rowScope,
+      });
       expect(ids(row?.data as PreferenceListData)).toEqual(['b']);
     });
   });
@@ -763,7 +777,7 @@ describe('preferenceList replica', () => {
     const paramsOf = (q: string): PreferenceListParams => ({ pageSize: 12, q });
     for (const q of previous) {
       await preferenceListResource.storage!.set(
-        { queryKey: preferenceListResource.storageKey(paramsOf(q)), scope },
+        { queryKey: preferenceListResource.storageKey(paramsOf(q)), scope: rowScope },
         {
           data: {
             currentPage: 0,
@@ -779,7 +793,7 @@ describe('preferenceList replica', () => {
     // The engine's index holds the storage keys it persisted; with no replica
     // `query`, those are the entry keys themselves.
     await preferenceListResource.storage!.set(
-      { queryKey: REPLICA_INDEX_KEY, scope },
+      { queryKey: REPLICA_INDEX_KEY, scope: rowScope },
       { data: previous.map((q) => preferenceListResource.storageKey(paramsOf(q))), updatedAt: 1 },
     );
 
@@ -809,7 +823,7 @@ describe('preferenceList replica', () => {
     await waitFor(async () => {
       const index = await preferenceListResource.storage!.get({
         queryKey: REPLICA_INDEX_KEY,
-        scope,
+        scope: rowScope,
       });
       const stored = (index?.data as unknown as string[] | undefined) ?? [];
       expect(stored).toHaveLength(MAX_RECENT_PREFERENCE_QUERIES);

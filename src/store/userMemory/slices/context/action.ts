@@ -3,12 +3,7 @@ import { useMemo } from 'react';
 import { type SWRResponse } from 'swr';
 
 import { type DisplayContextMemory } from '@/database/repositories/userMemory';
-import {
-  cacheScope,
-  createReplicaSlice,
-  type ReplicaLens,
-  type ReplicaPageResult,
-} from '@/libs/replica';
+import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
 import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
@@ -180,18 +175,11 @@ export class ContextActionImpl {
     mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root);
 
   /**
-   * Wipe the context list for "delete all memories". For the active scope: the
-   * in-memory view and every persisted query variant, dropping reads started
-   * before the wipe. Pass the scope the purge started in: if the user switched
-   * account/workspace meanwhile, only that scope's persisted rows are dropped
-   * and the view on screen (another scope's) is left alone. The caller
-   * (`purgeAllMemories`) revalidates afterwards.
+   * Wipe the context list for "delete all memories": the in-memory view, every
+   * persisted query variant of the user and reads started before the wipe.
+   * The caller (`purgeAllMemories`) revalidates afterwards.
    */
-  internal_clearContextList = async (scope: string = cacheScope.get()): Promise<boolean> => {
-    if (scope === cacheScope.get()) return this.#list.clear();
-    // Off-scope: schedules the delete of every persisted query variant there.
-    return this.#list.remove(CONTEXT_LIST_KEY, scope);
-  };
+  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
 
   /**
    * Confirmed patch of one context in the loaded view and in persisted rows

@@ -22,6 +22,7 @@ import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import {
   type HomeReplicaParams,
   IDENTITY_ROLES_KEY,
@@ -57,12 +58,15 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('userMemory home replicas', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let personaSpy: ReturnType<typeof vi.spyOn>;
   let rolesSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -100,7 +104,7 @@ describe('userMemory home replicas', () => {
   describe('persona', () => {
     it('paints the persisted persona before the network answers', async () => {
       await personaResource.storage!.set(
-        { queryKey: PERSONA_STORAGE_KEY, scope },
+        { queryKey: PERSONA_STORAGE_KEY, scope: rowScope },
         { data: { persona }, updatedAt: 1 },
       );
       personaSpy.mockImplementation(pending);
@@ -125,7 +129,7 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const row = await personaResource.storage!.get({
           queryKey: PERSONA_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(row?.data).toEqual({ persona });
       });
@@ -146,7 +150,7 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const row = await personaResource.storage!.get({
           queryKey: PERSONA_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(row?.data).toEqual({ persona: null });
       });
@@ -168,7 +172,7 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const row = await personaResource.storage!.get({
           queryKey: PERSONA_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(row?.data).toEqual({ persona: null });
       });
@@ -205,7 +209,7 @@ describe('userMemory home replicas', () => {
   describe('identity roles + tags', () => {
     it('paints the persisted roles/tags before the network answers', async () => {
       await identityRolesResource.storage!.set(
-        { queryKey: ROLES_STORAGE_KEY, scope },
+        { queryKey: ROLES_STORAGE_KEY, scope: rowScope },
         { data: roles, updatedAt: 1 },
       );
       rolesSpy.mockImplementation(pending);
@@ -232,7 +236,7 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const row = await identityRolesResource.storage!.get({
           queryKey: ROLES_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(row?.data).toEqual(roles);
       });
@@ -263,12 +267,12 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const personaRow = await personaResource.storage!.get({
           queryKey: PERSONA_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(personaRow?.data).toEqual({ persona });
         const rolesRow = await identityRolesResource.storage!.get({
           queryKey: ROLES_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(rolesRow?.data).toEqual(roles);
       });
@@ -292,12 +296,12 @@ describe('userMemory home replicas', () => {
       await waitFor(async () => {
         const personaRow = await personaResource.storage!.get({
           queryKey: PERSONA_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(personaRow?.data).toEqual({ persona: null });
         const rolesRow = await identityRolesResource.storage!.get({
           queryKey: ROLES_STORAGE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(rolesRow?.data).toEqual({ roles: [], tags: [] });
       });

@@ -1,7 +1,9 @@
 import { type ExperienceListItem, type ExperienceListSort } from '@lobechat/types';
 
-import { definePagedReplica, type ReplicaPagedData } from '@/libs/replica';
+import { type ReplicaPagedData } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
+
+import { defineUserMemoryPagedReplica } from '../../utils/replica';
 
 export type { ExperienceListSort };
 
@@ -42,7 +44,7 @@ export interface ExperienceListData extends ReplicaPagedData<ExperienceListItem,
  * sync key, so other slices that already revalidate that list by its key root
  * (e.g. `base/action.ts` after an edit or a purge) keep working unchanged.
  */
-export const experienceListResource = definePagedReplica<
+export const experienceListResource = defineUserMemoryPagedReplica<
   ExperienceListParams,
   ExperienceListItem,
   number,
