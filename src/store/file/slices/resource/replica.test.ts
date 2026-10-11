@@ -935,4 +935,88 @@ describe('resourceList replica', () => {
     expect(useFileStore.getState().resourceList).toHaveLength(100);
     expect(ids()[0]).toBe('resource-200');
   });
+
+  it('drops a failed create whose overlay a cached same-pool sort repaint dropped', async () => {
+    const sorted = normalizeResourceListParams({
+      parentId: null,
+      sorter: 'size',
+      sortType: 'asc',
+    })!;
+    await seedPersisted(sorted, [row('cached-sorted')]);
+
+    let failCreate!: (error: Error) => void;
+    vi.spyOn(resourceService, 'createResource').mockImplementation(
+      () => new Promise((_resolve, reject) => (failCreate = reject)) as never,
+    );
+    // The sorted query stays offline: only its cached page can paint it.
+    querySpy.mockImplementation((params) =>
+      params.sorter === 'size' ? pending() : Promise.resolve(page([row('newest-1')], 1)),
+    );
+
+    const hook = renderHook(
+      (props: { sorter?: 'size' }) =>
+        useFileStore((s) => s.useFetchResources)({
+          parentId: null,
+          sorter: props.sorter,
+          sortType: props.sorter ? 'asc' : undefined,
+        }),
+      { initialProps: {} as { sorter?: 'size' }, wrapper },
+    );
+    await waitFor(() => expect(ids()).toEqual(['newest-1']));
+
+    let creating!: Promise<string>;
+    act(() => {
+      creating = useFileStore.getState().createResource({
+        fileType: 'text/plain',
+        name: 'New',
+        parentId: null,
+        sourceType: 'file',
+        url: '',
+      });
+    });
+    const tempId = ids()[0];
+    expect(tempId.startsWith('temp-resource-')).toBe(true);
+
+    // The cached sort repaints and keeps the in-flight row as client-only.
+    hook.rerender({ sorter: 'size' });
+    await waitFor(() => expect(ids()).toContain('cached-sorted'));
+    expect(ids()).toContain(tempId);
+
+    await act(async () => {
+      failCreate(new Error('create failed'));
+      await creating.catch(() => undefined);
+    });
+
+    // The failed create must not linger as a phantom row.
+    expect(ids()).toEqual(['cached-sorted']);
+  });
+
+  it('applies a confirmed rename to every persisted query variant', async () => {
+    const sorted = normalizeResourceListParams({ ...BASE_INPUT, sorter: 'name', sortType: 'asc' })!;
+    await seedPersisted(sorted, [row('doc'), row('other')]);
+
+    querySpy.mockResolvedValue(page([row('doc')], 1));
+    vi.spyOn(resourceService, 'updateResource').mockResolvedValue({
+      ...row('doc'),
+      name: 'Renamed',
+    } as never);
+
+    renderHook(() => useFileStore((s) => s.useFetchResources)(BASE_INPUT), { wrapper });
+    await waitFor(() => expect(ids()).toEqual(['doc']));
+
+    await act(async () => {
+      await useFileStore.getState().updateResource('doc', { name: 'Renamed' });
+    });
+
+    expect(useFileStore.getState().resourceMap.get('doc')?.name).toBe('Renamed');
+    // The other sort's cached page must not repaint the old name.
+    await waitFor(async () => {
+      const stored = await resourceListResource.storage!.get({
+        queryKey: resourceListResource.storageKey(sorted),
+        scope,
+      });
+      const names = (stored?.data.items as ResourceItem[]).map((item) => item.name);
+      expect(names).toEqual(['Renamed', 'other']);
+    });
+  });
 });

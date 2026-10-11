@@ -42,6 +42,13 @@ const n = setNamespace('resource');
 
 type Setter = StoreSetter<FileStore>;
 
+/** An explorer-list overlay plus the list identity it was started on. */
+interface ListOverlay {
+  commit: (confirm?: (data: ResourceListValue) => ResourceListValue) => void;
+  rollback: () => void;
+  startedOn: string;
+}
+
 /**
  * The explorer list keeps a single replica entry whose view lives in the flat
  * store fields the rest of the app already reads. The engine is the only writer;
@@ -314,11 +321,25 @@ export class ResourceActionImpl {
   #requestedListQuery = (): string | undefined =>
     this.#requestedListParams ? resourceListResource.query(this.#requestedListParams) : undefined;
 
-  /** Optimistic overlay over the explorer list. */
-  #beginListOptimistic = (apply: (data: ResourceListValue) => ResourceListValue) => {
+  /**
+   * Optimistic overlay over the explorer list, tagged with the list it was
+   * started on (replica scope + requested storage row), so a settle can tell
+   * whether the entry has moved on to another query since.
+   */
+  #beginListOptimistic = (apply: (data: ResourceListValue) => ResourceListValue): ListOverlay => {
     this.#ensureListView();
-    return this.#resourceList.beginOptimistic(RESOURCE_LIST_KEY, apply, this.#requestedListQuery());
+    const startedOn = this.#currentListIdentity();
+    const token = this.#resourceList.beginOptimistic(
+      RESOURCE_LIST_KEY,
+      apply,
+      this.#requestedListQuery(),
+    );
+    return { ...token, startedOn };
   };
+
+  /** The list on screen: replica scope + requested storage row. */
+  #currentListIdentity = (): string =>
+    `${resourceListResource.scope.get()}\u0000${this.#requestedListStorageKey ?? ''}`;
 
   #revalidateList = async (): Promise<void> => {
     await this.#resourceList.revalidate();
@@ -339,19 +360,43 @@ export class ResourceActionImpl {
   };
 
   /**
-   * Settle an optimistic overlay and, when it could not be found any more — a
-   * same-pool query change (re-sort, view-mode switch) drops its token — force
-   * a reconciliation, so the server change is not left unreflected until the
+   * Settle an optimistic overlay and, when the list has moved on to another
+   * query since it started — a same-pool query change (re-sort, view-mode
+   * switch) drops the overlay, so its commit has nothing to settle — force a
+   * reconciliation, so the server change is not left unreflected until the
    * next focus, reconnect or manual refresh.
    */
   #commitListOptimistic = (
-    token:
-      { commit: (confirm?: (data: ResourceListValue) => ResourceListValue) => boolean } | undefined,
+    token: ListOverlay | undefined,
     action: string,
     confirm?: (data: ResourceListValue) => ResourceListValue,
   ): void => {
-    const settled = token?.commit(confirm);
-    if (token && !settled) void this.#revalidateListQuietly(action);
+    if (!token) return;
+    token.commit(confirm);
+    if (token.startedOn !== this.#currentListIdentity()) void this.#revalidateListQuietly(action);
+  };
+
+  /**
+   * Settle an optimistic create's temp row by id, whether or not its overlay
+   * still exists. A same-pool query change (a re-sort, a view-mode switch)
+   * repaints from that query's cached page and keeps the in-flight temp row as
+   * client-only, but drops the overlay token — so `rollback` / `commit` can no
+   * longer reach it. Without this a failed create would leave the temp row in
+   * the list for good (every later head response keeps it as client-only), and
+   * a successful one would show it next to the created row.
+   */
+  #settleTempRow = (tempId: string, created?: ResourceItem): void => {
+    if (!this.#get().resourceMap.has(tempId)) return;
+    this.#resourceList.update(
+      RESOURCE_LIST_KEY,
+      (data) => {
+        if (!data) return data;
+        return created
+          ? this.#replaceRow(data, tempId, created)
+          : this.#removeRows(data, new Set([tempId]));
+      },
+      { persist: false },
+    );
   };
 
   #clearSyncingOptimistic = (resource: ResourceItem): ResourceItem => stripOptimistic(resource);
@@ -605,8 +650,10 @@ export class ResourceActionImpl {
       this.#commitListOptimistic(token, 'createResource', (data) =>
         this.#settleCreated(data, optimistic.id, created),
       );
+      this.#settleTempRow(optimistic.id, created);
     } catch (error) {
       token?.rollback();
+      this.#settleTempRow(optimistic.id);
       console.error('Failed to create resource:', error);
       throw error;
     }
@@ -629,9 +676,11 @@ export class ResourceActionImpl {
       this.#commitListOptimistic(token, 'createResourceAndSync', (data) =>
         this.#settleCreated(data, optimistic.id, created),
       );
+      this.#settleTempRow(optimistic.id, created);
       return created.id;
     } catch (error) {
       token?.rollback();
+      this.#settleTempRow(optimistic.id);
       throw error;
     }
   };
@@ -708,8 +757,9 @@ export class ResourceActionImpl {
 
     const token = this.#beginListOptimistic((data) => this.#patchRow(data, id, () => updated));
 
+    let result: ResourceItem;
     try {
-      const result = (await resourceService.updateResource(id, updates)) as ResourceItem;
+      result = (await resourceService.updateResource(id, updates)) as ResourceItem;
       this.#commitListOptimistic(token, 'updateResource', (data) =>
         this.#patchRow(data, id, () => result),
       );
@@ -717,6 +767,13 @@ export class ResourceActionImpl {
       token?.rollback();
       throw error;
     }
+
+    // The overlay only settles the mounted query. The same row may be cached
+    // under another sort, view mode or filter, which a later (or offline) visit
+    // would paint with the old name: apply the confirmed row to every loaded
+    // and persisted variant.
+    const confirmed = stripOptimistic(result);
+    this.#resourceList.updateEntity<ResourceItem>(id, () => confirmed);
   };
 
   moveResource = async (id: string, parentId: string | null): Promise<void> => {
@@ -816,6 +873,9 @@ export class ResourceActionImpl {
   ) => {
     const scope = {
       libraryId: this.#get().queryParams?.libraryId,
+      // The replica partition includes the user, not just the workspace: two
+      // users in personal mode (or the same workspace) share a workspace id.
+      replicaScope: resourceListResource.scope.get(),
       workspaceId: getActiveWorkspaceId(),
     };
     const [fromParentKeys, toParentKeys] = await Promise.all([
@@ -844,6 +904,10 @@ export class ResourceActionImpl {
     resource: ResourceItem,
     patch: Awaited<ReturnType<ResourceActionImpl['prepareResourceMoveCachePatch']>>,
   ): Promise<void> => {
+    // A sign-out / sign-in or a workspace switch while the move was in flight:
+    // the mounted replica and its persisted rows now belong to another
+    // identity, so the moved row must not be written into them.
+    if (resourceListResource.scope.get() !== patch.scope.replicaScope) return;
     if (getActiveWorkspaceId() !== patch.scope.workspaceId) return;
     if ((this.#get().queryParams?.libraryId ?? undefined) !== patch.scope.libraryId) return;
 

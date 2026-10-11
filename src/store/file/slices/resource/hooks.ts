@@ -18,6 +18,8 @@ export type ResourceParentKey = string | null;
 export interface ResourceMoveCacheScope {
   /** Library the explorer was showing, `undefined` outside a library. */
   libraryId: string | undefined;
+  /** Replica partition (`user:workspace`) the move was issued under. */
+  replicaScope: string;
   workspaceId: string | null;
 }
 

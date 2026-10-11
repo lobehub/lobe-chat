@@ -121,12 +121,7 @@ export interface OptimisticMutationOptions<TData, TResult> {
 
 /** Handle of an optimistic overlay that is settled later (see `beginOptimistic`). */
 export interface ReplicaOptimisticToken<TData> {
-  /**
-   * Settle the overlay. Returns `false` when the overlay can no longer be
-   * found — e.g. a query change dropped it — so the caller can force a
-   * reconciliation instead of silently leaving the server change unreflected.
-   */
-  commit: (confirm?: (data: TData) => TData) => boolean;
+  commit: (confirm?: (data: TData) => TData) => void;
   rollback: () => void;
 }
 
@@ -746,7 +741,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       type: 'optimistic',
     });
     return {
-      commit: (confirm) => dispatch({ confirm, id, key, scope, type: 'commit' }),
+      commit: (confirm) => {
+        dispatch({ confirm, id, key, scope, type: 'commit' });
+      },
       rollback: () => {
         dispatch({ id, key, scope, type: 'rollback' });
       },

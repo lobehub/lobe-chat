@@ -7,6 +7,7 @@ import type { CreateDocumentParams, ResourceItem } from '@/types/resource';
 
 import type { ResourceMoveCachePatch, ResourceMoveCacheScope } from './hooks';
 import type { ResourceListParams, ResourceListValue } from './projection';
+import { resourceListResource } from './projection';
 
 const {
   mockAddFilesToKnowledgeBase,
@@ -355,9 +356,11 @@ describe('createResourceAndSync list placement', () => {
 });
 
 describe('applyMovedResourceToCaches scope', () => {
-  const patchFrom = (scope: ResourceMoveCacheScope): ResourceMoveCachePatch => ({
+  const patchFrom = (
+    scope: Omit<ResourceMoveCacheScope, 'replicaScope'> & { replicaScope?: string },
+  ): ResourceMoveCachePatch => ({
     fromParentKeys: [null],
-    scope,
+    scope: { replicaScope: resourceListResource.scope.get(), ...scope },
     toParentKeys: ['folder-b'],
   });
 
@@ -390,6 +393,21 @@ describe('applyMovedResourceToCaches scope', () => {
       .applyMovedResourceToCaches(
         createResource({ id: 'moved-1', parentId: 'folder-b' }),
         patchFrom({ libraryId: undefined, workspaceId: 'ws-1' }),
+      );
+
+    expect(listIds()).toEqual([]);
+  });
+
+  it('does not reconcile once another user signed in under the same workspace id', async () => {
+    seedList({ parentId: 'folder-b' }, []);
+
+    // Both users are in personal mode (workspace id `null`), so only the
+    // replica partition tells the issuing user apart from the active one.
+    await useFileStore
+      .getState()
+      .applyMovedResourceToCaches(
+        createResource({ id: 'moved-1', parentId: 'folder-b' }),
+        patchFrom({ libraryId: undefined, replicaScope: 'user-a:personal', workspaceId: null }),
       );
 
     expect(listIds()).toEqual([]);
@@ -444,7 +462,11 @@ describe('revalidating after a committed mutation', () => {
         .getState()
         .applyMovedResourceToCaches(createResource({ id: 'moved-1', parentId: 'folder-b' }), {
           fromParentKeys: [null],
-          scope: { libraryId: undefined, workspaceId: null },
+          scope: {
+            libraryId: undefined,
+            replicaScope: resourceListResource.scope.get(),
+            workspaceId: null,
+          },
           toParentKeys: ['folder-b'],
         }),
     ).resolves.toBeUndefined();
