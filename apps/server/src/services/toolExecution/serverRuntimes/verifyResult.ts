@@ -70,8 +70,17 @@ class VerifyResultExecutionRuntime {
       };
     }
     const targetOperationId = op.parentOperationId;
-
-    // The result row is keyed by the parent run's verification session.
+    if (!targetOperationId) {
+      // Same loud-fail contract as the missing parent above: without a parent
+      // operation there is no verification session to record against, and a
+      // `string | null` id must never reach the run lookup as `string`.
+      return {
+        content:
+          'No parent verification context for this run: the calling operation has no parent, so there is no check to record against. This tool only records a verdict for a check assigned by a verify run.',
+        error: 'NO_PARENT_VERIFICATION',
+        success: false,
+      };
+    }
     const run = await new VerifyRunModel(this.db, this.userId, this.workspaceId).findByOperation(
       targetOperationId,
     );
@@ -86,33 +95,56 @@ class VerifyResultExecutionRuntime {
 
     // Idempotent re-submission: re-submitting an already-recorded verdict is a
     // no-op, not a silent overwrite — a duplicate call must not clobber the
-    // recorded evidence/reasoning behind an existing verdict.
+    // recorded evidence/reasoning behind an existing verdict. The read here is
+    // only the fast path; the atomic guard in `updateByCheckItemIfPending` is
+    // the actual race protection (a concurrent duplicate can pass this check
+    // before either write lands).
     const current = (
       await new VerifyCheckResultModel(this.db, this.userId, this.workspaceId).listByRun(run.id)
     ).find((result) => result.checkItemId === params.checkItemId);
     if (current && TERMINAL_RESULT_STATUSES.has(current.status)) {
+      // Report the persisted verdict, not the status: every non-passed verdict
+      // maps to status "failed", so echoing the status would claim "failed"
+      // was recorded even when the stored verdict is e.g. "uncertain".
+      const reported = current.verdict ?? current.status;
       return {
-        content: `Verdict "${current.status}" was already recorded for this check; the duplicate submission was ignored.`,
+        content: `Verdict "${reported}" was already recorded for this check; the duplicate submission was ignored.`,
         success: true,
       };
     }
 
     const status = params.verdict === 'passed' ? 'passed' : 'failed';
-    await new VerifyCheckResultModel(this.db, this.userId, this.workspaceId).updateByCheckItem(
-      run.id,
-      params.checkItemId,
-      {
-        completedAt: new Date(),
-        status,
-        toulmin: {
-          counterEvidence: params.counterEvidence,
-          evidence: params.evidence,
-          limitation: params.limitation,
-          reasoning: params.reasoning,
-        },
-        verdict: params.verdict,
+    // Atomic terminal guard: the conditional update only lands when the row is
+    // still pending, so two concurrent submissions cannot both pass the
+    // listByRun() check above and overwrite each other's verdict/evidence.
+    const [updated] = await new VerifyCheckResultModel(
+      this.db,
+      this.userId,
+      this.workspaceId,
+    ).updateByCheckItemIfPending(run.id, params.checkItemId, {
+      completedAt: new Date(),
+      status,
+      toulmin: {
+        counterEvidence: params.counterEvidence,
+        evidence: params.evidence,
+        limitation: params.limitation,
+        reasoning: params.reasoning,
       },
-    );
+      verdict: params.verdict,
+    });
+    if (!updated) {
+      // Lost the race: a concurrent submission landed first and the row is now
+      // terminal. Re-read and report the persisted verdict as an idempotent
+      // receipt rather than overwriting it.
+      const landed = (
+        await new VerifyCheckResultModel(this.db, this.userId, this.workspaceId).listByRun(run.id)
+      ).find((result) => result.checkItemId === params.checkItemId);
+      const reported = landed?.verdict ?? landed?.status ?? params.verdict;
+      return {
+        content: `Verdict "${reported}" was already recorded for this check; the duplicate submission was ignored.`,
+        success: true,
+      };
+    }
     await new VerifyStatusService(this.db, this.userId, this.workspaceId).recompute(
       targetOperationId,
     );

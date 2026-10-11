@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   operationFindById: vi.fn(),
   runFindByOperation: vi.fn(),
   resultUpdateByCheckItem: vi.fn(),
+  resultUpdateByCheckItemIfPending: vi.fn(),
   resultListByRun: vi.fn(),
   statusRecompute: vi.fn(),
   finalizeVerifyRun: vi.fn(),
@@ -22,6 +23,7 @@ vi.mock('@/database/models/verifyCheckResult', () => ({
     return {
       listByRun: mocks.resultListByRun,
       updateByCheckItem: mocks.resultUpdateByCheckItem,
+      updateByCheckItemIfPending: mocks.resultUpdateByCheckItemIfPending,
     };
   }),
 }));
@@ -47,9 +49,13 @@ const factoryContext = {
 } as never;
 
 const buildRuntime = () =>
-  (verifyResultRuntime.factory as unknown as (ctx: typeof factoryContext) => {
-    submitVerifyResult: (params: unknown) => Promise<{ content: string; error?: string; success: boolean }>;
-  })(factoryContext);
+  (
+    verifyResultRuntime.factory as unknown as (ctx: typeof factoryContext) => {
+      submitVerifyResult: (
+        params: unknown,
+      ) => Promise<{ content: string; error?: string; success: boolean }>;
+    }
+  )(factoryContext);
 
 describe('verifyResultRuntime.submitVerifyResult', () => {
   let runtime: ReturnType<typeof buildRuntime>;
@@ -86,7 +92,7 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     expect(result.error).toBe('NO_RUN');
     // The message must name the escape hatch instead of the bare opaque error.
     expect(result.content).toContain('report your verdict in your reply');
-    expect(mocks.resultUpdateByCheckItem).not.toHaveBeenCalled();
+    expect(mocks.resultUpdateByCheckItemIfPending).not.toHaveBeenCalled();
   });
 
   it('returns an idempotent receipt instead of overwriting an already-terminal verdict', async () => {
@@ -107,7 +113,7 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
 
     expect(result.success).toBe(true);
     expect(result.content).toContain('already recorded');
-    expect(mocks.resultUpdateByCheckItem).not.toHaveBeenCalled();
+    expect(mocks.resultUpdateByCheckItemIfPending).not.toHaveBeenCalled();
     expect(mocks.statusRecompute).not.toHaveBeenCalled();
     expect(mocks.finalizeVerifyRun).not.toHaveBeenCalled();
   });
@@ -116,7 +122,7 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
     mocks.runFindByOperation.mockResolvedValue({ id: 'run-1' });
     mocks.resultListByRun.mockResolvedValue([]);
-    mocks.resultUpdateByCheckItem.mockResolvedValue(undefined);
+    mocks.resultUpdateByCheckItemIfPending.mockResolvedValue([{ status: 'passed' }]);
     mocks.statusRecompute.mockResolvedValue(undefined);
     mocks.finalizeVerifyRun.mockResolvedValue(undefined);
 
@@ -129,12 +135,80 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
 
     expect(result.success).toBe(true);
     expect(result.content).toContain('Recorded verdict');
-    expect(mocks.resultUpdateByCheckItem).toHaveBeenCalledWith(
+    expect(mocks.resultUpdateByCheckItemIfPending).toHaveBeenCalledWith(
       'run-1',
       'check-2',
       expect.objectContaining({ status: 'passed', verdict: 'passed' }),
     );
     expect(mocks.statusRecompute).toHaveBeenCalledWith('op-parent');
     expect(mocks.finalizeVerifyRun).toHaveBeenCalled();
+  });
+
+  it('loud-fails with NO_PARENT_VERIFICATION when the parent op exists but has no parentOperationId', async () => {
+    // TS2345 regression: `parentOperationId` is `string | null` — a null value
+    // must be guarded, not passed into the run lookup as `string`.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: null });
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'derived-id',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('NO_PARENT_VERIFICATION');
+    expect(mocks.runFindByOperation).not.toHaveBeenCalled();
+  });
+
+  it('reports the stored verdict (not the mapped status) on an idempotent duplicate', async () => {
+    // P2 regression: an `uncertain` verdict is persisted with status "failed";
+    // the receipt must echo the verdict, not claim "failed" was recorded.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1' });
+    mocks.resultListByRun.mockResolvedValue([
+      {
+        checkItemId: 'check-1',
+        status: 'failed',
+        verdict: 'uncertain',
+      },
+    ]);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.content).toContain('"uncertain"');
+    expect(result.content).not.toContain('"failed"');
+  });
+
+  it('loses the race gracefully when a concurrent submission lands between the read and the write', async () => {
+    // P1 regression: both concurrent calls can pass listByRun() before either
+    // write lands; the atomic pending-guard update must return no rows for the
+    // loser, which then reports the persisted verdict instead of overwriting.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1' });
+    // First read (fast path): row still pending → passes the terminal check.
+    mocks.resultListByRun.mockResolvedValueOnce([
+      { checkItemId: 'check-1', status: 'pending', verdict: null },
+    ]);
+    mocks.resultUpdateByCheckItemIfPending.mockResolvedValue([]);
+    // Re-read after losing the race: the winner's verdict is now terminal.
+    mocks.resultListByRun.mockResolvedValueOnce([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' },
+    ]);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      evidence: 'second writer',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.content).toContain('already recorded');
+    expect(result.content).toContain('"uncertain"');
+    // The loser must not touch rollup/finalization — the winner owns those.
+    expect(mocks.statusRecompute).not.toHaveBeenCalled();
+    expect(mocks.finalizeVerifyRun).not.toHaveBeenCalled();
   });
 });
