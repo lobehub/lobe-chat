@@ -11,6 +11,7 @@ import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@/types/us
 import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { clearUserMemoryReplicas } from '../../replicaRegistry';
 import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
@@ -69,6 +70,10 @@ export class BaseActionImpl {
     const { memoryCRUDService } = await import('@/services/userMemory');
 
     await memoryCRUDService.deleteAll();
+
+    // Replica-backed caches (see `replicaRegistry`) drop their views and every
+    // persisted row through the engine; a plain `set` would leave the rows behind.
+    await clearUserMemoryReplicas(this.#get);
 
     this.#set(
       produce((draft) => {

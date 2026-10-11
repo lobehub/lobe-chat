@@ -16,7 +16,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { cacheScope, createReplicaState } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
-import { userMemoryService } from '@/services/userMemory';
+import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type RetrieveMemoryResult } from '@/types/userMemory';
 
 import { initialState as userMemoryInitialState } from '../../initialState';
@@ -25,6 +25,7 @@ import { topicMemoriesResource } from './projection';
 import { agentMemorySelectors } from './selectors';
 
 vi.mock('@/services/userMemory', () => ({
+  memoryCRUDService: { deleteAll: vi.fn() },
   userMemoryService: { retrieveMemoryForTopic: vi.fn() },
 }));
 
@@ -162,6 +163,68 @@ describe('userMemory topic memories replica', () => {
         }),
       ).toBeUndefined(),
     );
+  });
+
+  it('purges every persisted bundle on purgeAllMemories, so a reload cannot restore them', async () => {
+    const storageKeyOf = (topicId: string) => ({
+      queryKey: topicMemoriesResource.storageKey(topicId),
+      scope,
+    });
+    const resetMemory = () =>
+      act(() =>
+        useUserMemoryStore.setState({
+          topicMemoriesMap: {},
+          topicMemoriesReplica: createReplicaState(),
+        }),
+      );
+
+    // An earlier session persisted TOPIC_B; after the reload it is not in memory.
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(
+      bundle('earlier-session'),
+    );
+    const earlier = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B),
+      { wrapper },
+    );
+    await waitFor(async () =>
+      expect(await topicMemoriesResource.storage!.get(storageKeyOf(TOPIC_B))).toBeDefined(),
+    );
+    earlier.unmount();
+    resetMemory();
+
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(bundle('fresh'));
+    renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_A), { wrapper });
+    await waitFor(() => expect(topicMemories(TOPIC_A)).toEqual(bundle('fresh')));
+    await waitFor(async () =>
+      expect(await topicMemoriesResource.storage!.get(storageKeyOf(TOPIC_A))).toBeDefined(),
+    );
+
+    // After the purge the server only has an empty bundle to give back.
+    const empty = bundle('empty');
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(empty);
+    await act(() => useUserMemoryStore.getState().purgeAllMemories());
+
+    expect(memoryCRUDService.deleteAll).toHaveBeenCalledTimes(1);
+    expect(await topicMemoriesResource.storage!.get(storageKeyOf(TOPIC_B))).toBeUndefined();
+    // The mounted topic settles on the server's post-purge answer, which is all
+    // that is persisted for it — never the deleted bundle.
+    await waitFor(() => expect(topicMemories(TOPIC_A)).toEqual(empty));
+    await waitFor(async () =>
+      expect((await topicMemoriesResource.storage!.get(storageKeyOf(TOPIC_A)))?.data).toEqual(
+        empty,
+      ),
+    );
+
+    // Reload: a fresh view whose fetch never answers paints nothing deleted.
+    cleanup();
+    resetMemory();
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockImplementation(pending);
+    const reloaded = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B),
+      { wrapper },
+    );
+    await waitFor(() => expect(reloaded.result.current.isHydrated).toBe(true));
+    expect(topicMemories(TOPIC_B)).toBeUndefined();
   });
 
   it('does not fetch when there is no topic', async () => {
