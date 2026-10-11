@@ -21,6 +21,7 @@ const modelMocks = vi.hoisted(() => ({
   generateGoalPlan: vi.fn(),
   getFullFileUrl: vi.fn(),
   getServerDB: vi.fn(async () => ({})),
+  listResultsByRun: vi.fn(),
   updateRun: vi.fn(),
   upsertByCheckItem: vi.fn(),
 }));
@@ -34,6 +35,7 @@ vi.mock('@/database/models/verifyCheckResult', () => ({
     return {
       delete: modelMocks.deleteResult,
       findById: modelMocks.findResultById,
+      listByRun: modelMocks.listResultsByRun,
       upsertByCheckItem: modelMocks.upsertByCheckItem,
     };
   }),
@@ -109,6 +111,7 @@ describe('verifyRouter', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     modelMocks.getServerDB.mockResolvedValue({});
+    modelMocks.listResultsByRun.mockResolvedValue([]);
     vi.mocked(FileService).mockImplementation(function () {
       return {
         getFullFileUrl: modelMocks.getFullFileUrl,
@@ -654,6 +657,40 @@ describe('verifyRouter', () => {
           required: false,
           verifierType: 'llm',
         }),
+      );
+    });
+
+    it('lands evidence for a repaired check on the repair round, not the settled one', async () => {
+      const plan = [{ id: 'item-1', index: 0, required: true, title: 'mutation gif' }];
+      modelMocks.findRunById.mockResolvedValueOnce({ id: 'round-1', plan, status: 'failed' });
+      modelMocks.listResultsByRun.mockImplementation(async (runId: string) =>
+        runId === 'round-1'
+          ? [{ checkItemId: 'item-1', repairOperationId: 'repair-op-2' }]
+          : [{ checkItemId: 'item-1', repairOperationId: null }],
+      );
+      modelMocks.findRunByOperation.mockResolvedValueOnce({
+        id: 'round-2',
+        plan,
+        status: 'planned',
+      });
+      modelMocks.upsertByCheckItem.mockResolvedValueOnce({
+        id: 'result-2',
+        verifyRunId: 'round-2',
+      });
+      modelMocks.createEvidence.mockResolvedValueOnce({ id: 'evidence-1' });
+
+      await createCaller().submitCheckEvidence({
+        checkItemId: 'item-1',
+        evidence: [{ fileId: 'files-1', type: 'gif' }],
+        verifyRunId: 'round-1',
+      });
+
+      expect(modelMocks.findRunByOperation).toHaveBeenCalledWith('repair-op-2');
+      expect(modelMocks.upsertByCheckItem).toHaveBeenCalledWith(
+        expect.objectContaining({ checkItemId: 'item-1', verifyRunId: 'round-2' }),
+      );
+      expect(modelMocks.createEvidence).toHaveBeenCalledWith(
+        expect.objectContaining({ checkResultId: 'result-2', type: 'gif' }),
       );
     });
 

@@ -49,6 +49,7 @@ import {
   createEvidenceFileResolver,
   finalizeVerifyRun,
   purgeVerifyRun,
+  resolveLiveRoundForItem,
   VerifyExecutorService,
   VerifyFeedbackService,
   VerifyPlanGeneratorService,
@@ -1019,11 +1020,15 @@ export const verifyRouter = router({
         }),
     )
     .mutation(async ({ ctx, input }) => {
-      const run = input.verifyRunId
+      const namedRun = input.verifyRunId
         ? await resolveVerifyRun(ctx, input.verifyRunId)
         : await resolveRunByOperation(ctx, input.operationId!);
       // The idempotent upsert overwrites the run's existing result rows.
-      assertWorkspaceRowManageable(ctx, run.userId, 'verify run');
+      assertWorkspaceRowManageable(ctx, namedRun.userId, 'verify run');
+      // A round whose failure already spawned a repair is never judged again;
+      // land the submission on the round the repair will be judged in.
+      const run = await resolveLiveRoundForItem(ctx, namedRun, input.checkItemId);
+      if (run.id !== namedRun.id) assertWorkspaceRowManageable(ctx, run.userId, 'verify run');
 
       // `required` / `verifierType` / index / title are stable per plan item, so
       // hydrate them from the run plan rather than hardcoding defaults — otherwise

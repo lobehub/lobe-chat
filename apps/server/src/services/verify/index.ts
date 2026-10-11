@@ -32,6 +32,7 @@ export {
 } from './executor';
 export { computeFalseFlags, VerifyFeedbackService } from './feedbackService';
 export { runVerifyOnCompletion } from './lifecycle';
+export { resolveLiveRoundForItem } from './liveRound';
 export {
   isHeterogeneousVerifyProvider,
   resolveVerifyModelConfig,
