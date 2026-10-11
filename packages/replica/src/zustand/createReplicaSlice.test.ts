@@ -962,6 +962,77 @@ describe('createReplicaSlice', () => {
       );
     });
 
+    it('calls a class-based storage with its receiver on every index pass', async () => {
+      /** Prototype methods that rely on `this`, like most storage classes. */
+      class ClassStorage implements ReplicaStorage<string[]> {
+        rows = new Map<string, ReplicaRow<string[]>>();
+        #id({ queryKey, scope }: { queryKey: string; scope: string }) {
+          return `${scope}|${queryKey}`;
+        }
+        async get(key: { queryKey: string; scope: string }) {
+          return this.rows.get(this.#id(key));
+        }
+        async getStrict(key: { queryKey: string; scope: string }) {
+          return this.rows.get(this.#id(key));
+        }
+        async remove(key: { queryKey: string; scope: string }) {
+          this.rows.delete(this.#id(key));
+        }
+        async set(key: { queryKey: string; scope: string }, row: ReplicaRow<string[]>) {
+          this.rows.set(this.#id(key), row);
+        }
+      }
+      const backing = new ClassStorage();
+      const storage = { ...createMemoryStorage(), storage: backing };
+      const dataRows = () =>
+        [...backing.rows.keys()].filter((key) => !key.endsWith(REPLICA_INDEX_KEY));
+      const first = setupQueried({ storage });
+      act(() => {
+        first.slice.replace({ id: 'a' }, ['a-all']);
+        first.slice.replace({ id: 'a', q: 'x' }, ['a-x']);
+        first.slice.replace({ id: 'b' }, ['b-all']);
+      });
+      await waitFor(() => expect(dataRows()).toHaveLength(3));
+      const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // A fresh engine only finds the rows through the index.
+      const { slice } = setupQueried({ storage });
+      slice.updateEntity('x', (item) => item);
+      act(() => slice.remove('a'));
+      await waitFor(() => expect(dataRows()).toEqual(['user-1:personal|b?{}']));
+      expect(await slice.clear()).toBe(true);
+      expect(dataRows()).toEqual([]);
+      expect(errors).not.toHaveBeenCalled();
+      errors.mockRestore();
+    });
+
+    it('drops the request record of a failure even without an onError', async () => {
+      const requests: { fetch: () => Promise<unknown>; onError?: (error: unknown) => void }[] = [];
+      const useQuery = vi.fn((key: any, fetch: () => Promise<unknown>, options: any) => {
+        if (key?.[0] === 'replica:sync') requests.push({ fetch, onError: options.onError });
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const { slice } = setupQueried({ driver: { revalidate: vi.fn(), useQuery } });
+      const deletes = vi.spyOn(Map.prototype, 'delete');
+
+      const { rerender } = renderHook((props: QueryParams) => slice.useSync(props), {
+        initialProps: { id: 'k1' } as QueryParams,
+      });
+      for (const id of ['k1', 'k2', 'k3']) {
+        rerender({ id });
+        const request = requests.at(-1)!;
+        await request.fetch();
+        act(() => request.onError!(new Error('forbidden')));
+      }
+
+      const dropped = deletes.mock.calls.map(([id]) => String(id));
+      for (const id of ['k1', 'k2', 'k3'])
+        expect(
+          dropped.some((record) => record.includes('replica:sync') && record.includes(id)),
+        ).toBe(true);
+      deletes.mockRestore();
+    });
+
     it('clear wipes memory, every persisted row and the index of the active scope', async () => {
       const first = await persistVariants();
       // A later session loads only one entry; the rest is known only to the index.

@@ -206,12 +206,12 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         // before a clear) must not surface on the query now on screen. The
         // captured key/scope is bound so a late terminal removal cannot land in
         // a scope that became active after the request.
-        onError: onError
-          ? (error: unknown) => {
-              if (!isSinceClear() || !isActiveQuery()) return;
-              onError(error, { key, scope });
-            }
-          : undefined,
+        // Always installed, so a failed request's generation record is dropped
+        // even when the caller has no error side effects.
+        onError: (error: unknown) => {
+          if (!isSinceClear() || !isActiveQuery()) return;
+          onError?.(error, { key, scope });
+        },
         onSuccess: (data) => {
           // Discard a head response the entry has moved past (the newer query
           // owns the view, see `headQuery`) or one that started before a clear.

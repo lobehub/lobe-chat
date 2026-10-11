@@ -457,6 +457,36 @@ describe('entity removals vs reads in flight', () => {
     expect(ctx.store.getState().lists.o1.items[0].title).toBe('renamed');
   });
 
+  it('keeps every guard a pending hydrate needs, however many, and releases them after', async () => {
+    const { list, listResource, listStorage, store } = await persisted();
+    const many = { owner: 'o9', pageSize: 600 };
+    const items = Array.from({ length: 600 }, (_, index) => row(`x${index}`));
+    listStorage.rows.set(`user-1|${listResource.storageKey(many)}`, {
+      data: { currentPage: 0, hasMore: false, items, pageSize: 600, total: 600 },
+      updatedAt: 1,
+    });
+    const release = holdReads(listStorage.storage, listResource.storageKey(many));
+
+    const hydration = list.hydrate(many);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    // A batch delete larger than any fixed window, while the read is pending.
+    for (const item of items) list.removeEntity(item.id);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    release();
+    await hydration;
+    expect(ids(store.getState().lists.o9)).toEqual([]);
+
+    // Once that read settled the guards are released: a row this session never
+    // patched (not indexed) hydrates as stored.
+    const later = { owner: 'o10', pageSize: 2 };
+    listStorage.rows.set(`user-1|${listResource.storageKey(later)}`, {
+      data: { currentPage: 0, hasMore: false, items: [row('x0')], pageSize: 2, total: 1 },
+      updatedAt: 1,
+    });
+    await list.hydrate(later);
+    expect(ids(store.getState().lists.o10)).toEqual(['x0']);
+  });
+
   it('a server value holding the entity again lifts the removal', async () => {
     const { list, listResource, listStorage, store, topic } = await persisted();
     topic.remove('a');
