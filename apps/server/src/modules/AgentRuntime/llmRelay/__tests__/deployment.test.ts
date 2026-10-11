@@ -9,7 +9,14 @@ const env = vi.hoisted(() => ({
 }));
 
 vi.mock('@/envs/app', () => ({ appEnv: env.app }));
-vi.mock('@/envs/redis', () => ({ redisEnv: env.redis }));
+vi.mock('@/envs/redis', () => ({
+  getRedisConfig: () => ({
+    enabled: !!env.redis.REDIS_URL,
+    prefix: 'lobechat',
+    tls: false,
+    url: env.redis.REDIS_URL ?? '',
+  }),
+}));
 
 // The browser only stands by for a one-shot relay where the server can relay:
 // a gateway it can push to and the Redis the relayed call runs through.

@@ -119,3 +119,24 @@ describe('getRedisServiceClient', () => {
     expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('isRedisServiceConfigured', () => {
+  it('follows REDIS_URL and DISABLE_REDIS without connecting', async () => {
+    const { isRedisServiceConfigured } = await loadClient();
+
+    mockGetRedisConfig.mockReturnValue({ enabled: false, prefix: 'lobe', tls: false, url: '' });
+    expect(isRedisServiceConfigured()).toBe(false);
+
+    mockGetRedisConfig.mockReturnValue(enabledConfig);
+    expect(isRedisServiceConfigured()).toBe(true);
+
+    vi.stubEnv('DISABLE_REDIS', '1');
+    try {
+      expect(isRedisServiceConfigured()).toBe(false);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+
+    expect(mockTryInitializeRedisWithPrefix).not.toHaveBeenCalled();
+  });
+});

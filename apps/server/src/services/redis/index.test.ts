@@ -3,7 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { redisService } from './index';
 
 const { get, set } = vi.hoisted(() => ({ get: vi.fn(), set: vi.fn() }));
-vi.mock('./client', () => ({ getRedisServiceClient: async () => ({ get, set }) }));
+vi.mock('./client', () => ({
+  getRedisServiceClient: async () => ({ get, set }),
+  isRedisServiceConfigured: () => true,
+}));
 
 describe('Redis domain service', () => {
   beforeEach(() => {

@@ -1,5 +1,9 @@
 import { getRedisConfig } from '@/envs/redis';
-import { RedisKeyNamespace, tryInitializeRedisWithPrefix } from '@/server/modules/Redis';
+import {
+  isRedisEnabled,
+  RedisKeyNamespace,
+  tryInitializeRedisWithPrefix,
+} from '@/server/modules/Redis';
 import type { BaseRedisProvider } from '@/server/modules/Redis/types';
 
 // The send-path caches are an optimization layered on a hot path, so a send
@@ -56,6 +60,13 @@ const observeFailures = (client: BaseRedisProvider): BaseRedisProvider =>
       };
     },
   });
+
+/**
+ * Whether this deployment runs with Redis at all: `REDIS_URL` is set and
+ * `DISABLE_REDIS` is not. A configuration check — it never connects, so a
+ * configured Redis that is currently down still counts.
+ */
+export const isRedisServiceConfigured = (): boolean => isRedisEnabled(getRedisConfig());
 
 /**
  * The shared send-path-cache client, or `null` when Redis is unavailable and

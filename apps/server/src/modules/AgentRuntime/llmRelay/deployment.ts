@@ -1,6 +1,5 @@
 import { appEnv } from '@/envs/app';
-import { redisEnv } from '@/envs/redis';
-import { isRedisDisabledByEnv } from '@/server/modules/Redis';
+import { redisService } from '@/server/services/redis';
 
 /**
  * Whether this deployment can relay an LLM call to a browser tab: it pushes to
@@ -11,5 +10,4 @@ import { isRedisDisabledByEnv } from '@/server/modules/Redis';
 export const isLlmRelayDeploymentReady = (): boolean =>
   !!(appEnv.AGENT_GATEWAY_INTERNAL_URL || appEnv.AGENT_GATEWAY_URL) &&
   !!appEnv.AGENT_GATEWAY_SERVICE_TOKEN &&
-  !!redisEnv.REDIS_URL &&
-  !isRedisDisabledByEnv();
+  redisService.isConfigured();
