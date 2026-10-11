@@ -69,4 +69,33 @@ describe('AgentSignalRestService.triggerSourceEvent', () => {
     expect(sourceEvent.payload.localDate).not.toBe('1999-01-01');
     expect(sourceEvent.sourceId).not.toContain('1999-01-01');
   });
+
+  /**
+   * ROOT CAUSE:
+   *
+   * The REST route shares the trigger path, so an agent id set only through
+   * `payloadOverride.agentId` reached the handlers without `assertAgentUsableBy` ever seeing it.
+   */
+  it('authorizes an agent id supplied only through payloadOverride', async () => {
+    await service.triggerSourceEvent({
+      payloadOverride: { agentId: 'foreign-agent' },
+      sourceType: 'agent.user.message',
+    });
+
+    expect(mocks.enqueueAgentSignalSourceEvent).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ agentId: 'foreign-agent', userId: 'user-1' }),
+    );
+  });
+
+  it('rejects a payload agent id that differs from the requested agent', async () => {
+    await expect(
+      service.triggerSourceEvent({
+        agentId: 'agent-1',
+        payloadOverride: { agentId: 'foreign-agent' },
+        sourceType: 'tool.outcome.failed',
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    expect(mocks.enqueueAgentSignalSourceEvent).not.toHaveBeenCalled();
+  });
 });

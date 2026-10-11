@@ -111,4 +111,37 @@ describe('agentSignalRouter.triggerSourceEvent', () => {
     expect(sourceEvent.payload.localDate).toBe('2026-05-31');
     expect(sourceEvent.sourceId).toBe('nightly-review:user-1:agent-1:2026-05-31');
   });
+
+  /**
+   * ROOT CAUSE:
+   *
+   * The enqueue path authorizes only `context.agentId`, which was the request's `agentId`. For
+   * source types that need no agent (`agent.user.message`, tool outcomes) a caller could leave it
+   * empty and point `payloadOverride.agentId` at an agent they cannot use.
+   */
+  it('authorizes an agent id supplied only through payloadOverride', async () => {
+    const caller = agentSignalRouter.createCaller(ctx);
+
+    await caller.triggerSourceEvent({
+      payloadOverride: { agentId: 'foreign-agent' },
+      sourceType: 'agent.user.message',
+    });
+
+    expect(mocks.enqueueAgentSignalSourceEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ payload: expect.objectContaining({ agentId: 'foreign-agent' }) }),
+      expect.objectContaining({ agentId: 'foreign-agent', userId: 'user-1' }),
+    );
+  });
+
+  it.each([
+    ['a different agent', { agentId: 'agent-1', payloadOverride: { agentId: 'foreign-agent' } }],
+    ['a non-string agent id', { payloadOverride: { agentId: 42 } }],
+  ])('rejects a payload override naming %s', async (_label, request) => {
+    const caller = agentSignalRouter.createCaller(ctx);
+
+    await expect(
+      caller.triggerSourceEvent({ ...request, sourceType: 'tool.outcome.failed' } as any),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    expect(mocks.enqueueAgentSignalSourceEvent).not.toHaveBeenCalled();
+  });
 });

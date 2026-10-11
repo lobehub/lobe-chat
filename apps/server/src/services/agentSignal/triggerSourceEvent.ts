@@ -2,6 +2,7 @@ import {
   AGENT_SIGNAL_SOURCE_TYPES,
   type AgentSignalSourcePayloadMap,
 } from '@lobechat/agent-signal/source';
+import { TRPCError } from '@trpc/server';
 
 import type { AgentSignalSourceEventInput } from './emitter';
 import {
@@ -94,6 +95,46 @@ const requireAgentId = (sourceType: AgentSignalTriggerSourceType, agentId?: stri
     throw new Error(`agentId is required to trigger source type "${sourceType}"`);
   }
   return agentId;
+};
+
+/**
+ * Resolves the agent id the enqueue path must authorize for one manual trigger.
+ *
+ * Use when:
+ * - A trigger caller passes the built event to `enqueueAgentSignalSourceEvent`, which only checks
+ *   `context.agentId` with `assertAgentUsableBy`
+ *
+ * Expects:
+ * - `event` comes from {@link buildTriggerSourceEvent}; `payloadOverride.agentId` may have put an
+ *   agent id in the payload that the request's `agentId` never named
+ *
+ * Returns:
+ * - The payload agent id (or the requested one when the payload has none), so the agent the
+ *   handlers act on is the one that gets authorized
+ *
+ * Throws:
+ * - `BAD_REQUEST` when the payload agent id is not a non-empty string or differs from `agentId`
+ */
+export const resolveTriggerSourceEventAgentId = (
+  event: Pick<AgentSignalSourceEventInput<AgentSignalTriggerSourceType>, 'payload'>,
+  requestedAgentId?: string,
+): string | undefined => {
+  const payloadAgentId = (event.payload as Record<string, unknown>).agentId;
+
+  if (payloadAgentId === undefined || payloadAgentId === null) return requestedAgentId;
+
+  if (typeof payloadAgentId !== 'string' || payloadAgentId.length === 0) {
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'payload agentId must be a string' });
+  }
+
+  if (requestedAgentId && payloadAgentId !== requestedAgentId) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'payload agentId must match the requested agentId',
+    });
+  }
+
+  return payloadAgentId;
 };
 
 /**

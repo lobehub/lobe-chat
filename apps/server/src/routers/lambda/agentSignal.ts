@@ -16,6 +16,7 @@ import { assertAgentSignalTriggerRateLimit } from '@/server/services/agentSignal
 import {
   AGENT_SIGNAL_TRIGGER_SOURCE_TYPES,
   buildTriggerSourceEvent,
+  resolveTriggerSourceEventAgentId,
 } from '@/server/services/agentSignal/triggerSourceEvent';
 
 const log = debug('lobe-server:agent-signal:router');
@@ -85,6 +86,10 @@ export const agentSignalRouter = router({
         userId: ctx.userId,
       });
 
+      // `payloadOverride.agentId` can name an agent the request's `agentId` never did; authorize
+      // the agent the payload actually targets.
+      const agentId = resolveTriggerSourceEventAgentId(sourceEvent, input.agentId);
+
       await assertAgentSignalTriggerRateLimit(ctx.userId);
 
       log(
@@ -94,7 +99,7 @@ export const agentSignalRouter = router({
       );
 
       return enqueueAgentSignalSourceEvent(sourceEvent, {
-        agentId: input.agentId,
+        agentId,
         userId: ctx.userId,
         workspaceId: ctx.workspaceId ?? undefined,
       });
