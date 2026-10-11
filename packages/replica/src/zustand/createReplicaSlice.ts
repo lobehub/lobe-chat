@@ -345,10 +345,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
           // owns the view, see `headQuery`), one that started before a clear, or
           // one captured under a scope the store has since left.
           if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
-          // A response `replace` rejects (it is not written, and must not be
-          // persisted) never replays its success side effects either: they act
-          // on the CURRENT stores, so they would adopt data that was not applied.
-          if (!replace(params!, data, scope)) return;
+          replace(params!, data, scope);
           // The same holds for a key the hook has moved past (g1 → g2 while
           // g1's request is in flight): the response still fills g1's own
           // entry, but its side effects would re-adopt g1 over the g2 view.

@@ -483,6 +483,48 @@ describe('createReplicaSlice', () => {
       expect(store.getState().lists.a).toBeUndefined();
     });
 
+    it('runs the caller success side effects when the response changes nothing', () => {
+      // `replace` reports false both for a rejected response and for one with
+      // nothing to write (an unchanged revalidation, or `undefined` for an id the
+      // server no longer has). Callers rely on onSuccess in the latter cases —
+      // e.g. removing a cached detail the server answered with nothing.
+      const requests: { onSuccess: (data: string[] | undefined) => void }[] = [];
+      const useQuery = vi.fn((key: any, _fetcher: unknown, options: any) => {
+        if (key !== null && options?.onSuccess) requests.push({ onSuccess: options.onSuccess });
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const resource = defineReplica<{ id: string }, string[]>({
+        fetcher: async () => ['server'],
+        key: ({ id }) => id,
+        name: 'noopSuccessSideEffects',
+        scope,
+        version: 1,
+      });
+      const store = createStore<TestState>()(() => ({
+        lists: { a: ['same'] },
+        listsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<TestState, { id: string }, string[]>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'listsReplica',
+        view: recordLens('lists'),
+      });
+
+      scopeState.current = 'user-1:personal';
+      const onSuccess = vi.fn();
+      renderHook(() => slice.useSync({ id: 'a' }, { onSuccess }), { wrapper });
+      const request = requests.find((entry) => entry)!;
+
+      act(() => request.onSuccess(['same']));
+      act(() => request.onSuccess(['same']));
+      act(() => request.onSuccess(undefined));
+
+      expect(onSuccess).toHaveBeenCalledTimes(3);
+      expect(onSuccess).toHaveBeenLastCalledWith(undefined);
+    });
+
     it("drops a settled request's success side effects once the store has left its scope", () => {
       // A response can settle after an identity/workspace switch. The engine
       // refuses the off-scope `replace`, but the caller's callbacks carry the
