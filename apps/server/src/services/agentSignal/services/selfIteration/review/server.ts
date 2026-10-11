@@ -189,6 +189,55 @@ const getProposalActionSnapshotInput = (action: Record<string, unknown>) => {
   };
 };
 
+/** Action types a `createSelfReviewProposal` action may carry. */
+export const SELF_REVIEW_PROPOSAL_ACTION_TYPES = [
+  'create_skill',
+  'refine_skill',
+  'consolidate_skill',
+  'refine_prompt',
+  'write_memory',
+  'proposal_only',
+] as const;
+
+const SELF_REVIEW_PROPOSAL_ACTION_TYPE_ALIASES: Record<string, string> = {
+  record_idea: 'proposal_only',
+};
+
+/**
+ * Normalizes model-authored proposal actions before projection.
+ *
+ * Models routinely send the action kind as `type` (and the legacy prompt named
+ * ideas `record_idea`); the projection only reads `actionType`, so those
+ * proposals silently projected to nothing and every nightly review ended
+ * without a brief. Unknown action types fail loudly so the model can retry.
+ */
+export const normalizeSelfReviewProposalInput = (
+  input: CreateSelfReviewProposalInput,
+): CreateSelfReviewProposalInput => {
+  if (!Array.isArray(input.actions)) return input;
+
+  const actions = input.actions.map((rawAction, index) => {
+    const action = toRecordOrEmpty(rawAction);
+    const rawType = pickTrimmedString(action.actionType) ?? pickTrimmedString(action.type);
+    const actionType = rawType
+      ? (SELF_REVIEW_PROPOSAL_ACTION_TYPE_ALIASES[rawType] ?? rawType)
+      : undefined;
+
+    if (
+      !actionType ||
+      !(SELF_REVIEW_PROPOSAL_ACTION_TYPES as readonly string[]).includes(actionType)
+    ) {
+      throw new Error(
+        `actions[${index}] has ${rawType ? `unsupported actionType "${rawType}"` : 'no actionType'}; expected one of: ${SELF_REVIEW_PROPOSAL_ACTION_TYPES.join(', ')}.`,
+      );
+    }
+
+    return { ...action, actionType };
+  });
+
+  return { ...input, actions } as CreateSelfReviewProposalInput;
+};
+
 const withCompleteProposalSnapshots = async ({
   agentId,
   input,
@@ -514,7 +563,9 @@ export const createReviewRuntimePrimitives = (
       });
     },
     createSelfReviewProposal: async (rawInput) => {
-      const input = rawInput as unknown as CreateSelfReviewProposalInput;
+      const input = normalizeSelfReviewProposalInput(
+        rawInput as unknown as CreateSelfReviewProposalInput,
+      );
       const projectionInput = await withCompleteProposalSnapshots({
         agentId,
         input,
@@ -542,7 +593,11 @@ export const createReviewRuntimePrimitives = (
         userId,
       });
 
-      if (!brief) throw new Error('Self-review proposal projection produced no brief');
+      if (!brief) {
+        throw new Error(
+          `Self-review proposal has no applicable action. Each action needs actionType set to one of: ${SELF_REVIEW_PROPOSAL_ACTION_TYPES.join(', ')}.`,
+        );
+      }
 
       const result = await proposalBriefWriter.writeDailyBrief(brief);
 
