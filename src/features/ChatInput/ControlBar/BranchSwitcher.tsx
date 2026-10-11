@@ -62,8 +62,17 @@ const styles = createStaticStyles(({ css }) => ({
   header: css`
     padding: 0;
   `,
+  // Fill the list slot like `list` does, so the footer stays pinned to the
+  // bottom of the fixed-height popup while loading / empty.
   emptyState: css`
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 0;
     padding-block: 12px;
+
     font-size: 12px;
     color: ${cssVar.colorTextTertiary};
     text-align: center;
