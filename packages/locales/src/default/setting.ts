@@ -1430,10 +1430,10 @@ export default {
   'settingGraphRuntime.validation.required':
     'A graph snapshot is required before enabling graph runtime.',
   'settingGraphRuntime.validation.unknown': 'Unknown graph validation error',
-  'settingSelfIteration.enabled.desc':
-    'Allow this assistant to review recent signals and improve its own skills when the self-iteration workflow runs.',
-  'settingSelfIteration.enabled.managedDesc':
-    'Always on for Lobe AI while Self-Iteration is available.',
+  'settingSelfIteration.enabled.learningDesc':
+    'Let this assistant learn from your conversations in the background: it remembers useful facts and preferences, refines its skills, and proposes rules and system prompt changes for you to review.',
+  'settingSelfIteration.enabled.lobeAiDesc':
+    'On by default for Lobe AI: it learns from your conversations in the background, remembers useful facts and preferences, refines its skills, and proposes rules and system prompt changes for you to review.',
   'settingSelfIteration.enabled.title': 'Enable Self-Iteration',
   'settingSelfIteration.title': 'Self-Iteration',
   'settingsSearch.empty': 'No settings found for "{{keyword}}"',

@@ -8,6 +8,9 @@ export const serverConfigSelectors = {
   enableEmailVerification: (s: ServerConfigStore) =>
     s.serverConfig.enableEmailVerification || false,
   enableComposio: (s: ServerConfigStore) => s.serverConfig.enableComposio || false,
+  /** Runtime flag `agent_self_iteration`: the background self-iteration pipeline and its review surfaces. */
+  enableAgentSelfIteration: (s: ServerConfigStore) =>
+    s.featureFlags.enableAgentSelfIteration === true,
   /** Runtime flag `dashboard`: dashboards, widget previews and the lobe-dashboard tool. */
   enableDashboard: (s: ServerConfigStore) => s.featureFlags.enableDashboard === true,
   enableGatewayMode: (s: ServerConfigStore) => s.serverConfig.enableGatewayMode || false,

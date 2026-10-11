@@ -17,7 +17,9 @@ const testStore = await vi.hoisted(async () => {
   >(() => ({ config: { chatConfig: {} }, disabled: false, setChatConfig: vi.fn() }), shallow);
 });
 
-vi.mock('@/store/agent', () => ({ useAgentStore: () => false }));
+const inboxState = vi.hoisted(() => ({ isInbox: false }));
+
+vi.mock('@/store/agent', () => ({ useAgentStore: () => inboxState.isInbox }));
 vi.mock('@/store/agent/selectors', () => ({
   builtinAgentSelectors: { isInboxAgent: () => false },
 }));
@@ -29,7 +31,10 @@ vi.mock('../store', () => ({
   useStore: testStore,
 }));
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  inboxState.isInbox = false;
+});
 
 describe('AgentSelfIteration', () => {
   it.each([false, true])(
@@ -60,4 +65,51 @@ describe('AgentSelfIteration', () => {
       expect(setChatConfig).toHaveBeenCalledWith({ selfIteration: { enabled: !enabled } });
     },
   );
+
+  describe('Lobe AI', () => {
+    // The default-merged config carries `enabled: false` for every agent, so Lobe AI must
+    // read as on and save an explicit opt-out instead of `enabled`.
+    it('shows on with the default-merged enabled: false and saves an explicit opt-out', () => {
+      inboxState.isInbox = true;
+      const setChatConfig = vi.fn().mockResolvedValue(undefined);
+      testStore.setState({
+        config: { chatConfig: { selfIteration: { enabled: false } } },
+        disabled: false,
+        setChatConfig,
+      });
+
+      render(<AgentSelfIteration />);
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).toHaveAttribute('aria-checked', 'true');
+      expect(toggle).not.toHaveAttribute('aria-disabled', 'true');
+
+      fireEvent.click(toggle);
+
+      expect(setChatConfig).toHaveBeenCalledWith({
+        selfIteration: { enabled: false, optedOut: true },
+      });
+    });
+
+    it('shows off after the opt-out and clears it when turned back on', () => {
+      inboxState.isInbox = true;
+      const setChatConfig = vi.fn().mockResolvedValue(undefined);
+      testStore.setState({
+        config: { chatConfig: { selfIteration: { enabled: false, optedOut: true } } },
+        disabled: false,
+        setChatConfig,
+      });
+
+      render(<AgentSelfIteration />);
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).toHaveAttribute('aria-checked', 'false');
+
+      fireEvent.click(toggle);
+
+      expect(setChatConfig).toHaveBeenCalledWith({
+        selfIteration: { enabled: false, optedOut: false },
+      });
+    });
+  });
 });

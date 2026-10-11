@@ -2,6 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  isAgentSelfIterationOptedIn,
   isAgentSignalEnabledForUser,
   isLobeAiAgentSlug,
   resolveAgentSelfIterationCapability,
@@ -48,7 +49,7 @@ describe('agentSignal feature gates', () => {
   it('disables self-iteration when the feature flag is disabled', () => {
     expect(
       resolveAgentSelfIterationCapability({
-        agentSelfIterationEnabled: true,
+        agentSelfIteration: { enabled: true },
         isAgentSelfIterationFeatureEnabled: false,
         isLobeAiAgent: true,
       }),
@@ -64,10 +65,58 @@ describe('agentSignal feature gates', () => {
     ).toBe(true);
   });
 
-  it('keeps non-Lobe AI agents behind agentSelfIterationEnabled', () => {
+  it('keeps Lobe AI on when the default-merged config reports enabled: false', () => {
     expect(
       resolveAgentSelfIterationCapability({
-        agentSelfIterationEnabled: true,
+        agentSelfIteration: { enabled: false },
+        isAgentSelfIterationFeatureEnabled: true,
+        isLobeAiAgent: true,
+      }),
+    ).toBe(true);
+  });
+
+  it('turns Lobe AI off once the user opts out', () => {
+    expect(
+      resolveAgentSelfIterationCapability({
+        agentSelfIteration: { enabled: false, optedOut: true },
+        isAgentSelfIterationFeatureEnabled: true,
+        isLobeAiAgent: true,
+      }),
+    ).toBe(false);
+  });
+
+  describe('isAgentSelfIterationOptedIn', () => {
+    it('defaults Lobe AI on and only honors the explicit opt-out', () => {
+      expect(isAgentSelfIterationOptedIn({ isLobeAiAgent: true })).toBe(true);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: true, selfIteration: { enabled: false } }),
+      ).toBe(true);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: true, selfIteration: { optedOut: false } }),
+      ).toBe(true);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: true, selfIteration: { optedOut: true } }),
+      ).toBe(false);
+    });
+
+    it('keeps other agents opt-in and ignores optedOut for them', () => {
+      expect(isAgentSelfIterationOptedIn({ isLobeAiAgent: false })).toBe(false);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: false, selfIteration: { enabled: false } }),
+      ).toBe(false);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: false, selfIteration: { optedOut: false } }),
+      ).toBe(false);
+      expect(
+        isAgentSelfIterationOptedIn({ isLobeAiAgent: false, selfIteration: { enabled: true } }),
+      ).toBe(true);
+    });
+  });
+
+  it('keeps non-Lobe AI agents behind selfIteration.enabled', () => {
+    expect(
+      resolveAgentSelfIterationCapability({
+        agentSelfIteration: { enabled: true },
         isAgentSelfIterationFeatureEnabled: true,
         isLobeAiAgent: false,
       }),
@@ -75,7 +124,7 @@ describe('agentSignal feature gates', () => {
 
     expect(
       resolveAgentSelfIterationCapability({
-        agentSelfIterationEnabled: false,
+        agentSelfIteration: { enabled: false },
         isAgentSelfIterationFeatureEnabled: true,
         isLobeAiAgent: false,
       }),

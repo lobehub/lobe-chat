@@ -8,9 +8,9 @@ import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFla
  */
 export interface AgentSelfIterationCapabilityInput {
   /**
-   * Stored agent-level self-iteration setting.
+   * Agent-level `chatConfig.selfIteration` setting.
    */
-  agentSelfIterationEnabled?: boolean;
+  agentSelfIteration?: AgentSelfIterationOptInInput['selfIteration'];
   /**
    * User-level rollout result from `enableAgentSelfIteration`.
    */
@@ -37,25 +37,64 @@ export interface AgentSelfIterationCapabilityInput {
 export const isLobeAiAgentSlug = (slug?: string | null) => slug === INBOX_SESSION_ID;
 
 /**
+ * Input used to resolve the per-agent self-iteration opt-in.
+ */
+export interface AgentSelfIterationOptInInput {
+  /**
+   * Whether the agent is the product-owned Lobe AI agent.
+   */
+  isLobeAiAgent: boolean;
+  /**
+   * Resolved `chatConfig.selfIteration`, as stored or default-merged.
+   */
+  selfIteration?: { enabled?: boolean; optedOut?: boolean } | null;
+}
+
+/**
+ * Resolves the per-agent self-iteration opt-in, ignoring the user-level rollout.
+ *
+ * Use when:
+ * - A server path must decide whether one agent participates in self-iteration
+ *   (turn signal enqueue, tool exposure, rollout-aware capability)
+ * - Callers need one rule instead of re-deriving the Lobe AI special case
+ *
+ * Expects:
+ * - `selfIteration` is the agent's `chatConfig.selfIteration`
+ *
+ * Returns:
+ * - Lobe AI: `true` unless the user turned it off (`optedOut === true`). `enabled` is ignored
+ *   because `DEFAULT_AGENT_CHAT_CONFIG` carries `enabled: false`, which is merged into every
+ *   runtime config and persisted on inbox rows, so it cannot express a user choice.
+ * - Other agents: `true` only when explicitly turned on (`enabled === true`)
+ *
+ * Keep in sync with `agentSelfIterationOptedInSql` in `@lobechat/database`, which
+ * expresses the same rule for database-side agent targeting.
+ */
+export const isAgentSelfIterationOptedIn = (input: AgentSelfIterationOptInInput) =>
+  input.isLobeAiAgent
+    ? input.selfIteration?.optedOut !== true
+    : input.selfIteration?.enabled === true;
+
+/**
  * Resolves whether one agent may run Agent Signal self-iteration.
  *
  * Use when:
  * - Server code has an agent context and must combine rollout with per-agent capability
- * - Lobe AI should be managed by feature flag instead of stored chat config
  *
  * Expects:
  * - `isAgentSelfIterationFeatureEnabled` already includes the user-level feature-flag result
  *
  * Returns:
- * - `true` for Lobe AI when the feature flag is enabled
- * - `true` for non-Lobe AI only when `agentSelfIterationEnabled` is true
+ * - `false` whenever the feature flag is off
+ * - Otherwise the per-agent opt-in from {@link isAgentSelfIterationOptedIn}
  */
 export const resolveAgentSelfIterationCapability = (input: AgentSelfIterationCapabilityInput) => {
   if (!input.isAgentSelfIterationFeatureEnabled) return false;
 
-  if (input.isLobeAiAgent) return true;
-
-  return input.agentSelfIterationEnabled === true;
+  return isAgentSelfIterationOptedIn({
+    isLobeAiAgent: input.isLobeAiAgent,
+    selfIteration: input.agentSelfIteration,
+  });
 };
 
 /**

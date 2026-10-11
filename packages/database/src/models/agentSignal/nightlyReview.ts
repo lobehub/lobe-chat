@@ -20,6 +20,7 @@ import type { LobeChatDatabase } from '../../type';
 import { normalizeInboxAgentTitle } from '../../utils/inboxAgent';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { notTrashed } from '../../utils/softDelete';
+import { agentSelfIterationOptedInSql } from './selfIterationOptIn';
 
 /** Restores the cursor timestamp inside PostgreSQL so workflow JSON never truncates its precision. */
 const cursorUsers = alias(users, 'nightly_review_cursor_users');
@@ -328,10 +329,7 @@ export class AgentSignalNightlyReviewModel {
           gte(messages.createdAt, options.windowStart),
           lte(messages.createdAt, options.windowEnd),
           or(eq(agents.virtual, false), isNull(agents.virtual), eq(agents.slug, INBOX_SESSION_ID)),
-          or(
-            eq(agents.slug, INBOX_SESSION_ID),
-            sql`COALESCE((${agents.chatConfig}->'selfIteration'->>'enabled')::boolean, false) = true`,
-          ),
+          agentSelfIterationOptedInSql(),
         ),
       )
       .groupBy(agents.id, agents.title, agents.name, agents.slug, userSettings.general)

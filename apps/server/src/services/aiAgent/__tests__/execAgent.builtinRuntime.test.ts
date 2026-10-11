@@ -86,18 +86,11 @@ vi.mock('@/server/services/agent', () => ({
   }),
 }));
 
-vi.mock('@/server/services/agentSignal/featureGate', () => ({
+// Keep the real per-agent opt-in rule so these tests exercise the same Lobe AI
+// default-on / opt-out logic production uses; only the user rollout is mocked.
+vi.mock('@/server/services/agentSignal/featureGate', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
   isAgentSignalEnabledForUser: mockIsAgentSignalEnabledForUser,
-  isLobeAiAgentSlug: (slug?: string | null) => slug === 'inbox',
-  resolveAgentSelfIterationCapability: ({
-    agentSelfIterationEnabled,
-    isAgentSelfIterationFeatureEnabled,
-    isLobeAiAgent,
-  }: {
-    agentSelfIterationEnabled?: boolean;
-    isAgentSelfIterationFeatureEnabled: boolean;
-    isLobeAiAgent: boolean;
-  }) => isAgentSelfIterationFeatureEnabled && (isLobeAiAgent || agentSelfIterationEnabled === true),
 }));
 
 vi.mock('@/server/services/agentSignal', () => ({
@@ -587,6 +580,50 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     expect(callArgs.toolSet.sourceMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeUndefined();
   });
 
+  // `getAgentConfig` merges DEFAULT_AGENT_CHAT_CONFIG, so a real Lobe AI run sees
+  // `selfIteration.enabled: false` even though the user never chose it.
+  it('should inject self-feedback intent tool for Lobe AI when the merged config reports enabled: false', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: { selfIteration: { enabled: false } },
+      id: 'agent-inbox',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      slug: 'inbox',
+      systemRole: '',
+    });
+
+    await service.execAgent({
+      agentId: 'agent-inbox',
+      prompt: 'Hello',
+    });
+
+    const callArgs = mockCreateOperation.mock.calls[0][0];
+    expect(callArgs.toolSet.enabledToolIds).toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
+    expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeDefined();
+  });
+
+  it('should not inject self-feedback intent tool for Lobe AI after the user opts out', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: { selfIteration: { enabled: false, optedOut: true } },
+      id: 'agent-inbox',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      slug: 'inbox',
+      systemRole: '',
+    });
+
+    await service.execAgent({
+      agentId: 'agent-inbox',
+      prompt: 'Hello',
+    });
+
+    const callArgs = mockCreateOperation.mock.calls[0][0];
+    expect(callArgs.toolSet.enabledToolIds).not.toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
+    expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeUndefined();
+  });
+
   it('should inject self-feedback intent tool for custom agents with agent self-iteration', async () => {
     mockGetAgentConfig.mockResolvedValue({
       chatConfig: { selfIteration: { enabled: true } },
@@ -660,6 +697,24 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
       const calls = await runWithAgent({ chatConfig: {}, slug: 'inbox' });
 
       expect(calls[0][0].payload).not.toHaveProperty('isConversationRoot');
+    });
+
+    it('feeds the signal channel for Lobe AI when the merged config reports enabled: false', async () => {
+      const calls = await runWithAgent({
+        chatConfig: { selfIteration: { enabled: false } },
+        slug: 'inbox',
+      });
+
+      expect(calls).toHaveLength(1);
+    });
+
+    it('does not feed the signal channel for Lobe AI after the user opts out', async () => {
+      const calls = await runWithAgent({
+        chatConfig: { selfIteration: { enabled: false, optedOut: true } },
+        slug: 'inbox',
+      });
+
+      expect(calls).toHaveLength(0);
     });
   });
 

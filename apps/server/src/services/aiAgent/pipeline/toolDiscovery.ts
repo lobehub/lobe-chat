@@ -70,6 +70,7 @@ import { createServerAgentToolsEngine } from '@/server/modules/Mecha';
 import { createServerModelParamsProviders } from '@/server/modules/Mecha/ModelParams/providers';
 import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import {
+  isAgentSelfIterationOptedIn,
   isAgentSignalEnabledForUser,
   isLobeAiAgentSlug,
   resolveAgentSelfIterationCapability,
@@ -1224,7 +1225,7 @@ export const discoverTools = async (
       composioManifests.length,
     );
 
-    const agentSelfIterationEnabled = agentConfig.chatConfig?.selfIteration?.enabled === true;
+    const agentSelfIteration = agentConfig.chatConfig?.selfIteration;
     const isLobeAiAgent = isLobeAiAgentSlug(agentSlug);
     // Share-visitor fail-closed gate — never expose the
     // `declareSelfFeedbackIntent` tool to a share-visitor turn. This tool sits
@@ -1238,11 +1239,13 @@ export const discoverTools = async (
     // gate in `turnSetup`; `allowReadMemory` is a read-only grant so this must
     // not be conditional on it either.
     const shouldCheckUserSelfIterationGate =
-      !shareGate && !disableSelfFeedbackIntentTool && (agentSelfIterationEnabled || isLobeAiAgent);
+      !shareGate &&
+      !disableSelfFeedbackIntentTool &&
+      isAgentSelfIterationOptedIn({ isLobeAiAgent, selfIteration: agentSelfIteration });
     if (shouldCheckUserSelfIterationGate) {
       const featureUserEnabled = await isAgentSignalEnabledForUser(deps.db, deps.userId);
       const effectiveAgentSelfIterationEnabled = resolveAgentSelfIterationCapability({
-        agentSelfIterationEnabled,
+        agentSelfIteration,
         isAgentSelfIterationFeatureEnabled: featureUserEnabled,
         isLobeAiAgent,
       });

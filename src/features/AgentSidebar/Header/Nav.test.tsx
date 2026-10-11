@@ -18,6 +18,9 @@ const permissionMock = vi.hoisted(() => ({
   create_content: true,
   edit_own_content: true,
 }));
+const featureFlagMock = vi.hoisted(() => ({
+  enableAgentSelfIteration: false,
+}));
 const labMock = vi.hoisted(() => ({
   enableSelfLearning: true,
   enableGoals: true,
@@ -102,12 +105,25 @@ vi.mock('@/store/global', () => ({
     selector({ toggleCommandMenu: toggleCommandMenuMock }),
 }));
 
+interface ServerConfigTestState {
+  featureFlags: { enableAgentSelfIteration: boolean; isAgentEditable: boolean };
+  serverConfigInit: boolean;
+}
+
 vi.mock('@/store/serverConfig', () => ({
-  featureFlagsSelectors: (state: { featureFlags: { isAgentEditable: boolean } }) =>
-    state.featureFlags,
-  useServerConfigStore: (
-    selector: (state: { featureFlags: { isAgentEditable: boolean } }) => unknown,
-  ) => selector({ featureFlags: { isAgentEditable: true } }),
+  featureFlagsSelectors: (state: ServerConfigTestState) => state.featureFlags,
+  serverConfigSelectors: {
+    enableAgentSelfIteration: (state: ServerConfigTestState) =>
+      state.featureFlags.enableAgentSelfIteration,
+  },
+  useServerConfigStore: (selector: (state: ServerConfigTestState) => unknown) =>
+    selector({
+      featureFlags: {
+        enableAgentSelfIteration: featureFlagMock.enableAgentSelfIteration,
+        isAgentEditable: true,
+      },
+      serverConfigInit: true,
+    }),
 }));
 
 vi.mock('@/store/user', () => ({
@@ -137,6 +153,7 @@ describe('Agent sidebar header nav', () => {
     permissionMock.edit_own_content = true;
     labMock.enableSelfLearning = true;
     labMock.enableGoals = true;
+    featureFlagMock.enableAgentSelfIteration = false;
 
     useParamsMock.mockReturnValue({ aid: 'agt_eH4zL98zBx5u', topicId: 'tpc_2FCHvjS7d4CA' });
   });
@@ -257,6 +274,20 @@ describe('Agent sidebar header nav', () => {
     render(<Nav />);
 
     expect(screen.queryByRole('button', { name: 'title' })).toBeNull();
+  });
+
+  // Users in the self-iteration rollout are already being learned about, so the review
+  // surface must not hide behind the Labs switch for them.
+  it('shows the self-learning entry for the self-iteration rollout without the labs toggle', () => {
+    labMock.enableSelfLearning = false;
+    featureFlagMock.enableAgentSelfIteration = true;
+    usePathnameMock.mockReturnValue('/agent/agt_eH4zL98zBx5u');
+
+    render(<Nav />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'title' }));
+
+    expect(pushMock).toHaveBeenCalledWith('/agent/agt_eH4zL98zBx5u/self-evolving');
   });
 
   it('keeps the self-learning entry active on its own route', () => {

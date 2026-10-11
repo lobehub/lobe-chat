@@ -27,17 +27,29 @@ const AgentSelfIteration = memo(() => {
     },
   });
 
+  // Lobe AI is on by default, so its switch writes an explicit `optedOut` instead of
+  // `enabled`: the default-merged config already carries `enabled: false` for every agent.
+  const lobeAiOn = config.selfIteration?.optedOut !== true;
+
   const selfIterationItem: FormFieldProps<LobeAgentChatConfig> = isInbox
     ? {
-        children: <Switch checked disabled />,
-        desc: t('settingSelfIteration.enabled.managedDesc'),
+        children: (
+          <Switch
+            checked={lobeAiOn}
+            disabled={disabled}
+            onChange={(checked) =>
+              updateConfig({ selfIteration: { ...config.selfIteration, optedOut: !checked } })
+            }
+          />
+        ),
+        desc: t('settingSelfIteration.enabled.lobeAiDesc'),
         label: t('settingSelfIteration.enabled.title'),
         layout: 'horizontal',
         minWidth: undefined,
       }
     : {
         children: <Switch disabled={disabled} />,
-        desc: t('settingSelfIteration.enabled.desc'),
+        desc: t('settingSelfIteration.enabled.learningDesc'),
         label: t('settingSelfIteration.enabled.title'),
         layout: 'horizontal',
         minWidth: undefined,

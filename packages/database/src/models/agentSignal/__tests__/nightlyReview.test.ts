@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
@@ -456,6 +456,23 @@ describe('AgentSignalNightlyReviewModel', () => {
 
       expect(result.map((item) => item.agentId)).toEqual([enabledAgent.id, lobeAiAgent.id]);
       expect(result.map((item) => item.agentId)).not.toContain(blockedAgent.id);
+    });
+
+    it('excludes Lobe AI after the user opts out', async () => {
+      const { enabledAgent, lobeAiAgent } = await seedNightlyCapabilityTargets('opted-out');
+      await serverDB
+        .update(agents)
+        .set({ chatConfig: { selfIteration: { enabled: false, optedOut: true } } })
+        .where(eq(agents.id, lobeAiAgent.id));
+
+      const model = new AgentSignalNightlyReviewModel(serverDB);
+
+      const result = await model.listActiveAgentTargets(enabledUserId, {
+        windowEnd: new Date('2026-05-03T23:59:59.999Z'),
+        windowStart: new Date('2026-05-03T00:00:00.000Z'),
+      });
+
+      expect(result.map((item) => item.agentId)).toEqual([enabledAgent.id]);
     });
 
     it('returns non-virtual agents with activity and failure counts inside the review window', async () => {

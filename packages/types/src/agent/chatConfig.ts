@@ -20,7 +20,16 @@ export interface AgentMemoryChatConfig {
 
 export interface AgentSelfIterationChatConfig {
   selfIteration?: {
+    /**
+     * Opt-in switch for agents where self-iteration is off by default.
+     * Not read for Lobe AI: the default-merged config persists `false` on its row.
+     */
     enabled?: boolean;
+    /**
+     * Explicit user opt-out for Lobe AI, where self-iteration is on by default.
+     * Written only by the agent setting switch, so it never comes from defaults.
+     */
+    optedOut?: boolean;
   };
 }
 
@@ -235,6 +244,7 @@ export const SelfIterationChatConfigSchema = z.object({
   selfIteration: z
     .object({
       enabled: z.boolean().optional(),
+      optedOut: z.boolean().optional(),
     })
     .optional(),
 });

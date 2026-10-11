@@ -15,6 +15,7 @@ import type { LobeChatDatabase } from '../../type';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { notTrashed } from '../../utils/softDelete';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import { agentSelfIterationOptedInSql } from './selfIterationOptIn';
 
 const parseAggregateTimestamp = (value: Date | string) =>
   value instanceof Date ? value : new Date(value);
@@ -124,10 +125,7 @@ export class AgentSignalReviewContextModel {
           eq(agents.id, agentId),
           this.ws(agents),
           or(eq(agents.virtual, false), isNull(agents.virtual), eq(agents.slug, INBOX_SESSION_ID)),
-          or(
-            eq(agents.slug, INBOX_SESSION_ID),
-            sql`COALESCE((${agents.chatConfig}->'selfIteration'->>'enabled')::boolean, false) = true`,
-          ),
+          agentSelfIterationOptedInSql(),
         ),
       )
       .limit(1);

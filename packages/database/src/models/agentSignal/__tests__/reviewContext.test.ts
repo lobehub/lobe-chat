@@ -49,6 +49,42 @@ describe('AgentSignalReviewContextModel', () => {
       ).resolves.toBe(true);
     });
 
+    it('keeps inbox Lobe AI on with a default-merged enabled: false', async () => {
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(agents).values({
+        chatConfig: { selfIteration: { enabled: false } },
+        id: 'agent-signal-review-context-inbox-default',
+        slug: INBOX_SESSION_ID,
+        title: 'Lobe AI',
+        userId,
+        virtual: true,
+      });
+
+      const model = new AgentSignalReviewContextModel(serverDB, userId);
+
+      await expect(
+        model.canAgentRunSelfIteration('agent-signal-review-context-inbox-default'),
+      ).resolves.toBe(true);
+    });
+
+    it('blocks inbox Lobe AI after the user opts out', async () => {
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(agents).values({
+        chatConfig: { selfIteration: { enabled: true, optedOut: true } },
+        id: 'agent-signal-review-context-inbox-off',
+        slug: INBOX_SESSION_ID,
+        title: 'Lobe AI',
+        userId,
+        virtual: true,
+      });
+
+      const model = new AgentSignalReviewContextModel(serverDB, userId);
+
+      await expect(
+        model.canAgentRunSelfIteration('agent-signal-review-context-inbox-off'),
+      ).resolves.toBe(false);
+    });
+
     /**
      * @example
      * await expect(model.canAgentRunSelfIteration('agent-signal-review-context-task')).resolves.toBe(false).
