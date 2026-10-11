@@ -370,27 +370,44 @@ export class VerifyRepairService {
         return null;
       }
 
-      // Link the repair operation onto each failed result and flip the rollup.
-      const run = await this.runModel.findByOperation(operationId);
-      if (run) {
-        for (const { item } of failures) {
-          await this.resultModel.updateByCheckItem(run.id, item.id, {
-            repairOperationId: spawned.repairOperationId,
-          });
+      // Everything below the spawn is reconciliation for an already-active
+      // child. The claim now belongs to that child's settlement (it recomputes
+      // the parent through `recomputeRepairAncestors`), so a failure here must
+      // NOT release the claim back to the old status — a released claim lets a
+      // settlement retry claim the parent again and spawn a duplicate repair
+      // for the same failures while the first child is still working. Log and
+      // keep the claim; the child or the sweep drives the parent from here.
+      try {
+        // Link the repair operation onto each failed result and flip the rollup.
+        const run = await this.runModel.findByOperation(operationId);
+        if (run) {
+          for (const { item } of failures) {
+            await this.resultModel.updateByCheckItem(run.id, item.id, {
+              repairOperationId: spawned.repairOperationId,
+            });
+          }
         }
+        // Already stamped `repairing` by the claim; this recomputes the linked
+        // acceptance.
+        await this.statusService.markRepairing(operationId);
+        // A fast startup failure can precede the plan/parent writes above. Reconcile
+        // after both exist as well as from the completion hook.
+        await settleFailedRepair(this.db, this.userId, spawned.repairOperationId, this.workspaceId);
+        log('triggered auto-repair op %s → %s', operationId, spawned.repairOperationId);
+      } catch (error) {
+        log(
+          'post-spawn reconciliation for op %s (repair child %s) failed — repair claim kept: %O',
+          operationId,
+          spawned.repairOperationId,
+          error,
+        );
       }
-      // Already stamped `repairing` by the claim; this recomputes the linked
-      // acceptance.
-      await this.statusService.markRepairing(operationId);
-      // A fast startup failure can precede the plan/parent writes above. Reconcile
-      // after both exist as well as from the completion hook.
-      await settleFailedRepair(this.db, this.userId, spawned.repairOperationId, this.workspaceId);
-      log('triggered auto-repair op %s → %s', operationId, spawned.repairOperationId);
 
       return spawned;
     } catch (error) {
-      // A spawn that throws must not leave the run stuck in `repairing` — no
-      // later attempt could re-enter. Roll the claim back so the next caller
+      // Pre-spawn failures (verify-card write, spawner itself) must not leave the
+      // run stuck in `repairing` — no repair child exists to own the claim, so
+      // no later attempt could re-enter. Roll the claim back so the next caller
       // (a settlement retry or the sweep) can try again.
       await this.releaseRepairClaim(runForGuard.id, fromStatus);
       throw error;

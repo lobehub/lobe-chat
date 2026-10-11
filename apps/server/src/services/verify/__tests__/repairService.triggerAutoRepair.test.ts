@@ -211,6 +211,67 @@ describe('VerifyRepairService.triggerAutoRepair', () => {
     expect(m.updateStatus).toHaveBeenCalledWith('run-1', 'failed');
   });
 
+  it('keeps the claim when post-spawn reconciliation throws', async () => {
+    // P1 regression: the catch used to cover all post-spawn work too. If the
+    // repair op was created successfully but linking results / markRepairing /
+    // settleFailedRepair threw, the claim was rolled back to the old status
+    // while the child stayed active — a settlement retry could then claim the
+    // parent again and spawn a duplicate repair for the same failures.
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.findVerifyMessage.mockResolvedValue(null);
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+    m.markRepairing.mockRejectedValue(new Error('recompute exploded'));
+
+    const spawner = vi.fn().mockResolvedValue({ repairOperationId: 'op-repair' });
+
+    const service = new VerifyRepairService(db, 'user-1');
+    await expect(service.triggerAutoRepair('op-1', spawner)).resolves.toEqual({
+      repairOperationId: 'op-repair',
+    });
+    // The claim is NOT released: no updateStatus back to the old status.
+    expect(m.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it('keeps the claim when result linking throws after a successful spawn', async () => {
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.findVerifyMessage.mockResolvedValue(null);
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+    m.resultUpdateByCheckItem.mockRejectedValue(new Error('link write failed'));
+
+    const spawner = vi.fn().mockResolvedValue({ repairOperationId: 'op-repair' });
+
+    const service = new VerifyRepairService(db, 'user-1');
+    await expect(service.triggerAutoRepair('op-1', spawner)).resolves.toEqual({
+      repairOperationId: 'op-repair',
+    });
+    expect(m.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it('releases the claim when the verify-card write throws before the spawn', async () => {
+    // Pre-spawn failure: no repair child exists, so nobody owns the claim —
+    // it must be rolled back or the run is stuck in `repairing` forever.
+    m.runFindByOperation.mockResolvedValue(failedRun);
+    m.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    m.findVerifyMessage.mockResolvedValue({ id: 'msg-1' });
+    m.claimRepairing.mockResolvedValue({ previousStatus: 'failed' });
+    m.messageUpdate.mockRejectedValue(new Error('card write failed'));
+
+    const spawner = vi.fn();
+
+    const service = new VerifyRepairService(db, 'user-1');
+    await expect(service.triggerAutoRepair('op-1', spawner)).rejects.toThrow('card write failed');
+    expect(spawner).not.toHaveBeenCalled();
+    expect(m.updateStatus).toHaveBeenCalledWith('run-1', 'failed');
+  });
+
   it('returns null when there is nothing to repair', async () => {
     m.runFindByOperation.mockResolvedValue(failedRun);
     m.resultListByRun.mockResolvedValue([

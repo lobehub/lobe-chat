@@ -695,14 +695,39 @@ export class VerifyRunModel {
   };
 
   /**
-   * One page of runs stranded in `verifying`, or confirmed `planned` rounds
-   * whose child operation aborted, since before `olderThan`, across
-   * all owners — the sweep's input (see `sweepStuckVerifyRuns`).
+   * Atomically retake an abandoned repair claim: flip `repairing` →
+   * `verifying`, exactly once, only while the run is still `repairing`. The
+   * sweep's recovery path uses this so a concurrent delivery that got here
+   * first (or a spawner that came back to life) makes the loser drop out.
+   *
+   * @returns true when this caller now owns the re-driven verification.
+   */
+  reclaimRepairing = async (runId: string): Promise<boolean> => {
+    const claimed = await this.db
+      .update(verifyRuns)
+      .set({ status: 'verifying' })
+      .where(and(eq(verifyRuns.id, runId), eq(verifyRuns.status, 'repairing'), this.ownership()))
+      .returning({ id: verifyRuns.id });
+
+    return claimed.length > 0;
+  };
+
+  /**
+   * One page of runs stranded in `verifying`, confirmed `planned` rounds whose
+   * child operation aborted, or `repairing` claims left behind by a dead
+   * worker, since before `olderThan`, across all owners — the sweep's input
+   * (see `sweepStuckVerifyRuns`).
    *
    * No per-user scope, like `TaskModel.findStuckTasks`: this backs a global
    * cron, and each row carries the owner the recovery is then performed as.
    * Operation-less rounds are excluded — the rollup is addressed by operation,
    * so there is nothing to recompute for them.
+   *
+   * `repairing` rows only qualify once stale: a live spawner holds a fresh
+   * claim, and both `triggerAutoRepair` and duplicate-verdict settlement skip
+   * `repairing` unconditionally — the `updatedAt` bound is the only signal
+   * separating "spawner died before returning" from "spawner is between its
+   * claim write and its next write".
    *
    * Paged on the `(updatedAt, id)` keyset rather than returning a fixed oldest-N
    * slice. The sweep deliberately leaves some rows untouched (a check whose
@@ -741,6 +766,12 @@ export class VerifyRunModel {
               and ${agentOperations.parentOperationId} is not null
               and ${agentOperations.completionReason} in ('error', 'interrupted'))`,
         ),
+        // An abandoned repair claim: `triggerAutoRepair` writes `repairing`
+        // durably before spawning, so a worker killed in that window leaves the
+        // run parked with neither a settlement path (both repair paths skip
+        // `repairing`) nor a sweep predicate — a permanent stranding. Stale
+        // `updated_at` is what marks the spawner as gone.
+        eq(verifyRuns.status, 'repairing'),
       )!,
       lt(verifyRuns.updatedAt, olderThan),
       isNotNull(verifyRuns.operationId),

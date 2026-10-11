@@ -9,6 +9,8 @@ const {
   claimVerifying,
   findStuckVerifying,
   operationFindById,
+  operationListTree,
+  reclaimRepairing,
   recompute,
   resultListByRun,
   upsertByCheckItem,
@@ -19,6 +21,8 @@ const {
   finalizeVerifyRun: vi.fn(),
   findStuckVerifying: vi.fn(),
   operationFindById: vi.fn(),
+  operationListTree: vi.fn(),
+  reclaimRepairing: vi.fn(),
   recompute: vi.fn(),
   resultListByRun: vi.fn(),
   upsertByCheckItem: vi.fn(),
@@ -27,7 +31,7 @@ const {
 vi.mock('@/database/models/verifyRun', () => ({
   VerifyRunModel: Object.assign(
     vi.fn(function () {
-      return {};
+      return { reclaimRepairing };
     }),
     { findStuckVerifying },
   ),
@@ -39,7 +43,7 @@ vi.mock('@/database/models/verifyCheckResult', () => ({
 }));
 vi.mock('@/database/models/agentOperation', () => ({
   AgentOperationModel: vi.fn(function () {
-    return { findById: operationFindById };
+    return { findById: operationFindById, listOperationTree: operationListTree };
   }),
 }));
 vi.mock('../statusService', () => ({
@@ -79,6 +83,8 @@ describe('sweepStuckVerifyRuns', () => {
       finalizeVerifyRun,
       findStuckVerifying,
       operationFindById,
+      operationListTree,
+      reclaimRepairing,
       recompute,
       resultListByRun,
       upsertByCheckItem,
@@ -86,6 +92,7 @@ describe('sweepStuckVerifyRuns', () => {
     findStuckVerifying.mockResolvedValue([]);
     resultListByRun.mockResolvedValue([]);
     claimVerifying.mockResolvedValue(true);
+    reclaimRepairing.mockResolvedValue(true);
   });
 
   it('recomputes a run whose checks all landed but whose rollup was lost', async () => {
@@ -300,6 +307,67 @@ describe('sweepStuckVerifyRuns', () => {
     settleFailedRepair.mockResolvedValue(true);
     expect((await sweepStuckVerifyRuns(db, { now: NOW })).abandoned).toEqual(['run-1']);
     expect(settleFailedRepair).toHaveBeenCalledWith(db, 'u1', 'op-1', undefined);
+    expect(finalizeVerifyRun).not.toHaveBeenCalled();
+  });
+
+  it('reclaims a stale repairing claim with no repair child and re-drives repair', async () => {
+    // The shape a worker killed between `claimRepairing` and the spawn leaves
+    // behind: the run is parked in `repairing` forever — both repair paths
+    // skip that status — unless the sweep reclaims it.
+    singlePage([stuckRun({ status: 'repairing' })]);
+    operationListTree.mockResolvedValue([{ id: 'op-1', parentOperationId: null }]);
+
+    const outcome = await sweepStuckVerifyRuns(db, { now: NOW });
+
+    expect(outcome.settled).toEqual(['run-1']);
+    // The rollup is recomputed (releasing the stale claim back to the derived
+    // verdict) and the finalizer re-enters `maybeAutoRepair`.
+    expect(recompute).toHaveBeenCalledWith('op-1');
+    expect(finalizeVerifyRun).toHaveBeenCalledWith(db, 'u1', 'op-1', {}, undefined);
+  });
+
+  it('leaves a stale repairing claim alone while its repair child is still in flight', async () => {
+    // The spawner died, but the repair child it already spawned is running —
+    // that child owns the parent's settlement, so reclaiming here would race
+    // it and spawn a duplicate round.
+    singlePage([stuckRun({ status: 'repairing' })]);
+    operationListTree.mockResolvedValue([
+      { id: 'op-1', parentOperationId: null },
+      { id: 'op-repair', parentOperationId: 'op-1', status: 'running' },
+    ]);
+
+    const outcome = await sweepStuckVerifyRuns(db, { now: NOW });
+
+    expect(outcome.skipped).toBe(1);
+    expect(recompute).not.toHaveBeenCalled();
+    expect(finalizeVerifyRun).not.toHaveBeenCalled();
+  });
+
+  it('reclaims a stale repairing claim whose repair child already finished', async () => {
+    // A terminal child stays terminal — the whole chain is dead, so the claim
+    // is abandoned even though a child operation exists.
+    singlePage([stuckRun({ status: 'repairing' })]);
+    operationListTree.mockResolvedValue([
+      { id: 'op-1', parentOperationId: null },
+      { id: 'op-repair', parentOperationId: 'op-1', status: 'done' },
+    ]);
+
+    const outcome = await sweepStuckVerifyRuns(db, { now: NOW });
+
+    expect(outcome.settled).toEqual(['run-1']);
+    expect(recompute).toHaveBeenCalledWith('op-1');
+    expect(finalizeVerifyRun).toHaveBeenCalledWith(db, 'u1', 'op-1', {}, undefined);
+  });
+
+  it('drops a stale repairing claim another delivery already reclaimed', async () => {
+    singlePage([stuckRun({ status: 'repairing' })]);
+    operationListTree.mockResolvedValue([{ id: 'op-1', parentOperationId: null }]);
+    reclaimRepairing.mockResolvedValue(false);
+
+    const outcome = await sweepStuckVerifyRuns(db, { now: NOW });
+
+    expect(outcome.skipped).toBe(1);
+    expect(recompute).not.toHaveBeenCalled();
     expect(finalizeVerifyRun).not.toHaveBeenCalled();
   });
 });
