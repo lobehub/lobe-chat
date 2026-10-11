@@ -172,11 +172,17 @@ export class BaseActionImpl {
    * Drop the retrieve map and every memory detail through their replicas:
    * memory, every persisted row of the active scope (including query variants
    * not loaded in memory) and reads in flight. Called by `purgeAllMemories`
-   * before it revalidates; resolves `true` once storage is purged.
+   * before it revalidates. A storage failure leaves a row the next session has
+   * no record of, so the purge is retried once; resolves `true` once storage
+   * is purged.
    */
   internal_clearMemoryReplicas = async (): Promise<boolean> => {
-    const cleared = await Promise.all([this.#retrieve.clear(), this.#detail.clear()]);
-    return cleared.every(Boolean);
+    let cleared = false;
+    for (let attempt = 0; attempt < 2 && !cleared; attempt++) {
+      const results = await Promise.all([this.#retrieve.clear(), this.#detail.clear()]);
+      cleared = results.every(Boolean);
+    }
+    return cleared;
   };
 
   purgeAllMemories = async (): Promise<void> => {
@@ -186,8 +192,13 @@ export class BaseActionImpl {
 
     // Replica-backed reads own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
-    // revalidation below, so a reload never resurrects purged rows.
-    await this.#get().internal_clearMemoryReplicas();
+    // revalidation below, so a reload never resurrects purged rows. Each
+    // `internal_clear*` resolves `false` when a persisted row survived a storage
+    // failure (the next session would hydrate it back).
+    const replicaPurges: boolean[] = [
+      // One line per replica-backed slice.
+      await this.#get().internal_clearMemoryReplicas(),
+    ];
 
     this.#set(
       produce((draft) => {
@@ -250,6 +261,13 @@ export class BaseActionImpl {
         { revalidate: false },
       ),
     ]);
+
+    // The in-memory reset above already stands — the user must not keep seeing
+    // purged memories. Surface the rows that survived locally instead of
+    // reporting a purge the next session would silently undo.
+    if (!replicaPurges.every(Boolean)) {
+      throw new Error('Failed to purge persisted memories from local storage');
+    }
   };
 
   refreshUserMemory = async (params: RetrieveMemoryParams): Promise<void> => {
@@ -402,16 +420,17 @@ export class BaseActionImpl {
     const resolvedParams = params ?? this.#get().activeParams;
     const key = resolvedParams ? userMemoryCacheKey(resolvedParams) : undefined;
 
-    const sync: ReplicaSyncResult = this.#retrieve.useSync(resolvedParams ?? null, {
-      enabled: enable && Boolean(resolvedParams),
-    });
+    const enabled = enable && Boolean(resolvedParams);
+    const sync: ReplicaSyncResult = this.#retrieve.useSync(resolvedParams ?? null, { enabled });
 
     const data = useUserMemoryStore((state) => (key ? state.memoryMap[key] : undefined));
 
     return {
       data,
       error: sync.error,
-      isLoading: !data && (sync.isValidating || !sync.isHydrated),
+      // A disabled read neither hydrates nor fetches: it is not loading (the
+      // former null-SWR-key behaviour), even though its row is not hydrated.
+      isLoading: enabled && !data && (sync.isValidating || !sync.isHydrated),
       isValidating: sync.isValidating,
       mutate: sync.revalidate,
     } as unknown as SWRResponse<RetrieveMemoryResult>;

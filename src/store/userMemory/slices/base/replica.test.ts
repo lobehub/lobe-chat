@@ -16,7 +16,7 @@ import { createElement, useEffect } from 'react';
 import { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { cacheScope } from '@/libs/replica';
+import { cacheScope, REPLICA_INDEX_KEY } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
@@ -136,6 +136,19 @@ describe('userMemory base replica', () => {
       });
     });
 
+    it('is not loading while the caller disables it', async () => {
+      retrieveSpy.mockImplementation(pending);
+
+      const { result } = renderHook(
+        () => useUserMemoryStore((s) => s.useFetchUserMemory)(false, PARAMS),
+        { wrapper },
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+    });
+
     it('does not fetch while the caller disables it', () => {
       retrieveSpy.mockResolvedValue(emptyResult());
 
@@ -225,6 +238,47 @@ describe('userMemory base replica', () => {
   });
 
   describe('purgeAllMemories', () => {
+    it('retries a failed local purge, then surfaces it after the in-memory reset', async () => {
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue({} as never);
+      renderHook(() => null, { wrapper });
+      const storage = userMemoryRetrieveResource.storage!;
+      const rowKey = { queryKey: RETRIEVE_KEY, scope };
+      const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+      await storage.set(rowKey, { data: emptyResult(), updatedAt: 1 });
+      await storage.set(indexRowKey, { data: [RETRIEVE_KEY], updatedAt: 1 });
+
+      const remove = storage.remove.bind(storage);
+      let failDeletes = true;
+      let removeCalls = 0;
+      vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
+        if (!failDeletes) return remove(key);
+        removeCalls++;
+        throw new Error('IndexedDB transaction aborted');
+      });
+      act(() =>
+        useUserMemoryStore.setState({
+          memoryMap: { [RETRIEVE_KEY]: emptyResult() },
+          tags: ['x'] as never,
+        }),
+      );
+
+      try {
+        await act(async () => {
+          await expect(useUserMemoryStore.getState().purgeAllMemories()).rejects.toThrow(
+            /local storage/,
+          );
+        });
+
+        // Retried once, and the in-memory reset still stands.
+        expect(removeCalls).toBeGreaterThan(1);
+        expect(useUserMemoryStore.getState().memoryMap).toEqual({});
+        expect(useUserMemoryStore.getState().tags).toEqual([]);
+      } finally {
+        // Let the suite's cleanup reach storage again.
+        failDeletes = false;
+      }
+    });
+
     it('drops the retrieve/detail views and the persisted retrieve row', async () => {
       const server: RetrieveMemoryResult = {
         ...emptyResult(),
