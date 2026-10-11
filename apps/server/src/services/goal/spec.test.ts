@@ -95,4 +95,14 @@ describe('uncoveredAxisValues', () => {
     );
     expect(gaps).toEqual([]);
   });
+
+  it('does not let an unrelated word satisfy a short variant value', () => {
+    // `no` must not be covered by `node` / `nothing` — otherwise an all-`yes`
+    // probe set would green the gate without ever testing the `no` variant.
+    const gaps = uncoveredAxisValues(
+      [{ axis: 'cold-start', values: ['no'] }],
+      [{ instruction: 'Handle a node route with nothing cold', title: 'Probe' }],
+    );
+    expect(gaps).toEqual([{ axis: 'cold-start', value: 'no' }]);
+  });
 });

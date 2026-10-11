@@ -18,6 +18,8 @@ const QUESTION_TAILS = [
   /\.?\s*Fix it, then retry or retire this task node\?$/,
   /\.?\s*Retry Goal acceptance or fail this Goal\?$/,
   /\.?\s*Retry Goal acceptance, abandon it, or fail this Goal\?$/,
+  // The batch pattern-break gate (see `GoalService.openPatternBreakGate`).
+  /\.?\s*How should this batch proceed\?$/,
 ];
 
 export const coordinatorGateReason = (question?: string | null): string | undefined => {

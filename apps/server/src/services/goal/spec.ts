@@ -91,6 +91,28 @@ export const minPairwiseSimilarity = (briefs: ProbeBrief[]): number => {
  */
 export const HOMOGENEITY_MIN_SIMILARITY = 0.5;
 
+const escapeRegExp = (value: string): string => value.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Whether a declared axis value is represented in the probe text.
+ *
+ * A Latin/alphanumeric value must appear on a word boundary, so a value like
+ * `no` is not counted as covered by the word `node` or `not` — otherwise an
+ * all-`yes` probe set would silently satisfy the `no` variant and the gate would
+ * release the mass rollout without ever testing it. Values in scripts without
+ * word boundaries (e.g. CJK) keep substring matching, where boundaries have no
+ * meaning.
+ */
+export const containsAxisValue = (haystack: string, value: string): boolean => {
+  const needle = value.trim().toLowerCase();
+  if (!needle) return false;
+  const text = haystack.toLowerCase();
+  if (!/^[\p{Script=Latin}\p{N} _-]+$/u.test(needle)) return text.includes(needle);
+  return new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(needle)}([^\\p{L}\\p{N}]|$)`, 'u').test(
+    text,
+  );
+};
+
 /**
  * R4's coverage check: axes the planner declared, and the values on them that
  * no probe touches. A declared value with zero coverage is the half the probe
@@ -102,15 +124,11 @@ export const uncoveredAxisValues = (
   briefs: ProbeBrief[],
 ): Array<{ axis: string; value: string }> => {
   if (!axes?.length) return [];
-  const haystack = briefs
-    .map((brief) => `${brief.title}\n${brief.instruction}`)
-    .join('\n')
-    .toLowerCase();
+  const haystack = briefs.map((brief) => `${brief.title}\n${brief.instruction}`).join('\n');
   const uncovered: Array<{ axis: string; value: string }> = [];
   for (const axis of axes) {
     for (const value of axis.values) {
-      const needle = value.trim().toLowerCase();
-      if (needle && !haystack.includes(needle)) uncovered.push({ axis: axis.axis, value });
+      if (!containsAxisValue(haystack, value)) uncovered.push({ axis: axis.axis, value });
     }
   }
   return uncovered;

@@ -1,6 +1,7 @@
 import {
   GOAL_ACCEPTANCE_TASK_TITLE,
   GOAL_BATCH_ASSAY_TITLE,
+  GOAL_BATCH_BREAK_OPTION,
   GOAL_BATCH_TEMPLATE_TITLE,
   GOAL_BATCH_TITLE,
   GOAL_CLARIFICATION_OPTION,
@@ -25,7 +26,12 @@ import type { GoalNodeView } from './goalGraphViewModel';
  */
 
 export type CoordinatorGateKind =
-  'agentQuestion' | 'clarifyGoal' | 'fixSetup' | 'goalAcceptance' | 'recoverTask';
+  | 'agentQuestion'
+  | 'batchPatternBreak'
+  | 'clarifyGoal'
+  | 'fixSetup'
+  | 'goalAcceptance'
+  | 'recoverTask';
 
 const idsOf = (decision?: GoalGraphDecision | null): Set<string> =>
   new Set((decision?.options ?? []).map((option) => option.id));
@@ -43,6 +49,9 @@ export const coordinatorGateKind = (
     return nodeTitle === GOAL_MACHINE_GATE_TITLE ? 'fixSetup' : 'recoverTask';
   if (ids.has(GOAL_CLARIFICATION_OPTION.assume) && ids.has(GOAL_CLARIFICATION_OPTION.answer))
     return 'clarifyGoal';
+  // A batch's pattern break: revise the recipe, or fork it as a new class.
+  if (ids.has(GOAL_BATCH_BREAK_OPTION.revise) && ids.has(GOAL_BATCH_BREAK_OPTION.newClass))
+    return 'batchPatternBreak';
   return undefined;
 };
 
@@ -72,6 +81,12 @@ export const gateOptionLabelKey = (
       return kind === 'fixSetup'
         ? 'goalProcess.gate.option.fixedRetry'
         : 'goalProcess.gate.option.retry';
+    }
+    case GOAL_BATCH_BREAK_OPTION.revise: {
+      return 'goalProcess.gate.option.reviseBatch';
+    }
+    case GOAL_BATCH_BREAK_OPTION.newClass: {
+      return 'goalProcess.gate.option.newClassBatch';
     }
     default: {
       return undefined;

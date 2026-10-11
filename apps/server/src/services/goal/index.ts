@@ -3,6 +3,8 @@ import { buildGoalRequirement } from '@lobechat/builtin-tool-goal';
 import {
   DEVICE_OFFLINE_RUN_STATUS,
   GOAL_BATCH_ASSAY_TITLE,
+  GOAL_BATCH_BREAK_OPTION,
+  GOAL_BATCH_BREAK_QUESTION_TAIL,
   GOAL_BATCH_TEMPLATE_TITLE,
   GOAL_BATCH_TITLE,
   GOAL_CLARIFICATION_OPTION,
@@ -3865,8 +3867,31 @@ export class GoalService {
           return committedEffects;
         }
 
+        // A rollout claim we did NOT turn into a batch — the caller forced
+        // `--rollout off`, or the homogeneity check refused it — still carries
+        // only the 3–5 representative probes in `tasks`, with the complete
+        // roster in `units`. A plain decomposition of `draftTasks` alone would
+        // silently drop every other unit, so materialize the whole roster as
+        // ordinary tasks instead: the probes keep their first-hand briefs, the
+        // rest run from the recipe. A goal with no claim at all is unchanged.
+        const plannedUnits = rolloutClaim
+          ? normalizeRolloutRoster(rolloutClaim.units, draftTasks, draftTasks.length).map(
+              (title, index) => {
+                const draft = draftTasks[index];
+                return {
+                  dependsOn: draft?.dependsOn ?? [],
+                  hypothesis: draft?.hypothesis,
+                  instruction:
+                    draft?.instruction ??
+                    [rolloutClaim.recipeOutline, `Unit: ${title}`].filter(Boolean).join('\n\n'),
+                  title: draft?.title ?? title,
+                };
+              },
+            )
+          : draftTasks;
+
         const createdIds: string[] = [];
-        for (const draft of draftTasks) {
+        for (const draft of plannedUnits) {
           // An experiment is a container for a candidate answer, not the
           // default shell around every planned step. Only a direction the
           // planner marked with a hypothesis gets one; a certain delivery step
@@ -3901,7 +3926,7 @@ export class GoalService {
         // dependent → prerequisite the way `decideNextMove` reads a blocker. Only
         // earlier indices are honoured, so a hallucinated forward or self reference
         // can never form a cycle that deadlocks the frontier.
-        for (const [index, draft] of draftTasks.entries()) {
+        for (const [index, draft] of plannedUnits.entries()) {
           const nodeId = createdIds[index];
           if (!nodeId) continue;
           for (const dep of new Set(draft.dependsOn ?? [])) {
@@ -4053,21 +4078,21 @@ export class GoalService {
       authority: 'user',
       options: [
         {
-          description: '按这一次的失败修订配方，然后重探这一批',
-          id: 'revise',
-          label: '修订配方并重探',
+          description: 'Revise the recipe from this failure, then re-probe this batch.',
+          id: GOAL_BATCH_BREAK_OPTION.revise,
+          label: 'Revise the recipe and re-probe',
         },
         {
           // One batch carries one roster and one gate, so this is not a second
           // batch running in parallel: it forks the recipe (no `revises`
           // chain) for the units that broke, inside this same batch.
           description:
-            '不沿用当前方案的修订链，为出问题的这几项另起一份方案并重探；本批次其余单元在新闸门通过后照常继续',
-          id: 'new_class',
-          label: '另起一份方案重探',
+            'Fork a fresh recipe for the units that broke (no revision chain); the rest of the batch continues once the new gate passes.',
+          id: GOAL_BATCH_BREAK_OPTION.newClass,
+          label: 'Fork a fresh recipe',
         },
       ],
-      question: `${message}\n\n该如何处理这个批次？`,
+      question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
       requestedUserId: this.userId,
     });
     await this.coordinatorGraph.updateNodeStatus(goalId, nodeId, 'waiting', reason);

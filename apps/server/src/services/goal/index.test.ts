@@ -2048,6 +2048,37 @@ describe('GoalService', () => {
     expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(2);
   });
 
+  it('keeps every roster unit when a rollout claim cannot become a batch', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 12 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 12,
+        units: Array.from({ length: 12 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 3 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    // The caller forbade a batch, so the planner's claim must NOT drop the
+    // units its probe-only `tasks` left out.
+    const graph = await service.create({
+      config: { rollout: { trigger: 'off' } },
+      title: 'Migrate stores, no batch',
+    });
+    await service.tick(graph.goal.id);
+
+    const after = await service.graph(graph.goal.id);
+    expect(after.nodes.filter((n) => n.kind === 'batch')).toHaveLength(0);
+    // All 12 units are planned, not only the 3 the planner listed as probes.
+    expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(12);
+  });
+
   it('restarts the canary loop when a person answers a broken batch gate', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',

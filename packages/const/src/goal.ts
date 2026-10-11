@@ -208,3 +208,20 @@ export const ROLLOUT_MAX_CANARY_SIZE = 5;
  * coordinator hands the choice to a person (revise the recipe vs. new class).
  */
 export const PATTERN_BREAK_PAUSE_REASON = 'Batch pattern break needs a decision';
+
+/**
+ * The batch pattern-break gate's option ids. Shared by the server that opens the
+ * gate and the client that localizes it, the same way `GOAL_CLARIFICATION_OPTION`
+ * is; the human-facing labels live in the locale files, never in the payload.
+ */
+export const GOAL_BATCH_BREAK_OPTION = {
+  newClass: 'new_class',
+  revise: 'revise',
+} as const;
+
+/**
+ * The batch pattern-break question's fixed English tail. The client strips it to
+ * reach the coordinator's dynamic reason, then renders the tail in the reader's
+ * language — mirroring the other coordinator question tails.
+ */
+export const GOAL_BATCH_BREAK_QUESTION_TAIL = 'How should this batch proceed?';

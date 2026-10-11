@@ -2270,6 +2270,7 @@ export default {
   'goalProcess.gate.title.recoverTask': 'Decide what happens to the failed task',
   'goalProcess.gate.title.goalAcceptance': 'Decide the goal acceptance outcome',
   'goalProcess.gate.title.fixSetup': 'Fix the setup, then retry',
+  'goalProcess.gate.title.batchPatternBreak': 'Decide how the failed batch proceeds',
   'goalProcess.clarify.title': 'Clarify the goal before work starts',
   'goalProcess.clarify.description':
     'Answer these once and the agent plans with them. Skip to let it proceed on its own assumptions.',
@@ -2312,6 +2313,8 @@ export default {
   'goalProcess.gate.option.retire': 'Retire work',
   'goalProcess.gate.option.fail': 'Fail goal',
   'goalProcess.gate.option.assume': 'Go with the assumption',
+  'goalProcess.gate.option.reviseBatch': 'Revise the recipe and re-probe',
+  'goalProcess.gate.option.newClassBatch': 'Fork a fresh recipe',
   'goalProcess.decision.effect.fixedRetry': 'Run the task again once the setup is fixed.',
   'goalProcess.decision.asks.judgment': 'needs your review on a stuck task',
   'goalProcess.decision.asks.goalAcceptance': 'needs your review on the goal acceptance',
