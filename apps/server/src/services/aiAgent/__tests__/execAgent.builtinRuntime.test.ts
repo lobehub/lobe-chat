@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createServerAgentToolsEngine } from '@/server/modules/Mecha';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
+import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 
 import { AiAgentService } from '../index';
 
@@ -606,6 +607,46 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     expect(callArgs.toolSet.enabledToolIds).toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
     expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeDefined();
     expect(callArgs.toolSet.sourceMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBe('builtin');
+  });
+
+  describe('agent.user.message signal gate', () => {
+    const runWithAgent = async (agent: { chatConfig: Record<string, unknown>; slug: string }) => {
+      mockGetAgentConfig.mockResolvedValue({
+        ...agent,
+        id: 'agent-gate',
+        model: 'gpt-4',
+        plugins: [],
+        provider: 'openai',
+        systemRole: '',
+      });
+
+      await service.execAgent({ agentId: 'agent-gate', prompt: 'Hello' });
+
+      return vi
+        .mocked(enqueueAgentSignalSourceEvent)
+        .mock.calls.filter(([input]) => input.sourceType === 'agent.user.message');
+    };
+
+    it('does not feed the signal channel for custom agents without self-iteration', async () => {
+      const calls = await runWithAgent({ chatConfig: {}, slug: 'custom-agent' });
+
+      expect(calls).toHaveLength(0);
+    });
+
+    it('feeds the signal channel for custom agents with self-iteration on', async () => {
+      const calls = await runWithAgent({
+        chatConfig: { selfIteration: { enabled: true } },
+        slug: 'custom-agent',
+      });
+
+      expect(calls).toHaveLength(1);
+    });
+
+    it('feeds the signal channel for Lobe AI', async () => {
+      const calls = await runWithAgent({ chatConfig: {}, slug: 'inbox' });
+
+      expect(calls).toHaveLength(1);
+    });
   });
 
   it('should inject page-agent runtime for regular agents in page scope', async () => {
