@@ -4,6 +4,7 @@ import type { StateCreator } from 'zustand/vanilla';
 import type { ResourceManagerMode } from '@/features/ResourceManager';
 import {
   createReplicaSlice,
+  linkReplicaEntity,
   readReplicaStoredKeys,
   recordLens,
   type ReplicaPageResult,
@@ -145,6 +146,11 @@ export class ResourceManagerStoreActionImpl {
   readonly #set: Setter;
   readonly #explorerSearch;
   readonly #hierarchySearch;
+  /**
+   * A resource as a search hit: both search surfaces hold copies of the same
+   * `ResourceItem`, in every query variant they have loaded or persisted.
+   */
+  readonly #searchHits;
   /** Query entry keys each surface has used, oldest first (see `#trackRecentSearch`). */
   readonly #recentExplorerSearches: string[] = [];
   readonly #recentHierarchySearches: string[] = [];
@@ -186,6 +192,11 @@ export class ResourceManagerStoreActionImpl {
       view: hierarchySearchLens,
       viewFields: (params) => ({ searchParams: params }),
     });
+
+    this.#searchHits = linkReplicaEntity<ResourceItem>([
+      this.#explorerSearch,
+      this.#hierarchySearch,
+    ]);
   }
 
   /**
@@ -313,6 +324,35 @@ export class ResourceManagerStoreActionImpl {
     await revalidateReplica(explorerSearchResource);
   };
 
+  /**
+   * Drop deleted resources from every cached search, after the delete landed.
+   *
+   * The search replicas persist each query's head page, so a deleted hit has to
+   * leave every variant — the one on screen, the ones left in memory and the
+   * ones only IndexedDB still holds — or a revisit / reload paints it again. An
+   * entity removal also guards hydrates already in flight, so a row read before
+   * the delete cannot bring the hit back. The mounted searches then refetch, so
+   * their totals and paging follow the server.
+   */
+  removeSearchHits = (ids: string[]): void => {
+    if (ids.length === 0) return;
+    for (const id of ids) this.#searchHits.remove(id);
+    void this.#searchHits.revalidate();
+  };
+
+  /**
+   * Apply a confirmed resource change (e.g. a rename) to every cached search.
+   *
+   * Every loaded and persisted variant gets the new fields, so no revisit or
+   * reload paints the old name. A rename can also move the hit into or out of a
+   * query, which only the server can decide: the mounted searches refetch so
+   * their membership is recomputed (unmounted ones refetch when shown again).
+   */
+  patchSearchHit = (id: string, patch: Partial<ResourceItem>): void => {
+    this.#searchHits.update(id, (item) => ({ ...item, ...patch }));
+    void this.#searchHits.revalidate();
+  };
+
   clearSelectAllState = (): void => {
     this.#set({ selectAllState: 'none', selectedFileIds: [], selectionTotal: undefined });
   };
@@ -368,12 +408,9 @@ export class ResourceManagerStoreActionImpl {
 
         await fileStore.deleteResources(resourceIds);
         void useTreeStore.getState().dropNodes(resourceIds, currentFolderKey);
-        // The explorer's own list drops the rows optimistically; the overlay
-        // mirrors cached replica pages, so drop them there too — from memory and
-        // from every stored page, loaded here or not — or a deleted hit would be
-        // painted again, on screen and on the next reload.
-        for (const id of resourceIds) this.#explorerSearch.updateEntity(id, () => undefined);
-        void revalidateReplica(explorerSearchResource);
+        // The explorer's own list drops the rows optimistically; the search
+        // surfaces mirror cached replica pages, so drop them there too.
+        this.removeSearchHits(resourceIds);
 
         this.clearSelectAllState();
         return;

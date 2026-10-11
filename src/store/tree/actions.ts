@@ -567,6 +567,9 @@ export class TreeActionImpl {
 
     tx.mutation = async () => {
       await resourceService.updateResource(itemId, { name: newName });
+      // The search surfaces keep their own persisted copies of the hit.
+      const { useResourceManagerStore } = await import('@/features/ResourceManager/store');
+      useResourceManagerStore.getState().patchSearchHit(itemId, { name: newName });
       const { useFileStore } = await import('@/store/file');
       await useFileStore.getState().refreshFileList();
     };
