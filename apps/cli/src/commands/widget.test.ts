@@ -138,6 +138,24 @@ describe('widget command', () => {
     expect(process.exitCode).toBe(1);
   });
 
+  it('exits non-zero for a failed dry run with --json too', async () => {
+    mockClient.widget.dryRun.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'timeout' } });
+    await run('widget', 'dry-run', 'w-1', '--json');
+    expect(process.exitCode).toBe(1);
+  });
+
+  it('exits non-zero when a manual refresh fails', async () => {
+    mockClient.widget.run.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'failed' } });
+    await run('widget', 'run', 'w-1', '--json');
+    expect(process.exitCode).toBe(1);
+  });
+
+  it('treats a partial manual refresh as usable', async () => {
+    mockClient.widget.run.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'partial' } });
+    await run('widget', 'run', 'w-1');
+    expect(process.exitCode).toBeUndefined();
+  });
+
   it('does not publish when the confirmation is declined', async () => {
     mockConfirm.mockResolvedValue(false);
     await run('widget', 'publish', 'w-1', '--version', 'ver-1');

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-import { WIDGET_OUTPUT_TYPES, WIDGET_RUNTIMES } from '@lobechat/types';
+import { WIDGET_OUTPUT_TYPES, WIDGET_RUN_OUTPUT_STATUSES, WIDGET_RUNTIMES } from '@lobechat/types';
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
@@ -217,9 +217,10 @@ export function registerWidgetCommand(program: Command) {
       const { data } = await (
         await getTrpcClient()
       ).widget.dryRun.mutate({ versionId: options.version, widgetId });
+      // Publish needs a succeeded dry run, so anything else fails — JSON output included.
+      if (data.status !== 'succeeded') process.exitCode = 1;
       if (options.json !== undefined) return outputJson(data, options.json);
       printRun(data);
-      if (data.status !== 'succeeded') process.exitCode = 1;
     });
 
   widget
@@ -248,6 +249,10 @@ export function registerWidgetCommand(program: Command) {
     .option('--json [fields]', 'Output JSON')
     .action(async (widgetId: string, options: { json?: boolean | string }) => {
       const { data } = await (await getTrpcClient()).widget.run.mutate({ widgetId });
+      // Failed runs come back as records, not errors; only usable output exits 0.
+      if (!(WIDGET_RUN_OUTPUT_STATUSES as readonly string[]).includes(data.status)) {
+        process.exitCode = 1;
+      }
       if (options.json !== undefined) return outputJson(data, options.json);
       printRun(data);
     });
