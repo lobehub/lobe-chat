@@ -37,4 +37,14 @@ describe('IndexedDBQueryProjectionStorage', () => {
       'database closed',
     );
   });
+
+  it('rejects a strict read that failed, while get stays a cache miss', async () => {
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue();
+    vi.spyOn(localDatabase, 'get').mockRejectedValue(new Error('database closed'));
+    const storage = new IndexedDBQueryProjectionStorage<string[]>({ namespace: 'projects' });
+    const key = { queryKey: '__replica:index', scope: 'personal' };
+
+    await expect(storage.getStrict(key)).rejects.toThrow('database closed');
+    await expect(storage.get(key)).resolves.toBeUndefined();
+  });
 });

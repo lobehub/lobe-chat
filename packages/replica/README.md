@@ -63,7 +63,7 @@ Persisted rows are kept per entry key **and** per query (`key?<query>`), so a re
 
 `slice.updateEntity(id, (item) => undefined)` also drops the entity from loaded values and persisted rows, but it is a plain patch: only `removeEntity` (which `linkReplicaEntity.remove` and an optimistic `'remove'` call) guards hydrates already in flight.
 
-A `ReplicaStorage` must reject from `remove` when a delete did not land (reads and writes stay best-effort). The engine then keeps the row indexed and the removal unpurged, so the next `remove(key)` / `clear()` retries it.
+A `ReplicaStorage` must reject from `remove` when a delete did not land, and should implement `getStrict` (a read that rejects on I/O failure) so an unreadable index fails a purge instead of passing for an empty one. `get` and `set` stay best-effort. The engine then keeps the row indexed and the removal unpurged, so the next `remove(key)` / `clear()` retries it.
 
 Prefer the narrowest call: an entity delete keeps the rest of every list; `remove(key)` is for a key whose whole value is gone or denied (NOT_FOUND / FORBIDDEN); `clear()` is for flows that invalidate everything the user has of that resource. `clear()` does not refetch: mounted views show their loading state until the next sync, so call `slice.revalidate()` after it when the server still has data to show.
 

@@ -22,6 +22,15 @@ export interface ReplicaRow<T> {
 export interface ReplicaStorage<T> {
   get: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
   /**
+   * Strict read for destructive passes: like `get`, but **rejects** when the
+   * row could not be read (I/O error, unparsable value) instead of reporting a
+   * miss. The engine reads its per-scope index through it before `remove` /
+   * `clear`, so an unreadable index fails the purge rather than passing for an
+   * empty one. Optional: without it `get` is used, which is only correct for a
+   * storage whose `get` already rejects on failure.
+   */
+  getStrict?: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
+  /**
    * Delete a row. Must **reject** when the delete did not land (a closed
    * IndexedDB, a quota or security error): the engine keeps the row indexed
    * and the removal unpurged, so the next `remove` / `clear` retries it instead

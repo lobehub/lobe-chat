@@ -251,8 +251,15 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     });
   };
 
+  /**
+   * Read the index for a destructive pass (remove / clear / entity patch).
+   * Uses the storage's strict read when it has one, so an unreadable index
+   * rejects instead of looking empty — a purge must never report success for
+   * rows it could not enumerate.
+   */
   const readIndex = async (scope: string): Promise<string[]> => {
-    const row = await resource.storage?.get(indexKey(scope));
+    const storage = resource.storage!;
+    const row = await (storage.getStrict ?? storage.get)(indexKey(scope));
     return (row?.data as unknown as string[] | undefined) ?? [];
   };
 
@@ -828,7 +835,15 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         ? Object.entries(slot.entries).map(([key, entry]) => storageKey(key, entry.query).queryKey)
         : [],
     );
-    const keys = await readIndex(scope);
+    let keys: string[];
+    try {
+      keys = await readIndex(scope);
+    } catch (error) {
+      // Rows cannot be enumerated: nothing to patch. Loaded entries are already
+      // updated, and a removal still guards later hydrates (`removeEntity`).
+      console.error(`[replica:${resource.name}] failed to read the persisted index`, error);
+      return;
+    }
     // Identity changed while reading the index: those rows are not ours to touch.
     if (resource.scope.get() !== scope) return;
     for (const queryKey of keys) {

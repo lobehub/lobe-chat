@@ -864,6 +864,104 @@ describe('createReplicaSlice', () => {
       expect(storage.rows.size).toBe(0);
     });
 
+    /**
+     * Storage whose index read fails the way the app adapters do: `get`
+     * swallows it into a miss, only `getStrict` reports it.
+     */
+    const failIndexReads = (storage: ReturnType<typeof createMemoryStorage>) => {
+      const state = { failing: true };
+      const original = storage.storage.get;
+      storage.storage.get = async (key) =>
+        key.queryKey === REPLICA_INDEX_KEY && state.failing ? undefined : original(key);
+      storage.storage.getStrict = async (key) => {
+        if (key.queryKey === REPLICA_INDEX_KEY && state.failing)
+          throw new Error('IndexedDB read failed');
+        return original(key);
+      };
+      return state;
+    };
+
+    it('reports a clear as failed when the index cannot be read, and a later clear retries', async () => {
+      const first = await persistVariants();
+      // Reload: only the persisted index knows the earlier session's rows.
+      const { slice, storage, store } = setupQueried({ storage: first.storage });
+      const index = failIndexReads(storage);
+
+      let purge!: Promise<boolean>;
+      act(() => {
+        purge = slice.clear();
+      });
+      expect(await purge).toBe(false);
+      expect(storage.rows.size).toBe(3);
+      // Hydration stays off while the wipe is incomplete.
+      await act(async () => {
+        expect(await slice.hydrate({ id: 'a' })).toBe(false);
+      });
+      expect(store.getState().lists.a).toBeUndefined();
+
+      index.failing = false;
+      act(() => {
+        purge = slice.clear();
+      });
+      expect(await purge).toBe(true);
+      expect(storage.rows.size).toBe(0);
+    });
+
+    it('keeps a removal unpurged when the index cannot be read, so it retries', async () => {
+      const first = await persistVariants();
+      const { resource, slice, storage } = setupQueried({ storage: first.storage });
+      const filtered = row(resource, { id: 'a', q: 'x' });
+      const index = failIndexReads(storage);
+
+      // Memory is empty, so every variant is known only through the index.
+      act(() => slice.remove('a'));
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(storage.rows.has(row(resource, { id: 'a' }))).toBe(true);
+      expect(storage.rows.has(filtered)).toBe(true);
+
+      index.failing = false;
+      act(() => slice.remove('a'));
+      await waitFor(() => {
+        expect(storage.rows.has(row(resource, { id: 'a' }))).toBe(false);
+        expect(storage.rows.has(filtered)).toBe(false);
+      });
+    });
+
+    it('never mistakes a plain key containing `?` for a query variant', async () => {
+      const storage = createMemoryStorage();
+      const { slice } = setup({ storage });
+      act(() => {
+        slice.replace({ id: 'foo' }, ['foo']);
+        slice.replace({ id: 'foo?bar' }, ['foo?bar']);
+      });
+      await waitFor(() => expect(storage.rows.size).toBe(2));
+
+      act(() => slice.remove('foo'));
+
+      await waitFor(() => expect(storage.rows.has('user-1:personal|foo')).toBe(false));
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(storage.rows.get('user-1:personal|foo?bar')?.data).toEqual(['foo?bar']);
+    });
+
+    it('cleans variants listed by an index written in the existing flat format', async () => {
+      const storage = createMemoryStorage();
+      // Rows and index as an earlier release persisted them on a device.
+      for (const queryKey of ['foo?{}', 'foo?{"q":"x"}', 'foo?bar?{}'])
+        storage.rows.set(`user-1:personal|${queryKey}`, { data: [queryKey], updatedAt: 1 });
+      storage.indexRows.set('user-1:personal', {
+        data: ['foo?{}', 'foo?{"q":"x"}', 'foo?bar?{}'],
+        updatedAt: 1,
+      });
+      const { slice } = setupQueried({ storage });
+
+      act(() => slice.remove('foo'));
+
+      await waitFor(() => expect([...storage.rows.keys()]).toEqual(['user-1:personal|foo?bar?{}']));
+      await waitFor(() =>
+        expect(storage.indexRows.get('user-1:personal')?.data).toEqual(['foo?bar?{}']),
+      );
+    });
+
     it('clear wipes memory, every persisted row and the index of the active scope', async () => {
       const first = await persistVariants();
       // A later session loads only one entry; the rest is known only to the index.

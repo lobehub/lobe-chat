@@ -57,4 +57,15 @@ describe('LocalStorageQueryProjectionStorage', () => {
       'access denied',
     );
   });
+
+  it('rejects a strict read that failed, while get stays a cache miss', async () => {
+    const storage = new LocalStorageQueryProjectionStorage<string[]>({ namespace: 'test' });
+    const key = { queryKey: '__replica:index', scope: 'user-a' };
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('access denied');
+    });
+
+    await expect(storage.getStrict(key)).rejects.toThrow('access denied');
+    await expect(storage.get(key)).resolves.toBeUndefined();
+  });
 });

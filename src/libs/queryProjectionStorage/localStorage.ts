@@ -42,6 +42,14 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     }
   };
 
+  /** Like `get`, but rejects when the row could not be read or parsed (see `ReplicaStorage.getStrict`). */
+  getStrict = async (key: QueryProjectionKey): Promise<QueryProjection<T> | undefined> => {
+    if (typeof window === 'undefined') return undefined;
+
+    const value = localStorage.getItem(this.#key(key));
+    return value ? this.#codec.parse(value) : undefined;
+  };
+
   /**
    * Rejects when the delete did not land (e.g. storage access denied), unlike
    * reads and writes: a caller removing a row the user deleted must be able to
