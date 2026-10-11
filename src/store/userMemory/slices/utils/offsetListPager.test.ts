@@ -185,6 +185,28 @@ describe('OffsetListPager', () => {
     expect(slice.loadMore).toHaveBeenCalledTimes(1);
   });
 
+  it('ignores a head failure captured under another account', async () => {
+    const refreshHead = vi.fn(async () => undefined);
+    const { pager, views } = setup({ refreshHead });
+    const previousUser = new Error('previous user failed');
+    const callbacks = pager.syncCallbacks('all');
+
+    // A request of the previous account settles after the switch.
+    callbacks.onError(previousUser, { isActive: false });
+    // The active user's page set is short, and its head refresh reports nothing.
+    views.all = { currentPage: 0, hasMore: true, items: Array.from({ length: 11 }), pageSize: 12 };
+    await pager.loadMore('all');
+
+    expect(views.all.loadMoreError).toBeInstanceOf(Error);
+    expect(views.all.loadMoreError).not.toBe(previousUser);
+
+    // The active user's own failure is surfaced.
+    const own = new Error('own failure');
+    callbacks.onError(own, { isActive: true });
+    await pager.loadMore('all');
+    expect(views.all.loadMoreError).toBe(own);
+  });
+
   it('shares one run between concurrent load-more calls', async () => {
     const { pager, slice } = setup();
 

@@ -104,6 +104,22 @@ export class OffsetListPager {
     this.#headErrors.delete(key);
   };
 
+  /**
+   * The `useSync` callbacks of `key`'s head request. A failure captured under
+   * another identity / workspace (`isActive: false` — a request of the previous
+   * account settling after a switch) is not this page set's: query keys repeat
+   * across users, so recording it would surface the previous user's error on
+   * the new user's footer.
+   */
+  syncCallbacks = (key: string) => ({
+    onError: (error: unknown, context?: { isActive?: boolean }) => {
+      if (context?.isActive === false) return;
+      this.headFailed(key, error);
+    },
+    // A landed head makes this page set's offsets the server's again.
+    onSuccess: () => this.headLanded(key),
+  });
+
   /** The head request of `key` failed (surfaced if paging is blocked on it). */
   headFailed = (key: string, error: unknown): void => {
     this.#headErrors.set(key, error);

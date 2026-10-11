@@ -234,9 +234,7 @@ export class IdentityActionImpl {
     }, [key]);
 
     return this.#identities.useSync(params, {
-      onError: (error) => this.#pager.headFailed(key, error),
-      // A landed head makes this page set's offsets the server's again.
-      onSuccess: () => this.#pager.headLanded(key),
+      ...this.#pager.syncCallbacks(key),
       revalidateOnFocus: false,
     });
   };
