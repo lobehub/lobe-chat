@@ -1,6 +1,13 @@
 import type { AgentEvalDataset, AgentEvalDatasetListItem } from '@lobechat/types';
 
-import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
+import {
+  arrayEntity,
+  createReplicaSlice,
+  linkReplicaEntity,
+  recordLens,
+  type ReplicaSyncResult,
+  singleEntity,
+} from '@/libs/replica';
 import { agentEvalService } from '@/services/agentEval';
 import { type EvalStore, useEvalStore } from '@/store/eval/store';
 import { type StoreSetter } from '@/store/types';
@@ -44,6 +51,8 @@ export const createDatasetSlice = (set: Setter, get: () => EvalStore, _api?: unk
 
 export class DatasetActionImpl {
   readonly #detail;
+  /** One dataset across both resources: a delete drops it from lists and detail alike. */
+  readonly #entity;
   readonly #get: () => EvalStore;
   readonly #list;
 
@@ -57,6 +66,7 @@ export class DatasetActionImpl {
     // - `#detail`: by-id dataset page → `datasetDetailMap`
     this.#list = createReplicaSlice(datasetListResource, {
       actionPrefix: 'datasetList',
+      entity: arrayEntity<AgentEvalDatasetListItem>((dataset) => dataset.id),
       fetcher: ({ benchmarkId }) =>
         benchmarkId
           ? agentEvalService.listDatasets(benchmarkId)
@@ -68,13 +78,25 @@ export class DatasetActionImpl {
     });
     this.#detail = createReplicaSlice(datasetDetailResource, {
       actionPrefix: 'datasetDetail',
+      entity: singleEntity<AgentEvalDataset>((dataset) => dataset.id),
       fetcher: async (id) => toDatasetDetail(await agentEvalService.getDataset(id)),
       get,
       set,
       stateKey: 'datasetDetailReplica',
       view: recordLens<EvalStore, AgentEvalDataset>('datasetDetailMap'),
     });
+    this.#entity = linkReplicaEntity<AgentEvalDataset>([this.#list, this.#detail]);
   }
+
+  /**
+   * Delete a dataset on the server, then drop it from every list and its
+   * persisted detail. Clearing only the server row would leave the IndexedDB
+   * detail to repaint the deleted dataset on the next visit.
+   */
+  deleteDataset = async (id: string): Promise<void> => {
+    await agentEvalService.deleteDataset(id);
+    this.#entity.remove(id);
+  };
 
   refreshDatasetDetail = async (id: string): Promise<void> => {
     await this.#detail.revalidate(id);
@@ -94,10 +116,14 @@ export class DatasetActionImpl {
       // persisted detail would otherwise keep painting it — `AsyncBoundary` sees
       // `data` defined and swallows the fetch error. NOT_FOUND is definitive, so
       // drop the cached row and let the page settle on its error state; any
-      // transient failure keeps the persisted copy on screen.
-      onError: (error) => {
-        if (!id || !isTrpcErrorCode(error, 'NOT_FOUND')) return;
-        this.#detail.remove(id);
+      // transient failure keeps the persisted copy on screen. The removal uses
+      // the request's captured key + scope: a late 404 from a workspace the user
+      // has left purges that workspace's row, never the entry now on screen. The
+      // replica's removal guard keeps a hydrate already in flight from
+      // repainting the dropped row.
+      onError: (error, { key, scope }) => {
+        if (!key || !isTrpcErrorCode(error, 'NOT_FOUND')) return;
+        this.#detail.remove(key, scope);
       },
     });
     // Subscribe so a replica commit (hydrate or server replace) re-renders the

@@ -8,9 +8,9 @@
  * hand-written SWR `mutate`.
  */
 import { renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createReplicaState } from '@/libs/replica';
+import { cacheScope, createReplicaState } from '@/libs/replica';
 import { useEvalStore } from '@/store/eval';
 
 vi.mock('@/services/agentEval', () => ({
@@ -43,7 +43,14 @@ const syncCalls = async (name: 'evalDatasetDetail' | 'evalDatasetList') => {
     .mock.calls.filter(
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
-    .map(([key, fetcher]) => ({ fetcher: fetcher as () => Promise<any>, key: key as unknown[] }));
+    .map(([key, fetcher, options]) => ({
+      fetcher: fetcher as () => Promise<any>,
+      key: key as unknown[],
+      options: options as {
+        onError?: (error: unknown) => void;
+        onSuccess?: (data: unknown) => void;
+      },
+    }));
 };
 
 /** Capture the `mutate` matchers a refresh registered. */
@@ -59,6 +66,11 @@ describe('DatasetAction replica wiring', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetStore();
+  });
+
+  // Undo per-test `cacheScope` spies so a scope switch never leaks into the next test.
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('useFetchDatasets', () => {
@@ -113,6 +125,33 @@ describe('DatasetAction replica wiring', () => {
       expect(detail).toBeDefined();
       await detail.fetcher();
       expect(agentEvalService.getDataset).toHaveBeenCalledWith('d1');
+    });
+
+    it('applies a late NOT_FOUND to the scope its request was raised under, not the active one', async () => {
+      const getScope = vi.spyOn(cacheScope, 'get').mockReturnValue('user:ws-a');
+      const useScope = vi.spyOn(cacheScope, 'use').mockReturnValue('user:ws-a');
+      vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+
+      // A request for d1 is issued under workspace A…
+      const { rerender } = renderHook(() => useEvalStore.getState().useFetchDatasetDetail('d1'));
+      const fromA = (await syncCalls('evalDatasetDetail')).find((call) =>
+        call.key.includes('user:ws-a'),
+      );
+
+      // …the user switches to workspace B, where the same id resolves.
+      getScope.mockReturnValue('user:ws-b');
+      useScope.mockReturnValue('user:ws-b');
+      rerender();
+      const fromB = (await syncCalls('evalDatasetDetail')).find((call) =>
+        call.key.includes('user:ws-b'),
+      );
+      fromB.options.onSuccess?.({ id: 'd1', name: 'In B' });
+      expect(useEvalStore.getState().datasetDetailMap.d1?.name).toBe('In B');
+
+      // A's request finally answers NOT_FOUND: it belongs to A, so B's entry stays.
+      fromA.options.onError?.({ data: { code: 'NOT_FOUND' } });
+
+      expect(useEvalStore.getState().datasetDetailMap.d1?.name).toBe('In B');
     });
 
     it('returns the pre-migration { data, error, isLoading, mutate } shape and is inert without an id', () => {

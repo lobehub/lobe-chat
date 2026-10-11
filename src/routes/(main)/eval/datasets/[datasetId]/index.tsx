@@ -107,6 +107,7 @@ const DatasetDetail = memo(() => {
   const runList = useEvalStore(runSelectors.datasetRunList(datasetId!));
   const refreshTestCases = useEvalStore((s) => s.refreshTestCases);
   const refreshDatasetDetail = useEvalStore((s) => s.refreshDatasetDetail);
+  const deleteDataset = useEvalStore((s) => s.deleteDataset);
 
   const { data: dataset, error, isLoading, mutate } = useFetchDatasetDetail(datasetId);
   // Nullable: a dataset accumulated from captured cases belongs to no benchmark.
@@ -192,7 +193,7 @@ const DatasetDetail = memo(() => {
       okText: t('common.delete'),
       onOk: async () => {
         try {
-          await agentEvalService.deleteDataset(datasetId!);
+          await deleteDataset(datasetId!);
           toast.success(t('dataset.delete.success'));
           navigate(benchmarkId ? `/eval/bench/${benchmarkId}` : '/eval');
         } catch {
@@ -201,7 +202,7 @@ const DatasetDetail = memo(() => {
       },
       title: t('common.delete'),
     });
-  }, [benchmarkId, datasetId, navigate, t]);
+  }, [benchmarkId, datasetId, deleteDataset, navigate, t]);
 
   // Skeleton → error → (resolved-null) blank, replacing a bare `return null`
   // that flashed blank on the happy path and stayed permanently blank on a

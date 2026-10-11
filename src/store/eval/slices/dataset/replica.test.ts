@@ -234,6 +234,94 @@ describe('dataset replica', () => {
     );
   });
 
+  it('keeps a deleted dataset gone when its hydrate lands after NOT_FOUND', async () => {
+    const getDataset = vi
+      .spyOn(agentEvalService, 'getDataset')
+      .mockRejectedValue({ data: { code: 'NOT_FOUND' } });
+
+    // Cold revisit: a stale row is still in storage, but its read only finishes
+    // after the 404 has already evicted the entry.
+    const storage = datasetDetailResource.storage!;
+    await storage.set(
+      { queryKey: DETAIL_STORAGE_KEY, scope },
+      { data: { id: DETAIL_ID, name: 'Cached' } as any, updatedAt: 1 },
+    );
+    const originalGet = storage.get.bind(storage);
+    // The snapshot the in-flight hydrate is holding while the 404 lands.
+    const staleRow = await originalGet({ queryKey: DETAIL_STORAGE_KEY, scope });
+    let detailReads = 0;
+    let releaseRead!: () => void;
+    const held = new Promise<void>((resolve) => (releaseRead = resolve));
+    vi.spyOn(storage, 'get').mockImplementation((key) => {
+      if (key.queryKey !== DETAIL_STORAGE_KEY) return originalGet(key);
+      detailReads += 1;
+      return held.then(() => staleRow);
+    });
+
+    const { result } = renderDetail(DETAIL_ID);
+
+    // The definitive NOT_FOUND settles first…
+    await waitFor(() => expect(getDataset).toHaveBeenCalled());
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+
+    // …then the stale snapshot the hydrate already read lands.
+    await act(async () => {
+      releaseRead();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    // The hydration did read a row, but the late stale value must not repaint it.
+    expect(detailReads).toBeGreaterThan(0);
+    expect(useEvalStore.getState().datasetDetailMap[DETAIL_ID]).toBeUndefined();
+    await waitFor(async () =>
+      expect(await originalGet({ queryKey: DETAIL_STORAGE_KEY, scope })).toBeUndefined(),
+    );
+  });
+
+  it('drops a deleted dataset from its persisted detail and every list', async () => {
+    vi.spyOn(agentEvalService, 'getDataset').mockResolvedValue({
+      id: DETAIL_ID,
+      name: 'MMLU',
+    } as any);
+    vi.spyOn(agentEvalService, 'listDatasets').mockResolvedValue([
+      listRow(DETAIL_ID, 'MMLU'),
+      listRow('d2', 'Other'),
+    ]);
+    const deleteDataset = vi.spyOn(agentEvalService, 'deleteDataset').mockResolvedValue({} as any);
+
+    renderDetail(DETAIL_ID);
+    renderBenchList();
+    await waitFor(() => {
+      expect(useEvalStore.getState().datasetDetailMap[DETAIL_ID]?.name).toBe('MMLU');
+      expect(benchList()).toHaveLength(2);
+    });
+    await waitFor(async () =>
+      expect(
+        (await datasetDetailResource.storage!.get({ queryKey: DETAIL_STORAGE_KEY, scope }))?.data,
+      ).toEqual({ id: DETAIL_ID, name: 'MMLU' }),
+    );
+
+    await act(() => useEvalStore.getState().deleteDataset(DETAIL_ID));
+
+    expect(deleteDataset).toHaveBeenCalledWith(DETAIL_ID);
+    expect(useEvalStore.getState().datasetDetailMap[DETAIL_ID]).toBeUndefined();
+    expect(benchList()?.map((row) => row.id)).toEqual(['d2']);
+    // The next visit must not hydrate the deleted dataset back.
+    await waitFor(async () =>
+      expect(
+        await datasetDetailResource.storage!.get({ queryKey: DETAIL_STORAGE_KEY, scope }),
+      ).toBeUndefined(),
+    );
+    await waitFor(async () =>
+      expect(
+        (await datasetListResource.storage!.get({ queryKey: BENCH_STORAGE_KEY, scope }))?.data?.map(
+          (row) => row.id,
+        ),
+      ).toEqual(['d2']),
+    );
+  });
+
   it('repaints the refreshed benchmark list after a mutation', async () => {
     const listDatasets = vi
       .spyOn(agentEvalService, 'listDatasets')
