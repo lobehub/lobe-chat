@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { type SWRResponse } from 'swr';
 
-import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
+import { cacheScope, createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
 import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
@@ -13,7 +13,6 @@ import { setNamespace } from '@/utils/storeDebug';
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
-import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
 import {
   type MemoryDetailDisplay,
@@ -179,6 +178,10 @@ export class BaseActionImpl {
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
 
+    // The scope whose memories are deleted: a switch while the request is in
+    // flight must not leave its persisted rows behind (or wipe the new scope).
+    const scope = cacheScope.get();
+
     await memoryCRUDService.deleteAll();
 
     // Replica-backed reads own their state and persisted projection: wipe them
@@ -194,14 +197,18 @@ export class BaseActionImpl {
     await this.#get().internal_clearExperienceList();
     await this.#get().internal_clearPreferenceList();
     await this.#get().internal_clearIdentityList();
+    await this.#get().internal_clearActivityList(scope);
 
     this.#set(
       produce((draft) => {
-        Object.assign(draft, activityInitialState);
         Object.assign(draft, contextInitialState);
         draft.experiencesQuery = undefined;
         draft.experiencesSort = undefined;
         draft.experiencesSearchError = undefined;
+        draft.activitiesQuery = undefined;
+        draft.activitiesSearchError = undefined;
+        draft.activitiesSearchLoading = undefined;
+        draft.activitiesSort = undefined;
 
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
@@ -289,14 +296,9 @@ export class BaseActionImpl {
     switch (layer) {
       case LayersEnum.Activity: {
         await memoryCRUDService.updateActivity(id, { narrative: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.activities.find((memory) => memory.id === id);
-            if (item) item.narrative = content;
-          }),
-          false,
-          n('updateMemory/activity'),
-        );
+        // The activity list is replica-backed: patch the view and its persisted
+        // rows together (the flat `activities` field mirrors it).
+        this.#get().internal_updateActivityEntity(id, (item) => ({ ...item, narrative: content }));
         listKeyRoot = userMemoryKeys.activities.root;
         break;
       }

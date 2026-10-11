@@ -2,8 +2,8 @@ import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@lobechat/
 
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 
-import { type ActivitySliceState } from './slices/activity';
-import { activityInitialState } from './slices/activity';
+import { type ActivitySliceState } from './slices/activity/initialState';
+import { activityInitialState } from './slices/activity/initialState';
 import { type AgentMemorySliceState } from './slices/agent';
 import { agentMemoryInitialState } from './slices/agent';
 import { type MemoryDetailDisplay } from './slices/base/projection';
