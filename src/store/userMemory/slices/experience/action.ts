@@ -189,7 +189,15 @@ export class ExperienceActionImpl {
    * Drop the painted page set for a new search/sort so the previous query's rows
    * never show under the new one. A no-op when the query is unchanged, so a
    * remount keeps the in-memory + persisted view (the replica's first-frame
-   * paint). The persisted rows are left alone.
+   * paint).
+   *
+   * This issues the replica `reset` (not a plain view `update`): it drops the
+   * entry's metadata as well as the view, so the NEXT query is no longer blocked
+   * by the previous entry and hydrates its own cached head on the first frame
+   * (`update` keeps the entry and its old query, which would reject that
+   * hydrate). It also invalidates a read of the previous query already in
+   * flight, so a late hydrate cannot repaint these cleared rows. Persisted rows
+   * are kept, so switching back still opens local-first.
    */
   resetExperiencesList = (params?: Omit<ExperienceQueryParams, 'page' | 'pageSize'>): void => {
     const { experiencesQuery, experiencesSort } = this.#get();
@@ -207,7 +215,7 @@ export class ExperienceActionImpl {
       false,
       n('resetExperiencesList'),
     );
-    this.#list.update(EXPERIENCE_LIST_KEY, () => undefined, { persist: false });
+    this.#list.reset(EXPERIENCE_LIST_KEY);
   };
 
   /**

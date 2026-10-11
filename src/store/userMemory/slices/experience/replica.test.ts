@@ -276,6 +276,89 @@ describe('experienceList replica', () => {
     expect(ids(row?.data as ExperienceListData)).toEqual(['a']);
   });
 
+  it("paints the new query's cached head after the query changes", async () => {
+    // The first query loads and leaves a replica entry for the shared key.
+    fetchSpy.mockResolvedValueOnce(listPage(idsOf(12), 24));
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(useUserMemoryStore.getState().experiences).toHaveLength(12));
+
+    // An earlier session cached the new query's head.
+    const cached: ExperienceListData = {
+      currentPage: 0,
+      hasMore: false,
+      items: [item('cached-foo')],
+      pageSize: 12,
+      total: 1,
+    };
+    await experienceListResource.storage!.set(
+      { queryKey: SEARCH_KEY, scope },
+      { data: cached, updatedAt: 1 },
+    );
+
+    // The query changes and its network request never answers.
+    fetchSpy.mockImplementation(pending);
+    act(() => useUserMemoryStore.getState().resetExperiencesList({ q: 'foo' }));
+    hook.rerender({ q: 'foo' });
+
+    // The new query's cached head paints on the first frame (the reset dropped
+    // the previous entry, so its hydrate is no longer rejected).
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().experienceListData)).toEqual(['cached-foo']),
+    );
+  });
+
+  it('does not let a delayed read of the previous query repaint after the query changes', async () => {
+    // An earlier session cached the previous query's head.
+    const cachedBase: ExperienceListData = {
+      currentPage: 0,
+      hasMore: false,
+      items: [item('cached-base')],
+      pageSize: 12,
+      total: 1,
+    };
+    await experienceListResource.storage!.set(
+      { queryKey: BASE_KEY, scope },
+      { data: cachedBase, updatedAt: 1 },
+    );
+
+    // Its hydrate read hangs, so it is still in flight when the query changes.
+    const realGet = experienceListResource.storage!.get.bind(experienceListResource.storage);
+    let release!: () => void;
+    let deferred = false;
+    const spy = vi.spyOn(experienceListResource.storage!, 'get').mockImplementation(async (key) => {
+      if (!deferred && key.queryKey === BASE_KEY) {
+        deferred = true;
+        await new Promise<void>((resolve) => (release = resolve));
+      }
+      return realGet(key);
+    });
+
+    fetchSpy.mockImplementation(pending);
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(deferred).toBe(true));
+
+    act(() => useUserMemoryStore.getState().resetExperiencesList({ q: 'foo' }));
+    hook.rerender({ q: 'foo' });
+
+    // The superseded read lands late: it must not repaint the cleared slot.
+    await act(async () => {
+      release();
+      // Flush the hydrate continuation so a late paint would land before we look.
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(ids(useUserMemoryStore.getState().experienceListData)).toBeUndefined();
+
+    spy.mockRestore();
+  });
+
   it('drops a deleted experience from the view and the persisted row', async () => {
     fetchSpy.mockResolvedValue(listPage([item('a'), item('b')], 2));
     vi.spyOn(memoryCRUDService, 'deleteExperience').mockResolvedValue(undefined as never);

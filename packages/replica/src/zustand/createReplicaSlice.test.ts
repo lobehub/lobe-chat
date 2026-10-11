@@ -581,6 +581,69 @@ describe('createReplicaSlice', () => {
     });
   });
 
+  describe('reset', () => {
+    it('drops the entry and the view but keeps the persisted row', async () => {
+      const storage = createMemoryStorage();
+      const { slice, store } = setup({ storage });
+
+      await act(async () => {
+        await slice.replace({ id: 'a' }, ['server']);
+      });
+      expect(store.getState().lists.a).toEqual(['server']);
+      await waitFor(() => expect(storage.rows.get('user-1:personal|a')?.data).toEqual(['server']));
+
+      act(() => slice.reset('a'));
+
+      expect(store.getState().lists.a).toBeUndefined();
+      expect(store.getState().listsReplica.entries.a).toBeUndefined();
+      // Unlike `remove`, the persisted row survives so a switch back is local-first.
+      expect(storage.rows.get('user-1:personal|a')?.data).toEqual(['server']);
+    });
+
+    it('drops a persisted read that started before the reset, and hydrates one started after', async () => {
+      const rows = new Map<string, ReplicaRow<string[]>>([
+        ['user-1:personal|a', { data: ['cached'], updatedAt: 1 }],
+      ]);
+      let releaseFirstRead!: () => void;
+      let defer = true;
+      const storage: ReplicaStorage<string[]> = {
+        get: async ({ queryKey, scope }) => {
+          const row = rows.get(`${scope}|${queryKey}`);
+          if (defer) {
+            defer = false;
+            await new Promise<void>((resolve) => (releaseFirstRead = resolve));
+          }
+          return row;
+        },
+        remove: async () => {},
+        set: async () => {},
+      };
+      const { slice, store } = setup({ storage: { storage } as never });
+
+      // A read of the previous query is in flight...
+      let inflight!: Promise<boolean>;
+      act(() => {
+        inflight = slice.hydrate({ id: 'a' });
+      });
+
+      // ...the query changes and the entry is reset...
+      act(() => slice.reset('a'));
+
+      // ...and the superseded read lands late: it must not repaint the slot.
+      await act(async () => {
+        releaseFirstRead();
+        await inflight;
+      });
+      expect(store.getState().lists.a).toBeUndefined();
+
+      // A read started after the reset still hydrates the new query's row.
+      await act(async () => {
+        await slice.hydrate({ id: 'a' });
+      });
+      expect(store.getState().lists.a).toEqual(['cached']);
+    });
+  });
+
   describe('persisted index', () => {
     it('removes a key this instance never wrote from the stored index', async () => {
       const storage = createMemoryStorage();

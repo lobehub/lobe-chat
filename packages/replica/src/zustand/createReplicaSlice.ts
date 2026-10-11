@@ -252,6 +252,17 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
       return engine.remove(key, scope);
     },
+    /**
+     * Drop the entry and its view for a query change (see `engine.reset`) and
+     * forget the key's head-query marker too: a response for the superseded
+     * query must not pass the `onSuccess` guard and repaint the slot the reset
+     * just emptied. Persisted rows are kept, so the next query hydrates its own
+     * cached head.
+     */
+    reset: (key: string, scope?: string) => {
+      if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
+      return engine.reset(key, scope);
+    },
     useSync,
   };
 };
