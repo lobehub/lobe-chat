@@ -87,7 +87,16 @@ const findLastMessageIdRecursive = (node: UIChatMessage | undefined): string | u
 
   const columns = (node as any).columns as UIChatMessage[][] | undefined;
   if (columns && columns.length > 0) {
-    return findLastMessageIdRecursive(columns.at(-1)?.at(-1));
+    // The conversation flow continues from the active column (compare nodes carry
+    // `activeColumnId` set by FlatListBuilder / ContextTreeBuilder), which is not
+    // necessarily the last one. Resolve the active column first so the next turn
+    // attaches to the visible branch; fall back to the last column otherwise.
+    const activeColumnId = (node as any).activeColumnId as string | undefined;
+    const activeColumn = activeColumnId
+      ? columns.find((column) => column?.some((message) => message?.id === activeColumnId))
+      : undefined;
+    const column = activeColumn && activeColumn.length > 0 ? activeColumn : columns.at(-1);
+    return findLastMessageIdRecursive(column?.at(-1));
   }
 
   // Priority 4: Return self ID

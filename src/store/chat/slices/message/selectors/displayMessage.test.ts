@@ -1014,5 +1014,59 @@ describe('displayMessageSelectors', () => {
       );
       expect(result).toBe('col-b');
     });
+
+    it('should resolve the active column id for a compare virtual message (not the last column)', () => {
+      // FlatListBuilder / ContextTreeBuilder mark the selected branch via
+      // `activeColumnId` and continue the flow from that column. When the active
+      // column is not the last one, attaching the next turn after the last column
+      // would parent it to an inactive alternative.
+      const compareMessage = {
+        id: 'compare-msg-1-msg-2-msg-3',
+        role: 'compare',
+        content: '',
+        activeColumnId: 'msg-2',
+        columns: [
+          [{ id: 'msg-2', content: 'A' }],
+          [
+            { id: 'msg-3', content: 'B' },
+            { id: 'msg-3-follow-up', content: 'B1' },
+          ],
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeAgentId: 'test-id',
+        messagesMap: {
+          [messageMapKey({ agentId: 'test-id' })]: [compareMessage],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('compare-msg-1-msg-2-msg-3')(
+        state as ChatStore,
+      );
+      expect(result).toBe('msg-2');
+    });
+
+    it('should fall back to the last column when the compare activeColumnId matches nothing', () => {
+      const compareMessage = {
+        id: 'compare-group-1',
+        role: 'compare',
+        content: '',
+        activeColumnId: 'msg-missing',
+        columns: [[{ id: 'col-a', content: 'A' }], [{ id: 'col-b', content: 'B' }]],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeAgentId: 'test-id',
+        messagesMap: {
+          [messageMapKey({ agentId: 'test-id' })]: [compareMessage],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('compare-group-1')(
+        state as ChatStore,
+      );
+      expect(result).toBe('col-b');
+    });
   });
 });
