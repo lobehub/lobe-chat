@@ -42,14 +42,15 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     }
   };
 
+  /**
+   * Rejects when the delete did not land (e.g. storage access denied), unlike
+   * reads and writes: a caller removing a row the user deleted must be able to
+   * retry it.
+   */
   remove = async (key: QueryProjectionKey): Promise<void> => {
     if (typeof window === 'undefined') return;
 
-    try {
-      localStorage.removeItem(this.#key(key));
-    } catch {
-      // Projection persistence is best-effort; the server remains the durable SoT.
-    }
+    localStorage.removeItem(this.#key(key));
   };
 
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {

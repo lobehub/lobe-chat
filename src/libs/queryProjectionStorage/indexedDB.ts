@@ -27,13 +27,13 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
     }
   };
 
+  /**
+   * Rejects when the delete did not land, unlike reads and writes: a caller
+   * that removes a row the user deleted must be able to retry it.
+   */
   remove = async (key: QueryProjectionKey): Promise<void> => {
-    try {
-      await localDatabase.initialize();
-      await localDatabase.delete(COLLECTION, this.#key(key));
-    } catch {
-      // Projection persistence is best-effort; the server remains the durable SoT.
-    }
+    await localDatabase.initialize();
+    await localDatabase.delete(COLLECTION, this.#key(key));
   };
 
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {

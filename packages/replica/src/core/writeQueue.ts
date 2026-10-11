@@ -14,6 +14,7 @@ export class ReplicaWriteQueue<T> {
 
   #id = ({ queryKey, scope }: ReplicaRowKey) => `${scope}:${queryKey}`;
 
+  /** Resolves `false` when storage rejected the delete (see `ReplicaStorage.remove`). */
   remove = (key: ReplicaRowKey): Promise<boolean> =>
     this.#enqueue(key, () => this.#storage.remove(key));
 

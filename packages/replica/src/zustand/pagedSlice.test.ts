@@ -3,6 +3,7 @@ import { createStore } from 'zustand/vanilla';
 
 import { testDriver as driver } from '../../tests/testDriver';
 import { definePagedReplica, defineReplica } from '../core/defineReplica';
+import { REPLICA_INDEX_KEY } from '../core/engine';
 import { linkReplicaEntity } from '../core/entity';
 import { singleEntity } from '../core/entityAdapters';
 import type { ReplicaPagedData, ReplicaPageResult } from '../core/paging';
@@ -416,6 +417,46 @@ describe('entity removals vs reads in flight', () => {
     expect(store.getState().details.a).toBeUndefined();
   });
 
+  it('an explicit slice.removeEntity beats a hydrate already reading', async () => {
+    const { list, listResource, listStorage, store } = await persisted();
+    const release = holdReads(listStorage.storage, listResource.storageKey(params));
+
+    const hydration = list.hydrate(params);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    list.removeEntity('a');
+    release();
+    await hydration;
+
+    expect(ids(store.getState().lists.o1)).toEqual(['b']);
+  });
+
+  it('updateEntity with a mapper returning undefined still deletes, whatever its arity', async () => {
+    const { list, listResource, listStorage, store } = await persisted();
+    list.replace({ owner: 'o2', pageSize: 2 }, { items: [row('a'), row('x')], total: 2 });
+
+    list.updateEntity<Row>('a', (_item) => undefined);
+
+    expect(ids(store.getState().lists.o2)).toEqual(['x']);
+    // The unloaded persisted row loses it too.
+    await vi.waitFor(() =>
+      expect(ids(listStorage.rows.get(`user-1|${listResource.storageKey(params)}`)?.data)).toEqual([
+        'b',
+      ]),
+    );
+  });
+
+  it('never invokes an entity mapper speculatively', () => {
+    const ctx = setup();
+    ctx.list.replace(params, pageOf(params));
+    const mapper = vi.fn(() => row('a', 'renamed'));
+
+    ctx.list.updateEntity<Row>('a', mapper, { persist: false });
+
+    // Once to probe the loaded value, once inside the confirmed update.
+    expect(mapper).toHaveBeenCalledTimes(2);
+    expect(ctx.store.getState().lists.o1.items[0].title).toBe('renamed');
+  });
+
   it('a server value holding the entity again lifts the removal', async () => {
     const { list, listResource, listStorage, store, topic } = await persisted();
     topic.remove('a');
@@ -446,7 +487,10 @@ describe('linkReplicaEntity.clear', () => {
     expect(ctx.store.getState().lists).toEqual({});
     expect(ctx.store.getState().details).toEqual({});
     expect(await purge).toBe(true);
-    expect(ctx.listStorage.rows.size).toBe(0);
-    expect(ctx.detailStorage.rows.size).toBe(0);
+    // Only the (emptied) index rows remain.
+    const dataRows = (rows: Map<string, unknown>) =>
+      [...rows.keys()].filter((key) => !key.endsWith(REPLICA_INDEX_KEY));
+    expect(dataRows(ctx.listStorage.rows)).toEqual([]);
+    expect(dataRows(ctx.detailStorage.rows)).toEqual([]);
   });
 });

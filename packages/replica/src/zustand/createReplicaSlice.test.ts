@@ -816,6 +816,54 @@ describe('createReplicaSlice', () => {
       });
     });
 
+    /** Make storage reject the first delete of `queryKey` (a closed IndexedDB). */
+    const failFirstDelete = (storage: ReturnType<typeof createMemoryStorage>, queryKey: string) => {
+      const original = storage.storage.remove;
+      let failed = false;
+      storage.storage.remove = async (key) => {
+        if (key.queryKey === queryKey && !failed) {
+          failed = true;
+          throw new Error('IndexedDB delete failed');
+        }
+        return original(key);
+      };
+    };
+
+    it('keeps a variant whose delete failed indexed, so a later remove retries it', async () => {
+      const { resource, slice, storage } = await persistVariants();
+      const filtered = row(resource, { id: 'a', q: 'x' });
+      failFirstDelete(storage, resource.storageKey({ id: 'a', q: 'x' }));
+      // Memory holds another variant, so the failing row is found through the index.
+      act(() => slice.replace({ id: 'a' }, ['a-all']));
+
+      act(() => slice.remove('a'));
+      await waitFor(() => expect(storage.rows.has(row(resource, { id: 'a' }))).toBe(false));
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(storage.rows.has(filtered)).toBe(true);
+
+      // The next removal still knows about the failed row and retries it.
+      act(() => slice.remove('a'));
+      await waitFor(() => expect(storage.rows.has(filtered)).toBe(false));
+    });
+
+    it('keeps a row whose delete failed indexed, so a later clear retries it', async () => {
+      const { resource, slice, storage } = await persistVariants();
+      failFirstDelete(storage, resource.storageKey({ id: 'ab' }));
+
+      let purge!: Promise<boolean>;
+      act(() => {
+        purge = slice.clear();
+      });
+      expect(await purge).toBe(false);
+      expect([...storage.rows.keys()]).toEqual([row(resource, { id: 'ab' })]);
+
+      act(() => {
+        purge = slice.clear();
+      });
+      expect(await purge).toBe(true);
+      expect(storage.rows.size).toBe(0);
+    });
+
     it('clear wipes memory, every persisted row and the index of the active scope', async () => {
       const first = await persistVariants();
       // A later session loads only one entry; the rest is known only to the index.
@@ -833,11 +881,9 @@ describe('createReplicaSlice', () => {
       await act(async () => {
         expect(await purge).toBe(true);
       });
-      // Only the other identity's row survives; the index is gone too.
+      // Only the other identity's row survives; the index lists nothing.
       expect([...storage.rows.keys()]).toEqual(['user-2:personal|a']);
-      expect(
-        await storage.storage.get({ queryKey: REPLICA_INDEX_KEY, scope: 'user-1:personal' }),
-      ).toBeUndefined();
+      await waitFor(() => expect(storage.indexRows.get('user-1:personal')?.data).toEqual([]));
       await act(async () => {
         expect(await slice.hydrate({ id: 'a' })).toBe(false);
       });

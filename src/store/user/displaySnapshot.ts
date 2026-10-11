@@ -71,5 +71,7 @@ export const writeUserDisplaySnapshot = (
  */
 export const clearUserDisplaySnapshot = (userId: string | undefined): void => {
   if (!userId) return;
-  void storage.remove(snapshotKey(userId));
+  storage.remove(snapshotKey(userId)).catch((error) => {
+    console.error('[displaySnapshot] failed to clear the display snapshot', error);
+  });
 };

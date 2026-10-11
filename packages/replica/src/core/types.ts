@@ -15,11 +15,18 @@ export interface ReplicaRow<T> {
 
 /**
  * Where a replica keeps its rows between sessions (IndexedDB, localStorage …).
- * Best-effort by contract: the server stays the durable source of truth, so
- * an implementation should swallow its own I/O failures.
+ * Reads and writes are best-effort: the server stays the durable source of
+ * truth, so `get` and `set` should swallow their own I/O failures (a failed
+ * read is a cache miss, a failed write is retried by the next one).
  */
 export interface ReplicaStorage<T> {
   get: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
+  /**
+   * Delete a row. Must **reject** when the delete did not land (a closed
+   * IndexedDB, a quota or security error): the engine keeps the row indexed
+   * and the removal unpurged, so the next `remove` / `clear` retries it instead
+   * of letting a row the user deleted hydrate again. A missing row is a success.
+   */
   remove: (key: ReplicaRowKey) => Promise<void>;
   set: (key: ReplicaRowKey, row: ReplicaRow<T>) => Promise<void>;
 }

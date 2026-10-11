@@ -10,6 +10,11 @@ export interface ReplicaEntityTarget {
   clear?: () => Promise<boolean>;
   /** Patch persisted rows whose entry is not loaded in memory. */
   patchStoredEntity: <TItem>(id: string, fn: (item: TItem) => TItem | undefined) => Promise<void>;
+  /**
+   * Explicit entity removal that also guards later hydrates. Optional for
+   * custom targets; `linkReplicaEntity` falls back to `updateEntity`.
+   */
+  removeEntity?: (id: string, options?: { persist?: boolean }) => void;
   revalidate: (key?: string) => Promise<unknown>;
   updateEntity: <TItem>(
     id: string,
@@ -46,7 +51,10 @@ export const linkReplicaEntity = <TItem>(targets: ReplicaEntityTarget[]) => {
    * flight — comes back without the entity.
    */
   const remove = (id: string, options?: { persist?: boolean }): void => {
-    for (const target of targets) target.updateEntity<TItem>(id, () => undefined, options);
+    for (const target of targets) {
+      if (target.removeEntity) target.removeEntity(id, options);
+      else target.updateEntity<TItem>(id, () => undefined, options);
+    }
   };
 
   /**

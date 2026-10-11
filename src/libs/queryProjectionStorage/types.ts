@@ -10,6 +10,7 @@ export interface QueryProjection<T> {
 
 export interface QueryProjectionStorage<T> {
   get: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
+  /** Rejects when the delete did not land (reads and writes stay best-effort). */
   remove: (key: QueryProjectionKey) => Promise<void>;
   set: (key: QueryProjectionKey, projection: QueryProjection<T>) => Promise<void>;
 }

@@ -27,4 +27,14 @@ describe('IndexedDBQueryProjectionStorage', () => {
 
     await expect(storage.get({ queryKey: 'all', scope: 'personal' })).resolves.toBeUndefined();
   });
+
+  it('reports a failed delete so the caller can retry it', async () => {
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue();
+    vi.spyOn(localDatabase, 'delete').mockRejectedValue(new Error('database closed'));
+    const storage = new IndexedDBQueryProjectionStorage<string[]>({ namespace: 'projects' });
+
+    await expect(storage.remove({ queryKey: 'all', scope: 'personal' })).rejects.toThrow(
+      'database closed',
+    );
+  });
 });
