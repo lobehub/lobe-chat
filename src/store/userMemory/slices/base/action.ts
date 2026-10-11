@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { type SWRResponse } from 'swr';
 import useSWR from 'swr';
 
+import { cacheScope } from '@/libs/replica';
 import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
@@ -67,13 +68,17 @@ export class BaseActionImpl {
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
 
+    // The scope whose memories are deleted: a switch while the request is in
+    // flight must not leave its persisted rows behind (or wipe the new scope).
+    const scope = cacheScope.get();
+
     await memoryCRUDService.deleteAll();
 
     // Replica-backed lists own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
     // revalidation below, so a reload never resurrects purged rows. Every
     // replica-backed userMemory slice adds its `internal_clear*` call here.
-    await this.#get().internal_clearActivityList();
+    await this.#get().internal_clearActivityList(scope);
 
     this.#set(
       produce((draft) => {

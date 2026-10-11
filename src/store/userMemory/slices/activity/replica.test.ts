@@ -541,6 +541,95 @@ describe('activityList replica', () => {
     });
   });
 
+  it('keeps paging blocked until a head page lands after a failed post-delete refresh', async () => {
+    const server = idsOf(24);
+    let failHead = false;
+    fetchSpy.mockImplementation(async (params: { page?: number; pageSize?: number } = {}) => {
+      const page = params.page ?? 1;
+      if (page === 1 && failHead) {
+        failHead = false;
+        throw new Error('head refresh failed');
+      }
+      const start = (page - 1) * 12;
+      return { items: server.slice(start, start + 12), page, pageSize: 12, total: server.length };
+    });
+    vi.spyOn(memoryCRUDService, 'deleteActivity').mockImplementation(async (id: string) => {
+      server.splice(
+        server.findIndex((row) => row.id === id),
+        1,
+      );
+      failHead = true;
+      return undefined as never;
+    });
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(12));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().deleteActivity('activity-0');
+    });
+    // The refresh failed: the head still holds 11 rows, so offset 12 would skip one.
+    expect(useUserMemoryStore.getState().activities).toHaveLength(11);
+
+    act(() => useUserMemoryStore.getState().loadMoreActivities());
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(23));
+
+    expect(useUserMemoryStore.getState().activities.map((row) => row.id)).toEqual(
+      server.map((row) => row.id),
+    );
+  });
+
+  it('purges the scope the delete-all started in when the scope switches meanwhile', async () => {
+    const server = idsOf(2);
+    serveList(server);
+    let finishDelete!: () => void;
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(
+      () => new Promise<never>((resolve) => (finishDelete = () => resolve(undefined as never))),
+    );
+
+    // The initiating scope persisted a search variant and the base list.
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({});
+    await waitFor(async () =>
+      expect(
+        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    const initiating = scope;
+
+    let purged!: Promise<void>;
+    act(() => {
+      purged = useUserMemoryStore.getState().purgeAllMemories();
+    });
+    await waitFor(() => expect(finishDelete).toBeTypeOf('function'));
+    // The user switches workspace while the server deletes.
+    useScope(`activity-user-${randomUUID()}:personal`);
+    await act(async () => {
+      finishDelete();
+      await purged;
+    });
+
+    await waitFor(async () => {
+      expect(
+        await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope: initiating }),
+      ).toBeFalsy();
+      expect(
+        await activityListResource.storage!.get({ queryKey: BASE_KEY, scope: initiating }),
+      ).toBeFalsy();
+    });
+  });
+
   it('does not fetch another page when the head page is the last one', async () => {
     fetchSpy.mockResolvedValue(listPage([item('only')], 1));
 
