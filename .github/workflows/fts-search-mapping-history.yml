@@ -3,6 +3,12 @@ name: FTS Search Mapping History
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
+    # The guard only compares the migration directory and schema snapshots, so a
+    # PR that touches neither cannot violate append-only history.
+    paths:
+      - 'packages/database/src/repositories/ftsSearchDocument/**'
+      - '.github/scripts/check-fts-mapping-history*.mjs'
+      - '.github/workflows/fts-search-mapping-history.yml'
 
 permissions:
   contents: read

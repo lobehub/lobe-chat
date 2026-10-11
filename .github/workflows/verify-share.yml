@@ -9,7 +9,21 @@
 name: Verify Share
 
 on:
-  pull_request: {}
+  pull_request:
+    # Only directories outside the share bundle graph are ignored; anything else
+    # still reaches the manifest check in `Detect share input changes`. The
+    # share manifest does pull files from apps/server, so that stays in.
+    paths-ignore:
+      - 'docs/**'
+      - 'e2e/**'
+      - '.agents/**'
+      - '.claude/**'
+      - 'apps/auth/**'
+      - 'apps/cli/**'
+      - 'apps/desktop/**'
+      - 'apps/workbench/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/scripts/**'
 
 permissions:
   actions: read

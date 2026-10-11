@@ -1,7 +1,21 @@
 name: Verify Workbench
 
 on:
-  pull_request: {}
+  pull_request:
+    # Only directories outside the workbench bundle graph are ignored; anything
+    # else still reaches the manifest check in `Detect workbench input changes`.
+    paths-ignore:
+      - 'docs/**'
+      - 'e2e/**'
+      - '.agents/**'
+      - '.claude/**'
+      - 'apps/auth/**'
+      - 'apps/cli/**'
+      - 'apps/desktop/**'
+      - 'apps/server/**'
+      - 'apps/share/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/scripts/**'
 
 permissions:
   actions: read
