@@ -47,9 +47,7 @@ export const HeterogeneousTaskConfig = ({ fields, source }: HeterogeneousTaskCon
                 {t(`taskDetail.runtimeConfig.field.${field.key}`)}
               </Text>
               <Text fontSize={12} style={{ flex: 1, overflowWrap: 'anywhere' }}>
-                {field.key === 'speed' && field.value === 'default' && field.source !== 'runtime'
-                  ? t('heteroAgent.modelSelector.speed.standard')
-                  : valueLabel(field.value)}
+                {valueLabel(field.value)}
               </Text>
               <Tag>{t(`taskDetail.runtimeConfig.source.${field.source}`)}</Tag>
             </Flexbox>
