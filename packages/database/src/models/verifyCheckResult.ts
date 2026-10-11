@@ -10,7 +10,7 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
  * Mirrors the runtime-side terminal set (verifyResult.ts): `pending` / `running`
  * are the only non-terminal lifecycle states of a check result.
  */
-const TERMINAL_RESULT_STATUSES = ['passed', 'failed', 'errored', 'skipped'];
+const TERMINAL_RESULT_STATUSES = ['passed', 'failed', 'errored', 'skipped'] as const;
 
 export class VerifyCheckResultModel {
   private readonly db: LobeChatDatabase;

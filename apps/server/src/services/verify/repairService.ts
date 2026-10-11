@@ -307,6 +307,17 @@ export class VerifyRepairService {
     operationId: string,
     spawner?: RepairSpawner,
   ): Promise<{ repairOperationId: string } | null> {
+    // Settlement may re-enter this path (finalizeVerifyRun is idempotent and
+    // duplicate verifier submissions re-run settlement), so a run whose repair
+    // round is already in flight must not spawn a second one against the same
+    // failures. The repairing stamp plus the per-result repairOperationId links
+    // below make a spawn observable before the next caller can act.
+    const runForGuard = await this.runModel.findByOperation(operationId);
+    if (runForGuard?.status === 'repairing') {
+      log('op %s already has a repair round in flight, not repairing again', operationId);
+      return null;
+    }
+
     const failures = await this.collectRepairable(operationId);
     if (failures.length === 0) return null;
     if (!spawner) {

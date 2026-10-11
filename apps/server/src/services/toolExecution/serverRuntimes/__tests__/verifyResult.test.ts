@@ -97,7 +97,9 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
 
   it('returns an idempotent receipt instead of overwriting an already-terminal verdict', async () => {
     mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
-    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1' });
+    // Fast-path settlement retry: the re-read must observe the settled run
+    // (status "failed") so the settlement tail re-runs idempotently.
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'failed' });
     mocks.resultListByRun.mockResolvedValue([
       {
         checkItemId: 'check-1',
@@ -114,6 +116,75 @@ describe('verifyResultRuntime.submitVerifyResult', () => {
     expect(result.success).toBe(true);
     expect(result.content).toContain('already recorded');
     expect(mocks.resultUpdateByCheckItemIfPending).not.toHaveBeenCalled();
+    // Duplicate calls execute the idempotent settlement path (rollup recompute
+    // + finalizer) so a verdict persisted without a completed settle recovers.
+    expect(mocks.statusRecompute).toHaveBeenCalledWith('op-parent');
+    expect(mocks.finalizeVerifyRun).toHaveBeenCalled();
+  });
+
+  it('re-runs settlement on a duplicate submission whose verdict already landed but finalize never completed', async () => {
+    // P1 regression: the first call persisted the verdict, then
+    // finalizeVerifyRun() threw (e.g. while starting an auto repair). The row
+    // is terminal, so every retry used to take the fast path, report success,
+    // and never retry finalization — leaving the run unsettled where the
+    // stuck-verification sweep cannot recover it.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'failed' });
+    mocks.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'uncertain' },
+    ]);
+    mocks.statusRecompute.mockResolvedValue('failed');
+    mocks.finalizeVerifyRun.mockResolvedValue(undefined);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'uncertain',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.content).toContain('already recorded');
+    expect(mocks.statusRecompute).toHaveBeenCalledWith('op-parent');
+    expect(mocks.finalizeVerifyRun).toHaveBeenCalled();
+  });
+
+  it('loud-fails the duplicate receipt when the settlement retry itself fails', async () => {
+    // A settlement retry that throws must surface as an error receipt — not a
+    // success ack — so the caller retries instead of trusting a no-op.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'failed' });
+    mocks.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+    mocks.statusRecompute.mockRejectedValue(new Error('rollup write failed'));
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('SETTLEMENT_INCOMPLETE');
+    expect(result.content).toContain('already recorded');
+    expect(result.content).toContain('settlement did not complete');
+    expect(mocks.finalizeVerifyRun).not.toHaveBeenCalled();
+  });
+
+  it('does not re-run settlement while a repair round is in flight', async () => {
+    // status "repairing" owns settlement from here on; touching the rollup or
+    // finalizer now would race the repair round's own completion path.
+    mocks.operationFindById.mockResolvedValue({ parentOperationId: 'op-parent' });
+    mocks.runFindByOperation.mockResolvedValue({ id: 'run-1', status: 'repairing' });
+    mocks.resultListByRun.mockResolvedValue([
+      { checkItemId: 'check-1', status: 'failed', verdict: 'failed' },
+    ]);
+
+    const result = await runtime.submitVerifyResult({
+      checkItemId: 'check-1',
+      verdict: 'passed',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.content).toContain('already recorded');
     expect(mocks.statusRecompute).not.toHaveBeenCalled();
     expect(mocks.finalizeVerifyRun).not.toHaveBeenCalled();
   });

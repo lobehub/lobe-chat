@@ -107,6 +107,32 @@ class VerifyResultExecutionRuntime {
       // maps to status "failed", so echoing the status would claim "failed"
       // was recorded even when the stored verdict is e.g. "uncertain".
       const reported = current.verdict ?? current.status;
+      // A previous call may have persisted the verdict but thrown during
+      // settlement (recompute/finalize), leaving the run terminal-but-unsettled
+      // where the stuck-verification sweep cannot recover it. Duplicate calls
+      // therefore re-run the idempotent settlement instead of blind-acking the
+      // receipt — except while a repair round is in flight (status "repairing"),
+      // which owns settlement from here on.
+      const freshRun = await new VerifyRunModel(
+        this.db,
+        this.userId,
+        this.workspaceId,
+      ).findByOperation(targetOperationId);
+      if (freshRun && freshRun.status !== 'repairing') {
+        try {
+          await new VerifyStatusService(this.db, this.userId, this.workspaceId).recompute(
+            targetOperationId,
+          );
+          await finalizeVerifyRun(this.db, this.userId, targetOperationId, {}, this.workspaceId);
+        } catch (error) {
+          log('settlement retry failed for op %s: %O', targetOperationId, error);
+          return {
+            content: `Verdict "${reported}" was already recorded for this check, but run settlement did not complete. Retry the submission to finish settlement.`,
+            error: 'SETTLEMENT_INCOMPLETE',
+            success: false,
+          };
+        }
+      }
       return {
         content: `Verdict "${reported}" was already recorded for this check; the duplicate submission was ignored.`,
         success: true,
