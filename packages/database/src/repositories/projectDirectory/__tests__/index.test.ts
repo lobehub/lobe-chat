@@ -5,6 +5,7 @@ import { getTestDB } from '../../../core/getTestDB';
 import { EnvironmentModel } from '../../../models/environment';
 import { ProjectModel } from '../../../models/project';
 import { ProjectWorkingDirectoryModel } from '../../../models/projectWorkingDirectory';
+import { TopicModel } from '../../../models/topic';
 import {
   agents,
   devices,
@@ -359,6 +360,28 @@ describe('ProjectDirectoryRepository.moveTopic', () => {
     await expect(repo.moveTopic('to-move', target.id)).rejects.toThrow('running');
     const [topic] = await db.select().from(topics).where(eq(topics.id, 'to-move'));
     expect(topic.projectWorkingDirectoryId).toBe(first.id);
+  });
+
+  it('refuses to move a topic while a turn holds its start reservation', async () => {
+    const first = await repo.bind(base);
+    const target = await repo.bind(second);
+    await pinnedTopic(first.id);
+    // A start reserved the topic but has not published `runningOperation` yet.
+    await new TopicModel(db, userId).updateMetadata('to-move', {
+      taskCallbackReservation: { messageId: 'msg-1', reservedAt: new Date().toISOString() },
+    });
+    await expect(repo.moveTopic('to-move', target.id)).rejects.toThrow('running');
+
+    // An expired reservation is abandoned and no longer holds the topic.
+    await new TopicModel(db, userId).updateMetadata('to-move', {
+      taskCallbackReservation: {
+        messageId: 'msg-1',
+        reservedAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      },
+    });
+    await repo.moveTopic('to-move', target.id);
+    const [topic] = await db.select().from(topics).where(eq(topics.id, 'to-move'));
+    expect(topic.projectWorkingDirectoryId).toBe(target.id);
   });
 
   it('lets another workspace member move a shared topic they did not create', async () => {

@@ -8,6 +8,7 @@ import {
   normalizeProjectDirectory,
   ProjectWorkingDirectoryModel,
 } from '../../models/projectWorkingDirectory';
+import { hasLiveTaskCallbackReservation } from '../../models/topic';
 import { agents, devices, projectEnvironments, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { buildWorkspaceWhere } from '../../utils/workspace';
@@ -292,7 +293,15 @@ export class ProjectDirectoryRepository {
       if (!topic) throw new Error('Topic not found or access denied');
       if (!topic.projectId || !topic.projectWorkingDirectoryId)
         throw new Error('Topic is not bound to a project directory');
-      if (topic.status === 'running' || topic.metadata?.runningOperation)
+      // A start that holds the reservation may already have resolved the old
+      // directory; moving under it would run the turn on the old machine while
+      // the topic is persisted as bound to the new one. The row lock above
+      // serializes with the reservation write.
+      if (
+        topic.status === 'running' ||
+        topic.metadata?.runningOperation ||
+        hasLiveTaskCallbackReservation(topic.metadata)
+      )
         throw new Error('Wait for the running topic to finish before moving it');
       // Scoped to the topic's own project: another project's directory is not
       // a device switch, it is a different conversation context.
