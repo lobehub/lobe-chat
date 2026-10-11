@@ -121,7 +121,7 @@ export class AssistantActionImpl {
       pageSize: params.pageSize ? Number(params.pageSize) : 21,
     };
     const queryKey = assistantListQueryKey(normalized);
-    const sync = this.#list.useSync(normalized, { enabled });
+    const sync = this.#list.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().assistantListMap[queryKey], enabled);
   };
 
@@ -142,7 +142,7 @@ export class AssistantActionImpl {
       version: params.version,
     };
     const queryKey = assistantDetailQueryKey(normalized);
-    const sync = this.#detail.useSync(normalized, { enabled });
+    const sync = this.#detail.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -166,7 +166,7 @@ export class AssistantActionImpl {
       locale: globalHelpers.getCurrentLanguage(),
     };
     const queryKey = assistantCategoriesQueryKey(normalized);
-    const sync = this.#categories.useSync(normalized, { enabled });
+    const sync = this.#categories.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -182,7 +182,7 @@ export class AssistantActionImpl {
   ): AssistantSyncResult => {
     const { enabled = true } = options;
     const queryKey = assistantIdentifiersQueryKey(params);
-    const sync = this.#identifiers.useSync(params, { enabled });
+    const sync = this.#identifiers.useSync(params, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,

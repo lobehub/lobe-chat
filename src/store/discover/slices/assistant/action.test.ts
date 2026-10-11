@@ -66,13 +66,34 @@ const syncCalls = async (
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
 };
 
 describe('AssistantSlice (replica)', () => {
+  it('does not revalidate any assistant read on window focus', async () => {
+    renderHook(() => {
+      const state = useStore.getState();
+      state.useFetchAssistantList();
+      state.useFetchAssistantDetail({ identifier: 'lobe-chat' });
+      state.useFetchAssistantCategories();
+      state.useFetchAssistantIdentifiers();
+    });
+
+    for (const name of [
+      'assistantList',
+      'assistantDetail',
+      'assistantCategories',
+      'assistantIdentifiers',
+    ] as const) {
+      const calls = await syncCalls(name);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const call of calls) expect(call.config.revalidateOnFocus).toBe(false);
+    }
+  });
+
   describe('useFetchAssistantList', () => {
     it('requests the list with normalized page / pageSize and the locale', async () => {
       const { discoverService } = await import('@/services/discover');
