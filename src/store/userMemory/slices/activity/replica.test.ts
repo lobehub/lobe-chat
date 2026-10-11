@@ -98,6 +98,19 @@ describe('activityList replica', () => {
     vi.clearAllMocks();
   });
 
+  /** A server list the fetch spy pages through by offset, like `queryActivities`. */
+  const serveList = (rows: ActivityListItem[]) =>
+    fetchSpy.mockImplementation(async (params: { page?: number; pageSize?: number } = {}) => {
+      const pageSize = params.pageSize ?? 12;
+      const start = ((params.page ?? 1) - 1) * pageSize;
+      return {
+        items: rows.slice(start, start + pageSize),
+        page: params.page ?? 1,
+        pageSize,
+        total: rows.length,
+      };
+    });
+
   it('reads the list from a single scope entry', () => {
     expect(ACTIVITY_LIST_KEY).toBe('all');
   });
@@ -262,8 +275,15 @@ describe('activityList replica', () => {
   });
 
   it('drops a deleted activity from the view and the persisted row', async () => {
-    fetchSpy.mockResolvedValue(listPage([item('a'), item('b')], 2));
-    vi.spyOn(memoryCRUDService, 'deleteActivity').mockResolvedValue(undefined as never);
+    const server = [item('a'), item('b')];
+    serveList(server);
+    vi.spyOn(memoryCRUDService, 'deleteActivity').mockImplementation(async (id: string) => {
+      server.splice(
+        server.findIndex((row) => row.id === id),
+        1,
+      );
+      return undefined as never;
+    });
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }), {
       wrapper,
@@ -283,6 +303,168 @@ describe('activityList replica', () => {
       const row = await activityListResource.storage!.get({ queryKey: BASE_KEY, scope });
       expect(ids(row?.data as ActivityListData)).toEqual(['b']);
     });
+  });
+
+  it('does not skip the row that shifts onto the head after a delete', async () => {
+    const server = idsOf(36);
+    serveList(server);
+    vi.spyOn(memoryCRUDService, 'deleteActivity').mockImplementation(async (id: string) => {
+      server.splice(
+        server.findIndex((row) => row.id === id),
+        1,
+      );
+      return undefined as never;
+    });
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(12));
+    act(() => useUserMemoryStore.getState().loadMoreActivities());
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(24));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().deleteActivity('activity-0');
+    });
+
+    // The loaded depth collapses to the revalidated head page.
+    const head = useUserMemoryStore.getState().activityListData!;
+    expect(head.currentPage).toBe(0);
+    expect(ids(head)).toEqual(idsOf(12, 1).map((row) => row.id));
+
+    act(() => useUserMemoryStore.getState().loadMoreActivities());
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(24));
+    act(() => useUserMemoryStore.getState().loadMoreActivities());
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(35));
+
+    // Every remaining server row is listed exactly once, in order.
+    expect(useUserMemoryStore.getState().activities.map((a) => a.id)).toEqual(
+      idsOf(35, 1).map((row) => row.id),
+    );
+  });
+
+  it('waits for the post-delete head revalidation before loading more', async () => {
+    const server = idsOf(36);
+    serveList(server);
+    vi.spyOn(memoryCRUDService, 'deleteActivity').mockImplementation(async (id: string) => {
+      server.splice(
+        server.findIndex((row) => row.id === id),
+        1,
+      );
+      return undefined as never;
+    });
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(12));
+
+    let deleted!: Promise<void>;
+    act(() => {
+      deleted = useUserMemoryStore.getState().deleteActivity('activity-3');
+      // Paging while the head is still being revalidated.
+      useUserMemoryStore.getState().loadMoreActivities();
+    });
+    await act(async () => {
+      await deleted;
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(24));
+
+    expect(useUserMemoryStore.getState().activities.map((a) => a.id)).toEqual(
+      server.slice(0, 24).map((row) => row.id),
+    );
+  });
+
+  it('reports a page being loaded and a failed page through the compatibility response', async () => {
+    let failPage!: (error: Error) => void;
+    fetchSpy
+      .mockResolvedValueOnce(listPage(idsOf(12), 24))
+      .mockImplementationOnce(() => new Promise<never>((_, reject) => (failPage = reject)));
+
+    const hook = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }),
+      { wrapper },
+    );
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(12));
+    expect(hook.result.current.isLoading).toBe(false);
+
+    act(() => useUserMemoryStore.getState().loadMoreActivities());
+    await waitFor(() => expect(hook.result.current.isLoading).toBe(true));
+    expect(hook.result.current.data?.items).toHaveLength(12);
+
+    const error = new Error('page 2 failed');
+    await act(async () => failPage(error));
+
+    await waitFor(() => expect(hook.result.current.isLoading).toBe(false));
+    expect(hook.result.current.error).toBe(error);
+    // A failed later page never replaces the settled list with an error.
+    expect(useUserMemoryStore.getState().activitiesSearchError).toBeUndefined();
+    expect(useUserMemoryStore.getState().activities).toHaveLength(12);
+  });
+
+  it('ignores a late failure of a superseded query', async () => {
+    const rejectByQuery = new Map<string, (error: Error) => void>();
+    fetchSpy.mockImplementation(
+      (params: { q?: string } = {}) =>
+        new Promise<ActivityListResult>((_, reject) => rejectByQuery.set(params.q ?? '', reject)),
+    );
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() => expect(rejectByQuery.has('')).toBe(true));
+
+    act(() => useUserMemoryStore.getState().resetActivitiesList({ q: 'foo' }));
+    hook.rerender({ q: 'foo' });
+    await waitFor(() => expect(rejectByQuery.has('foo')).toBe(true));
+
+    await act(async () => {
+      rejectByQuery.get('')!(new Error('superseded'));
+    });
+
+    // The new query is still resetting and shows no error of the old one.
+    expect(useUserMemoryStore.getState().activitiesSearchError).toBeUndefined();
+    expect(useUserMemoryStore.getState().activitiesSearchLoading).toBe(true);
+  });
+
+  it('wipes every persisted query variant when all memories are purged', async () => {
+    const server = [item('a'), item('b')];
+    serveList(server);
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockImplementation(async () => {
+      server.length = 0;
+      return undefined as never;
+    });
+
+    // A search the user visited earlier leaves its own persisted row behind.
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({});
+    await waitFor(async () =>
+      expect(
+        (await activityListResource.storage!.get({ queryKey: BASE_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    expect(ids(useUserMemoryStore.getState().activityListData)).toEqual(['a', 'b']);
+
+    await act(async () => {
+      await useUserMemoryStore.getState().purgeAllMemories();
+    });
+
+    // The inactive search's row is gone too: a reload on it cannot paint deleted memories.
+    expect(await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope })).toBeFalsy();
+    // The mounted query revalidates against the emptied server.
+    await waitFor(() => expect(ids(useUserMemoryStore.getState().activityListData)).toEqual([]));
+    expect(useUserMemoryStore.getState().activities).toEqual([]);
   });
 
   it('does not fetch another page when the head page is the last one', async () => {

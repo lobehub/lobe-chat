@@ -15,7 +15,6 @@ import { type UserMemoryStore } from '../../store';
 import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
-import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
 import { experienceInitialState } from '../experience/initialState';
 import { identityInitialState } from '../identity/initialState';
@@ -70,9 +69,15 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
+    // Replica-backed lists own their memory and persisted (IndexedDB) rows: wipe
+    // them through their engine, never by assigning initial state, so no query
+    // variant hydrates the deleted memories on a later reload. The SWR mutations
+    // below then revalidate whatever is mounted. Every replica-backed userMemory
+    // slice adds its `clear*` action here.
+    await this.#get().clearActivityList();
+
     this.#set(
       produce((draft) => {
-        Object.assign(draft, activityInitialState);
         Object.assign(draft, contextInitialState);
         Object.assign(draft, experienceInitialState);
         Object.assign(draft, identityInitialState);
