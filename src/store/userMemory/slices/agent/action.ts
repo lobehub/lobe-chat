@@ -38,11 +38,17 @@ export class AgentMemoryActionImpl {
    * Drop every topic bundle — memory and every persisted row of the active
    * scope, including bundles an earlier session wrote — then refetch the
    * mounted topics. Called by `purgeAllMemories`, so a reload can never inject
-   * deleted memories into the next chat request. Resolves `true` once storage
-   * is purged.
+   * deleted memories into the next chat request.
+   *
+   * Resolves `true` once storage is purged. Memory is wiped synchronously, but
+   * a storage failure (a blocked IndexedDB upgrade, a closed connection) leaves
+   * a row behind, and the next session has no in-memory record of this clear —
+   * it would hydrate that row into the next chat request. Retry once, then
+   * report the outcome so the caller surfaces it instead of claiming a purge
+   * that a reload would undo.
    */
   internal_clearTopicMemories = async (): Promise<boolean> => {
-    const cleared = await this.#topicMemories.clear();
+    const cleared = (await this.#topicMemories.clear()) || (await this.#topicMemories.clear());
     void this.#topicMemories.revalidate();
     return cleared;
   };

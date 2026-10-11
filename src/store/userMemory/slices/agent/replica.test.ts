@@ -8,6 +8,7 @@
  */
 import { randomUUID } from 'node:crypto';
 
+import { REPLICA_INDEX_KEY } from '@lobechat/replica';
 import { act, cleanup, renderHook, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { createElement, useEffect } from 'react';
@@ -225,6 +226,76 @@ describe('userMemory topic memories replica', () => {
     );
     await waitFor(() => expect(reloaded.result.current.isHydrated).toBe(true));
     expect(topicMemories(TOPIC_B)).toBeUndefined();
+  });
+
+  it('retries a purge whose row delete failed, so no earlier bundle survives', async () => {
+    // `purgeAllMemories` revalidates through the app's scoped `mutate`.
+    renderHook(() => null, { wrapper });
+
+    const storage = topicMemoriesResource.storage!;
+    const remove = storage.remove.bind(storage);
+    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
+    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+
+    // An earlier session's rows only — nothing is tracked in memory.
+    await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
+    await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
+
+    // The first delete aborts (a blocked IndexedDB upgrade); the retry lands.
+    let removeCalls = 0;
+    vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
+      removeCalls += 1;
+      if (removeCalls === 1) throw new Error('IndexedDB transaction aborted');
+      return remove(key);
+    });
+
+    await act(() => useUserMemoryStore.getState().purgeAllMemories());
+
+    expect(removeCalls).toBeGreaterThan(1);
+    expect(await storage.get(rowKey)).toBeUndefined();
+  });
+
+  it('surfaces a purge whose rows survive local storage, after the in-memory reset', async () => {
+    renderHook(() => null, { wrapper });
+
+    const storage = topicMemoriesResource.storage!;
+    const remove = storage.remove.bind(storage);
+    const rowKey = { queryKey: topicMemoriesResource.storageKey(TOPIC_B), scope };
+    const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+
+    await storage.set(rowKey, { data: bundle('earlier-session'), updatedAt: 1 });
+    await storage.set(indexRowKey, { data: [rowKey.queryKey], updatedAt: 1 });
+
+    let failRemoves = true;
+    vi.spyOn(storage, 'remove').mockImplementation(async (key) => {
+      if (failRemoves) throw new Error('IndexedDB transaction aborted');
+      return remove(key);
+    });
+
+    try {
+      // What the user is looking at when they hit purge.
+      act(() =>
+        useUserMemoryStore.setState({ topicMemoriesMap: { [TOPIC_A]: bundle('in-memory') } }),
+      );
+
+      // Storage is unreachable for both attempts, so the purge must not report success.
+      await act(async () => {
+        await expect(useUserMemoryStore.getState().purgeAllMemories()).rejects.toThrow(
+          /local storage/,
+        );
+      });
+
+      // The in-memory reset still stands — purged memories must not stay visible,
+      // and the row that could not be deleted is exactly what was surfaced.
+      expect(topicMemories(TOPIC_A)).toBeUndefined();
+      expect(agentMemorySelectors.hasTopicMemories(TOPIC_A)(useUserMemoryStore.getState())).toBe(
+        false,
+      );
+      expect(await storage.get(rowKey)).toBeDefined();
+    } finally {
+      // Let the suite's cleanup reach storage again.
+      failRemoves = false;
+    }
   });
 
   it('does not fetch when there is no topic', async () => {
