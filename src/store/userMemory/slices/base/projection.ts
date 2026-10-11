@@ -43,17 +43,19 @@ export const memoryDetailKey = ({ id, layer }: MemoryDetailParams): string => `$
  *
  * A detail is a single transient read behind the right panel. It stays out of
  * storage on purpose: a deleted or edited memory must never paint a stale
- * persisted copy before the network confirms it.
+ * persisted copy before the network confirms it. The fetcher answers `null`
+ * for a memory the server no longer has, which removes the cached detail
+ * (`isMissing`).
  */
 export const userMemoryDetailResource = defineReplica<
   MemoryDetailParams,
   MemoryDetailDisplay,
-  MemoryDetailDisplay | undefined
+  MemoryDetailDisplay | null
 >({
   key: memoryDetailKey,
   name: 'userMemoryDetail',
   storage: 'memory',
-  // Adopt the existing SWR key so `updateMemory`'s `mutate(memoryDetail(...))` still matches.
+  // Adopt the existing SWR key so a legacy `mutate(memoryDetail(...))` still matches.
   syncKey: ({ id, layer }) => userMemoryKeys.memoryDetail(layer, id),
   version: 1,
 });

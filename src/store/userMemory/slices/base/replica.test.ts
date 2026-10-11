@@ -22,6 +22,7 @@ import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
+import { registerUserMemoryReplica } from '../../replicaRegistry';
 import { useUserMemoryStore } from '../../store';
 import {
   memoryDetailKey,
@@ -31,6 +32,8 @@ import {
 
 const PARAMS = { queries: ['alpha'] } as RetrieveMemoryParams;
 const RETRIEVE_KEY = userMemoryRetrieveResource.key(PARAMS);
+const OTHER_PARAMS = { queries: ['beta'] } as RetrieveMemoryParams;
+const OTHER_RETRIEVE_KEY = userMemoryRetrieveResource.key(OTHER_PARAMS);
 const DETAIL_PARAMS = { id: 'pref-1', layer: LayersEnum.Preference };
 const DETAIL_KEY = memoryDetailKey(DETAIL_PARAMS);
 
@@ -82,8 +85,10 @@ describe('userMemory base replica', () => {
   afterEach(async () => {
     cleanup();
     await Promise.all(
-      [...scopes].map((value) =>
-        userMemoryRetrieveResource.storage!.remove({ queryKey: RETRIEVE_KEY, scope: value }),
+      [...scopes].flatMap((value) =>
+        [RETRIEVE_KEY, OTHER_RETRIEVE_KEY].map((queryKey) =>
+          userMemoryRetrieveResource.storage!.remove({ queryKey, scope: value }),
+        ),
       ),
     );
     scopes.clear();
@@ -184,6 +189,30 @@ describe('userMemory base replica', () => {
       expect(useUserMemoryStore.getState().memoryDetailMap).toEqual({});
     });
 
+    it('removes a loaded detail when a later fetch reports it missing', async () => {
+      detailSpy.mockResolvedValue({
+        layer: LayersEnum.Preference,
+        memory: { id: 'mem-1', tags: [], title: 'Preference' },
+        preference: { conclusionDirectives: 'x', id: 'pref-1' },
+      } as never);
+
+      const { result } = renderHook(
+        () => useUserMemoryStore((s) => s.useFetchMemoryDetail)('pref-1', LayersEnum.Preference),
+        { wrapper },
+      );
+      await waitFor(() => expect(result.current.data).toBeDefined());
+
+      // Deleted in another tab: the revalidation answers "no such memory".
+      detailSpy.mockResolvedValue(null as never);
+      await act(async () => {
+        await result.current.mutate();
+      });
+
+      await waitFor(() => expect(result.current.data).toBeUndefined());
+      expect(useUserMemoryStore.getState().memoryDetailMap[DETAIL_KEY]).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+    });
+
     it('does not fetch without an id', () => {
       detailSpy.mockResolvedValue(null as never);
 
@@ -233,6 +262,9 @@ describe('userMemory base replica', () => {
         ).toBeDefined(),
       );
 
+      // After the purge the server has nothing left to answer with.
+      retrieveSpy.mockImplementation(pending);
+      detailSpy.mockImplementation(pending);
       await act(async () => {
         await useUserMemoryStore.getState().purgeAllMemories();
       });
@@ -242,6 +274,125 @@ describe('userMemory base replica', () => {
       expect(useUserMemoryStore.getState().memoryFetchedAtMap).toEqual({});
       const row = await userMemoryRetrieveResource.storage!.get({ queryKey: RETRIEVE_KEY, scope });
       expect(row).toBeUndefined();
+    });
+
+    it('purges persisted retrieve rows of queries that are not loaded in memory', async () => {
+      retrieveSpy.mockResolvedValue({ ...emptyResult(), preferences: [{ id: 'old' } as never] });
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue({} as never);
+
+      // An earlier session persisted OTHER_PARAMS; after a reload it is not in memory.
+      const earlier = renderHook(
+        () => useUserMemoryStore((s) => s.useFetchUserMemory)(true, OTHER_PARAMS),
+        { wrapper },
+      );
+      await waitFor(async () =>
+        expect(
+          await userMemoryRetrieveResource.storage!.get({ queryKey: OTHER_RETRIEVE_KEY, scope }),
+        ).toBeDefined(),
+      );
+      earlier.unmount();
+      // Keep an SWR provider mounted for the purge's legacy cache mutations.
+      renderHook(() => null, { wrapper });
+      act(() => useUserMemoryStore.setState(initialState, false));
+      expect(useUserMemoryStore.getState().memoryMap).toEqual({});
+
+      await act(async () => {
+        await useUserMemoryStore.getState().purgeAllMemories();
+      });
+
+      expect(
+        await userMemoryRetrieveResource.storage!.get({ queryKey: OTHER_RETRIEVE_KEY, scope }),
+      ).toBeUndefined();
+
+      // Requesting that query again paints nothing deleted while the fetch is pending.
+      retrieveSpy.mockImplementation(pending);
+      const reloaded = renderHook(
+        () => useUserMemoryStore((s) => s.useFetchUserMemory)(true, OTHER_PARAMS),
+        { wrapper },
+      );
+      await waitFor(() => expect(reloaded.result.current.isLoading).toBe(true));
+      expect(useUserMemoryStore.getState().memoryMap[OTHER_RETRIEVE_KEY]).toBeUndefined();
+    });
+
+    it('clears every registered replica, and leaves owned layers to them', async () => {
+      vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue({} as never);
+      const clear = vi.fn(async () => true);
+      const unregister = registerUserMemoryReplica(useUserMemoryStore.getState, 'activityTest', {
+        clear,
+        layer: LayersEnum.Activity,
+      });
+      renderHook(() => null, { wrapper });
+      const ownedActivities = [{ id: 'replica-owned' }] as never;
+      act(() =>
+        useUserMemoryStore.setState({
+          activities: ownedActivities,
+          contexts: [{ id: 'legacy' }] as never,
+        }),
+      );
+
+      try {
+        await act(async () => {
+          await useUserMemoryStore.getState().purgeAllMemories();
+        });
+
+        expect(clear).toHaveBeenCalledTimes(1);
+        // The replica owns the activity list: no legacy plain reset over its view.
+        expect(useUserMemoryStore.getState().activities).toBe(ownedActivities);
+        // Unmigrated layers keep the legacy reset.
+        expect(useUserMemoryStore.getState().contexts).toEqual([]);
+      } finally {
+        unregister();
+      }
+    });
+  });
+
+  describe('updateMemory', () => {
+    // Keep an SWR provider mounted for the legacy cache revalidation.
+    beforeEach(() => {
+      renderHook(() => null, { wrapper });
+    });
+
+    it('hands an edit of a replica-owned layer to its replica instead of a plain patch', async () => {
+      vi.spyOn(memoryCRUDService, 'updateActivity').mockResolvedValue({} as never);
+      const update = vi.fn();
+      const unregister = registerUserMemoryReplica(useUserMemoryStore.getState, 'activityTest', {
+        clear: async () => true,
+        layer: LayersEnum.Activity,
+        update,
+      });
+      const activities = [{ id: 'act-1', narrative: 'old' }] as never;
+      act(() => useUserMemoryStore.setState({ activities }));
+
+      try {
+        await act(async () => {
+          await useUserMemoryStore.getState().updateMemory('act-1', 'new', LayersEnum.Activity);
+        });
+
+        expect(update).toHaveBeenCalledWith({
+          content: 'new',
+          id: 'act-1',
+          layer: LayersEnum.Activity,
+        });
+        expect(useUserMemoryStore.getState().activities).toBe(activities);
+      } finally {
+        unregister();
+      }
+    });
+
+    it('patches an unmigrated layer through the legacy plain state', async () => {
+      vi.spyOn(memoryCRUDService, 'updateContext').mockResolvedValue({} as never);
+      act(() =>
+        useUserMemoryStore.setState({ contexts: [{ description: 'old', id: 'ctx-1' }] as never }),
+      );
+
+      await act(async () => {
+        await useUserMemoryStore.getState().updateMemory('ctx-1', 'new', LayersEnum.Context);
+      });
+
+      expect(memoryCRUDService.updateContext).toHaveBeenCalledWith('ctx-1', {
+        description: 'new',
+      });
+      expect(useUserMemoryStore.getState().contexts[0]).toMatchObject({ description: 'new' });
     });
   });
 
