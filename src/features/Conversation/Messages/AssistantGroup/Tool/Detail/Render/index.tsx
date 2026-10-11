@@ -15,12 +15,13 @@ interface ToolRenderProps {
   messageId?: string;
   plugin?: ChatPluginPayload;
   pluginState?: any;
+  readOnly?: boolean;
   showCustomToolRender?: boolean;
   toolCallId: string;
 }
 
 const ToolRender = memo<ToolRenderProps>(
-  ({ showCustomToolRender, content, messageId, plugin, pluginState, toolCallId }) => {
+  ({ showCustomToolRender, content, messageId, plugin, pluginState, toolCallId, readOnly }) => {
     const hasCustomRender = !!getBuiltinRender(plugin?.identifier, plugin?.apiName);
 
     // Tools whose card renders the stored body — the read path projected it away
@@ -51,6 +52,7 @@ const ToolRender = memo<ToolRenderProps>(
           messageId={messageId}
           plugin={plugin}
           pluginState={resolvedState}
+          readOnly={readOnly}
           toolCallId={toolCallId}
         />
       );

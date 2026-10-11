@@ -3,6 +3,10 @@ import {
   ImageGenerationIdentifier,
 } from '@lobechat/builtin-tool-image-generation';
 import {
+  InteractiveUIApiName,
+  InteractiveUIIdentifier,
+} from '@lobechat/builtin-tool-interactive-ui';
+import {
   WebOnboardingApiName,
   WebOnboardingIdentifier,
 } from '@lobechat/builtin-tool-web-onboarding';
@@ -12,6 +16,10 @@ interface ToolRenderRuleTarget {
   apiName: string;
   identifier: string;
 }
+
+/** Match before results arrive so the streaming and finished UI share one mount. */
+export const isInteractiveUITool = ({ apiName, identifier }: ToolRenderRuleTarget): boolean =>
+  identifier === InteractiveUIIdentifier && apiName === InteractiveUIApiName.renderUI;
 
 export const shouldRenderToolCall = ({ apiName, identifier }: ToolRenderRuleTarget) => {
   // This call immediately ends onboarding and switches the UI to the completion state.
