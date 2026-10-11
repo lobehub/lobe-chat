@@ -26,13 +26,14 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     max-height: 180px;
     padding-block: 10px;
     padding-inline: 12px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadius};
 
     font-size: 13px;
     line-height: 1.6;
     color: ${cssVar.colorTextSecondary};
     white-space: pre-wrap;
+
+    background: ${cssVar.colorFillTertiary};
   `,
   subTitle: css`
     font-size: 13px;
