@@ -7,8 +7,6 @@ callers do not choose a provider, prefix, key, SET options or claim lifetime.
   callers may request a freshness bound through the existing gateway API.
 - `skillTools.remember`: connection scoped tool lists, ten minutes; empty/failed results are not cached.
 - `workspaceRescan.claim`: one background scan per principal/device/directory for 45 seconds.
-- `isConfigured`: whether the deployment runs with Redis (`REDIS_URL` set, `DISABLE_REDIS` unset);
-  a configuration check for features that require Redis, never a connection attempt.
 
 `client.ts` is the connection seam. All current domains share the existing `sendPathCache`
 connection and keyspace, preserving deployed cache/claim compatibility. A namespace is a key
