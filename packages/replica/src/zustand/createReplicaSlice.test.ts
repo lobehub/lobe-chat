@@ -600,6 +600,29 @@ describe('createReplicaSlice', () => {
       await waitFor(() => expect(memory.rows.get('user-1:personal|a')).toBeUndefined());
     });
 
+    // The guard lives in the engine, per scope — not in the bookkeeping slot a
+    // scope reset wipes — so an A → B → A round trip cannot lift it.
+    it('keeps the removal guard across a scope round trip', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['revoked'], updatedAt: 1 });
+      // The persisted-row delete is still pending: the stale row stays on disk.
+      storage.storage.remove = async () => {};
+      const { slice, store } = setup({ storage });
+
+      act(() => slice.remove('a'));
+
+      scopeState.current = 'user-2:personal';
+      act(() => slice.ensureScope('user-2:personal'));
+      expect(store.getState().listsReplica.scope).toBe('user-2:personal');
+      scopeState.current = 'user-1:personal';
+      act(() => slice.ensureScope('user-1:personal'));
+
+      await act(async () => {
+        expect(await slice.hydrate({ id: 'a' })).toBe(false);
+      });
+      expect(store.getState().lists.a).toBeUndefined();
+    });
+
     it('purges the captured scope row for a removal that lands after a scope switch', async () => {
       const storage = createMemoryStorage();
       storage.rows.set('user-1:personal|a', { data: ['revoked'], updatedAt: 1 });
