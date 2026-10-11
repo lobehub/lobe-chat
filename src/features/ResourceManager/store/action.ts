@@ -389,12 +389,12 @@ export class ResourceManagerStoreActionImpl {
           // cannot drop those rows by id: invalidate the surfaces instead and
           // let the refetch paint whatever survived.
           void this.#invalidateExplorerSearch();
-          fileStore.clearCurrentQueryResources();
-          // The server applies the caller's workspace role: members delete
-          // only their own rows, while owners may delete the full query scope.
-          // Revalidate so any surviving rows immediately reappear.
-          const { revalidateResources } = await import('@/store/file/slices/resource/hooks');
-          await revalidateResources(fileStore.queryParams);
+          // Same for the explorer list: evict every cached variant (memory and
+          // persisted rows), so a failed refetch cannot leave deleted rows for a
+          // reload or an offline visit to repaint. The server applies the
+          // caller's workspace role — members delete only their own rows, owners
+          // the full query scope — so the revalidation repaints the survivors.
+          await fileStore.evictResourceLists();
           // The deleted set is only known to the server here, and every row in
           // it was a child of the listed folder, so refetch that one folder.
           void useTreeStore.getState().revalidate(currentFolderKey);

@@ -135,14 +135,15 @@ describe('resource manager store actions', () => {
 
   it('should keep all-selected deletion caller-scoped when exclusions are present', async () => {
     const deleteResources = vi.fn().mockResolvedValue(undefined);
+    const evictResourceLists = vi.fn().mockResolvedValue(undefined);
 
     useResourceManagerStore.setState({
       selectAllState: 'all',
       selectedFileIds: ['file-2'],
     });
     useFileStore.setState({
-      clearCurrentQueryResources: vi.fn(),
       deleteResources,
+      evictResourceLists,
       queryParams: { q: 'report' } as any,
     });
     mockDeleteResourcesByQuery.mockResolvedValue({ count: 2 });
@@ -152,6 +153,7 @@ describe('resource manager store actions', () => {
     expect(mockDeleteResourcesByQuery).toHaveBeenCalledWith({ q: 'report' }, ['file-2']);
     expect(mockResolveSelectionIds).not.toHaveBeenCalled();
     expect(deleteResources).not.toHaveBeenCalled();
+    expect(evictResourceLists).toHaveBeenCalledTimes(1);
     expect(useResourceManagerStore.getState()).toMatchObject({
       selectAllState: 'none',
       selectedFileIds: [],
@@ -233,8 +235,8 @@ describe('resource manager store actions', () => {
       selectedFileIds: [],
     });
     useFileStore.setState({
-      clearCurrentQueryResources: vi.fn(),
       deleteResources: vi.fn(),
+      evictResourceLists: vi.fn().mockResolvedValue(undefined),
       queryParams: { parentId: 'folder-a' } as any,
     } as any);
     mockDeleteResourcesByQuery.mockResolvedValue({ count: 1 });
@@ -249,8 +251,8 @@ describe('resource manager store actions', () => {
   it('should refresh the listed folder when the deleted set is only known to the server', async () => {
     useResourceManagerStore.setState({ selectAllState: 'all', selectedFileIds: [] });
     useFileStore.setState({
-      clearCurrentQueryResources: vi.fn(),
       deleteResources: vi.fn(),
+      evictResourceLists: vi.fn().mockResolvedValue(undefined),
       queryParams: { parentId: 'folder-a' } as any,
     } as any);
     mockDeleteResourcesByQuery.mockResolvedValue({ count: 3 });
