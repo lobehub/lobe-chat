@@ -197,11 +197,11 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
      * Whether the entry is still on the scope the request was captured under.
      *
      * A response can settle after an identity/workspace switch. `replace` drops
-     * it — the engine refuses off-scope actions — but the caller's callbacks must
-     * not run either: they carry the previous identity's side effects (onboarding
-     * redirect, display snapshot, analytics identify, settings writes). The
-     * captured key/scope is not enough on its own, because a switch to a scope
-     * that reads the same key/query satisfies both guards above.
+     * it — the engine refuses off-scope actions — but the caller's `onSuccess`
+     * must not run either: it carries the previous identity's side effects
+     * (onboarding redirect, display snapshot, analytics identify, settings
+     * writes). The captured key/scope is not enough on its own, because a switch
+     * to a scope that reads the same key/query satisfies both guards above.
      */
     const isActiveScope = () => resource.scope.get() === scope;
 
@@ -214,14 +214,16 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       {
         ...schedule,
         // A failure of a query the entry has moved past (or of a request from
-        // before a clear) must not surface on the query now on screen. The
-        // captured key/scope is bound so a late terminal removal cannot land in
-        // a scope that became active after the request, and off-scope failures
-        // are dropped outright.
+        // before a clear) must not surface on the query now on screen. Unlike
+        // success, an off-scope failure is still forwarded: the captured
+        // key/scope is bound so a late terminal answer (NOT_FOUND / FORBIDDEN)
+        // can purge *its own* scope's persisted row via `remove(key, scope)`
+        // without touching the scope now on screen — dropping it would leave
+        // that row to hydrate again when the user switches back.
         // Always installed, so a failed request's generation record is dropped
         // even when the caller has no error side effects.
         onError: (error: unknown) => {
-          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
+          if (!isSinceClear() || !isActiveQuery()) return;
           onError?.(error, { key, scope });
         },
         onSuccess: (data) => {
