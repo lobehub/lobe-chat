@@ -7,6 +7,7 @@ import {
   buildUserMemoryActionAgentSignalMarker,
   defineUserMemoryActionHandler,
   resolveMemoryActionTargetFromState,
+  runMemoryActionAgent,
 } from '../userMemory';
 
 const memoryActionRunner = vi.fn();
@@ -338,6 +339,85 @@ describe('defineUserMemoryActionHandler', () => {
     expect(second?.status).toBe('applied');
     expect(touchGuardState).toHaveBeenCalledTimes(1);
     expect(memoryActionRunner).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('runMemoryActionAgent memory switch', () => {
+  const PLUGIN_QUERY_REACHED = new Error('plugin query reached');
+
+  const createOptions = (input: { agentMemoryEnabled?: boolean; userMemoryEnabled?: boolean }) => {
+    const pluginModel = { query: vi.fn().mockRejectedValue(PLUGIN_QUERY_REACHED) };
+    const userModel = {
+      getUserSettings: vi
+        .fn()
+        .mockResolvedValue(
+          input.userMemoryEnabled === undefined
+            ? undefined
+            : { memory: { enabled: input.userMemoryEnabled } },
+        ),
+    };
+
+    return {
+      options: {
+        agentService: {
+          getAgentConfig: vi.fn().mockResolvedValue({
+            chatConfig:
+              input.agentMemoryEnabled === undefined
+                ? {}
+                : { memory: { enabled: input.agentMemoryEnabled } },
+            model: 'gpt-test',
+            provider: 'openai',
+          }),
+        },
+        db: {} as never,
+        pluginModel,
+        userId: 'user-1',
+        userModel,
+      } as never,
+      pluginModel,
+      userModel,
+    };
+  };
+
+  it('skips the memory writer when the user turned memory off', async () => {
+    const { options, pluginModel } = createOptions({ userMemoryEnabled: false });
+
+    await expect(
+      runMemoryActionAgent({ agentId: 'agent-1', message: 'remember this' }, options),
+    ).resolves.toEqual({
+      detail: 'Memory is disabled for this agent or user.',
+      status: 'skipped',
+    });
+    expect(pluginModel.query).not.toHaveBeenCalled();
+  });
+
+  it('skips the memory writer when the agent turned memory off', async () => {
+    const { options, pluginModel, userModel } = createOptions({
+      agentMemoryEnabled: false,
+      userMemoryEnabled: true,
+    });
+
+    await expect(
+      runMemoryActionAgent({ agentId: 'agent-1', message: 'remember this' }, options),
+    ).resolves.toMatchObject({ status: 'skipped' });
+    expect(userModel.getUserSettings).not.toHaveBeenCalled();
+    expect(pluginModel.query).not.toHaveBeenCalled();
+  });
+
+  it('lets the agent-level switch override a disabled user setting', async () => {
+    const { options } = createOptions({ agentMemoryEnabled: true, userMemoryEnabled: false });
+
+    await expect(
+      runMemoryActionAgent({ agentId: 'agent-1', message: 'remember this' }, options),
+    ).rejects.toBe(PLUGIN_QUERY_REACHED);
+  });
+
+  it('keeps writing when memory has never been configured', async () => {
+    const { options } = createOptions({});
+
+    await expect(
+      runMemoryActionAgent({ agentId: 'agent-1', message: 'remember this' }, options),
+    ).rejects.toBe(PLUGIN_QUERY_REACHED);
   });
 });
 
