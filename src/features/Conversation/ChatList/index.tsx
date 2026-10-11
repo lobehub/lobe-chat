@@ -16,9 +16,8 @@ import {
   hasPendingInterventions,
   INTERVENTION_REFRESH_INTERVAL,
 } from '@/store/chat/utils/interventionSync';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { authSelectors, settingsSelectors } from '@/store/user/selectors';
+import { authSelectors, labPreferSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import WideScreenContainer from '../../WideScreenContainer';
 import SkeletonList from '../components/SkeletonList';
@@ -146,7 +145,7 @@ const ChatList = memo<ChatListProps>(
     const isCreatingTopic = useChatStore(
       (s) => !!context.topicId && s.creatingTopicIds.includes(context.topicId),
     );
-    const { enableAgentSelfIteration } = useServerConfigStore(featureFlagsSelectors);
+    const enableSelfLearning = useUserStore(labPreferSelectors.enableSelfLearning);
     const messagesSWR = useFetchMessages(context, {
       refreshInterval: hasPendingApproval ? INTERVENTION_REFRESH_INTERVAL : 0,
       revalidateOnFocus: hasPendingApproval || !isStreaming,
@@ -194,7 +193,7 @@ const ChatList = memo<ChatListProps>(
     // anonymous, and agent-share visitors are not the owner these APIs scope to.
     const isSharePage = !!context.topicShareId || !!context.agentShareId;
     // TODO: Migrate Agent Signal receipts behind a dedicated user-visible receipt capability.
-    const canShowAgentSignalReceipts = enableAgentSelfIteration === true && !isSharePage;
+    const canShowAgentSignalReceipts = enableSelfLearning && !isSharePage;
     const { receiptsByAnchor } = useAgentSignalReceipts({
       agentId: canShowAgentSignalReceipts ? activeAgentId : undefined,
       displayMessages,

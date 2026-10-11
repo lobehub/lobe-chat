@@ -157,7 +157,26 @@ const matchLesson = <T>(
   return lessons.byTitle.get(normalizeLessonTitle(observation.title));
 };
 
+/**
+ * Takes one unit of the caller's background budget before an ingestion spends a model call.
+ *
+ * Returns `allowed: false` with a human-readable `detail` to skip the call.
+ */
+export type ExpertiseIngestionBudget = () => Promise<{ allowed: boolean; detail?: string }>;
+
+/** Options for ingestions triggered by Agent Signal's completion path. */
+export interface ExpertiseSelfReviewIngestionOptions {
+  /**
+   * Charged once per LLM-backed topic ingestion, right before the model call.
+   *
+   * @default No budget: explicit backfills and tests run unmetered
+   */
+  acquireBudget?: ExpertiseIngestionBudget;
+}
+
 interface ExpertiseCompletionInput {
+  /** See {@link ExpertiseSelfReviewIngestionOptions.acquireBudget}. */
+  acquireBudget?: ExpertiseIngestionBudget;
   agentId: string;
   hadHumanInLoop?: boolean;
   ingestionKey?: string;
@@ -242,13 +261,18 @@ export class ExpertiseIngestionService {
    * Nightly review batches every active topic in its window; fast self-reflection reuses its
    * single topic scope. Other self-iteration modes are deliberately ignored.
    */
-  ingestSelfReview = async (input: CompletionCallbackParams) => {
+  ingestSelfReview = async (
+    input: CompletionCallbackParams,
+    options: ExpertiseSelfReviewIngestionOptions = {},
+  ) => {
     const marker = input.selfIteration?.marker;
     const agentId = marker?.agentId;
     if (!marker || !agentId) return { ingested: 0, reason: 'missing-review-agent' } as const;
+    const { acquireBudget } = options;
 
     if (marker.kind === 'self-reflection' && marker.topicId) {
       return this.ingestCompletion({
+        acquireBudget,
         agentId,
         operationId: input.operationId,
         topicId: marker.topicId,
@@ -269,13 +293,15 @@ export class ExpertiseIngestionService {
     const results = [];
     for (const topic of topics) {
       if (!topic.topicId) continue;
-      results.push(
-        await this.ingestCompletion({
-          agentId,
-          operationId: input.operationId,
-          topicId: topic.topicId,
-        }),
-      );
+      const result = await this.ingestCompletion({
+        acquireBudget,
+        agentId,
+        operationId: input.operationId,
+        topicId: topic.topicId,
+      });
+      results.push(result);
+      // Every remaining topic would be denied by the same exhausted daily budget.
+      if (result.reason === 'budget-exhausted') break;
     }
     return {
       ingested: results.reduce((sum, result) => sum + result.ingested, 0),
@@ -428,6 +454,20 @@ export class ExpertiseIngestionService {
       : await this.readTopicContext(input.topicId);
     const context = topicContext.serializedContext.slice(-MAX_CONTEXT_CHARS);
     if (!context.trim()) return { ingested: 0, reason: 'empty-context' } as const;
+
+    // Charged only once a model call is certain, so empty or unbound topics cost nothing.
+    if (input.acquireBudget) {
+      const budget = await input.acquireBudget();
+      if (!budget.allowed) {
+        log(
+          'skip expertise ingestion agent=%s topic=%s: %s',
+          input.agentId,
+          input.topicId,
+          budget.detail ?? 'budget denied',
+        );
+        return { ingested: 0, reason: 'budget-exhausted' } as const;
+      }
+    }
 
     const modelConfig = await resolveExpertiseModelConfig(this.db, this.userId);
 

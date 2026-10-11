@@ -57,6 +57,17 @@ describe('parseFeatureFlag', () => {
     expect(parseFeatureFlag(input)).toEqual({});
   });
 
+  /**
+   * `agent_self_iteration` was retired in favour of the Labs → Self-evolving switch. Deployments
+   * that still carry it (e.g. `FEATURE_FLAGS=-agent_self_iteration`) must keep parsing.
+   */
+  it('ignores the retired agent_self_iteration flag', () => {
+    expect(parseFeatureFlag('-agent_self_iteration')).toEqual({});
+    expect(parseFeatureFlag('+agent_self_iteration,+api_key_manage')).toEqual({
+      api_key_manage: true,
+    });
+  });
+
   it('ignores +/- on array-only flags like dev_dock_workspaces', () => {
     expect(parseFeatureFlag('+dev_dock_workspaces')).toEqual({});
     expect(parseFeatureFlag('-dev_dock_workspaces,+api_key_manage')).toEqual({

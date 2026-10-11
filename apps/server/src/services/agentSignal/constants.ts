@@ -22,11 +22,12 @@ export const AGENT_SIGNAL_KEYS = {
 /** Server-owned timing defaults for AgentSignal storage and generation. */
 export const AGENT_SIGNAL_DEFAULTS = {
   /**
-   * Per-user, per-UTC-day ceiling on background `execAgent` runs Agent Signal may dispatch
-   * (memory writer, skill management, self-reflection, self-feedback intent). Nightly review
-   * is exempt; it has its own once-per-agent-per-night guard.
+   * Per-user, per-UTC-day ceiling on background self-iteration processing: `execAgent` runs
+   * Agent Signal dispatches (memory writer, skill management, self-reflection, self-feedback
+   * intent) plus each LLM-backed expertise ingestion triggered from the completion path. Nightly
+   * review is exempt; it has its own once-per-agent-per-night guard.
    */
-  dailyBackgroundRunBudgetPerUser: 20,
+  dailyBackgroundRunBudgetPerUser: 50,
   /** TTL for the per-day budget counters; outlives one UTC day so the key never resets early. */
   dailyBudgetTtlSeconds: 2 * 24 * 60 * 60,
   /**

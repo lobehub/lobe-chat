@@ -27,7 +27,6 @@ export enum ChatSettingsTabs {
   Opening = 'opening',
   Plugin = 'plugin',
   Prompt = 'prompt',
-  SelfIteration = 'selfIteration',
 }
 
 export enum GroupSettingsTabs {

@@ -16,11 +16,7 @@ const mocks = vi.hoisted(() => ({
     optimisticUpdateAgentConfig: vi.fn(),
     optimisticUpdateAgentMeta: vi.fn(),
   },
-  serverState: {
-    featureFlags: {
-      enableAgentSelfIteration: true,
-    },
-  },
+  userState: { preference: { lab: { enableAgentGraphConfig: false, enableSelfLearning: true } } },
 }));
 
 vi.mock('@/features/AgentSetting', () => ({
@@ -66,63 +62,52 @@ vi.mock('@/store/agent/selectors', () => ({
   },
 }));
 
-vi.mock('@/store/serverConfig', () => ({
-  featureFlagsSelectors: (state: typeof mocks.serverState) => state.featureFlags,
-  useServerConfigStore: (selector: (state: typeof mocks.serverState) => unknown) =>
-    selector(mocks.serverState),
+vi.mock('@/store/user', () => ({
+  useUserStore: (selector: (state: typeof mocks.userState) => unknown) => selector(mocks.userState),
 }));
 
+vi.mock('@/store/user/selectors', () => ({
+  labPreferSelectors: {
+    enableAgentGraphConfig: (state: typeof mocks.userState) =>
+      state.preference.lab.enableAgentGraphConfig,
+  },
+}));
+
+// A stale rollout flag must not bring the per-agent tab back.
+vi.mock('@/store/serverConfig', () => {
+  const state = { featureFlags: { enableAgentSelfIteration: true } };
+  return {
+    featureFlagsSelectors: (s: typeof state) => s.featureFlags,
+    useServerConfigStore: (selector: (s: typeof state) => unknown) => selector(state),
+  };
+});
+
+/**
+ * There is no per-agent Self-Iteration tab any more: Labs → Self-evolving is the only control.
+ */
 describe('AgentSettings Content', () => {
   beforeEach(() => {
     mocks.agentState.isInbox = true;
-    mocks.serverState.featureFlags.enableAgentSelfIteration = true;
+    mocks.userState.preference.lab.enableSelfLearning = true;
   });
 
-  it('exposes both tabs for inbox when feature is on', () => {
+  it('shows no Self-Iteration tab for inbox even with Self-evolving on', () => {
     render(<Content />);
 
     const layout = screen.getByTestId('layout');
     expect(layout).toHaveAttribute('data-active', ChatSettingsTabs.Opening);
-    expect(layout).toHaveAttribute(
-      'data-tabs',
-      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.SelfIteration}`,
-    );
+    expect(layout).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
     expect(screen.getByTestId('agent-settings-content')).toHaveAttribute(
       'data-tab',
       ChatSettingsTabs.Opening,
     );
   });
 
-  it('exposes both tabs when not inbox and feature is on', () => {
+  it('shows no Self-Iteration tab for custom agents even with Self-evolving on', () => {
     mocks.agentState.isInbox = false;
 
     render(<Content />);
 
-    const layout = screen.getByTestId('layout');
-    expect(layout).toHaveAttribute('data-active', ChatSettingsTabs.Opening);
-    expect(layout).toHaveAttribute(
-      'data-tabs',
-      `${ChatSettingsTabs.Opening},${ChatSettingsTabs.SelfIteration}`,
-    );
-  });
-
-  it('falls back to opening when feature flag is off (inbox)', () => {
-    mocks.serverState.featureFlags.enableAgentSelfIteration = false;
-
-    render(<Content />);
-
-    const layout = screen.getByTestId('layout');
-    expect(layout).toHaveAttribute('data-active', ChatSettingsTabs.Opening);
-    expect(layout).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
-  });
-
-  it('exposes only opening when feature flag is off', () => {
-    mocks.agentState.isInbox = false;
-    mocks.serverState.featureFlags.enableAgentSelfIteration = false;
-
-    render(<Content />);
-
-    const layout = screen.getByTestId('layout');
-    expect(layout).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
+    expect(screen.getByTestId('layout')).toHaveAttribute('data-tabs', ChatSettingsTabs.Opening);
   });
 });

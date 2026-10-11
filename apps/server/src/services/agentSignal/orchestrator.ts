@@ -12,7 +12,7 @@ import { createSourceEvent } from '@lobechat/agent-signal/source';
 
 import { ExpertiseIngestionService } from '@/server/services/expertise/ingestion';
 
-import { acquireAgentSignalDailyBudget } from './budget';
+import { acquireAgentSignalDailyBudget, describeBudgetDenial } from './budget';
 import type {
   AgentSignalEmitOptions,
   AgentSignalExecutionContext,
@@ -126,7 +126,25 @@ const createPolicyOptions = (
           context.db,
           context.userId,
           context.workspaceId,
-        ).ingestSelfReview(input);
+        ).ingestSelfReview(
+          input,
+          // Each LLM-backed ingestion draws from the same daily background pool as the runs
+          // Agent Signal dispatches. Store-injected runs (evals, isolated tests) stay unmetered.
+          options.store
+            ? {}
+            : {
+                acquireBudget: async () => {
+                  const decision = await acquireAgentSignalDailyBudget({
+                    kind: 'background-run',
+                    userId: context.userId,
+                  });
+
+                  return decision.allowed
+                    ? { allowed: true }
+                    : { allowed: false, detail: describeBudgetDenial(decision) };
+                },
+              },
+        );
       },
     },
     feedbackDomainJudge: {

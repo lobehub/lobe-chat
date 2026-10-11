@@ -27,10 +27,6 @@ import type { TopicModel } from '@/database/models/topic';
 import { resolveModelExtendParamsForUser } from '@/server/modules/AgentRuntime/adapters/serverCallLlmContextHints';
 import type { AgentConfigWithId } from '@/server/services/agent';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
-import {
-  isAgentSelfIterationOptedIn,
-  isLobeAiAgentSlug,
-} from '@/server/services/agentSignal/featureGate';
 import { shouldSuppressSignal } from '@/server/services/agentSignal/suppressSignal';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 import { DocumentService } from '@/server/services/document';
@@ -981,17 +977,10 @@ export const setupTurn = async (
   // never be conditional on it: any share configuration would otherwise let a
   // link visitor mutate the creator's account via this out-of-band channel.
   //
-  // Per-agent capability gate — only Lobe AI (unless the user opted it out) and
-  // agents that turned on self-iteration feed this channel. Without it every chat turn on every agent
-  // pays the feedback classifiers and may spawn memory/skill writers. The
-  // user-level rollout flag is still checked inside the enqueue.
-  const isAgentSelfIterationCandidate = isAgentSelfIterationOptedIn({
-    isLobeAiAgent: isLobeAiAgentSlug(agentSlug),
-    selfIteration: agentConfig.chatConfig?.selfIteration,
-  });
+  // There is no per-agent gate: every agent feeds this channel, and the user's
+  // Labs → Self-evolving switch is checked inside the enqueue.
   if (
     userMessageRecord &&
-    isAgentSelfIterationCandidate &&
     !isHeteroAgent &&
     !shareGate &&
     !shouldSuppressSignal({ appContext, slug: agentSlug ?? undefined })

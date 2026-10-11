@@ -95,10 +95,10 @@ export const acquireAgentSignalDailyBudget = async (input: {
  * Describes a denied budget decision for skip details and runtime traces.
  *
  * Before:
- * - `{ kind: 'background-run', limit: 20, reason: 'exceeded' }`
+ * - `{ kind: 'background-run', limit: 50, reason: 'exceeded' }`
  *
  * After:
- * - `"Daily Agent Signal background-run budget exceeded (20/day)."`
+ * - `"Daily Agent Signal background-run budget exceeded (50/day)."`
  */
 export const describeBudgetDenial = (decision: AgentSignalBudgetDecision) =>
   decision.reason === 'exceeded'

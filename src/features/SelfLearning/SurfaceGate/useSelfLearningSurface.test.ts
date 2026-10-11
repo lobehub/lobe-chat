@@ -4,17 +4,20 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSelfLearningSurface } from './useSelfLearningSurface';
 
 const state = vi.hoisted(() => ({
-  enableAgentSelfIteration: false,
   enableSelfLearning: false,
-  serverConfigInit: true,
+  isUserStateInit: true,
 }));
 
-vi.mock('@/store/serverConfig', () => ({
-  serverConfigSelectors: {
-    enableAgentSelfIteration: (s: typeof state) => s.enableAgentSelfIteration,
-  },
-  useServerConfigStore: (selector: (s: typeof state) => unknown) => selector(state),
-}));
+// The retired `agent_self_iteration` rollout flag must no longer open the surfaces.
+vi.mock('@/store/serverConfig', () => {
+  const serverState = { enableAgentSelfIteration: true, serverConfigInit: true };
+  return {
+    serverConfigSelectors: {
+      enableAgentSelfIteration: (s: typeof serverState) => s.enableAgentSelfIteration,
+    },
+    useServerConfigStore: (selector: (s: typeof serverState) => unknown) => selector(serverState),
+  };
+});
 
 vi.mock('@/store/user', () => ({
   useUserStore: (selector: (s: typeof state) => unknown) => selector(state),
@@ -25,36 +28,31 @@ vi.mock('@/store/user/selectors', () => ({
 }));
 
 beforeEach(() => {
-  state.enableAgentSelfIteration = false;
   state.enableSelfLearning = false;
-  state.serverConfigInit = true;
+  state.isUserStateInit = true;
 });
 
 describe('useSelfLearningSurface', () => {
-  it('turns the review surfaces on for the self-iteration rollout without the labs toggle', () => {
-    state.enableAgentSelfIteration = true;
+  it('turns the review surfaces on with the Labs switch', () => {
+    state.enableSelfLearning = true;
 
     const { result } = renderHook(() => useSelfLearningSurface());
 
     expect(result.current).toEqual({ enabled: true, ready: true });
   });
 
-  it('keeps the labs toggle working outside the rollout', () => {
-    state.enableSelfLearning = true;
-
-    const { result } = renderHook(() => useSelfLearningSurface());
-
-    expect(result.current.enabled).toBe(true);
-  });
-
-  it('stays off when neither the rollout nor labs is on', () => {
+  it('stays off while the Labs switch is off, whatever the old rollout flag says', () => {
     const { result } = renderHook(() => useSelfLearningSurface());
 
     expect(result.current).toEqual({ enabled: false, ready: true });
   });
 
-  it('reports not ready until the server config has loaded', () => {
-    state.serverConfigInit = false;
+  /**
+   * The Labs preference arrives with the user state, not the server config; gated pages must
+   * not flash the "turn on in Labs" state before it loads.
+   */
+  it('reports not ready until the user state has loaded', () => {
+    state.isUserStateInit = false;
 
     const { result } = renderHook(() => useSelfLearningSurface());
 

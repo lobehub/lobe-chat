@@ -1,138 +1,80 @@
-import { INBOX_SESSION_ID } from '@lobechat/const';
+import type { UserPreference } from '@lobechat/types';
 
+import { UserModel } from '@/database/models/user';
 import type { LobeChatDatabase } from '@/database/type';
-import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFlags';
 
 /**
- * Input used to resolve Agent Signal self-iteration capability.
- */
-export interface AgentSelfIterationCapabilityInput {
-  /**
-   * Agent-level `chatConfig.selfIteration` setting.
-   */
-  agentSelfIteration?: AgentSelfIterationOptInInput['selfIteration'];
-  /**
-   * User-level rollout result from `enableAgentSelfIteration`.
-   */
-  isAgentSelfIterationFeatureEnabled: boolean;
-  /**
-   * Whether the agent is the product-owned Lobe AI agent.
-   */
-  isLobeAiAgent: boolean;
-}
-
-/**
- * Checks whether a slug belongs to Lobe AI.
+ * Reads the Labs → Self-evolving switch out of a loaded user preference.
  *
  * Use when:
- * - Agent Signal must special-case the product-owned default assistant
- * - Code must avoid treating every virtual/builtin agent as Lobe AI
- *
- * Expects:
- * - `slug` is the persisted agent slug or `undefined` when unavailable
+ * - The caller already holds `users.preference` and must not read it again
  *
  * Returns:
- * - `true` only for the builtin inbox agent slug
+ * - `true` only when `preference.lab.enableSelfLearning` is explicitly `true`
  */
-export const isLobeAiAgentSlug = (slug?: string | null) => slug === INBOX_SESSION_ID;
+export const isSelfLearningEnabledInPreference = (
+  preference: Pick<UserPreference, 'lab'> | null | undefined,
+) => preference?.lab?.enableSelfLearning === true;
 
 /**
- * Input used to resolve the per-agent self-iteration opt-in.
+ * How long one user's resolved switch is reused inside this process.
+ *
+ * Agent Signal asks on every runtime step and every enqueued source event, so an uncached read
+ * would add a `users` lookup to each of them. Five seconds matches the feature-flag runtime
+ * cache this gate replaced; a toggle reaches background work within that window.
  */
-export interface AgentSelfIterationOptInInput {
-  /**
-   * Whether the agent is the product-owned Lobe AI agent.
-   */
-  isLobeAiAgent: boolean;
-  /**
-   * Resolved `chatConfig.selfIteration`, as stored or default-merged.
-   */
-  selfIteration?: { enabled?: boolean; optedOut?: boolean } | null;
-}
+const USER_GATE_CACHE_TTL_MS = 5000;
+/** Bounds the cache; past it the whole map is dropped rather than tracking recency. */
+const USER_GATE_CACHE_MAX_ENTRIES = 5000;
 
-/**
- * Resolves the per-agent self-iteration opt-in, ignoring the user-level rollout.
- *
- * Use when:
- * - A server path must decide whether one agent participates in self-iteration
- *   (turn signal enqueue, tool exposure, rollout-aware capability)
- * - Callers need one rule instead of re-deriving the Lobe AI special case
- *
- * Expects:
- * - `selfIteration` is the agent's `chatConfig.selfIteration`
- *
- * Returns:
- * - Lobe AI: `true` unless the user turned it off (`optedOut === true`). `enabled` is ignored
- *   because `DEFAULT_AGENT_CHAT_CONFIG` carries `enabled: false`, which is merged into every
- *   runtime config and persisted on inbox rows, so it cannot express a user choice.
- * - Other agents: `true` only when explicitly turned on (`enabled === true`)
- *
- * Keep in sync with `agentSelfIterationOptedInSql` in `@lobechat/database`, which
- * expresses the same rule for database-side agent targeting.
- */
-export const isAgentSelfIterationOptedIn = (input: AgentSelfIterationOptInInput) =>
-  input.isLobeAiAgent
-    ? input.selfIteration?.optedOut !== true
-    : input.selfIteration?.enabled === true;
+const userGateCache = new Map<string, { expiresAt: number; value: Promise<boolean> }>();
 
-/**
- * Resolves whether one agent may run Agent Signal self-iteration.
- *
- * Use when:
- * - Server code has an agent context and must combine rollout with per-agent capability
- *
- * Expects:
- * - `isAgentSelfIterationFeatureEnabled` already includes the user-level feature-flag result
- *
- * Returns:
- * - `false` whenever the feature flag is off
- * - Otherwise the per-agent opt-in from {@link isAgentSelfIterationOptedIn}
- */
-export const resolveAgentSelfIterationCapability = (input: AgentSelfIterationCapabilityInput) => {
-  if (!input.isAgentSelfIterationFeatureEnabled) return false;
+/** Clears the per-process switch cache. Tests only. */
+export const resetAgentSignalUserGateCache = () => userGateCache.clear();
 
-  return isAgentSelfIterationOptedIn({
-    isLobeAiAgent: input.isLobeAiAgent,
-    selfIteration: input.agentSelfIteration,
-  });
+const readSelfLearningSwitch = async (db: LobeChatDatabase, userId: string) => {
+  try {
+    const preference = await new UserModel(db, userId).getUserPreference();
+
+    return isSelfLearningEnabledInPreference(preference);
+  } catch (error) {
+    console.error('[AgentSignal] Failed to read the Self-evolving Labs switch:', error);
+    return false;
+  }
 };
 
 /**
- * Resolves whether Agent Self-iteration is feature-flag enabled for the current user.
+ * Resolves whether Agent Signal self-iteration and Self-evolving learning may run for one user.
  *
- * Use when:
- * - UI or server code needs to know whether Agent Self-iteration can be used
- * - RuntimeConfig-backed feature flags are the source of truth for rollout eligibility
- *
- * Expects:
- * - `userId` belongs to the current authenticated user
- *
- * Returns:
- * - `true` only when the Agent Self-iteration feature flag is enabled for the user
- */
-export const isAgentSelfIterationFeatureEnabledForUser = async (userId: string) => {
-  const featureFlags = await getServerFeatureFlagsStateFromRuntimeConfig(userId);
-
-  return featureFlags.enableAgentSelfIteration === true;
-};
-
-/**
- * Resolves whether Agent Signal execution is enabled for the current user.
+ * The single user-level gate is the Labs → Self-evolving switch
+ * (`users.preference.lab.enableSelfLearning`). It covers background memory and skill writes,
+ * reflection, self-feedback intent, nightly review, and expertise lessons alike.
  *
  * Use when:
  * - A server entrypoint needs to decide whether Agent Signal may execute
- * - RuntimeConfig-backed feature flags are the source of truth for rollout eligibility
  *
  * Expects:
- * - `userId` belongs to the current authenticated user
+ * - `userId` belongs to the user whose credentials the work bills to
+ * - `options.preference`, when the caller already loaded the row, skips the read
  *
  * Returns:
- * - `true` only when the Agent Self-iteration feature flag is enabled for the user
+ * - `true` only when the user turned the Labs switch on; read failures resolve to `false`
  */
-export const isAgentSignalEnabledForUser = async (_db: LobeChatDatabase, userId: string) => {
-  try {
-    return await isAgentSelfIterationFeatureEnabledForUser(userId);
-  } catch {
-    return false;
-  }
+export const isAgentSignalEnabledForUser = async (
+  db: LobeChatDatabase,
+  userId: string,
+  options: { preference?: Pick<UserPreference, 'lab'> | null } = {},
+): Promise<boolean> => {
+  if ('preference' in options) return isSelfLearningEnabledInPreference(options.preference);
+
+  const now = Date.now();
+  const cached = userGateCache.get(userId);
+  if (cached && cached.expiresAt > now) return cached.value;
+
+  if (userGateCache.size >= USER_GATE_CACHE_MAX_ENTRIES) userGateCache.clear();
+
+  const value = readSelfLearningSwitch(db, userId);
+  userGateCache.set(userId, { expiresAt: now + USER_GATE_CACHE_TTL_MS, value });
+
+  return value;
 };

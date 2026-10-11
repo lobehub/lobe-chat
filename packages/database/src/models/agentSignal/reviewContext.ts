@@ -15,7 +15,6 @@ import type { LobeChatDatabase } from '../../type';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { notTrashed } from '../../utils/softDelete';
 import { buildWorkspaceWhere } from '../../utils/workspace';
-import { agentSelfIterationOptedInSql } from './selfIterationOptIn';
 
 const parseAggregateTimestamp = (value: Date | string) =>
   value instanceof Date ? value : new Date(value);
@@ -115,7 +114,10 @@ export class AgentSignalReviewContextModel {
   private ws = (cols: { userId: AnyPgColumn; workspaceId: AnyPgColumn }) =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, cols);
 
-  /** Checks agent ownership, virtual status, and self-iteration opt-in. */
+  /**
+   * Checks agent ownership and virtual status. There is no per-agent switch: every owned agent
+   * (plus the Lobe AI inbox) may self-iterate once the user's Labs → Self-evolving switch is on.
+   */
   canAgentRunSelfIteration = async (agentId: string) => {
     const [agent] = await this.db
       .select({ id: agents.id })
@@ -125,7 +127,6 @@ export class AgentSignalReviewContextModel {
           eq(agents.id, agentId),
           this.ws(agents),
           or(eq(agents.virtual, false), isNull(agents.virtual), eq(agents.slug, INBOX_SESSION_ID)),
-          agentSelfIterationOptedInSql(),
         ),
       )
       .limit(1);

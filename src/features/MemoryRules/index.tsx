@@ -334,7 +334,7 @@ const MemoryRules = () => {
     return (
       <Flexbox height={'100%'} width={'100%'}>
         <NavHeader />
-        {/* The rollout flag arrives with the server config; wait for it instead of flashing Labs. */}
+        {/* The Labs preference arrives with the user state; wait for it instead of flashing Labs. */}
         {ready && <SelfLearningLabOff />}
       </Flexbox>
     );

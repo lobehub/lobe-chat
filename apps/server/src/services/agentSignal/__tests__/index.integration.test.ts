@@ -98,6 +98,8 @@ const loadIndexIntegrationModule = async (options: LoadIndexIntegrationModuleOpt
 
 afterEach(() => {
   vi.clearAllMocks();
+  vi.doUnmock('@/server/services/expertise/ingestion');
+  vi.doUnmock('../services/selfIteration/completion');
   vi.resetModules();
   (
     globalThis as { __agentSignalRedisClient?: typeof mockRedis | undefined }
@@ -390,4 +392,73 @@ describe('emitAgentSignalSourceEvent integration', () => {
       expect(initModelRuntimeFromDB).not.toHaveBeenCalled();
     },
   );
+
+  /**
+   * Completion-path expertise ingestion draws from the same 50/day background pool as the runs
+   * Agent Signal dispatches; once the pool is spent the ingestion is skipped with a reason.
+   */
+  it('charges completion-path expertise ingestion to the daily background-run budget', async () => {
+    (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
+      mockRedis;
+    mockRedis.expire.mockResolvedValue(1);
+    mockRedis.incr.mockResolvedValue(51);
+    const ingestSelfReview = vi.fn().mockResolvedValue({ ingested: 0 });
+    vi.doMock('@/server/services/expertise/ingestion', () => ({
+      ExpertiseIngestionService: class {
+        ingestSelfReview = ingestSelfReview;
+      },
+    }));
+    vi.doMock('../services/selfIteration/completion', () => ({
+      createSelfIterationCompletionHandler: () => async () => {},
+    }));
+    const createDefaultAgentSignalPolicies = vi.fn().mockReturnValue([]);
+    const source = {
+      chain: { chainId: 'chain:budget', rootSourceId: 'budget-source' },
+      payload: {},
+      scopeKey: 'topic:topic-1',
+      sourceId: 'budget-source',
+      sourceType: 'agent.execution.completed',
+      timestamp: 1_710_000_000_000,
+    };
+
+    const { emitAgentSignalSourceEvent } = await loadIndexIntegrationModule({
+      mockCreateDefaultAgentSignalPolicies: createDefaultAgentSignalPolicies,
+      mockEmitSourceEvent: vi.fn().mockResolvedValue({
+        deduped: false,
+        source,
+        trigger: { scopeKey: 'topic:topic-1', token: 't', windowEventCount: 1 },
+      }),
+      mockRuntimeFactory: vi.fn().mockReturnValue({
+        emitNormalized: vi.fn().mockResolvedValue({
+          status: 'completed',
+          trace: { actions: [], results: [], signals: [], source },
+        }),
+      }),
+    });
+
+    await emitAgentSignalSourceEvent(
+      {
+        payload: { message: 'done', messageId: 'msg-budget' },
+        sourceId: 'budget-source',
+        sourceType: 'agent.user.message',
+      },
+      { agentId: 'agent-1', db: {} as never, userId: 'user-1' },
+    );
+
+    const policyOptions = createDefaultAgentSignalPolicies.mock.calls[0]![0];
+    const completionInput = { operationId: 'op-1' };
+    await policyOptions.completion.onSelfIterationCompleted(completionInput);
+
+    expect(ingestSelfReview).toHaveBeenCalledWith(completionInput, {
+      acquireBudget: expect.any(Function),
+    });
+    const { acquireBudget } = ingestSelfReview.mock.calls[0]![1];
+    await expect(acquireBudget()).resolves.toEqual({
+      allowed: false,
+      detail: 'Daily Agent Signal background-run budget exceeded (50/day).',
+    });
+    expect(mockRedis.incr).toHaveBeenCalledWith(
+      expect.stringMatching(/^agent-signal:budget:background-run:user:user-1:day:/),
+    );
+  });
 });

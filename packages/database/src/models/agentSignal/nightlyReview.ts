@@ -20,7 +20,6 @@ import type { LobeChatDatabase } from '../../type';
 import { normalizeInboxAgentTitle } from '../../utils/inboxAgent';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import { notTrashed } from '../../utils/softDelete';
-import { agentSelfIterationOptedInSql } from './selfIterationOptIn';
 
 /** Restores the cursor timestamp inside PostgreSQL so workflow JSON never truncates its precision. */
 const cursorUsers = alias(users, 'nightly_review_cursor_users');
@@ -153,8 +152,8 @@ export interface AgentSignalNightlyReviewTarget {
  * - Nightly review needs active agent targets for a local-day window
  *
  * Expects:
- * - Global feature gates are checked by the service layer
- * - Agent-level opt-in is stored on `agents.chatConfig.selfIteration.enabled`
+ * - The user-level Labs → Self-evolving switch is applied by `listEligibleUsers`
+ * - There is no agent-level opt-in; every active non-virtual agent (and Lobe AI) is a target
  *
  * Returns:
  * - Candidate users and active agent targets without emitting source events
@@ -174,7 +173,8 @@ export class AgentSignalNightlyReviewModel {
    * - Backfills need to restrict scheduling to a user allowlist
    *
    * Expects:
-   * - Global feature gates are checked by the service layer
+   * - Only users with Labs → Self-evolving on (`preference.lab.enableSelfLearning = true`) are
+   *   listed, whitelist runs included; the enqueue path re-checks the same switch
    * - Missing user timezone falls back to UTC
    * - `activeSince` is supplied by the scheduler; it is a superset of the per-user review
    *   window re-applied downstream, and it is skipped for whitelist runs
@@ -244,7 +244,16 @@ export class AgentSignalNightlyReviewModel {
 
     query = query
       .leftJoin(userSettings, eq(users.id, userSettings.id))
-      .where(and(cursorCondition, whitelistCondition, localHourCondition))
+      .where(
+        and(
+          // Labs → Self-evolving is the user-level gate for all background self-iteration.
+          // Filtering here keeps users who never turned it on out of the fan-out entirely.
+          sql`${users.preference}->'lab'->>'enableSelfLearning' = 'true'`,
+          cursorCondition,
+          whitelistCondition,
+          localHourCondition,
+        ),
+      )
       .orderBy(asc(users.createdAt), asc(users.id));
 
     return options.limit !== undefined ? query.limit(options.limit) : query;
@@ -329,7 +338,6 @@ export class AgentSignalNightlyReviewModel {
           gte(messages.createdAt, options.windowStart),
           lte(messages.createdAt, options.windowEnd),
           or(eq(agents.virtual, false), isNull(agents.virtual), eq(agents.slug, INBOX_SESSION_ID)),
-          agentSelfIterationOptedInSql(),
         ),
       )
       .groupBy(agents.id, agents.title, agents.name, agents.slug, userSettings.general)

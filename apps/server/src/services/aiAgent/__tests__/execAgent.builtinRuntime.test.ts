@@ -17,6 +17,7 @@ const {
   mockGetBuiltinAgent,
   mockGetInfoForAIGeneration,
   mockGetModelMetadata,
+  mockGetUserPreference,
   mockIsAgentSignalEnabledForUser,
   mockMessageCreate,
   mockMessageQuery,
@@ -28,6 +29,7 @@ const {
   mockGetBuiltinAgent: vi.fn(),
   mockGetInfoForAIGeneration: vi.fn(),
   mockGetModelMetadata: vi.fn(),
+  mockGetUserPreference: vi.fn(),
   mockIsAgentSignalEnabledForUser: vi.fn(),
   mockMessageCreate: vi.fn(),
   mockMessageQuery: vi.fn(),
@@ -146,8 +148,9 @@ vi.mock('@/database/models/thread', () => ({
 }));
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: {
-    getInfoForAIGeneration: mockGetInfoForAIGeneration,
+  UserModel: class {
+    static getInfoForAIGeneration = mockGetInfoForAIGeneration;
+    getUserPreference = mockGetUserPreference;
   },
 }));
 
@@ -558,7 +561,32 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     expect(callArgs.toolSet.sourceMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBe('builtin');
   });
 
-  it('should not inject self-feedback intent tool for custom agents without agent self-iteration', async () => {
+  /**
+   * The Labs → Self-evolving switch is the user gate. The run already reads `users.preference`
+   * for expertise injection, so tool exposure must reuse that row instead of reading it again.
+   */
+  it('decides the self-feedback intent tool from the preference the run already loaded', async () => {
+    mockGetUserPreference.mockResolvedValue({ lab: { enableSelfLearning: true } });
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-inbox',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      slug: 'inbox',
+      systemRole: '',
+    });
+
+    await service.execAgent({ agentId: 'agent-inbox', prompt: 'Hello' });
+
+    expect(mockIsAgentSignalEnabledForUser).toHaveBeenCalledWith(expect.anything(), userId, {
+      preference: { lab: { enableSelfLearning: true } },
+    });
+    expect(mockGetUserPreference).toHaveBeenCalledOnce();
+  });
+
+  // No per-agent switch: Labs → Self-evolving covers every agent.
+  it('should inject self-feedback intent tool for custom agents without any per-agent setting', async () => {
     mockGetAgentConfig.mockResolvedValue({
       chatConfig: {},
       id: 'agent-custom',
@@ -575,9 +603,27 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     });
 
     const callArgs = mockCreateOperation.mock.calls[0][0];
+    expect(callArgs.toolSet.enabledToolIds).toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
+    expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeDefined();
+  });
+
+  it('should not inject self-feedback intent tool for any agent when Labs Self-evolving is off', async () => {
+    mockIsAgentSignalEnabledForUser.mockResolvedValue(false);
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: { selfIteration: { enabled: true } },
+      id: 'agent-custom',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      slug: 'custom-agent',
+      systemRole: '',
+    });
+
+    await service.execAgent({ agentId: 'agent-custom', prompt: 'Hello' });
+
+    const callArgs = mockCreateOperation.mock.calls[0][0];
     expect(callArgs.toolSet.enabledToolIds).not.toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
     expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeUndefined();
-    expect(callArgs.toolSet.sourceMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeUndefined();
   });
 
   // `getAgentConfig` merges DEFAULT_AGENT_CHAT_CONFIG, so a real Lobe AI run sees
@@ -603,7 +649,7 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeDefined();
   });
 
-  it('should not inject self-feedback intent tool for Lobe AI after the user opts out', async () => {
+  it('should ignore a legacy per-agent opt-out on Lobe AI', async () => {
     mockGetAgentConfig.mockResolvedValue({
       chatConfig: { selfIteration: { enabled: false, optedOut: true } },
       id: 'agent-inbox',
@@ -620,8 +666,8 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
     });
 
     const callArgs = mockCreateOperation.mock.calls[0][0];
-    expect(callArgs.toolSet.enabledToolIds).not.toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
-    expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeUndefined();
+    expect(callArgs.toolSet.enabledToolIds).toContain(SELF_FEEDBACK_INTENT_IDENTIFIER);
+    expect(callArgs.toolSet.manifestMap[SELF_FEEDBACK_INTENT_IDENTIFIER]).toBeDefined();
   });
 
   it('should inject self-feedback intent tool for custom agents with agent self-iteration', async () => {
@@ -664,10 +710,11 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
         .mock.calls.filter(([input]) => input.sourceType === 'agent.user.message');
     };
 
-    it('does not feed the signal channel for custom agents without self-iteration', async () => {
+    // No per-agent switch: every agent feeds the channel; the Labs switch is checked downstream.
+    it('feeds the signal channel for custom agents without any per-agent setting', async () => {
       const calls = await runWithAgent({ chatConfig: {}, slug: 'custom-agent' });
 
-      expect(calls).toHaveLength(0);
+      expect(calls).toHaveLength(1);
     });
 
     it('feeds the signal channel for custom agents with self-iteration on', async () => {
@@ -708,13 +755,13 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
       expect(calls).toHaveLength(1);
     });
 
-    it('does not feed the signal channel for Lobe AI after the user opts out', async () => {
+    it('ignores a legacy per-agent opt-out on Lobe AI', async () => {
       const calls = await runWithAgent({
         chatConfig: { selfIteration: { enabled: false, optedOut: true } },
         slug: 'inbox',
       });
 
-      expect(calls).toHaveLength(0);
+      expect(calls).toHaveLength(1);
     });
   });
 

@@ -19,7 +19,7 @@ const SelfLearningSurfaceGate = ({ children }: { children: ReactNode }) => {
   const { enabled, ready } = useSelfLearningSurface();
 
   if (enabled) return children;
-  // The rollout flag arrives with the server config; wait for it instead of flashing Labs.
+  // The Labs preference arrives with the user state; wait for it instead of flashing Labs.
   if (!ready) return null;
 
   return (

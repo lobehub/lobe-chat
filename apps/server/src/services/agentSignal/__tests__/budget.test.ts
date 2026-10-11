@@ -37,7 +37,7 @@ describe('acquireAgentSignalDailyBudget', () => {
 
   /**
    * @example
-   * Run 20 of the day is allowed; run 21 is denied with an `exceeded` reason.
+   * Run 50 of the day is allowed; run 51 is denied with an `exceeded` reason.
    */
   it('allows runs up to the daily limit and denies the next one', async () => {
     const limit = AGENT_SIGNAL_DEFAULTS.dailyBackgroundRunBudgetPerUser;
@@ -63,6 +63,22 @@ describe('acquireAgentSignalDailyBudget', () => {
       'agent-signal:budget:background-run:user:u1:day:2026-10-11',
       AGENT_SIGNAL_DEFAULTS.dailyBudgetTtlSeconds,
     );
+  });
+
+  /**
+   * Product decision: background processing (dispatched runs plus completion-path expertise
+   * ingestion) shares one pool of 50 per user per UTC day; the classifier cap stays at 200.
+   */
+  it('caps background processing at 50 per user per day', async () => {
+    counters.set('agent-signal:budget:background-run:user:u1:day:2026-10-11', 49);
+
+    await expect(
+      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
+    ).resolves.toEqual({ allowed: true, count: 50, kind: 'background-run', limit: 50 });
+    await expect(
+      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
+    ).resolves.toMatchObject({ allowed: false, count: 51, limit: 50, reason: 'exceeded' });
+    expect(AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser).toBe(200);
   });
 
   /**
