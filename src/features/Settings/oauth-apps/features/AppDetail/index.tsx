@@ -32,6 +32,7 @@ import { showClientSecretModal } from '../SecretModal';
 import BasicInfoCard from './BasicInfoCard';
 import CredentialsCard from './CredentialsCard';
 import IntegrationCard from './IntegrationCard';
+import ManualSetupCard from './ManualSetupCard';
 import RedirectUrisCard from './RedirectUrisCard';
 import SectionCard from './SectionCard';
 
@@ -257,6 +258,7 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
         onRotateSecret={handleRotateSecret}
       />
+      <ManualSetupCard applicationType={detail.applicationType} />
       {isWebApp && (
         <RedirectUrisCard
           canEdit={canEdit}

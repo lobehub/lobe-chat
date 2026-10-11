@@ -60,12 +60,7 @@ const CredentialsCard: FC<CredentialsCardProps> = ({
       return (
         <Flexbox horizontal align={'center'} gap={8}>
           <Text type={'secondary'}>{t('oauthApp.secret.notGenerated')}</Text>
-          <Button
-            disabled={!canEdit}
-            loading={secretPending}
-            size={'small'}
-            onClick={onGenerateSecret}
-          >
+          <Button disabled={!canEdit} loading={secretPending} onClick={onGenerateSecret}>
             {t('oauthApp.secret.generate')}
           </Button>
         </Flexbox>
@@ -74,7 +69,7 @@ const CredentialsCard: FC<CredentialsCardProps> = ({
     return (
       <Flexbox horizontal align={'center'} gap={8}>
         <Text type={'secondary'}>{t('oauthApp.secret.hidden')}</Text>
-        <Button disabled={!canEdit} loading={secretPending} size={'small'} onClick={onRotateSecret}>
+        <Button disabled={!canEdit} loading={secretPending} onClick={onRotateSecret}>
           {t('oauthApp.secret.rotate')}
         </Button>
       </Flexbox>
