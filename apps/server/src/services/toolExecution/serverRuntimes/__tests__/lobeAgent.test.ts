@@ -286,6 +286,25 @@ describe('lobeAgentRuntime', () => {
     ).rejects.toMatchObject({ errorType: 429, message: 'Rate limited' });
   });
 
+  it('should rethrow a provider-only response body — provider alone is not a gateway marker', async () => {
+    // `normalizeChatMessageError` propagates `provider` into every error body as
+    // display metadata, so a provider-only `_responseBody` (e.g. a 429 rate
+    // limit tagged with the relay provider) must keep the rethrow behavior.
+    mockChat.mockRejectedValueOnce({
+      _responseBody: { provider: 'lobehub' },
+      errorType: 429,
+      message: 'Rate limited',
+    });
+    const runtime = lobeAgentRuntime.factory(baseContext);
+
+    await expect(
+      runtime.analyzeMedia({
+        question: 'what is this?',
+        urls: ['https://example.com/image.png'],
+      }),
+    ).rejects.toMatchObject({ errorType: 429, message: 'Rate limited' });
+  });
+
   it('should classify a gateway rejection from the response body alone (no message needed)', async () => {
     mockChat.mockRejectedValueOnce({
       _responseBody: { provider: 'lobehub', reason: 'quota_exceeded' },

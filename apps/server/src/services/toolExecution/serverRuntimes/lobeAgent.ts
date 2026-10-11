@@ -129,23 +129,24 @@ const getGatewayRejection = (error: unknown): { content: string; code: string } 
   const message = typeof raw.message === 'string' ? raw.message : undefined;
 
   // Numeric error types are part of the generic model-runtime error contract
-  // (429 rate limits, 4xx validation, provider-policy refusals). Only classify
-  // a failure as an account/gateway-level rejection when the gateway-specific
-  // response body is present — otherwise keep the existing rethrow behavior so
-  // ordinary structured errors stay transparent and retryable.
-  if (errorType === undefined || (provider === undefined && reason === undefined)) return;
+  // (429 rate limits, 4xx validation, provider-policy refusals), and
+  // `normalizeChatMessageError` propagates `provider` (and other display
+  // metadata) into every error body — so neither establishes a gateway-level
+  // refusal on its own. `_responseBody.reason` is the gateway-specific marker:
+  // require it before suppressing the throw, and keep ordinary structured
+  // errors (including provider-only response bodies, e.g. a 429 rate limit)
+  // transparent and retryable via the existing rethrow behavior.
+  if (errorType === undefined || !reason) return;
 
   const parts = [
     `Media analysis was rejected by the platform model gateway (HTTP ${errorType}${provider ? `, provider: ${provider}` : ''}).`,
-    reason ? `Gateway reason: ${reason}.` : undefined,
+    `Gateway reason: ${reason}.`,
     message && message !== 'error' ? `Upstream message: ${message}.` : undefined,
     'This is an account/gateway-level refusal, not a content-policy verdict on the media. Do not retry blindly or treat the media as blocked content.',
   ].filter(Boolean);
 
   return {
-    code: reason
-      ? `GATEWAY_${reason.toUpperCase().replaceAll(/[^A-Z0-9]+/g, '_')}`
-      : 'GATEWAY_REJECTED',
+    code: `GATEWAY_${reason.toUpperCase().replaceAll(/[^A-Z0-9]+/g, '_')}`,
     content: parts.join(' '),
   };
 };
