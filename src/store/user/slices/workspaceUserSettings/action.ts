@@ -206,19 +206,33 @@ export class WorkspaceUserSettingsActionImpl {
       return;
     }
 
-    // Seed the active entry when it has not loaded yet, so the optimistic
-    // overlay below always has a value to apply onto (a picker can fire before
-    // the first hydrate/fetch resolves). `persist: false` — this is not a
-    // server-confirmed value.
-    this.#replica().update(workspaceId, (data) => data ?? previous, { persist: false });
+    const replica = this.#replica();
+
+    // A picker can fire before the local copy was read. Read it first: seeding
+    // an entry now would make the persisted bucket unhydratable (hydration only
+    // fills an empty slot), so a failed write would hide the cached overrides
+    // and a successful one would persist the bare patch over them. Only a write
+    // that finds nothing loaded pays for the (local, IndexedDB) read.
+    if (replica.getConfirmed(workspaceId) === undefined) {
+      await replica.hydrate({ workspaceId });
+    }
+
+    // Seed the active entry when there is still nothing loaded (no local copy),
+    // so the optimistic overlay below always has a value to apply onto.
+    // `persist: false` — this is not a server-confirmed value.
+    replica.update(workspaceId, (data) => data ?? previous, { persist: false });
 
     // Optimistic merge: the picker's own re-render sees the new choice on the
     // next frame, and a failed write rolls the view back to the pre-write
-    // bucket.
-    await this.#replica().optimistic(
+    // bucket. Revalidate once the write settles: it supersedes a read that
+    // started before the write (the driver discards that response), which
+    // would otherwise land after the overlay is gone and restore the old value
+    // in the view and IndexedDB.
+    await replica.optimistic(
       workspaceId,
       (data) => mergePreference(data, patch),
       () => workspaceUserSettingsService.updatePreference(patch),
+      { revalidate: true },
     );
   };
 }

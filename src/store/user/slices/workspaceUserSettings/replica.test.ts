@@ -179,6 +179,10 @@ describe('workspace user preference replica', () => {
       expect(state().workspaceUserPreference.agentModeOverrides).toEqual({ existing: true }),
     );
 
+    // The server holds the merged row once the write lands (the write revalidates).
+    vi.mocked(workspaceUserSettingsService.getPreference).mockResolvedValue({
+      agentModeOverrides: { existing: true, selected: false },
+    });
     await act(() =>
       state().updateWorkspaceUserPreference({ agentModeOverrides: { selected: false } }),
     );
@@ -204,5 +208,90 @@ describe('workspace user preference replica', () => {
       existing: true,
       selected: false,
     });
+  });
+
+  it('applies a write made before hydration onto the persisted bucket, not over it', async () => {
+    await resource.storage!.set(
+      { queryKey: storageKey, scope },
+      { data: { agentModeOverrides: { cached: true } }, updatedAt: 1 },
+    );
+    vi.mocked(workspaceUserSettingsService.getPreference).mockImplementation(pending);
+    vi.mocked(workspaceUserSettingsService.updatePreference).mockResolvedValue(undefined);
+
+    // A picker fires before anything read the local copy.
+    await act(() =>
+      state().updateWorkspaceUserPreference({ agentModeOverrides: { picked: false } }),
+    );
+
+    // The persisted bucket is the base: the pick never hides the cached overrides.
+    expect(state().workspaceUserPreference.agentModeOverrides).toEqual({
+      cached: true,
+      picked: false,
+    });
+    await waitFor(async () =>
+      expect(
+        (await resource.storage!.get({ queryKey: storageKey, scope }))?.data.agentModeOverrides,
+      ).toEqual({ cached: true, picked: false }),
+    );
+  });
+
+  it('keeps the cached bucket when a write before hydration fails offline', async () => {
+    await resource.storage!.set(
+      { queryKey: storageKey, scope },
+      { data: { agentModeOverrides: { cached: true } }, updatedAt: 1 },
+    );
+    vi.mocked(workspaceUserSettingsService.getPreference).mockImplementation(pending);
+    vi.mocked(workspaceUserSettingsService.updatePreference).mockRejectedValue(
+      new Error('offline'),
+    );
+
+    await act(async () => {
+      await expect(
+        state().updateWorkspaceUserPreference({ agentModeOverrides: { picked: false } }),
+      ).rejects.toThrow('offline');
+    });
+
+    expect(state().workspaceUserPreference.agentModeOverrides).toEqual({ cached: true });
+  });
+
+  it('does not let a read that started before a write overwrite it', async () => {
+    vi.mocked(workspaceUserSettingsService.getPreference).mockResolvedValue({
+      agentModeOverrides: { a1: true },
+    });
+    vi.mocked(workspaceUserSettingsService.updatePreference).mockResolvedValue(undefined);
+    const { result } = renderSync();
+    await waitFor(() =>
+      expect(state().workspaceUserPreference.agentModeOverrides).toEqual({ a1: true }),
+    );
+
+    // A revalidation reads the old value and is still in flight…
+    let resolveStale!: (value: WorkspaceUserPreference) => void;
+    vi.mocked(workspaceUserSettingsService.getPreference)
+      .mockImplementationOnce(() => new Promise((resolve) => (resolveStale = resolve)))
+      .mockResolvedValue({ agentModeOverrides: { a1: false } });
+    act(() => {
+      void result.current.mutate();
+    });
+    await waitFor(() => expect(resolveStale).toBeDefined());
+
+    // …when the user picks the new value…
+    await act(() => state().updateWorkspaceUserPreference({ agentModeOverrides: { a1: false } }));
+
+    // …and the stale read answers afterwards.
+    await act(async () => {
+      resolveStale({ agentModeOverrides: { a1: true } });
+    });
+
+    await waitFor(() =>
+      expect(workspaceUserSettingsService.getPreference).toHaveBeenCalledTimes(3),
+    );
+    await waitFor(() =>
+      expect(state().workspaceUserPreference.agentModeOverrides).toEqual({ a1: false }),
+    );
+    await waitFor(async () =>
+      expect(
+        (await resource.storage!.get({ queryKey: storageKey, scope }))?.data.agentModeOverrides,
+      ).toEqual({ a1: false }),
+    );
   });
 });
