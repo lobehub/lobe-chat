@@ -334,6 +334,37 @@ export class AgentDocumentModel {
   }
 
   /**
+   * Counts live children per parent `documentId`, for listings that show which
+   * entries (folders or documents) have something nested under them. Omit
+   * `parentIds` to count every parent of the agent in one grouped query.
+   * Parents without children are absent from the map.
+   */
+  async countChildrenByParentIds(
+    agentId: string,
+    parentIds?: string[],
+  ): Promise<Map<string, number>> {
+    if (parentIds?.length === 0) return new Map();
+
+    const rows = await this.db
+      .select({ count: sql<number>`count(*)::int`, parentId: documents.parentId })
+      .from(agentDocuments)
+      .innerJoin(documents, eq(agentDocuments.documentId, documents.id))
+      .where(
+        and(
+          this.agentDocOwnership(),
+          eq(agentDocuments.agentId, agentId),
+          parentIds ? inArray(documents.parentId, parentIds) : isNotNull(documents.parentId),
+          isNull(agentDocuments.deletedAt),
+        ),
+      )
+      .groupBy(documents.parentId);
+
+    return new Map(
+      rows.flatMap((row) => (row.parentId ? [[row.parentId, Number(row.count)] as const] : [])),
+    );
+  }
+
+  /**
    * Associates an existing document row with an agent document binding.
    *
    * Use when:

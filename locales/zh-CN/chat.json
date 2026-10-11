@@ -3107,6 +3107,7 @@
   "workingPanel.resources.tree.moveError": "移动失败",
   "workingPanel.resources.tree.newDocument": "新建文档",
   "workingPanel.resources.tree.newFolder": "新建文件夹",
+  "workingPanel.resources.tree.newSubDocument": "新建子文档",
   "workingPanel.resources.tree.parentMissing": "上级目录不可用",
   "workingPanel.resources.tree.rename": "重命名",
   "workingPanel.resources.tree.untitledDocument": "未命名文档",

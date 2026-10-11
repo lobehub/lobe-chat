@@ -4,6 +4,12 @@ import type { CSSProperties, DragEvent, KeyboardEvent, MouseEvent, ReactNode } f
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 
 export interface ExplorerTreeNode<TData = unknown> {
+  /**
+   * Draw a node that holds children (`isFolder`) as a file — e.g. a document
+   * with records nested under it. It keeps its chevron and accepts drops, but
+   * its label carries `fileAppearanceCSS` instead of the folder glyph.
+   */
+  appearance?: 'file';
   children?: ExplorerTreeNode<TData>[];
   data?: TData;
   id: string;
@@ -92,6 +98,12 @@ export interface ExplorerTreeProps<TData = unknown> {
   defaultSelectedIds?: string[];
   density?: 'compact' | 'default' | 'relaxed' | number;
   expandedIds?: string[];
+  /**
+   * CSS declarations painted on the label of every folder node whose
+   * `appearance` is `file` (inside the shadow root, so it can override the
+   * folder glyph `unsafeCSS` draws).
+   */
+  fileAppearanceCSS?: string;
   /** Menu for a right click that lands on no row (the blank area under the rows). */
   getBlankContextMenuItems?: () => NativeContextMenuItem[];
   getContextMenuItems?: (node: ExplorerTreeNode<TData>) => NativeContextMenuItem[];

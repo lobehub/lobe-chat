@@ -82,6 +82,7 @@ const stashDocumentRegisterIntent = (input: {
 };
 
 const toListedDocument = (d: {
+  childCount?: number;
   documentId: string;
   filename: string;
   fileType: string;
@@ -90,6 +91,7 @@ const toListedDocument = (d: {
   title: string;
   updatedAt: Date;
 }) => ({
+  childCount: d.childCount,
   documentId: d.documentId,
   filename: d.filename,
   fileType: d.fileType,
@@ -193,6 +195,7 @@ const runtime = new AgentDocumentsExecutionRuntime(
         includeArchivedToolResults: true,
         parentId,
         sourceType,
+        withChildCount: true,
       });
       return docs.map(toListedDocument);
     },
@@ -204,6 +207,7 @@ const runtime = new AgentDocumentsExecutionRuntime(
         scope: 'currentTopic',
         sourceType,
         topicId,
+        withChildCount: true,
       });
       return docs.map(toListedDocument);
     },
@@ -233,10 +237,10 @@ const runtime = new AgentDocumentsExecutionRuntime(
     // Delete stays a lambda side-effect (removeDocument drops the Work server-side);
     // it carries no cost, so it needs no cost-stamping defer. Keep the immediate
     // work-cache refresh so the sidebar drops the removed doc.
-    removeDocument: async ({ agentId, id, toolContext, trigger }) =>
+    removeDocument: async ({ agentId, id, toolContext, trigger, withChildren }) =>
       (
         await withWorkRefresh(
-          agentDocumentService.removeDocument({ agentId, id, toolContext, trigger }),
+          agentDocumentService.removeDocument({ agentId, id, toolContext, trigger, withChildren }),
           toolContext,
         )
       ).deleted,

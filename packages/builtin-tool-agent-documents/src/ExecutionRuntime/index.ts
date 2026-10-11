@@ -42,6 +42,8 @@ const clampListLimit = (limit: unknown): number => {
 };
 
 interface AgentDocumentRecord {
+  /** Entries nested directly under this one (folders and documents can both be parents). */
+  childCount?: number;
   content?: string;
   /**
    * The underlying `documents` table id. Used for portal rendering
@@ -59,7 +61,7 @@ interface AgentDocumentRecord {
    */
   id: string;
   litexml?: string;
-  /** Containing folder's `documentId`; null at the root. */
+  /** `documentId` of the containing folder or document; null at the root. */
   parentId?: string | null;
   title?: string;
   updatedAt?: Date | string;
@@ -492,6 +494,7 @@ export class AgentDocumentsExecutionRuntime {
           // Folder membership lets the agent see what is filed where without a
           // second listing per folder; null marks a root entry.
           ...(d.parentId !== undefined ? { parentId: d.parentId } : {}),
+          ...(d.childCount ? { childCount: d.childCount } : {}),
           title: d.title,
           ...(d.fileType !== undefined
             ? { type: d.fileType === FOLDER_FILE_TYPE ? 'folder' : 'file' }

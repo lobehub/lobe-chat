@@ -107,7 +107,10 @@ describe('AgentDocumentsService', () => {
   const mockModel = {
     associate: vi.fn(),
     copy: vi.fn(),
+    countChildrenByParentIds: vi.fn(),
     create: vi.fn(),
+    delete: vi.fn(),
+    deleteSubtreeByDocumentId: vi.fn(),
     findById: vi.fn(),
     findByAgent: vi.fn(),
     findContextByAgent: vi.fn(),
@@ -157,6 +160,7 @@ describe('AgentDocumentsService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockModel.updateEditorSnapshotIfUnchanged.mockResolvedValue(true);
+    mockModel.countChildrenByParentIds.mockResolvedValue(new Map());
     (AgentDocumentModel as any).mockImplementation(function () {
       return mockModel;
     });
@@ -464,20 +468,50 @@ describe('AgentDocumentsService', () => {
       });
     });
 
-    it('rejects a parentId that does not identify an agent folder', async () => {
+    // A workflow document holds its run records: an ordinary document is a valid parent.
+    it('creates under an ordinary document parent', async () => {
       mockModel.findByDocumentId.mockResolvedValue({
         agentId: 'agent-1',
-        documentId: 'file-doc-id',
-        fileType: 'text/markdown',
-        id: 'file-agent-doc-id',
-        title: 'note',
+        documentId: 'sop-doc-id',
+        fileType: 'agent/document',
+        id: 'sop-agent-doc-id',
+        sourceType: 'agent',
+        templateId: null,
+        title: 'Vent fix-round SOP',
+      });
+      mockModel.findByParentAndFilename.mockResolvedValue(undefined);
+      mockModel.create.mockResolvedValue({ id: 'new-doc', filename: 'run' });
+
+      const service = new AgentDocumentsService(db, userId);
+      await service.createDocument('agent-1', 'run', 'content', { parentId: 'sop-doc-id' });
+
+      expect(mockModel.create).toHaveBeenCalledWith(
+        'agent-1',
+        'run',
+        'content',
+        expect.objectContaining({ parentId: 'sop-doc-id' }),
+      );
+    });
+
+    it.each([
+      ['a skill', { fileType: 'skills/index' }],
+      ['a web clip', { fileType: 'agent/document', sourceType: 'web' }],
+    ])('rejects %s as parent', async (_label, overrides) => {
+      mockModel.findByDocumentId.mockResolvedValue({
+        agentId: 'agent-1',
+        documentId: 'other-doc-id',
+        id: 'other-agent-doc-id',
+        sourceType: 'agent',
+        templateId: null,
+        title: 'Other',
+        ...overrides,
       });
 
       const service = new AgentDocumentsService(db, userId);
 
       await expect(
-        service.createDocument('agent-1', 'note', 'content', { parentId: 'file-doc-id' }),
-      ).rejects.toThrow('Not a folder: file-doc-id');
+        service.createDocument('agent-1', 'note', 'content', { parentId: 'other-doc-id' }),
+      ).rejects.toThrow('cannot contain other documents');
       expect(mockModel.create).not.toHaveBeenCalled();
     });
 
@@ -525,14 +559,14 @@ describe('AgentDocumentsService', () => {
       ...overrides,
     });
 
-    describe('resolveFolder', () => {
+    describe('resolveParent', () => {
       it('resolves a folder by its documents id or its agent-document row id', async () => {
         mockModel.findByDocumentId.mockResolvedValue(folder);
         mockModel.findById.mockResolvedValue(folder);
         const service = new AgentDocumentsService(db, userId);
 
-        await expect(service.resolveFolder('agent-1', 'docs_folder')).resolves.toBe(folder);
-        await expect(service.resolveFolder('agent-1', FOLDER_ROW_ID)).resolves.toBe(folder);
+        await expect(service.resolveParent('agent-1', 'docs_folder')).resolves.toBe(folder);
+        await expect(service.resolveParent('agent-1', FOLDER_ROW_ID)).resolves.toBe(folder);
         expect(mockModel.findByDocumentId).toHaveBeenCalledWith('agent-1', 'docs_folder');
         expect(mockModel.findById).toHaveBeenCalledWith(FOLDER_ROW_ID);
       });
@@ -541,8 +575,8 @@ describe('AgentDocumentsService', () => {
         mockModel.findById.mockResolvedValue({ ...folder, agentId: 'agent-2' });
         const service = new AgentDocumentsService(db, userId);
 
-        await expect(service.resolveFolder('agent-1', FOLDER_ROW_ID)).rejects.toThrow(
-          `Folder not found: ${FOLDER_ROW_ID}`,
+        await expect(service.resolveParent('agent-1', FOLDER_ROW_ID)).rejects.toThrow(
+          `Parent not found: ${FOLDER_ROW_ID}`,
         );
       });
     });
@@ -672,10 +706,32 @@ describe('AgentDocumentsService', () => {
         const [result] = await service.moveDocuments('agent-1', [FOLDER_ROW_ID], 'docs_child');
 
         expect(result).toMatchObject({
-          error: 'Cannot move a folder into itself or one of its subfolders.',
+          error: 'Cannot move a document or folder under itself or one of its descendants.',
           status: 'failed',
         });
         expect(mockModel.movePath).not.toHaveBeenCalled();
+      });
+
+      it('moves records under a workflow document', async () => {
+        const sop = doc({
+          documentId: 'docs_sop',
+          filename: 'Vent fix-round SOP',
+          id: 'sop-row',
+          title: 'Vent fix-round SOP',
+        });
+        mockModel.findByDocumentId.mockImplementation(async (_agentId: string, id: string) =>
+          id === 'docs_sop' ? sop : undefined,
+        );
+        mockModel.findById.mockResolvedValue(doc());
+        const service = new AgentDocumentsService(db, userId);
+
+        const [result] = await service.moveDocuments('agent-1', [DOC_ROW_ID], 'docs_sop');
+
+        expect(result.status).toBe('moved');
+        expect(mockModel.movePath).toHaveBeenCalledWith(
+          DOC_ROW_ID,
+          expect.objectContaining({ parentId: 'docs_sop' }),
+        );
       });
 
       it('moves to the root with a null parent', async () => {
@@ -716,6 +772,49 @@ describe('AgentDocumentsService', () => {
         documentId: 'documents-1',
         topicId: 'topic-1',
       });
+    });
+  });
+
+  describe('removeDocumentById', () => {
+    const parentDoc = {
+      agentId: 'agent-1',
+      content: '',
+      documentId: 'docs_sop',
+      fileType: 'agent/document',
+      id: DOC_ROW_ID,
+      title: 'Vent fix-round SOP',
+    };
+
+    it('refuses a document with nested children unless asked to take them', async () => {
+      mockModel.findById.mockResolvedValue(parentDoc);
+      mockModel.countChildrenByParentIds.mockResolvedValue(new Map([['docs_sop', 24]]));
+      const service = new AgentDocumentsService(db, userId);
+
+      await expect(service.removeDocumentById(DOC_ROW_ID, 'agent-1')).rejects.toThrow(
+        '"Vent fix-round SOP" has 24 nested document(s)',
+      );
+      expect(mockModel.delete).not.toHaveBeenCalled();
+      expect(mockModel.deleteSubtreeByDocumentId).not.toHaveBeenCalled();
+    });
+
+    it('deletes the whole subtree with withChildren', async () => {
+      mockModel.findById.mockResolvedValue(parentDoc);
+      mockModel.countChildrenByParentIds.mockResolvedValue(new Map([['docs_sop', 24]]));
+      const service = new AgentDocumentsService(db, userId);
+
+      await expect(
+        service.removeDocumentById(DOC_ROW_ID, 'agent-1', { withChildren: true }),
+      ).resolves.toBe(true);
+      expect(mockModel.deleteSubtreeByDocumentId).toHaveBeenCalledWith('agent-1', 'docs_sop');
+      expect(mockModel.delete).not.toHaveBeenCalled();
+    });
+
+    it('deletes a leaf document on its own', async () => {
+      mockModel.findById.mockResolvedValue(parentDoc);
+      const service = new AgentDocumentsService(db, userId);
+
+      await expect(service.removeDocumentById(DOC_ROW_ID, 'agent-1')).resolves.toBe(true);
+      expect(mockModel.delete).toHaveBeenCalledWith(DOC_ROW_ID);
     });
   });
 
@@ -820,7 +919,7 @@ describe('AgentDocumentsService', () => {
 
       await expect(
         service.listDocuments('agent-1', undefined, { parentId: 'docs_gone' }),
-      ).rejects.toThrow('Folder not found: docs_gone');
+      ).rejects.toThrow('Parent not found: docs_gone');
       expect(mockModel.listByAgent).not.toHaveBeenCalled();
     });
 

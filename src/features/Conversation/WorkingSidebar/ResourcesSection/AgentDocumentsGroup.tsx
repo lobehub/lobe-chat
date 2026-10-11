@@ -176,6 +176,7 @@ const DocumentItem = memo<DocumentItemProps>(
               agentId,
               documentId: document.documentId,
               id: document.id,
+              withChildren: true,
             });
             await mutate();
             if (isActive) onCurrentDeleted?.();
@@ -492,7 +493,12 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
                 okText: tCommon('delete'),
                 onOk: async () => {
                   try {
-                    await agentDocumentService.removeDocument({ agentId: agentId!, id: rowId });
+                    // A skill bundle always holds its SKILL.md and resources.
+                    await agentDocumentService.removeDocument({
+                      agentId: agentId!,
+                      id: rowId,
+                      withChildren: true,
+                    });
                     await mutate();
                     toast.success(t('workingPanel.skills.delete.success'));
                   } catch (error) {

@@ -18,6 +18,7 @@ import {
   DISABLE_ROW_TEXT_SELECTION_CSS,
   DOCUMENT_TREE_ICON_CSS,
   DOCUMENT_TREE_LAYOUT,
+  DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS,
   DOCUMENT_TREE_ROW_CSS,
   ExplorerTree,
   getExplorerTreeStyleVars,
@@ -157,16 +158,29 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
     [t],
   );
 
+  // A plain document can be a parent too (a workflow with its run records
+  // nested under it). The tree only lets containers hold children, so such a
+  // document becomes a container drawn as a document.
+  const parentDocumentIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const doc of documents) if (doc.parentId) ids.add(doc.parentId);
+    return ids;
+  }, [documents]);
+
   const nodes = useMemo<ExplorerTreeNode<AgentDocumentItem>[]>(
     () =>
-      documents.map((doc) => ({
-        data: doc,
-        id: doc.id,
-        isFolder: doc.isFolder,
-        name: resolveNodeName(doc),
-        parentId: resolveParentRowId(doc.parentId),
-      })),
-    [documents, resolveNodeName, resolveParentRowId],
+      documents.map((doc) => {
+        const isParentDocument = !doc.isFolder && parentDocumentIds.has(doc.documentId);
+        return {
+          ...(isParentDocument && { appearance: 'file' as const }),
+          data: doc,
+          id: doc.id,
+          isFolder: doc.isFolder || isParentDocument,
+          name: resolveNodeName(doc),
+          parentId: resolveParentRowId(doc.parentId),
+        };
+      }),
+    [documents, parentDocumentIds, resolveNodeName, resolveParentRowId],
   );
 
   const treeStyleVars = useMemo(
@@ -279,7 +293,8 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
   const handleNodeClick = useCallback(
     (node: ExplorerTreeNode<AgentDocumentItem>) => {
       const doc = node.data;
-      if (!doc || node.isFolder) return;
+      // A parent document is a container in the tree but still opens on click.
+      if (!doc || doc.isFolder) return;
       if (onOpenDocument) {
         onOpenDocument(doc.documentId, doc.id);
         return;
@@ -335,8 +350,12 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
         return [];
       }
 
-      const isFolder = !!node.isFolder;
+      // `node.isFolder` also covers a document holding nested documents; menu
+      // entries that depend on the row being a real folder read the data flag.
+      const isFolder = !!node.data?.isFolder;
       const targetParentId = isFolder ? node.id : (node.parentId ?? null);
+      const isPlainDocument =
+        !isFolder && !isSkill && node.data?.category === AGENT_DOCUMENT_CATEGORY;
 
       // Right-click on a row that's part of the current multi-selection acts
       // on the whole selection; otherwise it targets only the right-clicked
@@ -369,6 +388,19 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
             sfSymbol: 'square.and.arrow.up',
           },
           { key: 'div-1', type: 'divider' },
+        );
+      }
+
+      // Any document can hold sub-documents, e.g. the run records of a workflow.
+      if (isPlainDocument && !isMulti) {
+        items.push(
+          {
+            key: 'new-sub-document',
+            label: t('workingPanel.resources.tree.newSubDocument'),
+            onClick: () => handleCreateDocument(node.id),
+            sfSymbol: 'doc.badge.plus',
+          },
+          { key: 'div-sub', type: 'divider' },
         );
       }
 
@@ -470,6 +502,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
           canDrag={canDrag}
           canDrop={canDrop}
           canRename={canRename}
+          fileAppearanceCSS={DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS}
           getContextMenuItems={getContextMenuItems}
           header={toolbar}
           iconSet="complete"

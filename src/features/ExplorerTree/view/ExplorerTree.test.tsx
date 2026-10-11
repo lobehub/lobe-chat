@@ -11,7 +11,7 @@ import { canGoNative } from '@/libs/contextMenu/canGoNative';
 import { toNativeTemplate } from '@/libs/contextMenu/toNativeTemplate';
 
 import type { ExplorerTreeHandle, ExplorerTreeNode } from '../types';
-import ExplorerTree, { getItemPathFromEventPath } from './ExplorerTree';
+import ExplorerTree, { buildFileAppearanceCSS, getItemPathFromEventPath } from './ExplorerTree';
 
 const showContextMenu = vi.hoisted(() => vi.fn());
 
@@ -400,5 +400,39 @@ describe('ExplorerTree blank area and keys', () => {
       expect(rowPath('repo/a.ts')).not.toBeNull();
       expect(rowPath('repo/b.ts')).toBeNull();
     });
+  });
+});
+
+describe('ExplorerTree file appearance', () => {
+  it('builds one rule over every path and escapes quotes', () => {
+    expect(buildFileAppearanceCSS(['SOP/', 'a "b"/'], 'mask-image: x;')).toBe(
+      `[data-item-type='folder'][data-item-path="SOP/"] [data-item-section='content']::before,\n` +
+        `[data-item-type='folder'][data-item-path="a \\"b\\"/"] [data-item-section='content']::before {\nmask-image: x;\n}`,
+    );
+    expect(buildFileAppearanceCSS([], 'mask-image: x;')).toBe('');
+  });
+
+  // A document holding run records is a container in the tree but must not
+  // wear the folder glyph; the rule follows the nodes as they change.
+  it('paints file-appearance containers and drops the rule when none remain', async () => {
+    const nodes: ExplorerTreeNode[] = [
+      { appearance: 'file', id: 'sop', isFolder: true, name: 'SOP', parentId: null },
+      { id: 'run', name: 'Run 1', parentId: 'sop' },
+      { id: 'folder', isFolder: true, name: 'Reports', parentId: null },
+    ];
+    const view = render(<ExplorerTree fileAppearanceCSS="mask-image: x;" nodes={nodes} />);
+    const style = () =>
+      getHost(view.container).shadowRoot?.querySelector('style[data-explorer-file-appearance]');
+
+    await waitFor(() => expect(style()?.textContent).toContain('[data-item-path="SOP/"]'));
+    expect(style()?.textContent).not.toContain('Reports');
+
+    view.rerender(
+      <ExplorerTree
+        fileAppearanceCSS="mask-image: x;"
+        nodes={[{ id: 'sop', name: 'SOP', parentId: null }]}
+      />,
+    );
+    await waitFor(() => expect(style()).toBeNull());
   });
 });

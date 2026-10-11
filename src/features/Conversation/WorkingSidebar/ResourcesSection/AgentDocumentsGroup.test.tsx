@@ -616,6 +616,7 @@ describe('AgentDocumentsGroup', () => {
       agentId: 'agent-1',
       documentId: 'doc-content-2',
       id: 'doc-2',
+      withChildren: true,
     });
     expect(mutate).toHaveBeenCalled();
     expect(navigateMock).not.toHaveBeenCalled();

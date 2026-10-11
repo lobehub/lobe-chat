@@ -109,6 +109,7 @@ vi.mock('@/features/ExplorerTree', () => {
           const menuItems = (getContextMenuItems?.(node) ?? []) as MockMenuItem[];
           return (
             <div
+              data-appearance={node.appearance ?? 'default'}
               data-can-drag={String(canDrag?.(node) ?? true)}
               data-folder={String(!!node.isFolder)}
               data-menu-count={String(menuItems.length)}
@@ -154,6 +155,7 @@ vi.mock('@/features/ExplorerTree', () => {
     DISABLE_ROW_TEXT_SELECTION_CSS: '',
     DOCUMENT_TREE_ROW_CSS: '',
     DOCUMENT_TREE_ICON_CSS: '',
+    DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS: '',
     DOCUMENT_TREE_LAYOUT: {
       fontSize: 14,
       iconGap: 8,
@@ -238,6 +240,64 @@ describe('DocumentExplorerTree', () => {
     expect(screen.getByTestId('create-menu-upload-file')).toHaveTextContent(
       'workingPanel.resources.tree.uploadFile',
     );
+  });
+
+  // A workflow document holding its run records must stay expandable in the
+  // tree; before, nested children of a document were dropped from the panel.
+  it('shows the documents nested under a document and still opens the parent', () => {
+    const data = [
+      createDocument({
+        documentId: 'sop-doc',
+        filename: 'Fix-round SOP',
+        id: 'sop-row',
+        title: 'Fix-round SOP',
+      }),
+      createDocument({
+        documentId: 'run-doc',
+        filename: 'Run 1',
+        id: 'run-row',
+        parentId: 'sop-doc',
+        title: 'Run 1',
+      }),
+    ];
+    const onOpenDocument = vi.fn();
+
+    render(
+      <DocumentExplorerTree
+        agentId="agent-1"
+        data={data}
+        mutate={vi.fn()}
+        onOpenDocument={onOpenDocument}
+      />,
+      { wrapper: MemoryRouter },
+    );
+
+    const parent = screen.getByTestId('tree-node-sop-row');
+    expect(parent).toHaveAttribute('data-folder', 'true');
+    expect(parent).toHaveAttribute('data-appearance', 'file');
+    expect(
+      within(screen.getByTestId('tree-node-children-sop-row')).getByTestId('tree-node-run-row'),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('tree-node-run-row')).toHaveAttribute('data-appearance', 'default');
+
+    fireEvent.click(screen.getByTestId('tree-node-button-sop-row'));
+    expect(onOpenDocument).toHaveBeenCalledWith('sop-doc', 'sop-row');
+
+    // Still a document: it can be opened as a page and gain more sub-documents,
+    // but does not grow the folder-only entries.
+    expect(screen.getByTestId('tree-menu-sop-row-open-as-page')).toBeInTheDocument();
+    expect(screen.getByTestId('tree-menu-sop-row-new-sub-document')).toBeInTheDocument();
+    expect(screen.queryByTestId('tree-menu-sop-row-new-folder')).not.toBeInTheDocument();
+  });
+
+  it('offers a sub-document entry on a plain document', () => {
+    render(
+      <DocumentExplorerTree agentId="agent-1" data={[createDocument({})]} mutate={vi.fn()} />,
+      { wrapper: MemoryRouter },
+    );
+
+    expect(screen.getByTestId('tree-node-agent-doc-1')).toHaveAttribute('data-folder', 'false');
+    expect(screen.getByTestId('tree-menu-agent-doc-1-new-sub-document')).toBeInTheDocument();
   });
 
   it('offers upload on a folder context menu', () => {
@@ -445,6 +505,7 @@ describe('DocumentExplorerTree', () => {
         documentId: 'skill-bundle-doc',
         id: 'skill-bundle-row',
         topicId: undefined,
+        withChildren: true,
       });
     });
     expect(messageSuccess).not.toHaveBeenCalled();

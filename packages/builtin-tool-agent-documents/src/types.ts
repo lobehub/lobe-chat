@@ -42,7 +42,7 @@ export const AGENT_SHARE_DOCUMENT_API_NAMES = new Set<string>([
 export interface CreateDocumentArgs {
   content: string;
   hintIsSkill?: boolean;
-  /** Parent folder's underlying `documents.id`, as returned by listDocuments.documentId. */
+  /** Parent folder or document — its `documentId` (or `id`) from listDocuments. */
   parentId?: string;
   scope?: 'agent' | 'currentTopic';
   title: string;
@@ -139,6 +139,8 @@ export interface ModifyDocumentNodesState {
 
 export interface RemoveDocumentArgs {
   id: string;
+  /** Also delete everything nested under it. Without it, a parent with children is refused. */
+  withChildren?: boolean;
 }
 
 export interface RemoveDocumentState {
@@ -230,8 +232,8 @@ export interface ListDocumentsArgs {
   /** Number of documents to skip, for paging past the first page. */
   offset?: number;
   /**
-   * Restrict the listing to the direct children of this folder. Either id of the
-   * folder works; the progressive index surfaces its `documentId`.
+   * Restrict the listing to the direct children of this parent — a folder or a
+   * document. Either id works; the progressive index surfaces its `documentId`.
    */
   parentId?: string;
   scope?: 'agent' | 'currentTopic';
@@ -241,7 +243,7 @@ export interface ListDocumentsArgs {
 }
 
 export interface CreateFolderArgs {
-  /** Parent folder id (either id of the folder); omit to create at the root. */
+  /** Parent folder or document (either id); omit to create at the root. */
   parentId?: string;
   title: string;
 }
@@ -261,7 +263,7 @@ export const MOVE_DOCUMENTS_MAX_IDS = 200;
 export interface MoveDocumentsArgs {
   /** Documents or folders to move; either id of each works. */
   ids: string[];
-  /** Destination folder id (either id of the folder), or null to move to the root. */
+  /** Destination folder or document (either id), or null to move to the root. */
   parentId: string | null;
 }
 
@@ -299,10 +301,12 @@ export interface ListDocumentsState {
 }
 
 export interface ListedAgentDocument {
+  /** Entries nested directly under this one; documents can hold children too. */
+  childCount?: number;
   documentId?: string;
   filename: string;
   id: string;
-  /** Folder `documentId` this entry sits in; null at the root. */
+  /** `documentId` of the folder or document this entry sits under; null at the root. */
   parentId?: string | null;
   title?: string;
   type?: 'file' | 'folder';

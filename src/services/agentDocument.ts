@@ -67,6 +67,7 @@ class AgentDocumentService {
     scope?: 'agent' | 'currentTopic';
     sourceType?: 'all' | 'file' | 'web';
     topicId?: string;
+    withChildCount?: boolean;
   }) => {
     return lambdaClient.agentDocument.listDocuments.query(params);
   };
@@ -210,14 +211,17 @@ class AgentDocumentService {
       documentId?: string;
       id: string;
       topicId?: string;
+      /** Also delete documents nested under it; a parent with children is refused otherwise. */
+      withChildren?: boolean;
     } & AgentDocumentToolTriggerInput,
   ) => {
-    const { agentId, documentId, id, topicId, toolContext, trigger } = params;
+    const { agentId, documentId, id, topicId, toolContext, trigger, withChildren } = params;
     const result = await lambdaClient.agentDocument.removeDocument.mutate({
       agentId,
       id,
       toolContext,
       trigger,
+      withChildren,
     });
     await invalidateDocumentMutation({
       agentDocumentId: id,
@@ -329,44 +333,6 @@ class AgentDocumentService {
     parentId: string | null;
   }) => {
     const result = await lambdaClient.agentDocument.moveDocuments.mutate(params);
-    await revalidateAgentDocuments(params.agentId);
-
-    return result;
-  };
-
-  createFolder = async (params: { agentId: string; path: string; recursive?: boolean }) => {
-    const result = await lambdaClient.agentDocument.mkdirDocumentByPath.mutate(params);
-    await revalidateAgentDocuments(params.agentId);
-
-    return result;
-  };
-
-  moveDocument = async (params: {
-    agentId: string;
-    force?: boolean;
-    fromPath: string;
-    toPath: string;
-  }) => {
-    const result = await lambdaClient.agentDocument.renameDocumentByPath.mutate(params);
-    await revalidateAgentDocuments(params.agentId);
-
-    return result;
-  };
-
-  writeByPath = async (params: {
-    agentId: string;
-    content: string;
-    createMode?: 'always-new' | 'if-missing' | 'must-exist';
-    path: string;
-  }) => {
-    const result = await lambdaClient.agentDocument.writeDocumentByPath.mutate(params);
-    await revalidateAgentDocuments(params.agentId);
-
-    return result;
-  };
-
-  deleteByPath = async (params: { agentId: string; path: string; recursive?: boolean }) => {
-    const result = await lambdaClient.agentDocument.deleteDocumentByPath.mutate(params);
     await revalidateAgentDocuments(params.agentId);
 
     return result;

@@ -33,7 +33,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
           },
           parentId: {
             description:
-              'Folder to create the document in: the folder\'s "documentId" (or "id") from listDocuments or createFolder. Omit to create at the root. Fails if the folder does not exist.',
+              'Parent to create the document under: a folder, or a document such as the workflow/SOP whose run this document records. Pass its "documentId" (or "id") from listDocuments or createFolder. Omit to create at the root. Fails if the parent does not exist.',
             type: 'string',
           },
           scope: {
@@ -180,13 +180,19 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
       },
     },
     {
-      description: 'Remove an existing agent document by ID (similar intent to rm/delete).',
+      description:
+        'Remove an existing agent document or folder by ID (similar intent to rm). A document or folder with nested children is refused unless withChildren is true.',
       name: AgentDocumentsApiName.removeDocument,
       parameters: {
         properties: {
           id: {
             description: AGENT_DOCUMENT_ID_DESCRIPTION,
             type: 'string',
+          },
+          withChildren: {
+            description:
+              'Also delete every document nested under it. Only set this when the user wants the children gone too; otherwise move them out first.',
+            type: 'boolean',
           },
         },
         required: ['id'],
@@ -250,7 +256,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
         properties: {
           parentId: {
             description:
-              'Parent folder ("documentId" or "id" from listDocuments/createFolder). Omit to create at the root.',
+              'Parent folder or document ("documentId" or "id" from listDocuments/createFolder). Omit to create at the root.',
             type: 'string',
           },
           title: {
@@ -263,7 +269,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
       },
     },
     {
-      description: `Move documents and/or folders into a folder, or back to the root (similar intent to mv). Accepts up to ${MOVE_DOCUMENTS_MAX_IDS} ids per call, so a whole set can be filed in one call. Titles, ids, content, history and load rules are kept. Each id is reported as moved, unchanged (already there) or failed with a reason; one failure does not stop the rest.`,
+      description: `Move documents and/or folders under a folder or a document, or back to the root (similar intent to mv). Accepts up to ${MOVE_DOCUMENTS_MAX_IDS} ids per call, so a whole set can be filed in one call. Titles, ids, content, history and load rules are kept. Each id is reported as moved, unchanged (already there) or failed with a reason; one failure does not stop the rest.`,
       name: AgentDocumentsApiName.moveDocuments,
       parameters: {
         properties: {
@@ -277,7 +283,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
           },
           parentId: {
             description:
-              'Destination folder ("documentId" or "id" from listDocuments/createFolder). Pass null to move to the root.',
+              'Destination folder or document ("documentId" or "id" from listDocuments/createFolder). Pass null to move to the root.',
             type: ['string', 'null'],
           },
         },
@@ -287,7 +293,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
     },
     {
       description:
-        "List agent documents (this agent's own notes/skills/structured docs). Use this to discover documents that are not auto-injected (e.g. web-crawled pages), to expand a folder collapsed in the agent_documents_index, or to resolve a title to a document ID. Each entry reports its type (file or folder), parentId (null at the root) and updatedAt. Do NOT use this to find the user's uploaded files (PDFs, images, general uploads) — those live in the resource library and are covered by the Knowledge Base tool's listFiles, not here.",
+        "List agent documents (this agent's own notes/skills/structured docs). Use this to discover documents that are not auto-injected (e.g. web-crawled pages), to expand a folder collapsed in the agent_documents_index, or to resolve a title to a document ID. Each entry reports its type (file or folder), parentId (null at the root), childCount when something is nested under it (documents can hold children too) and updatedAt. Do NOT use this to find the user's uploaded files (PDFs, images, general uploads) — those live in the resource library and are covered by the Knowledge Base tool's listFiles, not here.",
       name: AgentDocumentsApiName.listDocuments,
       parameters: {
         properties: {
@@ -302,7 +308,7 @@ export const AgentDocumentsManifest: BuiltinToolManifest = {
           },
           parentId: {
             description:
-              'Restrict the listing to the direct children of this folder. Pass the folder id shown on a collapsed 📁 row in the agent_documents_index, or a folder\'s "documentId"/"id" from a previous listing. Fails if the folder does not exist. Without parentId every document is listed, including those inside folders; use each entry\'s "parentId" (null = root) to tell where it sits.',
+              'Restrict the listing to the direct children of this parent — a folder or a document. Pass the id shown on a collapsed row in the agent_documents_index, or a "documentId"/"id" from a previous listing. Fails if the parent does not exist. Without parentId every document is listed, including nested ones; use each entry\'s "parentId" (null = root) to tell where it sits.',
             type: 'string',
           },
           scope: {

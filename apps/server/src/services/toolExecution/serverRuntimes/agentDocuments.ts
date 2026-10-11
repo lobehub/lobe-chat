@@ -12,7 +12,8 @@ import { emitAgentDocumentToolOutcomeSafely } from '@/server/services/agentDocum
 import { resolveTaskWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
 
-const toListedDocument = (d: AgentDocumentListItem) => ({
+const toListedDocument = (d: AgentDocumentListItem, childCounts: Map<string, number>) => ({
+  childCount: childCounts.get(d.documentId) ?? 0,
   documentId: d.documentId,
   filename: d.filename,
   fileType: d.fileType,
@@ -254,7 +255,8 @@ export const agentDocumentsRuntime: ServerRuntimeRegistration = {
                 includeArchivedToolResults: true,
                 parentId,
               });
-          return docs.map(toListedDocument);
+          const childCounts = await service.countChildren(agentId);
+          return docs.map((d) => toListedDocument(d, childCounts));
         },
         listTopicDocuments: async ({ agentId, parentId, sourceType, topicId }) => {
           const service = await getService();
@@ -266,12 +268,15 @@ export const agentDocumentsRuntime: ServerRuntimeRegistration = {
               includeArchivedToolResults: true,
             },
           );
-          if (!parentId) return docs.map(toListedDocument);
+          const childCounts = await service.countChildren(agentId);
+          if (!parentId) return docs.map((d) => toListedDocument(d, childCounts));
 
           // Topic listing joins through topic associations rather than the agent
-          // folder tree, so the folder filter is applied in-memory here.
-          const folder = await service.resolveFolder(agentId, parentId);
-          return docs.filter((d) => d.parentId === folder.documentId).map(toListedDocument);
+          // folder tree, so the parent filter is applied in-memory here.
+          const parent = await service.resolveParent(agentId, parentId);
+          return docs
+            .filter((d) => d.parentId === parent.documentId)
+            .map((d) => toListedDocument(d, childCounts));
         },
         moveDocuments: async ({ agentId, ids, parentId }) => {
           if (shareTopicId) throw new Error('Moving documents is not available to share visitors');
@@ -303,7 +308,7 @@ export const agentDocumentsRuntime: ServerRuntimeRegistration = {
         },
         readDocument: async ({ agentId, id }) =>
           (await getService()).getDocumentSnapshotById(id, agentId),
-        removeDocument: ({ agentId, id }) =>
+        removeDocument: ({ agentId, id, withChildren }) =>
           withDocumentOutcome(
             {
               agentId,
@@ -313,7 +318,7 @@ export const agentDocumentsRuntime: ServerRuntimeRegistration = {
               summary: 'Agent documents removed a document.',
               toolAction: 'remove',
             },
-            async () => (await getService()).removeDocumentById(id, agentId),
+            async () => (await getService()).removeDocumentById(id, agentId, { withChildren }),
           ),
         renameDocument: async ({ agentId, id, newTitle }) => {
           const doc = await withDocumentOutcome(

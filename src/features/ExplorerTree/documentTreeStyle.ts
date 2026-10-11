@@ -61,6 +61,13 @@ const maskGlyph = (glyph: string) => `
     mask-size: ${iconSize}px ${iconSize}px;
 `;
 
+/**
+ * Label glyph for a document that has records nested under it: it sits in the
+ * tree as a container (chevron, children) but must still read as a document.
+ * Passed as ExplorerTree's `fileAppearanceCSS`.
+ */
+export const DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS = maskGlyph(FILE_TEXT_ICON_SVG);
+
 export const DOCUMENT_TREE_ICON_CSS = `
   [data-item-type='folder'] [data-item-section='content'] {
     display: flex;

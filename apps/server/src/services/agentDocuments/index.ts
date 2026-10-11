@@ -5,7 +5,7 @@ import type {
   DocumentTemplateSet,
 } from '@lobechat/agent-templates';
 import { DocumentLoadPosition, getDocumentTemplate, PolicyLoad } from '@lobechat/agent-templates';
-import { buildAgentSkillIdentifier } from '@lobechat/const';
+import { buildAgentSkillIdentifier, WEB_DOCUMENT_SOURCE_TYPE } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { DOCUMENT_FOLDER_TYPE } from '@lobechat/database/schemas';
 import type { DocumentAccessScope } from '@lobechat/types';
@@ -46,7 +46,17 @@ import {
 
 const MAX_UNIQUE_FILENAME_ATTEMPTS = 1000;
 /** Guards the ancestor walk against a corrupt parent cycle. */
-const MAX_FOLDER_DEPTH = 64;
+const MAX_TREE_DEPTH = 64;
+
+/**
+ * Whether a document may hold children. Folders group; an ordinary document can
+ * also be a parent — e.g. a workflow/SOP with its execution records nested under
+ * it. Skills keep their own bundle layout and web clips are not tree-managed.
+ */
+const canHoldChildren = (doc: AgentDocument) =>
+  !isManagedSkillDocument(doc) &&
+  !doc.fileType.startsWith('skills/') &&
+  doc.sourceType !== WEB_DOCUMENT_SOURCE_TYPE;
 
 export type MoveAgentDocumentStatus = 'failed' | 'moved' | 'unchanged';
 
@@ -658,7 +668,7 @@ export class AgentDocumentsService {
     options: CreateAgentDocumentOptions = {},
   ) {
     const parentId = options.parentId
-      ? (await this.resolveFolder(agentId, options.parentId)).documentId
+      ? (await this.resolveParent(agentId, options.parentId)).documentId
       : undefined;
 
     // The caller's explicit title wins; a leading H1 only names untitled documents.
@@ -685,22 +695,31 @@ export class AgentDocumentsService {
   }
 
   /**
-   * Resolve a folder from either of its ids: the backing `documentId` (`docs_…`,
-   * which listDocuments and the context index show) or the agent-document row id
-   * (uuid). Models routinely pass the other id of the pair, and a miss used to
-   * read back as an empty folder, so an unknown or non-folder reference throws.
+   * Resolve a parent — a folder or an ordinary document — from either of its ids:
+   * the backing `documentId` (`docs_…`, which listDocuments and the context index
+   * show) or the agent-document row id (uuid). Models routinely pass the other id
+   * of the pair, and a miss used to read back as an empty folder, so an unknown
+   * reference, a skill, or a web clip throws.
    */
-  async resolveFolder(agentId: string, folderRef: string): Promise<AgentDocument> {
-    const folder = await this.findReadableDocumentById(folderRef, agentId);
-    if (!folder) throw new AgentDocumentVfsError(`Folder not found: ${folderRef}`, 'NOT_FOUND');
-    if (folder.fileType !== DOCUMENT_FOLDER_TYPE) {
+  async resolveParent(agentId: string, parentRef: string): Promise<AgentDocument> {
+    const parent = await this.findReadableDocumentById(parentRef, agentId);
+    if (!parent) throw new AgentDocumentVfsError(`Parent not found: ${parentRef}`, 'NOT_FOUND');
+    if (!canHoldChildren(parent)) {
       throw new AgentDocumentVfsError(
-        `Not a folder: ${folderRef} ("${folder.title}" is a document)`,
+        `"${parent.title}" cannot contain other documents (skills and web clips cannot be parents).`,
         'BAD_REQUEST',
       );
     }
 
-    return folder;
+    return parent;
+  }
+
+  /**
+   * Live children per parent `documentId`; parents without children are absent.
+   * Omit `parentIds` to count every parent of the agent.
+   */
+  async countChildren(agentId: string, parentIds?: string[]): Promise<Map<string, number>> {
+    return this.agentDocumentModel.countChildrenByParentIds(agentId, parentIds);
   }
 
   /**
@@ -721,7 +740,7 @@ export class AgentDocumentsService {
       );
     }
 
-    const parentId = parentRef ? (await this.resolveFolder(agentId, parentRef)).documentId : null;
+    const parentId = parentRef ? (await this.resolveParent(agentId, parentRef)).documentId : null;
     const existing = await this.agentDocumentModel.findByParentAndFilename(agentId, parentId, name);
     if (existing) {
       if (existing.fileType === DOCUMENT_FOLDER_TYPE) return { created: false, folder: existing };
@@ -742,7 +761,8 @@ export class AgentDocumentsService {
   }
 
   /**
-   * Move documents or folders into a folder (or to the root with `null`). Each
+   * Move documents or folders under a parent folder or document (or to the root
+   * with `null`). Each
    * entry is applied and reported on its own so one bad id does not abort a bulk
    * reorganisation. Titles, ids, history and load rules are kept.
    */
@@ -751,11 +771,9 @@ export class AgentDocumentsService {
     refs: string[],
     parentRef: string | null,
   ): Promise<MoveAgentDocumentResult[]> {
-    const target = parentRef ? await this.resolveFolder(agentId, parentRef) : undefined;
+    const target = parentRef ? await this.resolveParent(agentId, parentRef) : undefined;
     const targetParentId = target?.documentId ?? null;
-    const blockedIds = target
-      ? await this.collectFolderLineage(agentId, target)
-      : new Set<string>();
+    const blockedIds = target ? await this.collectLineage(agentId, target) : new Set<string>();
     const results: MoveAgentDocumentResult[] = [];
 
     for (const ref of new Set(refs)) {
@@ -777,7 +795,7 @@ export class AgentDocumentsService {
         continue;
       }
       if (blockedIds.has(doc.documentId)) {
-        fail('Cannot move a folder into itself or one of its subfolders.');
+        fail('Cannot move a document or folder under itself or one of its descendants.');
         continue;
       }
 
@@ -803,12 +821,12 @@ export class AgentDocumentsService {
     return results;
   }
 
-  /** The target folder plus every ancestor; moving any of them into the target would loop. */
-  private async collectFolderLineage(agentId: string, folder: AgentDocument) {
-    const lineage = new Set<string>([folder.documentId]);
-    let parentId = folder.parentId;
+  /** The target parent plus every ancestor; moving any of them into the target would loop. */
+  private async collectLineage(agentId: string, parent: AgentDocument) {
+    const lineage = new Set<string>([parent.documentId]);
+    let parentId = parent.parentId;
 
-    for (let depth = 0; parentId && depth < MAX_FOLDER_DEPTH; depth += 1) {
+    for (let depth = 0; parentId && depth < MAX_TREE_DEPTH; depth += 1) {
       if (lineage.has(parentId)) break;
       lineage.add(parentId);
       parentId =
@@ -839,9 +857,30 @@ export class AgentDocumentsService {
     return this.agentDocumentModel.delete(documentId);
   }
 
-  async removeDocumentById(documentId: string, expectedAgentId?: string): Promise<boolean> {
+  async removeDocumentById(
+    documentId: string,
+    expectedAgentId?: string,
+    options: { withChildren?: boolean } = {},
+  ): Promise<boolean> {
     const doc = await this.getDocumentByIdInAgent(documentId, expectedAgentId);
     if (!doc) return false;
+
+    // A parent document carries its nested records (e.g. a workflow and its runs).
+    // Removing only the parent would strand them under a deleted row, so the
+    // caller has to choose: take the subtree, or move the children out first.
+    const childCount =
+      (await this.countChildren(doc.agentId, [doc.documentId])).get(doc.documentId) ?? 0;
+    if (childCount > 0) {
+      if (!options.withChildren) {
+        throw new AgentDocumentVfsError(
+          `"${doc.title}" has ${childCount} nested document(s). Remove it with withChildren: true to delete them too, or move them out first.`,
+          'CONFLICT',
+        );
+      }
+
+      await this.agentDocumentModel.deleteSubtreeByDocumentId(doc.agentId, doc.documentId);
+      return true;
+    }
 
     await this.deleteDocument(documentId);
     return true;
@@ -959,7 +998,7 @@ export class AgentDocumentsService {
     options?: { excludeWeb?: boolean; includeArchivedToolResults?: boolean; parentId?: string },
   ) {
     const parentId = options?.parentId
-      ? (await this.resolveFolder(agentId, options.parentId)).documentId
+      ? (await this.resolveParent(agentId, options.parentId)).documentId
       : undefined;
     const docs = await this.agentDocumentModel.listByAgent(agentId, {
       excludeWeb: options?.excludeWeb,
