@@ -103,7 +103,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
     const handleRenameConfirm = useCallback(async () => {
       if (!renamingValue.trim()) {
-        toast.error('Folder name cannot be empty');
+        toast.error(t('FileManager.actions.folderNameRequired', { ns: 'components' }));
         return;
       }
 
@@ -114,13 +114,13 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
       try {
         await renameItem(item.id, parentKey, renamingValue.trim());
-        toast.success('Renamed successfully');
+        toast.success(t('FileManager.actions.renameSuccess', { ns: 'components' }));
         setIsRenaming(false);
       } catch (error) {
         console.error('Rename error:', error);
-        toast.error('Rename failed');
+        toast.error(t('FileManager.actions.renameError', { ns: 'components' }));
       }
-    }, [item.id, item.name, parentKey, renamingValue, renameItem]);
+    }, [item.id, item.name, parentKey, renamingValue, renameItem, t]);
 
     // A folder freshly created from the tree's per-folder "+" enters inline
     // rename as soon as its row mounts (the parent was expanded/revalidated by

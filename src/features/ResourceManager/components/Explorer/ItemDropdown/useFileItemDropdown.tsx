@@ -408,11 +408,11 @@ export const useFileItemDropdown = ({
                   await downloadFile(blobUrl, mdFilename);
                   URL.revokeObjectURL(blobUrl);
                 } else {
-                  toast.error('Failed to download page: no content available');
+                  toast.error(t('FileManager.actions.downloadPageEmpty'));
                 }
               } catch (error) {
                 console.error('Failed to download page:', error);
-                toast.error('Failed to download page');
+                toast.error(t('FileManager.actions.downloadPageError'));
               }
             } else {
               // For regular files, download from URL
