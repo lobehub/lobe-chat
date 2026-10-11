@@ -595,4 +595,99 @@ describe('ResourceManager search replicas', () => {
     // against the new one, so the whole cleanup must be abandoned.
     expect(remove).not.toHaveBeenCalled();
   });
+  /** Persist a search row an earlier session wrote, and list it in the index. */
+  const seedStored = async (
+    resource: typeof explorerSearchResource | typeof hierarchySearchResource,
+    queryKey: string,
+    searchParams: ExplorerSearchParams | HierarchySearchParams,
+    items: ResourceItem[],
+  ) => {
+    await resource.storage!.set(
+      { queryKey, scope },
+      {
+        data: {
+          currentPage: 0,
+          hasMore: false,
+          items,
+          pageSize: DEFAULT_SEARCH_PAGE_SIZE,
+          searchParams,
+          total: items.length,
+        } as any,
+        updatedAt: 1,
+      },
+    );
+    await resource.storage!.set(
+      { queryKey: REPLICA_INDEX_KEY, scope },
+      { data: [queryKey] as any, updatedAt: 1 },
+    );
+  };
+
+  const storedIds = async (
+    resource: typeof explorerSearchResource | typeof hierarchySearchResource,
+    queryKey: string,
+  ) => ids((await resource.storage!.get({ queryKey, scope }))?.data as any);
+
+  it('drops a deleted hit from every loaded and persisted search variant', async () => {
+    // Regression: deleting a hit only patched the file store and the tree, so
+    // the persisted search rows kept it and a revisit / reload repainted it.
+    const shownParams: ExplorerSearchParams = { pageSize: DEFAULT_SEARCH_PAGE_SIZE, q: 'shown' };
+    fetchSpy.mockResolvedValue(page([item('gone'), item('kept')], 2));
+    await seedStored(explorerSearchResource, EXPLORER_KEY, EXPLORER_PARAMS, [
+      item('gone'),
+      item('other'),
+    ]);
+    await seedStored(hierarchySearchResource, HIERARCHY_KEY, HIERARCHY_PARAMS, [item('gone')]);
+
+    renderHook(() => useResourceManagerStore((s) => s.useFetchExplorerSearch)(shownParams), {
+      wrapper,
+    });
+    await waitFor(() => expect(ids(explorerEntry(shownParams))).toEqual(['gone', 'kept']));
+
+    // The server no longer has the hit once the delete landed.
+    fetchSpy.mockResolvedValue(page([item('kept')], 1));
+    act(() => useResourceManagerStore.getState().removeSearchHits(['gone']));
+
+    expect(ids(explorerEntry(shownParams))).toEqual(['kept']);
+    await waitFor(async () => {
+      expect(await storedIds(explorerSearchResource, EXPLORER_KEY)).toEqual(['other']);
+      // A row holding nothing but the deleted hit has nothing left to paint.
+      expect(await storedIds(hierarchySearchResource, HIERARCHY_KEY)).toEqual([]);
+    });
+  });
+
+  it('carries a renamed hit into every search variant and refetches the mounted one', async () => {
+    // Regression: renaming a hit left the old name in the search replicas, so
+    // the overlay kept painting it (and its old query membership) from storage.
+    const shownParams: ExplorerSearchParams = { pageSize: DEFAULT_SEARCH_PAGE_SIZE, q: 'shown' };
+    fetchSpy.mockResolvedValue(page([item('hit')], 1));
+    await seedStored(explorerSearchResource, EXPLORER_KEY, EXPLORER_PARAMS, [item('hit')]);
+    await seedStored(hierarchySearchResource, HIERARCHY_KEY, HIERARCHY_PARAMS, [item('hit')]);
+
+    renderHook(() => useResourceManagerStore((s) => s.useFetchExplorerSearch)(shownParams), {
+      wrapper,
+    });
+    await waitFor(() => expect(ids(explorerEntry(shownParams))).toEqual(['hit']));
+    const fetches = fetchSpy.mock.calls.length;
+
+    // Renamed away from the keyword: only the server can say it left the query.
+    fetchSpy.mockResolvedValue(page([], 0));
+    act(() => useResourceManagerStore.getState().patchSearchHit('hit', { name: 'renamed' }));
+
+    expect(explorerEntry(shownParams)?.items[0]?.name).toBe('renamed');
+    await waitFor(async () => {
+      const explorerRow = await explorerSearchResource.storage!.get({
+        queryKey: EXPLORER_KEY,
+        scope,
+      });
+      const hierarchyRow = await hierarchySearchResource.storage!.get({
+        queryKey: HIERARCHY_KEY,
+        scope,
+      });
+      expect((explorerRow?.data as any)?.items[0]?.name).toBe('renamed');
+      expect((hierarchyRow?.data as any)?.items[0]?.name).toBe('renamed');
+    });
+    // The mounted search refetches, so the membership change lands.
+    await waitFor(() => expect(fetchSpy.mock.calls.length).toBeGreaterThan(fetches));
+    await waitFor(() => expect(ids(explorerEntry(shownParams))).toEqual([]));
+  });
 });

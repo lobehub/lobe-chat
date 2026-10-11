@@ -24,6 +24,7 @@ import RepoIcon from '@/components/LibIcon';
 import { useSendToMessengerMenuItem } from '@/features/Messenger/PushResourceModal/useSendToMessengerMenuItem';
 import { useKnowledgeBaseListContext } from '@/features/ResourceManager/components/KnowledgeBaseListProvider';
 import { PAGE_FILE_TYPE } from '@/features/ResourceManager/constants';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { buildPagePath } from '@/features/ResourceManager/utils/resourcePath';
 import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
 import { useAppOrigin } from '@/hooks/useAppOrigin';
@@ -486,6 +487,9 @@ export const useFileItemDropdown = ({
                     // `dropNodes` forgets the whole subtree synchronously.
                     onDeleted?.();
                     void useTreeStore.getState().dropNodes([id], treeParentKey);
+                    // The search overlays persist their hits per query, so the
+                    // deleted row must leave those too or it repaints there.
+                    useResourceManagerStore.getState().removeSearchHits([id]);
                     await refreshFileList({ revalidateResources: false });
 
                     toast.success(t('FileManager.actions.deleteSuccess'));

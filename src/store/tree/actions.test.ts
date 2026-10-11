@@ -12,6 +12,7 @@ const {
   mockCollapseHierarchySearch,
   mockDeleteResources,
   mockGetKnowledgeItems,
+  mockPatchSearchHit,
   mockRefreshFileList,
   mockResourceMove,
   mockRevalidateReplica,
@@ -22,6 +23,7 @@ const {
   mockCollapseHierarchySearch: vi.fn(),
   mockDeleteResources: vi.fn(),
   mockGetKnowledgeItems: vi.fn(),
+  mockPatchSearchHit: vi.fn(),
   mockRefreshFileList: vi.fn(),
   mockResourceMove: vi.fn(),
   mockRevalidateReplica: vi.fn(),
@@ -36,7 +38,10 @@ vi.mock('@/libs/replica', async () => ({
 
 vi.mock('@/features/ResourceManager/store', () => ({
   useResourceManagerStore: {
-    getState: () => ({ collapseHierarchySearch: mockCollapseHierarchySearch }),
+    getState: () => ({
+      collapseHierarchySearch: mockCollapseHierarchySearch,
+      patchSearchHit: mockPatchSearchHit,
+    }),
   },
 }));
 
@@ -471,6 +476,10 @@ describe('TreeActionImpl optimistic moves (destination and other mutations)', ()
     mockRefreshFileList.mockReset();
     mockResourceMove.mockReset();
     mockStoreMove.mockReset();
+    // Reset explicitly rather than relying on the runner's `clearMocks`: the
+    // rename tests assert both a patch call and the absence of one.
+    mockPatchSearchHit.mockReset();
+    mockUpdateResource.mockReset();
     fileStoreState.resourceMap = new Map();
     mockResourceMove.mockResolvedValue({});
     mockRefreshFileList.mockResolvedValue(undefined);
@@ -521,6 +530,24 @@ describe('TreeActionImpl optimistic moves (destination and other mutations)', ()
     expect(mockUpdateResource).toHaveBeenCalledWith('doc-a', { name: 'Renamed' });
     expect(state.children['']?.find((i) => i.id === 'doc-a')?.name).toBe('Renamed');
     expect(revalidateSpy).toHaveBeenCalledWith('');
+    // Regression: the search surfaces keep their own persisted hits, so a
+    // sidebar rename has to reach them or they repaint the old name.
+    expect(mockPatchSearchHit).toHaveBeenCalledWith('doc-a', { name: 'Renamed' });
+  });
+
+  it('renameItem leaves the cached searches alone when the rename fails', async () => {
+    const state = createState();
+    state.children = { '': [folder, docA] };
+    const actions = new TreeActionImpl(
+      createSetter(() => state),
+      () => state,
+    );
+    vi.spyOn(actions, 'revalidate').mockResolvedValue();
+    mockUpdateResource.mockRejectedValue(new Error('boom'));
+
+    await withTimeout(actions.renameItem('doc-a', '', 'Renamed')).catch(() => undefined);
+
+    expect(mockPatchSearchHit).not.toHaveBeenCalled();
   });
 
   it('removeItems settles, drops the folder caches, and revalidates the parent', async () => {
