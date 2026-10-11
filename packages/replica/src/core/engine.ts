@@ -497,7 +497,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     pendingHydrates.set(scope, pending);
     pending.add(start);
     try {
-      return await readAndHydrate(params, key, scope);
+      return await readAndHydrate(params, key, scope, overwrite);
     } finally {
       pending.delete(start);
       if (pending.size === 0) pendingHydrates.delete(scope);
@@ -505,7 +505,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     }
   };
 
-  const readAndHydrate = async (params: TParams, key: string, scope: string) => {
+  const readAndHydrate = async (
+    params: TParams,
+    key: string,
+    scope: string,
+    overwrite: boolean,
+  ) => {
     const storage = resource.storage!;
     // A read started before a `clear()` of this scope holds a wiped row.
     const generation = clearGeneration(scope);
