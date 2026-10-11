@@ -25,9 +25,7 @@ import { normalizeAsyncError } from '@/libs/swr/normalizeError';
 import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
 import { type OAuthAppItem } from '@/types/oauthApp';
 
-import { clearFreshSecret, peekFreshSecret } from '../../freshSecret';
 import { confirmDisableOAuthApp } from '../confirmDisable';
-import FreshSecretCard from '../FreshSecretCard';
 import BasicInfoCard from './BasicInfoCard';
 import CredentialsCard from './CredentialsCard';
 import IntegrationCard from './IntegrationCard';
@@ -90,10 +88,9 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
   );
   const detail = data as OAuthAppItem | undefined;
 
-  // A secret issued by the create flow (or a rotation below) stays on the page
-  // until the user confirms it is saved or leaves.
-  const [freshSecret, setFreshSecret] = useState(() => peekFreshSecret(id));
-  useEffect(() => clearFreshSecret(id), [id]);
+  // A secret generated or rotated on this page, shown once until the user
+  // dismisses it or leaves.
+  const [freshSecret, setFreshSecret] = useState<string>();
 
   // Only a settled "no such app" goes back to the list; a failed load stays here
   // with Retry instead of silently bouncing the user away.
@@ -234,10 +231,6 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         />
       )}
 
-      {freshSecret && (
-        <FreshSecretCard clientSecret={freshSecret} onDismiss={() => setFreshSecret(undefined)} />
-      )}
-
       <BasicInfoCard
         canEdit={canEdit}
         detail={detail}
@@ -248,7 +241,10 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
       <CredentialsCard
         canEdit={canEdit}
         detail={detail}
-        rotating={rotateSecretMutation.isPending}
+        freshSecret={freshSecret}
+        secretPending={rotateSecretMutation.isPending}
+        onDismissFreshSecret={() => setFreshSecret(undefined)}
+        onGenerateSecret={() => rotateSecretMutation.mutate({ id })}
         onRotateSecret={handleRotateSecret}
       />
 

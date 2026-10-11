@@ -29,7 +29,8 @@ const oauthAppWriteProcedure = oauthAppProcedure.use(requireWorkspaceRoleWhenSco
 /**
  * The stored secret is encrypted and is never a useful thing to ship to a
  * browser, so every read path replaces it with a boolean. The plaintext is
- * returned exactly once, by `create` and `rotateSecret`.
+ * returned exactly once, by `rotateSecret` — which also issues a web app's
+ * first secret, since `create` issues none.
  */
 const stripSecret = <T extends { clientSecret?: string | null }>(client: T) => {
   const { clientSecret, ...rest } = client;
@@ -83,10 +84,9 @@ export const oauthAppRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { client, secret } = await ctx.oidcClientModel.create(input);
+      const { client } = await ctx.oidcClientModel.create(input);
 
-      // The only time the plaintext secret ever leaves the server.
-      return { ...stripSecret(client), clientSecret: secret };
+      return stripSecret(client);
     }),
 
   delete: oauthAppWriteProcedure

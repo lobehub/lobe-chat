@@ -330,15 +330,20 @@ key stays viewable — hides the missing one-time-reveal screen (the create resu
 only because the secret is wrongly re-viewable). The one-time reveal is also a §3.5
 persistent-result state, not a toast: the user must be able to copy before dismissing.
 
-**Where the reveal lives.** When creation navigates to the new entity's page, show the secret
-**inline on that page** — a highlighted panel at the top, next to the configuration the user
-is about to fill in — not a modal stacked over the page they just landed on. A modal blocks
-the very page the secret belongs to, is one ✕ / mask click from destroying the only copy, and
-forces "copy" and "look at the rest of the setup" into sequence. The inline panel stays until
-the user confirms ("I've saved it") or leaves the page, and its warning must name that real
-boundary ("once you leave this page"), not a modal's "before closing". Hand the plaintext to
-the destination through **memory only** — router state persists into `history.state` /
-session storage and outlives the page.
+**When to mint, and where the reveal lives.** Distinguish a secret that _is_ the created
+thing (an API key, a personal access token: the user created it to get the value) from a
+credential that _belongs to_ a larger entity (an OAuth app's client secret, a webhook's signing
+secret). For the first, the reveal is the create result. For the second, don't mint the secret
+as a side effect of creating the entity: the user has just landed on a page with other setup
+to do and is not ready to store it. Give the credential row a **Generate** action instead, and
+mint and reveal the secret **in place, in that row**, when the user asks. Once one exists, the
+row shows it masked with **Rotate** (confirmed, since rotating breaks live deployments). The
+reveal is part of the row, not a separate surface: no modal stacked over the page (it blocks
+the page the secret belongs to, and one ✕ destroys the only copy), and no warning-coloured
+banner (the reveal is routine, not an alarm; the "won't see it again" line carries the
+urgency). It stays until the user confirms ("I've saved it") or leaves, and its copy names that
+boundary ("once you leave this page"). An entity whose secret has not been generated yet must
+be unusable server-side, not half-configured.
 
 > ❌ Settings **API Key**: `ApiKeyModel.query()` decrypts and returns the **full plaintext** on
 > every list fetch (`packages/database/src/models/apiKey.ts`), the table masks client-side only
@@ -346,18 +351,21 @@ session storage and outlives the page.
 > — no one-time reveal. ✅ Hash at rest; return plaintext only from `createApiKey`; list returns
 > a masked prefix; on create, show a persistent reveal panel (full key + Copy + warning).
 >
-> ❌ Settings **OAuth Apps**, pre-fix: creating a web app navigated to its page and immediately
-> opened a "Your client secret" **modal** over it (`SecretModal`), dismissable by ✕ with no
-> confirmation, its copy saying "before closing". ✅ `FreshSecretCard` renders inline at the
-> top of the app page with Copy + "I've saved it"; the create flow hands the secret over via an
-> in-memory one-shot (`oauth-apps/freshSecret.ts`), and rotation reuses the same card.
+> ❌ Settings **OAuth Apps**, pre-fix: creating a web app minted its client secret and opened a
+> "Your client secret" **modal** over the new app's page, dismissable by ✕ with no confirmation.
+> A first fix moved it to a yellow inline card at the top of the page; the owner rejected that
+> too (too loud, and still revealed at creation, when they weren't ready). ✅ Web apps are
+> created without a secret; the Credentials card's secret row offers **Generate secret**, reveals
+> the value once in place (neutral outlined box, Copy, "I've saved it"), then shows it masked with
+> **Rotate**. Until a secret exists the OIDC adapter treats the client as not found
+> (`oauth-apps/features/AppDetail/CredentialsCard.tsx`, `libs/oidc-provider/adapter.ts`).
 
 **Checklist**
 
 - [ ] A minted secret is shown in full exactly once at creation (persistent reveal + Copy + "won't see again"), not a toast. _(Meaningful・Certainty)_
 - [ ] Secret stored hashed at rest; list / detail return a masked prefix, never re-reveal plaintext. _(Certainty)_
-- [ ] When creation lands on the entity's page, the reveal is an inline panel there (dismissed by an explicit "I've saved it" or leaving), not a modal over the page; the warning names the real boundary. _(Natural・Certainty)_
-- [ ] The plaintext reaches the destination through memory only, never router state / URL / storage. _(Certainty)_
+- [ ] A credential that belongs to a larger entity is generated on demand from its own row, not minted at entity creation; the entity is unusable until it exists. _(Natural・Certainty)_
+- [ ] The reveal happens in that row in neutral styling (no modal, no warning banner), stays until "I've saved it" or leaving, and names that boundary. _(Natural・Certainty)_
 
 ## 3.9 A store of data about the user owes correction, retain-without-use, export & undo・Meaningful・Certainty
 

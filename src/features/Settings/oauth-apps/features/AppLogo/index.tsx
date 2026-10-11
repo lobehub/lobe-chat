@@ -7,8 +7,12 @@ import { AppWindowIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
+  // An upload target reads as an empty slot: outline only, no fill.
   dashed: css`
     border: 1px dashed ${cssVar.colorBorder};
+  `,
+  filled: css`
+    background: ${cssVar.colorFillTertiary};
   `,
   placeholder: css`
     display: flex;
@@ -17,8 +21,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     justify-content: center;
 
     color: ${cssVar.colorTextTertiary};
-
-    background: ${cssVar.colorFillTertiary};
   `,
 }));
 
@@ -35,7 +37,7 @@ interface AppLogoPlaceholderProps {
  */
 export const AppLogoPlaceholder = memo<AppLogoPlaceholderProps>(({ dashed, size }) => (
   <span
-    className={cx(styles.placeholder, dashed && styles.dashed)}
+    className={cx(styles.placeholder, dashed ? styles.dashed : styles.filled)}
     style={{ borderRadius: Math.max(size / 6, 2), height: size, width: size }}
   >
     <Icon icon={AppWindowIcon} size={Math.round(size * 0.45)} />

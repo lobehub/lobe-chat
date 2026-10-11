@@ -85,18 +85,18 @@ export class OidcClientModel {
   };
 
   /**
-   * Creates an app and, for `web` apps, issues its one-time client secret.
+   * Creates an app. No secret is issued here, for either type.
    *
    * `device` apps stay public clients with no secret: the device flow has no
    * confidential channel to keep one in. `web` apps are confidential clients
-   * because the only consumer that can use a redirect flow here is a server
-   * that can hold a secret.
+   * (the only consumer that can use a redirect flow here is a server that can
+   * hold a secret), but their secret is minted only when the owner asks for
+   * it through `rotateSecret`, so the plaintext is shown at the moment the
+   * owner is ready to store it rather than as a side effect of creation.
+   * Until then the provider treats the client as unusable (see the adapter).
    */
   create = async (params: CreateOidcClientParams) => {
     const isWeb = params.type === 'web';
-    const { encrypted, secret } = isWeb
-      ? await this.issueClientSecret()
-      : { encrypted: null, secret: undefined };
 
     const [result] = await this.db
       .insert(oidcClients)
@@ -105,7 +105,7 @@ export class OidcClientModel {
           { userId: this.userId, workspaceId: this.workspaceId },
           {
             applicationType: isWeb ? 'web' : 'native',
-            clientSecret: encrypted,
+            clientSecret: null,
             description: params.description,
             grants: isWeb ? WEB_FLOW_GRANTS : DEVICE_FLOW_GRANTS,
             id: generateClientId(),
@@ -121,19 +121,22 @@ export class OidcClientModel {
       )
       .returning();
 
-    return { client: result, secret };
+    return { client: result };
   };
 
   /**
-   * Replaces the client secret and returns the new plaintext once.
+   * Issues the client secret of a web app — the first one, or a replacement —
+   * and returns the new plaintext once.
    *
-   * Returns `undefined` when the app is not the caller's or has no secret to
-   * rotate, so a device-flow app can never be turned into a confidential one
-   * through this path.
+   * Returns `undefined` when the app is not the caller's or is not a
+   * confidential client, so a device-flow app can never be turned into a
+   * confidential one through this path.
    */
   rotateSecret = async (id: string) => {
     const existing = await this.findById(id);
-    if (!existing || !existing.clientSecret) return undefined;
+    if (!existing || !existing.tokenEndpointAuthMethod?.startsWith('client_secret')) {
+      return undefined;
+    }
 
     const { encrypted, secret } = await this.issueClientSecret();
 

@@ -104,6 +104,7 @@ Distinguish `error` (transient → reason + retry, keep the URL) from a resolved
 
 - [ ] Empty state is a real page with explanation + CTA, not a blank screen. _(Meaningful)_
 - [ ] Empty variants distinguished: "no data yet" vs "no filter match". _(Certainty)_
+- [ ] An empty state that replaces a list sits in place **unframed** (not inside the list's bordered container), its title states the outcome ("Create your first OAuth app", not "No apps yet"), and it owns the page's one primary action — the header hides its duplicate Create while empty. ❌ OAuth Apps, first pass: the empty state rendered inside the list frame with "No OAuth apps yet" next to a header Create button. _(Meaningful・Certainty)_
 - [ ] Error is checked **before** the empty branch — a failed fetch never renders as empty (`!error && length === 0` gates empty); read `error`, don't coerce `data ?? []`. _(Certainty・Meaningful)_
 - [ ] On a **metrics / aggregate** surface (dashboard, stats, cost), a failed fetch never falls through to a **zero-valued default** (`data?.summary ?? {…:0}`, `?? 0`) — a confident `$0` reads as real data, not "empty"; branch `error` before rendering any aggregate. _(Certainty・Meaningful)_
 - [ ] A list merged from a fetched set + a **static/frontend set** (`[...fetched, ...placeholders]`, a catalog padded with "coming soon" rows) branches `error` **before** merging — a failed fetch there keeps `length > 0` via the static entries, so neither the empty guard nor an error-unread call site catches it (a plausible partial catalog); `fallbackData: []` makes it automatic. _(Certainty・Meaningful)_
@@ -567,10 +568,10 @@ label ("名称") as its avatar. Fall back to a **type-semantic glyph** (an app-w
 an OAuth app, the product's agent glyph for an agent) on a quiet fill, shared by every surface
 that shows the entity — list row, detail header, edit form, create form — so "no logo" looks
 the same everywhere. Where the same slot is also an **upload target**, the same glyph with a
-dashed outline signals "you can set one" without a second placeholder style.
+dashed outline and no fill signals "you can set one" without a second placeholder style.
 
 > ✅ OAuth apps: one `AppLogoPlaceholder` (app-window glyph, quiet fill) renders in the list
-> row, the detail header and — dashed — in the create / edit logo uploaders
+> row, the detail header and — outlined, unfilled — in the create / edit logo uploaders
 > (`features/Settings/oauth-apps/features/AppLogo`).
 > ❌ OAuth apps, pre-fix: the create modal passed the **name field's label** as the uploader's
 > `title`, so the empty logo rendered "名称" as two giant glyphs; the detail header rendered a

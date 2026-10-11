@@ -8,18 +8,9 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { usePermission } from '@/hooks/usePermission';
 import { lambdaClient } from '@/libs/trpc/client';
 
-import { stashFreshSecret } from '../freshSecret';
 import { createOAuthAppModal } from './CreateAppModal';
 
-interface CreateAppButtonProps {
-  /**
-   * The page header owns the primary action; a second entry (the empty state)
-   * renders as a secondary button so the page keeps one dominant control.
-   */
-  secondary?: boolean;
-}
-
-const CreateAppButton = ({ secondary }: CreateAppButtonProps) => {
+const CreateAppButton = () => {
   const { t } = useTranslation('auth');
   const { allowed: hasEditPermission, reason } = usePermission('create_content');
   const activeWorkspaceId = useActiveWorkspaceId();
@@ -34,22 +25,13 @@ const CreateAppButton = ({ secondary }: CreateAppButtonProps) => {
     createOAuthAppModal({
       onSubmit: async (values) => {
         const created = await lambdaClient.oauthApp.create.mutate(values);
-
-        // Web apps get a confidential secret; the app page renders its
-        // plaintext once, inline, instead of a modal over the page.
-        if (created.clientSecret) stashFreshSecret(created.id, created.clientSecret);
         navigate(`/settings/oauth-apps/${created.id}`);
       },
     });
   };
 
   return (
-    <Button
-      disabled={!canEdit}
-      title={reason}
-      type={secondary ? 'default' : 'primary'}
-      onClick={handleCreate}
-    >
+    <Button disabled={!canEdit} title={reason} type={'primary'} onClick={handleCreate}>
       {t('oauthApp.list.actions.create')}
     </Button>
   );

@@ -10,15 +10,12 @@ import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useClientDataSWR } from '@/libs/swr';
-import { authKeys } from '@/libs/swr/keys';
-import { lambdaClient } from '@/libs/trpc/client';
-import { type OAuthAppItem } from '@/types/oauthApp';
 
 import { resolveAppListState } from '../appList';
 import AppDetail from './AppDetail';
 import AppItem from './AppItem';
 import CreateAppButton from './CreateAppButton';
+import { useOAuthAppList } from './useOAuthAppList';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   listCol: css`
@@ -38,16 +35,7 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
   const navigate = useWorkspaceAwareNavigate();
   const params = useParams<{ sub?: string }>();
 
-  const {
-    data: apps,
-    error,
-    isLoading,
-    isValidating,
-    mutate,
-  } = useClientDataSWR(authKeys.oauthAppList(), async () => {
-    const list = await lambdaClient.oauthApp.list.query();
-    return list as OAuthAppItem[];
-  });
+  const { data: apps, error, isLoading, isValidating, mutate } = useOAuthAppList();
 
   const reload = () => mutate();
 
@@ -67,6 +55,22 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
   if (listState === 'error')
     return <AsyncError error={error} retrying={isValidating} variant={'block'} onRetry={reload} />;
 
+  // A small list the user builds themselves: the empty state sits in place,
+  // unframed, and owns the page's one primary action (the header hides its
+  // Create button meanwhile).
+  if (listState === 'empty' || (listState === 'list' && !apps))
+    return (
+      <Empty
+        action={canEdit && <CreateAppButton />}
+        description={t('oauthApp.list.empty')}
+        // The default 34ch cap breaks the one-sentence CJK copy mid-word.
+        descriptionProps={{ style: { maxWidth: '48ch' } }}
+        icon={AppWindowIcon}
+        style={{ paddingBlock: 64 }}
+        title={t('oauthApp.list.emptyTitle')}
+      />
+    );
+
   const renderRows = () => {
     if (listState === 'loading')
       return (
@@ -76,17 +80,7 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
         </Flexbox>
       );
 
-    if (listState === 'empty' || !apps)
-      return (
-        <Empty
-          action={canEdit && <CreateAppButton secondary />}
-          description={t('oauthApp.list.empty')}
-          icon={AppWindowIcon}
-          style={{ paddingBlock: 40 }}
-        />
-      );
-
-    return apps.map((app) => (
+    return apps?.map((app) => (
       <AppItem
         app={app}
         canEdit={canEdit}

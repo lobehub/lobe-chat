@@ -140,7 +140,7 @@ Use this scan to identify applicable checks, then read the linked module for its
 - [ ] Provide the lifecycle operations appropriate to each entity's source; honor pin/keep/lock on every removal path.
 - [ ] Show the acting identity and an account-switch or re-authentication path.
 - [ ] Require a deliberate gesture for unrecoverable or broad destructive actions and report partial failure.
-- [ ] Reveal newly minted secrets once with Copy — inline on the destination page, not a modal over it — hash them at rest, and mask subsequent views.
+- [ ] Reveal newly minted secrets once with Copy, hash them at rest, and mask subsequent views; an entity's credential is generated on demand in its own row, not minted and popped at creation.
 - [ ] User-memory/profile stores support correction, retaining without use, export, and undo or soft-delete.
 
 **Feedback — loading & system response** ([feedback.md](references/feedback.md))

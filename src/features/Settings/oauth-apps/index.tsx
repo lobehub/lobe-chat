@@ -11,6 +11,7 @@ import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors'
 
 import CreateAppButton from './features/CreateAppButton';
 import OAuthApps from './features/OAuthApps';
+import { useOAuthAppList } from './features/useOAuthAppList';
 
 const Page = () => {
   const { t } = useTranslation('auth');
@@ -25,13 +26,17 @@ const Page = () => {
     labPreferSelectors.enableOAuthApps(s),
   ]);
 
+  // While the list is empty its empty state carries the Create button.
+  const { data: apps } = useOAuthAppList(isPreferenceInit && enableOAuthApps);
+  const listEmpty = apps?.length === 0;
+
   if (!isPreferenceInit) return <Skeleton.Text rows={5} />;
   if (!enableOAuthApps) return <NotFound />;
 
   return (
     <>
       <SettingHeader
-        extra={!params.sub && canEdit && <CreateAppButton />}
+        extra={!params.sub && canEdit && !listEmpty && <CreateAppButton />}
         title={t('tab.oauthApps')}
       />
       <OAuthApps canEdit={canEdit} />

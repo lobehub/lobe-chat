@@ -162,6 +162,23 @@ usage-stats stub renders nothing, which left an empty bordered card, now hidden 
 The secret card printed the backticks around `client_secret` literally, so the parameter now
 renders as inline code.
 
+**⑭ Owner review of the first acceptance round** _fixed_
+The owner rejected three checks, and each rejection corrected the audit itself, not just the
+fix:
+
+- **③ was only half right.** Moving the secret from a modal to a yellow inline card fixed where
+  it showed, not when it was minted. A web app's secret should not exist until the owner asks
+  for it. Web apps are now created without a secret. The Credentials row offers **Generate
+  secret**, reveals the value once in place in neutral styling, then shows it masked with
+  **Rotate**. The OIDC adapter treats a secret-less web client as not found. → refined ux Act §3.8.
+- **⑥'s empty state** was still inside the list's bordered frame, titled "No OAuth apps yet" and
+  sharing the screen with the header's Create. It is now unframed, its title states the outcome
+  ("Create your first OAuth app"), and it owns the single primary Create while the header hides
+  its own. → ux Read §1.1.
+- **④'s upload placeholder** had a filled background. An upload slot is now outline-only. The
+  type cards also lost the 32px right gutter that had been reserved for the check mark, which
+  wrapped the description early; the check now sits in the title row.
+
 ## 4 — Skill feedback
 
 - **New rule landed — Read §1.14** (gap ④): an entity with no image falls back to a shared

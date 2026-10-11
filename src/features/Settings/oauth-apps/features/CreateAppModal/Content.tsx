@@ -26,8 +26,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     flex: 1;
 
     min-width: 0;
-    padding-block: 12px;
-    padding-inline: 12px 32px;
+    padding: 12px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -55,9 +54,8 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `,
   typeCheck: css`
-    position: absolute;
-    inset-block-start: 12px;
-    inset-inline-end: 12px;
+    flex: none;
+    margin-inline-start: auto;
     color: ${cssVar.colorText};
   `,
   typeDesc: css`
@@ -120,9 +118,9 @@ const TypeSelect: FC<TypeSelectProps> = ({ onChange, options, value }) => (
               <Icon icon={option.icon} size={16} />
             </span>
             <Text weight={500}>{option.title}</Text>
+            {selected && <Icon className={styles.typeCheck} icon={CheckIcon} size={16} />}
           </Flexbox>
           <span className={styles.typeDesc}>{option.description}</span>
-          {selected && <Icon className={styles.typeCheck} icon={CheckIcon} size={16} />}
         </Flexbox>
       );
     })}
