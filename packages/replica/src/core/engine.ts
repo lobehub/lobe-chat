@@ -273,10 +273,142 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return !!rows?.has(queryKey) && isEqual(rows.get(queryKey), data);
   };
 
+  // ---- bounded persisted entries ----------------------------------------
+  // With `persist.maxEntries`, the index is kept in least-recently-used order
+  // (oldest first — the order an unbounded index is appended in, so rows an
+  // earlier release indexed keep their place) and every use of a row moves it
+  // to the end. Past the cap the oldest rows that nothing pins are evicted.
+  const maxEntries = resource.maxPersistedEntries;
+  /** Mounted readers per storage key and per entry key (see `retain`). */
+  const retainedRows = new Map<string, number>();
+  const retainedKeys = new Map<string, number>();
+  /** Rows whose eviction delete is queued, per scope. */
+  const evicting = new Map<string, Set<string>>();
+
+  const bump = (counts: Map<string, number>, id: string, by: number) => {
+    const next = (counts.get(id) ?? 0) + by;
+    if (next > 0) counts.set(id, next);
+    else counts.delete(id);
+  };
+
+  /**
+   * Pin an entry (and the row of the query it asks for) while something shows
+   * it: eviction never drops a retained row or the memory entry of a retained
+   * key. `useSync` retains for as long as it is mounted. Returns the release.
+   */
+  const retain = (key: string, queryKey: string = replicaStorageKey(key)) => {
+    bump(retainedKeys, key, 1);
+    bump(retainedRows, queryKey, 1);
+    let released = false;
+    return () => {
+      if (released) return;
+      released = true;
+      bump(retainedKeys, key, -1);
+      bump(retainedRows, queryKey, -1);
+    };
+  };
+
+  /** Rows the memory of `scope` holds, by storage key → entry key. */
+  const loadedRows = (scope: string) => {
+    const slot = getSlot();
+    const rows = new Map<string, string>();
+    if (slot.scope !== scope) return rows;
+    for (const [key, entry] of Object.entries(slot.entries))
+      rows.set(replicaStorageKey(key, entry.query), key);
+    return rows;
+  };
+
+  /** A row on screen, or whose entry has writes / a page load in flight. */
+  const isPinned = (queryKey: string, entryKey: string | undefined) =>
+    retainedRows.has(queryKey) ||
+    (entryKey !== undefined &&
+      (retainedKeys.has(entryKey) ||
+        (getSlot().entries[entryKey]?.pending.length ?? 0) > 0 ||
+        loadingMore.has(entryKey)));
+
+  /** The oldest unpinned rows past the cap (`keys` is oldest first). */
+  const pickEvictions = (scope: string, keys: string[], touched: string): string[] => {
+    const going = evicting.get(scope);
+    let excess = keys.length - maxEntries! - keys.filter((key) => going?.has(key)).length;
+    if (excess <= 0) return [];
+    const loaded = loadedRows(scope);
+    const picked: string[] = [];
+    for (const queryKey of keys) {
+      if (excess <= 0) break;
+      if (queryKey === touched || going?.has(queryKey)) continue;
+      if (isPinned(queryKey, loaded.get(queryKey))) continue;
+      picked.push(queryKey);
+      excess -= 1;
+    }
+    return picked;
+  };
+
+  /**
+   * Evict rows: drop the memory entries that answer them (one commit), then
+   * delete the rows. A row leaves the index only once its delete landed, so a
+   * failed eviction is picked again by a later use.
+   */
+  const evictRows = (scope: string, queryKeys: string[]) => {
+    if (resource.scope.get() !== scope || !resource.scope.canPersist()) return;
+    const going = evicting.get(scope) ?? new Set<string>();
+    evicting.set(scope, going);
+    const loaded = loadedRows(scope);
+    // Re-check: a row may have been pinned since it was picked.
+    const rows = queryKeys.filter(
+      (queryKey) => !going.has(queryKey) && !isPinned(queryKey, loaded.get(queryKey)),
+    );
+    if (rows.length === 0) return;
+    for (const queryKey of rows) going.add(queryKey);
+    const dropped = rows.flatMap((queryKey) => {
+      const key = loaded.get(queryKey);
+      return key === undefined ? [] : [key];
+    });
+    if (dropped.length > 0) {
+      const slot = getSlot();
+      const entries = { ...slot.entries };
+      for (const key of dropped) delete entries[key];
+      port.commit(
+        dropped.map((key) => ({ data: undefined, key })),
+        { entries, scope },
+        `${prefix}/evict`,
+      );
+    }
+    void deleteRows(scope, rows).finally(() => {
+      for (const queryKey of rows) going.delete(queryKey);
+      if (going.size === 0 && evicting.get(scope) === going) evicting.delete(scope);
+    });
+  };
+
+  /**
+   * A bounded resource used a row: move it to the end of the index and evict
+   * past the cap. No-op for an unbounded resource.
+   */
+  const touchStorageKey = (scope: string, queryKey: string) => {
+    if (!writeQueue || maxEntries === undefined) return;
+    const known = indexed.get(scope) ?? new Set<string>();
+    indexed.set(scope, known);
+    known.add(queryKey);
+    let picked: string[] = [];
+    void writeQueue
+      .update(indexKey(scope), (current) => {
+        const keys = (current?.data as unknown as string[] | undefined) ?? [];
+        const next = [...keys.filter((key) => key !== queryKey), queryKey];
+        picked = pickEvictions(scope, next, queryKey);
+        if (keys.length === next.length && keys.at(-1) === queryKey) return undefined;
+        return { data: next as unknown as TData, updatedAt: Date.now() };
+      })
+      .then((touched) => {
+        // Unreadable index: leave it untouched, retry the append on the next use.
+        if (!touched) return void known.delete(queryKey);
+        if (picked.length > 0) evictRows(scope, picked);
+      });
+  };
+
   /** Record a persisted row in the index (queued after the row write). */
   const trackStorageKey = (scope: string, queryKey: string) => {
     if (!writeQueue) return;
     noteWrite(scope, queryKey);
+    if (maxEntries !== undefined) return touchStorageKey(scope, queryKey);
     const known = indexed.get(scope) ?? new Set<string>();
     indexed.set(scope, known);
     if (known.has(queryKey)) return;
@@ -415,7 +547,10 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         continue;
       }
       // The row already holds this value: an unchanged revalidation is no write.
-      if (isStored(effect.scope, key.queryKey, data)) continue;
+      if (isStored(effect.scope, key.queryKey, data)) {
+        touchStorageKey(effect.scope, key.queryKey);
+        continue;
+      }
       rememberStored(effect.scope, key.queryKey, data);
       void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
         // A failed write leaves the row as it was: the next persist must retry.
@@ -566,7 +701,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const stored = withoutRemovedEntities(scope, cached.data);
     if (stored === undefined) return false;
     const data = overwrite ? keepClientOnlyRows(stored, port.read(key)) : stored;
-    return dispatch({
+    const applied = dispatch({
       data,
       key,
       overwrite,
@@ -576,6 +711,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       type: 'hydrate',
       updatedAt: cached.updatedAt,
     });
+    // A hydrated row is a used row (bounded resources keep LRU order).
+    if (applied && resource.scope.canPersist()) touchStorageKey(scope, queryKey);
+    return applied;
   };
 
   const viewMatchesFields = (current: TData | undefined, params: TParams) => {
@@ -1171,6 +1309,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     removeEntity,
     replace,
     resource,
+    retain,
     revalidate,
     update,
     updateEntity,

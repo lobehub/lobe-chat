@@ -1,5 +1,9 @@
+import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { createStore } from 'zustand/vanilla';
 
+import { testDriver } from '../../tests/testDriver';
+import { createReplicaSlice, recordLens } from '../zustand/createReplicaSlice';
 import { defineReplica } from './defineReplica';
 import { createReplicaEngine, REPLICA_INDEX_KEY, type ReplicaStorePort } from './engine';
 import { arrayEntity } from './entityAdapters';
@@ -84,17 +88,24 @@ const createHost = <T>() => {
 
 type ListParams = { id: string; q?: string };
 
-const setupList = (storage: ReturnType<typeof createStorage>) => {
+const setupList = (
+  storage: ReturnType<typeof createStorage>,
+  { maxEntries }: { maxEntries?: number } = {},
+) => {
   const resource = defineReplica<ListParams, Item[]>({
     key: ({ id }) => id,
     name: 'list',
+    persist: { maxEntries },
     query: ({ q }) => ({ q }),
     scope,
     storage: storage.storage,
     version: 1,
   });
   const host = createHost<Item[]>();
-  const engine = createReplicaEngine(resource, { entity: arrayEntity<Item>((entry) => entry.id), port: host.port });
+  const engine = createReplicaEngine(resource, {
+    entity: arrayEntity<Item>((entry) => entry.id),
+    port: host.port,
+  });
   return { engine, host, resource };
 };
 
@@ -289,5 +300,162 @@ describe('redundant persist writes', () => {
     engine.replace({ id: 'a' }, [item('1'), item('2')]);
     await flush();
     expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1'), item('2')]);
+  });
+});
+
+describe('bounded persisted entries (persist.maxEntries)', () => {
+  const bounded = (storage = createStorage()) => ({
+    storage,
+    ...setupList(storage, { maxEntries: 2 }),
+  });
+
+  it('evicts the least recently used row, its index entry and its idle memory entry', async () => {
+    resetScope();
+    const { engine, host, storage } = bounded();
+    engine.replace({ id: 'a' }, [item('1')]);
+    engine.replace({ id: 'b' }, [item('2')]);
+    await flush();
+    engine.replace({ id: 'c' }, [item('3')]);
+    await flush();
+
+    expect(storage.dataKeys()).toEqual(['b?{}', 'c?{}']);
+    expect(storage.index()).toEqual(['b?{}', 'c?{}']);
+    expect(Object.keys(host.view()).sort()).toEqual(['b', 'c']);
+    expect(host.state().entries.a).toBeUndefined();
+  });
+
+  it('counts an unchanged revalidation and a hydrate as a use', async () => {
+    resetScope();
+    const { engine, storage } = bounded();
+    engine.replace({ id: 'a' }, [item('1')]);
+    engine.replace({ id: 'b' }, [item('2')]);
+    await flush();
+    // `a` is revalidated with the same value: no row write, but it is now recent.
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    engine.replace({ id: 'c' }, [item('3')]);
+    await flush();
+    expect(storage.dataKeys()).toEqual(['a?{}', 'c?{}']);
+
+    // A later session hydrates `a`: `c` becomes the oldest.
+    const next = bounded(storage);
+    expect(await next.engine.hydrate({ id: 'a' })).toBe(true);
+    await flush();
+    next.engine.replace({ id: 'd' }, [item('4')]);
+    await flush();
+    expect(storage.dataKeys()).toEqual(['a?{}', 'd?{}']);
+  });
+
+  it('keeps recency across reloads through the persisted index', async () => {
+    resetScope();
+    const first = bounded();
+    first.engine.replace({ id: 'a' }, [item('1')]);
+    first.engine.replace({ id: 'b' }, [item('2')]);
+    await flush();
+    first.engine.replace({ id: 'a' }, [item('1'), item('x')]);
+    await flush();
+    expect(first.storage.index()).toEqual(['b?{}', 'a?{}']);
+
+    const { engine, storage } = bounded(first.storage);
+    engine.replace({ id: 'c' }, [item('3')]);
+    await flush();
+    expect(storage.dataKeys()).toEqual(['a?{}', 'c?{}']);
+  });
+
+  it('never evicts a retained row or an entry with pending writes', async () => {
+    resetScope();
+    const { engine, host, storage } = bounded();
+    engine.replace({ id: 'a' }, [item('1')]);
+    engine.replace({ id: 'b' }, [item('2')]);
+    await flush();
+    const release = engine.retain('a', 'a?{}');
+    const pending = engine.beginOptimistic('b', (data) => [...data, item('tmp')]);
+
+    engine.replace({ id: 'c' }, [item('3')]);
+    await flush();
+    // Both older rows are pinned: the cap waits rather than dropping them.
+    expect(storage.dataKeys()).toEqual(['a?{}', 'b?{}', 'c?{}']);
+    expect(host.view().a).toEqual([item('1')]);
+
+    pending.rollback();
+    release();
+    engine.replace({ id: 'd' }, [item('4')]);
+    await flush();
+    expect(storage.dataKeys()).toEqual(['c?{}', 'd?{}']);
+    expect(Object.keys(host.view()).sort()).toEqual(['c', 'd']);
+  });
+
+  it('keeps a row whose eviction delete failed indexed, and retries it on the next use', async () => {
+    resetScope();
+    const { engine, storage } = bounded();
+    storage.failRemoves.add('a?{}');
+    engine.replace({ id: 'a' }, [item('1')]);
+    engine.replace({ id: 'b' }, [item('2')]);
+    engine.replace({ id: 'c' }, [item('3')]);
+    await flush();
+    // `a` was picked but its delete failed: it stays indexed and stored.
+    expect(storage.index()).toEqual(['a?{}', 'b?{}', 'c?{}']);
+    expect(storage.dataKeys()).toEqual(['a?{}', 'b?{}', 'c?{}']);
+
+    storage.failRemoves.delete('a?{}');
+    engine.replace({ id: 'c' }, [item('3'), item('4')]);
+    await flush();
+    expect(storage.index()).toEqual(['b?{}', 'c?{}']);
+    expect(storage.dataKeys()).toEqual(['b?{}', 'c?{}']);
+  });
+
+  it('leaves an unbounded resource append-ordered and unevicted', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine } = setupList(storage);
+    for (const id of ['a', 'b', 'c']) engine.replace({ id }, [item(id)]);
+    await flush();
+    engine.replace({ id: 'a' }, [item('a'), item('x')]);
+    await flush();
+    expect(storage.index()).toEqual(['a?{}', 'b?{}', 'c?{}']);
+  });
+});
+
+describe('useSync pins the entry it shows', () => {
+  it('a mounted useSync keeps its row and memory entry; unmounting releases them', async () => {
+    resetScope();
+    const storage = createStorage();
+    const resource = defineReplica<ListParams, Item[]>({
+      key: ({ id }) => id,
+      name: 'list',
+      persist: { maxEntries: 1 },
+      query: ({ q }) => ({ q }),
+      scope,
+      storage: storage.storage,
+      version: 1,
+    });
+    interface State {
+      lists: Record<string, Item[]>;
+      listsReplica: ReplicaState<Item[]>;
+    }
+    const store = createStore<State>()(() => ({ lists: {}, listsReplica: createReplicaState() }));
+    const slice = createReplicaSlice<State, ListParams, Item[]>(resource, {
+      driver: testDriver,
+      // No fetcher: only the pin is under test.
+      get: store.getState,
+      set: (partial) => store.setState(partial),
+      stateKey: 'listsReplica',
+      view: recordLens('lists'),
+    });
+
+    const view = renderHook(() => slice.useSync({ id: 'a' }));
+    slice.replace({ id: 'a' }, [item('1')]);
+    slice.replace({ id: 'b' }, [item('2')]);
+    await flush();
+    await flush();
+    expect(storage.dataKeys()).toEqual(['a?{}', 'b?{}']);
+    expect(store.getState().lists.a).toEqual([item('1')]);
+
+    view.unmount();
+    slice.replace({ id: 'c' }, [item('3')]);
+    await flush();
+    await flush();
+    expect(storage.dataKeys()).toEqual(['c?{}']);
+    expect(Object.keys(store.getState().lists)).toEqual(['c']);
   });
 });

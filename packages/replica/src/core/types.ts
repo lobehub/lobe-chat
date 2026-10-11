@@ -109,6 +109,8 @@ export interface ReplicaResource<TParams, TData, TFetched = TData, TCursor = any
   /** Paged resources receive the page cursor (`undefined` = head page). */
   fetcher?: (params: TParams, cursor?: TCursor) => Promise<TFetched>;
   key: (params: TParams) => string;
+  /** Cap of persisted rows per scope (LRU eviction, see `DefineReplicaOptions.persist`). */
+  maxPersistedEntries?: number;
   name: string;
   /** Storage namespace — `name` + `version`, so a version bump orphans old rows. */
   namespace: string;
