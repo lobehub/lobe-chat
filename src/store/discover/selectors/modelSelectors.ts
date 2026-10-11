@@ -19,7 +19,7 @@ const modelList =
 const modelDetail =
   (queryKey?: string) =>
   (s: DiscoverStore): DiscoverModelDetail | undefined =>
-    (queryKey && s.modelDetailMap[queryKey]?.model) || undefined;
+    queryKey ? s.modelDetailMap[queryKey] : undefined;
 
 const modelCategories =
   (queryKey?: string) =>

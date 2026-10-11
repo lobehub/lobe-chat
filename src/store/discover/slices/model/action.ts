@@ -4,7 +4,12 @@ import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/r
 import type { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import type { StoreSetter } from '@/store/types';
-import type { IdentifiersResponse, ModelListResponse, ModelQueryParams } from '@/types/discover';
+import type {
+  DiscoverModelDetail,
+  IdentifiersResponse,
+  ModelListResponse,
+  ModelQueryParams,
+} from '@/types/discover';
 import { setNamespace } from '@/utils/storeDebug';
 
 import {
@@ -14,7 +19,6 @@ import {
   type ModelDetailParams,
   modelDetailQueryKey,
   modelDetailResource,
-  type ModelDetailValue,
   type ModelIdentifiersParams,
   modelIdentifiersQueryKey,
   modelIdentifiersResource,
@@ -64,9 +68,12 @@ export class ModelActionImpl {
     this.#detail = createReplicaSlice(modelDetailResource, {
       actionPrefix: n('detail'),
       get,
+      // The market no longer has this model: drop the entry and its persisted
+      // row rather than keep serving the cached copy.
+      isMissing: (detail) => detail === null,
       set,
       stateKey: 'modelDetailReplica',
-      view: recordLens<DiscoverStore, ModelDetailValue>('modelDetailMap'),
+      view: recordLens<DiscoverStore, DiscoverModelDetail>('modelDetailMap'),
     });
     this.#categories = createReplicaSlice(modelCategoriesResource, {
       actionPrefix: n('categories'),
@@ -114,15 +121,14 @@ export class ModelActionImpl {
       pageSize: params.pageSize ? Number(params.pageSize) : 21,
     };
     const queryKey = modelListQueryKey(normalized);
-    const sync = this.#list.useSync(normalized, { enabled });
+    const sync = this.#list.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().modelListMap[queryKey], enabled);
   };
 
   /**
    * One model detail by identifier. Read it with
    * `modelSelectors.modelDetail(queryKey)`; `undefined` after the sync settles
-   * means the market has no such identifier (a `{ model: null }` entry, which
-   * also replaces a stale cached copy).
+   * means the market has no such identifier.
    */
   useFetchModelDetail = (
     params: ModelDetailParams,
@@ -134,7 +140,7 @@ export class ModelActionImpl {
       locale: globalHelpers.getCurrentLanguage(),
     };
     const queryKey = modelDetailQueryKey(normalized);
-    const sync = this.#detail.useSync(normalized, { enabled });
+    const sync = this.#detail.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -153,7 +159,7 @@ export class ModelActionImpl {
   ): ModelSyncResult => {
     const { enabled = true } = options;
     const queryKey = modelCategoriesQueryKey(params);
-    const sync = this.#categories.useSync(params, { enabled });
+    const sync = this.#categories.useSync(params, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().modelCategoriesMap[queryKey], enabled);
   };
 
@@ -162,7 +168,7 @@ export class ModelActionImpl {
     const { enabled = true } = options;
     const params: ModelIdentifiersParams = {};
     const queryKey = modelIdentifiersQueryKey(params);
-    const sync = this.#identifiers.useSync(params, { enabled });
+    const sync = this.#identifiers.useSync(params, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().modelIdentifiersMap[queryKey], enabled);
   };
 }

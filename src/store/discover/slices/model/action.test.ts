@@ -66,13 +66,34 @@ const syncCalls = async (
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
 };
 
 describe('ModelSlice (replica)', () => {
+  it('does not revalidate any model read on window focus', async () => {
+    renderHook(() => {
+      const state = useStore.getState();
+      state.useFetchModelList();
+      state.useFetchModelDetail({ identifier: 'gpt-4' });
+      state.useFetchModelCategories();
+      state.useFetchModelIdentifiers();
+    });
+
+    for (const name of [
+      'modelList',
+      'modelDetail',
+      'modelCategories',
+      'modelIdentifiers',
+    ] as const) {
+      const calls = await syncCalls(name);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const call of calls) expect(call.config.revalidateOnFocus).toBe(false);
+    }
+  });
+
   describe('useFetchModelList', () => {
     it('requests the list with normalized page / pageSize and the locale', async () => {
       const { discoverService } = await import('@/services/discover');
@@ -167,7 +188,7 @@ describe('ModelSlice (replica)', () => {
       const { discoverService } = await import('@/services/discover');
       const key = modelDetailQueryKey({ identifier: 'gone', locale: 'en-US' });
       useStore.setState({
-        modelDetailMap: { [key]: { model: { identifier: 'gone' } as any } },
+        modelDetailMap: { [key]: { identifier: 'gone' } as any },
       });
       vi.mocked(discoverService.getModelDetail).mockResolvedValue(undefined as any);
 
@@ -182,7 +203,7 @@ describe('ModelSlice (replica)', () => {
 
       // The stale copy is gone and the entry is settled, so the page renders NotFound.
       expect(modelSelectors.modelDetail(key)(useStore.getState())).toBeUndefined();
-      expect(useStore.getState().modelDetailMap[key]).toEqual({ model: null });
+      expect(useStore.getState().modelDetailMap[key]).toBeUndefined();
       expect(result.current.isLoading).toBe(false);
     });
 
