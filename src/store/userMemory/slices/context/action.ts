@@ -3,7 +3,12 @@ import { useMemo } from 'react';
 import { type SWRResponse } from 'swr';
 
 import { type DisplayContextMemory } from '@/database/repositories/userMemory';
-import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
+import {
+  cacheScope,
+  createReplicaSlice,
+  type ReplicaLens,
+  type ReplicaPageResult,
+} from '@/libs/replica';
 import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
@@ -101,7 +106,12 @@ export const createContextSlice = (set: Setter, get: () => UserMemoryStore, _api
 export class ContextActionImpl {
   readonly #get: () => UserMemoryStore;
   /** A delete and its head revalidation in flight; paging waits for it (see `deleteContext`). */
-  #headRefresh: Promise<unknown> | undefined;
+  #headRefresh: Promise<void> | undefined;
+  /**
+   * Set once a delete lands on the server, cleared when a head page lands: the
+   * loaded next-page offset is stale until then (see `#loadMore`).
+   */
+  #headStale = false;
   readonly #list;
   readonly #set: Setter;
 
@@ -170,12 +180,18 @@ export class ContextActionImpl {
     mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root);
 
   /**
-   * Wipe the context list for "delete all memories": the in-memory view and
-   * every persisted query variant of the active scope, dropping reads that
-   * started before the wipe. Resolves once the persisted rows are gone; the
-   * caller (`purgeAllMemories`) revalidates afterwards.
+   * Wipe the context list for "delete all memories". For the active scope: the
+   * in-memory view and every persisted query variant, dropping reads started
+   * before the wipe. Pass the scope the purge started in: if the user switched
+   * account/workspace meanwhile, only that scope's persisted rows are dropped
+   * and the view on screen (another scope's) is left alone. The caller
+   * (`purgeAllMemories`) revalidates afterwards.
    */
-  internal_clearContextList = (): Promise<boolean> => this.#list.clear();
+  internal_clearContextList = async (scope: string = cacheScope.get()): Promise<boolean> => {
+    if (scope === cacheScope.get()) return this.#list.clear();
+    // Off-scope: schedules the delete of every persisted query variant there.
+    return this.#list.remove(CONTEXT_LIST_KEY, scope);
+  };
 
   /**
    * Confirmed patch of one context in the loaded view and in persisted rows
@@ -190,19 +206,20 @@ export class ContextActionImpl {
   };
 
   deleteContext = async (id: string): Promise<void> => {
-    // Paging waits for the whole delete (see `loadMoreContexts`): a page
-    // fetched while the server shifts its offsets would skip a row.
-    const run = this.#deleteAndRefreshHead(id);
-    this.#headRefresh = run;
+    // Paging waits for the whole delete (see `#loadMore`): a page fetched while
+    // the server shifts its offsets would skip a row.
+    const pending = this.#deleteAndRefreshHead(id);
+    this.#headRefresh = pending;
     try {
-      await run;
+      await pending;
     } finally {
-      if (this.#headRefresh === run) this.#headRefresh = undefined;
+      if (this.#headRefresh === pending) this.#headRefresh = undefined;
     }
   };
 
   #deleteAndRefreshHead = async (id: string): Promise<void> => {
     await memoryCRUDService.deleteContext(id);
+    this.#headStale = true;
     // Drop the row from every loaded/persisted list, including reads in flight.
     this.#list.removeEntity(id);
     // The list is offset-paged: once a row is gone the server shifts the rows
@@ -213,20 +230,25 @@ export class ContextActionImpl {
   };
 
   /**
+   * Next page, once the head is trustworthy. After a delete the loaded offset
+   * is only valid when a fresh head page has landed; if that refresh failed,
+   * retry it first and page only once it succeeds.
+   */
+  #loadMore = async (): Promise<void> => {
+    if (this.#headRefresh) await this.#headRefresh.catch(() => undefined);
+    if (this.#headStale) {
+      await this.#revalidateList();
+      if (this.#headStale) return;
+    }
+    await this.#list.loadMore(CONTEXT_LIST_KEY);
+  };
+
+  /**
    * Append the next page of the context list. The engine reads the loaded head
-   * params, dedupes by id and keeps `hasMore` honest. After a delete it waits
-   * for the head revalidation so the next offset is the server's.
+   * params, dedupes by id and keeps `hasMore` honest.
    */
   loadMoreContexts = (): void => {
-    const refresh = this.#headRefresh;
-    if (!refresh) {
-      void this.#list.loadMore(CONTEXT_LIST_KEY);
-      return;
-    }
-    void refresh.then(
-      () => this.#list.loadMore(CONTEXT_LIST_KEY),
-      () => this.#list.loadMore(CONTEXT_LIST_KEY),
-    );
+    void this.#loadMore();
   };
 
   /**
@@ -269,7 +291,11 @@ export class ContextActionImpl {
       },
       {
         onError: (error) => this.#surfaceListError(error),
-        onSuccess: () => this.#clearListError(),
+        onSuccess: () => {
+          // A landed head page makes the paging offset trustworthy again.
+          this.#headStale = false;
+          this.#clearListError();
+        },
       },
     );
 
