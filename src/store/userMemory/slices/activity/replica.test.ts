@@ -19,6 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cacheScope } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
+import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
@@ -429,6 +430,36 @@ describe('activityList replica', () => {
     expect(useUserMemoryStore.getState().activitiesSearchLoading).toBe(true);
   });
 
+  it('drops the previous scope error when the account or workspace scope changes', async () => {
+    // The next identity's request stays in flight the whole time.
+    fetchSpy.mockImplementation(pending);
+    // The first identity's initial request fails, so its error is on screen.
+    fetchSpy.mockRejectedValueOnce(new Error('previous scope failed'));
+
+    const hook = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12 }),
+      { wrapper },
+    );
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().activitiesSearchError).toBeInstanceOf(Error),
+    );
+
+    // Switch identity: only the scope reset can drop the previous error before
+    // the new request settles (its own `onSuccess` never runs while pending).
+    act(() => {
+      scope = `activity-user-${randomUUID()}:personal`;
+      scopes.add(scope);
+    });
+    hook.rerender();
+
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().activitiesSearchError).toBeUndefined(),
+    );
+    // The new identity starts empty instead of showing the previous one's rows.
+    expect(useUserMemoryStore.getState().activities).toEqual([]);
+    expect(useUserMemoryStore.getState().activityListData).toBeUndefined();
+  });
+
   it('wipes every persisted query variant when all memories are purged', async () => {
     const server = [item('a'), item('b')];
     serveList(server);
@@ -465,6 +496,49 @@ describe('activityList replica', () => {
     // The mounted query revalidates against the emptied server.
     await waitFor(() => expect(ids(useUserMemoryStore.getState().activityListData)).toEqual([]));
     expect(useUserMemoryStore.getState().activities).toEqual([]);
+  });
+
+  it('patches an edited activity in the view and in persisted query variants', async () => {
+    const server = idsOf(2);
+    serveList(server);
+    // The server holds the edit too, so the head revalidation confirms it.
+    vi.spyOn(memoryCRUDService, 'updateActivity').mockImplementation(
+      async (id: string, data: object) => {
+        Object.assign(
+          server.find((row) => row.id === id)!,
+          data,
+        );
+        return undefined as never;
+      },
+    );
+
+    // A search the user visited earlier keeps its own persisted row.
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchActivities)({ pageSize: 12, q: props.q }),
+      { initialProps: { q: 'foo' } as { q?: string }, wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        (await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope }))?.data,
+      ).toBeDefined(),
+    );
+    hook.rerender({});
+    await waitFor(() => expect(useUserMemoryStore.getState().activities).toHaveLength(2));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().updateMemory('activity-0', 'edited', LayersEnum.Activity);
+    });
+
+    const edited = (data?: ActivityListData) =>
+      data?.items.find((entry) => entry.id === 'activity-0') as Record<string, unknown> | undefined;
+    // The canonical view (not only the flat mirror) carries the edit.
+    expect(edited(useUserMemoryStore.getState().activityListData)?.narrative).toBe('edited');
+    // The unloaded search variant is patched too, so a reload on it shows the edit.
+    await waitFor(async () => {
+      const row = await activityListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      expect(edited(row?.data as ActivityListData)?.narrative).toBe('edited');
+    });
   });
 
   it('does not fetch another page when the head page is the last one', async () => {

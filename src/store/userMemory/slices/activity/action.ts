@@ -43,6 +43,9 @@ const activityListLens: ReplicaLens<UserMemoryStore, ActivityListData> = {
     activitiesHasMore: true,
     activitiesInit: false,
     activitiesPage: 1,
+    // The reset answers a new scope/query: the previous one's error must not
+    // outlive it, or the boundary keeps showing it until the next request settles.
+    activitiesSearchError: undefined,
     activitiesSearchLoading: undefined,
     activitiesTotal: 0,
     activityListData: undefined,
@@ -55,6 +58,7 @@ const activityListLens: ReplicaLens<UserMemoryStore, ActivityListData> = {
         activitiesHasMore: true,
         activitiesInit: false,
         activitiesPage: 1,
+        activitiesSearchError: undefined,
         activitiesTotal: 0,
         activityListData: undefined,
       };
@@ -161,21 +165,21 @@ export class ActivityActionImpl {
   /**
    * Wipe the activity list for "delete all memories": the in-memory view and
    * every persisted query variant of the active scope, dropping reads that
-   * started before the wipe. The caller revalidates afterwards.
+   * started before the wipe. Resolves once the persisted rows are gone; the
+   * caller (`purgeAllMemories`) revalidates afterwards.
    */
-  clearActivityList = async (): Promise<void> => {
-    const purged = this.#list.clear();
-    this.#set(
-      {
-        activitiesQuery: undefined,
-        activitiesSearchError: undefined,
-        activitiesSearchLoading: undefined,
-        activitiesSort: undefined,
-      },
-      false,
-      n('clearActivityList'),
-    );
-    await purged;
+  internal_clearActivityList = (): Promise<boolean> => this.#list.clear();
+
+  /**
+   * Confirmed patch of one activity in the loaded view and in persisted rows
+   * of query variants that are not loaded, so an edit survives a reload even
+   * when no mounted list revalidates afterwards.
+   */
+  internal_updateActivityEntity = (
+    id: string,
+    fn: (item: ActivityListItem) => ActivityListItem,
+  ): void => {
+    this.#list.updateEntity<ActivityListItem>(id, fn);
   };
 
   deleteActivity = async (id: string): Promise<void> => {

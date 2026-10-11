@@ -69,16 +69,19 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
-    // Replica-backed lists own their memory and persisted (IndexedDB) rows: wipe
-    // them through their engine, never by assigning initial state, so no query
-    // variant hydrates the deleted memories on a later reload. The SWR mutations
-    // below then revalidate whatever is mounted. Every replica-backed userMemory
-    // slice adds its `clear*` action here.
-    await this.#get().clearActivityList();
+    // Replica-backed lists own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows. Every
+    // replica-backed userMemory slice adds its `internal_clear*` call here.
+    await this.#get().internal_clearActivityList();
 
     this.#set(
       produce((draft) => {
         Object.assign(draft, contextInitialState);
+        draft.activitiesQuery = undefined;
+        draft.activitiesSearchError = undefined;
+        draft.activitiesSearchLoading = undefined;
+        draft.activitiesSort = undefined;
         Object.assign(draft, experienceInitialState);
         Object.assign(draft, identityInitialState);
         Object.assign(draft, preferenceInitialState);
@@ -179,14 +182,9 @@ export class BaseActionImpl {
     switch (layer) {
       case LayersEnum.Activity: {
         await memoryCRUDService.updateActivity(id, { narrative: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.activities.find((memory) => memory.id === id);
-            if (item) item.narrative = content;
-          }),
-          false,
-          n('updateMemory/activity'),
-        );
+        // The activity list is replica-backed: patch the view and its persisted
+        // rows together (the flat `activities` field mirrors it).
+        this.#get().internal_updateActivityEntity(id, (item) => ({ ...item, narrative: content }));
         listKeyRoot = userMemoryKeys.activities.root;
         break;
       }
