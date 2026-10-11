@@ -66,13 +66,34 @@ const syncCalls = async (
       ([key]) => Array.isArray(key) && key[0] === 'replica:sync' && key[1] === name,
     )
     .map(([key, fetcher, config]) => ({
-      config: config as { onSuccess?: (data: unknown) => void },
+      config: config as { onSuccess?: (data: unknown) => void; revalidateOnFocus?: boolean },
       fetcher: fetcher as () => Promise<any>,
       key: key as unknown[],
     }));
 };
 
 describe('PluginSlice (replica)', () => {
+  it('does not revalidate any plugin read on window focus', async () => {
+    renderHook(() => {
+      const state = useStore.getState();
+      state.useFetchPluginList();
+      state.useFetchPluginDetail({ identifier: 'plugin-1' });
+      state.useFetchPluginCategories();
+      state.useFetchPluginIdentifiers();
+    });
+
+    for (const name of [
+      'pluginList',
+      'pluginDetail',
+      'pluginCategories',
+      'pluginIdentifiers',
+    ] as const) {
+      const calls = await syncCalls(name);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const call of calls) expect(call.config.revalidateOnFocus).toBe(false);
+    }
+  });
+
   describe('useFetchPluginList', () => {
     it('requests the list with normalized page / pageSize and the locale', async () => {
       const { discoverService } = await import('@/services/discover');
@@ -178,6 +199,33 @@ describe('PluginSlice (replica)', () => {
       expect(result.current.queryKey).not.toBe(first);
     });
 
+    it('drops a cached detail once the market reports the plugin gone', async () => {
+      const { discoverService } = await import('@/services/discover');
+
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchPluginDetail({ identifier: 'plugin-1' }),
+      );
+      const key = result.current.queryKey!;
+      const [call] = await syncCalls('pluginDetail');
+
+      vi.mocked(discoverService.getPluginDetail).mockResolvedValueOnce({
+        identifier: 'plugin-1',
+      } as any);
+      const cached = await call.fetcher();
+      act(() => call.config.onSuccess!(cached));
+      expect(pluginSelectors.pluginDetail(key)(useStore.getState())).toEqual({
+        identifier: 'plugin-1',
+      });
+
+      // The market removed the plugin: the service answers `undefined`.
+      vi.mocked(discoverService.getPluginDetail).mockResolvedValueOnce(undefined as any);
+      const missing = await call.fetcher();
+      act(() => call.config.onSuccess!(missing));
+
+      expect(pluginSelectors.pluginDetail(key)(useStore.getState())).toBeUndefined();
+      expect(useStore.getState().pluginDetailMap[key]).toBeUndefined();
+    });
+
     it('does not register a sync — and exposes no queryKey — when the identifier is absent', async () => {
       const { result } = renderHook(() =>
         useStore.getState().useFetchPluginDetail({ identifier: undefined, withManifest: false }),
@@ -198,7 +246,22 @@ describe('PluginSlice (replica)', () => {
       const [call] = await syncCalls('pluginCategories');
       await call.fetcher();
 
-      expect(discoverService.getPluginCategories).toHaveBeenCalledWith({ q: 'weather' });
+      expect(discoverService.getPluginCategories).toHaveBeenCalledWith({
+        locale: 'en-US',
+        q: 'weather',
+      });
+    });
+
+    it('keys the categories by the locale, so a language switch refetches', () => {
+      const { result, rerender } = renderHook(() =>
+        useStore.getState().useFetchPluginCategories({ q: 'weather' }),
+      );
+      const first = result.current.queryKey;
+
+      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
+      rerender();
+
+      expect(result.current.queryKey).not.toBe(first);
     });
 
     it('skips the request when disabled', async () => {

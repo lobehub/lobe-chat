@@ -68,6 +68,9 @@ export class PluginActionImpl {
     this.#detail = createReplicaSlice(pluginDetailResource, {
       actionPrefix: n('detail'),
       get,
+      // The market no longer has this plugin: drop the entry and its persisted
+      // row rather than keep serving the cached copy.
+      isMissing: (detail) => detail === null,
       set,
       stateKey: 'pluginDetailReplica',
       view: recordLens<DiscoverStore, DiscoverPluginDetail>('pluginDetailMap'),
@@ -118,7 +121,7 @@ export class PluginActionImpl {
       pageSize: params.pageSize ? Number(params.pageSize) : 21,
     };
     const queryKey = pluginListQueryKey(normalized);
-    const sync = this.#list.useSync(normalized, { enabled });
+    const sync = this.#list.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().pluginListMap[queryKey], enabled);
   };
 
@@ -140,7 +143,7 @@ export class PluginActionImpl {
       withManifest: params.withManifest,
     };
     const queryKey = pluginDetailQueryKey(normalized);
-    const sync = this.#detail.useSync(normalized, { enabled: active });
+    const sync = this.#detail.useSync(normalized, { enabled: active, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,
@@ -158,8 +161,12 @@ export class PluginActionImpl {
     options: { enabled?: boolean } = {},
   ): PluginSyncResult => {
     const { enabled = true } = options;
-    const queryKey = pluginCategoriesQueryKey(params);
-    const sync = this.#categories.useSync(params, { enabled });
+    const normalized: PluginCategoriesParams = {
+      ...params,
+      locale: globalHelpers.getCurrentLanguage(),
+    };
+    const queryKey = pluginCategoriesQueryKey(normalized);
+    const sync = this.#categories.useSync(normalized, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(sync, queryKey, !!this.#get().pluginCategoriesMap[queryKey], enabled);
   };
 
@@ -168,7 +175,7 @@ export class PluginActionImpl {
     const { enabled = true } = options;
     const params: PluginIdentifiersParams = {};
     const queryKey = pluginIdentifiersQueryKey(params);
-    const sync = this.#identifiers.useSync(params, { enabled });
+    const sync = this.#identifiers.useSync(params, { enabled, revalidateOnFocus: false });
     return this.#toSyncResult(
       sync,
       queryKey,

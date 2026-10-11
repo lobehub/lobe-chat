@@ -47,9 +47,15 @@ export interface PluginDetailParams {
 export const pluginDetailQueryKey = (params: PluginDetailParams): string => stableQueryKey(params);
 
 /** Category counts query of the community plugin sidebar (the search term). */
-export type PluginCategoriesParams = CategoryListQuery;
+export type PluginCategoriesParams = CategoryListQuery & {
+  /**
+   * Current UI language. The service resolves localized category labels, so a
+   * language switch is a different entry (the old SWR key carried it too).
+   */
+  locale?: string;
+};
 
-/** Entry key of one category-counts query (the search term). */
+/** Entry key of one category-counts query (the search term + locale). */
 export const pluginCategoriesQueryKey = (params: PluginCategoriesParams): string =>
   stableQueryKey(params);
 
@@ -74,17 +80,19 @@ export const pluginListResource = defineReplica<PluginListParams, PluginListResp
 });
 
 /**
- * One plugin detail by identifier (`pluginDetailMap[key]`). The fetcher answers
- * `undefined` for an identifier the market no longer has; the default merge
- * keeps whatever is already cached in that case, and an empty slot stays empty
- * so the surface can fall back to its builtin / composio metadata.
+ * One plugin detail by identifier (`pluginDetailMap[key]`). The service answers
+ * `undefined` for an identifier the market no longer has; the fetcher turns
+ * that into `null` so the slice's `isMissing` drops the entry (memory and
+ * persisted row) instead of letting the engine skip the write and keep painting
+ * a stale cached copy. The surface then falls back to its builtin / composio
+ * metadata once the sync settles.
  */
 export const pluginDetailResource = defineReplica<
   PluginDetailParams,
   DiscoverPluginDetail,
-  DiscoverPluginDetail | undefined
+  DiscoverPluginDetail | null
 >({
-  fetcher: (params) => discoverService.getPluginDetail(params),
+  fetcher: async (params) => (await discoverService.getPluginDetail(params)) ?? null,
   key: pluginDetailQueryKey,
   name: 'pluginDetail',
   storage: 'indexedDB',
