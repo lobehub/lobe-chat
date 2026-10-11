@@ -22,6 +22,29 @@ export class ReplicaWriteQueue<T> {
     this.#enqueue(key, () => this.#storage.set(key, value));
 
   /**
+   * Run `task` once every operation already queued for this resource settled,
+   * and make later operations queue behind it.
+   *
+   * A resource-wide destructive pass (a scope-prefix purge) bypasses the
+   * per-key chains, so without this it can land *between* two writes already
+   * queued for a sibling scope and be overtaken by the later one — the row the
+   * pass deleted is written back while the caller is told it was deleted.
+   */
+  barrier = <R>(task: () => Promise<R>): Promise<R> => {
+    const queued = [...this.#pending.entries()];
+    const gate = Promise.allSettled(queued.map(([, pending]) => pending)).then(() => task());
+    const tail = gate.then(
+      () => undefined,
+      () => undefined,
+    );
+    for (const [id] of queued) this.#pending.set(id, tail);
+    void tail.finally(() => {
+      for (const [id] of queued) if (this.#pending.get(id) === tail) this.#pending.delete(id);
+    });
+    return gate;
+  };
+
+  /**
    * Serialized read-modify-write: `fn` sees the row as of every earlier queued
    * write for this key. Return a projection to write it, `null` to remove the
    * row, or `undefined` to leave it untouched (a missing row stays missing).

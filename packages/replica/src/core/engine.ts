@@ -676,12 +676,20 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   const clearScopes = async (scopePrefix: string): Promise<boolean> => {
     const active = clear();
     const storage = resource.storage;
-    if (!storage?.purgeScopePrefix) return active;
+    const purgeScopePrefix = storage?.purgeScopePrefix?.bind(storage);
+    if (!purgeScopePrefix || !writeQueue) return active;
 
-    const widened = storage.purgeScopePrefix(scopePrefix).then(
-      () => true,
-      () => false,
-    );
+    // Order the delete after the writes already queued: a sibling scope's `set`
+    // queued before the user switched away would otherwise land after the delete
+    // and write the row back, while this call reported the purge as done. (A
+    // write enqueued *after* the switch cannot happen: `persist` and `dispatch`
+    // refuse an action whose scope is no longer the active one.)
+    const widened = writeQueue
+      .barrier(() => purgeScopePrefix(scopePrefix))
+      .then(
+        () => true,
+        () => false,
+      );
     const [activeLanded, widenedLanded] = await Promise.all([active, widened]);
     return activeLanded && widenedLanded;
   };

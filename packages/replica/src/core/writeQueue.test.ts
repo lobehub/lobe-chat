@@ -27,6 +27,40 @@ describe('ReplicaWriteQueue', () => {
     await vi.waitFor(() => expect(calls).toEqual([1, 2]));
   });
 
+  it('runs a barrier after the queued writes, and later writes behind it', async () => {
+    const order: string[] = [];
+    let releaseWrite!: () => void;
+    const held = new Promise<void>((resolve) => (releaseWrite = resolve));
+    const storage: ReplicaStorage<number> = {
+      get: vi.fn(),
+      purgeScopePrefix: vi.fn(async () => {
+        order.push('purge');
+      }),
+      remove: vi.fn(),
+      set: vi.fn(async (_key, projection) => {
+        order.push(`set:${projection.data}`);
+        if (projection.data === 1) await held;
+      }),
+    };
+    const queue = new ReplicaWriteQueue(storage);
+    const key = { queryKey: 'list', scope: 'scope' };
+
+    queue.set(key, { data: 1, updatedAt: 1 });
+    const purged = queue.barrier(() => storage.purgeScopePrefix!('scope:'));
+
+    // The barrier waits for the write that is already queued…
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(order).toEqual(['set:1']);
+
+    // …and a write queued while it is pending runs after it, not across it.
+    const later = queue.set(key, { data: 2, updatedAt: 2 });
+    releaseWrite();
+    await purged;
+    await later;
+
+    expect(order).toEqual(['set:1', 'purge', 'set:2']);
+  });
+
   it('update reads after earlier queued writes and never recreates a removed row', async () => {
     const rows = new Map<string, { data: number; updatedAt: number }>();
     const storage: ReplicaStorage<number> = {

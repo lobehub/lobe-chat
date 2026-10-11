@@ -288,6 +288,48 @@ describe('userMemory topic memories replica', () => {
     sync.unmount();
   });
 
+  it('orders the widened purge after a sibling workspace’s queued write', async () => {
+    renderHook(() => null, { wrapper });
+
+    const storage = topicMemoriesResource.storage!;
+    const set = storage.set.bind(storage);
+    const userId = scope.slice(0, scope.indexOf(':'));
+    const siblingScope = `${userId}:workspace-b`;
+    const siblingRowKey = {
+      queryKey: topicMemoriesResource.storageKey(TOPIC_B),
+      scope: siblingScope,
+    };
+
+    // A finished fetch in the sibling workspace is still writing its row when
+    // the user switches away: the write is queued, not started.
+    let releaseWrite!: () => void;
+    const heldWrite = new Promise<void>((resolve) => (releaseWrite = resolve));
+    vi.spyOn(storage, 'set').mockImplementation(async (key, row) => {
+      if (key.scope === siblingScope) await heldWrite;
+      return set(key, row);
+    });
+
+    vi.mocked(userMemoryService.retrieveMemoryForTopic).mockResolvedValue(bundle('sibling'));
+    useScope(siblingScope);
+    const sync = renderHook(() => useUserMemoryStore((s) => s.useFetchMemoriesForTopic)(TOPIC_B), {
+      wrapper,
+    });
+    await waitFor(() => expect(entry(TOPIC_B)?.source).toBe('server'));
+
+    // The user moves to another workspace and purges everything.
+    useScope(`${userId}:personal`);
+    sync.rerender();
+    const purging = useUserMemoryStore.getState().purgeAllMemories();
+    // Give the purge every chance to finish before the sibling write lands.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    releaseWrite();
+    await act(() => purging);
+
+    // The queued write landed before the delete, so the row is still purged.
+    expect(await storage.get(siblingRowKey)).toBeUndefined();
+    sync.unmount();
+  });
+
   it('surfaces a purge whose rows survive local storage, after the in-memory reset', async () => {
     renderHook(() => null, { wrapper });
 
