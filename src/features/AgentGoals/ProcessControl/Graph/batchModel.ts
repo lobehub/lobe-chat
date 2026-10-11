@@ -190,9 +190,12 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
   const firstProbeTitles = new Set(
     probeIdsByRound[0].map((id) => graph.byId[id]?.node.title).filter(Boolean),
   );
+  // History reads the full roster the batch was planned with: a restart re-cuts
+  // `unitTitles` to what is still owed, which would drop the units already
+  // delivered from the map. The state roster is the fallback for old batches.
   const roster =
-    state?.unitTitles ??
     config?.rollout?.units ??
+    state?.unitTitles ??
     tasks.filter((view) => !roundOfProbe.has(view.node.id)).map((view) => view.node.title);
   const pending = roster.filter((title) => !firstProbeTitles.has(title));
 

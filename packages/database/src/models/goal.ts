@@ -267,7 +267,7 @@ export class GoalModel {
         // the edit; a policy the edit leaves out stays as it is.
         ...(value.config !== undefined
           ? {
-              config: sql`CASE WHEN ${goals.config}->'rollout' IS NULL THEN ${merged}
+              config: sql`CASE WHEN NOT COALESCE(jsonb_exists(${goals.config}, 'rollout'), false) THEN ${merged}
                 ELSE jsonb_set(
                   ${merged},
                   '{rollout}',

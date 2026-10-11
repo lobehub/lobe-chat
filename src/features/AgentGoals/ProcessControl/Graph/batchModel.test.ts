@@ -567,3 +567,19 @@ describe('layoutBatch', () => {
     expect(model.rounds[2].probes[0].from).toEqual({ index: 0, kind: 'wave', wave: 1 });
   });
 });
+
+describe('buildBatchModel roster', () => {
+  it('keeps a delivered unit in the history after a restart re-cuts the owed roster', () => {
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: [node('m3', 'task', 10, { status: 'resolved', title: 'U3' })],
+        // The restart left only what is still owed; U3 was delivered.
+        state: { massNodeIds: ['m3'], unitTitles: ROSTER.filter((title) => title !== 'U3') },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+
+    expect(model.waves[0][0]).toMatchObject({ nodeId: 'm3', state: 'done', title: 'U3' });
+  });
+});
