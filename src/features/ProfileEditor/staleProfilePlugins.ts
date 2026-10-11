@@ -1,5 +1,23 @@
 import { type AgentPluginEntry, parsePluginEntry } from '@lobechat/types';
 
+import type { ToolStoreState } from '@/store/tool/initialState';
+import { AGENT_SKILL_LIST_KEY } from '@/store/tool/slices/agentSkills/projection';
+import { UNINSTALLED_BUILTIN_TOOLS_KEY } from '@/store/tool/slices/builtin/projection';
+import { INSTALLED_PLUGINS_KEY } from '@/store/tool/slices/plugin/projection';
+
+/**
+ * Whether every asynchronously loaded catalog that feeds `validIdentifiers`
+ * holds the server's answer. An unloaded catalog is empty, and a catalog
+ * hydrated from IndexedDB can predate a tool installed on another device, so
+ * pruning against either would delete valid tools and persist the loss.
+ *
+ * @see https://github.com/lobehub/lobehub/issues/18856
+ */
+export const selectProfileToolCatalogsSynced = (s: ToolStoreState): boolean =>
+  s.installedPluginsReplica.entries[INSTALLED_PLUGINS_KEY]?.source === 'server' &&
+  s.uninstalledBuiltinToolsReplica.entries[UNINSTALLED_BUILTIN_TOOLS_KEY]?.source === 'server' &&
+  s.agentSkillListReplica.entries[AGENT_SKILL_LIST_KEY]?.source === 'server';
+
 export interface StalePluginCleanupInput {
   /**
    * Workspace role permits editing own content (`edit_own_content`). Personal
@@ -22,6 +40,13 @@ export interface StalePluginCleanupInput {
    * connectors as stale.
    */
   isConnectorsInit: boolean;
+  /**
+   * Installed plugins, installed builtin tools and agent skills have all been
+   * loaded from the server (`selectProfileToolCatalogsSynced`), and the server
+   * config that decides the connector catalog has initialized. Until then a
+   * valid custom tool is missing from `validIdentifiers`.
+   */
+  isToolCatalogSynced: boolean;
   plugins: AgentPluginEntry[] | undefined;
   validIdentifiers: ReadonlySet<string>;
 }
@@ -45,11 +70,12 @@ export const resolveStalePluginCleanup = ({
   canEditResource,
   isAccessResolved,
   isConnectorsInit,
+  isToolCatalogSynced,
   plugins,
   validIdentifiers,
 }: StalePluginCleanupInput): AgentPluginEntry[] | null => {
   if (!canEditContent || !isAccessResolved || !canEditResource) return null;
-  if (!isConnectorsInit) return null;
+  if (!isConnectorsInit || !isToolCatalogSynced) return null;
   if (validIdentifiers.size === 0) return null;
 
   const rawPlugins = plugins ?? [];
