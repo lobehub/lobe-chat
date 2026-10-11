@@ -8,7 +8,12 @@ import { log } from '../utils/logger';
 const isVisibleModel = (model: { visible?: boolean }) => model.visible !== false;
 
 const DEFAULT_MODEL_LIST_LIMIT = 50;
-const MAX_MODEL_LIST_PAGE_SIZE = 200;
+
+/**
+ * Use a conservative client batch size instead of mirroring the server's current maximum. This
+ * limits coupling across CLI/server versions; the server must keep accepting this public baseline.
+ */
+const MODEL_LIST_PAGE_SIZE = 50;
 
 const parseModelListLimit = (value: string) => {
   if (!/^[1-9]\d*$/.test(value)) {
@@ -61,7 +66,7 @@ export function registerModelCommand(program: Command) {
         let offset = 0;
 
         while (fetchedItems.length < options.limit) {
-          const pageLimit = Math.min(MAX_MODEL_LIST_PAGE_SIZE, options.limit - fetchedItems.length);
+          const pageLimit = Math.min(MODEL_LIST_PAGE_SIZE, options.limit - fetchedItems.length);
           const input: Record<string, any> = { id: providerId, limit: pageLimit, offset };
           if (options.enabled) input.enabled = true;
           if (typeFilter) input.type = typeFilter;

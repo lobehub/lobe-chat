@@ -110,13 +110,13 @@ describe('model command', () => {
       );
     });
 
-    it('should paginate limits larger than the API page size', async () => {
+    it('should paginate the requested limit with conservative client batches', async () => {
       const createModels = (count: number, offset: number) =>
         Array.from({ length: count }, (_, index) => ({ id: `model-${offset + index}` }));
       mockTrpcClient.aiModel.getAiProviderModelList.query
-        .mockResolvedValueOnce(createModels(200, 0))
-        .mockResolvedValueOnce(createModels(200, 200))
-        .mockResolvedValueOnce(createModels(100, 400));
+        .mockResolvedValueOnce(createModels(50, 0))
+        .mockResolvedValueOnce(createModels(50, 50))
+        .mockResolvedValueOnce(createModels(20, 100));
 
       const program = createProgram();
       await program.parseAsync([
@@ -126,26 +126,26 @@ describe('model command', () => {
         'list',
         'openrouter',
         '--limit',
-        '500',
+        '120',
         '--json',
       ]);
 
       expect(mockTrpcClient.aiModel.getAiProviderModelList.query).toHaveBeenNthCalledWith(1, {
         id: 'openrouter',
-        limit: 200,
+        limit: 50,
         offset: 0,
       });
       expect(mockTrpcClient.aiModel.getAiProviderModelList.query).toHaveBeenNthCalledWith(2, {
         id: 'openrouter',
-        limit: 200,
-        offset: 200,
+        limit: 50,
+        offset: 50,
       });
       expect(mockTrpcClient.aiModel.getAiProviderModelList.query).toHaveBeenNthCalledWith(3, {
         id: 'openrouter',
-        limit: 100,
-        offset: 400,
+        limit: 20,
+        offset: 100,
       });
-      expect(JSON.parse(consoleSpy.mock.calls.at(-1)?.[0] as string)).toHaveLength(500);
+      expect(JSON.parse(consoleSpy.mock.calls.at(-1)?.[0] as string)).toHaveLength(120);
     });
 
     it('should stop pagination after a short page', async () => {
@@ -167,7 +167,7 @@ describe('model command', () => {
       expect(mockTrpcClient.aiModel.getAiProviderModelList.query).toHaveBeenCalledOnce();
       expect(mockTrpcClient.aiModel.getAiProviderModelList.query).toHaveBeenCalledWith({
         id: 'openrouter',
-        limit: 200,
+        limit: 50,
         offset: 0,
       });
       expect(consoleSpy).toHaveBeenCalledWith(JSON.stringify(models, null, 2));
