@@ -279,9 +279,11 @@ export class ProjectDirectoryRepository {
         .select()
         .from(topics)
         .where(
+          // Workspace-scoped, not creator-scoped: `topics.userId` only records
+          // who started a shared topic, and any member the router authorized to
+          // use it may move it.
           and(
             eq(topics.id, topicId),
-            eq(topics.userId, this.userId),
             buildWorkspaceWhere(this.scope(), topics),
             isNull(topics.deletedAt),
           ),

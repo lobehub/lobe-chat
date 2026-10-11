@@ -24,6 +24,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewTopicTargets,
 } from './_helpers/conversationResourceGuard';
+import { assertCreatorTopicTargets } from './_helpers/shareVisitorTargetGuard';
 
 const procedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { serverDB, userId, workspaceId } = opts.ctx;
@@ -182,6 +183,12 @@ export const projectWorkingDirectoryRouter = router({
     .input(z.object({ directoryId: z.string().uuid(), topicId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await assertCanUseTopicTargets(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
+        [input.topicId],
+      );
+      // Same visitor guard as `updateTopicMetadata`: a share-visitor topic is not
+      // the member's conversation to move.
+      await assertCreatorTopicTargets(
         { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
         [input.topicId],
       );

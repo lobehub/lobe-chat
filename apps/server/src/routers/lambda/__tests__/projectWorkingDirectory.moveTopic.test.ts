@@ -32,6 +32,10 @@ vi.mock('@/database/repositories/projectDirectory', () => ({
   }),
 }));
 
+vi.mock('../_helpers/shareVisitorTargetGuard', () => ({
+  assertCreatorTopicTargets: vi.fn(),
+}));
+
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: { statPath: mocks.statPath },
 }));

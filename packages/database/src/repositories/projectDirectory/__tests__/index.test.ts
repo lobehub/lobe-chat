@@ -15,6 +15,7 @@ import {
   projectWorkingDirectories,
   topics,
   users,
+  workspaces,
 } from '../../../schemas';
 import { ProjectDirectoryRepository } from '../index';
 
@@ -358,6 +359,68 @@ describe('ProjectDirectoryRepository.moveTopic', () => {
     await expect(repo.moveTopic('to-move', target.id)).rejects.toThrow('running');
     const [topic] = await db.select().from(topics).where(eq(topics.id, 'to-move'));
     expect(topic.projectWorkingDirectoryId).toBe(first.id);
+  });
+
+  it('lets another workspace member move a shared topic they did not create', async () => {
+    const workspaceId = 'move-topic-ws';
+    await db.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Move topic workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    await db.insert(agents).values({ id: 'ws-coordinator', userId, workspaceId });
+    await db.insert(projects).values({
+      coordinatorAgentId: 'ws-coordinator',
+      id: 'ws-project',
+      identifier: 'WSP',
+      name: 'Workspace project',
+      userId,
+      workspaceId,
+    });
+    await db.insert(devices).values([
+      // Workspace devices: the shared pool every member can run on.
+      {
+        deviceId: 'ws-device-a',
+        identitySource: 'fallback',
+        platform: 'linux',
+        userId,
+        visibility: 'public',
+        workspaceId,
+      },
+      {
+        deviceId: 'ws-device-b',
+        identitySource: 'fallback',
+        platform: 'linux',
+        userId,
+        visibility: 'public',
+        workspaceId,
+      },
+    ]);
+    const creatorRepo = new ProjectDirectoryRepository(db, userId, workspaceId);
+    const memberRepo = new ProjectDirectoryRepository(db, otherUserId, workspaceId);
+    const wsBase = { name: 'Repo', projectId: 'ws-project' };
+    const first = await creatorRepo.bind({ ...wsBase, deviceId: 'ws-device-a', path: '/ws/a' });
+    const target = await creatorRepo.bind({ ...wsBase, deviceId: 'ws-device-b', path: '/ws/b' });
+    // Environments start private; a member reaches the project's directories
+    // only once it is shared with the workspace.
+    await db.update(environments).set({ visibility: 'public' });
+    // Started by the creator; `topics.userId` records them, not an owner.
+    await db.insert(topics).values({
+      id: 'ws-topic',
+      metadata: { boundDeviceId: 'ws-device-a', workingDirectory: '/ws/a' },
+      projectId: 'ws-project',
+      projectWorkingDirectoryId: first.id,
+      userId,
+      workspaceId,
+    });
+    await memberRepo.moveTopic('ws-topic', target.id);
+    const [topic] = await db.select().from(topics).where(eq(topics.id, 'ws-topic'));
+    expect(topic).toMatchObject({
+      metadata: { boundDeviceId: 'ws-device-b', workingDirectory: '/ws/b' },
+      projectWorkingDirectoryId: target.id,
+      userId,
+    });
   });
 
   it('only moves conversations that run in a project directory', async () => {

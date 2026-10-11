@@ -5,12 +5,9 @@ import { Fragment, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
-import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
 
 import CloudRepoSwitcher from './CloudRepoSwitcher';
-import HeteroDeviceSwitcher from './HeteroDeviceSwitcher';
-import ProjectDeviceSwitcher from './ProjectDeviceSwitcher';
+import DeviceSwitcher from './DeviceSwitcher';
 import SandboxStorageSection from './SandboxStorageSection';
 import { useWorkspaceSurface, type WorkspaceSurface } from './useWorkspaceSurface';
 import WorkingDirectorySection from './WorkingDirectorySection';
@@ -42,14 +39,6 @@ const WorkspaceControls = memo<WorkspaceControlsProps>(
     // Resolved from the effective (override-merged) execution target so the
     // surfaces follow the device THIS member's run actually targets.
     const surfaces = useWorkspaceSurface(agentId, alwaysShowWorkspace);
-    // A project-directory conversation runs in its project's directory, so it
-    // only chooses a device (each bringing the project's directory there).
-    const activeTopicId = useChatStore((s) => s.activeTopicId);
-    const isProjectDirectoryTopic = useChatStore(
-      (s) =>
-        !!activeTopicId &&
-        !!topicSelectors.getTopicById(activeTopicId)(s)?.projectWorkingDirectoryId,
-    );
 
     const renderSurface = (surface: WorkspaceSurface) => {
       switch (surface) {
@@ -105,11 +94,7 @@ const WorkspaceControls = memo<WorkspaceControlsProps>(
 
     return (
       <>
-        {isProjectDirectoryTopic && activeTopicId ? (
-          <ProjectDeviceSwitcher agentId={agentId} topicId={activeTopicId} />
-        ) : (
-          <HeteroDeviceSwitcher agentId={agentId} />
-        )}
+        <DeviceSwitcher agentId={agentId} />
         {surfaces.map((surface) => (
           <Fragment key={surface}>{withAccessGate(surface)}</Fragment>
         ))}
