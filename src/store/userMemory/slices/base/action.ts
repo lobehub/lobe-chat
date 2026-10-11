@@ -17,7 +17,6 @@ import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
 import { activityInitialState } from '../activity/initialState';
 import { contextInitialState } from '../context/initialState';
-import { experienceInitialState } from '../experience/initialState';
 import { identityInitialState } from '../identity/initialState';
 import { preferenceInitialState } from '../preference/initialState';
 
@@ -70,11 +69,18 @@ export class BaseActionImpl {
 
     await memoryCRUDService.deleteAll();
 
+    // Replica-backed lists own their state and persisted projection: wipe them
+    // through the engine (memory + IndexedDB + reads in flight) before the
+    // revalidation below, so a reload never resurrects purged rows.
+    await this.#get().internal_clearExperienceList();
+
     this.#set(
       produce((draft) => {
         Object.assign(draft, activityInitialState);
         Object.assign(draft, contextInitialState);
-        Object.assign(draft, experienceInitialState);
+        draft.experiencesQuery = undefined;
+        draft.experiencesSort = undefined;
+        draft.experiencesSearchError = undefined;
         Object.assign(draft, identityInitialState);
         Object.assign(draft, preferenceInitialState);
 
@@ -200,14 +206,12 @@ export class BaseActionImpl {
       }
       case LayersEnum.Experience: {
         await memoryCRUDService.updateExperience(id, { keyLearning: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.experiences.find((memory) => memory.id === id);
-            if (item) item.keyLearning = content;
-          }),
-          false,
-          n('updateMemory/experience'),
-        );
+        // The experience list is replica-backed: patch the view and its
+        // persisted rows together (the flat `experiences` field mirrors it).
+        this.#get().internal_updateExperienceEntity(id, (item) => ({
+          ...item,
+          keyLearning: content,
+        }));
         listKeyRoot = userMemoryKeys.experiences.root;
         break;
       }

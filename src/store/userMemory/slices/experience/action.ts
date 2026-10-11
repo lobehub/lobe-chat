@@ -2,7 +2,12 @@ import { type ExperienceListItem, type ExperienceListResult } from '@lobechat/ty
 import { useMemo } from 'react';
 import { type SWRResponse } from 'swr';
 
-import { createReplicaSlice, type ReplicaLens, type ReplicaPageResult } from '@/libs/replica';
+import {
+  createReplicaSlice,
+  linkReplicaEntity,
+  type ReplicaLens,
+  type ReplicaPageResult,
+} from '@/libs/replica';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
@@ -83,6 +88,7 @@ export const createExperienceSlice = (set: Setter, get: () => UserMemoryStore, _
  * experience page and its components are untouched.
  */
 export class ExperienceActionImpl {
+  readonly #entity;
   readonly #get: () => UserMemoryStore;
   readonly #list;
   readonly #set: Setter;
@@ -101,6 +107,7 @@ export class ExperienceActionImpl {
       // Keep the painted page set self-describing (which query it answers).
       viewFields: ({ q, sort }) => ({ q: q || undefined, sort }),
     });
+    this.#entity = linkReplicaEntity<ExperienceListItem>([this.#list]);
   }
 
   /** One page of the experience list; `cursor` is the page index (0 = head). */
@@ -145,8 +152,29 @@ export class ExperienceActionImpl {
   deleteExperience = async (id: string): Promise<void> => {
     await memoryCRUDService.deleteExperience(id);
     // Drop the row from the in-memory view and the persisted projection right
-    // away; the list resyncs on its next revalidation (focus / remount).
-    this.#list.updateEntity(id, () => undefined);
+    // away (and from any read already in flight); the list resyncs on its next
+    // revalidation (focus / remount).
+    this.#entity.remove(id);
+  };
+
+  /**
+   * Wipe the experience list everywhere it lives: the painted view, every
+   * persisted query variant, and reads already in flight. Used by "delete all
+   * memories"; the caller revalidates afterwards. Resolves `true` once the
+   * persisted rows are gone.
+   */
+  internal_clearExperienceList = (): Promise<boolean> => this.#entity.clear();
+
+  /**
+   * Confirmed patch of one experience in the loaded view and in persisted rows
+   * of query variants that are not loaded, so an edit survives a reload even
+   * when no mounted list revalidates afterwards.
+   */
+  internal_updateExperienceEntity = (
+    id: string,
+    fn: (item: ExperienceListItem) => ExperienceListItem,
+  ): void => {
+    this.#entity.update(id, fn);
   };
 
   /**

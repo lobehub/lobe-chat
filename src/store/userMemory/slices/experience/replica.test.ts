@@ -16,9 +16,10 @@ import { createElement, useEffect } from 'react';
 import { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { cacheScope } from '@/libs/replica';
+import { cacheScope, REPLICA_INDEX_KEY } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
+import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
@@ -88,7 +89,7 @@ describe('experienceList replica', () => {
     cleanup();
     await Promise.all(
       [...scopes].flatMap((value) =>
-        [BASE_KEY, SEARCH_KEY].map((queryKey) =>
+        [BASE_KEY, SEARCH_KEY, REPLICA_INDEX_KEY].map((queryKey) =>
           experienceListResource.storage!.remove({ queryKey, scope: value }),
         ),
       ),
@@ -97,6 +98,18 @@ describe('experienceList replica', () => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
   });
+
+  /** Persist a row for a query variant that is not loaded, indexed like the engine does. */
+  const seedSearchRow = async (data: ExperienceListData) => {
+    await experienceListResource.storage!.set(
+      { queryKey: SEARCH_KEY, scope },
+      { data, updatedAt: 1 },
+    );
+    await experienceListResource.storage!.set({ queryKey: REPLICA_INDEX_KEY, scope }, {
+      data: [SEARCH_KEY],
+      updatedAt: 1,
+    } as never);
+  };
 
   it('reads the list from a single scope entry', () => {
     expect(EXPERIENCE_LIST_KEY).toBe('all');
@@ -287,6 +300,132 @@ describe('experienceList replica', () => {
       const row = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
       expect(ids(row?.data as ExperienceListData)).toEqual(['b']);
     });
+  });
+
+  it('ignores the failure of a query the list has moved past', async () => {
+    const rejectByQuery = new Map<string, (error: Error) => void>();
+    fetchSpy.mockImplementation(
+      (params: { q?: string } = {}) =>
+        new Promise<ExperienceListResult>((_, reject) => rejectByQuery.set(params.q ?? '', reject)),
+    );
+
+    // A consumer still mounted on the previous query keeps its request live
+    // (SWR's own same-hook key check does not apply), so only the replica's
+    // current-query guard can keep its failure off the new search.
+    renderHook(() => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(rejectByQuery.has('')).toBe(true));
+
+    act(() => useUserMemoryStore.getState().resetExperiencesList({ q: 'foo' }));
+    renderHook(() => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12, q: 'foo' }), {
+      wrapper,
+    });
+    await waitFor(() => expect(rejectByQuery.has('foo')).toBe(true));
+
+    // The superseded head request fails while the new search is still loading.
+    await act(async () => {
+      rejectByQuery.get('')!(new Error('stale failure'));
+    });
+
+    expect(useUserMemoryStore.getState().experiencesSearchError).toBeUndefined();
+    expect(useUserMemoryStore.getState().experiencesSearchLoading).toBe(true);
+
+    // The current query's own failure still surfaces.
+    await act(async () => {
+      rejectByQuery.get('foo')!(new Error('current failure'));
+    });
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().experiencesSearchError).toMatchObject({
+        message: 'current failure',
+      }),
+    );
+    expect(useUserMemoryStore.getState().experiencesSearchLoading).toBe(false);
+  });
+
+  it('writes an edited experience through to the view and every persisted query', async () => {
+    const searchRow: ExperienceListData = {
+      currentPage: 0,
+      hasMore: false,
+      items: [{ ...item('a'), keyLearning: 'old' } as ExperienceListItem],
+      pageSize: 12,
+      q: 'foo',
+      total: 1,
+    };
+    await seedSearchRow(searchRow);
+    fetchSpy.mockResolvedValue(
+      listPage([{ ...item('a'), keyLearning: 'old' } as ExperienceListItem, item('b')], 2),
+    );
+    vi.spyOn(memoryCRUDService, 'updateExperience').mockResolvedValue(undefined as never);
+
+    const hook = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }),
+      { wrapper },
+    );
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().experienceListData)).toEqual(['a', 'b']),
+    );
+    // Model the edit landing while no list is mounted to revalidate it.
+    hook.unmount();
+    renderHook(() => null, { wrapper });
+
+    await act(async () => {
+      await useUserMemoryStore.getState().updateMemory('a', 'new', LayersEnum.Experience);
+    });
+
+    const keyLearningOf = (data?: ExperienceListData) =>
+      data?.items.find((entry) => entry.id === 'a')?.keyLearning;
+    expect(keyLearningOf(useUserMemoryStore.getState().experienceListData)).toBe('new');
+    expect(useUserMemoryStore.getState().experiences.find((e) => e.id === 'a')?.keyLearning).toBe(
+      'new',
+    );
+    await waitFor(async () => {
+      const base = await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope });
+      expect(keyLearningOf(base?.data as ExperienceListData)).toBe('new');
+      const search = await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope });
+      expect(keyLearningOf(search?.data as ExperienceListData)).toBe('new');
+    });
+  });
+
+  it('removes the persisted projection when all memories are purged', async () => {
+    await seedSearchRow({
+      currentPage: 0,
+      hasMore: false,
+      items: [item('s')],
+      pageSize: 12,
+      total: 1,
+    });
+    fetchSpy.mockResolvedValue(listPage([item('a')], 1));
+    vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue(undefined as never);
+
+    const hook = renderHook(
+      () => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }),
+      { wrapper },
+    );
+    await waitFor(async () =>
+      expect(
+        ids(
+          (await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope }))
+            ?.data as ExperienceListData,
+        ),
+      ).toEqual(['a']),
+    );
+    // Purge from a surface where the experience list is not mounted.
+    hook.unmount();
+    renderHook(() => null, { wrapper });
+
+    await act(async () => {
+      await useUserMemoryStore.getState().purgeAllMemories();
+    });
+
+    expect(useUserMemoryStore.getState().experienceListData).toBeUndefined();
+    expect(useUserMemoryStore.getState().experiences).toEqual([]);
+    expect(
+      await experienceListResource.storage!.get({ queryKey: BASE_KEY, scope }),
+    ).toBeUndefined();
+    expect(
+      await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }),
+    ).toBeUndefined();
   });
 
   it('does not fetch another page when the head page is the last one', async () => {
