@@ -3,7 +3,7 @@
 import { GOAL_BATCH_BREAK_OPTION } from '@lobechat/const/goal';
 import type { GoalDecisionOption } from '@lobechat/types';
 import { Center, Flexbox, Icon } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
+import { Avatar, Text, toast } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { MonitorCog } from 'lucide-react';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';
@@ -20,6 +20,7 @@ import {
   localizedCoordinatorReason,
 } from '../ProcessControl/coordinatorCopy';
 import {
+  gateAnswerProblem,
   type GoalGateCategory,
   type GoalGateDecision,
   toGateAnswer,
@@ -315,13 +316,23 @@ const GoalDecisionCase = ({
     [basisText, category, decision, optionCopy, questionText],
   );
 
+  // A batch break revises the recipe with the correction written here; without
+  // one the "revision" would re-run the plan that just failed.
+  const batchBreak = !!decision.options?.some(
+    (option) => option.id === GOAL_BATCH_BREAK_OPTION.revise,
+  );
+
   const handleSubmit = useCallback(
     async (answers: ClarificationAnswer[]) => {
       const answer = toGateAnswer(decision, answers);
       if (!answer) return;
+      if (gateAnswerProblem(answer) === 'correctionRequired') {
+        toast.error(t('goalProcess.gate.batchCorrectionRequired'));
+        return;
+      }
       await onDecide(answer.optionId, answer.resolution?.trim() || undefined);
     },
-    [decision, onDecide],
+    [decision, onDecide, t],
   );
 
   // With links to lay beside it, the card owns the submit row: links on the
@@ -341,7 +352,11 @@ const GoalDecisionCase = ({
           key={decision.id}
           questions={questions}
           submitLabel={t('goalProcess.decision.submit')}
-          supplementPlaceholder={t('goalProcess.gate.notePlaceholder')}
+          supplementPlaceholder={t(
+            batchBreak
+              ? 'goalProcess.gate.batchCorrectionPlaceholder'
+              : 'goalProcess.gate.notePlaceholder',
+          )}
           onSubmit={handleSubmit}
         />
       ) : (

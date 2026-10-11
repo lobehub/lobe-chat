@@ -780,6 +780,8 @@
   "goalProcess.frontier.emptyTitle": "Nothing to advance right now",
   "goalProcess.frontier.needsYou": "{{count}} need you",
   "goalProcess.frontier.title": "Current tasks",
+  "goalProcess.gate.batchCorrectionPlaceholder": "What to change in the recipe — required to revise it; it becomes the next version",
+  "goalProcess.gate.batchCorrectionRequired": "Write the correction before revising the recipe",
   "goalProcess.gate.decisionPointLabel": "What needs your decision",
   "goalProcess.gate.noteLabel": "Extra guidance",
   "goalProcess.gate.notePlaceholder": "Optional — goes into the next attempt instructions",

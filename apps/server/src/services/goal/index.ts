@@ -2102,6 +2102,14 @@ export class GoalService {
     if (optionId === GOAL_CLARIFICATION_OPTION.answer && !resolution?.trim()) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'This answer needs a note' });
     }
+    // Revising a batch recipe without a correction would re-run the plan that
+    // just failed under a new version number. The correction is the revision.
+    if (optionId === GOAL_BATCH_BREAK_OPTION.revise && !resolution?.trim()) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Revising the recipe needs a correction',
+      });
+    }
     const chosen = decision.options?.find((option) => option.id === optionId);
     const resolved = await this.graphModel.resolveDecision(
       goalId,
@@ -4317,7 +4325,7 @@ export class GoalService {
     const released = state.releasedCount ?? state.probeNodeIds.length;
     // The correction the person wrote. A revision carries the plan forward and
     // appends it as its own section, so each version reads whole and diffs
-    // against the last one; a fork starts again from the batch's outline. The
+    // against the last one; a fork starts again from the original outline. The
     // result is the new recipe: later waves only ever read
     // `policy.spec.recipeOutline`, so a note kept solely on the Template would
     // never reach the tasks meant to test it.
@@ -4327,7 +4335,11 @@ export class GoalService {
     const previousPlan = state.templateNodeId
       ? graph.nodes.find((node) => node.id === state.templateNodeId)?.description?.trim()
       : undefined;
-    const basePlan = optionId === 'new_class' ? baseOutline : previousPlan || baseOutline;
+    // A fork starts from the batch's original outline — kept on the batch node,
+    // since every revision rewrites the policy's — not from the revised plan.
+    const originalOutline =
+      graph.nodes.find((node) => node.id === batchId)?.description?.trim() || baseOutline;
+    const basePlan = optionId === 'new_class' ? originalOutline : previousPlan || baseOutline;
     const revisedOutline = [basePlan, correction && `### v${revision}\n${correction}`]
       .filter(Boolean)
       .join('\n\n');
@@ -4404,8 +4416,27 @@ export class GoalService {
     const reOpen = broken.slice(0, canarySize);
     const deferred = broken.slice(canarySize).map((unit) => unit.title);
     const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
+    // Nothing broke and nothing is left to release — the gate held on something
+    // else, such as an untested axis. Re-probe units this round delivered,
+    // under the revision, so the new canary is never empty (an empty one would
+    // re-open the same break at once).
+    const reProbe =
+      broken.length || fresh.length
+        ? []
+        : [...memberIds]
+            .map((id) => graph.nodes.find((node) => node.id === id))
+            .filter(
+              (node): node is NonNullable<typeof node> =>
+                !!node && node.status === 'resolved' && !reopenedIds.has(node.id),
+            )
+            .slice(0, canarySize)
+            .map((node) => ({ brief: carriedUnitBrief(node), id: node.id, title: node.title }));
     const units = [
-      ...reOpen.map((unit) => ({ brief: unit.brief, from: unit.id, title: unit.title })),
+      ...[...reOpen, ...reProbe].map((unit) => ({
+        brief: unit.brief,
+        from: unit.id,
+        title: unit.title,
+      })),
       ...fresh.map((title) => ({
         brief: undefined as string | undefined,
         from: undefined as string | undefined,

@@ -780,6 +780,8 @@
   "goalProcess.frontier.emptyTitle": "当前没有可推进的任务",
   "goalProcess.frontier.needsYou": "{{count}} 项需要你",
   "goalProcess.frontier.title": "当前任务",
+  "goalProcess.gate.batchCorrectionPlaceholder": "要怎么改这份方案——修订时必填，会成为下一版",
+  "goalProcess.gate.batchCorrectionRequired": "修订方案前先写下要改什么",
   "goalProcess.gate.decisionPointLabel": "需要你决定什么",
   "goalProcess.gate.noteLabel": "补充说明",
   "goalProcess.gate.notePlaceholder": "可选，会写进下一次尝试的指令",

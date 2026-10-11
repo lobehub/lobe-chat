@@ -244,25 +244,36 @@ export class GoalModel {
   };
 
   update = async (id: string, value: Partial<Omit<GoalItem, 'id' | 'userId'>>) => {
+    // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
+    // ownership always comes from the current row, never that snapshot, and
+    // policy edits cannot replace the concurrently written incident ledger.
+    const merged = sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol' - 'supervisorState' - 'managerState' - 'understanding' - 'quotaRetryWakeAt' - 'rolloutState')
+      || jsonb_strip_nulls(jsonb_build_object(
+        'planningCheckpoint', ${goals.config}->'planningCheckpoint',
+        'planningProtocol', ${goals.config}->'planningProtocol',
+        'supervisorState', ${goals.config}->'supervisorState',
+        'managerState', ${goals.config}->'managerState',
+        'understanding', ${goals.config}->'understanding',
+        'quotaRetryWakeAt', ${goals.config}->'quotaRetryWakeAt',
+        'rolloutState', ${goals.config}->'rolloutState'
+      ))`;
     const [row] = await this.db
       .update(goals)
       .set({
         ...value,
-        // Policy editors may carry a pre-claim or pre-release snapshot. Runtime
-        // ownership always comes from the current row, never that snapshot, and
-        // policy edits cannot replace the concurrently written incident ledger.
+        // The batch recipe (`rollout.spec`) is the coordinator's too: a pattern
+        // break rewrites it, and a stale snapshot must not put back the recipe
+        // that just failed. The person's own rollout settings still come from
+        // the edit; a policy the edit leaves out stays as it is.
         ...(value.config !== undefined
           ? {
-              config: sql`(COALESCE(${JSON.stringify(value.config ?? {})}::jsonb, '{}'::jsonb) - 'planningCheckpoint' - 'planningProtocol' - 'supervisorState' - 'managerState' - 'understanding' - 'quotaRetryWakeAt' - 'rolloutState')
-                || jsonb_strip_nulls(jsonb_build_object(
-                  'planningCheckpoint', ${goals.config}->'planningCheckpoint',
-                  'planningProtocol', ${goals.config}->'planningProtocol',
-                  'supervisorState', ${goals.config}->'supervisorState',
-                  'managerState', ${goals.config}->'managerState',
-                  'understanding', ${goals.config}->'understanding',
-                  'quotaRetryWakeAt', ${goals.config}->'quotaRetryWakeAt',
-                  'rolloutState', ${goals.config}->'rolloutState'
-                ))`,
+              config: sql`CASE WHEN ${goals.config}->'rollout' IS NULL THEN ${merged}
+                ELSE jsonb_set(
+                  ${merged},
+                  '{rollout}',
+                  COALESCE(${merged}->'rollout', ${goals.config}->'rollout')
+                    || jsonb_strip_nulls(jsonb_build_object('spec', ${goals.config}->'rollout'->'spec'))
+                ) END`,
             }
           : {}),
         updatedAt: new Date(),

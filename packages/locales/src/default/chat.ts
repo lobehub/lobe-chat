@@ -2350,6 +2350,9 @@ export default {
   'goalProcess.gate.reason.batchUntestedAxes': 'untested axes: {{axes}}',
   'goalProcess.gate.recommended': 'recommended',
   'goalProcess.gate.noteLabel': 'Extra guidance',
+  'goalProcess.gate.batchCorrectionPlaceholder':
+    'What to change in the recipe — required to revise it; it becomes the next version',
+  'goalProcess.gate.batchCorrectionRequired': 'Write the correction before revising the recipe',
   'goalProcess.gate.notePlaceholder': 'Optional — goes into the next attempt instructions',
   'goalProcess.gate.option.retry': 'Retry work',
   'goalProcess.gate.option.fixedRetry': 'I fixed it — retry',

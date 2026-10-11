@@ -2503,6 +2503,119 @@ describe('GoalService', () => {
     expect((await service.graph(clean.goalId)).goal.config!.rolloutState!.phase).toBe('done');
   });
 
+  describe('answering a batch break', () => {
+    const decompose = (variants: { axis: string; values: string[] }[] = []) =>
+      vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+        problemStatement: '把 7 个同构的 store 迁移到 replica',
+        rollout: {
+          recipeOutline: '把 store 换成 replica 支撑的实现',
+          repeatable: true,
+          unitCount: 7,
+          units: Array.from({ length: 7 }, (_, i) => `Unit ${i + 1}`),
+          variants,
+        },
+        tasks: Array.from({ length: 5 }, (_, i) => ({
+          dependsOn: [],
+          instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+          title: `Unit ${i + 1}`,
+        })),
+      });
+    const pendingBreak = async (service: GoalService, goalId: string) =>
+      (await service.graph(goalId)).decisions.find(
+        (item) =>
+          item.status === 'pending' && item.options?.some((option) => option.id === 'revise'),
+      )!;
+
+    it('re-probes delivered units when the roster is exhausted and the gate held anyway', async () => {
+      // An axis value no unit's brief mentions keeps the gate shut even with
+      // every unit delivered.
+      decompose([{ axis: 'render', values: ['ssr'] }]);
+      const service = new GoalService(serverDB, userId);
+      const graphModel = new GoalGraphModel(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'full' } },
+        title: 'Full rollout, axis untested',
+      });
+      await service.tick(graph.goal.id);
+      const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      for (const id of [...state.probeNodeIds, ...(state.massNodeIds ?? [])])
+        await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
+      await service.tick(graph.goal.id);
+      expect((await service.graph(graph.goal.id)).goal.config!.rolloutState!.phase).toBe(
+        'pattern_break',
+      );
+
+      const decision = await pendingBreak(service, graph.goal.id);
+      await service.decide(graph.goal.id, decision.id, 'revise', '每个单元都按 ssr 路径验证');
+
+      // The new canary is not empty: delivered units are re-probed under v2.
+      const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      expect(next.phase).toBe('probe');
+      expect(next.probeNodeIds.length).toBeGreaterThan(0);
+    });
+
+    it('refuses to revise the recipe without a correction', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Revise needs a correction',
+      });
+      await service.tick(graph.goal.id);
+      const openGate = (
+        service as unknown as {
+          openPatternBreakGate: (
+            g: unknown,
+            message: string,
+            effects: unknown[],
+          ) => Promise<unknown>;
+        }
+      ).openPatternBreakGate.bind(service);
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      const decision = await pendingBreak(service, graph.goal.id);
+
+      await expect(service.decide(graph.goal.id, decision.id, 'revise', '  ')).rejects.toThrow(
+        'Revising the recipe needs a correction',
+      );
+      // The question stays open for an answer that says what to change.
+      expect((await pendingBreak(service, graph.goal.id)).id).toBe(decision.id);
+    });
+
+    it('forks a new class from the original outline, not the revised plan', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Fork after a revision',
+      });
+      await service.tick(graph.goal.id);
+      const openGate = (
+        service as unknown as {
+          openPatternBreakGate: (
+            g: unknown,
+            message: string,
+            effects: unknown[],
+          ) => Promise<unknown>;
+        }
+      ).openPatternBreakGate.bind(service);
+
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      let decision = await pendingBreak(service, graph.goal.id);
+      await service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步');
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      decision = await pendingBreak(service, graph.goal.id);
+      await service.decide(graph.goal.id, decision.id, 'new_class', '按新类型处理');
+
+      const after = await service.graph(graph.goal.id);
+      const plan = after.nodes.find(
+        (node) => node.id === after.goal.config!.rolloutState!.templateNodeId,
+      )!;
+      // The v2 correction belongs to the old class; the fork starts clean.
+      expect(plan.description).not.toContain('补上冷启动这一步');
+      expect(plan.description).toContain('把 store 换成 replica 支撑的实现');
+    });
+  });
+
   it('routes a batch unit out of verification retries through the batch gate', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',
