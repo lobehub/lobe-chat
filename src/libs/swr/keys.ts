@@ -444,8 +444,8 @@ export const serverConfigKeys = {
 };
 
 // ---- discover (marketplace) ---------------------------------------------
-// NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/agentKnowledge/
-// file prefixes are deliberately kept OUT of `CACHE_TIERS`
+// NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/file prefixes
+// are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
 // persistence — they stay memory-only exactly as before.
 export const discoverKeys = {
@@ -670,17 +670,6 @@ export const globalKeys = {
   latestVersion: def('global:latestVersion', () => ['global:latestVersion']),
   serverVersion: def('global:serverVersion', () => ['global:serverVersion']),
   systemStatus: def('global:systemStatus', () => ['global:systemStatus']),
-};
-
-// ---- agent knowledge (kept off the `agent:` idb tier on purpose) --------
-export const agentKnowledgeKeys = {
-  list: def(
-    'agentKnowledge:list',
-    (agentId: string | undefined, visibility?: 'private' | 'public') => {
-      const base = ['agentKnowledge:list', agentId] as const;
-      return visibility ? [...base, visibility] : base;
-    },
-  ),
 };
 
 // ---- file ---------------------------------------------------------------
@@ -1169,7 +1158,6 @@ export const swrKeys = {
   agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
-  agentKnowledge: agentKnowledgeKeys,
   agentProfile: agentProfileKeys,
   agentSignal: agentSignalKeys,
   aiModel: aiModelKeys,
