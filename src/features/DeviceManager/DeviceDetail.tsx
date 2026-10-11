@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
@@ -80,7 +81,11 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-type DetailTab = 'agents' | 'files' | 'overview';
+const DETAIL_TABS = ['overview', 'files', 'agents'] as const;
+type DetailTab = (typeof DETAIL_TABS)[number];
+
+const isDetailTab = (value: string | null): value is DetailTab =>
+  !!value && (DETAIL_TABS as readonly string[]).includes(value);
 
 interface DeviceDetailProps {
   device: DeviceListItem;
@@ -98,8 +103,22 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   const canEdit = useCanEditDevice()(device);
   const canOperate = useCanOperateDevice()(device);
   // Health monitoring and the directory settings are separate jobs; a tab each
-  // keeps the charts from pushing the directories below the fold.
-  const [tab, setTab] = useState<DetailTab>('overview');
+  // keeps the charts from pushing the directories below the fold. The active
+  // tab lives in `?tab=` so a view can be linked, reloaded and reached with
+  // Back; other params (the workspace `?visibility=`) are kept.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const tab: DetailTab = isDetailTab(tabParam) ? tabParam : 'overview';
+  const setTab = (next: DetailTab) =>
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        if (next === 'overview') params.delete('tab');
+        else params.set('tab', next);
+        return params;
+      },
+      { replace: true },
+    );
 
   const [name, setName] = useState(device.friendlyName ?? '');
   const [editingName, setEditingName] = useState(false);
