@@ -1620,6 +1620,52 @@ describe('createReplicaSlice', () => {
       expect(store.getState().lists.a).toBeUndefined();
       expect(onSuccess).not.toHaveBeenCalled();
     });
+
+    // a → b while a's request is in flight: a's late response still fills its
+    // own cache entry, but its success side effects act on the CURRENT view, so
+    // they must not re-adopt `a` while the hook shows `b`.
+    it('does not replay a response for a key the hook has moved past', () => {
+      let settle!: (data: string[]) => void;
+      const useQuery = vi.fn((key: any, _fetcher: unknown, options: any) => {
+        if (key !== null) settle = options.onSuccess;
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const resource = defineReplica<{ id: string }, string[]>({
+        fetcher: async ({ id }) => [id],
+        key: ({ id }) => id,
+        name: 'lateKeyResponse',
+        scope,
+        version: 1,
+      });
+      const store = createStore<TestState>()(() => ({
+        lists: {},
+        listsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<TestState, { id: string }, string[]>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'listsReplica',
+        view: recordLens('lists'),
+      });
+
+      const onSuccess = vi.fn();
+      const { rerender } = renderHook(({ id }) => slice.useSync({ id }, { onSuccess }), {
+        initialProps: { id: 'a' },
+      });
+      const settleA = settle;
+
+      rerender({ id: 'b' });
+      const settleB = settle;
+      act(() => settleA(['late-a']));
+
+      expect(store.getState().lists.a).toEqual(['late-a']);
+      expect(onSuccess).not.toHaveBeenCalled();
+
+      act(() => settleB(['b']));
+      expect(onSuccess).toHaveBeenCalledTimes(1);
+      expect(onSuccess).toHaveBeenCalledWith(['b']);
+    });
   });
 
   describe('updateMany', () => {

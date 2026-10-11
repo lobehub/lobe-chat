@@ -348,7 +348,12 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
           // A response `replace` rejects (it is not written, and must not be
           // persisted) never replays its success side effects either: they act
           // on the CURRENT stores, so they would adopt data that was not applied.
-          if (replace(params!, data, scope)) onSuccess?.(data);
+          if (!replace(params!, data, scope)) return;
+          // The same holds for a key the hook has moved past (g1 → g2 while
+          // g1's request is in flight): the response still fills g1's own
+          // entry, but its side effects would re-adopt g1 over the g2 view.
+          if (activeKey.current !== key) return;
+          onSuccess?.(data);
         },
       },
     );
