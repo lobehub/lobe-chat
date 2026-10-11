@@ -394,14 +394,14 @@ describe('emitAgentSignalSourceEvent integration', () => {
   );
 
   /**
-   * Completion-path expertise ingestion draws from the same 50/day background pool as the runs
-   * Agent Signal dispatches; once the pool is spent the ingestion is skipped with a reason.
+   * Completion-path expertise ingestion is not budgeted per day any more; the nightly pass
+   * shares the review's per-night topic quota instead.
    */
-  it('charges completion-path expertise ingestion to the daily background-run budget', async () => {
+  it('wires the nightly topic quota, not a daily budget, into completion-path ingestion', async () => {
     (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
       mockRedis;
     mockRedis.expire.mockResolvedValue(1);
-    mockRedis.incr.mockResolvedValue(51);
+    mockRedis.incr.mockResolvedValue(10_000);
     const ingestSelfReview = vi.fn().mockResolvedValue({ ingested: 0 });
     vi.doMock('@/server/services/expertise/ingestion', () => ({
       ExpertiseIngestionService: class {
@@ -449,16 +449,11 @@ describe('emitAgentSignalSourceEvent integration', () => {
     const completionInput = { operationId: 'op-1' };
     await policyOptions.completion.onSelfIterationCompleted(completionInput);
 
+    const { claimNightlyReviewTopics } =
+      await import('../services/selfIteration/review/topicQuota');
     expect(ingestSelfReview).toHaveBeenCalledWith(completionInput, {
-      acquireBudget: expect.any(Function),
+      claimNightlyTopics: claimNightlyReviewTopics,
     });
-    const { acquireBudget } = ingestSelfReview.mock.calls[0]![1];
-    await expect(acquireBudget()).resolves.toEqual({
-      allowed: false,
-      detail: 'Daily Agent Signal background-run budget exceeded (50/day).',
-    });
-    expect(mockRedis.incr).toHaveBeenCalledWith(
-      expect.stringMatching(/^agent-signal:budget:background-run:user:user-1:day:/),
-    );
+    expect(mockRedis.incr).not.toHaveBeenCalled();
   });
 });

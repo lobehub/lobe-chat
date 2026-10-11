@@ -37,66 +37,51 @@ describe('acquireAgentSignalDailyBudget', () => {
 
   /**
    * @example
-   * Run 50 of the day is allowed; run 51 is denied with an `exceeded` reason.
+   * Call 200 of the day is allowed; call 201 is denied with an `exceeded` reason.
    */
-  it('allows runs up to the daily limit and denies the next one', async () => {
-    const limit = AGENT_SIGNAL_DEFAULTS.dailyBackgroundRunBudgetPerUser;
-    const decisions = [];
-    for (let index = 0; index <= limit; index += 1) {
-      decisions.push(
-        await acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
-      );
-    }
+  it('allows classifier calls up to the daily limit and denies the next one', async () => {
+    const limit = AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser;
+    counters.set('agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11', limit - 1);
 
-    expect(decisions.slice(0, limit).every((decision) => decision.allowed)).toBe(true);
-    expect(decisions[limit]).toEqual({
+    await expect(
+      acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
+    ).resolves.toEqual({ allowed: true, count: limit, kind: 'feedback-classifier', limit: 200 });
+    await expect(
+      acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
+    ).resolves.toEqual({
       allowed: false,
       count: limit + 1,
-      kind: 'background-run',
+      kind: 'feedback-classifier',
       limit,
       reason: 'exceeded',
     });
-    expect(redis.incr).toHaveBeenCalledWith(
-      'agent-signal:budget:background-run:user:u1:day:2026-10-11',
-    );
     expect(redis.expire).toHaveBeenCalledWith(
-      'agent-signal:budget:background-run:user:u1:day:2026-10-11',
+      'agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11',
       AGENT_SIGNAL_DEFAULTS.dailyBudgetTtlSeconds,
     );
   });
 
   /**
-   * Product decision: background processing (dispatched runs plus completion-path expertise
-   * ingestion) shares one pool of 50 per user per UTC day; the classifier cap stays at 200.
+   * Everyday conversation has no count cap: the background-run budget is gone, and the
+   * classifier is the only daily budget left.
    */
-  it('caps background processing at 50 per user per day', async () => {
-    counters.set('agent-signal:budget:background-run:user:u1:day:2026-10-11', 49);
-
-    await expect(
-      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
-    ).resolves.toEqual({ allowed: true, count: 50, kind: 'background-run', limit: 50 });
-    await expect(
-      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
-    ).resolves.toMatchObject({ allowed: false, count: 51, limit: 50, reason: 'exceeded' });
-    expect(AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser).toBe(200);
+  it('has no daily background-run budget', () => {
+    expect(AGENT_SIGNAL_DEFAULTS).not.toHaveProperty('dailyBackgroundRunBudgetPerUser');
   });
 
   /**
    * @example
-   * Budgets are per user, per kind, and per UTC day.
+   * Budgets are per user and per UTC day.
    */
-  it('keeps separate counters per user, kind and UTC day', async () => {
-    counters.set('agent-signal:budget:background-run:user:u1:day:2026-10-11', 100);
+  it('keeps separate counters per user and UTC day', async () => {
+    counters.set('agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11', 1000);
 
     await expect(
-      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u2' }),
+      acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u2' }),
     ).resolves.toMatchObject({ allowed: true });
     await expect(
-      acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
-    ).resolves.toMatchObject({ allowed: true, limit: 200 });
-    await expect(
       acquireAgentSignalDailyBudget({
-        kind: 'background-run',
+        kind: 'feedback-classifier',
         now: NOW + 60 * 60 * 1000,
         userId: 'u1',
       }),
@@ -112,11 +97,11 @@ describe('acquireAgentSignalDailyBudget', () => {
     setRedis(null);
 
     await expect(
-      acquireAgentSignalDailyBudget({ kind: 'background-run', now: NOW, userId: 'u1' }),
+      acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
     ).resolves.toEqual({
       allowed: false,
-      kind: 'background-run',
-      limit: AGENT_SIGNAL_DEFAULTS.dailyBackgroundRunBudgetPerUser,
+      kind: 'feedback-classifier',
+      limit: AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser,
       reason: 'unavailable',
     });
   });
@@ -140,11 +125,11 @@ describe('acquireAgentSignalDailyBudget', () => {
     expect(
       describeBudgetDenial({
         allowed: false,
-        kind: 'background-run',
-        limit: 20,
+        kind: 'feedback-classifier',
+        limit: 200,
         reason: 'exceeded',
       }),
-    ).toBe('Daily Agent Signal background-run budget exceeded (20/day).');
+    ).toBe('Daily Agent Signal feedback-classifier budget exceeded (200/day).');
     expect(
       describeBudgetDenial({
         allowed: false,

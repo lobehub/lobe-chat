@@ -8,6 +8,8 @@ export const AGENT_SIGNAL_KEYS = {
   dedupe: (id: string) => `${AGENT_SIGNAL_PREFIX}dedupe:${id}`,
   declarationLimit: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}declaration-limit:${scopeKey}`,
   lock: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}lock:${scopeKey}`,
+  nightlyTopicQuota: (userId: string, localDate: string) =>
+    `${AGENT_SIGNAL_PREFIX}nightly-topics:user:${userId}:date:${localDate}`,
   policy: (policyId: string, scopeKey: string) =>
     `${AGENT_SIGNAL_PREFIX}policy:${policyId}:${scopeKey}`,
   receipt: (receiptId: string) => `${AGENT_SIGNAL_PREFIX}receipt:${receiptId}`,
@@ -21,13 +23,6 @@ export const AGENT_SIGNAL_KEYS = {
 
 /** Server-owned timing defaults for AgentSignal storage and generation. */
 export const AGENT_SIGNAL_DEFAULTS = {
-  /**
-   * Per-user, per-UTC-day ceiling on background self-iteration processing: `execAgent` runs
-   * Agent Signal dispatches (memory writer, skill management, self-reflection, self-feedback
-   * intent) plus each LLM-backed expertise ingestion triggered from the completion path. Nightly
-   * review is exempt; it has its own once-per-agent-per-night guard.
-   */
-  dailyBackgroundRunBudgetPerUser: 50,
   /** TTL for the per-day budget counters; outlives one UTC day so the key never resets early. */
   dailyBudgetTtlSeconds: 2 * 24 * 60 * 60,
   /**
@@ -36,6 +31,14 @@ export const AGENT_SIGNAL_DEFAULTS = {
    */
   dailyFeedbackClassifierBudgetPerUser: 200,
   generationLockTtlSeconds: 5,
+  /**
+   * Most distinct topics one user's nightly review may process for one local review date, across
+   * all of that user's agents: topics fed into each agent's review context plus topics the
+   * nightly expertise ingestion reads. Everyday conversation has no count cap.
+   */
+  nightlyReviewTopicLimitPerUser: 50,
+  /** TTL for the nightly topic set; outlives the review night so replays still see it. */
+  nightlyReviewTopicQuotaTtlSeconds: 3 * 24 * 60 * 60,
   receiptTtlSeconds: 3 * 24 * 60 * 60,
   runtimeGuardTtlSeconds: 3600,
   runtimeWaypointTtlSeconds: 3600,

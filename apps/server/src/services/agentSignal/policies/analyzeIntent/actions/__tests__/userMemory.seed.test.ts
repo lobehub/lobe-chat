@@ -2,17 +2,17 @@
 import { MemoryIdentifier } from '@lobechat/builtin-tool-memory';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type * as BudgetModule from '../../../../budget';
 import { runMemoryActionAgent } from '../userMemory';
 
-const { mockAcquireBudget, mockCreateOperation } = vi.hoisted(() => ({
-  mockAcquireBudget: vi.fn(),
+const { mockCreateOperation, mockIncrementCounter } = vi.hoisted(() => ({
   mockCreateOperation: vi.fn().mockResolvedValue(undefined),
+  mockIncrementCounter: vi.fn(),
 }));
 
-vi.mock('../../../../budget', async (importOriginal) => ({
-  ...(await importOriginal<typeof BudgetModule>()),
-  acquireAgentSignalDailyBudget: mockAcquireBudget,
+// Every Redis counter reads as far past any daily limit; the writer must not care.
+vi.mock('../../../../store/adapters/redis/counterStore', () => ({
+  decrementCounter: vi.fn(),
+  incrementCounter: mockIncrementCounter,
 }));
 
 vi.mock('@/server/services/agentRuntime/AgentRuntimeService', () => ({
@@ -65,22 +65,15 @@ const createOptions = () => {
 describe('runMemoryActionAgent seed prompt', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAcquireBudget.mockResolvedValue({ allowed: true, kind: 'background-run', limit: 20 });
+    mockIncrementCounter.mockResolvedValue(10_000);
   });
 
   /**
-   * @example
-   * Over the daily background-run budget, the async writer skips before any write.
+   * Everyday conversation has no count cap: the async memory writer runs however many
+   * background runs the user already had today.
    */
-  it('skips the async writer without creating a thread or operation when over budget', async () => {
-    mockAcquireBudget.mockResolvedValue({
-      allowed: false,
-      count: 21,
-      kind: 'background-run',
-      limit: 20,
-      reason: 'exceeded',
-    });
-    const { messageModel, options, threadModel } = createOptions();
+  it('runs the async writer without any daily background-run budget', async () => {
+    const { options, threadModel } = createOptions();
 
     const result = await runMemoryActionAgent(
       {
@@ -93,14 +86,10 @@ describe('runMemoryActionAgent seed prompt', () => {
       { marker },
     );
 
-    expect(result).toEqual({
-      detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
-      status: 'skipped',
-    });
-    expect(mockAcquireBudget).toHaveBeenCalledWith({ kind: 'background-run', userId: 'user-1' });
-    expect(threadModel.create).not.toHaveBeenCalled();
-    expect(messageModel.create).not.toHaveBeenCalled();
-    expect(mockCreateOperation).not.toHaveBeenCalled();
+    expect(result).not.toMatchObject({ status: 'skipped' });
+    expect(threadModel.create).toHaveBeenCalled();
+    expect(mockCreateOperation).toHaveBeenCalledOnce();
+    expect(mockIncrementCounter).not.toHaveBeenCalled();
   });
 
   it('persists the writer prompt in the isolation thread so a DB reload keeps it', async () => {

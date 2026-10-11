@@ -5,8 +5,13 @@ import { incrementCounter } from './store/adapters/redis/counterStore';
 
 const log = debug('lobe-server:agent-signal:budget');
 
-/** Per-user daily budgets Agent Signal enforces. */
-export type AgentSignalDailyBudgetKind = 'background-run' | 'feedback-classifier';
+/**
+ * Per-user daily budgets Agent Signal enforces.
+ *
+ * Only the satisfaction classifier is metered per day; everyday background runs have no count
+ * cap, and nightly review is bounded per night by its own topic quota.
+ */
+export type AgentSignalDailyBudgetKind = 'feedback-classifier';
 
 /** Outcome of one budget acquisition. */
 export interface AgentSignalBudgetDecision {
@@ -20,7 +25,6 @@ export interface AgentSignalBudgetDecision {
 }
 
 const DAILY_LIMITS: Record<AgentSignalDailyBudgetKind, number> = {
-  'background-run': AGENT_SIGNAL_DEFAULTS.dailyBackgroundRunBudgetPerUser,
   'feedback-classifier': AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser,
 };
 
@@ -95,10 +99,10 @@ export const acquireAgentSignalDailyBudget = async (input: {
  * Describes a denied budget decision for skip details and runtime traces.
  *
  * Before:
- * - `{ kind: 'background-run', limit: 50, reason: 'exceeded' }`
+ * - `{ kind: 'feedback-classifier', limit: 200, reason: 'exceeded' }`
  *
  * After:
- * - `"Daily Agent Signal background-run budget exceeded (50/day)."`
+ * - `"Daily Agent Signal feedback-classifier budget exceeded (200/day)."`
  */
 export const describeBudgetDenial = (decision: AgentSignalBudgetDecision) =>
   decision.reason === 'exceeded'

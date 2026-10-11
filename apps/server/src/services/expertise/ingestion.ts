@@ -37,6 +37,7 @@ import { notShareVisitorMessage, notShareVisitorTopic } from '@/database/utils/s
 import { notTrashed } from '@/database/utils/softDelete';
 import { buildWorkspaceWhere } from '@/database/utils/workspace';
 import type { CompletionCallbackParams } from '@/server/services/agentSignal/policies/completionPolicy';
+import type { ClaimNightlyReviewTopics } from '@/server/services/agentSignal/services/selfIteration/review/topicQuota';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 import { resolveModelReadableFrameUrl } from '@/server/services/verify/modelFrames';
@@ -157,26 +158,18 @@ const matchLesson = <T>(
   return lessons.byTitle.get(normalizeLessonTitle(observation.title));
 };
 
-/**
- * Takes one unit of the caller's background budget before an ingestion spends a model call.
- *
- * Returns `allowed: false` with a human-readable `detail` to skip the call.
- */
-export type ExpertiseIngestionBudget = () => Promise<{ allowed: boolean; detail?: string }>;
-
 /** Options for ingestions triggered by Agent Signal's completion path. */
 export interface ExpertiseSelfReviewIngestionOptions {
   /**
-   * Charged once per LLM-backed topic ingestion, right before the model call.
+   * Claims a nightly review's topics against the user's per-night topic quota before they are
+   * ingested; refused topics are skipped. Self-reflection ingestion is not metered.
    *
-   * @default No budget: explicit backfills and tests run unmetered
+   * @default No quota: tests and evals ingest every topic in the window
    */
-  acquireBudget?: ExpertiseIngestionBudget;
+  claimNightlyTopics?: ClaimNightlyReviewTopics;
 }
 
 interface ExpertiseCompletionInput {
-  /** See {@link ExpertiseSelfReviewIngestionOptions.acquireBudget}. */
-  acquireBudget?: ExpertiseIngestionBudget;
   agentId: string;
   hadHumanInLoop?: boolean;
   ingestionKey?: string;
@@ -268,11 +261,9 @@ export class ExpertiseIngestionService {
     const marker = input.selfIteration?.marker;
     const agentId = marker?.agentId;
     if (!marker || !agentId) return { ingested: 0, reason: 'missing-review-agent' } as const;
-    const { acquireBudget } = options;
 
     if (marker.kind === 'self-reflection' && marker.topicId) {
       return this.ingestCompletion({
-        acquireBudget,
         agentId,
         operationId: input.operationId,
         topicId: marker.topicId,
@@ -290,18 +281,38 @@ export class ExpertiseIngestionService {
       windowEnd: new Date(marker.reviewWindowEnd),
       windowStart: new Date(marker.reviewWindowStart),
     });
-    const results = [];
-    for (const topic of topics) {
-      if (!topic.topicId) continue;
-      const result = await this.ingestCompletion({
-        acquireBudget,
-        agentId,
-        operationId: input.operationId,
-        topicId: topic.topicId,
+    let topicIds = topics.flatMap((topic) => (topic.topicId ? [topic.topicId] : []));
+
+    // Topics the night's review already took are admitted again without counting twice.
+    if (options.claimNightlyTopics && marker.localDate && topicIds.length > 0) {
+      const claim = await options.claimNightlyTopics({
+        localDate: marker.localDate,
+        topicIds,
+        userId: this.userId,
       });
-      results.push(result);
-      // Every remaining topic would be denied by the same exhausted daily budget.
-      if (result.reason === 'budget-exhausted') break;
+      if (claim.reason) {
+        log(
+          'nightly expertise ingestion agent=%s date=%s: %d of %d topics refused (%s)',
+          agentId,
+          marker.localDate,
+          topicIds.length - claim.admitted.length,
+          topicIds.length,
+          claim.reason,
+        );
+      }
+      const admitted = new Set(claim.admitted);
+      topicIds = topicIds.filter((topicId) => admitted.has(topicId));
+    }
+
+    const results = [];
+    for (const topicId of topicIds) {
+      results.push(
+        await this.ingestCompletion({
+          agentId,
+          operationId: input.operationId,
+          topicId,
+        }),
+      );
     }
     return {
       ingested: results.reduce((sum, result) => sum + result.ingested, 0),
@@ -454,20 +465,6 @@ export class ExpertiseIngestionService {
       : await this.readTopicContext(input.topicId);
     const context = topicContext.serializedContext.slice(-MAX_CONTEXT_CHARS);
     if (!context.trim()) return { ingested: 0, reason: 'empty-context' } as const;
-
-    // Charged only once a model call is certain, so empty or unbound topics cost nothing.
-    if (input.acquireBudget) {
-      const budget = await input.acquireBudget();
-      if (!budget.allowed) {
-        log(
-          'skip expertise ingestion agent=%s topic=%s: %s',
-          input.agentId,
-          input.topicId,
-          budget.detail ?? 'budget denied',
-        );
-        return { ingested: 0, reason: 'budget-exhausted' } as const;
-      }
-    }
 
     const modelConfig = await resolveExpertiseModelConfig(this.db, this.userId);
 

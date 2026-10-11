@@ -40,7 +40,7 @@
   "features.persistentSandbox.title": "Persistent Sandbox",
   "features.projects.desc": "Organize long-running goals into dedicated workspaces with their own agents, knowledge bases, and tasks.",
   "features.projects.title": "Project Workspaces",
-  "features.selfLearning.desc": "Let every agent learn from your conversations in the background: it remembers facts, refines skills, collects lessons, and reviews its day each night. Rounds you send back become rules. Background learning runs at most 50 times a day. See it all under Memory → Self-evolving.",
+  "features.selfLearning.desc": "Let every agent learn from your conversations in the background: it remembers facts, refines skills, collects lessons, and reviews its day each night. Rounds you send back become rules. Each nightly review covers at most 50 conversations. See it all under Memory → Self-evolving.",
   "features.selfLearning.title": "Self-evolving",
   "features.taskVerify.desc": "Add an Acceptance section to the task detail: describe acceptance in one sentence and let AI generate editable verify criteria.",
   "features.taskVerify.title": "Acceptance",

@@ -95,41 +95,67 @@ describe('ExpertiseIngestionService.ingestSelfReview', () => {
   });
 });
 
-describe('ExpertiseIngestionService.ingestSelfReview budget', () => {
+describe('ExpertiseIngestionService.ingestSelfReview nightly topic quota', () => {
+  const nightlyCompletion = () =>
+    completion({
+      artifacts: [],
+      marker: {
+        agentId: 'agent_1',
+        kind: 'nightly-review',
+        localDate: '2026-10-11',
+        reviewWindowEnd: '2026-10-12T00:00:00.000Z',
+        reviewWindowStart: '2026-10-11T00:00:00.000Z',
+        sourceId: 'nightly_1',
+      },
+      mutations: [],
+      userId: 'user_1',
+    });
+
   /**
-   * Completion-path ingestion is billed to the user's provider, so it draws from the same daily
-   * background pool as the runs Agent Signal dispatches. Once the pool is empty the nightly fan-out
-   * stops instead of asking again for every remaining topic.
+   * The nightly expertise pass shares the user's 50-topics-per-night quota with the review:
+   * only admitted topics are ingested.
    */
-  it('stops the nightly fan-out once the budget denies a topic', async () => {
+  it('ingests only the topics the nightly topic quota admits', async () => {
     const service = new ExpertiseIngestionService({} as never, 'user_1');
-    const acquireBudget = vi.fn();
-    vi.spyOn(service as never, 'ingestCompletion' as never).mockImplementation((async () => ({
-      ingested: 0,
-      reason: 'budget-exhausted',
-    })) as never);
-    listTopicActivity.mockResolvedValue([{ topicId: 'topic_1' }, { topicId: 'topic_2' }]);
+    const ingestCompletion = vi
+      .spyOn(service, 'ingestCompletion')
+      .mockResolvedValue({ ingested: 1, reason: 'matched' } as never);
+    listTopicActivity.mockResolvedValue([
+      { topicId: 'topic_1' },
+      { topicId: 'topic_2' },
+      { topicId: 'topic_3' },
+    ]);
+    const claimNightlyTopics = vi
+      .fn()
+      .mockResolvedValue({ admitted: ['topic_1'], reason: 'exhausted' });
+
+    await service.ingestSelfReview(nightlyCompletion(), { claimNightlyTopics });
+
+    expect(claimNightlyTopics).toHaveBeenCalledWith({
+      localDate: '2026-10-11',
+      topicIds: ['topic_1', 'topic_2', 'topic_3'],
+      userId: 'user_1',
+    });
+    expect(ingestCompletion.mock.calls.map(([input]) => input.topicId)).toEqual(['topic_1']);
+  });
+
+  it('does not meter self-reflection ingestion', async () => {
+    const service = new ExpertiseIngestionService({} as never, 'user_1');
+    vi.spyOn(service, 'ingestCompletion').mockResolvedValue({ ingested: 1 } as never);
+    const claimNightlyTopics = vi.fn();
 
     await service.ingestSelfReview(
       completion({
         artifacts: [],
-        marker: {
-          agentId: 'agent_1',
-          kind: 'nightly-review',
-          reviewWindowEnd: '2026-10-12T00:00:00.000Z',
-          reviewWindowStart: '2026-10-11T00:00:00.000Z',
-          sourceId: 'nightly_1',
-        },
+        marker: { agentId: 'agent_1', kind: 'self-reflection', sourceId: 'r', topicId: 'topic_1' },
         mutations: [],
         userId: 'user_1',
       }),
-      { acquireBudget },
+      { claimNightlyTopics },
     );
 
+    expect(claimNightlyTopics).not.toHaveBeenCalled();
     expect(service.ingestCompletion).toHaveBeenCalledOnce();
-    expect(service.ingestCompletion).toHaveBeenCalledWith(
-      expect.objectContaining({ acquireBudget, topicId: 'topic_1' }),
-    );
   });
 });
 
@@ -255,74 +281,6 @@ describe('ExpertiseIngestionService.ingestCompletion', () => {
         }),
       }),
     );
-  });
-
-  const bindOneDomain = () => {
-    listDomainsForAgent.mockResolvedValue([
-      {
-        domain: {
-          canonEntries: [],
-          domainFilter: 'Production incidents',
-          id: 'domain_1',
-          layers: [],
-          outOfScope: 'Unrelated conversations',
-          title: 'Incident response',
-        },
-      },
-    ] as never);
-    listLessons.mockResolvedValue([]);
-    resolveExpertiseModelConfig.mockResolvedValue({ model: 'm', provider: 'p' });
-    generateObject.mockResolvedValue({ domains: [] });
-  };
-
-  it('skips the model call when the daily background budget is exhausted', async () => {
-    bindOneDomain();
-    generateObject.mockClear();
-    const acquireBudget = vi.fn().mockResolvedValue({
-      allowed: false,
-      detail: 'Daily Agent Signal background-run budget exceeded (50/day).',
-    });
-
-    const result = await new ExpertiseIngestionService({} as never, 'user_1').ingestCompletion({
-      acquireBudget,
-      agentId: 'agent_1',
-      serializedContext: '[user] Investigate the incident.',
-      topicId: 'topic_1',
-    });
-
-    expect(result).toEqual({ ingested: 0, reason: 'budget-exhausted' });
-    expect(acquireBudget).toHaveBeenCalledOnce();
-    expect(generateObject).not.toHaveBeenCalled();
-  });
-
-  it('charges the budget once and proceeds when it allows the call', async () => {
-    bindOneDomain();
-    generateObject.mockClear();
-    const acquireBudget = vi.fn().mockResolvedValue({ allowed: true });
-
-    await new ExpertiseIngestionService({} as never, 'user_1').ingestCompletion({
-      acquireBudget,
-      agentId: 'agent_1',
-      serializedContext: '[user] Investigate the incident.',
-      topicId: 'topic_1',
-    });
-
-    expect(acquireBudget).toHaveBeenCalledOnce();
-    expect(generateObject).toHaveBeenCalledOnce();
-  });
-
-  it('does not charge the budget when no domain is bound', async () => {
-    listDomainsForAgent.mockResolvedValue([]);
-    const acquireBudget = vi.fn();
-
-    await new ExpertiseIngestionService({} as never, 'user_1').ingestCompletion({
-      acquireBudget,
-      agentId: 'agent_1',
-      serializedContext: '[user] Investigate the incident.',
-      topicId: 'topic_1',
-    });
-
-    expect(acquireBudget).not.toHaveBeenCalled();
   });
 });
 

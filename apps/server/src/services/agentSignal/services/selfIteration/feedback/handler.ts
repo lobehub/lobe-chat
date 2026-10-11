@@ -7,10 +7,7 @@ import { isNonEmptyString } from '@lobechat/utils';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { defineSourceHandler } from '../../../runtime/middleware';
-import {
-  enqueueBudgetedSelfIterationRun,
-  isSelfIterationRunSkipped,
-} from '../dispatch/enqueueSelfIterationRun';
+import { enqueueSelfIterationRun } from '../dispatch/enqueueSelfIterationRun';
 import type { EvidenceRef } from '../types';
 import { buildSelfFeedbackIntentSourceId, ReviewRunStatus } from '../types';
 
@@ -110,14 +107,12 @@ export interface SelfFeedbackIntentEvidenceEnrichment {
 export interface SelfFeedbackIntentSourceHandlerResult extends Record<string, unknown> {
   /** Stable agent id being reviewed when payload validation succeeds. */
   agentId?: string;
-  /** Human-readable skip detail, e.g. when the daily background-run budget denied the run. */
-  detail?: string;
   /** Stable guard key used for idempotency when payload validation succeeds. */
   guardKey?: string;
   /** Operation id of the enqueued background self-iteration run, when dispatched. */
   operationId?: string;
   /** Machine-readable skip reason for non-dispatched runs. */
-  reason?: 'budget_exceeded' | 'budget_unavailable' | 'gate_disabled' | 'invalid_payload';
+  reason?: 'gate_disabled' | 'invalid_payload';
   /** Runtime scope id reviewed by the run. */
   scopeId?: string;
   /** Runtime scope family reviewed by the run. */
@@ -143,7 +138,7 @@ export interface CreateSelfFeedbackIntentSourceHandlerDependencies {
   /** Postgres handle used by the dispatch helper to enqueue the execAgent run. */
   db: LobeChatDatabase;
   /** Enqueues the async self-iteration run. Overridable for tests. */
-  dispatch?: typeof enqueueBudgetedSelfIterationRun;
+  dispatch?: typeof enqueueSelfIterationRun;
   /** Adds topic or operation evidence without mutating shared resources. */
   enrichEvidence?: (
     input: EnrichSelfFeedbackIntentEvidenceInput,
@@ -392,8 +387,8 @@ export const createSelfFeedbackIntentSourceHandler = (
       window: { end: timestamp, start: timestamp },
     });
 
-    const dispatch = deps.dispatch ?? enqueueBudgetedSelfIterationRun;
-    const dispatchResult = await dispatch({
+    const dispatch = deps.dispatch ?? enqueueSelfIterationRun;
+    const { operationId } = await dispatch({
       agentId: payload.agentId,
       db: deps.db,
       marker: {
@@ -410,18 +405,9 @@ export const createSelfFeedbackIntentSourceHandler = (
       workspaceId: deps.workspaceId,
     });
 
-    if (isSelfIterationRunSkipped(dispatchResult)) {
-      return {
-        ...baseResult,
-        detail: dispatchResult.detail,
-        reason: dispatchResult.reason,
-        status: ReviewRunStatus.Skipped,
-      };
-    }
-
     return {
       ...baseResult,
-      operationId: dispatchResult.operationId,
+      operationId,
       status: ReviewRunStatus.Dispatched,
     };
   },

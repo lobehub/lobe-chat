@@ -22,6 +22,21 @@ import {
   createSelfReflectionSourcePolicyHandler,
 } from '../handler';
 
+const { mockEnqueueSelfIterationRun, mockIncrementCounter } = vi.hoisted(() => ({
+  mockEnqueueSelfIterationRun: vi.fn(),
+  mockIncrementCounter: vi.fn(),
+}));
+
+vi.mock('../../dispatch/enqueueSelfIterationRun', () => ({
+  enqueueSelfIterationRun: mockEnqueueSelfIterationRun,
+}));
+
+// Every Redis counter reads as far past any daily limit; dispatch must not care.
+vi.mock('../../../../store/adapters/redis/counterStore', () => ({
+  decrementCounter: vi.fn(),
+  incrementCounter: mockIncrementCounter,
+}));
+
 const reflectionPayload = {
   agentId: 'agent-1',
   operationId: 'operation-1',
@@ -86,6 +101,29 @@ const createDependencies = (
 });
 
 describe('self-reflection source handler', () => {
+  /**
+   * Everyday conversation has no count cap: the default dispatch enqueues the run directly,
+   * with no daily background-run budget in front of it.
+   */
+  it('dispatches through the unbudgeted enqueue by default', async () => {
+    mockEnqueueSelfIterationRun.mockResolvedValue({
+      operationId: 'op-default',
+      topicId: 'topic-1',
+    });
+    mockIncrementCounter.mockResolvedValue(10_000);
+    const { dispatch: _dispatch, ...deps } = createDependencies();
+    const handler = createSelfReflectionSourceHandler(deps);
+
+    const result = await handler.handle(createReflectionSource());
+
+    expect(mockEnqueueSelfIterationRun).toHaveBeenCalledOnce();
+    expect(mockIncrementCounter).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      operationId: 'op-default',
+      status: ReviewRunStatus.Dispatched,
+    });
+  });
+
   it('dispatches an async self-iteration run under the builtin self-reflection slug', async () => {
     const deps = createDependencies();
     const handler = createSelfReflectionSourceHandler(deps);
@@ -130,33 +168,6 @@ describe('self-reflection source handler', () => {
         userId: 'user-1',
       }),
     );
-  });
-
-  /**
-   * @example
-   * An exhausted daily background-run budget turns the dispatch into a skipped result.
-   */
-  it('returns skipped with the budget detail when the daily background-run budget denies dispatch', async () => {
-    const deps = createDependencies({
-      dispatch: vi.fn(async () => ({
-        detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
-        reason: 'budget_exceeded' as const,
-        status: 'skipped' as const,
-      })),
-    });
-    const handler = createSelfReflectionSourceHandler(deps);
-
-    const result = await handler.handle(createReflectionSource());
-
-    expect(deps.dispatch).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(
-      expect.objectContaining({
-        detail: 'Daily Agent Signal background-run budget exceeded (20/day).',
-        reason: 'budget_exceeded',
-        status: ReviewRunStatus.Skipped,
-      }),
-    );
-    expect(result).not.toHaveProperty('operationId');
   });
 
   it('re-checks the gate then acquires the idempotency guard before dispatching', async () => {

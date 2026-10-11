@@ -12,7 +12,7 @@ import { createSourceEvent } from '@lobechat/agent-signal/source';
 
 import { ExpertiseIngestionService } from '@/server/services/expertise/ingestion';
 
-import { acquireAgentSignalDailyBudget, describeBudgetDenial } from './budget';
+import { acquireAgentSignalDailyBudget } from './budget';
 import type {
   AgentSignalEmitOptions,
   AgentSignalExecutionContext,
@@ -29,6 +29,7 @@ import { persistAgentSignalReceipts, projectAgentSignalReceipts } from './servic
 import { createSelfIterationCompletionHandler } from './services/selfIteration/completion';
 import { createServerSelfReviewBriefWriter } from './services/selfIteration/review/brief';
 import { resolveSelfReviewBriefTextTranslator } from './services/selfIteration/review/briefTextTranslator';
+import { claimNightlyReviewTopics } from './services/selfIteration/review/topicQuota';
 import { emitSourceEvent } from './sources';
 import { redisPolicyStateStore } from './store/adapters/redis/policyStateStore';
 import type { AgentSignalReceiptStore, AgentSignalSourceEventStore } from './store/types';
@@ -128,22 +129,9 @@ const createPolicyOptions = (
           context.workspaceId,
         ).ingestSelfReview(
           input,
-          // Each LLM-backed ingestion draws from the same daily background pool as the runs
-          // Agent Signal dispatches. Store-injected runs (evals, isolated tests) stay unmetered.
-          options.store
-            ? {}
-            : {
-                acquireBudget: async () => {
-                  const decision = await acquireAgentSignalDailyBudget({
-                    kind: 'background-run',
-                    userId: context.userId,
-                  });
-
-                  return decision.allowed
-                    ? { allowed: true }
-                    : { allowed: false, detail: describeBudgetDenial(decision) };
-                },
-              },
+          // The nightly expertise pass shares the night's per-user topic quota with the
+          // review itself. Store-injected runs (evals, isolated tests) stay unmetered.
+          options.store ? {} : { claimNightlyTopics: claimNightlyReviewTopics },
         );
       },
     },

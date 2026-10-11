@@ -60,6 +60,7 @@ import {
   listNightlyReceiptLocalDates,
   resolveReviewedLocalDate,
 } from './receiptActivity';
+import { claimNightlyReviewTopics } from './topicQuota';
 
 interface ProposalBriefReader {
   listUnresolvedByAgentAndTrigger: (options: {
@@ -846,6 +847,9 @@ export const createServerSelfReviewPolicyOptions = ({
   const briefModel = new BriefModel(db, userId, workspaceId);
   const skillDocumentService = new SkillManagementDocumentService(db, userId, workspaceId);
   const collector = createSelfReviewContextService({
+    // One Redis set per user and local review date bounds the topics every agent's review
+    // (and the nightly expertise pass) may process that night.
+    claimTopics: claimNightlyReviewTopics,
     listDocumentActivity: async ({ agentId: targetAgentId, reviewWindowEnd, reviewWindowStart }) =>
       tracer.startActiveSpan(
         'agent_signal.nightly_review.collector.list_document_activity',
