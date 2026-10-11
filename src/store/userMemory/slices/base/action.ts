@@ -121,18 +121,13 @@ export class BaseActionImpl {
     );
   };
 
-  /** PersonaHeader confirmation deletes the persona through memoryCRUDService, then clears its cache. */
+  /** PersonaHeader confirmation deletes the persona through memoryCRUDService, then refreshes its replica. */
   deletePersona = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
-    await mutate(
-      userMemoryKeys.persona(),
-      async () => {
-        await memoryCRUDService.deletePersona();
-        this.#set({ persona: undefined, personaInit: true }, false, n('deletePersona'));
-        return null;
-      },
-      { revalidate: false },
-    );
+    await memoryCRUDService.deletePersona();
+    // The persona is a replica view now: drop it locally and re-read server
+    // truth (null) so the section disappears without waiting for the network.
+    await this.#get().refreshPersona();
   };
 
   /**
@@ -199,6 +194,7 @@ export class BaseActionImpl {
       // One line per replica-backed slice.
       await this.#get().internal_clearMemoryReplicas(),
     ];
+    await this.#get().internal_clearHomeReplicas();
 
     this.#set(
       produce((draft) => {
@@ -213,11 +209,6 @@ export class BaseActionImpl {
         draft.editingMemoryContent = undefined;
         draft.editingMemoryId = undefined;
         draft.editingMemoryLayer = undefined;
-        draft.persona = undefined;
-        draft.personaInit = true;
-        draft.roles = [];
-        draft.tags = [];
-        draft.tagsInit = true;
       }),
       false,
       n('purgeAllMemories'),
@@ -251,15 +242,11 @@ export class BaseActionImpl {
       mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.retrieve.root, undefined, {
         revalidate: true,
       }),
-      mutate(userMemoryKeys.persona(), null, { revalidate: false }),
-      mutate(
-        userMemoryKeys.tags(),
-        {
-          roles: [],
-          tags: [],
-        },
-        { revalidate: false },
-      ),
+      // The persona and the roles/tags aggregate are replica-backed now:
+      // revalidate their custom sync keys so the engine re-reads and folds the
+      // (now empty) server truth instead of trusting a stale view.
+      mutate(userMemoryKeys.persona(), undefined, { revalidate: true }),
+      mutate(userMemoryKeys.tags(), undefined, { revalidate: true }),
     ]);
 
     // The in-memory reset above already stands — the user must not keep seeing

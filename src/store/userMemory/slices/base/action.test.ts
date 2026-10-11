@@ -96,19 +96,33 @@ describe('deletePersona', () => {
   const persona = { content: 'My persona', summary: 'Summary' };
 
   beforeEach(() => {
-    useUserMemoryStore.setState({ persona, personaInit: true });
-    vi.mocked(mutate).mockImplementation(async (_key: any, update: any) => update());
+    useUserMemoryStore.setState({ persona, personaData: { persona }, personaInit: true });
+    vi.mocked(mutate).mockResolvedValue(undefined as never);
   });
 
-  it('clears the persona cache while retaining the memory lists', async () => {
+  it('clears the persona replica view while retaining the memory lists', async () => {
     vi.spyOn(memoryCRUDService, 'deletePersona').mockResolvedValue({ success: true });
     await useUserMemoryStore.getState().deletePersona();
     expect(useUserMemoryStore.getState().persona).toBeUndefined();
+    // The canonical replica view carries the server-confirmed absence.
+    expect(useUserMemoryStore.getState().personaData).toEqual({ persona: null });
+    expect(useUserMemoryStore.getState().personaInit).toBe(true);
     expect(useUserMemoryStore.getState().preferences).toEqual([preferenceMemory]);
     expect(useUserMemoryStore.getState().preferencesTotal).toBe(1);
-    expect(mutate).toHaveBeenCalledWith(userMemoryKeys.persona(), expect.any(Function), {
-      revalidate: false,
-    });
+    // The replica adopts the userMemory:persona key as its sync key.
+    expect(mutate).toHaveBeenCalledWith(userMemoryKeys.persona());
+  });
+
+  it('resolves when the persona is deleted but the follow-up read fails', async () => {
+    vi.spyOn(memoryCRUDService, 'deletePersona').mockResolvedValue({ success: true });
+    vi.mocked(mutate).mockRejectedValueOnce(new Error('read failed'));
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(useUserMemoryStore.getState().deletePersona()).resolves.toBeUndefined();
+
+    expect(useUserMemoryStore.getState().persona).toBeUndefined();
+    expect(useUserMemoryStore.getState().personaData).toEqual({ persona: null });
+    expect(consoleError).toHaveBeenCalled();
   });
 
   it('retains the persona and memories when deletion fails', async () => {
