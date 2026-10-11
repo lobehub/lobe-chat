@@ -642,6 +642,29 @@ describe('createReplicaSlice', () => {
       });
       expect(store.getState().lists.a).toEqual(['cached']);
     });
+    it('re-arms hydration so returning to a reset query repaints its saved row', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['cached'], updatedAt: 1 });
+      const fetcher = vi.fn(() => new Promise<string[]>(() => {}));
+      const { slice, store } = setup({ fetcher, storage });
+
+      const hook = renderHook((props: { id: string }) => slice.useSync({ id: props.id }), {
+        initialProps: { id: 'a' },
+        wrapper,
+      });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
+
+      // Move on: the reset drops A's entry but keeps its saved row.
+      act(() => slice.reset('a'));
+      expect(store.getState().lists.a).toBeUndefined();
+      hook.rerender({ id: 'b' });
+      expect(store.getState().lists.b).toBeUndefined();
+
+      // Returning to A must re-read the saved row, not stay blank while the
+      // never-answering network is the only other source.
+      hook.rerender({ id: 'a' });
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached']));
+    });
   });
 
   describe('persisted index', () => {

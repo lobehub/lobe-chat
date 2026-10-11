@@ -311,6 +311,44 @@ describe('experienceList replica', () => {
     );
   });
 
+  it('re-hydrates the saved row when returning to an already-visited query', async () => {
+    // Query A's head was cached by an earlier session.
+    const cachedA: ExperienceListData = {
+      currentPage: 0,
+      hasMore: false,
+      items: [item('cached-a')],
+      pageSize: 12,
+      total: 1,
+    };
+    await experienceListResource.storage!.set(
+      { queryKey: BASE_KEY, scope },
+      { data: cachedA, updatedAt: 1 },
+    );
+    fetchSpy.mockImplementation(pending);
+
+    const hook = renderHook(
+      (props: { q?: string }) =>
+        useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12, q: props.q }),
+      { initialProps: {} as { q?: string }, wrapper },
+    );
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().experienceListData)).toEqual(['cached-a']),
+    );
+
+    // Move to query B: the reset drops A's entry but keeps A's saved row.
+    act(() => useUserMemoryStore.getState().resetExperiencesList({ q: 'b' }));
+    hook.rerender({ q: 'b' });
+    expect(useUserMemoryStore.getState().experienceListData).toBeUndefined();
+
+    // Back to A: its saved row paints again instead of staying blank while the
+    // network never answers (the once-hydration is re-armed on reset).
+    act(() => useUserMemoryStore.getState().resetExperiencesList({}));
+    hook.rerender({ q: undefined });
+    await waitFor(() =>
+      expect(ids(useUserMemoryStore.getState().experienceListData)).toEqual(['cached-a']),
+    );
+  });
+
   it('does not let a delayed read of the previous query repaint after the query changes', async () => {
     // An earlier session cached the previous query's head.
     const cachedBase: ExperienceListData = {

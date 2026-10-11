@@ -175,7 +175,14 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         await hydrate(params!, scope);
         return true;
       },
-      { once: true },
+      // Re-read the persisted row whenever this query becomes the active key
+      // again. `reset` drops the in-memory entry while keeping the saved row, so
+      // returning to that query must hydrate again; SWR's `once` keeps the
+      // cached success for the key and would leave the slot blank. A query the
+      // list is leaving is not a key change, so it never re-hydrates (unlike
+      // bumping the read key, which would re-create the entry being reset).
+      // Focus / reconnect refetches stay off, so this only fires on a key change.
+      { revalidateOnFocus: false, revalidateOnReconnect: false },
     );
 
     const syncKey =
