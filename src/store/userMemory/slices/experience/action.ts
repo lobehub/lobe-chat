@@ -8,6 +8,8 @@ import {
   type ReplicaLens,
   type ReplicaPageResult,
 } from '@/libs/replica';
+import { mutate } from '@/libs/swr';
+import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
@@ -152,9 +154,25 @@ export class ExperienceActionImpl {
   deleteExperience = async (id: string): Promise<void> => {
     await memoryCRUDService.deleteExperience(id);
     // Drop the row from the in-memory view and the persisted projection right
-    // away (and from any read already in flight); the list resyncs on its next
-    // revalidation (focus / remount).
+    // away (and from any read already in flight).
     this.#entity.remove(id);
+    // The list pages by offset (page index), so a local removal shifts every
+    // row after it by one: the loaded tail is now out of step and "load more"
+    // would start one row late, skipping the row that crossed the page
+    // boundary. Drop the tail and re-read the head so the next "load more"
+    // walks the pages below a fresh head (same repair as the topic-comment and
+    // trash lists).
+    //
+    // The revalidation goes through the list's key root, not the slice's
+    // `revalidate`: this resource overrides `syncKey` with the long-standing
+    // `userMemory:experiences` key, so the replica's own sync-key matcher does
+    // not recognise it — the same way `base/action.ts` revalidates this list.
+    this.#list.collapse(EXPERIENCE_LIST_KEY);
+    await mutate(
+      (key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root,
+      undefined,
+      { revalidate: true },
+    );
   };
 
   /**

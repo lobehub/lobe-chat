@@ -360,8 +360,14 @@ describe('experienceList replica', () => {
   });
 
   it('drops a deleted experience from the view and the persisted row', async () => {
-    fetchSpy.mockResolvedValue(listPage([item('a'), item('b')], 2));
-    vi.spyOn(memoryCRUDService, 'deleteExperience').mockResolvedValue(undefined as never);
+    let deleted = false;
+    fetchSpy.mockImplementation(async () =>
+      deleted ? listPage([item('b')], 1) : listPage([item('a'), item('b')], 2),
+    );
+    vi.spyOn(memoryCRUDService, 'deleteExperience').mockImplementation(async () => {
+      deleted = true;
+      return undefined as never;
+    });
 
     renderHook(() => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }), {
       wrapper,
@@ -509,6 +515,42 @@ describe('experienceList replica', () => {
     expect(
       await experienceListResource.storage!.get({ queryKey: SEARCH_KEY, scope }),
     ).toBeUndefined();
+  });
+
+  it('re-reads the head after a delete so load-more cannot skip the shifted row', async () => {
+    // Offset paging by page index: page 1 is IDs 0..11, page 2 is 12..23.
+    // Deleting ID 0 shifts everything, so the server's page 1 becomes 1..12 and
+    // its page 2 becomes 13..24 — ID 12 crosses the boundary.
+    let deleted = false;
+    fetchSpy.mockImplementation(async (params: { page?: number } = {}) => {
+      if ((params.page ?? 1) === 1) return listPage(deleted ? idsOf(12, 1) : idsOf(12), 24);
+      return listPage(idsOf(12, 13), 24);
+    });
+    vi.spyOn(memoryCRUDService, 'deleteExperience').mockImplementation(async () => {
+      deleted = true;
+      return undefined as never;
+    });
+
+    renderHook(() => useUserMemoryStore((s) => s.useFetchExperiences)({ pageSize: 12 }), {
+      wrapper,
+    });
+    await waitFor(() => expect(useUserMemoryStore.getState().experiences).toHaveLength(12));
+
+    await act(async () => {
+      await useUserMemoryStore.getState().deleteExperience('experience-0');
+    });
+
+    // The head is re-read, so the loaded page set is back in step (1..12).
+    await waitFor(() =>
+      expect(useUserMemoryStore.getState().experiences.map((e) => e.id)).toEqual(
+        idsOf(12, 1).map((e) => e.id),
+      ),
+    );
+
+    act(() => useUserMemoryStore.getState().loadMoreExperiences());
+    await waitFor(() => expect(useUserMemoryStore.getState().experiences).toHaveLength(24));
+    // The row that crossed the page boundary is present, never skipped.
+    expect(useUserMemoryStore.getState().experiences.map((e) => e.id)).toContain('experience-12');
   });
 
   it('does not fetch another page when the head page is the last one', async () => {
