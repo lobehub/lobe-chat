@@ -15,7 +15,7 @@ import {
   Share2,
   Trash,
 } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatList from '@/features/Conversation/ChatList';
@@ -153,6 +153,24 @@ const TopicChatDrawer = memo(() => {
   const useFetchTaskDetail = useTaskStore((s) => s.useFetchTaskDetail);
   const showArtifactPortal = useTopicDrawerArtifactPortal();
   const closeArtifact = useChatStore((s) => s.closeArtifact);
+
+  // The portal state is global: an artifact left open when this drawer closes
+  // would make the next opening of the same topic land on the artifact instead
+  // of the conversation, so the drawer takes its artifact down with it.
+  const handleClose = useCallback(() => {
+    if (showArtifactPortal) closeArtifact();
+    closeTopicDrawer();
+  }, [closeArtifact, closeTopicDrawer, showArtifactPortal]);
+
+  // A request to write ("Continue chat") needs the conversation and its
+  // composer. Each request is handled once, so an artifact the user opens
+  // afterwards from inside the conversation is left alone.
+  const handledFocusRequestRef = useRef(inputFocusRequest);
+  useEffect(() => {
+    if (!inputFocusRequest || inputFocusRequest === handledFocusRequestRef.current) return;
+    handledFocusRequestRef.current = inputFocusRequest;
+    if (showArtifactPortal) closeArtifact();
+  }, [closeArtifact, inputFocusRequest, showArtifactPortal]);
   const enableTopicLinkShare = useServerConfigStore(serverConfigSelectors.enableBusinessFeatures);
   const { allowed: canShare, reason } = usePermission('edit_own_content');
   const { allowed: canEditTask } = usePermission('create_content');
@@ -362,7 +380,7 @@ const TopicChatDrawer = memo(() => {
           overflow: 'hidden',
         },
       }}
-      onClose={closeTopicDrawer}
+      onClose={handleClose}
     >
       {/* `open` already proves both ids. The body deliberately does NOT wait for a
           task: a run opened from the home inbox may have no parent task at all,

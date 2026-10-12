@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { shallow } from 'zustand/shallow';
 
 import { useConversationResourceAccessForTarget } from '@/features/Conversation/hooks/useConversationResourceAccess';
+import { useAnalytics } from '@/libs/analytics/client';
 import { useTaskStore } from '@/store/task';
 
 interface NewsChatActionsProps {
@@ -23,6 +24,7 @@ interface NewsChatActionsProps {
  */
 const NewsChatActions = memo<NewsChatActionsProps>(({ agentId, taskId, title, topicId }) => {
   const { t } = useTranslation('home');
+  const { analytics } = useAnalytics();
   const { openTopicDrawer, setActiveTaskId } = useTaskStore(
     (s) => ({ openTopicDrawer: s.openTopicDrawer, setActiveTaskId: s.setActiveTaskId }),
     shallow,
@@ -33,13 +35,22 @@ const NewsChatActions = memo<NewsChatActionsProps>(({ agentId, taskId, title, to
 
   const openTopicChat = useCallback(
     (autoFocus: boolean) => {
+      const action = autoFocus ? 'continue' : 'view';
+      try {
+        analytics?.track({
+          name: 'home_daily_brief_chat_clicked',
+          properties: { action, spm: `homepage.daily_brief.${action}_chat.clicked` },
+        });
+      } catch {
+        // silently ignore tracking errors to avoid affecting business logic
+      }
       // setActiveTaskId hydrates the drawer's task context when the brief owns a
       // task and clears any prior drawer state, so openTopicDrawer must come
       // after it for the topic to survive the reset.
       setActiveTaskId(taskId ?? undefined);
       openTopicDrawer(topicId, { agentId, autoFocus, title });
     },
-    [agentId, openTopicDrawer, setActiveTaskId, taskId, title, topicId],
+    [agentId, analytics, openTopicDrawer, setActiveTaskId, taskId, title, topicId],
   );
 
   return (
