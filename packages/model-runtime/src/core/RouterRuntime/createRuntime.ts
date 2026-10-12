@@ -30,6 +30,8 @@ import type {
   CreateVideoMethodOptions,
   CreateVideoPayload,
   CreateVideoResult,
+  DecisionOptions,
+  DecisionPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
   GenerateObjectOptions,
@@ -179,6 +181,7 @@ export type RouterRuntimeMethod =
   | 'chat'
   | 'createImage'
   | 'createVideo'
+  | 'decide'
   | 'embeddings'
   | 'generateObject'
   | 'textToSpeech'
@@ -1380,6 +1383,30 @@ export const createRouterRuntime = ({
         payload.model,
         (runtime) => runtime.transcribe!(payload, options),
         { metadata: options?.metadata, method: 'transcribe', user: options?.user },
+      );
+    }
+
+    async decide(payload: DecisionPayload, options?: DecisionOptions) {
+      return this.runWithFallback(
+        payload.model,
+        (runtime) => {
+          // Route options pick runtimes by apiType, and most of those classes cannot serve
+          // decision models; fail this attempt explicitly so fallback can move on.
+          if (!runtime.decide) {
+            throw AgentRuntimeError.chat({
+              error: new Error('Decision models are not supported by the matched runtime'),
+              errorType: AgentRuntimeErrorType.CapabilityNotSupported,
+              provider: this._id,
+            });
+          }
+          return runtime.decide(payload, options);
+        },
+        {
+          metadata: options?.metadata,
+          method: 'decide',
+          pricingContext: options?.pricingContext,
+          user: options?.user,
+        },
       );
     }
   };

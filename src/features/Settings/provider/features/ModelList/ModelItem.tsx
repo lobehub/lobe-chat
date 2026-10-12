@@ -112,6 +112,8 @@ const ModelItem = memo<ModelItemProps>(
               }),
           ].filter(Boolean) as string[];
         }
+        // Decision models bill input tokens only.
+        case 'decision':
         case 'embedding': {
           const inputRate = getTextInputUnitRate(pricing);
           return [
