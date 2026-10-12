@@ -27,7 +27,6 @@ import { bootTiming } from '@/libs/bootTiming';
 
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import { migrateMessageListCache } from './migrations/messageListCache';
-import { sanitizeForPersistence } from './persistSanitizers';
 import { isScopeTrusted } from './useCacheScope';
 
 interface CacheEntry<T = unknown> {
@@ -67,11 +66,6 @@ export interface CacheProviderOptions {
   onError?: (error: Error) => void;
   /** Called after a scope's IndexedDB tier finishes hydrating. */
   onScopeHydrated?: (scope: string) => void;
-  /**
-   * Reshape an entry right before it is written to either tier (the in-memory
-   * entry is untouched). Return `undefined` to skip persisting that key.
-   */
-  sanitize?: (key: string, value: unknown) => unknown;
   /**
    * Cache TTL in milliseconds, defaults to 7 days. Governs the localStorage
    * tier only (small, frequently-changing shells like recents) — the IndexedDB
@@ -141,7 +135,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     version = '1.0.0',
     onError = (error) => console.error('[SWR Cache]', error),
     onScopeHydrated,
-    sanitize = (_key: string, value: unknown) => value,
   } = options;
 
   // SSR / no storage → plain memory cache, no persistence. Still signal
@@ -206,8 +199,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     try {
       const entries = Array.from(cacheMapInstance.entries())
         .filter(([k]) => matchesPattern(k, localPatterns))
-        .map(([k, data]) => [k, sanitize(k, data)] as const)
-        .filter(([, data]) => data !== undefined)
         .slice(-maxLocalEntries)
         .map(([k, data]) => [k, { data, timestamp: Date.now(), version } as CacheEntry]);
 
@@ -256,12 +247,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
-      const persisted = v === undefined ? undefined : sanitize(k, v);
-      if (persisted !== undefined)
-        void localDataCache.set(buildLocalDataKey(scope, k), persisted, version);
-      // A value that no longer qualifies (e.g. grew past its size cap) must not
-      // leave its previous, smaller row behind to resurrect on the next boot.
-      else if (v !== undefined) void localDataCache.delete(buildLocalDataKey(scope, k));
+      if (v !== undefined) void localDataCache.set(buildLocalDataKey(scope, k), v, version);
     }
   };
 
@@ -502,11 +488,6 @@ export const CACHE_TIERS = {
     'page:', // page detail / list / meta
     'notebook:', // notebook documents
     'brief:', // briefs
-    // Portal document header (the full document row the portal / goal readers
-    // render from) and local-file previews — both shaped and size-capped by
-    // `sanitizeForPersistence`, which keeps only text previews.
-    'portal:documentHeader',
-    'localFile:preview',
   ],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [
@@ -548,7 +529,6 @@ export const swrCacheProvider = (
     isEphemeralScope: () => !isScopeTrusted(),
     localPatterns: [...CACHE_TIERS.local],
     onScopeHydrated,
-    sanitize: sanitizeForPersistence,
     // Governs the localStorage tier only (recents-style shells); the IndexedDB
     // tier (messages, topics, …) never expires. 7 days is plenty for recents.
     ttl: 7 * 24 * 60 * 60 * 1000, // 7 days

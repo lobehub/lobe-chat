@@ -1,0 +1,269 @@
+/**
+ * @vitest-environment happy-dom
+ *
+ * The local-file portal preview is a replica: a reload paints the last text
+ * preview from IndexedDB while the device / sandbox confirms it. Only text
+ * previews under the size cap are persisted, without the short-lived
+ * `resourceBaseUrl` token; Blob-backed and oversized previews stay in memory.
+ */
+import { randomUUID } from 'node:crypto';
+
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { PropsWithChildren } from 'react';
+import { createElement, useEffect } from 'react';
+import { SWRConfig, useSWRConfig } from 'swr';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { cacheScope } from '@/libs/replica';
+import { setScopedMutate } from '@/libs/swr/mutate';
+import { cloudSandboxService } from '@/services/cloudSandbox';
+import { projectFileService } from '@/services/projectFile';
+
+import {
+  initialLocalFilePreviewState,
+  localFilePreviewKey,
+  localFilePreviewResource,
+  type LocalFilePreviewTarget,
+  MAX_PERSISTED_PREVIEW_CHARS,
+  useLocalFilePreview,
+  useLocalFilePreviewStore,
+} from './index';
+
+vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
+  getActiveWorkspaceId: () => null,
+  useActiveWorkspaceId: () => null,
+}));
+
+vi.mock('@/services/projectFile', () => ({
+  projectFileService: { getLocalFilePreview: vi.fn() },
+}));
+
+vi.mock('@/services/cloudSandbox', () => ({
+  cloudSandboxService: { callTool: vi.fn() },
+}));
+
+const MutateBridge = () => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => setScopedMutate(mutate), [mutate]);
+  return null;
+};
+
+const wrapper = ({ children }: PropsWithChildren) =>
+  createElement(
+    SWRConfig,
+    { value: { dedupingInterval: 0, provider: () => new Map() } },
+    createElement(MutateBridge),
+    children,
+  );
+
+const NOTES: LocalFilePreviewTarget = {
+  deviceId: 'device-a',
+  filePath: '/repo/notes.md',
+  workingDirectory: '/repo',
+};
+
+const textPreview = (content: string, extra: Record<string, unknown> = {}) =>
+  ({ content, contentType: 'text/markdown', type: 'text', ...extra }) as const;
+
+const renderPreview = (target: LocalFilePreviewTarget) =>
+  renderHook(
+    () => ({
+      preview: useLocalFilePreview(target),
+      sync: useLocalFilePreviewStore.getState().useFetchPreview(target),
+    }),
+    { wrapper },
+  );
+
+describe('local file preview replica', () => {
+  const scopes = new Set<string>();
+  const keys = new Set<string>();
+  let scope = '';
+
+  const useScope = (next: string) => {
+    scope = next;
+    scopes.add(next);
+    vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+  };
+
+  const storedRow = (target: LocalFilePreviewTarget) => {
+    const key = localFilePreviewKey(target);
+    keys.add(key);
+    return localFilePreviewResource.storage!.get({ queryKey: key, scope });
+  };
+
+  const seedRow = (target: LocalFilePreviewTarget, data: unknown) => {
+    const key = localFilePreviewKey(target);
+    keys.add(key);
+    return localFilePreviewResource.storage!.set({ queryKey: key, scope }, {
+      data,
+      updatedAt: 1,
+    } as never);
+  };
+
+  beforeEach(() => {
+    useScope(`local-file-user-${randomUUID()}:personal`);
+    act(() => useLocalFilePreviewStore.setState(initialLocalFilePreviewState));
+    vi.mocked(projectFileService.getLocalFilePreview).mockReset();
+    vi.mocked(cloudSandboxService.callTool).mockReset();
+  });
+
+  afterEach(async () => {
+    await Promise.all(
+      [...scopes].flatMap((value) =>
+        [...keys].map((key) =>
+          localFilePreviewResource.storage!.remove({ queryKey: key, scope: value }),
+        ),
+      ),
+    );
+    scopes.clear();
+    keys.clear();
+    vi.restoreAllMocks();
+  });
+
+  it('paints the persisted text preview after a reload, then swaps in the fresh read', async () => {
+    await seedRow(NOTES, textPreview('# v1'));
+    let answer: (preview: unknown) => void = () => {};
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as never,
+    );
+
+    const { result } = renderPreview(NOTES);
+
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('# v1')));
+    expect(result.current.sync.isLoading).toBe(false);
+    expect(result.current.sync.isValidating).toBe(true);
+    expect(projectFileService.getLocalFilePreview).toHaveBeenCalledWith({
+      allowExternalFile: undefined,
+      deviceId: 'device-a',
+      path: '/repo/notes.md',
+      workingDirectory: '/repo',
+    });
+
+    await act(async () => {
+      answer(textPreview('# v2'));
+    });
+
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('# v2')));
+    await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('# v2')));
+  });
+
+  it('keys previews by device and working directory', async () => {
+    const otherDevice = { ...NOTES, deviceId: 'device-b' };
+    await seedRow(NOTES, textPreview('device a'));
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise(() => {}) as never,
+    );
+
+    const { result } = renderPreview(otherDevice);
+
+    await waitFor(() => expect(result.current.sync.isHydrated).toBe(true));
+    expect(result.current.preview).toBeUndefined();
+    expect(result.current.sync.isLoading).toBe(true);
+    expect(localFilePreviewKey(NOTES)).not.toBe(localFilePreviewKey(otherDevice));
+    expect(localFilePreviewKey(NOTES)).not.toBe(
+      localFilePreviewKey({ ...NOTES, workingDirectory: '/other' }),
+    );
+  });
+
+  it('never persists the preview token URL', async () => {
+    const html = { ...NOTES, filePath: '/repo/index.html' };
+    vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
+      textPreview('<p>hi</p>', {
+        contentType: 'text/html',
+        resourceBaseUrl: 'localfile://session-token/',
+      }) as never,
+    );
+
+    const { result } = renderPreview(html);
+
+    await waitFor(() =>
+      expect(result.current.preview).toMatchObject({
+        resourceBaseUrl: 'localfile://session-token/',
+      }),
+    );
+    await waitFor(async () =>
+      expect((await storedRow(html))?.data).toEqual({
+        content: '<p>hi</p>',
+        contentType: 'text/html',
+        type: 'text',
+      }),
+    );
+  });
+
+  it('keeps image previews in memory only', async () => {
+    const image = { ...NOTES, filePath: '/repo/logo.png' };
+    const blob = new Blob(['png'], { type: 'image/png' });
+    vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue({
+      blob,
+      contentType: 'image/png',
+      type: 'image',
+    } as never);
+
+    const { result } = renderPreview(image);
+
+    await waitFor(() => expect(result.current.preview).toMatchObject({ type: 'image' }));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(await storedRow(image)).toBeUndefined();
+  });
+
+  it('drops the stored row once a file grows past the cap', async () => {
+    await seedRow(NOTES, textPreview('small'));
+    vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
+      textPreview('x'.repeat(MAX_PERSISTED_PREVIEW_CHARS + 1)) as never,
+    );
+
+    const { result } = renderPreview(NOTES);
+
+    await waitFor(() =>
+      expect((result.current.preview as { content: string } | undefined)?.content.length).toBe(
+        MAX_PERSISTED_PREVIEW_CHARS + 1,
+      ),
+    );
+    await waitFor(async () => expect(await storedRow(NOTES)).toBeUndefined());
+  });
+
+  it('reads sandbox files through the sandbox tool', async () => {
+    const sandbox = {
+      filePath: '/workspace/a.txt',
+      sandboxTopicId: 'topic-1',
+      workingDirectory: '',
+    };
+    vi.mocked(cloudSandboxService.callTool).mockResolvedValue({
+      result: { content: 'from sandbox', mimeType: 'text/plain' },
+      success: true,
+    } as never);
+
+    const { result } = renderPreview(sandbox);
+
+    await waitFor(() =>
+      expect(result.current.preview).toEqual({
+        content: 'from sandbox',
+        contentType: 'text/plain',
+        type: 'text',
+      }),
+    );
+    expect(cloudSandboxService.callTool).toHaveBeenCalledWith(
+      'readLocalFile',
+      { fullContent: true, path: '/workspace/a.txt' },
+      { topicId: 'topic-1' },
+    );
+    expect(projectFileService.getLocalFilePreview).not.toHaveBeenCalled();
+  });
+
+  it('folds a saved body into the preview and its stored row', async () => {
+    vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
+      textPreview('before') as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('before')));
+
+    act(() => useLocalFilePreviewStore.getState().applySavedContent(NOTES, 'after'));
+
+    expect(result.current.preview).toEqual(textPreview('after'));
+    await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('after')));
+  });
+});

@@ -80,6 +80,12 @@ export interface UseFetchDocumentResult {
   mutate: () => Promise<unknown>;
 }
 
+/** Result of `useFetchDocumentDetail`; `data` is read from the replica view. */
+export interface UseFetchDocumentDetailResult extends UseFetchDocumentResult {
+  /** The persisted row has been read (or there was none to read). */
+  isHydrated: boolean;
+}
+
 const detailLens = recordLens<DocumentStore, DocumentDetail>('documentDetailMap');
 
 type Setter = StoreSetter<DocumentStore>;
@@ -458,6 +464,61 @@ export class DocumentActionImpl {
       mutate: sync.revalidate,
     };
   };
+
+  /**
+   * Read one document's server row without mounting an editor — the portal
+   * header / body switch, the agent-document breadcrumb, goal deliverables and
+   * the resource preview. It shares the editor's replica entry, so every view of
+   * a document paints from the same persisted projection on a reload and one
+   * network sync confirms them all.
+   *
+   * `isLoading` keeps SWR's meaning (no value and no error yet). Check
+   * `isHydrated` before showing a loading state: until the persisted row has
+   * been read, "no value" may only mean "not read yet".
+   */
+  useFetchDocumentDetail = (documentId: string | undefined): UseFetchDocumentDetailResult => {
+    const document = useDocumentStore((s) =>
+      documentId ? s.documentDetailMap[documentId]?.document : undefined,
+    );
+    const sync = this.#detail.useSync(documentId);
+
+    return {
+      data: document,
+      error: sync.error,
+      isHydrated: sync.isHydrated,
+      isLoading: !!documentId && document === undefined && sync.error == null,
+      isValidating: sync.isValidating,
+      mutate: sync.revalidate,
+    };
+  };
+
+  /**
+   * Fold a confirmed server write (e.g. a highlight-editor save) into the
+   * document's replica entry, so the views reading it — and the next reload —
+   * show the saved revision without a refetch. A read already in flight started
+   * before the write and is not allowed to replace it.
+   */
+  patchDocumentDetail = (documentId: string, patch: Partial<DocumentItem>): void => {
+    const current = this.#get().documentDetailMap[documentId]?.document;
+    if (!current) return;
+    this.internal_adoptDocumentDetail(documentId, { ...current, ...patch });
+  };
+
+  /**
+   * Show `patch` on the document right away while `serverCall` runs. A failed
+   * call rolls back to the confirmed row plus any other write still in flight,
+   * so an older rejected rename never undoes a newer one.
+   */
+  optimisticDocumentDetail = <TResult>(
+    documentId: string,
+    patch: Partial<DocumentItem>,
+    serverCall: () => Promise<TResult>,
+  ): Promise<TResult> =>
+    this.#detail.optimistic(
+      documentId,
+      (detail) => (detail.document ? { document: { ...detail.document, ...patch } } : detail),
+      serverCall,
+    );
 
   /**
    * Warm the replica for a document the user is about to open (hover prefetch),

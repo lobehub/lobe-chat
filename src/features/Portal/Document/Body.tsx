@@ -20,9 +20,6 @@ import Loading from '@/components/Loading/CircleLoading';
 import FileNotFound from '@/features/FileNotFound';
 import { FileDocumentPreview } from '@/features/FileViewer/FileDocumentPreview';
 import WideScreenContainer from '@/features/WideScreenContainer';
-import { useClientDataSWR } from '@/libs/swr';
-import { portalKeys } from '@/libs/swr/keys';
-import { documentService } from '@/services/document';
 import { useDocumentStore } from '@/store/document';
 import { getDocumentRenderMode } from '@/utils/documentRenderMode';
 import {
@@ -233,29 +230,28 @@ const DocumentBody = memo(() => {
   );
   const isSkillMarkdown = contentFormat === 'skillMarkdown';
 
+  const useFetchDocumentDetail = useDocumentStore((s) => s.useFetchDocumentDetail);
+  const patchDocumentDetail = useDocumentStore((s) => s.patchDocumentDetail);
   const {
     data: documentMeta,
     error: documentError,
+    isHydrated: documentHydrated,
     isLoading: documentLoading,
     mutate: mutateDocumentMeta,
-  } = useClientDataSWR(documentId ? portalKeys.documentHeader(documentId) : null, () =>
-    documentService.getDocumentById(documentId!),
-  );
+  } = useFetchDocumentDetail(documentId);
   const renderMode = documentMeta
     ? getDocumentRenderMode(documentMeta)
     : { mode: 'editor' as const };
 
   const handleHighlightSaved = useCallback(
     (saved: string, updatedAt?: string) => {
-      mutateDocumentMeta(
-        (prev) =>
-          prev
-            ? { ...prev, content: saved, ...(updatedAt ? { updatedAt: new Date(updatedAt) } : {}) }
-            : prev,
-        { revalidate: false },
-      );
+      if (!documentId) return;
+      patchDocumentDetail(documentId, {
+        content: saved,
+        ...(updatedAt ? { updatedAt: new Date(updatedAt) } : {}),
+      });
     },
-    [mutateDocumentMeta],
+    [documentId, patchDocumentDetail],
   );
 
   const editorContent = (
@@ -280,9 +276,11 @@ const DocumentBody = memo(() => {
     </>
   );
 
-  if (documentLoading) return <Loading />;
-  // The header is persisted (stale-while-revalidate): a failed background
-  // refresh keeps the cached document on screen instead of replacing it.
+  // The persisted row is still being read: paint nothing rather than a spinner
+  // that the cached document replaces a few frames later.
+  if (documentLoading) return documentHydrated ? <Loading /> : null;
+  // The document is a persisted replica (stale-while-revalidate): a failed
+  // background refresh keeps the cached document on screen instead of replacing it.
   if (documentError && !documentMeta)
     return (
       <AsyncError

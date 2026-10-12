@@ -2,8 +2,6 @@ import { toast } from '@lobehub/ui';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { portalKeys } from '@/libs/swr/keys';
-
 import { useHighlightSave } from './useHighlightSave';
 
 vi.mock('@lobehub/ui', async (importOriginal) => ({
@@ -129,7 +127,6 @@ describe('useHighlightSave', () => {
     await act(() => result.current.handleSave());
 
     expect(mockInvalidateDocumentMutation).toHaveBeenCalledWith({ documentId: 'doc-1' });
-    expect(mockMutate).toHaveBeenCalledWith(portalKeys.documentHeader('doc-1'));
     expect(toast.error).toHaveBeenCalled();
     expect(onSaved).not.toHaveBeenCalled();
     expect(result.current.editingValue).toBe('before');

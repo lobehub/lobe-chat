@@ -6,8 +6,6 @@ import { debounce } from 'es-toolkit/compat';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { mutate } from '@/libs/swr';
-import { portalKeys } from '@/libs/swr/keys';
 import { documentService } from '@/services/document';
 import { invalidateDocumentMutation } from '@/services/document/invalidation';
 
@@ -77,9 +75,9 @@ export const useHighlightSave = ({
         if (expectedUpdatedAtRef.current?.getTime() !== expectedUpdatedAt?.getTime()) return;
         bufferRef.current = undefined;
         setBuffer(undefined);
+        // Refreshes the document's replica entry, which the portal body reads.
         await Promise.allSettled([
           invalidateDocumentMutation({ documentId: documentIdRef.current }),
-          mutate(portalKeys.documentHeader(documentIdRef.current)),
         ]);
         toast.error(tRef.current('document.saveConflict'));
         return;
