@@ -56,6 +56,7 @@ import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { type Store as ConversationStore } from '../../action';
+import { dataSelectors } from '../data/selectors';
 import { MAX_HETERO_AUTO_RETRIES } from './heteroRetryConfig';
 
 const buildRetryInitialContext = (editorData: Record<string, any> | null | undefined) => {
@@ -332,7 +333,10 @@ export const runHeterogeneousFromExistingMessage = async (
   const { operationId: heteroOpId } = chatStore.startOperation({
     context,
     label: 'Heterogeneous Agent Execution',
-    metadata: { heterogeneousType: heterogeneousProvider.type },
+    metadata: {
+      heteroAutoRetryAvailable: !replayTranscript,
+      heterogeneousType: heterogeneousProvider.type,
+    },
     parentOperationId,
     type: 'execHeterogeneousAgent',
   });
@@ -684,12 +688,6 @@ export interface GenerationAction {
    * Regenerate a user message
    */
   regenerateUserMessage: (messageId: string) => Promise<void>;
-
-  /**
-   * Re-invoke a tool message
-   * @deprecated Temporary bridge to ChatStore
-   */
-  reInvokeToolMessage: (messageId: string) => Promise<void>;
 
   /**
    * Resend a thread message
@@ -1160,12 +1158,11 @@ export const generationSlice: StateCreator<
 
   openThreadCreator: (messageId: string) => {
     const chatStore = useChatStore.getState();
-    chatStore.openThreadCreator(messageId);
-  },
-
-  reInvokeToolMessage: async (messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.reInvokeToolMessage(messageId);
+    // Anchor the subtopic on the row's tail. A steered row's id is its host (the
+    // chain's *first* turn) while the user is looking at the chain's last turn —
+    // passing the raw id anchors the fork at the top of the row instead of where
+    // the user is. See `dataSelectors.rowTailId`.
+    chatStore.openThreadCreator(dataSelectors.rowTailId(messageId)(get()));
   },
 
   internal_beginHeteroOverloadWait: (scopeId: string) => {

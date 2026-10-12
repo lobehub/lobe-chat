@@ -2,7 +2,7 @@
 
 import type { MenuProps } from '@lobehub/ui';
 import { DropdownMenu, Icon } from '@lobehub/ui';
-import { ActionIcon, confirmModal, toast } from '@lobehub/ui/base-ui';
+import { ActionIcon, Avatar, confirmModal, toast } from '@lobehub/ui/base-ui';
 import { FolderClosedIcon, MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,7 +70,6 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
       <NavItem
         contextMenuItems={canManage ? menuItems : undefined}
         disabled={deleting}
-        icon={project.avatar || FolderClosedIcon}
         title={project.name}
         actions={
           canManage ? (
@@ -78,6 +77,15 @@ const ProjectItem = memo<ProjectItemProps>(({ project }) => {
               <ActionIcon icon={MoreHorizontalIcon} loading={deleting} size={'small'} />
             </DropdownMenu>
           ) : undefined
+        }
+        // `avatar` is an emoji or image URL, not a component: `Icon` would pass it to
+        // createElement as a tag name and crash the whole page.
+        icon={
+          project.avatar ? (
+            <Avatar avatar={project.avatar} shape={'square'} size={18} />
+          ) : (
+            FolderClosedIcon
+          )
         }
       />
     </WorkspaceLink>

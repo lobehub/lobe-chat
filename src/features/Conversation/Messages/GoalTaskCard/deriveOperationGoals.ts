@@ -6,6 +6,12 @@ export interface OperationGoal {
   /** The `goals` row the tool created — the card's pointer and its link target. */
   goalId: string;
   name: string;
+  /**
+   * What created it: the builtin `createGoal` tool, or a CLI agent's
+   * `lh goal create --conversation` shell call (`/goal` in a heterogeneous
+   * agent conversation).
+   */
+  source: 'command' | 'tool';
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -28,7 +34,7 @@ const deriveBuiltinGoal = (tool: ChatToolPayloadWithResult): OperationGoal[] => 
   const name = nonEmptyString(tool.result.state.name) ?? nonEmptyString(args?.name) ?? goalId;
   const criteriaCount = Array.isArray(args?.criteria) ? args.criteria.length : 0;
 
-  return [{ criteriaCount, goalId, name }];
+  return [{ criteriaCount, goalId, name, source: 'tool' }];
 };
 
 const GOAL_CREATE_COMMAND = /\blh\s+goal\s+create\b/;
@@ -82,6 +88,7 @@ const deriveCliGoal = (tool: ChatToolPayloadWithResult): OperationGoal[] => {
       criteriaCount: command.match(CRITERION_FLAG)?.length ?? 0,
       goalId,
       name: nonEmptyString(goal?.title) ?? titleMatch?.[1] ?? titleMatch?.[2] ?? goalId,
+      source: 'command',
     },
   ];
 };
@@ -91,8 +98,13 @@ const deriveCliGoal = (tool: ChatToolPayloadWithResult): OperationGoal[] => {
  * group — the builtin Goal tool for server-side agents, an `lh goal create`
  * shell call for heterogeneous ones. Like the edited-files aggregate, this is
  * display-only: no Work row is created and nothing enters Work Gallery/history.
+ *
+ * Takes the tools-bearing slice of a block, so callers can pass either one
+ * group's parsed content blocks or whole messages from the conversation.
  */
-export const deriveOperationGoals = (blocks: AssistantContentBlock[] = []): OperationGoal[] => {
+export const deriveOperationGoals = (
+  blocks: { tools?: AssistantContentBlock['tools'] }[] = [],
+): OperationGoal[] => {
   const goals = blocks.flatMap((block) =>
     (block.tools ?? []).flatMap((tool) => {
       const builtin = deriveBuiltinGoal(tool);

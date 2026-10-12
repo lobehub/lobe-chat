@@ -2,6 +2,7 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import * as agentRuntime from '@lobechat/agent-runtime';
 import { resolveLocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import type * as LobeChatConst from '@lobechat/const';
+import { FILE_PREVIEW_CHARS } from '@lobechat/prompts';
 import { type LobeChatPluginApi, type UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { type EnabledAiModel, ModelProvider } from 'model-bank';
@@ -322,6 +323,76 @@ describe('StreamingExecutor actions', () => {
         streamSpy.mockRestore();
       },
     );
+
+    it('restores projected tool payloads before the first client LLM call', async () => {
+      act(() => {
+        useChatStore.setState({ executeClientAgent: realExecAgentRuntime });
+      });
+      const { result } = renderHook(() => useChatStore());
+      const context = { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID };
+      const toolCall = {
+        apiName: 'search',
+        arguments: '{}',
+        id: 'call-1',
+        identifier: 'web',
+        type: 'default',
+      } as const;
+
+      // The store holds a list read while Gateway mode projected tool payloads.
+      seedDbMessages(context, [
+        { content: 'find it', id: 'user-1', role: 'user' } as UIChatMessage,
+        { content: '', id: 'assistant-1', role: 'assistant', tools: [toolCall] } as UIChatMessage,
+        {
+          content: 'view-model summary',
+          id: 'tool-1',
+          payloadOmitted: 'detail',
+          role: 'tool',
+          tool_call_id: 'call-1',
+        } as UIChatMessage,
+        { content: 'and now?', id: TEST_IDS.USER_MESSAGE_ID, role: 'user' } as UIChatMessage,
+      ]);
+      const payloadSpy = vi
+        .spyOn(messageService, 'getToolResultPayloads')
+        .mockResolvedValue({ 'tool-1': { content: 'FULL STORED TOOL BODY' } });
+      const streamSpy = spyOnClientLLMStream();
+
+      // The send path hands over FOLDED display messages: the tool result sits
+      // inside the assistant group and carries no `payloadOmitted` marker.
+      await act(async () => {
+        await result.current.executeClientAgent({
+          context,
+          messages: [
+            { content: 'find it', id: 'user-1', role: 'user' } as UIChatMessage,
+            {
+              children: [
+                {
+                  content: '',
+                  id: 'assistant-1',
+                  tools: [
+                    {
+                      ...toolCall,
+                      result: { content: 'view-model summary', id: 'tool-1' },
+                      result_msg_id: 'tool-1',
+                    },
+                  ],
+                },
+              ],
+              content: '',
+              id: 'assistant-1',
+              role: 'assistantGroup',
+            } as UIChatMessage,
+            { content: 'and now?', id: TEST_IDS.USER_MESSAGE_ID, role: 'user' } as UIChatMessage,
+          ],
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
+          parentMessageType: 'user',
+        });
+      });
+
+      expect(payloadSpy).toHaveBeenCalledWith(['tool-1']);
+      const firstPayload = JSON.stringify(streamSpy.mock.calls[0][0].messages);
+      expect(firstPayload).toContain('FULL STORED TOOL BODY');
+      expect(firstPayload).not.toContain('view-model summary');
+    });
 
     it('writes topics.status=running at run start so off-conversation surfaces see it', async () => {
       act(() => {
@@ -1321,6 +1392,7 @@ describe('StreamingExecutor actions', () => {
         expect.any(Object),
         undefined,
         expect.objectContaining({ executionEnv: 'local' }),
+        { hasOversizedFiles: false },
       );
       const localSystem = state.operationToolSet?.manifestMap['lobe-local-system'];
       const readFile = localSystem?.api.find((api: LobeChatPluginApi) => api.name === 'readFile');
@@ -1814,6 +1886,48 @@ describe('StreamingExecutor actions', () => {
       });
 
       expect(streamSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('internal_createAgentState attachment reading', () => {
+    const createState = (content: string) => {
+      act(() => {
+        useChatStore.setState({ executeClientAgent: realExecAgentRuntime });
+      });
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = {
+        content: TEST_CONTENT.USER_MESSAGE,
+        fileList: [{ content, fileType: 'text/plain', id: 'file-1', name: 'paper.txt', size: 1 }],
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        sessionId: TEST_IDS.SESSION_ID,
+        topicId: TEST_IDS.TOPIC_ID,
+      } as UIChatMessage;
+
+      return result.current.internal_createAgentState({
+        agentId: TEST_IDS.SESSION_ID,
+        messages: [userMessage],
+        parentMessageId: userMessage.id,
+        topicId: TEST_IDS.TOPIC_ID,
+      });
+    };
+
+    // Regression: LOBE-14165. The attachment budget can send any attachment longer than a
+    // preview as one, so the client must offer `readAttachment` to page it, like the server.
+    it('enables readAttachment when an attachment is longer than a preview', () => {
+      const spy = vi.spyOn(toolEngineering, 'createAgentToolsEngine');
+
+      createState('x'.repeat(FILE_PREVIEW_CHARS + 1));
+
+      expect(spy.mock.calls.at(-1)?.[3]).toEqual({ hasOversizedFiles: true });
+    });
+
+    it('does not enable readAttachment for short attachments', () => {
+      const spy = vi.spyOn(toolEngineering, 'createAgentToolsEngine');
+
+      createState('short note');
+
+      expect(spy.mock.calls.at(-1)?.[3]).toEqual({ hasOversizedFiles: false });
     });
   });
 

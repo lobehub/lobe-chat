@@ -1,8 +1,9 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import { Flexbox, Form, Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { ActionIcon, Button, Text } from '@lobehub/ui/base-ui';
+import { Form, useForm } from '@lobehub/ui/base-ui/form';
 import { createStaticStyles } from 'antd-style';
 import { MonitorUpIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -24,11 +25,10 @@ import KeepAwake from './KeepAwake';
 
 const styles = createStaticStyles(({ css }) => ({
   // The device rows carry their own padding and hover fill; a thin, even inset
-  // keeps that fill the same distance from every edge of the card. The Form
-  // zeroes the group body's block padding with !important, hence the override.
+  // keeps that fill the same distance from every edge of the card.
   listGroup: css`
-    .ant-collapse-body {
-      padding: 4px !important;
+    [data-form-group-body] {
+      padding: 4px;
     }
   `,
 }));
@@ -42,6 +42,7 @@ const Page = memo<PageProps>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const [initialTab, setInitialTab] = useState<'cli' | 'desktop'>();
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>();
+  const form = useForm();
   // Shares DeviceManager's SWR entry, so the header actions drive the list it
   // renders — the same wiring the workspace devices page uses.
   const { data, isValidating, mutate } = useDeviceList();
@@ -68,6 +69,7 @@ const Page = memo<PageProps>(({ mobile }) => {
       <Form
         classNames={{ group: styles.listGroup }}
         collapsible={false}
+        form={form}
         itemsType={'group'}
         variant={'filled'}
         items={[

@@ -118,6 +118,7 @@ export const buildServerCallLlmContext = async ({
       enabledToolIds: resolved.enabledToolIds,
       executionTarget,
       features: resolveServerConnectorFeatures(),
+      isSubAgent: state.origin?.lineage?.isSubAgent === true,
       mentionedAgents: (state as any).initialContext?.initialContext?.mentionedAgents,
       messages: messagesForContext,
       shareVisitor: state.principal?.actor?.shareVisitor ?? ctx.agentShareVisitor,
@@ -129,6 +130,7 @@ export const buildServerCallLlmContext = async ({
 
   const contextEngineInput = {
     additionalContexts: llmPayload.additionalContexts,
+    attachmentPreviewFileIds: llmPayload.attachmentPreviewFileIds,
     agentDocuments: facts.agentDocuments,
     // Identity lives on the agent row, not in the prompt text — inject it so
     // the model introduces itself by the user-given name.

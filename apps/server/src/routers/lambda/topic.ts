@@ -12,17 +12,17 @@ import {
 } from '@lobechat/types';
 import { cleanObject } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
-import { inArray } from 'drizzle-orm';
+import { and, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { serverDBEnv } from '@/config/db';
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { ChatGroupModel } from '@/database/models/chatGroup';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
+import { ProjectWorkingDirectoryModel } from '@/database/models/projectWorkingDirectory';
 import { RbacModel } from '@/database/models/rbac';
 import { TopicModel } from '@/database/models/topic';
 import { TopicShareModel } from '@/database/models/topicShare';
@@ -32,11 +32,12 @@ import { HeteroSessionImporterRepo } from '@/database/repositories/heteroSession
 import { TopicImporterRepo } from '@/database/repositories/topicImporter';
 import { chatGroups } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { notTrashed } from '@/database/utils/softDelete';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { FileService } from '@/server/services/file';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
 import { TopicReferenceService } from '@/server/services/topicReference';
+import { TrashService } from '@/server/services/trash';
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { type BatchTaskResult } from '@/types/service';
 
@@ -84,6 +85,7 @@ const topicProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =>
       topicImporterRepo: new TopicImporterRepo(ctx.serverDB, ctx.userId, wsId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
       topicShareModel: new TopicShareModel(ctx.serverDB, ctx.userId, wsId),
+      trashService: new TrashService(ctx.serverDB, ctx.userId, wsId),
     },
   });
 });
@@ -371,7 +373,7 @@ export const topicRouter = router({
         assertWorkspaceRowManageable(ctx, userId, 'topic');
       }
 
-      return ctx.topicModel.batchDelete(input.ids);
+      await ctx.trashService.trashTopics(input.ids);
     }),
 
   batchDeleteByAgentId: topicProcedure
@@ -380,7 +382,7 @@ export const topicRouter = router({
     .mutation(async ({ input, ctx }) => {
       const restrictToCreator = shouldRestrictBulkDeleteToCreator(ctx, input.scope);
 
-      return ctx.topicModel.batchDeleteByAgentId(input.agentId, { restrictToCreator });
+      await ctx.trashService.trashTopicsByAgent(input.agentId, { restrictToCreator });
     }),
 
   batchDeleteByGroupId: topicProcedure
@@ -390,7 +392,7 @@ export const topicRouter = router({
       await assertCanUseConversationTargets(guardCtx(ctx), [{ groupId: input.groupId }]);
       const restrictToCreator = shouldRestrictBulkDeleteToCreator(ctx, input.scope);
 
-      return ctx.topicModel.batchDeleteByGroupId(input.groupId, { restrictToCreator });
+      await ctx.trashService.trashTopicsByGroup(input.groupId, { restrictToCreator });
     }),
 
   batchDeleteBySessionId: topicProcedure
@@ -418,7 +420,7 @@ export const topicRouter = router({
 
       const restrictToCreator = shouldRestrictBulkDeleteToCreator(ctx, input.scope);
 
-      return ctx.topicModel.batchDeleteBySessionId(resolved.sessionId, { restrictToCreator });
+      await ctx.trashService.trashTopicsBySession(resolved.sessionId, { restrictToCreator });
     }),
 
   batchMoveTopics: topicProcedure
@@ -459,6 +461,33 @@ export const topicRouter = router({
       return data.topic.id;
     }),
 
+  /**
+   * Fork a topic from one of its messages: copy the conversation prefix
+   * (first message → `messageId`) into a brand new topic and return its id.
+   *
+   * Shares `cloneTopic`'s guards: a fork writes a new topic and copies content
+   * out of the source, so it needs the same `topic:create` capability and the
+   * same refusal to lift a visitor topic's content into creator scope.
+   */
+  forkTopic: topicProcedure
+    .use(withScopedPermission('topic:create'))
+    .input(
+      z.object({
+        id: z.string(),
+        messageId: z.string(),
+        newTitle: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await assertCanUseTopicTargets(guardCtx(ctx), [input.id]);
+      await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
+      const data = await ctx.topicModel.duplicate(input.id, input.newTitle, {
+        upToMessageId: input.messageId,
+      });
+
+      return data.topic.id;
+    }),
+
   countTopics: topicProcedure
     .input(
       z
@@ -489,6 +518,9 @@ export const topicRouter = router({
           // The topic's pinned model snapshot, persisted to the top-level
           // `topics.model`/`provider` columns (config source of truth).
           model: z.string().optional(),
+          // Bind the new row to a project working directory. Resolved and
+          // pinned below, mirroring `projectWorkingDirectory.startTopic`.
+          projectWorkingDirectoryId: z.string().optional(),
           provider: z.string().optional(),
           title: z.string(),
           trigger: z.string().optional(),
@@ -496,7 +528,7 @@ export const topicRouter = router({
         .extend(basicContextSchema.shape),
     )
     .mutation(async ({ input, ctx }) => {
-      const { agentId, ...rest } = input;
+      const { agentId, projectWorkingDirectoryId, ...rest } = input;
       const resolved = await resolveContextWithAgentId(
         { agentId, groupId: rest.groupId, sessionId: rest.sessionId },
         ctx.serverDB,
@@ -509,10 +541,44 @@ export const topicRouter = router({
       // See batchCreateTopics — reparenting a visitor message would leak it.
       await assertCreatorMessageTargets(guardCtx(ctx), rest.messages ?? []);
 
+      // A topic started from a project group's "+" defers its row to the first
+      // message. Pin the directory here so the row is born inside the project —
+      // list, sidebar group and execution routing — instead of dropping into a
+      // path-only conversation. A directory that can no longer be resolved
+      // (deleted, unlinked from its environment, or another user's) is logged
+      // and skipped: losing the binding must not fail the user's first send.
+      const directory = projectWorkingDirectoryId
+        ? await new ProjectWorkingDirectoryModel(
+            ctx.serverDB,
+            ctx.userId,
+            ctx.workspaceId ?? undefined,
+          )
+            .resolve(projectWorkingDirectoryId)
+            .catch((error) => {
+              console.error(
+                '[topic.createTopic] Failed to resolve the project directory binding:',
+                error,
+              );
+              return undefined;
+            })
+        : undefined;
+
       const data = await ctx.topicModel.create({
         ...rest,
         agentId: resolved.agentId,
         sessionId: resolved.sessionId,
+        ...(directory
+          ? {
+              metadata: {
+                ...rest.metadata,
+                boundDeviceId: directory.deviceId,
+                workingDirectory: directory.path,
+                workingDirectoryConfig: { path: directory.path },
+              },
+              projectId: directory.projectId,
+              projectWorkingDirectoryId: directory.id,
+            }
+          : {}),
       });
 
       return data.id;
@@ -846,7 +912,7 @@ export const topicRouter = router({
             title: chatGroups.title,
           })
           .from(chatGroups)
-          .where(inArray(chatGroups.id, allGroupIds));
+          .where(and(inArray(chatGroups.id, allGroupIds), notTrashed(chatGroups.isDeleted)));
 
         // Query group member avatars (already normalized for the inbox agent)
         const groupMembersMap: Map<string, RecentTopicGroupMember[]> =
@@ -911,9 +977,14 @@ export const topicRouter = router({
   removeAllTopics: topicProcedure
     .use(withScopedPermission('topic:delete'))
     .mutation(async ({ ctx }) => {
-      return ctx.topicModel.deleteAll();
+      await ctx.trashService.trashAllTopics();
     }),
 
+  /**
+   * Move a topic to the recycle bin. With `removeFiles`, the attachments only
+   * this topic references go along as children and are dropped from storage
+   * when the topic is purged (restore brings them back too).
+   */
   removeTopic: topicProcedure
     .use(withScopedPermission('topic:delete'))
     .input(z.object({ id: z.string(), removeFiles: z.boolean().optional() }))
@@ -926,32 +997,10 @@ export const topicRouter = router({
       const topic = await ctx.topicModel.findOwnTopicById(input.id);
       if (topic) assertWorkspaceRowManageable(ctx, topic.userId, 'topic');
 
-      // No creator-visible topic behind this id: run the (no-op) delete for the
-      // unchanged return shape, but never touch any files.
-      if (!input.removeFiles || !topic) return ctx.topicModel.delete(input.id);
+      // No creator-visible topic behind this id: nothing to trash.
+      if (!topic) return;
 
-      // Collect the topic's deletable attachments BEFORE deleting it — the lookup
-      // joins messages, which are cascade-deleted along with the topic. Files
-      // still referenced by another topic or the session are intentionally kept.
-      const fileIds = await ctx.fileModel.findDeletableFilesByTopicId(input.id);
-
-      const result = await ctx.topicModel.delete(input.id);
-
-      if (fileIds.length > 0) {
-        const needToRemove = await ctx.fileModel.deleteMany(
-          fileIds,
-          serverDBEnv.REMOVE_GLOBAL_FILE,
-        );
-        // deleteMany returns only files whose underlying object is no longer
-        // referenced by any other file, so the S3 cleanup is reference-safe.
-        if (needToRemove && needToRemove.length > 0) {
-          const wsId = ctx.workspaceId ?? undefined;
-          const fileService = new FileService(ctx.serverDB, ctx.userId, wsId);
-          await fileService.deleteFiles(needToRemove.map((file) => file.url!));
-        }
-      }
-
-      return result;
+      await ctx.trashService.trashTopics([input.id], { removeFiles: input.removeFiles });
     }),
 
   searchTopics: topicSearchProcedure
@@ -1114,7 +1163,12 @@ export const topicRouter = router({
       // Same visitor guard as `batchMoveTopics`/`cloneTopic` above.
       await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
 
-      return ctx.topicModel.settleRunningOperation(input.id, input.operationId, input.status);
+      // Client-reported end: never clear the marker of a run the server is still
+      // driving (an early / mirrored terminal event would otherwise drop the
+      // supervisor's topic reservation mid group turn).
+      return ctx.topicModel.settleRunningOperation(input.id, input.operationId, input.status, {
+        rejectInFlightOperation: true,
+      });
     }),
 });
 

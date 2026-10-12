@@ -2,11 +2,13 @@ import { getWorkingDirSourcePath } from '@lobechat/types';
 import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 import { EnvironmentModel, normalizeProjectRepository } from '../../models/environment';
+import { EnvironmentInstanceModel } from '../../models/environmentInstance';
 import { ProjectModel } from '../../models/project';
 import {
   normalizeProjectDirectory,
   ProjectWorkingDirectoryModel,
 } from '../../models/projectWorkingDirectory';
+import { hasLiveTaskCallbackReservation } from '../../models/topic';
 import { agents, devices, projectEnvironments, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { buildWorkspaceWhere } from '../../utils/workspace';
@@ -55,6 +57,7 @@ export class ProjectDirectoryRepository {
     return this.db.transaction(async (tx) => {
       const db = tx as LobeChatDatabase;
       const environmentModel = new EnvironmentModel(db, this.userId, this.workspaceId);
+      const instanceModel = new EnvironmentInstanceModel(db, this.userId, this.workspaceId);
       const projectModel = new ProjectModel(db, this.userId, this.workspaceId);
       const directoryModel = new ProjectWorkingDirectoryModel(db, this.userId, this.workspaceId);
       // Serialize bindings of the same device, including bindings from different projects.
@@ -70,12 +73,24 @@ export class ProjectDirectoryRepository {
       const repositoryUrl = input.repositoryUrl
         ? normalizeProjectRepository(input.repositoryUrl)
         : undefined;
-      const existing = await environmentModel.findDeviceInstance(device.id, path);
+      const existing = await instanceModel.findByDeviceAndDirectory(device.id, path);
       let instance = existing;
       let environment;
-      const environmentId = existing?.environmentId ?? input.environmentId;
+      // An environment is the definition; an instance is one materialization of
+      // it. So the same project bound on a second device reuses the definition
+      // the first binding made and adds its own instance, rather than minting a
+      // second environment under the same name — which is both what the
+      // (user, scope, name) unique indexes require and what the two concepts
+      // already meant.
+      const knownId = existing?.environmentId ?? input.environmentId;
+      const named = knownId ? undefined : await environmentModel.findByName(input.name);
+      const environmentId = knownId ?? named?.id;
       if (environmentId) {
         environment = await environmentModel.findEnabledById(environmentId);
+        // The name lookup deliberately sees disabled rows, because the unique
+        // indexes do: a disabled environment of this name still owns the name,
+        // so minting a replacement would only hit the constraint.
+        if (!environment && named) throw new Error('Environment is disabled');
         if (!environment || (input.environmentId && input.environmentId !== environment.id))
           throw new Error('This directory belongs to another environment');
         if (
@@ -92,7 +107,7 @@ export class ProjectDirectoryRepository {
         });
       }
       if (!instance) {
-        instance = await environmentModel.createDeviceInstance({
+        instance = await instanceModel.createForDeviceBinding({
           configurationSnapshot: environment.configuration,
           deviceId: device.id,
           environmentId: environment.id,
@@ -246,6 +261,85 @@ export class ProjectDirectoryRepository {
                 },
               }
             : {}),
+        })
+        .where(eq(topics.id, topicId))
+        .returning();
+      return updated;
+    });
+  }
+  /**
+   * Move a project-directory conversation to its project's directory on another
+   * device. The directory belongs to the project, so switching devices means
+   * switching to that project's directory there — never to an arbitrary path.
+   * The cwd and CLI session only hold on the old machine, so they go with it.
+   */
+  async moveTopic(topicId: string, directoryId: string) {
+    return this.db.transaction(async (tx) => {
+      const db = tx as LobeChatDatabase;
+      const [topic] = await db
+        .select()
+        .from(topics)
+        .where(
+          // Workspace-scoped, not creator-scoped: `topics.userId` only records
+          // who started a shared topic, and any member the router authorized to
+          // use it may move it.
+          and(
+            eq(topics.id, topicId),
+            buildWorkspaceWhere(this.scope(), topics),
+            isNull(topics.deletedAt),
+          ),
+        )
+        .for('update');
+      if (!topic) throw new Error('Topic not found or access denied');
+      if (!topic.projectId || !topic.projectWorkingDirectoryId)
+        throw new Error('Topic is not bound to a project directory');
+      // A start that holds the reservation may already have resolved the old
+      // directory; moving under it would run the turn on the old machine while
+      // the topic is persisted as bound to the new one. The row lock above
+      // serializes with the reservation write.
+      if (
+        topic.status === 'running' ||
+        topic.metadata?.runningOperation ||
+        hasLiveTaskCallbackReservation(topic.metadata)
+      )
+        throw new Error('Wait for the running topic to finish before moving it');
+      // Scoped to the topic's own project: another project's directory is not
+      // a device switch, it is a different conversation context.
+      const directory = await new ProjectWorkingDirectoryModel(
+        db,
+        this.userId,
+        this.workspaceId,
+      ).resolve(directoryId, topic.projectId);
+      if (directory.id === topic.projectWorkingDirectoryId) return topic;
+      if (topic.agentId) {
+        const [agent] = await db
+          .select()
+          .from(agents)
+          .where(and(eq(agents.id, topic.agentId), buildWorkspaceWhere(this.scope(), agents)));
+        if (
+          !agent ||
+          (agent.agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
+            agent.agencyConfig.boundDeviceId !== directory.deviceId)
+        )
+          throw new Error('Agent cannot use this execution target');
+      }
+      const {
+        heteroSessionBindingKey: _bindingKey,
+        heteroSessionBindingKeyByWorkingDirectory: _bindingKeys,
+        heteroSessionId: _sessionId,
+        heteroSessionIdByWorkingDirectory: _sessionIds,
+        ...metadata
+      } = topic.metadata ?? {};
+      const [updated] = await db
+        .update(topics)
+        .set({
+          metadata: {
+            ...metadata,
+            boundDeviceId: directory.deviceId,
+            workingDirectory: directory.path,
+            workingDirectoryConfig: { path: directory.path },
+          },
+          projectWorkingDirectoryId: directory.id,
         })
         .where(eq(topics.id, topicId))
         .returning();

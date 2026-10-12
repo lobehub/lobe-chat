@@ -383,7 +383,11 @@ describe('GatewayHttpClient', () => {
     });
 
     it('describes an unreachable gateway host', async () => {
-      vi.mocked(fetch).mockRejectedValue(new TypeError('fetch failed'));
+      vi.mocked(fetch).mockRejectedValue(
+        Object.assign(new TypeError('fetch failed'), {
+          cause: { code: 'ECONNREFUSED', message: 'connect ECONNREFUSED 10.0.0.1:443' },
+        }),
+      );
 
       const result = await client.executeToolCall(
         { userId: 'user-1' },
@@ -393,6 +397,24 @@ describe('GatewayHttpClient', () => {
       expect(result.success).toBe(false);
       expect(result.content).toContain('Could not reach the device gateway');
       expect(result.error).toContain('DEVICE_GATEWAY_UNREACHABLE');
+    });
+
+    it('does not tell the model a call never ran when the connection dropped after sending', async () => {
+      vi.mocked(fetch).mockRejectedValue(
+        Object.assign(new TypeError('fetch failed'), {
+          cause: { code: 'UND_ERR_SOCKET', message: 'other side closed' },
+        }),
+      );
+
+      const result = await client.executeToolCall(
+        { userId: 'user-1' },
+        { apiName: 'writeFile', arguments: '{}', identifier: 'test' },
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).not.toContain('never ran');
+      expect(result.content).toContain('unclear whether the device ran it');
+      expect(result.error).toContain('DEVICE_GATEWAY_ERROR');
     });
 
     it('should pass optional deviceId and timeout', async () => {
@@ -408,7 +430,7 @@ describe('GatewayHttpClient', () => {
         { apiName: 'readFile', arguments: '{}', identifier: 'test' },
       );
 
-      expect(timeoutSpy).toHaveBeenCalledWith(35_000);
+      expect(timeoutSpy).toHaveBeenCalledWith(65_000);
       expect(fetch).toHaveBeenCalledWith(
         'https://gateway.test.com/api/device/tool-call',
         expect.objectContaining({
@@ -420,6 +442,40 @@ describe('GatewayHttpClient', () => {
       const init = vi.mocked(fetch).mock.calls[0][1];
       const body = JSON.parse((init as RequestInit).body as string);
       expect(body.toolCall.type).toBe('tool');
+    });
+
+    it("waits out the gateway's reconnect window so an offline device reads as offline", async () => {
+      // The gateway holds an undelivered call for `timeout + 45s` before it
+      // answers 503 DEVICE_OFFLINE. Aborting earlier turned every offline
+      // device into "timed out, the work may still be running".
+      const GATEWAY_RECOVERY_WINDOW_MS = 45_000;
+      mockFetch({
+        json: vi.fn().mockResolvedValue({ content: 'ok', success: true }),
+        ok: true,
+      });
+      const timeoutSpy = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(AbortSignal.abort());
+
+      await client.executeToolCall(
+        { deviceId: 'device-1', timeout: 10_000, userId: 'user-1' },
+        { apiName: 'runCommand', arguments: '{}', identifier: 'test' },
+      );
+
+      expect(timeoutSpy.mock.calls[0][0]).toBeGreaterThan(10_000 + GATEWAY_RECOVERY_WINDOW_MS);
+    });
+
+    it('never pads a call past the agent function window', async () => {
+      mockFetch({
+        json: vi.fn().mockResolvedValue({ content: 'ok', success: true }),
+        ok: true,
+      });
+      const timeoutSpy = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(AbortSignal.abort());
+
+      await client.executeToolCall(
+        { deviceId: 'device-1', timeout: 760_000, userId: 'user-1' },
+        { apiName: 'runCommand', arguments: '{}', identifier: 'test' },
+      );
+
+      expect(timeoutSpy).toHaveBeenCalledWith(800_000);
     });
 
     it('should pass optional operationId', async () => {
@@ -451,7 +507,7 @@ describe('GatewayHttpClient', () => {
         { apiName: 'readFile', arguments: '{}', identifier: 'test' },
       );
 
-      expect(timeoutSpy).toHaveBeenCalledWith(60_000);
+      expect(timeoutSpy).toHaveBeenCalledWith(90_000);
       expect(fetch).toHaveBeenCalledWith(
         'https://gateway.test.com/api/device/tool-call',
         expect.objectContaining({ signal }),
@@ -739,6 +795,86 @@ describe('GatewayHttpClient', () => {
     });
   });
 
+  describe('clientKinds', () => {
+    const bodyOf = (call = 0) =>
+      JSON.parse(vi.mocked(fetch).mock.calls[call][1]!.body as string) as Record<string, unknown>;
+
+    const withResolver = () => {
+      const resolveClientKinds = vi.fn((target: { kind: string; method?: string }) =>
+        target.kind === 'rpc' && target.method === 'listSkills' ? [] : (['desktop'] as const),
+      );
+      const kindsClient = new GatewayHttpClient({
+        gatewayUrl: 'https://gateway.test.com',
+        resolveClientKinds: resolveClientKinds as never,
+        serviceToken: 'test-token',
+      });
+      return { kindsClient, resolveClientKinds };
+    };
+
+    it('sends the resolved clientKinds with a tool call, tagged by identifier and type', async () => {
+      const { kindsClient, resolveClientKinds } = withResolver();
+      mockFetch({ json: vi.fn().mockResolvedValue({ content: 'ok', success: true }), ok: true });
+
+      await kindsClient.executeToolCall(
+        { deviceId: 'device-1', userId: 'user-1' },
+        { apiName: 'runCommand', arguments: '{}', identifier: 'lobe-computer-use' },
+      );
+
+      expect(resolveClientKinds).toHaveBeenCalledWith({
+        identifier: 'lobe-computer-use',
+        kind: 'tool',
+        type: 'tool',
+      });
+      expect(bodyOf()).toMatchObject({ clientKinds: ['desktop'] });
+    });
+
+    it('resolves MCP calls, the message API and RPC by their own target', async () => {
+      const { kindsClient, resolveClientKinds } = withResolver();
+      mockFetch({ json: vi.fn().mockResolvedValue({ success: true }), ok: true });
+
+      await kindsClient.executeMcpCall({
+        apiName: 'search',
+        arguments: '{}',
+        identifier: 'mcp-server',
+        params: {} as never,
+        userId: 'user-1',
+      });
+      await kindsClient.executeMessageApi(
+        { userId: 'user-1' },
+        { apiName: 'sendMessage', payload: {}, platform: 'imessage' },
+      );
+      await kindsClient.invokeRpc({ userId: 'user-1' }, { method: 'trashLocalFiles' });
+
+      expect(resolveClientKinds.mock.calls.map(([target]) => target)).toEqual([
+        { identifier: 'mcp-server', kind: 'tool', type: 'mcp' },
+        { kind: 'messageApi', platform: 'imessage' },
+        { kind: 'rpc', method: 'trashLocalFiles' },
+      ]);
+      for (const call of [0, 1, 2]) expect(bodyOf(call).clientKinds).toEqual(['desktop']);
+    });
+
+    it('omits clientKinds when any client can serve the request', async () => {
+      const { kindsClient } = withResolver();
+      mockFetch({ json: vi.fn().mockResolvedValue({ success: true }), ok: true });
+
+      await kindsClient.invokeRpc({ userId: 'user-1' }, { method: 'listSkills' });
+      await client.invokeRpc({ userId: 'user-1' }, { method: 'trashLocalFiles' });
+
+      expect(bodyOf(0)).not.toHaveProperty('clientKinds');
+      expect(bodyOf(1)).not.toHaveProperty('clientKinds');
+    });
+
+    it('passes clientKinds given for a system-info read', async () => {
+      mockFetch({ json: vi.fn().mockResolvedValue({ success: true, systemInfo: {} }), ok: true });
+
+      await client.getDeviceSystemInfo('user-1', 'device-1', undefined, {
+        clientKinds: ['desktop'],
+      });
+
+      expect(bodyOf()).toMatchObject({ clientKinds: ['desktop'], deviceId: 'device-1' });
+    });
+  });
+
   describe('getDeviceSystemInfo', () => {
     it('should return system info on success', async () => {
       const systemInfo = {
@@ -769,6 +905,17 @@ describe('GatewayHttpClient', () => {
       const result = await client.getDeviceSystemInfo('user-1', 'device-1');
 
       expect(result).toEqual({ success: false });
+    });
+
+    it('keeps the gateway reason on a non-ok response', async () => {
+      mockFetch({
+        json: vi.fn().mockResolvedValue({ error: 'TIMEOUT', success: false }),
+        ok: false,
+      });
+
+      const result = await client.getDeviceSystemInfo('user-1', 'device-1');
+
+      expect(result).toEqual({ error: 'TIMEOUT', success: false });
     });
 
     it('bounds the read with a timeout', async () => {

@@ -34,6 +34,7 @@ const mockIsGatewayModeEnabled = vi.fn(() => false);
 const mockExecuteGatewayAgent = vi.fn();
 const mockUpdateTopicMetadata = vi.fn();
 const mockUpdateTopicStatus = vi.fn();
+const mockOpenThreadCreator = vi.fn();
 const mockSourceTopic = {
   status: 'scheduled',
   metadata: { scheduledRun: { kind: 'resume_after_rate_limit' } },
@@ -69,6 +70,7 @@ vi.mock('@/store/chat', () => ({
       isGatewayModeEnabled: mockIsGatewayModeEnabled,
       executeGatewayAgent: mockExecuteGatewayAgent,
       internal_dispatchTopic: vi.fn(),
+      openThreadCreator: mockOpenThreadCreator,
       updateTopicMetadata: mockUpdateTopicMetadata,
       updateTopicStatus: mockUpdateTopicStatus,
     })),
@@ -84,6 +86,32 @@ describe('Generation Actions', () => {
 
   afterEach(() => {
     vi.clearAllTimers();
+  });
+
+  describe('openThreadCreator', () => {
+    it('anchors a steered row on its tail instead of the row/host id', () => {
+      const store = createStore({
+        context: { agentId: 'session-1', threadId: null, topicId: 'topic-1' },
+      });
+
+      // Steered row: host `g1` + steer message `s1` + continuation `g2`. The row
+      // renders as one block whose id is `g1` (the chain head), so passing the raw
+      // id anchored the fork at the top of the row instead of where the user is.
+      store.setState({
+        displayMessages: [
+          { content: '', createdAt: 0, id: 'u1', role: 'user' },
+          { content: '', createdAt: 0, id: 'g1', role: 'assistantGroup' },
+          { content: '', createdAt: 0, id: 's1', metadata: { steer: true }, role: 'user' },
+          { content: '', createdAt: 0, id: 'g2', role: 'assistantGroup' },
+        ] as any,
+      });
+
+      act(() => {
+        store.getState().openThreadCreator('g1');
+      });
+
+      expect(mockOpenThreadCreator).toHaveBeenCalledWith('g2');
+    });
   });
 
   describe('cancelHeteroContinuation', () => {
@@ -1725,13 +1753,14 @@ describe('Generation Actions', () => {
   // upcoming lifecycle refactor cannot silently change them. They assert what
   // the code does NOW — including behavior that looks buggy (called out inline).
   // ===========================================================================
-  describe('regenerate hetero branch characterization (lifecycle refactor regression net)', () => {
+  /** @example Both local CLI providers preserve attachments and topic configuration on retry. */
+  describe.each(['claude-code', 'codex'] as const)('regenerate %s branch', (providerType) => {
     // The hetero regenerate path lives behind `runtimeType === 'hetero'`. We
     // force that decision (it normally requires desktop + a local CLI provider)
     // by stubbing `selectRuntimeType`, and supply a `heterogeneousProvider` via
     // the agent config selector so the `runtimeType === 'hetero' && provider`
     // guard passes.
-    const heterogeneousProvider = { type: 'claude-code' } as any;
+    const heterogeneousProvider = { type: providerType };
 
     const setupHeteroChatStore = async (overrides: Record<string, any> = {}) => {
       const mockRefreshMessages = vi.fn().mockResolvedValue(undefined);
@@ -1823,7 +1852,7 @@ describe('Generation Actions', () => {
         expect.objectContaining({
           parentId: 'msg-1',
           role: 'assistant',
-          provider: 'claude-code',
+          provider: providerType,
         }),
       );
 
@@ -1849,10 +1878,11 @@ describe('Generation Actions', () => {
     });
 
     it('regenerates with the topic-pinned heterogeneous model', async () => {
+      const pinnedModel = providerType === 'codex' ? 'gpt-5.4' : 'opus';
       await setupHeteroChatStore({
         topicDataMap: {
           test: {
-            items: [{ id: 'topic-1', model: 'opus', provider: 'claude-code' }],
+            items: [{ id: 'topic-1', model: pinnedModel, provider: providerType }],
           },
         },
       });
@@ -1873,7 +1903,10 @@ describe('Generation Actions', () => {
       expect(executeHeterogeneousAgentSpy).toHaveBeenCalledWith(
         expect.any(Function),
         expect.objectContaining({
-          heterogeneousProvider: expect.objectContaining({ model: 'opus', type: 'claude-code' }),
+          heterogeneousProvider: expect.objectContaining({
+            model: pinnedModel,
+            type: providerType,
+          }),
         }),
       );
     });

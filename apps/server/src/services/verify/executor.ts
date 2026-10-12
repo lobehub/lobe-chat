@@ -29,7 +29,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 
-import { coverageGaps, readRequiredEvidence } from './evidenceCoverage';
+import { runEvidenceGaps } from './evidenceCoverage';
 import { planEvidenceVerification } from './evidencePlanner';
 import { resolveModelReadableFrameUrl } from './modelFrames';
 import { planItemToPendingResult } from './resultSnapshot';
@@ -266,13 +266,7 @@ export class VerifyExecutorService {
   ): Promise<Set<string>> {
     const gapIds = new Set<string>();
     for (const item of items) {
-      // Deliverable/task-artifact evidence is resolved by the verifier agent
-      // from the operation's associated documents/files. Only run evidence is
-      // expected to have been explicitly captured into verify_evidence rows.
-      const required = readRequiredEvidence(item.verifierConfig)?.filter(
-        (spec) => !spec.scope || spec.scope === 'run_evidence',
-      );
-      const gaps = coverageGaps(required, evidenceByItem.get(item.id) ?? []);
+      const gaps = runEvidenceGaps(item.verifierConfig, evidenceByItem.get(item.id) ?? []);
       if (gaps.length === 0) continue;
 
       gapIds.add(item.id);
@@ -281,7 +275,11 @@ export class VerifyExecutorService {
         completedAt: new Date(),
         confidence: 0,
         status: 'failed',
-        suggestion: `Capture and upload the missing evidence (${missing}) via \`lh verify upload-evidence\`.`,
+        // The repair that acts on this suggestion runs as a new operation with a
+        // round of its own, so the command targets the caller's operation, not
+        // this run: naming this (settled) run sent every repair's evidence one
+        // round behind the round its gate checks.
+        suggestion: `Capture and upload the missing evidence (${missing}) to your current run via \`lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item ${item.id} --type ${gaps.length === 1 ? gaps[0] : `<${gaps.join('|')}>`} --file <path>\`.`,
         toulmin: { limitation: `Required evidence not provided: ${missing}.` },
         verdict: 'uncertain',
       });

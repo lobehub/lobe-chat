@@ -1,6 +1,7 @@
 export {
   DOCUMENT_TREE_ICON_CSS,
   DOCUMENT_TREE_LAYOUT,
+  DOCUMENT_TREE_PARENT_DOCUMENT_GLYPH_CSS,
   DOCUMENT_TREE_ROW_CSS,
 } from './documentTreeStyle';
 export {
@@ -21,4 +22,5 @@ export type {
   ExplorerTreeProps,
   ExplorerTreeRowDecorationCtx,
 } from './types';
+export { isItemToggleEventPath } from './view/eventPath';
 export { default as ExplorerTree } from './view/ExplorerTree';

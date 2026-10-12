@@ -20,6 +20,7 @@ import type {
 import { TRPCError } from '@trpc/server';
 
 import { AgentModel } from '@/database/models/agent';
+import { GoalGraphModel } from '@/database/models/goalGraph';
 import { ProjectModel } from '@/database/models/project';
 import { RbacModel } from '@/database/models/rbac';
 import {
@@ -82,7 +83,6 @@ export interface CreateTaskInput {
   description?: string;
   editorData?: unknown;
   fileIds?: string[];
-  identifierPrefix?: string;
   instruction: string;
   name?: string;
   parentTaskId?: string;
@@ -100,6 +100,8 @@ export interface CreateTaskInput {
 export interface UpdateStatusResult {
   allSubtasksDone?: boolean;
   checkpointTriggered?: boolean;
+  /** Completion was requested by the task's own run and lands when it ends. */
+  completionDeferred?: boolean;
   parentTaskId?: string | null;
   paused: string[];
   task: TaskItem;
@@ -173,7 +175,6 @@ export class TaskService {
     if (createData.projectId) {
       const project = await this.projectModel.findManageableById(createData.projectId);
       if (!project) throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
-      createData.identifierPrefix ??= project.identifier;
     }
 
     // Pull the model/provider snapshot and the agent's visibility in a single
@@ -490,6 +491,13 @@ export class TaskService {
     input: {
       error?: string;
       id: string;
+      /**
+       * The caller's own run, when an agent changes the task it is executing.
+       * Completing that task is a delivery request: it is recorded and
+       * finalized by onTopicComplete once the run ends, instead of
+       * interrupting the run mid-tool-call.
+       */
+      operationId?: string;
       status: TaskStatus;
     },
     /**
@@ -499,7 +507,7 @@ export class TaskService {
      */
     actor?: { agentId?: string | null; userId?: string | null },
   ): Promise<UpdateStatusResult> {
-    const { id, status, error: errorMsg } = input;
+    const { id, operationId, status, error: errorMsg } = input;
 
     if (errorMsg && status !== 'failed') {
       throw new TRPCError({
@@ -512,6 +520,18 @@ export class TaskService {
 
     if (resolved.status === 'running' && status !== 'running') {
       const topics = await this.taskTopicModel.findByTaskId(resolved.id);
+
+      if (
+        status === 'completed' &&
+        operationId &&
+        topics.some((t) => t.status === 'running' && t.operationId === operationId)
+      ) {
+        await this.taskModel.updateContext(resolved.id, {
+          completion: { requestedByOperationId: operationId },
+        });
+        return { completionDeferred: true, paused: [], task: resolved, unlocked: [] };
+      }
+
       const aiAgentService = new AiAgentService(this.db, this.userId, {
         workspaceId: this.workspaceId,
       });
@@ -936,9 +956,10 @@ export class TaskService {
     taskId: string,
     data: Parameters<TaskModel['update']>[1],
     actor: { agentId?: string | null; userId?: string | null } = {},
+    options: Parameters<TaskModel['updateWithLog']>[3] = {},
   ): Promise<TaskItem | null> {
     return this.withAssigneeUserLock(data.assigneeUserId, (db) =>
-      new TaskModel(db, this.userId, this.workspaceId).updateWithLog(taskId, data, actor),
+      new TaskModel(db, this.userId, this.workspaceId).updateWithLog(taskId, data, actor, options),
     );
   }
 
@@ -981,6 +1002,7 @@ export class TaskService {
       activityLogs,
       workspace,
       acceptance,
+      goal,
     ] = await Promise.all([
       this.taskModel.findAllDescendants(task.id),
       this.taskModel.getDependencies(task.id),
@@ -989,6 +1011,10 @@ export class TaskService {
       this.taskModel.getActivities(task.id, TASK_DETAIL_ACTIVITY_LIMIT).catch(() => []),
       this.taskModel.getTreePinnedDocuments(task.id).catch(() => emptyWorkspace),
       resolveTaskAcceptance(this.db, this.userId, task.id, this.workspaceId).catch(() => undefined),
+      // The goal this task belongs to, so the page can link back to it
+      new GoalGraphModel(this.db, this.userId, this.workspaceId)
+        .findGoalByTaskId(task.id)
+        .catch(() => undefined),
     ]);
 
     // What the reader is shown, not what was written: a burst of edits to one
@@ -1377,6 +1403,7 @@ export class TaskService {
       description: task.description,
       editorData: task.editorData ?? undefined,
       error: task.error,
+      goal: goal ?? null,
       files: taskFiles.length > 0 ? taskFiles : undefined,
       heartbeat:
         task.heartbeatInterval || task.heartbeatTimeout || task.lastHeartbeatAt

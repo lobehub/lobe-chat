@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   publishFileToWorkspace: vi.fn(async (_id: string) => undefined),
   setFileVisibility: vi.fn(async (_id: string, _visibility: string) => undefined),
   refreshFileList: vi.fn(async () => undefined),
+  removeSearchHits: vi.fn(),
   revalidateTree: vi.fn(async () => undefined),
   useSendToMessengerMenuItem: vi.fn((_params: SendToMessengerParams) => undefined),
 }));
@@ -39,6 +40,9 @@ vi.mock('@/hooks/useAppOrigin', () => ({ useAppOrigin: () => 'https://app.exampl
 vi.mock('@/hooks/usePermission', () => ({ usePermission: () => ({ allowed: true }) }));
 vi.mock('@/features/ResourceManager/components/KnowledgeBaseListProvider', () => ({
   useKnowledgeBaseListContext: () => [],
+}));
+vi.mock('@/features/ResourceManager/store', () => ({
+  useResourceManagerStore: { getState: () => ({ removeSearchHits: mocks.removeSearchHits }) },
 }));
 vi.mock('@/store/user', () => ({ useUserStore: () => 'user-1' }));
 vi.mock('@/store/user/selectors', () => ({ userProfileSelectors: { userId: vi.fn() } }));
@@ -328,6 +332,32 @@ describe('useFileItemDropdown — workspace resource permissions', () => {
     await waitFor(() =>
       expect(mocks.dropTreeNodes).toHaveBeenCalledWith(['resource-id'], 'tree-parent-id'),
     );
+  });
+
+  it('drops the deleted row from the cached search results', async () => {
+    // Regression: deleting a hit from the search overlay updated the file store
+    // and the sidebar tree only, so the persisted search replica kept the hit
+    // and repainted it on the next revisit or reload.
+    const { result } = renderHook(() => useFileItemDropdown(baseParams as any));
+    const deleteItem = result.current.menuItems().find((item) => item?.key === 'delete') as any;
+    await deleteItem.onClick({ domEvent: { stopPropagation: vi.fn() } });
+
+    mocks.confirmModal.mock.calls.at(-1)![0].onOk();
+
+    await waitFor(() => expect(mocks.removeSearchHits).toHaveBeenCalledWith(['resource-id']));
+  });
+
+  it('keeps the cached search results when the delete fails', async () => {
+    mocks.deleteResource.mockRejectedValueOnce(new Error('boom'));
+    const { result } = renderHook(() => useFileItemDropdown(baseParams as any));
+    const deleteItem = result.current.menuItems().find((item) => item?.key === 'delete') as any;
+    await deleteItem.onClick({ domEvent: { stopPropagation: vi.fn() } });
+
+    mocks.confirmModal.mock.calls.at(-1)![0].onOk();
+
+    await waitFor(() => expect(mocks.deleteResource).toHaveBeenCalled());
+    await Promise.resolve();
+    expect(mocks.removeSearchHits).not.toHaveBeenCalled();
   });
 
   it("falls back to the explorer's folder for a row the tree does not own", async () => {

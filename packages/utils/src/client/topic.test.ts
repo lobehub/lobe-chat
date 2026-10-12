@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   getTopicWorkingDirectoryEffectivePath,
   getTopicWorkingDirectorySourcePath,
+  groupTopicsByAgent,
   groupTopicsByProject,
   groupTopicsByStatus,
   groupTopicsByTime,
@@ -309,6 +310,142 @@ describe('working directory topic helpers', () => {
     });
   });
 
+  /** @example Identical basenames expose only the distinguishing suffix, retaining membership. */
+  it('disambiguates duplicate project names without changing group identity or topic order', () => {
+    // ROOT CAUSE:
+    //
+    // groupTopicsByProject used only the final path segment for each title.
+    // Separate IDs therefore rendered as the same "lobehub" in GroupedAccordion.
+    // Expanding colliding names to a unique path suffix fixes the visible labels
+    // while preserving the source-path IDs and topic sorting.
+    const gitPath = '/Users/me/Git/lobehub/lobehub';
+    const workPath = '/Users/me/work/lobehub/lobehub';
+    const topics = [
+      createTopic('git-old', { workingDirectory: gitPath }, 1),
+      createTopic('work', { workingDirectory: workPath }, 3),
+      createTopic('git-new', { workingDirectory: gitPath }, 4),
+      createTopic('unique', { workingDirectory: '/Users/me/private/other' }, 2),
+      createTopic('none', undefined, 5),
+    ];
+
+    const result = groupTopicsByProject(topics, 'updatedAt');
+
+    /** @example The user's two checkouts keep their IDs, sorted children, and private ancestors hidden. */
+    expect(result).toEqual([
+      { children: [topics[2], topics[0]], id: `project:${gitPath}`, title: 'Git/lobehub/lobehub' },
+      { children: [topics[1]], id: `project:${workPath}`, title: 'work/lobehub/lobehub' },
+      { children: [topics[3]], id: 'project:/Users/me/private/other', title: 'other' },
+      { children: [topics[4]], id: 'no-project', title: undefined },
+    ]);
+    /** @example Reversing input does not change the labels or time-sorted groups. */
+    expect(groupTopicsByProject([...topics].reverse(), 'updatedAt')).toEqual(result);
+  });
+
+  /** @example A manager with 1,000 same-name projects retains unique labels and exact topic ownership. */
+  it('disambiguates a large project list without changing membership', () => {
+    // ROOT CAUSE:
+    //
+    // Each label previously split every other project's path, making the growing
+    // manager list quadratic. Shared suffix counts remove that repeated work;
+    // this case protects the resulting labels and membership at the reported scale.
+    const topics = Array.from({ length: 1000 }, (_, index) =>
+      createTopic(String(index), { workingDirectory: `/private/parent-${index}/repo` }, index),
+    );
+    const result = groupTopicsByProject(topics, 'updatedAt');
+
+    /** @example All 1,000 independently owned projects remain visible and distinguishable. */
+    expect(new Set(result.map(({ title }) => title)).size).toBe(1000);
+    /** @example Each label reveals only its distinguishing parent and keeps the original ID and child. */
+    expect(result).toEqual(
+      [...topics].reverse().map((topic) => ({
+        children: [topic],
+        id: `project:/private/parent-${topic.id}/repo`,
+        title: `parent-${topic.id}/repo`,
+      })),
+    );
+  });
+
+  /** @example A lone checkout keeps its basename even after a collision disappears. */
+  it('keeps a unique project name compact', () => {
+    const topics = [createTopic('single', { workingDirectory: '/Users/me/Git/lobehub/lobehub' })];
+
+    /** @example No parent path is exposed without another same-name project. */
+    expect(groupTopicsByProject(topics, 'createdAt')).toEqual([
+      { children: topics, id: 'project:/Users/me/Git/lobehub/lobehub', title: 'lobehub' },
+    ]);
+  });
+
+  /** @example Windows spelling remains part of identity; trailing separators retain existing normalization. */
+  it('retains case-sensitive path identities and normalizes trailing separators', () => {
+    const topics = [
+      createTopic('upper', { workingDirectory: 'C:/Work/repo/' }),
+      createTopic('lower', { workingDirectory: 'c:/work/repo' }),
+      createTopic('same', { workingDirectory: ' C:/Work/repo// ' }),
+    ];
+
+    /** @example Display suffixes distinguish parents while existing matching paths stay together. */
+    expect(groupTopicsByProject(topics, 'createdAt')).toEqual([
+      { children: [topics[0], topics[2]], id: 'project:C:/Work/repo', title: 'Work/repo' },
+      { children: [topics[1]], id: 'project:c:/work/repo', title: 'work/repo' },
+    ]);
+  });
+
+  /** @example Drive letters and UNC server names remain available when nearer ancestors collide. */
+  it('disambiguates Windows drives and remote shares', () => {
+    const paths = [
+      String.raw`C:\work\repo`,
+      'D:/work/repo',
+      String.raw`\\server-a\share\repo`,
+      String.raw`\\server-b\share\repo`,
+    ];
+    const topics = paths.map((path, index) =>
+      createTopic(String(index), { workingDirectory: path }),
+    );
+
+    /** @example Separators are consistent for display without altering path identity. */
+    expect(
+      groupTopicsByProject(topics, 'createdAt').map(({ id, title }) => ({ id, title })),
+    ).toEqual([
+      { id: `project:${paths[0]}`, title: 'C:/work/repo' },
+      { id: `project:${paths[1]}`, title: 'D:/work/repo' },
+      { id: `project:${paths[2]}`, title: 'server-a/share/repo' },
+      { id: `project:${paths[3]}`, title: 'server-b/share/repo' },
+    ]);
+  });
+
+  /** @example A path that is itself another path's suffix still has a distinct visible label. */
+  it('preserves raw path distinctions when no unique segment suffix exists', () => {
+    const paths = ['/repo', '/home/repo', 'home/repo', String.raw`home\repo`];
+    const topics = paths.map((path, index) =>
+      createTopic(String(index), { workingDirectory: path }),
+    );
+
+    /** @example The absolute root and separator spelling distinguish otherwise identical suffixes. */
+    expect(groupTopicsByProject(topics, 'createdAt').map((group) => group.title)).toEqual(paths);
+  });
+
+  /** @example Worktree locations must not determine the source project's display suffix. */
+  it('uses source repository paths when disambiguating worktree projects', () => {
+    const topics = [
+      createTopic('worktree', {
+        workingDirectory: '/tmp/checkout',
+        workingDirectoryConfig: {
+          git: { activeWorktree: '/tmp/checkout', branch: 'fix', isWorktree: true },
+          path: '/Git/repo',
+          repoType: 'git',
+        },
+      }),
+      createTopic('source', { workingDirectory: '/Git/repo' }),
+      createTopic('other', { workingDirectory: '/work/repo' }),
+    ];
+
+    /** @example The worktree stays with its source; only the two project labels expand. */
+    expect(groupTopicsByProject(topics, 'createdAt')).toEqual([
+      { children: [topics[0], topics[1]], id: 'project:/Git/repo', title: 'Git/repo' },
+      { children: [topics[2]], id: 'project:/work/repo', title: 'work/repo' },
+    ]);
+  });
+
   it('groups worktree topics under the source project', () => {
     const topics = [
       createTopic(
@@ -436,5 +573,263 @@ describe('groupTopicsByStatus', () => {
     const result = groupTopicsByStatus(topics, 'updatedAt', new Set(['waiting']));
 
     expect(result.map((g) => g.id)).toEqual(['pending']);
+  });
+});
+
+it('keeps project directory bindings and device identities separate', () => {
+  const base = { createdAt: 1, updatedAt: 1, title: 'Work' };
+  const topics: ChatTopic[] = [
+    {
+      ...base,
+      id: 'a',
+      projectWorkingDirectoryId: 'directory-a',
+      metadata: { workingDirectory: '/repo' },
+    },
+    {
+      ...base,
+      id: 'b',
+      projectWorkingDirectoryId: 'directory-b',
+      metadata: { workingDirectory: '/repo' },
+    },
+    { ...base, id: 'c', metadata: { workingDirectory: '/repo', boundDeviceId: 'device-a' } },
+    { ...base, id: 'd', metadata: { workingDirectory: '/repo', boundDeviceId: 'device-b' } },
+  ];
+  expect(groupTopicsByProject(topics, 'updatedAt')).toHaveLength(4);
+});
+
+describe('groupTopicsByProject project merging', () => {
+  const base = { createdAt: 0, title: 'Work', updatedAt: 0 };
+
+  /** @example Two directories of one project must collapse into a single sidebar group. */
+  it('merges directories of the same project into one project-id group', () => {
+    // ROOT CAUSE:
+    //
+    // Directory-bound topics were grouped per `projectWorkingDirectoryId`, so
+    // two directories bound to the same project rendered as two identically
+    // named groups in the sidebar's "by project" mode. Grouping by the
+    // topic's `projectId` first merges them into a single group.
+    const topics: ChatTopic[] = [
+      {
+        ...base,
+        createdAt: 3,
+        updatedAt: 3,
+        id: 'recent',
+        projectId: 'project-1',
+        projectWorkingDirectoryId: 'directory-a',
+        metadata: { workingDirectory: '/work/lobehub' },
+      },
+      {
+        ...base,
+        createdAt: 1,
+        updatedAt: 1,
+        id: 'older',
+        projectId: 'project-1',
+        projectWorkingDirectoryId: 'directory-b',
+        metadata: { workingDirectory: '/home/lobehub' },
+      },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt')).toEqual([
+      {
+        children: [topics[0], topics[1]],
+        id: 'project-id:project-1',
+        // Same-basename directories collide, so the label expands to the
+        // distinguishing parent of the most recently active directory.
+        title: 'work/lobehub',
+      },
+    ]);
+  });
+
+  /** @example A project conversation without a working directory still belongs to its project group. */
+  it('merges pathless project topics into their project group', () => {
+    const topics: ChatTopic[] = [
+      {
+        ...base,
+        createdAt: 2,
+        updatedAt: 2,
+        id: 'with-directory',
+        projectId: 'project-1',
+        projectWorkingDirectoryId: 'directory-a',
+        metadata: { workingDirectory: '/work/lobehub' },
+      },
+      { ...base, createdAt: 1, updatedAt: 1, id: 'conversation-only', projectId: 'project-1' },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt')).toEqual([
+      {
+        children: [topics[0], topics[1]],
+        id: 'project-id:project-1',
+        title: 'lobehub',
+      },
+    ]);
+  });
+
+  /** @example Topics without a project binding keep their per-directory groups. */
+  it('keeps directory grouping when topics have no project binding', () => {
+    const topics: ChatTopic[] = [
+      {
+        ...base,
+        id: 'a',
+        projectWorkingDirectoryId: 'directory-a',
+        metadata: { workingDirectory: '/repo-a' },
+      },
+      {
+        ...base,
+        id: 'b',
+        projectWorkingDirectoryId: 'directory-b',
+        metadata: { workingDirectory: '/repo-b' },
+      },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt')).toEqual([
+      {
+        children: [topics[0]],
+        id: 'project-directory:directory-a',
+        title: 'repo-a',
+      },
+      {
+        children: [topics[1]],
+        id: 'project-directory:directory-b',
+        title: 'repo-b',
+      },
+    ]);
+  });
+
+  /** @example Distinct projects never merge, and project groups stay above unbound topics. */
+  it('keeps distinct projects separate and sorts the no-project bucket last', () => {
+    const topics: ChatTopic[] = [
+      { ...base, createdAt: 1, updatedAt: 1, id: 'unbound' },
+      {
+        ...base,
+        createdAt: 2,
+        updatedAt: 2,
+        id: 'mobile',
+        projectId: 'project-2',
+        metadata: { workingDirectory: '/home/lobehub_mobile' },
+      },
+      {
+        ...base,
+        createdAt: 3,
+        updatedAt: 3,
+        id: 'main',
+        projectId: 'project-1',
+        metadata: { workingDirectory: '/home/lobehub' },
+      },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt').map((group) => group.id)).toEqual([
+      'project-id:project-1',
+      'project-id:project-2',
+      'no-project',
+    ]);
+  });
+
+  /** @example A stale explicit project still leads a freshly active directory group. */
+  it('sorts explicit-project groups ahead of directory groups regardless of activity', () => {
+    // ROOT CAUSE:
+    //
+    // Groups sorted purely by most recent activity, so a project the user
+    // deliberately bound topics to could sink below an inferred directory
+    // group. Explicit bindings are stronger signals and lead the list; only
+    // groups within the same tier compete on activity.
+    const topics: ChatTopic[] = [
+      {
+        ...base,
+        createdAt: 1,
+        updatedAt: 1,
+        id: 'bound-stale',
+        projectId: 'project-1',
+        metadata: { workingDirectory: '/home/lobehub' },
+      },
+      {
+        ...base,
+        createdAt: 3,
+        updatedAt: 3,
+        id: 'unbound-recent',
+        metadata: { workingDirectory: '/tmp/scratch' },
+      },
+      { ...base, createdAt: 2, updatedAt: 2, id: 'unbound' },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt').map((group) => group.id)).toEqual([
+      'project-id:project-1',
+      'project:/tmp/scratch',
+      'no-project',
+    ]);
+  });
+
+  /** @example Within the explicit-project tier the most recently active project still leads. */
+  it('keeps most-recent-activity order inside the explicit-project tier', () => {
+    const topics: ChatTopic[] = [
+      { ...base, createdAt: 1, updatedAt: 1, id: 'older', projectId: 'project-1' },
+      { ...base, createdAt: 2, updatedAt: 2, id: 'newer', projectId: 'project-2' },
+    ];
+
+    expect(groupTopicsByProject(topics, 'updatedAt').map((group) => group.id)).toEqual([
+      'project-id:project-2',
+      'project-id:project-1',
+    ]);
+  });
+});
+
+describe('groupTopicsByAgent', () => {
+  type AgentRow = ChatTopic & {
+    agentId?: string | null;
+    agentName?: string | null;
+    agentTitle?: string | null;
+  };
+
+  const createRow = (
+    id: string,
+    updatedAt: number,
+    agent?: { agentId?: string | null; agentName?: string | null; agentTitle?: string | null },
+  ): AgentRow => ({ agentId: null, createdAt: updatedAt, id, title: id, updatedAt, ...agent });
+
+  it('should return empty array for empty input', () => {
+    expect(groupTopicsByAgent([], 'updatedAt')).toEqual([]);
+  });
+
+  it('groups topics by agent with titles from agent metadata', () => {
+    const topics = [
+      createRow('a1', 2, { agentId: 'agent-x', agentTitle: 'LobeHub' }),
+      createRow('a2', 1, { agentId: 'agent-x', agentTitle: 'LobeHub' }),
+      createRow('b1', 3, { agentId: 'agent-y', agentName: 'lobehub_mobile' }),
+    ];
+
+    expect(groupTopicsByAgent(topics, 'updatedAt')).toEqual([
+      { children: [topics[2]], id: 'agent:agent-y', title: 'lobehub_mobile' },
+      { children: [topics[0], topics[1]], id: 'agent:agent-x', title: 'LobeHub' },
+    ]);
+  });
+
+  it('falls back to agentName when agentTitle is absent', () => {
+    const topics = [createRow('a1', 1, { agentId: 'agent-x', agentName: 'lobehub' })];
+
+    expect(groupTopicsByAgent(topics, 'updatedAt')[0]).toEqual({
+      children: topics,
+      id: 'agent:agent-x',
+      title: 'lobehub',
+    });
+  });
+
+  it('buckets rows without agent attribution as a title-less no-agent group', () => {
+    const topics = [createRow('a', 2), createRow('b', 1)];
+
+    expect(groupTopicsByAgent(topics, 'updatedAt')).toEqual([
+      { children: topics, id: 'no-agent', title: undefined },
+    ]);
+  });
+
+  it('sorts children and groups by the chosen field descending', () => {
+    const topics = [
+      createRow('old', 1, { agentId: 'agent-x' }),
+      createRow('new', 5, { agentId: 'agent-x' }),
+      createRow('other-recent', 4, { agentId: 'agent-y' }),
+    ];
+
+    const result = groupTopicsByAgent(topics, 'createdAt');
+
+    expect(result.map((group) => group.id)).toEqual(['agent:agent-x', 'agent:agent-y']);
+    expect(result[0].children.map((topic) => topic.id)).toEqual(['new', 'old']);
   });
 });
