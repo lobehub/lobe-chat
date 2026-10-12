@@ -17318,6 +17318,7 @@ paths:
                   - text2video
                   - text2music
                   - realtime
+                  - decision
                   - stt
               - type: "null"
       responses:
@@ -17498,6 +17499,7 @@ paths:
                         - text2video
                         - text2music
                         - realtime
+                        - decision
                         - stt
                     - type: "null"
                 id:
@@ -17792,6 +17794,7 @@ paths:
                         - text2video
                         - text2music
                         - realtime
+                        - decision
                         - stt
                     - type: "null"
       responses:
