@@ -5,7 +5,6 @@ import type { GoalRolloutLearning, GoalRolloutPlanSkill } from '@lobechat/types'
 import { type ExpertiseCarrier, ExpertiseModel } from '@/database/models/expertise';
 
 import { UserSkillService } from '../userSkill';
-import { VerifyPlanGeneratorService } from '../verify/planGenerator';
 
 /**
  * A batch's execution plan lives as a skill in the user's own library, not as
@@ -13,9 +12,10 @@ import { VerifyPlanGeneratorService } from '../verify/planGenerator';
  * one of its versions, and the skill outlives the goal for reuse elsewhere.
  *
  * A gate break also teaches the batch. Its guidance becomes a rule in the
- * batch's expertise domain — the executor reads it as context — and the rule
- * compiles into a verify criterion every later unit is judged against. So a
- * break revises the plan, the executor and the verifier together.
+ * batch's expertise domain, and every later unit's acceptance adds it as a
+ * clause it must meet (see `learnedRulesClause`) on top of the unit's own
+ * contract — so a break revises the plan, the executor and the verifier
+ * together.
  */
 
 const MAX_TITLE = 80;
@@ -134,7 +134,8 @@ export class BatchPlanSkillService {
 
   /**
    * Teaches the batch what a break found: a rule in its expertise domain
-   * (opened on the first break), compiled into a verify criterion.
+   * (opened on the first break). Nothing is compiled from it: later units'
+   * acceptance carries the rule as a clause of its requirement.
    */
   learn = async (params: {
     /** Where the domain is mounted: the goal's project, else its executing agent, else the user. */
@@ -171,31 +172,9 @@ export class BatchPlanSkillService {
     });
     if (!lesson) return undefined;
 
-    const [criterionId] = await new VerifyPlanGeneratorService(
-      this.db,
-      this.userId,
-      this.workspaceId,
-    ).createCriteriaFromDrafts([
-      {
-        description: params.guidance,
-        instruction: `PASS only when this unit's delivery follows the rule the batch learned at round ${params.revision}: ${params.guidance}`,
-        onFail: 'manual',
-        required: true,
-        title,
-        verifierType: 'agent',
-      },
-    ]);
-    if (criterionId) {
-      await expertise.updateLessonFields(lesson.id, {
-        compilability: 'compiled',
-        compiledCriterionId: criterionId,
-      });
-    }
-
     return {
       domainId,
       learning: {
-        criterionId,
         lessonCode: lesson.code,
         lessonId: lesson.id,
         revision: params.revision,

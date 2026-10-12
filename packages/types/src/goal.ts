@@ -554,10 +554,14 @@ export type GoalRolloutPhase = 'probe' | 'assay' | 'mass' | 'pattern_break' | 'd
  */
 /**
  * What one break taught the batch: a rule in the batch's expertise domain,
- * compiled into a verify criterion every later unit is judged against.
+ * which every later unit's acceptance adds as a clause it must meet.
  */
 export interface GoalRolloutLearning {
-  /** The criterion the rule compiled into; later units' acceptances carry it. */
+  /**
+   * Legacy: a standalone criterion compiled from the rule by an earlier
+   * version. Nothing mounts it — later units' acceptance carries `rule` as a
+   * clause of its requirement instead.
+   */
   criterionId?: string;
   lessonCode?: string;
   lessonId: string;

@@ -3039,14 +3039,15 @@ describe('GoalService', () => {
     // …and still carries the revised plan, in case the skill does not load.
     expect(reopened.description).toContain('### v2\n补上冷启动这一步');
 
-    // The break taught the batch: a rule for the executor, compiled into a
-    // criterion for the verifier.
+    // The break taught the batch: a rule in its expertise, which later units'
+    // acceptance adds as a clause — no standalone criterion that nothing mounts.
     expect(next.learnings).toMatchObject([{ revision: 1, title: '补上冷启动这一步' }]);
     const [learning] = next.learnings!;
+    expect(learning.criterionId).toBeUndefined();
     const lesson = await new ExpertiseModel(serverDB, userId).findLesson(learning.lessonId);
     expect(lesson).toMatchObject({
-      compilability: 'compiled',
-      compiledCriterionId: learning.criterionId,
+      compilability: 'compilable',
+      compiledCriterionId: null,
       enforcement: 'block',
     });
 

@@ -65,7 +65,7 @@ export default {
     'Every unit this round ran through on its own — none failed or was sent back',
   'goalBatch.gatePanel.learned': 'What this gate taught',
   'goalBatch.gatePanel.learnedHint':
-    'Written into the plan every later unit loads, and compiled into an acceptance check each of them is verified against.',
+    'Written into the plan every later unit loads, and added to the acceptance each of them must pass.',
   'goalBatch.gatePanel.checks': 'Checks',
   'goalBatch.gatePanel.checksAt': 'Verdict {{index}} · {{time}}',
   'goalBatch.gatePanel.checksPlanned': 'Not judged yet — these will be checked',
