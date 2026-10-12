@@ -45,9 +45,9 @@ import { FILE_TREE_UNSAFE_CSS } from './fileTreeStyle';
 import { isExcludedProjectFileEntry } from './fileVisibility';
 import { getAncestorIds, getParentRelativePath, PROJECT_ROOT_NODE_ID } from './treePaths';
 import { useCollapsedDirectoryChildren } from './useCollapsedDirectoryChildren';
+import { useFilesTreeSources } from './useFilesTreeSources';
 import { useFileTreeActions } from './useFileTreeActions';
-import { buildGitStatusEntries, useGitWorkingTreeFiles } from './useGitWorkingTreeFiles';
-import { useProjectFiles } from './useProjectFiles';
+import { buildGitStatusEntries } from './useGitWorkingTreeFiles';
 
 interface FilesProps {
   /**
@@ -219,15 +219,13 @@ const Files = memo<FilesProps>(
     // sandbox both answer over the network, and neither can be handed to Electron
     // to reveal in a file manager.
     const isSandbox = !!sandboxTopicId || !!sandboxInstanceId;
-    const { data, error, isLoading } = useProjectFiles(deviceId, workingDirectory, {
+    const {
+      git: { data: gitFiles },
+      project: { data, error, isLoading },
+    } = useFilesTreeSources(deviceId, workingDirectory, {
       instanceId: sandboxInstanceId,
       topicId: sandboxTopicId,
     });
-    const { data: gitFiles } = useGitWorkingTreeFiles(
-      deviceId,
-      workingDirectory,
-      data?.source === 'git',
-    );
     const projectSource = data?.source;
     const projectRoot = data?.root ?? workingDirectory;
 

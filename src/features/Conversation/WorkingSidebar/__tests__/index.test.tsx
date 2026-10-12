@@ -5,8 +5,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useDeviceStore } from '@/store/device';
 
 import type { ComposerTarget } from '../../types';
+import { FILES_LOCATION_STORAGE_KEY } from '../Files/useRememberedFilesLocation';
 import AgentWorkingSidebar from '../index';
 import PullRequestSections from '../PullRequest/Sections';
 
@@ -78,6 +80,9 @@ vi.mock('../PullRequest', async () => {
 });
 
 const filesProps = vi.hoisted(() => ({
+  current: undefined as { deviceId?: string; workingDirectory: string } | undefined,
+}));
+const filesPrefetchProps = vi.hoisted(() => ({
   current: undefined as { deviceId?: string; workingDirectory: string } | undefined,
 }));
 
@@ -179,6 +184,12 @@ vi.mock('../Files', () => ({
   default: (props: { deviceId?: string; workingDirectory: string }) => {
     filesProps.current = props;
     return <div data-testid="files" />;
+  },
+}));
+vi.mock('../Files/FilesPrefetch', () => ({
+  default: (props: { deviceId?: string; workingDirectory: string }) => {
+    filesPrefetchProps.current = props;
+    return <div data-testid="files-prefetch" />;
   },
 }));
 vi.mock('../Review', () => ({
@@ -450,6 +461,9 @@ beforeEach(() => {
   chatStore.topicDataMap = {};
   chatStore.topicDetailMap = {};
   filesProps.current = undefined;
+  filesPrefetchProps.current = undefined;
+  localStorage.clear();
+  useDeviceStore.setState({ isDevicesInit: false });
   renderedReview.current = undefined;
   reviewState.repoType = undefined;
   reviewState.setRepoType = undefined;
@@ -773,6 +787,53 @@ describe('AgentWorkingSidebar — controlled panel width', () => {
     expect(screen.queryByText('Workspace environment')).not.toBeInTheDocument();
     expect(screen.queryByText('/Users/me/project')).not.toBeInTheDocument();
     expect(filesProps.current).toBeUndefined();
+  });
+});
+
+describe('AgentWorkingSidebar — Files cold start', () => {
+  it('reads the Files tree while the panel is collapsed on a remembered Files tab', () => {
+    agentStore.activeAgentId = 'agent';
+    effectiveConfig.agencyConfig = { executionTarget: 'local' };
+    reviewState.workingDirectory = '/repo';
+    globalStore.status.showRightPanel = false;
+    globalStore.status.workingSidebarTab = 'files';
+
+    render(<AgentWorkingSidebar />);
+
+    expect(filesPrefetchProps.current).toMatchObject({ workingDirectory: '/repo' });
+  });
+
+  it('hands the read to the visible Files pane once it has mounted', () => {
+    agentStore.activeAgentId = 'agent';
+    effectiveConfig.agencyConfig = { executionTarget: 'local' };
+    reviewState.workingDirectory = '/repo';
+    globalStore.status.workingSidebarTab = 'files';
+
+    render(<AgentWorkingSidebar />);
+
+    expect(filesProps.current).toMatchObject({ workingDirectory: '/repo' });
+    expect(screen.queryByTestId('files-prefetch')).not.toBeInTheDocument();
+  });
+
+  it('opens the tree where the conversation last was until the device list loads', () => {
+    agentStore.activeAgentId = 'agent';
+    effectiveConfig.agencyConfig = { executionTarget: 'local' };
+    // Without the device default the cwd falls back to home.
+    reviewState.workingDirectory = '/Users/me';
+    globalStore.status.workingSidebarTab = 'files';
+    localStorage.setItem(
+      FILES_LOCATION_STORAGE_KEY,
+      JSON.stringify({ 'agent:agent': { directory: '/repo' } }),
+    );
+
+    const { rerender } = render(<AgentWorkingSidebar />);
+    expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/repo' });
+
+    act(() => {
+      useDeviceStore.setState({ isDevicesInit: true });
+    });
+    rerender(<AgentWorkingSidebar />);
+    expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/Users/me' });
   });
 });
 

@@ -25,6 +25,7 @@
  */
 import { bootTiming } from '@/libs/bootTiming';
 
+import { gitWorkingTreeFilesCodec, projectIndexCodec } from './codecs/projectFile';
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import { migrateMessageListCache } from './migrations/messageListCache';
 import { isScopeTrusted } from './useCacheScope';
@@ -40,11 +41,35 @@ interface CacheEntry<T = unknown> {
 
 export type CacheTier = 'idb' | 'local';
 
+/**
+ * Reshapes what an IndexedDB-tier key stores, for payloads too large or too
+ * redundant to keep verbatim. `encode` receives the SWR cache state and returns
+ * the row to write, or `undefined` to keep the key out of persistence (any row
+ * already stored is dropped). `decode` reverses it on hydrate; `undefined`
+ * discards the row.
+ *
+ * Encoded rows carry `${version}+${id}` instead of the plain cache version. A
+ * build without the codec — an older release after a rollback — hydrates every
+ * row of the current version as raw SWR data, and an encoded row read that way
+ * would reach its consumers in a shape they cannot render. The suffixed version
+ * makes those builds drop it like any other stale row.
+ */
+export interface PersistCodec {
+  decode: (stored: unknown) => unknown;
+  encode: (value: unknown) => unknown;
+  /** Format id; bump it whenever the encoded shape changes. */
+  id: string;
+  /** Substring of the SWR key, matched like the tier patterns. */
+  pattern: string;
+}
+
 export interface CacheProviderOptions {
   /** Debounce (ms) before flushing writes to either tier, defaults to 2000. */
   debounceMs?: number;
   /** Resolver for the active identity scope (`${userId}:${workspaceId}`). */
   getScope?: () => string;
+  /** Per-key-pattern encoders for IndexedDB-tier rows (see `PersistCodec`). */
+  idbCodecs?: PersistCodec[];
   /** SWR key patterns persisted to the IndexedDB tier. */
   idbPatterns?: string[];
   /**
@@ -127,6 +152,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
   const {
     debounceMs = 2000,
     getScope = () => 'default',
+    idbCodecs = [],
     idbPatterns = [],
     isEphemeralScope,
     localPatterns = [],
@@ -158,6 +184,9 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     if (matchesPattern(key, localPatterns)) return 'local';
     return null;
   };
+
+  const codecOf = (key: string) => idbCodecs.find((codec) => key.includes(codec.pattern));
+  const codecVersion = (codec: PersistCodec) => `${version}+${codec.id}`;
 
   /**
    * Whether the *current* scope may be written to persistence. Provisional
@@ -247,7 +276,16 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
-      if (v !== undefined) void localDataCache.set(buildLocalDataKey(scope, k), v, version);
+      if (v === undefined) continue;
+      const codec = codecOf(k);
+      const row = codec ? codec.encode(v) : v;
+      if (row === undefined) void localDataCache.delete(buildLocalDataKey(scope, k));
+      else
+        void localDataCache.set(
+          buildLocalDataKey(scope, k),
+          row,
+          codec ? codecVersion(codec) : version,
+        );
     }
   };
 
@@ -274,7 +312,21 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       // so legacy/unversioned rows (which the age check used to bound) are dropped
       // and a version bump still evicts everyone. TTL governs the localStorage
       // tier only (see `loadLocal`).
-      const valid = migratedEntries.filter((e) => e.version === version);
+      const valid: { data: unknown; key: string }[] = [];
+      for (const entry of migratedEntries) {
+        const codec = codecOf(entry.key);
+        if (!codec) {
+          if (entry.version === version) valid.push(entry);
+          continue;
+        }
+        if (entry.version !== codecVersion(codec)) continue;
+        try {
+          const data = codec.decode(entry.data);
+          if (data !== undefined) valid.push({ data, key: entry.key });
+        } catch (error) {
+          onError(error as Error);
+        }
+      }
       // Map may have changed scope while we awaited; only apply if still current.
       if (cacheMapInstance && getScope() === scope && hydrationEpoch === epoch) {
         cacheMapInstance.hydrate(valid.map((e) => [e.key, e.data]));
@@ -488,6 +540,11 @@ export const CACHE_TIERS = {
     'page:', // page detail / list / meta
     'notebook:', // notebook documents
     'brief:', // briefs
+    // Files tab tree + its git overlay. Keyed by host (device / sandbox /
+    // this machine) and directory, and stored through `CACHE_CODECS` — the
+    // rest of `localFile:` (file previews) stays memory-only.
+    'localFile:projectIndex',
+    'localFile:gitWorkingTreeFiles',
   ],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [
@@ -503,6 +560,9 @@ export const CACHE_TIERS = {
   ],
 } as const;
 
+/** Keys whose IndexedDB rows are slimmed / capped rather than stored verbatim. */
+export const CACHE_CODECS: PersistCodec[] = [projectIndexCodec, gitWorkingTreeFilesCodec];
+
 /**
  * Provider factory for SWRConfig.
  *
@@ -517,6 +577,7 @@ export const swrCacheProvider = (
 ): ScopedSWRProvider => {
   return createCacheProvider({
     getScope,
+    idbCodecs: CACHE_CODECS,
     idbPatterns: [...CACHE_TIERS.idb],
     // Quarantine writes until the session check resolves (`isScopeTrusted`).
     // The active scope is optimistic (persisted last-known user) before the

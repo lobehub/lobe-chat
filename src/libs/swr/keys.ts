@@ -440,6 +440,8 @@ export const serverConfigKeys = {
 // are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
 // persistence — they stay memory-only exactly as before.
+// (`localFile:projectIndex` / `localFile:gitWorkingTreeFiles` are the
+// exception: persisted through size-capped codecs for the Files tab.)
 export const discoverKeys = {
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [
