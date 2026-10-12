@@ -4368,12 +4368,12 @@ export class GoalService {
       // A fork starts a new class: the old class's rules must stop reaching
       // runs too, not only its acceptance — retire them in the shared domain,
       // where the executor's expertise would otherwise keep injecting them.
+      // Not in a forgiving savepoint: the fork clears the batch's record of
+      // them below, so a failure here fails the fork (the question stays open
+      // to answer again) rather than leaving them active and forgotten.
       if (optionId === 'new_class' && state.learnings?.length) {
-        const lessonIds = state.learnings.map((learning) => learning.lessonId);
-        await inSavepoint('old rules retirement', async (db) => {
-          const expertise = new ExpertiseModel(db, this.userId, this.workspaceId);
-          for (const lessonId of lessonIds) await expertise.retireLesson(lessonId);
-        });
+        const expertise = new ExpertiseModel(tx, this.userId, this.workspaceId);
+        for (const learning of state.learnings) await expertise.retireLesson(learning.lessonId);
       }
       const learned =
         correction && optionId !== 'new_class'

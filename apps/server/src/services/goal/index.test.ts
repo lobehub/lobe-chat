@@ -2710,6 +2710,57 @@ describe('GoalService', () => {
       expect((await pendingBreak(service, graph.goal.id)).id).toBe(decision.id);
     });
 
+    it('fails the fork, keeping the question open, when the old rules cannot be retired', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Fork with a stuck rule',
+      });
+      await service.tick(graph.goal.id);
+      const openGate = (
+        service as unknown as {
+          openPatternBreakGate: (
+            g: unknown,
+            message: string,
+            effects: unknown[],
+          ) => Promise<unknown>;
+        }
+      ).openPatternBreakGate.bind(service);
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      let decision = await pendingBreak(service, graph.goal.id);
+      await service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步');
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      decision = await pendingBreak(service, graph.goal.id);
+
+      // Retiring the old rule fails.
+      await serverDB.execute(sql`
+        CREATE OR REPLACE FUNCTION fail_lesson_retire() RETURNS trigger AS $$
+        BEGIN
+          IF NEW.status = 'retired' THEN RAISE EXCEPTION 'retire failed'; END IF;
+          RETURN NEW;
+        END $$ LANGUAGE plpgsql
+      `);
+      await serverDB.execute(sql`
+        CREATE TRIGGER fail_lesson_retire BEFORE UPDATE ON expertise_lessons
+          FOR EACH ROW EXECUTE FUNCTION fail_lesson_retire()
+      `);
+      try {
+        await expect(
+          service.decide(graph.goal.id, decision.id, 'new_class', '按新类型处理'),
+        ).rejects.toThrow();
+      } finally {
+        await serverDB.execute(sql`DROP TRIGGER IF EXISTS fail_lesson_retire ON expertise_lessons`);
+        await serverDB.execute(sql`DROP FUNCTION IF EXISTS fail_lesson_retire()`);
+      }
+
+      // The batch still knows the rule (so retiring it can be retried), and the
+      // question is still there to answer.
+      const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      expect(state.learnings).toHaveLength(1);
+      expect((await pendingBreak(service, graph.goal.id)).id).toBe(decision.id);
+    });
+
     it('forks a new class from the original outline, not the revised plan', async () => {
       decompose();
       const service = new GoalService(serverDB, userId);
