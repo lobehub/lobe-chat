@@ -926,6 +926,29 @@ describe('acceptance publication with missing evidence', () => {
       await expect(run('ingest', dir, '--dry-run')).rejects.toThrow('plan[screen].category');
     });
 
+    it('rejects an English required-evidence hint, shown as the evidence tooltip', async () => {
+      client.user.getUserState.query.mockResolvedValue({
+        settings: { general: { responseLanguage: 'zh-CN' } },
+      });
+      await writeFile(
+        path.join(dir, 'result.json'),
+        JSON.stringify({
+          plan: [
+            {
+              id: 'screen',
+              requiredEvidence: [{ hint: 'Capture checkout result', type: 'screenshot' }],
+              title: '用户能看到处理结果',
+            },
+          ],
+          title: '处理结果展示',
+        }),
+      );
+
+      await expect(run('ingest', dir, '--dry-run')).rejects.toThrow(
+        'plan[screen].requiredEvidence[0].hint',
+      );
+    });
+
     it('rejects `run create` with a title in the wrong language', async () => {
       client.user.getUserState.query.mockResolvedValue({
         settings: { general: { responseLanguage: 'zh-CN' } },

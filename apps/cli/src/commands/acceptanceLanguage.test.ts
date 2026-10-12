@@ -148,6 +148,7 @@ describe('flowLanguageFields', () => {
         },
         { criterionId: 'existing', id: 'n2' },
       ],
+      edges: [{ condition: 'when declined', id: 'e1', trigger: 'submit' }],
       title: 'flow',
     }).map((field) => field.path);
 
@@ -159,6 +160,8 @@ describe('flowLanguageFields', () => {
       'nodes[c1].check.definition.preconditions[0]',
       'nodes[c1].check.definition.steps[s1].instruction',
       'nodes[c1].check.definition.steps[s1].expected',
+      'edges[e1].trigger',
+      'edges[e1].condition',
     ]);
   });
 });
@@ -178,7 +181,11 @@ describe('ingestLanguageFields', () => {
           description: 'd',
           id: 'screen',
           title: 't',
-          verifierConfig: { expected: 'x', method: 'm' },
+          verifierConfig: {
+            expected: 'x',
+            method: 'm',
+            requiredEvidence: [{ hint: 'h', type: 'screenshot' }],
+          },
         },
       ],
     }).map((field) => field.path);
@@ -186,6 +193,7 @@ describe('ingestLanguageFields', () => {
     expect(paths).toEqual(
       expect.arrayContaining([
         'plan[screen].category',
+        'plan[screen].requiredEvidence[0].hint',
         'plan[screen].description',
         'plan[screen].definition.expected',
         'plan[screen].definition.preconditions[0]',

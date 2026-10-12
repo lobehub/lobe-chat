@@ -165,7 +165,12 @@ export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
     { path: 'proposal.md', text: input.proposal },
   ];
   for (const item of input.plan ?? []) {
-    const config = (item.verifierConfig ?? {}) as { expected?: unknown; method?: unknown };
+    const config = (item.verifierConfig ?? {}) as {
+      expected?: unknown;
+      method?: unknown;
+      requiredEvidence?: unknown;
+    };
+    const evidenceSpecs = Array.isArray(config.requiredEvidence) ? config.requiredEvidence : [];
     fields.push(
       { path: `plan[${item.id}].title`, text: item.title },
       { path: `plan[${item.id}].category`, text: item.category },
@@ -173,6 +178,11 @@ export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
       { path: `plan[${item.id}].expected`, text: config.expected },
       { path: `plan[${item.id}].description`, text: item.description },
       ...checkDefinitionFields(`plan[${item.id}].definition`, item.definition),
+      // Rendered as the evidence chip tooltip.
+      ...evidenceSpecs.map((spec: any, index: number) => ({
+        path: `plan[${item.id}].requiredEvidence[${index}].hint`,
+        text: spec?.hint,
+      })),
     );
   }
   for (const { case: c, checkItemId } of input.cases) {
@@ -253,9 +263,12 @@ export const languageSummary = (language: ReportLanguage) => ({
   status: language.status,
 });
 
-/** Prose in a flow definition: its title and every inline check's wording. */
+/**
+ * Prose in a flow definition: its title, every inline check's wording, and
+ * edge triggers/conditions, which render as graph labels.
+ */
 export function flowLanguageFields(definition: unknown): LanguageField[] {
-  const flow = (definition ?? {}) as { nodes?: unknown; title?: unknown };
+  const flow = (definition ?? {}) as { edges?: unknown; nodes?: unknown; title?: unknown };
   const fields: LanguageField[] = [{ path: 'definition.title', text: flow.title }];
   const nodes = Array.isArray(flow.nodes) ? flow.nodes : [];
   for (const node of nodes) {
@@ -266,6 +279,14 @@ export function flowLanguageFields(definition: unknown): LanguageField[] {
       { path: `${at}.title`, text: check.title },
       { path: `${at}.description`, text: check.description },
       ...checkDefinitionFields(`${at}.definition`, check.definition),
+    );
+  }
+  const edges = Array.isArray(flow.edges) ? flow.edges : [];
+  for (const edge of edges) {
+    const value = (edge ?? {}) as { condition?: unknown; id?: unknown; trigger?: unknown };
+    fields.push(
+      { path: `edges[${String(value.id)}].trigger`, text: value.trigger },
+      { path: `edges[${String(value.id)}].condition`, text: value.condition },
     );
   }
   return fields;
