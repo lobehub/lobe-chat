@@ -464,27 +464,12 @@ export class DocumentActionImpl {
    * so navigation paints the editor from the projection instead of a skeleton.
    */
   prefetchDocument = async (documentId: string): Promise<void> => {
-    // Capture the identity BEFORE the request. An account / workspace switch
-    // while it is in flight would otherwise make `replace` fall back to the new
-    // scope and write the old identity's document into its memory and IndexedDB
-    // partition. The regular `useSync` path captures the scope the same way; the
-    // engine drops an action whose scope is no longer active.
-    const scope = documentDetailResource.scope.get();
+    // Goes through the replica's own fetcher (which keeps a newer adopted row)
+    // and settle pipeline: a response captured under another identity is
+    // dropped, and one older than a response a sync already applied — e.g. a
+    // not-found the page settled while this was in flight — cannot regress it.
     try {
-      const before = this.#get().documentDetailMap[documentId];
-      const document = await documentService.getDocumentById(documentId);
-      // A sync or save that wrote the entry while this was in flight owns it
-      // now: it may hold a newer revision, or a confirmed absence. Never let a
-      // late prefetch regress it — e.g. resurrect the body of a document the
-      // sync has just settled as not-found.
-      if (this.#get().documentDetailMap[documentId] !== before) return;
-      // Otherwise the response refreshes the entry (a retained one may be stale
-      // from an earlier visit), unless it is strictly older than it.
-      this.#detail.replace(
-        documentId,
-        this.#keepNewerDetail(documentId, { document: document ?? null }),
-        scope,
-      );
+      await this.#detail.fetch(documentId);
     } catch (error) {
       console.error('[DocumentStore] Failed to prefetch document:', error);
     }

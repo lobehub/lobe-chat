@@ -53,6 +53,39 @@ A persisted row is only rewritten when its value changes: a persist whose value 
 
 Inside LobeHub, use `@/libs/replica`. It presets the cache scope, IndexedDB / localStorage storage and the app's SWR driver.
 
+## Fetching without a mounted view
+
+`slice.revalidate(key)` only re-runs the `useSync` queries that are mounted. A store that needs the data while no view is mounted — a hover prefetch, a refresh after a mutation on a route without the list — calls `slice.fetch(params)` instead of calling the service and `replace` by hand:
+
+```ts
+const { applied, data, missing } = await slice.fetch(params); // joins a request in flight
+await slice.fetch(params, { fresh: true }); // after a mutation: new request, retires older ones
+```
+
+Every head response, from `useSync` or `fetch`, goes through one settle pipeline. A request captures its scope, the `clear()` generation, the entry's removal generation and its query when it starts. The response is dropped when any of them moved on (identity switch, `clear()`, `remove` / a pruned entity, a view now showing another query) or when a newer response for the entry already applied. Otherwise it is folded in with `replace`; an `isMissing` answer removes the entry, and an `isMissing` answer captured under a scope the store has since left purges that scope's row instead. `fetch` resolves `{ applied, data, missing }` and rejects when the request fails.
+
+- **Dedupe.** `fetch` joins a request already in flight for the same entry, whether a `useSync` or another `fetch` started it. The request settles once, so effects do not run twice. `{ fresh: true }` starts a new request and retires the older ones, because those may still hold the pre-mutation value.
+- **Captured scope.** A flow that fans out from an earlier response (a warmup fetching replies for the roots it got) passes `{ scope }` captured at its start. Each step then settles into that scope. Once the scope is no longer active, `fetch` rejects with `ReplicaScopeChangedError` and sends no request, because the request would read the new identity's data under the old identity's label.
+- **Driver cache.** After `fetch` applies a response, it seeds the driver's cache under the sync key (`driver.seed`; for SWR that is `mutate(key, data, { revalidate: false })`). It skips the seed while a `useSync` request for that key is in flight: SWR discards an in-flight request that a write overtakes, so seeding then would drop that request's newer response. SWR still revalidates a later mount unless the sync sets `revalidateIfStale: false`. The value is already in the store, so that revalidation only confirms it.
+- **Effects.** Side effects that every response needs go on the slice, not on one view's callbacks:
+
+  ```ts
+  createReplicaSlice(resource, {
+    effects: {
+      onApplied: (data, params, ctx) => {}, // folded into the active scope
+      onMissing: (params, ctx) => {}, // `isMissing`, removed from the active scope
+      onPurge: (params, ctx) => {}, // `isMissing` captured under a scope left behind
+      onError: (error, params, { isActive, key, scope }) => {},
+    },
+    isMissing: (data) => data === null,
+    // …
+  });
+  ```
+
+  They run for `useSync` responses and `fetch` responses alike. A `useSync` request settles on its own response even when the hook has moved to another key and the driver skips its callback. `useSync`'s per-call `onSuccess` / `onError` remain for UI callbacks of that one view, and `onSuccess` is skipped for a key the hook has left.
+
+Use `revalidate` when the views that show the data are mounted and should refetch on their own schedule. Use `fetch` when the caller needs the data now, needs to know whether it applied, or may run with nothing mounted.
+
 ## Invalidation
 
 Persisted rows are kept per entry key **and** per query (`key?<query>`), so a resource can hold several rows for one key. Never delete through a plain `set` or by clearing SWR keys: the persisted rows survive and a reload paints the deleted data. Use the primitive that matches what is gone:
@@ -102,4 +135,4 @@ Message-like resources page backward by cursor, with windows whose length change
 | `slice.update(key, fn, { persist: false })` + `slice.persist(key)` | Stream into memory, then persist the confirmed value once.                                                                                                   |
 | `splitPagedLens({ itemsField, metaField, derive })`                | Keep raw rows where readers expect them, paging bookkeeping beside them, and derived fields (a parsed display list) in the same commit.                      |
 
-`useSync(params, options)` forwards a sync schedule (`refreshInterval`, `dedupingInterval`, `revalidateIfStale`, `revalidateOnFocus`, …) to the driver, and runs `onSuccess` / `onError` side effects after a response is folded in. On a cold start with no network (offline / slow), `onHydrated` runs the same "success" handling off the persisted value the hydrate paints, since there is no response for `onSuccess` to run on.
+`useSync(params, options)` forwards a sync schedule (`refreshInterval`, `dedupingInterval`, `revalidateIfStale`, `revalidateOnFocus`, …) to the driver, and runs `onSuccess` / `onError` side effects after a response is folded in (resource-wide side effects belong in the slice `effects`, see above). On a cold start with no network (offline / slow), `onHydrated` runs the same "success" handling off the persisted value the hydrate paints, since there is no response for `onSuccess` to run on.

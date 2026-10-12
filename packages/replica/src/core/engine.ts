@@ -112,6 +112,9 @@ export interface ReplicaEngineOptions<TParams, TData, TFetched> {
   viewFields?: (params: TParams) => Partial<TData>;
 }
 
+/** What a head response did once folded in (see `applyHead`). */
+export type ReplicaHeadOutcome = 'dropped' | 'missing' | 'replaced';
+
 export interface OptimisticMutationOptions<TData, TResult> {
   /** Turn the server result into the confirmed value; defaults to re-applying `apply`. */
   confirm?: (result: TResult) => (data: TData) => TData;
@@ -787,6 +790,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     );
   };
 
+  /** Non-paged: whether a (prepared) head response is a terminal absence (`isMissing`). */
+  const isMissingHead = (incoming: TFetched): boolean => !paging && !!options.isMissing?.(incoming);
+
   const mergeHead = (
     key: string,
     incoming: TFetched,
@@ -806,20 +812,30 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return confirmed !== undefined && isEqual(next, confirmed) ? undefined : next;
   };
 
-  const replace = (params: TParams, fetched: TFetched, scope = resource.scope.get()) => {
+  /**
+   * Fold a head response in and report what it was: dropped by `prepareHead`,
+   * a terminal absence (`isMissing`, applied as a removal) or a replacement.
+   * `changed` is whether the store moved. `replace` is the boolean shorthand;
+   * the zustand slice's settle pipeline reads the outcome to pick its effects.
+   */
+  const applyHead = (
+    params: TParams,
+    fetched: TFetched,
+    scope = resource.scope.get(),
+  ): { changed: boolean; outcome: ReplicaHeadOutcome } => {
     const key = resource.key(params);
     const incoming = options.prepareHead
       ? options.prepareHead(fetched, port.read(key), params)
       : fetched;
-    if (incoming === undefined) return false;
+    if (incoming === undefined) return { changed: false, outcome: 'dropped' };
     // A response that says the entry is gone clears it outright: the merge path
     // would keep — and re-persist — the confirmed value it is replacing. It also
     // arms the hydration guard, so a persisted read still in flight cannot bring
     // the dropped value back.
-    if (!paging && options.isMissing?.(incoming)) {
+    if (isMissingHead(incoming)) {
       // Route through `remove` so a repeated "missing" is a no-op and a response
       // captured under another scope is dropped rather than applied here.
-      return remove(key, scope);
+      return { changed: remove(key, scope), outcome: 'missing' };
     }
     const query = resource.query(params);
     const entry = getSlot().entries[key];
@@ -842,8 +858,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       type: 'replace',
     });
     if (applied) forgetRestoredEntities(scope, getConfirmed(key));
-    return applied;
+    return { changed: applied, outcome: 'replaced' };
   };
+
+  const replace = (params: TParams, fetched: TFetched, scope = resource.scope.get()) =>
+    applyHead(params, fetched, scope).changed;
 
   /**
    * Confirmed local write: patches the view (and the base under any overlay).
@@ -1469,6 +1488,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     });
 
   return {
+    applyHead,
     beginEntityOptimistic,
     beginOptimistic,
     clear,
@@ -1483,6 +1503,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     getConfirmed,
     hydrate,
     insertHead,
+    isMissingHead,
     loadMore,
     optimistic,
     patchStoredEntity,
