@@ -1,7 +1,6 @@
 'use client';
 
 import { Empty, Flexbox } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
 import { AppWindowIcon } from 'lucide-react';
 import { type FC } from 'react';
@@ -14,6 +13,7 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { resolveAppListState } from '../appList';
 import AppDetail from './AppDetail';
 import AppItem from './AppItem';
+import { AppRowsSkeleton } from './AppListSkeleton';
 import CreateAppButton from './CreateAppButton';
 import { useOAuthAppList } from './useOAuthAppList';
 
@@ -72,13 +72,7 @@ const OAuthApps: FC<OAuthAppsProps> = ({ canEdit }) => {
     );
 
   const renderRows = () => {
-    if (listState === 'loading')
-      return (
-        <Flexbox gap={12} padding={12}>
-          <Skeleton.Text rows={2} />
-          <Skeleton.Text rows={2} />
-        </Flexbox>
-      );
+    if (listState === 'loading') return <AppRowsSkeleton />;
 
     return apps?.map((app) => (
       <AppItem
