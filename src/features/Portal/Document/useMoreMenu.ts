@@ -32,7 +32,13 @@ export const useDocumentMoreMenu = (): PortalMoreMenuConfig | undefined => {
       okText: t('delete', { ns: 'common' }),
       onOk: async () => {
         try {
-          await agentDocumentService.removeDocument({ agentId, documentId, id: agentDocumentId });
+          await agentDocumentService.removeDocument({
+            agentId,
+            documentId,
+            id: agentDocumentId,
+            // Documents nested under it go with it, as a folder's contents do.
+            withChildren: true,
+          });
           toast.success(t('workingPanel.resources.deleteSuccess', { ns: 'chat' }));
           // The panel is showing a document that no longer exists; popping it
           // returns the user to whatever the panel was opened over.

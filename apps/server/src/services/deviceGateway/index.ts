@@ -19,6 +19,7 @@ import type {
   DeviceAppUpdateInstallResult,
   DeviceAppUpdateState,
   DeviceAppUpdateStateResult,
+  DeviceClient,
   DeviceCliRestartParams,
   DeviceCliUpdateState,
   DeviceCliUpdateStateResult,
@@ -74,6 +75,9 @@ import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
 import { gatewayEnv } from '@/envs/gateway';
+import { redisService } from '@/server/services/redis';
+
+import { resolveDeviceClientKinds } from './clientKinds';
 
 const log = debug('lobe-server:device-gateway');
 
@@ -266,13 +270,49 @@ export class DeviceGateway {
     );
   }
 
+  /**
+   * The device's system info, preferring the desktop app's answer: its
+   * `supportedTools` gate desktop-only tools, and when `lh connect` is up on the
+   * same device an unconstrained read is answered by the CLI, which reports
+   * none. When the desktop read fails for any reason, ask whichever client the
+   * device has: a device without the desktop app answers `NO_CAPABLE_CONNECTION`,
+   * and a desktop that timed out or whose socket is closing (`TIMEOUT`,
+   * `DEVICE_OFFLINE`) may still sit beside a live `lh connect`, which is the
+   * answer canary got. A gateway that predates `clientKinds` answers the first
+   * read as before.
+   *
+   * `maxAgeMs` lets a caller accept an answer this device gave within that
+   * window instead of a fresh round trip over its WebSocket. The send path
+   * asks every turn and the answer changes only when the client upgrades or
+   * the user moves the daemon, so a few minutes of staleness there is a
+   * round trip saved per send; callers that need the live answer (an
+   * explicit device inspection) leave it unset. Only successful answers are
+   * remembered — an offline device is asked again next time.
+   */
   async queryDeviceSystemInfo(
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { maxAgeMs?: number },
   ): Promise<DeviceSystemInfo | undefined> {
-    const read = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
-    return read.ok ? read.systemInfo : undefined;
+    const query = async () => {
+      const desktop = await this.readDeviceSystemInfo(userId, deviceId, workspaceId, {
+        clientKinds: ['desktop'],
+      });
+      if (desktop.ok) return desktop.systemInfo;
+
+      const any = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
+      return any.ok ? any.systemInfo : undefined;
+    };
+
+    const maxAgeMs = options?.maxAgeMs;
+    if (!maxAgeMs || maxAgeMs <= 0) return query();
+
+    return redisService.deviceSystemInfo.remember(
+      { userId, deviceId, workspaceId },
+      query,
+      maxAgeMs,
+    );
   }
 
   /**
@@ -284,12 +324,13 @@ export class DeviceGateway {
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { clientKinds?: DeviceClient[] },
   ): Promise<DeviceSystemInfoRead> {
     const client = this.getClient();
     if (!client) return { ok: false, reason: 'GATEWAY_NOT_CONFIGURED' };
 
     try {
-      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId);
+      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId, options);
       if (result.success && result.systemInfo) return { ok: true, systemInfo: result.systemInfo };
       log(
         'readDeviceSystemInfo: unanswered for userId=%s, deviceId=%s: %s',
@@ -2279,7 +2320,11 @@ export class DeviceGateway {
     if (!url || !token) return null;
 
     if (!this.client) {
-      this.client = new GatewayHttpClient({ gatewayUrl: url, serviceToken: token });
+      this.client = new GatewayHttpClient({
+        gatewayUrl: url,
+        resolveClientKinds: resolveDeviceClientKinds,
+        serviceToken: token,
+      });
     }
     return this.client;
   }

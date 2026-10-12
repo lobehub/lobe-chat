@@ -15,11 +15,31 @@ export interface ReplicaRow<T> {
 
 /**
  * Where a replica keeps its rows between sessions (IndexedDB, localStorage …).
- * Best-effort by contract: the server stays the durable source of truth, so
- * an implementation should swallow its own I/O failures.
+ * Reads and writes are best-effort: the server stays the durable source of
+ * truth, so `get` and `set` should swallow their own I/O failures (a failed
+ * read is a cache miss, a failed write is retried by the next one).
  */
 export interface ReplicaStorage<T> {
   get: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
+  /**
+   * Strict read for destructive passes: like `get`, but **rejects** when the
+   * row could not be read (I/O error, unparsable value) instead of reporting a
+   * miss. The engine reads its per-scope index (and every row it patches)
+   * through it before `remove` / `clear` / an entity patch / an eviction, so an
+   * unreadable index fails the pass rather than passing for an empty one.
+   *
+   * Optional only for compatibility: a storage without it still hydrates and
+   * persists, but every destructive pass **fails** (`clear()` resolves `false`,
+   * a removal stays unpurged and is retried, an entity guard is kept) because
+   * the engine cannot tell a miss from a failed read through `get`.
+   */
+  getStrict?: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
+  /**
+   * Delete a row. Must **reject** when the delete did not land (a closed
+   * IndexedDB, a quota or security error): the engine keeps the row indexed
+   * and the removal unpurged, so the next `remove` / `clear` retries it instead
+   * of letting a row the user deleted hydrate again. A missing row is a success.
+   */
   remove: (key: ReplicaRowKey) => Promise<void>;
   set: (key: ReplicaRowKey, row: ReplicaRow<T>) => Promise<void>;
 }
@@ -54,6 +74,13 @@ export interface ReplicaScope {
 export interface ReplicaPendingMutation<T> {
   apply: (data: T) => T;
   id: number;
+  /**
+   * Query the overlay was started under. An entry key can be reused for another
+   * query (a navigation), and an overlay only ever describes the query that
+   * created it — carrying it over would apply (and later persist) one query's
+   * row inside another.
+   */
+  query?: string;
 }
 
 export interface ReplicaEntryMeta<T> {
@@ -82,6 +109,8 @@ export interface ReplicaResource<TParams, TData, TFetched = TData, TCursor = any
   /** Paged resources receive the page cursor (`undefined` = head page). */
   fetcher?: (params: TParams, cursor?: TCursor) => Promise<TFetched>;
   key: (params: TParams) => string;
+  /** Cap of persisted rows per scope (LRU eviction, see `DefineReplicaOptions.persist`). */
+  maxPersistedEntries?: number;
   name: string;
   /** Storage namespace — `name` + `version`, so a version bump orphans old rows. */
   namespace: string;

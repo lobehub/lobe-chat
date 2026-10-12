@@ -117,6 +117,7 @@ describe('useDocumentMoreMenu', () => {
       agentId: 'agt_1',
       documentId: 'doc_1',
       id: 'adoc_1',
+      withChildren: true,
     });
     expect(mocks.closeDocument).toHaveBeenCalledOnce();
   });

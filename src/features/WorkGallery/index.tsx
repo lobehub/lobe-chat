@@ -291,12 +291,7 @@ const WorkGallery = memo<WorkGalleryProps>(({ galleryKey }) => {
               </div>
               <div className={styles.cardList}>
                 {group.items.map((item) => (
-                  <WorkPreviewCard
-                    item={item}
-                    key={item.id}
-                    onOpen={handleOpen}
-                    onRemoved={reload}
-                  />
+                  <WorkPreviewCard item={item} key={item.id} onOpen={handleOpen} />
                 ))}
               </div>
             </section>

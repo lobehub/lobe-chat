@@ -421,7 +421,7 @@ export const useCreateMenuItems = () => {
       navigate(`/page/${newPageId}`);
     } catch (error) {
       console.error('Failed to create page:', error);
-      toast.error('Failed to create page');
+      toast.error(tFile('pageList.createFailed'));
     }
   }, [canCreate, tFile, navigate, activeWorkspaceId]);
 

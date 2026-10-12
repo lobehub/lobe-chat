@@ -13,6 +13,23 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
       display: none;
     }
   `,
+  // Goal cards' footer: the dismiss text button on the left, the form's own
+  // actions (portal target) filling the rest.
+  goalActions: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding-block: 8px 12px;
+    padding-inline: 12px;
+    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+
+    background: color-mix(in srgb, ${cssVar.colorBgElevated} 92%, ${cssVar.colorFillSecondary});
+  `,
+  goalActionsSlot: css`
+    flex: 1;
+    min-width: 0;
+  `,
   card: css`
     pointer-events: auto;
 

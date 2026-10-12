@@ -4,6 +4,7 @@ import {
   defineReplica as defineCoreReplica,
   type DefineReplicaOptions,
   isReplicaSyncKey,
+  REPLICA_INDEX_KEY,
   type ReplicaPagedData,
   type ReplicaResource,
   type ReplicaScope,
@@ -46,11 +47,22 @@ export const setReplicaPersistedHydration = (enabled: boolean): void => {
   replicaHydrationEnabled = enabled;
 };
 
+/**
+ * The scope hook, wrapped so `cacheScope` does not *read* it while this module
+ * body runs. `@/libs/swr/useCacheScope` imports `@/store/user`, and a user-store
+ * slice imports this module — so when `useCacheScope` is the entry of that
+ * cycle this module's body executes before `useCacheScope`'s exports are
+ * initialized. Referencing them here directly would bake `undefined` into the
+ * scope (a resource would then have no `scope.get`); resolving at call time is
+ * equivalent because they are stateless delegating functions.
+ */
+const useCacheScopeLazy = (): string => useCacheScope();
+
 export const cacheScope: ReplicaScope = {
   canHydrate: () => replicaHydrationEnabled,
-  canPersist: isScopeTrusted,
-  get: getCacheScope,
-  use: useCacheScope,
+  canPersist: () => isScopeTrusted(),
+  get: () => getCacheScope(),
+  use: useCacheScopeLazy,
 };
 
 export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
@@ -115,6 +127,30 @@ export const revalidateReplica = (
   replicaSWRDriver.revalidate((queryKey) =>
     isReplicaSyncKey(queryKey, resource.name, { key, scope: resource.scope.get() }),
   );
+
+/**
+ * The entry storage keys this resource has a persisted row for in the active
+ * scope, oldest first.
+ *
+ * Storage has no key listing of its own; the engine keeps one index row per
+ * scope (`REPLICA_INDEX_KEY`) as it persists and drops entries, and this reads
+ * it. That is how code outside the owning store reaches rows an *earlier
+ * session* wrote — bounding how many survive a reload, or invalidating a row
+ * whose entry is not loaded in memory.
+ *
+ * The keys are storage keys (`key`, plus `?query` when the resource sets one),
+ * so a caller only matches them against entry keys when the resource leaves
+ * `query` unset.
+ */
+export const readReplicaStoredKeys = async (
+  resource: Pick<ReplicaResource<any, any, any>, 'scope' | 'storage'>,
+): Promise<string[]> => {
+  const row = await resource.storage?.get({
+    queryKey: REPLICA_INDEX_KEY,
+    scope: resource.scope.get(),
+  });
+  return (row?.data as unknown as string[] | undefined) ?? [];
+};
 
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(

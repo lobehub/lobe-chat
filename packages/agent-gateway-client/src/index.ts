@@ -44,9 +44,15 @@ export type {
   ToolResultPayload,
 } from './mux/types';
 export {
+  buildLlmRelayChannelId,
   CLIENT_LLM_WAIT_CAPABILITY,
   CLIENT_PROTOCOL_VERSION,
+  isLlmRelayChannelId,
+  isOwnLlmRelayChannelId,
   LLM_RELAY_CAPABILITY,
+  LLM_RELAY_CHANNEL_HEADER,
+  LLM_RELAY_CHANNEL_PREFIX,
+  LLM_RELAY_CLIENT_ID_HEADER,
   LLM_RELAY_LEASE_HEADER,
 } from './protocol';
 export { isSessionTerminalEvent } from './terminalEvent';
@@ -70,6 +76,7 @@ export type {
   LlmRelayBatch,
   LlmRelayBatchAck,
   LlmRelayDeadlines,
+  LlmRelayMethod,
   MessagePatchData,
   MessagePatchUpsert,
   SessionStatus,

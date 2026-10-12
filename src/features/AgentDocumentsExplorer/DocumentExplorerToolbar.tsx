@@ -1,12 +1,20 @@
-import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, type DropdownItem, DropdownMenu, Text } from '@lobehub/ui';
+import {
+  ActionIcon,
+  createStaticStyles,
+  type DropdownItem,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Text,
+} from '@lobehub/ui';
 import { FilePlusIcon, FileUp, FolderPlusIcon, PlusIcon } from 'lucide-react';
 import { memo, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   toolbar: css`
-    margin-inline: 6px;
+    /* Title on the column of the panel tabs' icons; the + stays on the row edge. */
+    padding-inline-start: 10px;
     color: ${cssVar.colorTextSecondary};
   `,
   title: css`

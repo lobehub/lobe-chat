@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react';
 
+import { stableQueryKey } from '../core/defineReplica';
 import { createReplicaEngine, type ReplicaEngineOptions } from '../core/engine';
 import { isReplicaSyncKey, replicaKeys } from '../core/keys';
 import type { ReplicaPagedData } from '../core/paging';
@@ -42,6 +43,13 @@ export interface CreateReplicaSliceOptions<TStore, TParams, TData, TFetched> ext
  * callback runs (an identity / workspace switch in between).
  */
 export interface ReplicaSyncErrorContext {
+  /**
+   * Whether the captured `scope` is still the one the store is on. A failure
+   * with `isActive: false` belongs to an identity / workspace the store has
+   * left: surface it on the *current* view only when this is true, while still
+   * using the captured `key` / `scope` to clean up the scope it came from.
+   */
+  isActive: boolean;
   /** The entry key the read was for; `undefined` for a disabled read. */
   key: string | undefined;
   /** The cache scope the read was captured under. */
@@ -121,7 +129,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     },
     revalidate,
   });
-  const { ensureScope, fetcher, hydrate, replace } = engine;
+  const { clearGeneration, ensureScope, fetcher, hydrate, replace, retain } = engine;
 
   /**
    * Row key of the head query each entry last asked for. One entry backs a
@@ -132,6 +140,15 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
    * leave a request's own callback live after the query changed.
    */
   const headQuery = new Map<string, string>();
+
+  /**
+   * `clear()` generation each in-flight head request started under, by sync
+   * key. A response to a request that started before a `clear()` of its scope
+   * holds wiped data and is discarded. The driver settles one request per key
+   * at a time (a newer request supersedes the older one), so the latest start
+   * is the one that settles.
+   */
+  const requestGeneration = new Map<string, number>();
 
   /**
    * Hydrates the persisted row once per scope/key/query, then lets the driver
@@ -157,6 +174,11 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       if (active && key !== undefined && queryKey !== undefined) headQuery.set(key, queryKey);
     }, [active, key, queryKey]);
 
+    // Pin the entry on screen against eviction (`persist.maxEntries`).
+    useLayoutEffect(() => {
+      if (active && key !== undefined && queryKey !== undefined) return retain(key, queryKey);
+    }, [active, key, queryKey]);
+
     const hydration = driver.useQuery<boolean>(
       active && resource.persisted && resource.persistKey(key!)
         ? replicaKeys.hydrate(resource.name, resource.version, scope, resource.storageKey(params!))
@@ -168,21 +190,62 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       { once: true },
     );
 
-    const sync = driver.useQuery<TFetched>(
+    const syncKey =
       active && fetcher
         ? (resource.syncKey?.(params!) ??
-            replicaKeys.sync(resource.name, resource.version, scope, key!, params))
-        : null,
-      () => fetcher!(params!, undefined),
+          replicaKeys.sync(resource.name, resource.version, scope, key!, params))
+        : null;
+    const requestId = () => `${scope}\u0000${stableQueryKey(syncKey)}`;
+    /** Whether the request settling now still belongs to the entry's active query. */
+    const isActiveQuery = () => queryKey !== undefined && headQuery.get(key!) === queryKey;
+    /** Whether the settling request started after the latest `clear()` of its scope. */
+    const isSinceClear = () => {
+      const id = requestId();
+      const started = requestGeneration.get(id);
+      requestGeneration.delete(id);
+      return started === undefined || started === clearGeneration(scope);
+    };
+    /**
+     * Whether the entry is still on the scope the request was captured under.
+     *
+     * A response can settle after an identity/workspace switch. `replace` drops
+     * it — the engine refuses off-scope actions — but the caller's `onSuccess`
+     * must not run either: it carries the previous identity's side effects
+     * (onboarding redirect, display snapshot, analytics identify, settings
+     * writes). The captured key/scope is not enough on its own, because a switch
+     * to a scope that reads the same key/query satisfies both guards above.
+     */
+    const isActiveScope = () => resource.scope.get() === scope;
+
+    const sync = driver.useQuery<TFetched>(
+      syncKey,
+      () => {
+        requestGeneration.set(requestId(), clearGeneration(scope));
+        return fetcher!(params!, undefined);
+      },
       {
         ...schedule,
-        // Bind the captured key/scope to the error callback: a late terminal
-        // removal must not land in a scope that became active after the request.
-        onError: onError ? (error: unknown) => onError(error, { key, scope }) : undefined,
+        // A failure of a query the entry has moved past (or of a request from
+        // before a clear) must not surface on the query now on screen. Unlike
+        // success, an off-scope failure is still forwarded: the captured
+        // key/scope is bound so a late terminal answer (NOT_FOUND / FORBIDDEN)
+        // can purge *its own* scope's persisted row via `remove(key, scope)`
+        // without touching the scope now on screen — dropping it would leave
+        // that row to hydrate again when the user switches back.
+        // Always installed, so a failed request's generation record is dropped
+        // even when the caller has no error side effects.
+        onError: (error: unknown) => {
+          if (!isSinceClear() || !isActiveQuery()) return;
+          // Forwarded even off-scope: the captured `key`/`scope` lets a consumer
+          // purge that scope's row. `isActive` tells it whether the failure also
+          // belongs to the view on screen.
+          onError?.(error, { isActive: isActiveScope(), key, scope });
+        },
         onSuccess: (data) => {
-          // Discard a head response the entry has moved past: the newer query
-          // owns the view (see `headQuery`).
-          if (queryKey === undefined || headQuery.get(key!) !== queryKey) return;
+          // Discard a head response the entry has moved past (the newer query
+          // owns the view, see `headQuery`), one that started before a clear, or
+          // one captured under a scope the store has since left.
+          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
           replace(params!, data, scope);
           onSuccess?.(data);
         },
@@ -205,7 +268,22 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     };
   };
 
-  return { ...engine, useSync };
+  return {
+    ...engine,
+    /**
+     * Forget the key's head query as well as the entry. A request already in
+     * flight for it would otherwise pass the `onSuccess` guard below (the marker
+     * still matches), `replace` the entry and persist pre-mutation rows back over
+     * an invalidation that has already completed.
+     */
+    remove: (key: string, scope?: string) => {
+      // Only the active scope's marker belongs to the entry on screen; an
+      // off-scope removal (see `engine.remove`) must not drop it.
+      if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
+      return engine.remove(key, scope);
+    },
+    useSync,
+  };
 };
 
 export type ReplicaSlice<TStore, TParams, TData, TFetched = TData> = ReturnType<

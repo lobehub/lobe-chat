@@ -294,9 +294,35 @@ export class VerifyRepairService {
     const results = await this.resultModel.listByRun(run.id);
     const byItem = new Map(results.map((r) => [r.checkItemId, r]));
 
+    // An optional check never gates delivery, so it must not spend a repair
+    // round either: a passing round whose only gap was an optional video kept
+    // re-running the builder until the repair cap.
     return plan
-      .filter((item) => item.onFail === 'auto_repair' && isFailed(byItem.get(item.id)))
+      .filter(
+        (item) =>
+          item.required !== false && item.onFail === 'auto_repair' && isFailed(byItem.get(item.id)),
+      )
       .map((item) => ({ item, result: byItem.get(item.id) }));
+  }
+
+  /**
+   * A round stops owning its acceptance once a later round exists or another
+   * round has already passed. Parallel attempts of one Task (a recovered topic
+   * next to a still-running repair chain) otherwise kept repairing a stale
+   * round after the acceptance was delivered, and left a failed round as the
+   * acceptance's latest state.
+   */
+  private async isSuperseded(operationId: string): Promise<boolean> {
+    const run = await this.runModel.findByOperation(operationId);
+    if (!run?.acceptanceId) return false;
+
+    const rounds = await this.runModel.listByAcceptance(run.acceptanceId);
+    return rounds.some(
+      (round) =>
+        round.id !== run.id &&
+        ((round.roundIndex ?? 0) > (run.roundIndex ?? 0) ||
+          (round.status === 'passed' && round.userDecision !== 'reject')),
+    );
   }
 
   /**
@@ -309,6 +335,10 @@ export class VerifyRepairService {
   ): Promise<{ repairOperationId: string } | null> {
     const failures = await this.collectRepairable(operationId);
     if (failures.length === 0) return null;
+    if (await this.isSuperseded(operationId)) {
+      log('op %s round is superseded within its acceptance, not repairing', operationId);
+      return null;
+    }
     if (!spawner) {
       log('auto-repair eligible for op %s but no spawner available', operationId);
       return null;

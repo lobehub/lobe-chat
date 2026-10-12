@@ -89,7 +89,7 @@ interface AgentMetaUpdateOptions {
  * whole and explicitly edited working directory selections are replaced atomically.
  * Returns `current` itself when nothing changed, so readers keep their reference.
  */
-const mergeAgentConfig = (
+export const mergeAgentConfig = (
   current: PartialDeep<AgentItem> | undefined,
   config: PartialDeep<LobeAgentConfig>,
   options?: { replaceWorkingDirDeviceIds?: string[]; workingDirByDeviceSnapshot?: boolean },

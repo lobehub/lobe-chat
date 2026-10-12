@@ -77,9 +77,10 @@ export interface TestCaseDetailProps {
   testCase: {
     datasetId: string;
     content?: {
+      expected?: string;
       input?: string;
       messages?: Array<{ content?: unknown; role?: string }>;
-    } & Record<string, unknown>;
+    };
     evalConfig?: Record<string, unknown> | null;
     evalMode?: string | null;
     id: string;
@@ -125,7 +126,7 @@ const TestCaseDetail = memo<TestCaseDetailProps>(({ datasetName, testCase }) => 
     if (!patch) return stop();
     setSaving(true);
     try {
-      await updateTestCase(testCase.id, testCase.datasetId, patch);
+      await updateTestCase(testCase.id, patch);
       stop();
     } catch (error) {
       toast.error((error as Error)?.message ?? t('testCaseDetail.saveFailed'));
