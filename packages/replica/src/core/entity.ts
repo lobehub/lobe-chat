@@ -14,7 +14,7 @@ export interface ReplicaEntityTarget {
    * Explicit entity removal that also guards later hydrates. Optional for
    * custom targets; `linkReplicaEntity` falls back to `updateEntity`.
    */
-  removeEntity?: (id: string, options?: { persist?: boolean }) => void;
+  removeEntity?: (id: string, options?: { persist?: boolean; scope?: string }) => void;
   revalidate: (key?: string) => Promise<unknown>;
   updateEntity: <TItem>(
     id: string,
@@ -48,12 +48,14 @@ export const linkReplicaEntity = <TItem>(targets: ReplicaEntityTarget[]) => {
   /**
    * Confirmed removal everywhere (list rows dropped, single-entity values
    * removed). A value hydrated later — even one whose read was already in
-   * flight — comes back without the entity.
+   * flight — comes back without the entity. With `scope` set to a scope left
+   * behind, only that scope's persisted rows lose the entity; the view on
+   * screen belongs to another scope and is left alone.
    */
-  const remove = (id: string, options?: { persist?: boolean }): void => {
+  const remove = (id: string, options?: { persist?: boolean; scope?: string }): void => {
     for (const target of targets) {
       if (target.removeEntity) target.removeEntity(id, options);
-      else target.updateEntity<TItem>(id, () => undefined, options);
+      else if (!options?.scope) target.updateEntity<TItem>(id, () => undefined, options);
     }
   };
 

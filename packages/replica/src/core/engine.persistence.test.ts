@@ -219,6 +219,31 @@ describe('removeEntity keeps its guard until the persisted patch lands', () => {
   });
 });
 
+describe('removeEntity in a scope left behind', () => {
+  it("drops the entity from that scope's rows without touching the active view", async () => {
+    resetScope();
+    const storage = createStorage();
+    const first = setupList(storage);
+    first.engine.replace({ id: 'b' }, [item('1'), item('2')]);
+    await flush();
+
+    // The UI moved to another scope, which shows its own `b`.
+    scopeState.current = 'u2';
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'b' }, [item('1'), item('9')]);
+    await flush();
+
+    // A late "gone" for entity 1, answered for the scope left behind.
+    engine.removeEntity('1', { scope: SCOPE });
+    await flush();
+
+    // That scope's persisted row loses it; the scope on screen keeps its own.
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([item('2')]);
+    expect(host.view().b).toEqual([item('1'), item('9')]);
+    resetScope();
+  });
+});
+
 describe('redundant persist writes', () => {
   const rowWrites = (storage: ReturnType<typeof createStorage>, queryKey: string) =>
     storage.writes.filter((key) => key === queryKey).length;

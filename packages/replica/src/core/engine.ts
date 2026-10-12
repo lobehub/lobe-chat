@@ -16,8 +16,8 @@ import {
 } from './paging';
 import type { ReplicaAction, ReplicaEffect, ReplicaViewWrite } from './reducer';
 import { replicaReducer } from './reducer';
-import { createTombstones } from './tombstones';
-import type { ReplicaResource, ReplicaState } from './types';
+import { createTombstones, DEFAULT_REMOVAL_TOMBSTONE_LIMIT } from './tombstones';
+import type { ReplicaResource, ReplicaSource, ReplicaState } from './types';
 import { readReplicaRowStrict, ReplicaWriteQueue } from './writeQueue';
 
 /** Reserved storage key of the per-scope index of persisted rows. */
@@ -166,7 +166,28 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * again once the scope becomes trusted.
    */
   const purgedEntries = createTombstones();
-  const markRemoved = (scope: string, key: string) => removedEntries.add(scope, key);
+  /**
+   * Bumped on every removal of a scope+key. A network response whose request
+   * started before the entry was removed (deleted, access revoked, pruned by an
+   * authoritative parent list) must not `replace` it back: the slice records
+   * the generation a request starts under and drops a response that crossed a
+   * removal. Bounded like the tombstones; an evicted key reads 0, which only
+   * ever drops a response (the next revalidate refetches), never admits one.
+   */
+  const removalGenerations = new Map<string, number>();
+  const removalId = (scope: string, key: string) => `${scope}\u0000${key}`;
+  const removalGeneration = (scope: string, key: string) =>
+    removalGenerations.get(removalId(scope, key)) ?? 0;
+  const markRemoved = (scope: string, key: string) => {
+    removedEntries.add(scope, key);
+    const id = removalId(scope, key);
+    const next = (removalGenerations.get(id) ?? 0) + 1;
+    // Re-insert so the map's insertion order is least-recently-removed first.
+    removalGenerations.delete(id);
+    removalGenerations.set(id, next);
+    if (removalGenerations.size > DEFAULT_REMOVAL_TOMBSTONE_LIMIT)
+      removalGenerations.delete(removalGenerations.keys().next().value as string);
+  };
   const clearRemoved = (scope: string, key: string) => {
     removedEntries.clear(scope, key);
     purgedEntries.clear(scope, key);
@@ -583,23 +604,36 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return port.read(key);
   };
 
-  const dispatch = (action: ReplicaAction<TData>): boolean => {
+  const dispatch = (action: ReplicaAction<TData>): boolean => runActions([action]);
+
+  /**
+   * Fold one or more actions into a single host commit. A caller that seeds
+   * many keys (a list refresh) must not clone the view and notify subscribers
+   * once per key; every action is still reduced in order, and the accumulated
+   * writes are applied as ONE host update. A batch is dropped whole when any
+   * action belongs to another identity (see {@link dispatch}).
+   */
+  function runActions(actions: ReplicaAction<TData>[]): boolean {
+    if (actions.length === 0) return false;
     const activeScope = resource.scope.get();
     // An action captured under another identity is stale — drop it.
-    if (action.scope !== activeScope) return false;
+    if (actions.some((action) => action.scope !== activeScope)) return false;
 
-    // Every removal path (explicit `remove`, a missing response, an entity that
-    // takes its whole value with it) arms the hydration guard for this key.
-    if (action.type === 'remove') markRemoved(action.scope, action.key);
-    // A replacement that reaches the active scope supersedes an earlier removal,
-    // so the key may hydrate again. A response captured under another scope is
-    // dropped below and must NOT clear its guard: the removal still stands for
-    // its own scope, whose row delete may be pending or may have failed.
-    if (action.type === 'replace') clearRemoved(action.scope, action.key);
+    for (const action of actions) {
+      // Every removal path (explicit `remove`, a missing response, an entity that
+      // takes its whole value with it) arms the hydration guard for this key.
+      if (action.type === 'remove') markRemoved(action.scope, action.key);
+      // A replacement that reaches the active scope supersedes an earlier
+      // removal, so the key may hydrate again. A response captured under another
+      // scope is dropped above and must NOT clear its guard: the removal still
+      // stands for its own scope, whose row delete may be pending or may have failed.
+      if (action.type === 'replace') clearRemoved(action.scope, action.key);
+    }
 
     const initial = getSlot();
     let slot = initial;
     const writes: ReplicaViewWrite<TData>[] = [];
+    const effects: ReplicaEffect<TData>[] = [];
     const read = (key: string) => readThrough(writes, key);
     if (slot.scope !== undefined && slot.scope !== activeScope) {
       // Memory moves to another identity; what we knew of its rows can go.
@@ -609,15 +643,23 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       slot = reset.state;
     }
 
-    const transition = replicaReducer(slot, action, read);
-    if (transition.state === slot && transition.writes.length === 0 && slot === initial)
-      return false;
+    let changed = false;
+    for (const action of actions) {
+      const transition = replicaReducer(slot, action, read);
+      writes.push(...transition.writes);
+      effects.push(...transition.effects);
+      // The reducer returns the entry's state unchanged for a no-op.
+      if (transition.state !== slot) {
+        slot = transition.state;
+        changed = true;
+      }
+    }
 
-    writes.push(...transition.writes);
-    port.commit(writes, transition.state, `${prefix}/${action.type}`);
-    runEffects(transition.effects);
+    if (!changed && writes.length === 0 && slot === initial) return false;
+    port.commit(writes, slot, `${prefix}/${actions.length > 1 ? 'batch' : actions[0].type}`);
+    runEffects(effects);
     return true;
-  };
+  }
 
   /**
    * Drop memory owned by another identity as soon as a new scope is active —
@@ -796,12 +838,49 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return applied;
   };
 
-  /** Confirmed local write: patches the view (and the base under any overlay). */
+  /**
+   * Confirmed local write: patches the view (and the base under any overlay).
+   * Pass `source: 'seed'` for a provisional row (a list row standing in for a
+   * detail): it is hydratable and never persisted, so the authoritative value it
+   * stands in for is preserved (see `ReplicaSource`).
+   */
   const update = (
     key: string,
     apply: (data: TData | undefined) => TData | undefined,
-    { persist = true }: { persist?: boolean } = {},
-  ) => dispatch({ apply, key, persist, scope: resource.scope.get(), type: 'update' });
+    {
+      persist = true,
+      seedTag,
+      source,
+    }: { persist?: boolean; seedTag?: string; source?: ReplicaSource } = {},
+  ) =>
+    dispatch({ apply, key, persist, scope: resource.scope.get(), seedTag, source, type: 'update' });
+
+  /**
+   * Confirmed local write to several keys as ONE host update — same per-key
+   * semantics as {@link update}, but a whole list seeds in a single commit
+   * instead of one per row (no repeated view cloning or subscriber churn).
+   */
+  const updateMany = (
+    entries: { apply: (data: TData | undefined) => TData | undefined; key: string }[],
+    {
+      persist = true,
+      seedTag,
+      source,
+    }: { persist?: boolean; seedTag?: string; source?: ReplicaSource } = {},
+  ) => {
+    const scope = resource.scope.get();
+    return runActions(
+      entries.map(({ apply, key }) => ({
+        apply,
+        key,
+        persist,
+        scope,
+        seedTag,
+        source,
+        type: 'update' as const,
+      })),
+    );
+  };
 
   /**
    * Purge a removal that belongs to a scope which is no longer active.
@@ -1106,13 +1185,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   const patchStoredEntityRows = async <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
+    scope: string = resource.scope.get(),
   ): Promise<boolean> => {
     if (!writeQueue) return true;
     if (!resource.scope.canPersist()) return false;
-    const scope = resource.scope.get();
+    // A scope left behind is patched on purpose: nothing of it is loaded, and an
+    // identity switch while reading its index does not make its rows foreign.
+    const offScope = scope !== resource.scope.get();
     const slot = getSlot();
+    // Rows memory holds are patched through memory — but only in the active
+    // scope; a view still showing a scope left behind is not what it persists.
     const loaded = new Set(
-      slot.scope === scope
+      !offScope && slot.scope === scope
         ? Object.entries(slot.entries).map(([key, entry]) => storageKey(key, entry.query).queryKey)
         : [],
     );
@@ -1126,7 +1210,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       return false;
     }
     // Identity changed while reading the index: those rows are not ours to touch.
-    if (resource.scope.get() !== scope) return false;
+    if (!offScope && resource.scope.get() !== scope) return false;
     const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
@@ -1256,8 +1340,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * a value hydrated afterwards — even by a read already in flight — comes
    * back without the entity (see `removedEntities`).
    */
-  const removeEntity = (id: string, options?: { persist?: boolean }) => {
-    const scope = resource.scope.get();
+  const removeEntity = (id: string, options?: { persist?: boolean; scope?: string }) => {
+    const scope = options?.scope ?? resource.scope.get();
     const guard: { releasedAt?: number } = {};
     const guards = removedEntities.get(scope) ?? new Map<string, { releasedAt?: number }>();
     removedEntities.set(scope, guards);
@@ -1268,7 +1352,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       guard.releasedAt = ++guardClock;
       pruneEntityGuards(scope);
     };
-    const patch = applyEntity(id, () => undefined, options);
+    // A scope left behind has nothing on screen: only its persisted rows drop
+    // the entity, and the guard keeps a later hydrate there from reading it back.
+    const patch =
+      scope === resource.scope.get()
+        ? applyEntity(id, () => undefined, options)
+        : patchStoredEntityRows(id, () => undefined, scope);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
     // A patch that did not land (untrusted scope, unreadable index or row, a
@@ -1304,6 +1393,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     beginOptimistic,
     clear,
     clearGeneration,
+    removalGeneration,
     collapse,
     dispatch,
     ensureScope,
@@ -1325,6 +1415,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     revalidate,
     update,
     updateEntity,
+    updateMany,
   };
 };
 

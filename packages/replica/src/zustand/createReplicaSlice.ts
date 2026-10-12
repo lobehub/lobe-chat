@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { stableQueryKey } from '../core/defineReplica';
 import { createReplicaEngine, type ReplicaEngineOptions } from '../core/engine';
@@ -12,6 +12,14 @@ import type { ReplicaSyncDriver, ReplicaSyncSchedule } from './driver';
 type Setter<TStore> = (partial: Partial<TStore>, replace?: false, action?: any) => void;
 
 /**
+ * One `key` write in a batched lens update (see {@link ReplicaLens.setMany}).
+ */
+export interface ReplicaViewSet<TData> {
+  data: TData | undefined;
+  key: string;
+}
+
+/**
  * Where the materialized value lives in the domain store. Selectors keep
  * reading this location; the slice is the only writer.
  */
@@ -21,6 +29,12 @@ export interface ReplicaLens<TStore, TData> {
   /** Enumerate loaded keys (needed for entity propagation). */
   keys?: (state: TStore) => string[];
   set: (state: TStore, key: string, data: TData | undefined) => Partial<TStore>;
+  /**
+   * Apply several key writes in one pass — one clone of the backing field
+   * instead of one per key. Optional: the slice falls back to repeated `set`
+   * when a lens does not implement it.
+   */
+  setMany?: (state: TStore, entries: ReplicaViewSet<TData>[]) => Partial<TStore>;
 }
 
 export interface CreateReplicaSliceOptions<TStore, TParams, TData, TFetched> extends Omit<
@@ -56,7 +70,10 @@ export interface ReplicaSyncErrorContext {
   scope: string;
 }
 
-export interface ReplicaSyncOptions<TFetched = unknown> extends ReplicaSyncSchedule {
+export interface ReplicaSyncOptions<
+  TFetched = unknown,
+  TData = unknown,
+> extends ReplicaSyncSchedule {
   enabled?: boolean;
   /**
    * Side effects of a failed fetch (error side-maps); the store view is left as is.
@@ -65,6 +82,13 @@ export interface ReplicaSyncOptions<TFetched = unknown> extends ReplicaSyncSched
    * active once the callback runs.
    */
   onError?: (error: unknown, context: ReplicaSyncErrorContext) => void;
+  /**
+   * Side effects of a hydrated persisted value, run after it is folded into the
+   * replica. A cold start with no network (offline / slow) has no response for
+   * `onSuccess` to run on, so the same "success" handling must also run off the
+   * persisted value it paints.
+   */
+  onHydrated?: (data: TData) => void;
   /**
    * Side effects of a response, run after it is folded into the replica
    * (e.g. adopting an active id, or settling a "not found" state).
@@ -102,14 +126,45 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     ...options
   }: CreateReplicaSliceOptions<TStore, TParams, TData, TFetched>,
 ) => {
+  /**
+   * Apply every view write as ONE host update, so subscribers never observe a
+   * view out of step with its bookkeeping. Consecutive key writes go through
+   * the lens' `setMany` when it has one, so seeding N rows clones the backing
+   * field once instead of N times.
+   */
   const applyWrites = (state: TStore, writes: ReplicaViewWrite<TData>[]) => {
     let patch: Partial<TStore> = {};
     let current = state;
+    let pending: ReplicaViewSet<TData>[] = [];
+
+    const flush = () => {
+      if (pending.length === 0) return;
+      const entries = pending;
+      pending = [];
+      if (view.setMany && entries.length > 1) {
+        const next = view.setMany(current, entries);
+        patch = { ...patch, ...next };
+        current = { ...current, ...next };
+        return;
+      }
+      for (const entry of entries) {
+        const next = view.set(current, entry.key, entry.data);
+        patch = { ...patch, ...next };
+        current = { ...current, ...next };
+      }
+    };
+
     for (const write of writes) {
-      const next = 'type' in write ? view.clear(current) : view.set(current, write.key, write.data);
-      patch = { ...patch, ...next };
-      current = { ...current, ...next };
+      if ('type' in write) {
+        flush();
+        const next = view.clear(current);
+        patch = { ...patch, ...next };
+        current = { ...current, ...next };
+      } else {
+        pending.push({ data: write.data, key: write.key });
+      }
     }
+    flush();
     return patch;
   };
 
@@ -129,7 +184,8 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     },
     revalidate,
   });
-  const { clearGeneration, ensureScope, fetcher, hydrate, replace, retain } = engine;
+  const { clearGeneration, ensureScope, fetcher, hydrate, removalGeneration, replace, retain } =
+    engine;
 
   /**
    * Row key of the head query each entry last asked for. One entry backs a
@@ -142,13 +198,23 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   const headQuery = new Map<string, string>();
 
   /**
+   * Entries (`scope` + key) whose one-shot hydration actually painted a
+   * persisted row. The hydration query settles `true` on a cache miss too, so
+   * a reactivated key may only replay `onHydrated` when its row really came from
+   * storage — not off a provisional seed or another source that happens to sit
+   * in the view.
+   */
+  const hydratedEntries = new Set<string>();
+  const hydratedEntryId = (scope: string, key: string) => `${scope}\u0000${key}`;
+
+  /**
    * `clear()` generation each in-flight head request started under, by sync
    * key. A response to a request that started before a `clear()` of its scope
    * holds wiped data and is discarded. The driver settles one request per key
    * at a time (a newer request supersedes the older one), so the latest start
    * is the one that settles.
    */
-  const requestGeneration = new Map<string, number>();
+  const requestGeneration = new Map<string, { clear: number; removal: number }>();
 
   /**
    * Hydrates the persisted row once per scope/key/query, then lets the driver
@@ -156,7 +222,13 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
    */
   const useSync = (
     params: TParams | null | undefined,
-    { enabled = true, onError, onSuccess, ...schedule }: ReplicaSyncOptions<TFetched> = {},
+    {
+      enabled = true,
+      onError,
+      onHydrated,
+      onSuccess,
+      ...schedule
+    }: ReplicaSyncOptions<TFetched, TData> = {},
   ): ReplicaSyncResult => {
     const scope = resource.scope.use();
     const key = params ? resource.key(params) : undefined;
@@ -179,16 +251,72 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       if (active && key !== undefined && queryKey !== undefined) return retain(key, queryKey);
     }, [active, key, queryKey]);
 
+    // The entry this hook currently asks for. A hydrate that resolves after the
+    // hook moved to another key still fills its own cache entry (harmless), but
+    // it must not replay `onHydrated`: those side effects act on the *current*
+    // view, so they would re-adopt a superseded object (e.g. navigate g1 → g2
+    // while g1's storage read is slow, then g1's hydrate resets the active group
+    // back to g1's supervisor).
+    const activeKey = useRef<string | undefined>(undefined);
+    // The entry (scope + key) whose hydration side effects already ran in its
+    // current activation. Reset on every key or scope change, so an entry that
+    // comes back (g1 → g2 → g1, or scope A → B → A with the same key) gets them
+    // replayed even though its `once` hydration is not re-run.
+    const hydratedKey = useRef<string | undefined>(undefined);
+    useLayoutEffect(() => {
+      activeKey.current = active ? key : undefined;
+      hydratedKey.current = undefined;
+    }, [active, key, scope]);
+
     const hydration = driver.useQuery<boolean>(
       active && resource.persisted && resource.persistKey(key!)
         ? replicaKeys.hydrate(resource.name, resource.version, scope, resource.storageKey(params!))
         : null,
       async () => {
-        await hydrate(params!, scope);
+        const didHydrate = await hydrate(params!, scope);
+        if (didHydrate) hydratedEntries.add(hydratedEntryId(scope, key!));
+        // A superseded key (the hook moved on) runs no side effects at all.
+        if (activeKey.current !== key) return true;
+        hydratedKey.current = hydratedEntryId(scope, key!);
+        // A persisted row is a successful value with no network response: replay
+        // the success side effects off it, so an offline / slow first paint still
+        // adopts the roster and settles the flags the response path would.
+        if (didHydrate) {
+          const hydrated = view.get(get(), key!);
+          if (hydrated !== undefined) onHydrated?.(hydrated);
+        }
         return true;
       },
       { once: true },
     );
+
+    // Reactivating a key whose hydration already settled: the driver reuses the
+    // `once` result and the fetcher above does not run, so replay the side
+    // effects off the value in memory. Without it, returning to g1 offline
+    // leaves them acting on g2 until a response lands (or forever, offline).
+    useEffect(() => {
+      if (!active || key === undefined || hydration.data !== true) return;
+      const entry = hydratedEntryId(scope, key);
+      if (hydratedKey.current === entry) return;
+      hydratedKey.current = entry;
+      const current = view.get(get(), key);
+      if (current !== undefined) {
+        // A lookup that missed storage hydrated nothing to replay.
+        if (hydratedEntries.has(entry)) onHydrated?.(current);
+        return;
+      }
+      // Back on a scope whose view `ensureScope` cleared (A → B → A): the cached
+      // `once` result means the fetcher will not read storage again, so read it
+      // here — otherwise a row still in A's partition stays off screen while
+      // the network is slow or offline.
+      void hydrate(params!, scope).then((didHydrate) => {
+        if (!didHydrate) return;
+        hydratedEntries.add(entry);
+        if (activeKey.current !== key || resource.scope.get() !== scope) return;
+        const hydrated = view.get(get(), key);
+        if (hydrated !== undefined) onHydrated?.(hydrated);
+      });
+    }, [active, key, scope, hydration.data]);
 
     const syncKey =
       active && fetcher
@@ -198,12 +326,20 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     const requestId = () => `${scope}\u0000${stableQueryKey(syncKey)}`;
     /** Whether the request settling now still belongs to the entry's active query. */
     const isActiveQuery = () => queryKey !== undefined && headQuery.get(key!) === queryKey;
-    /** Whether the settling request started after the latest `clear()` of its scope. */
+    /**
+     * Whether the settling request started after the latest `clear()` of its
+     * scope and after the latest removal of its entry (a deleted / pruned entry
+     * must not be recreated by a response that was already in flight).
+     */
     const isSinceClear = () => {
       const id = requestId();
       const started = requestGeneration.get(id);
       requestGeneration.delete(id);
-      return started === undefined || started === clearGeneration(scope);
+      return (
+        started === undefined ||
+        (started.clear === clearGeneration(scope) &&
+          started.removal === removalGeneration(scope, key!))
+      );
     };
     /**
      * Whether the entry is still on the scope the request was captured under.
@@ -220,7 +356,10 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     const sync = driver.useQuery<TFetched>(
       syncKey,
       () => {
-        requestGeneration.set(requestId(), clearGeneration(scope));
+        requestGeneration.set(requestId(), {
+          clear: clearGeneration(scope),
+          removal: removalGeneration(scope, key!),
+        });
         return fetcher!(params!, undefined);
       },
       {
@@ -247,6 +386,10 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
           // one captured under a scope the store has since left.
           if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
           replace(params!, data, scope);
+          // The same holds for a key the hook has moved past (g1 → g2 while
+          // g1's request is in flight): the response still fills g1's own
+          // entry, but its side effects would re-adopt g1 over the g2 view.
+          if (activeKey.current !== key) return;
           onSuccess?.(data);
         },
       },
@@ -301,6 +444,16 @@ export const recordLens = <TStore, TData>(
     const next = { ...(state[field] as Record<string, TData> | undefined) };
     if (data === undefined) delete next[key];
     else next[key] = data;
+    return { [field]: next } as Partial<TStore>;
+  },
+  setMany: (state, entries) => {
+    // One clone of the record, then every key — a list refresh seeds N groups
+    // in a single copy instead of N.
+    const next = { ...(state[field] as Record<string, TData> | undefined) };
+    for (const { key, data } of entries) {
+      if (data === undefined) delete next[key];
+      else next[key] = data;
+    }
     return { [field]: next } as Partial<TStore>;
   },
 });
