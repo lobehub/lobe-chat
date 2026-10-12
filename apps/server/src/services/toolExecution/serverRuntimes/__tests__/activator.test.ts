@@ -205,5 +205,28 @@ describe('activatorRuntime', () => {
       expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
       expect(result.state?.notFound).toEqual([]);
     }, 20_000);
+
+    it('activates a tool whose wire name carries an MD5-compressed identifier segment via the discoverable list', async () => {
+      // Codex P2 on PR #20791: a hashed identifier segment cannot be probed
+      // against the identifier-keyed `toolManifestMap`; the runtime must use
+      // the host's discoverable list and match hashed wire-name variants
+      // locally (mirror of `ToolNameResolver.generate`).
+      const { Md5 } = await import('ts-md5');
+      const wireHash = (segment: string) =>
+        `MD5HASH_${Md5.hashStr(segment).toString().slice(0, 12)}`;
+      const { activatorRuntime } = await import('../activator');
+      const runtime = await activatorRuntime.factory({
+        serverDB: {} as never,
+        toolManifestMap: { 'lobe-web-browsing': webBrowsingManifest },
+        userId: 'user-1',
+      });
+
+      const result = await runtime.activateTools({
+        identifiers: [`${wireHash('lobe-web-browsing')}____${wireHash('search')}`],
+      });
+
+      expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
+      expect(result.state?.notFound).toEqual([]);
+    }, 20_000);
   });
 });

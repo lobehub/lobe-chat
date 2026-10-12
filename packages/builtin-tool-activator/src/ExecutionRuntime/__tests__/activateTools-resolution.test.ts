@@ -1,6 +1,14 @@
+import { Md5 } from 'ts-md5';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ActivatorExecutionRuntime, type ToolManifestInfo } from '../index';
+
+/**
+ * Same truncation as the runtime's `hashSegment` (mirror of
+ * `ToolNameResolver.genHash`): 12-char MD5 prefix.
+ */
+const wireHash = (segment: string): string =>
+  `MD5HASH_${Md5.hashStr(segment).toString().slice(0, 12)}`;
 
 const webBrowsingManifest: ToolManifestInfo = {
   apiDescriptions: [
@@ -16,6 +24,7 @@ const buildService = (manifests: ToolManifestInfo[]) => ({
   getToolManifests: vi.fn(async (identifiers: string[]) =>
     manifests.filter((m) => identifiers.includes(m.identifier)),
   ),
+  listToolManifests: vi.fn(async () => manifests),
   markActivated: vi.fn(),
 });
 
@@ -61,7 +70,7 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
     const runtime = new ActivatorExecutionRuntime({ service });
 
     const result = await runtime.activateTools({
-      identifiers: ['lobe-web-browsing____MD5HASH_abc123def456'],
+      identifiers: [`lobe-web-browsing____${wireHash('search')}`],
       reason: 'test',
     });
 
@@ -124,7 +133,7 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
 
   it('deduplicates identifiers when one request carries two wire names of the same plugin', async () => {
     // Vent scenario (Codex P2 on PR #20791): the model asks for two APIs of
-    // the same plugin; both resolve to one identifier, and without dedup the
+    // the same plugin; both resolve to the plugin identifier, and without dedup the
     // response would list the plugin (and its manifests/React keys) twice.
     const service = buildService([webBrowsingManifest]);
     const runtime = new ActivatorExecutionRuntime({ service });
@@ -138,6 +147,88 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
     expect(service.markActivated).toHaveBeenCalledWith(['lobe-web-browsing']);
     const occurrences = (result.content.match(/lobe-web-browsing\.search/g) ?? []).length;
     expect(occurrences).toBe(1);
+    expect(result.state?.notFound).toEqual([]);
+  });
+
+  it('activates a tool requested by a wire name with an MD5-compressed api segment, mirroring ToolNameResolver variants', async () => {
+    // Codex P2 on PR #20791: `ToolNameResolver.generate` compresses the api
+    // segment to `MD5HASH_…` when the name is provider-invalid or over the
+    // length cap; a request copied from `tools[]` must match that exact
+    // variant instead of falling to the prefix probe.
+    const service = buildService([webBrowsingManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({
+      identifiers: ['lobe-web-browsing____' + wireHash('search')],
+      reason: 'test',
+    });
+
+    expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
+    expect(result.state?.notFound).toEqual([]);
+  });
+
+  it('activates a tool requested by a wire name whose identifier segment is MD5-compressed', async () => {
+    // Codex P2 on PR #20791: when the identifier makes the generated name
+    // exceed the provider length cap, `ToolNameResolver.generate` hashes the
+    // identifier segment too (`MD5HASH_xxx____MD5HASH_yyy`). The prefix probe
+    // cannot invert it against the identifier-keyed map, so the host's
+    // discoverable list is used to match hashed variants locally.
+    const service = buildService([webBrowsingManifest]);
+    service.listToolManifests = vi.fn(async () => [webBrowsingManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({
+      identifiers: [`${wireHash('lobe-web-browsing')}____${wireHash('search')}`],
+      reason: 'test',
+    });
+
+    expect(service.listToolManifests).toHaveBeenCalled();
+    expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
+    expect(result.state?.notFound).toEqual([]);
+  });
+
+  it('does not activate a truncated-identifier prefix tool for a separator-free request', async () => {
+    // Codex P2 on PR #20791: `identifiers: ['other-tool']` where another
+    // discoverable plugin is literally named `other-too` and exposes an API
+    // named `other-tool` — the old probe derived `other-too` via
+    // `slice(0, -1)`, loaded its manifest, and the bare-name path then
+    // activated the wrong tool.
+    const prefixTool: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'An api.', name: 'other-tool' }],
+      identifier: 'other-too',
+      name: 'Other Too',
+    };
+    const service = buildService([prefixTool]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({ identifiers: ['other-tool'], reason: 'test' });
+
+    // `other-tool` is not a manifest identifier; the truncated prefix must
+    // not be probed, so the request cannot resolve to `other-too`.
+    expect(result.content).toContain('Not found: other-tool');
+    expect(result.state?.notFound).toEqual(['other-tool']);
+  });
+
+  it('activates the exact manifest identifier even when another plugin exposes an API with the same name', async () => {
+    // Codex P2 on PR #20791: a plugin whose identifier equals another
+    // plugin's API name must resolve to itself, not be hijacked by the
+    // bare-API-name path.
+    const impostor: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'A colliding api.', name: 'other-tool' }],
+      identifier: 'impostor-plugin',
+      name: 'Impostor Plugin',
+    };
+    const target: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'Target api.', name: 'targetApi' }],
+      identifier: 'other-tool',
+      name: 'Other Tool',
+    };
+    const service = buildService([impostor, target]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({ identifiers: ['other-tool'], reason: 'test' });
+
+    expect(result.content).toContain('Successfully activated tools: other-tool.targetApi');
     expect(result.state?.notFound).toEqual([]);
   });
 });

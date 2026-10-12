@@ -1,4 +1,5 @@
 import type { BuiltinServerRuntimeOutput } from '@lobechat/types';
+import { Md5 } from 'ts-md5';
 
 import type { ActivatedToolInfo, ActivateSkillParams, ActivateToolsParams } from '../types';
 
@@ -20,6 +21,16 @@ export interface ActivatorRuntimeService {
   explainNotFound?: (identifier: string) => string | undefined;
   getActivatedToolIds: () => string[];
   getToolManifests: (identifiers: string[]) => Promise<ToolManifestInfo[]>;
+  /**
+   * Full list of discoverable tool manifests for this run, when the host can
+   * provide it. Used to invert `MD5HASH_…` wire-name segments locally: a
+   * hashed identifier segment cannot be probed against the identifier-keyed
+   * manifest map, but hashing every discoverable identifier and matching the
+   * generated variants recovers the exact tool that was offered. Scoping to
+   * discoverable tools stays the host's responsibility, same as
+   * `getToolManifests`.
+   */
+  listToolManifests?: () => Promise<ToolManifestInfo[]>;
   markActivated: (identifiers: string[]) => void;
 }
 
@@ -31,15 +42,29 @@ export interface ActivatorExecutionRuntimeOptions {
 const TOOL_NAME_SEPARATOR = '____';
 
 /**
+ * Mirror of `ToolNameResolver`'s MD5 compression (`PLUGIN_SCHEMA_API_MD5_PREFIX`
+ * + 12-char truncated hash of the original component, `ts-md5`). The resolver
+ * compresses a wire-name segment when it is invalid for strict providers
+ * (non-ASCII, dots, …) or when the full name exceeds the configured max length
+ * (OpenAI caps function names at 64), so a model can copy a wire name whose
+ * identifier segment is `MD5HASH_…` — inverting that segment locally is the
+ * only way to recover which tool it asked for.
+ */
+const API_MD5_PREFIX = 'MD5HASH_';
+const hashSegment = (segment: string): string =>
+  API_MD5_PREFIX + Md5.hashStr(segment).toString().slice(0, 12);
+
+/**
  * Models call `activateTools` with names copied from what they can see: the
- * wire names in `tools[]` (`identifier____apiName`, possibly with an
- * `MD5HASH_…` segment from long-name compression) or a bare API name
- * (`activateTools`) — not the plugin-level identifier the manifest map is
- * keyed by. The tool-call parse path (`ToolNameResolver`) understands all
- * three; activation previously accepted only the bare identifier and answered
- * "Not found" for the platform's own naming, so the model retried the exact
- * same call until it vented (e.g. `lobe-web-browsing____search` with
- * `lobe-web-browsing` enabled and discoverable).
+ * wire names in `tools[]` (`identifier____apiName`, possibly with
+ * `MD5HASH_…` segments from provider-name sanitization or long-name
+ * compression) or a bare API name (`activateTools`) — not the plugin-level
+ * identifier the manifest map is keyed by. The tool-call parse path
+ * (`ToolNameResolver`) understands all three; activation previously accepted
+ * only the bare identifier and answered "Not found" for the platform's own
+ * naming, so the model retried the exact same call until it vented (e.g.
+ * `lobe-web-browsing____search` with `lobe-web-browsing` enabled and
+ * discoverable).
  *
  * Resolve each requested name against the run's discovery manifests before
  * the not-found fallbacks. Unresolvable names pass through unchanged so the
@@ -49,7 +74,14 @@ const resolveActivationIdentifier = (
   requested: string,
   manifests: ToolManifestInfo[],
 ): string | undefined => {
+  // The request itself is already an exact manifest identifier. Checked first
+  // so a plugin whose identifier equals another plugin's API name can never be
+  // hijacked by the bare-name path below.
+  const exactIdentifier = manifests.find((m) => m.identifier === requested);
+  if (exactIdentifier) return exactIdentifier.identifier;
+
   const byApiName = new Map<string, string[]>();
+  /** Every wire-name spelling `ToolNameResolver.generate` can produce per api. */
   const byWireName = new Map<string, string>();
 
   for (const manifest of manifests) {
@@ -57,14 +89,22 @@ const resolveActivationIdentifier = (
       const matches = byApiName.get(api.name);
       if (matches) matches.push(manifest.identifier);
       else byApiName.set(api.name, [manifest.identifier]);
-      // The activator manifest is `type: 'builtin'`, the default in
-      // `ToolNameResolver.generate`, so the wire name never carries a type
-      // segment; length compression does not apply at these lengths either.
-      if (!byWireName.has(`${manifest.identifier}${TOOL_NAME_SEPARATOR}${api.name}`)) {
-        byWireName.set(
-          `${manifest.identifier}${TOOL_NAME_SEPARATOR}${api.name}`,
-          manifest.identifier,
-        );
+
+      // Activator manifests are `type: 'builtin'` (the resolver's default), so
+      // the generated wire name never carries a type segment. Mirror all
+      // compression variants: the plain name, the api segment hashed
+      // (invalid chars or length cap), and both segments hashed when the
+      // identifier itself was too long — a request copied from `tools[]`
+      // matches the exact variant that was offered.
+      for (const wireName of [
+        `${manifest.identifier}${TOOL_NAME_SEPARATOR}${api.name}`,
+        `${manifest.identifier}${TOOL_NAME_SEPARATOR}${hashSegment(api.name)}`,
+        `${hashSegment(manifest.identifier)}${TOOL_NAME_SEPARATOR}${api.name}`,
+        `${hashSegment(manifest.identifier)}${TOOL_NAME_SEPARATOR}${hashSegment(api.name)}`,
+      ]) {
+        if (!byWireName.has(wireName)) {
+          byWireName.set(wireName, manifest.identifier);
+        }
       }
     }
   }
@@ -74,11 +114,15 @@ const resolveActivationIdentifier = (
   const wireMatch = byWireName.get(requested);
   if (wireMatch) return wireMatch;
 
-  // Wire name with an MD5-compressed api segment (`prefix____MD5HASH_…`):
-  // the hash cannot be inverted from the manifest list, but activation is
+  // Wire name with an MD5-compressed segment we cannot invert from the
+  // manifest list alone (e.g. the identifier segment is hashed but only the
+  // hashed-identifier wire variants are indexed here): activation is
   // plugin-level, so resolving to the identifier prefix is still the tool the
   // model asked for — and the prefix is manifest-map-scoped, so no wall is
-  // bypassed. Bare names stay conservative: only a unique API match resolves.
+  // bypassed. Only derive a prefix when the separator is present: slicing a
+  // separator-free request would otherwise probe a truncated identifier as
+  // another tool. Bare names stay conservative: only a unique API match
+  // resolves.
   const separatorIndex = requested.indexOf(TOOL_NAME_SEPARATOR);
   if (separatorIndex > 0) {
     const prefix = requested.slice(0, separatorIndex);
@@ -125,14 +169,34 @@ export class ActivatorExecutionRuntime {
       // Wire names (`identifier____apiName`) and bare API names resolve to the
       // plugin-level identifier the manifest map is keyed by — mirrored from
       // the tool-call parse path so both entrances accept the same names.
-      const discoveryManifests = await this.service.getToolManifests(
+      //
+      // A request whose identifier segment is `MD5HASH_…` cannot be probed by
+      // prefix (the map is keyed by the original identifier), so first try the
+      // full discoverable list when the host exposes one and let the resolver
+      // match hashed wire-name variants locally.
+      const hashedIdentifierRequests = identifiers.filter((id) => {
+        const separatorIndex = id.indexOf(TOOL_NAME_SEPARATOR);
+        return separatorIndex > 0 && id.slice(0, separatorIndex).startsWith(API_MD5_PREFIX);
+      });
+      let discoveryManifests = await this.service.getToolManifests(
         // The map lookup is by plugin identifier: a wire name misses it, so
-        // probe with the `____`-prefixes too and let the resolver match.
+        // probe with the `____`-prefix too and let the resolver match. The
+        // prefix is only derived when the separator is present — slicing a
+        // separator-free request would probe a truncated identifier as
+        // another tool.
         identifiers.flatMap((id) => {
-          const prefix = id.slice(0, id.indexOf(TOOL_NAME_SEPARATOR));
-          return prefix && prefix !== id ? [id, prefix] : [id];
+          const separatorIndex = id.indexOf(TOOL_NAME_SEPARATOR);
+          if (separatorIndex <= 0) return [id];
+          const prefix = id.slice(0, separatorIndex);
+          return prefix !== id ? [id, prefix] : [id];
         }),
       );
+      if (
+        hashedIdentifierRequests.length > 0 &&
+        typeof this.service.listToolManifests === 'function'
+      ) {
+        discoveryManifests = await this.service.listToolManifests();
+      }
       // Deduplicate after resolution: two wire names of the same plugin
       // (`lobe-web-browsing____search`, `…____crawlSinglePage`) both resolve
       // to the plugin identifier, and duplicate entries would surface as
