@@ -23,6 +23,7 @@ import SettingsPageSkeleton from '@/components/Skeleton/Settings/Page';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
+import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import TasksSkeleton from '@/components/Skeleton/Tasks';
 import TopicsSkeleton from '@/components/Skeleton/Topics';
 import TaskDetailSkeleton from '@/features/AgentTasks/AgentTaskDetail/TaskDetailSkeleton';
@@ -495,6 +496,43 @@ describe('desktop router shared definition', () => {
       ).toBe(expectedSkeleton);
     }
   });
+
+  it.each([
+    ['Web', (_pathname: string) => webDesktopRoutes],
+    ['Electron', (pathname: string) => createTabRouter(pathname).routes],
+  ])(
+    '%s gives section-stacked workspace settings tabs a sections skeleton without a second frame',
+    (_, getRoutes) => {
+      // Regression: these tabs used the generic avatar/detail surface, which
+      // looked nothing like the stacked groups the page renders.
+      const genericSurfaces = new Set([
+        createSurfaceSkeleton('detail'),
+        createSurfaceSkeleton('grid'),
+      ]);
+
+      for (const tab of ['plans', 'billing', 'budget', 'credits', 'usage']) {
+        const pathname = `/team/settings/${tab}`;
+        const matches = matchRoutes(getRoutes(pathname), pathname);
+        const Skeleton = resolveRouteSkeleton(
+          matches?.map(({ route }) => ({ handle: route.handle })) ?? [],
+        );
+
+        expect(Skeleton, pathname).toBeDefined();
+        expect(genericSurfaces.has(Skeleton!), pathname).toBe(false);
+
+        // Inside the content layout (`chrome='body'`) only the sections render:
+        // the layout already owns the navigation header and padded container.
+        const html = renderToString(
+          <MemoryRouter initialEntries={[pathname]}>
+            {Skeleton && <Skeleton chrome={'body'} />}
+          </MemoryRouter>,
+        );
+
+        expect(html, pathname).toContain('data-testid="settings-sections-skeleton"');
+        expect(html, pathname).not.toContain('max-width:1024px');
+      }
+    },
+  );
 
   it.each([
     ['Web', (_pathname: string) => webDesktopRoutes],
