@@ -13,6 +13,7 @@ const getSidebarTopicListParamsMock = vi.hoisted(() => vi.fn());
 const preHydrateMessagesMock = vi.hoisted(() => vi.fn(async () => true));
 const builtinAgentIdMap = vi.hoisted(() => ({ inbox: 'agt_inbox' }) as Record<string, string>);
 const preHydrateBuiltinAgentMock = vi.hoisted(() => vi.fn(async () => true));
+const preHydrateDeviceListMock = vi.hoisted(() => vi.fn(async () => true));
 
 vi.mock('@lobechat/builtin-agents', () => ({
   BUILTIN_AGENT_SLUGS: { inbox: 'inbox' },
@@ -44,6 +45,10 @@ vi.mock('@/store/chat', () => ({
   },
 }));
 
+vi.mock('@/store/device', () => ({
+  useDeviceStore: { getState: () => ({ preHydrateDeviceList: preHydrateDeviceListMock }) },
+}));
+
 const loaderArgs = (aid?: string) => ({ params: aid ? { aid } : {} }) as never;
 
 describe('agent chat topic list loader', () => {
@@ -52,12 +57,33 @@ describe('agent chat topic list loader', () => {
     preHydrateTopicListMock.mockResolvedValue(true);
     preHydrateBuiltinAgentMock.mockClear();
     preHydrateBuiltinAgentMock.mockResolvedValue(true);
+    preHydrateDeviceListMock.mockClear();
+    preHydrateDeviceListMock.mockResolvedValue(true);
     getSidebarTopicListParamsMock.mockReset();
     getSidebarTopicListParamsMock.mockReturnValue({ agentId: 'agt_1', pageSize: 20 });
   });
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  // Without it the input bar's device chip read "Unknown device" until the
+  // mount-time hydrate (or the network) answered.
+  it('seeds the persisted device list before the route commits', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateDeviceListMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not let a stalled device-list read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateDeviceListMock.mockImplementation(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void agentChatTopicListLoader(loaderArgs('agt_1')).then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT);
+    expect(settled).toHaveBeenCalled();
   });
 
   it('seeds the persisted page for the route agent before the route commits', async () => {

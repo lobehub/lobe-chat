@@ -7,7 +7,7 @@ import { useSearchParams } from 'react-router';
 import AsyncError from '@/components/AsyncError';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
 import {
   useProjectDirectories,
@@ -45,7 +45,8 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
   const environments = useProjectEnvironments(projectId);
   const directories = useProjectDirectories(projectId);
   const deviceRequest = useDeviceStore((s) => s.useFetchDevices)(true);
-  const devices = useDeviceStore((s) => s.devices);
+  const devices = useDeviceStore(deviceSelectors.deviceList);
+  const isDeviceListLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
   const items = directories.filter((d) => !environmentId || d.environmentId === environmentId);
   const error = environmentsRequest.error || directoriesRequest.error || deviceRequest.error;
   return (
@@ -85,14 +86,14 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
             Promise.all([
               environmentsRequest.revalidate(),
               directoriesRequest.revalidate(),
-              deviceRequest.mutate(),
+              deviceRequest.revalidate(),
             ])
           }
         />
       ) : null}
       {error ? null : !directoriesRequest.hasData ||
         !environmentsRequest.hasData ||
-        deviceRequest.isLoading ? (
+        !isDeviceListLoaded ? (
         <Text>{t('loading', { ns: 'common' })}</Text>
       ) : !items.length ? (
         <Flexbox gap={12} paddingBlock={24}>

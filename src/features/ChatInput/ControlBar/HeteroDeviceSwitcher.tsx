@@ -298,8 +298,8 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
   // a switch.
   const { data: devices, isLoading, mutate: refreshDevices } = useDeviceList();
   // Until `useDeviceList` answers, name the bound device from the device store,
-  // which is seeded from the persisted device list before paint — otherwise the
-  // chip reads "Unknown device" on every reload.
+  // whose replica paints the persisted device list first — otherwise the chip
+  // reads "Unknown device" on every reload.
   const storedBoundDevice = useDeviceStore(deviceSelectors.getDeviceById(boundDeviceId));
 
   // The current machine's own gateway deviceId (desktop only), used to badge the

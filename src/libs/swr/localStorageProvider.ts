@@ -27,7 +27,6 @@ import { bootTiming } from '@/libs/bootTiming';
 
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import { migrateMessageListCache } from './migrations/messageListCache';
-import { isConfirmedLiveEntry, sanitizeForPersistence } from './persistSanitizers';
 import { isScopeTrusted } from './useCacheScope';
 
 interface CacheEntry<T = unknown> {
@@ -49,11 +48,6 @@ export interface CacheProviderOptions {
   /** SWR key patterns persisted to the IndexedDB tier. */
   idbPatterns?: string[];
   /**
-   * Whether an in-memory entry is confirmed data that a lossy (sanitized)
-   * snapshot from another tab must not overwrite. Defaults to never.
-   */
-  isConfirmedLive?: (key: string, value: unknown) => boolean;
-  /**
    * Predicate marking a scope as *provisional* — writes made while it is active
    * must never be persisted. On desktop the identity round-trip can complete (or
    * the CacheHydrationGate timeout backstop can fire) before `userId` resolves,
@@ -72,11 +66,6 @@ export interface CacheProviderOptions {
   onError?: (error: Error) => void;
   /** Called after a scope's IndexedDB tier finishes hydrating. */
   onScopeHydrated?: (scope: string) => void;
-  /**
-   * Reshape an entry right before it is written to either tier (the in-memory
-   * entry is untouched). Return `undefined` to skip persisting that key.
-   */
-  sanitize?: (key: string, value: unknown) => unknown;
   /**
    * Cache TTL in milliseconds, defaults to 7 days. Governs the localStorage
    * tier only (small, frequently-changing shells like recents) — the IndexedDB
@@ -146,8 +135,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     version = '1.0.0',
     onError = (error) => console.error('[SWR Cache]', error),
     onScopeHydrated,
-    sanitize = (_key: string, value: unknown) => value,
-    isConfirmedLive = () => false,
   } = options;
 
   // SSR / no storage → plain memory cache, no persistence. Still signal
@@ -213,8 +200,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       const entries = Array.from(cacheMapInstance.entries())
         .filter(([k]) => matchesPattern(k, localPatterns))
         .slice(-maxLocalEntries)
-        .map(([k, data]) => [k, sanitize(k, data)] as const)
-        .filter(([, data]) => data !== undefined)
         .map(([k, data]) => [k, { data, timestamp: Date.now(), version } as CacheEntry]);
 
       const serialized = JSON.stringify(entries);
@@ -262,9 +247,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
-      const persisted = v === undefined ? undefined : sanitize(k, v);
-      if (persisted !== undefined)
-        void localDataCache.set(buildLocalDataKey(scope, k), persisted, version);
+      if (v !== undefined) void localDataCache.set(buildLocalDataKey(scope, k), v, version);
     }
   };
 
@@ -407,12 +390,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       try {
         const parsed: [string, CacheEntry][] = JSON.parse(event.newValue);
         parsed.forEach(([key, entry]) => {
-          if (!matchesPattern(key, localPatterns)) return;
-          // A sanitized entry is a lossy snapshot (e.g. device presence stripped):
-          // never let another tab's copy downgrade this tab's confirmed data.
-          const live = cacheMapInstance!.get(key);
-          if (live !== undefined && isConfirmedLive(key, live)) return;
-          cacheMapInstance!.hydrate([[key, entry.data]]);
+          if (matchesPattern(key, localPatterns)) cacheMapInstance!.hydrate([[key, entry.data]]);
         });
       } catch (error) {
         onError(error as Error);
@@ -522,10 +500,6 @@ export const CACHE_TIERS = {
     'agentBuilder:suggestions', // builder opening-suggestion chips (skip LLM regen on revisit)
     'taskTemplate:', // home task-template recommendations
     'modelConfig:', // small remote model config shells used by home starter chips
-    // The device store's list: names the bound device and resolves its cwd on
-    // first paint. Persisted through `sanitizeForPersistence`, so presence is
-    // stored as unknown. `useDeviceList` (`device/listDevices`) stays memory-only.
-    'device:listDevices',
   ],
 } as const;
 
@@ -554,9 +528,7 @@ export const swrCacheProvider = (
     // on a real scope flip, so quarantined writes never survive a switch.
     isEphemeralScope: () => !isScopeTrusted(),
     localPatterns: [...CACHE_TIERS.local],
-    isConfirmedLive: isConfirmedLiveEntry,
     onScopeHydrated,
-    sanitize: sanitizeForPersistence,
     // Governs the localStorage tier only (recents-style shells); the IndexedDB
     // tier (messages, topics, …) never expires. 7 days is plenty for recents.
     ttl: 7 * 24 * 60 * 60 * 1000, // 7 days
