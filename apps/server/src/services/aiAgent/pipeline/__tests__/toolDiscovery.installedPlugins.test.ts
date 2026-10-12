@@ -1,4 +1,4 @@
-import type { LobeToolManifest } from '@lobechat/context-engine';
+import { type LobeToolManifest, ToolResolver } from '@lobechat/context-engine';
 import { describe, expect, it, vi } from 'vitest';
 
 import { buildToolDiscoveryConfig } from '@/server/modules/AgentRuntime/executorHelpers';
@@ -24,8 +24,16 @@ vi.mock('@/server/services/connector/refresh', () => ({
   buildLastSyncedAtMap: vi.fn().mockReturnValue(new Map()),
   scheduleStaleConnectorToolsRefresh: vi.fn(),
 }));
+// `isConfigured` decides `gatewayConfigured`, i.e. whether a run routes tool
+// calls through a device gateway — the tests flip it to cover both modes.
+const { deviceGatewayState } = vi.hoisted(() => ({ deviceGatewayState: { isConfigured: false } }));
 vi.mock('@/server/services/deviceGateway', () => ({
-  deviceGateway: { isConfigured: false, queryDeviceList: vi.fn().mockResolvedValue([]) },
+  deviceGateway: {
+    get isConfigured() {
+      return deviceGatewayState.isConfigured;
+    },
+    queryDeviceList: vi.fn().mockResolvedValue([]),
+  },
 }));
 
 const FEISHU = 'tituwork-feishu-mcp';
@@ -34,8 +42,8 @@ const FEISHU = 'tituwork-feishu-mcp';
  * A user-level installed MCP plugin row, shaped like `PluginModel.query()`:
  * the manifest carries the `api` list the activator's manifest map needs.
  */
-const installedPlugin = (identifier: string) => ({
-  customParams: { mcp: { type: 'http' } },
+const installedPlugin = (identifier: string, transport: 'http' | 'stdio' = 'http') => ({
+  customParams: { mcp: { type: transport } },
   identifier,
   manifest: {
     api: [
@@ -54,12 +62,18 @@ const installedPlugin = (identifier: string) => ({
 
 interface RunOptions {
   disabledPluginIds?: string[];
+  /** A device gateway is configured for the deployment. */
+  gatewayConfigured?: boolean;
   /** The agent's own `plugins` config — i.e. what the user pinned. */
   plugins?: string[];
+  /** Transport the installed plugin row reports. */
+  transport?: 'http' | 'stdio';
 }
 
-const run = (options: RunOptions = {}) =>
-  discoverTools(
+const run = (options: RunOptions = {}) => {
+  deviceGatewayState.isConfigured = options.gatewayConfigured ?? false;
+
+  return discoverTools(
     {
       agentDocumentsService: { hasDocuments: vi.fn().mockResolvedValue(false) },
       composioService: { getComposioManifests: vi.fn().mockResolvedValue([]) },
@@ -73,7 +87,9 @@ const run = (options: RunOptions = {}) =>
         getLobehubSkillManifests: vi.fn().mockResolvedValue([]),
       }),
       messageModel: { update: vi.fn() },
-      pluginModel: { query: vi.fn().mockResolvedValue([installedPlugin(FEISHU)]) },
+      pluginModel: {
+        query: vi.fn().mockResolvedValue([installedPlugin(FEISHU, options.transport ?? 'http')]),
+      },
       userId: 'user-1',
     } as never,
     {
@@ -96,6 +112,7 @@ const run = (options: RunOptions = {}) =>
       throwIfExecutionAborted: vi.fn(),
     } as never,
   );
+};
 
 /** Exactly what the model reads in `<available_tools>`. */
 const availableToolIds = (
@@ -151,5 +168,63 @@ describe('discoverTools — installed-but-not-pinned plugins (three-state `auto`
       availableToolIds(result.toolManifestMap, result.toolsResult.enabledToolIds),
     ).not.toContain(FEISHU);
     expect(offeredToolNames(result).some((name) => name.startsWith(`${FEISHU}____`))).toBe(false);
+  });
+});
+
+/**
+ * Replay the activator's effect on the operation's tool set: `ToolResolver`
+ * copies the executor map into the operation snapshot and `applyActivation`
+ * never revisits it, so discovery is the only place the dispatch target can be
+ * decided for a tool that only becomes callable mid-run.
+ */
+const activateAfterDiscovery = (
+  result: Awaited<ReturnType<typeof run>>,
+  identifier: string,
+): ReturnType<ToolResolver['resolve']> =>
+  new ToolResolver().resolve(
+    {
+      enabledToolIds: result.toolsResult.enabledToolIds,
+      executorMap: result.toolExecutorMap,
+      manifestMap: result.toolManifestMap,
+      sourceMap: result.toolSourceMap,
+      tools: result.tools ?? [],
+    },
+    { activatedTools: [] },
+    [
+      {
+        activatedAtStep: 1,
+        id: identifier,
+        manifest: result.toolManifestMap[identifier],
+        source: 'discovery',
+      },
+    ],
+  );
+
+describe('discoverTools — executor routing for a discoverable MCP plugin', () => {
+  it('keeps a discoverable stdio plugin client-executed across activation', async () => {
+    const result = await run({ transport: 'stdio' });
+
+    // A stdio MCP runs as a local process on the user's machine, so it must
+    // never be dispatched to the self-hosted server.
+    expect(result.toolExecutorMap[FEISHU]).toBe('client');
+
+    const resolved = activateAfterDiscovery(result, FEISHU);
+    expect(resolved.enabledToolIds).toContain(FEISHU);
+    expect(resolved.executorMap?.[FEISHU]).toBe('client');
+  });
+
+  it('leaves a discoverable http plugin on the server execution path', async () => {
+    const result = await run({ transport: 'http' });
+
+    expect(result.toolExecutorMap[FEISHU]).toBeUndefined();
+    expect(activateAfterDiscovery(result, FEISHU).executorMap?.[FEISHU]).toBeUndefined();
+  });
+
+  it('lets a configured device gateway own the route', async () => {
+    const result = await run({ gatewayConfigured: true, transport: 'stdio' });
+
+    // With a gateway every caller converges on the device-gateway path, so no
+    // client executor is set — the remote-device proxy resolves the route.
+    expect(result.toolExecutorMap[FEISHU]).toBeUndefined();
   });
 });

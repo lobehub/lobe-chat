@@ -290,22 +290,55 @@ describe('resolveDiscoveryPool', () => {
 });
 
 describe('resolveClientExecutors', () => {
+  const manifestMap = {
+    'local': manifest('local', { executors: ['client'] }),
+    'server': manifest('server'),
+    'stdio-mcp': manifest('stdio-mcp', { type: 'mcp' }),
+  };
+
   it('marks client-executed and stdio tools only without a gateway', () => {
-    const manifestMap = {
-      'local': manifest('local', { executors: ['client'] }),
-      'server': manifest('server'),
-      'stdio-mcp': manifest('stdio-mcp'),
-    };
     expect(
       resolveClientExecutors({
-        enabledIds: new Set(['stdio-mcp']),
         hasDeviceProxy: false,
         manifestMap,
-        stdioIdentifiers: ['stdio-mcp', 'not-enabled'],
+        stdioIdentifiers: ['stdio-mcp', 'no-manifest'],
       }),
     ).toEqual({ 'local': 'client', 'stdio-mcp': 'client' });
+
+    // With a gateway the executor stays unset: every caller converges on the
+    // device-gateway route, and marking the client here would bypass it.
     expect(
-      resolveClientExecutors({ enabledIds: new Set(), hasDeviceProxy: true, manifestMap }),
+      resolveClientExecutors({
+        hasDeviceProxy: true,
+        manifestMap,
+        stdioIdentifiers: ['stdio-mcp'],
+      }),
+    ).toEqual({});
+  });
+
+  it('marks a stdio plugin that is only discoverable, not enabled', () => {
+    // The activator can enable `stdio-mcp` mid-run. `ToolResolver` copies this
+    // map into the operation snapshot and `applyActivation` never revisits it,
+    // so an id left out here would be dispatched to the server — running the
+    // user's local MCP command there instead of on their machine.
+    expect(
+      resolveClientExecutors({
+        hasDeviceProxy: false,
+        manifestMap: { 'stdio-mcp': manifestMap['stdio-mcp'] },
+        stdioIdentifiers: ['stdio-mcp'],
+      }),
+    ).toEqual({ 'stdio-mcp': 'client' });
+  });
+
+  it('never marks a plugin that is not stdio', () => {
+    // An http MCP plugin in the same pool keeps running through the server's
+    // MCP path; only the stdio list is client-executed.
+    expect(
+      resolveClientExecutors({
+        hasDeviceProxy: false,
+        manifestMap: { 'http-mcp': manifest('http-mcp', { type: 'mcp' }) },
+        stdioIdentifiers: [],
+      }),
     ).toEqual({});
   });
 });

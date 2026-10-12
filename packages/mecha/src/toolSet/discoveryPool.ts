@@ -221,8 +221,6 @@ export const resolveDiscoveryPool = (request: DiscoveryPoolRequest): DiscoveryPo
 };
 
 export interface ClientExecutorsRequest {
-  /** Identifiers the engine enabled for this run. */
-  enabledIds: ReadonlySet<string>;
   /** A device gateway exists; tool calls tunnel to a registered device. */
   hasDeviceProxy: boolean;
   manifestMap: Readonly<Record<string, LobeToolManifest>>;
@@ -235,6 +233,14 @@ export interface ClientExecutorsRequest {
  * marked for direct client dispatch only in the standalone deployment: with a
  * gateway every caller converges on the device-gateway path and the executor
  * stays unset so the remote-device proxy resolves the route.
+ *
+ * A stdio entry is recognised by being *part of this run's pool*, not by being
+ * enabled. The activator can turn a discoverable-but-unpinned plugin into a
+ * callable tool mid-run, and `ToolResolver.applyActivation` adds it without
+ * re-running this pass — an id left out here would be dispatched to the server
+ * and run the user's local MCP command there instead of on their machine.
+ * Marking the whole pool up front costs nothing: an executor entry for a tool
+ * nobody calls is inert, and a share run prunes what it does not grant.
  */
 export const resolveClientExecutors = (
   request: ClientExecutorsRequest,
@@ -246,7 +252,7 @@ export const resolveClientExecutors = (
       executorMap[id] = 'client';
   }
   for (const id of request.stdioIdentifiers ?? []) {
-    if (request.enabledIds.has(id)) executorMap[id] = 'client';
+    if (request.manifestMap[id]) executorMap[id] = 'client';
   }
   return executorMap;
 };

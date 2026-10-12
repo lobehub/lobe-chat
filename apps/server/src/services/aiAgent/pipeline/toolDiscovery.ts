@@ -1217,7 +1217,6 @@ export const discoverTools = async (
     Object.assign(
       toolExecutorMap,
       resolveClientExecutors({
-        enabledIds: new Set(manifestMap.keys()),
         hasDeviceProxy: gatewayConfigured,
         manifestMap: toolManifestMap,
         stdioIdentifiers: [
