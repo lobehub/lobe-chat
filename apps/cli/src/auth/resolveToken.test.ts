@@ -130,6 +130,21 @@ describe('resolveToken', () => {
   });
 
   describe('with stored credentials', () => {
+    it.each([
+      { status: 'unavailable', exitCode: 75 },
+      { status: 'spent', exitCode: 1 },
+      { status: 'refused', exitCode: 1 },
+      { status: 'no-login', exitCode: 1 },
+    ] as const)(
+      'uses exit $exitCode for $status with a retry policy',
+      async ({ status, exitCode }) => {
+        vi.mocked(getValidToken).mockResolvedValue({ detail: 'controlled failure', status });
+
+        await expect(resolveToken({ unavailableExitCode: 75 })).rejects.toThrow('process.exit');
+        expect(exitSpy).toHaveBeenCalledWith(exitCode);
+      },
+    );
+
     it('should return stored credentials token', async () => {
       const token = makeJwt('stored-user');
       vi.mocked(getValidToken).mockResolvedValue({

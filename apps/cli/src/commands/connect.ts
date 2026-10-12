@@ -58,6 +58,7 @@ import {
 } from '../device/register';
 import { TerminalSessionManager } from '../device/terminal';
 import {
+  CONNECT_RETRYABLE_EXIT_CODE,
   getWorkspaceFailureExitCode,
   installConnectService,
   readConnectServiceStatus,
@@ -337,7 +338,8 @@ function buildDaemonArgs(options: ConnectOptions): string[] {
 }
 
 async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
-  let auth = await resolveToken(options);
+  const unavailableExitCode = options.workspace ? CONNECT_RETRYABLE_EXIT_CODE : undefined;
+  let auth = await resolveToken({ ...options, unavailableExitCode });
   const settings = loadSettings();
   const gatewayUrl = normalizeUrl(options.gateway) || settings?.gatewayUrl;
 
@@ -387,7 +389,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
 
   // Re-resolve the admin auth and, for workspace mode, re-mint the connect token.
   const refreshConnectToken = async (): Promise<string | undefined> => {
-    const refreshed = await resolveToken({});
+    const refreshed = await resolveToken({ unavailableExitCode });
     if (!refreshed) return undefined;
     auth = refreshed;
     if (workspaceId) {

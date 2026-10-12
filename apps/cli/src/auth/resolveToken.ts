@@ -9,6 +9,8 @@ import { pickAuthSource } from './source';
 interface ResolveTokenOptions {
   serviceToken?: string;
   token?: string;
+  /** Override the exit status for transient stored-credential refresh failures. */
+  unavailableExitCode?: number;
   userId?: string;
 }
 
@@ -112,5 +114,5 @@ export async function resolveToken(options: ResolveTokenOptions): Promise<Resolv
       ? `${report.detail} ${report.fix}`
       : `No authentication found. Run '${CLI_PRIMARY_BIN} login' first, or set ${CLI_API_KEY_ENV}, or provide --token.`,
   );
-  process.exit(1);
+  process.exit(result.status === 'unavailable' ? (options.unavailableExitCode ?? 1) : 1);
 }
