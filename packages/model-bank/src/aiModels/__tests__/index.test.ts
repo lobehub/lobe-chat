@@ -406,7 +406,14 @@ describe('subscription model catalogs', () => {
 });
 
 describe('anthropic contextCachingTTL extend param', () => {
-  it('accompanies disableContextCaching on every anthropic card', async () => {
+  // Cache writes tiered by prompt length: the runtime supplies no tier to a `ttl` lookup, so these
+  // cards cannot price a 1h write and do not offer the toggle.
+  const TIERED_CACHE_WRITE_CARDS = new Set(['claude-haiku-5-5']);
+
+  const cacheWriteUnit = (card: { pricing?: { units?: any[] } }) =>
+    card.pricing?.units?.find((unit) => unit.name === 'textInput_cacheWrite');
+
+  it('is offered on every caching anthropic card except the tiered-cache-write ones', async () => {
     const { default: anthropicModels } = await import('../anthropic');
     const cachingCards = anthropicModels.filter((m) =>
       m.settings?.extendParams?.includes('disableContextCaching'),
@@ -414,7 +421,27 @@ describe('anthropic contextCachingTTL extend param', () => {
 
     expect(cachingCards.length).toBeGreaterThan(0);
     for (const card of cachingCards) {
-      expect(card.settings!.extendParams, card.id).toContain('contextCachingTTL');
+      if (TIERED_CACHE_WRITE_CARDS.has(card.id)) {
+        expect(cacheWriteUnit(card)?.strategy, card.id).toBe('tiered');
+        expect(card.settings?.extendParams, card.id).not.toContain('contextCachingTTL');
+      } else {
+        expect(card.settings?.extendParams, card.id).toContain('contextCachingTTL');
+      }
+    }
+  });
+
+  it('prices both ttls by ttl alone wherever it is offered', async () => {
+    const { default: anthropicModels } = await import('../anthropic');
+    const ttlToggleCards = anthropicModels.filter((m) =>
+      m.settings?.extendParams?.includes('contextCachingTTL'),
+    );
+
+    expect(ttlToggleCards.length).toBeGreaterThan(0);
+    for (const card of ttlToggleCards) {
+      const unit = cacheWriteUnit(card);
+      expect(unit?.strategy, card.id).toBe('lookup');
+      expect(unit?.lookup?.pricingParams, card.id).toEqual(['ttl']);
+      expect(Object.keys(unit?.lookup?.prices ?? {}).sort(), card.id).toEqual(['1h', '5m']);
     }
   });
 });
