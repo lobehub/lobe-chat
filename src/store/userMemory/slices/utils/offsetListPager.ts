@@ -29,6 +29,18 @@ interface OffsetListPagerOptions {
   slice: OffsetPagedSlice;
 }
 
+/**
+ * A delete that waited behind other paging work and found another account
+ * active when its turn came. It was not sent: the server call would run with
+ * the new account's credentials. The optimistic removal is rolled back.
+ */
+export class MemoryDeleteScopeChangedError extends Error {
+  constructor() {
+    super('The account changed before the delete could be sent');
+    this.name = 'MemoryDeleteScopeChangedError';
+  }
+}
+
 /** Shown on the footer when the head could not be refreshed and no request error is known. */
 const staleHeadError = () => new Error('Failed to refresh the list before loading more');
 
@@ -141,6 +153,12 @@ export class OffsetListPager {
     const tokens = this.#slice.beginEntityOptimistic(id, () => undefined);
 
     return this.#serialize(async () => {
+      // Queued behind a page or another delete: by the time it runs, another
+      // account may be active. Never send it under that account's credentials.
+      if (this.#scope() !== scope) {
+        for (const token of tokens) token.rollback();
+        throw new MemoryDeleteScopeChangedError();
+      }
       try {
         await serverCall();
       } catch (error) {
