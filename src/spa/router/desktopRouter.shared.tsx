@@ -1438,6 +1438,23 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
               },
               {
                 element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/teams'),
+                  'Desktop > Workspace > Settings > Teams',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+                path: 'teams',
+              },
+              // Team detail — the page reads the team id from the route param.
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/teams'),
+                  'Desktop > Workspace > Settings > Teams > Detail',
+                ),
+                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('form') }) },
+                path: 'teams/:teamId',
+              },
+              {
+                element: dynamicElement(
                   () => import('@/routes/(main)/[workspaceSlug]/settings/notification'),
                   'Desktop > Workspace > Settings > Notification',
                 ),

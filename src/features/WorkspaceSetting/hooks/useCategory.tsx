@@ -28,6 +28,7 @@ import {
   Sparkles,
   TagIcon,
   Users,
+  UsersRound,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -157,6 +158,11 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               icon: Users,
               key: WorkspaceSettingsTabs.Members,
               label: t('workspaceSetting.tab.members'),
+            },
+            {
+              icon: UsersRound,
+              key: WorkspaceSettingsTabs.Teams,
+              label: t('workspaceSetting.tab.teams'),
             },
             {
               icon: MonitorSmartphoneIcon,
