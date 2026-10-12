@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
   ActionIcon,
   type DropdownItem,
+  DropdownMenu,
   Text,
 } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
@@ -17,6 +18,7 @@ import {
   FolderOpenIcon,
   LucideCheck,
   type LucideIcon,
+  MoreHorizontalIcon,
   PlusIcon,
 } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
@@ -302,46 +304,54 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
   const hasCollapsedUnread = !expanded && unreadCount > 0;
   const hasCollapsedIndicators = hasCollapsedStatus || hasCollapsedUnread;
   const ProjectFolderIcon = expanded ? FolderOpenIcon : FolderClosedIcon;
-  const action =
-    canAddTopic || hasCollapsedIndicators ? (
-      <Flexbox horizontal align={'center'} gap={4}>
-        {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
-        {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
-        {canAddTopic && (
-          <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
-            {needsPlainStart ? (
-              <>
-                <AgentDirectoryActions
-                  hideStartAction
-                  agentId={currentAgentId!}
-                  extraMenuItems={subGroupMenuItems}
-                  path={workingDirectory!}
-                  topics={children}
-                  onLegacyStart={handleAddTopic}
-                />
-                <ActionIcon
-                  icon={PlusIcon}
-                  size={'small'}
-                  title={tProject('directories.start')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStartPlain();
-                  }}
-                />
-              </>
-            ) : (
-              <AgentDirectoryActions
-                agentId={currentAgentId!}
-                extraMenuItems={subGroupMenuItems}
-                path={workingDirectory!}
-                topics={children}
-                onLegacyStart={handleAddTopic}
-              />
-            )}
-          </span>
+  // Sub-grouping needs no directory: when the directory actions can't render
+  // (e.g. the newest topic is conversation-only), the menu stands on its own.
+  const action = (
+    <Flexbox horizontal align={'center'} gap={4}>
+      {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
+      {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
+      <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
+        {!canAddTopic ? (
+          <DropdownMenu items={subGroupMenuItems}>
+            <ActionIcon
+              icon={MoreHorizontalIcon}
+              size={'small'}
+              title={tProject('topics.subGroup.title')}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </DropdownMenu>
+        ) : needsPlainStart ? (
+          <>
+            <AgentDirectoryActions
+              hideStartAction
+              agentId={currentAgentId!}
+              extraMenuItems={subGroupMenuItems}
+              path={workingDirectory!}
+              topics={children}
+              onLegacyStart={handleAddTopic}
+            />
+            <ActionIcon
+              icon={PlusIcon}
+              size={'small'}
+              title={tProject('directories.start')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStartPlain();
+              }}
+            />
+          </>
+        ) : (
+          <AgentDirectoryActions
+            agentId={currentAgentId!}
+            extraMenuItems={subGroupMenuItems}
+            path={workingDirectory!}
+            topics={children}
+            onLegacyStart={handleAddTopic}
+          />
         )}
-      </Flexbox>
-    ) : undefined;
+      </span>
+    </Flexbox>
+  );
 
   return (
     <AccordionItem value={id}>
@@ -399,18 +409,16 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
             </Text>
           </Flexbox>
         </AccordionTrigger>
-        {action && (
-          <div
-            className={cx(
-              'accordion-action',
-              accordionStyles.action,
-              accordionStyles.actionBorderless,
-              hasCollapsedIndicators && accordionStyles.actionAlwaysVisible,
-            )}
-          >
-            {action}
-          </div>
-        )}
+        <div
+          className={cx(
+            'accordion-action',
+            accordionStyles.action,
+            accordionStyles.actionBorderless,
+            hasCollapsedIndicators && accordionStyles.actionAlwaysVisible,
+          )}
+        >
+          {action}
+        </div>
       </AccordionHeader>
       <AccordionPanel contentStyle={{ padding: 0 }}>
         <ProjectTopicList groupId={id} topics={children} />

@@ -183,6 +183,26 @@ describe('Project topic group item', () => {
     subGroupModeMock.value = 'none';
   });
 
+  it('keeps the sub-group menu when the newest project topic has no working directory', () => {
+    // Without a directory the add-topic actions can't render; the grouping
+    // choice must not disappear with them.
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Conversation only' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    expect(screen.queryByRole('button', { name: 'directories.start' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'topics.subGroup.title' })).toBeTruthy();
+  });
+
   it('sections a project group by device when that mode is picked', () => {
     subGroupModeMock.value = 'byDevice';
     directoryRows.push(
