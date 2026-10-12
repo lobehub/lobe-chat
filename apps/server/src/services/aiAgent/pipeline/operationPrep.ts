@@ -846,7 +846,14 @@ export const prepareOperation = async (
     // batch's unit runs name the batch's plan skill that way.
     // The catalog carries no bodies; only the pinned / run-named skills read
     // theirs, so a library that grows with every batch stays cheap to list.
-    const userSkills = new UserSkillService(deps.db, deps.userId, deps.workspaceId);
+    // A workspace-public agent never reads its caller's private skills — every
+    // user skill is private — so its runs see none of them.
+    const userSkills = new UserSkillService(
+      deps.db,
+      deps.userId,
+      deps.workspaceId,
+      deps.workspaceId ? await deps.agentModel.getAgentVisibility(resolvedAgentId) : undefined,
+    );
     const namedUserSkills = await userSkills.loadRuntimeSkills([
       ...pinnedSkillIds,
       ...(agentPlugins ?? []),

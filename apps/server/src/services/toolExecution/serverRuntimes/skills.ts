@@ -1087,7 +1087,12 @@ export const skillsRuntime: ServerRuntimeRegistration = {
         // Models vary the casing of a name, as the preloaded lookup tolerates.
         const name = canonicalUserSkillIdentifier(requested);
         if (!name || !isSkillReachable(name)) return undefined;
-        const [skill] = await new UserSkillService(context.serverDB!, context.userId!, workspaceId)
+        const [skill] = await new UserSkillService(
+          context.serverDB!,
+          context.userId!,
+          workspaceId,
+          context.agentVisibility,
+        )
           .loadRuntimeSkills([name])
           .catch((error) => {
             log('failed to load user skill %s: %O', name, error);

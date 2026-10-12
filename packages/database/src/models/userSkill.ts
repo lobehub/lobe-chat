@@ -84,10 +84,23 @@ export class UserSkillModel {
   private userId: string;
   private workspaceId?: string;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+  /**
+   * Visibility of the agent a read runs for. A workspace-public agent must not
+   * read its caller's private rows — and user skills are private — so such a
+   * run sees none of them (see `buildWorkspaceWhere`).
+   */
+  private callerAgentVisibility?: 'private' | 'public' | null;
+
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    callerAgentVisibility?: 'private' | 'public' | null,
+  ) {
     this.db = db;
     this.userId = userId;
     this.workspaceId = workspaceId;
+    this.callerAgentVisibility = callerAgentVisibility;
   }
 
   /**
@@ -97,7 +110,14 @@ export class UserSkillModel {
    */
   private scope = () =>
     and(
-      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, documents),
+      buildWorkspaceWhere(
+        {
+          callerAgentVisibility: this.callerAgentVisibility,
+          userId: this.userId,
+          workspaceId: this.workspaceId,
+        },
+        documents,
+      ),
       eq(documents.userId, this.userId),
     );
 

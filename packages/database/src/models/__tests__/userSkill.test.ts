@@ -125,8 +125,13 @@ describe('UserSkillModel', () => {
     expect(await member.findByNames(['migrate-slice'])).toEqual([]);
     expect(await member.findById(skill.id)).toBeUndefined();
     expect(await member.revise(skill.id, { content: 'hijack' })).toBeUndefined();
-    // The creator still has it.
+    // The creator still has it…
     expect((await creator.listCatalog()).map((item) => item.id)).toEqual([skill.id]);
+    // …but not through a workspace-public agent, which must not read (and
+    // echo) its caller's private instructions.
+    const throughPublicAgent = new UserSkillModel(serverDB, userId, workspace.id, 'public');
+    expect(await throughPublicAgent.listCatalog()).toEqual([]);
+    expect(await throughPublicAgent.findByNames(['migrate-slice'])).toEqual([]);
     await serverDB.delete(workspaces);
   });
 

@@ -1,8 +1,10 @@
 import { buildUserSkillIdentifier } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { GoalRolloutLearning, GoalRolloutPlanSkill } from '@lobechat/types';
+import { and, eq, isNull } from 'drizzle-orm';
 
 import { type ExpertiseCarrier, ExpertiseModel } from '@/database/models/expertise';
+import { expertiseBindings, expertiseDomains } from '@/database/schemas';
 
 import { UserSkillService } from '../userSkill';
 
@@ -76,6 +78,8 @@ export const learnedRulesClause = (
 
 /** The one expertise domain a carrier keeps for every goal batch it runs. */
 export const BATCH_DOMAIN_TITLE = 'Goal batch rules';
+/** Its gate question — with the title, how a generated batch domain is recognized. */
+const BATCH_DOMAIN_FILTER = 'Doing or verifying a unit of a goal batch.';
 
 export class BatchPlanSkillService {
   constructor(
@@ -140,15 +144,38 @@ export class BatchPlanSkillService {
    * (opened on the first break). Nothing is compiled from it: later units'
    * acceptance carries the rule as a clause of its requirement.
    */
-  /** The carrier's existing batch domain, if it has one. */
-  private findBatchDomain = async (expertise: ExpertiseModel, carrier: ExpertiseCarrier) => {
-    const bound =
+  /**
+   * The batch domain bound to exactly this carrier, if it has one. Not the
+   * carrier's inherited list: an agent also sees the owner's domains, and a
+   * rule meant for one agent must not land in a domain every agent inherits.
+   */
+  private findBatchDomain = async (carrier: ExpertiseCarrier) => {
+    const binding =
       carrier.type === 'agent'
-        ? await expertise.listDomainsForAgent(carrier.id)
+        ? eq(expertiseBindings.agentId, carrier.id)
         : carrier.type === 'project'
-          ? await expertise.listDomainsForProject(carrier.id)
-          : await expertise.listDomainsForOwner();
-    return bound.find(({ domain }) => domain.title === BATCH_DOMAIN_TITLE)?.domain.id;
+          ? eq(expertiseBindings.projectId, carrier.id)
+          : and(
+              this.workspaceId
+                ? eq(expertiseBindings.boundWorkspaceId, this.workspaceId)
+                : eq(expertiseBindings.boundUserId, this.userId),
+              isNull(expertiseBindings.agentId),
+              isNull(expertiseBindings.projectId),
+            );
+    const [row] = await this.db
+      .select({ id: expertiseDomains.id })
+      .from(expertiseBindings)
+      .innerJoin(expertiseDomains, eq(expertiseDomains.id, expertiseBindings.domainId))
+      .where(
+        and(
+          binding,
+          eq(expertiseDomains.userId, this.userId),
+          eq(expertiseDomains.title, BATCH_DOMAIN_TITLE),
+          eq(expertiseDomains.domainFilter, BATCH_DOMAIN_FILTER),
+        ),
+      )
+      .limit(1);
+    return row?.id;
   };
 
   learn = async (params: {
@@ -168,11 +195,11 @@ export class BatchPlanSkillService {
     // domain per batch would grow that load with every batch ever run.
     const domainId =
       params.domainId ??
-      (await this.findBatchDomain(expertise, params.carrier)) ??
+      (await this.findBatchDomain(params.carrier)) ??
       (await expertise.createDomain({
         brief: 'What the release gates of goal batches have learned.',
         carrier: params.carrier,
-        domainFilter: 'Doing or verifying a unit of a goal batch.',
+        domainFilter: BATCH_DOMAIN_FILTER,
         title: BATCH_DOMAIN_TITLE,
       }));
     const scope = params.planSkill

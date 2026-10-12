@@ -86,8 +86,17 @@ export const toRuntimeSkill = (skill: UserSkillItem): UserRuntimeSkill => {
 export class UserSkillService {
   private model: UserSkillModel;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
-    this.model = new UserSkillModel(db, userId, workspaceId);
+  /**
+   * `callerAgentVisibility` is the run's agent: a workspace-public agent reads
+   * none of its caller's (private) skills.
+   */
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    callerAgentVisibility?: 'private' | 'public' | null,
+  ) {
+    this.model = new UserSkillModel(db, userId, workspaceId, callerAgentVisibility);
   }
 
   /** A free name from `base`: `base`, then `base-2`, `base-3`, … */

@@ -3221,7 +3221,17 @@ describe('GoalService', () => {
       return (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     };
 
+    // The owner already keeps a batch domain of their own, inherited by every
+    // agent: an agent's rule must not land there.
+    const ownerDomainId = await new ExpertiseModel(serverDB, userId).createDomain({
+      brief: 'What the release gates of goal batches have learned.',
+      carrier: { type: 'user' },
+      domainFilter: 'Doing or verifying a unit of a goal batch.',
+      title: 'Goal batch rules',
+    });
+
     const first = await breakAndRevise('First batch');
+    expect(first.learningDomainId).not.toBe(ownerDomainId);
     // Learned despite the stale executor: mounted on the goal agent it falls back to.
     expect(first.learnings).toHaveLength(1);
     const expertise = new ExpertiseModel(serverDB, userId);
