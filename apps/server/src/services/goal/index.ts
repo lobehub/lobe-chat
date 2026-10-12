@@ -32,7 +32,6 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
-  GoalRolloutPlanSkill,
   GoalRolloutState,
   GoalStatus,
   GoalTickResult,
@@ -68,12 +67,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
-import {
-  BatchPlanSkillService,
-  learnedRulesClause,
-  planSkillIdentifier,
-  planUnitBrief,
-} from './batchPlanSkill';
+import { BatchPlanSkillService, learnedRulesClause, planSkillIdentifier } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
   compareMetric,
