@@ -7,6 +7,8 @@
  * including human review (`review`) and the terminal `achieved` outcome.
  */
 export const goalStatuses = [
+  // Arranged but not started: the coordinator leaves it alone until `start`.
+  'draft',
   'planning',
   'running',
   'verifying',

@@ -94,6 +94,29 @@ The file is one of:
 an earlier task in the same plan. A later round without these links looks
 unrelated to the evidence it uses.
 
+A `tasks` plan may declare a batch with `rollout` when the work applies one
+recipe to many units (migrate N stores, cache N resources, update N callers):
+
+```json
+{
+  "action": "tasks",
+  "reason": "...",
+  "rollout": {
+    "recipe": "<procedure every unit follows>",
+    "units": ["<unit>", { "title": "<unit>", "description": "<its own pointers>" }],
+    "variants": [{ "axis": "...", "values": ["...", "..."] }]
+  },
+  "tasks": [{ "title": "<probe unit>", "description": "<full brief>" }]
+}
+```
+
+`tasks` then hold 2-5 representative probes; `units` list every other unit. The
+probes run first, the rest are released wave by wave once the probes ran through
+without a person, and a rejection revises the recipe and re-probes. Whether the
+units are one mould is the planning agent's call; the server refuses only a
+malformed declaration, a Goal with `--rollout off`, or a batch already in flight.
+No planning turn starts while a batch is in flight.
+
 `wait` is how a turn waits for time or external evidence — never sleep or poll.
 Producers deliver the event with `lh goal wake`.
 
@@ -114,7 +137,8 @@ Submits the wrap-up report from the Goal's wrap-up run.
 
 | Command                               | Effect                                                               |
 | ------------------------------------- | -------------------------------------------------------------------- |
-| `lh goal create <title>`              | Create a standalone goal and seed its graph                          |
+| `lh goal create <title>`              | Create a goal and seed its graph (`--topic`: a draft)                |
+| `lh goal start <id>`                  | Start a draft (`--rollout` folds its seed tasks into a batch)        |
 | `lh goal pause <id>` / `resume <id>`  | Stop / restart coordination (`--confirm-exit` settles a paused turn) |
 | `lh goal restart <id>`                | Reset every unfinished task to backlog                               |
 | `lh goal delete <id>`                 | Delete the goal and its graph (`--yes`)                              |
@@ -128,6 +152,15 @@ Submits the wrap-up report from the Goal's wrap-up run.
 `create --topic` links a Goal to the conversation it was created from and
 returns a `turnToken` for the first plan; without it the Goal is standalone and
 never shows on that topic's goal tray.
+
+From a chat, `create --topic` opens the Goal as a **draft**: nothing is
+dispatched until it is started. Arrange it first — seed tasks with `-t` or
+`--task-file` (titles with descriptions), adjust with `add-node` / `add-edge` —
+then launch it with `lh goal start <id>`; the owner can also start it from the
+goal page. Many tasks of one recipe start as a batch:
+`lh goal start <id> --rollout canary --recipe-file <md> --probes <2-5 node ids>`
+moves the probes into a batch and turns every other seed (or only `--units`)
+into roster units released wave by wave behind the gate.
 
 ## Decision gates and graph editing
 

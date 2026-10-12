@@ -16,7 +16,15 @@ import type { WorkType } from './work';
  * there), mirroring the AcceptanceStatus convention.
  */
 export type GoalStatus =
-  'planning' | 'running' | 'verifying' | 'review' | 'paused' | 'achieved' | 'failed' | 'canceled';
+  | 'draft'
+  | 'planning'
+  | 'running'
+  | 'verifying'
+  | 'review'
+  | 'paused'
+  | 'achieved'
+  | 'failed'
+  | 'canceled';
 
 /**
  * The execution carrier a goal is optionally bound to. Goals are standalone
@@ -463,6 +471,12 @@ export interface GoalRolloutPolicy {
     variantAxes?: GoalRolloutVariantAxis[];
   };
   trigger: GoalRolloutTrigger;
+  /**
+   * Notes for individual roster units, keyed by unit title. A main Agent that
+   * declares the batch can give each unit its own pointers (files, edge cases);
+   * a released unit's brief is the recipe plus its note.
+   */
+  unitBriefs?: Record<string, string>;
   /**
    * Roster of every homogeneous unit in the goal, probes included and in
    * delivery order. Probes are the first, fully-briefed units; the coordinator

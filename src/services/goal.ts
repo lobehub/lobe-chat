@@ -98,6 +98,9 @@ class GoalService {
 
   resume = async (id: string) => lambdaClient.goal.resume.mutate({ id });
 
+  /** Launch a draft goal; nothing was dispatched before this. */
+  start = async (id: string) => lambdaClient.goal.start.mutate({ id });
+
   /** Answer a goal's whole clarification round; the goal re-plans once with every answer. */
   answerClarifications = async (params: {
     answers: Array<{ decisionId: string; optionId: string; resolution?: string }>;

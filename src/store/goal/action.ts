@@ -306,6 +306,11 @@ export class GoalActionImpl {
     await this.refreshGoalGraph(goalId);
   };
 
+  startGoal = async (goalId: string): Promise<void> => {
+    await goalService.start(goalId);
+    await this.refreshGoalGraph(goalId);
+  };
+
   setGoalBudget = async (
     goalId: string,
     budget: {

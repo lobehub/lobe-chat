@@ -5,6 +5,7 @@ import {
   GOAL_CLARIFICATION_OPTION,
   GOAL_COORDINATOR_ACTOR_ID,
   GOAL_MANAGER_QUESTION_TITLE,
+  ROLLOUT_MAX_CANARY_SIZE,
 } from '@lobechat/const/goal';
 import { buildGoalManagerPrompt } from '@lobechat/prompts';
 import type {
@@ -45,6 +46,11 @@ import {
   QUOTA_RESET_MARGIN_MS,
   type RunFailure,
 } from './recoveryPolicy';
+import {
+  materializeRolloutBatch,
+  MAX_ROLLOUT_ROSTER,
+  normalizeRolloutRoster,
+} from './rolloutBatch';
 import { scheduleGoalAdvance } from './scheduler';
 import { recoveryEligibility } from './supervisor/policy';
 import { goalWaitSchema, GoalWaitService } from './wait';
@@ -102,6 +108,39 @@ const goalAskSchema = z
       ask.options.some((option) => option.id === ask.recommendedOptionId),
     { message: 'recommendedOptionId must name one of the options' },
   );
+const planRolloutSchema = z
+  .object({
+    /** The one reusable recipe every unit follows; the batch's Template, revised on every break. */
+    recipe: reason,
+    /** Every unit after the probes in `tasks`, in delivery order; a unit may carry its own notes. */
+    units: z
+      .array(
+        z.union([
+          z.string().trim().min(1).max(255),
+          z
+            .object({
+              title: z.string().trim().min(1).max(255),
+              description: z.string().trim().max(8000).optional(),
+            })
+            .strict(),
+        ]),
+      )
+      .min(1)
+      .max(MAX_ROLLOUT_ROSTER),
+    /** Axes the units vary along; the gate holds until the probes cover every value. */
+    variants: z
+      .array(
+        z
+          .object({
+            axis: z.string().trim().min(1).max(120),
+            values: z.array(z.string().trim().min(1).max(120)).min(1).max(20),
+          })
+          .strict(),
+      )
+      .max(10)
+      .optional(),
+  })
+  .strict();
 export const goalPlanSchema = z.discriminatedUnion('action', [
   z
     .object({
@@ -126,6 +165,14 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
         )
         .min(1)
         .max(10),
+      /**
+       * Declares the work one repeated mould and delivers it as a batch (STAMP):
+       * `tasks` become the probes that run first, the units below wait, and the
+       * coordinator releases them wave by wave once the gate shows the probes ran
+       * through without a person. Whether the work is one mould is the main
+       * Agent's judgement; the server only checks the declaration is well formed.
+       */
+      rollout: planRolloutSchema.optional(),
     })
     .strict(),
   z.object({ action: z.literal('verify'), reason }).strict(),
@@ -498,6 +545,27 @@ export class GoalManagerService {
       if (goal.status === 'planning') await model.updateStatus(goalId, 'running');
       return state;
     });
+
+  /**
+   * Starting a draft is the planning turn's answer. A conversation goal adopts
+   * the run that created it as its first turn, and coordination waits for that
+   * run to exit — so without this, `start` from inside the run would still
+   * dispatch nothing until the run ends. When the draft holds work, the turn is
+   * settled here: its arrangement is the plan. An empty draft keeps the turn
+   * open so the agent can still submit one. Caller holds the goal row lock.
+   */
+  closeTurnOnStart = async (goal: GoalItem, hasWork: boolean) => {
+    const state = goal.config?.managerState;
+    if (!state || state.consumed || !hasWork) return;
+    await this.save(this.db, goal.id, {
+      ...state,
+      consumed: true,
+      submitted: state.submitted ?? {
+        action: 'tasks',
+        reason: 'Started with the tasks arranged in the draft',
+      },
+    });
+  };
 
   /**
    * Move the management conversation onto the agent that now supervises the Goal.
@@ -1111,6 +1179,12 @@ export class GoalManagerService {
     if (!problem) {
       if (state?.readyForAcceptance || nodes.some((n) => n.title === GOAL_ACCEPTANCE_TASK_TITLE))
         return null;
+      // A batch in flight is the coordinator's to drive: when its members settle,
+      // the gate decides the next wave. A turn here would claim that moment —
+      // every member is terminal, so nothing looks in flight — and the waves
+      // would never release. Planning resumes once the roster is delivered.
+      const batch = goal.config?.rolloutState;
+      if (batch && batch.phase !== 'done') return null;
       const tasks = await new TaskModel(this.db, this.userId, this.workspaceId).findByIds(
         unfinished.flatMap((n) => (n.taskId ? [n.taskId] : [])),
       );
@@ -1381,7 +1455,10 @@ export class GoalManagerService {
         return rejectPlan('operation_mismatch', op?.status);
     }
     const graph = await this.graph(db).getGraph(goal.id);
-    if (!graph || !activeStatuses.has(goal.status)) return rejectPlan('inactive', op?.status);
+    // A draft takes plans too: the tasks land on the graph it is arranging, and
+    // nothing dispatches until the goal is started.
+    if (!graph || !(activeStatuses.has(goal.status) || goal.status === 'draft'))
+      return rejectPlan('inactive', op?.status);
     if (graph.decisions.some((d) => d.status === 'pending'))
       return rejectPlan('pending_decision', op?.status);
     if (state.submitted) return { code: 'duplicate', ok: true, submitted: state.submitted };
@@ -1547,6 +1624,83 @@ export class GoalManagerService {
       });
   };
 
+  /**
+   * Lay a main Agent's declared batch onto the graph, returning the probe node
+   * IDs in the order of `plan.tasks`. Refuses — before anything is written — a
+   * declaration the Goal's own policy or state cannot carry: rollout turned off,
+   * a takeover turn, a batch already in flight, or a probe/roster size outside
+   * what the gate and the waves can deliver whole.
+   */
+  private declareBatch = async (
+    db: LobeChatDatabase,
+    input: {
+      agentId: string;
+      goal: GoalItem;
+      plan: Extract<GoalPlan, { action: 'tasks' }> & {
+        rollout: z.infer<typeof planRolloutSchema>;
+      };
+      problemId?: string;
+      state: GoalManagerState;
+      writer: GoalGraphModel;
+    },
+  ): Promise<string[]> => {
+    const { agentId, goal, plan, problemId, state, writer } = input;
+    const refuse = (message: string, code: 'BAD_REQUEST' | 'CONFLICT' = 'BAD_REQUEST') => {
+      throw new TRPCError({ code, message });
+    };
+    const policy = goal.config?.rollout;
+    const trigger = policy?.trigger ?? 'canary';
+    if (trigger === 'off')
+      refuse('This Goal has rollout turned off; submit the units as ordinary tasks');
+    if (state.problem) refuse('A takeover turn cannot open a batch; answer the problem it names');
+    const active = goal.config?.rolloutState;
+    if (active && active.phase !== 'done')
+      refuse('A batch is already in flight; let its gate and waves finish first', 'CONFLICT');
+    if (!problemId) refuse('The Goal has no problem node to hang a batch on');
+    const maxProbes = trigger === 'full' ? 10 : ROLLOUT_MAX_CANARY_SIZE;
+    if (plan.tasks.length < 2 || plan.tasks.length > maxProbes)
+      refuse(`A batch runs 2-${maxProbes} probe tasks before its gate; got ${plan.tasks.length}`);
+
+    const units = plan.rollout.units.map((unit) =>
+      typeof unit === 'string' ? { title: unit } : unit,
+    );
+    const roster = normalizeRolloutRoster(
+      units.map((unit) => unit.title),
+      plan.tasks,
+      plan.tasks.length,
+      Number.POSITIVE_INFINITY,
+    );
+    if (roster.length > MAX_ROLLOUT_ROSTER)
+      refuse(
+        `A batch roster holds at most ${MAX_ROLLOUT_ROSTER} units; got ${roster.length}. Split the work into more than one Goal`,
+      );
+    if (roster.length <= plan.tasks.length)
+      refuse('The batch roster has no units beyond its probes; submit ordinary tasks instead');
+
+    const unitBriefs = Object.fromEntries(
+      units.flatMap((unit) =>
+        'description' in unit && unit.description ? [[unit.title, unit.description]] : [],
+      ),
+    );
+    const { probeIds } = await materializeRolloutBatch({
+      canarySize: plan.tasks.length,
+      createdByAgentId: agentId,
+      goalId: goal.id,
+      goalModel: new GoalModel(db, this.userId, this.workspaceId),
+      policy,
+      problemId: problemId!,
+      probes: plan.tasks.map((task) => ({ instruction: task.description, title: task.title })),
+      recipeOutline: plan.rollout.recipe,
+      repeatable: true,
+      roster,
+      trigger: trigger === 'full' ? 'full' : 'canary',
+      unitBriefs,
+      variants: plan.rollout.variants,
+      writer,
+    });
+    return probeIds;
+  };
+
   submit = async (goalId: string, token: string, operationId: string, input: GoalPlan) => {
     const plan = goalPlanSchema.parse(input);
     const armed = plan.action === 'wait' ? GoalWaitService.arm(plan.until) : undefined;
@@ -1622,7 +1776,18 @@ export class GoalManagerService {
         });
         const problem = graph.nodes.find((n) => n.kind === 'problem');
         const createdIds: string[] = [];
-        for (const { dependsOn: _dependsOn, ...task } of plan.tasks) {
+        if (plan.rollout) {
+          const probeIds = await this.declareBatch(db, {
+            agentId,
+            goal,
+            plan: { ...plan, rollout: plan.rollout },
+            problemId: problem?.id,
+            state,
+            writer: authored,
+          });
+          createdIds.push(...probeIds);
+        }
+        for (const { dependsOn: _dependsOn, ...task } of plan.rollout ? [] : plan.tasks) {
           const node = await authored.createNode(goalId, {
             ...task,
             kind: 'task',
