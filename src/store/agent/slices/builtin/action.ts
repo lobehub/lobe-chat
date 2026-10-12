@@ -1,5 +1,4 @@
 import { type AgentItem, type LobeAgentConfig } from '@lobechat/types';
-import { useLayoutEffect } from 'react';
 import { type PartialDeep } from 'type-fest';
 
 import {
@@ -37,8 +36,8 @@ const fetchBuiltinAgent = ({ slug }: BuiltinAgentParams): Promise<AgentItem> =>
  * The replica view keeps the long-standing `builtinAgentIdMap` (slug → id) as a
  * derived index alongside the materialized `builtinAgentMap` (slug → item): the
  * id index is what selectors and route loaders read, and the full item is what
- * re-seeds `agentMap` before paint. Both move in one commit, so a reader never
- * sees an id without its item (or vice versa).
+ * re-seeds `agentMap` before publishing the id. The index and item move in one
+ * commit, so a reader never sees an id without its item (or vice versa).
  */
 const builtinAgentLens: ReplicaLens<AgentStore, AgentItem> = {
   clear: () => ({ builtinAgentIdMap: {}, builtinAgentMap: {} }),
@@ -85,7 +84,16 @@ export class BuiltinAgentSliceActionImpl {
       actionPrefix: 'builtinAgent',
       fetcher: fetchBuiltinAgent,
       get,
-      set,
+      set: (patch, replace, action) => {
+        // Subscribers can render immediately when the id is published. Seed
+        // through the config replica first; a layout effect runs too late if
+        // that render already needs the builtin's avatar or other config.
+        const previous = get().builtinAgentMap;
+        for (const [slug, item] of Object.entries(patch.builtinAgentMap ?? {})) {
+          if (item !== previous[slug]) this.#seedAgentMap(item);
+        }
+        set(patch, replace, action);
+      },
       stateKey: 'builtinAgentReplica',
       view: builtinAgentLens,
     });
@@ -102,18 +110,9 @@ export class BuiltinAgentSliceActionImpl {
   };
 
   /**
-   * Whether `scope` is still the identity the replica is partitioned by. An
-   * async round-trip resolves under the scope it started in; a result that
-   * arrives after an identity switch must not paint or seed the switched-to
-   * identity's view (the engine drops the replica write, this guards the
-   * `agentMap` seed that sits outside the replica).
-   */
-  #isCurrentScope = (scope: string): boolean => this.#builtin.resource.scope.get() === scope;
-
-  /**
    * Confirm a builtin agent's latest value without a network round-trip — the
    * authoritative update response is already in hand (e.g. after a meta edit).
-   * Writes the slug → id index and its item, then seeds `agentMap`. A response
+   * Seeds the config before publishing the slug → id index and its item. A response
    * captured under a scope that is no longer active is dropped.
    */
   internal_replaceBuiltinAgent = (
@@ -123,7 +122,6 @@ export class BuiltinAgentSliceActionImpl {
   ): void => {
     if (!item?.id) return;
     this.#builtin.replace({ slug }, item, scope);
-    if (this.#isCurrentScope(scope)) this.#seedAgentMap(item);
   };
 
   /**
@@ -156,18 +154,6 @@ export class BuiltinAgentSliceActionImpl {
     });
     const data = this.#get().builtinAgentMap[slug];
 
-    /**
-     * Cache hits do not invoke SWR's onSuccess. Restore the identity and artwork
-     * before paint on every commit of the entry (hydrate as well as background
-     * revalidation), so a reload does not briefly display the default chief. The
-     * scope guard is the engine's: a response from an obsolete identity scope is
-     * dropped before it reaches this view.
-     */
-    useLayoutEffect(() => {
-      if (context?.isLogin === false) return;
-      this.#seedAgentMap(data);
-    }, [data, context?.isLogin]);
-
     return {
       ...sync,
       isLoading: sync.isValidating && !data,
@@ -184,10 +170,7 @@ export class BuiltinAgentSliceActionImpl {
   preHydrateBuiltinAgent = async (slug: string): Promise<boolean> => {
     const scope = cacheScope.get();
     this.#builtin.ensureScope(scope);
-    const hydrated = await this.#builtin.hydrate({ slug }, scope);
-    this.#seedAgentMap(this.#get().builtinAgentMap[slug]);
-
-    return hydrated;
+    return this.#builtin.hydrate({ slug }, scope);
   };
 }
 

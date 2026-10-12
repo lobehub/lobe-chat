@@ -82,6 +82,47 @@ describe('builtin agent replica', () => {
     vi.clearAllMocks();
   });
 
+  it.each(['network', 'hydrate', 'preHydrate', 'refresh', 'replace'] as const)(
+    'makes the config readable as soon as the builtin id is published via %s',
+    async (source) => {
+      const item = builtin(`builder-${source}`, { avatar: '🤖' });
+      const observedAvatars: Array<string | undefined> = [];
+      const unsubscribe = useAgentStore.subscribe((state) => {
+        const id = state.builtinAgentIdMap.inbox;
+        if (id) observedAvatars.push(state.agentMap[id]?.avatar);
+      });
+
+      try {
+        if (source === 'hydrate' || source === 'preHydrate') {
+          await builtinAgentResource.storage!.set(
+            { queryKey: PERSIST_KEY, scope },
+            { data: item, updatedAt: 1 },
+          );
+          vi.mocked(agentService.getBuiltinAgent).mockImplementation(pending);
+        } else {
+          vi.mocked(agentService.getBuiltinAgent).mockResolvedValue(item);
+        }
+
+        if (source === 'network' || source === 'hydrate') {
+          renderHook(() => useAgentStore.getState().useInitBuiltinAgent('inbox'), { wrapper });
+        } else {
+          await act(async () => {
+            const actions = useAgentStore.getState();
+            if (source === 'preHydrate') await actions.preHydrateBuiltinAgent('inbox');
+            else if (source === 'refresh') await actions.refreshBuiltinAgent('inbox');
+            else actions.internal_replaceBuiltinAgent('inbox', item);
+          });
+        }
+
+        await waitFor(() => expect(observedAvatars.length).toBeGreaterThan(0));
+        expect(observedAvatars).not.toContain(undefined);
+        expect(observedAvatars.every((avatar) => avatar === '🤖')).toBe(true);
+      } finally {
+        unsubscribe();
+      }
+    },
+  );
+
   it('paints the persisted slug → id and config before the network answers', async () => {
     await builtinAgentResource.storage!.set(
       { queryKey: PERSIST_KEY, scope },
@@ -237,5 +278,17 @@ describe('builtin agent replica', () => {
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(agentService.getBuiltinAgent).not.toHaveBeenCalled();
     expect(useAgentStore.getState().builtinAgentIdMap.inbox).toBeUndefined();
+  });
+
+  it('does not overwrite another builtin’s edited config when publishing an entry', () => {
+    const actions = useAgentStore.getState();
+    act(() => {
+      actions.internal_replaceBuiltinAgent('inbox', builtin('inbox-1', { avatar: '🤖' }));
+      actions.internal_dispatchAgentMap('inbox-1', { avatar: '🐱' });
+      actions.internal_replaceBuiltinAgent('agent-builder', builtin('builder-1'));
+    });
+
+    expect(useAgentStore.getState().agentMap['inbox-1'].avatar).toBe('🐱');
+    expect(useAgentStore.getState().agentMap['builder-1']).toBeDefined();
   });
 });
