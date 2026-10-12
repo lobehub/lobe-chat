@@ -208,7 +208,7 @@ export const useMentionCategories = (): MentionCategory[] => {
       const items = topics
         .filter((t) => t.id !== activeTopicId)
         .map((topic) => {
-          const title = topic.title || 'Untitled';
+          const title = topic.title || t('topic.defaultTitle');
           const label =
             title.length > MAX_TOPIC_LABEL ? `${title.slice(0, MAX_TOPIC_LABEL)}...` : title;
           return {
