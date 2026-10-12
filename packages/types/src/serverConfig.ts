@@ -159,6 +159,13 @@ export interface GlobalServerConfig {
   memory?: GlobalMemoryConfig;
   multimodalUnderstanding?: MultimodalUnderstandingConfig;
   oAuthSSOProviders?: string[];
+  /**
+   * Public issuer of the built-in OIDC provider (`APP_URL` + `/oidc`) — the
+   * exact value the provider signs into tokens and discovery. Clients show
+   * this to developers instead of their own origin, which differs behind a
+   * reverse proxy or on desktop.
+   */
+  oidcIssuer?: string;
   systemAgent?: PartialDeep<UserServiceModelConfig>;
   telemetry: {
     langfuse?: boolean;

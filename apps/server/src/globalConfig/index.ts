@@ -1,6 +1,7 @@
 import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { parseToolNameMaxLength } from '@lobechat/const/plugin';
 import { ModelProvider } from 'model-bank';
+import urlJoin from 'url-join';
 
 import { composioEnv } from '@/config/composio';
 import { isDesktop } from '@/const/version';
@@ -14,6 +15,7 @@ import { langfuseEnv } from '@/envs/langfuse';
 import { sandboxEnv } from '@/envs/sandbox';
 import { toolsEnv } from '@/envs/tools';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
+import { OIDC_ISSUER_PATH } from '@/libs/oidc-provider/routes';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { isLlmRelayDeploymentReady } from '@/server/modules/AgentRuntime/llmRelay/deployment';
 import { type GlobalServerConfig } from '@/types/serverConfig';
@@ -169,6 +171,8 @@ export const getServerGlobalConfig = async () => {
       userMemory: cleanObject(getPublicMemoryExtractionConfig()),
     },
     oAuthSSOProviders: getBetterAuthSSOProviders(),
+    // Same derivation as the provider's own issuer (`libs/oidc-provider/provider.ts`).
+    ...(appEnv.APP_URL ? { oidcIssuer: urlJoin(appEnv.APP_URL, OIDC_ISSUER_PATH) } : undefined),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
       langfuse: langfuseEnv.ENABLE_LANGFUSE,
