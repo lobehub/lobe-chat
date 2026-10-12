@@ -407,6 +407,55 @@ describe('clearScope purges an inactive scope behind its queued writes', () => {
   });
 });
 
+describe('entity changes confirmed for a captured scope', () => {
+  it('removeEntity({ scope }) patches only that scope’s rows, leaving the active view alone', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+
+    // The account switches; the new one shows a list holding the same id.
+    scopeState.current = 'u2';
+    engine.replace({ id: 'b' }, [item('1')]);
+    await flush();
+
+    engine.removeEntity('1', { scope: SCOPE });
+    await flush();
+
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('2')]);
+    // The active account's view and row are untouched.
+    expect(host.view().b).toEqual([item('1')]);
+    expect(storage.rows.get('u2|b?{}')?.data).toEqual([item('1')]);
+
+    // Back on the first account, its list hydrates without the entity.
+    scopeState.current = SCOPE;
+    engine.ensureScope(SCOPE);
+    await engine.hydrate({ id: 'a' });
+    expect(host.view().a).toEqual([item('2')]);
+    resetScope();
+  });
+
+  it('updateEntity({ scope }) patches only that scope’s rows', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    scopeState.current = 'u2';
+    engine.replace({ id: 'b' }, [item('1')]);
+    await flush();
+
+    engine.updateEntity<Item>('1', () => ({ id: '1', renamed: true }) as Item, { scope: SCOPE });
+    await flush();
+
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([{ id: '1', renamed: true }]);
+    expect(host.view().b).toEqual([item('1')]);
+    expect(storage.rows.get('u2|b?{}')?.data).toEqual([item('1')]);
+    resetScope();
+  });
+});
+
 describe('bounded persisted entries (persist.maxEntries)', () => {
   const bounded = (storage = createStorage()) => ({
     storage,

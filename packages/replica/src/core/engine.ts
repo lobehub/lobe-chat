@@ -1352,22 +1352,37 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return patch;
   };
 
+  /**
+   * Confirmed patch of one entity everywhere it is loaded and in the persisted
+   * rows of unloaded entries. `scope` targets a scope captured earlier (a
+   * write confirmed after the account switched): when it is no longer active,
+   * only that scope's persisted rows are patched and the view on screen —
+   * another identity's — is left alone.
+   */
   const updateEntity = <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
-    options?: { persist?: boolean },
+    options?: { persist?: boolean; scope?: string },
   ) => {
+    if (options?.scope !== undefined && options.scope !== resource.scope.get()) {
+      if (options.persist !== false) void patchStoredEntityRows(id, fn, options.scope);
+      return;
+    }
     void applyEntity(id, fn, options);
   };
 
   /**
-   * Confirmed removal of one entity everywhere (see `updateEntity`). Unlike a
-   * plain mapper returning `undefined`, it is also remembered for this scope:
+   * Confirmed removal of one entity everywhere (see `updateEntity`, including
+   * its captured `scope`). Unlike a plain mapper returning `undefined`, it is
+   * also remembered for that scope:
    * a value hydrated afterwards — even by a read already in flight — comes
    * back without the entity (see `removedEntities`).
    */
   const removeEntity = (id: string, options?: { persist?: boolean; scope?: string }) => {
     const scope = options?.scope ?? resource.scope.get();
+    // A removal confirmed after the account switched belongs to the scope that
+    // asked for it: guard and patch that scope's rows, never the active view.
+    const offScope = scope !== resource.scope.get();
     const guard: { releasedAt?: number } = {};
     const guards = removedEntities.get(scope) ?? new Map<string, { releasedAt?: number }>();
     removedEntities.set(scope, guards);
@@ -1380,10 +1395,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     };
     // A scope left behind has nothing on screen: only its persisted rows drop
     // the entity, and the guard keeps a later hydrate there from reading it back.
-    const patch =
-      scope === resource.scope.get()
-        ? applyEntity(id, () => undefined, options)
-        : patchStoredEntityRows(id, () => undefined, scope);
+    const patch = offScope
+      ? options?.persist === false
+        ? undefined
+        : patchStoredEntityRows(id, () => undefined, scope)
+      : applyEntity(id, () => undefined, options);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
     // A patch that did not land (untrusted scope, unreadable index or row, a

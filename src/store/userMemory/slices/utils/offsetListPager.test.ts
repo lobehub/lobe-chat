@@ -12,6 +12,8 @@ const deferred = <T = void>() => {
   return { promise, reject, resolve };
 };
 
+const scopeRef = { current: 'user-1:*' };
+
 const setup = ({ refreshHead = vi.fn(async () => undefined) } = {}) => {
   const log: string[] = [];
   const tokens = { commit: vi.fn(), rollback: vi.fn() };
@@ -33,6 +35,7 @@ const setup = ({ refreshHead = vi.fn(async () => undefined) } = {}) => {
   const pager = new OffsetListPager({
     keys: () => ['all'],
     read: (key) => views[key],
+    scope: () => scopeRef.current,
     refreshHead,
     slice,
   });
@@ -55,6 +58,25 @@ describe('OffsetListPager', () => {
     expect(log).toEqual(['optimistic', 'removeEntity:a', 'collapse:all']);
     expect(refreshHead).toHaveBeenCalledTimes(1);
     expect(pager.isHeadStale('all')).toBe(true);
+  });
+
+  it('routes a delete confirmed after an account switch to the account that asked', async () => {
+    scopeRef.current = 'user-1:*';
+    const { log, pager, refreshHead, slice } = setup();
+    const server = deferred();
+
+    const deleting = pager.delete('a', () => server.promise);
+    // The account switches while the server deletes.
+    scopeRef.current = 'user-2:*';
+    server.resolve();
+    await deleting;
+
+    expect(slice.removeEntity).toHaveBeenCalledWith('a', { scope: 'user-1:*' });
+    // Nothing on screen (the other account's lists) is collapsed or refreshed.
+    expect(log).not.toContain('collapse:all');
+    expect(refreshHead).not.toHaveBeenCalled();
+    expect(pager.isHeadStale('all')).toBe(false);
+    scopeRef.current = 'user-1:*';
   });
 
   it('rolls the optimistic removal back when the server rejects', async () => {
