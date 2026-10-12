@@ -13,7 +13,7 @@ import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import { agentEvalService } from '@/services/agentEval';
-import { runSelectors, useEvalStore } from '@/store/eval';
+import { runSelectors, testCaseSelectors, useEvalStore } from '@/store/eval';
 
 import TestCasePreviewPanel from '../../bench/[benchmarkId]/features/DatasetsTab/TestCasePreviewPanel';
 import TestCaseTable from '../../bench/[benchmarkId]/features/DatasetsTab/TestCaseTable';
@@ -107,6 +107,7 @@ const DatasetDetail = memo(() => {
   const runList = useEvalStore(runSelectors.datasetRunList(datasetId!));
   const refreshTestCases = useEvalStore((s) => s.refreshTestCases);
   const refreshDatasetDetail = useEvalStore((s) => s.refreshDatasetDetail);
+  const deleteDataset = useEvalStore((s) => s.deleteDataset);
 
   const { data: dataset, error, isLoading, mutate } = useFetchDatasetDetail(datasetId);
   // Nullable: a dataset accumulated from captured cases belongs to no benchmark.
@@ -122,14 +123,16 @@ const DatasetDetail = memo(() => {
     [runList],
   );
 
-  const { data: testCaseData } = useFetchTestCases({
+  // One query for the fetch and the read: the rows only show for this exact page.
+  const caseQuery = {
     datasetId: datasetId!,
     limit: pagination.pageSize,
     offset: (pagination.current - 1) * pagination.pageSize,
-  });
+  };
+  useFetchTestCases(caseQuery);
 
-  const testCases = testCaseData?.data || [];
-  const total = testCaseData?.total || 0;
+  const testCases = useEvalStore(testCaseSelectors.testCases(caseQuery));
+  const total = useEvalStore(testCaseSelectors.testCaseTotal(caseQuery));
 
   const filteredCases = testCases.filter((c: any) => {
     if (diffFilter !== 'all' && c.metadata?.difficulty !== diffFilter) return false;
@@ -157,7 +160,7 @@ const DatasetDetail = memo(() => {
 
   const handleRefresh = useCallback(async () => {
     if (datasetId) {
-      await refreshTestCases(datasetId);
+      await refreshTestCases();
       await refreshDatasetDetail(datasetId);
     }
   }, [datasetId, refreshTestCases, refreshDatasetDetail]);
@@ -190,7 +193,7 @@ const DatasetDetail = memo(() => {
       okText: t('common.delete'),
       onOk: async () => {
         try {
-          await agentEvalService.deleteDataset(datasetId!);
+          await deleteDataset(datasetId!);
           toast.success(t('dataset.delete.success'));
           navigate(benchmarkId ? `/eval/bench/${benchmarkId}` : '/eval');
         } catch {
@@ -199,7 +202,7 @@ const DatasetDetail = memo(() => {
       },
       title: t('common.delete'),
     });
-  }, [benchmarkId, datasetId, navigate, t]);
+  }, [benchmarkId, datasetId, deleteDataset, navigate, t]);
 
   // Skeleton → error → (resolved-null) blank, replacing a bare `return null`
   // that flashed blank on the happy path and stayed permanently blank on a

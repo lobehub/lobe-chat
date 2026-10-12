@@ -1,10 +1,11 @@
 import { type UIChatMessage } from '@lobechat/types';
 import { TraceEventType } from '@lobechat/types';
 import { copyToClipboard } from '@lobehub/ui';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { type Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { cacheScope } from '@/libs/replica';
 import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
 import { messageService } from '@/services/message';
 import {
@@ -13,6 +14,7 @@ import {
   messageListKey,
   runMessageListQuery,
 } from '@/services/message/cache';
+import { conversationMessagesKey, conversationMessagesResource } from '@/services/message/replica';
 import { topicService } from '@/services/topic';
 import { LOCAL_MESSAGE_SCOPE } from '@/store/chat/utils/localMessages';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -48,21 +50,26 @@ vi.stubGlobal(
 );
 
 // Mock service
-vi.mock('@/services/message', () => ({
-  messageService: {
-    getMessages: vi.fn(),
-    updateMessageError: vi.fn(),
-    removeMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    removeMessagesByAssistant: vi.fn(),
-    removeMessages: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
-    updateMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    updateMessageMetadata: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    updateMessagePlugin: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    updateMessagePluginError: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-    updateMessageRAG: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
-  },
-}));
+vi.mock('@/services/message', () => {
+  const getMessages = vi.fn();
+  return {
+    messageService: {
+      getMessages,
+      // The list cache reads pages; tests stub the plain list underneath.
+      getMessageListPage: vi.fn((params) => getMessages(params)),
+      updateMessageError: vi.fn(),
+      removeMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      removeMessagesByAssistant: vi.fn(),
+      removeMessages: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
+      updateMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      updateMessageMetadata: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      updateMessagePlugin: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      updateMessagePluginError: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+      updateMessageRAG: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+    },
+  };
+});
 vi.mock('@/services/topic', () => ({
   topicService: {
     createTopic: vi.fn(() => Promise.resolve()),
@@ -1285,6 +1292,73 @@ describe('chatMessage actions', () => {
   });
 
   describe('replaceMessages cache write-through', () => {
+    it('persists a finished background topic under its own context', async () => {
+      vi.spyOn(conversationMessagesResource.storage!, 'get').mockResolvedValue(undefined);
+      vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+      const storageSet = vi.spyOn(conversationMessagesResource.storage!, 'set').mockResolvedValue();
+      const context = { agentId: 'background-agent', topicId: 'background-topic' };
+      useChatStore.setState({ activeAgentId: context.agentId, activeTopicId: 'visible-topic' });
+      const operationId = useChatStore
+        .getState()
+        .startOperation({ type: 'execAgentRuntime', context }).operationId;
+      const messages = [
+        { id: 'background-message', role: 'assistant', content: 'finished' },
+      ] as UIChatMessage[];
+      useChatStore.getState().replaceMessages(messages, { context });
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(storageSet).not.toHaveBeenCalled();
+      // Gateway applies its terminal snapshot before marking the operation complete.
+      useChatStore.getState().completeOperation(operationId);
+      await waitFor(() =>
+        expect(storageSet).toHaveBeenCalledWith(
+          expect.objectContaining({ queryKey: conversationMessagesKey(context) }),
+          expect.objectContaining({ data: expect.objectContaining({ items: messages }) }),
+        ),
+      );
+      expect(
+        storageSet.mock.calls.every(
+          ([key]) =>
+            key.queryKey !== conversationMessagesKey({ ...context, topicId: 'visible-topic' }),
+        ),
+      ).toBe(true);
+    });
+
+    it('keeps only the persisted thread head when a run settles after loading older pages', async () => {
+      vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+      const context = {
+        agentId: 'thread-agent',
+        topicId: 'thread-topic',
+        threadId: 'thread-id',
+        scope: 'thread' as const,
+      };
+      const older = { id: 'older', role: 'user', content: 'older history' } as UIChatMessage;
+      const head = { id: 'head', role: 'user', content: 'latest question' } as UIChatMessage;
+      const reply = { id: 'reply', role: 'assistant', content: 'finished' } as UIChatMessage;
+      vi.spyOn(conversationMessagesResource.storage!, 'get').mockResolvedValue({
+        data: { currentPage: 0, hasMore: true, items: [head], pageSize: 1 },
+        updatedAt: 1,
+      });
+      const storageSet = vi.spyOn(conversationMessagesResource.storage!, 'set').mockResolvedValue();
+      useChatStore.setState({
+        activeAgentId: context.agentId,
+        activeTopicId: context.topicId,
+        activeThreadId: context.threadId,
+      });
+      const { operationId } = useChatStore
+        .getState()
+        .startOperation({ type: 'execAgentRuntime', context });
+      useChatStore.getState().replaceMessages([older, head, reply], { context });
+      useChatStore.getState().completeOperation(operationId);
+      await waitFor(() =>
+        expect(storageSet).toHaveBeenCalledWith(
+          expect.objectContaining({ queryKey: conversationMessagesKey(context) }),
+          expect.objectContaining({
+            data: expect.objectContaining({ items: [head, reply], currentPage: 0 }),
+          }),
+        ),
+      );
+    });
+
     beforeEach(() => {
       (mutate as Mock).mockClear();
     });
@@ -1652,6 +1726,9 @@ describe('chatMessage actions', () => {
       expect(messageService.getMessages).toHaveBeenCalledWith({
         agentId: 'prefetch-agent',
         groupId: null,
+        // Whole tool payloads: the conversation read only asks for projected
+        // ones for a protocol-v2 client whose runs execute on the server.
+        projectToolPayloads: false,
         threadId: null,
         topicId: 'prefetch-topic',
       });
@@ -1731,6 +1808,7 @@ describe('chatMessage actions', () => {
       expect(messageService.getMessages).toHaveBeenCalledWith({
         agentId: 'prefetch-agent',
         groupId: null,
+        projectToolPayloads: false,
         threadId: null,
         topicId: 'cached-topic',
       });

@@ -703,7 +703,7 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
           ? `cron "${task.schedulePattern}" (${task.scheduleTimezone || 'UTC'})`
           : task.automationMode;
     taskLines.push(
-      `Automation: ${cadence} — this task is a recurring loop and this run is one tick of it. When the run ends, the next tick is armed automatically; a tick with nothing to do is still a successful run. NEVER set this task to completed (or any terminal status) — that permanently stops the loop.`,
+      `Automation: ${cadence} — this task is a recurring loop and this run is one tick of it. When the run ends, the next tick is armed automatically; a tick with nothing to do, or whose condition is not met yet, is still a successful run — NEVER end the loop for that, and never set it to canceled or failed. The only exception: when the Instruction defines an end condition (e.g. "until X", "stop once Y", "after Z is done") and this tick has verified that it is now met, mark this task completed as your final step — that retires the loop once this run finishes. Do not ask the user to stop it instead.`,
     );
   }
   taskLines.push(`Instruction: ${task.instruction}`);
@@ -793,6 +793,9 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     );
     taskLines.push(
       '  A criterion with a visible surface is proved by a screenshot or recording, and `screenshot`/`video` evidence must reference a real artifact by fileId. Never label prose as a visual artifact: if you could not capture one, say what you observed as `text` and name the blocker.',
+    );
+    taskLines.push(
+      '  Caption each artifact in the language this Task is written in, in 1–3 short sentences saying what it shows for that criterion. Never paste your final report into a criterion: it already reaches the verifier as the deliverable.',
     );
     taskLines.push(
       '  Produce concrete evidence while you work, and include artifact paths, commands, and observed results in your final response.',

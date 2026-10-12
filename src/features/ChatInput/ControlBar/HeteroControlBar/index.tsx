@@ -14,7 +14,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInputCredits from '@/business/client/features/ChatInputCredits';
-import HeteroDeviceSwitcher from '@/features/ChatInput/ControlBar/HeteroDeviceSwitcher';
+import DeviceSwitcher from '@/features/ChatInput/ControlBar/DeviceSwitcher';
 import WorkspaceControls from '@/features/ChatInput/ControlBar/WorkspaceControls';
 import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
@@ -184,7 +184,7 @@ const HeteroControlBar = memo(() => {
     if (!agentId || isLoading) return null;
     return (
       <Flexbox horizontal align={'center'} className={styles.bar} justify={'space-between'}>
-        <HeteroDeviceSwitcher agentId={agentId} />
+        <DeviceSwitcher agentId={agentId} />
         {shouldShowApiCredits && <ChatInputCredits />}
       </Flexbox>
     );

@@ -1,5 +1,10 @@
+import {
+  DEVICE_OFFLINE_RUN_STATUS,
+  QUOTA_LIMITED_RUN_STATUS,
+  TRANSIENT_FAILED_RUN_STATUS,
+} from '@lobechat/const/goal';
 import type { BriefDecision, TaskTopicHandoff } from '@lobechat/types';
-import { and, count, desc, eq, gte, inArray, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, ne, sql } from 'drizzle-orm';
 
 import type { TaskTopicItem } from '../schemas/task';
 import { tasks, taskTopics } from '../schemas/task';
@@ -7,7 +12,15 @@ import { topics } from '../schemas/topic';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
 
-const TERMINAL_TOPIC_STATUSES = new Set(['canceled', 'completed', 'failed', 'timeout']);
+export const TERMINAL_TOPIC_STATUSES = new Set([
+  'canceled',
+  'completed',
+  DEVICE_OFFLINE_RUN_STATUS,
+  'failed',
+  QUOTA_LIMITED_RUN_STATUS,
+  'timeout',
+  TRANSIENT_FAILED_RUN_STATUS,
+]);
 
 export class TaskTopicModel {
   private readonly userId: string;
@@ -45,7 +58,7 @@ export class TaskTopicModel {
    * stamp `topics.completedAt` so duration can be computed at read time, and
    * promote `topics.status` to 'completed' on a clean finish.
    */
-  private async markTopicEnded(topicId: string, status: string): Promise<void> {
+  async markTopicEnded(topicId: string, status: string): Promise<void> {
     const setClause: { completedAt: Date; status?: 'completed' } = { completedAt: new Date() };
     if (status === 'completed') setClause.status = 'completed';
 
@@ -235,6 +248,105 @@ export class TaskTopicModel {
     return result.length;
   }
 
+  /**
+   * Flip one run out of `running` — but only while it is still that exact run.
+   *
+   * Unlike {@link updateStatus}, a miss is a real answer rather than a silent
+   * no-op: a row a newer operation has already replaced, or one another writer
+   * settled a moment ago, returns `false`. Only the run row is written; the
+   * topic's end stamp is the caller's to commit alongside it — see
+   * `TaskRunClaimRepo`.
+   */
+  async claimRunIfRunning(topicId: string, operationId: string, status: string): Promise<boolean> {
+    const result = await this.db
+      .update(taskTopics)
+      .set({ status })
+      .where(
+        and(
+          eq(taskTopics.topicId, topicId),
+          eq(taskTopics.operationId, operationId),
+          eq(taskTopics.status, 'running'),
+          this.ownership(),
+        ),
+      )
+      .returning({ topicId: taskTopics.topicId });
+
+    return result.length > 0;
+  }
+
+  /**
+   * Put a run claimed by {@link claimRunIfRunning} back to `running`.
+   *
+   * Keyed on the same operation as the claim, so a newer run that took the row
+   * over in between is never reopened. Only the run row is written; clearing the
+   * topic's end stamp is the caller's — see `TaskRunClaimRepo`.
+   */
+  async reopenRun(topicId: string, operationId: string, fromStatus: string): Promise<boolean> {
+    const result = await this.db
+      .update(taskTopics)
+      .set({ status: 'running' })
+      .where(
+        and(
+          eq(taskTopics.topicId, topicId),
+          eq(taskTopics.operationId, operationId),
+          eq(taskTopics.status, fromStatus),
+          this.ownership(),
+        ),
+      )
+      .returning({ topicId: taskTopics.topicId });
+
+    return result.length > 0;
+  }
+
+  /**
+   * Put a settled run back in flight, because its topic is live again.
+   *
+   * A Task's run row is written at the two ends of a run the runner owns: the
+   * runner opens it (`running`, with the operation it dispatched) and the
+   * lifecycle closes it (terminal). A user answering a finished run in that
+   * run's own conversation starts a third kind of run — dispatched from the
+   * composer, never through `runTask` — so without this the row stays terminal
+   * while the topic it names is visibly working: the run card keeps its finished
+   * state, `TaskService.cancelTopic` refuses to stop the live run, and the
+   * detail page stops polling for it.
+   *
+   * Guarded on the row not already being `running`: a message queued behind a
+   * run that is still going must not steal that run's `operationId`, which is
+   * the only handle cancellation has on it.
+   *
+   * The trigger is restamped as `'manual'` for the same reason it is written at
+   * all: only automation ticks may spend the attempt budget, and a user replying
+   * in the run's conversation is not one. Leaving the previous value would make
+   * an orphaned answer settle as a tick and count against the schedule.
+   *
+   * Only the run row is written; clearing the topic's end stamp is the caller's
+   * to commit alongside it — see `TaskRunClaimRepo`.
+   */
+  async reopenSettledRun(topicId: string, operationId: string): Promise<boolean> {
+    const result = await this.db
+      .update(taskTopics)
+      .set({ operationId, status: 'running', trigger: 'manual' })
+      .where(
+        and(eq(taskTopics.topicId, topicId), ne(taskTopics.status, 'running'), this.ownership()),
+      )
+      .returning({ topicId: taskTopics.topicId });
+
+    return result.length > 0;
+  }
+
+  /** Undo {@link markTopicEnded}'s end stamp for a run that is live again. */
+  async clearTopicEnded(topicId: string): Promise<void> {
+    await this.db
+      .update(topics)
+      .set({ completedAt: null })
+      .where(
+        and(
+          eq(topics.id, topicId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+        ),
+      );
+  }
+
   async findByTopicId(topicId: string): Promise<TaskTopicItem | null> {
     const result = await this.db
       .select()
@@ -343,8 +455,8 @@ export class TaskTopicModel {
   }
 
   /**
-   * A goal's spend and round count in one aggregate: how many runs those tasks
-   * produced and what they cost.
+   * Usage for one or more Tasks in one aggregate: how many runs they produced,
+   * their tokens, and what they cost.
    *
    * The Goal page renders these numbers and the coordinator enforces the budget
    * against them, so both read them from here — a second definition of "what
@@ -355,12 +467,30 @@ export class TaskTopicModel {
    * as a round but contribute nothing to the sum.
    */
   async sumRunCostByTaskIds(taskIds: string[]): Promise<{
-    byTask: { runs: number; taskId: string; totalCost: number; totalTokens: number }[];
+    byTask: {
+      runs: number;
+      taskId: string;
+      totalCost: number;
+      totalInputTokens: number;
+      totalOutputTokens: number;
+      totalTokens: number;
+    }[];
     runs: number;
     totalCost: number;
+    totalInputTokens: number;
+    totalOutputTokens: number;
     totalTokens: number;
   }> {
-    if (taskIds.length === 0) return { byTask: [], runs: 0, totalCost: 0, totalTokens: 0 };
+    if (taskIds.length === 0) {
+      return {
+        byTask: [],
+        runs: 0,
+        totalCost: 0,
+        totalInputTokens: 0,
+        totalOutputTokens: 0,
+        totalTokens: 0,
+      };
+    }
 
     // Grouped once, then folded — one round trip serves both the enforced
     // total and the per-Task breakdown the cost panel lists.
@@ -369,6 +499,8 @@ export class TaskTopicModel {
         runs: count(),
         taskId: taskTopics.taskId,
         totalCost: sql<string>`coalesce(sum(${topics.totalCost}), 0)`,
+        totalInputTokens: sql<string>`coalesce(sum(${topics.totalInputTokens}), 0)`,
+        totalOutputTokens: sql<string>`coalesce(sum(${topics.totalOutputTokens}), 0)`,
         totalTokens: sql<string>`coalesce(sum(${topics.totalTokens}), 0)`,
       })
       .from(taskTopics)
@@ -380,6 +512,8 @@ export class TaskTopicModel {
       runs: row.runs,
       taskId: row.taskId,
       totalCost: Number(row.totalCost ?? 0),
+      totalInputTokens: Number(row.totalInputTokens ?? 0),
+      totalOutputTokens: Number(row.totalOutputTokens ?? 0),
       totalTokens: Number(row.totalTokens ?? 0),
     }));
 
@@ -387,6 +521,8 @@ export class TaskTopicModel {
       byTask,
       runs: byTask.reduce((sum, row) => sum + row.runs, 0),
       totalCost: byTask.reduce((sum, row) => sum + row.totalCost, 0),
+      totalInputTokens: byTask.reduce((sum, row) => sum + row.totalInputTokens, 0),
+      totalOutputTokens: byTask.reduce((sum, row) => sum + row.totalOutputTokens, 0),
       totalTokens: byTask.reduce((sum, row) => sum + row.totalTokens, 0),
     };
   }

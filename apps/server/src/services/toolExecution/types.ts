@@ -6,6 +6,7 @@ import {
   type ClientSecretPayload,
   type DeviceUnavailableErrorData,
   type ExecSubAgentParams,
+  type ExecutionPlan,
   type StepActivatedSkill,
   type StepContextTodoItem,
   type WorkRegistrationIntent,
@@ -109,6 +110,14 @@ export interface ServerAgentMemberRunParams {
 }
 
 export interface ServerAgentMemberRunResult {
+  /**
+   * Per-member start failure reasons, parallel to the members that failed to
+   * fork. Surfaced to the supervisor's tool result so a speak/broadcast/
+   * delegate/executeAgentTask dispatch failure is diagnosable (e.g. "The model
+   * provider returned an empty completion.") instead of an opaque "failed to
+   * start" — mirrors `ServerSubAgentRunResult.error` (issue #16257).
+   */
+  errors?: string[];
   /**
    * Whether at least one member op was forked. `false` means every member
    * failed to start — no completion bridge will fire, so the caller must
@@ -245,6 +254,12 @@ export interface ToolExecutionContext {
    * flows; `lobe-agent.callSubAgent` uses the per-call `subAgent` runner below.
    */
   execSubAgent?: (params: ExecSubAgentParams) => Promise<unknown>;
+  /**
+   * The run's resolved execution plan. Lets a runtime explain a gate the plan
+   * imposes (e.g. a device-locked run has no device picker) instead of the
+   * gated tool just looking missing.
+   */
+  executionPlan?: ExecutionPlan;
   /** Per-call execution timeout resolved by the agent runtime. */
   executionTimeoutMs?: number;
   /** Current group ID for group chat context */

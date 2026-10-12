@@ -14,11 +14,14 @@ export enum PortalViewType {
   AcceptanceCheck = 'acceptanceCheck',
   AgentDetail = 'agentDetail',
   Artifact = 'artifact',
+  DashboardWidget = 'dashboardWidget',
   Document = 'document',
   FilePreview = 'filePreview',
   Goal = 'goal',
   GoalMetric = 'goalMetric',
   GoalNode = 'goalNode',
+  GoalReport = 'goalReport',
+  GoalReportChapter = 'goalReportChapter',
   GroupThread = 'groupThread',
   Home = 'home',
   LocalFile = 'localFile',
@@ -35,10 +38,27 @@ export enum PortalViewType {
   VerifyResult = 'verifyResult',
 }
 
+/**
+ * A file preview the opener has already resolved, for surfaces that cannot read
+ * the file through the owner-scoped file store.
+ */
+export interface PortalFileSource {
+  /** Display name; its extension also selects the renderer. */
+  name: string;
+  /** Publicly readable file URL. */
+  url: string;
+}
+
 export interface PortalFile {
   chunkId?: string;
   chunkText?: string;
   fileId: string;
+  /**
+   * Render from this source instead of fetching the file item. An agent-share
+   * visitor previews files the creator's run produced, which the visitor's
+   * own file store cannot read.
+   */
+  source?: PortalFileSource;
 }
 
 export interface OpenLocalFileParams {
@@ -72,10 +92,13 @@ export type PortalViewData =
   | { goalId: string; type: PortalViewType.Goal }
   | { goalId: string; metric: GoalMetricKind; type: PortalViewType.GoalMetric }
   | { goalId: string; nodeId: string; type: PortalViewType.GoalNode }
+  | { goalId: string; type: PortalViewType.GoalReport }
+  | { chapterIndex: number; goalId: string; type: PortalViewType.GoalReportChapter }
   | { acceptanceId: string; type: PortalViewType.Acceptance }
   | { acceptanceId: string; checkId: string; type: PortalViewType.AcceptanceCheck }
   | { agentId: string; type: PortalViewType.AgentDetail }
   | { artifact: PortalArtifact; type: PortalViewType.Artifact }
+  | { runId?: string; type: PortalViewType.DashboardWidget; widgetId: string }
   | { agentDocumentId?: string; documentId: string; type: PortalViewType.Document }
   | { type: PortalViewType.Notebook }
   | { file: PortalFile; type: PortalViewType.FilePreview }

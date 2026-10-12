@@ -1,5 +1,7 @@
+import { DEFAULT_TOOL_RESULT_MAX_LENGTH, truncateToolResult } from '@lobechat/prompts/toolResult';
 import { type ChatToolPayload } from '@lobechat/types';
-import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
+import { safeParseJSON } from '@lobechat/utils';
+import { isDeviceOnlyMcpEndpoint } from '@lobechat/utils/mcpEndpoint';
 import debug from 'debug';
 
 import { ConnectorToolPermission } from '@/database/schemas';
@@ -18,16 +20,13 @@ import { resolveDeviceClientKind } from '@/server/services/deviceGateway/deviceC
 import { resolveDeviceDispatchAuthorizationFailure } from '@/server/services/deviceGateway/dispatchAuthorization';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 import { contentBlocksToString } from '@/server/services/mcp/contentProcessor';
-import {
-  DEFAULT_TOOL_RESULT_MAX_LENGTH,
-  truncateToolResult,
-} from '@/server/utils/truncateToolResult';
 
 import { DiscoverService } from '../discover';
 import { type MCPService } from '../mcp';
 import { type BuiltinToolsExecutor } from './builtin';
 import { classifyToolError, getToolAccessDeniedError } from './errorClassification';
 import { resolveRunWorkspaceId } from './serverRuntimes/resolveWorkspaceScope';
+import { withoutDeviceReplay } from './serverRuntimes/withoutDeviceReplay';
 import {
   type ToolExecutionContext,
   type ToolExecutionResult,
@@ -285,6 +284,23 @@ export class ToolExecutionService {
       mcpParams.type,
     );
 
+    const isDeviceOnlyMcp = isDeviceOnlyMcpEndpoint(mcpParams);
+
+    // Agent Share visitor runs execute with the CREATOR's identity, so a
+    // device-only MCP would tunnel to (or, without a gateway, spawn on) the
+    // creator's machine on a visitor's behalf. The tool-set gate already drops
+    // these manifests (`applyShareGateToToolSet`); this is the unbypassable
+    // dispatch-site check, mirroring `isShareBlockedBuiltinDispatch`.
+    if (context.agentShareVisitor && isDeviceOnlyMcp) {
+      log('Share gate blocked device-only MCP dispatch: %s:%s', identifier, apiName);
+      const message = `MCP server '${identifier}' runs on the agent owner's own machine and is not available in shared conversations.`;
+      return {
+        content: message,
+        error: { code: 'SHARE_GATE_BLOCKED', message },
+        success: false,
+      };
+    }
+
     try {
       // Check if this is a cloud MCP endpoint
       if (mcpParams.type === 'cloud') {
@@ -301,9 +317,6 @@ export class ToolExecutionService {
       // classic-path guard in connector exec enforces). Standalone Electron /
       // self-host (no gateway) falls through to the in-process MCP service
       // below, which legitimately runs on the user's machine or LAN.
-      const isDeviceOnlyMcp =
-        mcpParams.type === 'stdio' ||
-        (mcpParams.type === 'http' && isLocalOrPrivateUrl(mcpParams.url));
       if (isDeviceOnlyMcp && deviceGateway.isConfigured) {
         const tunnelTarget = context.userId
           ? await this.resolveMcpTunnelTarget(context)
@@ -494,7 +507,9 @@ export class ToolExecutionService {
     );
 
     if (!result.success) {
-      return {
+      // The device may already be running the call, so never let the retry
+      // classifier replay it (see withoutDeviceReplay).
+      return withoutDeviceReplay({
         content: result.content,
         error: result.errorData ?? {
           code: 'MCP_DEVICE_EXECUTION_ERROR',
@@ -502,7 +517,7 @@ export class ToolExecutionService {
         },
         errorData: result.errorData,
         success: false,
-      };
+      });
     }
 
     return {

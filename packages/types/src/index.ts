@@ -1,7 +1,9 @@
 export * from './agent';
+export * from './agentAccount';
 export * from './agentExecution';
 export * from './agentGroup';
 export * from './agentHook';
+export * from './agentHookResponse';
 export * from './agentOperation';
 export * from './aiChat';
 export * from './aiProvider';
@@ -11,9 +13,10 @@ export * from './asyncTask';
 export * from './auth';
 export * from './brief';
 export * from './chunk';
-export * from './clientDB';
 export * from './conversation';
 export * from './creds';
+export * from './dashboard';
+export * from './dbMigration';
 export * from './device';
 export * from './deviceMetric';
 export * from './discover';
@@ -31,6 +34,8 @@ export * from './followUpAction';
 export * from './ftsSearch';
 export * from './generation';
 export * from './goal';
+export * from './goalReport';
+export * from './goalSubscription';
 export * from './heteroSessionImport';
 export * from './home';
 export * from './hotkey';
@@ -63,6 +68,7 @@ export * from './understanding';
 export * from './user';
 export * from './userMemory';
 export * from './verify';
+export * from './widget';
 export * from './work';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload

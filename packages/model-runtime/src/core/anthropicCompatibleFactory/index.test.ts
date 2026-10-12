@@ -730,6 +730,41 @@ describe('createAnthropicCompatibleRuntime', () => {
     );
   });
 
+  it('should omit disabled thinking when the mapped model always thinks', async () => {
+    // handlePayload resolves thinking by the logical id: Sonnet 5 accepts `disabled`, but a
+    // channel redirect to Sonnet 5.5 rejects it with a 400, so chat() must re-check the sent model.
+    const messagesCreate = vi.fn().mockResolvedValue({ content: [] });
+    const Runtime = createAnthropicCompatibleRuntime({
+      chatCompletion: {
+        handlePayload: buildDefaultAnthropicPayload,
+      },
+      customClient: {
+        createClient: () =>
+          ({
+            baseURL: 'https://aihubmix.com',
+            messages: { create: messagesCreate },
+          }) as unknown as Anthropic,
+      },
+      provider: 'test-provider',
+    });
+    const runtime = new Runtime({
+      apiKey: 'test-key',
+      modelIdMapping: { 'claude-sonnet-5': 'claude-sonnet-5-5' },
+    });
+
+    await runtime.chat({
+      messages: [{ content: 'hi', role: 'user' }],
+      model: 'claude-sonnet-5',
+      responseMode: 'json',
+      stream: false,
+      thinking: { type: 'disabled' },
+    } as any);
+
+    const request = messagesCreate.mock.calls[0][0];
+    expect(request.model).toBe('claude-sonnet-5-5');
+    expect(request).not.toHaveProperty('thinking');
+  });
+
   it('should keep logical model for generateObject and pass mapped id as request config', async () => {
     const generateObject = vi.fn().mockResolvedValue({ ok: true });
     const Runtime = createAnthropicCompatibleRuntime({

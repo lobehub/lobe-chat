@@ -1,9 +1,11 @@
 // @vitest-environment node
 import { type Message, parse } from '@lobechat/conversation-flow';
 import { ChatErrorType, RequestTrigger } from '@lobechat/types';
+import debug from 'debug';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { NotifyAgentInterventionRequiredParams } from '@/business/server/agent-run/agentInterventionReview';
+import { AgentOperationModel } from '@/database/models/agentOperation';
 import { WorkModel } from '@/database/models/work';
 import * as agentSignalService from '@/server/services/agentSignal';
 import * as verifyServices from '@/server/services/verify';
@@ -63,6 +65,50 @@ vi.mock('@/server/services/workRegistration', async (importOriginal) => ({
 const flushMicrotasks = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const buildLifecycle = () => new CompletionLifecycle({} as any, 'user-1');
+
+describe('CompletionLifecycle.recordStart diagnostics', () => {
+  let debugNamespaces: string;
+
+  beforeEach(() => {
+    debugNamespaces = debug.disable();
+    debug.enable('lobe-server:completion-lifecycle');
+  });
+
+  afterEach(() => {
+    debug.enable(debugNamespaces);
+    vi.restoreAllMocks();
+  });
+
+  it.each([undefined, { _hooks: [] }])(
+    'retains the database failure cause without persisted hooks: %j',
+    async (metadata) => {
+      vi.spyOn(AgentOperationModel.prototype, 'recordStart').mockRejectedValue(
+        new Error('connection refused'),
+      );
+      const output = vi.spyOn(debug, 'log').mockImplementation(() => {});
+
+      expect(await buildLifecycle().recordStart({ operationId: 'op-1', metadata })).toBe(false);
+      expect(output.mock.calls.flat().join(' ')).toContain('connection refused');
+    },
+  );
+
+  it('does not log database parameters containing hook credentials', async () => {
+    const secret = 'synthetic-hook-authorization';
+    vi.spyOn(AgentOperationModel.prototype, 'recordStart').mockRejectedValue(
+      new Error(`Failed query; params: ${secret}`),
+    );
+    const output = vi.spyOn(debug, 'log').mockImplementation(() => {});
+
+    expect(
+      await buildLifecycle().recordStart({
+        operationId: 'op-1',
+        metadata: { _hooks: [{ webhook: { headers: { Authorization: secret } } }] },
+      }),
+    ).toBe(false);
+    expect(output.mock.calls.flat().join(' ')).toContain('Failed to record operation start');
+    expect(output.mock.calls.flat().join(' ')).not.toContain(secret);
+  });
+});
 
 describe('isSuccessLikeCompletionReason', () => {
   // Regression: file-Work registration was gated on `reason === 'done'` alone,
@@ -688,6 +734,44 @@ describe('CompletionLifecycle.dispatchHooks — error persistence', () => {
     });
   });
 
+  it("writes the error onto the run's own assistant row when a server run carries no assistantMessageId", async () => {
+    // A server `execAgent` turn leaves `metadata.assistantMessageId` unset; with
+    // no client online (a closed tab, a bot, a schedule) nothing else writes
+    // the error, so the reply row would stay an empty bubble.
+    const lifecycle = buildLifecycle();
+    const updateMessage = vi.fn().mockResolvedValue({ success: true });
+    const findLatestAssistantByOperationId = vi.fn().mockResolvedValue({ id: 'msg-run' });
+
+    (lifecycle as any).messageModel = { findLatestAssistantByOperationId, update: updateMessage };
+    vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
+    vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
+
+    await lifecycle.dispatchHooks(
+      'op-1',
+      {
+        error: {
+          error: { reason: 'claim_timeout', recoverable: true },
+          errorType: 'ClientLlmExecutorUnavailable',
+          provider: 'lmstudio',
+        },
+        host: { hooks: [] },
+        metadata: {},
+        origin: { topicId: 'tpc-1' },
+        status: 'error',
+      },
+      'error',
+    );
+
+    expect(findLatestAssistantByOperationId).toHaveBeenCalledWith({
+      operationId: 'op-1',
+      topicId: 'tpc-1',
+    });
+    expect(updateMessage).toHaveBeenCalledWith('msg-run', {
+      error: expect.objectContaining({ type: 'ClientLlmExecutorUnavailable' }),
+    });
+  });
+
   it('rethrows critical webhook failures after terminal persistence', async () => {
     const lifecycle = buildLifecycle();
     const persistCompletion = vi
@@ -850,6 +934,20 @@ describe('CompletionLifecycle.dispatchHooks — async-tool park', () => {
       'waiting_for_async_tool',
       undefined,
     );
+    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(unregisterSpy).not.toHaveBeenCalled();
+  });
+
+  it('treats a waiting_for_client park the same way: persisted, no onComplete, hooks kept', async () => {
+    const lifecycle = buildLifecycle();
+    const persistSpy = vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
+    const dispatchSpy = vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
+    const unregisterSpy = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
+    const clientPark = { ...parkedState, status: 'waiting_for_client' };
+
+    await lifecycle.dispatchHooks('op-1', clientPark, 'waiting_for_client');
+
+    expect(persistSpy).toHaveBeenCalledWith('op-1', clientPark, 'waiting_for_client', undefined);
     expect(dispatchSpy).not.toHaveBeenCalled();
     expect(unregisterSpy).not.toHaveBeenCalled();
   });

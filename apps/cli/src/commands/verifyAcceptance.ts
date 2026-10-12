@@ -15,7 +15,7 @@ import { collectCommentFeedback } from './acceptanceCommentFeedback';
 import { attachAcceptanceFlowCommands } from './acceptanceFlow';
 import { attachAcceptanceRunCommands } from './acceptanceRun';
 import type { ReviewAnnotationRegion } from './verifyHelpers';
-import { formatAnnotationRegion, parseSubjectRef } from './verifyHelpers';
+import { formatAnnotationRegion, formatDisputedChapter, parseSubjectRef } from './verifyHelpers';
 
 /**
  * Resolve an acceptance from either its uuid or a `type:id` subject reference —
@@ -79,7 +79,16 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
 
   acceptance
     .command('create')
-    .description('Create or reuse an acceptance without creating a verification round or results')
+    .summary('Create or reuse an acceptance without creating a verification round or results')
+    .description(
+      'Create or reuse an acceptance record. This does not create checks, verification rounds, results, reports, or evidence.\n\n' +
+        'Before creating, agents should load and read the acceptance skill (.agents/skills/acceptance/SKILL.md) ' +
+        'and follow its workflow. If the skill is missing, run `lh acceptance install`, then read it.\n\n' +
+        'Use create for flow-first planning. If a completed local report already exists, use ' +
+        '`lh acceptance run ingest <reportDir>` to publish it; a separate create call is unnecessary. ' +
+        'An acceptance URL alone does not mean verification is complete: publish results and required evidence, ' +
+        'then read back coverage before handing off a completed acceptance.',
+    )
     .requiredOption(
       '--requirement <text>',
       'Durable business goal (preserved when reusing a subject)',
@@ -456,6 +465,8 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
             if (annotation.comment && annotation.comment !== entry.comment)
               console.log(`    ${pc.dim('region:')} ${annotation.comment}`);
             if (annotation.region) console.log(`      ${pc.dim(`└ ${annotation.region}`)}`);
+            const disputed = formatDisputedChapter(annotation.disputes);
+            if (disputed) console.log(`      ${pc.dim(`└ disputes ${disputed}`)}`);
           }
           if (entry.fileIds?.length)
             console.log(`    ${pc.dim(`attachments: ${entry.fileIds.join(', ')}`)}`);
@@ -464,6 +475,51 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
               console.log(`      ${attachment.name ?? attachment.id}: ${attachment.url}`);
           }
         }
+      },
+    );
+
+  acceptance
+    .command('link-pr <idOrSubject> <url>')
+    .description(
+      'Record that a pull request delivers this acceptance (works for PRs opened after the last round)',
+    )
+    .option('--title <text>', 'Pull request title, until the provider reports it')
+    .option('--unlink', 'Remove the link instead')
+    .option('--json [fields]', 'Output JSON')
+    .action(
+      async (
+        idOrSubject: string,
+        url: string,
+        options: { json?: boolean | string; title?: string; unlink?: boolean },
+      ) => {
+        const id = await resolveAcceptanceId(idOrSubject);
+        const client = await getTrpcClient();
+
+        if (options.unlink) {
+          await client.acceptance.unlinkPullRequest.mutate({ id, url });
+          if (options.json !== undefined) {
+            outputJson(
+              { unlinked: true, url },
+              typeof options.json === 'string' ? options.json : undefined,
+            );
+            return;
+          }
+          console.log(`${pc.green('✓')} Unlinked ${url}`);
+          return;
+        }
+
+        const linked = await client.acceptance.linkPullRequest.mutate({
+          id,
+          title: options.title,
+          url,
+        });
+        if (options.json !== undefined) {
+          outputJson(linked, typeof options.json === 'string' ? options.json : undefined);
+          return;
+        }
+        console.log(
+          `${pc.green('✓')} Linked ${linked.repoFullName}#${linked.number} to acceptance ${id}`,
+        );
       },
     );
 

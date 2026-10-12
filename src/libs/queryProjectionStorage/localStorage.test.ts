@@ -1,8 +1,9 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalStorageQueryProjectionStorage } from './localStorage';
 
 afterEach(() => {
+  vi.restoreAllMocks();
   localStorage.clear();
 });
 
@@ -44,5 +45,27 @@ describe('LocalStorageQueryProjectionStorage', () => {
     await storage.set(key, { data: { createdAt: new Date(0) }, updatedAt: 1 });
 
     expect((await storage.get(key))?.data.createdAt).toEqual(new Date(0));
+  });
+
+  it('reports a failed delete so the caller can retry it', async () => {
+    const storage = new LocalStorageQueryProjectionStorage<string[]>({ namespace: 'test' });
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new Error('access denied');
+    });
+
+    await expect(storage.remove({ queryKey: 'display', scope: 'user-a' })).rejects.toThrow(
+      'access denied',
+    );
+  });
+
+  it('rejects a strict read that failed, while get stays a cache miss', async () => {
+    const storage = new LocalStorageQueryProjectionStorage<string[]>({ namespace: 'test' });
+    const key = { queryKey: '__replica:index', scope: 'user-a' };
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('access denied');
+    });
+
+    await expect(storage.getStrict(key)).rejects.toThrow('access denied');
+    await expect(storage.get(key)).resolves.toBeUndefined();
   });
 });
