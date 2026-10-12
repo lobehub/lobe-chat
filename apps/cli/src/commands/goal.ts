@@ -236,6 +236,8 @@ const admissionHint: Record<string, string> = {
   pending_decision: 'a decision gate is still waiting on an answer',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
+  started_from_draft:
+    'the Goal was started from its draft, which settled this turn; the next turn plans further work',
   turn_owner: 'this Goal has no matching planning turn',
   turn_settled: "this turn's run is no longer running",
   wait_unsettled: 'unfinished work must be settled before waiting',
@@ -763,11 +765,13 @@ export function registerGoalCommand(program: Command) {
         ? hasOperationToken()
           ? await client.goal.createConversationGoal.mutate({
               ...goalInput,
+              draft: true,
               operationId: operationId!,
             })
           : await client.goal.create.mutate({
               ...goalInput,
               agentId: process.env.LOBEHUB_AGENT_ID,
+              draft: true,
               conversationOperationId: operationId,
               conversationTopicId: process.env.LOBEHUB_TOPIC_ID,
             })
@@ -809,6 +813,10 @@ export function registerGoalCommand(program: Command) {
         "kept as that unit's note, and is released wave by wave once the probes ran through without a person.",
         'A rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are',
         'one recipe; tasks whose steps differ are not, so start those without --rollout.',
+        'Inside a batch a seed may depend only on a probe, and folded seeds need distinct titles.',
+        '',
+        'Starting a draft that holds tasks settles the planning turn that created it: submit any plan with',
+        'lh goal plan before starting, not after.',
       ].join('\n'),
     )
     .option('--rollout <mode>', 'Fold the seed tasks into a batch: canary or full')

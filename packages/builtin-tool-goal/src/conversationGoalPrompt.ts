@@ -17,12 +17,13 @@ export const conversationGoalPrompt = `The user sent this request with LobeHub's
 1. Draft the goal from the user's request, in the user's language: a short title, the requirement, and one concrete, checkable acceptance criterion per explicit requirement. Do not add requirements the user did not ask for.
 2. Create it bound to this conversation, with its tasks (the LOBEHUB_* environment already identifies you and this conversation). Write the tasks to a JSON file — bounded, independent tasks, each [{"title":"specific task","description":"self-contained contract: inputs, output and acceptance"}] — then:
    lh goal create "<title>" --conversation -r "<requirement>" -i "<the user's ask in their words>" --criterion "<criterion>" --criterion "<criterion>" --task-file <tasks.json> --json
-   The goal opens as a draft: nothing is dispatched until you start it. The output contains goal.id, the graph with each task's node id, and turnToken. You are now the goal's supervising agent.
+   If lh rejects --task-file, pass the task titles with -t "<title>" "<title>" instead. The goal opens as a draft: nothing is dispatched until you start it. The output contains goal.id, the graph with each task's node id, and turnToken. You are now the goal's supervising agent.
 3. Start it from the graph lh goal create printed (do not run lh goal show or other lh goal commands: this run's credentials only allow creating or binding this goal, planning it and starting it):
    lh goal start <goalId> --json
    If the tasks apply one recipe to many units (migrate N stores to one mechanism, give N resources the same caching, update N callers), start them as a batch instead:
    lh goal start <goalId> --rollout canary --recipe-file <recipe.md> --probes <2-5 task node ids> --json
    The recipe is the procedure every unit follows; the probes are the most representative units, covering every way the units differ. The probes run first, and the other tasks are released wave by wave only after the probes ran through without a person; a rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are one recipe; tasks whose steps differ are not, so start those without --rollout.
+   If lh has no goal start command, the goal already runs: skip this step.
 4. Then end the run with one or two sentences in the user's language: the goal is running, and what runs first.
 
 If the request instead asks to attach an existing goal to this conversation (it names a goal id like goal_xxx, or a /goal/goal_xxx link, to continue, bind or supervise here), do not create a new goal. Bind that one:

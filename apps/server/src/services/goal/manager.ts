@@ -232,6 +232,11 @@ const PLAN_REJECTION = {
     trpc: 'CONFLICT',
   },
   stale_input: { message: 'Stale planning input; no plan applied', trpc: 'CONFLICT' },
+  started_from_draft: {
+    message:
+      'The Goal was started with the tasks arranged in its draft, which settled this planning turn; no plan applied',
+    trpc: 'CONFLICT',
+  },
   turn_owner: { message: 'This planning turn does not own the Goal', trpc: 'FORBIDDEN' },
   turn_settled: { message: 'Stale planning input; no plan applied', trpc: 'CONFLICT' },
   wait_unsettled: { message: 'Settle existing work before waiting', trpc: 'CONFLICT' },
@@ -560,10 +565,12 @@ export class GoalManagerService {
     await this.save(this.db, goal.id, {
       ...state,
       consumed: true,
-      submitted: state.submitted ?? {
-        action: 'tasks',
-        reason: 'Started with the tasks arranged in the draft',
-      },
+      ...(state.submitted
+        ? {}
+        : {
+            startedFromDraft: true,
+            submitted: { action: 'tasks', reason: 'Started with the tasks arranged in the draft' },
+          }),
     });
   };
 
@@ -1461,6 +1468,9 @@ export class GoalManagerService {
       return rejectPlan('inactive', op?.status);
     if (graph.decisions.some((d) => d.status === 'pending'))
       return rejectPlan('pending_decision', op?.status);
+    // That receipt is start's, not a plan: reporting it as a duplicate would
+    // tell the agent its plan was recorded when nothing was written.
+    if (state.startedFromDraft) return rejectPlan('started_from_draft', op?.status);
     if (state.submitted) return { code: 'duplicate', ok: true, submitted: state.submitted };
     if (state.consumed) return rejectPlan('consumed', op?.status);
     if (op && op.status !== 'running') return rejectPlan('turn_settled', op?.status);

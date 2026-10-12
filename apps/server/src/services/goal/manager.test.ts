@@ -317,6 +317,7 @@ describe('CLI main Agent planning', () => {
 
       const { graph, turnToken } = await service().createFromConversation(conversationOpId, {
         criteria: [{ title: 'Report delivered' }],
+        draft: true,
         title: 'Ship the report',
       });
 
@@ -366,6 +367,7 @@ describe('CLI main Agent planning', () => {
       it('dispatches nothing from a seeded draft until it is started', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
           tasks: seeds,
           title: 'Cache the resources',
         });
@@ -388,6 +390,7 @@ describe('CLI main Agent planning', () => {
       it('folds the seeds into a batch when started with a rollout', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
           tasks: seeds,
           title: 'Cache the resources',
         });
@@ -429,6 +432,7 @@ describe('CLI main Agent planning', () => {
       it('keeps a probe prerequisite whatever order the probes are listed in', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
           tasks: seeds,
           title: 'Cache the resources',
         });
@@ -463,6 +467,7 @@ describe('CLI main Agent planning', () => {
       it('refuses to fold a seed another kept node depends on, changing nothing', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
           tasks: seeds,
           title: 'Cache the resources',
         });
@@ -488,9 +493,143 @@ describe('CLI main Agent planning', () => {
         ).toHaveLength(4);
       });
 
+      /**
+       * Regression: a CLI released before `lh goal start` existed created a draft
+       * it could never start, and nothing noticed the goal sat there.
+       */
+      it('opens a running goal when the caller does not ask for a draft', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        expect(graph.goal.status).toBe('running');
+      });
+
+      /**
+       * Regression: a probe's link to a unit or to a node left behind was dropped
+       * without a word, so the probe ran before the work it needed.
+       */
+      it.each([
+        ['a unit', 'Project skills'],
+        ['a seed kept out of the batch', 'Home inbox'],
+      ])('refuses a probe that depends on %s, changing nothing', async (_, prerequisite) => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Device list'),
+          seedId(graph, prerequisite),
+          'depends_on',
+        );
+
+        await expect(
+          starter().start(graph.goal.id, {
+            rollout: {
+              probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+              recipe: 'Persist the resource',
+              unitNodeIds: [seedId(graph, 'Project skills')],
+            },
+          }),
+        ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+        expect(
+          (await service().graph(graph.goal.id)).nodes.filter((n) => n.kind === 'task'),
+        ).toHaveLength(4);
+      });
+
+      it('keeps a unit that depends on a probe, which the gate already orders', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Home inbox'),
+          seedId(graph, 'Device list'),
+          'depends_on',
+        );
+
+        await starter().start(graph.goal.id, {
+          rollout: {
+            probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+            recipe: 'Persist the resource',
+          },
+        });
+
+        expect((await model().findById(graph.goal.id))!.status).toBe('running');
+      });
+
+      /** Regression: the roster is keyed by title, so a second seed of one title vanished. */
+      it('refuses to fold two seeds that share a title', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: [...seeds, { title: 'Home inbox', description: 'HomeInbox/index.tsx:12' }],
+          title: 'Cache the resources',
+        });
+
+        await expect(
+          starter().start(graph.goal.id, {
+            rollout: {
+              probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+              recipe: 'Persist the resource',
+            },
+          }),
+        ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+      });
+
+      /**
+       * Regression: after `start` settled the turn, `lh goal plan` on it read as a
+       * duplicate and printed "Plan recorded" while writing nothing.
+       */
+      it('refuses a plan submitted after start settled the turn', async () => {
+        await startConversationRun();
+        const { graph, turnToken } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await starter().start(graph.goal.id, { operationId: conversationOpId });
+
+        await expect(
+          manager().submit(graph.goal.id, turnToken, conversationOpId, taskPlan),
+        ).rejects.toMatchObject({ code: 'CONFLICT' });
+        expect((await service().graph(graph.goal.id)).nodes.some((n) => n.title === 'Audit')).toBe(
+          false,
+        );
+      });
+
+      /**
+       * Regression: resume (or pause then resume) moved a draft to running
+       * without `start`, so the creating run's turn stayed open and nothing
+       * dispatched until that run exited.
+       */
+      it('leaves launching a draft to start, refusing pause and resume', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        await expect(service().resume(graph.goal.id)).rejects.toMatchObject({ code: 'CONFLICT' });
+        await expect(service().pause(graph.goal.id)).rejects.toMatchObject({ code: 'CONFLICT' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+      });
+
       it('starts a draft only once', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
           tasks: seeds,
           title: 'Cache the resources',
         });
@@ -562,7 +701,7 @@ describe('CLI main Agent planning', () => {
 
       const { graph, turnToken } = await service().createFromConversation(
         'op_client_only_local_run',
-        { title: 'Local goal' },
+        { draft: true, title: 'Local goal' },
         localRun,
       );
       expect(graph.goal).toMatchObject({ agentId, subjectId: conversationTopicId });
@@ -818,6 +957,7 @@ describe('CLI main Agent planning', () => {
       topicId: shared,
     });
     const { graph: b } = await service().createFromConversation(sharedRunId, {
+      draft: true,
       title: 'Second goal',
     });
     await starter().start(b.goal.id);

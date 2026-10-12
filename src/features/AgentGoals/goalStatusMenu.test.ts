@@ -30,6 +30,8 @@ describe('goal status menu', () => {
   it('offers only starting a draft goal, unchecked', () => {
     expect(toManualStatus('draft')).toBeUndefined();
     expect(isStatusChoiceDisabled('running', 'draft', true)).toBe(false);
+    // The server lets only the creator or an owner start a draft.
+    expect(isStatusChoiceDisabled('running', 'draft', false)).toBe(true);
     expect(isStatusChoiceDisabled('paused', 'draft', true)).toBe(true);
     expect(isStatusChoiceDisabled('canceled', 'draft', true)).toBe(true);
   });

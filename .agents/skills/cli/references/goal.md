@@ -160,7 +160,11 @@ then launch it with `lh goal start <id>`; the owner can also start it from the
 goal page. Many tasks of one recipe start as a batch:
 `lh goal start <id> --rollout canary --recipe-file <md> --probes <2-5 node ids>`
 moves the probes into a batch and turns every other seed (or only `--units`)
-into roster units released wave by wave behind the gate.
+into roster units released wave by wave behind the gate. Inside a batch a seed
+may depend only on a probe, and every folded seed needs its own title; start
+refuses anything else. Once started with tasks in place, the creating turn is
+settled: `lh goal plan` on its token is refused, and later work comes from the
+next planning turn.
 
 ## Decision gates and graph editing
 

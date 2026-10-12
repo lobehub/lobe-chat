@@ -153,6 +153,12 @@ const GOAL_ENDED_STATUSES = new Set<string>(['achieved', 'canceled']);
 const GOAL_DISPATCH_LOCK_NAMESPACE = 0x67_6f_64_69;
 /** Why a decomposition did or did not become a batch: DEBUG=lobe-server:goal-rollout. */
 const log = debug('lobe-server:goal-rollout');
+
+const draftNotStarted = (goalId: string) =>
+  new TRPCError({
+    code: 'CONFLICT',
+    message: `Goal is a draft; start it with lh goal start ${goalId}`,
+  });
 /** Who does the goal's Tasks: its dedicated executor, else the goal agent itself. */
 export const goalTaskAgentId = (goal: Pick<GoalItem, 'agentId' | 'config'>) =>
   goal.config?.taskAgentId ?? goal.agentId ?? undefined;
@@ -351,14 +357,15 @@ export class GoalService {
       'Only a run in a topic with an agent can create a goal it supervises',
     );
 
-    // A conversation goal opens as a draft: its agent arranges the graph in
-    // this run, and the goal runs only once someone starts it.
+    // A conversation goal opens as a draft when the caller asks for one: its
+    // agent arranges the graph in this run, and the goal runs only once someone
+    // starts it. Opt-in, because a CLI released before `lh goal start` existed
+    // could never start the draft it created.
     const created = await this.create({
       ...input,
       agentId,
       config: { ...input.config, manager: input.config?.manager ?? {} },
       createdByAgentId: agentId,
-      draft: true,
       topicId,
     });
     try {
@@ -1255,6 +1262,8 @@ export class GoalService {
 
   pause = async (goalId: string) => {
     const graph = await this.requireGraph(goalId);
+    // A draft never ran; pausing it would let a later resume skip `start`.
+    if (graph.goal.status === 'draft') throw draftNotStarted(goalId);
     // From here the pause is the person's, so no later measurement lifts it.
     // Written even when the goal is already paused — that transition is a
     // no-op, so this marker is the only record that the person took it over.
@@ -1890,6 +1899,9 @@ export class GoalService {
       const model = new GoalModel(tx, this.userId, this.workspaceId);
       const current = await model.lockById(goalId);
       if (!current) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+      // Only `start` launches a draft: it settles the creating run's planning
+      // turn and checks who may launch it, which a plain status flip skips.
+      if (current.status === 'draft') throw draftNotStarted(goalId);
       if (current.status !== graph.goal.status) {
         throw new TRPCError({
           code: 'CONFLICT',

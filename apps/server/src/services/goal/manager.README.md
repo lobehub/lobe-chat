@@ -27,15 +27,20 @@ elsewhere are refused. Like `create --topic`, the topic comes from
 the run's operation; an operation-token run (device or gateway) needs the
 `goal:manage` capability that `/goal` grants.
 
-A topic goal (`create --topic`, `/goal`) opens as a `draft`. The coordinator
-leaves a draft alone: its agent arranges the graph — seed tasks, `add-node`,
-`add-edge`, even a submitted plan — and `lh goal start` (or the goal page's
-Start) moves it to `running` (`start.ts`). Starting a draft that already holds
-work settles the adopted planning turn on the spot, so dispatch does not wait
-for the creating run to exit; an empty draft keeps the turn open for a plan.
-`start --rollout` folds the seed tasks into a batch: the probes are re-created
-inside it and the other seeds leave the graph as roster units, their
-descriptions kept as unit notes (`rollout.unitBriefs`).
+A topic goal (`create --topic`, `/goal`) opens as a `draft` when the CLI asks
+for one (`draft: true`, sent by every CLI that has `lh goal start`; an older CLI
+gets a goal that runs at once). The coordinator leaves a draft alone: its agent
+arranges the graph — seed tasks, `add-node`, `add-edge`, even a submitted plan —
+and `lh goal start` (or the goal page's Start) moves it to `running`
+(`start.ts`). `pause` and `resume` refuse a draft, so `start` stays the only way
+in. Starting a draft that already holds work settles the adopted planning turn
+on the spot, so dispatch does not wait for the creating run to exit; a plan
+submitted on that turn afterwards is refused (`started_from_draft`). An empty
+draft keeps the turn open for a plan. `start --rollout` folds the seed tasks
+into a batch: the probes are re-created inside it and the other seeds leave the
+graph as roster units, their descriptions kept as unit notes
+(`rollout.unitBriefs`). A folded seed may depend only on a probe, and folded
+seeds need distinct titles; anything else is refused rather than dropped.
 
 The main Agent must have a working shell and an authenticated `lh` CLI in its
 execution environment (for example a configured device Kimi/Codex Agent). Its
