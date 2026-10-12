@@ -121,9 +121,9 @@ export interface AgentAccountInboundMailDetail {
 export interface AgentInboxMessage {
   /** The account that received it — the routing key resolved to an account id. */
   accountId: string;
+  agentId: string;
   /** Media the sender attached, as the provider hosts it (e.g. a photo-only message). */
   attachments?: AgentAccountAttachment[];
-  agentId: string;
   /** Verification codes pulled out of the body (3–8 digits), for the `wait` primitive. */
   codes: string[];
   createdAt: Date;
