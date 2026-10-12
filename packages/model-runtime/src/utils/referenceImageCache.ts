@@ -7,9 +7,11 @@ import type { Buffer } from 'buffer.js';
  *
  * Providers that cannot take a URL download each reference image and re-encode
  * it (base64 or multipart File). Without a cache, the same image is downloaded
- * again for every image in a batch (each runs as its own async task) and for
- * every RouterRuntime fallback attempt. Those repeats happen within seconds, so
- * a one-minute TTL covers them while limiting staleness for arbitrary URLs whose
+ * again for every RouterRuntime fallback attempt within one request. Batch
+ * siblings each run as a separate async HTTP request, so they share downloads
+ * only when they land on the same server instance; serverless deployments may
+ * spread them across instances. Those repeats happen within seconds, so a
+ * one-minute TTL covers them while limiting staleness for arbitrary URLs whose
  * content may change (for example, an external URL passed by an agent tool).
  *
  * Only successful downloads of `http(s)` URLs are cached; concurrent requests
