@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { planDiff, skillBody } from './planDiff';
+import { planDiff, skillBody, skillVersionText } from './planDiff';
 
 describe('planDiff', () => {
   it('reads a revision as the previous plan unchanged plus its own section', () => {
@@ -27,5 +27,20 @@ describe('skillBody', () => {
       'Do it.\n\n### v2\nMore',
     );
     expect(skillBody('Plain plan')).toBe('Plain plan');
+  });
+});
+
+describe('skillVersionText', () => {
+  it('reads a kept version without its frontmatter', () => {
+    const versions = [
+      { content: '---\nname: goal-plan-x\ndescription: How\n---\nDo it.', version: 2 },
+    ];
+    expect(skillVersionText(versions, 2)).toBe('Do it.');
+    expect(skillVersionText(versions, 3)).toBeUndefined();
+  });
+
+  it('has nothing to offer when the payload carries no versions', () => {
+    expect(skillVersionText(undefined, 1)).toBeUndefined();
+    expect(skillVersionText(null, 1)).toBeUndefined();
   });
 });

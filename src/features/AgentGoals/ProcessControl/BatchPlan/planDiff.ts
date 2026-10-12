@@ -30,3 +30,15 @@ export const planDiff = (before = '', after = ''): PlanDiffLine[] =>
 /** A skill's `SKILL.md` without its frontmatter: the plan as a person reads it. */
 export const skillBody = (content: string) =>
   content.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, '').trim();
+
+/**
+ * One version's plan text from the versions a plan skill kept. A payload
+ * without `versions` (an older server) has none to offer, rather than throwing.
+ */
+export const skillVersionText = (
+  versions: readonly { content: string; version: number }[] | null | undefined,
+  revision: number,
+): string | undefined => {
+  const kept = (versions ?? []).find((version) => version.version === revision);
+  return kept ? skillBody(kept.content) : undefined;
+};

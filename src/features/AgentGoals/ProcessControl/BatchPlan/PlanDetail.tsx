@@ -10,7 +10,7 @@ import { userSkillService } from '@/services/userSkill';
 
 import type { GoalGraphView } from '../goalGraphViewModel';
 import type { BatchModel, BatchRound } from '../Graph/batchModel';
-import { planDiff, skillBody } from './planDiff';
+import { planDiff, skillVersionText } from './planDiff';
 
 /**
  * Every version of a batch's plan, for the panel that opens on one of them:
@@ -104,11 +104,10 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
     planSkill ? ['goal-plan-skill', planSkill.id, model.rounds.length] : null,
     () => userSkillService.get(planSkill!.id),
   );
-  const textOf = (item?: BatchRound) => {
-    const kept = item && skill?.versions.find((version) => version.version === item.revision);
-    if (kept) return skillBody(kept.content);
-    return (item?.templateId && graph.byId[item.templateId]?.node.description) || '';
-  };
+  const textOf = (item?: BatchRound) =>
+    (item && skillVersionText(skill?.versions, item.revision)) ||
+    (item?.templateId && graph.byId[item.templateId]?.node.description) ||
+    '';
 
   const lines = against ? planDiff(textOf(against), textOf(current)) : [];
   const changed = lines.some((line) => line.kind !== 'same');

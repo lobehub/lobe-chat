@@ -245,7 +245,7 @@ export class UserSkillModel {
           metadata: { ...bundle.metadata, userSkill: { ...meta, version } },
           updatedAt: new Date(),
         })
-        .where(eq(documents.id, id));
+        .where(and(this.bundleWhere(), eq(documents.id, id)));
       await this.insertVersion(tx, id, {
         content: params.content,
         note: params.note,
