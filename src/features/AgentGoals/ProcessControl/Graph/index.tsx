@@ -64,7 +64,7 @@ import {
   buildBatchModel,
   verdictChecks,
 } from './batchModel';
-import { layoutBatchScope } from './batchScopeLayout';
+import { batchStageId, batchStages, layoutBatchScope } from './batchScopeLayout';
 import { edgeDirection } from './edgeRouting';
 import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
 import { batchContainerStatus } from './experimentStatus';
@@ -882,14 +882,14 @@ const Canvas = memo<
             const data =
               group.kind === 'experimentProbe'
                 ? {
-                    onEnter: () => onEnter(batchId),
+                    onEnter: () => onEnter(batchStageId(batchId, 0)),
                     onSelect,
                     probes: first.probes,
                     started: first.probes.some((probe) => probe.state !== 'backlog'),
                     views: graph.byId,
                   }
                 : ({
-                    onEnter: () => onEnter(batchId),
+                    onEnter: () => onEnter(batchStageId(batchId, group.revision)),
                     onSelect,
                     probes: round.probes,
                     revision: group.revision,
@@ -1174,23 +1174,45 @@ Canvas.displayName = 'GoalGraphCanvas';
 
 const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange, ...props }) => {
   const { t } = useTranslation('chat');
-  const navigation = useExplorationNavigation(props.graph.goal.id, {
-    nodes: props.graph.nodes.map((item) => item.node),
-    edges: props.graph.edges,
-  });
+  const shape = useMemo(
+    () => ({ edges: props.graph.edges, nodes: props.graph.nodes.map((item) => item.node) }),
+    [props.graph],
+  );
+  // A batch is entered one stage at a time — its cold start, or one round —
+  // so each stage is a scope of its own, read off the whole graph.
+  const batchStageScopes = useMemo(() => {
+    const result = new Map<string, { members: Set<string>; model: BatchModel; revision: number }>();
+    for (const item of props.graph.nodes) {
+      if (item.node.kind !== 'batch') continue;
+      const model = buildBatchModel(props.graph, item.node.id);
+      const members = experimentMembers(shape, item.node.id);
+      for (const stage of batchStages(props.graph, model, members))
+        result.set(batchStageId(item.node.id, stage.revision), {
+          members: new Set([...stage.headers, ...stage.units]),
+          model,
+          revision: stage.revision,
+        });
+    }
+    return result;
+  }, [props.graph, shape]);
+  const navigation = useExplorationNavigation(
+    props.graph.goal.id,
+    shape,
+    (id) => batchStageScopes.get(id)?.members,
+  );
   const { collapsed, scopeId } = navigation;
   const scopeIds = new Set(navigation.nodes.map((node) => node.id));
   const scopedGraph: GoalGraphView = scopeId
     ? scopeGraphView(props.graph, scopeIds, navigation.edges)
     : props.graph;
-  // An entered batch reads its model off the whole graph, where its rollout lives.
-  const scopeBatch = useMemo(
-    () =>
-      scopeId && props.graph.byId[scopeId]?.node.kind === 'batch'
-        ? buildBatchModel(props.graph, scopeId)
-        : undefined,
-    [props.graph, scopeId],
-  );
+  const scopeStage = scopeId ? batchStageScopes.get(scopeId) : undefined;
+  const scopeBatch = scopeStage?.model;
+  const stageLabel = (revision: number) =>
+    revision ? t('goalBatch.round.title', { revision }) : t('goalBatch.probes.title');
+  const scopeLabel = (id: string) => {
+    const stage = batchStageScopes.get(id);
+    return stage ? stageLabel(stage.revision) : props.graph.byId[id]?.node.title;
+  };
   const openNode = useChatStore((s) => s.openGoalNode);
   const [preferredView, setView] = useState<GraphViewMode>('stage');
   const stageIsWholeMap = isStageWholeMap(props.graph);
@@ -1256,13 +1278,24 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
       {navigation.path.map((id, index) => (
         <Flexbox horizontal align={'center'} gap={4} key={id}>
           <ChevronRight size={14} />
-          {index === navigation.path.length - 1 ? (
+          {index === navigation.path.length - 1 && scopeStage ? (
+            // Inside a stage, the crumb is the stage switcher itself.
+            <Segmented
+              aria-current={'page'}
+              size={'small'}
+              value={id}
+              options={[...batchStageScopes]
+                .filter(([, stage]) => stage.model.batchId === scopeStage.model.batchId)
+                .map(([stageId, stage]) => ({ label: stageLabel(stage.revision), value: stageId }))}
+              onChange={(next) => navigation.switchTo(String(next))}
+            />
+          ) : index === navigation.path.length - 1 ? (
             <Text aria-current={'page'} fontSize={12}>
-              {props.graph.byId[id]?.node.title}
+              {scopeLabel(id)}
             </Text>
           ) : (
             <Button size={'small'} onClick={() => navigation.backTo(index + 1)}>
-              {props.graph.byId[id]?.node.title}
+              {scopeLabel(id)}
             </Button>
           )}
         </Flexbox>

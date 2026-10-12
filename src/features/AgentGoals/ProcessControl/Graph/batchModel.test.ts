@@ -18,7 +18,14 @@ import {
   reopenedRows,
   verdictChecks,
 } from './batchModel';
-import { BATCH_SCOPE_COLUMNS, batchScopeFrameId, layoutBatchScope } from './batchScopeLayout';
+import {
+  BATCH_SCOPE_COLUMNS,
+  batchScopeFrameId,
+  batchStageId,
+  batchStages,
+  layoutBatchScope,
+  parseBatchStageId,
+} from './batchScopeLayout';
 
 const T0 = new Date('2026-10-01T00:00:00Z');
 const at = (minutes: number) => new Date(T0.getTime() + minutes * 60_000);
@@ -670,5 +677,38 @@ describe('layoutBatchScope', () => {
     expect(boxes.stray.y + boxes.stray.height).toBeLessThanOrEqual(
       latest.box.y + latest.box.height,
     );
+  });
+});
+
+describe('batchStages', () => {
+  it('splits a batch into the stages a person enters one at a time', () => {
+    const units = ['m3', 'm4', 'm5'];
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: units.map((id, index) =>
+          node(id, 'task', 10, { status: 'resolved', title: `U${index + 3}` }),
+        ),
+        state: { massNodeIds: units, phase: 'mass', waveIndex: 1 },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+    const stages = batchStages(graph, model, new Set(['t1', 'a1', 'p1', 'p2', ...units]));
+
+    expect(stages).toEqual([
+      { headers: [], revision: 0, units: ['p1', 'p2'] },
+      { headers: ['t1', 'a1'], revision: 1, units },
+    ]);
+    // Entered alone, a stage lays out as one frame.
+    const { frames } = layoutBatchScope(graph, model, new Set(['t1', 'a1', ...units]));
+    expect(frames.map((frame) => frame.revision)).toEqual([1]);
+  });
+
+  it('names a stage as a scope and reads it back', () => {
+    expect(parseBatchStageId(batchStageId('batch-1', 2))).toEqual({
+      batchId: 'batch-1',
+      revision: 2,
+    });
+    expect(parseBatchStageId('batch-1')).toBeUndefined();
   });
 });

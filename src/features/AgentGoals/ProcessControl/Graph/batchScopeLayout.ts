@@ -5,15 +5,13 @@ import { type LayoutBox, NODE_HEIGHT, NODE_WIDTH } from './layout';
 import type { MeasuredSizes } from './measuredSizes';
 
 /**
- * A batch entered on its own: every unit as a card, grouped by the round it
- * ran in. A batch is dozens of units that do not lead to one another, so a
- * tree lays them out as one endless row; here each round is a frame, top to
- * bottom — the cold start first — with its plan and gate on the left and its
- * units in a grid beside them:
+ * A batch entered stage by stage. The batch's "进入" opens one stage — the
+ * cold start, or one round — and a stage is dozens of units that do not lead
+ * to one another, so a tree would lay them out as one endless row. Here the
+ * stage is a frame with its plan and gate on the left and its units in a grid
+ * beside them:
  *
- *   ┆冷启动: ▢ ▢ ▢ ▢ / ▢ ▢┆
- *   ┆第 1 轮: 方案 v1 · 闸门 │ ▢ ▢ ▢ ▢ / ▢ ▢ ▢ ▢ …┆
- *   ┆第 2 轮: 方案 v2 · 闸门 │ ▢ ▢┆
+ *   ┆第 2 轮: 方案 v2 → 闸门 │ ▢ ▢ ▢ ▢ / ▢ ▢ ▢ ▢ …┆
  */
 
 export const BATCH_SCOPE_COLUMNS = 4;
@@ -40,17 +38,33 @@ export interface BatchScopeLayout {
 export const batchScopeFrameId = (batchId: string, revision: number) =>
   `${batchId}::scope-${revision}`;
 
+/** One stage of a batch: the cold start (revision 0) or a round, with what ran in it. */
+export interface BatchStage {
+  /** The round's plan and gate, top to bottom; none for the cold start. */
+  headers: string[];
+  revision: number;
+  units: string[];
+}
+
+/** A stage a person can enter on its own, as a navigation scope. */
+export const batchStageId = (batchId: string, revision: number) => `${batchId}::stage-${revision}`;
+
+export const parseBatchStageId = (id: string) => {
+  const match = /^(.+)::stage-(\d+)$/.exec(id);
+  return match ? { batchId: match[1], revision: Number(match[2]) } : undefined;
+};
+
 /**
- * `nodeIds`: the members on the map. A member the rounds do not account for
- * (a side decision without a subject, a unit of an unknown wave) joins the
- * latest round, so nothing in the batch drops off the map.
+ * The batch's stages with the members each holds. `nodeIds`: the members on
+ * the map. A member the rounds do not account for (a side decision without a
+ * subject, a unit of an unknown wave) joins the latest round, so nothing in the
+ * batch drops off the map.
  */
-export const layoutBatchScope = (
+export const batchStages = (
   graph: GoalGraphView,
   model: BatchModel,
   nodeIds: ReadonlySet<string>,
-  sizes: MeasuredSizes = {},
-): BatchScopeLayout => {
+): BatchStage[] => {
   const placed = new Set<string>();
   const take = (ids: (string | undefined)[]) =>
     ids.filter((id): id is string => {
@@ -60,7 +74,7 @@ export const layoutBatchScope = (
     });
 
   const [first] = model.rounds;
-  const sections: { headers: string[]; revision: number; units: string[] }[] = [];
+  const sections: BatchStage[] = [];
   if (first.probes.length)
     sections.push({
       headers: [],
@@ -78,7 +92,7 @@ export const layoutBatchScope = (
     sections.push({ headers, revision: round.revision, units });
   }
   // Side decisions sit with the units of the round their subject ran in.
-  const sectionOf = new Map<string, (typeof sections)[number]>();
+  const sectionOf = new Map<string, BatchStage>();
   for (const section of sections) for (const id of section.units) sectionOf.set(id, section);
   const latest = sections.at(-1)!;
   for (const id of model.decisionIds) {
@@ -87,13 +101,30 @@ export const layoutBatchScope = (
     if (taken) (subject ? (sectionOf.get(subject) ?? latest) : latest).units.push(taken);
   }
   latest.units.push(...take([...nodeIds]));
+  return sections;
+};
+
+/** Lays out the stages of `nodeIds` — one stage when a person entered one. */
+export const layoutBatchScope = (
+  graph: GoalGraphView,
+  model: BatchModel,
+  nodeIds: ReadonlySet<string>,
+  sizes: MeasuredSizes = {},
+): BatchScopeLayout => {
+  const sections = batchStages(graph, model, nodeIds);
+  const placed = sections.flatMap((section) => [...section.headers, ...section.units]);
 
   const kindOf = (id: string) => graph.byId[id]?.node.kind ?? 'task';
   const widthOf = (id: string) => sizes[id]?.width ?? NODE_WIDTH[kindOf(id)];
   const heightOf = (id: string) => sizes[id]?.height ?? NODE_HEIGHT[kindOf(id)];
 
-  const cell = Math.max(NODE_WIDTH.task, ...[...placed].map(widthOf));
-  const gridWidth = BATCH_SCOPE_COLUMNS * cell + (BATCH_SCOPE_COLUMNS - 1) * GAP;
+  const cell = Math.max(NODE_WIDTH.task, ...placed.map(widthOf));
+  // As many columns as the fullest stage needs, up to the grid's width.
+  const columns = Math.min(
+    BATCH_SCOPE_COLUMNS,
+    Math.max(1, ...sections.map((section) => section.units.length)),
+  );
+  const gridWidth = columns * cell + (columns - 1) * GAP;
   const hasHeaders = sections.some((section) => section.headers.length);
   const gridX = PAD + (hasHeaders ? HEADER_WIDTH + HEADER_GAP : 0);
   const frameWidth = gridX + gridWidth + PAD;
@@ -115,8 +146,8 @@ export const layoutBatchScope = (
     });
 
     let rowTop = bodyTop;
-    for (let start = 0; start < section.units.length; start += BATCH_SCOPE_COLUMNS) {
-      const row = section.units.slice(start, start + BATCH_SCOPE_COLUMNS);
+    for (let start = 0; start < section.units.length; start += columns) {
+      const row = section.units.slice(start, start + columns);
       row.forEach((id, column) => {
         boxes[id] = {
           height: heightOf(id),
