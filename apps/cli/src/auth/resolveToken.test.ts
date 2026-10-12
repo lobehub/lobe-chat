@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { log } from '../utils/logger';
-import { getUserIdFromApiKey } from './apiKey';
+import type * as ApiKeyModule from './apiKey';
+import { ApiKeyValidationError, getUserIdFromApiKey } from './apiKey';
 import type * as RefreshModule from './refresh';
 import { getValidToken } from './refresh';
 import { resolveToken } from './resolveToken';
 
-vi.mock('./apiKey', () => ({
+vi.mock('./apiKey', async (importOriginal) => ({
+  ...(await importOriginal<typeof ApiKeyModule>()),
   getUserIdFromApiKey: vi.fn(),
 }));
 vi.mock('./refresh', async (importOriginal) => ({
@@ -99,6 +101,24 @@ describe('resolveToken', () => {
   });
 
   describe('with environment api key', () => {
+    it.each([
+      { retryable: true, override: 75, expected: 75 },
+      { retryable: false, override: 75, expected: 1 },
+      { retryable: true, override: undefined, expected: 1 },
+    ])(
+      'uses exit $expected with retryable=$retryable and policy=$override',
+      async ({ retryable, override, expected }) => {
+        process.env.LOBEHUB_CLI_API_KEY = 'fixture-key';
+        vi.mocked(getUserIdFromApiKey).mockRejectedValueOnce(
+          new ApiKeyValidationError('controlled failure', retryable),
+        );
+        await expect(resolveToken({ unavailableExitCode: override })).rejects.toThrow(
+          'process.exit',
+        );
+        expect(exitSpy).toHaveBeenCalledWith(expected);
+      },
+    );
+
     it('should return API key from environment', async () => {
       process.env.LOBEHUB_CLI_API_KEY = 'sk-lh-test';
       vi.mocked(getUserIdFromApiKey).mockResolvedValue('user-789');
