@@ -104,8 +104,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           // bookkeeping must not describe the next one's rows.
           messageReplica: { entries: {}, scope: storeApi.getState().messageReplica.scope },
           context,
-          dbMessages: messages ?? [],
-          displayMessages: [],
           messagesInit: false,
         });
 
@@ -116,6 +114,8 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         if (messages) {
           storeApi.getState().replaceMessages(messages, { skipOnMessagesChange: true });
           storeApi.setState({ messagesInit: true });
+        } else {
+          storeApi.setState({ dbMessages: [], displayMessages: [] });
         }
       }
     }, [contextKey]); // eslint-disable-line react-hooks/exhaustive-deps
