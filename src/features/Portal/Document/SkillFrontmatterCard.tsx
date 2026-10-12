@@ -1,9 +1,10 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
-import { memo, type ReactNode, useMemo } from 'react';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { ChevronRight } from 'lucide-react';
+import { memo, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { parseSkillMarkdownMetadata } from '@/utils/skillMarkdown';
@@ -33,6 +34,13 @@ const styles = createStaticStyles(({ css }) => ({
     min-width: 0;
     white-space: pre-wrap;
   `,
+  sectionHeaderCollapsed: css`
+    border-block-end: none;
+  `,
+  sectionHeaderToggle: css`
+    cursor: pointer;
+    user-select: none;
+  `,
   sectionHeader: css`
     padding-block: 10px;
     padding-inline: 12px;
@@ -43,6 +51,8 @@ const styles = createStaticStyles(({ css }) => ({
 interface SkillFrontmatterCardProps {
   /** Replaces the key/value rows, e.g. the raw YAML while editing. */
   children?: ReactNode;
+  /** Starts folded to its header; the header toggles it. */
+  defaultCollapsed?: boolean;
   /** The header's right side, e.g. an edit action. */
   extra?: ReactNode;
   frontmatter: string;
@@ -52,32 +62,67 @@ interface SkillFrontmatterCardProps {
  * A skill's frontmatter as a document shows it: a card of key/value rows above
  * the body. Read-only on its own; a host adds editing through `extra`.
  */
-const SkillFrontmatterCard = memo<SkillFrontmatterCardProps>(({ children, extra, frontmatter }) => {
-  const { t } = useTranslation('editor');
-  const metadata = useMemo(() => parseSkillMarkdownMetadata(frontmatter), [frontmatter]);
+const SkillFrontmatterCard = memo<SkillFrontmatterCardProps>(
+  ({ children, defaultCollapsed, extra, frontmatter }) => {
+    const { t } = useTranslation('editor');
+    const metadata = useMemo(() => parseSkillMarkdownMetadata(frontmatter), [frontmatter]);
+    const collapsible = defaultCollapsed !== undefined;
+    const [collapsed, setCollapsed] = useState(!!defaultCollapsed);
 
-  return (
-    <Flexbox className={styles.frontmatter}>
-      <Flexbox horizontal align="center" className={styles.sectionHeader} justify="space-between">
-        <Text type="secondary">{t('skillFrontmatter.title')}</Text>
-        {extra}
-      </Flexbox>
-      {children ??
-        (metadata.length > 0 ? (
-          metadata.map((item) => (
-            <Flexbox horizontal align="flex-start" className={styles.metadataRow} key={item.key}>
-              <Text className={styles.metadataKey}>{item.key}</Text>
-              <Text className={styles.metadataValue}>{item.value}</Text>
-            </Flexbox>
-          ))
-        ) : (
-          <Flexbox className={styles.metadataRow}>
-            <Text type="secondary">{t('skillFrontmatter.empty')}</Text>
+    return (
+      <Flexbox className={styles.frontmatter} data-collapsed={collapsed || undefined}>
+        <Flexbox
+          horizontal
+          align="center"
+          aria-expanded={collapsible ? !collapsed : undefined}
+          justify="space-between"
+          role={collapsible ? 'button' : undefined}
+          className={cx(
+            styles.sectionHeader,
+            collapsible && styles.sectionHeaderToggle,
+            collapsed && styles.sectionHeaderCollapsed,
+          )}
+          onClick={collapsible ? () => setCollapsed((value) => !value) : undefined}
+        >
+          <Flexbox horizontal align="center" gap={6}>
+            {collapsible && (
+              <Icon
+                icon={ChevronRight}
+                size={14}
+                style={{
+                  transform: collapsed ? undefined : 'rotate(90deg)',
+                  transition: 'transform 0.15s',
+                }}
+              />
+            )}
+            <Text type="secondary">{t('skillFrontmatter.title')}</Text>
           </Flexbox>
-        ))}
-    </Flexbox>
-  );
-});
+          {extra}
+        </Flexbox>
+        {collapsed
+          ? null
+          : (children ??
+            (metadata.length > 0 ? (
+              metadata.map((item) => (
+                <Flexbox
+                  horizontal
+                  align="flex-start"
+                  className={styles.metadataRow}
+                  key={item.key}
+                >
+                  <Text className={styles.metadataKey}>{item.key}</Text>
+                  <Text className={styles.metadataValue}>{item.value}</Text>
+                </Flexbox>
+              ))
+            ) : (
+              <Flexbox className={styles.metadataRow}>
+                <Text type="secondary">{t('skillFrontmatter.empty')}</Text>
+              </Flexbox>
+            )))}
+      </Flexbox>
+    );
+  },
+);
 
 SkillFrontmatterCard.displayName = 'SkillFrontmatterCard';
 
