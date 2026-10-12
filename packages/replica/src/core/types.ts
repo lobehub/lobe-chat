@@ -15,9 +15,10 @@ export interface ReplicaRow<T> {
 
 /**
  * Where a replica keeps its rows between sessions (IndexedDB, localStorage …).
- * Reads and writes are best-effort: the server stays the durable source of
- * truth, so `get` and `set` should swallow their own I/O failures (a failed
- * read is a cache miss, a failed write is retried by the next one).
+ * The server stays the durable source of truth, so `get` is best-effort: it
+ * swallows its own I/O failures and reports a miss. Writes are not: `set` and
+ * `remove` must reject when they did not land (see each method), so the
+ * engine can retry them instead of treating a dropped row as persisted.
  */
 export interface ReplicaStorage<T> {
   get: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
