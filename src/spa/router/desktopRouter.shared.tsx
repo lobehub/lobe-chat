@@ -41,6 +41,8 @@ import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
+import { createSettingsSectionsSkeleton } from '@/components/Skeleton/Settings/Sections';
+import { WORKSPACE_SETTINGS_SECTION_SHAPES } from '@/components/Skeleton/Settings/sectionShapes';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
 import { agentDocumentRouteMeta } from '@/features/AgentDocumentPage/routeMeta';
@@ -59,6 +61,7 @@ import { createSettingsRouteMeta, settingsRouteMeta } from '@/features/Settings/
 import { workspaceHomeRouteMeta } from '@/features/Workspace/routeMeta';
 import WorkspaceProviderRedirect from '@/features/WorkspaceSetting/ProviderRedirect';
 import {
+  agentChannelDetailRouteMeta,
   agentChannelRouteMeta,
   agentChatDesktopRouteMeta,
   agentPermissionRouteMeta,
@@ -85,6 +88,17 @@ import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
 export { ResourceCategorySkeleton };
+
+// Workspace settings tabs made of stacked filled groups. The content layout
+// declares `chrome='body'` and draws the header + padded container, so inside
+// it these render only the sections.
+const workspaceSettingsSkeletons = {
+  billing: createSettingsSectionsSkeleton(WORKSPACE_SETTINGS_SECTION_SHAPES.billing),
+  budget: createSettingsSectionsSkeleton(WORKSPACE_SETTINGS_SECTION_SHAPES.budget),
+  credits: createSettingsSectionsSkeleton(WORKSPACE_SETTINGS_SECTION_SHAPES.credits),
+  plans: createSettingsSectionsSkeleton(WORKSPACE_SETTINGS_SECTION_SHAPES.plans),
+  usage: createSettingsSectionsSkeleton(WORKSPACE_SETTINGS_SECTION_SHAPES.usage),
+};
 
 const agentChatElement = dynamicElement(
   () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/(main)/agent')),
@@ -227,7 +241,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               () => import('@/routes/(main)/agent/channel/[platform]'),
               'Desktop > Chat > Channel Platform',
             ),
-            handle: { meta: agentChannelRouteMeta },
+            handle: { meta: agentChannelDetailRouteMeta },
             loader: channelDataLoader,
             path: 'channel/:platform',
           },
@@ -1489,7 +1503,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/plans'),
                   'Desktop > Workspace > Settings > Plans',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
+                handle: { meta: routeMeta({ Skeleton: workspaceSettingsSkeletons.plans }) },
                 path: 'plans',
               },
               {
@@ -1497,7 +1511,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/billing'),
                   'Desktop > Workspace > Settings > Billing',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
+                handle: { meta: routeMeta({ Skeleton: workspaceSettingsSkeletons.billing }) },
                 path: 'billing',
               },
               {
@@ -1505,7 +1519,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/budget'),
                   'Desktop > Workspace > Settings > Budget',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
+                handle: { meta: routeMeta({ Skeleton: workspaceSettingsSkeletons.budget }) },
                 path: 'budget',
               },
               {
@@ -1513,7 +1527,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/credits'),
                   'Desktop > Workspace > Settings > Credits',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
+                handle: { meta: routeMeta({ Skeleton: workspaceSettingsSkeletons.credits }) },
                 path: 'credits',
               },
               {
@@ -1521,7 +1535,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/usage'),
                   'Desktop > Workspace > Settings > Usage',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('grid') }) },
+                handle: { meta: routeMeta({ Skeleton: workspaceSettingsSkeletons.usage }) },
                 path: 'usage',
               },
               {

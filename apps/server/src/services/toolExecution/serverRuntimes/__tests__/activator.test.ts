@@ -249,4 +249,65 @@ describe('activatorRuntime', () => {
       expect(result.state?.notFound).toEqual(['lobe-agent-management']);
     });
   });
+
+  describe('activateTools — installed-but-not-pinned plugins', () => {
+    // The run's discovery pool is what feeds `toolManifestMap`; an installed
+    // plugin the agent never pinned must be resolvable from it even though it
+    // is absent from `enabledToolIds`.
+    const mcpManifest = {
+      api: [{ description: 'Send a message to a Feishu chat', name: 'sendMessage' }],
+      identifier: 'tituwork-feishu-mcp',
+      meta: { title: 'Feishu MCP' },
+      type: 'mcp',
+    };
+
+    it('activates a plugin the run only discovered, and reports the APIs it unlocked', async () => {
+      const { resolveDiscoveryPool } = await import('@lobechat/mecha');
+      const pool = resolveDiscoveryPool({
+        builtinTools: [],
+        enabledManifests: new Map(),
+        executionTarget: 'none',
+        installedManifests: [mcpManifest as never],
+      });
+
+      const { activatorRuntime } = await import('../activator');
+      const runtime = await activatorRuntime.factory({
+        serverDB: {} as never,
+        toolManifestMap: pool.manifestMap,
+        userId: 'user-1',
+      });
+
+      const result = await runtime.activateTools({ identifiers: ['tituwork-feishu-mcp'] });
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain(
+        'Successfully activated tools: tituwork-feishu-mcp.sendMessage',
+      );
+      expect(result.state.notFound).toEqual([]);
+    }, 20_000);
+
+    it('still answers "Not found" for a plugin the run disabled', async () => {
+      const { resolveDiscoveryPool } = await import('@lobechat/mecha');
+      const pool = resolveDiscoveryPool({
+        builtinTools: [],
+        disabledPluginIds: [mcpManifest.identifier],
+        enabledManifests: new Map(),
+        executionTarget: 'none',
+        installedManifests: [mcpManifest as never],
+      });
+      expect(pool.manifestMap).toEqual({});
+
+      const { activatorRuntime } = await import('../activator');
+      const runtime = await activatorRuntime.factory({
+        serverDB: {} as never,
+        toolManifestMap: pool.manifestMap,
+        userId: 'user-1',
+      });
+
+      const result = await runtime.activateTools({ identifiers: ['tituwork-feishu-mcp'] });
+
+      expect(result.content).toContain('Not found: tituwork-feishu-mcp');
+      expect(result.content).not.toContain('Successfully activated');
+    }, 20_000);
+  });
 });

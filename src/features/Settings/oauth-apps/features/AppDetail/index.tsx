@@ -77,6 +77,16 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+/** The app page while it loads; also shown while the Labs flag resolves on a direct visit. */
+export const AppDetailSkeleton = () => (
+  <Flexbox gap={16}>
+    <Skeleton.Text rows={1} width={200} />
+    <div className={styles.card}>
+      <Skeleton.Text rows={4} />
+    </div>
+  </Flexbox>
+);
+
 const TAB_KEYS = ['overview', 'credentials', 'advanced'] as const;
 
 interface AppDetailProps {
@@ -192,15 +202,7 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
       />
     );
 
-  if (!detail)
-    return (
-      <Flexbox gap={16}>
-        <Skeleton.Text rows={1} width={200} />
-        <div className={styles.card}>
-          <Skeleton.Text rows={4} />
-        </div>
-      </Flexbox>
-    );
+  if (!detail) return <AppDetailSkeleton />;
 
   const isWebApp = detail.applicationType === 'web';
   const isDisabled = !detail.enabled;
