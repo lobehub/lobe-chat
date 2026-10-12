@@ -37,9 +37,9 @@ import type { ExplorerTreeNode } from '@/features/ExplorerTree';
 import { ExplorerTree, getExplorerTreeStyleVars } from '@/features/ExplorerTree';
 import type { ExplorerTreeHandle } from '@/features/ExplorerTree/types';
 import { useClientDataSWR } from '@/libs/swr';
-import { isPersistedPartialIndex } from '@/libs/swr/codecs/projectFile';
 import { projectFileService } from '@/services/projectFile';
 import { useGlobalStore } from '@/store/global';
+import { isPersistedPartialIndex } from '@/store/projectFile';
 
 import { filterProjectFileEntries, mergeMissingDeletedEntries } from './fileFilter';
 import { FILE_TREE_UNSAFE_CSS } from './fileTreeStyle';

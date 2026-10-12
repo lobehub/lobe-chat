@@ -1,6 +1,5 @@
 /**
- * Persistence codecs for the Files tab (`localFile:projectIndex` /
- * `localFile:gitWorkingTreeFiles`).
+ * Persisted shapes of the Files tab replicas (project tree / git overlay).
  *
  * A project index is a flat list of every file in a repo, and each entry
  * repeats what the root and its own relative path already say (`path`,
@@ -16,7 +15,12 @@ import type {
   ProjectFileIndexResult,
 } from '@lobechat/electron-client-ipc';
 
-import type { PersistCodec } from '../localStorageProvider';
+import {
+  REPLICA_INDEX_KEY,
+  type ReplicaRow,
+  type ReplicaRowKey,
+  type ReplicaStorage,
+} from '@/libs/replica';
 
 /**
  * Entries beyond this many are not persisted. The default first paint expands
@@ -28,9 +32,9 @@ export const PROJECT_INDEX_PERSIST_MAX_ENTRIES = 20_000;
 export const GIT_WORKING_TREE_PERSIST_MAX_PATHS = 5000;
 
 /**
- * Directories whose tree / overlay stay persisted; older ones are evicted. Every
- * row is read and decoded on each boot, so the set is the recent projects a
- * user is likely to reopen, not every directory they ever looked at.
+ * Directories whose tree / overlay stay persisted (`persist.maxEntries`); the
+ * least recently used are evicted, so storage holds the recent projects a user
+ * is likely to reopen, not every directory they ever looked at.
  */
 export const PROJECT_INDEX_PERSIST_MAX_ROWS = 10;
 export const GIT_WORKING_TREE_PERSIST_MAX_ROWS = 20;
@@ -159,12 +163,6 @@ const isEncodedProjectIndex = (value: unknown): value is EncodedProjectIndex =>
   (value as EncodedProjectIndex).__codec === ENCODED_PROJECT_INDEX &&
   Array.isArray((value as EncodedProjectIndex).entries);
 
-const isProjectIndex = (value: unknown): value is ProjectFileIndexResult =>
-  !!value &&
-  typeof value === 'object' &&
-  Array.isArray((value as ProjectFileIndexResult).entries) &&
-  typeof (value as ProjectFileIndexResult).root === 'string';
-
 const isGitWorkingTreeFiles = (value: unknown): value is GitWorkingTreeFiles =>
   !!value &&
   typeof value === 'object' &&
@@ -172,51 +170,61 @@ const isGitWorkingTreeFiles = (value: unknown): value is GitWorkingTreeFiles =>
   Array.isArray((value as GitWorkingTreeFiles).modified) &&
   Array.isArray((value as GitWorkingTreeFiles).deleted);
 
-/** SWR keeps `{ data, error, isLoading, isValidating }` per key. */
-interface CacheState {
-  data?: unknown;
+/**
+ * The overlay as stored: only the three buckets, and nothing at all past the
+ * cap — a huge dirty set is not worth a stale first paint.
+ */
+export const encodeGitWorkingTreeFiles = (
+  data: GitWorkingTreeFiles,
+): GitWorkingTreeFiles | undefined => {
+  const { added, deleted, modified } = data;
+  if (added.length + deleted.length + modified.length > GIT_WORKING_TREE_PERSIST_MAX_PATHS)
+    return undefined;
+  return { added, deleted, modified };
+};
+
+interface PersistCodec<TData, TStored> {
+  decode: (stored: unknown) => TData | undefined;
+  /** `undefined`: the value is not worth a row; the key's old row is dropped. */
+  encode: (data: TData) => TStored | undefined;
 }
 
 /**
- * Only settled data is worth a row: an error or an in-flight flag hydrated
- * into a fresh session would read as the state of a request that never ran.
+ * A replica storage that reshapes entry rows on the way in and out. The
+ * engine's per-scope index row passes through untouched; a row that no longer
+ * decodes (an older shape) reads as a miss.
  */
-const settled = (state: unknown): CacheState | undefined => {
-  if (!state || typeof state !== 'object') return undefined;
-  const { data } = state as CacheState;
-  return data === undefined ? undefined : { data };
+export const withPersistCodec = <TData, TStored>(
+  inner: ReplicaStorage<any>,
+  { decode, encode }: PersistCodec<TData, TStored>,
+): ReplicaStorage<TData> => {
+  const read = (row: ReplicaRow<unknown> | undefined, key: ReplicaRowKey) => {
+    if (!row || key.queryKey === REPLICA_INDEX_KEY) return row as ReplicaRow<TData> | undefined;
+    const data = decode(row.data);
+    return data === undefined ? undefined : { data, updatedAt: row.updatedAt };
+  };
+
+  return {
+    get: async (key) => read(await inner.get(key), key),
+    getStrict: inner.getStrict && (async (key) => read(await inner.getStrict!(key), key)),
+    remove: (key) => inner.remove(key),
+    set: (key, row) => {
+      if (key.queryKey === REPLICA_INDEX_KEY) return inner.set(key, row);
+      const data = encode(row.data);
+      // Too large to keep: drop what an earlier, smaller value left behind so
+      // a reload never paints it.
+      if (data === undefined) return inner.remove(key);
+      return inner.set(key, { data, updatedAt: row.updatedAt });
+    },
+  };
 };
 
-export const projectIndexCodec: PersistCodec = {
-  decode: (stored) => {
-    const state = settled(stored);
-    if (!state || !isEncodedProjectIndex(state.data)) return undefined;
-    return { data: decodeProjectIndex(state.data) };
-  },
-  encode: (value) => {
-    const state = settled(value);
-    if (!state || !isProjectIndex(state.data)) return undefined;
-    return { data: encodeProjectIndex(state.data) };
-  },
-  id: ENCODED_PROJECT_INDEX,
-  maxRows: PROJECT_INDEX_PERSIST_MAX_ROWS,
-  pattern: 'localFile:projectIndex',
+export const projectIndexCodec: PersistCodec<PersistedProjectIndex, EncodedProjectIndex> = {
+  decode: (stored) => (isEncodedProjectIndex(stored) ? decodeProjectIndex(stored) : undefined),
+  encode: (data) => encodeProjectIndex(data),
 };
 
-export const gitWorkingTreeFilesCodec: PersistCodec = {
-  decode: (stored) => {
-    const state = settled(stored);
-    return state && isGitWorkingTreeFiles(state.data) ? state : undefined;
-  },
-  encode: (value) => {
-    const state = settled(value);
-    if (!state || !isGitWorkingTreeFiles(state.data)) return undefined;
-    const { added, deleted, modified } = state.data;
-    if (added.length + deleted.length + modified.length > GIT_WORKING_TREE_PERSIST_MAX_PATHS)
-      return undefined;
-    return { data: { added, deleted, modified } };
-  },
-  id: 'gitWorkingTreeFiles@1',
-  maxRows: GIT_WORKING_TREE_PERSIST_MAX_ROWS,
-  pattern: 'localFile:gitWorkingTreeFiles',
+export const gitWorkingTreeFilesCodec: PersistCodec<GitWorkingTreeFiles, GitWorkingTreeFiles> = {
+  decode: (stored) => (isGitWorkingTreeFiles(stored) ? stored : undefined),
+  encode: encodeGitWorkingTreeFiles,
 };

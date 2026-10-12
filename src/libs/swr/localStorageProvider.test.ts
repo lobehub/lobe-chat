@@ -1,15 +1,13 @@
 /**
  * @vitest-environment happy-dom
  */
-import { unstable_serialize } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { bootTiming } from '@/libs/bootTiming';
 
-import { localFileKeys, taskKeys, taskTemplateKeys } from './keys';
+import { taskKeys, taskTemplateKeys } from './keys';
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import {
-  CACHE_CODECS,
   CACHE_TIERS,
   clearSWRCache,
   createCacheProvider,
@@ -292,151 +290,6 @@ describe('createCacheProvider — tiering', () => {
       map.set('recents', { x: 1 });
     }).not.toThrow();
     await new Promise((r) => setTimeout(r, 20));
-  });
-
-  it('stores idb rows through a matching codec and decodes them on hydrate', async () => {
-    const scope = { value: 's1' };
-    const codec = {
-      decode: (stored: unknown) => ({ data: (stored as { packed: string }).packed.split(',') }),
-      encode: (value: unknown) => {
-        const data = (value as { data?: string[] }).data;
-        return data && data.length < 3 ? { packed: data.join(',') } : undefined;
-      },
-      id: 'packed@1',
-      pattern: 'MSGS',
-    };
-    const { provider } = buildProvider(scope, { idbCodecs: [codec] });
-    const map = provider();
-
-    map.set('MSGS:a', { data: ['x', 'y'], isValidating: true });
-    await until(async () => (await localDataCache.entriesByScope('s1')).length > 0);
-    expect((await localDataCache.entriesByScope('s1'))[0].data).toEqual({ packed: 'x,y' });
-
-    const { hydrated, provider: provider2 } = buildProvider(scope, { idbCodecs: [codec] });
-    const map2 = provider2();
-    await hydrated;
-    expect(map2.get('MSGS:a')).toEqual({ data: ['x', 'y'] });
-
-    // An encoding the codec refuses drops the row rather than keeping a stale one.
-    map2.set('MSGS:a', { data: ['1', '2', '3'] });
-    await until(async () => (await localDataCache.entriesByScope('s1')).length === 0);
-  });
-
-  it('keeps encoded rows away from a provider that does not know the codec', async () => {
-    const scope = { value: 's1' };
-    const { provider } = buildProvider(scope, {
-      idbCodecs: CACHE_CODECS,
-      idbPatterns: ['localFile:'],
-    });
-    const map = provider();
-    const indexKey = unstable_serialize(localFileKeys.projectIndex(undefined, '/repo'));
-    map.set(indexKey, {
-      data: {
-        entries: [{ isDirectory: false, name: 'a', path: '/repo/a', relativePath: 'a' }],
-        indexedAt: 'now',
-        root: '/repo',
-        source: 'git',
-      },
-    });
-    await until(async () => (await localDataCache.entriesByScope('s1')).length > 0);
-
-    // An older build (no codecs) must not hydrate the encoded shape as raw data.
-    const { hydrated, provider: older } = buildProvider(scope, { idbPatterns: ['localFile:'] });
-    const olderMap = older();
-    await hydrated;
-    expect(olderMap.has(indexKey)).toBe(false);
-  });
-
-  it('keeps only the most recently written rows of a bounded codec', async () => {
-    const scope = { value: 's1' };
-    const codec = {
-      decode: (stored: unknown) => stored,
-      encode: (value: unknown) => value,
-      id: 'bounded@1',
-      maxRows: 2,
-      pattern: 'MSGS',
-    };
-    const { provider } = buildProvider(scope, { idbCodecs: [codec] });
-    const map = provider();
-    const persistedKeys = async () =>
-      (await localDataCache.entriesByScope('s1')).map((entry) => entry.key).sort();
-
-    for (const key of ['MSGS:a', 'MSGS:b', 'MSGS:c']) {
-      map.set(key, { data: key });
-      await until(async () => (await persistedKeys()).includes(key));
-      await new Promise((r) => setTimeout(r, 5));
-    }
-    // Writing a third directory evicts the oldest row.
-    await until(async () => (await persistedKeys()).length === 2);
-    expect(await persistedKeys()).toEqual(['MSGS:b', 'MSGS:c']);
-  });
-
-  it('evicts rows past the bound when a scope hydrates', async () => {
-    const scope = { value: 's1' };
-    for (const key of ['MSGS:old', 'MSGS:mid', 'MSGS:new'])
-      await localDataCache.set(buildLocalDataKey('s1', key), { data: key }, '1.0.0+bounded@1');
-    // `set` stamps rows with now; restamp them in a known order.
-    const rows = await localDataCache.entriesByScope('s1');
-    await localDataCache.applyBatch({
-      deleteKeys: [],
-      putEntries: rows.map((row) => ({
-        ...row,
-        key: buildLocalDataKey('s1', row.key),
-        updatedAt: { 'MSGS:mid': 2, 'MSGS:new': 3, 'MSGS:old': 1 }[row.key]!,
-      })),
-    });
-
-    const codec = {
-      decode: (stored: unknown) => stored,
-      encode: (value: unknown) => value,
-      id: 'bounded@1',
-      maxRows: 2,
-      pattern: 'MSGS',
-    };
-    const { hydrated, provider } = buildProvider(scope, { idbCodecs: [codec] });
-    const map = provider();
-    await hydrated;
-
-    expect(map.has('MSGS:old')).toBe(false);
-    expect(map.get('MSGS:new')).toEqual({ data: 'MSGS:new' });
-    await until(async () => (await localDataCache.entriesByScope('s1')).length === 2);
-  });
-
-  it('persists the Files tab tree and git overlay, but not file previews', async () => {
-    const scope = { value: 's1' };
-    const { provider } = buildProvider(scope, {
-      idbCodecs: CACHE_CODECS,
-      idbPatterns: [...CACHE_TIERS.idb],
-      localPatterns: [...CACHE_TIERS.local],
-    });
-    const map = provider();
-    const indexKey = unstable_serialize(localFileKeys.projectIndex('device-1', '/repo'));
-    const gitKey = unstable_serialize(localFileKeys.gitWorkingTreeFiles('device-1', '/repo'));
-    const previewKey = unstable_serialize(
-      localFileKeys.preview({ filePath: '/repo/a.ts', workingDirectory: '/repo' }),
-    );
-    const tree = {
-      entries: [{ isDirectory: false, name: 'a.ts', path: '/repo/a.ts', relativePath: 'a.ts' }],
-      indexedAt: 'now',
-      root: '/repo',
-      source: 'git',
-    };
-    const git = { added: [], deleted: [], modified: ['a.ts'] };
-
-    map.set(indexKey, { data: tree, isLoading: false });
-    map.set(gitKey, { data: git });
-    map.set(previewKey, { data: { content: 'secret' } });
-    await until(async () => (await localDataCache.entriesByScope('s1')).length === 2);
-
-    const { hydrated, provider: provider2 } = buildProvider(scope, {
-      idbCodecs: CACHE_CODECS,
-      idbPatterns: [...CACHE_TIERS.idb],
-    });
-    const map2 = provider2();
-    await hydrated;
-    expect(map2.get(indexKey)).toEqual({ data: tree });
-    expect(map2.get(gitKey)).toEqual({ data: git });
-    expect(map2.has(previewKey)).toBe(false);
   });
 
   it('exposes the central tier config keyed by domain prefix', () => {

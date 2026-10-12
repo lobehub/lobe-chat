@@ -25,7 +25,6 @@
  */
 import { bootTiming } from '@/libs/bootTiming';
 
-import { gitWorkingTreeFilesCodec, projectIndexCodec } from './codecs/projectFile';
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import { migrateMessageListCache } from './migrations/messageListCache';
 import { isScopeTrusted } from './useCacheScope';
@@ -41,42 +40,11 @@ interface CacheEntry<T = unknown> {
 
 export type CacheTier = 'idb' | 'local';
 
-/**
- * Reshapes what an IndexedDB-tier key stores, for payloads too large or too
- * redundant to keep verbatim. `encode` receives the SWR cache state and returns
- * the row to write, or `undefined` to keep the key out of persistence (any row
- * already stored is dropped). `decode` reverses it on hydrate; `undefined`
- * discards the row.
- *
- * Encoded rows carry `${version}+${id}` instead of the plain cache version. A
- * build without the codec — an older release after a rollback — hydrates every
- * row of the current version as raw SWR data, and an encoded row read that way
- * would reach its consumers in a shape they cannot render. The suffixed version
- * makes those builds drop it like any other stale row.
- */
-export interface PersistCodec {
-  decode: (stored: unknown) => unknown;
-  encode: (value: unknown) => unknown;
-  /** Format id; bump it whenever the encoded shape changes. */
-  id: string;
-  /**
-   * Most rows of this codec kept per scope. The IndexedDB tier never expires,
-   * so a key family that grows with what the user opens (one row per project
-   * directory) keeps only its most recently written rows; older ones are
-   * evicted on hydrate and on write.
-   */
-  maxRows?: number;
-  /** Substring of the SWR key, matched like the tier patterns. */
-  pattern: string;
-}
-
 export interface CacheProviderOptions {
   /** Debounce (ms) before flushing writes to either tier, defaults to 2000. */
   debounceMs?: number;
   /** Resolver for the active identity scope (`${userId}:${workspaceId}`). */
   getScope?: () => string;
-  /** Per-key-pattern encoders for IndexedDB-tier rows (see `PersistCodec`). */
-  idbCodecs?: PersistCodec[];
   /** SWR key patterns persisted to the IndexedDB tier. */
   idbPatterns?: string[];
   /**
@@ -159,7 +127,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
   const {
     debounceMs = 2000,
     getScope = () => 'default',
-    idbCodecs = [],
     idbPatterns = [],
     isEphemeralScope,
     localPatterns = [],
@@ -190,28 +157,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     if (matchesPattern(key, idbPatterns)) return 'idb';
     if (matchesPattern(key, localPatterns)) return 'local';
     return null;
-  };
-
-  const codecOf = (key: string) => idbCodecs.find((codec) => key.includes(codec.pattern));
-  const codecVersion = (codec: PersistCodec) => `${version}+${codec.id}`;
-
-  /** Last-write time of each persisted codec row in the current scope, by codec id. */
-  let codecRows = new Map<string, Map<string, number>>();
-  const trackCodecRow = (codec: PersistCodec, key: string, writtenAt: number) => {
-    let rows = codecRows.get(codec.id);
-    if (!rows) codecRows.set(codec.id, (rows = new Map()));
-    rows.set(key, writtenAt);
-  };
-  /** Untrack and return the rows past `maxRows`, oldest first. */
-  const evictCodecRows = (codec: PersistCodec): string[] => {
-    const rows = codecRows.get(codec.id);
-    if (!codec.maxRows || !rows || rows.size <= codec.maxRows) return [];
-    const stale = [...rows.entries()]
-      .sort((a, b) => a[1] - b[1])
-      .slice(0, rows.size - codec.maxRows)
-      .map(([key]) => key);
-    for (const key of stale) rows.delete(key);
-    return stale;
   };
 
   /**
@@ -299,29 +244,10 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     dirtyIdb.clear();
     deletedIdb.clear();
 
-    for (const k of dels) {
-      const codec = codecOf(k);
-      if (codec) codecRows.get(codec.id)?.delete(k);
-      void localDataCache.delete(buildLocalDataKey(scope, k));
-    }
+    for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
-      if (v === undefined) continue;
-      const codec = codecOf(k);
-      if (!codec) {
-        void localDataCache.set(buildLocalDataKey(scope, k), v, version);
-        continue;
-      }
-      const row = codec.encode(v);
-      if (row === undefined) {
-        codecRows.get(codec.id)?.delete(k);
-        void localDataCache.delete(buildLocalDataKey(scope, k));
-        continue;
-      }
-      trackCodecRow(codec, k, Date.now());
-      void localDataCache.set(buildLocalDataKey(scope, k), row, codecVersion(codec));
-      for (const stale of evictCodecRows(codec))
-        void localDataCache.delete(buildLocalDataKey(scope, stale));
+      if (v !== undefined) void localDataCache.set(buildLocalDataKey(scope, k), v, version);
     }
   };
 
@@ -348,29 +274,9 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       // so legacy/unversioned rows (which the age check used to bound) are dropped
       // and a version bump still evicts everyone. TTL governs the localStorage
       // tier only (see `loadLocal`).
-      const valid: { data: unknown; key: string }[] = [];
-      const encoded: { codec: PersistCodec; entry: (typeof migratedEntries)[number] }[] = [];
-      for (const entry of migratedEntries) {
-        const codec = codecOf(entry.key);
-        if (!codec) {
-          if (entry.version === version) valid.push(entry);
-        } else if (entry.version === codecVersion(codec)) encoded.push({ codec, entry });
-      }
+      const valid = migratedEntries.filter((e) => e.version === version);
       // Map may have changed scope while we awaited; only apply if still current.
       if (cacheMapInstance && getScope() === scope && hydrationEpoch === epoch) {
-        codecRows = new Map();
-        for (const { codec, entry } of encoded) trackCodecRow(codec, entry.key, entry.updatedAt);
-        const evicted = new Set(idbCodecs.flatMap(evictCodecRows));
-        for (const key of evicted) void localDataCache.delete(buildLocalDataKey(scope, key));
-        for (const { codec, entry } of encoded) {
-          if (evicted.has(entry.key)) continue;
-          try {
-            const data = codec.decode(entry.data);
-            if (data !== undefined) valid.push({ data, key: entry.key });
-          } catch (error) {
-            onError(error as Error);
-          }
-        }
         cacheMapInstance.hydrate(valid.map((e) => [e.key, e.data]));
         hydratedScope = scope;
       }
@@ -543,7 +449,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     }
     dirtyIdb.clear();
     deletedIdb.clear();
-    codecRows = new Map();
 
     cacheMapInstance.dropPersisted();
     cacheMapInstance.hydrate([...loadLocal().entries()]);
@@ -583,11 +488,6 @@ export const CACHE_TIERS = {
     'page:', // page detail / list / meta
     'notebook:', // notebook documents
     'brief:', // briefs
-    // Files tab tree + its git overlay. Keyed by host (device / sandbox /
-    // this machine) and directory, and stored through `CACHE_CODECS` — the
-    // rest of `localFile:` (file previews) stays memory-only.
-    'localFile:projectIndex',
-    'localFile:gitWorkingTreeFiles',
   ],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [
@@ -603,9 +503,6 @@ export const CACHE_TIERS = {
   ],
 } as const;
 
-/** Keys whose IndexedDB rows are slimmed / capped rather than stored verbatim. */
-export const CACHE_CODECS: PersistCodec[] = [projectIndexCodec, gitWorkingTreeFilesCodec];
-
 /**
  * Provider factory for SWRConfig.
  *
@@ -620,7 +517,6 @@ export const swrCacheProvider = (
 ): ScopedSWRProvider => {
   return createCacheProvider({
     getScope,
-    idbCodecs: CACHE_CODECS,
     idbPatterns: [...CACHE_TIERS.idb],
     // Quarantine writes until the session check resolves (`isScopeTrusted`).
     // The active scope is optimistic (persisted last-known user) before the

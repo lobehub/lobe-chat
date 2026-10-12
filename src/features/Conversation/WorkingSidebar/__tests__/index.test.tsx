@@ -6,9 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useDeviceStore } from '@/store/device';
+import { projectFileActions } from '@/store/projectFile';
 
 import type { ComposerTarget } from '../../types';
-import { FILES_LOCATION_STORAGE_KEY } from '../Files/useRememberedFilesLocation';
 import AgentWorkingSidebar from '../index';
 import PullRequestSections from '../PullRequest/Sections';
 
@@ -278,6 +278,7 @@ vi.mock('@/store/chat', () => ({
 }));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
+  getActiveWorkspaceId: () => workspace.id,
   useActiveWorkspaceId: () => workspace.id,
 }));
 
@@ -821,10 +822,7 @@ describe('AgentWorkingSidebar — Files cold start', () => {
     // Without the device default the cwd falls back to home.
     reviewState.workingDirectory = '/Users/me';
     globalStore.status.workingSidebarTab = 'files';
-    localStorage.setItem(
-      FILES_LOCATION_STORAGE_KEY,
-      JSON.stringify({ 'agent:agent': { directory: '/repo' } }),
-    );
+    projectFileActions.rememberFilesLocation('agent:agent', { directory: '/repo' });
 
     const { rerender } = render(<AgentWorkingSidebar />);
     expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/repo' });

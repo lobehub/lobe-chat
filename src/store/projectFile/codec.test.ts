@@ -1,6 +1,8 @@
 import type { ProjectFileIndexResult } from '@lobechat/electron-client-ipc';
 import { describe, expect, it } from 'vitest';
 
+import { REPLICA_INDEX_KEY, type ReplicaRow, type ReplicaStorage } from '@/libs/replica';
+
 import {
   decodeProjectIndex,
   encodeProjectIndex,
@@ -8,7 +10,8 @@ import {
   gitWorkingTreeFilesCodec,
   isPersistedPartialIndex,
   projectIndexCodec,
-} from './projectFile';
+  withPersistCodec,
+} from './codec';
 
 const index: ProjectFileIndexResult = {
   entries: [
@@ -105,33 +108,86 @@ describe('project index codec', () => {
     expect(isPersistedPartialIndex(decodeProjectIndex(encodeProjectIndex(restored)))).toBe(true);
   });
 
-  it('persists only settled data and restores it as SWR state', () => {
-    expect(projectIndexCodec.encode({ isLoading: true })).toBeUndefined();
-
-    const row = projectIndexCodec.encode({
-      data: index,
-      error: undefined,
-      isLoading: false,
-      isValidating: true,
-    });
-    expect(row).not.toHaveProperty('isValidating');
-    expect(projectIndexCodec.decode(row)).toEqual({ data: index });
-    expect(projectIndexCodec.decode({ data: index })).toBeUndefined();
+  it('decodes only rows it encoded', () => {
+    expect(projectIndexCodec.decode(projectIndexCodec.encode(index))).toEqual(index);
+    // A raw (unencoded) value is an older shape: a miss, not a broken tree.
+    expect(projectIndexCodec.decode(index)).toBeUndefined();
   });
 });
 
 describe('git working tree codec', () => {
   it('stores the dirty-file lists and skips oversized overlays', () => {
     const files = { added: ['a.ts'], deleted: [], modified: ['b.ts'] };
-    expect(
-      gitWorkingTreeFilesCodec.decode(gitWorkingTreeFilesCodec.encode({ data: files })),
-    ).toEqual({ data: files });
+    expect(gitWorkingTreeFilesCodec.decode(gitWorkingTreeFilesCodec.encode(files))).toEqual(files);
 
     const huge = {
       added: Array.from({ length: GIT_WORKING_TREE_PERSIST_MAX_PATHS + 1 }, (_, i) => `f${i}`),
       deleted: [],
       modified: [],
     };
-    expect(gitWorkingTreeFilesCodec.encode({ data: huge })).toBeUndefined();
+    expect(gitWorkingTreeFilesCodec.encode(huge)).toBeUndefined();
+  });
+});
+
+const memoryStorage = () => {
+  const rows = new Map<string, ReplicaRow<unknown>>();
+  const id = ({ queryKey, scope }: { queryKey: string; scope: string }) => `${scope}|${queryKey}`;
+  const storage: ReplicaStorage<unknown> = {
+    get: async (key) => rows.get(id(key)),
+    getStrict: async (key) => rows.get(id(key)),
+    remove: async (key) => {
+      rows.delete(id(key));
+    },
+    set: async (key, row) => {
+      rows.set(id(key), row);
+    },
+  };
+  return { rows, storage };
+};
+
+describe('withPersistCodec', () => {
+  const key = { queryKey: '["local","/repo"]', scope: 'u1:personal' };
+
+  it('stores the encoded row and reads the decoded value back', async () => {
+    const { rows, storage } = memoryStorage();
+    const codecStorage = withPersistCodec(storage, projectIndexCodec);
+
+    await codecStorage.set(key, { data: index, updatedAt: 1 });
+
+    expect((rows.get(`u1:personal|${key.queryKey}`)?.data as any).entries).toEqual([
+      ['src/', 1],
+      ['src/index.ts', 0],
+      ['node_modules/', 7],
+      ['.env', 2],
+    ]);
+    expect(await codecStorage.get(key)).toEqual({ data: index, updatedAt: 1 });
+    expect(await codecStorage.getStrict!(key)).toEqual({ data: index, updatedAt: 1 });
+  });
+
+  it('passes the replica index row through untouched', async () => {
+    const { storage } = memoryStorage();
+    const codecStorage = withPersistCodec(storage, projectIndexCodec);
+    const indexKey = { queryKey: REPLICA_INDEX_KEY, scope: 'u1:personal' };
+
+    await codecStorage.set(indexKey, { data: ['a', 'b'] as any, updatedAt: 1 });
+
+    expect(await codecStorage.get(indexKey)).toEqual({ data: ['a', 'b'], updatedAt: 1 });
+  });
+
+  it('drops the old row when a value is too large to keep', async () => {
+    const { rows, storage } = memoryStorage();
+    const codecStorage = withPersistCodec(storage, gitWorkingTreeFilesCodec);
+    const small = { added: ['a.ts'], deleted: [], modified: [] };
+    await codecStorage.set(key, { data: small, updatedAt: 1 });
+
+    const huge = {
+      added: Array.from({ length: GIT_WORKING_TREE_PERSIST_MAX_PATHS + 1 }, (_, i) => `f${i}`),
+      deleted: [],
+      modified: [],
+    };
+    await codecStorage.set(key, { data: huge, updatedAt: 2 });
+
+    expect(rows.size).toBe(0);
+    expect(await codecStorage.get(key)).toBeUndefined();
   });
 });
