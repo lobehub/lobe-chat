@@ -6,6 +6,7 @@ import {
   encodeProjectIndex,
   GIT_WORKING_TREE_PERSIST_MAX_PATHS,
   gitWorkingTreeFilesCodec,
+  isPersistedPartialIndex,
   projectIndexCodec,
 } from './projectFile';
 
@@ -93,6 +94,15 @@ describe('project index codec', () => {
       'node_modules/',
       '.env',
     ]);
+  });
+
+  it('marks a capped tree as partial, and keeps it partial when written back', () => {
+    expect(isPersistedPartialIndex(decodeProjectIndex(encodeProjectIndex(index)))).toBe(false);
+
+    const restored = decodeProjectIndex(encodeProjectIndex(index, 3));
+    expect(isPersistedPartialIndex(restored)).toBe(true);
+    // Under the cap now, but it is still the cut-down copy, not the full tree.
+    expect(isPersistedPartialIndex(decodeProjectIndex(encodeProjectIndex(restored)))).toBe(true);
   });
 
   it('persists only settled data and restores it as SWR state', () => {

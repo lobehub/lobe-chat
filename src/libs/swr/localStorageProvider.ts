@@ -59,6 +59,13 @@ export interface PersistCodec {
   encode: (value: unknown) => unknown;
   /** Format id; bump it whenever the encoded shape changes. */
   id: string;
+  /**
+   * Most rows of this codec kept per scope. The IndexedDB tier never expires,
+   * so a key family that grows with what the user opens (one row per project
+   * directory) keeps only its most recently written rows; older ones are
+   * evicted on hydrate and on write.
+   */
+  maxRows?: number;
   /** Substring of the SWR key, matched like the tier patterns. */
   pattern: string;
 }
@@ -188,6 +195,25 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
   const codecOf = (key: string) => idbCodecs.find((codec) => key.includes(codec.pattern));
   const codecVersion = (codec: PersistCodec) => `${version}+${codec.id}`;
 
+  /** Last-write time of each persisted codec row in the current scope, by codec id. */
+  let codecRows = new Map<string, Map<string, number>>();
+  const trackCodecRow = (codec: PersistCodec, key: string, writtenAt: number) => {
+    let rows = codecRows.get(codec.id);
+    if (!rows) codecRows.set(codec.id, (rows = new Map()));
+    rows.set(key, writtenAt);
+  };
+  /** Untrack and return the rows past `maxRows`, oldest first. */
+  const evictCodecRows = (codec: PersistCodec): string[] => {
+    const rows = codecRows.get(codec.id);
+    if (!codec.maxRows || !rows || rows.size <= codec.maxRows) return [];
+    const stale = [...rows.entries()]
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, rows.size - codec.maxRows)
+      .map(([key]) => key);
+    for (const key of stale) rows.delete(key);
+    return stale;
+  };
+
   /**
    * Whether the *current* scope may be written to persistence. Provisional
    * scopes (see `isEphemeralScope`) stay memory-only so their transient boot
@@ -273,19 +299,29 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     dirtyIdb.clear();
     deletedIdb.clear();
 
-    for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
+    for (const k of dels) {
+      const codec = codecOf(k);
+      if (codec) codecRows.get(codec.id)?.delete(k);
+      void localDataCache.delete(buildLocalDataKey(scope, k));
+    }
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
       if (v === undefined) continue;
       const codec = codecOf(k);
-      const row = codec ? codec.encode(v) : v;
-      if (row === undefined) void localDataCache.delete(buildLocalDataKey(scope, k));
-      else
-        void localDataCache.set(
-          buildLocalDataKey(scope, k),
-          row,
-          codec ? codecVersion(codec) : version,
-        );
+      if (!codec) {
+        void localDataCache.set(buildLocalDataKey(scope, k), v, version);
+        continue;
+      }
+      const row = codec.encode(v);
+      if (row === undefined) {
+        codecRows.get(codec.id)?.delete(k);
+        void localDataCache.delete(buildLocalDataKey(scope, k));
+        continue;
+      }
+      trackCodecRow(codec, k, Date.now());
+      void localDataCache.set(buildLocalDataKey(scope, k), row, codecVersion(codec));
+      for (const stale of evictCodecRows(codec))
+        void localDataCache.delete(buildLocalDataKey(scope, stale));
     }
   };
 
@@ -313,22 +349,28 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       // and a version bump still evicts everyone. TTL governs the localStorage
       // tier only (see `loadLocal`).
       const valid: { data: unknown; key: string }[] = [];
+      const encoded: { codec: PersistCodec; entry: (typeof migratedEntries)[number] }[] = [];
       for (const entry of migratedEntries) {
         const codec = codecOf(entry.key);
         if (!codec) {
           if (entry.version === version) valid.push(entry);
-          continue;
-        }
-        if (entry.version !== codecVersion(codec)) continue;
-        try {
-          const data = codec.decode(entry.data);
-          if (data !== undefined) valid.push({ data, key: entry.key });
-        } catch (error) {
-          onError(error as Error);
-        }
+        } else if (entry.version === codecVersion(codec)) encoded.push({ codec, entry });
       }
       // Map may have changed scope while we awaited; only apply if still current.
       if (cacheMapInstance && getScope() === scope && hydrationEpoch === epoch) {
+        codecRows = new Map();
+        for (const { codec, entry } of encoded) trackCodecRow(codec, entry.key, entry.updatedAt);
+        const evicted = new Set(idbCodecs.flatMap(evictCodecRows));
+        for (const key of evicted) void localDataCache.delete(buildLocalDataKey(scope, key));
+        for (const { codec, entry } of encoded) {
+          if (evicted.has(entry.key)) continue;
+          try {
+            const data = codec.decode(entry.data);
+            if (data !== undefined) valid.push({ data, key: entry.key });
+          } catch (error) {
+            onError(error as Error);
+          }
+        }
         cacheMapInstance.hydrate(valid.map((e) => [e.key, e.data]));
         hydratedScope = scope;
       }
@@ -501,6 +543,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     }
     dirtyIdb.clear();
     deletedIdb.clear();
+    codecRows = new Map();
 
     cacheMapInstance.dropPersisted();
     cacheMapInstance.hydrate([...loadLocal().entries()]);

@@ -125,9 +125,11 @@ const projectFilesMock = vi.hoisted(() => {
     data: {
       entries: [...baseEntries],
       indexedAt: '2026-01-01',
+      persistedPartial: undefined as true | undefined,
       root: '/repo',
       source: 'git' as 'git' | 'glob',
     },
+    isValidating: false,
   };
 });
 
@@ -178,7 +180,7 @@ vi.mock('../useProjectFiles', () => ({
       source: workingDirectory === '/non-git' ? 'glob' : projectFilesMock.data.source,
     },
     isLoading: false,
-    isValidating: false,
+    isValidating: projectFilesMock.isValidating,
     mutate: vi.fn(),
   }),
 }));
@@ -313,6 +315,8 @@ const expandSearch = () => {
 
 beforeEach(() => {
   projectFilesMock.data.source = 'git';
+  projectFilesMock.data.persistedPartial = undefined;
+  projectFilesMock.isValidating = false;
   projectFilesMock.data.entries = [...projectFilesMock.baseEntries];
   explorerTreeProps.current = undefined;
   handleSpies.focus.mockClear();
@@ -961,6 +965,26 @@ describe('Files — collapsed ignored directories', () => {
         ),
       ).toBe(true);
     });
+  });
+
+  it('flags a saved partial tree only once its refresh is no longer running', () => {
+    // Restored from a capped row (a large project) while the refresh is in flight.
+    projectFilesMock.data.persistedPartial = true;
+    projectFilesMock.isValidating = true;
+    const { unmount } = render(<Files workingDirectory="/repo" />);
+    expect(screen.queryByText('workingPanel.files.partialIndexNotice')).not.toBeInTheDocument();
+    unmount();
+
+    // The refresh failed: the partial tree is all there is, and it must say so.
+    projectFilesMock.isValidating = false;
+    render(<Files workingDirectory="/repo" />);
+    expect(screen.getByText('workingPanel.files.partialIndexNotice')).toBeInTheDocument();
+  });
+
+  it('does not flag a complete tree', () => {
+    render(<Files workingDirectory="/repo" />);
+
+    expect(screen.queryByText('workingPanel.files.partialIndexNotice')).not.toBeInTheDocument();
   });
 
   it('surfaces a truncation notice when the host caps the directory listing', async () => {

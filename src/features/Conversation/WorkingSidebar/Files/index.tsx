@@ -37,6 +37,7 @@ import type { ExplorerTreeNode } from '@/features/ExplorerTree';
 import { ExplorerTree, getExplorerTreeStyleVars } from '@/features/ExplorerTree';
 import type { ExplorerTreeHandle } from '@/features/ExplorerTree/types';
 import { useClientDataSWR } from '@/libs/swr';
+import { isPersistedPartialIndex } from '@/libs/swr/codecs/projectFile';
 import { projectFileService } from '@/services/projectFile';
 import { useGlobalStore } from '@/store/global';
 
@@ -221,7 +222,7 @@ const Files = memo<FilesProps>(
     const isSandbox = !!sandboxTopicId || !!sandboxInstanceId;
     const {
       git: { data: gitFiles },
-      project: { data, error, isLoading },
+      project: { data, error, isLoading, isValidating },
     } = useFilesTreeSources(deviceId, workingDirectory, {
       instanceId: sandboxInstanceId,
       topicId: sandboxTopicId,
@@ -501,6 +502,10 @@ const Files = memo<FilesProps>(
     );
 
     const isEmpty = displayEntries.length === 0;
+    // A large project's saved tree keeps only its shallowest entries. Its own
+    // refresh replaces it within moments; only when that refresh is not running
+    // (it failed, or has not been retried) is the partial tree worth flagging.
+    const showsPartialIndex = isPersistedPartialIndex(data) && !isValidating;
 
     if (!data && isLoading) {
       return (
@@ -615,8 +620,12 @@ const Files = memo<FilesProps>(
             />
           </div>
         )}
-        {truncatedCount > 0 && (
-          <div className={styles.truncated}>{t('workingPanel.files.truncatedNotice')}</div>
+        {showsPartialIndex ? (
+          <div className={styles.truncated}>{t('workingPanel.files.partialIndexNotice')}</div>
+        ) : (
+          truncatedCount > 0 && (
+            <div className={styles.truncated}>{t('workingPanel.files.truncatedNotice')}</div>
+          )
         )}
       </Flexbox>
     );

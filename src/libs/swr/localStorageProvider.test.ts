@@ -347,6 +347,61 @@ describe('createCacheProvider — tiering', () => {
     expect(olderMap.has(indexKey)).toBe(false);
   });
 
+  it('keeps only the most recently written rows of a bounded codec', async () => {
+    const scope = { value: 's1' };
+    const codec = {
+      decode: (stored: unknown) => stored,
+      encode: (value: unknown) => value,
+      id: 'bounded@1',
+      maxRows: 2,
+      pattern: 'MSGS',
+    };
+    const { provider } = buildProvider(scope, { idbCodecs: [codec] });
+    const map = provider();
+    const persistedKeys = async () =>
+      (await localDataCache.entriesByScope('s1')).map((entry) => entry.key).sort();
+
+    for (const key of ['MSGS:a', 'MSGS:b', 'MSGS:c']) {
+      map.set(key, { data: key });
+      await until(async () => (await persistedKeys()).includes(key));
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    // Writing a third directory evicts the oldest row.
+    await until(async () => (await persistedKeys()).length === 2);
+    expect(await persistedKeys()).toEqual(['MSGS:b', 'MSGS:c']);
+  });
+
+  it('evicts rows past the bound when a scope hydrates', async () => {
+    const scope = { value: 's1' };
+    for (const key of ['MSGS:old', 'MSGS:mid', 'MSGS:new'])
+      await localDataCache.set(buildLocalDataKey('s1', key), { data: key }, '1.0.0+bounded@1');
+    // `set` stamps rows with now; restamp them in a known order.
+    const rows = await localDataCache.entriesByScope('s1');
+    await localDataCache.applyBatch({
+      deleteKeys: [],
+      putEntries: rows.map((row) => ({
+        ...row,
+        key: buildLocalDataKey('s1', row.key),
+        updatedAt: { 'MSGS:mid': 2, 'MSGS:new': 3, 'MSGS:old': 1 }[row.key]!,
+      })),
+    });
+
+    const codec = {
+      decode: (stored: unknown) => stored,
+      encode: (value: unknown) => value,
+      id: 'bounded@1',
+      maxRows: 2,
+      pattern: 'MSGS',
+    };
+    const { hydrated, provider } = buildProvider(scope, { idbCodecs: [codec] });
+    const map = provider();
+    await hydrated;
+
+    expect(map.has('MSGS:old')).toBe(false);
+    expect(map.get('MSGS:new')).toEqual({ data: 'MSGS:new' });
+    await until(async () => (await localDataCache.entriesByScope('s1')).length === 2);
+  });
+
   it('persists the Files tab tree and git overlay, but not file previews', async () => {
     const scope = { value: 's1' };
     const { provider } = buildProvider(scope, {

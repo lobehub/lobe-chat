@@ -27,6 +27,14 @@ export const PROJECT_INDEX_PERSIST_MAX_ENTRIES = 20_000;
 /** A dirty-file overlay this large is not worth a stale first paint. */
 export const GIT_WORKING_TREE_PERSIST_MAX_PATHS = 5000;
 
+/**
+ * Directories whose tree / overlay stay persisted; older ones are evicted. Every
+ * row is read and decoded on each boot, so the set is the recent projects a
+ * user is likely to reopen, not every directory they ever looked at.
+ */
+export const PROJECT_INDEX_PERSIST_MAX_ROWS = 10;
+export const GIT_WORKING_TREE_PERSIST_MAX_ROWS = 20;
+
 const ENCODED_PROJECT_INDEX = 'projectIndex@1';
 
 const FLAG_DIRECTORY = 1;
@@ -41,6 +49,8 @@ type EncodedEntry = [string, number] | [string, number, string | null, string?];
 
 interface EncodedProjectIndex {
   __codec: typeof ENCODED_PROJECT_INDEX;
+  /** Entries past the persist cap were dropped from this row. */
+  capped?: boolean;
   entries: EncodedEntry[];
   indexedAt: string;
   root: string;
@@ -106,21 +116,38 @@ const keepShallowest = (entries: ProjectFileIndexEntry[], max: number) => {
   return ranked.map((index) => entries[index]);
 };
 
-export const encodeProjectIndex = (
-  data: ProjectFileIndexResult,
-  maxEntries = PROJECT_INDEX_PERSIST_MAX_ENTRIES,
-): EncodedProjectIndex => ({
-  __codec: ENCODED_PROJECT_INDEX,
-  entries: keepShallowest(data.entries, maxEntries).map((entry) => encodeEntry(data.root, entry)),
-  indexedAt: data.indexedAt,
-  root: data.root,
-  source: data.source,
-  ...(data.truncated ? { truncated: true } : {}),
-});
+/**
+ * A tree restored from a capped row: its deepest entries were not persisted.
+ * It paints the first screen correctly, but it is not the whole project until
+ * the network read replaces it — which is what the Files tab has to say when
+ * that read does not come.
+ */
+export type PersistedProjectIndex = ProjectFileIndexResult & { persistedPartial?: true };
 
-export const decodeProjectIndex = (encoded: EncodedProjectIndex): ProjectFileIndexResult => ({
+export const isPersistedPartialIndex = (data: ProjectFileIndexResult | undefined): boolean =>
+  !!(data as PersistedProjectIndex | undefined)?.persistedPartial;
+
+export const encodeProjectIndex = (
+  data: PersistedProjectIndex,
+  maxEntries = PROJECT_INDEX_PERSIST_MAX_ENTRIES,
+): EncodedProjectIndex => {
+  const kept = keepShallowest(data.entries, maxEntries);
+  return {
+    __codec: ENCODED_PROJECT_INDEX,
+    // A restored partial tree written back before its refresh lands is still partial.
+    ...(kept.length < data.entries.length || data.persistedPartial ? { capped: true } : {}),
+    entries: kept.map((entry) => encodeEntry(data.root, entry)),
+    indexedAt: data.indexedAt,
+    root: data.root,
+    source: data.source,
+    ...(data.truncated ? { truncated: true } : {}),
+  };
+};
+
+export const decodeProjectIndex = (encoded: EncodedProjectIndex): PersistedProjectIndex => ({
   entries: encoded.entries.map((entry) => decodeEntry(encoded.root, entry)),
   indexedAt: encoded.indexedAt,
+  ...(encoded.capped ? { persistedPartial: true as const } : {}),
   root: encoded.root,
   source: encoded.source,
   ...(encoded.truncated ? { truncated: true } : {}),
@@ -172,6 +199,7 @@ export const projectIndexCodec: PersistCodec = {
     return { data: encodeProjectIndex(state.data) };
   },
   id: ENCODED_PROJECT_INDEX,
+  maxRows: PROJECT_INDEX_PERSIST_MAX_ROWS,
   pattern: 'localFile:projectIndex',
 };
 
@@ -189,5 +217,6 @@ export const gitWorkingTreeFilesCodec: PersistCodec = {
     return { data: { added, deleted, modified } };
   },
   id: 'gitWorkingTreeFiles@1',
+  maxRows: GIT_WORKING_TREE_PERSIST_MAX_ROWS,
   pattern: 'localFile:gitWorkingTreeFiles',
 };
