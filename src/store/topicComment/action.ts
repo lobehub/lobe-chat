@@ -100,13 +100,6 @@ export class TopicCommentActionImpl {
       rootCommentId: params.rootCommentId,
     });
 
-  #prefetchReplies = async (rootCommentId: string, scope: string) => {
-    const params = { pageSize: TOPIC_COMMENT_PAGE_SIZE, rootCommentId };
-    const page = await this.#fetchReplies(params);
-    // `scope` was captured before the request (see `prefetchTopicComments`).
-    this.#replies.replace(params, page, scope);
-  };
-
   #fetchThreads = (params: TopicCommentThreadsParams, cursor?: string) =>
     topicCommentService.listThreads({
       cursor,
@@ -196,13 +189,12 @@ export class TopicCommentActionImpl {
     this.#prefetching.add(topicId);
     try {
       const params = { pageSize: TOPIC_COMMENT_PAGE_SIZE, topicId };
-      // Capture the partition before the request. A warmup that lands after a
-      // workspace / account switch must not paint, or persist, the previous
-      // identity's rows into the new one: resolving the scope at write time
-      // would target whatever partition is active when the response arrives.
-      const scope = topicCommentThreadResource.scope.get();
-      const threads = await this.#fetchThreads(params);
-      this.#thread.replace(params, threads, scope);
+      // The replica captures the partition when the request starts: a warmup
+      // that lands after a workspace / account switch is dropped instead of
+      // painting (or persisting) the previous identity's rows into the new
+      // one. Its roots belong to that identity too, so stop there.
+      const { applied, data: threads } = await this.#thread.fetch(params);
+      if (!applied) return;
 
       const rootCommentIds = threads.items.flatMap(({ replyCount, root }) =>
         replyCount > 0 ? [root.id] : [],
@@ -211,7 +203,9 @@ export class TopicCommentActionImpl {
         await Promise.all(
           rootCommentIds
             .slice(index, index + PREFETCH_CONCURRENCY)
-            .map((rootCommentId) => this.#prefetchReplies(rootCommentId, scope)),
+            .map((rootCommentId) =>
+              this.#replies.fetch({ pageSize: TOPIC_COMMENT_PAGE_SIZE, rootCommentId }),
+            ),
         );
       }
     } catch {
