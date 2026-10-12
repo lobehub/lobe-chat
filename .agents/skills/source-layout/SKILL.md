@@ -22,7 +22,7 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 
 A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `const.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `constants.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
-New files use named exports (`export const PlanCard = …`). Lint does not enforce this everywhere: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`, so follow the rule by hand. Many existing components still default-export; keep an existing file's exports unchanged when moving it, so its callers do not change.
+New files use named exports (`export const PlanCard = …`), except entry modules a framework loads by default export: route segments under `src/routes` (see `spa-routes`) and Next.js `page.tsx` / `layout.tsx`. Lint does not enforce this everywhere: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`, so follow the rule by hand. Many existing components still default-export; keep an existing file's exports unchanged when moving it, so its callers do not change.
 
 ## 2. Tests
 
@@ -42,7 +42,7 @@ The limit says when to split, not where. Split on a real boundary (state, reuse,
 
 ## 4. Turning a file into a directory
 
-A split keeps the public import path: `Foo.tsx` becomes `Foo/index.tsx`, so `import Foo from './Foo'` keeps working and callers do not change. Commit the move (`mkdir Foo && git mv Foo.tsx Foo/index.tsx`) alone before extracting, so reviewers can read the extraction diff separately and Git keeps the rename while those commits stay intact (a squash merge folds them together). `split-large-file` has the full procedure.
+A split keeps the public import path: `Foo.tsx` becomes `Foo/index.tsx`, so `import Foo from './Foo'` keeps working and callers do not change. Commit the move (`mkdir -p Foo && git mv Foo.tsx Foo/index.tsx`) alone before extracting, so reviewers can read the extraction diff separately and Git keeps the rename while those commits stay intact (a squash merge folds them together). `split-large-file` has the full procedure.
 
 | Kind            | `index` keeps                                   | Siblings                                                                                                                   | Precedent                                |
 | --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
