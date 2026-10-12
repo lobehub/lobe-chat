@@ -868,7 +868,8 @@ export function registerGoalCommand(program: Command) {
           rollout = {
             probeNodeIds: options.probes,
             recipe,
-            skillName: options.skillName,
+            // Only when given: a server from before the flag rejects the key.
+            ...(options.skillName ? { skillName: options.skillName } : {}),
             trigger: options.rollout as 'canary' | 'full',
             unitNodeIds: options.units,
             variants: options.variant?.map(parseVariant),
