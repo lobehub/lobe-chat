@@ -52,11 +52,12 @@ const EXPANDED_PANEL_WIDTH = 'min(960px, calc(100vw - 16px))';
 
 export interface TopicChatDrawerBodyProps {
   agentId: string;
-  /** Expand and focus the reply composer — set when the drawer is opened with
-      conversational intent (e.g. the brief's "Continue chat"). */
-  autoFocusInput?: boolean;
   defaultInputExpanded?: boolean;
   disableInputCollapse?: boolean;
+  /** Expand and focus the reply composer whenever this changes — bumped when the
+      drawer is opened with conversational intent (e.g. the brief's "Continue
+      chat"). */
+  inputFocusRequest?: number;
   /**
    * The run to resume streaming from. Hosts that embed the body outside the
    * drawer pass it themselves; the drawer falls back to its own topic's run.
@@ -68,9 +69,9 @@ export interface TopicChatDrawerBodyProps {
 export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
   ({
     agentId,
-    autoFocusInput,
     defaultInputExpanded,
     disableInputCollapse,
+    inputFocusRequest,
     runningOperation,
     topicId,
   }) => {
@@ -123,9 +124,9 @@ export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
             </Flexbox>
             <Flexbox paddingBlock={'0 12px'} paddingInline={12} style={{ flexShrink: 0 }}>
               <FeedbackInput
-                autoFocus={autoFocusInput}
                 defaultExpanded={defaultInputExpanded}
                 disableCollapse={disableInputCollapse}
+                focusRequest={inputFocusRequest}
               />
             </Flexbox>
           </Flexbox>
@@ -145,7 +146,7 @@ const TopicChatDrawer = memo(() => {
   const activeTaskId = useTaskStore((s) => s.activeTaskId);
   const agentId = useTaskStore(taskDetailSelectors.topicDrawerAgentId);
   const drawerTitle = useTaskStore(taskDetailSelectors.topicDrawerTitle);
-  const autoFocusInput = useTaskStore(taskDetailSelectors.topicDrawerAutoFocus);
+  const inputFocusRequest = useTaskStore(taskDetailSelectors.topicDrawerFocusRequest);
   const activity = useTaskStore(taskActivitySelectors.activeDrawerTopicActivity);
   const closeTopicDrawer = useTaskStore((s) => s.closeTopicDrawer);
   const deleteTopic = useTaskStore((s) => s.deleteTopic);
@@ -375,7 +376,7 @@ const TopicChatDrawer = memo(() => {
           ) : (
             <TopicChatDrawerBody
               agentId={agentId!}
-              autoFocusInput={autoFocusInput}
+              inputFocusRequest={inputFocusRequest}
               topicId={topicId!}
             />
           ))}

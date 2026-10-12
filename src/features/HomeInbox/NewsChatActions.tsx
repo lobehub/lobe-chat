@@ -1,0 +1,72 @@
+import { Flexbox } from '@lobehub/ui';
+import { Button } from '@lobehub/ui/base-ui';
+import { cssVar } from 'antd-style';
+import { MessageSquarePlus, Workflow } from 'lucide-react';
+import { memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { shallow } from 'zustand/shallow';
+
+import { useConversationResourceAccessForTarget } from '@/features/Conversation/hooks/useConversationResourceAccess';
+import { useTaskStore } from '@/store/task';
+
+interface NewsChatActionsProps {
+  agentId: string;
+  taskId?: string | null;
+  title: string;
+  topicId: string;
+}
+
+/**
+ * The way back into the conversation behind a run-owned brief. Mounted only
+ * while the brief is expanded, so the agent's access is resolved for the one
+ * row being read rather than for every row in the feed.
+ */
+const NewsChatActions = memo<NewsChatActionsProps>(({ agentId, taskId, title, topicId }) => {
+  const { t } = useTranslation('home');
+  const { openTopicDrawer, setActiveTaskId } = useTaskStore(
+    (s) => ({ openTopicDrawer: s.openTopicDrawer, setActiveTaskId: s.setActiveTaskId }),
+    shallow,
+  );
+  // A view-only member can still read the thread, but the drawer gives them no
+  // composer — offering "Continue chat" would promise a reply they cannot send.
+  const { canUseResource } = useConversationResourceAccessForTarget({ agentId });
+
+  const openTopicChat = useCallback(
+    (autoFocus: boolean) => {
+      // setActiveTaskId hydrates the drawer's task context when the brief owns a
+      // task and clears any prior drawer state, so openTopicDrawer must come
+      // after it for the topic to survive the reset.
+      setActiveTaskId(taskId ?? undefined);
+      openTopicDrawer(topicId, { agentId, autoFocus, title });
+    },
+    [agentId, openTopicDrawer, setActiveTaskId, taskId, title, topicId],
+  );
+
+  return (
+    <Flexbox horizontal align={'center'} gap={4} justify={'flex-end'}>
+      <Button
+        icon={Workflow}
+        size={'small'}
+        style={{ color: cssVar.colorTextSecondary }}
+        type={'text'}
+        onClick={() => openTopicChat(false)}
+      >
+        {t('inbox.news.viewChat')}
+      </Button>
+      {canUseResource && (
+        <Button
+          icon={MessageSquarePlus}
+          size={'small'}
+          type={'fill'}
+          onClick={() => openTopicChat(true)}
+        >
+          {t('inbox.news.continueChat')}
+        </Button>
+      )}
+    </Flexbox>
+  );
+});
+
+NewsChatActions.displayName = 'NewsChatActions';
+
+export default NewsChatActions;

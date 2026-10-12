@@ -65,7 +65,7 @@ beforeEach(() => {
   useTaskStore.setState({
     activeTaskId: undefined,
     activeTopicDrawerAgentId: undefined,
-    activeTopicDrawerAutoFocus: undefined,
+    activeTopicDrawerFocusRequest: undefined,
     activeTopicDrawerTitle: undefined,
     activeTopicDrawerTopicId: undefined,
     isCreatingTask: false,
@@ -230,28 +230,42 @@ describe('TaskDetailSliceAction', () => {
     });
   });
 
-  describe('topic drawer autoFocus', () => {
-    it('should record autoFocus when the drawer opens with conversational intent', () => {
+  describe('topic drawer focus request', () => {
+    it('should start a focus request when the drawer opens with conversational intent', () => {
       useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1', autoFocus: true });
 
-      expect(taskDetailSelectors.topicDrawerAutoFocus(useTaskStore.getState())).toBe(true);
+      expect(taskDetailSelectors.topicDrawerFocusRequest(useTaskStore.getState())).toBe(1);
     });
 
-    it('should upgrade an already-open drawer for the same topic to autoFocus', () => {
+    it('should not start a focus request for a plain opening', () => {
+      useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1' });
+
+      expect(useTaskStore.getState().activeTopicDrawerFocusRequest).toBeUndefined();
+    });
+
+    it('should bump the request on every repeated autoFocus opening of the same topic', () => {
       useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1' });
       useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1', autoFocus: true });
+      useTaskStore.getState().openTopicDrawer('tpc-1', { agentId: 'agt-1', autoFocus: true });
 
-      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBe(true);
+      expect(useTaskStore.getState().activeTopicDrawerFocusRequest).toBe(2);
     });
 
-    it('should clear autoFocus on close and when switching tasks', () => {
+    it('should not carry a focus request over to a plainly opened different topic', () => {
+      useTaskStore.getState().openTopicDrawer('tpc-1', { autoFocus: true });
+      useTaskStore.getState().openTopicDrawer('tpc-2');
+
+      expect(useTaskStore.getState().activeTopicDrawerFocusRequest).toBeUndefined();
+    });
+
+    it('should clear the focus request on close and when switching tasks', () => {
       useTaskStore.getState().openTopicDrawer('tpc-1', { autoFocus: true });
       useTaskStore.getState().closeTopicDrawer();
-      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBeUndefined();
+      expect(useTaskStore.getState().activeTopicDrawerFocusRequest).toBeUndefined();
 
       useTaskStore.getState().openTopicDrawer('tpc-1', { autoFocus: true });
       useTaskStore.getState().setActiveTaskId('T-2');
-      expect(useTaskStore.getState().activeTopicDrawerAutoFocus).toBeUndefined();
+      expect(useTaskStore.getState().activeTopicDrawerFocusRequest).toBeUndefined();
     });
   });
 
