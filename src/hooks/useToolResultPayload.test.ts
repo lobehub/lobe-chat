@@ -150,6 +150,24 @@ describe('useToolResultPayload replica', () => {
     expect(result.current.payload).toBeUndefined();
   });
 
+  it('evicts the least recently opened payload past the entry cap', async () => {
+    vi.spyOn(messageService, 'getToolResultPayload').mockImplementation(
+      async (id) => ({ content: `body of ${id}` }) as any,
+    );
+    const slice = useToolResultPayloadStore.getState().payload;
+    const total = TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES + 1;
+    for (let i = 0; i < total; i++) {
+      ids.add(`msg-lru-${i}`);
+      await slice.fetch(`msg-lru-${i}`);
+    }
+
+    await waitFor(async () => {
+      expect(await storage.get(rowKey('msg-lru-0'))).toBeUndefined();
+      expect(await storage.get(rowKey(`msg-lru-${total - 1}`))).toBeDefined();
+    });
+    expect(await storage.get(rowKey('msg-lru-1'))).toBeDefined();
+  });
+
   it('is bounded, and its network read is not persisted again by the SWR cache', () => {
     expect(toolResultPayloadResource.maxPersistedEntries).toBe(
       TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES,
