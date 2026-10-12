@@ -13,6 +13,8 @@ import { homeType } from '@/features/Home/components/homeType';
 import Time from '@/features/Home/components/Time';
 import { useBriefStore } from '@/store/brief';
 
+import NewsChatActions from './NewsChatActions';
+
 const Markdown = lazy(() => import('@lobehub/ui/es/Markdown/index'));
 
 const AVATAR_SIZE = 20;
@@ -103,6 +105,14 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
     });
   }, [brief.id, markBriefRead, read]);
 
+  // Only a run-owned brief (it names both an agent and a topic) has a thread to
+  // go back to: "View chat" reopens the conversation the agent worked in, and
+  // "Continue chat" opens the same thread with the reply composer hot. A brief
+  // without a topic stays a pure information row.
+  const agentId = brief.agentId ?? brief.agent?.id;
+  const topicId = brief.topicId;
+  const hasTopicChat = Boolean(agentId && topicId);
+
   return (
     <Flexbox className={bare ? undefined : styles.section}>
       <Button className={cx(styles.row, bare && styles.bareRow)} type={'text'} onClick={toggle}>
@@ -142,7 +152,7 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
         </Flexbox>
       </Button>
 
-      {expanded && (brief.summary || brief.artifacts) && (
+      {expanded && (brief.summary || brief.artifacts || hasTopicChat) && (
         <Flexbox className={bare ? styles.bareBody : styles.body} gap={8}>
           {brief.summary && (
             <Suspense fallback={null}>
@@ -152,6 +162,14 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
             </Suspense>
           )}
           <BriefCardArtifacts artifacts={brief.artifacts} />
+          {agentId && topicId && (
+            <NewsChatActions
+              agentId={agentId}
+              taskId={brief.taskId}
+              title={brief.taskName ?? brief.title}
+              topicId={topicId}
+            />
+          )}
         </Flexbox>
       )}
     </Flexbox>
