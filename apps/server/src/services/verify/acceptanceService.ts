@@ -853,9 +853,12 @@ export class AcceptanceService {
     const priorRuns = (await this.runModel.listByAcceptance(acceptanceId)).filter(
       (run) => run.id !== source.id,
     );
-    const priorResults = priorRuns.length
-      ? await this.resultModel.listByRuns(priorRuns.map((run) => run.id))
-      : [];
+    // Results of the earlier rounds and of the source run itself: an executed
+    // run may supersede one of its own result-only checks.
+    const priorResults = await this.resultModel.listByRuns([
+      ...priorRuns.map((run) => run.id),
+      source.id,
+    ]);
     const unresolvedSupersedes = findUnresolvedSupersedes(
       plan,
       priorRuns,

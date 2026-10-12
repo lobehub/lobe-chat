@@ -173,6 +173,18 @@ describe('findUnresolvedSupersedes', () => {
     ).toEqual([]);
   });
 
+  it('reports an item that supersedes itself, which folds nothing', () => {
+    expect(
+      findUnresolvedSupersedes(
+        [
+          planItem('check-a', { supersedes: ['check-a'] }),
+          planItem('check-b', { sourceCriterionId: 'crit-b', supersedes: ['crit-b'] }),
+        ],
+        prior,
+      ),
+    ).toEqual(['check-a', 'crit-b']);
+  });
+
   it('reports an id that names no check of the acceptance', () => {
     expect(
       findUnresolvedSupersedes([planItem('new', { supersedes: ['old', 'typo-id'] })], prior),

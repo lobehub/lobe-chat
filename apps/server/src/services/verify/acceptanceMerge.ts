@@ -91,28 +91,36 @@ export const countLogicalChecks = (
 /**
  * `supersedes` ids in an incoming plan that name no check the acceptance has
  * seen — no plan item id or row id an earlier round wrote, no result-only check
- * id, and no item of the incoming round itself. Such an entry folds nothing, so
+ * id, no item of the incoming round itself — or the item itself, which the union
+ * never folds into its own row. Such an entry folds nothing, so
  * the author is told instead of the old row silently staying on the page.
  */
 export const findUnresolvedSupersedes = (
   plan: VerifyCheckItem[] | null | undefined,
   priorRuns: Pick<VerifyRunItem, 'plan'>[],
-  /** Check ids of earlier results; a direct ingest may carry no plan item. */
+  /** Result check ids of earlier rounds and the incoming run; a direct ingest may carry no plan item. */
   priorResultCheckItemIds: Iterable<string> = [],
 ): string[] => {
+  const identities = (item: VerifyCheckItem) => [
+    item.id,
+    item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id),
+  ];
   const known = new Set<string>(priorResultCheckItemIds);
-  const addItem = (item: VerifyCheckItem) => {
-    known.add(item.id);
-    known.add(item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id));
-  };
-  for (const run of priorRuns)
-    for (const item of (run.plan ?? []) as VerifyCheckItem[]) addItem(item);
+  for (const run of priorRuns) {
+    for (const item of (run.plan ?? []) as VerifyCheckItem[]) {
+      for (const id of identities(item)) known.add(id);
+    }
+  }
   // An item may also replace another item of the same incoming round.
-  for (const item of plan ?? []) addItem(item);
+  for (const item of plan ?? []) for (const id of identities(item)) known.add(id);
 
   const unresolved = new Set<string>();
   for (const item of plan ?? []) {
-    for (const id of item.supersedes ?? []) if (id && !known.has(id)) unresolved.add(id);
+    // The union never folds a row into itself, so naming yourself replaces nothing.
+    const self = new Set(identities(item));
+    for (const id of item.supersedes ?? []) {
+      if (id && (self.has(id) || !known.has(id))) unresolved.add(id);
+    }
   }
   return [...unresolved];
 };

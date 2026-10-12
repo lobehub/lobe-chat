@@ -231,4 +231,30 @@ describe('attaching a round that targets an accepted check', () => {
     });
     expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
   });
+
+  it("resolves a supersedes that names the attached run's own result-only check", async () => {
+    // An executed run carries a result for `result-only` without a plan item,
+    // and another item replaces it; the union folds that row, so no warning.
+    mocks.runFindById.mockResolvedValue({
+      acceptanceId: null,
+      id: 'run-2',
+      plan: [{ id: 'replacement', index: 0, supersedes: ['result-only'], title: 'replacement' }],
+      userId: 'u1',
+    });
+    mocks.listByRuns.mockImplementation(async (runIds: string[]) =>
+      runIds.includes('run-2')
+        ? [
+            {
+              ...acceptedResult('result-only', 'run-2'),
+              userDecision: null,
+              userDecisionDetail: null,
+            },
+          ]
+        : [],
+    );
+
+    const attached = await service().attachRun('run-2', 'acc-1');
+
+    expect(attached).not.toHaveProperty('unresolvedSupersedes');
+  });
 });
