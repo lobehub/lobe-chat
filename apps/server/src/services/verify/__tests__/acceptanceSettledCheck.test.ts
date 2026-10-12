@@ -204,4 +204,31 @@ describe('attaching a round that targets an accepted check', () => {
     await expect(service().attachRun('run-2', 'acc-1')).resolves.toMatchObject({ roundIndex: 2 });
     expect(mocks.attachToAcceptance).toHaveBeenCalledOnce();
   });
+
+  it('reports unresolved supersedes again when an already-attached run is re-attached', async () => {
+    // The first attach committed but its response was lost; the retry takes
+    // the idempotent path and must still carry the warning.
+    mocks.runFindById.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-2',
+      plan: [{ id: 'replacement', index: 0, supersedes: ['typo-id'], title: 'replacement' }],
+      roundIndex: 2,
+      userId: 'u1',
+    });
+    mocks.listByAcceptance.mockResolvedValue([
+      { acceptanceId: 'acc-1', id: 'run-1', plan: planned('settled-check'), roundIndex: 1 },
+      {
+        acceptanceId: 'acc-1',
+        id: 'run-2',
+        plan: [{ id: 'replacement', index: 0, supersedes: ['typo-id'], title: 'replacement' }],
+        roundIndex: 2,
+      },
+    ]);
+
+    await expect(service().attachRun('run-2', 'acc-1')).resolves.toMatchObject({
+      id: 'run-2',
+      unresolvedSupersedes: ['typo-id'],
+    });
+    expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
+  });
 });

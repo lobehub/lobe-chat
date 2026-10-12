@@ -156,6 +156,23 @@ describe('findUnresolvedSupersedes', () => {
     ).toEqual([]);
   });
 
+  it('accepts a result-only check id from an earlier direct ingest', () => {
+    expect(
+      findUnresolvedSupersedes([planItem('new', { supersedes: ['result-only'] })], prior, [
+        'result-only',
+      ]),
+    ).toEqual([]);
+  });
+
+  it("accepts a same-round item's criterion id", () => {
+    expect(
+      findUnresolvedSupersedes(
+        [planItem('a', { sourceCriterionId: 'crit-a' }), planItem('b', { supersedes: ['crit-a'] })],
+        prior,
+      ),
+    ).toEqual([]);
+  });
+
   it('reports an id that names no check of the acceptance', () => {
     expect(
       findUnresolvedSupersedes([planItem('new', { supersedes: ['old', 'typo-id'] })], prior),

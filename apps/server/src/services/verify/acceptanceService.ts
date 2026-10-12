@@ -780,7 +780,10 @@ export class AcceptanceService {
     // an already-chained round keeps its index instead of being re-appended.
     const existing = await this.runModel.findById(runId);
     if (!existing) throw new Error(`Verify run "${runId}" not found in the current workspace`);
-    if (existing.acceptanceId === acceptanceId) return existing;
+    // A retried attach (the response of the first one was lost) still reports
+    // the warnings the first one did.
+    if (existing.acceptanceId === acceptanceId)
+      return this.withUnresolvedSupersedes(existing, acceptanceId);
     if (existing.acceptanceId) {
       throw new Error('This verify run already belongs to another acceptance');
     }
@@ -796,11 +799,10 @@ export class AcceptanceService {
     // run folds into it instead of pushing the ledger to yet another number.
     // Only the newest round counts — `listByAcceptance` is ascending, and an
     // older draft the chain has moved past is an abandoned ledger position.
-    const priorRuns = await this.runModel.listByAcceptance(acceptanceId);
-    const latest = priorRuns.at(-1);
-    const unresolvedSupersedes = findUnresolvedSupersedes(existing.plan, priorRuns);
-    const withWarnings = (attached: VerifyRunItem): AttachedRun =>
-      unresolvedSupersedes.length ? { ...attached, unresolvedSupersedes } : attached;
+    const latest = (await this.runModel.listByAcceptance(acceptanceId)).at(-1);
+    // Resolved against the chain as it stood before this run joined it.
+    const withWarnings = (attached: VerifyRunItem): Promise<AttachedRun> =>
+      this.withUnresolvedSupersedes(attached, acceptanceId, existing);
     // A run that already executed cannot fold (`foldIntoRound` refuses any source
     // with results): its verdicts belong to its own round. It is appended after
     // the draft instead — the path a verification driven by the CLI takes, since
@@ -818,7 +820,7 @@ export class AcceptanceService {
         folded.roundIndex,
         acceptanceId,
       );
-      return withWarnings(folded);
+      return await withWarnings(folded);
     }
 
     // Rounds inherit the aggregate's visibility so a private acceptance's new
@@ -832,7 +834,34 @@ export class AcceptanceService {
     // reviewing".
     if (latest) this.distilSettledRound(acceptanceId, latest.id);
 
-    return withWarnings(run);
+    return await withWarnings(run);
+  };
+
+  /**
+   * Attach `unresolvedSupersedes` — `supersedes` ids of `source`'s plan that
+   * name no check of the acceptance — to the run handed back to the caller.
+   * The source run itself is excluded from the chain it is resolved against.
+   */
+  private withUnresolvedSupersedes = async (
+    attached: VerifyRunItem,
+    acceptanceId: string,
+    source: VerifyRunItem = attached,
+  ): Promise<AttachedRun> => {
+    const plan = (source.plan ?? []) as VerifyCheckItem[];
+    if (!plan.some((item) => item.supersedes?.length)) return attached;
+
+    const priorRuns = (await this.runModel.listByAcceptance(acceptanceId)).filter(
+      (run) => run.id !== source.id,
+    );
+    const priorResults = priorRuns.length
+      ? await this.resultModel.listByRuns(priorRuns.map((run) => run.id))
+      : [];
+    const unresolvedSupersedes = findUnresolvedSupersedes(
+      plan,
+      priorRuns,
+      priorResults.map((result) => result.checkItemId),
+    );
+    return unresolvedSupersedes.length ? { ...attached, unresolvedSupersedes } : attached;
   };
 
   /**

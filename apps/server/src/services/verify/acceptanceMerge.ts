@@ -90,23 +90,25 @@ export const countLogicalChecks = (
 
 /**
  * `supersedes` ids in an incoming plan that name no check the acceptance has
- * seen — neither a plan item id an earlier round wrote nor the row id it was
- * keyed by. Such an entry folds nothing, so the author is told instead of the
- * old row silently staying on the page.
+ * seen — no plan item id or row id an earlier round wrote, no result-only check
+ * id, and no item of the incoming round itself. Such an entry folds nothing, so
+ * the author is told instead of the old row silently staying on the page.
  */
 export const findUnresolvedSupersedes = (
   plan: VerifyCheckItem[] | null | undefined,
   priorRuns: Pick<VerifyRunItem, 'plan'>[],
+  /** Check ids of earlier results; a direct ingest may carry no plan item. */
+  priorResultCheckItemIds: Iterable<string> = [],
 ): string[] => {
-  const known = new Set<string>();
-  for (const run of priorRuns) {
-    for (const item of (run.plan ?? []) as VerifyCheckItem[]) {
-      known.add(item.id);
-      known.add(item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id));
-    }
-  }
+  const known = new Set<string>(priorResultCheckItemIds);
+  const addItem = (item: VerifyCheckItem) => {
+    known.add(item.id);
+    known.add(item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id));
+  };
+  for (const run of priorRuns)
+    for (const item of (run.plan ?? []) as VerifyCheckItem[]) addItem(item);
   // An item may also replace another item of the same incoming round.
-  for (const item of plan ?? []) known.add(item.id);
+  for (const item of plan ?? []) addItem(item);
 
   const unresolved = new Set<string>();
   for (const item of plan ?? []) {
