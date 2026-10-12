@@ -18,7 +18,7 @@ const ENV_NAME_PATTERN = /^[A-Z_]\w*$/i;
 const SERVICE_ENV_FILE_NAME = 'connect-service.env';
 
 /**
- * Exit code for startup failures worth retrying (EX_TEMPFAIL). It sits outside the
+ * Exit code for workspace failures worth retrying (EX_TEMPFAIL). It sits outside the
  * unit's `SuccessExitStatus`, so `Restart=on-failure` restarts the service child.
  */
 export const CONNECT_RETRYABLE_EXIT_CODE = 75;
@@ -32,8 +32,8 @@ const PERMANENT_TRPC_ERROR_CODES = new Set([
   'UNAUTHORIZED',
 ]);
 
-/** Exit code for a failed workspace startup step (token mint, device registration): 1 for refusals, 75 otherwise. */
-export function getWorkspaceStartupExitCode(error: unknown): number {
+/** Exit code for a failed workspace operation (token mint, refresh, device registration): 1 for refusals, 75 otherwise. */
+export function getWorkspaceFailureExitCode(error: unknown): number {
   const code = (error as { data?: { code?: string } } | null)?.data?.code;
   return code && PERMANENT_TRPC_ERROR_CODES.has(code) ? 1 : CONNECT_RETRYABLE_EXIT_CODE;
 }

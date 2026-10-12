@@ -451,6 +451,38 @@ describe('connect command', () => {
     expect(exitSpy).not.toHaveBeenCalled();
   });
 
+  describe.each(['auth_failed', 'auth_expired'] as const)('%s workspace refresh', (event) => {
+    it.each([
+      { error: new Error('fetch failed'), exitCode: 75, reason: 'a transient outage' },
+      {
+        error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+        exitCode: 1,
+        reason: 'a server refusal',
+      },
+    ])('exits with $exitCode after $reason', async ({ error, exitCode }) => {
+      mintWorkspaceConnectTokenMock.mockResolvedValueOnce({ token: 'workspace-token' });
+      registerWorkspaceDeviceMock.mockResolvedValueOnce(undefined);
+      await createProgram().parseAsync([
+        'node',
+        'test',
+        'connect',
+        '--service-child',
+        '--workspace',
+        'ws_1',
+      ]);
+      expect(connectCalled).toBe(true);
+      mintWorkspaceConnectTokenMock.mockRejectedValueOnce(error);
+
+      await clientEventHandlers[event]?.('token expired');
+
+      expect(exitSpy).toHaveBeenCalledWith(exitCode);
+      expect(cleanupAllProcesses).toHaveBeenCalledOnce();
+      const client = vi.mocked(GatewayClient).mock.results[0].value;
+      expect(client.disconnect).toHaveBeenCalledOnce();
+      expect(client.reconnect).not.toHaveBeenCalled();
+    });
+  });
+
   it('should ignore auth_expired for api key auth', async () => {
     vi.mocked(resolveToken).mockResolvedValueOnce({
       serverUrl: 'https://self-hosted.example.com',

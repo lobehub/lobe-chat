@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   CONNECT_RETRYABLE_EXIT_CODE,
-  getWorkspaceStartupExitCode,
+  getWorkspaceFailureExitCode,
   installConnectService,
   readConnectServiceStatus,
   startConnectService,
@@ -185,19 +185,19 @@ describe('connect service', () => {
     expect(systemctlCalls).toContainEqual(['--user', 'start', 'lobehub-connect.service']);
   });
 
-  describe('getWorkspaceStartupExitCode', () => {
+  describe('getWorkspaceFailureExitCode', () => {
     it('lets systemd retry transient workspace startup failures', () => {
-      expect(getWorkspaceStartupExitCode(new Error('fetch failed'))).toBe(
+      expect(getWorkspaceFailureExitCode(new Error('fetch failed'))).toBe(
         CONNECT_RETRYABLE_EXIT_CODE,
       );
-      expect(getWorkspaceStartupExitCode({ data: { code: 'INTERNAL_SERVER_ERROR' } })).toBe(
+      expect(getWorkspaceFailureExitCode({ data: { code: 'INTERNAL_SERVER_ERROR' } })).toBe(
         CONNECT_RETRYABLE_EXIT_CODE,
       );
     });
 
     it('stops on server refusals that a restart cannot fix', () => {
-      expect(getWorkspaceStartupExitCode({ data: { code: 'CONFLICT' } })).toBe(1);
-      expect(getWorkspaceStartupExitCode({ data: { code: 'FORBIDDEN' } })).toBe(1);
+      expect(getWorkspaceFailureExitCode({ data: { code: 'CONFLICT' } })).toBe(1);
+      expect(getWorkspaceFailureExitCode({ data: { code: 'FORBIDDEN' } })).toBe(1);
     });
 
     it('keeps the retryable code outside the unit success exit statuses', () => {

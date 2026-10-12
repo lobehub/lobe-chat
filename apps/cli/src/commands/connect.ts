@@ -58,7 +58,7 @@ import {
 } from '../device/register';
 import { TerminalSessionManager } from '../device/terminal';
 import {
-  getWorkspaceStartupExitCode,
+  getWorkspaceFailureExitCode,
   installConnectService,
   readConnectServiceStatus,
   restartConnectService,
@@ -379,7 +379,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       connectToken = minted.token;
     } catch (err) {
       log.error(`Workspace connect token mint failed: ${(err as Error).message}`);
-      process.exit(getWorkspaceStartupExitCode(err));
+      process.exit(getWorkspaceFailureExitCode(err));
       throw new Error('process.exit', { cause: err });
     }
     connectTokenType = 'jwt';
@@ -779,6 +779,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   // (e.g., auto-reconnect may send an expired JWT before proactive refresh fires)
   let authFailedRefreshAttempted = false;
   client.on('auth_failed', async (reason) => {
+    let exitCode = 1;
     if (connectTokenType === 'jwt' && !authFailedRefreshAttempted) {
       authFailedRefreshAttempted = true;
       info(`Authentication failed (${reason}). Attempting token refresh...`);
@@ -793,8 +794,9 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
           await client.reconnect();
           return;
         }
-      } catch {
-        // fall through
+      } catch (err) {
+        error(`Token refresh failed: ${(err as Error).message}`);
+        if (workspaceId) exitCode = getWorkspaceFailureExitCode(err);
       }
     }
 
@@ -803,7 +805,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       `Run '${CLI_PRIMARY_BIN} login', or set ${CLI_API_KEY_ENV} and run '${CLI_PRIMARY_BIN} login --server <url>' to configure API key authentication.`,
     );
     cleanup();
-    process.exit(1);
+    process.exit(exitCode);
   });
 
   // Handle auth expired — refresh token and reconnect automatically
@@ -814,6 +816,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     }
 
     info('Authentication expired. Attempting to refresh token...');
+    let exitCode = 1;
 
     try {
       const newToken = await refreshConnectToken();
@@ -824,13 +827,14 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
         await client.reconnect();
         return;
       }
-    } catch {
-      // refresh failed — fall through
+    } catch (err) {
+      error(`Token refresh failed: ${(err as Error).message}`);
+      if (workspaceId) exitCode = getWorkspaceFailureExitCode(err);
     }
 
     error("Could not refresh token. Run 'lh login' to re-authenticate.");
     cleanup();
-    process.exit(1);
+    process.exit(exitCode);
   });
 
   // Another `lh connect` of this install (same persisted connection id) took
@@ -908,7 +912,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       if (workspaceId) {
         error(`Workspace device registration failed: ${(err as Error).message}`);
         cleanup();
-        process.exit(getWorkspaceStartupExitCode(err));
+        process.exit(getWorkspaceFailureExitCode(err));
       }
       error(`Device registration failed (non-fatal): ${(err as Error).message}`);
     }
