@@ -707,6 +707,77 @@ describe('StreamingExecutor actions', () => {
       streamSpy.mockRestore();
     });
 
+    // https://github.com/lobehub/lobehub/issues/17723 — Stop during a retry
+    // backoff kept the spinner until the delay elapsed, then saved the last
+    // provider error on the reply as if the run had failed.
+    it('ends at once without a provider error when stopped during a retry backoff', async () => {
+      act(() => {
+        useChatStore.setState({ executeClientAgent: realExecAgentRuntime });
+      });
+
+      // The branded provider is excluded from client retries; use one that retries.
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig({ model: 'gpt-4o-mini', provider: 'openai' }),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: TEST_IDS.SESSION_ID,
+        topicId: TEST_IDS.TOPIC_ID,
+      } as UIChatMessage;
+
+      seedDbMessages({ agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID }, [userMessage]);
+      const updateMessageErrorSpy = vi.spyOn(messageService, 'updateMessageError');
+      const streamSpy = spyOnClientLLMStream();
+      let streamCallCount = 0;
+      streamSpy.mockImplementation(async (_params, options) => {
+        streamCallCount++;
+        options?.onErrorHandle?.({
+          message: 'tokens per minute exceeded',
+          type: 'RateLimitExceeded',
+        } as any);
+        // The first backoff is 1s; Stop lands while it is still waiting.
+        setTimeout(() => {
+          const execOperation = Object.values(result.current.operations).find(
+            (op) => op.type === 'execAgentRuntime',
+          );
+          if (execOperation) result.current.cancelOperation(execOperation.id, 'user_cancelled');
+        }, 20);
+        return new Response();
+      });
+
+      const startedAt = Date.now();
+      await act(async () => {
+        await result.current.executeClientAgent({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+        });
+      });
+
+      expect(Date.now() - startedAt).toBeLessThan(800);
+      expect(streamCallCount).toBe(1);
+      expect(
+        Object.values(result.current.operations).find((op) => op.type === 'execAgentRuntime')
+          ?.status,
+      ).toBe('cancelled');
+      expect(updateMessageErrorSpy).not.toHaveBeenCalled();
+      const assistantMessages = Object.values(result.current.messagesMap)
+        .flat()
+        .filter((message) => message.role === 'assistant');
+      expect(assistantMessages.length).toBeGreaterThan(0);
+      for (const message of assistantMessages) expect(message.error).toBeFalsy();
+
+      streamSpy.mockRestore();
+    });
+
     it('should resolve aborted tools when cancelled after LLM returns tool calls', async () => {
       act(() => {
         useChatStore.setState({ executeClientAgent: realExecAgentRuntime });
