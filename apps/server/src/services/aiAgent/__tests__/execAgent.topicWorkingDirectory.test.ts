@@ -190,6 +190,10 @@ const { claimedKeys, mockTryInitializeRedisWithPrefix } = vi.hoisted(() => {
 });
 vi.mock('@/server/modules/Redis', async (importOriginal) => ({
   ...(await importOriginal<typeof RedisLib>()),
+  // The enabled config below would otherwise make every other Redis user (runtime config,
+  // latency cache, ...) open a real connection to `redis://test`, whose retry errors keep
+  // logging after the file finishes and fail the run with an EnvironmentTeardownError.
+  initializeRedis: vi.fn(async () => null),
   tryInitializeRedisWithPrefix: mockTryInitializeRedisWithPrefix,
 }));
 // Without REDIS_URL the service never reaches the fake provider and claims fall
