@@ -133,9 +133,15 @@ export class ActivatorExecutionRuntime {
           return prefix && prefix !== id ? [id, prefix] : [id];
         }),
       );
-      const resolvedIdentifiers = identifiers.map(
-        (id) => resolveActivationIdentifier(id, discoveryManifests) ?? id,
-      );
+      // Deduplicate after resolution: two wire names of the same plugin
+      // (`lobe-web-browsing____search`, `…____crawlSinglePage`) both resolve
+      // to the plugin identifier, and duplicate entries would surface as
+      // duplicate manifests (and duplicate React keys) downstream.
+      const resolvedIdentifiers = [
+        ...new Set(
+          identifiers.map((id) => resolveActivationIdentifier(id, discoveryManifests) ?? id),
+        ),
+      ];
 
       const toActivate: string[] = [];
       const alreadyActiveList: string[] = [];

@@ -121,4 +121,23 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
 
     expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
   });
+
+  it('deduplicates identifiers when one request carries two wire names of the same plugin', async () => {
+    // Vent scenario (Codex P2 on PR #20791): the model asks for two APIs of
+    // the same plugin; both resolve to one identifier, and without dedup the
+    // response would list the plugin (and its manifests/React keys) twice.
+    const service = buildService([webBrowsingManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({
+      identifiers: ['lobe-web-browsing____search', 'lobe-web-browsing____crawlSinglePage'],
+      reason: 'test',
+    });
+
+    expect(service.markActivated).toHaveBeenCalledTimes(1);
+    expect(service.markActivated).toHaveBeenCalledWith(['lobe-web-browsing']);
+    const occurrences = (result.content.match(/lobe-web-browsing\.search/g) ?? []).length;
+    expect(occurrences).toBe(1);
+    expect(result.state?.notFound).toEqual([]);
+  });
 });
