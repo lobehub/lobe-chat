@@ -142,6 +142,7 @@ export class CodexThreadSession {
       const adapter = new CodexAppServerAdapter({
         initialCumulativeUsage: this.cumulativeUsage,
         initialModel: this.model,
+        sessionId: threadId,
       });
       let resolveTurn!: () => void;
       const completion = new Promise<void>((resolve) => {

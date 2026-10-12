@@ -20,6 +20,10 @@ import type {
 } from '@lobechat/device-gateway-client';
 import { GatewayClient } from '@lobechat/device-gateway-client';
 import { listHeterogeneousAgentModels } from '@lobechat/heterogeneous-agents/models';
+import {
+  createRuntimeProbeCache,
+  type RuntimeProbeCache,
+} from '@lobechat/heterogeneous-agents/runtimeProbeCache';
 import type { Command } from 'commander';
 
 import { createLambdaClient } from '../api/client';
@@ -50,7 +54,7 @@ import {
   resolveDeviceIdentity,
   resolveWorkspaceDeviceIdentity,
 } from '../device/register';
-import { collectSystemInfo } from '../device/systemInfo';
+import { collectSystemInfo, probeNativeRuntimes } from '../device/systemInfo';
 import { TerminalSessionManager } from '../device/terminal';
 import {
   CONNECT_RETRYABLE_EXIT_CODE,
@@ -128,6 +132,15 @@ export function registerConnectCommand(program: Command) {
         options.daemonChild || isServiceChild || process.env.LOBEHUB_DAEMON === '1';
 
       await runConnect(options, isDaemonChild);
+    });
+
+  // Capability discovery runs without login or opening a gateway connection. Desktop
+  // invokes its bundled CLI here so the probe and subsequent dispatch share a runtime.
+  connectCmd
+    .command('capabilities')
+    .description('Report native agent runtimes supported by this CLI and installed binaries')
+    .action(async () => {
+      console.log(JSON.stringify({ supportedAgentRuntimes: await probeNativeRuntimes() }));
     });
 
   // Subcommands
@@ -522,6 +535,10 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     writeTerminal: (params) => Promise.resolve(terminals.write(params)),
   };
 
+  // One native runtime probe per connection: system info is queried by tool runs and
+  // agent dispatch alike, and each probe starts a Codex app-server process.
+  const nativeRuntimes = createRuntimeProbeCache(probeNativeRuntimes);
+
   const handlerContext: GatewayHandlerContext = {
     computerUse,
     deps: deviceControlDeps,
@@ -531,6 +548,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     info,
     isDaemonChild,
     maintenance,
+    nativeRuntimes,
     recordRequest,
   };
 
@@ -561,6 +579,10 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   client.on('connected', () => {
     updateStatus('connected');
     void metricsSampler?.flush();
+    // A (re)connection reprobes so an upgraded or downgraded Codex is reported, and
+    // warms the cache before the gateway's first system_info_request.
+    nativeRuntimes.invalidate();
+    void nativeRuntimes.get();
   });
 
   client.on('disconnected', () => {
@@ -953,6 +975,8 @@ interface GatewayHandlerContext {
   info: (msg: string) => void;
   isDaemonChild: boolean;
   maintenance: CliMaintenance;
+  /** Process-wide native runtime probe, shared by every gateway connection. */
+  nativeRuntimes: RuntimeProbeCache;
   recordRequest: () => void;
 }
 
@@ -973,7 +997,7 @@ function bindGatewayClientHandlers(
   // Handle system info requests
   client.on('system_info_request', async (request: SystemInfoRequestMessage) => {
     info(`Received system_info_request: requestId=${request.requestId}`);
-    const systemInfo = await collectSystemInfo(computerUse);
+    const systemInfo = await collectSystemInfo(ctx.nativeRuntimes, computerUse);
     client.sendSystemInfoResponse({
       requestId: request.requestId,
       result: { success: true, systemInfo },

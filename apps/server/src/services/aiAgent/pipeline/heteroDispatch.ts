@@ -30,6 +30,7 @@ import { AgentOperationModel } from '@/database/models/agentOperation';
 import { DeviceModel } from '@/database/models/device';
 import type { MessageModel } from '@/database/models/message';
 import type { TopicModel } from '@/database/models/topic';
+import { UserModel } from '@/database/models/user';
 import { resolveExecutionPlan, resolveWorkspaceScoped } from '@/helpers/executionTarget';
 import { signHeteroOperationJWT, signUserJWT } from '@/libs/trpc/utils/internalJwt';
 import {
@@ -64,6 +65,7 @@ import type {
   ExecRunContext,
   InternalExecAgentParams,
 } from '../types';
+import { type CodexDeviceRuntime, resolveCodexDeviceRuntime } from './codexDeviceRuntime';
 import { heteroOperationCapabilities } from './heteroOperationCapabilities';
 import type { RunAttachments } from './turnSetup';
 
@@ -1007,6 +1009,64 @@ export const dispatchHeteroAgent = async (
           userMessageId: userMessageId ?? parentMessageId ?? '',
         };
       }
+      let codexRuntime: CodexDeviceRuntime;
+      try {
+        codexRuntime = await resolveCodexDeviceRuntime({
+          authMode: heterogeneousProvider?.authMode,
+          heteroType,
+          isAppServerLabEnabled: async () => {
+            try {
+              const preference = await new UserModel(deps.db, deps.userId).getUserPreference();
+              return preference?.lab?.enableCodexAppServer === true;
+            } catch (err) {
+              log('execAgent: failed to read Codex app-server Lab preference: %O', err);
+              return false;
+            }
+          },
+          // Query the live connection, not merged DB metadata: downgrade/reconnect must revoke it.
+          querySupportedRuntimes: async () =>
+            (
+              await deviceGateway.queryDeviceSystemInfo(
+                deps.userId,
+                dispatchDeviceId,
+                cliDeviceWorkspaceId,
+              )
+            )?.supportedAgentRuntimes,
+        });
+      } catch (err) {
+        codexRuntime = {
+          kind: 'error',
+          message: err instanceof Error ? err.message : String(err),
+        };
+      }
+      if (codexRuntime.kind === 'error') {
+        log('execAgent: native Codex dispatch rejected: %s', codexRuntime.message);
+        const terminalReported = await finalizeHeteroDispatchError(deps, {
+          agentId: resolvedAgentId,
+          assistantMessageId,
+          detail: codexRuntime.message,
+          message: 'Native Codex dispatch rejected',
+          operationId,
+          topicId,
+        });
+        return {
+          agentId: resolvedAgentId,
+          assistantMessageId,
+          autoStarted: false,
+          createdAt: new Date().toISOString(),
+          error: codexRuntime.message,
+          message: codexRuntime.message,
+          operationId,
+          status: 'error',
+          success: false,
+          terminalReported,
+          timestamp: new Date().toISOString(),
+          topicId,
+          userMessageId: userMessageId ?? parentMessageId ?? '',
+        };
+      }
+      const nativeCodex = codexRuntime.kind === 'native' ? codexRuntime : undefined;
+
       // Resolve the working directory for the run: a topic-level override
       // wins, else the device's user-configured defaultCwd. The device row
       // lives in the DB (the gateway only knows live connections), so read
@@ -1074,7 +1134,8 @@ export const dispatchHeteroAgent = async (
         : await deviceGateway.dispatchAgentRun({
             ...heteroParams,
             agentId: resolvedAgentId,
-            args: heteroExecArgs,
+            // Only a live client advertising the native protocol receives these wrapper flags.
+            args: nativeCodex ? [...(heteroExecArgs ?? []), ...nativeCodex.args] : heteroExecArgs,
             cwd: deviceCwd,
             deviceId: dispatchDeviceId,
             resumeFallbackSystemContext: deviceResumeFallbackSystemContext,

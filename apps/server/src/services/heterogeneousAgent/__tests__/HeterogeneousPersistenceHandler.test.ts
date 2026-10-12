@@ -2326,3 +2326,93 @@ describe('HeterogeneousPersistenceHandler', () => {
     });
   });
 });
+
+/** @example A native Codex turn is recorded on both rows of the exchange. */
+describe('native Codex turn provenance', () => {
+  beforeEach(() => __resetOperationStatesForTesting());
+  afterEach(() => __resetOperationStatesForTesting());
+
+  // ROOT CAUSE:
+  // Device stream_start carried only the native session, so a device-run Codex message
+  // had no turn boundary and no later operation could locate it in the native thread.
+  /** @example The user prompt and its answer share the native turn before any text arrives. */
+  it('stamps the native turn on the source user prompt and the assistant', async () => {
+    const h = createHarness({
+      assistantMessageId: 'answer',
+      operationId: 'native-op',
+      topicId: 'topic-1',
+    });
+    h.messages.set('prompt', {
+      agentId: null,
+      content: 'question',
+      id: 'prompt',
+      role: 'user',
+      threadId: null,
+      topicId: 'topic-1',
+    });
+    h.messages.get('answer')!.parentId = 'prompt';
+
+    await h.handler.ingest({
+      events: [
+        {
+          data: { codexTurnId: 'native-turn', sessionId: 'native-thread' },
+          operationId: 'native-op',
+          stepIndex: 0,
+          timestamp: 1,
+          type: 'stream_start',
+        },
+      ],
+      operationId: 'native-op',
+      topicId: 'topic-1',
+    });
+
+    /** @example The prompt can be located in the native thread after reload. */
+    expect(h.messages.get('prompt')?.metadata).toEqual({
+      codexTurnId: 'native-turn',
+      heteroSessionId: 'native-thread',
+    });
+    /** @example The assistant carries the same boundary before it has content. */
+    expect(h.messages.get('answer')?.metadata).toEqual({
+      codexTurnId: 'native-turn',
+      heteroSessionId: 'native-thread',
+    });
+    /** @example The topic resume binding is unchanged by the provenance write. */
+    expect(h.topicModel.updateMetadata).toHaveBeenCalledWith('topic-1', {
+      heteroSessionId: 'native-thread',
+    });
+  });
+
+  /** @example A user row in another topic is never stamped with this run's turn. */
+  it('does not stamp a parent row outside the run topic', async () => {
+    const h = createHarness({
+      assistantMessageId: 'answer',
+      operationId: 'native-op',
+      topicId: 'topic-1',
+    });
+    h.messages.set('foreign', {
+      agentId: null,
+      content: 'question',
+      id: 'foreign',
+      role: 'user',
+      threadId: null,
+      topicId: 'topic-2',
+    });
+    h.messages.get('answer')!.parentId = 'foreign';
+
+    await h.handler.ingest({
+      events: [
+        {
+          data: { codexTurnId: 'native-turn', sessionId: 'native-thread' },
+          operationId: 'native-op',
+          stepIndex: 0,
+          timestamp: 1,
+          type: 'stream_start',
+        },
+      ],
+      operationId: 'native-op',
+      topicId: 'topic-1',
+    });
+
+    expect(h.messages.get('foreign')?.metadata).toBeUndefined();
+  });
+});

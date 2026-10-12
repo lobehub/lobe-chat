@@ -127,6 +127,8 @@ interface AssistantMessageDbLike {
  */
 interface OperationState {
   agentId: string | null;
+  /** Native turn boundary shared by the user prompt and every assistant/tool step. */
+  codexTurnId?: string;
   /**
    * CC-native session id this run is producing, captured off the stream_start
    * event stream and stamped on every persisted message's
@@ -153,6 +155,8 @@ interface OperationState {
    * after the event's XADD succeeds.
    */
   publishedKeys: Set<string>;
+  /** User message answered by this operation, checked against its topic/thread before stamping. */
+  sourceUserMessageId?: string;
   /** Isolation thread that owns this heterogeneous run, when applicable. */
   threadId: string | undefined;
   /**
@@ -653,6 +657,7 @@ export class HeterogeneousPersistenceHandler {
       // topic.metadata.heteroSessionId: that holds the id we ASKED CC to resume,
       // which differs from the actual id when a fork/new session occurred.
       heteroSessionId: undefined,
+      sourceUserMessageId: baseAssistantMessage?.parentId ?? undefined,
       lastStepIndex: 0,
       lastAppliedToolStateSeqByCallId: new Map(),
       main: createMainAgentRunState(currentAssistantMessageId),
@@ -840,6 +845,9 @@ export class HeterogeneousPersistenceHandler {
     // Recover the run's CC session id from a previously-stamped message so a
     // cold replica that never saw this run's stream_start still stamps the
     // right session id on the messages it persists.
+    if (!state.codexTurnId && typeof snapshot.metadata.codexTurnId === 'string') {
+      state.codexTurnId = snapshot.metadata.codexTurnId;
+    }
     if (!state.heteroSessionId && typeof snapshot.metadata.heteroSessionId === 'string') {
       state.heteroSessionId = snapshot.metadata.heteroSessionId;
     }
@@ -1129,6 +1137,28 @@ export class HeterogeneousPersistenceHandler {
       }
     }
 
+    if (event.type === 'stream_start' && typeof event.data?.codexTurnId === 'string') {
+      state.codexTurnId = event.data.codexTurnId;
+      const metadata = this.heteroProvenance(state);
+      // Save provenance before any visible answer. An ingest retry must reapply a failed handoff.
+      const assistantWrite = await this.deps.messageModel.update(state.main.currentAssistantId, {
+        metadata,
+      });
+      if (!assistantWrite.success)
+        throw new Error('Native assistant provenance could not be saved');
+      if (state.sourceUserMessageId) {
+        const user = await this.deps.messageModel.findById(state.sourceUserMessageId);
+        if (
+          user?.role === 'user' &&
+          user.topicId === state.topicId &&
+          (user.threadId ?? undefined) === state.threadId
+        ) {
+          const userWrite = await this.deps.messageModel.update(user.id, { metadata });
+          if (!userWrite.success) throw new Error('Native user provenance could not be saved');
+        }
+      }
+    }
+
     const { intents, state: next } = reduceMainAgent(state.main, event, this.mainReduceCtx(state));
 
     for (const intent of intents) {
@@ -1154,8 +1184,9 @@ export class HeterogeneousPersistenceHandler {
   private heteroProvenance(
     state: OperationState,
     heteroMessageId?: string,
-  ): { heteroMessageId?: string; heteroSessionId?: string } {
-    const out: { heteroMessageId?: string; heteroSessionId?: string } = {};
+  ): { codexTurnId?: string; heteroMessageId?: string; heteroSessionId?: string } {
+    const out: { codexTurnId?: string; heteroMessageId?: string; heteroSessionId?: string } = {};
+    if (state.codexTurnId) out.codexTurnId = state.codexTurnId;
     if (state.heteroSessionId) out.heteroSessionId = state.heteroSessionId;
     if (heteroMessageId) out.heteroMessageId = heteroMessageId;
     return out;
