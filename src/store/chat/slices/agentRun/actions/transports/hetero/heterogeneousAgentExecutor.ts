@@ -7,8 +7,10 @@ import { stripGoalCommand, withConversationGoalPrompt } from '@lobechat/builtin-
 import type { HeterogeneousAgentSessionError } from '@lobechat/electron-client-ipc';
 import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import {
+  appendAttachedFilesToPrompt,
   buildHeterogeneousAgentAuthRequiredError,
   createMainAgentRunState,
+  type HeteroAttachedFileRef,
   isHeterogeneousAgentAuthRequired,
   isHeterogeneousProviderBindingSupported,
   isLocalHeterogeneousType,
@@ -229,6 +231,11 @@ const isRecoverableResumeError = (
 
 export interface HeterogeneousAgentExecutorParams {
   assistantMessageId: string;
+  /**
+   * Non-image attachments from the user message. No CLI accepts them as content
+   * blocks, so they are appended to the prompt as download links.
+   */
+  attachedFiles?: HeteroAttachedFileRef[];
   context: ConversationContext;
   contextSelections?: ContextSelection[];
   heterogeneousProvider: HeterogeneousProviderConfig;
@@ -501,6 +508,7 @@ export const executeHeterogeneousAgent = async (
     heterogeneousProvider: persistedHeterogeneousProvider,
     contextSelections,
     assistantMessageId,
+    attachedFiles,
     context,
     imageList,
     message,
@@ -2655,7 +2663,7 @@ export const executeHeterogeneousAgent = async (
       operationId,
       // `/goal` travels as system-context instructions; the CLI gets only the
       // request so its own `/goal` command does not take the message over.
-      prompt: stripGoalCommand(message),
+      prompt: appendAttachedFilesToPrompt(stripGoalCommand(message), attachedFiles),
       ...(replayTranscript
         ? { replayTranscript: true, replayTranscriptConfigDir, replayTranscriptStartedAt }
         : {}),

@@ -5,6 +5,12 @@ export {
   GrokBuildAdapter,
   QoderAdapter,
 } from './adapters';
+export {
+  appendAttachedFilesToPrompt,
+  buildAttachedFilesPrompt,
+  collectHeteroAttachedFiles,
+  type HeteroAttachedFileRef,
+} from './attachedFiles';
 export type {
   HeterogeneousAgentCliError,
   HeterogeneousAgentDescriptor,

@@ -1,5 +1,9 @@
 import { AgentManagementIdentifier } from '@lobechat/builtin-tool-agent-management';
 import { HETERO_CONTINUE_PROMPT, LOADING_FLAT } from '@lobechat/const';
+import {
+  collectHeteroAttachedFiles,
+  type HeteroAttachedFileRef,
+} from '@lobechat/heterogeneous-agents';
 import { shouldDropUnsupportedClaudeAssistantPrefill } from '@lobechat/model-runtime/providers/anthropic/modelId';
 import type {
   ChatImageItem,
@@ -249,6 +253,8 @@ export const resolveHeteroRunContext = (
 export const runHeterogeneousFromExistingMessage = async (
   chatStore: ReturnType<typeof useChatStore.getState>,
   params: {
+    /** Non-image attachments from the original user message — forwarded to the CLI as download links */
+    attachedFiles?: HeteroAttachedFileRef[];
     context: ConversationContext;
     heterogeneousProvider: HeterogeneousProviderConfig;
     /** Image attachments from the original user message — forwarded to the CLI for vision support */
@@ -276,6 +282,7 @@ export const runHeterogeneousFromExistingMessage = async (
   terminalError?: boolean;
 }> => {
   const {
+    attachedFiles,
     context,
     heterogeneousProvider,
     imageList,
@@ -346,6 +353,7 @@ export const runHeterogeneousFromExistingMessage = async (
     await import('@/store/chat/slices/agentRun/actions/transports/hetero/heterogeneousAgentExecutor');
   const outcome = await executeHeterogeneousAgent(() => useChatStore.getState(), {
     assistantMessageId: assistantMsg.id,
+    attachedFiles: attachedFiles?.length ? attachedFiles : undefined,
     context,
     heterogeneousProvider: effectiveHeterogeneousProvider,
     imageList: imageList?.length ? imageList : undefined,
@@ -538,6 +546,7 @@ const regenerateUserMessageFromSource = async (
     // so prior context is preserved.
     if (runtimeType === 'hetero' && heterogeneousProvider) {
       await runHeterogeneousFromExistingMessage(chatStore, {
+        attachedFiles: collectHeteroAttachedFiles(item),
         context,
         heterogeneousProvider,
         // Forward the original user message's images so regenerate re-runs
