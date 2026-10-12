@@ -43,6 +43,21 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
     expect(service.markActivated).toHaveBeenCalledWith(['lobe-web-browsing']);
   });
 
+  it('resolves a bare API name by loading the full discoverable list', async () => {
+    // Codex P2 on PR #20791: the probe sends only the API name to the
+    // identifier-keyed map (no manifests come back), so the unique bare-name
+    // match must come from the host's full discoverable list.
+    const service = buildService([webBrowsingManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({ identifiers: ['search'], reason: 'test' });
+
+    expect(service.getToolManifests).toHaveBeenCalledWith(['search']);
+    expect(service.listToolManifests).toHaveBeenCalled();
+    expect(result.content).toContain('Successfully activated tools: lobe-web-browsing.search');
+    expect(result.state?.notFound).toEqual([]);
+  });
+
   it('resolves a bare API name when the manifests were returned for the request', async () => {
     // The host's getToolManifests only matches plugin identifiers, so a bare
     // API name gets no manifests back — the resolver then passes it through.
@@ -189,10 +204,30 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
 
   it('does not activate a truncated-identifier prefix tool for a separator-free request', async () => {
     // Codex P2 on PR #20791: `identifiers: ['other-tool']` where another
-    // discoverable plugin is literally named `other-too` and exposes an API
-    // named `other-tool` — the old probe derived `other-too` via
-    // `slice(0, -1)`, loaded its manifest, and the bare-name path then
-    // activated the wrong tool.
+    // discoverable plugin is literally named `other-too` — the old probe
+    // derived `other-too` via `slice(0, -1)` and activated the wrong tool.
+    // No manifest here exposes an API named `other-tool` and no manifest is
+    // named `other-tool`, so a correct resolver has nothing to match.
+    const prefixTool: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'An api.', name: 'unrelatedApi' }],
+      identifier: 'other-too',
+      name: 'Other Too',
+    };
+    const service = buildService([prefixTool]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({ identifiers: ['other-tool'], reason: 'test' });
+
+    // `other-tool` is not a manifest identifier nor an API name; the
+    // truncated prefix must not be probed, so the request cannot resolve to
+    // `other-too`.
+    expect(result.content).toContain('Not found: other-tool');
+    expect(result.state?.notFound).toEqual(['other-tool']);
+  });
+
+  it('activates a tool requested by a bare API name unique to one manifest', async () => {
+    // Separator-free request that IS a real API name resolves via the
+    // discoverable list without ever slicing a truncated identifier.
     const prefixTool: ToolManifestInfo = {
       apiDescriptions: [{ description: 'An api.', name: 'other-tool' }],
       identifier: 'other-too',
@@ -203,10 +238,52 @@ describe('ActivatorExecutionRuntime.activateTools — request-name resolution', 
 
     const result = await runtime.activateTools({ identifiers: ['other-tool'], reason: 'test' });
 
-    // `other-tool` is not a manifest identifier; the truncated prefix must
-    // not be probed, so the request cannot resolve to `other-too`.
-    expect(result.content).toContain('Not found: other-tool');
-    expect(result.state?.notFound).toEqual(['other-tool']);
+    expect(result.content).toContain('Successfully activated tools: other-too.other-tool');
+    expect(result.state?.notFound).toEqual([]);
+  });
+
+  it('activates a hashed MCP wire name carrying a type segment', async () => {
+    // Codex P2 on PR #20791: MCP/standalone manifests get a `____<type>`
+    // segment from `ToolNameResolver.generate`, so a copied name for a
+    // hashed MCP identifier is `MD5HASH_x____MD5HASH_y____mcp` — the type
+    // must come through the manifest and match, not fall to the prefix probe.
+    const mcpManifest: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'List issues.', name: 'listIssues' }],
+      identifier: 'github-mcp',
+      name: 'GitHub MCP',
+      type: 'mcp',
+    };
+    const service = buildService([mcpManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({
+      identifiers: [`${wireHash('github-mcp')}____${wireHash('listIssues')}____mcp`],
+      reason: 'test',
+    });
+
+    expect(result.content).toContain('Successfully activated tools: github-mcp.listIssues');
+    expect(result.state?.notFound).toEqual([]);
+  });
+
+  it('activates a typed wire name even when the request dropped the type segment', async () => {
+    // Tolerance path: a hashed MCP wire name without the `____mcp` suffix
+    // still recovers the same tool through the untyped variant index.
+    const mcpManifest: ToolManifestInfo = {
+      apiDescriptions: [{ description: 'List issues.', name: 'listIssues' }],
+      identifier: 'github-mcp',
+      name: 'GitHub MCP',
+      type: 'mcp',
+    };
+    const service = buildService([mcpManifest]);
+    const runtime = new ActivatorExecutionRuntime({ service });
+
+    const result = await runtime.activateTools({
+      identifiers: [`${wireHash('github-mcp')}____${wireHash('listIssues')}`],
+      reason: 'test',
+    });
+
+    expect(result.content).toContain('Successfully activated tools: github-mcp.listIssues');
+    expect(result.state?.notFound).toEqual([]);
   });
 
   it('activates the exact manifest identifier even when another plugin exposes an API with the same name', async () => {

@@ -63,6 +63,9 @@ const service: ActivatorRuntimeService = {
           identifier: builtin.identifier,
           name: builtin.title ?? builtin.identifier,
           systemRole: builtin.manifest.systemRole,
+          // Passed through for wire-name matching: non-builtin types append
+          // a `____<type>` segment to the offered wire name.
+          type: builtin.manifest.type,
         });
         continue;
       }
@@ -79,6 +82,7 @@ const service: ActivatorRuntimeService = {
           identifier: plugin.identifier,
           name: plugin.manifest.meta?.title ?? plugin.identifier,
           systemRole: plugin.manifest.systemRole,
+          type: (plugin.manifest as { type?: string }).type,
         });
         continue;
       }
@@ -102,6 +106,18 @@ const service: ActivatorRuntimeService = {
     }
 
     return results;
+  },
+  // Full discoverable list, for inverting `MD5HASH_…` wire-name segments and
+  // resolving bare API names: neither can be probed against the
+  // identifier-keyed `getToolManifests`, so the runtime hashes every
+  // discoverable identifier locally and matches the generated wire-name
+  // variants. Reuses `getToolManifests` on the same
+  // `availableToolsForDiscovery` allowlist so scoping and manifest mapping
+  // cannot drift between the two paths.
+  listToolManifests: async (): Promise<ToolManifestInfo[]> => {
+    const s = getToolStoreState();
+    const discoveryIds = toolSelectors.availableToolsForDiscovery(s).map((tool) => tool.identifier);
+    return service.getToolManifests(discoveryIds);
   },
   markActivated: () => {},
 };
