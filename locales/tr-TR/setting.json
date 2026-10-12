@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Bu cihazı kaldır?",
   "devices.remove.confirmDesc": "Bu, cihazı hesabınızdan ayırır. Cihaz oturumu kapatmaz ve bir sonraki bağlantıda yeniden kaydolabilir.",
   "devices.remove.currentSessionWarning": "Bu, şu anda kullandığınız cihazı da içeriyor — kaldırmak mevcut oturumunuzu sonlandırır.",
-  "devices.selection.total": "{{count}} cihaz",
   "devices.share.alreadyShared": "Paylaşıldı",
   "devices.share.badge": "{{count}} çalışma alanına paylaşıldı",
   "devices.share.confirm": "Paylaş",

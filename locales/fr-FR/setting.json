@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Supprimer cet appareil ?",
   "devices.remove.confirmDesc": "Cela déconnecte l'appareil de votre compte. Cela ne déconnecte pas l'appareil, et il peut se réenregistrer lors de la prochaine connexion.",
   "devices.remove.currentSessionWarning": "Cela inclut l'appareil que vous utilisez actuellement — le supprimer déconnectera votre session en cours.",
-  "devices.selection.total": "{{count}} appareils",
   "devices.share.alreadyShared": "Partagé",
   "devices.share.badge": "Partagé à {{count}} espaces de travail",
   "devices.share.confirm": "Partager",

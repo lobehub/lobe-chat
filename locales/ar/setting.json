@@ -518,7 +518,6 @@
   "devices.remove.confirm": "إزالة هذا الجهاز؟",
   "devices.remove.confirmDesc": "سيتم فصل الجهاز عن حسابك. لن يتم تسجيل خروج الجهاز، ويمكنه إعادة التسجيل عند الاتصال التالي.",
   "devices.remove.currentSessionWarning": "يتضمن ذلك الجهاز الذي تستخدمه الآن — إزالته ستؤدي إلى قطع الاتصال بجلسة العمل الحالية.",
-  "devices.selection.total": "{{count}} أجهزة",
   "devices.share.alreadyShared": "مشترك",
   "devices.share.badge": "مشترك في {{count}} مساحات عمل",
   "devices.share.confirm": "مشاركة",

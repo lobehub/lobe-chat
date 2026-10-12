@@ -518,7 +518,6 @@
   "devices.remove.confirm": "移除此裝置？",
   "devices.remove.confirmDesc": "這將使裝置與您的帳戶斷開連接。它不會登出該裝置，並且可以在下次連接時重新註冊。",
   "devices.remove.currentSessionWarning": "這包括您現在正在使用的裝置——移除它將使您的當前會話斷開連接。",
-  "devices.selection.total": "{{count}} 台裝置",
   "devices.share.alreadyShared": "已分享",
   "devices.share.badge": "已分享至 {{count}} 個工作區",
   "devices.share.confirm": "分享",

@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Премахване на това устройство?",
   "devices.remove.confirmDesc": "Това прекъсва връзката на устройството с вашия акаунт. Това не го изписва и може да се регистрира отново при следващо свързване.",
   "devices.remove.currentSessionWarning": "Това включва устройството, което използвате в момента — премахването му ще прекъсне текущата ви сесия.",
-  "devices.selection.total": "{{count}} устройства",
   "devices.share.alreadyShared": "Споделено",
   "devices.share.badge": "Споделено с {{count}} работни пространства",
   "devices.share.confirm": "Сподели",

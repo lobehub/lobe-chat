@@ -518,7 +518,6 @@
   "devices.remove.confirm": "این دستگاه حذف شود؟",
   "devices.remove.confirmDesc": "این دستگاه را از حساب شما قطع می‌کند. این دستگاه از حساب خارج نمی‌شود و می‌تواند در اتصال بعدی دوباره ثبت شود.",
   "devices.remove.currentSessionWarning": "این شامل دستگاهی است که در حال حاضر از آن استفاده می‌کنید — حذف آن باعث قطع اتصال جلسه فعلی شما می‌شود.",
-  "devices.selection.total": "{{count}} دستگاه",
   "devices.share.alreadyShared": "به اشتراک گذاشته شده",
   "devices.share.badge": "به {{count}} فضای کاری به اشتراک گذاشته شده",
   "devices.share.confirm": "اشتراک‌گذاری",

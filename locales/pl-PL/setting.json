@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Usunąć to urządzenie?",
   "devices.remove.confirmDesc": "To rozłącza urządzenie z Twojego konta. Nie wylogowuje urządzenia, które może się ponownie zarejestrować przy następnym połączeniu.",
   "devices.remove.currentSessionWarning": "Dotyczy to urządzenia, którego używasz w tej chwili — usunięcie go spowoduje rozłączenie bieżącej sesji.",
-  "devices.selection.total": "{{count}} urządzeń",
   "devices.share.alreadyShared": "Udostępniono",
   "devices.share.badge": "Udostępniono do {{count}} przestrzeni roboczych",
   "devices.share.confirm": "Udostępnij",

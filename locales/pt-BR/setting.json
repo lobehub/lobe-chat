@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Remover este dispositivo?",
   "devices.remove.confirmDesc": "Isso desconecta o dispositivo da sua conta. Não desconecta o dispositivo, e ele pode se registrar novamente na próxima conexão.",
   "devices.remove.currentSessionWarning": "Isso inclui o dispositivo que você está usando agora — removê-lo desconectará sua sessão atual.",
-  "devices.selection.total": "{{count}} dispositivos",
   "devices.share.alreadyShared": "Compartilhado",
   "devices.share.badge": "Compartilhado com {{count}} espaços de trabalho",
   "devices.share.confirm": "Compartilhar",

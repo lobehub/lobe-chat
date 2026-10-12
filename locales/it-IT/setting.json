@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Rimuovere questo dispositivo?",
   "devices.remove.confirmDesc": "Questo disconnette il dispositivo dal tuo account. Non effettua il logout del dispositivo, che può registrarsi nuovamente alla prossima connessione.",
   "devices.remove.currentSessionWarning": "Questo include il dispositivo che stai utilizzando in questo momento — rimuoverlo disconnetterà la tua sessione corrente.",
-  "devices.selection.total": "{{count}} dispositivi",
   "devices.share.alreadyShared": "Condiviso",
   "devices.share.badge": "Condiviso con {{count}} spazi di lavoro",
   "devices.share.confirm": "Condividi",

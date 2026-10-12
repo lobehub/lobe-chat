@@ -518,7 +518,6 @@
   "devices.remove.confirm": "このデバイスを削除しますか？",
   "devices.remove.confirmDesc": "このデバイスをアカウントから切断します。デバイスのサインアウトは行われず、次回接続時に再登録できます。",
   "devices.remove.currentSessionWarning": "これには現在使用しているデバイスも含まれます。削除すると現在のセッションが切断されます。",
-  "devices.selection.total": "{{count}} 台のデバイス",
   "devices.share.alreadyShared": "共有済み",
   "devices.share.badge": "{{count}} ワークスペースに共有済み",
   "devices.share.confirm": "共有",

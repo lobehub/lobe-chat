@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Удалить это устройство?",
   "devices.remove.confirmDesc": "Это отключит устройство от вашей учетной записи. Оно не будет выходить из системы и сможет зарегистрироваться снова при следующем подключении.",
   "devices.remove.currentSessionWarning": "Это включает устройство, которое вы используете прямо сейчас — его удаление завершит текущую сессию.",
-  "devices.selection.total": "{{count}} устройств",
   "devices.share.alreadyShared": "Поделено",
   "devices.share.badge": "Поделено с {{count}} рабочими пространствами",
   "devices.share.confirm": "Поделиться",

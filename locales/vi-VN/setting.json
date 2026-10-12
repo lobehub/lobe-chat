@@ -518,7 +518,6 @@
   "devices.remove.confirm": "Xóa thiết bị này?",
   "devices.remove.confirmDesc": "Điều này sẽ ngắt kết nối thiết bị khỏi tài khoản của bạn. Nó không đăng xuất thiết bị và có thể đăng ký lại khi kết nối lần sau.",
   "devices.remove.currentSessionWarning": "Điều này bao gồm thiết bị bạn đang sử dụng ngay bây giờ — việc loại bỏ nó sẽ ngắt kết nối phiên hiện tại của bạn.",
-  "devices.selection.total": "{{count}} thiết bị",
   "devices.share.alreadyShared": "Đã chia sẻ",
   "devices.share.badge": "Đã chia sẻ đến {{count}} không gian làm việc",
   "devices.share.confirm": "Chia sẻ",
