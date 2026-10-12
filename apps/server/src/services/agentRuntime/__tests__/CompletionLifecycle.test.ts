@@ -1719,6 +1719,69 @@ describe('CompletionLifecycle.emitSignalEvents — assistant anchor', () => {
     });
   });
 
+  it('reads a memory-writer run thread when the terminal state carries no messages', async () => {
+    const emitSpy = vi
+      .spyOn(agentSignalService, 'emitAgentSignalSourceEvent')
+      .mockResolvedValue(undefined as any);
+    const lifecycle = buildLifecycle();
+    const query = vi.spyOn(lifecycle['messageModel'], 'query').mockResolvedValue([
+      {
+        id: 'msg-tool-call',
+        role: 'assistant',
+        tools: [
+          {
+            apiName: 'addPreferenceMemory',
+            arguments: JSON.stringify({
+              summary: 'Answer in bullets',
+              title: 'Prefers bullet answers',
+            }),
+            id: 'call_pref',
+            identifier: 'lobe-user-memory',
+            type: 'builtin',
+          },
+        ],
+      },
+      {
+        content: 'Preference memory saved with memoryId: "mem_1" and preferenceId: "pref_1"',
+        id: 'msg-tool-result',
+        role: 'tool',
+        tool_call_id: 'call_pref',
+      },
+    ] as any);
+
+    await lifecycle.emitSignalEvents(
+      'op-memory',
+      {
+        messages: [],
+        origin: {
+          agentId: 'agent-1',
+          signal: { kind: 'memory', sourceId: 'memory-source-1', topicId: 'tpc-1' },
+          threadId: 'thd-memory',
+          topicId: 'tpc-1',
+          userId: 'user-1',
+        },
+        stepCount: 3,
+        usage: {
+          tools: {
+            byTool: [{ calls: 1, errors: 0, name: 'lobe-user-memory/addPreferenceMemory' }],
+          },
+        },
+      },
+      'done',
+    );
+
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({ threadId: 'thd-memory', topicId: 'tpc-1' }),
+      expect.anything(),
+    );
+    const [emission] = emitSpy.mock.calls[0];
+    expect(emission.payload.selfIteration.mutations[0].data.target).toMatchObject({
+      id: 'pref_1',
+      memoryId: 'mem_1',
+      title: 'Prefers bullet answers',
+    });
+  });
+
   it('hydrates a persisted self-reflection marker when terminal state metadata lost it', async () => {
     const emitSpy = vi
       .spyOn(agentSignalService, 'emitAgentSignalSourceEvent')

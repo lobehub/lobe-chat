@@ -12,8 +12,10 @@ import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefCardSummary from '@/features/DailyBrief/BriefCardSummary';
+import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { styles as briefStyles } from '@/features/DailyBrief/style';
 import { type BriefItem } from '@/features/DailyBrief/types';
+import { useSelfReviewBriefView } from '@/features/DailyBrief/useSelfReviewBriefView';
 import { homeType } from '@/features/Home/components/homeType';
 import Time from '@/features/Home/components/Time';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -52,6 +54,12 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
 
   const agent = brief.agent;
   const isInbox = agent?.id === INBOX_SESSION_ID;
+  const agentName = agent
+    ? agentDisplayName(agent, isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'))
+    : undefined;
+  // A nightly self-review proposal describes itself from its frozen actions, so
+  // the card says what would change instead of "a suggestion needs review".
+  const selfReview = useSelfReviewBriefView(brief.metadata);
   const canNavigate = Boolean(brief.taskId);
 
   // Error briefs carry their title + human, localized summary from the server
@@ -126,20 +134,21 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
             shape={'circle'}
             size={28}
             style={{ flex: 'none' }}
-            title={agentDisplayName(
-              agent,
-              isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'),
-            )}
+            title={agentName}
           />
         )}
         <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={8}>
             <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
-              {brief.title}
+              {selfReview?.title ?? brief.title}
             </Text>
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
-          <BriefCardSummary summary={brief.summary} />
+          {selfReview ? (
+            <SelfReviewBriefDetails agentName={agentName} details={selfReview.details} />
+          ) : (
+            <BriefCardSummary summary={brief.summary} />
+          )}
           <BriefCardArtifacts artifacts={brief.artifacts} />
         </Flexbox>
       </Flexbox>

@@ -325,7 +325,6 @@ export default {
   'agentTab.opening': 'Opening Settings',
   'agentTab.plugin': 'Skill Settings',
   'agentTab.prompt': 'Agent Profile',
-  'agentTab.selfIteration': 'Self-Iteration',
   'agentTab.tts': 'Voice Service',
   'permission.accessTag.useOnlyTip':
     'Your member permission here is "Can use" — you can view and use it, but not edit. Ask the creator or a workspace owner for edit access.',
@@ -1438,12 +1437,6 @@ export default {
   'settingGraphRuntime.validation.required':
     'A graph snapshot is required before enabling graph runtime.',
   'settingGraphRuntime.validation.unknown': 'Unknown graph validation error',
-  'settingSelfIteration.enabled.desc':
-    'Allow this assistant to review recent signals and improve its own skills when the self-iteration workflow runs.',
-  'settingSelfIteration.enabled.managedDesc':
-    'Always on for Lobe AI while Self-Iteration is available.',
-  'settingSelfIteration.enabled.title': 'Enable Self-Iteration',
-  'settingSelfIteration.title': 'Self-Iteration',
   'settingsSearch.empty': 'No settings found for "{{keyword}}"',
   'settingsSearch.placeholder': 'Search settings...',
   'settingsSearch.tabKeywords.about': 'about, version, changelog, feedback, help',

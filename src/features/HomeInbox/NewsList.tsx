@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next';
 
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefIcon from '@/features/DailyBrief/BriefIcon';
+import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { type BriefItem } from '@/features/DailyBrief/types';
+import { useSelfReviewBriefView } from '@/features/DailyBrief/useSelfReviewBriefView';
 import { homeType } from '@/features/Home/components/homeType';
 import Time from '@/features/Home/components/Time';
 import { useBriefStore } from '@/store/brief';
@@ -87,6 +89,8 @@ interface NewsItemProps {
  */
 const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
   const markBriefRead = useBriefStore((s) => s.markBriefRead);
+  // Nightly self-review ideas list themselves from metadata, like proposals do.
+  const selfReview = useSelfReviewBriefView(brief.metadata);
 
   const [expanded, setExpanded] = useState(false);
   const [localRead, setLocalRead] = useState(false);
@@ -141,7 +145,7 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
               minWidth: 0,
             }}
           >
-            {brief.title}
+            {selfReview?.title ?? brief.title}
           </Text>
           {showTime && <Time date={brief.createdAt} />}
           <Icon
@@ -154,12 +158,16 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
 
       {expanded && (brief.summary || brief.artifacts || hasTopicChat) && (
         <Flexbox className={bare ? styles.bareBody : styles.body} gap={8}>
-          {brief.summary && (
-            <Suspense fallback={null}>
-              <Markdown style={{ overflow: 'unset' }} variant={'chat'}>
-                {brief.summary}
-              </Markdown>
-            </Suspense>
+          {selfReview ? (
+            <SelfReviewBriefDetails details={selfReview.details} />
+          ) : (
+            brief.summary && (
+              <Suspense fallback={null}>
+                <Markdown style={{ overflow: 'unset' }} variant={'chat'}>
+                  {brief.summary}
+                </Markdown>
+              </Suspense>
+            )
           )}
           <BriefCardArtifacts artifacts={brief.artifacts} />
           {agentId && topicId && (

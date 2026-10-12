@@ -108,11 +108,15 @@ vi.mock('@/store/chat/selectors', () => ({
 
 vi.mock('@/store/serverConfig', () => ({
   featureFlagsSelectors: vi.fn(),
-  useServerConfigStore: () => ({ enableAgentSelfIteration: false }),
+  useServerConfigStore: () => ({}),
 }));
 
 vi.mock('@/store/user', () => ({ useUserStore: () => false }));
-vi.mock('@/store/user/selectors', () => ({ authSelectors: {}, settingsSelectors: {} }));
+vi.mock('@/store/user/selectors', () => ({
+  authSelectors: {},
+  labPreferSelectors: {},
+  settingsSelectors: {},
+}));
 
 const oldContext = {
   agentId: 'agt_old',

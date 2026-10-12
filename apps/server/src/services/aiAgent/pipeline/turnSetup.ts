@@ -976,6 +976,9 @@ export const setupTurn = async (
   // the creator's memory through the visible memory tool, so this gate must
   // never be conditional on it: any share configuration would otherwise let a
   // link visitor mutate the creator's account via this out-of-band channel.
+  //
+  // There is no per-agent gate: every agent feeds this channel, and the user's
+  // Labs → Self-evolving switch is checked inside the enqueue.
   if (
     userMessageRecord &&
     !isHeteroAgent &&
@@ -986,6 +989,11 @@ export const setupTurn = async (
       {
         payload: {
           agentId: resolvedAgentId,
+          // Lets the feedback classifier skip a first message: nothing came before
+          // it in the topic, so it cannot be feedback on an earlier reply.
+          ...(!userMessageRecord.parentId && !appContext?.threadId
+            ? { isConversationRoot: true }
+            : {}),
           message: prompt,
           messageId: userMessageRecord.id,
           threadId: appContext?.threadId ?? undefined,

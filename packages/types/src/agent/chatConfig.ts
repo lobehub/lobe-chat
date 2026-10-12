@@ -20,6 +20,10 @@ export interface AgentMemoryChatConfig {
 
 export interface AgentSelfIterationChatConfig {
   selfIteration?: {
+    /**
+     * Legacy per-agent switch, kept so stored configs still parse. Ignored: Labs →
+     * Self-evolving (`preference.lab.enableSelfLearning`) is the only self-iteration control.
+     */
     enabled?: boolean;
   };
 }

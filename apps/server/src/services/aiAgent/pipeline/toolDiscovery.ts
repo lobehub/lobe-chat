@@ -70,11 +70,7 @@ import type { ServerAgentToolsContext } from '@/server/modules/Mecha';
 import { createServerAgentToolsEngine } from '@/server/modules/Mecha';
 import { createServerModelParamsProviders } from '@/server/modules/Mecha/ModelParams/providers';
 import type { AgentDocumentsService } from '@/server/services/agentDocuments';
-import {
-  isAgentSignalEnabledForUser,
-  isLobeAiAgentSlug,
-  resolveAgentSelfIterationCapability,
-} from '@/server/services/agentSignal/featureGate';
+import { isAgentSignalEnabledForUser } from '@/server/services/agentSignal/featureGate';
 import { resolveUnsupportedMessageApis } from '@/server/services/bot/platforms/messageCapabilities';
 import type { ComposioService } from '@/server/services/composio';
 import {
@@ -279,7 +275,6 @@ export const discoverTools = async (
   } = ctx;
   const {
     additionalPluginIds,
-    agentSlug,
     attachedFileIds,
     botContext,
     disableLocalSystem,
@@ -1237,8 +1232,6 @@ export const discoverTools = async (
       composioManifests.length,
     );
 
-    const agentSelfIterationEnabled = agentConfig.chatConfig?.selfIteration?.enabled === true;
-    const isLobeAiAgent = isLobeAiAgentSlug(agentSlug);
     // Share-visitor fail-closed gate — never expose the
     // `declareSelfFeedbackIntent` tool to a share-visitor turn. This tool sits
     // outside the normal `toolManifestMap` / `applyShareGateToToolSet`
@@ -1250,19 +1243,18 @@ export const discoverTools = async (
     // to the creator's memory. Same root cause as the `agent.user.message`
     // gate in `turnSetup`; `allowReadMemory` is a read-only grant so this must
     // not be conditional on it either.
-    const shouldCheckUserSelfIterationGate =
-      !shareGate && !disableSelfFeedbackIntentTool && (agentSelfIterationEnabled || isLobeAiAgent);
-    if (shouldCheckUserSelfIterationGate) {
-      const featureUserEnabled = await isAgentSignalEnabledForUser(deps.db, deps.userId);
-      const effectiveAgentSelfIterationEnabled = resolveAgentSelfIterationCapability({
-        agentSelfIterationEnabled,
-        isAgentSelfIterationFeatureEnabled: featureUserEnabled,
-        isLobeAiAgent,
+    //
+    // There is no per-agent switch: Labs → Self-evolving covers every agent.
+    if (!shareGate && !disableSelfFeedbackIntentTool) {
+      // The run already reads `users.preference` for expertise injection; reuse that row.
+      // A failed read leaves the tool off (fail closed).
+      const featureUserEnabled = await isAgentSignalEnabledForUser(deps.db, deps.userId, {
+        preference: await ctx.runFacts.userPreference().catch(() => undefined),
       });
 
       if (
         shouldExposeSelfFeedbackIntentTool({
-          agentSelfIterationEnabled: effectiveAgentSelfIterationEnabled,
+          agentSelfIterationEnabled: featureUserEnabled,
           disableSelfFeedbackIntentTool,
           featureUserEnabled,
         })
