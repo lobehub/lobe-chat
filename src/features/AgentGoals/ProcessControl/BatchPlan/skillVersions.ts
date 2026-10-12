@@ -1,3 +1,5 @@
+import type { SkillResourceTreeNode } from '@lobechat/types';
+
 /**
  * One version's `SKILL.md` as a plan skill kept it — frontmatter included, as
  * the document view shows it. A payload without `versions` (an older server)
@@ -8,29 +10,37 @@ export const skillVersionContent = (
   revision: number,
 ): string | undefined => (versions ?? []).find((version) => version.version === revision)?.content;
 
-export interface PlanHeading {
-  level: number;
-  text: string;
-}
-
 /**
- * The headings of a plan's Markdown, in order — the table of contents beside
- * the document. Lines inside code fences are not headings.
+ * A skill's files as the file tree takes them: `scripts/check.sh` becomes a
+ * `scripts` folder holding `check.sh`. Folders first, then files, by name.
+ * `SKILL.md` itself is the tree's root entry, not one of these.
  */
-export const planHeadings = (markdown: string): PlanHeading[] => {
-  const headings: PlanHeading[] = [];
-  let fenced = false;
-  for (const line of markdown.split(/\r?\n/)) {
-    if (/^\s*(?:```|~~~)/.test(line)) {
-      fenced = !fenced;
-      continue;
-    }
-    if (fenced) continue;
-    const match = /^(#{1,6})\s(.*)$/.exec(line);
-    if (!match) continue;
-    // A closing run of `#` is decoration, not part of the heading.
-    const text = match[2].trim().replace(/\s#+$/, '').trim();
-    if (text) headings.push({ level: match[1].length, text });
+export const skillFileTree = (
+  files: readonly { content: string; path: string }[] | null | undefined,
+): SkillResourceTreeNode[] => {
+  const root: SkillResourceTreeNode[] = [];
+  for (const file of files ?? []) {
+    const parts = file.path.split('/').filter(Boolean);
+    let level = root;
+    parts.forEach((name, index) => {
+      const path = parts.slice(0, index + 1).join('/');
+      if (index === parts.length - 1) {
+        level.push({ content: file.content, name, path, type: 'file' });
+        return;
+      }
+      let folder = level.find((node) => node.type === 'directory' && node.name === name);
+      if (!folder) {
+        folder = { children: [], name, path, type: 'directory' };
+        level.push(folder);
+      }
+      level = folder.children!;
+    });
   }
-  return headings;
+  const sort = (nodes: SkillResourceTreeNode[]): SkillResourceTreeNode[] =>
+    nodes
+      .map((node) => (node.children ? { ...node, children: sort(node.children) } : node))
+      .sort((a, b) =>
+        a.type === b.type ? a.name.localeCompare(b.name) : a.type === 'directory' ? -1 : 1,
+      );
+  return sort(root);
 };

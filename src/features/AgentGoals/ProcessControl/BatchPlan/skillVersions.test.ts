@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { planHeadings, skillVersionContent } from './skillVersions';
+import { skillFileTree, skillVersionContent } from './skillVersions';
 
 describe('skillVersionContent', () => {
   it('reads a kept version whole, frontmatter included', () => {
@@ -14,18 +14,29 @@ describe('skillVersionContent', () => {
   });
 });
 
-describe('planHeadings', () => {
-  it('lists the headings in order, with their levels', () => {
-    expect(planHeadings('Intro\n\n## Steps\ntext\n### v4\nmore\n### v5 ##')).toEqual([
-      { level: 2, text: 'Steps' },
-      { level: 3, text: 'v4' },
-      { level: 3, text: 'v5' },
+describe('skillFileTree', () => {
+  it('nests a skill’s files into folders, folders first', () => {
+    expect(
+      skillFileTree([
+        { content: 'b', path: 'scripts/rollback.sql' },
+        { content: 'notes', path: 'README.md' },
+        { content: 'a', path: 'scripts/check.sh' },
+      ]),
+    ).toEqual([
+      {
+        children: [
+          { content: 'a', name: 'check.sh', path: 'scripts/check.sh', type: 'file' },
+          { content: 'b', name: 'rollback.sql', path: 'scripts/rollback.sql', type: 'file' },
+        ],
+        name: 'scripts',
+        path: 'scripts',
+        type: 'directory',
+      },
+      { content: 'notes', name: 'README.md', path: 'README.md', type: 'file' },
     ]);
   });
 
-  it('skips what looks like a heading inside a code fence', () => {
-    expect(planHeadings('```bash\n# not a heading\n```\n# Real')).toEqual([
-      { level: 1, text: 'Real' },
-    ]);
+  it('is empty for a skill with no files', () => {
+    expect(skillFileTree(undefined)).toEqual([]);
   });
 });

@@ -505,7 +505,6 @@
   "goalBatch.planPanel.forked": "A forked plan: it starts again from the batch’s original outline instead of revising the previous version",
   "goalBatch.planPanel.latest": "v{{revision}} · latest",
   "goalBatch.planPanel.same": "Same as v{{base}}",
-  "goalBatch.planPanel.toc": "Contents",
   "goalBatch.probes.cell.backlog": "Not started",
   "goalBatch.probes.cell.done": "Done",
   "goalBatch.probes.cell.human": "Needs you",

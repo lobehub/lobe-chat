@@ -54,5 +54,6 @@ export const usePlanVersions = (graph: GoalGraphView, model: BatchModel) => {
         ((item.templateId && graph.byId[item.templateId]?.node.description) || ''),
       revision: item.revision,
     }));
-  return { isLoading: !!planSkill && isLoading, versions };
+  // A skill's scripts are its latest set; versions keep `SKILL.md` alone.
+  return { files: skill?.files ?? [], isLoading: !!planSkill && isLoading, versions };
 };
