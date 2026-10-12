@@ -17,6 +17,7 @@ import { workspaceCreditsRouter } from '@/business/server/lambda-routers/workspa
 import { workspaceCredsRouter } from '@/business/server/lambda-routers/workspaceCreds';
 import { workspaceDataRouter } from '@/business/server/lambda-routers/workspaceData';
 import { workspaceMemberRouter } from '@/business/server/lambda-routers/workspaceMember';
+import { workspaceTeamRouter } from '@/business/server/lambda-routers/workspaceTeam';
 import { workspaceUsageRouter } from '@/business/server/lambda-routers/workspaceUsage';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 
@@ -207,6 +208,7 @@ export const lambdaRouter = router({
   workspaceCredits: workspaceCreditsRouter,
   workspaceData: workspaceDataRouter,
   workspaceMember: workspaceMemberRouter,
+  workspaceTeam: workspaceTeamRouter,
   workspaceUsage: workspaceUsageRouter,
   workspaceUserSettings: workspaceUserSettingsRouter,
   accountDeletion: accountDeletionRouter,

@@ -1,4 +1,5 @@
 import {
+  GOAL_BATCH_BREAK_OPTION,
   GOAL_CLARIFICATION_OPTION,
   GOAL_CLARIFICATION_TITLE,
   GOAL_MACHINE_GATE_TITLE,
@@ -102,3 +103,16 @@ export const toGateAnswer = (
   const option = optionForWrittenAnswer(decision.options ?? [], decision.recommendedOptionId);
   return option ? { optionId: option.id, resolution: answer.text } : undefined;
 };
+
+/**
+ * An answer the gate cannot take as is. Revising a batch recipe without saying
+ * what to change would re-run the plan that just failed under a new version,
+ * so the correction is required there (the server refuses it too).
+ */
+export const gateAnswerProblem = (answer: {
+  optionId: string;
+  resolution?: string;
+}): 'correctionRequired' | undefined =>
+  answer.optionId === GOAL_BATCH_BREAK_OPTION.revise && !answer.resolution?.trim()
+    ? 'correctionRequired'
+    : undefined;

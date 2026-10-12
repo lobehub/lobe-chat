@@ -150,9 +150,11 @@ const availableToolsForDiscovery = (s: ToolStoreState): AvailableToolForDiscover
       name: tool.title || tool.identifier,
     }));
 
-  // 2. User-installed plugins — directly from s.installedPlugins
+  // 2. User-installed plugins — only full records: a plugin painted from the
+  //    cached display projection has no connection yet, so it cannot be activated.
   //    Exclude Composio, LobeHub Skill, and agent skill entries (they are handled in dedicated sources)
-  const pluginItems = s.installedPlugins
+  const pluginItems = pluginSelectors
+    .confirmedInstalledPlugins(s)
     .filter((p) => !composioIds.has(p.identifier))
     .filter((p) => !lobehubSkillIds.has(p.identifier))
     .filter((p) => !agentSkillIds.has(p.identifier))

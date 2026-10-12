@@ -70,7 +70,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       box-shadow: none;
     }
 
-    /* Keep a visible landmark for keyboard focus (mirrors DeviceItem). */
+    /* Keep a visible landmark for keyboard focus (mirrors DeviceCard). */
     &:focus-visible {
       outline: 2px solid ${cssVar.colorPrimary};
       outline-offset: -1px;

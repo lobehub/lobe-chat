@@ -1,8 +1,18 @@
 export default {
+  'startupUpdate.requiredTitle': 'Update required',
+  'startupUpdate.requiredDescription': 'This version has a security issue. Update to continue.',
+  'startupUpdate.checking': 'Checking for updates…',
+  'startupUpdate.downloading': 'Downloading update',
+  'startupUpdate.applying': 'Restarting LobeHub…',
+  'startupUpdate.error': 'Couldn’t finish the update',
+  'startupUpdate.retry': 'Retry',
+  'startupUpdate.quit': 'Quit',
+
   'navigation.agentShare': 'Share',
   'navigation.agents': 'Agents',
   'navigation.channels': 'Channels',
   'navigation.chat': 'Chat',
+  'navigation.dashboard': 'Dashboards',
   'navigation.discover': 'Discover',
   'navigation.discoverAssistants': 'Discover Agents',
   'navigation.discoverMcp': 'Discover MCP',

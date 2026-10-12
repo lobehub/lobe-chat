@@ -19,6 +19,7 @@ import {
   ConfigAction,
   GenerationMediaModeSegment,
   GenerationModelNotice,
+  GenerationPromptBlockedNotice,
   GenerationPromptInput,
   GenerationVisibilitySelector,
   InlineImageReference,
@@ -150,6 +151,10 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
   } = useImageReferenceUpload();
   const isCreating = useImageStore(createImageSelectors.isCreating);
   const createImage = useImageStore((s) => s.createImage);
+  const blockedPrompt = useImageStore(createImageSelectors.blockedPrompt);
+  const dismissBlockedPrompt = useImageStore((s) => s.dismissBlockedPrompt);
+  // Editing the prompt dismisses the notice: it only describes the submitted text.
+  const isPromptBlocked = blockedPrompt !== undefined && blockedPrompt === value;
   const setModelAndProviderOnSelect = useImageStore((s) => s.setModelAndProviderOnSelect);
   const activeGenerationTopicId = useImageStore(generationTopicSelectors.activeGenerationTopicId);
   const activeGenerationTopic = useImageStore((s) =>
@@ -288,6 +293,11 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
         isCreating={isCreating}
         isDarkMode={isDarkMode}
         value={value}
+        header={
+          isPromptBlocked ? (
+            <GenerationPromptBlockedNotice onClose={dismissBlockedPrompt} />
+          ) : undefined
+        }
         inlineContent={
           showInlineRef ? (
             <InlineImageReference

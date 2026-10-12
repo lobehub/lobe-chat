@@ -8,6 +8,7 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Community = 'community',
+  Dashboard = 'dashboard',
   Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
@@ -193,6 +194,12 @@ export interface SystemStatus {
    * so dismissing the current one does not hide future ones.
    */
   dismissedBannerIds?: string[];
+  /**
+   * Keys of goal asks (clarification rounds, gates, sign-offs) the user waved
+   * off the approval island. Only the island honours them — the same ask stays
+   * in the Home inbox. Append-only and capped, see `appendDismissedIslandKey`.
+   */
+  dismissedIslandItemKeys?: string[];
   /**
    * Per-agent expanded state of the agent sidebar's top-level sections
    * (Tasks / Topic), keyed by agentId. Lets each agent remember its own
@@ -615,6 +622,18 @@ export const createInitialSystemStatus = (): SystemStatus => {
       typeof persistedStatus.showLeftPanel === 'boolean'
         ? persistedStatus.showLeftPanel
         : INITIAL_STATUS.showLeftPanel,
+    showRightPanel:
+      typeof persistedStatus.showRightPanel === 'boolean'
+        ? persistedStatus.showRightPanel
+        : INITIAL_STATUS.showRightPanel,
+    showWorkingOverview:
+      typeof persistedStatus.showWorkingOverview === 'boolean'
+        ? persistedStatus.showWorkingOverview
+        : undefined,
+    workingSidebarWidth:
+      typeof persistedStatus.workingSidebarWidth === 'number'
+        ? persistedStatus.workingSidebarWidth
+        : INITIAL_STATUS.workingSidebarWidth,
   };
 };
 

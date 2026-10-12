@@ -11,8 +11,10 @@ const {
   mockGetAssistantList,
   mockGetAssistantDetail,
   mockQueryAgents,
+  mockExistsById,
   mockGetAgentConfigById,
   mockServiceUpdateConfig,
+  mockUpdateAgent,
   mockUpdateConfig,
   mockFindById,
   mockCreatePlugin,
@@ -28,11 +30,13 @@ const {
   mockQueryPlugins: vi.fn(),
   mockResolveConnectors: vi.fn(),
   mockUpdatePlugin: vi.fn(),
+  mockExistsById: vi.fn(),
   mockGetAgentConfigById: vi.fn(),
   mockGetAssistantList: vi.fn(),
   mockGetAssistantDetail: vi.fn(),
   mockQueryAgents: vi.fn(),
   mockServiceUpdateConfig: vi.fn(),
+  mockUpdateAgent: vi.fn(),
   mockUpdateConfig: vi.fn(),
 }));
 
@@ -46,8 +50,10 @@ vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(function () {
     return {
       countAgents: mockCountAgents,
+      existsById: mockExistsById,
       getAgentConfigById: mockGetAgentConfigById,
       queryAgents: mockQueryAgents,
+      update: mockUpdateAgent,
       updateConfig: mockUpdateConfig,
     };
   }),
@@ -107,6 +113,7 @@ const makeAgents = (count: number, startIndex = 0) =>
 describe('agentManagementRuntime', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockExistsById.mockResolvedValue(true);
     mockServiceUpdateConfig.mockImplementation((...args) => mockUpdateConfig(...args));
     mockResolveConnectors.mockResolvedValue([]);
     mockQueryPlugins.mockResolvedValue([]);
@@ -140,6 +147,62 @@ describe('agentManagementRuntime', () => {
 
     expect(AgentModel).toHaveBeenCalledWith(expect.anything(), 'user-1', 'workspace-1');
     expect(PluginModel).toHaveBeenCalledWith(expect.anything(), 'user-1', 'workspace-1');
+  });
+
+  describe('existence guard (0-row silent no-op)', () => {
+    it('updateAgent fails loudly for an agent that does not exist', async () => {
+      mockExistsById.mockResolvedValue(false);
+
+      const result = await createRuntime().updateAgent({
+        agentId: 'agent-missing',
+        config: { model: 'gpt-4o' },
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not found');
+      expect(mockServiceUpdateConfig).not.toHaveBeenCalled();
+      expect(mockUpdateAgent).not.toHaveBeenCalled();
+    });
+
+    it('updateAgent still writes meta once the guard passes', async () => {
+      mockGetAgentConfigById.mockResolvedValue({ id: 'agent-1' });
+
+      const result = await createRuntime().updateAgent({
+        agentId: 'agent-1',
+        meta: { title: 'Renamed' },
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockUpdateAgent).toHaveBeenCalledWith('agent-1', { title: 'Renamed' });
+    });
+
+    it('updatePrompt fails loudly for an agent that does not exist', async () => {
+      mockExistsById.mockResolvedValue(false);
+
+      const result = await createRuntime().updatePrompt({
+        agentId: 'agent-missing',
+        prompt: 'new prompt',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not found');
+      expect(mockUpdateAgent).not.toHaveBeenCalled();
+    });
+
+    it('updatePrompt writes through once the guard passes', async () => {
+      mockGetAgentConfigById.mockResolvedValue({ id: 'agent-1' });
+
+      const result = await createRuntime().updatePrompt({
+        agentId: 'agent-1',
+        prompt: 'new prompt',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockUpdateAgent).toHaveBeenCalledWith('agent-1', {
+        editorData: null,
+        systemRole: 'new prompt',
+      });
+    });
   });
 
   describe('callAgent', () => {

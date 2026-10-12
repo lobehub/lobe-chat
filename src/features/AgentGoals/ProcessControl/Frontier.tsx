@@ -24,7 +24,7 @@ import AssigneeProfileAvatar from './AssigneeProfileAvatar';
 import {
   coordinatorGateReason,
   coordinatorNodeTitleKey,
-  coordinatorReasonCopy,
+  coordinatorReasonCopies,
   viewGateKind,
 } from './coordinatorCopy';
 import type { FrontierItem, GoalGraphView, GoalNodeView } from './goalGraphViewModel';
@@ -185,10 +185,10 @@ RowGlyph.displayName = 'GoalFrontierRowGlyph';
 
 const AttemptReason = memo<{ reason?: string | null }>(({ reason }) => {
   const { t } = useTranslation('chat');
-  const copy = coordinatorReasonCopy(reason);
+  const copies = coordinatorReasonCopies(reason);
   return (
     <Text ellipsis fontSize={12} style={{ flex: 1, minWidth: 0 }} type={'secondary'}>
-      {copy ? t(copy.key as any, copy.params) : (reason ?? '')}
+      {copies ? copies.map((copy) => t(copy.key as any, copy.params)).join('; ') : (reason ?? '')}
     </Text>
   );
 });
@@ -453,9 +453,9 @@ const FrontierRow = memo<{
   const coordinatorTitleKey = coordinatorNodeTitleKey(view);
   const gateKind = item.kind === 'gate' ? viewGateKind(view) : undefined;
   const rawGateReason = gateKind ? coordinatorGateReason(view.decision?.question) : undefined;
-  const gateReasonCopy = coordinatorReasonCopy(rawGateReason);
-  const gateReasonText = gateReasonCopy
-    ? t(gateReasonCopy.key as any, gateReasonCopy.params)
+  const gateReasonCopies = coordinatorReasonCopies(rawGateReason);
+  const gateReasonText = gateReasonCopies
+    ? gateReasonCopies.map((copy) => t(copy.key as any, copy.params)).join('; ')
     : rawGateReason;
 
   // Gate rows carry no tag: the expanded card with its action buttons already

@@ -29,6 +29,7 @@ import { TopicShareModel } from '@/database/models/topicShare';
 import { WorkspaceAuditLogModel } from '@/database/models/workspaceAuditLog';
 import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
 import { HeteroSessionImporterRepo } from '@/database/repositories/heteroSessionImporter';
+import { TopicRepository } from '@/database/repositories/topic';
 import { TopicImporterRepo } from '@/database/repositories/topicImporter';
 import { chatGroups } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
@@ -84,6 +85,7 @@ const topicProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =>
       messageModel: new MessageModel(ctx.serverDB, ctx.userId, wsId),
       topicImporterRepo: new TopicImporterRepo(ctx.serverDB, ctx.userId, wsId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
+      topicRepo: new TopicRepository(ctx.serverDB, ctx.userId, wsId),
       topicShareModel: new TopicShareModel(ctx.serverDB, ctx.userId, wsId),
       trashService: new TrashService(ctx.serverDB, ctx.userId, wsId),
     },
@@ -459,6 +461,60 @@ export const topicRouter = router({
       const data = await ctx.topicModel.duplicate(input.id, input.newTitle);
 
       return data.topic.id;
+    }),
+
+  /**
+   * Fork a topic from one of its messages: copy the conversation prefix
+   * (first message → `messageId`) into a brand new topic and return its id.
+   *
+   * Shares `cloneTopic`'s guards: a fork writes a new topic and copies content
+   * out of the source, so it needs the same `topic:create` capability and the
+   * same refusal to lift a visitor topic's content into creator scope.
+   */
+  forkTopic: topicProcedure
+    .use(withScopedPermission('topic:create'))
+    .input(
+      z.object({
+        id: z.string(),
+        messageId: z.string(),
+        newTitle: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await assertCanUseTopicTargets(guardCtx(ctx), [input.id]);
+      await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
+      const data = await ctx.topicModel.duplicate(input.id, input.newTitle, {
+        upToMessageId: input.messageId,
+      });
+
+      return data.topic.id;
+    }),
+
+  /**
+   * Edit-and-resend for runtimes whose native history cannot be rewound
+   * (Codex): copies the conversation up to one user message into a new topic
+   * with the edited content. The source topic is left as it was.
+   */
+  branchTopicAtMessage: topicProcedure
+    .use(withScopedPermission('topic:create'))
+    .input(
+      z.object({
+        content: z.string(),
+        editorData: z.record(z.string(), z.any()).nullish(),
+        messageId: z.string(),
+        title: z.string().optional(),
+        topicId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { topicId, messageId, ...edit } = input;
+      await assertCanUseTopicTargets(guardCtx(ctx), [topicId]);
+      // Same visitor guard as `cloneTopic` above.
+      await assertCreatorTopicTargets(guardCtx(ctx), [topicId]);
+      const branch = await ctx.topicRepo.branchAtMessage(topicId, messageId, edit);
+      if (!branch) throw new TRPCError({ code: 'NOT_FOUND', message: 'User message not found' });
+
+      return { messageId: branch.messageId, topicId: branch.topic.id };
     }),
 
   countTopics: topicProcedure

@@ -12,9 +12,12 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type ConversationContext, type ConversationHooks } from '../../../types';
 import { createStore } from '../../index';
+import type { CodexMessageEdit } from './action';
 import { MAX_HETERO_AUTO_RETRIES } from './heteroRetryConfig';
 
-vi.mock('@/services/topic', () => ({ topicService: { cancelRateLimitContinuation: vi.fn() } }));
+vi.mock('@/services/topic', () => ({
+  topicService: { branchTopicAtMessage: vi.fn(), cancelRateLimitContinuation: vi.fn() },
+}));
 
 // Mock useChatStore
 const mockCancelOperations = vi.fn();
@@ -34,6 +37,7 @@ const mockIsGatewayModeEnabled = vi.fn(() => false);
 const mockExecuteGatewayAgent = vi.fn();
 const mockUpdateTopicMetadata = vi.fn();
 const mockUpdateTopicStatus = vi.fn();
+const mockOpenThreadCreator = vi.fn();
 const mockSourceTopic = {
   status: 'scheduled',
   metadata: { scheduledRun: { kind: 'resume_after_rate_limit' } },
@@ -69,6 +73,7 @@ vi.mock('@/store/chat', () => ({
       isGatewayModeEnabled: mockIsGatewayModeEnabled,
       executeGatewayAgent: mockExecuteGatewayAgent,
       internal_dispatchTopic: vi.fn(),
+      openThreadCreator: mockOpenThreadCreator,
       updateTopicMetadata: mockUpdateTopicMetadata,
       updateTopicStatus: mockUpdateTopicStatus,
     })),
@@ -84,6 +89,32 @@ describe('Generation Actions', () => {
 
   afterEach(() => {
     vi.clearAllTimers();
+  });
+
+  describe('openThreadCreator', () => {
+    it('anchors a steered row on its tail instead of the row/host id', () => {
+      const store = createStore({
+        context: { agentId: 'session-1', threadId: null, topicId: 'topic-1' },
+      });
+
+      // Steered row: host `g1` + steer message `s1` + continuation `g2`. The row
+      // renders as one block whose id is `g1` (the chain head), so passing the raw
+      // id anchored the fork at the top of the row instead of where the user is.
+      store.setState({
+        displayMessages: [
+          { content: '', createdAt: 0, id: 'u1', role: 'user' },
+          { content: '', createdAt: 0, id: 'g1', role: 'assistantGroup' },
+          { content: '', createdAt: 0, id: 's1', metadata: { steer: true }, role: 'user' },
+          { content: '', createdAt: 0, id: 'g2', role: 'assistantGroup' },
+        ] as any,
+      });
+
+      act(() => {
+        store.getState().openThreadCreator('g1');
+      });
+
+      expect(mockOpenThreadCreator).toHaveBeenCalledWith('g2');
+    });
   });
 
   describe('cancelHeteroContinuation', () => {
@@ -1875,10 +1906,167 @@ describe('Generation Actions', () => {
       expect(executeHeterogeneousAgentSpy).toHaveBeenCalledWith(
         expect.any(Function),
         expect.objectContaining({
-          heterogeneousProvider: expect.objectContaining({ model: pinnedModel, type: providerType }),
+          heterogeneousProvider: expect.objectContaining({
+            model: pinnedModel,
+            type: providerType,
+          }),
         }),
       );
     });
+
+    it.runIf(providerType === 'codex')(
+      'resends an edit through the branched topic, leaving the source session alone',
+      async () => {
+        const branchContext = { agentId: 'session-1', threadId: null, topicId: 'branch-topic' };
+        const branchRows = [{ content: 'fixed prompt', id: 'branch-user', role: 'user' }];
+        const mockSwitchTopic = vi.fn();
+        await setupHeteroChatStore({
+          dbMessagesMap: { [messageMapKey(branchContext)]: branchRows },
+          messagesMap: { [messageMapKey(branchContext)]: branchRows },
+          prefetchMessages: vi.fn(),
+          refreshTopic: vi.fn(),
+          switchTopic: mockSwitchTopic,
+          topicDataMap: {
+            test: { items: [{ id: 'topic-1', metadata: { heteroSessionId: 'source-thread' } }] },
+          },
+        });
+        vi.mocked(topicService.branchTopicAtMessage).mockResolvedValue({
+          messageId: 'branch-user',
+          topicId: 'branch-topic',
+        });
+        const store = createStore({
+          context: { agentId: 'session-1', threadId: null, topicId: 'topic-1' },
+        });
+        store.setState({
+          displayMessages: [{ content: 'typo prompt', id: 'msg-1', role: 'user' }],
+        } as any);
+        const onAccepted = vi.fn();
+
+        await store
+          .getState()
+          .regenerateUserMessage('msg-1', { content: 'fixed prompt', onAccepted });
+        await vi.waitFor(() => expect(executeHeterogeneousAgentSpy).toHaveBeenCalled());
+
+        expect(topicService.branchTopicAtMessage).toHaveBeenCalledWith(
+          expect.objectContaining({
+            content: 'fixed prompt',
+            messageId: 'msg-1',
+            topicId: 'topic-1',
+          }),
+        );
+        expect(onAccepted).toHaveBeenCalled();
+        expect(mockSwitchTopic).toHaveBeenCalledWith(
+          'branch-topic',
+          expect.objectContaining({ onlyIfActiveTopicIn: ['topic-1'] }),
+        );
+        expect(createMessageSpy).toHaveBeenCalledWith(
+          expect.objectContaining({ parentId: 'branch-user', topicId: 'branch-topic' }),
+        );
+        expect(executeHeterogeneousAgentSpy).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.objectContaining({
+            context: expect.objectContaining({ topicId: 'branch-topic' }),
+            message: 'fixed prompt',
+            resumeSessionId: undefined,
+          }),
+        );
+      },
+    );
+
+    /** @example A failed destination fetch keeps an isolated editor open and retryable. */
+    it.runIf(providerType === 'codex')(
+      'keeps the edit until the copied message is available for resend',
+      async () => {
+        const target = { agentId: 'session-1', threadId: null, topicId: 'branch-topic' };
+        const onTopicCreated = vi.fn();
+        const onAccepted = vi.fn();
+        const edit: CodexMessageEdit = { content: 'fixed prompt', onAccepted };
+        const switchTopic = vi.fn();
+        await setupHeteroChatStore({
+          dbMessagesMap: {},
+          messagesMap: {},
+          prefetchMessages: vi.fn().mockResolvedValue(undefined),
+          refreshTopic: vi.fn(),
+          switchTopic,
+        });
+        vi.mocked(topicService.branchTopicAtMessage).mockResolvedValue({
+          messageId: 'branch-user',
+          topicId: 'branch-topic',
+        });
+        const store = createStore({
+          context: {
+            agentId: 'session-1',
+            isolatedTopic: true,
+            threadId: null,
+            topicId: 'topic-1',
+          },
+          hooks: { onTopicCreated },
+        });
+        // ROOT CAUSE:
+        // Background prefetch swallows network errors; an empty destination made resend silently
+        // return after onAccepted closed the editor. Acceptance must wait for the copied message.
+        await expect(store.getState().regenerateUserMessage('msg-1', edit)).rejects.toThrow(
+          'Could not load the new topic. Your edit is kept; try sending again.',
+        );
+        /** @example Neither host navigation nor draft acceptance happens on incomplete context. */
+        expect(onAccepted).not.toHaveBeenCalled();
+        expect(onTopicCreated).not.toHaveBeenCalled();
+        expect(switchTopic).not.toHaveBeenCalled();
+        expect(executeHeterogeneousAgentSpy).not.toHaveBeenCalled();
+
+        const { useChatStore } = await import('@/store/chat');
+        // The same editor may amend its draft before retrying the failed preparation.
+        vi.spyOn(messageService, 'updateMessage').mockResolvedValue({ success: true });
+        edit.content = 'amended prompt';
+        const rows = [{ content: 'amended prompt', id: 'branch-user', role: 'user' as const }];
+        const state = useChatStore.getState();
+        vi.mocked(state.prefetchMessages).mockImplementation(async () => {
+          state.messagesMap[messageMapKey(target)] = rows;
+          state.dbMessagesMap[messageMapKey(target)] = rows;
+        });
+        await store.getState().regenerateUserMessage('msg-1', edit);
+        /** @example A retry dispatches the edited prompt once the destination fetch succeeds. */
+        await vi.waitFor(() => expect(executeHeterogeneousAgentSpy).toHaveBeenCalledTimes(1));
+        /** @example Retrying preparation reuses the already-created destination. */
+        expect(topicService.branchTopicAtMessage).toHaveBeenCalledTimes(1);
+        /** @example Only the already-created destination receives the amended draft. */
+        expect(messageService.updateMessage).toHaveBeenCalledWith('branch-user', {
+          content: 'amended prompt',
+          editorData: undefined,
+        });
+        expect(executeHeterogeneousAgentSpy).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.objectContaining({ message: 'amended prompt' }),
+        );
+        expect(onAccepted).toHaveBeenCalledTimes(1);
+        expect(onTopicCreated).toHaveBeenCalledWith('branch-topic');
+      },
+    );
+
+    it.runIf(providerType === 'codex')(
+      'reports a friendly error and keeps the draft when the branch cannot be created',
+      async () => {
+        await setupHeteroChatStore();
+        vi.mocked(topicService.branchTopicAtMessage).mockRejectedValue(new Error('offline'));
+        const store = createStore({
+          context: { agentId: 'session-1', threadId: null, topicId: 'topic-1' },
+        });
+        const onAccepted = vi.fn();
+
+        const result = store
+          .getState()
+          .regenerateUserMessage('msg-1', { content: 'fixed prompt', onAccepted });
+
+        // The editor toasts this message, so it must not be the raw transport error.
+        await expect(result).rejects.toThrow(
+          'Could not create the new topic. Your edit is kept; try sending again.',
+        );
+        await expect(result).rejects.toMatchObject({ cause: new Error('offline') });
+
+        expect(onAccepted).not.toHaveBeenCalled();
+        expect(executeHeterogeneousAgentSpy).not.toHaveBeenCalled();
+      },
+    );
 
     it('preserves a legacy subscription resume', async () => {
       await setupHeteroChatStore({

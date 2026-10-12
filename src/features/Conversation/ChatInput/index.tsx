@@ -45,9 +45,9 @@ import OpStatusTray from './OpStatusTray';
 import QueueTray from './QueueTray';
 import { sendVoiceMessage } from './sendVoiceMessage';
 import { transcribeVoiceMessage } from './transcribeVoiceMessage';
+import { useConversationChatInputUiState } from './useConversationChatInputUiState';
 import {
   getContextWindowMessages,
-  getConversationChatInputUiState,
   getConversationSendButtonProps,
   toChatInputMessages,
   toDisplayableSendErrorMessage,
@@ -260,7 +260,6 @@ const ChatInput = memo<ChatInputProps>(
     }, [setChatInputOverlayHeight]);
 
     // Loading state from ConversationStore (bridged from ChatStore)
-    const isInputLoading = useConversationStore(messageStateSelectors.isInputVisiblyLoading);
     const isInputQueueBlocked = useChatStore((s) =>
       operationSelectors.isInputLoadingByContext(context)(s),
     );
@@ -312,12 +311,7 @@ const ChatInput = memo<ChatInputProps>(
     // Computed state
     const isInputEmpty = !inputMessage.trim() && fileList.length === 0 && contextList.length === 0;
     const { placeholderVariant, showSendMenu, showSendWhileGenerating, showStopButton } =
-      getConversationChatInputUiState({
-        disableFollowUpVariant,
-        disableQueue,
-        isInputEmpty,
-        isInputLoading,
-      });
+      useConversationChatInputUiState({ disableFollowUpVariant, disableQueue, isInputEmpty });
     // Input stays enabled during agent execution — messages are queued.
     // When disableQueue is set (e.g. onboarding), block sending while loading.
     // disableSend hard-blocks regardless of content (host surface is read-only).
@@ -378,8 +372,8 @@ const ChatInput = memo<ChatInputProps>(
         if (!message.trim() && currentFileList.length === 0 && currentContextList.length === 0)
           return;
 
-        // A rejected directory preflight has no persisted message to recover from.
-        // Keep the composer and attachments intact until the target is usable.
+        // A rejected preflight has no persisted message to recover from. Keep
+        // the composer and attachments intact until the target is usable.
         const chatState = useChatStore.getState();
         const sendContext = storeApi.getState().context;
         const topic = sendContext.topicId
@@ -429,7 +423,13 @@ const ChatInput = memo<ChatInputProps>(
           files: currentFileList,
           message,
           onPreflightFailure: () => {
-            useFileStore.getState().restoreChatContextSelections(contextKey, currentContextList);
+            const store = useFileStore.getState();
+            // The composer was cleared up front; a send rejected before any
+            // message owned the content must hand every part of it back —
+            // uploads and context selections, not just the editor text the
+            // lifecycle restores on its own.
+            store.restoreChatUploadFileList(currentFileList);
+            store.restoreChatContextSelections(contextKey, currentContextList);
           },
           pageSelections,
         });

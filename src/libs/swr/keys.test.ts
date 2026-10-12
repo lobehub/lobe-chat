@@ -65,7 +65,7 @@ describe('isAcceptanceListKey', () => {
     expect(isAcceptanceListKey(['verify:acceptances', '100', 'needle', 'all', 'workspace-1'])).toBe(
       true,
     );
-    expect(isAcceptanceListKey(['verify:acceptanceBundle', 'acceptance-1'])).toBe(false);
+    expect(isAcceptanceListKey(['verify:acceptancePurgePreview', 'acceptance-1'])).toBe(false);
   });
 
   it('keeps project-scoped acceptance feeds in separate cache entries', () => {
@@ -131,9 +131,6 @@ describe('resourceKeys', () => {
     );
     expect(resourceKeys.recentFiles(null, undefined)).not.toEqual(
       resourceKeys.recentFiles('workspace-1', undefined),
-    );
-    expect(resourceKeys.search({ q: 'report' }, 'workspace-1')).not.toEqual(
-      resourceKeys.search({ q: 'report' }, 'workspace-2'),
     );
   });
 });

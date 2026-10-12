@@ -2,12 +2,16 @@ import type {
   LlmCancelData,
   LlmExecuteData,
   LlmRelayDeadlines,
+  LlmRelayMethod,
 } from '@lobechat/agent-gateway-client';
 import type {
   ChatMethodOptions,
   ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
   ModelRuntime,
   ProviderResponseDiagnostics,
+  PullModelParams,
 } from '@lobechat/model-runtime';
 import { createCallbacksTransformer } from '@lobechat/model-runtime';
 import type { ModelUsage } from '@lobechat/types';
@@ -83,7 +87,10 @@ const createAbortError = () => {
  *
  * One instance per attempt: `callId` is the attempt's idempotency key.
  */
-export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleChatStreamError'> {
+export class RelayModelRuntime implements Pick<
+  ModelRuntime,
+  'chat' | 'generateObject' | 'handleChatStreamError' | 'models' | 'pullModel'
+> {
   readonly result: RelayAttemptResult = { usageEstimated: false };
 
   private readonly deadlines: LlmRelayDeadlines;
@@ -98,6 +105,52 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
   }
 
   async chat(payload: ChatStreamPayload, options: ChatMethodOptions = {}): Promise<Response> {
+    const reader = await this.start('chat', payload, payload.model);
+
+    return new Response(
+      this.createStream(reader, payload, options).pipeThrough(
+        createCallbacksTransformer(options.callback),
+      ),
+      // Trace ids and the like, as every provider runtime sets them.
+      { headers: options.headers },
+    );
+  }
+
+  /**
+   * Structured output on the device (`runtime.generateObject`), returned as the
+   * value the device uploaded (see {@link collectResult}).
+   */
+  async generateObject(
+    payload: GenerateObjectPayload,
+    options: GenerateObjectOptions = {},
+  ): Promise<any> {
+    const reader = await this.start('generateObject', payload, payload.model);
+    return this.collectResult(reader, options.signal);
+  }
+
+  /** The provider's model list, as the device's runtime reads it. */
+  async models(): Promise<any> {
+    const reader = await this.start('models', {}, '');
+    return this.collectResult(reader);
+  }
+
+  /**
+   * Download a model on the device (Ollama). The response streams the
+   * provider's own progress lines; a failure ends it with a
+   * `{"status":"error"}` line, the shape a progress reader already handles.
+   */
+  async pullModel(params: PullModelParams, options: { signal?: AbortSignal } = {}) {
+    const reader = await this.start('pullModel', params, params.model);
+    return new Response(this.createProgressStream(reader, options.signal), {
+      headers: { 'content-type': 'application/x-ndjson' },
+    });
+  }
+
+  /**
+   * Store the request for the device and hand it the call. Throws an
+   * unavailable-executor error when nobody can pick it up.
+   */
+  private async start(method: LlmRelayMethod, payload: unknown, model: string) {
     const { callId, provider, redis } = this.params;
     const dispatchedAt = this.now();
     const ttlMs = this.deadlines.totalMs + LLM_RELAY_KEY_GRACE_MS;
@@ -116,7 +169,7 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
 
     let delivered: number | undefined;
     try {
-      delivered = await this.dispatch(payload.model, dispatchedAt);
+      delivered = await this.dispatch(method, model, dispatchedAt);
     } catch (error) {
       log('[%s] llm_execute dispatch failed: %O', callId, error);
       await this.cleanup();
@@ -131,18 +184,12 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
       throw createClientLlmExecutorUnavailableError(provider, 'not_delivered');
     }
 
-    const reader = new RelayBatchReader(
+    return new RelayBatchReader(
       redis.duplicate(),
       llmRelayKeys.stream(callId),
       this.deadlines,
       dispatchedAt,
       this.now,
-    );
-
-    return new Response(
-      this.createStream(reader, payload, options).pipeThrough(
-        createCallbacksTransformer(options.callback),
-      ),
     );
   }
 
@@ -158,7 +205,11 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
    * Hand the call to the user's clients. Resolves to how many the gateway
    * delivered it to when it can tell, else `undefined`.
    */
-  private async dispatch(model: string, dispatchedAt: number): Promise<number | undefined> {
+  private async dispatch(
+    method: LlmRelayMethod,
+    model: string,
+    dispatchedAt: number,
+  ): Promise<number | undefined> {
     const { params } = this;
     const data: LlmExecuteData = {
       assistantMessageId: params.assistantMessageId,
@@ -170,6 +221,8 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
         exp: dispatchedAt + this.deadlines.totalMs + LLM_RELAY_KEY_GRACE_MS,
         userId: params.userId,
       }),
+      // Absent for `chat`, so a client from before `method` existed still runs it.
+      ...(method !== 'chat' && { method }),
       model,
       operationId: params.operationId,
       preferredClientId: params.preferredClientId,
@@ -297,6 +350,126 @@ export class RelayModelRuntime implements Pick<ModelRuntime, 'chat' | 'handleCha
                 );
               }
             }
+          }
+        } catch (error) {
+          await settle('error');
+          controller.error(error);
+        }
+      },
+    });
+  }
+
+  /**
+   * Read a call whose device uploads a return value (`generateObject`,
+   * `models`) and resolve to it. The device sends the value as JSON text split
+   * into `result_part` chunks, so a large model list never exceeds the batch
+   * cap. A provider failure on the device rejects with its normalized error,
+   * like the provider SDK would have thrown it.
+   */
+  private async collectResult(reader: RelayBatchReader, signal?: AbortSignal): Promise<unknown> {
+    const { provider } = this.params;
+    let resultJson = '';
+    let settled = false;
+    const settle = async (cancelReason?: LlmCancelData['reason']) => {
+      if (settled) return;
+      settled = true;
+      if (cancelReason) await this.cancel(cancelReason);
+      await this.cleanup(reader);
+    };
+
+    try {
+      for (;;) {
+        const next = await reader.next(signal);
+        if (next.kind === 'aborted') {
+          await settle('interrupted');
+          throw createAbortError();
+        }
+        if (next.kind === 'timeout') {
+          await settle('timeout');
+          throw this.toDeadlineError(next.which);
+        }
+
+        for (const chunk of next.batch.chunks) {
+          if (chunk.type === 'result_part' && typeof chunk.data === 'string')
+            resultJson += chunk.data;
+        }
+
+        const { final } = next.batch;
+        if (!final) continue;
+
+        await settle();
+        if (final.reason === 'done') return resultJson ? JSON.parse(resultJson) : undefined;
+        if (final.reason === 'error') {
+          throw final.error ?? createClientLlmExecutorLostError(provider, 'client_aborted');
+        }
+        throw createClientLlmExecutorLostError(provider, 'client_aborted');
+      }
+    } catch (error) {
+      await settle('error');
+      throw error;
+    }
+  }
+
+  private createProgressStream(
+    reader: RelayBatchReader,
+    signal?: AbortSignal,
+  ): ReadableStream<Uint8Array> {
+    const encoder = new TextEncoder();
+    let settled = false;
+    const settle = async (cancelReason?: LlmCancelData['reason']) => {
+      if (settled) return;
+      settled = true;
+      if (cancelReason) await this.cancel(cancelReason);
+      await this.cleanup(reader);
+    };
+    const errorLine = (error: unknown) => {
+      const message =
+        (error as { message?: unknown })?.message ??
+        (error as { error?: { message?: unknown } })?.error?.message ??
+        (error as { errorType?: unknown })?.errorType ??
+        'The model download failed';
+      return encoder.encode(`${JSON.stringify({ error: String(message), status: 'error' })}\n`);
+    };
+
+    return new ReadableStream<Uint8Array>({
+      cancel: async () => {
+        await settle('interrupted');
+      },
+      pull: async (controller) => {
+        try {
+          for (;;) {
+            const next = await reader.next(signal);
+            if (next.kind === 'aborted') {
+              await settle('interrupted');
+              return controller.error(createAbortError());
+            }
+            if (next.kind === 'timeout') {
+              await settle('timeout');
+              controller.enqueue(errorLine(this.toDeadlineError(next.which)));
+              return controller.close();
+            }
+
+            const { batch } = next;
+            for (const chunk of batch.chunks) {
+              if (chunk.type === 'progress' && typeof chunk.data === 'string')
+                controller.enqueue(encoder.encode(chunk.data));
+            }
+
+            if (!batch.final) {
+              if (batch.chunks.length > 0) return;
+              continue;
+            }
+
+            await settle();
+            if (batch.final.reason !== 'done') {
+              controller.enqueue(
+                errorLine(
+                  batch.final.error ??
+                    createClientLlmExecutorLostError(this.params.provider, 'client_aborted'),
+                ),
+              );
+            }
+            return controller.close();
           }
         } catch (error) {
           await settle('error');

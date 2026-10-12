@@ -13,7 +13,6 @@ import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspace
 import { AppUpdateAction, AppUpdateHint, useDeviceAppUpdate } from './AppUpdate';
 import { getChannelKind, getChannelVersion } from './channelKind';
 import { CliUpdate } from './CliUpdate';
-import FieldLabel from './FieldLabel';
 import PresenceDot from './PresenceDot';
 
 interface ConnectionCardProps {
@@ -31,11 +30,11 @@ interface ConnectionCardProps {
 
 /**
  * One client connection: state dot, client, version, connection status and
- * action on one baseline-aligned line; anything more goes on a second line.
+ * action on one vertically centered line; anything more goes on a second line.
  */
 const ConnectionCard = ({ channel, detail, extra, live, status, version }: ConnectionCardProps) => (
   <Block gap={4} paddingBlock={8} paddingInline={12} variant={'outlined'}>
-    <Flexbox horizontal align={'baseline'} gap={8}>
+    <Flexbox horizontal align={'center'} gap={8}>
       <Text style={{ flex: 'none' }}>
         <PresenceDot live={live} />
       </Text>
@@ -57,6 +56,7 @@ interface ConnectionsProps {
 
 /**
  * The device's live connections, one card per client with the version it runs.
+ * Unlabelled — the host card carries the heading.
  * The desktop app's card also carries its remote update — confirmed only once
  * the device reconnects on the new version.
  */
@@ -103,7 +103,6 @@ const Connections = ({ canEdit, device }: ConnectionsProps) => {
 
   return (
     <Flexbox gap={8}>
-      <FieldLabel>{t('devices.detail.connections')}</FieldLabel>
       {channels.map((channel, index) => {
         const key = `${channel.connectedAt}-${index}`;
         const label = channel.channel ?? t('devices.channel.unknown');

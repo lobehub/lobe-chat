@@ -23,6 +23,7 @@ import { useSingleton } from '@/hooks/useSingleton';
 
 import { arrayEqual, normalizeTree, remapIdsToPaths, remapPathsToIds } from '../adapter';
 import { extractName, toCanonicalTreePath } from '../adapter/path';
+import { cssString } from '../folderIconStyle';
 import type {
   ExplorerTreeHandle,
   ExplorerTreeMoveEvent,
@@ -30,7 +31,7 @@ import type {
   ExplorerTreeProps,
 } from '../types';
 import { openExplorerContextMenu } from './ContextMenu';
-import { getItemPathFromEventPath } from './eventPath';
+import { getItemPathFromEventPath, isItemToggleEventPath } from './eventPath';
 import NameInputHint from './NameInputHint';
 import { type PendingCreate, useInlineNameEdit } from './useInlineNameEdit';
 
@@ -51,6 +52,24 @@ type FileTreeModel = ReturnType<typeof useFileTree>['model'];
 // a beat behind the store — the tree applies renames and drops optimistically,
 // and a data refresh can turn a folder into a file under the same name — so a
 // stale lookup has to degrade to null instead of taking down the whole route.
+const FILE_APPEARANCE_STYLE_ATTRIBUTE = 'data-explorer-file-appearance';
+
+/**
+ * Per-row rules for folder nodes drawn as files. `unsafeCSS` is fixed when the
+ * tree is constructed, but these rows change with the data (a document turns
+ * into a parent when its first child lands), so the rules are keyed on each
+ * row's path and rewritten into the shadow root whenever the nodes change.
+ */
+export const buildFileAppearanceCSS = (paths: string[], declarations: string): string =>
+  paths.length === 0
+    ? ''
+    : `${paths
+        .map(
+          (path) =>
+            `[data-item-type='folder'][data-item-path="${cssString(path)}"] [data-item-section='content']::before`,
+        )
+        .join(',\n')} {\n${declarations}\n}`;
+
 const getItemSafely = (model: FileTreeModel, path: string): FileTreeItemHandle | null => {
   try {
     return model.getItem(path);
@@ -120,6 +139,7 @@ function ExplorerTreeInner<TData>(
 
     return {
       density: props.density,
+      flattenEmptyDirectories: props.flattenEmptyDirectories,
       dragAndDrop: {
         canDrag: (paths) => {
           const fn = propsRef.current.canDrag;
@@ -492,6 +512,49 @@ function ExplorerTreeInner<TData>(
     }
   }, [adapterRef, props.nodes, model, requestTreeRebuild]);
 
+  // Runs after the nodes effect above, so it reads the paths just applied. On
+  // first mount the shadow root can attach a frame after this effect, so the
+  // write retries for a few frames instead of silently skipping.
+  useLayoutEffect(() => {
+    const declarations = props.fileAppearanceCSS;
+    const a = adapterRef.current;
+    const paths = declarations
+      ? [...a.nodeById.values()]
+          .filter((node) => node.isFolder && node.appearance === 'file')
+          .flatMap((node) => a.pathById.get(node.id) ?? [])
+      : [];
+    const css = declarations ? buildFileAppearanceCSS(paths, declarations) : '';
+
+    const apply = (): boolean => {
+      const shadowRoot = model.getFileTreeContainer()?.shadowRoot;
+      if (!shadowRoot) return false;
+      let style = shadowRoot.querySelector<HTMLStyleElement>(
+        `style[${FILE_APPEARANCE_STYLE_ATTRIBUTE}]`,
+      );
+      if (!css) {
+        style?.remove();
+        return true;
+      }
+      if (!style) {
+        style = document.createElement('style');
+        style.setAttribute(FILE_APPEARANCE_STYLE_ATTRIBUTE, '');
+        shadowRoot.append(style);
+      }
+      if (style.textContent !== css) style.textContent = css;
+      return true;
+    };
+
+    if (apply()) return;
+    let frame = 0;
+    let attempts = 10;
+    const retry = () => {
+      attempts -= 1;
+      if (!apply() && attempts > 0) frame = requestAnimationFrame(retry);
+    };
+    frame = requestAnimationFrame(retry);
+    return () => cancelAnimationFrame(frame);
+  }, [adapterRef, model, props.fileAppearanceCSS, props.nodes]);
+
   useImperativeHandle(
     ref,
     (): ExplorerTreeHandle => ({
@@ -566,8 +629,6 @@ function ExplorerTreeInner<TData>(
   };
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
-    const onNodeClick = propsRef.current.onNodeClick;
-    if (!onNodeClick) return;
     const itemPath = getItemPathFromHostEvent(event);
     if (!itemPath) return;
     const a = adapterRef.current;
@@ -575,7 +636,17 @@ function ExplorerTreeInner<TData>(
     if (!id) return;
     const node = a.nodeById.get(id);
     if (!node) return;
-    onNodeClick(node, event);
+    // The tree toggles any container on a row click, before the click reaches
+    // this host listener. A file-appearance container opens on click instead, so
+    // only its chevron may expand or collapse it: undo the row-click toggle.
+    if (
+      node.isFolder &&
+      node.appearance === 'file' &&
+      !isItemToggleEventPath(getComposedPath(event))
+    ) {
+      asDirectory(getItemSafely(model, itemPath))?.toggle();
+    }
+    propsRef.current.onNodeClick?.(node, event);
   };
 
   const handleDropCapture = (event: DragEvent<HTMLElement>) => {
