@@ -22,14 +22,14 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 
 A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `const.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `constants.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
-New files use named exports (`export const PlanCard = …`), except entry modules a framework loads by default export: route segments under `src/routes` (see `spa-routes`) and Next.js `page.tsx` / `layout.tsx`. Lint does not enforce this everywhere: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`, so follow the rule by hand. Many existing components still default-export; keep an existing file's exports unchanged when moving it, so its callers do not change.
+New files use named exports (`export const PlanCard = …`), except modules a framework or tool loads by their default export, such as route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), and `*.config.ts` files. Lint does not enforce this everywhere: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`, so follow the rule by hand. Many existing components still default-export; keep an existing file's exports unchanged when moving it, so its callers do not change.
 
 ## 2. Tests
 
 - `src/**`: colocate `Foo.test.ts(x)` beside `Foo`. A component directory's test is `index.test.ts(x)`.
 - `apps/server/src/**` and `packages/**`: colocate by default. Use the directory's `__tests__/` when the domain requires it (database models and repositories, see `testing`), or when tests need shared fixtures, setup files, or several scenario files for one source (`services/comfyui/__tests__/`).
 - One directory uses one placement. When it already has `__tests__/`, new tests for that directory go there. Do not migrate an existing mixed directory as a side task.
-- Split a large test file by scenario: `Foo.<scenario>.test.ts` (`aiAgent/__tests__/execAgent.resume.test.ts`; `index.<scenario>.test.ts` for a directory entry). Put shared mock factories and fixtures in a `testUtils.ts` beside them; each test file keeps its own `vi.mock` calls, because Vitest hoists them per file.
+- Split a large test file by scenario: `Foo.<scenario>.test.ts(x)`, keeping the original extension (`aiAgent/__tests__/execAgent.resume.test.ts`; `index.<scenario>.test.ts(x)` for a directory entry). Put shared mock factories and fixtures in a `testUtils.ts` beside them; each test file keeps its own `vi.mock` calls, because Vitest hoists them per file.
 
 ## 3. File size
 

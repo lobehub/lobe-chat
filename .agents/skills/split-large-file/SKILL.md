@@ -53,7 +53,7 @@ Behavior the split moves unchanged and that had no test before stays "uncovered 
 
 ## 4. Move first, in its own commit
 
-Move the file and its tests together: `mkdir -p Foo && git mv Foo.tsx Foo/index.tsx` (`git mv` does not create the directory, and `Foo/` may already exist), then move each matching test keeping its extension (`Foo.test.tsx` → `Foo/index.test.tsx`, `Foo.<scenario>.test.ts` → `Foo/index.<scenario>.test.ts`). Rewrite only relative module specifiers in imports, `vi.mock`, and dynamic imports; run the tests by explicit path, and commit. Large extraction in the same commit lowers content similarity until Git stops detecting the rename. A separate move commit keeps the extraction diff reviewable on its own; a squash merge folds both commits together.
+Skip this step when the file is already a directory entry (`foo/index.ts`); extract siblings beside it instead. Otherwise move the file and its tests together: `mkdir -p Foo && git mv Foo.tsx Foo/index.tsx` (`git mv` does not create the directory, and `Foo/` may already exist), then move each matching test keeping its extension (`Foo.test.tsx` → `Foo/index.test.tsx`, `Foo.<scenario>.test.ts` → `Foo/index.<scenario>.test.ts`). Rewrite only relative module specifiers in imports, `vi.mock`, and dynamic imports; run the tests by explicit path, and commit. Large extraction in the same commit lowers content similarity until Git stops detecting the rename. A separate move commit keeps the extraction diff reviewable on its own; a squash merge folds both commits together.
 
 ## 5. Extract along the plan
 
@@ -68,7 +68,7 @@ Keep the public import path and exported names unchanged so callers do not chang
 
 ## 6. Split and trim the tests
 
-When the test file is large or covers distinct scenarios, split it by scenario (`index.render.test.ts`, `index.actions.test.ts`, …) with shared mocks in `testUtils.ts`, as `source-layout` §2 describes.
+When the test file is large or covers distinct scenarios, split it by scenario (`index.render.test.ts`, `index.actions.test.ts`, …; keep `.tsx` when the tests contain JSX) with shared mocks in `testUtils.ts`, as `source-layout` §2 describes.
 
 Preserve every observable behavior the old suite asserted. Remove a test or assertion only when it duplicates a named retained test, is coupled to implementation details (`testing` lists these), or checks an expectation that is demonstrably obsolete; record each removal and its replacement or evidence in the PR. Merge near-identical tests into `it.each`, and drop mock branches and translation keys nothing renders.
 
