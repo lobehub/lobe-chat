@@ -517,7 +517,6 @@
   "devices.remove.confirm": "移除此设备？",
   "devices.remove.confirmDesc": "这会断开设备与你账户的关联，但不会让设备登出，下次连接时它可重新注册。",
   "devices.remove.currentSessionWarning": "其中包含你当前正在使用的设备，移除后会断开当前会话。",
-  "devices.selection.total": "{{count}} 台设备",
   "devices.share.alreadyShared": "已共享",
   "devices.share.badge": "已共享到 {{count}} 个工作区",
   "devices.share.confirm": "共享",

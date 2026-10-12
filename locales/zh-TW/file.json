@@ -314,6 +314,7 @@
   "pageList.copySuccess": "頁面已複製",
   "pageList.copyTitle": "複製頁面",
   "pageList.copyTo": "複製到…",
+  "pageList.createFailed": "無法建立頁面",
   "pageList.duplicate": "建立副本",
   "pageList.empty": "尚無文稿，點擊上方按鈕建立你的第一篇文稿",
   "pageList.filter.all": "全部",
