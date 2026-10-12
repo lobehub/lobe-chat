@@ -64,11 +64,6 @@ export const useExplorationNavigation = (
       if (!containers.some((node) => node.id === id) && !virtualScope?.(id)) return;
       setState((previous) => ({ ...previous, path: [...path, id] }));
     },
-    /** Swap the current scope for a sibling, e.g. another stage of the same batch. */
-    switchTo: (id: string) => {
-      if (!virtualScope?.(id)) return;
-      setState((previous) => ({ ...previous, path: [...path.slice(0, -1), id] }));
-    },
     backTo: (depth: number) =>
       setState((previous) => ({ ...previous, path: path.slice(0, depth) })),
     toggle: (id: string) =>

@@ -5,6 +5,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { graphNodeKind } from '@/features/AgentGoals/Experiments/model';
+import { usePlanVersionSelection } from '@/features/AgentGoals/ProcessControl/BatchPlan/planVersion';
 import { coordinatorNodeTitleKey } from '@/features/AgentGoals/ProcessControl/coordinatorCopy';
 import { buildGoalGraphView } from '@/features/AgentGoals/ProcessControl/goalGraphViewModel';
 import {
@@ -27,6 +28,8 @@ const Title = memo(() => {
   const { t } = useTranslation('chat');
   const view = useChatStore(chatPortalSelectors.goalNodeView);
   const snapshot = useGoalStore(goalSelectors.goalGraph(view?.goalId ?? ''));
+  // A plan's title names the version the header picked.
+  const { selected } = usePlanVersionSelection();
   const node = useMemo(() => {
     if (!snapshot || !view) return undefined;
     const graph = buildGoalGraphView(snapshot);
@@ -36,8 +39,11 @@ const Title = memo(() => {
     const revision = findBatchGate(graph, nodeView.node.id)?.round.revision;
     const plan = findBatchPlan(graph, nodeView.node.id);
     const titleKey = coordinatorNodeTitleKey(nodeView);
+    const planRound = plan
+      ? (plan.model.rounds.find((item) => item.revision === selected) ?? plan.round)
+      : undefined;
     const title = plan
-      ? t(batchPlanTitleKey(plan.model, plan.round), { revision: plan.round.revision })
+      ? t(batchPlanTitleKey(plan.model, planRound!), { revision: planRound!.revision })
       : revision && revision > 1
         ? t('goalBatch.gate.titleRound', { revision })
         : titleKey
@@ -49,7 +55,7 @@ const Title = memo(() => {
       skill: !!plan?.model.planSkill,
       title,
     };
-  }, [snapshot, view, t]);
+  }, [snapshot, view, t, selected]);
 
   return (
     // Hug the content so the shared `…` sits right after the title.

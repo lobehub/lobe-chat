@@ -725,8 +725,6 @@ export const BatchWavesGroup = memo<NodeProps>(({ data }) => {
 BatchWavesGroup.displayName = 'GoalBatchWavesGroup';
 
 export interface BatchRoundFrameData extends Record<string, unknown> {
-  /** Instead of "第 N 轮", e.g. the cold start's frame in an entered batch. */
-  label?: string;
   revision: number;
 }
 
@@ -737,7 +735,7 @@ export interface BatchRoundFrameData extends Record<string, unknown> {
  * sides, level with its label.
  */
 export const BatchRoundFrame = memo<NodeProps>(({ data }) => {
-  const { label, revision } = data as BatchRoundFrameData;
+  const { revision } = data as BatchRoundFrameData;
   const { t } = useTranslation('chat');
   return (
     <div className={styles.frame}>
@@ -757,7 +755,7 @@ export const BatchRoundFrame = memo<NodeProps>(({ data }) => {
         style={{ top: BATCH_FRAME_HEAD / 2 }}
         type="source"
       />
-      <div className={styles.frameHead}>{label ?? t('goalBatch.round.title', { revision })}</div>
+      <div className={styles.frameHead}>{t('goalBatch.round.title', { revision })}</div>
     </div>
   );
 });

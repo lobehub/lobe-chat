@@ -41,10 +41,11 @@ export default {
   'goalBatch.cell.stale': 'Superseded',
   'goalBatch.cell.tooltip': 'Wave {{wave}} · item {{index}} · {{title}} · {{state}}',
   'goalBatch.enter': 'Open',
-  'goalBatch.planPanel.diff': 'What changed from v{{base}} to v{{revision}}',
+  'goalBatch.planPanel.compare': 'Compare versions',
+  'goalBatch.planPanel.compareTitle': 'Compare plan versions',
   'goalBatch.planPanel.forked':
     'A forked plan: it starts again from the batch’s original outline instead of revising the previous version',
-  'goalBatch.planPanel.full': 'v{{revision}} in full',
+  'goalBatch.planPanel.latest': 'v{{revision}} · latest',
   'goalBatch.planPanel.same': 'Same as v{{base}}',
   'goalBatch.probes.cell.backlog': 'Not started',
   'goalBatch.probes.cell.done': 'Done',

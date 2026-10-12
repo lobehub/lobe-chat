@@ -835,24 +835,6 @@ const Canvas = memo<
     // nodes; their cards and squares open the real node underneath.
     const batchFlowNodes: FlowNode[] = useMemo(
       () => [
-        // The entered batch's rounds, each a frame around its plan, gate and units.
-        ...(scopeLayout?.frames ?? []).map(
-          (frame) =>
-            ({
-              data: {
-                label: frame.revision ? undefined : t('goalBatch.probes.title'),
-                revision: frame.revision,
-              } satisfies BatchRoundFrameData,
-              draggable: false,
-              id: frame.id,
-              position: { x: frame.box.x, y: frame.box.y },
-              selectable: false,
-              style: { height: frame.box.height, width: frame.box.width },
-              type: 'goalBatchRound',
-              width: frame.box.width,
-              zIndex: -1,
-            }) satisfies FlowNode,
-        ),
         ...[...batches].flatMap(([batchId, { layout, model }]) => {
           if (!layout || !visibleIds.has(batchId)) return [];
           const [first] = model.rounds;
@@ -911,7 +893,7 @@ const Canvas = memo<
           });
         }),
       ],
-      [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap, scopeLayout, t],
+      [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap],
     );
 
     const flowEdges: FlowEdge[] = useMemo(() => {
@@ -1278,18 +1260,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
       {navigation.path.map((id, index) => (
         <Flexbox horizontal align={'center'} gap={4} key={id}>
           <ChevronRight size={14} />
-          {index === navigation.path.length - 1 && scopeStage ? (
-            // Inside a stage, the crumb is the stage switcher itself.
-            <Segmented
-              aria-current={'page'}
-              size={'small'}
-              value={id}
-              options={[...batchStageScopes]
-                .filter(([, stage]) => stage.model.batchId === scopeStage.model.batchId)
-                .map(([stageId, stage]) => ({ label: stageLabel(stage.revision), value: stageId }))}
-              onChange={(next) => navigation.switchTo(String(next))}
-            />
-          ) : index === navigation.path.length - 1 ? (
+          {index === navigation.path.length - 1 ? (
             <Text aria-current={'page'} fontSize={12}>
               {scopeLabel(id)}
             </Text>
