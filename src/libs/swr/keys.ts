@@ -99,6 +99,14 @@ export const messageKeys = {
     normalizeMessageListQueryContext(context),
     MESSAGE_CACHE_VERSION,
   ]),
+  /**
+   * Stored payload of a tool message the read path projected away. Immutable
+   * per message id, so it rides the IndexedDB tier (capped in `CACHE_TIERS`).
+   */
+  toolResultPayload: def('message:toolResultPayload', (messageId: string) => [
+    'message:toolResultPayload',
+    messageId,
+  ]),
 };
 
 /**
