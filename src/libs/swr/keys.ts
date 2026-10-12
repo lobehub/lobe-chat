@@ -380,12 +380,6 @@ export const briefKeys = {
   ]),
 };
 
-// ---- home inbox ---------------------------------------------------------
-export const homeInboxKeys = {
-  /** Account-wide topics powering the home inbox (running + unread + needs-input). */
-  topics: def('home:inboxTopics', (isLogin: boolean) => ['home:inboxTopics', isLogin]),
-};
-
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
   available: def('agent:available', () => ['agent:available']),
@@ -1048,10 +1042,6 @@ export const topicActionKeys = {
 };
 
 // ---- misc remaining domains ---------------------------------------------
-export const homeKeys = {
-  dailyBrief: def('home:dailyBrief', (userId: string) => ['home:dailyBrief', userId]),
-};
-
 /**
  * Daily task-template recommendation cache schema version. Bump this when the
  * persisted recommendation row shape changes incompatibly so desktop clients
@@ -1077,25 +1067,6 @@ export const resourceKeys = {
     params,
     workspaceId,
   ]),
-  // Every Resources cache entry is workspace-scoped: the same visibility means
-  // different rows in each workspace, so leaving `workspaceId` out of the key
-  // makes a workspace switch serve the previous workspace's rows from cache.
-  recentFiles: def(
-    'resource:recentFiles',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentFiles',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
-  recentPages: def(
-    'resource:recentPages',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentPages',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
 };
 export const recommendationsKeys = {
   heteroDetections: def('recommendations:heteroDetections', () => [
@@ -1163,7 +1134,6 @@ export const swrKeys = {
   goal: goalKeys,
   global: globalKeys,
   group: groupKeys,
-  home: homeKeys,
   image: imageKeys,
   imessage: imessageKeys,
   inbox: inboxKeys,
