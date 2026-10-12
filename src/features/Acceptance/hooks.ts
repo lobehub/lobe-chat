@@ -7,11 +7,14 @@ import { useClientDataSWR } from '@/libs/swr';
 import { verifyKeys } from '@/libs/swr/keys';
 import { documentService } from '@/services/document';
 import type {
+  AcceptanceBySubject,
   AcceptanceListFilter,
   AcceptanceListPage,
+  AcceptanceListQuery,
   VerifyReportSummaryPage,
 } from '@/services/verify';
 import { verifyService } from '@/services/verify';
+import { useVerifyStore } from '@/store/verify';
 
 const VERIFY_REPORT_PAGE_SIZE = 30;
 const ACCEPTANCE_PAGE_SIZE = 30;
@@ -68,22 +71,48 @@ export const useVerifyReportBundle = (verifyRunId: string | null) =>
 
 export { useAcceptanceBundle } from './Viewer/useAcceptanceBundle';
 
-/** The optional acceptance aggregate attached to a task/topic/document subject. */
+/** What `useAcceptanceBySubject` hands its readers — the former SWR response shape. */
+export interface AcceptanceBySubjectSync {
+  /** The attachment from the replica view; `undefined` until hydrated or fetched. */
+  data: AcceptanceBySubject | undefined;
+  error: unknown;
+  /** Nothing to show yet, and a hydration or fetch is still outstanding. */
+  isLoading: boolean;
+  isValidating: boolean;
+  /** Re-read the attachment and resolve with the freshly read value. */
+  mutate: () => Promise<AcceptanceBySubject | undefined>;
+}
+
+/**
+ * The optional acceptance aggregate attached to a task/topic/document subject,
+ * read from the verify store's replica of `acceptanceBySubjectMap`. A subject
+ * can mount before its first Verify Run creates the aggregate, so the sync
+ * polls fastest until one exists and then keeps it live until it settles.
+ */
 export const useAcceptanceBySubject = (
   subjectType: AcceptanceSubjectType,
   subjectId: string | null,
-) =>
-  useClientDataSWR(
-    subjectId ? verifyKeys.acceptanceBySubject(subjectType, subjectId) : null,
-    () => verifyService.getAcceptanceBySubject(subjectType, subjectId!),
-    {
-      ...ACCEPTANCE_BUNDLE_SWR_CONFIG,
-      // A task can mount before its first Verify Run creates the aggregate.
-      // Discover that server-side transition without requiring focus/reload,
-      // then stop polling as soon as the Acceptance exists.
-      refreshInterval: getAcceptanceBySubjectRefreshInterval,
+): AcceptanceBySubjectSync => {
+  const useFetchAcceptanceBySubject = useVerifyStore((s) => s.useFetchAcceptanceBySubject);
+  const key = subjectId ? `${subjectType}:${subjectId}` : undefined;
+  const data = useVerifyStore((s) => (key ? s.acceptanceBySubjectMap[key] : undefined));
+
+  const sync = useFetchAcceptanceBySubject(subjectType, subjectId, {
+    refreshInterval: getAcceptanceBySubjectRefreshInterval(data),
+  });
+
+  return {
+    data,
+    error: sync.error,
+    // A read with no subject has nothing to load — never report it as loading.
+    isLoading: !!subjectId && !data && !sync.error && (sync.isValidating || !sync.isHydrated),
+    isValidating: sync.isValidating,
+    mutate: async () => {
+      await sync.revalidate();
+      return key ? useVerifyStore.getState().acceptanceBySubjectMap[key] : undefined;
     },
-  );
+  };
+};
 
 /**
  * The caller's recent acceptance aggregates (with subject headers) — the list
@@ -96,17 +125,20 @@ export const useAcceptanceBySubject = (
  */
 export const useAcceptanceList = (
   enabled: boolean,
-  options?: {
-    filter?: 'active' | 'all' | 'completed';
+  options?: AcceptanceListQuery & {
     limit?: number;
-    projectId?: string;
     q?: string;
     revalidateOnMount?: boolean;
   },
 ) =>
   useClientDataSWR(
     enabled
-      ? verifyKeys.acceptances(options?.limit, options?.q, options?.filter, options?.projectId)
+      ? verifyKeys.acceptances(options?.limit, options?.q, {
+          filter: options?.filter,
+          projectId: options?.projectId,
+          scope: options?.scope,
+          source: options?.source,
+        })
       : null,
     () =>
       verifyService.listAcceptances({
@@ -114,6 +146,8 @@ export const useAcceptanceList = (
         limit: options?.limit,
         projectId: options?.projectId,
         q: options?.q,
+        scope: options?.scope,
+        source: options?.source,
       }),
     {
       ...VERIFY_REPORT_SWR_CONFIG,
@@ -140,9 +174,10 @@ export const useAcceptancePurgePreview = (acceptanceId: string | null) =>
  */
 export const useAcceptanceListInfinite = (
   filter: AcceptanceListFilter | null,
-  projectId?: string,
+  query: Omit<AcceptanceListQuery, 'filter'> = {},
 ) => {
   const workspaceId = useActiveWorkspaceId();
+  const { projectId, scope, source } = query;
 
   const getKey = useCallback(
     (_index: number, previous: AcceptanceListPage | null) => {
@@ -150,29 +185,32 @@ export const useAcceptanceListInfinite = (
       if (!filter) return null;
       return verifyKeys.acceptancePage(
         workspaceId ?? undefined,
-        filter,
-        projectId,
+        { filter, projectId, scope, source },
         previous?.nextCursor ?? undefined,
       );
     },
-    [filter, projectId, workspaceId],
+    [filter, projectId, scope, source, workspaceId],
   );
 
   const { data, error, isLoading, mutate, setSize, size } = useSWRInfinite(
     getKey,
-    ([, , , scopedProjectId, cursor]: readonly [string, string, string, string, string]) =>
+    // Read the narrowing from the closure, not the key: the key spells the
+    // unfiled project as a sentinel string, the server wants `null`.
+    (key: readonly string[]) =>
       verifyService.listAcceptancePage({
-        cursor: cursor || undefined,
+        cursor: key.at(-1) || undefined,
         filter: filter ?? undefined,
         limit: ACCEPTANCE_PAGE_SIZE,
-        projectId: scopedProjectId || undefined,
+        projectId,
+        scope,
+        source,
       }),
     { ...VERIFY_REPORT_SWR_CONFIG, revalidateFirstPage: false },
   );
 
   useEffect(() => {
     setSize(1);
-  }, [filter, projectId, workspaceId, setSize]);
+  }, [filter, projectId, scope, source, workspaceId, setSize]);
 
   const loadMore = useCallback(() => {
     void setSize((s) => s + 1);

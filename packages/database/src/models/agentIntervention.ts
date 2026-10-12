@@ -30,6 +30,7 @@ import {
   userSettings,
 } from '../schemas';
 import type { LobeChatDatabase, Transaction } from '../type';
+import { notTrashed } from '../utils/softDelete';
 
 export const AGENT_INTERVENTION_INVALID_REVIEW_TOKEN_HASH =
   'AGENT_INTERVENTION_INVALID_REVIEW_TOKEN_HASH';
@@ -600,15 +601,26 @@ export class AgentInterventionModel {
    * actions. The correlation pair is not authority: callers must still load
    * the owning operation, apply resource ACL, and then rebuild the
    * owner/workspace-scoped model before reading or claiming the batch.
+   *
+   * Use when:
+   * - Resolving an authenticated callback without a review token.
+   *
+   * Expects:
+   * - Batch or callback identity when an operation/tool pair has multiple rows.
+   *
+   * Returns:
+   * - The exact locator, undefined if absent, or an error for ambiguous legacy input.
+   * - Never substitutes a newer pending batch for an older client action.
    */
   static locateByOperationAndToolCall = async (
     db: LobeChatDatabase,
     operationId: string,
     toolCallId: string,
+    callback?: { batchId?: string; interventionId?: string },
   ): Promise<AgentInterventionLocator | undefined> => {
     if (!operationId.trim() || !toolCallId.trim()) return undefined;
 
-    const [row] = await db
+    const rows = await db
       .select({
         activityKey: agentInterventions.activityKey,
         batchId: agentInterventions.batchId,
@@ -625,11 +637,17 @@ export class AgentInterventionModel {
         and(
           eq(agentInterventions.operationId, operationId),
           eq(agentInterventions.toolCallId, toolCallId),
+          callback?.batchId ? eq(agentInterventions.batchId, callback.batchId) : undefined,
+          callback?.interventionId
+            ? sql`${agentInterventions.sanitizedRequest}->>'interventionId' = ${callback.interventionId}`
+            : undefined,
         ),
       )
-      .limit(1);
+      .limit(2);
 
-    return row;
+    if (rows.length > 1)
+      throw new Error('Ambiguous intervention callback; batch or callback identity is required');
+    return rows[0];
   };
 
   /** System-only owner/workspace recovery for post-claim delivery callbacks. */
@@ -2049,6 +2067,7 @@ export class AgentInterventionModel {
           this.workspaceId
             ? eq(messages.workspaceId, this.workspaceId)
             : isNull(messages.workspaceId),
+          notTrashed(messages.isDeleted),
         ),
       )
       .limit(1)
@@ -2190,6 +2209,7 @@ export class AgentInterventionModel {
           this.workspaceId
             ? eq(messages.workspaceId, this.workspaceId)
             : isNull(messages.workspaceId),
+          notTrashed(messages.isDeleted),
         ),
       )
       .limit(1)

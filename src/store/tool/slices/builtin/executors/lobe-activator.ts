@@ -21,6 +21,7 @@ import { SkillsExecutionRuntime } from '@lobechat/builtin-tool-skills/executionR
 import { filterBuiltinSkills } from '@/helpers/skillFilters';
 import { agentSkillService } from '@/services/skill';
 import { getToolStoreState } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { toolSelectors } from '@/store/tool/selectors/tool';
 import { LobehubSkillStatus } from '@/store/tool/slices/lobehubSkillStore';
 
@@ -67,7 +68,7 @@ const service: ActivatorRuntimeService = {
       }
 
       // Search installed plugins
-      const plugin = s.installedPlugins.find((p) => p.identifier === id);
+      const plugin = pluginSelectors.getInstalledPluginById(id)(s);
       if (plugin?.manifest) {
         results.push({
           apiDescriptions: (plugin.manifest.api || []).map((a) => ({

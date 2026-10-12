@@ -37,6 +37,8 @@ const createMockState = (overrides: Partial<State> = {}): State => ({
   dbMessages: [],
   displayMessages: [],
   hooks: {},
+  isLoadingEarlierMessages: false,
+  messageReplica: { entries: {} } as State['messageReplica'],
   messagesInit: false,
   operationState: DEFAULT_OPERATION_STATE,
   skipFetch: false,

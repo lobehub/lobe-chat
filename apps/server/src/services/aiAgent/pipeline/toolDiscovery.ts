@@ -9,6 +9,7 @@ import {
   shouldExposeSelfFeedbackIntentTool,
 } from '@lobechat/builtin-tool-self-iteration';
 import { manualModeExcludeToolIds } from '@lobechat/builtin-tools';
+import { getFeatureDisabledToolIds } from '@lobechat/builtin-tools/featureGates';
 import type {
   AgentGroupConfig,
   LobeToolManifest,
@@ -24,8 +25,9 @@ import {
   resolveDiscoveryPool,
   resolveInvocationToolIds,
 } from '@lobechat/mecha';
-import { FILE_INLINE_MAX_CHARS, isOversizedFileContent } from '@lobechat/prompts';
+import { FILE_PREVIEW_CHARS, isOversizedFileContent } from '@lobechat/prompts';
 import type {
+  BuiltinToolResolveContext,
   ChatTopicBotContext,
   FrozenCredentialFacts,
   FrozenModelFacts,
@@ -60,6 +62,7 @@ import {
 } from '@/helpers/executionTarget';
 import { buildConnectorManifests } from '@/libs/mcp/buildConnectorManifests';
 import { patchManifestWithPermissions } from '@/libs/mcp/connectorPermissionCheck';
+import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFlags';
 import { resolveModelMediaCapabilities } from '@/server/modules/AgentRuntime/resolveModelMediaCapabilities';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import type { ServerAgentToolsContext } from '@/server/modules/Mecha';
@@ -281,7 +284,7 @@ export const discoverTools = async (
     disableLocalSystem,
     disableSelfFeedbackIntentTool,
     disableTools,
-    disabledPluginIds,
+    disabledPluginIds: requestedDisabledPluginIds,
     discordContext,
     exclusivePluginIds,
     externalFileTypes: rawExternalFileTypes,
@@ -297,6 +300,15 @@ export const discoverTools = async (
     throwIfExecutionAborted,
     topicBoundDeviceId,
   } = input;
+  // Feature-flagged builtin tools (e.g. lobe-dashboard) leave the pool while
+  // their flag is off for this user; a flag read failure keeps them out.
+  const featureFlags = await getServerFeatureFlagsStateFromRuntimeConfig(deps.userId).catch(
+    () => undefined,
+  );
+  const disabledPluginIds = [
+    ...requestedDisabledPluginIds,
+    ...getFeatureDisabledToolIds(featureFlags),
+  ];
 
   let tools: any[] | undefined;
   /** Started once the tool set is known; awaited at the return. */
@@ -509,8 +521,11 @@ export const discoverTools = async (
   }
 
   /**
-   * Whether this turn sends any file as a truncated preview (see `previewLongFileContent`):
-   * an enabled agent file, or a parsed attachment of this turn or topic, over the inline limit.
+   * Whether this turn can send any file as a truncated preview (see `previewLongFileContent`):
+   * an enabled agent file over the inline limit, or a parsed attachment of this turn or topic
+   * longer than a preview. Attachments under the inline limit are still previewed once the
+   * request's attachment budget is spent (`planAttachmentPreviews`), which is only known per step,
+   * so any attachment a preview would shorten enables the tool.
    * Enables the attachments tool in the modes whose rules include it (agent / chat). The preview
    * only names `readAttachment` when the final tool set carries it (see `MessagesEngine`), so
    * custom / exclusive tool turns and share visitors fall back to a plain preview.
@@ -527,7 +542,7 @@ export const discoverTools = async (
     return traceDiscoveryStage('oversized_files', () =>
       new DocumentModel(deps.db, deps.userId, deps.workspaceId).hasFileDocumentsOverChars({
         fileIds: attachedFileIds,
-        minChars: FILE_INLINE_MAX_CHARS,
+        minChars: FILE_PREVIEW_CHARS,
         topicId,
       }),
     );
@@ -1058,6 +1073,38 @@ export const discoverTools = async (
     const activeComposioManifests = dropDisabledManifests(composioManifests);
     const activeConnectorManifests = dropDisabledManifests(connectorManifests);
 
+    // Context-aware builtin manifests: inside a sub-agent (or group) run,
+    // lobe-agent drops `callSubAgent` so the model can't recurse into nested
+    // sub-agents (which the runtime rejects, looping until the inactivity
+    // watchdog kills the op). Mirrors the frontend `createAgentToolsEngine`.
+    // `executionEnv` mirrors the resolved plan, while preserving the local
+    // target for a routed desktop because its readFile implementation can
+    // return images. It also keeps the `device-unrouted` degradation, where
+    // the user picked a local device that is offline and exec silently lands
+    // in the sandbox.
+    // For bot conversations we also pass the IM platform so `lobe-message`
+    // can drop APIs the platform can't fulfil (e.g. WeChat has no
+    // `readMessages`). Telegram Guest Mode uses a stricter overlay —
+    // the bot is not a chat member and has no regular channel tools.
+    // The discovery pool below resolves with the same context, so a tool
+    // activated mid-run carries the trimmed manifest too.
+    const manifestContext: BuiltinToolResolveContext = {
+      ...(botContext?.platform && {
+        botPlatform: {
+          id: botContext.platform,
+          unsupportedMessageApis: resolveUnsupportedMessageApis(
+            botContext.platform,
+            botContext.platformThreadId,
+          ),
+        },
+      }),
+      executionEnv: executionPlanToManifestExecutionEnv(executionPlan, localDeviceId),
+      executionEnvUnroutedReason:
+        executionPlan.kind === 'device-unrouted' ? executionPlan.reason : undefined,
+      isSubAgent: appContext?.isSubAgent,
+      scope: appContext?.scope ?? undefined,
+    };
+
     toolsEngine = createServerAgentToolsEngine(toolsContext, {
       additionalManifests: [
         ...activeLobehubSkillManifests,
@@ -1089,35 +1136,7 @@ export const discoverTools = async (
       isBotConversation,
       isGroupSupervisor,
       modelAbilities,
-      // Context-aware builtin manifests: inside a sub-agent (or group) run,
-      // lobe-agent drops `callSubAgent` so the model can't recurse into nested
-      // sub-agents (which the runtime rejects, looping until the inactivity
-      // watchdog kills the op). Mirrors the frontend `createAgentToolsEngine`.
-      // `executionEnv` mirrors the resolved plan, while preserving the local
-      // target for a routed desktop because its readFile implementation can
-      // return images. It also keeps the `device-unrouted` degradation, where
-      // the user picked a local device that is offline and exec silently lands
-      // in the sandbox.
-      // For bot conversations we also pass the IM platform so `lobe-message`
-      // can drop APIs the platform can't fulfil (e.g. WeChat has no
-      // `readMessages`). Telegram Guest Mode uses a stricter overlay —
-      // the bot is not a chat member and has no regular channel tools.
-      manifestContext: {
-        ...(botContext?.platform && {
-          botPlatform: {
-            id: botContext.platform,
-            unsupportedMessageApis: resolveUnsupportedMessageApis(
-              botContext.platform,
-              botContext.platformThreadId,
-            ),
-          },
-        }),
-        executionEnv: executionPlanToManifestExecutionEnv(executionPlan, localDeviceId),
-        executionEnvUnroutedReason:
-          executionPlan.kind === 'device-unrouted' ? executionPlan.reason : undefined,
-        isSubAgent: appContext?.isSubAgent,
-        scope: appContext?.scope ?? undefined,
-      },
+      manifestContext,
       model,
       provider,
       useApplicationBuiltinSearchTool: searchDecision.useApplicationBuiltinSearchTool,
@@ -1177,6 +1196,7 @@ export const discoverTools = async (
       exclusivePluginIds,
       executionTarget: executionPlan.target,
       lobehubSkills: activeLobehubSkillManifests,
+      manifestContext,
     });
     Object.assign(toolManifestMap, discovery.manifestMap);
     Object.assign(toolSourceMap, discovery.sourceMap);

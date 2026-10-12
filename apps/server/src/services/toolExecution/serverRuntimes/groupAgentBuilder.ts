@@ -266,7 +266,15 @@ export const groupAgentBuilderRuntime: ServerRuntimeRegistration = {
         const { query, limit = 10 } = params;
 
         try {
-          const results = await agentModel.queryAgents({ keyword: query, limit });
+          // A builtin can never join a group (`addAgentsToGroup` refuses it), so
+          // the inbox has to be excluded by the query itself: filtering the page
+          // afterwards lets a recently updated inbox consume a `limit` slot and
+          // hide an addable agent behind it.
+          const results = await agentModel.queryAgents({
+            includeInbox: false,
+            keyword: query,
+            limit,
+          });
           const agents = results.map((agent) => ({
             avatar: agent.avatar ?? undefined,
             description: agent.description ?? undefined,
@@ -821,7 +829,18 @@ export const groupAgentBuilderRuntime: ServerRuntimeRegistration = {
           };
         }
 
-        if (groupId) await assertGroupEditable(groupId);
+        try {
+          if (groupId) await assertGroupEditable(groupId);
+
+          // Group edit alone is not enough (same rule as `updateAgentPrompt`):
+          // a linked standalone member keeps its own ACL, and model / provider /
+          // plugins are edit-level config that also apply outside this group.
+          if ((await getConfigAccess('agent', agentId)) !== 'full') {
+            return configAccessDenied(agentId);
+          }
+        } catch (error) {
+          return handleError(error, 'Failed to update agent config');
+        }
 
         return builder.updateConfig(rest, withEditingAgent(ctx, agentId));
       },
@@ -844,7 +863,15 @@ export const groupAgentBuilderRuntime: ServerRuntimeRegistration = {
           };
         }
 
-        if (groupId) await assertGroupEditable(groupId);
+        try {
+          if (groupId) await assertGroupEditable(groupId);
+
+          if ((await getConfigAccess('agent', agentId)) !== 'full') {
+            return configAccessDenied(agentId);
+          }
+        } catch (error) {
+          return handleError(error, 'Failed to install plugin');
+        }
 
         return builder.installPlugin(params, withEditingAgent(ctx, agentId));
       },

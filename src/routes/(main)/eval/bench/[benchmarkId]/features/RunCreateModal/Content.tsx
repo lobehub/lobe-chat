@@ -6,12 +6,14 @@ import {
   Accordion,
   ActionIcon,
   Avatar,
+  Input,
+  InputNumber,
   Select,
   Text,
   toast,
   useModalContext,
 } from '@lobehub/ui/base-ui';
-import { Form, Input, InputNumber, Space } from 'antd';
+import { Form, useForm, useWatch } from '@lobehub/ui/base-ui/form';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
@@ -21,7 +23,7 @@ import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspa
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { agentService } from '@/services/agent';
-import { useEvalStore } from '@/store/eval';
+import { datasetSelectors, useEvalStore } from '@/store/eval';
 
 const DEFAULT_MAX_STEPS = 100;
 const DEFAULT_TIMEOUT_MINUTES = 30;
@@ -60,6 +62,15 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
+interface RunCreateFormValues {
+  datasetId?: string;
+  k?: number | null;
+  maxSteps?: number | null;
+  name?: string;
+  targetAgentId?: string;
+  timeoutMinutes?: number | null;
+}
+
 interface AgentOption {
   avatar?: string | null;
   backgroundColor?: string | null;
@@ -95,11 +106,17 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
   const createRun = useEvalStore((s) => s.createRun);
   const startRun = useEvalStore((s) => s.startRun);
-  const datasetList = useEvalStore((s) => s.datasetList);
-  const [form] = Form.useForm();
-  const kValue = Form.useWatch('k', form) ?? 1;
-
+  const datasetList = useEvalStore(datasetSelectors.datasetList(benchmarkId));
   const isDatasetMode = !!datasetId && !!datasetName;
+  const form = useForm<RunCreateFormValues>({
+    initialValues: {
+      datasetId: datasetId && !isDatasetMode ? datasetId : undefined,
+      k: 1,
+      maxSteps: DEFAULT_MAX_STEPS,
+      timeoutMinutes: DEFAULT_TIMEOUT_MINUTES,
+    },
+  });
+  const kValue = useWatch(form, 'k') ?? 1;
 
   const [agents, setAgents] = useState<AgentOption[]>([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
@@ -107,16 +124,12 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
   useEffect(() => {
     setLoadingAgents(true);
     agentService
-      .queryAgents()
+      // The inbox is added locally as `inboxAgent` just below; asking the query
+      // for it as well would offer Lobe AI twice under two different ids.
+      .queryAgents({ includeInbox: false })
       .then((list) => setAgents(list as AgentOption[]))
       .finally(() => setLoadingAgents(false));
   }, []);
-
-  useEffect(() => {
-    if (datasetId && !isDatasetMode) {
-      form.setFieldsValue({ datasetId });
-    }
-  }, [datasetId, isDatasetMode, form]);
 
   const inboxAgent: AgentOption = useMemo(
     () => ({
@@ -164,12 +177,9 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
 
   const submit = useCallback(
     async (shouldStart: boolean) => {
-      let values;
-      try {
-        values = await form.validateFields();
-      } catch {
-        return;
-      }
+      const { valid } = await form.validate();
+      if (!valid) return;
+      const values = form.getValues();
       onLoadingChange?.(true);
       try {
         const maxSteps = values.maxSteps ?? DEFAULT_MAX_STEPS;
@@ -181,7 +191,7 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
             maxSteps,
             timeout: timeoutMinutes * 60_000,
           },
-          datasetId: isDatasetMode ? datasetId : values.datasetId,
+          datasetId: (isDatasetMode ? datasetId : values.datasetId)!,
           experimentId,
           name: values.name,
           targetAgentId: values.targetAgentId,
@@ -229,10 +239,10 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
 
   return (
     <Form form={form} layout="vertical">
-      <Form.Item
+      <Form.Field
         label={t('run.create.name')}
         name="name"
-        rules={[{ message: t('run.create.name.required'), required: true }]}
+        required={t('run.create.name.required')}
         extra={
           <Text
             className={styles.timestampLink}
@@ -240,7 +250,7 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
             onClick={() => {
               const now = new Date();
               const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-              form.setFieldsValue({ name: ts });
+              form.setValue('name', ts);
             }}
           >
             {t('run.create.name.useTimestamp')}
@@ -248,12 +258,12 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
         }
       >
         <Input placeholder={t('run.create.name.placeholder')} variant="filled" />
-      </Form.Item>
+      </Form.Field>
 
-      <Form.Item
+      <Form.Field
         label={t('run.create.agent')}
         name="targetAgentId"
-        rules={[{ message: t('run.create.agent.required'), required: true }]}
+        required={t('run.create.agent.required')}
       >
         <Select
           allowClear
@@ -281,32 +291,32 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
             </span>
           )}
         />
-      </Form.Item>
+      </Form.Field>
 
       {!isDatasetMode && (
-        <Form.Item
+        <Form.Field
           label={t('run.create.dataset')}
           name="datasetId"
-          rules={[{ message: t('run.create.dataset.required'), required: true }]}
+          required={t('run.create.dataset.required')}
         >
           <Select
             placeholder={t('run.create.dataset.placeholder')}
             variant="filled"
             options={datasetList.map((ds) => ({
               label: (
-                <Space>
+                <Flexbox horizontal align={'center'} gap={8}>
                   <span>{ds.name}</span>
                   {ds.testCaseCount !== undefined && (
                     <span style={{ color: cssVar.colorTextQuaternary, fontSize: 12 }}>
                       {t('run.create.caseCount', { count: ds.testCaseCount })}
                     </span>
                   )}
-                </Space>
+                </Flexbox>
               ),
               value: ds.id,
             }))}
           />
-        </Form.Item>
+        </Form.Field>
       )}
 
       <Accordion
@@ -318,11 +328,10 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
           {
             children: (
               <Flexbox gap={16} style={{ paddingTop: 8 }}>
-                <Form.Item
-                  initialValue={1}
+                <Form.Field
                   label={t('run.config.k')}
                   name="k"
-                  style={{ marginBottom: 0 }}
+                  style={{ paddingBlock: 0 }}
                   extra={
                     <span className={styles.hint}>{t('run.config.k.hint', { k: kValue })}</span>
                   }
@@ -334,13 +343,12 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
                     style={{ width: '100%' }}
                     variant="filled"
                   />
-                </Form.Item>
-                <Form.Item
+                </Form.Field>
+                <Form.Field
                   extra={<span className={styles.hint}>{t('run.config.maxSteps.hint')}</span>}
-                  initialValue={DEFAULT_MAX_STEPS}
                   label={t('run.config.maxSteps')}
                   name="maxSteps"
-                  style={{ marginBottom: 0 }}
+                  style={{ paddingBlock: 0 }}
                 >
                   <InputNumber
                     max={1000}
@@ -349,12 +357,11 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
                     style={{ width: '100%' }}
                     variant="filled"
                   />
-                </Form.Item>
-                <Form.Item
-                  initialValue={DEFAULT_TIMEOUT_MINUTES}
+                </Form.Field>
+                <Form.Field
                   label={t('run.config.timeout')}
                   name="timeoutMinutes"
-                  style={{ marginBottom: 0 }}
+                  style={{ paddingBlock: 0 }}
                 >
                   <InputNumber
                     max={MAX_TIMEOUT_MINUTES}
@@ -363,7 +370,7 @@ const RunCreateContent: FC<RunCreateContentProps> = ({
                     suffix={t('run.config.timeout.unit')}
                     variant="filled"
                   />
-                </Form.Item>
+                </Form.Field>
               </Flexbox>
             ),
             key: 'advanced',

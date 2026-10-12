@@ -24,6 +24,7 @@ import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from '../verdict
 import { canReviewAcceptance } from '../visibility';
 import DecisionBar from './DecisionBar';
 import FeedbackDrawer, { type FeedbackListEntry } from './FeedbackDrawer';
+import { draftRepairPromptInMobile } from './mobileBridge';
 import { openAcceptModal, openGroupFeedbackModal, openRejectModal } from './modals';
 import { rejectCopyOnly } from './rejectCopyOnly';
 
@@ -226,6 +227,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
           })
         }
         onCopyReview={async () => {
+          if (draftRepairPromptInMobile(acceptance.id, repairPrompt)) return;
           await copyToClipboard(repairPrompt);
           toast.success({
             placement: 'top',
@@ -238,6 +240,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
             // viewer's promise, not the server's gate — the copy path below
             // opts out of dispatch explicitly.
             dispatchAvailable: Boolean(data.origin?.topic),
+            acceptanceId: acceptance.id,
             onConfirm: async (comment) => {
               if (!data.origin?.topic) {
                 const rejected = await runAction(() =>

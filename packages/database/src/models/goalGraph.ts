@@ -6,6 +6,7 @@ import type {
   GoalEventActorType,
   GoalEventEntityType,
   GoalEventType,
+  GoalGraphEvent,
   GoalGraphSnapshot,
   GoalGraphWorkVersionDisplay,
   GoalNodeKind,
@@ -14,7 +15,20 @@ import type {
   GoalStatus,
 } from '@lobechat/types';
 import { experimentMembers, experimentOwner, experimentStatus } from '@lobechat/utils/goalGraph';
-import { and, asc, count, desc, eq, inArray, isNull, lt, or, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNull,
+  lt,
+  ne,
+  notInArray,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import { goals } from '../schemas/goal';
 import {
@@ -24,9 +38,10 @@ import {
   goalNodes,
   goalNodeWorkVersions,
 } from '../schemas/goalGraph';
-import { tasks } from '../schemas/task';
+import { briefs, tasks } from '../schemas/task';
 import { works, workVersions } from '../schemas/work';
 import type { LobeChatDatabase, Transaction } from '../type';
+import { notTrashed } from '../utils/softDelete';
 import { buildWorkspaceWhere } from '../utils/workspace';
 import { workOwnership } from './work/context';
 
@@ -63,6 +78,27 @@ interface CreateDecisionInput {
 }
 
 /** Persistence boundary for an owned Goal Graph and its append-only audit trail. */
+/**
+ * A goal gate is asked in two places — the goal itself and the brief that
+ * carries it to the inbox. Whichever answers, the other must stop asking, so
+ * every write that settles a decision settles its brief in the same transaction.
+ */
+const settleDecisionBriefs = async (
+  tx: Transaction,
+  decisionId: string,
+  action: string,
+  comment?: string,
+) =>
+  tx
+    .update(briefs)
+    .set({ resolvedAction: action, resolvedAt: new Date(), resolvedComment: comment ?? null })
+    .where(
+      and(
+        isNull(briefs.resolvedAt),
+        sql`${briefs.metadata} -> 'goal' ->> 'decisionId' = ${decisionId}`,
+      ),
+    );
+
 export class GoalGraphModel {
   /**
    * `actor` is who the audit trail records for the transitions made through this
@@ -163,6 +199,80 @@ export class GoalGraphModel {
   };
 
   /**
+   * The goal's audit trail, newest first, with the cursor that continues it.
+   *
+   * `getGraph` bundles only the newest {@link GRAPH_EVENT_LIMIT} events, which a
+   * long-running goal exhausts — the transition that explains a stall can sit
+   * just past the cap. This pages the same table so a reader can reach it.
+   * Ownership is the predicate `getGraph` uses, so "no such goal" and "not
+   * yours" stay indistinguishable and neither leaks another user's goal.
+   *
+   * A cursor, not an offset: this feed is live and events are PREPENDED while the
+   * goal runs, so an offset taken on page one re-serves a row that a later insert
+   * pushed down. `(createdAt, id)` is the sort key, so it is also the
+   * continuation key.
+   *
+   * `createdAt` is compared and ordered at **millisecond** precision, matching
+   * the cursor. The column is `timestamptz` and can carry microseconds, but the
+   * cursor round-trips through a JS `Date` / ISO string and so only carries
+   * milliseconds; comparing the raw column against that truncated cursor makes a
+   * same-millisecond row match neither the `<` bound nor the `eq`/id tie-break,
+   * silently dropping it from the next page. Truncating both sides keeps the
+   * keyset lossless — the same pattern as `verifyRun.queryPage`.
+   */
+  listEvents = async (
+    goalId: string,
+    options: {
+      cursor?: { createdAt: Date; id: string };
+      entityType?: GoalEventEntityType;
+      eventType?: GoalEventType;
+      limit: number;
+    },
+  ): Promise<
+    { events: GoalGraphEvent[]; nextCursor?: { createdAt: Date; id: string } } | undefined
+  > => {
+    const [goal] = await this.db
+      .select({ id: goals.id })
+      .from(goals)
+      .where(and(eq(goals.id, goalId), this.ownership()))
+      .limit(1);
+    if (!goal) return undefined;
+
+    // Millisecond-truncated `createdAt`, the precision the cursor round-trips at.
+    const createdAtMs = sql`date_trunc('milliseconds', ${goalEvents.createdAt})`;
+
+    const filters = [eq(goalEvents.goalId, goalId)];
+    if (options.entityType) filters.push(eq(goalEvents.entityType, options.entityType));
+    if (options.eventType) filters.push(eq(goalEvents.eventType, options.eventType));
+    // Strictly older than the cursor, ties broken by id — the same pair the rows
+    // are ordered by, so a page can neither repeat nor skip.
+    const afterCursor = options.cursor
+      ? or(
+          lt(createdAtMs, options.cursor.createdAt),
+          and(eq(createdAtMs, options.cursor.createdAt), lt(goalEvents.id, options.cursor.id)),
+        )
+      : undefined;
+
+    // One row past the page answers "is there more?" without a second count query.
+    const rows = await this.db
+      .select()
+      .from(goalEvents)
+      .where(and(...filters, afterCursor))
+      .orderBy(desc(createdAtMs), desc(goalEvents.id))
+      .limit(options.limit + 1);
+
+    const events = rows.slice(0, options.limit);
+    const last = events.at(-1);
+    return {
+      events,
+      nextCursor:
+        rows.length > options.limit && last
+          ? { createdAt: last.createdAt, id: last.id }
+          : undefined,
+    };
+  };
+
+  /**
    * Display snapshots for linked Work versions, keyed by version id.
    *
    * Read separately from the link rows, and gated by `workOwnership`: `goals`
@@ -218,6 +328,9 @@ export class GoalGraphModel {
         workId: row.workId,
         ...(row.metadata?.agentDocumentId ? { agentDocumentId: row.metadata.agentDocumentId } : {}),
         ...(row.metadata?.fileUrl ? { fileUrl: row.metadata.fileUrl } : {}),
+        ...(row.metadata?.fileId ? { fileId: row.metadata.fileId } : {}),
+        ...(typeof row.metadata?.fileSize === 'number' ? { fileSize: row.metadata.fileSize } : {}),
+        ...(row.metadata?.mimeType ? { mimeType: row.metadata.mimeType } : {}),
       });
     }
     return display;
@@ -274,6 +387,27 @@ export class GoalGraphModel {
     });
   };
 
+  /**
+   * Record a change to the goal row itself that is not a status move, such as
+   * binding it to a topic, so the goal's timeline says when and by whom
+   * its carrier changed.
+   */
+  recordGoalUpdate = async (
+    goalId: string,
+    input: { operationId?: string; reason: string },
+  ): Promise<void> => {
+    await this.db.insert(goalEvents).values({
+      actorId: this.actor?.id ?? this.userId,
+      actorType: this.actor?.type ?? 'user',
+      entityId: goalId,
+      entityType: 'goal',
+      eventType: 'updated',
+      goalId,
+      operationId: input.operationId,
+      reason: input.reason,
+    });
+  };
+
   attachWorkVersion = async (
     goalId: string,
     nodeId: string,
@@ -320,6 +454,32 @@ export class GoalGraphModel {
     });
 
   /**
+   * Work ids this goal already declares as produced, on any node.
+   *
+   * The claim predicate for deliverables: one Work is one deliverable, and it
+   * belongs to the node that first delivered it. A later round that merely
+   * revises the same resource (a shared document every task appends to is the
+   * common case) must not re-declare it on its own node, or the goal history
+   * repeats one deliverable under every task and its Works list counts one
+   * artifact several times.
+   *
+   * Read from the database rather than from a graph snapshot because the
+   * harvest of one settle has to see the links an earlier settle — possibly in
+   * the same tick — already wrote. Ticks of one goal are serialized by the
+   * dispatch advisory lock, so this read-then-write needs no extra guard.
+   */
+  listProducedWorkIds = async (goalId: string): Promise<Set<string>> => {
+    const rows = await this.db
+      .select({ workId: workVersions.workId })
+      .from(goalNodeWorkVersions)
+      .innerJoin(goalNodes, eq(goalNodeWorkVersions.nodeId, goalNodes.id))
+      .innerJoin(workVersions, eq(goalNodeWorkVersions.workVersionId, workVersions.id))
+      .where(and(eq(goalNodes.goalId, goalId), eq(goalNodeWorkVersions.relation, 'produced')));
+
+    return new Set(rows.map((row) => row.workId));
+  };
+
+  /**
    * How many of a goal's tasks are occupying a concurrency slot.
    *
    * Counted in the database rather than from a graph snapshot so it can be read
@@ -336,9 +496,71 @@ export class GoalGraphModel {
           eq(goalNodes.goalId, goalId),
           eq(goalNodes.kind, 'task'),
           inArray(tasks.status, ['running', 'scheduled']),
+          notTrashed(tasks.isDeleted),
         ),
       );
     return row?.count ?? 0;
+  };
+
+  /**
+   * The goal a task belongs to — as the responsible Task of one of its nodes,
+   * as the goal's own execution carrier, or through the nearest ancestor that is
+   * either (goal Tasks spawn their own subtasks). Lets a Task page link back to
+   * the goal that owns it.
+   */
+  findGoalByTaskId = async (taskId: string): Promise<{ id: string; title: string } | undefined> => {
+    // Walk up `parent_task_id`, nearest first. The task tree has no depth limit,
+    // so stop on a revisited id instead of a fixed depth: a corrupt cycle ends
+    // without truncating a valid deep chain.
+    const chain = await this.db.execute<{ depth: number; id: string }>(sql`
+      WITH RECURSIVE chain(id, depth, visited) AS (
+        SELECT ${tasks.id}, 0, ARRAY[${tasks.id}] FROM ${tasks} WHERE ${tasks.id} = ${taskId}
+        UNION ALL
+        SELECT ${tasks.parentTaskId}, chain.depth + 1, chain.visited || ${tasks.parentTaskId}
+        FROM ${tasks} JOIN chain ON ${tasks.id} = chain.id
+        WHERE ${tasks.parentTaskId} IS NOT NULL
+          AND NOT (${tasks.parentTaskId} = ANY(chain.visited))
+      )
+      SELECT id, depth FROM chain
+    `);
+    const depthOf = new Map(chain.rows.map((row) => [row.id, Number(row.depth)]));
+    if (depthOf.size === 0) return undefined;
+    const taskIds = [...depthOf.keys()];
+
+    const rows = await this.db
+      .select({
+        carrierTaskId: goals.subjectId,
+        createdAt: goals.createdAt,
+        id: goals.id,
+        nodeTaskId: goalNodes.taskId,
+        subjectType: goals.subjectType,
+        title: goals.title,
+      })
+      .from(goals)
+      .leftJoin(goalNodes, and(eq(goalNodes.goalId, goals.id), inArray(goalNodes.taskId, taskIds)))
+      .where(
+        and(
+          this.ownership(),
+          or(
+            inArray(goalNodes.taskId, taskIds),
+            and(eq(goals.subjectType, 'task'), inArray(goals.subjectId, taskIds)),
+          ),
+        ),
+      );
+
+    const depthOfRow = (row: (typeof rows)[number]) =>
+      Math.min(
+        row.nodeTaskId ? (depthOf.get(row.nodeTaskId) ?? Infinity) : Infinity,
+        row.subjectType === 'task' && row.carrierTaskId
+          ? (depthOf.get(row.carrierTaskId) ?? Infinity)
+          : Infinity,
+      );
+    const [nearest] = rows.sort(
+      (a, b) =>
+        depthOfRow(a) - depthOfRow(b) ||
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    return nearest ? { id: nearest.id, title: nearest.title } : undefined;
   };
 
   createNode = async (goalId: string, input: CreateNodeInput) =>
@@ -491,6 +713,10 @@ export class GoalGraphModel {
             eq(goalNodes.goalId, goalId),
             eq(goalNodes.id, nodeId),
             eq(goalNodes.kind, 'task'),
+            // A node retired (or otherwise settled) while its Task was being
+            // created must not be flipped back to `active` by the bind — that
+            // is the fence `GoalService.retireNodes` relies on.
+            notInArray(goalNodes.status, ['resolved', 'rejected', 'retired']),
             isNull(goalNodes.taskId),
           ),
         )
@@ -534,12 +760,22 @@ export class GoalGraphModel {
     });
 
   /** Rewrite a node's description — e.g. the planner replacing the seeded requirement blob with its own problem statement. */
-  updateNodeDescription = async (goalId: string, nodeId: string, description: string) =>
+  /** `confidence` travels with the description when the planner re-reads the problem. */
+  updateNodeDescription = async (
+    goalId: string,
+    nodeId: string,
+    description: string,
+    confidence?: number,
+  ) =>
     this.db.transaction(async (tx) => {
       if (!(await this.ownedGoal(goalId, tx))) return undefined;
       const [node] = await tx
         .update(goalNodes)
-        .set({ description, updatedAt: new Date() })
+        .set({
+          description,
+          ...(confidence === undefined ? {} : { confidence: confidence.toString() }),
+          updatedAt: new Date(),
+        })
         .where(and(eq(goalNodes.goalId, goalId), eq(goalNodes.id, nodeId)))
         .returning();
       if (!node) return undefined;
@@ -552,6 +788,17 @@ export class GoalGraphModel {
       });
       return node;
     });
+
+  /** Current status of one node, read fresh — for writers holding an older snapshot. */
+  getNodeStatus = async (goalId: string, nodeId: string): Promise<GoalNodeStatus | undefined> => {
+    const [row] = await this.db
+      .select({ status: goalNodes.status })
+      .from(goalNodes)
+      .innerJoin(goals, eq(goals.id, goalNodes.goalId))
+      .where(and(eq(goalNodes.goalId, goalId), eq(goalNodes.id, nodeId), this.ownership()))
+      .limit(1);
+    return row?.status as GoalNodeStatus | undefined;
+  };
 
   updateNodeStatus = async (
     goalId: string,
@@ -568,7 +815,24 @@ export class GoalGraphModel {
           status,
           updatedAt: new Date(),
         })
-        .where(and(eq(goalNodes.goalId, goalId), eq(goalNodes.id, nodeId)))
+        .where(
+          and(
+            eq(goalNodes.goalId, goalId),
+            eq(goalNodes.id, nodeId),
+            // A write that does not change the status is a no-op: rewriting the
+            // same status would bump `updatedAt` and append a duplicate event
+            // for nothing. A coordinator retry loop re-activating an
+            // already-active node on every tick would then churn the graph
+            // until no in-flight planning turn could submit a plan (the
+            // manager's snapshot hash reads these rows).
+            ne(goalNodes.status, status),
+            // Retirement is a person's final word on a node. A coordinator tick
+            // that loaded the node before it was retired must not write it back
+            // to `resolved` / `active` afterwards; the goal row lock taken above
+            // serializes this check with the retirement itself.
+            status === 'retired' ? undefined : ne(goalNodes.status, 'retired'),
+          ),
+        )
         .returning();
       if (!node) return undefined;
       const eventType: GoalEventType =
@@ -664,6 +928,7 @@ export class GoalGraphModel {
         eventType: 'resolved',
         reason: resolution,
       });
+      await settleDecisionBriefs(tx, decision.id, optionId, resolution);
       return decision;
     });
 
@@ -707,6 +972,7 @@ export class GoalGraphModel {
         eventType: 'retired',
         reason,
       });
+      await settleDecisionBriefs(tx, decision.id, 'canceled', reason);
       return decision;
     });
 }

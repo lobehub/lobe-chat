@@ -508,6 +508,49 @@ describe('ConversationLifecycle actions', () => {
         expect(sendMessageOperation?.metadata.inputSendErrorMsg).toBeTruthy();
       });
 
+      it('should fire onPreflightFailure when a gateway send is refused before acceptance', async () => {
+        // Regression: the composer is cleared (text, uploads, context
+        // selections) the instant Enter is pressed. A gateway send the server
+        // refuses before persisting anything — e.g. a project-directory topic
+        // whose bound device is offline, rejected in turn setup — restored
+        // only the editor text via `restoreComposerAfterFailedSend`, so the
+        // cleared attachments and selections vanished. The lifecycle must
+        // also fire `onPreflightFailure`, the callback the composer uses to
+        // restore them.
+        const { result } = renderHook(() => useChatStore());
+        const onPreflightFailure = vi.fn();
+        const executeGatewayAgentSpy = vi
+          .fn()
+          .mockRejectedValue(
+            new TRPCClientError('Device is offline or working directory is unavailable'),
+          );
+
+        act(() => {
+          useChatStore.setState({
+            executeGatewayAgent: executeGatewayAgentSpy,
+            isGatewayModeEnabled: () => true,
+            mainInputEditor: {
+              getJSONState: vi.fn().mockReturnValue({ root: { children: [], type: 'root' } }),
+              setDocument: vi.fn(),
+              setJSONState: vi.fn(),
+            } as any,
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            message: 'Send to an offline device',
+            onPreflightFailure,
+          });
+        });
+
+        // Prove the gateway branch actually ran and failed — otherwise a
+        // silent early bail would satisfy the assertion below by accident.
+        expect(executeGatewayAgentSpy).toHaveBeenCalled();
+        expect(onPreflightFailure).toHaveBeenCalledOnce();
+      });
+
       it.each(['unchanged', 'edited', 'cleared'] as const)(
         'preserves the %s live draft when a cancelled first send rolls back asynchronously',
         async (change) => {
@@ -587,6 +630,7 @@ describe('ConversationLifecycle actions', () => {
 
       it('should not restore the composer when gateway setup fails after message acceptance', async () => {
         const { result } = renderHook(() => useChatStore());
+        const onPreflightFailure = vi.fn();
         const setDocument = vi.fn();
         const setJSONState = vi.fn();
         const executeGatewayAgentSpy = vi.fn().mockImplementation(async (params) => {
@@ -610,6 +654,7 @@ describe('ConversationLifecycle actions', () => {
           await result.current.sendMessage({
             context: createTestContext(),
             message: 'Already persisted',
+            onPreflightFailure,
           });
         });
 
@@ -619,7 +664,100 @@ describe('ConversationLifecycle actions', () => {
         expect(executeGatewayAgentSpy).toHaveBeenCalledOnce();
         expect(setDocument).not.toHaveBeenCalled();
         expect(setJSONState).not.toHaveBeenCalled();
+        // The message was accepted, so nothing the composer cleared is
+        // orphaned — restoring it would duplicate the persisted turn's data.
+        expect(onPreflightFailure).not.toHaveBeenCalled();
         expect(sendMessageOperation?.metadata.inputSendErrorMsg).toBeUndefined();
+      });
+
+      it('does not refill the global composer when a send names no editor of its own', async () => {
+        // Regression: an embedded reply (a task run's inline follow-up) passes
+        // `inputEditor: null` to say "no composer here". The lifecycle used to
+        // treat that null as "unset" and fall back to ChatStore's global editor,
+        // writing the failed message into a surface the send does not own.
+        const { result } = renderHook(() => useChatStore());
+        const setDocument = vi.fn();
+        const setJSONState = vi.fn();
+        const executeGatewayAgentSpy = vi
+          .fn()
+          .mockRejectedValue(
+            new TRPCClientError('Topic tpc_test remained busy while starting operation'),
+          );
+
+        act(() => {
+          useChatStore.setState({
+            executeGatewayAgent: executeGatewayAgentSpy,
+            isGatewayModeEnabled: () => true,
+            mainInputEditor: {
+              getJSONState: vi.fn().mockReturnValue({ root: { children: [], type: 'root' } }),
+              setDocument,
+              setJSONState,
+            } as any,
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            inputEditor: null,
+            message: 'Typed into an inline reply',
+          });
+        });
+
+        const sendMessageOperation = Object.values(result.current.operations).find(
+          (operation) => operation.type === 'sendMessage',
+        );
+        // Prove the gateway branch ran and failed before asserting the global
+        // editor was left untouched.
+        expect(executeGatewayAgentSpy).toHaveBeenCalled();
+        expect(sendMessageOperation?.status).toBe('failed');
+        expect(setDocument).not.toHaveBeenCalled();
+        expect(setJSONState).not.toHaveBeenCalled();
+      });
+
+      it('should send a snapshot of the tracked server runs with a gateway send', async () => {
+        const context = { ...createTestContext(), topicId: TEST_IDS.TOPIC_ID };
+        const contextKey = messageMapKey(context);
+        const executeGatewayAgent = vi.fn().mockResolvedValue({ operationId: 'srv-new' });
+        useChatStore.setState({
+          executeGatewayAgent,
+          isGatewayModeEnabled: () => true,
+          operations: {
+            'op-finished-output': {
+              childOperationIds: [],
+              context,
+              id: 'op-finished-output',
+              metadata: { serverOperationId: 'srv-live', visibleLoadingDone: true },
+              status: 'running',
+              type: 'execServerAgentRuntime',
+            },
+            'op-not-started': {
+              childOperationIds: [],
+              context,
+              id: 'op-not-started',
+              metadata: { isAborting: true },
+              status: 'running',
+              type: 'execServerAgentRuntime',
+            },
+          } as any,
+          operationsByContext: { [contextKey]: ['op-finished-output', 'op-not-started'] },
+        });
+
+        await useChatStore.getState().sendMessage({ context, message: 'next turn' });
+
+        expect(executeGatewayAgent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            // Only runs that reached the server are useful to diagnose.
+            clientOperations: [
+              {
+                isAborting: undefined,
+                operationId: 'srv-live',
+                status: 'running',
+                visibleLoadingDone: true,
+              },
+            ],
+          }),
+        );
       });
 
       it('should restore the pre-send editor snapshot when a hetero send fails', async () => {

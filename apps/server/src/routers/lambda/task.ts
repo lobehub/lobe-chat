@@ -1,15 +1,9 @@
 import { TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type { TaskListItem, TaskParticipant, TaskVerifyConfig } from '@lobechat/types';
-import {
-  isValidTimezone,
-  validateCronPattern,
-  validateScheduleUpdate,
-} from '@lobechat/utils/cronEval';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { notifyTaskAssigned } from '@/business/server/task/notifyTaskAssigned';
 import type { TaskCommentActivityRecipient } from '@/business/server/task/notifyTaskCommentActivity';
 import { notifyTaskCommentActivity } from '@/business/server/task/notifyTaskCommentActivity';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -28,7 +22,17 @@ import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
 import { EditLockService } from '@/server/services/editLock';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 import { TaskService } from '@/server/services/task';
+import { notifyAssignedBestEffort } from '@/server/services/task/assignmentNotification';
 import { TaskIntentService } from '@/server/services/task/intent';
+import {
+  assertAssigneeAgentBelongsToUser,
+  resolveTaskPatchInvariants,
+} from '@/server/services/task/patchValidation';
+import {
+  assertResultingScheduleValid,
+  schedulePatternSchema,
+  scheduleTimezoneSchema,
+} from '@/server/services/task/scheduleValidation';
 import { TaskLifecycleService } from '@/server/services/taskLifecycle';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 import { AcceptanceService } from '@/server/services/verify/acceptanceService';
@@ -80,24 +84,10 @@ const taskVerifyConfigPatchSchema = z.object({
   verifyRubricId: z.string().nullish(),
 });
 
-// Reject cron the schedule dispatcher cannot evaluate at write time, instead of
-// storing it and letting it silently never fire. An empty string still clears.
-const schedulePatternSchema = z.string().superRefine((pattern, ctx) => {
-  if (!pattern) return;
-  const result = validateCronPattern(pattern, null);
-  if (!result.valid) {
-    ctx.addIssue({
-      code: 'custom',
-      message: `Invalid schedulePattern "${pattern}": ${result.error}`,
-    });
-  }
-});
-
-const scheduleTimezoneSchema = z.string().refine((tz) => !tz || isValidTimezone(tz), {
-  message: 'scheduleTimezone must be an IANA timezone such as "Asia/Shanghai"',
-});
-
 // Priority: 0=None, 1=Urgent, 2=High, 3=Normal, 4=Low
+// Unknown fields are stripped, including the removed identifierPrefix. Released
+// CLI clients send 'T' by default; ignore it so project subtasks use their project
+// identifier without breaking ordinary creates from those clients.
 const createSchema = z.object({
   assigneeAgentId: z.string().optional(),
   assigneeUserId: z.string().optional(),
@@ -109,7 +99,6 @@ const createSchema = z.object({
   createdByAgentId: z.string().optional(),
   description: z.string().optional(),
   editorData: z.unknown().optional(),
-  identifierPrefix: z.string().optional(),
   instruction: z.string().min(1),
   name: z.string().optional(),
   parentTaskId: z.string().optional(),
@@ -133,6 +122,9 @@ const updateSchema = z.object({
   assigneeUserId: z.string().nullish(),
   automationMode: z.enum(['heartbeat', 'schedule']).nullish(),
   config: z.record(z.string(), z.unknown()).optional(),
+  // Deep-merged into `config` under the update's row lock rather than
+  // replacing it — for a client editing one config key alongside columns.
+  configPatch: z.record(z.string(), z.unknown()).optional(),
   context: z.record(z.string(), z.unknown()).optional(),
   description: z.string().optional(),
   editorData: z.unknown().optional(),
@@ -214,29 +206,6 @@ const groupListSchema = z
   });
 
 // Helper: resolve id/identifier and throw if not found
-/**
- * The field schemas check `schedulePattern` and `scheduleTimezone` one at a
- * time; this checks the pair the task ends up with, filling any field the
- * input leaves out from the stored row, so e.g. a pattern-only update cannot
- * keep a legacy invalid timezone and still report success.
- */
-function assertResultingScheduleValid(
-  stored: { schedulePattern?: string | null; scheduleTimezone?: string | null } | null,
-  input: {
-    automationMode?: string | null;
-    schedulePattern?: string | null;
-    scheduleTimezone?: string | null;
-  },
-) {
-  const result = validateScheduleUpdate(
-    stored ? { pattern: stored.schedulePattern, timezone: stored.scheduleTimezone } : null,
-    input,
-  );
-  if (result && !result.valid) {
-    throw new TRPCError({ code: 'BAD_REQUEST', message: `Invalid schedule: ${result.error}` });
-  }
-}
-
 async function resolveOrThrow(model: TaskModel, id: string) {
   const task = await model.resolve(id);
   if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
@@ -330,63 +299,6 @@ function notifyCommentActivityBestEffort(
 }
 
 /**
- * Assignment ping (Linear-style), delivered after the response as best-effort
- * work. Silent for self-assignment; the assignee lock already guarantees the
- * member is active and can open the task (`assertAssigneeUserVisibilityCompat`
- * rejects private tasks assigned to anyone but their creator). Callers decide
- * whether the assignee actually changed.
- */
-function notifyAssignedBestEffort(
-  ctx: { userId: string; workspaceId?: string | null },
-  task: {
-    assigneeUserId: string | null;
-    id: string;
-    identifier: string;
-    name: string | null;
-  },
-) {
-  const { assigneeUserId } = task;
-  if (!assigneeUserId || assigneeUserId === ctx.userId) return;
-
-  const params = {
-    actorUserId: ctx.userId,
-    assigneeUserId,
-    taskId: task.id,
-    taskIdentifier: task.identifier,
-    taskName: task.name,
-    workspaceId: ctx.workspaceId ?? undefined,
-  };
-  after(async () => {
-    try {
-      await notifyTaskAssigned(params);
-    } catch (error) {
-      console.error('[task] Failed to send assignment notification', error);
-    }
-  });
-}
-
-async function assertAssigneeAgentBelongsToUser(
-  db: LobeChatDatabase,
-  callerCtx: { userId: string; workspaceId?: string },
-  assigneeAgentId?: string | null,
-) {
-  if (!assigneeAgentId) return;
-
-  try {
-    await assertAgentUsableBy(db, assigneeAgentId, callerCtx);
-  } catch (error) {
-    if (error instanceof TRPCError && error.code === 'NOT_FOUND') {
-      // Preserve the task-context message so the UI surfaces "Assignee agent
-      // not found" instead of the generic "Agent not found". Cross-user access
-      // to a private agent still resolves to NOT_FOUND, never FORBIDDEN, so we
-      // don't leak existence of someone else's private agent.
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Assignee agent not found' });
-    }
-    throw error;
-  }
-}
-
-/**
  * Who an activity row is attributed to.
  *
  * A server-side caller (the gateway task runtime) carries the agent in
@@ -415,40 +327,6 @@ async function resolveActivityActor(
     });
   }
   return { agentId: claimedAgentId ?? null, userId: ctx.userId };
-}
-
-async function resolveSafeParentTaskId(
-  model: TaskModel,
-  taskId: string,
-  parentTaskId: string | null,
-): Promise<string | null> {
-  if (parentTaskId === null) return null;
-
-  const parent = await resolveOrThrow(model, parentTaskId);
-  if (parent.id === taskId) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Task cannot be parented to itself',
-    });
-  }
-
-  const descendants = await model.findAllDescendants(taskId);
-  if (descendants.some((task) => task.id === parent.id)) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Task cannot be parented to its own descendant',
-    });
-  }
-
-  const task = await resolveOrThrow(model, taskId);
-  if (task.projectId !== parent.projectId) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Parent task must belong to the same project',
-    });
-  }
-
-  return parent.id;
 }
 
 export const taskRouter = router({
@@ -1163,6 +1041,7 @@ export const taskRouter = router({
       idInput.merge(
         z.object({
           continueTopicId: z.string().optional(),
+          deviceId: z.string().optional(),
           prompt: z.string().optional(),
         }),
       ),
@@ -1178,6 +1057,7 @@ export const taskRouter = router({
         );
         return await runner.runTask({
           continueTopicId: input.continueTopicId,
+          deviceId: input.deviceId,
           extraPrompt: input.prompt,
           taskId: task.id,
         });
@@ -1502,74 +1382,24 @@ export const taskRouter = router({
   update: taskProcedureWrite
     .input(idInput.merge(updateSchema).extend({ actorAgentId: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
-      const { actorAgentId, id, parentTaskId, status, ...data } = input;
+      const { actorAgentId, configPatch, id, parentTaskId, status, ...data } = input;
       try {
         const model = ctx.taskModel;
         const actor = await resolveActivityActor(ctx, actorAgentId);
-        await assertAssigneeAgentBelongsToUser(
-          ctx.serverDB,
-          { userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
-          data.assigneeAgentId,
+        // Hierarchy, visibility and assignment invariants — shared with the
+        // REST patch boundary so the two cannot drift.
+        const { data: normalizedUpdateData, resolved } = await resolveTaskPatchInvariants(
+          {
+            agentModel: ctx.agentModel,
+            editLockService: ctx.editLockService,
+            serverDB: ctx.serverDB,
+            taskModel: model,
+            taskService: ctx.taskService,
+            userId: ctx.userId,
+            workspaceId: ctx.workspaceId ?? undefined,
+          },
+          { data, id, parentTaskId },
         );
-        const resolved = await resolveOrThrow(model, id);
-        assertResultingScheduleValid(resolved, data);
-
-        // Collaborative edit lock: reject writes to a workspace task another member
-        // is actively editing. Inert until a client acquires the lock.
-        if (ctx.workspaceId) {
-          const blockedBy = await ctx.editLockService.getBlockingHolder('task', resolved.id);
-          if (blockedBy) {
-            throw new TRPCError({
-              cause: { data: { code: 'DocumentLocked' } },
-              code: 'CONFLICT',
-              message: 'Task is being edited by another user',
-            });
-          }
-        }
-
-        // Reject changing the assignee to a private agent on a public task —
-        // a public task must never be assigned to a private agent.
-        // `undefined` means "no change"; `null` clears the assignee and is
-        // always safe.
-        if (data.assigneeAgentId) {
-          const agentVisibility = await ctx.agentModel.getAgentVisibility(data.assigneeAgentId);
-          ctx.taskService.assertAgentVisibilityCompat(resolved.visibility, agentVisibility);
-        }
-
-        // A private task can only be assigned to its creator — the assignee
-        // would otherwise never see the task. `null` clears and is always safe.
-        ctx.taskService.assertAssigneeUserVisibilityCompat(
-          resolved.visibility,
-          data.assigneeUserId,
-          resolved.createdByUserId,
-        );
-
-        const resolvedParentTaskId =
-          parentTaskId === undefined
-            ? undefined
-            : await resolveSafeParentTaskId(model, resolved.id, parentTaskId);
-
-        // Reparenting a public task under a private one breaks the parent
-        // visibility invariant — a subtask cannot be more public than its
-        // parent (otherwise workspace members would still see the child while
-        // its new parent is hidden). `undefined` means "no change"; `null`
-        // clears the parent and is always safe.
-        if (resolvedParentTaskId) {
-          const newParent = await model.findById(resolvedParentTaskId);
-          ctx.taskService.assertParentVisibilityCompat(resolved.visibility, newParent?.visibility);
-        }
-
-        const updateData =
-          parentTaskId === undefined ? data : { ...data, parentTaskId: resolvedParentTaskId };
-        // `instruction` is the markdown source of truth while `editorData` is its
-        // rich-text mirror. Text-only callers (for example the editTask builtin)
-        // cannot produce Lexical JSON, so discard the stale mirror and let the
-        // editor rebuild from markdown. Callers that provide both fields keep
-        // their explicit editor state.
-        const normalizedUpdateData =
-          updateData.instruction !== undefined && updateData.editorData === undefined
-            ? { ...updateData, editorData: null }
-            : updateData;
         // Agent attribution comes from `resolveActivityActor` above. The
         // assignment activity is written inside this update's own transaction
         // (see `TaskModel.updateWithLog`), so a concurrent reassignment cannot
@@ -1581,6 +1411,7 @@ export const taskRouter = router({
                 resolved.id,
                 normalizedUpdateData,
                 actor,
+                { configPatch },
               );
               if (!updated) return null;
 
@@ -1591,6 +1422,7 @@ export const taskRouter = router({
               resolved.id,
               normalizedUpdateData,
               actor,
+              { configPatch },
             );
         if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
         // Only an actual assignee change notifies — re-saving the same assignee
@@ -1815,6 +1647,7 @@ export const taskRouter = router({
         actorAgentId: z.string().optional(),
         error: z.string().optional(),
         id: z.string(),
+        operationId: z.string().optional(),
         status: z.enum(TASK_STATUSES),
       }),
     )
@@ -1825,12 +1658,20 @@ export const taskRouter = router({
         // transitions call the service without an actor and stay silent.
         const actor = await resolveActivityActor(ctx, actorAgentId);
         const result = await ctx.taskService.updateStatus(statusInput, actor);
-        const { task, unlocked, paused, checkpointTriggered, allSubtasksDone, parentTaskId } =
-          result;
+        const {
+          task,
+          unlocked,
+          paused,
+          checkpointTriggered,
+          allSubtasksDone,
+          parentTaskId,
+          completionDeferred,
+        } = result;
         return {
           data: task,
           message: `Task ${input.status}`,
           success: true,
+          ...(completionDeferred && { completionDeferred: true }),
           ...(unlocked.length > 0 && { unlocked }),
           ...(paused.length > 0 && { paused }),
           ...(checkpointTriggered && { checkpointTriggered: true }),
@@ -1871,6 +1712,26 @@ export const taskRouter = router({
         });
       }
     }),
+
+  usage: taskProcedure.input(idInput).query(async ({ input, ctx }) => {
+    try {
+      const task = await resolveOrThrow(ctx.taskModel, input.id);
+      const usage = await ctx.taskTopicModel.sumRunCostByTaskIds([task.id]);
+
+      return {
+        data: { ...usage, taskId: task.id, taskIdentifier: task.identifier },
+        success: true,
+      };
+    } catch (error) {
+      if (error instanceof TRPCError) throw error;
+      console.error('[task:usage]', error);
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to get task usage',
+      });
+    }
+  }),
 
   // Cross-workspace task *transfer* is intentionally not supported anymore:
   // moving a task drags its whole subtree plus history (dependencies,

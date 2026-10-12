@@ -2,12 +2,13 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem, DeviceWorkspaceShare } from '@lobechat/types';
-import { Flexbox, Icon, Input, SortableList } from '@lobehub/ui';
+import { Flexbox, Icon, SortableList } from '@lobehub/ui';
 import {
   ActionIcon,
   Avatar,
   Button,
   confirmModal,
+  Input,
   Tabs,
   Tag,
   Text,
@@ -32,7 +33,7 @@ import DeviceHealth, { HealthLegend } from './DeviceHealth';
 import FieldLabel from './FieldLabel';
 import { getDeviceIcon } from './getDeviceIcon';
 import PresenceDot from './PresenceDot';
-import { useCanEditDevice } from './useCanEditDevice';
+import { useCanEditDevice, useCanOperateDevice } from './useCanEditDevice';
 
 const styles = createStaticStyles(({ css }) => ({
   // Fills whatever host it lands in: inside a page-level rail the height is
@@ -105,6 +106,7 @@ interface DeviceDetailPanelProps {
 const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onClose }) => {
   const { t } = useTranslation(['setting', 'device']);
   const canEdit = useCanEditDevice()(device);
+  const canOperate = useCanOperateDevice()(device);
   // Health monitoring and the directory settings are separate jobs; a tab each
   // keeps the charts from pushing the directories below the fold.
   const [tab, setTab] = useState<DetailTab>('overview');
@@ -303,6 +305,26 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
 
         {tab === 'overview' && (
           <>
+            {/* ─── Name ─── */}
+            <Flexbox gap={8}>
+              <FieldLabel>{t('devices.edit.friendlyName')}</FieldLabel>
+              {canEdit ? (
+                <Input
+                  placeholder={t('devices.edit.friendlyNamePlaceholder')}
+                  value={name}
+                  onBlur={commitName}
+                  onChange={(e) => setName(e.target.value)}
+                  onPressEnter={commitName}
+                />
+              ) : device.friendlyName ? (
+                // Read-only: render the canonical value (not the local draft), so a
+                // value the caller can't actually commit never bleeds through.
+                <Text>{device.friendlyName}</Text>
+              ) : (
+                <Text type={'secondary'}>—</Text>
+              )}
+            </Flexbox>
+
             {/* ─── Enrolled by (workspace only) ─── */}
             {device.scope === 'workspace' && device.enroller && (
               <Flexbox gap={8}>
@@ -344,32 +366,12 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
             )}
 
             {/* ─── Connections, each with its client version; desktop carries the update ─── */}
-            <Connections canEdit={canEdit} device={device} />
+            <Connections canEdit={canOperate} device={device} />
 
             {/* ─── Machine health ─── */}
             <Flexbox gap={8}>
               <FieldLabel extra={<HealthLegend />}>{t('devices.health.title')}</FieldLabel>
               <DeviceHealth deviceId={device.deviceId} />
-            </Flexbox>
-
-            {/* ─── Name ─── */}
-            <Flexbox gap={8}>
-              <FieldLabel>{t('devices.edit.friendlyName')}</FieldLabel>
-              {canEdit ? (
-                <Input
-                  placeholder={t('devices.edit.friendlyNamePlaceholder')}
-                  value={name}
-                  onBlur={commitName}
-                  onChange={(e) => setName(e.target.value)}
-                  onPressEnter={commitName}
-                />
-              ) : device.friendlyName ? (
-                // Read-only: render the canonical value (not the local draft), so a
-                // value the caller can't actually commit never bleeds through.
-                <Text>{device.friendlyName}</Text>
-              ) : (
-                <Text type={'secondary'}>—</Text>
-              )}
             </Flexbox>
           </>
         )}

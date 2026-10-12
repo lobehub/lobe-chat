@@ -28,14 +28,14 @@ packages:
   - apps/workbench
 
 minimumReleaseAgeExclude:
-  - '@auv-js/api-client@0.0.22'
-  - '@auv-js/cli-darwin-arm64@0.0.22'
-  - '@auv-js/cli-darwin-x64@0.0.22'
-  - '@auv-js/cli-linux-arm64-gnu@0.0.22'
-  - '@auv-js/cli-linux-x64-gnu@0.0.22'
-  - '@auv-js/cli-win32-x64-msvc@0.0.22'
-  - '@auv-js/cli@0.0.22'
-  - '@auv-js/sdk@0.0.22'
+  - '@auv-js/api-client@0.0.25'
+  - '@auv-js/cli-darwin-arm64@0.0.25'
+  - '@auv-js/cli-darwin-x64@0.0.25'
+  - '@auv-js/cli-linux-arm64-gnu@0.0.25'
+  - '@auv-js/cli-linux-x64-gnu@0.0.25'
+  - '@auv-js/cli-win32-x64-msvc@0.0.25'
+  - '@auv-js/cli@0.0.25'
+  - '@auv-js/sdk@0.0.25'
   - '@lobehub/*'
 
 # Build scripts run one at a time. Several peer-variant copies of
@@ -51,6 +51,7 @@ allowBuilds:
   '@sentry/cli': true
   '@vercel/speed-insights': true
   core-js: false
+  electron-sparkle-updater: false
   es5-ext: false
   esbuild: false
   ffmpeg-static: true
@@ -69,6 +70,9 @@ overrides:
   drizzle-orm: ^0.45.2
   fast-xml-parser: 5.4.2
   lexical: 0.42.0
+  # Keep the coupled core/autolink patches applied without a root lockfile.
+  micromark: 4.0.3
+  micromark-extension-gfm-autolink-literal: 2.1.0
   node-gyp: ^12.4.0
   pdfjs-dist: 5.4.530
   react: 19.2.7
@@ -77,7 +81,9 @@ overrides:
   stylelint-config-clean-order: 7.0.0
   typescript: 6.0.3
   vitest: 5.0.0
-  'zod@^4': 4.5.4
+  'zod@^4': 4.6.5
 
 patchedDependencies:
   '@upstash/qstash': patches/@upstash__qstash.patch
+  micromark@4.0.3: patches/micromark@4.0.3.patch
+  micromark-extension-gfm-autolink-literal@2.1.0: patches/micromark-extension-gfm-autolink-literal@2.1.0.patch

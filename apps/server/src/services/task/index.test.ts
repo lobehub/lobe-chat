@@ -30,6 +30,15 @@ vi.mock('@/database/models/task', () => ({
   }),
 }));
 
+const { findGoalByTaskId } = vi.hoisted(() => ({
+  findGoalByTaskId: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('@/database/models/goalGraph', () => ({
+  GoalGraphModel: vi.fn().mockImplementation(function () {
+    return { findGoalByTaskId };
+  }),
+}));
+
 vi.mock('@/database/models/taskTopic', () => ({
   TaskTopicModel: vi.fn(),
 }));
@@ -259,6 +268,12 @@ describe('TaskService', () => {
       expect(result?.activities).toBeUndefined();
       expect(result?.workspace).toBeUndefined();
       expect(result?.parent).toBeNull();
+      expect(result?.goal).toBeNull();
+      expect(findGoalByTaskId).toHaveBeenCalledWith('task_001');
+
+      findGoalByTaskId.mockResolvedValueOnce({ id: 'goal_1', title: 'G' });
+      const withGoal = await service.getTaskDetail('TASK-1');
+      expect(withGoal?.goal).toEqual({ id: 'goal_1', title: 'G' });
     });
 
     it('surfaces the effective inherited Acceptance policy', async () => {
@@ -1468,6 +1483,48 @@ describe('TaskService', () => {
     });
   });
 
+  describe('completion requested by the task own run', () => {
+    it('defers instead of interrupting the calling operation', async () => {
+      const task = { automationMode: 'schedule', id: 'task-self', status: 'running' };
+      mockTaskModel.resolve.mockResolvedValue(task);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { topicId: 'topic-self', operationId: 'op-self', status: 'running' },
+      ]);
+
+      const result = await new TaskService(db, userId).updateStatus({
+        id: 'task-self',
+        operationId: 'op-self',
+        status: 'completed',
+      });
+
+      expect(result).toMatchObject({ completionDeferred: true, task });
+      expect(mockTaskModel.updateContext).toHaveBeenCalledWith('task-self', {
+        completion: { requestedByOperationId: 'op-self' },
+      });
+      expect(interruptTaskMock).not.toHaveBeenCalled();
+      expect(mockTaskTopicModel.cancelIfRunning).not.toHaveBeenCalled();
+      expect(mockTaskModel.updateStatus).not.toHaveBeenCalled();
+    });
+
+    it('still interrupts when the operation is not one of the task runs', async () => {
+      mockTaskModel.resolve.mockResolvedValue({ id: 'task-live', status: 'running' });
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        { topicId: 'topic-live', operationId: 'op-live', status: 'running' },
+      ]);
+      interruptTaskMock.mockResolvedValueOnce({ success: false });
+
+      await expect(
+        new TaskService(db, userId).updateStatus({
+          id: 'task-live',
+          operationId: 'op-other',
+          status: 'completed',
+        }),
+      ).rejects.toThrow('Task interruption was not confirmed');
+      expect(interruptTaskMock).toHaveBeenCalledWith({ operationId: 'op-live' });
+      expect(mockTaskModel.updateContext).not.toHaveBeenCalled();
+    });
+  });
+
   describe('confirmed execution stop', () => {
     it.each([{ success: true, deviceCancellationConfirmed: false }, { success: false }])(
       'keeps a live Task and topic unchanged when cancellation is unconfirmed: %j',
@@ -2191,6 +2248,7 @@ describe('TaskService', () => {
         'task_001',
         { assigneeAgentId: 'agt_new' },
         { agentId: 'agt_actor', userId: 'user_actor' },
+        {},
       );
     });
 

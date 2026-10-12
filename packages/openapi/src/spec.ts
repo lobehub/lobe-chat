@@ -432,6 +432,109 @@ const groupResources: Record<string, { listKey: string; schema: string }> = {
 
 const ref = (schema: string): SchemaObject => ({ $ref: `#/components/schemas/${schema}` });
 
+/** One chat bubble of the IM channel — whole, never a partial stream. */
+const imMessageSchema: SchemaObject = {
+  additionalProperties: false,
+  properties: {
+    content: { type: 'string' },
+    createdAt: dateTime,
+    error: { type: 'boolean' },
+    id: { type: 'string' },
+    role: { enum: ['assistant', 'user'], type: 'string' },
+  },
+  required: ['content', 'createdAt', 'error', 'id', 'role'],
+  type: 'object',
+};
+
+const imResponseSchema = (method: string, rest: string): SchemaObject => {
+  if (method === 'post' && rest === 'messages') {
+    return {
+      additionalProperties: false,
+      properties: {
+        accepted: { type: 'boolean' },
+        operationId: nullableString,
+        topicId: { type: 'string' },
+        userMessage: imMessageSchema,
+      },
+      required: ['accepted', 'operationId', 'topicId', 'userMessage'],
+      type: 'object',
+    };
+  }
+
+  if (rest.endsWith('/read')) {
+    return {
+      additionalProperties: false,
+      properties: { unread: { minimum: 0, type: 'integer' } },
+      required: ['unread'],
+      type: 'object',
+    };
+  }
+
+  return {
+    additionalProperties: false,
+    properties: {
+      cursor: { type: 'string' },
+      messages: { items: imMessageSchema, type: 'array' },
+      readUpTo: {
+        anyOf: [
+          {
+            additionalProperties: false,
+            properties: { messageId: { type: 'string' }, readAt: dateTime },
+            required: ['messageId', 'readAt'],
+            type: 'object',
+          },
+          { type: 'null' },
+        ],
+      },
+      state: { type: 'string' },
+      typing: { type: 'boolean' },
+      unread: { minimum: 0, type: 'integer' },
+    },
+    required: ['cursor', 'messages', 'readUpTo', 'state', 'typing', 'unread'],
+    type: 'object',
+  };
+};
+
+/**
+ * Personal-agent resources whose payload is coordinator / inbox state rather
+ * than a stable CRUD row (a goal's graph snapshot, a category of memory
+ * entries, a page of receipts). The spec stays deliberately vague for these —
+ * same policy as unnamed sub-operations: `additionalProperties` over a guessed
+ * shape, so a generated client is never confidently mistyped.
+ */
+const PERSONAL_AGENT_GROUPS = new Set(['goals', 'memories', 'notifications', 'signals', 'tasks']);
+
+/**
+ * Handlers whose success status is not 200. A controller's return code is not
+ * visible to the generator, so every non-200 success has to be declared here —
+ * otherwise the document (and the SDK generated from it) advertises a status
+ * the runtime never sends, and status-discriminating clients branch wrongly.
+ */
+const CREATED_OPERATIONS = new Set([
+  'POST agent-groups',
+  'POST agents/{id}/duplicate',
+  'POST api-keys',
+  'POST eval/benchmarks',
+  'POST eval/datasets',
+  'POST eval/datasets/{datasetId}/test-cases',
+  'POST goals',
+  'POST mcp-servers',
+  'POST tasks',
+]);
+
+const ACCEPTED_OPERATIONS = new Set([
+  'POST eval/runs',
+  'POST signals/source-events',
+  'POST signals/trigger',
+]);
+
+const successStatusFor = (group: string, rest: string, method: string): number => {
+  const operation = `${method.toUpperCase()} ${group}${rest ? `/${rest}` : ''}`;
+  if (ACCEPTED_OPERATIONS.has(operation)) return 202;
+  if (CREATED_OPERATIONS.has(operation)) return 201;
+  return 200;
+};
+
 const successEnvelope = (data: SchemaObject): SchemaObject => ({
   additionalProperties: false,
   properties: {
@@ -456,6 +559,10 @@ const getSuccessSchema = (group: string, rest: string, method: string): SchemaOb
       required: ['service', 'status', 'timestamp'],
       type: 'object',
     };
+  }
+
+  if (PERSONAL_AGENT_GROUPS.has(group)) {
+    return successEnvelope({ additionalProperties: true, type: ['array', 'object', 'null'] });
   }
 
   if (group === 'responses') {
@@ -543,6 +650,18 @@ const getSuccessSchema = (group: string, rest: string, method: string): SchemaOb
       },
       required: ['plugins', 'total'],
     });
+
+  if (group === 'im') return successEnvelope(imResponseSchema(method, rest));
+
+  if (group === 'push-tokens') {
+    if (method === 'delete') return successEnvelope({ type: 'null' });
+    return successEnvelope({
+      additionalProperties: false,
+      properties: { deviceId: { type: 'string' }, platform: { type: 'string' } },
+      required: ['deviceId', 'platform'],
+      type: 'object',
+    });
+  }
 
   const resource = groupResources[group];
   if (!resource) return successEnvelope({ additionalProperties: true, type: 'object' });
@@ -780,16 +899,15 @@ export const buildSpecDocument = async (app: GenerateSpecsApp) => {
         successContent['text/event-stream'] = { schema: { type: 'string' } };
       }
 
-      const successStatus =
-        group === 'eval' && method === 'post' && rest === 'runs'
-          ? 202
-          : method === 'post' &&
-              ((['agent-groups', 'api-keys', 'mcp-servers'].includes(group) && rest === '') ||
-                (group === 'agents' && rest === '{id}/duplicate') ||
-                (group === 'eval' &&
-                  ['benchmarks', 'datasets', 'datasets/{datasetId}/test-cases'].includes(rest)))
-            ? 201
-            : 200;
+      const successStatus = successStatusFor(group, rest, method);
+      // `hono-openapi` fills a contentless 200 into operations that declare a
+      // request body but no responses. When the handler actually answers
+      // 201/202 that placeholder is not a real response and must go, or the
+      // document keeps advertising a status the runtime never sends.
+      const placeholder200 = op.responses[200] as { content?: unknown } | undefined;
+      if (successStatus !== 200 && placeholder200 && !placeholder200.content) {
+        delete op.responses[200];
+      }
       const currentSuccess = (op.responses[successStatus] ?? {}) as Record<string, unknown>;
       op.responses[successStatus] = {
         ...currentSuccess,

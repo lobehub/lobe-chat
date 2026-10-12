@@ -1,8 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Switch, Tabs, Text } from '@lobehub/ui/base-ui';
-import { Divider } from 'antd';
+import { ActionIcon, Divider, Switch, Tabs, Text } from '@lobehub/ui/base-ui';
 import { Images } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -94,7 +93,7 @@ const PromptExtendItem = memo(() => {
     const options = enumValues.map((item) => ({
       disabled: !canCreate,
       key: item,
-      label: item,
+      label: t(`config.promptExtend.options.${item}`, { defaultValue: item }),
     }));
 
     return (

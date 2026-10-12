@@ -24,7 +24,9 @@ import { browserRuntime } from './browser';
 import { calculatorRuntime } from './calculator';
 import { cloudSandboxRuntime } from './cloudSandbox';
 import { credsRuntime } from './creds';
+import { dashboardRuntime } from './dashboard';
 import { goalRuntime } from './goal';
+import { goalReportRuntime } from './goalReport';
 import { goalSupervisorRuntime } from './goalSupervisor';
 import { groupAgentBuilderRuntime } from './groupAgentBuilder';
 import { groupManagementRuntime } from './groupManagement';
@@ -89,9 +91,11 @@ registerRuntimes([
   topicReferenceRuntime,
   userInteractionRuntime,
   credsRuntime,
+  dashboardRuntime,
   groupAgentBuilderRuntime,
   groupManagementRuntime,
   goalRuntime,
+  goalReportRuntime,
   goalSupervisorRuntime,
   imageGenerationRuntime,
   videoGenerationRuntime,

@@ -1,5 +1,6 @@
 import { fetchAcceptanceSkillBundle } from '@lobechat/builtin-skills/acceptance';
 import {
+  normalizeEvidenceMetadata,
   normalizeVerifySurface,
   verifyRunScenarios,
   verifySurfaces,
@@ -9,6 +10,7 @@ import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type {
   VerifyCheckItem,
   VerifyCheckResultMetadata,
+  VerifyEvidenceType,
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
@@ -23,6 +25,7 @@ import {
 } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { DocumentModel } from '@/database/models/document';
+import { FileModel } from '@/database/models/file';
 import { LlmGenerationTracingModel } from '@/database/models/llmGenerationTracing';
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyCriterionModel } from '@/database/models/verifyCriterion';
@@ -46,8 +49,10 @@ import { GoalCriteriaGeneratorService } from '@/server/services/goal/criteriaGen
 import {
   AcceptanceService,
   createEvidenceFileResolver,
+  evidenceTypeForStoredFile,
   finalizeVerifyRun,
   purgeVerifyRun,
+  resolveLiveRoundForItem,
   VerifyExecutorService,
   VerifyFeedbackService,
   VerifyPlanGeneratorService,
@@ -262,6 +267,7 @@ const verifyProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
       criterionModel: new VerifyCriterionModel(ctx.serverDB, ctx.userId, workspaceId),
       documentModel: new DocumentModel(ctx.serverDB, ctx.userId, workspaceId),
       evidenceModel: new VerifyEvidenceModel(ctx.serverDB, ctx.userId, workspaceId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId, workspaceId),
       executorService: new VerifyExecutorService(ctx.serverDB, ctx.userId, workspaceId),
       tracingModel: new LlmGenerationTracingModel(ctx.serverDB, ctx.userId, workspaceId),
       feedbackService: new VerifyFeedbackService(ctx.serverDB, ctx.userId, workspaceId),
@@ -321,6 +327,14 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
+
+/** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
+const storedEvidenceType = async (
+  ctx: { fileModel: FileModel },
+  type: VerifyEvidenceType,
+  fileId?: string | null,
+): Promise<VerifyEvidenceType> =>
+  fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
 
 export const verifyRouter = router({
   // ---- criteria (reusable atomic standards) ----
@@ -514,7 +528,6 @@ export const verifyRouter = router({
         enableAiGeneration: z.boolean().optional(),
         goal: z.string(),
         maxAiCriteria: z.number().optional(),
-        modelConfig: modelConfigSchema.optional(),
         operationId: z.string(),
         verifyCriteriaIds: z.array(z.string()).optional(),
         verifyRubricId: z.string().nullish(),
@@ -539,7 +552,6 @@ export const verifyRouter = router({
         context: z.string().optional(),
         goal: z.string().min(1),
         maxCriteria: z.number().int().min(1).max(8).optional(),
-        modelConfig: modelConfigSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -667,10 +679,10 @@ export const verifyRouter = router({
 
   /**
    * Serve a pullable skill bundle (`SKILL.md` + inline resource files) by
-   * identifier. Keep the authenticated contract and legacy alias while sourcing
+   * identifier without authentication. Keep the legacy alias while sourcing
    * all installers from the upstream default branch (or an explicitly selected tag).
    */
-  getSkillBundle: wsCompatProcedure
+  getSkillBundle: publicProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -961,6 +973,7 @@ export const verifyRouter = router({
       // Attaching evidence mutates another member's result — creator-scoped,
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
+      const type = await storedEvidenceType(ctx, input.type, input.fileId);
 
       return ctx.evidenceModel.create({
         capturedAt: new Date(),
@@ -969,8 +982,8 @@ export const verifyRouter = router({
         content: input.content ?? null,
         description: input.description ?? null,
         fileId: input.fileId ?? null,
-        metadata: input.metadata ?? null,
-        type: input.type,
+        metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
+        type,
       });
     }),
 
@@ -1020,11 +1033,15 @@ export const verifyRouter = router({
         }),
     )
     .mutation(async ({ ctx, input }) => {
-      const run = input.verifyRunId
+      const namedRun = input.verifyRunId
         ? await resolveVerifyRun(ctx, input.verifyRunId)
         : await resolveRunByOperation(ctx, input.operationId!);
       // The idempotent upsert overwrites the run's existing result rows.
-      assertWorkspaceRowManageable(ctx, run.userId, 'verify run');
+      assertWorkspaceRowManageable(ctx, namedRun.userId, 'verify run');
+      // A round whose failure already spawned a repair is never judged again;
+      // land the submission on the round the repair will be judged in.
+      const run = await resolveLiveRoundForItem(ctx, namedRun, input.checkItemId);
+      if (run.id !== namedRun.id) assertWorkspaceRowManageable(ctx, run.userId, 'verify run');
 
       // `required` / `verifierType` / index / title are stable per plan item, so
       // hydrate them from the run plan rather than hardcoding defaults — otherwise
@@ -1033,9 +1050,20 @@ export const verifyRouter = router({
       // no verdict so an existing row keeps its status (and a new row falls to the
       // DB default 'pending') instead of being reset to 'running'. drizzle omits
       // undefined fields from both the insert and the conflict-update.
-      const planItem = (run.plan as VerifyCheckItem[] | null)?.find(
-        (i) => i.id === input.checkItemId,
-      );
+      const plan = (run.plan as VerifyCheckItem[] | null) ?? [];
+      const planItem = plan.find((i) => i.id === input.checkItemId);
+      // A planned run owns its checklist. An unknown id used to be upserted as a
+      // new row that fell to the column default `required: true`, minting a
+      // phantom required check no later round ever plans or re-answers — and the
+      // Goal review then judged its stale evidence forever. Name the valid ids
+      // so the caller can resubmit under the right one.
+      if (plan.length > 0 && !planItem)
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Check item "${input.checkItemId}" is not in this verification run's plan. Use one of: ${plan
+            .map((item) => `${item.id} (${item.title})`)
+            .join('; ')}`,
+        });
 
       const checkResult = await ctx.resultModel.upsertByCheckItem({
         checkItemId: input.checkItemId,
@@ -1054,7 +1082,7 @@ export const verifyRouter = router({
 
       const evidence = input.evidence?.length
         ? await Promise.all(
-            input.evidence.map((e) =>
+            input.evidence.map(async (e) =>
               ctx.evidenceModel.create({
                 capturedAt: new Date(),
                 capturedBy: e.capturedBy ?? null,
@@ -1062,7 +1090,7 @@ export const verifyRouter = router({
                 content: e.content ?? null,
                 description: e.description ?? null,
                 fileId: e.fileId ?? null,
-                type: e.type,
+                type: await storedEvidenceType(ctx, e.type, e.fileId),
               }),
             ),
           )

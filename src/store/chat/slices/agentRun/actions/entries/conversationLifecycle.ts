@@ -47,12 +47,13 @@ import {
 } from '@/helpers/executionTarget';
 import { globalAgentContextManager } from '@/helpers/GlobalAgentContextManager';
 import { agentService } from '@/services/agent';
-import { aiAgentService } from '@/services/aiAgent';
+import { aiAgentService, MAX_CLIENT_OPERATION_SNAPSHOT } from '@/services/aiAgent';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
 import { resolveSelectedSkillsWithContent } from '@/services/chat/mecha/skillPreload';
 import { resolveSelectedToolsWithContent } from '@/services/chat/mecha/toolPreload';
 import { messageService } from '@/services/message';
+import { projectWorkingDirectoryService } from '@/services/projectWorkingDirectory';
 import { topicService } from '@/services/topic';
 import { getAgentStoreState } from '@/store/agent';
 import {
@@ -61,10 +62,12 @@ import {
   chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
+import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
 import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
+  operationSelectors,
   topicSelectors,
 } from '@/store/chat/selectors';
 import { selectRuntimeType } from '@/store/chat/slices/agentRun/actions/dispatch/agentDispatcher';
@@ -139,7 +142,8 @@ export interface SendMessageWithContextParams extends SendMessageParams {
   /**
    * Editor owned by the calling ConversationProvider. Embedded conversations
    * must not fall back to ChatStore's global editor, which may belong to a
-   * sibling panel.
+   * sibling panel. Pass `null` when the send is not backed by a composer editor
+   * at all, so a failed send is not written into the global one.
    */
   inputEditor?: ChatInputEditor | null;
   /** Restore composer-owned context when sending fails before a message owns it. */
@@ -386,7 +390,12 @@ export class ConversationLifecycleActionImpl {
 
     let editorData = inputEditorData;
     const { executeClientAgent, mainInputEditor } = this.#get();
-    const targetInputEditor = inputEditor ?? mainInputEditor;
+    // `inputEditor` names the editor that owns this send. An explicit `null`
+    // means "this send has no composer editor": an embedded reply (a task run's
+    // inline follow-up) must not fall back to ChatStore's global editor, which
+    // belongs to a sibling surface and would be refilled with this send's text
+    // when it fails. Only an omitted editor falls back to the global one.
+    const targetInputEditor = inputEditor === undefined ? mainInputEditor : inputEditor;
     const ownerAgentId = context.agentId;
     const selectedSkills = parseSelectedSkillsFromEditorData(editorData);
     const selectedTools = parseSelectedToolsFromEditorData(editorData);
@@ -465,7 +474,7 @@ export class ConversationLifecycleActionImpl {
     // switcher. A workspace-local pick is intentionally private to this member
     // and is therefore safe to execute in-process on their desktop. An existing
     // conversation then stays on the machine it already ran on.
-    const { agencyConfig, workspaceScoped } = applyTopicDeviceBinding(
+    const topicBinding = applyTopicDeviceBinding(
       {
         agencyConfig: resolveAgentAgencyConfig(agentConfig?.agencyConfig, deviceOverride, {
           canManage,
@@ -480,7 +489,30 @@ export class ConversationLifecycleActionImpl {
       ),
       getElectronStoreState().gatewayDeviceInfo?.deviceId,
     );
+    const { workspaceScoped } = topicBinding;
+    let { agencyConfig } = topicBinding;
     const isGatewayMode = this.#get().isGatewayModeEnabled(agentId);
+    const boundTopic = context.topicId
+      ? topicSelectors.getTopicById(context.topicId)(this.#get())
+      : undefined;
+    if (boundTopic?.projectWorkingDirectoryId) {
+      const { data: directory } = await projectWorkingDirectoryService.resolve(
+        boundTopic.projectWorkingDirectoryId,
+      );
+      if (!isGatewayMode)
+        throw new Error('Enable Gateway Mode to run in a project working directory');
+      if (
+        agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
+        agencyConfig.boundDeviceId !== directory.deviceId
+      )
+        throw new Error('Agent is fixed to another execution target');
+      agencyConfig = {
+        ...agencyConfig,
+        boundDeviceId: directory.deviceId,
+        executionTarget: 'device',
+      };
+    }
+
     // Legacy agents may only carry `model: '<cli-type>'`. Keep gateway routing
     // unchanged when it is available. Recover the provider when gateway mode is
     // off so desktop can still spawn locally and non-desktop (Android/web) still
@@ -737,7 +769,11 @@ export class ConversationLifecycleActionImpl {
         break;
       }
     }
-    if (runningQueueBlockingOp) {
+    const queueDrainPending =
+      !runningQueueBlockingOp &&
+      !onlyAddUserMessage &&
+      operationSelectors.isQueueDrainPending(operationContext)(this.#get());
+    if (runningQueueBlockingOp || queueDrainPending) {
       // Snapshot file previews so the tray can render thumbnails AND the
       // resumed sendMessage can rebuild audioList/imageList/videoList — by the time
       // we drain, chatUploadFileList has long been cleared.
@@ -762,7 +798,7 @@ export class ConversationLifecycleActionImpl {
           metadata: userMessageMetadata,
           createdAt: Date.now(),
         },
-        runningQueueBlockingOp.id,
+        runningQueueBlockingOp?.id,
       );
       notifyMessageAccepted();
       return;
@@ -824,15 +860,28 @@ export class ConversationLifecycleActionImpl {
       return;
     }
 
-    const replaceableGatewayOperationId = queueCandidateKeys
+    const serverRuntimeOperations = queueCandidateKeys
       .flatMap((key) => this.#get().operationsByContext[key] || [])
       .map((id) => this.#get().operations[id])
-      .findLast(
-        (operation) =>
-          operation?.type === 'execServerAgentRuntime' &&
-          operation.status === 'running' &&
-          (operation.metadata.isAborting || operation.metadata.visibleLoadingDone),
-      )?.metadata.serverOperationId;
+      .filter((operation) => operation?.type === 'execServerAgentRuntime');
+
+    const replaceableGatewayOperationId = serverRuntimeOperations.findLast(
+      (operation) =>
+        operation.status === 'running' &&
+        (operation.metadata.isAborting || operation.metadata.visibleLoadingDone),
+    )?.metadata.serverOperationId;
+
+    // What this client believes about the conversation's server runs. The
+    // server keeps it only when the send has to stop a run left live.
+    const clientOperations = serverRuntimeOperations
+      .filter((operation) => operation.metadata.serverOperationId)
+      .slice(-MAX_CLIENT_OPERATION_SNAPSHOT)
+      .map((operation) => ({
+        isAborting: operation.metadata.isAborting,
+        operationId: operation.metadata.serverOperationId!,
+        status: operation.status,
+        visibleLoadingDone: operation.metadata.visibleLoadingDone,
+      }));
 
     if (onlyAddUserMessage) {
       await this.#get().addUserMessage({
@@ -883,6 +932,9 @@ export class ConversationLifecycleActionImpl {
     // whole send.
     const tempId = optimisticUserMessageId ?? generateEntityId('messages');
     const tempAssistantId = generateEntityId('messages');
+    const steeredTurnStartTime = (metadata as Pick<MessageMetadata, 'steer'> | undefined)?.steer
+      ? operationSelectors.getLatestAgentRuntimeTurnStartTime(operationContext)(this.#get())
+      : undefined;
     const { operationId, abortController } = this.#get().startOperation({
       type: 'sendMessage',
       context: { ...operationContext, messageId: tempId },
@@ -890,6 +942,7 @@ export class ConversationLifecycleActionImpl {
       metadata: {
         // Mark this as thread operation if threadId exists
         inThread: !!operationContext.threadId,
+        ...(steeredTurnStartTime === undefined ? {} : { turnStartTime: steeredTurnStartTime }),
       },
     });
     sendOperationId = operationId;
@@ -935,6 +988,12 @@ export class ConversationLifecycleActionImpl {
       } else {
         targetInputEditor?.setDocument('markdown', message);
       }
+
+      // The editor snapshot covers only text. A send rejected after the composer
+      // was cleared (e.g. the server refusing an offline bound device) would
+      // otherwise still swallow the cleared uploads and context selections —
+      // hand them back to the caller that captured them before clearing.
+      onPreflightFailure?.();
     };
     const restoreUnacceptedVoiceMessageContext = () => {
       if (!optimisticUserMessageId || hasNotifiedMessageAccepted) return;
@@ -1275,10 +1334,28 @@ export class ConversationLifecycleActionImpl {
             newTopicDeviceId
             ? { boundDeviceId: newTopicDeviceId }
             : undefined;
+    // Chosen in the composer while no topic existed to write it to. Not gated
+    // on runtime: the map is only ever filled by the sandbox picker, which only
+    // renders under a cloud-sandbox target.
+    const pendingSandboxSelection =
+      willCreateNewTopic && operationContext.agentId
+        ? getPendingSandboxSelection(operationContext.agentId)
+        : undefined;
+    const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
+      ? {
+          sandboxInstanceId: pendingSandboxSelection.instanceId,
+          sandboxMode: pendingSandboxSelection.mode,
+        }
+      : undefined;
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
-    const optimisticTopicMetadata = newTopicReasoningSnapshot
-      ? { ...workingDirectoryMetadata, ...newTopicReasoningSnapshot }
-      : workingDirectoryMetadata;
+    const optimisticTopicMetadata =
+      newTopicReasoningSnapshot || sandboxInstanceMetadata
+        ? {
+            ...workingDirectoryMetadata,
+            ...sandboxInstanceMetadata,
+            ...newTopicReasoningSnapshot,
+          }
+        : workingDirectoryMetadata;
 
     // The sidebar row was already inserted (title + model) before the awaits
     // above; the cwd/repos metadata only resolves here, so patch it on now.
@@ -1653,7 +1730,7 @@ export class ConversationLifecycleActionImpl {
       const { operationId: heteroOpId } = this.#get().startOperation({
         context: heteroExecutionContext,
         label: 'Heterogeneous Agent Execution',
-        metadata: { heterogeneousType: heterogeneousProvider.type },
+        metadata: { heteroAutoRetryAvailable: true, heterogeneousType: heterogeneousProvider.type },
         parentOperationId: operationId,
         type: 'execHeterogeneousAgent',
       });
@@ -1806,6 +1883,7 @@ export class ConversationLifecycleActionImpl {
           onMessageAccepted: notifyMessageAccepted,
           onTopicCreated: context.isolatedTopic ? onTopicCreated : undefined,
           parentOperationId: operationId,
+          clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
           // Forward @-mentioned tool ids so the server runtime enables them for

@@ -3,6 +3,7 @@ import type { TopicCommentItem } from '@lobechat/types';
 import { projectFileService } from '@/services/projectFile';
 import { type ChatStore } from '@/store/chat/store';
 import { useGlobalStore } from '@/store/global';
+import { getServerConfigStoreState } from '@/store/serverConfig';
 import { type StoreSetter } from '@/store/types';
 import { type PortalArtifact } from '@/types/artifact';
 
@@ -687,6 +688,17 @@ export class ChatPortalActionImpl {
     this.#get().pushPortalView({ messageId, type: PortalViewType.MessageDetail });
   };
 
+  /** A dashboard widget in full: data, the dry run that produced a preview, versions and logs. */
+  openDashboardWidget = (widgetId: string, runId?: string): void => {
+    // The widget view only exists while the `dashboard` feature flag is on.
+    if (getServerConfigStoreState()?.featureFlags.enableDashboard !== true) return;
+    this.#get().pushPortalView({
+      ...(runId ? { runId } : {}),
+      type: PortalViewType.DashboardWidget,
+      widgetId,
+    });
+  };
+
   openNotebook = (): void => {
     this.#get().pushPortalView({ type: PortalViewType.Notebook });
   };
@@ -726,6 +738,16 @@ export class ChatPortalActionImpl {
       false,
       'drillIntoGoalNode',
     );
+  };
+
+  /** The wrap-up report's full text, read beside the result page. */
+  openGoalReport = (goalId: string): void => {
+    this.#get().pushPortalView({ goalId, type: PortalViewType.GoalReport });
+  };
+
+  /** One storyline chapter's local map: its main path and the detours off it. */
+  openGoalReportChapter = (goalId: string, chapterIndex: number): void => {
+    this.#get().pushPortalView({ chapterIndex, goalId, type: PortalViewType.GoalReportChapter });
   };
 
   openGoalMetric = (goalId: string, metric: GoalMetricKind): void => {

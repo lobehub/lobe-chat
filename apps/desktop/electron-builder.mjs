@@ -14,6 +14,16 @@ import {
   getAsarUnpackPatterns,
   getNativeModulesFilesConfig,
 } from './native-deps.config.mjs';
+import {
+  COMPUTER_USE_HELPER_BUNDLE_PATH,
+  COMPUTER_USE_HELPER_SIGN_IGNORE,
+  embedComputerUseHelper,
+  resolveComputerUseHelperVersion,
+  verifyComputerUseHelper,
+} from './scripts/computerUseHelper.mjs';
+import { packBuiltinCore } from './scripts/packBuiltinCore.mjs';
+import { toSparkleBuildVersion } from './scripts/sparkleBuildVersion.mjs';
+import { resolveSparklePackaging } from './scripts/sparklePackaging.mjs';
 import { verifyFontListSignature } from './scripts/verifyFontListSigning.mjs';
 
 dotenv.config();
@@ -21,6 +31,8 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const packageJSON = JSON.parse(await fs.readFile(path.join(__dirname, 'package.json'), 'utf8'));
+
+const computerUseHelperVersion = resolveComputerUseHelperVersion(packageJSON);
 
 const channel = process.env.UPDATE_CHANNEL;
 const arch = os.arch();
@@ -127,6 +139,22 @@ const getProtocolScheme = () => {
 
 const protocolScheme = getProtocolScheme();
 
+const sparklePublicKey = process.env.SPARKLE_ED_PUBLIC_KEY;
+const { useSparkle } = resolveSparklePackaging({
+  channel,
+  hasAppleCertificate,
+  platform: process.platform,
+  sparklePublicKey,
+  updateServerUrl,
+});
+const sparklePackageDir = useSparkle
+  ? await fs.realpath(path.join(__dirname, 'node_modules/electron-sparkle-updater'))
+  : null;
+const sparkleFeedUrl =
+  useSparkle && updateServerUrl
+    ? `${stripChannelSuffix(updateServerUrl).replace(/\/$/, '')}/${isCanary || channel === 'beta' ? 'canary' : 'stable'}/appcast-${arch}.xml`
+    : undefined;
+
 // Determine icon file based on version type
 const getIconFileName = () => {
   if (isStable || isCanary) return 'Icon';
@@ -145,6 +173,14 @@ const config = {
    */
   beforePack: async (context) => {
     buildFirstPartyNativeAddons();
+
+    if (sparklePackageDir) {
+      console.info('🔧 Building Sparkle bridge addon...');
+      execSync(
+        `node "${path.join(sparklePackageDir, 'bin/electron-sparkle-updater.js')}" rebuild --arch ${arch}`,
+        { cwd: __dirname, stdio: 'inherit' },
+      );
+    }
 
     await copyNativeModulesToSource();
     await copyExternalRuntimeModulesToSource();
@@ -178,6 +214,7 @@ const config = {
       `node scripts/buildCoreManifest.mjs --core=core-dist --platform=${corePlatform} --channel=${channel || 'stable'} --version=${packageJSON.version} --seq=${process.env.CORE_SEQ || 0} --shell-abi=${shellAbi}`,
       { stdio: 'inherit', cwd: __dirname },
     );
+    await packBuiltinCore(__dirname);
   },
   /**
    * AfterPack hook for copying Liquid Glass Assets.car on macOS 26+.
@@ -192,12 +229,19 @@ const config = {
       return;
     }
 
-    const resourcesPath = path.join(
-      context.appOutDir,
-      `${context.packager.appInfo.productFilename}.app`,
-      'Contents',
-      'Resources',
-    );
+    const appPath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`);
+    const resourcesPath = path.join(appPath, 'Contents', 'Resources');
+
+    // The Mac App Store sandbox cannot register the helper's LaunchAgent.
+    if (context.electronPlatformName === 'darwin') {
+      await embedComputerUseHelper({
+        appPath,
+        arch: arch === 'arm64' ? 'arm64' : 'x64',
+        cacheDir: path.join(__dirname, 'node_modules', '.cache', 'lobehub-computer-use'),
+        version: computerUseHelperVersion,
+      });
+    }
+
     const iconFileName = getIconFileName();
     const assetsCarSource = path.join(__dirname, 'build', `${iconFileName}.Assets.car`);
     const assetsCarDest = path.join(resourcesPath, 'Assets.car');
@@ -212,7 +256,21 @@ const config = {
       console.info(`⏭️  Skipping Assets.car (not found or copy failed)`);
     }
   },
-  afterSign: verifyFontListSignature,
+  afterSign: async (context) => {
+    await verifyFontListSignature(context);
+
+    if (context.electronPlatformName === 'darwin') {
+      verifyComputerUseHelper(
+        path.join(
+          context.appOutDir,
+          `${context.packager.appInfo.productFilename}.app`,
+          COMPUTER_USE_HELPER_BUNDLE_PATH,
+        ),
+        { version: computerUseHelperVersion },
+      );
+      console.info('✅ Computer Use helper kept its notarized signature');
+    }
+  },
   appId: macAppId,
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
@@ -225,6 +283,8 @@ const config = {
 
   // Native modules must be unpacked from asar to work correctly
   asarUnpack: getAsarUnpackPatterns(),
+
+  ...(useSparkle ? { buildVersion: toSparkleBuildVersion(packageJSON.version) } : {}),
 
   detectUpdateChannel: true,
 
@@ -257,6 +317,7 @@ const config = {
   files: [
     'shell/**',
     '!shell/__tests__',
+    ...(useSparkle ? ['!shell/rescue/electron-updater.cjs'] : []),
     'package.json',
     // Exclude all node_modules first
     '!node_modules',
@@ -286,6 +347,15 @@ const config = {
         }
       : {}),
     extendInfo: {
+      ...(useSparkle
+        ? {
+            SUDeltaChainHistory: 6,
+            SUEnableAutomaticChecks: false,
+            SUEnableInstallerLauncherService: false,
+            SUFeedURL: sparkleFeedUrl,
+            SUPublicEDKey: sparklePublicKey,
+          }
+        : {}),
       CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
@@ -300,6 +370,8 @@ const config = {
         "Application requests access to the user's Documents folder.",
       NSDownloadsFolderUsageDescription:
         "Application requests access to the user's Downloads folder.",
+      NSLocalNetworkUsageDescription:
+        'LobeHub connects to self-hosted servers, model providers, and other services on your local network.',
       NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
       NSScreenCaptureUsageDescription:
         'Application requests access to record and analyze screen content for AI assistance.',
@@ -307,6 +379,8 @@ const config = {
     },
     gatekeeperAssess: false,
     hardenedRuntime: hasAppleCertificate,
+    // Ship the notarized helper as built; re-signing drops its stapled ticket.
+    signIgnore: [COMPUTER_USE_HELPER_SIGN_IGNORE],
     notarize: hasAppleCertificate,
     ...(hasAppleCertificate ? {} : { identity: null }),
     target: [
@@ -341,11 +415,30 @@ const config = {
     releaseNotes: process.env.RELEASE_NOTES || undefined,
   },
 
+  ...(sparklePackageDir
+    ? {
+        extraFiles: [
+          {
+            from: path.join(sparklePackageDir, 'native/vendor/Sparkle.framework'),
+            to: 'Frameworks/Sparkle.framework',
+          },
+        ],
+      }
+    : {}),
   extraResources: [
     { from: 'resources/bin', to: 'bin' },
-    { from: 'core-dist', to: 'core' },
-    // electron-builder's copy filter drops a top-level `node_modules` dir from any `from`, so it needs its own entry
-    { from: 'core-dist/node_modules', to: 'core/node_modules' },
+    { from: 'core.asar', to: 'core.asar' },
+    { from: 'core.asar.unpacked', to: 'core.asar.unpacked' },
+    // The Sparkle bridge addon is loaded by an explicit path outside app.asar; pnpm's
+    // symlinked package dir cannot be matched by asarUnpack, so it ships as a resource.
+    ...(sparklePackageDir
+      ? [
+          {
+            from: path.join(sparklePackageDir, 'native/build/Release/sparkle_bridge.node'),
+            to: 'sparkle/sparkle_bridge.node',
+          },
+        ]
+      : []),
     // Local Sandbox helper binaries. The sandbox spawns these by path, so they
     // must be real files — not entries inside app.asar, and not something the
     // user is expected to install separately.

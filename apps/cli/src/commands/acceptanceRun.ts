@@ -7,7 +7,8 @@ import type { VerifyAgentPlanConfig, VerifyCheckItem } from '@lobechat/types';
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
-import { getTrpcClient } from '../api/client';
+import type { TrpcClient } from '../api/client';
+import { createPublicLambdaClient, getTrpcClient } from '../api/client';
 import { resolveWorkspaceId } from '../api/workspace';
 import { resolveServerUrl } from '../settings';
 import { ensureAcceptanceDirIgnored, ensureAcceptanceDirIgnoredFor } from '../utils/acceptanceDir';
@@ -74,8 +75,7 @@ const listMaterializedFiles = (directory: string): string[] => {
   });
 };
 
-async function installAction(options: InstallOptions): Promise<void> {
-  const client = await getTrpcClient();
+async function installAction(options: InstallOptions, client: TrpcClient): Promise<void> {
   const version = options.skillVersion?.replace(/^v/, '');
   const bundle = await client.verify.getSkillBundle.query({
     identifier: options.skill,
@@ -654,12 +654,16 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   // the PR link after the ingest, whatever the scenario resolved to.
   let context: Record<string, unknown> | undefined;
   let pullRequest: ReturnType<typeof pullRequestFromResult>;
+  // Only a PR the report names is a delivery claim; the branch lookup below is
+  // best-effort provenance and may find a long-lived branch's unrelated PR.
+  let authoredPullRequest: ReturnType<typeof pullRequestFromResult>;
   if (scenario === 'coding') {
     const branch = typeof result.branch === 'string' ? result.branch : undefined;
     const surfaces = surfacesFromResult(result);
     // An authored PR wins; otherwise ask `gh` what the branch's PR is, so the
     // report links to it without the author having to remember the field.
-    pullRequest = pullRequestFromResult(result) ?? pullRequestFromBranch(branch);
+    authoredPullRequest = pullRequestFromResult(result);
+    pullRequest = authoredPullRequest ?? pullRequestFromBranch(branch);
     const contextEntries = Object.entries({
       branch,
       commit: typeof result.commit === 'string' ? result.commit : undefined,
@@ -699,6 +703,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   // An external repository has none of those, so create a first-class
   // standalone subject instead of making the caller manufacture a Task ID.
   let subject = subjectFromResult(result);
+  let foldTaskRunTopic = false;
   if (!requestedAcceptanceId && options.subject) {
     const ref = parseSubjectRef(options.subject);
     if (!ref) {
@@ -714,6 +719,8 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   } else if (!requestedAcceptanceId && !subject) {
     const ref = subjectFromEnv();
     if (ref) subject = { ref };
+    // Only the ambient topic may be folded onto its Task; an explicit subject stays exact.
+    foldTaskRunTopic = Boolean(ref);
   }
   if (!requestedAcceptanceId && !subject) {
     subject = {
@@ -772,10 +779,16 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
       requirement,
       subjectId: subject!.ref.subjectId,
       subjectType: subject!.ref.subjectType,
+      ...(foldTaskRunTopic ? { foldTaskRunTopic } : {}),
       ...(subject!.ref.subjectType === 'standalone' && (title || goal)
         ? { title: title || goal }
         : {}),
     });
+    // The server may fold the subject (a Task's run topic lands on the Task).
+    subject = {
+      ...subject!,
+      ref: { subjectId: acceptance.subjectId, subjectType: acceptance.subjectType },
+    };
     // A subject's acceptance may already hold rounds; this one has to line up
     // with them exactly as an explicit `--acceptance` round does.
     bundle = await client.acceptance.getBundle.query({ id: acceptance.id });
@@ -839,6 +852,15 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   // The chained round's index — `?r=<roundIndex>` on the acceptance URL
   // deep-links this round's report as the fixed snapshot view.
   const roundIndex = attached?.roundIndex ?? null;
+  // A `supersedes` entry that names no check of this acceptance folds nothing:
+  // the old row would stay on the page as if never replaced. An older server
+  // does not report these, so treat the field as optional.
+  const unresolvedSupersedes: string[] = attached?.unresolvedSupersedes ?? [];
+  if (unresolvedSupersedes.length > 0) {
+    log.warn(
+      `supersedes names no check of this acceptance, so nothing was replaced: ${unresolvedSupersedes.join(', ')}. Name it by a plan item id from an earlier round or a check id from \`lh acceptance view --json\`.`,
+    );
+  }
   const acceptanceUrl = new URL(
     `/acceptance/${encodeURIComponent(acceptanceId)}`,
     resolveServerUrl(),
@@ -979,6 +1001,24 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
     }
   }
 
+  // 5. Link the PR to the acceptance itself. The round's context is a
+  //    snapshot of this ingest; the acceptance is what the PR delivers, and
+  //    the page reads its PRs from there. Only the report's own PR is linked:
+  //    a branch-inferred one stays round provenance. Never fatal: an older
+  //    server lacks the procedure, and the round itself is the deliverable.
+  if (authoredPullRequest?.url) {
+    try {
+      await client.acceptance.linkPullRequest.mutate({
+        id: acceptanceId,
+        title:
+          typeof authoredPullRequest.title === 'string' ? authoredPullRequest.title : undefined,
+        url: String(authoredPullRequest.url),
+      });
+    } catch (e) {
+      log.warn(`pull request not linked to the acceptance: ${String(e)}`);
+    }
+  }
+
   // A case with no matching plan item means the run checked something it
   // never planned — worth saying out loud, but not a failure. Only
   // meaningful against a plan that actually names something: with no plan
@@ -1027,6 +1067,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
         subject: subject!.ref,
         unexecuted: unexecuted.map((item) => item.id),
         unplanned,
+        unresolvedSupersedes,
         verifyRunId: runId,
       },
       typeof options.json === 'string' ? options.json : undefined,
@@ -1130,7 +1171,7 @@ function withSubmitOptions(cmd: Command): Command {
     .option('--run <verifyRunId>', 'Target verification session (or use --operation)')
     .option('--operation <operationId>', 'Resolve the session from an Agent Run operation id')
     .requiredOption('--item <checkItemId>', 'Plan item id (checkItemId)')
-    .option('--type <type>', 'screenshot|gif|video|text|dom_snapshot|transcript')
+    .option('--type <type>', 'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript')
     .option('--file <path>', 'Local file to upload as the evidence artifact')
     .option('--content <text>', 'Inline text payload (instead of a file)')
     .option('--verdict <verdict>', 'passed|failed|uncertain')
@@ -1143,7 +1184,10 @@ function withSubmitOptions(cmd: Command): Command {
 function withEvidenceUploadOptions(cmd: Command): Command {
   return cmd
     .requiredOption('--check <checkResultId>', 'Target check result id')
-    .requiredOption('--type <type>', 'screenshot|gif|video|text|dom_snapshot|transcript')
+    .requiredOption(
+      '--type <type>',
+      'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript',
+    )
     .option('--file <path>', 'Local file to upload as the artifact')
     .option('--file-id <id>', 'Attach an already-uploaded file without uploading it again')
     .option('--content <text>', 'Inline text payload (instead of a file)')
@@ -1197,13 +1241,15 @@ export function attachAcceptanceRunCommands(acceptance: Command): void {
     acceptance
       .command('install')
       .description('Install the latest acceptance skill source into .agents/skills/acceptance'),
-  ).action(installAction);
+  ).action((options: InstallOptions) => installAction(options, createPublicLambdaClient()));
 
   withInstallOptions(
     acceptance
       .command('update')
       .description('Download the latest skill source, replacing its files and re-wiring harnesses'),
-  ).action((options: InstallOptions) => installAction({ ...options, force: true }));
+  ).action((options: InstallOptions) =>
+    installAction({ ...options, force: true }, createPublicLambdaClient()),
+  );
 
   const run = acceptance
     .command('run')
@@ -1313,14 +1359,14 @@ export function attachDeprecatedVerifyRunAliases(verify: Command): void {
       verify.command('init').description('Deprecated — use `lh acceptance install`'),
     ),
     'lh acceptance install',
-  ).action(installAction);
+  ).action(async (options: InstallOptions) => installAction(options, await getTrpcClient()));
 
   deprecate(
     withInstallOptions(
       verify.command('install').description('Deprecated — use `lh acceptance install`'),
     ),
     'lh acceptance install',
-  ).action(installAction);
+  ).action(async (options: InstallOptions) => installAction(options, await getTrpcClient()));
 
   deprecate(
     withIngestReportOptions(

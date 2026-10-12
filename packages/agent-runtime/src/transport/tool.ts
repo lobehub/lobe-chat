@@ -76,6 +76,8 @@ export interface ToolRunExecution {
   interrupted?: boolean;
   mocked?: boolean;
   result: ToolRunResult;
+  /** Server-owned verdict; tools cannot supply this through their result. */
+  resultBlocked?: boolean;
   /** The transport already persisted the result into its tool message. */
   resultPersisted?: boolean;
   /** Existing/pre-created tool message owned by the transport. */
@@ -138,6 +140,11 @@ export interface ToolRunContext {
  * client adapter wraps `internal_invokeDifferentTypePlugin`.
  */
 export interface ToolTransport {
+  /** Execution-entry control; a returned result settles this call without launching it. */
+  beforeToolCall?: (
+    call: ChatToolPayload,
+    context: ToolRunContext,
+  ) => Promise<ToolRunExecution | undefined>;
   /** This runtime can execute tools whose source is the client directly. */
   canRunClientTools?: boolean;
   getCost?: (toolName: string) => number;

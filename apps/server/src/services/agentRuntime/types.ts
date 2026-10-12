@@ -1,4 +1,8 @@
-import { type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
+import {
+  type AgentRunLlmExecutor,
+  type AgentRuntimeContext,
+  type AgentState,
+} from '@lobechat/agent-runtime';
 import type {
   AgentGroupConfig,
   BotPlatformContext,
@@ -131,7 +135,8 @@ export type StepCompletionReason =
   | 'cost_limit'
   | 'tool_call_repeat_limit'
   | 'waiting_for_human'
-  | 'waiting_for_async_tool';
+  | 'waiting_for_async_tool'
+  | 'waiting_for_client';
 
 // ==================== Execution Params ====================
 
@@ -143,6 +148,12 @@ export interface AgentExecutionParams {
    * (treated as attempt 1) on the first re-check armed by a completion bridge.
    */
   asyncToolVerifyAttempt?: number;
+  /**
+   * Expiry check of a `waiting_for_client` park, carrying the park's
+   * `parkedAt`. Scheduled when the run parks; ends the run with an actionable
+   * error if it is still parked on that same wait. Runs without the step lock.
+   */
+  clientLlmWaitExpired?: string;
   context?: AgentRuntimeContext;
   externalRetryCount?: number;
   /**
@@ -190,6 +201,11 @@ export interface AgentExecutionParams {
    * via `tryResumeParentFromAsyncTool`.
    */
   resumeAsyncTool?: boolean;
+  /**
+   * Continue a run parked in `waiting_for_client`: replay the parked LLM call
+   * now that a client asked to run it. Scheduled by `resumeFromClientLlmWait`.
+   */
+  resumeClientLlm?: boolean;
   /**
    * Keep the operation lock held after this step returns. Used by the inline
    * step loop so the lock spans the whole invocation rather than being dropped
@@ -307,6 +323,8 @@ export interface GroupActionMemberBridgeParams {
    * collapse the anchor onto the group tool call itself).
    */
   anchorMessageId: string;
+  /** Member deadline (epoch ms), carried for approval continuations. */
+  deadlineAt?: number;
   /** Total members forked under this group tool call — the K=N barrier target. */
   expectedMembers: number;
   /** Child member op's final state — passed in local mode; loaded otherwise. */
@@ -381,6 +399,13 @@ export interface ExecGroupMemberParams {
   timeout?: number;
   /** Group topic id. */
   topicId: string;
+  /**
+   * The supervisor run's approval policy. Members answer to the same mode the
+   * user picked for the turn, so a `humanIntervention: 'required'` tool still
+   * asks for approval when a member calls it. Falls back to headless only when
+   * the supervisor carries none.
+   */
+  userInterventionConfig?: UserInterventionConfig;
 }
 
 export interface ExecGroupMemberResult {
@@ -394,6 +419,20 @@ export interface ExecGroupMemberResult {
 }
 
 export interface OperationCreationParams {
+  /**
+   * The client starting this run renders `file` Works (declared via
+   * `aiAgent.execAgent`'s `streamFeatures`). Stored on
+   * `state.host.acceptsFileWorks`; a group member run streaming on its
+   * supervisor's channel inherits the supervisor's when it declares none.
+   */
+  acceptsFileWorks?: boolean;
+  /**
+   * The client starting this run handles `member_runtime_end` (declared via
+   * `aiAgent.execAgent`'s `streamFeatures`). Persisted on the op's metadata so
+   * the Gateway stream notifier renames the group member terminals it mirrors
+   * onto this op's channel only for a client that recognizes the new event.
+   */
+  acceptsMemberRuntimeEnd?: boolean;
   activeDeviceId?: string;
   /**
    * Principal pool the routed `activeDeviceId` lives in. `personal` when a
@@ -484,6 +523,11 @@ export interface OperationCreationParams {
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
   /**
+   * Wire protocol the client that started this run speaks; `2` lets the run
+   * deliver message revisions instead of whole `uiMessages` snapshots. Absent ⇒ 1.
+   */
+  clientProtocol?: 1 | 2;
+  /**
    * Borrowed-connector attribution, resolved once during tool discovery. Run
    * context for the context engine to inject — see `expertise`.
    */
@@ -538,6 +582,12 @@ export interface OperationCreationParams {
     sourceOperationId: string;
     sourceToolMessageIds: string[];
   };
+  /**
+   * The client that started this run can execute relayed LLM attempts
+   * (`llm_execute`). Stored on `state.host.llmExecutor`; a sub-agent run
+   * inherits its parent's when it declares none.
+   */
+  llmExecutor?: AgentRunLlmExecutor;
   maxSteps?: number;
   modelRuntimeConfig?: any;
   /** Marks the source claim non-rollbackable once deterministic runtime state is durable. */

@@ -44,6 +44,10 @@ vi.mock('./features/CreateAppModal', () => ({
   createOAuthAppModal: vi.fn(),
 }));
 
+vi.mock('./features/useOAuthAppList', () => ({
+  useOAuthAppList: () => ({ data: undefined }),
+}));
+
 vi.mock('./features/OAuthApps', () => ({
   default: () => <div>oauth-apps-page</div>,
 }));
