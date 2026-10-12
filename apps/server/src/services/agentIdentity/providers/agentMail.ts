@@ -29,7 +29,8 @@ export interface AgentMailProviderConfig {
   /**
    * Replay store keyed by webhook event id. The claim-store shape is
    * transport-neutral, so the bounded in-memory store Linq ships is reused as
-   * the single-process default; a multi-instance deployment injects a shared one.
+   * the single-process default; the deployment registry injects the shared
+   * Redis-backed one.
    */
   dedupeStore?: LinqWebhookDedupeStore;
   /** Injected fetch, for tests and offline acceptance. */

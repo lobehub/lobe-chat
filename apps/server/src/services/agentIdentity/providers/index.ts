@@ -1,4 +1,5 @@
 import { agentIdentityEnv } from '@/envs/agentIdentity';
+import { redisService } from '@/server/services/redis';
 
 import { AgentAccountProviderRegistry } from '../registry';
 import type { AgentMailProviderConfig } from './agentMail';
@@ -52,6 +53,16 @@ export const createDefaultAgentAccountRegistry = (): AgentAccountProviderRegistr
         ? {
             apiBaseUrl: agentIdentityEnv.AGENT_MAIL_API_BASE_URL,
             apiKey: agentIdentityEnv.AGENT_MAIL_API_KEY,
+            // Shared across instances: a retry or replay can land on any worker.
+            dedupeStore: {
+              claim: (eventId, ttlSeconds) =>
+                redisService.agentIdentity.claimWebhookEvent(
+                  { eventId, provider: 'agent-mail' },
+                  ttlSeconds,
+                ),
+              release: (eventId) =>
+                redisService.agentIdentity.releaseWebhookEvent({ eventId, provider: 'agent-mail' }),
+            },
             webhookSecret: agentIdentityEnv.AGENT_MAIL_WEBHOOK_SECRET,
             webhookUrl: agentIdentityEnv.AGENT_MAIL_WEBHOOK_URL,
           }
