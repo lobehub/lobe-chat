@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isUserSkillIdentifier, toRuntimeSkill } from './index';
+import { canonicalUserSkillIdentifier, isUserSkillIdentifier, toRuntimeSkill } from './index';
 
 const skill = {
   content: '---\nname: migrate-slice\ndescription: Move one slice\n---\nDo it.',
@@ -37,5 +37,18 @@ describe('toRuntimeSkill', () => {
     expect(runtime.content).toContain('check.sh');
     expect(runtime.content).toContain('readReference');
     expect(runtime.content.startsWith(skill.content)).toBe(true);
+  });
+});
+
+describe('canonicalUserSkillIdentifier', () => {
+  it('accepts a user skill name in any casing', () => {
+    expect(canonicalUserSkillIdentifier('User-Skills:Goal-Plan-X')).toBe('user-skills:goal-plan-x');
+    expect(canonicalUserSkillIdentifier(' user-skills:goal-plan-x ')).toBe(
+      'user-skills:goal-plan-x',
+    );
+  });
+
+  it('rejects a name that is not a user skill', () => {
+    expect(canonicalUserSkillIdentifier('agent-skills:foo')).toBeUndefined();
   });
 });

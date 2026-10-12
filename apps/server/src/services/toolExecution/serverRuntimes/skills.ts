@@ -50,7 +50,7 @@ import {
   isLhCommand,
   preprocessLhCommand,
 } from '@/server/services/toolExecution/preprocessLhCommand';
-import { isUserSkillIdentifier, UserSkillService } from '@/server/services/userSkill';
+import { canonicalUserSkillIdentifier, UserSkillService } from '@/server/services/userSkill';
 
 import { resolveContentWorkspaceId, resolveRunWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
@@ -1083,8 +1083,10 @@ export const skillsRuntime: ServerRuntimeRegistration = {
       // for — it grows with every goal batch, and this factory runs per tool
       // call. Same carrier shape as above, under the recovered workspace (a
       // dispatched or resumed run may not carry it on the context).
-      resolveSkill: async (name) => {
-        if (!isUserSkillIdentifier(name) || !isSkillReachable(name)) return undefined;
+      resolveSkill: async (requested) => {
+        // Models vary the casing of a name, as the preloaded lookup tolerates.
+        const name = canonicalUserSkillIdentifier(requested);
+        if (!name || !isSkillReachable(name)) return undefined;
         const [skill] = await new UserSkillService(context.serverDB!, context.userId!, workspaceId)
           .loadRuntimeSkills([name])
           .catch((error) => {

@@ -74,6 +74,9 @@ export const learnedRulesClause = (
         .join('\n')}`
     : undefined;
 
+/** The one expertise domain a carrier keeps for every goal batch it runs. */
+export const BATCH_DOMAIN_TITLE = 'Goal batch rules';
+
 export class BatchPlanSkillService {
   constructor(
     private readonly db: LobeChatDatabase,
@@ -137,8 +140,19 @@ export class BatchPlanSkillService {
    * (opened on the first break). Nothing is compiled from it: later units'
    * acceptance carries the rule as a clause of its requirement.
    */
+  /** The carrier's existing batch domain, if it has one. */
+  private findBatchDomain = async (expertise: ExpertiseModel, carrier: ExpertiseCarrier) => {
+    const bound =
+      carrier.type === 'agent'
+        ? await expertise.listDomainsForAgent(carrier.id)
+        : carrier.type === 'project'
+          ? await expertise.listDomainsForProject(carrier.id)
+          : await expertise.listDomainsForOwner();
+    return bound.find(({ domain }) => domain.title === BATCH_DOMAIN_TITLE)?.domain.id;
+  };
+
   learn = async (params: {
-    /** Where the domain is mounted: the goal's project, else its executing agent, else the user. */
+    /** Where the domain is mounted: the executing agent, else the user. */
     carrier: ExpertiseCarrier;
     domainId?: string;
     /** What the gate found, in words. */
@@ -149,17 +163,21 @@ export class BatchPlanSkillService {
     revision: number;
   }): Promise<{ domainId: string; learning: GoalRolloutLearning } | undefined> => {
     const expertise = new ExpertiseModel(this.db, this.userId, this.workspaceId);
+    // One domain per carrier for every batch it runs, not one per batch: each
+    // run's expertise snapshot loads every domain its agent carries, so a
+    // domain per batch would grow that load with every batch ever run.
+    const domainId =
+      params.domainId ??
+      (await this.findBatchDomain(expertise, params.carrier)) ??
+      (await expertise.createDomain({
+        brief: 'What the release gates of goal batches have learned.',
+        carrier: params.carrier,
+        domainFilter: 'Doing or verifying a unit of a goal batch.',
+        title: BATCH_DOMAIN_TITLE,
+      }));
     const scope = params.planSkill
       ? `the batch plan ${planSkillIdentifier(params.planSkill)}`
       : `the batch of "${params.goalTitle}"`;
-    const domainId =
-      params.domainId ??
-      (await expertise.createDomain({
-        brief: `What the release gate of ${scope} has learned.`,
-        carrier: params.carrier,
-        domainFilter: `Doing or verifying a unit of ${scope}.`,
-        title: oneLine(`${params.goalTitle} · batch`, MAX_TITLE),
-      }));
 
     const title = oneLine(params.guidance, MAX_TITLE);
     const lesson = await expertise.createRule({
@@ -168,7 +186,7 @@ export class BatchPlanSkillService {
       enforcement: 'block',
       how: params.guidance,
       title,
-      why: `The release gate of round ${params.revision} sent the batch back: ${params.found}`,
+      why: `The release gate of round ${params.revision} of ${scope} sent it back: ${params.found}`,
     });
     if (!lesson) return undefined;
 

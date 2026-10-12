@@ -26,6 +26,16 @@ import { renderSkillIndexContent, validateSkillName } from '../skillManagement/f
 
 export const isUserSkillIdentifier = (id: string) => id.startsWith(USER_SKILLS_IDENTIFIER_PREFIX);
 
+/**
+ * The canonical identifier of a user skill a model named, or undefined when
+ * the name is not one. Models vary casing; user skill names are lowercase
+ * slugs, so the lowercased name is the canonical one.
+ */
+export const canonicalUserSkillIdentifier = (name: string): string | undefined => {
+  const canonical = name.trim().toLowerCase();
+  return isUserSkillIdentifier(canonical) ? canonical : undefined;
+};
+
 /** A skill as the skill pool and the skills runtime take it. */
 export interface UserRuntimeSkill {
   /** `SKILL.md` alone — `activateSkill` appends the tree of its scripts itself. */

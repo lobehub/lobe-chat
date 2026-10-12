@@ -4276,6 +4276,16 @@ export class GoalService {
     // goal row's lock, so a failure part-way leaves the question open to answer
     // again rather than consumed beside half a round; and a second answer
     // racing this one finds the break already restarted.
+    // What a break teaches is mounted on the agent that runs the batch's units
+    // (a run's expertise snapshot reads the executing agent's domains, not the
+    // project's) — resolved like the task assignee, so a deleted executor falls
+    // back to the goal agent rather than a binding that cannot be written. Read
+    // before the transaction, which holds the goal row.
+    const carrierAgentId = await this.resolveTaskAssignee(graph.goal);
+    const carrier: ExpertiseCarrier = carrierAgentId
+      ? { id: carrierAgentId, type: 'agent' }
+      : { type: 'user' };
+
     const committed = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
@@ -4355,13 +4365,6 @@ export class GoalService {
           }),
         );
       }
-      // Mounted on the agent that runs the batch's units: a run's expertise
-      // snapshot reads the executing agent's domains (and the owner's), not
-      // the project's, so a project mount would never reach those runs.
-      const carrierAgentId = goalTaskAgentId(graph.goal);
-      const carrier: ExpertiseCarrier = carrierAgentId
-        ? { id: carrierAgentId, type: 'agent' }
-        : { type: 'user' };
       const learned =
         correction && optionId !== 'new_class'
           ? await inSavepoint('break learning', (db) =>
@@ -4509,8 +4512,16 @@ export class GoalService {
         phase: 'probe',
         probeNodeIds: probeIds,
         releasedCount: opened.length,
-        learningDomainId: learned?.domainId ?? state.learningDomainId,
-        learnings: learned ? [...(state.learnings ?? []), learned.learning] : state.learnings,
+        // A fork starts a new class of units: the old class's rules do not
+        // bind it, so its learnings start empty.
+        learningDomainId:
+          optionId === 'new_class' ? undefined : (learned?.domainId ?? state.learningDomainId),
+        learnings:
+          optionId === 'new_class'
+            ? undefined
+            : learned
+              ? [...(state.learnings ?? []), learned.learning]
+              : state.learnings,
         planSkill,
         templateNodeId: template?.id ?? state.templateNodeId,
         templateRevision: state.templateRevision + 1,

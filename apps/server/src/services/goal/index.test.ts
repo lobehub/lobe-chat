@@ -2742,6 +2742,9 @@ describe('GoalService', () => {
       // The v2 correction belongs to the old class; the fork starts clean.
       expect(plan.description).not.toContain('补上冷启动这一步');
       expect(plan.description).toContain('把 store 换成 replica 支撑的实现');
+      // …and so do its rules: the old class's learnings do not bind the new one.
+      expect(after.goal.config!.rolloutState!.learnings).toBeUndefined();
+      expect(after.goal.config!.rolloutState!.learningDomainId).toBeUndefined();
     });
   });
 
@@ -3170,6 +3173,69 @@ describe('GoalService', () => {
     const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     const domains = await new ExpertiseModel(serverDB, userId).listDomainsForAgent('agt_batch');
     expect(domains.map(({ domain }) => domain.id)).toContain(next.learningDomainId);
+  });
+
+  it('learns into one shared domain per agent, through the executor fallback', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    await serverDB.insert(agents).values([
+      { id: 'agt_goal_main', slug: 'agt-goal-main', userId },
+      { id: 'agt_gone_exec', slug: 'agt-gone-exec', userId },
+    ]);
+    const service = new GoalService(serverDB, userId);
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const breakAndRevise = async (title: string) => {
+      const graph = await service.create({
+        agentId: 'agt_goal_main',
+        config: { taskAgentId: 'agt_gone_exec' },
+        title,
+      });
+      await service.tick(graph.goal.id);
+      const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      const decision = await graphModel.createDecision(graph.goal.id, state.assayNodeId!, {
+        authority: 'user',
+        options: [{ id: 'revise', label: 'Revise' }],
+        question: 'Batch gate blocked',
+        requestedUserId: userId,
+      });
+      await graphModel.updateNodeStatus(graph.goal.id, state.assayNodeId!, 'waiting');
+      await goalModel.updateRolloutState(graph.goal.id, { ...state, phase: 'pattern_break' });
+      await serverDB.update(goals).set({ status: 'paused' }).where(eq(goals.id, graph.goal.id));
+      // The dedicated executor is deleted before the break is answered.
+      await serverDB.delete(agents).where(eq(agents.id, 'agt_gone_exec'));
+      await service.decide(graph.goal.id, decision!.id, 'revise', '补上冷启动这一步');
+      return (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    };
+
+    const first = await breakAndRevise('First batch');
+    // Learned despite the stale executor: mounted on the goal agent it falls back to.
+    expect(first.learnings).toHaveLength(1);
+    const expertise = new ExpertiseModel(serverDB, userId);
+    expect(
+      (await expertise.listDomainsForAgent('agt_goal_main')).map(({ domain }) => domain.id),
+    ).toContain(first.learningDomainId);
+
+    // A second batch on the same agent reuses that domain instead of adding one.
+    await serverDB
+      .insert(agents)
+      .values({ id: 'agt_gone_exec', slug: 'agt-gone-exec', userId })
+      .onConflictDoNothing();
+    const second = await breakAndRevise('Second batch');
+    expect(second.learningDomainId).toBe(first.learningDomainId);
   });
 
   it('moves a batch from before plan skills into one at its next revision', async () => {
