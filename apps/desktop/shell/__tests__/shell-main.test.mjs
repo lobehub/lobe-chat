@@ -124,7 +124,10 @@ describe('shell main', () => {
 
   it('starts stable boot validation without waiting for the background security check', async () => {
     const core = fakeCore('builtin');
-    const resolveCore = vi.fn(() => core);
+    const resolveCore = vi.fn(({ deferBoot }) => {
+      if (!deferBoot) core.startBoot();
+      return core;
+    });
     loadMain({ app: packagedApp(), resolveCore });
     const check = vi.fn();
     let release;
@@ -134,8 +137,8 @@ describe('shell main', () => {
           release = resolve;
         }),
     });
-    expect(resolveCore).toHaveBeenCalledWith(expect.objectContaining({ deferBoot: true }));
-    expect(core.startBoot).not.toHaveBeenCalled();
+    expect(resolveCore).toHaveBeenCalledWith(expect.objectContaining({ deferBoot: false }));
+    expect(core.startBoot).toHaveBeenCalledOnce();
     expect(await global.__SHELL__.startupUpdate.run(check)).toBe(true);
     expect(check).not.toHaveBeenCalled();
     expect(core.startBoot).toHaveBeenCalledOnce();
@@ -143,6 +146,53 @@ describe('shell main', () => {
     expect(await background).toBe(true);
     expect(core.startBoot).toHaveBeenCalledOnce();
   });
+
+  it.each([
+    ['stable', false],
+    ['canary', true],
+    ['beta', true],
+  ])('counts early interrupted %s launches (existing: %s)', (channel, existing) => {
+    const builtinDir = path.join(process.resourcesPath, 'core.asar');
+    fs.writeFileSync(
+      path.join(builtinDir, 'manifest.json'),
+      JSON.stringify({ channel, version: '1.0.0' }),
+    );
+    const userData = path.join(tmp, 'userData');
+    fs.mkdirSync(userData, { recursive: true });
+    if (existing) fs.writeFileSync(path.join(userData, 'lobehub-settings.json'), '{}');
+    // Never enter bootstrap or mark healthy, simulating interruption before App starts.
+    coreMain = path.join(builtinDir, 'dist/main/index.js');
+    fs.mkdirSync(path.dirname(coreMain), { recursive: true });
+    fs.writeFileSync(coreMain, 'module.exports = 1;');
+    delete require.cache[loaderPath];
+    const { resolveCore } = require(loaderPath);
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      loadMain({ app: packagedApp(), resolveCore });
+      const boot = JSON.parse(fs.readFileSync(path.join(userData, 'core-ota/boot.json'), 'utf8'));
+      expect(boot.failures).toBe(attempt);
+    }
+    const { runRescue } = loadMain({ app: packagedApp(), resolveCore });
+    expect(runRescue).toHaveBeenCalledOnce();
+  });
+
+  it.each(['canary', 'beta'])(
+    'defers a fresh %s boot until the gate allows entry',
+    async (channel) => {
+      fs.writeFileSync(
+        path.join(process.resourcesPath, 'core.asar/manifest.json'),
+        JSON.stringify({ channel }),
+      );
+      const core = fakeCore('builtin');
+      const resolveCore = vi.fn(({ deferBoot }) => {
+        if (!deferBoot) core.startBoot();
+        return core;
+      });
+      loadMain({ app: packagedApp(), electron: { net: { isOnline: () => false } }, resolveCore });
+      expect(core.startBoot).not.toHaveBeenCalled();
+      expect(await global.__SHELL__.startupUpdate.run(vi.fn())).toBe(true);
+      expect(core.startBoot).toHaveBeenCalledOnce();
+    },
+  );
 
   it('rescues in-process when the builtin core throws while loading', () => {
     const core = fakeCore('builtin', 'throw new Error("builtin boom");');

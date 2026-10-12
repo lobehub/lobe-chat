@@ -72,7 +72,7 @@ try {
     ? resolveCore({
         abi: abi.shellAbi,
         builtinDir,
-        deferBoot: !!startupUpdate,
+        deferBoot: startupUpdate.pending,
         publicKey: abi.publicKey,
         userData: app.getPath('userData'),
       })
@@ -107,7 +107,7 @@ try {
       run: async (check) => {
         try {
           const ready = await startupUpdate.run(check);
-          if (ready) core.startBoot();
+          if (ready && startupUpdate.pending) core.startBoot();
           return ready;
         } catch (error) {
           rescue(error, core.log);
