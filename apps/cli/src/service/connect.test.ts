@@ -206,6 +206,9 @@ describe('connect service', () => {
       const successCodes = unit.match(/^SuccessExitStatus=(.*)$/m)![1].split(' ');
       expect(successCodes).not.toContain(String(CONNECT_RETRYABLE_EXIT_CODE));
       expect(unit).toContain('Restart=on-failure');
+      // A start-rate limit would stop the retries after a burst of failures.
+      expect(unit).toContain('StartLimitIntervalSec=0');
+      expect(unit).not.toContain('StartLimitBurst');
     });
   });
 });

@@ -41,7 +41,7 @@ export function getWorkspaceStartupExitCode(error: unknown): number {
 export interface ConnectServiceOptions {
   /** With `workspace`: enroll into the shared pool visible to every member. */
   public?: boolean;
-  /** Enroll this machine as a device of the given workspace (admin only). */
+  /** Enroll this machine as a device of the given workspace (workspace members). */
   workspace?: string;
 }
 
@@ -114,8 +114,9 @@ function renderUnit(options: ConnectServiceOptions): string {
     `Description=${CLI_DISPLAY_NAME} connect service`,
     'After=network-online.target',
     'Wants=network-online.target',
-    'StartLimitIntervalSec=60',
-    'StartLimitBurst=10',
+    // No start-rate limit: transient workspace startup failures exit 75 and must
+    // keep retrying through outages of any length; RestartSec spaces the attempts.
+    'StartLimitIntervalSec=0',
     '',
     '[Service]',
     'Type=simple',
@@ -128,7 +129,7 @@ function renderUnit(options: ConnectServiceOptions): string {
     `StandardError=append:${logPath}`,
     'Restart=on-failure',
     'SuccessExitStatus=0 1 2',
-    'RestartSec=1',
+    'RestartSec=5',
     'TimeoutStopSec=20',
     '',
     '[Install]',

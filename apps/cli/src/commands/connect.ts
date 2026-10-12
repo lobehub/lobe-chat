@@ -95,7 +95,7 @@ interface ConnectOptions {
   serviceChild?: boolean;
   token?: string;
   verbose?: boolean;
-  /** Enroll this machine as a device of the given workspace (admin only). */
+  /** Enroll this machine as a device of the given workspace (workspace members). */
   workspace?: string;
 }
 
@@ -106,7 +106,7 @@ export function registerConnectCommand(program: Command) {
     .option('--token <jwt>', 'JWT access token')
     .option('--gateway <url>', 'Device gateway URL')
     .option('--device-id <id>', 'Device ID (auto-generated if not provided)')
-    .option('--workspace <id>', 'Enroll as a device of this workspace (admin only)')
+    .option('--workspace <id>', 'Enroll as a device of this workspace (workspace members)')
     .option(
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
@@ -203,7 +203,7 @@ export function registerConnectCommand(program: Command) {
   serviceCmd
     .command('install')
     .description('Install and start the Linux user systemd connect service')
-    .option('--workspace <id>', 'Enroll as a device of this workspace (admin only)')
+    .option('--workspace <id>', 'Enroll as a device of this workspace (workspace members)')
     .option(
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
