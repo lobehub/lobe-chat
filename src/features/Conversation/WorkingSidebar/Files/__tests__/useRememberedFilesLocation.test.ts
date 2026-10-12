@@ -47,11 +47,11 @@ beforeEach(() => {
 
 describe('useRememberedFilesLocation', () => {
   it('opens where the conversation last was until the device list settles', async () => {
-    await remember('topic:t1', { deviceId: 'device-1', directory: '/repo' });
+    await remember('topic/t1', { deviceId: 'device-1', directory: '/repo' });
 
     // Before the device default is known the live resolution is the home fallback.
     const { rerender, result } = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/Users/me' },
       settled: false,
     });
@@ -60,7 +60,7 @@ describe('useRememberedFilesLocation', () => {
     );
 
     rerender({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { deviceId: 'device-1', directory: '/repo/next' },
       settled: true,
     });
@@ -68,7 +68,7 @@ describe('useRememberedFilesLocation', () => {
 
     // The next session opens the new location.
     const next = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/Users/me' },
       settled: false,
     });
@@ -78,10 +78,10 @@ describe('useRememberedFilesLocation', () => {
   });
 
   it('answers with the saved location on the first render, before the replica hydrates', async () => {
-    await remember('topic:t1', { directory: '/repo' });
+    await remember('topic/t1', { directory: '/repo' });
 
     const { result } = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/Users/me' },
       settled: false,
     });
@@ -90,10 +90,10 @@ describe('useRememberedFilesLocation', () => {
   });
 
   it('uses the live resolution when nothing was remembered for this context', async () => {
-    await remember('topic:other', { directory: '/elsewhere' });
+    await remember('topic/other', { directory: '/elsewhere' });
 
     const { result } = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/repo' },
       settled: false,
     });
@@ -102,11 +102,11 @@ describe('useRememberedFilesLocation', () => {
   });
 
   it('keeps each identity’s locations apart', async () => {
-    await remember('topic:t1', { directory: '/repo' });
+    await remember('topic/t1', { directory: '/repo' });
 
     scope.current = 'u2:personal';
     const { result } = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/Users/other' },
       settled: false,
     });
@@ -116,13 +116,36 @@ describe('useRememberedFilesLocation', () => {
 
   it('does not remember an unsettled resolution', async () => {
     const view = await boot({
-      contextKey: 'topic:t1',
+      contextKey: 'topic/t1',
       resolved: { directory: '/Users/me' },
       settled: false,
     });
     await waitFor(() => expect(view.result.current).toEqual({ directory: '/Users/me' }));
 
     expect(storedRows()).toEqual([]);
+  });
+
+  it('keeps its replica keys out of the SWR persistent cache', async () => {
+    const { replicaKeys } = await import('@lobechat/replica');
+    const { unstable_serialize } = await import('swr');
+    const { CACHE_TIERS } = await import('@/libs/swr/localStorageProvider');
+    const { filesLocationResource } = await import('@/store/projectFile/projection');
+    const { filesLocationContextKey } = await import('../useRememberedFilesLocation');
+    const patterns = [...CACHE_TIERS.idb, ...CACHE_TIERS.local];
+
+    for (const contextKey of [
+      filesLocationContextKey('tpc_1', 'agt_1')!,
+      filesLocationContextKey(undefined, 'agt_1')!,
+    ]) {
+      const { name, version } = filesLocationResource;
+      const storageKey = filesLocationResource.storageKey({ contextKey });
+      // The SWR provider persists any key containing a tier pattern, so the
+      // replica's hydrate read must not carry one.
+      const swrKey = unstable_serialize(
+        replicaKeys.hydrate(name, version, 'u1:personal', storageKey),
+      );
+      expect(patterns.filter((pattern) => swrKey.includes(pattern))).toEqual([]);
+    }
   });
 
   it('passes the resolution through when there is no context to remember', async () => {

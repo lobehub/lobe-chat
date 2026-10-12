@@ -11,6 +11,16 @@ import {
 export type { FilesLocation } from '@/store/projectFile';
 
 /**
+ * The conversation a remembered location belongs to. `/` rather than `:` keeps
+ * the replica's own SWR keys clear of the `topic:` / `agent:` prefixes the SWR
+ * persistent cache matches by substring, so the row is stored once, here.
+ */
+export const filesLocationContextKey = (
+  topicId: string | null | undefined,
+  agentId: string | null | undefined,
+): string | undefined => (topicId ? `topic/${topicId}` : agentId ? `agent/${agentId}` : undefined);
+
+/**
  * The Files tree's directory, stable across a cold start.
  *
  * Until the device list arrives the working directory cannot be resolved for

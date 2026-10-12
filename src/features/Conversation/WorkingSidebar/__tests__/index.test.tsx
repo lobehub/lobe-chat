@@ -822,7 +822,7 @@ describe('AgentWorkingSidebar — Files cold start', () => {
     // Without the device default the cwd falls back to home.
     reviewState.workingDirectory = '/Users/me';
     globalStore.status.workingSidebarTab = 'files';
-    projectFileActions.rememberFilesLocation('agent:agent', { directory: '/repo' });
+    projectFileActions.rememberFilesLocation('agent/agent', { directory: '/repo' });
 
     const { rerender } = render(<AgentWorkingSidebar />);
     expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/repo' });

@@ -84,7 +84,10 @@ import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandb
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
 import Files from './Files';
 import FilesPrefetch from './Files/FilesPrefetch';
-import { useRememberedFilesLocation } from './Files/useRememberedFilesLocation';
+import {
+  filesLocationContextKey,
+  useRememberedFilesLocation,
+} from './Files/useRememberedFilesLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
 import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
@@ -436,11 +439,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // index can paint instead of a home-directory read or a missing tab.
   const devicesSettled = useDeviceStore((s) => s.isDevicesInit);
   const filesLocation = useRememberedFilesLocation(
-    isSandboxFiles
-      ? undefined
-      : topicId
-        ? `topic:${topicId}`
-        : activeAgentId && `agent:${activeAgentId}`,
+    isSandboxFiles ? undefined : filesLocationContextKey(topicId, activeAgentId),
     liveFilesDirectory === undefined
       ? undefined
       : { deviceId: remoteDeviceId, directory: liveFilesDirectory },
