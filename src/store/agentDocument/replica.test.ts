@@ -291,5 +291,23 @@ describe('agent document replicas', () => {
       expect(reader()?.missingMessage).toBe('Agent document not found');
       await waitFor(async () => expect(await storedReader()).toBeUndefined());
     });
+
+    it('evicts the persisted body once this session may no longer read it', async () => {
+      await agentDocumentReaderResource.storage!.set(
+        { queryKey: READER_KEY, scope },
+        {
+          data: { document: { content: '# Revoked', filename: 'a.md', title: 'A' } },
+          updatedAt: 1,
+        },
+      );
+      vi.spyOn(agentDocumentService, 'getReaderDocument').mockRejectedValue(
+        Object.assign(new Error('Forbidden'), { data: { code: 'FORBIDDEN' } }),
+      );
+
+      renderSync();
+
+      await waitFor(() => expect(reader()?.document).toBeNull());
+      await waitFor(async () => expect(await storedReader()).toBeUndefined());
+    });
   });
 });

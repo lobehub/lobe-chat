@@ -13,6 +13,8 @@ import {
 
 type Setter = StoreSetter<AgentDocumentState>;
 
+const READER_ACCESS_LOST = ['NOT_FOUND', 'FORBIDDEN', 'UNAUTHORIZED'] as const;
+
 export class AgentDocumentPrivateAction {
   readonly list;
   readonly reader;
@@ -33,8 +35,10 @@ export class AgentDocumentPrivateAction {
           const document = await agentDocumentService.getReaderDocument({ agentId, documentId });
           return { document: toAgentDocumentReaderContent(document) };
         } catch (error) {
-          // A deleted (or never-owned) document is an answer, not a failure.
-          if (isTrpcErrorCode(error, 'NOT_FOUND')) {
+          // A deleted (or never-owned) document, or one this session may no
+          // longer read, is an answer, not a failure: it must evict the body a
+          // reload would otherwise paint before the server says no.
+          if (READER_ACCESS_LOST.some((code) => isTrpcErrorCode(error, code))) {
             return { document: null, missingMessage: (error as Error).message };
           }
           throw error;

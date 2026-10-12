@@ -28,7 +28,8 @@ const ACTIVE_SCOPE_STORAGE_KEY = 'lobehub:active-scope';
 
 const isBrowser = () => typeof localStorage !== 'undefined';
 
-const readActiveScope = (): string | null => {
+/** The last-known resolved cache scope, or `null` when none is persisted. */
+export const readActiveScope = (): string | null => {
   if (!isBrowser()) return null;
   try {
     return localStorage.getItem(ACTIVE_SCOPE_STORAGE_KEY);
@@ -37,7 +38,7 @@ const readActiveScope = (): string | null => {
   }
 };
 
-const writeActiveScope = (scope: string): void => {
+export const writeActiveScope = (scope: string): void => {
   if (!isBrowser()) return;
   try {
     localStorage.setItem(ACTIVE_SCOPE_STORAGE_KEY, scope);
