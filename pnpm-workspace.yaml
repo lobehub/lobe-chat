@@ -61,7 +61,7 @@ allowBuilds:
   workerd: true
 
 overrides:
-  '@lobehub/ui': ^6.0.0-beta.2
+  '@lobehub/ui': ^6.0.0-beta.3
   '@lobehub/icons': ^6.0.0-beta.1
   '@lobehub/editor': ^5.0.0-beta.1
   '@lobehub/charts': ^6.0.0-beta.1

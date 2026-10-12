@@ -183,7 +183,6 @@ export const DesktopEvidenceReview = memo<DesktopEvidenceReviewProps>(({ model }
             <div className={styles.stageRow} style={{ position: 'relative' }}>
               {isVideo ? (
                 <VideoReviewStage
-                  activeNoteKey={model.activeNoteKey}
                   chapters={activeEvidence.chapters ?? []}
                   handleRef={videoStage}
                   key={activeEvidence.id}
