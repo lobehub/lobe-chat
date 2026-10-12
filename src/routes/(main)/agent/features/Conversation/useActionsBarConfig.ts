@@ -26,10 +26,15 @@ const HETERO_USER: { bar: MessageActionSlot[]; menu: MessageActionSlot[] } = {
   menu: ['restoreToInput', 'copy', 'divider', 'select', 'divider', 'del'],
 };
 
-/** Codex user edits run a replacement prompt while preserving the original history. */
 const CODEX_USER: typeof HETERO_USER = {
-  bar: ['edit', ...HETERO_USER.bar],
-  menu: ['edit', ...HETERO_USER.menu],
+  bar: ['copy'],
+  menu: ['restoreToInput', 'copy', 'branching', 'divider', 'select', 'divider', 'del'],
+};
+
+/** Codex user edits run a replacement prompt while preserving the original history. */
+const CODEX_EDITABLE_USER: typeof HETERO_USER = {
+  bar: ['edit', ...CODEX_USER.bar],
+  menu: ['edit', ...CODEX_USER.menu],
 };
 
 const HETERO_ASSISTANT: { bar: MessageActionSlot[]; menu: MessageActionSlot[] } = {
@@ -40,7 +45,7 @@ const HETERO_ASSISTANT: { bar: MessageActionSlot[]; menu: MessageActionSlot[] } 
 /** Codex replies can reuse the existing heterogeneous regeneration path. */
 const CODEX_ASSISTANT: typeof HETERO_ASSISTANT = {
   bar: ['copy', 'regenerate'],
-  menu: ['regenerate', ...HETERO_ASSISTANT.menu],
+  menu: ['regenerate', 'copy', 'branching', 'divider', 'select', 'divider', 'del'],
 };
 
 /**
@@ -67,7 +72,12 @@ export const useActionsBarConfig = (): ActionsBarConfig => {
       return {
         assistant: providerType === 'codex' ? CODEX_ASSISTANT : HETERO_ASSISTANT,
         assistantGroup: providerType === 'codex' ? CODEX_ASSISTANT : HETERO_ASSISTANT,
-        user: canEditCodex ? CODEX_USER : HETERO_USER,
+        user:
+          providerType === 'codex'
+            ? canEditCodex
+              ? CODEX_EDITABLE_USER
+              : CODEX_USER
+            : HETERO_USER,
       };
     }
 

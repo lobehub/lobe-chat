@@ -450,7 +450,9 @@ export class CodexAppServerAdapter {
         if (!this.lastCumulativeUsage && !this.latestCumulativeUsage && tokenUsage.last) {
           // A resumed thread without saved cumulative usage (connected devices
           // have no local rollout to read) would otherwise report its whole
-          // history as this turn. Reconstruct the baseline from the first request.
+          // history as this turn. Forks also clear the source usage, because it
+          // includes turns after their boundary. Reconstruct the baseline from
+          // the first request, including when a refresh resumes an unstarted child.
           this.lastCumulativeUsage = toTurnUsageFromCumulative(
             cumulativeUsage,
             toUsage(tokenUsage.last),

@@ -1,6 +1,8 @@
 import { PassThrough } from 'node:stream';
 
-import type { AgentPromptInput } from '../protocol';
+import type { CodexForkTarget } from '@lobechat/types';
+
+import { type AgentPromptInput, buildHeterogeneousPrompt } from '../protocol';
 import { createEventQueue } from '../spawn/agentEventQueue';
 import { buildAgentInput } from '../spawn/input';
 import type { SpawnAgentHandle } from '../spawn/spawnAgent';
@@ -24,6 +26,8 @@ export interface CodexAgentHandleOptions {
   cwd: string;
   /** Environment inherited by the native process. */
   env: NodeJS.ProcessEnv;
+  /** Immutable source turn boundary; absent when continuing an established child. */
+  forkTarget?: CodexForkTarget;
   /** Raw native protocol trace callback. */
   onRawStdout?: (chunk: Buffer) => void;
   /** Registers cancellation before native startup begins. */
@@ -37,6 +41,11 @@ export interface CodexAgentHandleOptions {
    * whether to retry fresh with its transcript fallback.
    */
   resumeSessionId?: string;
+  /**
+   * Fork branches: the caller must not restart or replay a missing native history.
+   * Ordinary topics leave this unset so the caller can retry with its transcript fallback.
+   */
+  strictHistory?: boolean;
 }
 
 /**
@@ -45,7 +54,8 @@ export interface CodexAgentHandleOptions {
  * Use when:
  * - A connected device receives an explicitly native Codex operation.
  * Expects:
- * - Supported native arguments and, when resuming, a saved native session.
+ * - Supported native arguments and, when resuming, a saved native session; for Fork,
+ *   a saved source session/turn boundary.
  * Returns:
  * - A spawn-compatible handle preserving native session and turn provenance.
  *
@@ -60,7 +70,7 @@ export const createCodexAgentHandle = async (
   options: CodexAgentHandleOptions,
 ): Promise<SpawnAgentHandle> => {
   const unsupported = getCodexAppServerUnsupportedArgs(options.args, {
-    resume: Boolean(options.resumeSessionId),
+    resume: Boolean(options.resumeSessionId || options.forkTarget),
   });
   if (unsupported.length > 0) {
     throw new Error(`Native Codex does not support these arguments: ${unsupported.join(', ')}`);
@@ -102,6 +112,7 @@ export const createCodexAgentHandle = async (
   };
   const session = new CodexThreadSession({
     client,
+    forkTarget: options.forkTarget,
     initialThreadId: options.resumeSessionId,
     onEvents: (batch) => {
       if (
@@ -132,8 +143,21 @@ export const createCodexAgentHandle = async (
   };
   options.onStartupControl?.({ cancel });
   const turnOptions = {
-    // Keep the already materialized user input and attachment paths unchanged.
-    input: buildCodexAppServerInput(input),
+    // Gateway prompts are prepared as source resumes. Only native boundary resolution
+    // knows whether before-first-turn Fork produced an empty session needing its guide.
+    input: async (isNewSession: boolean) => {
+      const sessionIntroduction =
+        isNewSession && options.forkTarget
+          ? buildCodexAppServerInput(
+              await buildAgentInput(
+                'codex',
+                buildHeterogeneousPrompt({ isNewSession, prompt: '' }),
+              ),
+            )
+          : [];
+      // Keep the already materialized user input and attachment paths unchanged.
+      return [...sessionIntroduction, ...buildCodexAppServerInput(input)];
+    },
     onRawMessage: (line: string) => options.onRawStdout?.(Buffer.from(line)),
     operationId: options.operationId,
     provenance,
@@ -150,7 +174,9 @@ export const createCodexAgentHandle = async (
       },
       (error: unknown) => {
         const detail = error instanceof Error ? error.message : String(error);
-        stderr.write(`${detail}\n`);
+        stderr.write(
+          `${options.strictHistory && (options.resumeSessionId || options.forkTarget) ? 'Native Codex history is unavailable; refusing to restart or replay the branch. ' : ''}${detail}\n`,
+        );
         return { code: cancelledSignal ? null : 1, signal: cancelledSignal ?? null };
       },
     )

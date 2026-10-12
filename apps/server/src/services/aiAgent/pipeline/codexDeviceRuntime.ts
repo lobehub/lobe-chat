@@ -1,5 +1,6 @@
 import type { LobeChatDatabase } from '@lobechat/database';
 import { getCodexAppServerUnsupportedArgs } from '@lobechat/heterogeneous-agents/codexAppServerParams';
+import type { CodexBranchRun } from '@lobechat/heterogeneous-agents/protocol';
 import type { DeviceClient, LobeAgentAgencyConfig } from '@lobechat/types';
 import debug from 'debug';
 
@@ -67,6 +68,13 @@ export type CodexDeviceRuntime =
       /** Extra `lh hetero exec` wrapper flags. */
       args: string[];
       kind: 'native';
+      /** Native thread to resume; for a first Fork, the source thread. */
+      resumeSessionId?: string;
+      /**
+       * True for Fork branches: a missing native session fails instead of restarting
+       * with a text transcript, which would silently replace the branch history.
+       */
+      strictHistory: boolean;
     };
 
 export interface ResolveCodexDeviceRuntimeParams {
@@ -74,13 +82,17 @@ export interface ResolveCodexDeviceRuntimeParams {
   agentArgs?: readonly string[];
   /** `api` auth uses the hosted provider binding, which has no native app-server session. */
   authMode?: string;
+  /** Present only when the run belongs to a Codex Fork thread. */
+  forkThread?: unknown;
   heteroType: string;
   /** Reads the user's Labs `enableCodexAppServer` preference. */
   isAppServerLabEnabled: () => Promise<boolean>;
   /** Reads the live connection's advertised runtimes, never merged DB metadata. */
   querySupportedRuntimes: () => Promise<readonly string[] | undefined>;
-  /** Whether this turn resumes a saved native session. */
-  resume?: boolean;
+  /** Resolves the Fork branch's native boundary or established child session. */
+  resolveBranchRun: () => Promise<CodexBranchRun>;
+  /** The topic-level (or Fork-thread-level) resume binding. */
+  resumeSessionId?: string;
 }
 
 /**
@@ -89,11 +101,13 @@ export interface ResolveCodexDeviceRuntimeParams {
  * Use when:
  * - Dispatching a Codex turn to a connected device.
  * Expects:
- * - The live connection reports `codex-app-server-v1` only after a native handshake.
+ * - `forkThread` is set only for runs inside a Codex Fork thread.
  * Returns:
- * - `exec` for every run unless the user enabled the Labs app-server runtime, the
- *   device supports it, and app-server can honor every provider argument; native runs
- *   keep transcript recovery.
+ * - `exec` for every ordinary run unless the user enabled the Labs app-server runtime,
+ *   the device supports it, and app-server can honor every provider argument; ordinary
+ *   native runs keep transcript recovery.
+ * - `native` with strict history for Fork branches.
+ * - `error` when a Fork branch cannot run natively on this device.
  *
  * Call stack:
  *
@@ -106,18 +120,49 @@ export const resolveCodexDeviceRuntime = async (
   if (params.heteroType !== 'codex') return { kind: 'exec' };
   const nativeAuth = params.authMode !== 'api';
 
-  // Codex topics keep `codex exec` by default. The app-server runtime is opt-in through
-  // the same Labs preference Desktop local runs use; it records native turn IDs.
-  if (!nativeAuth || !(await params.isAppServerLabEnabled())) return { kind: 'exec' };
-  // `codex exec` accepts options (e.g. `--profile`) the native thread contract cannot
-  // represent; the device handle rejects them, so keep those configurations on exec.
-  const unsupported = getCodexAppServerUnsupportedArgs([...(params.agentArgs ?? [])], {
-    resume: params.resume,
-  });
-  if (unsupported.length > 0) return { kind: 'exec' };
-  const runtimes = await params.querySupportedRuntimes();
-  if (!runtimes?.includes(CODEX_APP_SERVER_RUNTIME)) return { kind: 'exec' };
-  return { args: ['--codex-app-server'], kind: 'native' };
+  if (!params.forkThread) {
+    // Ordinary topics keep `codex exec` by default. The app-server runtime is opt-in through
+    // the same Labs preference Desktop local runs use; it records the native turn IDs that
+    // later make a message forkable.
+    if (!nativeAuth || !(await params.isAppServerLabEnabled())) return { kind: 'exec' };
+    // `codex exec` accepts options (e.g. `--profile`) the native thread contract cannot
+    // represent; the device handle rejects them, so keep those configurations on exec.
+    const unsupported = getCodexAppServerUnsupportedArgs([...(params.agentArgs ?? [])], {
+      resume: Boolean(params.resumeSessionId),
+    });
+    if (unsupported.length > 0) return { kind: 'exec' };
+    const runtimes = await params.querySupportedRuntimes();
+    if (!runtimes?.includes(CODEX_APP_SERVER_RUNTIME)) return { kind: 'exec' };
+    return {
+      args: ['--codex-app-server'],
+      kind: 'native',
+      resumeSessionId: params.resumeSessionId,
+      strictHistory: false,
+    };
+  }
+
+  const runtimes = nativeAuth ? await params.querySupportedRuntimes() : undefined;
+  if (!runtimes?.includes(CODEX_APP_SERVER_RUNTIME)) {
+    return {
+      kind: 'error',
+      message:
+        'Native Codex Fork requires native authentication and a connected CLI supporting codex-app-server-v1. Update and reconnect that device.',
+    };
+  }
+  const branchRun = await params.resolveBranchRun();
+  if (branchRun.codexBranchError) return { kind: 'error', message: branchRun.codexBranchError };
+  return {
+    args: [
+      '--codex-app-server',
+      '--codex-strict-history',
+      ...(branchRun.codexForkTarget
+        ? ['--codex-fork-target', JSON.stringify(branchRun.codexForkTarget)]
+        : []),
+    ],
+    kind: 'native',
+    resumeSessionId: branchRun.resumeSessionId,
+    strictHistory: true,
+  };
 };
 
 /** A {@link CodexDeviceRuntime} whose native variant names the connection to pin. */
@@ -130,12 +175,16 @@ export type CodexDeviceDispatch =
 
 export interface SelectCodexDeviceDispatchParams {
   db: LobeChatDatabase;
+  /** Present only when the run belongs to a Codex Fork thread. */
+  forkThread?: unknown;
   heterogeneousProvider?: LobeAgentAgencyConfig['heterogeneousProvider'];
   heteroType: string;
   /** Reads system info from the dispatch device, restricted to the given clients. */
   readSystemInfo: (clientKinds: DeviceClient[]) => Promise<AgentRunSystemInfoRead>;
-  /** Whether this turn resumes a saved native session. */
-  resume: boolean;
+  /** Resolves the Fork branch's native boundary or established child session. */
+  resolveBranchRun: () => Promise<CodexBranchRun>;
+  /** The topic-level (or Fork-thread-level) resume binding. */
+  resumeSessionId?: string;
   userId: string;
 }
 
@@ -168,6 +217,7 @@ export const selectCodexDeviceDispatch = async (
       agentArgs:
         heterogeneousProvider?.type === heteroType ? heterogeneousProvider.args : undefined,
       authMode: heterogeneousProvider?.authMode,
+      forkThread: params.forkThread,
       heteroType,
       isAppServerLabEnabled: async () => {
         try {
@@ -185,7 +235,8 @@ export const selectCodexDeviceDispatch = async (
         clientKinds = probe.clientKinds;
         return probe.runtimes;
       },
-      resume: params.resume,
+      resolveBranchRun: params.resolveBranchRun,
+      resumeSessionId: params.resumeSessionId,
     });
   } catch (err) {
     runtime = { kind: 'error', message: err instanceof Error ? err.message : String(err) };

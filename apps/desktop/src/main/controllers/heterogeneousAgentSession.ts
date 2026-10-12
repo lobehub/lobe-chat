@@ -13,6 +13,7 @@ import type {
   TraeAcpSession,
 } from '@lobechat/heterogeneous-agents/spawn';
 import type {
+  CodexForkTarget,
   HeterogeneousServerDefaultApiConfig,
   HeteroSessionImportMessage,
 } from '@lobechat/types';
@@ -101,6 +102,7 @@ export interface AgentSession {
    */
   cancelledByUs?: boolean;
   codexAppServerFallback?: boolean;
+  codexForkTarget?: CodexForkTarget;
   command: string;
   cursorAcpSession?: CursorAcpSession;
   cwd?: string;
