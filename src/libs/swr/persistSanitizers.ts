@@ -18,6 +18,17 @@ export const MAX_PERSISTED_DOCUMENT_HEADER_CHARS = 512 * 1024;
 const dataOf = (value: unknown): unknown => (value as { data?: unknown } | null | undefined)?.data;
 
 /**
+ * The persisted SWR state for a cached value. Keep the request flags explicit:
+ * SWR treats a missing `isLoading` as "loading" on the first mount even when
+ * `data` is present, so a bare `{ data }` row would still paint the spinner.
+ */
+export const toPersistedState = (data: unknown) => ({
+  data,
+  isLoading: false,
+  isValidating: false,
+});
+
+/**
  * `localFile:preview` keeps text previews only: images / documents hold Blobs
  * and video / binary placeholders are cheap to recompute. `resourceBaseUrl` is
  * dropped because it embeds a short-lived desktop preview token; the background
@@ -29,8 +40,8 @@ const sanitizeLocalFilePreview: PersistSanitizer = (value) => {
   if (data?.type !== 'text' || typeof data.content !== 'string') return undefined;
   if (data.content.length > MAX_PERSISTED_PREVIEW_CHARS) return undefined;
 
-  // Keep only the data — never the request state (`isValidating`, `error`).
-  return { data: { content: data.content, contentType: data.contentType, type: 'text' } };
+  // Keep only the data — never a live request state or `error`.
+  return toPersistedState({ content: data.content, contentType: data.contentType, type: 'text' });
 };
 
 const sanitizeDocumentHeader: PersistSanitizer = (value) => {
@@ -42,7 +53,7 @@ const sanitizeDocumentHeader: PersistSanitizer = (value) => {
     return undefined;
   }
 
-  return { data };
+  return toPersistedState(data);
 };
 
 const SANITIZERS: [pattern: string, sanitize: PersistSanitizer][] = [

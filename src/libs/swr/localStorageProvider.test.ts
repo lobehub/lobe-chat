@@ -18,6 +18,7 @@ import {
   MAX_PERSISTED_DOCUMENT_HEADER_CHARS,
   MAX_PERSISTED_PREVIEW_CHARS,
   sanitizeForPersistence,
+  toPersistedState,
 } from './persistSanitizers';
 
 /** Poll until `fn` returns truthy (for async IndexedDB tier assertions). */
@@ -507,7 +508,7 @@ describe('createCacheProvider — portal document + local file preview', () => {
       [headerKey, { data: doc, isLoading: false, isValidating: true }],
     ]);
 
-    expect(restored.get(headerKey)).toEqual({ data: doc });
+    expect(restored.get(headerKey)).toEqual(toPersistedState(doc));
   });
 
   it('keeps an oversized document header memory-only', async () => {
@@ -534,9 +535,9 @@ describe('createCacheProvider — portal document + local file preview', () => {
       ],
     ]);
 
-    expect(restored.get(key)).toEqual({
-      data: { content: 'hello', contentType: 'text/markdown', type: 'text' },
-    });
+    expect(restored.get(key)).toEqual(
+      toPersistedState({ content: 'hello', contentType: 'text/markdown', type: 'text' }),
+    );
   });
 
   it('never persists binary or oversized previews', async () => {
