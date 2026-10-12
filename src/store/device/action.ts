@@ -1,4 +1,5 @@
 import type { DeviceListItem, WorkingDirEntry } from '@lobechat/types';
+import { useLayoutEffect } from 'react';
 import { type SWRResponse } from 'swr';
 
 import { refreshDeviceList } from '@/features/DeviceManager/const';
@@ -197,8 +198,8 @@ export class DeviceActionImpl {
     }
   };
 
-  useFetchDevices = (enabled = false): SWRResponse<DeviceListItem[]> =>
-    useClientDataSWR<DeviceListItem[]>(
+  useFetchDevices = (enabled = false): SWRResponse<DeviceListItem[]> => {
+    const response = useClientDataSWR<DeviceListItem[]>(
       enabled ? deviceKeys.listDevices() : null,
       () => deviceService.listDevices(),
       {
@@ -208,6 +209,21 @@ export class DeviceActionImpl {
         },
       },
     );
+    const { data } = response;
+
+    // Seed the store from the persisted snapshot before paint, so the device
+    // name and its `defaultCwd` resolve on first render instead of flipping in
+    // once `listDevices` returns. `isDevicesInit` stays false: it means
+    // "confirmed by the server", which the fetch above still owns.
+    useLayoutEffect(() => {
+      if (!enabled || !data?.length) return;
+      const { devices, isDevicesInit } = this.#get();
+      if (isDevicesInit || devices.length > 0) return;
+      this.#set({ devices: data }, false, 'hydrateCachedDevices');
+    }, [enabled, data]);
+
+    return response;
+  };
 }
 
 export type DeviceAction = Pick<DeviceActionImpl, keyof DeviceActionImpl>;

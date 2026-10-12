@@ -439,7 +439,9 @@ export const serverConfigKeys = {
 // NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/file prefixes
 // are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
-// persistence — they stay memory-only exactly as before.
+// persistence — they stay memory-only exactly as before. The one exception is
+// `device:listDevices`, persisted in the local tier through a sanitizer that
+// drops live presence (see `persistSanitizers.ts`).
 export const discoverKeys = {
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [

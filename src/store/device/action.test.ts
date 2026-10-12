@@ -1,8 +1,10 @@
 import type { DeviceListItem, WorkingDirEntry } from '@lobechat/types';
+import { renderHook } from '@testing-library/react';
+import type { SWRResponse } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEVICE_LIST_SWR_KEY } from '@/features/DeviceManager/const';
-import { mutate } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { deviceKeys } from '@/libs/swr/keys';
 import { deviceService } from '@/services/device';
 
@@ -185,6 +187,46 @@ describe('DeviceAction', () => {
         workingDirs: [],
       });
       expect(deviceService.updateWorkspaceDevice).not.toHaveBeenCalled();
+    });
+  });
+
+  // Regression: the store only filled `devices` in `onSuccess`, so after a
+  // reload a persisted device list sat unused until the fetch returned — the
+  // device default cwd resolved late and the chip named the device "Unknown".
+  describe('useFetchDevices', () => {
+    const cached = [buildDevice({ defaultCwd: '/cached', onlineUnknown: true })];
+    const mockSWR = (data: DeviceListItem[]) =>
+      vi.mocked(useClientDataSWR).mockReturnValue({ data } as SWRResponse<DeviceListItem[]>);
+
+    it('seeds the store from the cached list before the fetch confirms it', () => {
+      useDeviceStore.setState({ devices: [], isDevicesInit: false });
+      mockSWR(cached);
+
+      renderHook(() => useDeviceStore.getState().useFetchDevices(true));
+
+      const state = useDeviceStore.getState();
+      expect(deviceSelectors.getDeviceDefaultCwd('dev-1')(state)).toBe('/cached');
+      // Only the server fetch may mark the list as confirmed.
+      expect(state.isDevicesInit).toBe(false);
+    });
+
+    it('never overwrites a list the server already confirmed', () => {
+      const confirmed = [buildDevice({ defaultCwd: '/fresh', online: true })];
+      useDeviceStore.setState({ devices: confirmed, isDevicesInit: true });
+      mockSWR(cached);
+
+      renderHook(() => useDeviceStore.getState().useFetchDevices(true));
+
+      expect(useDeviceStore.getState().devices).toBe(confirmed);
+    });
+
+    it('does not seed while disabled', () => {
+      useDeviceStore.setState({ devices: [], isDevicesInit: false });
+      mockSWR(cached);
+
+      renderHook(() => useDeviceStore.getState().useFetchDevices(false));
+
+      expect(useDeviceStore.getState().devices).toEqual([]);
     });
   });
 });

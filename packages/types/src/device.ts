@@ -388,6 +388,13 @@ export interface DeviceListItem {
    */
   metadata?: Record<string, string> | null;
   online: boolean;
+  /**
+   * Client-only: the row was hydrated from the persisted device-list snapshot
+   * and has not been confirmed by a fresh `listDevices` yet. `online` is
+   * `false` and `channels` empty on such rows — presence is unknown, not
+   * offline. Never sent by the server.
+   */
+  onlineUnknown?: boolean;
   platform: string | null;
   registered: boolean;
   /** Personal (own) vs. workspace-enrolled device — drives picker grouping. */

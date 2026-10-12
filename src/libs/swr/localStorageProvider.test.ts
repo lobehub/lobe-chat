@@ -1,11 +1,13 @@
 /**
  * @vitest-environment happy-dom
  */
+import { unstable_serialize } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DEVICE_LIST_SWR_KEY } from '@/features/DeviceManager/const';
 import { bootTiming } from '@/libs/bootTiming';
 
-import { taskKeys, taskTemplateKeys } from './keys';
+import { deviceKeys, taskKeys, taskTemplateKeys } from './keys';
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import {
   CACHE_TIERS,
@@ -13,6 +15,7 @@ import {
   createCacheProvider,
   getScopedCacheKey,
 } from './localStorageProvider';
+import { MAX_PERSISTED_DEVICES, sanitizeForPersistence } from './persistSanitizers';
 
 /** Poll until `fn` returns truthy (for async IndexedDB tier assertions). */
 const until = async (fn: () => boolean | Promise<boolean>, timeout = 1000): Promise<void> => {
@@ -298,6 +301,111 @@ describe('createCacheProvider — tiering', () => {
     expect(CACHE_TIERS.local).toContain('recent:topicList');
     expect(CACHE_TIERS.local).toContain('taskTemplate:');
     expect(CACHE_TIERS.local).toContain('modelConfig:');
+  });
+});
+
+/**
+ * Regression: the device list was memory-only, so after every reload the
+ * execution-target chip showed "Unknown device" and the device-default cwd
+ * flipped in only once `listDevices` returned. Both device-list entries now
+ * persist in the local tier, with live presence stripped.
+ */
+describe('createCacheProvider — device list snapshot', () => {
+  const device = {
+    channels: [
+      { channel: 'cli', connectedAt: '2026-10-12T00:00:00Z', hostname: 'mbp', platform: 'darwin' },
+    ],
+    defaultCwd: '/Users/me/repo',
+    deviceId: 'dev-1',
+    enroller: null,
+    friendlyName: 'My MacBook',
+    hostname: 'mbp',
+    identitySource: 'machine-id',
+    lastSeen: '2026-10-12T00:00:00Z',
+    online: true,
+    platform: 'darwin',
+    registered: true,
+    scope: 'personal',
+    visibility: null,
+    workingDirs: [{ path: '/Users/me/repo' }],
+  };
+  const storeKey = unstable_serialize([...deviceKeys.listDevices(), 'ws-1']);
+  const listKey = unstable_serialize([DEVICE_LIST_SWR_KEY, 'ws-1']);
+  const options = {
+    idbPatterns: [...CACHE_TIERS.idb],
+    localPatterns: [...CACHE_TIERS.local],
+    sanitize: sanitizeForPersistence,
+  };
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('restores both device-list entries after a reload with presence marked unknown', async () => {
+    const scope = { value: 's1' };
+    const { provider } = buildProvider(scope, options);
+    const map = provider();
+    const live = { data: [device], isValidating: false };
+    map.set(storeKey, live);
+    map.set(listKey, live);
+
+    // The live in-memory entry keeps its presence.
+    expect(map.get(storeKey)).toBe(live);
+
+    await until(() => localStorage.getItem(getScopedCacheKey('s1')) !== null);
+
+    const { provider: restored } = buildProvider(scope, options);
+    const restoredMap = restored();
+    const expected = {
+      data: [{ ...device, channels: [], online: false, onlineUnknown: true }],
+    };
+    expect(restoredMap.get(storeKey)).toEqual(expected);
+    expect(restoredMap.get(listKey)).toEqual(expected);
+    expect(await localDataCache.entriesByScope('s1')).toEqual([]);
+
+    // Another workspace scope never sees this snapshot.
+    const { provider: other } = buildProvider({ value: 's2' }, options);
+    expect(other().get(storeKey)).toBeUndefined();
+  });
+
+  it('caps the persisted rows', async () => {
+    const scope = { value: 's1' };
+    const { provider } = buildProvider(scope, options);
+    const many = Array.from({ length: MAX_PERSISTED_DEVICES + 10 }, (_, i) => ({
+      ...device,
+      deviceId: `dev-${i}`,
+    }));
+    provider().set(storeKey, { data: many });
+
+    await until(() => localStorage.getItem(getScopedCacheKey('s1')) !== null);
+
+    const { provider: restored } = buildProvider(scope, options);
+    expect((restored().get(storeKey) as { data: unknown[] }).data).toHaveLength(
+      MAX_PERSISTED_DEVICES,
+    );
+  });
+
+  it("does not let another tab's snapshot downgrade this tab's live device list", () => {
+    const scope = { value: 's1' };
+    const { provider } = buildProvider(scope, options);
+    const map = provider();
+    const live = { data: [device] };
+    map.set(storeKey, live);
+
+    const snapshot = [
+      [
+        storeKey,
+        { data: sanitizeForPersistence(storeKey, live), timestamp: Date.now(), version: '1.0.0' },
+      ],
+    ];
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: getScopedCacheKey('s1'),
+        newValue: JSON.stringify(snapshot),
+      }),
+    );
+
+    expect(map.get(storeKey)).toBe(live);
   });
 });
 
