@@ -193,7 +193,10 @@ class ClientLLMRetryPolicy implements LLMRetryPolicy {
    */
   waitForRetry = async (delayMs: number): Promise<void> => {
     const signal = this.get().operations[this.operationId]?.abortController?.signal;
-    if (!signal) return sleep(delayMs);
+    if (!signal) {
+      await sleep(delayMs);
+      return;
+    }
     if (signal.aborted) return;
 
     await new Promise<void>((resolve) => {
