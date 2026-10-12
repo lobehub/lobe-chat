@@ -3,6 +3,7 @@ import type {
   GitWorkingTreePatch,
   SubmoduleWorkingTreePatches,
 } from '@lobechat/electron-client-ipc';
+import type { ReplicaSlice, ReplicaSyncSchedule } from '@lobechat/replica/zustand';
 import type {
   DeviceGitAheadBehind,
   DeviceGitPullRequestActivity,
@@ -12,10 +13,14 @@ import type {
   DeviceGitWorkingTreeStatus,
   DeviceGitWorktreeListItem,
 } from '@lobechat/types';
+import { useCallback, useMemo } from 'react';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { deviceKeys, localFileKeys } from '@/libs/swr/keys';
 import { type GitBranchSummary, type GitLinkedPRSummary, gitService } from '@/services/git';
+
+import { gitStatusKey, type GitStatusParams, type GitStatusRead } from './gitStatus/projection';
+import { type GitStatusStore, useGitStatusStore } from './gitStatus/store';
 
 export type ReviewMode = 'unstaged' | 'branch';
 
@@ -99,8 +104,9 @@ export const invalidateGitReviewCaches = async ({
   const cacheDeviceId = deviceId ?? 'local';
   await Promise.all([
     mutate(deviceKeys.gitReviewPatches(cacheDeviceId, dirPath, mode, baseRef ?? '')),
-    mutate(deviceKeys.gitWorkingTreeStatus(cacheDeviceId, dirPath)),
-    mutate(deviceKeys.gitAheadBehind(cacheDeviceId, dirPath)),
+    useGitStatusStore
+      .getState()
+      .revalidateGitStatus(deviceId, dirPath, ['workingTreeStatus', 'aheadBehind']),
     mutate(localFileKeys.gitWorkingTreeFiles(deviceId, dirPath)),
   ]);
 };
@@ -132,19 +138,85 @@ export const useReviewPatches = (
   );
 };
 
+interface GitStatusReadResult<T> {
+  data: T | undefined;
+  error: unknown;
+  /** Nothing to paint yet (no persisted row, no response) and a read is pending. */
+  isLoading: boolean;
+  isValidating: boolean;
+  /**
+   * SWR-shaped: no argument re-runs the read; a value writes it into the
+   * replica (persisted) and, unless `revalidate: false`, re-runs the read.
+   */
+  mutate: (data?: T, options?: { revalidate?: boolean }) => Promise<unknown>;
+}
+
+type GitStatusSlice<T> = Pick<
+  ReplicaSlice<GitStatusStore, GitStatusParams, GitStatusRead<T>, any>,
+  'revalidate' | 'update' | 'useSync'
+>;
+
+/**
+ * Read one of the replica-backed git status reads (see `./gitStatus`): the
+ * persisted row paints first, the device read confirms it in the background.
+ * Returns the SWR-like shape the git chips were written against.
+ */
+const useGitStatusRead = <T>(
+  slice: GitStatusSlice<T>,
+  selectMap: (state: GitStatusStore) => Record<string, GitStatusRead<T>>,
+  deviceId: string | undefined,
+  path: string | undefined,
+  schedule: ReplicaSyncSchedule,
+): GitStatusReadResult<T> => {
+  const params = useMemo(
+    () => (isEnabled(deviceId, path) ? { deviceId, path } : null),
+    [deviceId, path],
+  );
+  const key = params ? gitStatusKey(params) : undefined;
+  const stored = useGitStatusStore((s) => (key ? selectMap(s)[key] : undefined));
+  // The driver forwards SWR options as given: a failed git read (dead path,
+  // unreachable device) is not retried, like the SWR hooks these replaced.
+  const syncOptions = { ...schedule, shouldRetryOnError: false };
+  const { error, isHydrated, isValidating, revalidate } = slice.useSync(params, syncOptions);
+
+  const mutate = useCallback(
+    async (data?: T, options?: { revalidate?: boolean }) => {
+      if (!key) return;
+      if (data !== undefined) slice.update(key, () => ({ value: data }));
+      if (data === undefined || options?.revalidate !== false) return revalidate();
+    },
+    [key, slice, revalidate],
+  );
+
+  return {
+    data: stored?.value,
+    error,
+    isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
+    isValidating,
+    mutate,
+  };
+};
+
+const selectBranchMap = (s: GitStatusStore) => s.gitBranchMap;
+const selectAheadBehindMap = (s: GitStatusStore) => s.gitAheadBehindMap;
+const selectWorkingTreeStatusMap = (s: GitStatusStore) => s.gitWorkingTreeStatusMap;
+const selectWorktreesMap = (s: GitStatusStore) => s.gitWorktreesMap;
+
 /**
  * Current branch + detached state. A cheap local git read, so use a short
  * dedupe window (2s): switching the working directory must refetch the branch
- * promptly. A longer window would swallow SWR's key-change revalidation and
+ * promptly. A longer window would swallow the key-change revalidation and
  * leave the branch label stuck on the previous directory (only a manual
  * `mutate()` refresh would recover it). 2s still collapses truly concurrent
  * reads of the same dir.
  */
 export const useFetchGitBranch = (deviceId: string | undefined, path?: string) =>
-  useClientDataSWR<GitBranchSummary>(
-    isEnabled(deviceId, path) ? deviceKeys.gitBranch(deviceId ?? 'local', path) : null,
-    () => gitService.getGitBranch({ deviceId, path: path! }),
-    { dedupingInterval: 2 * 1000, shouldRetryOnError: false },
+  useGitStatusRead<GitBranchSummary>(
+    useGitStatusStore.getState().slices.branch,
+    selectBranchMap,
+    deviceId,
+    path,
+    { dedupingInterval: 2 * 1000 },
   );
 
 /**
@@ -174,10 +246,12 @@ export const useFetchGitLinkedPR = (
  * +N ~M -K badge tracks edits when the user switches back to the window.
  */
 export const useFetchGitWorkingTreeStatus = (deviceId: string | undefined, path?: string) =>
-  useClientDataSWR<DeviceGitWorkingTreeStatus | undefined>(
-    isEnabled(deviceId, path) ? deviceKeys.gitWorkingTreeStatus(deviceId ?? 'local', path) : null,
-    () => gitService.getGitWorkingTreeStatus({ deviceId, path: path! }),
-    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true, shouldRetryOnError: false },
+  useGitStatusRead<DeviceGitWorkingTreeStatus>(
+    useGitStatusStore.getState().slices.workingTreeStatus,
+    selectWorkingTreeStatusMap,
+    deviceId,
+    path,
+    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },
   );
 
 /**
@@ -185,10 +259,12 @@ export const useFetchGitWorkingTreeStatus = (deviceId: string | undefined, path?
  * inside the read, so focus revalidation (5s throttle) surfaces remote updates.
  */
 export const useFetchGitAheadBehind = (deviceId: string | undefined, path?: string) =>
-  useClientDataSWR<DeviceGitAheadBehind | undefined>(
-    isEnabled(deviceId, path) ? deviceKeys.gitAheadBehind(deviceId ?? 'local', path) : null,
-    () => gitService.getGitAheadBehind({ deviceId, path: path! }),
-    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true, shouldRetryOnError: false },
+  useGitStatusRead<DeviceGitAheadBehind>(
+    useGitStatusStore.getState().slices.aheadBehind,
+    selectAheadBehindMap,
+    deviceId,
+    path,
+    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },
   );
 
 /**
@@ -197,10 +273,12 @@ export const useFetchGitAheadBehind = (deviceId: string | undefined, path?: stri
  * without restarting the conversation.
  */
 export const useFetchGitWorktrees = (deviceId: string | undefined, path?: string) =>
-  useClientDataSWR<DeviceGitWorktreeListItem[]>(
-    isEnabled(deviceId, path) ? deviceKeys.gitWorktrees(deviceId ?? 'local', path) : null,
-    () => gitService.listGitWorktrees({ deviceId, path: path! }),
-    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true, shouldRetryOnError: false },
+  useGitStatusRead<DeviceGitWorktreeListItem[]>(
+    useGitStatusStore.getState().slices.worktrees,
+    selectWorktreesMap,
+    deviceId,
+    path,
+    { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },
   );
 
 export const pullRequestDetailRefreshInterval = (

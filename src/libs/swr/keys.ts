@@ -439,10 +439,7 @@ export const serverConfigKeys = {
 // NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/file prefixes
 // are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
-// persistence — they stay memory-only exactly as before. Exception: the small
-// git status reads (`device:gitBranch` / `gitAheadBehind` /
-// `gitWorkingTreeStatus` / `gitWorktrees`) are persisted so the Overview and
-// chat-input git chips paint stale-first; they are keyed by device + path.
+// persistence — they stay memory-only exactly as before.
 export const discoverKeys = {
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [
@@ -526,16 +523,6 @@ export const deviceKeys = {
     workspaceId,
     deviceId,
   ]),
-  gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
-    'device:gitAheadBehind',
-    deviceId,
-    path,
-  ]),
-  gitBranch: def('device:gitBranch', (deviceId: string, path: string) => [
-    'device:gitBranch',
-    deviceId,
-    path,
-  ]),
   gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
     'device:gitBranches',
     deviceId,
@@ -595,16 +582,6 @@ export const deviceKeys = {
       baseRef,
     ],
   ),
-  gitWorkingTreeStatus: def('device:gitWorkingTreeStatus', (deviceId: string, path: string) => [
-    'device:gitWorkingTreeStatus',
-    deviceId,
-    path,
-  ]),
-  gitWorktrees: def('device:gitWorktrees', (deviceId: string, path: string) => [
-    'device:gitWorktrees',
-    deviceId,
-    path,
-  ]),
   listDevices: def('device:listDevices', () => ['device:listDevices']),
   repoType: def('device:repoType', (path: string) => ['device:repoType', path]),
 };

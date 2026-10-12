@@ -488,15 +488,6 @@ export const CACHE_TIERS = {
     'page:', // page detail / list / meta
     'notebook:', // notebook documents
     'brief:', // briefs
-    // Small per-(device, directory) git status reads behind the Working Sidebar
-    // Overview and the chat-input git chips. Quoted so `device:gitBranch` does
-    // not also capture the (larger, picker-only) `device:gitBranches` list; the
-    // rest of `device:*` stays memory-only. Only branch/upstream/count shapes —
-    // no credentials, no diffs.
-    '"device:gitBranch"',
-    '"device:gitAheadBehind"',
-    '"device:gitWorkingTreeStatus"',
-    '"device:gitWorktrees"',
   ],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [

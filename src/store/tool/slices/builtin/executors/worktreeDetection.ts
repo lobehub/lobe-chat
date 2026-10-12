@@ -7,11 +7,10 @@ import type {
 import { getWorkingDirSourcePath } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 
-import { mutate } from '@/libs/swr';
-import { deviceKeys } from '@/libs/swr/keys';
 import { gitService } from '@/services/git';
 import { topicSelectors } from '@/store/chat/selectors';
 import { getChatStoreState } from '@/store/chat/store';
+import { useGitStatusStore } from '@/store/device/gitStatus/store';
 import { getElectronStoreState } from '@/store/electron';
 
 /**
@@ -1078,7 +1077,11 @@ export const recordGitCommandEffects = async (params: {
     const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
     const cacheDeviceId =
       currentDeviceId && boundDeviceId === currentDeviceId ? 'local' : boundDeviceId;
-    await mutate(deviceKeys.gitBranch(cacheDeviceId ?? 'local', source));
+    await useGitStatusStore
+      .getState()
+      .revalidateGitStatus(cacheDeviceId === 'local' ? undefined : cacheDeviceId, source, [
+        'branch',
+      ]);
   }
 };
 
