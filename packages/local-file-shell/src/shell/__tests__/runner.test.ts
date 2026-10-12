@@ -147,33 +147,44 @@ describe('runCommand', () => {
       expect(result.stdout).toContain('Working directory does not exist');
       expect(result.stdout).toContain(missingCwd);
       expect(result.stdout).toContain('Falling back to');
+      // The fallback is an isolated directory under the temp root — never the
+      // user's home — so project-relative commands cannot damage real files.
+      expect(result.stdout).toContain('lobehub-cwd-fallback-');
       // The command actually ran from the fallback directory.
       expect(result.stdout).toContain('reachable');
     });
 
-    it('falls back to temp when even home is unusable', async () => {
+    it('falls back to a fresh empty directory under the temp root when the cwd is missing', async () => {
       const missingCwd = path.join(tmpDir, 'missing-worktree');
       const result = await runCommand(
-        { command: 'echo home-fallback', cwd: missingCwd },
+        { command: 'echo temp-fallback && pwd', cwd: missingCwd },
         {
-          homeOverride: tmpDir,
           processManager,
+          tmpdirOverride: tmpDir,
         },
       );
 
       expect(result.success).toBe(true);
-      expect(result.stdout).toContain(`Falling back to ${tmpDir}`);
-      expect(result.stdout).toContain('home-fallback');
+      expect(result.stdout).toContain('Falling back to');
+      expect(result.stdout).toContain('temp-fallback');
+      // Exactly one isolated fallback directory was created under the temp
+      // root, it is empty, and the run reported it by path.
+      const created = fs
+        .readdirSync(tmpDir)
+        .filter((name) => name.startsWith('lobehub-cwd-fallback-'));
+      expect(created).toHaveLength(1);
+      const fallbackDir = path.join(tmpDir, created[0]);
+      expect(fs.readdirSync(fallbackDir)).toEqual([]);
+      expect(result.stdout).toContain(`Falling back to ${fallbackDir}`);
     });
 
-    it('keeps the structured error when no fallback directory exists', async () => {
+    it('keeps the structured error when the fallback directory cannot be created', async () => {
       const missingCwd = path.join(tmpDir, 'missing-worktree');
       const result = await runCommand(
         { command: 'echo unreachable', cwd: missingCwd },
         {
-          homeOverride: path.join(tmpDir, 'missing-home'),
           processManager,
-          tmpdirOverride: path.join(tmpDir, 'missing-tmp'),
+          tmpdirOverride: path.join(tmpDir, 'missing-tmp-root'),
         },
       );
 
@@ -219,8 +230,6 @@ describe('runCommand', () => {
       expect(result.stdout).toContain('Falling back to');
       expect(result.stdout).toContain('via-file-cwd');
     });
-
-
 
     it('should merge env into child process environment', async () => {
       const result = await runCommand(

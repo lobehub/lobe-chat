@@ -1,6 +1,7 @@
 import type { spawn } from 'node:child_process';
-import { stat } from 'node:fs/promises';
+import { mkdtemp, stat } from 'node:fs/promises';
 import os from 'node:os';
+import path from 'node:path';
 
 import type { SandboxPolicy } from '@lobechat/device-sandbox';
 
@@ -40,12 +41,10 @@ export interface RunCommandOptions {
    */
   spawnProcess?: typeof spawn;
   /**
-   * Replaces `os.homedir()` in the cwd fallback chain. Test/DI hook — the
-   * fallback order and its reporting are the behaviors under test, not the
-   * specific directories.
+   * Root directory for the isolated fallback directory (see below). Defaults
+   * to `os.tmpdir()`. Test/DI hook — the fallback and its reporting are the
+   * behaviors under test, not the specific directory.
    */
-  homeOverride?: string;
-  /** Replaces `os.tmpdir()` in the cwd fallback chain. See {@link homeOverride}. */
   tmpdirOverride?: string;
 }
 
@@ -84,9 +83,9 @@ interface WorkingDirectoryResolution {
  * cwd, callers strip a model-supplied cwd before dispatch, and re-running
  * `cd` inside the command does not help because the check happens before the
  * shell exists — so the same failure repeats forever. Un-sandboxed runs fall
- * back through the home directory and the OS temp directory instead (the same
- * chain `resolveHeteroSpawnCwd` uses for the hetero wrapper), and the fallback
- * is reported so nothing downstream mistakes it for the requested directory.
+ * back to a fresh isolated directory created under the OS temp root, and the
+ * fallback is reported so nothing downstream mistakes it for the requested
+ * directory.
  *
  * Sandboxed runs do NOT fall back: the sandbox fence (`createLocalSandboxPolicy`)
  * is built on the requested cwd, so silently spawning in another directory
@@ -95,7 +94,7 @@ interface WorkingDirectoryResolution {
 const resolveWorkingDirectory = async (
   requestedCwd: string,
   sandboxRequested: boolean,
-  fallbackDirs: (string | undefined)[],
+  fallbackRoot: string | undefined,
 ): Promise<WorkingDirectoryResolution> => {
   const usable = await statIsDirectory(requestedCwd);
   if (usable) return { cwd: requestedCwd };
@@ -111,18 +110,21 @@ const resolveWorkingDirectory = async (
     };
   }
 
-  for (const dir of fallbackDirs) {
-    if (!dir) continue;
-    if ((await statIsDirectory(dir)) === true) {
-      return { cwd: dir, notice: `${reason}. Falling back to ${dir}.` };
-    }
+  // The fallback is a fresh, empty directory rather than an existing one: a
+  // populated fallback (the user's home) would run project-relative commands
+  // like `rm -rf ./*` against someone else's files before the notice even
+  // reaches the model. An empty directory cannot be damaged that way, and the
+  // notice plus the visible `pwd` make the move impossible to miss.
+  try {
+    const fallback = await mkdtemp(path.join(fallbackRoot ?? os.tmpdir(), 'lobehub-cwd-fallback-'));
+    return { cwd: fallback, notice: `${reason}. Falling back to ${fallback}.` };
+  } catch {
+    // No usable fallback: keep the structured error instead of letting the
+    // spawn surface a misleading `spawn <shell> ENOENT`.
+    return {
+      error: `${reason}. The shell is fine — run the command from a directory that exists on this device.`,
+    };
   }
-
-  // No usable fallback anywhere: keep the structured error instead of letting
-  // the spawn surface a misleading `spawn <shell> ENOENT`.
-  return {
-    error: `${reason}. The shell is fine — run the command from a directory that exists on this device.`,
-  };
 };
 
 export async function runCommand(
@@ -141,7 +143,6 @@ export async function runCommand(
     onSandboxUnavailable,
     sandboxPolicy,
     spawnProcess,
-    homeOverride,
     tmpdirOverride,
   }: RunCommandOptions,
 ): Promise<RunCommandResult> {
@@ -160,10 +161,7 @@ export async function runCommand(
   let effectiveCwd = cwd;
   let cwdNotice: string | undefined;
   if (cwd) {
-    const resolution = await resolveWorkingDirectory(cwd, !!sandboxPolicy, [
-      homeOverride ?? os.homedir(),
-      tmpdirOverride ?? os.tmpdir(),
-    ]);
+    const resolution = await resolveWorkingDirectory(cwd, !!sandboxPolicy, tmpdirOverride);
     if (resolution.error) return { error: resolution.error, success: false };
     effectiveCwd = resolution.cwd;
     cwdNotice = resolution.notice;
