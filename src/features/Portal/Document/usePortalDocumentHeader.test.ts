@@ -293,7 +293,6 @@ describe('usePortalDocumentHeaderActions', () => {
     });
 
     expect(mockInvalidate).toHaveBeenCalledWith({
-      agentDocumentId: 'agent-document-1',
       agentId: 'agent-1',
       documentId: 'document-1',
     });

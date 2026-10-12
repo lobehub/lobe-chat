@@ -1,6 +1,7 @@
 import { unstable_batchedUpdates } from 'react-dom';
 
 import { useAgentStore } from '@/store/agent';
+import { agentDocumentActions } from '@/store/agentDocument';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { resetGatewayMuxRegistry } from '@/store/chat/slices/agentRun/actions/transports/gateway/muxRegistry';
@@ -47,7 +48,7 @@ const resetableStores: ResetableStoreApi[] = [
   useVideoStore,
 ];
 
-const resetableActions: ResetableStore[] = [pageActions];
+const resetableActions: ResetableStore[] = [agentDocumentActions, pageActions];
 
 export interface StoreActions extends ResetableStore {}
 
