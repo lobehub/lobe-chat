@@ -16,7 +16,7 @@ import {
 } from './paging';
 import type { ReplicaAction, ReplicaEffect, ReplicaViewWrite } from './reducer';
 import { replicaReducer } from './reducer';
-import { createTombstones } from './tombstones';
+import { createTombstones, DEFAULT_REMOVAL_TOMBSTONE_LIMIT } from './tombstones';
 import type { ReplicaResource, ReplicaSource, ReplicaState } from './types';
 import { readReplicaRowStrict, ReplicaWriteQueue } from './writeQueue';
 
@@ -166,7 +166,28 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * again once the scope becomes trusted.
    */
   const purgedEntries = createTombstones();
-  const markRemoved = (scope: string, key: string) => removedEntries.add(scope, key);
+  /**
+   * Bumped on every removal of a scope+key. A network response whose request
+   * started before the entry was removed (deleted, access revoked, pruned by an
+   * authoritative parent list) must not `replace` it back: the slice records
+   * the generation a request starts under and drops a response that crossed a
+   * removal. Bounded like the tombstones; an evicted key reads 0, which only
+   * ever drops a response (the next revalidate refetches), never admits one.
+   */
+  const removalGenerations = new Map<string, number>();
+  const removalId = (scope: string, key: string) => `${scope}\u0000${key}`;
+  const removalGeneration = (scope: string, key: string) =>
+    removalGenerations.get(removalId(scope, key)) ?? 0;
+  const markRemoved = (scope: string, key: string) => {
+    removedEntries.add(scope, key);
+    const id = removalId(scope, key);
+    const next = (removalGenerations.get(id) ?? 0) + 1;
+    // Re-insert so the map's insertion order is least-recently-removed first.
+    removalGenerations.delete(id);
+    removalGenerations.set(id, next);
+    if (removalGenerations.size > DEFAULT_REMOVAL_TOMBSTONE_LIMIT)
+      removalGenerations.delete(removalGenerations.keys().next().value as string);
+  };
   const clearRemoved = (scope: string, key: string) => {
     removedEntries.clear(scope, key);
     purgedEntries.clear(scope, key);
@@ -1362,6 +1383,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     beginOptimistic,
     clear,
     clearGeneration,
+    removalGeneration,
     collapse,
     dispatch,
     ensureScope,

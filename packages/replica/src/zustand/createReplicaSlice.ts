@@ -184,7 +184,8 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     },
     revalidate,
   });
-  const { clearGeneration, ensureScope, fetcher, hydrate, replace, retain } = engine;
+  const { clearGeneration, ensureScope, fetcher, hydrate, removalGeneration, replace, retain } =
+    engine;
 
   /**
    * Row key of the head query each entry last asked for. One entry backs a
@@ -213,7 +214,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
    * at a time (a newer request supersedes the older one), so the latest start
    * is the one that settles.
    */
-  const requestGeneration = new Map<string, number>();
+  const requestGeneration = new Map<string, { clear: number; removal: number }>();
 
   /**
    * Hydrates the persisted row once per scope/key/query, then lets the driver
@@ -310,12 +311,20 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     const requestId = () => `${scope}\u0000${stableQueryKey(syncKey)}`;
     /** Whether the request settling now still belongs to the entry's active query. */
     const isActiveQuery = () => queryKey !== undefined && headQuery.get(key!) === queryKey;
-    /** Whether the settling request started after the latest `clear()` of its scope. */
+    /**
+     * Whether the settling request started after the latest `clear()` of its
+     * scope and after the latest removal of its entry (a deleted / pruned entry
+     * must not be recreated by a response that was already in flight).
+     */
     const isSinceClear = () => {
       const id = requestId();
       const started = requestGeneration.get(id);
       requestGeneration.delete(id);
-      return started === undefined || started === clearGeneration(scope);
+      return (
+        started === undefined ||
+        (started.clear === clearGeneration(scope) &&
+          started.removal === removalGeneration(scope, key!))
+      );
     };
     /**
      * Whether the entry is still on the scope the request was captured under.
@@ -332,7 +341,10 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     const sync = driver.useQuery<TFetched>(
       syncKey,
       () => {
-        requestGeneration.set(requestId(), clearGeneration(scope));
+        requestGeneration.set(requestId(), {
+          clear: clearGeneration(scope),
+          removal: removalGeneration(scope, key!),
+        });
         return fetcher!(params!, undefined);
       },
       {

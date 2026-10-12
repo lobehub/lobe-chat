@@ -207,7 +207,12 @@ class ChatGroupInternalAction implements ResetableStore {
   #isStillInScope = (scope: string): boolean => cacheScope.get() === scope;
 
   #removeStaleGroup = (groupId: string) => {
+    const loaded = this.#get().groupMap[groupId] !== undefined;
     this.#groupRows.remove(groupId);
+    // The entity removal only dispatches for a loaded detail. Remove the key
+    // itself otherwise, so a detail request already in flight for it is
+    // invalidated too (and cannot recreate the group once it answers).
+    if (!loaded) this.#groupDetail.remove(groupId);
   };
 
   /**
@@ -305,15 +310,16 @@ class ChatGroupInternalAction implements ResetableStore {
   internal_fetchGroupDetail = async (groupId: string) => {
     const scope = this.#captureScope();
     const groupDetail = await chatGroupService.getGroupDetail(groupId);
+    // A terminal "gone / no access" is settled in the scope the request started
+    // under — even after a switch, that scope's persisted detail is purged so
+    // switching back cannot hydrate the deleted / revoked group.
+    if (!groupDetail) {
+      this.#settleGroupGone(groupId, scope);
+      return;
+    }
     // The request may resolve after a logout / account switch; its response
     // belongs to the scope it started under, not the one active now.
     if (!this.#isStillInScope(scope)) return;
-
-    if (!groupDetail) {
-      this.#removeStaleGroup(groupId);
-      this.#markGroupNotFound(groupId);
-      return;
-    }
     this.#clearGroupNotFound(groupId);
 
     // Confirmed server detail: it paints the group page on the next visit too.
@@ -393,7 +399,7 @@ class ChatGroupInternalAction implements ResetableStore {
     this.#droppedGroupIds = [];
 
     for (const groupId of candidates) {
-      if (!listedIds.has(groupId)) this.#groupRows.remove(groupId);
+      if (!listedIds.has(groupId)) this.#removeStaleGroup(groupId);
     }
     this.internal_updateGroupMaps(groups);
   };
@@ -449,7 +455,7 @@ class ChatGroupInternalAction implements ResetableStore {
         if (load !== this.#listLoadSeq || !this.#isStillInScope(scope)) return;
         const current = new Set(this.#get().groups.map((group) => group.id));
         for (const id of ids) {
-          if (!listedIds.has(id) && !current.has(id)) this.#groupRows.remove(id);
+          if (!listedIds.has(id) && !current.has(id)) this.#removeStaleGroup(id);
         }
       });
     }

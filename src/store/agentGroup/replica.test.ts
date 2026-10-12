@@ -298,6 +298,66 @@ describe('agentGroup store replica', () => {
     session.unmount();
   });
 
+  // The authoritative list drops g1 while g1's detail request is still in
+  // flight: that older response must not recreate (and re-persist) the group.
+  it('does not let an in-flight detail response recreate a group the list pruned', async () => {
+    const scope = createScope();
+    getGroups.mockResolvedValue([groupRow('g1')]);
+    getGroupDetail.mockResolvedValue(groupDetail('g1', 'One'));
+    await useAgentGroupStore.getState().loadGroups();
+    await useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeDefined();
+
+    let answerG1!: (detail: unknown) => void;
+    getGroupDetail.mockImplementation(() => new Promise((resolve) => (answerG1 = resolve)));
+    const session = renderHook(() => useAgentGroupStore.getState().useFetchGroupDetail(true, 'g1'));
+    await vi.waitFor(() => expect(answerG1).toBeDefined());
+
+    // The list no longer carries g1 (deleted / access revoked).
+    getGroups.mockResolvedValue([]);
+    await useAgentGroupStore.getState().loadGroups();
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeUndefined();
+
+    answerG1(groupDetail('g1', 'Stale'));
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeUndefined();
+    await vi.waitFor(async () =>
+      expect(
+        await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g1'), scope }),
+      ).toBeUndefined(),
+    );
+    session.unmount();
+  });
+
+  // An imperative refresh answers "gone" only after an account switch: the
+  // persisted detail must still be purged in the scope the request started in.
+  it('purges a late terminal absence in the scope the refresh started in', async () => {
+    const scope = createScope();
+    getGroupDetail.mockResolvedValue(groupDetail('g1', 'One'));
+    await useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    await vi.waitFor(async () =>
+      expect(
+        (await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g1'), scope }))
+          ?.data,
+      ).toBeDefined(),
+    );
+
+    let answer!: (detail: null) => void;
+    getGroupDetail.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+    const refresh = useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    await vi.waitFor(() => expect(answer).toBeDefined());
+
+    createScope('agent-group-other-user');
+    answer(null);
+    await refresh;
+
+    await vi.waitFor(async () =>
+      expect(
+        await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g1'), scope }),
+      ).toBeUndefined(),
+    );
+  });
+
   it('replaces the list with the server response, persists it and seeds groupMap', async () => {
     const scope = createScope();
     getGroups.mockResolvedValue([groupRow('g1', 'Server group')]);

@@ -11,6 +11,7 @@ import { createStore } from 'zustand/vanilla';
 import { testDriver as driver } from '../../tests/testDriver';
 import { defineReplica } from '../core/defineReplica';
 import { REPLICA_INDEX_KEY } from '../core/engine';
+import { singleEntity } from '../core/entityAdapters';
 import { createReplicaState } from '../core/reducer';
 import type { ReplicaRow, ReplicaScope, ReplicaState, ReplicaStorage } from '../core/types';
 import { createReplicaSlice, recordLens } from './createReplicaSlice';
@@ -1690,6 +1691,58 @@ describe('createReplicaSlice', () => {
       act(() => settle(['late-user-1']));
 
       expect(store.getState().lists.a).toBeUndefined();
+      expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    // An entity removed while its entry's request is in flight (deleted, pruned
+    // by an authoritative parent list) must not be recreated by that response.
+    // `slice.remove` drops the head-query marker, but an entity removal goes
+    // straight through the engine, so the request generation must catch it.
+    it('drops a response whose request started before the entity was removed', () => {
+      interface Item {
+        id: string;
+        title: string;
+      }
+      interface ItemState {
+        items: Record<string, Item>;
+        itemsReplica: ReplicaState<Item>;
+      }
+      let settle!: (data: Item) => void;
+      const useQuery = vi.fn((key: any, fetcher: () => unknown, options: any) => {
+        if (key !== null) {
+          settle = options.onSuccess;
+          void fetcher();
+        }
+        return { isValidating: false, mutate: vi.fn() };
+      });
+      const resource = defineReplica<{ id: string }, Item>({
+        fetcher: () => new Promise<Item>(() => {}),
+        key: ({ id }) => id,
+        name: 'removedEntityInFlight',
+        scope,
+        version: 1,
+      });
+      const store = createStore<ItemState>()(() => ({
+        items: {},
+        itemsReplica: createReplicaState(),
+      }));
+      const slice = createReplicaSlice<ItemState, { id: string }, Item>(resource, {
+        driver: { revalidate: vi.fn(), useQuery },
+        entity: singleEntity<Item>((item) => item.id),
+        get: store.getState,
+        set: (partial) => store.setState(partial),
+        stateKey: 'itemsReplica',
+        view: recordLens('items'),
+      });
+      act(() => slice.replace({ id: 'a' }, { id: 'a', title: 'first' }));
+
+      const onSuccess = vi.fn();
+      renderHook(() => slice.useSync({ id: 'a' }, { onSuccess }));
+      act(() => slice.removeEntity('a'));
+      expect(store.getState().items.a).toBeUndefined();
+
+      act(() => settle({ id: 'a', title: 'stale' }));
+      expect(store.getState().items.a).toBeUndefined();
       expect(onSuccess).not.toHaveBeenCalled();
     });
 
