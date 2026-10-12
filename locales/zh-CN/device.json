@@ -2,7 +2,6 @@
   "workingDirectory.addFolder": "添加目录…",
   "workingDirectory.addFolderDesc": "输入目标设备上的绝对路径，如 /Users/name/projects",
   "workingDirectory.addFolderFailed": "无法添加此文件夹，请重试。",
-  "workingDirectory.addFolderNoDevice": "请先连接设备再添加文件夹",
   "workingDirectory.addFolderTitle": "添加工作目录",
   "workingDirectory.agentDescription": "该助手下所有对话的默认工作目录",
   "workingDirectory.agentLevel": "代理工作目录",

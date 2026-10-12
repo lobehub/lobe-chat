@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { deviceService } from '@/services/device';
@@ -30,6 +30,13 @@ interface UseCreateFolderOptions {
 /** Name + create one folder inside the folder a remote picker is browsing. */
 export const useCreateFolder = ({ deviceId, onCreated, parentPath }: UseCreateFolderOptions) => {
   const { t } = useTranslation('device');
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [name, setNameState] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
@@ -52,7 +59,7 @@ export const useCreateFolder = ({ deviceId, onCreated, parentPath }: UseCreateFo
     setPending(true);
     try {
       const result = await deviceService.createDirectory({ deviceId, name: next, parentPath });
-      onCreated(result.path);
+      if (mounted.current) onCreated(result.path);
     } catch (cause) {
       console.error('Failed to create folder', cause);
       setError(t(getErrorMessageKey(cause)));

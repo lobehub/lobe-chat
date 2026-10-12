@@ -1,5 +1,4 @@
 import { AGENT_CHAT_URL, isDesktop } from '@lobechat/const';
-import { Tooltip } from '@lobehub/ui';
 import { ActionIcon, toast } from '@lobehub/ui/base-ui';
 import { FolderPlusIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -52,7 +51,7 @@ const AddFolderAction = memo<{ agentId: string }>(({ agentId }) => {
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
 
   const startInFolder = async (entry: PickedWorkingDir) => {
-    await commit(entry);
+    await commit(entry, { rethrow: true, showErrorMessage: false });
     const chat = useChatStore.getState();
     chat.setPendingNewTopicDirectory();
     chat.switchTopic(null, { skipRefreshMessage: true });
@@ -83,19 +82,7 @@ const AddFolderAction = memo<{ agentId: string }>(({ agentId }) => {
     }
   };
 
-  // Without a target device there is nowhere to save the folder, so the pick
-  // would be dropped and the new topic would open without it.
-  if (!targetDeviceId) {
-    const reason = t('workingDirectory.addFolderNoDevice');
-    // A disabled button gets no hover events, so the wrapper carries the tooltip.
-    return (
-      <Tooltip title={reason}>
-        <span style={{ display: 'inline-flex' }}>
-          <ActionIcon disabled aria-label={reason} icon={FolderPlusIcon} size={'small'} />
-        </span>
-      </Tooltip>
-    );
-  }
+  if (!targetDeviceId) return null;
 
   return (
     <ActionIcon

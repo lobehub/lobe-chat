@@ -282,6 +282,23 @@ describe('useCommitWorkingDirectory — commitAgentDefault', () => {
     );
   });
 
+  it('rejects a failed folder pick before the caller starts a new topic', async () => {
+    testState.agent.updateAgentConfigById = vi.fn(
+      async (_id: string, _patch: unknown, options?: { rethrow?: boolean }) => {
+        if (options?.rethrow) throw new Error('save failed');
+      },
+    );
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id', null));
+    const startTopic = vi.fn();
+
+    await expect(
+      result.current
+        .commit({ path: '/work' }, { rethrow: true, showErrorMessage: false })
+        .then(startTopic),
+    ).rejects.toThrow('save failed');
+    expect(startTopic).not.toHaveBeenCalled();
+  });
+
   it('exposes the workspace preference loading state for writers to wait on', () => {
     testState.effective = { ...testState.effective, isPreferenceLoading: true };
 

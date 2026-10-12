@@ -1,6 +1,5 @@
 export default {
   'workingDirectory.addFolderFailed': 'Could not add this folder. Please try again.',
-  'workingDirectory.addFolderNoDevice': 'Connect a device to add a folder',
   'workingDirectory.browseDescription': 'Choose a folder on the connected device.',
   'workingDirectory.browseFolders': 'Browse folders',
   'workingDirectory.enterPathManually': 'Enter path manually',

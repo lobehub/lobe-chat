@@ -50,6 +50,27 @@ describe('useCreateFolder', () => {
     expect(hook.result.current.pending).toBe(false);
   });
 
+  it('does not navigate after the user dismisses the creating row', async () => {
+    let resolveCreate!: (value: { path: string; success: boolean }) => void;
+    vi.mocked(deviceService.createDirectory).mockReturnValue(
+      new Promise((resolve) => {
+        resolveCreate = resolve;
+      }),
+    );
+    const { hook, onCreated } = setup();
+    act(() => hook.result.current.setName('new'));
+    let submission!: Promise<void>;
+    act(() => {
+      submission = hook.result.current.submit();
+    });
+    hook.unmount();
+    await act(async () => {
+      resolveCreate({ path: '/home/me/new', success: true });
+      await submission;
+    });
+    expect(onCreated).not.toHaveBeenCalled();
+  });
+
   it('reports a taken name with a dedicated message', async () => {
     vi.mocked(deviceService.createDirectory).mockRejectedValue({ data: { code: 'CONFLICT' } });
     const { hook, onCreated, submitName } = setup();
