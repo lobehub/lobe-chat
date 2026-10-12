@@ -52,7 +52,8 @@ const partitionEmptyArgumentsCalls = (toolsCalling: ChatToolPayload[]) => {
   const emptyArgsCalls: ChatToolPayload[] = [];
   const executableCalls: ChatToolPayload[] = [];
   for (const toolCalling of toolsCalling) {
-    if (toolCalling.arguments && toolCalling.arguments.trim().length > 0) executableCalls.push(toolCalling);
+    if (toolCalling.arguments && toolCalling.arguments.trim().length > 0)
+      executableCalls.push(toolCalling);
     else emptyArgsCalls.push(toolCalling);
   }
   return { emptyArgsCalls, executableCalls };
