@@ -12,6 +12,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import {
   collectCheckIds,
   countLogicalChecks,
+  findUnresolvedSupersedes,
   mergeAcceptanceRounds,
   planCheckIdRemap,
   remapPlanItem,
@@ -137,6 +138,31 @@ describe('collectCheckIds', () => {
   });
 });
 
+describe('findUnresolvedSupersedes', () => {
+  const prior = [
+    run('run-1', 1, [planItem('old', { sourceCriterionId: 'crit-old' })]),
+    run('run-2', 2, [planItem('older-flow', {})]),
+  ];
+
+  it('accepts an earlier plan item id, a row id, or an item of the same round', () => {
+    expect(
+      findUnresolvedSupersedes(
+        [
+          planItem('new', { supersedes: ['old', 'crit-old', 'older-flow'] }),
+          planItem('newer', { supersedes: ['new'] }),
+        ],
+        prior,
+      ),
+    ).toEqual([]);
+  });
+
+  it('reports an id that names no check of the acceptance', () => {
+    expect(
+      findUnresolvedSupersedes([planItem('new', { supersedes: ['old', 'typo-id'] })], prior),
+    ).toEqual(['typo-id']);
+  });
+});
+
 describe('countLogicalChecks', () => {
   it('counts one check once even when it carries a separate criterion id', () => {
     // `collectCheckIds` holds both ids for collision purposes — the user-facing
@@ -151,6 +177,16 @@ describe('countLogicalChecks', () => {
     const runs = [
       run('run-1', 1, [planItem('old')]),
       run('run-2', 2, [planItem('new', { supersedes: ['old'] })]),
+    ];
+
+    expect(countLogicalChecks(runs, [])).toBe(1);
+  });
+
+  it('does not count a generation folded away by its authored plan id', () => {
+    // Rows are keyed by criterion; `supersedes` names the old plan item id.
+    const runs = [
+      run('run-1', 1, [planItem('old', { sourceCriterionId: 'crit-old' })]),
+      run('run-2', 2, [planItem('new', { sourceCriterionId: 'crit-new', supersedes: ['old'] })]),
     ];
 
     expect(countLogicalChecks(runs, [])).toBe(1);

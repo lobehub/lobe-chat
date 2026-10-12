@@ -162,6 +162,37 @@ describe('attaching a round that targets an accepted check', () => {
     expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
   });
 
+  it('refuses a new id that supersedes the settled check by its authored plan id', async () => {
+    // Authored ingests keep the harness's plan id but key the row by a minted
+    // criterion. Naming the settled check by that plan id still folds it.
+    mocks.listByAcceptance.mockResolvedValue([
+      {
+        acceptanceId: 'acc-1',
+        id: 'run-1',
+        plan: [{ id: 'settled-check', index: 0, sourceCriterionId: 'crit-s', title: 'settled' }],
+        roundIndex: 1,
+      },
+    ]);
+    mocks.listByRuns.mockResolvedValue([acceptedResult('settled-check', 'run-1')]);
+    mocks.runFindById.mockResolvedValue({
+      acceptanceId: null,
+      id: 'run-2',
+      plan: [
+        {
+          id: 'replacement',
+          index: 0,
+          sourceCriterionId: 'crit-r',
+          supersedes: ['settled-check'],
+          title: 'replacement',
+        },
+      ],
+      userId: 'u1',
+    });
+
+    await expect(service().attachRun('run-2', 'acc-1')).rejects.toThrow(/replacement/);
+    expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
+  });
+
   it('attaches a round that only touches unreviewed or brand-new checks', async () => {
     mocks.runFindById.mockResolvedValue({
       acceptanceId: null,

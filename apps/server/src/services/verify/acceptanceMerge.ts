@@ -80,9 +80,39 @@ export const countLogicalChecks = (
   for (const result of results) {
     logical.add(logicalByItemId.get(result.checkItemId) ?? result.checkItemId);
   }
-  for (const id of superseded) logical.delete(id);
+  // `supersedes` may name the plan item id the author wrote, while the row is
+  // keyed by its criterion — resolve through the plan ids seen above.
+  for (const id of superseded)
+    logical.delete(logical.has(id) ? id : (logicalByItemId.get(id) ?? id));
 
   return logical.size;
+};
+
+/**
+ * `supersedes` ids in an incoming plan that name no check the acceptance has
+ * seen — neither a plan item id an earlier round wrote nor the row id it was
+ * keyed by. Such an entry folds nothing, so the author is told instead of the
+ * old row silently staying on the page.
+ */
+export const findUnresolvedSupersedes = (
+  plan: VerifyCheckItem[] | null | undefined,
+  priorRuns: Pick<VerifyRunItem, 'plan'>[],
+): string[] => {
+  const known = new Set<string>();
+  for (const run of priorRuns) {
+    for (const item of (run.plan ?? []) as VerifyCheckItem[]) {
+      known.add(item.id);
+      known.add(item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id));
+    }
+  }
+  // An item may also replace another item of the same incoming round.
+  for (const item of plan ?? []) known.add(item.id);
+
+  const unresolved = new Set<string>();
+  for (const item of plan ?? []) {
+    for (const id of item.supersedes ?? []) if (id && !known.has(id)) unresolved.add(id);
+  }
+  return [...unresolved];
 };
 
 /**

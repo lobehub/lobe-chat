@@ -852,6 +852,15 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   // The chained round's index — `?r=<roundIndex>` on the acceptance URL
   // deep-links this round's report as the fixed snapshot view.
   const roundIndex = attached?.roundIndex ?? null;
+  // A `supersedes` entry that names no check of this acceptance folds nothing:
+  // the old row would stay on the page as if never replaced. An older server
+  // does not report these, so treat the field as optional.
+  const unresolvedSupersedes: string[] = attached?.unresolvedSupersedes ?? [];
+  if (unresolvedSupersedes.length > 0) {
+    log.warn(
+      `supersedes names no check of this acceptance, so nothing was replaced: ${unresolvedSupersedes.join(', ')}. Name it by a plan item id from an earlier round or a check id from \`lh acceptance view --json\`.`,
+    );
+  }
   const acceptanceUrl = new URL(
     `/acceptance/${encodeURIComponent(acceptanceId)}`,
     resolveServerUrl(),
@@ -1058,6 +1067,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
         subject: subject!.ref,
         unexecuted: unexecuted.map((item) => item.id),
         unplanned,
+        unresolvedSupersedes,
         verifyRunId: runId,
       },
       typeof options.json === 'string' ? options.json : undefined,
