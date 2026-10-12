@@ -1237,6 +1237,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     }
     // Identity changed while reading the index: those rows are not ours to touch.
     if (!offScope && resource.scope.get() !== scope) return false;
+    // Rows this session wrote to the scope may not be in the persisted index yet
+    // (their row or index write is still queued — e.g. just before an account
+    // switch). Patch them too: each patch is queued behind the row's own write,
+    // so it reads the row once that write landed.
+    for (const queryKey of indexed.get(scope) ?? [])
+      if (!keys.includes(queryKey)) keys.push(queryKey);
     const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;

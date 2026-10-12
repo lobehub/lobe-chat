@@ -474,6 +474,39 @@ describe('entity changes confirmed for a captured scope', () => {
     resetScope();
   });
 
+  it('patches a captured scope’s rows whose writes were still queued at the switch', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    // Every write of the first account is still queued when the account switches.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const { set } = storage.storage;
+    storage.storage.set = async (key, row) => {
+      if (key.scope === SCOPE) await held;
+      return set(key, row);
+    };
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    engine.replace({ id: 'b' }, [item('1')]);
+
+    scopeState.current = 'u2';
+    engine.ensureScope('u2');
+    engine.replace({ id: 'c' }, [item('1')]);
+    engine.removeEntity('1', { scope: SCOPE });
+    engine.updateEntity<Item>('2', () => ({ id: '2', renamed: true }) as Item, { scope: SCOPE });
+
+    release();
+    for (let i = 0; i < 5; i++) await flush();
+
+    // Neither row was in the persisted index yet, yet both got the change.
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([{ id: '2', renamed: true }]);
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([]);
+    // The active account is untouched.
+    expect(host.view().c).toEqual([item('1')]);
+    expect(storage.rows.get('u2|c?{}')?.data).toEqual([item('1')]);
+    resetScope();
+  });
+
   it('updateEntity({ scope }) patches only that scope’s rows', async () => {
     resetScope();
     const storage = createStorage();
