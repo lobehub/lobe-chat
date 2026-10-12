@@ -96,9 +96,9 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     --trees-item-row-gap-override: ${DOCUMENT_TREE_LAYOUT.iconGap}px;
 
     /* No horizontal gutter of its own: a row's hover fill spans the panel's
-       content edges. Rows start without leading padding (DOCUMENT_TREE_ROW_CSS)
-       so the chevron glyph lines up with the 「文档」 title, which in turn sits on
-       the column of the panel tabs (技能 / 文档) above. */
+       content edges, the same edges as the panel tabs (技能 / 文档) above. Rows
+       pad their start (DOCUMENT_TREE_ROW_CSS) so the first glyph — file icon or
+       chevron — lines up with the 「文档」 title. */
     --trees-item-padding-x-override: 6px;
     --trees-item-margin-x-override: 0px;
     --trees-padding-inline-override: 0px;
