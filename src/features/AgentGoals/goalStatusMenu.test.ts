@@ -26,4 +26,11 @@ describe('goal status menu', () => {
     expect(toManualStatus('review')).toBe('running');
     expect(toManualStatus('failed')).toBeUndefined();
   });
+
+  it('offers only starting a draft goal, unchecked', () => {
+    expect(toManualStatus('draft')).toBeUndefined();
+    expect(isStatusChoiceDisabled('running', 'draft', true)).toBe(false);
+    expect(isStatusChoiceDisabled('paused', 'draft', true)).toBe(true);
+    expect(isStatusChoiceDisabled('canceled', 'draft', true)).toBe(true);
+  });
 });
