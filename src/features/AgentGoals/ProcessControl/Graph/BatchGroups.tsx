@@ -19,6 +19,7 @@ import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TASK_STATUS_VISUALS } from '@/components/ExecutionStatus';
+import RunningGlyph from '@/features/Home/components/RunningGlyph';
 
 import type { GoalNodeView } from '../goalGraphViewModel';
 import { KIND_COLOR, KIND_ICON } from '../shared';
@@ -36,7 +37,7 @@ import {
  * The expanded batch, drawn the way it is followed and with no frame of its
  * own: the first round's trials (an experiment probe) as task cards, the roster as waves of squares, and a
  * small re-dispatch group per re-opened round. Squares carry the canonical
- * execution states — grey not run, amber running (breathing), blue needs a
+ * execution states — grey not run, amber running (breathing square), blue needs a
  * person, green done, faded superseded.
  */
 
@@ -320,12 +321,14 @@ const GroupHandles = () => (
 interface GroupStatus {
   color: string;
   icon: LucideIcon;
+  /** Live work swaps the static glyph for the shared spinning ring. */
+  running?: boolean;
   text: string;
 }
 
-const StatusText = memo<GroupStatus & { breathe?: boolean }>(({ breathe, color, icon, text }) => (
-  <span className={cx(styles.status, breathe && styles.breathe)} style={{ color }}>
-    <Icon icon={icon} size={13} />
+const StatusText = memo<GroupStatus>(({ color, icon, running, text }) => (
+  <span className={styles.status} style={{ color }}>
+    {running ? <RunningGlyph size={13} /> : <Icon icon={icon} size={13} />}
     {text}
   </span>
 ));
@@ -423,7 +426,7 @@ const useUnitsStatus = () => {
     cells: { state: BatchCellState }[],
     copy: { done: string; pending: string; running: string },
     started: boolean,
-  ): GroupStatus & { breathe?: boolean } => {
+  ): GroupStatus => {
     const counts = countCells(cells);
     if (counts.human)
       return { ...CELL_VISUAL.human, text: t('goalBatch.status.human', { count: counts.human }) };
@@ -436,7 +439,7 @@ const useUnitsStatus = () => {
     if (cells.length > 0 && counts.done + counts.stale === cells.length)
       return { ...CELL_VISUAL.done, text: copy.done };
     if (!started && !counts.running) return { ...CELL_VISUAL.backlog, text: copy.pending };
-    return { ...CELL_VISUAL.running, text: copy.running };
+    return { ...CELL_VISUAL.running, running: true, text: copy.running };
   };
 };
 
@@ -479,9 +482,9 @@ const ProbeCell = memo<{ onSelect: (id: string) => void; probe: BatchProbe; view
     return (
       <div className={styles.probeCell} data-probe={probe.nodeId} data-state={probe.state}>
         <StatusText
-          breathe={probe.state === 'running'}
           color={visual.color}
           icon={visual.icon}
+          running={probe.state === 'running'}
           text={t(`goalBatch.probes.cell.${probe.state}` as const)}
         />
         <div
