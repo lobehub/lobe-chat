@@ -2,7 +2,7 @@
 
 import type { HeteroQuotaWindow } from '@lobechat/electron-client-ipc';
 import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Skeleton, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Alert, Skeleton, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { ChevronDownIcon, GaugeIcon, RefreshCwIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -42,16 +42,6 @@ const styles = createStaticStyles(({ css }) => ({
     color: ${cssVar.colorError};
 
     background: ${cssVar.colorErrorBg};
-  `,
-  refreshNotice: css`
-    padding: 8px;
-    border: 1px solid ${cssVar.colorWarningBorder};
-    border-radius: ${cssVar.borderRadius};
-
-    font-size: 12px;
-    color: ${cssVar.colorWarningText};
-
-    background: ${cssVar.colorWarningBg};
   `,
   header: css`
     padding-block-end: 6px;
@@ -613,7 +603,17 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
           {quota && renderHeader?.(quota, { applyQuota, formatDuration, now })}
           <Flexbox gap={10}>{windows.map((item) => renderQuotaWindow(item))}</Flexbox>
           {quota && renderFooter?.(quota, { applyQuota, formatDuration, now })}
-          {refreshErrorText && <div className={styles.refreshNotice}>{refreshErrorText}</div>}
+          {refreshErrorText && (
+            // Stale windows stay the subject; the notice only annotates them.
+            <Alert
+              colorfulText
+              showIcon
+              styles={{ title: { fontSize: 12 } }}
+              title={refreshErrorText}
+              type={'warning'}
+              variant={'plain'}
+            />
+          )}
         </>
       ) : (
         <div className={styles.emptyState}>{t('heteroAgent.quota.noData')}</div>
