@@ -5,7 +5,7 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { agentAccounts, agents, users } from '@/database/schemas';
+import { agentAccounts, agents, users, workspaces } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { AgentAccountService } from '../index';
@@ -401,6 +401,76 @@ describe('AgentAccountService — actions', () => {
     await expect(service.update(created.id, lifecyclePatch)).rejects.toThrow(/not patchable/);
 
     expect(await service.get(created.id)).toMatchObject({ status: 'active' });
+  });
+
+  it('refuses to rewrite the provider-owned handles of an issued account', async () => {
+    const { calls, fetchImpl } = createMailFetch();
+    const service = buildService(fetchImpl);
+    const created = await service.provision({ agentId, provider: 'agent-mail' });
+
+    // Send and release act on `metadata.inboxId` with the deployment-wide key,
+    // so a patched id would let the account send as, or delete, another inbox.
+    await expect(
+      service.update(created.id, { metadata: { inboxId: 'inb_someone_else' } }),
+    ).rejects.toThrow(/not patchable/);
+    expect(await service.get(created.id)).toMatchObject({
+      metadata: { clientId: 'cli_1', inboxId: 'inb_1' },
+    });
+
+    await service.revoke(created.id);
+    expect(calls).toContainEqual({ method: 'DELETE', path: '/v1/inboxes/inb_1' });
+
+    // A caller-mounted account of an unregistered provider still owns its metadata.
+    const mounted = await service.create({
+      agentId,
+      capabilities: { login: true, receive: false, send: false },
+      identifier: 'agent@github',
+      kind: 'service',
+      provider: 'user',
+    });
+    await expect(service.update(mounted.id, { metadata: { org: 'lobehub' } })).resolves.toBe(
+      mounted.id,
+    );
+  });
+
+  it('refuses mutations from a workspace member who did not create the agent', async () => {
+    const workspaceId = 'agent-identity-service-ws';
+    await serverDB.insert(users).values({ id: foreignUserId });
+    await serverDB
+      .insert(workspaces)
+      .values({ id: workspaceId, name: workspaceId, primaryOwnerId: userId, slug: workspaceId });
+
+    const { calls, fetchImpl } = createMailFetch();
+    const registry = new AgentAccountProviderRegistry().register(
+      createAgentMailProvider({ apiKey: 'am_svc', fetchImpl, webhookUrl: 'https://x/hook' }),
+    );
+    const creator = new AgentAccountService(serverDB, userId, {
+      gateKeeper,
+      registry,
+      workspaceId,
+    });
+    const member = new AgentAccountService(serverDB, foreignUserId, {
+      gateKeeper,
+      registry,
+      workspaceId,
+    });
+    const created = await creator.provision({ agentId, provider: 'agent-mail' });
+
+    // The workspace scope lets the member see the account; that is not enough
+    // to replace its secret, rewrite it or release its inbox.
+    expect(await member.get(created.id)).toBeDefined();
+    await expect(member.setCredential(created.id, { webhookSecret: 'x' })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+    await expect(member.update(created.id, { displayName: 'mine' })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+    await expect(member.revoke(created.id)).rejects.toMatchObject({ code: 'FORBIDDEN' });
+
+    expect(calls.some((c) => c.method === 'DELETE')).toBe(false);
+    expect(await creator.get(created.id)).toMatchObject({ displayName: null, status: 'active' });
+
+    await serverDB.delete(workspaces);
   });
 
   it('releases on the provider and purges the credential when revoking', async () => {

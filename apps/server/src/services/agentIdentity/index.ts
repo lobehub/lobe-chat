@@ -234,6 +234,11 @@ export class AgentAccountService {
    * while skipping the provider release, the credential purge and `revokedAt`
    * — and could equally revive a row that had already been released. Lifecycle
    * moves through {@link revoke}.
+   *
+   * `metadata` of a registered provider's account is not patchable either: it
+   * holds the provider-side handles (an inbox id) that send and release act on
+   * with the deployment-wide key, so rewriting it would point the account at a
+   * resource it was never issued.
    */
   update = async (id: string, patch: AgentAccountPatch): Promise<string | undefined> => {
     if ('status' in patch) {
@@ -242,15 +247,28 @@ export class AgentAccountService {
       );
     }
 
+    const account = await this.findEditable(id);
+    if (!account) return undefined;
+
+    if ('metadata' in patch && this.options.registry.has(account.provider)) {
+      throw new Error(
+        `Agent account metadata is owned by the "${account.provider}" provider and is not patchable.`,
+      );
+    }
+
     return this.model.update(id, patch);
   };
 
   /** Install or rotate a credential. Write-only: nothing reads it back out here. */
-  setCredential = (
+  setCredential = async (
     id: string,
     credential: Record<string, string>,
     hint?: Omit<AgentAccountCredentialHint, 'rotatedAt'>,
-  ): Promise<string | undefined> => this.model.setCredential(id, credential, hint);
+  ): Promise<string | undefined> => {
+    if (!(await this.findEditable(id))) return undefined;
+
+    return this.model.setCredential(id, credential, hint);
+  };
 
   /**
    * Release the account on the provider side (when it is registered) and mark
@@ -263,7 +281,7 @@ export class AgentAccountService {
     options: RevokeAgentAccountOptions = {},
   ): Promise<string | undefined> => {
     const release = options.release ?? true;
-    const account = await this.model.findById(id);
+    const account = await this.findEditable(id);
     if (!account) return undefined;
 
     if (release && this.options.registry.has(account.provider)) {
@@ -359,6 +377,21 @@ export class AgentAccountService {
     if (!(await agentModel.existsOwnedById(agentId))) {
       throw new TRPCError({ code: 'FORBIDDEN', message: 'Agent not found or not editable' });
     }
+  };
+
+  /**
+   * Load an account for a mutation, under the same creator-only rule as
+   * {@link create} and {@link provision}. The model's scope alone is not
+   * enough: in a workspace it matches every member's accounts, so without this
+   * any member could rotate the creator's secret, rewrite the account or
+   * release it on the provider.
+   */
+  private findEditable = async (id: string): Promise<AgentAccountView | undefined> => {
+    const account = await this.model.findById(id);
+    if (!account) return undefined;
+
+    await this.assertAgentOwned(account.agentId);
+    return account;
   };
 
   /** Turn a routing-key unique violation into a refusal a person can act on. */

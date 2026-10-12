@@ -46,7 +46,9 @@ const mailDetail = (overrides: Partial<EmailMessageDetail> = {}): EmailMessageDe
 });
 
 /** Minimal stand-in for the Agent Mail REST surface the provider touches. */
-const createMailFetch = (options: { raw?: null | string } = {}) => {
+const createMailFetch = (
+  options: { detail?: Partial<EmailMessageDetail>; raw?: null | string } = {},
+) => {
   const calls: Array<{ body?: unknown; method: string; path: string }> = [];
 
   const fetchImpl: typeof fetch = async (input, init) => {
@@ -75,7 +77,7 @@ const createMailFetch = (options: { raw?: null | string } = {}) => {
       return json(mailDetail({ direction: 'outbound', id: 'msg_out_reply_1' }));
     }
     if (method === 'GET' && pathname === '/v1/messages/msg_in_1') {
-      return json(mailDetail());
+      return json(mailDetail(options.detail));
     }
     if (method === 'GET' && pathname === '/v1/messages/msg_in_1/raw') {
       if (options.raw === null) return new Response('', { status: 404 });
@@ -171,6 +173,43 @@ describe('agent-mail provider — provisioning', () => {
     expect(result.credential).toEqual({ webhookSecret: SECRET });
     expect(result.credentialHint?.masked).toBe('••••cret');
     expect(calls.some((c) => c.method === 'POST' && c.path === '/v1/webhooks')).toBe(true);
+  });
+
+  it('asks for the inbox by the agent id, so a retry is handed the one already opened', async () => {
+    const { calls, fetchImpl } = createMailFetch();
+    const provider = createAgentMailProvider({ ...isolated(), apiKey: 'am_test', fetchImpl });
+
+    await provider.provision({ agentId: 'agent_7', userId: 'user_1' });
+
+    expect(calls.find((c) => c.method === 'POST' && c.path === '/v1/inboxes')?.body).toMatchObject({
+      clientId: 'agent_7',
+      endUserId: 'agent_7',
+    });
+  });
+
+  it('does not register a second webhook for an inbox a live account already holds', async () => {
+    const { calls, fetchImpl } = createMailFetch();
+    const provider = createAgentMailProvider({
+      ...isolated(),
+      apiKey: 'am_test',
+      fetchImpl,
+      webhookUrl: 'https://app.lobehub.com/hook',
+    });
+
+    // The first attempt committed its row and only the response was lost: the
+    // row keeps the webhook secret, so a fresh webhook would sign deliveries
+    // with a secret nothing stores.
+    const result = await provider.provision({
+      agentId: 'agent_7',
+      isIdentifierHeld: async (identifier) => identifier === 'agent-7@lobe.id',
+      userId: 'user_1',
+    });
+
+    expect(result).toEqual({
+      identifier: 'agent-7@lobe.id',
+      metadata: { clientId: 'cli_1', inboxId: 'inb_1' },
+    });
+    expect(calls.some((c) => c.path === '/v1/webhooks')).toBe(false);
   });
 
   it('releases the inbox on release', async () => {
@@ -349,6 +388,40 @@ describe('agent-mail provider — inbound', () => {
       to: 'agent-7@lobe.id',
     });
     expect(message!.text).toContain('the answer');
+  });
+
+  it('carries the attachments, so an attachment-only email still reaches the agent with its files', async () => {
+    const { fetchImpl } = createMailFetch({
+      detail: {
+        attachments: [
+          { contentType: 'application/pdf', filename: 'invoice.pdf', index: 0, size: 1024 },
+          { index: 1 },
+        ],
+        text: null,
+      },
+    });
+    const provider = createAgentMailProvider({ ...isolated(), apiKey: 'am_test', fetchImpl });
+
+    const message = await provider.normalizeInbound(
+      { eventId: 'evt_1', payload: JSON.parse(inboundBody()) },
+      ref(),
+    );
+
+    expect(message?.text).toBe('');
+    expect(message?.attachments).toEqual([
+      {
+        mimeType: 'application/pdf',
+        name: 'invoice.pdf',
+        size: 1024,
+        url: 'https://api.lobe.id/v1/messages/msg_in_1/attachments/0',
+      },
+      {
+        mimeType: 'application/octet-stream',
+        name: undefined,
+        size: undefined,
+        url: 'https://api.lobe.id/v1/messages/msg_in_1/attachments/1',
+      },
+    ]);
   });
 
   it('drops robot mail instead of handing it to the agent', async () => {

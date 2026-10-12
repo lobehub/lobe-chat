@@ -109,10 +109,23 @@ export const createAgentMailProvider = (
     provider: 'agent-mail',
 
     provision: async (input: AgentAccountProvisionInput): Promise<AgentAccountProvisionResult> => {
+      // `clientId` is the mail API's idempotency key: a retry for the same agent
+      // gets the inbox it already opened instead of a second, billable one.
       const inbox = await client.createInbox({
+        clientId: input.agentId,
         displayName: input.displayName,
         endUserId: input.agentId,
       });
+      const identity: AgentAccountProvisionResult = {
+        identifier: inbox.address,
+        metadata: { clientId: inbox.clientId ?? null, inboxId: inbox.id },
+      };
+
+      // A live row already routes on this inbox: an earlier attempt committed
+      // and only its response was lost. That row holds the webhook secret, so
+      // registering again would only mint a second webhook whose secret nothing
+      // stores. Hand back the inbox; the service reconciles to the live row.
+      if (await input.isIdentifierHeld?.(inbox.address)) return identity;
 
       let credential: Record<string, string> | undefined;
       let credentialHint: AgentAccountProvisionResult['credentialHint'];
@@ -134,12 +147,7 @@ export const createAgentMailProvider = (
         }
       }
 
-      return {
-        credential,
-        credentialHint,
-        identifier: inbox.address,
-        metadata: { clientId: inbox.clientId ?? null, inboxId: inbox.id },
-      };
+      return { ...identity, credential, credentialHint };
     },
 
     release: async (ref: AgentAccountRef): Promise<void> => {
@@ -239,7 +247,18 @@ export const createAgentMailProvider = (
       // boundary: answering them is how an agent talks to a robot forever.
       if (decision.ignored) return null;
 
+      // The mail API serves attachment bytes only behind the deployment's API
+      // key, so the URL is that endpoint: it names the message and index the
+      // bytes are retrieved by, rather than a link anyone can open.
+      const attachments = (detail.attachments ?? []).map((attachment) => ({
+        mimeType: attachment.contentType || 'application/octet-stream',
+        name: attachment.filename ?? undefined,
+        size: attachment.size,
+        url: `${client.baseUrl}/v1/messages/${encodeURIComponent(detail.id)}/attachments/${attachment.index}`,
+      }));
+
       return {
+        attachments: attachments.length > 0 ? attachments : undefined,
         from,
         providerMessageId: detail.id,
         receivedAt: new Date(detail.receivedAt),
