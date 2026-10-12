@@ -32,6 +32,9 @@ test('flags the untouched template and an empty body', () => {
 
 test('ignores evidence that only appears inside HTML comments', () => {
   assert.equal(passes(fill('<!-- https://example.com/after.png -->')), false);
+  // GitHub hides everything after an unclosed comment, so that text is not evidence either.
+  assert.equal(passes(fill('<!-- https://example.com/after.png')), false);
+  assert.equal(passes(fill('<!<!---- --> https://example.com/after.png')), true);
 });
 
 test('requires a reason when acceptance is opted out', () => {

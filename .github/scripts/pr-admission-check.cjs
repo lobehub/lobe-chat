@@ -58,7 +58,23 @@ const EVIDENCE_HEADING =
 /** A published acceptance round is evidence wherever it appears. */
 const ACCEPTANCE_LINK = /https:\/\/(?:app\.)?lobehub\.com\/acceptance\/[\w-]+/i;
 
-const stripComments = (text) => text.replaceAll(/<!--[\S\s]*?-->/g, '');
+/**
+ * Drops what GitHub hides when rendering: HTML comments, and everything after an unclosed
+ * `<!--`. Scans by index rather than with a regex replace so no comment opener survives.
+ */
+const stripComments = (text) => {
+  let result = '';
+  let cursor = 0;
+  while (cursor < text.length) {
+    const start = text.indexOf('<!--', cursor);
+    if (start === -1) return result + text.slice(cursor);
+    result += text.slice(cursor, start);
+    const end = text.indexOf('-->', start + 4);
+    if (end === -1) return result;
+    cursor = end + 3;
+  }
+  return result;
+};
 
 /** Unchecked boxes and the template's own test options say nothing about this change. */
 const TEMPLATE_SCAFFOLDING =
