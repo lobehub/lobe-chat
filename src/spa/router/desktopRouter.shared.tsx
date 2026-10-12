@@ -50,6 +50,7 @@ import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/route
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
 import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/routeMeta';
+import DevicesPageSkeleton from '@/features/DeviceManager/Skeleton';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import {
   projectConversationRouteMeta,
@@ -1618,7 +1619,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/devices'),
                   'Desktop > Workspace > Settings > Devices',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('grid') }) },
+                handle: { meta: routeMeta({ Skeleton: DevicesPageSkeleton }) },
                 path: 'devices',
               },
               // Device detail level — the page reads the device id from `sub`.

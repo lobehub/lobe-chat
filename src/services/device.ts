@@ -31,6 +31,11 @@ class DeviceService {
     return lambdaClient.device.browseDirectory.query(input);
   }
 
+  /** Create a folder inside the directory a remote folder picker is browsing. */
+  createDirectory(input: Parameters<DeviceClient['createDirectory']['mutate']>[0]) {
+    return lambdaClient.device.createDirectory.mutate(input);
+  }
+
   /** Probe whether an agent platform (openclaw / hermes) is available on a device. */
   checkCapability(input: Parameters<DeviceClient['checkCapability']['query']>[0]) {
     return lambdaClient.device.checkCapability.query(input);

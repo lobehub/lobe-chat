@@ -21,6 +21,7 @@ import { useChatStore } from '@/store/chat';
 import { operationSelectors, topicSelectors } from '@/store/chat/selectors';
 
 import Actions from './Actions';
+import AddFolder from './AddFolder';
 import Filter from './Filter';
 import List from './List';
 import ToggleGroups from './ToggleGroups';
@@ -138,6 +139,7 @@ const Topic = memo<TopicProps>(({ expanded, itemKey }) => {
             )}
           >
             <Flexbox horizontal align="center" gap={2}>
+              <AddFolder />
               <ToggleGroups />
               <Filter />
               <Actions />

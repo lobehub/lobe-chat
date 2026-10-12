@@ -1,0 +1,65 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { deviceService } from '@/services/device';
+
+/** Mirrors the server rule: one path segment, never `.` / `..`, no separators or NUL. */
+export const isValidFolderName = (name: string) =>
+  !!name && name !== '.' && name !== '..' && !/[/\\\0]/.test(name);
+
+const ERROR_MESSAGE_KEYS = {
+  // The name is taken on the device.
+  CONFLICT: 'workingDirectory.newFolderExists',
+  // The device app predates folder creation.
+  PRECONDITION_FAILED: 'workingDirectory.newFolderUnsupported',
+} as const;
+
+const getErrorMessageKey = (error: unknown) => {
+  const code = (error as { data?: { code?: string } })?.data?.code;
+  return code && code in ERROR_MESSAGE_KEYS
+    ? ERROR_MESSAGE_KEYS[code as keyof typeof ERROR_MESSAGE_KEYS]
+    : 'workingDirectory.newFolderFailed';
+};
+
+interface UseCreateFolderOptions {
+  deviceId: string;
+  onCreated: (path: string) => void;
+  parentPath: string;
+}
+
+/** Name + create one folder inside the folder a remote picker is browsing. */
+export const useCreateFolder = ({ deviceId, onCreated, parentPath }: UseCreateFolderOptions) => {
+  const { t } = useTranslation('device');
+  const [name, setNameState] = useState('');
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+
+  const setName = (value: string) => {
+    setNameState(value);
+    setError(undefined);
+  };
+
+  const submit = async () => {
+    if (pending) return;
+    const next = name.trim();
+    if (!next) return;
+    if (!isValidFolderName(next)) {
+      setError(t('workingDirectory.newFolderInvalidName'));
+      return;
+    }
+
+    setError(undefined);
+    setPending(true);
+    try {
+      const result = await deviceService.createDirectory({ deviceId, name: next, parentPath });
+      onCreated(result.path);
+    } catch (cause) {
+      console.error('Failed to create folder', cause);
+      setError(t(getErrorMessageKey(cause)));
+    } finally {
+      setPending(false);
+    }
+  };
+
+  return { error, name, pending, setName, submit };
+};

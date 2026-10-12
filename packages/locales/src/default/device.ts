@@ -1,5 +1,6 @@
 export default {
   'workingDirectory.addFolderFailed': 'Could not add this folder. Please try again.',
+  'workingDirectory.addFolderNoDevice': 'Connect a device to add a folder',
   'workingDirectory.browseDescription': 'Choose a folder on the connected device.',
   'workingDirectory.browseFolders': 'Browse folders',
   'workingDirectory.enterPathManually': 'Enter path manually',
@@ -10,6 +11,15 @@ export default {
   'workingDirectory.foldersLoading': 'Loading folders…',
   'workingDirectory.home': 'Home folder',
   'workingDirectory.loadMoreFolders': 'Load more folders',
+  'workingDirectory.newFolder': 'New folder',
+  'workingDirectory.newFolderCreate': 'Create',
+  'workingDirectory.newFolderExists': 'A file or folder with this name already exists here.',
+  'workingDirectory.newFolderFailed':
+    'Couldn’t create this folder. Check the device connection and folder permissions, then try again.',
+  'workingDirectory.newFolderInvalidName': 'Folder names can’t be “.” or “..”, or contain / or \\.',
+  'workingDirectory.newFolderPlaceholder': 'Folder name',
+  'workingDirectory.newFolderUnsupported':
+    'This device’s app doesn’t support creating folders yet. Update it and try again.',
   'workingDirectory.openPath': 'Open',
   'workingDirectory.parentFolder': 'Parent folder',
   'workingDirectory.useFolder': 'Use this folder',
