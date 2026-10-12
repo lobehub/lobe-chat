@@ -1,7 +1,8 @@
 import { useEditor } from '@lobehub/editor/react';
 import { Flexbox } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { ActionIcon, Text } from '@lobehub/ui/base-ui';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { PanelRightCloseIcon, PanelRightOpenIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,11 +33,21 @@ const SKILL_INDEX = 'SKILL.md';
 const styles = createStaticStyles(({ css }) => ({
   files: css`
     overflow-y: auto;
+    display: flex;
     flex: none;
+    flex-direction: column;
 
     width: 180px;
     padding: 8px;
     border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
+  `,
+  filesFolded: css`
+    width: auto;
+    padding-inline: 4px;
+  `,
+  filesHead: css`
+    padding-block: 2px 6px;
+    padding-inline: 8px 0;
   `,
 }));
 
@@ -50,6 +61,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
   const { t } = useTranslation('chat');
   const editor = useEditor();
   const [selectedFile, setSelectedFile] = useState(SKILL_INDEX);
+  const [filesOpen, setFilesOpen] = useState(true);
   const { selected } = usePlanVersionSelection();
   const { files, isLoading, versions } = usePlanVersions(graph, model);
   const resourceTree = useMemo(() => skillFileTree(files), [files]);
@@ -93,12 +105,43 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
             <ContentViewer contentMap={contentMap} key={selectedFile} selectedFile={selectedFile} />
           )}
         </div>
-        <div data-plan-files className={styles.files}>
-          <FileTree
-            resourceTree={resourceTree}
-            selectedFile={selectedFile}
-            onSelectFile={setSelectedFile}
-          />
+        {/* The skill's files: folds to a rail so the document can take the width. */}
+        <div
+          className={cx(styles.files, !filesOpen && styles.filesFolded)}
+          data-plan-files={filesOpen ? 'open' : 'folded'}
+        >
+          {filesOpen ? (
+            <>
+              <Flexbox
+                horizontal
+                align={'center'}
+                className={styles.filesHead}
+                justify={'space-between'}
+              >
+                <Text fontSize={12} type={'secondary'} weight={500}>
+                  {t('goalBatch.planPanel.files')}
+                </Text>
+                <ActionIcon
+                  icon={PanelRightCloseIcon}
+                  size={'small'}
+                  title={t('goalBatch.planPanel.foldFiles')}
+                  onClick={() => setFilesOpen(false)}
+                />
+              </Flexbox>
+              <FileTree
+                resourceTree={resourceTree}
+                selectedFile={selectedFile}
+                onSelectFile={setSelectedFile}
+              />
+            </>
+          ) : (
+            <ActionIcon
+              icon={PanelRightOpenIcon}
+              size={'small'}
+              title={t('goalBatch.planPanel.unfoldFiles')}
+              onClick={() => setFilesOpen(true)}
+            />
+          )}
         </div>
       </Flexbox>
     </Flexbox>
