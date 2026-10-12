@@ -26,9 +26,29 @@ const directoryRows = vi.hoisted(
       projectId: string;
       projectAvatar: string;
       deviceId?: string;
+      deviceName?: string;
       path?: string;
     }>,
 );
+const subGroupModeMock = vi.hoisted(() => ({ value: 'none' as string }));
+const updateSystemStatusMock = vi.hoisted(() => vi.fn());
+vi.mock('@/store/global', () => ({
+  useGlobalStore: (selector: (state: object) => unknown) =>
+    selector({
+      status: { projectTopicSubGroupModeByGroup: { 'project-id:prj-1': subGroupModeMock.value } },
+      updateSystemStatus: updateSystemStatusMock,
+    }),
+}));
+
+vi.mock('@/store/device', () => ({
+  deviceSelectors: { deviceList: (s: { devices: unknown[] }) => s.devices },
+  useDeviceStore: (selector: (state: object) => unknown) =>
+    selector({
+      devices: [{ deviceId: 'device-2', friendlyName: 'Studio Linux' }],
+      useFetchDevices: () => ({}),
+    }),
+}));
+
 vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectoryStore: (selector: (state: unknown) => unknown) =>
     selector({
@@ -160,6 +180,102 @@ describe('Project topic group item', () => {
     routeParamsMock.aid = 'agent-1';
     agentStoreStateMock.activeAgentId = 'agent-1';
     activeWorkspaceSlugMock.value = 'lobehub';
+    subGroupModeMock.value = 'none';
+  });
+
+  it('keeps the sub-group menu when the newest project topic has no working directory', () => {
+    // Without a directory the add-topic actions can't render; the grouping
+    // choice must not disappear with them.
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Conversation only' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    expect(screen.queryByRole('button', { name: 'directories.start' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'topics.subGroup.title' })).toBeTruthy();
+  });
+
+  it('picks a sub-group mode from the row grouping button and remembers it per group', async () => {
+    updateSystemStatusMock.mockReset();
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Topic' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'topics.subGroup.title' }));
+    fireEvent.click(await screen.findByText('topics.subGroup.byDevice'));
+
+    expect(updateSystemStatusMock).toHaveBeenCalledWith({
+      projectTopicSubGroupModeByGroup: { 'project-id:prj-1': 'byDevice' },
+    });
+  });
+
+  it('sections a project group by device when that mode is picked', () => {
+    subGroupModeMock.value = 'byDevice';
+    directoryRows.push(
+      {
+        deviceId: 'device-1',
+        deviceName: 'MacBook',
+        id: 'binding-mac',
+        path: '/Users/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+      {
+        deviceId: 'device-2',
+        id: 'binding-linux',
+        path: '/home/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+    );
+
+    render(
+      <AccordionRoot defaultValue={['project-id:prj-1']}>
+        <GroupItem
+          expanded
+          group={{
+            children: [
+              { id: 't1', projectWorkingDirectoryId: 'binding-linux', title: 'Linux topic' },
+              { id: 't2', title: 'Loose topic' },
+              { id: 't3', projectWorkingDirectoryId: 'binding-mac', title: 'Mac topic' },
+            ] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    const order = ['Studio Linux', 'Linux topic', 'MacBook', 'Mac topic'];
+    const text = document.body.textContent ?? '';
+    order.reduce((from, label) => {
+      const at = text.indexOf(label, from);
+      expect(at, label).toBeGreaterThanOrEqual(from);
+      return at;
+    }, 0);
+    expect(text.indexOf('groupTitle.byDevice.unknown')).toBeLessThan(text.indexOf('Loose topic'));
+    expect(text.indexOf('Mac topic')).toBeLessThan(text.indexOf('groupTitle.byDevice.unknown'));
   });
 
   it('opens the new-topic composer for the project directory without creating a topic', async () => {
