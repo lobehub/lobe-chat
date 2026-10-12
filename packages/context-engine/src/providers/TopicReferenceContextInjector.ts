@@ -53,7 +53,7 @@ function formatTopicReferences(items: TopicReferenceItem[]): string | null {
   const withoutContext = items.filter((item) => !item.summary && !item.recentMessages?.length);
 
   const lines: string[] = [
-    '<referred_topics hint="The following are brief summaries or excerpts of referenced topics. For the complete conversation history, run `lh topic view` with the topic id (LobeHub CLI).">',
+    '<referred_topics hint="The following are brief summaries or excerpts of referenced topics. For the complete conversation history, activate the lobehub skill and run `lh topic view` with the topic id.">',
   ];
 
   for (const item of withContext) {
@@ -70,7 +70,7 @@ function formatTopicReferences(items: TopicReferenceItem[]): string | null {
 
   if (withoutContext.length > 0) {
     lines.push(
-      '<pending_topics hint="No context available for the following topics. Run `lh topic view` with the topic id (LobeHub CLI) to read their conversation history.">',
+      '<pending_topics hint="No context available for the following topics. Activate the lobehub skill and run `lh topic view` with the topic id to read their conversation history.">',
     );
     for (const item of withoutContext) {
       const title = item.topicTitle ? ` title="${item.topicTitle}"` : '';
