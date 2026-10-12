@@ -287,7 +287,6 @@ export default {
     "This app is disabled. Users can't sign in with it until you enable it again.",
   'oauthApp.form.description.label': 'Description',
   'oauthApp.form.description.placeholder': 'What is this app for? (optional)',
-  'oauthApp.form.editTitle': 'Edit OAuth App',
   'oauthApp.form.logo.label': 'Logo',
   'oauthApp.form.logo.tooLarge': 'The logo must be 2 MB or smaller.',
   'oauthApp.form.logo.uploadFailed': 'The logo could not be uploaded. Please try again.',
