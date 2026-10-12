@@ -56,6 +56,53 @@ const draftSeeds = (graph: GoalGraphSnapshot) => {
 };
 
 /**
+ * The probes with every prerequisite ahead of what builds on it, otherwise in
+ * the order given. The batch keeps a probe's `depends_on` links only to earlier
+ * probes, so `--probes` listed out of dependency order would otherwise drop the
+ * link and run the two at once. A cycle cannot be ordered and is refused.
+ */
+const orderByPrerequisites = <T extends { id: string; title: string }>(
+  probes: T[],
+  graph: GoalGraphSnapshot,
+): T[] => {
+  const ids = new Set(probes.map((probe) => probe.id));
+  const prerequisites = new Map(
+    probes.map((probe) => [
+      probe.id,
+      new Set(
+        graph.edges
+          .filter(
+            (edge) =>
+              edge.kind === 'depends_on' &&
+              edge.sourceNodeId === probe.id &&
+              ids.has(edge.targetNodeId),
+          )
+          .map((edge) => edge.targetNodeId),
+      ),
+    ]),
+  );
+  const ordered: T[] = [];
+  const placed = new Set<string>();
+  while (ordered.length < probes.length) {
+    const next = probes.find(
+      (probe) =>
+        !placed.has(probe.id) &&
+        [...prerequisites.get(probe.id)!].every((prerequisite) => placed.has(prerequisite)),
+    );
+    if (!next)
+      return refuse(
+        `The probes depend on each other in a cycle: ${probes
+          .filter((probe) => !placed.has(probe.id))
+          .map((probe) => `"${probe.title}"`)
+          .join(', ')}`,
+      );
+    ordered.push(next);
+    placed.add(next.id);
+  }
+  return ordered;
+};
+
+/**
  * Launch a draft Goal.
  *
  * A Goal created from a conversation starts as a `draft`: its agent (or the
@@ -84,7 +131,9 @@ export class GoalStartService {
         const operation = await new AgentOperationModel(db, this.userId, this.workspaceId).findById(
           input.operationId,
         );
-        if (!operation || operation.agentId !== goal!.agentId)
+        // The run acts for its own user: the goal agent's run may start only a
+        // goal that user owns, never another workspace member's draft.
+        if (!operation || operation.agentId !== goal!.agentId || goal!.userId !== this.userId)
           refuse('Only the goal agent or its owner can start this goal', 'CONFLICT');
         actorAgentId = operation!.agentId ?? undefined;
       }
@@ -142,10 +191,13 @@ export class GoalStartService {
 
     const seeds = draftSeeds(graph);
     const probeIds = [...new Set(rollout.probeNodeIds)];
-    const probes = probeIds.map(
-      (id) =>
-        seeds.find((seed) => seed.id === id) ??
-        refuse(`Probe ${id} is not a seed task of this draft`),
+    const probes = orderByPrerequisites(
+      probeIds.map(
+        (id) =>
+          seeds.find((seed) => seed.id === id) ??
+          refuse(`Probe ${id} is not a seed task of this draft`),
+      ),
+      graph,
     );
     const maxProbes = trigger === 'full' ? 10 : ROLLOUT_MAX_CANARY_SIZE;
     if (probes.length < 2 || probes.length > maxProbes)
@@ -195,6 +247,7 @@ export class GoalStartService {
       dependsOn: graph.edges
         .filter((edge) => edge.kind === 'depends_on' && edge.sourceNodeId === probe.id)
         .map((edge) => indexOf.get(edge.targetNodeId))
+        // Ordered by prerequisites above, so every probe it builds on comes first.
         .filter((dep): dep is number => dep !== undefined && dep < index),
       instruction: probe.description?.trim() || probe.title,
       title: probe.title,

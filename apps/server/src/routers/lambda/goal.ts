@@ -464,6 +464,11 @@ export const goalRouter = router({
   }),
   /** Launch a draft goal; until now the coordinator has left its graph alone. */
   start: goalWriteProcedure.input(startInput).mutation(async ({ ctx, input }) => {
+    // A draft is its creator's arrangement: in a shared workspace only they or
+    // an owner may launch it (and, with a rollout, fold its seed nodes away).
+    const goal = await ctx.goalModel.findById(input.id);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
     try {
       const data = await new GoalStartService(
         ctx.serverDB,

@@ -422,6 +422,44 @@ describe('CLI main Agent planning', () => {
         });
       });
 
+      /**
+       * Regression: probes listed after the probe that builds on them lost the
+       * link (only earlier probes were kept), so the two ran at once.
+       */
+      it('keeps a probe prerequisite whatever order the probes are listed in', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Tool payload'),
+          seedId(graph, 'Device list'),
+          'depends_on',
+        );
+
+        await starter().start(graph.goal.id, {
+          rollout: {
+            // The dependent first: it must still wait for its prerequisite.
+            probeNodeIds: [seedId(graph, 'Tool payload'), seedId(graph, 'Device list')],
+            recipe: 'Persist the resource',
+          },
+        });
+
+        const after = await service().graph(graph.goal.id);
+        const task = (title: string) =>
+          after.nodes.find((n) => n.kind === 'task' && n.title === title)!.id;
+        expect(
+          after.edges.some(
+            (edge) =>
+              edge.kind === 'depends_on' &&
+              edge.sourceNodeId === task('Tool payload') &&
+              edge.targetNodeId === task('Device list'),
+          ),
+        ).toBe(true);
+      });
+
       it('refuses to fold a seed another kept node depends on, changing nothing', async () => {
         await startConversationRun();
         const { graph } = await service().createFromConversation(conversationOpId, {
