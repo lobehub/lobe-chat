@@ -10,6 +10,7 @@ import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { advanceGoal } from '@/server/services/goal/advanceGoal';
+import { graphForClient } from '@/server/services/goal/graphCompat';
 import { GoalManagerService, goalPlanSchema } from '@/server/services/goal/manager';
 import {
   DEFAULT_MANAGER_MAX_TURNS,
@@ -946,13 +947,23 @@ export const goalRouter = router({
     }
   }),
 
-  graph: goalProcedure.input(idInput).query(async ({ ctx, input }) => {
-    try {
-      return { data: await ctx.goalService.graph(input.id), success: true };
-    } catch (error) {
-      mapGoalError(error, 'graph');
-    }
-  }),
+  graph: goalProcedure
+    .input(
+      idInput.extend({
+        /** Graph features this client renders (see `GOAL_GRAPH_CAPABILITY`). */
+        capabilities: z.array(z.string()).max(20).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return {
+          data: graphForClient(await ctx.goalService.graph(input.id), input.capabilities),
+          success: true,
+        };
+      } catch (error) {
+        mapGoalError(error, 'graph');
+      }
+    }),
 
   /**
    * Why `submitPlan` would accept or refuse a plan right now, without writing.

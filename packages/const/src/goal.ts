@@ -183,6 +183,17 @@ export const goalRolloutTriggers = ['canary', 'full', 'off'] as const;
 export const GOAL_BATCH_TITLE = 'Deliver the repeated batch';
 
 /**
+ * Graph features a client declares it can render, sent with the graph read.
+ * The server keeps newer node kinds from clients that do not declare them —
+ * a cached web bundle or an installed desktop app predates them — and returns
+ * a shape they already understand instead.
+ */
+export const GOAL_GRAPH_CAPABILITY = {
+  /** The `batch` node kind (repeated-mould rollouts). */
+  batch: 'batch',
+} as const;
+
+/**
  * Fixed title of the Assay (gate) decision node inside a batch. The coordinator
  * opens it to answer one question a person may have to settle: can this whole
  * class run automatically?

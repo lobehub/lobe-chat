@@ -2644,6 +2644,37 @@ describe('GoalService', () => {
       ]);
     });
 
+    it('does not re-park a goal whose gate was answered while its brief was written', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Answered during the brief',
+      });
+      await service.tick(graph.goal.id);
+      const internals = service as unknown as {
+        briefs: { openDecision: (...args: unknown[]) => Promise<void> };
+        openPatternBreakGate: (g: unknown, message: string, effects: unknown[]) => Promise<unknown>;
+      };
+      // The person answers the moment the gate is visible, before the brief lands.
+      internals.briefs.openDecision = async () => {
+        const decision = await pendingBreak(service, graph.goal.id);
+        await service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步');
+      };
+
+      await internals.openPatternBreakGate.bind(service)(
+        await service.graph(graph.goal.id),
+        'Unit 1 did not pass',
+        [],
+      );
+
+      // The answer resumed the goal on a new round; the opener must not undo it.
+      const after = await service.graph(graph.goal.id);
+      expect(after.goal.config!.rolloutState!.phase).toBe('probe');
+      expect(after.goal.status).toBe('running');
+      expect(after.goal.config?.pausedBy).toBeUndefined();
+    });
+
     it('refuses to revise the recipe without a correction', async () => {
       decompose();
       const service = new GoalService(serverDB, userId);

@@ -4236,8 +4236,9 @@ export class GoalService {
     // opening a second assay and decision that would re-park the goal later.
     const claim = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
-      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
-      if (!current) return undefined;
+      const locked = await goalModel.lockById(goalId);
+      const current = locked?.config?.rolloutState;
+      if (!locked || !current) return undefined;
       if (current.phase === 'pattern_break')
         return { gateNodeId: current.assayNodeId, opened: false as const };
       const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
@@ -4300,6 +4301,16 @@ export class GoalService {
           },
         ),
       );
+      // Park the goal in the same commit, from the locked row: once the gate is
+      // visible an answer may land at any moment, and a pause written after it
+      // from an older snapshot would re-park a goal the answer just resumed.
+      await goalModel.updatePauseReason(goalId, 'pattern_break');
+      if (locked.status !== 'paused' && !GOAL_ENDED_STATUSES.has(locked.status)) {
+        await goalModel.updateStatus(goalId, 'paused');
+        await writer
+          .recordGoalStatus(goalId, locked.status, 'paused', reason)
+          .catch((error) => console.error('[GoalService] failed to record goal status:', error));
+      }
       return { decisionId: decision?.id, gateNodeId, opened: true as const };
     });
     if (!claim) return { goalId, message, outcome: 'waiting_human' };
@@ -4322,8 +4333,6 @@ export class GoalService {
         options: [],
         question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
       });
-    await this.setPauseReason(goalId, 'pattern_break');
-    await this.transitionStatus(graph.goal, 'paused', reason);
     effects.push({ type: 'goal_status', detail: 'paused: pattern_break' });
     return { goalId, message, nodeId: gateNodeId, outcome: 'waiting_human' };
   };

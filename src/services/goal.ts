@@ -1,4 +1,4 @@
-import type { GoalStatus } from '@lobechat/const/goal';
+import { GOAL_GRAPH_CAPABILITY, type GoalStatus } from '@lobechat/const/goal';
 import type {
   GoalCreateConfig,
   GoalGraphSnapshot,
@@ -68,7 +68,12 @@ class GoalService {
 
   /** The whole Goal Graph in one read: nodes, edges, decisions, events, work-version links. */
   getGraph = async (id: string): Promise<GoalGraphSnapshot> => {
-    const { data } = await lambdaClient.goal.graph.query({ id });
+    // This client draws batches; without the declaration the server sends an
+    // older client's shape (see `graphForClient`).
+    const { data } = await lambdaClient.goal.graph.query({
+      capabilities: [GOAL_GRAPH_CAPABILITY.batch],
+      id,
+    });
     return data;
   };
 
