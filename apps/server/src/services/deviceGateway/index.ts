@@ -75,6 +75,7 @@ import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
 import { gatewayEnv } from '@/envs/gateway';
+import { redisService } from '@/server/services/redis';
 
 import { resolveDeviceClientKinds } from './clientKinds';
 
@@ -279,19 +280,39 @@ export class DeviceGateway {
    * `DEVICE_OFFLINE`) may still sit beside a live `lh connect`, which is the
    * answer canary got. A gateway that predates `clientKinds` answers the first
    * read as before.
+   *
+   * `maxAgeMs` lets a caller accept an answer this device gave within that
+   * window instead of a fresh round trip over its WebSocket. The send path
+   * asks every turn and the answer changes only when the client upgrades or
+   * the user moves the daemon, so a few minutes of staleness there is a
+   * round trip saved per send; callers that need the live answer (an
+   * explicit device inspection) leave it unset. Only successful answers are
+   * remembered — an offline device is asked again next time.
    */
   async queryDeviceSystemInfo(
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { maxAgeMs?: number },
   ): Promise<DeviceSystemInfo | undefined> {
-    const desktop = await this.readDeviceSystemInfo(userId, deviceId, workspaceId, {
-      clientKinds: ['desktop'],
-    });
-    if (desktop.ok) return desktop.systemInfo;
+    const query = async () => {
+      const desktop = await this.readDeviceSystemInfo(userId, deviceId, workspaceId, {
+        clientKinds: ['desktop'],
+      });
+      if (desktop.ok) return desktop.systemInfo;
 
-    const any = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
-    return any.ok ? any.systemInfo : undefined;
+      const any = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
+      return any.ok ? any.systemInfo : undefined;
+    };
+
+    const maxAgeMs = options?.maxAgeMs;
+    if (!maxAgeMs || maxAgeMs <= 0) return query();
+
+    return redisService.deviceSystemInfo.remember(
+      { userId, deviceId, workspaceId },
+      query,
+      maxAgeMs,
+    );
   }
 
   /**
