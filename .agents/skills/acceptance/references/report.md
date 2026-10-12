@@ -1,10 +1,10 @@
 # Structured Report Rounds (`lh acceptance run ingest`)
 
-Per-criterion `result submit` (SKILL.md Step 3) assumes a verify plan already
-exists. When it doesn't — a standalone delivery, or any run where **you** author
-the checks, which is the usual case — publish a **structured report round**
-instead: a self-contained directory that
-`lh acceptance run ingest` uploads as one immutable verification round. The
+Every round is a **structured report round**: a self-contained directory that
+`lh acceptance run ingest` uploads as one immutable verification round. You
+author the checks here, which is the usual case; when a verify plan was handed to
+you, the same directory is keyed by its check item ids and ingested into the
+plan's round ([plan-format.md](./plan-format.md)). The
 acceptance page renders itself from `result.json`: provenance, the overall
 conclusion, and the check list from `plan[]` paired with `cases[]`, each with
 its evidence inline — **images render as figures, before/after pairs render
@@ -19,8 +19,8 @@ never gets that rendering; the structured round does.
 - [result.json schema](#resultjson-schema)
 - [Rules](#rules)
 
-Rule of thumb: **plan exists → per-criterion submit; you author the checks →
-structured round ingest.** Never mix both for the same delivery round.
+Rule of thumb: **you author the checks → `ingest`; a plan was handed to you →
+`ingest --operation`.** Never mix both for the same delivery round.
 
 ## No operation id needed
 

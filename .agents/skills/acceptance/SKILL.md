@@ -2,7 +2,7 @@
 name: acceptance
 license: Apache-2.0
 metadata:
-  version: "0.7.5"
+  version: "0.8.0"
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -132,10 +132,15 @@ have an operation id only when the invocation names one. Never hunt the
 environment for one, and never report this skill inapplicable — a round without
 an operation is simply recorded as `standalone`.
 
-| You have                        | Path                                                                                                                 |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| No plan — you author the checks | Write `result.json` + `assets/`, publish with `lh acceptance run ingest` — [report.md](references/report.md)         |
-| An operation id you were given  | `lh verify plan state`, then `result submit --operation` per criterion — [plan-format.md](references/plan-format.md) |
+| You have                        | Path                                                                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No plan — you author the checks | Write `result.json` + `assets/`, publish with `lh acceptance run ingest` — [report.md](references/report.md)                                           |
+| An operation id you were given  | Read the frozen plan, write the same round directory keyed by its check item ids, publish with `ingest --operation` — [plan-format.md](references/plan-format.md) |
+
+The paths differ only in where the checks come from and which round the ingest
+lands in. Capture is identical: the surface guides, recordings with
+[chapters](references/video-chapters.md), before/after pairs, screenshots you
+looked at, `proposal.md`. A handed-down plan never licenses a lighter capture.
 
 Pass `--subject` (`task:<id>` / `topic:<id>` / `document:<id>`) only when the
 caller named one; otherwise ingest attaches the round itself when it can and
@@ -458,12 +463,12 @@ claim. Obtain the links from the path you actually executed:
 
 - **Authored round:** copy `acceptanceUrl` returned by
   `lh acceptance run ingest --json` verbatim.
-- **Operation-plan round:** follow the read-only
-  [plan handoff lookup](references/plan-format.md#resolve-the-plan-rounds-handoff-links).
-  It resolves the supplied operation ID to its existing run, acceptance, and
-  round using the CLI's actual server configuration. Copy its
-  `acceptanceUrl` output. Do not run authored ingest, create another
-  acceptance, or resubmit evidence merely to obtain a link.
+- **Operation-plan round:** copy `acceptanceUrl` returned by
+  `lh acceptance run ingest --operation <id> --json`. When the plan needed no
+  ingest, or the CLI predates plan-round ingest, follow the read-only
+  [plan handoff lookup](references/plan-format.md#resolve-the-plan-rounds-handoff-links)
+  instead. Do not ingest without `--operation`, create another acceptance, or
+  resubmit evidence merely to obtain a link.
 
 Never guess a host, acceptance ID, or round index. The documented plan lookup is
 the only reconstruction needed for CLIs whose submission output contains only an
@@ -489,8 +494,9 @@ Coverage: 2/2 criteria, all required evidence uploaded
 simctl io` over host-window capture. Rounds land under `.acceptances/`;
   allocate them with `new_round` ([report.md](references/report.md#no-operation-id-needed)),
   which seeds the `.acceptances/.gitignore` that keeps them out of git.
-- **Upload as you go.** Evidence keyed to its check mid-run survives a crash near
-  the end.
+- **Save as you go.** Write each artifact into the round's `assets/` and its case
+  into `result.json` the moment it is captured, so a crash near the end loses
+  nothing; then publish the round once.
 - **Don't invent evidence.** Capture only the types a check declares.
 - **Chapter every recording.** Log a mark for each step and each claim you
   verify on a frame, and disclose every anomaly you noticed as a `flag`; the
@@ -509,7 +515,7 @@ For both acceptance-checker handoffs and review output, read
 | Mistakes checklist (read every round)          | [common-mistakes.md](references/common-mistakes.md)                                                                                                                                     |
 | Forcing state, error injection, runtime probes | [probe-mock-patterns.md](references/probe-mock-patterns.md)                                                                                                                             |
 | Authored rounds, `result.json`, ingest         | [report.md](references/report.md)                                                                                                                                                       |
-| Plan-driven rounds: schema, submit, coverage   | [plan-format.md](references/plan-format.md)                                                                                                                                             |
+| Plan-driven rounds: plan, ingest, coverage     | [plan-format.md](references/plan-format.md)                                                                                                                                             |
 | Evidence media, provenance, submission, safety | [evidence.md](references/evidence.md)                                                                                                                                                   |
 | Interaction cost overlay                       | [interaction-cost.md](references/interaction-cost.md)                                                                                                                                   |
 | Web/Electron Chromium CLI commands             | [agent-browser.md](references/agent-browser.md)                                                                                                                                         |
