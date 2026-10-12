@@ -68,7 +68,12 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
-import { BatchPlanSkillService, planSkillIdentifier, planUnitBrief } from './batchPlanSkill';
+import {
+  BatchPlanSkillService,
+  learnedRulesClause,
+  planSkillIdentifier,
+  planUnitBrief,
+} from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
   compareMetric,
@@ -2798,9 +2803,7 @@ export class GoalService {
       const rollout = graph.goal.config?.rolloutState;
       const batchUnit = frontier.kind === 'task' && this.isBatchMember(graph, frontier.id);
       const planSkill = batchUnit ? rollout?.planSkill : undefined;
-      const learnedRules = batchUnit
-        ? (rollout?.learnings ?? []).map((learning) => learning.title)
-        : [];
+      const learnedRules = batchUnit ? (rollout?.learnings ?? []) : [];
       task = await this.taskService.createTask({
         assigneeAgentId: await this.resolveTaskAssignee(graph.goal),
         config: {
@@ -2831,9 +2834,7 @@ export class GoalService {
         // rules join the requirement instead of standing in for it.
         requirement: [
           this.buildTaskAcceptanceRequirement(graph, frontier.title, frontier.description),
-          learnedRules.length
-            ? `Rules this batch learned from its release gate (each must also hold):\n${learnedRules.map((rule) => `- ${rule}`).join('\n')}`
-            : undefined,
+          learnedRulesClause(learnedRules),
         ]
           .filter(Boolean)
           .join('\n\n'),

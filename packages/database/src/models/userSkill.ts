@@ -46,6 +46,11 @@ export interface UserSkillVersion {
 
 export interface UserSkillCatalogItem {
   description: string;
+  /**
+   * Written by the system for one job (a goal batch's plan), not by the person.
+   * Such skills are loaded where they are named, not listed to every run.
+   */
+  generated: boolean;
   id: string;
   name: string;
   title: string;
@@ -85,8 +90,16 @@ export class UserSkillModel {
     this.workspaceId = workspaceId;
   }
 
+  /**
+   * The caller's own rows in the current workspace. A user skill belongs to its
+   * creator: the workspace scope alone would also admit other members' public
+   * rows, putting one member's instructions into another member's runs.
+   */
   private scope = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, documents);
+    and(
+      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, documents),
+      eq(documents.userId, this.userId),
+    );
 
   private bundleWhere = () =>
     and(
@@ -116,6 +129,8 @@ export class UserSkillModel {
         parentId: params.parentId,
         source: USER_SKILL_SOURCE,
         sourceType: SOURCE_TYPE,
+        // Owner-only, like the reads above: never listed to other members.
+        visibility: 'private' as const,
         title: params.title,
         totalCharCount: params.content.length,
         totalLineCount: lineCount(params.content),
@@ -330,6 +345,7 @@ export class UserSkillModel {
         description: documents.description,
         filename: documents.filename,
         id: documents.id,
+        metadata: documents.metadata,
         title: documents.title,
       })
       .from(documents)
@@ -337,6 +353,7 @@ export class UserSkillModel {
       .orderBy(asc(documents.filename));
     return rows.map((row) => ({
       description: row.description ?? '',
+      generated: !!(row.metadata?.userSkill as UserSkillMeta | undefined)?.origin?.batchNodeId,
       id: row.id,
       name: row.filename ?? '',
       title: row.title ?? row.filename ?? '',

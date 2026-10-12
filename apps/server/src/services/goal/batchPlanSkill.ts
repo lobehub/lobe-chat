@@ -55,6 +55,20 @@ export const planUnitBrief = (
       ].join('\n\n')
     : [plan.outline, `Unit: ${title}`].filter(Boolean).join('\n\n');
 
+/**
+ * The clause a batch unit's acceptance adds for what the batch learned: every
+ * rule in full (the title is a truncated label), on top of the unit's own
+ * contract.
+ */
+export const learnedRulesClause = (
+  learnings: readonly Pick<GoalRolloutLearning, 'rule' | 'title'>[],
+): string | undefined =>
+  learnings.length
+    ? `Rules this batch learned from its release gate (each must also hold):\n${learnings
+        .map((learning) => `- ${(learning.rule ?? learning.title).trim()}`)
+        .join('\n')}`
+    : undefined;
+
 export class BatchPlanSkillService {
   constructor(
     private readonly db: LobeChatDatabase,
@@ -180,6 +194,7 @@ export class BatchPlanSkillService {
         lessonCode: lesson.code,
         lessonId: lesson.id,
         revision: params.revision,
+        rule: params.guidance,
         title,
       },
     };

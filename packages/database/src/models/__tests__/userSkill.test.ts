@@ -3,7 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { documents, users } from '../../schemas';
+import { documents, users, workspaces } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { DocumentModel } from '../document';
 import { UserSkillModel } from '../userSkill';
@@ -84,11 +84,48 @@ describe('UserSkillModel', () => {
     expect(await model.listCatalog()).toEqual([
       {
         description: 'Move one slice',
+        generated: false,
         id: skill.id,
         name: 'migrate-slice',
         title: 'Migrate a slice',
       },
     ]);
+  });
+
+  it('flags a skill a goal batch wrote as generated', async () => {
+    await model.create({
+      content: 'v1',
+      description: 'How each unit is done',
+      name: 'goal-plan-x',
+      origin: { batchNodeId: 'batch-1', goalId: 'goal-1', revision: 1 },
+      title: 'Plan',
+    });
+    expect((await model.listCatalog()).map((item) => [item.name, item.generated])).toEqual([
+      ['goal-plan-x', true],
+    ]);
+  });
+
+  it('keeps a workspace member’s skills away from the other members', async () => {
+    const [workspace] = await serverDB
+      .insert(workspaces)
+      .values({ name: 'user-skill-ws', primaryOwnerId: userId, slug: 'user-skill-ws' })
+      .returning();
+    const creator = new UserSkillModel(serverDB, userId, workspace.id);
+    const skill = await creator.create({
+      content: 'Do it.',
+      description: 'Move one slice',
+      name: 'migrate-slice',
+      title: 'Migrate a slice',
+    });
+
+    const member = new UserSkillModel(serverDB, otherUserId, workspace.id);
+    expect(await member.listCatalog()).toEqual([]);
+    expect(await member.findByNames(['migrate-slice'])).toEqual([]);
+    expect(await member.findById(skill.id)).toBeUndefined();
+    expect(await member.revise(skill.id, { content: 'hijack' })).toBeUndefined();
+    // The creator still has it.
+    expect((await creator.listCatalog()).map((item) => item.id)).toEqual([skill.id]);
+    await serverDB.delete(workspaces);
   });
 
   it('stays out of the Page library', async () => {

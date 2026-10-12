@@ -852,12 +852,17 @@ export const prepareOperation = async (
         (skill) => [skill.identifier, skill.content] as const,
       ),
     );
-    const userSkillMetas = (await userSkills.listCatalog()).map((skill) => ({
-      content: userSkillContent.get(skill.identifier),
-      description: skill.description,
-      identifier: skill.identifier,
-      name: skill.name,
-    }));
+    // Skills the system generated for one job (a goal batch's plan) are not
+    // listed to every run — one accumulates per batch — only joined where the
+    // run pins or names them, as that batch's units do.
+    const userSkillMetas = (await userSkills.listCatalog())
+      .filter((skill) => !skill.generated || userSkillContent.has(skill.identifier))
+      .map((skill) => ({
+        content: userSkillContent.get(skill.identifier),
+        description: skill.description,
+        identifier: skill.identifier,
+        name: skill.name,
+      }));
 
     const projectMetas = workspaceInit.workspace.skills.map((s) => ({
       description: s.description ?? '',

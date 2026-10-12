@@ -155,7 +155,13 @@ export class UserSkillService {
   listCatalog = async () =>
     (await this.model.listCatalog()).map((skill) => {
       const identifier = buildUserSkillIdentifier(skill.name);
-      return { description: skill.description, identifier, name: identifier, title: skill.title };
+      return {
+        description: skill.description,
+        generated: skill.generated,
+        identifier,
+        name: identifier,
+        title: skill.title,
+      };
     });
 
   /** Bodies (and scripts) of just the skills a run pins or names. */

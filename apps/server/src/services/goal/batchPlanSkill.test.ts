@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { planSkillName, planUnitBrief } from './batchPlanSkill';
+import { learnedRulesClause, planSkillName, planUnitBrief } from './batchPlanSkill';
 
 describe('planSkillName', () => {
   it('turns a node id into a short, valid skill name', () => {
@@ -24,5 +24,19 @@ describe('planUnitBrief', () => {
     expect(planUnitBrief('Unit 3', { outline: 'Swap the store' })).toBe(
       'Swap the store\n\nUnit: Unit 3',
     );
+  });
+});
+
+describe('learnedRulesClause', () => {
+  it('carries every rule in full, not its truncated title', () => {
+    const rule = `${'先确认 generation_batches 已在 replica 建表，'.repeat(4)}最后补一条回滚脚本`;
+    const clause = learnedRulesClause([{ rule, title: `${rule.slice(0, 79)}…` }]);
+    expect(clause).toContain(`- ${rule}`);
+    expect(clause).toContain('最后补一条回滚脚本');
+  });
+
+  it('falls back to the title for a rule recorded before the full text was kept', () => {
+    expect(learnedRulesClause([{ title: 'Seed SSR first' }])).toContain('- Seed SSR first');
+    expect(learnedRulesClause([])).toBeUndefined();
   });
 });

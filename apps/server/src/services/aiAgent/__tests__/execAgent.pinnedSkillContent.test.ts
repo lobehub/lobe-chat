@@ -267,11 +267,19 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
     mockHasDocuments.mockResolvedValue(false);
     const planSkill = {
       description: 'How each unit is done',
+      generated: true,
       identifier: 'user-skills:goal-plan-x',
       name: 'user-skills:goal-plan-x',
       title: 'Plan',
     };
-    mockListUserSkillCatalog.mockResolvedValue([planSkill]);
+    const handMade = {
+      description: 'My review checklist',
+      generated: false,
+      identifier: 'user-skills:review',
+      name: 'user-skills:review',
+      title: 'Review',
+    };
+    mockListUserSkillCatalog.mockResolvedValue([planSkill, handMade]);
     // Only bodies the run asks for come back, as the real loader does.
     mockLoadUserSkills.mockImplementation(async (ids: string[]) =>
       ids.includes(planSkill.identifier)
@@ -440,8 +448,11 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
 
     await service.execAgent({ agentId: 'agent-1', prompt: 'Hello' } as any);
 
-    expect(skillById('user-skills:goal-plan-x')).toBeDefined();
-    expect(skillById('user-skills:goal-plan-x')?.content).toBeUndefined();
+    // A hand-made skill is listed, without its body.
+    expect(skillById('user-skills:review')).toBeDefined();
+    expect(skillById('user-skills:review')?.content).toBeUndefined();
+    // A batch's generated plan skill is not listed to an unrelated run.
+    expect(skillById('user-skills:goal-plan-x')).toBeUndefined();
     // Listing the library reads no body: none was asked for.
     expect(mockLoadUserSkills.mock.calls[0][0]).not.toContain('user-skills:goal-plan-x');
   });

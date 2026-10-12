@@ -563,6 +563,8 @@ export interface GoalRolloutLearning {
   lessonId: string;
   /** The round whose gate broke and taught it. */
   revision: number;
+  /** The whole correction, as written — `title` is its one-line label. */
+  rule?: string;
   title: string;
 }
 
