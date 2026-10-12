@@ -168,9 +168,14 @@ export const DOCUMENT_TREE_ROW_CSS = `
      indented past the title and the file glyphs. Pull only the glyph back onto
      their column; the slot keeps its width so the folder glyph and the label
      stay where the nested file rows expect them. \`translate\` composes with
-     pierre's own nudge / expand-rotation \`transform\` instead of replacing it. */
+     pierre's own nudge / expand-rotation \`transform\` instead of replacing it.
+     \`translate\` is physical, so RTL mirrors it toward the inline start too. */
   [data-item-type='folder'] > [data-item-section='icon'] > [data-icon-name='file-tree-icon-chevron'] {
     translate: -4px 0;
+
+    &:dir(rtl) {
+      translate: 4px 0;
+    }
   }
 
 ${DOCUMENT_TREE_NO_FOCUS_BORDER_CSS}
