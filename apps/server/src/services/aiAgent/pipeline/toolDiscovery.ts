@@ -20,6 +20,7 @@ import type {
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { DeviceUnavailableErrorData } from '@lobechat/device-gateway-client';
 import {
+  dropInvalidManifests,
   readFrozenModelFacts,
   resolveClientExecutors,
   resolveDiscoveryPool,
@@ -1195,6 +1196,19 @@ export const discoverTools = async (
       enabledManifests: manifestMap,
       exclusivePluginIds,
       executionTarget: executionPlan.target,
+      // Installed-but-not-pinned plugins (`auto` in the three-state plugin
+      // config): the model must be able to discover and activate them mid-run,
+      // exactly as the client runtime lists them from `installedPlugins`.
+      // They never join `enabledToolIds` — the engine's rules stay pinned-only
+      // — so this widens what the activator can reach, not what the run gets
+      // by default. Disabled ids were dropped in 5a and the pool's own ingest
+      // wall re-checks them; a connector / Composio / LobeHub skill manifest
+      // of the same identifier still wins, because the pool seeds this source
+      // last.
+      installedManifests: dropInvalidManifests(
+        pluginsWithoutConnectors.map((plugin) => plugin.manifest as LobeToolManifest | undefined),
+        'installedPlugins(auto)',
+      ),
       lobehubSkills: activeLobehubSkillManifests,
       manifestContext,
     });
@@ -1203,7 +1217,6 @@ export const discoverTools = async (
     Object.assign(
       toolExecutorMap,
       resolveClientExecutors({
-        enabledIds: new Set(manifestMap.keys()),
         hasDeviceProxy: gatewayConfigured,
         manifestMap: toolManifestMap,
         stdioIdentifiers: [
