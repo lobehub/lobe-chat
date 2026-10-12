@@ -107,7 +107,21 @@ describe('connect service', () => {
       `EnvironmentFile=${path.join(tmpDir, '.lobehub', 'connect-service.env')}`,
     );
     expect(systemctlCalls).toContainEqual(['--user', 'daemon-reload']);
-    expect(systemctlCalls).toContainEqual(['--user', 'enable', '--now', 'lobehub-connect.service']);
+    expect(systemctlCalls).toContainEqual(['--user', 'enable', 'lobehub-connect.service']);
+    expect(systemctlCalls).toContainEqual(['--user', 'restart', 'lobehub-connect.service']);
+  });
+
+  it('passes workspace enrollment flags to the service child', () => {
+    installConnectService({ public: true, workspace: 'ws_123' });
+
+    expect(fs.readFileSync(path.join(unitDir, 'lobehub-connect.service'), 'utf8')).toContain(
+      `"${process.execPath}" "${fs.realpathSync(entryPath)}" "connect" "--service-child" "--workspace" "ws_123" "--public"`,
+    );
+  });
+
+  it('rejects --public without --workspace', () => {
+    expect(() => installConnectService({ public: true })).toThrow('--public requires --workspace.');
+    expect(fs.existsSync(path.join(unitDir, 'lobehub-connect.service'))).toBe(false);
   });
 
   it('does not install when a managed connect daemon is already running', () => {
@@ -117,12 +131,7 @@ describe('connect service', () => {
       'Background connect daemon is already running (PID 12345).',
     );
     expect(fs.existsSync(path.join(unitDir, 'lobehub-connect.service'))).toBe(false);
-    expect(systemctlCalls).not.toContainEqual([
-      '--user',
-      'enable',
-      '--now',
-      'lobehub-connect.service',
-    ]);
+    expect(systemctlCalls).not.toContainEqual(['--user', 'enable', 'lobehub-connect.service']);
   });
 
   it('does not install when no auth is available', () => {
@@ -130,12 +139,7 @@ describe('connect service', () => {
 
     expect(() => installConnectService()).toThrow("No authentication found. Run 'lh login' first");
     expect(fs.existsSync(path.join(unitDir, 'lobehub-connect.service'))).toBe(false);
-    expect(systemctlCalls).not.toContainEqual([
-      '--user',
-      'enable',
-      '--now',
-      'lobehub-connect.service',
-    ]);
+    expect(systemctlCalls).not.toContainEqual(['--user', 'enable', 'lobehub-connect.service']);
   });
 
   it('writes the current environment to a service-scoped env file', () => {

@@ -202,9 +202,18 @@ export function registerConnectCommand(program: Command) {
   serviceCmd
     .command('install')
     .description('Install and start the Linux user systemd connect service')
-    .action(() => {
-      installConnectService();
-      log.info(`Installed and started ${CONNECT_SERVICE_NAME}.`);
+    .option('--workspace <id>', 'Enroll as a device of this workspace (admin only)')
+    .option(
+      '--public',
+      'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
+    )
+    .action((options: Pick<ConnectOptions, 'public' | 'workspace'>) => {
+      installConnectService({ public: options.public, workspace: options.workspace });
+      log.info(
+        options.workspace
+          ? `Installed and started ${CONNECT_SERVICE_NAME} for workspace ${options.workspace}.`
+          : `Installed and started ${CONNECT_SERVICE_NAME}.`,
+      );
       log.info("Run 'lh connect service status' to inspect the service.");
     });
 
