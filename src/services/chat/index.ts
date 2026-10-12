@@ -11,6 +11,7 @@ import { isResponsesAPIModel } from '@lobechat/model-runtime/providers/openai/mo
 import { AgentRuntimeError } from '@lobechat/model-runtime/utils/createError';
 import {
   ChatErrorType,
+  type ChatMessageError,
   getDisabledPluginIds,
   type RequestTrigger,
   type RuntimeAdditionalContextFragment,
@@ -122,6 +123,28 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
   stepContext?: RuntimeStepContext;
   trace?: TracePayload;
 }
+
+/**
+ * A relayed call that fails on the device reaches the stream as its executor's
+ * error (`{ provider, errorType, error }`), not the `ChatMessageError`
+ * (`{ type, body, message }`) the legacy browser path produced for the same
+ * failure. Callers read `type` / `body.error` (the Ollama error views, the
+ * provider checker), so give them that shape again.
+ */
+const toRelayedChatError = (error: ChatMessageError): ChatMessageError => {
+  const relayed = error as unknown as {
+    error?: { message?: unknown };
+    errorType?: unknown;
+    message?: unknown;
+    type?: unknown;
+  };
+  if (!relayed || typeof relayed !== 'object' || relayed.type || !relayed.errorType) return error;
+  const message =
+    (typeof relayed.error?.message === 'string' && relayed.error.message) ||
+    (typeof relayed.message === 'string' && relayed.message) ||
+    String(relayed.errorType);
+  return { body: relayed, message, type: relayed.errorType as ChatMessageError['type'] };
+};
 
 class ChatService {
   buildAssistantMessageContext = async (
@@ -430,7 +453,10 @@ class ChatService {
           headers: relay ? { ...(headers as Record<string, string>), ...relay.headers } : headers,
           method: 'POST',
           onAbort: options?.onAbort,
-          onErrorHandle: options?.onErrorHandle,
+          onErrorHandle:
+            relay && options?.onErrorHandle
+              ? (error) => options.onErrorHandle!(toRelayedChatError(error))
+              : options?.onErrorHandle,
           onFinish: options?.onFinish,
           onMessageHandle: options?.onMessageHandle,
           requestContext: {

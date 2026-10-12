@@ -1792,6 +1792,39 @@ describe('ChatService', () => {
       expect(initializeWithClientStore).not.toHaveBeenCalled();
     });
 
+    // A relayed call that fails on the device streams its executor's error
+    // (`{ provider, errorType, error }`). Callers read the `ChatMessageError`
+    // shape the legacy browser path gave them: the Ollama provider checker
+    // dereferenced `body.error` and crashed the settings page on a missing model.
+    it('hands a relayed device error to the caller as a ChatMessageError', async () => {
+      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'needsRelay').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'run').mockImplementation(async (_provider, request) =>
+        request({ channel: 'llmcall:user-1:abcdefgh', headers: {} }),
+      );
+      const relayedError = {
+        error: { message: "model 'gpt-oss:20b' not found", name: 'ResponseError', status_code: 404 },
+        errorType: 'OllamaBizError',
+        provider: 'ollama',
+      };
+      mockFetchSSE.mockImplementation(async (_url: string, options: any) => {
+        options.onErrorHandle(relayedError);
+        return new Response('');
+      });
+      const onErrorHandle = vi.fn();
+
+      await chatService.getChatCompletion(
+        { messages: [], model: 'gpt-oss:20b', provider: 'ollama' },
+        { onErrorHandle },
+      );
+
+      expect(onErrorHandle).toHaveBeenCalledWith({
+        body: relayedError,
+        message: "model 'gpt-oss:20b' not found",
+        type: 'OllamaBizError',
+      });
+    });
+
     // An abort while the relay channel is still being set up must not sit out
     // the subscribe timeout (manual compaction, preset-task loading state).
     it("hands the caller's abort signal to the relay setup", async () => {
