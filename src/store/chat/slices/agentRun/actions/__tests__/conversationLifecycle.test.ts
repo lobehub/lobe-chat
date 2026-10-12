@@ -445,6 +445,43 @@ describe('ConversationLifecycle actions', () => {
         expect(setDocument).not.toHaveBeenCalled();
       });
 
+      // Regression: the send adopts its minted topic (clearing the staged
+      // directory) before the gateway transport runs, so the directory a
+      // project group "+" staged never reached the server and the topic was
+      // born outside the project.
+      it('carries the staged project directory into the gateway send of a new topic', async () => {
+        const { projectWorkingDirectoryService } =
+          await import('@/services/projectWorkingDirectory');
+        vi.spyOn(projectWorkingDirectoryService, 'resolve').mockResolvedValue({
+          data: { deviceId: 'device-85', id: 'dir-85', projectId: 'prj-1' },
+        } as any);
+        const { result } = renderHook(() => useChatStore());
+        const executeGatewayAgentSpy = vi.fn().mockResolvedValue({ topicId: 'tpc_new' });
+
+        act(() => {
+          useChatStore.setState({
+            executeGatewayAgent: executeGatewayAgentSpy,
+            isGatewayModeEnabled: () => true,
+            pendingNewTopicDirectory: {
+              agentId: TEST_IDS.SESSION_ID,
+              projectWorkingDirectoryId: 'dir-85',
+            },
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            message: 'Start in the directory',
+          });
+        });
+
+        expect(projectWorkingDirectoryService.resolve).toHaveBeenCalledWith('dir-85');
+        expect(executeGatewayAgentSpy).toHaveBeenCalledWith(
+          expect.objectContaining({ projectWorkingDirectoryId: 'dir-85' }),
+        );
+      });
+
       it('should restore the pre-send editor snapshot when a gateway send fails', async () => {
         // Regression: the composer is cleared the instant Enter is pressed, and
         // only the client-runtime branch put the text back. The gateway branch

@@ -19,6 +19,8 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
+
 const hotArea = css`
   &::before {
     content: '';
@@ -64,25 +66,10 @@ export const useTopicActionsDropdownMenu = (
 
   const handleArchiveMergedPullRequests = useCallback(
     async (scope: TopicMaintenanceScope = 'own') => {
-      const mergedTopics = (topics ?? []).filter((topic) => {
-        if (
-          activeWorkspaceId &&
-          scope === 'own' &&
-          (!currentUserId || topic.userId !== currentUserId)
-        ) {
-          return false;
-        }
-
-        const pullRequest = topic.metadata?.workingDirectoryConfig?.git?.github?.pullRequest;
-        const isMerged = !!pullRequest?.mergedAt || pullRequest?.state?.toLowerCase() === 'merged';
-
-        return (
-          isMerged &&
-          topic.status !== 'completed' &&
-          topic.status !== 'archived' &&
-          topic.status !== 'unread'
-        );
-      });
+      const mergedTopics = getMergedPullRequestTopics(
+        topics ?? [],
+        activeWorkspaceId && scope === 'own' ? (currentUserId ?? null) : undefined,
+      );
 
       if (mergedTopics.length === 0) {
         toast.info(t('actions.archiveMergedPullRequestsNone'));

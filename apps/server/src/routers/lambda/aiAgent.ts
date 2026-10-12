@@ -1236,6 +1236,8 @@ const ExecAgentSchema = z
          * identity survives the gateway step_start snapshot / refetch.
          */
         orchestrationRole: z.enum(['supervisor', 'member']).optional(),
+        /** Bind a NEW topic to this project working directory (ignored with topicId). */
+        projectWorkingDirectoryId: z.string().optional(),
         scope: z.string().nullish(),
         sessionId: z.string().optional(),
         taskId: z.string().nullish(),
