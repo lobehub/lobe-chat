@@ -48,6 +48,7 @@ import { sql } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
+import { type ExpertiseCarrier, ExpertiseModel } from '@/database/models/expertise';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { MetricModel } from '@/database/models/metric';
@@ -66,6 +67,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
+import { BatchPlanSkillService, learnedRulesClause, planSkillIdentifier } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
   compareMetric,
@@ -2790,9 +2792,18 @@ export class GoalService {
       ]
         .filter(Boolean)
         .join('\n\n');
+      // A batch unit loads the batch's plan skill on every run, and is judged
+      // by every rule the batch's breaks have taught.
+      const rollout = graph.goal.config?.rolloutState;
+      const batchUnit = frontier.kind === 'task' && this.isBatchMember(graph, frontier.id);
+      const planSkill = batchUnit ? rollout?.planSkill : undefined;
+      const learnedRules = batchUnit ? (rollout?.learnings ?? []) : [];
       task = await this.taskService.createTask({
         assigneeAgentId: await this.resolveTaskAssignee(graph.goal),
-        config: { checkpoint: { topic: { after: false } } },
+        config: {
+          checkpoint: { topic: { after: false } },
+          ...(planSkill ? { skills: [planSkillIdentifier(planSkill)] } : {}),
+        },
         description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
         instruction: this.buildTaskInstruction(graph, frontier.title, description),
         name: frontier.title,
@@ -2811,11 +2822,16 @@ export class GoalService {
           enabled: true,
           ...(goalCriteriaIds?.length ? { verifyCriteriaIds: goalCriteriaIds } : {}),
         },
-        requirement: this.buildTaskAcceptanceRequirement(
-          graph,
-          frontier.title,
-          frontier.description,
-        ),
+        // A batch unit is judged on its own delivery and, on top of it, on every
+        // rule the batch's breaks taught. Configured criteria would replace the
+        // prose contract (the verify plan materializes only them), so the
+        // rules join the requirement instead of standing in for it.
+        requirement: [
+          this.buildTaskAcceptanceRequirement(graph, frontier.title, frontier.description),
+          learnedRulesClause(learnedRules),
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
       });
       acceptanceId = acceptance.id;
       const bound = await this.coordinatorGraph.bindTask(goalId, frontier.id, task.id);
@@ -3804,6 +3820,12 @@ export class GoalService {
             canarySize,
             goalId,
             goalModel,
+            planSkillOwner: {
+              db: tx,
+              goalTitle: graph.goal.title,
+              userId: this.userId,
+              workspaceId: this.workspaceId,
+            },
             policy: existingRollout,
             problemId: currentProblem.id,
             probes: draftTasks,
@@ -4009,7 +4031,7 @@ export class GoalService {
           goalId,
           state.batchNodeId,
           title,
-          policy.spec?.recipeOutline,
+          { outline: policy.spec?.recipeOutline, skill: state.planSkill },
           policy.unitBriefs?.[title],
         );
         if (nodeId) {
@@ -4248,6 +4270,16 @@ export class GoalService {
     // goal row's lock, so a failure part-way leaves the question open to answer
     // again rather than consumed beside half a round; and a second answer
     // racing this one finds the break already restarted.
+    // What a break teaches is mounted on the agent that runs the batch's units
+    // (a run's expertise snapshot reads the executing agent's domains, not the
+    // project's) — resolved like the task assignee, so a deleted executor falls
+    // back to the goal agent rather than a binding that cannot be written. Read
+    // before the transaction, which holds the goal row.
+    const carrierAgentId = await this.resolveTaskAssignee(graph.goal);
+    const carrier: ExpertiseCarrier = carrierAgentId
+      ? { id: carrierAgentId, type: 'agent' }
+      : { type: 'user' };
+
     const committed = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
@@ -4274,6 +4306,88 @@ export class GoalService {
       if (template && optionId !== 'new_class' && state.templateNodeId) {
         await writer.createEdge(goalId, template.id, state.templateNodeId, 'revises');
       }
+
+      // The plan skill takes the revision as its next version, and the break
+      // teaches the batch: a rule the executor reads, compiled into a criterion
+      // the verifier judges every later unit by. A fork starts a new class of
+      // units — its correction describes them, it is not a rule for the old
+      // ones. Each runs in its own savepoint: a failure there costs the skill
+      // version or the lesson, never the round the answer opens.
+      const inSavepoint = <T>(label: string, run: (db: typeof tx) => Promise<T>) =>
+        tx.transaction(run).catch((error) => {
+          log('restartRolloutLoop: %s failed: %O', label, error);
+          return undefined;
+        });
+      let planSkill = state.planSkill;
+      if (planSkill && revisedOutline) {
+        const skill = planSkill;
+        const version = await inSavepoint('plan skill revision', (db) =>
+          new BatchPlanSkillService(db, this.userId, this.workspaceId).revise(skill, {
+            goalId,
+            guidance: correction || undefined,
+            plan: revisedOutline,
+            revision,
+          }),
+        );
+        // The revision did not land (the skill was deleted, or the write
+        // failed): units must not load a skill that lacks it. They fall back to
+        // copying the revised plan, and the batch drops the stale reference.
+        if (version === undefined) planSkill = undefined;
+      } else if (!planSkill && revisedOutline) {
+        // A batch from before plans were skills moves into one now, carrying
+        // every earlier version of its plan.
+        const inBatch = new Set(
+          graph.edges
+            .filter((edge) => edge.kind === 'contains' && edge.sourceNodeId === batchId)
+            .map((edge) => edge.targetNodeId),
+        );
+        const earlier = graph.nodes
+          .filter(
+            (node) =>
+              node.kind === 'finding' &&
+              node.title === GOAL_BATCH_TEMPLATE_TITLE &&
+              inBatch.has(node.id),
+          )
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          .map((node) => node.description?.trim() ?? '');
+        planSkill = await inSavepoint('plan skill adoption', (db) =>
+          new BatchPlanSkillService(db, this.userId, this.workspaceId).adopt({
+            batchNodeId: batchId,
+            goalId,
+            goalTitle: graph.goal.title,
+            versions: [...earlier, revisedOutline],
+          }),
+        );
+      }
+      // A fork starts a new class: the old class's rules must stop reaching
+      // runs too, not only its acceptance — retire them in the shared domain,
+      // where the executor's expertise would otherwise keep injecting them.
+      // Not in a forgiving savepoint: the fork clears the batch's record of
+      // them below, so a failure here fails the fork (the question stays open
+      // to answer again) rather than leaving them active and forgotten.
+      if (optionId === 'new_class' && state.learnings?.length) {
+        const expertise = new ExpertiseModel(tx, this.userId, this.workspaceId);
+        for (const learning of state.learnings) await expertise.retireLesson(learning.lessonId);
+      }
+      const learned =
+        correction && optionId !== 'new_class'
+          ? await inSavepoint('break learning', (db) =>
+              new BatchPlanSkillService(db, this.userId, this.workspaceId).learn({
+                carrier,
+                domainId: state.learningDomainId,
+                // What the gate found: this round's latest hold, in its own words.
+                found:
+                  state.gateLog?.findLast(
+                    (entry) =>
+                      entry.outcome === 'blocked' && entry.revision === state.templateRevision,
+                  )?.message ?? 'the release gate held',
+                goalTitle: graph.goal.title,
+                guidance: correction,
+                planSkill,
+                revision: state.templateRevision,
+              }),
+            )
+          : undefined;
 
       // 2. Retire the members that broke or were superseded, never delete them —
       // the new round is `derived_from` them (decision #4). A member an earlier
@@ -4368,7 +4482,7 @@ export class GoalService {
           goalId,
           batchId,
           unit.title,
-          revisedOutline || baseOutline,
+          { outline: revisedOutline || baseOutline, skill: planSkill },
           unit.brief,
         );
         if (!nodeId) continue;
@@ -4402,6 +4516,17 @@ export class GoalService {
         phase: 'probe',
         probeNodeIds: probeIds,
         releasedCount: opened.length,
+        // A fork starts a new class of units: the old class's rules do not
+        // bind it, so its learnings start empty.
+        learningDomainId:
+          optionId === 'new_class' ? undefined : (learned?.domainId ?? state.learningDomainId),
+        learnings:
+          optionId === 'new_class'
+            ? undefined
+            : learned
+              ? [...(state.learnings ?? []), learned.learning]
+              : state.learnings,
+        planSkill,
         templateNodeId: template?.id ?? state.templateNodeId,
         templateRevision: state.templateRevision + 1,
         unitTitles: remaining,

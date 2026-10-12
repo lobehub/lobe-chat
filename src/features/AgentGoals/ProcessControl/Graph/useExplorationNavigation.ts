@@ -15,13 +15,27 @@ type Graph = Pick<GoalGraphSnapshot, 'nodes' | 'edges'>;
  */
 const foldable = (node: Graph['nodes'][number]) => node.kind !== 'batch';
 
-export const useExplorationNavigation = (goalId: string, graph: Graph) => {
+/**
+ * A scope that is not a node: a batch's stage (`batchStageId`). Returns its
+ * members, or undefined when `id` is no such scope.
+ */
+export type ScopeMembers = (id: string) => ReadonlySet<string> | undefined;
+
+export const useExplorationNavigation = (
+  goalId: string,
+  graph: Graph,
+  virtualScope?: ScopeMembers,
+) => {
   const [state, setState] = useState({ goalId, path: [] as string[], toggled: new Set<string>() });
   if (state.goalId !== goalId) setState({ goalId, path: [], toggled: new Set() });
 
-  const path = state.path.filter((id) => graph.nodes.some((n) => n.id === id));
+  const path = state.path.filter(
+    (id) => graph.nodes.some((n) => n.id === id) || !!virtualScope?.(id),
+  );
   const scopeId = path.at(-1);
-  const scopeIds = scopeId ? experimentMembers(graph, scopeId) : undefined;
+  const scopeIds = scopeId
+    ? (virtualScope?.(scopeId) ?? experimentMembers(graph, scopeId))
+    : undefined;
   const nodes = graph.nodes.filter((node) => !scopeIds || scopeIds.has(node.id));
   const ids = new Set(nodes.map((node) => node.id));
   const edges = graph.edges.filter(
@@ -47,7 +61,7 @@ export const useExplorationNavigation = (goalId: string, graph: Graph) => {
     path,
     scopeId,
     enter: (id: string) => {
-      if (!containers.some((node) => node.id === id)) return;
+      if (!containers.some((node) => node.id === id) && !virtualScope?.(id)) return;
       setState((previous) => ({ ...previous, path: [...path, id] }));
     },
     backTo: (depth: number) =>

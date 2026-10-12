@@ -1,5 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
+import { SkillsIcon } from '@lobehub/ui/icons';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   Boxes,
@@ -41,6 +42,15 @@ export const KIND_COLOR: Record<GoalGraphNodeKind, { line: string; soft: string 
  * decision orange, and not a red that reads as an error.
  */
 export const GATE_COLOR = { line: cssVar.cyan10, soft: cssVar.cyan3 };
+
+/**
+ * A batch's execution plan kept as a skill in the user's library. It is the
+ * graph's `finding` node underneath, but it reads as a skill — the thing every
+ * unit loads — not as a conclusion. It wears the color skills wear everywhere
+ * else (the chat input's skill tags), so it reads as the same thing.
+ */
+export const SKILL_COLOR = { line: cssVar.colorSuccess, soft: cssVar.colorSuccessBg };
+export const SKILL_ICON = SkillsIcon as unknown as LucideIcon;
 
 export const KIND_ICON: Record<GoalGraphNodeKind, LucideIcon> = {
   batch: Boxes,

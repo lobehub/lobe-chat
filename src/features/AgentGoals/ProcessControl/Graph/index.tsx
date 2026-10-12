@@ -46,7 +46,7 @@ import {
   isRunningNode,
   scopeGraphView,
 } from '../goalGraphViewModel';
-import { GATE_COLOR, KindDot } from '../shared';
+import { GATE_COLOR, KindDot, SKILL_COLOR, SKILL_ICON } from '../shared';
 import {
   BatchExperimentProbeGroup,
   BatchRoundFrame,
@@ -59,10 +59,12 @@ import { type BatchLayout, layoutBatch } from './batchLayout';
 import {
   type BatchGateState,
   type BatchModel,
+  batchPlanTitleKey,
   type BatchRound,
   buildBatchModel,
   verdictChecks,
 } from './batchModel';
+import { batchStageId, batchStages, layoutBatchScope } from './batchScopeLayout';
 import { edgeDirection } from './edgeRouting';
 import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
 import { batchContainerStatus } from './experimentStatus';
@@ -448,12 +450,22 @@ const useBatchCopy = () => {
               : t('goalBatch.gate.title'),
         };
       },
-      template: (round: BatchRound, view: GoalNodeView): GraphNodeData['presentation'] => ({
+      template: (
+        round: BatchRound,
+        view: GoalNodeView,
+        model: BatchModel,
+      ): GraphNodeData['presentation'] => ({
         chip: null,
-        subtitle: view.node.description?.split('\n')[0] ?? '',
-        title: round.forked
-          ? t('goalBatch.template.forked', { revision: round.revision })
-          : t('goalBatch.template.title', { revision: round.revision }),
+        // A plan kept as a skill reads as the skill every unit loads — its icon,
+        // its colour, its identifier — not as a conclusion.
+        ...(model.planSkill
+          ? {
+              icon: SKILL_ICON,
+              palette: SKILL_COLOR,
+              subtitle: `user-skills:${model.planSkill.name}`,
+            }
+          : { subtitle: view.node.description?.split('\n')[0] ?? '' }),
+        title: t(batchPlanTitleKey(model, round), { revision: round.revision }),
       }),
     }),
     [t, checkCopy],
@@ -483,6 +495,8 @@ const Canvas = memo<
     onInspect: (id: string) => void;
     onEnter: (id: string) => void;
     navigation?: ReactNode;
+    /** The batch entered on its own: its units as a grid, round by round. */
+    scopeBatch?: BatchModel;
   }
 >(
   ({
@@ -500,6 +514,7 @@ const Canvas = memo<
     onInspect,
     onEnter,
     navigation,
+    scopeBatch,
     view,
   }) => {
     const { fitView, getInternalNode, getViewport, setCenter } = useReactFlow();
@@ -541,15 +556,15 @@ const Canvas = memo<
     }, [graph, collapsed]);
     const batchRoles = useMemo(() => {
       const result = new Map<string, BatchRole>();
-      for (const { layout, model } of batches.values()) {
-        if (!layout) continue;
+      const open = [...batches.values()].flatMap(({ layout, model }) => (layout ? [model] : []));
+      for (const model of scopeBatch ? [...open, scopeBatch] : open) {
         for (const round of model.rounds) {
           if (round.templateId) result.set(round.templateId, { kind: 'template', model, round });
           if (round.assayId) result.set(round.assayId, { kind: 'assay', model, round });
         }
       }
       return result;
-    }, [batches]);
+    }, [batches, scopeBatch]);
     const containerLayouts = useMemo(
       () =>
         new Map(
@@ -591,13 +606,23 @@ const Canvas = memo<
     const handleNodesChange = useCallback((changes: NodeChange[]) => {
       setMeasuredSizes((previous) => mergeMeasuredSizes(previous, changes));
     }, []);
-    const positions = hasContainers
-      ? map.boxes
-      : layoutGraph(
-          baseNodes.filter((node) => visibleIds.has(node.id)),
-          [...graph.edges, ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const }))],
-          measuredSizes,
-        );
+    const scopeLayout = useMemo(
+      () =>
+        scopeBatch ? layoutBatchScope(graph, scopeBatch, visibleIds, measuredSizes) : undefined,
+      [graph, scopeBatch, visibleIds, measuredSizes],
+    );
+    const positions = scopeLayout
+      ? scopeLayout.boxes
+      : hasContainers
+        ? map.boxes
+        : layoutGraph(
+            baseNodes.filter((node) => visibleIds.has(node.id)),
+            [
+              ...graph.edges,
+              ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const })),
+            ],
+            measuredSizes,
+          );
 
     const ghosts = useMemo(() => {
       if (!planning) return [];
@@ -687,7 +712,8 @@ const Canvas = memo<
             const box = positions[item.node.id];
             const batchRole = batchRoles.get(item.node.id);
             const inBatch =
-              !!map.parents.get(item.node.id) && batches.has(map.parents.get(item.node.id)!);
+              !!scopeBatch ||
+              (!!map.parents.get(item.node.id) && batches.has(map.parents.get(item.node.id)!));
             const waiting = item.node.kind === 'decision' && item.node.status === 'waiting';
             // Inside a batch a decision is a plain card: the hand glyph and a blue
             // chip say a person is needed, without the orange gate frame.
@@ -704,18 +730,21 @@ const Canvas = memo<
               // Once the report marked a mainline, everything off it is context too.
               // Inside a batch the gate's own chip says it is locked; a settled
               // side decision steps back instead.
-              dim: inBatch
-                ? !batchRole && item.node.status === 'resolved'
-                : isNodeDimmed({
-                    blocked: item.node.status === 'proposed' && item.blockers.length > 0,
-                    emphasis,
-                    highlighted,
-                  }),
+              // An entered batch is the units themselves: only a superseded one steps back.
+              dim: scopeBatch
+                ? item.isStale
+                : inBatch
+                  ? !batchRole && item.node.status === 'resolved'
+                  : isNodeDimmed({
+                      blocked: item.node.status === 'proposed' && item.blockers.length > 0,
+                      emphasis,
+                      highlighted,
+                    }),
               highlighted,
               isGate,
               presentation:
                 batchRole?.kind === 'template'
-                  ? batchCopy.template(batchRole.round, item)
+                  ? batchCopy.template(batchRole.round, item, batchRole.model)
                   : batchRole?.kind === 'assay'
                     ? batchCopy.gate(batchRole.round, batchRole.model)
                     : inBatch && item.node.kind === 'decision'
@@ -797,6 +826,7 @@ const Canvas = memo<
         batchCopy,
         openBatchIds,
         placeInMap,
+        scopeBatch,
       ],
     );
 
@@ -804,8 +834,8 @@ const Canvas = memo<
     // round's waves and the frame each round's nodes sit in. They are not graph
     // nodes; their cards and squares open the real node underneath.
     const batchFlowNodes: FlowNode[] = useMemo(
-      () =>
-        [...batches].flatMap(([batchId, { layout, model }]) => {
+      () => [
+        ...[...batches].flatMap(([batchId, { layout, model }]) => {
           if (!layout || !visibleIds.has(batchId)) return [];
           const [first] = model.rounds;
           // The roster waves a round owns, keeping each one's roster position.
@@ -834,14 +864,14 @@ const Canvas = memo<
             const data =
               group.kind === 'experimentProbe'
                 ? {
-                    onEnter: () => onEnter(batchId),
+                    onEnter: () => onEnter(batchStageId(batchId, 0)),
                     onSelect,
                     probes: first.probes,
                     started: first.probes.some((probe) => probe.state !== 'backlog'),
                     views: graph.byId,
                   }
                 : ({
-                    onEnter: () => onEnter(batchId),
+                    onEnter: () => onEnter(batchStageId(batchId, group.revision)),
                     onSelect,
                     probes: round.probes,
                     revision: group.revision,
@@ -862,6 +892,7 @@ const Canvas = memo<
             } satisfies FlowNode;
           });
         }),
+      ],
       [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap],
     );
 
@@ -880,7 +911,9 @@ const Canvas = memo<
       const markerOf = (tone: EdgeTone) =>
         tone === 'mainline' ? mainlineMarker : tone === 'detour' ? detourMarker : marker;
       const lanes = new Map<string, number>();
-      const direct = (hasContainers ? map.edges : graph.edges)
+      // Inside an entered batch the units do not lead to one another: the grid
+      // draws only each round's plan → gate.
+      const direct = (scopeLayout ? [] : hasContainers ? map.edges : graph.edges)
         .filter((edge) => visibleIds.has(edge.sourceNodeId) && visibleIds.has(edge.targetNodeId))
         .map((edge) => {
           // An open batch has no card of its own: a link to it lands on its first piece.
@@ -960,8 +993,20 @@ const Canvas = memo<
               }) satisfies FlowEdge,
           ),
       );
-      return [...direct, ...bridged, ...chained];
+      const scoped = (scopeLayout?.edges ?? []).map(
+        (edge) =>
+          ({
+            data: { lane: 0 },
+            id: edge.id,
+            markerEnd: marker,
+            source: edge.source,
+            target: edge.target,
+            type: 'exploration',
+          }) satisfies FlowEdge,
+      );
+      return [...direct, ...(scopeLayout ? [] : bridged), ...chained, ...scoped];
     }, [
+      scopeLayout,
       batches,
       graph,
       visibleIds,
@@ -1111,15 +1156,45 @@ Canvas.displayName = 'GoalGraphCanvas';
 
 const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange, ...props }) => {
   const { t } = useTranslation('chat');
-  const navigation = useExplorationNavigation(props.graph.goal.id, {
-    nodes: props.graph.nodes.map((item) => item.node),
-    edges: props.graph.edges,
-  });
+  const shape = useMemo(
+    () => ({ edges: props.graph.edges, nodes: props.graph.nodes.map((item) => item.node) }),
+    [props.graph],
+  );
+  // A batch is entered one stage at a time — its cold start, or one round —
+  // so each stage is a scope of its own, read off the whole graph.
+  const batchStageScopes = useMemo(() => {
+    const result = new Map<string, { members: Set<string>; model: BatchModel; revision: number }>();
+    for (const item of props.graph.nodes) {
+      if (item.node.kind !== 'batch') continue;
+      const model = buildBatchModel(props.graph, item.node.id);
+      const members = experimentMembers(shape, item.node.id);
+      for (const stage of batchStages(props.graph, model, members))
+        result.set(batchStageId(item.node.id, stage.revision), {
+          members: new Set([...stage.headers, ...stage.units]),
+          model,
+          revision: stage.revision,
+        });
+    }
+    return result;
+  }, [props.graph, shape]);
+  const navigation = useExplorationNavigation(
+    props.graph.goal.id,
+    shape,
+    (id) => batchStageScopes.get(id)?.members,
+  );
   const { collapsed, scopeId } = navigation;
   const scopeIds = new Set(navigation.nodes.map((node) => node.id));
   const scopedGraph: GoalGraphView = scopeId
     ? scopeGraphView(props.graph, scopeIds, navigation.edges)
     : props.graph;
+  const scopeStage = scopeId ? batchStageScopes.get(scopeId) : undefined;
+  const scopeBatch = scopeStage?.model;
+  const stageLabel = (revision: number) =>
+    revision ? t('goalBatch.round.title', { revision }) : t('goalBatch.probes.title');
+  const scopeLabel = (id: string) => {
+    const stage = batchStageScopes.get(id);
+    return stage ? stageLabel(stage.revision) : props.graph.byId[id]?.node.title;
+  };
   const openNode = useChatStore((s) => s.openGoalNode);
   const [preferredView, setView] = useState<GraphViewMode>('stage');
   const stageIsWholeMap = isStageWholeMap(props.graph);
@@ -1187,11 +1262,11 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
           <ChevronRight size={14} />
           {index === navigation.path.length - 1 ? (
             <Text aria-current={'page'} fontSize={12}>
-              {props.graph.byId[id]?.node.title}
+              {scopeLabel(id)}
             </Text>
           ) : (
             <Button size={'small'} onClick={() => navigation.backTo(index + 1)}>
-              {props.graph.byId[id]?.node.title}
+              {scopeLabel(id)}
             </Button>
           )}
         </Flexbox>
@@ -1301,6 +1376,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
               key={scopeId ?? 'root'}
               planning={scopeId ? false : props.planning}
               refitKey={showPortal}
+              scopeBatch={scopeBatch}
               view={scopeId ? 'all' : view}
               navigation={
                 <Flexbox gap={8}>
@@ -1365,6 +1441,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
           key={scopeId ?? 'root'}
           navigation={breadcrumbs}
           planning={scopeId ? false : props.planning}
+          scopeBatch={scopeBatch}
           view={scopeId ? 'all' : view}
           onEnter={navigation.enter}
           onInspect={(id) => openNode(props.graph.goal.id, id)}

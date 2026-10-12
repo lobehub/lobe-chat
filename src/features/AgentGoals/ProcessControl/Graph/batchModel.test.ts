@@ -11,12 +11,21 @@ import { describe, expect, it } from 'vitest';
 import { buildGoalGraphView } from '../goalGraphViewModel';
 import { batchGroupId, layoutBatch } from './batchLayout';
 import {
+  batchPlanTitleKey,
   buildBatchModel,
   findBatchGate,
   findBatchPlan,
   reopenedRows,
   verdictChecks,
 } from './batchModel';
+import {
+  BATCH_SCOPE_COLUMNS,
+  batchScopeFrameId,
+  batchStageId,
+  batchStages,
+  layoutBatchScope,
+  parseBatchStageId,
+} from './batchScopeLayout';
 
 const T0 = new Date('2026-10-01T00:00:00Z');
 const at = (minutes: number) => new Date(T0.getTime() + minutes * 60_000);
@@ -599,5 +608,107 @@ describe('buildBatchModel roster', () => {
     const model = buildBatchModel(graph, 'batch');
 
     expect(model.waves[0][0]).toMatchObject({ nodeId: 'm3b', state: 'done', title: 'U3' });
+  });
+});
+
+describe('batchPlanTitleKey', () => {
+  const round = { forked: false, revision: 2 } as any;
+
+  it('names the plan as a skill when the batch keeps it as one', () => {
+    const model = { planSkill: { id: 'docs_1', name: 'goal-plan-x' } };
+    expect(batchPlanTitleKey(model, round)).toBe('goalBatch.skill.title');
+    expect(batchPlanTitleKey(model, { ...round, forked: true })).toBe('goalBatch.skill.forked');
+  });
+
+  it('keeps the plain plan name for a batch without a plan skill', () => {
+    expect(batchPlanTitleKey({}, round)).toBe('goalBatch.template.title');
+  });
+});
+
+describe('layoutBatchScope', () => {
+  it('lays an entered batch out as round frames with its units in a grid', () => {
+    const units = ['m3', 'm4', 'm5', 'm6', 'm7', 'm8'];
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: units.map((id, index) =>
+          node(id, 'task', 10, { status: 'resolved', title: `U${index + 3}` }),
+        ),
+        state: { massNodeIds: units, phase: 'mass', waveIndex: 1 },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+    const members = new Set(['t1', 'a1', 'p1', 'p2', ...units]);
+    const { boxes, edges, frames } = layoutBatchScope(graph, model, members);
+
+    // The cold start, then round 1 — one frame each, stacked top to bottom.
+    expect(frames.map((frame) => frame.revision)).toEqual([0, 1]);
+    const [cold, round1] = frames;
+    expect(round1.box.y).toBeGreaterThan(cold.box.y + cold.box.height);
+    expect(boxes.p1.y).toBe(boxes.p2.y);
+    // Plan over gate on the left, linked; the units in a grid beside them.
+    expect(boxes.t1.x).toBe(boxes.a1.x);
+    expect(boxes.a1.y).toBeGreaterThan(boxes.t1.y);
+    expect(edges).toEqual([expect.objectContaining({ source: 't1', target: 'a1' })]);
+    const firstRow = units.slice(0, BATCH_SCOPE_COLUMNS);
+    expect(new Set(firstRow.map((id) => boxes[id].y)).size).toBe(1);
+    expect(boxes.m4.x).toBeGreaterThan(boxes.m3.x);
+    expect(boxes.m3.x).toBeGreaterThan(boxes.t1.x + boxes.t1.width);
+    // Six units in four columns wrap to a second row, back at the first column.
+    expect(boxes.m7.y).toBeGreaterThan(boxes.m3.y);
+    expect(boxes.m7.x).toBe(boxes.m3.x);
+    // Every unit sits inside its round's frame.
+    for (const id of units) {
+      expect(boxes[id].y + boxes[id].height).toBeLessThanOrEqual(round1.box.y + round1.box.height);
+      expect(boxes[id].x + boxes[id].width).toBeLessThanOrEqual(round1.box.width);
+    }
+    expect(boxes[batchScopeFrameId('batch', 1)]).toEqual(round1.box);
+  });
+
+  it('keeps a member the rounds do not account for on the map, in the latest round', () => {
+    const graph = buildGoalGraphView(
+      batchSnapshot({ extraNodes: [node('stray', 'task', 20)], state: {} }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+    const { boxes, frames } = layoutBatchScope(graph, model, new Set(['t1', 'a1', 'stray']));
+    const latest = frames.at(-1)!;
+    expect(boxes.stray.y).toBeGreaterThanOrEqual(latest.box.y);
+    expect(boxes.stray.y + boxes.stray.height).toBeLessThanOrEqual(
+      latest.box.y + latest.box.height,
+    );
+  });
+});
+
+describe('batchStages', () => {
+  it('splits a batch into the stages a person enters one at a time', () => {
+    const units = ['m3', 'm4', 'm5'];
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: units.map((id, index) =>
+          node(id, 'task', 10, { status: 'resolved', title: `U${index + 3}` }),
+        ),
+        state: { massNodeIds: units, phase: 'mass', waveIndex: 1 },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+    const stages = batchStages(graph, model, new Set(['t1', 'a1', 'p1', 'p2', ...units]));
+
+    expect(stages).toEqual([
+      { headers: [], revision: 0, units: ['p1', 'p2'] },
+      { headers: ['t1', 'a1'], revision: 1, units },
+    ]);
+    // Entered alone, a stage lays out as one frame.
+    const { frames } = layoutBatchScope(graph, model, new Set(['t1', 'a1', ...units]));
+    expect(frames.map((frame) => frame.revision)).toEqual([1]);
+  });
+
+  it('names a stage as a scope and reads it back', () => {
+    expect(parseBatchStageId(batchStageId('batch-1', 2))).toEqual({
+      batchId: 'batch-1',
+      revision: 2,
+    });
+    expect(parseBatchStageId('batch-1')).toBeUndefined();
   });
 });

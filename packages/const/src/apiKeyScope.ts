@@ -301,6 +301,8 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   user: rw('user:read', 'user:write'),
   userMemories: rw('user:read', 'user:write'),
   userMemory: rw('user:read', 'user:write'),
+  // the user's own skill library — same scope as the agent skills it sits beside
+  userSkill: rw('agent:read', 'agent:write'),
   verify: 'blocked',
   video: { any: 'model:invoke' },
   waitlist: 'blocked',

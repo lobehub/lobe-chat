@@ -21,6 +21,7 @@ import { DeviceModel } from '@/database/models/device';
 import { ExpertiseModel } from '@/database/models/expertise';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import type { MessageModel } from '@/database/models/message';
+import { TaskModel } from '@/database/models/task';
 import type { TopicModel } from '@/database/models/topic';
 import { UserPersonaModel } from '@/database/models/userMemory/persona';
 import { isDeviceCapablePlan } from '@/helpers/executionTarget';
@@ -29,6 +30,7 @@ import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { FileService } from '@/server/services/file';
 import { redisService } from '@/server/services/redis';
+import { readTaskSkillIds, UserSkillService } from '@/server/services/userSkill';
 import { afterUnscoped } from '@/server/utils/scheduleAfterResponse';
 
 import { pruneRegeneratedBranch } from '../pruneRegeneratedBranch';
@@ -196,6 +198,8 @@ export interface OperationPrepInput {
   operationId: string;
   runAttachments: RunAttachments;
   runFromHistory: boolean;
+  /** The Task this run executes; the skills it names are trusted for this run. */
+  taskId?: string;
   throwIfExecutionAborted: (stage: string) => Promise<void>;
 }
 
@@ -840,6 +844,58 @@ export const prepareOperation = async (
       name: skill.name,
     }));
 
+    // The user's own skill library: listed to every run, and injected up front
+    // when the agent pins one or the run names it in its plugins — a goal
+    // batch's unit runs name the batch's plan skill that way.
+    // The catalog carries no bodies; only the pinned / run-named skills read
+    // theirs, so a library that grows with every batch stays cheap to list.
+    // A workspace-public agent never reads its caller's private skills — every
+    // user skill is private — so its runs see none of them.
+    const userSkills = new UserSkillService(
+      deps.db,
+      deps.userId,
+      deps.workspaceId,
+      deps.workspaceId ? await deps.agentModel.getAgentVisibility(resolvedAgentId) : undefined,
+    );
+    // The skills the run's own Task names (a goal batch's plan) load even
+    // through a public agent — and only those; nothing the model or a picker
+    // supplies widens that.
+    const taskSkillIds = input.taskId
+      ? readTaskSkillIds(
+          (await new TaskModel(deps.db, deps.userId, deps.workspaceId).findById(input.taskId))
+            ?.config,
+        )
+      : [];
+    const namedUserSkills = await userSkills.loadRuntimeSkills(
+      [...pinnedSkillIds, ...(agentPlugins ?? []), ...taskSkillIds],
+      { trustedGenerated: taskSkillIds },
+    );
+    // Skills the system generated for one job (a goal batch's plan) are not
+    // listed to every run — one accumulates per batch, so the query leaves them
+    // out — only joined where the run pins or names them, as that batch's units
+    // do. Those come in with their bodies.
+    const listed = await userSkills.listCatalog({ includeGenerated: false });
+    const listedIds = new Set(listed.map((skill) => skill.identifier));
+    const namedContent = new Map(
+      namedUserSkills.map((skill) => [skill.identifier, skill.content] as const),
+    );
+    const userSkillMetas = [
+      ...listed.map((skill) => ({
+        content: namedContent.get(skill.identifier),
+        description: skill.description,
+        identifier: skill.identifier,
+        name: skill.name,
+      })),
+      ...namedUserSkills
+        .filter((skill) => !listedIds.has(skill.identifier))
+        .map((skill) => ({
+          content: skill.content,
+          description: skill.description,
+          identifier: skill.identifier,
+          name: skill.name,
+        })),
+    ];
+
     const projectMetas = workspaceInit.workspace.skills.map((s) => ({
       description: s.description ?? '',
       identifier: `${s.scope === 'device' ? 'device' : 'project'}:${s.name}`,
@@ -884,7 +940,7 @@ export const prepareOperation = async (
     // load time.
     const shareAllowedSkillIds = shareGate
       ? filterSkillsByShareGate(
-          [...projectMetas, ...dbMetas, ...agentSkillMetas, ...builtinMetas].map(
+          [...projectMetas, ...dbMetas, ...agentSkillMetas, ...userSkillMetas, ...builtinMetas].map(
             (skill) => skill.identifier,
           ),
           shareGate,
@@ -911,7 +967,7 @@ export const prepareOperation = async (
     // command execution is gated at the device tool layer.
     operationSkillSet = assembleSkillPool(
       {
-        agentSkills: agentSkillMetas,
+        agentSkills: [...agentSkillMetas, ...userSkillMetas],
         builtin: builtinMetas,
         db: dbMetas,
         project: projectMetas,
