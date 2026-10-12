@@ -24,10 +24,14 @@ export interface ReplicaStorage<T> {
   /**
    * Strict read for destructive passes: like `get`, but **rejects** when the
    * row could not be read (I/O error, unparsable value) instead of reporting a
-   * miss. The engine reads its per-scope index through it before `remove` /
-   * `clear`, so an unreadable index fails the purge rather than passing for an
-   * empty one. Optional: without it `get` is used, which is only correct for a
-   * storage whose `get` already rejects on failure.
+   * miss. The engine reads its per-scope index (and every row it patches)
+   * through it before `remove` / `clear` / an entity patch / an eviction, so an
+   * unreadable index fails the pass rather than passing for an empty one.
+   *
+   * Optional only for compatibility: a storage without it still hydrates and
+   * persists, but every destructive pass **fails** (`clear()` resolves `false`,
+   * a removal stays unpurged and is retried, an entity guard is kept) because
+   * the engine cannot tell a miss from a failed read through `get`.
    */
   getStrict?: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
   /**
@@ -105,6 +109,8 @@ export interface ReplicaResource<TParams, TData, TFetched = TData, TCursor = any
   /** Paged resources receive the page cursor (`undefined` = head page). */
   fetcher?: (params: TParams, cursor?: TCursor) => Promise<TFetched>;
   key: (params: TParams) => string;
+  /** Cap of persisted rows per scope (LRU eviction, see `DefineReplicaOptions.persist`). */
+  maxPersistedEntries?: number;
   name: string;
   /** Storage namespace — `name` + `version`, so a version bump orphans old rows. */
   namespace: string;

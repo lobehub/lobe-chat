@@ -45,7 +45,11 @@ import type { LobeChatDatabase } from '@/database/type';
 import { notTrashed } from '@/database/utils/softDelete';
 import { ExpertiseRejectionWorkflow } from '@/server/workflows/expertiseRejection';
 
-import { type AcceptanceMergeSummary, mergeAcceptanceRounds } from './acceptanceMerge';
+import {
+  type AcceptanceMergeSummary,
+  findUnresolvedSupersedes,
+  mergeAcceptanceRounds,
+} from './acceptanceMerge';
 import { computeFalseFlags } from './feedbackService';
 
 const log = debug('lobe-server:verify-acceptance');
@@ -143,6 +147,12 @@ const itemSurface = (item: VerifyCheckItem | undefined): VerifySurface | null =>
   return typeof raw === 'string' ? normalizeVerifySurface(raw) : null;
 };
 
+/** A run chained onto an acceptance, with anything the author should fix. */
+export type AttachedRun = VerifyRunItem & {
+  /** `supersedes` ids naming no check of this acceptance; they fold nothing. */
+  unresolvedSupersedes?: string[];
+};
+
 /**
  * Merge a whole round chain into the union check list.
  *
@@ -161,6 +171,10 @@ export const buildAcceptanceCheckUnion = (
   const rows = new Map<string, AcceptanceCheckRow>();
   // Last round whose PLAN named each item — drives the carried-forward flag.
   const lastPlannedRound = new Map<string, number>();
+  // A `supersedes` entry names the check the author knew: often the plan item id
+  // they wrote, while the row is keyed by the criterion minted for it. Remember
+  // every plan item id's row so the fold below resolves either spelling.
+  const logicalIdByPlanItemId = new Map<string, string>();
 
   const ensureRow = (id: string, roundIndex: number): AcceptanceCheckRow => {
     const existing = rows.get(id);
@@ -199,6 +213,7 @@ export const buildAcceptanceCheckUnion = (
     for (const item of plan) {
       const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
       const row = ensureRow(logicalId, roundIndex);
+      logicalIdByPlanItemId.set(item.id, logicalId);
       // The latest snapshot wins: repair rounds may refine method/expected.
       if (item.sourceFlowNode) {
         // A rerun is a fresh execution; historical evidence stays in the timeline.
@@ -239,7 +254,9 @@ export const buildAcceptanceCheckUnion = (
   // order so a chain (C replaced by B replaced by A) collapses fully into A.
   const foldOrder = [...rows.values()].sort((a, b) => a.introducedAtRound - b.introducedAtRound);
   for (const row of foldOrder) {
-    const supersedes = (row.planItem?.supersedes ?? []).map((id) => rows.get(id)?.id ?? id);
+    const supersedes = (row.planItem?.supersedes ?? []).map((id) =>
+      rows.has(id) ? id : (logicalIdByPlanItemId.get(id) ?? id),
+    );
     for (const oldId of supersedes) {
       const old = rows.get(oldId);
       if (!old || old === row) continue;
@@ -648,7 +665,7 @@ export class AcceptanceService {
    * Chain a run onto an acceptance as its next round, then re-derive the
    * aggregate status (a new round re-opens a rejected loop).
    */
-  attachRun = async (runId: string, acceptanceId: string): Promise<VerifyRunItem> => {
+  attachRun = async (runId: string, acceptanceId: string): Promise<AttachedRun> => {
     const acceptance = await this.acceptanceModel.findById(acceptanceId);
     if (!acceptance) throw new Error(`Acceptance "${acceptanceId}" not found`);
 
@@ -656,7 +673,7 @@ export class AcceptanceService {
   };
 
   /** Attach a Task run using policy scope while preserving report visibility. */
-  attachPolicyRun = async (runId: string, acceptanceId: string): Promise<VerifyRunItem> => {
+  attachPolicyRun = async (runId: string, acceptanceId: string): Promise<AttachedRun> => {
     const acceptance = await this.acceptanceModel.findPolicyById(acceptanceId);
     if (!acceptance) throw new Error(`Acceptance "${acceptanceId}" not found`);
 
@@ -727,6 +744,14 @@ export class AcceptanceService {
       blocked.add(check.id);
       for (const superseded of check.supersededIds ?? []) blocked.add(superseded);
     }
+    // Rows are keyed by criterion, but an author names a check by the plan item
+    // id they wrote — in `supersedes` as much as in a re-run. Block those too.
+    for (const { plan } of runs) {
+      for (const item of (plan ?? []) as VerifyCheckItem[]) {
+        const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
+        if (blocked.has(logicalId)) blocked.add(item.id);
+      }
+    }
 
     // Report the plan item the author has to change, not the internal identity
     // it collided through — those can differ, and only the former is editable.
@@ -748,14 +773,17 @@ export class AcceptanceService {
   private attachResolvedRun = async (
     runId: string,
     acceptance: AcceptanceItem,
-  ): Promise<VerifyRunItem> => {
+  ): Promise<AttachedRun> => {
     const acceptanceId = acceptance.id;
 
     // Idempotent for the re-ingest path (the CLI sidecar remembers the run):
     // an already-chained round keeps its index instead of being re-appended.
     const existing = await this.runModel.findById(runId);
     if (!existing) throw new Error(`Verify run "${runId}" not found in the current workspace`);
-    if (existing.acceptanceId === acceptanceId) return existing;
+    // A retried attach (the response of the first one was lost) still reports
+    // the warnings the first one did.
+    if (existing.acceptanceId === acceptanceId)
+      return this.withUnresolvedSupersedes(existing, acceptanceId);
     if (existing.acceptanceId) {
       throw new Error('This verify run already belongs to another acceptance');
     }
@@ -772,6 +800,9 @@ export class AcceptanceService {
     // Only the newest round counts — `listByAcceptance` is ascending, and an
     // older draft the chain has moved past is an abandoned ledger position.
     const latest = (await this.runModel.listByAcceptance(acceptanceId)).at(-1);
+    // Resolved against the chain as it stood before this run joined it.
+    const withWarnings = (attached: VerifyRunItem): Promise<AttachedRun> =>
+      this.withUnresolvedSupersedes(attached, acceptanceId, existing);
     // A run that already executed cannot fold (`foldIntoRound` refuses any source
     // with results): its verdicts belong to its own round. It is appended after
     // the draft instead — the path a verification driven by the CLI takes, since
@@ -789,7 +820,7 @@ export class AcceptanceService {
         folded.roundIndex,
         acceptanceId,
       );
-      return folded;
+      return await withWarnings(folded);
     }
 
     // Rounds inherit the aggregate's visibility so a private acceptance's new
@@ -803,7 +834,37 @@ export class AcceptanceService {
     // reviewing".
     if (latest) this.distilSettledRound(acceptanceId, latest.id);
 
-    return run;
+    return await withWarnings(run);
+  };
+
+  /**
+   * Attach `unresolvedSupersedes` — `supersedes` ids of `source`'s plan that
+   * name no check of the acceptance — to the run handed back to the caller.
+   * The source run itself is excluded from the chain it is resolved against.
+   */
+  private withUnresolvedSupersedes = async (
+    attached: VerifyRunItem,
+    acceptanceId: string,
+    source: VerifyRunItem = attached,
+  ): Promise<AttachedRun> => {
+    const plan = (source.plan ?? []) as VerifyCheckItem[];
+    if (!plan.some((item) => item.supersedes?.length)) return attached;
+
+    const priorRuns = (await this.runModel.listByAcceptance(acceptanceId)).filter(
+      (run) => run.id !== source.id,
+    );
+    // Results of the earlier rounds and of the source run itself: an executed
+    // run may supersede one of its own result-only checks.
+    const priorResults = await this.resultModel.listByRuns([
+      ...priorRuns.map((run) => run.id),
+      source.id,
+    ]);
+    const unresolvedSupersedes = findUnresolvedSupersedes(
+      plan,
+      priorRuns,
+      priorResults.map((result) => result.checkItemId),
+    );
+    return unresolvedSupersedes.length ? { ...attached, unresolvedSupersedes } : attached;
   };
 
   /**

@@ -64,9 +64,10 @@ const SCAN_TIMEOUT_MS = 10_000;
  * else's enrollment, while shared cleanup remains an owner action.
  */
 /**
- * Gate an action that operates the machine itself — exposing a port, updating
- * its app — the same way `browseDirectory` gates new paths: on a workspace
- * device, only the enrolling member or a workspace owner.
+ * Gate an action that operates the machine itself — browsing folders, a
+ * terminal, exposing a port, updating its app. A public workspace device is
+ * shared infra every member works on, so any member may operate it; a private
+ * one stays limited to the enrolling member or a workspace owner.
  */
 const assertDeviceOperable = async (
   ctx: {
@@ -82,10 +83,13 @@ const assertDeviceOperable = async (
 
   const row = await ctx.deviceModel.findWorkspaceDeviceById(deviceId);
   if (!row) throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-  if (!canEditWorkspaceDevice(ctx.workspaceRole, ctx.userId, row.userId)) {
+  if (!canOperateWorkspaceDevice(ctx.workspaceRole, ctx.userId, row)) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: `Only the enrolling member or a workspace owner can ${action} on this device.`,
+      message:
+        row.visibility === 'public'
+          ? `Workspace viewers cannot ${action} on this device.`
+          : `Only the enrolling member or a workspace owner can ${action} on this private device.`,
     });
   }
 };
@@ -138,6 +142,19 @@ const canEditWorkspaceDevice = (
   actorUserId: string,
   enrollerUserId: string,
 ): boolean => role === 'owner' || enrollerUserId === actorUserId;
+
+/**
+ * Using a workspace device (as opposed to editing its registration) is open to
+ * every member once it is public; read-only viewers never operate a machine.
+ * See {@link assertDeviceOperable}.
+ */
+const canOperateWorkspaceDevice = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  row: { userId: string; visibility: 'private' | 'public' },
+): boolean =>
+  (row.visibility === 'public' && !!role && role !== 'viewer') ||
+  canEditWorkspaceDevice(role, actorUserId, row.userId);
 
 /**
  * Fixed workspace agents promise every member the same execution device. Keep
@@ -817,8 +834,7 @@ export const deviceRouter = router({
 
   /**
    * Browse one directory level on a remote device. Personal devices belong to
-   * the caller. A workspace device may expose new paths only to its enroller or
-   * a workspace owner; other members continue to use its approved recents.
+   * the caller; workspace devices follow {@link assertDeviceOperable}.
    */
   browseDirectory: deviceProcedure
     .input(
@@ -830,19 +846,7 @@ export const deviceRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (ctx.workspaceId) {
-        const row = await ctx.deviceModel.findWorkspaceDeviceById(input.deviceId);
-        if (!row) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-        }
-        const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
-        if (!canEditWorkspaceDevice(role, ctx.userId, row.userId)) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Only the enrolling member or a workspace owner can browse this device.',
-          });
-        }
-      }
+      await assertDeviceOperable(ctx, input.deviceId, 'browse folders');
 
       const result = await deviceGateway.browseDirectory({
         cursor: input.cursor,

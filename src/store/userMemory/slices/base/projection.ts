@@ -1,10 +1,10 @@
 import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@lobechat/types';
 
-import { defineReplica } from '@/libs/replica';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { type LayersEnum } from '@/types/userMemory';
 
 import { userMemoryCacheKey } from '../../utils/cacheKey';
+import { defineUserMemoryReplica } from '../../utils/replica';
 
 /**
  * One query of the memory retrieve endpoint (`userMemoryService.retrieveMemory`).
@@ -13,16 +13,17 @@ import { userMemoryCacheKey } from '../../utils/cacheKey';
  * (`memoryMap`) and the SWR key stay keyed exactly as before: any caller that
  * revalidates `userMemory:retrieve` by its root keeps working.
  */
-export const userMemoryRetrieveResource = defineReplica<RetrieveMemoryParams, RetrieveMemoryResult>(
-  {
-    key: (params) => userMemoryCacheKey(params),
-    name: 'userMemoryRetrieve',
-    storage: 'indexedDB',
-    // Adopt the existing SWR key so the legacy root-key revalidation still matches.
-    syncKey: (params) => userMemoryKeys.retrieve(userMemoryCacheKey(params)),
-    version: 1,
-  },
-);
+export const userMemoryRetrieveResource = defineUserMemoryReplica<
+  RetrieveMemoryParams,
+  RetrieveMemoryResult
+>({
+  key: (params) => userMemoryCacheKey(params),
+  name: 'userMemoryRetrieve',
+  storage: 'indexedDB',
+  // Adopt the existing SWR key so the legacy root-key revalidation still matches.
+  syncKey: (params) => userMemoryKeys.retrieve(userMemoryCacheKey(params)),
+  version: 1,
+});
 
 export interface MemoryDetailParams {
   id: string;
@@ -47,7 +48,7 @@ export const memoryDetailKey = ({ id, layer }: MemoryDetailParams): string => `$
  * for a memory the server no longer has, which removes the cached detail
  * (`isMissing`).
  */
-export const userMemoryDetailResource = defineReplica<
+export const userMemoryDetailResource = defineUserMemoryReplica<
   MemoryDetailParams,
   MemoryDetailDisplay,
   MemoryDetailDisplay | null

@@ -23,6 +23,7 @@ import { LayersEnum } from '@/types/userMemory';
 
 import { initialState } from '../../initialState';
 import { useUserMemoryStore } from '../../store';
+import { identityScopeOf } from '../../utils/replica';
 import {
   memoryDetailKey,
   userMemoryDetailResource,
@@ -63,12 +64,15 @@ const wrapper = ({ children }: PropsWithChildren) =>
 describe('userMemory base replica', () => {
   const scopes = new Set<string>();
   let scope = '';
+  /** Storage partition of userMemory replicas: the user, not the workspace. */
+  let rowScope = '';
   let retrieveSpy: ReturnType<typeof vi.spyOn>;
   let detailSpy: ReturnType<typeof vi.spyOn>;
 
   const useScope = (next: string) => {
     scope = next;
-    scopes.add(next);
+    rowScope = identityScopeOf(scope);
+    scopes.add(rowScope);
     vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
@@ -102,7 +106,7 @@ describe('userMemory base replica', () => {
         preferences: [{ id: 'cached-1' } as never],
       };
       await userMemoryRetrieveResource.storage!.set(
-        { queryKey: RETRIEVE_KEY, scope },
+        { queryKey: RETRIEVE_KEY, scope: rowScope },
         { data: cached, updatedAt: 1 },
       );
       retrieveSpy.mockImplementation(pending);
@@ -130,7 +134,7 @@ describe('userMemory base replica', () => {
       await waitFor(async () => {
         const row = await userMemoryRetrieveResource.storage!.get({
           queryKey: RETRIEVE_KEY,
-          scope,
+          scope: rowScope,
         });
         expect(row?.data).toEqual(server);
       });
@@ -242,8 +246,8 @@ describe('userMemory base replica', () => {
       vi.spyOn(memoryCRUDService, 'deleteAll').mockResolvedValue({} as never);
       renderHook(() => null, { wrapper });
       const storage = userMemoryRetrieveResource.storage!;
-      const rowKey = { queryKey: RETRIEVE_KEY, scope };
-      const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope };
+      const rowKey = { queryKey: RETRIEVE_KEY, scope: rowScope };
+      const indexRowKey = { queryKey: REPLICA_INDEX_KEY, scope: rowScope };
       await storage.set(rowKey, { data: emptyResult(), updatedAt: 1 });
       await storage.set(indexRowKey, { data: [RETRIEVE_KEY], updatedAt: 1 });
 
@@ -311,7 +315,10 @@ describe('userMemory base replica', () => {
       );
       await waitFor(async () =>
         expect(
-          await userMemoryRetrieveResource.storage!.get({ queryKey: RETRIEVE_KEY, scope }),
+          await userMemoryRetrieveResource.storage!.get({
+            queryKey: RETRIEVE_KEY,
+            scope: rowScope,
+          }),
         ).toBeDefined(),
       );
 
@@ -325,7 +332,10 @@ describe('userMemory base replica', () => {
       expect(useUserMemoryStore.getState().memoryMap).toEqual({});
       expect(useUserMemoryStore.getState().memoryDetailMap).toEqual({});
       expect(useUserMemoryStore.getState().memoryFetchedAtMap).toEqual({});
-      const row = await userMemoryRetrieveResource.storage!.get({ queryKey: RETRIEVE_KEY, scope });
+      const row = await userMemoryRetrieveResource.storage!.get({
+        queryKey: RETRIEVE_KEY,
+        scope: rowScope,
+      });
       expect(row).toBeUndefined();
     });
 
@@ -340,7 +350,10 @@ describe('userMemory base replica', () => {
       );
       await waitFor(async () =>
         expect(
-          await userMemoryRetrieveResource.storage!.get({ queryKey: OTHER_RETRIEVE_KEY, scope }),
+          await userMemoryRetrieveResource.storage!.get({
+            queryKey: OTHER_RETRIEVE_KEY,
+            scope: rowScope,
+          }),
         ).toBeDefined(),
       );
       earlier.unmount();
@@ -354,7 +367,10 @@ describe('userMemory base replica', () => {
       });
 
       expect(
-        await userMemoryRetrieveResource.storage!.get({ queryKey: OTHER_RETRIEVE_KEY, scope }),
+        await userMemoryRetrieveResource.storage!.get({
+          queryKey: OTHER_RETRIEVE_KEY,
+          scope: rowScope,
+        }),
       ).toBeUndefined();
 
       // Requesting that query again paints nothing deleted while the fetch is pending.

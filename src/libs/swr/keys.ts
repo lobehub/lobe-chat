@@ -20,7 +20,7 @@
  */
 import { type ConversationContext } from '@lobechat/types';
 
-import { agentDocumentSWRKeys, documentSWRKeys } from '@/services/document/swrKeys';
+import { agentDocumentSWRKeys } from '@/services/document/swrKeys';
 
 type KeyFactory<A extends unknown[]> = ((...args: A) => readonly unknown[]) & { root: string };
 
@@ -626,13 +626,6 @@ export const userMemoryKeys = {
     'userMemory:experiences',
     params,
   ]),
-  /** Injection identities (distinct from the paginated `identityList`). */
-  identities: def('userMemory:identities', () => ['userMemory:identities']),
-  /** Paginated identity list for the memory home views. */
-  identityList: def('userMemory:identityList', (params: unknown) => [
-    'userMemory:identityList',
-    params,
-  ]),
   memoryDetail: def('userMemory:memoryDetail', (layer: string, id: string) => [
     'userMemory:memoryDetail',
     layer,
@@ -648,10 +641,6 @@ export const userMemoryKeys = {
     cacheKey,
   ]),
   tags: def('userMemory:tags', () => ['userMemory:tags']),
-  topicMemories: def('userMemory:topicMemories', (topicId: string) => [
-    'userMemory:topicMemories',
-    topicId,
-  ]),
 };
 
 // ---- tool (skills / plugins / builtin / mcp / composio stores) -------------
@@ -1124,7 +1113,6 @@ export const gatewayKeys = {
 };
 export const userKeys = {
   checkTrace: def('user:checkTrace', () => ['user:checkTrace']),
-  initState: def('user:initState', () => ['user:initState']),
 };
 export const imessageKeys = {
   bridgeStatus: def('imessage:bridgeStatus', () => ['imessage:bridgeStatus']),
@@ -1167,7 +1155,6 @@ export const swrKeys = {
   cron: cronKeys,
   device: deviceKeys,
   discover: discoverKeys,
-  document: documentSWRKeys,
   electron: electronKeys,
   eval: evalKeys,
   expertise: expertiseKeys,
