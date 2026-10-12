@@ -2763,13 +2763,19 @@ export class GoalService {
       // Acceptance closes the whole Goal, so it builds on the work that ends each
       // line of the graph. Linking the delivered leaf Tasks lays it out below them
       // instead of beside the first round. They are all resolved, so nothing blocks.
-      const delivered = graph.nodes.filter(
-        (node) =>
-          node.kind === 'task' &&
-          node.status === 'resolved' &&
-          node.id !== created.node.id &&
-          !experimentOwner(graph, node.id),
-      );
+      // An experiment's Tasks are a candidate answer and stay inside it; a
+      // batch's units ARE the delivered work, so they count as leaves too —
+      // otherwise the report, which walks back from acceptance, never sees them.
+      const ownerKind = (nodeId: string) => {
+        const owner = experimentOwner(graph, nodeId);
+        return owner ? graph.nodes.find((node) => node.id === owner)?.kind : undefined;
+      };
+      const delivered = graph.nodes.filter((node) => {
+        if (node.kind !== 'task' || node.status !== 'resolved' || node.id === created.node.id)
+          return false;
+        const kind = ownerKind(node.id);
+        return !kind || kind === 'batch';
+      });
       const deliveredIds = new Set(delivered.map((node) => node.id));
       const builtUpon = new Set(
         graph.edges

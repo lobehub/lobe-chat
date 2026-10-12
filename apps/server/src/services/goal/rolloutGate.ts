@@ -13,18 +13,7 @@ import { uncoveredAxisValues } from './spec';
 /** Node states that mean a unit will never produce again. */
 const TERMINAL_NODE_STATUSES = new Set(['resolved', 'rejected', 'retired']);
 
-/** An external check's observed result, read by `tick` and handed in. */
-export interface RolloutExternalCheckResult {
-  passed: boolean;
-  title: string;
-}
-
 export interface RolloutGateInput {
-  /**
-   * The external facts read for the declared checks. Absent means they have not
-   * been evaluated yet — which blocks the gate rather than silently passing it.
-   */
-  externalChecks?: RolloutExternalCheckResult[];
   graph: Pick<GoalGraphSnapshot, 'edges' | 'nodes'>;
   policy: GoalRolloutPolicy;
   state: GoalRolloutState;
@@ -54,22 +43,21 @@ const asBrief = (node: GoalGraphNode) => ({
 /**
  * Whether a repeated batch has earned its next wave.
  *
- * Pure: every external fact (real CI, a real remote merge) arrives as
- * `externalChecks`, so the judgment can be replayed and tested like the rest of
- * `decideNextMove`. Five conditions, all of which must hold:
+ * Pure, so the judgment can be replayed and tested like the rest of
+ * `decideNextMove`. Four conditions, all of which must hold:
  *
  * 1. every probe settled without a person (no rejected / retired probe);
  * 2. no human decision is open anywhere in the batch;
  * 3. the Template is complete enough to apply (a recipe outline exists);
- * 4. every declared external check passed — the R1 anchor, so "the run
- *    finished" can never be the only evidence for a class-wide green;
- * 5. every declared variant axis value is represented among the probes (R4).
+ * 4. every declared variant axis value is represented among the probes (R4).
+ *
+ * An external anchor (real CI, a real remote merge) is not judged here yet:
+ * nothing evaluates such a check, and a declared one could only ever block.
  */
 export const evaluateRolloutGate = ({
   graph,
   policy,
   state,
-  externalChecks,
 }: RolloutGateInput): RolloutGateResult => {
   const checks: GoalRolloutGateCheck[] = [];
   const blockers: string[] = [];
@@ -128,21 +116,6 @@ export const evaluateRolloutGate = ({
     passed: planWritten,
   });
   if (!planWritten) blockers.push('the batch template is incomplete');
-
-  for (const declared of policy.gate?.externalChecks ?? []) {
-    const observed = externalChecks?.find((check) => check.title === declared.title);
-    checks.push({ details: [declared.title], key: 'external', passed: !!observed?.passed });
-  }
-  const declared = policy.gate?.externalChecks ?? [];
-  if (declared.length) {
-    if (!externalChecks?.length) {
-      blockers.push('the declared external checks have not been evaluated');
-    } else {
-      const failed = externalChecks.filter((check) => !check.passed);
-      if (failed.length)
-        blockers.push(`external check(s) failed: ${failed.map((check) => check.title).join(', ')}`);
-    }
-  }
 
   if (policy.spec?.variantAxes?.length) {
     const gaps = uncoveredAxisValues(policy.spec.variantAxes, probeNodes.map(asBrief));

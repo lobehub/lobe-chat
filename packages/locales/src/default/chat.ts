@@ -56,7 +56,6 @@ export default {
   'goalBatch.probes.cell.stale': 'Superseded',
   'goalBatch.gateCheck.axes_covered': 'The trials covered every declared variant',
   'goalBatch.gateCheck.count': '{{count}} / {{total}}',
-  'goalBatch.gateCheck.external': 'External check: {{title}}',
   'goalBatch.gateCheck.no_open_decision': 'No decision in the batch is waiting on a person',
   'goalBatch.gateCheck.plan_written': 'The batch plan is written',
   'goalBatch.gateCheck.uncovered': 'Not covered: {{values}}',
@@ -2351,9 +2350,6 @@ export default {
   'goalProcess.gate.reason.batchBroken': '{{count}} unit(s) did not succeed',
   'goalProcess.gate.reason.batchOpenDecision': 'a human decision is still open in this batch',
   'goalProcess.gate.reason.batchTemplateIncomplete': 'the batch template is incomplete',
-  'goalProcess.gate.reason.batchChecksNotEvaluated':
-    'the declared external checks have not been evaluated',
-  'goalProcess.gate.reason.batchChecksFailed': 'external check(s) failed: {{titles}}',
   'goalProcess.gate.reason.batchUntestedAxes': 'untested axes: {{axes}}',
   'goalProcess.gate.recommended': 'recommended',
   'goalProcess.gate.noteLabel': 'Extra guidance',

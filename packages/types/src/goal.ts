@@ -442,19 +442,6 @@ export interface GoalRolloutVariantAxis {
 }
 
 /**
- * A check the gate runs without a person. Programmatic by default; a remote
- * signal (real CI, a real remote merge) is an adapter that resolves to the same
- * pass/fail shape, so an inward-looking "the run finished" can never be the
- * only evidence for a class-wide green.
- */
-export interface GoalRolloutExternalCheck {
-  /** Deterministic command, or an adapter key resolving a remote signal. */
-  check: string;
-  /** Human-facing name of the check. */
-  title: string;
-}
-
-/**
  * Batch rollout policy. Lives on the JSONB `config` column like the other goal
  * policies — the graph's own vocabulary (`goal_nodes.kind`) carries the shape,
  * so nothing here needs a schema of its own.
@@ -462,8 +449,6 @@ export interface GoalRolloutExternalCheck {
 export interface GoalRolloutPolicy {
   /** Probe size K — how many representative units run before the gate. */
   canarySize?: number;
-  /** Declared automatic checks the gate must see pass (the external anchor). */
-  gate?: { externalChecks?: GoalRolloutExternalCheck[] };
   /**
    * How many structurally identical units make one batch worth gating. Below it
    * the ordinary per-unit decomposition is cheaper than the ceremony.
@@ -495,17 +480,12 @@ export interface GoalRolloutPolicy {
  * why a gate passed or held, not only that it did.
  */
 export type GoalRolloutGateCheckKey =
-  | 'axes_covered'
-  | 'external'
-  | 'no_open_decision'
-  | 'plan_written'
-  | 'units_settled'
-  | 'units_succeeded';
+  'axes_covered' | 'no_open_decision' | 'plan_written' | 'units_settled' | 'units_succeeded';
 
 export interface GoalRolloutGateCheck {
   /** For a count check: how many of `total` held, e.g. 5 of 5 units ran through. */
   count?: number;
-  /** Free-form specifics: an external check's title, an uncovered `axis=value`. */
+  /** Free-form specifics, such as an uncovered `axis=value`. */
   details?: string[];
   key: GoalRolloutGateCheckKey;
   /** The nodes the check is about — the units that failed, the open decision. */

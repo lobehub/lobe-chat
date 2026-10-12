@@ -1,4 +1,9 @@
-import type { GoalGraphNode, GoalGraphSnapshot, GoalRolloutState } from '@lobechat/types';
+import type {
+  GoalGraphNode,
+  GoalGraphSnapshot,
+  GoalRolloutPolicy,
+  GoalRolloutState,
+} from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { evaluateRolloutGate, GATE_LOG_PER_ROUND, withGateVerdict } from './rolloutGate';
@@ -134,37 +139,19 @@ describe('evaluateRolloutGate', () => {
     expect(result.blockers.join(' ')).toContain('human decision');
   });
 
-  it('requires the declared external checks before it can pass (R1)', () => {
+  it('does not wait on external checks nothing evaluates', () => {
+    // A row persisted with the retired `gate.externalChecks` would otherwise
+    // block every settled wave forever.
     const policy = {
       gate: { externalChecks: [{ check: 'ci', title: 'CI green' }] },
       trigger: 'canary' as const,
-    };
-    const graphWithProbe = graph([
-      node('probe'),
-      node('template', { description: 'recipe', kind: 'finding' }),
-    ]);
-
-    expect(
-      evaluateRolloutGate({ graph: graphWithProbe, policy, state: state() }).blockers.join(' '),
-    ).toContain('have not been evaluated');
-
-    expect(
-      evaluateRolloutGate({
-        externalChecks: [{ passed: false, title: 'CI green' }],
-        graph: graphWithProbe,
-        policy,
-        state: state(),
-      }).met,
-    ).toBe(false);
-
-    expect(
-      evaluateRolloutGate({
-        externalChecks: [{ passed: true, title: 'CI green' }],
-        graph: graphWithProbe,
-        policy,
-        state: state(),
-      }).met,
-    ).toBe(true);
+    } as GoalRolloutPolicy;
+    const result = evaluateRolloutGate({
+      graph: graph([node('probe'), node('template', { description: 'recipe', kind: 'finding' })]),
+      policy,
+      state: state(),
+    });
+    expect(result.met).toBe(true);
   });
 
   it('blocks an untested variant axis (R4)', () => {

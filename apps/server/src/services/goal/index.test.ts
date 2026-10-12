@@ -3758,6 +3758,57 @@ describe('GoalService', () => {
     ).toEqual(leaves.sort());
   });
 
+  it('builds the Goal-level Acceptance Task on the units a batch delivered', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 7 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 7,
+        units: Array.from({ length: 7 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const taskModel = new TaskModel(serverDB, userId);
+    const graph = await service.create({
+      config: { rollout: { minHomogeneousUnits: 5, trigger: 'full' } },
+      requirement: 'Migrate every store.',
+      title: 'Batch to acceptance',
+    });
+
+    let acceptance;
+    for (let i = 0; i < 30 && !acceptance; i++) {
+      await service.tick(graph.goal.id);
+      const current = await service.graph(graph.goal.id);
+      for (const node of current.nodes) {
+        if (node.taskId && node.title !== 'Complete full Goal acceptance')
+          await taskModel.updateStatus(node.taskId, 'completed');
+      }
+      acceptance = current.nodes.find((node) => node.title === 'Complete full Goal acceptance');
+    }
+
+    // The report walks back from acceptance; the batch's units must be on that path.
+    const current = await service.graph(graph.goal.id);
+    const units = current.nodes
+      .filter((node) => /^Unit \d+$/.test(node.title) && node.status === 'resolved')
+      .map((node) => node.id);
+    expect(acceptance).toBeTruthy();
+    expect(units).toHaveLength(7);
+    expect(
+      current.edges
+        .filter((edge) => edge.kind === 'depends_on' && edge.sourceNodeId === acceptance!.id)
+        .map((edge) => edge.targetNodeId)
+        .sort(),
+    ).toEqual(units.sort());
+  });
+
   /**
    * Regression: the acceptance node and its dependency edges were written in
    * separate transactions. A failure between them left the node without its

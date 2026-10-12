@@ -43,9 +43,11 @@ const styles = createStaticStyles(({ css }) => ({
 
 /** An expanded container encloses its work without replacing the surrounding map. */
 const ExperimentGroup = ({ data }: NodeProps) => {
-  const { view, memberCount, onToggle, onInspect, onEnter, kind } = data as ExperimentGroupData;
+  const { containerStatus, view, memberCount, onToggle, onInspect, onEnter, kind } =
+    data as ExperimentGroupData;
   const { t } = useTranslation('chat');
-  const status = experimentStatusVisual(view.node.status);
+  const nodeStatus = containerStatus ?? view.node.status;
+  const status = experimentStatusVisual(nodeStatus);
   // A batch folds like an experiment but is not one: it wears its own icon and
   // the batch label, so the two containers never read as the same thing.
   const isBatch = kind === 'batch';
@@ -108,7 +110,7 @@ const ExperimentGroup = ({ data }: NodeProps) => {
         <Flexbox horizontal align={'center'} gap={5}>
           <Icon color={status.color} icon={status.icon} size={13} />
           <Text fontSize={12} style={{ color: status.color }}>
-            {t(`goalExperiment.status.${view.node.status}`)}
+            {t(`goalExperiment.status.${nodeStatus}`)}
           </Text>
         </Flexbox>
         <Text fontSize={12} type={'secondary'}>

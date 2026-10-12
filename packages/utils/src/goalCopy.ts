@@ -147,15 +147,6 @@ const BATCH_BLOCKER_PATTERNS: ReasonPattern[] = [
     pattern: /^the batch template is incomplete$/,
   },
   {
-    key: 'goalProcess.gate.reason.batchChecksNotEvaluated',
-    pattern: /^the declared external checks have not been evaluated$/,
-  },
-  {
-    key: 'goalProcess.gate.reason.batchChecksFailed',
-    params: ['titles'],
-    pattern: /^external check\(s\) failed: (.+)$/,
-  },
-  {
     key: 'goalProcess.gate.reason.batchUntestedAxes',
     params: ['axes'],
     pattern: /^untested axes: (.+)$/,

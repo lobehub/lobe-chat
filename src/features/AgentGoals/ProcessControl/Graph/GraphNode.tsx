@@ -1,5 +1,6 @@
 'use client';
 
+import type { GoalNodeStatus } from '@lobechat/types';
 import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
@@ -27,6 +28,8 @@ import { experimentStatusVisual } from './experimentStatus';
  */
 
 export interface GraphNodeData extends Record<string, unknown> {
+  /** A container's status when its node's own does not tell it — an open batch. */
+  containerStatus?: GoalNodeStatus;
   dim: boolean;
   /** Called out by the host — a detour on a report chapter's local map. */
   highlighted?: boolean;

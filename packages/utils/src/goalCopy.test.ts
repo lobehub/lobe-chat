@@ -58,14 +58,9 @@ describe('batch gate reasons', () => {
     ]);
   });
 
-  it('reads a lone blocker and carries the failed-check titles', () => {
+  it('reads a lone blocker', () => {
     expect(reasonOf('1 unit(s) did not succeed\n\nHow should this batch proceed?')).toEqual([
       { key: 'goalProcess.gate.reason.batchBroken', params: { count: '1' } },
-    ]);
-    expect(
-      reasonOf('external check(s) failed: CI, Remote merge\n\nHow should this batch proceed?'),
-    ).toEqual([
-      { key: 'goalProcess.gate.reason.batchChecksFailed', params: { titles: 'CI, Remote merge' } },
     ]);
   });
 

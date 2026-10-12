@@ -65,6 +65,7 @@ import {
 } from './batchModel';
 import { edgeDirection } from './edgeRouting';
 import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
+import { batchContainerStatus } from './experimentStatus';
 import ExplorationEdge from './ExplorationEdge';
 import { explorationMap } from './explorationMap';
 import GraphNodeView, { GhostNodeView, type GraphNodeData, type StateChip } from './GraphNode';
@@ -693,7 +694,12 @@ const Canvas = memo<
             const isGate = waiting && !inBatch;
             const emphasis = emphasisById.get(item.node.id);
             const highlighted = highlightedIds?.has(item.node.id) ?? false;
+            const rolloutState = graph.goal.config?.rolloutState;
             const data: GraphNodeData = {
+              containerStatus:
+                item.node.kind === 'batch' && rolloutState?.batchNodeId === item.node.id
+                  ? batchContainerStatus(rolloutState.phase)
+                  : undefined,
               // Not started and still blocked — it is context, not the story.
               // Once the report marked a mainline, everything off it is context too.
               // Inside a batch the gate's own chip says it is locked; a settled

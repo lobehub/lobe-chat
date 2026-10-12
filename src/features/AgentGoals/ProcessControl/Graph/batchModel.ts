@@ -89,12 +89,10 @@ export interface BatchRound {
 /**
  * One condition the release gate will check, before any verdict exists —
  * mirroring the coordinator's `evaluateRolloutGate`: the same keys in the same
- * order, an external check per declared one, and axis coverage when declared.
+ * order, and axis coverage when declared.
  */
 export interface BatchGateCheck {
   key: GoalRolloutGateCheckKey;
-  /** An external check's title. */
-  title?: string;
 }
 
 export interface BatchModel {
@@ -324,10 +322,6 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     { key: 'units_succeeded' },
     { key: 'no_open_decision' },
     { key: 'plan_written' },
-    ...(policy?.gate?.externalChecks ?? []).map((check) => ({
-      key: 'external' as const,
-      title: check.title,
-    })),
     ...(policy?.spec?.variantAxes?.length ? [{ key: 'axes_covered' as const }] : []),
   ];
 
