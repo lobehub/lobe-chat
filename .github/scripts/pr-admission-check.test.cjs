@@ -90,7 +90,7 @@ test('rejects evidence sections that hold only scaffolding', () => {
   assert.equal(passes('## Acceptance\n\nN/A\n\n## Notes\nsomething'), false);
 });
 
-test('exempts drafts, bots, and release PRs', () => {
+test('exempts drafts, bots, team members, and release PRs', () => {
   const base = {
     draft: false,
     head: { ref: 'feat/x' },
@@ -98,6 +98,18 @@ test('exempts drafts, bots, and release PRs', () => {
     user: { login: 'someone' },
   };
   assert.equal(isExempt(base), false);
+  assert.equal(isExempt({ ...base, author_association: 'FIRST_TIME_CONTRIBUTOR' }), false);
+  assert.equal(isExempt({ ...base, author_association: 'CONTRIBUTOR' }), false);
+  assert.equal(isExempt({ ...base, author_association: 'MEMBER' }), true);
+  assert.equal(isExempt({ ...base, author_association: 'OWNER' }), true);
+  // Private org members arrive as CONTRIBUTOR; the maintainer list still recognizes them.
+  assert.equal(
+    isExempt({ ...base, author_association: 'CONTRIBUTOR', user: { login: 'TJX666' } }),
+    true,
+  );
+  assert.equal(isExempt({ ...base, title: '🚀 release: 20261007' }), true);
+  assert.equal(isExempt({ ...base, title: '🚀 release: sync main branch to canary' }), true);
+  assert.equal(isExempt({ ...base, head: { ref: 'release/db-migration-0152-forward' } }), true);
   assert.equal(isExempt({ ...base, draft: true }), true);
   assert.equal(isExempt({ ...base, user: { login: 'renovate[bot]', type: 'Bot' } }), true);
   assert.equal(isExempt({ ...base, user: { login: 'lobehubbot', type: 'User' } }), true);

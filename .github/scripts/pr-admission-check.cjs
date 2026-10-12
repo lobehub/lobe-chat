@@ -24,8 +24,26 @@ const MARKER = '<!-- PR-ADMISSION-CHECK -->';
 const TEMPLATE_URL =
   'https://github.com/lobehub/lobehub/blob/canary/.github/PULL_REQUEST_TEMPLATE.md';
 
+const fs = require('node:fs');
+const path = require('node:path');
+
 /** Automation accounts that open PRs without the template (i18n, dependency bumps). */
 const EXEMPT_LOGINS = new Set(['lobehubbot']);
+
+/**
+ * Team members are held to the merge standard in review, not by this check; it targets
+ * outside contributions. `author_association` covers org members and collaborators, but
+ * GitHub reports private org members as `CONTRIBUTOR` in event payloads, so the maintainer
+ * list (also used by `claude-pr-assign.yml`) backs it up.
+ */
+const TEAM_ASSOCIATIONS = new Set(['COLLABORATOR', 'MEMBER', 'OWNER']);
+const MAINTAINERS = new Set(
+  fs
+    .readFileSync(path.join(__dirname, '../maintainers.txt'), 'utf8')
+    .split('\n')
+    .map((line) => line.trim().toLowerCase())
+    .filter(Boolean),
+);
 
 /** Template placeholders and bare opt-outs that carry no evidence or reason. */
 const EMPTY_VALUES = new Set(['', '...', '…', '-', 'n/a', 'na', 'none', 'todo', 'tbd']);
@@ -111,11 +129,19 @@ const findProblems = ({ body = '' }) => {
   ];
 };
 
-/** PRs the check skips: drafts, bots, and release/hotfix PRs that follow the release flow. */
+const isTeamMember = (pr) =>
+  TEAM_ASSOCIATIONS.has(pr.author_association) || MAINTAINERS.has(pr.user?.login?.toLowerCase());
+
+/**
+ * PRs the check skips: drafts, bots, team members, and PRs from the release flow — weekly
+ * releases and main→canary syncs (`🚀 release:` titles), and hotfix or migration-forward
+ * branches (`hotfix/*`, `release/*`).
+ */
 const isExempt = (pr) =>
   pr.draft ||
   pr.user?.type === 'Bot' ||
   EXEMPT_LOGINS.has(pr.user?.login) ||
+  isTeamMember(pr) ||
   /^🚀\s*release:/u.test(pr.title ?? '') ||
   /^(?:hotfix|release)\//.test(pr.head?.ref ?? '');
 

@@ -25,6 +25,7 @@ jobs:
       - name: Checkout base branch scripts
         uses: actions/checkout@v7
         with:
+          # Cone mode also checks out files directly under .github/, including maintainers.txt.
           sparse-checkout: .github/scripts
 
       - name: Check PR description
