@@ -119,6 +119,19 @@ export class ActionImpl {
     await this.#bySubject.revalidate(acceptanceBySubjectKey({ subjectId, subjectType }));
   };
 
+  /**
+   * Seed the persisted verify cards of a transcript before its messages mount
+   * (route pre-paint), so a settled card paints in the same frame as the
+   * message it belongs to instead of a few frames later.
+   */
+  preHydrateVerifyRuns = async (operationIds: string[]): Promise<void> => {
+    if (operationIds.length === 0) return;
+    const scope = verifyRunResource.scope.get();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#run.ensureScope(scope);
+    await Promise.all(operationIds.map((operationId) => this.#run.hydrate(operationId, scope)));
+  };
+
   /** Re-read one Agent Run's verify card (after a plan action or a manual refresh). */
   refreshVerifyRun = async (operationId: string): Promise<void> => {
     await this.#run.revalidate(operationId);

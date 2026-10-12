@@ -104,6 +104,15 @@ describe('verify run replica', () => {
     expect(result.current.results?.[0]?.status).toBe('passed');
   });
 
+  it('pre-hydrates a persisted run into the view before any card mounts', async () => {
+    await persist(run('passed'));
+
+    await useVerifyStore.getState().preHydrateVerifyRuns([OP, 'op-missing']);
+
+    expect(useVerifyStore.getState().verifyRunMap[OP]?.state?.verifyStatus).toBe('passed');
+    expect(useVerifyStore.getState().verifyRunMap['op-missing']).toBeUndefined();
+  });
+
   it('persists a settled run fetched from the server', async () => {
     serve(run('passed'));
 
