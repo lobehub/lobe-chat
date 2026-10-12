@@ -17,6 +17,27 @@ const SERVICE_NAME = CLI_CONNECT_SERVICE_NAME;
 const ENV_NAME_PATTERN = /^[A-Z_]\w*$/i;
 const SERVICE_ENV_FILE_NAME = 'connect-service.env';
 
+/**
+ * Exit code for startup failures worth retrying (EX_TEMPFAIL). It sits outside the
+ * unit's `SuccessExitStatus`, so `Restart=on-failure` restarts the service child.
+ */
+export const CONNECT_RETRYABLE_EXIT_CODE = 75;
+
+// Server refusals that a restart cannot fix; retrying them would only loop.
+const PERMANENT_TRPC_ERROR_CODES = new Set([
+  'BAD_REQUEST',
+  'CONFLICT',
+  'FORBIDDEN',
+  'NOT_FOUND',
+  'UNAUTHORIZED',
+]);
+
+/** Exit code for a failed workspace device registration: 1 for refusals, 75 otherwise. */
+export function getWorkspaceRegistrationExitCode(error: unknown): number {
+  const code = (error as { data?: { code?: string } } | null)?.data?.code;
+  return code && PERMANENT_TRPC_ERROR_CODES.has(code) ? 1 : CONNECT_RETRYABLE_EXIT_CODE;
+}
+
 export interface ConnectServiceOptions {
   /** With `workspace`: enroll into the shared pool visible to every member. */
   public?: boolean;

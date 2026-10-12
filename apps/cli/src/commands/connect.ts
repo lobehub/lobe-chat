@@ -58,6 +58,7 @@ import {
 } from '../device/register';
 import { TerminalSessionManager } from '../device/terminal';
 import {
+  getWorkspaceRegistrationExitCode,
   installConnectService,
   readConnectServiceStatus,
   restartConnectService,
@@ -901,7 +902,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       if (workspaceId) {
         error(`Workspace device registration failed: ${(err as Error).message}`);
         cleanup();
-        process.exit(1);
+        process.exit(getWorkspaceRegistrationExitCode(err));
       }
       error(`Device registration failed (non-fatal): ${(err as Error).message}`);
     }

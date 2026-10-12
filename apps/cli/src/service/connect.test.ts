@@ -4,7 +4,13 @@ import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { installConnectService, readConnectServiceStatus, startConnectService } from './connect';
+import {
+  CONNECT_RETRYABLE_EXIT_CODE,
+  getWorkspaceRegistrationExitCode,
+  installConnectService,
+  readConnectServiceStatus,
+  startConnectService,
+} from './connect';
 
 const tmpDir = path.join(os.tmpdir(), `lobehub-connect-service-test-${process.pid}`);
 const unitDir = path.join(tmpDir, 'systemd-user');
@@ -177,5 +183,29 @@ describe('connect service', () => {
       'LOBEHUB_CLI_API_KEY="rotated-key"',
     );
     expect(systemctlCalls).toContainEqual(['--user', 'start', 'lobehub-connect.service']);
+  });
+
+  describe('getWorkspaceRegistrationExitCode', () => {
+    it('lets systemd retry transient registration failures', () => {
+      expect(getWorkspaceRegistrationExitCode(new Error('fetch failed'))).toBe(
+        CONNECT_RETRYABLE_EXIT_CODE,
+      );
+      expect(getWorkspaceRegistrationExitCode({ data: { code: 'INTERNAL_SERVER_ERROR' } })).toBe(
+        CONNECT_RETRYABLE_EXIT_CODE,
+      );
+    });
+
+    it('stops on server refusals that a restart cannot fix', () => {
+      expect(getWorkspaceRegistrationExitCode({ data: { code: 'CONFLICT' } })).toBe(1);
+      expect(getWorkspaceRegistrationExitCode({ data: { code: 'FORBIDDEN' } })).toBe(1);
+    });
+
+    it('keeps the retryable code outside the unit success exit statuses', () => {
+      installConnectService({ workspace: 'ws_123' });
+      const unit = fs.readFileSync(path.join(unitDir, 'lobehub-connect.service'), 'utf8');
+      const successCodes = unit.match(/^SuccessExitStatus=(.*)$/m)![1].split(' ');
+      expect(successCodes).not.toContain(String(CONNECT_RETRYABLE_EXIT_CODE));
+      expect(unit).toContain('Restart=on-failure');
+    });
   });
 });
