@@ -656,8 +656,20 @@ export class AgentManagerRuntime {
       return mode === 'pinned' ? identifier : `${identifier} (${mode})`;
     }) as string[] | undefined;
 
-    const provider = config.provider as string | undefined;
-    const model = config.model as string | undefined;
+    // Marketplace configs can carry the model as an object
+    // ({ model, provider, parameters }) — extract the nested model/provider so
+    // the LLM-facing summary and GetAgentDetailRender never see "[object
+    // Object]" (same normalization as src/services/agent.ts).
+    let provider = config.provider as string | undefined;
+    let model = config.model as string | undefined;
+    if (model !== null && typeof model === 'object') {
+      const { model: modelName, provider: modelProvider } = model as {
+        model?: string;
+        provider?: string;
+      };
+      model = modelName;
+      provider = provider ?? modelProvider;
+    }
     const systemRole = config.systemRole as string | undefined;
 
     const parts: string[] = [];

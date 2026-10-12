@@ -686,6 +686,33 @@ describe('agentManagementRuntime', () => {
       });
     });
 
+    it('normalizes the object-shaped marketplace model before rendering', async () => {
+      mockGetAgentConfigById.mockResolvedValue(null);
+      mockGetAssistantDetail.mockResolvedValue({
+        avatar: '🌐',
+        config: {
+          model: { model: 'gpt-4o', parameters: { temperature: 0.6 }, provider: 'openai' },
+          plugins: ['web-browsing'],
+          systemRole: 'Market prompt',
+        },
+        description: 'A market agent',
+        identifier: 'mktobj1',
+        related: [],
+        tags: ['ai'],
+        title: 'Object Model Agent',
+      });
+
+      const runtime = createRuntime();
+      const result = await runtime.getAgentDetail({ agentId: 'mktobj1' });
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Model: openai/gpt-4o');
+      expect(result.content).not.toContain('[object Object]');
+      expect(result.state).toMatchObject({
+        config: expect.objectContaining({ model: 'gpt-4o', provider: 'openai' }),
+      });
+    });
+
     it('still reports not found when the market fallback misses', async () => {
       mockGetAgentConfigById.mockResolvedValue(null);
       mockGetAssistantDetail.mockResolvedValue(undefined);

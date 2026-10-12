@@ -798,6 +798,32 @@ describe('AgentManagerRuntime', () => {
       expect(result.content).toContain('not found');
     });
 
+    it('should normalize the object-shaped marketplace model before rendering', async () => {
+      vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
+      vi.mocked(mockDiscoverService.getAssistantDetail!).mockResolvedValue({
+        avatar: '🌐',
+        config: {
+          model: { model: 'gpt-4o', parameters: { temperature: 0.6 }, provider: 'openai' },
+          plugins: ['web-browsing'],
+          systemRole: 'Market prompt',
+        },
+        description: 'A market agent',
+        identifier: 'mktobj1',
+        related: [],
+        tags: ['ai'],
+        title: 'Object Model Agent',
+      } as any);
+
+      const result = await runtime.getAgentDetail('mktobj1');
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Model: openai/gpt-4o');
+      expect(result.content).not.toContain('[object Object]');
+      expect(result.state).toMatchObject({
+        config: expect.objectContaining({ model: 'gpt-4o', provider: 'openai' }),
+      });
+    });
+
     it('should still return not found when discover service lacks getAssistantDetail', async () => {
       vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
       const originalGetAssistantDetail = mockDiscoverService.getAssistantDetail;
