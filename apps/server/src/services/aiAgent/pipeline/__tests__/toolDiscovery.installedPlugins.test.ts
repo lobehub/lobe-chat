@@ -100,7 +100,10 @@ const run = (options: RunOptions = {}) => {
       prompt: 'send a message to the team chat',
       provider: 'test-provider',
       resolvedAgentId: 'agent-1',
-      runFacts: { deviceSystemInfo: vi.fn().mockResolvedValue(undefined) },
+      runFacts: {
+        deviceSystemInfo: vi.fn().mockResolvedValue(undefined),
+        userPreference: vi.fn().mockResolvedValue(undefined),
+      },
       shareGate: undefined,
     } as never,
     {
