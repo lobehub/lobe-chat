@@ -181,11 +181,9 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
         variant={'page'}
         action={
           <Flexbox horizontal gap={8}>
-            <Button size={'small'} onClick={onBack}>
-              {t('oauthApp.detail.back')}
-            </Button>
+            <Button onClick={onBack}>{t('oauthApp.detail.back')}</Button>
             {normalizeAsyncError(error).retryable && (
-              <Button loading={isValidating} size={'small'} onClick={() => mutate()}>
+              <Button loading={isValidating} onClick={() => mutate()}>
                 {t('retry', { ns: 'common' })}
               </Button>
             )}
