@@ -123,6 +123,27 @@ describe('agent document replicas', () => {
       expect(list()![0].title).toBe('Cached');
     });
 
+    it('seeds the persisted list before anything mounts, for the docs route loader', async () => {
+      await agentDocumentListResource.storage!.set(
+        { queryKey: LIST_KEY, scope },
+        { data: [row('a', { title: 'Cached' })], updatedAt: 1 },
+      );
+      const listDocuments = vi.spyOn(agentDocumentService, 'listDocuments');
+
+      await expect(agentDocumentActions.preHydrateDocumentList(AGENT_ID)).resolves.toBe(true);
+
+      // Already in the store when the sidebar first renders: no spinner frame.
+      expect(list()![0].title).toBe('Cached');
+      expect(listDocuments).not.toHaveBeenCalled();
+    });
+
+    it('leaves the list unloaded when nothing is persisted or no agent is routed', async () => {
+      await expect(agentDocumentActions.preHydrateDocumentList(AGENT_ID)).resolves.toBe(false);
+      await expect(agentDocumentActions.preHydrateDocumentList(undefined)).resolves.toBe(false);
+
+      expect(list()).toBeUndefined();
+    });
+
     it('persists the server answer for the next cold start', async () => {
       vi.spyOn(agentDocumentService, 'listDocuments').mockResolvedValue([row('a'), row('b')]);
 

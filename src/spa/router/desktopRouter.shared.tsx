@@ -81,6 +81,7 @@ import AppShellSkeleton, { APP_SHELL_FALLBACK_ID } from '@/spa/BootShell/AppShel
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
 import { activityListLoader } from '@/spa/router/activityListLoader';
 import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
+import { agentDocumentListLoader } from '@/spa/router/agentDocumentListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
@@ -204,6 +205,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
               () => import('@/routes/(main)/agent/docs/_layout'),
               'Desktop > Chat > DocumentLayout',
             ),
+            // Seed the persisted document list before the docs sidebar paints.
+            loader: agentDocumentListLoader,
             path: 'docs',
           },
           {

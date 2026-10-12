@@ -26,6 +26,8 @@ import {
   agentDocumentReaderResource,
 } from '@/store/agentDocument/projection';
 
+import { workbenchRoutes } from '../router';
+import { agentDocumentReaderLoader } from '../routes/agent/docs/[docId]/readerLoader';
 import {
   enableWorkbenchIdentity,
   resetWorkbenchReplicaScope,
@@ -112,6 +114,23 @@ describe('workbench replica scope', () => {
     renderReader();
 
     await waitFor(() => expect(reader()?.document?.content).toBe('# Cached'));
+  });
+
+  it('seeds the last-read body in the route loader, before the reader mounts', async () => {
+    localStorage.setItem(ACTIVE_SCOPE_KEY, `${userId}:ws_1`);
+    await persistReaderBody(`${userId}:workbench`, '# Cached');
+    vi.stubGlobal('fetch', vi.fn(pending));
+    const getReaderDocument = vi.spyOn(agentDocumentService, 'getReaderDocument');
+
+    const route = workbenchRoutes[0].children!.find((r) => r.path === 'agent/:aid/docs/:docId');
+    expect(route?.loader).toBeTypeOf('function');
+
+    // Bare ids, as in the mobile URL; the loader adds the prefixes.
+    await agentDocumentReaderLoader({ params: { aid: '1', docId: '1' } } as never);
+
+    // Already in the store when the reader first renders: no spinner frame.
+    expect(reader()?.document?.content).toBe('# Cached');
+    expect(getReaderDocument).not.toHaveBeenCalled();
   });
 
   it('persists the server answer once the session confirms the same account', async () => {

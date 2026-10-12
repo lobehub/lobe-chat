@@ -1,4 +1,4 @@
-import { type ReplicaSyncResult } from '@/libs/replica';
+import { cacheScope, type ReplicaSyncResult } from '@/libs/replica';
 import type { AgentDocumentListItem } from '@/services/agentDocument';
 import type { StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
@@ -51,6 +51,33 @@ export class AgentDocumentActionImpl {
     { enabled = true }: UseFetchDocumentListOptions = {},
   ): ReplicaSyncResult =>
     this.#private.list.useSync(agentId || null, { enabled, revalidateOnFocus: false });
+
+  /**
+   * Seed one agent's persisted list before anything mounts — the docs route
+   * loader's pre-paint read, so the sidebar's first frame is the list rather
+   * than its loading spinner. Resolves `true` when a persisted list landed.
+   */
+  preHydrateDocumentList = (agentId?: string | null): Promise<boolean> => {
+    if (!agentId) return Promise.resolve(false);
+
+    const scope = cacheScope.get();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#private.list.ensureScope(scope);
+    return this.#private.list.hydrate(agentId, scope);
+  };
+
+  /**
+   * Seed the reader's persisted body before the reader mounts — its route
+   * loader's pre-paint read, so the first frame is the body rather than the
+   * content spinner. Resolves `true` when a persisted body landed.
+   */
+  preHydrateReaderDocument = (params?: AgentDocumentReaderParams | null): Promise<boolean> => {
+    if (!params?.agentId || !params.documentId) return Promise.resolve(false);
+
+    const scope = cacheScope.get();
+    this.#private.reader.ensureScope(scope);
+    return this.#private.reader.hydrate(params, scope);
+  };
 
   /** Fetch orchestration for the read-only reader; read it with `getReaderDocument`. */
   useFetchReaderDocument = (params?: AgentDocumentReaderParams | null): ReplicaSyncResult =>
