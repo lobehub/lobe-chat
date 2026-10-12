@@ -551,6 +551,77 @@ describe('ConversationLifecycle actions', () => {
         expect(onPreflightFailure).toHaveBeenCalledOnce();
       });
 
+      it.each(['refused', 'accepted', 'aborted'] as const)(
+        'keeps a newer composer and recovers unaccepted attachments when a gateway send is %s',
+        async (outcome) => {
+          const context = createTestContext();
+          const contextKey = messageMapKey(context);
+          const submittedFile = { id: 'submitted-file', status: 'success' } as any;
+          const newerFile = { id: 'newer-file', status: 'success' } as any;
+          const submittedSelection = {
+            id: 'submitted-selection',
+            type: 'text',
+            content: 'Original selection',
+          } as any;
+          const newerSelection = {
+            id: 'newer-selection',
+            type: 'text',
+            content: 'New selection',
+          } as any;
+          const newerDraft = { root: { children: [{ text: 'New draft' }], type: 'root' } };
+          const editor = {
+            getJSONState: vi.fn(() => newerDraft),
+            setDocument: vi.fn(),
+            setJSONState: vi.fn(),
+          };
+          const onPreflightFailure = vi.fn(() => {
+            const store = useFileStore.getState();
+            store.restoreChatUploadFileList([submittedFile]);
+            store.restoreChatContextSelections(contextKey, [submittedSelection]);
+          });
+          const executeGatewayAgent = vi.fn().mockImplementation(async (params) => {
+            if (outcome === 'accepted') params.onMessageAccepted();
+            if (outcome === 'aborted') throw new DOMException('Stopped', 'AbortError');
+            throw new TRPCClientError('Device is offline');
+          });
+          useFileStore.setState({
+            chatUploadFileList: [newerFile],
+            chatContextSelectionsByContext: { [contextKey]: [newerSelection] },
+          });
+          useChatStore.setState({ executeGatewayAgent, isGatewayModeEnabled: () => true });
+
+          try {
+            await useChatStore.getState().sendMessage({
+              context,
+              files: [submittedFile],
+              inputEditor: editor as any,
+              message: 'Original message',
+              onPreflightFailure,
+              preserveComposer: true,
+            });
+
+            expect(executeGatewayAgent).toHaveBeenCalledOnce();
+            expect(editor.setJSONState).not.toHaveBeenCalled();
+            expect(editor.setDocument).not.toHaveBeenCalled();
+            expect(editor.getJSONState()).toEqual(newerDraft);
+            expect(onPreflightFailure).toHaveBeenCalledTimes(outcome === 'refused' ? 1 : 0);
+            const files = useFileStore.getState();
+            expect(files.chatUploadFileList).toEqual(
+              outcome === 'refused' ? [newerFile, submittedFile] : [newerFile],
+            );
+            const selections = fileChatSelectors.chatContextSelections(contextKey)(files);
+            expect(selections).toHaveLength(outcome === 'refused' ? 2 : 1);
+            expect(selections).toEqual(
+              expect.arrayContaining(
+                outcome === 'refused' ? [submittedSelection, newerSelection] : [newerSelection],
+              ),
+            );
+          } finally {
+            useFileStore.setState({ chatUploadFileList: [], chatContextSelectionsByContext: {} });
+          }
+        },
+      );
+
       it.each(['unchanged', 'edited', 'cleared'] as const)(
         'preserves the %s live draft when a cancelled first send rolls back asynchronously',
         async (change) => {

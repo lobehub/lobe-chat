@@ -968,7 +968,7 @@ export class ConversationLifecycleActionImpl {
      * indistinguishable from the message being silently swallowed.
      */
     const restoreComposerAfterFailedSend = (error: unknown) => {
-      if (preserveComposer || hasNotifiedMessageAccepted) return;
+      if (hasNotifiedMessageAccepted) return;
 
       // Cancellation is a deliberate user action with its own restore path
       // (`inputEditorTempState` is replayed by the cancel flow); re-filling the
@@ -977,6 +977,13 @@ export class ConversationLifecycleActionImpl {
         error instanceof Error &&
         (error.message.includes('aborted') || error.name === 'AbortError');
       if (isAbort) return;
+
+      if (preserveComposer) {
+        // Keep a newer editor draft, but return submitted attachments and
+        // selections when no persisted message owns them.
+        onPreflightFailure?.();
+        return;
+      }
 
       this.#get().updateOperationMetadata(operationId, {
         inputSendErrorMsg: error instanceof Error ? error.message : 'Unknown error',
