@@ -7,11 +7,18 @@ import {
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
+  type DropdownItem,
   Text,
 } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { FolderClosedIcon, FolderOpenIcon, type LucideIcon, PlusIcon } from 'lucide-react';
+import {
+  FolderClosedIcon,
+  FolderOpenIcon,
+  LucideCheck,
+  type LucideIcon,
+  PlusIcon,
+} from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -30,13 +37,16 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { type ProjectTopicSubGroupMode } from '@/store/global/initialState';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useProjectDirectories, useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 import { getTopicWorkingDirectorySourcePath } from '@/utils/client/topic';
 
 import { buildPrefixedAgentRoutePath, parseAgentPathname } from '../../../utils/agentPathname';
-import TopicItem from '../../List/Item';
 import { useTopicListScope } from '../../TopicListScope';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
+import ProjectTopicList from './ProjectTopicList';
 import {
   getProjectTopicStatusCounts,
   hasProjectTopicStatusCounts,
@@ -45,6 +55,7 @@ import {
 
 const PROJECT_GROUP_PREFIX = 'project:';
 const PROJECT_ID_GROUP_PREFIX = 'project-id:';
+const SUB_GROUP_MODES: ProjectTopicSubGroupMode[] = ['none', 'byDevice', 'byTime', 'byStatus'];
 
 const styles = createStaticStyles(({ css }) => ({
   statusBadge: css`
@@ -262,6 +273,25 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
   const needsPlainStart = !!projectId && projectDirectories.length > 1;
   const { t: tProject } = useTranslation('project');
 
+  const subGroupMode = useGlobalStore(systemStatusSelectors.projectTopicSubGroupMode(id));
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const subGroupMenuItems = useMemo<DropdownItem[]>(
+    () => [
+      {
+        children: SUB_GROUP_MODES.map((mode) => ({
+          icon: subGroupMode === mode ? <Icon icon={LucideCheck} /> : <div />,
+          key: `sub-group-${mode}`,
+          label: tProject(`topics.subGroup.${mode}`),
+          onClick: () => updateSystemStatus({ projectTopicSubGroupModeByGroup: { [id]: mode } }),
+        })),
+        key: 'sub-group',
+        label: tProject('topics.subGroup.title'),
+        type: 'submenu',
+      },
+    ],
+    [id, subGroupMode, tProject, updateSystemStatus],
+  );
+
   const statusCounts = useChatStore(
     (s) => getProjectTopicStatusCounts(children, operationSelectors.visiblyRunningTopicIds(s)),
     isEqual,
@@ -284,6 +314,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
                 <AgentDirectoryActions
                   hideStartAction
                   agentId={currentAgentId!}
+                  extraMenuItems={subGroupMenuItems}
                   path={workingDirectory!}
                   topics={children}
                   onLegacyStart={handleAddTopic}
@@ -301,6 +332,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
             ) : (
               <AgentDirectoryActions
                 agentId={currentAgentId!}
+                extraMenuItems={subGroupMenuItems}
                 path={workingDirectory!}
                 topics={children}
                 onLegacyStart={handleAddTopic}
@@ -381,20 +413,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
         )}
       </AccordionHeader>
       <AccordionPanel contentStyle={{ padding: 0 }}>
-        <Flexbox gap={1} paddingBlock={1}>
-          {children.map((topic) => (
-            <TopicItem
-              fav={topic.favorite}
-              id={topic.id}
-              key={topic.id}
-              metadata={topic.metadata}
-              runStartedAt={topic.runStartedAt}
-              status={topic.status}
-              title={topic.title}
-              userId={topic.userId}
-            />
-          ))}
-        </Flexbox>
+        <ProjectTopicList groupId={id} topics={children} />
       </AccordionPanel>
     </AccordionItem>
   );

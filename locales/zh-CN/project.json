@@ -213,6 +213,11 @@
   "topics.status.scheduled": "已安排",
   "topics.status.unread": "有新结果",
   "topics.status.waitingForHuman": "等待你处理",
+  "topics.subGroup.byDevice": "按设备",
+  "topics.subGroup.byStatus": "按状态",
+  "topics.subGroup.byTime": "按时间",
+  "topics.subGroup.none": "不分组",
+  "topics.subGroup.title": "话题分组",
   "topics.title": "话题",
   "topics.viewProject": "查看项目"
 }

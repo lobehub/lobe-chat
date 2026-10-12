@@ -3,6 +3,7 @@ import { type TopicGroupMode } from '@/types/topic';
 import type {
   GlobalState,
   ModelDetailPanelExpandedKey,
+  ProjectTopicSubGroupMode,
   SystemStatus,
   WorkspaceOverridableField,
 } from '../initialState';
@@ -89,6 +90,11 @@ const collapsedTopicGroupKeys =
   (mode: TopicGroupMode) =>
   (s: GlobalState): string[] | undefined =>
     s.status.collapsedTopicGroupKeysByMode?.[mode];
+
+const projectTopicSubGroupMode =
+  (groupId: string) =>
+  (s: GlobalState): ProjectTopicSubGroupMode =>
+    s.status.projectTopicSubGroupModeByGroup?.[groupId] ?? 'none';
 
 const agentSidebarSections =
   (agentId: string | undefined) =>
@@ -541,6 +547,7 @@ export const systemStatusSelectors = {
   verifyReportPanelWidth,
   tokenDisplayFormatShort,
   collapsedTopicGroupKeys,
+  projectTopicSubGroupMode,
   topicPageSize,
   videoPanelWidth,
   videoTopicViewMode,
