@@ -31,7 +31,8 @@ const NewsChatActions = memo<NewsChatActionsProps>(({ agentId, taskId, title, to
   );
   // A view-only member can still read the thread, but the drawer gives them no
   // composer — offering "Continue chat" would promise a reply they cannot send.
-  const { canUseResource } = useConversationResourceAccessForTarget({ agentId });
+  // It waits for a resolved grant, so it never flashes in while access loads.
+  const { canUseResourceConfirmed } = useConversationResourceAccessForTarget({ agentId });
 
   const openTopicChat = useCallback(
     (autoFocus: boolean) => {
@@ -64,7 +65,7 @@ const NewsChatActions = memo<NewsChatActionsProps>(({ agentId, taskId, title, to
       >
         {t('inbox.news.viewChat')}
       </Button>
-      {canUseResource && (
+      {canUseResourceConfirmed && (
         <Button
           icon={MessageSquarePlus}
           size={'small'}
