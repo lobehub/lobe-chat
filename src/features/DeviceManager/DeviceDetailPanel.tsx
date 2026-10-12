@@ -33,7 +33,7 @@ import DeviceHealth, { HealthLegend } from './DeviceHealth';
 import FieldLabel from './FieldLabel';
 import { getDeviceIcon } from './getDeviceIcon';
 import PresenceDot from './PresenceDot';
-import { useCanEditDevice } from './useCanEditDevice';
+import { useCanEditDevice, useCanOperateDevice } from './useCanEditDevice';
 
 const styles = createStaticStyles(({ css }) => ({
   // Fills whatever host it lands in: inside a page-level rail the height is
@@ -106,6 +106,7 @@ interface DeviceDetailPanelProps {
 const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onClose }) => {
   const { t } = useTranslation(['setting', 'device']);
   const canEdit = useCanEditDevice()(device);
+  const canOperate = useCanOperateDevice()(device);
   // Health monitoring and the directory settings are separate jobs; a tab each
   // keeps the charts from pushing the directories below the fold.
   const [tab, setTab] = useState<DetailTab>('overview');
@@ -365,7 +366,7 @@ const DeviceDetailPanel = memo<DeviceDetailPanelProps>(({ device, isCurrent, onC
             )}
 
             {/* ─── Connections, each with its client version; desktop carries the update ─── */}
-            <Connections canEdit={canEdit} device={device} />
+            <Connections canEdit={canOperate} device={device} />
 
             {/* ─── Machine health ─── */}
             <Flexbox gap={8}>
