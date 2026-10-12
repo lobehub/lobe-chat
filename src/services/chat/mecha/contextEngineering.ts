@@ -1,3 +1,4 @@
+import { LobeHubIdentifier } from '@lobechat/builtin-skills/manifests';
 import { LobeActivatorIdentifier } from '@lobechat/builtin-tool-activator';
 import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { isDesktop } from '@lobechat/const';
@@ -9,6 +10,7 @@ import type {
   ToolDiscoveryConfig,
   UserMemoryData,
 } from '@lobechat/context-engine';
+import { parseReferTopicTags } from '@lobechat/context-engine';
 import { type ContextSnapshot, gatherContextFacts, runContextEngineering } from '@lobechat/mecha';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import {
@@ -298,6 +300,8 @@ export const contextEngineering = async ({
         plugins,
         disabledPluginIds,
         agentChatConfigSelectors.skillActivateMode(agentStoreState),
+        // A `<refer_topic>` hint points at `lh topic view`, which the lobehub skill teaches.
+        parseReferTopicTags(messages).length > 0 ? [LobeHubIdentifier] : undefined,
       )
     ).skills;
   }
