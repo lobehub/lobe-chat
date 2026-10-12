@@ -126,3 +126,21 @@ export const RedisKeys = {
       `workspace_rescan_claim:v1:${userId}:${pool}:${deviceId}:${cwd}`,
   },
 } as const;
+
+/**
+ * The namespace (key prefix) each {@link RedisKeys} scope lives under. A scope's keys are
+ * only read and written through a client prefixed with its namespace, so a key can never
+ * land under another scope's prefix. Every scope must be mapped.
+ */
+export const RedisKeyScopeNamespace = {
+  agentSignal: RedisKeyNamespace.AGENT_SIGNAL,
+  aiGeneration: RedisKeyNamespace.AI_GENERATION,
+  lobechat: RedisKeyNamespace.LOBEHUB,
+  sendPathCache: RedisKeyNamespace.SEND_PATH_CACHE,
+} as const satisfies Record<
+  keyof typeof RedisKeys,
+  (typeof RedisKeyNamespace)[keyof typeof RedisKeyNamespace]
+>;
+
+/** A {@link RedisKeys} scope, e.g. `sendPathCache` or `agentSignal`. */
+export type RedisKeyScope = keyof typeof RedisKeyScopeNamespace;

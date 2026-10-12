@@ -1,5 +1,9 @@
 import { getRedisConfig } from '@/envs/redis';
-import { RedisKeyNamespace, tryInitializeRedisWithPrefix } from '@/server/modules/Redis';
+import {
+  type RedisKeyScope,
+  RedisKeyScopeNamespace,
+  tryInitializeRedisWithPrefix,
+} from '@/server/modules/Redis';
 import type { BaseRedisProvider } from '@/server/modules/Redis/types';
 
 // The send-path caches are an optimization layered on a hot path, so a send
@@ -12,16 +16,14 @@ const CONNECT_TIMEOUT_MS = 1000;
 const COMMAND_TIMEOUT_MS = 1000;
 const COOLDOWN_MS = 30_000;
 
-type RedisServiceNamespace = (typeof RedisKeyNamespace)[keyof typeof RedisKeyNamespace];
-
 /**
- * `Date.now()` until which a namespace's circuit stays open. Kept per namespace so an
- * outage seen by one domain does not switch off another domain's Redis.
+ * `Date.now()` until which a scope's circuit stays open. Kept per scope so an outage seen
+ * by one domain does not switch off another domain's Redis.
  */
-const cooldownUntil = new Map<RedisServiceNamespace, number>();
+const cooldownUntil = new Map<RedisKeyScope, number>();
 
-const openCircuit = (namespace: RedisServiceNamespace) => {
-  cooldownUntil.set(namespace, Date.now() + COOLDOWN_MS);
+const openCircuit = (scope: RedisKeyScope) => {
+  cooldownUntil.set(scope, Date.now() + COOLDOWN_MS);
 };
 
 const withDeadline = async <T>(work: Promise<T>, ms: number): Promise<T | null> => {
@@ -44,10 +46,7 @@ const withDeadline = async <T>(work: Promise<T>, ms: number): Promise<T | null> 
  * connect — nothing would trip the cooldown, so each send would pay the
  * command timeout before falling back to its live read.
  */
-const observeFailures = (
-  client: BaseRedisProvider,
-  namespace: RedisServiceNamespace,
-): BaseRedisProvider =>
+const observeFailures = (client: BaseRedisProvider, scope: RedisKeyScope): BaseRedisProvider =>
   new Proxy(client, {
     get(target, property, receiver) {
       const value = Reflect.get(target, property, receiver);
@@ -57,7 +56,7 @@ const observeFailures = (
         const result = value.apply(target, args);
         return result instanceof Promise
           ? result.catch((error) => {
-              openCircuit(namespace);
+              openCircuit(scope);
               throw error;
             })
           : result;
@@ -66,21 +65,23 @@ const observeFailures = (
   });
 
 /**
- * The Redis service client for one key namespace (send-path caches by default), or `null`
- * when Redis is unavailable and the caller should fall back.
+ * The Redis service client for one {@link RedisKeys} scope, or `null` when Redis is
+ * unavailable and the caller should fall back.
  *
- * Each namespace gets its own key prefix, composed under REDIS_PREFIX. Never blocks for long:
- * acquiring the client is bounded by {@link ACQUIRE_TIMEOUT_MS}, and any failure (or a
- * disabled Redis) returns `null`. A failed acquisition, or a command that fails later on the
- * memoized client, opens that namespace's circuit for {@link COOLDOWN_MS} so concurrent and
- * later callers degrade straight to their fallback.
+ * The client's key prefix is the scope's namespace from {@link RedisKeyScopeNamespace},
+ * composed under REDIS_PREFIX, so a domain reading `RedisKeys.<scope>` always writes under
+ * that scope's own prefix. Never blocks for long: acquiring the client is bounded by
+ * {@link ACQUIRE_TIMEOUT_MS}, and any failure (or a disabled Redis) returns `null`. A failed
+ * acquisition, or a command that fails later on the memoized client, opens that scope's
+ * circuit for {@link COOLDOWN_MS} so concurrent and later callers degrade to their fallback.
  */
 export const getRedisServiceClient = async (
-  namespace: RedisServiceNamespace = RedisKeyNamespace.SEND_PATH_CACHE,
+  scope: RedisKeyScope,
 ): Promise<BaseRedisProvider | null> => {
   const config = getRedisConfig();
-  if (!config.enabled || Date.now() < (cooldownUntil.get(namespace) ?? 0)) return null;
+  if (!config.enabled || Date.now() < (cooldownUntil.get(scope) ?? 0)) return null;
 
+  const namespace = RedisKeyScopeNamespace[scope];
   const client = await withDeadline(
     tryInitializeRedisWithPrefix(
       { ...config, commandTimeoutMs: COMMAND_TIMEOUT_MS, connectTimeoutMs: CONNECT_TIMEOUT_MS },
@@ -92,9 +93,9 @@ export const getRedisServiceClient = async (
   );
 
   if (!client) {
-    openCircuit(namespace);
+    openCircuit(scope);
     return null;
   }
 
-  return observeFailures(client, namespace);
+  return observeFailures(client, scope);
 };

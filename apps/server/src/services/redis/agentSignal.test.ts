@@ -23,10 +23,10 @@ describe('redisService.agentSignal', () => {
     getRedisServiceClient.mockImplementation(async () => client.current ?? null);
   });
 
-  it('keeps its keys in the agent-signal namespace', async () => {
+  it('reads and writes through the agentSignal key scope', async () => {
     await redisService.agentSignal.countClassifierCall({ userId: 'u', utcDay: '2026-10-11' });
 
-    expect(getRedisServiceClient).toHaveBeenCalledWith('agent-signal');
+    expect(getRedisServiceClient).toHaveBeenCalledWith('agentSignal');
   });
 
   it('counts classifier calls per user and UTC day, outliving the day', async () => {

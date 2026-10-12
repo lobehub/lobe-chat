@@ -16,7 +16,7 @@ export const skillTools = {
       '|',
     );
     return readThroughRedis(
-      await getRedisServiceClient(),
+      await getRedisServiceClient('sendPathCache'),
       RedisKeys.sendPathCache.lobehubSkillTools(scope.userId, scope.providerId, identity),
       fetch,
       {

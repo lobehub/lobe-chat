@@ -1,8 +1,8 @@
-import { RedisKeyNamespace, RedisKeys } from '@/server/modules/Redis';
+import { RedisKeys } from '@/server/modules/Redis';
 
 import { getRedisServiceClient } from './client';
 
-const getClient = () => getRedisServiceClient(RedisKeyNamespace.AGENT_SIGNAL);
+const getClient = () => getRedisServiceClient('agentSignal');
 
 // Every count returns `undefined` when Redis is unavailable: the Agent Signal callers decide
 // whether that fails open or closed, since each one guards different spend.
