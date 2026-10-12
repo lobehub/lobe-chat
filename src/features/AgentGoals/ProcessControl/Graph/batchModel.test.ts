@@ -582,4 +582,22 @@ describe('buildBatchModel roster', () => {
 
     expect(model.waves[0][0]).toMatchObject({ nodeId: 'm3', state: 'done', title: 'U3' });
   });
+
+  it('follows a deferred unit to the wave that re-delivered it', () => {
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: [
+          // U3 broke in its wave and did not fit in the restarted canary…
+          node('m3', 'task', 10, { status: 'retired', title: 'U3' }),
+          // …so a later wave re-delivered it as a new task.
+          node('m3b', 'task', 20, { status: 'resolved', title: 'U3' }),
+        ],
+        state: { massNodeIds: ['m3b'] },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+
+    expect(model.waves[0][0]).toMatchObject({ nodeId: 'm3b', state: 'done', title: 'U3' });
+  });
 });

@@ -24,6 +24,7 @@ import {
   acceptances,
   agentOperations,
   agents,
+  briefs,
   documents,
   goalEdges,
   goalEvents,
@@ -2552,6 +2553,95 @@ describe('GoalService', () => {
       const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
       expect(next.phase).toBe('probe');
       expect(next.probeNodeIds.length).toBeGreaterThan(0);
+    });
+
+    it('leaves the question open when the restart fails part-way, and restarts on a retry', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Restart is atomic',
+      });
+      await service.tick(graph.goal.id);
+      const openGate = (
+        service as unknown as {
+          openPatternBreakGate: (
+            g: unknown,
+            message: string,
+            effects: unknown[],
+          ) => Promise<unknown>;
+        }
+      ).openPatternBreakGate.bind(service);
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      const before = await service.graph(graph.goal.id);
+      const decision = await pendingBreak(service, graph.goal.id);
+
+      // The restart dies after writing its new plan, while creating the next gate.
+      await serverDB.execute(sql`
+        CREATE OR REPLACE FUNCTION fail_next_assay() RETURNS trigger AS $$
+        BEGIN
+          IF NEW.kind = 'decision' THEN RAISE EXCEPTION 'worker stopped'; END IF;
+          RETURN NEW;
+        END $$ LANGUAGE plpgsql
+      `);
+      await serverDB.execute(sql`
+        CREATE TRIGGER fail_next_assay BEFORE INSERT ON goal_nodes
+          FOR EACH ROW EXECUTE FUNCTION fail_next_assay()
+      `);
+      try {
+        await expect(
+          service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步'),
+        ).rejects.toThrow();
+      } finally {
+        await serverDB.execute(sql`DROP TRIGGER IF EXISTS fail_next_assay ON goal_nodes`);
+        await serverDB.execute(sql`DROP FUNCTION IF EXISTS fail_next_assay()`);
+      }
+
+      // Nothing of the half round survived, and the question is still open.
+      const failed = await service.graph(graph.goal.id);
+      expect(failed.nodes).toHaveLength(before.nodes.length);
+      expect(failed.goal.config!.rolloutState!.phase).toBe('pattern_break');
+      expect((await pendingBreak(service, graph.goal.id)).id).toBe(decision.id);
+
+      // Answering again opens the next round.
+      await service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步');
+      const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      expect(next.phase).toBe('probe');
+      expect(next.templateRevision).toBe(2);
+    });
+
+    it('leaves a brief for the batch gate so Home keeps it after a dismissal', async () => {
+      decompose();
+      const service = new GoalService(serverDB, userId);
+      const graph = await service.create({
+        config: { rollout: { minHomogeneousUnits: 5, trigger: 'canary' } },
+        title: 'Batch gate brief',
+      });
+      await service.tick(graph.goal.id);
+      const openGate = (
+        service as unknown as {
+          openPatternBreakGate: (
+            g: unknown,
+            message: string,
+            effects: unknown[],
+          ) => Promise<unknown>;
+        }
+      ).openPatternBreakGate.bind(service);
+      await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
+      const decision = await pendingBreak(service, graph.goal.id);
+
+      const rows = await serverDB.select().from(briefs).where(eq(briefs.userId, userId));
+      const brief = rows.find(
+        (row) =>
+          (row.metadata as { goal?: { decisionId?: string } } | null)?.goal?.decisionId ===
+          decision.id,
+      );
+      expect(brief).toMatchObject({ type: 'decision' });
+      // Revising needs a correction, so the brief sends the person to the goal
+      // page rather than offering one-click answers.
+      expect((brief!.actions as { key: string }[]).map((action) => action.key)).toEqual([
+        'openGoal',
+      ]);
     });
 
     it('refuses to revise the recipe without a correction', async () => {

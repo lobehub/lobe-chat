@@ -2133,12 +2133,22 @@ export class GoalService {
       });
     }
     const chosen = decision.options?.find((option) => option.id === optionId);
-    const resolved = await this.graphModel.resolveDecision(
-      goalId,
-      decisionId,
-      optionId,
-      resolution,
-    );
+    // R5: a person answering a batch gate IS the intervention, and an
+    // intervention rolls the class back to canary. Open the next recipe round
+    // automatically — revise the same mould, or fork it as a new class — rather
+    // than leaving the goal parked for someone to rerun by hand. The gate hangs
+    // on the Assay (materialized on demand for a `full` rollout), so match that,
+    // falling back to the batch node for any gate opened elsewhere. The restart
+    // consumes the answer itself, atomically with the round it opens.
+    const rolloutState = graph.goal.config?.rolloutState;
+    const patternBreakNodeId = rolloutState?.assayNodeId ?? rolloutState?.batchNodeId;
+    const answersBatchBreak =
+      rolloutState?.phase === 'pattern_break' &&
+      patternBreakNodeId !== undefined &&
+      decision.nodeId === patternBreakNodeId;
+    const resolved = answersBatchBreak
+      ? await this.restartRolloutLoop(goalId, decisionId, optionId, resolution)
+      : await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
     if (!resolved)
       throw new TRPCError({ code: 'CONFLICT', message: 'Decision was already resolved' });
 
@@ -2171,21 +2181,6 @@ export class GoalService {
       } else if (effect === 'retire') {
         await this.graphModel.updateNodeStatus(goalId, source.id, 'retired', resolution);
       }
-    }
-    // R5: a person answering a batch gate IS the intervention, and an
-    // intervention rolls the class back to canary. Open the next recipe round
-    // automatically — revise the same mould, or fork it as a new class — rather
-    // than leaving the goal parked for someone to rerun by hand. The gate hangs
-    // on the Assay (materialized on demand for a `full` rollout), so match that,
-    // falling back to the batch node for any gate opened elsewhere.
-    const rolloutState = graph.goal.config?.rolloutState;
-    const patternBreakNodeId = rolloutState?.assayNodeId ?? rolloutState?.batchNodeId;
-    if (
-      rolloutState?.phase === 'pattern_break' &&
-      patternBreakNodeId !== undefined &&
-      decision.nodeId === patternBreakNodeId
-    ) {
-      await this.restartRolloutLoop(goalId, optionId, resolution);
     }
     // Ending the terminal acceptance ends the Goal: `fail` is a verdict that
     // the Goal failed, `retire` abandons it without one.
@@ -4318,6 +4313,15 @@ export class GoalService {
       targetId: claim.decisionId ?? gateNodeId,
       type: 'opened_decision',
     });
+    // Home lists what waits on the person from its briefs, so the gate stays
+    // findable after it is dismissed from the approval island. It offers no
+    // one-click answers: revising needs a correction, written on the goal page.
+    if (claim.decisionId)
+      await this.briefs.openDecision(graph.goal, {
+        decisionId: claim.decisionId,
+        options: [],
+        question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
+      });
     await this.setPauseReason(goalId, 'pattern_break');
     await this.transitionStatus(graph.goal, 'paused', reason);
     effects.push({ type: 'goal_status', detail: 'paused: pattern_break' });
@@ -4340,13 +4344,15 @@ export class GoalService {
    */
   private restartRolloutLoop = async (
     goalId: string,
+    decisionId: string,
     optionId: string,
     resolution: string | undefined,
-  ): Promise<void> => {
+  ) => {
     const graph = await this.requireGraph(goalId);
     const policy = graph.goal.config?.rollout;
     const state = graph.goal.config?.rolloutState;
-    if (!policy || !state) return;
+    if (!policy || !state)
+      return this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
 
     const batchId = state.batchNodeId;
     const roster = state.unitTitles ?? [];
@@ -4372,155 +4378,182 @@ export class GoalService {
       .filter(Boolean)
       .join('\n\n');
 
-    // 1. A new recipe revision, or a forked new class (no `revises` chain).
-    const template = await this.coordinatorGraph.createNode(goalId, {
-      description: revisedOutline || baseOutline,
-      kind: 'finding',
-      scopeId: batchId,
-      title: GOAL_BATCH_TEMPLATE_TITLE,
-    });
-    if (template && optionId !== 'new_class' && state.templateNodeId) {
-      await this.coordinatorGraph.createEdge(goalId, template.id, state.templateNodeId, 'revises');
-    }
-
-    // 2. Retire the members that broke or were superseded, never delete them —
-    // the new round is `derived_from` them (decision #4). A member an earlier
-    // round already re-opened is history, not a unit to re-open again.
-    const memberIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
-    const reopenedIds = new Set(
-      graph.edges.filter((edge) => edge.kind === 'derived_from').map((edge) => edge.targetNodeId),
-    );
-    const broken: { brief?: string; id: string; title: string }[] = [];
-    for (const node of graph.nodes) {
-      if (!memberIds.has(node.id) || node.status === 'resolved' || reopenedIds.has(node.id))
-        continue;
-      broken.push({ brief: carriedUnitBrief(node), id: node.id, title: node.title });
-      if (!TERMINAL_NODE_STATUSES.has(node.status)) {
-        await this.coordinatorGraph.updateNodeStatus(
-          goalId,
-          node.id,
-          'retired',
-          'superseded by a new recipe revision',
-        );
-      }
-    }
-    // A sibling still running when the gate was answered would keep spending —
-    // and could deliver — beside the probe that replaces it. The nodes are
-    // fenced above; stop the Tasks behind them.
-    if (broken.length) await this.stopFencedTasks(goalId, new Set(broken.map((unit) => unit.id)));
-
-    // 3. A fresh gate for the fresh round.
-    const assay = await this.coordinatorGraph.createNode(goalId, {
-      description: 'Whether this repeated batch can be delivered without further human decisions.',
-      kind: 'decision',
-      scopeId: batchId,
-      status: 'proposed',
-      title: GOAL_BATCH_ASSAY_TITLE,
-    });
-    if (!assay) return;
-
-    // The revised recipe becomes the batch's policy, so the probes below and
-    // every later wave (which read it off the graph) carry the correction.
-    await this.goalModel.updateRolloutPolicy(goalId, {
-      ...policy,
-      spec: {
-        ...policy.spec,
-        recipeOutline: revisedOutline || baseOutline,
-        repeatable: policy.spec?.repeatable ?? true,
-      },
-    });
-
-    // 4. The new canary re-opens the units that broke, as new tasks that
-    // supersede the retired ones (decision #4: new task + retire, never move).
-    // Cap it at the canary size: a break in a large wave — or a `full` rollout
-    // that released the whole class — must not redispatch every member at once.
-    // The broken units beyond the canary stay owed, and the waves after the gate
-    // re-deliver them under the revised recipe. Only a gate that blocked with
-    // every member resolved has nothing to re-open; it re-probes the next slice.
-    const canarySize = Math.max(
-      2,
-      Math.min(policy.canarySize ?? ROLLOUT_CANARY_SIZE_DEFAULT, ROLLOUT_MAX_CANARY_SIZE),
-    );
-    const reOpen = broken.slice(0, canarySize);
-    const deferred = broken.slice(canarySize).map((unit) => unit.title);
-    const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
-    // Nothing broke and nothing is left to release — the gate held on something
-    // else, such as an untested axis. Re-probe units this round delivered,
-    // under the revision, so the new canary is never empty (an empty one would
-    // re-open the same break at once).
-    const reProbe =
-      broken.length || fresh.length
-        ? []
-        : [...memberIds]
-            .map((id) => graph.nodes.find((node) => node.id === id))
-            .filter(
-              (node): node is NonNullable<typeof node> =>
-                !!node && node.status === 'resolved' && !reopenedIds.has(node.id),
-            )
-            .slice(0, canarySize)
-            .map((node) => ({ brief: carriedUnitBrief(node), id: node.id, title: node.title }));
-    const units = [
-      ...[...reOpen, ...reProbe].map((unit) => ({
-        brief: unit.brief,
-        from: unit.id,
-        title: unit.title,
-      })),
-      ...fresh.map((title) => ({
-        brief: undefined as string | undefined,
-        from: undefined as string | undefined,
-        title,
-      })),
-    ];
-    const probeIds: string[] = [];
-    const opened: { from: string | undefined; title: string }[] = [];
-    for (const unit of units) {
-      const nodeId = await createRecipeUnitTask(
-        this.coordinatorGraph,
+    // The answer and the round it opens land together. Every write below —
+    // resolving the question included — commits in one transaction under the
+    // goal row's lock, so a failure part-way leaves the question open to answer
+    // again rather than consumed beside half a round; and a second answer
+    // racing this one finds the break already restarted.
+    const committed = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (current?.phase !== 'pattern_break') return undefined;
+      const resolved = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
         goalId,
-        batchId,
-        unit.title,
-        revisedOutline || baseOutline,
-        unit.brief,
+        decisionId,
+        optionId,
+        resolution,
       );
-      if (!nodeId) continue;
-      probeIds.push(nodeId);
-      opened.push(unit);
-      if (unit.from) {
-        await this.coordinatorGraph
-          .createEdge(goalId, nodeId, unit.from, 'derived_from')
-          .catch(() => {});
-      }
-    }
-    for (const probeId of probeIds) {
-      await this.coordinatorGraph.createEdge(goalId, assay.id, probeId, 'depends_on');
-    }
+      if (!resolved) return undefined;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
 
-    // 5. Back to canary, on the new revision. The roster is re-cut to what is
-    // still owed — the new probes first, then the broken units not re-probed,
-    // then whatever was never released — so the waves deliver only the
-    // remainder and units already delivered under the old recipe drop out.
-    const remaining = Array.from(
-      new Set([
-        ...opened.map((unit) => unit.title),
-        ...deferred,
-        ...roster.slice(released + fresh.length),
-      ]),
-    );
-    await this.goalModel.updateRolloutState(goalId, {
-      ...state,
-      assayNodeId: assay.id,
-      // The new canary is a fresh round: the old waves' members — the broken
-      // ones now retired — must not count against its gate.
-      massNodeIds: undefined,
-      phase: 'probe',
-      probeNodeIds: probeIds,
-      releasedCount: opened.length,
-      templateNodeId: template?.id ?? state.templateNodeId,
-      templateRevision: state.templateRevision + 1,
-      unitTitles: remaining,
-      waveIndex: 0,
+      // 1. A new recipe revision, or a forked new class (no `revises` chain).
+      const template = await writer.createNode(goalId, {
+        description: revisedOutline || baseOutline,
+        kind: 'finding',
+        scopeId: batchId,
+        title: GOAL_BATCH_TEMPLATE_TITLE,
+      });
+      if (template && optionId !== 'new_class' && state.templateNodeId) {
+        await writer.createEdge(goalId, template.id, state.templateNodeId, 'revises');
+      }
+
+      // 2. Retire the members that broke or were superseded, never delete them —
+      // the new round is `derived_from` them (decision #4). A member an earlier
+      // round already re-opened is history, not a unit to re-open again.
+      const memberIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
+      const reopenedIds = new Set(
+        graph.edges.filter((edge) => edge.kind === 'derived_from').map((edge) => edge.targetNodeId),
+      );
+      const broken: { brief?: string; id: string; title: string }[] = [];
+      for (const node of graph.nodes) {
+        if (!memberIds.has(node.id) || node.status === 'resolved' || reopenedIds.has(node.id))
+          continue;
+        broken.push({ brief: carriedUnitBrief(node), id: node.id, title: node.title });
+        if (!TERMINAL_NODE_STATUSES.has(node.status)) {
+          await writer.updateNodeStatus(
+            goalId,
+            node.id,
+            'retired',
+            'superseded by a new recipe revision',
+          );
+        }
+      }
+
+      // 3. A fresh gate for the fresh round.
+      const assay = await writer.createNode(goalId, {
+        description:
+          'Whether this repeated batch can be delivered without further human decisions.',
+        kind: 'decision',
+        scopeId: batchId,
+        status: 'proposed',
+        title: GOAL_BATCH_ASSAY_TITLE,
+      });
+      if (!assay) throw new Error('Failed to create the next batch gate');
+
+      // The revised recipe becomes the batch's policy, so the probes below and
+      // every later wave (which read it off the graph) carry the correction.
+      await goalModel.updateRolloutPolicy(goalId, {
+        ...policy,
+        spec: {
+          ...policy.spec,
+          recipeOutline: revisedOutline || baseOutline,
+          repeatable: policy.spec?.repeatable ?? true,
+        },
+      });
+
+      // 4. The new canary re-opens the units that broke, as new tasks that
+      // supersede the retired ones (decision #4: new task + retire, never move).
+      // Cap it at the canary size: a break in a large wave — or a `full` rollout
+      // that released the whole class — must not redispatch every member at once.
+      // The broken units beyond the canary stay owed, and the waves after the gate
+      // re-deliver them under the revised recipe. Only a gate that blocked with
+      // every member resolved has nothing to re-open; it re-probes the next slice.
+      const canarySize = Math.max(
+        2,
+        Math.min(policy.canarySize ?? ROLLOUT_CANARY_SIZE_DEFAULT, ROLLOUT_MAX_CANARY_SIZE),
+      );
+      const reOpen = broken.slice(0, canarySize);
+      const deferred = broken.slice(canarySize).map((unit) => unit.title);
+      const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
+      // Nothing broke and nothing is left to release — the gate held on something
+      // else, such as an untested axis. Re-probe units this round delivered,
+      // under the revision, so the new canary is never empty (an empty one would
+      // re-open the same break at once).
+      const reProbe =
+        broken.length || fresh.length
+          ? []
+          : [...memberIds]
+              .map((id) => graph.nodes.find((node) => node.id === id))
+              .filter(
+                (node): node is NonNullable<typeof node> =>
+                  !!node && node.status === 'resolved' && !reopenedIds.has(node.id),
+              )
+              .slice(0, canarySize)
+              .map((node) => ({ brief: carriedUnitBrief(node), id: node.id, title: node.title }));
+      const units = [
+        ...[...reOpen, ...reProbe].map((unit) => ({
+          brief: unit.brief,
+          from: unit.id,
+          title: unit.title,
+        })),
+        ...fresh.map((title) => ({
+          brief: undefined as string | undefined,
+          from: undefined as string | undefined,
+          title,
+        })),
+      ];
+      const probeIds: string[] = [];
+      const opened: { from: string | undefined; title: string }[] = [];
+      for (const unit of units) {
+        const nodeId = await createRecipeUnitTask(
+          writer,
+          goalId,
+          batchId,
+          unit.title,
+          revisedOutline || baseOutline,
+          unit.brief,
+        );
+        if (!nodeId) continue;
+        probeIds.push(nodeId);
+        opened.push(unit);
+        if (unit.from) {
+          await writer.createEdge(goalId, nodeId, unit.from, 'derived_from').catch(() => {});
+        }
+      }
+      for (const probeId of probeIds) {
+        await writer.createEdge(goalId, assay.id, probeId, 'depends_on');
+      }
+
+      // 5. Back to canary, on the new revision. The roster is re-cut to what is
+      // still owed — the new probes first, then the broken units not re-probed,
+      // then whatever was never released — so the waves deliver only the
+      // remainder and units already delivered under the old recipe drop out.
+      const remaining = Array.from(
+        new Set([
+          ...opened.map((unit) => unit.title),
+          ...deferred,
+          ...roster.slice(released + fresh.length),
+        ]),
+      );
+      await goalModel.updateRolloutState(goalId, {
+        ...state,
+        assayNodeId: assay.id,
+        // The new canary is a fresh round: the old waves' members — the broken
+        // ones now retired — must not count against its gate.
+        massNodeIds: undefined,
+        phase: 'probe',
+        probeNodeIds: probeIds,
+        releasedCount: opened.length,
+        templateNodeId: template?.id ?? state.templateNodeId,
+        templateRevision: state.templateRevision + 1,
+        unitTitles: remaining,
+        waveIndex: 0,
+      });
+      return { brokenIds: broken.map((unit) => unit.id), resolved };
     });
+    if (!committed) return undefined;
+
+    // A sibling still running when the gate was answered would keep spending —
+    // and could deliver — beside the probe that replaces it. Its node is fenced
+    // as retired above; stop the Task behind it. Not part of the transaction:
+    // stopping a run cannot be rolled back, and retrying it is harmless.
+    if (committed.brokenIds.length)
+      await this.stopFencedTasks(goalId, new Set(committed.brokenIds));
     await this.setPauseReason(goalId, undefined);
+    return committed.resolved;
   };
 
   private buildTaskAcceptanceRequirement = (

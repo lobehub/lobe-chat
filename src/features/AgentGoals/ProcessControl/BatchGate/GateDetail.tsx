@@ -17,6 +17,7 @@ import {
   verdictChecks,
 } from '../Graph/batchModel';
 import { KIND_COLOR, KIND_ICON } from '../shared';
+import { activateProps } from './activateProps';
 import { type GateCheckLike, useGateCheckCopy } from './useGateCheckCopy';
 
 /**
@@ -168,7 +169,7 @@ const GateDetail = memo<GateDetailProps>(({ decide, graph, model, onOpenNode, ro
         data-unit={nodeId}
         gap={8}
         key={nodeId}
-        role={'button'}
+        {...activateProps(() => onOpenNode(nodeId))}
         onClick={() => onOpenNode(nodeId)}
       >
         <span

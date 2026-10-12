@@ -207,7 +207,13 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     const wave = Math.floor(position / waveSize);
     const index = position % waveSize;
     const nodes = tasksByTitle.get(title) ?? [];
-    const main = nodes.find((view) => !roundOfProbe.has(view.node.id));
+    // The newest delivery on the main roster: a broken unit that did not fit in
+    // the restarted canary is re-delivered by a later wave as a new task, and
+    // the cell must follow that one, not the original that broke.
+    const mainNodes = nodes.filter((view) => !roundOfProbe.has(view.node.id));
+    const main = mainNodes.at(-1);
+    // Every earlier slot still names where a re-opened unit first ran.
+    for (const earlier of mainNodes.slice(0, -1)) waveOf.set(earlier.node.id, { index, wave });
     const later = nodes.find((view) => (roundOfProbe.get(view.node.id) ?? 0) > 0);
     const laterRound = later ? roundOfProbe.get(later.node.id)! + 1 : undefined;
     if (main) waveOf.set(main.node.id, { index, wave });
