@@ -1,12 +1,18 @@
 import { CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
 
 import { hierarchySearchResource } from '@/features/ResourceManager/store/projection';
-import { revalidateReplica } from '@/libs/replica';
+import { createReplicaSlice, recordLens, revalidateReplica } from '@/libs/replica';
+import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { fileService } from '@/services/file';
 import { resourceService } from '@/services/resource';
 import type { StoreSetter } from '@/store/types';
 import { OptimisticEngine } from '@/store/utils/optimisticEngine';
 
+import {
+  buildLibraryTreeSnapshot,
+  libraryTreeResource,
+  type LibraryTreeSnapshot,
+} from './projection';
 import type { TreeDataState, TreeItem, TreeState, TreeStoreHandle } from './types';
 
 /**
@@ -122,11 +128,19 @@ export class TreeActionImpl {
   readonly #get: () => TreeState;
   readonly #set: Setter;
   #engine?: OptimisticEngine<TreeDataState>;
+  readonly #snapshot;
   #storeHandle: TreeStoreHandle;
 
   constructor(set: Setter, get: () => TreeState) {
     this.#set = set;
     this.#get = get;
+    this.#snapshot = createReplicaSlice(libraryTreeResource, {
+      actionPrefix: 'libraryTree',
+      get,
+      set,
+      stateKey: 'snapshotReplica',
+      view: recordLens<TreeState, LibraryTreeSnapshot>('snapshotMap'),
+    });
     this.#storeHandle = {
       getState: () => ({
         children: get().children,
@@ -180,12 +194,71 @@ export class TreeActionImpl {
     return key;
   };
 
+  /**
+   * Store the visible tree as the library's persisted snapshot. Runs after the
+   * writes that settle a folder; the replica skips a write whose value did not
+   * change, so a revalidation that confirms the tree costs no storage write.
+   */
+  #persistSnapshot = () => {
+    const { children, expanded, knowledgeBaseId } = this.#get();
+    if (!knowledgeBaseId) return;
+    const snapshot = buildLibraryTreeSnapshot(children, expanded);
+    if (!snapshot) return;
+    this.#snapshot.update(knowledgeBaseId, () => snapshot);
+  };
+
+  /**
+   * Fill in folders the network has not answered yet from the library's
+   * persisted snapshot, then confirm each of them in the background. A folder
+   * the network already settled keeps its fresh rows.
+   */
+  #seedFromSnapshot = (snapshot: LibraryTreeSnapshot) => {
+    const { children, expanded } = this.#get();
+    const seeded = Object.keys(snapshot.children).filter((folderId) => !children[folderId]);
+    if (seeded.length === 0) return;
+
+    const nextChildren = { ...children };
+    for (const folderId of seeded) nextChildren[folderId] = snapshot.children[folderId];
+    const nextExpanded = { ...expanded };
+    for (const folderId of snapshot.expanded) {
+      if (nextExpanded[folderId] === undefined) nextExpanded[folderId] = true;
+    }
+    this.#set({ children: nextChildren, expanded: nextExpanded }, false, 'tree/seedFromSnapshot');
+
+    // The root's own fetch (started by `init`) is already confirming it.
+    for (const folderId of seeded) if (folderId) void this.#revalidateFolder(folderId);
+  };
+
+  #hydrateSnapshot = async (knowledgeBaseId: string, epoch: number) => {
+    await this.preHydrate(knowledgeBaseId);
+    if (this.#get().epoch !== epoch) return;
+    const snapshot = this.#get().snapshotMap[knowledgeBaseId];
+    if (snapshot) this.#seedFromSnapshot(snapshot);
+  };
+
+  preHydrate = (knowledgeBaseId: string): Promise<boolean> => {
+    const scope = getCacheScope();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#snapshot.ensureScope(scope);
+    return this.#snapshot.hydrate({ libraryId: knowledgeBaseId }, scope);
+  };
+
   init = (knowledgeBaseId: string) => {
+    const current = this.#get();
+    // Remounting the library already in memory (leaving the page and coming
+    // back): keep the tree on screen and confirm what is loaded in the
+    // background, instead of wiping it back to a skeleton.
+    if (current.knowledgeBaseId === knowledgeBaseId && current.children['']) {
+      for (const folderId of this.#loadedVisibleFolders()) void this.#revalidateFolder(folderId);
+      return;
+    }
+
     this.#queuedRevalidate.clear();
+    const epoch = current.epoch + 1;
     this.#set(
       {
         children: {},
-        epoch: this.#get().epoch + 1,
+        epoch,
         errors: {},
         expanded: {},
         knowledgeBaseId,
@@ -194,7 +267,28 @@ export class TreeActionImpl {
       false,
       'tree/init',
     );
+
+    // The route loader usually hydrated the snapshot already, so the tree
+    // paints in this very commit; otherwise it lands as soon as storage answers.
+    const snapshot = current.snapshotMap[knowledgeBaseId];
+    if (snapshot) this.#seedFromSnapshot(snapshot);
     void this.loadChildren('');
+    if (!snapshot) void this.#hydrateSnapshot(knowledgeBaseId, epoch);
+  };
+
+  /** The root plus every expanded folder reachable from it that has rows loaded. */
+  #loadedVisibleFolders = (): string[] => {
+    const { children, expanded } = this.#get();
+    const result: string[] = [];
+    const queue = [''];
+    while (queue.length > 0) {
+      const folderId = queue.shift()!;
+      const items = children[folderId];
+      if (!items || result.includes(folderId)) continue;
+      result.push(folderId);
+      for (const item of items) if (item.isFolder && expanded[item.id]) queue.push(item.id);
+    }
+    return result;
   };
 
   reset = () => {
@@ -220,7 +314,9 @@ export class TreeActionImpl {
 
     if (!isExpanded && !this.#get().children[folderId]) {
       void this.loadChildren(folderId);
+      return;
     }
+    this.#persistSnapshot();
   };
 
   loadChildren = async (folderId: string) => {
@@ -257,6 +353,7 @@ export class TreeActionImpl {
         false,
         'tree/loadChildren/success',
       );
+      this.#persistSnapshot();
       this.#runQueuedRevalidate(folderId);
     } catch (error) {
       if (this.#get().epoch !== epoch) return;
@@ -278,8 +375,14 @@ export class TreeActionImpl {
 
   revalidate = async (folderKey: string) => {
     void revalidateHierarchySearch();
+    await this.#revalidateFolder(this.#resolveFolderKey(folderKey));
+  };
 
-    const folderId = this.#resolveFolderKey(folderKey);
+  /**
+   * Refetch one folder while its current rows stay on screen. A failure keeps
+   * them (status back to idle) rather than flagging the folder as errored.
+   */
+  #revalidateFolder = async (folderId: string) => {
     const { epoch, knowledgeBaseId, status } = this.#get();
     if (status[folderId] === 'loading' || status[folderId] === 'revalidating') {
       this.#queuedRevalidate.add(folderId);
@@ -313,6 +416,7 @@ export class TreeActionImpl {
         false,
         'tree/revalidate/success',
       );
+      this.#persistSnapshot();
       this.#runQueuedRevalidate(folderId);
     } catch {
       if (this.#get().epoch !== epoch) return;
@@ -342,6 +446,7 @@ export class TreeActionImpl {
       false,
       'tree/reconcile',
     );
+    this.#persistSnapshot();
   };
 
   expandAncestors = async (folderIds: string[]) => {
@@ -420,6 +525,7 @@ export class TreeActionImpl {
     }
 
     this.#set({ children, errors, expanded, status }, false, 'tree/dropNodes');
+    this.#persistSnapshot();
 
     // A parent that is itself being removed has no list left to refresh, and
     // fetching it would recreate the orphan entry the purge just dropped.

@@ -1,4 +1,7 @@
+import type { ReplicaState } from '@/libs/replica';
 import type { StoreHandle } from '@/store/utils/optimisticEngine';
+
+import type { LibraryTreeSnapshot } from './projection';
 
 export interface TreeItem {
   /**
@@ -59,10 +62,17 @@ export interface TreeState extends TreeDataState {
   loadChildren: (folderId: string) => Promise<void>;
   moveItem: (itemId: string, fromParent: string, toParent: string) => Promise<void>;
   moveItems: (itemIds: string[], fromParent: string, toParent: string) => Promise<void>;
+  /**
+   * Read the library's persisted tree into `snapshotMap` so the next `init`
+   * paints it on its first frame. Called from the route loader.
+   */
+  preHydrate: (knowledgeBaseId: string) => Promise<boolean>;
   reconcile: (folderId: string, items: TreeItem[]) => void;
   removeItems: (itemIds: string[], parentId: string) => Promise<void>;
   renameItem: (itemId: string, parentId: string, newName: string) => Promise<void>;
   reset: () => void;
   revalidate: (folderId: string) => Promise<void>;
+  snapshotMap: Record<string, LibraryTreeSnapshot>;
+  snapshotReplica: ReplicaState<LibraryTreeSnapshot>;
   toggle: (folderId: string) => void;
 }
