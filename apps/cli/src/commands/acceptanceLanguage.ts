@@ -197,13 +197,50 @@ export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
     const evidence = Array.isArray(c.evidence) ? c.evidence : [c.evidence];
     evidence.forEach((entry: any, index: number) => {
       if (!entry || typeof entry !== 'object') return;
-      fields.push({
-        path: `cases[${checkItemId}].evidence[${index}].description`,
-        text: entry.description ?? entry.desc,
-      });
+      const at = `cases[${checkItemId}].evidence[${index}]`;
+      const chapters = Array.isArray(entry.chapters) ? entry.chapters : [];
+      fields.push(
+        { path: `${at}.description`, text: entry.description ?? entry.desc },
+        // Video step/claim captions and the before/after caption band.
+        ...chapters.flatMap((chapter: any, i: number) => [
+          { path: `${at}.chapters[${i}].label`, text: chapter?.label },
+          { path: `${at}.chapters[${i}].note`, text: chapter?.note },
+        ]),
+        { path: `${at}.comparison.label`, text: entry.comparison?.label },
+      );
     });
+    fields.push(...visualizationFields(`cases[${checkItemId}]`, c));
   }
   return fields;
+}
+
+/**
+ * Visualization prose: titles, context and axis/series labels. Categories and
+ * table cells are data (model names, file names, ids) and legitimately Latin,
+ * so they are not checked — a false rejection has no bypass.
+ */
+function visualizationFields(at: string, c: Record<string, any>): LanguageField[] {
+  const datasets = Array.isArray(c.datasets) ? c.datasets : [];
+  const views = Array.isArray(c.visualizations) ? c.visualizations : [];
+  return [
+    ...datasets.flatMap((dataset: any, d: number) =>
+      (Array.isArray(dataset?.fields) ? dataset.fields : []).map((field: any, f: number) => ({
+        path: `${at}.datasets[${d}].fields[${f}].label`,
+        text: field?.label,
+      })),
+    ),
+    ...views.flatMap((view: any, v: number) => {
+      const series = Array.isArray(view?.encoding?.series) ? view.encoding.series : [];
+      return [
+        { path: `${at}.visualizations[${v}].title`, text: view?.title },
+        { path: `${at}.visualizations[${v}].context`, text: view?.context },
+        ...series.map((entry: any, i: number) => ({
+          path: `${at}.visualizations[${v}].encoding.series[${i}].label`,
+          text: entry?.label,
+        })),
+      ];
+    }),
+  ];
 }
 
 const preview = (text: string) => {

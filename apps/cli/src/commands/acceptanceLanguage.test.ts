@@ -203,3 +203,46 @@ describe('ingestLanguageFields', () => {
     );
   });
 });
+
+describe('ingestLanguageFields evidence and visualization captions', () => {
+  it('covers chapter, comparison and visualization prose but not data cells', () => {
+    const paths = ingestLanguageFields({
+      cases: [
+        {
+          case: {
+            datasets: [{ fields: [{ key: 'model', label: 'Model' }], id: 'd', rows: [] }],
+            evidence: [
+              {
+                chapters: [{ kind: 'step', label: 'Open page', note: 'Shows result', t: 0 }],
+                comparison: { id: 'p', label: 'Retry', role: 'before' },
+                description: '描述',
+                path: 'a.png',
+              },
+            ],
+            visualizations: [
+              {
+                context: 'ctx',
+                encoding: { series: [{ field: 'v', label: 'Latency' }] },
+                title: 't',
+              },
+            ],
+          },
+          checkItemId: 'screen',
+        },
+      ],
+    }).map((field) => field.path);
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'cases[screen].evidence[0].chapters[0].label',
+        'cases[screen].evidence[0].chapters[0].note',
+        'cases[screen].evidence[0].comparison.label',
+        'cases[screen].datasets[0].fields[0].label',
+        'cases[screen].visualizations[0].title',
+        'cases[screen].visualizations[0].context',
+        'cases[screen].visualizations[0].encoding.series[0].label',
+      ]),
+    );
+    expect(paths.some((path) => path.includes('rows'))).toBe(false);
+  });
+});
