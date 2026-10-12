@@ -1367,8 +1367,9 @@ export const deviceRouter = router({
   //
   // A tunnel makes one loopback port on a device reachable at
   // `https://<port>--<slug>.lobe.sh/`. Creating one is gated exactly like
-  // browsing the device's filesystem: on a workspace device, only the
-  // enrolling member or an owner may expose a port.
+  // browsing the device's filesystem: on a public workspace device any
+  // non-viewer member may expose a port; on a private one, only the enrolling
+  // member or an owner.
 
   /** Open a link to `port` on a device. */
   createTunnel: deviceProcedure
