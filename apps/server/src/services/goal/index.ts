@@ -4313,7 +4313,7 @@ export class GoalService {
       let planSkill = state.planSkill;
       if (planSkill && revisedOutline) {
         const skill = planSkill;
-        await inSavepoint('plan skill revision', (db) =>
+        const version = await inSavepoint('plan skill revision', (db) =>
           new BatchPlanSkillService(db, this.userId, this.workspaceId).revise(skill, {
             goalId,
             guidance: correction || undefined,
@@ -4321,6 +4321,10 @@ export class GoalService {
             revision,
           }),
         );
+        // The revision did not land (the skill was deleted, or the write
+        // failed): units must not load a skill that lacks it. They fall back to
+        // copying the revised plan, and the batch drops the stale reference.
+        if (version === undefined) planSkill = undefined;
       } else if (!planSkill && revisedOutline) {
         // A batch from before plans were skills moves into one now, carrying
         // every earlier version of its plan.
@@ -4347,14 +4351,13 @@ export class GoalService {
           }),
         );
       }
-      // Mounted where the batch's units run — the goal's project, else its
-      // executing agent — so the rules reach those runs and not every chat.
+      // Mounted on the agent that runs the batch's units: a run's expertise
+      // snapshot reads the executing agent's domains (and the owner's), not
+      // the project's, so a project mount would never reach those runs.
       const carrierAgentId = goalTaskAgentId(graph.goal);
-      const carrier: ExpertiseCarrier = graph.goal.projectId
-        ? { id: graph.goal.projectId, type: 'project' }
-        : carrierAgentId
-          ? { id: carrierAgentId, type: 'agent' }
-          : { type: 'user' };
+      const carrier: ExpertiseCarrier = carrierAgentId
+        ? { id: carrierAgentId, type: 'agent' }
+        : { type: 'user' };
       const learned =
         correction && optionId !== 'new_class'
           ? await inSavepoint('break learning', (db) =>

@@ -147,4 +147,23 @@ export class UserSkillService {
   /** Every skill in the library, shaped for a run. */
   listRuntimeSkills = async (): Promise<UserRuntimeSkill[]> =>
     (await this.model.findAll()).map(toRuntimeSkill);
+
+  /**
+   * What every run lists: identifier, name and description of each library
+   * skill, without reading any body. Cheap however large the library grows.
+   */
+  listCatalog = async () =>
+    (await this.model.listCatalog()).map((skill) => {
+      const identifier = buildUserSkillIdentifier(skill.name);
+      return { description: skill.description, identifier, name: identifier, title: skill.title };
+    });
+
+  /** Bodies (and scripts) of just the skills a run pins or names. */
+  loadRuntimeSkills = async (identifiers: Iterable<string>): Promise<UserRuntimeSkill[]> => {
+    const names = [...new Set(identifiers)]
+      .filter(isUserSkillIdentifier)
+      .map((id) => id.slice(USER_SKILLS_IDENTIFIER_PREFIX.length));
+    if (!names.length) return [];
+    return (await this.model.findByNames(names)).map(toRuntimeSkill);
+  };
 }

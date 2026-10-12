@@ -844,14 +844,16 @@ export const prepareOperation = async (
     // The user's own skill library: listed to every run, and injected up front
     // when the agent pins one or the run names it in its plugins — a goal
     // batch's unit runs name the batch's plan skill that way.
-    const runPluginIds = new Set(agentPlugins ?? []);
-    const userSkillMetas = (
-      await new UserSkillService(deps.db, deps.userId, deps.workspaceId).listRuntimeSkills()
-    ).map((skill) => ({
-      content:
-        pinnedSkillIds.has(skill.identifier) || runPluginIds.has(skill.identifier)
-          ? skill.content
-          : undefined,
+    // The catalog carries no bodies; only the pinned / run-named skills read
+    // theirs, so a library that grows with every batch stays cheap to list.
+    const userSkills = new UserSkillService(deps.db, deps.userId, deps.workspaceId);
+    const userSkillContent = new Map(
+      (await userSkills.loadRuntimeSkills([...pinnedSkillIds, ...(agentPlugins ?? [])])).map(
+        (skill) => [skill.identifier, skill.content] as const,
+      ),
+    );
+    const userSkillMetas = (await userSkills.listCatalog()).map((skill) => ({
+      content: userSkillContent.get(skill.identifier),
       description: skill.description,
       identifier: skill.identifier,
       name: skill.name,

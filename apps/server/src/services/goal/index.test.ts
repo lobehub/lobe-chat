@@ -34,6 +34,7 @@ import {
   goals,
   metricPoints,
   metrics,
+  projects,
   tasks,
   taskTopics,
   topics,
@@ -85,6 +86,8 @@ afterEach(async () => {
   await serverDB.delete(metrics);
   await serverDB.delete(acceptances);
   await serverDB.delete(agentOperations);
+  // A project holds its coordinator agent; it goes before the agents do.
+  await serverDB.delete(projects);
   await serverDB.delete(taskTopics);
   await serverDB.delete(topics);
   await serverDB.delete(tasks);
@@ -3060,6 +3063,107 @@ describe('GoalService', () => {
       dispatched.taskId!,
     );
     expect(acceptance?.config).toMatchObject({ verifyCriteriaIds: [learning.criterionId] });
+  });
+
+  it('falls back to copying the revised plan when the skill revision does not land', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate stores' });
+    await service.tick(graph.goal.id);
+
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    // The plan skill was deleted from the library in the meantime.
+    await serverDB.delete(documents).where(eq(documents.id, state.planSkill!.id));
+
+    const decision = await graphModel.createDecision(graph.goal.id, state.assayNodeId!, {
+      authority: 'user',
+      options: [{ id: 'revise', label: 'Revise' }],
+      question: 'Batch gate blocked',
+      requestedUserId: userId,
+    });
+    await graphModel.updateNodeStatus(graph.goal.id, state.assayNodeId!, 'waiting');
+    await goalModel.updateRolloutState(graph.goal.id, { ...state, phase: 'pattern_break' });
+    await serverDB.update(goals).set({ status: 'paused' }).where(eq(goals.id, graph.goal.id));
+
+    await service.decide(graph.goal.id, decision!.id, 'revise', '补上冷启动这一步');
+
+    // The new round does not point units at a skill that lacks the revision:
+    // they carry the revised plan themselves.
+    const after = await service.graph(graph.goal.id);
+    const next = after.goal.config!.rolloutState!;
+    expect(next.planSkill).toBeUndefined();
+    const probe = after.nodes.find((node) => node.id === next.probeNodeIds[0])!;
+    expect(probe.description).toContain('### v2\n补上冷启动这一步');
+    expect(probe.description).not.toContain('user-skills:');
+  });
+
+  it('mounts what a break taught on the agent that runs the units, even in a project', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    await serverDB.insert(agents).values([{ id: 'agt_batch', slug: 'agt-batch', userId }]);
+    await serverDB.insert(projects).values({
+      coordinatorAgentId: 'agt_batch',
+      id: 'proj_batch',
+      identifier: 'BAT',
+      name: 'Batch project',
+      userId,
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      agentId: 'agt_batch',
+      projectId: 'proj_batch',
+      title: 'Migrate stores in a project',
+    });
+    await service.tick(graph.goal.id);
+
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    const decision = await graphModel.createDecision(graph.goal.id, state.assayNodeId!, {
+      authority: 'user',
+      options: [{ id: 'revise', label: 'Revise' }],
+      question: 'Batch gate blocked',
+      requestedUserId: userId,
+    });
+    await graphModel.updateNodeStatus(graph.goal.id, state.assayNodeId!, 'waiting');
+    await goalModel.updateRolloutState(graph.goal.id, { ...state, phase: 'pattern_break' });
+    await serverDB.update(goals).set({ status: 'paused' }).where(eq(goals.id, graph.goal.id));
+    await service.decide(graph.goal.id, decision!.id, 'revise', '补上冷启动这一步');
+
+    // A run's expertise snapshot reads the executing agent's domains, so that
+    // is where the batch's rules must live for its units to receive them.
+    const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+    const domains = await new ExpertiseModel(serverDB, userId).listDomainsForAgent('agt_batch');
+    expect(domains.map(({ domain }) => domain.id)).toContain(next.learningDomainId);
   });
 
   it('moves a batch from before plan skills into one at its next revision', async () => {

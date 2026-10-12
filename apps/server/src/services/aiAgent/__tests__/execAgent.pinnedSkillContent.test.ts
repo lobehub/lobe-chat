@@ -18,7 +18,8 @@ const {
   mockGetComposioManifests,
   mockGetLobehubSkillManifests,
   mockHasDocuments,
-  mockListUserSkills,
+  mockListUserSkillCatalog,
+  mockLoadUserSkills,
   mockMessageCreate,
   mockPluginQuery,
   mockSkillFindAll,
@@ -36,7 +37,8 @@ const {
   mockGetComposioManifests: vi.fn().mockResolvedValue([]),
   mockGetLobehubSkillManifests: vi.fn().mockResolvedValue([]),
   mockHasDocuments: vi.fn().mockResolvedValue(false),
-  mockListUserSkills: vi.fn().mockResolvedValue([]),
+  mockListUserSkillCatalog: vi.fn().mockResolvedValue([]),
+  mockLoadUserSkills: vi.fn().mockResolvedValue([]),
   mockMessageCreate: vi.fn(),
   mockPluginQuery: vi.fn().mockResolvedValue([]),
   mockSkillFindAll: vi.fn().mockResolvedValue({ data: [], total: 0 }),
@@ -103,7 +105,7 @@ vi.mock('@/server/services/agentDocuments', () => ({
 
 vi.mock('@/server/services/userSkill', () => ({
   UserSkillService: vi.fn().mockImplementation(function () {
-    return { listRuntimeSkills: mockListUserSkills };
+    return { listCatalog: mockListUserSkillCatalog, loadRuntimeSkills: mockLoadUserSkills };
   }),
 }));
 
@@ -263,16 +265,19 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
     );
     mockGetAgentSkills.mockResolvedValue([]);
     mockHasDocuments.mockResolvedValue(false);
-    mockListUserSkills.mockResolvedValue([
-      {
-        body: 'PLAN BODY',
-        content: 'PLAN BODY + FILES',
-        description: 'How each unit is done',
-        identifier: 'user-skills:goal-plan-x',
-        name: 'user-skills:goal-plan-x',
-        title: 'Plan',
-      },
-    ]);
+    const planSkill = {
+      description: 'How each unit is done',
+      identifier: 'user-skills:goal-plan-x',
+      name: 'user-skills:goal-plan-x',
+      title: 'Plan',
+    };
+    mockListUserSkillCatalog.mockResolvedValue([planSkill]);
+    // Only bodies the run asks for come back, as the real loader does.
+    mockLoadUserSkills.mockImplementation(async (ids: string[]) =>
+      ids.includes(planSkill.identifier)
+        ? [{ ...planSkill, body: 'PLAN BODY', content: 'PLAN BODY + FILES' }]
+        : [],
+    );
     service = new AiAgentService({} as any, 'test-user-id');
   });
 
@@ -437,6 +442,8 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
 
     expect(skillById('user-skills:goal-plan-x')).toBeDefined();
     expect(skillById('user-skills:goal-plan-x')?.content).toBeUndefined();
+    // Listing the library reads no body: none was asked for.
+    expect(mockLoadUserSkills.mock.calls[0][0]).not.toContain('user-skills:goal-plan-x');
   });
 
   it('injects a user skill the run names in its plugins, as a goal batch unit does', async () => {

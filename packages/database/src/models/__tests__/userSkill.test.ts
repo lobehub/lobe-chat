@@ -79,6 +79,18 @@ describe('UserSkillModel', () => {
     expect(await other.revise(skill.id, { content: 'hijack' })).toBeUndefined();
   });
 
+  it('lists the library as a catalog without reading any body', async () => {
+    const skill = await create();
+    expect(await model.listCatalog()).toEqual([
+      {
+        description: 'Move one slice',
+        id: skill.id,
+        name: 'migrate-slice',
+        title: 'Migrate a slice',
+      },
+    ]);
+  });
+
   it('stays out of the Page library', async () => {
     await create();
     const { items } = await new DocumentModel(serverDB, userId).query();

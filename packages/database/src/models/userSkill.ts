@@ -44,6 +44,13 @@ export interface UserSkillVersion {
   version: number;
 }
 
+export interface UserSkillCatalogItem {
+  description: string;
+  id: string;
+  name: string;
+  title: string;
+}
+
 export interface UserSkillItem {
   /** The current `SKILL.md`. */
   content: string;
@@ -271,8 +278,16 @@ export class UserSkillModel {
         ),
       )
       .orderBy(asc(documents.filename));
+    // One pass over the children, not one per bundle.
+    const byBundle = new Map<string, (typeof children)[number][]>();
+    for (const child of children) {
+      if (!child.parentId) continue;
+      const list = byBundle.get(child.parentId) ?? [];
+      list.push(child);
+      byBundle.set(child.parentId, list);
+    }
     return bundles.map((bundle) => {
-      const own = children.filter((child) => child.parentId === bundle.id);
+      const own = byBundle.get(bundle.id) ?? [];
       const meta = (bundle.metadata?.userSkill ?? { version: 1 }) as UserSkillMeta;
       return {
         content: own.find((child) => child.fileType === SKILL_INDEX_FILE_TYPE)?.content ?? '',
@@ -304,7 +319,31 @@ export class UserSkillModel {
     return (await this.load(bundles))[0];
   };
 
-  /** Every skill in the library. */
+  /**
+   * The library as a catalog: name, title and description from the bundle rows
+   * alone, no `SKILL.md` or scripts. What every run lists; bodies are loaded
+   * only for the skills a run actually uses (`findByNames`).
+   */
+  listCatalog = async (): Promise<UserSkillCatalogItem[]> => {
+    const rows = await this.db
+      .select({
+        description: documents.description,
+        filename: documents.filename,
+        id: documents.id,
+        title: documents.title,
+      })
+      .from(documents)
+      .where(this.bundleWhere())
+      .orderBy(asc(documents.filename));
+    return rows.map((row) => ({
+      description: row.description ?? '',
+      id: row.id,
+      name: row.filename ?? '',
+      title: row.title ?? row.filename ?? '',
+    }));
+  };
+
+  /** Every skill in the library, bodies included. */
   findAll = async (): Promise<UserSkillItem[]> => {
     const bundles = await this.db
       .select()

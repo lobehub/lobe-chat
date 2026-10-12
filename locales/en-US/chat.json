@@ -490,7 +490,7 @@
   "goalBatch.gatePanel.history.unit": "“{{title}}” failed its own check — the batch was held at once",
   "goalBatch.gatePanel.history.unrecorded": "Judged before verdicts were recorded — no detail kept",
   "goalBatch.gatePanel.learned": "What this gate taught",
-  "goalBatch.gatePanel.learnedHint": "Kept as a rule the executor reads, and compiled into an acceptance check every later unit is verified against.",
+  "goalBatch.gatePanel.learnedHint": "Written into the plan every later unit loads, and compiled into an acceptance check each of them is verified against.",
   "goalBatch.gatePanel.next.checking": "Every unit finished — judged on the coordinator’s next step",
   "goalBatch.gatePanel.next.human": "Waiting on you: revise the plan, or fork a fresh one for the units that broke",
   "goalBatch.gatePanel.next.locked": "Judged automatically once this round’s {{count}} units finish",
