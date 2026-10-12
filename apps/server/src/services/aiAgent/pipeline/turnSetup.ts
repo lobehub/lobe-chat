@@ -486,6 +486,41 @@ export const setupTurn = async (
     });
   }
 
+  const assertProjectDirectoryAccess = () => {
+    if (shareGate || (botContext && !resolveDeviceAccessPolicy({ botContext }).canUseDevice))
+      throw new Error('Project directory access denied');
+  };
+  /** Pin the run to the device a project directory lives on — only it can honour the run. */
+  const routeToProjectDirectory = async (directory: { deviceId: string | null }) => {
+    if (
+      agentConfig.agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
+      agentConfig.agencyConfig.boundDeviceId !== directory.deviceId
+    )
+      throw new Error('Agent is fixed to another execution target');
+    // Reject an unavailable device *here*, before the user/assistant rows are
+    // persisted: the client treats a rejected send as never accepted, keeps the
+    // draft and rolls back its optimistic pair, so a later rejection would leave
+    // a failed turn durable server-side that the client disagrees with.
+    // Liveness comes from the gateway's device listing — not a device round
+    // trip — so the send path keeps the latency fix, and the dispatch remains
+    // the authority on whether the directory still exists on the device.
+    const { canUseDevice: canUseProjectDevice } = resolveDeviceAccessPolicy({ botContext });
+    const projectDevices = canUseProjectDevice
+      ? await getScopedOnlineDevices(deps.db, deps.userId, deps.workspaceId)
+      : [];
+    if (!projectDevices.some((device) => device.deviceId === directory.deviceId && device.online))
+      throw new Error('Device is offline or working directory is unavailable');
+    const deviceId = directory.deviceId ?? undefined;
+    resolvedRequestedDeviceId = deviceId;
+    effectiveRequestedDeviceId = deviceId;
+    topicBoundDeviceId = deviceId;
+    agentConfig.agencyConfig = {
+      ...agentConfig.agencyConfig,
+      boundDeviceId: deviceId,
+      executionTarget: 'device',
+    };
+  };
+
   // Topic resolution assigns the turn's narrowed bindings (topic id, pinned
   // model, device targets), so it is a marked block rather than a callback:
   // every exit, including a throw, records the error and closes the span.
@@ -496,9 +531,29 @@ export const setupTurn = async (
         throw new Error('Resume mode requires the parent message to belong to a topic');
       }
 
+      // A blank conversation opened from a project group's "+" is born inside
+      // that directory: bound to it, and run on the device it lives on.
+      let projectDirectory:
+        Awaited<ReturnType<ProjectWorkingDirectoryModel['resolve']>> | undefined;
+      if (appContext?.projectWorkingDirectoryId) {
+        assertProjectDirectoryAccess();
+        projectDirectory = await new ProjectWorkingDirectoryModel(
+          deps.db,
+          deps.userId,
+          deps.workspaceId,
+        ).resolve(appContext.projectWorkingDirectoryId);
+        await routeToProjectDirectory(projectDirectory);
+      }
+
       // Prepare metadata with cronJobId, taskId, botContext, bound device, and any
       // client-supplied initial metadata (e.g. repos selected before first message).
-      const initialTopicMeta = appContext?.initialTopicMetadata;
+      const initialTopicMeta = projectDirectory
+        ? {
+            ...appContext?.initialTopicMetadata,
+            workingDirectory: projectDirectory.path,
+            workingDirectoryConfig: { path: projectDirectory.path },
+          }
+        : appContext?.initialTopicMetadata;
       // Builder conversations are owned by a builtin builder agent and get no
       // `groupId` / `sessionId` (those columns mark the target's own chat), so
       // without this the row keeps no trace of what it was configuring. The
@@ -552,6 +607,10 @@ export const setupTurn = async (
         // must carry the groupId through too (group topic sidebar + ownership fix).
         groupId: appContext?.groupId,
         metadata: metadataWithSnapshot,
+        ...(projectDirectory && {
+          projectId: projectDirectory.projectId,
+          projectWorkingDirectoryId: projectDirectory.id,
+        }),
         // Snapshot the effective model as the topic's pinned model (config).
         model: snapshot.model,
         provider: snapshot.provider,
@@ -607,44 +666,14 @@ export const setupTurn = async (
       // A project conversation without a directory follows the plain
       // topic-pinned device path below, like any other conversation.
       if (existingTopic?.projectWorkingDirectoryId) {
-        if (shareGate || (botContext && !resolveDeviceAccessPolicy({ botContext }).canUseDevice))
-          throw new Error('Project directory access denied');
+        assertProjectDirectoryAccess();
         const directory = await new ProjectWorkingDirectoryModel(
           deps.db,
           deps.userId,
           deps.workspaceId,
         ).resolveForTopic(topicId);
         if (!directory) throw new Error('Project directory binding no longer exists');
-        if (
-          agentConfig.agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
-          agentConfig.agencyConfig.boundDeviceId !== directory.deviceId
-        )
-          throw new Error('Agent is fixed to another execution target');
-        // The directory lives on one device, so only that device can honour the
-        // run. Reject an unavailable device *here*, before the user/assistant
-        // rows are persisted: the client treats a rejected send as never
-        // accepted, keeps the draft and rolls back its optimistic pair, so a
-        // later rejection would leave a failed turn durable server-side that the
-        // client disagrees with. Liveness comes from the gateway's device
-        // listing — not a device round trip — so the send path keeps the latency
-        // fix, and the dispatch remains the authority on whether the directory
-        // still exists on the device.
-        const { canUseDevice: canUseProjectDevice } = resolveDeviceAccessPolicy({ botContext });
-        const projectDevices = canUseProjectDevice
-          ? await getScopedOnlineDevices(deps.db, deps.userId, deps.workspaceId)
-          : [];
-        if (
-          !projectDevices.some((device) => device.deviceId === directory.deviceId && device.online)
-        )
-          throw new Error('Device is offline or working directory is unavailable');
-        resolvedRequestedDeviceId = directory.deviceId;
-        effectiveRequestedDeviceId = directory.deviceId;
-        topicBoundDeviceId = directory.deviceId;
-        agentConfig.agencyConfig = {
-          ...agentConfig.agencyConfig,
-          boundDeviceId: directory.deviceId,
-          executionTarget: 'device',
-        };
+        await routeToProjectDirectory(directory);
       }
 
       // Fail-closed guard: a non-share run must never operate on a share-visitor

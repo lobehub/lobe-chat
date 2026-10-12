@@ -495,10 +495,22 @@ export class ConversationLifecycleActionImpl {
     const boundTopic = context.topicId
       ? topicSelectors.getTopicById(context.topicId)(this.#get())
       : undefined;
-    if (boundTopic?.projectWorkingDirectoryId) {
-      const { data: directory } = await projectWorkingDirectoryService.resolve(
-        boundTopic.projectWorkingDirectoryId,
-      );
+    // A blank conversation opened from a project group's "+" runs in the
+    // directory it staged; the gateway transport has the server bind the topic.
+    const pendingDirectory = this.#get().pendingNewTopicDirectory;
+    const stagedDirectoryId =
+      !context.topicId &&
+      !context.isolatedTopic &&
+      !context.groupId &&
+      !directMentionRoute &&
+      pendingDirectory?.agentId === ownerAgentId
+        ? pendingDirectory.projectWorkingDirectoryId
+        : undefined;
+    const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
+    let stagedDirectory: { id: string; projectId: string } | undefined;
+    if (projectDirectoryId) {
+      const { data: directory } = await projectWorkingDirectoryService.resolve(projectDirectoryId);
+      if (stagedDirectoryId) stagedDirectory = directory;
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1168,6 +1180,11 @@ export class ConversationLifecycleActionImpl {
           value: {
             id: mintedTopicId,
             ...newTopicModelSnapshot,
+            // Shown under its project group from the first frame.
+            ...(stagedDirectory && {
+              projectId: stagedDirectory.projectId,
+              projectWorkingDirectoryId: stagedDirectory.id,
+            }),
             ...(operationContext.groupId ? {} : { sessionId: operationContext.agentId }),
             title: newTopicTitle,
           },
@@ -1886,6 +1903,7 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
+          projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention
           // selection (only the client runtime did). Omit when empty.

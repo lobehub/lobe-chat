@@ -1066,6 +1066,12 @@ export class GatewayActionImpl {
      * without issuing a second legacy resume request.
      */
     precreatedResult?: ExecAgentResult;
+    /**
+     * Project working directory the NEW topic is born in — the blank
+     * conversation a project group's "+" staged. The caller reads it before the
+     * send adopts its minted topic, since that switch clears the staging.
+     */
+    projectWorkingDirectoryId?: string;
     /** Server operation whose visible output ended before this fresh turn. */
     replacesOperationId?: string;
     /** Diagnostic snapshot of the conversation's server runs, see `ExecAgentTaskParams`. */
@@ -1139,6 +1145,7 @@ export class GatewayActionImpl {
       parentMessageId,
       parentOperationId,
       precreatedResult,
+      projectWorkingDirectoryId,
       replacesOperationId,
       resumeApproval,
       resumeApprovals,
@@ -1316,6 +1323,7 @@ export class GatewayActionImpl {
                 // supervisor turn loses its role on the step_start snapshot / refetch
                 // and renders as a generic assistant.
                 orchestrationRole: executionContext.orchestrationRole,
+                ...(isCreateNewTopic && projectWorkingDirectoryId && { projectWorkingDirectoryId }),
                 scope: executionContext.scope,
                 taskId,
                 threadId: executionContext.threadId,

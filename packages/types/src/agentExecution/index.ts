@@ -173,6 +173,12 @@ export interface ExecAgentAppContext {
    * `metadata.orchestrationRole` so the role snapshot persists for rendering.
    */
   orchestrationRole?: 'supervisor' | 'member';
+  /**
+   * Project working directory a NEW topic is born in — the blank conversation a
+   * project group's "+" opened. The topic is bound to it and the run routes to
+   * the directory's device. Ignored when a topicId is already provided.
+   */
+  projectWorkingDirectoryId?: string;
   /** Scope identifier */
   scope?: string | null;
   /** Session ID */
