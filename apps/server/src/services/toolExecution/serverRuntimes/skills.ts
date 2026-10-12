@@ -29,6 +29,7 @@ import debug from 'debug';
 import { AgentModel } from '@/database/models/agent';
 import { AgentSkillModel } from '@/database/models/agentSkill';
 import { FileModel } from '@/database/models/file';
+import { TaskModel } from '@/database/models/task';
 import { UserModel } from '@/database/models/user';
 import type { LobeChatDatabase } from '@/database/type';
 import { filterBuiltinSkills } from '@/helpers/skillFilters';
@@ -50,7 +51,11 @@ import {
   isLhCommand,
   preprocessLhCommand,
 } from '@/server/services/toolExecution/preprocessLhCommand';
-import { canonicalUserSkillIdentifier, UserSkillService } from '@/server/services/userSkill';
+import {
+  canonicalUserSkillIdentifier,
+  readTaskSkillIds,
+  UserSkillService,
+} from '@/server/services/userSkill';
 
 import { resolveContentWorkspaceId, resolveRunWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
@@ -1093,7 +1098,19 @@ export const skillsRuntime: ServerRuntimeRegistration = {
           workspaceId,
           context.agentVisibility,
         )
-          .loadRuntimeSkills([name])
+          .loadRuntimeSkills([name], {
+            // Only the generated skills this run's own Task names are trusted
+            // past a public agent's visibility — never a name the model chose.
+            trustedGenerated: context.taskId
+              ? readTaskSkillIds(
+                  (
+                    await new TaskModel(context.serverDB!, context.userId!, workspaceId).findById(
+                      context.taskId,
+                    )
+                  )?.config,
+                )
+              : [],
+          })
           .catch((error) => {
             log('failed to load user skill %s: %O', name, error);
             return [];

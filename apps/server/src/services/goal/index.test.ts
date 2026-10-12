@@ -3304,6 +3304,57 @@ describe('GoalService', () => {
     expect(second.learningDomainId).toBe(first.learningDomainId);
   });
 
+  it('creates one batch domain when two goals on an agent learn at the same time', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    await serverDB.insert(agents).values([{ id: 'agt_shared', slug: 'agt-shared', userId }]);
+    const service = new GoalService(serverDB, userId);
+    const graphModel = new GoalGraphModel(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const openBreak = async (title: string) => {
+      const graph = await service.create({ agentId: 'agt_shared', title });
+      await service.tick(graph.goal.id);
+      const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
+      const decision = await graphModel.createDecision(graph.goal.id, state.assayNodeId!, {
+        authority: 'user',
+        options: [{ id: 'revise', label: 'Revise' }],
+        question: 'Batch gate blocked',
+        requestedUserId: userId,
+      });
+      await graphModel.updateNodeStatus(graph.goal.id, state.assayNodeId!, 'waiting');
+      await goalModel.updateRolloutState(graph.goal.id, { ...state, phase: 'pattern_break' });
+      await serverDB.update(goals).set({ status: 'paused' }).where(eq(goals.id, graph.goal.id));
+      return { decisionId: decision!.id, goalId: graph.goal.id };
+    };
+    const a = await openBreak('Batch A');
+    const b = await openBreak('Batch B');
+
+    // Both first breaks are answered at once.
+    await Promise.all([
+      service.decide(a.goalId, a.decisionId, 'revise', '补上冷启动这一步'),
+      service.decide(b.goalId, b.decisionId, 'revise', '补上 SSR 播种这一步'),
+    ]);
+
+    const domainOf = async (goalId: string) =>
+      (await service.graph(goalId)).goal.config!.rolloutState!.learningDomainId;
+    expect(await domainOf(a.goalId)).toBe(await domainOf(b.goalId));
+    const bound = await new ExpertiseModel(serverDB, userId).listDomainsForAgent('agt_shared');
+    expect(bound.filter(({ domain }) => domain.title === 'Goal batch rules')).toHaveLength(1);
+  });
+
   it('moves a batch from before plan skills into one at its next revision', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',

@@ -26,6 +26,16 @@ import { renderSkillIndexContent, validateSkillName } from '../skillManagement/f
 
 export const isUserSkillIdentifier = (id: string) => id.startsWith(USER_SKILLS_IDENTIFIER_PREFIX);
 
+/** The skill identifiers a task's config names under `skills`. */
+export const readTaskSkillIds = (config: unknown): string[] => {
+  const skills = (config as { skills?: unknown } | null | undefined)?.skills;
+  return Array.isArray(skills)
+    ? skills.filter((id): id is string => typeof id === 'string' && !!id)
+    : [];
+};
+
+const toName = (identifier: string) => identifier.slice(USER_SKILLS_IDENTIFIER_PREFIX.length);
+
 /**
  * The canonical identifier of a user skill a model named, or undefined when
  * the name is not one. Models vary casing; user skill names are lowercase
@@ -183,12 +193,18 @@ export class UserSkillService {
       };
     });
 
-  /** Bodies (and scripts) of just the skills a run pins or names. */
-  loadRuntimeSkills = async (identifiers: Iterable<string>): Promise<UserRuntimeSkill[]> => {
-    const names = [...new Set(identifiers)]
-      .filter(isUserSkillIdentifier)
-      .map((id) => id.slice(USER_SKILLS_IDENTIFIER_PREFIX.length));
+  /**
+   * Bodies (and scripts) of just the skills a run pins or names.
+   * `trustedGenerated` lists generated skills the run's own Task names: those
+   * load even through a workspace-public agent (it is the goal's own plan).
+   */
+  loadRuntimeSkills = async (
+    identifiers: Iterable<string>,
+    { trustedGenerated = [] }: { trustedGenerated?: Iterable<string> } = {},
+  ): Promise<UserRuntimeSkill[]> => {
+    const names = [...new Set(identifiers)].filter(isUserSkillIdentifier).map(toName);
     if (!names.length) return [];
-    return (await this.model.findByNames(names)).map(toRuntimeSkill);
+    const trusted = [...new Set(trustedGenerated)].filter(isUserSkillIdentifier).map(toName);
+    return (await this.model.findByNames(names, { trustedGenerated: trusted })).map(toRuntimeSkill);
   };
 }

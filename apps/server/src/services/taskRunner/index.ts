@@ -17,6 +17,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { resolveFailedRunStatus } from '@/server/services/goal/recoveryPolicy';
 import { createTaskRunHooks } from '@/server/services/task/runHooks';
+import { readTaskSkillIds } from '@/server/services/userSkill';
 
 import { buildTaskPrompt } from './buildTaskPrompt';
 import {
@@ -50,12 +51,6 @@ export interface RunTaskResult extends ExecAgentResult {
   taskId: string;
   taskIdentifier: string;
 }
-
-/** The skill identifiers a task's config names under `skills`. */
-export const readTaskSkillIds = (config: Record<string, unknown>): string[] =>
-  Array.isArray(config.skills)
-    ? config.skills.filter((id): id is string => typeof id === 'string' && !!id)
-    : [];
 
 /**
  * TaskRunnerService — orchestrates a single Task run.

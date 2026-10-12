@@ -1,7 +1,7 @@
 import { buildUserSkillIdentifier } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { GoalRolloutLearning, GoalRolloutPlanSkill } from '@lobechat/types';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 
 import { type ExpertiseCarrier, ExpertiseModel } from '@/database/models/expertise';
 import { expertiseBindings, expertiseDomains } from '@/database/schemas';
@@ -190,6 +190,17 @@ export class BatchPlanSkillService {
     revision: number;
   }): Promise<{ domainId: string; learning: GoalRolloutLearning } | undefined> => {
     const expertise = new ExpertiseModel(this.db, this.userId, this.workspaceId);
+    // Two goals on the same carrier can break at once, each under only its own
+    // goal lock: serialize finding-or-creating the carrier's domain, so the
+    // second sees the first's instead of creating another. Held until the
+    // enclosing transaction ends.
+    const carrierKey =
+      params.carrier.type === 'user'
+        ? `user:${this.workspaceId ?? this.userId}`
+        : `${params.carrier.type}:${params.carrier.id}`;
+    await this.db.execute(
+      sql`SELECT pg_advisory_xact_lock(hashtext(${`goal-batch-domain:${carrierKey}`}))`,
+    );
     // One domain per carrier for every batch it runs, not one per batch: each
     // run's expertise snapshot loads every domain its agent carries, so a
     // domain per batch would grow that load with every batch ever run.

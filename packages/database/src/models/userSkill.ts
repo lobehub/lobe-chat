@@ -410,18 +410,32 @@ export class UserSkillModel {
   };
 
   /** The skills with these names, for a run that loads them. */
-  findByNames = async (names: string[]): Promise<UserSkillItem[]> => {
+  findByNames = async (
+    names: string[],
+    { trustedGenerated = [] }: { trustedGenerated?: string[] } = {},
+  ): Promise<UserSkillItem[]> => {
     if (!names.length) return [];
     // A skill a goal batch generated is that goal's own plan — its units carry
-    // it in their brief anyway — so a run that names it gets it even through a
-    // workspace-public agent. The rest of the caller's private library stays
-    // out of such a run.
+    // it in their brief anyway — so the run whose Task names it gets it even
+    // through a workspace-public agent. Only those exact names: a name the
+    // model supplies never widens it, and the rest of the caller's private
+    // library stays out of such a run.
+    const trusted = trustedGenerated.filter((name) => names.includes(name));
     const bundles = await this.db
       .select()
       .from(documents)
       .where(
         and(
-          or(this.bundleWhere(), and(this.bundleWhere(this.ownerScope()), this.generated())),
+          trusted.length
+            ? or(
+                this.bundleWhere(),
+                and(
+                  this.bundleWhere(this.ownerScope()),
+                  this.generated(),
+                  inArray(documents.filename, trusted),
+                ),
+              )
+            : this.bundleWhere(),
           inArray(documents.filename, names),
         ),
       );

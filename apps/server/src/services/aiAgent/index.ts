@@ -1430,6 +1430,7 @@ export class AiAgentService {
     // instead of on the send path.
     const initRequest = buildOperationInitRequest({
       additionalPluginIds,
+      taskId: operationTaskId,
       agentSlug,
       approvalOwnerAssistantId,
       approvedToolEntries,

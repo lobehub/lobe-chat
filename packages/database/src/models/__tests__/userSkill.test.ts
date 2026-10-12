@@ -132,8 +132,8 @@ describe('UserSkillModel', () => {
     const throughPublicAgent = new UserSkillModel(serverDB, userId, workspace.id, 'public');
     expect(await throughPublicAgent.listCatalog()).toEqual([]);
     expect(await throughPublicAgent.findByNames(['migrate-slice'])).toEqual([]);
-    // A goal batch's own plan, named by its units, still loads there — it is the
-    // goal's plan, not the caller's private library.
+    // A goal batch's own plan loads there only when the run's Task names it —
+    // it is the goal's plan — never because a name was merely supplied.
     await creator.create({
       content: 'Plan body',
       description: 'How each unit is done',
@@ -142,7 +142,10 @@ describe('UserSkillModel', () => {
       origin: { batchNodeId: 'batch-1', goalId: 'goal-1', revision: 1 },
       title: 'Plan',
     });
-    const [plan] = await throughPublicAgent.findByNames(['goal-plan-x', 'migrate-slice']);
+    expect(await throughPublicAgent.findByNames(['goal-plan-x'])).toEqual([]);
+    const [plan] = await throughPublicAgent.findByNames(['goal-plan-x', 'migrate-slice'], {
+      trustedGenerated: ['goal-plan-x'],
+    });
     expect(plan).toMatchObject({ content: 'Plan body', name: 'goal-plan-x' });
     expect(plan.files.map((file) => file.path)).toEqual(['scripts/check.sh']);
     await serverDB.delete(workspaces);

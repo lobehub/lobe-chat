@@ -21,6 +21,7 @@ import { DeviceModel } from '@/database/models/device';
 import { ExpertiseModel } from '@/database/models/expertise';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import type { MessageModel } from '@/database/models/message';
+import { TaskModel } from '@/database/models/task';
 import type { TopicModel } from '@/database/models/topic';
 import { UserPersonaModel } from '@/database/models/userMemory/persona';
 import { isDeviceCapablePlan } from '@/helpers/executionTarget';
@@ -29,7 +30,7 @@ import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { FileService } from '@/server/services/file';
 import { redisService } from '@/server/services/redis';
-import { UserSkillService } from '@/server/services/userSkill';
+import { readTaskSkillIds, UserSkillService } from '@/server/services/userSkill';
 import { afterUnscoped } from '@/server/utils/scheduleAfterResponse';
 
 import { pruneRegeneratedBranch } from '../pruneRegeneratedBranch';
@@ -197,6 +198,8 @@ export interface OperationPrepInput {
   operationId: string;
   runAttachments: RunAttachments;
   runFromHistory: boolean;
+  /** The Task this run executes; the skills it names are trusted for this run. */
+  taskId?: string;
   throwIfExecutionAborted: (stage: string) => Promise<void>;
 }
 
@@ -854,10 +857,19 @@ export const prepareOperation = async (
       deps.workspaceId,
       deps.workspaceId ? await deps.agentModel.getAgentVisibility(resolvedAgentId) : undefined,
     );
-    const namedUserSkills = await userSkills.loadRuntimeSkills([
-      ...pinnedSkillIds,
-      ...(agentPlugins ?? []),
-    ]);
+    // The skills the run's own Task names (a goal batch's plan) load even
+    // through a public agent — and only those; nothing the model or a picker
+    // supplies widens that.
+    const taskSkillIds = input.taskId
+      ? readTaskSkillIds(
+          (await new TaskModel(deps.db, deps.userId, deps.workspaceId).findById(input.taskId))
+            ?.config,
+        )
+      : [];
+    const namedUserSkills = await userSkills.loadRuntimeSkills(
+      [...pinnedSkillIds, ...(agentPlugins ?? []), ...taskSkillIds],
+      { trustedGenerated: taskSkillIds },
+    );
     // Skills the system generated for one job (a goal batch's plan) are not
     // listed to every run — one accumulates per batch, so the query leaves them
     // out — only joined where the run pins or names them, as that batch's units
