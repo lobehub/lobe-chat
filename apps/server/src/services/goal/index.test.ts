@@ -3062,7 +3062,11 @@ describe('GoalService', () => {
       'task',
       dispatched.taskId!,
     );
-    expect(acceptance?.config).toMatchObject({ verifyCriteriaIds: [learning.criterionId] });
+    // The learned rule is added to the unit's own contract, not substituted for
+    // it: configured criteria would make the verifier check only those.
+    expect(acceptance?.config?.verifyCriteriaIds).toBeUndefined();
+    expect(acceptance?.requirement).toContain(dispatched.title);
+    expect(acceptance?.requirement).toContain('- 补上冷启动这一步');
   });
 
   it('falls back to copying the revised plan when the skill revision does not land', async () => {

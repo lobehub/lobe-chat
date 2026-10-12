@@ -2798,10 +2798,8 @@ export class GoalService {
       const rollout = graph.goal.config?.rolloutState;
       const batchUnit = frontier.kind === 'task' && this.isBatchMember(graph, frontier.id);
       const planSkill = batchUnit ? rollout?.planSkill : undefined;
-      const learnedCriteriaIds = batchUnit
-        ? (rollout?.learnings ?? []).flatMap((learning) =>
-            learning.criterionId ? [learning.criterionId] : [],
-          )
+      const learnedRules = batchUnit
+        ? (rollout?.learnings ?? []).map((learning) => learning.title)
         : [];
       task = await this.taskService.createTask({
         assigneeAgentId: await this.resolveTaskAssignee(graph.goal),
@@ -2821,19 +2819,24 @@ export class GoalService {
       const goalCriteriaIds =
         frontier.title === GOAL_ACCEPTANCE_TASK_TITLE
           ? graph.goal.config?.acceptance?.criteriaIds
-          : learnedCriteriaIds.length
-            ? learnedCriteriaIds
-            : undefined;
+          : undefined;
       const acceptance = await this.acceptanceService.ensureForSubject('task', task.id, {
         config: {
           enabled: true,
           ...(goalCriteriaIds?.length ? { verifyCriteriaIds: goalCriteriaIds } : {}),
         },
-        requirement: this.buildTaskAcceptanceRequirement(
-          graph,
-          frontier.title,
-          frontier.description,
-        ),
+        // A batch unit is judged on its own delivery and, on top of it, on every
+        // rule the batch's breaks taught. Configured criteria would replace the
+        // prose contract (the verify plan materializes only them), so the
+        // rules join the requirement instead of standing in for it.
+        requirement: [
+          this.buildTaskAcceptanceRequirement(graph, frontier.title, frontier.description),
+          learnedRules.length
+            ? `Rules this batch learned from its release gate (each must also hold):\n${learnedRules.map((rule) => `- ${rule}`).join('\n')}`
+            : undefined,
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
       });
       acceptanceId = acceptance.id;
       const bound = await this.coordinatorGraph.bindTask(goalId, frontier.id, task.id);

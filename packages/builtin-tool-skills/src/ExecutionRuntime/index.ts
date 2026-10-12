@@ -105,6 +105,12 @@ export interface SkillsExecutionRuntimeOptions {
   deviceFileAccess?: DeviceFileAccess;
   /** Filesystem skills discovered on the execution device. */
   projectSkills?: ProjectSkillRuntimeItem[];
+  /**
+   * Resolves a skill by name when it is not among `builtinSkills`: a library
+   * too large to load up front (the user's own skills) is read on demand, only
+   * for the name a call asks for.
+   */
+  resolveSkill?: (name: string) => Promise<BuiltinSkill | undefined>;
   service: SkillRuntimeService;
 }
 
@@ -167,6 +173,7 @@ export class SkillsExecutionRuntime {
   private builtinSkills: BuiltinSkill[];
   private projectSkills: ProjectSkillRuntimeItem[];
   private deviceFileAccess?: DeviceFileAccess;
+  private resolveSkill?: (name: string) => Promise<BuiltinSkill | undefined>;
   private service: SkillRuntimeService;
 
   constructor(options: SkillsExecutionRuntimeOptions) {
@@ -175,7 +182,17 @@ export class SkillsExecutionRuntime {
     this.builtinSkills = options.builtinSkills || [];
     this.projectSkills = options.projectSkills || [];
     this.deviceFileAccess = options.deviceFileAccess;
+    this.resolveSkill = options.resolveSkill;
   }
+
+  /** A preloaded builtin-shaped skill, else one the resolver reads on demand. */
+  private findBuiltinSkill = async (name: string): Promise<BuiltinSkill | undefined> => {
+    const preloaded = findByNameCI(this.builtinSkills, name);
+    if (preloaded || !this.resolveSkill) return preloaded;
+    const resolved = await this.resolveSkill(name);
+    if (resolved) this.builtinSkills = [...this.builtinSkills, resolved];
+    return resolved;
+  };
 
   async execScript(args: ExecScriptParams): Promise<BuiltinServerRuntimeOutput> {
     const { command, description } = args;
@@ -365,7 +382,7 @@ export class SkillsExecutionRuntime {
 
       // Fall back to builtin skills (includes agent-document skill bundles
       // via the `agent-skills:` identifier prefix).
-      const builtinSkill = findByNameCI(this.builtinSkills, id);
+      const builtinSkill = await this.findBuiltinSkill(id);
       if (builtinSkill?.resources) {
         const meta = builtinSkill.resources[path];
         if (meta?.content !== undefined) {
@@ -470,7 +487,7 @@ export class SkillsExecutionRuntime {
 
     // Fall back to builtin skills (includes agent-document skill bundles via
     // the `agent-skills:` identifier prefix).
-    const builtinSkill = findByNameCI(this.builtinSkills, name);
+    const builtinSkill = await this.findBuiltinSkill(name);
     if (builtinSkill) {
       let content = builtinSkill.content;
       const hasResources = !!(
