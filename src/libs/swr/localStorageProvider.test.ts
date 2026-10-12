@@ -1,11 +1,12 @@
 /**
  * @vitest-environment happy-dom
  */
+import { unstable_serialize } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { bootTiming } from '@/libs/bootTiming';
 
-import { taskKeys, taskTemplateKeys } from './keys';
+import { localFileKeys, portalKeys, taskKeys, taskTemplateKeys } from './keys';
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import {
   CACHE_TIERS,
@@ -13,6 +14,11 @@ import {
   createCacheProvider,
   getScopedCacheKey,
 } from './localStorageProvider';
+import {
+  MAX_PERSISTED_DOCUMENT_HEADER_CHARS,
+  MAX_PERSISTED_PREVIEW_CHARS,
+  sanitizeForPersistence,
+} from './persistSanitizers';
 
 /** Poll until `fn` returns truthy (for async IndexedDB tier assertions). */
 const until = async (fn: () => boolean | Promise<boolean>, timeout = 1000): Promise<void> => {
@@ -454,5 +460,123 @@ describe('clearSWRCache', () => {
     localStorage.setItem('lobechat-swr-cache', '[]');
     clearSWRCache();
     expect(localStorage.getItem('lobechat-swr-cache')).toBeNull();
+  });
+});
+
+/**
+ * Regression: the portal document header and local-file previews were
+ * memory-only, so every reload re-opened the portal on a full-panel spinner.
+ * Both now persist in the IndexedDB tier, shaped by `sanitizeForPersistence`.
+ */
+describe('createCacheProvider — portal document + local file preview', () => {
+  const options = {
+    idbPatterns: [...CACHE_TIERS.idb],
+    localPatterns: [...CACHE_TIERS.local],
+    sanitize: sanitizeForPersistence,
+  };
+  const headerKey = unstable_serialize(portalKeys.documentHeader('doc-1'));
+  const previewKey = (filePath: string) =>
+    unstable_serialize(
+      localFileKeys.preview({ deviceId: 'dev-1', filePath, workingDirectory: '/repo' }),
+    );
+
+  const persistAndRestore = async (entries: [string, unknown][]) => {
+    const scope = { value: 's1' };
+    const { provider } = buildProvider(scope, options);
+    await provider.hydrateScope?.();
+    const map = provider();
+    for (const [key, value] of entries) map.set(key, value);
+    await new Promise((r) => setTimeout(r, 40));
+
+    const { provider: restored } = buildProvider(scope, options);
+    await restored.hydrateScope?.();
+    return restored();
+  };
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(async () => {
+    await localDataCache.clearScope('s1');
+  });
+
+  it('restores the document header after a reload without the request state', async () => {
+    const doc = { content: '# Hello', filename: 'notes.md', id: 'doc-1', title: 'Notes' };
+    const restored = await persistAndRestore([
+      [headerKey, { data: doc, isLoading: false, isValidating: true }],
+    ]);
+
+    expect(restored.get(headerKey)).toEqual({ data: doc });
+  });
+
+  it('keeps an oversized document header memory-only', async () => {
+    const doc = { content: 'x'.repeat(MAX_PERSISTED_DOCUMENT_HEADER_CHARS + 1), id: 'doc-1' };
+    const restored = await persistAndRestore([[headerKey, { data: doc }]]);
+
+    expect(restored.get(headerKey)).toBeUndefined();
+  });
+
+  it('restores a text preview after a reload, dropping the tokenized resourceBaseUrl', async () => {
+    const key = previewKey('/repo/README.md');
+    const restored = await persistAndRestore([
+      [
+        key,
+        {
+          data: {
+            content: 'hello',
+            contentType: 'text/markdown',
+            resourceBaseUrl: 'localfile://preview/token-123/',
+            type: 'text',
+          },
+          isValidating: false,
+        },
+      ],
+    ]);
+
+    expect(restored.get(key)).toEqual({
+      data: { content: 'hello', contentType: 'text/markdown', type: 'text' },
+    });
+  });
+
+  it('never persists binary or oversized previews', async () => {
+    const image = previewKey('/repo/logo.png');
+    const big = previewKey('/repo/huge.log');
+    const restored = await persistAndRestore([
+      [image, { data: { blob: new Blob(['x']), contentType: 'image/png', type: 'image' } }],
+      [
+        big,
+        {
+          data: {
+            content: 'x'.repeat(MAX_PERSISTED_PREVIEW_CHARS + 1),
+            contentType: 'text/plain',
+            type: 'text',
+          },
+        },
+      ],
+    ]);
+
+    expect(restored.get(image)).toBeUndefined();
+    expect(restored.get(big)).toBeUndefined();
+    expect(await localDataCache.entriesByScope('s1')).toEqual([]);
+  });
+
+  it('removes a persisted preview once the file grows past the cap', async () => {
+    const key = previewKey('/repo/growing.log');
+    const scope = { value: 's1' };
+    const { provider } = buildProvider(scope, options);
+    await provider.hydrateScope?.();
+    const map = provider();
+    map.set(key, { data: { content: 'small', contentType: 'text/plain', type: 'text' } });
+    await until(async () => (await localDataCache.entriesByScope('s1')).length === 1);
+
+    map.set(key, {
+      data: {
+        content: 'x'.repeat(MAX_PERSISTED_PREVIEW_CHARS + 1),
+        contentType: 'text/plain',
+        type: 'text',
+      },
+    });
+    await until(async () => (await localDataCache.entriesByScope('s1')).length === 0);
   });
 });
