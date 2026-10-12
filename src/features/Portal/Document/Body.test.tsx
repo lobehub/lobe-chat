@@ -61,8 +61,14 @@ const mockDocumentMeta = vi.hoisted(() => ({
   },
 }));
 
+const mockDocumentError = vi.hoisted(() => ({ current: undefined as Error | undefined }));
+
 vi.mock('@/libs/swr', () => ({
-  useClientDataSWR: () => ({ data: mockDocumentMeta.current }),
+  useClientDataSWR: () => ({
+    data: mockDocumentMeta.current,
+    error: mockDocumentError.current,
+    mutate: vi.fn(),
+  }),
 }));
 
 const mockUpdateDocument = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
@@ -129,6 +135,10 @@ vi.mock('@/store/document', () => ({
 }));
 
 describe('DocumentBody', () => {
+  afterEach(() => {
+    mockDocumentError.current = undefined;
+  });
+
   /** @example A file-backed document previews its upload and keeps the portal actions. */
   it('shows the original upload without mounting either editor', () => {
     // ROOT CAUSE:
@@ -154,6 +164,15 @@ describe('DocumentBody', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('keeps the cached document on screen when the background refresh fails', () => {
+    mockDocumentMeta.current = { content: 'cached log', filename: 'topic_call.txt' };
+    mockDocumentError.current = new Error('Failed to fetch');
+
+    render(<DocumentBody />);
+
+    expect(screen.getByTestId('highlight-editor')).toHaveValue('cached log');
   });
 
   it('renders highlight editor for non-markdown files', () => {

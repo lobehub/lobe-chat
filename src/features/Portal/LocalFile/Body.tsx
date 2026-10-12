@@ -487,7 +487,10 @@ const ActiveFileView = memo<ActiveFileViewProps>(
 
     if (isLoading) return <Loading />;
 
-    if (error || !preview) {
+    // Text previews are persisted (stale-while-revalidate): a failed background
+    // refresh keeps the cached content. A sandbox error still wins — a recycled
+    // sandbox has no file left to show.
+    if (!preview || (error && sandboxTopicId)) {
       return (
         <Center height={'100%'} width={'100%'}>
           <Empty

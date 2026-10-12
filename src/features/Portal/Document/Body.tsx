@@ -281,7 +281,9 @@ const DocumentBody = memo(() => {
   );
 
   if (documentLoading) return <Loading />;
-  if (documentError)
+  // The header is persisted (stale-while-revalidate): a failed background
+  // refresh keeps the cached document on screen instead of replacing it.
+  if (documentError && !documentMeta)
     return (
       <AsyncError
         error={documentError}

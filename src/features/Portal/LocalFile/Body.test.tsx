@@ -299,6 +299,22 @@ describe('LocalFile Body', () => {
     });
   });
 
+  it('keeps a cached text preview on screen when the background refresh fails', () => {
+    mockChatState.current = createChatState('topic-a');
+    mockUseClientDataSWR.mockReturnValue({
+      data: { content: 'cached', contentType: 'text/plain', type: 'text' },
+      error: new Error('Failed to fetch'),
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    });
+
+    render(<Body />);
+
+    expect(screen.getByTestId('code-editor')).toBeInTheDocument();
+    expect(screen.queryByText('workingPanel.localFile.error')).toBeNull();
+  });
+
   it('requests workspace resources for a desktop HTML file and passes its base URL to preview', () => {
     const htmlFileId = createLocalFileTabId({
       filePath: '/project-a/pages/index.html',
