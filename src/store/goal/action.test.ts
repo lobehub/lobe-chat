@@ -210,6 +210,8 @@ describe('GoalAction', () => {
       expect(options.refreshInterval(withStatuses('achieved', 'running'))).toBeGreaterThan(0);
       expect(options.refreshInterval(withStatuses('review', 'paused'))).toBe(0);
       expect(options.refreshInterval(undefined)).toBe(0);
+      // Regression: the tray read "Not started" after its agent started the draft.
+      expect(options.refreshInterval(withStatuses('draft'))).toBeGreaterThan(0);
     });
 
     it('polls while the conversation is generating, before any goal exists', () => {

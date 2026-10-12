@@ -543,6 +543,30 @@ describe('CLI main Agent planning', () => {
         ).toHaveLength(4);
       });
 
+      it('keeps a unit that depends on a probe, which the gate already orders', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Home inbox'),
+          seedId(graph, 'Device list'),
+          'depends_on',
+        );
+
+        await starter().start(graph.goal.id, {
+          rollout: {
+            probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+            recipe: 'Persist the resource',
+          },
+        });
+
+        expect((await model().findById(graph.goal.id))!.status).toBe('running');
+      });
+
       /** Regression: the roster is keyed by title, so a second seed of one title vanished. */
       it('refuses to fold two seeds that share a title', async () => {
         await startConversationRun();
