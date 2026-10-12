@@ -1005,6 +1005,23 @@ describe('ClaudeCodeQuotaMenu', () => {
     );
   });
 
+  it('explains a blocked live refresh under the persisted windows it could not update', async () => {
+    mockQuotaService.listAccounts.mockResolvedValue([persistedAccount(Date.now() - 31 * 60_000)]);
+    mockQuotaService.getLatestReadings.mockResolvedValue([
+      persistedSessionReading(Date.now() - 31 * 60_000),
+    ]);
+    mockService.getClaudeCodeQuota.mockResolvedValue(
+      claudeSnapshot({ error: 'blocked (403)', reason: 'request-blocked', status: 'unavailable' }),
+    );
+
+    render(<ClaudeCodeQuotaMenu />);
+
+    expect(
+      await screen.findByText('heteroAgent.claudeQuota.unavailableRequestBlocked'),
+    ).toBeTruthy();
+    expect(screen.getByText('92%')).toBeTruthy();
+  });
+
   it('paints persisted windows while a stale live refresh is still in flight', async () => {
     mockQuotaService.listAccounts.mockResolvedValue([persistedAccount(Date.now() - 31 * 60_000)]);
     mockQuotaService.getLatestReadings.mockResolvedValue([

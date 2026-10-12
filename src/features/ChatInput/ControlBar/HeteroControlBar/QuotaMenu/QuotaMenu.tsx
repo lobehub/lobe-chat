@@ -217,6 +217,11 @@ interface QuotaMenuProps<S extends QuotaSnapshotBase> {
   getErrorText?: (quota: S) => string | undefined;
   /** Localized explanation for a manual refresh error when stale data is preserved. */
   getRefreshErrorText?: (quota: S) => string | undefined;
+  /**
+   * Localized notice for a snapshot that still renders preserved windows but
+   * whose latest live refresh could not run (e.g. the network was blocked).
+   */
+  getStaleNotice?: (quota: S) => string | undefined;
   /** Localized explanation for `status: 'unavailable'`; falls back to `error`. */
   getUnavailableText?: (quota: S) => string | undefined;
   getWindows: (quota: S) => QuotaWindowItem[];
@@ -247,6 +252,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
   fetchQuota,
   getErrorText,
   getRefreshErrorText,
+  getStaleNotice,
   getUnavailableText,
   getWindows,
   hasExtraData,
@@ -491,7 +497,8 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
     quota?.status === 'error' && hasQuotaData
       ? getRefreshErrorText?.(quota) || t('heteroAgent.quota.refreshFailed')
       : undefined;
-  const refreshErrorText = manualRefreshErrorText || staleSnapshotErrorText;
+  const staleNoticeText = quota && hasQuotaData ? getStaleNotice?.(quota) : undefined;
+  const refreshErrorText = manualRefreshErrorText || staleSnapshotErrorText || staleNoticeText;
   // An unavailable / error explanation stays readable while a retry runs;
   // swapping it for a skeleton every poll made it look like data was loading.
   const hasStatusMessage = quota?.status === 'unavailable' || quota?.status === 'error';
