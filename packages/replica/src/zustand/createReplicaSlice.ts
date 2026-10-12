@@ -130,6 +130,15 @@ export interface ReplicaFetchOptions {
    * `fetch` joins the request in flight (a `useSync` one or another `fetch`).
    */
   fresh?: boolean;
+  /**
+   * The cache scope the fetch belongs to, captured by a caller that started a
+   * multi-step flow earlier (a warmup fanning out from a parent response). The
+   * response settles into that scope under the same off-scope rules as any
+   * other. When the scope is no longer active the fetch rejects without a
+   * request: it would read the new identity's data under the old one's label.
+   * Defaults to the active scope.
+   */
+  scope?: string;
 }
 
 export interface ReplicaFetchResult<TFetched> {
@@ -181,6 +190,14 @@ export interface ReplicaSyncResult {
   isValidating: boolean;
   /** Re-run the network sync for this entry. */
   revalidate: () => Promise<unknown>;
+}
+
+/** `slice.fetch` was asked to fetch for a scope that is no longer active. */
+export class ReplicaScopeChangedError extends Error {
+  constructor(name: string, scope: string) {
+    super(`[replica] ${name}: scope ${scope} is no longer active`);
+    this.name = 'ReplicaScopeChangedError';
+  }
 }
 
 /** One head request, from `begin` to `settle`. */
@@ -515,7 +532,24 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   ): ReplicaSettled => {
     if (request.settled) return request.settled;
     request.settledWith = 'error' in outcome ? outcome.error : outcome.data;
-    return (request.settled = settleOnce(request, outcome));
+    request.settled = settleOnce(request, outcome);
+    if (request.source === 'sync') releaseSyncRequest(request);
+    return request.settled;
+  };
+
+  /**
+   * Drop a settled `useSync` request's record once its driver callback had its
+   * chance to read it. The record is normally taken by that callback, but the
+   * driver skips it when the hook changed key, unmounted or was superseded —
+   * the request still settles on its own promise, and its record (holding the
+   * response) must not stay behind. A driver runs the callback in the same
+   * turn the response resolves (SWR does, in microtasks), so a macrotask later
+   * the record is only a leak.
+   */
+  const releaseSyncRequest = (request: ReplicaRequest<TParams, TFetched>) => {
+    setTimeout(() => {
+      if (syncRequests.get(request.requestId) === request) syncRequests.delete(request.requestId);
+    }, 0);
   };
 
   /**
@@ -530,10 +564,11 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
    */
   const fetch = async (
     params: TParams,
-    { fresh = false }: ReplicaFetchOptions = {},
+    { fresh = false, scope = resource.scope.get() }: ReplicaFetchOptions = {},
   ): Promise<ReplicaFetchResult<TFetched>> => {
     if (!fetcher) throw new Error(`[replica] ${resource.name} has no fetcher`);
-    let request = begin(params, resource.scope.get(), 'fetch');
+    if (scope !== resource.scope.get()) throw new ReplicaScopeChangedError(resource.name, scope);
+    let request = begin(params, scope, 'fetch');
     const joined = fresh ? undefined : inflight.get(request.requestId);
     if (joined) request = joined;
     else {
@@ -736,6 +771,8 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
 
   return {
     ...engine,
+    /** @internal Records of `useSync` requests not yet released (leak checks in tests). */
+    debugPendingSyncRequests: () => syncRequests.size,
     fetch,
     remove,
     useSync,

@@ -189,22 +189,25 @@ export class TopicCommentActionImpl {
     this.#prefetching.add(topicId);
     try {
       const params = { pageSize: TOPIC_COMMENT_PAGE_SIZE, topicId };
-      // The replica captures the partition when the request starts: a warmup
-      // that lands after a workspace / account switch is dropped instead of
-      // painting (or persisting) the previous identity's rows into the new
-      // one. Its roots belong to that identity too, so stop there.
-      const { applied, data: threads } = await this.#thread.fetch(params);
+      // The whole warmup belongs to the partition it started under. Every
+      // fetch settles into it, so one that lands after a workspace / account
+      // switch is dropped instead of painting (or persisting) the previous
+      // identity's rows into the new one; and once the scope moved on, the
+      // remaining roots — that identity's ids — are not fetched at all.
+      const scope = topicCommentThreadResource.scope.get();
+      const { applied, data: threads } = await this.#thread.fetch(params, { scope });
       if (!applied) return;
 
       const rootCommentIds = threads.items.flatMap(({ replyCount, root }) =>
         replyCount > 0 ? [root.id] : [],
       );
       for (let index = 0; index < rootCommentIds.length; index += PREFETCH_CONCURRENCY) {
+        if (topicCommentThreadResource.scope.get() !== scope) return;
         await Promise.all(
           rootCommentIds
             .slice(index, index + PREFETCH_CONCURRENCY)
             .map((rootCommentId) =>
-              this.#replies.fetch({ pageSize: TOPIC_COMMENT_PAGE_SIZE, rootCommentId }),
+              this.#replies.fetch({ pageSize: TOPIC_COMMENT_PAGE_SIZE, rootCommentId }, { scope }),
             ),
         );
       }

@@ -15,7 +15,7 @@ import { replicaKeys } from '../core/keys';
 import { createReplicaState } from '../core/reducer';
 import type { ReplicaRow, ReplicaScope, ReplicaState, ReplicaStorage } from '../core/types';
 import type { ReplicaEffects } from './createReplicaSlice';
-import { createReplicaSlice, recordLens } from './createReplicaSlice';
+import { createReplicaSlice, recordLens, ReplicaScopeChangedError } from './createReplicaSlice';
 import type { ReplicaSyncDriver } from './driver';
 
 type Value = string[] | null;
@@ -312,6 +312,49 @@ describe('createReplicaSlice fetch', () => {
     );
     // The view's own callback is not run for a key it left.
     expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  it('releases the record of a sync request whose callback the driver skipped', async () => {
+    const { calls, fetcher } = deferredFetcher();
+    const { slice } = setup({ fetcher });
+
+    const { rerender, unmount } = renderHook(({ id }) => slice.useSync({ id }), {
+      initialProps: { id: 'a' },
+      wrapper,
+    });
+    await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    rerender({ id: 'b' });
+    await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2));
+    rerender({ id: 'c' });
+    await waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
+    unmount();
+
+    // Every request answers after its hook moved on or unmounted: the driver
+    // runs none of the callbacks that would have taken the records.
+    await act(async () => {
+      for (const call of calls) call.resolve(['server']);
+    });
+    await act(() => new Promise((resolve) => setTimeout(resolve, 10)));
+
+    expect(slice.debugPendingSyncRequests()).toBe(0);
+  });
+
+  it('settles a fetch into the scope its caller captured, and refuses one that left it', async () => {
+    const { calls, fetcher } = deferredFetcher();
+    const { slice, store } = setup({ fetcher });
+
+    const pending = slice.fetch({ id: 'a' }, { scope: 'user-1:personal' });
+    scopeState.current = 'user-2:personal';
+    calls[0].resolve(['previous identity']);
+    await expect(pending).resolves.toMatchObject({ applied: false });
+
+    // A later step of the same flow must not fetch the new identity's data
+    // under the old identity's label.
+    await expect(slice.fetch({ id: 'b' }, { scope: 'user-1:personal' })).rejects.toBeInstanceOf(
+      ReplicaScopeChangedError,
+    );
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(store.getState().lists).toEqual({});
   });
 
   it('a fresh fetch retires the requests started before it', async () => {
