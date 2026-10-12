@@ -1284,6 +1284,7 @@
   "heteroAgent.claudeQuota.unavailableExpired": "Claude Code login has expired. Start a Claude Code conversation or run claude in a terminal, then refresh.",
   "heteroAgent.claudeQuota.unavailableExternalAuth": "This agent uses an API key / custom endpoint, so subscription quota does not apply.",
   "heteroAgent.claudeQuota.unavailableNotFound": "No Claude Code login found. Run claude in a terminal to sign in first.",
+  "heteroAgent.claudeQuota.unavailableRequestBlocked": "Anthropic refused the quota request from this machine's network (usually a region restriction). Check the machine's network proxy, then refresh.",
   "heteroAgent.claudeSdkRuntime.state.closed": "SDK closed",
   "heteroAgent.claudeSdkRuntime.state.closing": "SDK closing",
   "heteroAgent.claudeSdkRuntime.state.error": "SDK error",

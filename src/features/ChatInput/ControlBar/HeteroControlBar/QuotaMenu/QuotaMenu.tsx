@@ -492,6 +492,9 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
       ? getRefreshErrorText?.(quota) || t('heteroAgent.quota.refreshFailed')
       : undefined;
   const refreshErrorText = manualRefreshErrorText || staleSnapshotErrorText;
+  // An unavailable / error explanation stays readable while a retry runs;
+  // swapping it for a skeleton every poll made it look like data was loading.
+  const hasStatusMessage = quota?.status === 'unavailable' || quota?.status === 'error';
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -578,12 +581,13 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
             disabled={loading}
             icon={RefreshCwIcon}
             size={'small'}
+            spin={loading}
             onClick={() => void loadQuota({ manual: true })}
           />
         </Tooltip>
       </Flexbox>
 
-      {loading && !hasQuotaData ? (
+      {loading && !hasQuotaData && !hasStatusMessage ? (
         <Flexbox gap={8}>
           <Skeleton height={18} />
           <Skeleton height={18} />

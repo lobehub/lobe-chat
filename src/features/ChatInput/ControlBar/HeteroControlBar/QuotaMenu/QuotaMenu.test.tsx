@@ -657,6 +657,37 @@ describe('ClaudeCodeQuotaMenu', () => {
     expect(screen.queryByText('raw main-process message')).toBeNull();
   });
 
+  it('explains a network-blocked sample instead of reporting an expired login', async () => {
+    mockService.getClaudeCodeQuota.mockResolvedValue(
+      claudeSnapshot({ error: 'blocked (403)', reason: 'request-blocked', status: 'unavailable' }),
+    );
+
+    render(<ClaudeCodeQuotaMenu />);
+
+    expect(
+      await screen.findByText('heteroAgent.claudeQuota.unavailableRequestBlocked'),
+    ).toBeTruthy();
+    expect(screen.queryByText('heteroAgent.claudeQuota.unavailableExpired')).toBeNull();
+  });
+
+  it('keeps the unavailable explanation on screen while a retry is in flight', async () => {
+    mockService.getClaudeCodeQuota.mockResolvedValueOnce(
+      claudeSnapshot({ error: 'expired', reason: 'credentials-expired', status: 'unavailable' }),
+    );
+
+    render(<ClaudeCodeQuotaMenu />);
+
+    expect(await screen.findByText('heteroAgent.claudeQuota.unavailableExpired')).toBeTruthy();
+
+    mockService.getClaudeCodeQuota.mockImplementation(() => new Promise(() => {}));
+    fireEvent.click(screen.getByTestId('refresh'));
+
+    await waitFor(() => expect(mockService.getClaudeCodeQuota).toHaveBeenCalledTimes(2));
+    expect((screen.getByTestId('refresh') as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByTestId('skeleton')).toBeNull();
+    expect(screen.getByText('heteroAgent.claudeQuota.unavailableExpired')).toBeTruthy();
+  });
+
   it('shows a friendly rate-limit message for first-load 429 errors', async () => {
     mockService.getClaudeCodeQuota.mockResolvedValue(
       claudeSnapshot({ error: 'Anthropic usage API returned 429', status: 'error' }),

@@ -209,6 +209,9 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
         case 'external-auth': {
           return t('heteroAgent.claudeQuota.unavailableExternalAuth');
         }
+        case 'request-blocked': {
+          return t('heteroAgent.claudeQuota.unavailableRequestBlocked');
+        }
         default: {
           return undefined;
         }
