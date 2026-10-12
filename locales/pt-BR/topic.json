@@ -85,6 +85,7 @@
   "forkSuccess": "Bifurcado para um novo tópico",
   "forkTitle": "{{title}} (Ramo)",
   "groupTitle.byAgent.unknown": "Agente desconhecido",
+  "groupTitle.byDevice.unknown": "Dispositivo desconhecido",
   "groupTitle.byProject.noProject": "Nenhum diretório",
   "groupTitle.byStatus.active": "Ativo",
   "groupTitle.byStatus.archived": "Arquivado",

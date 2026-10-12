@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Запланированный",
   "topics.status.unread": "Новые результаты",
   "topics.status.waitingForHuman": "Требуется ваш ввод",
+  "topics.subGroup.byDevice": "По устройству",
+  "topics.subGroup.byStatus": "По статусу",
+  "topics.subGroup.byTime": "По времени",
+  "topics.subGroup.none": "Без группировки",
+  "topics.subGroup.title": "Группировать темы",
   "topics.title": "Темы",
   "topics.viewProject": "Просмотр проекта"
 }

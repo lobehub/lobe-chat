@@ -85,6 +85,7 @@
   "forkSuccess": "In ein neues Thema verzweigt",
   "forkTitle": "{{title}} (Zweig)",
   "groupTitle.byAgent.unknown": "Unbekannter Agent",
+  "groupTitle.byDevice.unknown": "Unbekanntes Gerät",
   "groupTitle.byProject.noProject": "Kein Verzeichnis",
   "groupTitle.byStatus.active": "Aktiv",
   "groupTitle.byStatus.archived": "Archiviert",
