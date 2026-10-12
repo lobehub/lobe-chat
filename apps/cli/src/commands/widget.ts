@@ -32,6 +32,23 @@ const fail = (message: string) => {
 const isUsableRun = (status: string) =>
   (WIDGET_RUN_OUTPUT_STATUSES as readonly string[]).includes(status);
 
+interface RunManifest {
+  env?: { connector?: string; name: string }[];
+  network?: { allow?: string[] };
+}
+
+/** What a version can reach outside the sandbox, or undefined for a closed run. */
+const describeRunRisk = (manifest: unknown) => {
+  const { env = [], network } = (manifest ?? {}) as RunManifest;
+  const hosts = network?.allow ?? [];
+  const parts = [
+    env.length > 0 &&
+      `credentials ${env.map((e) => (e.connector ? `${e.name} (${e.connector})` : e.name)).join(', ')}`,
+    hosts.length > 0 && `network hosts ${hosts.join(', ')}`,
+  ].filter(Boolean);
+  return parts.length > 0 ? parts.join(' and ') : undefined;
+};
+
 interface RunLike {
   durationMs?: number | null;
   error?: unknown;
@@ -217,19 +234,54 @@ export function registerWidgetCommand(program: Command) {
 
   widget
     .command('dry-run <widgetId>')
-    .description('Run a draft once in the sandbox and print its real output and logs')
+    .description(
+      "Run a draft once in the sandbox and print its real output and logs. A draft with connector credentials or network hosts needs the user's approval of that exact version (--version + --yes)",
+    )
     .option('--version <versionId>', 'Draft version to run (default: the current draft)')
+    .option('--yes', "Confirm the user approved this exact version's credentials and hosts")
     .option('--json [fields]', 'Output JSON')
-    .action(async (widgetId: string, options: { json?: boolean | string; version?: string }) => {
-      const { data } = await (
-        await getTrpcClient()
-      ).widget.dryRun.mutate({ versionId: options.version, widgetId });
-      // Publish accepts any usable run (partial included), so only failed / timed-out
-      // dry runs fail — JSON output included.
-      if (!isUsableRun(data.status)) process.exitCode = 1;
-      if (options.json !== undefined) return outputJson(data, options.json);
-      printRun(data);
-    });
+    .action(
+      async (
+        widgetId: string,
+        options: { json?: boolean | string; version?: string; yes?: boolean },
+      ) => {
+        const client = await getTrpcClient();
+        const version = options.version
+          ? (await client.widget.getVersion.query({ versionId: options.version, widgetId })).data
+          : await (async () => {
+              const { data } = await client.widget.detail.query({ id: widgetId });
+              return data.draftVersion ?? data.publishedVersion;
+            })();
+        if (!version) return fail('This widget has no version to dry-run yet.');
+
+        // Credentialed or networked code can act on the user's behalf — or leak
+        // the credential — the moment it runs, so it needs consent for exactly
+        // this version, the same rule the Dashboards builtin tool enforces.
+        const risk = describeRunRisk(version.manifest);
+        if (risk) {
+          const ask = `Version ${version.id} uses ${risk}.`;
+          if (!options.yes) {
+            if (!process.stdin.isTTY) {
+              return fail(
+                `${ask} Show the user this version id, what the script does and the ${risk}, wait for their explicit approval, then rerun with --version ${version.id} --yes.`,
+              );
+            }
+            if (!(await confirm(`${ask} Run it?`))) return;
+          } else if (!options.version) {
+            return fail(
+              `${ask} Pass --version ${version.id} with --yes so the approval covers exactly this version.`,
+            );
+          }
+        }
+
+        const { data } = await client.widget.dryRun.mutate({ versionId: version.id, widgetId });
+        // Publish accepts any usable run (partial included), so only failed / timed-out
+        // dry runs fail — JSON output included.
+        if (!isUsableRun(data.status)) process.exitCode = 1;
+        if (options.json !== undefined) return outputJson(data, options.json);
+        printRun(data);
+      },
+    );
 
   widget
     .command('publish <widgetId>')

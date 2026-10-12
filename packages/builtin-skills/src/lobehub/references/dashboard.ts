@@ -17,7 +17,7 @@ and asks the user to approve risky dry runs and publishing. Use these commands w
 - \`lh widget create -t <title> -d <metric definition> [--agent <agentId>] [--project <projectId>] [--dashboard <id>]\` - Create a widget (no script yet)
 - \`lh widget edit <id> [-t <title>] [-d <metric definition>]\` - Rename or rewrite the metric definition
 - \`lh widget draft <widgetId> [--script-file <path>] [--runtime <rt>] [--output-type <type>] [--manifest <json>] [--view <json>] [--note <text>]\` - Save a new draft; omitted fields keep the current draft's values
-- \`lh widget dry-run <widgetId> [--version <versionId>]\` - Run a draft once and print its REAL output, stdout/stderr and error
+- \`lh widget dry-run <widgetId> [--version <versionId>] [--yes]\` - Run a draft once and print its REAL output, stdout/stderr and error (\`--yes\` only after the user approved a credentialed or networked version)
 - \`lh widget publish <widgetId> --version <versionId> [--yes]\` - Make a dry-run-succeeded draft live
 - \`lh widget run <widgetId>\` - Refresh the live version now
 - \`lh widget runs <widgetId> [--run <runId>] [-L <n>]\` - Recent runs; \`--run\` for one run's full logs
@@ -34,7 +34,7 @@ and asks the user to approve risky dry runs and publishing. Use these commands w
 A draft that declares connector credentials (\`manifest.env\`) or network hosts (\`manifest.network.allow\`)
 can act on the user's behalf — or leak a credential — the moment it runs. Before every dry run of such a
 draft, show the user the exact version id, the credentials and hosts it uses and what the script does, then
-**wait for their explicit approval of that exact version**; a new draft needs a new approval. If they decline,
+**wait for their explicit approval of that exact version**, then run \`lh widget dry-run <widgetId> --version <versionId> --yes\` (the CLI refuses such a draft without it); a new draft needs a new approval. If they decline,
 ask what to change instead of retrying the same draft. A draft with neither runs in a closed sandbox and
 needs no approval.
 

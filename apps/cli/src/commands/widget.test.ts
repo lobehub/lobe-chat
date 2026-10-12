@@ -18,6 +18,7 @@ const { mockClient, mockConfirm } = vi.hoisted(() => ({
       detail: { query: vi.fn() },
       dryRun: { mutate: vi.fn() },
       getRun: { query: vi.fn() },
+      getVersion: { query: vi.fn() },
       list: { query: vi.fn() },
       listByProject: { query: vi.fn() },
       listRuns: { query: vi.fn() },
@@ -66,6 +67,12 @@ describe('widget command', () => {
     vi.clearAllMocks();
     process.exitCode = undefined;
     logs = [];
+    // A closed draft (no credentials, no network) by default; risky cases override it.
+    const closed = { id: 'ver-1', manifest: null };
+    mockClient.widget.getVersion.query.mockResolvedValue({ data: closed });
+    mockClient.widget.detail.query.mockResolvedValue({
+      data: { draftVersion: closed, publishedVersion: null },
+    });
     vi.spyOn(console, 'log').mockImplementation((...args) => logs.push(args.join(' ')));
   });
 
@@ -148,6 +155,66 @@ describe('widget command', () => {
     mockClient.widget.dryRun.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'partial' } });
     await run('widget', 'dry-run', 'w-1', '--json');
     expect(process.exitCode).toBeUndefined();
+  });
+
+  describe('dry-run of a credentialed or networked draft', () => {
+    const risky = {
+      id: 'ver-2',
+      manifest: {
+        env: [{ connector: 'github', name: 'GITHUB_TOKEN' }],
+        network: { allow: ['api.github.com'] },
+      },
+    };
+    let isTTY: PropertyDescriptor | undefined;
+
+    beforeEach(() => {
+      mockClient.widget.getVersion.query.mockResolvedValue({ data: risky });
+      mockClient.widget.detail.query.mockResolvedValue({
+        data: { draftVersion: risky, publishedVersion: null },
+      });
+      mockClient.widget.dryRun.mutate.mockResolvedValue({
+        data: { id: 'run-1', status: 'succeeded' },
+      });
+      isTTY = Object.getOwnPropertyDescriptor(process.stdin, 'isTTY');
+      Object.defineProperty(process.stdin, 'isTTY', { configurable: true, value: false });
+    });
+
+    afterEach(() => {
+      if (isTTY) Object.defineProperty(process.stdin, 'isTTY', isTTY);
+      else delete (process.stdin as { isTTY?: boolean }).isTTY;
+    });
+
+    it('refuses to run without the user’s approval and says what to show them', async () => {
+      await run('widget', 'dry-run', 'w-1', '--version', 'ver-2');
+      expect(mockClient.widget.dryRun.mutate).not.toHaveBeenCalled();
+      expect(process.exitCode).toBe(1);
+      const { log } = await import('../utils/logger');
+      expect(vi.mocked(log.error).mock.calls[0][0]).toMatch(
+        /GITHUB_TOKEN \(github\).*api\.github\.com.*--version ver-2 --yes/,
+      );
+    });
+
+    it('refuses --yes without the exact version the approval covers', async () => {
+      await run('widget', 'dry-run', 'w-1', '--yes');
+      expect(mockClient.widget.dryRun.mutate).not.toHaveBeenCalled();
+      expect(process.exitCode).toBe(1);
+    });
+
+    it('runs the approved exact version with --version and --yes', async () => {
+      await run('widget', 'dry-run', 'w-1', '--version', 'ver-2', '--yes');
+      expect(mockClient.widget.dryRun.mutate).toHaveBeenCalledWith({
+        versionId: 'ver-2',
+        widgetId: 'w-1',
+      });
+    });
+
+    it('asks interactively in a terminal', async () => {
+      Object.defineProperty(process.stdin, 'isTTY', { configurable: true, value: true });
+      mockConfirm.mockResolvedValue(false);
+      await run('widget', 'dry-run', 'w-1', '--version', 'ver-2');
+      expect(mockConfirm).toHaveBeenCalled();
+      expect(mockClient.widget.dryRun.mutate).not.toHaveBeenCalled();
+    });
   });
 
   it('exits non-zero when a manual refresh fails', async () => {
