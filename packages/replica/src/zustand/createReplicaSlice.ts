@@ -197,6 +197,16 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   const headQuery = new Map<string, string>();
 
   /**
+   * Entries (`scope` + key) whose one-shot hydration actually painted a
+   * persisted row. The hydration query settles `true` on a cache miss too, so
+   * a reactivated key may only replay `onHydrated` when its row really came from
+   * storage — not off a provisional seed or another source that happens to sit
+   * in the view.
+   */
+  const hydratedEntries = new Set<string>();
+  const hydratedEntryId = (scope: string, key: string) => `${scope}\u0000${key}`;
+
+  /**
    * `clear()` generation each in-flight head request started under, by sync
    * key. A response to a request that started before a `clear()` of its scope
    * holds wiped data and is discarded. The driver settles one request per key
@@ -262,6 +272,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         : null,
       async () => {
         const didHydrate = await hydrate(params!, scope);
+        if (didHydrate) hydratedEntries.add(hydratedEntryId(scope, key!));
         // A superseded key (the hook moved on) runs no side effects at all.
         if (activeKey.current !== key) return true;
         hydratedKey.current = key;
@@ -285,9 +296,11 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       if (!active || key === undefined || hydration.data !== true) return;
       if (hydratedKey.current === key) return;
       hydratedKey.current = key;
+      // A lookup that missed storage hydrated nothing to replay.
+      if (!hydratedEntries.has(hydratedEntryId(scope, key))) return;
       const current = view.get(get(), key);
       if (current !== undefined) onHydrated?.(current);
-    }, [active, key, hydration.data]);
+    }, [active, key, scope, hydration.data]);
 
     const syncKey =
       active && fetcher

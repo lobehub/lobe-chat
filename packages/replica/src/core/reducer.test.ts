@@ -212,7 +212,7 @@ describe('replicaReducer', () => {
       expect(h.view.k).toEqual(['persisted', 'seed', 'confirmed']);
     });
 
-    it('replays every seed write in order, but persists neither seeds nor in-memory writes', () => {
+    it('replays the latest seed and later writes, but persists neither seeds nor in-memory writes', () => {
       const h = createHarness();
       h.run({
         apply: seedWith('seed'),
@@ -233,8 +233,36 @@ describe('replicaReducer', () => {
       h.run({ apply: append('memory'), key: 'k', persist: false, scope: S, type: 'update' });
 
       h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
-      expect(h.view.k).toEqual(['persisted', 'seed', 'reseeded', 'memory']);
+      // The re-seed supersedes the first seed (same source); the in-memory
+      // write still replays after it.
+      expect(h.view.k).toEqual(['persisted', 'reseeded', 'memory']);
       expect(h.effects).toEqual([]);
+    });
+
+    // Repeated refreshes of one source must not grow the remembered history:
+    // a later seed of the same tag supersedes the earlier one since the last
+    // confirmed write, while other tags and confirmed writes keep their order.
+    it('coalesces repeated seeds of one tag, keeping their order around confirmed writes', () => {
+      const h = createHarness();
+      const seed = (item: string, seedTag: string) =>
+        h.run({
+          apply: seedWith(item),
+          key: 'k',
+          persist: false,
+          scope: S,
+          seedTag,
+          source: 'seed',
+          type: 'update',
+        });
+      for (let i = 0; i < 50; i++) seed(`list-${i}`, 'list');
+      seed('session', 'session');
+      seed('list-last', 'list');
+      h.run({ apply: append('confirmed'), key: 'k', persist: true, scope: S, type: 'update' });
+      seed('list-after', 'list');
+
+      expect(h.state.entries.k.seedPatches).toHaveLength(4);
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['persisted', 'session', 'list-last', 'confirmed', 'list-after']);
     });
 
     it('does not hydrate over a seed that carries an in-flight overlay', () => {

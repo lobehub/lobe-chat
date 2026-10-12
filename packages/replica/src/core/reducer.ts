@@ -1,6 +1,7 @@
 import type {
   ReplicaEntryMeta,
   ReplicaPendingMutation,
+  ReplicaSeedPatch,
   ReplicaSource,
   ReplicaState,
 } from './types';
@@ -47,6 +48,12 @@ export type ReplicaAction<T> =
       scope: string;
       /** Marks a provisional write (`'seed'`); defaults to the entry's own source. */
       source?: ReplicaSource;
+      /**
+       * Seed writes of one source (a list refresh, a session refresh). A later
+       * seed write supersedes an earlier one of the same tag since the last
+       * confirmed write, so a remembered seed history stays bounded.
+       */
+      seedTag?: string;
       type: 'update';
     }
   | {
@@ -90,6 +97,27 @@ const noop = <T>(state: ReplicaState<T>): ReplicaTransition<T> => ({
   state,
   writes: [],
 });
+
+/**
+ * Drop the seed patches a new seed write of `tag` supersedes: those of the same
+ * tag after the last confirmed patch. Repeated refreshes of one source then keep
+ * one patch instead of one per refresh, while the order relative to confirmed
+ * writes (and to other sources' seeds) is preserved.
+ */
+const coalesceSeedPatches = <T>(
+  patches: ReplicaSeedPatch<T>[],
+  isSeedWrite: boolean,
+  tag: string | undefined,
+): ReplicaSeedPatch<T>[] => {
+  if (!isSeedWrite) return patches;
+  let lastConfirmed = -1;
+  patches.forEach((patch, index) => {
+    if (!patch.seed) lastConfirmed = index;
+  });
+  return patches.filter(
+    (patch, index) => index <= lastConfirmed || !patch.seed || patch.tag !== tag,
+  );
+};
 
 export const replicaReducer = <T>(
   state: ReplicaState<T>,
@@ -222,11 +250,11 @@ export const replicaReducer = <T>(
       const seedPatches =
         source === 'seed'
           ? [
-              ...(entry?.seedPatches ?? []),
+              ...coalesceSeedPatches(entry?.seedPatches ?? [], isSeedWrite, action.seedTag),
               {
                 apply: action.apply,
                 persist: !isSeedWrite && action.persist,
-                ...(isSeedWrite && { seed: true }),
+                ...(isSeedWrite && { seed: true, tag: action.seedTag }),
               },
             ]
           : entry?.seedPatches;

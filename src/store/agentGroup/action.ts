@@ -48,6 +48,34 @@ const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
   }) as AgentGroupDetail;
 
 /**
+ * Where a seed row comes from. A `list` row is the server's group list row; a
+ * `session` row is synthesized from a session and only its real fields count.
+ */
+export type GroupSeedSource = 'list' | 'session';
+
+/**
+ * The fields a session-derived group row actually carries. The rest of that row
+ * is placeholders (`workspaceId: null`, `visibility: 'public'`, `userId: ''`, …)
+ * that must never overwrite a real detail — e.g. turn a workspace group personal.
+ */
+const SESSION_GROUP_FIELDS = [
+  'createdAt',
+  'description',
+  'groupId',
+  'pinned',
+  'title',
+  'updatedAt',
+] as const satisfies readonly (keyof ChatGroupItem)[];
+
+const pickSessionFields = (group: ChatGroupItem): Partial<ChatGroupItem> => {
+  const picked: Partial<ChatGroupItem> = {};
+  for (const field of SESSION_GROUP_FIELDS) {
+    if (group[field] !== undefined) (picked as Record<string, unknown>)[field] = group[field];
+  }
+  return picked;
+};
+
+/**
  * Fold a list row into a group detail: the row's metadata (title, avatar, …)
  * wins, while a loaded roster (`agents`) and an authoritative `config` are kept.
  *
@@ -59,11 +87,12 @@ const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
 const mergeListRow = (
   existing: AgentGroupDetail | undefined,
   group: ChatGroupItem,
+  source: GroupSeedSource = 'list',
 ): AgentGroupDetail =>
   existing
     ? ({
         ...existing,
-        ...group,
+        ...(source === 'session' ? pickSessionFields(group) : group),
         agents: existing.agents,
         config: existing.config || group.config,
       } as AgentGroupDetail)
@@ -104,6 +133,8 @@ class ChatGroupInternalAction implements ResetableStore {
    * {@link #reconcileGroupMap}.
    */
   #droppedGroupIds: string[] = [];
+  /** Bumped by every `loadGroups`; a late reconcile only runs for the latest. */
+  #listLoadSeq = 0;
 
   constructor(set: Setter, get: () => ChatGroupStore, _api?: unknown) {
     // keep signature aligned with StateCreator params: (set, get, api)
@@ -135,12 +166,21 @@ class ChatGroupInternalAction implements ResetableStore {
     this.#groupDetail = createReplicaSlice(agentGroupDetailResource, {
       actionPrefix: 'agentGroupDetail',
       entity: agentGroupDetailEntity,
-      fetcher: async ({ groupId }) => await chatGroupService.getGroupDetail(groupId),
+      fetcher: async ({ groupId }) => {
+        const scope = this.#captureScope();
+        const groupDetail = await chatGroupService.getGroupDetail(groupId);
+        // `null` is a terminal "gone / no access" answer. Record it here, per
+        // key, rather than only in the hook's success callback: that callback
+        // is skipped once the hook moved to another group (or the driver drops
+        // it), and the stale detail would then be kept and replayed offline.
+        if (!groupDetail) this.#settleGroupGone(groupId, scope);
+        return groupDetail;
+      },
       get,
       // The endpoint returns the complete, authoritative detail. `null` (gone /
-      // no access) is settled by the sync hook, not a value to paint, so it
-      // keeps the current entry and lets the hook drop it. An unchanged detail
-      // keeps its reference so the group pages do not re-render.
+      // no access) is settled by the fetcher (see `#settleGroupGone`), not a
+      // value to paint. An unchanged detail keeps its reference so the group
+      // pages do not re-render.
       merge: (incoming, confirmed) =>
         !incoming || isEqual(incoming, confirmed) ? undefined : incoming,
       set,
@@ -168,6 +208,20 @@ class ChatGroupInternalAction implements ResetableStore {
 
   #removeStaleGroup = (groupId: string) => {
     this.#groupRows.remove(groupId);
+  };
+
+  /**
+   * A detail request answered "gone / no access" for `groupId` under `scope`.
+   * In the active scope the group leaves every view (and storage) and settles
+   * as not found; a scope left behind only has its persisted row purged.
+   */
+  #settleGroupGone = (groupId: string, scope: string) => {
+    if (!this.#isStillInScope(scope)) {
+      this.#groupDetail.remove(groupId, scope);
+      return;
+    }
+    this.#removeStaleGroup(groupId);
+    this.#markGroupNotFound(groupId);
   };
 
   // A successful fetch that resolves to nothing means the group doesn't exist
@@ -279,6 +333,7 @@ class ChatGroupInternalAction implements ResetableStore {
     });
     this.#groupDetail.update(group.id, (existing) => mergeListRow(existing, group), {
       persist: false,
+      seedTag: 'list',
       source: 'seed',
     });
   };
@@ -306,13 +361,14 @@ class ChatGroupInternalAction implements ResetableStore {
    * The seeds are applied as ONE batched replica write: doing it per row would
    * clone `groupMap` and notify subscribers once per group.
    */
-  internal_updateGroupMaps = (groups: ChatGroupItem[]) => {
+  internal_updateGroupMaps = (groups: ChatGroupItem[], source: GroupSeedSource = 'list') => {
     this.#groupDetail.updateMany(
       groups.map((group) => ({
-        apply: (existing) => mergeListRow(existing, group),
+        apply: (existing) => mergeListRow(existing, group, source),
         key: group.id,
       })),
-      { persist: false, source: 'seed' },
+      // One tag per source: a refresh supersedes that source's earlier seed.
+      { persist: false, seedTag: source, source: 'seed' },
     );
   };
 
@@ -366,9 +422,15 @@ class ChatGroupInternalAction implements ResetableStore {
     // the new scope's persisted list is never read — which in turn leaves the
     // detail reconcile blind to the persisted-only ids a response omits.
     this.#groupList.ensureScope(scope);
+    const load = ++this.#listLoadSeq;
     const hydration = this.#get().groupsInit
       ? undefined
-      : this.#groupList.hydrate(LIST_PARAMS, scope);
+      : this.#groupList.hydrate(LIST_PARAMS, scope).finally(() => (hydrated = true));
+    let hydrated = !hydration;
+    // The persisted list ids, read alongside the hydrate. If the hydrate misses
+    // the bound below, the list `replace` cannot see which ids the response
+    // dropped (see `#droppedGroupIds`), so those are pruned from this snapshot.
+    const persistedIds = hydration ? this.#readPersistedGroupIds(scope) : undefined;
     const groups = await chatGroupService.getGroups();
     // Let a hydrate that is about to land paint first, but never let a stalled
     // storage read hold back an authoritative response that already arrived:
@@ -379,6 +441,31 @@ class ChatGroupInternalAction implements ResetableStore {
 
     this.#groupList.replace(LIST_PARAMS, groups, scope);
     this.#reconcileGroupMap(groups);
+
+    if (!hydrated && persistedIds) {
+      const listedIds = new Set(groups.map((group) => group.id));
+      void persistedIds.then((ids) => {
+        // A newer list load (or an identity switch) owns the reconcile now.
+        if (load !== this.#listLoadSeq || !this.#isStillInScope(scope)) return;
+        const current = new Set(this.#get().groups.map((group) => group.id));
+        for (const id of ids) {
+          if (!listedIds.has(id) && !current.has(id)) this.#groupRows.remove(id);
+        }
+      });
+    }
+  };
+
+  /** Ids of the persisted group list in `scope` (empty when unreadable). */
+  #readPersistedGroupIds = async (scope: string): Promise<string[]> => {
+    try {
+      const row = await agentGroupListResource.storage?.get({
+        queryKey: agentGroupListResource.storageKey(LIST_PARAMS),
+        scope,
+      });
+      return (row?.data ?? []).map((group) => group.id);
+    } catch {
+      return [];
+    }
   };
 
   refreshGroupDetail = async (groupId: string) => {

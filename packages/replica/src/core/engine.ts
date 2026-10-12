@@ -826,8 +826,13 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   const update = (
     key: string,
     apply: (data: TData | undefined) => TData | undefined,
-    { persist = true, source }: { persist?: boolean; source?: ReplicaSource } = {},
-  ) => dispatch({ apply, key, persist, scope: resource.scope.get(), source, type: 'update' });
+    {
+      persist = true,
+      seedTag,
+      source,
+    }: { persist?: boolean; seedTag?: string; source?: ReplicaSource } = {},
+  ) =>
+    dispatch({ apply, key, persist, scope: resource.scope.get(), seedTag, source, type: 'update' });
 
   /**
    * Confirmed local write to several keys as ONE host update — same per-key
@@ -836,7 +841,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    */
   const updateMany = (
     entries: { apply: (data: TData | undefined) => TData | undefined; key: string }[],
-    { persist = true, source }: { persist?: boolean; source?: ReplicaSource } = {},
+    {
+      persist = true,
+      seedTag,
+      source,
+    }: { persist?: boolean; seedTag?: string; source?: ReplicaSource } = {},
   ) => {
     const scope = resource.scope.get();
     return runActions(
@@ -845,6 +854,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         key,
         persist,
         scope,
+        seedTag,
         source,
         type: 'update' as const,
       })),

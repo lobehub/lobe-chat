@@ -119,6 +119,11 @@ export interface ReplicaSeedPatch<T> {
   persist: boolean;
   /** A provisional seed write: replayed, but never makes the result confirmed. */
   seed?: boolean;
+  /**
+   * Source of a seed write. A later seed of the same tag supersedes this one
+   * (since the last confirmed write), so it must carry every field this one set.
+   */
+  tag?: string;
 }
 
 /** Bookkeeping slot a replica keeps inside its domain store. */

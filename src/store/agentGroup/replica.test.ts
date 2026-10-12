@@ -174,6 +174,130 @@ describe('agentGroup store replica', () => {
     getSpy.mockRestore();
   });
 
+  // The list hydrate misses the bound, so the `replace` cannot see which ids the
+  // response dropped. A persisted detail of a dropped group must still be pruned,
+  // or a later slow / offline visit paints the deleted group.
+  it('prunes a dropped group detail even when the list hydrate misses the bound', async () => {
+    const scope = createScope();
+    getGroups.mockResolvedValue([groupRow('g1'), groupRow('g2')]);
+    getGroupDetail.mockImplementation(async (groupId: string) => groupDetail(groupId));
+
+    // An earlier visit persisted both the list and g2's detail.
+    await useAgentGroupStore.getState().loadGroups();
+    await useAgentGroupStore.getState().internal_fetchGroupDetail('g2');
+    await vi.waitFor(async () =>
+      expect(
+        (
+          await agentGroupListResource.storage!.get({ queryKey: LIST_STORAGE_KEY, scope })
+        )?.data?.map((group) => group.id),
+      ).toEqual(['g1', 'g2']),
+    );
+    await vi.waitFor(async () =>
+      expect(
+        (await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g2'), scope }))
+          ?.data,
+      ).toBeDefined(),
+    );
+
+    // Reload: memory is gone, storage stays.
+    useAgentGroupStore.setState({ ...initialChatGroupState });
+    getGroups.mockResolvedValue([groupRow('g1')]);
+    const storage = agentGroupListResource.storage!;
+    const realGet = storage.get.bind(storage);
+    const getSpy = vi.spyOn(storage, 'get').mockImplementation(async (key: any) => {
+      const row = await realGet(key);
+      // A slow list read: well past the pre-paint bound.
+      if (key.queryKey === LIST_STORAGE_KEY) await new Promise((r) => setTimeout(r, 150));
+      return row;
+    });
+
+    await useAgentGroupStore.getState().loadGroups();
+    expect(useAgentGroupStore.getState().groups.map((group) => group.id)).toEqual(['g1']);
+
+    getSpy.mockRestore();
+    await vi.waitFor(
+      async () =>
+        expect(
+          await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g2'), scope }),
+        ).toBeUndefined(),
+      { timeout: 2000 },
+    );
+  });
+
+  // Session rows are synthesized: their placeholders (`workspaceId: null`,
+  // `visibility: 'public'`) must not be replayed over a real persisted detail.
+  it('keeps a persisted detail’s real fields over a session seed', async () => {
+    const scope = createScope();
+    const roster = [{ id: 'a1', isSupervisor: false, title: 'Member' }];
+    await agentGroupDetailResource.storage!.set(
+      { queryKey: detailStorageKey('g1'), scope },
+      {
+        data: {
+          ...groupDetail('g1', 'Persisted'),
+          agents: roster,
+          visibility: 'private',
+          workspaceId: 'ws-1',
+        } as any,
+        updatedAt: 1,
+      },
+    );
+
+    useAgentGroupStore
+      .getState()
+      .internal_updateGroupMaps(
+        [{ ...groupRow('g1', 'Session title'), visibility: 'public', workspaceId: null } as any],
+        'session',
+      );
+    getGroupDetail.mockImplementation(pending);
+    const session = renderHook(() => useAgentGroupStore.getState().useFetchGroupDetail(true, 'g1'));
+
+    await vi.waitFor(() =>
+      expect(useAgentGroupStore.getState().groupMap.g1?.agents).toEqual(roster),
+    );
+    const detail = useAgentGroupStore.getState().groupMap.g1 as any;
+    expect(detail.title).toBe('Session title');
+    expect(detail.workspaceId).toBe('ws-1');
+    expect(detail.visibility).toBe('private');
+    session.unmount();
+  });
+
+  // g1 answers "gone" only after the page moved on to g2. The success callback
+  // is skipped for a superseded key, so the terminal answer must still drop g1
+  // (memory + storage) and settle it as not found.
+  it('records a terminal absence that lands after navigating to another group', async () => {
+    const scope = createScope();
+    await agentGroupDetailResource.storage!.set(
+      { queryKey: detailStorageKey('g1'), scope },
+      { data: groupDetail('g1', 'One'), updatedAt: 1 },
+    );
+    let answerG1!: (detail: null) => void;
+    getGroupDetail.mockImplementation((id: string) =>
+      id === 'g1'
+        ? new Promise((resolve) => (answerG1 = resolve))
+        : Promise.resolve(groupDetail(id)),
+    );
+
+    const session = renderHook(
+      ({ id }: { id: string }) => useAgentGroupStore.getState().useFetchGroupDetail(true, id),
+      { initialProps: { id: 'g1' } },
+    );
+    await vi.waitFor(() => expect(useAgentGroupStore.getState().groupMap.g1).toBeDefined());
+    await vi.waitFor(() => expect(answerG1).toBeDefined());
+
+    session.rerender({ id: 'g2' });
+    await vi.waitFor(() => expect(useAgentGroupStore.getState().groupMap.g2).toBeDefined());
+
+    answerG1(null);
+    await vi.waitFor(() => expect(useAgentGroupStore.getState().groupMap.g1).toBeUndefined());
+    expect(useAgentGroupStore.getState().groupNotFoundMap.g1).toBe(true);
+    await vi.waitFor(async () =>
+      expect(
+        await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g1'), scope }),
+      ).toBeUndefined(),
+    );
+    session.unmount();
+  });
+
   it('replaces the list with the server response, persists it and seeds groupMap', async () => {
     const scope = createScope();
     getGroups.mockResolvedValue([groupRow('g1', 'Server group')]);

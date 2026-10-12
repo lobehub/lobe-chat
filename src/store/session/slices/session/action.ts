@@ -252,7 +252,9 @@ export class SessionActionImpl {
               workspaceId: null,
             }));
 
-            chatGroupStore.internal_updateGroupMaps(chatGroups);
+            // Session rows are synthesized: only their real fields may seed a
+            // group detail (see `GroupSeedSource`).
+            chatGroupStore.internal_updateGroupMaps(chatGroups, 'session');
           }
 
           this.#set(

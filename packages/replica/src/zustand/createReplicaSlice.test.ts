@@ -899,6 +899,36 @@ describe('createReplicaSlice', () => {
       session.unmount();
     });
 
+    // A lookup that missed storage settles `true` as well; reactivating its key
+    // must not replay `onHydrated` off a value that never came from storage
+    // (a provisional seed written into the view).
+    it('does not replay onHydrated for a reactivated key whose lookup missed storage', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|b', { data: ['cached-b'], updatedAt: 1 });
+      const { slice } = setup({ fetcher: () => new Promise<string[]>(() => {}), storage });
+      const seen: string[][] = [];
+
+      const session = renderHook(
+        ({ id }: { id: string }) =>
+          slice.useSync({ id }, { onHydrated: (data) => seen.push(data) }),
+        { initialProps: { id: 'a' }, wrapper },
+      );
+      await waitFor(() => expect(session.result.current.isHydrated).toBe(true));
+      expect(seen).toEqual([]);
+
+      session.rerender({ id: 'b' });
+      await waitFor(() => expect(seen).toEqual([['cached-b']]));
+
+      // A seed lands in `a`'s view while the hook shows `b`.
+      act(() => {
+        slice.update('a', () => ['seed-a'], { persist: false, source: 'seed' });
+      });
+      session.rerender({ id: 'a' });
+      await act(async () => {});
+      expect(seen).toEqual([['cached-b']]);
+      session.unmount();
+    });
+
     it('a version bump ignores rows written by the previous version', async () => {
       // One backing map shared by every version, keyed by the namespace the
       // factory receives — like IndexedDB rows of two app releases.
