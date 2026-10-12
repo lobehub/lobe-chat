@@ -18,6 +18,7 @@ import type {
   MessageMetadata,
   MessagePluginItem,
   ModelRankItem,
+  ModelReasoning,
   ModelUsage,
   NewMessageQueryParams,
   QueryMessageParams,
@@ -103,6 +104,7 @@ import { inJsonStringArray } from '../utils/inJsonStringArray';
 import { documentOriginalCharCount } from '../utils/originalCharCount';
 import { searchableMessage } from '../utils/searchableMessage';
 import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
+import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
 import { WorkModel } from './work';
@@ -196,6 +198,7 @@ export interface HumanApprovalResolution {
   content?: string;
   id: string;
   intervention: Record<string, unknown>;
+  pluginError?: MessagePluginItem['error'] | null;
   pluginState?: Record<string, unknown> | null;
   replacePluginState?: boolean;
 }
@@ -290,10 +293,16 @@ export interface TopicTranscriptMessage {
   id: string;
   messageGroupId: string | null;
   metadata: MessageMetadata | null;
+  model: string | null;
   parentId: string | null;
+  pluginError: unknown;
+  provider: string | null;
+  reasoning: ModelReasoning | null;
   role: string;
   threadId: string | null;
+  toolCallId: string | null;
   tools: ChatToolPayload[] | null;
+  usage: ModelUsage | null;
 }
 
 export interface TopicTranscriptResult {
@@ -1062,6 +1071,24 @@ export const toVisitorMessage = (
   } as UIChatMessage;
 };
 
+export interface SoftDeletedMessage {
+  /** Live children that were re-parented away from this message at trash time. */
+  childIds: string[];
+  content: string | null;
+  id: string;
+  /** Pulled in as a tool companion of a requested message (never a root of its own). */
+  isCompanion: boolean;
+  /**
+   * For a companion: the requested message whose tool call produced it, so the
+   * caller can file it under the right root. `null` for requested rows.
+   */
+  ownerId: string | null;
+  parentId: string | null;
+  projectId: string | null;
+  role: string;
+  topicId: string | null;
+}
+
 export class MessageModel {
   private userId: string;
   private db: LobeChatDatabase;
@@ -1152,6 +1179,20 @@ export class MessageModel {
     if (rows.length === 0) return 'visitor';
     return rows[0].senderId === null ? 'creator' : 'visitor';
   };
+
+  /**
+   * Scope predicate without the recycle-bin filter — restore / purge internals
+   * only. Keeps the visitor exclusion of {@link ownership} so a creator-facing
+   * restore or purge can never reach an agent-share visitor row.
+   */
+  private trashScope = () =>
+    and(
+      buildWorkspaceWhere(
+        { includeTrashed: true, userId: this.userId, workspaceId: this.workspaceId },
+        messages,
+      ),
+      this.notShareVisitor(),
+    );
 
   private pluginsOwnership = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messagePlugins);
@@ -1482,6 +1523,12 @@ export class MessageModel {
           agentId: messages.agentId,
           error: messages.error,
           metadata: messages.metadata,
+          model: messages.model,
+          pluginError: messagePlugins.error,
+          provider: messages.provider,
+          reasoning: messages.reasoning,
+          toolCallId: messagePlugins.toolCallId,
+          usage: messages.usage,
           content: messages.content,
           createdAt: messages.createdAt,
           id: messages.id,
@@ -1492,6 +1539,7 @@ export class MessageModel {
           tools: messages.tools,
         })
         .from(messages)
+        .leftJoin(messagePlugins, and(eq(messagePlugins.id, messages.id), this.pluginsOwnership()))
         .where(where)
         .orderBy(asc(messages.createdAt), asc(messages.id))
         .limit(limit)
@@ -1503,11 +1551,12 @@ export class MessageModel {
     ]);
 
     return {
-      items: items.map(({ tools, ...message }) => ({
+      items: items.map(({ tools, usage, ...message }) => ({
         ...message,
         error: message.error as ChatMessageError | null,
         metadata: message.metadata as MessageMetadata | null,
         tools: Array.isArray(tools) ? (tools as ChatToolPayload[]) : null,
+        usage: usage ?? message.metadata?.usage ?? null,
       })),
       total: totalResult[0]?.count ?? 0,
     };
@@ -4057,7 +4106,10 @@ export class MessageModel {
 
     return this.db
       .update(messages)
-      .set({ metadata: mergedMetadata, ...(usageToWrite && { usage: usageToWrite }) })
+      .set({
+        metadata: mergedMetadata,
+        ...(usageToWrite && { usage: usageToWrite }),
+      })
       .where(and(eq(messages.id, id), this.ownership()));
   };
 
@@ -4094,10 +4146,13 @@ export class MessageModel {
   /**
    * Resolve an approval batch at one row-locking boundary. Every target is
    * checked before any write, so Web, Mobile, Stop, and notification actions
-   * cannot each win a subset of the same assistant turn.
+   * cannot each win a subset of the same assistant turn. Source adapters claim
+   * only; content/state remain in their private resolution until the runtime
+   * passes publishResult after afterToolCall. Stop may publish its fixed receipt.
    */
   resolveHumanApproval = async (
     resolutions: HumanApprovalResolution[],
+    options: { publishResult?: boolean } = {},
   ): Promise<'applied' | 'idempotent'> => {
     if (resolutions.length === 0) return 'idempotent';
 
@@ -4107,6 +4162,14 @@ export class MessageModel {
     }
 
     return this.db.transaction(async (trx) => {
+      // Match deferred completion's lock order (message before plugin).
+      const lockedMessages = await trx
+        .select({ id: messages.id, content: messages.content })
+        .from(messages)
+        .where(and(inArray(messages.id, ids), this.ownership()))
+        .orderBy(messages.id)
+        .for('update');
+      const messagesById = new Map(lockedMessages.map((row) => [row.id, row]));
       const lockedRows = await trx
         .select({
           id: messagePlugins.id,
@@ -4135,14 +4198,26 @@ export class MessageModel {
         throw new HumanApprovalAlreadyResolvedError(resolution.id);
       });
       const pendingCount = rowStates.filter((state) => state === 'pending').length;
-      if (pendingCount === 0) return 'idempotent';
-      if (pendingCount !== resolutions.length) {
+      if (pendingCount === 0 && !options.publishResult) return 'idempotent';
+      if (pendingCount !== 0 && pendingCount !== resolutions.length) {
         throw new Error('Human approval batch contains a partial idempotent claim');
       }
 
+      let published = false;
       for (const resolution of resolutions) {
+        // An already claimed source answer can publish exactly once. A replay
+        // retains the first final content, including a hook denial.
+        if (
+          pendingCount === 0 &&
+          (messagesById.get(resolution.id)?.content ||
+            (resolution.content === undefined &&
+              resolution.pluginState === undefined &&
+              resolution.pluginError === undefined))
+        )
+          continue;
+        published = true;
         const row = lockedById.get(resolution.id)!;
-        if (resolution.content !== undefined) {
+        if (options.publishResult && resolution.content !== undefined) {
           const [updatedMessage] = await trx
             .update(messages)
             .set({ content: resolution.content })
@@ -4159,18 +4234,21 @@ export class MessageModel {
             // parked tool row was created so subsequent source reads, Stop,
             // and rollback still address the same sealed batch.
             intervention: merge(row.intervention || {}, resolution.intervention),
-            ...(resolution.pluginState !== undefined && {
-              state: resolution.replacePluginState
-                ? resolution.pluginState
-                : merge(row.state || {}, resolution.pluginState || {}),
-            }),
+            ...(options.publishResult &&
+              resolution.pluginError !== undefined && { error: resolution.pluginError }),
+            ...(options.publishResult &&
+              resolution.pluginState !== undefined && {
+                state: resolution.replacePluginState
+                  ? resolution.pluginState
+                  : merge(row.state || {}, resolution.pluginState || {}),
+              }),
           })
           .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()))
           .returning({ id: messagePlugins.id });
         if (!updatedPlugin) throw new Error(`Plugin not found: ${resolution.id}`);
       }
 
-      return 'applied';
+      return published ? 'applied' : 'idempotent';
     });
   };
 
@@ -4180,6 +4258,12 @@ export class MessageModel {
 
     await this.db.transaction(async (trx) => {
       const ids = resolutions.map(({ id }) => id);
+      await trx
+        .select({ id: messages.id })
+        .from(messages)
+        .where(and(inArray(messages.id, ids), this.ownership()))
+        .orderBy(messages.id)
+        .for('update');
       const lockedRows = await trx
         .select({ id: messagePlugins.id, intervention: messagePlugins.intervention })
         .from(messagePlugins)
@@ -4208,6 +4292,7 @@ export class MessageModel {
           .update(messagePlugins)
           .set({
             intervention: resolution.intervention,
+            ...(resolution.pluginError !== undefined && { error: resolution.pluginError }),
             ...(resolution.pluginState !== undefined && { state: resolution.pluginState }),
           })
           .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()));
@@ -4579,9 +4664,20 @@ export class MessageModel {
       metadata?: Record<string, any>;
       pluginError?: any;
       pluginState?: Record<string, any>;
+      /** Replace rather than merge when withholding a complete tool result. */
+      replacePluginState?: boolean;
+      /** Finalize a deferred placeholder once; later callbacks cannot replace its result. */
+      onlyIfEmpty?: boolean;
     },
   ): Promise<{ applied: boolean; snapshotSeq?: number; success: boolean }> => {
-    const { content, heterogeneousToolState, metadata, pluginState, pluginError } = params;
+    const {
+      content,
+      heterogeneousToolState,
+      metadata,
+      pluginState,
+      pluginError,
+      replacePluginState,
+    } = params;
 
     // `undefined` while no branch has looked for the row yet; see `update` above
     // for why a write that matches nothing must not report success.
@@ -4591,6 +4687,20 @@ export class MessageModel {
 
     try {
       await this.db.transaction(async (trx) => {
+        if (params.onlyIfEmpty) {
+          const [message] = await trx
+            .select({ content: messages.content })
+            .from(messages)
+            .where(and(eq(messages.id, id), this.ownership()))
+            .for('update');
+          matchedRow = !!message;
+          if (!message) return;
+          if (message.content) {
+            applied = false;
+            return;
+          }
+        }
+
         let existingMetadata: Record<string, any> | undefined;
 
         if (metadata !== undefined || heterogeneousToolState !== undefined) {
@@ -4637,7 +4747,7 @@ export class MessageModel {
           const messageUpdateData: Record<string, any> = {};
 
           if (content !== undefined) {
-            messageUpdateData.content = content;
+            messageUpdateData.content = sanitizeNullBytes(content);
           }
 
           if (metadata !== undefined || heterogeneousToolState !== undefined) {
@@ -4666,16 +4776,18 @@ export class MessageModel {
           const pluginUpdateData: Record<string, any> = {};
 
           if (pluginState !== undefined) {
+            const sanitizedState = sanitizeNullBytes(pluginState);
             // Snapshot writes replace the whole runtime state. Ordinary patches
             // own complete top-level keys and merge inside the UPDATE so an
             // answer write cannot race away an intervention-terminal write.
-            pluginUpdateData.state = heterogeneousToolState
-              ? pluginState
-              : sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(pluginState)}::jsonb`;
+            pluginUpdateData.state =
+              heterogeneousToolState || replacePluginState
+                ? sanitizedState
+                : sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(sanitizedState)}::jsonb`;
           }
 
           if (pluginError !== undefined) {
-            pluginUpdateData.error = pluginError;
+            pluginUpdateData.error = sanitizeNullBytes(pluginError);
           }
 
           const [updatedPlugin] = await trx
@@ -5316,6 +5428,301 @@ export class MessageModel {
           ),
         ),
       );
+
+  // **************** Recycle bin *************** //
+
+  /**
+   * Move messages to the recycle bin. Mirrors {@link deleteMessages} step for
+   * step — tool companions are pulled in, live children are re-parented onto
+   * the nearest surviving ancestor, the active-branch pointer is reconciled and
+   * the topic usage rollup recomputed — but the rows are stamped instead of
+   * dropped. Returns one entry per stamped row with the tree data a restore
+   * needs to splice it back (`parentId` + the child ids that were re-parented
+   * away from it), and whether the row was an explicitly requested root or a
+   * tool companion pulled in with it.
+   */
+  softDeleteMessages = async (
+    ids: string[],
+    options: SoftDeleteOptions,
+  ): Promise<SoftDeletedMessage[]> => {
+    if (ids.length === 0) return [];
+
+    return this.db.transaction(async (tx) => {
+      const requested = await tx
+        .select({
+          content: messages.content,
+          id: messages.id,
+          parentId: messages.parentId,
+          projectId: topics.projectId,
+          role: messages.role,
+          tools: messages.tools,
+          topicId: messages.topicId,
+        })
+        .from(messages)
+        .leftJoin(
+          topics,
+          and(
+            eq(messages.topicId, topics.id),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+          ),
+        )
+        .where(and(this.ownership(), inArray(messages.id, ids)));
+      if (requested.length === 0) return [];
+
+      // Tool companions: the tool-result rows of a trashed assistant turn go
+      // with it (same rule as the hard delete).
+      const toolCallIds = requested
+        .flatMap((row) => ((row.tools as ChatToolPayload[]) ?? []).map((tool) => tool.id))
+        .filter(Boolean);
+      const requestedIds = new Set(requested.map((row) => row.id));
+      // toolCallId → the requested row that issued it, so each companion is
+      // attributed to its own assistant turn rather than to the batch.
+      const toolCallOwner = new Map<string, string>();
+      for (const row of requested) {
+        for (const tool of (row.tools as ChatToolPayload[]) ?? []) {
+          if (tool.id) toolCallOwner.set(tool.id, row.id);
+        }
+      }
+      const companionOwner = new Map<string, string>();
+      let companions: typeof requested = [];
+      if (toolCallIds.length > 0) {
+        const companionRows = await tx
+          .select({ id: messagePlugins.id, toolCallId: messagePlugins.toolCallId })
+          .from(messagePlugins)
+          .where(inArray(messagePlugins.toolCallId, toolCallIds));
+        for (const row of companionRows) {
+          const owner = row.toolCallId ? toolCallOwner.get(row.toolCallId) : undefined;
+          if (owner && !requestedIds.has(row.id)) companionOwner.set(row.id, owner);
+        }
+        const companionIds = [...companionOwner.keys()];
+        if (companionIds.length > 0) {
+          companions = await tx
+            .select({
+              content: messages.content,
+              id: messages.id,
+              parentId: messages.parentId,
+              projectId: topics.projectId,
+              role: messages.role,
+              tools: messages.tools,
+              topicId: messages.topicId,
+            })
+            .from(messages)
+            .leftJoin(
+              topics,
+              and(
+                eq(messages.topicId, topics.id),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            )
+            .where(and(this.ownership(), inArray(messages.id, companionIds)));
+        }
+      }
+
+      const toDelete = [...requested, ...companions];
+      const deleteIds = toDelete.map((row) => row.id);
+      const deleteSet = new Set(deleteIds);
+      const parentMap = new Map(toDelete.map((row) => [row.id, row.parentId] as const));
+
+      const finalAncestorMap = new Map<string, string | null>();
+      const findFinalAncestor = (id: string): string | null => {
+        if (finalAncestorMap.has(id)) return finalAncestorMap.get(id)!;
+        const parentId = parentMap.get(id);
+        if (parentId === null || parentId === undefined) {
+          finalAncestorMap.set(id, null);
+          return null;
+        }
+        if (!deleteSet.has(parentId)) {
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+        const ancestor = findFinalAncestor(parentId);
+        finalAncestorMap.set(id, ancestor);
+        return ancestor;
+      };
+      for (const id of deleteSet) findFinalAncestor(id);
+
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(
+        tx,
+        [...new Set(finalAncestorMap.values())].filter((id): id is string => id !== null),
+      );
+
+      // Live children re-parented onto the nearest surviving ancestor —
+      // remembered per message so a restore can hand them back.
+      const children = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(
+          and(
+            this.ownership(),
+            inArray(messages.parentId, deleteIds),
+            not(inArray(messages.id, deleteIds)),
+          ),
+        );
+      const childIdsByParent = new Map<string, string[]>();
+      for (const child of children) {
+        const list = childIdsByParent.get(child.parentId!) ?? [];
+        list.push(child.id);
+        childIdsByParent.set(child.parentId!, list);
+        await tx
+          .update(messages)
+          .set({ parentId: finalAncestorMap.get(child.parentId!) ?? null })
+          .where(and(eq(messages.id, child.id), this.ownership()));
+      }
+
+      await tx
+        .update(messages)
+        .set(trashStamp(options.deletedAt))
+        .where(and(this.ownership(), inArray(messages.id, deleteIds)));
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
+
+      const affectedTopicIds = [
+        ...new Set(toDelete.map((m) => m.topicId).filter(Boolean) as string[]),
+      ];
+      for (const topicId of affectedTopicIds) {
+        await recomputeTopicUsage(tx, this.userId, topicId, this.workspaceId);
+      }
+
+      return toDelete.map((row) => ({
+        childIds: childIdsByParent.get(row.id) ?? [],
+        content: row.content,
+        id: row.id,
+        isCompanion: !requestedIds.has(row.id),
+        ownerId: companionOwner.get(row.id) ?? null,
+        parentId: row.parentId,
+        projectId: row.projectId,
+        role: row.role,
+        topicId: row.topicId,
+      }));
+    });
+  };
+
+  /**
+   * Bring trashed messages back and splice them into their branch: the stamp
+   * is cleared and the children recorded at trash time are re-parented onto
+   * the message again (best effort — a child that has since moved or gone is
+   * left alone). The active-branch pointer of the parent keeps pointing at
+   * whatever branch is active today.
+   */
+  restoreMessages = async (
+    entries: { childIds?: string[]; id: string; parentId?: string | null }[],
+  ): Promise<string[]> => {
+    if (entries.length === 0) return [];
+    return this.db.transaction(async (tx) => {
+      const ids = entries.map((entry) => entry.id);
+      const rows = await tx
+        .select({ id: messages.id, parentId: messages.parentId, topicId: messages.topicId })
+        .from(messages)
+        .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+      if (rows.length === 0) return [];
+
+      const parentIds = rows.map((row) => row.parentId).filter((id): id is string => !!id);
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(tx, parentIds);
+
+      // Report what the write restored, not what the read saw: a purge that
+      // commits in between leaves nothing to update, and the caller must not
+      // count that row as restored.
+      const updated = await tx
+        .update(messages)
+        .set(restoreStamp())
+        .where(
+          and(
+            this.trashScope(),
+            inArray(
+              messages.id,
+              rows.map((row) => row.id),
+            ),
+            isTrashed(messages.isDeleted),
+          ),
+        )
+        .returning({ id: messages.id });
+      const restoredIds = new Set(updated.map((row) => row.id));
+
+      for (const entry of entries) {
+        if (!restoredIds.has(entry.id) || !entry.childIds?.length) continue;
+        await tx
+          .update(messages)
+          .set({ parentId: entry.id })
+          .where(and(inArray(messages.id, entry.childIds), this.trashScope()));
+      }
+
+      // While the row was in the bin its children hung off its parent, and the
+      // user may have picked one of them as the active branch there. They now
+      // move back under the restored row, so carry that choice up to it —
+      // otherwise reconciliation cannot find the child among the parent's
+      // branches, drops the selection and the view can jump to a sibling.
+      const restoredAncestorOf = new Map<string, string>();
+      for (const entry of entries) {
+        if (!restoredIds.has(entry.id)) continue;
+        for (const childId of entry.childIds ?? []) restoredAncestorOf.set(childId, entry.id);
+      }
+      for (const snapshot of activeBranchSnapshots) {
+        const ancestor = snapshot.activeBranchId && restoredAncestorOf.get(snapshot.activeBranchId);
+        if (ancestor) snapshot.activeBranchId = ancestor;
+      }
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
+
+      const affectedTopicIds = [...new Set(rows.map((m) => m.topicId).filter(Boolean) as string[])];
+      for (const topicId of affectedTopicIds) {
+        await recomputeTopicUsage(tx, this.userId, topicId, this.workspaceId);
+      }
+      return [...restoredIds];
+    });
+  };
+
+  findTrashedByIds = async (ids: string[]) => {
+    if (ids.length === 0) return [];
+    return this.db
+      .select({
+        agentId: messages.agentId,
+        id: messages.id,
+        parentId: messages.parentId,
+        sessionId: messages.sessionId,
+        topicId: messages.topicId,
+      })
+      .from(messages)
+      .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+  };
+
+  /**
+   * Cascade helper for trashing an agent: stamps the live messages that hang
+   * off the given agents or their legacy session shells WITHOUT a topic. Rows
+   * inside a topic are hidden by that topic's own stamp; topic-less rows have
+   * no parent to hide them (`workspaceScope()` treats them as live), so they
+   * are stamped directly and registered as the agent's children. Their branch
+   * stays intact, so a plain restore of the same ids brings them back.
+   */
+  softDeleteTopicless = async (
+    parents: { agentIds?: string[]; sessionIds?: string[] },
+    options: SoftDeleteOptions,
+  ) => {
+    const conditions: SQL[] = [];
+    if (parents.agentIds?.length) conditions.push(inArray(messages.agentId, parents.agentIds));
+    if (parents.sessionIds?.length)
+      conditions.push(inArray(messages.sessionId, parents.sessionIds));
+    if (conditions.length === 0) return [];
+
+    return this.db
+      .update(messages)
+      .set(trashStamp(options.deletedAt))
+      .where(and(isNull(messages.topicId), or(...conditions), this.ownership()))
+      .returning({ content: messages.content, id: messages.id, role: messages.role });
+  };
+
+  /**
+   * Hard delete for the purge sweep. Children were already re-parented at trash
+   * time and usage already excludes stamped rows, so this is a plain delete
+   * keyed on `scope()`.
+   */
+  purgeMessages = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    // Only rows still stamped: a restore that commits between the purge's
+    // registry read and this delete must win.
+    return this.db
+      .delete(messages)
+      .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+  };
 
   /**
    * Creator-facing "clear this session/topic/group" sweep.

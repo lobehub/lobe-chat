@@ -283,6 +283,23 @@ export const AgentRuntimeErrorType = {
   OperationInactivityTimeout: 'OperationInactivityTimeout',
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
+  /**
+   * The model can only be reached from the user's own device, and no open
+   * LobeHub client picked up the request (no client declared it can run this
+   * provider, or none claimed the call in time). Retrying once a client is
+   * open recovers the run.
+   */
+  ClientLlmExecutorUnavailable: 'ClientLlmExecutorUnavailable',
+  /**
+   * The device running a relayed model request stopped sending output
+   * (closed, refreshed or lost its connection) before the request finished.
+   */
+  ClientLlmExecutorLost: 'ClientLlmExecutorLost',
+  /**
+   * A relayed model request on the user's device did not produce its first
+   * output, or did not finish, within the allowed time.
+   */
+  ClientLlmTimeout: 'ClientLlmTimeout',
   OllamaBizError: 'OllamaBizError',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable',
 

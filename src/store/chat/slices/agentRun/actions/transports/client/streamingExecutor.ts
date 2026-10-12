@@ -11,6 +11,7 @@ import {
   GeneralChatAgent,
   isParkedStatus,
 } from '@lobechat/agent-runtime';
+import { createDryRunAudit, DASHBOARD_DRY_RUN_AUDIT } from '@lobechat/builtin-tool-dashboard';
 import { LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent';
 import { createPathScopeAudit } from '@lobechat/builtin-tool-local-system';
 import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
@@ -22,7 +23,12 @@ import {
   resolveSubAgentModel,
 } from '@lobechat/const';
 import { type ToolsEngine } from '@lobechat/context-engine';
-import { buildTaskDetailPrompt, buildTaskListPrompt } from '@lobechat/prompts';
+import {
+  buildTaskDetailPrompt,
+  buildTaskListPrompt,
+  FILE_PREVIEW_CHARS,
+  isOversizedFileContent,
+} from '@lobechat/prompts';
 import {
   buildGoalOverviewContext,
   type ConversationContext,
@@ -39,6 +45,7 @@ import { aiAgentService } from '@/services/aiAgent';
 import { isCanUseAudio, isCanUseVideo, isCanUseVision } from '@/services/chat/helper';
 import { type ResolvedAgentConfig } from '@/services/chat/mecha';
 import { composeEnabledTools, resolveAgentConfig } from '@/services/chat/mecha';
+import { dashboardService } from '@/services/dashboard';
 import { localFileService } from '@/services/electron/localFileService';
 import { messageService } from '@/services/message';
 import { hydrateProjectedConversation } from '@/services/message/hydrateProjectedTools';
@@ -73,6 +80,9 @@ import type { RunParkedReason, RunScope } from '../../lifecycle/types';
 const log = debug('lobe-store:streaming-executor');
 
 const dynamicInterventionAudits = {
+  [DASHBOARD_DRY_RUN_AUDIT]: createDryRunAudit({
+    loadVersion: (widgetId, versionId) => dashboardService.getVersion(widgetId, versionId),
+  }),
   pathScopeAudit: createPathScopeAudit({
     areAllPathsSafe: async ({ paths, resolveAgainstScope }) => {
       if (!isDesktop) return false;
@@ -99,6 +109,23 @@ const getMediaAvailability = (messages: UIChatMessage[]) => ({
   hasImages: messages.some((message) => message.role === 'user' && !!message.imageList?.length),
   hasVideos: messages.some((message) => message.role === 'user' && !!message.videoList?.length),
 });
+
+/**
+ * Whether any user attachment is long enough to be sent as a preview, either because it is
+ * oversized or because the attachment budget (`planAttachmentPreviews`) previews it. Mirrors the
+ * server's `readHasOversizedFiles`, which enables `readAttachment` for those previews.
+ */
+const hasPreviewableFiles = (messages: UIChatMessage[]) =>
+  messages.some(
+    (message) =>
+      message.role === 'user' &&
+      !!message.fileList?.some((file) => {
+        const length = file.content?.length ?? 0;
+        return (
+          length > FILE_PREVIEW_CHARS || isOversizedFileContent(length, file.originalCharCount)
+        );
+      }),
+  );
 
 /**
  * Core streaming execution actions for AI chat
@@ -279,6 +306,7 @@ export class StreamingExecutorActionImpl {
       // sub-agent runs. Desktop client runs also need the local environment so
       // local-system can advertise IPC-only capabilities such as direct image reads.
       { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, scope },
+      { hasOversizedFiles: hasPreviewableFiles(messages) },
     );
     // When skillActivateMode is 'manual':
     // Exclude only discovery tools (activator, skill-store) so runtime-managed defaults
@@ -423,10 +451,14 @@ export class StreamingExecutorActionImpl {
         let contextPrompt: string | undefined;
 
         if (viewedTask.type === 'list') {
+          const viewedList = taskState.activeTaskListKey
+            ? taskState.taskListMap[taskState.activeTaskListKey]
+            : undefined;
+          const tasks = viewedList?.items ?? [];
           contextPrompt = buildTaskListPrompt({
             defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-            tasks: taskState.tasks,
-            total: taskState.tasksTotal || taskState.tasks.length,
+            tasks,
+            total: viewedList?.total || tasks.length,
           });
         } else {
           const detail = taskState.taskDetailMap[viewedTask.taskId];

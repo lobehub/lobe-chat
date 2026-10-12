@@ -1,7 +1,8 @@
 'use client';
 
-import { FormGroup, Grid, Icon } from '@lobehub/ui';
+import { Grid, Icon } from '@lobehub/ui';
 import { DatePicker, Divider, Tabs } from '@lobehub/ui/base-ui';
+import { Form } from '@lobehub/ui/base-ui/form';
 import { ProviderIcon } from '@lobehub/ui/icons';
 import dayjs from 'dayjs';
 import { Brain, UserIcon } from 'lucide-react';
@@ -78,10 +79,9 @@ const StatsSetting = memo<StatsSettingProps>(
       <>
         {showSettingHeader && <SettingHeader title={t('tab.stats')} />}
         {/* ========== Header Section ========== */}
-        <FormGroup
+        <Form.Group
           collapsible={false}
           extra={headerNode === undefined ? <ShareButton /> : undefined}
-          gap={16}
           variant={'filled'}
           title={
             headerNode === undefined ? (
@@ -105,11 +105,10 @@ const StatsSetting = memo<StatsSettingProps>(
             <AssistantsRank mobile={mobile} />
             <TopicsRank mobile={mobile} />
           </Grid>
-        </FormGroup>
-        <FormGroup
+        </Form.Group>
+        <Form.Group
           collapsible={false}
-          gap={16}
-          title={t('tab.usage')}
+          title={<span style={{ lineHeight: '35px' }}>{t('tab.usage')}</span>}
           variant={'filled'}
           extra={
             <>
@@ -147,9 +146,6 @@ const StatsSetting = memo<StatsSettingProps>(
               />
             </>
           }
-          styles={{
-            title: { lineHeight: '35px' },
-          }}
         >
           <AsyncBoundary data={data} error={error} errorVariant={'block'} onRetry={() => mutate()}>
             <UsageCards
@@ -168,7 +164,7 @@ const StatsSetting = memo<StatsSettingProps>(
           </AsyncBoundary>
           <div style={{ height: 24 }} />
           <UsageTable dateStrings={dateStrings} />
-        </FormGroup>
+        </Form.Group>
       </>
     );
   },

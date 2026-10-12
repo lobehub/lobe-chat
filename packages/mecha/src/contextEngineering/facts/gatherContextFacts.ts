@@ -3,6 +3,7 @@ import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { AgentManagementIdentifier } from '@lobechat/builtin-tool-agent-management';
 import {
   CloudSandboxIdentifier,
+  formatSandboxStoragePromptVariables,
   formatUploadedFilesPrompt,
 } from '@lobechat/builtin-tool-cloud-sandbox';
 import {
@@ -15,6 +16,7 @@ import {
 } from '@lobechat/builtin-tool-creds';
 import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
 import { LobeAgentIdentifier } from '@lobechat/builtin-tool-lobe-agent';
+import { SkillsIdentifier } from '@lobechat/builtin-tool-skills';
 import { WebOnboardingIdentifier } from '@lobechat/builtin-tool-web-onboarding';
 import { COMPOSIO_APP_TYPES } from '@lobechat/const';
 import {
@@ -448,6 +450,13 @@ export const gatherContextFacts = async (
 ): Promise<GatheredContextFacts> => {
   const docsAgentId = documentsAgentId(request);
   const sandboxEnabled = request.enabledToolIds.includes(CloudSandboxIdentifier);
+  // Two tools reach the sandbox, and the optional one is not the common case:
+  // `lobe-skills` is always on, and its runCommand / execScript open the SAME
+  // session in the SAME directory as the cloud-sandbox tool. Asking only
+  // whether the optional tool is enabled told a skills-driven run the
+  // ephemeral wording while its commands ran in a persistent workspace — so it
+  // cloned into /tmp and the user's file browser stayed empty.
+  const sandboxShellEnabled = sandboxEnabled || request.enabledToolIds.includes(SkillsIdentifier);
 
   const tasks = [
     () =>
@@ -468,6 +477,10 @@ export const gatherContextFacts = async (
           : undefined,
       ),
     () =>
+      attempt('sandboxPersistence', () =>
+        sandboxShellEnabled ? providers.resolveSandboxPersistence?.() : undefined,
+      ),
+    () =>
       attempt('topic', () =>
         request.topicId ? providers.findTopic?.(request.topicId) : undefined,
       ),
@@ -486,6 +499,7 @@ export const gatherContextFacts = async (
     onboardingContext,
     planTodo,
     sandboxFiles,
+    sandboxPersistence,
     topic,
     topicReferences,
     userInfo,
@@ -520,6 +534,12 @@ export const gatherContextFacts = async (
       memory_effort: String(request.agent.chatConfig?.memory?.effort ?? ''),
       sandbox_enabled: String(sandboxEnabled),
       sandbox_uploaded_files: sandboxFiles ? formatUploadedFilesPrompt(sandboxFiles) : '',
+      // Left out entirely for an ephemeral run so the variable generators'
+      // fallback renders the original wording; spelling it out here would mean
+      // two copies of the same ephemeral text to keep in step.
+      ...(sandboxPersistence?.mode === 'persistent'
+        ? formatSandboxStoragePromptVariables(sandboxPersistence)
+        : {}),
       topic_id: request.topicId ?? '',
       topic_title: topic?.title ?? '',
       username: userInfo?.username ?? '',

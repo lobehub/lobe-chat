@@ -87,11 +87,15 @@ export const initialState: State = {
 export const createEphemeralResetState = (): Partial<State> => ({
   activeIndex: null,
   atBottom: true,
+  autoScrollDetached: false,
   earlierMessagesError: undefined,
   heteroOverloadRetryAttempts: {},
   heteroOverloadWaitOpIds: {},
   inputMessage: '',
   isLoadingEarlierMessages: false,
+  // The paging of the previous conversation's transcript must not describe
+  // the next one's rows.
+  messagePaging: undefined,
   refreshingRowId: undefined,
   isScrolling: false,
   messageEditingIds: [],

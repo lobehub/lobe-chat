@@ -11,19 +11,16 @@ overrides:
   vitest: 5.0.3
   zod@^4: 4.6.5
 
-patchedDependencies:
-  electron-sparkle-updater@0.5.2: 6f583444e425a99e21e374a9afab303612eb8255ee21194afdb77f347c6cc045
-
 importers:
 
   .:
     dependencies:
       '@auv-js/cli':
-        specifier: 0.0.28
-        version: 0.0.28
+        specifier: 0.0.33
+        version: 0.0.33
       '@auv-js/sdk':
-        specifier: 0.0.28
-        version: 0.0.28
+        specifier: 0.0.33
+        version: 0.0.33
       '@lobehub/fluent-emoji':
         specifier: ^4.1.1
         version: 4.1.1(@types/react@19.3.0)(antd@6.6.5(date-fns@4.4.0)(luxon@3.7.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@9.4.0)
@@ -34,8 +31,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       electron-sparkle-updater:
-        specifier: 0.5.2
-        version: 0.5.2(patch_hash=6f583444e425a99e21e374a9afab303612eb8255ee21194afdb77f347c6cc045)(electron@44.5.1(supports-color@9.4.0))
+        specifier: 0.5.3
+        version: 0.5.3(electron@44.5.1(supports-color@9.4.0))
       font-list:
         specifier: ^2.1.0
         version: 2.1.0
@@ -641,8 +638,8 @@ importers:
   ../../packages/types:
     dependencies:
       '@lobehub/market-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(supports-color@9.4.0)(zod@4.6.5)
+        specifier: 0.42.0
+        version: 0.42.0(supports-color@9.4.0)(zod@4.6.5)
       '@lobehub/market-types':
         specifier: ^1.17.1
         version: 1.17.1
@@ -712,6 +709,9 @@ importers:
       file-type:
         specifier: ^21.3.4
         version: 21.3.4(supports-color@9.4.0)
+      gpt-tokenizer:
+        specifier: ^3.4.0
+        version: 3.4.0
       mime:
         specifier: ^4.1.0
         version: 4.1.0
@@ -761,6 +761,9 @@ importers:
 
   ../cli:
     dependencies:
+      '@lydell/node-pty':
+        specifier: 1.2.0-beta.15
+        version: 1.2.0-beta.15
       ws:
         specifier: ^8.21.0
         version: 8.22.0
@@ -974,53 +977,53 @@ packages:
       zod:
         optional: true
 
-  '@auv-js/api-client@0.0.28':
-    resolution: {integrity: sha512-dM/41Bymh9AeK+ePORUF+IJ9d1U2eguOO1ywyFYmAsDdLZqm2/C6mAkiqNFXj3UKYuNo2eL8z+pQNrmS3BSoFg==}
+  '@auv-js/api-client@0.0.33':
+    resolution: {integrity: sha512-arcCp/DlfKZb2ZPuHxM3GUs5Ehi2ZgW152CGhKKjXdopzWkGus0esFS8L+vbpTqzq0B1P9kNGxVSTFepFJ9dhw==}
 
-  '@auv-js/cli-darwin-arm64@0.0.28':
-    resolution: {integrity: sha512-mgwnJuzHeAX3KfQSrcR0sniZBCRmXU/FSoBH6dF5jTm+uzeRY37EPJY7YwxvZXsS6TAHLDIjA9JpAzKN1HzRKQ==}
+  '@auv-js/cli-darwin-arm64@0.0.33':
+    resolution: {integrity: sha512-Djp1dglnU6a3Hgi07zv0dTT7OBbONFJ/lxb65vIJ0vUWBziQSFlKqAOWUo3zwkaSTy5N/Wy5uOHBPhSZwO6gtg==}
     engines: {node: '>=20.19.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@auv-js/cli-darwin-x64@0.0.28':
-    resolution: {integrity: sha512-3ZSziSCV2AZF/F1hUauu7fYVlChQ96+4oHgp/fv7OZobAq+/EiAQqyrbatvYE4O27NcjamiNDdMq6SBdcJCvOw==}
+  '@auv-js/cli-darwin-x64@0.0.33':
+    resolution: {integrity: sha512-oyBJdXg8thX+jX5vAo085PzibCgVazRIbYjckgL6NAlFej5rj1Xkh7Q+Z3iqag4c3tAonLcGS2nlfL6arkNY8g==}
     engines: {node: '>=20.19.0'}
     cpu: [x64]
     os: [darwin]
 
-  '@auv-js/cli-linux-arm64-gnu@0.0.28':
-    resolution: {integrity: sha512-x4WVMjqysLyqFZlBfSQI7d5pWBeiY48twodcYaBa49c8xagzfSs1adrJfXqYDW6hptPhtooKRsdFU3HbLsrkgQ==}
+  '@auv-js/cli-linux-arm64-gnu@0.0.33':
+    resolution: {integrity: sha512-LFlsLTUozhvAnJhdimEt16RbJYYWZxqpnrsr9YQS/u7l5dUetJgvDignNp2Ey61a620U1LfwinCsCyBqmfbPQA==}
     engines: {node: '>=20.19.0'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@auv-js/cli-linux-x64-gnu@0.0.28':
-    resolution: {integrity: sha512-rvKrKQ+C/K/JetZef8WroXsC3ZZThv96Szjye/w15+vvJVPujNOcoGeiRc112MrJ6PktKsxbJQXC+B4krZkFWQ==}
+  '@auv-js/cli-linux-x64-gnu@0.0.33':
+    resolution: {integrity: sha512-Tjkgd2UUbiL36fuKoKi1VQDD/66KIzMIIn4RAbm36ThbjpLcy3mQ39zI4+5UqQp7HZ/hBv21R8UUGwviaYH9eA==}
     engines: {node: '>=20.19.0'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@auv-js/cli-win32-arm64-msvc@0.0.28':
-    resolution: {integrity: sha512-R9Nu9TUT2heshiDWbaDOZiuXs/H4yd0RQdatuX/uKSsTnEhgPfKmdYj7hpGqtJf6b52pENbdvUs8ZlOyV5rRJQ==}
+  '@auv-js/cli-win32-arm64-msvc@0.0.33':
+    resolution: {integrity: sha512-3qekgM/FGSeU0yFbTakhY5EJBGFE3N26isJUN+fUJO1oT1HWy//JDWCB7Yn38FcBp+eH+wM8zJIQpLuS1Se0BA==}
     engines: {node: '>=20.19.0'}
     cpu: [arm64]
     os: [win32]
 
-  '@auv-js/cli-win32-x64-msvc@0.0.28':
-    resolution: {integrity: sha512-AwVXaJBqfqidq8VWdQNXfmvkhXDKu4ZwmljBG4y4KxD74zHWVGRPDO3ANRE72HBZuU0sSEP3a8LDUCSo5Ycz2w==}
+  '@auv-js/cli-win32-x64-msvc@0.0.33':
+    resolution: {integrity: sha512-kz62T+9OxdH0w/y8WqiLGayGM0L2mXdR3hCr5nrhwB9pzp28jT5fhtfTznwu0GC5nfT2MFL93tmkhckVxmfPUg==}
     engines: {node: '>=20.19.0'}
     cpu: [x64]
     os: [win32]
 
-  '@auv-js/cli@0.0.28':
-    resolution: {integrity: sha512-ZgLD6e0ruwjaxObls1yldzYFiyiXnwrv5Uoo2vOi6nnycxcHGcYa6C/3Paq9R+48QnDzH1HaLZMXbrPLbFRfLA==}
+  '@auv-js/cli@0.0.33':
+    resolution: {integrity: sha512-mAMGRwrrC+UUTEK5hdBrYhPsamuR+6sRF8eEO9GJABXmvYfsSE6BifY8WrlfepSrEi6JUcTNEVEucxcaC3+KkQ==}
     hasBin: true
 
-  '@auv-js/sdk@0.0.28':
-    resolution: {integrity: sha512-Moknh7kgfTH5eaLqbny1X5u4oDxvJrxhRwQHhaUARo1a6FrdWbwsG821VbXPcYlyUJWD+7XItchdt7o0Rqu0Rw==}
+  '@auv-js/sdk@0.0.33':
+    resolution: {integrity: sha512-9Oadm9bNLPEOcHNC9NoXPL1I5njz5eKfLGN7KhcbA2yenPjigSoT0WIvO3TuEvVubRqHykZLZQdGD11AM2xJUA==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -2184,13 +2187,16 @@ packages:
       react: 19.2.7
       react-dom: 19.2.7
 
-  '@lobehub/market-sdk@0.41.0':
-    resolution: {integrity: sha512-zrzOWVf/aIECfW5w3ZbiV+swPNdeSxpbiSQG6uOLq7G53QKfDm/VNcOWqrZFO+zNMWwXYtJp7BgB9hXVL6tmxg==}
+  '@lobehub/market-sdk@0.42.0':
+    resolution: {integrity: sha512-1c+hf2lP9tqX9qyg6+J5Q90dYqvdZz7agrYWB9h9tiEJdIS57bzFcSRJZzxUiesbQ7jmvS5a7kBMUwsd9kxzKw==}
     peerDependencies:
       zod: ^3.24.4
 
   '@lobehub/market-types@1.17.1':
     resolution: {integrity: sha512-jwY3nXyJaP4V3kBYQpnPMYgWC4LWW03g1BP+s43p4d7SMWJ/wlDwfENoIyDP5p9NFZPIPV4ajaWpidcW7iENOg==}
+
+  '@lobehub/market-types@1.18.0':
+    resolution: {integrity: sha512-1xx+y4rtRpN0oplvJEC1WvmCymJoUNUJIR8wr/U+d/jgrPvJSb3as/NZRCUrxeFd6BDSlQHyJl12CwzFNA6ZAw==}
 
   '@lobehub/streamdown@1.4.0':
     resolution: {integrity: sha512-kkqq2nqwcqz+rV/eUPQ7vY1TQWHWZE3kQt1MsSLtNFLNXMoKYPiF+cdahP97uunWKtf2dB48q/nkSWaZzEKRSw==}
@@ -4893,8 +4899,8 @@ packages:
   electron-publish@26.16.0:
     resolution: {integrity: sha512-Vt3KzQIiw9BImvNOYtndg9Mjki+tl4+1sQiC/+G5j8khWaENOJFWodiB+sUl6yyHwtd37avehskdtPw7f8y/+Q==}
 
-  electron-sparkle-updater@0.5.2:
-    resolution: {integrity: sha512-S7C35axw51hTYer9/TSx28/1QyAxARFJZHIDpXrTDM2owxAeGlqnvcPduzk4FJhNkEah1tF/f3ko21/r/TwvoQ==}
+  electron-sparkle-updater@0.5.3:
+    resolution: {integrity: sha512-mEN+cKZ+oujw/kDTc0XbToVg0dNNZVELttD0xuFo/v3tw8b0aocWF0phcW1XvpUTFHpr4HRApfT3H9QzJgZs5w==}
     engines: {node: '>=20.19'}
     hasBin: true
     peerDependencies:
@@ -8925,40 +8931,40 @@ snapshots:
     optionalDependencies:
       zod: 4.6.5
 
-  '@auv-js/api-client@0.0.28': {}
+  '@auv-js/api-client@0.0.33': {}
 
-  '@auv-js/cli-darwin-arm64@0.0.28':
+  '@auv-js/cli-darwin-arm64@0.0.33':
     optional: true
 
-  '@auv-js/cli-darwin-x64@0.0.28':
+  '@auv-js/cli-darwin-x64@0.0.33':
     optional: true
 
-  '@auv-js/cli-linux-arm64-gnu@0.0.28':
+  '@auv-js/cli-linux-arm64-gnu@0.0.33':
     optional: true
 
-  '@auv-js/cli-linux-x64-gnu@0.0.28':
+  '@auv-js/cli-linux-x64-gnu@0.0.33':
     optional: true
 
-  '@auv-js/cli-win32-arm64-msvc@0.0.28':
+  '@auv-js/cli-win32-arm64-msvc@0.0.33':
     optional: true
 
-  '@auv-js/cli-win32-x64-msvc@0.0.28':
+  '@auv-js/cli-win32-x64-msvc@0.0.33':
     optional: true
 
-  '@auv-js/cli@0.0.28':
+  '@auv-js/cli@0.0.33':
     dependencies:
       std-env: 4.2.0
     optionalDependencies:
-      '@auv-js/cli-darwin-arm64': 0.0.28
-      '@auv-js/cli-darwin-x64': 0.0.28
-      '@auv-js/cli-linux-arm64-gnu': 0.0.28
-      '@auv-js/cli-linux-x64-gnu': 0.0.28
-      '@auv-js/cli-win32-arm64-msvc': 0.0.28
-      '@auv-js/cli-win32-x64-msvc': 0.0.28
+      '@auv-js/cli-darwin-arm64': 0.0.33
+      '@auv-js/cli-darwin-x64': 0.0.33
+      '@auv-js/cli-linux-arm64-gnu': 0.0.33
+      '@auv-js/cli-linux-x64-gnu': 0.0.33
+      '@auv-js/cli-win32-arm64-msvc': 0.0.33
+      '@auv-js/cli-win32-x64-msvc': 0.0.33
 
-  '@auv-js/sdk@0.0.28':
+  '@auv-js/sdk@0.0.33':
     dependencies:
-      '@auv-js/api-client': 0.0.28
+      '@auv-js/api-client': 0.0.33
       '@bufbuild/protobuf': 2.13.0
       '@grpc/grpc-js': 1.14.4
       '@moeru/std': 0.1.0-beta.20
@@ -9998,9 +10004,10 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@lobehub/market-sdk@0.41.0(supports-color@9.4.0)(zod@4.6.5)':
+  '@lobehub/market-sdk@0.42.0(supports-color@9.4.0)(zod@4.6.5)':
     dependencies:
-      '@lobehub/market-types': 1.17.1
+      '@lobehub/market-types': 1.18.0
+      '@opentelemetry/api': 1.9.1
       debug: 4.4.3(supports-color@9.4.0)
       jose: 6.2.12
       url-join: 5.0.0
@@ -10009,6 +10016,10 @@ snapshots:
       - supports-color
 
   '@lobehub/market-types@1.17.1':
+    dependencies:
+      zod: 3.25.76
+
+  '@lobehub/market-types@1.18.0':
     dependencies:
       zod: 3.25.76
 
@@ -12782,7 +12793,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron-sparkle-updater@0.5.2(patch_hash=6f583444e425a99e21e374a9afab303612eb8255ee21194afdb77f347c6cc045)(electron@44.5.1(supports-color@9.4.0)):
+  electron-sparkle-updater@0.5.3(electron@44.5.1(supports-color@9.4.0)):
     dependencies:
       node-addon-api: 8.9.2
       node-gyp: 12.4.0

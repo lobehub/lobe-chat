@@ -11,6 +11,7 @@ import {
   BrainCircuit,
   ChartColumnBigIcon,
   Coins,
+  ContainerIcon,
   CreditCard,
   Database,
   EllipsisIcon,
@@ -85,6 +86,9 @@ export const useCategory = () => {
   const isDevMode = useUserStore((s) => userGeneralSettingsSelectors.config(s).isDevMode);
   const enableOAuthApps = useUserStore(labPreferSelectors.enableOAuthApps);
   const enableIntegrations = useUserStore(labPreferSelectors.enableIntegrations);
+  // Behind the same experiment that gates the persistent sandbox itself: a tab
+  // for environments nothing can run in would be a dead end.
+  const enablePersistentSandbox = useUserStore(labPreferSelectors.enablePersistentSandbox);
 
   const avatarUrl = useMemo(() => {
     if (!avatar) return undefined;
@@ -117,8 +121,10 @@ export const useCategory = () => {
         label: t('tab.hotkey'),
       },
       // Messenger bindings are a per-user identity (owned by userId), so they
-      // live with the account rather than the agent configuration.
-      {
+      // live with the account rather than the agent configuration. The bots
+      // are LobeHub-operated: their credentials are only ever written by the
+      // cloud admin, so a self-hosted deployment has nothing to bind to.
+      enableBusinessFeatures && {
         icon: MessageCircleIcon,
         key: SettingsTabs.Messenger,
         label: t('tab.messenger'),
@@ -150,6 +156,11 @@ export const useCategory = () => {
         icon: MonitorSmartphoneIcon,
         key: SettingsTabs.Devices,
         label: t('tab.devices'),
+      },
+      enablePersistentSandbox && {
+        icon: ContainerIcon,
+        key: SettingsTabs.Environments,
+        label: t('tab.environments'),
       },
       (enableBusinessFeatures || isDesktop) && {
         icon: BellIcon,
@@ -320,6 +331,7 @@ export const useCategory = () => {
     isDevMode,
     enableOAuthApps,
     enableIntegrations,
+    enablePersistentSandbox,
     avatarUrl,
     username,
   ]);

@@ -15,7 +15,7 @@ import { getWorkingDirectoryPathString } from '@/helpers/workingDirectoryPath';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
-import { deviceSelectors, useDeviceStore } from '@/store/device';
+import { useElectronStore } from '@/store/electron';
 
 export type DeviceLabelSource = Pick<DeviceListItem, 'deviceId' | 'friendlyName' | 'hostname'>;
 
@@ -100,6 +100,8 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
     (s) => s.localAgentWorkingDirectoryMap[agentId],
   );
   const agentWorkspaceId = useAgentStore((s) => s.agentMap[agentId]?.workspaceId);
+  // This desktop's own device id — the machine a `local` target means here.
+  const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
 
   // The pool a task may pin from must be the pool its runs can reach: a deviceId
   // carries the identity it was enrolled under, so a workspace agent cannot run
@@ -129,14 +131,36 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
   const pinApplies = !!pinnedDeviceId && canSelectExecutionTarget;
   const isDeviceTarget = pinApplies;
   const effectiveTarget: DeviceExecutionTarget = pinApplies ? 'device' : inheritedTarget;
+  // A workspace agent's `local` target is the member's own machine, which the
+  // task's automation and collaborators cannot resolve unless it is in the task
+  // pool (public workspace devices); offering it would pin an unreachable device.
+  const localCandidate = agencyConfig?.boundDeviceId || currentDeviceId;
+  const localDeviceId =
+    localCandidate &&
+    (!agentWorkspaceId || pool.some((device) => device.deviceId === localCandidate))
+      ? localCandidate
+      : undefined;
+
+  // A `local` target is a machine too — this desktop. A task run carries no
+  // `localDeviceId`, so the server routes it to the agent's bound device (the
+  // desktop syncs its own id there); fall back to this desktop's id when the
+  // binding has not been written yet. Without this the directory axis showed a
+  // dead "Follow agent" hint, although the run starts in a path on a machine.
+  // Picking a directory then pins this machine (`applyTaskDirectorySelection`),
+  // so the run is routed to where the path exists.
   const deviceId = pinApplies
     ? pinnedDeviceId
     : inheritedTarget === 'device'
       ? agencyConfig?.boundDeviceId
-      : undefined;
+      : inheritedTarget === 'local'
+        ? localDeviceId
+        : undefined;
 
-  const rawDeviceDefaultCwd = useDeviceStore(deviceSelectors.getDeviceDefaultCwd(deviceId));
-  const deviceDefaultCwd = getWorkingDirectoryPathString(rawDeviceDefaultCwd);
+  // From the device list this hook already fetched, not the device store,
+  // which a task page may never populate.
+  const deviceDefaultCwd = getWorkingDirectoryPathString(
+    devices?.find((device) => device.deviceId === deviceId)?.defaultCwd ?? undefined,
+  );
 
   // Only a device run has a machine whose default could apply; asking for one
   // otherwise would describe a directory the cloud run never uses.
@@ -155,7 +179,9 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
     [agencyConfig, deviceDefaultCwd, deviceId, legacyAgentWorkingDirectory, workspaceScoped],
   );
 
-  const surface = resolveWorkspaceSurface({
+  // A list since the sandbox landed: more than one surface can apply to the
+  // same run, so membership rather than equality.
+  const surfaces = resolveWorkspaceSurface({
     agencyConfig,
     alwaysShowWorkspace: isHetero,
     clientExecutionAvailable: isDesktop,
@@ -172,7 +198,7 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
   // a directory without one.
   const directoryKind: TaskDirectoryKind = deviceId
     ? 'device'
-    : surface === 'cloudRepo'
+    : surfaces.includes('cloudRepo')
       ? 'repo'
       : 'none';
 

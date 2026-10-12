@@ -9,7 +9,7 @@ import { WorkspaceSidePanelProvider } from '@/features/RightPanel/WorkspaceSideP
 
 import GoalDetailPage from './GoalDetailPage';
 
-const mocks = vi.hoisted(() => ({ hasSupervision: true, showPortal: false }));
+const mocks = vi.hoisted(() => ({ canEdit: true, hasSupervision: true, showPortal: false }));
 
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 
@@ -57,7 +57,7 @@ vi.mock('@/store/global/selectors', () => ({
   systemStatusSelectors: { showLeftPanel: () => false },
 }));
 
-vi.mock('@/hooks/usePermission', () => ({ usePermission: () => ({ allowed: true }) }));
+vi.mock('@/hooks/usePermission', () => ({ usePermission: () => ({ allowed: mocks.canEdit }) }));
 
 vi.mock('@/features/Portal/usePortalPanelWidth', () => ({
   usePortalPanelWidth: () => ({ maxWidth: 800, minWidth: 300, updateWidth: vi.fn(), width: 400 }),
@@ -100,18 +100,35 @@ vi.mock('@/features/WideScreenContainer', () => ({
   default: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 vi.mock('./GoalChat', () => ({
-  default: ({ agentId }: { agentId: string }) => (
-    <div data-agent-id={agentId} data-testid="goal-chat" />
+  default: ({ agentId, initialMessage }: { agentId: string; initialMessage?: string }) => (
+    <div data-agent-id={agentId} data-initial-message={initialMessage} data-testid="goal-chat" />
   ),
 }));
 vi.mock('./GoalDetailActions', () => ({ default: () => null }));
 vi.mock('./GoalHeaderMetrics', () => ({ default: () => null }));
 vi.mock('./GoalRequirement', () => ({ default: () => null }));
 vi.mock('./NorthStarMetrics', () => ({ default: () => null }));
-vi.mock('./ProcessControl', () => ({ default: () => null }));
+// The result page's composer lives inside ProcessControl; the page owns where
+// its message goes, so the stub only exposes the hand-off.
+vi.mock('./ProcessControl', () => ({
+  default: ({ onFollowUp }: { onFollowUp?: (message: string) => void }) =>
+    onFollowUp ? (
+      <button data-testid="goal-follow-up" onClick={() => onFollowUp('what next?')}>
+        follow up
+      </button>
+    ) : null,
+}));
 vi.mock('./GoalSupervision', () => ({
-  GoalSupervision: ({ onOpenChat, topicId }: { onOpenChat?: () => void; topicId: string }) => (
-    <div data-testid="goal-supervision">
+  GoalSupervision: ({
+    initialMessage,
+    onOpenChat,
+    topicId,
+  }: {
+    initialMessage?: string;
+    onOpenChat?: () => void;
+    topicId: string;
+  }) => (
+    <div data-initial-message={initialMessage} data-testid="goal-supervision">
       {topicId}
       {onOpenChat && (
         <button data-testid="goal-supervision-open-chat" onClick={onOpenChat}>
@@ -124,6 +141,7 @@ vi.mock('./GoalSupervision', () => ({
 
 describe('GoalDetailPage', () => {
   beforeEach(() => {
+    mocks.canEdit = true;
     mocks.hasSupervision = true;
     mocks.showPortal = false;
   });
@@ -161,9 +179,40 @@ describe('GoalDetailPage', () => {
     expect(screen.getByTestId('goal-right-panel')).toHaveAttribute('data-expand', 'true');
   });
 
-  // The record is read-only, so a goal that has one must keep a route back to the
-  // editable conversation — otherwise consolidating the header's two controls
-  // would have removed the only way to ask the goal's agent anything.
+  // The result page's composer talks to the same conversation the header opens:
+  // the supervision record when the goal has one, the side chat otherwise.
+  it('sends a result follow-up into the supervision record when the goal has one', () => {
+    render(<GoalDetailPage agentId={'agt_manager'} goalId={'goal_1'} />);
+
+    fireEvent.click(screen.getByTestId('goal-follow-up'));
+
+    expect(screen.getByTestId('goal-supervision')).toHaveAttribute(
+      'data-initial-message',
+      'what next?',
+    );
+    expect(screen.getByTestId('goal-right-panel')).toHaveAttribute('data-expand', 'true');
+  });
+
+  it('sends a result follow-up into the side chat when the goal has no record', () => {
+    mocks.hasSupervision = false;
+    render(<GoalDetailPage agentId={'agt_manager'} goalId={'goal_1'} />);
+
+    fireEvent.click(screen.getByTestId('goal-follow-up'));
+
+    expect(screen.getByTestId('goal-chat')).toHaveAttribute('data-initial-message', 'what next?');
+  });
+
+  // A viewer can read the result but the backend would reject their turn, so
+  // the page offers no composer rather than one that fails on send.
+  it('offers no result follow-up to someone who cannot create content', () => {
+    mocks.canEdit = false;
+    render(<GoalDetailPage agentId={'agt_manager'} goalId={'goal_1'} />);
+
+    expect(screen.queryByTestId('goal-follow-up')).not.toBeInTheDocument();
+  });
+
+  // The side chat stays one menu item away, for a question that should not land
+  // in the manager's own record.
   it('hands a managed goal back to its editable conversation from the record', () => {
     render(<GoalDetailPage agentId={'agt_manager'} goalId={'goal_1'} />);
 

@@ -3,7 +3,7 @@
 import { BRANDING_EMAIL } from '@lobechat/business-const';
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Button, Input, toast, Upload, useModalContext } from '@lobehub/ui/base-ui';
-import { Form } from 'antd';
+import { Form, useForm, useWatch } from '@lobehub/ui/base-ui/form';
 import { ImagePlus, Send } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -29,8 +29,8 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
   const { t } = useTranslation('common');
 
   const { close } = useModalContext();
-  const [form] = Form.useForm<FormValues>();
-  const title = Form.useWatch('title', form);
+  const form = useForm<FormValues>({ initialValues: { message: '', title: '', ...initialValues } });
+  const title = useWatch(form, 'title');
 
   const [loading, setLoading] = useState(false);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
@@ -70,7 +70,9 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
 
   const handleSubmit = useCallback(async () => {
     try {
-      const values = await form.validateFields();
+      const { valid } = await form.validate();
+      if (!valid) return;
+      const values = form.getValues();
       setLoading(true);
 
       await lambdaClient.market.submitFeedback.mutate({
@@ -87,7 +89,7 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
       });
 
       toast.success(t('feedback.success'));
-      form.resetFields();
+      form.reset();
       setScreenshotUrl(null);
       close();
     } catch (error: any) {
@@ -99,7 +101,7 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
   }, [close, form, screenshotUrl, t, userEmail]);
 
   const handleCancel = useCallback(() => {
-    form.resetFields();
+    form.reset();
     setScreenshotUrl(null);
     close();
   }, [close, form]);
@@ -124,29 +126,29 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
         />
       </p>
 
-      <Form form={form} initialValues={initialValues} layout="vertical">
-        <Form.Item
+      <Form form={form} gap={0} layout="vertical">
+        <Form.Field
           label={t('feedback.fields.title.label')}
           name="title"
-          rules={[
-            { message: t('feedback.fields.title.required'), required: true },
-            { max: 200, message: t('feedback.fields.title.maxLength') },
-          ]}
+          required={t('feedback.fields.title.required')}
+          validate={(value: string) =>
+            value.length > 200 ? t('feedback.fields.title.maxLength') : undefined
+          }
         >
           <Input
             maxLength={200}
             placeholder={t('feedback.fields.title.placeholder')}
             suffix={`${title?.length ?? 0} / 200`}
           />
-        </Form.Item>
+        </Form.Field>
 
-        <Form.Item
+        <Form.Field
           label={t('feedback.fields.message.label')}
           name="message"
-          rules={[
-            { message: t('feedback.fields.message.required'), required: true },
-            { max: 5000, message: t('feedback.fields.message.maxLength') },
-          ]}
+          required={t('feedback.fields.message.required')}
+          validate={(value: string) =>
+            value.length > 5000 ? t('feedback.fields.message.maxLength') : undefined
+          }
         >
           <TextArea
             showCount
@@ -154,9 +156,9 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
             placeholder={t('feedback.fields.message.placeholder')}
             rows={6}
           />
-        </Form.Item>
+        </Form.Field>
 
-        <Form.Item label={t('feedback.fields.screenshot.label')} style={{ marginBottom: 0 }}>
+        <Form.Field label={t('feedback.fields.screenshot.label')} style={{ marginBottom: 0 }}>
           <Flexbox gap={8}>
             {screenshotUrl ? (
               <Flexbox gap={8}>
@@ -182,7 +184,7 @@ const FeedbackContent = memo<FeedbackContentProps>(({ initialValues }) => {
           <p style={{ color: 'var(--colorTextSecondary)', fontSize: 12, marginTop: 8 }}>
             {t('feedback.fields.screenshot.hint')}
           </p>
-        </Form.Item>
+        </Form.Field>
       </Form>
 
       <Flexbox horizontal gap={8} justify="flex-end">

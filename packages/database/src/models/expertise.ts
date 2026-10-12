@@ -1,14 +1,17 @@
-import type {
-  ExpertiseAnchorCandidate,
-  ExpertiseCanonEntry,
-  ExpertiseEnforcement,
-  ExpertiseLayerDefinition,
-  ExpertiseLessonSection,
+import {
+  EXPERTISE_RULE_DIRECTIONS,
+  type ExpertiseAnchorCandidate,
+  type ExpertiseCanonEntry,
+  type ExpertiseEnforcement,
+  type ExpertiseLayerDefinition,
+  type ExpertiseLessonSection,
+  type ExpertiseRuleDirection,
 } from '@lobechat/types';
 import { and, asc, desc, eq, inArray, isNotNull, isNull, or, type SQL, sql } from 'drizzle-orm';
 
 import {
   agents,
+  documents,
   expertiseBindings,
   expertiseDomains,
   expertiseDomainSnapshots,
@@ -68,6 +71,13 @@ const carrierColumns = (
     ? { boundWorkspaceId: owner.workspaceId }
     : { boundUserId: owner.userId };
 };
+
+/**
+ * Runs that observed practice: a material the reviewer distilled (`reflectionKey` `material:…`)
+ * records the passages a rule was read from, which are not outcomes of applying it.
+ */
+const notMaterialRun = () =>
+  sql`coalesce(${expertiseRuns.reflectionKey}, '') not like 'material:%'`;
 
 export class ExpertiseModel {
   private db: LobeChatDatabase;
@@ -184,6 +194,8 @@ export class ExpertiseModel {
   /**
    * Per-run pass/violation counts — the reliability series behind the "做对率" chart.
    * A run without hits produces no row; callers treat missing runs as "nothing to judge".
+   * A material the reviewer distilled is not practice: its quotes are evidence the rule exists,
+   * not a run that got it right, so they never count as passes.
    */
   reliabilitySeries = async (domainIds: string[]) => {
     if (domainIds.length === 0) return [];
@@ -196,7 +208,7 @@ export class ExpertiseModel {
       })
       .from(expertiseHits)
       .innerJoin(expertiseRuns, eq(expertiseRuns.id, expertiseHits.runId))
-      .where(inArray(expertiseHits.domainId, domainIds))
+      .where(and(inArray(expertiseHits.domainId, domainIds), notMaterialRun()))
       .groupBy(expertiseHits.domainId, expertiseRuns.runIndex)
       .orderBy(asc(expertiseHits.domainId), asc(expertiseRuns.runIndex));
   };
@@ -230,6 +242,8 @@ export class ExpertiseModel {
           compilability: expertiseLessons.compilability,
           createdAt: expertiseLessons.createdAt,
           createdByUserId: expertiseLessons.createdByUserId,
+          // Null until judged; the page asks for the unjudged ones to be settled.
+          direction: expertiseLessons.direction,
           domainId: expertiseLessons.domainId,
           originRunId: expertiseLessons.originRunId,
           // Rows that predate the column hold null; they have only ever been reminders.
@@ -365,7 +379,11 @@ export class ExpertiseModel {
         // reader uses for `taughtByUser`.
         .map(({ originRunId, ...lesson }) => ({
           ...lesson,
-          ...(bySource.get(lesson.id) ?? { conversationHitCount: 0, rejectionHitCount: 0 }),
+          ...(bySource.get(lesson.id) ?? {
+            conversationHitCount: 0,
+            materialHitCount: 0,
+            rejectionHitCount: 0,
+          }),
           authored: lesson.createdByUserId != null && originRunId == null,
         })),
       scopes: (bindingsByDomain.get(domain.id) ?? []).map((binding) => {
@@ -405,9 +423,16 @@ export class ExpertiseModel {
           checkTitle: verifyCheckResults.checkItemTitle,
           createdAt: expertiseHits.createdAt,
           example: expertiseHits.example,
+          // A material the reviewer brought: the document it was read from (a file is recorded as
+          // its parsed document, which keeps the file id), and which kind of material it was.
+          documentFileId: documents.fileId,
+          documentId: documents.id,
           // Read from the run, not from the check-result join: a deleted acceptance leaves that
           // join empty, and the hit was still a rejection.
           fromAcceptance: sql<boolean>`coalesce(${expertiseRuns.reflectionKey}, '') like 'acceptance:%'`,
+          materialType: sql<
+            string | null
+          >`case when ${expertiseRuns.reflectionKey} like 'material:%' then split_part(${expertiseRuns.reflectionKey}, ':', 2) end`,
           id: expertiseHits.id,
           // Where a conversation source can be reopened: the topic, the agent it lives under, and
           // the message the observation was read from when ingestion could find it.
@@ -432,6 +457,15 @@ export class ExpertiseModel {
             eq(expertiseRuns.subjectType, 'topic'),
             eq(topics.id, expertiseRuns.subjectId),
             buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+          ),
+        )
+        // Only a document the viewer can open, by the same scope documents are listed with.
+        .leftJoin(
+          documents,
+          and(
+            eq(expertiseRuns.subjectType, 'document'),
+            eq(documents.id, expertiseRuns.subjectId),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, documents),
           ),
         )
         .leftJoin(verifyCheckResults, eq(verifyCheckResults.id, expertiseHits.sourceCheckResultId))
@@ -526,8 +560,10 @@ export class ExpertiseModel {
         ? []
         : await this.db
             .select({
-              conversations: sql<number>`count(*) filter (where coalesce(${expertiseRuns.reflectionKey}, '') not like 'acceptance:%')::int`,
+              conversations: sql<number>`count(*) filter (where coalesce(${expertiseRuns.reflectionKey}, '') not like 'acceptance:%' and coalesce(${expertiseRuns.reflectionKey}, '') not like 'material:%')::int`,
               lessonId: expertiseHits.lessonId,
+              // Read from a material the reviewer brought: evidence the rule was stated, not seen.
+              materials: sql<number>`count(*) filter (where ${expertiseRuns.reflectionKey} like 'material:%')::int`,
               rejections: sql<number>`count(*) filter (where ${expertiseRuns.reflectionKey} like 'acceptance:%')::int`,
             })
             .from(expertiseHits)
@@ -539,11 +575,15 @@ export class ExpertiseModel {
     return new Map(
       lessonIds.map((id) => {
         const lineage = lineages.get(id) ?? [];
-        const sum = (key: 'conversations' | 'rejections') =>
+        const sum = (key: 'conversations' | 'materials' | 'rejections') =>
           lineage.reduce((total, member) => total + (byLesson.get(member)?.[key] ?? 0), 0);
         return [
           id,
-          { conversationHitCount: sum('conversations'), rejectionHitCount: sum('rejections') },
+          {
+            conversationHitCount: sum('conversations'),
+            materialHitCount: sum('materials'),
+            rejectionHitCount: sum('rejections'),
+          },
         ];
       }),
     );
@@ -585,6 +625,7 @@ export class ExpertiseModel {
    * Active lessons for the portrait, each with its most recent hit outcomes (newest last).
    * Recent outcomes are what the client folds into a reliability tier; the topic title of each
    * hit lets the row say *where* it last went wrong without another query.
+   * Material quotes are left out for the same reason as in {@link reliabilitySeries}.
    */
   listLessonsWithRecent = async (domainIds: string[], recentLimit = 6) => {
     if (domainIds.length === 0) return [];
@@ -621,7 +662,7 @@ export class ExpertiseModel {
         })
         .from(expertiseHits)
         .innerJoin(expertiseRuns, eq(expertiseRuns.id, expertiseHits.runId))
-        .where(inArray(expertiseHits.domainId, domainIds)),
+        .where(and(inArray(expertiseHits.domainId, domainIds), notMaterialRun())),
     );
     const recentRows = await this.db
       .with(ranked)
@@ -1111,10 +1152,16 @@ export class ExpertiseModel {
    */
   createRule = async (params: {
     compilability?: 'compilable' | 'not-compilable';
+    direction?: ExpertiseRuleDirection;
     domainId: string;
     enforcement?: ExpertiseEnforcement;
     how?: string;
     limits?: string;
+    /**
+     * The run it was read from, when it was distilled from a material rather than typed. It also
+     * keeps the row from reading as "you wrote it", which is decided by the absence of an origin.
+     */
+    originRunId?: string;
     title: string;
     why?: string;
   }) => {
@@ -1139,8 +1186,10 @@ export class ExpertiseModel {
           code,
           compilability: params.compilability ?? 'not-compilable',
           createdByUserId: this.userId,
+          direction: params.direction ?? null,
           domainId: params.domainId,
           enforcement: params.enforcement ?? 'remind',
+          originRunId: params.originRunId,
           polarity: 'rule',
           reasonKind: 'taste',
           reasonSource: 'reviewer',
@@ -1151,6 +1200,76 @@ export class ExpertiseModel {
         .returning({ code: expertiseLessons.code, id: expertiseLessons.id });
       return row;
     });
+  };
+
+  /**
+   * One reading of a material the reviewer brought, as a run on one domain. `reflectionKey`
+   * starts with `material:` so counts and sources can tell it apart from rejections and
+   * conversations the system observed on its own. Returns null, writing nothing, when the domain
+   * is not one the caller may file into.
+   */
+  insertMaterialRun = async (params: {
+    domainId: string;
+    reflectionKey: string;
+    subjectId: string;
+    subjectType: 'document' | 'standalone' | 'topic';
+  }) => {
+    // The domain row lock queues this behind any other writer numbering runs in the same domain
+    // (another distillation, background ingestion); otherwise both read the same maximum and the
+    // unique `(domain_id, run_index)` index aborts one whole save. Held until the caller commits.
+    // Read in the caller's scope, so a foreign domain id is neither locked nor numbered.
+    const [domain] = await this.db
+      .select({ id: expertiseDomains.id })
+      .from(expertiseDomains)
+      .where(and(eq(expertiseDomains.id, params.domainId), this.scopeWhere()))
+      .for('update');
+    if (!domain) return null;
+    const [prior] = await this.db
+      .select({ value: sql<number | null>`max(${expertiseRuns.runIndex})` })
+      .from(expertiseRuns)
+      .where(eq(expertiseRuns.domainId, params.domainId));
+    const [row] = await this.db
+      .insert(expertiseRuns)
+      .values({
+        actorId: this.userId,
+        actorType: 'user',
+        completedAt: new Date(),
+        domainId: params.domainId,
+        hadHumanInLoop: true,
+        reflectionKey: params.reflectionKey,
+        runIndex: (prior?.value ?? 0) + 1,
+        subjectId: params.subjectId,
+        subjectType: params.subjectType,
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      })
+      .returning({ id: expertiseRuns.id });
+    return row.id;
+  };
+
+  /**
+   * The passage of a material a rule was read from. It is evidence that the material states the
+   * rule, not a violation, so it does not add to `hitCount`.
+   */
+  insertMaterialHit = async (params: {
+    domainId: string;
+    lessonId: string;
+    quote: string;
+    runId: string;
+    where: string;
+  }) => {
+    const [row] = await this.db
+      .insert(expertiseHits)
+      .values({
+        domainId: params.domainId,
+        example: params.quote || null,
+        lessonId: params.lessonId,
+        outcome: 'pass',
+        runId: params.runId,
+        where: params.where,
+      })
+      .returning({ id: expertiseHits.id });
+    return row.id;
   };
 
   /**
@@ -1183,6 +1302,21 @@ export class ExpertiseModel {
       .update(expertiseLessons)
       .set({ ...fields, updatedAt: new Date() })
       .where(eq(expertiseLessons.id, lessonId));
+  };
+
+  /**
+   * Writes judged directions onto rules that still have none. A rule the reviewer flipped while
+   * the judgment was in flight keeps their choice: only null rows are filled.
+   */
+  fillLessonDirections = async (judged: { direction: ExpertiseRuleDirection; id: string }[]) => {
+    for (const direction of EXPERTISE_RULE_DIRECTIONS) {
+      const ids = judged.filter((rule) => rule.direction === direction).map((rule) => rule.id);
+      if (ids.length === 0) continue;
+      await this.db
+        .update(expertiseLessons)
+        .set({ direction, updatedAt: new Date() })
+        .where(and(inArray(expertiseLessons.id, ids), isNull(expertiseLessons.direction)));
+    }
   };
 
   /**

@@ -64,9 +64,10 @@ const SCAN_TIMEOUT_MS = 10_000;
  * else's enrollment, while shared cleanup remains an owner action.
  */
 /**
- * Gate an action that operates the machine itself — exposing a port, updating
- * its app — the same way `browseDirectory` gates new paths: on a workspace
- * device, only the enrolling member or a workspace owner.
+ * Gate an action that operates the machine itself — browsing folders, a
+ * terminal, exposing a port, updating its app. A public workspace device is
+ * shared infra every member works on, so any member may operate it; a private
+ * one stays limited to the enrolling member or a workspace owner.
  */
 const assertDeviceOperable = async (
   ctx: {
@@ -82,10 +83,13 @@ const assertDeviceOperable = async (
 
   const row = await ctx.deviceModel.findWorkspaceDeviceById(deviceId);
   if (!row) throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-  if (!canEditWorkspaceDevice(ctx.workspaceRole, ctx.userId, row.userId)) {
+  if (!canOperateWorkspaceDevice(ctx.workspaceRole, ctx.userId, row)) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: `Only the enrolling member or a workspace owner can ${action} on this device.`,
+      message:
+        row.visibility === 'public'
+          ? `Workspace viewers cannot ${action} on this device.`
+          : `Only the enrolling member or a workspace owner can ${action} on this private device.`,
     });
   }
 };
@@ -95,6 +99,29 @@ const assertTunnelDeviceWritable = (
   ctx: Parameters<typeof assertDeviceOperable>[0],
   deviceId: string,
 ) => assertDeviceOperable(ctx, deviceId, 'expose a port');
+
+/**
+ * Base64 characters accepted by one `writeTerminal` call. A keystroke is a
+ * handful of bytes; this only bounds what a malicious caller can push through
+ * in a single request.
+ */
+const MAX_TERMINAL_WRITE_CHARS = 65_536;
+
+/**
+ * Relay a terminal call, surfacing the device's own reason. A device that is
+ * offline — or a client without PTY support — answers with a message the user
+ * needs to read; a bare 500 would make it look like a LobeHub bug.
+ */
+const relayTerminal = async <T>(run: () => Promise<T>): Promise<T> => {
+  try {
+    return await run();
+  } catch (error) {
+    throw new TRPCError({
+      code: 'BAD_GATEWAY',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
 
 /** Append a freshly minted access token to a tunnel URL. */
 const buildTunnelOpenUrl = async (
@@ -115,6 +142,19 @@ const canEditWorkspaceDevice = (
   actorUserId: string,
   enrollerUserId: string,
 ): boolean => role === 'owner' || enrollerUserId === actorUserId;
+
+/**
+ * Using a workspace device (as opposed to editing its registration) is open to
+ * every member once it is public; read-only viewers never operate a machine.
+ * See {@link assertDeviceOperable}.
+ */
+const canOperateWorkspaceDevice = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  row: { userId: string; visibility: 'private' | 'public' },
+): boolean =>
+  (row.visibility === 'public' && !!role && role !== 'viewer') ||
+  canEditWorkspaceDevice(role, actorUserId, row.userId);
 
 /**
  * Fixed workspace agents promise every member the same execution device. Keep
@@ -429,6 +469,7 @@ export const deviceRouter = router({
         env: z.record(z.string(), z.string()).optional(),
         type: z.enum([
           'codebuddy',
+          'codex',
           'cursor',
           'droid',
           'devin',
@@ -793,8 +834,7 @@ export const deviceRouter = router({
 
   /**
    * Browse one directory level on a remote device. Personal devices belong to
-   * the caller. A workspace device may expose new paths only to its enroller or
-   * a workspace owner; other members continue to use its approved recents.
+   * the caller; workspace devices follow {@link assertDeviceOperable}.
    */
   browseDirectory: deviceProcedure
     .input(
@@ -806,19 +846,7 @@ export const deviceRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (ctx.workspaceId) {
-        const row = await ctx.deviceModel.findWorkspaceDeviceById(input.deviceId);
-        if (!row) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-        }
-        const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
-        if (!canEditWorkspaceDevice(role, ctx.userId, row.userId)) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Only the enrolling member or a workspace owner can browse this device.',
-          });
-        }
-      }
+      await assertDeviceOperable(ctx, input.deviceId, 'browse folders');
 
       const result = await deviceGateway.browseDirectory({
         cursor: input.cursor,
@@ -1425,6 +1453,146 @@ export const deviceRouter = router({
       await assertDeviceOperable(ctx, input.deviceId, 'update the app');
       return deviceGateway.installAppUpdate({
         deviceId: input.deviceId,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+      });
+    }),
+
+  // ─── Interactive terminal ───
+  //
+  // A terminal hands the caller a shell on the device, so it is gated exactly
+  // like exposing a port. The check runs on the polling reads too, not just on
+  // create — otherwise a session would outlive the permission that opened it.
+
+  createTerminalSession: deviceProcedure
+    .input(
+      z.object({
+        cols: z.number().int().min(1).max(1000),
+        cwd: z.string().optional(),
+        deviceId: z.string(),
+        rows: z.number().int().min(1).max(1000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'open a terminal on');
+      return relayTerminal(() =>
+        deviceGateway.createTerminalSession({
+          cols: input.cols,
+          cwd: input.cwd,
+          deviceId: input.deviceId,
+          rows: input.rows,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+      );
+    }),
+
+  writeTerminal: deviceProcedure
+    .input(
+      z.object({
+        /** Base64 keystrokes. */
+        data: z.string().max(MAX_TERMINAL_WRITE_CHARS),
+        deviceId: z.string(),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'use a terminal on');
+      return relayTerminal(() =>
+        deviceGateway.writeTerminal({
+          data: input.data,
+          deviceId: input.deviceId,
+          id: input.id,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+      );
+    }),
+
+  readTerminal: deviceProcedure
+    .input(z.object({ cursor: z.number().int().min(0), deviceId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'use a terminal on');
+      return relayTerminal(() =>
+        deviceGateway.readTerminal({
+          cursor: input.cursor,
+          deviceId: input.deviceId,
+          id: input.id,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+      );
+    }),
+
+  resizeTerminal: deviceProcedure
+    .input(
+      z.object({
+        cols: z.number().int().min(1).max(1000),
+        deviceId: z.string(),
+        id: z.string(),
+        rows: z.number().int().min(1).max(1000),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'use a terminal on');
+      return relayTerminal(() =>
+        deviceGateway.resizeTerminal({
+          cols: input.cols,
+          deviceId: input.deviceId,
+          id: input.id,
+          rows: input.rows,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+      );
+    }),
+
+  closeTerminal: deviceProcedure
+    .input(z.object({ deviceId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'use a terminal on');
+      return relayTerminal(() =>
+        deviceGateway.closeTerminal({
+          deviceId: input.deviceId,
+          id: input.id,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+      );
+    }),
+
+  getCliUpdateState: deviceProcedure
+    .input(z.object({ deviceId: z.string() }).strict())
+    .query(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'maintain the CLI');
+      return deviceGateway.getCliUpdateState({
+        deviceId: input.deviceId,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+      });
+    }),
+
+  checkCliUpdate: deviceProcedure
+    .input(z.object({ deviceId: z.string() }).strict())
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'maintain the CLI');
+      return deviceGateway.checkCliUpdate({
+        deviceId: input.deviceId,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+      });
+    }),
+
+  restartCli: deviceProcedure
+    .input(
+      z
+        .object({ deviceId: z.string(), requestId: z.string().uuid(), update: z.boolean() })
+        .strict(),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'maintain the CLI');
+      return deviceGateway.restartCli({
+        ...input,
         userId: ctx.userId,
         workspaceId: ctx.workspaceId,
       });

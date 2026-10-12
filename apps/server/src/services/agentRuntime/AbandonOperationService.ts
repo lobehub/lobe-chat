@@ -24,6 +24,20 @@ import { createDefaultSnapshotStore } from './snapshotStore';
 
 const log = debug('lobe-server:abandon-operation');
 
+/**
+ * Report a failure that leaves terminal state unsettled.
+ *
+ * Everything on this path is best-effort, but some of it is not optional:
+ * when the durable row, the run row or the terminal hook fails here, the run
+ * ends with a row still claiming to be `running` and nothing left to report it
+ * — a Task that never settles, a Goal that waits on it, and a user looking at a
+ * spinner. Those failures get a real log line; the ones that only
+ * cost a retry stay on `debug`.
+ */
+const reportSettleFailure = (message: string, context: unknown): void => {
+  console.error(`[abandon-operation] ${message}: %O`, context);
+};
+
 interface AbandonOperationOptions {
   coordinator?: AgentRuntimeCoordinator;
   snapshotStore?: ISnapshotStore | null;
@@ -144,7 +158,8 @@ export class AbandonOperationService {
     const shouldDispatchAbandonedLifecycle =
       state.status === 'running' ||
       state.status === 'waiting_for_human' ||
-      state.status === 'waiting_for_async_tool';
+      state.status === 'waiting_for_async_tool' ||
+      state.status === 'waiting_for_client';
     const message = `${ABANDONED_OPERATION_ERROR_PREFIX} ${reason}`;
     const error: ChatMessageError = {
       body: { message },
@@ -231,7 +246,10 @@ export class AbandonOperationService {
           result.assistantMessageUpdated = true;
         }
       } catch (e) {
-        log('[%s] assistant failure row write failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandoned op failed to mark its assistant message (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -242,7 +260,7 @@ export class AbandonOperationService {
         });
         await topicModel.settleRunningOperation(origin.topicId, operationId);
       } catch (e) {
-        log('[%s] abandoned op runningOperation cleanup failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(`abandoned op failed to settle its topic (op=${operationId})`, e);
       }
     }
 
@@ -255,7 +273,10 @@ export class AbandonOperationService {
           skipErrorMessageWrite: result.assistantMessageUpdated,
         });
       } catch (e) {
-        log('[%s] abandoned op lifecycle dispatch failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandoned op failed to dispatch its terminal hooks (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -283,7 +304,10 @@ export class AbandonOperationService {
           log('[%s] durable row settled by abandon safety net', operationId);
         }
       } catch (e) {
-        log('[%s] abandon safety-net settle failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandon safety net could not retire the durable row (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -384,7 +408,9 @@ export class AbandonOperationService {
     if (
       !op ||
       (!preClaimed &&
-        !['running', 'waiting_for_human', 'waiting_for_async_tool'].includes(op.status))
+        !['running', 'waiting_for_human', 'waiting_for_async_tool', 'waiting_for_client'].includes(
+          op.status,
+        ))
     ) {
       return;
     }
@@ -417,7 +443,10 @@ export class AbandonOperationService {
           totalTokens: 0,
         });
       } catch (e) {
-        log('[%s] no-state abandon: recordCompletion failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `no-state abandon could not retire the durable row (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -485,7 +514,10 @@ export class AbandonOperationService {
           : { skipErrorMessageWrite: true },
       );
     } catch (e) {
-      log('[%s] no-state abandon: lifecycle dispatch failed (non-fatal): %O', operationId, e);
+      reportSettleFailure(
+        `no-state abandon failed to dispatch its terminal hooks (op=${operationId})`,
+        e,
+      );
     }
   }
 
@@ -604,7 +636,13 @@ export class AbandonOperationService {
         }
         return { ...topicHooks, ...(await this.findPlaceholderMessage(op, operationId)) };
       } catch (e) {
-        log('[%s] no-state abandon: topic lookup failed (non-fatal): %O', operationId, e);
+        // The topic could not be settled, so this run's hooks are suppressed —
+        // which means the Task behind it never hears that it ended. Visible
+        // even though the path continues.
+        reportSettleFailure(
+          `no-state abandon could not settle its topic, so the terminal hooks are suppressed (op=${operationId})`,
+          e,
+        );
         // A failed settle cannot rule out a newer operation on the topic, and
         // firing this run's task hook would then pause the replacement's Task.
         return { ...(await this.findPlaceholderMessage(op, operationId)), ownershipUnproven: true };

@@ -28,7 +28,22 @@ const mocks = vi.hoisted(() => ({
   activeTopicAgency: undefined as undefined | { agencyConfig: Record<string, unknown> },
   agentState: { agentMap: {} as Record<string, { workspaceId?: string }> },
   devices: [] as { deviceId: string; scope?: string; visibility?: string }[],
-  deviceState: { defaultCwd: {} as Record<string, string>, workingDirs: {} as Record<string, []> },
+  electron: { currentDeviceId: undefined as string | undefined, isDesktop: false },
+}));
+
+vi.mock('@lobechat/const', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    get isDesktop() {
+      return mocks.electron.isDesktop;
+    },
+  };
+});
+
+vi.mock('@/store/electron', () => ({
+  useElectronStore: (selector: (state: unknown) => unknown) =>
+    selector({ gatewayDeviceInfo: { deviceId: mocks.electron.currentDeviceId } }),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -59,17 +74,6 @@ vi.mock('@/store/agent/selectors', () => ({
   agentByIdSelectors: { isAgentHeterogeneousById: () => () => true },
 }));
 
-vi.mock('@/store/device', () => ({
-  deviceSelectors: {
-    getDeviceDefaultCwd: (deviceId?: string) => (state: (typeof mocks)['deviceState']) =>
-      state.defaultCwd[deviceId ?? ''],
-    getDeviceWorkingDirs: (deviceId?: string) => (state: (typeof mocks)['deviceState']) =>
-      state.workingDirs[deviceId ?? ''] ?? [],
-  },
-  useDeviceStore: (selector: (state: (typeof mocks)['deviceState']) => unknown) =>
-    selector(mocks.deviceState),
-}));
-
 const deviceBoundAgent = {
   boundDeviceId: DEVICE_AGENT_BOUND,
   executionTarget: 'device',
@@ -83,7 +87,7 @@ beforeEach(() => {
   mocks.agency.isPreferenceLoading = false;
   mocks.agentState.agentMap = {};
   mocks.devices = [];
-  mocks.deviceState = { defaultCwd: {}, workingDirs: {} };
+  mocks.electron = { currentDeviceId: undefined, isDesktop: false };
 });
 
 describe('useTaskRunTarget', () => {
@@ -111,6 +115,54 @@ describe('useTaskRunTarget', () => {
     expect(result.current.deviceId).toBe(DEVICE_AGENT_BOUND);
     expect(result.current.directoryKind).toBe('device');
     expect(result.current.pinnedDeviceId).toBeUndefined();
+  });
+
+  it('offers the directory control for a local target on this desktop', () => {
+    // A `local` run still starts in a path on a machine — this desktop. This
+    // used to report `none`, leaving the task with a dead "Follow agent" hint.
+    mocks.electron = { currentDeviceId: 'device-this-desktop', isDesktop: true };
+    mocks.agency.agencyConfig = {
+      executionTarget: 'local',
+      heterogeneousProvider: { type: 'claude-code' },
+    };
+
+    const { result } = renderHook(() => useTaskRunTarget('agent-1'));
+
+    expect(result.current.inheritedTarget).toBe('local');
+    expect(result.current.deviceId).toBe('device-this-desktop');
+    expect(result.current.directoryKind).toBe('device');
+    expect(result.current.pinnedDeviceId).toBeUndefined();
+  });
+
+  it('prefers the bound device for a local target, the machine the server routes to', () => {
+    mocks.electron = { currentDeviceId: 'device-this-desktop', isDesktop: true };
+    mocks.agency.agencyConfig = {
+      boundDeviceId: DEVICE_AGENT_BOUND,
+      executionTarget: 'local',
+      heterogeneousProvider: { type: 'claude-code' },
+    };
+
+    const { result } = renderHook(() => useTaskRunTarget('agent-1'));
+
+    expect(result.current.deviceId).toBe(DEVICE_AGENT_BOUND);
+    expect(result.current.directoryKind).toBe('device');
+  });
+
+  it('offers no directory control for a workspace agent whose local machine is outside the task pool', () => {
+    // A member's personal desktop cannot be resolved by the task's automation or
+    // collaborators, so pinning it through a directory pick would strand the task.
+    mocks.electron = { currentDeviceId: PERSONAL_DEVICE.deviceId, isDesktop: true };
+    mocks.agentState.agentMap = { 'agent-1': { workspaceId: 'ws-1' } };
+    mocks.devices = [PERSONAL_DEVICE, WORKSPACE_DEVICE];
+    mocks.agency.agencyConfig = {
+      executionTarget: 'local',
+      heterogeneousProvider: { type: 'claude-code' },
+    };
+
+    const { result } = renderHook(() => useTaskRunTarget('agent-1'));
+
+    expect(result.current.deviceId).toBeUndefined();
+    expect(result.current.directoryKind).not.toBe('device');
   });
 
   it('ignores a task pin the run side would drop for a fixed selection policy', () => {

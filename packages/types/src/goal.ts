@@ -228,6 +228,32 @@ export interface GoalManagerPolicy {
   maxTurns?: number;
 }
 
+/** Bounded wait on time or one correlated external result. */
+export interface GoalManagerWait {
+  /**
+   * When the currently scheduled wake check fires. Ticks before this moment
+   * leave the queue alone, so polling a wait does not enqueue duplicate wakes.
+   */
+  armedUntil?: string;
+  event?: { key: string; type: string };
+  /** Fallback check even when an external event is lost. */
+  until: string;
+  wake?: {
+    at: string;
+    cause: 'event' | 'timer';
+    eventId?: string;
+    reference?: string;
+    summary?: string;
+  };
+}
+
+/** A question the main Agent escalates to the owner, with the answers it proposes. */
+export interface GoalManagerAsk {
+  options: GoalDecisionOption[];
+  question: string;
+  recommendedOptionId?: string;
+}
+
 /** Server-owned dispatch receipt, retained across backend restarts. */
 export interface GoalManagerState {
   /**
@@ -252,6 +278,23 @@ export interface GoalManagerState {
    * owner can edit.
    */
   dispatchNeverStarted?: boolean;
+  /**
+   * Consecutive turns that ended in an error without committing a plan. Reset by
+   * a turn that commits a plan or ends without an error. Reaching the limit
+   * pauses the Goal on the last error instead of re-dispatching an Agent that
+   * keeps failing the same way.
+   */
+  failedTurns?: number;
+  /**
+   * The device the last turn could not reach, when it failed as unavailable.
+   * Seeing it online again ends the `retryAfter` wait early.
+   */
+  offlineDevice?: { deviceId: string; userId: string; workspaceId?: string };
+  /**
+   * Consecutive turns that never reached their device. They are not charged to
+   * the turn budget and follow the Task offline retry schedule instead.
+   */
+  offlineTurns?: number;
   operationId?: string;
   /**
    * Management conversations this Goal planned in before a handoff moved it to
@@ -272,17 +315,79 @@ export interface GoalManagerState {
    *  it can retire exactly that node without parsing the key. */
   problemTaskId?: string;
   readyForAcceptance?: boolean;
+  replanReason?: string;
+  /**
+   * Earliest time the next turn may be dispatched after one failed without a
+   * plan: the provider's quota reset when the error carries one, otherwise an
+   * exponential backoff. Without it a failing Agent was re-dispatched on every
+   * tick and spent the whole turn budget in minutes.
+   */
+  retryAfter?: string;
   reviewSnapshot?: string;
   snapshot: string;
   startedAt: string;
   submitted?: {
-    action: 'tasks' | 'verify' | 'retry' | 'escalate';
+    action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait';
+    /**
+     * The question an `escalate` puts to the owner, with the answers it offers.
+     * Without it the gate could only ask "retry or retire?" while the real
+     * question sat unanswerable in the reason text.
+     */
+    ask?: GoalManagerAsk;
     reason: string;
     taskId?: string;
   };
   token: string;
   topicId: string;
   turns: number;
+  wait?: GoalManagerWait;
+}
+
+/**
+ * The admission verdict `submit` would reach, plus the facts behind it.
+ *
+ * Served as `goal.planContext` and rendered by `lh goal state`: a refused
+ * `lh goal plan` re-reads it, so the CLI can explain *why* from the server's own
+ * predicates. `snapshot` / `review` carry the recorded hashes next to the
+ * current ones because a stale plan is exactly the case a client cannot judge on
+ * its own — the graph it holds has no manager or review receipt.
+ */
+export interface GoalPlanContext {
+  /**
+   * `ok` means nothing refuses this turn — NOT that a new plan would be applied.
+   * `code: 'duplicate'` is `ok` because a plan is already recorded and
+   * re-submitting returns its receipt unchanged; it must not be rendered as
+   * "accepted".
+   */
+  admission: { code: string; message?: string; ok: boolean };
+  budget?: {
+    blocked: boolean;
+    deadline: string | null;
+    maxRounds: number | null;
+    maxTotalCost: number | null;
+    runs: number;
+    totalCost: number;
+  };
+  goal: { agentId: string | null; pausedBy: GoalPauseReason | null; status: GoalStatus };
+  queue?: { pendingDecisions: number; unfinishedTasks: number };
+  review: { current?: string; recorded: string | null };
+  snapshot: { current?: string; recorded: string | null };
+  turn: {
+    adopted: boolean;
+    consumed: boolean;
+    dispatchNeverStarted: boolean;
+    failedTurns: number;
+    operationId: string | null;
+    /** `agent_operations.status` of the run behind this turn, when one exists. */
+    opStatus: string | null;
+    problem: string | null;
+    problemTaskId: string | null;
+    retryAfter: string | null;
+    startedAt: string;
+    submitted: GoalManagerState['submitted'] | null;
+    token: string;
+    turns: number;
+  } | null;
 }
 
 /**
@@ -337,6 +442,11 @@ export interface GoalConfig {
   planningCheckpoint?: { expiresAt: string; token: string };
   /** Retained after release to distinguish lease-aware retries from legacy planners. */
   planningProtocol?: 'lease-v1';
+  /**
+   * Coordinator-owned: when the queued wake for a Task waiting on a usage-window
+   * reset fires. One wake per Goal, so ticks before the reset do not queue more.
+   */
+  quotaRetryWakeAt?: string;
   recovery?: GoalRecoveryPolicy;
   /** Coordinator-owned receipt of the latest wrap-up report dispatch. */
   report?: GoalReportDispatch;
@@ -426,8 +536,18 @@ export type GoalDecisionAuthority = 'agent' | 'user' | 'project_role';
 
 export type GoalDecisionStatus = 'pending' | 'resolved' | 'canceled';
 
+/**
+ * What answering with an option does to the Task the gate was opened for.
+ * Coordinator options carry it implicitly through their fixed ids
+ * (`retry` / `retire` / `fail`); options the main Agent writes for its own
+ * question name it, so its wording never has to match a reserved id.
+ */
+export type GoalDecisionOptionEffect = 'retry' | 'retire';
+
 export interface GoalDecisionOption {
+  /** The consequence of choosing this option, in the words the person reads. */
   description?: string;
+  effect?: GoalDecisionOptionEffect;
   id: string;
   label: string;
 }

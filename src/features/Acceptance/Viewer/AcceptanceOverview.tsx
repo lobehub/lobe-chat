@@ -106,6 +106,7 @@ export const AcceptanceOverview = ({
               resourceCount={resourceCount}
               discussionCount={countDiscussionMessages({
                 approvals: [],
+                checks: data?.checks,
                 items,
                 rounds: data?.rounds.map(({ run }) => run) ?? [],
                 threads,
@@ -129,7 +130,7 @@ export const AcceptanceOverview = ({
             reviewer's "fine by me" — or a reviewer would lose the affordance
             entirely. */}
         {tab === 'discussion' ? (
-          <AcceptanceDiscussion />
+          <AcceptanceDiscussion onOpenChecks={() => setTab('checks')} />
         ) : tab === 'flow' ? (
           <>
             <AcceptanceFlow />

@@ -53,6 +53,7 @@ import { chatService } from '@/services/chat';
 import { resolveSelectedSkillsWithContent } from '@/services/chat/mecha/skillPreload';
 import { resolveSelectedToolsWithContent } from '@/services/chat/mecha/toolPreload';
 import { messageService } from '@/services/message';
+import { projectWorkingDirectoryService } from '@/services/projectWorkingDirectory';
 import { topicService } from '@/services/topic';
 import { getAgentStoreState } from '@/store/agent';
 import {
@@ -61,6 +62,7 @@ import {
   chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
+import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
 import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
@@ -472,7 +474,7 @@ export class ConversationLifecycleActionImpl {
     // switcher. A workspace-local pick is intentionally private to this member
     // and is therefore safe to execute in-process on their desktop. An existing
     // conversation then stays on the machine it already ran on.
-    const { agencyConfig, workspaceScoped } = applyTopicDeviceBinding(
+    const topicBinding = applyTopicDeviceBinding(
       {
         agencyConfig: resolveAgentAgencyConfig(agentConfig?.agencyConfig, deviceOverride, {
           canManage,
@@ -487,7 +489,30 @@ export class ConversationLifecycleActionImpl {
       ),
       getElectronStoreState().gatewayDeviceInfo?.deviceId,
     );
+    const { workspaceScoped } = topicBinding;
+    let { agencyConfig } = topicBinding;
     const isGatewayMode = this.#get().isGatewayModeEnabled(agentId);
+    const boundTopic = context.topicId
+      ? topicSelectors.getTopicById(context.topicId)(this.#get())
+      : undefined;
+    if (boundTopic?.projectWorkingDirectoryId) {
+      const { data: directory } = await projectWorkingDirectoryService.resolve(
+        boundTopic.projectWorkingDirectoryId,
+      );
+      if (!isGatewayMode)
+        throw new Error('Enable Gateway Mode to run in a project working directory');
+      if (
+        agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
+        agencyConfig.boundDeviceId !== directory.deviceId
+      )
+        throw new Error('Agent is fixed to another execution target');
+      agencyConfig = {
+        ...agencyConfig,
+        boundDeviceId: directory.deviceId,
+        executionTarget: 'device',
+      };
+    }
+
     // Legacy agents may only carry `model: '<cli-type>'`. Keep gateway routing
     // unchanged when it is available. Recover the provider when gateway mode is
     // off so desktop can still spawn locally and non-desktop (Android/web) still
@@ -963,6 +988,12 @@ export class ConversationLifecycleActionImpl {
       } else {
         targetInputEditor?.setDocument('markdown', message);
       }
+
+      // The editor snapshot covers only text. A send rejected after the composer
+      // was cleared (e.g. the server refusing an offline bound device) would
+      // otherwise still swallow the cleared uploads and context selections —
+      // hand them back to the caller that captured them before clearing.
+      onPreflightFailure?.();
     };
     const restoreUnacceptedVoiceMessageContext = () => {
       if (!optimisticUserMessageId || hasNotifiedMessageAccepted) return;
@@ -1303,10 +1334,28 @@ export class ConversationLifecycleActionImpl {
             newTopicDeviceId
             ? { boundDeviceId: newTopicDeviceId }
             : undefined;
+    // Chosen in the composer while no topic existed to write it to. Not gated
+    // on runtime: the map is only ever filled by the sandbox picker, which only
+    // renders under a cloud-sandbox target.
+    const pendingSandboxSelection =
+      willCreateNewTopic && operationContext.agentId
+        ? getPendingSandboxSelection(operationContext.agentId)
+        : undefined;
+    const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
+      ? {
+          sandboxInstanceId: pendingSandboxSelection.instanceId,
+          sandboxMode: pendingSandboxSelection.mode,
+        }
+      : undefined;
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
-    const optimisticTopicMetadata = newTopicReasoningSnapshot
-      ? { ...workingDirectoryMetadata, ...newTopicReasoningSnapshot }
-      : workingDirectoryMetadata;
+    const optimisticTopicMetadata =
+      newTopicReasoningSnapshot || sandboxInstanceMetadata
+        ? {
+            ...workingDirectoryMetadata,
+            ...sandboxInstanceMetadata,
+            ...newTopicReasoningSnapshot,
+          }
+        : workingDirectoryMetadata;
 
     // The sidebar row was already inserted (title + model) before the awaits
     // above; the cwd/repos metadata only resolves here, so patch it on now.
@@ -1681,7 +1730,7 @@ export class ConversationLifecycleActionImpl {
       const { operationId: heteroOpId } = this.#get().startOperation({
         context: heteroExecutionContext,
         label: 'Heterogeneous Agent Execution',
-        metadata: { heterogeneousType: heterogeneousProvider.type },
+        metadata: { heteroAutoRetryAvailable: true, heterogeneousType: heterogeneousProvider.type },
         parentOperationId: operationId,
         type: 'execHeterogeneousAgent',
       });

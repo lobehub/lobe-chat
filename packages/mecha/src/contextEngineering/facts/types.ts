@@ -162,6 +162,15 @@ export interface ContextFactProviders {
   ) => Promise<{ content: string; role: string }[] | undefined>;
   /** Builtin tool identifiers the user uninstalled in the current scope. */
   listUninstalledBuiltinIds?: () => Promise<Iterable<string> | undefined>;
+  /**
+   * Whether this run's cloud sandbox keeps its working directory, and which
+   * subdirectory it works in. Resolved by the host because it depends on a
+   * signed entitlement the browser cannot see; absent means the sandbox is
+   * ephemeral, which is what every run without one gets.
+   */
+  resolveSandboxPersistence?: () => Promise<
+    { cwd?: string; mode: 'ephemeral' | 'persistent'; workingDir?: string } | undefined
+  >;
 }
 
 export interface GatheredContextFacts {

@@ -388,6 +388,12 @@ export interface MessageMetadata {
   /** @deprecated use `metadata.performance` instead */
   duration?: number;
   /**
+   * Where the model request behind this message ran. `client`: the server
+   * relayed it to the user's device (a local model only that device can
+   * reach), so the platform neither paid for nor billed it. Absent: the server.
+   */
+  executionSite?: 'client';
+  /**
    * The provider event that produced this server-injected user turn
    * (GitHub CI failure, review feedback, …). See {@link ExternalOriginMetadata}.
    */
@@ -580,6 +586,11 @@ export interface MessageMetadata {
    * but new writers should target the top-level `usage` instead.
    */
   usage?: ModelUsage;
+  /**
+   * The model reported no usage, so the server estimated the token counts from
+   * the request and the output text. Only set alongside `executionSite: 'client'`.
+   */
+  usageEstimated?: boolean;
   /**
    * Agent Run operation id this verify card belongs to (for role='verify' messages).
    * References `agent_operations.id`; the card reads the verify plan + results off it.

@@ -51,6 +51,8 @@ export default {
   'branching': 'Create Subtopic',
   'branchingRequiresSavedTopic':
     'Current topic is not saved, please save it first to use subtopic feature',
+  'forkRequiresSavedTopic': 'Current topic is not saved. Save it first to fork a new topic',
+  'forkTopic': 'Continue in new topic',
   'viewExecutionDetails': 'View execution details',
   'cancel': 'Cancel',
   'changelog': 'Changelog',
@@ -58,6 +60,9 @@ export default {
   'checkForUpdates': 'Check for Updates',
   'downloadingUpdate': 'Downloading {{percent}}%',
   'restartToUpdate': 'Restart to Update',
+  'updateUnsupported.action': 'Download Latest Version',
+  'updateUnsupported.desc':
+    'This installation format cannot update itself. Download the latest build to upgrade.',
   'close': 'Close',
   'cmdk.about': 'About',
   'cmdk.aiModeEmptyState': 'Type your question above to start chatting with AI',
@@ -470,6 +475,8 @@ export default {
   'visibilityConfirm.publish.itemVisible': 'All workspace members will see this immediately',
   'visibilityConfirm.publish.itemReversible':
     'You can switch it back to private later from the same menu',
+  'visibilityConfirm.publish.itemCapturedState':
+    'Members can run its instances and reach everything it has captured — files, CLI logins, your signed-in identity',
   'visibilityConfirm.publish.itemLoaded':
     'After switching back, content others have already loaded can’t be pulled back',
   'retry': 'Retry',
@@ -530,6 +537,7 @@ export default {
   'tab.chat': 'Chat',
   'recents': 'Recents',
   'tab.community': 'Community',
+  'tab.dashboard': 'Dashboards',
   'tab.create': 'Create',
   'tab.discover': 'Discover',
   'tab.eval': 'Eval Lab',

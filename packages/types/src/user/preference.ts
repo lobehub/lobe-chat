@@ -233,6 +233,12 @@ export const UserLabSchema = z.object({
    * running there can be opened from this UI
    */
   enableDeviceTunnel: z.boolean().optional(),
+  /**
+   * opt this user's cloud-sandbox runs into a persistent workspace: the working
+   * directory survives session recycling and is shared across their topics,
+   * instead of being thrown away with the sandbox
+   */
+  enablePersistentSandbox: z.boolean().optional(),
 });
 
 export type UserLab = z.infer<typeof UserLabSchema>;
@@ -389,7 +395,7 @@ export const UserPreferenceSchema = z
     sidebarHiddenGroupIds: z.array(z.string()).optional(),
     terminalFontFamily: z.string().optional(),
     telemetry: z.boolean().nullable(),
-    topicGroupMode: z.enum(['byTime', 'byProject', 'flat', 'byStatus']).optional(),
+    topicGroupMode: z.enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent']).optional(),
     topicIncludeCompleted: z.boolean().optional(),
     topicSortBy: z.enum(['createdAt', 'updatedAt']).optional(),
     useCmdEnterToSend: z.boolean().optional(),

@@ -7,6 +7,11 @@ import pMap from 'p-map';
 
 import { type TrustedClientUserInfo } from '@/libs/trusted-client';
 import { generateTrustedClientToken, getTrustedClientTokenForSession } from '@/libs/trusted-client';
+import { redisService } from '@/server/services/redis';
+import {
+  createSandboxStorageClient,
+  type SandboxStorageClient,
+} from '@/server/services/sandbox/storageFiles';
 import { getToolAccessDeniedError } from '@/server/services/toolExecution/errorClassification';
 
 import {
@@ -153,9 +158,16 @@ export class MarketService {
 
   private readonly oauthProxyHeaders: Record<string, string>;
 
+  /**
+   * Who the cached skill tool lists belong to. A service built without a user
+   * (M2M credentials, a bare trusted token) has no scope and skips the cache.
+   */
+  private readonly skillCacheScope?: string;
+
   constructor(options: MarketServiceOptions = {}) {
     const { accessToken, userInfo, clientCredentials, trustedClientToken, ownerAccountId } =
       options;
+    this.skillCacheScope = userInfo?.userId;
 
     // Use provided trustedClientToken or generate from userInfo
     const resolvedTrustedClientToken =
@@ -410,6 +422,32 @@ export class MarketService {
         );
       },
       options?.timeoutMs,
+    );
+  }
+
+  /**
+   * The live tool list of one connected skill, remembered per connection for
+   * ten minutes.
+   *
+   * Discovery runs on every send and `tools/live` is a round trip to the
+   * provider's MCP server (150ms for GitHub, up to a second for Notion) for
+   * an answer that changes when the provider ships tools, not per turn. The
+   * key carries the connection's identity (`createdAt`, provider user), so a
+   * re-connected skill starts from a fresh read; an empty or failed list is
+   * never remembered. The connection list itself stays live so a newly
+   * connected skill shows up on the next send.
+   */
+  private async listSkillToolsForConnection(
+    connection: { createdAt?: string; providerUserId?: string },
+    providerId: string,
+  ) {
+    const read = () =>
+      this.listSkillTools(providerId, { timeoutMs: LOBEHUB_SKILL_DISCOVERY_TIMEOUT_MS });
+    if (!this.skillCacheScope) return read();
+
+    return redisService.skillTools.remember(
+      { connection, providerId, userId: this.skillCacheScope },
+      read,
     );
   }
 
@@ -821,9 +859,10 @@ export class MarketService {
             const icon = (connection as any).icon;
             const providerLabel = LOBEHUB_SKILL_PROVIDER_LABELS[providerId] || providerId;
 
-            const { tools, instruction } = await this.listSkillTools(providerId, {
-              timeoutMs: LOBEHUB_SKILL_DISCOVERY_TIMEOUT_MS,
-            });
+            const { tools, instruction } = await this.listSkillToolsForConnection(
+              connection,
+              providerId,
+            );
             if (!tools || tools.length === 0) return;
 
             const manifest: LobeToolManifest = {
@@ -946,6 +985,21 @@ export class MarketService {
     const result = await response.json();
     log('uploadCredFile success: fileHashId=%s', result.fileHashId);
     return result;
+  }
+
+  /**
+   * Client for the persistent sandbox workspace's file API.
+   *
+   * Not on the SDK yet, so it is hand-written against the same endpoints; it
+   * lives in its own module and only borrows this service's auth headers, so
+   * replacing it with the generated client later is a deletion. The workspace it
+   * addresses is always the one the caller's signed entitlement names.
+   */
+  getSandboxStorageClient(): SandboxStorageClient {
+    return createSandboxStorageClient({
+      baseURL: MARKET_BASE_URL,
+      headers: this.oauthProxyHeaders,
+    });
   }
 
   // ============================== Direct SDK Access ==============================

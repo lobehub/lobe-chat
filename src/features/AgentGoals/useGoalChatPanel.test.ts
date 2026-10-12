@@ -34,6 +34,37 @@ describe('useGoalChatPanel', () => {
     expect(result.current.topicId).toBeUndefined();
   });
 
+  // The result page's composer hands its text to the panel; a later reopen must
+  // not replay it, so the message rides only the request that carried it.
+  // Folding the panel before the history loads must not lose a message the
+  // result composer has already cleared from its own editor.
+  it('keeps a pending message across folding the panel until it is consumed', () => {
+    const { result } = renderHook(() => useGoalChatPanel('goal-a', 'worker'));
+
+    act(() => result.current.openConversation({ agentId: 'worker', initialMessage: 'next?' }));
+    expect(result.current).toMatchObject({ initialMessage: 'next?', open: true });
+
+    act(() => result.current.setOpen(false));
+    act(() => result.current.setOpen(true));
+    expect(result.current.initialMessage).toBe('next?');
+
+    act(() => result.current.consumeInitialMessage());
+    expect(result.current.initialMessage).toBeUndefined();
+  });
+
+  // The panel remounts whenever a drill-down replaces it; once the message has
+  // gone out, the host must stop handing it over, or the return trip resends it.
+  it('drops a dispatched message without remounting the panel', () => {
+    const { result } = renderHook(() => useGoalChatPanel('goal-a', 'worker'));
+
+    act(() => result.current.openConversation({ agentId: 'worker', initialMessage: 'next?' }));
+    const request = result.current.request;
+    act(() => result.current.consumeInitialMessage());
+
+    expect(result.current.initialMessage).toBeUndefined();
+    expect(result.current).toMatchObject({ agentId: 'worker', open: true, request });
+  });
+
   it('never carries another goal’s open panel or creator into the next goal', () => {
     const { result, rerender } = renderHook(({ id, agent }) => useGoalChatPanel(id, agent), {
       initialProps: { id: 'goal-a', agent: 'worker-a' },

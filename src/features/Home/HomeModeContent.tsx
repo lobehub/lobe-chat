@@ -367,9 +367,9 @@ const TaskContent = memo(() => {
     statuses: RECENT_TASK_STATUSES,
     visibility: 'all',
   });
-  const tasks = useTaskStore(taskListSelectors.taskList);
-  const tasksTotal = useTaskStore(taskListSelectors.taskListTotal);
-  const tasksInit = useTaskStore(taskListSelectors.isTaskListInit);
+  const tasks = useTaskStore(taskListSelectors.taskList(tasksSWR.queryKey));
+  const tasksTotal = useTaskStore(taskListSelectors.taskListTotal(tasksSWR.queryKey));
+  const tasksInit = useTaskStore(taskListSelectors.isTaskListInit(tasksSWR.queryKey));
   const taskCount = useGlobalStore(systemStatusSelectors.homeTaskCount);
   const shown = tasks.slice(0, taskCount);
 
@@ -504,9 +504,9 @@ const HomeModeContent = memo<HomeModeContentProps>(({ inlineRail, mode, onSugges
     [inboxTopics.running, myId],
   );
   const useFetchBriefs = useBriefStore((s) => s.useFetchBriefs);
-  const briefsSWR = useFetchBriefs(isLogin, cacheScope);
-  const briefs = useBriefStore(briefListSelectors.briefs(cacheScope));
-  const briefsInit = useBriefStore(briefListSelectors.isBriefsInit(cacheScope));
+  const briefsSWR = useFetchBriefs(isLogin);
+  const briefs = useBriefStore(briefListSelectors.briefs);
+  const briefsInit = useBriefStore(briefListSelectors.isBriefsInit);
   const needsYouCount = useMemo(() => splitBriefs(briefs).needsYou.length, [briefs]);
   const topicRecents = recentsSWR.data ?? [];
 

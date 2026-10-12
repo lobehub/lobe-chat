@@ -13,11 +13,17 @@ import { resolveServerUrl } from '../settings';
 import { log } from '../utils/logger';
 import { uploadLocalFile } from '../utils/uploadLocalFile';
 import { attachAcceptanceRunCommands } from './acceptanceRun';
+import type * as VerifyHelpers from './verifyHelpers';
+import { pullRequestFromBranch } from './verifyHelpers';
 
 vi.mock('../api/client', () => ({ getTrpcClient: vi.fn() }));
 vi.mock('../api/workspace', () => ({ resolveWorkspaceId: vi.fn() }));
 vi.mock('../settings', () => ({ resolveServerUrl: vi.fn() }));
 vi.mock('../utils/uploadLocalFile', () => ({ uploadLocalFile: vi.fn() }));
+vi.mock('./verifyHelpers', async (importOriginal) => ({
+  ...(await importOriginal<typeof VerifyHelpers>()),
+  pullRequestFromBranch: vi.fn(),
+}));
 
 describe('acceptance publication with missing evidence', () => {
   const client = {
@@ -25,6 +31,7 @@ describe('acceptance publication with missing evidence', () => {
       attachRun: { mutate: vi.fn() },
       ensure: { mutate: vi.fn() },
       getBundle: { query: vi.fn() },
+      linkPullRequest: { mutate: vi.fn() },
     },
     verify: {
       createRun: { mutate: vi.fn() },
@@ -129,6 +136,60 @@ describe('acceptance publication with missing evidence', () => {
       verdict: 'uncertain',
     });
     expect(await readFile(path.join(dir, 'result.json'), 'utf8')).toBe(original);
+  });
+
+  it('links the reported pull request to the acceptance, and survives a failed link', async () => {
+    const pullRequest = {
+      number: 20171,
+      title: 'Durable waits',
+      url: 'https://github.com/lobehub/lobehub/pull/20171',
+    };
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [
+          { evidence: ['output.txt'], id: 'screen', name: '用户能看到处理结果', status: 'passed' },
+        ],
+        plan: [{ id: 'screen', requiredEvidence: ['text'], title: '用户能看到处理结果' }],
+        pullRequest,
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+        title: '处理结果展示',
+      }),
+    );
+    client.acceptance.linkPullRequest.mutate.mockRejectedValue(new Error('CONFLICT'));
+
+    await run('ingest', dir, '--json');
+
+    expect(client.acceptance.linkPullRequest.mutate).toHaveBeenCalledExactlyOnceWith({
+      id: 'acceptance-1',
+      title: 'Durable waits',
+      url: pullRequest.url,
+    });
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('not linked'));
+    expect(result()).toMatchObject({ publicationStatus: 'complete', pullRequest });
+  });
+
+  it('keeps a branch-inferred PR as round provenance without linking it to the acceptance', async () => {
+    const inferred = { number: 7, url: 'https://github.com/lobehub/lobehub/pull/7' };
+    vi.mocked(pullRequestFromBranch).mockReturnValue(inferred);
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        branch: 'canary',
+        cases: [
+          { evidence: ['output.txt'], id: 'screen', name: '用户能看到处理结果', status: 'passed' },
+        ],
+        plan: [{ id: 'screen', requiredEvidence: ['text'], title: '用户能看到处理结果' }],
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+        title: '处理结果展示',
+      }),
+    );
+
+    await run('ingest', dir, '--json');
+
+    expect(pullRequestFromBranch).toHaveBeenCalledWith('canary');
+    expect(result()).toMatchObject({ pullRequest: inferred });
+    expect(client.acceptance.linkPullRequest.mutate).not.toHaveBeenCalled();
   });
 
   it('does not downgrade a pass when only an optional medium failed', async () => {
@@ -480,6 +541,42 @@ describe('acceptance publication with missing evidence', () => {
     });
     expect(client.verify.ingestResult.mutate).not.toHaveBeenCalled();
     expect(process.exitCode).toBe(1);
+  });
+
+  it('warns when supersedes names no check of the acceptance', async () => {
+    client.acceptance.attachRun.mutate.mockResolvedValue({
+      id: 'run-1',
+      roundIndex: 2,
+      unresolvedSupersedes: ['typo-id'],
+    });
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
+        plan: [{ id: 'response', supersedes: ['typo-id'], title: '收到回复' }],
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+      }),
+    );
+
+    await run('ingest', dir, '--json');
+
+    expect(result()).toMatchObject({ unresolvedSupersedes: ['typo-id'] });
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('typo-id'));
+  });
+
+  it('reports no unresolved supersedes when an older server omits the field', async () => {
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
+        plan: [{ id: 'response', title: '收到回复' }],
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+      }),
+    );
+
+    await run('ingest', dir, '--json');
+
+    expect(result()).toMatchObject({ unresolvedSupersedes: [] });
   });
 
   it('accounts for draft-only checks and incoming checks using the folded plan', async () => {

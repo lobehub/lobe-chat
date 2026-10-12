@@ -16,7 +16,7 @@ import { TopicModel } from '@/database/models/topic';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { resolveFailedRunStatus } from '@/server/services/goal/recoveryPolicy';
-import { TaskLifecycleService } from '@/server/services/taskLifecycle';
+import { createTaskRunHooks } from '@/server/services/task/runHooks';
 
 import { buildTaskPrompt } from './buildTaskPrompt';
 import {
@@ -31,6 +31,8 @@ export interface RunTaskParams {
   /** Extra builtin tools this run mounts beside the Task skill, e.g. the Goal report tool. */
   additionalPluginIds?: string[];
   continueTopicId?: string;
+  /** Explicit device target for this run only. The Task itself does not retain the binding. */
+  deviceId?: string;
   extraPrompt?: string;
   /** Optional per-operation cap. Omitted means the agent runtime remains uncapped. */
   maxSteps?: number;
@@ -60,7 +62,6 @@ export class TaskRunnerService {
   private agentModel: AgentModel;
   private briefModel: BriefModel;
   private db: LobeChatDatabase;
-  private taskLifecycle: TaskLifecycleService;
   private taskModel: TaskModel;
   private taskTopicModel: TaskTopicModel;
   private topicModel: TopicModel;
@@ -77,7 +78,6 @@ export class TaskRunnerService {
     this.taskTopicModel = new TaskTopicModel(db, userId, workspaceId);
     this.topicModel = new TopicModel(db, userId, workspaceId);
     this.briefModel = new BriefModel(db, userId, workspaceId);
-    this.taskLifecycle = new TaskLifecycleService(db, userId, workspaceId);
   }
 
   /**
@@ -107,6 +107,7 @@ export class TaskRunnerService {
       additionalPluginIds,
       taskId: idOrIdentifier,
       continueTopicId,
+      deviceId,
       extraPrompt,
       maxSteps,
       trigger = 'manual',
@@ -216,10 +217,7 @@ export class TaskRunnerService {
       const aiAgentService = new AiAgentService(this.db, this.userId, {
         workspaceId: this.workspaceId,
       });
-      const taskId = task.id;
       const taskIdentifier = task.identifier;
-      const taskLifecycle = this.taskLifecycle;
-      const userId = this.userId;
 
       const checkpoint = this.taskModel.getCheckpointConfig(task);
       const reviewConfig = this.taskModel.getReviewConfig(task);
@@ -289,36 +287,17 @@ export class TaskRunnerService {
       const result = await aiAgentService.execAgent({
         ...(isSlug ? { slug: agentRef } : { agentId: agentRef }),
         additionalPluginIds: pluginIds,
+        ...(deviceId && { deviceId }),
         ...(typeof taskConfig.model === 'string' && { model: taskConfig.model }),
         ...(typeof taskConfig.provider === 'string' && { provider: taskConfig.provider }),
-        hooks: [
-          {
-            handler: async (event) => {
-              await taskLifecycle.onTopicComplete({
-                errorCode: event.errorType,
-                errorMessage: event.errorMessage,
-                lastAssistantContent: event.lastAssistantContent,
-                operationId: event.operationId,
-                reason: event.reason || 'done',
-                runTrigger: trigger,
-                taskId,
-                taskIdentifier,
-                topicId: event.topicId,
-              });
-            },
-            id: 'task-on-complete',
-            type: 'onComplete' as const,
-            webhook: {
-              // `runTrigger` rides in the static body so the production webhook
-              // callback (which reconstructs onTopicComplete params server-side)
-              // knows whether this was a manual run or an automation tick.
-              body: { runTrigger: trigger, taskId, taskIdentifier, userId },
-              delivery: 'qstash' as const,
-              fallback: 'none' as const,
-              url: '/api/workflows/task/on-topic-complete',
-            },
-          },
-        ],
+        hooks: createTaskRunHooks({
+          db: this.db,
+          taskId: task.id,
+          taskIdentifier: task.identifier,
+          trigger,
+          userId: this.userId,
+          workspaceId: this.workspaceId,
+        }),
         ...(attachmentFileIds.length > 0 ? { fileIds: attachmentFileIds } : {}),
         ...(maxSteps ? { maxSteps } : {}),
         prompt,
@@ -381,13 +360,15 @@ export class TaskRunnerService {
         // node — while this run was being dispatched, whoever did it found no
         // topic to stop yet. Nobody else will stop it, so stop it here instead
         // of recording an operation that keeps running behind the cancellation.
+        // A claim withdrawn mid-startup is the same case: closing or restarting
+        // a goal puts a claimed Task with no recorded run back to `backlog`.
         const recorded = await this.db.transaction(async (tx) => {
           const taskModel = new TaskModel(tx, this.userId, this.workspaceId);
           const taskTopicModel = new TaskTopicModel(tx, this.userId, this.workspaceId);
           if (!(await taskModel.lockForUpdate(task.id))) return 'deleted' as const;
-          if ((await taskModel.findById(task.id))?.status === 'canceled') {
-            return 'canceled' as const;
-          }
+          const current = await taskModel.findById(task.id);
+          if (current?.status === 'canceled') return 'canceled' as const;
+          if (current?.status === 'backlog') return 'withdrawn' as const;
           if (continueTopicId) {
             await taskTopicModel.updateStatus(task.id, continueTopicId, 'running');
             await taskTopicModel.updateOperationId(task.id, continueTopicId, result.operationId);

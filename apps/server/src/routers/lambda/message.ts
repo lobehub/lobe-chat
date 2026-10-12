@@ -124,7 +124,7 @@ const messageBatchOperationSchema = z.discriminatedUnion('type', [
     value: z.object({
       content: z.string().optional(),
       heterogeneousToolState: heterogeneousToolStateSnapshotSchema.optional(),
-      metadata: z.record(z.string(), z.any()).optional(),
+      metadata: z.object({}).passthrough().optional(),
       pluginError: z.any().optional(),
       pluginState: z.record(z.string(), z.any()).optional(),
     }),
@@ -690,11 +690,13 @@ export const messageRouter = router({
       z
         .object({
           ids: z.array(z.string()),
+          /** Skip the recycle bin: internal cleanup whose rows must never be restored. */
+          permanent: z.boolean().optional(),
         })
         .extend(basicContextSchema.shape),
     )
     .mutation(async ({ input, ctx }) => {
-      const { ids, agentId, ...options } = input;
+      const { ids, agentId, permanent, ...options } = input;
       await assertCanUseMessageTargets(guardCtx(ctx), ids);
       const resolved = await resolveContext(
         { agentId, ...options },
@@ -703,7 +705,7 @@ export const messageRouter = router({
         ctx.workspaceId ?? undefined,
       );
 
-      return ctx.messageService.removeMessages(ids, resolved);
+      return ctx.messageService.removeMessages(ids, resolved, { permanent });
     }),
 
   removeMessagesByAssistant: messageProcedure

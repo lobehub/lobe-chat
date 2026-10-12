@@ -13,7 +13,7 @@ import {
   Upload,
   useModalContext,
 } from '@lobehub/ui/base-ui';
-import { Form } from 'antd';
+import { Form, useForm, useWatch } from '@lobehub/ui/base-ui/form';
 import { cssVar } from 'antd-style';
 import { CircleHelp, Globe, ImagePlus, Trash2 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -28,6 +28,8 @@ import {
 import AvatarUpload from '@/components/AvatarUpload';
 import { useFileStore } from '@/store/file';
 import type { DiscoverUserInfo } from '@/types/discover';
+
+import { getNamespaceError, isNamespaceFormatValid, isWebsiteUrlValid } from './validation';
 
 interface FormValues {
   description?: string;
@@ -58,19 +60,20 @@ const normalizeNamespace = (value: string) =>
     .replaceAll(/^-|-$/g, '')
     .slice(0, 32);
 
-// Mirrors the namespace Form rules below — only run the live availability check
-// once the handle is well-formed, so we don't probe Market for invalid input.
-const NAMESPACE_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-const isNamespaceFormatValid = (value: string) =>
-  value.length >= 3 && value.length <= 32 && NAMESPACE_PATTERN.test(value);
-
 type NamespaceAvailability = 'available' | 'checking' | 'idle' | 'taken';
 
 export const Content = memo<ContentProps>(({ user, onSuccess }) => {
   const { t } = useTranslation('discover');
 
   const { close } = useModalContext();
-  const [form] = Form.useForm<FormValues>();
+  const form = useForm<FormValues>({
+    initialValues: {
+      description: user.description ?? undefined,
+      displayName: user.displayName ?? user.userName ?? user.namespace,
+      namespace: user.namespace || normalizeNamespace(user.displayName ?? user.userName ?? ''),
+      websiteUrl: user.socialLinks?.website,
+    },
+  });
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatarUrl ?? null);
   const [avatarUploading, setAvatarUploading] = useState(false);
@@ -83,8 +86,8 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
   // set). Mirrors the workspace create wizard's slug check: debounce, only probe
   // a well-formed handle, and treat it purely as a UX hint — the setup mutation
   // still rejects a taken handle on submit.
-  const namespaceValue = Form.useWatch('namespace', form);
-  const displayNameValue = Form.useWatch('displayName', form);
+  const namespaceValue = useWatch(form, 'namespace');
+  const displayNameValue = useWatch(form, 'displayName');
   const trimmedNamespace = (namespaceValue ?? '').trim();
   const [namespaceAvailability, setNamespaceAvailability] = useState<NamespaceAvailability>('idle');
 
@@ -183,7 +186,9 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
   const handleSave = useCallback(async () => {
     if (loading) return;
 
-    const values = await form.validateFields();
+    const { valid } = await form.validate();
+    if (!valid) return;
+    const values = form.getValues();
 
     if (isSetup && namespaceAvailability === 'taken') {
       toast.error(t('user.workspaceProfile.fields.namespace.taken'));
@@ -234,18 +239,20 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
   const optionalContent = useMemo(
     () => (
       <>
-        <Form.Item
+        <Form.Field
           label={t('user.workspaceProfile.fields.websiteUrl')}
           name="websiteUrl"
-          rules={[{ message: t('user.workspaceProfile.errors.url'), type: 'url' }]}
+          validate={(value?: string) =>
+            value && !isWebsiteUrlValid(value) ? t('user.workspaceProfile.errors.url') : undefined
+          }
         >
           <Input
             placeholder={t('user.workspaceProfile.fields.websiteUrl.placeholder')}
             prefix={<Icon color={cssVar.colorTextSecondary} icon={Globe} />}
           />
-        </Form.Item>
+        </Form.Field>
 
-        <Form.Item
+        <Form.Field
           label={
             <Flexbox horizontal align="center" gap={4}>
               {t('user.workspaceProfile.fields.bannerUrl')}
@@ -331,7 +338,7 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
               </Flexbox>
             )}
           </Flexbox>
-        </Form.Item>
+        </Form.Field>
       </>
     ),
     [bannerUploading, bannerUrl, handleBannerUpload, t],
@@ -339,61 +346,49 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
 
   return (
     <Flexbox gap={20} padding={24}>
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{
-          description: user.description ?? undefined,
-          displayName: user.displayName ?? user.userName ?? user.namespace,
-          namespace: user.namespace || normalizeNamespace(user.displayName ?? user.userName ?? ''),
-          websiteUrl: user.socialLinks?.website,
-        }}
-      >
+      <Form form={form} layout="vertical">
         <Flexbox horizontal gap={24}>
           <Flexbox flex={1}>
-            <Form.Item
+            <Form.Field
               label={t('user.workspaceProfile.fields.displayName')}
               name="displayName"
-              rules={[
-                { message: t('user.workspaceProfile.errors.displayName'), required: true },
-                { max: 50, message: t('user.workspaceProfile.fields.displayName.maxLength') },
-              ]}
+              required={t('user.workspaceProfile.errors.displayName')}
+              validate={(value?: string) =>
+                value && value.length > 50
+                  ? t('user.workspaceProfile.fields.displayName.maxLength')
+                  : undefined
+              }
             >
               <Input
                 maxLength={50}
                 placeholder={t('user.workspaceProfile.fields.displayName.placeholder')}
                 suffix={`${displayNameValue?.length ?? 0} / 50`}
               />
-            </Form.Item>
+            </Form.Field>
           </Flexbox>
 
-          <Form.Item>
-            <AvatarUpload
-              allowDelete={!!avatarUrl}
-              loading={avatarUploading}
-              shape="square"
-              size={80}
-              value={avatarUrl || undefined}
-              onDelete={() => setAvatarUrl(null)}
-              onUpload={handleAvatarUpload}
-            />
-          </Form.Item>
+          <AvatarUpload
+            allowDelete={!!avatarUrl}
+            loading={avatarUploading}
+            shape="square"
+            size={80}
+            value={avatarUrl || undefined}
+            onDelete={() => setAvatarUrl(null)}
+            onUpload={handleAvatarUpload}
+          />
         </Flexbox>
 
         {isSetup && (
-          <Form.Item
+          <Form.Field
             extra={namespaceStatusNode}
             label={t('user.workspaceProfile.fields.namespace')}
             name="namespace"
-            rules={[
-              { message: t('user.workspaceProfile.errors.namespace.required'), required: true },
-              { max: 32, message: t('user.workspaceProfile.errors.namespace.length') },
-              { min: 3, message: t('user.workspaceProfile.errors.namespace.length') },
-              {
-                message: t('user.workspaceProfile.errors.namespace.pattern'),
-                pattern: /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/,
-              },
-            ]}
+            required={t('user.workspaceProfile.errors.namespace.required')}
+            validate={(value?: string) => {
+              if (!value) return;
+              const error = getNamespaceError(value);
+              if (error) return t(`user.workspaceProfile.errors.namespace.${error}`);
+            }}
           >
             <Input
               maxLength={32}
@@ -401,13 +396,17 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
               prefix={ORGANIZATION_URL_PREFIX}
               suffix={`${namespaceValue?.length ?? 0} / 32`}
             />
-          </Form.Item>
+          </Form.Field>
         )}
 
-        <Form.Item
+        <Form.Field
           label={t('user.workspaceProfile.fields.description')}
           name="description"
-          rules={[{ max: 200, message: t('user.workspaceProfile.fields.description.maxLength') }]}
+          validate={(value?: string) =>
+            value && value.length > 200
+              ? t('user.workspaceProfile.fields.description.maxLength')
+              : undefined
+          }
         >
           <TextArea
             showCount
@@ -415,7 +414,7 @@ export const Content = memo<ContentProps>(({ user, onSuccess }) => {
             placeholder={t('user.workspaceProfile.fields.description.placeholder')}
             rows={3}
           />
-        </Form.Item>
+        </Form.Field>
 
         <Accordion
           keepMounted

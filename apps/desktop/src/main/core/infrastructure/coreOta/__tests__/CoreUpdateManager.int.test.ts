@@ -73,7 +73,18 @@ const makeApp = () => ({
   browserManager: {
     broadcastToAllWindows: vi.fn(),
     browsers: new Map([
-      ['main', { browserWindow: { webContents: { reloadIgnoringCache: vi.fn() } } }],
+      [
+        'main',
+        {
+          browserWindow: { webContents: { id: 1, reloadIgnoringCache: vi.fn() } },
+          cancelUnloadConfirmation: vi.fn(),
+          reloadIgnoringCache: vi.fn(function (this: {
+            browserWindow: { webContents: { reloadIgnoringCache: () => void } };
+          }) {
+            this.browserWindow.webContents.reloadIgnoringCache();
+          }),
+        },
+      ],
     ]),
   },
   isQuiting: false,
@@ -657,6 +668,55 @@ describe('CoreUpdateManager checkForUpdates', () => {
     expect(existsSync(coreDir('1.0.1'))).toBe(false);
   });
 
+  it('retains a healthy hot update and its active renderer version for late subscribers', async () => {
+    serveLatest(rendererOnly('1.0.1', 1));
+    const { app, manager } = await loadManager();
+    await manager.checkForUpdates();
+    expect(manager.getStatus().appliedVersion).toBeNull();
+    manager.applyStagedNow();
+    manager.handleBootPing('loaded');
+    expect(manager.getStatus().appliedVersion).toBeNull();
+    expect(app.browserManager.broadcastToAllWindows).not.toHaveBeenCalledWith(
+      'coreUpdateApplied',
+      expect.anything(),
+    );
+    manager.handleBootPing('mounted');
+    expect(manager.getStatus()).toMatchObject({
+      appliedVersion: '1.0.1',
+      running: '1.0.1',
+      staged: null,
+    });
+    expect(app.browserManager.broadcastToAllWindows).toHaveBeenCalledWith(
+      'coreUpdateApplied',
+      '1.0.1',
+    );
+    manager.handleBootPing('mounted');
+    expect(
+      app.browserManager.broadcastToAllWindows.mock.calls.filter(
+        ([event]) => event === 'coreUpdateApplied',
+      ),
+    ).toHaveLength(1);
+  });
+
+  it('does not announce a failed hot update as completed', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { app, manager } = await loadManager();
+      await manager.checkForUpdates();
+      manager.applyStagedNow();
+      await vi.advanceTimersByTimeAsync(60_000);
+      manager.handleBootPing('mounted');
+      expect(manager.getStatus().appliedVersion).toBeNull();
+      expect(app.browserManager.broadcastToAllWindows).not.toHaveBeenCalledWith(
+        'coreUpdateApplied',
+        expect.anything(),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('stages a renderer-only update as core-reload and applies it in place', async () => {
     const remote = rendererOnly('1.0.1', 1);
     serveLatest(remote);
@@ -733,6 +793,63 @@ describe('CoreUpdateManager checkForUpdates', () => {
     expect(app.browserManager.broadcastToAllWindows).toHaveBeenCalledWith('updateReady', {
       kind: 'core-reload',
       version: '1.0.1',
+    });
+  });
+
+  it('replaces a staged reload core when a newer one is published', async () => {
+    serveLatest(rendererOnly('1.0.1', 1));
+    const { app, manager } = await loadManager();
+    await manager.checkForUpdates();
+
+    serveLatest(rendererOnly('1.0.2', 2));
+    await manager.checkForUpdates();
+
+    expect(manager.getStatus()).toMatchObject({ applyMode: 'reload', staged: '1.0.2' });
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({ current: null, staged: '1.0.2' });
+    expect(app.browserManager.broadcastToAllWindows).toHaveBeenLastCalledWith('updateReady', {
+      kind: 'core-reload',
+      version: '1.0.2',
+    });
+
+    expect(manager.applyStagedNow()).toBe(true);
+    expectAppliedRenderer(app, 'index-1.0.2');
+  });
+
+  it('replaces a staged relaunch core without keeping the stale one as rollback', async () => {
+    serveLatest(mainChanged('1.0.1', 1));
+    const { app, manager } = await loadManager();
+    await manager.checkForUpdates();
+
+    serveLatest(mainChanged('1.0.2', 2));
+    await manager.checkForUpdates();
+    await flushGc(manager);
+
+    expect(manager.getStatus()).toMatchObject({ applyMode: 'relaunch', staged: '1.0.2' });
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({
+      current: '1.0.2',
+      previous: null,
+      staged: null,
+    });
+    expect(existsSync(coreDir('1.0.1'))).toBe(false);
+    expect(app.browserManager.broadcastToAllWindows).toHaveBeenLastCalledWith('updateReady', {
+      kind: 'core-relaunch',
+      version: '1.0.2',
+    });
+  });
+
+  it('reverts a staged relaunch when the newer core only needs a reload', async () => {
+    serveLatest(mainChanged('1.0.1', 1));
+    const { manager } = await loadManager();
+    await manager.checkForUpdates();
+
+    serveLatest(rendererOnly('1.0.2', 2));
+    await manager.checkForUpdates();
+
+    expect(manager.getStatus()).toMatchObject({ applyMode: 'reload', staged: '1.0.2' });
+    expect(readPointer(otaRoot(), ABI)).toMatchObject({
+      current: null,
+      previous: null,
+      staged: '1.0.2',
     });
   });
 
@@ -850,18 +967,115 @@ describe('CoreUpdateManager checkForUpdates', () => {
     expect(readdirSync(path.join(otaRoot(), 'cores')).sort()).toEqual(['0.9.5', '1.0.1', '1.0.2']);
   });
 
-  it('cancels the boot check instead of blacklisting when the renderer vetoes reload', async () => {
+  it('waits for all mounted windows and retains retry when a later window vetoes', async () => {
+    serveLatest(rendererOnly('1.0.1', 1));
+    const app = makeApp();
+    app.browserManager.browsers.set('second', {
+      browserWindow: { webContents: { id: 2, reloadIgnoringCache: vi.fn() } },
+      cancelUnloadConfirmation: vi.fn(),
+      reloadIgnoringCache: vi.fn(function (this: {
+        browserWindow: { webContents: { reloadIgnoringCache: () => void } };
+      }) {
+        this.browserWindow.webContents.reloadIgnoringCache();
+      }),
+    });
+    const { manager } = await loadManager(app);
+    manager.handleBootPing('mounted', 1);
+    manager.handleBootPing('mounted', 2);
+    await manager.checkForUpdates();
+    manager.applyStagedNow();
+    manager.handleBootPing('mounted', 1);
+    expect(manager.getStatus().appliedVersion).toBeNull();
+    manager.handleUnloadPrevented();
+    expect(manager.getStatus()).toMatchObject({ appliedVersion: null, staged: '1.0.1' });
+    expect(app.browserManager.broadcastToAllWindows).not.toHaveBeenCalledWith(
+      'coreUpdateApplied',
+      expect.anything(),
+    );
+    manager.applyStagedNow();
+    manager.handleBootPing('mounted', 2);
+    expect(manager.getStatus().appliedVersion).toBeNull();
+    manager.handleBootPing('mounted', 1);
+    expect(manager.getStatus().appliedVersion).toBe('1.0.1');
+  });
+
+  it('does not roll back when a remaining update participant closes', async () => {
+    serveLatest(rendererOnly('1.0.1', 1));
+    const app = makeApp();
+    app.browserManager.browsers.set('second', {
+      browserWindow: { webContents: { id: 2, reloadIgnoringCache: vi.fn() } },
+      cancelUnloadConfirmation: vi.fn(),
+      reloadIgnoringCache: vi.fn(function (this: {
+        browserWindow: { webContents: { reloadIgnoringCache: () => void } };
+      }) {
+        this.browserWindow.webContents.reloadIgnoringCache();
+      }),
+    });
+    const { manager } = await loadManager(app);
+    manager.handleBootPing('mounted', 1);
+    manager.handleBootPing('mounted', 2);
+    await manager.checkForUpdates();
+    manager.applyStagedNow();
+    manager.handleBootPing('mounted', 1);
+    manager.handleRendererDestroyed(2);
+    expect(manager.getStatus().appliedVersion).toBe('1.0.1');
+    expect(readPointer(otaRoot(), ABI).blacklist).toEqual([]);
+  });
+
+  it('pauses the boot deadline while awaiting UI confirmation and restores staging on cancel', async () => {
     vi.useFakeTimers();
     try {
       serveLatest(rendererOnly('1.0.1', 1));
       const { manager } = await loadManager();
       await manager.checkForUpdates();
       manager.applyStagedNow();
+      expect(manager.pauseForUnloadConfirmation(1)).toBe(true);
+      vi.advanceTimersByTime(60_000);
+      expect(readPointer(otaRoot(), ABI).blacklist).toEqual([]);
+      expect(manager.resolveUnloadConfirmation(1, false)).toBe(false);
+      expect(manager.getStatus()).toMatchObject({
+        staged: '1.0.1',
+        appliedVersion: null,
+        running: '1.0.0',
+      });
+      expect(manager.resolveUnloadConfirmation(1, true)).toBe(false);
+      manager.applyStagedNow();
+      manager.pauseForUnloadConfirmation(1);
+      expect(manager.resolveUnloadConfirmation(1, true)).toBe(true);
+      manager.handleBootPing('mounted');
+      expect(manager.getStatus().appliedVersion).toBe('1.0.1');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 
+  it('preserves the update for retry when the renderer vetoes reload', async () => {
+    vi.useFakeTimers();
+    try {
+      serveLatest(rendererOnly('1.0.1', 1));
+      const { app, manager } = await loadManager();
+      const originalRenderer = { resolve: () => null };
+      app.rendererUrlManager.activeRenderer = originalRenderer;
+      await manager.checkForUpdates();
+      const before = readPointer(otaRoot(), ABI);
+      manager.applyStagedNow();
       manager.handleUnloadPrevented();
       vi.advanceTimersByTime(20_000);
 
-      expect(readPointer(otaRoot(), ABI)).toMatchObject({ blacklist: [], current: '1.0.1' });
+      expect(app.browserManager.broadcastToAllWindows).toHaveBeenCalledWith(
+        'coreUpdateDeferred',
+        undefined,
+      );
+      expect(readPointer(otaRoot(), ABI)).toEqual(before);
+      expect(app.rendererUrlManager.activeRenderer).toBe(originalRenderer);
+      expect(manager.getStatus()).toMatchObject({
+        appliedVersion: null,
+        applyMode: 'reload',
+        staged: '1.0.1',
+      });
+      expect(manager.applyStagedNow()).toBe(true);
+      manager.handleBootPing('mounted');
+      expect(manager.getStatus()).toMatchObject({ appliedVersion: '1.0.1', staged: null });
     } finally {
       vi.useRealTimers();
     }

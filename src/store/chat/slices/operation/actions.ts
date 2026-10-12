@@ -2,6 +2,7 @@ import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 import { produce } from 'immer';
 
+import { persistSettledTranscript } from '@/services/message/replica';
 import { type ChatStore } from '@/store/chat/store';
 import { type MessageMapKeyInput } from '@/store/chat/utils/messageMapKey';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -10,6 +11,7 @@ import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { operationSelectors } from './selectors';
 import {
   type AfterCompletionCallback,
   AI_RUNTIME_OPERATION_TYPES,
@@ -46,6 +48,32 @@ export class OperationActionsImpl {
     this.#set = set;
     this.#get = get;
   }
+
+  /**
+   * Abandons unclaimed automatic recovery when a conversation changes branches.
+   *
+   * Use when:
+   * - Either conversation surface selects another persisted reply.
+   *
+   * Expects:
+   * - The full message context, including thread and share scopes.
+   *
+   * Returns:
+   * - No value; unrelated conversations and explicit Retry remain unchanged.
+   *
+   * Call stack:
+   *
+   * switchMessageBranch (conversation or chat store)
+   *   -> {@link OperationActionsImpl.revokeHeteroAutoRetry}
+   *     -> {@link OperationActionsImpl.updateOperationMetadata}
+   */
+  revokeHeteroAutoRetry = (context: MessageMapKeyInput): void => {
+    for (const operation of operationSelectors.getOperationsByContext(context)(this.#get())) {
+      if (operation.metadata.heteroAutoRetryAvailable) {
+        this.updateOperationMetadata(operation.id, { heteroAutoRetryAvailable: false });
+      }
+    }
+  };
 
   internal_getConversationContext = (reference?: {
     context?: MessageMapKeyInput;
@@ -281,6 +309,9 @@ export class OperationActionsImpl {
 
   completeOperation = (operationId: string, metadata?: Partial<OperationMetadata>): void => {
     const operation = this.#get().operations[operationId];
+    // Late stream/session callbacks cannot overwrite the persisted terminal
+    // outcome (or reset its duration) after snapshot reconciliation.
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[completeOperation] operation %s (type=%s) completed, duration=%dms',
@@ -315,6 +346,24 @@ export class OperationActionsImpl {
       false,
       n(`completeOperation/${operationId}`),
     );
+
+    if (
+      operation &&
+      AI_RUNTIME_OPERATION_TYPES.includes(operation.type) &&
+      operation.status !== 'completed'
+    ) {
+      const state = this.#get();
+      const { agentId, topicId } = operation.context;
+      if (!agentId || !topicId) return;
+      // A run that finishes after the user switched away must still persist to
+      // its own conversation, so rebuild the operation's context with a definite
+      // agent/topic: `OperationContext` exposes them as optional, but the runtime
+      // check, the message key and the persist call all need a concrete agentId.
+      const context = { ...operation.context, agentId, topicId };
+      if (operationSelectors.isAgentRuntimeRunningByContext(context)(state)) return;
+      const messages = state.dbMessagesMap[messageMapKey(context)];
+      if (messages) persistSettledTranscript(context, messages);
+    }
   };
 
   getOperationAbortSignal = (operationId: string): AbortSignal => {
@@ -524,6 +573,7 @@ export class OperationActionsImpl {
     error: { code?: string; details?: any; message: string; type: string },
   ): void => {
     const operation = this.#get().operations[operationId];
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[failOperation] operation %s (type=%s) failed: %s',

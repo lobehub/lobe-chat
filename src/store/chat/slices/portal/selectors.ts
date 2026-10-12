@@ -159,6 +159,7 @@ const currentFile = (s: ChatStoreState): PortalFile | undefined => {
 
 const previewFileId = (s: ChatStoreState) => currentFile(s)?.fileId;
 const chunkText = (s: ChatStoreState) => currentFile(s)?.chunkText;
+const previewFileSource = (s: ChatStoreState) => currentFile(s)?.source;
 
 // Local File selectors
 const currentLocalFileScopeWorkingDirectory = (s: ChatStoreState): string | undefined =>
@@ -262,6 +263,8 @@ const taskResultId = (s: ChatStoreState): string | undefined => {
   return view?.taskId;
 };
 
+const dashboardWidgetView = (s: ChatStoreState) => getViewData(s, PortalViewType.DashboardWidget);
+
 // Goal detail drill-down selectors
 const goalPortalId = (s: ChatStoreState): string | undefined =>
   getViewData(s, PortalViewType.Goal)?.goalId;
@@ -349,10 +352,12 @@ export const chatPortalSelectors = {
   // File preview data
   currentFile,
   previewFileId,
+  previewFileSource,
   chunkText,
 
   // Goal drill-down data
   goalMetricView,
+  dashboardWidgetView,
   goalNodeView,
   goalPortalId,
   goalReportChapterView,

@@ -174,10 +174,12 @@ const styles = createStaticStyles(({ css }) => ({
     font-variant-numeric: tabular-nums;
     color: ${cssVar.colorTextTertiary};
   `,
-  /* A ring, not a fill: the kind tint and the state chip must stay readable. */
+  /* A ring, not a fill: the kind tint and the state chip must stay readable.
+     Blue, not `colorPrimary` — the primary is near-black here, so the ring read
+     as a heavier version of the plain card border and told nothing apart. */
   mainline: css`
-    border-color: ${cssVar.colorPrimary};
-    box-shadow: 0 0 0 1px ${cssVar.colorPrimary};
+    border-color: ${cssVar.colorInfo};
+    box-shadow: 0 0 0 1px ${cssVar.colorInfo};
   `,
   selected: css`
     border-color: ${cssVar.colorPrimaryBorder};
@@ -232,6 +234,13 @@ const useStateChip = (data: GraphNodeData): StateChip | null => {
   // Running renders the same animated ring the frontier and home surfaces use.
   if (running)
     return { color: TASK_STATUS_VISUALS.running.color, text: t('goalProcess.node.running') };
+  // The goal ended under this run: it was stopped, not still going.
+  if (view.halted)
+    return {
+      color: TASK_STATUS_VISUALS.canceled.color,
+      icon: TASK_STATUS_VISUALS.canceled.icon,
+      text: t('goalProcess.node.stopped'),
+    };
   if (node.kind === 'task' && node.status === 'resolved')
     return {
       color: TASK_STATUS_VISUALS.completed.color,

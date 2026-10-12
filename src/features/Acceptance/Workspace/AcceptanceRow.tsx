@@ -27,10 +27,9 @@ import { useNavigate } from 'react-router';
 
 import { openRenameModal } from '@/components/RenameModal';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { mutate as globalMutate } from '@/libs/swr';
-import { verifyKeys } from '@/libs/swr/keys';
 import type { AcceptanceListItem } from '@/services/verify';
 import { verifyService } from '@/services/verify';
+import { useVerifyStore } from '@/store/verify';
 
 import { acceptanceListPath } from '../Viewer/routes';
 import { getAcceptanceStatusActions } from '../Viewer/statusActions';
@@ -126,7 +125,7 @@ const AcceptanceRow = memo<{
   const title = item.subject.title || item.subjectId;
 
   const refresh = () =>
-    Promise.all([onChanged(), globalMutate(verifyKeys.acceptanceBundle(item.id))]);
+    Promise.all([onChanged(), useVerifyStore.getState().refreshAcceptanceBundle(item.id)]);
 
   /**
    * The shared rename dialog, same as a topic's. An in-place input inside a
@@ -212,7 +211,10 @@ const AcceptanceRow = memo<{
         try {
           const summary = await verifyService.mergeAcceptance(item.id, targetId);
           if (active) navigate(`/acceptance/${targetId}`, { replace: true });
-          await Promise.all([onChanged(), globalMutate(verifyKeys.acceptanceBundle(targetId))]);
+          await Promise.all([
+            onChanged(),
+            useVerifyStore.getState().refreshAcceptanceBundle(targetId),
+          ]);
           toast.success(t('acceptance.workspace.merge.success', { count: summary.movedChecks }));
           return true;
         } catch (error) {
@@ -335,8 +337,10 @@ const AcceptanceRow = memo<{
       // Only where the grouping does not already say it, and only when the row
       // actually has one — stamping "ungrouped" on every other row would cost a
       // line of height to say nothing.
+      // Someone else's acceptance (a participated row) offers no menu: every
+      // entry in it is a write its owner alone may make.
       actions={
-        selectable ? undefined : (
+        selectable || !item.canManage ? undefined : (
           <DropdownMenu
             iconSpaceMode={'group'}
             items={menuItems}
@@ -381,8 +385,8 @@ const AcceptanceRow = memo<{
           : undefined
       }
       onClick={(e) => {
-        if (selectable || e.shiftKey || e.metaKey || e.ctrlKey) {
-          onToggleSelect?.(e.shiftKey);
+        if (onToggleSelect && (selectable || e.shiftKey || e.metaKey || e.ctrlKey)) {
+          onToggleSelect(e.shiftKey);
           return;
         }
         navigate(`/acceptance/${item.id}`);

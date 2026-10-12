@@ -1,6 +1,10 @@
 // @vitest-environment node
-import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
-import { eq } from 'drizzle-orm';
+import {
+  GOAL_ACCEPTANCE_TASK_TITLE,
+  GOAL_COORDINATOR_ACTOR_ID,
+  GOAL_MANAGER_QUESTION_TITLE,
+} from '@lobechat/const/goal';
+import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '@/database/core/getTestDB';
@@ -28,9 +32,11 @@ import { goalRouter } from '@/server/routers/lambda/goal';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
 
+import { deviceGateway } from '../deviceGateway';
 import { GoalService } from './index';
-import { GoalManagerService } from './manager';
+import { decideFailedTurn, GoalManagerService, MAX_FAILED_MANAGER_TURNS } from './manager';
 import * as scheduler from './scheduler';
+import { GoalWaitService } from './wait';
 
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => db }));
 vi.mock('@/libs/oidc-provider/access-control', () => ({ assertOIDCUserActive: async () => {} }));
@@ -720,6 +726,192 @@ describe('CLI main Agent planning', () => {
     expect((await service().graph(id)).nodes.filter((n) => n.kind === 'task')).toHaveLength(0);
   });
 
+  it('keeps accepting submits when a background loop rewrites node rows without planning changes', async () => {
+    // A retry loop re-activating an already-active task node used to bump
+    // `goal_nodes.updated_at` between dispatch and submit; the manager hashed
+    // whole node rows, so every in-flight planning turn was rejected with
+    // "Stale planning input" no matter what the agent did.
+    const { id, state, op } = await start();
+    // No-op writes to the very rows the snapshot covers, mid-turn.
+    for (const node of (await service().graph(id)).nodes) {
+      await new GoalGraphModel(db, userId).updateNodeStatus(id, node.id, node.status, 'retry churn');
+    }
+    await expect(manager().submit(id, state.token, op.id, taskPlan)).resolves.toBeTruthy();
+  });
+
+  it('names on the read path the refusal submit folds into one message', async () => {
+    const { id, state, op } = await start();
+
+    // A live, unchanged turn: both paths agree a plan would apply.
+    expect((await manager().admission(id)).admission).toMatchObject({ code: 'ok', ok: true });
+
+    // The same changed graph `submit` refuses — but admission says WHICH
+    // precondition failed, where the shared message says only "Stale planning
+    // input". This is the answer `lh goal state` renders.
+    await new GoalGraphModel(db, userId).createNode(id, {
+      title: 'Changed input',
+      kind: 'finding',
+    });
+    expect((await manager().admission(id)).admission).toMatchObject({
+      code: 'stale_input',
+      ok: false,
+    });
+    await expect(manager().submit(id, state.token, op.id, taskPlan)).rejects.toThrow('Stale');
+
+    // A pause is its own code, not the same "the graph moved" answer.
+    await service().pause(id);
+    expect((await manager().admission(id)).admission).toMatchObject({
+      code: 'inactive',
+      ok: false,
+    });
+
+    // A token that is not this turn's is named as such, rather than reported as
+    // whatever precondition happens to fail next.
+    expect((await manager().admission(id, { token: 'not-the-token' })).admission).toMatchObject({
+      code: 'turn_owner',
+      ok: false,
+    });
+  });
+
+  it('re-derives the plan-specific refusals the read path would otherwise call ok', async () => {
+    const { id, state, op } = await start();
+
+    // `existing_work` and `wait_until_past` only fire when a plan is present. A
+    // read that does not see the plan therefore reports `ok`, and `lh goal plan`
+    // prints no explanation for exactly the refusals that need one. Feed the plan
+    // and the read matches what `submit` refuses on.
+    const verifyPlan = { action: 'verify' as const, reason: 'Compare results' };
+    expect((await manager().admission(id, { plan: verifyPlan })).admission).toMatchObject({
+      code: 'existing_work',
+      ok: false,
+    });
+    await expect(manager().submit(id, state.token, op.id, verifyPlan)).rejects.toThrow(
+      'Existing work',
+    );
+
+    const pastWait = {
+      action: 'wait' as const,
+      reason: 'Let tasks settle',
+      until: new Date(Date.now() - 1000).toISOString(),
+    };
+    expect((await manager().admission(id, { plan: pastWait })).admission).toMatchObject({
+      code: 'wait_until_past',
+      ok: false,
+    });
+    await expect(manager().submit(id, state.token, op.id, pastWait)).rejects.toThrow(
+      'Wait until must be in the future',
+    );
+
+    // With no plan the read still answers the non-plan question.
+    expect((await manager().admission(id)).admission).toMatchObject({ code: 'ok', ok: true });
+  });
+
+  it('authorizes a read from the turn’s own operation before its id reaches the receipt', async () => {
+    const { id, op } = await start();
+
+    // `advance` saves `managerState.operationId` only after the dispatched run's
+    // `execAgent` resolves, so a fast run is live and holding a token while the
+    // field is still absent (and if that save fails it never arrives, yet the turn
+    // is live and `submit` still succeeds). Ownership must therefore come from the
+    // topic/source-message lookup `submit` uses, not the receipt field.
+    const goal = (await model().findById(id))!;
+    const { operationId: _unpersisted, ...managerState } = goal.config!.managerState!;
+    await db
+      .update(goals)
+      .set({ config: { ...goal.config, managerState } })
+      .where(eq(goals.id, id));
+    expect((await model().findById(id))!.config!.managerState!.operationId).toBeUndefined();
+
+    await expect(manager().assertOperationOwnsTurn(id, op.id)).resolves.toBeUndefined();
+    await expect(manager().assertOperationOwnsTurn(id, 'op-someone-else')).rejects.toThrow(
+      'does not own',
+    );
+    await expect(manager().assertOperationOwnsTurn('goal-missing', op.id)).rejects.toThrow(
+      'Goal not found',
+    );
+  });
+
+  it('pages the goal audit trail by cursor and refuses another owner', async () => {
+    const { id } = await start();
+    const graph = new GoalGraphModel(db, userId);
+    // A second event, so paging has something to page over.
+    await graph.createNode(id, { title: 'Extra finding', kind: 'finding' });
+    const first = await graph.listEvents(id, { limit: 50 });
+    const all = first!.events;
+
+    expect(all.length).toBeGreaterThan(1);
+    expect(all[0]!.createdAt.getTime()).toBeGreaterThanOrEqual(all.at(-1)!.createdAt.getTime());
+
+    const page = await graph.listEvents(id, { limit: 1 });
+    expect(page!.events).toHaveLength(1);
+    expect(page!.nextCursor).toBeDefined();
+    // The cursor continues on the second-newest row...
+    const next = await graph.listEvents(id, { cursor: page!.nextCursor!, limit: 1 });
+    expect(next!.events[0]!.id).toBe(all[1]!.id);
+
+    // ...and still does after a live insert. This is why the page is keyed by
+    // `(createdAt, id)` and not an offset: events are PREPENDED while a goal
+    // runs, so `offset=2` would re-serve a row a new event pushed down.
+    await graph.createNode(id, { title: 'Inserted between pages', kind: 'finding' });
+    const afterInsert = await graph.listEvents(id, { cursor: page!.nextCursor!, limit: 1 });
+    expect(afterInsert!.events[0]!.id).toBe(all[1]!.id);
+
+    // The last page reports no continuation, so a caller can stop paging.
+    const last = await graph.listEvents(id, { limit: 200 });
+    expect(last!.nextCursor).toBeUndefined();
+
+    // A missing goal and someone else's goal are both invisible.
+    expect(await graph.listEvents('goal-missing', { limit: 5 })).toBeUndefined();
+    expect(await new GoalGraphModel(db, 'other-user').listEvents(id, { limit: 5 })).toBeUndefined();
+  });
+
+  it('pages across microsecond-apart events that share one millisecond', async () => {
+    const { id } = await start();
+    // Four events 100–400µs into 2026-01-01T00:00:00.000Z — all inside ONE
+    // millisecond. The column keeps microseconds, but a cursor round-trips
+    // through a JS Date and so carries only milliseconds: an untruncated keyset
+    // compares the microsecond column against a millisecond bound and drops the
+    // rows it cannot place (they match neither `<` nor the id tie-break).
+    const seeds = [
+      { entityId: 'micro-1', id: '00000000-0000-4000-8000-000000000001', micros: '000100' },
+      { entityId: 'micro-2', id: '00000000-0000-4000-8000-000000000002', micros: '000200' },
+      { entityId: 'micro-3', id: '00000000-0000-4000-8000-000000000003', micros: '000300' },
+      { entityId: 'micro-4', id: '00000000-0000-4000-8000-000000000004', micros: '000400' },
+    ];
+    for (const seed of seeds) {
+      await db.insert(goalEvents).values({
+        actorType: 'system',
+        createdAt: sql`${`2026-01-01T00:00:00.${seed.micros}Z`}::timestamptz`,
+        entityId: seed.entityId,
+        entityType: 'node',
+        eventType: 'created',
+        goalId: id,
+        id: seed.id,
+      });
+    }
+
+    // Walk the whole trail one row at a time, the way `lh goal events --limit 1` does.
+    const graph = new GoalGraphModel(db, userId);
+    const seen: string[] = [];
+    let cursor: { createdAt: Date; id: string } | undefined;
+    for (let i = 0; i < 50; i += 1) {
+      const page = await graph.listEvents(id, { cursor, limit: 1 });
+      if (!page) throw new Error('goal vanished mid-page');
+      seen.push(...page.events.map((event) => event.entityId));
+      if (!page.nextCursor) break;
+      cursor = page.nextCursor;
+    }
+
+    // None of the four is lost to the millisecond boundary. Within the shared
+    // millisecond the order falls back to id, which here runs with time.
+    expect(seen.filter((entityId) => entityId.startsWith('micro-'))).toEqual([
+      'micro-4',
+      'micro-3',
+      'micro-2',
+      'micro-1',
+    ]);
+  });
+
   it('adopts a dispatch with a lost response rather than launching another Agent', async () => {
     const original = vi.mocked(AiAgentService.prototype.execAgent).getMockImplementation()!;
     vi.mocked(AiAgentService.prototype.execAgent).mockImplementation(async (params) => {
@@ -738,10 +930,27 @@ describe('CLI main Agent planning', () => {
       completionReason: 'error',
       error: { message: 'transport error' },
     });
-    expect((await service().tick(id)).outcome).toBe('advanced');
+    expect((await service().tick(id)).outcome).toBe('waiting_external');
     expect((await service().tick(id)).outcome).toBe('no_progress');
     expect((await model().findById(id))!.status).toBe('paused');
     expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+  });
+
+  it('records a turn-budget pause as the system, not the owner', async () => {
+    const { id, op } = await start(1);
+    await ops().recordCompletion(op.id, {
+      status: 'error',
+      completionReason: 'error',
+      error: { message: 'transport error' },
+    });
+    await service().tick(id);
+    await service().tick(id);
+
+    const pause = (await service().graph(id)).events.find(
+      (event) =>
+        event.entityType === 'goal' && event.reason === 'Goal or main Agent turn budget exhausted',
+    );
+    expect(pause).toMatchObject({ actorId: GOAL_COORDINATOR_ACTOR_ID, actorType: 'system' });
   });
 
   it('rejects a delayed claim after another turn has consumed the remaining budget', async () => {
@@ -749,6 +958,9 @@ describe('CLI main Agent planning', () => {
     await ops().recordCompletion(op.id, { status: 'error' });
     await service().tick(id);
     const stale = await service().graph(id);
+    // Past the backoff the failed turn set, so the next turn may start.
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now + 2 * 60_000);
     await service().tick(id);
     const second = (await model().findById(id))!.config!.managerState!;
     await ops().recordCompletion(second.operationId!, { status: 'error' });
@@ -758,6 +970,171 @@ describe('CLI main Agent planning', () => {
     expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
     await service().tick(id);
     expect((await model().findById(id))!.status).toBe('paused');
+  });
+
+  describe('a turn that fails without a plan', () => {
+    const quotaError = (resetsAt: number) => ({
+      message: "You've hit your session limit",
+      category: 'quota',
+      body: {
+        code: 'rate_limit',
+        rateLimitInfo: { status: 'rejected', resetsAt, rateLimitType: 'five_hour' },
+      },
+    });
+
+    it('waits for a quota reset without charging the refused turn', async () => {
+      const { id, op } = await start(3);
+      const now = Date.now();
+      const resetsAt = Math.floor(now / 1000) + 600;
+      await ops().recordCompletion(op.id, { status: 'error', error: quotaError(resetsAt) });
+
+      expect((await service().tick(id)).outcome).toBe('waiting_external');
+      const state = (await model().findById(id))!.config!.managerState!;
+      expect(state.turns).toBe(0);
+      expect(Date.parse(state.retryAfter!)).toBe(resetsAt * 1000 + 60_000);
+      expect(vi.mocked(scheduler.scheduleGoalAdvance)).toHaveBeenLastCalledWith(
+        expect.objectContaining({ goalId: id, delay: expect.any(Number) }),
+      );
+      expect(
+        vi.mocked(scheduler.scheduleGoalAdvance).mock.lastCall![0].delay,
+      ).toBeGreaterThanOrEqual(600);
+
+      // The sweep and Task events keep ticking before the reset; none of them
+      // may dispatch a turn that would be refused the same way.
+      for (let i = 0; i < 10; i++)
+        expect((await service().tick(id)).outcome).toBe('waiting_external');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+
+      vi.spyOn(Date, 'now').mockReturnValue(resetsAt * 1000 + 61_000);
+      expect((await service().tick(id)).outcome).toBe('waiting_external');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+      expect((await model().findById(id))!.config!.managerState!.turns).toBe(1);
+    });
+
+    it('backs off and pauses on the error after consecutive failed turns', async () => {
+      const { id, op } = await start(20);
+      let now = Date.now();
+      const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+      let operationId = op.id;
+      for (let failed = 1; failed <= MAX_FAILED_MANAGER_TURNS; failed++) {
+        await ops().recordCompletion(operationId, {
+          status: 'error',
+          error: { message: 'spawn claude ENOENT' },
+        });
+        const result = await service().tick(id);
+        const state = (await model().findById(id))!.config!.managerState!;
+        if (failed === MAX_FAILED_MANAGER_TURNS) {
+          expect(result.outcome).toBe('no_progress');
+          expect(result.message).toContain('spawn claude ENOENT');
+          // Whoever resumes the Goal starts from a fresh schedule.
+          expect(state.failedTurns).toBeUndefined();
+          break;
+        }
+        expect(state.failedTurns).toBe(failed);
+        expect(result.outcome).toBe('waiting_external');
+        expect(Date.parse(state.retryAfter!) - now).toBe(60_000 * 2 ** (failed - 1));
+        expect((await service().tick(id)).outcome).toBe('waiting_external');
+        expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(failed);
+        now = Date.parse(state.retryAfter!) + 1;
+        await service().tick(id);
+        operationId = (await model().findById(id))!.config!.managerState!.operationId!;
+      }
+      clock.mockRestore();
+      expect((await model().findById(id))!.status).toBe('paused');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(
+        MAX_FAILED_MANAGER_TURNS,
+      );
+    });
+
+    it('waits for an offline device on the Task schedule without charging the turn', async () => {
+      vi.spyOn(deviceGateway, 'isConfigured', 'get').mockReturnValue(true);
+      const list = vi.spyOn(deviceGateway, 'queryDeviceList').mockResolvedValue([]);
+      const { id, op } = await start(3);
+      const now = Date.now();
+      await ops().recordCompletion(op.id, {
+        status: 'error',
+        error: {
+          deviceRoute: { deviceId: 'device-laptop', userId },
+          message: 'DEVICE_OFFLINE (HTTP 503)',
+        },
+      });
+
+      expect((await service().tick(id)).outcome).toBe('waiting_external');
+      const state = (await model().findById(id))!.config!.managerState!;
+      expect(state.turns).toBe(0);
+      expect(state.offlineTurns).toBe(1);
+      expect(state.failedTurns).toBeUndefined();
+      expect(Date.parse(state.retryAfter!) - now).toBeGreaterThanOrEqual(30 * 60_000 - 1000);
+
+      // Still offline: no turn.
+      expect((await service().tick(id)).outcome).toBe('waiting_external');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+      expect(list).toHaveBeenCalledWith(userId, undefined);
+
+      // Back online before the scheduled retry: plan right away.
+      list.mockResolvedValue([{ deviceId: 'device-laptop' } as never]);
+      await service().tick(id);
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+    });
+
+    it('pauses at once on an error only a person can fix', async () => {
+      const { id, op } = await start(10);
+      await ops().recordCompletion(op.id, {
+        status: 'error',
+        error: { category: 'quota', message: 'Insufficient balance' },
+      });
+
+      const result = await service().tick(id);
+      expect(result.outcome).toBe('no_progress');
+      expect(result.message).toContain('Insufficient balance');
+      expect((await model().findById(id))!.status).toBe('paused');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+    });
+
+    it('pauses in the same transaction that consumes the failed turn', async () => {
+      const { id, op } = await start(10);
+      await ops().recordCompletion(op.id, {
+        status: 'error',
+        error: { category: 'auth', message: 'Invalid API key' },
+      });
+      // A concurrent tick that lands right after the settling transaction commits.
+      const original = db.transaction.bind(db);
+      let raced = false;
+      vi.spyOn(db, 'transaction').mockImplementation((async (
+        ...args: Parameters<typeof db.transaction>
+      ) => {
+        const result = await original(...args);
+        const goal = await model().findById(id);
+        if (!raced && goal?.config?.managerState?.consumed) {
+          raced = true;
+          await manager().advance(await service().graph(id));
+        }
+        return result;
+      }) as typeof db.transaction);
+
+      expect((await service().tick(id)).outcome).toBe('no_progress');
+      expect(raced).toBe(true);
+      expect((await model().findById(id))!.status).toBe('paused');
+      expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps a running turn plan valid when a Task arms its quota wake', async () => {
+      const { id, state, op } = await start();
+      expect(
+        await model().armQuotaRetryWake(id, new Date(Date.now() + 3_600_000).toISOString()),
+      ).toBe(true);
+      await expect(manager().submit(id, state.token, op.id, taskPlan)).resolves.toBeDefined();
+    });
+
+    it('does not hold back the next turn after a committed plan whose run errored', async () => {
+      const { id, state, op } = await start();
+      await manager().submit(id, state.token, op.id, taskPlan);
+      await ops().recordCompletion(op.id, { status: 'error', error: { message: 'late crash' } });
+      expect((await service().tick(id)).outcome).not.toBe('no_progress');
+      const settled = (await model().findById(id))!.config!.managerState!;
+      expect(settled.retryAfter).toBeUndefined();
+      expect(settled.failedTurns).toBeUndefined();
+    });
   });
 
   it.each(['waiting_for_human', 'waiting_for_async_tool'] as const)(
@@ -854,6 +1231,9 @@ describe('CLI main Agent planning', () => {
     expect(next.token).not.toBe(state.token);
     expect(next.turns).toBe(state.turns + 1);
     expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+    // The replacement's message must not claim the refused turn ran and exited.
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toContain('<previousTurn outcome="never_started" />');
   });
 
   it('keeps pausing when the planning message is deleted after a dispatch that had started', async () => {
@@ -1134,6 +1514,13 @@ describe('CLI main Agent planning', () => {
     await service().tick(id);
     const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
     expect(prompt).toContain('The recommendation baseline is not a training majority');
+    // Written after the previous turn started, so this turn shows it as new.
+    expect(prompt).toMatch(
+      /<feedback author="user" new="true"[^>]*><!\[CDATA\[\nThe recommendation baseline is not a training majority/,
+    );
+    // The card names the task by title; the agent keeps the id.
+    expect(prompt).toContain(`taskId="${taskId}" taskTitle="Audit"`);
+    expect(prompt).toContain('<previousTurn action="tasks" outcome="submitted">');
     const next = (await model().findById(id))!.config!.managerState!;
     await taskModel.addComment({
       taskId,
@@ -1145,6 +1532,59 @@ describe('CLI main Agent planning', () => {
       manager().submit(id, next.token, next.operationId!, { action: 'verify', reason: 'Ready' }),
     ).rejects.toThrow('feedback');
     expect((await model().findById(id))!.config!.managerState!.readyForAcceptance).not.toBe(true);
+  });
+
+  /**
+   * Regression: the next turn's cutoff was taken after the comments were read,
+   * so a comment committed in between was dated before a turn that never saw it
+   * and the retry showed it only as a 200-character "earlier" excerpt.
+   */
+  it('shows a comment committed while the claim read feedback as new on the next turn', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, taskPlan);
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    const taskId = (await service().tick(id)).taskId!;
+    const node = (await service().graph(id)).nodes.find((n) => n.taskId === taskId)!;
+    await db.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, node.id));
+
+    const original = TaskModel.prototype.getComments;
+    const late = 'Late review: the baseline must exclude future cases.';
+    const read = vi
+      .spyOn(TaskModel.prototype, 'getComments')
+      .mockImplementationOnce(async function (this: TaskModel, commentTaskId) {
+        const seen = await original.call(this, commentTaskId);
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        const now = new Date();
+        await this.addComment({
+          taskId: commentTaskId,
+          userId,
+          authorUserId: userId,
+          content: late,
+          createdAt: now,
+          updatedAt: now,
+        });
+        return seen;
+      });
+    await service().tick(id);
+    read.mockRestore();
+    const missed = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(missed).not.toContain(late);
+
+    const turn = (await model().findById(id))!.config!.managerState!;
+    await manager()
+      .submit(id, turn.token, turn.operationId!, {
+        action: 'escalate',
+        reason: 'stale',
+      })
+      .catch(() => undefined);
+    await ops().recordCompletion(turn.operationId!, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toMatch(
+      new RegExp(String.raw`<feedback author="user" new="true"[^>]*><!\[CDATA\[\n${late}`),
+    );
   });
 
   it('accepts a main Agent alongside the system planner', async () => {
@@ -1370,37 +1810,38 @@ describe('takeover ordering', () => {
   });
 });
 
+/** A takeover-mode Goal whose only Task just spent its attempt budget. */
+const stuckGoal = async (title = 'Explored research') => {
+  const graph = await service().create({
+    config: {
+      exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
+      manager: { maxTurns: 4 },
+      recovery: { maxAttemptsPerTask: 1 },
+    },
+    createdByAgentId: agentId,
+    tasks: ['Measure ranking ability on the frozen holdout'],
+    title,
+  });
+  const created = await service().tick(graph.goal.id);
+  const taskModel = new TaskModel(db, userId);
+  await taskModel.update(created.taskId!, { totalTopics: 1 });
+  await taskModel.updateStatus(created.taskId!, 'paused', {
+    error: 'Delivery did not pass verification.',
+  });
+  await service().tick(graph.goal.id);
+  const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+  const turn = await ops().findByTopicSourceMessage(
+    state.topicId,
+    `msg_goal_manager_${state.token}`,
+  );
+  return { goalId: graph.goal.id, state, taskId: created.taskId!, turn: turn! };
+};
+
 /**
  * Codex review round 2 on #19477. Both findings were about the takeover contract
  * promising more than the code would accept.
  */
 describe('takeover submissions', () => {
-  const stuckGoal = async (title = 'Explored research') => {
-    const graph = await service().create({
-      config: {
-        exploration: { instruction: 'Follow the pre-registered branches', maxExperiments: 4 },
-        manager: { maxTurns: 4 },
-        recovery: { maxAttemptsPerTask: 1 },
-      },
-      createdByAgentId: agentId,
-      tasks: ['Measure ranking ability on the frozen holdout'],
-      title,
-    });
-    const created = await service().tick(graph.goal.id);
-    const taskModel = new TaskModel(db, userId);
-    await taskModel.update(created.taskId!, { totalTopics: 1 });
-    await taskModel.updateStatus(created.taskId!, 'paused', {
-      error: 'Delivery did not pass verification.',
-    });
-    await service().tick(graph.goal.id);
-    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
-    const turn = await ops().findByTopicSourceMessage(
-      state.topicId,
-      `msg_goal_manager_${state.token}`,
-    );
-    return { goalId: graph.goal.id, state, taskId: created.taskId!, turn: turn! };
-  };
-
   /**
    * The prompt advertises a corrective task, verification, a retry and escalation.
    * `submit` refused `tasks` and `verify` whenever any task node was unfinished —
@@ -1495,6 +1936,155 @@ describe('takeover submissions', () => {
     const gated = await service().graph(goalId);
     expect(gated.decisions).toHaveLength(1);
     expect(gated.decisions[0].question).toContain('Needs a human judge');
+  });
+});
+
+/**
+ * Escalations used to carry only a reason, so the owner's gate offered retry /
+ * retire while the actual decision — waive a criterion, restore a closed PR —
+ * sat in the text with no button to answer it.
+ */
+describe('escalations that ask a real question', () => {
+  const waiveAsk = {
+    question: 'Waive the "in order" criterion for this delivery?',
+    options: [
+      {
+        id: 'waive',
+        label: 'Waive it',
+        description: 'Accept the PRs in the order they merged',
+        effect: 'retry' as const,
+      },
+      { id: 'keep', label: 'Keep it', effect: 'retire' as const },
+    ],
+    recommendedOptionId: 'waive',
+  };
+
+  it('opens a question gate instead of pausing an ordinary planning turn', async () => {
+    const { id, state, op } = await start();
+    await operationCaller(op.id).submitOperationPlan({
+      id,
+      operationId: op.id,
+      token: state.token,
+      plan: {
+        action: 'escalate',
+        reason: 'Both readings of the requirement are defensible',
+        ask: {
+          question: 'Should the report cover desktop only?',
+          options: [
+            { id: 'desktop', label: 'Desktop only' },
+            { id: 'all', label: 'Desktop and mobile' },
+          ],
+        },
+      },
+    });
+
+    const goal = (await model().findById(id))!;
+    expect(goal.status).toBe('review');
+    const graph = await service().graph(id);
+    const node = graph.nodes.find((n) => n.title === GOAL_MANAGER_QUESTION_TITLE)!;
+    expect(node).toMatchObject({
+      description: 'Both readings of the requirement are defensible',
+      kind: 'decision',
+    });
+    expect(graph.decisions).toEqual([
+      expect.objectContaining({
+        nodeId: node.id,
+        options: [
+          { id: 'desktop', label: 'Desktop only' },
+          { id: 'all', label: 'Desktop and mobile' },
+        ],
+        question: 'Should the report cover desktop only?',
+        status: 'pending',
+      }),
+    ]);
+
+    // The answer is what the next turn plans from.
+    await service().decide(id, graph.decisions[0].id, 'all', 'Mobile matters for this launch');
+    expect((await model().findById(id))!.status).toBe('running');
+    const answered = (await service().graph(id)).decisions[0];
+    expect(answered).toMatchObject({
+      resolution: 'Mobile matters for this launch',
+      resolvedOptionId: 'all',
+      status: 'resolved',
+    });
+  });
+
+  it('asks a takeover question as written and carries the chosen answer into the retry', async () => {
+    const { goalId, state, taskId, turn } = await stuckGoal();
+    await operationCaller(turn.id).submitOperationPlan({
+      id: goalId,
+      operationId: turn.id,
+      plan: { action: 'escalate', reason: 'The PRs merged out of order', ask: waiveAsk },
+      token: state.token,
+    });
+    await db.update(agentOperations).set({ status: 'done' }).where(eq(agentOperations.id, turn.id));
+    await service().tick(goalId);
+
+    expect(await service().tick(goalId)).toMatchObject({ outcome: 'waiting_human' });
+    const gated = await service().graph(goalId);
+    expect(gated.decisions).toHaveLength(1);
+    const [gate] = gated.decisions;
+    expect(gate).toMatchObject({
+      options: waiveAsk.options,
+      question: waiveAsk.question,
+      recommendedOptionId: 'waive',
+    });
+    expect(gated.nodes.find((n) => n.id === gate.nodeId)!.description).toContain(
+      'The PRs merged out of order',
+    );
+
+    await service().decide(goalId, gate.id, 'waive', 'Order follows merge time');
+    const task = await new TaskModel(db, userId).findById(taskId);
+    expect(task!.status).toBe('backlog');
+    const comments = await new TaskModel(db, userId).getComments(taskId);
+    expect(comments.at(-1)!.content).toContain('Chosen: Waive it');
+    expect(comments.at(-1)!.content).toContain('Guidance: Order follows merge time');
+  });
+
+  // Gates are labelled by option id, so an authored "retry" that retires the
+  // Task would read "Retry task" on the card.
+  it('refuses answers that reuse the coordinator option ids', async () => {
+    const { goalId, state, turn } = await stuckGoal();
+    await expect(
+      operationCaller(turn.id).submitOperationPlan({
+        id: goalId,
+        operationId: turn.id,
+        plan: {
+          action: 'escalate',
+          reason: 'Needs a call',
+          ask: {
+            question: 'Keep this result?',
+            options: [
+              { id: 'retry', label: 'Keep this result', effect: 'retire' },
+              { id: 'redo', label: 'Redo it', effect: 'retry' },
+            ],
+          },
+        },
+        token: state.token,
+      }),
+    ).rejects.toThrow('reserved');
+  });
+
+  it('refuses a takeover question whose answers leave the blocked Task undecided', async () => {
+    const { goalId, state, turn } = await stuckGoal();
+    await expect(
+      operationCaller(turn.id).submitOperationPlan({
+        id: goalId,
+        operationId: turn.id,
+        plan: {
+          action: 'escalate',
+          reason: 'Needs a judge',
+          ask: {
+            question: 'Which judge?',
+            options: [
+              { id: 'a', label: 'A' },
+              { id: 'b', label: 'B' },
+            ],
+          },
+        },
+        token: state.token,
+      }),
+    ).rejects.toThrow('needs an effect');
   });
 });
 
@@ -1636,5 +2226,310 @@ describe('takeover and dependent work', () => {
       (await service().graph(graph.goal.id)).nodes.find((node) => node.id === blockedNode.id)!
         .status,
     ).not.toBe('retired');
+  });
+});
+
+describe('durable manager continuation', () => {
+  const waits = () => new GoalWaitService(db, userId);
+  const event = { type: 'external.result', key: 'experiment-1', eventId: 'delivery-1' };
+  const finish = async (id: string, operationId: string) => {
+    await ops().recordCompletion(operationId, { status: 'done' });
+    await service().tick(id);
+  };
+  const begin = async () => {
+    const run = await start();
+    await manager().submit(run.id, run.state.token, run.op.id, {
+      action: 'wait',
+      reason: 'Await external evidence',
+      until: new Date(Date.now() + 60_000).toISOString(),
+      event: { type: event.type, key: event.key },
+    });
+    return run;
+  };
+
+  it('persists a bounded wait without paying for another planning turn', async () => {
+    const { id, op } = await begin();
+    await finish(id, op.id);
+    expect((await service().tick(id)).outcome).toBe('waiting_external');
+    const goal = await model().findById(id);
+    expect(goal?.status).toBe('running');
+    expect(goal?.config?.managerState).toMatchObject({
+      consumed: true,
+      turns: 1,
+      submitted: { action: 'wait' },
+    });
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+    expect(
+      (await GoalModel.listStalled(db, { staleBefore: new Date() })).map((g) => g.id),
+    ).not.toContain(id);
+  });
+
+  it('arms one wake per scheduled check instead of one per poll', async () => {
+    const wakes = () =>
+      vi
+        .mocked(scheduler.scheduleGoalAdvance)
+        .mock.calls.filter(([input]) => input.goalId === id && input.trigger === 'wake');
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, {
+      action: 'wait',
+      reason: 'Await a slow external result',
+      until: new Date(Date.now() + 3 * 86400_000).toISOString(),
+    });
+    await finish(id, op.id);
+    for (let i = 0; i < 5; i++) expect((await service().tick(id)).outcome).toBe('waiting_external');
+    expect(wakes()).toHaveLength(1);
+    // The armed check fires after the 24h queue bound; the wait re-arms once.
+    vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 86400_000 + 1000);
+    for (let i = 0; i < 5; i++) expect((await service().tick(id)).outcome).toBe('waiting_external');
+    expect(wakes()).toHaveLength(2);
+    expect(wakes()[1][0].delay).toBeGreaterThan(86000);
+  });
+
+  it('retains an early event, rejects duplicates and fences later waits', async () => {
+    const { id, state, op } = await begin();
+    expect(await waits().deliver(id, { ...event, waitToken: 'stale' })).toMatchObject({
+      accepted: false,
+    });
+    expect(
+      await waits().deliver(id, { ...event, waitToken: state.token, key: 'wrong' }),
+    ).toMatchObject({ accepted: false });
+    expect(
+      await waits().deliver(id, { ...event, waitToken: state.token, reference: 'experiment:1' }),
+    ).toMatchObject({ accepted: true });
+    expect(await waits().deliver(id, { ...event, waitToken: state.token })).toMatchObject({
+      accepted: false,
+      reason: 'already_woken',
+    });
+    await service().tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+    await finish(id, op.id);
+    await service().tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(AiAgentService.prototype.execAgent).mock.calls[1][0].prompt).toContain(
+      'experiment:1',
+    );
+    const next = (await model().findById(id))!.config!.managerState!;
+    await manager().submit(id, next.token, next.operationId!, {
+      action: 'wait',
+      reason: 'Next observation',
+      until: new Date(Date.now() + 60_000).toISOString(),
+      event: { type: event.type, key: event.key },
+    });
+    expect(await waits().deliver(id, { ...event, waitToken: state.token })).toMatchObject({
+      accepted: false,
+      reason: 'unmatched',
+    });
+    expect((await model().findById(id))!.config!.managerState!.wait?.wake).toBeUndefined();
+  });
+
+  it('does not expose a personal Goal to another user', async () => {
+    const { id, state } = await begin();
+    await expect(
+      new GoalWaitService(db, 'another-user').deliver(id, { ...event, waitToken: state.token }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+  });
+
+  it('keeps a user pause through an event and elapsed timer until explicit resume', async () => {
+    const { id, state, op } = await begin();
+    await finish(id, op.id);
+    await service().pause(id);
+    expect(await waits().deliver(id, { ...event, waitToken: state.token })).toMatchObject({
+      accepted: false,
+      reason: 'stopped',
+    });
+    vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 120_000);
+    await service().tick(id);
+    expect((await model().findById(id))?.status).toBe('paused');
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(1);
+    await service().resume(id);
+    await service().tick(id);
+    await service().tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+  });
+
+  it('recovers an elapsed persisted wait after service recreation via the sweep', async () => {
+    const { id, op } = await begin();
+    await finish(id, op.id);
+    const goal = (await model().findById(id))!;
+    const state = goal.config!.managerState!;
+    // Let database time observe an elapsed deadline without a real minute-long test.
+    await db
+      .update(goals)
+      .set({
+        config: {
+          ...goal.config,
+          managerState: {
+            ...state,
+            wait: { ...state.wait!, until: new Date(Date.now() - 1000).toISOString() },
+          },
+        },
+      })
+      .where(eq(goals.id, id));
+    expect(
+      (await GoalModel.listStalled(db, { staleBefore: new Date() })).map((g) => g.id),
+    ).toContain(id);
+    await new GoalService(db, userId).tick(id);
+    await new GoalService(db, userId).tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores historical measurements but wakes on a fresh below-target observation', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, {
+      action: 'wait',
+      reason: 'Observe progress',
+      until: new Date(Date.now() + 60_000).toISOString(),
+      event: { type: 'metric.observed', key: 'score' },
+    });
+    await finish(id, op.id);
+    await service().setMetricCriteria(id, [{ key: 'score', target: 100 }]);
+    await service().recordObservation(id, {
+      key: 'score',
+      value: 1,
+      observedAt: new Date(Date.now() - 86400_000),
+    });
+    expect((await model().findById(id))!.config!.managerState!.wait?.wake).toBeUndefined();
+    await service().recordObservation(id, { key: 'score', value: 2 });
+    await service().tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent)).toHaveBeenCalledTimes(2);
+    expect((await model().findById(id))!.config!.acceptance?.metrics).toEqual([
+      { key: 'score', target: 100 },
+    ]);
+  });
+
+  it('returns an unmet measured contract to planning and accepts another experiment', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, taskPlan);
+    const node = (await service().graph(id)).nodes.find((n) => n.kind === 'task')!;
+    await new GoalGraphModel(db, userId).updateNodeStatus(id, node.id, 'resolved');
+    await finish(id, op.id);
+    await service().setMetricCriteria(id, [{ key: 'score', target: 100 }]);
+    await service().tick(id);
+    const next = (await model().findById(id))!.config!.managerState!;
+    await manager().submit(id, next.token, next.operationId!, {
+      action: 'verify',
+      reason: 'Evaluate evidence',
+    });
+    await finish(id, next.operationId!);
+    expect((await service().tick(id)).outcome).toBe('advanced');
+    expect((await model().findById(id))?.status).toBe('running');
+    await service().tick(id);
+    expect(vi.mocked(AiAgentService.prototype.execAgent).mock.calls[2][0].prompt).toContain(
+      'Measured acceptance not met',
+    );
+    const third = (await model().findById(id))!.config!.managerState!;
+    await manager().submit(id, third.token, third.operationId!, taskPlan);
+    expect((await service().graph(id)).nodes.filter((n) => n.kind === 'task')).toHaveLength(2);
+  });
+
+  it('invites the first manager turn after exploration reaches unmet acceptance', async () => {
+    const graph = await service().create({
+      title: 'Measured exploration',
+      agentId,
+      config: {
+        manager: { maxTurns: 3 },
+        exploration: { instruction: 'Explore', maxExperiments: 2 },
+      },
+    });
+    for (const node of graph.nodes.filter((n) => n.kind !== 'problem'))
+      await db.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, node.id));
+    expect(
+      (
+        await manager().reconsiderAcceptance(
+          await service().graph(graph.goal.id),
+          'Measured acceptance not met: score',
+        )
+      )?.outcome,
+    ).toBe('waiting_external');
+    expect(vi.mocked(AiAgentService.prototype.execAgent).mock.calls[0][0].prompt).toContain(
+      'Measured acceptance not met: score',
+    );
+  });
+
+  it('rejects elapsed waits and unfinished work', async () => {
+    const { id, state, op } = await start();
+    await expect(
+      manager().submit(id, state.token, op.id, {
+        action: 'wait',
+        reason: 'Elapsed',
+        until: new Date(Date.now() - 1000).toISOString(),
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    await new GoalGraphModel(db, userId).createNode(id, { kind: 'task', title: 'Pending work' });
+    await expect(
+      manager().submit(id, state.token, op.id, {
+        action: 'wait',
+        reason: 'Pending',
+        until: new Date(Date.now() + 60_000).toISOString(),
+      }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+  });
+});
+
+describe('decideFailedTurn', () => {
+  const now = Date.parse('2026-10-05T19:49:30Z');
+
+  it('waits for the reported quota reset and does not charge the turn', () => {
+    const resetsAt = Math.floor(now / 1000) + 3600;
+    expect(
+      decideFailedTurn(
+        { category: 'quota', body: { code: 'rate_limit', rateLimitInfo: { resetsAt } } },
+        { failedTurns: 2 },
+        now,
+      ),
+    ).toMatchObject({
+      action: 'retry',
+      charged: false,
+      failedTurns: 2,
+      retryAfter: new Date(resetsAt * 1000 + 60_000).toISOString(),
+    });
+  });
+
+  it('follows the Task offline schedule for an unreachable device, then pauses', () => {
+    const offline = { message: 'DEVICE_OFFLINE' };
+    const delays = [0, 1, 2, 3, 4, 5].map((offlineTurns) => {
+      const decision = decideFailedTurn(offline, { offlineTurns }, now);
+      expect(decision).toMatchObject({ action: 'retry', charged: false });
+      return decision.action === 'retry' ? Date.parse(decision.retryAfter) - now : 0;
+    });
+    const HOUR = 60 * 60_000;
+    expect(delays).toEqual([HOUR / 2, HOUR, 2 * HOUR, 4 * HOUR, 8 * HOUR, 8 * HOUR]);
+    expect(decideFailedTurn(offline, { offlineTurns: 6 }, now).action).toBe('pause');
+  });
+
+  it('restarts the offline schedule after a failure that reached the device', () => {
+    const between = decideFailedTurn({ message: 'boom' }, { offlineTurns: 3 }, now);
+    expect(between).toMatchObject({ action: 'retry', offlineTurns: 0 });
+    const next = decideFailedTurn({ message: 'DEVICE_OFFLINE' }, { offlineTurns: 0 }, now);
+    expect(next.action === 'retry' && Date.parse(next.retryAfter) - now).toBe(30 * 60_000);
+  });
+
+  it('pauses at once when a person has to act', () => {
+    for (const error of [
+      { category: 'auth', message: 'Invalid API key' },
+      { category: 'quota', message: 'Insufficient balance' },
+      // A session limit without a reset time cannot be waited out.
+      { body: { code: 'rate_limit' }, category: 'quota', message: 'session limit' },
+    ])
+      expect(decideFailedTurn(error, {}, now).action).toBe('pause');
+  });
+
+  it('backs off transient and unknown errors, then pauses on the fifth in a row', () => {
+    const delays = [0, 1, 2, 3].map((failedTurns) => {
+      const decision = decideFailedTurn({ message: 'boom' }, { failedTurns }, now);
+      expect(decision).toMatchObject({ action: 'retry', charged: true });
+      return decision.action === 'retry' ? Date.parse(decision.retryAfter) - now : 0;
+    });
+    expect(delays).toEqual([60_000, 120_000, 240_000, 480_000]);
+    expect(
+      decideFailedTurn({ category: 'capacity', message: '429' }, { failedTurns: 4 }, now),
+    ).toMatchObject({ action: 'pause', reason: expect.stringContaining('5 turns') });
+  });
+
+  it('charges a quota error whose reset has already passed like any other failure', () => {
+    const past = Math.floor(now / 1000) - 600;
+    expect(
+      decideFailedTurn({ category: 'quota', body: { rateLimitInfo: { resetsAt: past } } }, {}, now),
+    ).toMatchObject({ action: 'retry', charged: true });
   });
 });

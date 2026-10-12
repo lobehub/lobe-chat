@@ -5,7 +5,7 @@ import {
   type ServerDefaultHeterogeneousRelayInvocation,
   type VerifyRunStatus,
 } from '@lobechat/types';
-import { and, eq, gte, inArray, isNotNull, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNotNull, or, sql } from 'drizzle-orm';
 
 import { today } from '@/utils/time';
 
@@ -245,6 +245,7 @@ export class AgentOperationModel {
               'running',
               'waiting_for_human',
               'waiting_for_async_tool',
+              'waiting_for_client',
             ]),
             eq(agentOperations.status, params.status),
           ),
@@ -368,6 +369,7 @@ export class AgentOperationModel {
       'running',
       'waiting_for_human',
       'waiting_for_async_tool',
+      'waiting_for_client',
     ]);
   }
 
@@ -879,6 +881,84 @@ export class AgentOperationModel {
       )
       .returning({ id: agentOperations.id });
     return rows.length === 1;
+  }
+
+  /**
+   * Atomically flip an op parked in `waiting_for_client` back to `running`.
+   * True only for the single winner, so a manual "continue" racing an
+   * automatic one resumes the run once.
+   */
+  async tryResumeFromClientWait(operationId: string): Promise<boolean> {
+    const rows = await this.db
+      .update(agentOperations)
+      .set({ status: 'running' })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          this.ownership(),
+          eq(agentOperations.status, 'waiting_for_client'),
+        ),
+      )
+      .returning({ id: agentOperations.id });
+    return rows.length === 1;
+  }
+
+  /**
+   * Undo a won `tryResumeFromClientWait` whose resume step never got enqueued,
+   * so the run stays parked (resumable, expirable, stoppable) instead of
+   * sitting in `running` with nothing scheduled.
+   */
+  async revertClientWaitResume(operationId: string): Promise<boolean> {
+    const rows = await this.db
+      .update(agentOperations)
+      .set({ status: 'waiting_for_client' })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          this.ownership(),
+          eq(agentOperations.status, 'running'),
+        ),
+      )
+      .returning({ id: agentOperations.id });
+    return rows.length === 1;
+  }
+
+  /**
+   * Retire an op still parked in `waiting_for_client` (its wait ran out or it
+   * was stopped while waiting). Only matches the parked row, so a run a client
+   * already resumed is never settled under it.
+   */
+  async settleClientWait(
+    operationId: string,
+    status: 'error' | 'interrupted' = 'error',
+  ): Promise<boolean> {
+    return this.settleFrom(operationId, status, ['waiting_for_client']);
+  }
+
+  /**
+   * Operations of this user parked in `waiting_for_client`, newest first.
+   * `providers` narrows to the ones the asking client can run before the
+   * limit applies, so waits for another device's providers cannot crowd out
+   * the ones it could take.
+   */
+  async listWaitingForClient(options: { limit?: number; providers?: string[] } = {}) {
+    const { limit = 20, providers } = options;
+    return this.db
+      .select({
+        id: agentOperations.id,
+        provider: agentOperations.provider,
+        topicId: agentOperations.topicId,
+      })
+      .from(agentOperations)
+      .where(
+        and(
+          eq(agentOperations.status, 'waiting_for_client'),
+          this.ownership(),
+          providers ? inArray(agentOperations.provider, providers) : undefined,
+        ),
+      )
+      .orderBy(desc(agentOperations.createdAt))
+      .limit(limit);
   }
 
   // ============================================

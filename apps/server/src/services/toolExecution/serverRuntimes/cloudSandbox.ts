@@ -5,7 +5,7 @@ import debug from 'debug';
 import { UserModel } from '@/database/models/user';
 import { FileService } from '@/server/services/file';
 import { MarketService } from '@/server/services/market';
-import { createSandboxService } from '@/server/services/sandbox';
+import { createSandboxService, resolveSandboxSessionConfig } from '@/server/services/sandbox';
 import {
   isDirectLhInvocation,
   isLhCommand,
@@ -126,27 +126,56 @@ export const cloudSandboxRuntime: ServerRuntimeRegistration = {
       // non-fatal — MarketService will fall back to trustedClientToken
     }
 
+    // The workspace this run belongs to. `context.workspaceId` is empty on the
+    // dispatch and resume paths, which is most of them: a workspace agent's
+    // tool call then resolved its topic in the personal scope, found nothing,
+    // and ran ephemeral — the conversation said "Lobehub Dev" while `pwd`
+    // answered `/workspace` and the clone went somewhere nothing reads.
+    //
+    // Recovered once and used for everything this runtime builds, because the
+    // danger is not the recovery but a disagreement: the claim signs a
+    // directory that the token's identity must also name, or an organization's
+    // files mount inside a personal session. `creds.ts` recovers the same way.
+    const workspaceId = await resolveContentWorkspaceId(context);
+
+    // Persistence for this run: the entitlement that goes on the trust token,
+    // and the topic's own preferences that go on each request.
+    const sandbox = await resolveSandboxSessionConfig({
+      isShareVisitorRun: Boolean(context.agentShareVisitor),
+      serverDB: context.serverDB,
+      topicId: context.topicId,
+      userId: context.userId,
+      workspaceId,
+    });
+
     const marketService = new MarketService({
       accessToken,
-      userInfo: { userId: context.userId, workspaceId: context.workspaceId },
+      userInfo: {
+        sandboxStorage: sandbox.claim,
+        userId: context.userId,
+        workspaceId,
+      },
     });
-    const fileService = new FileService(context.serverDB, context.userId, context.workspaceId);
+    const fileService = new FileService(context.serverDB, context.userId, workspaceId);
     const sandboxService = createSandboxService({
       fileService,
       marketService,
+      sandboxCwd: sandbox.cwd,
+      sandboxInstanceId: sandbox.environment,
+      sandboxSpecification: sandbox.specification,
+      sandboxWorkingDir: sandbox.workingDir,
+      sandboxMode: sandbox.mode,
       serverDB: context.serverDB,
       topicId: context.topicId,
       userId: context.userId,
     });
 
-    let workspaceIdPromise: Promise<string | undefined> | undefined;
-
     return new CloudSandboxExecutionRuntime(
       withLhPreprocessing(sandboxService, {
         isShareVisitor: Boolean(context.agentShareVisitor),
         userId: context.userId,
-        workspaceId: () => (workspaceIdPromise ??= resolveContentWorkspaceId(context)),
-        workspaceIdHint: context.workspaceId,
+        workspaceId: async () => workspaceId,
+        workspaceIdHint: workspaceId,
       }),
     );
   },

@@ -6,14 +6,21 @@ vi.mock('@/libs/trpc/utils/internalJwt', () => ({
   signUserJWT: vi.fn().mockResolvedValue('jwt'),
 }));
 
+const sourceExecutor = { capabilities: ['llm_relay@1'], clientId: 'tab-a', providers: ['ollama'] };
+
 const setup = (sourceAccepts: boolean) => {
   const calls: string[] = [];
   const agentRuntimeService = {
+    acceptsFileWorks: vi.fn(async () => sourceAccepts),
     acceptsMemberRuntimeEnd: vi.fn(async () => {
       calls.push('read-source');
       return sourceAccepts;
     }),
     createOperation: vi.fn(async () => ({ autoStarted: true, messageId: 'msg-assistant' })),
+    getLlmExecutor: vi.fn(async () => {
+      calls.push('read-executor');
+      return sourceExecutor;
+    }),
   };
   const deps = {
     agentRuntimeService,
@@ -78,7 +85,7 @@ describe('startOperation › member_runtime_end declaration', () => {
     expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
       expect.objectContaining({ acceptsMemberRuntimeEnd: true }),
     );
-    expect(calls).toEqual(['read-source', 'retire-source']);
+    expect(calls).toEqual(['read-source', 'read-executor', 'retire-source']);
   });
 
   // Codex P1 on #20102: an older client resuming an approval of a run a newer
@@ -106,6 +113,65 @@ describe('startOperation › member_runtime_end declaration', () => {
 
     expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
       expect.objectContaining({ acceptsMemberRuntimeEnd: undefined }),
+    );
+  });
+});
+
+describe('startOperation › relay executor', () => {
+  it('carries the parked operation relay executor over to an approval continuation', async () => {
+    const { agentRuntimeService, calls, ctx, deps, input } = setup(true);
+
+    await startOperation(deps, ctx, input({ approvalSourceOperationId: 'op-parked' }));
+
+    expect(agentRuntimeService.getLlmExecutor).toHaveBeenCalledWith('op-parked');
+    expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
+      expect.objectContaining({ llmExecutor: sourceExecutor }),
+    );
+    // Read before the parked operation is retired.
+    expect(calls.indexOf('read-executor')).toBeLessThan(calls.indexOf('retire-source'));
+  });
+
+  it('keeps the executor the resuming client declared', async () => {
+    const { agentRuntimeService, ctx, deps, input } = setup(true);
+    const declared = { ...sourceExecutor, clientId: 'tab-b' };
+
+    await startOperation(
+      deps,
+      ctx,
+      input({ approvalSourceOperationId: 'op-parked', llmExecutor: declared }),
+    );
+
+    expect(agentRuntimeService.getLlmExecutor).not.toHaveBeenCalled();
+    expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
+      expect.objectContaining({ llmExecutor: declared }),
+    );
+  });
+});
+
+describe('startOperation › file_works declaration', () => {
+  it('carries the parked operation declaration over to an approval continuation', async () => {
+    const { agentRuntimeService, ctx, deps, input } = setup(true);
+
+    await startOperation(deps, ctx, input({ approvalSourceOperationId: 'op-parked' }));
+
+    expect(agentRuntimeService.acceptsFileWorks).toHaveBeenCalledWith('op-parked');
+    expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
+      expect.objectContaining({ acceptsFileWorks: true }),
+    );
+  });
+
+  it('keeps a resuming client explicit false over the parked operation declaration', async () => {
+    const { agentRuntimeService, ctx, deps, input } = setup(true);
+
+    await startOperation(
+      deps,
+      ctx,
+      input({ acceptsFileWorks: false, approvalSourceOperationId: 'op-parked' }),
+    );
+
+    expect(agentRuntimeService.acceptsFileWorks).not.toHaveBeenCalled();
+    expect(agentRuntimeService.createOperation).toHaveBeenCalledWith(
+      expect.objectContaining({ acceptsFileWorks: false }),
     );
   });
 });

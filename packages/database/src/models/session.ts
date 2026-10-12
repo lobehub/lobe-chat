@@ -22,6 +22,17 @@ import { isTrashed, notTrashed } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
 /**
+ * ParadeDB's BM25 (`@@@`) ordering rejects a `LIMIT` above 8192 with
+ * `error: min > max. min = 9999, max = 8192`.
+ *
+ * A page size used as "no pagination" therefore has to be clamped instead of
+ * passed through: `findSessionsByKeywords` swallows database errors, so an
+ * over-limit page size does not degrade gracefully — it silently returns *no*
+ * matches at all.
+ */
+const BM25_MAX_LIMIT = 8192;
+
+/**
  * @deprecated Sessions are the legacy shell of an agent — see the `sessions`
  * schema note. Reads here still exist for the mobile session list and legacy
  * data; write paths should go through `AgentModel` / `TopicModel`.
@@ -545,6 +556,25 @@ export class SessionModel {
     return links.map((link) => link.agentId);
   };
 
+  /**
+   * Whether `sessionId` is the agent's one and only shell and carries no other
+   * agent — i.e. removing the session means removing the agent. The schema
+   * allows an agent to be linked to several sessions (and a group shell to
+   * several agents); in either case only the selected shell may go. Link
+   * counting mirrors {@link clearOrphanAgent}: every link counts, so an agent
+   * is never treated as orphaned while anything still points at it.
+   */
+  isSoleShellOfAgent = async (sessionId: string, agentId: string): Promise<boolean> => {
+    const links = await this.db
+      .select({ agentId: agentsToSessions.agentId, sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(or(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.sessionId, sessionId)));
+    return (
+      links.length > 0 &&
+      links.every((link) => link.agentId === agentId && link.sessionId === sessionId)
+    );
+  };
+
   clearOrphanAgent = async (agentIds: string[], trx: any): Promise<string[]> => {
     if (agentIds.length === 0) return [];
 
@@ -568,6 +598,16 @@ export class SessionModel {
     }
 
     return orphanedAgentIds;
+  };
+
+  /**
+   * Drop the legacy session shells of an agent being purged from the recycle
+   * bin. Their links are already gone by then, so the trashed-agent gate no
+   * longer applies; the trash handler composes this with the agent purge.
+   */
+  deleteShellsByIds = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    await this.db.delete(sessions).where(and(inArray(sessions.id, ids), this.scope()));
   };
 
   // **************** Update *************** //
@@ -716,7 +756,9 @@ export class SessionModel {
     keyword: string;
     pageSize?: number;
   }) => {
-    const { keyword, pageSize = 9999, current = 0 } = params;
+    const { keyword, current = 0 } = params;
+    // "No pagination" must stay under ParadeDB's BM25 ceiling — see BM25_MAX_LIMIT.
+    const pageSize = Math.min(params.pageSize ?? BM25_MAX_LIMIT, BM25_MAX_LIMIT);
     const offset = current * pageSize;
 
     if (this.ftsSearchCandidateSource?.ftsSearchCandidateEnabled) {

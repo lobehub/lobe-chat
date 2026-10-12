@@ -1,10 +1,18 @@
 import { createHash, randomUUID } from 'node:crypto';
 
-import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
+import {
+  GOAL_ACCEPTANCE_TASK_TITLE,
+  GOAL_CLARIFICATION_OPTION,
+  GOAL_COORDINATOR_ACTOR_ID,
+  GOAL_MANAGER_QUESTION_TITLE,
+} from '@lobechat/const/goal';
 import { buildGoalManagerPrompt } from '@lobechat/prompts';
 import type {
+  GoalGraphNode,
   GoalGraphSnapshot,
+  GoalItem,
   GoalManagerState,
+  GoalPlanContext,
   GoalTickResult,
   TaskItem,
 } from '@lobechat/types';
@@ -23,13 +31,77 @@ import { TopicModel } from '@/database/models/topic';
 import { goals } from '@/database/schemas/goal';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { readDeviceDispatchRoute } from '@/server/services/aiAgent/helpers/heteroErrors';
 import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
+import { deviceGateway } from '@/server/services/deviceGateway';
 
-import { countDeviceOfflineRuns, DEFAULT_MANAGER_MAX_TURNS } from './recoveryPolicy';
+import { GoalBriefService } from './goalBriefs';
+import { TERMINAL_GOAL_STATUSES as finishedGoalStatuses } from './goalTraceRecorder';
+import {
+  classifyRunFailure,
+  countUnchargedRuns,
+  DEFAULT_MANAGER_MAX_TURNS,
+  nextDeviceOfflineRetryAt,
+  QUOTA_RESET_MARGIN_MS,
+  type RunFailure,
+} from './recoveryPolicy';
 import { scheduleGoalAdvance } from './scheduler';
 import { recoveryEligibility } from './supervisor/policy';
+import { goalWaitSchema, GoalWaitService } from './wait';
 
 const reason = z.string().trim().min(1).max(8000);
+/**
+ * The question an escalation puts to the owner. A bare reason left the gate
+ * asking "retry or retire?" while the decision that actually blocked the goal —
+ * waive a criterion, restore a closed PR — was buried in its text with no
+ * button to answer it.
+ */
+/**
+ * Option ids the coordinator and the planner own. Their gates are labelled by
+ * id on the goal page and in the inbox, so an authored answer reusing one would
+ * show the coordinator's label ("Retry task") over a different consequence.
+ */
+const RESERVED_ASK_OPTION_IDS = new Set<string>([
+  'fail',
+  'retire',
+  'retry',
+  ...Object.values(GOAL_CLARIFICATION_OPTION),
+]);
+
+const goalAskSchema = z
+  .object({
+    question: z.string().trim().min(1).max(2000),
+    options: z
+      .array(
+        z
+          .object({
+            id: z
+              .string()
+              .trim()
+              .regex(/^[\w-]{1,40}$/),
+            label: z.string().trim().min(1).max(120),
+            description: z.string().trim().max(600).optional(),
+            effect: z.enum(['retry', 'retire']).optional(),
+          })
+          .strict(),
+      )
+      .min(2)
+      .max(4),
+    recommendedOptionId: z.string().trim().optional(),
+  })
+  .strict()
+  .refine((ask) => new Set(ask.options.map((option) => option.id)).size === ask.options.length, {
+    message: 'Option ids must be unique',
+  })
+  .refine((ask) => ask.options.every((option) => !RESERVED_ASK_OPTION_IDS.has(option.id)), {
+    message: `Option ids ${[...RESERVED_ASK_OPTION_IDS].join(', ')} are reserved; name the answer itself (e.g. "waive")`,
+  })
+  .refine(
+    (ask) =>
+      !ask.recommendedOptionId ||
+      ask.options.some((option) => option.id === ask.recommendedOptionId),
+    { message: 'recommendedOptionId must name one of the options' },
+  );
 export const goalPlanSchema = z.discriminatedUnion('action', [
   z
     .object({
@@ -57,6 +129,7 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
     })
     .strict(),
   z.object({ action: z.literal('verify'), reason }).strict(),
+  z.object({ action: z.literal('wait'), reason, ...goalWaitSchema.shape }).strict(),
   z
     .object({
       action: z.literal('retry'),
@@ -65,15 +138,186 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
       failedOperationId: z.string().min(1),
     })
     .strict(),
-  z.object({ action: z.literal('escalate'), reason }).strict(),
+  z.object({ action: z.literal('escalate'), reason, ask: goalAskSchema.optional() }).strict(),
 ]);
 type GoalPlan = z.infer<typeof goalPlanSchema>;
 const activeStatuses = new Set(['planning', 'running']);
 const terminalOperations = new Set(['done', 'error', 'interrupted']);
 const terminalNodes = new Set(['resolved', 'retired', 'rejected']);
 const TIMEOUT_MS = 20 * 60_000;
+/** Task comments listed in one planning turn's message; older ones are counted, not shown. */
+const FEEDBACK_NOTE_LIMIT = 20;
 /** Source message id prefix of a dispatched planning turn; the suffix is its token. */
 const MANAGER_SOURCE_MESSAGE_PREFIX = 'msg_goal_manager_';
+/** Consecutive charged turns that errored without a plan before the Goal pauses. */
+export const MAX_FAILED_MANAGER_TURNS = 5;
+const FAILED_TURN_BASE_BACKOFF_MS = 60_000;
+const FAILED_TURN_MAX_BACKOFF_MS = 30 * 60_000;
+
+/**
+ * Why a plan was refused, with the verbatim message this service has thrown
+ * since before a diagnosis surface existed.
+ *
+ * A table rather than literals at each throw site so the write path (`submit`)
+ * and the read path (`admission`) cannot drift: both read the same entry, and
+ * `lh goal state` turns `code` into a sentence. Several codes share one message
+ * on purpose — `submit` has always folded "consumed", "the run ended" and "the
+ * graph moved" into a single stale-input refusal, and callers match that text.
+ */
+const PLAN_REJECTION = {
+  acceptance_escalate_only: {
+    message:
+      'A failed Goal acceptance can only be escalated; it cannot be superseded by new work yet',
+    trpc: 'CONFLICT',
+  },
+  budget_exhausted: { message: 'Goal budget exhausted', trpc: 'CONFLICT' },
+  consumed: { message: 'Stale planning input; no plan applied', trpc: 'CONFLICT' },
+  existing_work: {
+    message: 'Existing work must be delivered before planning or verification',
+    trpc: 'CONFLICT',
+  },
+  inactive: { message: 'Goal stopped or awaiting human decision', trpc: 'CONFLICT' },
+  operation_mismatch: { message: 'Unrelated main Agent operation', trpc: 'FORBIDDEN' },
+  pending_decision: { message: 'Goal stopped or awaiting human decision', trpc: 'CONFLICT' },
+  review_changed: {
+    message:
+      'Task review feedback changed; exit without a plan so the next bounded turn can read it',
+    trpc: 'CONFLICT',
+  },
+  stale_input: { message: 'Stale planning input; no plan applied', trpc: 'CONFLICT' },
+  turn_owner: { message: 'This planning turn does not own the Goal', trpc: 'FORBIDDEN' },
+  turn_settled: { message: 'Stale planning input; no plan applied', trpc: 'CONFLICT' },
+  wait_unsettled: { message: 'Settle existing work before waiting', trpc: 'CONFLICT' },
+  wait_until_past: { message: 'Wait until must be in the future', trpc: 'BAD_REQUEST' },
+} as const satisfies Record<
+  string,
+  { message: string; trpc: 'BAD_REQUEST' | 'CONFLICT' | 'FORBIDDEN' }
+>;
+
+type PlanRejectionCode = keyof typeof PLAN_REJECTION;
+
+/** A precondition verdict: enough for `submit` to throw it, or for the CLI to explain it. */
+type PlanAdmission =
+  | {
+      agentId: string;
+      code: 'ok';
+      graph: GoalGraphSnapshot;
+      ok: true;
+      opStatus?: string;
+      unfinished: GoalGraphNode[];
+    }
+  | {
+      code: 'duplicate';
+      ok: true;
+      /** Never set here — the duplicate branch returns before the run is resolved. */
+      opStatus?: string;
+      submitted: NonNullable<GoalManagerState['submitted']>;
+    }
+  | {
+      code: PlanRejectionCode;
+      message: string;
+      ok: false;
+      /** The turn's run status when it was already resolved, so a refusal can still name it. */
+      opStatus?: string;
+      trpcCode: (typeof PLAN_REJECTION)[PlanRejectionCode]['trpc'];
+    };
+
+const rejectPlan = (code: PlanRejectionCode, opStatus?: string): PlanAdmission => ({
+  code,
+  message: PLAN_REJECTION[code].message,
+  ok: false,
+  opStatus,
+  trpcCode: PLAN_REJECTION[code].trpc,
+});
+
+export type FailedTurnDecision =
+  | { action: 'pause'; failure: RunFailure; reason: string }
+  | {
+      action: 'retry';
+      /** Whether the failed turn counts toward the manager turn budget. */
+      charged: boolean;
+      failure: RunFailure;
+      failedTurns: number;
+      offlineTurns: number;
+      retryAfter: string;
+    };
+
+/**
+ * What to do after a planning turn ended in an error without committing a plan.
+ *
+ * It follows the same classification as Task recovery (`classifyRunFailure`):
+ * - A usage window that reports its reset waits for that reset. The refused
+ *   turn did no work, so it is not charged.
+ * - A device that is not reachable follows the Task offline schedule
+ *   (30 min, doubling to 8 h, six retries). It is not charged, and the Goal
+ *   pauses once the device stays away.
+ * - Credentials, spend or permission pause at once, because no retry fixes them.
+ * - Anything else backs off exponentially from 1 min to 30 min and is charged.
+ *   `MAX_FAILED_MANAGER_TURNS` in a row pause the Goal.
+ *
+ * Before this, every failure re-dispatched on the next tick. That is how one Goal
+ * spent its whole 100-turn budget on a session limit in 20 minutes.
+ */
+export const decideFailedTurn = (
+  error: unknown,
+  streak: { failedTurns?: number; offlineTurns?: number },
+  now = Date.now(),
+): FailedTurnDecision => {
+  const failure = classifyRunFailure(error);
+  const failedTurns = streak.failedTurns ?? 0;
+  // `offlineTurns` counts turns that never reached their device back to back. Any
+  // other ending reached it, so only a device failure carries the streak forward.
+  const offlineTurns = failure.kind === 'device_unavailable' ? (streak.offlineTurns ?? 0) : 0;
+  const message = (error as { message?: unknown } | undefined)?.message;
+  const detail = typeof message === 'string' && message ? `: ${message}` : '';
+
+  if (failure.kind === 'quota_reset' && failure.resetsAt! + QUOTA_RESET_MARGIN_MS > now)
+    return {
+      action: 'retry',
+      charged: false,
+      failedTurns,
+      failure,
+      offlineTurns,
+      retryAfter: new Date(failure.resetsAt! + QUOTA_RESET_MARGIN_MS).toISOString(),
+    };
+  if (failure.kind === 'device_unavailable') {
+    const retryAt = nextDeviceOfflineRetryAt(offlineTurns + 1, new Date(now));
+    if (!retryAt)
+      return { action: 'pause', failure, reason: `Main Agent device stayed offline${detail}` };
+    return {
+      action: 'retry',
+      charged: false,
+      failedTurns,
+      failure,
+      offlineTurns: offlineTurns + 1,
+      retryAfter: retryAt.toISOString(),
+    };
+  }
+  if (failure.kind === 'needs_user')
+    return {
+      action: 'pause',
+      failure,
+      reason: `Main Agent needs credentials, spend or permission fixed${detail}`,
+    };
+  if (failedTurns + 1 >= MAX_FAILED_MANAGER_TURNS)
+    return {
+      action: 'pause',
+      failure,
+      reason: `Main Agent failed ${failedTurns + 1} turns in a row without a plan${detail}`,
+    };
+  const backoff = Math.min(
+    FAILED_TURN_MAX_BACKOFF_MS,
+    FAILED_TURN_BASE_BACKOFF_MS * 2 ** failedTurns,
+  );
+  return {
+    action: 'retry',
+    charged: true,
+    failedTurns: failedTurns + 1,
+    failure,
+    offlineTurns,
+    retryAfter: new Date(now + backoff).toISOString(),
+  };
+};
 
 /**
  * The token a planning turn is keyed by, carrying the Goal it belongs to.
@@ -86,9 +330,20 @@ const MANAGER_SOURCE_MESSAGE_PREFIX = 'msg_goal_manager_';
  */
 const managerTurnToken = (goalId: string) => `${goalId}_${randomUUID()}`;
 
-/** Excludes only the manager's own receipt. Concurrent policy/graph changes invalidate its plan. */
+/**
+ * Excludes only the manager's own receipt. Concurrent policy/graph changes
+ * invalidate its plan.
+ *
+ * Node rows are projected, not hashed whole: `updatedAt` is bookkeeping that a
+ * same-status rewrite bumps without changing any planning input, and hashing it
+ * made an in-flight planning turn go stale whenever a background loop rewrote a
+ * node it did not own (a coordinator retry re-activating an already-active task
+ * rejected every submit with "Stale planning input" until the turn expired).
+ */
 export const managerSnapshot = (graph: GoalGraphSnapshot) => {
-  const { managerState: _state, ...config } = graph.goal.config ?? {};
+  // Coordinator receipts are not planning input: arming a Task's quota wake while a
+  // turn runs must not make that turn's plan stale.
+  const { managerState: _state, quotaRetryWakeAt: _quotaWake, ...config } = graph.goal.config ?? {};
   return createHash('sha256')
     .update(
       JSON.stringify({
@@ -96,7 +351,7 @@ export const managerSnapshot = (graph: GoalGraphSnapshot) => {
         config,
         maxRounds: graph.goal.maxRounds,
         maxTotalCost: graph.goal.maxTotalCost,
-        nodes: graph.nodes,
+        nodes: graph.nodes.map(({ updatedAt: _updatedAt, ...planning }) => planning),
         edges: graph.edges,
         decisions: graph.decisions,
         versions: graph.workVersions.map(({ nodeId, workVersionId, relation }) => ({
@@ -128,7 +383,7 @@ export const problemKey = (problem: { reason: string; taskId?: string }) =>
  */
 export const answeredProblem = (state?: GoalManagerState) =>
   state?.consumed && state.problem && state.submitted
-    ? { key: state.problem, reason: state.submitted.reason }
+    ? { ask: state.submitted.ask, key: state.problem, reason: state.submitted.reason }
     : undefined;
 
 export class GoalManagerService {
@@ -291,6 +546,160 @@ export class GoalManagerService {
       return next;
     });
 
+  /**
+   * Attach an existing goal to a topic so it ends up in the state
+   * `/goal` in that topic would have left it: the topic's agent is
+   * the goal agent, the topic is the goal's `topic` subject, the goal
+   * has a main Agent policy, and its management topic
+   * (`managerState.topicId`) is this topic, so later planning turns land
+   * there.
+   *
+   * The graph, Tasks, budgets and status are left alone. The binding run is
+   * adopted as a planning turn only when the goal is where a freshly created
+   * topic goal would be — no turn in flight and no unfinished Task to
+   * preempt — because an adopted turn holds task coordination until it settles.
+   * Otherwise the next turn the coordinator starts is dispatched here.
+   *
+   * Refused while a planning turn is in flight elsewhere: `settleInFlight`
+   * finds that turn's run through `state.topicId`, so moving it would strand
+   * the turn and pause the goal.
+   */
+  bindTopic = async (
+    goalId: string,
+    run: { agentId: string; operationId: string; topicId: string },
+    options?: { force?: boolean },
+  ): Promise<{
+    goal: GoalItem;
+    previousAgentId: string | null;
+    previousSubject: { id: string | null; type: GoalItem['subjectType'] };
+    turnToken?: string;
+  }> =>
+    this.db.transaction(async (db) => {
+      const model = new GoalModel(db, this.userId, this.workspaceId);
+      const goal = await model.lockById(goalId);
+      if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+      if (finishedGoalStatuses.has(goal.status))
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `Goal is ${goal.status}; a finished goal cannot be bound to a topic`,
+        });
+
+      const previousSubject = { id: goal.subjectId, type: goal.subjectType };
+      const alreadyBound = goal.subjectType === 'topic' && goal.subjectId === run.topicId;
+      if (!alreadyBound && goal.subjectId && !options?.force)
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `Goal is already bound to ${goal.subjectType} ${goal.subjectId}; pass force to move it to this topic`,
+        });
+
+      const state = goal.config?.managerState;
+      if (
+        state &&
+        !state.consumed &&
+        (state.topicId !== run.topicId || goal.agentId !== run.agentId)
+      )
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `A planning turn of this goal is in flight in ${state.topicId}; wait for it to settle (or confirm its exit with lh goal resume ${goalId} --confirm-exit) before binding`,
+        });
+
+      // Same default as `createFromConversation`: a topic goal always
+      // has a main Agent; an existing policy (turn cap, instruction) is kept.
+      await db
+        .update(goals)
+        .set({
+          agentId: run.agentId,
+          config: sql`COALESCE(${goals.config}, '{}'::jsonb) || jsonb_build_object('manager', COALESCE(${goals.config}->'manager', '{}'::jsonb))`,
+          subjectId: run.topicId,
+          subjectType: 'topic',
+          updatedAt: new Date(),
+        })
+        .where(eq(goals.id, goalId));
+
+      let turnToken: string | undefined;
+      // An in-flight turn reaching here is already this topic's.
+      if (!state || state.consumed) {
+        const graph = await this.graph(db).getGraph(goalId);
+        if (!graph) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        const previousTopicIds = [
+          ...new Set([
+            ...(state?.previousTopicIds ?? []),
+            ...(state?.topicId && state.topicId !== run.topicId ? [state.topicId] : []),
+          ]),
+        ];
+        const maxTurns = graph.goal.config?.manager?.maxTurns ?? DEFAULT_MANAGER_MAX_TURNS;
+        const quiet =
+          activeStatuses.has(goal.status) &&
+          !state?.readyForAcceptance &&
+          (state?.turns ?? 0) < maxTurns &&
+          !graph.decisions.some((d) => d.status === 'pending') &&
+          !graph.nodes.some((n) => n.kind === 'task' && !terminalNodes.has(n.status)) &&
+          !(await this.budgetBlocked(graph, db));
+        let next: GoalManagerState;
+        if (quiet) {
+          // What `adoptConversationTurn` records for a goal created here.
+          next = {
+            adopted: true,
+            adoptedOperationId: run.operationId,
+            operationId: run.operationId,
+            ...(previousTopicIds.length > 0 && { previousTopicIds }),
+            reviewSnapshot: (await this.reviews(graph, db)).hash,
+            snapshot: managerSnapshot(graph),
+            startedAt: new Date().toISOString(),
+            token: randomUUID(),
+            topicId: run.topicId,
+            turns: (state?.turns ?? 0) + 1,
+          };
+          turnToken = next.token;
+        } else {
+          // No turn now: re-point the settled receipt (or record a settled
+          // one with no turn spent) so the next turn the coordinator starts is
+          // dispatched into this topic instead of a new topic.
+          next = state
+            ? {
+                ...state,
+                ...(previousTopicIds.length > 0 && { previousTopicIds }),
+                topicId: run.topicId,
+              }
+            : {
+                consumed: true,
+                snapshot: managerSnapshot(graph),
+                startedAt: new Date().toISOString(),
+                token: managerTurnToken(goalId),
+                topicId: run.topicId,
+                turns: 0,
+              };
+        }
+        await this.save(db, goalId, next);
+        if (quiet && goal.status === 'planning') await model.updateStatus(goalId, 'running');
+      }
+
+      if (!alreadyBound || goal.agentId !== run.agentId) {
+        const moved =
+          previousSubject.id && !alreadyBound
+            ? ` (moved from ${previousSubject.type} ${previousSubject.id})`
+            : '';
+        const agentChange =
+          goal.agentId !== run.agentId
+            ? `; goal agent ${goal.agentId ?? 'none'} → ${run.agentId}`
+            : '';
+        await new GoalGraphModel(db, this.userId, this.workspaceId, {
+          id: run.agentId,
+          type: 'agent',
+        }).recordGoalUpdate(goalId, {
+          operationId: run.operationId,
+          reason: `bound to topic ${run.topicId}${moved}${agentChange}`,
+        });
+      }
+
+      return {
+        goal: (await model.findById(goalId))!,
+        previousAgentId: goal.agentId,
+        previousSubject,
+        turnToken,
+      };
+    });
+
   private save = async (db: LobeChatDatabase, id: string, state: GoalManagerState) => {
     // Caller holds the owned Goal row lock. Do not overwrite concurrent policy namespaces.
     await db
@@ -303,10 +712,19 @@ export class GoalManagerService {
   };
 
   private graph = (db = this.db) => new GoalGraphModel(db, this.userId, this.workspaceId);
+  private coordinatorGraph = (db = this.db) =>
+    new GoalGraphModel(db, this.userId, this.workspaceId, {
+      id: GOAL_COORDINATOR_ACTOR_ID,
+      type: 'system',
+    });
 
   private reviews = async (graph: GoalGraphSnapshot, db = this.db) => {
     const tasks = new TaskModel(db, this.userId, this.workspaceId);
     const visible = await tasks.findByIds(graph.nodes.flatMap((n) => (n.taskId ? [n.taskId] : [])));
+    // The node title names the task the way the goal page does, for the person
+    // reading the card; kept out of the hash, so a rename does not invalidate a
+    // turn's feedback snapshot.
+    const titles = new Map(graph.nodes.flatMap((n) => (n.taskId ? [[n.taskId, n.title]] : [])));
     const comments = (
       await Promise.all(
         visible.map(async (task) =>
@@ -325,16 +743,20 @@ export class GoalManagerService {
       .sort((a, b) => a.id.localeCompare(b.id));
     return {
       hash: createHash('sha256').update(JSON.stringify(comments)).digest('hex'),
-      notes: JSON.stringify(
-        [...comments]
-          .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
-          .slice(-20)
-          .map((c) => ({ ...c, content: c.content.slice(0, 2000) })),
-      ),
+      notes: [...comments]
+        .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
+        .map((c) => ({
+          author: c.authorAgentId ? `agent ${c.authorAgentId}` : 'user',
+          content: c.content,
+          taskId: c.taskId,
+          taskTitle: titles.get(c.taskId) ?? undefined,
+          updatedAt: c.updatedAt,
+        })),
     };
   };
 
-  private budgetBlocked = async (graph: GoalGraphSnapshot, db = this.db) => {
+  /** Whether a budget bound is reached, with the numbers behind it for `lh goal state`. */
+  private budgetFacts = async (graph: GoalGraphSnapshot, db = this.db) => {
     const spend = await new TaskTopicModel(db, this.userId, this.workspaceId).sumRunCostByTaskIds(
       graph.nodes.flatMap((n) => (n.taskId ? [n.taskId] : [])),
     );
@@ -343,13 +765,23 @@ export class GoalManagerService {
       graph.goal.config?.managerState,
     );
     const goal = graph.goal;
-    return (
-      (goal.maxRounds !== null && spend.runs >= goal.maxRounds) ||
-      (goal.maxTotalCost !== null &&
-        spend.totalCost + management.totalCost >= Number(goal.maxTotalCost)) ||
-      (!!goal.config?.schedule?.deadline && Date.now() >= Date.parse(goal.config.schedule.deadline))
-    );
+    const totalCost = spend.totalCost + management.totalCost;
+    const deadline = goal.config?.schedule?.deadline ?? null;
+    return {
+      blocked:
+        (goal.maxRounds !== null && spend.runs >= goal.maxRounds) ||
+        (goal.maxTotalCost !== null && totalCost >= Number(goal.maxTotalCost)) ||
+        (!!deadline && Date.now() >= Date.parse(deadline)),
+      deadline,
+      maxRounds: goal.maxRounds,
+      maxTotalCost: goal.maxTotalCost,
+      runs: spend.runs,
+      totalCost,
+    };
   };
+
+  private budgetBlocked = async (graph: GoalGraphSnapshot, db = this.db) =>
+    (await this.budgetFacts(graph, db)).blocked;
 
   private wait = async (goalId: string, message: string): Promise<GoalTickResult> => {
     await scheduleGoalAdvance({
@@ -361,13 +793,23 @@ export class GoalManagerService {
     return { goalId, outcome: 'waiting_external', message };
   };
 
+  /** Whether the device the last turn could not reach is connected again. */
+  private offlineDeviceIsBack = async (state: GoalManagerState) => {
+    const route = state.offlineDevice;
+    if (!route || !deviceGateway.isConfigured) return false;
+    const devices = await deviceGateway.queryDeviceList(route.userId, route.workspaceId);
+    return devices.some((device) => device.deviceId === route.deviceId);
+  };
+
   private pause = async (goalId: string, message: string): Promise<GoalTickResult> => {
     await this.db.transaction(async (db) => {
       const model = new GoalModel(db, this.userId, this.workspaceId);
       const goal = await model.lockById(goalId);
       if (goal && activeStatuses.has(goal.status)) {
         await model.updateStatus(goalId, 'paused');
-        await this.graph(db).recordGoalStatus(goalId, goal.status, 'paused', message);
+        // The system paused it (a spent turn budget, an unconfirmed main Agent
+        // turn), so the timeline must not file it as the owner's pause.
+        await this.coordinatorGraph(db).recordGoalStatus(goalId, goal.status, 'paused', message);
       }
     });
     return { goalId, outcome: 'no_progress', message };
@@ -403,7 +845,7 @@ export class GoalManagerService {
    * `mayStartTurn` is what orders the two planners. The system's own
    * exploration planner owns the ordinary path; a main Agent is the fallback for
    * problems that planner cannot express, so on a Goal that has exploration
-   * configured this only settles a turn already in flight and otherwise declines.
+   * configured this settles an in-flight turn or resumes an explicit continuation.
    * A Goal whose only planner IS the main Agent keeps starting turns here.
    */
   advance = async (
@@ -413,7 +855,12 @@ export class GoalManagerService {
     if (!this.eligible(graph)) return null;
     const settled = await this.settleInFlight(graph);
     if (settled) return settled;
-    if (options?.mayStartTurn === false) return null;
+    const waiting = await new GoalWaitService(this.db, this.userId, this.workspaceId).advance(
+      graph,
+    );
+    if (waiting) return waiting;
+    const state = graph.goal.config?.managerState;
+    if (options?.mayStartTurn === false && !state?.replanReason && !state?.wait?.wake) return null;
     return this.startTurn(graph);
   };
 
@@ -440,6 +887,37 @@ export class GoalManagerService {
     const settled = await this.settleInFlight(graph);
     if (settled) return settled;
     return this.startTurn(graph, problem);
+  };
+
+  /** Return measured shortfalls to planning without weakening acceptance. */
+  reconsiderAcceptance = async (
+    graph: GoalGraphSnapshot,
+    reason: string,
+  ): Promise<GoalTickResult | null> => {
+    if (!this.eligible(graph)) return null;
+    if (!graph.goal.config?.managerState) return this.startTurn(graph, undefined, reason);
+    const changed = await this.db.transaction(async (db) => {
+      const goal = await new GoalModel(db, this.userId, this.workspaceId).lockById(graph.goal.id);
+      const state = goal?.config?.managerState;
+      if (
+        !goal ||
+        !activeStatuses.has(goal.status) ||
+        !state?.consumed ||
+        state.token !== graph.goal.config?.managerState?.token
+      )
+        return false;
+      const current = await this.graph(db).getGraph(goal.id);
+      if (!current || managerSnapshot(current) !== managerSnapshot(graph)) return false;
+      await this.save(db, goal.id, {
+        ...state,
+        readyForAcceptance: false,
+        replanReason: reason,
+        problem: undefined,
+        problemTaskId: undefined,
+      });
+      return true;
+    });
+    return changed ? { goalId: graph.goal.id, outcome: 'advanced', message: reason } : null;
   };
 
   /** Shared entry conditions: a policy and its agent, an active Goal, and nobody waiting on a person. */
@@ -506,19 +984,69 @@ export class GoalManagerService {
         }
         return this.wait(goal.id, 'Waiting for main Agent CLI planning turn');
       }
-      await this.db.transaction(async (db) => {
+      const failed = await this.db.transaction(async (db) => {
         const fresh = await new GoalModel(db, this.userId, this.workspaceId).lockById(goal.id);
-        if (
-          fresh?.config?.managerState?.token === state.token &&
-          !fresh.config.managerState.consumed
-        ) {
-          await this.save(db, goal.id, {
-            ...fresh.config.managerState,
-            operationId: operation?.id ?? state.operationId,
-            consumed: true,
-          });
+        const current = fresh?.config?.managerState;
+        if (current?.token !== state.token || current.consumed) return;
+        const settled: GoalManagerState = {
+          ...current,
+          operationId: operation?.id ?? state.operationId,
+          consumed: true,
+        };
+        const cleared = {
+          failedTurns: undefined,
+          offlineDevice: undefined,
+          offlineTurns: undefined,
+          retryAfter: undefined,
+        };
+        // A committed plan is progress whatever the run's ending; only an errored
+        // turn that committed nothing gates the next dispatch.
+        if (current.submitted || operation?.status !== 'error') {
+          await this.save(db, goal.id, { ...settled, ...cleared });
+          return;
         }
+        const decision = decideFailedTurn(operation.error, current);
+        if (decision.action === 'pause') {
+          // The person who resumes the Goal gets a fresh retry schedule. Pause in
+          // this same transaction: committing the consumed receipt first would
+          // let a concurrent tick claim and dispatch a replacement turn before
+          // the pause took the row lock.
+          await this.save(db, goal.id, { ...settled, ...cleared });
+          const message = `${decision.reason}. Resume with: lh goal resume ${goal.id}`;
+          if (activeStatuses.has(fresh!.status)) {
+            await new GoalModel(db, this.userId, this.workspaceId).updateStatus(goal.id, 'paused');
+            await this.graph(db).recordGoalStatus(goal.id, fresh!.status, 'paused', message);
+          }
+          return { ...decision, reason: message };
+        }
+        await this.save(db, goal.id, {
+          ...settled,
+          failedTurns: decision.failedTurns || undefined,
+          offlineDevice:
+            decision.failure.kind === 'device_unavailable'
+              ? readDeviceDispatchRoute(operation.error)
+              : undefined,
+          offlineTurns: decision.offlineTurns || undefined,
+          retryAfter: decision.retryAfter,
+          turns: decision.charged ? current.turns : Math.max(0, current.turns - 1),
+        });
+        return decision;
       });
+      if (failed?.action === 'pause')
+        return { goalId: goal.id, outcome: 'no_progress', message: failed.reason };
+      if (failed) {
+        await scheduleGoalAdvance({
+          goalId: goal.id,
+          userId: this.userId,
+          workspaceId: this.workspaceId,
+          delay: GoalWaitService.arm(failed.retryAfter).delay,
+        });
+        return {
+          goalId: goal.id,
+          outcome: 'waiting_external',
+          message: `Main Agent turn failed without a plan (${failed.failure.kind}); the next turn starts after ${failed.retryAfter}`,
+        };
+      }
       return {
         goalId: goal.id,
         outcome: 'advanced',
@@ -558,12 +1086,13 @@ export class GoalManagerService {
           runs[0].operationId,
         )
       : undefined;
-    return !recoveryEligibility(graph, failed, op, false, countDeviceOfflineRuns(runs)).eligible;
+    return !recoveryEligibility(graph, failed, op, false, countUnchargedRuns(runs)).eligible;
   };
 
   private startTurn = async (
     graph: GoalGraphSnapshot,
     problem?: { reason: string; taskId?: string },
+    continuation?: string,
   ): Promise<GoalTickResult | null> => {
     const { goal } = graph;
     const policy = goal.config!.manager!;
@@ -598,6 +1127,21 @@ export class GoalManagerService {
       if (problem) return null;
       return this.pause(goal.id, 'Goal or main Agent turn budget exhausted');
     }
+    // The previous turn failed without a plan. Its settlement already queued the
+    // wakeup for this time, so a tick arriving earlier (the sweep, a Task event)
+    // only reports the wait instead of queueing another one. An invited turn
+    // waits too: it would fail the same way, and the problem is still there later.
+    // A device seen back online ends the wait early, as it does for Tasks.
+    if (
+      state?.retryAfter &&
+      Date.parse(state.retryAfter) > Date.now() &&
+      !(await this.offlineDeviceIsBack(state))
+    )
+      return {
+        goalId: goal.id,
+        outcome: 'waiting_external',
+        message: `Main Agent turn deferred until ${state.retryAfter} after a failed turn`,
+      };
     const claimed = await this.db.transaction(async (db) => {
       const model = new GoalModel(db, this.userId, this.workspaceId);
       const fresh = await model.lockById(goal.id);
@@ -653,6 +1197,10 @@ export class GoalManagerService {
           ...(freshState?.topicId && freshState.topicId !== topicId ? [freshState.topicId] : []),
         ]),
       ];
+      // The cutoff the next turn splits new from earlier feedback at. Taken before
+      // the comments are read, so a comment committed while they load is never
+      // dated before a turn that did not see it; at worst it is shown as new twice.
+      const startedAt = new Date().toISOString();
       const reviews = await this.reviews(current, db);
       const next: GoalManagerState = {
         ...(problem
@@ -663,16 +1211,44 @@ export class GoalManagerService {
           : {}),
         ...(state?.adoptedOperationId && { adoptedOperationId: state.adoptedOperationId }),
         ...(previousTopicIds.length > 0 && { previousTopicIds }),
+        // Failure streaks span turns; settling a turn that did not error resets them.
+        ...(freshState?.failedTurns && { failedTurns: freshState.failedTurns }),
+        ...(freshState?.offlineTurns && { offlineTurns: freshState.offlineTurns }),
         reviewSnapshot: reviews.hash,
         topicId,
         turns: (state?.turns ?? 0) + 1,
         token: managerTurnToken(goal.id),
         snapshot: managerSnapshot(current),
-        startedAt: new Date().toISOString(),
+        startedAt,
       };
       await this.save(db, goal.id, next);
       if (fresh.status === 'planning') await model.updateStatus(goal.id, 'running');
-      return { ...next, reviewNotes: reviews.notes };
+      // Split at the previous turn's start, so the message names what is new to
+      // this turn instead of resending the same comments every turn.
+      // Only the latest FEEDBACK_NOTE_LIMIT are listed; the rest are counted so
+      // the agent knows to read them in full rather than treating the list as all.
+      const since = freshState?.startedAt ? Date.parse(freshState.startedAt) : undefined;
+      const isNew = (n: (typeof reviews.notes)[number]) =>
+        since === undefined || n.updatedAt.getTime() > since;
+      const listed = reviews.notes.slice(-FEEDBACK_NOTE_LIMIT);
+      const omitted = reviews.notes.slice(0, -FEEDBACK_NOTE_LIMIT);
+      const note = ({ updatedAt, ...rest }: (typeof reviews.notes)[number]) => ({
+        ...rest,
+        updatedAt: updatedAt.toISOString(),
+      });
+      return {
+        ...next,
+        earlierFeedback: listed.filter((n) => !isNew(n)).map(note),
+        newFeedback: listed.filter(isNew).map(note),
+        omittedFeedback: {
+          earlier: omitted.filter((n) => !isNew(n)).length,
+          new: omitted.filter(isNew).length,
+        },
+        previousTurn: freshState && {
+          neverStarted: freshState.dispatchNeverStarted,
+          plan: freshState.submitted,
+        },
+      };
     });
     if (!claimed) return this.wait(goal.id, 'Another advance owns the planning turn');
     try {
@@ -690,8 +1266,19 @@ export class GoalManagerService {
           requirement: goal.requirement ?? goal.title,
           instruction: policy.instruction,
           token: claimed.token,
-          feedback: claimed.reviewNotes,
+          turn: claimed.turns,
+          maxTurns: policy.maxTurns ?? DEFAULT_MANAGER_MAX_TURNS,
+          previousTurn: claimed.previousTurn,
+          newFeedback: claimed.newFeedback,
+          omittedFeedback: claimed.omittedFeedback,
+          earlierFeedback: claimed.earlierFeedback,
           problem: problem?.reason,
+          continuation:
+            continuation ??
+            state?.replanReason ??
+            (state?.wait?.wake
+              ? JSON.stringify({ reason: state.submitted?.reason, ...state.wait })
+              : undefined),
         }),
       });
       await this.db.transaction(async (db) => {
@@ -754,94 +1341,226 @@ export class GoalManagerService {
         await this.save(db, goalId, { ...fresh.config.managerState, dispatchNeverStarted: true });
     });
 
+  /**
+   * Every precondition a plan has to satisfy, evaluated without writing.
+   *
+   * `submit` runs this first and throws its verdict; `admission()` returns the
+   * same verdict to `lh goal state`. One implementation, so the refusal a caller
+   * sees and the reason the CLI prints can never disagree.
+   *
+   * `token` / `operationId` are optional because the read path asks "would the
+   * CURRENT turn's plan apply?" — it has no submitted token to compare, so it
+   * passes the recorded one. Guards that only make sense with a plan are skipped
+   * when none is supplied.
+   */
+  private evaluateAdmission = async (
+    db: LobeChatDatabase,
+    input: {
+      goal: GoalItem;
+      operationId?: string;
+      plan?: GoalPlan;
+      state: GoalManagerState;
+      token?: string;
+    },
+  ): Promise<PlanAdmission> => {
+    const { goal, plan, state } = input;
+    if (!goal.config?.manager || !goal.agentId) return rejectPlan('turn_owner');
+    if (input.token !== undefined && state.token !== input.token) return rejectPlan('turn_owner');
+    // Bound to the goal agent as it is NOW: a turn dispatched before a handoff
+    // no longer speaks for the goal.
+    const agentId = goal.agentId;
+    const op = await this.turnOperation(
+      new AgentOperationModel(db, this.userId, this.workspaceId),
+      state,
+    );
+    if (input.operationId !== undefined) {
+      // An adopted local desktop run has no server operation row; it is the run
+      // whose id the conversation environment carried when the goal was created.
+      const localAdoptedRun = !!state.adopted && !op && input.operationId === state.operationId;
+      if (!localAdoptedRun && (op?.id !== input.operationId || op.agentId !== agentId))
+        return rejectPlan('operation_mismatch', op?.status);
+    }
+    const graph = await this.graph(db).getGraph(goal.id);
+    if (!graph || !activeStatuses.has(goal.status)) return rejectPlan('inactive', op?.status);
+    if (graph.decisions.some((d) => d.status === 'pending'))
+      return rejectPlan('pending_decision', op?.status);
+    if (state.submitted) return { code: 'duplicate', ok: true, submitted: state.submitted };
+    if (state.consumed) return rejectPlan('consumed', op?.status);
+    if (op && op.status !== 'running') return rejectPlan('turn_settled', op?.status);
+    if (managerSnapshot(graph) !== state.snapshot) return rejectPlan('stale_input', op?.status);
+    if (state.reviewSnapshot && (await this.reviews(graph, db)).hash !== state.reviewSnapshot)
+      return rejectPlan('review_changed', op?.status);
+    if ((await this.budgetFacts(graph, db)).blocked)
+      return rejectPlan('budget_exhausted', op?.status);
+    const unfinished = graph.nodes.filter((n) => n.kind === 'task' && !terminalNodes.has(n.status));
+    // A takeover of the terminal acceptance can only be answered with `escalate`.
+    // The acceptance task is matched by TITLE regardless of status, so a corrective
+    // task returns to that same failed node and `verify` sets `readyForAcceptance`
+    // without producing a fresh run — both end at the Gate. Refusing here keeps the
+    // prompt's offer and the server's answer the same; letting the acceptance be
+    // superseded is a lifecycle change, not a validation one.
+    if (
+      plan &&
+      (plan.action === 'tasks' || plan.action === 'verify') &&
+      state.problem &&
+      graph.nodes.some(
+        (n) =>
+          n.kind === 'task' &&
+          n.taskId === state.problemTaskId &&
+          n.title === GOAL_ACCEPTANCE_TASK_TITLE,
+      )
+    )
+      return rejectPlan('acceptance_escalate_only', op?.status);
+    // The unfinished-work guard asks whether an UNINVITED turn may plan while
+    // work is in flight; it would double-plan the frontier. A takeover turn
+    // inherits work that is stuck by definition — the coordinator only handed it
+    // over because nothing else moves it — so a corrective task is the answer
+    // rather than the thing to forbid. Without this exemption the prompt
+    // advertises four actions and only `escalate` can ever commit.
+    if (
+      plan &&
+      (plan.action === 'tasks' || plan.action === 'verify') &&
+      ((unfinished.length && !state.problem) ||
+        (plan.action === 'verify' &&
+          !graph.nodes.some((n) => n.kind === 'task' && n.status === 'resolved')))
+    )
+      return rejectPlan('existing_work', op?.status);
+    if (plan?.action === 'wait' && unfinished.length)
+      return rejectPlan('wait_unsettled', op?.status);
+    if (plan?.action === 'wait' && Date.parse(plan.until) <= Date.now())
+      return rejectPlan('wait_until_past', op?.status);
+    return { agentId, code: 'ok', graph, ok: true, opStatus: op?.status, unfinished };
+  };
+
+  /**
+   * The verdict `submit` would reach right now, plus the facts behind it.
+   *
+   * Read-only: `lh goal state` renders it and a refused `lh goal plan` re-reads
+   * it, so the CLI explains a refusal from these predicates instead of deriving
+   * them from a graph that cannot see the manager or review receipts. Token and
+   * operation default to the current turn's — the plan a takeover prompt sends.
+   *
+   * `plan` is forwarded to `evaluateAdmission` because four guards only fire with
+   * one (`existing_work`, `acceptance_escalate_only`, `wait_unsettled`,
+   * `wait_until_past`). A refused `lh goal plan` passes the plan it just
+   * submitted so those refusals are re-derived rather than reported as `ok`;
+   * `lh goal state` has no plan and asks only whether the non-plan guards pass.
+   */
+  admission = async (
+    goalId: string,
+    input: { operationId?: string; plan?: GoalPlan; token?: string } = {},
+  ): Promise<GoalPlanContext> => {
+    const goal = await new GoalModel(this.db, this.userId, this.workspaceId).findById(goalId);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    const state = goal.config?.managerState;
+    const verdict: PlanAdmission =
+      state && goal.config?.manager && goal.agentId
+        ? await this.evaluateAdmission(this.db, {
+            goal,
+            operationId: input.operationId ?? state.operationId,
+            plan: input.plan,
+            state,
+            token: input.token ?? state.token,
+          })
+        : rejectPlan('turn_owner');
+    const graph =
+      verdict.ok && verdict.code === 'ok' ? verdict.graph : await this.graph().getGraph(goalId);
+    const budget = graph ? await this.budgetFacts(graph) : undefined;
+    return {
+      admission: {
+        code: verdict.code,
+        ...(verdict.ok ? {} : { message: verdict.message }),
+        ok: verdict.ok,
+      },
+      budget: budget
+        ? {
+            blocked: budget.blocked,
+            deadline: budget.deadline,
+            maxRounds: budget.maxRounds,
+            maxTotalCost: budget.maxTotalCost,
+            runs: budget.runs,
+            totalCost: budget.totalCost,
+          }
+        : undefined,
+      goal: { agentId: goal.agentId, pausedBy: goal.config?.pausedBy ?? null, status: goal.status },
+      queue: graph
+        ? {
+            pendingDecisions: graph.decisions.filter((d) => d.status === 'pending').length,
+            unfinishedTasks: graph.nodes.filter(
+              (n) => n.kind === 'task' && !terminalNodes.has(n.status),
+            ).length,
+          }
+        : undefined,
+      review: {
+        ...(graph && state ? { current: (await this.reviews(graph)).hash } : {}),
+        recorded: state?.reviewSnapshot ?? null,
+      },
+      snapshot: {
+        ...(graph ? { current: managerSnapshot(graph) } : {}),
+        recorded: state?.snapshot ?? null,
+      },
+      turn: state
+        ? {
+            adopted: !!state.adopted,
+            consumed: !!state.consumed,
+            dispatchNeverStarted: !!state.dispatchNeverStarted,
+            failedTurns: state.failedTurns ?? 0,
+            operationId: state.operationId ?? null,
+            opStatus: verdict.opStatus ?? null,
+            problem: state.problem ?? null,
+            problemTaskId: state.problemTaskId ?? null,
+            retryAfter: state.retryAfter ?? null,
+            startedAt: state.startedAt,
+            submitted: state.submitted ?? null,
+            token: state.token,
+            turns: state.turns,
+          }
+        : null,
+    };
+  };
+
+  /**
+   * Authorize a heterogeneous planning read: the caller's operation must be the
+   * one the Goal's *current* turn belongs to.
+   *
+   * The turn is resolved through `turnOperation` — the lookup `submit` uses — not
+   * through the `managerState.operationId` receipt. That receipt is written only
+   * once the dispatched run's `execAgent` resolves, so a fast run can be live and
+   * holding a token before the field exists; and if that save fails the field never
+   * arrives, yet the turn is live and `submit` still succeeds. Reading ownership
+   * off the same recoverable lookup keeps reads and writes in step.
+   */
+  assertOperationOwnsTurn = async (goalId: string, operationId: string): Promise<void> => {
+    const goal = await new GoalModel(this.db, this.userId, this.workspaceId).findById(goalId);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    const state = goal.config?.managerState;
+    const operation = state
+      ? await this.turnOperation(
+          new AgentOperationModel(this.db, this.userId, this.workspaceId),
+          state,
+        )
+      : undefined;
+    if (operation?.id !== operationId)
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'This run does not own the current planning turn of this goal',
+      });
+  };
+
   submit = async (goalId: string, token: string, operationId: string, input: GoalPlan) => {
     const plan = goalPlanSchema.parse(input);
-    return this.db.transaction(async (db) => {
+    const armed = plan.action === 'wait' ? GoalWaitService.arm(plan.until) : undefined;
+    const result = await this.db.transaction(async (db) => {
       const model = new GoalModel(db, this.userId, this.workspaceId);
       const goal = await model.lockById(goalId);
       const state = goal?.config?.managerState;
-      if (!goal?.config?.manager || !goal.agentId || !state || state.token !== token)
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'This planning turn does not own the Goal',
-        });
-      const op = await this.turnOperation(
-        new AgentOperationModel(db, this.userId, this.workspaceId),
-        state,
-      );
-      // Bound to the goal agent as it is NOW: a turn dispatched before a handoff
-      // no longer speaks for the goal.
-      const agentId = goal.agentId;
-      // An adopted local desktop run has no server operation row; it is the run
-      // whose id the conversation environment carried when the goal was created.
-      const localAdoptedRun = !!state.adopted && !op && operationId === state.operationId;
-      if (!localAdoptedRun && (op?.id !== operationId || op.agentId !== agentId))
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Unrelated main Agent operation' });
-      const graph = await this.graph(db).getGraph(goalId);
-      if (
-        !graph ||
-        !activeStatuses.has(goal.status) ||
-        graph.decisions.some((d) => d.status === 'pending')
-      )
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'Goal stopped or awaiting human decision',
-        });
-      if (state.submitted) return { duplicate: true, plan: state.submitted };
-      if (
-        state.consumed ||
-        (op && op.status !== 'running') ||
-        managerSnapshot(graph) !== state.snapshot
-      )
-        throw new TRPCError({ code: 'CONFLICT', message: 'Stale planning input; no plan applied' });
-      if (state.reviewSnapshot && (await this.reviews(graph, db)).hash !== state.reviewSnapshot)
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message:
-            'Task review feedback changed; exit without a plan so the next bounded turn can read it',
-        });
-      if (await this.budgetBlocked(graph, db))
-        throw new TRPCError({ code: 'CONFLICT', message: 'Goal budget exhausted' });
-      const unfinished = graph.nodes.filter(
-        (n) => n.kind === 'task' && !terminalNodes.has(n.status),
-      );
-      // A takeover of the terminal acceptance can only be answered with `escalate`.
-      // The acceptance task is matched by TITLE regardless of status, so a corrective
-      // task returns to that same failed node and `verify` sets `readyForAcceptance`
-      // without producing a fresh run — both end at the Gate. Refusing here keeps the
-      // prompt's offer and the server's answer the same; letting the acceptance be
-      // superseded is a lifecycle change, not a validation one.
-      if (
-        state.problem &&
-        (plan.action === 'tasks' || plan.action === 'verify') &&
-        graph.nodes.some(
-          (n) =>
-            n.kind === 'task' &&
-            n.taskId === state.problemTaskId &&
-            n.title === GOAL_ACCEPTANCE_TASK_TITLE,
-        )
-      )
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message:
-            'A failed Goal acceptance can only be escalated; it cannot be superseded by new work yet',
-        });
-      // The unfinished-work guard asks whether an UNINVITED turn may plan while
-      // work is in flight; it would double-plan the frontier. A takeover turn
-      // inherits work that is stuck by definition — the coordinator only handed it
-      // over because nothing else moves it — so a corrective task is the answer
-      // rather than the thing to forbid. Without this exemption the prompt
-      // advertises four actions and only `escalate` can ever commit.
-      if (
-        (plan.action === 'tasks' || plan.action === 'verify') &&
-        ((unfinished.length && !state.problem) ||
-          (plan.action === 'verify' &&
-            !graph.nodes.some((n) => n.kind === 'task' && n.status === 'resolved')))
-      )
-        throw new TRPCError({
-          code: 'CONFLICT',
-          message: 'Existing work must be delivered before planning or verification',
-        });
+      if (!goal || !state)
+        throw new TRPCError({ code: 'FORBIDDEN', message: PLAN_REJECTION.turn_owner.message });
+      const admission = await this.evaluateAdmission(db, { goal, operationId, plan, state, token });
+      if (!admission.ok)
+        throw new TRPCError({ code: admission.trpcCode, message: admission.message });
+      if (admission.code === 'duplicate') return { duplicate: true, plan: admission.submitted };
+      const { agentId, graph, unfinished } = admission;
       const authored = new GoalGraphModel(db, this.userId, this.workspaceId, {
         id: agentId,
         type: 'agent',
@@ -937,7 +1656,7 @@ export class GoalManagerService {
         if (
           !task ||
           runs[0]?.operationId !== plan.failedOperationId ||
-          !recoveryEligibility(graph, task, failure, false, countDeviceOfflineRuns(runs)).eligible
+          !recoveryEligibility(graph, task, failure, false, countUnchargedRuns(runs)).eligible
         )
           throw new TRPCError({
             code: 'CONFLICT',
@@ -952,6 +1671,44 @@ export class GoalManagerService {
           ))
         )
           throw new TRPCError({ code: 'CONFLICT', message: 'Task changed before retry' });
+      } else if (plan.action === 'escalate' && state.problem && plan.ask) {
+        // A takeover question is answered on the failed Task's gate, so every
+        // answer has to say what happens to that Task — an answer that leaves it
+        // failed would only reopen the same gate on the next tick.
+        if (plan.ask.options.some((option) => !option.effect))
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message:
+              'Every option of a takeover question needs an effect (retry or retire) for the blocked Task',
+          });
+      } else if (plan.action === 'escalate' && !state.problem && plan.ask) {
+        // A question with answers is asked, not parked: it opens a gate the
+        // owner can answer from anywhere, and the answer wakes the next turn.
+        const node = await authored.createNode(goalId, {
+          description: plan.reason,
+          kind: 'decision',
+          status: 'waiting',
+          title: GOAL_MANAGER_QUESTION_TITLE,
+        });
+        if (!node) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+        const problemNode = graph.nodes.find((n) => n.kind === 'problem');
+        if (problemNode) await authored.createEdge(goalId, problemNode.id, node.id, 'leads_to');
+        const decision = await authored.createDecision(goalId, node.id, {
+          authority: 'user',
+          options: plan.ask.options,
+          question: plan.ask.question,
+          recommendedOptionId: plan.ask.recommendedOptionId,
+          requestedUserId: this.userId,
+        });
+        await model.updateStatus(goalId, 'review');
+        await authored.recordGoalStatus(goalId, goal.status, 'review', plan.reason);
+        if (decision)
+          await new GoalBriefService(db, this.userId, this.workspaceId).openDecision(goal, {
+            decisionId: decision.id,
+            options: decision.options,
+            question: decision.question,
+            recommendedOptionId: decision.recommendedOptionId,
+          });
       } else if (plan.action === 'escalate' && !state.problem) {
         // Only an ORDINARY planning turn pauses the Goal here. A takeover turn has
         // a gate waiting behind it for this exact problem, and the coordinator
@@ -967,10 +1724,22 @@ export class GoalManagerService {
           action: plan.action,
           reason: plan.reason,
           ...(plan.action === 'retry' ? { taskId: plan.taskId } : {}),
+          ...(plan.action === 'escalate' && plan.ask ? { ask: plan.ask } : {}),
         },
         readyForAcceptance: plan.action === 'verify',
+        replanReason: undefined,
+        wait:
+          plan.action === 'wait' && armed
+            ? { until: plan.until, event: plan.event, armedUntil: armed.armedUntil }
+            : undefined,
       });
       return { recorded: true, action: plan.action };
     });
+    if (armed && !('duplicate' in result))
+      await new GoalWaitService(this.db, this.userId, this.workspaceId).schedule(
+        goalId,
+        armed.delay,
+      );
+    return result;
   };
 }

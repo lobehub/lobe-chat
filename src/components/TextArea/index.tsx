@@ -7,7 +7,7 @@ interface TextAreaProps extends Omit<Props, 'onChange'> {
   onChange?: (value: string) => void;
 }
 
-const TextArea = memo<TextAreaProps>(({ onChange, value: defaultValue, ...props }) => {
+const TextArea = memo<TextAreaProps>(({ onBlur, onChange, value: defaultValue, ...props }) => {
   const ref = useRef<HTMLTextAreaElement>(null);
   const { compositionProps, isComposingRef } = useIMECompositionEvent();
 
@@ -16,8 +16,9 @@ const TextArea = memo<TextAreaProps>(({ onChange, value: defaultValue, ...props 
   return (
     <LobeTextArea
       ref={ref}
-      onBlur={() => {
+      onBlur={(e) => {
         onChange?.(value);
+        onBlur?.(e);
       }}
       onChange={(e) => {
         setValue(e.target.value);
@@ -28,7 +29,7 @@ const TextArea = memo<TextAreaProps>(({ onChange, value: defaultValue, ...props 
         onChange?.(value);
       }}
       {...props}
-      value={value}
+      value={value ?? ''}
     />
   );
 });

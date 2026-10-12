@@ -2,12 +2,16 @@ import { readFile } from 'node:fs/promises';
 
 import type {
   GoalEdgeKind,
+  GoalEventEntityType,
+  GoalEventType,
   GoalGraphDecision,
+  GoalGraphEvent,
   GoalGraphSnapshot,
   GoalNodeKind,
+  GoalPlanContext,
   GoalTickResult,
 } from '@lobechat/types';
-import type { Command } from 'commander';
+import { type Command, Option } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../api/client';
@@ -124,8 +128,24 @@ const isSameWaitingState = (previous: GoalRunTickResult | undefined, current: Go
   previous.taskId === current.taskId;
 
 function printGraph(graph: GoalGraphSnapshot) {
-  console.log(`\n${pc.bold(graph.goal.title)} ${pc.dim(graph.goal.id)} [${graph.goal.status}]`);
-  if (graph.goal.requirement) console.log(`${pc.dim('Requirement:')} ${graph.goal.requirement}`);
+  const { goal } = graph;
+  console.log(
+    `\n${pc.bold(goal.title)} ${pc.dim(goal.id)} [${goal.status}${
+      goal.config?.pausedBy ? ` · paused by ${goal.config.pausedBy}` : ''
+    }]`,
+  );
+  if (goal.subjectType)
+    console.log(`${pc.dim('Subject:')} ${`${goal.subjectType} ${goal.subjectId ?? ''}`.trim()}`);
+  if (goal.requirement) console.log(`${pc.dim('Requirement:')} ${goal.requirement}`);
+  const turn = goal.config?.managerState;
+  const pending = graph.decisions.filter((decision) => decision.status === 'pending').length;
+  console.log(
+    `${pc.dim('Planning:')} ${
+      turn
+        ? `turn #${turn.turns} · started ${turn.startedAt}${turn.consumed ? ' · settled' : ''}`
+        : 'no planning turn'
+    }${pending > 0 ? pc.yellow(` · ${pending} decision(s) need you`) : ''}`,
+  );
   const incoming = new Map<string, typeof graph.edges>();
   for (const edge of graph.edges) {
     const list = incoming.get(edge.targetNodeId) ?? [];
@@ -163,6 +183,207 @@ function printTick(result: GoalTickResult) {
   if (result.nodeId) console.log(`  ${pc.dim(`node: ${result.nodeId}`)}`);
 }
 
+/** Recent events `lh goal state` shows unless a caller asks for another count. */
+const GOAL_EVENT_TAIL_DEFAULT = 10;
+
+/**
+ * A one-line reading of each admission code the server can return.
+ *
+ * Keyed by code, not by message: the server deliberately folds several causes
+ * ("the turn was consumed", "its run ended", "the graph moved") into the single
+ * `Stale planning input` message, so the message alone cannot say which
+ * precondition failed — which is exactly what the CLI is here to surface.
+ */
+const admissionHint: Record<string, string> = {
+  acceptance_escalate_only:
+    'a failed Goal acceptance can only be escalated — it cannot be superseded by new work',
+  budget_exhausted: 'a budget bound is reached (rounds, cost or deadline)',
+  consumed: 'this turn was already settled; its plan cannot be submitted again',
+  duplicate:
+    'a plan is already recorded for this turn; submitting again returns that receipt unchanged',
+  existing_work: 'unfinished work must be delivered before planning or verifying',
+  inactive: 'the Goal is not in an active state (planning or running)',
+  operation_mismatch: 'the token does not speak for the operation bound to this Goal',
+  pending_decision: 'a decision gate is still waiting on an answer',
+  review_changed: 'task review feedback changed after this turn started',
+  stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
+  turn_owner: 'this Goal has no matching planning turn',
+  turn_settled: "this turn's run is no longer running",
+  wait_unsettled: 'unfinished work must be settled before waiting',
+  wait_until_past: 'the wait deadline is already in the past',
+};
+
+const toIso = (value: Date | string) =>
+  value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+
+const shortHash = (hash?: string | null) => (hash ? `${hash.slice(0, 12)}…` : '—');
+
+/**
+ * Recorded receipt against what the server computes now. The snapshot a plan is
+ * validated against is server-owned — a client cannot recompute it — so this is
+ * the one place the "why was my plan stale" comparison becomes visible.
+ */
+const compareHash = (recorded: string | null, current?: string) => {
+  if (!current) return pc.dim('unavailable');
+  if (!recorded) return `${shortHash(current)} ${pc.dim('(no receipt)')}`;
+  return current === recorded
+    ? `${shortHash(current)} ${pc.dim('matches receipt')}`
+    : `${shortHash(recorded)} → ${shortHash(current)} ${pc.yellow('moved')}`;
+};
+
+/** The same comparison without color, for a message that is not a console line. */
+const compareHashPlain = (recorded: string | null, current?: string) => {
+  if (!current) return 'unavailable';
+  if (!recorded) return `${shortHash(current)} (no receipt)`;
+  return current === recorded
+    ? `${shortHash(current)} matches receipt`
+    : `${shortHash(recorded)} → ${shortHash(current)} MOVED`;
+};
+
+function printGoalState(
+  graph: GoalGraphSnapshot,
+  context: GoalPlanContext,
+  events: GoalGraphEvent[],
+) {
+  const { goal } = graph;
+  const field = (label: string, value: string) =>
+    console.log(`  ${pc.dim(label.padEnd(11))} ${value}`);
+
+  console.log(`\n${pc.bold(goal.title)} ${pc.dim(goal.id)}`);
+  field(
+    'Status',
+    `${context.goal.status}${
+      context.goal.pausedBy ? pc.yellow(` (paused by ${context.goal.pausedBy})`) : ''
+    }`,
+  );
+  field(
+    'Subject',
+    goal.subjectType ? `${goal.subjectType} ${goal.subjectId ?? ''}`.trim() : 'standalone',
+  );
+  field('Agent', context.goal.agentId ?? '—');
+  if (goal.requirement) field('Requirement', truncate(goal.requirement, 96));
+  if (context.budget) {
+    const cap =
+      context.budget.maxTotalCost === null
+        ? ''
+        : `/${Number(context.budget.maxTotalCost).toFixed(2)}`;
+    field(
+      'Budget',
+      `runs ${context.budget.runs}/${context.budget.maxRounds ?? '∞'} · $${context.budget.totalCost.toFixed(2)}${cap}${
+        context.budget.deadline ? ` · deadline ${context.budget.deadline}` : ''
+      }${context.budget.blocked ? pc.red(' · exhausted') : ''}`,
+    );
+  }
+
+  if (context.turn) {
+    const { turn } = context;
+    console.log(
+      `\n  ${pc.bold(`Planning turn #${turn.turns}`)} ${pc.dim(`started ${turn.startedAt}`)}`,
+    );
+    field('token', turn.token);
+    field(
+      'operation',
+      `${turn.operationId ?? '—'}${turn.opStatus ? pc.dim(` (${turn.opStatus})`) : ''}`,
+    );
+    field(
+      'receipt',
+      `consumed ${turn.consumed} · failedTurns ${turn.failedTurns} · neverStarted ${turn.dispatchNeverStarted} · adopted ${turn.adopted}`,
+    );
+    field('snapshot', compareHash(context.snapshot.recorded, context.snapshot.current));
+    field('review', compareHash(context.review.recorded, context.review.current));
+    if (turn.problem)
+      field('problem', `${turn.problemTaskId ?? '—'} · ${truncate(turn.problem, 60)}`);
+    if (turn.submitted)
+      field('submitted', `${turn.submitted.action} · ${truncate(turn.submitted.reason, 60)}`);
+    if (turn.retryAfter) field('retryAfter', turn.retryAfter);
+  } else {
+    console.log(`\n  ${pc.dim('No planning turn recorded for this Goal.')}`);
+  }
+
+  const { admission } = context;
+  // `duplicate` is `ok` (nothing is refused) but is NOT an invitation to plan:
+  // the turn already holds a submitted plan, and `submit` returns that receipt
+  // instead of applying a new one, so it must not read as "accepted".
+  const alreadyRecorded = admission.code === 'duplicate';
+  console.log(
+    `\n  ${pc.bold('Admission')} ${
+      alreadyRecorded
+        ? pc.yellow('◆ a plan is already recorded for this turn — a new one will not replace it')
+        : admission.ok
+          ? pc.green('✓ a plan for the current turn would be accepted')
+          : pc.red(`✗ refused — ${admission.code}`)
+    }`,
+  );
+  if (!admission.ok) {
+    const hint = admissionHint[admission.code];
+    if (hint) console.log(`      ${pc.dim(hint)}`);
+    if (admission.message) console.log(`      ${admission.message}`);
+  }
+
+  if (context.queue)
+    field(
+      'Queue',
+      `${context.queue.unfinishedTasks} unfinished task(s) · ${context.queue.pendingDecisions} pending decision(s)`,
+    );
+
+  if (events.length > 0) {
+    console.log(`\n  ${pc.bold('Recent events')} ${pc.dim(`(newest ${events.length})`)}`);
+    for (const event of events)
+      console.log(
+        `    ${pc.dim(toIso(event.createdAt))}  ${event.entityType} ${event.eventType}${
+          event.reason ? `  ${truncate(event.reason, 76)}` : ''
+        }`,
+      );
+  }
+}
+
+/**
+ * The plan shape `goal.planContext` accepts, read off the client so the two
+ * cannot drift. A refused `lh goal plan` re-reads the admission with the plan it
+ * just submitted: four guards (`existing_work`, `acceptance_escalate_only`,
+ * `wait_unsettled`, `wait_until_past`) only fire when a plan is present, so
+ * omitting it would report `ok` and explain nothing.
+ */
+type PlanInput = NonNullable<
+  Parameters<Awaited<ReturnType<typeof getTrpcClient>>['goal']['planContext']['query']>[0]['plan']
+>;
+
+/**
+ * Explain a refused `lh goal plan` from the server's own admission, so an
+ * operator does not have to re-derive it from the graph. Best-effort: a
+ * diagnostic that itself fails must never replace the real error.
+ */
+async function explainPlanRefusal(
+  id: string,
+  options: { operation?: string; plan?: PlanInput; token?: string },
+): Promise<string | undefined> {
+  try {
+    const reads = await goalReads();
+    const { data } = await reads.planContext.query({
+      id,
+      operationId: options.operation ?? process.env.LOBEHUB_OPERATION_ID,
+      plan: options.plan,
+      token: options.token,
+    });
+    if (data.admission.ok) return undefined;
+    const lines = [`Refused (${data.admission.code}): ${admissionHint[data.admission.code] ?? ''}`];
+    if (data.admission.message) lines.push(`  ${data.admission.message}`);
+    if (data.turn) {
+      lines.push(
+        `  turn #${data.turn.turns} started ${data.turn.startedAt} · consumed ${data.turn.consumed} · run ${
+          data.turn.opStatus ?? 'n/a'
+        }`,
+      );
+      lines.push(`  snapshot ${compareHashPlain(data.snapshot.recorded, data.snapshot.current)}`);
+      lines.push(`  review   ${compareHashPlain(data.review.recorded, data.review.current)}`);
+    }
+    lines.push(`  Inspect with: lh goal state ${id}`);
+    return lines.join('\n');
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Whether this process runs with a server-minted operation token (device and
  * gateway runs) rather than the user's own login. Operation tokens are refused
@@ -182,14 +403,80 @@ const hasOperationToken = () => {
   }
 };
 
+/**
+ * The Goal reads `lh goal show` / `state` / `events` use, picked by credential.
+ *
+ * A device or gateway planning run holds a `hetero-operation` JWT, and the
+ * server's ordinary authed routes refuse that by design — so the same reads have
+ * an operation-authenticated twin. Runs holding one are exactly the runs whose
+ * refusal these commands exist to explain, so they must not be the ones that
+ * cannot read.
+ */
+const goalReads = async () => {
+  const client = await getTrpcClient();
+  return hasOperationToken()
+    ? {
+        events: client.goal.eventsOperation,
+        graph: client.goal.graphOperation,
+        planContext: client.goal.planContextOperation,
+      }
+    : {
+        events: client.goal.events,
+        graph: client.goal.graph,
+        planContext: client.goal.planContext,
+      };
+};
+
 export function registerGoalCommand(program: Command) {
   const goal = program.command('goal').description('Run long-horizon Goal Graphs');
+  goal
+    .command('wake <id>')
+    .description('Deliver an external result to a specific Goal wait')
+    .requiredOption('--token <token>', 'managerState.token from the waiting Goal')
+    .requiredOption('--event <id>', 'Stable delivery ID')
+    .requiredOption('--type <type>', 'Event type declared by the wait')
+    .requiredOption('--key <key>', 'Event correlation key declared by the wait')
+    .option('--summary <text>', 'Short observation')
+    .option('--reference <reference>', 'Evidence reference, not an inline dataset')
+    .option('--json', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: {
+          token: string;
+          event: string;
+          type: string;
+          key: string;
+          summary?: string;
+          reference?: string;
+          json?: boolean;
+        },
+      ) => {
+        const client = await getTrpcClient();
+        const result = await client.goal.wake.mutate({
+          id,
+          waitToken: options.token,
+          eventId: options.event,
+          type: options.type,
+          key: options.key,
+          summary: options.summary,
+          reference: options.reference,
+        });
+        if (options.json) outputJson(result.data);
+        else
+          console.log(
+            result.data.accepted
+              ? 'Event recorded; Goal continuation queued.'
+              : `Event not applied: ${result.data.reason}`,
+          );
+      },
+    );
   goal
     .command('plan <id>')
     .description('Atomically submit the current main Agent plan')
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/verify/retry/escalate, reason and action fields',
+      'JSON plan: action tasks/wait/verify/retry/escalate, reason and action fields',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
@@ -201,19 +488,36 @@ export function registerGoalCommand(program: Command) {
       ) => {
         const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
         if (!operationId) throw new Error('Current manager operation ID required');
+        // Read and parse the plan BEFORE any network call: a missing or malformed
+        // file is a local error, and must not be dressed up as a server refusal
+        // just because the Goal's own admission happens to be non-OK.
+        const plan = JSON.parse(await readFile(options.file, 'utf8'));
         const client = await getTrpcClient();
         const endpoint = hasOperationToken()
           ? client.goal.submitOperationPlan
           : client.goal.submitPlan;
-        const result = await endpoint.mutate({
-          id,
-          token: options.token,
-          operationId,
-          plan: JSON.parse(await readFile(options.file, 'utf8')),
-        });
-        if (options.json) outputJson(result.data);
-        else
-          console.log('Plan recorded; the coordinator will continue after this Agent turn exits.');
+        try {
+          const result = await endpoint.mutate({ id, token: options.token, operationId, plan });
+          if (options.json) outputJson(result.data);
+          else
+            console.log(
+              'Plan recorded; the coordinator will continue after this Agent turn exits.',
+            );
+        } catch (error) {
+          // A refusal is a verdict about this turn, so print the server's own
+          // admission before the error propagates: the bare message ("Stale
+          // planning input") cannot say which precondition failed. The plan
+          // travels with it — the read is only as specific as the plan it sees.
+          // stderr, not stdout: `--json` callers parse stdout, and a refusal
+          // must not turn it into prose.
+          const explanation = await explainPlanRefusal(id, {
+            operation: options.operation,
+            plan,
+            token: options.token,
+          });
+          if (explanation) console.error(explanation);
+          throw error;
+        }
       },
     );
 
@@ -293,9 +597,11 @@ export function registerGoalCommand(program: Command) {
       'Reclaim a Task operation after this idle time (minimum: 60000)',
     )
     .option(
-      '--conversation',
-      "Link the goal to the current conversation. Use it whenever you create a goal for the user from a chat, not only for /goal: without it the goal is standalone and never shows on this conversation's goal tray. This agent supervises the goal from this conversation; the output carries a turnToken, so submit the first plan with `lh goal plan <id> --token <turnToken> --file <plan.json>`",
+      '--topic',
+      "Link the goal to the current topic. Use it whenever you create a goal for the user from a chat, not only for /goal: without it the goal is standalone and never shows on this topic's goal tray. This agent supervises the goal from this topic; the output carries a turnToken, so submit the first plan with `lh goal plan <id> --token <turnToken> --file <plan.json>`",
     )
+    // Former name of --topic, kept so existing prompts and scripts keep working.
+    .addOption(new Option('--conversation').hideHelp())
     .option('--criterion <text...>', 'Acceptance criterion (repeatable)')
     .option('--json [fields]', 'Output JSON')
     .action(async (title: string, options) => {
@@ -303,10 +609,9 @@ export function registerGoalCommand(program: Command) {
         throw new Error('--max-experiments requires --explore');
       }
       const operationId = process.env.LOBEHUB_OPERATION_ID;
-      if (options.conversation && !operationId) {
-        throw new Error(
-          '--conversation must run inside an agent conversation (LOBEHUB_OPERATION_ID)',
-        );
+      const fromTopic = Boolean(options.topic || options.conversation);
+      if (fromTopic && !operationId) {
+        throw new Error('--topic must run inside an agent topic (LOBEHUB_OPERATION_ID)');
       }
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
@@ -358,12 +663,12 @@ export function registerGoalCommand(program: Command) {
         title,
         tasks: options.task,
       };
-      // A conversation goal takes its agent and conversation from the running
+      // A topic goal takes its agent and topic from the running
       // operation on the server; the CLI only names the run. Device and gateway
       // runs hold an operation token, which only the operation endpoint accepts.
       // A local desktop run keeps its operation client-side, so it also names
-      // its conversation and agent for the server to check.
-      const result = options.conversation
+      // its topic and agent for the server to check.
+      const result = fromTopic
         ? hasOperationToken()
           ? await client.goal.createConversationGoal.mutate({
               ...goalInput,
@@ -430,7 +735,8 @@ export function registerGoalCommand(program: Command) {
     });
 
   const show = async (id: string, options: { json?: boolean | string }) => {
-    const result = await (await getTrpcClient()).goal.graph.query({ id });
+    const reads = await goalReads();
+    const result = await reads.graph.query({ id });
     if (options.json !== undefined) return outputJson(result.data, options.json);
     printGraph(result.data);
   };
@@ -444,6 +750,77 @@ export function registerGoalCommand(program: Command) {
     .description('Show the Goal Graph')
     .option('--json [fields]', 'Output JSON')
     .action(show);
+
+  goal
+    .command('state <id>')
+    .alias('inspect')
+    .description('Explain why this Goal will or will not accept a plan right now')
+    .option(
+      '--events <n>',
+      'Recent events to include (0 disables)',
+      String(GOAL_EVENT_TAIL_DEFAULT),
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(async (id: string, options: { events: string; json?: boolean | string }) => {
+      const reads = await goalReads();
+      const tail = Math.max(0, Number.parseInt(options.events, 10) || 0);
+      const [graph, context] = await Promise.all([
+        reads.graph.query({ id }),
+        reads.planContext.query({ id }),
+      ]);
+      const events = tail > 0 ? (await reads.events.query({ id, limit: tail })).data.events : [];
+      if (options.json !== undefined) return outputJson({ ...context.data, events }, options.json);
+      printGoalState(graph.data, context.data, events);
+    });
+
+  goal
+    .command('events <id>')
+    .description("List this Goal's audit trail, newest first")
+    .option('-L, --limit <n>', 'Events to fetch', '50')
+    .option('--cursor <token>', 'Continue from the previous page (the token it printed)')
+    .option('--entity <type>', 'Filter by entity: goal | node | edge | decision | task')
+    .option(
+      '--type <type>',
+      'Filter by event: created | updated | activated | resolved | rejected | retired | linked | unlinked',
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: {
+          cursor?: string;
+          entity?: GoalEventEntityType;
+          json?: boolean | string;
+          limit: string;
+          type?: GoalEventType;
+        },
+      ) => {
+        const reads = await goalReads();
+        const result = await reads.events.query({
+          id,
+          cursor: options.cursor,
+          entityType: options.entity,
+          eventType: options.type,
+          limit: Number.parseInt(options.limit, 10),
+        });
+        if (options.json !== undefined) return outputJson(result.data, options.json);
+        if (result.data.events.length === 0) return log.info('No events.');
+        printTable(
+          result.data.events.map((event) => [
+            toIso(event.createdAt),
+            `${event.entityType} ${event.eventType}`,
+            event.actorType,
+            truncate(event.reason ?? '-', 64),
+            event.id,
+          ]),
+          ['TIME', 'EVENT', 'ACTOR', 'REASON', 'EVENT ID'],
+        );
+        if (result.data.nextCursor)
+          console.log(
+            pc.dim(`\nMore may follow — continue with --cursor "${result.data.nextCursor}"`),
+          );
+      },
+    );
 
   goal
     .command('supervision <id>')
@@ -669,6 +1046,61 @@ export function registerGoalCommand(program: Command) {
       });
       log.info(result.message);
     });
+
+  goal
+    .command('bind-topic <id>')
+    .description(
+      'Attach an existing goal to the current topic run: this agent supervises it from this topic, as if it had been created here with create --topic',
+    )
+    .option('--force', 'Move a goal that is already bound to another topic or task')
+    .option(
+      '--goal-only',
+      'When the goal agent changes, leave existing tasks with their current agent',
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: { force?: boolean; goalOnly?: boolean; json?: boolean | string },
+      ) => {
+        const operationId = process.env.LOBEHUB_OPERATION_ID;
+        if (!operationId)
+          throw new Error('bind-topic must run inside an agent topic (LOBEHUB_OPERATION_ID)');
+        const client = await getTrpcClient();
+        const buildUrl = await resolveAppUrlBuilder(client);
+        const input = { force: options.force, goalOnly: options.goalOnly, id, operationId };
+        // Same split as `create --topic`: the server takes the agent and
+        // topic from the run; a local desktop run, whose operation lives
+        // only on the client, also names them for the server to check.
+        const result = hasOperationToken()
+          ? await client.goal.bindOperationTopic.mutate(input)
+          : await client.goal.bindTopic.mutate({
+              ...input,
+              agentId: process.env.LOBEHUB_AGENT_ID,
+              topicId: process.env.LOBEHUB_TOPIC_ID,
+            });
+        const turnToken = result.turnToken;
+        const url = buildUrl(`/goal/${encodeURIComponent(result.data!.goal.id)}`);
+        if (options.json !== undefined)
+          return outputJson(
+            {
+              ...result.data,
+              previousSubject: result.previousSubject,
+              reassignedTaskIds: result.reassignedTaskIds,
+              turnToken,
+              url,
+            },
+            options.json,
+          );
+        log.info(result.message);
+        console.log(`${pc.bold('goal')}: ${url}`);
+        if (turnToken) {
+          console.log(
+            `${pc.bold('planning turn')}: lh goal plan ${result.data!.goal.id} --token ${turnToken} --file <plan.json>`,
+          );
+        }
+      },
+    );
 
   goal
     .command('restart <id>')

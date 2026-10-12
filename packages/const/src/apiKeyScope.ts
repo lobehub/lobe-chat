@@ -212,6 +212,9 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   composio: 'blocked',
   config: 'open',
   connector: 'blocked',
+  // boards only lay out widgets; reads mirror `widget`, writes stay key-less
+  // so a restricted key cannot reshape what a widget run is attached to
+  dashboard: rw('agent:read', null),
   device: 'blocked',
   deviceMetric: 'blocked',
   document: rw('knowledge:read', 'knowledge:write'),
@@ -253,6 +256,8 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   pageShare: rw('chat:read', 'chat:write'),
   plugin: rw('agent:read', 'agent:write'),
   project: rw('agent:read', 'agent:write'),
+  // project environments and working directories: same agent domain as `project`
+  projectWorkingDirectory: rw('agent:read', 'agent:write'),
   pushToken: 'blocked',
   ragEval: 'blocked',
   recent: rw('chat:read', null),
@@ -261,6 +266,12 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   // Member-to-member ownership handover: accepting/declining is an interactive
   // human decision, not something a restricted key should automate.
   resourceTransferRequest: 'blocked',
+  // Reads and DELETES files in the caller's persistent sandbox working
+  // directory. No existing scope honestly describes that store: granting it
+  // under `file:*` would let a key given knowledge-base write access delete
+  // working files too, which is not what that grant means. Blocked until the
+  // feature ships with a scope of its own (full-access keys still reach it).
+  sandboxStorage: 'blocked',
   search: rw('chat:read', null),
   // source-control integration wiring (installations, linked identities,
   // tracked pull requests) is configured from Settings, not from keys
@@ -294,6 +305,10 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   video: { any: 'model:invoke' },
   waitlist: 'blocked',
   webBrowsing: { any: 'model:invoke' },
+  // widget runs execute user scripts in the sandbox with the owner's connector
+  // credentials, so restricted keys may read widgets and runs but not change
+  // or trigger them
+  widget: rw('agent:read', null),
   work: rw('agent:read', 'agent:write'),
   workspace: rw('workspace:read', 'workspace:write'),
   workspaceAuditLog: rw('workspace:read', null),

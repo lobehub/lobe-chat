@@ -25,6 +25,7 @@ The `acceptance` skill is generated from the default branch of [lobehub/acceptan
 For the full repository map or help locating a code layer, read the `project-overview` skill.
 
 - `apps/server/src`: backend runtime, routers, and services, imported through `@/server/*`. `src/app/(backend)` contains Next.js route shells only; do not put backend business logic there.
+- Server business code reaches Redis through domain methods in `apps/server/src/services/redis` (`redisService.deviceSystemInfo`, `skillTools`, `workspaceRescan`). The service aggregates domains and owns connections, keys, TTL and consistency policy. `apps/server/src/modules/Redis` is only the client/provider layer, not the business service. Add missing business methods to the service and missing transport primitives to the client. Generic cache/claim helpers stay internal to the service boundary. ESLint prevents new direct client access; its explicit legacy migration list only shrinks.
 - `src/app`: Next.js HTML/auth shells. Web shell helpers belong under `src/libs` or the relevant app segment, not `src/server`.
 - `src/spa`: SPA entry points and React Router configuration. `src/routes` holds thin page segments that compose `src/features`; business UI and logic belong in features by domain.
 - `src/services` and `src/store`: client API services and Zustand state. Keep fetch/cache guidance in `data-fetching-architecture` and store conventions in `zustand`.
@@ -78,7 +79,8 @@ Use `bun run check [changed-files...]`.
 
 - Every bug fix needs a regression test that fails before the fix and passes after it. Skip pure style/CSS fixes when the only practical assertion would match stylesheet source strings.
 - Run once with the selectors needed: no selector means lint + related tests; `--lint`, `--test`, and `--type` compose. Default scope is all staged, unstaged and untracked changes; explicit paths override it.
-- Lint autofixes files: review the emitted diff. Tests use the nearest owning Vitest config. `--type` checks the full repo. Never run `bun run test`, which runs the full suite.
+- Lint autofixes files: review the emitted diff. Tests use the nearest owning Vitest config. `--type` checks the full repo (`bun run type-check`). Never run `bun run test`, which runs the full suite.
+- `bun run type-check` runs Bun's builtin checker (`bun --check --tsconfig-override tsconfig.type-check.json`). That needs Bun ≥ 1.4.3. The package.json `check` script is the agent CLI (`bun run check`).
 - `--alint` is opt-in: model-backed rules in `packages/alint/` for judgement calls eslint cannot express. It needs a provider (`bun run alint:setup`); findings are warnings to fix or justify in the PR.
 - For a manual package test, run from the owning package: `cd packages/database && bunx vitest run --silent='passed-only' '[file-path]'`.
 
@@ -87,6 +89,7 @@ Use `bun run check [changed-files...]`.
 Use the `acceptance` skill to decide whether the delivery needs product verification and whether existing evidence already covers it. Opening or marking a PR ready is a checkpoint for that decision, not a trigger to rerun verification.
 
 - Documentation/instruction-only changes, pure refactors or tooling changes with no product behavior change, and gitlink-only syncs do not require a new acceptance run. State the reason in the PR; for a gitlink sync, link the upstream change and its existing acceptance when available.
+- Changes to rendered UI text, including locale keys and translations, change product behavior and are not exempt. A test that only asserts key presence does not show that the page renders the text.
 - Reuse a completed acceptance that covers the delivered behavior. If its report and evidence exist only locally, inspect and upload them with `lh acceptance run ingest`; if already published, reuse the link. Do not rerun the product merely to open a PR or obtain a report URL.
 - For new or changed product behavior not covered by valid evidence, verify the affected outcomes on the real product, capture the required evidence, and publish the result. The skill owns reuse criteria and the execution workflow.
 - Agent tool results shown in chat are Web UI outcomes even when the implementation is server-side. Verify the rendered tool card and parent reply, including the failure state when recovery is the goal.

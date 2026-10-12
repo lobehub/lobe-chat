@@ -188,6 +188,46 @@ describe('serverMessagesEngine', () => {
       expect(result[0].content).toBe(systemRole + '\n\n' + getCurrentDateContent());
     });
 
+    it('renders the cloud-sandbox workspace placeholders to the ephemeral wording unless the builder supplies them', async () => {
+      const messages = createBasicMessages();
+      const systemRole =
+        '<env>{{sandbox_workspace}}</env><session>{{sandbox_session_files}}</session>';
+
+      // No additionalVariables — the run got no persistent workspace: the
+      // original ephemeral-session wording must render, never the literal tokens.
+      const { messages: fallback } = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole,
+      });
+      expect(fallback[0].content).not.toContain('{{sandbox_workspace}}');
+      expect(fallback[0].content).not.toContain('{{sandbox_session_files}}');
+      expect(fallback[0].content).toContain(
+        'Files created here are temporary and session-specific',
+      );
+      expect(fallback[0].content).toContain('Files from previous sessions may not persist');
+
+      // The builder's persistent-workspace guidance overrides both fallbacks.
+      const { messages: resolved } = await serverMessagesEngine({
+        additionalVariables: {
+          sandbox_session_files: '- Files in your working directory persist',
+          sandbox_workspace: '- Your working directory is a persistent workspace',
+        },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole,
+      });
+      expect(resolved[0].content).toContain(
+        '<env>- Your working directory is a persistent workspace</env>',
+      );
+      expect(resolved[0].content).toContain(
+        '<session>- Files in your working directory persist</session>',
+      );
+      expect(resolved[0].content).not.toContain('temporary and session-specific');
+    });
+
     it('renders {{workingDirectory}} to a fallback instead of leaking the literal ', async () => {
       const messages = createBasicMessages();
       const systemRole = '<working-directory>{{workingDirectory}}</working-directory>';
@@ -359,6 +399,40 @@ describe('serverMessagesEngine', () => {
       const content = userMessage?.content as any[];
 
       expect(content[0].text).toContain('url="https://app.example.com/f/file1"');
+    });
+
+    it('sends attachments planned for preview as previews', async () => {
+      const content = 'row,value\n'.repeat(1000);
+      const { messages: result } = await serverMessagesEngine({
+        attachmentPreviewFileIds: ['file1'],
+        messages: [
+          {
+            content: 'Read this',
+            createdAt: Date.now(),
+            fileList: [
+              {
+                content,
+                fileType: 'text/csv',
+                id: 'file1',
+                name: 'data.csv',
+                size: content.length,
+                url: 'https://app.example.com/f/file1',
+              },
+            ],
+            id: 'msg-1',
+            role: 'user',
+            updatedAt: Date.now(),
+          } as UIChatMessage,
+        ],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const userMessage = result.find((message) => message.role === 'user');
+      const text = (userMessage?.content as any[])[0].text as string;
+
+      expect(text).toContain('truncated="true"');
+      expect(text).not.toContain(content);
     });
 
     it('should pass active topic document initial context into MessagesEngine', async () => {

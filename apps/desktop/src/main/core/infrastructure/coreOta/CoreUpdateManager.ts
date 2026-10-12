@@ -72,6 +72,7 @@ export class CoreUpdateManager {
   private lastError: string | null = null;
   private needsFullRelease = false;
   private unloadPrevented = false;
+  private rollbackPointer: CorePointer | null = null;
   private rollbackRenderer: RendererSource | null = null;
   private rendererVersion: string | null = null;
   private rollbackRendererVersion: string | null = null;
@@ -79,6 +80,9 @@ export class CoreUpdateManager {
   private coldBootCheck = false;
   private deferredColdBootCheck = false;
   private mountedSeen = false;
+  private mountedRenderers = new Set<number | undefined>();
+  private unloadConfirmations = new Set<number>();
+  private pendingRenderers = new Set<number | undefined>();
   private bootCrashCount = 0;
   private bootCheckTimer: NodeJS.Timeout | null = null;
   private loadPingTimer: NodeJS.Timeout | null = null;
@@ -86,6 +90,7 @@ export class CoreUpdateManager {
   private checkInterval: NodeJS.Timeout | null = null;
   private networkInterval: NodeJS.Timeout | null = null;
   private scheduledChecksStarted = false;
+  private appliedVersion: string | null = null;
   private idleTimer: NodeJS.Timeout | null = null;
   private gcTask: Promise<void> = Promise.resolve();
   private checkTask: Promise<void> = Promise.resolve();
@@ -225,23 +230,58 @@ export class CoreUpdateManager {
     if (this.scheduledChecksStarted && this.enabled) this.scheduleChecks();
   };
 
-  handleBootPing = (stage?: 'loaded' | 'mounted') => {
-    if (stage !== 'loaded') this.mountedSeen = true;
+  handleBootPing = (stage?: 'loaded' | 'mounted', senderId?: number) => {
+    if (stage !== 'loaded') {
+      this.mountedSeen = true;
+      this.mountedRenderers.add(senderId);
+    }
     if (!this.pendingBootCheck) return;
     if (stage === 'loaded') {
       this.clearLoadPingTimer();
       return;
     }
+    if (!this.coldBootCheck) {
+      this.pendingRenderers.delete(senderId);
+      if (this.pendingRenderers.size > 0) return;
+    }
+    this.completeBootCheck();
+  };
+
+  handleRendererDestroyed = (senderId: number) => {
+    if (
+      this.unloadConfirmations.delete(senderId) &&
+      this.unloadConfirmations.size === 0 &&
+      this.pendingBootCheck
+    )
+      this.armBootCheck();
+    this.mountedRenderers.delete(senderId);
+    if (
+      this.pendingRenderers.delete(senderId) &&
+      this.pendingRenderers.size === 0 &&
+      this.pendingBootCheck &&
+      !this.coldBootCheck
+    ) {
+      this.completeBootCheck();
+    }
+  };
+
+  private completeBootCheck() {
     logger.info(`Core ${this.pointer.current} boot check passed`);
+    if (!this.coldBootCheck && this.pointer.current) {
+      this.appliedVersion = this.pointer.current;
+      this.app.browserManager.broadcastToAllWindows('coreUpdateApplied', this.appliedVersion);
+    }
     this.clearBootTimers();
     const shouldRunDeferredCheck = this.deferredColdBootCheck;
     this.pendingBootCheck = false;
     this.deferredColdBootCheck = false;
     this.bootCrashCount = 0;
     this.rollbackRenderer = null;
+    this.rollbackPointer = null;
+    this.unloadConfirmations.clear();
     this.gc();
     if (shouldRunDeferredCheck) this.checkForUpdates();
-  };
+  }
 
   handleRendererCrash = () => {
     if (!this.pendingBootCheck) return;
@@ -253,13 +293,42 @@ export class CoreUpdateManager {
   handleUnloadPrevented = () => {
     this.unloadPrevented = true;
     if (!this.pendingBootCheck || this.coldBootCheck) return;
-    logger.info('Reload cancelled by renderer, cancelling boot check');
+    this.rendererVersion = this.rollbackRendererVersion;
+    logger.info('Reload cancelled by renderer, restoring staged update');
+    this.app.browserManager.browsers.forEach((browser) => browser.cancelUnloadConfirmation());
+    this.unloadConfirmations.clear();
     this.clearBootTimers();
     this.pendingBootCheck = false;
+    this.app.rendererUrlManager.setActiveRenderer(this.rollbackRenderer);
     this.rollbackRenderer = null;
+    if (this.rollbackPointer) {
+      const version = this.rollbackPointer.staged;
+      this.savePointer(this.rollbackPointer);
+      this.rollbackPointer = null;
+      this.staged = version ? { applyMode: 'reload', version } : null;
+      this.announceStaged();
+      this.app.browserManager.broadcastToAllWindows('coreUpdateDeferred', undefined);
+    }
   };
 
-  applyStagedNow = () => {
+  pauseForUnloadConfirmation = (senderId: number) => {
+    if (!this.pendingBootCheck || this.coldBootCheck) return false;
+    this.unloadConfirmations.add(senderId);
+    this.clearBootTimers();
+    return true;
+  };
+
+  resolveUnloadConfirmation = (senderId: number, proceed: boolean) => {
+    if (!this.unloadConfirmations.delete(senderId) || !this.pendingBootCheck) return false;
+    if (!proceed) {
+      this.handleUnloadPrevented();
+      return false;
+    }
+    if (this.unloadConfirmations.size === 0) this.armBootCheck();
+    return true;
+  };
+
+  applyStagedNow = ({ automatic = false } = {}) => {
     if (!this.staged) return false;
     if (this.staged.applyMode === 'relaunch') {
       this.relaunchIntoCore();
@@ -283,15 +352,22 @@ export class CoreUpdateManager {
     }
     this.rollbackRendererVersion = this.rendererVersion;
     this.rendererVersion = version;
+    this.rollbackPointer = this.pointer;
     this.savePointer({ current: version, previous: this.pointer.current, staged: null });
     this.staged = null;
     this.clearIdleTimer();
-    this.reloadAllWindows();
+    this.pendingRenderers = new Set(
+      [...this.app.browserManager.browsers.values()]
+        .map((browser) => browser.browserWindow.webContents.id)
+        .filter((id) => this.mountedRenderers.has(id)),
+    );
     this.armBootCheck();
+    this.reloadAllWindows(!automatic);
     return true;
   };
 
   getStatus = () => ({
+    appliedVersion: this.appliedVersion,
     applyMode: this.staged?.applyMode ?? null,
     current: this.pointer.current,
     disabledReasons: this.disabledReasons,
@@ -331,17 +407,13 @@ export class CoreUpdateManager {
   };
 
   private async runCheck(startupProgress?: (state: StartupUpdateProgress) => void) {
-    if (this.pendingBootCheck && this.coldBootCheck) this.deferredColdBootCheck = true;
-    if (!this.enabled || this.busy || this.staged || this.pendingBootCheck) {
-      logger.info('Core OTA check skipped', {
-        reason: !this.enabled
-          ? 'disabled'
-          : this.busy
-            ? 'busy'
-            : this.pendingBootCheck
-              ? 'boot-validation'
-              : 'already-staged',
-      });
+    if (!this.enabled || this.busy) {
+      logger.info('Core OTA check skipped', { reason: !this.enabled ? 'disabled' : 'busy' });
+      return;
+    }
+    if (this.pendingBootCheck) {
+      this.deferredColdBootCheck = true;
+      logger.info('Core OTA check deferred', { reason: 'cold-boot-check' });
       return;
     }
     const generation = this.checkGeneration;
@@ -357,6 +429,7 @@ export class CoreUpdateManager {
       if (this.needsFullRelease) throw new SkipCheck('needs-full-release');
       if (remote.channel === this.running.channel && remote.seq <= this.running.seq)
         throw new SkipCheck('up-to-date');
+      if (version === this.staged?.version) throw new SkipCheck('already-staged');
       if (version === this.pointer.current) throw new SkipCheck('already-current');
       if (this.pointer.blacklist.includes(version)) throw new SkipCheck('blacklisted');
       if (!this.inRollout(version, remote.rollout)) throw new SkipCheck('rollout-excluded');
@@ -394,6 +467,9 @@ export class CoreUpdateManager {
       if (generation !== this.checkGeneration) throw new SkipCheck('superseded');
       const applyMode = computeApplyMode(this.running.tree, remote.tree);
       logger.info('Core OTA staged', { applyMode, version, ...staged.downloaded });
+      if (this.staged?.applyMode === 'relaunch') {
+        this.pointer = { ...this.pointer, current: this.pointer.previous, previous: null };
+      }
       this.staged = { applyMode, version };
       this.unloadPrevented = false;
       this.savePointer(
@@ -534,7 +610,8 @@ export class CoreUpdateManager {
     if (BrowserWindow.getAllWindows().some((window) => window.isFocused())) return;
     this.clearIdleTimer();
     this.idleTimer = setTimeout(() => {
-      if (this.staged?.applyMode === 'reload' && !this.unloadPrevented) this.applyStagedNow();
+      if (this.staged?.applyMode === 'reload' && !this.unloadPrevented)
+        this.applyStagedNow({ automatic: true });
     }, IDLE_APPLY_DELAY);
     this.idleTimer.unref?.();
   };
@@ -563,6 +640,8 @@ export class CoreUpdateManager {
     this.app.rendererUrlManager.setActiveRenderer(this.rollbackRenderer);
     this.rollbackRenderer = null;
     this.rendererVersion = this.rollbackRendererVersion;
+    this.rollbackPointer = null;
+    this.unloadConfirmations.clear();
     this.gc();
     this.reloadAllWindows();
   }
@@ -595,10 +674,10 @@ export class CoreUpdateManager {
     this.bootCheckTimer = null;
   }
 
-  private reloadAllWindows() {
+  private reloadAllWindows(promptBeforeUnload = false) {
     this.app.browserManager.browsers.forEach((browser) => {
       try {
-        browser.browserWindow.webContents.reloadIgnoringCache();
+        browser.reloadIgnoringCache(false, promptBeforeUnload);
       } catch {}
     });
   }

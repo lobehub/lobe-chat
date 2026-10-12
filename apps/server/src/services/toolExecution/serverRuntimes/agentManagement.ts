@@ -310,9 +310,18 @@ export const agentManagementRuntime: ServerRuntimeRegistration = {
           let marketTotal = 0;
 
           if (source === 'user' || source === 'all') {
+            // This is the CRUD surface: every id it returns can be forwarded to
+            // `deleteAgent` / `updateAgent`. The inbox is product-owned and must
+            // not be deletable (see `AgentModel.delete`), so keep it out of the
+            // management search instead of letting a delete proposal reach it.
             const [userAgents, total] = await Promise.all([
-              agentModel.queryAgents({ keyword: params.keyword, limit, offset }),
-              agentModel.countAgents({ keyword: params.keyword }),
+              agentModel.queryAgents({
+                includeInbox: false,
+                keyword: params.keyword,
+                limit,
+                offset,
+              }),
+              agentModel.countAgents({ includeInbox: false, keyword: params.keyword }),
             ]);
             userTotal = total;
             results.push(...userAgents.map((a) => ({ ...a, isMarket: false })));
@@ -384,6 +393,17 @@ export const agentManagementRuntime: ServerRuntimeRegistration = {
           const { agentId } = params;
           let { config, meta } = params;
 
+          // Existence guard: a Drizzle UPDATE on a missing/foreign agent row is a
+          // silent 0-row no-op, so writes would "succeed" without persisting
+          // anything. Fail loudly like the config path already does. Uses the
+          // lightweight existsById probe instead of getAgentConfigById, which
+          // needlessly enriches the row with knowledge associations just to
+          // test existence.
+          const exists = await agentModel.existsById(agentId);
+          if (!exists) {
+            return { content: `Agent "${agentId}" not found.`, success: false };
+          }
+
           // Guard against LLM double-encoding: parse strings if needed
           if (typeof config === 'string') {
             try {
@@ -429,6 +449,14 @@ export const agentManagementRuntime: ServerRuntimeRegistration = {
       updatePrompt: async (params: UpdatePromptParams): Promise<ToolExecutionResult> => {
         try {
           const { agentId, prompt } = params;
+
+          // Existence guard: same 0-row silent no-op hazard as updateAgent.
+          // Lightweight existsById probe (see updateAgent note).
+          const exists = await agentModel.existsById(agentId);
+          if (!exists) {
+            return { content: `Agent "${agentId}" not found.`, success: false };
+          }
+
           await agentModel.update(agentId, { editorData: null, systemRole: prompt } as Record<
             string,
             unknown
