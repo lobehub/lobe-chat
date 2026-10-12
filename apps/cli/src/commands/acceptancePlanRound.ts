@@ -152,10 +152,15 @@ export async function ingestIntoPlanRound(
   const acceptanceUrl = run?.acceptanceId
     ? new URL(`/acceptance/${encodeURIComponent(run.acceptanceId)}`, resolveServerUrl()).toString()
     : null;
-  if (!acceptanceUrl)
+  // The evidence landed, but with no acceptance there is nothing to hand off:
+  // a caller reading only the status must not take this for a publication.
+  const blocked = !acceptanceUrl;
+  if (blocked) {
+    process.exitCode = 1;
     log.warn(
       'this run is not attached to an acceptance yet — report the handoff as blocked; do not ingest a duplicate round',
     );
+  }
   const recovery = failedEvidence.some((failure) => failure.reason === 'storage_quota')
     ? await storageQuotaRecovery(client)
     : undefined;
@@ -183,7 +188,7 @@ export async function ingestIntoPlanRound(
         operationId: params.operationId,
         planItems: plan.length,
         proposalPosted,
-        publicationStatus: partial ? 'partial' : 'complete',
+        publicationStatus: blocked ? 'blocked' : partial ? 'partial' : 'complete',
         recovery,
         roundIndex: run?.roundIndex ?? null,
         unexecuted: unexecuted.map((item) => item.id),
@@ -195,7 +200,7 @@ export async function ingestIntoPlanRound(
   }
 
   console.log(
-    `${partial ? pc.yellow('⚠ Partially published') : pc.green('✓ Published')} ${pc.bold(String(params.cases.length))} case(s), ${pc.bold(String(evidenceCount))} evidence artifact(s) into the plan round of ${pc.bold(params.operationId)}`,
+    `${blocked ? pc.yellow('⚠ Published without an acceptance') : partial ? pc.yellow('⚠ Partially published') : pc.green('✓ Published')} ${pc.bold(String(params.cases.length))} case(s), ${pc.bold(String(evidenceCount))} evidence artifact(s) into the plan round of ${pc.bold(params.operationId)}`,
   );
   for (const failure of failedEvidence) {
     console.log(`${pc.yellow('retry (POSIX shell)')}: ${failure.retryCommand}`);

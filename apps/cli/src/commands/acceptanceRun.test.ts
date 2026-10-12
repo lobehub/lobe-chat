@@ -910,6 +910,27 @@ describe('acceptance publication with missing evidence', () => {
       expect(process.exitCode).toBeUndefined();
     });
 
+    it('reports an unattached plan round as blocked, not complete', async () => {
+      client.verify.getRun.query.mockResolvedValue({
+        acceptanceId: null,
+        id: 'plan-run',
+        roundIndex: null,
+      });
+      await writeRound([
+        { evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' },
+        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
+      ]);
+
+      await run('ingest', dir, '--operation', 'op-task', '--json');
+
+      expect(result()).toMatchObject({
+        acceptanceUrl: null,
+        missingEvidence: [],
+        publicationStatus: 'blocked',
+      });
+      expect(process.exitCode).toBe(1);
+    });
+
     it('keeps creating a round for an operation with no verification run', async () => {
       client.verify.getVerifyState.query.mockResolvedValue(null);
       await report([], ['output.txt']);
