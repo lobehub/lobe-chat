@@ -154,7 +154,11 @@ const GitStatus = memo<GitStatusProps>(
       (s) => !!deviceSelectors.getDeviceById(deviceId)(s)?.online,
     );
     const probeReachedDirectory = !deviceId || deviceOnline;
-    const isStale = !branch && probeSettled && probeReachedDirectory && !!fallbackGit?.branch;
+    // A recorded worktree is enough to know the directory is gone: worktrees picked
+    // from the bar were persisted without a branch, and requiring one collapsed
+    // the whole cluster — reset-to-source action included — for exactly those.
+    const hasSnapshot = !!fallbackGit?.branch || !!fallbackGit?.activeWorktree;
+    const isStale = !branch && probeSettled && probeReachedDirectory && hasSnapshot;
     const { data: prData, mutate: mutatePR } = useFetchGitLinkedPR(
       deviceId,
       path,

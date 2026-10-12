@@ -215,6 +215,24 @@ describe('GitStatus', () => {
       expect(screen.queryByTestId('worktree-switcher')).not.toBeInTheDocument();
     });
 
+    // Worktrees picked from the bar were persisted without a branch. The dead
+    // worktree alone must still hand off, or the reset-to-source action vanishes
+    // with the rest of the cluster and the conversation is stuck on a missing cwd.
+    it('hands off when the snapshot recorded only the worktree, no branch', () => {
+      render(
+        <GitStatus
+          isGithub
+          agentId="agent-1"
+          deviceId="device-1"
+          fallbackGit={{ activeWorktree: '/tmp/lobehub-wt-subtask', isWorktree: true }}
+          path="/tmp/lobehub-wt-subtask"
+          sourcePath="/repo"
+        />,
+      );
+
+      expect(screen.getByTestId('stale-git-snapshot')).toBeInTheDocument();
+    });
+
     it('skips the linked-PR lookup, which has no directory to run `gh` in', () => {
       render(
         <GitStatus
