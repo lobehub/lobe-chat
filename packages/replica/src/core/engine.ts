@@ -1185,13 +1185,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   const patchStoredEntityRows = async <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
+    scope: string = resource.scope.get(),
   ): Promise<boolean> => {
     if (!writeQueue) return true;
     if (!resource.scope.canPersist()) return false;
-    const scope = resource.scope.get();
+    // A scope left behind is patched on purpose: nothing of it is loaded, and an
+    // identity switch while reading its index does not make its rows foreign.
+    const offScope = scope !== resource.scope.get();
     const slot = getSlot();
+    // Rows memory holds are patched through memory — but only in the active
+    // scope; a view still showing a scope left behind is not what it persists.
     const loaded = new Set(
-      slot.scope === scope
+      !offScope && slot.scope === scope
         ? Object.entries(slot.entries).map(([key, entry]) => storageKey(key, entry.query).queryKey)
         : [],
     );
@@ -1205,7 +1210,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       return false;
     }
     // Identity changed while reading the index: those rows are not ours to touch.
-    if (resource.scope.get() !== scope) return false;
+    if (!offScope && resource.scope.get() !== scope) return false;
     const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
@@ -1335,8 +1340,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * a value hydrated afterwards — even by a read already in flight — comes
    * back without the entity (see `removedEntities`).
    */
-  const removeEntity = (id: string, options?: { persist?: boolean }) => {
-    const scope = resource.scope.get();
+  const removeEntity = (id: string, options?: { persist?: boolean; scope?: string }) => {
+    const scope = options?.scope ?? resource.scope.get();
     const guard: { releasedAt?: number } = {};
     const guards = removedEntities.get(scope) ?? new Map<string, { releasedAt?: number }>();
     removedEntities.set(scope, guards);
@@ -1347,7 +1352,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       guard.releasedAt = ++guardClock;
       pruneEntityGuards(scope);
     };
-    const patch = applyEntity(id, () => undefined, options);
+    // A scope left behind has nothing on screen: only its persisted rows drop
+    // the entity, and the guard keeps a later hydrate there from reading it back.
+    const patch =
+      scope === resource.scope.get()
+        ? applyEntity(id, () => undefined, options)
+        : patchStoredEntityRows(id, () => undefined, scope);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
     // A patch that did not land (untrusted scope, unreadable index or row, a

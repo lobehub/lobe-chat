@@ -389,6 +389,38 @@ describe('agentGroup store replica', () => {
     );
   });
 
+  // The same late "gone" must also leave that scope's persisted list, or
+  // switching back hydrates the deleted group into the sidebar.
+  it('drops a late terminal absence from the original scope’s persisted list', async () => {
+    const scope = createScope();
+    getGroups.mockResolvedValue([groupRow('g1', 'One'), groupRow('g2', 'Two')]);
+    await useAgentGroupStore.getState().loadGroups();
+    await vi.waitFor(async () =>
+      expect(
+        (
+          await agentGroupListResource.storage!.get({ queryKey: LIST_STORAGE_KEY, scope })
+        )?.data?.map((group) => group.id),
+      ).toEqual(['g1', 'g2']),
+    );
+
+    let answer!: (detail: null) => void;
+    getGroupDetail.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+    const refresh = useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    await vi.waitFor(() => expect(answer).toBeDefined());
+
+    createScope('agent-group-other-user');
+    answer(null);
+    await refresh;
+
+    await vi.waitFor(async () =>
+      expect(
+        (
+          await agentGroupListResource.storage!.get({ queryKey: LIST_STORAGE_KEY, scope })
+        )?.data?.map((group) => group.id),
+      ).toEqual(['g2']),
+    );
+  });
+
   it('replaces the list with the server response, persists it and seeds groupMap', async () => {
     const scope = createScope();
     getGroups.mockResolvedValue([groupRow('g1', 'Server group')]);

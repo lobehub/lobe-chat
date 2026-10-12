@@ -218,11 +218,15 @@ class ChatGroupInternalAction implements ResetableStore {
   /**
    * A detail request answered "gone / no access" for `groupId` under `scope`.
    * In the active scope the group leaves every view (and storage) and settles
-   * as not found; a scope left behind only has its persisted row purged.
+   * as not found. A scope left behind keeps its view untouched — it is not on
+   * screen — but its persisted detail and its persisted list row both drop the
+   * group, so switching back cannot hydrate it into the sidebar (indefinitely,
+   * offline, until `getGroups()` answers).
    */
   #settleGroupGone = (groupId: string, scope: string) => {
     if (!this.#isStillInScope(scope)) {
       this.#groupDetail.remove(groupId, scope);
+      this.#groupRows.remove(groupId, { scope });
       return;
     }
     this.#removeStaleGroup(groupId);

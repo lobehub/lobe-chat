@@ -258,14 +258,15 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     // while g1's storage read is slow, then g1's hydrate resets the active group
     // back to g1's supervisor).
     const activeKey = useRef<string | undefined>(undefined);
-    // The key whose hydration side effects already ran in its current
-    // activation. Reset on every key change, so a key that comes back (g1 → g2
-    // → g1) gets them replayed even though its `once` hydration is not re-run.
+    // The entry (scope + key) whose hydration side effects already ran in its
+    // current activation. Reset on every key or scope change, so an entry that
+    // comes back (g1 → g2 → g1, or scope A → B → A with the same key) gets them
+    // replayed even though its `once` hydration is not re-run.
     const hydratedKey = useRef<string | undefined>(undefined);
     useLayoutEffect(() => {
       activeKey.current = active ? key : undefined;
       hydratedKey.current = undefined;
-    }, [active, key]);
+    }, [active, key, scope]);
 
     const hydration = driver.useQuery<boolean>(
       active && resource.persisted && resource.persistKey(key!)
@@ -276,7 +277,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
         if (didHydrate) hydratedEntries.add(hydratedEntryId(scope, key!));
         // A superseded key (the hook moved on) runs no side effects at all.
         if (activeKey.current !== key) return true;
-        hydratedKey.current = key;
+        hydratedKey.current = hydratedEntryId(scope, key!);
         // A persisted row is a successful value with no network response: replay
         // the success side effects off it, so an offline / slow first paint still
         // adopts the roster and settles the flags the response path would.
@@ -295,12 +296,26 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     // leaves them acting on g2 until a response lands (or forever, offline).
     useEffect(() => {
       if (!active || key === undefined || hydration.data !== true) return;
-      if (hydratedKey.current === key) return;
-      hydratedKey.current = key;
-      // A lookup that missed storage hydrated nothing to replay.
-      if (!hydratedEntries.has(hydratedEntryId(scope, key))) return;
+      const entry = hydratedEntryId(scope, key);
+      if (hydratedKey.current === entry) return;
+      hydratedKey.current = entry;
       const current = view.get(get(), key);
-      if (current !== undefined) onHydrated?.(current);
+      if (current !== undefined) {
+        // A lookup that missed storage hydrated nothing to replay.
+        if (hydratedEntries.has(entry)) onHydrated?.(current);
+        return;
+      }
+      // Back on a scope whose view `ensureScope` cleared (A → B → A): the cached
+      // `once` result means the fetcher will not read storage again, so read it
+      // here — otherwise a row still in A's partition stays off screen while
+      // the network is slow or offline.
+      void hydrate(params!, scope).then((didHydrate) => {
+        if (!didHydrate) return;
+        hydratedEntries.add(entry);
+        if (activeKey.current !== key || resource.scope.get() !== scope) return;
+        const hydrated = view.get(get(), key);
+        if (hydrated !== undefined) onHydrated?.(hydrated);
+      });
     }, [active, key, scope, hydration.data]);
 
     const syncKey =

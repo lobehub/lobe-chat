@@ -900,6 +900,34 @@ describe('createReplicaSlice', () => {
       session.unmount();
     });
 
+    // Scope A → B → A with the same key: B's activation cleared the view and
+    // A's `once` hydration result is reused, so the slice must read A's
+    // partition again — offline, nothing else would bring the row back.
+    it('rehydrates an entry after returning to a prior scope', async () => {
+      const storage = createMemoryStorage();
+      storage.rows.set('user-1:personal|a', { data: ['cached-a1'], updatedAt: 1 });
+      storage.rows.set('user-2:personal|a', { data: ['cached-a2'], updatedAt: 1 });
+      const { slice, store } = setup({ fetcher: () => new Promise<string[]>(() => {}), storage });
+      const seen: string[][] = [];
+
+      const session = renderHook(
+        () => slice.useSync({ id: 'a' }, { onHydrated: (data) => seen.push(data) }),
+        { wrapper },
+      );
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached-a1']));
+
+      scopeState.current = 'user-2:personal';
+      session.rerender();
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached-a2']));
+
+      scopeState.current = 'user-1:personal';
+      session.rerender();
+      await waitFor(() => expect(store.getState().lists.a).toEqual(['cached-a1']));
+      // Its side effects follow the row back too.
+      await waitFor(() => expect(seen.at(-1)).toEqual(['cached-a1']));
+      session.unmount();
+    });
+
     // A lookup that missed storage settles `true` as well; reactivating its key
     // must not replay `onHydrated` off a value that never came from storage
     // (a provisional seed written into the view).
