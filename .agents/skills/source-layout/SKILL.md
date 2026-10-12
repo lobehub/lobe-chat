@@ -14,7 +14,7 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 | ---------------------------------------------------- | --------------------- | ---------------------------------------------- |
 | React component file / component directory           | PascalCase            | `PlanCard.tsx`, `ChatInput/ControlBar/`        |
 | Hook                                                 | `useXxx.ts(x)`        | `ChatInputNotice/useChatInputNotice.ts`        |
-| Other module                                         | camelCase or one word | `pricingFallback.ts`, `recentDirs.ts`          |
+| Other module                                         | camelCase or one word | `originLink.ts`, `recentDirs.ts`               |
 | Server class module                                  | the class name        | `services/agentRuntime/CompletionLifecycle.ts` |
 | Service, router, store, and other non-component dirs | camelCase             | `services/aiAgent/`, `store/chat/slices/`      |
 | Package directory                                    | kebab-case            | `packages/agent-runtime/`                      |
@@ -27,7 +27,7 @@ New files use named exports (`export const PlanCard = …`). Lint does not enfor
 ## 2. Tests
 
 - `src/**`: colocate `Foo.test.ts(x)` beside `Foo`. A component directory's test is `index.test.ts(x)`.
-- `apps/server/src/**` and `packages/**`: colocate by default. Use the directory's `__tests__/` when the domain requires it (database models and repositories, see `testing`), or when tests need shared fixtures, setup files, or several scenario files for one source (`services/subscription/stripe/__tests__/`).
+- `apps/server/src/**` and `packages/**`: colocate by default. Use the directory's `__tests__/` when the domain requires it (database models and repositories, see `testing`), or when tests need shared fixtures, setup files, or several scenario files for one source (`services/comfyui/__tests__/`).
 - One directory uses one placement. When it already has `__tests__/`, new tests for that directory go there. Do not migrate an existing mixed directory as a side task.
 - Split a large test file by scenario: `Foo.<scenario>.test.ts` (`aiAgent/__tests__/execAgent.resume.test.ts`; `index.<scenario>.test.ts` for a directory entry). Put shared mock factories and fixtures in a `testUtils.ts` beside them; each test file keeps its own `vi.mock` calls, because Vitest hoists them per file.
 
@@ -44,12 +44,12 @@ The limit says when to split, not where. Split on a real boundary (state, reuse,
 
 A split keeps the public import path: `Foo.tsx` becomes `Foo/index.tsx`, so `import Foo from './Foo'` keeps working and callers do not change. Commit the `git mv Foo.tsx Foo/index.tsx` move alone before extracting, so reviewers can read the extraction diff separately and Git keeps the rename while those commits stay intact (a squash merge folds them together). `split-large-file` has the full procedure.
 
-| Kind            | `index` keeps                                   | Siblings                                                                                                                   | Precedent                                            |
-| --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| React component | Public API, shared top-level state, composition | Child components (PascalCase), `useXxx.ts` for state transitions and side effects, pure logic modules with their own tests | `Conversation/Messages/GoalTaskCard/`                |
-| Server service  | The class and its orchestration methods         | Stage functions taking an explicit `deps` object (`pipeline/<stage>.ts`), sub-domain folders                               | `services/aiAgent/`, `services/subscription/stripe/` |
-| tRPC router     | The merged router                               | One sub-router per sub-domain (`market/agent.ts` exports `agentRouter`)                                                    | `routers/lambda/market/`                             |
-| Zustand store   | —                                               | Follow `zustand`                                                                                                           | `src/store/page`                                     |
+| Kind            | `index` keeps                                   | Siblings                                                                                                                   | Precedent                                |
+| --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| React component | Public API, shared top-level state, composition | Child components (PascalCase), `useXxx.ts` for state transitions and side effects, pure logic modules with their own tests | `Conversation/Messages/GoalTaskCard/`    |
+| Server service  | The class and its orchestration methods         | Stage functions taking an explicit `deps` object (`pipeline/<stage>.ts`), sub-domain folders                               | `services/aiAgent/`, `services/comfyui/` |
+| tRPC router     | The merged router                               | One sub-router per sub-domain (`market/agent.ts` exports `agentRouter`)                                                    | `routers/lambda/market/`                 |
+| Zustand store   | —                                               | Follow `zustand`                                                                                                           | `src/store/page`                         |
 
 - Prefer flat siblings. Add a sub-folder for a sub-area with several files of its own (`ChatInput/ControlBar/`), not a kind folder such as `components/` or `hooks/` for one or two files.
 - A split moves code without changing behavior. Collapsing duplicated branches that become one component is in scope when existing tests cover each branch; any other behavior change belongs in a separate commit.

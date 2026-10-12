@@ -23,7 +23,7 @@ The shortlist still contains data tables and generated code; filter it by readin
 
 - **A real extraction boundary**: hand-written logic with separable state, sub-domains, or stages, not a lookup table.
 - **A repeatable verification surface**: behavior that unit or integration tests can observe (including the real-database tests `testing` requires for models), not one that needs a browser session or live third-party calls.
-- **A reviewable scope**: one PR can hold the split. In Cloud, prefer Cloud-owned paths; split an OSS file only through an OSS PR.
+- **A reviewable scope**: one PR can hold the split. When this repository is mounted as a submodule, split a file of the submodule only through a PR to the submodule.
 
 Use recent churn (`git log --since=3.months --oneline -- <file> | wc -l`) only to break ties. State the choice and the reason before starting.
 
