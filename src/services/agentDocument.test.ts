@@ -34,7 +34,7 @@ vi.mock('@/libs/trpc/client', () => ({
 }));
 
 // Every SWR key / matcher handed to `mutate`, so a test can ask whether a
-// replica sync key (or a legacy SWR key) was revalidated.
+// replica sync key (or a plain `agent:*` SWR key) was revalidated.
 const revalidated = () => vi.mocked(mutate).mock.calls.map((call) => call[0]);
 const matchesReplica = (key: unknown[]) =>
   revalidated().some((entry) => typeof entry === 'function' && entry(key));
@@ -49,8 +49,7 @@ const agentDocumentListSyncKey = (agentId: string) => [
 const legacyAgentDocumentKeys = () =>
   revalidated().filter(
     (entry) =>
-      Array.isArray(entry) &&
-      ['agent:documents', 'agent:documentsList', 'agent:documentEditor'].includes(entry[0]),
+      Array.isArray(entry) && typeof entry[0] === 'string' && entry[0].startsWith('agent:'),
   );
 
 describe('AgentDocumentService', () => {
@@ -86,9 +85,8 @@ describe('AgentDocumentService', () => {
     });
 
     // The agent's document list is a replica keyed by agent: the per-agent sync
-    // key refreshes, other agents' entries do not, and none of the removed SWR
-    // keys (`agent:documents` / `agent:documentsList` / `agent:documentEditor`)
-    // is revalidated any more.
+    // key refreshes, other agents' entries do not, and no plain `agent:*` SWR
+    // key is revalidated any more.
     expect(matchesReplica(agentDocumentListSyncKey('agent-1'))).toBe(true);
     expect(matchesReplica(agentDocumentListSyncKey('other-agent'))).toBe(false);
     expect(legacyAgentDocumentKeys()).toEqual([]);
