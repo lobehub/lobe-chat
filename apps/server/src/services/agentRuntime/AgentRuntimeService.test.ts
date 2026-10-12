@@ -1090,6 +1090,28 @@ describe('AgentRuntimeService', () => {
       expect(mockCoordinator.deleteAgentOperation).toHaveBeenCalledWith('test-operation-1');
       expect(hookDispatcher.hasHooks('test-operation-1')).toBe(false);
     });
+
+    it('should cleanup the written state and hooks when the deferred gateway init fails', async () => {
+      const initError = new Error('stream publish failed');
+      const initPublished = Promise.reject(initError);
+      initPublished.catch(() => undefined);
+      mockCoordinator.createAgentOperation.mockResolvedValueOnce({ initPublished });
+      const onOperationCreated = vi.fn();
+
+      await expect(
+        service.createOperation({
+          ...mockParams,
+          hooks: [{ handler: vi.fn(), id: 'hook-1', type: 'onComplete' }],
+          onOperationCreated,
+        }),
+      ).rejects.toBe(initError);
+
+      expect(mockCoordinator.saveAgentState).toHaveBeenCalled();
+      expect(onOperationCreated).not.toHaveBeenCalled();
+      expect(mockQueueService.scheduleMessage).not.toHaveBeenCalled();
+      expect(mockCoordinator.deleteAgentOperation).toHaveBeenCalledWith('test-operation-1');
+      expect(hookDispatcher.hasHooks('test-operation-1')).toBe(false);
+    });
   });
 
   describe('executeStep', () => {

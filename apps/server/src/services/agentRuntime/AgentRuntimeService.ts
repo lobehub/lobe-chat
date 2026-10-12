@@ -1326,6 +1326,7 @@ export class AgentRuntimeService {
     const operationToolSet = toolSet;
     let operationCreated = false;
     let hooksRegistered = false;
+    let gatewayInitFailed = false;
 
     try {
       throwIfAborted(signal, 'Agent execution aborted before operation startup');
@@ -1553,6 +1554,22 @@ export class AgentRuntimeService {
         }
       }
 
+      // The gateway must know the operation before anything can push to it:
+      // the first step's events, and whatever `onOperationCreated` wires up.
+      // Awaited before the intervention preparation is recorded: a failed init
+      // must leave nothing behind (cleaned up below), as it did when it ran
+      // inline, so the continuation's own failure recovery still applies.
+      // A coordinator double that returns nothing counts as already published.
+      try {
+        await traceStartStage(
+          'gateway_init',
+          () => runtimeMeta?.initPublished ?? Promise.resolve(),
+        );
+      } catch (error) {
+        gatewayInitFailed = true;
+        throw error;
+      }
+
       if (interventionResolution) {
         const preparedState = await this.coordinator.loadAgentState(operationId);
         if (!preparedState) {
@@ -1586,11 +1603,6 @@ export class AgentRuntimeService {
         }
         onInterventionPrepared?.();
       }
-
-      // The gateway must know the operation before anything can push to it:
-      // the first step's events, and whatever `onOperationCreated` wires up.
-      // A coordinator double that returns nothing counts as already published.
-      await traceStartStage('gateway_init', () => runtimeMeta?.initPublished ?? Promise.resolve());
 
       await params.onOperationCreated?.(operationId);
 
@@ -1638,7 +1650,7 @@ export class AgentRuntimeService {
 
       return { autoStarted, messageId, operationId, success: true };
     } catch (error) {
-      if (isAbortError(error)) {
+      if (isAbortError(error) || gatewayInitFailed) {
         if (hooksRegistered) {
           hookDispatcher.unregister(operationId);
         }
@@ -1647,11 +1659,19 @@ export class AgentRuntimeService {
           try {
             await this.coordinator.deleteAgentOperation(operationId);
           } catch (cleanupError) {
-            console.error('Failed to cleanup aborted operation %s: %O', operationId, cleanupError);
+            console.error(
+              'Failed to cleanup unstarted operation %s: %O',
+              operationId,
+              cleanupError,
+            );
           }
         }
 
-        log('[%s] Operation creation aborted before scheduling', operationId);
+        if (gatewayInitFailed) {
+          console.error('Failed to publish operation init %s: %O', operationId, error);
+        } else {
+          log('[%s] Operation creation aborted before scheduling', operationId);
+        }
         throw error;
       }
 
