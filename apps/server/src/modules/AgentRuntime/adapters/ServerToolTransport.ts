@@ -1,11 +1,14 @@
 import type {
+  AfterToolCallHookEvent,
   AgentState,
+  ToolCallErrorHookEvent,
   ToolRunContext,
   ToolRunExecution,
   ToolTransport,
   ToolWorkRegistration,
 } from '@lobechat/agent-runtime';
-import { executeToolWithRetry } from '@lobechat/agent-runtime';
+import { executeToolWithRetry, selectOperationToolSet } from '@lobechat/agent-runtime';
+import { AgentDocumentsIdentifier } from '@lobechat/builtin-tool-agent-documents';
 import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import {
   buildExecuteToolAttributes,
@@ -16,12 +19,19 @@ import {
 import type { ChatToolPayload } from '@lobechat/types';
 
 import { AgentModel } from '@/database/models/agent';
+import { AgentOperationModel } from '@/database/models/agentOperation';
 import { isDeviceCapablePlan, isLocalSandboxEnabled } from '@/helpers/executionTarget';
+import {
+  controlDeferredToolResult,
+  loadDurableToolResultHooks,
+} from '@/server/services/agentRuntime/hooks/deferredToolResultControl';
+import { controlToolResult } from '@/server/services/agentRuntime/hooks/toolResultControl';
 import type { DeviceAccessReason } from '@/server/services/aiAgent/deviceToolAudit';
 import {
   isDeviceToolIdentifier,
   logDeviceToolAudit,
 } from '@/server/services/aiAgent/deviceToolAudit';
+import { resolveRunWorkAccessScope } from '@/server/services/workRegistration';
 
 import type { RuntimeExecutorContext } from '../context';
 import { dispatchClientTool } from '../dispatchClientTool';
@@ -39,6 +49,7 @@ import {
 import { resolveRunActiveDeviceId } from '../executors/resolveRunActiveDeviceId';
 import { resolveRunProjectSkills } from '../executors/resolveRunProjectSkills';
 import { resolveToolTimeoutMs } from '../resolveToolTimeout';
+import { buildToolCallHookContext } from './toolCallHookContext';
 
 export class ServerToolTransport implements ToolTransport {
   maxRetries = TOOL_MAX_RETRIES;
@@ -50,7 +61,21 @@ export class ServerToolTransport implements ToolTransport {
   }
 
   async registerWork(registration: ToolWorkRegistration, state: AgentState): Promise<void> {
+    const topicId = state.origin?.topicId;
+    // A share visitor's run registers under the share scope of its visitor
+    // topic; without a topic there is no scope to serve it back through, so
+    // fail closed rather than leak an unscoped Work into the creator's lists.
+    const accessScope = resolveRunWorkAccessScope({
+      shareVisitor: this.ctx.agentShareVisitor,
+      topicId,
+    });
+    if (accessScope === null) {
+      log('registerWork skipped: share visitor run has no topic (op=%s)', this.ctx.operationId);
+      return;
+    }
+
     await registerWorkFromIntent({
+      accessScope,
       agentId: state.origin?.agentId ?? null,
       intent: registration.intent,
       rootOperationId: this.ctx.operationId,
@@ -61,7 +86,7 @@ export class ServerToolTransport implements ToolTransport {
       sourceToolName: registration.sourceToolName,
       state: registration.state,
       threadId: state.origin?.threadId,
-      topicId: state.origin?.topicId,
+      topicId,
       userId: this.ctx.userId,
       workspaceId: state.origin?.workspaceId ?? this.ctx.workspaceId,
     });
@@ -72,7 +97,7 @@ export class ServerToolTransport implements ToolTransport {
     error: unknown,
     context: ToolRunContext,
   ): Promise<void> {
-    const { hookDispatcher, operationId, stepIndex, userId } = this.ctx;
+    const { hookDispatcher, operationId, stepIndex } = this.ctx;
 
     if (hookDispatcher) {
       hookDispatcher
@@ -80,15 +105,9 @@ export class ServerToolTransport implements ToolTransport {
           operationId,
           'onToolCallError',
           {
-            apiName: chatToolPayload.apiName,
-            args: context.parsedArgs,
-            callIndex: context.callIndex,
+            ...buildToolCallHookContext(chatToolPayload, context, this.ctx),
             error: error instanceof Error ? error.message : String(error),
-            identifier: chatToolPayload.identifier,
-            operationId,
-            stepIndex,
-            userId,
-          },
+          } satisfies ToolCallErrorHookEvent,
           context.state.host?.hooks,
         )
         .catch(() => {});
@@ -100,10 +119,40 @@ export class ServerToolTransport implements ToolTransport {
     );
   }
 
+  async beforeToolCall(
+    call: ChatToolPayload,
+    context: ToolRunContext,
+  ): Promise<ToolRunExecution | undefined> {
+    const decision = await this.ctx.hookDispatcher?.evaluateToolCall(
+      this.ctx.operationId,
+      buildToolCallHookContext(call, context, this.ctx),
+      context.state.host?.hooks,
+      context.abortSignal,
+    );
+    if (context.abortSignal?.aborted || decision?.status === 'cancelled')
+      return this.abortedBeforeLaunch();
+    if (decision?.status === 'blocked') {
+      const reason = decision.reason ?? 'Blocked by beforeToolCall hook.';
+      const result = {
+        content: reason,
+        error: 'hook_denied',
+        executionTime: 0,
+        state: { reason, type: 'blocked' },
+        success: false,
+      };
+      await this.dispatchAfterToolCall(call, context, result, false);
+      return { attempts: 0, mocked: false, result };
+    }
+  }
+
   async run(chatToolPayload: ChatToolPayload, context: ToolRunContext): Promise<ToolRunExecution> {
     const { operationId, serverDB, stepIndex, streamManager, toolExecutionService, userId } =
       this.ctx;
     const operationLogId = `${operationId}:${stepIndex}`;
+    const enabledToolIds = [
+      ...selectOperationToolSet(context.state).enabledToolIds,
+      ...(context.state.activatedStepTools ?? []).map((activation) => activation.id),
+    ];
     const executeToolSpan = agentRuntimeTracer.startSpan(executeToolSpanName(context.toolName), {
       attributes: buildExecuteToolAttributes({
         operationId,
@@ -117,6 +166,7 @@ export class ServerToolTransport implements ToolTransport {
 
     try {
       const hookResult = await this.dispatchBeforeToolCall(chatToolPayload, context);
+      if (context.abortSignal?.aborted) return this.abortedBeforeLaunch();
       let toolCallMocked = false;
 
       if (isDeviceToolIdentifier(chatToolPayload.identifier) && !hookResult?.isMocked) {
@@ -205,6 +255,7 @@ export class ServerToolTransport implements ToolTransport {
                 context.state,
                 chatToolPayload,
                 context.parentMessageId,
+                context.reuseExistingMessage ? context.toolMessageId : undefined,
               ),
               // Share-visitor marker: lets `BuiltinToolsExecutor.execute`
               // re-apply the share data-tool gate at the actual dispatch site.
@@ -218,9 +269,10 @@ export class ServerToolTransport implements ToolTransport {
                 ? isDeviceCapablePlan(context.state.plan?.execution)
                 : undefined,
               documentId: context.state.origin?.documentId,
-              editingAgentId: context.state.metadata?.editingAgentId,
-              editingGroupId: context.state.metadata?.editingGroupId,
+              editingAgentId: context.state.origin?.editingAgentId,
+              editingGroupId: context.state.origin?.editingGroupId,
               execSubAgent: this.ctx.execSubAgent,
+              executionPlan: context.state.plan?.execution,
               executionTimeoutMs: timeoutMs,
               groupId: context.state.origin?.groupId,
               isSubAgent: context.state.origin?.lineage?.isSubAgent === true,
@@ -249,10 +301,12 @@ export class ServerToolTransport implements ToolTransport {
                 context.state,
                 chatToolPayload,
                 context.parentMessageId,
+                context.toolMessageId,
               ),
               taskId: context.state.origin?.taskId,
               threadId: context.state.origin?.threadId,
               toolCallId: chatToolPayload.id,
+              enabledToolIds,
               toolManifestMap: context.effectiveManifestMap,
               toolMessageId: context.toolMessageId,
               toolResultMaxLength: context.toolResultMaxLength,
@@ -288,16 +342,79 @@ export class ServerToolTransport implements ToolTransport {
         ...execution.result,
         executionTime: execution.result.executionTime ?? 0,
       };
-      const executionResult = await archiveRuntimeToolResult(resultWithExecutionTime, {
-        agentId: context.state.origin?.agentId,
-        identifier: chatToolPayload.identifier,
-        limit: context.toolResultMaxLength,
-        serverDB,
-        toolCallId: chatToolPayload.id,
-        topicId: this.ctx.topicId ?? context.state.origin?.topicId,
-        userId,
-        workspaceId: context.state.origin?.workspaceId ?? this.ctx.workspaceId,
-      });
+      // Evaluate the full result before truncation/archive creation. A denied
+      // archive must not remain retrievable by the model on a later tool call.
+      const originalOperationId = context.toolMessageId
+        ? (await this.ctx.messageModel.findMessagePlugin(context.toolMessageId))?.intervention
+            ?.operationId
+        : undefined;
+      let originalControl: Awaited<ReturnType<typeof controlDeferredToolResult>> | undefined;
+      if (originalOperationId && context.toolMessageId) {
+        if (!this.ctx.hookDispatcher || !this.ctx.userId) {
+          throw new Error(
+            'Cannot review a resumed tool result without its runtime owner and dispatcher',
+          );
+        }
+        originalControl = await controlDeferredToolResult(
+          {
+            dispatcher: this.ctx.hookDispatcher,
+            loadState: (operationId) =>
+              operationId === this.ctx.operationId
+                ? Promise.resolve(context.state)
+                : (this.ctx.loadAgentState?.(operationId) ?? Promise.resolve(null)),
+            loadDurableHooks: (operationId) =>
+              loadDurableToolResultHooks(
+                new AgentOperationModel(this.ctx.serverDB, this.ctx.userId!, this.ctx.workspaceId),
+                operationId,
+              ),
+            messageModel: this.ctx.messageModel,
+            userId: this.ctx.userId,
+            workspaceId: this.ctx.workspaceId,
+          },
+          {
+            operationId: originalOperationId,
+            includeServerHooks: originalOperationId === this.ctx.operationId,
+            toolMessageId: context.toolMessageId,
+            result: resultWithExecutionTime,
+            signal: context.abortSignal,
+          },
+        );
+      }
+      // Approval continuations need not inherit caller hooks. Keep the original
+      // gate; any new run controls can only narrow its decision. Never infer
+      // a control decision from the untrusted tool's result.state fields.
+      const controlled =
+        originalControl && (originalControl.blocked || originalOperationId === this.ctx.operationId)
+          ? originalControl
+          : await controlToolResult(
+              this.ctx.hookDispatcher,
+              {
+                ...buildToolCallHookContext(chatToolPayload, context, this.ctx),
+                mocked: toolCallMocked || !!execution.mocked,
+                result: originalControl?.result ?? resultWithExecutionTime,
+              },
+              context.state.host?.hooks,
+              context.abortSignal,
+            );
+      if (controlled.cancelled) {
+        return { ...execution, interrupted: true, result: controlled.result };
+      }
+      const executionResult = controlled.blocked
+        ? controlled.result
+        : await archiveRuntimeToolResult(
+            { ...controlled.result, executionTime: controlled.result.executionTime ?? 0 },
+            {
+              agentId: context.state.origin?.agentId,
+              canReadArchive: enabledToolIds.includes(AgentDocumentsIdentifier),
+              identifier: chatToolPayload.identifier,
+              limit: context.toolResultMaxLength,
+              serverDB,
+              toolCallId: chatToolPayload.id,
+              topicId: this.ctx.topicId ?? context.state.origin?.topicId,
+              userId,
+              workspaceId: context.state.origin?.workspaceId ?? this.ctx.workspaceId,
+            },
+          );
 
       await this.dispatchAfterToolCall(chatToolPayload, context, executionResult, toolCallMocked);
 
@@ -312,6 +429,7 @@ export class ServerToolTransport implements ToolTransport {
         ...execution,
         mocked: toolCallMocked || execution.mocked,
         result: executionResult,
+        resultBlocked: controlled.blocked,
       };
     } catch (error) {
       executeToolSpan.recordException(error as Error);
@@ -342,33 +460,11 @@ export class ServerToolTransport implements ToolTransport {
   }
 
   private async dispatchBeforeToolCall(chatToolPayload: ChatToolPayload, context: ToolRunContext) {
-    const { hookDispatcher, operationId, stepIndex, userId } = this.ctx;
+    const { hookDispatcher, operationId } = this.ctx;
     if (!hookDispatcher) return null;
 
-    hookDispatcher
-      .dispatch(
-        operationId,
-        'beforeToolCall',
-        {
-          apiName: chatToolPayload.apiName,
-          args: context.parsedArgs,
-          callIndex: context.callIndex,
-          identifier: chatToolPayload.identifier,
-          operationId,
-          stepIndex,
-          userId,
-        },
-        context.state.host?.hooks,
-      )
-      .catch(() => {});
-
-    return hookDispatcher.dispatchBeforeToolCall(operationId, {
-      apiName: chatToolPayload.apiName,
-      args: context.parsedArgs,
-      callIndex: context.callIndex,
-      identifier: chatToolPayload.identifier,
-      stepIndex,
-    });
+    const event = buildToolCallHookContext(chatToolPayload, context, this.ctx);
+    return hookDispatcher.dispatchBeforeToolCall(operationId, event, context.state.host?.hooks);
   }
 
   private async dispatchAfterToolCall(
@@ -377,7 +473,7 @@ export class ServerToolTransport implements ToolTransport {
     result: ToolRunExecution['result'],
     mocked: boolean,
   ) {
-    const { hookDispatcher, operationId, stepIndex, userId } = this.ctx;
+    const { hookDispatcher, operationId } = this.ctx;
     if (!hookDispatcher) return;
 
     // A tool that outlives an abort still finishes in the background — we cannot
@@ -393,18 +489,10 @@ export class ServerToolTransport implements ToolTransport {
         operationId,
         'afterToolCall',
         {
-          apiName: chatToolPayload.apiName,
-          args: context.parsedArgs,
-          callIndex: context.callIndex,
-          content: result.content,
-          executionTimeMs: result.executionTime ?? 0,
-          identifier: chatToolPayload.identifier,
+          ...buildToolCallHookContext(chatToolPayload, context, this.ctx),
           mocked,
-          operationId,
-          stepIndex,
-          success: result.success,
-          userId,
-        },
+          result,
+        } satisfies AfterToolCallHookEvent,
         context.state.host?.hooks,
       )
       .catch(() => {});

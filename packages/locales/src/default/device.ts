@@ -87,6 +87,7 @@ export default {
   'workingDirectory.renameBranchAction': 'Rename branch',
   'workingDirectory.renameBranchTitle': 'Rename branch',
   'workingDirectory.renameFailed': 'Rename failed',
+  'workingDirectory.rollBranchName': 'Roll another branch name',
   'workingDirectory.searchPlaceholder': 'Search directories',
   'workingDirectory.selectFolder': 'Select folder',
   'workingDirectory.setDefault': 'Set as default',
@@ -96,6 +97,7 @@ export default {
   'workingDirectory.staleWorktreeSnapshot':
     'The worktree “{{name}}” recorded for this conversation no longer exists — showing the Git snapshot saved on the topic.',
   'workingDirectory.title': 'Working Directory',
+  'workingDirectory.unselected': 'Not selected',
   'workingDirectory.undo': 'Undo',
   'workingDirectory.topicDescription': 'Override Agent default for this conversation only',
   'workingDirectory.topicLevel': 'Conversation override',

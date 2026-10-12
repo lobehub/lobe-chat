@@ -20,11 +20,12 @@ vi.hoisted(() => {
   });
 });
 
-const createWrapper = (showProvider: boolean) => {
+const createWrapper = (showProvider: boolean, enableBusinessFeatures = false) => {
   const Wrapper = ({ children }: { children: ReactNode }) => (
     <Provider
       createStore={() =>
         initServerConfigStore({
+          serverConfig: { aiProvider: {}, enableBusinessFeatures, telemetry: {} },
           featureFlags: {
             ...mapFeatureFlagsEnvToState({
               provider_settings: true,
@@ -72,7 +73,6 @@ describe('settings useCategory', () => {
       SettingsTabs.Profile,
       SettingsTabs.Appearance,
       SettingsTabs.Hotkey,
-      SettingsTabs.Messenger,
     ]);
     expect(generalGroup?.items.map((item) => item.key)).toEqual([
       SettingsTabs.Stats,
@@ -81,6 +81,18 @@ describe('settings useCategory', () => {
     expect(
       result.current.find((group) => group.key === SettingsGroupKey.Agent)?.items.map((i) => i.key),
     ).not.toContain(SettingsTabs.Messenger);
+  });
+
+  // Messenger bots are LobeHub-operated and only configurable from the cloud
+  // admin, so the tab is a dead end on self-hosted deployments.
+  it('shows Messenger in the Account group only with business features on', () => {
+    expect(getItemKeys()).not.toContain(SettingsTabs.Messenger);
+
+    const { result } = renderHook(() => useCategory(), {
+      wrapper: createWrapper(true, true),
+    });
+    const accountGroup = result.current.find((group) => group.key === SettingsGroupKey.Account);
+    expect(accountGroup?.items.map((item) => item.key)).toContain(SettingsTabs.Messenger);
   });
 
   it('keeps Provider visible when provider settings are enabled', () => {
@@ -99,6 +111,20 @@ describe('settings useCategory', () => {
 
   it('hides OAuth Apps by default', () => {
     expect(getItemKeys()).not.toContain(SettingsTabs.OAuthApps);
+  });
+
+  it('hides Integrations by default and shows it in the Account group once the Labs flag is on', () => {
+    expect(getItemKeys()).not.toContain(SettingsTabs.Integrations);
+
+    useUserStore.setState({
+      preference: {
+        ...initialUserStoreState.preference,
+        lab: { ...initialUserStoreState.preference.lab, enableIntegrations: true },
+      },
+    });
+    const { result } = renderHook(() => useCategory(), { wrapper: createWrapper(true) });
+    const accountGroup = result.current.find((group) => group.key === SettingsGroupKey.Account);
+    expect(accountGroup?.items.map((item) => item.key)).toContain(SettingsTabs.Integrations);
   });
 
   it('shows OAuth Apps when the Labs preference is enabled', () => {

@@ -1,9 +1,11 @@
-import { type ChatTopic } from '@/types/topic';
+import { createReplicaState, type ReplicaPagedData, type ReplicaState } from '@/libs/replica';
+import { type ChatTopic, type TopicQuerySortBy } from '@/types/topic';
 
 /**
- * Unified topic data structure for each agent
+ * Unified topic data structure for each agent: the generic local-first paged
+ * view plus topic query descriptors.
  */
-export interface TopicData {
+export interface TopicData extends ReplicaPagedData<ChatTopic, number> {
   currentPage: number;
   excludeStatuses?: string[];
   excludeTriggers?: string[];
@@ -24,6 +26,8 @@ export interface TopicData {
    * or cases where total items < pageSize.
    */
   pageSize: number;
+  /** Server-side ordering the bucket was fetched with (part of its query identity). */
+  sortBy?: TopicQuerySortBy;
   total: number;
   /**
    * Tracks whether the first fetch for this container asked the server for
@@ -44,6 +48,8 @@ export interface ChatTopicState {
    * lands last wins, tangling both views.
    */
   agentTopicsViewMap: Record<string, TopicData>;
+  /** Local-first bookkeeping for `agentTopicsViewMap`. */
+  agentTopicsViewReplica: ReplicaState<TopicData>;
   /**
    * whether all topics drawer is open
    */
@@ -63,6 +69,18 @@ export interface ChatTopicState {
   creatingTopicIds: string[];
   inSearchingMode?: boolean;
   isSearchingTopic: boolean;
+  /**
+   * Project working directory the *next* topic creation should bind to.
+   *
+   * Set when a project group's "+" opens a blank conversation and cleared by
+   * any later switch to a real topic (or by the creation itself), so it can
+   * only ever describe that one pending new topic. `internal_createTopic` folds
+   * it into the create call, which is what keeps the deferred row inside the
+   * project instead of dropping it into a path-only conversation. The agent id
+   * is part of the value: switching agents must not let one agent's pending
+   * directory land on another agent's topic.
+   */
+  pendingNewTopicDirectory?: { agentId: string; projectWorkingDirectoryId: string };
   searchTopics: ChatTopic[];
   /**
    * Unified topic data map for each agent
@@ -77,8 +95,12 @@ export interface ChatTopicState {
    * keeps the real title instead of degrading to the "new topic" placeholder.
    */
   topicDetailMap: Record<string, ChatTopic>;
+  /** Local-first bookkeeping for `topicDetailMap`. */
+  topicDetailReplica: ReplicaState<ChatTopic>;
   /** Topics with effort selections queued or being persisted. */
   topicEffortUpdatingIds: string[];
+  /** Local-first bookkeeping for `topicDataMap` (scope, optimistic overlays). */
+  topicListReplica: ReplicaState<TopicData>;
   /**
    * Internal ref-count for topic loading owners. A topic can be loading because
    * the agent is running and because title-summary is streaming at the same time.
@@ -92,6 +114,7 @@ export interface ChatTopicState {
 export const initialTopicState: ChatTopicState = {
   activeTopicId: null as any,
   agentTopicsViewMap: {},
+  agentTopicsViewReplica: createReplicaState<TopicData>(),
   creatingTopicIds: [],
   allTopicsDrawerOpen: false,
   creatingTopic: false,
@@ -99,6 +122,8 @@ export const initialTopicState: ChatTopicState = {
   searchTopics: [],
   topicDataMap: {},
   topicDetailMap: {},
+  topicDetailReplica: createReplicaState<ChatTopic>(),
+  topicListReplica: createReplicaState<TopicData>(),
   topicLoadingIdCounts: {},
   topicLoadingIds: [],
   topicEffortUpdatingIds: [],

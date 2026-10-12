@@ -220,6 +220,17 @@ export interface LobeChatPluginApi {
    * @default 'collapsed'
    */
   renderDisplayControl?: RenderDisplayControl;
+  /**
+   * Name of the argument that identifies the resource this API mutates (e.g.
+   * a file path). Within one tool batch, calls to the same tool whose argument
+   * holds the same value run one after another in emission order — across
+   * APIs of that tool, so a `writeFile` and an `editFile` on one path queue
+   * together. Calls on different values stay concurrent.
+   *
+   * Framework-only config like `ordered`: it never reaches the LLM-facing
+   * tool spec.
+   */
+  serializeBy?: string;
   url?: string;
   /**
    * Declarative Work-registration config. When present, the tool-execution
@@ -237,12 +248,29 @@ export const LobeChatPluginApiSchema = z.object({
   ordered: z.boolean().optional(),
   parameters: z.record(z.string(), z.any()),
   renderDisplayControl: RenderDisplayControlSchema.optional(),
+  serializeBy: z.string().optional(),
   url: z.string().optional(),
   work: PluginApiWorkConfigSchema.optional(),
 });
 
+/**
+ * A program that holds a device-gateway connection for a device: the LobeHub
+ * desktop app, or the `lh connect` CLI. One device can hold both at once.
+ */
+export type DeviceClient = 'cli' | 'desktop';
+
 export interface BuiltinToolManifest {
   api: LobeChatPluginApi[];
+
+  /**
+   * Device clients that can run this tool when it executes on a device. The
+   * gateway is told to skip connections of any other client — e.g. Computer
+   * Use and the browser panel live only in the desktop app, so a call must not
+   * land on `lh connect` running on the same machine.
+   *
+   * When omitted, any device client can run it.
+   */
+  deviceClients?: DeviceClient[];
 
   /**
    * Supported execution environments for this tool.
@@ -283,6 +311,7 @@ export interface BuiltinToolManifest {
 
 export const BuiltinToolManifestSchema = z.object({
   api: z.array(LobeChatPluginApiSchema),
+  deviceClients: z.array(z.enum(['cli', 'desktop'])).optional(),
   executors: z.array(z.enum(['client', 'server'])).optional(),
   humanIntervention: ExtendedHumanInterventionConfigSchema.optional(),
   identifier: z.string(),
@@ -358,6 +387,23 @@ export type BuiltinManifestResolver = (
   context: BuiltinToolResolveContext,
 ) => BuiltinToolManifest | null;
 
+export interface BuiltinRestrictedManifestResolveContext {
+  /** API names left after the runtime has applied its access policy. */
+  allowedApiNames: readonly string[];
+  /** Policy boundary responsible for the reduced API surface. */
+  restriction: 'agentShare' | 'toolSelection';
+}
+
+/** Resolve a builtin-owned manifest for a known restricted API surface. */
+export type BuiltinRestrictedToolManifest = Omit<BuiltinToolManifest, 'systemRole'> & {
+  /** Omit the role when it describes APIs outside the restricted surface. */
+  systemRole?: string;
+};
+
+export type BuiltinRestrictedManifestResolver = (
+  context: BuiltinRestrictedManifestResolveContext,
+) => BuiltinRestrictedToolManifest | undefined;
+
 export interface LobeBuiltinTool {
   /** Identity (hoisted from `manifest.meta`): icon shown in UI lists. */
   avatar?: string;
@@ -378,6 +424,16 @@ export interface LobeBuiltinTool {
    * a resolver never breaks those synchronous reads.
    */
   resolveManifest?: BuiltinManifestResolver;
+  /**
+   * Optional manifest for a policy-restricted API subset.
+   *
+   * This callback stays on the in-process builtin registry rather than the
+   * serializable manifest contract. It lets the owning package narrow both
+   * instructions and schemas when policy changes their actual semantics.
+   * Unknown subsets must return `undefined` so callers fail closed instead of
+   * attaching stale capability metadata.
+   */
+  resolveRestrictedManifest?: BuiltinRestrictedManifestResolver;
   /** Identity (hoisted from `manifest.meta`): tags shown in UI / discovery. */
   tags?: string[];
   /** Identity (hoisted from `manifest.meta`): display name. Falls back to `identifier`. */
@@ -523,6 +579,14 @@ export interface BuiltinInterventionProps<Arguments = any> {
   identifier?: string;
   interactionMode?: 'approval' | 'custom';
   messageId: string;
+  /**
+   * Hold the host's approve action while the intervention cannot show what is
+   * being approved — e.g. its review data is still loading or failed to load.
+   * Pass `true` to block approval and `false` to release it; reject / stop stay
+   * available. Hosts without approval controls ignore it. Only approval-mode
+   * interventions receive it.
+   */
+  onApprovalBlockedChange?: (blocked: boolean) => void;
   /**
    * Callback to update the arguments before approval
    * This is called when the user modifies the intervention content

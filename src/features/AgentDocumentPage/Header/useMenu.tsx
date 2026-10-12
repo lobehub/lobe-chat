@@ -20,6 +20,7 @@ interface UseMenuParams {
   agentDocumentId?: string;
   agentId: string;
   documentId: string;
+  fileBacked?: boolean;
   onDeleted: () => void;
   title?: string;
   updatedAt?: Date | string | null;
@@ -34,6 +35,7 @@ export const useMenu = ({
   agentDocumentId,
   agentId,
   documentId,
+  fileBacked,
   onDeleted,
   title,
   updatedAt,
@@ -95,7 +97,13 @@ export const useMenu = ({
         okText: t('delete', { ns: 'common' }),
         onOk: async () => {
           try {
-            await agentDocumentService.removeDocument({ agentId, documentId, id: agentDocumentId });
+            await agentDocumentService.removeDocument({
+              agentId,
+              documentId,
+              id: agentDocumentId,
+              // Documents nested under it go with it, as a folder's contents do.
+              withChildren: true,
+            });
             toast.success(t('workingPanel.resources.deleteSuccess', { ns: 'chat' }));
             onDeleted();
           } catch (error) {
@@ -169,7 +177,9 @@ export const useMenu = ({
       );
     }
 
-    return items;
+    return fileBacked
+      ? items.filter((item) => item?.key !== 'export' && item?.key !== 'full-width')
+      : items;
   }, [
     activeWorkspaceSlug,
     agentDocumentId,
@@ -177,6 +187,7 @@ export const useMenu = ({
     appOrigin,
     documentId,
     editor,
+    fileBacked,
     lg,
     dateLocale,
     onDeleted,

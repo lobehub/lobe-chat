@@ -5,7 +5,7 @@ import {
   EMPTY_ARRAY,
 } from '@lobechat/const';
 import { Center, Empty, Flexbox } from '@lobehub/ui';
-import { ActionIcon, confirmModal, Text, toast } from '@lobehub/ui/base-ui';
+import { ActionIcon, confirmModal, Spin, Text, toast } from '@lobehub/ui/base-ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import { createStaticStyles, cx } from 'antd-style';
 import dayjs from 'dayjs';
@@ -19,7 +19,6 @@ import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { withErrorBoundary } from '@/components/ErrorBoundary';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { buildAgentDocumentPath } from '@/features/AgentDocumentPage/navigation';
 import { DocumentExplorerTree } from '@/features/AgentDocumentsExplorer';
 import { startSkillDrag } from '@/features/ChatInput/InputEditor/ActionTag/skillDragData';
@@ -177,6 +176,7 @@ const DocumentItem = memo<DocumentItemProps>(
               agentId,
               documentId: document.documentId,
               id: document.id,
+              withChildren: true,
             });
             await mutate();
             if (isActive) onCurrentDeleted?.();
@@ -493,7 +493,12 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
                 okText: tCommon('delete'),
                 onOk: async () => {
                   try {
-                    await agentDocumentService.removeDocument({ agentId: agentId!, id: rowId });
+                    // A skill bundle always holds its SKILL.md and resources.
+                    await agentDocumentService.removeDocument({
+                      agentId: agentId!,
+                      id: rowId,
+                      withChildren: true,
+                    });
                     await mutate();
                     toast.success(t('workingPanel.skills.delete.success'));
                   } catch (error) {
@@ -519,7 +524,7 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
     if (isLoading) {
       return (
         <Center flex={1} paddingBlock={24}>
-          <NeuralNetworkLoading size={32} />
+          <Spin size="large" />
         </Center>
       );
     }
@@ -581,7 +586,7 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
         if (showProjectSkills && isProjectSkillsLoading) {
           return (
             <Center flex={1} paddingBlock={24}>
-              <NeuralNetworkLoading size={32} />
+              <Spin size="large" />
             </Center>
           );
         }

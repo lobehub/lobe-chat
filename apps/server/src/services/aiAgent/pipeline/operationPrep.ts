@@ -7,7 +7,7 @@ import { buildExpertiseContextSnapshot } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { assembleSkillPool } from '@lobechat/mecha';
 import { buildTaskManagerDefaultsPrompt, resourcesTreePrompt } from '@lobechat/prompts';
-import type { LobeAgentAgencyConfig, WorkingDirConfig, WorkspaceInitResult } from '@lobechat/types';
+import type { LobeAgentAgencyConfig, WorkspaceInitResult } from '@lobechat/types';
 import {
   buildGoalOverviewContext,
   getActivePluginIds,
@@ -28,11 +28,18 @@ import type { ServerUserMemoryConfig } from '@/server/modules/Mecha/ContextEngin
 import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { FileService } from '@/server/services/file';
+import { redisService } from '@/server/services/redis';
+import { afterUnscoped } from '@/server/utils/scheduleAfterResponse';
 
 import { pruneRegeneratedBranch } from '../pruneRegeneratedBranch';
 import { resolveDeviceWorkingDirectoryConfig } from '../resolveDeviceWorkingDirectory';
-import { applyShareGateToToolSet, filterPluginsByShareGate } from '../shareGate';
-import type { ExecRunContext, InternalExecAgentParams, ResolvedWorkspaceInit } from '../types';
+import { applyShareGateToToolSet, filterSkillsByShareGate } from '../shareGate';
+import type {
+  BindTopicWorkingDirectoryParams,
+  ExecRunContext,
+  InternalExecAgentParams,
+  ResolvedWorkspaceInit,
+} from '../types';
 import { isWorkspaceCacheFresh, upsertWorkspaceScan } from '../workspaceInitCache';
 import type { ToolDiscoveryResult } from './toolDiscovery';
 import type { RunAttachments } from './turnSetup';
@@ -88,6 +95,10 @@ export const createHistoryMessagesLoader = (
   // it, a non-share run pointed at a leaked visitor topicId would still load
   // the visitor's transcript into the owner's model context.
   const historyQueryOptions = { allowShareVisitor: deps.isShareVisitorRun, postProcessUrl };
+  // Group runs must scope the query by `groupId`: without it `query()` falls
+  // into its standard branch (`groupId IS NULL`) and returns none of the group
+  // conversation, so a group supervisor's run starts with no history and loses
+  // everything derived from it (e.g. cross-operation tool-activation restore).
 
   return async () => {
     if (historyMessagesCache) return historyMessagesCache;
@@ -95,6 +106,7 @@ export const createHistoryMessagesLoader = (
     if (existingMessageIds.length > 0) {
       const messages = await deps.messageModel.query(
         {
+          groupId: appContext?.groupId ?? undefined,
           sessionId: appContext?.sessionId,
           threadId: appContext?.threadId,
           topicId: appContext?.topicId ?? undefined,
@@ -110,6 +122,7 @@ export const createHistoryMessagesLoader = (
       // as the in-memory `userMessage`, so leaving it in would double-count it.
       const messages = await deps.messageModel.query(
         {
+          groupId: appContext?.groupId ?? undefined,
           sessionId: appContext?.sessionId,
           threadId: appContext?.threadId,
           topicId: appContext?.topicId,
@@ -162,11 +175,7 @@ export const createHistoryMessagesLoader = (
 export interface OperationPrepDeps {
   agentDocumentsService: AgentDocumentsService;
   agentModel: AgentModel;
-  bindTopicWorkingDirectory: (params: {
-    config?: WorkingDirConfig;
-    currentWorkingDirectory?: string;
-    topicId: string;
-  }) => Promise<void>;
+  bindTopicWorkingDirectory: (params: BindTopicWorkingDirectoryParams) => Promise<void>;
   db: LobeChatDatabase;
   topicModel: TopicModel;
   userId: string;
@@ -259,13 +268,23 @@ const resolveWorkspaceInit = async (
     const boundCwdConfig = resolveDeviceWorkingDirectoryConfig({
       deviceDefaultCwd: device.defaultCwd,
       deviceId: activeDeviceId,
+      devicePlatform: device.platform,
+      // A directory that is one of the topic's repos is not a path on this
+      // machine — skip it (see the resolver) and scan what the device has.
+      repos: topic?.metadata?.repos,
+      topicDeviceId: topic?.metadata?.boundDeviceId,
       topicWorkingDirectory,
       topicWorkingDirectoryConfig: topic?.metadata?.workingDirectoryConfig,
       workingDirByDevice: agencyConfig?.workingDirByDevice,
     });
     const boundCwd = getWorkingDirEffectivePath(boundCwdConfig);
     if (!boundCwd) return { workspace: empty };
-    const resolved = { boundCwd, boundCwdConfig, topicWorkingDirectory };
+    const resolved = {
+      boundCwd,
+      boundCwdConfig,
+      topicDeviceId: topic?.metadata?.boundDeviceId,
+      topicWorkingDirectory,
+    };
 
     const workingDirs = device.workingDirs ?? [];
     const cached = workingDirs.find(
@@ -277,26 +296,10 @@ const resolveWorkspaceInit = async (
       return { ...resolved, workspace: cached.workspace };
     }
 
-    const scanned = await deviceGateway.initWorkspace({
-      deviceId: activeDeviceId,
-      scope: boundCwd,
-      userId: deps.userId,
-      workspaceId: deviceWorkspaceId,
-    });
-    if (!scanned) {
-      // Scan failed (offline mid-run / parse error). Fall back to a stale
-      // cache rather than dropping the project's skills + instructions.
-      if (cached?.workspace) {
-        log('execAgent: workspace init scan failed, using stale cache for %s', boundCwd);
-        return { ...resolved, workspace: cached.workspace };
-      }
-      return { ...resolved, workspace: empty };
-    }
-
-    // Persist the fresh scan back onto `workingDirs` (update in place or prepend
-    // a new MRU entry), keeping the JSONB payload bounded. Workspace devices
-    // are owned by the workspace, not a userId — use the workspace-scoped
-    // update path so the writeback actually lands.
+    // Scan the directory on the device and persist the result back onto
+    // `workingDirs` (update in place or prepend a new MRU entry), keeping the
+    // JSONB payload bounded. Workspace devices are owned by the workspace, not
+    // a userId — use the workspace-scoped update path so the writeback lands.
     //
     // Update the MATCHED entry's path, not `boundCwd`: the lookup above can
     // match a source entry by its effective (worktree) path, so a selected
@@ -304,15 +307,85 @@ const resolveWorkspaceInit = async (
     // recorded entry is keyed by the source path. Upserting on `boundCwd`
     // would prepend a bare worktree recent and lose the source/worktree
     // metadata the picker relies on; upsert on the matched source path instead.
-    const updated = upsertWorkspaceScan(workingDirs, cached?.path ?? boundCwd, scanned, Date.now());
-    if (deviceWorkspaceId) {
-      await deviceModel.updateWorkspaceDevice(activeDeviceId, { workingDirs: updated });
-    } else {
-      await deviceModel.update(activeDeviceId, { workingDirs: updated });
-    }
-    log('execAgent: scanned and cached workspace init for %s', boundCwd);
+    const scanAndPersist = async (): Promise<WorkspaceInitResult | undefined> => {
+      const scanned = await deviceGateway.initWorkspace({
+        deviceId: activeDeviceId,
+        scope: boundCwd,
+        userId: deps.userId,
+        workspaceId: deviceWorkspaceId,
+      });
+      if (!scanned) return undefined;
 
-    return { ...resolved, workspace: scanned };
+      // Re-read the row before writing: the scan runs for up to 30s, and the
+      // user (or another refresh) may have edited `workingDirs` in the
+      // meantime. Merging the fresh scan into the CURRENT list keeps those
+      // edits instead of overwriting them with the pre-scan snapshot.
+      const latest = deviceWorkspaceId
+        ? await deviceModel.findWorkspaceDeviceById(activeDeviceId)
+        : await deviceModel.findByDeviceId(activeDeviceId);
+      const current = latest?.workingDirs ?? workingDirs;
+
+      // The entry this scan refreshes was removed mid-scan. Writing it back
+      // would resurrect it — and `workingDirs` is the allowlist for device
+      // file-operation roots — so keep the answer for this turn only.
+      if (cached && !current.some((dir) => dir.path === cached.path)) {
+        log('execAgent: %s was removed during the scan; skip the writeback', cached.path);
+        return scanned;
+      }
+
+      const updated = upsertWorkspaceScan(current, cached?.path ?? boundCwd, scanned, Date.now());
+      if (deviceWorkspaceId) {
+        await deviceModel.updateWorkspaceDevice(activeDeviceId, { workingDirs: updated });
+      } else {
+        await deviceModel.update(activeDeviceId, { workingDirs: updated });
+      }
+      log('execAgent: scanned and cached workspace init for %s', boundCwd);
+      return scanned;
+    };
+
+    // A stale scan still describes the project well enough for this turn:
+    // project skills and AGENTS.md change on the order of commits, not sends.
+    // Serve it now and refresh after the response, so the user does not wait
+    // on a directory walk over the device's WebSocket (up to 30s) just
+    // because an hour passed. A directory never scanned still scans inline —
+    // there is nothing to serve instead.
+    //
+    // Unscoped on purpose: a sub-agent or group-member run reaches here from
+    // inside a step's scheduled-work scope, whose step-boundary flush has a
+    // short budget — a rescan of this length would stall it. The refresh is
+    // not part of the step's settlement, so it goes straight to the host.
+    //
+    // Claimed before scanning: concurrent sends, sub-agents and group members
+    // that read the same stale entry would each schedule their own 30s walk
+    // and the same writeback. One of them wins the claim for the length of a
+    // scan; the others leave the refresh to it.
+    if (cached?.workspace) {
+      log('execAgent: serving stale workspace init for %s, refreshing in background', boundCwd);
+      afterUnscoped(async () => {
+        try {
+          if (
+            !(await redisService.workspaceRescan.claim({
+              userId: deps.userId,
+              workspaceId: deviceWorkspaceId,
+              deviceId: activeDeviceId,
+              cwd: boundCwd,
+            }))
+          ) {
+            log('execAgent: workspace rescan for %s already in flight, skipping', boundCwd);
+            return;
+          }
+          await scanAndPersist();
+        } catch (error) {
+          log('execAgent: background workspace rescan failed for %s: %O', boundCwd, error);
+        }
+      });
+      return { ...resolved, workspace: cached.workspace };
+    }
+
+    const scanned = await scanAndPersist();
+    // Scan failed (offline mid-run / parse error) and there is no cache to
+    // fall back to: the run proceeds without project skills + instructions.
+    return { ...resolved, workspace: scanned ?? empty };
   } catch (error) {
     log('execAgent: resolveWorkspaceInit failed: %O', error);
     return { workspace: empty };
@@ -695,7 +768,9 @@ export const prepareOperation = async (
   // the tool layer reads the topic's cwd on the same run.
   await deps.bindTopicWorkingDirectory({
     config: workspaceInit.boundCwdConfig,
+    currentDeviceId: workspaceInit.topicDeviceId,
     currentWorkingDirectory: workspaceInit.topicWorkingDirectory,
+    deviceId: activeDeviceId,
     topicId,
   });
 
@@ -801,18 +876,30 @@ export const prepareOperation = async (
     // device-only builtin gate are the shared rules in `@lobechat/mecha`; this
     // pipeline supplies the four sources and the run's facts.
     //
-    // A shared run only sees skills its share configuration allows. The
-    // allowlist is an id-list intersection (`filterPluginsByShareGate`), not
-    // tool-specific, so the pool stays the single enforcement point — an
-    // empty or missing allowlist collapses it to nothing.
+    // A shared run only sees skills its share configuration allows —
+    // `shareConfig.skillGrants`, the creator's explicit per-skill list, NOT the
+    // tool picker (`filterSkillsByShareGate`). The pool is the FIRST
+    // enforcement point, not the only one: `activateSkill` takes a
+    // model-supplied name, so the skill runtime re-checks the same grant at
+    // load time.
     const shareAllowedSkillIds = shareGate
-      ? filterPluginsByShareGate(
+      ? filterSkillsByShareGate(
           [...projectMetas, ...dbMetas, ...agentSkillMetas, ...builtinMetas].map(
             (skill) => skill.identifier,
           ),
           shareGate,
         )
       : undefined;
+
+    // Whether a skill is PINNED is the agent's own configuration; the share
+    // only decides whether the visitor may reach it. `agentPlugins` has already
+    // been narrowed by the TOOL grants (`filterPluginsByShareGate` in
+    // `toolDiscovery`), which drops a skill the creator granted as a skill
+    // rather than as a tool — leaving it un-pinned for the visitor (no content
+    // injection) and, under `manual` mode, dropped from the pool entirely. Add
+    // back exactly the ids that are both genuinely pinned on the agent AND
+    // allowed by this share's skill grants; nothing else widens.
+    const shareEnabledSkillIds = shareAllowedSkillIds?.filter((id) => pinnedSkillIds.has(id)) ?? [];
 
     // Device-only builtin skills are gated on the run's execution plan, not
     // the compile-time `isDesktop` constant (always false on the server). Use
@@ -832,7 +919,7 @@ export const prepareOperation = async (
       {
         canExecuteOnDevice: executionPlan ? isDeviceCapablePlan(executionPlan) : false,
         disabledIds: disabledPluginIds,
-        enabledPluginIds: agentPlugins ?? [],
+        enabledPluginIds: [...new Set([...(agentPlugins ?? []), ...shareEnabledSkillIds])],
         shareAllowedIds: shareAllowedSkillIds,
         skillActivateMode: agentConfig.chatConfig?.skillActivateMode,
       },

@@ -715,6 +715,41 @@ describe('computeChatPricing', () => {
       expect(totalCredits).toBe(232);
     });
 
+    it('bills Gemini Omni video output separately from input and text output', () => {
+      const pricing: Pricing = {
+        units: [
+          { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'imageInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'videoInput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
+          { name: 'videoGeneration', rate: 17.5, strategy: 'fixed', unit: 'millionTokens' },
+        ],
+      };
+
+      // A real conversational edit: the source video is billed as input.
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 43,
+        inputVideoTokens: 58_511,
+        outputReasoningTokens: 383,
+        outputTextTokens: 1025,
+        outputVideoTokens: 57_920,
+        totalInputTokens: 58_554,
+        totalOutputTokens: 59_328,
+        totalTokens: 117_882,
+      };
+
+      const result = computeChatCost(pricing, usage);
+
+      expect(result?.issues).toHaveLength(0);
+      const breakdown = result!.breakdown;
+      expect(breakdown.find((item) => item.unit.name === 'textInput')?.quantity).toBe(43);
+      expect(breakdown.find((item) => item.unit.name === 'videoInput')?.quantity).toBe(58_511);
+      expect(breakdown.find((item) => item.unit.name === 'textOutput')?.quantity).toBe(1408);
+      expect(breakdown.find((item) => item.unit.name === 'videoGeneration')?.quantity).toBe(57_920);
+      expect(breakdown.find((item) => item.unit.name === 'imageInput')).toBeUndefined();
+      expect(result?.totalCost).toBe(1.114104);
+    });
+
     it('splits cache reads by modality when dedicated modality cache units exist', () => {
       const pricing: Pricing = {
         units: [
@@ -1325,6 +1360,42 @@ describe('computeChatPricing', () => {
         (item) => item.unit.name === 'textInput_cacheWrite',
       );
       expect(cacheWrite?.credits).toBe(0); // No credits when lookup params undefined
+    });
+
+    describe('Claude Haiku 5.5 prompt-length pricing', () => {
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-haiku-5-5',
+      )?.pricing;
+
+      it('bills a prompt of exactly 100K tokens at the base tier', () => {
+        const usage: ModelTokensUsage = {
+          inputCacheMissTokens: 60_000,
+          inputCachedTokens: 30_000,
+          inputWriteCacheTokens: 10_000,
+          outputTextTokens: 2_000,
+          totalInputTokens: 100_000,
+        };
+
+        const result = computeChatCost(pricing, usage);
+        expect(result?.issues).toHaveLength(0);
+        // 60K × $0.10 + 30K × $0.01 + 10K × $0.125 + 2K × $0.50 (per million tokens)
+        expect(result?.totalCredits).toBe(8_550);
+      });
+
+      it('bills every unit at the higher tier once the prompt, cache included, exceeds 100K', () => {
+        const usage: ModelTokensUsage = {
+          inputCacheMissTokens: 60_000,
+          inputCachedTokens: 30_000,
+          inputWriteCacheTokens: 20_000,
+          outputTextTokens: 2_000,
+          totalInputTokens: 110_000,
+        };
+
+        const result = computeChatCost(pricing, usage);
+        expect(result?.issues).toHaveLength(0);
+        // 60K × $0.50 + 30K × $0.05 + 20K × $0.625 + 2K × $2.50 (per million tokens)
+        expect(result?.totalCredits).toBe(49_000);
+      });
     });
   });
 

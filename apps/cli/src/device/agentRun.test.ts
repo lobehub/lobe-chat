@@ -2,7 +2,10 @@ import { EventEmitter } from 'node:events';
 import { statSync } from 'node:fs';
 import os from 'node:os';
 
-import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
+import {
+  HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
+  lobeHubCliGuide,
+} from '@lobechat/heterogeneous-agents/protocol';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { spawnHeteroAgentRun } from './agentRun';
@@ -116,27 +119,36 @@ describe('spawnHeteroAgentRun', () => {
     child.emit('spawn');
 
     await expect(ackPromise).resolves.toEqual({ status: 'accepted' });
-    expect(child.stdin.write).toHaveBeenCalledWith(JSON.stringify('hi'));
+    expect(child.stdin.write).toHaveBeenCalledWith(
+      JSON.stringify([
+        { text: lobeHubCliGuide, type: 'text' },
+        { text: 'hi', type: 'text' },
+      ]),
+    );
     expect(child.stdin.end).toHaveBeenCalledTimes(1);
   });
 
-  it('replaces the launcher conversation context with the dispatched run', async () => {
-    for (const key of ['AGENT', 'TASK', 'OPERATION', 'TOPIC', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
-      vi.stubEnv(`LOBEHUB_${key}_ID`, `launcher-${key}`);
-    }
-    const child = makeFakeChild();
-    spawnMock.mockReturnValue(child);
+  it.each([undefined, 'agt_dispatched'])(
+    'replaces the launcher conversation context with dispatched agent %s',
+    async (agentId) => {
+      for (const key of ['AGENT', 'TASK', 'OPERATION', 'TOPIC', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+        vi.stubEnv(`LOBEHUB_${key}_ID`, `launcher-${key}`);
+      }
+      const child = makeFakeChild();
+      spawnMock.mockReturnValue(child);
 
-    const ack = spawnHeteroAgentRun({ ...baseParams, assistantMessageId: undefined });
-    const env = spawnMock.mock.calls[0][2].env;
-    expect(env.LOBEHUB_OPERATION_ID).toBe('op');
-    expect(env.LOBEHUB_TOPIC_ID).toBe('tpc');
-    for (const key of ['AGENT', 'TASK', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
-      expect(env).not.toHaveProperty(`LOBEHUB_${key}_ID`);
-    }
-    child.emit('spawn');
-    await expect(ack).resolves.toEqual({ status: 'accepted' });
-  });
+      const ack = spawnHeteroAgentRun({ ...baseParams, agentId, assistantMessageId: undefined });
+      const env = spawnMock.mock.calls[0][2].env;
+      expect(env.LOBEHUB_OPERATION_ID).toBe('op');
+      expect(env.LOBEHUB_TOPIC_ID).toBe('tpc');
+      expect(env.LOBEHUB_AGENT_ID).toBe(agentId);
+      for (const key of ['TASK', 'WORKSPACE', 'ASSISTANT_MESSAGE']) {
+        expect(env).not.toHaveProperty(`LOBEHUB_${key}_ID`);
+      }
+      child.emit('spawn');
+      await expect(ack).resolves.toEqual({ status: 'accepted' });
+    },
+  );
 
   it('starts the wrapper from home so its inner preflight can report a missing cwd', async () => {
     const missingCwd = '/missing';
@@ -153,7 +165,12 @@ describe('spawnHeteroAgentRun', () => {
     child.emit('spawn');
 
     await expect(ackPromise).resolves.toEqual({ status: 'accepted' });
-    expect(child.stdin.write).toHaveBeenCalledWith(JSON.stringify('hi'));
+    expect(child.stdin.write).toHaveBeenCalledWith(
+      JSON.stringify([
+        { text: lobeHubCliGuide, type: 'text' },
+        { text: 'hi', type: 'text' },
+      ]),
+    );
   });
 
   it('rejects when the wrapper process still fails to spawn from the fallback cwd', async () => {
@@ -227,6 +244,7 @@ describe('spawnHeteroAgentRun', () => {
     expect(child.stdin.write).toHaveBeenCalledWith(
       JSON.stringify([
         { text: 'workspace rules', type: 'text' },
+        { text: lobeHubCliGuide, type: 'text' },
         { text: 'do it', type: 'text' },
       ]),
     );
@@ -254,10 +272,25 @@ describe('spawnHeteroAgentRun', () => {
         ],
         resumeFallback: [
           { text: 'workspace rules\n\nprevious conversation', type: 'text' },
+          // Resuming, so the primary prompt above skips the CLI introduction the
+          // first turn already delivered — but the fallback starts a fresh
+          // session, which has to be told again.
+          { text: lobeHubCliGuide, type: 'text' },
           { text: 'continue', type: 'text' },
         ],
       }),
     );
+  });
+
+  it('skips the CLI introduction when it resumes an existing session', async () => {
+    const child = makeFakeChild();
+    spawnMock.mockReturnValue(child);
+
+    const ackPromise = spawnHeteroAgentRun({ ...baseParams, resumeSessionId: 'session-1' });
+    child.emit('spawn');
+    await ackPromise;
+
+    expect(child.stdin.write).toHaveBeenCalledWith(JSON.stringify('hi'));
   });
 
   it('appends image blocks to stdin when imageList is provided', async () => {
@@ -274,6 +307,7 @@ describe('spawnHeteroAgentRun', () => {
 
     expect(child.stdin.write).toHaveBeenCalledWith(
       JSON.stringify([
+        { text: lobeHubCliGuide, type: 'text' },
         { text: 'look at this', type: 'text' },
         { source: { id: 'file-1', type: 'url', url: 'https://signed/a.png' }, type: 'image' },
       ]),

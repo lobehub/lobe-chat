@@ -4,6 +4,7 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AcceptanceModel } from '@/database/models/acceptance';
+import { ProjectModel } from '@/database/models/project';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TaskService } from '@/server/services/task';
@@ -118,6 +119,46 @@ describe('Task Router Integration', () => {
   });
 
   describe('create + find + detail', () => {
+    it.each(['personal', 'workspace'])(
+      'ignores legacy prefixes and inherits project numbering in %s',
+      async (scope) => {
+        let workspaceId: string | undefined;
+        if (scope === 'workspace') {
+          workspaceId = 'task-prefix-integration-workspace';
+          const { workspaces, workspaceMembers } = await import('@/database/schemas');
+          await serverDB.insert(workspaces).values({
+            id: workspaceId,
+            name: 'Task prefixes',
+            primaryOwnerId: userId,
+            slug: workspaceId,
+          });
+          await serverDB.insert(workspaceMembers).values({ role: 'owner', userId, workspaceId });
+        }
+        const scopedCaller = taskRouter.createCaller({ ...createTestContext(userId), workspaceId });
+        const model = new TaskModel(serverDB, userId, workspaceId);
+        const project = await new ProjectModel(serverDB, userId, workspaceId).create({
+          identifier: 'PROJ',
+          name: 'Prefix project',
+        });
+        for (const identifierPrefix of ['T', 'CUSTOM', '', null, 42]) {
+          const legacyInput = { identifierPrefix, instruction: 'Standalone' };
+          const standalone = await scopedCaller.create(legacyInput);
+          expect(standalone.success).toBe(true);
+          expect(standalone.data.identifier).toBe(`T-${standalone.data.seq}`);
+          const projectInput = { ...legacyInput, projectId: project.id };
+          const parent = await scopedCaller.create(projectInput);
+          expect(parent.data.identifier).toBe(`PROJ-${parent.data.seq}`);
+          for (const parentTaskId of [parent.data.id, parent.data.identifier]) {
+            const childInput = { ...legacyInput, parentTaskId };
+            const child = await scopedCaller.create(childInput);
+            expect(child.data.projectId).toBe(project.id);
+            expect(child.data.identifier).toBe(`PROJ-${child.data.seq}`);
+            expect((await model.findById(child.data.id))?.identifier).toBe(child.data.identifier);
+          }
+        }
+      },
+    );
+
     it('should create a task and retrieve it', async () => {
       const result = await caller.create({
         instruction: 'Write a book',
@@ -411,6 +452,63 @@ describe('Task Router Integration', () => {
           parentTaskId: child.data.identifier,
         }),
       ).rejects.toThrow('Task cannot be parented to its own descendant');
+    });
+  });
+
+  describe('schedule pattern validation', () => {
+    it('accepts standard cron with day-of-month, month and weekday ranges', async () => {
+      const created = await caller.create({
+        automationMode: 'schedule',
+        instruction: 'One-shot reminder',
+        schedulePattern: '0 10 27 9 *',
+        scheduleTimezone: 'Asia/Shanghai',
+      });
+      const updated = await caller.update({
+        id: created.data.id,
+        schedulePattern: '45 11 * * 1-5',
+      });
+      expect(updated.data.schedulePattern).toBe('45 11 * * 1-5');
+    });
+
+    it('rejects cron the dispatcher cannot evaluate on create and update', async () => {
+      await expect(
+        caller.create({
+          automationMode: 'schedule',
+          instruction: 'Bad cron',
+          schedulePattern: '0 0 9 * * *',
+        }),
+      ).rejects.toThrow(/Invalid schedulePattern .*0 0 9 \* \* \*.*expected 5 fields/);
+
+      const created = await caller.create({ instruction: 'Later scheduled' });
+      await expect(
+        caller.update({ id: created.data.id, schedulePattern: '0 0 30 2 *' }),
+      ).rejects.toThrow(/Invalid schedulePattern .*0 0 30 2 \*.*day of month/);
+      await expect(
+        caller.update({ id: created.data.id, scheduleTimezone: 'Mars/Base' }),
+      ).rejects.toThrow(/IANA timezone/);
+    });
+
+    it('checks the resulting pattern/timezone pair against the stored schedule', async () => {
+      const created = await caller.create({ instruction: 'Legacy schedule' });
+      // A row written before write-time validation existed.
+      await new TaskModel(testDB, userId).update(created.data.id, {
+        schedulePattern: '0 0 9 * * *',
+        scheduleTimezone: 'Mars/Base',
+      });
+
+      await expect(
+        caller.update({ id: created.data.id, schedulePattern: '0 9 * * *' }),
+      ).rejects.toThrow(/Invalid schedule: unknown timezone "Mars\/Base"/);
+      await expect(
+        caller.update({ automationMode: 'schedule', id: created.data.id }),
+      ).rejects.toThrow(/Invalid schedule: expected 5 fields/);
+
+      const updated = await caller.update({
+        id: created.data.id,
+        schedulePattern: '0 9 * * *',
+        scheduleTimezone: 'Asia/Shanghai',
+      });
+      expect(updated.data.scheduleTimezone).toBe('Asia/Shanghai');
     });
   });
 
@@ -941,6 +1039,39 @@ describe('Task Router Integration', () => {
       await expect(caller.run({ continueTopicId: 'tpc_test', id: task.data.id })).rejects.toThrow(
         /already running/,
       );
+    });
+  });
+
+  describe('usage', () => {
+    it('aggregates the task topic usage', async () => {
+      const task = await caller.create({ instruction: 'Measure this task' });
+      await new TaskTopicModel(serverDB, userId).add(task.data.id, testTopicId, {
+        operationId: 'op_usage',
+        seq: 1,
+      });
+      const { topics } = await import('@/database/schemas');
+      const { eq } = await import('drizzle-orm');
+      await serverDB
+        .update(topics)
+        .set({
+          totalCost: '0.125',
+          totalInputTokens: 1200,
+          totalOutputTokens: 300,
+          totalTokens: 1500,
+        })
+        .where(eq(topics.id, testTopicId));
+
+      const result = await caller.usage({ id: task.data.identifier });
+
+      expect(result.data).toMatchObject({
+        runs: 1,
+        taskId: task.data.id,
+        taskIdentifier: task.data.identifier,
+        totalCost: 0.125,
+        totalInputTokens: 1200,
+        totalOutputTokens: 300,
+        totalTokens: 1500,
+      });
     });
   });
 

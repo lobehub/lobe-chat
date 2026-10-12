@@ -9,11 +9,18 @@ import { useTranslation } from 'react-i18next';
 
 import { useConversationResourceAccess } from '../../../../../hooks/useConversationResourceAccess';
 import { useConversationStore } from '../../../../../store';
+import { type ApprovalChoice, isChoiceSubmitBlocked } from './approvalGate';
 import { type ApprovalMode } from './index';
+import { isSubmitShortcutBlockedByTarget } from './submitShortcutGuard';
 
 interface ApprovalActionsProps {
   apiName: string;
   approvalMode: ApprovalMode;
+  /**
+   * Hold the approve choices: the intervention cannot show what is being
+   * approved yet (see `onApprovalBlockedChange`). Reject and stop stay enabled.
+   */
+  approveDisabled?: boolean;
   assistantGroupId?: string;
   identifier: string;
   messageId: string;
@@ -26,7 +33,7 @@ interface ApprovalActionsProps {
   toolCallId: string;
 }
 
-type Choice = 'approve' | 'approve-remember' | 'reject';
+type Choice = ApprovalChoice;
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -129,7 +136,15 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const ApprovalActions = memo<ApprovalActionsProps>(
-  ({ approvalMode, apiName, assistantGroupId, identifier, messageId, onBeforeApprove }) => {
+  ({
+    approvalMode,
+    approveDisabled,
+    apiName,
+    assistantGroupId,
+    identifier,
+    messageId,
+    onBeforeApprove,
+  }) => {
     const { t } = useTranslation('chat');
     const [choice, setChoice] = useState<Choice>('approve');
     const [reason, setReason] = useState('');
@@ -182,8 +197,9 @@ const ApprovalActions = memo<ApprovalActionsProps>(
       stopPendingApprovalForCard,
       messageId,
     ]);
+    const submitBlocked = isChoiceSubmitBlocked(choice, approveDisabled);
     const handleSubmit = useCallback(async () => {
-      if (loading || isMessageCreating || !canUseResource) return;
+      if (loading || isMessageCreating || !canUseResource || submitBlocked) return;
       setLoading(true);
       try {
         if (choice === 'reject') {
@@ -214,6 +230,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
       onBeforeApprove,
       reason,
       rejectAndContinueToolCall,
+      submitBlocked,
     ]);
 
     // When choice flips to reject (via click on row, '2', or arrow), pull focus
@@ -225,7 +242,9 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     }, [choice]);
 
     // Page-level keyboard: 1/2/↑/↓ to switch, Enter to submit. Skip while
-    // typing anywhere on the page so we never hijack the main chat composer.
+    // typing anywhere on the page so we never hijack the main chat composer,
+    // and skip when another interactive control has focus — Enter must
+    // activate that control, never silently submit an approval.
     // The reject input has its own onKeyDown for Enter / ↑.
     //
     // Kept fresh in a ref so the shared-arbiter registration below stays
@@ -235,11 +254,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     useEffect(() => {
       onKeyDownRef.current = (e: KeyboardEvent) => {
         if (e.defaultPrevented) return;
-        const target = e.target as HTMLElement | null;
-        if (target) {
-          const tag = target.tagName;
-          if (tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable) return;
-        }
+        if (isSubmitShortcutBlockedByTarget(e.target as HTMLElement | null)) return;
         if (e.metaKey || e.ctrlKey || e.altKey) return;
         // Digit keys select the matching numbered row directly.
         if (/^[1-9]$/.test(e.key)) {
@@ -355,6 +370,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
             return (
               <div
                 aria-checked={choice === c}
+                aria-disabled={approveDisabled || undefined}
                 className={cx(styles.option, choice === c && styles.optionSelected)}
                 key={c}
                 role="radio"
@@ -380,7 +396,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
           </Button>
           <Button
             className={styles.submitButton}
-            disabled={isMessageCreating}
+            disabled={isMessageCreating || submitBlocked}
             loading={loading}
             size={'middle'}
             type={'primary'}

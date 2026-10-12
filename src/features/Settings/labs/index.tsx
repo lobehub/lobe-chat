@@ -1,15 +1,15 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import { type FormGroupItemType, type FormItemProps } from '@lobehub/ui';
-import { Flexbox, Form, Tooltip } from '@lobehub/ui';
-import { Alert, Skeleton, Switch, Tag } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { Flexbox, Tooltip } from '@lobehub/ui';
+import { Alert, Switch, Tag } from '@lobehub/ui/base-ui';
+import { Form, type FormFieldProps, type FormGroupItem, useForm } from '@lobehub/ui/base-ui/form';
 import { FlaskConicalIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
+import { SettingsSectionSkeleton } from '@/components/Skeleton';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import SettingHeader from '@/features/Settings/features/SettingHeader';
 import { SettingsSearchAnchor } from '@/features/SettingsSearch/anchor';
@@ -17,14 +17,6 @@ import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
 import { LAB_FEATURES, type LabFeatureItem, type LabStage } from './features';
-
-const styles = createStaticStyles(({ css }) => ({
-  labItem: css`
-    .ant-form-item-row {
-      align-items: center !important;
-    }
-  `,
-}));
 
 const StageTag = memo<{ stage: LabStage }>(({ stage }) => {
   const { t } = useTranslation('labs');
@@ -52,6 +44,7 @@ const LabsForm = memo(() => {
   const labChecked = useUserStore((s) =>
     LAB_FEATURES.map(({ flag }) => labPreferSelectors[flag](s)),
   );
+  const form = useForm();
 
   if (!isUserStateInit) {
     // A failed user-state init must show error + Retry, not a permanent skeleton
@@ -63,14 +56,29 @@ const LabsForm = memo(() => {
           onRetry={() => refreshUserState()}
         />
       );
-    return <Skeleton.Text rows={5} />;
+    // Same groups as the loaded form: General always, Desktop only in Electron.
+    return (
+      <SettingsSectionSkeleton
+        groups={[
+          { rows: LAB_FEATURES.filter((feature) => !feature.desktopOnly).length, titleWidth: 72 },
+          ...(isDesktop
+            ? [
+                {
+                  rows: LAB_FEATURES.filter((feature) => feature.desktopOnly).length,
+                  titleWidth: 72,
+                },
+              ]
+            : []),
+        ]}
+      />
+    );
   }
 
   const checkedByFlag = Object.fromEntries(
     LAB_FEATURES.map(({ flag }, index) => [flag, labChecked[index]]),
   );
 
-  const toFormItem = ({ flag, i18nKey, stage }: LabFeatureItem): FormItemProps => ({
+  const toFormItem = ({ flag, i18nKey, stage }: LabFeatureItem): FormFieldProps => ({
     children: (
       <Switch
         checked={checkedByFlag[flag]}
@@ -78,7 +86,6 @@ const LabsForm = memo(() => {
         onChange={(next: boolean) => updateLab({ [flag]: next })}
       />
     ),
-    className: styles.labItem,
     desc: tLabs(`features.${i18nKey}.desc`),
     label: (
       <SettingsSearchAnchor id={`labs-${flag}`}>
@@ -98,7 +105,7 @@ const LabsForm = memo(() => {
   // in-app browser (renderer-retained Electron webviews).
   const desktopItems = LAB_FEATURES.filter((feature) => feature.desktopOnly);
 
-  const items: FormGroupItemType[] = [
+  const items: FormGroupItem[] = [
     {
       children: generalItems.map((item) => toFormItem(item)),
       title: tLabs('group.general'),
@@ -117,6 +124,7 @@ const LabsForm = memo(() => {
   return (
     <Form
       collapsible={false}
+      form={form}
       items={items}
       itemsType={'group'}
       variant={'filled'}

@@ -1,9 +1,13 @@
 import { BUILTIN_AGENT_SLUGS, getAgentPersistConfig } from '@lobechat/builtin-agents';
-import { INBOX_SESSION_ID, isHeterogeneousAgentModelId } from '@lobechat/const';
+import {
+  DEFAULT_INBOX_TITLE,
+  INBOX_SESSION_ID,
+  isHeterogeneousAgentModelId,
+} from '@lobechat/const';
 import type { AgentRankItem, AgentTopicShareSubject, LobeAgentAgencyConfig } from '@lobechat/types';
 import {
+  applyWorkingDirByDevicePatch,
   DEFAULT_WORKSPACE_AGENT_SELECTION_POLICIES,
-  pruneWorkingDirByDeviceDeletes,
 } from '@lobechat/types';
 import { toRecord } from '@lobechat/utils/object';
 import { TRPCError } from '@trpc/server';
@@ -82,11 +86,20 @@ import {
 } from '../utils/agentKnowledgeMounts';
 import { rehomeAgentLabelsForRecipient } from '../utils/agentLabelsOwnership';
 import { rehomeAgentQuotaBindingsForRecipient } from '../utils/agentQuotaBindings';
+import { notFileBackedPlaceholder } from '../utils/fileBackedPlaceholder';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { resolveGroupMembershipType } from '../utils/groupMembership';
 import { normalizeInboxAgentMeta } from '../utils/inboxAgent';
+import { readOriginalCharCount } from '../utils/parsedDocument';
 import { sanitizeAgentApiConfig } from '../utils/sanitizeAgentApiConfig';
 import { notShareVisitorTopic } from '../utils/shareVisitor';
+import {
+  isTrashed,
+  notTrashed,
+  restoreStamp,
+  type SoftDeleteOptions,
+  trashStamp,
+} from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from './agentCopyJob';
 import {
@@ -118,6 +131,10 @@ import {
  * not just the fields each historically happened to receive. Clients on builds older than
  * PR #16420 can still hit this path, so enforce it here (the single write chokepoint)
  * regardless of caller.
+ *
+ * Such a write is rejected, not silently trimmed: the writer is almost always aiming at a
+ * different agent (the one the builder is editing), and a trimmed write still reports
+ * success — the caller would believe the prompt/name landed when nothing changed.
  */
 const AGENT_BUILDER_PROTECTED_FIELDS = [
   'title',
@@ -129,6 +146,18 @@ const AGENT_BUILDER_PROTECTED_FIELDS = [
   'marketIdentifier',
   'systemRole',
 ] as const;
+
+const assertNoAgentBuilderProtectedFields = (data: Record<string, unknown>) => {
+  const fields = AGENT_BUILDER_PROTECTED_FIELDS.filter((field) => data[field] !== undefined);
+  if (fields.length === 0) return;
+
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message:
+      `The Agent Builder's own ${fields.join(', ')} cannot be changed, so nothing was updated. ` +
+      'Target the agent being edited instead.',
+  });
+};
 
 /**
  * Fields that define a row's identity, scope and provisioning status. Every one of
@@ -208,21 +237,9 @@ export const AGENT_OWNED_BY_GROUP = 'AGENT_OWNED_BY_GROUP';
 export const AGENT_OWNERSHIP_STALE = 'AGENT_OWNERSHIP_STALE';
 
 /**
- * Ownership transfer refused: the agent still carries an `agent_shares` row.
- *
- * The share row is bound to the ORIGINAL owner — it carries their grants and
- * (in Cloud) their spend cap linked to their budget, and every visitor
- * conversation reached through the link is stored under (agentId, senderId)
- * within THAT owner's scope. Handing the agent to someone else would either
- * silently republish the previous owner's grants under a new identity, or
- * strand the visitor conversations under a user that no longer owns the
- * agent. Neither is a valid product state, so ownership transfer of a shared
- * agent is refused until the owner disables sharing AND deletes the share
- * row (`AgentShareModel.deleteByAgentId`).
- *
- * Same-owner personal ↔ workspace moves are unaffected: the share row is
- * paused via `isRunStillAuthorized`'s `agents.workspaceId IS NULL` join and
- * resumes on the round-trip. Only a change of `agents.userId` is blocked.
+ * A share binds its grants, billing scope and visitor history to the current
+ * agent owner and workspace. Transfers remain unsupported while any share row
+ * exists, including paused shares; disabling a link must not bypass the guard.
  */
 export const AGENT_SHARED_TRANSFER_BLOCKED = 'AGENT_SHARED_TRANSFER_BLOCKED';
 
@@ -237,6 +254,10 @@ export class AgentOwnedByGroupError extends Error {
     super(AGENT_OWNED_BY_GROUP);
     this.name = 'AgentOwnedByGroupError';
   }
+}
+
+interface AgentTransferOptions {
+  rejectForeignTopicCommentAuthors?: boolean;
 }
 
 export class AgentModel {
@@ -290,7 +311,10 @@ export class AgentModel {
         title: agents.title,
       })
       .from(agents)
-      .leftJoin(topics, and(eq(topics.agentId, agents.id), notShareVisitorTopic()))
+      .leftJoin(
+        topics,
+        and(eq(topics.agentId, agents.id), notShareVisitorTopic(), notTrashed(topics.isDeleted)),
+      )
       .where(and(this.ownership(), or(eq(agents.slug, INBOX_SESSION_ID), ne(agents.virtual, true))))
       .groupBy(agents.id)
       .having(({ count }) => gt(count, 0))
@@ -311,6 +335,22 @@ export class AgentModel {
     buildWorkspaceWhere(
       { userId: this.userId, workspaceId: this.workspaceId },
       {
+        isDeleted: agents.isDeleted,
+        userId: agents.userId,
+        workspaceId: agents.workspaceId,
+        visibility: agents.visibility,
+      },
+    );
+
+  /**
+   * {@link ownership} without the recycle-bin filter — restore / purge / the
+   * trash pre-flight lock only.
+   */
+  private trashScope = () =>
+    buildWorkspaceWhere(
+      { includeTrashed: true, userId: this.userId, workspaceId: this.workspaceId },
+      {
+        isDeleted: agents.isDeleted,
         userId: agents.userId,
         workspaceId: agents.workspaceId,
         visibility: agents.visibility,
@@ -495,7 +535,7 @@ export class AgentModel {
     const rows = await this.db
       .select({ id: agents.id })
       .from(agents)
-      .where(and(eq(agents.id, id), eq(agents.userId, this.userId)))
+      .where(and(eq(agents.id, id), eq(agents.userId, this.userId), notTrashed(agents.isDeleted)))
       .limit(1);
 
     return rows.length > 0;
@@ -520,6 +560,24 @@ export class AgentModel {
     const row = rows[0];
     if (!row || !row.model || !row.provider) return null;
     return { model: row.model, provider: row.provider };
+  };
+
+  /**
+   * Single-SELECT lookup of an agent's `agencyConfig`.
+   *
+   * The task runner needs the target the agent would use on its own — and
+   * whether a workspace author FIXED it — to tell a task-level pin the run will
+   * use from one the runtime replaces (see `resolveRunDeviceId`). The enriched
+   * `getAgentConfig` would drag knowledge/file queries into every run.
+   */
+  getAgentAgencyConfig = async (idOrSlug: string): Promise<LobeAgentAgencyConfig | null> => {
+    const rows = await this.db
+      .select({ agencyConfig: agents.agencyConfig })
+      .from(agents)
+      .where(and(this.ownership(), or(eq(agents.id, idOrSlug), eq(agents.slug, idOrSlug))))
+      .limit(1);
+
+    return rows[0]?.agencyConfig ?? null;
   };
 
   /**
@@ -556,37 +614,80 @@ export class AgentModel {
   };
 
   /**
-   * Build the where condition shared by queryAgents / countAgents:
-   * non-virtual agents of the current user, with optional keyword filter.
+   * Build the where condition shared by queryAgents / countAgents: the current
+   * user's agents, with optional keyword filter.
+   *
+   * Virtual rows are infrastructure (group-built members, supervisors) and stay
+   * excluded. That includes the inbox (Lobe AI): it is the product-owned
+   * assistant, so including it is a deliberate choice every caller makes with
+   * `includeInbox: true` — never something a generic agent lookup inherits. The
+   * default is therefore the long-standing behavior (real, user-created agents
+   * only), so callers that never asked for the inbox — older clients, the
+   * CRUD/management tool runtimes, group pickers — keep it out instead of
+   * discovering a row they cannot delete or add.
+   *
+   * When a caller does opt in, the inbox joins the page inside the where clause
+   * rather than being filtered afterwards, so `limit` is never spent on an inbox
+   * the caller would drop.
    */
-  private buildQueryAgentsWhere = (keyword?: string) => {
-    // Include agents where virtual is false OR null (legacy data without virtual field)
+  private buildQueryAgentsWhere = (keyword?: string, includeInbox = false) => {
+    // Include agents where virtual is false OR null (legacy data without virtual
+    // field), plus the inbox when the caller opts into it.
     const baseConditions = and(
       this.ownership(),
-      or(eq(agents.virtual, false), isNull(agents.virtual)),
+      includeInbox
+        ? or(eq(agents.virtual, false), isNull(agents.virtual), eq(agents.slug, INBOX_SESSION_ID))
+        : or(eq(agents.virtual, false), isNull(agents.virtual)),
     );
 
-    // Add keyword search condition if provided
-    return keyword
-      ? and(
-          baseConditions,
-          or(ilike(agents.title, `%${keyword}%`), ilike(agents.description, `%${keyword}%`)),
-        )
-      : baseConditions;
+    // `name` is the user-facing display name (see `agents.name`); resolving the
+    // label the UI shows is the primary way users and tools find an agent, so
+    // the keyword must match it alongside `title`/`description`.
+    if (!keyword) return baseConditions;
+
+    // An inbox with a blank title is shown as `DEFAULT_INBOX_TITLE` only after
+    // the query (see `normalizeInboxAgentMeta`), so the raw `title` column can't
+    // match it — match that default label here instead.
+    const matchesDefaultInboxTitle =
+      includeInbox && DEFAULT_INBOX_TITLE.toLowerCase().includes(keyword.toLowerCase());
+
+    return and(
+      baseConditions,
+      or(
+        ilike(agents.title, `%${keyword}%`),
+        ilike(agents.name, `%${keyword}%`),
+        ilike(agents.description, `%${keyword}%`),
+        matchesDefaultInboxTitle
+          ? and(
+              eq(agents.slug, INBOX_SESSION_ID),
+              or(isNull(agents.title), sql`trim(${agents.title}) = ''`),
+            )
+          : undefined,
+      ),
+    );
   };
 
   /**
-   * Query non-virtual agents with optional keyword filter.
-   * Returns minimal agent info (id, title, description, avatar, backgroundColor),
-   * plus `userId`/`visibility` so callers can gate per-agent actions (e.g.
-   * transfer is creator/primary-owner only), and a compact `heteroType` derived
-   * from `agencyConfig` so callers can tell which results are heterogeneous
-   * (external CLI/device) agents.
-   * Excludes virtual agents (like inbox, supervisors, etc).
+   * Query the user's agents with an optional keyword filter.
+   * Returns minimal agent info (id, title, name, description, avatar,
+   * backgroundColor), plus `userId`/`visibility` so callers can gate per-agent
+   * actions (e.g. transfer is creator/primary-owner only), a compact
+   * `heteroType` derived from `agencyConfig` so callers can tell which results
+   * are heterogeneous (external CLI/device) agents, and `isInbox` so callers can
+   * recognize the product-owned inbox (Lobe AI) without re-deriving it from a
+   * slug the row shape no longer carries.
+   * Excludes virtual agents (supervisors, group-built members) and, unless the
+   * caller opts in with `includeInbox: true`, the product-owned inbox (Lobe AI).
+   * See `buildQueryAgentsWhere`.
    */
-  queryAgents = async (params?: { keyword?: string; limit?: number; offset?: number }) => {
-    const { keyword, limit = 9999, offset = 0 } = params ?? {};
-    const searchCondition = this.buildQueryAgentsWhere(keyword);
+  queryAgents = async (params?: {
+    includeInbox?: boolean;
+    keyword?: string;
+    limit?: number;
+    offset?: number;
+  }) => {
+    const { includeInbox = false, keyword, limit = 9999, offset = 0 } = params ?? {};
+    const searchCondition = this.buildQueryAgentsWhere(keyword, includeInbox);
 
     const rows = await this.db
       .select({
@@ -608,16 +709,23 @@ export class AgentModel {
       .offset(offset);
 
     // Surface only the hetero runtime type, not the full agencyConfig payload.
-    return rows.map(({ slug, agencyConfig, ...row }) =>
-      normalizeInboxAgentMeta(
+    return rows.map(({ slug, agencyConfig, ...row }) => ({
+      ...normalizeInboxAgentMeta(
         { ...row, heteroType: agencyConfig?.heterogeneousProvider?.type },
         { slug },
       ),
-    );
+      // When the caller opted in, the inbox is the only virtual row this query
+      // keeps, and `slug` is consumed above rather than returned — so the flag
+      // is what lets callers pin or annotate Lobe AI without re-deriving it.
+      isInbox: slug === INBOX_SESSION_ID,
+    }));
   };
 
   /**
-   * Count non-virtual agents matching the same conditions as queryAgents.
+   * Count the agents matching the same conditions as queryAgents — the inbox is
+   * counted only when the caller opts in with `includeInbox: true`, other
+   * virtual rows always excluded — so the count stays a faithful total for
+   * paginated callers and for the assistants stats.
    * Used to report real totals (and pagination) when queryAgents is limited.
    * Accepts the same date filters as SessionModel.count so callers can compare
    * current vs. prior-period totals without falling back to the legacy
@@ -625,6 +733,7 @@ export class AgentModel {
    */
   countAgents = async (params?: {
     endDate?: string;
+    includeInbox?: boolean;
     keyword?: string;
     range?: [string, string];
     startDate?: string;
@@ -634,7 +743,7 @@ export class AgentModel {
       .from(agents)
       .where(
         genWhere([
-          this.buildQueryAgentsWhere(params?.keyword),
+          this.buildQueryAgentsWhere(params?.keyword, params?.includeInbox ?? false),
           params?.range
             ? genRangeWhere(params.range, agents.createdAt, (date) => date.toDate())
             : undefined,
@@ -776,19 +885,34 @@ export class AgentModel {
       .filter((f) => f.enabled)
       .map((f) => f.id)
       .filter((id) => id !== undefined);
-    let files: Array<(typeof knowledge.files)[number] & { content?: string | null }> =
-      knowledge.files;
+    let files: Array<
+      (typeof knowledge.files)[number] & { content?: string | null; originalCharCount?: number }
+    > = knowledge.files;
 
     if (enabledFileIds.length > 0) {
       const documentsData = await this.db.query.documents.findMany({
-        where: and(this.documentsOwnership(), inArray(documents.fileId, enabledFileIds)),
+        // A file can own several documents; take the oldest, like `DocumentModel.findByFileId`
+        // (which `readAttachment` pages through), so the preview and its continuation agree.
+        orderBy: [asc(documents.createdAt), asc(documents.id)],
+        where: and(
+          this.documentsOwnership(),
+          inArray(documents.fileId, enabledFileIds),
+          notFileBackedPlaceholder(),
+        ),
       });
 
-      const documentMap = new Map(documentsData.map((doc) => [doc.fileId, doc.content]));
-      files = knowledge.files.map((file) => ({
-        ...file,
-        content: file.enabled && file.id ? documentMap.get(file.id) : undefined,
-      }));
+      const documentMap = new Map<string | null, (typeof documentsData)[number]>();
+      for (const doc of documentsData) {
+        if (!documentMap.has(doc.fileId)) documentMap.set(doc.fileId, doc);
+      }
+      files = knowledge.files.map((file) => {
+        const document = file.enabled && file.id ? documentMap.get(file.id) : undefined;
+        return {
+          ...file,
+          content: document?.content,
+          originalCharCount: readOriginalCharCount(document?.metadata),
+        };
+      });
     }
 
     return { ...normalizedAgent, ...knowledge, files };
@@ -958,11 +1082,25 @@ export class AgentModel {
       // lock-then-guard order as transferAgents. A concurrent copy enqueue
       // locks the same source rows, so the guard here cannot run in the window
       // where the enqueue's job row exists but is not yet committed.
-      await trx
-        .select({ id: agents.id })
+      const [locked] = await trx
+        .select({ id: agents.id, slug: agents.slug })
         .from(agents)
         .where(and(eq(agents.id, agentId), this.ownership()))
         .for('update');
+
+      // Builtins (the inbox, the agent builders) are provisioned per user and
+      // carry `virtual` exactly like a group's own members. Deleting one takes
+      // its linked session and every conversation with it, and nothing can
+      // recreate them — refuse here, the same way `addAgentsToGroup` refuses to
+      // seat one. This only guards callers of `AgentModel.delete`; paths that
+      // delete `agents` rows directly (e.g. the OpenAPI `migrateSessionTo`
+      // delete) bypass it.
+      if (locked?.slug && RESERVED_AGENT_SLUGS.has(locked.slug)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'A builtin agent cannot be deleted',
+        });
+      }
 
       // The junction records every agent an unfinished job still maps, a
       // copy's TARGET included — and a group copy's drain writes those ids into
@@ -1014,6 +1152,145 @@ export class AgentModel {
       // 4. Delete the agent itself
       return trx.delete(agents).where(and(eq(agents.id, agentId), this.ownership()));
     });
+  };
+
+  // **************** Recycle bin *************** //
+
+  /**
+   * Same pre-flight as {@link delete}: an agent whose history is mid-copy or
+   * mid-transfer must not disappear from under the job. Runs the guards under
+   * the same row lock so the check cannot race an enqueue. Throws
+   * `AGENT_TRANSFER_IN_PROGRESS` / `AGENT_COPY_IN_PROGRESS`.
+   */
+  assertDeletable = async (agentIds: string[], trx?: Transaction) => {
+    if (agentIds.length === 0) return;
+    const run = async (tx: Transaction | LobeChatDatabase) => {
+      await tx
+        .select({ id: agents.id })
+        .from(agents)
+        .where(and(inArray(agents.id, agentIds), this.trashScope()))
+        .for('update');
+      if (await AgentTransferJobModel.hasPendingJobForAgents(tx, agentIds)) {
+        throw new Error(AGENT_TRANSFER_IN_PROGRESS);
+      }
+      if (await AgentTransferJobModel.hasPendingRemapForSourceAgents(tx, agentIds)) {
+        throw new Error(AGENT_TRANSFER_IN_PROGRESS);
+      }
+      if (await AgentCopyJobModel.hasPendingCopyJobForSourceAgents(tx, agentIds)) {
+        throw new Error(AGENT_COPY_IN_PROGRESS);
+      }
+    };
+    return trx ? run(trx) : run(this.db);
+  };
+
+  /** Legacy session shells linked to the given agents (used to stamp `topics.session_id` rows). */
+  findSessionIdsByAgentIds = async (agentIds: string[]): Promise<string[]> => {
+    if (agentIds.length === 0) return [];
+    const links = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(inArray(agentsToSessions.agentId, agentIds), this.agentsToSessionsOwnership()));
+    return [...new Set(links.map((link) => link.sessionId))];
+  };
+
+  /** Agents linked to the given legacy session shells — the reverse of {@link findSessionIdsByAgentIds}. */
+  findAgentIdsBySessionIds = async (sessionIds: string[]): Promise<string[]> => {
+    if (sessionIds.length === 0) return [];
+    const links = await this.db
+      .select({ agentId: agentsToSessions.agentId })
+      .from(agentsToSessions)
+      .where(
+        and(inArray(agentsToSessions.sessionId, sessionIds), this.agentsToSessionsOwnership()),
+      );
+    return [...new Set(links.map((link) => link.agentId))];
+  };
+
+  /**
+   * Whether the agent that owns a row is sitting in the bin — reached either
+   * directly (`agent_id`) or, for legacy rows that only carry `session_id`,
+   * through the session shell's agent link. Restoring such a row first would
+   * bring it back under an invisible container.
+   */
+  hasTrashedOwner = async (owner: {
+    agentId?: string | null;
+    sessionId?: string | null;
+  }): Promise<boolean> => {
+    const agentIds = [
+      ...(owner.agentId ? [owner.agentId] : []),
+      ...(owner.sessionId ? await this.findAgentIdsBySessionIds([owner.sessionId]) : []),
+    ];
+    return (await this.findTrashedByIds([...new Set(agentIds)])).length > 0;
+  };
+
+  /**
+   * Move agents to the recycle bin. Only the `agents` rows are stamped here —
+   * the server-side trash handler cascades to sessions / topics through their
+   * own models so the registry can record each child.
+   */
+  softDelete = async (agentIds: string[], options: SoftDeleteOptions): Promise<AgentItem[]> => {
+    if (agentIds.length === 0) return [];
+    return this.db
+      .update(agents)
+      .set(trashStamp(options.deletedAt))
+      .where(
+        and(
+          inArray(agents.id, agentIds),
+          this.ownership(),
+          options.restrictToCreator ? eq(agents.userId, this.userId) : undefined,
+        ),
+      )
+      .returning();
+  };
+
+  restore = async (agentIds: string[]): Promise<AgentItem[]> => {
+    if (agentIds.length === 0) return [];
+    return this.db
+      .update(agents)
+      .set(restoreStamp())
+      .where(and(inArray(agents.id, agentIds), this.trashScope(), isTrashed(agents.isDeleted)))
+      .returning();
+  };
+
+  findTrashedByIds = async (agentIds: string[]): Promise<AgentItem[]> => {
+    if (agentIds.length === 0) return [];
+    return this.db
+      .select()
+      .from(agents)
+      .where(and(inArray(agents.id, agentIds), this.trashScope(), isTrashed(agents.isDeleted)));
+  };
+
+  /**
+   * Lock the given agents for a purge and return the ones still in the bin.
+   * Run inside the caller's transaction: the row lock holds until the purge
+   * commits, so a restore racing it waits and then finds nothing to restore,
+   * while a restore that already committed makes this return no ids.
+   */
+  lockTrashedForPurge = async (agentIds: string[]): Promise<string[]> => {
+    if (agentIds.length === 0) return [];
+    const stamped = await this.db
+      .select({ id: agents.id })
+      .from(agents)
+      .where(and(inArray(agents.id, agentIds), this.trashScope(), isTrashed(agents.isDeleted)))
+      .for('update');
+    return stamped.map((row) => row.id);
+  };
+
+  /**
+   * Hard delete for the purge sweep: the agent rows and their session links,
+   * still-stamped rows only. FK cascades take topics / messages / threads.
+   * The legacy session shells are another aggregate — the trash handler
+   * drops them through `SessionModel` in the same transaction.
+   */
+  purge = async (agentIds: string[]): Promise<string[]> => {
+    if (agentIds.length === 0) return [];
+    await this.db
+      .delete(agentsToSessions)
+      .where(and(inArray(agentsToSessions.agentId, agentIds), this.agentsToSessionsOwnership()));
+    const rows = await this.db
+      .delete(agents)
+      .where(and(inArray(agents.id, agentIds), this.trashScope(), isTrashed(agents.isDeleted)))
+      .returning({ id: agents.id });
+    return rows.map((row) => row.id);
   };
 
   /**
@@ -1141,10 +1418,8 @@ export class AgentModel {
     const apiSafeData = Object.hasOwn(data, 'agencyConfig')
       ? { ...data, agencyConfig: sanitizeAgentApiConfig(data.agencyConfig) }
       : data;
-    const sanitizedData = await this.stripAgentBuilderProtectedFields(
-      agentId,
-      this.stripImmutableFields(apiSafeData),
-    );
+    const sanitizedData = this.stripImmutableFields(apiSafeData);
+    await this.assertNotAgentBuilderProtectedWrite(agentId, sanitizedData);
 
     return this.db
       .update(agents)
@@ -1153,27 +1428,22 @@ export class AgentModel {
   };
 
   /**
-   * Strip fields the Agent Builder's own row must never carry (see
+   * Reject a write of fields the Agent Builder's own row must never carry (see
    * {@link AGENT_BUILDER_PROTECTED_FIELDS}). Only looks up the target row's `slug` when the
    * incoming patch actually touches a protected field, so normal updates pay no extra query.
    */
-  private stripAgentBuilderProtectedFields = async <T extends Record<string, any>>(
+  private assertNotAgentBuilderProtectedWrite = async (
     agentId: string,
-    data: T,
-    protectedFields: readonly string[] = AGENT_BUILDER_PROTECTED_FIELDS,
-  ): Promise<T> => {
-    if (!protectedFields.some((field) => field in data)) return data;
+    data: Record<string, unknown>,
+  ) => {
+    if (!AGENT_BUILDER_PROTECTED_FIELDS.some((field) => data[field] !== undefined)) return;
 
     const agent = await this.db.query.agents.findFirst({
       columns: { slug: true },
       where: and(eq(agents.id, agentId), this.ownership()),
     });
 
-    if (agent?.slug !== BUILTIN_AGENT_SLUGS.agentBuilder) return data;
-
-    const sanitized = { ...data };
-    for (const field of protectedFields) delete sanitized[field];
-    return sanitized;
+    if (agent?.slug === BUILTIN_AGENT_SLUGS.agentBuilder) assertNoAgentBuilderProtectedFields(data);
   };
 
   /**
@@ -1386,7 +1656,11 @@ export class AgentModel {
     return result?.id ?? null;
   };
 
-  updateConfig = async (agentId: string, input: PartialDeep<AgentItem> | undefined | null) => {
+  updateConfig = async (
+    agentId: string,
+    input: PartialDeep<AgentItem> | undefined | null,
+    replaceWorkingDirDeviceIds?: string[],
+  ) => {
     if (!input || Object.keys(input).length === 0) return;
 
     const data = this.stripImmutableFields(input);
@@ -1430,8 +1704,15 @@ export class AgentModel {
     // See AGENT_BUILDER_PROTECTED_FIELDS: some callers (e.g. the browser client's meta
     // editor) route title/avatar/etc. through updateConfig() rather than update().
     if (agent.slug === BUILTIN_AGENT_SLUGS.agentBuilder) {
-      for (const field of AGENT_BUILDER_PROTECTED_FIELDS) delete restData[field];
+      assertNoAgentBuilderProtectedFields(restData as Record<string, unknown>);
     }
+
+    // Only the columns this patch touches are written back. The row was read
+    // before the awaits above, so writing the whole merged row would restore
+    // any column another writer committed in between — e.g. a parallel
+    // `updatePrompt` losing its new systemRole to a concurrent config write.
+    const touchedColumns = new Set<string>(Object.keys(restData));
+    if (data.params) touchedColumns.add('params');
 
     const mergedValue = merge(agent, restData);
 
@@ -1461,9 +1742,11 @@ export class AgentModel {
     if (agent.slug === INBOX_SESSION_ID) {
       if (mergedValue.agencyConfig?.heterogeneousProvider) {
         delete mergedValue.agencyConfig.heterogeneousProvider;
+        touchedColumns.add('agencyConfig');
       }
       if (isHeterogeneousAgentModelId(mergedValue.model)) {
         mergedValue.model = null;
+        touchedColumns.add('model');
       }
     }
 
@@ -1489,6 +1772,7 @@ export class AgentModel {
       // ownership of the graph: drop the legacy chatConfig fields so the
       // runtime's `??` fallback cannot resurrect an old snapshot.
       if (mergedValue.chatConfig) {
+        touchedColumns.add('chatConfig');
         const {
           graph: _legacyGraph,
           enableGraphMode: _legacyEnableGraphMode,
@@ -1497,6 +1781,7 @@ export class AgentModel {
         mergedValue.chatConfig = restChatConfig as AgentItem['chatConfig'];
       }
     } else if (data.chatConfig && Object.hasOwn(data.chatConfig, 'graph')) {
+      touchedColumns.add('agencyConfig');
       const legacyChatConfig = data.chatConfig as Record<string, unknown>;
       mergedValue.agencyConfig = {
         ...mergedValue.agencyConfig,
@@ -1516,9 +1801,13 @@ export class AgentModel {
     // Apply the processed parameters
     mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
 
-    // agencyConfig.workingDirByDevice: a per-device entry is cleared by sending
-    // `undefined`, which merge() skips — prune those keys so the delete persists.
-    pruneWorkingDirByDeviceDeletes(mergedValue.agencyConfig, data.agencyConfig);
+    // Opt-in replacement prevents old clients' complete cached maps from
+    // deleting Git metadata on devices they did not actually edit.
+    applyWorkingDirByDevicePatch(
+      mergedValue.agencyConfig,
+      data.agencyConfig,
+      replaceWorkingDirDeviceIds,
+    );
 
     await this.assertFixedExecutionTarget(agent.workspaceId, mergedValue.agencyConfig);
 
@@ -1535,9 +1824,15 @@ export class AgentModel {
       }
     }
 
-    // Remove timestamp fields to let Drizzle's $onUpdate handle them automatically
+    // Timestamp fields are left to Drizzle's $onUpdate.
+    touchedColumns.delete('updatedAt');
+    touchedColumns.delete('accessedAt');
+    touchedColumns.delete('createdAt');
 
-    const { updatedAt: _, accessedAt: __, createdAt: ___, ...updateData } = mergedValue;
+    const updateData = Object.fromEntries(
+      Object.entries(mergedValue).filter(([column]) => touchedColumns.has(column)),
+    ) as Partial<typeof mergedValue>;
+    if (!Object.values(updateData).some((value) => value !== undefined)) return;
 
     return this.db
       .update(agents)
@@ -1573,6 +1868,7 @@ export class AgentModel {
           buildWorkspaceWhere(
             { userId: this.userId, workspaceId: this.workspaceId },
             {
+              isDeleted: sessionGroups.isDeleted,
               userId: sessionGroups.userId,
               visibility: sessionGroups.visibility,
               workspaceId: sessionGroups.workspaceId,
@@ -1983,6 +2279,7 @@ export class AgentModel {
         visible: sql<boolean>`(${buildWorkspaceWhere(
           { userId: this.userId, workspaceId: this.workspaceId },
           {
+            isDeleted: chatGroups.isDeleted,
             userId: chatGroups.userId,
             visibility: chatGroups.visibility,
             workspaceId: chatGroups.workspaceId,
@@ -2065,7 +2362,7 @@ export class AgentModel {
     targetWorkspaceId: string | null,
     targetUserId: string,
     targetVisibility?: 'private' | 'public',
-    options: { rejectForeignTopicCommentAuthors?: boolean } = {},
+    options: AgentTransferOptions = {},
   ): Promise<{ agentId: string; slug: string | null; transferJobId: string | null }> => {
     const [result] = await this.transferAgents(
       [agentId],
@@ -2088,7 +2385,7 @@ export class AgentModel {
     targetWorkspaceId: string | null,
     targetUserId: string,
     targetVisibility?: 'private' | 'public',
-    options: { rejectForeignTopicCommentAuthors?: boolean } = {},
+    options: AgentTransferOptions = {},
   ): Promise<{ agentId: string; slug: string | null; transferJobId: string | null }[]> => {
     if (agentIds.length === 0) return [];
 
@@ -2138,30 +2435,15 @@ export class AgentModel {
       const ownedGroups = await this.findOwnedGroupMemberships(trx, agentIds);
       if (ownedGroups.length > 0) throw new AgentOwnedByGroupError(ownedGroups);
 
-      // 1d. Refuse to change the owner of an agent that still carries an
-      // `agent_shares` row. The share is bound to the previous owner: it
-      // holds their tool grants and spend cap, and every visitor conversation
-      // opened through the link is stored under (agentId, senderId) within
-      // THAT owner's scope. Handing the agent over would either silently
-      // republish the previous owner's grants under a new identity, or leave
-      // the visitor threads dangling under a user that no longer owns them.
-      // Disabling sharing keeps the row as `private`, so this is a hard stop
-      // until the row is removed (`AgentShareModel.deleteByAgentId`, which has
-      // no product entry point yet — a deliberate follow-up). A same-owner
-      // personal ↔ workspace move keeps the row (it is paused via the
-      // workspaceId join in `isRunStillAuthorized`). Fail the whole batch,
-      // consistent with the guards above.
-      const sharedAgentIds = foundAgents
-        .filter((agent) => agent.userId !== targetUserId)
-        .map((agent) => agent.id);
-      if (sharedAgentIds.length > 0) {
-        const sharedRows = await trx
-          .select({ agentId: agentShares.agentId })
-          .from(agentShares)
-          .where(inArray(agentShares.agentId, sharedAgentIds))
-          .limit(1);
-        if (sharedRows.length > 0) throw new Error(AGENT_SHARED_TRANSFER_BLOCKED);
-      }
+      // 1d. Keep the share owner and tenancy stable. Check paused shares too:
+      // disabling a link retains its grants and visitor history. The Agent row
+      // lock also serializes this guard with AgentShareModel.create.
+      const [existingShare] = await trx
+        .select({ id: agentShares.id })
+        .from(agentShares)
+        .where(inArray(agentShares.agentId, agentIds))
+        .limit(1);
+      if (existingShare) throw new Error(AGENT_SHARED_TRANSFER_BLOCKED);
 
       // 2. Resolve slug conflicts in the target scope with a single query:
       //    fetch every existing slug that could collide (exact match or
@@ -2639,13 +2921,7 @@ export class AgentModel {
     const ownedGroups = await this.findOwnedGroupMemberships(trx, [agentId]);
     if (ownedGroups.length > 0) throw new AgentOwnedByGroupError(ownedGroups);
 
-    // Mirror of transferAgents step 1d: refuse the handover if the agent
-    // still carries an `agent_shares` row. The share is bound to the previous
-    // owner's grants / spend cap, and every visitor conversation reached
-    // through the link is stored under (agentId, senderId) within THAT
-    // owner's scope. The previous owner must turn sharing off and delete the
-    // share row before their agent can change hands. Checked BEFORE any
-    // mutation below so the refusal leaves the agent untouched.
+    /** Reject before mutation so the transfer request and share remain unchanged. */
     const [existingShare] = await trx
       .select({ id: agentShares.id })
       .from(agentShares)

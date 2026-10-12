@@ -160,6 +160,27 @@ describe('callLlmFinalizer', () => {
         type: 'stream_end',
       }),
     );
+    // The turn finalizes with no tool calls, so the run ends in `status: 'done'`
+    // like any other. This marker is the only thing that says it was cut short.
+    expect(result.newState.toolCallRepeatGuard?.stoppedByRepeatLimit).toBe(true);
+  });
+
+  it('keeps the repeat-limit marker on later turns that call no tools', async () => {
+    const state = AgentRuntime.createInitialState({ operationId: 'operation-1' });
+    state.toolCallRepeatGuard = { counts: {}, stoppedByRepeatLimit: true };
+
+    const result = await finalizeCallLlmTurn({
+      assistantMessageId: 'assistant-6',
+      events: [],
+      host: createHost(),
+      model: 'glm',
+      output: createOutput({ content: 'done' }),
+      provider: 'lobehub',
+      shouldReplayAssistantReasoning: false,
+      state,
+    });
+
+    expect(result.newState.toolCallRepeatGuard?.stoppedByRepeatLimit).toBe(true);
   });
 
   it('preserves user cancellation when an aborted stream emits the limit-th repeated tool call', async () => {
@@ -559,6 +580,45 @@ describe('callLlmFinalizer', () => {
       },
       phase: 'human_abort',
     });
+  });
+
+  it('records a client-executed attempt and its estimated usage on the message', async () => {
+    const messages = createMessageTransport();
+
+    await finalizeCallLlmTurn({
+      assistantMessageId: 'assistant-1',
+      events: [],
+      host: createHost(messages),
+      model: 'llama3',
+      output: createOutput({
+        executionSite: 'client',
+        usage: { totalInputTokens: 9, totalOutputTokens: 3, totalTokens: 12 },
+        usageEstimated: true,
+      }),
+      provider: 'ollama',
+      shouldReplayAssistantReasoning: false,
+      state: AgentRuntime.createInitialState({ operationId: 'operation-1' }),
+    });
+
+    expect(messages.update).toHaveBeenCalledWith(
+      'assistant-1',
+      expect.objectContaining({
+        metadata: expect.objectContaining({ executionSite: 'client', usageEstimated: true }),
+      }),
+    );
+
+    await persistInterruptedCallLlmResult({
+      assistantMessageId: 'assistant-2',
+      host: createHost(messages),
+      output: createOutput({ content: 'Partial', executionSite: 'client' }),
+    });
+
+    expect(messages.update).toHaveBeenLastCalledWith(
+      'assistant-2',
+      expect.objectContaining({
+        metadata: { executionSite: 'client', interruptedMidStream: true },
+      }),
+    );
   });
 
   it('persists partial interrupted output and skips empty interruptions', async () => {

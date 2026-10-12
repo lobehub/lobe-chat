@@ -176,6 +176,17 @@ describe('decideNextMove', () => {
         }).branch,
       ).toBe('recover_lease');
 
+      // The gateway watchdog abandoning a silent run loses it the same way an
+      // expired lease does; nothing judged the work, so it must not wait on a person.
+      expect(
+        decide(snapshot, {
+          frontierTask: task({
+            error: 'Operation abandoned: inactivity_watchdog',
+            status: 'paused',
+          }),
+        }).branch,
+      ).toBe('recover_lease');
+
       expect(
         decide(snapshot, {
           frontierTask: task({ error: VERIFICATION_FAILED_ERROR, status: 'paused' }),
@@ -610,5 +621,32 @@ describe('exploration terminal phase', () => {
     expect(decide(snapshot, { frontierTask: task({ status: 'running' }) }).branch).not.toBe(
       'explore_graph',
     );
+  });
+});
+
+describe('batch rollout gate', () => {
+  const decideWithGate = (rolloutGate: Parameters<typeof decideNextMove>[0]['rolloutGate']) =>
+    decideNextMove({
+      concurrency: 3,
+      frontier: selectFrontier(graph()),
+      graph: graph(),
+      rolloutGate,
+      tasksById: new Map(),
+    });
+
+  it('releases the next wave when the gate passed', () => {
+    const move = decideWithGate({ blockers: [], met: true, provisional: false });
+    expect(move.branch).toBe('rollout_gate');
+    expect(move.outcome).toBe('advanced');
+  });
+
+  it('hands a blocked gate to a person instead of parking the goal', () => {
+    const move = decideWithGate({
+      blockers: ['1 probe(s) did not succeed'],
+      met: false,
+      provisional: false,
+    });
+    expect(move.branch).toBe('pattern_break');
+    expect(move.outcome).toBe('waiting_human');
   });
 });

@@ -2,6 +2,11 @@ import { CLASSNAMES } from '@lobehub/ui';
 import type { Theme } from 'antd-style';
 import { css } from 'antd-style';
 
+import {
+  MAC_PANEL_BG_VAR,
+  MAC_WINDOW_FULLSCREEN_SELECTOR,
+} from '@/features/Electron/system/macWindowFullscreen';
+
 // fix ios input keyboard
 // overflow: hidden;
 // ref: https://zhuanlan.zhihu.com/p/113855026
@@ -19,6 +24,10 @@ const genGlobalStyle = ({ token }: { prefixCls: string; token: Theme }) => css`
 
     @media (device-width >= 576px) {
       overflow: hidden;
+
+      /* The root cannot scroll here, and a root 'none' also suppresses the
+         elastic overscroll of inner scrollers in Chromium on macOS. */
+      overscroll-behavior: auto;
     }
   }
 
@@ -55,12 +64,26 @@ const genGlobalStyle = ({ token }: { prefixCls: string; token: Theme }) => css`
     }
   }
 
+  /* antd resets re-apply antialiased on each component root, so body alone is not enough */
+  html[data-font-antialiasing='off'] * {
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
   html.desktop[data-theme='dark'] body {
     background-color: color-mix(in srgb, ${token.colorBgLayout} 50%, transparent);
   }
 
   html.desktop[data-theme='light'] body {
     background-color: color-mix(in srgb, ${token.colorBgLayout} 70%, transparent);
+  }
+
+  ${MAC_WINDOW_FULLSCREEN_SELECTOR} {
+    ${MAC_PANEL_BG_VAR}: ${token.colorBgLayout};
+  }
+
+  ${MAC_WINDOW_FULLSCREEN_SELECTOR} body {
+    background-color: ${token.colorBgLayout};
   }
 
   button {

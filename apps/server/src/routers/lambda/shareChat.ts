@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import {
   AGENT_SHARE_DEFAULT_MAX_FILE_STORAGE,
   AGENT_SHARE_DEFAULT_MAX_TOPICS_PER_VISITOR,
@@ -9,22 +11,32 @@ import {
 } from '@lobechat/const';
 import type { ChatMessageError } from '@lobechat/types';
 import {
+  agentShareDocumentAccessScope,
   agentShareFileAccessScope,
+  agentShareWorkAccessScope,
   ChatErrorType,
   entityIdPattern,
   RequestTrigger,
+  UserInterventionConfigSchema,
 } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import pMap from 'p-map';
 import { z } from 'zod';
 
+import { resolveAgentInterventionBySource } from '@/business/server/agent-run/agentInterventionReview';
 import { checkAgentShareSpendAllowance } from '@/business/server/agent-share/spendGate';
 import { serverDBEnv } from '@/config/db';
 import { AgentShareModel } from '@/database/models/agentShare';
+import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { FileUploadModel } from '@/database/models/fileUpload';
-import { MessageModel, sanitizeVisitorError } from '@/database/models/message';
+import {
+  HumanApprovalAlreadyResolvedError,
+  MessageModel,
+  sanitizeVisitorError,
+} from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
 import type { LobeChatDatabase } from '@/database/type';
@@ -38,33 +50,40 @@ import { FileService } from '@/server/services/file';
 import { FileUploadService } from '@/server/services/fileUpload';
 import { reserveUpload } from '@/server/services/fileUploadReservation';
 
+import { mapAgentInterventionTRPCError } from './_helpers/agentInterventionError';
 import { assertAgentShareVisitorEnabled } from './_helpers/agentShareFeatureGate';
+import { toClientExecAgentResult } from './_helpers/groupMemberContinuationResult';
+import { ResolveAgentInterventionBySourceSchema } from './_schema/agentIntervention';
+import {
+  type AgentInterventionDispatchContext,
+  bridgeLegacyResumeToSourceIntervention,
+  dispatchClaimedAgentIntervention,
+  ResumeApprovalDecisionSchema,
+  ResumeToolResultSchema,
+  validateResumePayload,
+} from './aiAgent';
 
 const log = debug('lobe-server:router:shareChat');
 
 /**
  * Visitor-facing execution chain for shared agents (Agent Share).
  *
- * All procedures authenticate the VISITOR (ctx.userId) but operate on
- * CREATOR-owned rows: topics/messages of a share conversation carry the
- * creator's userId (so runtime, billing, and tool paths behave exactly as a
- * creator-owned chat) plus `topics.senderId = visitor` for scoping. Every
+ * All procedures authenticate the VISITOR (ctx.userId) but operate on rows in
+ * the Agent's owning scope: topics/messages carry the creator's userId plus the
+ * Agent's workspaceId when present, and `topics.senderId = visitor` for
+ * scoping. Every
  * read/write here is therefore manually authorized: resolve the share via
  * {@link resolveLinkShareOrThrow}, then require
  * `topic.senderId === visitor && topic.agentId === share.agentId`
  * ({@link findVisitorTopicOrThrow}).
  *
- * There is no share-instance column on `topics`: a visitor topic is tied to
- * its share purely through `(agentId, senderId)`, which is unambiguous because
- * `agent_shares` is 1:1 per agent. The known consequence is that a visitor's
- * own older topics resurface after an owner disables and re-enables the share
- * (a pause that keeps the same row, so nothing marks the topics as belonging
- * to an earlier run of it). That crosses no identity boundary — it is the same
- * visitor's own prior conversation with the same agent — but it does mean the
- * per-visitor topic cap counts them.
+ * A visitor topic is tied to its share through `(agentId, senderId)`. Turning
+ * sharing off and back on keeps the same share row, so that visitor's older
+ * conversations remain available and continue counting toward the topic cap.
  *
- * Agent sharing is personal-only (workspace agents cannot be shared), so no
- * workspaceId is ever threaded into the creator-scoped models/services.
+ * Workspace identity is resolved from the share row, never from visitor
+ * headers, and is threaded through every model/service that persists data or
+ * invokes the runtime.
  */
 const shareChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   // Visitor access depends on deployment support and share permissions,
@@ -190,7 +209,7 @@ const authorizeVisitorRunningOperation = async (
 ) => {
   const share = await resolveLinkShareOrThrow(db, input.shareId, visitorUserId);
 
-  const topicModel = new TopicModel(db, share.ownerId, undefined, undefined, {
+  const topicModel = new TopicModel(db, share.ownerId, share.workspaceId ?? undefined, undefined, {
     includeShareVisitor: true,
   });
   const topic = await findVisitorTopicOrThrow(topicModel, {
@@ -209,9 +228,78 @@ const authorizeVisitorRunningOperation = async (
 
   const aiAgentService = new AiAgentService(db, share.ownerId, {
     includeShareVisitor: true,
+    workspaceId: share.workspaceId ?? undefined,
   });
 
   return { aiAgentService, share };
+};
+
+type LinkShare = Awaited<ReturnType<typeof resolveLinkShareOrThrow>>;
+
+/**
+ * Everything a share VISITOR run executes with: the creator-scoped service and
+ * models (the run's rows are written under the creator's identity) plus the
+ * `shareGate` that strips whatever the share config does not grant.
+ *
+ * Built fresh from the live share row on every call — a fresh turn and an
+ * intervention continuation alike — so a continuation is gated by the share's
+ * CURRENT config, never by a snapshot taken when the run parked.
+ */
+const createShareRunScope = async (
+  db: LobeChatDatabase,
+  share: LinkShare,
+  visitorUserId: string,
+) => {
+  const workspaceId = share.workspaceId ?? undefined;
+  const modelOptions = { includeShareVisitor: true } as const;
+  const topicModel = new TopicModel(db, share.ownerId, workspaceId, undefined, modelOptions);
+  const messageModel = new MessageModel(db, share.ownerId, workspaceId, undefined, modelOptions);
+
+  const shareGate: AgentShareGate = {
+    agentId: share.agentId,
+    shareConfig: share.shareConfig,
+    // See `AgentShareGate.shareId`'s JSDoc — the share instance this run is
+    // authorized against, and the token every later revalidation compares.
+    shareId: share.shareId,
+    visitorUserId,
+  };
+
+  // Creator's Market access token, mirroring aiAgentProcedure — the
+  // server-side tool runtime authenticates against the Market API with it.
+  let marketAccessToken: string | undefined;
+  if (!share.workspaceId) {
+    try {
+      const userModel = new UserModel(db, share.ownerId);
+      const settings = await userModel.getUserSettings();
+      marketAccessToken = (settings?.market as any)?.accessToken;
+    } catch {
+      // non-fatal — MarketService falls back to trustedClientToken
+    }
+  }
+
+  const aiAgentService = new AiAgentService(db, share.ownerId, {
+    // Share visitor turns persist under the creator's `userId` — the
+    // service's internal `messageModel`/`topicModel`/runtime must be
+    // constructed with the visitor scope so reads/writes on
+    // `topics.senderId <> NULL` rows aren't filtered out.
+    includeShareVisitor: true,
+    marketAccessToken,
+    workspaceId,
+  });
+
+  /**
+   * Dispatch context for an intervention the VISITOR resolved: the actor is
+   * the visitor, the continuation runs as the creator under `shareGate`.
+   */
+  const dispatchContext: AgentInterventionDispatchContext = {
+    aiAgentService,
+    serverDB: db,
+    shareGate,
+    userId: visitorUserId,
+    workspaceId: share.workspaceId,
+  };
+
+  return { aiAgentService, dispatchContext, messageModel, shareGate, topicModel };
 };
 
 /**
@@ -221,8 +309,14 @@ const authorizeVisitorRunningOperation = async (
  * release reservations that live under their share's prefix, never one of the
  * creator's own uploads.
  */
-const shareUploadPrefix = (ownerId: string, shareId: string) =>
-  `files/${ownerId}/agent-share/${shareId}/`;
+const shareUploadPrefix = (share: {
+  ownerId: string;
+  shareId: string;
+  workspaceId: string | null;
+}) =>
+  share.workspaceId
+    ? `files/workspaces/${share.workspaceId}/agent-share/${share.shareId}/`
+    : `files/${share.ownerId}/agent-share/${share.shareId}/`;
 
 /**
  * Visitor-facing storage refusal, one shape for two causes: the share's own
@@ -267,14 +361,14 @@ const sanitizeUploadName = (name: string) =>
  */
 const assertShareVisitorFiles = async (
   db: LobeChatDatabase,
-  share: { ownerId: string; shareId: string },
+  share: { ownerId: string; shareId: string; workspaceId: string | null },
   visitorUserId: string,
   fileIds: string[] | undefined,
 ) => {
   if (!fileIds?.length) return;
 
   const uniqueIds = Array.from(new Set(fileIds));
-  const rows = await new FileModel(db, share.ownerId).findByIds(
+  const rows = await new FileModel(db, share.ownerId, share.workspaceId ?? undefined).findByIds(
     uniqueIds,
     agentShareFileAccessScope({ shareId: share.shareId, visitorUserId }),
   );
@@ -310,11 +404,15 @@ export const shareChatRouter = router({
     .input(z.object({ pathname: z.string().min(1), shareId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
-      if (!input.pathname.startsWith(shareUploadPrefix(share.ownerId, share.shareId))) {
+      if (!input.pathname.startsWith(shareUploadPrefix(share))) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Upload not found' });
       }
 
-      const fileUploadService = new FileUploadService(ctx.serverDB, share.ownerId);
+      const fileUploadService = new FileUploadService(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+      );
       const upload = await fileUploadService.findLatest(input.pathname);
       if (upload?.status === 'active') await fileUploadService.release(input.pathname);
 
@@ -354,12 +452,20 @@ export const shareChatRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
-      if (!input.pathname.startsWith(shareUploadPrefix(share.ownerId, share.shareId))) {
+      if (!input.pathname.startsWith(shareUploadPrefix(share))) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Upload not found' });
       }
 
-      const fileUploadService = new FileUploadService(ctx.serverDB, share.ownerId);
-      const fileService = new FileService(ctx.serverDB, share.ownerId);
+      const fileUploadService = new FileUploadService(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+      );
+      const fileService = new FileService(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+      );
 
       // No legacy (reservation-less) path here: the share upload flow was born
       // with reservations, so a pathname without an active session is either
@@ -386,6 +492,26 @@ export const shareChatRouter = router({
       const dirname = parts.join('/');
 
       const { id } = await ctx.serverDB.transaction(async (trx) => {
+        // Transfer hard revocation locks this same Agent row before it snapshots
+        // and deletes share files. Taking the lock first gives the two paths a
+        // single order: if settlement wins, transfer sees and removes this
+        // file; if transfer wins, the locked recheck below rejects the stale
+        // share before a new file row can escape the cleanup snapshot.
+        const tx = trx as LobeChatDatabase;
+        const lockedAgent = await AgentShareModel.lockScopedAgentRow(tx, share.agentId, {
+          userId: share.ownerId,
+          workspaceId: share.workspaceId ?? undefined,
+        });
+        if (
+          !lockedAgent ||
+          !(await AgentShareModel.isRunStillAuthorized(tx, {
+            agentId: share.agentId,
+            shareId: share.shareId,
+          }))
+        ) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Share not found' });
+        }
+
         const lockedUpload = await fileUploadService.model.findLatestByPathnameForUpdate(
           input.pathname,
           trx,
@@ -394,7 +520,11 @@ export const shareChatRouter = router({
           throw new TRPCError({ code: 'CONFLICT', message: 'Upload session is no longer active' });
         }
 
-        const file = await new FileModel(ctx.serverDB, share.ownerId).create(
+        const file = await new FileModel(
+          ctx.serverDB,
+          share.ownerId,
+          share.workspaceId ?? undefined,
+        ).create(
           {
             fileType: input.fileType,
             metadata: {
@@ -460,11 +590,15 @@ export const shareChatRouter = router({
         throw shareStorageBlocked('share_limit');
       }
 
-      const prefix = shareUploadPrefix(share.ownerId, share.shareId);
+      const prefix = shareUploadPrefix(share);
       const pathname = `${prefix}${nanoid()}/${sanitizeUploadName(input.name)}`;
       const s3 = new FileS3();
-      const uploadModel = new FileUploadModel(ctx.serverDB, share.ownerId);
-      const fileModel = new FileModel(ctx.serverDB, share.ownerId);
+      const uploadModel = new FileUploadModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+      );
+      const fileModel = new FileModel(ctx.serverDB, share.ownerId, share.workspaceId ?? undefined);
 
       try {
         await reserveUpload({
@@ -488,6 +622,7 @@ export const shareChatRouter = router({
           size: input.size,
           storage: s3,
           userId: share.ownerId,
+          workspaceId: share.workspaceId,
         });
       } catch (error) {
         throw toVisitorStorageBlock(error);
@@ -496,7 +631,11 @@ export const shareChatRouter = router({
       try {
         return { pathname, url: await s3.createPreSignedUrl(pathname, input.size) };
       } catch (error) {
-        await new FileUploadService(ctx.serverDB, share.ownerId).releaseBestEffort(pathname);
+        await new FileUploadService(
+          ctx.serverDB,
+          share.ownerId,
+          share.workspaceId ?? undefined,
+        ).releaseBestEffort(pathname);
         throw error;
       }
     }),
@@ -508,32 +647,74 @@ export const shareChatRouter = router({
    */
   execAgent: shareChatProcedure
     .input(
-      z.object({
-        /** Client-minted row ids, honoured verbatim (see aiAgent.execAgent). */
-        clientIds: z
-          .object({
-            assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-            topicId: z.string().regex(entityIdPattern('topics')).optional(),
-            userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-          })
-          .optional(),
-        /**
-         * Ids of files the VISITOR uploaded through `shareChat.createFile`.
-         * Re-checked below against the file rows' share provenance — see
-         * `assertShareVisitorFiles`.
-         */
-        fileIds: z
-          .array(z.string().min(1).max(64))
-          .max(SHARE_VISITOR_MAX_FILES_PER_TURN)
-          .optional(),
-        /** See `SHARE_VISITOR_PROMPT_MAX_LENGTH`'s JSDoc for the size-bound rationale. */
-        prompt: z.string().max(SHARE_VISITOR_PROMPT_MAX_LENGTH),
-        shareId: z.string(),
-        /** Queued behind a running turn; see `aiAgent.execAgent`'s `steer`. */
-        steer: z.boolean().optional(),
-        /** Absent → the run creates a new visitor topic (counted against the topic cap). */
-        topicId: z.string().nullish(),
-      }),
+      z
+        .object({
+          /** Client-minted row ids, honoured verbatim (see aiAgent.execAgent). */
+          clientIds: z
+            .object({
+              assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
+              topicId: z.string().regex(entityIdPattern('topics')).optional(),
+              userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
+            })
+            .optional(),
+          /**
+           * Ids of files the VISITOR uploaded through `shareChat.createFile`.
+           * Re-checked below against the file rows' share provenance — see
+           * `assertShareVisitorFiles`.
+           */
+          fileIds: z
+            .array(z.string().min(1).max(64))
+            .max(SHARE_VISITOR_MAX_FILES_PER_TURN)
+            .optional(),
+          /**
+           * The pending tool message a resume targets. Set only together with one
+           * of the `resume*` payloads — a visitor never regenerates or continues
+           * from an arbitrary message.
+           */
+          parentMessageId: z.string().optional(),
+          /** See `SHARE_VISITOR_PROMPT_MAX_LENGTH`'s JSDoc for the size-bound rationale. */
+          prompt: z.string().max(SHARE_VISITOR_PROMPT_MAX_LENGTH),
+          /**
+           * Legacy (message-row) resume of the visitor's own parked run — the
+           * fallback when the deployment has no durable intervention store; see
+           * `resolveInterventionBySource` for the primary path.
+           */
+          resumeApproval: ResumeApprovalDecisionSchema.optional(),
+          resumeApprovals: z.array(ResumeApprovalDecisionSchema).min(1).optional(),
+          resumeToolResult: ResumeToolResultSchema.optional(),
+          shareId: z.string(),
+          /** Queued behind a running turn; see `aiAgent.execAgent`'s `steer`. */
+          steer: z.boolean().optional(),
+          /** Absent → the run creates a new visitor topic (counted against the topic cap). */
+          topicId: z.string().nullish(),
+          /**
+           * The VISITOR's own approval mode / allow list. A share run is approved
+           * by the visitor, so it honors their preference exactly like the owner's
+           * own chat honors the owner's; absent → `manual` (see
+           * `AiAgentService.execAgent`).
+           */
+          userInterventionConfig: UserInterventionConfigSchema.optional(),
+        })
+        .superRefine((data, refinementCtx) => {
+          validateResumePayload(data, refinementCtx);
+          const isResume = Boolean(
+            data.resumeApproval || data.resumeApprovals || data.resumeToolResult,
+          );
+          if (data.parentMessageId && !isResume) {
+            refinementCtx.addIssue({
+              code: 'custom',
+              message: 'parentMessageId is only accepted with an intervention resume',
+              path: ['parentMessageId'],
+            });
+          }
+          if (isResume && !data.topicId) {
+            refinementCtx.addIssue({
+              code: 'custom',
+              message: 'topicId is required for an intervention resume',
+              path: ['topicId'],
+            });
+          }
+        }),
     )
     .mutation(async ({ input, ctx }) => {
       const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
@@ -548,11 +729,22 @@ export const shareChatRouter = router({
         ownerUserId: share.ownerId,
         shareId: share.shareId,
         visitorUserId: ctx.userId,
+        workspaceId: share.workspaceId ?? undefined,
       });
       if (!spendGate.allowed) {
         throw new TRPCError({
           code: 'TOO_MANY_REQUESTS',
           message: ChatErrorType.ShareSpendLimitExceeded,
+        });
+      }
+
+      const isResume = Boolean(
+        input.resumeApproval || input.resumeApprovals || input.resumeToolResult,
+      );
+      if (isResume && input.fileIds?.length) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'An intervention resume cannot attach files',
         });
       }
 
@@ -569,12 +761,8 @@ export const shareChatRouter = router({
         share.shareConfig.maxTopicsPerVisitor ?? AGENT_SHARE_DEFAULT_MAX_TOPICS_PER_VISITOR;
       const maxTurnsPerTopic =
         share.shareConfig.maxTurnsPerTopic ?? AGENT_SHARE_DEFAULT_MAX_TURNS_PER_TOPIC;
-      const topicModel = new TopicModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-        includeShareVisitor: true,
-      });
-      const messageModel = new MessageModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-        includeShareVisitor: true,
-      });
+      const { aiAgentService, dispatchContext, messageModel, shareGate, topicModel } =
+        await createShareRunScope(ctx.serverDB, share, ctx.userId);
 
       // Fast, UX-only pre-check for both caps: reject an obviously-over-cap
       // request BEFORE paying for agent-config/tool resolution, instead of only
@@ -592,10 +780,15 @@ export const shareChatRouter = router({
           visitorUserId: ctx.userId,
         });
 
-        const turnCount = await messageModel.countByTopic({
-          role: 'user',
-          topicId: input.topicId,
-        });
+        // A resume continues the turn the visitor already spent — it adds no
+        // user message (`reserveShareVisitorTurn` skips it too), so a visitor
+        // on their last allowed turn can still answer that turn's approval.
+        const turnCount = isResume
+          ? 0
+          : await messageModel.countByTopic({
+              role: 'user',
+              topicId: input.topicId,
+            });
         if (turnCount >= maxTurnsPerTopic) {
           throw new TRPCError({
             code: 'TOO_MANY_REQUESTS',
@@ -615,41 +808,32 @@ export const shareChatRouter = router({
         }
       }
 
-      // Creator-scoped service: the run executes under the creator's identity
-      // (their agent config, connectors, billing context). The shareGate strips
-      // everything the share config doesn't grant.
-      const shareGate: AgentShareGate = {
-        agentId: share.agentId,
-        shareConfig: share.shareConfig,
-        // See `AgentShareGate.shareId`'s JSDoc — the share instance this run is
-        // authorized against, and the token every later revalidation compares.
-        shareId: share.shareId,
-        visitorUserId: ctx.userId,
-      };
-
-      // Creator's Market access token, mirroring aiAgentProcedure — the
-      // server-side tool runtime authenticates against the Market API with it.
-      let marketAccessToken: string | undefined;
-      try {
-        const userModel = new UserModel(ctx.serverDB, share.ownerId);
-        const settings = await userModel.getUserSettings();
-        marketAccessToken = (settings?.market as any)?.accessToken;
-      } catch {
-        // non-fatal — MarketService falls back to trustedClientToken
-      }
-
-      const aiAgentService = new AiAgentService(ctx.serverDB, share.ownerId, {
-        // Share visitor turns persist under the creator's `userId` — the
-        // service's internal `messageModel`/`topicModel`/runtime must be
-        // constructed with the visitor scope so reads/writes on
-        // `topics.senderId <> NULL` rows aren't filtered out.
-        includeShareVisitor: true,
-        marketAccessToken,
-      });
-
       log('execAgent: share=%s visitor=%s topic=%s', input.shareId, ctx.userId, input.topicId);
 
       try {
+        if (isResume) {
+          // Claim the durable generic intervention first when the deployment
+          // provides a durable store, scoped to this visitor's own share run;
+          // falls through to the legacy message-row resume when no durable row
+          // exists.
+          const bridged = await bridgeLegacyResumeToSourceIntervention(
+            {
+              messageModel,
+              parentMessageId: input.parentMessageId,
+              resumeApproval: input.resumeApproval,
+              resumeApprovals: input.resumeApprovals,
+              resumeToolResult: input.resumeToolResult,
+              shareVisitor: {
+                agentId: share.agentId,
+                ownerUserId: share.ownerId,
+                topicId: input.topicId!,
+              },
+            },
+            dispatchContext,
+          );
+          if (bridged) return bridged;
+        }
+
         const result = await aiAgentService.execAgent({
           agentId: share.agentId,
           appContext: { topicId: input.topicId },
@@ -678,8 +862,20 @@ export const shareChatRouter = router({
           // liveness-checked reservation every non-interactive start uses: a
           // second concurrent send for a topic with a live operation is
           // rejected instead of silently displacing the first.
-          interactiveStart: false,
+          //
+          // A resume is the exception: the topic is still held by the parked
+          // (`waiting_for_human`) operation it answers, so the liveness check
+          // would always reject it as busy. Its concurrency guard is the
+          // exactly-once approval claim instead (`claimApprovalResume` locks the
+          // pending tool rows via `resolveHumanApproval`), so a duplicate resume
+          // fails there rather than starting a second continuation.
+          interactiveStart: isResume,
+          parentMessageId: input.parentMessageId,
           prompt: input.prompt,
+          resume: isResume,
+          resumeApproval: input.resumeApproval,
+          resumeApprovals: input.resumeApprovals,
+          resumeToolResult: input.resumeToolResult,
           shareGate,
           steer: input.steer,
           // Not `RequestTrigger.Chat`: a share run is billed to the CREATOR,
@@ -688,6 +884,7 @@ export const shareChatRouter = router({
           // `state.origin.trigger` all the way into the spend-log metadata.
           trigger: RequestTrigger.AgentShare,
           userAgent: ctx.userAgent ?? undefined,
+          userInterventionConfig: input.userInterventionConfig,
         });
 
         // `AiAgentService.execAgent` RESOLVES (does not throw) when
@@ -713,6 +910,13 @@ export const shareChatRouter = router({
         return result;
       } catch (error: any) {
         if (error instanceof TRPCError) throw error;
+        if (error instanceof HumanApprovalAlreadyResolvedError) {
+          throw new TRPCError({
+            cause: error,
+            code: 'CONFLICT',
+            message: 'This approval has already been resolved.',
+          });
+        }
 
         throw toVisitorSafeStartupError('execAgent', error, {
           showErrorDetails: share.shareConfig.showErrorDetails,
@@ -720,42 +924,118 @@ export const shareChatRouter = router({
       }
     }),
 
+  /**
+   * One document a visitor's share run produced (the open target of a
+   * `document` Work card). Read under the visitor's share document scope, so
+   * only a document stamped with exactly this share/topic/visitor resolves —
+   * the creator's own documents and other visitors' documents 404.
+   */
+  getDocument: shareChatProcedure
+    .input(ShareTopicScopeSchema.extend({ documentId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
+
+      const topicModel = new TopicModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        { includeShareVisitor: true },
+      );
+      await findVisitorTopicOrThrow(topicModel, {
+        agentId: share.agentId,
+        topicId: input.topicId,
+        visitorUserId: ctx.userId,
+      });
+
+      const documentModel = new DocumentModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        agentShareDocumentAccessScope({
+          shareId: share.shareId,
+          topicId: input.topicId,
+          visitorUserId: ctx.userId,
+        }),
+      );
+      const document = await documentModel.findById(input.documentId);
+      if (!document) throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
+
+      // Narrow projection: no metadata / source / owner columns cross the
+      // share boundary — the visitor only needs what the read-only viewer shows.
+      return {
+        content: document.content,
+        fileType: document.fileType,
+        id: document.id,
+        title: document.title,
+        updatedAt: document.updatedAt,
+      };
+    }),
+
   /** Messages of one visitor-owned share topic. */
-  getMessages: shareChatProcedure.input(ShareTopicScopeSchema).query(async ({ input, ctx }) => {
-    const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
+  getMessages: shareChatProcedure
+    .input(ShareTopicScopeSchema.extend({ includeFileWorks: z.boolean().optional() }))
+    .query(async ({ input, ctx }) => {
+      const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
 
-    const topicModel = new TopicModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-      includeShareVisitor: true,
-    });
-    await findVisitorTopicOrThrow(topicModel, {
-      agentId: share.agentId,
-      topicId: input.topicId,
-      visitorUserId: ctx.userId,
-    });
+      const topicModel = new TopicModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        { includeShareVisitor: true },
+      );
+      await findVisitorTopicOrThrow(topicModel, {
+        agentId: share.agentId,
+        topicId: input.topicId,
+        visitorUserId: ctx.userId,
+      });
 
-    const messageModel = new MessageModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-      includeShareVisitor: true,
-    });
-    const fileService = new FileService(ctx.serverDB, share.ownerId);
+      const messageModel = new MessageModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        { includeShareVisitor: true },
+      );
+      const fileService = new FileService(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+      );
 
-    // queryForVisitor strips the creator's `sender` identity, and — unless the
-    // share opts in via `showModelInfo` / `showErrorDetails` — the spend/model
-    // snapshot and raw error payload too. Share messages persist under the
-    // CREATOR's account (see the module doc above), so the raw `query()` result
-    // would otherwise leak the creator's account identity to the visitor.
-    return messageModel.queryForVisitor(
-      // skipWorks: Work summaries join live task/version state of the CREATOR's
-      // account — never serve them to a visitor surface.
-      { skipWorks: true, topicId: input.topicId },
-      {
-        postProcessUrl: (path, file) => fileService.getFileAccessUrl({ id: file.id, url: path }),
-        redaction: {
-          showErrorDetails: share.shareConfig.showErrorDetails,
-          showModelInfo: share.shareConfig.showModelInfo,
+      // queryForVisitor strips the creator's `sender` identity, and — unless the
+      // share opts in via `showModelInfo` / `showErrorDetails` — the spend/model
+      // snapshot and raw error payload too. Share messages persist under the
+      // CREATOR's account (see the module doc above), so the raw `query()` result
+      // would otherwise leak the creator's account identity to the visitor.
+      return messageModel.queryForVisitor(
+        { includeFileWorks: input.includeFileWorks, topicId: input.topicId },
+        {
+          postProcessUrl: (path, file) => fileService.getFileAccessUrl({ id: file.id, url: path }),
+          redaction: {
+            showErrorDetails: share.shareConfig.showErrorDetails,
+            showModelInfo: share.shareConfig.showModelInfo,
+          },
+          // Work summaries are assembled under the visitor's OWN share scope:
+          // only Works registered from this share topic resolve, never the
+          // creator's ordinary Works (see `workMatchesAccessScope`).
+          //
+          // Gated on the client's `includeFileWorks` opt-in: pre-Works clients
+          // (rolling deploys, cached sessions, lagging desktop builds) never
+          // send it and have no share-aware open handler for the cards, so
+          // they keep the old Work-free response instead of dead cards.
+          workAccessScope: input.includeFileWorks
+            ? agentShareWorkAccessScope({
+                shareId: share.shareId,
+                topicId: input.topicId,
+                visitorUserId: ctx.userId,
+              })
+            : undefined,
         },
-      },
-    );
-  }),
+      );
+    }),
 
   /** The visitor's own topics on this shared agent. */
   getTopics: shareChatProcedure
@@ -769,13 +1049,209 @@ export const shareChatRouter = router({
       // what a visitor already created. Tying the page size to it would hide
       // those older conversations with no pagination or deep link to reach
       // them, so the model applies its own fixed, generous list bound instead.
-      const topicModel = new TopicModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-        includeShareVisitor: true,
-      });
+      const topicModel = new TopicModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        { includeShareVisitor: true },
+      );
       return topicModel.queryBySender({
         agentId: share.agentId,
         senderId: ctx.userId,
       });
+    }),
+
+  /**
+   * Resolve an intervention (approve / reject / answer / skip / stop) parked on
+   * the VISITOR's own share run — the visitor counterpart of
+   * `aiAgent.resolveAgentInterventionBySource`. A share run is approved by the
+   * visitor: granting a tool to visitors grants its normal approval flow.
+   *
+   * The visitor must own `topicId` under this live share; the business slot
+   * then binds the durable batch to exactly this creator/agent/topic and a
+   * share-run operation, so a visitor can never resolve anyone else's run and
+   * the owner can never resolve a visitor's run through their own endpoints.
+   * The continuation is dispatched under a `shareGate` rebuilt from the live
+   * share row (see {@link createShareRunScope}).
+   *
+   * `unavailable` means the deployment has no durable intervention store (OSS);
+   * the client then falls back to `execAgent`'s legacy `resume*` payloads.
+   */
+  resolveInterventionBySource: shareChatProcedure
+    .input(
+      ResolveAgentInterventionBySourceSchema.extend({
+        shareId: z.string(),
+        topicId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { shareId, topicId, ...source } = input;
+      const share = await resolveLinkShareOrThrow(ctx.serverDB, shareId, ctx.userId);
+      const { dispatchContext, topicModel } = await createShareRunScope(
+        ctx.serverDB,
+        share,
+        ctx.userId,
+      );
+      await findVisitorTopicOrThrow(topicModel, {
+        agentId: share.agentId,
+        topicId,
+        visitorUserId: ctx.userId,
+      });
+
+      // A server-side `remember` writes the OWNER's allow list, so a visitor
+      // may only approve once here; their "don't ask again" goes to their own
+      // allow list client-side (see `approveToolCalling`).
+      if (source.action.type === 'approve_tool' && source.action.scope === 'remember') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Visitors can only approve once' });
+      }
+
+      log(
+        'resolveInterventionBySource: share=%s visitor=%s topic=%s operation=%s action=%s',
+        shareId,
+        ctx.userId,
+        topicId,
+        source.operationId,
+        source.action.type,
+      );
+
+      const resolution = await resolveAgentInterventionBySource({
+        ...source,
+        actorUserId: ctx.userId,
+        shareVisitor: { agentId: share.agentId, ownerUserId: share.ownerId, topicId },
+        workspaceId: share.workspaceId ?? undefined,
+      }).catch((error: unknown) => {
+        throw mapAgentInterventionTRPCError(error);
+      });
+
+      if (!resolution.handled) {
+        return {
+          contractVersion: 2 as const,
+          status: 'unavailable' as const,
+          success: false as const,
+        };
+      }
+      if (resolution.state === 'already_resolved') {
+        return {
+          contractVersion: 2 as const,
+          state: resolution.state,
+          status: resolution.status,
+          success: true as const,
+        };
+      }
+
+      try {
+        const dispatch = await dispatchClaimedAgentIntervention(resolution, dispatchContext);
+        return {
+          contractVersion: 2 as const,
+          ...(dispatch.execution && { execution: toClientExecAgentResult(dispatch.execution) }),
+          state: resolution.state,
+          status: dispatch.status,
+          success: true as const,
+        };
+      } catch (error: any) {
+        if (error instanceof TRPCError) throw error;
+
+        throw toVisitorSafeStartupError('resolveInterventionBySource', error, {
+          showErrorDetails: share.shareConfig.showErrorDetails,
+        });
+      }
+    }),
+
+  /**
+   * Stop the visitor's own parked run from its pending approval card — the
+   * visitor counterpart of `aiAgent.stopPendingApproval`, used when the
+   * deployment has no durable intervention store (OSS) or the rows predate it.
+   * `InterventionController.stopPendingApproval` re-checks that the operation
+   * is the parked owner of `topicId` and every message belongs to it.
+   */
+  stopPendingApproval: shareChatProcedure
+    .input(
+      ShareTopicScopeSchema.extend({
+        batchId: z.string().min(1),
+        operationId: z.string().min(1),
+        toolMessageIds: z.array(z.string()).min(1),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
+      const { aiAgentService, dispatchContext, messageModel, topicModel } =
+        await createShareRunScope(ctx.serverDB, share, ctx.userId);
+      await findVisitorTopicOrThrow(topicModel, {
+        agentId: share.agentId,
+        topicId: input.topicId,
+        visitorUserId: ctx.userId,
+      });
+
+      const stopPlugins = await pMap(
+        input.toolMessageIds,
+        (id) => messageModel.findMessagePlugin(id),
+        { concurrency: 5 },
+      );
+      const hasGenericSource = stopPlugins.every(
+        (plugin) =>
+          Boolean(plugin?.toolCallId) &&
+          plugin?.intervention?.operationId === input.operationId &&
+          plugin.intervention.batchId === input.batchId,
+      );
+      if (hasGenericSource) {
+        const sourceResolution = await resolveAgentInterventionBySource({
+          action: { scope: 'operation', type: 'stop' },
+          actorUserId: ctx.userId,
+          batchId: input.batchId,
+          operationId: input.operationId,
+          resolutionRequestId: randomUUID(),
+          shareVisitor: {
+            agentId: share.agentId,
+            ownerUserId: share.ownerId,
+            topicId: input.topicId,
+          },
+          targets: stopPlugins.map((plugin, index) => ({
+            toolCallId: plugin!.toolCallId!,
+            toolMessageId: input.toolMessageIds[index],
+          })),
+          workspaceId: share.workspaceId ?? undefined,
+        }).catch((error: unknown) => {
+          throw mapAgentInterventionTRPCError(error);
+        });
+        if (sourceResolution.handled) {
+          if (sourceResolution.state === 'already_resolved') {
+            throw new TRPCError({
+              code: 'CONFLICT',
+              message: 'This approval has already been resolved.',
+            });
+          }
+          try {
+            await dispatchClaimedAgentIntervention(sourceResolution, dispatchContext);
+          } catch (error: any) {
+            if (error instanceof TRPCError) throw error;
+
+            throw toVisitorSafeStartupError('stopPendingApproval', error, {
+              showErrorDetails: share.shareConfig.showErrorDetails,
+            });
+          }
+          return {
+            operationId: input.operationId,
+            settledToolMessageIds: input.toolMessageIds,
+            success: true,
+          };
+        }
+      }
+
+      try {
+        return await aiAgentService.stopPendingApproval({
+          batchId: input.batchId,
+          operationId: input.operationId,
+          toolMessageIds: input.toolMessageIds,
+          topicId: input.topicId,
+        });
+      } catch (error: any) {
+        if (error instanceof TRPCError) throw error;
+
+        throw toVisitorSafeStartupError('stopPendingApproval', error, {
+          showErrorDetails: share.shareConfig.showErrorDetails,
+        });
+      }
     }),
 
   /**
@@ -890,9 +1366,13 @@ export const shareChatRouter = router({
     .query(async ({ input, ctx }) => {
       const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
 
-      const topicModel = new TopicModel(ctx.serverDB, share.ownerId, undefined, undefined, {
-        includeShareVisitor: true,
-      });
+      const topicModel = new TopicModel(
+        ctx.serverDB,
+        share.ownerId,
+        share.workspaceId ?? undefined,
+        undefined,
+        { includeShareVisitor: true },
+      );
       const topic = await findVisitorTopicOrThrow(topicModel, {
         agentId: share.agentId,
         topicId: input.topicId,
@@ -934,7 +1414,7 @@ export const shareChatRouter = router({
     .mutation(async ({ input, ctx }) => {
       const share = await resolveLinkShareOrThrow(ctx.serverDB, input.shareId, ctx.userId);
 
-      const fileModel = new FileModel(ctx.serverDB, share.ownerId);
+      const fileModel = new FileModel(ctx.serverDB, share.ownerId, share.workspaceId ?? undefined);
       const accessScope = agentShareFileAccessScope({
         shareId: share.shareId,
         visitorUserId: ctx.userId,
@@ -950,7 +1430,9 @@ export const shareChatRouter = router({
       });
       if (!file) return;
 
-      await new FileService(ctx.serverDB, share.ownerId).deleteFile(file.url!);
+      await new FileService(ctx.serverDB, share.ownerId, share.workspaceId ?? undefined).deleteFile(
+        file.url!,
+      );
     }),
 });
 

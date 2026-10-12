@@ -18,6 +18,7 @@ import type {
   MessageMetadata,
   MessagePluginItem,
   ModelRankItem,
+  ModelReasoning,
   ModelUsage,
   NewMessageQueryParams,
   QueryMessageParams,
@@ -27,6 +28,7 @@ import type {
   UISignalCallbacksBlock,
   UpdateMessageParams,
   UpdateMessageRAGParams,
+  WorkAccessScope,
   WorkSummaryItem,
 } from '@lobechat/types';
 import {
@@ -58,6 +60,7 @@ import {
   inArray,
   isNotNull,
   isNull,
+  lt,
   lte,
   ne,
   not,
@@ -94,14 +97,52 @@ import {
 import type { LobeChatDatabase, Transaction } from '../type';
 import { sanitizeBm25Query } from '../utils/bm25';
 import { notCopiedTranscript } from '../utils/copiedTranscript';
+import { notFileBackedPlaceholder } from '../utils/fileBackedPlaceholder';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
 import { inJsonStringArray } from '../utils/inJsonStringArray';
+import { documentOriginalCharCount } from '../utils/originalCharCount';
 import { searchableMessage } from '../utils/searchableMessage';
 import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
+import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 import { recomputeTopicUsage } from './topicUsage';
 import { WorkModel } from './work';
+
+/**
+ * Parsed-document columns attached to chat file items. `originalCharCount` is only set when the
+ * stored text was cut at parse time; prompts use it to tell the model the text is incomplete.
+ * Selected as a scalar so the rest of `metadata` never leaves the database.
+ */
+const fileDocumentColumns = {
+  content: documents.content,
+  fileId: documents.fileId,
+  originalCharCount: documentOriginalCharCount().mapWith(Number),
+};
+
+/**
+ * A file can own more than one document (`parseDocument` writes a page-editor copy next to the parse
+ * cache). Every reader picks the oldest, matching `DocumentModel.findByFileId`, so a preview and the
+ * `readAttachment` pages that continue it come from the same text.
+ */
+const fileDocumentsOrder = [asc(documents.createdAt), asc(documents.id)];
+
+type FileDocumentsMap = Record<string, { content: string; originalCharCount?: number }>;
+
+const toFileDocumentsMap = (
+  rows: { content: string | null; fileId: string | null; originalCharCount: number | null }[],
+): FileDocumentsMap =>
+  rows.reduce<FileDocumentsMap>((acc, doc) => {
+    // Rows arrive oldest first (see `fileDocumentsOrder`); keep the first so the prompt shows the
+    // same document `DocumentModel.findByFileId` — and therefore `readAttachment` — pages through.
+    if (doc.fileId && !(doc.fileId in acc)) {
+      acc[doc.fileId] = {
+        content: doc.content as string,
+        originalCharCount: doc.originalCharCount ?? undefined,
+      };
+    }
+    return acc;
+  }, {});
 
 const createChatImageItem = ({
   id,
@@ -157,6 +198,7 @@ export interface HumanApprovalResolution {
   content?: string;
   id: string;
   intervention: Record<string, unknown>;
+  pluginError?: MessagePluginItem['error'] | null;
   pluginState?: Record<string, unknown> | null;
   replacePluginState?: boolean;
 }
@@ -187,9 +229,24 @@ export interface QueryMessagesOptions {
    */
   allowShareVisitor?: boolean;
   /**
+   * Round-cursor for loading older history (see `QueryMessageParams.before`):
+   * only rows strictly older than this `(createdAt, id)` tuple are fetched.
+   */
+  before?: { createdAt: Date; id: string };
+  /**
    * Current page number (0-indexed)
    */
   current?: number;
+  /**
+   * Constrain MessageGroup assembly to an explicit `[from, before)` time window
+   * instead of loading every group in the topic (or deriving the window from the
+   * fetched rows). Set by cursor pagination so consecutive pages partition the
+   * topic's groups exactly once: a scroll-up page neither repeats group nodes nor
+   * drops the ones dated between (or older than) its mainline rows. Either bound
+   * may be omitted to leave that side open. Bounds are lossless microsecond
+   * timestamp strings compared with a `::timestamptz` cast.
+   */
+  groupNodeWindow?: MessageGroupNodeWindow;
   /**
    * Opt-in for `file` work summaries in the payload (see
    * `QueryMessageParams.includeFileWorks`).
@@ -219,22 +276,96 @@ export interface QueryMessagesOptions {
    * Custom where condition for message filtering
    */
   where?: SQL;
+  /**
+   * Agent Share boundary for the Work-summary assembly. Omitted = ordinary
+   * scope, which never resolves a share visitor's Works; the share read path
+   * passes `agentShareWorkAccessScope(...)` so a visitor gets exactly the
+   * Works registered from their own share topic.
+   */
+  workAccessScope?: WorkAccessScope;
 }
 
 export interface TopicTranscriptMessage {
+  agentId: string | null;
   content: string | null;
   createdAt: Date;
+  error: ChatMessageError | null;
   id: string;
   messageGroupId: string | null;
+  metadata: MessageMetadata | null;
+  model: string | null;
   parentId: string | null;
+  pluginError: unknown;
+  provider: string | null;
+  reasoning: ModelReasoning | null;
   role: string;
   threadId: string | null;
+  toolCallId: string | null;
   tools: ChatToolPayload[] | null;
+  usage: ModelUsage | null;
 }
 
 export interface TopicTranscriptResult {
   items: TopicTranscriptMessage[];
   total: number;
+}
+
+/**
+ * Round-boundary cursor for {@link MessageModel.queryTopicMessagesByCursor}. Points
+ * at a mainline `user` message (a round start); paging older fetches the rounds
+ * strictly before it.
+ */
+export interface MessageRoundCursor {
+  createdAt: string;
+  id: string;
+}
+
+export interface QueryTopicByCursorParams {
+  /**
+   * Ignored: a concrete topic is the conversation boundary and may hold rows
+   * from several agents/sessions (e.g. `callAgent` replies), same as `query`.
+   * Accepted only so callers can forward their usual query params.
+   */
+  agentId?: string | null;
+  /** Hard cap on rows walked when resolving the round window (safety, ~rows). */
+  countBudget?: number;
+  /** Omit for the initial (newest) page; pass a prior `nextCursor` to load older. */
+  cursor?: MessageRoundCursor | null;
+  /** Group chat topic: rows carry the group id, same filter as `query`. */
+  groupId?: string | null;
+  /** See {@link QueryMessageParams.includeFileWorks}. */
+  includeFileWorks?: boolean;
+  /** How many rounds to load per page (the current round is always whole). */
+  roundLimit?: number;
+  /** Ignored for the same reason as `agentId`. */
+  sessionId?: string | null;
+  skipWorks?: boolean;
+  topicId: string;
+}
+
+export interface TopicMessagesByCursorResult {
+  hasMore: boolean;
+  messages: UIChatMessage[];
+  /** Cursor to load the previous (older) page, or null when at the topic start. */
+  nextCursor: MessageRoundCursor | null;
+}
+
+/** Default rounds per cursor page. */
+const DEFAULT_ROUND_LIMIT = 10;
+/** Default safety cap on rows scanned per cursor page. */
+const DEFAULT_ROUND_COUNT_BUDGET = 2000;
+/**
+ * Row ceiling for the cursor path's underlying `queryWithWhere` fetch. The `where`
+ * already bounds rows to the resolved round window; this only prevents an
+ * unbounded scan and keeps `queryWithWhere`'s newest-first trim disabled (the
+ * result stays below `pageSize`, so the trim guard never fires).
+ */
+const CURSOR_PAGE_CEILING = 100_000;
+
+/** Half-open `[from, before)` MessageGroup window; see `groupNodeWindow`. */
+export interface MessageGroupNodeWindow {
+  before?: string | null;
+  from?: string | null;
 }
 
 export interface ModelTimingContext extends TimingSink {}
@@ -308,7 +439,7 @@ interface ActiveBranchSnapshot {
 }
 
 interface MessageFileRelations {
-  documentsMap: Record<string, string>;
+  documentsMap: FileDocumentsMap;
   relatedFileList: MessageRelatedFile[];
 }
 
@@ -358,6 +489,7 @@ interface CreateMessageRelationParams {
   fileChunks?: CreateMessageParams['fileChunks'];
   files?: CreateMessageParams['files'];
   plugin?: CreateMessageParams['plugin'];
+  pluginError?: CreateMessageParams['pluginError'];
   pluginIntervention?: CreateMessageParams['pluginIntervention'];
   pluginState?: CreateMessageParams['pluginState'];
   ragQueryId?: CreateMessageParams['ragQueryId'];
@@ -798,6 +930,32 @@ const sanitizeVisitorMetadata = (
 };
 
 /**
+ * Project Work summaries for a share visitor. A visitor run executes as the
+ * creator, so `userId` / `workspaceId` on every Work are the CREATOR's account
+ * and workspace — dropped unconditionally, like the message-level `sender`.
+ * The version spend snapshot is the creator's billing figure and follows the
+ * `showModelInfo` gate (`stripSpend`).
+ *
+ * The identity keys are omitted rather than nulled (`userId` is non-nullable on
+ * `WorkItem`); no visitor-facing Work surface reads them.
+ */
+const sanitizeVisitorWorks = (
+  works: WorkSummaryItem[] | undefined,
+  { stripSpend }: { stripSpend: boolean },
+): WorkSummaryItem[] | undefined =>
+  works?.map((work) => {
+    const { userId: _userId, workspaceId: _workspaceId, ...rest } = work;
+    const visible = stripSpend
+      ? {
+          ...rest,
+          event: { ...rest.event, cumulativeCost: null, cumulativeUsage: null },
+          totalCost: null,
+        }
+      : rest;
+    return visible as WorkSummaryItem;
+  });
+
+/**
  * Strip creator-only fields from a message row before it reaches an
  * agent-share visitor. Creator account identity never crosses the share
  * boundary; the creator's model/provider/spend choices cross it only when the
@@ -849,9 +1007,11 @@ export const toVisitorMessage = (
           taskDetail: message.taskDetail,
           usage: message.usage,
         }),
-    // Work summaries join live task/version state under the CREATOR's account
-    // — never served to a visitor surface regardless of share config.
-    works: undefined,
+    // Work summaries reach a visitor only when the query ran under their share
+    // scope (see `queryForVisitor`), so every item here was registered from
+    // this visitor's own topic. Creator identity is always dropped; spend
+    // follows the `showModelInfo` gate — see `sanitizeVisitorWorks`.
+    works: sanitizeVisitorWorks(message.works, { stripSpend: stripModelInfo }),
     // A compacted topic nests raw rows under the group node, and group chat
     // nests member messages, so anything less than a full recursive sanitize
     // would leave the creator's identity on everything inside it.
@@ -911,6 +1071,24 @@ export const toVisitorMessage = (
   } as UIChatMessage;
 };
 
+export interface SoftDeletedMessage {
+  /** Live children that were re-parented away from this message at trash time. */
+  childIds: string[];
+  content: string | null;
+  id: string;
+  /** Pulled in as a tool companion of a requested message (never a root of its own). */
+  isCompanion: boolean;
+  /**
+   * For a companion: the requested message whose tool call produced it, so the
+   * caller can file it under the right root. `null` for requested rows.
+   */
+  ownerId: string | null;
+  parentId: string | null;
+  projectId: string | null;
+  role: string;
+  topicId: string | null;
+}
+
 export class MessageModel {
   private userId: string;
   private db: LobeChatDatabase;
@@ -941,13 +1119,28 @@ export class MessageModel {
   }
 
   /**
-   * Raw workspace/user scope, WITHOUT the visitor exclusion. Backing store
-   * for {@link ownership} and the escape hatch for methods that resolve the
+   * Workspace/user scope plus the live parent-topic fence, WITHOUT the visitor
+   * exclusion. Topic-less rows remain valid. Backing store for
+   * {@link ownership} and the escape hatch for methods that resolve the
    * effective visitor gate per-call ({@link deleteMessage},
    * {@link deleteMessages}, {@link query} via `allowShareVisitor`, …).
    */
   private workspaceScope = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages);
+    and(
+      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messages),
+      or(
+        isNull(messages.topicId),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+            ),
+        ),
+      ),
+    );
 
   /**
    * Default visitor exclusion applied by {@link ownership} — see
@@ -986,6 +1179,20 @@ export class MessageModel {
     if (rows.length === 0) return 'visitor';
     return rows[0].senderId === null ? 'creator' : 'visitor';
   };
+
+  /**
+   * Scope predicate without the recycle-bin filter — restore / purge internals
+   * only. Keeps the visitor exclusion of {@link ownership} so a creator-facing
+   * restore or purge can never reach an agent-share visitor row.
+   */
+  private trashScope = () =>
+    and(
+      buildWorkspaceWhere(
+        { includeTrashed: true, userId: this.userId, workspaceId: this.workspaceId },
+        messages,
+      ),
+      this.notShareVisitor(),
+    );
 
   private pluginsOwnership = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, messagePlugins);
@@ -1044,6 +1251,7 @@ export class MessageModel {
   query = async (
     {
       agentId,
+      before,
       current = 0,
       includeFileWorks,
       pageSize = 1000,
@@ -1068,6 +1276,8 @@ export class MessageModel {
         file: { fileType: string; id?: string | null },
       ) => Promise<string>;
       timing?: ModelTimingContext;
+      /** See {@link QueryMessagesOptions.workAccessScope}. */
+      workAccessScope?: WorkAccessScope;
     } = {},
   ) => {
     const queryStartedAt = Date.now();
@@ -1142,6 +1352,7 @@ export class MessageModel {
       const threadScopeCondition = topicId ? this.matchTopic(topicId) : agentCondition;
       const messageItems = await this.queryWithWhere({
         allowShareVisitor: effectiveIncludeVisitor,
+        before,
         current,
         includeFileWorks,
         pageSize,
@@ -1149,6 +1360,7 @@ export class MessageModel {
         skipWorks,
         timing,
         topicId: topicId ?? undefined,
+        workAccessScope: options.workAccessScope,
         where: and(threadScopeCondition, threadCondition),
       });
       logTiming(timing, 'db.message.query:done', {
@@ -1170,6 +1382,7 @@ export class MessageModel {
 
       const messageItems = await this.queryWithWhere({
         allowShareVisitor: effectiveIncludeVisitor,
+        before,
         current,
         includeFileWorks,
         pageSize,
@@ -1177,6 +1390,7 @@ export class MessageModel {
         skipWorks,
         timing,
         topicId: topicId ?? undefined,
+        workAccessScope: options.workAccessScope,
         where: whereCondition,
       });
       logTiming(timing, 'db.message.query:done', {
@@ -1202,6 +1416,7 @@ export class MessageModel {
 
     const messageItems = await this.queryWithWhere({
       allowShareVisitor: effectiveIncludeVisitor,
+      before,
       current,
       includeFileWorks,
       pageSize,
@@ -1210,6 +1425,7 @@ export class MessageModel {
       timing,
       topicId: topicId ?? undefined,
       where: whereCondition,
+      workAccessScope: options.workAccessScope,
     });
     logTiming(timing, 'db.message.query:done', {
       messageCount: messageItems.length,
@@ -1238,11 +1454,20 @@ export class MessageModel {
       ) => Promise<string>;
       redaction?: VisitorRedactionOptions;
       timing?: ModelTimingContext;
+      /**
+       * The visitor's share scope for Work summaries. Omitting it skips Work
+       * assembly entirely (fail closed): the ordinary scope would join the
+       * CREATOR's Works, which must never reach a visitor surface.
+       */
+      workAccessScope?: WorkAccessScope;
     } = {},
   ): Promise<UIChatMessage[]> => {
     // The only caller allowed past `query()`'s visitor guard: the topic was
     // already resolved and authorized as this visitor's own share topic.
-    const messageItems = await this.query(params, { ...options, allowShareVisitor: true });
+    const messageItems = await this.query(
+      { ...params, skipWorks: params.skipWorks || !options.workAccessScope },
+      { ...options, allowShareVisitor: true },
+    );
     return messageItems.map((message) => toVisitorMessage(message, options.redaction));
   };
 
@@ -1295,6 +1520,15 @@ export class MessageModel {
     const [items, totalResult] = await Promise.all([
       this.db
         .select({
+          agentId: messages.agentId,
+          error: messages.error,
+          metadata: messages.metadata,
+          model: messages.model,
+          pluginError: messagePlugins.error,
+          provider: messages.provider,
+          reasoning: messages.reasoning,
+          toolCallId: messagePlugins.toolCallId,
+          usage: messages.usage,
           content: messages.content,
           createdAt: messages.createdAt,
           id: messages.id,
@@ -1305,6 +1539,7 @@ export class MessageModel {
           tools: messages.tools,
         })
         .from(messages)
+        .leftJoin(messagePlugins, and(eq(messagePlugins.id, messages.id), this.pluginsOwnership()))
         .where(where)
         .orderBy(asc(messages.createdAt), asc(messages.id))
         .limit(limit)
@@ -1316,9 +1551,12 @@ export class MessageModel {
     ]);
 
     return {
-      items: items.map(({ tools, ...message }) => ({
+      items: items.map(({ tools, usage, ...message }) => ({
         ...message,
+        error: message.error as ChatMessageError | null,
+        metadata: message.metadata as MessageMetadata | null,
         tools: Array.isArray(tools) ? (tools as ChatToolPayload[]) : null,
+        usage: usage ?? message.metadata?.usage ?? null,
       })),
       total: totalResult[0]?.count ?? 0,
     };
@@ -1370,6 +1608,7 @@ export class MessageModel {
   queryWithWhere = async (options: QueryMessagesOptions = {}): Promise<UIChatMessage[]> => {
     const {
       where,
+      before,
       current = 0,
       includeFileWorks,
       pageSize = 1000,
@@ -1378,6 +1617,8 @@ export class MessageModel {
       topicId,
       timing,
       allowShareVisitor,
+      workAccessScope,
+      groupNodeWindow,
     } = options;
     const totalStartedAt = Date.now();
     const offset = current * pageSize;
@@ -1385,6 +1626,16 @@ export class MessageModel {
     // instance's `includeShareVisitor` so either widens the scope.
     const scope =
       allowShareVisitor || this.includeShareVisitor ? this.workspaceScope() : this.ownership();
+
+    // Round-cursor paging: only rows strictly older than the `(createdAt, id)`
+    // tuple. The id tie-break mirrors the sort order below, so rows sharing a
+    // createdAt with the cursor are neither skipped nor duplicated.
+    const beforeCondition = before
+      ? or(
+          lt(messages.createdAt, before.createdAt),
+          and(eq(messages.createdAt, before.createdAt), lt(messages.id, before.id)),
+        )
+      : undefined;
 
     // 1. get basic messages with joins, excluding messages that belong to MessageGroups
     const result = await runTimedStage(
@@ -1461,6 +1712,7 @@ export class MessageModel {
               // Filter out messages that belong to MessageGroups
               isNull(messages.messageGroupId),
               where,
+              beforeCondition,
             ),
           )
           .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
@@ -1495,15 +1747,14 @@ export class MessageModel {
     // round with no user message in view is kept whole (the proper fix for those
     // is lazy step loading). Thread queries pass no `topicId` and are untouched.
     //
-    // Scope: this only serves the single "most recent page" load (`current === 0`),
-    // which is the only page the chat read path ever requests — `current`/`pageSize`
-    // offset paging is dead code here (the very premise of). The trim is
-    // deliberately NOT offset-exact: the rows it drops from page 0 also fall outside
-    // page 1's `offset = pageSize` window, so a hypothetical offset walk would skip
-    // them. That is acceptable because nothing offset-walks this path; loading older
-    // history is round-cursor based (see the follow-up), which supersedes offset
-    // paging entirely and closes that gap by construction.
-    if (topicId && current === 0 && result.length >= pageSize) {
+    // Scope: this serves the single "most recent page" load (`current === 0`)
+    // and the round-cursor `before` pages that walk older history — the only
+    // shapes the chat read path requests; `current`/`pageSize` offset paging is
+    // dead code here (the very premise of). The trim is deliberately NOT
+    // offset-exact: rows dropped from one page reappear at the TOP of the next
+    // `before` page (its cursor is the trimmed page's oldest kept row), so the
+    // round-cursor walk loses nothing by construction.
+    if (topicId && (current === 0 || before) && result.length >= pageSize) {
       const firstRoundStart = result.findIndex((message) => message.role === 'user');
       if (firstRoundStart > 0) result.splice(0, firstRoundStart);
     }
@@ -1513,10 +1764,12 @@ export class MessageModel {
     const messageGroupNodesPromise = this.queryMessageGroupNodesForPage({
       allowShareVisitor: allowShareVisitor || this.includeShareVisitor,
       current,
+      hasBeforeCursor: !!before,
       postProcessUrl,
       result,
       timing,
       topicId,
+      window: groupNodeWindow,
     });
 
     const taskMessageIds = result
@@ -1540,7 +1793,7 @@ export class MessageModel {
       this.queryMessageThreadRelations(taskMessageIds, timing),
       skipWorks
         ? ({} as Record<string, WorkSummaryItem[]>)
-        : this.queryMessageWorkSummaries(result, includeFileWorks, timing),
+        : this.queryMessageWorkSummaries(result, includeFileWorks, timing, workAccessScope),
     ]);
 
     if (messageIds.length === 0 && messageGroupNodes.length === 0) {
@@ -1620,7 +1873,8 @@ export class MessageModel {
                   name === null
                     ? { fileType: '', id, inaccessible: true, name: '', size: 0, url: '' }
                     : {
-                        content: documentsMap[id],
+                        content: documentsMap[id]?.content,
+                        originalCharCount: documentsMap[id]?.originalCharCount,
                         fileType: fileType!,
                         id,
                         name,
@@ -1684,13 +1938,200 @@ export class MessageModel {
     return allItems;
   };
 
+  /**
+   * Cursor-paginated read of a topic's mainline conversation, aligned to round
+   * boundaries (a mainline `user` message starts a round). Built for callers that
+   * only DISPLAY history and never resend it to the model — server-runtime
+   * (gateway) and local hetero agents — where eagerly loading the whole transcript
+   * is wasteful on long topics. Legacy client mode keeps using `query` (full
+   * fetch) because it resends the entire session each turn.
+   *
+   * Initial load (`cursor` omitted) returns the newest `roundLimit` rounds, or
+   * fewer if `countBudget` is reached first, but the current round is always
+   * whole. Pass the returned `nextCursor` to load the previous rounds (scroll up).
+   * Unlike offset paging, cursors land on round boundaries, so consecutive pages
+   * are gap-free and never split a round.
+   */
+  queryTopicMessagesByCursor = async (
+    {
+      countBudget = DEFAULT_ROUND_COUNT_BUDGET,
+      cursor,
+      groupId,
+      includeFileWorks,
+      roundLimit = DEFAULT_ROUND_LIMIT,
+      skipWorks,
+      topicId,
+    }: QueryTopicByCursorParams,
+    options: {
+      postProcessUrl?: (
+        path: string | null,
+        file: { fileType: string; id?: string | null },
+      ) => Promise<string>;
+      timing?: ModelTimingContext;
+    } = {},
+  ): Promise<TopicMessagesByCursorResult> => {
+    // Same visitor gate as `query`: a creator's read of an agent-share visitor
+    // topic fails closed, and a verified creator topic skips the per-row check.
+    if ((await this.resolveTopicVisitorScope(topicId)) === 'visitor') {
+      return { hasMore: false, messages: [], nextCursor: null };
+    }
+
+    // Mainline = this topic (and its chat group, if any), not in a thread. Like
+    // the standard `query`, a concrete topic is the conversation boundary: it is
+    // NOT narrowed by agent/session, because a topic may legitimately hold rows
+    // from several agents (e.g. `callAgent` / delegated replies).
+    const mainlineWhere = and(
+      this.matchTopic(topicId),
+      this.matchGroup(groupId),
+      this.matchThread(undefined),
+    );
+
+    const { lowerBound, hasMore } = await this.resolveRoundWindow({
+      countBudget,
+      cursor,
+      mainlineWhere,
+      roundLimit,
+    });
+
+    // MessageGroup nodes (compression / comparison) are partitioned across pages
+    // by the same `[lowerBound, cursor)` window as mainline rows, so each group is
+    // emitted exactly once over a full backward walk. The oldest page (`!hasMore`)
+    // leaves the lower side open so groups dated before the first remaining
+    // mainline row — including a topic whose whole history was compressed — stay
+    // reachable instead of vanishing.
+    const groupNodeWindow: MessageGroupNodeWindow = {
+      before: cursor?.createdAt ?? null,
+      from: hasMore && lowerBound ? lowerBound.createdAt : null,
+    };
+
+    // No lower bound means no mainline rows remain — either the topic has none
+    // (e.g. compression moved every message into a group) or nothing older than
+    // the cursor is left. The page is then group-only: fetch no mainline rows (an
+    // unbounded `where` would wrongly reload the entire topic) but still assemble
+    // the remaining group nodes.
+    //
+    // Otherwise bound the window on BOTH sides: at/after the resolved round start,
+    // and — when paging older — strictly before the cursor. Without the upper
+    // bound the window would also re-include every newer round already loaded.
+    const where = lowerBound
+      ? and(
+          mainlineWhere,
+          this.messageAtOrAfter(lowerBound),
+          cursor ? this.messageStrictlyBefore(cursor) : undefined,
+        )
+      : sql`false`;
+
+    const messages = await this.queryWithWhere({
+      allowShareVisitor: true,
+      current: 0,
+      includeFileWorks,
+      pageSize: CURSOR_PAGE_CEILING,
+      postProcessUrl: options.postProcessUrl,
+      skipWorks,
+      timing: options.timing,
+      topicId,
+      where,
+      // Only assemble group nodes within this page's window (not the whole topic),
+      // so scroll-up pages don't repeat groups or eagerly load compressed history.
+      groupNodeWindow,
+    });
+
+    // `lowerBound.createdAt` is already the lossless microsecond cursor string.
+    return { hasMore, messages, nextCursor: hasMore && lowerBound ? lowerBound : null };
+  };
+
+  /**
+   * Resolve the round window for a cursor page: walk mainline rows newest-first
+   * and stop at the `roundLimit`-th round boundary (a `user` message) or the
+   * `countBudget` safety cap, whichever comes first. Returns the lower bound (the
+   * oldest included round's start) and whether older rounds remain.
+   */
+  private resolveRoundWindow = async ({
+    countBudget,
+    cursor,
+    mainlineWhere,
+    roundLimit,
+  }: {
+    countBudget: number;
+    cursor?: MessageRoundCursor | null;
+    mainlineWhere: SQL | undefined;
+    roundLimit: number;
+  }): Promise<{ hasMore: boolean; lowerBound: { createdAt: string; id: string } | null }> => {
+    const olderThanCursor = cursor ? this.messageStrictlyBefore(cursor) : undefined;
+
+    const rows = (await this.db
+      .select({
+        // Microsecond-precision UTC string. `createdAt` is a timestamptz whose
+        // now() default can carry microseconds, but a JS Date keeps only
+        // milliseconds — a Date-derived cursor would round sub-millisecond
+        // boundaries and let rows leak between adjacent pages. Carry the lossless
+        // value in the cursor and compare it back with a ::timestamptz cast.
+        createdAtIso: sql<string>`to_char(${messages.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`,
+        id: messages.id,
+        role: messages.role,
+      })
+      .from(messages)
+      .where(and(this.ownership(), isNull(messages.messageGroupId), mainlineWhere, olderThanCursor))
+      .orderBy(desc(messages.createdAt), desc(messages.id))
+      .limit(countBudget + 1)) as { createdAtIso: string; id: string; role: string }[];
+
+    if (rows.length === 0) return { hasMore: false, lowerBound: null };
+
+    let rounds = 0;
+    let boundaryIndex = -1;
+    for (let i = 0; i < rows.length; i += 1) {
+      if (rows[i].role === 'user') {
+        rounds += 1;
+        boundaryIndex = i;
+        if (rounds >= roundLimit) break;
+      }
+      // Safety cap: once a full budget has been walked and at least one whole
+      // round is captured, stop at the last boundary instead of scanning further.
+      if (i + 1 >= countBudget && rounds >= 1) break;
+    }
+
+    // No `user` turn in the visible window — an oversized newest round, or a tail
+    // with no user turn. Fall back to the oldest fetched row; that slice is a
+    // partial round the renderer roots as an orphan chain. Lazy step loading is
+    // the proper fix (a later stage).
+    if (boundaryIndex === -1) boundaryIndex = rows.length - 1;
+
+    const boundaryRow = rows[boundaryIndex];
+    const hasMore = boundaryIndex < rows.length - 1 || rows.length > countBudget;
+
+    return { hasMore, lowerBound: { createdAt: boundaryRow.createdAtIso, id: boundaryRow.id } };
+  };
+
+  /**
+   * `(createdAt, id)` strictly before the cursor — the "older than" half-open
+   * bound. Compares against the cursor's lossless microsecond string cast to
+   * `timestamptz`, so sub-millisecond boundaries stay exact.
+   */
+  private messageStrictlyBefore = (cursor: MessageRoundCursor) =>
+    or(
+      sql`${messages.createdAt} < ${cursor.createdAt}::timestamptz`,
+      and(
+        sql`${messages.createdAt} = ${cursor.createdAt}::timestamptz`,
+        lt(messages.id, cursor.id),
+      ),
+    );
+
+  /** `(createdAt, id)` at or after the lower bound — the inclusive window start. */
+  private messageAtOrAfter = (bound: { createdAt: string; id: string }) =>
+    or(
+      sql`${messages.createdAt} > ${bound.createdAt}::timestamptz`,
+      and(sql`${messages.createdAt} = ${bound.createdAt}::timestamptz`, gte(messages.id, bound.id)),
+    );
+
   private queryMessageGroupNodesForPage = async ({
     allowShareVisitor,
     current,
+    hasBeforeCursor,
     postProcessUrl,
     result,
     timing,
     topicId,
+    window,
   }: {
     /**
      * Effective visitor gate resolved by the caller (per-call
@@ -1703,6 +2144,13 @@ export class MessageModel {
      */
     allowShareVisitor?: boolean;
     current: number;
+    /**
+     * The page was fetched with a round-cursor (`before`): scope group nodes to
+     * the page's time window instead of the whole topic — page 0 already
+     * returned every group node, so an unwindowed fetch here would only
+     * duplicate them.
+     */
+    hasBeforeCursor?: boolean;
     postProcessUrl?: (
       path: string | null,
       file: { fileType: string; id?: string | null },
@@ -1710,11 +2158,26 @@ export class MessageModel {
     result: { createdAt: Date }[];
     timing?: ModelTimingContext;
     topicId?: string;
+    /** Explicit group window (cursor pagination); overrides the row-derived one. */
+    window?: MessageGroupNodeWindow;
   }): Promise<UIChatMessage[]> => {
     if (!topicId) return [];
 
+    if (window) {
+      return runTimedStage(
+        timing,
+        'db.message.queryWithWhere.messageGroups',
+        () =>
+          this.queryMessageGroupNodes(topicId, undefined, postProcessUrl, timing, {
+            allowShareVisitor,
+            window,
+          }),
+        { current, hasMessages: result.length > 0, topicId },
+      );
+    }
+
     if (result.length === 0) {
-      if (current !== 0) return [];
+      if (current !== 0 || hasBeforeCursor) return [];
 
       return runTimedStage(
         timing,
@@ -1727,7 +2190,7 @@ export class MessageModel {
       );
     }
 
-    if (current === 0) {
+    if (current === 0 && !hasBeforeCursor) {
       return runTimedStage(
         timing,
         'db.message.queryWithWhere.messageGroups',
@@ -1838,22 +2301,14 @@ export class MessageModel {
       'db.message.queryWithWhere.documents.select',
       () =>
         this.db
-          .select({
-            content: documents.content,
-            fileId: documents.fileId,
-          })
+          .select(fileDocumentColumns)
           .from(documents)
-          .where(inArray(documents.fileId, fileIds)),
+          .where(and(inArray(documents.fileId, fileIds), notFileBackedPlaceholder()))
+          .orderBy(...fileDocumentsOrder),
       { fileCount: fileIds.length },
     );
 
-    const documentsMap = documentsList.reduce(
-      (acc, doc) => {
-        if (doc.fileId) acc[doc.fileId] = doc.content as string;
-        return acc;
-      },
-      {} as Record<string, string>,
-    );
+    const documentsMap = toFileDocumentsMap(documentsList);
 
     return { documentsMap, relatedFileList };
   };
@@ -1917,6 +2372,7 @@ export class MessageModel {
     rows: { id: unknown; metadata: unknown }[],
     includeFileWorks?: boolean,
     timing?: ModelTimingContext,
+    workAccessScope?: WorkAccessScope,
   ): Promise<Record<string, WorkSummaryItem[]>> => {
     const anchorByRootId = new Map<string, string>();
     for (const row of rows) {
@@ -1929,7 +2385,12 @@ export class MessageModel {
       timing,
       'db.message.queryWithWhere.workSummaries',
       () =>
-        new WorkModel(this.db, this.userId, this.workspaceId).listSummariesByRootOperations({
+        new WorkModel(
+          this.db,
+          this.userId,
+          this.workspaceId,
+          workAccessScope,
+        ).listSummariesByRootOperations({
           includeFileWorks,
           rootOperationIds: Array.from(anchorByRootId.keys()),
         }),
@@ -2221,24 +2682,16 @@ export class MessageModel {
       .map((file) => file.id)
       .filter(Boolean);
 
-    let documentsMap: Record<string, string> = {};
+    let documentsMap: FileDocumentsMap = {};
 
     if (fileIds.length > 0) {
       const documentsList = await this.db
-        .select({
-          content: documents.content,
-          fileId: documents.fileId,
-        })
+        .select(fileDocumentColumns)
         .from(documents)
-        .where(inArray(documents.fileId, fileIds));
+        .where(and(inArray(documents.fileId, fileIds), notFileBackedPlaceholder()))
+        .orderBy(...fileDocumentsOrder);
 
-      documentsMap = documentsList.reduce(
-        (acc, doc) => {
-          if (doc.fileId) acc[doc.fileId] = doc.content as string;
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
+      documentsMap = toFileDocumentsMap(documentsList);
     }
 
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
@@ -2319,7 +2772,8 @@ export class MessageModel {
               name === null
                 ? { fileType: '', id, inaccessible: true, name: '', size: 0, url: '' }
                 : {
-                    content: documentsMap[id],
+                    content: documentsMap[id]?.content,
+                    originalCharCount: documentsMap[id]?.originalCharCount,
                     fileType: fileType!,
                     id,
                     name,
@@ -2371,7 +2825,7 @@ export class MessageModel {
       file: { fileType: string; id?: string | null },
     ) => Promise<string>,
     timing?: ModelTimingContext,
-    options: { allowShareVisitor?: boolean } = {},
+    options: { allowShareVisitor?: boolean; window?: MessageGroupNodeWindow } = {},
   ): Promise<UIChatMessage[]> => {
     // Effective visitor gate — see `queryMessageGroupNodesForPage`. Absent
     // this predicate, a creator's default `query({ topicId })` on a visitor
@@ -2393,6 +2847,15 @@ export class MessageModel {
         gte(messageGroups.createdAt, timeRange.startTime),
         lte(messageGroups.createdAt, timeRange.endTime),
       );
+    }
+
+    // Explicit half-open `[from, before)` window from cursor pagination, compared
+    // against lossless microsecond strings so page boundaries stay exact.
+    if (options.window?.from) {
+      whereConditions.push(sql`${messageGroups.createdAt} >= ${options.window.from}::timestamptz`);
+    }
+    if (options.window?.before) {
+      whereConditions.push(sql`${messageGroups.createdAt} < ${options.window.before}::timestamptz`);
     }
 
     const groups = await runTimedStage(
@@ -2634,7 +3097,18 @@ export class MessageModel {
       where: and(
         this.ownership(),
         eq(messages.agentId, agentId),
-        eq(messages.topicId, topicId),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              and(
+                eq(topics.id, topicId),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            ),
+        ),
         eq(messages.threadId, threadId),
         eq(messages.role, 'assistant'),
       ),
@@ -2648,7 +3122,7 @@ export class MessageModel {
   findVerifyMessageByOperationId = async (operationId: string) => {
     return this.db.query.messages.findFirst({
       where: and(
-        eq(messages.userId, this.userId),
+        this.ownership(),
         eq(messages.role, 'verify'),
         sql`${messages.metadata}->>'verifyOperationId' = ${operationId}`,
       ),
@@ -2675,8 +3149,19 @@ export class MessageModel {
   }) => {
     return this.db.query.messages.findFirst({
       where: and(
-        eq(messages.userId, this.userId),
-        eq(messages.topicId, topicId),
+        this.ownership(),
+        inArray(
+          messages.topicId,
+          this.db
+            .select({ id: topics.id })
+            .from(topics)
+            .where(
+              and(
+                eq(topics.id, topicId),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            ),
+        ),
         eq(messages.role, 'assistant'),
         sql`${messages.metadata}->>'operationId' = ${operationId}`,
       ),
@@ -3206,6 +3691,7 @@ export class MessageModel {
     files,
     model: fromModel,
     plugin,
+    pluginError,
     pluginIntervention,
     pluginState,
     provider: fromProvider,
@@ -3225,6 +3711,7 @@ export class MessageModel {
       fileChunks,
       files,
       plugin,
+      pluginError,
       pluginIntervention,
       pluginState,
       ragQueryId,
@@ -3266,6 +3753,7 @@ export class MessageModel {
       fileChunks,
       files,
       plugin,
+      pluginError,
       pluginIntervention,
       pluginState,
       ragQueryId,
@@ -3281,6 +3769,9 @@ export class MessageModel {
         trx.insert(messagePlugins).values({
           apiName: clampToolIdentifier(plugin?.apiName),
           arguments: sanitizeNullBytes(plugin?.arguments),
+          // A tool that fails on its first write only has pluginError to explain
+          // itself; without it the model reads an empty tool result.
+          error: sanitizeNullBytes(pluginError),
           id,
           identifier: clampToolIdentifier(plugin?.identifier),
           intervention: pluginIntervention,
@@ -3615,7 +4106,10 @@ export class MessageModel {
 
     return this.db
       .update(messages)
-      .set({ metadata: mergedMetadata, ...(usageToWrite && { usage: usageToWrite }) })
+      .set({
+        metadata: mergedMetadata,
+        ...(usageToWrite && { usage: usageToWrite }),
+      })
       .where(and(eq(messages.id, id), this.ownership()));
   };
 
@@ -3652,10 +4146,13 @@ export class MessageModel {
   /**
    * Resolve an approval batch at one row-locking boundary. Every target is
    * checked before any write, so Web, Mobile, Stop, and notification actions
-   * cannot each win a subset of the same assistant turn.
+   * cannot each win a subset of the same assistant turn. Source adapters claim
+   * only; content/state remain in their private resolution until the runtime
+   * passes publishResult after afterToolCall. Stop may publish its fixed receipt.
    */
   resolveHumanApproval = async (
     resolutions: HumanApprovalResolution[],
+    options: { publishResult?: boolean } = {},
   ): Promise<'applied' | 'idempotent'> => {
     if (resolutions.length === 0) return 'idempotent';
 
@@ -3665,6 +4162,14 @@ export class MessageModel {
     }
 
     return this.db.transaction(async (trx) => {
+      // Match deferred completion's lock order (message before plugin).
+      const lockedMessages = await trx
+        .select({ id: messages.id, content: messages.content })
+        .from(messages)
+        .where(and(inArray(messages.id, ids), this.ownership()))
+        .orderBy(messages.id)
+        .for('update');
+      const messagesById = new Map(lockedMessages.map((row) => [row.id, row]));
       const lockedRows = await trx
         .select({
           id: messagePlugins.id,
@@ -3693,14 +4198,26 @@ export class MessageModel {
         throw new HumanApprovalAlreadyResolvedError(resolution.id);
       });
       const pendingCount = rowStates.filter((state) => state === 'pending').length;
-      if (pendingCount === 0) return 'idempotent';
-      if (pendingCount !== resolutions.length) {
+      if (pendingCount === 0 && !options.publishResult) return 'idempotent';
+      if (pendingCount !== 0 && pendingCount !== resolutions.length) {
         throw new Error('Human approval batch contains a partial idempotent claim');
       }
 
+      let published = false;
       for (const resolution of resolutions) {
+        // An already claimed source answer can publish exactly once. A replay
+        // retains the first final content, including a hook denial.
+        if (
+          pendingCount === 0 &&
+          (messagesById.get(resolution.id)?.content ||
+            (resolution.content === undefined &&
+              resolution.pluginState === undefined &&
+              resolution.pluginError === undefined))
+        )
+          continue;
+        published = true;
         const row = lockedById.get(resolution.id)!;
-        if (resolution.content !== undefined) {
+        if (options.publishResult && resolution.content !== undefined) {
           const [updatedMessage] = await trx
             .update(messages)
             .set({ content: resolution.content })
@@ -3717,18 +4234,21 @@ export class MessageModel {
             // parked tool row was created so subsequent source reads, Stop,
             // and rollback still address the same sealed batch.
             intervention: merge(row.intervention || {}, resolution.intervention),
-            ...(resolution.pluginState !== undefined && {
-              state: resolution.replacePluginState
-                ? resolution.pluginState
-                : merge(row.state || {}, resolution.pluginState || {}),
-            }),
+            ...(options.publishResult &&
+              resolution.pluginError !== undefined && { error: resolution.pluginError }),
+            ...(options.publishResult &&
+              resolution.pluginState !== undefined && {
+                state: resolution.replacePluginState
+                  ? resolution.pluginState
+                  : merge(row.state || {}, resolution.pluginState || {}),
+              }),
           })
           .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()))
           .returning({ id: messagePlugins.id });
         if (!updatedPlugin) throw new Error(`Plugin not found: ${resolution.id}`);
       }
 
-      return 'applied';
+      return published ? 'applied' : 'idempotent';
     });
   };
 
@@ -3738,6 +4258,12 @@ export class MessageModel {
 
     await this.db.transaction(async (trx) => {
       const ids = resolutions.map(({ id }) => id);
+      await trx
+        .select({ id: messages.id })
+        .from(messages)
+        .where(and(inArray(messages.id, ids), this.ownership()))
+        .orderBy(messages.id)
+        .for('update');
       const lockedRows = await trx
         .select({ id: messagePlugins.id, intervention: messagePlugins.intervention })
         .from(messagePlugins)
@@ -3766,6 +4292,7 @@ export class MessageModel {
           .update(messagePlugins)
           .set({
             intervention: resolution.intervention,
+            ...(resolution.pluginError !== undefined && { error: resolution.pluginError }),
             ...(resolution.pluginState !== undefined && { state: resolution.pluginState }),
           })
           .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()));
@@ -3847,6 +4374,47 @@ export class MessageModel {
       type: row.type ?? 'default',
       userId: row.userId,
     }));
+  };
+
+  /**
+   * The `state` of the most recent call to one tool API in a topic that
+   * produced any — a failed or aborted call leaves no state. Lets a tool read
+   * back what an earlier call in the same conversation produced, e.g. the group
+   * a builder conversation last created with `createGroup`.
+   *
+   * Scoped like a message query for the same branch: without `threadId` only
+   * the main conversation counts; with it, the thread plus the parent messages
+   * its type inherits — never a sibling thread.
+   */
+  findLatestPluginStateInTopic = async (params: {
+    apiName: string;
+    identifier: string;
+    threadId?: string | null;
+    topicId: string;
+  }): Promise<Record<string, any> | undefined> => {
+    const threadCondition = params.threadId
+      ? await this.buildThreadQueryCondition(params.threadId)
+      : isNull(messages.threadId);
+
+    const [row] = await this.db
+      .select({ state: messagePlugins.state })
+      .from(messagePlugins)
+      .innerJoin(messages, eq(messagePlugins.id, messages.id))
+      .where(
+        and(
+          eq(messages.topicId, params.topicId),
+          threadCondition,
+          eq(messagePlugins.identifier, params.identifier),
+          eq(messagePlugins.apiName, params.apiName),
+          isNotNull(messagePlugins.state),
+          this.ownership(),
+          this.pluginsOwnership(),
+        ),
+      )
+      .orderBy(desc(messages.createdAt), desc(messages.id))
+      .limit(1);
+
+    return row?.state ?? undefined;
   };
 
   /**
@@ -4096,9 +4664,20 @@ export class MessageModel {
       metadata?: Record<string, any>;
       pluginError?: any;
       pluginState?: Record<string, any>;
+      /** Replace rather than merge when withholding a complete tool result. */
+      replacePluginState?: boolean;
+      /** Finalize a deferred placeholder once; later callbacks cannot replace its result. */
+      onlyIfEmpty?: boolean;
     },
   ): Promise<{ applied: boolean; snapshotSeq?: number; success: boolean }> => {
-    const { content, heterogeneousToolState, metadata, pluginState, pluginError } = params;
+    const {
+      content,
+      heterogeneousToolState,
+      metadata,
+      pluginState,
+      pluginError,
+      replacePluginState,
+    } = params;
 
     // `undefined` while no branch has looked for the row yet; see `update` above
     // for why a write that matches nothing must not report success.
@@ -4108,6 +4687,20 @@ export class MessageModel {
 
     try {
       await this.db.transaction(async (trx) => {
+        if (params.onlyIfEmpty) {
+          const [message] = await trx
+            .select({ content: messages.content })
+            .from(messages)
+            .where(and(eq(messages.id, id), this.ownership()))
+            .for('update');
+          matchedRow = !!message;
+          if (!message) return;
+          if (message.content) {
+            applied = false;
+            return;
+          }
+        }
+
         let existingMetadata: Record<string, any> | undefined;
 
         if (metadata !== undefined || heterogeneousToolState !== undefined) {
@@ -4154,7 +4747,7 @@ export class MessageModel {
           const messageUpdateData: Record<string, any> = {};
 
           if (content !== undefined) {
-            messageUpdateData.content = content;
+            messageUpdateData.content = sanitizeNullBytes(content);
           }
 
           if (metadata !== undefined || heterogeneousToolState !== undefined) {
@@ -4183,16 +4776,18 @@ export class MessageModel {
           const pluginUpdateData: Record<string, any> = {};
 
           if (pluginState !== undefined) {
+            const sanitizedState = sanitizeNullBytes(pluginState);
             // Snapshot writes replace the whole runtime state. Ordinary patches
             // own complete top-level keys and merge inside the UPDATE so an
             // answer write cannot race away an intervention-terminal write.
-            pluginUpdateData.state = heterogeneousToolState
-              ? pluginState
-              : sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(pluginState)}::jsonb`;
+            pluginUpdateData.state =
+              heterogeneousToolState || replacePluginState
+                ? sanitizedState
+                : sql`coalesce(${messagePlugins.state}, '{}'::jsonb) || ${JSON.stringify(sanitizedState)}::jsonb`;
           }
 
           if (pluginError !== undefined) {
-            pluginUpdateData.error = pluginError;
+            pluginUpdateData.error = sanitizeNullBytes(pluginError);
           }
 
           const [updatedPlugin] = await trx
@@ -4833,6 +5428,301 @@ export class MessageModel {
           ),
         ),
       );
+
+  // **************** Recycle bin *************** //
+
+  /**
+   * Move messages to the recycle bin. Mirrors {@link deleteMessages} step for
+   * step — tool companions are pulled in, live children are re-parented onto
+   * the nearest surviving ancestor, the active-branch pointer is reconciled and
+   * the topic usage rollup recomputed — but the rows are stamped instead of
+   * dropped. Returns one entry per stamped row with the tree data a restore
+   * needs to splice it back (`parentId` + the child ids that were re-parented
+   * away from it), and whether the row was an explicitly requested root or a
+   * tool companion pulled in with it.
+   */
+  softDeleteMessages = async (
+    ids: string[],
+    options: SoftDeleteOptions,
+  ): Promise<SoftDeletedMessage[]> => {
+    if (ids.length === 0) return [];
+
+    return this.db.transaction(async (tx) => {
+      const requested = await tx
+        .select({
+          content: messages.content,
+          id: messages.id,
+          parentId: messages.parentId,
+          projectId: topics.projectId,
+          role: messages.role,
+          tools: messages.tools,
+          topicId: messages.topicId,
+        })
+        .from(messages)
+        .leftJoin(
+          topics,
+          and(
+            eq(messages.topicId, topics.id),
+            buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+          ),
+        )
+        .where(and(this.ownership(), inArray(messages.id, ids)));
+      if (requested.length === 0) return [];
+
+      // Tool companions: the tool-result rows of a trashed assistant turn go
+      // with it (same rule as the hard delete).
+      const toolCallIds = requested
+        .flatMap((row) => ((row.tools as ChatToolPayload[]) ?? []).map((tool) => tool.id))
+        .filter(Boolean);
+      const requestedIds = new Set(requested.map((row) => row.id));
+      // toolCallId → the requested row that issued it, so each companion is
+      // attributed to its own assistant turn rather than to the batch.
+      const toolCallOwner = new Map<string, string>();
+      for (const row of requested) {
+        for (const tool of (row.tools as ChatToolPayload[]) ?? []) {
+          if (tool.id) toolCallOwner.set(tool.id, row.id);
+        }
+      }
+      const companionOwner = new Map<string, string>();
+      let companions: typeof requested = [];
+      if (toolCallIds.length > 0) {
+        const companionRows = await tx
+          .select({ id: messagePlugins.id, toolCallId: messagePlugins.toolCallId })
+          .from(messagePlugins)
+          .where(inArray(messagePlugins.toolCallId, toolCallIds));
+        for (const row of companionRows) {
+          const owner = row.toolCallId ? toolCallOwner.get(row.toolCallId) : undefined;
+          if (owner && !requestedIds.has(row.id)) companionOwner.set(row.id, owner);
+        }
+        const companionIds = [...companionOwner.keys()];
+        if (companionIds.length > 0) {
+          companions = await tx
+            .select({
+              content: messages.content,
+              id: messages.id,
+              parentId: messages.parentId,
+              projectId: topics.projectId,
+              role: messages.role,
+              tools: messages.tools,
+              topicId: messages.topicId,
+            })
+            .from(messages)
+            .leftJoin(
+              topics,
+              and(
+                eq(messages.topicId, topics.id),
+                buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, topics),
+              ),
+            )
+            .where(and(this.ownership(), inArray(messages.id, companionIds)));
+        }
+      }
+
+      const toDelete = [...requested, ...companions];
+      const deleteIds = toDelete.map((row) => row.id);
+      const deleteSet = new Set(deleteIds);
+      const parentMap = new Map(toDelete.map((row) => [row.id, row.parentId] as const));
+
+      const finalAncestorMap = new Map<string, string | null>();
+      const findFinalAncestor = (id: string): string | null => {
+        if (finalAncestorMap.has(id)) return finalAncestorMap.get(id)!;
+        const parentId = parentMap.get(id);
+        if (parentId === null || parentId === undefined) {
+          finalAncestorMap.set(id, null);
+          return null;
+        }
+        if (!deleteSet.has(parentId)) {
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+        const ancestor = findFinalAncestor(parentId);
+        finalAncestorMap.set(id, ancestor);
+        return ancestor;
+      };
+      for (const id of deleteSet) findFinalAncestor(id);
+
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(
+        tx,
+        [...new Set(finalAncestorMap.values())].filter((id): id is string => id !== null),
+      );
+
+      // Live children re-parented onto the nearest surviving ancestor —
+      // remembered per message so a restore can hand them back.
+      const children = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(
+          and(
+            this.ownership(),
+            inArray(messages.parentId, deleteIds),
+            not(inArray(messages.id, deleteIds)),
+          ),
+        );
+      const childIdsByParent = new Map<string, string[]>();
+      for (const child of children) {
+        const list = childIdsByParent.get(child.parentId!) ?? [];
+        list.push(child.id);
+        childIdsByParent.set(child.parentId!, list);
+        await tx
+          .update(messages)
+          .set({ parentId: finalAncestorMap.get(child.parentId!) ?? null })
+          .where(and(eq(messages.id, child.id), this.ownership()));
+      }
+
+      await tx
+        .update(messages)
+        .set(trashStamp(options.deletedAt))
+        .where(and(this.ownership(), inArray(messages.id, deleteIds)));
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
+
+      const affectedTopicIds = [
+        ...new Set(toDelete.map((m) => m.topicId).filter(Boolean) as string[]),
+      ];
+      for (const topicId of affectedTopicIds) {
+        await recomputeTopicUsage(tx, this.userId, topicId, this.workspaceId);
+      }
+
+      return toDelete.map((row) => ({
+        childIds: childIdsByParent.get(row.id) ?? [],
+        content: row.content,
+        id: row.id,
+        isCompanion: !requestedIds.has(row.id),
+        ownerId: companionOwner.get(row.id) ?? null,
+        parentId: row.parentId,
+        projectId: row.projectId,
+        role: row.role,
+        topicId: row.topicId,
+      }));
+    });
+  };
+
+  /**
+   * Bring trashed messages back and splice them into their branch: the stamp
+   * is cleared and the children recorded at trash time are re-parented onto
+   * the message again (best effort — a child that has since moved or gone is
+   * left alone). The active-branch pointer of the parent keeps pointing at
+   * whatever branch is active today.
+   */
+  restoreMessages = async (
+    entries: { childIds?: string[]; id: string; parentId?: string | null }[],
+  ): Promise<string[]> => {
+    if (entries.length === 0) return [];
+    return this.db.transaction(async (tx) => {
+      const ids = entries.map((entry) => entry.id);
+      const rows = await tx
+        .select({ id: messages.id, parentId: messages.parentId, topicId: messages.topicId })
+        .from(messages)
+        .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+      if (rows.length === 0) return [];
+
+      const parentIds = rows.map((row) => row.parentId).filter((id): id is string => !!id);
+      const activeBranchSnapshots = await this.captureActiveBranchSnapshots(tx, parentIds);
+
+      // Report what the write restored, not what the read saw: a purge that
+      // commits in between leaves nothing to update, and the caller must not
+      // count that row as restored.
+      const updated = await tx
+        .update(messages)
+        .set(restoreStamp())
+        .where(
+          and(
+            this.trashScope(),
+            inArray(
+              messages.id,
+              rows.map((row) => row.id),
+            ),
+            isTrashed(messages.isDeleted),
+          ),
+        )
+        .returning({ id: messages.id });
+      const restoredIds = new Set(updated.map((row) => row.id));
+
+      for (const entry of entries) {
+        if (!restoredIds.has(entry.id) || !entry.childIds?.length) continue;
+        await tx
+          .update(messages)
+          .set({ parentId: entry.id })
+          .where(and(inArray(messages.id, entry.childIds), this.trashScope()));
+      }
+
+      // While the row was in the bin its children hung off its parent, and the
+      // user may have picked one of them as the active branch there. They now
+      // move back under the restored row, so carry that choice up to it —
+      // otherwise reconciliation cannot find the child among the parent's
+      // branches, drops the selection and the view can jump to a sibling.
+      const restoredAncestorOf = new Map<string, string>();
+      for (const entry of entries) {
+        if (!restoredIds.has(entry.id)) continue;
+        for (const childId of entry.childIds ?? []) restoredAncestorOf.set(childId, entry.id);
+      }
+      for (const snapshot of activeBranchSnapshots) {
+        const ancestor = snapshot.activeBranchId && restoredAncestorOf.get(snapshot.activeBranchId);
+        if (ancestor) snapshot.activeBranchId = ancestor;
+      }
+
+      await this.reconcileActiveBranchSnapshots(tx, activeBranchSnapshots);
+
+      const affectedTopicIds = [...new Set(rows.map((m) => m.topicId).filter(Boolean) as string[])];
+      for (const topicId of affectedTopicIds) {
+        await recomputeTopicUsage(tx, this.userId, topicId, this.workspaceId);
+      }
+      return [...restoredIds];
+    });
+  };
+
+  findTrashedByIds = async (ids: string[]) => {
+    if (ids.length === 0) return [];
+    return this.db
+      .select({
+        agentId: messages.agentId,
+        id: messages.id,
+        parentId: messages.parentId,
+        sessionId: messages.sessionId,
+        topicId: messages.topicId,
+      })
+      .from(messages)
+      .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+  };
+
+  /**
+   * Cascade helper for trashing an agent: stamps the live messages that hang
+   * off the given agents or their legacy session shells WITHOUT a topic. Rows
+   * inside a topic are hidden by that topic's own stamp; topic-less rows have
+   * no parent to hide them (`workspaceScope()` treats them as live), so they
+   * are stamped directly and registered as the agent's children. Their branch
+   * stays intact, so a plain restore of the same ids brings them back.
+   */
+  softDeleteTopicless = async (
+    parents: { agentIds?: string[]; sessionIds?: string[] },
+    options: SoftDeleteOptions,
+  ) => {
+    const conditions: SQL[] = [];
+    if (parents.agentIds?.length) conditions.push(inArray(messages.agentId, parents.agentIds));
+    if (parents.sessionIds?.length)
+      conditions.push(inArray(messages.sessionId, parents.sessionIds));
+    if (conditions.length === 0) return [];
+
+    return this.db
+      .update(messages)
+      .set(trashStamp(options.deletedAt))
+      .where(and(isNull(messages.topicId), or(...conditions), this.ownership()))
+      .returning({ content: messages.content, id: messages.id, role: messages.role });
+  };
+
+  /**
+   * Hard delete for the purge sweep. Children were already re-parented at trash
+   * time and usage already excludes stamped rows, so this is a plain delete
+   * keyed on `scope()`.
+   */
+  purgeMessages = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    // Only rows still stamped: a restore that commits between the purge's
+    // registry read and this delete must win.
+    return this.db
+      .delete(messages)
+      .where(and(this.trashScope(), inArray(messages.id, ids), isTrashed(messages.isDeleted)));
+  };
 
   /**
    * Creator-facing "clear this session/topic/group" sweep.

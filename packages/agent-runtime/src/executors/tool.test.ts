@@ -176,6 +176,41 @@ describe('tool executors', () => {
     expect(result.newState.usage.tools.totalCalls).toBe(1);
   });
 
+  it('deduplicates activatedTools persisted in one tool result (PR #20791 P2 regression)', async () => {
+    // persistActivatedTools updates its dedup set inside the filter: a result
+    // listing the same plugin twice (e.g. two wire names of one plugin both
+    // resolved to the same identifier) must be appended once.
+    runTool = vi.fn().mockResolvedValue({
+      attempts: 1,
+      result: {
+        content: 'Tool result',
+        executionTime: 100,
+        state: {
+          activatedTools: [
+            { identifier: 'lobe-web-browsing' },
+            { identifier: 'lobe-web-browsing' },
+          ],
+        },
+        success: true,
+      },
+    });
+    host.transports.tools!.run = runTool;
+
+    const instruction: Extract<AgentInstruction, { type: 'call_tool' }> = {
+      payload: {
+        parentMessageId: 'assistant-msg-1',
+        toolCalling: createToolCall(),
+      },
+      type: 'call_tool',
+    };
+
+    const result = await callTool(host)(instruction, createState());
+
+    const stepTools = result.newState.activatedStepTools ?? [];
+    expect(stepTools).toHaveLength(1);
+    expect(stepTools[0]).toMatchObject({ id: 'lobe-web-browsing', source: 'discovery' });
+  });
+
   it('parks single client-source tools without invoking the transport runner', async () => {
     const instruction: Extract<AgentInstruction, { type: 'call_tool' }> = {
       payload: {
@@ -609,6 +644,38 @@ describe('tool executors', () => {
     expect(result.events).toContainEqual(
       expect.objectContaining({ reason: 'async_tool', type: 'interrupted' }),
     );
+  });
+
+  // An approved async tool (group member task / sub-agent) resumes with the
+  // approve op's seeded "…" placeholder still on state. Parking keeps nothing in
+  // it: the server-side resume writes its own reply, and the empty seed left
+  // under the tool hid that reply.
+  it('retires the resume-seeded placeholder when an approved async tool parks', async () => {
+    runTool.mockResolvedValue({
+      attempts: 1,
+      result: {
+        content: '',
+        deferred: true,
+        state: { status: 'pending', toolMessageId: 'approved-tool' },
+        success: true,
+      },
+    });
+
+    const result = await callTool(host)(
+      {
+        payload: {
+          parentMessageId: 'approved-tool',
+          skipCreateToolMessage: true,
+          toolCalling: createToolCall('task-call', 'lobe-group-management'),
+        },
+        type: 'call_tool',
+      },
+      createState({ pendingAssistantMessageId: 'seeded-placeholder' } as any),
+    );
+
+    expect(result.newState.status).toBe('waiting_for_async_tool');
+    expect(host.transports.messages.deleteMessage).toHaveBeenCalledWith('seeded-placeholder');
+    expect(result.newState.pendingAssistantMessageId).toBeUndefined();
   });
 
   it('omits toolMessageIds when a deferred tool reports no placeholder', async () => {
@@ -1138,6 +1205,109 @@ describe('tool executors', () => {
       // Resuming an approved batch continues from the assistant that emitted
       // it, exactly like a batch that never paused.
       expect(result.nextContext?.payload).toMatchObject({ parentMessageId: 'assistant-msg-1' });
+    });
+  });
+
+  describe('serialized batch calls', () => {
+    // Several editFile calls to one path in a batch reached the device at once;
+    // each read the same snapshot and the last write dropped the others while
+    // every call reported success. Calls naming the same resource through
+    // `serializeBy` queue in emission order; other paths stay concurrent.
+    const manifestMap = {
+      'lobe-local-system': {
+        api: [
+          { name: 'editFile', serializeBy: 'file_path' },
+          { name: 'writeFile', serializeBy: 'path' },
+          { name: 'readFile' },
+        ],
+        identifier: 'lobe-local-system',
+      },
+    };
+
+    const fileCall = (id: string, apiName: string, args: Record<string, unknown>) => ({
+      apiName,
+      arguments: JSON.stringify(args),
+      id,
+      identifier: 'lobe-local-system',
+      type: 'builtin' as const,
+    });
+
+    const trackingRunner = (delays: Record<string, number>, timeline: string[]) =>
+      vi.fn().mockImplementation(async (tool: { id: string }) => {
+        timeline.push(`start:${tool.id}`);
+        await new Promise((resolve) => setTimeout(resolve, delays[tool.id] ?? 0));
+        timeline.push(`end:${tool.id}`);
+        return {
+          attempts: 1,
+          result: { content: `done ${tool.id}`, executionTime: 1, state: {}, success: true },
+        };
+      });
+
+    beforeEach(() => {
+      host.transports.messages.createToolMessage = vi
+        .fn()
+        .mockImplementation(async ({ tool_call_id }: { tool_call_id: string }) => ({
+          id: `tool-msg-${tool_call_id}`,
+        }));
+    });
+
+    it('runs edits and writes to one path one after another, in emission order', async () => {
+      const timeline: string[] = [];
+      host.transports.tools!.run = trackingRunner(
+        { 'edit-1': 30, 'edit-2': 10, 'write-1': 0 },
+        timeline,
+      );
+
+      const result = await callToolsBatch(host)(
+        {
+          payload: {
+            parentMessageId: 'assistant-msg-1',
+            toolsCalling: [
+              fileCall('edit-1', 'editFile', { file_path: '/repo/a.ts', old_string: 'x' }),
+              fileCall('edit-2', 'editFile', { file_path: '/repo/a.ts', old_string: 'y' }),
+              fileCall('write-1', 'writeFile', { content: 'z', path: '/repo/a.ts' }),
+            ],
+          },
+          type: 'call_tools_batch',
+        },
+        createState({ toolManifestMap: manifestMap }),
+      );
+
+      expect(timeline).toEqual([
+        'start:edit-1',
+        'end:edit-1',
+        'start:edit-2',
+        'end:edit-2',
+        'start:write-1',
+        'end:write-1',
+      ]);
+      expect((result.nextContext?.payload as any).toolResults).toHaveLength(3);
+    });
+
+    it('keeps edits to different paths and unmarked reads concurrent', async () => {
+      const timeline: string[] = [];
+      host.transports.tools!.run = trackingRunner(
+        { 'edit-a': 30, 'edit-b': 0, 'read-a': 0 },
+        timeline,
+      );
+
+      await callToolsBatch(host)(
+        {
+          payload: {
+            parentMessageId: 'assistant-msg-1',
+            toolsCalling: [
+              fileCall('edit-a', 'editFile', { file_path: '/repo/a.ts', old_string: 'x' }),
+              fileCall('edit-b', 'editFile', { file_path: '/repo/b.ts', old_string: 'x' }),
+              fileCall('read-a', 'readFile', { path: '/repo/a.ts' }),
+            ],
+          },
+          type: 'call_tools_batch',
+        },
+        createState({ toolManifestMap: manifestMap }),
+      );
+
+      // All three start before the slow edit to a.ts finishes.
+      expect(timeline.slice(0, 3).sort()).toEqual(['start:edit-a', 'start:edit-b', 'start:read-a']);
     });
   });
 

@@ -44,7 +44,7 @@ import { connectorSelectors } from '@/store/tool/slices/connector';
 import PluginTag from './PluginTag';
 import PopoverContent from './PopoverContent';
 import { getVisibleProfileToolIds } from './profileToolVisibility';
-import { resolveStalePluginCleanup } from './staleProfilePlugins';
+import { resolveStalePluginCleanup, selectProfileToolCatalogsSynced } from './staleProfilePlugins';
 
 export interface AgentToolProps {
   /**
@@ -202,6 +202,11 @@ const AgentTool = memo<AgentToolProps>(
       [agentConnectors, excludeAgentConnectors],
     );
     const isConnectorsInit = useToolStore((s) => s.isConnectorsInit);
+    const isToolStoreCatalogSynced = useToolStore(selectProfileToolCatalogsSynced);
+    // Not `serverConfigInit`: it is also set by the error fallback, whose default
+    // config hides the Composio and LobeHub Skill catalogs.
+    const isServerConfigLoaded = useServerConfigStore((s) => s.serverConfigLoaded);
+    const isToolCatalogSynced = isToolStoreCatalogSynced && isServerConfigLoaded;
     const fetchConnectors = useToolStore((s) => s.fetchConnectors);
     useEffect(() => {
       if (!isConnectorsInit) fetchConnectors();
@@ -785,18 +790,19 @@ const AgentTool = memo<AgentToolProps>(
     // Track whether initial cleanup has been performed
     const cleanupDoneRef = useRef(false);
 
-    // Auto-remove stale plugin IDs from the agent config
-    // Uses a short debounce to allow async data (SWR) to complete loading
+    // Auto-remove stale plugin IDs from the agent config. The catalog gates
+    // decide when the data is complete; the debounce only coalesces the burst
+    // of catalog updates that arrive together.
     useEffect(() => {
       if (cleanupDoneRef.current) return;
 
-      // Defer cleanup to avoid race with async data loading (SWR, Composio, etc.)
       const timer = setTimeout(() => {
         const cleanedPlugins = resolveStalePluginCleanup({
           canEditContent: canEdit,
           canEditResource,
           isAccessResolved,
           isConnectorsInit,
+          isToolCatalogSynced,
           plugins: config?.plugins,
           validIdentifiers,
         });
@@ -817,7 +823,14 @@ const AgentTool = memo<AgentToolProps>(
 
       return () => clearTimeout(timer);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [validIdentifiers, canEdit, canEditResource, isAccessResolved, isConnectorsInit]);
+    }, [
+      validIdentifiers,
+      canEdit,
+      canEditResource,
+      isAccessResolved,
+      isConnectorsInit,
+      isToolCatalogSynced,
+    ]);
 
     // Only display tools that this profile surface actually manages. Runtime-
     // managed entries remain untouched in config for compatibility with other

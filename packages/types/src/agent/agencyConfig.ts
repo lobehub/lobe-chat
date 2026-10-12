@@ -37,7 +37,12 @@ import {
 } from './heteroSelectorCapabilities';
 
 export type HeterogeneousAgentModelCatalogErrorCode =
-  'cli_not_found' | 'command_failed' | 'device_unavailable' | 'timeout' | 'unsupported_client';
+  | 'cli_not_found'
+  | 'command_failed'
+  | 'device_unavailable'
+  | 'timeout'
+  | 'unsupported_client'
+  | 'unsupported_configuration';
 
 /** One model reported by a heterogeneous CLI's device-local model catalog. */
 export interface HeterogeneousAgentModel {
@@ -58,10 +63,12 @@ export interface ListHeterogeneousAgentModelsParams {
   env?: Record<string, string>;
   type:
     | 'codebuddy'
+    | 'codex'
     | 'cursor'
     | 'devin'
     | 'droid'
     | 'grok-build'
+    | 'kimi-code'
     | 'opencode'
     | 'pi'
     | 'qoder'
@@ -116,6 +123,20 @@ export const isServerDefaultHeterogeneousModel = (
   requestModel: unknown,
   operationModel: string,
 ): boolean => requestModel === formatServerDefaultHeterogeneousModel(operationModel);
+
+/**
+ * Model-card facts a CLI needs to describe a deployment model it has no
+ * built-in entry for (context window, modalities, reasoning). Credential-free.
+ */
+export interface ServerDefaultHeterogeneousModelDescriptor {
+  abilities: { reasoning: boolean; vision: boolean };
+  contextWindowTokens?: number;
+  displayName?: string;
+  maxOutput?: number;
+  model: string;
+  /** Served on the OpenAI Responses API natively; Codex ships its own entry for it. */
+  nativeResponses: boolean;
+}
 
 export interface ServerDefaultHeterogeneousRelayInvocation {
   acceptedAt: string;
@@ -450,7 +471,7 @@ interface QoderSelectionSource {
 const HETERO_EXEC_AGENT_ARG_FLAG = '--agent-arg';
 
 const modelFlagsOf = (
-  type: 'codex' | 'grok-build' | 'opencode' | 'pi' | 'qoder',
+  type: 'codex' | 'grok-build' | 'kimi-code' | 'opencode' | 'pi' | 'qoder',
 ): readonly string[] =>
   HETERO_SELECTOR_CAPABILITIES[type].model.encodings.flatMap((encoding: HeteroCliEncoding) =>
     encoding.kind === 'flag' ? encoding.flags : [],
@@ -459,6 +480,7 @@ const modelFlagsOf = (
 const CODEX_MODEL_FLAGS = modelFlagsOf('codex');
 const CURSOR_MODEL_FLAGS = ['--model'] as const;
 const GROK_BUILD_MODEL_FLAGS = modelFlagsOf('grok-build');
+const KIMI_CODE_MODEL_FLAGS = modelFlagsOf('kimi-code');
 const OPENCODE_MODEL_FLAGS = modelFlagsOf('opencode');
 const PI_MODEL_FLAGS = modelFlagsOf('pi');
 const QODER_MODEL_FLAGS = modelFlagsOf('qoder');
@@ -620,12 +642,23 @@ export const buildHeteroSpawnArgs = (
     }
   }
 
-  if (provider.type === 'cursor' || provider.type === 'devin' || provider.type === 'kimi-code') {
+  if (provider.type === 'cursor' || provider.type === 'devin') {
     const model = provider.model?.trim();
     if (
       model &&
       model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
       !hasAnyCliFlag(baseArgs, CURSOR_MODEL_FLAGS)
+    ) {
+      extraArgs.push('--model', model);
+    }
+  }
+
+  if (provider.type === 'kimi-code') {
+    const model = provider.model?.trim();
+    if (
+      model &&
+      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
+      !hasAnyCliFlag(baseArgs, KIMI_CODE_MODEL_FLAGS)
     ) {
       extraArgs.push('--model', model);
     }
@@ -777,12 +810,23 @@ export const buildHeteroExecArgs = (
     }
   }
 
-  if (provider.type === 'cursor' || provider.type === 'devin' || provider.type === 'kimi-code') {
+  if (provider.type === 'cursor' || provider.type === 'devin') {
     const model = provider.model?.trim();
     if (
       model &&
       model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
       !hasAnyCliFlag(baseArgs, CURSOR_MODEL_FLAGS)
+    ) {
+      selectorArgs.push('--model', model);
+    }
+  }
+
+  if (provider.type === 'kimi-code') {
+    const model = provider.model?.trim();
+    if (
+      model &&
+      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
+      !hasAnyCliFlag(baseArgs, KIMI_CODE_MODEL_FLAGS)
     ) {
       selectorArgs.push('--model', model);
     }
@@ -1048,6 +1092,9 @@ export interface LobeAgentAgencyConfig {
    * Legacy values are plain path strings. New git-aware values may carry `git`
    * metadata; when `git.activeWorktree` is present, that active worktree is the
    * effective cwd while `path` remains the source/recent entry.
+   * Each device value is a complete selection: updating it replaces the value,
+   * including Git metadata. Other devices are preserved; `undefined` deletes
+   * an explicitly patched device entry.
    *
    * Keyed per device so switching the bound device never resolves a path that
    * only exists on another machine. Persisted (server-synced) so the choice
@@ -1250,20 +1297,20 @@ export const resolveAgentAgencyConfig = (
 };
 
 /**
- * Apply "undefined means delete" semantics to a `workingDirByDevice` patch.
+ * Apply per-device replacement semantics to a `workingDirByDevice` patch.
  *
- * Deep-merge (used by both the client optimistic store and the server persist
- * path) can only add/overwrite keys — it silently skips `undefined` sources, so
- * it can never *remove* a per-device entry. To clear a device's cwd the patch
- * carries `{ [deviceId]: undefined }`; this prunes those keys from the merged
- * map after the merge has run.
+ * Run after a config deep-merge. Only explicitly marked devices are complete
+ * selections: omitted Git fields must not survive from the previous repository.
+ * Unmarked entries retain legacy deep-merge semantics because older clients
+ * send cached complete maps. Explicit `undefined` values still remove entries.
  *
  * Mutates `merged` in place (safe on an immer draft) and is a no-op when the
  * patch touches no device entries.
  */
-export const pruneWorkingDirByDeviceDeletes = (
+export const applyWorkingDirByDevicePatch = (
   merged: { workingDirByDevice?: Record<string, unknown> } | null | undefined,
   patch: { workingDirByDevice?: Record<string, unknown> } | null | undefined,
+  replaceDeviceIds: readonly string[] = [],
 ): void => {
   const incoming = patch?.workingDirByDevice;
   const target = merged?.workingDirByDevice;
@@ -1271,5 +1318,6 @@ export const pruneWorkingDirByDeviceDeletes = (
 
   for (const key of Object.keys(incoming)) {
     if (incoming[key] === undefined) delete target[key];
+    else if (replaceDeviceIds.includes(key)) target[key] = incoming[key];
   }
 };

@@ -7,6 +7,7 @@ import urlJoin from 'url-join';
 import { UserModel } from '@/database/models/user';
 import { appEnv } from '@/envs/app';
 import { getJWKS } from '@/libs/oidc-provider/jwt';
+import { OIDC_ISSUER_PATH, OIDC_ROUTES } from '@/libs/oidc-provider/routes';
 import { normalizeLocale } from '@/locales/resources';
 
 import { isOIDCUserBanned } from './access-control';
@@ -30,9 +31,17 @@ export const oidcArtifactTTL = {
   BackchannelAuthenticationRequest: 10 * MINUTE_SECONDS,
   ClientCredentials: 10 * MINUTE_SECONDS,
   DeviceCode: 10 * MINUTE_SECONDS,
-  // oidc-provider never extends Grant.exp on refresh, so this is the absolute cap on a
-  // signed-in session no matter how often the refresh token rotates.
-  Grant: 365 * DAY_SECONDS,
+  /**
+   * A grant is the standing record of "this account authorised this client". oidc-provider
+   * checks `grant.isExpired` on every refresh but never extends `Grant.exp`, so any finite
+   * value here caps a signed-in session however active it is: the library's 14-day default
+   * logged every client out a fortnight after login while its refresh token still sat unused
+   * and unexpired. Inactivity is already expressed by `RefreshToken`, whose TTL restarts on
+   * each rotation, so a grant carries no deadline of its own. `ttl` entries do accept
+   * `undefined`, but the configuration merge drops undefined values, so "never" has to be
+   * spelled as a century.
+   */
+  Grant: 100 * 365 * DAY_SECONDS,
   IdToken: HOUR_SECONDS,
   Interaction: HOUR_SECONDS,
   RefreshToken: 30 * DAY_SECONDS,
@@ -298,13 +307,11 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // Added: enable refresh token rotation
     rotateRefreshToken: true,
 
-    routes: {
-      authorization: '/oidc/auth',
-      code_verification: '/oidc/device',
-      device_authorization: '/oidc/device/auth',
-      end_session: '/oidc/session/end',
-      token: '/oidc/token',
-    },
+    // Every route is written with the `/oidc` prefix because the provider is
+    // mounted under it and the adapter hands it the untouched pathname. A route
+    // left at its default (e.g. `/jwks`) is therefore unreachable: the request
+    // arrives as `/oidc/jwks` and the provider answers 404.
+    routes: { ...OIDC_ROUTES },
     // 3. Scopes definition
     scopes: defaultScopes,
 
@@ -313,7 +320,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
   };
 
   // Create provider instance
-  const baseUrl = urlJoin(appEnv.APP_URL!, '/oidc');
+  const baseUrl = urlJoin(appEnv.APP_URL!, OIDC_ISSUER_PATH);
 
   const provider = new Provider(baseUrl, configuration);
   provider.proxy = true;
@@ -325,6 +332,44 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
   provider.on('authorization.success', (ctx) => {
     logProvider('Authorization successful for client: %s', ctx.oidc.client?.clientId); // Use logProvider
+  });
+
+  /**
+   * A rejected token request is the moment a client loses its session, and until this listener
+   * existed it left no trace on the server: oidc-provider answers the client and nothing else,
+   * so the platform logs showed a bare `POST /oidc/token 400` with no client, no grant type and
+   * no reason. `error_detail` is the field worth having — it separates "grant not found" from
+   * "refresh token already used" from "client mismatch", and the spec keeps it out of the
+   * response body, so the server is the only place it can be read.
+   *
+   * Logged at warn, not error: a client presenting a dead token is its own fault, not an
+   * incident, and drowning the error feed in it would bury the failures that are ours.
+   */
+  provider.on('grant.error', (ctx, err) => {
+    const error = err as { error?: string; error_description?: string; error_detail?: string };
+
+    console.warn(
+      '[OIDC] grant rejected',
+      JSON.stringify({
+        clientId: ctx.oidc?.client?.clientId,
+        error: error.error,
+        errorDescription: error.error_description,
+        errorDetail: error.error_detail,
+        grantType: ctx.oidc?.params?.grant_type,
+        status: ctx.status,
+      }),
+    );
+  });
+
+  provider.on('grant.revoked', (ctx, grantId) => {
+    console.warn(
+      '[OIDC] grant revoked',
+      JSON.stringify({
+        clientId: ctx.oidc?.client?.clientId,
+        grantId,
+        grantType: ctx.oidc?.params?.grant_type,
+      }),
+    );
   });
 
   return provider;

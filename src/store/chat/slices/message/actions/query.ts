@@ -4,9 +4,9 @@ import debug from 'debug';
 import isEqual from 'fast-deep-equal';
 import { type SWRResponse } from 'swr';
 
+import { readConversationMessageListPage } from '@/helpers/conversationMessageRead';
 import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
 import { isMessageListKey } from '@/libs/swr/keys';
-import { messageService } from '@/services/message';
 import {
   getMessageListCacheIdentity,
   getMessageListFetchPolicy,
@@ -15,6 +15,7 @@ import {
   messageListKey,
   runMessageListQuery,
 } from '@/services/message/cache';
+import { persistSettledTranscript } from '@/services/message/replica';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import {
@@ -97,18 +98,20 @@ export class MessageQueryActionImpl {
 
     prefetchingMessageKeys.add(messagesKey);
 
-    const request = runMessageListQuery(context, messageService.getMessages).then((messages) => {
-      // Re-check at DELIVERY time, not just at start: the user can open this
-      // topic and submit a follow-up while the request is in flight. Applying
-      // the pre-run snapshot then would drop the freshly created user/assistant
-      // rows, and streaming updates targeting those now-missing ids are silent
-      // no-ops until terminal reconciliation. Mirrors the defense-in-depth gate
-      // in `useFetchMessages`' onData; the SWR cache seed below is unaffected.
-      if (!operationSelectors.isAgentRuntimeRunningByContext(context)(this.#get())) {
-        this.#get().replaceMessages(messages, { action: 'prefetchMessages', context });
-      }
-      return messages;
-    });
+    const request = runMessageListQuery(context, readConversationMessageListPage).then(
+      (messages) => {
+        // Re-check at DELIVERY time, not just at start: the user can open this
+        // topic and submit a follow-up while the request is in flight. Applying
+        // the pre-run snapshot then would drop the freshly created user/assistant
+        // rows, and streaming updates targeting those now-missing ids are silent
+        // no-ops until terminal reconciliation. Mirrors the defense-in-depth gate
+        // in `useFetchMessages`' onData; the SWR cache seed below is unaffected.
+        if (!operationSelectors.isAgentRuntimeRunningByContext(context)(this.#get())) {
+          this.#get().replaceMessages(messages, { action: 'prefetchMessages', context });
+        }
+        return messages;
+      },
+    );
 
     try {
       await mutate(messageListKey(context), request, { revalidate: false });
@@ -254,7 +257,9 @@ export class MessageQueryActionImpl {
     if (isEqual(nextDbMap, this.#get().dbMessagesMap)) return;
 
     // Parse messages using conversation-flow
-    const { flatList } = parse(reconciled);
+    // A thread view's rows are its ancestors plus its replies; scope the parse to that thread
+    // so the replies are not dropped as a side conversation.
+    const { flatList } = parse(reconciled, undefined, { threadId: ctx.threadId });
 
     this.#set(
       {
@@ -327,6 +332,14 @@ export class MessageQueryActionImpl {
     // A concrete canonical key creates the cache entry even when no subscriber
     // has mounted yet, which lets a later conversation switch render locally.
     void mutate(messageListKey(ctx), messages, { revalidate: false });
+    const active = this.#get();
+    if (
+      ctx.agentId !== active.activeAgentId ||
+      ctx.topicId !== active.activeTopicId ||
+      (ctx.threadId ?? null) !== (active.activeThreadId ?? null)
+    ) {
+      persistSettledTranscript({ ...ctx, agentId: ctx.agentId, topicId: ctx.topicId }, messages);
+    }
   };
 
   useFetchMessages = (
@@ -354,7 +367,7 @@ export class MessageQueryActionImpl {
 
     return useClientDataSWRWithSync<UIChatMessage[]>(
       shouldFetch ? messageListKey(context) : null,
-      () => runMessageListQuery(context, messageService.getMessages),
+      () => runMessageListQuery(context, readConversationMessageListPage),
       {
         ...getMessageListFetchPolicy(context),
         onData: (data) => {

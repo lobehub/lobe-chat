@@ -53,6 +53,7 @@ import {
   buildResourcePermissionState,
 } from '@/server/services/resourcePermission';
 import { assertTransferRecipientValid } from '@/server/services/resourceTransferRequest';
+import { TrashService } from '@/server/services/trash';
 import {
   hasWorkspaceScopedPermission,
   isWorkspacePrimaryOwner,
@@ -160,14 +161,16 @@ export const agentRouter = router({
     }),
 
   /**
-   * Count non-virtual agents with optional keyword filter, matching the
-   * conditions of queryAgents. Lets paginated callers report real totals.
+   * Count the agents matching the conditions of queryAgents — other virtual
+   * rows excluded, and the inbox (Lobe AI) counted only when the caller passes
+   * `includeInbox: true`. Lets paginated callers report real totals.
    */
   countAgents: agentProcedure
     .input(
       z
         .object({
           endDate: z.string().optional(),
+          includeInbox: z.boolean().optional(),
           keyword: z.string().optional(),
           range: z.tuple([z.string(), z.string()]).optional(),
           startDate: z.string().optional(),
@@ -746,14 +749,18 @@ export const agentRouter = router({
     }),
 
   /**
-   * Query non-virtual agents with optional keyword filter.
-   * Returns agents with minimal info (id, title, description, avatar, backgroundColor).
+   * Query the user's agents with optional keyword filter — other virtual rows
+   * excluded, and the inbox (Lobe AI) included and flagged with `isInbox` only
+   * when the caller passes `includeInbox: true`.
+   * Returns agents with minimal info (id, name, title, description, avatar,
+   * backgroundColor).
    * Used by AddGroupMemberModal and group-management tool to search/select agents.
    */
   queryAgents: agentProcedure
     .input(
       z
         .object({
+          includeInbox: z.boolean().optional(),
           keyword: z.string().optional(),
           limit: z.number().max(100).optional(),
           offset: z.number().optional(),
@@ -800,7 +807,13 @@ export const agentRouter = router({
       }
       let result;
       try {
-        result = await ctx.agentModel.delete(input.agentId);
+        // Recycle bin: the agent, its session shells and every topic under it
+        // are stamped, not dropped — the FK cascade only runs at purge time.
+        result = await new TrashService(
+          ctx.serverDB,
+          ctx.userId,
+          ctx.workspaceId ?? undefined,
+        ).trashAgent(input.agentId);
       } catch (error) {
         if (error instanceof Error && error.message === AGENT_COPY_IN_PROGRESS) {
           throw new TRPCError({
@@ -820,12 +833,12 @@ export const agentRouter = router({
         }
         throw error;
       }
+      // Sharing grants are left in place while the agent sits in the bin (the
+      // row is invisible anyway) so a restore brings them back; the purge
+      // handler removes them for good. A pending handover is different: the
+      // agent is invisible to the recipient too, so an acceptance would move
+      // ownership of trashed content — void it now, as the hard delete did.
       if (ctx.workspaceId) {
-        await new ResourcePermissionModel(ctx.serverDB, ctx.workspaceId).removeAll(
-          'agent',
-          input.agentId,
-        );
-        // A deleted agent can no longer be handed over — void any live request.
         await new ResourceTransferRequestModel(
           ctx.serverDB,
           ctx.workspaceId,
@@ -1135,7 +1148,9 @@ export const agentRouter = router({
           input.targetWorkspaceId,
           ctx.userId,
           input.targetVisibility,
-          { rejectForeignTopicCommentAuthors: isWorkspaceNonOwner(ctx) },
+          {
+            rejectForeignTopicCommentAuthors: isWorkspaceNonOwner(ctx),
+          },
         );
       } catch (error) {
         if (
@@ -1175,7 +1190,8 @@ export const agentRouter = router({
           throw new TRPCError({
             cause: { data: { code: TransferErrorCode.SharedTransferBlocked } },
             code: 'PRECONDITION_FAILED',
-            message: 'This agent has a share link, so its owner cannot be changed.',
+            message:
+              'This agent cannot be transferred while a share link exists, including paused links.',
           });
         }
         throw error;
@@ -1319,7 +1335,9 @@ export const agentRouter = router({
           input.targetWorkspaceId,
           ctx.userId,
           input.targetVisibility,
-          { rejectForeignTopicCommentAuthors: isWorkspaceNonOwner(ctx) },
+          {
+            rejectForeignTopicCommentAuthors: isWorkspaceNonOwner(ctx),
+          },
         );
       } catch (error) {
         if (
@@ -1357,7 +1375,8 @@ export const agentRouter = router({
           throw new TRPCError({
             cause: { data: { code: TransferErrorCode.SharedTransferBlocked } },
             code: 'PRECONDITION_FAILED',
-            message: 'One of these agents has a share link, so its owner cannot be changed.',
+            message:
+              'These agents cannot be transferred while a share link exists, including paused links.',
           });
         }
         throw error;
@@ -1399,6 +1418,8 @@ export const agentRouter = router({
     .input(
       z.object({
         agentId: z.string(),
+        // Transport-only opt-in; old clients send cached complete device maps.
+        replaceWorkingDirDeviceIds: z.array(z.string()).optional(),
         value: z.object({}).passthrough().partial(),
       }),
     )
@@ -1449,7 +1470,11 @@ export const agentRouter = router({
       }
 
       // Use AgentService to update and return the updated agent data
-      return ctx.agentService.updateAgentConfig(input.agentId, safeValue);
+      return ctx.agentService.updateAgentConfig(
+        input.agentId,
+        safeValue,
+        input.replaceWorkingDirDeviceIds,
+      );
     }),
 
   /**

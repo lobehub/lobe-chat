@@ -26,11 +26,19 @@ import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { toAgentSignalTraceEvents } from '@/server/services/agentSignal/observability/traceEvents';
 import { parseAgentSignalMarker } from '@/server/services/agentSignal/operationMarker';
 import { extractSelfIterationCompletionPayload } from '@/server/services/agentSignal/services/selfIteration/completion';
-import { instantiateVerifyPlanOnStart, runVerifyOnCompletion } from '@/server/services/verify';
-import { registerWorksForOperation } from '@/server/services/workRegistration';
+import {
+  instantiateVerifyPlanOnStart,
+  runVerifyOnCompletion,
+  settleFailedRepair,
+} from '@/server/services/verify';
+import {
+  registerWorksForOperation,
+  resolveRunWorkAccessScope,
+} from '@/server/services/workRegistration';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { buildRuntimeInterventionNotification } from './agentInterventionNotification';
+import { extractFinalReplyImageUrls } from './finalReplyImages';
 import { CriticalHookDeliveryError, hookDispatcher, type SerializedHook } from './hooks';
 
 const log = debug('lobe-server:completion-lifecycle');
@@ -44,7 +52,10 @@ const log = debug('lobe-server:completion-lifecycle');
  * `reason === 'done'` alone silently drops capped runs' artifacts.
  */
 export const isSuccessLikeCompletionReason = (reason: string): boolean =>
-  reason === 'done' || reason === 'max_steps' || reason === 'cost_limit';
+  reason === 'done' ||
+  reason === 'max_steps' ||
+  reason === 'cost_limit' ||
+  reason === 'tool_call_repeat_limit';
 
 /**
  * Triggers whose completion recalls the user with a push notification. Beyond
@@ -134,6 +145,8 @@ export interface OperationCompletionInput {
   provider?: string | null;
   /** Serialized webhook hooks (queue mode); ignored in local in-memory mode. */
   serializedHooks?: SerializedHook[];
+  /** When the run started, so the terminal row keeps its processing time. */
+  startedAt?: Date | string;
   stepCount?: number | null;
   topicId?: string;
   /** Trace / usage aggregates (llm calls, tokens, tool calls). */
@@ -143,6 +156,14 @@ export interface OperationCompletionInput {
 
 /** Options shared by {@link CompletionLifecycle.completeOperation} / `dispatchHooks`. */
 export interface CompleteOperationOptions {
+  /**
+   * The durable row was already retired to `abandoned` / `lease_expired` by the
+   * caller's own compare-and-set (`settleStaleRunning`). Persist the terminal
+   * stats onto that status instead of `error`: `recordCompletion` refuses to
+   * move a row out of one terminal status into another, so writing `error`
+   * would be rejected and the hooks below would never fire.
+   */
+  settledAsAbandoned?: boolean;
   /**
    * Skip writing the terminal error onto the assistant message row. Set by callers
    * that already wrote a bespoke error bubble before delegating (e.g. the hetero
@@ -220,7 +241,12 @@ export class CompletionLifecycle {
       await this.agentOperationModel.recordStart(params);
     } catch (error) {
       persisted = false;
-      log('[%s] Failed to record operation start (non-fatal): %O', params.operationId, error);
+      // Hook configuration may contain inline authorization headers. Never log
+      // a database error that could repeat its bound metadata parameters.
+      const hooks = params.metadata?._hooks;
+      if (hooks && (!Array.isArray(hooks) || hooks.length > 0))
+        log('[%s] Failed to record operation start (non-fatal)', params.operationId);
+      else log('[%s] Failed to record operation start (non-fatal): %O', params.operationId, error);
     }
 
     // Auto-instantiate the task's verify plan at run start so the completion gate
@@ -310,7 +336,13 @@ export class CompletionLifecycle {
    */
   private statusForReason(
     reason: string,
-  ): 'done' | 'error' | 'interrupted' | 'waiting_for_human' | 'waiting_for_async_tool' {
+  ):
+    | 'done'
+    | 'error'
+    | 'interrupted'
+    | 'waiting_for_human'
+    | 'waiting_for_async_tool'
+    | 'waiting_for_client' {
     switch (reason) {
       case 'error': {
         return 'error';
@@ -323,6 +355,9 @@ export class CompletionLifecycle {
       }
       case 'waiting_for_async_tool': {
         return 'waiting_for_async_tool';
+      }
+      case 'waiting_for_client': {
+        return 'waiting_for_client';
       }
       default: {
         return 'done';
@@ -339,12 +374,16 @@ export class CompletionLifecycle {
     operationId: string,
     state: any,
     reason: string,
+    settledAsAbandoned?: boolean,
   ): Promise<boolean> {
-    const completionReason: any =
-      reason === 'max_steps' ||
-      reason === 'cost_limit' ||
-      reason === 'waiting_for_human' ||
-      reason === 'waiting_for_async_tool'
+    const completionReason: any = settledAsAbandoned
+      ? 'lease_expired'
+      : reason === 'max_steps' ||
+          reason === 'cost_limit' ||
+          reason === 'tool_call_repeat_limit' ||
+          reason === 'waiting_for_human' ||
+          reason === 'waiting_for_async_tool' ||
+          reason === 'waiting_for_client'
         ? reason
         : this.statusForReason(reason);
 
@@ -358,11 +397,12 @@ export class CompletionLifecycle {
       ? Date.now() - new Date(state.createdAt).getTime()
       : null;
 
-    const status = this.statusForReason(reason);
+    const runtimeStatus = this.statusForReason(reason);
+    const status = settledAsAbandoned ? ('abandoned' as const) : runtimeStatus;
     // Parked statuses are pauses, not true terminal states — leave completedAt
     // null so analytics doesn't read a paused op as completed. The next
     // dispatchHooks call (when the op resumes and truly ends) overwrites both.
-    const completedAt = isParkedStatus(status) ? undefined : new Date();
+    const completedAt = isParkedStatus(runtimeStatus) ? undefined : new Date();
 
     // Fold every child operation's spend (callSubAgent children, isolated group
     // members) into the parent's totals, so an op's row accounts for the whole
@@ -676,6 +716,7 @@ export class CompletionLifecycle {
   private buildStateFromInput(input: OperationCompletionInput) {
     return {
       cost: input.cost ?? { total: null },
+      createdAt: input.startedAt,
       error: input.error ?? undefined,
       messages: [
         { content: input.goal ?? '', role: 'user' },
@@ -792,7 +833,20 @@ export class CompletionLifecycle {
   async registerFileWorks(operationId: string, state: any): Promise<void> {
     if (state?.metadata?._fileWorksRegistered) return;
     try {
+      // Share visitor runs register under the share scope of their visitor
+      // topic (both the file scan below and the anchor lookup that follows).
+      const shareVisitor = state?.principal?.actor?.shareVisitor ?? null;
+      const accessScope = resolveRunWorkAccessScope({
+        shareVisitor,
+        topicId: state?.origin?.topicId,
+      });
+      if (accessScope === null) {
+        log('[%s] Skipping Work registration: share visitor run has no topic', operationId);
+        return;
+      }
+
       const outcome = await registerWorksForOperation({
+        agentShareVisitor: shareVisitor,
         // The round's final assistant message — the shell github scan stamps the
         // Work display anchor onto it for hetero runs (see registerWorksForOperation).
         assistantMessageId:
@@ -813,6 +867,7 @@ export class CompletionLifecycle {
         this.serverDB,
         state?.origin?.userId || this.userId,
         this.workspaceId,
+        accessScope,
       ).listByRootOperation({ includeFileWorks: true, limit: 1, rootOperationId: operationId });
       if (works.length > 0) {
         const assistantMessageId =
@@ -886,7 +941,9 @@ export class CompletionLifecycle {
     // schedules a fresh continuation operation and then retires this parked
     // segment; the continuation receives the serialized hooks through
     // `host.hooks`.
-    const isAsyncToolPark = reason === 'waiting_for_async_tool';
+    // `waiting_for_client` (no client to run the next LLM call) parks the same
+    // operation the same way: it resumes under this id or expires to `error`.
+    const isAsyncToolPark = reason === 'waiting_for_async_tool' || reason === 'waiting_for_client';
     let shouldRetainHooksForRetry = false;
 
     try {
@@ -899,7 +956,12 @@ export class CompletionLifecycle {
 
       // Finalize the agent_operations row before user hooks fire so
       // downstream consumers see the row in its terminal shape.
-      const completionAccepted = await this.persistCompletion(operationId, state, reason);
+      const completionAccepted = await this.persistCompletion(
+        operationId,
+        state,
+        reason,
+        options?.settledAsAbandoned,
+      );
       if (completionAccepted === false) {
         log('[%s] Skipping hooks for an operation with a conflicting terminal owner', operationId);
         return;
@@ -932,7 +994,13 @@ export class CompletionLifecycle {
           runOrigin.userId || this.userId,
           typeof runOrigin.topicId === 'string' ? runOrigin.topicId : undefined,
         );
-        if (recovered) event.lastAssistantContent = recovered;
+        if (recovered) {
+          event.lastAssistantContent = recovered;
+          const attachments = extractOutboundAttachments([
+            { content: recovered, role: 'assistant' },
+          ]);
+          event.attachments = attachments.length > 0 ? attachments : undefined;
+        }
       }
 
       await hookDispatcher.dispatch(operationId, 'onComplete', event, state?.host?.hooks);
@@ -1012,6 +1080,17 @@ export class CompletionLifecycle {
         );
       }
 
+      if (reason === 'error' || reason === 'interrupted') {
+        after(async () => {
+          await settleFailedRepair(
+            this.serverDB,
+            runOrigin.userId || this.userId,
+            operationId,
+            this.workspaceId,
+          );
+        });
+      }
+
       // Register entity files edited this round as `file` Works. On the
       // gateway/queue path this already ran BEFORE the terminal snapshot (see
       // `registerFileWorks`) and no-ops via the state marker; here it is the
@@ -1032,7 +1111,10 @@ export class CompletionLifecycle {
       if (reason === 'error') {
         await hookDispatcher.dispatch(operationId, 'onError', event, state?.host?.hooks);
 
-        const assistantMessageId = metadata?.assistantMessageId;
+        const assistantMessageId =
+          state?.error && !options?.skipErrorMessageWrite
+            ? await this.resolveErrorMessageId(operationId, metadata, runOrigin)
+            : undefined;
         if (assistantMessageId && state?.error && !options?.skipErrorMessageWrite) {
           // Preserve the semantic error type written by the runtime. Rebuilding
           // this as a generic AgentRuntimeError would lose UI routing data such
@@ -1151,6 +1233,35 @@ export class CompletionLifecycle {
       return content;
     } catch (error) {
       log('[%s] recoverLastAssistantContent failed (non-fatal): %O', operationId, error);
+      return undefined;
+    }
+  }
+
+  /**
+   * The assistant row an error belongs on. The client runtime names it in
+   * `metadata.assistantMessageId`; a server `execAgent` turn leaves that unset,
+   * so fall back to the run's own newest assistant row (`call_llm` stamps
+   * `metadata.operationId` on it). Without this, a server run that fails with
+   * no client online — a closed tab, a bot, a schedule — leaves an empty
+   * bubble with no error card. Never the topic's latest row: that may belong
+   * to an earlier turn or a concurrent run.
+   */
+  private async resolveErrorMessageId(
+    operationId: string,
+    metadata: { assistantMessageId?: string } | undefined,
+    runOrigin: { topicId?: string; userId?: string },
+  ): Promise<string | undefined> {
+    if (metadata?.assistantMessageId) return metadata.assistantMessageId;
+    if (!runOrigin.topicId || (runOrigin.userId && runOrigin.userId !== this.userId)) return;
+
+    try {
+      const row = await this.messageModel.findLatestAssistantByOperationId({
+        operationId,
+        topicId: runOrigin.topicId,
+      });
+      return row?.id;
+    } catch (error) {
+      log('[%s] Failed to resolve the run assistant row for its error: %O', operationId, error);
       return undefined;
     }
   }
@@ -1457,8 +1568,18 @@ const extractOutboundAttachments = (messages: any[]): OutboundAttachment[] => {
 
     if (role === 'assistant') {
       if (!crossedFinalAssistant) {
-        // The final assistant turn: harvest its multimodal parts.
-        collected.push(...extractAttachmentsFromContent(content));
+        // Only the final reply's Markdown expresses an intent to send images.
+        // Do not promote generation state or intermediate tool Markdown.
+        const attachments: OutboundAttachment[] = [];
+        const text = extractTextFromMessageContent(content);
+        if (text) {
+          for (const url of extractFinalReplyImageUrls(text)) {
+            const attachment = buildAttachmentFromUrl(url, 'image');
+            if (attachment) attachments.push(attachment);
+          }
+        }
+        attachments.push(...extractAttachmentsFromContent(content));
+        collected.unshift(...attachments);
         crossedFinalAssistant = true;
         continue;
       }
@@ -1469,12 +1590,11 @@ const extractOutboundAttachments = (messages: any[]): OutboundAttachment[] => {
 
     if (role === 'tool') {
       // Tool results between the previous assistant turn and the final one.
-      collected.push(...extractAttachmentsFromContent(content));
+      collected.unshift(...extractAttachmentsFromContent(content));
     }
   }
 
-  // Reverse so message-order (older first) is preserved, then dedupe.
-  collected.reverse();
+  // Prepending each message preserves both message and within-message order.
   const seen = new Set<string>();
   const result: OutboundAttachment[] = [];
   for (const att of collected) {

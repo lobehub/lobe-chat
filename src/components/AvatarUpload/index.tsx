@@ -1,11 +1,10 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Avatar } from '@lobehub/ui/base-ui';
-import { Spin, Upload } from 'antd';
+import { Avatar, Spin, Upload } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { Loader2, PencilIcon, X } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { PencilIcon, X } from 'lucide-react';
+import { memo, type ReactNode, useMemo } from 'react';
 
 import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
@@ -19,6 +18,8 @@ interface AvatarUploadProps {
   loading?: boolean;
   onDelete?: () => void;
   onUpload?: (file: File) => void;
+  /** Rendered in place of the letter-avatar while no image is set. */
+  placeholder?: ReactNode;
   shape?: 'circle' | 'square';
   size?: number;
   title?: string;
@@ -91,6 +92,7 @@ const AvatarUpload = memo<AvatarUploadProps>(
     loading,
     compressSize = 256,
     shape = 'square',
+    placeholder,
     size = 72,
     title,
   }) => {
@@ -111,10 +113,10 @@ const AvatarUpload = memo<AvatarUploadProps>(
     );
 
     return (
-      <Upload beforeUpload={handleUpload} itemRender={() => void 0} maxCount={1}>
-        <Spin indicator={<Icon spin icon={Loader2} />} spinning={!!loading}>
+      <Upload maxCount={1} onFiles={([file]) => handleUpload(file)}>
+        <Spin size="small" spinning={!!loading}>
           <div className={styles.wrapper}>
-            <Avatar avatar={value} shape={shape} size={size} title={title} />
+            <Avatar avatar={value || placeholder} shape={shape} size={size} title={title} />
             <div className={`${styles.overlay} avatar-edit-overlay`}>
               <Icon
                 color={cssVar.colorTextLightSolid}

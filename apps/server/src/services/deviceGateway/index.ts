@@ -12,9 +12,23 @@ import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type {
   ClaudeCodeQuotaSnapshot,
   CodexQuotaSnapshot,
+  KimiCodeQuotaSnapshot,
 } from '@lobechat/heterogeneous-agents/quota';
 import type {
+  DeviceAppUpdateFailure,
+  DeviceAppUpdateInstallResult,
+  DeviceAppUpdateState,
+  DeviceAppUpdateStateResult,
+  DeviceClient,
+  DeviceCliRestartParams,
+  DeviceCliUpdateState,
+  DeviceCliUpdateStateResult,
+  DeviceCloseTerminalResult,
   DeviceCopyAssetForPublishResult,
+  DeviceCopyProjectFileItem,
+  DeviceCopyProjectFileResultItem,
+  DeviceCreateProjectEntryResult,
+  DeviceCreateTerminalSessionResult,
   DeviceDirectoryBrowseResult,
   DeviceExternalAssetForPublishResult,
   DeviceGitAddWorktreeResult,
@@ -39,14 +53,18 @@ import type {
   DeviceGitWorkingTreePatches,
   DeviceGitWorkingTreeStatus,
   DeviceGitWorktreeListItem,
+  DeviceListeningPortsResult,
   DeviceListProjectSkillsResult,
   DeviceLocalFilePreviewResult,
+  DeviceMetricSample,
   DeviceMoveProjectFileItem,
   DeviceMoveProjectFileResultItem,
   DeviceProjectDirectoryListResult,
   DeviceProjectFileIndexResult,
   DeviceProjectFileSearchResult,
+  DeviceReadTerminalResult,
   DeviceRenameProjectFileResult,
+  DeviceTrashProjectFilesResult,
   DeviceUnavailableErrorData,
   DeviceWriteProjectFileResult,
   HeterogeneousAgentModelCatalog,
@@ -57,6 +75,9 @@ import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
 import { gatewayEnv } from '@/envs/gateway';
+import { redisService } from '@/server/services/redis';
+
+import { resolveDeviceClientKinds } from './clientKinds';
 
 const log = debug('lobe-server:device-gateway');
 
@@ -96,11 +117,58 @@ const assertPathsWithinWorkspace = (
   }
 };
 
+/**
+ * Refuse to trash / rename / move / duplicate the workspace root itself. It
+ * passes the containment check (a root is "within" itself), but removing or
+ * renaming it pulls the whole Files tree out from under the UI, and a duplicate
+ * of the root would land in its parent — outside the workspace.
+ */
+const assertNotWorkspaceRoot = (
+  workspaceRoot: string,
+  candidates: Array<string | undefined>,
+): void => {
+  for (const candidate of candidates) {
+    if (
+      candidate &&
+      isAbsolute(candidate) &&
+      relative(resolve(workspaceRoot), resolve(candidate)) === ''
+    ) {
+      throw new Error(`This operation is not allowed on the workspace root: ${candidate}`);
+    }
+  }
+};
+
 export type { DeviceAttachment, DeviceStatusResult, DeviceSystemInfo };
+
+/**
+ * Outcome of a device system-info read. `reason` is the gateway's code when it
+ * gave one (`TIMEOUT`, `DEVICE_OFFLINE`, `DEVICE_NOT_FOUND`), otherwise a local one.
+ */
+export type DeviceSystemInfoRead =
+  { ok: true; systemInfo: DeviceSystemInfo } | { ok: false; reason: string };
+
+interface AppUpdateRpcParams {
+  deviceId: string;
+  timeout?: number;
+  userId: string;
+  workspaceId?: string;
+}
 
 /** One extra attempt for a device read; see `readDevices`. */
 const DEVICE_READ_ATTEMPTS = 2;
 const DEVICE_READ_RETRY_DELAY_MS = 250;
+
+/** Scope every terminal RPC carries; mirrors {@link AppUpdateRpcParams}. */
+interface TerminalRpcScope {
+  deviceId: string;
+  timeout?: number;
+  userId: string;
+  workspaceId?: string;
+}
+
+/** The five device RPCs that make up one interactive terminal session. */
+type TerminalRpcMethod =
+  'closeTerminal' | 'createTerminalSession' | 'readTerminal' | 'resizeTerminal' | 'writeTerminal';
 
 export class DeviceGateway {
   private client: GatewayHttpClient | null = null;
@@ -202,20 +270,111 @@ export class DeviceGateway {
     );
   }
 
+  /**
+   * The device's system info, preferring the desktop app's answer: its
+   * `supportedTools` gate desktop-only tools, and when `lh connect` is up on the
+   * same device an unconstrained read is answered by the CLI, which reports
+   * none. When the desktop read fails for any reason, ask whichever client the
+   * device has: a device without the desktop app answers `NO_CAPABLE_CONNECTION`,
+   * and a desktop that timed out or whose socket is closing (`TIMEOUT`,
+   * `DEVICE_OFFLINE`) may still sit beside a live `lh connect`, which is the
+   * answer canary got. A gateway that predates `clientKinds` answers the first
+   * read as before.
+   *
+   * `maxAgeMs` lets a caller accept an answer this device gave within that
+   * window instead of a fresh round trip over its WebSocket. The send path
+   * asks every turn and the answer changes only when the client upgrades or
+   * the user moves the daemon, so a few minutes of staleness there is a
+   * round trip saved per send; callers that need the live answer (an
+   * explicit device inspection) leave it unset. Only successful answers are
+   * remembered — an offline device is asked again next time.
+   */
   async queryDeviceSystemInfo(
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { maxAgeMs?: number },
   ): Promise<DeviceSystemInfo | undefined> {
+    const query = async () => {
+      const desktop = await this.readDeviceSystemInfo(userId, deviceId, workspaceId, {
+        clientKinds: ['desktop'],
+      });
+      if (desktop.ok) return desktop.systemInfo;
+
+      const any = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
+      return any.ok ? any.systemInfo : undefined;
+    };
+
+    const maxAgeMs = options?.maxAgeMs;
+    if (!maxAgeMs || maxAgeMs <= 0) return query();
+
+    return redisService.deviceSystemInfo.remember(
+      { userId, deviceId, workspaceId },
+      query,
+      maxAgeMs,
+    );
+  }
+
+  /**
+   * Like {@link queryDeviceSystemInfo}, but a failed read says why. Use it when
+   * "the device did not answer" must not be mistaken for "the device answered
+   * without this capability" — e.g. gating a tool on `supportedTools`.
+   */
+  async readDeviceSystemInfo(
+    userId: string,
+    deviceId: string,
+    workspaceId?: string,
+    options?: { clientKinds?: DeviceClient[] },
+  ): Promise<DeviceSystemInfoRead> {
     const client = this.getClient();
-    if (!client) return undefined;
+    if (!client) return { ok: false, reason: 'GATEWAY_NOT_CONFIGURED' };
 
     try {
-      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId);
-      return result.success ? result.systemInfo : undefined;
-    } catch {
-      log('queryDeviceSystemInfo: failed for userId=%s, deviceId=%s', userId, deviceId);
-      return undefined;
+      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId, options);
+      if (result.success && result.systemInfo) return { ok: true, systemInfo: result.systemInfo };
+      log(
+        'readDeviceSystemInfo: unanswered for userId=%s, deviceId=%s: %s',
+        userId,
+        deviceId,
+        result.error,
+      );
+      return { ok: false, reason: result.error ?? 'NO_SYSTEM_INFO' };
+    } catch (error) {
+      log('readDeviceSystemInfo: failed for userId=%s, deviceId=%s: %O', userId, deviceId, error);
+      return { ok: false, reason: describeGatewayRequestFailure(error, 'RPC call').code };
+    }
+  }
+
+  /**
+   * The device's health samples held by the gateway (two days), observed at or
+   * after `since`. Unlike the RPC reads this works while the device is
+   * offline — the samples live in gateway storage, not on the device.
+   *
+   * A failed read degrades to no samples: the chart is a polled side panel,
+   * and surfacing a gateway blip as a 500 only turns each poll (and its SWR
+   * retries) into an error log. The next poll picks the history back up.
+   */
+  async queryDeviceMetrics(params: {
+    deviceId: string;
+    since: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceMetricSample[]> {
+    const client = this.getClient();
+    if (!client) return [];
+    try {
+      return await client.getDeviceMetrics(params.userId, params.deviceId, {
+        since: params.since,
+        workspaceId: params.workspaceId,
+      });
+    } catch (error) {
+      console.warn('[DeviceGateway] device metrics read failed; returning no samples', {
+        deviceId: params.deviceId,
+        error: error instanceof Error ? error.message : String(error),
+        userId: params.userId,
+        workspaceId: params.workspaceId,
+      });
+      return [];
     }
   }
 
@@ -580,6 +739,20 @@ export class DeviceGateway {
     });
   }
 
+  /** Kimi Code subscription quota sampled from the login on a remote device. */
+  kimiCodeQuota(params: {
+    deviceId: string;
+    env?: Record<string, string>;
+    force?: boolean;
+    userId: string;
+    workspaceId?: string;
+  }) {
+    return this.invokeDeviceRead<KimiCodeQuotaSnapshot>('getKimiCodeQuota', params, {
+      env: params.env,
+      force: params.force,
+    });
+  }
+
   /** Git worktrees attached to the same repository as a directory on a remote device. */
   listGitWorktrees(params: {
     deviceId: string;
@@ -602,10 +775,12 @@ export class DeviceGateway {
     timeout?: number;
     type:
       | 'codebuddy'
+      | 'codex'
       | 'cursor'
       | 'devin'
       | 'droid'
       | 'grok-build'
+      | 'kimi-code'
       | 'opencode'
       | 'pi'
       | 'qoder'
@@ -1465,10 +1640,14 @@ export class DeviceGateway {
       workingDirectory,
       items.flatMap((item) => [item.oldPath, item.newPath]),
     );
+    assertNotWorkspaceRoot(
+      workingDirectory,
+      items.map((item) => item.oldPath),
+    );
 
     const result = await client.invokeRpc<DeviceMoveProjectFileResultItem[]>(
       { deviceId, timeout, userId, workspaceId },
-      { method: 'moveLocalFiles', params: { items } },
+      { method: 'moveLocalFiles', params: { items, workspaceRoot: workingDirectory } },
     );
 
     if (!result.success || !result.data) {
@@ -1508,10 +1687,11 @@ export class DeviceGateway {
     // The rename stays in the same directory (the device rejects separators in
     // `newName`), so containing the source path also contains the target.
     assertPathsWithinWorkspace(workingDirectory, [path]);
+    assertNotWorkspaceRoot(workingDirectory, [path]);
 
     const result = await client.invokeRpc<DeviceRenameProjectFileResult>(
       { deviceId, timeout, userId, workspaceId },
-      { method: 'renameLocalFile', params: { newName, path } },
+      { method: 'renameLocalFile', params: { newName, path, workspaceRoot: workingDirectory } },
     );
 
     if (!result.success || !result.data) {
@@ -1552,12 +1732,159 @@ export class DeviceGateway {
 
     const result = await client.invokeRpc<DeviceWriteProjectFileResult>(
       { deviceId, timeout, userId, workspaceId },
-      { method: 'writeLocalFile', params: { content, path } },
+      { method: 'writeLocalFile', params: { content, path, workspaceRoot: workingDirectory } },
     );
 
     if (!result.success || !result.data) {
       log('writeProjectFile: failed for deviceId=%s — %s', deviceId, result.error);
       throw new Error(result.error || 'Write failed');
+    }
+
+    return result.data;
+  }
+
+  /**
+   * Create a new, empty (or seeded) file on a remote device via the device's
+   * `createLocalFile` RPC. Never overwrites: an existing entry comes back as
+   * `{ success: false, error }`. A transport failure throws.
+   */
+  async createProjectFile(params: {
+    content?: string;
+    deviceId: string;
+    path: string;
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCreateProjectEntryResult> {
+    const {
+      userId,
+      deviceId,
+      path,
+      content,
+      workingDirectory,
+      timeout = 30_000,
+      workspaceId,
+    } = params;
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    assertPathsWithinWorkspace(workingDirectory, [path]);
+
+    const result = await client.invokeRpc<DeviceCreateProjectEntryResult>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'createLocalFile', params: { content, path, workspaceRoot: workingDirectory } },
+    );
+
+    if (!result.success || !result.data) {
+      log('createProjectFile: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Create file failed');
+    }
+
+    return result.data;
+  }
+
+  /**
+   * Create a new folder on a remote device via the device's
+   * `createLocalDirectory` RPC. An existing entry fails instead of being reused.
+   */
+  async createProjectDirectory(params: {
+    deviceId: string;
+    path: string;
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCreateProjectEntryResult> {
+    const { userId, deviceId, path, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    assertPathsWithinWorkspace(workingDirectory, [path]);
+
+    const result = await client.invokeRpc<DeviceCreateProjectEntryResult>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'createLocalDirectory', params: { path, workspaceRoot: workingDirectory } },
+    );
+
+    if (!result.success || !result.data) {
+      log('createProjectDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Create folder failed');
+    }
+
+    return result.data;
+  }
+
+  /**
+   * Copy (or, without `targetPath`, duplicate in place) files/folders on a
+   * remote device via the device's `copyLocalFiles` RPC. Both ends of every item
+   * must stay inside the workspace. A duplicate lands next to its source, so
+   * containing the source (and refusing the root itself) contains the copy.
+   */
+  async copyProjectFiles(params: {
+    deviceId: string;
+    items: DeviceCopyProjectFileItem[];
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceCopyProjectFileResultItem[]> {
+    const { userId, deviceId, items, workingDirectory, timeout = 60_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    assertPathsWithinWorkspace(
+      workingDirectory,
+      items.flatMap((item) =>
+        item.targetPath === undefined ? [item.sourcePath] : [item.sourcePath, item.targetPath],
+      ),
+    );
+    assertNotWorkspaceRoot(
+      workingDirectory,
+      items.map((item) => item.sourcePath),
+    );
+
+    const result = await client.invokeRpc<DeviceCopyProjectFileResultItem[]>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'copyLocalFiles', params: { items, workspaceRoot: workingDirectory } },
+    );
+
+    if (!result.success || !result.data) {
+      log('copyProjectFiles: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Copy failed');
+    }
+
+    return result.data;
+  }
+
+  /**
+   * Move files/folders to the remote device's trash via its `trashLocalFiles`
+   * RPC. A device without a recoverable trash (the CLI daemon) rejects the RPC,
+   * which surfaces here as a thrown error — never as a permanent delete.
+   */
+  async trashProjectFiles(params: {
+    deviceId: string;
+    paths: string[];
+    timeout?: number;
+    userId: string;
+    workingDirectory: string;
+    workspaceId?: string;
+  }): Promise<DeviceTrashProjectFilesResult> {
+    const { userId, deviceId, paths, workingDirectory, timeout = 30_000, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    assertPathsWithinWorkspace(workingDirectory, paths);
+    assertNotWorkspaceRoot(workingDirectory, paths);
+
+    const result = await client.invokeRpc<DeviceTrashProjectFilesResult>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'trashLocalFiles', params: { paths, workspaceRoot: workingDirectory } },
+    );
+
+    if (!result.success || !result.data) {
+      log('trashProjectFiles: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Move to trash failed');
     }
 
     return result.data;
@@ -1576,7 +1903,10 @@ export class DeviceGateway {
     timeout?: number;
     userId: string;
     workspaceId?: string;
-  }): Promise<{ exists: boolean; isDirectory: boolean; repoType?: 'git' | 'github' } | undefined> {
+  }): Promise<
+    | { exists: boolean; isDirectory: boolean; repositoryUrl?: string; repoType?: 'git' | 'github' }
+    | undefined
+  > {
     const { userId, deviceId, path, timeout = 8000, workspaceId } = params;
     const client = this.getClient();
     if (!client) return undefined;
@@ -1601,6 +1931,7 @@ export class DeviceGateway {
   }
 
   async dispatchAgentRun(params: {
+    agentId?: string;
     agentType: HeterogeneousAgentType;
     assistantMessageId: string;
     /** Resolved `lh hetero exec` wrapper args. */
@@ -1762,13 +2093,238 @@ export class DeviceGateway {
     }
   }
 
+  /**
+   * TCP ports the device is listening on that a tunnel can reach, with the
+   * project's own ports marked. Resolves undefined when the device is
+   * offline or predates the RPC — the UI then says it can't read the ports.
+   */
+  async listListeningPorts(params: {
+    cwd?: string;
+    deviceId: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceListeningPortsResult | undefined> {
+    const { cwd, deviceId, timeout = 10_000, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return undefined;
+
+    try {
+      const result = await client.invokeRpc<DeviceListeningPortsResult>(
+        { deviceId, timeout, userId, workspaceId },
+        { method: 'listListeningPorts', params: { cwd } },
+      );
+      if (!result.success || !result.data) {
+        log('listListeningPorts: failed for deviceId=%s', deviceId);
+        return undefined;
+      }
+      return result.data;
+    } catch (error) {
+      log(
+        'listListeningPorts: error for deviceId=%s (%s)',
+        deviceId,
+        error instanceof Error ? error.name : typeof error,
+      );
+      return undefined;
+    }
+  }
+
+  /** Where the device's desktop app update stands; never checks on its own. */
+  async getAppUpdateState(params: AppUpdateRpcParams): Promise<DeviceAppUpdateStateResult> {
+    const result = await this.invokeAppUpdate<DeviceAppUpdateState>('getAppUpdateState', params);
+    return result.status === 'ok' ? { state: result.data, status: 'ok' } : result;
+  }
+
+  /** Start an update check on the device; a found update downloads on its own. */
+  async checkAppUpdate(params: AppUpdateRpcParams): Promise<DeviceAppUpdateStateResult> {
+    const result = await this.invokeAppUpdate<DeviceAppUpdateState>('checkAppUpdate', params);
+    return result.status === 'ok' ? { state: result.data, status: 'ok' } : result;
+  }
+
+  /** Restart the device's desktop app into its downloaded update. */
+  async installAppUpdate(params: AppUpdateRpcParams): Promise<DeviceAppUpdateInstallResult> {
+    const result = await this.invokeAppUpdate<{ targetVersion: string }>(
+      'installAppUpdate',
+      params,
+    );
+    return result.status === 'ok'
+      ? { status: 'ok', targetVersion: result.data.targetVersion }
+      : result;
+  }
+
+  // ─── Interactive terminal (PTY) ───
+  //
+  // A terminal is a session the caller drives, not a one-shot read, so these
+  // deliberately THROW on failure instead of returning `undefined` the way the
+  // best-effort readers above do: the panel has to say why a shell did not open
+  // (device offline, a client without PTY support) rather than wait forever on
+  // one that will never exist.
+
+  async createTerminalSession(
+    params: TerminalRpcScope & { cols: number; cwd?: string; rows: number },
+  ): Promise<DeviceCreateTerminalSessionResult> {
+    return this.invokeTerminalRpc('createTerminalSession', params, {
+      cols: params.cols,
+      cwd: params.cwd,
+      rows: params.rows,
+    });
+  }
+
+  async writeTerminal(params: TerminalRpcScope & { data: string; id: string }): Promise<void> {
+    await this.invokeTerminalRpc('writeTerminal', params, { data: params.data, id: params.id });
+  }
+
+  async readTerminal(
+    params: TerminalRpcScope & { cursor: number; id: string },
+  ): Promise<DeviceReadTerminalResult> {
+    return this.invokeTerminalRpc('readTerminal', params, {
+      cursor: params.cursor,
+      id: params.id,
+    });
+  }
+
+  async resizeTerminal(
+    params: TerminalRpcScope & { cols: number; id: string; rows: number },
+  ): Promise<void> {
+    await this.invokeTerminalRpc('resizeTerminal', params, {
+      cols: params.cols,
+      id: params.id,
+      rows: params.rows,
+    });
+  }
+
+  async closeTerminal(
+    params: TerminalRpcScope & { id: string },
+  ): Promise<DeviceCloseTerminalResult> {
+    return this.invokeTerminalRpc('closeTerminal', params, { id: params.id });
+  }
+
+  /**
+   * Relay one terminal RPC and unwrap its result.
+   *
+   * Every call carries the `cli` channel hint: the PTY lives in the `lh
+   * connect` process, so on a machine also running the desktop app the RPC has
+   * to reach that connection — the desktop's own terminal is local-only and
+   * would refuse these. A gateway that predates the hint ignores it, which is
+   * why the refusal below still has to surface as an error.
+   */
+  private async invokeTerminalRpc<T>(
+    method: TerminalRpcMethod,
+    params: TerminalRpcScope,
+    rpcParams: Record<string, unknown>,
+  ): Promise<T> {
+    const { deviceId, timeout = 15_000, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway is not configured on this deployment.');
+
+    const result = await client.invokeRpc<T>(
+      { channel: 'cli', deviceId, timeout, userId, workspaceId },
+      { method, params: rpcParams },
+    );
+    // `writeTerminal` / `resizeTerminal` answer with no payload, so absence of
+    // `data` is not a failure — only an explicit `success: false` is.
+    if (!result.success) throw new Error(result.error || `${method} failed`);
+    return result.data as T;
+  }
+
+  /**
+   * Shared relay for the remote app-update RPCs. Only the desktop app can
+   * update itself, so the call asks for the `desktop` channel; an older gateway
+   * may still hand it to `lh connect` on the same machine, whose rejection is
+   * reported as `unsupported` like an outdated desktop's.
+   */
+  private async invokeAppUpdate<T>(
+    method: 'checkAppUpdate' | 'getAppUpdateState' | 'installAppUpdate',
+    params: AppUpdateRpcParams,
+  ): Promise<{ data: T; status: 'ok' } | { message: string; status: DeviceAppUpdateFailure }> {
+    const { deviceId, timeout = 15_000, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { message: 'Device Gateway is not configured', status: 'unavailable' };
+
+    try {
+      const result = await client.invokeRpc<T>(
+        { channel: 'desktop', deviceId, timeout, userId, workspaceId },
+        { method },
+      );
+      if (result.success && result.data !== undefined) return { data: result.data, status: 'ok' };
+
+      const message = result.error || `${method} failed`;
+      log('%s: failed for deviceId=%s — %s', method, deviceId, message);
+      const unsupported =
+        message.includes('does not support remote updates') ||
+        message.includes('Unknown device RPC method');
+      return { message, status: unsupported ? 'unsupported' : 'unavailable' };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      log('%s: error for deviceId=%s — %s', method, deviceId, message);
+      return { message, status: 'unavailable' };
+    }
+  }
+
+  async getCliUpdateState(params: AppUpdateRpcParams): Promise<DeviceCliUpdateStateResult> {
+    return this.invokeCliUpdate('getCliUpdateState', params);
+  }
+
+  async checkCliUpdate(params: AppUpdateRpcParams): Promise<DeviceCliUpdateStateResult> {
+    return this.invokeCliUpdate('checkCliUpdate', params);
+  }
+
+  async restartCli(
+    params: AppUpdateRpcParams & DeviceCliRestartParams,
+  ): Promise<DeviceCliUpdateStateResult> {
+    return this.invokeCliUpdate('restartCli', params, {
+      requestId: params.requestId,
+      update: params.update,
+    });
+  }
+
+  private async invokeCliUpdate(
+    method: 'getCliUpdateState' | 'checkCliUpdate' | 'restartCli',
+    params: AppUpdateRpcParams,
+    restartParams?: DeviceCliRestartParams,
+  ): Promise<DeviceCliUpdateStateResult> {
+    const { deviceId, timeout = 15_000, userId, workspaceId } = params;
+    const client = this.getClient();
+    if (!client) return { message: 'Device Gateway is not configured', status: 'unavailable' };
+
+    try {
+      const result = await client.invokeRpc<DeviceCliUpdateState>(
+        { channel: 'cli', deviceId, timeout, userId, workspaceId },
+        { method, ...(restartParams ? { params: restartParams } : {}) },
+      );
+      if (result.success && result.data !== undefined) return { state: result.data, status: 'ok' };
+
+      const message = result.error || `${method} failed`;
+      const unsupported =
+        message.includes('does not support remote CLI updates') ||
+        message.includes('Unknown device RPC method');
+      log('%s: failed for deviceId=%s — %s', method, deviceId, message);
+      return {
+        message: message.replace('CLI_MAINTENANCE_REJECTED: ', ''),
+        status: unsupported
+          ? 'unsupported'
+          : message.startsWith('CLI_MAINTENANCE_REJECTED: ')
+            ? 'rejected'
+            : 'unavailable',
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      log('%s: error for deviceId=%s — %s', method, deviceId, message);
+      return { message, status: 'unavailable' };
+    }
+  }
+
   private getClient(): GatewayHttpClient | null {
     const url = gatewayEnv.DEVICE_GATEWAY_URL;
     const token = gatewayEnv.DEVICE_GATEWAY_SERVICE_TOKEN;
     if (!url || !token) return null;
 
     if (!this.client) {
-      this.client = new GatewayHttpClient({ gatewayUrl: url, serviceToken: token });
+      this.client = new GatewayHttpClient({
+        gatewayUrl: url,
+        resolveClientKinds: resolveDeviceClientKinds,
+        serviceToken: token,
+      });
     }
     return this.client;
   }

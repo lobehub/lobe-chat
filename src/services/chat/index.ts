@@ -12,6 +12,7 @@ import { AgentRuntimeError } from '@lobechat/model-runtime/utils/createError';
 import {
   ChatErrorType,
   getDisabledPluginIds,
+  type RequestTrigger,
   type RuntimeAdditionalContextFragment,
   type RuntimeInitialContext,
   type RuntimeStepContext,
@@ -61,6 +62,11 @@ const providersWithDeploymentName = new Set<string>([
 export interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   additionalContexts?: readonly RuntimeAdditionalContextFragment[];
   agentId?: string;
+  /**
+   * Attachments sent as a preview plus file id because the request's attachment
+   * budget is spent (planned by `shouldCompress`).
+   */
+  attachmentPreviewFileIds?: string[];
   groupId?: string;
   messages: UIChatMessage[];
   /**
@@ -97,6 +103,11 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
    */
   params: ChatStreamInputParams;
   trace?: TracePayload;
+  /**
+   * Request source recorded on spend / route-attempt logs. Required so every
+   * preset task names its own feature instead of being counted as `chat`.
+   */
+  trigger: RequestTrigger;
 }
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
@@ -118,6 +129,7 @@ class ChatService {
       agentId,
       groupId,
       additionalContexts,
+      attachmentPreviewFileIds,
       topicId,
       resolvedAgentConfig,
       ...params
@@ -205,6 +217,7 @@ class ChatService {
       enableUserMemories,
       groupId,
       additionalContexts,
+      attachmentPreviewFileIds,
       // History messages + the current turn; unset means no truncation.
       historyCount: modelParams.historyCount,
       // Page editor context from agent runtime
@@ -431,6 +444,7 @@ class ChatService {
     onLoadingChange,
     abortController,
     trace,
+    trigger,
   }: FetchAITaskResultParams) => {
     const errorHandle = (error: Error, errorContent?: any) => {
       onLoadingChange?.(false);
@@ -453,6 +467,7 @@ class ChatService {
       await this.getChatCompletion(
         { ...params, messages: llmMessages },
         {
+          metadata: { trigger },
           onErrorHandle: (error) => {
             errorHandle(new Error(error.message), error);
           },

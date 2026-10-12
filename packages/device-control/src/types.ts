@@ -6,6 +6,8 @@
  * desktop wiring can pass its own IPC-typed implementations directly.
  */
 
+import type { DeviceCliRestartParams, DeviceCliUpdateState } from '@lobechat/types';
+
 // ─── Workspace scan ───
 
 export type ProjectSkillScope = 'device' | 'project';
@@ -61,6 +63,7 @@ export interface ListProjectSkillsResult {
 export interface StatPathResult {
   exists: boolean;
   isDirectory: boolean;
+  repositoryUrl?: string;
   repoType?: 'git' | 'github';
 }
 
@@ -272,9 +275,48 @@ export interface WorkspaceScanDeps {
  * - The CLI uses the portable defaults exported from this package
  *   (`defaultGetLocalFilePreview`, `defaultGetProjectFileIndex`).
  */
+// ─── Trash ───
+
+/** Mirrors `@lobechat/electron-client-ipc` `TrashLocalFilesParams`. */
+export interface TrashLocalFilesParams {
+  paths: string[];
+}
+
+export interface TrashLocalFilesResultItem {
+  error?: string;
+  /** The path as it was requested, so the caller can reconcile its own rows. */
+  path: string;
+  success: boolean;
+}
+
+/** Per-path outcome in request order; `success` is true only when every path was trashed. */
+export interface TrashLocalFilesResult {
+  items: TrashLocalFilesResultItem[];
+  success: boolean;
+}
+
 export interface DeviceControlDeps extends SkillDirectoryDeps, WorkspaceScanDeps {
+  /**
+   * Start an app update check on this client; an available update downloads
+   * automatically. Returns right away with the updated state — callers poll
+   * {@link DeviceControlDeps.getAppUpdateState} for progress. Optional: only
+   * the desktop app can update itself, so the CLI omits the three app-update
+   * handlers and the dispatcher fails the RPC with a stable reason.
+   */
+  checkAppUpdate?: () => Promise<AppUpdateState>;
+  checkCliUpdate?: () => Promise<DeviceCliUpdateState>;
+  /**
+   * Interactive PTY handlers. Optional: a host without a PTY implementation
+   * (or one whose runtime forbids spawning shells) omits them, and the
+   * dispatcher fails the RPC with {@link TERMINAL_UNSUPPORTED_MESSAGE} rather
+   * than leaving a terminal panel waiting on a session that will never appear.
+   */
+  closeTerminal?: (params: CloseTerminalParams) => Promise<CloseTerminalResult>;
   /** Copy a publish asset (possibly outside the workspace) to a path inside the workspace. */
   copyAssetForPublish?: (params: CopyAssetForPublishParams) => Promise<CopyAssetForPublishResult>;
+  createTerminalSession?: (
+    params: CreateTerminalSessionParams,
+  ) => Promise<CreateTerminalSessionResult>;
   /**
    * Enroll this machine into a workspace pool: derive the workspace-scoped
    * deviceId and open a second gateway connection authenticated with `token`
@@ -285,10 +327,18 @@ export interface DeviceControlDeps extends SkillDirectoryDeps, WorkspaceScanDeps
    * the RPC with a clear reason.
    */
   enrollWorkspace?: (params: EnrollWorkspaceParams) => Promise<EnrollWorkspaceResult>;
+  /** Where this client's app update stands: current version, stage, progress. */
+  getAppUpdateState?: () => Promise<AppUpdateState>;
+  getCliUpdateState?: () => Promise<DeviceCliUpdateState>;
   /** Read a local file preview (host-gated on desktop; disk read on CLI). */
   getLocalFilePreview: (params: LocalFilePreviewUrlParams) => Promise<LocalFilePreviewResult>;
   /** Build the project file index. */
   getProjectFileIndex: (params: ProjectFileIndexParams) => Promise<ProjectFileIndexResult>;
+  /**
+   * Restart into a downloaded update. Resolves before the app quits so the
+   * response still reaches the caller; rejects when nothing is downloaded.
+   */
+  installAppUpdate?: () => Promise<InstallAppUpdateResult>;
   /** Query a heterogeneous CLI's model catalog on this execution host. */
   listHeterogeneousAgentModels?: (
     params: ListHeterogeneousAgentModelsParams,
@@ -297,14 +347,25 @@ export interface DeviceControlDeps extends SkillDirectoryDeps, WorkspaceScanDeps
   readExternalAssetForPublish?: (
     params: ExternalAssetForPublishParams,
   ) => Promise<ExternalAssetForPublishResult>;
+  readTerminal?: (params: ReadTerminalParams) => Promise<ReadTerminalResult>;
+  resizeTerminal?: (params: ResizeTerminalParams) => Promise<void>;
+  restartCli?: (params: DeviceCliRestartParams) => Promise<DeviceCliUpdateState>;
   /** Search project files without shipping the whole index to the caller. */
   searchProjectFiles: (params: ProjectFileSearchParams) => Promise<ProjectFileSearchResult>;
+  /**
+   * Move files/folders to the OS trash. Optional: only a host with a desktop
+   * shell (Electron `shell.trashItem`) has a recoverable trash, so the CLI omits
+   * it and the dispatcher fails the RPC with {@link TRASH_UNSUPPORTED_MESSAGE}
+   * rather than degrading to a permanent delete.
+   */
+  trashLocalFiles?: (params: TrashLocalFilesParams) => Promise<TrashLocalFilesResult>;
   /**
    * Drop this machine's enrollment in a workspace pool: close the
    * workspace-principal connection and clear any persisted auto-reconnect
    * state. Optional, mirroring {@link DeviceControlDeps.enrollWorkspace}.
    */
   unenrollWorkspace?: (params: UnenrollWorkspaceParams) => Promise<{ success: boolean }>;
+  writeTerminal?: (params: WriteTerminalParams) => Promise<void>;
 }
 
 // ─── Heterogeneous agent model discovery ───
@@ -320,10 +381,12 @@ export interface ListHeterogeneousAgentModelsParams {
   env?: Record<string, string>;
   type:
     | 'codebuddy'
+    | 'codex'
     | 'cursor'
     | 'devin'
     | 'droid'
     | 'grok-build'
+    | 'kimi-code'
     | 'opencode'
     | 'pi'
     | 'qoder'
@@ -345,7 +408,8 @@ export type HeterogeneousAgentModelCatalog =
           | 'command_failed'
           | 'device_unavailable'
           | 'timeout'
-          | 'unsupported_client';
+          | 'unsupported_client'
+          | 'unsupported_configuration';
         message: string;
       };
       status: 'error';
@@ -381,4 +445,107 @@ export interface EnrollWorkspaceResult {
 
 export interface UnenrollWorkspaceParams {
   workspaceId: string;
+}
+
+// ─── Remote app update ───
+
+/**
+ * Structural mirror of the desktop updater's stage, plus `unsupported` for a
+ * client that can't update itself (a dev build, or updates turned off).
+ */
+export type AppUpdateStage =
+  'checking' | 'downloaded' | 'downloading' | 'error' | 'idle' | 'latest' | 'unsupported';
+
+export interface AppUpdateState {
+  /** Version the client is running right now. */
+  currentVersion: string;
+  errorMessage?: string;
+  /** Download progress, 0–100. Present while `stage` is `downloading`. */
+  progress?: number;
+  stage: AppUpdateStage;
+  /** Version being downloaded or ready to install. */
+  targetVersion?: string;
+}
+
+export interface InstallAppUpdateResult {
+  /** Version the client restarts into. */
+  targetVersion: string;
+}
+
+// ─── Interactive terminal (PTY) ───
+//
+// The device RPC surface is strictly request/response, so an interactive shell
+// is expressed as a session plus polling rather than a byte stream: the host
+// spawns a real PTY, keeps its output in a bounded ring buffer, and the caller
+// drains that buffer with a cursor. A real PTY (rather than a piped child) is
+// the whole point — `sudo` reads the password from `/dev/tty`, so it prompts
+// and accepts input exactly as it would in a local shell, and no credential
+// ever leaves the device.
+//
+// Runnable bytes are base64 in both directions: PTY output is not guaranteed to
+// be valid UTF-8 at chunk boundaries, and JSON strings cannot carry arbitrary
+// bytes. Mirrors the tunnel frames' own `data` encoding.
+
+export interface CreateTerminalSessionParams {
+  /** Initial grid width. Re-sent later through {@link ResizeTerminalParams}. */
+  cols: number;
+  /** Directory to start in; the host falls back to the home directory. */
+  cwd?: string;
+  /** Initial grid height. */
+  rows: number;
+}
+
+export interface CreateTerminalSessionResult {
+  /** Directory the shell actually started in (the request's `cwd` may not exist). */
+  cwd: string;
+  id: string;
+  pid: number;
+  /** Absolute path of the shell binary that was spawned. */
+  shell: string;
+}
+
+export interface WriteTerminalParams {
+  /** Base64-encoded bytes to write to the PTY. */
+  data: string;
+  id: string;
+}
+
+export interface ReadTerminalParams {
+  /**
+   * Only output produced after this point is returned. Pass the previous
+   * response's `nextCursor`; start at 0. A caller that fell behind the ring
+   * buffer is clamped forward rather than refused, so the terminal resumes at
+   * the oldest output still held.
+   */
+  cursor: number;
+  id: string;
+}
+
+export interface ReadTerminalResult {
+  /**
+   * Base64-encoded output produced since `cursor` (empty when nothing new).
+   * Capped per call; keep reading while it is non-empty to drain a burst.
+   */
+  chunk: string;
+  /** Present once the shell has exited. */
+  exitCode?: number;
+  /** Whether the shell has exited. */
+  exited: boolean;
+  /** Cursor for the next read. */
+  nextCursor: number;
+}
+
+export interface ResizeTerminalParams {
+  cols: number;
+  id: string;
+  rows: number;
+}
+
+export interface CloseTerminalParams {
+  id: string;
+}
+
+export interface CloseTerminalResult {
+  /** False when the session was already gone (exited, reaped, or never existed). */
+  closed: boolean;
 }

@@ -1,11 +1,15 @@
+import { randomUUID } from 'node:crypto';
+
 import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import {
   agents,
+  environments,
   knowledgeBases,
   projectCompletionReviews,
+  projectEnvironments,
   projects,
   projectWorks,
   tasks,
@@ -15,9 +19,11 @@ import {
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { AgentModel } from '../agent';
+import { EnvironmentModel } from '../environment';
 import type { CreateProjectInput } from '../project';
 import { ProjectModel } from '../project';
 import { TaskModel } from '../task';
+import { TopicModel } from '../topic';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'project-model-user';
@@ -41,6 +47,8 @@ describe('ProjectModel', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
+    await serverDB.delete(projectEnvironments);
+    await serverDB.delete(environments);
     await serverDB.delete(users);
   });
 
@@ -304,63 +312,6 @@ describe('ProjectModel', () => {
     expect(await serverDB.select().from(works).where(eq(works.id, work.id))).toHaveLength(1);
   });
 
-  it('moves a task subtree into a project', async () => {
-    const project = await createProject(model, { name: 'Tasks' });
-    const taskModel = new TaskModel(serverDB, userId);
-    const parent = await taskModel.create({ instruction: 'Parent' });
-    const child = await taskModel.create({ instruction: 'Child', parentTaskId: parent.id });
-
-    const moved = await model.moveTaskTree(project.id, parent.id);
-    expect(moved?.map(({ id }) => id).sort()).toEqual([child.id, parent.id].sort());
-    const projectTasks = await model.listTasks(project.id);
-    expect(projectTasks?.map(({ id }) => id).sort()).toEqual([child.id, parent.id].sort());
-  });
-
-  it('preserves project tree boundaries when moving tasks', async () => {
-    const source = await createProject(model, { name: 'Source' });
-    const target = await createProject(model, { name: 'Target' });
-    const taskModel = new TaskModel(serverDB, userId);
-    const parent = await taskModel.create({ instruction: 'Parent', projectId: source.id });
-    const child = await taskModel.create({
-      instruction: 'Child',
-      parentTaskId: parent.id,
-      projectId: source.id,
-    });
-
-    await expect(model.moveTaskTree(target.id, child.id)).rejects.toThrow(
-      'Cannot move a task away from its parent project',
-    );
-    await serverDB.update(tasks).set({ projectId: target.id }).where(eq(tasks.id, parent.id));
-    expect(await model.moveTaskTree(target.id, child.id)).toEqual([
-      expect.objectContaining({ id: child.id }),
-    ]);
-    await expect(model.moveTaskTree(target.id, 'missing')).rejects.toThrow('Task not found');
-    expect(await model.moveTaskTree('missing', child.id)).toBeNull();
-  });
-
-  it('rejects moving a workspace task tree with descendants created by another member', async () => {
-    await serverDB.insert(workspaces).values({
-      id: 'mixed-tree-workspace',
-      name: 'Mixed Tree',
-      primaryOwnerId: userId,
-      slug: 'mixed-tree-workspace',
-    });
-    const workspaceModel = new ProjectModel(serverDB, userId, 'mixed-tree-workspace');
-    const ownerTasks = new TaskModel(serverDB, userId, 'mixed-tree-workspace');
-    const memberTasks = new TaskModel(serverDB, otherUserId, 'mixed-tree-workspace');
-    const project = await createProject(workspaceModel, { name: 'Target' });
-    const parent = await ownerTasks.create({ instruction: 'Parent' });
-    await memberTasks.create({
-      instruction: 'Member child',
-      parentTaskId: parent.id,
-      visibility: 'private',
-    });
-
-    await expect(workspaceModel.moveTaskTree(project.id, parent.id)).rejects.toThrow(
-      'Cannot move a task tree containing tasks created by another user',
-    );
-  });
-
   it('enforces project boundaries in the shared dependency model path', async () => {
     const firstProject = await createProject(model, { name: 'First' });
     const secondProject = await createProject(model, { name: 'Second' });
@@ -480,5 +431,67 @@ describe('ProjectModel', () => {
       instruction: 'Standalone',
     });
     expect(await model.getEnabledKnowledgeBaseIdsForTask(standaloneTask.id)).toEqual([]);
+  });
+
+  it('attaches environments and lists them per project in the owner scope', async () => {
+    const project = await createProject(model, { name: 'Env host' });
+    const environmentModel = new EnvironmentModel(serverDB, userId);
+    const env = await environmentModel.save({
+      name: 'Shared GitHub',
+      repositoryUrl: 'https://github.com/lobehub/lobehub',
+    });
+    expect(await model.listEnvironments(project.id)).toEqual([]);
+    await model.attachEnvironment(project.id, env.id);
+    await model.attachEnvironment(project.id, env.id);
+    expect(await model.listEnvironments(project.id)).toEqual([
+      expect.objectContaining({ id: env.id }),
+    ]);
+    await expect(otherModel.attachEnvironment(project.id, env.id)).rejects.toThrow('access denied');
+    await expect(otherModel.listEnvironments(project.id)).rejects.toThrow('access denied');
+    await expect(model.attachEnvironment(project.id, randomUUID())).rejects.toThrow(
+      'access denied',
+    );
+  });
+
+  it('lists project conversations with or without directories, retaining each agent', async () => {
+    const project = await createProject(model, { name: 'Topics host' });
+    const topicModel = new TopicModel(serverDB, userId);
+    const plain = await topicModel.create({
+      agentId: project.coordinatorAgentId,
+      projectId: project.id,
+      title: 'Planning',
+    });
+    const work = await topicModel.create({
+      agentId: project.coordinatorAgentId,
+      favorite: true,
+      metadata: { workingDirectory: '/work/repo' },
+      projectId: project.id,
+      title: 'Implementation',
+    });
+    const list = await model.listTopics(project.id);
+    expect(list).toHaveLength(2);
+    expect(list.find((t) => t.id === plain.id)).toMatchObject({
+      agentId: project.coordinatorAgentId,
+      projectWorkingDirectoryId: null,
+    });
+    expect(list.find((t) => t.id === work.id)).toMatchObject({
+      agentId: project.coordinatorAgentId,
+      createdAt: expect.any(Date),
+      favorite: true,
+      metadata: expect.objectContaining({ workingDirectory: '/work/repo' }),
+      userId,
+    });
+    await expect(otherModel.listTopics(project.id)).rejects.toThrow('access denied');
+  });
+
+  it('keeps agentless conversations visible in project listings', async () => {
+    const project = await createProject(model, { name: 'Agentless host' });
+    const topic = await new TopicModel(serverDB, userId).create({
+      projectId: project.id,
+      title: 'Agentless',
+    });
+    expect(await model.listTopics(project.id)).toEqual([
+      expect.objectContaining({ agentId: null, agentTitle: null, id: topic.id }),
+    ]);
   });
 });

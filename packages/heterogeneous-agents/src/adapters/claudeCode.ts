@@ -38,10 +38,10 @@
 
 import { getHeterogeneousAgentConfigOrThrow } from '../config';
 import {
-  CLI_CREDIT_LIMIT_PATTERNS,
+  classifyCliQuotaMessage,
   CLI_SERVER_THROTTLE_PATTERNS,
   CLI_USER_RATE_LIMIT_PATTERNS,
-} from '../errors/claudeCodeQuota';
+} from '../errors/cliQuota';
 import type { HeteroErrorKind } from '../errors/specs';
 import { imagePlaceholder } from '../imageEcho';
 import type {
@@ -700,6 +700,17 @@ const isAbortedResult = (raw: any): boolean =>
   !getCliResultMessage(raw?.result) &&
   !getCliResultErrors(raw);
 
+/**
+ * A `result` that closes CC's own task-notification pass without running a
+ * single turn. A notification pass that DID run a turn (`num_turns > 0`) carries
+ * real output and stays a normal result.
+ */
+const isEmptyTaskNotificationResult = (raw: any): boolean =>
+  raw?.origin?.kind === 'task-notification' &&
+  raw.num_turns === 0 &&
+  !raw.is_error &&
+  !getCliResultMessage(raw.result);
+
 const buildAbortedRuntimeEndData = (raw: any): Record<string, unknown> => ({
   kind: 'aborted' satisfies HeteroErrorKind,
   reason: 'interrupted',
@@ -874,11 +885,9 @@ const getRateLimitTerminalError = (
 
   // A credit/balance limit shares the `rate_limit` guide but not its remedy:
   // waiting for a reset never clears it, so it is a distinct taxonomy kind.
-  const kind: HeteroErrorKind = CLI_CREDIT_LIMIT_PATTERNS.some((pattern) =>
-    pattern.test(rawMessage),
-  )
-    ? 'credit_limit'
-    : 'usage_limit';
+  // A `rate_limit_info`-only rejection (no quota wording in the text) is a
+  // plan window by definition — that structured event only ever reports one.
+  const kind: HeteroErrorKind = classifyCliQuotaMessage(rawMessage)?.kind ?? 'usage_limit';
 
   return {
     agentType,
@@ -1017,6 +1026,13 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
   private readonly profile: ClaudeCompatibleAdapterProfile;
   sessionId?: string;
   private pendingRateLimitInfo?: HeterogeneousRateLimitInfo;
+  /**
+   * What the resumed session had already spent before this run (from its
+   * transcript's last `cost-state`). CC restores that tally on `--resume`, so
+   * its `result.total_cost_usd` is session-cumulative; subtracting this makes
+   * the emitted `costUsd` this run's own spend.
+   */
+  private sessionCostBaseline?: number;
 
   /** Pending tool_use ids awaiting their tool_result */
   private pendingToolCalls = new Set<string>();
@@ -1220,6 +1236,37 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
    */
   private pendingTaskCompletion: { sourceToolCallId: string; sourceToolName: string } | undefined;
 
+  /**
+   * Map a raw per-turn usage object (from `message_delta.usage` in partial
+   * mode, or `assistant.message.usage` in batch mode) into the normalized
+   * `UsageData` shape. Subclasses override to surface provider-specific
+   * consumption signals the token-only base mapping drops — e.g. Qoder zeroes
+   * the token fields and bills in `credits`, so the base mapping alone would
+   * return undefined and emit no usage event at all.
+   */
+  protected extractUsage(
+    raw:
+      | {
+          cache_creation_input_tokens?: number;
+          cache_read_input_tokens?: number;
+          input_tokens?: number;
+          output_tokens?: number;
+        }
+      | null
+      | undefined,
+  ): UsageData | undefined {
+    return toUsageData(raw);
+  }
+
+  /**
+   * Map the terminal `result` event into its session-total `UsageData`.
+   * Takes the whole raw event because session-level consumption is not
+   * always nested under `usage` (Qoder puts credits on `total_credits`).
+   */
+  protected extractResultUsage(raw: any): UsageData | undefined {
+    return toUsageData(raw?.usage);
+  }
+
   constructor(
     options: ClaudeCodeAdapterOptions = {},
     profile: ClaudeCompatibleAdapterProfile = CLAUDE_CODE_ADAPTER_PROFILE,
@@ -1249,6 +1296,12 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
       }
       case 'result': {
         return this.handleResult(raw);
+      }
+      case 'session_configured': {
+        if (typeof raw.initialSessionCostUsd === 'number') {
+          this.sessionCostBaseline = raw.initialSessionCostUsd;
+        }
+        return [];
       }
       default: {
         return [];
@@ -1529,7 +1582,7 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
     // partial mode (`sawStreamEvent`) `message_delta` owns this — skip here to
     // avoid double-counting the stale snapshot.
     if (!this.sawStreamEvent) {
-      const usage = toUsageData(raw.message?.usage);
+      const usage = this.extractUsage(raw.message?.usage);
       if (usage) {
         events.push(
           this.makeEvent('step_complete', {
@@ -1713,7 +1766,7 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
       ),
     );
 
-    const usage = toUsageData(raw.message?.usage);
+    const usage = this.extractUsage(raw.message?.usage);
     if (usage) {
       events.push(
         this.makeEvent('step_complete', {
@@ -2051,17 +2104,37 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
     return synthesizeTaskPluginState(this.claudeCodeTasks);
   }
 
+  /**
+   * This run's spend out of CC's session-cumulative `total_cost_usd`. A total
+   * below the baseline means CC did not restore the tally (the transcript's
+   * cost-state was not the one it resumed from), so the total stands alone.
+   */
+  private toRunCost(sessionTotal: unknown): number | undefined {
+    if (typeof sessionTotal !== 'number') return undefined;
+    const baseline = this.sessionCostBaseline;
+    return baseline !== undefined && baseline <= sessionTotal
+      ? sessionTotal - baseline
+      : sessionTotal;
+  }
+
   private handleResult(raw: any): HeterogeneousAgentEvent[] {
+    // Resuming a session whose previous run left background tasks behind makes
+    // CC first report them as orphaned (`task_notification` ×N), then close that
+    // bookkeeping pass with an empty zero-turn `result` BEFORE the user's turn
+    // even starts. Treating it as terminal ends the operation with no content
+    // and drops the real turn that follows — the reply stays a `...` shell.
+    if (isEmptyTaskNotificationResult(raw)) return [];
+
     // Emit authoritative grand-total usage from CC's result event. The
     // executor currently ignores this phase (it persists per-turn via
     // turn_metadata), but we still emit it so other consumers — cost
     // displays, logs — can read the normalized total.
     const events: HeterogeneousAgentEvent[] = [];
-    const usage = toUsageData(raw.usage);
+    const usage = this.extractResultUsage(raw);
     if (usage) {
       events.push(
         this.makeEvent('step_complete', {
-          costUsd: raw.total_cost_usd,
+          costUsd: this.toRunCost(raw.total_cost_usd),
           phase: 'result_usage',
           usage,
         }),
@@ -2187,7 +2260,7 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
         // every `assistant` event, so `handleAssistant` deliberately skips the
         // emission and lets this branch own it. `message_delta.usage` carries
         // the full final usage (input + cache + final output_tokens).
-        const usage = toUsageData(event.usage);
+        const usage = this.extractUsage(event.usage);
         if (!usage) return [];
         return [
           this.makeEvent('step_complete', {

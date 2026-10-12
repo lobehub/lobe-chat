@@ -11,28 +11,32 @@ export default {
   'actions.archiveMergedPullRequestsSuccess_other': 'Archived {{count}} topics with merged PRs.',
   'actions.confirmArchiveMergedPullRequestsWorkspace':
     'Archive all Workspace topics with merged PRs, including topics created by other members?',
-  'actions.confirmRemoveAll': 'You are about to delete all topics. This action cannot be undone.',
+  'actions.confirmRemoveAll':
+    'You are about to delete all topics. They will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllOwn':
-    'You are about to delete all topics you created in the current list. Topics created by other Workspace members will remain. This action cannot be undone.',
+    'You are about to delete all topics you created in the current list. Topics created by other Workspace members will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllWorkspace':
-    'You are about to delete all topics in the current Workspace list, including topics created by other members. This action cannot be undone.',
+    'You are about to delete all topics in the current Workspace list, including topics created by other members. They move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllWorkspaceAcknowledge':
-    "I understand that this permanently deletes other members' topics.",
-  'actions.confirmRemoveTopic': 'You are about to delete this topic. This action cannot be undone.',
+    "I understand that this moves other members' topics to the trash.",
+  'actions.confirmRemoveTopic':
+    'You are about to delete this topic. It will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveTopicFiles': 'Also delete images and files uploaded in this topic',
   'actions.confirmRemoveTopicTitle': 'Delete this topic?',
   'actions.confirmRemoveUnstarred':
-    'You are about to delete unstarred topics. This action cannot be undone.',
+    'You are about to delete unstarred topics. They will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredOwn':
-    'You are about to delete unstarred topics you created. Topics created by other Workspace members will remain. This action cannot be undone.',
+    'You are about to delete unstarred topics you created. Topics created by other Workspace members will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredWorkspace':
-    'You are about to delete all unstarred topics in the current Workspace list, including topics created by other members. Starred topics will remain. This action cannot be undone.',
+    'You are about to delete all unstarred topics in the current Workspace list, including topics created by other members. Starred topics will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredWorkspaceAcknowledge':
-    "I understand that this permanently deletes other members' unstarred topics.",
+    "I understand that this moves other members' unstarred topics to the trash.",
   'actions.copyLink': 'Copy Link',
   'actions.copyLinkSuccess': 'Link copied',
   'actions.copySessionId': 'Copy Topic ID',
   'actions.copySessionIdSuccess': 'Topic ID copied',
+  'actions.copyTopicPrompt': 'Copy Topic Prompt',
+  'actions.copyTopicPromptSuccess': 'Topic prompt copied',
   'actions.copyWorkingDirectory': 'Copy Working Directory',
   'actions.copyWorkingDirectorySuccess': 'Working directory copied',
   'actions.duplicate': 'Duplicate',
@@ -80,6 +84,10 @@ export default {
   'duplicateSuccess': 'Topic Copied Successfully',
   'failedStatusTip': 'This run hit an error — open it to take a look.',
   'favorite': 'Favorite',
+  'forkFailed': 'Failed to fork the topic',
+  'forkLoading': 'Creating a new topic...',
+  'forkSuccess': 'Forked to a new topic',
+  'forkTitle': '{{title}} (Branch)',
   'metaCard.ci.failure': 'CI failed',
   'metaCard.ci.none': 'No CI checks',
   'metaCard.ci.pending': 'CI running',
@@ -89,6 +97,7 @@ export default {
   'metaCard.pr.merged': 'Merged',
   'metaCard.pr.open': 'Open',
   'filter.filter': 'Filter',
+  'filter.groupMode.byAgent': 'By agent',
   'filter.groupMode.byProject': 'By project',
   'filter.groupMode.byStatus': 'By status',
   'filter.groupMode.byTime': 'By time',
@@ -98,6 +107,7 @@ export default {
   'filter.sort': 'Sort by',
   'filter.sortBy.createdAt': 'Created time',
   'filter.sortBy.updatedAt': 'Updated time',
+  'groupTitle.byAgent.unknown': 'Unknown agent',
   'groupTitle.byProject.noProject': 'No directory',
   'groupTitle.byStatus.active': 'Active',
   'groupTitle.byStatus.archived': 'Archived',
@@ -196,7 +206,7 @@ export default {
   'management.bulk.cancel': 'Cancel',
   'management.bulk.delete': 'Delete',
   'management.bulk.deleteConfirm':
-    'You are about to delete {{count}} topics. This action cannot be undone.',
+    'You are about to delete {{count}} topics. They will be moved to the trash and can be restored within 30 days.',
   'management.bulk.deleteTitle': 'Delete topics?',
   'management.bulk.favorite': 'Favorite',
   'management.bulk.move': 'Move to agent',

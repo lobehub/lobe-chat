@@ -1,50 +1,20 @@
+import { LOADING_FLAT } from '@lobechat/const';
 import type { HeteroSessionImportMessage, UIChatMessage } from '@lobechat/types';
-import pMap from 'p-map';
-
-/** Bounded so rebuilding a long topic's transcript can't stampede the API. */
-const HYDRATE_CONCURRENCY = 6;
 
 /**
- * Restore the stored body of any tool message the read path projected away,
- * for the ONE consumer that feeds it back to a model.
+ * Is a restored transcript worth paying for on this adapter?
  *
- * Everything else the store drives is a render, which the view model already
- * satisfies. A resume replay is different: it rebuilds a transcript that the
- * external CLI then resumes from, so an emptied tool result would be written to
- * disk and every later turn would read it back as a tool that returned nothing.
+ * Main consumes `resumeReplayMessages` in exactly one place —
+ * `HeterogeneousAgentImpl`'s `ensureClaudeCodeResumeTranscript` — which is
+ * gated on `agentType === 'claude-code'`. Every other adapter is handed the
+ * replay and ignores it, so restoring bodies for them would spend one
+ * authenticated round trip per historical tool, on every turn, for nothing.
  *
- * Only runs when a GC'd session forces a rebuild, so the fetch cost lands on a
- * path that is already doing far more expensive work.
+ * Keep this in step with that call site if another adapter starts rebuilding a
+ * transcript.
  */
-export const hydrateProjectedToolMessages = async (
-  messages: UIChatMessage[] | undefined,
-  fetchStoredPayload: (messageId: string) => Promise<{ content: string } | undefined | null>,
-): Promise<UIChatMessage[] | undefined> => {
-  if (!messages?.length) return messages;
-
-  const projected = messages.filter((m) => m.role === 'tool' && !!m.payloadOmitted);
-  if (projected.length === 0) return messages;
-
-  const restored = new Map<string, string>();
-  await pMap(
-    projected,
-    async (m) => {
-      try {
-        const payload = await fetchStoredPayload(m.id);
-        if (typeof payload?.content === 'string') restored.set(m.id, payload.content);
-      } catch (error) {
-        // Replay the trimmed body rather than failing the turn: a degraded
-        // transcript still resumes, a thrown error loses the user's prompt.
-        console.error('[resumeReplay] failed to restore tool payload %s: %O', m.id, error);
-      }
-    },
-    { concurrency: HYDRATE_CONCURRENCY },
-  );
-
-  if (restored.size === 0) return messages;
-
-  return messages.map((m) => (restored.has(m.id) ? { ...m, content: restored.get(m.id)! } : m));
-};
+export const shouldHydrateResumeReplay = (providerType?: string): boolean =>
+  providerType === 'claude-code';
 
 /**
  * Map the topic's chat messages into the normalized shape
@@ -108,4 +78,55 @@ export const buildResumeReplayMessages = (
   }
 
   return mapped;
+};
+
+/** Same limits as the gateway's `<previous_conversation>` fallback. */
+const EDITED_TOPIC_MAX_TURNS = 30;
+const EDITED_TOPIC_USER_MAX = 1024;
+const EDITED_TOPIC_ASSISTANT_MAX = 2048;
+
+/**
+ * Serialize the copied ancestry of an edited topic for a fresh local run.
+ *
+ * Use when:
+ * - A topic created by Codex edit-and-resend (`metadata.editedFrom`) starts
+ *   without a native session, so the CLI would otherwise see no history.
+ *
+ * Expects:
+ * - The topic's persisted rows and the assistant placeholder of this run,
+ *   whose parent is the edited user message.
+ *
+ * Returns:
+ * - A `<previous_conversation>` block of the completed user/assistant turns
+ *   before the edited message (the prompt itself is sent separately), or
+ *   `undefined` when there is nothing to replay. Tool rows are walked through
+ *   but not serialized, matching the gateway fallback.
+ */
+export const buildEditedTopicPreviousConversation = (
+  messages: UIChatMessage[] | undefined,
+  assistantMessageId: string,
+): string | undefined => {
+  if (!messages?.length) return;
+  const byId = new Map(messages.map((message) => [message.id, message]));
+  const prompt = byId.get(byId.get(assistantMessageId)?.parentId ?? '');
+  if (prompt?.role !== 'user') return;
+
+  const turns: string[] = [];
+  const visited = new Set<string>([prompt.id]);
+  let id = prompt.parentId;
+  while (id && !visited.has(id) && turns.length < EDITED_TOPIC_MAX_TURNS) {
+    visited.add(id);
+    const message = byId.get(id);
+    if (!message) break;
+    id = message.parentId;
+    if (message.role !== 'user' && message.role !== 'assistant') continue;
+    const content = message.content?.trim();
+    if (!content || content === LOADING_FLAT) continue;
+    const limit = message.role === 'user' ? EDITED_TOPIC_USER_MAX : EDITED_TOPIC_ASSISTANT_MAX;
+    const body = content.length > limit ? `${content.slice(0, limit)}… [truncated]` : content;
+    turns.push(`<${message.role}>\n${body}\n</${message.role}>`);
+  }
+  if (turns.length === 0) return;
+
+  return `<previous_conversation>\n${turns.reverse().join('\n')}\n</previous_conversation>`;
 };

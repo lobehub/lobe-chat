@@ -12,6 +12,7 @@ import type { HookDispatcher } from '@/server/services/agentRuntime/hooks/HookDi
 import type {
   ExecGroupMemberParams,
   ExecGroupMemberResult,
+  GroupActionMemberBridgeParams,
 } from '@/server/services/agentRuntime/types';
 import { type ToolExecutionService } from '@/server/services/toolExecution';
 
@@ -30,7 +31,7 @@ export interface RuntimeExecutorContext {
    * its presence alone is the signal every per-step consumer keys off. Forwarded
    * into `ToolExecutionContext.agentShareVisitor` so
    * `BuiltinToolsExecutor.execute` can re-check the visitor's grants right
-   * before dispatch — see `isShareBlockedDataToolCall` in `shareGate.ts`.
+   * before dispatch — see `isShareBlockedDataToolCall` in `shareGate/dispatch.ts`.
    */
   agentShareVisitor?: AgentShareVisitorContext;
   /**
@@ -63,6 +64,13 @@ export interface RuntimeExecutorContext {
   loadAgentState?: (operationId: string) => Promise<AgentState | null>;
   messageModel: MessageModel;
   modelRuntimeConfig?: AgentState['modelRuntimeConfig'];
+  /** Check the shared completion barrier after a startup-failure receipt is published. */
+  onGroupMemberResult?: (
+    params: Pick<
+      GroupActionMemberBridgeParams,
+      'anchorMessageId' | 'expectedMembers' | 'groupToolMessageId' | 'parentOperationId'
+    >,
+  ) => Promise<boolean>;
   operationId: string;
   serverDB: LobeChatDatabase;
   stepIndex: number;
@@ -81,7 +89,7 @@ export interface RuntimeExecutorContext {
    * ~83% of each step. Routing CE through this callback keeps the heavy
    * payload in trace only, reducing per-step Redis state from ~3.4MB to ~6KB.
    */
-  tracingContextEngine?: (input: unknown, output: unknown) => void;
+  tracingContextEngine?: (input: unknown, output: unknown, metadata?: unknown) => void;
   userId?: string;
   /**
    * Workspace scoping for ownership filters on models/services constructed

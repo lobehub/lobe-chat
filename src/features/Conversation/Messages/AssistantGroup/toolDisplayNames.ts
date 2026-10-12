@@ -2,14 +2,15 @@ import {
   formatBrowserMcpShortLabel,
   formatLinearMcpShortLabel,
 } from '@lobechat/builtin-tool-claude-code/client/labels';
+import { getGoalCommand, isGoalCommandFailed } from '@lobechat/shared-tool-ui/goal-command';
 import type { ChatToolPayloadWithResult } from '@lobechat/types';
+import { formatDuration } from '@lobechat/utils';
 import { t } from 'i18next';
 
 import { LOADING_FLAT } from '@/const/message';
 import type { AssistantContentBlock } from '@/types/index';
 
 import {
-  DURATION_SECONDS_PER_MINUTE,
   TIME_MS_PER_SECOND,
   TOOL_API_DISPLAY_NAMES,
   TOOL_HEADLINE_DETAIL_MAX_CHARS,
@@ -144,11 +145,44 @@ export const getExplicitStepHeadlineLine = (tool: ChatToolPayloadWithResult): st
 };
 
 /**
+ * `/goal` in a CLI agent conversation creates and plans the goal through `lh`
+ * shell calls. While the run streams, that step reads as the goal step it is
+ * ("正在创建目标 <title>") rather than "执行命令 <description>".
+ */
+const getGoalCommandHeadlineLine = (tool: ChatToolPayloadWithResult): string => {
+  if (!tool.arguments?.includes('goal ')) return '';
+
+  let command: unknown;
+  try {
+    command = JSON.parse(tool.arguments).command;
+  } catch {
+    // arguments still streaming or invalid
+    return '';
+  }
+  const goalCommand = typeof command === 'string' ? getGoalCommand(command) : undefined;
+  if (!goalCommand) return '';
+
+  const status =
+    tool.result == null || tool.result.content === LOADING_FLAT
+      ? 'loading'
+      : isGoalCommandFailed(tool.result)
+        ? 'failed'
+        : 'completed';
+  const label = t(`builtins.goalCommand.${goalCommand.kind}.${status}`, { ns: 'plugin' });
+  const title = goalCommand.kind === 'create' ? goalCommand.title : undefined;
+
+  return title ? `${label} ${title}` : label;
+};
+
+/**
  * C — action label + one keyword (no explicit step). This is the shining line
  * of a RUNNING collapsed workflow, so it reads as a sentence ("执行命令
  * monthly.ts"), never as a raw args dump.
  */
 export const getToolFallbackHeadlineLine = (tool: ChatToolPayloadWithResult): string => {
+  const goalHeadline = getGoalCommandHeadlineLine(tool);
+  if (goalHeadline) return goalHeadline;
+
   const label = getToolActionLabel(tool);
   const keyword = getToolKeywordDetail(tool);
   return keyword ? `${label} ${keyword}` : label;
@@ -324,13 +358,12 @@ export const getWorkflowStreamingHeadlineState = (
   return { kind: 'idle' };
 };
 
-export const formatReasoningDuration = (ms: number): string => {
-  const totalSeconds = Math.round(ms / TIME_MS_PER_SECOND);
-  if (totalSeconds < DURATION_SECONDS_PER_MINUTE) return `${totalSeconds}s`;
-  const minutes = Math.floor(totalSeconds / DURATION_SECONDS_PER_MINUTE);
-  const seconds = totalSeconds % DURATION_SECONDS_PER_MINUTE;
-  return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
-};
+/**
+ * Hour-scale turns roll up to "4h 11m": seconds are noise next to hours, and a
+ * bare "251m 49s" makes the reader do the division themselves.
+ */
+export const formatReasoningDuration = (ms: number): string =>
+  formatDuration(Math.round(ms / TIME_MS_PER_SECOND) * TIME_MS_PER_SECOND, { trimZero: true });
 
 /**
  * Collapsed-workflow summary: the total number of tool calls, nothing more.

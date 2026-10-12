@@ -39,6 +39,35 @@ export const FeatureFlagsSchema = z.object({
 
   rag_eval: FeatureFlagValue.optional(),
 
+  /**
+   * Rollout gate for the multiplexed Agent Gateway socket (protocol v2: one
+   * `/v2/ws` connection per user instead of one per run). Array values are user
+   * ids, so the rollout can go allowlist → everyone without a deploy.
+   *
+   * Deployment support is independent and enforced separately: the client also
+   * requires `serverConfig.agentGatewayProtocol === 2`, because a gateway
+   * without `/v2/ws` cannot serve this no matter what the flag says.
+   */
+  agent_gateway_mux: FeatureFlagValue.optional(),
+
+  /**
+   * Rollout gate for relaying LLM calls to the user's device: a model provider
+   * only that device can reach (a local Ollama / LM Studio, a private-network
+   * endpoint) runs one attempt at a time on the client that started the run,
+   * while the agent loop stays on the server. Off: such providers keep being
+   * dialed by the server. Array values are user ids.
+   */
+  agent_llm_relay: FeatureFlagValue.optional(),
+
+  /**
+   * Dashboards: monitoring widgets built by the `lobe-dashboard` agent tool,
+   * the home / project dashboard pages, the widget Portal and in-chat widget
+   * previews. Off: none of it is reachable and the tool is never offered;
+   * already-published widgets keep refreshing on their schedule. Array values
+   * are user ids.
+   */
+  dashboard: FeatureFlagValue.optional(),
+
   // internal flag
   agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
@@ -102,6 +131,16 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   knowledge_base: true,
   rag_eval: false,
 
+  // Off until an admin publishes a user allowlist or flips it to true; the
+  // v1 socket stays the default everywhere until then.
+  agent_gateway_mux: false,
+
+  // Off until the client executor ships everywhere; allowlist first.
+  agent_llm_relay: false,
+
+  // Off until an admin publishes a user allowlist or flips it to true.
+  dashboard: false,
+
   agent_self_iteration: isDev,
   agent_onboarding: isDev,
   dev_dock: isDev,
@@ -134,6 +173,9 @@ export const mapFeatureFlagsEnvToState = (
     isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
 
     enableAgentShare: evaluateFeatureFlag(config.agent_share, userId),
+    enableGatewayMux: evaluateFeatureFlag(config.agent_gateway_mux, userId),
+    enableLlmRelay: evaluateFeatureFlag(config.agent_llm_relay, userId),
+    enableDashboard: evaluateFeatureFlag(config.dashboard, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),

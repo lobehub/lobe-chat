@@ -3,6 +3,7 @@ import { HETERO_CONTINUE_PROMPT, LOADING_FLAT } from '@lobechat/const';
 import { shouldDropUnsupportedClaudeAssistantPrefill } from '@lobechat/model-runtime/providers/anthropic/modelId';
 import type {
   ChatImageItem,
+  ChatTopic,
   ConversationContext,
   HeterogeneousProviderConfig,
 } from '@lobechat/types';
@@ -20,7 +21,11 @@ import {
   getRuntimeCanManageAgent,
 } from '@/helpers/agentManagementAccess';
 import { resolveAgentWorkingDirectory } from '@/helpers/agentWorkingDirectory';
-import { resolveWorkspaceScoped } from '@/helpers/executionTarget';
+import {
+  applyTopicDeviceBinding,
+  getTopicBoundDeviceId,
+  resolveWorkspaceScoped,
+} from '@/helpers/executionTarget';
 import { globalAgentContextManager } from '@/helpers/GlobalAgentContextManager';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -40,6 +45,7 @@ import {
 } from '@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { INPUT_LOADING_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
+import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
 import {
   mergeAgentRuntimeInitialContexts,
   resolveActiveTopicDocumentInitialContext,
@@ -50,6 +56,7 @@ import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { type Store as ConversationStore } from '../../action';
+import { dataSelectors } from '../data/selectors';
 import { MAX_HETERO_AUTO_RETRIES } from './heteroRetryConfig';
 
 const buildRetryInitialContext = (editorData: Record<string, any> | null | undefined) => {
@@ -110,7 +117,7 @@ const settleGenerationEntry = (
  * mounted. No-ops for authors, members-with-resolved-answers, and non-workspace
  * agents; a failed fetch falls back to authorship for this run.
  */
-const ensureEffectiveAgencyAccess = async (agentId: string) => {
+export const ensureEffectiveAgencyAccess = async (agentId: string) => {
   const agentState = getAgentStoreState();
   const agent = agentByIdSelectors.getAgentById(agentId)(agentState);
   await ensureAgentManagementAccess({
@@ -122,7 +129,11 @@ const ensureEffectiveAgencyAccess = async (agentId: string) => {
   });
 };
 
-const getEffectiveAgencyConfig = (agentId: string) => {
+/**
+ * `topic` keeps the run on the machine that conversation already ran on — see
+ * `applyTopicDeviceBinding`. Omit it for agent-level decisions only.
+ */
+export const getEffectiveAgencyConfig = (agentId: string, topic?: ChatTopic | null) => {
   const agentState = getAgentStoreState();
   const sharedAgencyConfig = agentSelectors.getAgentConfigById(agentId)(agentState)?.agencyConfig;
   const agent = agentByIdSelectors.getAgentById(agentId)(agentState);
@@ -145,15 +156,24 @@ const getEffectiveAgencyConfig = (agentId: string) => {
     ? getUserStoreState().workspaceUserPreference.agentDeviceOverrides?.[agentId]
     : undefined;
 
+  const { agencyConfig, workspaceScoped } = applyTopicDeviceBinding(
+    {
+      agencyConfig: resolveAgentAgencyConfig(sharedAgencyConfig, deviceOverride, {
+        canManage,
+        visibility: agent?.visibility,
+        workspaceId: agent?.workspaceId,
+      }),
+      workspaceScoped: resolveWorkspaceScoped(usesWorkspaceMemberSelection, deviceOverride),
+    },
+    getTopicBoundDeviceId(topic, agentId),
+    getElectronStoreState().gatewayDeviceInfo?.deviceId,
+  );
+
   return {
-    agencyConfig: resolveAgentAgencyConfig(sharedAgencyConfig, deviceOverride, {
-      canManage,
-      visibility: agent?.visibility,
-      workspaceId: agent?.workspaceId,
-    }),
+    agencyConfig,
     /** True workspace membership — stays true for the author, unlike `workspaceScoped`. */
     isWorkspaceAgent: !!agent?.workspaceId,
-    workspaceScoped: resolveWorkspaceScoped(usesWorkspaceMemberSelection, deviceOverride),
+    workspaceScoped,
   };
 };
 
@@ -174,18 +194,20 @@ const getEffectiveAgencyConfig = (agentId: string) => {
  * over the agent-level default, so regenerate/continue stay on the same project
  * as the original turn.
  */
-const resolveHeteroRunContext = (
+export const resolveHeteroRunContext = (
   chatStore: ReturnType<typeof useChatStore.getState>,
   context: ConversationContext,
   agentId: string,
+  /** Topic row when the caller already holds it (the paginated store may not). */
+  topicOverride?: ChatTopic,
 ) => {
-  const topic = context.topicId
-    ? topicSelectors.getTopicById(context.topicId)(chatStore)
-    : undefined;
+  const topic =
+    topicOverride ??
+    (context.topicId ? topicSelectors.getTopicById(context.topicId)(chatStore) : undefined);
   const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
   const agentState = getAgentStoreState();
   const desktopContext = globalAgentContextManager.getContext();
-  const { agencyConfig, workspaceScoped } = getEffectiveAgencyConfig(agentId);
+  const { agencyConfig, workspaceScoped } = getEffectiveAgencyConfig(agentId, topic);
   const agentWorkingDirectory = resolveAgentWorkingDirectory({
     agencyConfig,
     currentDeviceId,
@@ -224,7 +246,7 @@ const resolveHeteroRunContext = (
  * `execHeterogeneousAgent` op as a child of the caller's parent op so Stop
  * cancels the executor without killing the parent op early.
  */
-const runHeterogeneousFromExistingMessage = async (
+export const runHeterogeneousFromExistingMessage = async (
   chatStore: ReturnType<typeof useChatStore.getState>,
   params: {
     context: ConversationContext;
@@ -234,23 +256,55 @@ const runHeterogeneousFromExistingMessage = async (
     parentMessageId: string;
     parentOperationId: string;
     prompt: string;
+    /**
+     * Replay the topic's on-disk CLI transcript into this row instead of
+     * spawning the CLI (desktop restart recovery). The saved session id must
+     * resolve, or there is nothing to read.
+     */
+    replayTranscript?: boolean;
+    /** Claude profile root the interrupted run's transcript was written under. */
+    replayTranscriptConfigDir?: string;
+    /** ISO spawn time of the interrupted run; pins the replay to that run's own turn. */
+    replayTranscriptStartedAt?: string;
+    /** Topic row when the caller already holds it (not necessarily in the paginated store). */
+    topic?: ChatTopic;
   },
-): Promise<string> => {
-  const { context, heterogeneousProvider, imageList, parentMessageId, parentOperationId, prompt } =
-    params;
+): Promise<{
+  assistantMessageId: string;
+  replayComplete?: boolean;
+  /** The executor persisted a terminal error instead of throwing. */
+  terminalError?: boolean;
+}> => {
+  const {
+    context,
+    heterogeneousProvider,
+    imageList,
+    parentMessageId,
+    parentOperationId,
+    prompt,
+    replayTranscript,
+    replayTranscriptConfigDir,
+    replayTranscriptStartedAt,
+    topic: topicOverride,
+  } = params;
   const agentId = context.agentId;
   if (!agentId) throw new Error('agentId is required for heterogeneous agent');
 
   await ensureEffectiveAgencyAccess(agentId);
   const { cwdChanged, reason, resumeBindingKey, resumeSessionId, workingDirectory } =
-    resolveHeteroRunContext(chatStore, context, agentId);
+    resolveHeteroRunContext(chatStore, context, agentId, topicOverride);
+  if (replayTranscript && !resumeSessionId) {
+    throw new Error('Transcript replay needs a resumable CLI session on the topic');
+  }
   if (cwdChanged) toast.info(t('heteroAgent.resumeReset.cwdChanged', { ns: 'chat' }));
   else if (reason === 'binding_changed')
     toast.info(t('heteroAgent.resumeReset.bindingChanged', { ns: 'chat' }));
 
-  const topicPin = context.topicId
-    ? topicSelectors.getTopicHeteroPinById(context.topicId)(chatStore)
-    : undefined;
+  const topicPin =
+    (topicOverride ? resolveTopicHeteroPin(topicOverride) : undefined) ??
+    (context.topicId
+      ? topicSelectors.getTopicHeteroPinById(context.topicId)(chatStore)
+      : undefined);
   const effectiveHeterogeneousProvider = applyTopicModelToHeterogeneousProvider(
     heterogeneousProvider,
     topicPin,
@@ -270,12 +324,19 @@ const runHeterogeneousFromExistingMessage = async (
 
   // Pull the new row into the store so the loading bubble is visible while
   // the executor runs (the executor only dispatches updates, not creates).
-  await chatStore.refreshMessages();
+  // Scoped to THIS context: restart recovery runs this for a topic the user
+  // may not be looking at, and an unscoped refresh would hit the active topic
+  // instead — leaving the new row out of the store, so every step the executor
+  // chains under it renders as an orphan group.
+  await chatStore.refreshMessages(context);
 
   const { operationId: heteroOpId } = chatStore.startOperation({
     context,
     label: 'Heterogeneous Agent Execution',
-    metadata: { heterogeneousType: heterogeneousProvider.type },
+    metadata: {
+      heteroAutoRetryAvailable: !replayTranscript,
+      heterogeneousType: heterogeneousProvider.type,
+    },
     parentOperationId,
     type: 'execHeterogeneousAgent',
   });
@@ -283,19 +344,26 @@ const runHeterogeneousFromExistingMessage = async (
 
   const { executeHeterogeneousAgent } =
     await import('@/store/chat/slices/agentRun/actions/transports/hetero/heterogeneousAgentExecutor');
-  await executeHeterogeneousAgent(() => useChatStore.getState(), {
+  const outcome = await executeHeterogeneousAgent(() => useChatStore.getState(), {
     assistantMessageId: assistantMsg.id,
     context,
     heterogeneousProvider: effectiveHeterogeneousProvider,
     imageList: imageList?.length ? imageList : undefined,
     message: prompt,
     operationId: heteroOpId,
+    ...(replayTranscript
+      ? { replayTranscript: true, replayTranscriptConfigDir, replayTranscriptStartedAt }
+      : {}),
     resumeBindingKey,
     resumeSessionId,
     workingDirectory,
   });
 
-  return assistantMsg.id;
+  return {
+    assistantMessageId: assistantMsg.id,
+    replayComplete: outcome?.replay?.complete,
+    terminalError: outcome?.terminalError,
+  };
 };
 
 export interface HeteroContinuationScheduleParams {
@@ -421,6 +489,9 @@ const regenerateUserMessageFromSource = async (
     await ensureEffectiveAgencyAccess(context.agentId);
     const { agencyConfig, isWorkspaceAgent, workspaceScoped } = getEffectiveAgencyConfig(
       context.agentId,
+      context.topicId
+        ? topicSelectors.getTopicById(context.topicId)(useChatStore.getState())
+        : undefined,
     );
     const heterogeneousProvider = agencyConfig?.heterogeneousProvider;
     const runtimeType = selectRuntimeType({
@@ -500,6 +571,128 @@ const regenerateUserMessageFromSource = async (
     });
     throw error;
   }
+};
+
+/** A replacement prompt for an edited Codex user message. */
+export interface CodexMessageEdit {
+  content: string;
+  /** Updated rich editor state; omitted keeps the original message's state. */
+  editorData?: Record<string, unknown>;
+  /** Called once the copied message is ready, before the replacement run starts. */
+  onAccepted?: () => void;
+  /** Unsent destination retained by the open editor after a preparation failure. */
+  preparedTopic?: {
+    /** Last prompt persisted in the copied message. */
+    content: string;
+    /** Serialized editor state last persisted in the copied message. */
+    editorData?: string;
+    /** Destination user message, never the source message. */
+    messageId: string;
+    /** Source boundary used to prevent reuse by another editor. */
+    sourceMessageId: string;
+    /** Source conversation used to prevent cross-topic reuse. */
+    sourceTopicId: string;
+    /** Destination created for this editor but not yet dispatched. */
+    topicId: string;
+  };
+}
+
+/**
+ * Edit-and-resend for a Codex user message. Codex cannot rewind its native
+ * thread, so the server branches the conversation up to the message into a new
+ * topic carrying the edited prompt, and that topic's ordinary regenerate path
+ * runs it in a fresh session (the executor replays the copied history). The
+ * source topic and its native session are left untouched.
+ *
+ * Rejects until the copied message is ready so the editor keeps the draft;
+ * after acceptance, the run reports its own failures.
+ */
+const editCodexUserMessage = async (
+  messageId: string,
+  source: RegenerateUserMessageSource,
+  edit: CodexMessageEdit,
+) => {
+  const { context, hooks } = source;
+  const chatStore = useChatStore.getState();
+  if (!context.agentId || !context.topicId)
+    throw new Error(t('messageAction.codexEdit.sourceUnavailable', { ns: 'chat' }));
+
+  let branch = edit.preparedTopic;
+  if (branch?.sourceMessageId !== messageId || branch.sourceTopicId !== context.topicId) {
+    const created = await topicService
+      .branchTopicAtMessage({
+        content: edit.content,
+        editorData: edit.editorData,
+        messageId,
+        title: edit.content.slice(0, 80),
+        topicId: context.topicId,
+      })
+      .catch((error: unknown) => {
+        // Transport/parse errors are not user-facing; the editor toasts this and keeps the draft.
+        console.error('[Codex edit] Could not create the branch topic:', error);
+        throw new Error(t('messageAction.codexEdit.branchFailed', { ns: 'chat' }), {
+          cause: error,
+        });
+      });
+    branch = {
+      ...created,
+      content: edit.content,
+      editorData: JSON.stringify(edit.editorData),
+      sourceMessageId: messageId,
+      sourceTopicId: context.topicId,
+    };
+    edit.preparedTopic = branch;
+  }
+  const target: ConversationContext = { ...context, threadId: null, topicId: branch.topicId };
+  const key = messageMapKey(target);
+  if (branch.content !== edit.content || branch.editorData !== JSON.stringify(edit.editorData)) {
+    // The draft can change after a failed read. Update only its unsent copy,
+    // then refresh that bucket before accepting; the source row stays untouched.
+    await messageService.updateMessage(branch.messageId, {
+      content: edit.content,
+      editorData: edit.editorData,
+    });
+    await chatStore.refreshMessages(target);
+    branch.content = edit.content;
+    branch.editorData = JSON.stringify(edit.editorData);
+  }
+  await chatStore.prefetchMessages(target);
+  const displayMessages = useChatStore.getState().messagesMap[key] ?? [];
+  // Background warming may swallow a failed fetch or skip an in-flight request.
+  // Keep the source editor until the copied user message can actually start a run.
+  if (
+    !displayMessages.some(
+      (message) =>
+        message.id === branch.messageId &&
+        message.role === 'user' &&
+        message.content === edit.content,
+    )
+  ) {
+    throw new Error(t('messageAction.codexEdit.prepareFailed', { ns: 'chat' }));
+  }
+  edit.preparedTopic = undefined;
+  edit.onAccepted?.();
+
+  await chatStore.refreshTopic();
+  if (context.isolatedTopic) {
+    // Embedded hosts own their visible topic independently of global navigation.
+    hooks.onTopicCreated?.(branch.topicId);
+  } else {
+    await chatStore.switchTopic(branch.topicId, {
+      onlyIfActiveAgentId: context.agentId,
+      onlyIfActiveTopicIn: [context.topicId],
+    });
+  }
+
+  // The run outlives the editor; it surfaces its own errors.
+  void regenerateUserMessageFromSource(branch.messageId, {
+    context: target,
+    displayMessages,
+    hooks,
+    readDbMessages: () => useChatStore.getState().dbMessagesMap[key] ?? [],
+  }).catch((error: unknown) => {
+    toast.error(error instanceof Error ? error.message : String(error));
+  });
 };
 
 /**
@@ -614,15 +807,10 @@ export interface GenerationAction {
   regenerateAssistantMessage: (messageId: string) => Promise<void>;
 
   /**
-   * Regenerate a user message
+   * Regenerate a user message. With `edit`, resend an edited Codex prompt in a
+   * branched topic instead (see {@link editCodexUserMessage}).
    */
-  regenerateUserMessage: (messageId: string) => Promise<void>;
-
-  /**
-   * Re-invoke a tool message
-   * @deprecated Temporary bridge to ChatStore
-   */
-  reInvokeToolMessage: (messageId: string) => Promise<void>;
+  regenerateUserMessage: (messageId: string, edit?: CodexMessageEdit) => Promise<void>;
 
   /**
    * Resend a thread message
@@ -792,6 +980,9 @@ export const generationSlice: StateCreator<
     await ensureEffectiveAgencyAccess(context.agentId);
     const { agencyConfig, isWorkspaceAgent, workspaceScoped } = getEffectiveAgencyConfig(
       context.agentId,
+      context.topicId
+        ? topicSelectors.getTopicById(context.topicId)(useChatStore.getState())
+        : undefined,
     );
     const runtimeType = selectRuntimeType({
       boundDeviceId: agencyConfig?.boundDeviceId,
@@ -883,6 +1074,9 @@ export const generationSlice: StateCreator<
     await ensureEffectiveAgencyAccess(context.agentId);
     const { agencyConfig, isWorkspaceAgent, workspaceScoped } = getEffectiveAgencyConfig(
       context.agentId,
+      context.topicId
+        ? topicSelectors.getTopicById(context.topicId)(useChatStore.getState())
+        : undefined,
     );
     const heterogeneousProvider = agencyConfig?.heterogeneousProvider;
     const runtimeType = selectRuntimeType({
@@ -1087,12 +1281,11 @@ export const generationSlice: StateCreator<
 
   openThreadCreator: (messageId: string) => {
     const chatStore = useChatStore.getState();
-    chatStore.openThreadCreator(messageId);
-  },
-
-  reInvokeToolMessage: async (messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.reInvokeToolMessage(messageId);
+    // Anchor the subtopic on the row's tail. A steered row's id is its host (the
+    // chain's *first* turn) while the user is looking at the chain's last turn —
+    // passing the raw id anchors the fork at the top of the row instead of where
+    // the user is. See `dataSelectors.rowTailId`.
+    chatStore.openThreadCreator(dataSelectors.rowTailId(messageId)(get()));
   },
 
   internal_beginHeteroOverloadWait: (scopeId: string) => {
@@ -1231,8 +1424,11 @@ export const generationSlice: StateCreator<
     await get().regenerateUserMessage(userId);
   },
 
-  regenerateUserMessage: async (messageId: string) =>
-    regenerateUserMessageFromSource(messageId, captureRegenerateUserMessageSource(get)),
+  regenerateUserMessage: async (messageId: string, edit?: CodexMessageEdit) => {
+    const source = captureRegenerateUserMessageSource(get);
+    if (edit) return editCodexUserMessage(messageId, source, edit);
+    return regenerateUserMessageFromSource(messageId, source);
+  },
 
   resendThreadMessage: async (messageId: string) => {
     // Resend is essentially regenerating the user message in thread context

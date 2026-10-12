@@ -104,8 +104,6 @@ class TaskService {
     createdByAgentId?: string;
     description?: string;
     editorData?: unknown;
-    /** Bind a goal entity (`goals` row) to the created task. */
-    identifierPrefix?: string;
     instruction: string;
     name?: string;
     parentTaskId?: string;
@@ -133,6 +131,8 @@ class TaskService {
       // Automation mode; null = no automation
       automationMode?: TaskAutomationMode | null;
       config?: Record<string, unknown>;
+      /** Deep-merged into `config` server-side under the row lock (vs. `config`, which replaces). */
+      configPatch?: Record<string, unknown>;
       context?: Record<string, unknown>;
       description?: string;
       editorData?: unknown;

@@ -723,6 +723,40 @@ describe('AgentRuntimeService.executeStep - step idempotency (distributed lock)'
     expect(coordinator.releaseStepLock).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['a stale delivery it acks', 9],
+    ['a live holder it hands back', 5],
+  ])('drops the buffered trace partial on %s', async (_label, stepCount) => {
+    const service = createService();
+    const coordinator = (service as any).coordinator;
+    coordinator.tryClaimStep = vi.fn().mockResolvedValue(false);
+    coordinator.loadAgentState = vi.fn().mockResolvedValue({ status: 'running', stepCount });
+    const discardPartial = vi.spyOn((service as any).traceRecorder, 'discardPartial');
+
+    await service.executeStep({ operationId: 'op-locked', stepIndex: 5 });
+
+    expect(discardPartial).toHaveBeenCalled();
+  });
+
+  it('drops the buffered trace partial when it re-queues itself after losing the lock', async () => {
+    const scheduleMessage = vi.fn().mockResolvedValue('msg-1');
+    const service = new AgentRuntimeService({} as any, 'user-1', {
+      queueService: { getImpl: () => ({}), scheduleMessage } as any,
+    });
+    const coordinator = (service as any).coordinator;
+    coordinator.tryClaimStep = vi.fn().mockResolvedValue(false);
+    coordinator.loadAgentState = vi.fn().mockResolvedValue({ status: 'running', stepCount: 5 });
+    const discardPartial = vi.spyOn((service as any).traceRecorder, 'discardPartial');
+
+    const result = await service.executeStep({ operationId: 'op-requeue', stepIndex: 5 });
+
+    // This path returns before the generic lock-conflict fallback, so it needs
+    // the same hand-over cleanup: the steps this invocation buffered belong to
+    // whoever holds the operation now.
+    expect(result.lockRescheduled).toBe(true);
+    expect(discardPartial).toHaveBeenCalled();
+  });
+
   it('should re-queue the same step on its own backoff for a non-stale lock conflict', async () => {
     const scheduleMessage = vi.fn().mockResolvedValue('msg-1');
     const service = new AgentRuntimeService({} as any, 'user-1', {
@@ -1725,16 +1759,14 @@ describe('AgentRuntimeService.executeStep - step_start uiMessages payload', () =
     expect(queryMock).not.toHaveBeenCalled();
   });
 
-  it('sends only the expected revision for a Gateway mux native run', async () => {
-    const service = new AgentRuntimeService({} as any, 'user-1', {
-      gatewayMuxEnabledResolver: async () => true,
-      queueService: null,
-    });
+  it('sends only the expected revision when the client declared protocol 2', async () => {
+    const service = new AgentRuntimeService({} as any, 'user-1', { queueService: null });
     const coordinator = (service as any).coordinator;
     const streamManager = (service as any).streamManager;
 
     coordinator.tryClaimStep = vi.fn().mockResolvedValue(true);
     coordinator.loadAgentState = vi.fn().mockResolvedValue({
+      host: { clientProtocol: 2 },
       lastModified: new Date().toISOString(),
       origin: { agentId: 'agt_1', topicId: 'tpc_1' },
       status: 'done',
@@ -1755,6 +1787,40 @@ describe('AgentRuntimeService.executeStep - step_start uiMessages payload', () =
       ([, evt]: any) => evt?.type === 'step_start',
     );
     expect(stepStartCall[1].data).toEqual({ messageRevision: 5 });
+  });
+
+  it('still pushes the whole snapshot to a client that declared nothing', async () => {
+    const service = new AgentRuntimeService({} as any, 'user-1', { queueService: null });
+    const coordinator = (service as any).coordinator;
+    const streamManager = (service as any).streamManager;
+
+    coordinator.tryClaimStep = vi.fn().mockResolvedValue(true);
+    coordinator.loadAgentState = vi.fn().mockResolvedValue({
+      // An older desktop bundle: it only learns the settled list from what the
+      // server pushes, so a revision alone would leave it rendering stale rows.
+      host: {},
+      lastModified: new Date().toISOString(),
+      origin: { agentId: 'agt_1', topicId: 'tpc_1' },
+      status: 'done',
+      stepCount: 3,
+    });
+    streamManager.publishStreamEvent = vi.fn().mockResolvedValue(undefined);
+    (service as any).messageServiceInstance = {
+      prepareUiMessages: vi.fn().mockResolvedValue([{ id: 'large-history', role: 'user' }]),
+    };
+
+    await service.executeStep({
+      context: { phase: 'user_input' } as any,
+      operationId: 'op-legacy',
+      stepIndex: 5,
+    });
+
+    const stepStartCall = streamManager.publishStreamEvent.mock.calls.find(
+      ([, evt]: any) => evt?.type === 'step_start',
+    );
+    expect(stepStartCall[1].data).toEqual({
+      uiMessages: [{ id: 'large-history', role: 'user' }],
+    });
   });
 });
 

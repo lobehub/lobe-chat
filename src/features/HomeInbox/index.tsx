@@ -24,7 +24,7 @@ import { useBriefStore } from '@/store/brief';
 import { briefListSelectors } from '@/store/brief/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { goalSelectors, useGoalStore } from '@/store/goal';
+import { useGoalStore } from '@/store/goal';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 import { authSelectors, userProfileSelectors } from '@/store/user/slices/auth/selectors';
@@ -138,14 +138,16 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   const isLogin = useUserStore(authSelectors.isLogin);
   const myId = useUserStore(userProfileSelectors.userId);
 
-  // Briefs are per-user AND per-workspace rows, so the feed is read through the
-  // active cache scope — a list left over from the previous workspace holds ids
-  // this one cannot resolve, and every action on it would fail silently.
+  // Briefs are per-user AND per-workspace rows: a list left over from the
+  // previous workspace holds ids this one cannot resolve, and every action on it
+  // would fail silently. The `briefList` replica partitions by identity scope
+  // and clears its view on a scope switch, so the selectors only ever surface
+  // the active scope's feed.
   const cacheScope = useCacheScope();
   const useFetchBriefs = useBriefStore((s) => s.useFetchBriefs);
-  const briefsSWR = useFetchBriefs(isLogin, cacheScope);
-  const briefs = useBriefStore(briefListSelectors.briefs(cacheScope));
-  const isBriefsInit = useBriefStore(briefListSelectors.isBriefsInit(cacheScope));
+  const briefsSWR = useFetchBriefs(isLogin);
+  const briefs = useBriefStore(briefListSelectors.briefs);
+  const isBriefsInit = useBriefStore(briefListSelectors.isBriefsInit);
 
   // The news digest is day-scoped: it fetches only briefs *created* on the
   // viewed local day (today by default), resolved or not, with ‹ › paging into
@@ -171,12 +173,14 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   // Goals are the one home feed that is not about today: they run for days, so
   // the dashboard is where you check on them. Behind the same lab toggle as the
   // goal pages themselves — without it a row would navigate to a redirect.
-  const goalsEnabled = useUserStore(labPreferSelectors.enableTopicAcceptance);
+  const goalsEnabled = useUserStore(labPreferSelectors.enableGoals);
   const showGoals = isLogin === true && goalsEnabled && showRailSections;
   const useFetchHomeGoals = useGoalStore((s) => s.useFetchHomeGoals);
   const goalsSWR = useFetchHomeGoals(showGoals, cacheScope);
-  const goals = useGoalStore(goalSelectors.homeGoals(cacheScope));
-  const isGoalsInit = useGoalStore(goalSelectors.isHomeGoalsInitialized(cacheScope));
+  // Read the replica view, not the hook: the persisted roll-up paints the rail
+  // on the first frame and the sync only confirms it, so a cache hit no longer
+  // renders one empty frame before the revalidate lands.
+  const goals = useGoalStore((s) => s.homeGoalsByScope[cacheScope]?.goals);
   // The goal rail reads the goal's own lifecycle state (`goals.status`), so it
   // no longer needs a separate acceptance read to decide each pile.
   const goalEntries = useMemo(
@@ -292,7 +296,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   // A goal feed failure must not be silent: without this the card just vanishes,
   // which is indistinguishable from having no open goals — the one reading a
   // long-running goal surface can least afford.
-  if (showGoals && goalsSWR.error && !isGoalsInit)
+  if (showGoals && goalsSWR.error && goals === undefined)
     sections.push({
       key: 'goals-error',
       label: t('inbox.goals.title'),

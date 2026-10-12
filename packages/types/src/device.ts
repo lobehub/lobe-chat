@@ -372,6 +372,12 @@ export interface DeviceListItem {
   hostname: string | null;
   identitySource: string | null;
   lastSeen: string;
+  /**
+   * What the client reported about itself on its last connect — the desktop
+   * app sends `appVersion` (plus runtime versions), the CLI `cliVersion`.
+   * `undefined` for ghost rows.
+   */
+  metadata?: Record<string, string> | null;
   online: boolean;
   platform: string | null;
   registered: boolean;
@@ -880,6 +886,40 @@ export interface DeviceWriteProjectFileResult {
 }
 
 /**
+ * Result of the `createLocalFile` / `createLocalDirectory` device RPCs. Neither
+ * overwrites: an existing entry fails with `error`. Mirrors the desktop
+ * `CreateLocalEntryResult`.
+ */
+export interface DeviceCreateProjectEntryResult {
+  error?: string;
+  path: string;
+  success: boolean;
+}
+
+/**
+ * One item of a `copyLocalFiles` device RPC. Omitting `targetPath` duplicates
+ * the source next to itself under a Finder-style free name (`name copy.ext`).
+ */
+export interface DeviceCopyProjectFileItem {
+  sourcePath: string;
+  targetPath?: string;
+}
+
+/** Per-item result of the `copyLocalFiles` device RPC. Mirrors `LocalCopyFilesResultItem`. */
+export interface DeviceCopyProjectFileResultItem {
+  error?: string;
+  sourcePath: string;
+  success: boolean;
+  targetPath?: string;
+}
+
+/** Result of the `trashLocalFiles` device RPC. Mirrors the desktop `TrashLocalFilesResult`. */
+export interface DeviceTrashProjectFilesResult {
+  items: { error?: string; path: string; success: boolean }[];
+  success: boolean;
+}
+
+/**
  * A single project skill (`.agents/skills` / `.claude/skills`) discovered on a
  * remote device, returned by the `listProjectSkills` device RPC. Mirrors the
  * desktop `ProjectSkillItem` (`@lobechat/electron-client-ipc`).
@@ -951,3 +991,121 @@ export const workingDirConfigSchema = z.object({
   path: z.string(),
   repoType: z.enum(['git', 'github']).optional(),
 });
+
+/** One TCP port a device is listening on that a tunnel can reach. */
+export interface DeviceListeningPort {
+  command?: string;
+  cwd?: string;
+  /** The listening process runs inside the requested project directory. */
+  inProject: boolean;
+  /** Which loopback address reaches it — `ipv6` means `::1` only. */
+  loopback: 'both' | 'ipv4' | 'ipv6';
+  pid?: number;
+  port: number;
+}
+
+/** Result of the `listListeningPorts` device RPC. */
+export interface DeviceListeningPortsResult {
+  ports: DeviceListeningPort[];
+  /** False when the device has no detector for its platform. */
+  supported: boolean;
+}
+
+// ─── Remote app update ───
+
+/** Mirrors `@lobechat/device-control`'s `AppUpdateStage`. */
+export type DeviceAppUpdateStage =
+  'checking' | 'downloaded' | 'downloading' | 'error' | 'idle' | 'latest' | 'unsupported';
+
+/** Where a device's desktop app update stands, as the device reports it. */
+export interface DeviceAppUpdateState {
+  currentVersion: string;
+  errorMessage?: string;
+  /** Download progress, 0–100, while `stage` is `downloading`. */
+  progress?: number;
+  stage: DeviceAppUpdateStage;
+  /** Version being downloaded or ready to install. */
+  targetVersion?: string;
+}
+
+/**
+ * Why a device couldn't take part in a remote update:
+ * - `unsupported` — the connected client can't update itself remotely (an
+ *   older desktop build, or the CLI answered in the desktop app's place).
+ * - `unavailable` — the device didn't answer (offline, restarting, timeout).
+ */
+export type DeviceAppUpdateFailure = 'unavailable' | 'unsupported';
+
+export type DeviceAppUpdateStateResult =
+  | { state: DeviceAppUpdateState; status: 'ok' }
+  | { message: string; status: DeviceAppUpdateFailure };
+
+export type DeviceAppUpdateInstallResult =
+  { status: 'ok'; targetVersion: string } | { message: string; status: DeviceAppUpdateFailure };
+
+// ─── Interactive terminal (PTY) ───
+//
+// Server-side mirror of `@lobechat/device-control`'s terminal types. An
+// interactive shell over a request/response RPC is a session plus a cursor:
+// the device holds the PTY's output, the caller drains it. Runnable bytes are
+// base64 in both directions — PTY output is not valid UTF-8 at every chunk
+// boundary, and JSON strings cannot carry arbitrary bytes.
+
+/** Result of the `createTerminalSession` device RPC. */
+export interface DeviceCreateTerminalSessionResult {
+  /** Directory the shell actually started in (a missing `cwd` falls back home). */
+  cwd: string;
+  id: string;
+  pid: number;
+  /** Absolute path of the shell binary the device spawned. */
+  shell: string;
+}
+
+/** Result of the `readTerminal` device RPC. */
+export interface DeviceReadTerminalResult {
+  /** Base64 output produced since the caller's cursor; empty when nothing new. */
+  chunk: string;
+  /** Present once the shell has exited. */
+  exitCode?: number;
+  exited: boolean;
+  /** Cursor to pass to the next read. */
+  nextCursor: number;
+}
+
+/** Result of the `closeTerminal` device RPC. */
+export interface DeviceCloseTerminalResult {
+  /** False when the session was already gone (exited, reaped, or never existed). */
+  closed: boolean;
+}
+
+/** A CLI maintenance request is acknowledged before the connection goes away. */
+export interface DeviceCliUpdateOperation {
+  error?: string;
+  fromInstanceId: string;
+  id: string;
+  kind: 'restart' | 'update';
+  stage: 'updating' | 'restarting' | 'failed';
+  targetVersion: string;
+}
+
+export interface DeviceCliUpdateState {
+  activeTasks: number;
+  currentVersion: string;
+  /** Changes on every process start; reconnecting a socket alone is not a restart. */
+  instanceId: string;
+  latestVersion?: string;
+  operation?: DeviceCliUpdateOperation;
+  /** Remote maintenance requires a standalone daemon and a stable installed CLI entry. */
+  supported: boolean;
+  unsupportedReason?: string;
+}
+
+export interface DeviceCliRestartParams {
+  /** Idempotency key, retained when retrying an ambiguous request. */
+  requestId: string;
+  update: boolean;
+}
+
+export type DeviceCliUpdateStateResult =
+  | { state: DeviceCliUpdateState; status: 'ok' }
+  | { message: string; status: 'rejected' | 'unavailable' | 'unsupported' };

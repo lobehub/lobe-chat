@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import os from 'node:os';
+import path from 'node:path';
 
 import { OFFICIAL_DEVICE_GATEWAY_URL } from '@lobechat/const/url';
 import type {
@@ -7,6 +8,7 @@ import type {
   EnrollWorkspaceResult,
   UnenrollWorkspaceParams,
 } from '@lobechat/device-control';
+import type { DeviceMetricsSampler } from '@lobechat/device-control/metrics';
 import type {
   AgentRunRequestMessage,
   DeviceSystemInfo,
@@ -33,6 +35,13 @@ import { ServiceModule } from './index';
 const logger = createLogger('services:GatewayConnectionSrv');
 
 const DEFAULT_GATEWAY_URL = OFFICIAL_DEVICE_GATEWAY_URL;
+
+/**
+ * The socket drops about once an hour (Cloudflare moving the Durable Object,
+ * edge link resets) and is back within ~2s. A drop that recovers inside this
+ * window is not surfaced to the UI, so the device indicator doesn't flicker.
+ */
+const RECONNECT_UI_GRACE_MS = 5000;
 
 /**
  * Result envelope a tool-call handler must return. Mirrors
@@ -145,6 +154,9 @@ export default class GatewayConnectionService extends ServiceModule {
   private status: GatewayConnectionStatus = 'disconnected';
   private deviceId: string | null = null;
   private powerSaveBlockerId: number | null = null;
+  /** Status last pushed to renderers; lags `status` during a transient drop. */
+  private displayedStatus: GatewayConnectionStatus = 'disconnected';
+  private statusBroadcastTimer: ReturnType<typeof setTimeout> | null = null;
 
   private identitySource: IdentitySource | null = null;
 
@@ -156,6 +168,8 @@ export default class GatewayConnectionService extends ServiceModule {
   private agentRunHandler: AgentRunHandler | null = null;
   private rpcHandler: RpcHandler | null = null;
   private deviceRegistrar: DeviceRegistrar | null = null;
+  /** Samples CPU / memory / load for the personal device while the connection is on. */
+  private metricsSampler: { deviceId: string; sampler: DeviceMetricsSampler } | null = null;
   private workspaceTokenProvider: WorkspaceTokenProvider | null = null;
   private workspaceDeviceChecker: WorkspaceDeviceChecker | null = null;
 
@@ -163,6 +177,22 @@ export default class GatewayConnectionService extends ServiceModule {
   private workspaceClients = new Map<string, GatewayClient>();
   /** Serializes enrollment restores so reconnect churn can't double-open sockets. */
   private workspaceRestoreInFlight = false;
+  /**
+   * Set once an `auth_failed` has already triggered a token refresh for the
+   * current personal connection. Unlike `auth_expired`, `auth_failed` is
+   * terminal inside the gateway client (it disconnects and switches the backoff
+   * reconnect off), so the service is the only thing that can bring the socket
+   * back — and this guard is what stops a refresh that keeps yielding a
+   * rejected token from spinning forever. Cleared by a successful
+   * authentication, or by a user-initiated connect.
+   */
+  private authRecoveryAttempted = false;
+  /**
+   * Workspace clients that already spent their single `auth_failed` retry. A
+   * weak set on purpose: the retry budget is per client instance (a re-enroll
+   * builds a new one), so entries must die with their client.
+   */
+  private workspaceAuthRetried = new WeakSet<GatewayClient>();
 
   // ─── Configuration ───
 
@@ -178,6 +208,20 @@ export default class GatewayConnectionService extends ServiceModule {
    */
   setTokenRefresher(refresher: () => Promise<{ error?: string; success: boolean }>) {
     this.tokenRefresher = refresher;
+  }
+
+  /**
+   * Push a freshly refreshed access token into the live personal connection.
+   *
+   * The gateway client captures its token at construction and replays that same
+   * value on every backoff / heartbeat reconnect, while the access token is
+   * refreshed elsewhere (AuthCtr's auto-refresh timer, not the gateway path).
+   * Without this push, a token that roams past `exp` while the socket is
+   * healthy is re-sent on the next reconnect, rejected with `auth_failed`, and
+   * the device goes offline until the user intervenes.
+   */
+  updatePersonalToken(token: string) {
+    this.client?.updateToken(token);
   }
 
   /**
@@ -300,6 +344,11 @@ export default class GatewayConnectionService extends ServiceModule {
     return this.status;
   }
 
+  /** Status as shown in the UI — hides reconnects that recover quickly. */
+  getDisplayedStatus(): GatewayConnectionStatus {
+    return this.displayedStatus;
+  }
+
   getDeviceInfo() {
     return {
       deviceId: this.getDeviceId(),
@@ -339,10 +388,18 @@ export default class GatewayConnectionService extends ServiceModule {
     if (this.status === 'connected' || this.status === 'connecting') {
       return { success: true };
     }
+    // A user-initiated connect always gets a fresh retry budget — only the
+    // automatic recoveries are rationed by the guard.
+    this.authRecoveryAttempted = false;
     return this.doConnect();
   }
 
   async disconnect(): Promise<{ success: boolean }> {
+    // A user-initiated disconnect turns the device off, so stop sampling too —
+    // the page then shows no data rather than "running but unreachable". The
+    // samples since the last upload are pushed first (bounded), while the
+    // socket is still open.
+    await this.stopMetricsSampler({ flushTimeoutMs: 3000 });
     if (this.client) {
       await this.client.disconnect();
       this.client = null;
@@ -399,6 +456,7 @@ export default class GatewayConnectionService extends ServiceModule {
       }).catch((err) => {
         logger.warn(`Device registration failed (non-fatal): ${(err as Error).message}`);
       });
+      await this.startMetricsSampler(identity.deviceId);
     }
 
     const { GatewayClient } = await import('@lobechat/device-gateway-client');
@@ -472,8 +530,32 @@ export default class GatewayConnectionService extends ServiceModule {
         void this.handleWorkspaceAuthExpired(scope.workspaceId);
       } else {
         logger.warn('Received auth_expired, will reconnect with refreshed token');
-        this.handleAuthExpired();
+        void this.handleAuthExpired();
       }
+    });
+
+    client.on('auth_failed', (reason) => {
+      if (scope) {
+        void this.handleWorkspaceAuthFailed(scope.workspaceId, reason);
+      } else {
+        void this.handleAuthFailed(reason);
+      }
+    });
+
+    client.on('connected', () => {
+      // A live authenticated socket is the reset point for the auth_failed
+      // retry guards: the next rejection gets a fresh single retry.
+      if (scope) {
+        this.workspaceAuthRetried.delete(client);
+      } else {
+        this.authRecoveryAttempted = false;
+      }
+    });
+
+    client.on('replaced', () => {
+      logger.warn(
+        `Gateway connection${scope ? ` for workspace ${scope.workspaceId}` : ''} was taken over by another client with the same connection id; not reconnecting`,
+      );
     });
 
     client.on('error', (error) => {
@@ -605,6 +687,33 @@ export default class GatewayConnectionService extends ServiceModule {
   }
 
   /**
+   * A workspace share connection was rejected outright by the gateway. Recover
+   * the same way as an expired connect token — re-mint and reconnect in place —
+   * but only once per client instance, so a share that keeps being rejected
+   * (revoked membership / revoked share) is closed instead of retried forever.
+   * The persisted enrollment is kept: the next startup's restore path settles it
+   * against the server row.
+   */
+  private async handleWorkspaceAuthFailed(workspaceId: string, reason: string) {
+    const client = this.workspaceClients.get(workspaceId);
+    if (!client) return;
+
+    if (this.workspaceAuthRetried.has(client)) {
+      logger.warn(
+        `Workspace ${workspaceId} authentication failed again (${reason}), closing share connection`,
+      );
+      await this.closeWorkspaceClient(workspaceId);
+      return;
+    }
+
+    this.workspaceAuthRetried.add(client);
+    logger.warn(
+      `Workspace ${workspaceId} authentication failed (${reason}), re-minting connect token`,
+    );
+    await this.handleWorkspaceAuthExpired(workspaceId);
+  }
+
+  /**
    * Re-open share connections persisted by a previous run. Before reconnecting,
    * confirm the derived workspace deviceId still has a registered row — the
    * share may have been revoked while the app was offline (the server can't
@@ -673,9 +782,14 @@ export default class GatewayConnectionService extends ServiceModule {
     );
   }
 
-  // ─── Auth Expired Handling ───
+  // ─── Auth Expired / Failed Handling ───
 
-  private async handleAuthExpired() {
+  /**
+   * Refresh the user token and rebuild the personal connection. A failed
+   * refresh settles on `disconnected` and waits for the next user action or app
+   * start — the refresher already reports the OIDC reason.
+   */
+  private async refreshTokenAndReconnect() {
     // Disconnect the current client
     if (this.client) {
       await this.client.disconnect();
@@ -683,7 +797,7 @@ export default class GatewayConnectionService extends ServiceModule {
     }
 
     if (!this.tokenRefresher) {
-      logger.error('No token refresher configured, cannot handle auth_expired');
+      logger.error('No token refresher configured, cannot refresh the access token');
       this.setStatus('disconnected');
       return;
     }
@@ -698,6 +812,35 @@ export default class GatewayConnectionService extends ServiceModule {
       logger.error('Token refresh failed:', result.error);
       this.setStatus('disconnected');
     }
+  }
+
+  private async handleAuthExpired() {
+    await this.refreshTokenAndReconnect();
+  }
+
+  /**
+   * The gateway rejected our token outright (`auth_failed`). Unlike
+   * `auth_expired` this is terminal inside the gateway client: it emits the
+   * event and then calls `disconnect()`, which turns the backoff reconnect off.
+   * With nobody listening the socket stayed down — and because the UI switch
+   * reads the connection status, it surfaced as the switch turning itself off —
+   * until the user toggled it or restarted the app.
+   *
+   * Refresh once and reconnect. {@link authRecoveryAttempted} keeps a refresh
+   * that yields another rejected token (revoked grant, clock skew) from looping.
+   */
+  private async handleAuthFailed(reason: string) {
+    if (this.authRecoveryAttempted) {
+      logger.error(
+        `Authentication failed again after a token refresh (${reason}); staying disconnected until the next connect`,
+      );
+      this.setStatus('disconnected');
+      return;
+    }
+
+    this.authRecoveryAttempted = true;
+    logger.warn(`Authentication failed: ${reason}. Attempting token refresh before reconnect...`);
+    await this.refreshTokenAndReconnect();
   }
 
   // ─── System Info ───
@@ -921,10 +1064,37 @@ export default class GatewayConnectionService extends ServiceModule {
 
   // ─── Power Save Blocker ───
 
+  getKeepAwake(): boolean {
+    return this.app.storeManager.get('gatewayKeepAwake', true);
+  }
+
+  setKeepAwake(enabled: boolean) {
+    this.app.storeManager.set('gatewayKeepAwake', enabled);
+    logger.info(`Keep awake while connected: ${enabled}`);
+    this.syncPowerSaveBlocker();
+  }
+
   /**
-   * Start power save blocker to prevent macOS App Nap from suspending the process
-   * while the gateway connection is active. Uses 'prevent-app-suspension' so the
-   * display can still sleep — only the app process is kept alive.
+   * Hold the blocker for as long as the device is meant to be online — not
+   * just while the socket is `connected`. Releasing it on every transient drop
+   * (the socket blips every few tens of minutes) hands macOS a window to idle
+   * sleep: with the default "sleep 1 minute after the display turns off" the
+   * idle timer has long expired, so the machine sleeps before the ~2s reconnect
+   * lands and stays offline until the user comes back. Only an explicit
+   * disconnect (status settles on `disconnected`) or the user opting out lets
+   * the system sleep again.
+   */
+  private syncPowerSaveBlocker() {
+    if (this.status !== 'disconnected' && this.getKeepAwake()) {
+      this.startPowerSaveBlocker();
+    } else {
+      this.stopPowerSaveBlocker();
+    }
+  }
+
+  /**
+   * 'prevent-app-suspension' keeps the system from idle-sleeping (and App Nap
+   * from suspending the process) while still letting the display sleep.
    */
   private startPowerSaveBlocker() {
     if (this.powerSaveBlockerId !== null) return;
@@ -939,6 +1109,44 @@ export default class GatewayConnectionService extends ServiceModule {
     this.powerSaveBlockerId = null;
   }
 
+  // ─── Device Metrics ───
+
+  /**
+   * Keeps sampling across drops and reconnects (that stretch is what explains
+   * a drop); only a new identity or an explicit disconnect replaces it.
+   * Samples go to the device gateway (their only store) over the personal
+   * connection, whichever client instance currently holds it.
+   */
+  private async startMetricsSampler(deviceId: string) {
+    if (this.metricsSampler?.deviceId === deviceId) return;
+    await this.stopMetricsSampler();
+
+    const userData = safeGetPath('userData');
+    const { DeviceMetricsSampler, deviceMetricsBacklogFileName, pushMetrics } =
+      await import('@lobechat/device-control/metrics');
+    const sampler = new DeviceMetricsSampler({
+      isConnected: () => this.status === 'connected',
+      logger: { warn: (msg) => logger.warn(msg) },
+      storagePath: userData
+        ? path.join(userData, 'device-metrics', deviceMetricsBacklogFileName(deviceId))
+        : undefined,
+      // Mirrored to the workspace-share connections so a shared device's
+      // workspace row has the same history (the gateway stores per socket).
+      upload: async (samples) => {
+        if (!this.client) throw new Error('Gateway not connected');
+        await pushMetrics(this.client, this.workspaceClients.values(), samples);
+      },
+    });
+    this.metricsSampler = { deviceId, sampler };
+    await sampler.start();
+  }
+
+  private async stopMetricsSampler(options?: { flushTimeoutMs?: number }) {
+    const current = this.metricsSampler;
+    this.metricsSampler = null;
+    await current?.sampler.stop(options);
+  }
+
   // ─── Status Broadcasting ───
 
   private setStatus(status: GatewayConnectionStatus) {
@@ -947,14 +1155,36 @@ export default class GatewayConnectionService extends ServiceModule {
     logger.info(`Connection status: ${this.status} → ${status}`);
     this.status = status;
 
-    // Keep the app process alive while gateway is connected so macOS App Nap
-    // does not suspend it during display sleep, which would drop the WebSocket.
-    if (status === 'connected') {
-      this.startPowerSaveBlocker();
-    } else {
-      this.stopPowerSaveBlocker();
+    // Upload what accrued while offline right away, not at the next tick.
+    if (status === 'connected') void this.metricsSampler?.sampler.flush();
+    this.syncPowerSaveBlocker();
+    this.scheduleStatusBroadcast(status);
+  }
+
+  private scheduleStatusBroadcast(status: GatewayConnectionStatus) {
+    if (this.statusBroadcastTimer) {
+      clearTimeout(this.statusBroadcastTimer);
+      this.statusBroadcastTimer = null;
     }
 
+    // Leaving `connected` for a reconnect: hold the UI on `connected` for a
+    // grace period. An explicit `disconnected` is always shown immediately.
+    const isTransientDrop =
+      this.displayedStatus === 'connected' && status !== 'connected' && status !== 'disconnected';
+    if (isTransientDrop) {
+      this.statusBroadcastTimer = setTimeout(() => {
+        this.statusBroadcastTimer = null;
+        this.broadcastStatus(this.status);
+      }, RECONNECT_UI_GRACE_MS);
+      return;
+    }
+
+    this.broadcastStatus(status);
+  }
+
+  private broadcastStatus(status: GatewayConnectionStatus) {
+    if (this.displayedStatus === status) return;
+    this.displayedStatus = status;
     this.app.browserManager.broadcastToAllWindows('gatewayConnectionStatusChanged', { status });
   }
 

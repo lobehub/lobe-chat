@@ -61,8 +61,10 @@ import type {
   ReplyToThreadState,
   SearchMessagesParams,
   SearchMessagesState,
+  SendAttachmentsOutcome,
   SendDirectMessageParams,
   SendDirectMessageState,
+  SendMessageAttachment,
   SendMessageParams,
   SendMessageState,
   SendMessengerPushParams,
@@ -124,6 +126,7 @@ export type {
   ListPlatformsState,
   ListThreadsParams,
   ListThreadsState,
+  MessageSendRoute,
   MessengerInfo,
   MessengerLinkInfo,
   MessengerPlatformInfo,
@@ -253,6 +256,91 @@ export interface MessageExecutionRuntimeOptions {
   service: MessageRuntimeService;
 }
 
+/**
+ * Turn a send state's attachment outcome into what the model must read.
+ *
+ * Attachment failures are swallowed per item on purpose so the text leg still
+ * ships — but a `success: true` that says nothing about them is how the model
+ * ends up telling the user "see attached" about a file that never arrived.
+ * The failed attachments are named, with the reason, and the model is told
+ * to fall back to a download link instead of claiming delivery.
+ *
+ * `success` stays true while SOMETHING reached the user (text, an embed, or
+ * at least one attachment). When there was no text and every attachment failed, nothing was
+ * delivered and the call is reported as failed.
+ */
+const describeAttachmentOutcome = (
+  params: { attachments?: SendMessageAttachment[]; content?: string; embeds?: unknown[] },
+  state: SendAttachmentsOutcome,
+  /** The success line, used verbatim while something reached the user. */
+  sentLine: string,
+): { content: string; success: boolean } => {
+  const failures = state.attachmentFailures ?? [];
+  if (failures.length === 0) return { content: sentLine, success: true };
+
+  const requested = params.attachments?.length ?? failures.length;
+  const lines = failures.map(
+    (f) =>
+      `- "${f.name ?? '(unnamed)'}" (${f.type}): ${f.reason}${f.detail ? ` — ${f.detail}` : ''}`,
+  );
+  // Embeds ride the text leg (Discord posts them even with empty content), so
+  // a delivered embed counts as something reaching the user.
+  const nothingDelivered =
+    (state.attachmentsDelivered ?? 0) === 0 && !params.content?.trim() && !params.embeds?.length;
+  const content = [
+    // Never open with "Message sent" when nothing was: the lead line is what a
+    // skimming model reads first.
+    nothingDelivered ? 'Nothing was delivered.' : sentLine,
+    `WARNING: ${failures.length} of ${requested} attachment(s) were NOT delivered:`,
+    ...lines,
+    nothingDelivered
+      ? 'No text or embed was given and every attachment failed, so the user received nothing. Do not tell them a file was sent.'
+      : 'Only the text (and any attachments not listed above) reached the user. Do NOT claim these files were attached — tell the user which files could not be delivered and share a download link for each instead.',
+  ].join('\n');
+  return { content, success: !nothingDelivered };
+};
+
+/** Discord has no has_more flag: expose real IDs, not an inferred availability claim. */
+const describeDiscordPagination = (
+  params: ReadMessagesParams,
+  result: ReadMessagesState,
+): string => {
+  const messages = result.messages;
+  if (!Array.isArray(messages)) {
+    return '\n\n[Pagination blocked: the response did not contain a message page. Do not claim history is complete.]';
+  }
+  if (messages.length === 0) {
+    return '\n\n[No messages returned for this request. Stop this traversal of visible history; this does not prove the channel has no inaccessible history.]';
+  }
+
+  // Snowflakes exceed Number.MAX_SAFE_INTEGER. Do not depend on response ordering.
+  if (messages.some((message) => typeof message.id !== 'string' || !/^\d+$/.test(message.id))) {
+    return '\n\n[Pagination blocked: a message ID is not a decimal string. Do not invent a cursor.]';
+  }
+  const ids = messages.map((message) => message.id);
+  const oldest = ids.reduce((a, b) => (BigInt(a) < BigInt(b) ? a : b));
+  const newest = ids.reduce((a, b) => (BigInt(a) > BigInt(b) ? a : b));
+  const direction = params.after !== undefined ? 'after' : 'before';
+  const cursor = direction === 'after' ? newest : oldest;
+  const previous = params[direction];
+  if (
+    previous !== undefined &&
+    /^\d+$/.test(previous) &&
+    (direction === 'after'
+      ? BigInt(cursor) <= BigInt(previous)
+      : BigInt(cursor) >= BigInt(previous))
+  ) {
+    return '\n\n[Pagination blocked: the cursor did not advance. Stop and investigate; do not claim history is complete.]';
+  }
+  const next = JSON.stringify({
+    platform: params.platform,
+    channelId: params.channelId,
+    [direction]: cursor,
+    ...(params.limit !== undefined ? { limit: params.limit } : {}),
+  });
+  return `\n\n[Discord pagination: oldest message ID: "${oldest}"; newest message ID: "${newest}". Within the 3–5-call readMessages budget, to continue toward ${direction === 'before' ? 'older' : 'newer'} messages, call readMessages with ${next}. Use only one of before/after. More messages are unknown, regardless of page size; stop on a successful empty page, or stop and investigate errors/non-advancing cursors. For large-volume requests or tasks needing more calls, use the lobehub skill to batch read via the CLI (lh bot message read) outside the conversation context instead of repeatedly calling readMessages.]`;
+};
+
 export class MessageExecutionRuntime {
   private botProvider?: BotProviderQuery;
   private service: MessageRuntimeService;
@@ -267,11 +355,12 @@ export class MessageExecutionRuntime {
   async sendMessage(params: SendMessageParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const result = await this.service.sendMessage(params);
-      return {
-        content: `Message sent to ${params.platform}:${params.channelId} (messageId: ${result.messageId})`,
-        state: result,
-        success: true,
-      };
+      const outcome = describeAttachmentOutcome(
+        params,
+        result,
+        `Message sent to ${params.platform}:${params.channelId} (messageId: ${result.messageId})`,
+      );
+      return { content: outcome.content, state: result, success: outcome.success };
     } catch (e) {
       return {
         content: `sendMessage error: ${(e as Error).message}`,
@@ -281,20 +370,42 @@ export class MessageExecutionRuntime {
   }
 
   async readMessages(params: ReadMessagesParams): Promise<BuiltinServerRuntimeOutput> {
+    if (params.platform === 'discord') {
+      if (params.before !== undefined && params.after !== undefined) {
+        return {
+          content: 'readMessages error: Discord before and after are mutually exclusive.',
+          success: false,
+        };
+      }
+      for (const direction of ['before', 'after'] as const) {
+        const cursor = params[direction];
+        if (cursor !== undefined && (typeof cursor !== 'string' || !/^\d+$/.test(cursor))) {
+          return {
+            content: `readMessages error: Discord ${direction} must be a non-empty decimal message ID string. Omit it when not needed.`,
+            success: false,
+          };
+        }
+      }
+    }
     try {
       const result = await this.service.readMessages(params);
       const count = result.messages?.length ?? 0;
       const formatted = result.messages
-        ?.map((m) => `[${m.timestamp}] ${m.author.name}: ${m.content}`)
+        ?.map(
+          (m) =>
+            `[${m.timestamp}] [messageId: ${JSON.stringify(m.id)}] ${m.author.name}: ${m.content}`,
+        )
         .join('\n');
 
       const paginationHint =
-        result.hasMore && result.nextCursor
-          ? `\n\n[More messages available — pass cursor: "${result.nextCursor}" to fetch next page]`
-          : '';
+        params.platform === 'discord'
+          ? describeDiscordPagination(params, result)
+          : result.hasMore && result.nextCursor
+            ? `\n\n[More messages available — pass cursor: "${result.nextCursor}" to fetch next page]`
+            : '';
 
       return {
-        content: `Fetched ${count} messages from ${params.platform}:${params.channelId}\n\n${formatted ?? '(no messages)'}${paginationHint}`,
+        content: `Fetched ${count} messages from ${params.platform}:${params.channelId}${params.platform === 'discord' ? paginationHint : ''}\n\n${formatted ?? '(no messages)'}${params.platform === 'discord' ? '' : paginationHint}`,
         state: result,
         success: true,
       };
@@ -383,7 +494,10 @@ export class MessageExecutionRuntime {
       const result = await this.service.searchMessages(params);
       const count = result.totalFound ?? result.messages?.length ?? 0;
       const formatted = result.messages
-        ?.map((m) => `[${m.timestamp}] ${m.author.name}: ${m.content}`)
+        ?.map(
+          (m) =>
+            `[${m.timestamp}] [messageId: ${JSON.stringify(m.id)}] ${m.author.name}: ${m.content}`,
+        )
         .join('\n');
 
       return {
@@ -582,11 +696,12 @@ export class MessageExecutionRuntime {
   async replyToThread(params: ReplyToThreadParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const result = await this.service.replyToThread(params);
-      return {
-        content: `Reply sent to thread ${params.threadId} (messageId: ${result.messageId})`,
-        state: result,
-        success: true,
-      };
+      const outcome = describeAttachmentOutcome(
+        params,
+        result,
+        `Reply sent to thread ${params.threadId} (messageId: ${result.messageId})`,
+      );
+      return { content: outcome.content, state: result, success: outcome.success };
     } catch (e) {
       return {
         content: `replyToThread error: ${(e as Error).message}`,
@@ -624,11 +739,12 @@ export class MessageExecutionRuntime {
     }
     try {
       const result = await this.service.sendDirectMessage(params);
-      return {
-        content: `Direct message sent to user ${params.userId} on ${params.platform} (messageId: ${result.messageId})`,
-        state: result,
-        success: true,
-      };
+      const outcome = describeAttachmentOutcome(
+        params,
+        result,
+        `Direct message sent to user ${params.userId} on ${params.platform} (messageId: ${result.messageId})`,
+      );
+      return { content: outcome.content, state: result, success: outcome.success };
     } catch (e) {
       return {
         content: `sendDirectMessage error: ${(e as Error).message}`,

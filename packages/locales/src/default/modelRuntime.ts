@@ -5,6 +5,12 @@ export default {
     'Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.',
   'CapabilityNotSupported':
     'Sorry, this model does not support the requested capability (such as vision input or tool calling). Please switch to a model that supports it.',
+  'ClientLlmExecutorLost':
+    'The device running {{provider}} for this conversation stopped responding before the reply finished — it may have been closed, refreshed or disconnected. Keep the LobeHub window open and try again.',
+  'ClientLlmExecutorUnavailable':
+    '{{provider}} can only be reached from your own device, but no open LobeHub window picked up the request. Open LobeHub on the device where {{provider}} runs, then retry.',
+  'ClientLlmTimeout':
+    '{{provider}} on your device did not respond in time. Make sure the model is running and loaded, then try again.',
   'ComfyUIBizError':
     'An error occurred while requesting the ComfyUI service. Please troubleshoot using the information below or try again.',
   'ComfyUIEmptyResult':
@@ -28,6 +34,8 @@ export default {
     'A database operation failed while saving or loading this conversation. Please try again; if it persists, contact support.',
   'ExceededContextWindow':
     'The current request content exceeds the length that the model can handle. Please reduce the amount of content and try again.',
+  'ExceededImageLimit':
+    'This conversation contains more images than the model provider allows in one request. Start a new topic or remove some images, then try again.',
   'ExceededToolLimit':
     'This run reached its tool-call limit. Break the task into smaller steps, or ask the agent owner to adjust the tool-call limit.',
   'HarnessJsonParseError':
@@ -79,6 +87,8 @@ export default {
     'Connection to the provider timed out or was dropped. Please check your network and try again.',
   'ProviderNoImageGenerated':
     'The provider returned no image for this request. Try rephrasing the request, or choose a model that supports image generation.',
+  'RemoteMediaDownloadTimeout':
+    'The provider timed out while downloading an attached image or file. Please try again.',
   'ProviderServiceUnavailable':
     'The provider is temporarily overloaded or unavailable. Please try again shortly.',
   'QuotaLimitReached':

@@ -292,6 +292,57 @@ describe('FileModel', () => {
   });
 
   describe('deleteUnreferenced', () => {
+    /** @example Dedicated cleanup cannot remove an ordinary library file. */
+    it('limits source-specific cleanup to agent uploads', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'application/pdf',
+        name: 'library.pdf',
+        size: 100,
+        url: 'files/library.pdf',
+      });
+      await fileModel.deleteUnreferenced(id, { source: FileSource.AgentDocument });
+      /** @example Ordinary resources keep their independent lifecycle. */
+      expect(await fileModel.findById(id)).toBeDefined();
+    });
+
+    /** @example A backing upload survives while another document or KB still uses it. */
+    it('preserves document and knowledge-base references during agent upload cleanup', async () => {
+      // ROOT CAUSE:
+      // Cleanup only checked messages and sessions and could delete files still used by
+      // documents or knowledge bases. Check these references under the same file-row lock.
+      const { id } = await fileModel.create({
+        fileType: 'application/pdf',
+        name: 'shared.pdf',
+        size: 100,
+        source: FileSource.AgentDocument,
+        url: 'files/shared.pdf',
+      });
+      const [document] = await serverDB
+        .insert(documents)
+        .values({
+          fileId: id,
+          fileType: 'application/pdf',
+          filename: 'shared.pdf',
+          source: 'files/shared.pdf',
+          sourceType: 'file',
+          userId,
+          totalCharCount: 0,
+          totalLineCount: 0,
+        })
+        .returning();
+      await fileModel.deleteUnreferenced(id);
+      /** @example Document-backed files must survive cleanup. */
+      expect(await fileModel.findById(id)).toBeDefined();
+
+      await serverDB.delete(documents).where(eq(documents.id, document.id));
+      await serverDB
+        .insert(knowledgeBaseFiles)
+        .values({ fileId: id, knowledgeBaseId: 'kb1', userId });
+      await fileModel.deleteUnreferenced(id);
+      /** @example A KB relation independently keeps the file alive. */
+      expect(await fileModel.findById(id)).toBeDefined();
+    });
+
     it('deletes an owned file that has no message or session references', async () => {
       await fileModel.createGlobalFile({
         creator: userId,
@@ -972,6 +1023,53 @@ describe('FileModel', () => {
       expect(await fileModel.countAgentShareUsage('share-a')).toBe(30);
       expect(await fileModel.countAgentShareUsage('share-b')).toBe(40);
       expect(await fileModel.countAgentShareUsage('share-none')).toBe(0);
+    });
+  });
+
+  describe('findKnowledgeBaseIds', () => {
+    it('lists the libraries a file is filed in', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'image/png',
+        name: 'photo.png',
+        size: 100,
+        url: 'files/photo.png',
+      });
+      await serverDB
+        .insert(knowledgeBaseFiles)
+        .values({ fileId: id, knowledgeBaseId: 'kb1', userId });
+
+      expect(await fileModel.findKnowledgeBaseIds(id)).toEqual(['kb1']);
+    });
+
+    // Regression: a collaborator's private library leaked into the caller's
+    // list, and saving an edit then tried to write to it.
+    it('omits libraries the caller cannot see', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'image/png',
+        name: 'shared.png',
+        size: 100,
+        url: 'files/shared.png',
+      });
+      await serverDB
+        .insert(knowledgeBases)
+        .values({ id: 'kb_other_private', name: 'theirs', userId: 'user2' });
+      await serverDB.insert(knowledgeBaseFiles).values([
+        { fileId: id, knowledgeBaseId: 'kb1', userId },
+        { fileId: id, knowledgeBaseId: 'kb_other_private', userId: 'user2' },
+      ]);
+
+      expect(await fileModel.findKnowledgeBaseIds(id)).toEqual(['kb1']);
+    });
+
+    it('returns an empty list for a file outside any library', async () => {
+      const { id } = await fileModel.create({
+        fileType: 'image/png',
+        name: 'loose.png',
+        size: 100,
+        url: 'files/loose.png',
+      });
+
+      expect(await fileModel.findKnowledgeBaseIds(id)).toEqual([]);
     });
   });
 

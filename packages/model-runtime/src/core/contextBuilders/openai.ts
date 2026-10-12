@@ -11,6 +11,7 @@ import type {
   UserMessageContentPart,
 } from '../../types';
 import { isDeepSeekThinkingEligibleModel } from '../../utils/modelParse';
+import { fetchReferenceImageBytes } from '../../utils/referenceImageCache';
 import { resolveScopedSignature, type SignatureScope } from '../../utils/signatureScope';
 import { parseDataUri } from '../../utils/uriParser';
 
@@ -442,8 +443,13 @@ export const convertOpenAIResponseInputs = async (
                   c as OpenAI.ChatCompletionContentPart,
                   options,
                 );
-                const url = (image as OpenAI.ChatCompletionContentPartImage).image_url?.url;
-                return url ? { image_url: url, type: 'input_image' as const } : undefined;
+                const imageUrl = (image as OpenAI.ChatCompletionContentPartImage).image_url;
+                if (!imageUrl?.url) return undefined;
+                return {
+                  image_url: imageUrl.url,
+                  type: 'input_image' as const,
+                  ...(imageUrl.detail && { detail: imageUrl.detail }),
+                };
               }),
             )
           ).filter((c) => !!c);
@@ -515,12 +521,16 @@ export const convertOpenAIResponseInputs = async (
                   c as OpenAI.ChatCompletionContentPart,
                   options,
                 );
-                if (!(image as OpenAI.ChatCompletionContentPartImage).image_url?.url) {
+                const imageUrl = (image as OpenAI.ChatCompletionContentPartImage).image_url;
+                if (!imageUrl?.url) {
                   return undefined;
                 }
+                // Forward the requested detail level so callers that need full resolution
+                // (e.g. inspecting small annotations on screenshots) are not downgraded to auto.
                 return {
-                  image_url: (image as OpenAI.ChatCompletionContentPartImage).image_url?.url,
+                  image_url: imageUrl.url,
                   type: 'input_image',
+                  ...(imageUrl.detail && { detail: imageUrl.detail }),
                 };
               }),
             );
@@ -603,13 +613,17 @@ export const convertImageUrlToFile = async (imageUrl: string) => {
     mimeType = mimeTypePart.split(':')[1].split(';')[0];
     buffer = Buffer.from(base64Data, 'base64');
   } else {
-    // a http url
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image from ${imageUrl}: ${response.statusText}`);
-    }
-    buffer = Buffer.from(await response.arrayBuffer());
-    mimeType = response.headers.get('content-type') || 'image/png';
+    // a http url; generation retries and batch siblings reuse the same download
+    ({ buffer, mimeType } = await fetchReferenceImageBytes(imageUrl, async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image from ${url}: ${response.statusText}`);
+      }
+      return {
+        buffer: Buffer.from(await response.arrayBuffer()),
+        mimeType: response.headers.get('content-type') || 'image/png',
+      };
+    }));
   }
 
   return toFile(buffer, `image.${mimeType.split('/')[1]}`, { type: mimeType });

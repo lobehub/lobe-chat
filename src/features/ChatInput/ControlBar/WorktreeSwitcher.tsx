@@ -1,5 +1,5 @@
 import { deriveWorktreePath, type DeviceGitWorktreeListItem } from '@lobechat/types';
-import { Icon, Input, Tooltip } from '@lobehub/ui';
+import { Icon, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
   DropdownMenuItem,
@@ -8,6 +8,8 @@ import {
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  Input,
+  Spin,
   toast,
 } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
@@ -16,7 +18,6 @@ import {
   FolderPlusIcon,
   GitBranchIcon,
   GitForkIcon,
-  LoaderCircleIcon,
   RefreshCwIcon,
   SearchIcon,
   Trash2Icon,
@@ -36,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { gitService } from '@/services/git';
 
 import { openCreateWorktreeModal } from './CreateWorktreeModal';
+import { gitMenuTriggerStyles } from './gitMenuTriggerStyles';
 import { useSwitchWorktree } from './useSwitchWorktree';
 import { getPathName, isDisabled, normalizeDisplayPath } from './worktreeHelpers';
 
@@ -123,14 +125,6 @@ const styles = createStaticStyles(({ css }) => ({
     padding-block: 4px;
     padding-inline: 12px;
     border-block-end: 1px solid ${cssVar.colorSplit};
-
-    .ant-input-affix-wrapper {
-      padding-inline: 0;
-    }
-
-    .ant-input-prefix {
-      margin-inline-end: 8px;
-    }
   `,
   section: css`
     flex: 1;
@@ -324,20 +318,6 @@ const styles = createStaticStyles(({ css }) => ({
 
     &:hover {
       background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  triggerAnchor: css`
-    display: inline-flex;
-    flex: none;
-  `,
-  /* Custom row triggers (overview panel) must fill the stretched trigger, or the
-     popup-open background paints wider than the row's own hover background. */
-  triggerFill: css`
-    display: flex;
-    width: 100%;
-
-    > * {
-      flex: 1;
     }
   `,
 }));
@@ -602,10 +582,18 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     const openCreateWorktree = useCallback(() => {
       setOpen(false);
       openCreateWorktreeModal({
+        // The modal reads the repo's full local branch list itself and draws the
+        // generated default from it, so a name is not handed out twice and does
+        // not collide with a ref on the `wt` namespace path (see
+        // `generateWorktreeBranchName`). It lives there rather than here so the
+        // list can be awaited: snapshotting an in-flight (empty) list would hand
+        // out a name git is guaranteed to refuse.
+        deviceId,
         onSubmit: handleCreateWorktree,
+        path,
         resolvePath: (branch) => deriveWorktreePath(sourcePath, branch),
       });
-    }, [handleCreateWorktree, sourcePath]);
+    }, [deviceId, handleCreateWorktree, path, sourcePath]);
 
     // Scroll the current worktree into view each time the dropdown opens — the
     // list mounts at scrollTop=0, so a current worktree below the fold would
@@ -645,8 +633,8 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
 
     return (
       <DropdownMenuRoot open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger className={styles.triggerAnchor}>
-          <div className={children ? styles.triggerFill : undefined}>
+        <DropdownMenuTrigger>
+          <div className={gitMenuTriggerStyles.trigger}>
             {open ? trigger : <Tooltip title={triggerTitle}>{trigger}</Tooltip>}
           </div>
         </DropdownMenuTrigger>
@@ -660,6 +648,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
                     placeholder={t('workingDirectory.worktreeSearchPlaceholder')}
                     prefix={<Icon icon={SearchIcon} size={14} />}
                     size="small"
+                    style={{ paddingInline: 0 }}
                     value={search}
                     variant="borderless"
                     onChange={(e) => setSearch(e.target.value)}
@@ -745,7 +734,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
                           </div>
                           <div className={styles.actionCell}>
                             {removing ? (
-                              <Icon spin icon={LoaderCircleIcon} size={13} />
+                              <Spin size={13} />
                             ) : worktree.current ? (
                               <Icon className={styles.check} icon={CheckIcon} size={14} />
                             ) : (

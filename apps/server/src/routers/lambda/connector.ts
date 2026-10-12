@@ -30,6 +30,8 @@ import {
   discoverConnectorOAuth,
   getConnectorRedirectUri,
   registerDynamicClient,
+  registeredAuthMethod,
+  toClientInformation,
 } from '@/server/services/connector/oauth';
 import {
   generateConnectorOAuthState,
@@ -548,9 +550,18 @@ export const connectorRouter = router({
       const redirectUri = getConnectorRedirectUri();
 
       // 1. Discover the authorization server backing the MCP resource.
+      // Discovery and registration failures below are server-compatibility
+      // problems the user must fix in their OAuth setup, not internal errors —
+      // surface them as BAD_REQUEST with the reason so the form can show it.
       const { authorizationServerUrl, metadata } = await discoverConnectorOAuth(
         connector.mcpServerUrl,
-      );
+      ).catch((error: unknown) => {
+        throw new TRPCError({
+          cause: error,
+          code: 'BAD_REQUEST',
+          message: (error as Error)?.message ?? String(error),
+        });
+      });
 
       // Default to the scopes advertised by the server when the user did not
       // specify any — many MCP authorization servers reject (or issue a useless
@@ -561,6 +572,7 @@ export const connectorRouter = router({
       // 2. Resolve the OAuth client: pre-registration vs. DCR.
       let clientId = existing.clientId;
       let clientSecret = existing.clientSecret;
+      let tokenEndpointAuthMethod = existing.tokenEndpointAuthMethod;
       const scheme: OIDCConfig['scheme'] = clientId ? 'pre_registration' : 'dcr';
 
       if (!clientId) {
@@ -576,9 +588,16 @@ export const connectorRouter = router({
           metadata,
           redirectUri,
           scopes,
+        }).catch((error: unknown) => {
+          throw new TRPCError({
+            cause: error,
+            code: 'BAD_REQUEST',
+            message: `Dynamic client registration failed: ${(error as Error)?.message ?? String(error)}`,
+          });
         });
         clientId = reg.client_id;
         clientSecret = reg.client_secret ?? undefined;
+        tokenEndpointAuthMethod = registeredAuthMethod(reg, metadata);
       }
 
       // 3. Persist the resolved config so the callback + refresh can reuse it.
@@ -593,6 +612,7 @@ export const connectorRouter = router({
         scheme,
         scopes,
         tokenEndpoint: metadata.token_endpoint,
+        tokenEndpointAuthMethod,
       };
       await ctx.connectorModel.update(input.id, { oidcConfig: resolvedOidc });
 
@@ -600,7 +620,7 @@ export const connectorRouter = router({
       const state = generateConnectorOAuthState();
       const { authorizationUrl, codeVerifier } = await buildAuthorizationUrl({
         authorizationServerUrl,
-        clientInformation: { client_id: clientId, client_secret: clientSecret },
+        clientInformation: toClientInformation(resolvedOidc),
         metadata,
         redirectUri,
         resource: connector.mcpServerUrl,
@@ -614,6 +634,7 @@ export const connectorRouter = router({
         connectorId: input.id,
         lobeUserId: ctx.userId,
         returnTo: input.returnTo,
+        workspaceId: ctx.workspaceId ?? undefined,
       });
 
       return { authorizationUrl };

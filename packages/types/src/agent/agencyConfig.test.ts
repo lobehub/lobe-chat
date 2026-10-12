@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { HeterogeneousProviderConfig } from './agencyConfig';
 import {
   applyTopicModelToHeterogeneousProvider,
+  applyWorkingDirByDevicePatch,
   buildHeteroExecArgs,
   buildHeteroSpawnArgs,
   canPublishAgentTopicLink,
@@ -10,7 +11,6 @@ import {
   isServerDefaultHeterogeneousModel,
   isServerDefaultHeterogeneousRelayInvocation,
   normalizeHeterogeneousProviderConfig,
-  pruneWorkingDirByDeviceDeletes,
   resolveAgencyConfig,
   resolveAgentAgencyConfig,
   resolveAgentTopicSharePolicy,
@@ -111,33 +111,83 @@ describe('normalizeHeterogeneousProviderConfig', () => {
   });
 });
 
-describe('pruneWorkingDirByDeviceDeletes', () => {
+describe('applyWorkingDirByDevicePatch', () => {
+  it('replaces a device selection without retaining another repository’s Git state', () => {
+    const merged = {
+      workingDirByDevice: {
+        'device-a': {
+          git: { activeWorktree: '/repos/titu-worktree', branch: 'master' },
+          path: '/repos/lobehub',
+          repoType: 'github',
+        },
+        'device-b': '/remote/repo',
+      },
+    };
+
+    applyWorkingDirByDevicePatch(
+      merged,
+      {
+        workingDirByDevice: { 'device-a': { path: '/repos/lobehub' } },
+      },
+      ['device-a'],
+    );
+
+    expect(merged.workingDirByDevice).toEqual({
+      'device-a': { path: '/repos/lobehub' },
+      'device-b': '/remote/repo',
+    });
+  });
+
+  it('replaces Git metadata when returning from a worktree to its source repository', () => {
+    const merged = {
+      workingDirByDevice: {
+        'device-a': {
+          git: { activeWorktree: '/repos/worktree', branch: 'main' },
+          path: '/repos/source',
+        },
+      },
+    };
+
+    applyWorkingDirByDevicePatch(
+      merged,
+      {
+        workingDirByDevice: { 'device-a': { git: { branch: 'main' }, path: '/repos/source' } },
+      },
+      ['device-a'],
+    );
+
+    expect(merged.workingDirByDevice['device-a']).toEqual({
+      git: { branch: 'main' },
+      path: '/repos/source',
+    });
+  });
+
   it('deletes keys whose patch value is undefined', () => {
     const merged = { workingDirByDevice: { 'device-a': '/a', 'device-b': '/b' } };
-    pruneWorkingDirByDeviceDeletes(merged, { workingDirByDevice: { 'device-a': undefined } });
+    applyWorkingDirByDevicePatch(merged, { workingDirByDevice: { 'device-a': undefined } });
     expect(merged.workingDirByDevice).toEqual({ 'device-b': '/b' });
   });
 
   it('leaves defined patch values untouched', () => {
     const merged = { workingDirByDevice: { 'device-a': '/a' } };
-    pruneWorkingDirByDeviceDeletes(merged, { workingDirByDevice: { 'device-a': '/a' } });
+    applyWorkingDirByDevicePatch(merged, { workingDirByDevice: { 'device-a': '/a' } });
     expect(merged.workingDirByDevice).toEqual({ 'device-a': '/a' });
   });
 
   it('is a no-op when the patch has no workingDirByDevice', () => {
     const merged = { workingDirByDevice: { 'device-a': '/a' } };
-    pruneWorkingDirByDeviceDeletes(merged, {});
-    pruneWorkingDirByDeviceDeletes(merged, undefined);
-    pruneWorkingDirByDeviceDeletes(merged, null);
+    applyWorkingDirByDevicePatch(merged, {});
+    applyWorkingDirByDevicePatch(merged, undefined);
+    applyWorkingDirByDevicePatch(merged, null);
     expect(merged.workingDirByDevice).toEqual({ 'device-a': '/a' });
   });
 
   it('is a no-op when the merged target has no workingDirByDevice', () => {
     expect(() =>
-      pruneWorkingDirByDeviceDeletes({}, { workingDirByDevice: { 'device-a': undefined } }),
+      applyWorkingDirByDevicePatch({}, { workingDirByDevice: { 'device-a': undefined } }),
     ).not.toThrow();
     expect(() =>
-      pruneWorkingDirByDeviceDeletes(undefined, { workingDirByDevice: { 'device-a': undefined } }),
+      applyWorkingDirByDevicePatch(undefined, { workingDirByDevice: { 'device-a': undefined } }),
     ).not.toThrow();
   });
 });
@@ -446,6 +496,23 @@ describe('buildHeteroSpawnArgs', () => {
       '--model',
       'kimi-for-coding',
     ]);
+  });
+
+  it('does not duplicate the Kimi Code model when native args already spell it', () => {
+    expect(
+      buildHeteroSpawnArgs({
+        args: ['-m', 'kimi-code/k3'],
+        model: 'kimi-code/k3-256k',
+        type: 'kimi-code',
+      }),
+    ).toEqual(['-m', 'kimi-code/k3']);
+    expect(
+      buildHeteroExecArgs({
+        args: ['--model=kimi-code/k3'],
+        model: 'kimi-code/k3-256k',
+        type: 'kimi-code',
+      }),
+    ).toEqual(['--agent-arg=--model=kimi-code/k3']);
   });
 
   it('preserves Qoder model and reasoning effort from native args without injecting duplicates', () => {

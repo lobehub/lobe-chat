@@ -11,6 +11,7 @@ import { getTask, removeTask, saveTask } from '../daemon/taskRegistry';
 import { registerAgentRun } from './agentRunRegistry';
 
 export interface SpawnHeteroAgentRunParams {
+  agentId?: string;
   agentType: string;
   /** Resolved `lh hetero exec` wrapper args. */
   args?: string[];
@@ -110,6 +111,7 @@ export function spawnHeteroAgentRun(
   // coerceJsonPrompt.
   const stdinPayload = buildHeteroExecStdinPayload({
     imageList,
+    isNewSession: !resumeSessionId,
     prompt,
     resumeFallbackSystemContext,
     systemContext,
@@ -142,6 +144,7 @@ export function spawnHeteroAgentRun(
       detached: true,
       env: {
         ...childEnv,
+        ...(params.agentId ? { LOBEHUB_AGENT_ID: params.agentId } : {}),
         ...(assistantMessageId ? { LOBEHUB_ASSISTANT_MESSAGE_ID: assistantMessageId } : {}),
         [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',
         LOBEHUB_JWT: jwt,

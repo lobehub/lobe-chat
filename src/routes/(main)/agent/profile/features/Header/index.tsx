@@ -175,7 +175,9 @@ const Header = memo(() => {
         toast.success(t('confirmRemoveSessionSuccess', { ns: 'chat' }));
         navigate('/');
       },
-      title: t('confirmRemoveSessionItemAlert', { ns: 'chat' }),
+      content: t('confirmRemoveSessionItemAlert', { ns: 'chat' }),
+      okText: t('delete', { ns: 'common' }),
+      title: t('delete', { ns: 'common' }),
     });
   }, [activeAgentId, canManage, navigate, removeAgent, t]);
 
@@ -252,7 +254,9 @@ const Header = memo(() => {
   );
 
   const { visible: shareVisible } = useAgentShareSupported(activeAgentId);
-  const canShareAgent = shareVisible === true && canConfigure;
+  // External sharing is stronger than General Access `edit`: only the Agent
+  // creator or a Workspace admin (`canManageResource`) may manage the link.
+  const canShareAgent = shareVisible === true && canManage;
 
   const showMarketSubmission = !!config && !isBuiltinAgent && !isHeterogeneous;
   const canSubmitToMarket = showMarketSubmission && canManage && !lockedByOther && !lockPending;

@@ -2,6 +2,7 @@ import type * as DeviceGatewayClientModule from '@lobechat/device-gateway-client
 import { describe, expect, it, vi } from 'vitest';
 
 // Import after mocks are set up
+import { resolveDeviceClientKinds } from '../clientKinds';
 import { DeviceGateway } from '../index';
 
 const mockEnv = vi.hoisted(() => ({
@@ -13,6 +14,7 @@ const mockClient = vi.hoisted(() => ({
   executeMcpCall: vi.fn(),
   executeMessageApi: vi.fn(),
   executeToolCall: vi.fn(),
+  getDeviceMetrics: vi.fn(),
   getDeviceSystemInfo: vi.fn(),
   invokeRpc: vi.fn(),
   queryDeviceList: vi.fn(),
@@ -24,6 +26,16 @@ const MockGatewayHttpClient = vi.hoisted(() =>
     return mockClient;
   }),
 );
+
+// The send-path cache rides on the Redis service; hand its connection seam a
+// fake client so the test sees which key and TTL the gateway asked for,
+// independent of whether this environment has Redis configured.
+const { cacheRedis, getRedisServiceClient } = vi.hoisted(() => {
+  const cacheRedis = { get: vi.fn(async () => null), set: vi.fn(async () => 'OK') };
+  return { cacheRedis, getRedisServiceClient: vi.fn(async () => cacheRedis) };
+});
+
+vi.mock('@/server/services/redis/client', () => ({ getRedisServiceClient }));
 
 vi.mock('@/envs/gateway', () => ({
   gatewayEnv: mockEnv,
@@ -42,6 +54,146 @@ describe('DeviceGateway', () => {
     vi.clearAllMocks();
     mockEnv.DEVICE_GATEWAY_URL = undefined;
     mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = undefined;
+  });
+
+  describe('remote app update', () => {
+    const configure = () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    };
+    const params = { deviceId: 'device-1', userId: 'user-1' };
+
+    it('asks the desktop channel for the update state', async () => {
+      configure();
+      const state = { currentVersion: '2.1.0', stage: 'downloaded', targetVersion: '2.2.0' };
+      mockClient.invokeRpc.mockResolvedValue({ data: state, success: true });
+
+      await expect(new DeviceGateway().getAppUpdateState(params)).resolves.toEqual({
+        state,
+        status: 'ok',
+      });
+      expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+        expect.objectContaining({ channel: 'desktop', deviceId: 'device-1', userId: 'user-1' }),
+        { method: 'getAppUpdateState' },
+      );
+    });
+
+    it('returns the version the device restarts into', async () => {
+      configure();
+      mockClient.invokeRpc.mockResolvedValue({ data: { targetVersion: '2.2.0' }, success: true });
+
+      await expect(new DeviceGateway().installAppUpdate(params)).resolves.toEqual({
+        status: 'ok',
+        targetVersion: '2.2.0',
+      });
+    });
+
+    it.each([
+      'This device client does not support remote updates',
+      'Unknown device RPC method: checkAppUpdate',
+    ])('reports a client that cannot update remotely as unsupported (%s)', async (error) => {
+      configure();
+      mockClient.invokeRpc.mockResolvedValue({ error, success: false });
+
+      await expect(new DeviceGateway().checkAppUpdate(params)).resolves.toEqual({
+        message: error,
+        status: 'unsupported',
+      });
+    });
+
+    it('reports an unreachable device as unavailable', async () => {
+      configure();
+      mockClient.invokeRpc.mockRejectedValue(new Error('timeout'));
+
+      await expect(new DeviceGateway().getAppUpdateState(params)).resolves.toEqual({
+        message: 'timeout',
+        status: 'unavailable',
+      });
+    });
+
+    it('reports unavailable without a configured gateway', async () => {
+      await expect(new DeviceGateway().installAppUpdate(params)).resolves.toMatchObject({
+        status: 'unavailable',
+      });
+      expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('remote CLI maintenance', () => {
+    const params = { deviceId: 'device', userId: 'user', workspaceId: 'workspace' };
+    const restart = { requestId: '89d177cf-52e5-4d55-b71c-13deef4ea366', update: true };
+
+    beforeEach(() => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    });
+
+    it.each(['getCliUpdateState', 'checkCliUpdate', 'restartCli'] as const)(
+      'targets only the CLI channel for %s',
+      async (method) => {
+        const state = {
+          activeTasks: 0,
+          currentVersion: '1.0.0',
+          instanceId: 'instance',
+          supported: true,
+        };
+        mockClient.invokeRpc.mockResolvedValue({ data: state, success: true });
+        await expect(new DeviceGateway()[method]({ ...params, ...restart })).resolves.toEqual({
+          state,
+          status: 'ok',
+        });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { ...params, channel: 'cli', timeout: 15_000 },
+          { method, ...(method === 'restartCli' ? { params: restart } : {}) },
+        );
+      },
+    );
+
+    it.each([
+      'Unknown device RPC method: checkCliUpdate',
+      'This device client does not support remote CLI updates',
+    ])('reports unsupported old clients: %s', async (message) => {
+      mockClient.invokeRpc.mockResolvedValue({ error: message, success: false });
+      await expect(new DeviceGateway().checkCliUpdate(params)).resolves.toEqual({
+        message,
+        status: 'unsupported',
+      });
+    });
+
+    it('reports offline devices as unavailable', async () => {
+      mockClient.invokeRpc.mockResolvedValue({ error: 'Device offline', success: false });
+      await expect(new DeviceGateway().restartCli({ ...params, ...restart })).resolves.toEqual({
+        message: 'Device offline',
+        status: 'unavailable',
+      });
+    });
+
+    it('distinguishes an explicit maintenance refusal from an ambiguous transport failure', async () => {
+      mockClient.invokeRpc.mockResolvedValue({
+        error: 'CLI_MAINTENANCE_REJECTED: This device has active tasks.',
+        success: false,
+      });
+      await expect(new DeviceGateway().restartCli({ ...params, ...restart })).resolves.toEqual({
+        message: 'This device has active tasks.',
+        status: 'rejected',
+      });
+    });
+
+    it('reports timeout as unavailable', async () => {
+      mockClient.invokeRpc.mockRejectedValue(new Error('timeout'));
+      await expect(new DeviceGateway().getCliUpdateState(params)).resolves.toEqual({
+        message: 'timeout',
+        status: 'unavailable',
+      });
+    });
+
+    it('reports an unconfigured gateway as unavailable', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = undefined;
+      await expect(new DeviceGateway().getCliUpdateState(params)).resolves.toMatchObject({
+        status: 'unavailable',
+      });
+      expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+    });
   });
 
   describe('isConfigured', () => {
@@ -275,7 +427,9 @@ describe('DeviceGateway', () => {
       const result = await proxy.queryDeviceSystemInfo('user-1', 'dev-1');
 
       expect(result).toEqual(systemInfo);
-      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith('user-1', 'dev-1', undefined);
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith('user-1', 'dev-1', undefined, {
+        clientKinds: ['desktop'],
+      });
     });
 
     it('should return undefined when result is not successful', async () => {
@@ -298,6 +452,199 @@ describe('DeviceGateway', () => {
       const result = await proxy.queryDeviceSystemInfo('user-1', 'dev-1');
 
       expect(result).toBeUndefined();
+    });
+
+    it('asks the device directly when no maxAge is given', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ success: true, systemInfo: {} });
+
+      await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(getRedisServiceClient).not.toHaveBeenCalled();
+      expect(cacheRedis.get).not.toHaveBeenCalled();
+    });
+
+    it('serves a recent answer through the cache when maxAge is set', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+      const systemInfo = { arch: 'arm64' };
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1', 'ws-1', {
+        maxAgeMs: 180_000,
+      });
+
+      expect(result).toEqual(systemInfo);
+      // The key carries user, pool and device so two principals never share an answer.
+      expect(cacheRedis.get).toHaveBeenCalledWith('device_system_info:v1:user-1:ws-1:dev-1');
+      expect(cacheRedis.set).toHaveBeenCalledWith(
+        'device_system_info:v1:user-1:ws-1:dev-1',
+        JSON.stringify(systemInfo),
+        { px: 180_000 },
+      );
+    });
+  });
+
+  describe('queryDeviceSystemInfo client preference', () => {
+    const configure = () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    };
+
+    it('falls back to any client when the device has no desktop app', async () => {
+      configure();
+      const systemInfo = { arch: 'arm64', userDataPath: '/home/u/.lobehub' };
+      mockClient.getDeviceSystemInfo
+        .mockResolvedValueOnce({ error: 'NO_CAPABLE_CONNECTION', success: false })
+        .mockResolvedValueOnce({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1', 'ws-1');
+
+      expect(result).toEqual(systemInfo);
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(1, 'user-1', 'dev-1', 'ws-1', {
+        clientKinds: ['desktop'],
+      });
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(
+        2,
+        'user-1',
+        'dev-1',
+        'ws-1',
+        undefined,
+      );
+    });
+
+    it.each(['TIMEOUT', 'DEVICE_OFFLINE'])(
+      'asks any client when the desktop read fails with %s',
+      async (error) => {
+        configure();
+        const systemInfo = { arch: 'arm64', userDataPath: '/home/u/.lobehub' };
+        mockClient.getDeviceSystemInfo
+          .mockResolvedValueOnce({ error, success: false })
+          .mockResolvedValueOnce({ success: true, systemInfo });
+
+        const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+        expect(result).toEqual(systemInfo);
+        expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(
+          2,
+          'user-1',
+          'dev-1',
+          undefined,
+          undefined,
+        );
+      },
+    );
+
+    it('asks any client when the desktop read throws', async () => {
+      configure();
+      const systemInfo = { arch: 'arm64' };
+      mockClient.getDeviceSystemInfo
+        .mockRejectedValueOnce(new Error('fetch failed'))
+        .mockResolvedValueOnce({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toEqual(systemInfo);
+    });
+
+    it('returns undefined when neither read is answered', async () => {
+      configure();
+      mockClient.getDeviceSystemInfo.mockResolvedValue({
+        error: 'DEVICE_NOT_FOUND',
+        success: false,
+      });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toBeUndefined();
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('readDeviceSystemInfo', () => {
+    const configure = () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    };
+
+    it('reports an unconfigured gateway', async () => {
+      const result = await new DeviceGateway().readDeviceSystemInfo('user-1', 'dev-1');
+      expect(result).toEqual({ ok: false, reason: 'GATEWAY_NOT_CONFIGURED' });
+    });
+
+    it('returns systemInfo on success', async () => {
+      configure();
+      const systemInfo = { arch: 'arm64', supportedTools: ['lobe-computer-use'] };
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().readDeviceSystemInfo('user-1', 'dev-1', 'ws-1');
+
+      expect(result).toEqual({ ok: true, systemInfo });
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith(
+        'user-1',
+        'dev-1',
+        'ws-1',
+        undefined,
+      );
+    });
+
+    it("keeps the gateway's reason for an unanswered read", async () => {
+      configure();
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ error: 'TIMEOUT', success: false });
+
+      const result = await new DeviceGateway().readDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toEqual({ ok: false, reason: 'TIMEOUT' });
+    });
+
+    it('classifies a client-side timeout', async () => {
+      configure();
+      mockClient.getDeviceSystemInfo.mockRejectedValue(
+        Object.assign(new Error('The operation timed out.'), { name: 'TimeoutError' }),
+      );
+
+      const result = await new DeviceGateway().readDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toEqual({ ok: false, reason: 'DEVICE_RESPONSE_TIMEOUT' });
+    });
+  });
+
+  describe('queryDeviceMetrics', () => {
+    const params = { deviceId: 'dev-1', since: 1000, userId: 'user-1', workspaceId: 'ws-1' };
+    const configure = () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    };
+
+    it('returns the gateway samples', async () => {
+      configure();
+      const samples = [{ observedAt: 2000 }];
+      mockClient.getDeviceMetrics.mockResolvedValue(samples);
+
+      await expect(new DeviceGateway().queryDeviceMetrics(params)).resolves.toEqual(samples);
+      expect(mockClient.getDeviceMetrics).toHaveBeenCalledWith('user-1', 'dev-1', {
+        since: 1000,
+        workspaceId: 'ws-1',
+      });
+    });
+
+    it('degrades to no samples when the gateway read fails', async () => {
+      configure();
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      mockClient.getDeviceMetrics.mockRejectedValue(
+        new Error('device metrics read failed: HTTP 500'),
+      );
+
+      await expect(new DeviceGateway().queryDeviceMetrics(params)).resolves.toEqual([]);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('device metrics read failed'),
+        expect.objectContaining({
+          deviceId: 'dev-1',
+          error: 'device metrics read failed: HTTP 500',
+        }),
+      );
+      warn.mockRestore();
     });
   });
 
@@ -970,7 +1317,10 @@ describe('DeviceGateway', () => {
         expect(result).toEqual({ success: true });
         expect(mockClient.invokeRpc).toHaveBeenCalledWith(
           { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
-          { method: 'writeLocalFile', params: { content: 'next', path: '/proj/src/App.tsx' } },
+          {
+            method: 'writeLocalFile',
+            params: { content: 'next', path: '/proj/src/App.tsx', workspaceRoot: '/proj' },
+          },
         );
       });
 
@@ -1041,6 +1391,303 @@ describe('DeviceGateway', () => {
       });
     });
 
+    describe('createProjectFile', () => {
+      it('invokes createLocalFile when the path is inside the workspace', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: '/proj/new.ts', success: true },
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        const result = await proxy.createProjectFile({
+          deviceId: 'dev-1',
+          path: '/proj/new.ts',
+          userId: 'user-1',
+          workingDirectory: '/proj',
+        });
+
+        expect(result).toEqual({ path: '/proj/new.ts', success: true });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+          {
+            method: 'createLocalFile',
+            params: { content: undefined, path: '/proj/new.ts', workspaceRoot: '/proj' },
+          },
+        );
+      });
+
+      it('throws without invoking the rpc when the path escapes the workspace', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.createProjectFile({
+            deviceId: 'dev-1',
+            path: '/proj/../evil.sh',
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/outside the approved workspace/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('surfaces a device that has not shipped the rpc yet as an error', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          error: 'Unknown device RPC method: createLocalFile',
+          success: false,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.createProjectFile({
+            deviceId: 'dev-1',
+            path: '/proj/new.ts',
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow('Unknown device RPC method: createLocalFile');
+      });
+    });
+
+    describe('createProjectDirectory', () => {
+      it('invokes createLocalDirectory when the path is inside the workspace', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: '/proj/src/new', success: true },
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.createProjectDirectory({
+            deviceId: 'dev-1',
+            path: '/proj/src/new',
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).resolves.toEqual({ path: '/proj/src/new', success: true });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+          {
+            method: 'createLocalDirectory',
+            params: { path: '/proj/src/new', workspaceRoot: '/proj' },
+          },
+        );
+      });
+
+      it('throws without invoking the rpc when the path escapes the workspace', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.createProjectDirectory({
+            deviceId: 'dev-1',
+            path: '/tmp/outside',
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/outside the approved workspace/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('copyProjectFiles', () => {
+      it('invokes copyLocalFiles when source and target stay inside the workspace', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: [{ sourcePath: '/proj/a.ts', success: true, targetPath: '/proj/a copy.ts' }],
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        const items = [
+          { sourcePath: '/proj/a.ts' },
+          { sourcePath: '/proj/b', targetPath: '/proj/c' },
+        ];
+        await proxy.copyProjectFiles({
+          deviceId: 'dev-1',
+          items,
+          userId: 'user-1',
+          workingDirectory: '/proj',
+        });
+
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 60_000, userId: 'user-1' },
+          { method: 'copyLocalFiles', params: { items, workspaceRoot: '/proj' } },
+        );
+      });
+
+      it('throws when a source lies outside the workspace', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.copyProjectFiles({
+            deviceId: 'dev-1',
+            items: [{ sourcePath: '/Users/me/.ssh/id_rsa', targetPath: '/proj/key' }],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/outside the approved workspace/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('throws when a target lies outside the workspace', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.copyProjectFiles({
+            deviceId: 'dev-1',
+            items: [{ sourcePath: '/proj/secrets.env', targetPath: '/tmp/exfil.env' }],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/outside the approved workspace/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('refuses to duplicate the workspace root (the copy would land outside it)', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.copyProjectFiles({
+            deviceId: 'dev-1',
+            items: [{ sourcePath: '/proj' }],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/workspace root/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('trashProjectFiles', () => {
+      it('invokes trashLocalFiles when every path is inside the workspace', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { items: [{ path: '/proj/a.ts', success: true }], success: true },
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.trashProjectFiles({
+            deviceId: 'dev-1',
+            paths: ['/proj/a.ts'],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).resolves.toEqual({ items: [{ path: '/proj/a.ts', success: true }], success: true });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+          { method: 'trashLocalFiles', params: { paths: ['/proj/a.ts'], workspaceRoot: '/proj' } },
+        );
+      });
+
+      it('throws when any path escapes the workspace', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.trashProjectFiles({
+            deviceId: 'dev-1',
+            paths: ['/proj/a.ts', '/Users/me/Documents'],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/outside the approved workspace/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it.each(['/proj', '/proj/', '/proj/src/..'])(
+        'refuses to trash the workspace root itself (%s)',
+        async (rootPath) => {
+          configure();
+          const proxy = new DeviceGateway();
+
+          await expect(
+            proxy.trashProjectFiles({
+              deviceId: 'dev-1',
+              paths: [rootPath],
+              userId: 'user-1',
+              workingDirectory: '/proj',
+            }),
+          ).rejects.toThrow(/workspace root/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
+      it('surfaces a device without a trash as an error, not a delete', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          error: 'This device does not support moving files to the trash',
+          success: false,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.trashProjectFiles({
+            deviceId: 'dev-1',
+            paths: ['/proj/a.ts'],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow('This device does not support moving files to the trash');
+        expect(mockClient.invokeRpc).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('workspace root guard on rename / move', () => {
+      it('refuses to rename the workspace root itself', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.renameProjectFile({
+            deviceId: 'dev-1',
+            newName: 'renamed',
+            path: '/proj',
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/workspace root/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('refuses to move the workspace root itself', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.moveProjectFiles({
+            deviceId: 'dev-1',
+            items: [{ newPath: '/proj/inner', oldPath: '/proj' }],
+            userId: 'user-1',
+            workingDirectory: '/proj',
+          }),
+        ).rejects.toThrow(/workspace root/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('contains Windows workspace roots with Windows semantics', async () => {
+        configure();
+        const proxy = new DeviceGateway();
+
+        await expect(
+          proxy.trashProjectFiles({
+            deviceId: 'dev-1',
+            paths: ['C:\\proj\\'],
+            userId: 'user-1',
+            workingDirectory: 'C:\\proj',
+          }),
+        ).rejects.toThrow(/workspace root/);
+      });
+    });
+
     describe('moveProjectFiles', () => {
       it('throws when any item moves out of the workspace', async () => {
         configure();
@@ -1082,7 +1729,10 @@ describe('DeviceGateway', () => {
           { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
           {
             method: 'moveLocalFiles',
-            params: { items: [{ newPath: '/proj/b.ts', oldPath: '/proj/a.ts' }] },
+            params: {
+              items: [{ newPath: '/proj/b.ts', oldPath: '/proj/a.ts' }],
+              workspaceRoot: '/proj',
+            },
           },
         );
       });
@@ -1120,6 +1770,7 @@ describe('DeviceGateway', () => {
       expect(MockGatewayHttpClient).toHaveBeenCalledTimes(1);
       expect(MockGatewayHttpClient).toHaveBeenCalledWith({
         gatewayUrl: 'https://gateway.example.com',
+        resolveClientKinds: resolveDeviceClientKinds,
         serviceToken: 'token',
       });
     });

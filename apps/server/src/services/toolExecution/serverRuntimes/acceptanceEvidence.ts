@@ -11,6 +11,7 @@ import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { LobeChatDatabase } from '@/database/type';
+import { evidenceTypeForStoredFile } from '@/server/services/verify/evidenceMedium';
 
 import type { ServerRuntimeRegistration } from './types';
 
@@ -32,8 +33,8 @@ class AcceptanceEvidenceExecutionRuntime {
    * The builder now captures evidence inside the main Task run, so the plan
    * hangs off the operation the tool is called from. The post-run
    * evidence-submission turn is a *child* operation, and its plan still lives
-   * on the parent — hence the parent wins when there is one. Resolving only the
-   * parent (the original shape) made every in-run call fail NO_PARENT_OPERATION.
+   * on the parent. Repair operations have a parent AND their own round, so their
+   * own plan must win; otherwise repaired evidence overwrites the failed round.
    */
   private resolveRunOperationId = async () => {
     if (!this.operationId) return undefined;
@@ -43,7 +44,11 @@ class AcceptanceEvidenceExecutionRuntime {
       this.workspaceId,
     ).findById(this.operationId);
     if (!operation) return undefined;
-    return operation.parentOperationId ?? operation.id;
+    if (!operation.parentOperationId) return operation.id;
+    const ownRun = await new VerifyRunModel(this.db, this.userId, this.workspaceId).findByOperation(
+      operation.id,
+    );
+    return ownRun ? operation.id : operation.parentOperationId;
   };
 
   listCriteria = async () => {
@@ -168,7 +173,9 @@ class AcceptanceEvidenceExecutionRuntime {
     // with no file, which renders on the acceptance as a visual check with
     // nothing behind it: strictly worse than an honest text note.
     const unbacked = params.evidence.find(
-      (item) => (item.type === 'screenshot' || item.type === 'video') && !item.fileId,
+      (item) =>
+        (item.type === 'gif' || item.type === 'screenshot' || item.type === 'video') &&
+        !item.fileId,
     );
     if (unbacked) {
       return {
@@ -210,6 +217,7 @@ class AcceptanceEvidenceExecutionRuntime {
     }
 
     const fileIds = [...new Set(params.evidence.flatMap((evidence) => evidence.fileId ?? []))];
+    const filesById = new Map<string, Awaited<ReturnType<FileModel['findById']>>>();
     if (fileIds.length > 0) {
       const files = await Promise.all(
         fileIds.map((fileId) =>
@@ -224,6 +232,7 @@ class AcceptanceEvidenceExecutionRuntime {
           success: false,
         };
       }
+      fileIds.forEach((fileId, index) => filesById.set(fileId, files[index]));
     }
 
     const result = await new VerifyCheckResultModel(
@@ -249,7 +258,10 @@ class AcceptanceEvidenceExecutionRuntime {
         description: evidence.description ?? null,
         documentId: evidence.documentId ?? null,
         fileId: evidence.fileId ?? null,
-        type: evidence.type,
+        type: evidenceTypeForStoredFile(
+          evidence.type,
+          evidence.fileId ? filesById.get(evidence.fileId) : undefined,
+        ),
       })),
     );
 
