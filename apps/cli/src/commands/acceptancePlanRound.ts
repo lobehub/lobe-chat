@@ -1,4 +1,5 @@
-import type { VerifyAgentPlanConfig, VerifyCheckItem } from '@lobechat/types';
+import { runEvidenceGaps } from '@lobechat/const/verify';
+import type { VerifyCheckItem } from '@lobechat/types';
 import pc from 'picocolors';
 
 import type { TrpcClient } from '../api/client';
@@ -103,8 +104,9 @@ export async function ingestIntoPlanRound(
     evidenceCount += uploaded.count;
     inlined += uploaded.inlined;
     failedEvidence.push(...uploaded.failedEvidence.map((failure) => ({ ...failure, checkItemId })));
-    const gaps = requiredTypes(plan.find((item) => item.id === checkItemId)).filter(
-      (type) => !uploaded.types.has(type),
+    const gaps = coverageGaps(
+      plan.find((item) => item.id === checkItemId),
+      [...uploaded.types],
     );
     if (gaps.length > 0) {
       missingEvidence.push({ checkItemId, types: gaps });
@@ -113,7 +115,7 @@ export async function ingestIntoPlanRound(
   }
   const unexecuted = plan.filter((item) => !seen.has(item.id));
   for (const item of unexecuted) {
-    const types = requiredTypes(item);
+    const types = coverageGaps(item, []);
     if (types.length === 0) continue;
     missingEvidence.push({ checkItemId: item.id, types });
     log.warn(`${item.id}: no case; required evidence not published: ${types.join(', ')}.`);
@@ -207,7 +209,13 @@ export async function ingestIntoPlanRound(
   if (acceptanceUrl) console.log(`${pc.bold('open acceptance')}: ${acceptanceUrl}`);
 }
 
-const requiredTypes = (item: VerifyCheckItem | undefined): EvidenceType[] => {
-  const config = item?.verifierConfig as VerifyAgentPlanConfig | undefined;
-  return [...new Set(config?.requiredEvidence?.map((spec) => spec.type) ?? [])] as EvidenceType[];
-};
+/**
+ * The verifier's own gate: only `run_evidence` must exist as rows (deliverable
+ * and task artifacts are resolved by the verifier), and a same-medium artifact
+ * (`video` for `gif`, `markdown` for `text`) covers the requirement.
+ */
+const coverageGaps = (item: VerifyCheckItem | undefined, published: EvidenceType[]) =>
+  runEvidenceGaps(
+    item?.verifierConfig as Record<string, unknown> | undefined,
+    published.map((type) => ({ type })),
+  ) as EvidenceType[];

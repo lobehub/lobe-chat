@@ -884,6 +884,32 @@ describe('acceptance publication with missing evidence', () => {
       });
     });
 
+    it('applies the verifier gate: deliverable scopes and same-medium substitutes are covered', async () => {
+      client.verify.getVerifyState.query.mockResolvedValue({
+        verifyPlan: [
+          {
+            ...frozenPlan[0],
+            verifierConfig: {
+              requiredEvidence: [{ type: 'gif' }, { scope: 'deliverable', type: 'markdown' }],
+            },
+          },
+          {
+            ...frozenPlan[1],
+            verifierConfig: { requiredEvidence: [{ scope: 'task_artifacts', type: 'text' }] },
+          },
+        ],
+        verifyRunId: 'plan-run',
+      });
+      // A recording uploaded as video satisfies a gif requirement; the deliverable
+      // markdown and the unexecuted item's task artifact are the verifier's to resolve.
+      await writeRound([{ evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' }]);
+
+      await run('ingest', dir, '--operation', 'op-task', '--json');
+
+      expect(result()).toMatchObject({ missingEvidence: [], publicationStatus: 'complete' });
+      expect(process.exitCode).toBeUndefined();
+    });
+
     it('keeps creating a round for an operation with no verification run', async () => {
       client.verify.getVerifyState.query.mockResolvedValue(null);
       await report([], ['output.txt']);
