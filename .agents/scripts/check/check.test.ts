@@ -149,6 +149,7 @@ describe('findNewComponentTestAdvisories', () => {
     expect(advisories[0]).toContain(
       '.agents/skills/testing/SKILL.md (Core Principles: "No new component tests")',
     );
+    expect(advisories[0]).toContain('split-large-file');
   });
 
   it('skips the warning when the configured base cannot be inspected', async () => {

@@ -53,7 +53,7 @@ Behavior the split moves unchanged and that had no test before stays "uncovered 
 
 ## 4. Move first, in its own commit
 
-Move the file and its tests together (`git mv Foo.tsx Foo/index.tsx`, `git mv Foo.test.ts Foo/index.test.ts`). Rewrite only relative module specifiers in imports, `vi.mock`, and dynamic imports; run the tests by explicit path, and commit. Large extraction in the same commit lowers content similarity until Git stops detecting the rename. A separate move commit keeps the extraction diff reviewable on its own; a squash merge folds both commits together.
+Move the file and its tests together (`mkdir Foo && git mv Foo.tsx Foo/index.tsx && git mv Foo.test.ts Foo/index.test.ts`; `git mv` does not create the directory). Rewrite only relative module specifiers in imports, `vi.mock`, and dynamic imports; run the tests by explicit path, and commit. Large extraction in the same commit lowers content similarity until Git stops detecting the rename. A separate move commit keeps the extraction diff reviewable on its own; a squash merge folds both commits together.
 
 ## 5. Extract along the plan
 
@@ -75,7 +75,7 @@ Preserve every observable behavior the old suite asserted. Remove a test or asse
 ## 7. Verify and deliver
 
 ```bash
-wc -l <dir>/*   # every file ≤ 800
+find <dir> -type f -exec wc -l {} + | sort -rn   # every file ≤ 800, nested folders included
 bun run check <every changed source file> <every guard test file> --lint --test --type
 ```
 
