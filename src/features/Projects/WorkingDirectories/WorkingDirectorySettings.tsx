@@ -1,3 +1,4 @@
+import type { DeviceListItem } from '@lobechat/types';
 import { Block, Button, cssVar, Flexbox, Icon, Select, Text } from '@lobehub/ui';
 import { FolderIcon, MessageSquarePlusIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,20 @@ import {
 import { openAddDirectoryModal } from './AddDirectoryModal';
 import { openBindDirectoryModal } from './BindDirectoryModal';
 import { openProjectTopicModal } from './StartDirectoryModal';
+
+/**
+ * A device row restored from the persisted list (`onlineUnknown`) has not been
+ * confirmed yet, so its presence is left unsaid until `listDevices` answers.
+ */
+const DevicePresence = ({ device }: { device?: DeviceListItem }) => {
+  const { t } = useTranslation('project');
+  if (device?.onlineUnknown) return null;
+  return (
+    <Text fontSize={12} type="secondary">
+      {t(device?.online ? 'settings.deviceOnline' : 'settings.deviceOffline')}
+    </Text>
+  );
+};
 
 export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
   const { t } = useTranslation('project');
@@ -113,13 +128,9 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
                       14,
                     )}
                     <Text fontSize={12}>{directory.deviceName || directory.deviceId}</Text>
-                    <Text fontSize={12} type="secondary">
-                      {t(
-                        devices.find((d) => d.deviceId === directory.deviceId)?.online
-                          ? 'settings.deviceOnline'
-                          : 'settings.deviceOffline',
-                      )}
-                    </Text>
+                    <DevicePresence
+                      device={devices.find((d) => d.deviceId === directory.deviceId)}
+                    />
                     <Text fontSize={12} type="secondary">
                       · {directory.environmentName || t('directories.noEnvironment')}
                     </Text>

@@ -15,7 +15,11 @@ import {
   createCacheProvider,
   getScopedCacheKey,
 } from './localStorageProvider';
-import { MAX_PERSISTED_DEVICES, sanitizeForPersistence } from './persistSanitizers';
+import {
+  isConfirmedLiveEntry,
+  MAX_PERSISTED_DEVICES,
+  sanitizeForPersistence,
+} from './persistSanitizers';
 
 /** Poll until `fn` returns truthy (for async IndexedDB tier assertions). */
 const until = async (fn: () => boolean | Promise<boolean>, timeout = 1000): Promise<void> => {
@@ -307,8 +311,8 @@ describe('createCacheProvider — tiering', () => {
 /**
  * Regression: the device list was memory-only, so after every reload the
  * execution-target chip showed "Unknown device" and the device-default cwd
- * flipped in only once `listDevices` returned. Both device-list entries now
- * persist in the local tier, with live presence stripped.
+ * flipped in only once `listDevices` returned. The device store's entry now
+ * persists in the local tier, with live presence stripped.
  */
 describe('createCacheProvider — device list snapshot', () => {
   const device = {
@@ -333,6 +337,7 @@ describe('createCacheProvider — device list snapshot', () => {
   const listKey = unstable_serialize([DEVICE_LIST_SWR_KEY, 'ws-1']);
   const options = {
     idbPatterns: [...CACHE_TIERS.idb],
+    isConfirmedLive: isConfirmedLiveEntry,
     localPatterns: [...CACHE_TIERS.local],
     sanitize: sanitizeForPersistence,
   };
@@ -341,7 +346,7 @@ describe('createCacheProvider — device list snapshot', () => {
     localStorage.clear();
   });
 
-  it('restores both device-list entries after a reload with presence marked unknown', async () => {
+  it("restores the store's device list after a reload with presence marked unknown", async () => {
     const scope = { value: 's1' };
     const { provider } = buildProvider(scope, options);
     const map = provider();
@@ -360,7 +365,9 @@ describe('createCacheProvider — device list snapshot', () => {
       data: [{ ...device, channels: [], online: false, onlineUnknown: true }],
     };
     expect(restoredMap.get(storeKey)).toEqual(expected);
-    expect(restoredMap.get(listKey)).toEqual(expected);
+    // The shared `useDeviceList` entry stays memory-only: its consumers read
+    // `online` as confirmed presence.
+    expect(restoredMap.get(listKey)).toBeUndefined();
     expect(await localDataCache.entriesByScope('s1')).toEqual([]);
 
     // Another workspace scope never sees this snapshot.
@@ -385,27 +392,39 @@ describe('createCacheProvider — device list snapshot', () => {
     );
   });
 
-  it("does not let another tab's snapshot downgrade this tab's live device list", () => {
-    const scope = { value: 's1' };
-    const { provider } = buildProvider(scope, options);
+  /** Simulate another tab persisting `entry` under `storeKey`. */
+  const dispatchSnapshotFromOtherTab = (entry: unknown) => {
+    const snapshot = [[storeKey, { data: entry, timestamp: Date.now(), version: '1.0.0' }]];
+    const event = Object.assign(new Event('storage'), {
+      key: getScopedCacheKey('s1'),
+      newValue: JSON.stringify(snapshot),
+    });
+    window.dispatchEvent(event);
+  };
+
+  it("does not let another tab's snapshot downgrade this tab's confirmed device list", () => {
+    const { provider } = buildProvider({ value: 's1' }, options);
     const map = provider();
     const live = { data: [device] };
     map.set(storeKey, live);
 
-    const snapshot = [
-      [
-        storeKey,
-        { data: sanitizeForPersistence(storeKey, live), timestamp: Date.now(), version: '1.0.0' },
-      ],
-    ];
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key: getScopedCacheKey('s1'),
-        newValue: JSON.stringify(snapshot),
-      }),
-    );
+    dispatchSnapshotFromOtherTab(sanitizeForPersistence(storeKey, live));
 
     expect(map.get(storeKey)).toBe(live);
+  });
+
+  it("lets another tab's newer snapshot replace a not-yet-confirmed snapshot", () => {
+    const { provider } = buildProvider({ value: 's1' }, options);
+    const map = provider();
+    // Hydrated at boot, not yet revalidated.
+    map.set(storeKey, sanitizeForPersistence(storeKey, { data: [device] }));
+
+    const newer = sanitizeForPersistence(storeKey, {
+      data: [{ ...device, defaultCwd: '/Users/me/other' }],
+    });
+    dispatchSnapshotFromOtherTab(newer);
+
+    expect(map.get(storeKey)).toEqual(newer);
   });
 });
 

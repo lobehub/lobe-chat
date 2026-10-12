@@ -27,7 +27,7 @@ import { bootTiming } from '@/libs/bootTiming';
 
 import { buildLocalDataKey, localDataCache } from './localDataCache';
 import { migrateMessageListCache } from './migrations/messageListCache';
-import { sanitizeForPersistence } from './persistSanitizers';
+import { isConfirmedLiveEntry, sanitizeForPersistence } from './persistSanitizers';
 import { isScopeTrusted } from './useCacheScope';
 
 interface CacheEntry<T = unknown> {
@@ -48,6 +48,11 @@ export interface CacheProviderOptions {
   getScope?: () => string;
   /** SWR key patterns persisted to the IndexedDB tier. */
   idbPatterns?: string[];
+  /**
+   * Whether an in-memory entry is confirmed data that a lossy (sanitized)
+   * snapshot from another tab must not overwrite. Defaults to never.
+   */
+  isConfirmedLive?: (key: string, value: unknown) => boolean;
   /**
    * Predicate marking a scope as *provisional* — writes made while it is active
    * must never be persisted. On desktop the identity round-trip can complete (or
@@ -142,6 +147,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     onError = (error) => console.error('[SWR Cache]', error),
     onScopeHydrated,
     sanitize = (_key: string, value: unknown) => value,
+    isConfirmedLive = () => false,
   } = options;
 
   // SSR / no storage → plain memory cache, no persistence. Still signal
@@ -403,9 +409,9 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
         parsed.forEach(([key, entry]) => {
           if (!matchesPattern(key, localPatterns)) return;
           // A sanitized entry is a lossy snapshot (e.g. device presence stripped):
-          // never let another tab's copy downgrade this tab's live data.
+          // never let another tab's copy downgrade this tab's confirmed data.
           const live = cacheMapInstance!.get(key);
-          if (live !== undefined && sanitize(key, live) !== live) return;
+          if (live !== undefined && isConfirmedLive(key, live)) return;
           cacheMapInstance!.hydrate([[key, entry.data]]);
         });
       } catch (error) {
@@ -516,11 +522,10 @@ export const CACHE_TIERS = {
     'agentBuilder:suggestions', // builder opening-suggestion chips (skip LLM regen on revisit)
     'taskTemplate:', // home task-template recommendations
     'modelConfig:', // small remote model config shells used by home starter chips
-    // Device list (both the device store's and `useDeviceList`'s entries): names
-    // the bound device and resolves its cwd on first paint. Persisted through
-    // `sanitizeForPersistence`, so presence is stored as unknown, not online.
+    // The device store's list: names the bound device and resolves its cwd on
+    // first paint. Persisted through `sanitizeForPersistence`, so presence is
+    // stored as unknown. `useDeviceList` (`device/listDevices`) stays memory-only.
     'device:listDevices',
-    'device/listDevices',
   ],
 } as const;
 
@@ -549,6 +554,7 @@ export const swrCacheProvider = (
     // on a real scope flip, so quarantined writes never survive a switch.
     isEphemeralScope: () => !isScopeTrusted(),
     localPatterns: [...CACHE_TIERS.local],
+    isConfirmedLive: isConfirmedLiveEntry,
     onScopeHydrated,
     sanitize: sanitizeForPersistence,
     // Governs the localStorage tier only (recents-style shells); the IndexedDB

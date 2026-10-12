@@ -8,11 +8,14 @@ import type { DeviceListItem } from '@lobechat/types';
 type PersistSanitizer = (value: unknown) => unknown;
 
 /**
- * Both device-list entries: the device store's `deviceKeys.listDevices()` and
- * the workspace-aware `useDeviceList` (`DEVICE_LIST_SWR_KEY`). Matched as
- * substrings of the serialized key, like `CACHE_TIERS`.
+ * The device store's `deviceKeys.listDevices()` entry, matched as a substring of
+ * the serialized key like `CACHE_TIERS`. Only the store's entry is persisted:
+ * the store seeds itself from it (names + cwd) while its few presence readers
+ * treat a cached row as unknown. The shared `useDeviceList` entry
+ * (`device/listDevices`) stays memory-only — its consumers (settings, pickers,
+ * policies) read `online` / `channels` as confirmed presence.
  */
-export const DEVICE_LIST_CACHE_PATTERNS = ['device:listDevices', 'device/listDevices'] as const;
+export const DEVICE_LIST_CACHE_PATTERNS = ['device:listDevices'] as const;
 
 /** Upper bound on persisted device rows — the snapshot must stay a small shell. */
 export const MAX_PERSISTED_DEVICES = 50;
@@ -43,6 +46,22 @@ const sanitizeDeviceList: PersistSanitizer = (value) => {
 const SANITIZERS: [patterns: readonly string[], sanitize: PersistSanitizer][] = [
   [DEVICE_LIST_CACHE_PATTERNS, sanitizeDeviceList],
 ];
+
+const isPersistedDeviceList = (value: unknown): boolean => {
+  const data = (value as { data?: unknown } | null | undefined)?.data;
+  return Array.isArray(data) && data.some((d) => (d as DeviceListItem).onlineUnknown);
+};
+
+/**
+ * Whether an in-memory entry holds confirmed data that a persisted snapshot
+ * (from another tab) must not replace. A snapshot already in memory — hydrated
+ * at boot and not yet revalidated — may be replaced by a newer one.
+ */
+export const isConfirmedLiveEntry = (key: string, value: unknown): boolean => {
+  if (DEVICE_LIST_CACHE_PATTERNS.some((pattern) => key.includes(pattern)))
+    return !isPersistedDeviceList(value);
+  return false;
+};
 
 /** Reshape an SWR cache entry for persistence; identity for keys with no sanitizer. */
 export const sanitizeForPersistence = (key: string, value: unknown): unknown => {
