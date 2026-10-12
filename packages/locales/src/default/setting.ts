@@ -985,6 +985,7 @@ export default {
   'notification.item.credit_balance_low': 'Credit balance running low',
   'notification.item.image_generation_completed': 'Image generation completed',
   'notification.item.storage_overage_cap_reached': 'Storage pay-as-you-go cap reached',
+  'notification.item.subscription_one_time_expired': 'One-time plan ended',
   'notification.item.subscription_payment_failed': 'Subscription renewal payment failed',
   'notification.item.subscription_plan_changed': 'Subscription plan changed',
   'notification.item.subscription_renewed': 'Subscription renewed',
