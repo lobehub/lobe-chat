@@ -13,7 +13,7 @@ import type {
   AcceptanceListQuery,
 } from '@/services/verify';
 import { verifyService } from '@/services/verify';
-import { useVerifyStore } from '@/store/verify';
+import { useVerifyStore, verifySelectors } from '@/store/verify';
 
 const ACCEPTANCE_PAGE_SIZE = 30;
 const VERIFY_REPORT_SWR_CONFIG = {
@@ -47,17 +47,29 @@ export const getAcceptanceBySubjectRefreshInterval = (acceptance: unknown) => {
   return status && TERMINAL_ACCEPTANCE_STATUSES.has(status) ? 0 : 5000;
 };
 
+/**
+ * One Agent Run's verify card, read from the verify store's replica of
+ * `verifyRunMap`: a settled run paints from IndexedDB on reload, then refreshes.
+ */
+const useVerifyRun = (operationId: string | null) => {
+  const useFetchVerifyRun = useVerifyStore((s) => s.useFetchVerifyRun);
+  const run = useVerifyStore(verifySelectors.verifyRun(operationId));
+  const sync = useFetchVerifyRun(operationId);
+
+  return { mutate: sync.revalidate, run };
+};
+
 /** Plan + rollup status for one Agent Run. Pass null operationId to skip. */
-export const useVerifyState = (operationId: string | null) =>
-  useClientDataSWR(operationId ? verifyKeys.state(operationId) : null, () =>
-    verifyService.getVerifyState(operationId!),
-  );
+export const useVerifyState = (operationId: string | null) => {
+  const { mutate, run } = useVerifyRun(operationId);
+  return { data: run?.state, mutate };
+};
 
 /** Per-item check results for one Agent Run. Pass null operationId to skip. */
-export const useVerifyResults = (operationId: string | null) =>
-  useClientDataSWR(operationId ? verifyKeys.results(operationId) : null, () =>
-    verifyService.listResults(operationId!),
-  );
+export const useVerifyResults = (operationId: string | null) => {
+  const { mutate, run } = useVerifyRun(operationId);
+  return { data: run?.results, mutate };
+};
 
 /** Full standalone report bundle (run + report + results + evidence) by verifyRunId. */
 export const useVerifyReportBundle = (verifyRunId: string | null) =>

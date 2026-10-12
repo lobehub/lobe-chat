@@ -1,7 +1,9 @@
 import type { AcceptanceSubjectType } from '@lobechat/types';
 
-import { defineReplica } from '@/libs/replica';
-import type { AcceptanceBundle, AcceptanceBySubject } from '@/services/verify';
+import type { VerifyCheckResultItem } from '@/database/schemas/verify';
+import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
+import { defineReplica, REPLICA_INDEX_KEY, type ReplicaStorage } from '@/libs/replica';
+import type { AcceptanceBundle, AcceptanceBySubject, VerifyStateResponse } from '@/services/verify';
 
 /**
  * The Acceptance aggregate of one acceptance id (`acceptanceBundleMap[id]`):
@@ -44,4 +46,60 @@ export const acceptanceBySubjectResource = defineReplica<
   name: 'acceptanceBySubject',
   storage: 'indexedDB',
   version: 1,
+});
+
+/** The plan + rollup status and per-item results of one Agent Run's verify round. */
+export interface VerifyRunSnapshot {
+  results: VerifyCheckResultItem[];
+  /** `null` when the run has no verify state on the server. */
+  state: VerifyStateResponse | null;
+}
+
+const SETTLED_VERIFY_STATUSES = new Set(['delivered', 'errored', 'failed', 'passed']);
+
+/** A run whose verdict no longer moves — the only kind worth replaying after a reload. */
+export const isSettledVerifyRun = (run: VerifyRunSnapshot | undefined): boolean =>
+  !!run?.state?.verifyStatus && SETTLED_VERIFY_STATUSES.has(run.state.verifyStatus);
+
+const VERIFY_RUN_NAME = 'verifyRun';
+const VERIFY_RUN_VERSION = 1;
+
+/**
+ * IndexedDB rows of settled runs only. A planned / verifying / repairing run is
+ * never written, so a reload cannot replay a stale spinner or a premature
+ * verdict; a settled run that starts moving again has its row dropped. The
+ * replica index row passes through untouched.
+ */
+const settledRunsOnly = (
+  storage: ReplicaStorage<VerifyRunSnapshot>,
+): ReplicaStorage<VerifyRunSnapshot> => ({
+  get: (key) => storage.get(key),
+  getStrict: (key) => storage.getStrict!(key),
+  remove: (key) => storage.remove(key),
+  set: (key, row) =>
+    key.queryKey === REPLICA_INDEX_KEY || isSettledVerifyRun(row.data)
+      ? storage.set(key, row)
+      : storage.remove(key),
+});
+
+/**
+ * The verify card of one Agent Run (`verifyRunMap[operationId]`), read by the
+ * chat thread's Verify message, the verify result portal and the task run
+ * detail. State and results live in one entry so a persisted card never pairs
+ * a verdict with results from another moment.
+ *
+ * Settled runs persist to IndexedDB, so a reload paints the last verdict in
+ * the first frame and revalidates in the background; LRU-capped because every
+ * verified run in history would otherwise keep its row.
+ */
+export const verifyRunResource = defineReplica<string, VerifyRunSnapshot>({
+  key: (operationId) => operationId,
+  name: VERIFY_RUN_NAME,
+  persist: { maxEntries: 100 },
+  storage: settledRunsOnly(
+    new IndexedDBQueryProjectionStorage<VerifyRunSnapshot>({
+      namespace: `replica:${VERIFY_RUN_NAME}:v${VERIFY_RUN_VERSION}`,
+    }),
+  ),
+  version: VERIFY_RUN_VERSION,
 });
