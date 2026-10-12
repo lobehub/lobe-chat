@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import { acceptanceSubjectTypes } from '@lobechat/const/verify';
 import type { VerifyAgentPlanConfig, VerifyCheckItem } from '@lobechat/types';
+import { coverageGaps, executionGapTypes } from '@lobechat/utils/verify/evidenceCoverage';
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
@@ -22,6 +23,7 @@ import {
   uploadAcceptanceFile,
   uploadReportEvidence,
 } from './acceptanceEvidence';
+import { attachTerminalEvidenceCommands, publishTerminalBundle } from './acceptanceTerminal';
 import {
   assertReportLanguage,
   evidenceCaptionFields,
@@ -359,9 +361,41 @@ interface SubmitOptions {
   json?: boolean | string;
   operation?: string;
   run?: string;
+  terminal?: string;
   title?: string;
   type?: string;
   verdict?: string;
+}
+
+/** Thrown by an uploader once the storage-quota recovery has been printed. */
+class EvidenceUploadStopped extends Error {}
+
+/** Upload through the quota-aware path; a blocked upload stops the whole publication. */
+const quotaAwareUploader =
+  (client: TrpcClient, json: boolean | string | undefined) => async (file: string) => {
+    const uploaded = await uploadAcceptanceFile(client, file, json);
+    if (!uploaded) throw new EvidenceUploadStopped();
+    return uploaded;
+  };
+
+/** Publish a terminal bundle for an atomic submission; undefined when the upload was stopped. */
+async function terminalEvidenceFor(
+  client: TrpcClient,
+  bundle: string,
+  options: { by?: string; desc?: string; json?: boolean | string },
+) {
+  try {
+    const payload = await publishTerminalBundle(
+      quotaAwareUploader(client, options.json),
+      bundle,
+      options.desc,
+    );
+    return { ...payload, capturedBy: (options.by ?? 'cli') as any };
+  } catch (error) {
+    if (error instanceof EvidenceUploadStopped) return undefined;
+    log.error((error as Error).message);
+    process.exit(1);
+  }
 }
 
 async function submitAction(options: SubmitOptions): Promise<void> {
@@ -369,17 +403,22 @@ async function submitAction(options: SubmitOptions): Promise<void> {
     log.error('Provide --run <verifyRunId> or --operation <operationId>');
     process.exit(1);
   }
-  const hasEvidence = Boolean(options.file) || Boolean(options.content);
-  if (Boolean(options.file) && Boolean(options.content)) {
-    log.error('Provide at most one of --file or --content');
+  const hasEvidence =
+    Boolean(options.file) || Boolean(options.content) || Boolean(options.terminal);
+  if ([options.file, options.content, options.terminal].filter(Boolean).length > 1) {
+    log.error('Provide at most one of --file, --content or --terminal');
     process.exit(1);
   }
-  if (hasEvidence && !options.type) {
+  if (hasEvidence && !options.terminal && !options.type) {
     log.error('--type is required when attaching evidence');
     process.exit(1);
   }
+  if (options.terminal && options.type && options.type !== 'terminal') {
+    log.error('--terminal publishes terminal evidence; drop --type or pass --type terminal');
+    process.exit(1);
+  }
   if (!hasEvidence && !options.verdict) {
-    log.error('Provide evidence (--file/--content) and/or a --verdict');
+    log.error('Provide evidence (--file/--content/--terminal) and/or a --verdict');
     process.exit(1);
   }
   const client = await getTrpcClient();
@@ -389,6 +428,11 @@ async function submitAction(options: SubmitOptions): Promise<void> {
   ]);
   let fileId: string | undefined;
   let inlineContent = options.content;
+  if (options.terminal) {
+    const terminal = await terminalEvidenceFor(client, options.terminal, options);
+    if (!terminal) return;
+    return submitWith(client, options, [terminal]);
+  }
   if (options.file) {
     inlineContent = inlineTextEvidenceForFile(options.file, options.type!);
     if (inlineContent === undefined) {
@@ -408,6 +452,14 @@ async function submitAction(options: SubmitOptions): Promise<void> {
         },
       ]
     : undefined;
+  return submitWith(client, options, evidence);
+}
+
+async function submitWith(
+  client: TrpcClient,
+  options: SubmitOptions,
+  evidence: Parameters<TrpcClient['verify']['submitCheckEvidence']['mutate']>[0]['evidence'],
+): Promise<void> {
   const res = await client.verify.submitCheckEvidence.mutate({
     checkItemId: options.item,
     checkItemTitle: options.title,
@@ -455,12 +507,20 @@ interface EvidenceUploadOptions {
   fileId?: string;
   json?: boolean | string;
   metadata?: string;
-  type: string;
+  terminal?: string;
+  type?: string;
 }
 
 async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<void> {
-  if ([options.file, options.content, options.fileId].filter(Boolean).length !== 1) {
-    log.error('Provide exactly one of --file, --file-id or --content');
+  if (
+    [options.file, options.content, options.fileId, options.terminal].filter(Boolean).length !== 1
+  ) {
+    log.error('Provide exactly one of --file, --file-id, --content or --terminal');
+    process.exit(1);
+  }
+  if (options.terminal) return terminalEvidenceUploadAction(options);
+  if (!options.type) {
+    log.error('--type is required (or publish a terminal bundle with --terminal <dir>)');
     process.exit(1);
   }
   const metadata: unknown = options.metadata ? JSON.parse(options.metadata) : undefined;
@@ -493,6 +553,25 @@ async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<voi
     return;
   }
   console.log(`${pc.green('✓')} Evidence ${pc.bold(ev.id)}${fileId ? ` (file ${fileId})` : ''}`);
+}
+
+async function terminalEvidenceUploadAction(options: EvidenceUploadOptions): Promise<void> {
+  if (options.type && options.type !== 'terminal') {
+    log.error('--terminal publishes terminal evidence; drop --type or pass --type terminal');
+    process.exit(1);
+  }
+  const client = await getTrpcClient();
+  const terminal = await terminalEvidenceFor(client, options.terminal!, options);
+  if (!terminal) return;
+  const ev = await client.verify.uploadEvidence.mutate({
+    ...terminal,
+    checkResultId: options.check,
+  });
+  if (options.json !== undefined) {
+    outputJson(ev, typeof options.json === 'string' ? options.json : undefined);
+    return;
+  }
+  console.log(`${pc.green('✓')} Terminal evidence ${pc.bold(ev.id)} (${terminal.description})`);
 }
 
 async function evidenceListAction(
@@ -975,15 +1054,22 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
     failedEvidence.push(...uploaded.failedEvidence.map((failure) => ({ ...failure, checkItemId })));
     const config = plan?.find((item) => item.id === checkItemId)?.verifierConfig as
       VerifyAgentPlanConfig | undefined;
-    const required = config?.requiredEvidence;
-    const gaps = [...new Set(required?.map((spec) => spec.type) ?? [])].filter(
-      (type) => !uploaded.types.has(type),
+    // The same rule the server's structural gate applies, so a case is never
+    // published as passed with evidence the gate will then reject.
+    const runSpecs = config?.requiredEvidence?.filter(
+      (spec) => !spec.scope || spec.scope === 'run_evidence',
     );
+    const gaps = coverageGaps(runSpecs, uploaded.published);
     const publishedVerdict = gaps.length > 0 && verdict === 'passed' ? 'uncertain' : verdict;
     publishedVerdicts.push(publishedVerdict);
     if (gaps.length > 0) {
       missingEvidence.push({ checkItemId, types: gaps });
-      const limitation = `Required evidence not published: ${gaps.join(', ')}.`;
+      const executionGaps = executionGapTypes(runSpecs, gaps);
+      const limitation = `Required evidence not published: ${gaps
+        .map((type) =>
+          executionGaps.includes(type) ? `${type} from a real command execution` : type,
+        )
+        .join(', ')}.`;
       log.warn(`${checkItemId}: ${limitation}`);
       await client.verify.ingestResult.mutate({
         ...checkInput,
@@ -1242,6 +1328,10 @@ function withSubmitOptions(cmd: Command): Command {
     .option('--type <type>', 'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript')
     .option('--file <path>', 'Local file to upload as the evidence artifact')
     .option('--content <text>', 'Inline text payload (instead of a file)')
+    .option(
+      '--terminal <dir>',
+      'Terminal evidence bundle written by `lh acceptance run evidence capture|import`',
+    )
     .option('--verdict <verdict>', 'passed|failed|uncertain')
     .option('--title <text>', 'Check item title snapshot')
     .option('--by <capturedBy>', 'agent-browser|cdp|cli|program|llm_judge', 'cli')
@@ -1252,11 +1342,15 @@ function withSubmitOptions(cmd: Command): Command {
 function withEvidenceUploadOptions(cmd: Command): Command {
   return cmd
     .requiredOption('--check <checkResultId>', 'Target check result id')
-    .requiredOption(
+    .option(
       '--type <type>',
-      'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript',
+      'screenshot|gif|video|audio|text|markdown|dom_snapshot|transcript (implied by --terminal)',
     )
     .option('--file <path>', 'Local file to upload as the artifact')
+    .option(
+      '--terminal <dir>',
+      'Terminal evidence bundle written by `lh acceptance run evidence capture|import`',
+    )
     .option('--file-id <id>', 'Attach an already-uploaded file without uploading it again')
     .option('--content <text>', 'Inline text payload (instead of a file)')
     .option('--metadata <json>', 'Evidence metadata, preserved when retrying an attachment')
@@ -1382,8 +1476,11 @@ export function attachAcceptanceRunCommands(acceptance: Command): void {
   withEvidenceUploadOptions(
     evidence
       .command('upload')
-      .description('Attach an evidence artifact (file or inline text) to a check result'),
+      .description(
+        'Attach an evidence artifact (file, inline text, or terminal bundle) to a check result',
+      ),
   ).action(evidenceUploadAction);
+  attachTerminalEvidenceCommands(evidence);
   evidence
     .command('list <checkResultId>')
     .description('List evidence for a check result')

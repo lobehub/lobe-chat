@@ -1,6 +1,5 @@
 import { fetchAcceptanceSkillBundle } from '@lobechat/builtin-skills/acceptance';
 import {
-  normalizeEvidenceMetadata,
   normalizeVerifySurface,
   verifyRunScenarios,
   verifySurfaces,
@@ -52,6 +51,8 @@ import {
   evidenceTypeForStoredFile,
   finalizeVerifyRun,
   purgeVerifyRun,
+  resolveEvidenceFiles,
+  resolveEvidenceMetadata,
   resolveLiveRoundForItem,
   VerifyExecutorService,
   VerifyFeedbackService,
@@ -85,6 +86,7 @@ const evidenceTypeSchema = z.enum([
   'markdown',
   'dom_snapshot',
   'transcript',
+  'terminal',
 ]);
 const evidenceCapturedBySchema = z.enum(['agent-browser', 'cdp', 'cli', 'program', 'llm_judge']);
 const toulminSchema = z.object({
@@ -327,6 +329,10 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
+
+/** Owner-scoped file lookup for the artifacts a terminal evidence references. */
+const findOwnFile = (ctx: { fileModel: FileModel }) => (fileId: string) =>
+  ctx.fileModel.findById(fileId);
 
 /** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
 const storedEvidenceType = async (
@@ -974,6 +980,7 @@ export const verifyRouter = router({
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
       const type = await storedEvidenceType(ctx, input.type, input.fileId);
+      const metadata = await resolveEvidenceMetadata(findOwnFile(ctx), type, input.metadata);
 
       return ctx.evidenceModel.create({
         capturedAt: new Date(),
@@ -982,7 +989,7 @@ export const verifyRouter = router({
         content: input.content ?? null,
         description: input.description ?? null,
         fileId: input.fileId ?? null,
-        metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
+        metadata: metadata ?? null,
         type,
       });
     }),
@@ -1010,6 +1017,7 @@ export const verifyRouter = router({
                   content: z.string().min(1).optional(),
                   description: z.string().optional(),
                   fileId: z.string().min(1).optional(),
+                  metadata: z.unknown().optional(),
                   type: evidenceTypeSchema,
                 })
                 .refine((e) => Boolean(e.content) !== Boolean(e.fileId), {
@@ -1065,6 +1073,20 @@ export const verifyRouter = router({
             .join('; ')}`,
         });
 
+      // Resolve every evidence's medium and metadata before touching the result:
+      // a rejected terminal record must fail the whole submission, not leave a
+      // verdict behind without the evidence that was meant to back it.
+      const evidenceRows = await Promise.all(
+        (input.evidence ?? []).map(async (e) => {
+          const type = await storedEvidenceType(ctx, e.type, e.fileId);
+          return {
+            ...e,
+            metadata: await resolveEvidenceMetadata(findOwnFile(ctx), type, e.metadata),
+            type,
+          };
+        }),
+      );
+
       const checkResult = await ctx.resultModel.upsertByCheckItem({
         checkItemId: input.checkItemId,
         checkItemIndex: input.checkItemIndex ?? planItem?.index,
@@ -1080,21 +1102,20 @@ export const verifyRouter = router({
         verifyRunId: run.id,
       });
 
-      const evidence = input.evidence?.length
-        ? await Promise.all(
-            input.evidence.map(async (e) =>
-              ctx.evidenceModel.create({
-                capturedAt: new Date(),
-                capturedBy: e.capturedBy ?? null,
-                checkResultId: checkResult.id,
-                content: e.content ?? null,
-                description: e.description ?? null,
-                fileId: e.fileId ?? null,
-                type: await storedEvidenceType(ctx, e.type, e.fileId),
-              }),
-            ),
-          )
-        : [];
+      const evidence = await Promise.all(
+        evidenceRows.map((e) =>
+          ctx.evidenceModel.create({
+            capturedAt: new Date(),
+            capturedBy: e.capturedBy ?? null,
+            checkResultId: checkResult.id,
+            content: e.content ?? null,
+            description: e.description ?? null,
+            fileId: e.fileId ?? null,
+            metadata: e.metadata ?? null,
+            type: e.type,
+          }),
+        ),
+      );
 
       return { checkResult, evidence };
     }),
@@ -1283,7 +1304,7 @@ export const verifyRouter = router({
           return {
             ...r,
             evidence: await Promise.all(
-              evidence.map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId)) })),
+              evidence.map((e) => resolveEvidenceFiles(resolveFileMeta, e)),
             ),
           };
         }),

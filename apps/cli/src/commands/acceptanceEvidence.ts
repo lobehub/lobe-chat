@@ -1,12 +1,16 @@
 import { access } from 'node:fs/promises';
 import path from 'node:path';
 
+import type { CoverageEvidence } from '@lobechat/utils/verify/evidenceCoverage';
+
 import type { TrpcClient } from '../api/client';
 import { resolveWorkspaceId } from '../api/workspace';
 import { resolveServerUrl } from '../settings';
 import { outputJson } from '../utils/format';
 import { log } from '../utils/logger';
+import { terminalBundleDir } from '../utils/terminalEvidence/bundle';
 import { uploadLocalFile } from '../utils/uploadLocalFile';
+import { publishTerminalBundle } from './acceptanceTerminal';
 import type { EvidenceType } from './verifyHelpers';
 import {
   evidenceDescriptionForFile,
@@ -103,10 +107,52 @@ export async function uploadReportEvidence(
 ) {
   const failedEvidence: FailedReportEvidence[] = [];
   const types = new Set<EvidenceType>();
+  /** What landed, with metadata — the coverage rule reads a terminal's provenance. */
+  const published: CoverageEvidence[] = [];
   let count = 0;
   let inlined = 0;
   for (const input of reportEvidence(params.evidence)) {
     const absolutePath = path.resolve(params.dir, input.path);
+    // A case may list a terminal evidence bundle (its directory or its
+    // terminal.json) as an evidence path; it publishes as one terminal row.
+    if (terminalBundleDir(absolutePath)) {
+      try {
+        const payload = await publishTerminalBundle(
+          (file) => uploadLocalFile(client, file),
+          absolutePath,
+          input.description,
+        );
+        // A before/after pair of runs renders as one comparison, like screenshots.
+        const metadata = input.comparison
+          ? { ...payload.metadata, comparison: input.comparison }
+          : payload.metadata;
+        await client.verify.uploadEvidence.mutate({
+          ...payload,
+          capturedBy: 'cli',
+          checkResultId: params.checkResultId,
+          metadata,
+        });
+        types.add('terminal');
+        published.push({ metadata, type: 'terminal' });
+        count += 1;
+        if (payload.content !== undefined) inlined += 1;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        const args = ['--check', params.checkResultId, '--terminal', absolutePath];
+        failedEvidence.push({
+          checkResultId: params.checkResultId,
+          error: message,
+          path: absolutePath,
+          reason: message.includes('storage_block:') ? 'storage_quota' : 'upload_failed',
+          retryArgs: ['acceptance', 'run', 'evidence', 'upload', ...args],
+          retryCommand: `lh acceptance run evidence upload ${args.map((arg) => `'${arg.replaceAll("'", "'\\''")}'`).join(' ')}`,
+          retryCommandShell: 'posix',
+          type: 'terminal',
+        });
+        log.warn(`terminal evidence not published: ${absolutePath}: ${message}`);
+      }
+      continue;
+    }
     const type = evidenceTypeForFile(absolutePath);
     const description = evidenceDescriptionForFile(input.description, absolutePath);
     const metadata =
@@ -137,6 +183,7 @@ export async function uploadReportEvidence(
         type,
       });
       types.add(type);
+      published.push({ metadata, type });
       count += 1;
       if (content !== undefined) inlined += 1;
     } catch (error) {
@@ -173,5 +220,5 @@ export async function uploadReportEvidence(
       log.warn(`evidence not published: ${path.basename(absolutePath)}: ${message}`);
     }
   }
-  return { count, failedEvidence, inlined, types };
+  return { count, failedEvidence, inlined, published, types };
 }

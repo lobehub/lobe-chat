@@ -70,8 +70,7 @@ export function assertEnum<T extends string>(
 }
 
 export type Verdict = 'failed' | 'passed' | 'uncertain';
-export type EvidenceType =
-  'audio' | 'dom_snapshot' | 'gif' | 'markdown' | 'screenshot' | 'text' | 'transcript' | 'video';
+export type EvidenceType = (typeof verifyEvidenceTypes)[number];
 
 export const INLINE_TEXT_EVIDENCE_LIMIT = 5000;
 export const INLINE_TEXT_EVIDENCE_TYPES = new Set<EvidenceType>([
@@ -760,9 +759,15 @@ export function planFromResult(result: Record<string, unknown>, droppedIds?: Set
           const raw = typeof spec === 'string' ? spec : firstString(record?.type);
           if (!raw) return [];
 
+          const provenance = record?.provenance;
+          if (provenance !== undefined && provenance !== 'execution')
+            log.warn(
+              `plan item "${id}": requiredEvidence provenance "${String(provenance)}" is not "execution" — ignoring it`,
+            );
           return [
             {
               hint: firstString(record?.hint),
+              ...(provenance === 'execution' ? { provenance: 'execution' as const } : {}),
               type: assertPlanEnum(raw, EVIDENCE_TYPES, 'requiredEvidence', id),
             },
           ];
