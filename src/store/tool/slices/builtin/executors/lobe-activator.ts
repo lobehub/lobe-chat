@@ -23,6 +23,7 @@ import { agentSkillService } from '@/services/skill';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { toolSelectors } from '@/store/tool/selectors/tool';
+import { composioStoreSelectors } from '@/store/tool/slices/composioStore/selectors';
 import { LobehubSkillStatus } from '@/store/tool/slices/lobehubSkillStore';
 
 const skillsRuntime = new SkillsExecutionRuntime({
@@ -100,6 +101,34 @@ const service: ActivatorRuntimeService = {
           avatar: lobehubSkillServer.icon,
           identifier: lobehubSkillServer.identifier,
           name: lobehubSkillServer.name,
+        });
+        continue;
+      }
+
+      // Search Composio MCP servers — the discovery allowlist includes
+      // connected Composio entries whose manifests come straight from the
+      // cached `composioServers` replica, while `getInstalledPluginById`
+      // only sees synced plugin replicas. During the startup window before
+      // the independent plugin fetch lands, the plugin probe misses and
+      // activation would fail with `Not found`; build the manifest from the
+      // cached server tools instead. Placed after the LobeHub Skill probe to
+      // mirror discovery's ownership rule: an identifier served by a
+      // connected LobeHub Skill server must not be claimed by its legacy
+      // Composio connection.
+      const composioManifest = composioStoreSelectors
+        .composioAsLobeTools(s)
+        .find((tool) => tool.identifier === id);
+      if (composioManifest) {
+        results.push({
+          apiDescriptions: (composioManifest.manifest.api || []).map((a: any) => ({
+            description: a.description,
+            name: a.name,
+          })),
+          avatar: composioManifest.manifest.meta?.avatar,
+          identifier: composioManifest.identifier,
+          name: composioManifest.manifest.meta?.title ?? composioManifest.identifier,
+          systemRole: composioManifest.manifest.systemRole,
+          type: (composioManifest.manifest as { type?: string }).type,
         });
         continue;
       }
