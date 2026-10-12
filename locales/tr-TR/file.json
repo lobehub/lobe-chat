@@ -314,6 +314,7 @@
   "pageList.copySuccess": "Sayfa kopyalandı",
   "pageList.copyTitle": "Sayfayı kopyala",
   "pageList.copyTo": "Şuraya kopyala…",
+  "pageList.createFailed": "Sayfa oluşturulamadı",
   "pageList.duplicate": "Kopyala",
   "pageList.empty": "Henüz sayfa yok. İlk sayfanızı oluşturmak için yukarıdaki butona tıklayın.",
   "pageList.filter.all": "Tümü",

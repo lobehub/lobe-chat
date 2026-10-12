@@ -314,6 +314,7 @@
   "pageList.copySuccess": "ページがコピーされました",
   "pageList.copyTitle": "ページをコピー",
   "pageList.copyTo": "コピー先…",
+  "pageList.createFailed": "ページの作成に失敗しました",
   "pageList.duplicate": "複製を作成",
   "pageList.empty": "ドキュメントがまだありません。上のボタンをクリックして最初のドキュメントを作成しましょう。",
   "pageList.filter.all": "すべて",

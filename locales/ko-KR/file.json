@@ -314,6 +314,7 @@
   "pageList.copySuccess": "페이지가 복제되었습니다.",
   "pageList.copyTitle": "페이지 복제",
   "pageList.copyTo": "복제 대상…",
+  "pageList.createFailed": "페이지 생성에 실패했습니다",
   "pageList.duplicate": "복사본 만들기",
   "pageList.empty": "아직 문서가 없습니다. 위 버튼을 클릭하여 첫 문서를 작성해 보세요",
   "pageList.filter.all": "전체",
