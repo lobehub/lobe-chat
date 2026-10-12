@@ -27,6 +27,7 @@ vi.mock('./verifyHelpers', async (importOriginal) => ({
 
 describe('acceptance publication with missing evidence', () => {
   const client = {
+    acceptanceComment: { create: { mutate: vi.fn() } },
     acceptance: {
       attachRun: { mutate: vi.fn() },
       ensure: { mutate: vi.fn() },
@@ -35,7 +36,10 @@ describe('acceptance publication with missing evidence', () => {
     },
     verify: {
       createRun: { mutate: vi.fn() },
+      getRun: { query: vi.fn() },
+      getVerifyState: { query: vi.fn() },
       ingestResult: { mutate: vi.fn() },
+      submitCheckEvidence: { mutate: vi.fn() },
       uploadEvidence: { mutate: vi.fn() },
       upsertReport: { mutate: vi.fn() },
     },
@@ -755,6 +759,223 @@ describe('acceptance publication with missing evidence', () => {
     expect(client.verify.uploadEvidence.mutate).toHaveBeenCalledWith(
       expect.objectContaining({ metadata: { chapters }, type: 'video' }),
     );
+  });
+
+  describe('ingest into an operation that already owns a plan round', () => {
+    const chapters = [
+      { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
+      { kind: 'check', note: 'First frame already shows the cached device', t: 2.4 },
+    ];
+    const frozenPlan = [
+      {
+        id: 'vci_reload',
+        index: 0,
+        required: true,
+        title: '刷新后首屏直接显示设备',
+        verifierConfig: { requiredEvidence: [{ type: 'video' }] },
+        verifierType: 'llm',
+      },
+      {
+        id: 'vci_code',
+        index: 1,
+        required: true,
+        title: '持久化改用 replica',
+        verifierConfig: {},
+        verifierType: 'llm',
+      },
+    ];
+    const writeRound = (cases: unknown[]) =>
+      writeFile(
+        path.join(dir, 'result.json'),
+        JSON.stringify({
+          cases,
+          plan: [{ id: 'authored', title: 'ignored when the plan is frozen' }],
+          summary: { verdict: 'passed' },
+          title: '设备列表首屏',
+        }),
+      );
+
+    beforeEach(async () => {
+      client.verify.getVerifyState.query.mockResolvedValue({
+        verifyPlan: frozenPlan,
+        verifyRunId: 'plan-run',
+      });
+      client.verify.getRun.query.mockResolvedValue({
+        acceptanceId: 'acceptance-task',
+        id: 'plan-run',
+        roundIndex: 1,
+      });
+      client.verify.submitCheckEvidence.mutate.mockImplementation(async (input) => ({
+        checkResult: { id: `result-${input.checkItemId}`, verifyRunId: 'plan-run' },
+        evidence: [],
+      }));
+      vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
+        throw new Error(`exit ${code}`);
+      }) as never);
+      vi.spyOn(log, 'error').mockImplementation(() => {});
+      await writeFile(path.join(dir, 'report.md'), '# builder narrative');
+      await writeFile(path.join(dir, 'proposal.md'), '刷新后设备芯片首帧即显示。');
+    });
+
+    it('publishes cases and chaptered videos into the plan round without creating a round or judging it', async () => {
+      await writeRound([
+        {
+          evidence: [{ chapters, description: 'warm reload', path: 'scroll.mp4' }],
+          id: 'vci_reload',
+          observation: 'device chip renders on the first frame',
+          status: 'passed',
+        },
+        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
+      ]);
+
+      await run('ingest', dir, '--operation', 'op-task', '--json');
+
+      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
+      expect(client.acceptance.attachRun.mutate).not.toHaveBeenCalled();
+      expect(client.acceptance.ensure.mutate).not.toHaveBeenCalled();
+      expect(client.verify.ingestResult.mutate).not.toHaveBeenCalled();
+      // The round's verifier writes the report and the verdicts.
+      expect(client.verify.upsertReport.mutate).not.toHaveBeenCalled();
+      expect(client.verify.submitCheckEvidence.mutate).toHaveBeenCalledWith({
+        checkItemId: 'vci_reload',
+        operationId: 'op-task',
+        toulmin: { evidence: 'device chip renders on the first frame' },
+      });
+      expect(client.verify.uploadEvidence.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          checkResultId: 'result-vci_reload',
+          metadata: { chapters },
+          type: 'video',
+        }),
+      );
+      expect(client.acceptanceComment.create.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({ acceptanceId: 'acceptance-task', contextRunId: 'plan-run' }),
+      );
+      expect(result()).toMatchObject({
+        acceptanceUrl: 'https://app.lobehub.com/acceptance/acceptance-task',
+        missingEvidence: [],
+        mode: 'plan-round',
+        publicationStatus: 'complete',
+        roundIndex: 1,
+        verifyRunId: 'plan-run',
+      });
+      expect(process.exitCode).toBeUndefined();
+    });
+
+    it('rejects a case id outside the frozen plan before writing anything', async () => {
+      await writeRound([{ evidence: ['scroll.mp4'], id: 'reload', status: 'passed' }]);
+
+      await expect(run('ingest', dir, '--operation', 'op-task')).rejects.toThrow('exit 1');
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('vci_reload'));
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+      expect(uploadLocalFile).not.toHaveBeenCalled();
+    });
+
+    it('reports a planned video that never got a case as missing', async () => {
+      await writeRound([{ evidence: ['output.txt'], id: 'vci_code', status: 'passed' }]);
+
+      await run('ingest', dir, '--operation', 'op-task', '--json');
+
+      expect(process.exitCode).toBe(1);
+      expect(result()).toMatchObject({
+        missingEvidence: [{ checkItemId: 'vci_reload', types: ['video'] }],
+        publicationStatus: 'partial',
+        unexecuted: ['vci_reload'],
+      });
+    });
+
+    it('keeps creating a round for an operation with no verification run', async () => {
+      client.verify.getVerifyState.query.mockResolvedValue(null);
+      await report([], ['output.txt']);
+
+      await run('ingest', dir, '--operation', 'op-free', '--json');
+
+      expect(client.verify.createRun.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({ operationId: 'op-free' }),
+      );
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('result submit chapters', () => {
+    const chapters = [
+      { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
+      { kind: 'check', note: 'First frame already shows the cached device', t: 2.4 },
+    ];
+    const submit = (...extra: string[]) =>
+      run(
+        'result',
+        'submit',
+        '--operation',
+        'op-1',
+        '--item',
+        'reload',
+        '--file',
+        path.join(dir, 'scroll.mp4'),
+        '--type',
+        'video',
+        ...extra,
+      );
+
+    beforeEach(() => {
+      client.verify.submitCheckEvidence.mutate.mockResolvedValue({
+        checkResult: { id: 'result-reload', verifyRunId: 'run-1' },
+        evidence: [{ id: 'evidence-1' }],
+      });
+      vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
+        throw new Error(`exit ${code}`);
+      }) as never);
+      vi.spyOn(log, 'error').mockImplementation(() => {});
+    });
+
+    it('attaches a plan-round video with its chapters', async () => {
+      await writeFile(path.join(dir, 'chapters.json'), JSON.stringify(chapters));
+
+      await submit('--chapters', path.join(dir, 'chapters.json'));
+
+      expect(client.verify.submitCheckEvidence.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          checkItemId: 'reload',
+          evidence: [expect.objectContaining({ metadata: { chapters }, type: 'video' })],
+          operationId: 'op-1',
+        }),
+      );
+    });
+
+    it('rejects a malformed marker before uploading anything', async () => {
+      await writeFile(
+        path.join(dir, 'chapters.json'),
+        JSON.stringify([...chapters, { kind: 'check', t: 3 }]),
+      );
+
+      await expect(submit('--chapters', path.join(dir, 'chapters.json'))).rejects.toThrow(
+        '1 of 3 chapters are malformed',
+      );
+      expect(uploadLocalFile).not.toHaveBeenCalled();
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+    });
+
+    it('rejects chapters on evidence that has no timeline', async () => {
+      await writeFile(path.join(dir, 'chapters.json'), JSON.stringify(chapters));
+
+      await expect(
+        run(
+          'result',
+          'submit',
+          '--operation',
+          'op-1',
+          '--item',
+          'reload',
+          '--file',
+          path.join(dir, "screen's shot.png"),
+          '--type',
+          'screenshot',
+          '--chapters',
+          path.join(dir, 'chapters.json'),
+        ),
+      ).rejects.toThrow('--chapters only applies to --type video evidence');
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+    });
   });
 
   it('retries only the failed attachment, reusing its file and preserving its caption and comparison', async () => {

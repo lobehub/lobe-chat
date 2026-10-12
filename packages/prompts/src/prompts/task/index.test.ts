@@ -462,7 +462,10 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('an independent verifier decides whether this Task is complete');
     expect(result).toContain('Run the Acceptance inside this Task, not after it');
     expect(result).toContain('lh acceptance install');
-    expect(result).toContain('lh acceptance run result submit');
+    expect(result).toContain('follow its plan path for operation `$LOBEHUB_OPERATION_ID`');
+    expect(result).toContain('chapters on every recording');
+    // The skill owns the publish commands; inlining them let builders bypass it.
+    expect(result).not.toContain('lh acceptance run result submit');
     expect(result).toContain('proved by a screenshot or recording');
     // The portable skill is pulled to disk by CLI builders and is absent from
     // `builtinSkills`, so it must never be named as an unconditional step.

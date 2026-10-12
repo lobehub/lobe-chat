@@ -731,6 +731,40 @@ describe('verifyRouter', () => {
       );
     });
 
+    it('keeps the chapters a plan-round video is submitted with', async () => {
+      // A Task's builder submits through this procedure; without metadata its
+      // recordings reached the reviewer with no timeline to seek along.
+      const chapters = [
+        { kind: 'check', note: 'device chip renders on the first frame', t: 2.4 },
+        { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
+        { kind: 'check', t: 3 },
+      ];
+      modelMocks.findRunByOperation.mockResolvedValueOnce({ id: 'run-1', plan: [] });
+      modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1' });
+      modelMocks.createEvidence
+        .mockResolvedValueOnce({ id: 'evidence-1' })
+        .mockResolvedValueOnce({ id: 'evidence-2' });
+
+      await createCaller().submitCheckEvidence({
+        checkItemId: 'item-1',
+        evidence: [
+          { fileId: 'files-video', metadata: { chapters }, type: 'video' },
+          { fileId: 'files-shot', metadata: { chapters }, type: 'screenshot' },
+        ],
+        operationId: 'op-1',
+      });
+
+      expect(modelMocks.createEvidence.mock.calls.map(([row]) => row.metadata)).toEqual([
+        {
+          chapters: [
+            { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
+            { kind: 'check', note: 'device chip renders on the first frame', t: 2.4 },
+          ],
+        },
+        null,
+      ]);
+    });
+
     it('rejects a check item that is not in the run plan instead of minting a required row', async () => {
       modelMocks.findRunById.mockResolvedValueOnce({
         id: 'run-1',

@@ -15,6 +15,7 @@ import {
   GOMS_KLM_TRACE_FILE,
   isFullFrameRect,
   isProgrammaticTestCheck,
+  MAX_VERIFY_EVIDENCE_CHAPTERS,
   normalizeVerifySurface,
   PROGRAMMATIC_TEST_CHECK_HINT,
   readEvidenceChapters,
@@ -462,6 +463,46 @@ function reportEvidenceChapters(
     );
   }
   return chapters.length > 0 ? chapters : undefined;
+}
+
+/**
+ * The metadata bag for one command-line evidence upload: `--metadata` JSON with
+ * `--chapters <file>` merged in. Unlike a report ingest, a single upload names
+ * its chapters explicitly, so a malformed or misplaced marker is an error to
+ * fix before the upload rather than a warning after it.
+ */
+export function evidenceMetadataFromOptions(options: {
+  chapters?: string;
+  metadata?: string;
+  type?: string;
+}): Record<string, unknown> | undefined {
+  let metadata: Record<string, unknown> | undefined;
+  if (options.metadata) {
+    const parsed: unknown = JSON.parse(options.metadata);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+      throw new Error('--metadata must be a JSON object');
+    metadata = parsed as Record<string, unknown>;
+  }
+  if (!options.chapters) return metadata;
+
+  if (options.type !== 'video') throw new Error('--chapters only applies to --type video evidence');
+  const raw: unknown = JSON.parse(readFileSync(options.chapters, 'utf8'));
+  // Accept the bare array video-chapters.md writes, or a `{ chapters }` bag.
+  const list =
+    raw && typeof raw === 'object' && !Array.isArray(raw)
+      ? (raw as { chapters?: unknown }).chapters
+      : raw;
+  if (!Array.isArray(list)) throw new Error(`${options.chapters}: chapters must be a JSON array`);
+  if (list.length > MAX_VERIFY_EVIDENCE_CHAPTERS)
+    throw new Error(
+      `${options.chapters}: ${list.length} chapters exceed the limit of ${MAX_VERIFY_EVIDENCE_CHAPTERS} per video`,
+    );
+  const chapters = readEvidenceChapters(list) ?? [];
+  if (chapters.length !== list.length)
+    throw new Error(
+      `${options.chapters}: ${list.length - chapters.length} of ${list.length} chapters are malformed — each needs a non-negative "t" (seconds), a "kind" of step/check/flag, a "label" for a step and a "note" for a check or flag`,
+    );
+  return { ...metadata, chapters };
 }
 
 export function firstString(...values: unknown[]): string | undefined {

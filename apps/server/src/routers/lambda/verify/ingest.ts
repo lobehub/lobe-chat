@@ -205,6 +205,8 @@ export const ingestRouter = router({
                   content: z.string().min(1).optional(),
                   description: z.string().optional(),
                   fileId: z.string().min(1).optional(),
+                  // Same bag as `uploadEvidence`: a video's chapters ride here.
+                  metadata: z.unknown().optional(),
                   type: evidenceTypeSchema,
                 })
                 .refine((e) => Boolean(e.content) !== Boolean(e.fileId), {
@@ -278,16 +280,19 @@ export const ingestRouter = router({
       const evidence = input.evidence?.length
         ? await pMap(
             input.evidence,
-            async (e) =>
-              ctx.evidenceModel.create({
+            async (e) => {
+              const type = await storedEvidenceType(ctx, e.type, e.fileId);
+              return ctx.evidenceModel.create({
                 capturedAt: new Date(),
                 capturedBy: e.capturedBy ?? null,
                 checkResultId: checkResult.id,
                 content: e.content ?? null,
                 description: e.description ?? null,
                 fileId: e.fileId ?? null,
-                type: await storedEvidenceType(ctx, e.type, e.fileId),
-              }),
+                metadata: normalizeEvidenceMetadata(e.metadata, type) ?? null,
+                type,
+              });
+            },
             { concurrency: EVIDENCE_WRITE_CONCURRENCY },
           )
         : [];

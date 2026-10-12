@@ -22,6 +22,7 @@ import {
   uploadAcceptanceFile,
   uploadReportEvidence,
 } from './acceptanceEvidence';
+import { ingestIntoPlanRound } from './acceptancePlanRound';
 import {
   assertReportLanguage,
   evidenceCaptionFields,
@@ -33,6 +34,7 @@ import {
   DECISIONS,
   deriveReportVerdict,
   evidenceDescriptionForFile,
+  evidenceMetadataFromOptions,
   type EvidenceType,
   findIdenticalLatestRound,
   genericContextFromResult,
@@ -352,11 +354,13 @@ async function resultListAction(options: {
 
 interface SubmitOptions {
   by?: string;
+  chapters?: string;
   content?: string;
   desc?: string;
   file?: string;
   item: string;
   json?: boolean | string;
+  metadata?: string;
   operation?: string;
   run?: string;
   title?: string;
@@ -382,6 +386,12 @@ async function submitAction(options: SubmitOptions): Promise<void> {
     log.error('Provide evidence (--file/--content) and/or a --verdict');
     process.exit(1);
   }
+  if (!hasEvidence && (options.chapters || options.metadata)) {
+    log.error('--chapters/--metadata describe evidence: pass --file or --content too');
+    process.exit(1);
+  }
+  // Parse before uploading: a bad chapters file must not leave an orphan upload.
+  const metadata = evidenceMetadataFromOptions(options);
   const client = await getTrpcClient();
   await assertReportLanguage(client, [
     { path: '--title', text: options.title },
@@ -404,6 +414,7 @@ async function submitAction(options: SubmitOptions): Promise<void> {
           content: inlineContent,
           description: evidenceDescriptionForFile(options.desc, options.file),
           fileId,
+          metadata,
           type: options.type as any,
         },
       ]
@@ -448,6 +459,7 @@ async function decisionAction(resultId: string, decision: Decision): Promise<voi
 
 interface EvidenceUploadOptions {
   by?: string;
+  chapters?: string;
   check: string;
   content?: string;
   desc?: string;
@@ -463,7 +475,7 @@ async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<voi
     log.error('Provide exactly one of --file, --file-id or --content');
     process.exit(1);
   }
-  const metadata: unknown = options.metadata ? JSON.parse(options.metadata) : undefined;
+  const metadata = evidenceMetadataFromOptions(options);
   const client = await getTrpcClient();
   await assertReportLanguage(client, [
     { path: '--desc', text: options.desc },
@@ -806,6 +818,33 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
       `${pc.green('✓ Dry run passed')} — ${cases.length} case(s), ${plan?.length ?? 0} plan item(s), ${checked}. Nothing was published.`,
     );
     return;
+  }
+  // An Agent Run that already owns a round (a Task's plan round) publishes into
+  // it: the operation id is unique per run, and a second round would be judged
+  // apart from the verifier's.
+  const operationState = options.operation
+    ? await client.verify.getVerifyState.query({ operationId: options.operation })
+    : null;
+  if (operationState) {
+    if (options.acceptance || options.subject) {
+      log.error(
+        `Operation ${options.operation} already has a verification round; drop --acceptance/--subject.`,
+      );
+      process.exit(1);
+    }
+    return ingestIntoPlanRound(client, {
+      authoredPlan: plan,
+      caseMetadata,
+      cases,
+      dir,
+      droppedLabels,
+      json: options.json,
+      operationId: options.operation!,
+      proposal,
+      pullRequest: authoredPullRequest,
+      reportContent: content,
+      state: operationState,
+    });
   }
   let acceptance;
   let bundle;
@@ -1246,6 +1285,8 @@ function withSubmitOptions(cmd: Command): Command {
     .option('--title <text>', 'Check item title snapshot')
     .option('--by <capturedBy>', 'agent-browser|cdp|cli|program|llm_judge', 'cli')
     .option('--desc <text>', 'Human-readable caption for the evidence')
+    .option('--chapters <file>', 'Video chapters JSON (steps, checks, flags on the timeline)')
+    .option('--metadata <json>', 'Evidence metadata JSON object')
     .option('--json [fields]', 'Output JSON');
 }
 
@@ -1260,6 +1301,7 @@ function withEvidenceUploadOptions(cmd: Command): Command {
     .option('--file-id <id>', 'Attach an already-uploaded file without uploading it again')
     .option('--content <text>', 'Inline text payload (instead of a file)')
     .option('--metadata <json>', 'Evidence metadata, preserved when retrying an attachment')
+    .option('--chapters <file>', 'Video chapters JSON (steps, checks, flags on the timeline)')
     .option('--by <capturedBy>', 'agent-browser|cdp|cli|program|llm_judge', 'cli')
     .option('--desc <text>', 'Human-readable caption')
     .option('--json [fields]', 'Output JSON');
@@ -1281,7 +1323,10 @@ function withReportUpsertOptions(cmd: Command): Command {
 function withIngestReportOptions(cmd: Command): Command {
   return cmd
     .option('--source <source>', 'agent | agent-testing', 'agent-testing')
-    .option('--operation <id>', 'Link the session to an existing Agent Run')
+    .option(
+      '--operation <id>',
+      "Agent Run under test; a run that already owns a round (a Task's plan round) is published into",
+    )
     .option('--acceptance <id>', 'Append this round to an existing acceptance')
     .option('--title <title>', 'Override the session title')
     .option('--goal <goal>', 'The goal/task being verified')
