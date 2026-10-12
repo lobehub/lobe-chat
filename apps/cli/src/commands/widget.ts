@@ -25,6 +25,13 @@ const fail = (message: string) => {
   process.exitCode = 1;
 };
 
+/**
+ * Failed runs come back as records, not errors. `succeeded` and `partial` both
+ * carry output the card can show and the publish gate accepts.
+ */
+const isUsableRun = (status: string) =>
+  (WIDGET_RUN_OUTPUT_STATUSES as readonly string[]).includes(status);
+
 interface RunLike {
   durationMs?: number | null;
   error?: unknown;
@@ -217,8 +224,9 @@ export function registerWidgetCommand(program: Command) {
       const { data } = await (
         await getTrpcClient()
       ).widget.dryRun.mutate({ versionId: options.version, widgetId });
-      // Publish needs a succeeded dry run, so anything else fails — JSON output included.
-      if (data.status !== 'succeeded') process.exitCode = 1;
+      // Publish accepts any usable run (partial included), so only failed / timed-out
+      // dry runs fail — JSON output included.
+      if (!isUsableRun(data.status)) process.exitCode = 1;
       if (options.json !== undefined) return outputJson(data, options.json);
       printRun(data);
     });
@@ -249,10 +257,7 @@ export function registerWidgetCommand(program: Command) {
     .option('--json [fields]', 'Output JSON')
     .action(async (widgetId: string, options: { json?: boolean | string }) => {
       const { data } = await (await getTrpcClient()).widget.run.mutate({ widgetId });
-      // Failed runs come back as records, not errors; only usable output exits 0.
-      if (!(WIDGET_RUN_OUTPUT_STATUSES as readonly string[]).includes(data.status)) {
-        process.exitCode = 1;
-      }
+      if (!isUsableRun(data.status)) process.exitCode = 1;
       if (options.json !== undefined) return outputJson(data, options.json);
       printRun(data);
     });

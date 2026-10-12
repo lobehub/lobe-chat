@@ -144,6 +144,12 @@ describe('widget command', () => {
     expect(process.exitCode).toBe(1);
   });
 
+  it('treats a partial dry run as usable, like the publish gate does', async () => {
+    mockClient.widget.dryRun.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'partial' } });
+    await run('widget', 'dry-run', 'w-1', '--json');
+    expect(process.exitCode).toBeUndefined();
+  });
+
   it('exits non-zero when a manual refresh fails', async () => {
     mockClient.widget.run.mutate.mockResolvedValue({ data: { id: 'run-1', status: 'failed' } });
     await run('widget', 'run', 'w-1', '--json');
