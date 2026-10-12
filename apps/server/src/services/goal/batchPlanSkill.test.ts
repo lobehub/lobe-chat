@@ -34,6 +34,17 @@ describe('planSkillName', () => {
     expect(name).toMatch(/^[a-z\d]+(?:-[a-z\d]+)*$/);
   });
 
+  /**
+   * Regression: a title whose first word alone overflows the limit counted
+   * as readable, so the name came back empty, the skill write threw, and the
+   * batch lost its plan skill.
+   */
+  it('falls back to the batch id when no title word fits the limit', () => {
+    expect(planSkillName({ batchNodeId, goalTitle: `${'a'.repeat(49)} b` })).toBe(
+      'goal-plan-13b47c2a',
+    );
+  });
+
   it('falls back to the batch id only when nothing readable is left', () => {
     expect(planSkillName({ batchNodeId, goalTitle: '迁移所有 store' })).toBe('goal-plan-13b47c2a');
     expect(planSkillName({ batchNodeId: 'gnd_AbC123xyz' })).toBe('goal-plan-gndabc12');

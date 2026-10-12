@@ -34,12 +34,14 @@ const MAX_NAME = 48;
 const toSkillSlug = (text: string | undefined) => {
   const words = (text ?? '').toLowerCase().match(/[\da-z]+/g) ?? [];
   let slug = '';
+  let admitted = 0;
   for (const word of words) {
     const next = slug ? `${slug}-${word}` : word;
     if (next.length > MAX_NAME) break;
     slug = next;
+    admitted += 1;
   }
-  return { slug, words: words.length };
+  return { slug, words: admitted };
 };
 
 /**
