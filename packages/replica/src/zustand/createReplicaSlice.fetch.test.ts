@@ -375,6 +375,34 @@ describe('createReplicaSlice fetch', () => {
     expect(store.getState().lists.a).toEqual(['after mutation']);
   });
 
+  it('keeps no retirement records once nothing older is in flight', async () => {
+    const { slice } = setup();
+
+    for (let index = 0; index < 50; index++) {
+      await slice.fetch({ id: `doc-${index}` });
+      await slice.fetch({ id: `doc-${index}` }, { fresh: true });
+    }
+
+    expect(slice.debugRetiredRequests()).toBe(0);
+  });
+
+  it('keeps a retirement while an older request is in flight, then prunes it', async () => {
+    const { calls, fetcher } = deferredFetcher();
+    const { slice, store } = setup({ fetcher });
+
+    const older = slice.fetch({ id: 'a' });
+    const newer = slice.fetch({ id: 'a' }, { fresh: true });
+    calls[1].resolve(['newer']);
+    await newer;
+    // The older request is still pending: its retirement must survive pruning.
+    expect(slice.debugRetiredRequests()).toBe(1);
+
+    calls[0].resolve(['older']);
+    await expect(older).resolves.toMatchObject({ applied: false });
+    expect(store.getState().lists.a).toEqual(['newer']);
+    expect(slice.debugRetiredRequests()).toBe(0);
+  });
+
   it('drops an older response once a newer one for the entry has applied', async () => {
     const { calls, fetcher } = deferredFetcher();
     const { slice, store } = setup({ fetcher });

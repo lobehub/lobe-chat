@@ -5,6 +5,7 @@ import { createReplicaEngine, type ReplicaEngineOptions } from '../core/engine';
 import { isReplicaSyncKey, replicaKeys } from '../core/keys';
 import type { ReplicaPagedData } from '../core/paging';
 import type { ReplicaViewWrite } from '../core/reducer';
+import { DEFAULT_REMOVAL_TOMBSTONE_LIMIT } from '../core/tombstones';
 import type { ReplicaResource, ReplicaState } from '../core/types';
 import type { ReplicaSyncDriver, ReplicaSyncSchedule } from './driver';
 
@@ -368,10 +369,49 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
    * Requests whose start order is at or below this number are retired, per
    * request id: a newer response already applied, or a `fresh` fetch started
    * after them. Their late response would repaint an older value.
+   *
+   * An entry only matters while a request it retires is still unsettled:
+   * every request started later has a higher sequence, so a missing entry
+   * (read as 0) admits exactly the same responses. Entries are pruned as soon
+   * as no sent request at or below them is pending, so the map holds only the
+   * ids with an older request in flight.
    */
   const retiredThrough = new Map<string, number>();
+  /** Sequences of the sent requests that have not settled yet, per request id. */
+  const unsettled = new Map<string, Set<number>>();
+
+  /** Drop the retirement of `requestId` once no request it retires is pending. */
+  const pruneRetired = (requestId: string) => {
+    const through = retiredThrough.get(requestId);
+    if (through === undefined) return;
+    for (const seq of unsettled.get(requestId) ?? []) if (seq <= through) return;
+    retiredThrough.delete(requestId);
+  };
+
   const retire = (requestId: string, seq: number) => {
     if ((retiredThrough.get(requestId) ?? 0) < seq) retiredThrough.set(requestId, seq);
+    pruneRetired(requestId);
+    // Backstop: never more ids than a removal tombstone window. Only an entry
+    // with no older request pending may go — evicting one that still retires
+    // a request in flight would let its stale response win.
+    if (retiredThrough.size <= DEFAULT_REMOVAL_TOMBSTONE_LIMIT) return;
+    for (const id of retiredThrough.keys()) {
+      pruneRetired(id);
+      if (retiredThrough.size <= DEFAULT_REMOVAL_TOMBSTONE_LIMIT) return;
+    }
+  };
+
+  const trackUnsettled = ({ requestId, seq }: ReplicaRequest<TParams, TFetched>) => {
+    const pending = unsettled.get(requestId) ?? new Set<number>();
+    unsettled.set(requestId, pending);
+    pending.add(seq);
+  };
+
+  const untrackUnsettled = ({ requestId, seq }: ReplicaRequest<TParams, TFetched>) => {
+    const pending = unsettled.get(requestId);
+    if (!pending?.delete(seq)) return;
+    if (pending.size === 0) unsettled.delete(requestId);
+    pruneRetired(requestId);
   };
 
   /** The latest request in flight per id, which a non-`fresh` `fetch` joins. */
@@ -421,6 +461,8 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     // driver still gets exactly what it returned.
     const promise = Promise.resolve(sent);
     request.promise = promise;
+    // Until it settles, a retirement that covers it must be kept.
+    trackUnsettled(request);
     inflight.set(requestId, request);
     if (request.source === 'sync')
       syncInflight.set(requestId, (syncInflight.get(requestId) ?? 0) + 1);
@@ -533,6 +575,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     if (request.settled) return request.settled;
     request.settledWith = 'error' in outcome ? outcome.error : outcome.data;
     request.settled = settleOnce(request, outcome);
+    untrackUnsettled(request);
     if (request.source === 'sync') releaseSyncRequest(request);
     return request.settled;
   };
@@ -773,6 +816,8 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     ...engine,
     /** @internal Records of `useSync` requests not yet released (leak checks in tests). */
     debugPendingSyncRequests: () => syncRequests.size,
+    /** @internal Retirement records still held (leak checks in tests). */
+    debugRetiredRequests: () => retiredThrough.size,
     fetch,
     remove,
     useSync,
