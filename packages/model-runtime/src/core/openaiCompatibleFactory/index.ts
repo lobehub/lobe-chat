@@ -1,4 +1,5 @@
 import type { ChatModelCard } from '@lobechat/types';
+import { isRecord } from '@lobechat/utils/object';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import debug from 'debug';
@@ -23,6 +24,9 @@ import type {
   ChatMethodOptions,
   ChatStreamCallbacks,
   ChatStreamPayload,
+  DecisionOptions,
+  DecisionPayload,
+  DecisionResponse,
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
@@ -83,6 +87,7 @@ import {
 import { OpenAICompatibleClient } from './client';
 import { createOpenAICompatibleImage } from './createImage';
 import { createOpenAICompatibleVideo, pollOpenAICompatibleVideoStatus } from './createVideo';
+import { createSystemOneDecision } from './decide';
 import { transformResponseAPIToStream, transformResponseToStream } from './nonStreamToStream';
 import {
   initializeOpenAIDiagnostics,
@@ -282,6 +287,14 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
     chatCompletion: () => boolean;
     responses?: () => boolean;
   };
+  /**
+   * Serve decision models through a System One endpoint. Only providers that set this expose
+   * `decide`, so callers can tell decision support apart from plain chat compatibility.
+   */
+  decide?: {
+    /** Endpoint path relative to the base URL, e.g. `/systemone`. */
+    path: string;
+  };
   errorType?: {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
@@ -363,6 +376,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   promptCacheKeyModels,
   createImage: customCreateImage,
   createVideo: customCreateVideo,
+  decide: decideConfig,
   videoGenerationCapabilities,
   handleCreateVideoWebhook: customHandleCreateVideoWebhook,
   handlePollVideoStatus: customHandlePollVideoStatus,
@@ -382,6 +396,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     private subscriptionChannelId?: Promise<string>;
 
     baseURL!: string;
+    decide?: LobeRuntimeAI['decide'];
     protected _options: ConstructorOptions<T>;
 
     getVideoGenerationCapabilities(model: string): VideoGenerationCapabilities {
@@ -426,6 +441,29 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         );
       }
       this.logPrefix = `lobe-model-runtime:${this.id}`;
+
+      if (decideConfig) {
+        this.decide = (payload, decideOptions) =>
+          this.decideViaSystemOne(decideConfig.path, payload, decideOptions);
+      }
+    }
+
+    private async decideViaSystemOne(
+      path: string,
+      payload: DecisionPayload,
+      options?: DecisionOptions,
+    ): Promise<DecisionResponse> {
+      try {
+        return await createSystemOneDecision(this.client, payload, options, {
+          path,
+          provider: this.id,
+          requestModel: resolveMappedModelId(payload.model, this.modelIdMappingOptions),
+        });
+      } catch (error) {
+        // Validation failures are already runtime error payloads; only map transport errors.
+        if (isRecord(error) && 'errorType' in error) throw error;
+        throw this.handleError(error);
+      }
     }
 
     /**
