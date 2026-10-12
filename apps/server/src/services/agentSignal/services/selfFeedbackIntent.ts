@@ -13,9 +13,9 @@ import {
 } from '@lobechat/builtin-tool-self-iteration';
 
 import type { AgentSignalSourceEventInput } from '@/server/services/agentSignal/emitter';
+import { redisService } from '@/server/services/redis';
 
-import { AGENT_SIGNAL_DEFAULTS, AGENT_SIGNAL_KEYS } from '../constants';
-import { decrementCounter, incrementCounter } from '../store/adapters/redis/counterStore';
+import { AGENT_SIGNAL_DEFAULTS } from '../constants';
 import { buildSelfFeedbackIntentSourceId } from './selfIteration/types';
 
 export type {
@@ -83,10 +83,7 @@ export const createInMemoryDeclarationLimiter = (): SelfFeedbackIntentDeclaratio
 export const createRedisDeclarationLimiter = (): SelfFeedbackIntentDeclarationLimiter => ({
   acquire: async (scopeKey, limit) => {
     try {
-      const count = await incrementCounter(
-        AGENT_SIGNAL_KEYS.declarationLimit(scopeKey),
-        AGENT_SIGNAL_DEFAULTS.selfFeedbackIntentDeclarationTtlSeconds,
-      );
+      const count = await redisService.agentSignal.takeDeclarationSlot(scopeKey);
 
       return count !== undefined && count <= limit;
     } catch (error) {
@@ -96,7 +93,7 @@ export const createRedisDeclarationLimiter = (): SelfFeedbackIntentDeclarationLi
   },
   release: async (scopeKey) => {
     try {
-      await decrementCounter(AGENT_SIGNAL_KEYS.declarationLimit(scopeKey));
+      await redisService.agentSignal.releaseDeclarationSlot(scopeKey);
     } catch (error) {
       console.error('[AgentSignal] Failed to release self-feedback intent slot:', error);
     }

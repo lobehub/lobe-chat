@@ -3,13 +3,8 @@ export const AGENT_SIGNAL_PREFIX = 'agent-signal:';
 
 /** Server-owned Redis key builders for AgentSignal adapters. */
 export const AGENT_SIGNAL_KEYS = {
-  dailyBudget: (budget: string, userId: string, utcDay: string) =>
-    `${AGENT_SIGNAL_PREFIX}budget:${budget}:user:${userId}:day:${utcDay}`,
   dedupe: (id: string) => `${AGENT_SIGNAL_PREFIX}dedupe:${id}`,
-  declarationLimit: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}declaration-limit:${scopeKey}`,
   lock: (scopeKey: string) => `${AGENT_SIGNAL_PREFIX}lock:${scopeKey}`,
-  nightlyTopicQuota: (userId: string, localDate: string) =>
-    `${AGENT_SIGNAL_PREFIX}nightly-topics:user:${userId}:date:${localDate}`,
   policy: (policyId: string, scopeKey: string) =>
     `${AGENT_SIGNAL_PREFIX}policy:${policyId}:${scopeKey}`,
   receipt: (receiptId: string) => `${AGENT_SIGNAL_PREFIX}receipt:${receiptId}`,
@@ -23,8 +18,6 @@ export const AGENT_SIGNAL_KEYS = {
 
 /** Server-owned timing defaults for AgentSignal storage and generation. */
 export const AGENT_SIGNAL_DEFAULTS = {
-  /** TTL for the per-day budget counters; outlives one UTC day so the key never resets early. */
-  dailyBudgetTtlSeconds: 2 * 24 * 60 * 60,
   /**
    * Per-user, per-UTC-day ceiling on feedback satisfaction classifier calls. Each call is a
    * mini-model request billed to the user's provider credentials.
@@ -37,15 +30,11 @@ export const AGENT_SIGNAL_DEFAULTS = {
    * nightly expertise ingestion reads. Everyday conversation has no count cap.
    */
   nightlyReviewTopicLimitPerUser: 50,
-  /** TTL for the nightly topic set; outlives the review night so replays still see it. */
-  nightlyReviewTopicQuotaTtlSeconds: 3 * 24 * 60 * 60,
   receiptTtlSeconds: 3 * 24 * 60 * 60,
   runtimeGuardTtlSeconds: 3600,
   runtimeWaypointTtlSeconds: 3600,
   /** Max accepted self-feedback intent declarations per operation (or topic) scope. */
   selfFeedbackIntentDeclarationLimitPerScope: 3,
-  /** TTL for the shared self-feedback intent declaration counter of one scope. */
-  selfFeedbackIntentDeclarationTtlSeconds: 24 * 60 * 60,
   signalDedupeTtlSeconds: 300,
   signalWindowTtlSeconds: 3600,
 } as const;

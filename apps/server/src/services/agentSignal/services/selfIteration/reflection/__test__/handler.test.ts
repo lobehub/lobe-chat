@@ -22,9 +22,8 @@ import {
   createSelfReflectionSourcePolicyHandler,
 } from '../handler';
 
-const { mockEnqueueSelfIterationRun, mockIncrementCounter } = vi.hoisted(() => ({
+const { mockEnqueueSelfIterationRun } = vi.hoisted(() => ({
   mockEnqueueSelfIterationRun: vi.fn(),
-  mockIncrementCounter: vi.fn(),
 }));
 
 vi.mock('../../dispatch/enqueueSelfIterationRun', () => ({
@@ -32,11 +31,6 @@ vi.mock('../../dispatch/enqueueSelfIterationRun', () => ({
 }));
 
 // Every Redis counter reads as far past any daily limit; dispatch must not care.
-vi.mock('../../../../store/adapters/redis/counterStore', () => ({
-  decrementCounter: vi.fn(),
-  incrementCounter: mockIncrementCounter,
-}));
-
 const reflectionPayload = {
   agentId: 'agent-1',
   operationId: 'operation-1',
@@ -101,23 +95,17 @@ const createDependencies = (
 });
 
 describe('self-reflection source handler', () => {
-  /**
-   * Everyday conversation has no count cap: the default dispatch enqueues the run directly,
-   * with no daily background-run budget in front of it.
-   */
-  it('dispatches through the unbudgeted enqueue by default', async () => {
+  it('dispatches through the self-iteration enqueue by default', async () => {
     mockEnqueueSelfIterationRun.mockResolvedValue({
       operationId: 'op-default',
       topicId: 'topic-1',
     });
-    mockIncrementCounter.mockResolvedValue(10_000);
     const { dispatch: _dispatch, ...deps } = createDependencies();
     const handler = createSelfReflectionSourceHandler(deps);
 
     const result = await handler.handle(createReflectionSource());
 
     expect(mockEnqueueSelfIterationRun).toHaveBeenCalledOnce();
-    expect(mockIncrementCounter).not.toHaveBeenCalled();
     expect(result).toMatchObject({
       operationId: 'op-default',
       status: ReviewRunStatus.Dispatched,

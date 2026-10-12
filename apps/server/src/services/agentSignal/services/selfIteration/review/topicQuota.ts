@@ -1,7 +1,8 @@
 import debug from 'debug';
 
-import { AGENT_SIGNAL_DEFAULTS, AGENT_SIGNAL_KEYS } from '../../../constants';
-import { getRedisClient } from '../../../store/adapters/redis/shared';
+import { redisService } from '@/server/services/redis';
+
+import { AGENT_SIGNAL_DEFAULTS } from '../../../constants';
 
 const log = debug('lobe-server:agent-signal:nightly-topic-quota');
 
@@ -29,31 +30,6 @@ export type ClaimNightlyReviewTopics = (
 ) => Promise<ClaimNightlyReviewTopicsResult>;
 
 /**
- * Admits candidate topic ids into the night's set while it holds fewer than `limit` members.
- * Ids already in the set are admitted without counting again, so a replayed run (or the
- * expertise pass reading topics the review already took) never double-counts.
- *
- * KEYS[1] = set key; ARGV[1] = limit; ARGV[2] = ttl seconds; ARGV[3..] = topic ids
- */
-const CLAIM_TOPICS_SCRIPT = `
-local admitted = {}
-local count = redis.call('SCARD', KEYS[1])
-local limit = tonumber(ARGV[1])
-for i = 3, #ARGV do
-  local id = ARGV[i]
-  if redis.call('SISMEMBER', KEYS[1], id) == 1 then
-    table.insert(admitted, id)
-  elseif count < limit then
-    redis.call('SADD', KEYS[1], id)
-    count = count + 1
-    table.insert(admitted, id)
-  end
-end
-redis.call('EXPIRE', KEYS[1], ARGV[2])
-return admitted
-`;
-
-/**
  * Claims topics against the user's nightly review quota in Redis.
  *
  * Use when:
@@ -73,21 +49,18 @@ export const claimNightlyReviewTopics: ClaimNightlyReviewTopics = async (input) 
   const topicIds = [...new Set(input.topicIds.filter(Boolean))];
   if (topicIds.length === 0) return { admitted: [] };
 
-  const redis = getRedisClient();
-  if (!redis) {
-    log('nightly topic quota unavailable user=%s date=%s', input.userId, input.localDate);
-    return { admitted: [], reason: 'unavailable' };
-  }
-
   try {
-    const admitted = (await redis.eval(
-      CLAIM_TOPICS_SCRIPT,
-      1,
-      AGENT_SIGNAL_KEYS.nightlyTopicQuota(input.userId, input.localDate),
-      AGENT_SIGNAL_DEFAULTS.nightlyReviewTopicLimitPerUser,
-      AGENT_SIGNAL_DEFAULTS.nightlyReviewTopicQuotaTtlSeconds,
-      ...topicIds,
-    )) as string[];
+    const admitted = await redisService.agentSignal.claimNightlyTopics({
+      limit: AGENT_SIGNAL_DEFAULTS.nightlyReviewTopicLimitPerUser,
+      localDate: input.localDate,
+      topicIds,
+      userId: input.userId,
+    });
+
+    if (!admitted) {
+      log('nightly topic quota unavailable user=%s date=%s', input.userId, input.localDate);
+      return { admitted: [], reason: 'unavailable' };
+    }
 
     if (admitted.length < topicIds.length) {
       log(

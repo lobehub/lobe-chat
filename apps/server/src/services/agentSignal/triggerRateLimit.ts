@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import type Redis from 'ioredis';
 
-import { getRedisClient } from './store/adapters/redis/shared';
+import { redisService } from '@/server/services/redis';
 
 /**
  * Manual Agent Signal triggers one user may enqueue per rolling-hour bucket.
@@ -10,10 +9,6 @@ import { getRedisClient } from './store/adapters/redis/shared';
  * model-backed workflow (a nightly review is a full agent run), so it is bounded per user.
  */
 export const AGENT_SIGNAL_TRIGGER_RATE_LIMIT_PER_HOUR = 10;
-
-const AGENT_SIGNAL_TRIGGER_RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
-
-const getTriggerRateLimitKey = (userId: string) => `agent-signal:trigger-rate:user:${userId}`;
 
 /**
  * Consumes one manual trigger from the user's hourly budget.
@@ -29,18 +24,9 @@ const getTriggerRateLimitKey = (userId: string) => `agent-signal:trigger-rate:us
  * - `true` when Redis is not configured: Agent Signal dedupe and review guards cannot run
  *   without Redis either, so there is no model spend for this limit to protect
  */
-export const consumeAgentSignalTriggerQuota = async (
-  userId: string,
-  redis: Pick<Redis, 'incr' | 'set'> | null = getRedisClient(),
-): Promise<boolean> => {
-  if (!redis) return true;
-
-  const key = getTriggerRateLimitKey(userId);
-
-  // Create the bucket with its TTL before incrementing: INCR keeps an existing TTL, so the key
-  // can never be left without one if the process dies between the two commands.
-  await redis.set(key, '0', 'EX', AGENT_SIGNAL_TRIGGER_RATE_LIMIT_WINDOW_SECONDS, 'NX');
-  const count = await redis.incr(key);
+export const consumeAgentSignalTriggerQuota = async (userId: string): Promise<boolean> => {
+  const count = await redisService.agentSignal.countManualTrigger(userId);
+  if (count === undefined) return true;
 
   return count <= AGENT_SIGNAL_TRIGGER_RATE_LIMIT_PER_HOUR;
 };

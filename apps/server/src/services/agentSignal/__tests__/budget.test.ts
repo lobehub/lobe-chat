@@ -1,38 +1,35 @@
 // @vitest-environment node
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { acquireAgentSignalDailyBudget, describeBudgetDenial, toUtcDay } from '../budget';
 import { AGENT_SIGNAL_DEFAULTS } from '../constants';
 
-const counters = new Map<string, number>();
-const redis = {
-  expire: vi.fn(async () => 1),
-  incr: vi.fn(async (key: string) => {
-    const next = (counters.get(key) ?? 0) + 1;
-    counters.set(key, next);
-    return next;
-  }),
-};
+const service = vi.hoisted(() => ({
+  available: true,
+  countClassifierCall: vi.fn(),
+  counters: new Map<string, number>(),
+}));
 
-interface AgentSignalRedisTestGlobal {
-  __agentSignalRedisClient?: unknown;
-}
-
-const setRedis = (value: unknown) => {
-  (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = value;
-};
+vi.mock('@/server/services/redis', () => ({
+  redisService: { agentSignal: { countClassifierCall: service.countClassifierCall } },
+}));
 
 const NOW = Date.UTC(2026, 9, 11, 23, 30);
 
 describe('acquireAgentSignalDailyBudget', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    counters.clear();
-    setRedis(redis);
-  });
-
-  afterEach(() => {
-    setRedis(undefined);
+    service.available = true;
+    service.counters.clear();
+    service.countClassifierCall.mockImplementation(
+      async ({ userId, utcDay }: { userId: string; utcDay: string }) => {
+        if (!service.available) return undefined;
+        const key = `${userId}:${utcDay}`;
+        const next = (service.counters.get(key) ?? 0) + 1;
+        service.counters.set(key, next);
+        return next;
+      },
+    );
   });
 
   /**
@@ -41,7 +38,7 @@ describe('acquireAgentSignalDailyBudget', () => {
    */
   it('allows classifier calls up to the daily limit and denies the next one', async () => {
     const limit = AGENT_SIGNAL_DEFAULTS.dailyFeedbackClassifierBudgetPerUser;
-    counters.set('agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11', limit - 1);
+    service.counters.set('u1:2026-10-11', limit - 1);
 
     await expect(
       acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
@@ -55,10 +52,10 @@ describe('acquireAgentSignalDailyBudget', () => {
       limit,
       reason: 'exceeded',
     });
-    expect(redis.expire).toHaveBeenCalledWith(
-      'agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11',
-      AGENT_SIGNAL_DEFAULTS.dailyBudgetTtlSeconds,
-    );
+    expect(service.countClassifierCall).toHaveBeenCalledWith({
+      userId: 'u1',
+      utcDay: '2026-10-11',
+    });
   });
 
   /**
@@ -66,7 +63,7 @@ describe('acquireAgentSignalDailyBudget', () => {
    * Budgets are per user and per UTC day.
    */
   it('keeps separate counters per user and UTC day', async () => {
-    counters.set('agent-signal:budget:feedback-classifier:user:u1:day:2026-10-11', 1000);
+    service.counters.set('u1:2026-10-11', 1000);
 
     await expect(
       acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u2' }),
@@ -86,7 +83,7 @@ describe('acquireAgentSignalDailyBudget', () => {
    * No Redis configured: the budget cannot be enforced, so the work is skipped.
    */
   it('fails closed when Redis is not configured', async () => {
-    setRedis(null);
+    service.available = false;
 
     await expect(
       acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),
@@ -104,7 +101,7 @@ describe('acquireAgentSignalDailyBudget', () => {
    */
   it('fails closed without throwing when Redis errors', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-    redis.incr.mockRejectedValueOnce(new Error('connection reset'));
+    service.countClassifierCall.mockRejectedValueOnce(new Error('connection reset'));
 
     await expect(
       acquireAgentSignalDailyBudget({ kind: 'feedback-classifier', now: NOW, userId: 'u1' }),

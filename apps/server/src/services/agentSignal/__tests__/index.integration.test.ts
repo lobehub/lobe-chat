@@ -20,6 +20,12 @@ const mockRedis = {
   set: vi.fn(),
 };
 
+// The daily classifier budget counts through the Redis business service.
+const mockCountClassifierCall = vi.hoisted(() => vi.fn());
+vi.mock('@/server/services/redis', () => ({
+  redisService: { agentSignal: { countClassifierCall: mockCountClassifierCall } },
+}));
+
 /**
  * Loads the Agent Signal service entrypoint with one test-scoped module graph.
  *
@@ -304,7 +310,7 @@ describe('emitAgentSignalSourceEvent integration', () => {
       mockRedis.hgetall.mockResolvedValue({});
       mockRedis.hset.mockResolvedValue(1);
       mockRedis.expire.mockResolvedValue(1);
-      mockRedis.incr.mockResolvedValue(1);
+      mockCountClassifierCall.mockResolvedValue(1);
       const initModelRuntimeFromDB = vi.fn().mockResolvedValue({
         generateObject: vi.fn().mockResolvedValue({
           confidence: 0.91,
@@ -367,7 +373,7 @@ describe('emitAgentSignalSourceEvent integration', () => {
       mockRedis.hgetall.mockResolvedValue({});
       mockRedis.hset.mockResolvedValue(1);
       mockRedis.expire.mockResolvedValue(1);
-      mockRedis.incr.mockResolvedValue(201);
+      mockCountClassifierCall.mockResolvedValue(201);
       const initModelRuntimeFromDB = vi.fn();
 
       const { emitAgentSignalSourceEvent } = await loadIndexIntegrationModule({
@@ -384,11 +390,10 @@ describe('emitAgentSignalSourceEvent integration', () => {
       );
 
       expect(result?.deduped).toBe(false);
-      expect(mockRedis.incr).toHaveBeenCalledWith(
-        expect.stringMatching(
-          /^agent-signal:budget:feedback-classifier:user:user_1:day:\d{4}-\d{2}-\d{2}$/,
-        ),
-      );
+      expect(mockCountClassifierCall).toHaveBeenCalledWith({
+        userId: 'user_1',
+        utcDay: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+      });
       expect(initModelRuntimeFromDB).not.toHaveBeenCalled();
     },
   );
@@ -401,7 +406,7 @@ describe('emitAgentSignalSourceEvent integration', () => {
     (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
       mockRedis;
     mockRedis.expire.mockResolvedValue(1);
-    mockRedis.incr.mockResolvedValue(10_000);
+    mockCountClassifierCall.mockResolvedValue(10_000);
     const ingestSelfReview = vi.fn().mockResolvedValue({ ingested: 0 });
     vi.doMock('@/server/services/expertise/ingestion', () => ({
       ExpertiseIngestionService: class {
@@ -454,6 +459,6 @@ describe('emitAgentSignalSourceEvent integration', () => {
     expect(ingestSelfReview).toHaveBeenCalledWith(completionInput, {
       claimNightlyTopics: claimNightlyReviewTopics,
     });
-    expect(mockRedis.incr).not.toHaveBeenCalled();
+    expect(mockCountClassifierCall).not.toHaveBeenCalled();
   });
 });

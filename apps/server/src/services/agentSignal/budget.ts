@@ -1,7 +1,8 @@
 import debug from 'debug';
 
-import { AGENT_SIGNAL_DEFAULTS, AGENT_SIGNAL_KEYS } from './constants';
-import { incrementCounter } from './store/adapters/redis/counterStore';
+import { redisService } from '@/server/services/redis';
+
+import { AGENT_SIGNAL_DEFAULTS } from './constants';
 
 const log = debug('lobe-server:agent-signal:budget');
 
@@ -55,15 +56,13 @@ export const acquireAgentSignalDailyBudget = async (input: {
   userId: string;
 }): Promise<AgentSignalBudgetDecision> => {
   const limit = DAILY_LIMITS[input.kind];
-  const key = AGENT_SIGNAL_KEYS.dailyBudget(
-    input.kind,
-    input.userId,
-    toUtcDay(input.now ?? Date.now()),
-  );
 
   let count: number | undefined;
   try {
-    count = await incrementCounter(key, AGENT_SIGNAL_DEFAULTS.dailyBudgetTtlSeconds);
+    count = await redisService.agentSignal.countClassifierCall({
+      userId: input.userId,
+      utcDay: toUtcDay(input.now ?? Date.now()),
+    });
   } catch (error) {
     console.error('[AgentSignal] Failed to read daily budget, skipping work:', {
       error,

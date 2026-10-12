@@ -8,24 +8,21 @@ vi.mock('@/server/services/agentSignal', () => ({
   enqueueAgentSignalSourceEvent: vi.fn(),
 }));
 
-const counters = new Map<string, number>();
-const redis = {
-  decr: vi.fn(async (key: string) => {
-    const next = (counters.get(key) ?? 0) - 1;
-    counters.set(key, next);
-    return next;
-  }),
-  expire: vi.fn(async () => 1),
-  incr: vi.fn(async (key: string) => {
-    const next = (counters.get(key) ?? 0) + 1;
-    counters.set(key, next);
-    return next;
-  }),
-};
+const service = vi.hoisted(() => ({
+  available: true,
+  counters: new Map<string, number>(),
+  releaseDeclarationSlot: vi.fn(),
+  takeDeclarationSlot: vi.fn(),
+}));
 
-interface AgentSignalRedisTestGlobal {
-  __agentSignalRedisClient?: typeof redis | null;
-}
+vi.mock('@/server/services/redis', () => ({
+  redisService: {
+    agentSignal: {
+      releaseDeclarationSlot: service.releaseDeclarationSlot,
+      takeDeclarationSlot: service.takeDeclarationSlot,
+    },
+  },
+}));
 
 const createInput = () => ({
   action: 'refine' as const,
@@ -38,13 +35,21 @@ const createInput = () => ({
 
 describe('selfFeedbackIntentRuntime', () => {
   afterEach(() => {
-    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = undefined;
+    service.available = true;
   });
 
   beforeEach(() => {
     vi.clearAllMocks();
-    counters.clear();
-    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = redis;
+    service.counters.clear();
+    service.takeDeclarationSlot.mockImplementation(async (scopeKey: string) => {
+      if (!service.available) return undefined;
+      const next = (service.counters.get(scopeKey) ?? 0) + 1;
+      service.counters.set(scopeKey, next);
+      return next;
+    });
+    service.releaseDeclarationSlot.mockImplementation(async (scopeKey: string) => {
+      service.counters.set(scopeKey, (service.counters.get(scopeKey) ?? 0) - 1);
+    });
     vi.mocked(enqueueAgentSignalSourceEvent).mockResolvedValue({
       accepted: true,
       scopeKey: 'topic:topic-1',
@@ -182,7 +187,7 @@ describe('selfFeedbackIntentRuntime', () => {
    * The declaration limit is read from Redis, so it holds across server processes.
    */
   it('enforces the declaration limit from the shared Redis counter', async () => {
-    counters.set('agent-signal:declaration-limit:user-1:agent-1:topic:topic-shared', 3);
+    service.counters.set('user-1:agent-1:topic:topic-shared', 3);
     const runtime = selfFeedbackIntentRuntime.factory({ toolManifestMap: {} });
 
     const result = await runtime.declareSelfFeedbackIntent(createInput(), {
@@ -202,7 +207,7 @@ describe('selfFeedbackIntentRuntime', () => {
    * Without Redis the limit cannot be enforced, so declarations are rejected (fail closed).
    */
   it('rejects declarations when Redis is unavailable', async () => {
-    (globalThis as AgentSignalRedisTestGlobal).__agentSignalRedisClient = null;
+    service.available = false;
     const runtime = selfFeedbackIntentRuntime.factory({ toolManifestMap: {} });
 
     const result = await runtime.declareSelfFeedbackIntent(createInput(), {
