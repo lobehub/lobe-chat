@@ -23,6 +23,18 @@ describe('runCommand', () => {
     fs.rmSync(tmpDir, { force: true, recursive: true });
   });
 
+  const waitFor = async (predicate: () => boolean, timeoutMs = 5_000): Promise<boolean> => {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      if (predicate()) return true;
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    }
+    return predicate();
+  };
+
+  const fallbackDirsIn = (root: string): string[] =>
+    fs.readdirSync(root).filter((name) => name.startsWith('lobehub-cwd-fallback-'));
+
   describe('foreground observation mode', () => {
     it('should execute a simple command and finish immediately', async () => {
       const result = await runCommand({ command: 'echo hello' }, { processManager });
@@ -229,6 +241,54 @@ describe('runCommand', () => {
       expect(result.stdout).toContain('Working directory is not a directory');
       expect(result.stdout).toContain('Falling back to');
       expect(result.stdout).toContain('via-file-cwd');
+    });
+
+    it('removes the fallback directory once the foreground command closes', async () => {
+      const missingCwd = path.join(tmpDir, 'missing-worktree');
+      const result = await runCommand(
+        { command: 'echo cleanup-foreground && pwd', cwd: missingCwd },
+        { processManager, tmpdirOverride: tmpDir },
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.stdout).toContain('cleanup-foreground');
+      expect(fallbackDirsIn(tmpDir)).toHaveLength(1);
+      const removed = await waitFor(() => fallbackDirsIn(tmpDir).length === 0);
+      expect(removed).toBe(true);
+    });
+
+    it('removes the fallback directory once a background command closes', async () => {
+      const missingCwd = path.join(tmpDir, 'missing-worktree');
+      const bg = await runCommand(
+        { command: 'echo cleanup-background && pwd', cwd: missingCwd, run_in_background: true },
+        { processManager, tmpdirOverride: tmpDir },
+      );
+
+      expect(bg.success).toBe(true);
+      expect(bg.shell_id).toBeDefined();
+      // While the command runs, the fallback directory exists.
+      expect(fallbackDirsIn(tmpDir)).toHaveLength(1);
+      const observed = await processManager.getOutput({ shell_id: bg.shell_id! });
+      expect(observed.stdout).toContain('cleanup-background');
+      const removed = await waitFor(() => fallbackDirsIn(tmpDir).length === 0);
+      expect(removed).toBe(true);
+    });
+
+    it('never creates a fallback directory when the requested cwd is usable', async () => {
+      const usableCwd = path.join(tmpDir, 'usable-cwd');
+      fs.mkdirSync(usableCwd);
+      const result = await runCommand(
+        { command: 'echo usable && pwd', cwd: usableCwd },
+        {
+          processManager,
+          tmpdirOverride: tmpDir,
+        },
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.stdout).not.toContain('Falling back to');
+      const removed = await waitFor(() => fallbackDirsIn(tmpDir).length === 0);
+      expect(removed).toBe(true);
     });
 
     it('should merge env into child process environment', async () => {
