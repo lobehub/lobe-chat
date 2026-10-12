@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import { buildGoalGraphView } from '../goalGraphViewModel';
 import { batchGroupId, layoutBatch } from './batchLayout';
 import {
+  batchPlanTitleKey,
   buildBatchModel,
   findBatchGate,
   findBatchPlan,
@@ -599,5 +600,19 @@ describe('buildBatchModel roster', () => {
     const model = buildBatchModel(graph, 'batch');
 
     expect(model.waves[0][0]).toMatchObject({ nodeId: 'm3b', state: 'done', title: 'U3' });
+  });
+});
+
+describe('batchPlanTitleKey', () => {
+  const round = { forked: false, revision: 2 } as any;
+
+  it('names the plan as a skill when the batch keeps it as one', () => {
+    const model = { planSkill: { id: 'docs_1', name: 'goal-plan-x' } };
+    expect(batchPlanTitleKey(model, round)).toBe('goalBatch.skill.title');
+    expect(batchPlanTitleKey(model, { ...round, forked: true })).toBe('goalBatch.skill.forked');
+  });
+
+  it('keeps the plain plan name for a batch without a plan skill', () => {
+    expect(batchPlanTitleKey({}, round)).toBe('goalBatch.template.title');
   });
 });

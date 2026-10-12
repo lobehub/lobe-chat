@@ -46,7 +46,7 @@ import {
   isRunningNode,
   scopeGraphView,
 } from '../goalGraphViewModel';
-import { GATE_COLOR, KindDot } from '../shared';
+import { GATE_COLOR, KindDot, SKILL_COLOR, SKILL_ICON } from '../shared';
 import {
   BatchExperimentProbeGroup,
   BatchRoundFrame,
@@ -59,6 +59,7 @@ import { type BatchLayout, layoutBatch } from './batchLayout';
 import {
   type BatchGateState,
   type BatchModel,
+  batchPlanTitleKey,
   type BatchRound,
   buildBatchModel,
   verdictChecks,
@@ -448,12 +449,22 @@ const useBatchCopy = () => {
               : t('goalBatch.gate.title'),
         };
       },
-      template: (round: BatchRound, view: GoalNodeView): GraphNodeData['presentation'] => ({
+      template: (
+        round: BatchRound,
+        view: GoalNodeView,
+        model: BatchModel,
+      ): GraphNodeData['presentation'] => ({
         chip: null,
-        subtitle: view.node.description?.split('\n')[0] ?? '',
-        title: round.forked
-          ? t('goalBatch.template.forked', { revision: round.revision })
-          : t('goalBatch.template.title', { revision: round.revision }),
+        // A plan kept as a skill reads as the skill every unit loads — its icon,
+        // its colour, its identifier — not as a conclusion.
+        ...(model.planSkill
+          ? {
+              icon: SKILL_ICON,
+              palette: SKILL_COLOR,
+              subtitle: `user-skills:${model.planSkill.name}`,
+            }
+          : { subtitle: view.node.description?.split('\n')[0] ?? '' }),
+        title: t(batchPlanTitleKey(model, round), { revision: round.revision }),
       }),
     }),
     [t, checkCopy],
@@ -715,7 +726,7 @@ const Canvas = memo<
               isGate,
               presentation:
                 batchRole?.kind === 'template'
-                  ? batchCopy.template(batchRole.round, item)
+                  ? batchCopy.template(batchRole.round, item, batchRole.model)
                   : batchRole?.kind === 'assay'
                     ? batchCopy.gate(batchRole.round, batchRole.model)
                     : inBatch && item.node.kind === 'decision'

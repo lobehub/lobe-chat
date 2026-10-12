@@ -121,6 +121,8 @@ export default {
   'goalBatch.status.pending': 'Not started',
   'goalBatch.status.running': 'In progress',
   'goalBatch.status.stale': '{{count}} superseded',
+  'goalBatch.skill.forked': 'Plan skill v{{revision}} · new class',
+  'goalBatch.skill.title': 'Plan skill v{{revision}}',
   'goalBatch.template.forked': 'Plan v{{revision}} · new class',
   'goalBatch.template.title': 'Plan v{{revision}}',
   'goalBatch.templatePlain': 'Batch plan',

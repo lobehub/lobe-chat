@@ -529,6 +529,8 @@
   "goalBatch.round.foot": "{{count}} 项",
   "goalBatch.round.reviseEdge": "打回 · 修订",
   "goalBatch.round.title": "第 {{revision}} 轮",
+  "goalBatch.skill.forked": "方案技能 v{{revision}} · 新类型",
+  "goalBatch.skill.title": "方案技能 v{{revision}}",
   "goalBatch.status.done": "全部完成",
   "goalBatch.status.human": "{{count}} 项需要介入",
   "goalBatch.status.pending": "待开始",

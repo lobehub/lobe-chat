@@ -453,6 +453,16 @@ export const reopenedRows = (
  * The batch and round a plan version belongs to, when `nodeId` is one — so the
  * panel that opens on it can show every version and what changed between them.
  */
+/** How a round's plan is named: a skill when the batch keeps its plan as one. */
+export const batchPlanTitleKey = (model: Pick<BatchModel, 'planSkill'>, round: BatchRound) =>
+  model.planSkill
+    ? round.forked
+      ? ('goalBatch.skill.forked' as const)
+      : ('goalBatch.skill.title' as const)
+    : round.forked
+      ? ('goalBatch.template.forked' as const)
+      : ('goalBatch.template.title' as const);
+
 export const findBatchPlan = (
   graph: GoalGraphView,
   nodeId: string,

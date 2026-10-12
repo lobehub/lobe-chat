@@ -8,10 +8,16 @@ import { graphNodeKind } from '@/features/AgentGoals/Experiments/model';
 import { coordinatorNodeTitleKey } from '@/features/AgentGoals/ProcessControl/coordinatorCopy';
 import { buildGoalGraphView } from '@/features/AgentGoals/ProcessControl/goalGraphViewModel';
 import {
+  batchPlanTitleKey,
   findBatchGate,
   findBatchPlan,
 } from '@/features/AgentGoals/ProcessControl/Graph/batchModel';
-import { GATE_COLOR, KindIcon } from '@/features/AgentGoals/ProcessControl/shared';
+import {
+  GATE_COLOR,
+  KindIcon,
+  SKILL_COLOR,
+  SKILL_ICON,
+} from '@/features/AgentGoals/ProcessControl/shared';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { goalSelectors, useGoalStore } from '@/store/goal';
@@ -28,18 +34,21 @@ const Title = memo(() => {
     if (!nodeView) return undefined;
     // Coordinator-authored titles are English; a batch gate also names its round.
     const revision = findBatchGate(graph, nodeView.node.id)?.round.revision;
-    const plan = findBatchPlan(graph, nodeView.node.id)?.round;
+    const plan = findBatchPlan(graph, nodeView.node.id);
     const titleKey = coordinatorNodeTitleKey(nodeView);
     const title = plan
-      ? t(plan.forked ? 'goalBatch.template.forked' : 'goalBatch.template.title', {
-          revision: plan.revision,
-        })
+      ? t(batchPlanTitleKey(plan.model, plan.round), { revision: plan.round.revision })
       : revision && revision > 1
         ? t('goalBatch.gate.titleRound', { revision })
         : titleKey
           ? t(titleKey as any)
           : nodeView.node.title;
-    return { gate: !!revision, kind: graphNodeKind(graph, nodeView), title };
+    return {
+      gate: !!revision,
+      kind: graphNodeKind(graph, nodeView),
+      skill: !!plan?.model.planSkill,
+      title,
+    };
   }, [snapshot, view, t]);
 
   return (
@@ -48,6 +57,8 @@ const Title = memo(() => {
       {node &&
         (node.gate ? (
           <Icon color={GATE_COLOR.line} icon={DoorOpen} size={14} />
+        ) : node.skill ? (
+          <Icon color={SKILL_COLOR.line} icon={SKILL_ICON} size={14} />
         ) : (
           <KindIcon kind={node.kind} />
         ))}
