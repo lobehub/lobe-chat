@@ -1,12 +1,13 @@
 /** @vitest-environment happy-dom */
-import { renderHook } from '@testing-library/react';
-import { createElement, type PropsWithChildren } from 'react';
+import { act, renderHook } from '@testing-library/react';
+import { createElement, type PropsWithChildren, useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { TopicListScopeContext } from './TopicListScope';
+import { TopicListRevealContext, TopicListScopeContext } from './TopicListScope';
 import { useScopedSidebarTopics } from './useScopedTopics';
 
 const fixture = vi.hoisted(() => ({ topicId: undefined as string | undefined }));
+const updateSystemStatus = vi.hoisted(() => vi.fn());
 const rows = [
   {
     id: 'old',
@@ -52,15 +53,30 @@ vi.mock('@/store/projectWorkingDirectory', () => ({
 }));
 vi.mock('@/hooks/useActiveRouteParams', () => ({ useActiveRouteParams: () => fixture }));
 vi.mock('@/store/chat', () => ({ useChatStore: () => new Set<string>() }));
-vi.mock('@/store/global', () => ({ useGlobalStore: () => vi.fn() }));
+vi.mock('@/store/global', () => ({
+  useGlobalStore: (selector: (s: unknown) => unknown) => selector({ updateSystemStatus }),
+}));
 vi.mock('i18next', () => ({ t: (key: string) => key }));
 
+const RevealHost = ({ children }: PropsWithChildren) => {
+  const [extraRows, setExtraRows] = useState(0);
+  return createElement(
+    TopicListRevealContext,
+    { value: { extraRows, revealMore: () => setExtraRows((rows) => rows + 20) } },
+    children,
+  );
+};
 const wrapper = ({ children }: PropsWithChildren) =>
-  createElement(TopicListScopeContext, { value: { projectId: 'project-a' } }, children);
+  createElement(
+    TopicListScopeContext,
+    { value: { projectId: 'project-a' } },
+    createElement(RevealHost, null, children),
+  );
 
 describe('Project topics use the canonical Agent sidebar rules', () => {
   beforeEach(() => {
     fixture.topicId = undefined;
+    updateSystemStatus.mockClear();
   });
   it('pins favorites and orders the rest by the selected timestamp across Agents', () => {
     const { result, rerender } = renderHook(
@@ -105,5 +121,24 @@ describe('Project topics use the canonical Agent sidebar rules', () => {
     });
     expect(result.current.topics.map((topic) => topic.id)).toEqual(['star']);
     expect(result.current.hasMore).toBe(true);
+  });
+  // Growing the global `topicPageSize` past the server's `getTopics` cap of
+  // 100 made every Agent's topic list fail validation, so "load more" in a
+  // project only reveals more of the already-loaded rows.
+  it('loads more project topics without growing the global topic page size', () => {
+    // The list and the collapse-all toggle each call the hook; both must see
+    // the revealed rows.
+    const { result } = renderHook(
+      () => ({
+        list: useScopedSidebarTopics(1, 'updatedAt', 'byAgent', false),
+        toggle: useScopedSidebarTopics(1, 'updatedAt', 'byAgent', false),
+      }),
+      { wrapper },
+    );
+    act(() => result.current.list.loadMore());
+    expect(result.current.list.topics.map((topic) => topic.id)).toEqual(['star', 'old', 'new']);
+    expect(result.current.list.hasMore).toBe(false);
+    expect(result.current.toggle.groups).toEqual(result.current.list.groups);
+    expect(updateSystemStatus).not.toHaveBeenCalled();
   });
 });
