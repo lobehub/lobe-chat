@@ -10,6 +10,7 @@ import { UserModel } from '@/database/models/user';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import type { LobeChatDatabase } from '@/database/type';
 
+import { TaskRunnerService } from '../taskRunner';
 import { TaskService } from './index';
 
 const { cancelScheduled, scheduleNextTopic } = vi.hoisted(() => ({
@@ -1480,6 +1481,105 @@ describe('TaskService', () => {
       // comment with time should come first, topic without time at end
       expect(result?.activities?.[0].type).toBe('comment');
       expect(result?.activities?.[1].type).toBe('topic');
+    });
+  });
+
+  describe('dependents held by a failed-verification delivery', () => {
+    const cascadeResult = { failed: [], paused: [], started: ['T-374'] };
+    let cascade: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      cascade = vi
+        .spyOn(TaskRunnerService.prototype, 'cascadeOnCompletion')
+        .mockResolvedValue(cascadeResult);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([]);
+    });
+
+    it('completes without unlocking dependents and marks them held', async () => {
+      mockTaskModel.resolve.mockResolvedValue({ context: {}, id: 'task-1', status: 'running' });
+      mockTaskModel.updateStatus.mockResolvedValue({
+        id: 'task-1',
+        parentTaskId: null,
+        status: 'completed',
+      });
+
+      const result = await new TaskService(db, userId).updateStatus({
+        holdDependents: true,
+        id: 'task-1',
+        status: 'completed',
+      });
+
+      expect(mockTaskModel.updateContext).toHaveBeenCalledWith('task-1', {
+        completion: { dependentsHeld: true },
+      });
+      // The hold is written before the task reads completed.
+      expect(mockTaskModel.updateContext.mock.invocationCallOrder[0]).toBeLessThan(
+        mockTaskModel.updateStatus.mock.invocationCallOrder[0]!,
+      );
+      expect(cascade).not.toHaveBeenCalled();
+      expect(result.unlocked).toEqual([]);
+    });
+
+    it('still unlocks dependents on an ordinary completion', async () => {
+      mockTaskModel.resolve.mockResolvedValue({ context: {}, id: 'task-1', status: 'running' });
+      mockTaskModel.updateStatus.mockResolvedValue({
+        id: 'task-1',
+        parentTaskId: null,
+        status: 'completed',
+      });
+
+      const result = await new TaskService(db, userId).updateStatus({
+        id: 'task-1',
+        status: 'completed',
+      });
+
+      expect(mockTaskModel.updateContext).not.toHaveBeenCalled();
+      expect(cascade).toHaveBeenCalledWith('task-1');
+      expect(result.unlocked).toEqual(['T-374']);
+    });
+
+    it('drops a stale hold when the task completes normally later', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        context: { completion: { dependentsHeld: true } },
+        id: 'task-1',
+        status: 'paused',
+      });
+      mockTaskModel.updateStatus.mockResolvedValue({
+        id: 'task-1',
+        parentTaskId: null,
+        status: 'completed',
+      });
+
+      await new TaskService(db, userId).updateStatus({ id: 'task-1', status: 'completed' });
+
+      expect(mockTaskModel.updateContext).toHaveBeenCalledWith('task-1', {
+        completion: { dependentsHeld: false },
+      });
+      expect(cascade).toHaveBeenCalledWith('task-1');
+    });
+
+    it('releases held dependents of a completed task on accept', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        context: { completion: { dependentsHeld: true } },
+        id: 'task-1',
+        status: 'completed',
+      });
+
+      await expect(new TaskService(db, userId).releaseHeldDependents('T-373')).resolves.toEqual([
+        'T-374',
+      ]);
+      expect(mockTaskModel.updateContext).toHaveBeenCalledWith('task-1', {
+        completion: { dependentsHeld: false },
+      });
+      expect(cascade).toHaveBeenCalledWith('task-1');
+    });
+
+    it('does nothing for a task that holds no dependents', async () => {
+      mockTaskModel.resolve.mockResolvedValue({ context: {}, id: 'task-1', status: 'completed' });
+
+      await expect(new TaskService(db, userId).releaseHeldDependents('T-373')).resolves.toEqual([]);
+      expect(mockTaskModel.updateContext).not.toHaveBeenCalled();
+      expect(cascade).not.toHaveBeenCalled();
     });
   });
 

@@ -1036,7 +1036,7 @@ export class AcceptanceService {
     // the way, and those rejections are exactly the material.
     this.distilSettledRound(acceptanceId, settled);
 
-    if (acceptance.subjectType === 'task') await this.completeTaskSubject(acceptance.subjectId);
+    if (acceptance.subjectType === 'task') await this.acceptTaskSubject(acceptance.subjectId);
 
     return (await this.acceptanceModel.findById(acceptanceId))!;
   };
@@ -1074,7 +1074,7 @@ export class AcceptanceService {
 
     await this.acceptanceModel.updateStatus(acceptanceId, 'accepted');
     if (current) this.distilSettledRound(acceptanceId, current.id);
-    if (acceptance.subjectType === 'task') await this.completeTaskSubject(acceptance.subjectId);
+    if (acceptance.subjectType === 'task') await this.acceptTaskSubject(acceptance.subjectId);
 
     log(
       'acceptance %s accepted by merge of %s#%d (was %s)',
@@ -1290,7 +1290,10 @@ export class AcceptanceService {
    * ingested round delivers. Best-effort: a task error must not undo the
    * recorded acceptance.
    */
-  private completeTaskSubject = async (subjectId: string): Promise<void> => {
+  private completeTaskSubject = async (
+    subjectId: string,
+    options: { holdDependents?: boolean } = {},
+  ): Promise<void> => {
     try {
       const taskModel = new TaskModel(this.db, this.userId, this.workspaceId);
       const task = await taskModel.resolve(subjectId);
@@ -1304,10 +1307,38 @@ export class AcceptanceService {
       await new TaskService(this.db, this.userId, this.workspaceId).updateStatus({
         id: task.id,
         status: 'completed',
+        ...(options.holdDependents && { holdDependents: true }),
       });
-      log('acceptance → task %s completed', task.id);
+      log(
+        options.holdDependents
+          ? 'acceptance → task %s completed, dependents held until accepted'
+          : 'acceptance → task %s completed',
+        task.id,
+      );
     } catch (error) {
       log('completeTaskSubject failed (non-fatal): %O', error);
+    }
+  };
+
+  /**
+   * The user accepted the delivery: complete a task verification did not
+   * settle, and release the dependents a failed-verification delivery held —
+   * the task may already read completed, so completing alone would not unlock
+   * them. Best-effort like {@link completeTaskSubject}.
+   */
+  private acceptTaskSubject = async (subjectId: string): Promise<void> => {
+    await this.completeTaskSubject(subjectId);
+    try {
+      const { TaskService } = await import('../task');
+      const started = await new TaskService(
+        this.db,
+        this.userId,
+        this.workspaceId,
+      ).releaseHeldDependents(subjectId);
+      if (started.length > 0)
+        log('acceptance → task %s released dependents %o', subjectId, started);
+    } catch (error) {
+      log('releaseHeldDependents failed (non-fatal): %O', error);
     }
   };
 
@@ -1336,6 +1367,10 @@ export class AcceptanceService {
    * rejected in between → the reject saw an unfinished task and did not reopen
    * it, so it is reopened here. Best-effort — never fails the caller.
    *
+   * `holdDependents` completes the task without unlocking its `blocks`
+   * dependents — for a delivery whose verification did not pass, so the
+   * dependents wait for the user's accept instead of the verdict.
+   *
    * @returns `completed` when the task now reads completed, `rejected` when a
    * reject won, `skipped` when the task does not follow the acceptance or could
    * not be completed.
@@ -1343,6 +1378,7 @@ export class AcceptanceService {
   completeTaskForDelivery = async (
     acceptanceId: string,
     subjectId: string,
+    options: { holdDependents?: boolean } = {},
   ): Promise<'completed' | 'rejected' | 'skipped'> => {
     try {
       const task = await this.resolveLifecycleTask(subjectId);
@@ -1352,7 +1388,7 @@ export class AcceptanceService {
       if (before?.status === 'rejected') return 'rejected';
       if (before?.status !== 'delivered') return 'skipped';
 
-      await this.completeTaskSubject(task.id);
+      await this.completeTaskSubject(task.id, options);
       // `completeTaskSubject` is best-effort and swallows its own failures (e.g. a
       // running operation that could not be interrupted). Only a task that really
       // reads completed counts — anything else lets the caller fall back.

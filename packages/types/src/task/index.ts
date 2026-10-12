@@ -301,6 +301,10 @@ export interface TaskOriginContext {
 
 export interface TaskContext {
   completion?: {
+    /** The task completed as a delivery whose verification did not pass: it
+     * reads completed so the user's accept / reject decides, but its `blocks`
+     * dependents stay locked until the user accepts it. */
+    dependentsHeld?: boolean;
     /** The running operation that asked to complete its own task. The lifecycle
      * finalizes the task only after that operation has finished cleanly. */
     requestedByOperationId?: string;

@@ -17,6 +17,7 @@ const mocks = vi.hoisted(() => ({
   listByAcceptance: vi.fn(),
   setDecision: vi.fn(),
   taskFindById: vi.fn(),
+  taskReleaseHeldDependents: vi.fn(),
   taskResolve: vi.fn(),
   taskServiceUpdateStatus: vi.fn(),
   taskUpdateStatusIfCurrent: vi.fn(),
@@ -64,7 +65,10 @@ vi.mock('@/database/models/topic', () => ({ TopicModel: vi.fn() }));
 vi.mock('@/database/models/document', () => ({ DocumentModel: vi.fn() }));
 vi.mock('@/server/services/task', () => ({
   TaskService: vi.fn(function () {
-    return { updateStatus: mocks.taskServiceUpdateStatus };
+    return {
+      releaseHeldDependents: mocks.taskReleaseHeldDependents,
+      updateStatus: mocks.taskServiceUpdateStatus,
+    };
   }),
 }));
 vi.mock('@/server/workflows/expertiseRejection', () => ({
@@ -88,6 +92,7 @@ describe('AcceptanceService task lifecycle', () => {
     mocks.taskResolve.mockResolvedValue({ automationMode: null, id: 'task_1', status: 'running' });
     // The row read back after the completion write.
     mocks.taskFindById.mockResolvedValue({ id: 'task_1', status: 'completed' });
+    mocks.taskReleaseHeldDependents.mockResolvedValue([]);
   });
 
   describe('delivered → task completed', () => {
@@ -246,6 +251,78 @@ describe('AcceptanceService task lifecycle', () => {
     it('completes the task when no reject intervenes', async () => {
       await expect(service().completeTaskForDelivery('acc-1', 'task_1')).resolves.toBe('completed');
       expect(mocks.taskUpdateStatusIfCurrent).not.toHaveBeenCalled();
+      // A plain delivery unlocks its dependents as before.
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        id: 'task_1',
+        status: 'completed',
+      });
+    });
+
+    it('holds the dependents of a delivery that failed verification', async () => {
+      await expect(
+        service().completeTaskForDelivery('acc-1', 'task_1', { holdDependents: true }),
+      ).resolves.toBe('completed');
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        holdDependents: true,
+        id: 'task_1',
+        status: 'completed',
+      });
+    });
+  });
+
+  describe('accepted → held dependents released', () => {
+    beforeEach(() => {
+      mocks.findById.mockResolvedValue(taskAcceptance('delivered'));
+      mocks.listByAcceptance.mockResolvedValue([{ id: 'run-1', roundIndex: 1 }]);
+    });
+
+    it('releases the dependents of a task the failed delivery already completed', async () => {
+      // The failed round completed the task with its dependents held; the
+      // accept finds it completed, so only the release can unlock them.
+      mocks.taskResolve.mockResolvedValue({
+        automationMode: null,
+        id: 'task_1',
+        status: 'completed',
+      });
+      mocks.taskReleaseHeldDependents.mockResolvedValue(['T-374']);
+
+      await service().accept('acc-1');
+
+      expect(mocks.updateStatus).toHaveBeenCalledWith('acc-1', 'accepted');
+      expect(mocks.taskServiceUpdateStatus).not.toHaveBeenCalled();
+      expect(mocks.taskReleaseHeldDependents).toHaveBeenCalledWith('task_1');
+    });
+
+    it('completes an open task and releases on accept', async () => {
+      await service().accept('acc-1');
+
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        id: 'task_1',
+        status: 'completed',
+      });
+      expect(mocks.taskReleaseHeldDependents).toHaveBeenCalledWith('task_1');
+    });
+
+    it('releases the dependents when a merged pull request accepts the delivery', async () => {
+      mocks.taskResolve.mockResolvedValue({
+        automationMode: null,
+        id: 'task_1',
+        status: 'completed',
+      });
+
+      await service().acceptFromScmMerge('acc-1', {
+        number: 1,
+        repoFullName: 'lobehub/lobehub',
+      } as any);
+
+      expect(mocks.taskReleaseHeldDependents).toHaveBeenCalledWith('task_1');
+    });
+
+    it('still records the accept when releasing the dependents fails', async () => {
+      mocks.taskReleaseHeldDependents.mockRejectedValue(new Error('runner down'));
+
+      await expect(service().accept('acc-1')).resolves.toBeDefined();
+      expect(mocks.updateStatus).toHaveBeenCalledWith('acc-1', 'accepted');
     });
   });
 

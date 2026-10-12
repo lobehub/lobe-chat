@@ -93,6 +93,18 @@ const TRACKED_TASK_COLUMNS = [
  */
 const ORPHANED_RUN_OPERATION_STATUSES: AgentOperationStatus[] = ['abandoned', 'error'];
 
+/**
+ * A `blocks` dependency is satisfied only by a completed task whose dependents
+ * are not held: a delivery that completed on a failed verification reads
+ * completed but keeps its dependents locked until the user accepts it (see
+ * `TaskContext.completion.dependentsHeld`).
+ */
+const unsatisfiedBlocker = () =>
+  or(
+    ne(tasks.status, 'completed'),
+    sql`(${tasks.context} #>> '{completion,dependentsHeld}') = 'true'`,
+  );
+
 /** One `running` Task run whose operation has already ended — see the finder. */
 export interface OrphanedRunningTopic {
   completionReason: string | null;
@@ -1904,7 +1916,7 @@ export class TaskModel {
         and(
           eq(taskDependencies.taskId, taskId),
           eq(taskDependencies.type, 'blocks'),
-          ne(tasks.status, 'completed'),
+          unsatisfiedBlocker(),
           this.depsOwnership(),
         ),
       );
@@ -1939,7 +1951,7 @@ export class TaskModel {
     const dependentIds = [...new Set(dependents.map(({ taskId }) => taskId))];
     if (dependentIds.length === 0) return [];
 
-    // Of those, which still have at least one incomplete blocking dependency
+    // Of those, which still have at least one unsatisfied blocking dependency
     const blocked = await this.db
       .selectDistinct({ taskId: taskDependencies.taskId })
       .from(taskDependencies)
@@ -1948,7 +1960,7 @@ export class TaskModel {
         and(
           inArray(taskDependencies.taskId, dependentIds),
           eq(taskDependencies.type, 'blocks'),
-          ne(tasks.status, 'completed'),
+          unsatisfiedBlocker(),
           this.depsOwnership(),
         ),
       );
