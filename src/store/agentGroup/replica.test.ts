@@ -329,6 +329,37 @@ describe('agentGroup store replica', () => {
     session.unmount();
   });
 
+  // The imperative refresh writes through `replace` directly, so it needs the
+  // same removal guard: a group the list pruned mid-flight stays gone.
+  it('does not let an in-flight imperative detail fetch recreate a pruned group', async () => {
+    const scope = createScope();
+    getGroups.mockResolvedValue([groupRow('g1')]);
+    getGroupDetail.mockResolvedValue(groupDetail('g1', 'One'));
+    await useAgentGroupStore.getState().loadGroups();
+    await useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeDefined();
+
+    let answer!: (detail: unknown) => void;
+    getGroupDetail.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+    const refresh = useAgentGroupStore.getState().internal_fetchGroupDetail('g1');
+    await vi.waitFor(() => expect(answer).toBeDefined());
+
+    getGroups.mockResolvedValue([]);
+    await useAgentGroupStore.getState().loadGroups();
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeUndefined();
+
+    agentStoreMock.setActiveAgentId.mockClear();
+    answer(groupDetail('g1', 'Stale'));
+    await refresh;
+    expect(useAgentGroupStore.getState().groupMap.g1).toBeUndefined();
+    expect(agentStoreMock.setActiveAgentId).not.toHaveBeenCalled();
+    await vi.waitFor(async () =>
+      expect(
+        await agentGroupDetailResource.storage!.get({ queryKey: detailStorageKey('g1'), scope }),
+      ).toBeUndefined(),
+    );
+  });
+
   // An imperative refresh answers "gone" only after an account switch: the
   // persisted detail must still be purged in the scope the request started in.
   it('purges a late terminal absence in the scope the refresh started in', async () => {

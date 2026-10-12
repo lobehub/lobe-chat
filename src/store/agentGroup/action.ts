@@ -309,6 +309,10 @@ class ChatGroupInternalAction implements ResetableStore {
 
   internal_fetchGroupDetail = async (groupId: string) => {
     const scope = this.#captureScope();
+    // The removal generation the request starts under: a group pruned or
+    // removed while the request is in flight must not be recreated by it (the
+    // same guard `useSync` applies to its own responses).
+    const removal = this.#groupDetail.removalGeneration(scope, groupId);
     const groupDetail = await chatGroupService.getGroupDetail(groupId);
     // A terminal "gone / no access" is settled in the scope the request started
     // under — even after a switch, that scope's persisted detail is purged so
@@ -320,6 +324,8 @@ class ChatGroupInternalAction implements ResetableStore {
     // The request may resolve after a logout / account switch; its response
     // belongs to the scope it started under, not the one active now.
     if (!this.#isStillInScope(scope)) return;
+    // Removed while in flight: the response is older than the removal.
+    if (this.#groupDetail.removalGeneration(scope, groupId) !== removal) return;
     this.#clearGroupNotFound(groupId);
 
     // Confirmed server detail: it paints the group page on the next visit too.
