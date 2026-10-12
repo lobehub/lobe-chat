@@ -20,6 +20,7 @@ import { registerDocCommands } from './doc';
 import { briefIcon, priorityLabel, statusBadge } from './helpers';
 import { registerLifecycleCommands } from './lifecycle';
 import { registerReviewCommands } from './review';
+import { buildScheduleInput, formatSchedule } from './schedule';
 import { registerTopicCommands } from './topic';
 import { resolveAppUrl, resolveAppUrlBuilder, taskPath } from './url';
 
@@ -297,6 +298,8 @@ export function registerTaskCommand(program: Command) {
           `${pc.dim('Heartbeat:')} ${isStuck ? pc.red(hb) : hb}  ${pc.dim('interval:')} ${interval}  ${pc.dim('timeout:')} ${t.heartbeat.timeout}s${isStuck ? pc.red('  ⚠ TIMEOUT') : ''}`,
         );
       }
+      const scheduleSummary = formatSchedule(t);
+      if (scheduleSummary) console.log(`${pc.dim('Schedule:')} ${scheduleSummary}`);
       if (t.error) console.log(`${pc.red('Error:')} ${t.error}`);
 
       // ── Subtasks (nested tree) ──
@@ -527,6 +530,8 @@ export function registerTaskCommand(program: Command) {
     .option('--user <idOrEmail>', 'Assign to a workspace member (user id, email or username)')
     .option('--parent <id>', 'Parent task ID')
     .option('--priority <n>', 'Priority (0=none, 1=urgent, 2=high, 3=normal, 4=low)', '0')
+    .option('--schedule <cron>', 'Run on a cron schedule, e.g. "0 */6 * * *" (every 6 hours)')
+    .option('--timezone <tz>', 'IANA timezone for --schedule, e.g. Asia/Shanghai (default: UTC)')
     .option('--json [fields]', 'Output JSON')
     .action(
       async (options: {
@@ -536,8 +541,18 @@ export function registerTaskCommand(program: Command) {
         name?: string;
         parent?: string;
         priority?: string;
+        schedule?: string;
+        timezone?: string;
         user?: string;
       }) => {
+        let schedule: ReturnType<typeof buildScheduleInput>;
+        try {
+          schedule = buildScheduleInput(options);
+        } catch (error) {
+          log.error((error as Error).message);
+          return;
+        }
+
         const client = await getTrpcClient();
         const buildUrl = await resolveAppUrlBuilder(client);
         const assigneeUserId = await resolveUserOption(client, options.user);
@@ -551,6 +566,9 @@ export function registerTaskCommand(program: Command) {
         if (assigneeUserId) input.assigneeUserId = assigneeUserId;
         if (options.parent) input.parentTaskId = options.parent;
         if (options.priority) input.priority = Number.parseInt(options.priority, 10);
+        if (schedule.automationMode) input.automationMode = schedule.automationMode;
+        if (schedule.schedulePattern) input.schedulePattern = schedule.schedulePattern;
+        if (schedule.scheduleTimezone) input.scheduleTimezone = schedule.scheduleTimezone;
 
         const result = await client.task.create.mutate(input);
         const url = buildUrl(taskPath(result.data.identifier, result.data.name));
@@ -561,6 +579,11 @@ export function registerTaskCommand(program: Command) {
         }
 
         log.info(`Task created: ${pc.bold(result.data.identifier)} ${result.data.name || ''}`);
+        if (schedule.schedulePattern) {
+          log.info(
+            `Scheduled: ${schedule.schedulePattern} (${schedule.scheduleTimezone || 'UTC'})`,
+          );
+        }
         console.log(`${pc.bold('task')}: ${url}`);
       },
     );
@@ -578,9 +601,12 @@ export function registerTaskCommand(program: Command) {
     .option('--heartbeat-interval <n>', 'Heartbeat interval in seconds')
     .option('--heartbeat-timeout <n>', 'Heartbeat timeout in seconds (0 to disable)')
     .option('--description <text>', 'Task description')
+    .option('--schedule <cron>', 'Run on a cron schedule, e.g. "0 */6 * * *" (every 6 hours)')
+    .option('--no-schedule', 'Turn the schedule off (the pattern is kept)')
+    .option('--timezone <tz>', 'IANA timezone for the schedule, e.g. Asia/Shanghai')
     .option(
       '--status <status>',
-      'Set status (backlog, running, paused, completed, failed, canceled)',
+      'Set status (backlog, running, scheduled, paused, completed, failed, canceled)',
     )
     .option('--json [fields]', 'Output JSON')
     .action(
@@ -595,10 +621,20 @@ export function registerTaskCommand(program: Command) {
           json?: string | boolean;
           name?: string;
           priority?: string;
+          schedule?: string | false;
           status?: string;
+          timezone?: string;
           user?: string;
         },
       ) => {
+        let schedule: ReturnType<typeof buildScheduleInput>;
+        try {
+          schedule = buildScheduleInput(options);
+        } catch (error) {
+          log.error((error as Error).message);
+          return;
+        }
+
         const client = await getTrpcClient();
         const assigneeUserId = await resolveUserOption(client, options.user);
         if (assigneeUserId === false) return;
@@ -616,13 +652,22 @@ export function registerTaskCommand(program: Command) {
           const val = Number.parseInt(options.heartbeatTimeout, 10);
           input.heartbeatTimeout = val === 0 ? null : val;
         }
+        Object.assign(input, schedule);
         const hasFieldEdits = Object.keys(input).length > 1;
 
         // Status-only edits use the lifecycle API. Combined edits go through
         // task.update so the server can apply the fields and lifecycle change
         // atomically.
         if (options.status) {
-          const valid = ['backlog', 'running', 'paused', 'completed', 'failed', 'canceled'];
+          const valid = [
+            'backlog',
+            'running',
+            'scheduled',
+            'paused',
+            'completed',
+            'failed',
+            'canceled',
+          ];
           if (!valid.includes(options.status)) {
             log.error(`Invalid status "${options.status}". Must be one of: ${valid.join(', ')}`);
             return;
@@ -636,7 +681,17 @@ export function registerTaskCommand(program: Command) {
           input.status = options.status;
         }
 
-        const result = await client.task.update.mutate(input as any);
+        let result = await client.task.update.mutate(input as any);
+
+        // Like "Cancel schedule" in the app: a task parked in `scheduled` goes back to
+        // the backlog once automation is off, unless this edit set a status itself.
+        if (
+          schedule.automationMode === null &&
+          !options.status &&
+          result.data.status === 'scheduled'
+        ) {
+          result = await client.task.updateStatus.mutate({ id, status: 'backlog' });
+        }
 
         if (options.json !== undefined) {
           outputJson(result.data, typeof options.json === 'string' ? options.json : undefined);
