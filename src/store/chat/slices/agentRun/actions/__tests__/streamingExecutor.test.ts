@@ -768,6 +768,11 @@ describe('StreamingExecutor actions', () => {
           ?.status,
       ).toBe('cancelled');
       expect(updateMessageErrorSpy).not.toHaveBeenCalled();
+      const assistantMessages = Object.values(result.current.messagesMap)
+        .flat()
+        .filter((message) => message.role === 'assistant');
+      expect(assistantMessages.length).toBeGreaterThan(0);
+      for (const message of assistantMessages) expect(message.error).toBeFalsy();
 
       streamSpy.mockRestore();
     });
