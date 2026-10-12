@@ -1,4 +1,4 @@
-import { goalStatuses } from '@lobechat/const/goal';
+import { goalStatuses, ROLLOUT_MAX_CANARY_SIZE } from '@lobechat/const/goal';
 import { MAX_GOAL_METRIC_CRITERIA, summarizeGoalSupervision } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -10,6 +10,7 @@ import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { advanceGoal } from '@/server/services/goal/advanceGoal';
+import { graphForClient } from '@/server/services/goal/graphCompat';
 import { GoalManagerService, goalPlanSchema } from '@/server/services/goal/manager';
 import {
   DEFAULT_MANAGER_MAX_TURNS,
@@ -104,6 +105,19 @@ const conversationGoalInput = z.object({
           maxAttemptsPerTask: z.number().int().positive().optional(),
           maxStepsPerRun: z.number().int().positive().nullable().optional(),
           operationLeaseTimeoutMs: z.number().int().min(60_000).optional(),
+        })
+        .optional(),
+      /**
+       * Batch roll-out policy for a goal that is one repeated mould. Omit it and
+       * the planner's own homogeneity claim decides; `off` forbids a batch even
+       * when the planner claims one.
+       */
+      rollout: z
+        .object({
+          canarySize: z.number().int().min(2).max(ROLLOUT_MAX_CANARY_SIZE).optional(),
+          minHomogeneousUnits: z.number().int().min(1).max(200).optional(),
+          trigger: z.enum(['canary', 'full', 'off']),
+          waveSize: z.number().int().min(1).max(50).optional(),
         })
         .optional(),
       schedule: z
@@ -933,13 +947,23 @@ export const goalRouter = router({
     }
   }),
 
-  graph: goalProcedure.input(idInput).query(async ({ ctx, input }) => {
-    try {
-      return { data: await ctx.goalService.graph(input.id), success: true };
-    } catch (error) {
-      mapGoalError(error, 'graph');
-    }
-  }),
+  graph: goalProcedure
+    .input(
+      idInput.extend({
+        /** Graph features this client renders (see `GOAL_GRAPH_CAPABILITY`). */
+        capabilities: z.array(z.string()).max(20).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return {
+          data: graphForClient(await ctx.goalService.graph(input.id), input.capabilities),
+          success: true,
+        };
+      } catch (error) {
+        mapGoalError(error, 'graph');
+      }
+    }),
 
   /**
    * Why `submitPlan` would accept or refuse a plan right now, without writing.

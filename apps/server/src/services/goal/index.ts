@@ -2,10 +2,19 @@ import type { GoalAdvanceEffect, GoalMetricCriteriaState } from '@lobechat/agent
 import { buildGoalRequirement } from '@lobechat/builtin-tool-goal';
 import {
   DEVICE_OFFLINE_RUN_STATUS,
+  GOAL_BATCH_ASSAY_TITLE,
+  GOAL_BATCH_BREAK_OPTION,
+  GOAL_BATCH_BREAK_QUESTION_TAIL,
+  GOAL_BATCH_TEMPLATE_TITLE,
+  GOAL_BATCH_TITLE,
   GOAL_CLARIFICATION_OPTION,
   GOAL_CLARIFICATION_TITLE,
   GOAL_COORDINATOR_ACTOR_ID,
   GOAL_MACHINE_GATE_TITLE,
+  PATTERN_BREAK_PAUSE_REASON,
+  ROLLOUT_CANARY_SIZE_DEFAULT,
+  ROLLOUT_MAX_CANARY_SIZE,
+  ROLLOUT_WAVE_SIZE_DEFAULT,
 } from '@lobechat/const/goal';
 import type {
   ChatTopicMetadata,
@@ -24,6 +33,7 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
+  GoalRolloutState,
   GoalStatus,
   GoalTickResult,
   MetricKind,
@@ -34,6 +44,7 @@ import type {
 import { isAgentOperationInFlight } from '@lobechat/types';
 import { experimentOwner, provenanceParentId } from '@lobechat/utils/goalGraph';
 import { TRPCError } from '@trpc/server';
+import debug from 'debug';
 import { sql } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
@@ -92,7 +103,9 @@ import {
 import { isGoalReportNode, withoutGoalReport } from './report';
 import { GoalReportService } from './reportService';
 import { GoalReportStore } from './reportStore';
+import { evaluateRolloutGate, type RolloutGateResult, withGateVerdict } from './rolloutGate';
 import { scheduleGoalAdvance } from './scheduler';
+import { evaluateHomogeneity } from './spec';
 import { GoalSupervisorService } from './supervisor';
 import { statusAuthoredByActor } from './supervisor/policy';
 import { claimGoalTask } from './taskClaim';
@@ -130,6 +143,84 @@ const TASK_DESCRIPTION_MAX_LENGTH = 255;
 const GOAL_ENDED_STATUSES = new Set<string>(['achieved', 'canceled']);
 /** Advisory-lock namespace for goal dispatch. `0x676f_6469` is ASCII `godi`. */
 const GOAL_DISPATCH_LOCK_NAMESPACE = 0x67_6f_64_69;
+/** Why a decomposition did or did not become a batch: DEBUG=lobe-server:goal-rollout. */
+const log = debug('lobe-server:goal-rollout');
+/** Upper bound on a batch roster; a planner that over-lists cannot swamp the config. */
+const MAX_ROLLOUT_ROSTER = 60;
+/**
+ * The roster the coordinator promotes from, probes first. The probe titles come
+ * from the tasks actually created; the rest come from the planner's `units`,
+ * de-duplicated. A planner that omitted `units` degrades to probes-only, which
+ * delivers the class without a mass phase rather than inventing units.
+ *
+ * `limit` bounds the roster a *batch* carries (its config safety valve); the
+ * ordinary fallback passes no limit, because trimming there would silently drop
+ * units the goal promised to deliver.
+ */
+const normalizeRolloutRoster = (
+  units: string[] | undefined,
+  probeDrafts: GoalDecompositionDraft['tasks'],
+  canarySize: number,
+  limit: number = MAX_ROLLOUT_ROSTER,
+): string[] => {
+  const probeTitles = probeDrafts.slice(0, canarySize).map((draft) => draft.title);
+  const seen = new Set(probeTitles);
+  const rest: string[] = [];
+  for (const unit of units ?? []) {
+    const title = unit.trim();
+    if (!title || seen.has(title)) continue;
+    seen.add(title);
+    rest.push(title);
+    if (probeTitles.length + rest.length >= limit) break;
+  }
+  return [...probeTitles, ...rest];
+};
+
+/** Heads the brief a unit carries over from its first run when it is re-opened. */
+const UNIT_BRIEF_HEADING = 'Unit brief (from its first run):';
+
+/**
+ * The per-unit brief a re-opened unit must keep: the first-hand probe brief
+ * (which may be the only place its variant assignment is stated), or the one a
+ * previous re-open already carried over. A unit briefed only from the shared
+ * recipe has none of its own.
+ */
+const carriedUnitBrief = (node: { description?: string | null; title: string }) => {
+  const description = node.description?.trim();
+  if (!description) return undefined;
+  const carried = description.indexOf(UNIT_BRIEF_HEADING);
+  if (carried >= 0) return description.slice(carried + UNIT_BRIEF_HEADING.length).trim();
+  return description.endsWith(`Unit: ${node.title}`) ? undefined : description;
+};
+
+/**
+ * Materialize one roster unit as a Task inside a batch. The brief is the shared
+ * recipe applied to this unit — the probes carry the full first-hand brief, the
+ * units promoted later reuse what the Template already proved. A re-opened unit
+ * also keeps its own first-hand brief.
+ */
+const createRecipeUnitTask = async (
+  writer: GoalGraphModel,
+  goalId: string,
+  batchNodeId: string,
+  title: string,
+  recipeOutline?: string,
+  unitBrief?: string,
+): Promise<string | undefined> => {
+  const node = await writer.createNode(goalId, {
+    description: [
+      recipeOutline,
+      `Unit: ${title}`,
+      unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n'),
+    kind: 'task',
+    scopeId: batchNodeId,
+    title,
+  });
+  return node?.id;
+};
 
 /** Who does the goal's Tasks: its dedicated executor, else the goal agent itself. */
 export const goalTaskAgentId = (goal: Pick<GoalItem, 'agentId' | 'config'>) =>
@@ -1577,6 +1668,52 @@ export class GoalService {
         };
 
   /**
+   * Stop the Tasks bound to nodes already fenced as `retired`, so a retired
+   * node cannot keep spending or deliver into the Goal afterwards. Bound Tasks
+   * are read after the fence so a Task bound just before it is included.
+   * Returns the graph as read after the fence.
+   */
+  private stopFencedTasks = async (goalId: string, targetIds: ReadonlySet<string>) => {
+    const fenced = await this.requireGraph(goalId);
+    const taskIds = fenced.nodes.flatMap((node) =>
+      targetIds.has(node.id) && node.taskId ? [node.taskId] : [],
+    );
+    if (taskIds.length > 0) {
+      // The caller may be a workspace owner retiring a colleague's goal (the
+      // router authorizes that). The nodes' Tasks were created by the goal's
+      // coordinator, which runs as the goal's owner — and may be `private`,
+      // inherited from that owner's private agent — so reads under the caller's
+      // visibility would miss them and leave them running. Stop them under the
+      // goal owner's principal instead, limited to the Tasks bound to the nodes
+      // being retired.
+      const { taskModel, taskService, taskTopicModel } = this.goalOwnerTaskScope(fenced.goal);
+      const cancelTasks = async () => {
+        for (const id of taskIds) {
+          // CAS against the status just read; a runner flipping the Task to
+          // `running` in between makes it miss, so re-read and try again.
+          for (let attempt = 0; attempt < 3; attempt++) {
+            const [task] = await taskModel.findByIds([id]);
+            if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) break;
+            if (await taskModel.updateStatusIfCurrent(id, task.status, 'canceled')) break;
+          }
+        }
+      };
+      // Cancel the Tasks FIRST: that is the fence a run still being dispatched
+      // checks under the Task's row lock before recording its operation, so a
+      // run started from here on stops itself (TaskRunnerService.runTask).
+      // Runs recorded before the fence are then found and stopped below.
+      await cancelTasks();
+      for (const topic of await taskTopicModel.findRunningByTaskIds(taskIds)) {
+        if (topic.topicId) await taskService.cancelTopic(topic.topicId);
+      }
+      // `cancelTopic` parks its Task as `paused`; settle them back to canceled.
+      await cancelTasks();
+    }
+
+    return fenced;
+  };
+
+  /**
    * Retire Task nodes a person no longer wants run — a duplicated plan branch,
    * work that landed elsewhere. Without this a stray node that never got a Task
    * stays unfinished forever and the coordinator can never reach acceptance.
@@ -1651,43 +1788,8 @@ export class GoalService {
     }
 
     // Stop what the nodes are still running, so a retired node cannot keep
-    // spending or deliver into the Goal afterwards. Bound Tasks are read after
-    // the fence so a Task bound just before it is included.
-    const fenced = await this.requireGraph(goalId);
-    const taskIds = fenced.nodes.flatMap((node) =>
-      targetIds.has(node.id) && node.taskId ? [node.taskId] : [],
-    );
-    if (taskIds.length > 0) {
-      // The caller may be a workspace owner retiring a colleague's goal (the
-      // router authorizes that). The nodes' Tasks were created by the goal's
-      // coordinator, which runs as the goal's owner — and may be `private`,
-      // inherited from that owner's private agent — so reads under the caller's
-      // visibility would miss them and leave them running. Stop them under the
-      // goal owner's principal instead, limited to the Tasks bound to the nodes
-      // being retired.
-      const { taskModel, taskService, taskTopicModel } = this.goalOwnerTaskScope(fenced.goal);
-      const cancelTasks = async () => {
-        for (const id of taskIds) {
-          // CAS against the status just read; a runner flipping the Task to
-          // `running` in between makes it miss, so re-read and try again.
-          for (let attempt = 0; attempt < 3; attempt++) {
-            const [task] = await taskModel.findByIds([id]);
-            if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) break;
-            if (await taskModel.updateStatusIfCurrent(id, task.status, 'canceled')) break;
-          }
-        }
-      };
-      // Cancel the Tasks FIRST: that is the fence a run still being dispatched
-      // checks under the Task's row lock before recording its operation, so a
-      // run started from here on stops itself (TaskRunnerService.runTask).
-      // Runs recorded before the fence are then found and stopped below.
-      await cancelTasks();
-      for (const topic of await taskTopicModel.findRunningByTaskIds(taskIds)) {
-        if (topic.topicId) await taskService.cancelTopic(topic.topicId);
-      }
-      // `cancelTopic` parks its Task as `paused`; settle them back to canceled.
-      await cancelTasks();
-    }
+    // spending or deliver into the Goal afterwards.
+    const fenced = await this.stopFencedTasks(goalId, targetIds);
 
     // A pending recovery gate on a retired node asks a question nobody needs
     // answered any more; left pending it keeps the Goal parked in review.
@@ -2022,13 +2124,31 @@ export class GoalService {
     if (optionId === GOAL_CLARIFICATION_OPTION.answer && !resolution?.trim()) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'This answer needs a note' });
     }
+    // Revising a batch recipe without a correction would re-run the plan that
+    // just failed under a new version number. The correction is the revision.
+    if (optionId === GOAL_BATCH_BREAK_OPTION.revise && !resolution?.trim()) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Revising the recipe needs a correction',
+      });
+    }
     const chosen = decision.options?.find((option) => option.id === optionId);
-    const resolved = await this.graphModel.resolveDecision(
-      goalId,
-      decisionId,
-      optionId,
-      resolution,
-    );
+    // R5: a person answering a batch gate IS the intervention, and an
+    // intervention rolls the class back to canary. Open the next recipe round
+    // automatically — revise the same mould, or fork it as a new class — rather
+    // than leaving the goal parked for someone to rerun by hand. The gate hangs
+    // on the Assay (materialized on demand for a `full` rollout), so match that,
+    // falling back to the batch node for any gate opened elsewhere. The restart
+    // consumes the answer itself, atomically with the round it opens.
+    const rolloutState = graph.goal.config?.rolloutState;
+    const patternBreakNodeId = rolloutState?.assayNodeId ?? rolloutState?.batchNodeId;
+    const answersBatchBreak =
+      rolloutState?.phase === 'pattern_break' &&
+      patternBreakNodeId !== undefined &&
+      decision.nodeId === patternBreakNodeId;
+    const resolved = answersBatchBreak
+      ? await this.restartRolloutLoop(goalId, decisionId, optionId, resolution)
+      : await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
     if (!resolved)
       throw new TRPCError({ code: 'CONFLICT', message: 'Decision was already resolved' });
 
@@ -2307,12 +2427,16 @@ export class GoalService {
       : undefined;
 
     const concurrency = resolveMaxConcurrentTasks(graph.goal);
+    // A repeated batch judges its own gate once the wave it released has fully
+    // settled; while a wave is still running the ordinary frontier owns the tick.
+    const rolloutGate = this.collectRolloutGate(graph);
     const move = decideNextMove({
       budget,
       concurrency,
       frontier,
       graph,
       metricCriteria,
+      rolloutGate,
       tasksById,
     });
     // The scheduler may pick past the head of the frontier, so every arm below
@@ -2414,6 +2538,16 @@ export class GoalService {
         return observe(await this.planDecomposition(graph, effects));
       }
 
+      case 'rollout_gate': {
+        return observe(await this.releaseRolloutWave(graph, effects, rolloutGate));
+      }
+
+      case 'pattern_break': {
+        return observe(
+          await this.openPatternBreakGate(graph, move.message, effects, { gate: rolloutGate }),
+        );
+      }
+
       case 'no_frontier': {
         // Say so on the row instead of leaving a goal that reads as `running`
         // while it cannot run — and, just as importantly, take it out of the
@@ -2464,6 +2598,20 @@ export class GoalService {
           }
 
           case 'failure_decision': {
+            // R6: a batch member that did not pass its own check IS the same
+            // intervention as a blocked gate. Route it through the batch gate so
+            // the class rolls back to canary, instead of parking on a standalone
+            // task decision that never touches the recipe.
+            if (this.isBatchMember(graph, acting!.id)) {
+              return observe(
+                await this.openPatternBreakGate(
+                  graph,
+                  `${acting!.title}: ${move.message}`,
+                  effects,
+                  { unitId: acting!.id },
+                ),
+              );
+            }
             const waiting =
               (await this.waitForDevice(graph, acting!.id, task, effects)) ??
               (await this.waitForQuotaReset(graph, acting!.id, task, effects));
@@ -2486,6 +2634,18 @@ export class GoalService {
           }
 
           case 'task_paused': {
+            // R6: a paused batch member (e.g. its delivery did not pass
+            // verification) is an intervention on the class, not on one task.
+            if (this.isBatchMember(graph, acting!.id)) {
+              return observe(
+                await this.openPatternBreakGate(
+                  graph,
+                  `${acting!.title}: ${move.message}`,
+                  effects,
+                  { unitId: acting!.id },
+                ),
+              );
+            }
             return observe({
               goalId,
               message: move.message,
@@ -2598,13 +2758,19 @@ export class GoalService {
       // Acceptance closes the whole Goal, so it builds on the work that ends each
       // line of the graph. Linking the delivered leaf Tasks lays it out below them
       // instead of beside the first round. They are all resolved, so nothing blocks.
-      const delivered = graph.nodes.filter(
-        (node) =>
-          node.kind === 'task' &&
-          node.status === 'resolved' &&
-          node.id !== created.node.id &&
-          !experimentOwner(graph, node.id),
-      );
+      // An experiment's Tasks are a candidate answer and stay inside it; a
+      // batch's units ARE the delivered work, so they count as leaves too —
+      // otherwise the report, which walks back from acceptance, never sees them.
+      const ownerKind = (nodeId: string) => {
+        const owner = experimentOwner(graph, nodeId);
+        return owner ? graph.nodes.find((node) => node.id === owner)?.kind : undefined;
+      };
+      const delivered = graph.nodes.filter((node) => {
+        if (node.kind !== 'task' || node.status !== 'resolved' || node.id === created.node.id)
+          return false;
+        const kind = ownerKind(node.id);
+        return !kind || kind === 'batch';
+      });
       const deliveredIds = new Set(delivered.map((node) => node.id));
       const builtUpon = new Set(
         graph.edges
@@ -2846,6 +3012,22 @@ export class GoalService {
         : recovery.outcome === 'exhausted-rounds'
           ? 'Task attempt budget was exhausted'
           : 'Automatic recovery could not start the next attempt';
+    // R6: a batch member that ran out of attempts to pass its own check breaks
+    // the class, like one that failed outright — revise the recipe and re-probe,
+    // not a standalone retry/retire gate (retiring a last-wave member would let
+    // the goal head for acceptance with the unit undone). A spent goal budget
+    // and a run that never started are not the recipe's fault: those keep the
+    // ordinary gate.
+    if (
+      recovery.outcome !== 'exhausted-cost' &&
+      recovery.outcome !== 'spawn-failed' &&
+      this.isBatchMember(graph, nodeId)
+    ) {
+      const title = graph.nodes.find((node) => node.id === nodeId)?.title ?? task.identifier;
+      return this.openPatternBreakGate(graph, `${title}: ${exhaustedReason}`, effects, {
+        unitId: nodeId,
+      });
+    }
     return this.gateOrTakeOver(graph, nodeId, task.id, exhaustedReason, effects, {
       machine: recovery.outcome === 'spawn-failed',
     });
@@ -3631,8 +3813,192 @@ export class GoalService {
           return committedEffects;
         }
 
+        // Batch roll-out: when the planner judges this goal to be one repeated
+        // mould — and `spec.ts` agrees — decompose it as a class rather than as
+        // N flat siblings. The graph gets one `batch` container, one Template,
+        // one Assay and only the K fully-briefed probe tasks; the roster waits in
+        // `rolloutState` and the coordinator releases it one wave at a time.
+        const rolloutClaim = plan?.rollout ?? null;
+        const existingRollout = current.config?.rollout;
+        const rolloutTrigger = existingRollout?.trigger ?? 'canary';
+        const rolloutEnabled = rolloutTrigger !== 'off';
+        const verdict =
+          rolloutClaim && rolloutEnabled
+            ? evaluateHomogeneity(
+                rolloutClaim,
+                draftTasks.map((draft) => ({ instruction: draft.instruction, title: draft.title })),
+                {
+                  maxUnits: MAX_ROLLOUT_ROSTER,
+                  minUnits: existingRollout?.minHomogeneousUnits,
+                },
+              )
+            : { batch: false, reasons: [] as string[] };
+
+        log(
+          'decomposition rollout: trigger=%s claim=%o tasks=%d verdict=%o',
+          rolloutTrigger,
+          rolloutClaim,
+          draftTasks.length,
+          verdict,
+        );
+
+        if (rolloutClaim && rolloutEnabled && verdict.batch && currentProblem) {
+          const roster = normalizeRolloutRoster(rolloutClaim.units, draftTasks, draftTasks.length);
+          const canarySize =
+            rolloutTrigger === 'full'
+              ? roster.length
+              : Math.max(
+                  2,
+                  Math.min(
+                    existingRollout?.canarySize ?? ROLLOUT_CANARY_SIZE_DEFAULT,
+                    ROLLOUT_MAX_CANARY_SIZE,
+                    draftTasks.length,
+                  ),
+                );
+
+          const batch = await writer.createNode(goalId, {
+            description: rolloutClaim.recipeOutline,
+            kind: 'batch',
+            title: GOAL_BATCH_TITLE,
+          });
+          if (!batch) throw new Error('Failed to create a planned batch');
+          await writer.createEdge(goalId, currentProblem.id, batch.id, 'decomposes');
+
+          const template = await writer.createNode(goalId, {
+            description: rolloutClaim.recipeOutline,
+            kind: 'finding',
+            scopeId: batch.id,
+            title: GOAL_BATCH_TEMPLATE_TITLE,
+          });
+          if (!template) throw new Error('Failed to create a batch template');
+
+          // The Assay is the gate. It is a `decision` node so a failed gate has
+          // somewhere to hang the human question, but it carries NO pending
+          // decision yet — opening one now would park the goal before a probe ran.
+          // A `full` roll-out skips the probe, so it opens no gate at all.
+          const assay =
+            rolloutTrigger === 'full'
+              ? undefined
+              : await writer.createNode(goalId, {
+                  description:
+                    'Whether this repeated batch can be delivered without further human decisions.',
+                  kind: 'decision',
+                  scopeId: batch.id,
+                  status: 'proposed',
+                  title: GOAL_BATCH_ASSAY_TITLE,
+                });
+          if (rolloutTrigger !== 'full' && !assay)
+            throw new Error('Failed to create a batch assay');
+
+          const probeDrafts = draftTasks.slice(0, canarySize);
+          const probeIds: string[] = [];
+          for (const draft of probeDrafts) {
+            const node = await writer.createNode(goalId, {
+              description: draft.instruction,
+              kind: 'task',
+              scopeId: batch.id,
+              title: draft.title,
+            });
+            if (!node) throw new Error('Failed to create a probe task');
+            probeIds.push(node.id);
+            committedEffects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
+          }
+
+          // The gate depends on every probe: `selectFrontier` reads `depends_on`
+          // as blocks, so the gate cannot be evaluated until they settle.
+          if (assay) {
+            for (const probeId of probeIds) {
+              await writer.createEdge(goalId, assay.id, probeId, 'depends_on');
+            }
+          }
+          // Honour the planner's own intra-probe dependencies too.
+          for (const [index, draft] of probeDrafts.entries()) {
+            for (const dep of new Set(draft.dependsOn ?? [])) {
+              if (dep < index && probeIds[dep]) {
+                await writer.createEdge(goalId, probeIds[index], probeIds[dep], 'depends_on');
+              }
+            }
+          }
+
+          // A `full` roll-out releases the rest of the roster immediately, as the
+          // single wave the trigger promises; `canary` waits for the gate.
+          const massNodeIds: string[] = [];
+          if (rolloutTrigger === 'full') {
+            for (const title of roster.slice(probeIds.length)) {
+              const nodeId = await createRecipeUnitTask(
+                writer,
+                goalId,
+                batch.id,
+                title,
+                rolloutClaim.recipeOutline,
+              );
+              if (nodeId) massNodeIds.push(nodeId);
+            }
+          }
+
+          const rolloutState: GoalRolloutState = {
+            batchNodeId: batch.id,
+            assayNodeId: assay?.id,
+            massNodeIds: massNodeIds.length ? massNodeIds : undefined,
+            phase: rolloutTrigger === 'full' ? 'mass' : 'probe',
+            probeNodeIds: probeIds,
+            releasedCount: probeIds.length + massNodeIds.length,
+            templateNodeId: template.id,
+            templateRevision: 1,
+            unitTitles: roster,
+            waveIndex: rolloutTrigger === 'full' ? 1 : 0,
+          };
+          await goalModel.updateRolloutState(goalId, rolloutState);
+
+          // Always persist what the planner derived — later waves brief their
+          // tasks from the recipe and the gate checks its variant axes — while
+          // keeping whatever the caller chose (trigger, sizes) on top.
+          await goalModel.updateRolloutPolicy(goalId, {
+            ...existingRollout,
+            canarySize:
+              rolloutTrigger === 'full' ? undefined : (existingRollout?.canarySize ?? canarySize),
+            spec: {
+              recipeOutline: rolloutClaim.recipeOutline,
+              repeatable: rolloutClaim.repeatable,
+              variantAxes: rolloutClaim.variants,
+            },
+            trigger: rolloutTrigger,
+            units: roster,
+            waveSize: existingRollout?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT,
+          });
+          return committedEffects;
+        }
+
+        // A rollout claim we did NOT turn into a batch — the caller forced
+        // `--rollout off`, or the homogeneity check refused it — still carries
+        // only the 3–5 representative probes in `tasks`, with the complete
+        // roster in `units`. A plain decomposition of `draftTasks` alone would
+        // silently drop every other unit, so materialize the whole roster as
+        // ordinary tasks instead: the probes keep their first-hand briefs, the
+        // rest run from the recipe. The batch config's roster cap does NOT apply
+        // here — trimming the fallback would leave the tail of the requested
+        // goal undelivered. A goal with no claim at all is unchanged.
+        const plannedUnits = rolloutClaim
+          ? normalizeRolloutRoster(
+              rolloutClaim.units,
+              draftTasks,
+              draftTasks.length,
+              Number.POSITIVE_INFINITY,
+            ).map((title, index) => {
+              const draft = draftTasks[index];
+              return {
+                dependsOn: draft?.dependsOn ?? [],
+                hypothesis: draft?.hypothesis,
+                instruction:
+                  draft?.instruction ??
+                  [rolloutClaim.recipeOutline, `Unit: ${title}`].filter(Boolean).join('\n\n'),
+                title: draft?.title ?? title,
+              };
+            })
+          : draftTasks;
+
         const createdIds: string[] = [];
-        for (const draft of draftTasks) {
+        for (const draft of plannedUnits) {
           // An experiment is a container for a candidate answer, not the
           // default shell around every planned step. Only a direction the
           // planner marked with a hypothesis gets one; a certain delivery step
@@ -3667,7 +4033,7 @@ export class GoalService {
         // dependent → prerequisite the way `decideNextMove` reads a blocker. Only
         // earlier indices are honoured, so a hallucinated forward or self reference
         // can never form a cycle that deadlocks the frontier.
-        for (const [index, draft] of draftTasks.entries()) {
+        for (const [index, draft] of plannedUnits.entries()) {
           const nodeId = createdIds[index];
           if (!nodeId) continue;
           for (const dep of new Set(draft.dependsOn ?? [])) {
@@ -3711,6 +4077,492 @@ export class GoalService {
     } finally {
       await this.goalModel.releasePlanning(goalId, claim.token);
     }
+  };
+
+  /**
+   * Judge a repeated batch's gate, but only once the wave it released has fully
+   * settled. Returns undefined when there is nothing to judge: no batch, a batch
+   * already through its gate or parked on a pattern break, or a wave still
+   * running (the ordinary frontier owns that tick). The final wave is judged
+   * like every other — a unit retired or broken in it must stop the batch the
+   * same way — and a pass with the roster exhausted closes the batch.
+   */
+  private collectRolloutGate = (graph: GoalGraphSnapshot): RolloutGateResult | undefined => {
+    const policy = graph.goal.config?.rollout;
+    const state = graph.goal.config?.rolloutState;
+    if (!policy || !state || state.phase === 'done' || state.phase === 'pattern_break')
+      return undefined;
+    const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
+    const materialized = graph.nodes.filter((node) => materializedIds.has(node.id));
+    if (materialized.some((node) => !TERMINAL_NODE_STATUSES.has(node.status))) return undefined;
+    return evaluateRolloutGate({ graph, policy, state });
+  };
+
+  /** Whether a node is one of the current batch's released members (R6 routing). */
+  private isBatchMember = (graph: GoalGraphSnapshot, nodeId: string): boolean => {
+    const state = graph.goal.config?.rolloutState;
+    if (!state) return false;
+    return state.probeNodeIds.includes(nodeId) || (state.massNodeIds ?? []).includes(nodeId);
+  };
+
+  /** Release the next wave of a repeated batch once its gate passed. */
+  private releaseRolloutWave = async (
+    graph: GoalGraphSnapshot,
+    effects: GoalAdvanceEffect[],
+    gate?: RolloutGateResult,
+  ): Promise<GoalTickResult> => {
+    const goalId = graph.goal.id;
+    const policy = graph.goal.config?.rollout;
+    const state = graph.goal.config?.rolloutState;
+    if (!policy || !state)
+      return { goalId, message: 'Batch state missing; nothing to release', outcome: 'no_progress' };
+
+    const roster = state.unitTitles ?? [];
+    const released = state.releasedCount ?? state.probeNodeIds.length;
+    const waveSize = Math.max(1, policy.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
+    const wave = roster.slice(released, released + waveSize);
+
+    if (!wave.length) {
+      await this.goalModel.updateRolloutState(goalId, { ...state, phase: 'done' });
+      return { goalId, message: 'Batch roster exhausted', outcome: 'advanced' };
+    }
+
+    // Advances overlap — two settling tasks can each queue one — and both
+    // would read the same cursor and release the same wave twice. Claim it:
+    // under the goal row's lock, release only if the cursor is still where this
+    // advance read it.
+    const created: GoalAdvanceEffect[] = [];
+    const message = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (
+        !current ||
+        current.phase !== state.phase ||
+        current.waveIndex !== state.waveIndex ||
+        (current.releasedCount ?? current.probeNodeIds.length) !== released
+      )
+        return undefined;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+
+      const newIds: string[] = [];
+      for (const title of wave) {
+        const nodeId = await createRecipeUnitTask(
+          writer,
+          goalId,
+          state.batchNodeId,
+          title,
+          policy.spec?.recipeOutline,
+        );
+        if (nodeId) {
+          newIds.push(nodeId);
+          created.push({ detail: title, nodeId, type: 'created_node' });
+        }
+      }
+
+      const message = `Batch gate passed; released wave ${state.waveIndex + 1} (${newIds.length} unit${newIds.length === 1 ? '' : 's'})`;
+      // A batch that predates the counter has no `gateLog` either, and a restart
+      // resets `waveIndex`; the roster position still says how many waves are out:
+      // everything released beyond the first canary went out a wave at a time.
+      const waveNumber =
+        (state.wavesReleased ??
+          Math.max(
+            state.waveIndex,
+            (state.gateLog ?? []).filter((entry) => entry.outcome === 'released').length,
+            Math.ceil(Math.max(0, released - (policy.canarySize ?? 0)) / waveSize),
+          )) + 1;
+      const next: GoalRolloutState = withGateVerdict(
+        {
+          ...state,
+          massNodeIds: [...(state.massNodeIds ?? []), ...newIds],
+          phase: 'mass',
+          releasedCount: released + newIds.length,
+          waveIndex: state.waveIndex + 1,
+          wavesReleased: waveNumber,
+        },
+        {
+          checks: gate?.checks ?? [],
+          message,
+          outcome: 'released',
+          releasedCount: newIds.length,
+          revision: state.templateRevision,
+          trigger: 'gate',
+          wave: waveNumber,
+          waveIndex: state.waveIndex + 1,
+        },
+      );
+      // Even the final wave stays `mass`: the gate still judges it once it
+      // settles, and only a pass with the roster exhausted closes the batch.
+      await goalModel.updateRolloutState(goalId, next);
+      return message;
+    });
+
+    if (!message)
+      return {
+        goalId,
+        message: 'Another advance already released this wave',
+        outcome: 'no_progress',
+      };
+    effects.push(...created);
+    return { goalId, message, outcome: 'advanced' };
+  };
+
+  /**
+   * Hand a blocked batch gate to a person.
+   *
+   * The batch cannot advance on its own, so this opens a decision on the Assay
+   * and pauses the goal with the pattern-break reason. The choice is the v3
+   * fork: revise the same recipe (repeat the v1 → v2 loop) or fork a fresh
+   * recipe for the units that broke, inside this batch — never a silent park.
+   */
+  private openPatternBreakGate = async (
+    graph: GoalGraphSnapshot,
+    message: string,
+    effects: GoalAdvanceEffect[],
+    /** What held the batch: the gate's own verdict, or one unit's failed check (R6). */
+    cause: { gate?: RolloutGateResult; unitId?: string } = {},
+  ): Promise<GoalTickResult> => {
+    const goalId = graph.goal.id;
+    const state = graph.goal.config?.rolloutState;
+    if (!state) return { goalId, message, outcome: 'waiting_human' };
+
+    const reason = `${PATTERN_BREAK_PAUSE_REASON}: ${message}`;
+    // Overlapping advances can both see the batch break. Claim it under the
+    // goal row's lock: the first opens the gate — materializing the Assay a
+    // `full` rollout never created — and records it in the same transaction;
+    // the rest find the break already open and reuse its gate instead of
+    // opening a second assay and decision that would re-park the goal later.
+    const claim = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const locked = await goalModel.lockById(goalId);
+      const current = locked?.config?.rolloutState;
+      if (!locked || !current) return undefined;
+      if (current.phase === 'pattern_break')
+        return { gateNodeId: current.assayNodeId, opened: false as const };
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+
+      // The gate hangs on the Assay. A `full` rollout never created one — it
+      // skips the probe gate — but a break still needs a `decision` node for the
+      // human question and, later, for the restart (a `batch` node cannot carry
+      // a decision), so the gate target is stable whichever trigger opened it.
+      let gateNodeId = current.assayNodeId;
+      if (!gateNodeId) {
+        const assay = await writer.createNode(goalId, {
+          description:
+            'Whether this repeated batch can be delivered without further human decisions.',
+          kind: 'decision',
+          scopeId: current.batchNodeId,
+          status: 'proposed',
+          title: GOAL_BATCH_ASSAY_TITLE,
+        });
+        if (!assay) return undefined;
+        gateNodeId = assay.id;
+      }
+      // The ids are the stable vocabulary; the human-facing labels and their
+      // consequences live in the locale files and are resolved by option id on
+      // the client (like the retry/retire/fail gates), so no English copy is
+      // persisted into a gate a non-English reader has to answer.
+      const decision = await writer.createDecision(goalId, gateNodeId, {
+        authority: 'user',
+        options: [
+          {
+            id: GOAL_BATCH_BREAK_OPTION.revise,
+            label: 'Revise the recipe and re-probe',
+          },
+          {
+            // One batch carries one roster and one gate, so this is not a second
+            // batch running in parallel: it forks the recipe (no `revises`
+            // chain) for the units that broke, inside this same batch.
+            id: GOAL_BATCH_BREAK_OPTION.newClass,
+            label: 'Fork a fresh recipe',
+          },
+        ],
+        question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
+        requestedUserId: this.userId,
+      });
+      await writer.updateNodeStatus(goalId, gateNodeId, 'waiting', reason);
+      await goalModel.updateRolloutState(
+        goalId,
+        withGateVerdict(
+          { ...current, assayNodeId: gateNodeId, phase: 'pattern_break' },
+          {
+            checks: cause.gate?.checks ?? [],
+            message,
+            nodeId: cause.unitId,
+            outcome: 'blocked',
+            revision: current.templateRevision,
+            trigger: cause.unitId ? 'unit' : 'gate',
+            waveIndex: current.waveIndex,
+          },
+        ),
+      );
+      // Park the goal in the same commit, from the locked row: once the gate is
+      // visible an answer may land at any moment, and a pause written after it
+      // from an older snapshot would re-park a goal the answer just resumed.
+      await goalModel.updatePauseReason(goalId, 'pattern_break');
+      if (locked.status !== 'paused' && !GOAL_ENDED_STATUSES.has(locked.status)) {
+        await goalModel.updateStatus(goalId, 'paused');
+        await writer
+          .recordGoalStatus(goalId, locked.status, 'paused', reason)
+          .catch((error) => console.error('[GoalService] failed to record goal status:', error));
+      }
+      return { decisionId: decision?.id, gateNodeId, opened: true as const };
+    });
+    if (!claim) return { goalId, message, outcome: 'waiting_human' };
+    // Another advance opened this break; it parks the goal.
+    if (!claim.opened)
+      return { goalId, message, nodeId: claim.gateNodeId, outcome: 'waiting_human' };
+    const gateNodeId = claim.gateNodeId;
+    effects.push({
+      detail: message,
+      nodeId: gateNodeId,
+      targetId: claim.decisionId ?? gateNodeId,
+      type: 'opened_decision',
+    });
+    // Home lists what waits on the person from its briefs, so the gate stays
+    // findable after it is dismissed from the approval island. It offers no
+    // one-click answers: revising needs a correction, written on the goal page.
+    if (claim.decisionId)
+      await this.briefs.openDecision(graph.goal, {
+        decisionId: claim.decisionId,
+        options: [],
+        question: `${message}\n\n${GOAL_BATCH_BREAK_QUESTION_TAIL}`,
+      });
+    effects.push({ type: 'goal_status', detail: 'paused: pattern_break' });
+    return { goalId, message, nodeId: gateNodeId, outcome: 'waiting_human' };
+  };
+
+  /**
+   * R5: restart the canary loop after a person intervened on a batch gate.
+   *
+   * The person's answer is the single human judgment; the coordinator opens the
+   * next recipe round from it. `revise` chains a new Template onto the old one
+   * (`revises`); `new_class` forks a fresh Template with no chain edge, still
+   * inside this batch. Either way the members that broke are retired and
+   * re-opened as the new canary, and the rollout returns to the probe phase, so
+   * the class is proved again instead of rerun by hand.
+   *
+   * The correction is the *new recipe*: it is folded into the policy and written
+   * on the Template, so the re-opened probes and every later wave are briefed
+   * from the revised transformation — not from the outline that just failed.
+   */
+  private restartRolloutLoop = async (
+    goalId: string,
+    decisionId: string,
+    optionId: string,
+    resolution: string | undefined,
+  ) => {
+    const graph = await this.requireGraph(goalId);
+    const policy = graph.goal.config?.rollout;
+    const state = graph.goal.config?.rolloutState;
+    if (!policy || !state)
+      return this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
+
+    const batchId = state.batchNodeId;
+    const roster = state.unitTitles ?? [];
+    const released = state.releasedCount ?? state.probeNodeIds.length;
+    // The correction the person wrote. A revision carries the plan forward and
+    // appends it as its own section, so each version reads whole and diffs
+    // against the last one; a fork starts again from the original outline. The
+    // result is the new recipe: later waves only ever read
+    // `policy.spec.recipeOutline`, so a note kept solely on the Template would
+    // never reach the tasks meant to test it.
+    const baseOutline = policy.spec?.recipeOutline?.trim() ?? '';
+    const correction = (resolution ?? '').trim();
+    const revision = state.templateRevision + 1;
+    const previousPlan = state.templateNodeId
+      ? graph.nodes.find((node) => node.id === state.templateNodeId)?.description?.trim()
+      : undefined;
+    // A fork starts from the batch's original outline — kept on the batch node,
+    // since every revision rewrites the policy's — not from the revised plan.
+    const originalOutline =
+      graph.nodes.find((node) => node.id === batchId)?.description?.trim() || baseOutline;
+    const basePlan = optionId === 'new_class' ? originalOutline : previousPlan || baseOutline;
+    const revisedOutline = [basePlan, correction && `### v${revision}\n${correction}`]
+      .filter(Boolean)
+      .join('\n\n');
+
+    // The answer and the round it opens land together. Every write below —
+    // resolving the question included — commits in one transaction under the
+    // goal row's lock, so a failure part-way leaves the question open to answer
+    // again rather than consumed beside half a round; and a second answer
+    // racing this one finds the break already restarted.
+    const committed = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (current?.phase !== 'pattern_break') return undefined;
+      const resolved = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
+        goalId,
+        decisionId,
+        optionId,
+        resolution,
+      );
+      if (!resolved) return undefined;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+
+      // 1. A new recipe revision, or a forked new class (no `revises` chain).
+      const template = await writer.createNode(goalId, {
+        description: revisedOutline || baseOutline,
+        kind: 'finding',
+        scopeId: batchId,
+        title: GOAL_BATCH_TEMPLATE_TITLE,
+      });
+      if (template && optionId !== 'new_class' && state.templateNodeId) {
+        await writer.createEdge(goalId, template.id, state.templateNodeId, 'revises');
+      }
+
+      // 2. Retire the members that broke or were superseded, never delete them —
+      // the new round is `derived_from` them (decision #4). A member an earlier
+      // round already re-opened is history, not a unit to re-open again.
+      const memberIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
+      const reopenedIds = new Set(
+        graph.edges.filter((edge) => edge.kind === 'derived_from').map((edge) => edge.targetNodeId),
+      );
+      const broken: { brief?: string; id: string; title: string }[] = [];
+      for (const node of graph.nodes) {
+        if (!memberIds.has(node.id) || node.status === 'resolved' || reopenedIds.has(node.id))
+          continue;
+        broken.push({ brief: carriedUnitBrief(node), id: node.id, title: node.title });
+        if (!TERMINAL_NODE_STATUSES.has(node.status)) {
+          await writer.updateNodeStatus(
+            goalId,
+            node.id,
+            'retired',
+            'superseded by a new recipe revision',
+          );
+        }
+      }
+
+      // 3. A fresh gate for the fresh round.
+      const assay = await writer.createNode(goalId, {
+        description:
+          'Whether this repeated batch can be delivered without further human decisions.',
+        kind: 'decision',
+        scopeId: batchId,
+        status: 'proposed',
+        title: GOAL_BATCH_ASSAY_TITLE,
+      });
+      if (!assay) throw new Error('Failed to create the next batch gate');
+
+      // The revised recipe becomes the batch's policy, so the probes below and
+      // every later wave (which read it off the graph) carry the correction.
+      await goalModel.updateRolloutPolicy(goalId, {
+        ...policy,
+        spec: {
+          ...policy.spec,
+          recipeOutline: revisedOutline || baseOutline,
+          repeatable: policy.spec?.repeatable ?? true,
+        },
+      });
+
+      // 4. The new canary re-opens the units that broke, as new tasks that
+      // supersede the retired ones (decision #4: new task + retire, never move).
+      // Cap it at the canary size: a break in a large wave — or a `full` rollout
+      // that released the whole class — must not redispatch every member at once.
+      // The broken units beyond the canary stay owed, and the waves after the gate
+      // re-deliver them under the revised recipe. Only a gate that blocked with
+      // every member resolved has nothing to re-open; it re-probes the next slice.
+      const canarySize = Math.max(
+        2,
+        Math.min(policy.canarySize ?? ROLLOUT_CANARY_SIZE_DEFAULT, ROLLOUT_MAX_CANARY_SIZE),
+      );
+      const reOpen = broken.slice(0, canarySize);
+      const deferred = broken.slice(canarySize).map((unit) => unit.title);
+      const fresh = broken.length ? [] : roster.slice(released, released + canarySize);
+      // Nothing broke and nothing is left to release — the gate held on something
+      // else, such as an untested axis. Re-probe units this round delivered,
+      // under the revision, so the new canary is never empty (an empty one would
+      // re-open the same break at once).
+      const reProbe =
+        broken.length || fresh.length
+          ? []
+          : [...memberIds]
+              .map((id) => graph.nodes.find((node) => node.id === id))
+              .filter(
+                (node): node is NonNullable<typeof node> =>
+                  !!node && node.status === 'resolved' && !reopenedIds.has(node.id),
+              )
+              .slice(0, canarySize)
+              .map((node) => ({ brief: carriedUnitBrief(node), id: node.id, title: node.title }));
+      const units = [
+        ...[...reOpen, ...reProbe].map((unit) => ({
+          brief: unit.brief,
+          from: unit.id,
+          title: unit.title,
+        })),
+        ...fresh.map((title) => ({
+          brief: undefined as string | undefined,
+          from: undefined as string | undefined,
+          title,
+        })),
+      ];
+      const probeIds: string[] = [];
+      const opened: { from: string | undefined; title: string }[] = [];
+      for (const unit of units) {
+        const nodeId = await createRecipeUnitTask(
+          writer,
+          goalId,
+          batchId,
+          unit.title,
+          revisedOutline || baseOutline,
+          unit.brief,
+        );
+        if (!nodeId) continue;
+        probeIds.push(nodeId);
+        opened.push(unit);
+        if (unit.from) {
+          await writer.createEdge(goalId, nodeId, unit.from, 'derived_from').catch(() => {});
+        }
+      }
+      for (const probeId of probeIds) {
+        await writer.createEdge(goalId, assay.id, probeId, 'depends_on');
+      }
+
+      // 5. Back to canary, on the new revision. The roster is re-cut to what is
+      // still owed — the new probes first, then the broken units not re-probed,
+      // then whatever was never released — so the waves deliver only the
+      // remainder and units already delivered under the old recipe drop out.
+      const remaining = Array.from(
+        new Set([
+          ...opened.map((unit) => unit.title),
+          ...deferred,
+          ...roster.slice(released + fresh.length),
+        ]),
+      );
+      await goalModel.updateRolloutState(goalId, {
+        ...state,
+        assayNodeId: assay.id,
+        // The new canary is a fresh round: the old waves' members — the broken
+        // ones now retired — must not count against its gate.
+        massNodeIds: undefined,
+        phase: 'probe',
+        probeNodeIds: probeIds,
+        releasedCount: opened.length,
+        templateNodeId: template?.id ?? state.templateNodeId,
+        templateRevision: state.templateRevision + 1,
+        unitTitles: remaining,
+        waveIndex: 0,
+      });
+      return { brokenIds: broken.map((unit) => unit.id), resolved };
+    });
+    if (!committed) return undefined;
+
+    // A sibling still running when the gate was answered would keep spending —
+    // and could deliver — beside the probe that replaces it. Its node is fenced
+    // as retired above; stop the Task behind it. Not part of the transaction:
+    // stopping a run cannot be rolled back, and retrying it is harmless.
+    if (committed.brokenIds.length)
+      await this.stopFencedTasks(goalId, new Set(committed.brokenIds));
+    await this.setPauseReason(goalId, undefined);
+    return committed.resolved;
   };
 
   private buildTaskAcceptanceRequirement = (

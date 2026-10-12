@@ -110,6 +110,8 @@ export type GoalPauseReason =
   | 'exploration_limit'
   /** The planner asked for a correction after its allowance was already spent. */
   | 'exploration_revision_limit'
+  /** A repeated batch hit a pattern break and is waiting on a person's choice. */
+  | 'pattern_break'
   | 'user';
 
 export interface GoalExplorationDecision {
@@ -418,6 +420,163 @@ export interface GoalUnderstanding {
   updatedAt: string;
 }
 
+/**
+ * Batch rollout trigger. `off`/absent keeps the ordinary decomposition: a goal
+ * that is not one repeated mould never grows a batch node, and the coordinator
+ * reads none of the rollout code paths. `canary` probes first, proves the class
+ * is fully automatic at a gate, then releases the rest in waves; `full` skips
+ * the probe and delivers every unit as one wave.
+ */
+export type GoalRolloutTrigger = 'canary' | 'full' | 'off';
+
+/**
+ * One axis the repeated units vary along. Recorded so the gate can refuse a
+ * green whose coverage never took a value on some axis — the half the probe
+ * happened to miss (a `cold-start` value discovered only later).
+ */
+export interface GoalRolloutVariantAxis {
+  /** Axis name, e.g. "cold-start", "auth-boundary". */
+  axis: string;
+  /** Concrete values the repeated units take on this axis. */
+  values: string[];
+}
+
+/**
+ * Batch rollout policy. Lives on the JSONB `config` column like the other goal
+ * policies — the graph's own vocabulary (`goal_nodes.kind`) carries the shape,
+ * so nothing here needs a schema of its own.
+ */
+export interface GoalRolloutPolicy {
+  /** Probe size K — how many representative units run before the gate. */
+  canarySize?: number;
+  /**
+   * How many structurally identical units make one batch worth gating. Below it
+   * the ordinary per-unit decomposition is cheaper than the ceremony.
+   */
+  minHomogeneousUnits?: number;
+  /** Why the planner judged this batch homogeneous; kept for the gate report. */
+  spec?: {
+    /** R2 condition: after masking concrete names, is the transform still one? */
+    repeatable: boolean;
+    /** The reusable transformation, in the planner's words. */
+    recipeOutline?: string;
+    variantAxes?: GoalRolloutVariantAxis[];
+  };
+  trigger: GoalRolloutTrigger;
+  /**
+   * Roster of every homogeneous unit in the goal, probes included and in
+   * delivery order. Probes are the first, fully-briefed units; the coordinator
+   * materializes the rest from here one wave at a time, so the graph never
+   * shows the whole fan-out at build time.
+   */
+  units?: string[];
+  /** Mass wave size M — how many units are released per wave after the gate. */
+  waveSize?: number;
+}
+
+/**
+ * One condition the release gate judged. Mirrors `evaluateRolloutGate`: the
+ * same keys, in the same order, with what each one found — so the person can see
+ * why a gate passed or held, not only that it did.
+ */
+export type GoalRolloutGateCheckKey =
+  'axes_covered' | 'no_open_decision' | 'plan_written' | 'units_settled' | 'units_succeeded';
+
+export interface GoalRolloutGateCheck {
+  /** For a count check: how many of `total` held, e.g. 5 of 5 units ran through. */
+  count?: number;
+  /** Free-form specifics, such as an uncovered `axis=value`. */
+  details?: string[];
+  key: GoalRolloutGateCheckKey;
+  /** The nodes the check is about — the units that failed, the open decision. */
+  nodeIds?: string[];
+  passed: boolean;
+  total?: number;
+}
+
+/**
+ * One gate verdict and what the coordinator did with it. Appended on every
+ * release and every hold, so the gate keeps its own record instead of the
+ * decision's prose being the only trace.
+ */
+export interface GoalRolloutGateEvaluation {
+  /** ISO time of the verdict. */
+  at: string;
+  /** What the gate judged; empty when a unit's own check held the batch (R6). */
+  checks: GoalRolloutGateCheck[];
+  /** The coordinator's English summary, kept for the trace. */
+  message?: string;
+  /** The unit whose own check held the batch, when `trigger` is `unit`. */
+  nodeId?: string;
+  outcome: 'blocked' | 'released';
+  /** Units the release put into the next wave. */
+  releasedCount?: number;
+  /** The recipe revision (round) this verdict belongs to. */
+  revision: number;
+  /**
+   * 1-based ordinal of this verdict within its round. Written by the
+   * coordinator so it keeps counting after older verdicts were dropped.
+   */
+  seq?: number;
+  /** `gate`: the gate judged a settled wave. `unit`: one unit failed its own check. */
+  trigger: 'gate' | 'unit';
+  /**
+   * The roster wave a release put out, counted across every round. Written by
+   * the coordinator because the log is capped — counting the kept entries would
+   * renumber the history once the oldest fall off.
+   */
+  wave?: number;
+  /** Waves released in this round when the verdict was taken (after a release). */
+  waveIndex: number;
+}
+
+/** Where a batch rollout currently stands. */
+export type GoalRolloutPhase = 'probe' | 'assay' | 'mass' | 'pattern_break' | 'done';
+
+/**
+ * Coordinator-owned rollout progress. Written by decomposition and by the
+ * coordinator's own gate moves, never by a policy edit — the same rule that
+ * keeps `managerState` server-owned.
+ */
+export interface GoalRolloutState {
+  /** The gate (Assay) decision node, once decomposition created it. */
+  assayNodeId?: string;
+  /** The `batch` container node. */
+  batchNodeId: string;
+  /**
+   * Gate verdicts, oldest first. Each round keeps its most recent few, so a
+   * round that was judged never loses its latest verdict to later rounds.
+   */
+  gateLog?: GoalRolloutGateEvaluation[];
+  /**
+   * Node ids of the mass tasks the current round released, oldest wave first.
+   * A restarted canary starts a new round and clears it.
+   */
+  massNodeIds?: string[];
+  /** Phase the rollout is in; the coordinator reads this to pick its move. */
+  phase: GoalRolloutPhase;
+  /** Node ids of the probe tasks that must run before the gate passes. */
+  probeNodeIds: string[];
+  /** How many roster entries have been materialized (probes + released waves). */
+  releasedCount?: number;
+  /** Node id of the current Template (finding) node. */
+  templateNodeId?: string;
+  /** Current Template revision; incremented each time the recipe is revised. */
+  templateRevision: number;
+  /**
+   * The class still to deliver, in delivery order; probes come first. Starts as
+   * the full roster. A pattern break re-cuts it to what is still owed — the
+   * re-opened probes, the broken units past the canary size, then whatever was
+   * never released — so waves deliver only the remainder and units already
+   * delivered under the old recipe drop out.
+   */
+  unitTitles?: string[];
+  /** How many mass waves have been released. */
+  waveIndex: number;
+  /** Roster waves released so far across every round; `waveIndex` restarts per round. */
+  wavesReleased?: number;
+}
+
 export interface GoalConfig {
   acceptance?: GoalAcceptancePolicy;
   /**
@@ -450,6 +609,13 @@ export interface GoalConfig {
   recovery?: GoalRecoveryPolicy;
   /** Coordinator-owned receipt of the latest wrap-up report dispatch. */
   report?: GoalReportDispatch;
+  /**
+   * Batch rollout, when this goal is one repeated mould. Absent on every goal
+   * that is not — which is what keeps the mechanism off the ordinary path.
+   */
+  rollout?: GoalRolloutPolicy;
+  /** Coordinator-owned batch progress; never accepted as client configuration. */
+  rolloutState?: GoalRolloutState;
   schedule?: GoalSchedulePolicy;
   supervision?: GoalSupervisionPolicy;
   /** Durable supervisor topic and bounded incident ledger. */
@@ -467,7 +633,7 @@ export interface GoalConfig {
 /** Creation accepts planning options, never a runtime receipt. */
 export type GoalCreateConfig = Omit<
   GoalConfig,
-  'managerState' | 'report' | 'supervisorState' | 'understanding'
+  'managerState' | 'report' | 'rolloutState' | 'supervisorState' | 'understanding'
 >;
 
 /**
@@ -502,8 +668,16 @@ export interface GoalItem {
 // Goal Graph — durable long-horizon reasoning structure
 // ============================================
 
-/** Coarse-grained semantic role of a node in a Goal Graph. */
-export type GoalNodeKind = 'problem' | 'experiment' | 'task' | 'finding' | 'decision';
+/**
+ * Coarse-grained semantic role of a node in a Goal Graph.
+ *
+ * `batch` is the container for one repeated mould: a set of structurally
+ * identical units delivered as a single class (probe → gate → waves) instead of
+ * N flat sibling tasks. It is deliberately its own kind rather than a reuse of
+ * `experiment`: an experiment is a candidate answer under test, a batch is one
+ * reusable transformation applied many times.
+ */
+export type GoalNodeKind = 'problem' | 'experiment' | 'task' | 'finding' | 'decision' | 'batch';
 
 /** Semantic lifecycle of a node; independent from the execution status of its Task. */
 export type GoalNodeStatus =

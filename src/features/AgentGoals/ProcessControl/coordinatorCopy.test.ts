@@ -6,6 +6,7 @@ import {
   coordinatorGateReason,
   coordinatorReasonCopy,
   gateOptionLabelKey,
+  localizedCoordinatorReason,
 } from './coordinatorCopy';
 
 const decision = (ids: string[]) => ({ options: ids.map((id) => ({ id, label: id })) }) as any;
@@ -141,5 +142,25 @@ describe('machine gate copy', () => {
     expect(coordinatorReasonCopy('Task device stayed offline')).toEqual({
       key: 'goalProcess.gate.reason.deviceStayedOffline',
     });
+  });
+});
+
+describe('localizedCoordinatorReason', () => {
+  const t = (key: string, params?: Record<string, unknown>) =>
+    `${key}${params?.count === undefined ? '' : `(${params.count})`}`;
+
+  it('localizes every blocker of a compound batch reason', () => {
+    expect(
+      localizedCoordinatorReason(
+        '1 unit(s) did not succeed; a human decision is still open in this batch',
+        t,
+      ),
+    ).toBe('goalProcess.gate.reason.batchBroken(1); goalProcess.gate.reason.batchOpenDecision');
+  });
+
+  it('keeps a reason it does not recognize as stored', () => {
+    expect(localizedCoordinatorReason('Something else went wrong', t)).toBe(
+      'Something else went wrong',
+    );
   });
 });
