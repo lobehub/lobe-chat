@@ -16,9 +16,9 @@ import isEqual from 'fast-deep-equal';
 import {
   FolderClosedIcon,
   FolderOpenIcon,
+  ListTreeIcon,
   LucideCheck,
   type LucideIcon,
-  MoreHorizontalIcon,
   PlusIcon,
 } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
@@ -103,11 +103,11 @@ const styles = createStaticStyles(({ css }) => ({
       max-width 150ms ${cssVar.motionEaseOut},
       opacity 150ms ${cssVar.motionEaseOut};
 
-    /* Holds the "more" menu plus the start "+" (2 × 24px), not a single icon */
+    /* Holds the grouping menu, the "more" menu and the start "+" (3 × 24px) */
     &:focus-within,
     .accordion-header:hover & {
       pointer-events: auto;
-      max-width: 48px;
+      max-width: 72px;
       opacity: 1;
     }
   `,
@@ -288,7 +288,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
         })),
         key: 'sub-group',
         label: tProject('topics.subGroup.title'),
-        type: 'submenu',
+        type: 'group',
       },
     ],
     [id, subGroupMode, tProject, updateSystemStatus],
@@ -304,28 +304,27 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
   const hasCollapsedUnread = !expanded && unreadCount > 0;
   const hasCollapsedIndicators = hasCollapsedStatus || hasCollapsedUnread;
   const ProjectFolderIcon = expanded ? FolderOpenIcon : FolderClosedIcon;
-  // Sub-grouping needs no directory: when the directory actions can't render
-  // (e.g. the newest topic is conversation-only), the menu stands on its own.
+  // Sub-grouping is its own row action: it needs no directory, so it stays
+  // available even when the directory actions below can't render.
   const action = (
     <Flexbox horizontal align={'center'} gap={4}>
       {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
       {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
       <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
-        {!canAddTopic ? (
-          <DropdownMenu items={subGroupMenuItems}>
-            <ActionIcon
-              icon={MoreHorizontalIcon}
-              size={'small'}
-              title={tProject('topics.subGroup.title')}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </DropdownMenu>
-        ) : needsPlainStart ? (
+        <DropdownMenu items={subGroupMenuItems}>
+          <ActionIcon
+            active={subGroupMode !== 'none'}
+            icon={ListTreeIcon}
+            size={'small'}
+            title={tProject('topics.subGroup.title')}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </DropdownMenu>
+        {!canAddTopic ? null : needsPlainStart ? (
           <>
             <AgentDirectoryActions
               hideStartAction
               agentId={currentAgentId!}
-              extraMenuItems={subGroupMenuItems}
               path={workingDirectory!}
               topics={children}
               onLegacyStart={handleAddTopic}
@@ -343,7 +342,6 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
         ) : (
           <AgentDirectoryActions
             agentId={currentAgentId!}
-            extraMenuItems={subGroupMenuItems}
             path={workingDirectory!}
             topics={children}
             onLegacyStart={handleAddTopic}

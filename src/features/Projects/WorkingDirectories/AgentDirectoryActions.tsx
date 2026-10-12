@@ -1,5 +1,5 @@
 import type { ChatTopic } from '@lobechat/types';
-import { ActionIcon, type DropdownItem, DropdownMenu, toast } from '@lobehub/ui/base-ui';
+import { ActionIcon, DropdownMenu, toast } from '@lobehub/ui/base-ui';
 import { MoreHorizontalIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,6 @@ export function AgentDirectoryActions({
   topics,
   onLegacyStart,
   hideStartAction = false,
-  extraMenuItems,
 }: {
   agentId: string;
   path: string;
@@ -26,8 +25,6 @@ export function AgentDirectoryActions({
   onLegacyStart: (projectWorkingDirectoryId?: string) => Promise<void>;
   /** Render only the binding/menu affordance; the caller provides its own start action. */
   hideStartAction?: boolean;
-  /** Appended below the binding entries, after a divider. */
-  extraMenuItems?: DropdownItem[];
 }) {
   const { t } = useTranslation('project');
   const navigate = useWorkspaceAwareNavigate();
@@ -101,7 +98,6 @@ export function AgentDirectoryActions({
                     }),
                 },
               ]),
-          ...(extraMenuItems?.length ? [{ type: 'divider' as const }, ...extraMenuItems] : []),
         ]}
       >
         <ActionIcon

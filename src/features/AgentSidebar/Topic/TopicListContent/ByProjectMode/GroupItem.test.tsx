@@ -203,6 +203,29 @@ describe('Project topic group item', () => {
     expect(screen.getByRole('button', { name: 'topics.subGroup.title' })).toBeTruthy();
   });
 
+  it('picks a sub-group mode from the row grouping button and remembers it per group', async () => {
+    updateSystemStatusMock.mockReset();
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Topic' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'topics.subGroup.title' }));
+    fireEvent.click(await screen.findByText('topics.subGroup.byDevice'));
+
+    expect(updateSystemStatusMock).toHaveBeenCalledWith({
+      projectTopicSubGroupModeByGroup: { 'project-id:prj-1': 'byDevice' },
+    });
+  });
+
   it('sections a project group by device when that mode is picked', () => {
     subGroupModeMock.value = 'byDevice';
     directoryRows.push(
