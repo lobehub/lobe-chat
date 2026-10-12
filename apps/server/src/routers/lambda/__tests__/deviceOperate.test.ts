@@ -77,6 +77,7 @@ describe('operating a workspace device', () => {
       withDevice('public');
       await expect(operate[procedure]('viewer', 'viewer')).rejects.toMatchObject({
         code: 'FORBIDDEN',
+        message: expect.stringContaining('Workspace viewers cannot'),
       });
       expect(mocks[procedure]).not.toHaveBeenCalled();
     },

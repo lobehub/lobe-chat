@@ -86,7 +86,10 @@ const assertDeviceOperable = async (
   if (!canOperateWorkspaceDevice(ctx.workspaceRole, ctx.userId, row)) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: `Only the enrolling member or a workspace owner can ${action} on this private device.`,
+      message:
+        row.visibility === 'public'
+          ? `Workspace viewers cannot ${action} on this device.`
+          : `Only the enrolling member or a workspace owner can ${action} on this private device.`,
     });
   }
 };
