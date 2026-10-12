@@ -3034,9 +3034,10 @@ describe('GoalService', () => {
     expect(skill?.versions.map((version) => version.version)).toEqual([1, 2]);
     expect(skill?.content).toContain('### v2\n补上冷启动这一步');
     expect(skill?.versions[0].content).not.toContain('### v2');
-    // A re-opened unit names the skill instead of copying a plan that would go stale.
+    // A re-opened unit names the skill, which carries every later revision…
     expect(reopened.description).toContain(`user-skills:${planSkill.name}`);
-    expect(reopened.description).not.toContain('把 store 换成 replica 支撑的实现');
+    // …and still carries the revised plan, in case the skill does not load.
+    expect(reopened.description).toContain('### v2\n补上冷启动这一步');
 
     // The break taught the batch: a rule for the executor, compiled into a
     // criterion for the verifier.

@@ -279,7 +279,10 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
       name: 'user-skills:review',
       title: 'Review',
     };
-    mockListUserSkillCatalog.mockResolvedValue([planSkill, handMade]);
+    // The catalog query honours `includeGenerated`, as the real one does.
+    mockListUserSkillCatalog.mockImplementation(async (options?: { includeGenerated?: boolean }) =>
+      options?.includeGenerated === false ? [handMade] : [planSkill, handMade],
+    );
     // Only bodies the run asks for come back, as the real loader does.
     mockLoadUserSkills.mockImplementation(async (ids: string[]) =>
       ids.includes(planSkill.identifier)
@@ -451,8 +454,10 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
     // A hand-made skill is listed, without its body.
     expect(skillById('user-skills:review')).toBeDefined();
     expect(skillById('user-skills:review')?.content).toBeUndefined();
-    // A batch's generated plan skill is not listed to an unrelated run.
+    // A batch's generated plan skill is not listed to an unrelated run, and the
+    // catalog is asked to leave generated skills out.
     expect(skillById('user-skills:goal-plan-x')).toBeUndefined();
+    expect(mockListUserSkillCatalog).toHaveBeenCalledWith({ includeGenerated: false });
     // Listing the library reads no body: none was asked for.
     expect(mockLoadUserSkills.mock.calls[0][0]).not.toContain('user-skills:goal-plan-x');
   });

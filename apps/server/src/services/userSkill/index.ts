@@ -152,8 +152,8 @@ export class UserSkillService {
    * What every run lists: identifier, name and description of each library
    * skill, without reading any body. Cheap however large the library grows.
    */
-  listCatalog = async () =>
-    (await this.model.listCatalog()).map((skill) => {
+  listCatalog = async (options?: { includeGenerated?: boolean }) =>
+    (await this.model.listCatalog(options)).map((skill) => {
       const identifier = buildUserSkillIdentifier(skill.name);
       return {
         description: skill.description,

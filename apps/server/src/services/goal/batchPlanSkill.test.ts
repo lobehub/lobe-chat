@@ -10,14 +10,16 @@ describe('planSkillName', () => {
 });
 
 describe('planUnitBrief', () => {
-  it('names the plan skill instead of copying the plan', () => {
+  it('names the plan skill and keeps the plan at dispatch as a fallback', () => {
     const brief = planUnitBrief('Unit 3', {
       outline: 'Swap the store for replica',
       skill: { id: 'docs_1', name: 'goal-plan-x' },
     });
     expect(brief).toContain('Unit: Unit 3');
     expect(brief).toContain('`user-skills:goal-plan-x`');
-    expect(brief).not.toContain('Swap the store');
+    // A run that cannot load the skill still has the plan to work from.
+    expect(brief).toContain('If that skill is not loaded in this run');
+    expect(brief).toContain('Swap the store for replica');
   });
 
   it('copies the plan when the batch has no skill', () => {

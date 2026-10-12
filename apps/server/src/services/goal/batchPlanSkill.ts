@@ -41,8 +41,9 @@ export const planSkillIdentifier = (skill: GoalRolloutPlanSkill) =>
 
 /**
  * A unit's brief. With a plan skill the brief names the skill — the run loads
- * it, so a revised plan reaches every unit dispatched after the revision —
- * instead of copying a plan that would go stale.
+ * its latest version — and still carries the plan as it stood at dispatch, so a
+ * run that could not load the skill (deleted, or a failed read) works from the
+ * plan rather than from nothing.
  */
 export const planUnitBrief = (
   title: string,
@@ -52,7 +53,11 @@ export const planUnitBrief = (
     ? [
         `Unit: ${title}`,
         `Do this unit by the batch's execution plan, the skill \`${planSkillIdentifier(plan.skill)}\` loaded for this run. Follow its latest version.`,
-      ].join('\n\n')
+        plan.outline &&
+          `If that skill is not loaded in this run, follow the plan as it stood at dispatch:\n\n${plan.outline}`,
+      ]
+        .filter(Boolean)
+        .join('\n\n')
     : [plan.outline, `Unit: ${title}`].filter(Boolean).join('\n\n');
 
 /**

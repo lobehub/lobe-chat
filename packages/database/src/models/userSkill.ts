@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 import {
   documents,
@@ -339,21 +339,27 @@ export class UserSkillModel {
    * alone, no `SKILL.md` or scripts. What every run lists; bodies are loaded
    * only for the skills a run actually uses (`findByNames`).
    */
-  listCatalog = async (): Promise<UserSkillCatalogItem[]> => {
+  listCatalog = async ({ includeGenerated = true }: { includeGenerated?: boolean } = {}): Promise<
+    UserSkillCatalogItem[]
+  > => {
+    // A bundle a goal batch generated records the batch in its origin. Tested
+    // by key existence (never `IS NULL` on an extracted jsonb value), in the
+    // query, so a run that lists only hand-made skills never reads the rest.
+    const generated = sql<boolean>`COALESCE(jsonb_exists(${documents.metadata} -> 'userSkill' -> 'origin', 'batchNodeId'), false)`;
     const rows = await this.db
       .select({
         description: documents.description,
         filename: documents.filename,
+        generated,
         id: documents.id,
-        metadata: documents.metadata,
         title: documents.title,
       })
       .from(documents)
-      .where(this.bundleWhere())
+      .where(includeGenerated ? this.bundleWhere() : and(this.bundleWhere(), sql`NOT ${generated}`))
       .orderBy(asc(documents.filename));
     return rows.map((row) => ({
       description: row.description ?? '',
-      generated: !!(row.metadata?.userSkill as UserSkillMeta | undefined)?.origin?.batchNodeId,
+      generated: !!row.generated,
       id: row.id,
       name: row.filename ?? '',
       title: row.title ?? row.filename ?? '',

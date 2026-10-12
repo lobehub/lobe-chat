@@ -103,6 +103,8 @@ describe('UserSkillModel', () => {
     expect((await model.listCatalog()).map((item) => [item.name, item.generated])).toEqual([
       ['goal-plan-x', true],
     ]);
+    // A run listing only hand-made skills does not read it at all.
+    expect(await model.listCatalog({ includeGenerated: false })).toEqual([]);
   });
 
   it('keeps a workspace member’s skills away from the other members', async () => {

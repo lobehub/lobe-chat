@@ -847,22 +847,35 @@ export const prepareOperation = async (
     // The catalog carries no bodies; only the pinned / run-named skills read
     // theirs, so a library that grows with every batch stays cheap to list.
     const userSkills = new UserSkillService(deps.db, deps.userId, deps.workspaceId);
-    const userSkillContent = new Map(
-      (await userSkills.loadRuntimeSkills([...pinnedSkillIds, ...(agentPlugins ?? [])])).map(
-        (skill) => [skill.identifier, skill.content] as const,
-      ),
-    );
+    const namedUserSkills = await userSkills.loadRuntimeSkills([
+      ...pinnedSkillIds,
+      ...(agentPlugins ?? []),
+    ]);
     // Skills the system generated for one job (a goal batch's plan) are not
-    // listed to every run — one accumulates per batch — only joined where the
-    // run pins or names them, as that batch's units do.
-    const userSkillMetas = (await userSkills.listCatalog())
-      .filter((skill) => !skill.generated || userSkillContent.has(skill.identifier))
-      .map((skill) => ({
-        content: userSkillContent.get(skill.identifier),
+    // listed to every run — one accumulates per batch, so the query leaves them
+    // out — only joined where the run pins or names them, as that batch's units
+    // do. Those come in with their bodies.
+    const listed = await userSkills.listCatalog({ includeGenerated: false });
+    const listedIds = new Set(listed.map((skill) => skill.identifier));
+    const namedContent = new Map(
+      namedUserSkills.map((skill) => [skill.identifier, skill.content] as const),
+    );
+    const userSkillMetas = [
+      ...listed.map((skill) => ({
+        content: namedContent.get(skill.identifier),
         description: skill.description,
         identifier: skill.identifier,
         name: skill.name,
-      }));
+      })),
+      ...namedUserSkills
+        .filter((skill) => !listedIds.has(skill.identifier))
+        .map((skill) => ({
+          content: skill.content,
+          description: skill.description,
+          identifier: skill.identifier,
+          name: skill.name,
+        })),
+    ];
 
     const projectMetas = workspaceInit.workspace.skills.map((s) => ({
       description: s.description ?? '',
