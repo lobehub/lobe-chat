@@ -1,14 +1,24 @@
 'use client';
 
 import { Text } from '@lobehub/ui/base-ui';
+import { useSize } from 'ahooks';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { type ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 
 import { formatPercent, usageLevel } from './format';
 import { USAGE_COLOR, usageTextColor } from './shared';
 
-/** Tick count of the segmented bar — fine enough that 1–2% still lights a tick. */
-const SEGMENTS = 40;
+/**
+ * Whole-pixel tick geometry. Splitting the bar into a fixed tick count gives
+ * fractional widths that the browser snaps to alternating 3px / 4px ticks, so
+ * the count follows the bar width instead.
+ */
+const SEGMENT_WIDTH = 3;
+const SEGMENT_GAP = 1;
+
+/** Ticks that fit a bar of `width` px. */
+export const segmentCount = (width: number) =>
+  Math.max(0, Math.floor((width + SEGMENT_GAP) / (SEGMENT_WIDTH + SEGMENT_GAP)));
 
 const styles = createStaticStyles(({ css }) => ({
   // Fills its track's width — a grid cell in the card meter, a full-width row
@@ -17,7 +27,7 @@ const styles = createStaticStyles(({ css }) => ({
   bar: css`
     display: flex;
     flex: none;
-    gap: 1px;
+    gap: ${SEGMENT_GAP}px;
 
     width: 100%;
     min-width: 0;
@@ -31,15 +41,15 @@ const styles = createStaticStyles(({ css }) => ({
     align-items: center;
   `,
   segment: css`
-    flex: 1;
-    min-width: 1px;
+    flex: none;
+    width: ${SEGMENT_WIDTH}px;
     border-radius: 1px;
   `,
 }));
 
 /** Lit ticks for a reading: any non-zero usage lights at least one, so a running machine never reads as empty. */
-export const litSegments = (value: number | null | undefined, segments = SEGMENTS) => {
-  if (value === null || value === undefined || value <= 0) return 0;
+export const litSegments = (value: number | null | undefined, segments: number) => {
+  if (segments <= 0 || value === null || value === undefined || value <= 0) return 0;
   return Math.min(segments, Math.max(1, Math.round((value / 100) * segments)));
 };
 
@@ -54,13 +64,16 @@ interface UsageBarProps {
  * No reading keeps every segment unlit.
  */
 export const UsageBar = ({ height = 12, value }: UsageBarProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const size = useSize(ref);
+  const segments = segmentCount(size?.width ?? 0);
   const level = usageLevel(value);
-  const lit = litSegments(value);
+  const lit = litSegments(value, segments);
   const color = level ? USAGE_COLOR[level] : cssVar.colorFillSecondary;
 
   return (
-    <div aria-hidden className={styles.bar} style={{ height }}>
-      {Array.from({ length: SEGMENTS }, (_, i) => (
+    <div aria-hidden className={styles.bar} ref={ref} style={{ height }}>
+      {Array.from({ length: segments }, (_, i) => (
         <span
           className={styles.segment}
           key={i}
