@@ -63,6 +63,17 @@ export interface DefineReplicaOptions<TParams, TData, TFetched = TData, TCursor 
   name: string;
   paging?: ReplicaPagingConfig<any, TCursor>;
   /**
+   * Bound what the resource keeps in storage. `maxEntries` caps the persisted
+   * rows (storage keys: one per entry key and query) per scope; past it the
+   * least recently used rows are evicted — their persisted row, index entry
+   * and, when nothing holds it, their memory entry. Use rows (a hydrate or a
+   * persist, including a skipped unchanged one) count as recent, and the order
+   * lives in the persisted index, so it survives reloads. A row on screen (a
+   * mounted `useSync`, see `retain`), with pending optimistic writes or a
+   * `loadMore` in flight is never evicted. Unbounded by default.
+   */
+  persist?: { maxEntries?: number };
+  /**
    * Entries that never touch storage (no hydrate, no persist) — e.g. scoped
    * buckets whose rows must not land under an ordinary entry. Defaults to all.
    */
@@ -99,6 +110,7 @@ export const defineReplica = <TParams, TData, TFetched = TData, TCursor = any>(
   return {
     fetcher: options.fetcher,
     key: options.key,
+    maxPersistedEntries: options.persist?.maxEntries,
     name: options.name,
     namespace,
     paging: options.paging,

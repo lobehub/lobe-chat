@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { type SWRResponse } from 'swr';
 
 import { createReplicaSlice, type ReplicaLens, type ReplicaSyncResult } from '@/libs/replica';
-import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
+import { mutate } from '@/libs/swr';
 import { userMemoryKeys } from '@/libs/swr/keys';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { type StoreSetter } from '@/store/types';
@@ -11,14 +11,9 @@ import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type UserMemoryStore, useUserMemoryStore } from '../../store';
-import { type IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
+import { clearUserReplicas, userMemoryIdentityScope } from '../../utils/replica';
 import { createMemorySearchParams } from '../../utils/searchParams';
-import { activityInitialState } from '../activity/initialState';
-import { contextInitialState } from '../context/initialState';
-import { experienceInitialState } from '../experience/initialState';
-import { identityInitialState } from '../identity/initialState';
-import { preferenceInitialState } from '../preference/initialState';
 import {
   type MemoryDetailDisplay,
   memoryDetailKey,
@@ -121,18 +116,13 @@ export class BaseActionImpl {
     );
   };
 
-  /** PersonaHeader confirmation deletes the persona through memoryCRUDService, then clears its cache. */
+  /** PersonaHeader confirmation deletes the persona through memoryCRUDService, then refreshes its replica. */
   deletePersona = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
-    await mutate(
-      userMemoryKeys.persona(),
-      async () => {
-        await memoryCRUDService.deletePersona();
-        this.#set({ persona: undefined, personaInit: true }, false, n('deletePersona'));
-        return null;
-      },
-      { revalidate: false },
-    );
+    await memoryCRUDService.deletePersona();
+    // The persona is a replica view now: drop it locally and re-read server
+    // truth (null) so the section disappears without waiting for the network.
+    await this.#get().refreshPersona();
   };
 
   /**
@@ -176,96 +166,87 @@ export class BaseActionImpl {
    * no record of, so the purge is retried once; resolves `true` once storage
    * is purged.
    */
-  internal_clearMemoryReplicas = async (): Promise<boolean> => {
-    let cleared = false;
-    for (let attempt = 0; attempt < 2 && !cleared; attempt++) {
-      const results = await Promise.all([this.#retrieve.clear(), this.#detail.clear()]);
-      cleared = results.every(Boolean);
-    }
-    return cleared;
-  };
+  internal_clearMemoryReplicas = (user?: string): Promise<boolean> =>
+    clearUserReplicas(user, this.#retrieve, this.#detail);
 
   purgeAllMemories = async (): Promise<void> => {
     const { memoryCRUDService } = await import('@/services/userMemory');
+
+    // Every userMemory replica is partitioned per user (see
+    // `userMemoryIdentityScope`), so a workspace switch while the request is in
+    // flight changes nothing below.
+    const user = userMemoryIdentityScope.get();
 
     await memoryCRUDService.deleteAll();
 
     // Replica-backed reads own their state and persisted projection: wipe them
     // through the engine (memory + IndexedDB + reads in flight) before the
-    // revalidation below, so a reload never resurrects purged rows. Each
-    // `internal_clear*` resolves `false` when a persisted row survived a storage
-    // failure (the next session would hydrate it back).
+    // plain-state reset and the revalidation below, so a reload never
+    // resurrects purged rows. Each `internal_clear*` retries once and resolves
+    // `false` when a persisted row survived a storage failure (the next session
+    // would hydrate it back). No slice resets its replica-owned fields here.
+    //
+    // `user` is the account whose memories the server deleted. If another
+    // account became active while the request ran, each slice purges only that
+    // user's persisted partition and leaves the active user's views and rows
+    // alone (`clearUserReplicas`).
     const replicaPurges: boolean[] = [
       // One line per replica-backed slice.
-      await this.#get().internal_clearMemoryReplicas(),
+      await this.#get().internal_clearMemoryReplicas(user),
+      await this.#get().internal_clearTopicMemories(user),
+      await this.#get().internal_clearHomeReplicas(user),
+      await this.#get().internal_clearActivityList(user),
+      await this.#get().internal_clearContextList(user),
+      await this.#get().internal_clearExperienceList(user),
+      await this.#get().internal_clearIdentityList(user),
+      await this.#get().internal_clearPreferenceList(user),
     ];
+    const purgeFailed = !replicaPurges.every(Boolean);
+
+    // An account switch: the active views, plain state and mounted queries all
+    // belong to the other user, so there is nothing to reset or refetch.
+    if (userMemoryIdentityScope.get() !== user) {
+      if (purgeFailed) throw new Error('Failed to purge persisted memories from local storage');
+      return;
+    }
 
     this.#set(
       produce((draft) => {
-        Object.assign(draft, activityInitialState);
-        Object.assign(draft, contextInitialState);
-        Object.assign(draft, experienceInitialState);
-        Object.assign(draft, identityInitialState);
-        Object.assign(draft, preferenceInitialState);
-
         draft.activeParams = undefined;
         draft.activeParamsKey = undefined;
         draft.editingMemoryContent = undefined;
         draft.editingMemoryId = undefined;
         draft.editingMemoryLayer = undefined;
-        draft.persona = undefined;
-        draft.personaInit = true;
-        draft.roles = [];
-        draft.tags = [];
-        draft.tagsInit = true;
       }),
       false,
       n('purgeAllMemories'),
     );
 
+    // `clear()` does not refetch: revalidate every mounted read so the views
+    // settle on the server's (now empty) answer. The lists, the retrieve map,
+    // the detail and the home reads adopt their legacy SWR keys as sync keys;
+    // identities (and the topic memories, see `internal_clearTopicMemories`)
+    // sync under the replica's own keys.
     await Promise.all([
-      mutate(
-        (key) => Array.isArray(key) && key[0] === userMemoryKeys.memoryDetail.root,
-        undefined,
-        { revalidate: true },
+      ...[
+        userMemoryKeys.activities.root,
+        userMemoryKeys.contexts.root,
+        userMemoryKeys.experiences.root,
+        userMemoryKeys.memoryDetail.root,
+        userMemoryKeys.preferences.root,
+        userMemoryKeys.retrieve.root,
+      ].map((root) =>
+        mutate((key) => Array.isArray(key) && key[0] === root, undefined, { revalidate: true }),
       ),
-      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.activities.root, undefined, {
-        revalidate: true,
-      }),
-      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.contexts.root, undefined, {
-        revalidate: true,
-      }),
-      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.experiences.root, undefined, {
-        revalidate: true,
-      }),
-      mutate(
-        (key) => Array.isArray(key) && key[0] === userMemoryKeys.identityList.root,
-        undefined,
-        {
-          revalidate: true,
-        },
-      ),
-      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.preferences.root, undefined, {
-        revalidate: true,
-      }),
-      mutate((key) => Array.isArray(key) && key[0] === userMemoryKeys.retrieve.root, undefined, {
-        revalidate: true,
-      }),
-      mutate(userMemoryKeys.persona(), null, { revalidate: false }),
-      mutate(
-        userMemoryKeys.tags(),
-        {
-          roles: [],
-          tags: [],
-        },
-        { revalidate: false },
-      ),
+      mutate(userMemoryKeys.persona(), undefined, { revalidate: true }),
+      mutate(userMemoryKeys.tags(), undefined, { revalidate: true }),
+      this.#get().refreshIdentities(),
     ]);
 
     // The in-memory reset above already stands — the user must not keep seeing
     // purged memories. Surface the rows that survived locally instead of
     // reporting a purge the next session would silently undo.
-    if (!replicaPurges.every(Boolean)) {
+    if (purgeFailed) {
       throw new Error('Failed to purge persisted memories from local storage');
     }
   };
@@ -303,85 +284,68 @@ export class BaseActionImpl {
     );
   };
 
+  /**
+   * Save an inline edit. Every layer is replica-backed: its slice's
+   * `internal_update<X>Entity` patches the row in every loaded query and in
+   * the persisted rows of the ones not loaded, so a filter / sort switch or a
+   * reload shows the edit before any refetch. The list and the detail are
+   * then revalidated against the server.
+   */
   updateMemory = async (id: string, content: string, layer: LayersEnum): Promise<void> => {
-    let listKeyRoot: string | undefined;
+    const listRoot = (root: string) => () => mutate((key) => Array.isArray(key) && key[0] === root);
+    let revalidateList: () => Promise<unknown>;
 
     switch (layer) {
       case LayersEnum.Activity: {
         await memoryCRUDService.updateActivity(id, { narrative: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.activities.find((memory) => memory.id === id);
-            if (item) item.narrative = content;
-          }),
-          false,
-          n('updateMemory/activity'),
-        );
-        listKeyRoot = userMemoryKeys.activities.root;
+        this.#get().internal_updateActivityEntity(id, (item) => ({ ...item, narrative: content }));
+        revalidateList = listRoot(userMemoryKeys.activities.root);
         break;
       }
       case LayersEnum.Context: {
         await memoryCRUDService.updateContext(id, { description: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.contexts.find((memory) => memory.id === id);
-            if (item) item.description = content;
-          }),
-          false,
-          n('updateMemory/context'),
-        );
-        listKeyRoot = userMemoryKeys.contexts.root;
+        this.#get().internal_updateContextEntity(id, (item) => ({ ...item, description: content }));
+        revalidateList = listRoot(userMemoryKeys.contexts.root);
         break;
       }
       case LayersEnum.Experience: {
         await memoryCRUDService.updateExperience(id, { keyLearning: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.experiences.find((memory) => memory.id === id);
-            if (item) item.keyLearning = content;
-          }),
-          false,
-          n('updateMemory/experience'),
-        );
-        listKeyRoot = userMemoryKeys.experiences.root;
+        this.#get().internal_updateExperienceEntity(id, (item) => ({
+          ...item,
+          keyLearning: content,
+        }));
+        revalidateList = listRoot(userMemoryKeys.experiences.root);
         break;
       }
       case LayersEnum.Identity: {
         await memoryCRUDService.updateIdentity(id, { description: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.identities.find((memory) => memory.id === id);
-            if (item) item.description = content;
-          }),
-          false,
-          n('updateMemory/identity'),
-        );
-        listKeyRoot = userMemoryKeys.identityList.root;
+        this.#get().internal_updateIdentityEntity(id, (item) => ({
+          ...item,
+          description: content,
+        }));
+        // The list and the self identities injected into chat sync under the
+        // replica's own keys.
+        revalidateList = this.#get().refreshIdentities;
         break;
       }
       case LayersEnum.Preference: {
         await memoryCRUDService.updatePreference(id, { conclusionDirectives: content });
-        this.#set(
-          produce((draft) => {
-            const item = draft.preferences.find((memory) => memory.id === id);
-            if (item) item.conclusionDirectives = content;
-          }),
-          false,
-          n('updateMemory/preference'),
-        );
-        listKeyRoot = userMemoryKeys.preferences.root;
+        this.#get().internal_updatePreferenceEntity(id, (item) => ({
+          ...item,
+          conclusionDirectives: content,
+        }));
+        revalidateList = listRoot(userMemoryKeys.preferences.root);
         break;
+      }
+      default: {
+        this.#get().clearEditingMemory();
+        return;
       }
     }
 
     this.#get().clearEditingMemory();
 
-    if (listKeyRoot) {
-      await Promise.all([
-        mutate((key) => Array.isArray(key) && key[0] === listKeyRoot),
-        mutate(userMemoryKeys.memoryDetail(layer, id)),
-      ]);
-    }
+    await Promise.all([revalidateList(), mutate(userMemoryKeys.memoryDetail(layer, id))]);
   };
 
   /**
@@ -434,31 +398,6 @@ export class BaseActionImpl {
       isValidating: sync.isValidating,
       mutate: sync.revalidate,
     } as unknown as SWRResponse<RetrieveMemoryResult>;
-  };
-
-  useInitIdentities = (isLogin: boolean): SWRResponse<any> => {
-    return useClientDataSWRWithSync<IdentityForInjection[]>(
-      isLogin ? userMemoryKeys.identities() : null,
-      // Use dedicated API that filters for self identities only
-      () => userMemoryService.queryIdentitiesForInjection({ limit: 25 }),
-      {
-        onSuccess: (data) => {
-          if (!data) return;
-
-          const fetchedAt = Date.now();
-
-          this.#set(
-            {
-              globalIdentities: data,
-              globalIdentitiesFetchedAt: fetchedAt,
-              globalIdentitiesInit: true,
-            },
-            false,
-            n('useInitIdentities/success', { count: data.length }),
-          );
-        },
-      },
-    );
   };
 }
 

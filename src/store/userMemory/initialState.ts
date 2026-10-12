@@ -2,24 +2,22 @@ import { type RetrieveMemoryParams, type RetrieveMemoryResult } from '@lobechat/
 
 import { createReplicaState, type ReplicaState } from '@/libs/replica';
 
-import { type ActivitySliceState } from './slices/activity';
-import { activityInitialState } from './slices/activity';
+import { type ActivitySliceState } from './slices/activity/initialState';
+import { activityInitialState } from './slices/activity/initialState';
 import { type AgentMemorySliceState } from './slices/agent';
 import { agentMemoryInitialState } from './slices/agent';
 import { type MemoryDetailDisplay } from './slices/base/projection';
-import { type ContextSliceState } from './slices/context';
-import { contextInitialState } from './slices/context';
-import { type ExperienceSliceState } from './slices/experience';
-import { experienceInitialState } from './slices/experience';
+import { type ContextSliceState } from './slices/context/initialState';
+import { contextInitialState } from './slices/context/initialState';
+import { type ExperienceSliceState } from './slices/experience/initialState';
+import { experienceInitialState } from './slices/experience/initialState';
+import { homeInitialState, type HomeSliceState } from './slices/home/initialState';
 import { type IdentitySliceState } from './slices/identity';
 import { identityInitialState } from './slices/identity';
-import { type PreferenceSliceState } from './slices/preference';
-import { preferenceInitialState } from './slices/preference';
+import { type PreferenceSliceState } from './slices/preference/initialState';
+import { preferenceInitialState } from './slices/preference/initialState';
 
-export interface PersonaData {
-  content: string;
-  summary: string;
-}
+export type { PersonaData } from './slices/home/projection';
 
 export interface UserMemoryStoreState
   extends
@@ -27,6 +25,7 @@ export interface UserMemoryStoreState
     AgentMemorySliceState,
     ContextSliceState,
     ExperienceSliceState,
+    HomeSliceState,
     IdentitySliceState,
     PreferenceSliceState {
   activeParams?: RetrieveMemoryParams;
@@ -45,11 +44,6 @@ export interface UserMemoryStoreState
   memoryMap: Record<string, RetrieveMemoryResult>;
   /** Local-first bookkeeping for the retrieve result map (`memoryMap`). */
   memoryRetrieveReplica: ReplicaState<RetrieveMemoryResult>;
-  persona?: PersonaData;
-  personaInit: boolean;
-  roles: { count: number; tag: string }[];
-  tags: { count: number; tag: string }[];
-  tagsInit: boolean;
 }
 
 export const initialState: UserMemoryStoreState = {
@@ -57,6 +51,7 @@ export const initialState: UserMemoryStoreState = {
   ...agentMemoryInitialState,
   ...contextInitialState,
   ...experienceInitialState,
+  ...homeInitialState,
   ...identityInitialState,
   ...preferenceInitialState,
   activeParams: undefined,
@@ -69,9 +64,4 @@ export const initialState: UserMemoryStoreState = {
   memoryFetchedAtMap: {},
   memoryMap: {},
   memoryRetrieveReplica: createReplicaState<RetrieveMemoryResult>(),
-  persona: undefined,
-  personaInit: false,
-  roles: [],
-  tags: [],
-  tagsInit: false,
 };

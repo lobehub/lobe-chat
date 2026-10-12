@@ -49,23 +49,44 @@ slice.optimistic(key, apply, serverCall);
 
 A persisted read is asynchronous, so a list hydrated only by `useSync` paints its loading state for a few frames on a cold start. When that list must paint without a skeleton, seed it from the route loader before the route commits: `slice.ensureScope(scope)` + `slice.hydrate(params, scope)`, bounded by `settleWithin(…, PRE_PAINT_HYDRATE_TIMEOUT)` from `@/libs/replica/prePaint`. A later `useSync` hydrate is a no-op once the slot is filled.
 
+A persisted row is only rewritten when its value changes: a persist whose value is deep-equal to what the engine last wrote to (or hydrated from) that row is skipped, so an unchanged revalidation costs no storage write. A failed write, a delete, an entity patch, an eviction or a `clear()` forgets what the row holds, so the next persist writes it again. The engine only tracks its own writes: a row changed behind it (another tab) is corrected by the next changed value or the next session.
+
 Inside LobeHub, use `@/libs/replica`. It presets the cache scope, IndexedDB / localStorage storage and the app's SWR driver.
 
 ## Invalidation
 
 Persisted rows are kept per entry key **and** per query (`key?<query>`), so a resource can hold several rows for one key. Never delete through a plain `set` or by clearing SWR keys: the persisted rows survive and a reload paints the deleted data. Use the primitive that matches what is gone:
 
-| What is gone                               | Call                                                           | What it does                                                                                                                                                                                            |
-| ------------------------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| One entity (a deleted topic, file, memory) | `linkReplicaEntity(...).remove(id)` / `slice.removeEntity(id)` | Drops it from every loaded entry and from persisted rows of unloaded entries. A value hydrated later — even by a read already in flight — comes back without it until a server value holds it again.    |
-| One entry key, under every filter / sort   | `slice.remove(key)`                                            | Drops the entry and every persisted query variant of the key. No variant hydrates again until a server `replace` for the key supersedes the removal.                                                    |
-| The whole resource ("delete all", a reset) | `slice.clear()` / `linkReplicaEntity(...).clear()`             | Empties memory in one commit, deletes every persisted row and the index of the active scope, and drops hydrates and `useSync` responses that started before it. Resolves `true` once storage is purged. |
+| What is gone                               | Call                                                           | What it does                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| One entity (a deleted topic, file, memory) | `linkReplicaEntity(...).remove(id)` / `slice.removeEntity(id)` | Drops it from every loaded entry and from persisted rows of unloaded entries. A value hydrated later — even by a read already in flight — comes back without it until a server value holds it again; if the persisted patch does not land (untrusted scope, unreadable storage), the guard stays for the session. |
+| One entry key, under every filter / sort   | `slice.remove(key)`                                            | Drops the entry and every persisted query variant of the key. No variant hydrates again until a server `replace` for the key supersedes the removal.                                                                                                                                                              |
+| The whole resource ("delete all", a reset) | `slice.clear()` / `linkReplicaEntity(...).clear()`             | Empties memory in one commit, deletes every persisted row and the index of the active scope, and drops hydrates and `useSync` responses that started before it. Resolves `true` once storage is purged.                                                                                                           |
 
 `slice.updateEntity(id, (item) => undefined)` also drops the entity from loaded values and persisted rows, but it is a plain patch: only `removeEntity` (which `linkReplicaEntity.remove` and an optimistic `'remove'` call) guards hydrates already in flight.
 
-A `ReplicaStorage` must reject from `remove` when a delete did not land, and should implement `getStrict` (a read that rejects on I/O failure) so an unreadable index fails a purge instead of passing for an empty one. `get` and `set` stay best-effort. The engine then keeps the row indexed and the removal unpurged, so the next `remove(key)` / `clear()` retries it.
+A `ReplicaStorage` must reject from `remove` when a delete did not land, and must implement `getStrict` (a read that rejects on I/O failure) for any destructive pass to succeed: `remove(key)` variant scans, `clear()`, off-scope purges, entity patches of unloaded rows and evictions all read through it, so an unreadable index fails the pass instead of passing for an empty one. A storage without `getStrict` still hydrates and persists, but every destructive pass fails: `clear()` resolves `false`, a removal stays unpurged and is retried, an entity guard is kept. `get` and `set` stay best-effort. The engine then keeps the row indexed and the removal unpurged, so the next `remove(key)` / `clear()` retries it.
 
 Prefer the narrowest call: an entity delete keeps the rest of every list; `remove(key)` is for a key whose whole value is gone or denied (NOT_FOUND / FORBIDDEN); `clear()` is for flows that invalidate everything the user has of that resource. `clear()` does not refetch: mounted views show their loading state until the next sync, so call `slice.revalidate()` after it when the server still has data to show.
+
+## Bounding persisted query variants
+
+Every distinct key + query a resource persists is its own row, so a resource keyed (or queried) by free text — a search, a market filter, a per-topic bundle — would grow storage with every query the user ever ran. Opt in to a cap instead of hand-rolling a recency window around `remove`:
+
+```ts
+const searchList = defineReplica<Params, Result>({
+  key: ({ keyword }) => keyword,
+  name: 'search',
+  persist: { maxEntries: 20 }, // at most 20 persisted rows per scope
+  // …
+});
+```
+
+- **What counts.** Persisted storage keys per scope: each `key?query` row counts once.
+- **Recency.** A hydrate, a persist, or an unchanged revalidation whose write is skipped marks the row as used. The order is kept in the per-scope index (oldest first), so it survives reloads. Rows an unbounded release indexed keep their append order.
+- **Eviction.** Past the cap, the oldest rows go: the row, its index entry, and the memory entry that answers it. An evicted entry is a cache miss. A revisit fetches it again; it is not a removal and does not block hydrates the way `remove` does.
+- **Never evicted.** A row with a mounted `useSync` (pinned for as long as it is mounted), an entry with pending optimistic writes, and an entry with a `loadMore` in flight. A view that renders an entry without `useSync` pins it with `slice.retain(key, storageKey)`, which returns the release.
+- **Failure.** A failed delete stays indexed and is picked again on the next use. An unreadable index (see `getStrict`) evicts nothing.
 
 ## Transcripts and other irregular pages
 

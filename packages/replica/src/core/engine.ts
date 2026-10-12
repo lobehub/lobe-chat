@@ -18,7 +18,7 @@ import type { ReplicaAction, ReplicaEffect, ReplicaViewWrite } from './reducer';
 import { replicaReducer } from './reducer';
 import { createTombstones } from './tombstones';
 import type { ReplicaResource, ReplicaState } from './types';
-import { ReplicaWriteQueue } from './writeQueue';
+import { readReplicaRowStrict, ReplicaWriteQueue } from './writeQueue';
 
 /** Reserved storage key of the per-scope index of persisted rows. */
 export const REPLICA_INDEX_KEY = '__replica:index';
@@ -182,8 +182,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   // count: it is released once its storage patch landed (`releasedAt`) and is
   // dropped as soon as no hydrate that started before that point is pending.
   // So memory stays bounded by in-flight reads, and no guard a pending read
-  // still needs is ever evicted. A server value holding the entity again
-  // (restored) lifts it early.
+  // still needs is ever evicted. A patch that did not land is never released:
+  // the unloaded row still holds the entity, so every later hydrate needs the
+  // guard. A server value holding the entity again (restored) lifts it early.
   /** Logical clock shared by hydrate starts and guard releases. */
   let guardClock = 0;
   /** Start ticks of the hydrates in flight, per scope. */
@@ -249,20 +250,189 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return seq;
   };
 
+  // ---- last persisted value per row ---------------------------------------
+  // What this session knows a row holds in storage: the value it queued (until
+  // that write fails) or read back by a hydrate no write raced. A persist of a
+  // deep-equal value is skipped — an unchanged revalidation must not rewrite
+  // the same row. Every path that may change a row behind it (a delete, a
+  // patch, a clear, an eviction) forgets the row, so the next persist writes.
+  const storedValues = new Map<string, Map<string, unknown>>();
+  const rememberStored = (scope: string, queryKey: string, data: unknown) => {
+    const rows = storedValues.get(scope) ?? new Map<string, unknown>();
+    storedValues.set(scope, rows);
+    rows.set(queryKey, data);
+  };
+  const forgetStored = (scope: string, queryKeys: Iterable<string>) => {
+    const rows = storedValues.get(scope);
+    if (!rows) return;
+    for (const queryKey of queryKeys) rows.delete(queryKey);
+    if (rows.size === 0) storedValues.delete(scope);
+  };
+  const isStored = (scope: string, queryKey: string, data: unknown) => {
+    const rows = storedValues.get(scope);
+    return !!rows?.has(queryKey) && isEqual(rows.get(queryKey), data);
+  };
+
+  // ---- bounded persisted entries ----------------------------------------
+  // With `persist.maxEntries`, the index is kept in least-recently-used order
+  // (oldest first — the order an unbounded index is appended in, so rows an
+  // earlier release indexed keep their place) and every use of a row moves it
+  // to the end. Past the cap the oldest rows that nothing pins are evicted.
+  const maxEntries = resource.maxPersistedEntries;
+  /** Mounted readers per storage key and per entry key (see `retain`). */
+  const retainedRows = new Map<string, number>();
+  const retainedKeys = new Map<string, number>();
+  /** Rows whose eviction delete is queued, per scope. */
+  const evicting = new Map<string, Set<string>>();
+
+  const bump = (counts: Map<string, number>, id: string, by: number) => {
+    const next = (counts.get(id) ?? 0) + by;
+    if (next > 0) counts.set(id, next);
+    else counts.delete(id);
+  };
+
+  /**
+   * Pin an entry (and the row of the query it asks for) while something shows
+   * it: eviction never drops a retained row or the memory entry of a retained
+   * key. `useSync` retains for as long as it is mounted. Returns the release.
+   */
+  const retain = (key: string, queryKey: string = replicaStorageKey(key)) => {
+    bump(retainedKeys, key, 1);
+    bump(retainedRows, queryKey, 1);
+    let released = false;
+    return () => {
+      if (released) return;
+      released = true;
+      bump(retainedKeys, key, -1);
+      bump(retainedRows, queryKey, -1);
+    };
+  };
+
+  /** Rows the memory of `scope` holds, by storage key → entry key. */
+  const loadedRows = (scope: string) => {
+    const slot = getSlot();
+    const rows = new Map<string, string>();
+    if (slot.scope !== scope) return rows;
+    for (const [key, entry] of Object.entries(slot.entries))
+      rows.set(replicaStorageKey(key, entry.query), key);
+    return rows;
+  };
+
+  /** A row on screen, or whose entry has writes / a page load in flight. */
+  const isPinned = (queryKey: string, entryKey: string | undefined) =>
+    retainedRows.has(queryKey) ||
+    (entryKey !== undefined &&
+      (retainedKeys.has(entryKey) ||
+        (getSlot().entries[entryKey]?.pending.length ?? 0) > 0 ||
+        loadingMore.has(entryKey)));
+
+  /** The oldest unpinned rows past the cap (`keys` is oldest first). */
+  const pickEvictions = (scope: string, keys: string[], touched: string): string[] => {
+    const going = evicting.get(scope);
+    let excess = keys.length - maxEntries! - keys.filter((key) => going?.has(key)).length;
+    if (excess <= 0) return [];
+    const loaded = loadedRows(scope);
+    const picked: string[] = [];
+    for (const queryKey of keys) {
+      if (excess <= 0) break;
+      if (queryKey === touched || going?.has(queryKey)) continue;
+      if (isPinned(queryKey, loaded.get(queryKey))) continue;
+      picked.push(queryKey);
+      excess -= 1;
+    }
+    return picked;
+  };
+
+  /**
+   * Evict rows: drop the memory entries that answer them (one commit), then
+   * delete the rows. A row leaves the index only once its delete landed, so a
+   * failed eviction is picked again by a later use.
+   */
+  const evictRows = (scope: string, queryKeys: string[]) => {
+    if (resource.scope.get() !== scope || !resource.scope.canPersist()) return;
+    const going = evicting.get(scope) ?? new Set<string>();
+    evicting.set(scope, going);
+    const loaded = loadedRows(scope);
+    // Re-check: a row may have been pinned since it was picked.
+    const rows = queryKeys.filter(
+      (queryKey) => !going.has(queryKey) && !isPinned(queryKey, loaded.get(queryKey)),
+    );
+    if (rows.length === 0) return;
+    for (const queryKey of rows) going.add(queryKey);
+    const dropped = rows.flatMap((queryKey) => {
+      const key = loaded.get(queryKey);
+      return key === undefined ? [] : [key];
+    });
+    if (dropped.length > 0) {
+      const slot = getSlot();
+      const entries = { ...slot.entries };
+      for (const key of dropped) delete entries[key];
+      port.commit(
+        dropped.map((key) => ({ data: undefined, key })),
+        { entries, scope },
+        `${prefix}/evict`,
+      );
+    }
+    void deleteRows(scope, rows).finally(() => {
+      for (const queryKey of rows) going.delete(queryKey);
+      if (going.size === 0 && evicting.get(scope) === going) evicting.delete(scope);
+    });
+  };
+
+  /**
+   * A bounded resource used a row: move it to the end of the index and evict
+   * past the cap. No-op for an unbounded resource.
+   */
+  const touchStorageKey = (scope: string, queryKey: string) => {
+    if (!writeQueue || maxEntries === undefined) return;
+    const known = indexed.get(scope) ?? new Set<string>();
+    indexed.set(scope, known);
+    known.add(queryKey);
+    let picked: string[] = [];
+    void writeQueue
+      .update(
+        indexKey(scope),
+        (current) => {
+          const keys = (current?.data as unknown as string[] | undefined) ?? [];
+          const next = [...keys.filter((key) => key !== queryKey), queryKey];
+          picked = pickEvictions(scope, next, queryKey);
+          if (keys.length === next.length && keys.at(-1) === queryKey) return undefined;
+          return { data: next as unknown as TData, updatedAt: Date.now() };
+        },
+        { read: 'prefer-strict' },
+      )
+      .then((touched) => {
+        // Unreadable index: leave it untouched, retry the append on the next use.
+        if (!touched) return void known.delete(queryKey);
+        if (picked.length > 0) evictRows(scope, picked);
+      });
+  };
+
   /** Record a persisted row in the index (queued after the row write). */
   const trackStorageKey = (scope: string, queryKey: string) => {
     if (!writeQueue) return;
     noteWrite(scope, queryKey);
+    if (maxEntries !== undefined) return touchStorageKey(scope, queryKey);
     const known = indexed.get(scope) ?? new Set<string>();
     indexed.set(scope, known);
     if (known.has(queryKey)) return;
     known.add(queryKey);
-    writeQueue.update(indexKey(scope), (current) => {
-      const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
-      if (keys.has(queryKey)) return undefined;
-      keys.add(queryKey);
-      return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
-    });
+    void writeQueue
+      .update(
+        indexKey(scope),
+        (current) => {
+          const keys = new Set((current?.data as unknown as string[] | undefined) ?? []);
+          if (keys.has(queryKey)) return undefined;
+          keys.add(queryKey);
+          return { data: [...keys] as unknown as TData, updatedAt: Date.now() };
+        },
+        { read: 'prefer-strict' },
+      )
+      // An unreadable index is left untouched (never rewritten as just this
+      // key); forget the key so the next write of the row retries the append.
+      .then((tracked) => {
+        if (!tracked) known.delete(queryKey);
+      });
   };
 
   /**
@@ -272,11 +442,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * rows it could not enumerate.
    */
   const readIndex = async (scope: string): Promise<string[]> => {
-    const storage = resource.storage!;
-    // Call through `storage`: a class-based storage needs its receiver.
-    const row = await (storage.getStrict
-      ? storage.getStrict(indexKey(scope))
-      : storage.get(indexKey(scope)));
+    // A storage without `getStrict` rejects here: its `get` cannot tell an
+    // unreadable index from an empty one.
+    const row = await readReplicaRowStrict(resource.storage!, indexKey(scope));
     return (row?.data as unknown as string[] | undefined) ?? [];
   };
 
@@ -289,12 +457,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const known = indexed.get(scope);
     for (const queryKey of queryKeys) known?.delete(queryKey);
     const dropped = new Set(queryKeys);
-    writeQueue.update(indexKey(scope), (current) => {
-      const keys = (current?.data as unknown as string[] | undefined) ?? [];
-      const next = keys.filter((queryKey) => !dropped.has(queryKey));
-      if (!current || next.length === keys.length) return undefined;
-      return { data: next as unknown as TData, updatedAt: Date.now() };
-    });
+    writeQueue.update(
+      indexKey(scope),
+      (current) => {
+        const keys = (current?.data as unknown as string[] | undefined) ?? [];
+        const next = keys.filter((queryKey) => !dropped.has(queryKey));
+        if (!current || next.length === keys.length) return undefined;
+        return { data: next as unknown as TData, updatedAt: Date.now() };
+      },
+      { read: 'prefer-strict' },
+    );
   };
 
   /** Take rows whose delete landed out of the index, unless rewritten since. */
@@ -314,6 +486,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    */
   const deleteRows = (scope: string, queryKeys: string[]): Promise<boolean> => {
     const queue = writeQueue!;
+    forgetStored(scope, queryKeys);
     const queued = queryKeys.map((queryKey) => {
       const seq = noteWrite(scope, queryKey);
       return queue
@@ -385,7 +558,17 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         void deleteRows(effect.scope, [key.queryKey]);
         continue;
       }
-      writeQueue.set(key, { data, updatedAt: Date.now() });
+      // The row already holds this value: an unchanged revalidation is no write.
+      if (isStored(effect.scope, key.queryKey, data)) {
+        touchStorageKey(effect.scope, key.queryKey);
+        continue;
+      }
+      rememberStored(effect.scope, key.queryKey, data);
+      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
+        // A failed write leaves the row as it was: the next persist must retry.
+        if (!written && storedValues.get(effect.scope)?.get(key.queryKey) === data)
+          forgetStored(effect.scope, [key.queryKey]);
+      });
       trackStorageKey(effect.scope, key.queryKey);
     }
   };
@@ -419,6 +602,8 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const writes: ReplicaViewWrite<TData>[] = [];
     const read = (key: string) => readThrough(writes, key);
     if (slot.scope !== undefined && slot.scope !== activeScope) {
+      // Memory moves to another identity; what we knew of its rows can go.
+      storedValues.delete(slot.scope);
       const reset = replicaReducer(slot, { scope: activeScope, type: 'resetScope' }, read);
       writes.push(...reset.writes);
       slot = reset.state;
@@ -513,17 +698,22 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const purge = scopePurges.get(scope);
     if (purge && !(await purge)) return false;
     const query = resource.query(params);
-    const cached = await storage.get({ ...storageKey(key, query), scope });
+    const { queryKey } = storageKey(key, query);
+    const writesBefore = writeCounter;
+    const cached = await storage.get({ queryKey, scope });
     if (!cached) return false;
     // Re-check after the read: a removal or a clear that landed while it was in
     // flight must not resurrect the row it just dropped.
     if (isRemoved(scope, key) || clearGeneration(scope) !== generation) return false;
+    // The row holds what was read, unless a write was queued while reading.
+    if (writeCounter === writesBefore && !storedValues.get(scope)?.has(queryKey))
+      rememberStored(scope, queryKey, cached.data);
     if (options.isHydratable && !options.isHydratable(cached.data, params)) return false;
     // Entities deleted while the read was in flight may still be in the row.
     const stored = withoutRemovedEntities(scope, cached.data);
     if (stored === undefined) return false;
     const data = overwrite ? keepClientOnlyRows(stored, port.read(key)) : stored;
-    return dispatch({
+    const applied = dispatch({
       data,
       key,
       overwrite,
@@ -533,6 +723,9 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       type: 'hydrate',
       updatedAt: cached.updatedAt,
     });
+    // A hydrated row is a used row (bounded resources keep LRU order).
+    if (applied && resource.scope.canPersist()) touchStorageKey(scope, queryKey);
+    return applied;
   };
 
   const viewMatchesFields = (current: TData | undefined, params: TParams) => {
@@ -688,6 +881,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const scope = resource.scope.get();
     clearGenerations.set(scope, clearGeneration(scope) + 1);
     port.commit([{ type: 'clear' }], { entries: {}, scope }, `${prefix}/clear`);
+    storedValues.delete(scope);
     const purge = purgeScope(scope);
     scopePurges.set(scope, purge);
     return purge;
@@ -904,13 +1098,17 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * Apply an entity change to persisted rows that memory does not hold (the
    * memory path already persists loaded entries). Read-modify-write runs in
    * the per-key write queue, so it sees every earlier write; a missing row is
-   * never recreated. Resolves once the patches have settled.
+   * never recreated. Resolves once the patches have settled: `true` when every
+   * unloaded row is known to be patched (or nothing is persisted), `false` when
+   * a row may still hold the old entity (untrusted scope, unreadable index or
+   * row, a failed write, an identity switch mid-pass).
    */
-  const patchStoredEntity = async <TItem>(
+  const patchStoredEntityRows = async <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
-  ): Promise<void> => {
-    if (!writeQueue || !resource.scope.canPersist()) return;
+  ): Promise<boolean> => {
+    if (!writeQueue) return true;
+    if (!resource.scope.canPersist()) return false;
     const scope = resource.scope.get();
     const slot = getSlot();
     const loaded = new Set(
@@ -923,34 +1121,47 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       keys = await readIndex(scope);
     } catch (error) {
       // Rows cannot be enumerated: nothing to patch. Loaded entries are already
-      // updated, and a removal still guards later hydrates (`removeEntity`).
+      // updated, and a removal keeps guarding later hydrates (`removeEntity`).
       console.error(`[replica:${resource.name}] failed to read the persisted index`, error);
-      return;
+      return false;
     }
     // Identity changed while reading the index: those rows are not ours to touch.
-    if (resource.scope.get() !== scope) return;
-    const patches: Promise<void>[] = [];
+    if (resource.scope.get() !== scope) return false;
+    const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
       const seq = noteWrite(scope, queryKey);
+      forgetStored(scope, [queryKey]);
       let dropped = false;
       const patch = writeQueue
-        .update({ queryKey, scope }, (current) => {
-          if (!current) return undefined;
-          const next = mapEntity(current.data, id, fn);
-          if (next === current.data) return undefined;
-          if (next === undefined) {
-            dropped = true;
-            return null;
-          }
-          return { data: next, updatedAt: Date.now() };
-        })
+        .update(
+          { queryKey, scope },
+          (current) => {
+            if (!current) return undefined;
+            const next = mapEntity(current.data, id, fn);
+            if (next === current.data) return undefined;
+            if (next === undefined) {
+              dropped = true;
+              return null;
+            }
+            return { data: next, updatedAt: Date.now() };
+          },
+          { read: 'strict' },
+        )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
+          return written;
         });
       patches.push(patch);
     }
-    await Promise.all(patches);
+    return (await Promise.all(patches)).every(Boolean);
+  };
+
+  const patchStoredEntity = async <TItem>(
+    id: string,
+    fn: (item: TItem) => TItem | undefined,
+  ): Promise<void> => {
+    await patchStoredEntityRows(id, fn);
   };
 
   /**
@@ -983,18 +1194,23 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
       const seq = noteWrite(scope, queryKey);
+      forgetStored(scope, [queryKey]);
       let dropped = false;
       const patch = writeQueue
-        .update({ queryKey, scope }, (current) => {
-          if (!current) return undefined;
-          const next = fn(current.data);
-          if (next === current.data || next === undefined) return undefined;
-          if (next === null) {
-            dropped = true;
-            return null;
-          }
-          return { data: next, updatedAt: Date.now() };
-        })
+        .update(
+          { queryKey, scope },
+          (current) => {
+            if (!current) return undefined;
+            const next = fn(current.data);
+            if (next === current.data || next === undefined) return undefined;
+            if (next === null) {
+              dropped = true;
+              return null;
+            }
+            return { data: next, updatedAt: Date.now() };
+          },
+          { read: 'strict' },
+        )
         .then((written) => {
           if (written && dropped) confirmDeleted(scope, [[queryKey, seq]]);
         });
@@ -1003,13 +1219,16 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     await Promise.all(patches);
   };
 
-  /** `updateEntity`, returning the persisted-row patch (if any) to wait on. */
+  /**
+   * `updateEntity`, returning the persisted-row patch (if any) to wait on —
+   * `true` once every unloaded row is patched.
+   */
   const applyEntity = <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
     { persist = true }: { persist?: boolean } = {},
-  ): Promise<void> | undefined => {
-    const patch = persist ? patchStoredEntity(id, fn) : undefined;
+  ): Promise<boolean> | undefined => {
+    const patch = persist ? patchStoredEntityRows(id, fn) : undefined;
     for (const key of entityKeys(id)) {
       const current = port.read(key);
       if (current === undefined) continue;
@@ -1052,7 +1271,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const patch = applyEntity(id, () => undefined, options);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
-    if (patch) void patch.then(release, release);
+    // A patch that did not land (untrusted scope, unreadable index or row, a
+    // failed write, an identity switch) leaves the entity in an unloaded row:
+    // every later hydrate of that row could resurrect it, so the guard is kept
+    // — until a server value holds the entity again, or a later removal of the
+    // same id lands its patch.
+    if (patch)
+      void patch.then(
+        (patched) => {
+          if (patched) release();
+        },
+        () => undefined,
+      );
     else release();
   };
 
@@ -1091,6 +1321,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     removeEntity,
     replace,
     resource,
+    retain,
     revalidate,
     update,
     updateEntity,

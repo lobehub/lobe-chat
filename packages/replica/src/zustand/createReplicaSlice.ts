@@ -129,7 +129,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     },
     revalidate,
   });
-  const { clearGeneration, ensureScope, fetcher, hydrate, replace } = engine;
+  const { clearGeneration, ensureScope, fetcher, hydrate, replace, retain } = engine;
 
   /**
    * Row key of the head query each entry last asked for. One entry backs a
@@ -172,6 +172,11 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     // Remember the query this entry now asks for (see `headQuery`).
     useLayoutEffect(() => {
       if (active && key !== undefined && queryKey !== undefined) headQuery.set(key, queryKey);
+    }, [active, key, queryKey]);
+
+    // Pin the entry on screen against eviction (`persist.maxEntries`).
+    useLayoutEffect(() => {
+      if (active && key !== undefined && queryKey !== undefined) return retain(key, queryKey);
     }, [active, key, queryKey]);
 
     const hydration = driver.useQuery<boolean>(

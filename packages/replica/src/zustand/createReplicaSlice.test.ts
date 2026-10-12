@@ -34,11 +34,13 @@ const createMemoryStorage = (delays: Record<string, number> = {}) => {
   const rows = new Map<string, ReplicaRow<string[]>>();
   const writes: string[] = [];
   const indexRows = new Map<string, ReplicaRow<string[]>>();
+  const read: ReplicaStorage<string[]>['get'] = async ({ queryKey, scope }) =>
+    queryKey === REPLICA_INDEX_KEY
+      ? (indexRows.get(scope) as ReplicaRow<string[]> | undefined)
+      : rows.get(`${scope}|${queryKey}`);
   const storage: ReplicaStorage<string[]> = {
-    get: async ({ queryKey, scope }) =>
-      queryKey === REPLICA_INDEX_KEY
-        ? (indexRows.get(scope) as ReplicaRow<string[]> | undefined)
-        : rows.get(`${scope}|${queryKey}`),
+    get: read,
+    getStrict: read,
     remove: async ({ queryKey, scope }) => {
       if (queryKey === REPLICA_INDEX_KEY) return void indexRows.delete(scope);
       rows.delete(`${scope}|${queryKey}`);
