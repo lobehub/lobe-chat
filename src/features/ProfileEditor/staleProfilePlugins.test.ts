@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { initialState, type ToolStoreState } from '@/store/tool/initialState';
 import { AGENT_SKILL_LIST_KEY } from '@/store/tool/slices/agentSkills/projection';
 import { UNINSTALLED_BUILTIN_TOOLS_KEY } from '@/store/tool/slices/builtin/projection';
+import { CONNECTOR_LIST_KEY } from '@/store/tool/slices/connector/projection';
 import { INSTALLED_PLUGINS_KEY } from '@/store/tool/slices/plugin/projection';
 
 import {
@@ -105,6 +106,7 @@ describe('selectProfileToolCatalogsSynced', () => {
 
   const stateWith = (sources: {
     agentSkills?: Source;
+    connectors?: Source;
     installedPlugins?: Source;
     uninstalledBuiltinTools?: Source;
   }): ToolStoreState =>
@@ -113,6 +115,10 @@ describe('selectProfileToolCatalogsSynced', () => {
       agentSkillListReplica: {
         ...initialState.agentSkillListReplica,
         entries: sources.agentSkills ? { [AGENT_SKILL_LIST_KEY]: entry(sources.agentSkills) } : {},
+      },
+      connectorsReplica: {
+        ...initialState.connectorsReplica,
+        entries: sources.connectors ? { [CONNECTOR_LIST_KEY]: entry(sources.connectors) } : {},
       },
       installedPluginsReplica: {
         ...initialState.installedPluginsReplica,
@@ -133,11 +139,27 @@ describe('selectProfileToolCatalogsSynced', () => {
       selectProfileToolCatalogsSynced(
         stateWith({
           agentSkills: 'server',
+          connectors: 'server',
           installedPlugins: 'server',
           uninstalledBuiltinTools: 'server',
         }),
       ),
     ).toBe(true);
+  });
+
+  // `isConnectorsInit` is already true after the IndexedDB hydrate, so a
+  // connector bound on another device would look stale until the server list lands.
+  it('is false while the connector list only holds its persisted IndexedDB copy', () => {
+    expect(
+      selectProfileToolCatalogsSynced(
+        stateWith({
+          agentSkills: 'server',
+          connectors: 'storage',
+          installedPlugins: 'server',
+          uninstalledBuiltinTools: 'server',
+        }),
+      ),
+    ).toBe(false);
   });
 
   it('is false on a cold start before the installed plugins load', () => {

@@ -203,8 +203,10 @@ const AgentTool = memo<AgentToolProps>(
     );
     const isConnectorsInit = useToolStore((s) => s.isConnectorsInit);
     const isToolStoreCatalogSynced = useToolStore(selectProfileToolCatalogsSynced);
-    const isServerConfigInit = useServerConfigStore((s) => s.serverConfigInit);
-    const isToolCatalogSynced = isToolStoreCatalogSynced && isServerConfigInit;
+    // Not `serverConfigInit`: it is also set by the error fallback, whose default
+    // config hides the Composio and LobeHub Skill catalogs.
+    const isServerConfigLoaded = useServerConfigStore((s) => s.serverConfigLoaded);
+    const isToolCatalogSynced = isToolStoreCatalogSynced && isServerConfigLoaded;
     const fetchConnectors = useToolStore((s) => s.fetchConnectors);
     useEffect(() => {
       if (!isConnectorsInit) fetchConnectors();
