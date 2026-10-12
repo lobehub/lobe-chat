@@ -1,7 +1,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Text } from '@lobehub/ui/base-ui';
 import { PlusIcon } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
@@ -25,17 +25,11 @@ import {
 } from '@/store/projectWorkingDirectory';
 
 import { openProjectTopicModal } from './StartDirectoryModal';
+import { useProjectTopicReveal } from './useProjectTopicReveal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
   const scope = useMemo(() => ({ projectId: props.projectId }), [props.projectId]);
-  // Keyed by project so switching projects starts from the first page again.
-  const [revealed, setRevealed] = useState({ projectId: props.projectId, rows: 0 });
-  const extraRows = revealed.projectId === props.projectId ? revealed.rows : 0;
-  const revealMore = useCallback(
-    () => setRevealed({ projectId: props.projectId, rows: extraRows + 20 }),
-    [props.projectId, extraRows],
-  );
-  const reveal = useMemo(() => ({ extraRows, revealMore }), [extraRows, revealMore]);
+  const reveal = useProjectTopicReveal(props.projectId);
   return (
     <TopicListScopeContext value={scope}>
       <TopicListRevealContext value={reveal}>
