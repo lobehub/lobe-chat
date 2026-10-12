@@ -798,6 +798,7 @@ describe('acceptance publication with missing evidence', () => {
     beforeEach(async () => {
       client.verify.getVerifyState.query.mockResolvedValue({
         verifyPlan: frozenPlan,
+        verifyPlanConfirmedAt: '2026-10-12T17:35:52.000Z',
         verifyRunId: 'plan-run',
       });
       client.verify.getRun.query.mockResolvedValue({
@@ -898,6 +899,7 @@ describe('acceptance publication with missing evidence', () => {
             verifierConfig: { requiredEvidence: [{ scope: 'task_artifacts', type: 'text' }] },
           },
         ],
+        verifyPlanConfirmedAt: '2026-10-12T17:35:52.000Z',
         verifyRunId: 'plan-run',
       });
       // A recording uploaded as video satisfies a gif requirement; the deliverable
@@ -929,6 +931,24 @@ describe('acceptance publication with missing evidence', () => {
         publicationStatus: 'blocked',
       });
       expect(process.exitCode).toBe(1);
+    });
+
+    it('refuses to fold a retry into an earlier authored round under the same operation', async () => {
+      // An authored ingest with --operation leaves a run whose plan was never
+      // confirmed; it is not a plan round, and its verdicts and report are final.
+      client.verify.getVerifyState.query.mockResolvedValue({
+        verifyPlan: [{ id: 'screen', title: '用户能看到处理结果' }],
+        verifyPlanConfirmedAt: null,
+        verifyRunId: 'authored-run',
+      });
+      await report([], ['output.txt']);
+
+      await expect(run('ingest', dir, '--operation', 'op-authored')).rejects.toThrow('exit 1');
+
+      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('authored-run'));
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
+      expect(client.verify.uploadEvidence.mutate).not.toHaveBeenCalled();
     });
 
     it('keeps creating a round for an operation with no verification run', async () => {

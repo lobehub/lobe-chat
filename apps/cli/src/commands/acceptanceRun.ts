@@ -821,11 +821,13 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   }
   // An Agent Run that already owns a round (a Task's plan round) publishes into
   // it: the operation id is unique per run, and a second round would be judged
-  // apart from the verifier's.
+  // apart from the verifier's. Only a confirmed plan marks such a round — an
+  // earlier authored ingest under this operation left a run with no confirmed
+  // plan, and folding a retry into it would drop the authored verdicts and report.
   const operationState = options.operation
     ? await client.verify.getVerifyState.query({ operationId: options.operation })
     : null;
-  if (operationState) {
+  if (operationState?.verifyPlanConfirmedAt) {
     if (options.acceptance || options.subject) {
       log.error(
         `Operation ${options.operation} already has a verification round; drop --acceptance/--subject.`,
@@ -935,6 +937,15 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   // Every ingest is an immutable verification snapshot. A repair or
   // re-verification is another round on the same acceptance, unless the
   // acceptance still holds a draft round: the server folds this run into it.
+  if (operationState) {
+    log.error(
+      `Operation ${options.operation} already has an authored round (${operationState.verifyRunId}); a round is immutable.`,
+    );
+    log.error(
+      '  Retry only failed evidence with its retryArgs, or publish a new round without --operation.',
+    );
+    process.exit(1);
+  }
   const run = await client.verify.createRun.mutate({
     context,
     goal,
