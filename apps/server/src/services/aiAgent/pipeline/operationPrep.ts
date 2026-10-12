@@ -3,7 +3,7 @@ import { extractActivatedToolIdsFromMessages } from '@lobechat/agent-runtime';
 import { builtinSkills, LobeHubIdentifier } from '@lobechat/builtin-skills';
 import { getShellSyntaxGuidance } from '@lobechat/builtin-tool-local-system';
 import type { OperationSkillSet, ProjectInstructionFile } from '@lobechat/context-engine';
-import { buildExpertiseContextSnapshot, parseReferTopicTags } from '@lobechat/context-engine';
+import { buildExpertiseContextSnapshot, mentionsTopic } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { assembleSkillPool } from '@lobechat/mecha';
 import { buildTaskManagerDefaultsPrompt, resourcesTreePrompt } from '@lobechat/prompts';
@@ -922,9 +922,9 @@ export const prepareOperation = async (
         enabledPluginIds: [...new Set([...(agentPlugins ?? []), ...shareEnabledSkillIds])],
         shareAllowedIds: shareAllowedSkillIds,
         skillActivateMode: agentConfig.chatConfig?.skillActivateMode,
-        // A `<refer_topic>` hint points at `lh topic view`, which the lobehub skill teaches.
-        turnSkillIds:
-          parseReferTopicTags([{ content: prompt ?? '' }]).length > 0 ? [LobeHubIdentifier] : [],
+        // Reading another topic (`<refer_topic>` or a raw `tpc_` id) goes through `lh topic view`,
+        // which the lobehub skill teaches.
+        turnSkillIds: mentionsTopic([{ content: prompt ?? '' }]) ? [LobeHubIdentifier] : [],
       },
     );
   } catch (error) {

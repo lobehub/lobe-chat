@@ -10,7 +10,7 @@ import type {
   ToolDiscoveryConfig,
   UserMemoryData,
 } from '@lobechat/context-engine';
-import { parseReferTopicTags } from '@lobechat/context-engine';
+import { mentionsTopic } from '@lobechat/context-engine';
 import { type ContextSnapshot, gatherContextFacts, runContextEngineering } from '@lobechat/mecha';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import {
@@ -300,8 +300,9 @@ export const contextEngineering = async ({
         plugins,
         disabledPluginIds,
         agentChatConfigSelectors.skillActivateMode(agentStoreState),
-        // A `<refer_topic>` hint points at `lh topic view`, which the lobehub skill teaches.
-        parseReferTopicTags(messages).length > 0 ? [LobeHubIdentifier] : undefined,
+        // Reading another topic (`<refer_topic>` or a raw `tpc_` id) goes through `lh topic view`,
+        // which the lobehub skill teaches.
+        mentionsTopic(messages) ? [LobeHubIdentifier] : undefined,
       )
     ).skills;
   }
