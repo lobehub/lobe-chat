@@ -49,7 +49,7 @@ import { sql } from 'drizzle-orm';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
-import type { ExpertiseCarrier } from '@/database/models/expertise';
+import { type ExpertiseCarrier, ExpertiseModel } from '@/database/models/expertise';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { MetricModel } from '@/database/models/metric';
@@ -4364,6 +4364,16 @@ export class GoalService {
             versions: [...earlier, revisedOutline],
           }),
         );
+      }
+      // A fork starts a new class: the old class's rules must stop reaching
+      // runs too, not only its acceptance — retire them in the shared domain,
+      // where the executor's expertise would otherwise keep injecting them.
+      if (optionId === 'new_class' && state.learnings?.length) {
+        const lessonIds = state.learnings.map((learning) => learning.lessonId);
+        await inSavepoint('old rules retirement', async (db) => {
+          const expertise = new ExpertiseModel(db, this.userId, this.workspaceId);
+          for (const lessonId of lessonIds) await expertise.retireLesson(lessonId);
+        });
       }
       const learned =
         correction && optionId !== 'new_class'

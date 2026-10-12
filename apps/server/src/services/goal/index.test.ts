@@ -2731,6 +2731,7 @@ describe('GoalService', () => {
       await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
       let decision = await pendingBreak(service, graph.goal.id);
       await service.decide(graph.goal.id, decision.id, 'revise', '补上冷启动这一步');
+      const [taught] = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.learnings!;
       await openGate(await service.graph(graph.goal.id), 'Unit 1 did not pass', []);
       decision = await pendingBreak(service, graph.goal.id);
       await service.decide(graph.goal.id, decision.id, 'new_class', '按新类型处理');
@@ -2745,6 +2746,10 @@ describe('GoalService', () => {
       // …and so do its rules: the old class's learnings do not bind the new one.
       expect(after.goal.config!.rolloutState!.learnings).toBeUndefined();
       expect(after.goal.config!.rolloutState!.learningDomainId).toBeUndefined();
+      // The old class's rule also stops reaching runs: retired in the shared domain.
+      expect((await new ExpertiseModel(serverDB, userId).findLesson(taught.lessonId))?.status).toBe(
+        'retired',
+      );
     });
   });
 

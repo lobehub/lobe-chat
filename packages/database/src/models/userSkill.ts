@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, or, type SQL, sql } from 'drizzle-orm';
 
 import {
   documents,
@@ -121,13 +121,24 @@ export class UserSkillModel {
       eq(documents.userId, this.userId),
     );
 
-  private bundleWhere = () =>
+  /** The caller's own rows, whatever agent the read runs for. */
+  private ownerScope = () =>
     and(
-      this.scope(),
+      buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, documents),
+      eq(documents.userId, this.userId),
+    );
+
+  private bundleWhere = (scope: SQL | undefined = this.scope()) =>
+    and(
+      scope,
       eq(documents.fileType, SKILL_BUNDLE_FILE_TYPE),
       eq(documents.source, USER_SKILL_SOURCE),
       isNull(documents.parentId),
     );
+
+  /** A bundle a goal batch generated records the batch in its origin. */
+  private generated = () =>
+    sql<boolean>`COALESCE(jsonb_exists(${documents.metadata} -> 'userSkill' -> 'origin', 'batchNodeId'), false)`;
 
   private row = (params: {
     content: string;
@@ -304,7 +315,9 @@ export class UserSkillModel {
       .from(documents)
       .where(
         and(
-          this.scope(),
+          // The bundles were authorized by the caller's read; their own rows
+          // follow them.
+          this.ownerScope(),
           inArray(
             documents.parentId,
             bundles.map((bundle) => bundle.id),
@@ -365,7 +378,7 @@ export class UserSkillModel {
     // A bundle a goal batch generated records the batch in its origin. Tested
     // by key existence (never `IS NULL` on an extracted jsonb value), in the
     // query, so a run that lists only hand-made skills never reads the rest.
-    const generated = sql<boolean>`COALESCE(jsonb_exists(${documents.metadata} -> 'userSkill' -> 'origin', 'batchNodeId'), false)`;
+    const generated = this.generated();
     const rows = await this.db
       .select({
         description: documents.description,
@@ -399,10 +412,19 @@ export class UserSkillModel {
   /** The skills with these names, for a run that loads them. */
   findByNames = async (names: string[]): Promise<UserSkillItem[]> => {
     if (!names.length) return [];
+    // A skill a goal batch generated is that goal's own plan — its units carry
+    // it in their brief anyway — so a run that names it gets it even through a
+    // workspace-public agent. The rest of the caller's private library stays
+    // out of such a run.
     const bundles = await this.db
       .select()
       .from(documents)
-      .where(and(this.bundleWhere(), inArray(documents.filename, names)));
+      .where(
+        and(
+          or(this.bundleWhere(), and(this.bundleWhere(this.ownerScope()), this.generated())),
+          inArray(documents.filename, names),
+        ),
+      );
     return this.load(bundles);
   };
 
