@@ -110,9 +110,11 @@ interface GitStatusProps {
   agentId: string;
   deviceId?: string;
   /**
-   * Git context persisted on the topic, used only when the live probe finds no
-   * branch at `path` — which happens whenever the recorded worktree directory
-   * has since been deleted. Standing in for the dead probe keeps the branch /
+   * Git context persisted on the topic. Stands in for the live probe in two
+   * cases: while the probe is still pending (no cached branch yet), it paints a
+   * read-only branch / PR chip so the cluster doesn't pop in once the read lands;
+   * and when the probe finds no branch at `path` — which happens whenever the
+   * recorded worktree directory has since been deleted — it keeps the branch /
    * worktree / PR chips visible (read-only) instead of collapsing the whole
    * cluster, so the bar agrees with the topic's meta hover card, which reads
    * this same snapshot and never probes.
@@ -208,11 +210,22 @@ const GitStatus = memo<GitStatusProps>(
     const showRightPanel = useGlobalStore(systemStatusSelectors.showRightPanel);
     const workingSidebarTab = useGlobalStore((s) => s.status.workingSidebarTab);
 
+    // Until the linked-PR lookup answers for this branch, reuse the PR the topic
+    // recorded for the same branch so the PR chip doesn't pop in late.
+    const pullRequest =
+      prData !== undefined
+        ? prData.pullRequest
+        : isGithub &&
+            (!branch || branch === fallbackGit?.branch) &&
+            fallbackGit?.github?.pullRequest
+          ? fallbackGit.github.pullRequest
+          : undefined;
+
     const handleOpenPr = useCallback(() => {
-      if (prData?.pullRequest?.url) {
-        openTrustedExternalUrl(prData.pullRequest.url);
+      if (pullRequest?.url) {
+        openTrustedExternalUrl(pullRequest.url);
       }
-    }, [prData?.pullRequest?.url]);
+    }, [pullRequest?.url]);
 
     const handleToggleReview = useCallback(() => {
       if (showRightPanel && workingSidebarTab === 'review') {
@@ -318,17 +331,44 @@ const GitStatus = memo<GitStatusProps>(
       );
     }
 
-    if (!branch) return null;
+    if (!branch) {
+      // Probe still pending: paint the topic's recorded branch / PR read-only
+      // (not the dead-directory snapshot — nothing is known to be gone yet).
+      if (!probeSettled && fallbackGit?.branch) {
+        return (
+          <>
+            <div className={gitChipStyles.separator} />
+            <div aria-busy className={styles.branchGroup}>
+              <div className={gitChipStyles.trigger}>
+                <span className={styles.branchLabel}>{fallbackGit.branch}</span>
+              </div>
+            </div>
+            {pullRequest && (
+              <>
+                <div className={gitChipStyles.separator} />
+                <Tooltip title={pullRequest.title}>
+                  <div className={gitChipStyles.prTrigger} role="button" onClick={handleOpenPr}>
+                    <Icon icon={GitPullRequest} size={12} />
+                    <span>#{pullRequest.number}</span>
+                  </div>
+                </Tooltip>
+              </>
+            )}
+          </>
+        );
+      }
+      return null;
+    }
 
     const branchTooltip = detached ? t('workingDirectory.detachedHead', { sha: branch }) : branch;
 
-    const prTooltip = prData?.pullRequest
-      ? prData.extraCount
+    const prTooltip = pullRequest
+      ? prData?.extraCount
         ? t('workingDirectory.prTooltipWithExtra', {
             count: prData.extraCount,
-            title: prData.pullRequest.title,
+            title: pullRequest.title,
           })
-        : prData.pullRequest.title
+        : pullRequest.title
       : prData?.ghMissing
         ? t('workingDirectory.ghMissing')
         : undefined;
@@ -480,13 +520,13 @@ const GitStatus = memo<GitStatusProps>(
         {pullNode}
         {pushNode}
         {diffNode}
-        {prData?.pullRequest && (
+        {pullRequest && (
           <>
             <div className={gitChipStyles.separator} />
             <Tooltip title={prTooltip}>
               <div className={gitChipStyles.prTrigger} role="button" onClick={handleOpenPr}>
                 <Icon icon={GitPullRequest} size={12} />
-                <span>#{prData.pullRequest.number}</span>
+                <span>#{pullRequest.number}</span>
               </div>
             </Tooltip>
           </>

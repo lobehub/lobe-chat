@@ -302,13 +302,13 @@ describe('GitStatus', () => {
       );
     });
 
-    it('stays empty while the probe is still pending, so no stale flash', () => {
+    it('does not flash the dead-directory snapshot while the probe is still pending', () => {
       gitHookMocks.useFetchGitBranch.mockReturnValue({
         data: undefined,
         mutate: gitHookMocks.mutateBranch,
       });
 
-      const { container } = render(
+      render(
         <GitStatus
           isGithub
           agentId="agent-1"
@@ -317,7 +317,7 @@ describe('GitStatus', () => {
         />,
       );
 
-      expect(container).toBeEmptyDOMElement();
+      expect(screen.queryByTestId('stale-git-snapshot')).not.toBeInTheDocument();
     });
 
     it('renders nothing when the topic carries no git snapshot either', () => {
@@ -391,6 +391,94 @@ describe('GitStatus', () => {
 
       expect(screen.getByTestId('stale-git-snapshot')).toBeInTheDocument();
     });
+  });
+
+  describe('probe still pending (cold load, nothing cached yet)', () => {
+    const fallbackGit = {
+      branch: 'feat/stale-first',
+      github: {
+        pullRequest: {
+          number: 42,
+          state: 'OPEN',
+          title: 'Stale-first git chips',
+          url: 'https://github.com/lobehub/lobehub/pull/42',
+        },
+      },
+    };
+
+    beforeEach(() => {
+      gitHookMocks.useFetchGitBranch.mockReturnValue({
+        data: undefined,
+        mutate: gitHookMocks.mutateBranch,
+      });
+      gitHookMocks.useFetchGitLinkedPR.mockReturnValue({
+        data: undefined,
+        mutate: gitHookMocks.mutatePR,
+      });
+    });
+
+    // Regression: the bar rendered nothing until the branch probe answered, so
+    // the whole branch / PR cluster popped in after every reload even though the
+    // topic already carried a persisted git snapshot.
+    it('paints the persisted branch and PR snapshot instead of collapsing', () => {
+      render(<GitStatus isGithub agentId="agent-1" fallbackGit={fallbackGit} path="/repo" />);
+
+      expect(screen.getByText('feat/stale-first')).toBeInTheDocument();
+      expect(screen.getByText('#42')).toBeInTheDocument();
+      expect(screen.queryByTestId('stale-git-snapshot')).not.toBeInTheDocument();
+    });
+
+    it('stays empty when the topic carries no snapshot', () => {
+      const { container } = render(<GitStatus isGithub agentId="agent-1" path="/repo" />);
+
+      expect(container).toBeEmptyDOMElement();
+    });
+  });
+
+  it('keeps the recorded PR chip while the linked-PR lookup for the same branch loads', () => {
+    gitHookMocks.useFetchGitLinkedPR.mockReturnValue({
+      data: undefined,
+      mutate: gitHookMocks.mutatePR,
+    });
+
+    render(
+      <GitStatus
+        isGithub
+        agentId="agent-1"
+        path="/repo"
+        fallbackGit={{
+          branch: 'fix/remote-review',
+          github: {
+            pullRequest: { number: 7, state: 'OPEN', title: 'Remote review', url: 'https://x/7' },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByText('#7')).toBeInTheDocument();
+  });
+
+  it('drops the recorded PR chip once the live branch differs from the snapshot', () => {
+    gitHookMocks.useFetchGitLinkedPR.mockReturnValue({
+      data: undefined,
+      mutate: gitHookMocks.mutatePR,
+    });
+
+    render(
+      <GitStatus
+        isGithub
+        agentId="agent-1"
+        path="/repo"
+        fallbackGit={{
+          branch: 'other-branch',
+          github: {
+            pullRequest: { number: 7, state: 'OPEN', title: 'Other', url: 'https://x/7' },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.queryByText('#7')).not.toBeInTheDocument();
   });
 
   it('keeps branch switching visible when worktrees are available', () => {

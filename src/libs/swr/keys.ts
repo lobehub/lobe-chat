@@ -439,7 +439,10 @@ export const serverConfigKeys = {
 // NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/file prefixes
 // are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
-// persistence — they stay memory-only exactly as before.
+// persistence — they stay memory-only exactly as before. Exception: the small
+// git status reads (`device:gitBranch` / `gitAheadBehind` /
+// `gitWorkingTreeStatus` / `gitWorktrees`) are persisted so the Overview and
+// chat-input git chips paint stale-first; they are keyed by device + path.
 export const discoverKeys = {
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [

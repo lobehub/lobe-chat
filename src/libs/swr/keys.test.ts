@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   agentBuilderKeys,
+  deviceKeys,
   documentCommentKeys,
   isAcceptanceListKey,
   isDocumentCommentKeyForEvent,
@@ -180,5 +181,43 @@ describe('taskKeys', () => {
       serialized.includes(pattern),
     );
     expect(persisted).toBe(true);
+  });
+});
+
+describe('deviceKeys git status', () => {
+  const tierOf = (key: readonly unknown[]) => {
+    const serialized = unstable_serialize(key);
+    if (CACHE_TIERS.idb.some((pattern) => serialized.includes(pattern))) return 'idb';
+    if (CACHE_TIERS.local.some((pattern) => serialized.includes(pattern))) return 'local';
+    return null;
+  };
+
+  // Regression: every `device:*` key was memory-only, so the Working Sidebar
+  // Overview showed a skeleton and the chat-input branch chip popped in after
+  // every reload. The small git status reads must hydrate from IndexedDB.
+  it('persists the small git status reads, scoped by device and path', () => {
+    for (const key of [
+      deviceKeys.gitBranch('local', '/repo'),
+      deviceKeys.gitAheadBehind('device-1', '/repo'),
+      deviceKeys.gitWorkingTreeStatus('device-1', '/repo'),
+      deviceKeys.gitWorktrees('local', '/repo'),
+      // Workspace-augmented shape (`augmentKey` appends the workspace id).
+      [...deviceKeys.gitBranch('device-1', '/repo'), 'workspace-1'],
+    ]) {
+      expect(tierOf(key)).toBe('idb');
+    }
+  });
+
+  it('keeps large or credential-adjacent device reads memory-only', () => {
+    for (const key of [
+      deviceKeys.gitBranches('local', '/repo'),
+      deviceKeys.gitRemoteBranches('local', '/repo'),
+      deviceKeys.gitReviewPatches('local', '/repo', 'unstaged', ''),
+      deviceKeys.gitLinkedPR('local', '/repo', 'main'),
+      deviceKeys.listDevices(),
+      deviceKeys.tunnels(null, 'device-1'),
+    ]) {
+      expect(tierOf(key)).toBeNull();
+    }
   });
 });

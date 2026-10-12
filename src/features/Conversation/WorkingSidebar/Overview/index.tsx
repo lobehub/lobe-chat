@@ -59,7 +59,12 @@ import { labPreferSelectors } from '@/store/user/selectors';
 import GoalSection from '../GoalSection';
 import ProgressSection from '../ProgressSection';
 import DeviceStatusSection from './DeviceStatusSection';
-import { collectChangeStats, isLinkedWorktreeCheckout, shouldShowCiLabel } from './overviewData';
+import {
+  collectChangeStats,
+  isLinkedWorktreeCheckout,
+  shouldShowCiLabel,
+  shouldShowGitSkeleton,
+} from './overviewData';
 import OverviewHeader from './OverviewHeader';
 import { ChevronRight, OverviewRow, PickerGlyph, rowStyles } from './OverviewRow';
 import PortSwitcher from './PortSwitcher';
@@ -140,10 +145,12 @@ const Overview = memo<OverviewProps>(
       isLoading: reviewLoading,
       mutate: mutateReview,
     } = useReviewPatches(gitPath, 'unstaged', undefined, deviceId, active);
-    const { data: worktrees = [], mutate: mutateWorktrees } = useFetchGitWorktrees(
-      deviceId,
-      gitPath,
-    );
+    const {
+      data: worktreesData,
+      isLoading: worktreesLoading,
+      mutate: mutateWorktrees,
+    } = useFetchGitWorktrees(deviceId, gitPath);
+    const worktrees = worktreesData ?? [];
     const [switcherOpen, setSwitcherOpen] = useState(false);
     const [pulling, setPulling] = useState(false);
     const [pushing, setPushing] = useState(false);
@@ -151,7 +158,19 @@ const Overview = memo<OverviewProps>(
     const changeStats = useMemo(() => collectChangeStats(reviewData), [reviewData]);
 
     const gitError = branchError || aheadBehindError || reviewError;
-    const isGitLoading = branchLoading || reviewLoading;
+    // Stale-first: the small git reads are replica-persisted, so after a
+    // reload some of them paint instantly while the rest (e.g. the diff patches)
+    // are still in flight. Only fall back to the skeleton when nothing at all is
+    // there yet; rows whose own read is pending render a placeholder instead.
+    const isGitLoading = shouldShowGitSkeleton({
+      hasData:
+        branchData !== undefined ||
+        aheadBehind !== undefined ||
+        reviewData !== undefined ||
+        worktreesData !== undefined,
+      loading: branchLoading || reviewLoading || worktreesLoading,
+    });
+    const changesPending = reviewData === undefined && reviewLoading;
     const visibleWorks = works.slice(0, 3);
     const directoryName = workingDirectory ? pathBasename(workingDirectory) : undefined;
     const hasWorkspace = environmentAvailable && !!workingDirectory;
@@ -331,7 +350,9 @@ const Overview = memo<OverviewProps>(
         <OverviewRow
           icon={ClipboardListIcon}
           trailing={
-            changeStats.files > 0 ? (
+            changesPending ? (
+              <RingLoadingIcon size={12} />
+            ) : changeStats.files > 0 ? (
               <>
                 <span className={rowStyles.changeAdditions}>+{changeStats.additions}</span>
                 <span className={rowStyles.changeDeletions}>−{changeStats.deletions}</span>
