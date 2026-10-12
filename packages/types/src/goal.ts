@@ -336,6 +336,12 @@ export interface GoalManagerState {
   reviewSnapshot?: string;
   snapshot: string;
   startedAt: string;
+  /**
+   * `start` settled this turn with the draft's arrangement rather than a plan
+   * the agent submitted, so a later `lh goal plan` on it is refused, not
+   * reported as a duplicate of a plan that was never written.
+   */
+  startedFromDraft?: boolean;
   submitted?: {
     action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait';
     /**

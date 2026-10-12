@@ -141,6 +141,11 @@ const conversationGoalInput = z.object({
       }),
     )
     .optional(),
+  /**
+   * Open a conversation goal as a draft that runs only once `start` launches
+   * it. Sent by a CLI that has `lh goal start`; ignored for a standalone goal.
+   */
+  draft: z.boolean().optional(),
   problemDescription: z.string().optional(),
   projectId: z.string().optional(),
   requirement: z.string().optional(),
@@ -789,7 +794,8 @@ export const goalRouter = router({
             });
             return { data: graph, message: 'Goal created', success: true, turnToken };
           }
-          const data = await ctx.goalService.create(input);
+          const { draft: _draft, ...standaloneInput } = input;
+          const data = await ctx.goalService.create(standaloneInput);
           // A goal is not a document — creating one means starting it. The
           // coordinator takes it from here without a client holding a loop open.
           await scheduleGoalAdvance({

@@ -558,6 +558,8 @@ describe('goal create command', () => {
           agentId: 'agent-1',
           conversationOperationId: 'op-1',
           conversationTopicId: 'tpc-1',
+          // The server opens a draft only for a CLI that can start it.
+          draft: true,
         }),
       );
     },

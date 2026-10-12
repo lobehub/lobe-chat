@@ -30,8 +30,9 @@ export const isStatusChoiceDisabled = (
   canClose: boolean,
 ): boolean => {
   if (next === 'paused') return !PAUSABLE_STATUSES.has(status ?? '');
-  // Closing a draft would end a goal that never ran; delete it instead.
-  if (status === 'draft' && next !== 'running') return true;
+  // Closing a draft would end a goal that never ran; delete it instead. Starting
+  // it is allowed to the same people as closing: its creator or an owner.
+  if (status === 'draft') return next !== 'running' || !canClose;
   if (next === 'achieved' || next === 'canceled') return !canClose;
   return false;
 };

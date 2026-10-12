@@ -216,18 +216,47 @@ export class GoalStartService {
     // The folded seeds leave the graph, and their links go with them. A node
     // staying behind that builds on one would silently lose that prerequisite.
     const folded = new Set([...probes, ...units].map((node) => node.id));
+    const title = (id: string) => graph.nodes.find((node) => node.id === id)?.title ?? id;
     const stranded = graph.edges.find(
       (edge) =>
         edge.kind === 'depends_on' &&
         folded.has(edge.targetNodeId) &&
         !folded.has(edge.sourceNodeId),
     );
-    if (stranded) {
-      const title = (id: string) => graph.nodes.find((node) => node.id === id)?.title ?? id;
+    if (stranded)
       refuse(
         `"${title(stranded.sourceNodeId)}" depends on "${title(stranded.targetNodeId)}", which joins the batch; remove that link or keep it out of the batch`,
       );
-    }
+    // Inside the batch only a link to a probe still holds: probes run first and
+    // the gate releases units after them. A probe waiting on anything else, or a
+    // unit waiting on another unit or on a node left behind, would lose that
+    // prerequisite and run without it.
+    const probeSet = new Set(probeIds);
+    const resolved = new Set(
+      graph.nodes.filter((node) => node.status === 'resolved').map((node) => node.id),
+    );
+    const dropped = graph.edges.find(
+      (edge) =>
+        edge.kind === 'depends_on' &&
+        folded.has(edge.sourceNodeId) &&
+        !probeSet.has(edge.targetNodeId) &&
+        !resolved.has(edge.targetNodeId),
+    );
+    if (dropped)
+      refuse(
+        `"${title(dropped.sourceNodeId)}" depends on "${title(dropped.targetNodeId)}", which is not a probe of the batch; a batch keeps only links to its probes, so make it a probe or remove that link`,
+      );
+    // The roster and the unit notes are keyed by title, so two seeds sharing a
+    // title would collapse into one unit and the other's work would vanish.
+    const seen = new Set<string>();
+    const duplicate = [...probes, ...units].find((node) => {
+      const key = node.title.trim();
+      if (seen.has(key)) return true;
+      seen.add(key);
+      return false;
+    });
+    if (duplicate)
+      refuse(`Two seeds share the title "${duplicate.title.trim()}"; give each a distinct title`);
 
     const roster = normalizeRolloutRoster(
       units.map((unit) => unit.title),

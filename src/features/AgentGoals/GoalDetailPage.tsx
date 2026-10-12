@@ -20,6 +20,7 @@ import RightPanel from '@/features/RightPanel';
 import { useWorkspaceSidePanel } from '@/features/RightPanel/WorkspaceSidePanel';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import { usePermission } from '@/hooks/usePermission';
+import { useResourceManageable } from '@/hooks/useResourceManageable';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -68,6 +69,8 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
   const pauseGoal = useGoalStore((s) => s.pauseGoal);
   const resumeGoal = useGoalStore((s) => s.resumeGoal);
   const startGoal = useGoalStore((s) => s.startGoal);
+  // The server lets only a draft's creator or a workspace owner launch it.
+  const canStart = useResourceManageable(snapshot?.goal.userId);
 
   const buildAgentPath = useAgentRoutePath(agentId ?? '');
 
@@ -243,7 +246,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                   and starting it is the one explicit move into running. */}
               {goal.status === 'draft' && (
                 <Flexbox horizontal align={'center'} gap={10} paddingBlock={'8px 0'}>
-                  {canEdit && (
+                  {canEdit && canStart && (
                     <Button
                       icon={PlayIcon}
                       loading={starting}

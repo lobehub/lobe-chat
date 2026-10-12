@@ -114,6 +114,9 @@ const goalAcceptanceUnsettled = (graph: GoalGraphSnapshot): boolean => {
  */
 const goalGraphShouldPoll = (graph: GoalGraphSnapshot): boolean =>
   SERVER_ADVANCING_STATUSES.has(graph.goal.status) ||
+  // A draft is arranged and usually started by its agent from the conversation,
+  // never from this page, so no local action would refresh "Not started".
+  graph.goal.status === 'draft' ||
   graph.report?.status === 'running' ||
   (graph.goal.status === 'achieved' && goalAcceptanceUnsettled(graph));
 

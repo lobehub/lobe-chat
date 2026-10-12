@@ -82,6 +82,18 @@ describe('GoalAction', () => {
       },
     );
 
+    /**
+     * Regression: the agent starts its draft from the conversation a few seconds
+     * after creating it. Unpolled, the card and page kept reading "Not started"
+     * while its tasks ran.
+     */
+    it('keeps re-reading a draft its agent may start at any moment', () => {
+      seedGraph(graphWith('draft'));
+      renderGraph();
+
+      expect(syncConfigFor('goalGraph')?.refreshInterval).toBeGreaterThan(0);
+    });
+
     it.each(['review', 'paused', 'achieved', 'failed', 'canceled'])(
       'stops polling a %s goal',
       (status) => {
