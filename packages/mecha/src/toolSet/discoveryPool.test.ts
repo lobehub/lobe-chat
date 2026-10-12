@@ -176,6 +176,81 @@ describe('resolveDiscoveryPool', () => {
     expect(pool.manifestMap.gmail).toBeDefined();
   });
 
+  describe('installed-but-not-pinned plugins', () => {
+    // `auto` in the agent's three-state plugin config: installed at the user
+    // level, absent from `agent.plugins`, not disabled. The client runtime
+    // lists these in `<available_tools>`; the gateway must not diverge.
+    const installed = (identifier: string) =>
+      manifest(identifier, { meta: { title: identifier }, type: 'mcp' });
+
+    it('seeds them as discoverable, without touching the enabled set', () => {
+      const pool = resolveDiscoveryPool(
+        request({
+          builtinTools: [],
+          enabledManifests: new Map([['my-plugin', manifest('my-plugin')]]),
+          installedManifests: [installed('feishu-mcp'), installed('github-mcp')],
+        }),
+      );
+
+      expect(pool.manifestMap['feishu-mcp']).toBeDefined();
+      expect(pool.manifestMap['github-mcp']).toBeDefined();
+      // Every installed plugin executes through the MCP path.
+      expect(pool.sourceMap['feishu-mcp']).toBe('mcp');
+
+      // The source is additive: what the engine enabled is unchanged, and the
+      // pool carries no notion of "enabled" of its own — `enabledToolIds` is
+      // computed elsewhere from the rules.
+      expect(Object.keys(pool.manifestMap)).toEqual(['my-plugin', 'feishu-mcp', 'github-mcp']);
+    });
+
+    it('never overrides an identifier another source already answered for', () => {
+      // A pinned plugin keeps the engine's manifest (and so keeps its own
+      // routing rather than being relabelled as a fresh MCP plugin).
+      const pinned = manifest('feishu-mcp', { meta: { title: 'Pinned' } });
+      const pin = resolveDiscoveryPool(
+        request({
+          enabledManifests: new Map([['feishu-mcp', pinned]]),
+          installedManifests: [installed('feishu-mcp')],
+        }),
+      );
+      expect(pin.manifestMap['feishu-mcp']).toBe(pinned);
+      expect(pin.sourceMap['feishu-mcp']).toBeUndefined();
+
+      // A connector family outranks the same-named leftover plugin row.
+      const family = resolveDiscoveryPool(
+        request({ composio: [manifest('gmail')], installedManifests: [installed('gmail')] }),
+      );
+      expect(family.sourceMap.gmail).toBe('composio');
+    });
+
+    it('keeps every wall on the new source', () => {
+      const disabled = resolveDiscoveryPool(
+        request({
+          disabledPluginIds: ['feishu-mcp'],
+          installedManifests: [installed('feishu-mcp')],
+        }),
+      );
+      expect(disabled.manifestMap['feishu-mcp']).toBeUndefined();
+      expect(disabled.sourceMap['feishu-mcp']).toBeUndefined();
+
+      const exclusive = resolveDiscoveryPool(
+        request({
+          exclusivePluginIds: ['my-plugin'],
+          installedManifests: [installed('feishu-mcp')],
+        }),
+      );
+      expect(Object.keys(exclusive.manifestMap)).toEqual(['my-plugin']);
+
+      const noDevice = resolveDiscoveryPool(
+        request({
+          deviceAccess: { canUseDevice: false, deviceLocked: false },
+          installedManifests: [installed(LocalSystemManifest.identifier)],
+        }),
+      );
+      expect(noDevice.manifestMap[LocalSystemManifest.identifier]).toBeUndefined();
+    });
+  });
+
   describe('context-aware builtin manifests', () => {
     const agentManagement = {
       identifier: AgentManagementManifest.identifier,
