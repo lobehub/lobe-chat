@@ -22,6 +22,11 @@ const AgentBuilderWelcome = memo<AgentBuilderWelcomeProps>(
   ({ disabled, mode = 'agentBuilder' }) => {
     const { t } = useTranslation('chat');
     const agentId = useConversationStore(conversationSelectors.agentId);
+    /**
+     * The builtin replica publishes the builder id one render before its layout
+     * effect seeds the config into `agentMap`, so the first commit after a cold
+     * fetch reads `undefined` here.
+     */
     const agent = useAgentStore(agentByIdSelectors.getAgentConfigById(agentId));
 
     return (
