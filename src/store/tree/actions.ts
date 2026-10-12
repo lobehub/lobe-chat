@@ -2,6 +2,7 @@ import { CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
 
 import { hierarchySearchResource } from '@/features/ResourceManager/store/projection';
 import { createReplicaSlice, recordLens, revalidateReplica } from '@/libs/replica';
+import { subscribeCacheScope } from '@/libs/replica/cacheScopeEvents';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { fileService } from '@/services/file';
 import { resourceService } from '@/services/resource';
@@ -12,6 +13,7 @@ import {
   buildLibraryTreeSnapshot,
   libraryTreeResource,
   type LibraryTreeSnapshot,
+  MAX_PERSISTED_FOLDERS,
 } from './projection';
 import type { TreeDataState, TreeItem, TreeState, TreeStoreHandle } from './types';
 
@@ -130,6 +132,8 @@ export class TreeActionImpl {
   #engine?: OptimisticEngine<TreeDataState>;
   readonly #snapshot;
   #storeHandle: TreeStoreHandle;
+  /** Cache scope the rendered tree was loaded under. */
+  #treeScope?: string;
 
   constructor(set: Setter, get: () => TreeState) {
     this.#set = set;
@@ -148,7 +152,28 @@ export class TreeActionImpl {
       }),
       setState: (next) => set(next as Partial<TreeState>, false, 'tree/engineSetState'),
     };
+
+    // Nothing renders this store's replica through `useSync`, so it would never
+    // see an identity switch: a cold boot can seed the tree from the last
+    // user's partition before identity resolves to someone else. The store is
+    // an app-lifetime singleton, so the subscription is never torn down.
+    subscribeCacheScope((scope) => this.#dropStaleScope(scope));
   }
+
+  /**
+   * Drop the previous identity's snapshot and rendered tree, then load the open
+   * library again under the new scope. A no-op when the tree already belongs to
+   * `scope`, which is the common case: identity resolving to the scope the cold
+   * boot guessed.
+   */
+  #dropStaleScope = (scope: string): void => {
+    this.#snapshot.ensureScope(scope);
+    const { knowledgeBaseId } = this.#get();
+    if (!knowledgeBaseId || this.#treeScope === scope) return;
+
+    this.reset();
+    this.init(knowledgeBaseId);
+  };
 
   #getEngine = () => {
     if (this.#engine) return this.#engine;
@@ -249,11 +274,12 @@ export class TreeActionImpl {
     // back): keep the tree on screen and confirm what is loaded in the
     // background, instead of wiping it back to a skeleton.
     if (current.knowledgeBaseId === knowledgeBaseId && current.children['']) {
-      for (const folderId of this.#loadedVisibleFolders()) void this.#revalidateFolder(folderId);
+      this.#revalidateOnRemount();
       return;
     }
 
     this.#queuedRevalidate.clear();
+    this.#treeScope = getCacheScope();
     const epoch = current.epoch + 1;
     this.#set(
       {
@@ -274,6 +300,31 @@ export class TreeActionImpl {
     if (snapshot) this.#seedFromSnapshot(snapshot);
     void this.loadChildren('');
     if (!snapshot) void this.#hydrateSnapshot(knowledgeBaseId, epoch);
+  };
+
+  /**
+   * Confirm the visible tree after a remount, bounded like the persisted
+   * snapshot: the root and the first expanded folders are refreshed in place.
+   * Open folders past the cap are collapsed and forgotten instead of left stale,
+   * so a long session with hundreds of open folders does not fire one request
+   * per folder on every return; expanding one again loads it fresh.
+   */
+  #revalidateOnRemount = () => {
+    const visible = this.#loadedVisibleFolders();
+    const overflow = visible.slice(MAX_PERSISTED_FOLDERS);
+    if (overflow.length > 0) {
+      const children = { ...this.#get().children };
+      const expanded = { ...this.#get().expanded };
+      for (const folderId of overflow) {
+        delete children[folderId];
+        expanded[folderId] = false;
+      }
+      this.#set({ children, expanded }, false, 'tree/collapseOverflow');
+    }
+
+    for (const folderId of visible.slice(0, MAX_PERSISTED_FOLDERS)) {
+      void this.#revalidateFolder(folderId);
+    }
   };
 
   /** The root plus every expanded folder reachable from it that has rows loaded. */

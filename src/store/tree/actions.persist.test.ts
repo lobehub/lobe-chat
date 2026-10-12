@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as ReplicaModule from '@/libs/replica';
 import { createReplicaState } from '@/libs/replica';
+import { broadcastCacheScope, resetCacheScopeBroadcast } from '@/libs/replica/cacheScopeEvents';
+import type * as CacheScopeModule from '@/libs/swr/useCacheScope';
 
 import { TreeActionImpl } from './actions';
 import {
@@ -12,7 +14,15 @@ import {
 } from './projection';
 import type { TreeItem, TreeState } from './types';
 
-const { mockGetKnowledgeItems } = vi.hoisted(() => ({ mockGetKnowledgeItems: vi.fn() }));
+const { mockGetKnowledgeItems, scope } = vi.hoisted(() => ({
+  mockGetKnowledgeItems: vi.fn(),
+  scope: { current: 'user-a:personal' },
+}));
+
+vi.mock('@/libs/swr/useCacheScope', async () => ({
+  ...(await vi.importActual<typeof CacheScopeModule>('@/libs/swr/useCacheScope')),
+  getCacheScope: () => scope.current,
+}));
 
 vi.mock('@/libs/replica', async () => ({
   ...(await vi.importActual<typeof ReplicaModule>('@/libs/replica')),
@@ -115,6 +125,29 @@ describe('TreeActionImpl.init — keep the tree across remounts', () => {
     pending.resolve({ items: [] });
   });
 
+  it('refreshes at most MAX_PERSISTED_FOLDERS folders on remount and collapses the rest', async () => {
+    const { actions, state } = setup();
+    const folders = Array.from({ length: MAX_PERSISTED_FOLDERS + 10 }, (_, i) => folder(`d-${i}`));
+    mockGetKnowledgeItems.mockResolvedValue({ items: folders.map((f) => serverRow(f.id, true)) });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(folders.length));
+    for (const f of folders) {
+      state.children[f.id] = [file(`${f.id}-child`)];
+      state.expanded[f.id] = true;
+    }
+
+    mockGetKnowledgeItems.mockReset().mockReturnValue(new Promise(() => {}));
+    actions.init('kb-1');
+
+    // The root plus the first expanded folders, never one request per open folder.
+    expect(mockGetKnowledgeItems).toHaveBeenCalledTimes(MAX_PERSISTED_FOLDERS);
+    expect(state.children['d-0'].map((i) => i.id)).toEqual(['d-0-child']);
+    // Folders past the cap are not left stale: collapsed, so the next expand reloads them.
+    const last = folders.at(-1)!.id;
+    expect(state.children[last]).toBeUndefined();
+    expect(state.expanded[last]).toBeFalsy();
+  });
+
   it('still resets when a different library mounts', () => {
     const { actions, state } = setup();
     mockGetKnowledgeItems.mockReturnValue(new Promise(() => {}));
@@ -171,6 +204,45 @@ describe('TreeActionImpl.init — persisted snapshot', () => {
     await vi.waitFor(() => expect(state.snapshotMap['kb-1']).toBeDefined());
     expect(state.snapshotMap['kb-1'].children[''].map((i) => i.id)).toEqual(['doc-1']);
     expect(state.snapshotMap['kb-1'].children[''][0].url).toBe('');
+  });
+});
+
+describe('TreeActionImpl — cache scope switch', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+    resetCacheScopeBroadcast();
+    scope.current = 'user-a:personal';
+  });
+
+  it("drops the previous identity's rendered tree when the scope changes", async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('secret-folder', true)] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(1));
+    broadcastCacheScope('user-a:personal');
+
+    // The new identity's request fails: nothing of user-a may stay on screen.
+    mockGetKnowledgeItems.mockReset().mockRejectedValue(new Error('unauthorized'));
+    scope.current = 'user-b:personal';
+    broadcastCacheScope('user-b:personal');
+
+    expect(state.children['']).toBeUndefined();
+    expect(state.snapshotMap['kb-1']).toBeUndefined();
+    await vi.waitFor(() => expect(state.status['']).toBe('error'));
+    expect(state.children['']).toBeUndefined();
+  });
+
+  it('keeps the tree when the resolved scope is the one it was built for', async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('folder-a', true)] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(1));
+    const epoch = state.epoch;
+
+    broadcastCacheScope('user-a:personal');
+
+    expect(state.epoch).toBe(epoch);
+    expect(state.children[''].map((i) => i.id)).toEqual(['folder-a']);
   });
 });
 
