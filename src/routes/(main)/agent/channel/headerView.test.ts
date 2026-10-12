@@ -24,6 +24,13 @@ describe('resolveChannelHeaderView', () => {
     });
   });
 
+  it('treats a loaded definition without a route id as a detail page', () => {
+    expect(resolveChannelHeaderView(undefined, { name: 'Discord' }, false)).toEqual({
+      detail: true,
+      platformName: 'Discord',
+    });
+  });
+
   it('shows the tab switcher on the platform list', () => {
     expect(resolveChannelHeaderView(undefined, undefined, false)).toEqual({
       detail: false,

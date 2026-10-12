@@ -19,6 +19,8 @@ export const resolveChannelHeaderView = (
   platformDef: { name: string } | undefined,
   loading: boolean,
 ): ChannelHeaderView => ({
-  detail: !!platformId,
+  // A loaded definition still implies a detail page for callers that pass
+  // only `platformDef`.
+  detail: !!platformId || !!platformDef,
   platformName: platformDef?.name ?? (loading ? undefined : platformId),
 });
