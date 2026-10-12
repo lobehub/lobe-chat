@@ -23,12 +23,12 @@ import {
 } from '@lobechat/prompts';
 import {
   type BuiltinToolResult,
+  type DiscoverAssistantDetail,
   getPluginMode,
   type HeterogeneousProviderConfig,
   parsePluginEntry,
   upsertPluginMode,
 } from '@lobechat/types';
-import type { AssistantMarketSource, DiscoverAssistantDetail } from '@lobechat/types';
 
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors/selectors';

@@ -17,6 +17,7 @@ import {
   parsePluginEntry,
   upsertPluginMode,
 } from '@lobechat/types';
+import debug from 'debug';
 
 import { AgentModel } from '@/database/models/agent';
 import { ConnectorModel } from '@/database/models/connector';
@@ -39,6 +40,8 @@ const handleError = (error: unknown, message: string): ToolExecutionResult => {
 
 /** Max results per searchAgent call (mirrored in the tool manifest: "max: 20") */
 const MAX_SEARCH_AGENT_LIMIT = 20;
+
+const log = debug('lobe-server:agent-management-runtime');
 
 export const agentManagementRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
@@ -503,8 +506,14 @@ const getMarketAgentDetail = async (
       identifier: agentId,
       source: 'new',
     });
-  } catch {
-    // Market lookup is best-effort: fall through to the local "not found".
+  } catch (error) {
+    // Market lookup is best-effort: fall through to the local "not found",
+    // but keep the failure observable instead of silent.
+    log(
+      'getAgentDetail: market fallback lookup failed for identifier=%s: %s',
+      agentId,
+      error instanceof Error ? error.message : error,
+    );
     return null;
   }
 
