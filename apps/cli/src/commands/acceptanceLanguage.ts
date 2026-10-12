@@ -118,6 +118,8 @@ interface IngestTextInput {
   conclusion?: string;
   goal?: string;
   plan?: {
+    /** Rendered as the checklist group heading. */
+    category?: string;
     definition?: unknown;
     description?: string;
     id: string;
@@ -166,6 +168,7 @@ export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
     const config = (item.verifierConfig ?? {}) as { expected?: unknown; method?: unknown };
     fields.push(
       { path: `plan[${item.id}].title`, text: item.title },
+      { path: `plan[${item.id}].category`, text: item.category },
       { path: `plan[${item.id}].method`, text: config.method },
       { path: `plan[${item.id}].expected`, text: config.expected },
       { path: `plan[${item.id}].description`, text: item.description },

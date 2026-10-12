@@ -169,6 +169,7 @@ describe('ingestLanguageFields', () => {
       cases: [],
       plan: [
         {
+          category: 'c',
           definition: {
             expected: 'e',
             preconditions: ['p'],
@@ -184,6 +185,7 @@ describe('ingestLanguageFields', () => {
 
     expect(paths).toEqual(
       expect.arrayContaining([
+        'plan[screen].category',
         'plan[screen].description',
         'plan[screen].definition.expected',
         'plan[screen].definition.preconditions[0]',

@@ -911,6 +911,21 @@ describe('acceptance publication with missing evidence', () => {
       expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
     });
 
+    it('rejects an English category, which renders as the checklist group heading', async () => {
+      client.user.getUserState.query.mockResolvedValue({
+        settings: { general: { responseLanguage: 'zh-CN' } },
+      });
+      await writeFile(
+        path.join(dir, 'result.json'),
+        JSON.stringify({
+          plan: [{ category: 'Task hierarchy', id: 'screen', title: '用户能看到处理结果' }],
+          title: '处理结果展示',
+        }),
+      );
+
+      await expect(run('ingest', dir, '--dry-run')).rejects.toThrow('plan[screen].category');
+    });
+
     it('rejects `run create` with a title in the wrong language', async () => {
       client.user.getUserState.query.mockResolvedValue({
         settings: { general: { responseLanguage: 'zh-CN' } },
