@@ -606,9 +606,8 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
           {refreshErrorText && (
             // Stale windows stay the subject; the notice only annotates them.
             <Alert
-              colorfulText
               showIcon
-              styles={{ title: { fontSize: 12 } }}
+              styles={{ title: { color: cssVar.colorTextSecondary, fontSize: 12 } }}
               title={refreshErrorText}
               type={'warning'}
               variant={'plain'}
