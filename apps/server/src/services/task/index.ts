@@ -407,6 +407,8 @@ export class TaskService {
     // and would otherwise survive as orphans that keep showing up in the
     // sidebar. Collect their ids before the task row goes (the cascade wipes
     // the links with it), then delete the topic rows in the same transaction.
+    // The kept operation's own topic is excluded — it must survive with its
+    // run (see the snapshot below).
     const handled = new Set(runningTopics.map((topic) => topic.operationId));
     const outcome = await this.db.transaction(async (tx) => {
       const taskModel = new TaskModel(tx, this.userId, this.workspaceId);
@@ -417,15 +419,29 @@ export class TaskService {
 
       // The row lock guarantees no run can record a topic between here and
       // the status CAS below, so this snapshot is the complete topic set.
+      // `keepOperationId` spares the caller's own run: its topic must survive
+      // with the operation, or the messages ON DELETE CASCADE would pull the
+      // conversation out from under the still-running tool call.
       const allTopics = await taskTopicModel.findByTaskId(task.id);
       const topicIds = allTopics
+        .filter(
+          (topic) =>
+            !topic.topicId ||
+            !options.keepOperationId ||
+            topic.operationId !== options.keepOperationId,
+        )
         .map((topic) => topic.topicId)
         .filter((topicId): topicId is string => !!topicId);
 
       if (!(await taskModel.deleteIfStatus(task.id, task.status))) return 'conflict' as const;
 
       if (topicIds.length > 0) {
-        await new TopicModel(tx, this.userId, this.workspaceId).batchDelete(topicIds);
+        // trashScope variant: a linked topic already sitting in the recycle
+        // bin must go too, or restoring it later resurrects the sidebar
+        // orphan this cascade exists to eliminate.
+        await new TopicModel(tx, this.userId, this.workspaceId).batchDeleteIncludingTrashed(
+          topicIds,
+        );
       }
       return 'deleted' as const;
     });

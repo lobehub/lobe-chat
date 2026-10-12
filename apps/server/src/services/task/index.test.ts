@@ -147,7 +147,7 @@ describe('TaskService', () => {
   };
 
   const mockTopicModel = {
-    batchDelete: vi.fn().mockResolvedValue(undefined),
+    batchDeleteIncludingTrashed: vi.fn().mockResolvedValue(undefined),
   };
 
   const mockBriefModel = {
@@ -170,7 +170,7 @@ describe('TaskService', () => {
     resolveTaskAcceptance.mockResolvedValue(undefined);
     mockTaskTopicModel.findRunningByTaskIds.mockResolvedValue([]);
     mockTaskModel.getActivities.mockResolvedValue([]);
-    mockTopicModel.batchDelete.mockResolvedValue(undefined);
+    mockTopicModel.batchDeleteIncludingTrashed.mockResolvedValue(undefined);
     (AgentModel as any).mockImplementation(function () {
       return mockAgentModel;
     });
@@ -1719,7 +1719,42 @@ describe('TaskService', () => {
       // Topic ids are snapshotted before the task row goes, then removed in
       // the same transaction — `task_topics` links alone cascade via FK, the
       // topic rows would otherwise survive as sidebar orphans.
-      expect(mockTopicModel.batchDelete).toHaveBeenCalledWith(['topic-1', 'topic-2']);
+      expect(mockTopicModel.batchDeleteIncludingTrashed).toHaveBeenCalledWith([
+        'topic-1',
+        'topic-2',
+      ]);
+    });
+
+    it('spares the kept operation topic when a task deletes itself mid-run', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        id: 'task-self-topics',
+        identifier: 'T-12',
+        status: 'running',
+      });
+      mockTaskTopicModel.findRunningByTaskIds.mockResolvedValue([
+        {
+          operationId: 'op-self',
+          status: 'running',
+          taskId: 'task-self-topics',
+          topicId: 'topic-live',
+        },
+      ]);
+      mockTaskTopicModel.findByTaskId.mockResolvedValue([
+        {
+          operationId: 'op-self',
+          status: 'running',
+          taskId: 'task-self-topics',
+          topicId: 'topic-live',
+        },
+        { status: 'completed', taskId: 'task-self-topics', topicId: 'topic-old' },
+      ]);
+
+      await new TaskService(db, userId).deleteTask('T-12', { keepOperationId: 'op-self' });
+
+      // The live run's topic must survive with its operation — messages
+      // cascade off the topic row, so deleting it would rip the conversation
+      // out from under the still-running tool call.
+      expect(mockTopicModel.batchDeleteIncludingTrashed).toHaveBeenCalledWith(['topic-old']);
     });
 
     it('deletes no topic rows when the task has none', async () => {
@@ -1732,7 +1767,7 @@ describe('TaskService', () => {
 
       await new TaskService(db, userId).deleteTask('T-10');
 
-      expect(mockTopicModel.batchDelete).not.toHaveBeenCalled();
+      expect(mockTopicModel.batchDeleteIncludingTrashed).not.toHaveBeenCalled();
     });
 
     it('leaves topic rows alone when the delete loses the race', async () => {
@@ -1749,7 +1784,7 @@ describe('TaskService', () => {
       await expect(new TaskService(db, userId).deleteTask('T-11')).rejects.toMatchObject({
         code: 'CONFLICT',
       });
-      expect(mockTopicModel.batchDelete).not.toHaveBeenCalled();
+      expect(mockTopicModel.batchDeleteIncludingTrashed).not.toHaveBeenCalled();
     });
   });
 
