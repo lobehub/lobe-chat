@@ -25,7 +25,13 @@ export const createModelConfigModal = (options: ModelConfigModalOptions): ModalI
         }}
       />
     ),
-    footer: <ModelConfigFooter formRef={formRef} id={options.id} />,
+    footer: (
+      <ModelConfigFooter
+        formRef={formRef}
+        id={options.id}
+        showDeployName={options.showDeployName}
+      />
+    ),
     maskClosable: true,
     title: t('llm.customModelCards.modelConfig.modalTitle', { ns: 'setting' }),
     width: 'min(90vw, 640px)',
