@@ -34,7 +34,8 @@ const { mockClient, mockConfirm } = vi.hoisted(() => ({
 }));
 
 vi.mock('../api/client', () => ({ getTrpcClient: vi.fn().mockResolvedValue(mockClient) }));
-vi.mock('../api/workspace', () => ({ resolveWorkspaceId: () => undefined }));
+const { mockResolveWorkspaceId } = vi.hoisted(() => ({ mockResolveWorkspaceId: vi.fn() }));
+vi.mock('../api/workspace', () => ({ resolveWorkspaceId: mockResolveWorkspaceId }));
 vi.mock('../settings', () => ({ resolveServerUrl: () => 'https://app.example.com' }));
 vi.mock('../utils/logger', () => ({ log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } }));
 vi.mock('../utils/format', async (importOriginal) => ({
@@ -261,10 +262,13 @@ describe('widget command', () => {
 describe('dashboard command', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.exitCode = undefined;
+    mockResolveWorkspaceId.mockReturnValue(undefined);
     vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
+    process.exitCode = undefined;
     vi.restoreAllMocks();
   });
 
@@ -288,6 +292,24 @@ describe('dashboard command', () => {
     expect(console.log).toHaveBeenCalledWith(
       expect.stringContaining('https://app.example.com/project/prj_1/dashboard/d-1'),
     );
+  });
+
+  it('refuses a project-less board in a workspace, where it could not be opened', async () => {
+    mockResolveWorkspaceId.mockReturnValue('ws_1');
+    await run('dashboard', 'create', '-t', 'Ops');
+    expect(mockClient.dashboard.create.mutate).not.toHaveBeenCalled();
+    expect(process.exitCode).toBe(1);
+  });
+
+  it('creates a project board in a workspace', async () => {
+    mockResolveWorkspaceId.mockReturnValue('ws_1');
+    mockClient.workspace.getById.query.mockResolvedValue({ slug: 'team' });
+    mockClient.dashboard.create.mutate.mockResolvedValue({
+      data: { id: 'd-1', projectId: 'prj_1', title: 'Ops' },
+    });
+    await run('dashboard', 'create', '-t', 'Ops', '--project', 'prj_1');
+    expect(mockClient.dashboard.create.mutate).toHaveBeenCalled();
+    expect(process.exitCode).toBeUndefined();
   });
 
   it('places a widget on a board', async () => {

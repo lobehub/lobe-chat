@@ -2,7 +2,9 @@ import type { Command } from 'commander';
 import pc from 'picocolors';
 
 import { getTrpcClient } from '../api/client';
+import { resolveWorkspaceId } from '../api/workspace';
 import { outputJson, printTable, timeAgo, truncate } from '../utils/format';
+import { log } from '../utils/logger';
 import { resolveAppUrlBuilder } from './task/url';
 
 /** Where a board opens: inside its project when it belongs to one, else on the home dashboards. */
@@ -69,7 +71,7 @@ export function registerDashboardCommand(program: Command) {
     .description('Create a dashboard')
     .requiredOption('-t, --title <title>', 'Dashboard title')
     .option('-d, --description <text>', 'Description')
-    .option('--project <projectId>', 'Create it inside a project')
+    .option('--project <projectId>', 'Create it inside a project (required in a workspace)')
     .option('--widget <widgetId>', 'Place this widget on the new board')
     .option('--json [fields]', 'Output JSON')
     .action(
@@ -80,6 +82,15 @@ export function registerDashboardCommand(program: Command) {
         title: string;
         widget?: string;
       }) => {
+        // Home dashboards are personal-only: a workspace-level board would be
+        // created but have no page to open it on.
+        if (resolveWorkspaceId() && !options.project) {
+          log.error(
+            'Workspace dashboards live inside a project: pass --project <projectId> (see `lh project list`).',
+          );
+          process.exitCode = 1;
+          return;
+        }
         const client = await getTrpcClient();
         const { data } = await client.dashboard.create.mutate({
           description: options.description,

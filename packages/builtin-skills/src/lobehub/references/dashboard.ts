@@ -10,7 +10,7 @@ and asks the user to approve risky dry runs and publishing. Use these commands w
 
 - \`lh dashboard list [--project <projectId>]\` - List boards (with \`--project\`, every board of that project)
 - \`lh dashboard view <id>\` - A board and the widgets on it
-- \`lh dashboard create -t <title> [--project <projectId>] [--widget <widgetId>]\` - Create a board, optionally placing a widget
+- \`lh dashboard create -t <title> [--project <projectId>] [--widget <widgetId>]\` - Create a board, optionally placing a widget (\`--project\` is required in a workspace: home boards are personal-only)
 - \`lh dashboard add <dashboardId> <widgetId>\` - Place a widget on a board
 - \`lh widget list [--agent <agentId>] [--project <projectId>]\` - List widgets
 - \`lh widget view <id> [--script]\` - A widget with its draft / live versions and boards
