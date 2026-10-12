@@ -1,4 +1,4 @@
-import type { TopicCommentItem } from '@lobechat/types';
+import type { LayersEnum, TopicCommentItem } from '@lobechat/types';
 
 import { type PortalArtifact } from '@/types/artifact';
 
@@ -14,6 +14,7 @@ export enum PortalViewType {
   AcceptanceCheck = 'acceptanceCheck',
   AgentDetail = 'agentDetail',
   Artifact = 'artifact',
+  DashboardWidget = 'dashboardWidget',
   Document = 'document',
   FilePreview = 'filePreview',
   Goal = 'goal',
@@ -24,6 +25,7 @@ export enum PortalViewType {
   GroupThread = 'groupThread',
   Home = 'home',
   LocalFile = 'localFile',
+  MemoryDetail = 'memoryDetail',
   MessageDetail = 'messageDetail',
   Notebook = 'notebook',
   TaskDetail = 'taskDetail',
@@ -97,10 +99,13 @@ export type PortalViewData =
   | { acceptanceId: string; checkId: string; type: PortalViewType.AcceptanceCheck }
   | { agentId: string; type: PortalViewType.AgentDetail }
   | { artifact: PortalArtifact; type: PortalViewType.Artifact }
+  | { runId?: string; type: PortalViewType.DashboardWidget; widgetId: string }
   | { agentDocumentId?: string; documentId: string; type: PortalViewType.Document }
   | { type: PortalViewType.Notebook }
   | { file: PortalFile; type: PortalViewType.FilePreview }
   | { type: PortalViewType.LocalFile }
+  /** `id` is the layer-specific row id (e.g. a preference id), not the base memory id. */
+  | { id: string; layer: LayersEnum; type: PortalViewType.MemoryDetail }
   | { messageId: string; type: PortalViewType.MessageDetail }
   | {
       identifier: string;

@@ -6,6 +6,7 @@ import { cssVar } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { AgentStatCardsSkeleton } from '@/components/Skeleton/AgentStatistics';
 import StatisticCard from '@/components/StatisticCard';
 import { type AgentUsageStats } from '@/types/usage/usageRecord';
 import { formatNumber, formatUsageValue } from '@/utils/format';
@@ -26,10 +27,13 @@ const StatCards = memo<StatCardsProps>(({ summary, isLoading, rangeLabel }) => {
   const { t } = useTranslation('spend');
   const suffix = ` · ${rangeLabel}`;
 
+  // Same shape as the route skeleton, so the route → data wait hands over
+  // without the cards flashing `$0.00` behind a spinner.
+  if (isLoading) return <AgentStatCardsSkeleton />;
+
   return (
     <Grid gap={8} maxItemWidth={240} rows={3}>
       <StatisticCard
-        loading={isLoading}
         title={t('usageStats.cards.cost') + suffix}
         statistic={{
           precision: 2,
@@ -38,7 +42,6 @@ const StatCards = memo<StatCardsProps>(({ summary, isLoading, rangeLabel }) => {
         }}
       />
       <StatisticCard
-        loading={isLoading}
         title={t('usageStats.cards.cacheSavings') + suffix}
         statistic={{
           description: desc(
@@ -54,7 +57,6 @@ const StatCards = memo<StatCardsProps>(({ summary, isLoading, rangeLabel }) => {
         }}
       />
       <StatisticCard
-        loading={isLoading}
         title={t('usageStats.cards.token') + suffix}
         statistic={{
           description: desc(

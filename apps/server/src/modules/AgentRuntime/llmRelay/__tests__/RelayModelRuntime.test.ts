@@ -365,6 +365,142 @@ describe('RelayModelRuntime + llm-relay handlers', () => {
   });
 });
 
+describe('RelayModelRuntime non-chat methods', () => {
+  beforeEach(() => {
+    vi.stubEnv('KEY_VAULTS_SECRET', 'test-secret');
+    redis = new FakeRedis();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('runs generateObject on the device and resolves to its uploaded result', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager);
+    const objectPayload = {
+      messages: [{ content: 'Title this', role: 'user' as const }],
+      model: 'llama3',
+      schema: { name: 'title', schema: { properties: {}, type: 'object' as const } },
+    };
+
+    const result = runtime.generateObject(objectPayload);
+    const execute = await waitForExecute(events);
+    expect(execute.method).toBe('generateObject');
+
+    const payloadRes = await llmRelayPayload(buildContext(CALL_ID, { lease: execute.leaseToken }));
+    expect(await payloadRes.json()).toEqual(objectPayload);
+
+    // The value arrives as JSON text in parts, possibly across batches.
+    await post(execute.leaseToken, {
+      chunks: [{ data: '{"title":', type: 'result_part' }],
+      clientId: 'tab-a',
+      seq: 1,
+    });
+    await post(execute.leaseToken, {
+      chunks: [{ data: '"Hello"}', type: 'result_part' }],
+      clientId: 'tab-a',
+      final: { reason: 'done' },
+      seq: 2,
+    });
+
+    await expect(result).resolves.toEqual({ title: 'Hello' });
+    expect(redis.peek(llmRelayKeys.payload(CALL_ID))).toBeUndefined();
+  });
+
+  it('rejects generateObject with the provider error the device reported', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager);
+
+    const result = runtime.generateObject({ messages: [], model: 'llama3' } as any);
+    const { leaseToken } = await waitForExecute(events);
+    const providerError = { errorType: 'OllamaServiceUnavailable', provider: 'ollama' };
+    await post(leaseToken, {
+      chunks: [],
+      clientId: 'tab-a',
+      final: { error: providerError, reason: 'error' },
+      seq: 1,
+    });
+
+    await expect(result).rejects.toEqual(providerError);
+  });
+
+  it('fails generateObject as ClientLlmExecutorUnavailable when nobody claims it', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager, {
+      claimMs: 50,
+      firstChunkMs: 2000,
+      idleMs: 2000,
+      totalMs: 5000,
+    });
+
+    await expect(runtime.models()).rejects.toMatchObject({
+      error: { reason: 'claim_timeout' },
+      errorType: AgentRuntimeErrorType.ClientLlmExecutorUnavailable,
+    });
+    expect(events.find((e) => e.type === 'llm_execute')?.data.method).toBe('models');
+    expect(events.some((e) => e.type === 'llm_cancel')).toBe(true);
+  });
+
+  it('streams pullModel progress and ends a failed download with an error line', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager);
+
+    const response = await runtime.pullModel({ model: 'llama3' });
+    const execute = await waitForExecute(events);
+    expect(execute).toMatchObject({ method: 'pullModel', model: 'llama3' });
+
+    await post(execute.leaseToken, {
+      chunks: [{ data: '{"status":"pulling","completed":1,"total":2}\n', type: 'progress' }],
+      clientId: 'tab-a',
+      seq: 1,
+    });
+    await post(execute.leaseToken, {
+      chunks: [],
+      clientId: 'tab-a',
+      final: { error: { message: 'disk full' }, reason: 'error' },
+      seq: 2,
+    });
+
+    const lines = (await response.text())
+      .trim()
+      .split('\n')
+      .map((line) => JSON.parse(line));
+    expect(lines).toEqual([
+      { completed: 1, status: 'pulling', total: 2 },
+      { error: 'disk full', status: 'error' },
+    ]);
+  });
+
+  // The chat route hands trace headers in `options.headers`; every provider
+  // runtime sets them on its Response, and the browser stores the trace id
+  // with the message from there.
+  it('sets the response headers the caller hands to chat (trace ids)', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager);
+
+    const response = runtime.chat(payload, { headers: { 'x-lobe-chat-trace-id': 'trace-1' } });
+    const execute = await waitForExecute(events);
+    await post(execute.leaseToken, {
+      chunks: [],
+      clientId: 'tab-a',
+      final: { reason: 'done' },
+      seq: 1,
+    });
+
+    expect((await response).headers.get('x-lobe-chat-trace-id')).toBe('trace-1');
+  });
+
+  it('keeps method off the chat dispatch, for executors that predate it', async () => {
+    const { events, manager } = createStreamManager();
+    const runtime = createRuntime(manager);
+
+    void runtime.chat(payload).catch(() => {});
+    const execute = await waitForExecute(events);
+    expect(execute).not.toHaveProperty('method');
+  });
+});
+
 describe('RelayModelRuntime over a gateway with relay routes', () => {
   beforeEach(() => {
     vi.stubEnv('KEY_VAULTS_SECRET', 'test-secret');

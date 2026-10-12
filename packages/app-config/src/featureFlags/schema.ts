@@ -59,8 +59,16 @@ export const FeatureFlagsSchema = z.object({
    */
   agent_llm_relay: FeatureFlagValue.optional(),
 
+  /**
+   * Dashboards: monitoring widgets built by the `lobe-dashboard` agent tool,
+   * the home / project dashboard pages, the widget Portal and in-chat widget
+   * previews. Off: none of it is reachable and the tool is never offered;
+   * already-published widgets keep refreshing on their schedule. Array values
+   * are user ids.
+   */
+  dashboard: FeatureFlagValue.optional(),
+
   // internal flag
-  agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
   dev_dock: FeatureFlagValue.optional(),
   dev_dock_workspaces: z.array(z.string()).optional(),
@@ -129,7 +137,9 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   // Off until the client executor ships everywhere; allowlist first.
   agent_llm_relay: false,
 
-  agent_self_iteration: isDev,
+  // Off until an admin publishes a user allowlist or flips it to true.
+  dashboard: false,
+
   agent_onboarding: isDev,
   dev_dock: isDev,
   auth_captcha: true,
@@ -163,6 +173,7 @@ export const mapFeatureFlagsEnvToState = (
     enableAgentShare: evaluateFeatureFlag(config.agent_share, userId),
     enableGatewayMux: evaluateFeatureFlag(config.agent_gateway_mux, userId),
     enableLlmRelay: evaluateFeatureFlag(config.agent_llm_relay, userId),
+    enableDashboard: evaluateFeatureFlag(config.dashboard, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
@@ -178,7 +189,6 @@ export const mapFeatureFlagsEnvToState = (
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
-    enableAgentSelfIteration: evaluateFeatureFlag(config.agent_self_iteration, userId),
     enableAgentOnboarding: evaluateFeatureFlag(config.agent_onboarding, userId),
     enableDevDock: evaluateFeatureFlag(config.dev_dock, userId),
     enableAuthCaptcha: evaluateFeatureFlag(config.auth_captcha, userId),

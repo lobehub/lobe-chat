@@ -23,6 +23,7 @@ import SettingsPageSkeleton from '@/components/Skeleton/Settings/Page';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
+import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import TasksSkeleton from '@/components/Skeleton/Tasks';
 import TopicsSkeleton from '@/components/Skeleton/Topics';
 import TaskDetailSkeleton from '@/features/AgentTasks/AgentTaskDetail/TaskDetailSkeleton';
@@ -193,7 +194,7 @@ describe('desktop router shared definition', () => {
   });
 
   it.each(mainAreaVariants)(
-    '%s exposes project task, goal, and acceptance workspaces',
+    '%s exposes project task, goal, dashboard, and acceptance workspaces',
     (_, factory) => {
       const projectRoute = factory().find((route) => route.path === 'project/:projectId');
       const projectIndexRoute = projectRoute?.children?.find((route) => route.index);
@@ -206,6 +207,7 @@ describe('desktop router shared definition', () => {
         'tasks',
         'settings/:section?',
         'goals',
+        'dashboard',
         'acceptance',
       ]);
       for (const section of ['general', 'environments', 'directories']) {
@@ -220,6 +222,16 @@ describe('desktop router shared definition', () => {
       ).toBe('conversation');
     },
   );
+
+  it.each(mainAreaVariants)('%s matches project dashboard list and board pages', (_, factory) => {
+    const list = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/dashboard');
+    const board = matchRoutes(createMainAreaRoutes(factory), '/acme/project/prj_1/dashboard/d-1');
+
+    expect(list?.at(-1)?.route.index).toBe(true);
+    expect(list?.at(-1)?.route.handle).toMatchObject({ meta: expect.any(Object) });
+    expect(board?.at(-1)?.route.path).toBe(':dashboardId');
+    expect(board?.at(-1)?.params).toMatchObject({ dashboardId: 'd-1', projectId: 'prj_1' });
+  });
 
   it.each(mainAreaVariants)('%s exposes the projects view-all route', (_, factory) => {
     const personalMatches = matchRoutes(createMainAreaRoutes(factory), '/projects');
@@ -241,6 +253,27 @@ describe('desktop router shared definition', () => {
       expect(paths).not.toContain(':workspaceSlug');
       expect(paths?.at(-1)).toBe('memory');
       expect(matches?.at(-1)?.route.handle).toMatchObject({ settingsTab: 'memory' });
+    },
+  );
+
+  it.each(mainAreaVariants)(
+    '%s personal devices list and detail use their own skeletons, not the settings form',
+    (_, factory) => {
+      for (const [url, leaf] of [
+        ['/settings/devices', 'devices'],
+        ['/settings/devices/device-1', 'devices/:sub'],
+      ] as const) {
+        const matches = matchRoutes(createMainAreaRoutes(factory), url);
+        const handle = matches?.at(-1)?.route.handle as {
+          meta?: { Skeleton?: unknown };
+          settingsTab?: string;
+        };
+
+        expect(matches?.at(-1)?.route.path).toBe(leaf);
+        expect(handle.settingsTab).toBe('devices');
+        expect(handle.meta?.Skeleton).toBeDefined();
+        expect(handle.meta?.Skeleton).not.toBe(SettingsPageSkeleton);
+      }
     },
   );
 
@@ -463,6 +496,43 @@ describe('desktop router shared definition', () => {
       ).toBe(expectedSkeleton);
     }
   });
+
+  it.each([
+    ['Web', (_pathname: string) => webDesktopRoutes],
+    ['Electron', (pathname: string) => createTabRouter(pathname).routes],
+  ])(
+    '%s gives section-stacked workspace settings tabs a sections skeleton without a second frame',
+    (_, getRoutes) => {
+      // Regression: these tabs used the generic avatar/detail surface, which
+      // looked nothing like the stacked groups the page renders.
+      const genericSurfaces = new Set([
+        createSurfaceSkeleton('detail'),
+        createSurfaceSkeleton('grid'),
+      ]);
+
+      for (const tab of ['plans', 'billing', 'budget', 'credits', 'usage']) {
+        const pathname = `/team/settings/${tab}`;
+        const matches = matchRoutes(getRoutes(pathname), pathname);
+        const Skeleton = resolveRouteSkeleton(
+          matches?.map(({ route }) => ({ handle: route.handle })) ?? [],
+        );
+
+        expect(Skeleton, pathname).toBeDefined();
+        expect(genericSurfaces.has(Skeleton!), pathname).toBe(false);
+
+        // Inside the content layout (`chrome='body'`) only the sections render:
+        // the layout already owns the navigation header and padded container.
+        const html = renderToString(
+          <MemoryRouter initialEntries={[pathname]}>
+            {Skeleton && <Skeleton chrome={'body'} />}
+          </MemoryRouter>,
+        );
+
+        expect(html, pathname).toContain('data-testid="settings-sections-skeleton"');
+        expect(html, pathname).not.toContain('max-width:1024px');
+      }
+    },
+  );
 
   it.each([
     ['Web', (_pathname: string) => webDesktopRoutes],

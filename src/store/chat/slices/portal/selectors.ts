@@ -81,6 +81,8 @@ const agentDetailId = (s: ChatStoreState): string | undefined => {
   return view?.agentId;
 };
 
+const memoryDetailView = (s: ChatStoreState) => getViewData(s, PortalViewType.MemoryDetail);
+
 // Artifact selectors
 const currentArtifact = (s: ChatStoreState): PortalArtifact | undefined => {
   const view = getViewData(s, PortalViewType.Artifact);
@@ -263,6 +265,8 @@ const taskResultId = (s: ChatStoreState): string | undefined => {
   return view?.taskId;
 };
 
+const dashboardWidgetView = (s: ChatStoreState) => getViewData(s, PortalViewType.DashboardWidget);
+
 // Goal detail drill-down selectors
 const goalPortalId = (s: ChatStoreState): string | undefined =>
   getViewData(s, PortalViewType.Goal)?.goalId;
@@ -355,6 +359,7 @@ export const chatPortalSelectors = {
 
   // Goal drill-down data
   goalMetricView,
+  dashboardWidgetView,
   goalNodeView,
   goalPortalId,
   goalReportChapterView,
@@ -370,6 +375,9 @@ export const chatPortalSelectors = {
   localFilePath,
   localFileWorkingDirectory,
   openLocalFiles,
+
+  // Memory detail data
+  memoryDetailView,
 
   // Message detail data
   messageDetailId,

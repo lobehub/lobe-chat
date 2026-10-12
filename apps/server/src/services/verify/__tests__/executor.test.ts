@@ -204,7 +204,7 @@ describe('VerifyExecutorService', () => {
       'shot-check',
       expect.objectContaining({
         suggestion: expect.stringContaining(
-          'lh acceptance run result submit --run run-1 --item shot-check',
+          'lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item shot-check --type screenshot',
         ),
         verdict: 'uncertain',
       }),

@@ -55,6 +55,11 @@ export default {
   'topics.status.completed': 'Completed',
   'topics.status.archived': 'Archived',
   'topics.status.unread': 'New results',
+  'topics.subGroup.title': 'Group topics',
+  'topics.subGroup.none': 'No grouping',
+  'topics.subGroup.byDevice': 'By device',
+  'topics.subGroup.byTime': 'By time',
+  'topics.subGroup.byStatus': 'By status',
   'settings.addDirectory': 'Add folder',
   'settings.addDirectoryDescription':
     'Select an environment and a connected device, then enter the full path of an existing folder. Files stay on that device.',
@@ -63,6 +68,11 @@ export default {
 
   'directories.autoFileTopics': 'All {{count}} existing topics will be linked to this project.',
   'settings.general': 'General',
+  'settings.logo': 'Logo',
+  'settings.logoDescription': 'Shown in the project header, sidebar and switcher.',
+  'settings.logoSizeExceeded': 'The logo must be smaller than 2 MB.',
+  'settings.logoUploadFailed': 'Could not upload the logo',
+  'settings.advanced': 'Advanced',
   'settings.noRepository': 'No GitHub repository linked',
   'settings.noDirectories':
     'No folders in this environment yet. Add an existing folder on a connected device to start working.',
@@ -77,6 +87,8 @@ export default {
   'directories.environment': 'Environment',
   'directories.newEnvironment': 'Create environment',
 
+  'directories.boundTip':
+    "This directory belongs to the project ({{path}}). Switch devices to use the project's directory on another device.",
   'directories.boundRoot':
     'This conversation is bound to a project directory. Start a new conversation to use a different directory.',
   'directories.detectRepository': 'Detect GitHub repository',
@@ -221,6 +233,7 @@ export default {
   'overview.tasksTitle': 'Project tasks',
   'sections.agents': 'Agents',
   'sections.acceptance': 'Acceptance',
+  'sections.dashboard': 'Dashboards',
   'sections.goals': 'Goals',
   'sections.home': 'Project home',
   'sections.knowledgeBases': 'Libraries',

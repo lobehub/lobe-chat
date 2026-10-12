@@ -579,6 +579,38 @@ export class CompletionLifecycle {
           );
         }
       }
+      // A memory-writer run's terminal state may not carry the tool calls that
+      // name the written memory (messages live in the DB). When the receipt would
+      // fall back to a generic "Memory saved" with no id, re-read the run's own
+      // thread so it can name the memory and offer undo.
+      const memoryTargetUnresolved = selfIteration?.mutations.some((mutation) => {
+        const target = isRecord(mutation.data) ? mutation.data.target : undefined;
+        return !isRecord(target) || !target.id;
+      });
+      if (selfIteration?.marker.kind === 'memory' && memoryTargetUnresolved && runOrigin.threadId) {
+        try {
+          const messages = await this.messageModel.query(
+            {
+              agentId: runOrigin.agentId,
+              threadId: runOrigin.threadId,
+              topicId: runOrigin.topicId,
+            },
+            { allowShareVisitor: true },
+          );
+          selfIteration =
+            extractSelfIterationCompletionPayload({
+              ...state,
+              messages,
+              origin: { ...runOrigin, signal: selfIteration.marker, userId: selfIteration.userId },
+            }) ?? selfIteration;
+        } catch (error) {
+          log(
+            '[completion-lifecycle] failed to load memory-writer messages op=%s: %O',
+            operationId,
+            error,
+          );
+        }
+      }
       if (reason !== 'error') {
         log(
           '[completion-lifecycle] emit agent.execution.completed op=%s userId=%s assistant=%s metaAssistant=%s selfIteration=%s',

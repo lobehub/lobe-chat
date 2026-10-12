@@ -2,7 +2,7 @@
 
 import { type UserMemoryEffort, type UserMemorySettings } from '@lobechat/types';
 import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { Skeleton, Switch } from '@lobehub/ui/base-ui';
+import { Switch } from '@lobehub/ui/base-ui';
 import { Form, type FormGroupItem, useForm } from '@lobehub/ui/base-ui/form';
 import isEqual from 'fast-deep-equal';
 import { CircleHelpIcon } from 'lucide-react';
@@ -10,6 +10,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AutoSaveHint from '@/components/Editor/AutoSaveHint';
+import { SettingsSectionSkeleton } from '@/components/Skeleton';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import LevelSlider from '@/features/ModelSwitchPanel/components/ControlsForm/LevelSlider';
 import { usePermission } from '@/hooks/usePermission';
@@ -37,7 +38,14 @@ const MemorySetting = memo(() => {
     },
   });
 
-  if (!isUserStateInit) return <Skeleton.Text rows={3} />;
+  // One filled group: the enable switch and the effort slider (settles at ~180x44
+  // with its marks), which makes the second row taller than a plain input row.
+  if (!isUserStateInit)
+    return (
+      <SettingsSectionSkeleton
+        groups={[{ controls: { 1: { height: 44, width: 180 } }, rows: 2, titleWidth: 80 }]}
+      />
+    );
 
   const memorySettings: FormGroupItem<UserMemorySettings> = {
     children: [

@@ -16,11 +16,7 @@ export type SelfFeedbackIntentSourceScopeType = 'operation' | 'topic';
 
 /** Actions that an agent may declare as self-feedback intent. */
 export type SelfFeedbackIntentDeclaredAction =
-  | 'write'
-  | 'create'
-  | 'refine'
-  | 'consolidate'
-  | 'proposal';
+  'write' | 'create' | 'refine' | 'consolidate' | 'proposal';
 
 /** Self-feedback target category declared by the running agent. */
 export type SelfFeedbackIntentDeclaredKind = 'memory' | 'skill' | 'gap';

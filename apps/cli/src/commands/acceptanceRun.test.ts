@@ -543,6 +543,42 @@ describe('acceptance publication with missing evidence', () => {
     expect(process.exitCode).toBe(1);
   });
 
+  it('warns when supersedes names no check of the acceptance', async () => {
+    client.acceptance.attachRun.mutate.mockResolvedValue({
+      id: 'run-1',
+      roundIndex: 2,
+      unresolvedSupersedes: ['typo-id'],
+    });
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
+        plan: [{ id: 'response', supersedes: ['typo-id'], title: '收到回复' }],
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+      }),
+    );
+
+    await run('ingest', dir, '--json');
+
+    expect(result()).toMatchObject({ unresolvedSupersedes: ['typo-id'] });
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('typo-id'));
+  });
+
+  it('reports no unresolved supersedes when an older server omits the field', async () => {
+    await writeFile(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
+        plan: [{ id: 'response', title: '收到回复' }],
+        summary: { passed: 1, total: 1, verdict: 'passed' },
+      }),
+    );
+
+    await run('ingest', dir, '--json');
+
+    expect(result()).toMatchObject({ unresolvedSupersedes: [] });
+  });
+
   it('accounts for draft-only checks and incoming checks using the folded plan', async () => {
     client.acceptance.attachRun.mutate.mockResolvedValue({
       id: 'draft-run',

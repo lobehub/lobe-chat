@@ -275,9 +275,11 @@ export class VerifyExecutorService {
         completedAt: new Date(),
         confidence: 0,
         status: 'failed',
-        // `result submit` needs a run selector; spell out this run and item so
-        // the recovery command can be run as-is.
-        suggestion: `Capture and upload the missing evidence (${missing}) via \`lh acceptance run result submit --run ${verifyRunId} --item ${item.id} --type <type> --file <path>\`.`,
+        // The repair that acts on this suggestion runs as a new operation with a
+        // round of its own, so the command targets the caller's operation, not
+        // this run: naming this (settled) run sent every repair's evidence one
+        // round behind the round its gate checks.
+        suggestion: `Capture and upload the missing evidence (${missing}) to your current run via \`lh acceptance run result submit --operation "$LOBEHUB_OPERATION_ID" --item ${item.id} --type ${gaps.length === 1 ? gaps[0] : `<${gaps.join('|')}>`} --file <path>\`.`,
         toulmin: { limitation: `Required evidence not provided: ${missing}.` },
         verdict: 'uncertain',
       });

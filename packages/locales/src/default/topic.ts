@@ -108,6 +108,7 @@ export default {
   'filter.sortBy.createdAt': 'Created time',
   'filter.sortBy.updatedAt': 'Updated time',
   'groupTitle.byAgent.unknown': 'Unknown agent',
+  'groupTitle.byDevice.unknown': 'Unknown device',
   'groupTitle.byProject.noProject': 'No directory',
   'groupTitle.byStatus.active': 'Active',
   'groupTitle.byStatus.archived': 'Archived',

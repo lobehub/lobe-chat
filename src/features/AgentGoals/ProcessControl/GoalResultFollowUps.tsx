@@ -14,8 +14,8 @@ import { createGoalModal } from '../CreateGoalModal';
 import {
   coordinatorGateKind,
   coordinatorGateReason,
-  coordinatorReasonCopy,
   gateTitleKey,
+  localizedCoordinatorReason,
 } from './coordinatorCopy';
 import { pickFinalDeliverable } from './goalAcceptanceReport';
 import type { GoalGraphView } from './goalGraphViewModel';
@@ -95,7 +95,6 @@ const useDecisionCopy = (graph: GoalGraphView) => {
     const subjectId = graph.byId[decision.nodeId]?.gateSubjectId;
     const subject = subjectId ? graph.byId[subjectId]?.node.title : undefined;
     const rawReason = coordinatorGateReason(decision.question);
-    const reasonCopy = coordinatorReasonCopy(rawReason);
     const optionId = decision.resolvedOptionId;
     const choice =
       optionId === 'retry' || optionId === 'retire' || optionId === 'fail'
@@ -104,7 +103,7 @@ const useDecisionCopy = (graph: GoalGraphView) => {
 
     return {
       choice,
-      detail: reasonCopy ? t(reasonCopy.key as any, reasonCopy.params) : rawReason,
+      detail: localizedCoordinatorReason(rawReason, t as any),
       question: subject
         ? `${t(gateTitleKey(kind) as any)} · ${subject}`
         : t(gateTitleKey(kind) as any),

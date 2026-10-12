@@ -12,6 +12,7 @@ import { agentService } from '@/services/agent';
 import { type StoreSetter } from '@/store/types';
 
 import { type AgentStore } from '../../store';
+import { mergeAgentConfig } from '../agent/action';
 import { type BuiltinAgentParams, builtinAgentResource } from './projection';
 
 interface UseInitBuiltinAgentContext {
@@ -39,6 +40,11 @@ const fetchBuiltinAgent = ({ slug }: BuiltinAgentParams): Promise<AgentItem> =>
  * id index is what selectors and route loaders read, and the full item is what
  * re-seeds `agentMap` before paint. Both move in one commit, so a reader never
  * sees an id without its item (or vice versa).
+ *
+ * The item is also merged into `agentMap` in that same commit. Surfaces such as
+ * AgentBuilderWelcome read `agentMap[builtinAgentIdMap[slug]]` in the render that
+ * first sees the id; seeding `agentMap` later (in a layout effect) left that
+ * render with an undefined config and crashed the agent profile page.
  */
 const builtinAgentLens: ReplicaLens<AgentStore, AgentItem> = {
   clear: () => ({ builtinAgentIdMap: {}, builtinAgentMap: {} }),
@@ -53,8 +59,18 @@ const builtinAgentLens: ReplicaLens<AgentStore, AgentItem> = {
       delete idMap[key];
     } else {
       map[key] = data;
-      if (data.id) idMap[key] = data.id;
-      else delete idMap[key];
+      if (data.id) {
+        idMap[key] = data.id;
+        const current = state.agentMap[data.id];
+        const next = mergeAgentConfig(current, data as PartialDeep<LobeAgentConfig>);
+        if (next !== current) {
+          return {
+            agentMap: { ...state.agentMap, [data.id]: next },
+            builtinAgentIdMap: idMap,
+            builtinAgentMap: map,
+          };
+        }
+      } else delete idMap[key];
     }
 
     return { builtinAgentIdMap: idMap, builtinAgentMap: map };

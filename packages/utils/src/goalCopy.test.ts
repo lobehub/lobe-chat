@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { coordinatorGateReason, coordinatorReasonCopy } from './goalCopy';
+import { coordinatorGateReason, coordinatorReasonCopies, coordinatorReasonCopy } from './goalCopy';
 
 /**
  * The machine gate's question is English data written on the server; without a
@@ -36,5 +36,37 @@ describe('machine gate reasons', () => {
     expect(reasonOf('Task T-3 did not pass verification. Retry or retire this task node?')).toEqual(
       { key: 'goalProcess.gate.reason.verifyFailed', params: { id: 'T-3' } },
     );
+  });
+});
+
+/**
+ * A batch pattern break lists every blocker it hit at once, joined by `; `. The
+ * sentence reached a Chinese reader verbatim, so each blocker is localized on
+ * its own and the parts rejoin.
+ */
+describe('batch gate reasons', () => {
+  const reasonOf = (question: string) => coordinatorReasonCopies(coordinatorGateReason(question));
+
+  it('localizes each blocker a pattern break lists', () => {
+    expect(
+      reasonOf(
+        '3 unit(s) did not succeed; the batch template is incomplete\n\nHow should this batch proceed?',
+      ),
+    ).toEqual([
+      { key: 'goalProcess.gate.reason.batchBroken', params: { count: '3' } },
+      { key: 'goalProcess.gate.reason.batchTemplateIncomplete' },
+    ]);
+  });
+
+  it('reads a lone blocker', () => {
+    expect(reasonOf('1 unit(s) did not succeed\n\nHow should this batch proceed?')).toEqual([
+      { key: 'goalProcess.gate.reason.batchBroken', params: { count: '1' } },
+    ]);
+  });
+
+  it('keeps a half-known sentence verbatim rather than half-translating it', () => {
+    expect(
+      reasonOf('1 unit(s) did not succeed; something new\n\nHow should this batch proceed?'),
+    ).toBeUndefined();
   });
 });

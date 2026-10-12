@@ -6,22 +6,22 @@ import {
   AccordionTrigger,
   Text,
 } from '@lobehub/ui/base-ui';
-import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TopicItem from '../../List/Item';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
-
-const preformat = (id: string) =>
-  id.startsWith('20') ? (id.includes('-') ? dayjs(id).format('MMMM') : id) : undefined;
+import { formatTimeGroupId } from './timeGroupTitle';
 
 const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const { t } = useTranslation('topic');
   const { id, title, children } = group;
 
-  const timeTitle = useMemo(() => preformat(id) ?? t(`groupTitle.byTime.${id}` as any), [id, t]);
+  const timeTitle = useMemo(
+    () => formatTimeGroupId(id) ?? t(`groupTitle.byTime.${id}` as any),
+    [id, t],
+  );
 
   return (
     <AccordionItem value={id}>

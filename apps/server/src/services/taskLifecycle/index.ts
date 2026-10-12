@@ -228,6 +228,9 @@ export class TaskLifecycleService {
       }
 
       // 5. Default post-tick transition.
+      //    - Automation task whose own tick requested completion (the
+      //      instruction's end condition was verified as met) → 'completed',
+      //      retiring the loop now that the run has finished cleanly.
       //    - Schedule-mode task that just consumed its final allowed run
       //      (count ≥ maxExecutions) → park at 'completed' so the UI reflects
       //      the cap immediately. Without this, a daily cron with
@@ -272,7 +275,10 @@ export class TaskLifecycleService {
             } | null
           )?.completion?.requestedByOperationId === params.operationId;
 
-        if (
+        if (currentTask.automationMode && completionRequestedByCurrentOperation) {
+          log('automation task=%s retired by its own tick — end condition met', taskIdentifier);
+          await this.completeTask(currentTask);
+        } else if (
           currentTask.automationMode === 'schedule' &&
           (await this.scheduleCapReached(currentTask))
         ) {
@@ -287,14 +293,7 @@ export class TaskLifecycleService {
           await this.recordAutomationRecovery(currentTask);
           await this.taskModel.updateStatus(taskId, 'scheduled', { error: null });
         } else if (!verifyBound && completionRequestedByCurrentOperation) {
-          if (currentTask.parentTaskId) {
-            await this.completeSubtask(currentTask);
-          } else {
-            await this.taskModel.updateStatusIfCurrent(taskId, 'running', 'completed', {
-              completedAt: new Date(),
-              error: null,
-            });
-          }
+          await this.completeTask(currentTask);
         } else if (!verifyBound && params.runTrigger === 'goal' && !currentTask.parentTaskId) {
           await this.taskModel.updateStatusIfCurrent(taskId, 'running', 'completed', {
             completedAt: new Date(),
@@ -307,7 +306,7 @@ export class TaskLifecycleService {
               error: null,
             });
           } else {
-            await this.completeSubtask(currentTask);
+            await this.completeTask(currentTask);
           }
         } else if (!verifyBound && this.taskModel.shouldPauseOnTopicComplete(currentTask)) {
           await this.taskModel.updateStatus(taskId, 'paused', { error: null });
@@ -550,14 +549,14 @@ export class TaskLifecycleService {
   }
 
   /**
-   * Settle a successful child task and advance its sibling dependency graph.
+   * Settle a successful task and advance its dependency graph.
    *
    * This mirrors the completion side effects of TaskService.updateStatus
    * without importing TaskService here (TaskRunner already depends on this
    * lifecycle service). The dynamic import keeps that module cycle out of
    * initialization while preserving the runner's single cascade implementation.
    */
-  private async completeSubtask(task: TaskItem): Promise<void> {
+  private async completeTask(task: TaskItem): Promise<void> {
     const completedTask = await this.taskModel.updateStatusIfCurrent(
       task.id,
       'running',
@@ -568,13 +567,15 @@ export class TaskLifecycleService {
       },
     );
     if (!completedTask) {
-      log('subtask=%s no longer running — skipping completion cascade', task.identifier);
+      log('task=%s no longer running — skipping completion cascade', task.identifier);
       return;
     }
 
-    const parentTask = await this.taskModel.findById(completedTask.parentTaskId!);
-    if (parentTask && this.taskModel.shouldPauseAfterComplete(parentTask, task.identifier)) {
-      await this.taskModel.updateStatus(parentTask.id, 'paused');
+    if (completedTask.parentTaskId) {
+      const parentTask = await this.taskModel.findById(completedTask.parentTaskId);
+      if (parentTask && this.taskModel.shouldPauseAfterComplete(parentTask, task.identifier)) {
+        await this.taskModel.updateStatus(parentTask.id, 'paused');
+      }
     }
 
     const { TaskRunnerService } = await import('@/server/services/taskRunner');

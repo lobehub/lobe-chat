@@ -15,7 +15,7 @@ import {
   Share2,
   Trash,
 } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatList from '@/features/Conversation/ChatList';
@@ -54,6 +54,10 @@ export interface TopicChatDrawerBodyProps {
   agentId: string;
   defaultInputExpanded?: boolean;
   disableInputCollapse?: boolean;
+  /** Expand and focus the reply composer whenever this changes — bumped when the
+      drawer is opened with conversational intent (e.g. the brief's "Continue
+      chat"). */
+  inputFocusRequest?: number;
   /**
    * The run to resume streaming from. Hosts that embed the body outside the
    * drawer pass it themselves; the drawer falls back to its own topic's run.
@@ -63,7 +67,14 @@ export interface TopicChatDrawerBodyProps {
 }
 
 export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
-  ({ agentId, defaultInputExpanded, disableInputCollapse, runningOperation, topicId }) => {
+  ({
+    agentId,
+    defaultInputExpanded,
+    disableInputCollapse,
+    inputFocusRequest,
+    runningOperation,
+    topicId,
+  }) => {
     const isLogin = useUserStore(authSelectors.isLogin);
     const useHydrateAgentConfig = useAgentStore((s) => s.useHydrateAgentConfig);
 
@@ -115,6 +126,7 @@ export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
               <FeedbackInput
                 defaultExpanded={defaultInputExpanded}
                 disableCollapse={disableInputCollapse}
+                focusRequest={inputFocusRequest}
               />
             </Flexbox>
           </Flexbox>
@@ -134,12 +146,31 @@ const TopicChatDrawer = memo(() => {
   const activeTaskId = useTaskStore((s) => s.activeTaskId);
   const agentId = useTaskStore(taskDetailSelectors.topicDrawerAgentId);
   const drawerTitle = useTaskStore(taskDetailSelectors.topicDrawerTitle);
+  const inputFocusRequest = useTaskStore(taskDetailSelectors.topicDrawerFocusRequest);
   const activity = useTaskStore(taskActivitySelectors.activeDrawerTopicActivity);
   const closeTopicDrawer = useTaskStore((s) => s.closeTopicDrawer);
   const deleteTopic = useTaskStore((s) => s.deleteTopic);
   const useFetchTaskDetail = useTaskStore((s) => s.useFetchTaskDetail);
   const showArtifactPortal = useTopicDrawerArtifactPortal();
   const closeArtifact = useChatStore((s) => s.closeArtifact);
+
+  // The portal state is global: an artifact left open when this drawer closes
+  // would make the next opening of the same topic land on the artifact instead
+  // of the conversation, so the drawer takes its artifact down with it.
+  const handleClose = useCallback(() => {
+    if (showArtifactPortal) closeArtifact();
+    closeTopicDrawer();
+  }, [closeArtifact, closeTopicDrawer, showArtifactPortal]);
+
+  // A request to write ("Continue chat") needs the conversation and its
+  // composer. Each request is handled once, so an artifact the user opens
+  // afterwards from inside the conversation is left alone.
+  const handledFocusRequestRef = useRef(inputFocusRequest);
+  useEffect(() => {
+    if (!inputFocusRequest || inputFocusRequest === handledFocusRequestRef.current) return;
+    handledFocusRequestRef.current = inputFocusRequest;
+    if (showArtifactPortal) closeArtifact();
+  }, [closeArtifact, inputFocusRequest, showArtifactPortal]);
   const enableTopicLinkShare = useServerConfigStore(serverConfigSelectors.enableBusinessFeatures);
   const { allowed: canShare, reason } = usePermission('edit_own_content');
   const { allowed: canEditTask } = usePermission('create_content');
@@ -349,7 +380,7 @@ const TopicChatDrawer = memo(() => {
           overflow: 'hidden',
         },
       }}
-      onClose={closeTopicDrawer}
+      onClose={handleClose}
     >
       {/* `open` already proves both ids. The body deliberately does NOT wait for a
           task: a run opened from the home inbox may have no parent task at all,
@@ -361,7 +392,11 @@ const TopicChatDrawer = memo(() => {
               <PortalContent onClose={closeArtifact} />
             </Flexbox>
           ) : (
-            <TopicChatDrawerBody agentId={agentId!} topicId={topicId!} />
+            <TopicChatDrawerBody
+              agentId={agentId!}
+              inputFocusRequest={inputFocusRequest}
+              topicId={topicId!}
+            />
           ))}
       </Freeze>
     </FloatingPanel>

@@ -29,6 +29,7 @@ import {
   ConfigAction,
   GenerationMediaModeSegment,
   GenerationModelNotice,
+  GenerationPromptBlockedNotice,
   GenerationPromptInput,
   GenerationVisibilitySelector,
   InlineVideoFrames,
@@ -324,6 +325,10 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
   const isCreating = useVideoStore(createVideoSelectors.isCreating);
   const createVideo = useVideoStore((s) => s.createVideo);
   const cancelEditingVideo = useVideoStore((s) => s.cancelEditingVideo);
+  const blockedPrompt = useVideoStore(createVideoSelectors.blockedPrompt);
+  const dismissBlockedPrompt = useVideoStore((s) => s.dismissBlockedPrompt);
+  // Editing the prompt dismisses the notice: it only describes the submitted text.
+  const isPromptBlocked = blockedPrompt !== undefined && blockedPrompt === value;
   const editingGenerationId = useVideoStore(createVideoSelectors.editingGenerationId);
   const currentGenerationBatches = useVideoStore(generationBatchSelectors.currentGenerationBatches);
   const editingBatch = useMemo(() => {
@@ -594,14 +599,21 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
                 : t('generation.status.generating')
             }
             header={
-              editingGenerationId ? (
-                <EditingVideoHeader
-                  coverUrl={editingAsset?.coverUrl || editingAsset?.thumbnailUrl}
-                  prompt={editingBatch?.prompt}
-                  version={versionMap.get(editingGenerationId)?.version ?? 1}
-                  onCancel={cancelEditingVideo}
-                  onLocate={() => revealVideoGeneration(editingGenerationId)}
-                />
+              editingGenerationId || isPromptBlocked ? (
+                <>
+                  {editingGenerationId && (
+                    <EditingVideoHeader
+                      coverUrl={editingAsset?.coverUrl || editingAsset?.thumbnailUrl}
+                      prompt={editingBatch?.prompt}
+                      version={versionMap.get(editingGenerationId)?.version ?? 1}
+                      onCancel={cancelEditingVideo}
+                      onLocate={() => revealVideoGeneration(editingGenerationId)}
+                    />
+                  )}
+                  {isPromptBlocked && (
+                    <GenerationPromptBlockedNotice onClose={dismissBlockedPrompt} />
+                  )}
+                </>
               ) : undefined
             }
             inlineContent={

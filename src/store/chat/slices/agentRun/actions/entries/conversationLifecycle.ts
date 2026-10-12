@@ -988,6 +988,12 @@ export class ConversationLifecycleActionImpl {
       } else {
         targetInputEditor?.setDocument('markdown', message);
       }
+
+      // The editor snapshot covers only text. A send rejected after the composer
+      // was cleared (e.g. the server refusing an offline bound device) would
+      // otherwise still swallow the cleared uploads and context selections —
+      // hand them back to the caller that captured them before clearing.
+      onPreflightFailure?.();
     };
     const restoreUnacceptedVoiceMessageContext = () => {
       if (!optimisticUserMessageId || hasNotifiedMessageAccepted) return;
@@ -1724,7 +1730,7 @@ export class ConversationLifecycleActionImpl {
       const { operationId: heteroOpId } = this.#get().startOperation({
         context: heteroExecutionContext,
         label: 'Heterogeneous Agent Execution',
-        metadata: { heterogeneousType: heterogeneousProvider.type },
+        metadata: { heteroAutoRetryAvailable: true, heterogeneousType: heterogeneousProvider.type },
         parentOperationId: operationId,
         type: 'execHeterogeneousAgent',
       });

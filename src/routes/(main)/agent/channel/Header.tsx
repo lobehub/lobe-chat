@@ -17,6 +17,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
+import SkeletonBar from '@/components/Skeleton/Bar';
 import AgentBreadcrumb from '@/features/AgentBreadcrumb';
 import AgentProfileTabs, { AGENT_PROFILE_TABS_CENTER_STYLE } from '@/features/AgentProfileTabs';
 import NavHeader from '@/features/NavHeader';
@@ -25,6 +26,7 @@ import { useAgentStore } from '@/store/agent';
 import type { BotProviderItem } from '@/store/agent/slices/bot/action';
 
 import { BOT_RUNTIME_STATUSES, type BotRuntimeStatus } from '../../../../types/botRuntimeStatus';
+import { resolveChannelHeaderView } from './headerView';
 import { isImportableChannel, planChannelImport } from './importPlan';
 
 interface HeaderProps {
@@ -32,6 +34,10 @@ interface HeaderProps {
   currentConfig?: BotProviderItem;
   disabled?: boolean;
   platformDef?: SerializedPlatformDefinition & { comingSoon?: boolean };
+  /** The `:platform` route param; set on a platform detail even before `platformDef` loads. */
+  platformId?: string;
+  /** Platform definitions are still loading. */
+  platformsLoading?: boolean;
   providers?: BotProviderItem[];
   runtimeStatus?: BotRuntimeStatus;
 }
@@ -45,8 +51,18 @@ const STATUS_TAG_COLORS: Partial<Record<BotRuntimeStatus, string>> = {
 };
 
 const Header = memo<HeaderProps>(
-  ({ agentId, currentConfig, disabled, platformDef, providers, runtimeStatus }) => {
+  ({
+    agentId,
+    currentConfig,
+    disabled,
+    platformDef,
+    platformId,
+    platformsLoading = false,
+    providers,
+    runtimeStatus,
+  }) => {
     const { t } = useTranslation(['agent', 'chat', 'common']);
+    const view = resolveChannelHeaderView(platformId, platformDef, platformsLoading);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [pendingEnabled, setPendingEnabled] = useState<boolean>();
@@ -331,9 +347,13 @@ const Header = memo<HeaderProps>(
             // is the only way back to the list.
             <AgentBreadcrumb
               agentId={agentId}
-              extraItems={platformDef ? [platformDef.name] : undefined}
+              extraItems={
+                view.detail
+                  ? [view.platformName ?? <SkeletonBar height={14} width={56} />]
+                  : undefined
+              }
               title={
-                platformDef ? (
+                view.detail ? (
                   <Link relative="path" to="..">
                     {t('tab.integration', { ns: 'chat' })}
                   </Link>
@@ -351,7 +371,7 @@ const Header = memo<HeaderProps>(
               On a platform detail (`/channel/:platform`) it is one level too
               deep, so drop it there and let the breadcrumb's Channels link be
               the way back. */}
-          {!platformDef && <AgentProfileTabs active={'channel'} agentId={agentId} />}
+          {!view.detail && <AgentProfileTabs active={'channel'} agentId={agentId} />}
         </NavHeader>
       </>
     );

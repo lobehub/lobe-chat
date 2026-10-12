@@ -8,27 +8,33 @@ import { createStaticStyles } from 'antd-style';
 import { MonitorUpIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import {
   DeviceConnectModal,
-  DeviceDetailPanel,
+  DeviceDetailPage,
   DeviceManager,
   useDeviceList,
 } from '@/features/DeviceManager';
 import NavHeader from '@/features/NavHeader';
-import RightPanel from '@/features/RightPanel';
 import SettingContainer from '@/features/Setting/SettingContainer';
-import { useElectronStore } from '@/store/electron';
 
 import KeepAwake from './KeepAwake';
 
 const styles = createStaticStyles(({ css }) => ({
-  // The device rows carry their own padding and hover fill; a thin, even inset
-  // keeps that fill the same distance from every edge of the card.
-  listGroup: css`
+  // The onboarding state carries its own padding; a thin, even inset keeps its
+  // fill the same distance from every edge of the card.
+  emptyGroup: css`
     [data-form-group-body] {
       padding: 4px;
+    }
+  `,
+  // Device cards carry their own frame; give the grid room to breathe inside
+  // the settings card.
+  gridGroup: css`
+    [data-form-group-body] {
+      padding: 16px;
     }
   `,
 }));
@@ -41,8 +47,10 @@ const Page = memo<PageProps>(({ mobile }) => {
   const { t } = useTranslation('setting');
   const [open, setOpen] = useState(false);
   const [initialTab, setInitialTab] = useState<'cli' | 'desktop'>();
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string>();
   const form = useForm();
+  // `/settings/devices/:sub` — the second level is one device's detail page.
+  const { sub: deviceId } = useParams<{ sub?: string }>();
+  const navigate = useNavigate();
   // Shares DeviceManager's SWR entry, so the header actions drive the list it
   // renders — the same wiring the workspace devices page uses.
   const { data, isValidating, mutate } = useDeviceList();
@@ -53,21 +61,15 @@ const Page = memo<PageProps>(({ mobile }) => {
   };
 
   const devices = (data ?? []).filter((device) => device.scope === 'personal');
-  const selectedDevice = devices.find((device) => device.deviceId === selectedDeviceId);
 
-  const useFetchDeviceInfo = useElectronStore((s) => s.useFetchGatewayDeviceInfo);
-  const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
-  useFetchDeviceInfo();
-  const currentDeviceId = isDesktop ? gatewayDeviceInfo?.deviceId : undefined;
-
-  // Narrow viewports have no room beside the list, so the detail stays inside
-  // the manager (the master-detail stack DeviceManager owns by default).
-  const externalDetail = !mobile;
+  // Personal-only route: plain `navigate` keeps it out of any active workspace.
+  const openDevice = (id: string) => navigate(`/settings/devices/${encodeURIComponent(id)}`);
+  const backToList = () => navigate('/settings/devices');
 
   const list = (
     <Flexbox gap={24}>
       <Form
-        classNames={{ group: styles.listGroup }}
+        classNames={{ group: devices.length > 0 ? styles.gridGroup : styles.emptyGroup }}
         collapsible={false}
         form={form}
         itemsType={'group'}
@@ -76,11 +78,9 @@ const Page = memo<PageProps>(({ mobile }) => {
           {
             children: (
               <DeviceManager
-                inlineDetail={!externalDetail}
                 scope={'personal'}
-                selectedDeviceId={selectedDeviceId}
                 onConnect={handleConnect}
-                onSelectedDeviceChange={setSelectedDeviceId}
+                onOpenDevice={openDevice}
               />
             ),
             extra: (
@@ -124,50 +124,31 @@ const Page = memo<PageProps>(({ mobile }) => {
     />
   );
 
+  const content = deviceId ? (
+    <DeviceDetailPage deviceId={deviceId} scope={'personal'} onBack={backToList} />
+  ) : (
+    list
+  );
+
   if (mobile)
     return (
       <>
-        {list}
+        {content}
         {connectModal}
       </>
     );
 
   return (
-    <Flexbox horizontal flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
-      <Flexbox flex={1} height={'100%'} style={{ minWidth: 0 }}>
-        <NavHeader styles={{ center: { alignItems: 'center' } }}>
-          <Text weight={500}>{t('devices.title')}</Text>
-        </NavHeader>
-        {/* The list keeps the settings reading column — centered at the shared
-            1024 max width — so opening the detail only narrows the space it
-            centers in, it never turns the page into a left-hugging column. */}
-        <SettingContainer maxWidth={1024} paddingBlock={'24px 128px'} paddingInline={24}>
-          {list}
-        </SettingContainer>
-      </Flexbox>
-      {/* Page-level rail rather than a card beside the list: the detail is a
-          full-height surface with its own scroll, so a device with a long
-          working-directory history stays readable without stretching the page. */}
-      <RightPanel
-        defaultWidth={420}
-        expand={!!selectedDevice}
-        maxWidth={640}
-        minWidth={320}
-        onExpandChange={(next) => {
-          if (!next) setSelectedDeviceId(undefined);
-        }}
-      >
-        {selectedDevice && (
-          <DeviceDetailPanel
-            device={selectedDevice}
-            isCurrent={selectedDevice.deviceId === currentDeviceId}
-            key={selectedDevice.deviceId}
-            onClose={() => setSelectedDeviceId(undefined)}
-          />
-        )}
-      </RightPanel>
+    <>
+      <NavHeader styles={{ center: { alignItems: 'center' } }}>
+        <Text weight={500}>{t('devices.title')}</Text>
+      </NavHeader>
+      {/* Full width: the card grid adds columns as the pane widens. */}
+      <SettingContainer maxWidth={'100%'} paddingBlock={'24px 128px'} paddingInline={24}>
+        {content}
+      </SettingContainer>
       {connectModal}
-    </Flexbox>
+    </>
   );
 });
 
