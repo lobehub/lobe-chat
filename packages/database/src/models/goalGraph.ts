@@ -713,6 +713,41 @@ export class GoalGraphModel {
       return edge;
     });
 
+  /**
+   * Take nodes back off a draft Goal's graph, with every edge touching them.
+   *
+   * Only a `draft` can lose nodes, and only ones never bound to a Task: nothing
+   * has run, so no history goes with them. A started Goal retires nodes instead.
+   */
+  removeDraftNodes = async (goalId: string, nodeIds: string[], reason: string) =>
+    this.db.transaction(async (tx) => {
+      const goal = await this.ownedGoal(goalId, tx);
+      if (!goal) return 0;
+      if (goal.status !== 'draft') throw new Error('Only a draft Goal can remove nodes');
+      if (!nodeIds.length) return 0;
+      const removed = await tx
+        .delete(goalNodes)
+        .where(
+          and(
+            eq(goalNodes.goalId, goalId),
+            inArray(goalNodes.id, nodeIds),
+            isNull(goalNodes.taskId),
+          ),
+        )
+        .returning({ id: goalNodes.id });
+      if (removed.length !== nodeIds.length)
+        throw new Error('Only unbound nodes of this Goal can be removed');
+      for (const { id } of removed) {
+        await this.appendEvent(tx, goalId, {
+          entityId: id,
+          entityType: 'node',
+          eventType: 'unlinked',
+          reason,
+        });
+      }
+      return removed.length;
+    });
+
   bindTask = async (goalId: string, nodeId: string, taskId: string) =>
     this.db.transaction(async (tx) => {
       if (!(await this.ownedGoal(goalId, tx))) return undefined;

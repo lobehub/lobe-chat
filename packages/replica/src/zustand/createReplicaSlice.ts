@@ -5,6 +5,7 @@ import { createReplicaEngine, type ReplicaEngineOptions } from '../core/engine';
 import { isReplicaSyncKey, replicaKeys } from '../core/keys';
 import type { ReplicaPagedData } from '../core/paging';
 import type { ReplicaViewWrite } from '../core/reducer';
+import { DEFAULT_REMOVAL_TOMBSTONE_LIMIT } from '../core/tombstones';
 import type { ReplicaResource, ReplicaState } from '../core/types';
 import type { ReplicaSyncDriver, ReplicaSyncSchedule } from './driver';
 
@@ -43,6 +44,12 @@ export interface CreateReplicaSliceOptions<TStore, TParams, TData, TFetched> ext
 > {
   /** Query cache that schedules fetches (see `createSWRDriver`). */
   driver: ReplicaSyncDriver;
+  /**
+   * Side effects of the resource itself, run by every head response — a
+   * mounted `useSync` and an imperative `fetch` alike — after the response is
+   * folded in (see {@link ReplicaEffects}).
+   */
+  effects?: ReplicaEffects<TParams, TFetched>;
   get: () => TStore;
   set: Setter<TStore>;
   /** Store field holding the {@link ReplicaState} bookkeeping slot. */
@@ -70,6 +77,84 @@ export interface ReplicaSyncErrorContext {
   scope: string;
 }
 
+/** Where a settled head response was captured, for {@link ReplicaEffects}. */
+export interface ReplicaSettleContext {
+  key: string;
+  /** The cache scope the request was captured under (the active one, except for `onPurge`). */
+  scope: string;
+  /** Which path requested it: a mounted `useSync`, or `slice.fetch`. */
+  source: 'fetch' | 'sync';
+}
+
+/**
+ * Resource-level side effects of head responses. Unlike `useSync`'s per-call
+ * `onSuccess` / `onError` (UI callbacks of one mounted view), these run for
+ * every response the resource settles, whichever path requested it — so a
+ * store that fetches while no view is mounted keeps the same side effects.
+ *
+ * They run only for a response that passed every guard (clear, removal, active
+ * query, a newer response already applied) and, for `onApplied` / `onMissing`,
+ * only when its captured scope is still the active one.
+ */
+export interface ReplicaEffects<TParams, TFetched> {
+  /**
+   * A response was folded into the active scope (`prepareHead` kept it and it
+   * is not a terminal absence). Runs even when the value did not change.
+   */
+  onApplied?: (data: TFetched, params: TParams, context: ReplicaSettleContext) => void;
+  /**
+   * A failed head read. Like `useSync`'s `onError`, it is forwarded off-scope
+   * too, with `isActive: false`: use the captured key / scope to clean up that
+   * scope, and touch the view on screen only when `isActive`.
+   */
+  onError?: (error: unknown, params: TParams, context: ReplicaSyncErrorContext) => void;
+  /**
+   * The response was a terminal absence (`isMissing`) and the entry was
+   * removed from the active scope. An absence captured under a scope the store
+   * has left purges that scope's row and runs `onPurge` instead.
+   */
+  onMissing?: (params: TParams, context: ReplicaSettleContext) => void;
+  /**
+   * A terminal absence captured under a scope the store has since left. The
+   * entry's row in that scope is already purged; purge what other resources
+   * keep of it there (a linked list row). Never touch the view on screen.
+   */
+  onPurge?: (params: TParams, context: ReplicaSettleContext) => void;
+}
+
+export interface ReplicaFetchOptions {
+  /**
+   * Start a new request even when one for the same entry is in flight, and
+   * retire every request started before it: a late response of an older one
+   * is dropped instead of applied. Use it for refreshes after a mutation,
+   * where an in-flight request may hold the pre-mutation value. By default
+   * `fetch` joins the request in flight (a `useSync` one or another `fetch`).
+   */
+  fresh?: boolean;
+  /**
+   * The cache scope the fetch belongs to, captured by a caller that started a
+   * multi-step flow earlier (a warmup fanning out from a parent response). The
+   * response settles into that scope under the same off-scope rules as any
+   * other. When the scope is no longer active the fetch rejects without a
+   * request: it would read the new identity's data under the old one's label.
+   * Defaults to the active scope.
+   */
+  scope?: string;
+}
+
+export interface ReplicaFetchResult<TFetched> {
+  /**
+   * Whether the response was settled into the active scope: folded in, or
+   * applied as a terminal absence. `false` when a guard dropped it (scope
+   * switch, `remove` / `clear` mid-flight, superseded) or `prepareHead` did.
+   */
+  applied: boolean;
+  /** The response as fetched, also when it was not applied. */
+  data: TFetched;
+  /** The response was a terminal absence (`isMissing`), in whichever scope. */
+  missing: boolean;
+}
+
 export interface ReplicaSyncOptions<
   TFetched = unknown,
   TData = unknown,
@@ -91,10 +176,67 @@ export interface ReplicaSyncOptions<
   onHydrated?: (data: TData) => void;
   /**
    * Side effects of a response, run after it is folded into the replica
-   * (e.g. adopting an active id, or settling a "not found" state).
+   * (e.g. adopting an active id). UI callbacks of this view only: effects every
+   * response of the resource needs belong in the slice's `effects`, which
+   * `fetch` runs too.
    */
   onSuccess?: (data: TFetched) => void;
 }
+
+export interface ReplicaSyncResult {
+  error: unknown;
+  /** The persisted row has been read (or there is nothing to read). */
+  isHydrated: boolean;
+  /** A network request is in flight. Never a reason to hide store data. */
+  isValidating: boolean;
+  /** Re-run the network sync for this entry. */
+  revalidate: () => Promise<unknown>;
+}
+
+/** `slice.fetch` was asked to fetch for a scope that is no longer active. */
+export class ReplicaScopeChangedError extends Error {
+  constructor(name: string, scope: string) {
+    super(`[replica] ${name}: scope ${scope} is no longer active`);
+    this.name = 'ReplicaScopeChangedError';
+  }
+}
+
+/** One head request, from `begin` to `settle`. */
+interface ReplicaRequest<TParams, TFetched> {
+  /** `clear()` generation of `scope` when the request started. */
+  clearGeneration: number;
+  key: string;
+  params: TParams;
+  /** Settles the request; set once it is sent. */
+  promise?: Promise<TFetched>;
+  /** Row key of the query it asks for (`headQuery` guard). */
+  queryKey: string;
+  /** `remove` generation of `scope` + `key` when the request started. */
+  removalGeneration: number;
+  /** Scope + sync key: requests of the same id dedupe and supersede each other. */
+  requestId: string;
+  /** The cache scope it was captured under. */
+  scope: string;
+  /** Start order across the slice. */
+  seq: number;
+  /** What it settled to; a request is settled once (a joined fetch and its sync share it). */
+  settled?: ReplicaSettled;
+  /** The response (or failure) it settled with. */
+  settledWith?: unknown;
+  source: 'fetch' | 'sync';
+  syncKey: readonly unknown[];
+}
+
+interface ReplicaSettled {
+  /** Settled into the active scope (folded in or removed as missing). */
+  applied: boolean;
+  /** Passed every guard; `isActive` says whether its scope is still on screen. */
+  current: boolean;
+  isActive: boolean;
+  missing: boolean;
+}
+
+type ReplicaOutcome<TFetched> = { data: TFetched } | { error: unknown };
 
 export interface ReplicaSyncResult {
   error: unknown;
@@ -119,6 +261,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
   {
     driver,
+    effects,
     get,
     set,
     stateKey,
@@ -184,8 +327,16 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
     },
     revalidate,
   });
-  const { clearGeneration, ensureScope, fetcher, hydrate, removalGeneration, replace, retain } =
-    engine;
+  const {
+    applyHead,
+    clearGeneration,
+    ensureScope,
+    fetcher,
+    hydrate,
+    isMissingHead,
+    removalGeneration,
+    retain,
+  } = engine;
 
   /**
    * Row key of the head query each entry last asked for. One entry backs a
@@ -207,14 +358,296 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   const hydratedEntries = new Set<string>();
   const hydratedEntryId = (scope: string, key: string) => `${scope}\u0000${key}`;
 
+  // ---- one settle pipeline ---------------------------------------------
+  // Every head response — a mounted `useSync`, or `fetch` with no view mounted
+  // — is captured by `begin` when its request starts and folded in by `settle`,
+  // so every path applies the same guards and the same resource effects.
+
+  let requestSeq = 0;
+
   /**
-   * `clear()` generation each in-flight head request started under, by sync
-   * key. A response to a request that started before a `clear()` of its scope
-   * holds wiped data and is discarded. The driver settles one request per key
-   * at a time (a newer request supersedes the older one), so the latest start
-   * is the one that settles.
+   * Requests whose start order is at or below this number are retired, per
+   * request id: a newer response already applied, or a `fresh` fetch started
+   * after them. Their late response would repaint an older value.
+   *
+   * An entry only matters while a request it retires is still unsettled:
+   * every request started later has a higher sequence, so a missing entry
+   * (read as 0) admits exactly the same responses. Entries are pruned as soon
+   * as no sent request at or below them is pending, so the map holds only the
+   * ids with an older request in flight.
    */
-  const requestGeneration = new Map<string, { clear: number; removal: number }>();
+  const retiredThrough = new Map<string, number>();
+  /** Sequences of the sent requests that have not settled yet, per request id. */
+  const unsettled = new Map<string, Set<number>>();
+
+  /** Drop the retirement of `requestId` once no request it retires is pending. */
+  const pruneRetired = (requestId: string) => {
+    const through = retiredThrough.get(requestId);
+    if (through === undefined) return;
+    for (const seq of unsettled.get(requestId) ?? []) if (seq <= through) return;
+    retiredThrough.delete(requestId);
+  };
+
+  const retire = (requestId: string, seq: number) => {
+    if ((retiredThrough.get(requestId) ?? 0) < seq) retiredThrough.set(requestId, seq);
+    pruneRetired(requestId);
+    // Backstop: never more ids than a removal tombstone window. Only an entry
+    // with no older request pending may go — evicting one that still retires
+    // a request in flight would let its stale response win.
+    if (retiredThrough.size <= DEFAULT_REMOVAL_TOMBSTONE_LIMIT) return;
+    for (const id of retiredThrough.keys()) {
+      pruneRetired(id);
+      if (retiredThrough.size <= DEFAULT_REMOVAL_TOMBSTONE_LIMIT) return;
+    }
+  };
+
+  const trackUnsettled = ({ requestId, seq }: ReplicaRequest<TParams, TFetched>) => {
+    const pending = unsettled.get(requestId) ?? new Set<number>();
+    unsettled.set(requestId, pending);
+    pending.add(seq);
+  };
+
+  const untrackUnsettled = ({ requestId, seq }: ReplicaRequest<TParams, TFetched>) => {
+    const pending = unsettled.get(requestId);
+    if (!pending?.delete(seq)) return;
+    if (pending.size === 0) unsettled.delete(requestId);
+    pruneRetired(requestId);
+  };
+
+  /** The latest request in flight per id, which a non-`fresh` `fetch` joins. */
+  const inflight = new Map<string, ReplicaRequest<TParams, TFetched>>();
+  /** `useSync` requests in flight per id (`fetch` seeds the driver only while none is). */
+  const syncInflight = new Map<string, number>();
+
+  /**
+   * `useSync` request each sync id last started, settled by the driver's
+   * callback. The driver settles one request per key at a time (a newer
+   * request supersedes the older one), so the latest start is the one that
+   * settles.
+   */
+  const syncRequests = new Map<string, ReplicaRequest<TParams, TFetched>>();
+
+  const syncKeyOf = (params: TParams, scope: string, key: string) =>
+    resource.syncKey?.(params) ??
+    replicaKeys.sync(resource.name, resource.version, scope, key, params);
+
+  /** Capture what a head request for `params` started under. */
+  const begin = (
+    params: TParams,
+    scope: string,
+    source: 'fetch' | 'sync',
+  ): ReplicaRequest<TParams, TFetched> => {
+    const key = resource.key(params);
+    const syncKey = syncKeyOf(params, scope, key);
+    return {
+      clearGeneration: clearGeneration(scope),
+      key,
+      params,
+      queryKey: resource.storageKey(params),
+      removalGeneration: removalGeneration(scope, key),
+      requestId: `${scope}\u0000${stableQueryKey(syncKey)}`,
+      scope,
+      seq: ++requestSeq,
+      source,
+      syncKey,
+    };
+  };
+
+  /** Send the request and track it in flight until it settles. */
+  const send = (request: ReplicaRequest<TParams, TFetched>) => {
+    const { requestId } = request;
+    const sent = fetcher!(request.params, undefined);
+    // Tolerate a fetcher (a test double) that does not return a promise: the
+    // driver still gets exactly what it returned.
+    const promise = Promise.resolve(sent);
+    request.promise = promise;
+    // Until it settles, a retirement that covers it must be kept.
+    trackUnsettled(request);
+    inflight.set(requestId, request);
+    if (request.source === 'sync')
+      syncInflight.set(requestId, (syncInflight.get(requestId) ?? 0) + 1);
+    const done = () => {
+      if (inflight.get(requestId) === request) inflight.delete(requestId);
+      if (request.source !== 'sync') return;
+      const count = (syncInflight.get(requestId) ?? 1) - 1;
+      if (count > 0) syncInflight.set(requestId, count);
+      else syncInflight.delete(requestId);
+    };
+    promise.then(done, done);
+    // A `useSync` request settles on its own response, not only through the
+    // driver's callback: a driver skips that callback once the hook moved to
+    // another key, unmounted, or a newer request superseded it — and the
+    // resource effects (a terminal absence, a purge) must not depend on which
+    // view is still mounted. The callback then reads the memoized result.
+    if (request.source === 'sync')
+      promise.then(
+        (data) => settle(request, { data }),
+        (error: unknown) => settle(request, { error }),
+      );
+    return sent;
+  };
+
+  /**
+   * Whether the request still answers the query its entry shows. A `useSync`
+   * request must match the query the entry last asked for (see `headQuery`). A
+   * `fetch` may also land with no view mounted, but never over a view that
+   * shows another query of the key.
+   */
+  const isActiveQuery = ({ key, queryKey, source }: ReplicaRequest<TParams, TFetched>) => {
+    const head = headQuery.get(key);
+    return source === 'sync' ? head === queryKey : head === undefined || head === queryKey;
+  };
+
+  const settleOnce = (
+    request: ReplicaRequest<TParams, TFetched>,
+    outcome: ReplicaOutcome<TFetched>,
+  ): ReplicaSettled => {
+    const { key, params, scope } = request;
+    /**
+     * Whether the entry is still on the scope the request was captured under.
+     *
+     * A response can settle after an identity/workspace switch. `replace` drops
+     * it — the engine refuses off-scope actions — but no side effect may run
+     * either: it carries the previous identity's state (onboarding redirect,
+     * display snapshot, analytics identify, settings writes). The captured
+     * key/scope is not enough on its own, because a switch to a scope that
+     * reads the same key/query satisfies the other guards.
+     */
+    const isActive = resource.scope.get() === scope;
+    const dropped: ReplicaSettled = { applied: false, current: false, isActive, missing: false };
+
+    // Discard a response that started before a `clear()` of its scope or a
+    // `remove` of its entry (it holds wiped data), one for a query the entry
+    // has moved past (the newer query owns the view, see `headQuery`), and one
+    // older than a response already applied or a `fresh` fetch.
+    if (
+      request.clearGeneration !== clearGeneration(scope) ||
+      request.removalGeneration !== removalGeneration(scope, key) ||
+      request.seq <= (retiredThrough.get(request.requestId) ?? 0) ||
+      !isActiveQuery(request)
+    )
+      return dropped;
+
+    if ('error' in outcome) {
+      // Forwarded even off-scope: the captured `key`/`scope` lets a consumer
+      // purge that scope's row (a late NOT_FOUND / FORBIDDEN) without touching
+      // the scope on screen; `isActive` tells it whether the failure also
+      // belongs to the view on screen.
+      effects?.onError?.(outcome.error, params, { isActive, key, scope });
+      return { ...dropped, current: true };
+    }
+
+    if (!isActive) {
+      // Off-scope: never fold a value into the scope on screen. A terminal
+      // absence still purges its own scope's row (`remove` routes it there), so
+      // a switch back cannot hydrate a value the server no longer has.
+      const missing = isMissingHead(outcome.data);
+      if (missing) {
+        remove(key, scope);
+        effects?.onPurge?.(params, { key, scope, source: request.source });
+      }
+      return { ...dropped, current: true, missing };
+    }
+
+    retire(request.requestId, request.seq - 1);
+    const { outcome: folded } = applyHead(params, outcome.data, scope);
+    const context: ReplicaSettleContext = { key, scope, source: request.source };
+    if (folded === 'replaced') effects?.onApplied?.(outcome.data, params, context);
+    else if (folded === 'missing') effects?.onMissing?.(params, context);
+    return {
+      applied: folded !== 'dropped',
+      current: true,
+      isActive,
+      missing: folded === 'missing',
+    };
+  };
+
+  /**
+   * Fold a settled head request into the replica: apply every guard, then
+   * `replace` / remove a terminal absence (in the captured scope) / purge one
+   * captured off-scope, then run the resource effects. A request is settled
+   * once: a `fetch` that joined a `useSync` request shares its result.
+   */
+  const settle = (
+    request: ReplicaRequest<TParams, TFetched>,
+    outcome: ReplicaOutcome<TFetched>,
+  ): ReplicaSettled => {
+    if (request.settled) return request.settled;
+    request.settledWith = 'error' in outcome ? outcome.error : outcome.data;
+    request.settled = settleOnce(request, outcome);
+    untrackUnsettled(request);
+    if (request.source === 'sync') releaseSyncRequest(request);
+    return request.settled;
+  };
+
+  /**
+   * Drop a settled `useSync` request's record once its driver callback had its
+   * chance to read it. The record is normally taken by that callback, but the
+   * driver skips it when the hook changed key, unmounted or was superseded —
+   * the request still settles on its own promise, and its record (holding the
+   * response) must not stay behind. A driver runs the callback in the same
+   * turn the response resolves (SWR does, in microtasks), so a macrotask later
+   * the record is only a leak.
+   */
+  const releaseSyncRequest = (request: ReplicaRequest<TParams, TFetched>) => {
+    setTimeout(() => {
+      if (syncRequests.get(request.requestId) === request) syncRequests.delete(request.requestId);
+    }, 0);
+  };
+
+  /**
+   * Fetch the head of an entry now and settle it like a `useSync` response —
+   * for stores that need the data while no view is mounted (a hover prefetch,
+   * a refresh after a mutation on a route without the list). `revalidate` only
+   * re-runs mounted queries.
+   *
+   * Joins a request in flight for the same entry unless `fresh`. Resolves with
+   * what was fetched and whether it was applied; rejects when the request
+   * fails, after routing the failure through `effects.onError`.
+   */
+  const fetch = async (
+    params: TParams,
+    { fresh = false, scope = resource.scope.get() }: ReplicaFetchOptions = {},
+  ): Promise<ReplicaFetchResult<TFetched>> => {
+    if (!fetcher) throw new Error(`[replica] ${resource.name} has no fetcher`);
+    if (scope !== resource.scope.get()) throw new ReplicaScopeChangedError(resource.name, scope);
+    let request = begin(params, scope, 'fetch');
+    const joined = fresh ? undefined : inflight.get(request.requestId);
+    if (joined) request = joined;
+    else {
+      if (fresh) retire(request.requestId, request.seq - 1);
+      send(request);
+    }
+
+    let data: TFetched;
+    try {
+      data = await request.promise!;
+    } catch (error) {
+      settle(request, { error });
+      throw error;
+    }
+    const settled = settle(request, { data });
+    // Seed the driver's cache with what this fetch applied, unless a `useSync`
+    // request of the key is in flight: it fills the cache itself, and a write
+    // overtaking it could make the driver discard its newer response.
+    if (settled.applied && request.source === 'fetch' && !syncInflight.has(request.requestId))
+      driver.seed?.(request.syncKey, data);
+    return { applied: settled.applied, data, missing: settled.missing };
+  };
+
+  /**
+   * Forget the key's head query as well as the entry. A `useSync` request
+   * already in flight for it would otherwise pass the settle guards (the
+   * marker still matches), `replace` the entry and persist pre-mutation rows
+   * back over an invalidation that has already completed. (The engine's
+   * removal generation drops a `fetch` captured before the removal.)
+   */
+  const remove = (key: string, scope?: string) => {
+    // Only the active scope's marker belongs to the entry on screen; an
+    // off-scope removal (see `engine.remove`) must not drop it.
+    if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
+    return engine.remove(key, scope);
+  };
 
   /**
    * Hydrates the persisted row once per scope/key/query, then lets the driver
@@ -318,77 +751,45 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
       });
     }, [active, key, scope, hydration.data]);
 
-    const syncKey =
-      active && fetcher
-        ? (resource.syncKey?.(params!) ??
-          replicaKeys.sync(resource.name, resource.version, scope, key!, params))
-        : null;
-    const requestId = () => `${scope}\u0000${stableQueryKey(syncKey)}`;
-    /** Whether the request settling now still belongs to the entry's active query. */
-    const isActiveQuery = () => queryKey !== undefined && headQuery.get(key!) === queryKey;
-    /**
-     * Whether the settling request started after the latest `clear()` of its
-     * scope and after the latest removal of its entry (a deleted / pruned entry
-     * must not be recreated by a response that was already in flight).
-     */
-    const isSinceClear = () => {
-      const id = requestId();
-      const started = requestGeneration.get(id);
-      requestGeneration.delete(id);
-      return (
-        started === undefined ||
-        (started.clear === clearGeneration(scope) &&
-          started.removal === removalGeneration(scope, key!))
-      );
+    const syncKey = active && fetcher ? syncKeyOf(params!, scope, key!) : null;
+    /** The request settling now: the one this sync id last started. */
+    const takeRequest = (response: unknown) => {
+      const requestId = `${scope}\u0000${stableQueryKey(syncKey)}`;
+      const request = syncRequests.get(requestId);
+      syncRequests.delete(requestId);
+      // The request already settled on its own response, and the driver now
+      // reports that same response: read the memoized result.
+      if (request && (!request.settled || request.settledWith === response)) return request;
+      // A response the driver settles without having run our fetcher (a
+      // cache-shared key), or one the recorded request did not produce, is
+      // captured now: nothing it started under is known.
+      return begin(params!, scope, 'sync');
     };
-    /**
-     * Whether the entry is still on the scope the request was captured under.
-     *
-     * A response can settle after an identity/workspace switch. `replace` drops
-     * it — the engine refuses off-scope actions — but the caller's `onSuccess`
-     * must not run either: it carries the previous identity's side effects
-     * (onboarding redirect, display snapshot, analytics identify, settings
-     * writes). The captured key/scope is not enough on its own, because a switch
-     * to a scope that reads the same key/query satisfies both guards above.
-     */
-    const isActiveScope = () => resource.scope.get() === scope;
 
     const sync = driver.useQuery<TFetched>(
       syncKey,
       () => {
-        requestGeneration.set(requestId(), {
-          clear: clearGeneration(scope),
-          removal: removalGeneration(scope, key!),
-        });
-        return fetcher!(params!, undefined);
+        const request = begin(params!, scope, 'sync');
+        syncRequests.set(request.requestId, request);
+        return send(request);
       },
       {
         ...schedule,
-        // A failure of a query the entry has moved past (or of a request from
-        // before a clear) must not surface on the query now on screen. Unlike
-        // success, an off-scope failure is still forwarded: the captured
-        // key/scope is bound so a late terminal answer (NOT_FOUND / FORBIDDEN)
-        // can purge *its own* scope's persisted row via `remove(key, scope)`
-        // without touching the scope now on screen — dropping it would leave
-        // that row to hydrate again when the user switches back.
-        // Always installed, so a failed request's generation record is dropped
-        // even when the caller has no error side effects.
+        // Always installed, so a failed request is settled (and its capture
+        // dropped) even when the caller has no error side effects. A failure
+        // of a query the entry has moved past (or of a request from before a
+        // clear) never surfaces on the query now on screen; an off-scope one is
+        // still forwarded with the captured key/scope (see `settle`).
         onError: (error: unknown) => {
-          if (!isSinceClear() || !isActiveQuery()) return;
-          // Forwarded even off-scope: the captured `key`/`scope` lets a consumer
-          // purge that scope's row. `isActive` tells it whether the failure also
-          // belongs to the view on screen.
-          onError?.(error, { isActive: isActiveScope(), key, scope });
+          const settled = settle(takeRequest(error), { error });
+          if (settled.current) onError?.(error, { isActive: settled.isActive, key, scope });
         },
         onSuccess: (data) => {
-          // Discard a head response the entry has moved past (the newer query
-          // owns the view, see `headQuery`), one that started before a clear, or
-          // one captured under a scope the store has since left.
-          if (!isSinceClear() || !isActiveQuery() || !isActiveScope()) return;
-          replace(params!, data, scope);
-          // The same holds for a key the hook has moved past (g1 → g2 while
-          // g1's request is in flight): the response still fills g1's own
-          // entry, but its side effects would re-adopt g1 over the g2 view.
+          const settled = settle(takeRequest(data), { data });
+          if (!settled.current || !settled.isActive) return;
+          // A key the hook has moved past (g1 → g2 while g1's request is in
+          // flight): the response still fills g1's own entry, but this view's
+          // side effects would re-adopt g1 over the g2 view.
           if (activeKey.current !== key) return;
           onSuccess?.(data);
         },
@@ -413,18 +814,12 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
 
   return {
     ...engine,
-    /**
-     * Forget the key's head query as well as the entry. A request already in
-     * flight for it would otherwise pass the `onSuccess` guard below (the marker
-     * still matches), `replace` the entry and persist pre-mutation rows back over
-     * an invalidation that has already completed.
-     */
-    remove: (key: string, scope?: string) => {
-      // Only the active scope's marker belongs to the entry on screen; an
-      // off-scope removal (see `engine.remove`) must not drop it.
-      if (scope === undefined || scope === resource.scope.get()) headQuery.delete(key);
-      return engine.remove(key, scope);
-    },
+    /** @internal Records of `useSync` requests not yet released (leak checks in tests). */
+    debugPendingSyncRequests: () => syncRequests.size,
+    /** @internal Retirement records still held (leak checks in tests). */
+    debugRetiredRequests: () => retiredThrough.size,
+    fetch,
+    remove,
     useSync,
   };
 };

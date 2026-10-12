@@ -626,6 +626,8 @@ export default {
     'This agent uses an API key / custom endpoint, so subscription quota does not apply.',
   'heteroAgent.claudeQuota.unavailableNotFound':
     'No Claude Code login found. Run claude in a terminal to sign in first.',
+  'heteroAgent.claudeQuota.unavailableRequestBlocked':
+    "Anthropic refused the quota request from this machine's network (usually a region restriction). Check the machine's network proxy, then refresh.",
   'heteroAgent.claudeSdkRuntime.state.closed': 'SDK closed',
   'heteroAgent.claudeSdkRuntime.state.closing': 'SDK closing',
   'heteroAgent.claudeSdkRuntime.state.error': 'SDK error',
@@ -2155,6 +2157,7 @@ export default {
   'goalList.roundProgress': 'Round {{current}}/{{total}}',
   'goalList.status.achieved': 'Achieved',
   'goalList.status.canceled': 'Canceled',
+  'goalList.status.draft': 'Not started',
   'goalList.status.error': 'Needs attention',
   'goalList.status.paused': 'Paused',
   'goalList.status.planning': 'Planning',
@@ -2168,6 +2171,7 @@ export default {
   'goalTask.tasksDone': '{{passed}}/{{total}} tasks done',
   'goalTask.status.achieved': 'Achieved',
   'goalTask.status.canceled': 'Canceled',
+  'goalTask.status.draft': 'Not started',
   'goalTask.status.error': 'Needs attention',
   'goalTask.status.paused': 'Paused',
   'goalTask.status.planning': 'Planning',
@@ -2716,6 +2720,9 @@ export default {
   'goalProcess.pause': 'Pause',
   'goalProcess.resume': 'Resume',
   'goalProcess.paused': 'Paused — no new work will start',
+  'goalProcess.draft':
+    'Not started — nothing runs until you start it. Check the tasks below first.',
+  'goalProcess.start': 'Start',
   'goalPage.allGoals': 'All goals',
   'goalPage.activeGoals': 'Open goals',
   'goalPage.description':

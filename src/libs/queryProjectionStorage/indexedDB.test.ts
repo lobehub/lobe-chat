@@ -21,6 +21,16 @@ describe('IndexedDBQueryProjectionStorage', () => {
     });
   });
 
+  it('rejects a write that did not land, so the replica retries it', async () => {
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue();
+    vi.spyOn(localDatabase, 'set').mockRejectedValue(new Error('transaction aborted'));
+    const storage = new IndexedDBQueryProjectionStorage<string[]>({ namespace: 'projects' });
+
+    await expect(
+      storage.set({ queryKey: 'all', scope: 'personal' }, { data: ['x'], updatedAt: 1 }),
+    ).rejects.toThrow('transaction aborted');
+  });
+
   it('treats persistence failures as a cache miss', async () => {
     vi.spyOn(localDatabase, 'initialize').mockRejectedValue(new Error('unavailable'));
     const storage = new IndexedDBQueryProjectionStorage<string[]>({ namespace: 'projects' });

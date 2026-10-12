@@ -18,6 +18,7 @@ import {
 } from '@/server/services/goal/recoveryPolicy';
 import { GoalReportStore, type SubmitGoalReportInput } from '@/server/services/goal/reportStore';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
+import { GoalStartService } from '@/server/services/goal/start';
 import { GoalWaitService, goalWakeEventSchema } from '@/server/services/goal/wait';
 import {
   HeteroOperationPrincipalError,
@@ -336,6 +337,26 @@ const goalOperationReadProcedure = heteroAuthedProcedure.use(serverDatabase).use
   });
 });
 
+/** What `start` folds into a batch: the probes that run first, and the recipe every unit follows. */
+const startRolloutInput = z
+  .object({
+    probeNodeIds: z.array(z.string().min(1)).min(2).max(10),
+    recipe: z.string().trim().min(1).max(8000),
+    trigger: z.enum(['canary', 'full']).optional(),
+    unitNodeIds: z.array(z.string().min(1)).max(60).optional(),
+    variants: z
+      .array(
+        z.object({
+          axis: z.string().trim().min(1).max(120),
+          values: z.array(z.string().trim().min(1).max(120)).min(1).max(20),
+        }),
+      )
+      .max(10)
+      .optional(),
+  })
+  .strict();
+const startInput = idInput.extend({ rollout: startRolloutInput.optional() });
+
 export const goalRouter = router({
   wake: goalWriteProcedure
     .input(goalWakeEventSchema.extend({ id: z.string() }))
@@ -441,6 +462,75 @@ export const goalRouter = router({
     ).submitFromOperation(input.id, input.report as SubmitGoalReportInput, input.operationId);
     return { data, success: true };
   }),
+  /** Launch a draft goal; until now the coordinator has left its graph alone. */
+  start: goalWriteProcedure.input(startInput).mutation(async ({ ctx, input }) => {
+    // A draft is its creator's arrangement: in a shared workspace only they or
+    // an owner may launch it (and, with a rollout, fold its seed nodes away).
+    const goal = await ctx.goalModel.findById(input.id);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
+    try {
+      const data = await new GoalStartService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      ).start(input.id, { rollout: input.rollout });
+      await scheduleGoalAdvance({
+        goalId: input.id,
+        trigger: 'start',
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      return { data, message: 'Goal started', success: true };
+    } catch (error) {
+      mapGoalError(error, 'start');
+    }
+  }),
+  /** `start` from the goal agent's own run, authenticated by its operation token. */
+  startOperation: heteroAuthedProcedure
+    .use(serverDatabase)
+    .input(startInput.extend({ operationId: z.string().min(1) }))
+    .mutation(async ({ ctx, input: { operationId, ...input } }) => {
+      if (ctx.heteroAuthKind !== 'operation' || !ctx.heteroOperation) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'An operation-bound token is required',
+        });
+      }
+      let principal;
+      try {
+        principal = await resolveActiveHeteroOperationPrincipal({
+          capability: 'hetero:ingest',
+          claims: ctx.heteroOperation,
+          db: ctx.serverDB,
+          operationId,
+        });
+      } catch (error) {
+        if (!(error instanceof HeteroOperationPrincipalError)) throw error;
+        throw new TRPCError({
+          cause: error,
+          code:
+            error.status === 401 ? 'UNAUTHORIZED' : error.status === 409 ? 'CONFLICT' : 'FORBIDDEN',
+          message: error.message,
+        });
+      }
+      try {
+        const data = await new GoalStartService(
+          ctx.serverDB,
+          principal.userId,
+          principal.workspaceId,
+        ).start(input.id, { operationId, rollout: input.rollout });
+        await scheduleGoalAdvance({
+          goalId: input.id,
+          trigger: 'start',
+          userId: principal.userId,
+          workspaceId: principal.workspaceId,
+        });
+        return { data, message: 'Goal started', success: true };
+      } catch (error) {
+        mapGoalError(error, 'start');
+      }
+    }),
   submitPlan: goalWriteProcedure
     .input(
       idInput.extend({

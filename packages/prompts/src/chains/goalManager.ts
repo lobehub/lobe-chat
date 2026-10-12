@@ -12,8 +12,10 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * wall of identical text every turn.
  * v8 lets an escalation carry an `ask` — the owner's question with concrete
  * answers (and, on a takeover, what each answer does to the blocked Task).
+ * v9 teaches the batch: a tasks plan may declare `rollout`, so one recipe over
+ * many units runs a few probes first and the rest wave by wave behind a gate.
  */
-export const GOAL_MANAGER_PROMPT_VERSION = 'v8';
+export const GOAL_MANAGER_PROMPT_VERSION = 'v9';
 
 export interface GoalManagerFeedbackNote {
   /** `user`, or `agent <id>` for an agent-written comment. */
@@ -146,6 +148,13 @@ const feedback = (note: GoalManagerFeedbackNote, isNew: boolean) => {
 const takeoverRules =
   'Takeover: without you this Goal stops on a person, so decide what actually moves it: a corrective task that replaces the stuck work, independent verification when the evidence already warrants it, a diagnosed retry (only a transport failure is retryable; anything else will be refused), or — when the block genuinely needs a human — escalate with the specific question they have to answer. Two limits are enforced, so do not spend the turn on them: a FAILED Goal acceptance can only be escalated, not replaced by new work; and stuck work that something else depends on cannot be retired, so escalate that too.';
 
+/**
+ * When to declare a batch, and how. The judgement is the planning agent's; the
+ * server only checks the declaration is well formed.
+ */
+export const GOAL_BATCH_PLANNING_RULE =
+  'Batch (one repeated mould): when the remaining work applies one recipe to many units — migrate N stores to one mechanism, give N resources the same caching, update N callers — and the first units will likely need a person (unsettled conventions, review, acceptance), do not plan every unit as a task. Add "rollout" to the tasks plan instead: "tasks" become 2-5 probes, the most representative units covering every variant, each with a full brief; "rollout.recipe" is the one procedure every unit follows; "rollout.units" lists every other unit in delivery order, as a title or as {"title","description"} when the unit has its own pointers; "rollout.variants" names the axes the units differ along, and the gate holds until the probes cover each value. The probes run first; the rest are released wave by wave only after every probe ran through without a person, and any rejection revises the recipe and starts a new probe round. Units that differ only in names, files or details are still one mould; work whose steps differ from task to task is not, so plan it as ordinary tasks. Never declare a batch on a Goal whose rollout is off. While a batch is in flight no planning turn starts; the next one comes after its roster is delivered.';
+
 const contract = (input: GoalManagerPromptInput) =>
   [
     `You are the sole planning agent for Goal ${input.goalId}. Use the available shell and lh CLI, not a supervisor tool set.`,
@@ -158,9 +167,11 @@ const contract = (input: GoalManagerPromptInput) =>
     `3. Write a JSON plan file and run lh goal plan ${input.goalId} --token ${input.token} --file <path> --json. The current operation ID is provided by LOBEHUB_OPERATION_ID.`,
     '4. Submit one atomic plan, then exit. If submission rejects stale input or changed feedback, exit without repeatedly retrying this token; the next bounded turn receives fresh state. Do not start a poll loop or directly invoke task run/agent run for graph work: the server records and dispatches those runs under Goal budgets. Never lower the original requirement to produce a pass.',
     'Give every planned task a dependsOn list naming the work it builds on: task node IDs from lh goal show for earlier rounds, or 0-based indexes of earlier tasks in the same plan. Omit it only for work that is genuinely independent — the Goal graph is laid out from these links, so a later round without them looks unrelated to the evidence it uses. Never depend on a retired or rejected node.',
+    GOAL_BATCH_PLANNING_RULE,
     'When useful work must wait for time or external evidence, submit wait and exit; never sleep or poll. until is a future UTC ISO instant and a fallback check even if the optional event is lost. Events match type, key and current turn token; producers deliver using lh goal wake. A wake asks you to reconsider evidence, never proves success. Measured shortfalls are feedback: plan useful work or a bounded wait; do not lower the original target.',
     'Choose exactly one schema:',
     '{"action":"tasks","reason":"evidence-based rationale","tasks":[{"title":"specific task","description":"self-contained contract, inputs, output and acceptance","dependsOn":["task node ID from an earlier round", 0]}]}',
+    '{"action":"tasks","reason":"why these units are one mould","tasks":[{"title":"probe unit","description":"full brief for this unit"}],"rollout":{"recipe":"the procedure every unit follows","units":["unit title",{"title":"unit title","description":"this unit\'s own pointers"}],"variants":[{"axis":"what the units differ in","values":["value a","value b"]}]}}',
     '{"action":"wait","reason":"why evidence must arrive later","until":"future UTC ISO instant","event":{"type":"external.result","key":"correlated job ID"}}',
     '{"action":"verify","reason":"why the existing evidence warrants independent Goal verification"}',
     '{"action":"retry","taskId":"failed Task ID","failedOperationId":"latest confirmed failure ID","reason":"diagnosis and checkpoint-aware recovery instruction"}',

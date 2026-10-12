@@ -11,6 +11,8 @@ export const MANUAL_STATUSES: ManualGoalStatus[] = ['running', 'paused', 'achiev
 const PAUSABLE_STATUSES = new Set(['paused', 'planning', 'running', 'verifying']);
 
 export const toManualStatus = (status: string | undefined): ManualGoalStatus | undefined => {
+  // A draft is in none of the manual states yet; picking "running" starts it.
+  if (status === 'draft') return;
   if (status === 'paused' || status === 'achieved' || status === 'canceled') return status;
   if (status === 'failed') return;
   return status ? 'running' : undefined;
@@ -28,6 +30,8 @@ export const isStatusChoiceDisabled = (
   canClose: boolean,
 ): boolean => {
   if (next === 'paused') return !PAUSABLE_STATUSES.has(status ?? '');
+  // Closing a draft would end a goal that never ran; delete it instead.
+  if (status === 'draft' && next !== 'running') return true;
   if (next === 'achieved' || next === 'canceled') return !canClose;
   return false;
 };

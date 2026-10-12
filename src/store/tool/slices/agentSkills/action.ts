@@ -100,19 +100,18 @@ export class AgentSkillsActionImpl {
   #isCurrentScope = (scope: string): boolean => this.#list.resource.scope.get() === scope;
 
   /**
-   * Fetch the list and write it straight into the replica. `refreshAgentSkills`
-   * is also called from flows where the list hook is not mounted (installing a
+   * Fetch the list and settle it into the replica. `refreshAgentSkills` is
+   * also called from flows where the list hook is not mounted (installing a
    * suggested skill from the create-agent modal), and it must populate the
    * store regardless, so this does not just revalidate the SWR entry.
    *
-   * The scope is captured before the request and passed to `replace`, so a
-   * response that resolves after an identity switch is dropped instead of being
-   * written (and persisted) into the next scope's partition.
+   * It runs after mutations, so it never joins a request already in flight
+   * (`fresh`): that one may hold the pre-mutation list. The replica drops a
+   * response that resolves after an identity switch instead of writing (and
+   * persisting) it into the next scope's partition.
    */
   #refreshList = async (): Promise<void> => {
-    const scope = this.#captureScope();
-    const response = await agentSkillService.list();
-    this.#list.replace(LIST_PARAMS, response, scope);
+    await this.#list.fetch(LIST_PARAMS, { fresh: true });
   };
 
   createAgentSkill = async (

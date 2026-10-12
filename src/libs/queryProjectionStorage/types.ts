@@ -18,6 +18,7 @@ export interface QueryProjectionStorage<T> {
   getStrict: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
   /** Rejects when the delete did not land (reads and writes stay best-effort). */
   remove: (key: QueryProjectionKey) => Promise<void>;
+  /** Rejects when the write did not land (see `ReplicaStorage.set`). */
   set: (key: QueryProjectionKey, projection: QueryProjection<T>) => Promise<void>;
 }
 

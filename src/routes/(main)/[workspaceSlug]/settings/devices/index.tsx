@@ -1,19 +1,14 @@
 'use client';
 
 import type { DeviceVisibility } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Tabs } from '@lobehub/ui/base-ui';
-import { LockIcon, RefreshCwIcon, TerminalIcon, UsersIcon } from 'lucide-react';
+import { Icon } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui/base-ui';
+import { LockIcon, UsersIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
 
-import {
-  DeviceConnectModal,
-  DeviceDetailPage,
-  DeviceManager,
-  useDeviceList,
-} from '@/features/DeviceManager';
+import { DeviceConnectModal, DeviceDetailPage, DeviceManager } from '@/features/DeviceManager';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
 /**
@@ -37,11 +32,6 @@ const WorkspaceDevicesSetting = memo(() => {
   const setVisibility = (next: DeviceVisibility) =>
     setSearchParams(next === 'private' ? { visibility: next } : {}, { replace: true });
 
-  // The connect + refresh actions sit beside the tabs (same header pattern as
-  // the workspace credential page). Shares DeviceManager's SWR entry, so
-  // `mutate` refreshes the list it renders.
-  const { isValidating, mutate } = useDeviceList();
-
   if (deviceId)
     return (
       <DeviceDetailPage
@@ -59,8 +49,12 @@ const WorkspaceDevicesSetting = memo(() => {
 
   return (
     <>
-      <Flexbox gap={16}>
-        <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>
+      {/* DeviceManager owns the refresh + connect toolbar; the tabs fill its
+          leading slot (same header pattern as the workspace credential page). */}
+      <DeviceManager
+        scope={'workspace'}
+        visibility={visibility}
+        toolbarLeading={
           <Tabs
             activeKey={visibility}
             items={[
@@ -77,37 +71,16 @@ const WorkspaceDevicesSetting = memo(() => {
             ]}
             onChange={(key) => setVisibility(key as DeviceVisibility)}
           />
-          <Flexbox horizontal align={'center'} gap={8}>
-            <Button
-              icon={<Icon icon={RefreshCwIcon} />}
-              loading={isValidating}
-              title={t('devices.actions.refresh')}
-              onClick={() => mutate()}
-            />
-            <Button
-              icon={<Icon icon={TerminalIcon} />}
-              type={'primary'}
-              onClick={() => setOpen(true)}
-            >
-              {t('devices.empty.methodCli.title')}
-            </Button>
-          </Flexbox>
-        </Flexbox>
-
-        <DeviceManager
-          key={visibility}
-          scope={'workspace'}
-          visibility={visibility}
-          onConnect={() => setOpen(true)}
-          onOpenDevice={(id) =>
-            navigate(
-              `/settings/devices/${encodeURIComponent(id)}${
-                visibility === 'private' ? '?visibility=private' : ''
-              }`,
-            )
-          }
-        />
-      </Flexbox>
+        }
+        onConnect={() => setOpen(true)}
+        onOpenDevice={(id) =>
+          navigate(
+            `/settings/devices/${encodeURIComponent(id)}${
+              visibility === 'private' ? '?visibility=private' : ''
+            }`,
+          )
+        }
+      />
 
       <DeviceConnectModal
         open={open}

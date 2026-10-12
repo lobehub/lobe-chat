@@ -314,6 +314,7 @@
   "pageList.copySuccess": "Страница скопирована",
   "pageList.copyTitle": "Копировать страницу",
   "pageList.copyTo": "Копировать в…",
+  "pageList.createFailed": "Не удалось создать страницу",
   "pageList.duplicate": "Дублировать",
   "pageList.empty": "Пока нет страниц. Нажмите кнопку выше, чтобы создать первую.",
   "pageList.filter.all": "Все",

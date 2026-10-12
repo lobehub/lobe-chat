@@ -314,6 +314,7 @@
   "pageList.copySuccess": "صفحه کپی شد",
   "pageList.copyTitle": "کپی کردن صفحه",
   "pageList.copyTo": "کپی به...",
+  "pageList.createFailed": "ایجاد صفحه ناموفق بود",
   "pageList.duplicate": "تکثیر",
   "pageList.empty": "هنوز هیچ صفحه‌ای وجود ندارد. برای ایجاد اولین صفحه روی دکمه بالا کلیک کنید.",
   "pageList.filter.all": "همه",
