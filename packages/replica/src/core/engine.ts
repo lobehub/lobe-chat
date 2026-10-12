@@ -1353,6 +1353,31 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   };
 
   /**
+   * An entity patch started for a scope that was not active settled. If the
+   * user switched back to that scope meanwhile, an entry may have hydrated the
+   * pre-patch row before the patch landed: apply the same change to what is
+   * loaded now, in memory only — storage already holds it.
+   */
+  const reconcileLoaded = <TItem>(
+    scope: string,
+    id: string,
+    fn: (item: TItem) => TItem | undefined,
+  ) => {
+    if (resource.scope.get() !== scope || getSlot().scope !== scope) return;
+    for (const key of entityKeys(id)) {
+      const current = port.read(key);
+      if (current === undefined) continue;
+      // A hydrate during the patch may have recorded the pre-patch row as stored.
+      forgetStored(scope, [storageKey(key, getSlot().entries[key]?.query).queryKey]);
+      if (mapEntity(current, id, fn) === undefined) remove(key);
+      else
+        update(key, (data) => (data === undefined ? data : (mapEntity(data, id, fn) ?? data)), {
+          persist: false,
+        });
+    }
+  };
+
+  /**
    * Confirmed patch of one entity everywhere it is loaded and in the persisted
    * rows of unloaded entries. `scope` targets a scope captured earlier (a
    * write confirmed after the account switched): when it is no longer active,
@@ -1365,7 +1390,10 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     options?: { persist?: boolean; scope?: string },
   ) => {
     if (options?.scope !== undefined && options.scope !== resource.scope.get()) {
-      if (options.persist !== false) void patchStoredEntityRows(id, fn, options.scope);
+      const scope = options.scope;
+      if (options.persist === false) return;
+      const settle = () => reconcileLoaded(scope, id, fn);
+      void patchStoredEntityRows(id, fn, scope).then(settle, settle);
       return;
     }
     void applyEntity(id, fn, options);
@@ -1398,7 +1426,11 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const patch = offScope
       ? options?.persist === false
         ? undefined
-        : patchStoredEntityRows(id, () => undefined, scope)
+        : patchStoredEntityRows(id, () => undefined, scope).then((patched) => {
+            // Switched back meanwhile: drop it from anything hydrated since.
+            reconcileLoaded(scope, id, () => undefined);
+            return patched;
+          })
       : applyEntity(id, () => undefined, options);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.

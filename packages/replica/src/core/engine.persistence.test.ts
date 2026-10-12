@@ -436,6 +436,44 @@ describe('entity changes confirmed for a captured scope', () => {
     resetScope();
   });
 
+  it('reconciles an entry hydrated while an off-scope update was still landing', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+    scopeState.current = 'u2';
+    engine.ensureScope('u2');
+
+    // Hold the patch on its index read, so the switch back lands first.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const { getStrict } = storage.storage;
+    storage.storage.getStrict = async (key) => {
+      if (key.scope === SCOPE && key.queryKey === REPLICA_INDEX_KEY) await held;
+      return getStrict!(key);
+    };
+    engine.updateEntity<Item>('1', () => ({ id: '1', renamed: true }) as Item, { scope: SCOPE });
+
+    // Back on the first account: its list hydrates the pre-patch row.
+    scopeState.current = SCOPE;
+    engine.ensureScope(SCOPE);
+    await engine.hydrate({ id: 'a' });
+    expect(host.view().a).toEqual([item('1'), item('2')]);
+
+    release();
+    await flush();
+    await flush();
+
+    // The patch landed in storage and in the view now on screen.
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([
+      { id: '1', renamed: true },
+      item('2'),
+    ]);
+    expect(host.view().a).toEqual([{ id: '1', renamed: true }, item('2')]);
+    resetScope();
+  });
+
   it('updateEntity({ scope }) patches only that scope’s rows', async () => {
     resetScope();
     const storage = createStorage();
