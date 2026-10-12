@@ -74,7 +74,10 @@ class ExpertiseService {
       lambdaClient.expertise.draftRuleGroup.mutate({ brief }, withLlmRelay(relay)),
     );
 
-  distillRules = async (input: DistillInput) => lambdaClient.expertise.distillRules.mutate(input);
+  distillRules = async (input: DistillInput) =>
+    runOnExpertiseModel((relay) =>
+      lambdaClient.expertise.distillRules.mutate(input, withLlmRelay(relay)),
+    );
 
   commitDistilledRules = async (input: CommitDistilledInput) =>
     lambdaClient.expertise.commitDistilledRules.mutate(input);

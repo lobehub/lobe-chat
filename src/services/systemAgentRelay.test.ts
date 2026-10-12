@@ -17,6 +17,7 @@ vi.mock('@/libs/trpc/client', async (importOriginal) => ({
       draftDomain: { mutate: vi.fn(async () => ({})) },
       draftRule: { mutate: vi.fn(async () => ({})) },
       draftRuleGroup: { mutate: vi.fn(async () => ({})) },
+      distillRules: { mutate: vi.fn(async () => ({})) },
       judgeRuleDirections: { mutate: vi.fn(async () => ({ judged: 0 })) },
     },
     task: {
@@ -121,6 +122,17 @@ describe('system-agent browser entries and the one-shot relay', () => {
       expect(oneShotRelay.run).toHaveBeenCalledWith('lmstudio', expect.any(Function));
       expect(lambdaClient.expertise.draftRuleGroup.mutate).toHaveBeenCalledWith(
         { brief: 'a group' },
+        RELAY_OPTIONS,
+      );
+    });
+
+    it('distillRules', async () => {
+      const params = { agentId: 'agt', sources: [] } as any;
+      await expertiseService.distillRules(params);
+
+      expect(oneShotRelay.run).toHaveBeenCalledWith('lmstudio', expect.any(Function));
+      expect(lambdaClient.expertise.distillRules.mutate).toHaveBeenCalledWith(
+        params,
         RELAY_OPTIONS,
       );
     });
