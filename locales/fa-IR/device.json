@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "پوشه جدید",
   "workingDirectory.newFolderCreate": "ایجاد",
+  "workingDirectory.newFolderCreated": "پوشه ایجاد شد: {{path}}",
   "workingDirectory.newFolderExists": "یک فایل یا پوشه با این نام در اینجا وجود دارد.",
   "workingDirectory.newFolderFailed": "ایجاد این پوشه ممکن نیست. اتصال دستگاه و مجوزهای پوشه را بررسی کنید و دوباره تلاش کنید.",
   "workingDirectory.newFolderInvalidName": "نام پوشه نمی‌تواند “.” یا “..” باشد یا شامل / یا \\ باشد.",

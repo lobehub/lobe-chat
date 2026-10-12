@@ -1,5 +1,6 @@
+import { toast } from '@lobehub/ui/base-ui';
 import { act, renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { deviceService } from '@/services/device';
 
@@ -24,9 +25,12 @@ const setup = (parentPath = '/home/me') => {
 };
 
 describe('useCreateFolder', () => {
+  afterEach(() => vi.restoreAllMocks());
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(toast, 'success').mockImplementation(() => undefined);
+    vi.spyOn(toast, 'error').mockImplementation(() => undefined);
   });
 
   it('creates the trimmed name inside the browsed folder and reports the new path', async () => {
@@ -67,6 +71,28 @@ describe('useCreateFolder', () => {
       await submission;
     });
     expect(onCreated).not.toHaveBeenCalled();
+    expect(toast.success).toHaveBeenCalledWith('workingDirectory.newFolderCreated');
+  });
+
+  it('reports a creation failure after the picker closes', async () => {
+    let rejectCreate!: (error: unknown) => void;
+    vi.mocked(deviceService.createDirectory).mockReturnValue(
+      new Promise((_, reject) => {
+        rejectCreate = reject;
+      }),
+    );
+    const { hook } = setup();
+    act(() => hook.result.current.setName('new'));
+    let submission!: Promise<void>;
+    act(() => {
+      submission = hook.result.current.submit();
+    });
+    hook.unmount();
+    await act(async () => {
+      rejectCreate({ data: { code: 'CONFLICT' } });
+      await submission;
+    });
+    expect(toast.error).toHaveBeenCalledWith('workingDirectory.newFolderExists');
   });
 
   it('reports a taken name with a dedicated message', async () => {

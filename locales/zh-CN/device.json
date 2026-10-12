@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/新分支名称",
   "workingDirectory.newFolder": "新建文件夹",
   "workingDirectory.newFolderCreate": "创建",
+  "workingDirectory.newFolderCreated": "已创建文件夹：{{path}}",
   "workingDirectory.newFolderExists": "此处已存在同名的文件或文件夹。",
   "workingDirectory.newFolderFailed": "无法创建文件夹。请检查设备连接和文件夹权限后重试。",
   "workingDirectory.newFolderInvalidName": "文件夹名称不能是「.」或「..」，也不能包含 / 或 \\。",

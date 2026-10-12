@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "Нова папка",
   "workingDirectory.newFolderCreate": "Създай",
+  "workingDirectory.newFolderCreated": "Създадена папка: {{path}}",
   "workingDirectory.newFolderExists": "Файл или папка с това име вече съществува тук.",
   "workingDirectory.newFolderFailed": "Не можа да се създаде тази папка. Проверете връзката на устройството и разрешенията за папката, след което опитайте отново.",
   "workingDirectory.newFolderInvalidName": "Имената на папките не могат да бъдат „.“ или „..“, или да съдържат / или \\.",

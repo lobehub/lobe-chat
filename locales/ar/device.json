@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "مجلد جديد",
   "workingDirectory.newFolderCreate": "إنشاء",
+  "workingDirectory.newFolderCreated": "تم إنشاء المجلد: {{path}}",
   "workingDirectory.newFolderExists": "يوجد بالفعل ملف أو مجلد بهذا الاسم هنا.",
   "workingDirectory.newFolderFailed": "تعذر إنشاء هذا المجلد. تحقق من اتصال الجهاز وأذونات المجلد، ثم حاول مرة أخرى.",
   "workingDirectory.newFolderInvalidName": "لا يمكن أن تكون أسماء المجلدات “.” أو “..”، أو تحتوي على / أو \\.",

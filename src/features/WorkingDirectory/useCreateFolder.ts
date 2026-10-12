@@ -1,4 +1,5 @@
 import { isValidDirectoryName, isWindowsDevicePath } from '@lobechat/utils/directoryName';
+import { toast } from '@lobehub/ui/base-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -65,11 +66,14 @@ export const useCreateFolder = ({ deviceId, onCreated, parentPath }: UseCreateFo
     try {
       const result = await deviceService.createDirectory({ deviceId, name: next, parentPath });
       if (mounted.current) onCreated(result.path);
+      else toast.success(t('workingDirectory.newFolderCreated', { path: result.path }));
     } catch (cause) {
       console.error('Failed to create folder', cause);
-      setError(t(getErrorMessageKey(cause)));
+      const message = t(getErrorMessageKey(cause));
+      if (mounted.current) setError(message);
+      else toast.error(message);
     } finally {
-      setPending(false);
+      if (mounted.current) setPending(false);
     }
   };
 

@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "New folder",
   "workingDirectory.newFolderCreate": "Create",
+  "workingDirectory.newFolderCreated": "Created folder: {{path}}",
   "workingDirectory.newFolderExists": "A file or folder with this name already exists here.",
   "workingDirectory.newFolderFailed": "Couldn’t create this folder. Check the device connection and folder permissions, then try again.",
   "workingDirectory.newFolderInvalidName": "Folder names can’t be “.” or “..”, or contain / or \\.",

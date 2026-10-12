@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/neuer-zweig-name",
   "workingDirectory.newFolder": "Neuer Ordner",
   "workingDirectory.newFolderCreate": "Erstellen",
+  "workingDirectory.newFolderCreated": "Ordner erstellt: {{path}}",
   "workingDirectory.newFolderExists": "Eine Datei oder ein Ordner mit diesem Namen existiert hier bereits.",
   "workingDirectory.newFolderFailed": "Dieser Ordner konnte nicht erstellt werden. Überprüfen Sie die Geräteverbindung und die Ordnerberechtigungen und versuchen Sie es erneut.",
   "workingDirectory.newFolderInvalidName": "Ordnernamen dürfen nicht „.“ oder „..“ sein oder / oder \\ enthalten.",

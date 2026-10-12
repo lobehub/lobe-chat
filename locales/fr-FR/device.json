@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/nouvelle-branche-nom",
   "workingDirectory.newFolder": "Nouveau dossier",
   "workingDirectory.newFolderCreate": "Créer",
+  "workingDirectory.newFolderCreated": "Dossier créé : {{path}}",
   "workingDirectory.newFolderExists": "Un fichier ou un dossier portant ce nom existe déjà ici.",
   "workingDirectory.newFolderFailed": "Impossible de créer ce dossier. Vérifiez la connexion de l'appareil et les autorisations du dossier, puis réessayez.",
   "workingDirectory.newFolderInvalidName": "Les noms de dossier ne peuvent pas être « . » ou « .. », ni contenir / ou \\.",

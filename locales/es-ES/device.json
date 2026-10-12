@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/nombre-nueva-rama",
   "workingDirectory.newFolder": "Nueva carpeta",
   "workingDirectory.newFolderCreate": "Crear",
+  "workingDirectory.newFolderCreated": "Carpeta creada: {{path}}",
   "workingDirectory.newFolderExists": "Ya existe un archivo o carpeta con este nombre aquí.",
   "workingDirectory.newFolderFailed": "No se pudo crear esta carpeta. Verifica la conexión del dispositivo y los permisos de la carpeta, luego inténtalo de nuevo.",
   "workingDirectory.newFolderInvalidName": "Los nombres de las carpetas no pueden ser “.” o “..”, ni contener / o \\.",

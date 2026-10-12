@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/nome-novo-branch",
   "workingDirectory.newFolder": "Nova pasta",
   "workingDirectory.newFolderCreate": "Criar",
+  "workingDirectory.newFolderCreated": "Pasta criada: {{path}}",
   "workingDirectory.newFolderExists": "Já existe um arquivo ou pasta com este nome aqui.",
   "workingDirectory.newFolderFailed": "Não foi possível criar esta pasta. Verifique a conexão do dispositivo e as permissões da pasta, depois tente novamente.",
   "workingDirectory.newFolderInvalidName": "Os nomes das pastas não podem ser “.” ou “..”, ou conter / ou \\.",

@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "새 폴더",
   "workingDirectory.newFolderCreate": "생성",
+  "workingDirectory.newFolderCreated": "폴더 생성됨: {{path}}",
   "workingDirectory.newFolderExists": "이름이 같은 파일 또는 폴더가 이미 여기에 있습니다.",
   "workingDirectory.newFolderFailed": "이 폴더를 생성할 수 없습니다. 장치 연결 및 폴더 권한을 확인한 후 다시 시도하세요.",
   "workingDirectory.newFolderInvalidName": "폴더 이름은 “.” 또는 “..”일 수 없으며, / 또는 \\를 포함할 수 없습니다.",

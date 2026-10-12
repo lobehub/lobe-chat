@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/nome-nuovo-ramo",
   "workingDirectory.newFolder": "Nuova cartella",
   "workingDirectory.newFolderCreate": "Crea",
+  "workingDirectory.newFolderCreated": "Cartella creata: {{path}}",
   "workingDirectory.newFolderExists": "Un file o una cartella con questo nome esiste già qui.",
   "workingDirectory.newFolderFailed": "Impossibile creare questa cartella. Controlla la connessione del dispositivo e i permessi della cartella, quindi riprova.",
   "workingDirectory.newFolderInvalidName": "I nomi delle cartelle non possono essere “.” o “..”, né contenere / o \\.",

@@ -1,4 +1,5 @@
 export default {
+  'workingDirectory.newFolderCreated': 'Created folder: {{path}}',
   'workingDirectory.newFolderInvalidWindowsName':
     'Use a Windows folder name without reserved names (such as CON), special characters (< > : " / \\ | ? *), control characters, or a trailing space or period.',
   'workingDirectory.addFolderFailed': 'Could not add this folder. Please try again.',

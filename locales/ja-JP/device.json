@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/new-branch-name",
   "workingDirectory.newFolder": "新しいフォルダー",
   "workingDirectory.newFolderCreate": "作成",
+  "workingDirectory.newFolderCreated": "フォルダーを作成しました: {{path}}",
   "workingDirectory.newFolderExists": "この場所にはすでに同じ名前のファイルまたはフォルダーがあります。",
   "workingDirectory.newFolderFailed": "このフォルダーを作成できませんでした。デバイスの接続状況とフォルダーの権限を確認して、再試行してください。",
   "workingDirectory.newFolderInvalidName": "フォルダー名には「.」や「..」、または / や \\ を含めることはできません。",

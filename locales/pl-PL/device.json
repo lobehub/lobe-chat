@@ -58,6 +58,7 @@
   "workingDirectory.newBranchPlaceholder": "feature/nazwa-nowej-gałęzi",
   "workingDirectory.newFolder": "Nowy folder",
   "workingDirectory.newFolderCreate": "Utwórz",
+  "workingDirectory.newFolderCreated": "Utworzono folder: {{path}}",
   "workingDirectory.newFolderExists": "Plik lub folder o tej nazwie już tutaj istnieje.",
   "workingDirectory.newFolderFailed": "Nie udało się utworzyć tego folderu. Sprawdź połączenie urządzenia i uprawnienia do folderu, a następnie spróbuj ponownie.",
   "workingDirectory.newFolderInvalidName": "Nazwy folderów nie mogą być „.” lub „..”, ani zawierać / lub \\.",
