@@ -1,26 +1,28 @@
-import { Flexbox, Icon, Markdown } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { Segmented, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { BookMarked } from 'lucide-react';
-import { memo, type ReactNode, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SkillDetailView, { SkillDetailSkeleton } from '@/features/AgentSkillDetail/SkillDetailView';
 import { useClientDataSWR } from '@/libs/swr';
 import { userSkillService } from '@/services/userSkill';
 
 import type { GoalGraphView } from '../goalGraphViewModel';
 import type { BatchModel, BatchRound } from '../Graph/batchModel';
-import { planDiff, skillVersionText } from './planDiff';
+import { planDiff, skillFileTree, skillVersionContent, skillVersionText } from './planDiff';
 
 /**
- * Every version of a batch's plan, for the panel that opens on one of them:
- * pick a version, pick what to compare it with (the previous one by default),
- * read the line diff, then the version in full.
+ * A batch's plan, opened from its node: the skill in the user's library it is,
+ * shown the way every skill is shown — who it is, its files, `SKILL.md` — at
+ * the version the reader picks (round N is version N), or as what changed from
+ * the version before.
  *
- * The plan is a skill in the user's library — round N is its version N, and
- * every unit loads it — so the panel reads the versions the skill kept. A batch
- * from before the plan became a skill falls back to its plan nodes' text.
+ * A batch from before the plan became a skill falls back to its plan nodes'
+ * text, in the same view.
  */
+
+const TREE_WIDTH = 168;
 
 const styles = createStaticStyles(({ css }) => ({
   diff: css`
@@ -49,36 +51,7 @@ const styles = createStaticStyles(({ css }) => ({
   same: css`
     color: ${cssVar.colorTextTertiary};
   `,
-  label: css`
-    font-size: 12px;
-    font-weight: 600;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  skill: css`
-    padding-block: 8px;
-    padding-inline: 10px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-  `,
-  mono: css`
-    overflow: hidden;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
 }));
-
-const Section = memo<{ children: ReactNode; title: string }>(({ children, title }) => (
-  <Flexbox gap={6}>
-    <span className={styles.label}>{title}</span>
-    {children}
-  </Flexbox>
-));
-
-Section.displayName = 'GoalPlanDetailSection';
 
 const MARK = { added: '+ ', removed: '− ', same: '  ' } as const;
 
@@ -92,51 +65,31 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
   const { t } = useTranslation('chat');
   const versions = model.rounds.filter((item) => item.templateId);
   const [selected, setSelected] = useState(round.revision);
-  const [base, setBase] = useState<number | undefined>(undefined);
+  const [showDiff, setShowDiff] = useState(false);
 
   const current = versions.find((item) => item.revision === selected) ?? round;
-  const earlier = versions.filter((item) => item.revision < current.revision);
-  // Compare with the previous version unless the reader picked another.
-  const against = earlier.find((item) => item.revision === base) ?? earlier.at(-1);
+  const previous = versions.findLast((item) => item.revision < current.revision);
   const planSkill = model.planSkill;
   // Keyed by the round count, so a revision the panel is open on loads its version.
-  const { data: skill } = useClientDataSWR(
+  const { data: skill, isLoading } = useClientDataSWR(
     planSkill ? ['goal-plan-skill', planSkill.id, model.rounds.length] : null,
     () => userSkillService.get(planSkill!.id),
   );
+  const nodeText = (item?: BatchRound) =>
+    (item?.templateId && graph.byId[item.templateId]?.node.description) || '';
   const textOf = (item?: BatchRound) =>
-    (item && skillVersionText(skill?.versions, item.revision)) ||
-    (item?.templateId && graph.byId[item.templateId]?.node.description) ||
-    '';
+    (item && skillVersionText(skill?.versions, item.revision)) || nodeText(item);
 
-  const lines = against ? planDiff(textOf(against), textOf(current)) : [];
-  const changed = lines.some((line) => line.kind !== 'same');
+  if (planSkill && isLoading) return <SkillDetailSkeleton treeWidth={TREE_WIDTH} />;
 
-  return (
-    <Flexbox data-plan-detail gap={16}>
-      {planSkill && (
-        <Flexbox data-plan-skill horizontal align={'flex-start'} className={styles.skill} gap={8}>
-          <Icon
-            color={cssVar.colorTextSecondary}
-            icon={BookMarked}
-            size={14}
-            style={{ marginBlockStart: 3 }}
-          />
-          <Flexbox gap={2} style={{ flex: 1, minWidth: 0 }}>
-            <Text fontSize={13} weight={500}>
-              {skill?.title ?? planSkill.name}
-            </Text>
-            <Text fontSize={12} type={'secondary'}>
-              {t('goalBatch.planPanel.skill', { version: skill?.version ?? model.rounds.length })}
-            </Text>
-            <span className={styles.mono}>{`user-skills:${planSkill.name}`}</span>
-          </Flexbox>
-        </Flexbox>
-      )}
+  const keptVersion = skill?.versions?.find((version) => version.version === current.revision);
+  const diffing = showDiff && !!previous;
+  const lines = diffing ? planDiff(textOf(previous), textOf(current)) : [];
 
+  const header = (
+    <Flexbox gap={8}>
       {versions.length > 1 && (
         <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
-          <span className={styles.label}>{t('goalBatch.planPanel.version')}</span>
           <Segmented
             size={'small'}
             value={String(current.revision)}
@@ -144,71 +97,78 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
               label: `v${item.revision}`,
               value: String(item.revision),
             }))}
-            onChange={(value) => {
-              setSelected(Number(value));
-              setBase(undefined);
-            }}
+            onChange={(value) => setSelected(Number(value))}
           />
-          {earlier.length > 1 && (
-            <>
-              <span className={styles.label}>{t('goalBatch.planPanel.compare')}</span>
-              <Segmented
-                size={'small'}
-                value={against ? String(against.revision) : undefined}
-                options={earlier.map((item) => ({
-                  label: `v${item.revision}`,
-                  value: String(item.revision),
-                }))}
-                onChange={(value) => setBase(Number(value))}
-              />
-            </>
+          {previous && (
+            <Segmented
+              size={'small'}
+              value={diffing ? 'diff' : 'full'}
+              options={[
+                {
+                  label: t('goalBatch.planPanel.full', { revision: current.revision }),
+                  value: 'full',
+                },
+                {
+                  label: t('goalBatch.planPanel.diff', {
+                    base: previous.revision,
+                    revision: current.revision,
+                  }),
+                  value: 'diff',
+                },
+              ]}
+              onChange={(value) => setShowDiff(value === 'diff')}
+            />
           )}
         </Flexbox>
       )}
-
       {current.forked && (
         <Text fontSize={12} type={'secondary'}>
           {t('goalBatch.planPanel.forked')}
         </Text>
       )}
+    </Flexbox>
+  );
 
-      {against ? (
-        <Section
-          title={t('goalBatch.planPanel.diff', {
-            base: against.revision,
-            revision: current.revision,
-          })}
-        >
-          {changed ? (
-            <div data-plan-diff className={styles.diff}>
-              {lines.map((line, index) => (
-                <div
-                  className={cx(styles.line, styles[line.kind])}
-                  data-diff={line.kind}
-                  key={index}
-                >
-                  {MARK[line.kind]}
-                  {line.text}
+  return (
+    <Flexbox data-plan-detail flex={1} style={{ minHeight: 0 }}>
+      <SkillDetailView
+        content={skillVersionContent(skill?.versions, current.revision) ?? nodeText(current)}
+        description={skill?.description}
+        headerExtra={header}
+        resourceTree={skillFileTree(skill?.files)}
+        treeWidth={TREE_WIDTH}
+        updatedAt={keptVersion?.createdAt ?? skill?.updatedAt}
+        version={current.revision}
+        name={
+          skill?.name ??
+          planSkill?.name ??
+          t('goalBatch.template.title', { revision: current.revision })
+        }
+        renderContent={(file) =>
+          diffing && file === 'SKILL.md' ? (
+            <Flexbox data-plan-diff gap={8} padding={16}>
+              {lines.some((line) => line.kind !== 'same') ? (
+                <div className={styles.diff}>
+                  {lines.map((line, index) => (
+                    <div
+                      className={cx(styles.line, styles[line.kind])}
+                      data-diff={line.kind}
+                      key={index}
+                    >
+                      {MARK[line.kind]}
+                      {line.text}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <Text fontSize={12} type={'secondary'}>
-              {t('goalBatch.planPanel.same', { base: against.revision })}
-            </Text>
-          )}
-        </Section>
-      ) : (
-        <Text fontSize={12} type={'secondary'}>
-          {t('goalBatch.planPanel.first')}
-        </Text>
-      )}
-
-      <Section title={t('goalBatch.planPanel.full', { revision: current.revision })}>
-        <Markdown fontSize={13} style={{ flexShrink: 0 }} variant={'chat'}>
-          {textOf(current)}
-        </Markdown>
-      </Section>
+              ) : (
+                <Text fontSize={12} type={'secondary'}>
+                  {t('goalBatch.planPanel.same', { base: previous!.revision })}
+                </Text>
+              )}
+            </Flexbox>
+          ) : undefined
+        }
+      />
     </Flexbox>
   );
 });

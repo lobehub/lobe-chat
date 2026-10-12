@@ -64,6 +64,7 @@ import {
   buildBatchModel,
   verdictChecks,
 } from './batchModel';
+import { layoutBatchScope } from './batchScopeLayout';
 import { edgeDirection } from './edgeRouting';
 import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
 import { batchContainerStatus } from './experimentStatus';
@@ -494,6 +495,8 @@ const Canvas = memo<
     onInspect: (id: string) => void;
     onEnter: (id: string) => void;
     navigation?: ReactNode;
+    /** The batch entered on its own: its units as a grid, round by round. */
+    scopeBatch?: BatchModel;
   }
 >(
   ({
@@ -511,6 +514,7 @@ const Canvas = memo<
     onInspect,
     onEnter,
     navigation,
+    scopeBatch,
     view,
   }) => {
     const { fitView, getInternalNode, getViewport, setCenter } = useReactFlow();
@@ -552,15 +556,15 @@ const Canvas = memo<
     }, [graph, collapsed]);
     const batchRoles = useMemo(() => {
       const result = new Map<string, BatchRole>();
-      for (const { layout, model } of batches.values()) {
-        if (!layout) continue;
+      const open = [...batches.values()].flatMap(({ layout, model }) => (layout ? [model] : []));
+      for (const model of scopeBatch ? [...open, scopeBatch] : open) {
         for (const round of model.rounds) {
           if (round.templateId) result.set(round.templateId, { kind: 'template', model, round });
           if (round.assayId) result.set(round.assayId, { kind: 'assay', model, round });
         }
       }
       return result;
-    }, [batches]);
+    }, [batches, scopeBatch]);
     const containerLayouts = useMemo(
       () =>
         new Map(
@@ -602,13 +606,23 @@ const Canvas = memo<
     const handleNodesChange = useCallback((changes: NodeChange[]) => {
       setMeasuredSizes((previous) => mergeMeasuredSizes(previous, changes));
     }, []);
-    const positions = hasContainers
-      ? map.boxes
-      : layoutGraph(
-          baseNodes.filter((node) => visibleIds.has(node.id)),
-          [...graph.edges, ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const }))],
-          measuredSizes,
-        );
+    const scopeLayout = useMemo(
+      () =>
+        scopeBatch ? layoutBatchScope(graph, scopeBatch, visibleIds, measuredSizes) : undefined,
+      [graph, scopeBatch, visibleIds, measuredSizes],
+    );
+    const positions = scopeLayout
+      ? scopeLayout.boxes
+      : hasContainers
+        ? map.boxes
+        : layoutGraph(
+            baseNodes.filter((node) => visibleIds.has(node.id)),
+            [
+              ...graph.edges,
+              ...bridges.map((bridge) => ({ ...bridge, kind: 'leads_to' as const })),
+            ],
+            measuredSizes,
+          );
 
     const ghosts = useMemo(() => {
       if (!planning) return [];
@@ -698,7 +712,8 @@ const Canvas = memo<
             const box = positions[item.node.id];
             const batchRole = batchRoles.get(item.node.id);
             const inBatch =
-              !!map.parents.get(item.node.id) && batches.has(map.parents.get(item.node.id)!);
+              !!scopeBatch ||
+              (!!map.parents.get(item.node.id) && batches.has(map.parents.get(item.node.id)!));
             const waiting = item.node.kind === 'decision' && item.node.status === 'waiting';
             // Inside a batch a decision is a plain card: the hand glyph and a blue
             // chip say a person is needed, without the orange gate frame.
@@ -715,13 +730,16 @@ const Canvas = memo<
               // Once the report marked a mainline, everything off it is context too.
               // Inside a batch the gate's own chip says it is locked; a settled
               // side decision steps back instead.
-              dim: inBatch
-                ? !batchRole && item.node.status === 'resolved'
-                : isNodeDimmed({
-                    blocked: item.node.status === 'proposed' && item.blockers.length > 0,
-                    emphasis,
-                    highlighted,
-                  }),
+              // An entered batch is the units themselves: only a superseded one steps back.
+              dim: scopeBatch
+                ? item.isStale
+                : inBatch
+                  ? !batchRole && item.node.status === 'resolved'
+                  : isNodeDimmed({
+                      blocked: item.node.status === 'proposed' && item.blockers.length > 0,
+                      emphasis,
+                      highlighted,
+                    }),
               highlighted,
               isGate,
               presentation:
@@ -808,6 +826,7 @@ const Canvas = memo<
         batchCopy,
         openBatchIds,
         placeInMap,
+        scopeBatch,
       ],
     );
 
@@ -815,8 +834,26 @@ const Canvas = memo<
     // round's waves and the frame each round's nodes sit in. They are not graph
     // nodes; their cards and squares open the real node underneath.
     const batchFlowNodes: FlowNode[] = useMemo(
-      () =>
-        [...batches].flatMap(([batchId, { layout, model }]) => {
+      () => [
+        // The entered batch's rounds, each a frame around its plan, gate and units.
+        ...(scopeLayout?.frames ?? []).map(
+          (frame) =>
+            ({
+              data: {
+                label: frame.revision ? undefined : t('goalBatch.probes.title'),
+                revision: frame.revision,
+              } satisfies BatchRoundFrameData,
+              draggable: false,
+              id: frame.id,
+              position: { x: frame.box.x, y: frame.box.y },
+              selectable: false,
+              style: { height: frame.box.height, width: frame.box.width },
+              type: 'goalBatchRound',
+              width: frame.box.width,
+              zIndex: -1,
+            }) satisfies FlowNode,
+        ),
+        ...[...batches].flatMap(([batchId, { layout, model }]) => {
           if (!layout || !visibleIds.has(batchId)) return [];
           const [first] = model.rounds;
           // The roster waves a round owns, keeping each one's roster position.
@@ -873,7 +910,8 @@ const Canvas = memo<
             } satisfies FlowNode;
           });
         }),
-      [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap],
+      ],
+      [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap, scopeLayout, t],
     );
 
     const flowEdges: FlowEdge[] = useMemo(() => {
@@ -891,7 +929,9 @@ const Canvas = memo<
       const markerOf = (tone: EdgeTone) =>
         tone === 'mainline' ? mainlineMarker : tone === 'detour' ? detourMarker : marker;
       const lanes = new Map<string, number>();
-      const direct = (hasContainers ? map.edges : graph.edges)
+      // Inside an entered batch the units do not lead to one another: the grid
+      // draws only each round's plan → gate.
+      const direct = (scopeLayout ? [] : hasContainers ? map.edges : graph.edges)
         .filter((edge) => visibleIds.has(edge.sourceNodeId) && visibleIds.has(edge.targetNodeId))
         .map((edge) => {
           // An open batch has no card of its own: a link to it lands on its first piece.
@@ -971,8 +1011,20 @@ const Canvas = memo<
               }) satisfies FlowEdge,
           ),
       );
-      return [...direct, ...bridged, ...chained];
+      const scoped = (scopeLayout?.edges ?? []).map(
+        (edge) =>
+          ({
+            data: { lane: 0 },
+            id: edge.id,
+            markerEnd: marker,
+            source: edge.source,
+            target: edge.target,
+            type: 'exploration',
+          }) satisfies FlowEdge,
+      );
+      return [...direct, ...(scopeLayout ? [] : bridged), ...chained, ...scoped];
     }, [
+      scopeLayout,
       batches,
       graph,
       visibleIds,
@@ -1131,6 +1183,14 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
   const scopedGraph: GoalGraphView = scopeId
     ? scopeGraphView(props.graph, scopeIds, navigation.edges)
     : props.graph;
+  // An entered batch reads its model off the whole graph, where its rollout lives.
+  const scopeBatch = useMemo(
+    () =>
+      scopeId && props.graph.byId[scopeId]?.node.kind === 'batch'
+        ? buildBatchModel(props.graph, scopeId)
+        : undefined,
+    [props.graph, scopeId],
+  );
   const openNode = useChatStore((s) => s.openGoalNode);
   const [preferredView, setView] = useState<GraphViewMode>('stage');
   const stageIsWholeMap = isStageWholeMap(props.graph);
@@ -1312,6 +1372,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
               key={scopeId ?? 'root'}
               planning={scopeId ? false : props.planning}
               refitKey={showPortal}
+              scopeBatch={scopeBatch}
               view={scopeId ? 'all' : view}
               navigation={
                 <Flexbox gap={8}>
@@ -1376,6 +1437,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
           key={scopeId ?? 'root'}
           navigation={breadcrumbs}
           planning={scopeId ? false : props.planning}
+          scopeBatch={scopeBatch}
           view={scopeId ? 'all' : view}
           onEnter={navigation.enter}
           onInspect={(id) => openNode(props.graph.goal.id, id)}

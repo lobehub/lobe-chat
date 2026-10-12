@@ -37,6 +37,15 @@ const styles = createStaticStyles(({ css }) => ({
       border-block-start: 1px dashed ${cssVar.colorBorderSecondary};
     }
   `,
+  /* A rule this gate taught, as a card of its own — it outlives the round. */
+  learnedCard: css`
+    padding-block: 10px;
+    padding-inline: 12px;
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: ${cssVar.borderRadiusLG};
+
+    background: ${cssVar.colorBgContainer};
+  `,
   label: css`
     font-size: 12px;
     font-weight: 600;
@@ -226,15 +235,29 @@ const GateDetail = memo<GateDetailProps>(({ decide, graph, model, onOpenNode, ro
       )}
 
       {/* What this gate's break taught the batch: a rule the executor reads,
-          compiled into an acceptance check later units are verified against. */}
+          and a clause every later unit's acceptance must meet. */}
       {learned.length > 0 && (
         <Section title={t('goalBatch.gatePanel.learned')}>
-          <Flexbox data-gate-learned gap={6}>
+          <Flexbox data-gate-learned gap={8}>
             {learned.map((learning) => (
-              <Flexbox horizontal align={'baseline'} gap={8} key={learning.lessonId}>
-                <Icon color={cssVar.colorTextSecondary} icon={GraduationCap} size={13} />
-                <Text fontSize={13} style={{ flex: 1, minWidth: 0 }}>
-                  {learning.title}
+              <Flexbox
+                horizontal
+                align={'flex-start'}
+                className={styles.learnedCard}
+                gap={10}
+                key={learning.lessonId}
+              >
+                <span
+                  className={styles.unitGlyph}
+                  style={{ background: cssVar.colorFillTertiary, color: cssVar.colorTextSecondary }}
+                >
+                  <Icon icon={GraduationCap} size={14} />
+                </span>
+                <Text
+                  fontSize={13}
+                  style={{ flex: 1, minWidth: 0, paddingBlockStart: 3, whiteSpace: 'pre-wrap' }}
+                >
+                  {learning.rule ?? learning.title}
                 </Text>
                 {learning.lessonCode && (
                   <Text className={styles.mono} fontSize={12} type={'secondary'}>

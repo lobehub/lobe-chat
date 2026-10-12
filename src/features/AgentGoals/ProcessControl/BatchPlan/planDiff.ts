@@ -1,3 +1,4 @@
+import type { SkillResourceTreeNode } from '@lobechat/types';
 import { diffLines } from 'diff';
 
 export interface PlanDiffLine {
@@ -41,4 +42,44 @@ export const skillVersionText = (
 ): string | undefined => {
   const kept = (versions ?? []).find((version) => version.version === revision);
   return kept ? skillBody(kept.content) : undefined;
+};
+
+/** One version's `SKILL.md` as kept — frontmatter included, as the skill viewer shows it. */
+export const skillVersionContent = (
+  versions: readonly { content: string; version: number }[] | null | undefined,
+  revision: number,
+): string | undefined => (versions ?? []).find((version) => version.version === revision)?.content;
+
+/**
+ * A skill's files as the file tree takes them: `scripts/check.sh` becomes a
+ * `scripts` folder holding `check.sh`. Folders first, then files, by name.
+ */
+export const skillFileTree = (
+  files: readonly { content: string; path: string }[] | null | undefined,
+): SkillResourceTreeNode[] => {
+  const root: SkillResourceTreeNode[] = [];
+  for (const file of files ?? []) {
+    const parts = file.path.split('/').filter(Boolean);
+    let level = root;
+    parts.forEach((name, index) => {
+      const path = parts.slice(0, index + 1).join('/');
+      if (index === parts.length - 1) {
+        level.push({ content: file.content, name, path, type: 'file' });
+        return;
+      }
+      let folder = level.find((node) => node.type === 'directory' && node.name === name);
+      if (!folder) {
+        folder = { children: [], name, path, type: 'directory' };
+        level.push(folder);
+      }
+      level = folder.children!;
+    });
+  }
+  const sort = (nodes: SkillResourceTreeNode[]): SkillResourceTreeNode[] =>
+    nodes
+      .map((node) => (node.children ? { ...node, children: sort(node.children) } : node))
+      .sort((a, b) =>
+        a.type === b.type ? a.name.localeCompare(b.name) : a.type === 'directory' ? -1 : 1,
+      );
+  return sort(root);
 };

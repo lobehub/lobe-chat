@@ -168,8 +168,10 @@ const Body = memo(() => {
   // A batch's release gate is judged by the coordinator, not asked of a person:
   // its panel shows the verdicts and their checks instead of a bare decision.
   const batchGate = node.kind === 'decision' ? findBatchGate(graph, node.id) : undefined;
-  // A batch's plan opens on its versions and what changed between them.
+  // A batch's plan is a skill: it opens as one, full height, with its versions.
   const batchPlan = node.kind === 'finding' ? findBatchPlan(graph, node.id) : undefined;
+  if (batchPlan)
+    return <PlanDetail graph={graph} model={batchPlan.model} round={batchPlan.round} />;
 
   // Coordinator gates localize; arbitrary gates keep their stored copy.
   const gateKind = node.kind === 'decision' ? viewGateKind(nodeView) : undefined;
@@ -183,7 +185,7 @@ const Body = memo(() => {
     <Flexbox flex={1} gap={16} padding={16} style={{ minHeight: 0, overflowY: 'auto' }}>
       {/* A gate's raw node status stays `proposed` while it releases waves;
           its verdict below says what state it is really in. */}
-      {!batchGate && !batchPlan && (
+      {!batchGate && (
         <Flexbox horizontal align={'center'} gap={8}>
           <Tag size={'small'}>{t(`goalProcess.kind.${node.kind}` as const)}</Tag>
           <Tag size={'small'}>{t(`goalProcess.nodeStatus.${node.status}` as const)}</Tag>
@@ -203,11 +205,8 @@ const Body = memo(() => {
         />
       )}
 
-      {batchPlan && <PlanDetail graph={graph} model={batchPlan.model} round={batchPlan.round} />}
-
       {node.description &&
         !batchGate &&
-        !batchPlan &&
         (isFinding ? (
           // A finding's description is the run's handoff — real Markdown, so
           // render it as such instead of pre-wrapped source text. `flex-shrink: 0`
