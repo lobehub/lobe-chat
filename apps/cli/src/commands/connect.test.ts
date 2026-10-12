@@ -14,10 +14,15 @@ import { log, setVerbose } from '../utils/logger';
 import { registerConnectCommand } from './connect';
 
 const registerDeviceMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const mintWorkspaceConnectTokenMock = vi.hoisted(() => vi.fn());
 
 vi.mock('../device/register', async (importOriginal) => {
   const actual = await importOriginal<typeof DeviceRegister>();
-  return { ...actual, registerDevice: registerDeviceMock };
+  return {
+    ...actual,
+    mintWorkspaceConnectToken: mintWorkspaceConnectTokenMock,
+    registerDevice: registerDeviceMock,
+  };
 });
 
 vi.mock('../auth/refresh', async (importOriginal) => ({
@@ -255,6 +260,28 @@ describe('connect command', () => {
     expect(log.error).toHaveBeenCalledWith(
       "Current login uses custom --server https://self-hosted.example.com. Please also provide '--gateway <url>' for the device gateway.",
     );
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  it('exits with a retryable code when the workspace token mint fails transiently', async () => {
+    mintWorkspaceConnectTokenMock.mockRejectedValueOnce(new Error('fetch failed'));
+
+    const program = createProgram();
+    await expect(
+      program.parseAsync(['node', 'test', 'connect', '--workspace', 'ws_1']),
+    ).rejects.toThrow('process.exit');
+    expect(exitSpy).toHaveBeenCalledWith(75);
+  });
+
+  it('exits without retry when the server refuses the workspace token mint', async () => {
+    mintWorkspaceConnectTokenMock.mockRejectedValueOnce(
+      Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+    );
+
+    const program = createProgram();
+    await expect(
+      program.parseAsync(['node', 'test', 'connect', '--workspace', 'ws_1']),
+    ).rejects.toThrow('process.exit');
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 

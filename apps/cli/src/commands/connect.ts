@@ -58,7 +58,7 @@ import {
 } from '../device/register';
 import { TerminalSessionManager } from '../device/terminal';
 import {
-  getWorkspaceRegistrationExitCode,
+  getWorkspaceStartupExitCode,
   installConnectService,
   readConnectServiceStatus,
   restartConnectService,
@@ -374,8 +374,14 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   let connectToken = auth.token;
   let connectTokenType: 'apiKey' | 'jwt' | 'serviceToken' = auth.tokenType;
   if (workspaceId) {
-    const minted = await mintWorkspaceConnectToken(auth, workspaceId);
-    connectToken = minted.token;
+    try {
+      const minted = await mintWorkspaceConnectToken(auth, workspaceId);
+      connectToken = minted.token;
+    } catch (err) {
+      log.error(`Workspace connect token mint failed: ${(err as Error).message}`);
+      process.exit(getWorkspaceStartupExitCode(err));
+      throw new Error('process.exit', { cause: err });
+    }
     connectTokenType = 'jwt';
   }
 
@@ -902,7 +908,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       if (workspaceId) {
         error(`Workspace device registration failed: ${(err as Error).message}`);
         cleanup();
-        process.exit(getWorkspaceRegistrationExitCode(err));
+        process.exit(getWorkspaceStartupExitCode(err));
       }
       error(`Device registration failed (non-fatal): ${(err as Error).message}`);
     }

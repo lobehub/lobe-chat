@@ -32,8 +32,8 @@ const PERMANENT_TRPC_ERROR_CODES = new Set([
   'UNAUTHORIZED',
 ]);
 
-/** Exit code for a failed workspace device registration: 1 for refusals, 75 otherwise. */
-export function getWorkspaceRegistrationExitCode(error: unknown): number {
+/** Exit code for a failed workspace startup step (token mint, device registration): 1 for refusals, 75 otherwise. */
+export function getWorkspaceStartupExitCode(error: unknown): number {
   const code = (error as { data?: { code?: string } } | null)?.data?.code;
   return code && PERMANENT_TRPC_ERROR_CODES.has(code) ? 1 : CONNECT_RETRYABLE_EXIT_CODE;
 }
