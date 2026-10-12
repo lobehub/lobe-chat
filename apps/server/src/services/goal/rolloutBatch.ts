@@ -130,6 +130,8 @@ export interface MaterializeRolloutBatchInput {
   repeatable: boolean;
   /** The whole roster, probes first, in delivery order. */
   roster: string[];
+  /** The declarer's name for the plan skill: what one unit does, not the goal's id. */
+  skillName?: string;
   trigger: 'canary' | 'full';
   /** Per-unit notes keyed by roster title, appended to the recipe when a wave releases it. */
   unitBriefs?: Record<string, string>;
@@ -158,6 +160,7 @@ export const materializeRolloutBatch = async ({
   recipeOutline,
   repeatable,
   roster,
+  skillName,
   trigger,
   unitBriefs,
   variants,
@@ -198,6 +201,7 @@ export const materializeRolloutBatch = async ({
           goalId,
           goalTitle: planSkillOwner.goalTitle,
           plan: outline,
+          skillName,
         }),
       );
     } catch (error) {

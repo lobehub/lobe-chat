@@ -49,7 +49,7 @@ describe('withConversationGoalPrompt', () => {
     expect(conversationGoalPrompt).toContain('nothing is dispatched until you start it');
     expect(conversationGoalPrompt).toContain('lh goal start <goalId> --json');
     expect(conversationGoalPrompt).toContain(
-      'lh goal start <goalId> --rollout canary --recipe-file <recipe.md> --probes',
+      'lh goal start <goalId> --rollout canary --recipe-file <recipe.md> --skill-name <what-one-unit-does> --probes',
     );
   });
 

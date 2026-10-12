@@ -512,8 +512,10 @@ export function registerGoalCommand(program: Command) {
         'A tasks plan lists 1-10 tasks, each a title, a self-contained description and an optional dependsOn.',
         'When the work applies one recipe to many units (migrate N stores to one mechanism, give N resources',
         'the same caching, update N callers), declare a batch instead of listing every unit: add "rollout" with',
-        '"recipe" (the procedure every unit follows), "units" (every unit beyond the probes, as a title or',
-        '{"title","description"}) and optional "variants" ([{"axis","values"}]); "tasks" then hold 2-5',
+        '"recipe" (the procedure every unit follows), "skillName" (the recipe\'s name as a skill in the user',
+        'library, e.g. "migrate-store-to-replica": 2-5 lowercase words saying what one unit does), "units"',
+        '(every unit beyond the probes, as a title or {"title","description"}) and optional "variants"',
+        '([{"axis","values"}]); "tasks" then hold 2-5',
         'representative probes. The probes run first and the rest are released wave by wave only after the',
         'probes ran through without a person; a rejection revises the recipe and re-probes. Units that differ',
         'only in names, files or details are still one mould; work whose steps differ per task is not.',
@@ -621,7 +623,7 @@ export function registerGoalCommand(program: Command) {
         '',
         'Many tasks that apply one recipe to different units (migrate N stores, cache N resources, update N',
         'callers) should run as a batch: seed every unit as a task, then start with',
-        '`--rollout canary --recipe-file <md> --probes <2-5 node ids>`. The probes run first; the other units',
+        '`--rollout canary --recipe-file <md> --skill-name <name> --probes <2-5 node ids>`. The probes run first; the other units',
         'are released wave by wave only after the probes ran through without a person.',
         '',
         'Without --topic the goal is standalone and starts at once; omit -t to let the planner decompose it.',
@@ -813,6 +815,8 @@ export function registerGoalCommand(program: Command) {
         "kept as that unit's note, and is released wave by wave once the probes ran through without a person.",
         'A rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are',
         'one recipe; tasks whose steps differ are not, so start those without --rollout.',
+        'The recipe is kept as a skill in the user library that every unit loads and that stays reusable',
+        'after the goal; name it with --skill-name after what one unit does (e.g. migrate-store-to-replica).',
         'Inside a batch a seed may depend only on a probe, and folded seeds need distinct titles.',
         '',
         'Starting a draft that holds tasks settles the planning turn that created it: submit any plan with',
@@ -827,6 +831,10 @@ export function registerGoalCommand(program: Command) {
     )
     .option('--recipe <text>', 'The procedure every unit follows')
     .option('--recipe-file <path>', 'Read the recipe from a markdown file')
+    .option(
+      '--skill-name <name>',
+      "The recipe's skill name: lowercase words and hyphens saying what one unit does (default: from the goal title)",
+    )
     .option(
       '--variant <axis=values...>',
       'An axis the units differ along, e.g. mechanism=replica,swr (repeatable); the gate holds until the probes cover each value',
@@ -843,6 +851,7 @@ export function registerGoalCommand(program: Command) {
           recipe?: string;
           recipeFile?: string;
           rollout?: string;
+          skillName?: string;
           units?: string[];
           variant?: string[];
         },
@@ -859,12 +868,19 @@ export function registerGoalCommand(program: Command) {
           rollout = {
             probeNodeIds: options.probes,
             recipe,
+            skillName: options.skillName,
             trigger: options.rollout as 'canary' | 'full',
             unitNodeIds: options.units,
             variants: options.variant?.map(parseVariant),
           };
-        } else if (options.probes || options.units || options.recipe || options.recipeFile) {
-          throw new Error('--probes, --units and --recipe only apply with --rollout');
+        } else if (
+          options.probes ||
+          options.units ||
+          options.recipe ||
+          options.recipeFile ||
+          options.skillName
+        ) {
+          throw new Error('--probes, --units, --recipe and --skill-name only apply with --rollout');
         }
         const client = await getTrpcClient();
         const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;

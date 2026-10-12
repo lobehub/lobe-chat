@@ -82,6 +82,8 @@ const decompositionSchema = z.object({
     .object({
       recipeOutline: z.string().optional(),
       repeatable: z.boolean(),
+      /** The recipe's name as a skill; older answers without it still plan. */
+      skillName: z.string().nullish(),
       /** Honest count of the homogeneous units in the whole goal. */
       unitCount: z.number().int().positive(),
       /** Roster of every homogeneous unit, probes first, in delivery order. */

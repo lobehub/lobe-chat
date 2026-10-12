@@ -3088,7 +3088,7 @@ describe('GoalService', () => {
     // The plan lives as a skill in the user's library: v1 at decomposition,
     // v2 when the break revised it — each version kept whole.
     const planSkill = next.planSkill!;
-    expect(planSkill.name).toMatch(/^goal-plan-/);
+    expect(planSkill.name).toBe('migrate-stores');
     const skill = await new UserSkillService(serverDB, userId).getSkill(planSkill.id);
     expect(skill?.versions.map((version) => version.version)).toEqual([1, 2]);
     expect(skill?.content).toContain('### v2\n补上冷启动这一步');

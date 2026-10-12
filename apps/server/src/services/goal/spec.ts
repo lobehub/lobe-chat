@@ -12,6 +12,8 @@ import type { GoalRolloutVariantAxis } from '@lobechat/types';
 export interface BatchSpecDraft {
   recipeOutline?: string;
   repeatable: boolean;
+  /** The recipe's name as a skill in the user's library. */
+  skillName?: string | null;
   /** Honest count of the homogeneous units in the whole goal. */
   unitCount: number;
   /** Roster of every homogeneous unit; probes come first, in delivery order. */

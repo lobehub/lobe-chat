@@ -112,6 +112,8 @@ const planRolloutSchema = z
   .object({
     /** The one reusable recipe every unit follows; the batch's Template, revised on every break. */
     recipe: reason,
+    /** The recipe's name as a skill in the user's library, e.g. `migrate-store-to-replica`. */
+    skillName: z.string().trim().min(1).max(80).optional(),
     /** Every unit after the probes in `tasks`, in delivery order; a unit may carry its own notes. */
     units: z
       .array(
@@ -1709,6 +1711,7 @@ export class GoalManagerService {
       recipeOutline: plan.rollout.recipe,
       repeatable: true,
       roster,
+      skillName: plan.rollout.skillName,
       trigger: trigger === 'full' ? 'full' : 'canary',
       unitBriefs,
       variants: plan.rollout.variants,
