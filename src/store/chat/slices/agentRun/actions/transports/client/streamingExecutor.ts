@@ -93,17 +93,6 @@ const dynamicInterventionAudits = {
   }),
 };
 
-const hasReferTopicNode = (editorData: Record<string, any> | null | undefined): boolean => {
-  if (!editorData) return false;
-  const walk = (node: any): boolean => {
-    if (!node) return false;
-    if (node.type === 'refer-topic') return true;
-    if (Array.isArray(node.children)) return node.children.some(walk);
-    return false;
-  };
-  return walk(editorData.root);
-};
-
 const getMediaAvailability = (messages: UIChatMessage[]) => ({
   hasAudios: messages.some((message) => message.role === 'user' && !!message.audioList?.length),
   hasImages: messages.some((message) => message.role === 'user' && !!message.imageList?.length),
@@ -257,7 +246,6 @@ export class StreamingExecutorActionImpl {
     }
 
     // Dynamically inject turn-scoped builtin tools.
-    const hasTopicReference = messages.some((m) => hasReferTopicNode(m.editorData));
     const mediaAvailability = getMediaAvailability(messages);
     const serverConfigState = getServerConfigStoreState();
     const multimodalUnderstandingConfigured =
@@ -273,7 +261,6 @@ export class StreamingExecutorActionImpl {
     const runtimePluginIds = [
       ...new Set([
         ...(pluginIds || []),
-        ...(hasTopicReference ? ['lobe-topic-reference'] : []),
         ...(shouldEnableMultimodalUnderstanding ? [LobeAgentManifest.identifier] : []),
       ]),
     ];
@@ -284,11 +271,10 @@ export class StreamingExecutorActionImpl {
         : effectivePluginIds;
 
     log(
-      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s, hasTopicReference=%s',
+      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s',
       effectivePluginIds,
       isSubAgent,
       disableTools,
-      hasTopicReference,
     );
 
     // Generate tools using ToolsEngine (centralized here, passed to chatService via agentConfig)

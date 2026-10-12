@@ -1850,8 +1850,6 @@
   "tools.builtins.lobe-skills.title": "スキル",
   "tools.builtins.lobe-task.description": "依存関係とレビュー設定を備えたタスクの作成、一覧、編集、削除を行います",
   "tools.builtins.lobe-task.title": "タスクツール",
-  "tools.builtins.lobe-topic-reference.description": "参照されたトピック会話からコンテキストを取得します",
-  "tools.builtins.lobe-topic-reference.title": "トピック参照",
   "tools.builtins.lobe-user-interaction.description": "UI を通じてユーザーへ質問し、そのライフサイクル結果を観察します",
   "tools.builtins.lobe-user-interaction.title": "ユーザーインタラクション",
   "tools.builtins.lobe-user-memory.description": "あなたに関するパーソナライズされたナレッジベースを構築します。好みを記憶し、活動や体験を追跡し、個人情報を保存して、将来の会話で関連するコンテキストを呼び出します。",

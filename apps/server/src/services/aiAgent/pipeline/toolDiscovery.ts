@@ -361,7 +361,7 @@ export const discoverTools = async (
   // OAuth credentials touched for a visitor turn (issuing background MCP
   // traffic and refresh jobs on behalf of the creator). The later pass right
   // before manifest discovery (~line 618) stays as defense in depth: internal
-  // additions like the topic-reference / bot message / multimodal
+  // additions like the bot message / multimodal
   // understanding tool are appended after this point and must run through the
   // same allowlist.
   if (shareGate) {
@@ -839,7 +839,6 @@ export const discoverTools = async (
     };
 
     // Dynamically inject turn-scoped builtin tools.
-    const hasTopicReference = /refer_topic/.test(prompt ?? '');
     const modelAbilities =
       builtinModels.find((item) => item.id === model && item.providerId === provider)?.abilities ??
       builtinModels.find((item) => item.id === model)?.abilities;
@@ -872,7 +871,6 @@ export const discoverTools = async (
       (needsAudioUnderstanding || needsImageUnderstanding || needsVideoUnderstanding);
     agentPlugins = [
       ...agentPlugins,
-      ...(hasTopicReference ? ['lobe-topic-reference'] : []),
       ...(isBotConversation ? [MessageToolIdentifier] : []),
       ...(shouldEnableMultimodalUnderstanding ? [LobeAgentManifest.identifier] : []),
     ];
@@ -890,8 +888,8 @@ export const discoverTools = async (
     // `discoverTools` (before connector resolution) so that ungranted
     // connectors never reach `resolveByIdentifiers` /
     // `scheduleStaleConnectorToolsRefresh`. Keep this second pass — the
-    // internal additions above (topic reference, bot message tool,
-    // multimodal understanding) are appended after the first pass and would
+    // internal additions above (bot message tool, multimodal understanding)
+    // are appended after the first pass and would
     // otherwise slip through.
     if (shareGate) {
       agentPlugins = filterPluginsByShareGate(agentPlugins, shareGate);

@@ -1850,8 +1850,6 @@
   "tools.builtins.lobe-skills.title": "Umiejętności",
   "tools.builtins.lobe-task.description": "Twórz, wyświetlaj, edytuj i usuwaj zadania z zależnościami i konfiguracją przeglądu",
   "tools.builtins.lobe-task.title": "Narzędzia Zadań",
-  "tools.builtins.lobe-topic-reference.description": "Pobieraj kontekst z rozmów przypisanych do określonych tematów",
-  "tools.builtins.lobe-topic-reference.title": "Odwołanie do Tematu",
   "tools.builtins.lobe-user-interaction.description": "Zadawaj użytkownikom pytania poprzez interakcje w interfejsie i obserwuj ich wyniki",
   "tools.builtins.lobe-user-interaction.title": "Interakcja z Użytkownikiem",
   "tools.builtins.lobe-user-memory.description": "Buduj spersonalizowaną bazę wiedzy o sobie. Zapamiętuj preferencje, śledź aktywności i doświadczenia, przechowuj informacje tożsamościowe i przywołuj istotny kontekst w przyszłych rozmowach.",

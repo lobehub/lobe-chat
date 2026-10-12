@@ -1850,8 +1850,6 @@
   "tools.builtins.lobe-skills.title": "Fähigkeiten",
   "tools.builtins.lobe-task.description": "Aufgaben mit Abhängigkeiten und Review‑Konfiguration erstellen, auflisten, bearbeiten und löschen",
   "tools.builtins.lobe-task.title": "Aufgabentools",
-  "tools.builtins.lobe-topic-reference.description": "Kontext aus referenzierten Themenunterhaltungen abrufen",
-  "tools.builtins.lobe-topic-reference.title": "Themenreferenz",
   "tools.builtins.lobe-user-interaction.description": "Benutzern über UI‑Interaktionen Fragen stellen und deren Ergebnisverläufe beobachten",
   "tools.builtins.lobe-user-interaction.title": "Benutzerinteraktion",
   "tools.builtins.lobe-user-memory.description": "Erstellen Sie eine personalisierte Wissensdatenbank über sich selbst. Präferenzen merken, Aktivitäten und Erfahrungen verfolgen, Identitätsinformationen speichern und relevanten Kontext in zukünftigen Gesprächen abrufen.",

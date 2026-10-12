@@ -37,7 +37,6 @@ import { notTrashed } from '@/database/utils/softDelete';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
-import { TopicReferenceService } from '@/server/services/topicReference';
 import { TrashService } from '@/server/services/trash';
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { type BatchTaskResult } from '@/types/service';
@@ -308,16 +307,6 @@ export const topicRouter = router({
 
       return { ...transcript, topic };
     }),
-
-  getTopicContext: topicProcedure
-    .input(z.object({ topicId: z.string() }))
-    .query(async ({ input, ctx }) =>
-      new TopicReferenceService(
-        ctx.serverDB,
-        ctx.userId,
-        ctx.workspaceId ?? undefined,
-      ).getTopicContext(input),
-    ),
 
   batchCreateTopics: topicProcedure
     .use(withScopedPermission('topic:create'))

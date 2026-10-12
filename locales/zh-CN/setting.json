@@ -1852,8 +1852,6 @@
   "tools.builtins.lobe-skills.title": "技能",
   "tools.builtins.lobe-task.description": "创建、调度、列出、编辑和删除任务，支持依赖关系和审核配置",
   "tools.builtins.lobe-task.title": "任务工具",
-  "tools.builtins.lobe-topic-reference.description": "从被引用的话题对话中检索上下文",
-  "tools.builtins.lobe-topic-reference.title": "话题引用",
   "tools.builtins.lobe-user-interaction.description": "通过界面交互向用户提问，并观察其生命周期结果",
   "tools.builtins.lobe-user-interaction.title": "用户交互",
   "tools.builtins.lobe-user-memory.description": "记住用户的偏好、活动和经历",

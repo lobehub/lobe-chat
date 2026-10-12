@@ -1850,8 +1850,6 @@
   "tools.builtins.lobe-skills.title": "Habilidades",
   "tools.builtins.lobe-task.description": "Crie, liste, edite e exclua tarefas com dependências e configuração de revisão",
   "tools.builtins.lobe-task.title": "Ferramentas de Tarefas",
-  "tools.builtins.lobe-topic-reference.description": "Recupere contexto de conversas em tópicos referenciados",
-  "tools.builtins.lobe-topic-reference.title": "Referência de Tópico",
   "tools.builtins.lobe-user-interaction.description": "Faça perguntas aos usuários através de interações na interface e acompanhe os resultados",
   "tools.builtins.lobe-user-interaction.title": "Interação com o Usuário",
   "tools.builtins.lobe-user-memory.description": "Construa uma base de conhecimento personalizada sobre você. Lembre preferências, acompanhe atividades e experiências, armazene informações de identidade e recupere contextos relevantes em conversas futuras.",

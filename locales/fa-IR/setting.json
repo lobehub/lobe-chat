@@ -1850,8 +1850,6 @@
   "tools.builtins.lobe-skills.title": "مهارت‌ها",
   "tools.builtins.lobe-task.description": "ایجاد، فهرست، ویرایش و حذف وظایف با وابستگی‌ها و پیکربندی بازبینی",
   "tools.builtins.lobe-task.title": "ابزارهای وظیفه",
-  "tools.builtins.lobe-topic-reference.description": "بازیابی زمینه از گفتگوهای موضوعی مرجع‌شده",
-  "tools.builtins.lobe-topic-reference.title": "مرجع موضوع",
   "tools.builtins.lobe-user-interaction.description": "پرسیدن سؤال از کاربران از طریق تعاملات UI و مشاهده نتایج چرخه عمر آنها",
   "tools.builtins.lobe-user-interaction.title": "تعامل کاربر",
   "tools.builtins.lobe-user-memory.description": "ساخت پایگاه دانش شخصی درباره شما. به خاطر سپردن ترجیحات، پیگیری فعالیت‌ها و تجربیات، ذخیره اطلاعات هویتی و یادآوری زمینه‌های مرتبط در گفتگوهای آینده.",

@@ -793,7 +793,7 @@ export const prepareOperation = async (
     // not lazily via the `activateSkill` tool. Gate on the agent's genuinely
     // pinned entries (`getActivePluginIds(agentConfig.plugins)`), NOT the
     // fully-expanded `agentPlugins`: the latter also carries turn-scoped tool
-    // ids (mentions, selected tools, `lobe-topic-reference`, …), which would
+    // ids (mentions, selected tools, `lobe-message`, …), which would
     // eager-activate an auto-mode skill whose identifier merely collides with
     // one of them. `findAll` uses `skillListColumns` (no `content`), so fetch
     // bodies only for the pinned subset to keep the op-param payload bounded.

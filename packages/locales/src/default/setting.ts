@@ -3757,9 +3757,6 @@ When I am ___, I need ___
   'tools.builtins.lobe-task.description':
     'Create, schedule, list, edit, and delete tasks with dependencies and review configuration',
   'tools.builtins.lobe-task.title': 'Task Tools',
-  'tools.builtins.lobe-topic-reference.description':
-    'Retrieve context from referenced topic conversations',
-  'tools.builtins.lobe-topic-reference.title': 'Topic Reference',
   'tools.builtins.lobe-user-interaction.description':
     'Ask users questions through UI interactions and observe their lifecycle outcomes',
   'tools.builtins.lobe-user-interaction.title': 'User Interaction',
