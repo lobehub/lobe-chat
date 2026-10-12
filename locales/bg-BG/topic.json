@@ -85,6 +85,7 @@
   "forkSuccess": "Разклонено в нова тема",
   "forkTitle": "{{title}} (Клон)",
   "groupTitle.byAgent.unknown": "Неизвестен агент",
+  "groupTitle.byDevice.unknown": "Неизвестно устройство",
   "groupTitle.byProject.noProject": "Няма директория",
   "groupTitle.byStatus.active": "Активен",
   "groupTitle.byStatus.archived": "Архивиран",

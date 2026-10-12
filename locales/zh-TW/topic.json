@@ -85,6 +85,7 @@
   "forkSuccess": "已分支到新主題",
   "forkTitle": "{{title}}（分支）",
   "groupTitle.byAgent.unknown": "未知代理",
+  "groupTitle.byDevice.unknown": "未知裝置",
   "groupTitle.byProject.noProject": "無目錄",
   "groupTitle.byStatus.active": "活躍",
   "groupTitle.byStatus.archived": "已封存",

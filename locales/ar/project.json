@@ -213,6 +213,11 @@
   "topics.status.scheduled": "مجدول",
   "topics.status.unread": "نتائج جديدة",
   "topics.status.waitingForHuman": "يحتاج إلى مدخلاتك",
+  "topics.subGroup.byDevice": "حسب الجهاز",
+  "topics.subGroup.byStatus": "حسب الحالة",
+  "topics.subGroup.byTime": "حسب الوقت",
+  "topics.subGroup.none": "بدون تجميع",
+  "topics.subGroup.title": "تجميع المواضيع",
   "topics.title": "المواضيع",
   "topics.viewProject": "عرض المشروع"
 }

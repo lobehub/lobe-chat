@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Zamanlandı",
   "topics.status.unread": "Yeni sonuçlar",
   "topics.status.waitingForHuman": "Sizin girdinize ihtiyaç var",
+  "topics.subGroup.byDevice": "Cihaza göre",
+  "topics.subGroup.byStatus": "Duruma göre",
+  "topics.subGroup.byTime": "Zamana göre",
+  "topics.subGroup.none": "Gruplama yok",
+  "topics.subGroup.title": "Konuları gruplandır",
   "topics.title": "Konular",
   "topics.viewProject": "Projeyi görüntüle"
 }

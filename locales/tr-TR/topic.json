@@ -85,6 +85,7 @@
   "forkSuccess": "Yeni bir konuya çatallandı",
   "forkTitle": "{{title}} (Dal)",
   "groupTitle.byAgent.unknown": "Bilinmeyen ajan",
+  "groupTitle.byDevice.unknown": "Bilinmeyen cihaz",
   "groupTitle.byProject.noProject": "Dizin yok",
   "groupTitle.byStatus.active": "Aktif",
   "groupTitle.byStatus.archived": "Arşivlendi",

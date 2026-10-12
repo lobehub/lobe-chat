@@ -26,7 +26,11 @@ import { UserModel } from '@/database/models/user';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signTunnelAccessToken, signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
-import { type DeviceAttachment, deviceGateway } from '@/server/services/deviceGateway';
+import {
+  type DeviceAttachment,
+  deviceGateway,
+  isValidDirectoryName,
+} from '@/server/services/deviceGateway';
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
 
@@ -857,6 +861,57 @@ export const deviceRouter = router({
         workspaceId: ctx.workspaceId,
       });
       return result ?? null;
+    }),
+
+  /**
+   * Create a folder inside the directory a remote folder picker is browsing, so
+   * a new working directory can be made without leaving the picker. Same access
+   * rule as {@link browseDirectory}; a taken name is reported as `CONFLICT`.
+   */
+  createDirectory: deviceProcedure
+    .input(
+      z.object({
+        deviceId: z.string(),
+        name: z.string().min(1).max(255),
+        parentPath: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'create folders');
+
+      if (
+        !isValidDirectoryName(input.name, input.parentPath) ||
+        !isValidDirectoryName(input.name.trim(), input.parentPath)
+      ) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid folder name.' });
+      }
+
+      let result: Awaited<ReturnType<typeof deviceGateway.createDirectory>>;
+      try {
+        result = await deviceGateway.createDirectory({
+          deviceId: input.deviceId,
+          name: input.name.trim(),
+          parentPath: input.parentPath,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        // A device app predating `createLocalDirectory` needs an update, not a retry.
+        throw new TRPCError({
+          code: /Unknown device RPC method/.test(message) ? 'PRECONDITION_FAILED' : 'BAD_GATEWAY',
+          message,
+        });
+      }
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: /already exists/i.test(result.error ?? '') ? 'CONFLICT' : 'BAD_REQUEST',
+          message: result.error || 'Create folder failed',
+        });
+      }
+
+      return result;
     }),
 
   /**

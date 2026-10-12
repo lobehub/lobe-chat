@@ -3,7 +3,7 @@
 import { isDesktop } from '@lobechat/const';
 import type { DeviceScope, DeviceVisibility } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
+import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import {
   ChevronRightIcon,
@@ -23,6 +23,8 @@ import AsyncBoundary from '@/components/AsyncBoundary';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceCard from './DeviceCard';
+import DeviceGrid from './DeviceGrid';
+import { DeviceGridSkeleton } from './Skeleton';
 import { useDeviceList } from './useDeviceList';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -124,39 +126,6 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorFillTertiary};
   `,
-  // ─── Card grid ───
-  // Cards carry their own frame, so the grid sits bare in its host. The page
-  // is full width, so columns step by the host's own width — one on a phone,
-  // then two, three and four — keeping every card at least ~270px wide.
-  skeletonCard: css`
-    padding: 20px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorBgContainer};
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-    min-width: 0;
-
-    @container device-grid (min-width: 560px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    @container device-grid (min-width: 880px) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    @container device-grid (min-width: 1200px) {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  `,
-  // Query container for the grid's column steps (a grid can't query itself).
-  gridHost: css`
-    container: device-grid / inline-size;
-    min-width: 0;
-  `,
 }));
 
 interface ConnectOptionProps {
@@ -241,28 +210,6 @@ const Capabilities = memo(() => {
     </Flexbox>
   );
 });
-
-// Loading placeholder in the card grid's shape — loading → loaded is a content
-// swap, not a relayout (ux §4.1).
-const GridSkeleton = memo(() => (
-  <div className={styles.gridHost}>
-    <div className={styles.grid}>
-      {Array.from({ length: 2 }, (_, index) => (
-        <Flexbox className={styles.skeletonCard} gap={20} key={index}>
-          <Flexbox horizontal align={'center'} gap={16}>
-            <Skeleton.Avatar shape={'square'} size={48} />
-            <Flexbox flex={1} gap={8}>
-              <Skeleton height={16} width={160} />
-              <Skeleton height={12} width={100} />
-            </Flexbox>
-          </Flexbox>
-          <Skeleton height={36} width={'100%'} />
-          <Skeleton height={32} width={'100%'} />
-        </Flexbox>
-      ))}
-    </div>
-  </div>
-));
 
 interface DeviceManagerProps {
   /** Open the enrollment wizard (the modal is owned by the route). */
@@ -411,21 +358,19 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
       errorVariant={'block'}
       isEmpty={devices.length === 0}
       isLoading={isLoading}
-      loading={<GridSkeleton />}
+      loading={<DeviceGridSkeleton />}
       onRetry={() => mutate()}
     >
-      <div className={styles.gridHost}>
-        <div className={styles.grid}>
-          {devices.map((device) => (
-            <DeviceCard
-              device={device}
-              isCurrent={isCurrent(device.deviceId)}
-              key={device.deviceId}
-              onOpen={() => onOpenDevice(device.deviceId)}
-            />
-          ))}
-        </div>
-      </div>
+      <DeviceGrid>
+        {devices.map((device) => (
+          <DeviceCard
+            device={device}
+            isCurrent={isCurrent(device.deviceId)}
+            key={device.deviceId}
+            onOpen={() => onOpenDevice(device.deviceId)}
+          />
+        ))}
+      </DeviceGrid>
     </AsyncBoundary>
   );
 

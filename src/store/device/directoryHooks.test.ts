@@ -149,4 +149,34 @@ describe('useFetchDeviceDirectory', () => {
     expect(result.current.entries.map(({ name }) => name)).toEqual(['next']);
     expect(result.current.hasMore).toBe(true);
   });
+
+  it('reloads the parent after a refresh raced a move into a new child', async () => {
+    const listings: Record<string, DeviceDirectoryBrowseResult> = {
+      '/home': page({ entries: [folder('projects')], path: '/home' }),
+      '/home/new': page({ entries: [], parentPath: '/home', path: '/home/new' }),
+    };
+    const browse = vi
+      .spyOn(deviceService, 'browseDirectory')
+      .mockImplementation(async ({ path }) => listings[path ?? '/home']);
+    const { result, rerender } = renderHook(({ path }) => useFetchDeviceDirectory('device', path), {
+      initialProps: { path: '/home' },
+      wrapper,
+    });
+    await waitFor(() => expect(result.current.directory?.path).toBe('/home'));
+
+    // The new-folder flow: the folder now exists, refresh the listing and
+    // open the new folder in the same tick.
+    listings['/home'] = page({ entries: [folder('new'), folder('projects')], path: '/home' });
+    act(() => {
+      void result.current.retry();
+    });
+    rerender({ path: '/home/new' });
+    await waitFor(() => expect(result.current.directory?.path).toBe('/home/new'));
+
+    rerender({ path: '/home' });
+    await waitFor(() => expect(result.current.directory?.path).toBe('/home'));
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.entries.map(({ name }) => name)).toEqual(['new', 'projects']);
+    expect(browse.mock.calls.length).toBeLessThan(10);
+  });
 });

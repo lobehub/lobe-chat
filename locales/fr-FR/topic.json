@@ -85,6 +85,7 @@
   "forkSuccess": "Cloné vers un nouveau sujet",
   "forkTitle": "{{title}} (Branche)",
   "groupTitle.byAgent.unknown": "Agent inconnu",
+  "groupTitle.byDevice.unknown": "Appareil inconnu",
   "groupTitle.byProject.noProject": "Aucun répertoire",
   "groupTitle.byStatus.active": "Actif",
   "groupTitle.byStatus.archived": "Archivé",

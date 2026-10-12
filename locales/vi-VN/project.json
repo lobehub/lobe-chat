@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Đã lên lịch",
   "topics.status.unread": "Kết quả mới",
   "topics.status.waitingForHuman": "Cần bạn nhập liệu",
+  "topics.subGroup.byDevice": "Theo thiết bị",
+  "topics.subGroup.byStatus": "Theo trạng thái",
+  "topics.subGroup.byTime": "Theo thời gian",
+  "topics.subGroup.none": "Không nhóm",
+  "topics.subGroup.title": "Nhóm chủ đề",
   "topics.title": "Chủ đề",
   "topics.viewProject": "Xem dự án"
 }

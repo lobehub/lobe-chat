@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Pianificato",
   "topics.status.unread": "Nuovi risultati",
   "topics.status.waitingForHuman": "Richiede il tuo intervento",
+  "topics.subGroup.byDevice": "Per dispositivo",
+  "topics.subGroup.byStatus": "Per stato",
+  "topics.subGroup.byTime": "Per tempo",
+  "topics.subGroup.none": "Nessuna raggruppamento",
+  "topics.subGroup.title": "Raggruppa argomenti",
   "topics.title": "Argomenti",
   "topics.viewProject": "Visualizza progetto"
 }

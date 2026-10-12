@@ -71,6 +71,7 @@ import type {
   ProjectSkillMeta,
   WorkspaceInitResult,
 } from '@lobechat/types';
+import { isValidDirectoryName } from '@lobechat/utils/directoryName';
 import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
@@ -115,6 +116,18 @@ const assertPathsWithinWorkspace = (
       throw new Error(`Path is outside the approved workspace: ${candidate ?? '(empty)'}`);
     }
   }
+};
+
+export { isValidDirectoryName } from '@lobechat/utils/directoryName';
+
+/**
+ * Append one segment to a device path, keeping the device's own separator. The
+ * folder picker browses Windows devices too (`C:\Users`), and `pathe.join`
+ * would rewrite those to forward slashes.
+ */
+export const joinDevicePath = (parentPath: string, name: string): string => {
+  const separator = /^[A-Z]:\\/i.test(parentPath) || parentPath.startsWith('\\\\') ? '\\' : '/';
+  return `${parentPath.replace(/[\\/]+$/, '')}${separator}${name}`;
 };
 
 /**
@@ -1809,6 +1822,47 @@ export class DeviceGateway {
 
     if (!result.success || !result.data) {
       log('createProjectDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Create folder failed');
+    }
+
+    return result.data;
+  }
+
+  /**
+   * Create one folder directly inside `parentPath` for the remote folder picker,
+   * via the device's `createLocalDirectory` RPC. `parentPath` doubles as the
+   * device-side workspace root, so the device guard confines the write to a
+   * single new child of the folder being browsed. A device-reported failure
+   * (e.g. the name is taken) is returned as `success: false`, not thrown.
+   */
+  async createDirectory(params: {
+    deviceId: string;
+    name: string;
+    parentPath: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceCreateProjectEntryResult> {
+    const { deviceId, parentPath, timeout = 30_000, userId, workspaceId } = params;
+    const name = params.name.trim();
+    if (!isValidDirectoryName(params.name, parentPath) || !isValidDirectoryName(name, parentPath))
+      throw new Error(`Invalid folder name: ${params.name}`);
+    if (!isAbsolute(parentPath)) throw new Error(`Parent path must be absolute: ${parentPath}`);
+
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    const path = joinDevicePath(parentPath, name);
+    assertPathsWithinWorkspace(parentPath, [path]);
+    assertNotWorkspaceRoot(parentPath, [path]);
+
+    const result = await client.invokeRpc<DeviceCreateProjectEntryResult>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'createLocalDirectory', params: { path, workspaceRoot: parentPath } },
+    );
+
+    if (!result.success || !result.data) {
+      log('createDirectory: failed for deviceId=%s — %s', deviceId, result.error);
       throw new Error(result.error || 'Create folder failed');
     }
 

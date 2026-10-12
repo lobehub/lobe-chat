@@ -213,6 +213,11 @@
   "topics.status.scheduled": "زمان‌بندی‌شده",
   "topics.status.unread": "نتایج جدید",
   "topics.status.waitingForHuman": "نیاز به ورودی شما",
+  "topics.subGroup.byDevice": "بر اساس دستگاه",
+  "topics.subGroup.byStatus": "بر اساس وضعیت",
+  "topics.subGroup.byTime": "بر اساس زمان",
+  "topics.subGroup.none": "بدون گروه‌بندی",
+  "topics.subGroup.title": "گروه‌بندی موضوعات",
   "topics.title": "موضوعات",
   "topics.viewProject": "مشاهده پروژه"
 }
