@@ -436,9 +436,14 @@ describe('AgentAccountService — actions', () => {
   it('refuses mutations from a workspace member who did not create the agent', async () => {
     const workspaceId = 'agent-identity-service-ws';
     await serverDB.insert(users).values({ id: foreignUserId });
+    const sharedAgentId = 'agent-identity-service-shared-agent';
     await serverDB
       .insert(workspaces)
       .values({ id: workspaceId, name: workspaceId, primaryOwnerId: userId, slug: workspaceId });
+    // Shared with the workspace, so the member can use the agent — just not edit it.
+    await serverDB
+      .insert(agents)
+      .values({ id: sharedAgentId, userId, visibility: 'public', workspaceId });
 
     const { calls, fetchImpl } = createMailFetch();
     const registry = new AgentAccountProviderRegistry().register(
@@ -454,7 +459,7 @@ describe('AgentAccountService — actions', () => {
       registry,
       workspaceId,
     });
-    const created = await creator.provision({ agentId, provider: 'agent-mail' });
+    const created = await creator.provision({ agentId: sharedAgentId, provider: 'agent-mail' });
 
     // The workspace scope lets the member see the account; that is not enough
     // to replace its secret, rewrite it or release its inbox.
@@ -470,6 +475,8 @@ describe('AgentAccountService — actions', () => {
     expect(calls.some((c) => c.method === 'DELETE')).toBe(false);
     expect(await creator.get(created.id)).toMatchObject({ displayName: null, status: 'active' });
 
+    await serverDB.delete(agentAccounts);
+    await serverDB.delete(agents).where(eq(agents.id, sharedAgentId));
     await serverDB.delete(workspaces);
   });
 
