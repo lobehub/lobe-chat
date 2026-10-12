@@ -325,10 +325,10 @@ const GoalDecisionCase = ({
   const handleSubmit = useCallback(
     async (answers: ClarificationAnswer[]) => {
       const answer = toGateAnswer(decision, answers);
-      if (!answer) return;
+      if (!answer) return false;
       if (gateAnswerProblem(answer) === 'correctionRequired') {
         toast.error(t('goalProcess.gate.batchCorrectionRequired'));
-        return;
+        return false;
       }
       await onDecide(answer.optionId, answer.resolution?.trim() || undefined);
     },
