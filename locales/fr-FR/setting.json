@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Compétences",
   "tools.builtins.lobe-task.description": "Créer, lister, modifier et supprimer des tâches avec dépendances et configuration de révision",
   "tools.builtins.lobe-task.title": "Outils de Tâches",
-  "tools.builtins.lobe-topic-reference.description": "Récupérer le contexte depuis des conversations de sujets référencés",
-  "tools.builtins.lobe-topic-reference.title": "Référence de Sujet",
   "tools.builtins.lobe-user-interaction.description": "Poser des questions aux utilisateurs via des interactions d’interface et observer leurs résultats",
   "tools.builtins.lobe-user-interaction.title": "Interaction Utilisateur",
   "tools.builtins.lobe-user-memory.description": "Créez une base de connaissances personnalisée à votre sujet. Mémorisez vos préférences, suivez vos activités et expériences, stockez des informations d'identité et retrouvez le contexte pertinent dans de futures conversations.",

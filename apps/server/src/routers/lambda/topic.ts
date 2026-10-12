@@ -287,7 +287,12 @@ export const topicRouter = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const topic = await ctx.topicModel.findOwnTopicById(input.topicId);
+      // `lh topic view` from a workspace run may be given one of the user's personal topic ids.
+      const topic = await new TopicReferenceService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      ).findTopic(input.topicId);
 
       if (!topic) {
         throw new TRPCError({
@@ -300,7 +305,11 @@ export const topicRouter = router({
         return { items: [], topic, total: null };
       }
 
-      const transcript = await ctx.messageModel.queryTopicTranscript({
+      const messageModel =
+        (topic.workspaceId ?? undefined) === (ctx.workspaceId ?? undefined)
+          ? ctx.messageModel
+          : new MessageModel(ctx.serverDB, ctx.userId, topic.workspaceId ?? undefined);
+      const transcript = await messageModel.queryTopicTranscript({
         limit: input.limit,
         offset: input.offset,
         topicId: input.topicId,
@@ -309,6 +318,11 @@ export const topicRouter = router({
       return { ...transcript, topic };
     }),
 
+  /**
+   * @deprecated The `lobe-topic-reference` tool was removed; agents read topics with
+   * `lh topic view`. Kept for released Desktop builds and cached web bundles whose
+   * client executor still calls this. Remove once those clients have aged out.
+   */
   getTopicContext: topicProcedure
     .input(z.object({ topicId: z.string() }))
     .query(async ({ input, ctx }) =>

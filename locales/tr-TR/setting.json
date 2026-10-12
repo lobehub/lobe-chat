@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Beceri",
   "tools.builtins.lobe-task.description": "Bağımlılıkları ve inceleme yapılandırması olan görevler oluşturun, listeleyin, düzenleyin ve silin",
   "tools.builtins.lobe-task.title": "Görev Araçları",
-  "tools.builtins.lobe-topic-reference.description": "Referanslanan konu konuşmalarından bağlam alın",
-  "tools.builtins.lobe-topic-reference.title": "Konu Referansı",
   "tools.builtins.lobe-user-interaction.description": "Kullanıcılara arayüz etkileşimleriyle sorular sorun ve yaşam döngüsü sonuçlarını gözlemleyin",
   "tools.builtins.lobe-user-interaction.title": "Kullanıcı Etkileşimi",
   "tools.builtins.lobe-user-memory.description": "Kullanıcı tercihlerini, etkinliklerini ve deneyimlerini konuşmalar arasında hatırlayın",

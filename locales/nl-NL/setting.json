@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Skills",
   "tools.builtins.lobe-task.description": "Maak, lijst, bewerk en verwijder taken met afhankelijkheden en reviewconfiguratie",
   "tools.builtins.lobe-task.title": "Task‑tools",
-  "tools.builtins.lobe-topic-reference.description": "Haal context op uit gelinkte onderwerpconversaties",
-  "tools.builtins.lobe-topic-reference.title": "Onderwerpverwijzing",
   "tools.builtins.lobe-user-interaction.description": "Stel gebruikers vragen via UI‑interacties en observeer hun levenscyclusresultaten",
   "tools.builtins.lobe-user-interaction.title": "Gebruikersinteractie",
   "tools.builtins.lobe-user-memory.description": "Bouw een gepersonaliseerde kennisbasis over jezelf. Onthoud voorkeuren, houd activiteiten en ervaringen bij, sla identiteitsinformatie op en herinner relevante context in toekomstige gesprekken.",

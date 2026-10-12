@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "المهارات",
   "tools.builtins.lobe-task.description": "إنشاء، عرض، تحرير، وحذف المهام مع إدارة التبعيات وإعدادات المراجعة",
   "tools.builtins.lobe-task.title": "أدوات المهام",
-  "tools.builtins.lobe-topic-reference.description": "استرجاع السياق من المحادثات المرجعية للمواضيع",
-  "tools.builtins.lobe-topic-reference.title": "مرجع الموضوع",
   "tools.builtins.lobe-user-interaction.description": "طرح الأسئلة على المستخدمين عبر تفاعلات الواجهة ومتابعة نتائج دورة حياتهم",
   "tools.builtins.lobe-user-interaction.title": "تفاعل المستخدم",
   "tools.builtins.lobe-user-memory.description": "أنشئ قاعدة معرفة مخصصة عنك. تذكّر التفضيلات، وتتبع الأنشطة والتجارب، واحفظ معلومات الهوية، واسترجع السياق المناسب في المحادثات المستقبلية.",

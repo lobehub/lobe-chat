@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Skill",
   "tools.builtins.lobe-task.description": "Crea, elenca, modifica e cancella attività con dipendenze e configurazione di revisione",
   "tools.builtins.lobe-task.title": "Strumenti di Attività",
-  "tools.builtins.lobe-topic-reference.description": "Recupera contesto da conversazioni su argomenti di riferimento",
-  "tools.builtins.lobe-topic-reference.title": "Riferimento Argomenti",
   "tools.builtins.lobe-user-interaction.description": "Poni domande agli utenti tramite interazioni UI e osservane gli esiti",
   "tools.builtins.lobe-user-interaction.title": "Interazione Utente",
   "tools.builtins.lobe-user-memory.description": "Ricorda preferenze, attività ed esperienze dell'utente nelle conversazioni",

@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Навыки",
   "tools.builtins.lobe-task.description": "Создание, список, редактирование и удаление задач с зависимостями и настройками проверки",
   "tools.builtins.lobe-task.title": "Инструменты задач",
-  "tools.builtins.lobe-topic-reference.description": "Получение контекста из связанных тематических бесед",
-  "tools.builtins.lobe-topic-reference.title": "Тематические ссылки",
   "tools.builtins.lobe-user-interaction.description": "Задавайте вопросы пользователям через UI‑взаимодействие и отслеживайте результаты",
   "tools.builtins.lobe-user-interaction.title": "Взаимодействие с пользователем",
   "tools.builtins.lobe-user-memory.description": "Создайте персонализированную базу знаний о себе. Запоминайте предпочтения, отслеживайте действия и события, сохраняйте информацию о личности и вспоминайте важный контекст в будущих беседах.",

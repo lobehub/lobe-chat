@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "스킬",
   "tools.builtins.lobe-task.description": "의존성과 검토 설정이 포함된 작업을 생성, 목록 조회, 편집, 삭제합니다",
   "tools.builtins.lobe-task.title": "작업 도구",
-  "tools.builtins.lobe-topic-reference.description": "참조된 주제 대화에서 컨텍스트를 가져옵니다",
-  "tools.builtins.lobe-topic-reference.title": "토픽 참조",
   "tools.builtins.lobe-user-interaction.description": "UI 상호작용을 통해 사용자에게 질문하고 그 결과를 관찰합니다",
   "tools.builtins.lobe-user-interaction.title": "사용자 상호작용",
   "tools.builtins.lobe-user-memory.description": "사용자의 선호도, 활동 및 경험을 대화 전반에 걸쳐 기억",

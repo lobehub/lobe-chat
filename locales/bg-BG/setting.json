@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Умения",
   "tools.builtins.lobe-task.description": "Създаване, изброяване, редактиране и изтриване на задачи с зависимости и настройки за преглед",
   "tools.builtins.lobe-task.title": "Инструменти за задачи",
-  "tools.builtins.lobe-topic-reference.description": "Извличане на контекст от свързани тематични разговори",
-  "tools.builtins.lobe-topic-reference.title": "Тематична препратка",
   "tools.builtins.lobe-user-interaction.description": "Задаване на въпроси на потребителите чрез UI взаимодействия и проследяване на техните резултати",
   "tools.builtins.lobe-user-interaction.title": "Взаимодействие с потребителя",
   "tools.builtins.lobe-user-memory.description": "Изградете персонализирана база знания за вас. Запомняйте предпочитания, следете дейности и преживявания, съхранявайте информация за идентичност и извличайте релевантен контекст в бъдещи разговори.",

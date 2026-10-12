@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "技能",
   "tools.builtins.lobe-task.description": "建立、列出、編輯與刪除具有相依性與審查設定的任務",
   "tools.builtins.lobe-task.title": "任務工具",
-  "tools.builtins.lobe-topic-reference.description": "從被引用的主題對話中擷取上下文",
-  "tools.builtins.lobe-topic-reference.title": "主題參考",
   "tools.builtins.lobe-user-interaction.description": "透過 UI 互動向使用者提問並觀察其操作流程結果",
   "tools.builtins.lobe-user-interaction.title": "使用者互動",
   "tools.builtins.lobe-user-memory.description": "建立關於您的個人化知識庫。記住偏好設定、追蹤活動與經歷、儲存身份資訊，並在未來對話中回憶相關背景。",

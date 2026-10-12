@@ -1851,8 +1851,6 @@
   "tools.builtins.lobe-skills.title": "Kỹ Năng",
   "tools.builtins.lobe-task.description": "Tạo, liệt kê, chỉnh sửa và xóa tác vụ với cấu hình phụ thuộc và rà soát",
   "tools.builtins.lobe-task.title": "Công Cụ Tác Vụ",
-  "tools.builtins.lobe-topic-reference.description": "Truy xuất ngữ cảnh từ các cuộc hội thoại theo chủ đề được tham chiếu",
-  "tools.builtins.lobe-topic-reference.title": "Tham Chiếu Chủ Đề",
   "tools.builtins.lobe-user-interaction.description": "Đặt câu hỏi cho người dùng thông qua tương tác giao diện và theo dõi kết quả của chúng",
   "tools.builtins.lobe-user-interaction.title": "Tương Tác Người Dùng",
   "tools.builtins.lobe-user-memory.description": "Xây dựng cơ sở kiến thức cá nhân hóa về bạn. Ghi nhớ sở thích, theo dõi hoạt động và trải nghiệm, lưu trữ thông tin nhận dạng và gợi nhớ ngữ cảnh liên quan trong các cuộc trò chuyện sau.",

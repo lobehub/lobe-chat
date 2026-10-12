@@ -1,9 +1,9 @@
 import type { AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { extractActivatedToolIdsFromMessages } from '@lobechat/agent-runtime';
-import { builtinSkills } from '@lobechat/builtin-skills';
+import { builtinSkills, LobeHubIdentifier } from '@lobechat/builtin-skills';
 import { getShellSyntaxGuidance } from '@lobechat/builtin-tool-local-system';
 import type { OperationSkillSet, ProjectInstructionFile } from '@lobechat/context-engine';
-import { buildExpertiseContextSnapshot } from '@lobechat/context-engine';
+import { buildExpertiseContextSnapshot, mentionsTopic } from '@lobechat/context-engine';
 import type { LobeChatDatabase } from '@lobechat/database';
 import { assembleSkillPool } from '@lobechat/mecha';
 import { buildTaskManagerDefaultsPrompt, resourcesTreePrompt } from '@lobechat/prompts';
@@ -793,7 +793,7 @@ export const prepareOperation = async (
     // not lazily via the `activateSkill` tool. Gate on the agent's genuinely
     // pinned entries (`getActivePluginIds(agentConfig.plugins)`), NOT the
     // fully-expanded `agentPlugins`: the latter also carries turn-scoped tool
-    // ids (mentions, selected tools, `lobe-topic-reference`, …), which would
+    // ids (mentions, selected tools, `lobe-message`, …), which would
     // eager-activate an auto-mode skill whose identifier merely collides with
     // one of them. `findAll` uses `skillListColumns` (no `content`), so fetch
     // bodies only for the pinned subset to keep the op-param payload bounded.
@@ -922,6 +922,9 @@ export const prepareOperation = async (
         enabledPluginIds: [...new Set([...(agentPlugins ?? []), ...shareEnabledSkillIds])],
         shareAllowedIds: shareAllowedSkillIds,
         skillActivateMode: agentConfig.chatConfig?.skillActivateMode,
+        // Reading another topic (`<refer_topic>` or a raw `tpc_` id) goes through `lh topic view`,
+        // which the lobehub skill teaches.
+        turnSkillIds: mentionsTopic([{ content: prompt ?? '' }]) ? [LobeHubIdentifier] : [],
       },
     );
   } catch (error) {
