@@ -118,4 +118,30 @@ describe('getRedisServiceClient', () => {
     await expect(getRedisServiceClient()).resolves.toBeNull();
     expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledTimes(1);
   });
+
+  it('gives each namespace its own prefix under REDIS_PREFIX', async () => {
+    mockGetRedisConfig.mockReturnValue(enabledConfig);
+    mockTryInitializeRedisWithPrefix.mockResolvedValue({ get: vi.fn(), set: vi.fn() });
+    const { getRedisServiceClient } = await loadClient();
+    const { RedisKeyNamespace } = await import('@/server/modules/Redis');
+
+    await getRedisServiceClient(RedisKeyNamespace.AGENT_SIGNAL);
+
+    expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledWith(
+      expect.anything(),
+      'lobe:agent-signal',
+    );
+  });
+
+  it('keeps one namespace serving while another namespace is cooling down', async () => {
+    mockGetRedisConfig.mockReturnValue(enabledConfig);
+    mockTryInitializeRedisWithPrefix.mockImplementation(async (_config, prefix: string) =>
+      prefix === 'lobe:sendPathCache' ? null : { get: vi.fn(), set: vi.fn() },
+    );
+    const { getRedisServiceClient } = await loadClient();
+    const { RedisKeyNamespace } = await import('@/server/modules/Redis');
+
+    await expect(getRedisServiceClient()).resolves.toBeNull();
+    await expect(getRedisServiceClient(RedisKeyNamespace.AGENT_SIGNAL)).resolves.not.toBeNull();
+  });
 });

@@ -9,12 +9,15 @@ callers do not choose a provider, prefix, key, SET options or claim lifetime.
 - `workspaceRescan.claim`: one background scan per principal/device/directory for 45 seconds.
 - `agentSignal`: spend bounds for background self-iteration — classifier calls per user per UTC
   day, self-feedback declaration slots per topic, manual triggers per user per hour, and the
-  distinct topics one nightly review may cover. Each count returns `undefined` without Redis;
-  the Agent Signal caller decides whether that fails open or closed.
+  distinct topics one nightly review may cover. Its keys live in the `agent-signal` namespace
+  next to the Agent Signal runtime stores. Each count returns `undefined` without Redis; the
+  Agent Signal caller decides whether that fails open or closed.
 
-`client.ts` is the connection seam. All current domains share the existing `sendPathCache`
-connection and keyspace, preserving deployed cache/claim compatibility. A namespace is a key
-partition, not a reason to open another connection. Add a separate connection only for a
+`client.ts` is the connection seam. `getRedisServiceClient(namespace)` returns the client for one
+key namespace (`RedisKeyNamespace`), prefixed under `REDIS_PREFIX`; the send-path domains share
+the default `sendPathCache` namespace, preserving deployed cache/claim compatibility, and
+`agentSignal` uses `agent-signal`. Each namespace has its own cooldown, so one domain's Redis
+failures do not switch off another's. Add a separate connection only for a
 transport requirement such as pub/sub or blocking commands. Client/provider code and its tests live in `apps/server/src/modules/Redis`.
 The service composes this infrastructure through domain methods.
 `cache.ts` holds the generic cache/claim policy (read-through caching, the atomic claim with its

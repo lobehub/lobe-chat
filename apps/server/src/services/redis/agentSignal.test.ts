@@ -5,7 +5,8 @@ import { redisService } from './index';
 const client = vi.hoisted(() => ({
   current: undefined as Record<string, ReturnType<typeof vi.fn>> | null | undefined,
 }));
-vi.mock('./client', () => ({ getRedisServiceClient: async () => client.current ?? null }));
+const getRedisServiceClient = vi.hoisted(() => vi.fn());
+vi.mock('./client', () => ({ getRedisServiceClient }));
 
 const createClient = () => ({
   decr: vi.fn().mockResolvedValue(0),
@@ -18,6 +19,14 @@ const createClient = () => ({
 describe('redisService.agentSignal', () => {
   beforeEach(() => {
     client.current = createClient();
+    getRedisServiceClient.mockReset();
+    getRedisServiceClient.mockImplementation(async () => client.current ?? null);
+  });
+
+  it('keeps its keys in the agent-signal namespace', async () => {
+    await redisService.agentSignal.countClassifierCall({ userId: 'u', utcDay: '2026-10-11' });
+
+    expect(getRedisServiceClient).toHaveBeenCalledWith('agent-signal');
   });
 
   it('counts classifier calls per user and UTC day, outliving the day', async () => {
@@ -25,11 +34,9 @@ describe('redisService.agentSignal', () => {
       redisService.agentSignal.countClassifierCall({ userId: 'u', utcDay: '2026-10-11' }),
     ).resolves.toBe(1);
 
-    expect(client.current!.incr).toHaveBeenCalledWith(
-      'agent_signal:classifier_calls:v1:u:2026-10-11',
-    );
+    expect(client.current!.incr).toHaveBeenCalledWith('classifier_calls:v1:u:2026-10-11');
     expect(client.current!.expire).toHaveBeenCalledWith(
-      'agent_signal:classifier_calls:v1:u:2026-10-11',
+      'classifier_calls:v1:u:2026-10-11',
       2 * 24 * 60 * 60,
     );
   });
@@ -38,18 +45,18 @@ describe('redisService.agentSignal', () => {
     await redisService.agentSignal.takeDeclarationSlot('topic:t1');
     await redisService.agentSignal.releaseDeclarationSlot('topic:t1');
 
-    expect(client.current!.incr).toHaveBeenCalledWith('agent_signal:declaration_slots:v1:topic:t1');
+    expect(client.current!.incr).toHaveBeenCalledWith('declaration_slots:v1:topic:t1');
     expect(client.current!.expire).toHaveBeenCalledWith(
-      'agent_signal:declaration_slots:v1:topic:t1',
+      'declaration_slots:v1:topic:t1',
       24 * 60 * 60,
     );
-    expect(client.current!.decr).toHaveBeenCalledWith('agent_signal:declaration_slots:v1:topic:t1');
+    expect(client.current!.decr).toHaveBeenCalledWith('declaration_slots:v1:topic:t1');
   });
 
   it('opens the manual-trigger window with its expiry before counting', async () => {
     await redisService.agentSignal.countManualTrigger('u');
 
-    expect(client.current!.set).toHaveBeenCalledWith('agent_signal:manual_triggers:v1:u', '0', {
+    expect(client.current!.set).toHaveBeenCalledWith('manual_triggers:v1:u', '0', {
       ex: 3600,
       nx: true,
     });
@@ -71,7 +78,7 @@ describe('redisService.agentSignal', () => {
     expect(client.current!.eval).toHaveBeenCalledWith(
       expect.stringContaining('SISMEMBER'),
       1,
-      'agent_signal:nightly_topics:v1:u:2026-10-11',
+      'nightly_topics:v1:u:2026-10-11',
       50,
       3 * 24 * 60 * 60,
       't1',

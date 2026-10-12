@@ -16,6 +16,11 @@
  */
 export const RedisKeyNamespace = {
   /**
+   * Agent Signal keys — the same `agent-signal` keyspace the Agent Signal runtime
+   * stores (receipts, dedupe, policy state) already use.
+   */
+  AGENT_SIGNAL: 'agent-signal',
+  /**
    * AI generation related keys (agent welcome, placeholders, etc.)
    */
   AI_GENERATION: 'aiGeneration',
@@ -47,32 +52,32 @@ export const RedisKeyNamespace = {
  */
 export const RedisKeys = {
   /**
-   * Agent Signal spend bounds: per-user counters and quotas that keep background
-   * self-iteration work billed to the user within its limits.
+   * Agent Signal spend bounds — see {@link RedisKeyNamespace.AGENT_SIGNAL}. Per-user
+   * counters and quotas that keep background self-iteration work within its limits.
    */
   agentSignal: {
     /**
      * Feedback-classifier calls one user made on one UTC day.
-     * Full key: {prefix}:agent_signal:classifier_calls:v1:{userId}:{utcDay}
+     * Full key: agent-signal:classifier_calls:v1:{userId}:{utcDay}
      */
     classifierCalls: (userId: string, utcDay: string): string =>
-      `agent_signal:classifier_calls:v1:${userId}:${utcDay}`,
+      `classifier_calls:v1:${userId}:${utcDay}`,
     /**
      * Self-feedback declarations accepted in one topic scope.
-     * Full key: {prefix}:agent_signal:declaration_slots:v1:{scopeKey}
+     * Full key: agent-signal:declaration_slots:v1:{scopeKey}
      */
-    declarationSlots: (scopeKey: string): string => `agent_signal:declaration_slots:v1:${scopeKey}`,
+    declarationSlots: (scopeKey: string): string => `declaration_slots:v1:${scopeKey}`,
     /**
      * Manual Agent Signal triggers one user sent in the current hourly window.
-     * Full key: {prefix}:agent_signal:manual_triggers:v1:{userId}
+     * Full key: agent-signal:manual_triggers:v1:{userId}
      */
-    manualTriggers: (userId: string): string => `agent_signal:manual_triggers:v1:${userId}`,
+    manualTriggers: (userId: string): string => `manual_triggers:v1:${userId}`,
     /**
      * Distinct topics one user's nightly review covered on one local night.
-     * Full key: {prefix}:agent_signal:nightly_topics:v1:{userId}:{localDate}
+     * Full key: agent-signal:nightly_topics:v1:{userId}:{localDate}
      */
     nightlyTopics: (userId: string, localDate: string): string =>
-      `agent_signal:nightly_topics:v1:${userId}:${localDate}`,
+      `nightly_topics:v1:${userId}:${localDate}`,
   },
   /**
    * AI generation scope - for AI-generated content like welcome messages

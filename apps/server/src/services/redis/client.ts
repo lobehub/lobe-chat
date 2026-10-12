@@ -12,11 +12,16 @@ const CONNECT_TIMEOUT_MS = 1000;
 const COMMAND_TIMEOUT_MS = 1000;
 const COOLDOWN_MS = 30_000;
 
-/** `Date.now()` until which the circuit stays open; 0 means closed. */
-let cooldownUntil = 0;
+type RedisServiceNamespace = (typeof RedisKeyNamespace)[keyof typeof RedisKeyNamespace];
 
-const openCircuit = () => {
-  cooldownUntil = Date.now() + COOLDOWN_MS;
+/**
+ * `Date.now()` until which a namespace's circuit stays open. Kept per namespace so an
+ * outage seen by one domain does not switch off another domain's Redis.
+ */
+const cooldownUntil = new Map<RedisServiceNamespace, number>();
+
+const openCircuit = (namespace: RedisServiceNamespace) => {
+  cooldownUntil.set(namespace, Date.now() + COOLDOWN_MS);
 };
 
 const withDeadline = async <T>(work: Promise<T>, ms: number): Promise<T | null> => {
@@ -39,7 +44,10 @@ const withDeadline = async <T>(work: Promise<T>, ms: number): Promise<T | null> 
  * connect — nothing would trip the cooldown, so each send would pay the
  * command timeout before falling back to its live read.
  */
-const observeFailures = (client: BaseRedisProvider): BaseRedisProvider =>
+const observeFailures = (
+  client: BaseRedisProvider,
+  namespace: RedisServiceNamespace,
+): BaseRedisProvider =>
   new Proxy(client, {
     get(target, property, receiver) {
       const value = Reflect.get(target, property, receiver);
@@ -49,7 +57,7 @@ const observeFailures = (client: BaseRedisProvider): BaseRedisProvider =>
         const result = value.apply(target, args);
         return result instanceof Promise
           ? result.catch((error) => {
-              openCircuit();
+              openCircuit(namespace);
               throw error;
             })
           : result;
@@ -58,35 +66,35 @@ const observeFailures = (client: BaseRedisProvider): BaseRedisProvider =>
   });
 
 /**
- * The shared send-path-cache client, or `null` when Redis is unavailable and
- * the caller should fall back to its live read.
+ * The Redis service client for one key namespace (send-path caches by default), or `null`
+ * when Redis is unavailable and the caller should fall back.
  *
- * Never blocks for long: acquiring the client is bounded by
- * {@link ACQUIRE_TIMEOUT_MS}, and any failure (or a disabled Redis) returns
- * `null`. A failed acquisition, or a command that fails later on the memoized
- * client, opens the circuit for {@link COOLDOWN_MS} so concurrent and later
- * sends degrade straight to their live read.
+ * Each namespace gets its own key prefix, composed under REDIS_PREFIX. Never blocks for long:
+ * acquiring the client is bounded by {@link ACQUIRE_TIMEOUT_MS}, and any failure (or a
+ * disabled Redis) returns `null`. A failed acquisition, or a command that fails later on the
+ * memoized client, opens that namespace's circuit for {@link COOLDOWN_MS} so concurrent and
+ * later callers degrade straight to their fallback.
  */
-export const getRedisServiceClient = async (): Promise<BaseRedisProvider | null> => {
+export const getRedisServiceClient = async (
+  namespace: RedisServiceNamespace = RedisKeyNamespace.SEND_PATH_CACHE,
+): Promise<BaseRedisProvider | null> => {
   const config = getRedisConfig();
-  if (!config.enabled || Date.now() < cooldownUntil) return null;
+  if (!config.enabled || Date.now() < (cooldownUntil.get(namespace) ?? 0)) return null;
 
   const client = await withDeadline(
     tryInitializeRedisWithPrefix(
       { ...config, commandTimeoutMs: COMMAND_TIMEOUT_MS, connectTimeoutMs: CONNECT_TIMEOUT_MS },
       // Compose with REDIS_PREFIX rather than replace it: deployments sharing
       // one Redis isolate by prefix, and their user/device ids can collide.
-      config.prefix
-        ? `${config.prefix}:${RedisKeyNamespace.SEND_PATH_CACHE}`
-        : RedisKeyNamespace.SEND_PATH_CACHE,
+      config.prefix ? `${config.prefix}:${namespace}` : namespace,
     ),
     ACQUIRE_TIMEOUT_MS,
   );
 
   if (!client) {
-    openCircuit();
+    openCircuit(namespace);
     return null;
   }
 
-  return observeFailures(client);
+  return observeFailures(client, namespace);
 };

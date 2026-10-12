@@ -1,6 +1,8 @@
-import { RedisKeys } from '@/server/modules/Redis';
+import { RedisKeyNamespace, RedisKeys } from '@/server/modules/Redis';
 
 import { getRedisServiceClient } from './client';
+
+const getClient = () => getRedisServiceClient(RedisKeyNamespace.AGENT_SIGNAL);
 
 // Every count returns `undefined` when Redis is unavailable: the Agent Signal callers decide
 // whether that fails open or closed, since each one guards different spend.
@@ -36,7 +38,7 @@ return admitted
 `;
 
 const count = async (key: string, ttlSeconds: number) => {
-  const redis = await getRedisServiceClient();
+  const redis = await getClient();
   if (!redis) return;
 
   const value = await redis.incr(key);
@@ -60,7 +62,7 @@ export const agentSignal = {
 
   /** Returns a slot whose declaration was rejected or failed to enqueue. */
   async releaseDeclarationSlot(scopeKey: string) {
-    const redis = await getRedisServiceClient();
+    const redis = await getClient();
     if (!redis) return;
 
     await redis.decr(RedisKeys.agentSignal.declarationSlots(scopeKey));
@@ -71,7 +73,7 @@ export const agentSignal = {
    * its expiry before the increment, so a crash between the two never leaves it without one.
    */
   async countManualTrigger(userId: string) {
-    const redis = await getRedisServiceClient();
+    const redis = await getClient();
     if (!redis) return;
 
     const key = RedisKeys.agentSignal.manualTriggers(userId);
@@ -89,7 +91,7 @@ export const agentSignal = {
     topicIds: string[];
     userId: string;
   }) {
-    const redis = await getRedisServiceClient();
+    const redis = await getClient();
     if (!redis) return;
 
     return redis.eval<string[]>(
