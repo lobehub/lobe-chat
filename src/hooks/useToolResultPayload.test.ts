@@ -1,88 +1,163 @@
 /**
  * @vitest-environment happy-dom
+ *
+ * Projected tool payloads are a replica keyed by message id: after a reload the
+ * card paints the persisted body on the first frame and the read confirms it.
  */
-import { renderHook, waitFor } from '@testing-library/react';
-import type { PropsWithChildren } from 'react';
-import { createElement } from 'react';
-import { type Cache, SWRConfig } from 'swr';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { randomUUID } from 'node:crypto';
 
-import { localDataCache } from '@/libs/swr/localDataCache';
-import { CACHE_TIERS, createCacheProvider } from '@/libs/swr/localStorageProvider';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { PropsWithChildren } from 'react';
+import { createElement, useEffect } from 'react';
+import { SWRConfig, unstable_serialize, useSWRConfig } from 'swr';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { cacheScope, replicaKeys } from '@/libs/replica';
+import { CACHE_TIERS } from '@/libs/swr/localStorageProvider';
+import { setScopedMutate } from '@/libs/swr/mutate';
 import { messageService } from '@/services/message';
+import {
+  TOOL_RESULT_PAYLOAD_MAX_PERSISTED_CHARS,
+  TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES,
+  toolResultPayloadResource,
+} from '@/services/message/replica';
+import {
+  initialToolResultPayloadState,
+  useToolResultPayloadStore,
+} from '@/store/toolResultPayload/store';
 
 import { useToolResultPayload } from './useToolResultPayload';
 
-const SCOPE = 'tool-payload-user:personal';
+const MutateBridge = () => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => setScopedMutate(mutate), [mutate]);
+  return null;
+};
 
-/** The production tier config, with a short debounce so writes land quickly. */
-const makeProvider = () =>
-  createCacheProvider({
-    debounceMs: 5,
-    getScope: () => SCOPE,
-    idbEntryLimits: [...CACHE_TIERS.idbLimits],
-    idbPatterns: [...CACHE_TIERS.idb],
-    localPatterns: [...CACHE_TIERS.local],
+const wrapper = ({ children }: PropsWithChildren) =>
+  createElement(
+    SWRConfig,
+    { value: { dedupingInterval: 0, provider: () => new Map() } },
+    createElement(MutateBridge),
+    children,
+  );
+
+/** Never-resolving read: the first frame can only come from storage. */
+const pending = () => new Promise<never>(() => {});
+
+const storage = toolResultPayloadResource.storage!;
+
+describe('useToolResultPayload replica', () => {
+  const scopes = new Set<string>();
+  const ids = new Set<string>();
+  let scope = '';
+  const useScope = (next: string) => {
+    scope = next;
+    scopes.add(next);
+    vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+  };
+  const rowKey = (messageId: string, inScope = scope) => {
+    ids.add(messageId);
+    return { queryKey: toolResultPayloadResource.storageKey(messageId), scope: inScope };
+  };
+  /** A fresh session: empty memory, same IndexedDB. */
+  const reload = () => act(() => useToolResultPayloadStore.setState(initialToolResultPayloadState));
+
+  beforeEach(() => {
+    useScope(`tool-payload-user-${randomUUID()}:personal`);
+    reload();
   });
 
-const wrapper =
-  (provider: ReturnType<typeof createCacheProvider>) =>
-  ({ children }: PropsWithChildren) =>
-    createElement(
-      SWRConfig,
-      { value: { provider: provider as unknown as (c: Readonly<Cache>) => Cache } },
-      children,
-    );
-
-describe('useToolResultPayload persistence', () => {
   afterEach(async () => {
+    await Promise.all(
+      [...scopes].flatMap((value) => [...ids].map((id) => storage.remove(rowKey(id, value)))),
+    );
+    scopes.clear();
+    ids.clear();
     vi.restoreAllMocks();
-    await localDataCache.clearScope(SCOPE);
   });
 
-  it('serves the stored payload immediately after a reload, then revalidates', async () => {
-    const payload = { content: '# page body', pluginState: { url: 'https://example.com' } };
+  // Regression: the payload lived only in SWR's memory cache, so after a reload
+  // opening the card showed the payload skeleton until the read returned.
+  it('paints the persisted payload after a reload, then revalidates', async () => {
+    const cached = { content: '# page body v1', pluginState: { url: 'https://example.com' } };
+    await storage.set(rowKey('msg-1'), { data: { value: cached as any }, updatedAt: 1 });
 
-    // --- session 1: the card fetches the projected payload -----------------
+    let resolveFresh!: (value: any) => void;
+    const fetch = vi
+      .spyOn(messageService, 'getToolResultPayload')
+      .mockReturnValue(new Promise((resolve) => (resolveFresh = resolve)));
+
+    const { result } = renderHook(() => useToolResultPayload('msg-1', true), { wrapper });
+
+    await waitFor(() => expect(result.current).toEqual({ isLoading: false, payload: cached }));
+    expect(fetch).toHaveBeenCalledWith('msg-1');
+
+    const fresh = { content: '# page body v2' };
+    await act(async () => resolveFresh(fresh));
+    await waitFor(() => expect(result.current.payload).toEqual(fresh));
+  });
+
+  it('persists a fetched payload so the next session paints it without the network', async () => {
+    const payload = { content: 'scraped body', pluginState: { status: 'ok' } };
     vi.spyOn(messageService, 'getToolResultPayload').mockResolvedValue(payload as any);
-    const p1 = makeProvider();
-    await p1.hydrateScope?.();
-    const r1 = renderHook(() => useToolResultPayload('msg-1', true), { wrapper: wrapper(p1) });
-    await waitFor(() => expect(r1.result.current.payload).toEqual(payload));
-    await waitFor(async () => {
-      expect((await localDataCache.entriesByScope(SCOPE)).length).toBeGreaterThan(0);
-    });
-    r1.unmount();
+    const first = renderHook(() => useToolResultPayload('msg-2', true), { wrapper });
+    await waitFor(() => expect(first.result.current.payload).toEqual(payload));
+    await waitFor(async () =>
+      expect((await storage.get(rowKey('msg-2')))?.data).toEqual({ value: payload }),
+    );
+    first.unmount();
 
-    // --- session 2 ("reload"): the network is slow -------------------------
-    let resolveSlow: (v: unknown) => void;
-    const slow = new Promise((r) => {
-      resolveSlow = r;
-    });
-    const fetch = vi.spyOn(messageService, 'getToolResultPayload').mockReturnValue(slow as any);
-    const p2 = makeProvider();
-    await p2.hydrateScope?.();
-    const r2 = renderHook(() => useToolResultPayload('msg-1', true), { wrapper: wrapper(p2) });
-
-    // first paint uses the persisted copy: no skeleton
-    expect(r2.result.current).toEqual({ isLoading: false, payload });
-
-    // and the server copy still revalidates behind it
-    await waitFor(() => expect(fetch).toHaveBeenCalledWith('msg-1'));
-    const fresh = { content: '# fresh body' };
-    resolveSlow!(fresh);
-    await waitFor(() => expect(r2.result.current.payload).toEqual(fresh));
+    reload();
+    vi.spyOn(messageService, 'getToolResultPayload').mockImplementation(pending);
+    const second = renderHook(() => useToolResultPayload('msg-2', true), { wrapper });
+    await waitFor(() => expect(second.result.current).toEqual({ isLoading: false, payload }));
   });
 
-  it('keeps payloads over the size cap memory-only', async () => {
-    const huge = { content: 'x'.repeat(200 * 1024) };
-    vi.spyOn(messageService, 'getToolResultPayload').mockResolvedValue(huge as any);
-    const p1 = makeProvider();
-    await p1.hydrateScope?.();
-    const r1 = renderHook(() => useToolResultPayload('msg-big', true), { wrapper: wrapper(p1) });
-    await waitFor(() => expect(r1.result.current.payload).toEqual(huge));
-    await new Promise((r) => setTimeout(r, 50));
+  it('shows the loading state and fetches nothing until enabled', async () => {
+    const fetch = vi.spyOn(messageService, 'getToolResultPayload').mockImplementation(pending);
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useToolResultPayload('msg-3', enabled),
+      { initialProps: { enabled: false }, wrapper },
+    );
+    expect(result.current).toEqual({ isLoading: false, payload: undefined });
+    expect(fetch).not.toHaveBeenCalled();
 
-    expect(await localDataCache.entriesByScope(SCOPE)).toEqual([]);
+    rerender({ enabled: true });
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith('msg-3'));
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  it('keeps payloads over the size cap in memory only and drops an older row', async () => {
+    await storage.set(rowKey('msg-big'), { data: { value: { content: 'old' } }, updatedAt: 1 });
+    const huge = { content: 'x'.repeat(TOOL_RESULT_PAYLOAD_MAX_PERSISTED_CHARS + 1) };
+    vi.spyOn(messageService, 'getToolResultPayload').mockResolvedValue(huge as any);
+
+    const { result } = renderHook(() => useToolResultPayload('msg-big', true), { wrapper });
+    await waitFor(() => expect(result.current.payload).toEqual(huge));
+    await waitFor(async () => expect(await storage.get(rowKey('msg-big'))).toBeUndefined());
+  });
+
+  it('never paints another identity’s payload', async () => {
+    await storage.set(rowKey('msg-4'), { data: { value: { content: 'mine' } }, updatedAt: 1 });
+    useScope(`tool-payload-other-${randomUUID()}:personal`);
+    vi.spyOn(messageService, 'getToolResultPayload').mockImplementation(pending);
+
+    const { result } = renderHook(() => useToolResultPayload('msg-4', true), { wrapper });
+    await waitFor(() => expect(result.current.isLoading).toBe(true));
+    expect(result.current.payload).toBeUndefined();
+  });
+
+  it('is bounded, and its network read is not persisted again by the SWR cache', () => {
+    expect(toolResultPayloadResource.maxPersistedEntries).toBe(
+      TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES,
+    );
+    const syncKey = unstable_serialize(
+      replicaKeys.sync(toolResultPayloadResource.name, 1, scope, 'msg_abc', 'msg_abc'),
+    );
+    const tiers: string[] = [...CACHE_TIERS.idb, ...CACHE_TIERS.local];
+    expect(tiers.filter((pattern) => syncKey.includes(pattern))).toEqual([]);
   });
 });

@@ -1,7 +1,4 @@
-import useSWR from 'swr';
-
-import { swrKeys } from '@/libs/swr/keys';
-import { messageService } from '@/services/message';
+import { useToolResultPayloadStore } from '@/store/toolResultPayload/store';
 
 /**
  * Fetch the stored tool payload for a message the read path projected.
@@ -11,15 +8,21 @@ import { messageService } from '@/services/message';
  * down as soon as a conversation loads, which is the exact cost the projection
  * exists to avoid.
  *
- * The payload is persisted to IndexedDB (`message:` tier, size-capped), so after
- * a reload the card paints the last copy at once and revalidates behind it.
+ * The payload is a replica keyed by message id (`toolResultPayloadResource`),
+ * so after a reload the card paints the persisted copy at once and the read
+ * confirms it behind it.
  */
 export const useToolResultPayload = (messageId: string | undefined, enabled: boolean) => {
-  const { data, isLoading } = useSWR(
-    enabled && messageId ? swrKeys.message.toolResultPayload(messageId) : null,
-    ([, id]: [string, string]) => messageService.getToolResultPayload(id),
-    { revalidateOnFocus: false },
+  const params = enabled && messageId ? messageId : null;
+  const stored = useToolResultPayloadStore((s) =>
+    params ? s.toolResultPayloadMap[params] : undefined,
   );
+  const { error, isHydrated, isValidating } = useToolResultPayloadStore
+    .getState()
+    .payload.useSync(params, { revalidateOnFocus: false });
 
-  return { isLoading: enabled && isLoading, payload: data };
+  return {
+    isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
+    payload: stored?.value,
+  };
 };

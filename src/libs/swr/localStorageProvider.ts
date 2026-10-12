@@ -40,27 +40,11 @@ interface CacheEntry<T = unknown> {
 
 export type CacheTier = 'idb' | 'local';
 
-/**
- * Bound on an IndexedDB-tier key family whose rows can grow without limit
- * (e.g. one row per message). Every IndexedDB row is loaded into memory at
- * boot, so these families must stay small.
- */
-export interface IdbEntryLimit {
-  /** Max rows kept for this family; the least recently written are evicted at hydration. */
-  maxEntries?: number;
-  /** Max serialized length (UTF-16 code units) of one row; larger values stay memory-only. */
-  maxSize: number;
-  /** Substring of the SWR key, matched like the tier patterns. */
-  pattern: string;
-}
-
 export interface CacheProviderOptions {
   /** Debounce (ms) before flushing writes to either tier, defaults to 2000. */
   debounceMs?: number;
   /** Resolver for the active identity scope (`${userId}:${workspaceId}`). */
   getScope?: () => string;
-  /** Per-family size / count caps for IndexedDB-tier keys. */
-  idbEntryLimits?: IdbEntryLimit[];
   /** SWR key patterns persisted to the IndexedDB tier. */
   idbPatterns?: string[];
   /**
@@ -143,7 +127,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
   const {
     debounceMs = 2000,
     getScope = () => 'default',
-    idbEntryLimits = [],
     idbPatterns = [],
     isEphemeralScope,
     localPatterns = [],
@@ -174,52 +157,6 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     if (matchesPattern(key, idbPatterns)) return 'idb';
     if (matchesPattern(key, localPatterns)) return 'local';
     return null;
-  };
-
-  const limitOf = (key: string): IdbEntryLimit | undefined =>
-    idbEntryLimits.find((limit) => key.includes(limit.pattern));
-
-  /** Whether a value fits its family's per-row size cap (uncapped keys always fit). */
-  const fitsLimit = (key: string, value: unknown): boolean => {
-    const limit = limitOf(key);
-    if (!limit) return true;
-    try {
-      return JSON.stringify(value).length <= limit.maxSize;
-    } catch {
-      return false;
-    }
-  };
-
-  /**
-   * Enforce per-family row caps on freshly loaded rows: drop oversized rows and
-   * keep only the newest `maxEntries` of each family. Evicted rows are deleted
-   * from IndexedDB so the next boot does not load them again.
-   */
-  const applyIdbLimits = <T extends { data: unknown; key: string; updatedAt: number }>(
-    scope: string,
-    entries: T[],
-  ): T[] => {
-    if (idbEntryLimits.length === 0) return entries;
-
-    const evicted = new Set<string>();
-    for (const limit of idbEntryLimits) {
-      const family = entries.filter((e) => e.key.includes(limit.pattern));
-      const kept = family.filter((e) => {
-        if (fitsLimit(e.key, e.data)) return true;
-        evicted.add(e.key);
-        return false;
-      });
-      if (limit.maxEntries !== undefined && kept.length > limit.maxEntries) {
-        kept
-          .sort((a, b) => b.updatedAt - a.updatedAt)
-          .slice(limit.maxEntries)
-          .forEach((e) => evicted.add(e.key));
-      }
-    }
-    if (evicted.size === 0) return entries;
-
-    for (const key of evicted) void localDataCache.delete(buildLocalDataKey(scope, key));
-    return entries.filter((e) => !evicted.has(e.key));
   };
 
   /**
@@ -310,10 +247,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
     for (const k of dels) void localDataCache.delete(buildLocalDataKey(scope, k));
     for (const k of writes) {
       const v = cacheMapInstance.get(k);
-      if (v === undefined) continue;
-      // Oversized rows stay memory-only; also drop any smaller copy persisted earlier.
-      if (!fitsLimit(k, v)) void localDataCache.delete(buildLocalDataKey(scope, k));
-      else void localDataCache.set(buildLocalDataKey(scope, k), v, version);
+      if (v !== undefined) void localDataCache.set(buildLocalDataKey(scope, k), v, version);
     }
   };
 
@@ -340,10 +274,7 @@ export function createCacheProvider(options: CacheProviderOptions = {}): ScopedS
       // so legacy/unversioned rows (which the age check used to bound) are dropped
       // and a version bump still evicts everyone. TTL governs the localStorage
       // tier only (see `loadLocal`).
-      const valid = applyIdbLimits(
-        scope,
-        migratedEntries.filter((e) => e.version === version),
-      );
+      const valid = migratedEntries.filter((e) => e.version === version);
       // Map may have changed scope while we awaited; only apply if still current.
       if (cacheMapInstance && getScope() === scope && hydrationEpoch === epoch) {
         cacheMapInstance.hydrate(valid.map((e) => [e.key, e.data]));
@@ -558,15 +489,6 @@ export const CACHE_TIERS = {
     'notebook:', // notebook documents
     'brief:', // briefs
   ],
-  /**
-   * Caps for IndexedDB key families that grow one row per entity. Every row is
-   * loaded at boot, so a family like this must not grow without bound.
-   */
-  idbLimits: [
-    // Projected tool payloads (`message:toolResultPayload`) — immutable per
-    // message, but a single crawl / file read can be large.
-    { maxEntries: 200, maxSize: 128 * 1024, pattern: 'message:toolResultPayload' },
-  ] satisfies IdbEntryLimit[],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [
     // Home's chat-mode recents still uses the SWR persistence tier. The mixed
@@ -595,7 +517,6 @@ export const swrCacheProvider = (
 ): ScopedSWRProvider => {
   return createCacheProvider({
     getScope,
-    idbEntryLimits: [...CACHE_TIERS.idbLimits],
     idbPatterns: [...CACHE_TIERS.idb],
     // Quarantine writes until the session check resolves (`isScopeTrusted`).
     // The active scope is optimistic (persisted last-known user) before the
