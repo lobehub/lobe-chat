@@ -1,11 +1,10 @@
+import { isValidDirectoryName, isWindowsDevicePath } from '@lobechat/utils/directoryName';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { deviceService } from '@/services/device';
 
-/** Mirrors the server rule: one path segment, never `.` / `..`, no separators or NUL. */
-export const isValidFolderName = (name: string) =>
-  !!name && name !== '.' && name !== '..' && !/[/\\\0]/.test(name);
+export { isValidDirectoryName as isValidFolderName } from '@lobechat/utils/directoryName';
 
 const ERROR_MESSAGE_KEYS = {
   // The name is taken on the device.
@@ -50,8 +49,14 @@ export const useCreateFolder = ({ deviceId, onCreated, parentPath }: UseCreateFo
     if (pending) return;
     const next = name.trim();
     if (!next) return;
-    if (!isValidFolderName(next)) {
-      setError(t('workingDirectory.newFolderInvalidName'));
+    if (!isValidDirectoryName(name, parentPath) || !isValidDirectoryName(next, parentPath)) {
+      setError(
+        t(
+          isWindowsDevicePath(parentPath)
+            ? 'workingDirectory.newFolderInvalidWindowsName'
+            : 'workingDirectory.newFolderInvalidName',
+        ),
+      );
       return;
     }
 

@@ -61,6 +61,7 @@
   "workingDirectory.newFolderExists": "Đã tồn tại một tệp hoặc thư mục với tên này tại đây.",
   "workingDirectory.newFolderFailed": "Không thể tạo thư mục này. Kiểm tra kết nối thiết bị và quyền thư mục, sau đó thử lại.",
   "workingDirectory.newFolderInvalidName": "Tên thư mục không thể là “.” hoặc “..”, hoặc chứa / hoặc \\.",
+  "workingDirectory.newFolderInvalidWindowsName": "Sử dụng tên thư mục Windows không chứa các tên dành riêng (như CON), ký tự đặc biệt (< > : \" / \\ | ? *), ký tự điều khiển hoặc khoảng trắng hoặc dấu chấm ở cuối.",
   "workingDirectory.newFolderPlaceholder": "Tên thư mục",
   "workingDirectory.newFolderUnsupported": "Ứng dụng của thiết bị này hiện chưa hỗ trợ tạo thư mục. Cập nhật ứng dụng và thử lại.",
   "workingDirectory.newWorktreeLocation": "Sẽ được tạo tại {{path}}",

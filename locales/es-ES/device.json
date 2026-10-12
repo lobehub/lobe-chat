@@ -61,6 +61,7 @@
   "workingDirectory.newFolderExists": "Ya existe un archivo o carpeta con este nombre aquí.",
   "workingDirectory.newFolderFailed": "No se pudo crear esta carpeta. Verifica la conexión del dispositivo y los permisos de la carpeta, luego inténtalo de nuevo.",
   "workingDirectory.newFolderInvalidName": "Los nombres de las carpetas no pueden ser “.” o “..”, ni contener / o \\.",
+  "workingDirectory.newFolderInvalidWindowsName": "Utiliza un nombre de carpeta de Windows sin nombres reservados (como CON), caracteres especiales (< > : \" / \\ | ? *), caracteres de control o un espacio o punto al final.",
   "workingDirectory.newFolderPlaceholder": "Nombre de la carpeta",
   "workingDirectory.newFolderUnsupported": "La aplicación de este dispositivo aún no admite la creación de carpetas. Actualízala e inténtalo de nuevo.",
   "workingDirectory.newWorktreeLocation": "Se creará en {{path}}",

@@ -61,6 +61,7 @@
   "workingDirectory.newFolderExists": "یک فایل یا پوشه با این نام در اینجا وجود دارد.",
   "workingDirectory.newFolderFailed": "ایجاد این پوشه ممکن نیست. اتصال دستگاه و مجوزهای پوشه را بررسی کنید و دوباره تلاش کنید.",
   "workingDirectory.newFolderInvalidName": "نام پوشه نمی‌تواند “.” یا “..” باشد یا شامل / یا \\ باشد.",
+  "workingDirectory.newFolderInvalidWindowsName": "از یک نام پوشه ویندوز بدون نام‌های رزرو شده (مانند CON)، کاراکترهای خاص (< > : \" / \\ | ? *)، کاراکترهای کنترلی، یا فاصله یا نقطه در انتها استفاده کنید.",
   "workingDirectory.newFolderPlaceholder": "نام پوشه",
   "workingDirectory.newFolderUnsupported": "اپلیکیشن این دستگاه هنوز از ایجاد پوشه‌ها پشتیبانی نمی‌کند. آن را به‌روزرسانی کنید و دوباره تلاش کنید.",
   "workingDirectory.newWorktreeLocation": "در مسیر {{path}} ایجاد خواهد شد",

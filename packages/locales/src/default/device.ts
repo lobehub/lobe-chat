@@ -1,4 +1,6 @@
 export default {
+  'workingDirectory.newFolderInvalidWindowsName':
+    'Use a Windows folder name without reserved names (such as CON), special characters (< > : " / \\ | ? *), control characters, or a trailing space or period.',
   'workingDirectory.addFolderFailed': 'Could not add this folder. Please try again.',
   'workingDirectory.browseDescription': 'Choose a folder on the connected device.',
   'workingDirectory.browseFolders': 'Browse folders',

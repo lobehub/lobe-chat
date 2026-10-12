@@ -61,6 +61,7 @@
   "workingDirectory.newFolderExists": "Файл или папка с таким именем уже существует здесь.",
   "workingDirectory.newFolderFailed": "Не удалось создать эту папку. Проверьте подключение устройства и разрешения на папку, затем попробуйте снова.",
   "workingDirectory.newFolderInvalidName": "Имена папок не могут быть «.» или «..», или содержать / или \\.",
+  "workingDirectory.newFolderInvalidWindowsName": "Используйте имя папки Windows без зарезервированных имен (например, CON), специальных символов (< > : \" / \\ | ? *), управляющих символов или завершающих пробелов или точек.",
   "workingDirectory.newFolderPlaceholder": "Имя папки",
   "workingDirectory.newFolderUnsupported": "Приложение этого устройства пока не поддерживает создание папок. Обновите его и попробуйте снова.",
   "workingDirectory.newWorktreeLocation": "Будет создано по адресу {{path}}",

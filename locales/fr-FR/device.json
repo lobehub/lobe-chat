@@ -61,6 +61,7 @@
   "workingDirectory.newFolderExists": "Un fichier ou un dossier portant ce nom existe déjà ici.",
   "workingDirectory.newFolderFailed": "Impossible de créer ce dossier. Vérifiez la connexion de l'appareil et les autorisations du dossier, puis réessayez.",
   "workingDirectory.newFolderInvalidName": "Les noms de dossier ne peuvent pas être « . » ou « .. », ni contenir / ou \\.",
+  "workingDirectory.newFolderInvalidWindowsName": "Utilisez un nom de dossier Windows sans noms réservés (comme CON), caractères spéciaux (< > : \" / \\ | ? *), caractères de contrôle, ou un espace ou un point final.",
   "workingDirectory.newFolderPlaceholder": "Nom du dossier",
   "workingDirectory.newFolderUnsupported": "L'application de cet appareil ne prend pas encore en charge la création de dossiers. Mettez-la à jour et réessayez.",
   "workingDirectory.newWorktreeLocation": "Sera créé à {{path}}",

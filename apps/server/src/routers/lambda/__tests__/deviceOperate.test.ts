@@ -148,6 +148,20 @@ describe('creating a folder from the remote picker', () => {
     },
   );
 
+  it.each(['CON', 'a:b', 'folder.', 'folder '])(
+    'rejects Windows name %j with BAD_REQUEST',
+    async (name) => {
+      await expect(
+        workspaceCaller('member', 'member').createDirectory({
+          deviceId: 'device',
+          name,
+          parentPath: 'C:\\Users\\me',
+        }),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      expect(mocks.createDirectory).not.toHaveBeenCalled();
+    },
+  );
+
   it('reports a taken name as CONFLICT', async () => {
     mocks.createDirectory.mockResolvedValue({
       error: 'An item already exists at /home/new-project.',

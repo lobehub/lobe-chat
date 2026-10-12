@@ -1559,6 +1559,22 @@ describe('DeviceGateway', () => {
         },
       );
 
+      it.each(['a:b', 'CON.txt', 'project.', 'project '])(
+        'rejects invalid Windows name %j before invoking the device',
+        async (name) => {
+          configure();
+          await expect(
+            new DeviceGateway().createDirectory({
+              deviceId: 'dev-1',
+              name,
+              parentPath: 'C:\\Users\\me',
+              userId: 'user-1',
+            }),
+          ).rejects.toThrow(/Invalid folder name/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
       it('rejects a relative parent path without invoking the rpc', async () => {
         configure();
 

@@ -13,11 +13,9 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-const setup = () => {
+const setup = (parentPath = '/home/me') => {
   const onCreated = vi.fn();
-  const hook = renderHook(() =>
-    useCreateFolder({ deviceId: 'device', onCreated, parentPath: '/home/me' }),
-  );
+  const hook = renderHook(() => useCreateFolder({ deviceId: 'device', onCreated, parentPath }));
   const submitName = async (name: string) => {
     act(() => hook.result.current.setName(name));
     await act(() => hook.result.current.submit());
@@ -107,6 +105,27 @@ describe('useCreateFolder', () => {
     await submitName('a/b');
 
     expect(hook.result.current.error).toBe('workingDirectory.newFolderInvalidName');
+    expect(deviceService.createDirectory).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    'a:b',
+    'a*b',
+    'a?b',
+    'a"b',
+    'a<b',
+    'a>b',
+    'a|b',
+    'CON',
+    'nul.txt',
+    'COM1',
+    'LPT².log',
+    'project.',
+    'project ',
+  ])('rejects Windows name %j before making a request', async (name) => {
+    const { hook, submitName } = setup('C:\\Users\\me');
+    await submitName(name);
+    expect(hook.result.current.error).toBe('workingDirectory.newFolderInvalidWindowsName');
     expect(deviceService.createDirectory).not.toHaveBeenCalled();
   });
 

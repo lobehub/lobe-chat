@@ -71,6 +71,7 @@ import type {
   ProjectSkillMeta,
   WorkspaceInitResult,
 } from '@lobechat/types';
+import { isValidDirectoryName } from '@lobechat/utils/directoryName';
 import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
@@ -117,13 +118,7 @@ const assertPathsWithinWorkspace = (
   }
 };
 
-/**
- * A single path segment usable as a new folder name on any device OS: no path
- * separators (which would create elsewhere than the browsed folder), no `.` /
- * `..`, and no NUL.
- */
-export const isValidDirectoryName = (name: string): boolean =>
-  !!name && name !== '.' && name !== '..' && !/[/\\\0]/.test(name);
+export { isValidDirectoryName } from '@lobechat/utils/directoryName';
 
 /**
  * Append one segment to a device path, keeping the device's own separator. The
@@ -1850,7 +1845,8 @@ export class DeviceGateway {
   }): Promise<DeviceCreateProjectEntryResult> {
     const { deviceId, parentPath, timeout = 30_000, userId, workspaceId } = params;
     const name = params.name.trim();
-    if (!isValidDirectoryName(name)) throw new Error(`Invalid folder name: ${params.name}`);
+    if (!isValidDirectoryName(params.name, parentPath) || !isValidDirectoryName(name, parentPath))
+      throw new Error(`Invalid folder name: ${params.name}`);
     if (!isAbsolute(parentPath)) throw new Error(`Parent path must be absolute: ${parentPath}`);
 
     const client = this.getClient();

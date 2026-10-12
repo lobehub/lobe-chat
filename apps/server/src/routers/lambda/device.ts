@@ -872,14 +872,17 @@ export const deviceRouter = router({
     .input(
       z.object({
         deviceId: z.string(),
-        name: z.string().trim().min(1).max(255),
+        name: z.string().min(1).max(255),
         parentPath: z.string().min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       await assertDeviceOperable(ctx, input.deviceId, 'create folders');
 
-      if (!isValidDirectoryName(input.name)) {
+      if (
+        !isValidDirectoryName(input.name, input.parentPath) ||
+        !isValidDirectoryName(input.name.trim(), input.parentPath)
+      ) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid folder name.' });
       }
 
@@ -887,7 +890,7 @@ export const deviceRouter = router({
       try {
         result = await deviceGateway.createDirectory({
           deviceId: input.deviceId,
-          name: input.name,
+          name: input.name.trim(),
           parentPath: input.parentPath,
           userId: ctx.userId,
           workspaceId: ctx.workspaceId,
