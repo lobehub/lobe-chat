@@ -272,8 +272,10 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   };
 
   // ---- last persisted value per row ---------------------------------------
-  // What this session knows a row holds in storage: the value it queued (until
-  // that write fails) or read back by a hydrate no write raced. A persist of a
+  // What this session knows a row holds in storage: the value of its latest
+  // write once that write is confirmed (`ReplicaStorage.set` resolved), or the
+  // value read back by a hydrate no write raced. A write still in flight, or one
+  // that failed, leaves the row unknown. A persist of a
   // deep-equal value is skipped — an unchanged revalidation must not rewrite
   // the same row. Every path that may change a row behind it (a delete, a
   // patch, a clear, an eviction) forgets the row, so the next persist writes.
@@ -584,13 +586,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         touchStorageKey(effect.scope, key.queryKey);
         continue;
       }
-      rememberStored(effect.scope, key.queryKey, data);
-      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
-        // A failed write leaves the row as it was: the next persist must retry.
-        if (!written && storedValues.get(effect.scope)?.get(key.queryKey) === data)
-          forgetStored(effect.scope, [key.queryKey]);
-      });
+      // Until this write is confirmed the row's content is unknown: forget what
+      // it held, and only remember `data` once the write observably landed and
+      // is still the latest queued for the row. A failed (or best-effort,
+      // silently dropped) write therefore never makes a later identical persist
+      // look redundant — that one writes again.
+      forgetStored(effect.scope, [key.queryKey]);
       trackStorageKey(effect.scope, key.queryKey);
+      const id = rowId(effect.scope, key.queryKey);
+      const seq = rowWrites.get(id);
+      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
+        if (written && rowWrites.get(id) === seq) rememberStored(effect.scope, key.queryKey, data);
+      });
     }
   };
 
@@ -961,6 +968,25 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     clearGenerations.set(scope, clearGeneration(scope) + 1);
     port.commit([{ type: 'clear' }], { entries: {}, scope }, `${prefix}/clear`);
     storedValues.delete(scope);
+    const purge = purgeScope(scope);
+    scopePurges.set(scope, purge);
+    return purge;
+  };
+
+  /**
+   * `clear()` for any scope, including one that is not active (a user who
+   * switched away while their data was being deleted): every persisted row of
+   * `scope` and its index go, and for the active scope memory is wiped too
+   * (exactly `clear()`). An inactive scope's memory is not on screen and is
+   * left alone. The row deletes go through the write queue, so they land after
+   * any write this session already queued for that scope — a row (or index
+   * entry) written just before is purged rather than landing after the purge.
+   * A later hydrate of `scope` waits for the purge. Resolves `true` once the
+   * persisted rows are gone.
+   */
+  const clearScope = (scope: string): Promise<boolean> => {
+    if (scope === resource.scope.get()) return clear();
+    clearGenerations.set(scope, clearGeneration(scope) + 1);
     const purge = purgeScope(scope);
     scopePurges.set(scope, purge);
     return purge;
@@ -1393,6 +1419,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     beginOptimistic,
     clear,
     clearGeneration,
+    clearScope,
     removalGeneration,
     collapse,
     dispatch,

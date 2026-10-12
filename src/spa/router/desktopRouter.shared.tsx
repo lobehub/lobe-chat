@@ -78,8 +78,10 @@ import {
 } from '@/routes/(main)/group/features/routeMeta';
 import AppShellSkeleton, { APP_SHELL_FALLBACK_ID } from '@/spa/BootShell/AppShellSkeleton';
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
+import { activityListLoader } from '@/spa/router/activityListLoader';
 import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
+import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
@@ -793,6 +795,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
         handle: {
           meta: routeMeta({ icon: BrainCircuit, titleKey: 'navigation.memoryContexts' }),
         },
+        // Seed the persisted head page before the page paints (see `contextListLoader`).
+        loader: contextListLoader,
         path: 'contexts',
       },
       {
@@ -825,6 +829,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
         handle: {
           meta: routeMeta({ icon: BrainCircuit, titleKey: 'navigation.memory' }),
         },
+        // Seed the persisted head page before the page paints (see `activityListLoader`).
+        loader: activityListLoader,
         path: 'activities',
       },
     ],

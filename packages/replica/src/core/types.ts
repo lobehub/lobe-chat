@@ -41,6 +41,13 @@ export interface ReplicaStorage<T> {
    * of letting a row the user deleted hydrate again. A missing row is a success.
    */
   remove: (key: ReplicaRowKey) => Promise<void>;
+  /**
+   * Write a row. Should **reject** when the write did not land: the engine only
+   * treats a row as holding a value after `set` resolved, so a rejected write is
+   * retried by the next persist rather than skipped as redundant. A storage that
+   * swallows failures still works, but a dropped write then survives until the
+   * value changes or the next session.
+   */
   set: (key: ReplicaRowKey, row: ReplicaRow<T>) => Promise<void>;
 }
 
