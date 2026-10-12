@@ -55,9 +55,9 @@ describe('LobeLiteLLMAI - custom features', () => {
 
       expect(instance['client'].models.list).toHaveBeenCalled();
       expect(models).toHaveLength(3);
-      expect(models[0]).toMatchObject({ id: 'gpt-6-luna' });
-      expect(models[1]).toMatchObject({ id: 'text-embedding-3-large' });
-      expect(models[2]).toMatchObject({ id: 'my-internal-alias' });
+      expect(models[0]).toMatchObject({ id: 'gpt-6-luna', type: 'chat' });
+      expect(models[1]).toMatchObject({ id: 'text-embedding-3-large', type: 'embedding' });
+      expect(models[2]).toMatchObject({ id: 'my-internal-alias', type: 'chat' });
     });
 
     it('should handle empty model list', async () => {
