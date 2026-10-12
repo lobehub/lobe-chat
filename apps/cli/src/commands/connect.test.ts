@@ -15,6 +15,7 @@ import { registerConnectCommand } from './connect';
 
 const registerDeviceMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const mintWorkspaceConnectTokenMock = vi.hoisted(() => vi.fn());
+const registerWorkspaceDeviceMock = vi.hoisted(() => vi.fn());
 
 vi.mock('../device/register', async (importOriginal) => {
   const actual = await importOriginal<typeof DeviceRegister>();
@@ -22,6 +23,7 @@ vi.mock('../device/register', async (importOriginal) => {
     ...actual,
     mintWorkspaceConnectToken: mintWorkspaceConnectTokenMock,
     registerDevice: registerDeviceMock,
+    registerWorkspaceDevice: registerWorkspaceDeviceMock,
   };
 });
 
@@ -283,6 +285,36 @@ describe('connect command', () => {
       program.parseAsync(['node', 'test', 'connect', '--workspace', 'ws_1']),
     ).rejects.toThrow('process.exit');
     expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  it.each([
+    { error: new Error('fetch failed'), exitCode: 75, reason: 'fails transiently' },
+    {
+      error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+      exitCode: 1,
+      reason: 'is refused by the server',
+    },
+  ])('exits with $exitCode when workspace registration $reason', async ({ error, exitCode }) => {
+    mintWorkspaceConnectTokenMock.mockResolvedValueOnce({ token: 'workspace-token' });
+    registerWorkspaceDeviceMock.mockRejectedValueOnce(error);
+    exitSpy.mockImplementation(() => {
+      throw new Error('process.exit');
+    });
+
+    await expect(
+      createProgram().parseAsync([
+        'node',
+        'test',
+        'connect',
+        '--service-child',
+        '--workspace',
+        'ws_1',
+      ]),
+    ).rejects.toThrow('process.exit');
+
+    expect(registerWorkspaceDeviceMock).toHaveBeenCalledOnce();
+    expect(exitSpy).toHaveBeenCalledWith(exitCode);
+    expect(connectCalled).toBe(false);
   });
 
   it('should use explicit gateway for custom login server', async () => {
