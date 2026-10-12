@@ -272,8 +272,10 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   };
 
   // ---- last persisted value per row ---------------------------------------
-  // What this session knows a row holds in storage: the value it queued (until
-  // that write fails) or read back by a hydrate no write raced. A persist of a
+  // What this session knows a row holds in storage: the value of its latest
+  // write once that write is confirmed (`ReplicaStorage.set` resolved), or the
+  // value read back by a hydrate no write raced. A write still in flight, or one
+  // that failed, leaves the row unknown. A persist of a
   // deep-equal value is skipped — an unchanged revalidation must not rewrite
   // the same row. Every path that may change a row behind it (a delete, a
   // patch, a clear, an eviction) forgets the row, so the next persist writes.
@@ -584,13 +586,18 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
         touchStorageKey(effect.scope, key.queryKey);
         continue;
       }
-      rememberStored(effect.scope, key.queryKey, data);
-      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
-        // A failed write leaves the row as it was: the next persist must retry.
-        if (!written && storedValues.get(effect.scope)?.get(key.queryKey) === data)
-          forgetStored(effect.scope, [key.queryKey]);
-      });
+      // Until this write is confirmed the row's content is unknown: forget what
+      // it held, and only remember `data` once the write observably landed and
+      // is still the latest queued for the row. A failed (or best-effort,
+      // silently dropped) write therefore never makes a later identical persist
+      // look redundant — that one writes again.
+      forgetStored(effect.scope, [key.queryKey]);
       trackStorageKey(effect.scope, key.queryKey);
+      const id = rowId(effect.scope, key.queryKey);
+      const seq = rowWrites.get(id);
+      void writeQueue.set(key, { data, updatedAt: Date.now() }).then((written) => {
+        if (written && rowWrites.get(id) === seq) rememberStored(effect.scope, key.queryKey, data);
+      });
     }
   };
 
@@ -966,6 +973,25 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return purge;
   };
 
+  /**
+   * `clear()` for any scope, including one that is not active (a user who
+   * switched away while their data was being deleted): every persisted row of
+   * `scope` and its index go, and for the active scope memory is wiped too
+   * (exactly `clear()`). An inactive scope's memory is not on screen and is
+   * left alone. The row deletes go through the write queue, so they land after
+   * any write this session already queued for that scope — a row (or index
+   * entry) written just before is purged rather than landing after the purge.
+   * A later hydrate of `scope` waits for the purge. Resolves `true` once the
+   * persisted rows are gone.
+   */
+  const clearScope = (scope: string): Promise<boolean> => {
+    if (scope === resource.scope.get()) return clear();
+    clearGenerations.set(scope, clearGeneration(scope) + 1);
+    const purge = purgeScope(scope);
+    scopePurges.set(scope, purge);
+    return purge;
+  };
+
   /** Delete every persisted row of `scope` (see `clear`). */
   const purgeScope = async (scope: string): Promise<boolean> => {
     if (!writeQueue) return true;
@@ -1211,6 +1237,12 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     }
     // Identity changed while reading the index: those rows are not ours to touch.
     if (!offScope && resource.scope.get() !== scope) return false;
+    // Rows this session wrote to the scope may not be in the persisted index yet
+    // (their row or index write is still queued — e.g. just before an account
+    // switch). Patch them too: each patch is queued behind the row's own write,
+    // so it reads the row once that write landed.
+    for (const queryKey of indexed.get(scope) ?? [])
+      if (!keys.includes(queryKey)) keys.push(queryKey);
     const patches: Promise<boolean>[] = [];
     for (const queryKey of keys) {
       if (loaded.has(queryKey)) continue;
@@ -1326,22 +1358,65 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     return patch;
   };
 
+  /**
+   * An entity patch started for a scope that was not active settled. If the
+   * user switched back to that scope meanwhile, an entry may have hydrated the
+   * pre-patch row before the patch landed: apply the same change to what is
+   * loaded now, in memory only — storage already holds it.
+   */
+  const reconcileLoaded = <TItem>(
+    scope: string,
+    id: string,
+    fn: (item: TItem) => TItem | undefined,
+  ) => {
+    if (resource.scope.get() !== scope || getSlot().scope !== scope) return;
+    for (const key of entityKeys(id)) {
+      const current = port.read(key);
+      if (current === undefined) continue;
+      // A hydrate during the patch may have recorded the pre-patch row as stored.
+      forgetStored(scope, [storageKey(key, getSlot().entries[key]?.query).queryKey]);
+      if (mapEntity(current, id, fn) === undefined) remove(key);
+      else
+        update(key, (data) => (data === undefined ? data : (mapEntity(data, id, fn) ?? data)), {
+          persist: false,
+        });
+    }
+  };
+
+  /**
+   * Confirmed patch of one entity everywhere it is loaded and in the persisted
+   * rows of unloaded entries. `scope` targets a scope captured earlier (a
+   * write confirmed after the account switched): when it is no longer active,
+   * only that scope's persisted rows are patched and the view on screen —
+   * another identity's — is left alone.
+   */
   const updateEntity = <TItem>(
     id: string,
     fn: (item: TItem) => TItem | undefined,
-    options?: { persist?: boolean },
+    options?: { persist?: boolean; scope?: string },
   ) => {
+    if (options?.scope !== undefined && options.scope !== resource.scope.get()) {
+      const scope = options.scope;
+      if (options.persist === false) return;
+      const settle = () => reconcileLoaded(scope, id, fn);
+      void patchStoredEntityRows(id, fn, scope).then(settle, settle);
+      return;
+    }
     void applyEntity(id, fn, options);
   };
 
   /**
-   * Confirmed removal of one entity everywhere (see `updateEntity`). Unlike a
-   * plain mapper returning `undefined`, it is also remembered for this scope:
+   * Confirmed removal of one entity everywhere (see `updateEntity`, including
+   * its captured `scope`). Unlike a plain mapper returning `undefined`, it is
+   * also remembered for that scope:
    * a value hydrated afterwards — even by a read already in flight — comes
    * back without the entity (see `removedEntities`).
    */
   const removeEntity = (id: string, options?: { persist?: boolean; scope?: string }) => {
     const scope = options?.scope ?? resource.scope.get();
+    // A removal confirmed after the account switched belongs to the scope that
+    // asked for it: guard and patch that scope's rows, never the active view.
+    const offScope = scope !== resource.scope.get();
     const guard: { releasedAt?: number } = {};
     const guards = removedEntities.get(scope) ?? new Map<string, { releasedAt?: number }>();
     removedEntities.set(scope, guards);
@@ -1354,10 +1429,15 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     };
     // A scope left behind has nothing on screen: only its persisted rows drop
     // the entity, and the guard keeps a later hydrate there from reading it back.
-    const patch =
-      scope === resource.scope.get()
-        ? applyEntity(id, () => undefined, options)
-        : patchStoredEntityRows(id, () => undefined, scope);
+    const patch = offScope
+      ? options?.persist === false
+        ? undefined
+        : patchStoredEntityRows(id, () => undefined, scope).then((patched) => {
+            // Switched back meanwhile: drop it from anything hydrated since.
+            reconcileLoaded(scope, id, () => undefined);
+            return patched;
+          })
+      : applyEntity(id, () => undefined, options);
     // Without a storage patch (`persist: false`) only reads already in flight
     // can hold the entity; with one, reads that start before it lands can too.
     // A patch that did not land (untrusted scope, unreadable index or row, a
@@ -1393,6 +1473,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     beginOptimistic,
     clear,
     clearGeneration,
+    clearScope,
     removalGeneration,
     collapse,
     dispatch,
