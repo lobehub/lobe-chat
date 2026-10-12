@@ -7,6 +7,7 @@ import type {
   AiProviderModelListItem,
   CreateAiModelParams,
   ToggleAiModelEnableParams,
+  UpdateAiModelParams,
 } from 'model-bank';
 import type { SWRResponse } from 'swr';
 
@@ -349,7 +350,7 @@ export class AiModelActionImpl {
   updateAiModelsConfig = async (
     id: string,
     providerId: string,
-    data: Partial<AiProviderModelListItem>,
+    data: UpdateAiModelParams,
   ): Promise<void> => {
     await aiModelService.updateAiModel(id, providerId, data);
     await this.#get().refreshAiModelList();
