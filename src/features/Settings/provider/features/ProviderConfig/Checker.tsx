@@ -137,7 +137,11 @@ const Checker = memo<ConnectionCheckerProps>(
         },
 
         onFinish: async (value) => {
-          if (!isError && value) {
+          // A provider error inside a 200 stream (a relayed device call, or any
+          // in-stream error) also finishes the stream: keep that error.
+          if (isError) return;
+
+          if (value) {
             setError(undefined);
             setPass(true);
           } else {
