@@ -60,9 +60,25 @@ const GIF_SHEET_DECODE_CONCURRENCY = 3;
 export const GIF_FRAME_SHEET_NOTE =
   'Animated recording shown as evenly spaced frames in playback order, left to right, top to bottom.';
 
-/** Whether a frame URL is the PNG sheet a GIF artifact was rendered into. */
+/**
+ * Ceiling on a GIF read to build its sheet. The source is only decoded, never
+ * sent, so it is not bound by the inline limits; this only keeps one huge
+ * recording from being pulled into memory.
+ */
+export const MAX_GIF_SOURCE_BYTES = 64 * 1024 * 1024;
+/** Past this a PNG sheet is re-encoded as JPEG, keeping each sheet small to inline. */
+const MAX_GIF_SHEET_PNG_BYTES = 1024 * 1024;
+
+export const isGifStoredFrame = (file: { fileType?: string | null }): boolean =>
+  file.fileType?.toLowerCase() === 'image/gif';
+
+/** Whether a frame URL is the sheet a GIF artifact was rendered into. */
 export const isGifFrameSheet = (type: string, url: string): boolean =>
-  type === 'gif' && url.startsWith('data:image/png;');
+  type === 'gif' && /^data:image\/(?:png|jpeg);/.test(url);
+
+/** Bytes a data-URI frame adds to a request once decoded; 0 for a link. */
+export const inlinedFrameBytes = (url: string): number =>
+  url.startsWith('data:') ? Math.floor(((url.length - url.indexOf(',') - 1) * 3) / 4) : 0;
 
 /**
  * Render a GIF as a PNG sheet of evenly spaced frames.
@@ -116,6 +132,15 @@ export const renderGifFrameSheet = async (bytes: Uint8Array): Promise<Buffer | u
     .toBuffer();
 };
 
+const sheetDataUri = async (bytes: Uint8Array): Promise<string | undefined> => {
+  const sheet = await renderGifFrameSheet(bytes);
+  if (!sheet) return;
+  if (sheet.length <= MAX_GIF_SHEET_PNG_BYTES)
+    return `data:image/png;base64,${sheet.toString('base64')}`;
+  const jpeg = await sharp(sheet).jpeg({ quality: 80 }).toBuffer();
+  return `data:image/jpeg;base64,${jpeg.toString('base64')}`;
+};
+
 /**
  * The URL a judging model is given for a stored evidence frame.
  *
@@ -125,7 +150,10 @@ export const renderGifFrameSheet = async (bytes: Uint8Array): Promise<Buffer | u
  * from the provider, and the model call fails with "Error while downloading
  * file" on every attempt, however many times the review is retried.
  *
- * A GIF is sent as a PNG frame sheet (see {@link renderGifFrameSheet}).
+ * A GIF is always sent as a frame sheet (see {@link renderGifFrameSheet}),
+ * whatever its size or the remaining inline budget: a linked GIF is no fallback,
+ * because an adapter that downloads it still drops `image/gif`. The sheet is
+ * what spends the budget, not the recording it came from.
  *
  * Falls back to the access URL when the frame is too large to inline, is not a
  * recognizable image, or cannot be read.
@@ -136,14 +164,27 @@ export const resolveModelReadableFrameUrl = async (
   /** False once the request's inline budget is spent: link the frame instead. */
   inline = true,
 ): Promise<string> => {
+  if (
+    isGifStoredFrame(file) &&
+    typeof file.size === 'number' &&
+    file.size <= MAX_GIF_SOURCE_BYTES
+  ) {
+    try {
+      const sheet = await sheetDataUri(await fileService.getFileByteArray(file.url));
+      if (sheet) return sheet;
+    } catch (error) {
+      log('could not render GIF %s as a frame sheet: %O', file.id, error);
+    }
+  }
   if (inline && isInlineableFrameSize(file.size)) {
     try {
       const bytes = await fileService.getFileByteArray(file.url);
       const sniffed = sniffImageMimeType(bytes);
       const mimeType = file.fileType?.startsWith('image/') ? file.fileType : sniffed;
-      if (mimeType === 'image/gif' || sniffed === 'image/gif') {
-        const sheet = await renderGifFrameSheet(bytes);
-        if (sheet) return `data:image/png;base64,${sheet.toString('base64')}`;
+      if (sniffed === 'image/gif') {
+        // A GIF stored without its MIME type.
+        const sheet = await sheetDataUri(bytes);
+        if (sheet) return sheet;
       }
       if (mimeType) return `data:${mimeType};base64,${Buffer.from(bytes).toString('base64')}`;
     } catch (error) {

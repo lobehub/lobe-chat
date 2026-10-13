@@ -3,7 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { FileService } from '@/server/services/file';
 
-import { isGifFrameSheet, renderGifFrameSheet, resolveModelReadableFrameUrl } from '../modelFrames';
+import {
+  isGifFrameSheet,
+  MAX_INLINE_FRAME_BYTES,
+  renderGifFrameSheet,
+  resolveModelReadableFrameUrl,
+} from '../modelFrames';
 
 const FRAME = 40;
 const COLORS = [
@@ -79,6 +84,20 @@ describe('resolveModelReadableFrameUrl', () => {
 
     expect(url.startsWith('data:image/png;base64,')).toBe(true);
     expect(isGifFrameSheet('gif', url)).toBe(true);
+  });
+
+  it('still sends a GIF as a sheet when it is past the inline limits', async () => {
+    const gif = await animatedGif();
+    const fileService = fileServiceFor(gif);
+    const url = await resolveModelReadableFrameUrl(
+      fileService,
+      // Larger than one inline frame, and the request's budget is already spent.
+      { fileType: 'image/gif', id: 'file_big', size: MAX_INLINE_FRAME_BYTES + 1, url: 'big.gif' },
+      false,
+    );
+
+    expect(isGifFrameSheet('gif', url)).toBe(true);
+    expect(fileService.getFileAccessUrl).not.toHaveBeenCalled();
   });
 
   it('keeps a PNG screenshot as-is', async () => {

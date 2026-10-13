@@ -21,7 +21,9 @@ import { FileService } from '@/server/services/file';
 
 import {
   GIF_FRAME_SHEET_NOTE,
+  inlinedFrameBytes,
   isGifFrameSheet,
+  isGifStoredFrame,
   isInlineableFrameSize,
   MAX_INLINE_REQUEST_BYTES,
   resolveModelReadableFrameUrl,
@@ -378,9 +380,19 @@ export class VerifyReviewPredictorService {
 
     const files = await Promise.all(visual.map((row) => this.fileModel.findById(row.fileId!)));
 
-    // Spend the request's inline budget in evidence order; later frames are
-    // linked, so a many-frame check cannot push the body past provider limits.
-    let inlineBytes = 0;
+    // A GIF has no usable link (adapters that download it still drop
+    // `image/gif`), so it is always rendered to a sheet and inlined. The sheets
+    // are resolved first and spend the budget at their own size; the remaining
+    // frames then spend what is left in evidence order, and later ones are
+    // linked so a many-frame check cannot push the body past provider limits.
+    const gifSheets = await Promise.all(
+      files.map((file) =>
+        file && isGifStoredFrame(file)
+          ? resolveModelReadableFrameUrl(this.fileService, file)
+          : undefined,
+      ),
+    );
+    let inlineBytes = gifSheets.reduce((sum, url) => sum + (url ? inlinedFrameBytes(url) : 0), 0);
     const inline = files.map((file) => {
       const size = file?.size;
       if (!isInlineableFrameSize(size) || inlineBytes + size > MAX_INLINE_REQUEST_BYTES)
@@ -393,7 +405,9 @@ export class VerifyReviewPredictorService {
       visual.map(async (row, index) => {
         const file = files[index];
         if (!file) return null;
-        const accessUrl = await resolveModelReadableFrameUrl(this.fileService, file, inline[index]);
+        const accessUrl =
+          gifSheets[index] ??
+          (await resolveModelReadableFrameUrl(this.fileService, file, inline[index]));
         const frameSheet = isGifFrameSheet(row.type, accessUrl);
         return {
           accessUrl,
