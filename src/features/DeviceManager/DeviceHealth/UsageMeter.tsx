@@ -1,9 +1,12 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { useSize } from 'ahooks';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { type ReactNode, useRef } from 'react';
+
+import SkeletonBar from '@/components/Skeleton/Bar';
 
 import { formatPercent, usageLevel } from './format';
 import { USAGE_COLOR, usageTextColor } from './shared';
@@ -89,8 +92,36 @@ interface UsageMeterProps {
   value: number | null | undefined;
 }
 
-export const UsageMeterGroup = ({ children }: { children: ReactNode }) => (
-  <div className={styles.group}>{children}</div>
+export const UsageMeterGroup = ({
+  children,
+  loading,
+}: {
+  children: ReactNode;
+  loading?: boolean;
+}) => (
+  <div aria-busy={loading || undefined} className={styles.group}>
+    {children}
+  </div>
+);
+
+/** A text-line placeholder centered in the 20px line box of the meter's label / value. */
+const SkeletonLine = ({ width }: { width: number }) => (
+  <Flexbox justify={'center'} style={{ height: 20, minWidth: 0 }}>
+    <SkeletonBar height={12} width={width} />
+  </Flexbox>
+);
+
+/**
+ * Placeholder for one {@link UsageMeter} while its reading loads, in the same
+ * three grid cells and row height so the card keeps its height on loading →
+ * loaded. The label column still settles to the real label's width.
+ */
+export const UsageMeterSkeleton = () => (
+  <>
+    <SkeletonLine width={72} />
+    <SkeletonBar height={12} />
+    <SkeletonLine width={28} />
+  </>
 );
 
 /**
