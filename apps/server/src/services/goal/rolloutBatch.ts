@@ -52,7 +52,7 @@ export const normalizeRolloutRoster = (
     for (const unit of unitsNamedByProbes(
       probeTitles,
       (units ?? []).map((unit) => unit.trim()),
-    ))
+    ).keys())
       seen.add(unit);
   const rest: string[] = [];
   for (const unit of units ?? []) {

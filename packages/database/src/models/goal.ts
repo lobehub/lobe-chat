@@ -210,21 +210,35 @@ export class GoalModel {
   };
 
   /**
-   * Patch only `config.manager`: set the main Agent policy (keeping one already
-   * there), or remove it with `null`. The coordinator opens one when its own
-   * planner hands a goal over.
+   * Patch only `config.manager`: open the main Agent policy unless one is
+   * already there, which is kept as it is. The coordinator opens one when its
+   * own planner hands a goal over.
    */
-  updateManagerPolicy = async (id: string, policy: GoalManagerPolicy | null): Promise<void> => {
+  openManagerPolicy = async (id: string, policy: GoalManagerPolicy): Promise<void> => {
     await this.db
       .update(goals)
       .set({
-        config:
-          policy === null
-            ? sql`COALESCE(${goals.config}, '{}'::jsonb) - 'manager'`
-            : sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{manager}', COALESCE(${goals.config}->'manager', ${JSON.stringify(policy)}::jsonb))`,
+        config: sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{manager}', COALESCE(${goals.config}->'manager', ${JSON.stringify(policy)}::jsonb))`,
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Remove the policy a hand-over opened, only while it is still that one: a
+   * policy a person set or changed in the meantime has another token, or none.
+   */
+  closeHandoffManagerPolicy = async (id: string, token: string): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({ config: sql`${goals.config} - 'manager'`, updatedAt: new Date() })
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`${goals.config}->'manager'->>'openedForHandoff' = ${token}`,
+        ),
+      );
   };
 
   /** Patch only `config.rollout`, so auto-detection can persist the policy. */

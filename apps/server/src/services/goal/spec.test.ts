@@ -11,8 +11,8 @@ describe('evaluateHomogeneity', () => {
     variants: [],
   };
   const probes = [
-    { instruction: 'Migrate src/a.ts the same way', title: 'Migrate A' },
-    { instruction: 'Migrate src/b.ts the same way', title: 'Migrate B' },
+    { instruction: 'Migrate src/a.ts the same way', title: 'Migrate 1' },
+    { instruction: 'Migrate src/b.ts the same way', title: 'Migrate 2' },
   ];
 
   it('accepts one repeated mould above the threshold', () => {
@@ -38,7 +38,24 @@ describe('evaluateHomogeneity', () => {
   it('refuses a claim whose roster does not list every claimed unit', () => {
     const verdict = evaluateHomogeneity({ ...spec, units: ['Migrate 1', 'Migrate 2'] }, probes);
     expect(verdict).toMatchObject({ batch: false, malformed: true });
-    expect(verdict.reasons.join(' ')).toContain('roster lists 4 of the 50 claimed units');
+    expect(verdict.reasons.join(' ')).toContain('roster lists 2 of the 50 claimed units');
+  });
+
+  /**
+   * Regression: a probe the roster did not name was counted as one more unit,
+   * so nine declared units plus three unrelated probes made "twelve" and the
+   * batch passed — three requested units were never named and never delivered.
+   */
+  it('refuses a probe that is not one of the declared units', () => {
+    const units = Array.from({ length: 9 }, (_, i) => `Migrate ${i + 1}`);
+    const verdict = evaluateHomogeneity({ ...spec, unitCount: 12, units }, [
+      { instruction: 'x', title: 'Audit the cache layer' },
+      { instruction: 'x', title: 'Write the rollout doc' },
+      { instruction: 'x', title: 'Benchmark cold start' },
+    ]);
+    expect(verdict).toMatchObject({ batch: false, malformed: true });
+    expect(verdict.reasons.join(' ')).toContain('"Audit the cache layer"');
+    expect(verdict.reasons.join(' ')).toContain('roster lists 9 of the 12 claimed units');
   });
 
   it('keeps a goal that is simply not a batch on the ordinary plan', () => {
@@ -94,7 +111,7 @@ describe('unitsNamedByProbes', () => {
       ...unitsNamedByProbes(
         ['迁移 agent runtime（探针）', '迁移设备列表'],
         ['agent runtime', 'agent', '设备列表', '设备'],
-      ),
+      ).keys(),
     ]).toEqual(['agent runtime', '设备列表']);
   });
 });

@@ -2958,7 +2958,7 @@ describe('planning the system planner hands to the main Agent', () => {
     expect((await service().tick(id)).outcome).toBe('waiting_external');
 
     const { config, tasks } = await after(id);
-    expect(config.manager).toEqual({});
+    expect(config.manager).toEqual({ openedForHandoff: expect.any(String) });
     expect(config.managerState?.token).toBeTruthy();
     // Nothing from the planner's own pass ran.
     expect(tasks).toHaveLength(0);
@@ -3025,6 +3025,29 @@ describe('planning the system planner hands to the main Agent', () => {
     expect(config.manager).toBeUndefined();
     expect(tasks.map((n) => n.title)).toEqual(units.slice(0, 3));
     expect(AiAgentService.prototype.execAgent).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Regression: a hand-over that could not start removed `config.manager`
+   * unconditionally, so a policy a person set while it ran was deleted too.
+   */
+  it('keeps a main Agent policy a person set while the hand-over ran', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库',
+    });
+    vi.spyOn(GoalManagerService.prototype, 'planInstead').mockImplementation(async (graph) => {
+      await db
+        .update(goals)
+        .set({ config: sql`jsonb_set(${goals.config}, '{manager}', '{"maxTurns": 7}'::jsonb)` })
+        .where(eq(goals.id, graph.goal.id));
+      return null;
+    });
+    const id = await unmanagedGoal();
+
+    await service().tick(id);
+
+    expect((await after(id)).config.manager).toEqual({ maxTurns: 7 });
   });
 
   it('runs its own plan, and adds no main Agent, when none can take the goal', async () => {

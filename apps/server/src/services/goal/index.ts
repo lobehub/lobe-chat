@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import type { GoalAdvanceEffect, GoalMetricCriteriaState } from '@lobechat/agent-tracing';
 import { buildGoalRequirement } from '@lobechat/builtin-tool-goal';
 import {
@@ -4064,13 +4066,14 @@ export class GoalService {
   /**
    * Give the goal's planning to its main Agent, opening one for a goal that had
    * none. Returns undefined when no turn could start (no eligible agent, turn or
-   * budget limits); a policy opened here is then removed again, so the goal
-   * keeps the system planner and does not gain an uninvited planner later.
+   * budget limits); a policy opened here is then removed again — only that one,
+   * by its token — so the goal keeps the system planner and does not gain an
+   * uninvited planner later, while a policy a person set meanwhile stays.
    */
   private handPlanningToMainAgent = async (graph: GoalGraphSnapshot, reason: string) => {
     const goalId = graph.goal.id;
-    const opened = !graph.goal.config?.manager;
-    if (opened) await this.goalModel.updateManagerPolicy(goalId, {});
+    const token = randomUUID();
+    await this.goalModel.openManagerPolicy(goalId, { openedForHandoff: token });
     const result = await new GoalManagerService(this.db, this.userId, this.workspaceId)
       .planInstead(await this.requireGraph(goalId), reason)
       .catch((error: unknown) => {
@@ -4078,7 +4081,7 @@ export class GoalService {
         return null;
       });
     if (result) return result;
-    if (opened) await this.goalModel.updateManagerPolicy(goalId, null);
+    await this.goalModel.closeHandoffManagerPolicy(goalId, token);
     return undefined;
   };
 

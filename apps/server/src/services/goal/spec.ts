@@ -113,12 +113,19 @@ export const evaluateHomogeneity = (
     notBatch.push(`unitCount ${spec.unitCount} is below the threshold ${minUnits}`);
   if (!spec.recipeOutline?.trim()) broken.push('no reusable recipe outline');
   // The roster is what the waves deliver: a claim the roster cannot account for
-  // would exhaust it early and silently drop every unit it left out. A probe
-  // counts once, as the unit its title names.
+  // would exhaust it early and silently drop every unit it left out. Only the
+  // declared units count, and every probe must be one of them — a probe the
+  // roster does not name would stand in for a unit nobody listed, and the unit
+  // it displaced would never be delivered.
   const probeTitles = briefs.map((brief) => brief.title.trim()).filter(Boolean);
   const units = (spec.units ?? []).map((unit) => unit.trim()).filter(Boolean);
   const probed = unitsNamedByProbes(probeTitles, units);
-  const roster = new Set([...probeTitles, ...units.filter((unit) => !probed.has(unit))]);
+  const stray = probeTitles.filter(
+    (title) => !units.includes(title) && !units.some((unit) => probed.get(unit) === title),
+  );
+  if (stray.length)
+    broken.push(`probe ${stray.map((title) => `"${title}"`).join(', ')} is not a roster unit`);
+  const roster = new Set(units);
   if (Number.isFinite(spec.unitCount) && roster.size < spec.unitCount)
     broken.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
   if (options.maxUnits !== undefined && roster.size > options.maxUnits)
@@ -143,14 +150,15 @@ export const evaluateHomogeneity = (
  * holds, so the probe `agent runtime` leaves the separate unit `agent` queued:
  * a probe covering two units costs a rerun, never a unit that is dropped.
  */
-export const unitsNamedByProbes = (probeTitles: string[], units: string[]): Set<string> => {
-  const named = new Set<string>();
+export const unitsNamedByProbes = (probeTitles: string[], units: string[]): Map<string, string> => {
+  // unit → the probe title that stands for it
+  const named = new Map<string, string>();
   const candidates = [...new Set(units)].filter((unit) => !probeTitles.includes(unit));
   for (const probe of probeTitles) {
     const unit = candidates
       .filter((candidate) => !named.has(candidate) && containsAxisValue(probe, candidate))
       .sort((a, b) => b.length - a.length)[0];
-    if (unit) named.add(unit);
+    if (unit) named.set(unit, probe);
   }
   return named;
 };
