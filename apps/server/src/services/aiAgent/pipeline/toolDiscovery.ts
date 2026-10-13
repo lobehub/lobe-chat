@@ -47,7 +47,7 @@ import { loadModels } from '@/business/client/model-bank/loadModels';
 import { AiModelModel } from '@/database/models/aiModel';
 import { AiProviderModel } from '@/database/models/aiProvider';
 import { ChatGroupModel } from '@/database/models/chatGroup';
-import { ConnectorModel } from '@/database/models/connector';
+import { ConnectorModel, type DecryptedConnector } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
@@ -426,8 +426,56 @@ export const discoverTools = async (
           ? await deps.connectorToolModel.queryAllByConnectorIds(connectorsMcp.map((c) => c.id))
           : [];
 
-      return { connectorGateKeeper, connectors, connectorsMcp, connectorTools };
+      const discoverable = await readDiscoverableConnectors(candidateIds, connectorGateKeeper);
+
+      return {
+        connectorGateKeeper,
+        connectors,
+        connectorsMcp,
+        connectorTools,
+        discoverableConnectorManifests: discoverable.manifests,
+        discoverableConnectorsMcp: discoverable.connectorsMcp,
+      };
     });
+  }
+
+  /**
+   * Connectors the agent has not pinned — `auto` in the three-state plugin
+   * config, which is simply "absent from `plugins`". A custom MCP is stored as
+   * a connector, so without this source an unpinned one is resolvable only on
+   * the turn that @-mentions it: the next turn's activator answers
+   * "Not found" and the model's direct call is rejected as an unknown name.
+   * Like installed plugins they are discoverable but never enabled.
+   *
+   * Share runs skip it: the early allowlist above exists so ungranted creator
+   * connectors never get their credentials decrypted for a visitor turn.
+   * Degrades to nothing on failure — widening discovery must not fail the run.
+   */
+  async function readDiscoverableConnectors(
+    candidateIds: string[],
+    gateKeeper: KeyVaultsGateKeeper | undefined,
+  ): Promise<{ connectorsMcp: DecryptedConnector[]; manifests: LobeToolManifest[] }> {
+    if (shareGate || exclusivePluginIds || isGoalTurn) return { connectorsMcp: [], manifests: [] };
+    try {
+      const candidates = new Set(candidateIds);
+      const connectorsMcp = (
+        await deps.connectorModel.resolveAll(resolvedAgentId, gateKeeper)
+      ).filter(
+        (c) => !candidates.has(c.identifier) && (c.mcpServerUrl || c.mcpConnectionType === 'stdio'),
+      );
+      if (connectorsMcp.length === 0) return { connectorsMcp, manifests: [] };
+
+      const tools = await deps.connectorToolModel.queryAllByConnectorIds(
+        connectorsMcp.map((c) => c.id),
+      );
+      return {
+        connectorsMcp,
+        manifests: buildConnectorManifests(connectorsMcp, tools) as LobeToolManifest[],
+      };
+    } catch (error) {
+      log('execAgent: failed to read discoverable connectors: %O', error);
+      return { connectorsMcp: [], manifests: [] };
+    }
   }
 
   async function readLobehubSkillManifests(): Promise<LobeToolManifest[]> {
@@ -661,8 +709,14 @@ export const discoverTools = async (
     );
 
     // 5a-1. Resolve connectors — connector identifier takes priority over plugin.
-    const { connectorGateKeeper, connectors, connectorsMcp, connectorTools } =
-      await toolReads.connectors;
+    const {
+      connectorGateKeeper,
+      connectors,
+      connectorsMcp,
+      connectorTools,
+      discoverableConnectorManifests,
+      discoverableConnectorsMcp,
+    } = await toolReads.connectors;
 
     // 5a-1b. Model awareness: when the caller runs a shared agent whose tools
     // were authorized by OTHER members (workspace dimension), tell the model
@@ -720,7 +774,10 @@ export const discoverTools = async (
     // tools) replace a same-named plugin. Deriving the set from connectorsMcp
     // instead would let a disabled / not-yet-synced connector evict the plugin
     // while contributing no tools — leaving the runtime with nothing to call.
-    const connectorIdentifierSet = new Set(connectorManifests.map((m) => m.identifier));
+    // Unpinned connectors supersede a leftover plugin row the same way.
+    const connectorIdentifierSet = new Set(
+      [...connectorManifests, ...discoverableConnectorManifests].map((m) => m.identifier),
+    );
 
     // Filter out plugin entries that are now handled by real MCP connectors.
     // `let` because community-MCP plugins may be patched with connector
@@ -1066,6 +1123,9 @@ export const discoverTools = async (
     const activeLobehubSkillManifests = dropDisabledManifests(lobehubSkillManifests);
     const activeComposioManifests = dropDisabledManifests(composioManifests);
     const activeConnectorManifests = dropDisabledManifests(connectorManifests);
+    const activeDiscoverableConnectorManifests = dropDisabledManifests(
+      discoverableConnectorManifests,
+    );
 
     // Context-aware builtin manifests: inside a sub-agent (or group) run,
     // lobe-agent drops `callSubAgent` so the model can't recurse into nested
@@ -1104,6 +1164,11 @@ export const discoverTools = async (
         ...activeLobehubSkillManifests,
         ...activeComposioManifests,
         ...activeConnectorManifests,
+        // Known to the engine but never invocation candidates (they stay out of
+        // `connectorIds` below), so they are not enabled by default — this only
+        // lets a previous turn's activation pass the explicit-activation
+        // re-check when the next operation restores it.
+        ...activeDiscoverableConnectorManifests,
       ],
       agentConfig: {
         chatConfig: isGoalTurn
@@ -1198,10 +1263,14 @@ export const discoverTools = async (
       // wall re-checks them; a connector / Composio / LobeHub skill manifest
       // of the same identifier still wins, because the pool seeds this source
       // last.
-      installedManifests: dropInvalidManifests(
-        pluginsWithoutConnectors.map((plugin) => plugin.manifest as LobeToolManifest | undefined),
-        'installedPlugins(auto)',
-      ),
+      // Unpinned connectors join them on the same terms.
+      installedManifests: [
+        ...activeDiscoverableConnectorManifests,
+        ...dropInvalidManifests(
+          pluginsWithoutConnectors.map((plugin) => plugin.manifest as LobeToolManifest | undefined),
+          'installedPlugins(auto)',
+        ),
+      ],
       lobehubSkills: activeLobehubSkillManifests,
       manifestContext,
     });
@@ -1216,7 +1285,7 @@ export const discoverTools = async (
           ...installedPlugins
             .filter((plugin) => plugin.customParams?.mcp?.type === 'stdio')
             .map((plugin) => plugin.identifier),
-          ...connectorsMcp
+          ...[...connectorsMcp, ...discoverableConnectorsMcp]
             .filter((connector) => connector.mcpConnectionType === 'stdio')
             .map((connector) => connector.identifier),
         ],
