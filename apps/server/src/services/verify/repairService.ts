@@ -14,6 +14,7 @@ import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLi
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { AcceptanceService } from './acceptanceService';
+import { carryPassedResultsForward } from './carryForward';
 import { settleFailedRepair } from './repairTerminal';
 import { VerifyStatusService } from './statusService';
 
@@ -99,7 +100,7 @@ export const createRepairRunner = (params: {
     params;
   if (!agentId || !topicId) return undefined;
 
-  return async ({ instruction, operationId, verifyMessageId }) => {
+  return async ({ failedItemIds, instruction, operationId, verifyMessageId }) => {
     const operationModel = new AgentOperationModel(db, userId, workspaceId);
 
     const round = await countRepairRounds(operationModel, operationId);
@@ -134,6 +135,25 @@ export const createRepairRunner = (params: {
               await new AcceptanceService(repairDB, userId, workspaceId).attachPolicyRun(
                 repairRun.id,
                 sourceRun.acceptanceId,
+              );
+            }
+
+            // The repair is asked to fix the failed checks only, so the rest keep
+            // the verdict and evidence they already earned instead of being
+            // judged again on a turn that never touched them.
+            if (sourceRun) {
+              await carryPassedResultsForward(
+                repairDB,
+                userId,
+                {
+                  excludeItemIds: failedItemIds,
+                  operationId: repairOperationId,
+                  plan,
+                  sourceRoundIndex: sourceRun.roundIndex,
+                  sourceRunId: sourceRun.id,
+                  targetRunId: repairRun.id,
+                },
+                workspaceId,
               );
             }
           }
@@ -266,6 +286,10 @@ const buildInstruction = (
   return [
     'The delivery checker found unresolved issues with the previous result. Fix only these, then stop:',
     ...lines,
+    '',
+    'The checks not listed here already passed and are carried forward; do not re-submit their evidence.',
+    'Submit fresh evidence for each check listed above to this run.',
+    'Your final reply is read by the verifier as the deliverable: describe the complete delivery as it now stands (what is implemented, where, and the evidence for it), not only what changed in this turn.',
   ].join('\n');
 };
 

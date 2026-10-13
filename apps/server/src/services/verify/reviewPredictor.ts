@@ -20,6 +20,8 @@ import { AiGenerationService } from '@/server/services/aiGeneration';
 import { FileService } from '@/server/services/file';
 
 import {
+  GIF_FRAME_SHEET_NOTE,
+  isGifFrameSheet,
   isInlineableFrameSize,
   MAX_INLINE_REQUEST_BYTES,
   resolveModelReadableFrameUrl,
@@ -391,9 +393,12 @@ export class VerifyReviewPredictorService {
       visual.map(async (row, index) => {
         const file = files[index];
         if (!file) return null;
+        const accessUrl = await resolveModelReadableFrameUrl(this.fileService, file, inline[index]);
         return {
-          accessUrl: await resolveModelReadableFrameUrl(this.fileService, file, inline[index]),
-          description: row.description,
+          accessUrl,
+          description: isGifFrameSheet(row.type, accessUrl)
+            ? [row.description, GIF_FRAME_SHEET_NOTE].filter(Boolean).join(' ')
+            : row.description,
           evidenceId: row.id,
         };
       }),

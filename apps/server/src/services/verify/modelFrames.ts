@@ -44,6 +44,74 @@ const sniffImageMimeType = (bytes: Uint8Array): string | undefined => {
     return 'image/webp';
 };
 
+/** Frames sampled from an animated GIF into one sheet. */
+const GIF_SHEET_MAX_FRAMES = 9;
+/** Tile width on a multi-frame sheet; a 3×3 sheet stays under ~1.5k px wide. */
+const GIF_SHEET_TILE_WIDTH = 480;
+const GIF_SHEET_GAP = 8;
+
+/**
+ * Caption suffix for a GIF the model receives as a frame sheet, so it reads the
+ * grid as a timeline rather than as one busy screenshot.
+ */
+export const GIF_FRAME_SHEET_NOTE =
+  'Animated recording shown as evenly spaced frames in playback order, left to right, top to bottom.';
+
+/** Whether a frame URL is the PNG sheet a GIF artifact was rendered into. */
+export const isGifFrameSheet = (type: string, url: string): boolean =>
+  type === 'gif' && url.startsWith('data:image/png;');
+
+/**
+ * Render a GIF as a PNG sheet of evenly spaced frames.
+ *
+ * Vision models cannot read an animated GIF: some providers reject the format
+ * outright and the rest look at the first frame only. A cold-start recording's
+ * first frame is the browser unloading, so a reviewer handed the raw GIF
+ * reported "no recording attached" and sent a passing delivery back for
+ * another round. A sheet shows the whole recording in one image every vision
+ * model accepts.
+ */
+export const renderGifFrameSheet = async (bytes: Uint8Array): Promise<Buffer | undefined> => {
+  const { default: sharp } = await import('sharp');
+  const { height, pageHeight, pages = 1, width } = await sharp(bytes).metadata();
+  const frameHeight = pageHeight ?? height;
+  if (!width || !frameHeight) return;
+
+  const count = Math.min(Math.max(pages, 1), GIF_SHEET_MAX_FRAMES);
+  const indices =
+    count === 1
+      ? [0]
+      : Array.from({ length: count }, (_, i) => Math.round((i * (pages - 1)) / (count - 1)));
+  const tileWidth = count === 1 ? width : Math.min(width, GIF_SHEET_TILE_WIDTH);
+  const tileHeight = Math.max(1, Math.round((frameHeight * tileWidth) / width));
+  const columns = Math.ceil(Math.sqrt(count));
+  const rows = Math.ceil(count / columns);
+
+  const tiles = await Promise.all(
+    indices.map((page) =>
+      sharp(bytes, { page }).resize(tileWidth, tileHeight, { fit: 'fill' }).png().toBuffer(),
+    ),
+  );
+
+  return sharp({
+    create: {
+      background: '#ffffff',
+      channels: 3,
+      height: rows * tileHeight + (rows - 1) * GIF_SHEET_GAP,
+      width: columns * tileWidth + (columns - 1) * GIF_SHEET_GAP,
+    },
+  })
+    .composite(
+      tiles.map((input, index) => ({
+        input,
+        left: (index % columns) * (tileWidth + GIF_SHEET_GAP),
+        top: Math.floor(index / columns) * (tileHeight + GIF_SHEET_GAP),
+      })),
+    )
+    .png()
+    .toBuffer();
+};
+
 /**
  * The URL a judging model is given for a stored evidence frame.
  *
@@ -52,6 +120,8 @@ const sniffImageMimeType = (bytes: Uint8Array): string | undefined => {
  * we do not control: a bucket on localhost or a private network is unreachable
  * from the provider, and the model call fails with "Error while downloading
  * file" on every attempt, however many times the review is retried.
+ *
+ * A GIF is sent as a PNG frame sheet (see {@link renderGifFrameSheet}).
  *
  * Falls back to the access URL when the frame is too large to inline, is not a
  * recognizable image, or cannot be read.
@@ -65,9 +135,12 @@ export const resolveModelReadableFrameUrl = async (
   if (inline && isInlineableFrameSize(file.size)) {
     try {
       const bytes = await fileService.getFileByteArray(file.url);
-      const mimeType = file.fileType?.startsWith('image/')
-        ? file.fileType
-        : sniffImageMimeType(bytes);
+      const sniffed = sniffImageMimeType(bytes);
+      const mimeType = file.fileType?.startsWith('image/') ? file.fileType : sniffed;
+      if (mimeType === 'image/gif' || sniffed === 'image/gif') {
+        const sheet = await renderGifFrameSheet(bytes);
+        if (sheet) return `data:image/png;base64,${sheet.toString('base64')}`;
+      }
       if (mimeType) return `data:${mimeType};base64,${Buffer.from(bytes).toString('base64')}`;
     } catch (error) {
       log('could not inline frame %s, linking it instead: %O', file.id, error);
