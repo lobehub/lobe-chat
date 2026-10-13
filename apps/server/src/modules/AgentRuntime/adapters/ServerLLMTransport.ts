@@ -41,7 +41,7 @@ import {
 } from '@lobechat/observability-otel/modules/agent-runtime';
 import { RequestTrigger, toAgentShareVisitorIds } from '@lobechat/types';
 
-import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
+import { initModelRuntimeFromDB, resolveServerModel } from '@/server/modules/ModelRuntime';
 
 import type { RuntimeExecutorContext } from '../context';
 import { log, sleep } from '../executorHelpers';
@@ -340,32 +340,49 @@ export class ServerLLMTransport implements LLMTransport {
     payload: LLMStreamPayload,
     handlers?: Parameters<LLMTransport['stream']>[1],
   ): Promise<LLMStreamResult> {
-    const runtime = await this.createStreamRuntime(payload.provider);
+    const { runtime, state } = await this.createStreamRuntime(payload.provider);
+    // `stream()` only serves context compression. Deployment-catalog providers
+    // (Azure, Volcengine Ark, Spark) address the request model by the card's
+    // `config.deploymentName` — the same mapping `runAttemptWithRuntime`
+    // applies from the run's frozen cards. A compression model equal to the
+    // run's model is answered from that snapshot; any other model resolves the
+    // deployment catalog live, and an unresolvable one keeps the bare id.
+    const frozenCard = state?.modelRuntimeConfig?.modelFacts?.cards.find(
+      (card) =>
+        card.providerId === payload.provider &&
+        (card.id === payload.model || card.deploymentName === payload.model),
+    );
+    const deploymentName =
+      frozenCard?.deploymentName ??
+      (await this.resolveStreamDeploymentName(payload.provider, payload.model));
     const { provider: _provider, ...runtimePayload } = payload;
     let content = '';
     let usage: LLMStreamResult['usage'];
     let streamError: unknown;
 
-    const response = await runtime.chat(runtimePayload as any, {
-      callback: {
-        onCompletion: async (data: any) => {
-          if (data.usage) usage = data.usage;
+    const response = await runtime.chat(
+      { ...runtimePayload, ...(deploymentName && { deploymentName }) } as any,
+      {
+        callback: {
+          onCompletion: async (data: any) => {
+            if (data.usage) usage = data.usage;
+          },
+          onError: async (errorData: unknown) => {
+            streamError = errorData;
+            handlers?.onError?.(errorData);
+          },
+          onText: async (text: string) => {
+            content += text;
+            handlers?.onText?.(text);
+          },
         },
-        onError: async (errorData: unknown) => {
-          streamError = errorData;
-          handlers?.onError?.(errorData);
-        },
-        onText: async (text: string) => {
-          content += text;
-          handlers?.onText?.(text);
-        },
+        // `stream()` only serves context compression. Without a trigger, RouterRuntime
+        // rejects the call in development (skipping compression) and bills it as
+        // trigger=null in production.
+        metadata: { topicId: this.ctx.topicId, trigger: RequestTrigger.ContextCompression },
+        user: this.ctx.userId,
       },
-      // `stream()` only serves context compression. Without a trigger, RouterRuntime
-      // rejects the call in development (skipping compression) and bills it as
-      // trigger=null in production.
-      metadata: { topicId: this.ctx.topicId, trigger: RequestTrigger.ContextCompression },
-      user: this.ctx.userId,
-    });
+    );
 
     await consumeStreamUntilDone(response);
 
@@ -392,13 +409,30 @@ export class ServerLLMTransport implements LLMTransport {
     }
     if (site.site === 'client') {
       this.relayStreamCount += 1;
-      return this.createRelayRuntime(provider, site, {
-        attempt: 1,
-        callId: `${buildLlmRelayCallId(this.ctx.operationId, this.ctx.stepIndex, this.relayGeneration, 1)}:stream${this.relayStreamCount}`,
-      });
+      return {
+        runtime: this.createRelayRuntime(provider, site, {
+          attempt: 1,
+          callId: `${buildLlmRelayCallId(this.ctx.operationId, this.ctx.stepIndex, this.relayGeneration, 1)}:stream${this.relayStreamCount}`,
+        }),
+        state,
+      };
     }
 
-    return this.createModelRuntime(provider);
+    return { runtime: await this.createModelRuntime(provider), state };
+  }
+
+  /**
+   * Live deployment-name resolution for a compression model outside the run's
+   * frozen cards. Best effort: compression is an optimization, so an unknown
+   * model keeps the bare id instead of failing the run.
+   */
+  private async resolveStreamDeploymentName(provider: string, model: string) {
+    try {
+      const resolved = await resolveServerModel(provider, model);
+      return resolved.deploymentName;
+    } catch {
+      return undefined;
+    }
   }
 
   private createRelayRuntime(
