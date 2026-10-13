@@ -394,19 +394,27 @@ export class VerifyReviewPredictorService {
         const file = files[index];
         if (!file) return null;
         const accessUrl = await resolveModelReadableFrameUrl(this.fileService, file, inline[index]);
+        const frameSheet = isGifFrameSheet(row.type, accessUrl);
         return {
           accessUrl,
-          description: isGifFrameSheet(row.type, accessUrl)
+          description: frameSheet
             ? [row.description, GIF_FRAME_SHEET_NOTE].filter(Boolean).join(' ')
             : row.description,
           evidenceId: row.id,
+          frameSheet,
         };
       }),
     );
 
     return resolved.filter(
-      (item): item is { accessUrl: string; description: string | null; evidenceId: string } =>
-        Boolean(item?.accessUrl),
+      (
+        item,
+      ): item is {
+        accessUrl: string;
+        description: string | null;
+        evidenceId: string;
+        frameSheet: boolean;
+      } => Boolean(item?.accessUrl),
     );
   }
 
@@ -418,14 +426,19 @@ export class VerifyReviewPredictorService {
    * A region naming an image outside the attached set is dropped rather than
    * clamped to image 0: a note pinned to the wrong screenshot is more misleading
    * than no note, because the reviewer has no way to tell it moved.
+   *
+   * A GIF is shown to the model as a frame sheet, so a region drawn on it is in
+   * sheet coordinates. The page draws annotations over the original animation,
+   * where those coordinates land on unrelated content, so they are dropped; the
+   * comment still carries the finding.
    */
   private toAnnotations(
     regions: RawReviewPrediction['regions'],
-    visuals: { evidenceId: string }[],
+    visuals: { evidenceId: string; frameSheet: boolean }[],
   ): AcceptanceReviewAnnotation[] {
     return (regions ?? []).flatMap((region) => {
       const target = visuals[region.imageIndex];
-      if (!target) return [];
+      if (!target || target.frameSheet) return [];
       return [
         {
           comment: region.comment ?? undefined,
