@@ -1,4 +1,6 @@
 import debug from 'debug';
+import pMap from 'p-map';
+import sharp from 'sharp';
 
 import type { FileService } from '@/server/services/file';
 
@@ -49,6 +51,7 @@ const GIF_SHEET_MAX_FRAMES = 9;
 /** Tile width on a multi-frame sheet; a 3×3 sheet stays under ~1.5k px wide. */
 const GIF_SHEET_TILE_WIDTH = 480;
 const GIF_SHEET_GAP = 8;
+const GIF_SHEET_DECODE_CONCURRENCY = 3;
 
 /**
  * Caption suffix for a GIF the model receives as a frame sheet, so it reads the
@@ -72,7 +75,6 @@ export const isGifFrameSheet = (type: string, url: string): boolean =>
  * model accepts.
  */
 export const renderGifFrameSheet = async (bytes: Uint8Array): Promise<Buffer | undefined> => {
-  const { default: sharp } = await import('sharp');
   const { height, pageHeight, pages = 1, width } = await sharp(bytes).metadata();
   const frameHeight = pageHeight ?? height;
   if (!width || !frameHeight) return;
@@ -87,10 +89,12 @@ export const renderGifFrameSheet = async (bytes: Uint8Array): Promise<Buffer | u
   const columns = Math.ceil(Math.sqrt(count));
   const rows = Math.ceil(count / columns);
 
-  const tiles = await Promise.all(
-    indices.map((page) =>
+  // Each tile decodes the whole GIF, so keep only a few in flight at once.
+  const tiles = await pMap(
+    indices,
+    (page) =>
       sharp(bytes, { page }).resize(tileWidth, tileHeight, { fit: 'fill' }).png().toBuffer(),
-    ),
+    { concurrency: GIF_SHEET_DECODE_CONCURRENCY },
   );
 
   return sharp({
