@@ -1,4 +1,5 @@
 // @vitest-environment node
+import type { LLMAttemptInput } from '@lobechat/agent-runtime';
 import { ModelRuntime } from '@lobechat/model-runtime';
 import { tracer as agentRuntimeTracer } from '@lobechat/observability-otel/modules/agent-runtime';
 import { RequestTrigger } from '@lobechat/types';
@@ -220,6 +221,99 @@ describe('ServerLLMTransport.stream · deployment name', () => {
     expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
     // ...and the live deployment catalog is not even consulted.
     expect(resolveServerModel).not.toHaveBeenCalled();
+  });
+});
+
+describe('ServerLLMTransport.runAttempt · deployment name without frozen model facts', () => {
+  // Codex P1 (4257694112): operations without a `modelFacts` snapshot —
+  // agent-signal memory actions, persisted operations predating `modelFacts` —
+  // must still resolve the deployment alias live, or deployment-catalog
+  // providers keep receiving a logical id they 404 on.
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const createAttemptCtx = () =>
+    ({
+      operationId: 'op-1',
+      serverDB: {},
+      stepIndex: 0,
+      streamManager: {
+        publishStreamChunk: vi.fn().mockResolvedValue('chunk-id'),
+        publishStreamEvent: vi.fn().mockResolvedValue('event-id'),
+      },
+      toolExecutionService: {},
+      userId: 'user-1',
+    }) as unknown as RuntimeExecutorContext;
+
+  const createAttemptInput = (state: Record<string, unknown>): LLMAttemptInput =>
+    ({
+      assistantMessageId: 'msg-1',
+      attempt: 1,
+      context: {
+        messages: [{ content: 'Question', role: 'user' }],
+        modelParameters: {},
+        replayAssistantReasoning: false,
+        resolvedTools: {
+          enabledToolIds: [],
+          executorMap: {},
+          manifestMap: {},
+          promptManifestMap: {},
+          sourceMap: {},
+          tools: [],
+        },
+      } as unknown as LLMAttemptInput['context'],
+      events: [],
+      maxAttempts: 6,
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+      state,
+    }) as unknown as LLMAttemptInput;
+
+  it('resolves the deployment catalog live when the operation has no modelFacts', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'deepseek-v4-pro-ga-260813',
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+    });
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(createAttemptInput({}));
+
+    expect(resolveServerModel).toHaveBeenCalledWith('volcengine', 'deepseek-v4-pro-ga');
+    expect(chat.mock.calls[0][0].deploymentName).toBe('deepseek-v4-pro-ga-260813');
+  });
+
+  it('shares one live resolution across attempts instead of paying one per attempt', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'deepseek-v4-pro-ga-260813',
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+    });
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(createAttemptInput({}));
+    await transport.runAttempt(createAttemptInput({}));
+
+    expect(resolveServerModel).toHaveBeenCalledTimes(1);
+    expect(chat).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the bare model id when the live catalog cannot resolve the model', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    vi.mocked(resolveServerModel).mockRejectedValue(
+      new Error('The selected server model is not available'),
+    );
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(createAttemptInput({}));
+
+    expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
   });
 });
 

@@ -291,6 +291,14 @@ export class ServerLLMTransport implements LLMTransport {
   >();
 
   /**
+   * Deployment names the live catalog resolved for a run's model, per
+   * provider:model. The run's attempts share one resolution (retries included)
+   * instead of paying a catalog read per attempt; a resolution failure is not
+   * cached — a later attempt may succeed after a transient catalog error.
+   */
+  private readonly resolvedDeploymentNames = new Map<string, Promise<string | undefined>>();
+
+  /**
    * Output of the latest relayed attempt that failed after producing some,
    * per assistant message. A re-dispatch that never gets claimed (the tab that
    * ran the attempt is gone) ends the step with nothing of its own to keep.
@@ -450,6 +458,35 @@ export class ServerLLMTransport implements LLMTransport {
     }
   }
 
+  /**
+   * Live deployment-name resolution for a run attempt whose operation has no
+   * frozen `modelFacts` snapshot (agent-signal memory actions, persisted
+   * operations predating `modelFacts`). Same best-effort contract as
+   * `resolveStreamDeploymentName`: an unresolvable model keeps the bare id.
+   * The run's attempts share one resolution per provider:model (retries
+   * included) instead of paying a catalog read per attempt.
+   */
+  private resolveAttemptDeploymentName(provider: string, model: string) {
+    const key = `${provider}:${model}`;
+    let promise = this.resolvedDeploymentNames.get(key);
+    if (!promise) {
+      promise = this.resolveStreamDeploymentName(provider, model).finally(() => {
+        // Keep failures out of the cache so a transient catalog error doesn't
+        // pin the bare id for the rest of the run.
+        if (promise) {
+          promise.then(
+            (resolved) => {
+              if (!resolved) this.resolvedDeploymentNames.delete(key);
+            },
+            () => this.resolvedDeploymentNames.delete(key),
+          );
+        }
+      });
+      this.resolvedDeploymentNames.set(key, promise);
+    }
+    return promise;
+  }
+
   private createRelayRuntime(
     provider: string,
     site: Extract<LlmExecutionSite, { site: 'client' }>,
@@ -557,12 +594,20 @@ export class ServerLLMTransport implements LLMTransport {
     // Providers that address models by a deployment/catalog name (Azure,
     // Volcengine Ark, Spark) resolve the request model from the card's
     // `config.deploymentName`. The run froze the matching card at operation
-    // creation, so the mapping needs no bank or DB read per attempt.
+    // creation, so the mapping needs no bank or DB read per attempt. Operations
+    // without that snapshot (agent-signal memory actions, persisted operations
+    // predating `modelFacts`) resolve the deployment catalog live instead —
+    // the same mapping `stream()` applies for compression models.
     const frozenCard = input.state.modelRuntimeConfig?.modelFacts?.cards.find(
       (card) =>
         card.providerId === input.provider &&
         (card.id === input.model || card.deploymentName === input.model),
     );
+    const deploymentName =
+      frozenCard?.deploymentName ??
+      (DEPLOYMENT_NAME_PROVIDERS.has(input.provider)
+        ? await this.resolveAttemptDeploymentName(input.provider, input.model)
+        : undefined);
     const chatPayload = {
       messages: input.context.messages as ChatStreamPayload['messages'],
       model: input.model,
@@ -572,10 +617,7 @@ export class ServerLLMTransport implements LLMTransport {
       ...(typeof input.context.preserveThinking === 'boolean' && {
         preserveThinking: input.context.preserveThinking,
       }),
-      ...(frozenCard?.deploymentName &&
-        DEPLOYMENT_NAME_PROVIDERS.has(input.provider) && {
-          deploymentName: frozenCard.deploymentName,
-        }),
+      ...(deploymentName && { deploymentName }),
     };
     const operationLogId = `${this.ctx.operationId}:${this.ctx.stepIndex}`;
     const attempt = createServerCallLlmAttempt({
