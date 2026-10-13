@@ -1177,6 +1177,38 @@ export class TopicModel {
   };
 
   /**
+   * Who started each topic's current run. Workspace topics are co-editable, so
+   * the member running a topic now can differ from its creator (`topics.userId`);
+   * the latest top-level running operation records the actual initiator — the
+   * same row `runStartedAt` reads. Topics whose run never wrote an operation
+   * row (client-executed runs) are absent; callers fall back to the creator.
+   *
+   * Not scoped by {@link ownership}: in a workspace the run may belong to
+   * another member, and callers pass ids from an ownership-gated topic read.
+   */
+  findRunInitiators = async (topicIds: string[]): Promise<Map<string, string>> => {
+    if (topicIds.length === 0) return new Map();
+
+    const rows = await this.db
+      .selectDistinctOn([agentOperations.topicId], {
+        topicId: agentOperations.topicId,
+        userId: agentOperations.userId,
+      })
+      .from(agentOperations)
+      .where(
+        and(
+          inArray(agentOperations.topicId, topicIds),
+          eq(agentOperations.status, 'running'),
+          isNull(agentOperations.parentOperationId),
+          isNotNull(agentOperations.startedAt),
+        ),
+      )
+      .orderBy(agentOperations.topicId, desc(agentOperations.startedAt));
+
+    return new Map(rows.flatMap((row) => (row.topicId ? [[row.topicId, row.userId]] : [])));
+  };
+
+  /**
    * Recent topics from the same IM channel, most-recent first. Matches the
    * channel via the `metadata.bot.platformThreadId` path written at topic
    * creation (see `ChatTopicBotContext`). Used to pre-inject cross-session

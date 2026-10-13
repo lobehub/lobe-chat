@@ -705,6 +705,55 @@ describe('TopicModel', () => {
     });
   });
 
+  describe('findRunInitiators', () => {
+    it("returns the member who started each topic's current run", async () => {
+      await serverDB.insert(topics).values([
+        { id: 'ri-run', status: 'running', title: 'run', userId },
+        { id: 'ri-client', status: 'running', title: 'client run', userId },
+        { id: 'ri-done', status: 'active', title: 'done', userId },
+      ]);
+      await serverDB.insert(agentOperations).values([
+        // A crashed earlier run by the creator; the live, later one wins.
+        {
+          id: 'ri-op-stale',
+          startedAt: new Date('2026-01-01T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId,
+        },
+        // A teammate continued the topic the creator started.
+        {
+          id: 'ri-op-live',
+          startedAt: new Date('2026-01-02T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId: otherUserId,
+        },
+        // A sub-operation never names the run's initiator.
+        {
+          id: 'ri-op-sub',
+          parentOperationId: 'ri-op-live',
+          startedAt: new Date('2026-01-03T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId,
+        },
+        {
+          id: 'ri-op-done',
+          startedAt: new Date('2026-01-02T00:00:00Z'),
+          status: 'completed',
+          topicId: 'ri-done',
+          userId: otherUserId,
+        },
+      ]);
+
+      const initiators = await topicModel.findRunInitiators(['ri-run', 'ri-client', 'ri-done']);
+
+      expect([...initiators]).toEqual([['ri-run', otherUserId]]);
+      expect(await topicModel.findRunInitiators([])).toEqual(new Map());
+    });
+  });
+
   describe('queryTopics', () => {
     it('filters by the given statuses and is scoped to the owner', async () => {
       await serverDB.insert(topics).values([

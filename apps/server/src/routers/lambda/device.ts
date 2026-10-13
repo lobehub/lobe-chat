@@ -263,6 +263,20 @@ const loadTopicUsers = async (
 };
 
 /**
+ * The member running each topic now: the initiator of its current run, else
+ * its creator (a client-executed run writes no operation row). In a workspace
+ * a teammate can continue someone else's topic, so the creator alone would
+ * name the wrong person as using the device.
+ */
+const resolveRunUserIds = async (
+  topicModel: TopicModel,
+  topics: { id: string; userId: string }[],
+): Promise<Map<string, string>> => {
+  const initiators = await topicModel.findRunInitiators(topics.map((topic) => topic.id));
+  return new Map(topics.map((topic) => [topic.id, initiators.get(topic.id) ?? topic.userId]));
+};
+
+/**
  * Upper bound on the running topics read for the device-list summary. A real
  * account runs far fewer at once; the cap only bounds a pathological one.
  */
@@ -360,6 +374,7 @@ export const deviceRouter = router({
   getDeviceActivity: deviceProcedure
     .input(z.object({ deviceId: z.string() }))
     .query(async ({ ctx, input }) => {
+      const topicModel = new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
       const [agents, runningTopics] = await Promise.all([
         loadDeviceBoundAgents({
           db: ctx.serverDB,
@@ -367,22 +382,17 @@ export const deviceRouter = router({
           userId: ctx.userId,
           workspaceId: ctx.workspaceId,
         }),
-        new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId).queryTopics({
-          deviceId: input.deviceId,
-          statuses: ['running'],
-        }),
+        topicModel.queryTopics({ deviceId: input.deviceId, statuses: ['running'] }),
       ]);
 
-      const users = await loadTopicUsers(
-        ctx.serverDB,
-        runningTopics.map((topic) => topic.userId),
-      );
+      const runUserIds = await resolveRunUserIds(topicModel, runningTopics);
+      const users = await loadTopicUsers(ctx.serverDB, [...runUserIds.values()]);
 
       return {
         agents,
         runningTopics: runningTopics.map((topic) => ({
           ...topic,
-          user: users.get(topic.userId) ?? null,
+          user: users.get(runUserIds.get(topic.id) ?? topic.userId) ?? null,
         })),
       };
     }),
@@ -396,19 +406,19 @@ export const deviceRouter = router({
   getRunningSummary: deviceProcedure.query(async ({ ctx }): Promise<DeviceRunningSummary[]> => {
     // Most recently active first, so each device's avatar stack leads with
     // whoever touched it last.
-    const runningTopics = await new TopicModel(
-      ctx.serverDB,
-      ctx.userId,
-      ctx.workspaceId,
-    ).queryTopics({ pageSize: RUNNING_SUMMARY_LIMIT, statuses: ['running'] });
+    const topicModel = new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
+    const runningTopics = (
+      await topicModel.queryTopics({ pageSize: RUNNING_SUMMARY_LIMIT, statuses: ['running'] })
+    ).filter((topic) => getTopicDeviceId(topic.metadata));
+    const runUserIds = await resolveRunUserIds(topicModel, runningTopics);
 
     const byDevice = new Map<string, { count: number; userIds: string[] }>();
     for (const topic of runningTopics) {
-      const deviceId = getTopicDeviceId(topic.metadata);
-      if (!deviceId) continue;
+      const deviceId = getTopicDeviceId(topic.metadata)!;
+      const runUserId = runUserIds.get(topic.id) ?? topic.userId;
       const entry = byDevice.get(deviceId) ?? { count: 0, userIds: [] };
       entry.count += 1;
-      if (!entry.userIds.includes(topic.userId)) entry.userIds.push(topic.userId);
+      if (!entry.userIds.includes(runUserId)) entry.userIds.push(runUserId);
       byDevice.set(deviceId, entry);
     }
 
