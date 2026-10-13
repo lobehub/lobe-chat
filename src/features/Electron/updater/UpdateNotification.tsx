@@ -1,8 +1,7 @@
 import type { UpdateInfo } from '@lobechat/electron-client-ipc';
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Flexbox, Icon, Markdown } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Icon, Markdown } from '@lobehub/ui';
 import { Button as BaseButton, createModal, toast, useModalContext } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
 import { t } from 'i18next';
 import { X } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
@@ -14,6 +13,7 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { applyCoreUpdate } from './applyCoreUpdate';
+import { formatCoreVersion } from './coreVersion';
 import { selectUpdateInfo } from './selectUpdateInfo';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -204,7 +204,9 @@ export const UpdateNotification: React.FC = () => {
   if (updateInfo?.kind === 'renderer' || updateInfo?.kind === 'core-reload') {
     return (
       <div className={styles.installLaterToast}>
-        <span>{tElectron('updater.rendererReady', { version: updateInfo.version })}</span>
+        <span>
+          {tElectron('updater.rendererReady', { version: formatCoreVersion(updateInfo.version) })}
+        </span>
         <BaseButton size={'small'} type={'text'} onClick={() => setUpdateInfo(null)}>
           {tElectron('updater.ignore')}
         </BaseButton>
@@ -225,7 +227,7 @@ export const UpdateNotification: React.FC = () => {
       <div className={styles.installLaterToast}>
         <span>
           {tElectron('updater.updateReady')}
-          {isDevMode ? ` · ${updateInfo.version}` : ''}
+          {isDevMode ? ` · ${formatCoreVersion(updateInfo.version)}` : ''}
         </span>
         <BaseButton size={'small'} type={'text'} onClick={() => setUpdateInfo(null)}>
           {tElectron('updater.later')}
@@ -245,7 +247,9 @@ export const UpdateNotification: React.FC = () => {
   if (!updateInfo)
     return appliedVersion ? (
       <div className={styles.installLaterToast}>
-        <span>{tElectron('updater.rendererUpdated', { version: appliedVersion })}</span>
+        <span>
+          {tElectron('updater.rendererUpdated', { version: formatCoreVersion(appliedVersion) })}
+        </span>
         <BaseButton size={'small'} type={'text'} onClick={() => setAppliedVersion(null)}>
           {tElectron('updater.ignore')}
         </BaseButton>
