@@ -51,6 +51,12 @@ A split keeps the public import path: `Foo.tsx` becomes `Foo/index.tsx`, so `imp
 | tRPC router     | The merged router                               | One sub-router per sub-domain (`market/agent.ts` exports `agentRouter`)                                                    | `routers/lambda/market/`                 |
 | Zustand store   | —                                               | Follow `zustand`                                                                                                           | `src/store/page`                         |
 
-- Prefer flat siblings. Add a sub-folder for a sub-area with several files of its own (`ChatInput/ControlBar/`), not a kind folder such as `components/` or `hooks/` for one or two files.
+- Prefer flat siblings. Add a sub-folder for a sub-area with several files of its own (`ChatInput/ControlBar/`).
+- Kind folders (`components/`, `hooks/`, `utils/`) follow who uses the code:
+  - One user: keep it in that file or beside it (`PlanGrid/usePlanActions.ts`).
+  - A few modules in the directory share it: flat siblings for hooks and components, one `utils.ts` for pure functions.
+  - Three or more files of one kind shared by sibling modules: collect them in a kind folder (`Dashboard/utils/`, `ChatInput/hooks/`, `ResourceManager/components/`).
+  - Shared across features: `src/utils`, `src/hooks`, `src/components`, or a `packages/*` package.
+  - Do not create `helpers/`; name the module by its content or use `utils`.
 - A split moves code without changing behavior. Collapsing duplicated branches that become one component is in scope when existing tests cover each branch; any other behavior change belongs in a separate commit.
 - Move the matching tests with the code they cover, then run `bun run check` with the test files passed explicitly: related-test discovery only finds `<name>.test.*`, so `index.tsx` does not pick up `index.<scenario>.test.ts`.
