@@ -29,6 +29,7 @@ import {
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SkeletonBar from '@/components/Skeleton/Bar';
 import { createWorkspaceLambdaClient } from '@/libs/trpc/client';
 import { formatSize } from '@/utils/format';
 
@@ -36,10 +37,10 @@ import Connections from './Connections';
 import { refreshDeviceList } from './const';
 import { BoundAgentList, RunningTopicList } from './DeviceActivity';
 import DeviceHealth, { HealthLegend } from './DeviceHealth';
-import { buildHealthTimeline } from './DeviceHealth/buildHealthTimeline';
 import { formatPercent, usageLevel } from './DeviceHealth/format';
 import { usageTextColor, useDeviceMetricSeries } from './DeviceHealth/shared';
 import { UsageBar } from './DeviceHealth/UsageMeter';
+import { latestUsageView } from './DeviceHealth/viewState';
 import { getDeviceIcon, getPlatformLabel } from './getDeviceIcon';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -178,30 +179,41 @@ const Empty = () => <Text type={'secondary'}>—</Text>;
 interface StatCardProps {
   detail?: string;
   icon: LucideIcon;
+  /** First read still in flight: placeholders in the reading's own line boxes. */
+  loading?: boolean;
   title: string;
   value: number | null | undefined;
 }
 
 /** One reading at a glance: the big share, its absolute size, and the segmented bar. */
-const StatCard = ({ detail, icon, title, value }: StatCardProps) => (
+const StatCard = ({ detail, icon, loading, title, value }: StatCardProps) => (
   <DetailCard icon={icon} title={title}>
-    <Flexbox gap={14}>
-      <Flexbox horizontal align={'baseline'} distribution={'space-between'} gap={8}>
-        <Text
-          fontSize={28}
-          style={{ color: usageTextColor(usageLevel(value)), lineHeight: 1.2 }}
-          weight={600}
-        >
-          {formatPercent(value)}
-        </Text>
-        {detail && (
-          <Text ellipsis fontSize={13} type={'secondary'}>
-            {detail}
-          </Text>
-        )}
+    {loading ? (
+      <Flexbox aria-busy gap={14}>
+        <Flexbox justify={'center'} style={{ height: 34 }}>
+          <SkeletonBar height={24} width={72} />
+        </Flexbox>
+        <SkeletonBar height={8} />
       </Flexbox>
-      <UsageBar height={8} value={value} />
-    </Flexbox>
+    ) : (
+      <Flexbox gap={14}>
+        <Flexbox horizontal align={'baseline'} distribution={'space-between'} gap={8}>
+          <Text
+            fontSize={28}
+            style={{ color: usageTextColor(usageLevel(value)), lineHeight: 1.2 }}
+            weight={600}
+          >
+            {formatPercent(value)}
+          </Text>
+          {detail && (
+            <Text ellipsis fontSize={13} type={'secondary'}>
+              {detail}
+            </Text>
+          )}
+        </Flexbox>
+        <UsageBar height={8} value={value} />
+      </Flexbox>
+    )}
   </DetailCard>
 );
 
@@ -217,13 +229,14 @@ interface DeviceOverviewProps {
  */
 const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
   const { t } = useTranslation('setting');
-  const { data } = useDeviceMetricSeries(device.deviceId);
+  const { data, error } = useDeviceMetricSeries(device.deviceId);
+  const usage = latestUsageView({ data, error });
+  const latest = usage.loading ? null : usage.latest;
 
   const channels = device.channels ?? [];
   const online = channels.length > 0;
 
   const newest = data?.points.at(-1);
-  const latest = data && data.points.length > 0 ? buildHealthTimeline(data).latest : null;
   const cores = data?.cpuCount ?? null;
   const memoryTotal = data?.memoryTotalBytes ?? null;
   const memoryUsed = newest?.memoryUsedBytes ?? null;
@@ -359,11 +372,13 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
         <StatCard
           detail={cores ? t('devices.detail.cores', { count: cores }) : undefined}
           icon={CpuIcon}
+          loading={usage.loading}
           title={t('devices.card.cpuUsage')}
           value={latest?.cpuPercent}
         />
         <StatCard
           icon={MemoryStickIcon}
+          loading={usage.loading}
           title={t('devices.card.memoryUsage')}
           value={latest?.memoryPercent}
           detail={
@@ -374,6 +389,7 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
         />
         <StatCard
           icon={GaugeIcon}
+          loading={usage.loading}
           title={t('devices.detail.loadUsage')}
           value={latest?.loadPercent}
           detail={

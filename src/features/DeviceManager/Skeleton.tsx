@@ -7,6 +7,7 @@ import { memo } from 'react';
 import SkeletonBar from '@/components/Skeleton/Bar';
 
 import DeviceGrid from './DeviceGrid';
+import { UsageMeterSkeleton } from './DeviceHealth/UsageMeter';
 
 const styles = createStaticStyles(({ css }) => ({
   // Same frame and sections as `DeviceCard`.
@@ -93,14 +94,6 @@ const Line = ({
   </Flexbox>
 );
 
-const MeterRow = () => (
-  <>
-    <Line barHeight={12} height={20} width={72} />
-    <SkeletonBar height={12} />
-    <Line barHeight={12} height={20} width={28} />
-  </>
-);
-
 const CardSkeleton = () => (
   <div className={styles.card}>
     <Flexbox className={styles.body} gap={20}>
@@ -120,8 +113,8 @@ const CardSkeleton = () => (
         ))}
       </div>
       <div className={styles.meterGroup}>
-        <MeterRow />
-        <MeterRow />
+        <UsageMeterSkeleton />
+        <UsageMeterSkeleton />
       </div>
     </Flexbox>
     <Flexbox horizontal align={'center'} className={styles.footer} gap={8}>
