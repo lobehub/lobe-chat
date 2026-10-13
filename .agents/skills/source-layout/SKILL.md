@@ -20,7 +20,7 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 | Package directory                                    | kebab-case            | `packages/agent-runtime/`                      |
 | Files inside a package                               | camelCase             | `packages/database/src/models/`                |
 
-A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `const.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `constants.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
+A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `constants.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `const.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
 New files use named exports (`export const PlanCard = …`), even when the neighboring files default-export; do not copy the older default-export habit. The exceptions are modules a framework or tool loads by their default export: route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), and `*.config.ts` files. Lint does not enforce this: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`. When moving an existing file, keep its exports unchanged so its callers do not change.
 

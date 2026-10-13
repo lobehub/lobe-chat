@@ -62,7 +62,7 @@ Extract one boundary at a time and rerun the guard tests by explicit path after 
 - Pure functions to `utils.ts` (or a named module) with explicit parameters instead of closures over component state.
 - For React components, a cohesive `useXxx.ts` when transitions, side effects, or handlers obscure rendering or form a reusable unit; otherwise keep state in its smallest owner (`react`). For services, routers, and stores, use the matching row of `source-layout` §4.
 - Child components to PascalCase siblings with named exports.
-- A constant stays in the module that uses it; one shared by several extracted modules goes to the nearest common directory's `const.ts`.
+- A constant stays in the module that uses it; one shared by several extracted modules goes to the nearest common directory's `constants.ts`.
 
 Keep the public import path and exported names unchanged so callers do not change. Every resulting file must be at most 800 lines, and the entry should read as composition, not logic.
 
