@@ -16,6 +16,7 @@ import {
   getAttachmentFileIdsFromEditor,
   pickAndInsertAttachments,
 } from '@/features/EditorCanvas/editorAttachments';
+import { focusEditorStartLine } from '@/features/EditorCanvas/focusEditorStartLine';
 import { usePermission } from '@/hooks/usePermission';
 import { useGlobalStore } from '@/store/global';
 import { useTaskStore } from '@/store/task';
@@ -202,6 +203,17 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
       }
     }, []);
 
+    const handleTitleKeyDown = useCallback(
+      (e: KeyboardEvent<HTMLInputElement>) => {
+        // Cmd/Ctrl+Enter submits from the wrapper; an IME Enter only confirms a candidate.
+        if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || e.nativeEvent.isComposing) return;
+
+        e.preventDefault();
+        focusEditorStartLine(editor);
+      },
+      [editor],
+    );
+
     return (
       <Flexbox onKeyDown={handleKeyDown}>
         <Flexbox horizontal style={{ padding: '16px 24px 0' }}>
@@ -224,6 +236,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
                 width: '100%',
               }}
               onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={handleTitleKeyDown}
             />
             <EditorCanvas
               disabled={!canCreateTask}
