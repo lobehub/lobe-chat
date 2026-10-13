@@ -2,7 +2,7 @@
 import { ModelRuntime } from '@lobechat/model-runtime';
 import { tracer as agentRuntimeTracer } from '@lobechat/observability-otel/modules/agent-runtime';
 import { RequestTrigger } from '@lobechat/types';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { initModelRuntimeFromDB, resolveServerModel } from '@/server/modules/ModelRuntime';
 
@@ -56,6 +56,14 @@ describe('ServerLLMTransport.stream · conversation affinity', () => {
 });
 
 describe('ServerLLMTransport.stream · deployment name', () => {
+  // Codex P1 (4255361517): clear the module-level `resolveServerModel` mock
+  // before each test instead of relying on Vitest's default `clearMocks`
+  // behavior, so the zero-call assertion below cannot inherit residual calls
+  // from the live-resolution and rejection tests above.
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('carries the frozen card deployment name for a compression model equal to the run model', async () => {
     const chat = vi.fn().mockImplementation(async () => new Response(''));
     vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
