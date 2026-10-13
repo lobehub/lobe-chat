@@ -34,6 +34,58 @@ describe('minPairwiseSimilarity', () => {
   });
 });
 
+describe('minPairwiseSimilarity on real planner briefs', () => {
+  /**
+   * Regression: real planner output for one recipe — the first probe long
+   * (references, deliverables), the next short and pointing back — read as
+   * different work, so a Chinese goal never became a batch. Chinese clauses
+   * were single tokens, and Jaccard punished the length gap.
+   */
+  it('reads a long and a short Chinese brief of one recipe as one mould', () => {
+    const similarity = minPairwiseSimilarity([
+      {
+        instruction:
+          '以仓库内已迁移到 @lobechat/replica 的 store 为参照，对 src/store 下的 device 和 toolPayload 两个 store 各执行下列相同步骤：1) 为该 store 定义 replica；2) 把使用该 store 的组件改为从 store selector 读取数据；3) 删除该 store 的 SWR 持久化条目；4) 补一个冷启动「先显示上次缓存数据」的回归测试。交付物是两个 store 均已迁移、`pnpm test` 与类型检查通过的可运行代码，并给出每个 store 迁移前后数据读取路径的对照说明。判定标准：组件不再直接引用 SWR 持久化缓存，而是经 selector 从 replica 读取；删除的 SWR 持久化条目被真正移除；新增回归测试通过。',
+        title: '迁移 device 与 toolPayload store（探针）',
+      },
+      {
+        instruction:
+          '对 src/store 下的 projectSkills 与 homeInbox 两个 store 各执行：1) 定义 replica；2) 组件改为从 store selector 读取；3) 删除该 store 的 SWR 持久化条目；4) 补冷启动「先显示上次数据」回归测试。参照已迁移的 device/toolPayload 探针成果保持一致。交付物：两个 store 迁移完成、测试与类型检查通过。判定：组件仅经 selector 从 replica 读取，SWR 持久化条目已删除，冷启动回归测试通过。',
+        title: '迁移 projectSkills 与 homeInbox store',
+      },
+    ]);
+    expect(similarity).toBeGreaterThanOrEqual(HOMOGENEITY_MIN_SIMILARITY);
+  });
+
+  it('still tells two different pieces of Chinese work apart', () => {
+    const similarity = minPairwiseSimilarity([
+      {
+        instruction:
+          '为目标页设计新的空状态插画，补齐中英文文案，并在浅色和深色主题下各截一张图交给设计评审。',
+        title: '设计目标页空状态',
+      },
+      {
+        instruction:
+          '把生产数据库从 Postgres 15 升级到 17，先在预发环境演练回滚，再安排维护窗口并更新运维手册。',
+        title: '升级生产数据库',
+      },
+    ]);
+    expect(similarity).toBeLessThan(HOMOGENEITY_MIN_SIMILARITY);
+  });
+
+  it('does not let a one-line brief pass by sitting inside a long one', () => {
+    const similarity = minPairwiseSimilarity([
+      { instruction: 'Fix the tests', title: 'Fix' },
+      {
+        instruction:
+          'Rewrite the billing service on the new queue, fix the tests it breaks, migrate the invoices table and document the rollout for the support team.',
+        title: 'Rewrite billing',
+      },
+    ]);
+    expect(similarity).toBeLessThan(HOMOGENEITY_MIN_SIMILARITY);
+  });
+});
+
 describe('evaluateHomogeneity', () => {
   const spec = {
     recipeOutline: 'Replace the store with the replica-backed one',

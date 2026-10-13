@@ -154,6 +154,19 @@ const GOAL_DISPATCH_LOCK_NAMESPACE = 0x67_6f_64_69;
 /** Why a decomposition did or did not become a batch: DEBUG=lobe-server:goal-rollout. */
 const log = debug('lobe-server:goal-rollout');
 
+/**
+ * One line for why the planner failed, for the audit trail. Model runtime
+ * errors arrive as plain objects (`{ errorType, error }`), not `Error`s.
+ */
+const describePlannerFailure = (error: unknown): string => {
+  const runtime = error as { error?: { message?: string }; errorType?: string } | undefined;
+  const text =
+    error instanceof Error
+      ? error.message
+      : [runtime?.errorType, runtime?.error?.message].filter(Boolean).join(': ') || String(error);
+  return text.length > 300 ? `${text.slice(0, 299)}…` : text;
+};
+
 const draftNotStarted = (goalId: string) =>
   new TRPCError({
     code: 'CONFLICT',
@@ -3672,9 +3685,19 @@ export class GoalService {
 
       const generator = new GoalCriteriaGeneratorService(this.db, this.userId, this.workspaceId);
       const clarifications = collectClarificationAnswers(graph);
+      // A failed plan still starts the goal from the raw requirement, but says
+      // so: the server log and the first task's audit event carry the cause.
+      let plannerFailure: string | undefined;
       const plan = await generator
         .decompose({ clarifications, requirement })
-        .catch(() => undefined);
+        .catch((error: unknown) => {
+          plannerFailure = describePlannerFailure(error);
+          console.error(
+            `[GoalService] goal ${goalId} decomposition failed; starting from the raw requirement:`,
+            error,
+          );
+          return undefined;
+        });
       // A graph without a problem node has nowhere to hang a question, so its
       // questions are planned around as assumptions like a re-plan's would be.
       const understanding = plan
@@ -3886,6 +3909,14 @@ export class GoalService {
             })
           : draftTasks;
 
+        // Why this goal was planned unit by unit, on the first task's `created`
+        // event: a planner failure, or a batch claim the checks refused.
+        let fallbackReason = !plan
+          ? `Planner failed (${plannerFailure ?? 'no answer'}); started from the raw requirement`
+          : rolloutClaim && rolloutEnabled && !verdict.batch
+            ? `Batch claim refused (${verdict.reasons.join('; ')}); planned unit by unit`
+            : undefined;
+
         const createdIds: string[] = [];
         for (const draft of plannedUnits) {
           // An experiment is a container for a candidate answer, not the
@@ -3909,6 +3940,7 @@ export class GoalService {
             scopeId: experiment?.id,
             description: draft.instruction,
             kind: 'task',
+            reason: fallbackReason,
             title: draft.title,
           });
           if (!node) throw new Error('Failed to create a planned task');
@@ -3916,6 +3948,7 @@ export class GoalService {
             await writer.createEdge(goalId, currentProblem.id, node.id, 'decomposes');
           createdIds.push(node.id);
           committedEffects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
+          fallbackReason = undefined;
         }
 
         // The planner's `dependsOn` indices become `depends_on` edges, drawn

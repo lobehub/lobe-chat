@@ -63,6 +63,8 @@ interface CreateNodeInput {
   kind: GoalNodeKind;
   priority?: number;
   questionId?: string;
+  /** Why the node was created this way, kept on its `created` event. */
+  reason?: string;
   scopeId?: string;
   status?: GoalNodeStatus;
   title: string;
@@ -566,7 +568,7 @@ export class GoalGraphModel {
   createNode = async (goalId: string, input: CreateNodeInput) =>
     this.db.transaction(async (tx) => {
       if (!(await this.ownedGoal(goalId, tx))) return undefined;
-      const { scopeId, questionId, ...values } = input;
+      const { scopeId, questionId, reason, ...values } = input;
       if (input.kind === 'experiment' && !questionId)
         throw new Error('An experiment must answer a question');
       if (input.kind !== 'experiment' && questionId)
@@ -586,6 +588,7 @@ export class GoalGraphModel {
         entityId: node.id,
         entityType: 'node',
         eventType: 'created',
+        reason,
       });
       const model = new GoalGraphModel(
         tx as unknown as LobeChatDatabase,

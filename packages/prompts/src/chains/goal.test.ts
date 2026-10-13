@@ -44,7 +44,7 @@ describe('chainGoalDecompose', () => {
     const { messages } = chainGoalDecompose({ requirement });
     const prompt = messages[0].content;
 
-    expect(GOAL_DECOMPOSE_PROMPT_VERSION).toBe('v8');
+    expect(GOAL_DECOMPOSE_PROMPT_VERSION).toBe('v9');
     expect(messages[1].content).toContain(requirement);
     expect(prompt).toContain('a request to build, fix, or upgrade requires implementation');
     expect(prompt).toContain('It may pass when it proves a capability is missing');
@@ -64,6 +64,10 @@ describe('chainGoalDecompose', () => {
     expect(prompt).toContain('after replacing the concrete file / module / symbol names');
     // Probe-only tasks plus the full roster the coordinator promotes from.
     expect(prompt).toContain('3–5 probes');
+    // One unit per probe, one template, no recipe-checking task: otherwise the
+    // probes stop reading as one mould and the batch is refused.
+    expect(prompt).toContain('Each probe is exactly ONE unit from rollout.units');
+    expect(prompt).toContain('Do not add tasks that verify, summarize or validate the recipe');
     expect(prompt).toContain('full roster of every homogeneous unit');
     expect(prompt).toContain('leave rollout null');
 

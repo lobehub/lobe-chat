@@ -58,28 +58,59 @@ export const maskConcreteNames = (text: string): string =>
     .replaceAll(/\s+/g, ' ')
     .trim();
 
-const tokensOf = (text: string): Set<string> =>
-  new Set(
-    maskConcreteNames(text)
-      .split(/[^\p{L}\p{N}<>]+/u)
-      .filter((token) => token.length > 1),
-  );
+/** Scripts written without spaces between words. */
+const UNSPACED_SCRIPT = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
-const jaccard = (a: Set<string>, b: Set<string>): number => {
+/**
+ * The word-ish tokens of a masked brief. A run of an unspaced script (Chinese,
+ * Japanese, Korean) is one "word" to the splitter — a whole clause — so it is
+ * cut into character bigrams instead; otherwise two briefs in one of those
+ * languages share almost nothing unless whole clauses repeat verbatim.
+ */
+const tokensOf = (text: string): Set<string> => {
+  const tokens = new Set<string>();
+  for (const piece of maskConcreteNames(text).split(/[^\p{L}\p{N}<>]+/u)) {
+    if (!UNSPACED_SCRIPT.test(piece)) {
+      if (piece.length > 1) tokens.add(piece);
+      continue;
+    }
+    const chars = [...piece];
+    if (chars.length === 1) tokens.add(piece);
+    for (let i = 0; i + 1 < chars.length; i += 1) tokens.add(chars[i] + chars[i + 1]);
+  }
+  return tokens;
+};
+
+/**
+ * Below this many tokens a shape is too small to judge by containment: a
+ * one-line brief can sit inside almost any long one.
+ */
+const MIN_CONTAINMENT_TOKENS = 8;
+
+/**
+ * How much of the smaller shape the larger one covers. Probe briefs share the
+ * recipe but differ in length — the first often carries the references and
+ * deliverables the rest point back to — and Jaccard reads that length gap as a
+ * different recipe. Two small shapes fall back to Jaccard.
+ */
+const similarity = (a: Set<string>, b: Set<string>): number => {
   if (a.size === 0 && b.size === 0) return 1;
   let intersection = 0;
   for (const token of a) if (b.has(token)) intersection += 1;
-  return intersection / (a.size + b.size - intersection);
+  const smaller = Math.min(a.size, b.size);
+  return smaller >= MIN_CONTAINMENT_TOKENS
+    ? intersection / smaller
+    : intersection / (a.size + b.size - intersection);
 };
 
-/** Lowest pairwise Jaccard similarity across every pair of probe shapes. */
+/** Lowest pairwise similarity across every pair of probe shapes. */
 export const minPairwiseSimilarity = (briefs: ProbeBrief[]): number => {
   if (briefs.length < 2) return 1;
   const shapes = briefs.map((brief) => tokensOf(`${brief.title}\n${brief.instruction}`));
   let min = 1;
   for (let i = 0; i < shapes.length; i += 1) {
     for (let j = i + 1; j < shapes.length; j += 1) {
-      min = Math.min(min, jaccard(shapes[i], shapes[j]));
+      min = Math.min(min, similarity(shapes[i], shapes[j]));
     }
   }
   return min;
