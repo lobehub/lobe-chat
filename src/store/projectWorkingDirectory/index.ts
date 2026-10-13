@@ -328,6 +328,15 @@ export const useProjectDirectories = (projectId?: string) =>
     rowsOf(state.directoriesMap, projectId ?? ALL_PROJECTS_KEY, EMPTY_DIRECTORIES),
   );
 
+/** One directory row from whichever loaded projection holds it, outside React. */
+export const findProjectDirectory = (id: string): ProjectDirectory | undefined => {
+  for (const rows of Object.values(useProjectDirectoryStore.getState().directoriesMap)) {
+    const row = rows.find((item) => item.id === id);
+    if (row) return row;
+  }
+  return undefined;
+};
+
 /** Environments of one project, or every environment of the scope. */
 export const useProjectEnvironments = (projectId?: string) =>
   useProjectDirectoryStore((state) =>
