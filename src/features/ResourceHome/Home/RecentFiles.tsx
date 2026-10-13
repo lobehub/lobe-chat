@@ -94,7 +94,9 @@ const RecentFiles = memo(() => {
 
   // A replica partitioned by user + workspace: a reload paints the last cards
   // from the local copy while the server confirms them.
-  const { error, revalidate } = useHomeStore((s) => s.useFetchResourceRecentFiles)({ visibility });
+  const { error, isValidating, revalidate } = useHomeStore((s) => s.useFetchResourceRecentFiles)({
+    visibility,
+  });
   const data = useHomeStore(homeRecentSelectors.resourceFiles({ visibility }));
   const isLoading = data === undefined && !error;
 
@@ -102,7 +104,11 @@ const RecentFiles = memo(() => {
 
   return (
     <Flexbox gap={12}>
-      <SectionTitle title={t('home.recentFiles')} viewAllUrl={`/resource/${FilesTabs.All}`} />
+      <SectionTitle
+        loading={isValidating && !!data?.length}
+        title={t('home.recentFiles')}
+        viewAllUrl={`/resource/${FilesTabs.All}`}
+      />
       {error && !data?.length ? (
         <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />
       ) : isLoading ? (

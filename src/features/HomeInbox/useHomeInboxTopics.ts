@@ -9,6 +9,8 @@ export type InboxTopic = TopicListItem;
 export interface HomeInboxTopics {
   error: unknown;
   isInit: boolean;
+  /** Rows are on screen (possibly the local copy) and a refresh is in flight. */
+  isRefreshing: boolean;
   /**
    * Optimistically flip a just-replied topic to `running` so it moves out of
    * "unread" and into the running card the instant the user hits send — then
@@ -34,7 +36,9 @@ const EMPTY: InboxTopic[] = [];
  * and the server only confirms it.
  */
 export const useHomeInboxTopics = (isLogin: boolean | undefined): HomeInboxTopics => {
-  const { error, revalidate } = useHomeStore((s) => s.useFetchHomeInboxTopics)(isLogin);
+  const { error, isValidating, revalidate } = useHomeStore((s) => s.useFetchHomeInboxTopics)(
+    isLogin,
+  );
   const promoteToRunning = useHomeStore((s) => s.promoteInboxTopicToRunning);
   const data = useHomeStore(homeInboxSelectors.inboxTopics);
 
@@ -47,11 +51,12 @@ export const useHomeInboxTopics = (isLogin: boolean | undefined): HomeInboxTopic
     () => ({
       error: hasHardError ? error : undefined,
       isInit: (isLogin !== true || data !== undefined) && !hasHardError,
+      isRefreshing: isValidating && data !== undefined,
       promoteToRunning,
       reload: () => void revalidate(),
       running: topics.filter((t) => t.status === 'running'),
       unread: topics.filter((t) => t.status === 'unread'),
     }),
-    [data, topics, error, hasHardError, isLogin, promoteToRunning, revalidate],
+    [data, topics, error, hasHardError, isLogin, isValidating, promoteToRunning, revalidate],
   );
 };

@@ -82,7 +82,9 @@ const RecentPages = memo(() => {
 
   // A replica partitioned by user + workspace: a reload paints the last cards
   // from the local copy while the server confirms them.
-  const { error, revalidate } = useHomeStore((s) => s.useFetchResourceRecentPages)({ visibility });
+  const { error, isValidating, revalidate } = useHomeStore((s) => s.useFetchResourceRecentPages)({
+    visibility,
+  });
   const data = useHomeStore(homeRecentSelectors.resourcePages({ visibility }));
   const isLoading = data === undefined && !error;
 
@@ -90,7 +92,11 @@ const RecentPages = memo(() => {
 
   return (
     <Flexbox gap={12}>
-      <SectionTitle title={t('home.recentPages')} viewAllUrl={'/resource/page'} />
+      <SectionTitle
+        loading={isValidating && !!data?.length}
+        title={t('home.recentPages')}
+        viewAllUrl={'/resource/page'}
+      />
       {error && !data?.length ? (
         <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />
       ) : isLoading ? (
