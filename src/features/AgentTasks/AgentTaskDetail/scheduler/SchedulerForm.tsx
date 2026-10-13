@@ -21,6 +21,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     font-size: 12px;
     color: ${cssVar.colorTextSecondary};
   `,
+  // The number input's intrinsic width would otherwise squeeze the unit until
+  // it wraps mid-word in a narrow popover.
+  hourlyUnit: css`
+    flex-shrink: 0;
+    white-space: nowrap;
+  `,
   timezoneOffset: css`
     flex-shrink: 0;
     margin-inline-start: 12px;
@@ -262,14 +268,16 @@ const SchedulerForm = memo<SchedulerFormProps>(({ maxExecutions, onChange, patte
               <InputNumber
                 max={24}
                 min={1}
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 0 }}
                 value={hourlyInterval}
                 variant="filled"
                 onChange={handleHourlyIntervalChange}
               />
-              <Text type="secondary">{t('taskSchedule.hours')}</Text>
+              <Text className={styles.hourlyUnit} type="secondary">
+                {t('taskSchedule.hours')}
+              </Text>
               <Select
-                style={{ width: 80 }}
+                style={{ flexShrink: 0, width: 80 }}
                 value={triggerTime.minute()}
                 variant="filled"
                 options={[
