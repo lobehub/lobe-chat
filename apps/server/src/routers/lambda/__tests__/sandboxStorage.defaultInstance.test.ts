@@ -52,6 +52,18 @@ vi.mock('@/server/services/market', () => ({
 
 const caller = () => sandboxStorageRouter.createCaller({ serverDB, userId } as any);
 
+type CreateEnvironmentInput = Parameters<ReturnType<typeof caller>['createEnvironment']>[0];
+
+/** As the current client calls it: asking for the default instance. */
+const createEnvironment = async (input: CreateEnvironmentInput) => {
+  const { defaultInstance, ...environment } = await caller().createEnvironment({
+    ...input,
+    withDefaultInstance: true,
+  });
+
+  return { ...environment, defaultInstance: defaultInstance! };
+};
+
 const instancesOf = (environmentId: string) =>
   serverDB
     .select()
@@ -82,7 +94,7 @@ afterEach(reset);
 
 describe('createEnvironment', () => {
   it('persists exactly one instance with the environment, and returns it as the default', async () => {
-    const created = await caller().createEnvironment({
+    const created = await createEnvironment({
       configuration: { bootstrapCommand: 'pip install pandas' },
       name: 'Python 数据分析',
     });
@@ -106,7 +118,7 @@ describe('createEnvironment', () => {
   it('stores a default instance with nothing to build as ready', async () => {
     // No build will ever run for it, and a files environment offers no rebuild:
     // a row left `pending` here could only be cleared by deleting the environment.
-    const created = await caller().createEnvironment({
+    const created = await createEnvironment({
       configuration: { kind: 'files' },
       name: 'Quarterly reports',
     });
@@ -116,7 +128,7 @@ describe('createEnvironment', () => {
   });
 
   it('stores a later copy with nothing to build as ready too', async () => {
-    const created = await caller().createEnvironment({
+    const created = await createEnvironment({
       configuration: { kind: 'files' },
       name: 'Quarterly reports',
     });
@@ -128,18 +140,28 @@ describe('createEnvironment', () => {
     expect(rows.find((row) => row.id === copy.id)?.status).toBe('ready');
   });
 
+  it('creates the environment alone for a client that does not ask for a default instance', async () => {
+    // A client from before default instances opens its own create-instance
+    // dialog next; one made here too would leave it with two.
+    const created = await caller().createEnvironment({ name: 'Legacy client' });
+
+    expect(created.defaultInstance).toBeUndefined();
+    expect(await instancesOf(created.id)).toHaveLength(0);
+    expect(await environmentExists(created.id)).toBe(true);
+  });
+
   it('derives the next directory when the slug is already taken in the workspace', async () => {
-    const first = await caller().createEnvironment({ name: 'Atlas' });
-    const second = await caller().createEnvironment({ name: 'atlas!' });
+    const first = await createEnvironment({ name: 'Atlas' });
+    const second = await createEnvironment({ name: 'atlas!' });
 
     expect(first.defaultInstance.workingDirectory).toBe('atlas');
     expect(second.defaultInstance.workingDirectory).toBe('atlas-2');
   });
 
   it('leaves nothing behind when the environment name is taken', async () => {
-    await caller().createEnvironment({ name: 'Taken' });
+    await createEnvironment({ name: 'Taken' });
 
-    await expect(caller().createEnvironment({ name: 'Taken' })).rejects.toMatchObject({
+    await expect(createEnvironment({ name: 'Taken' })).rejects.toMatchObject({
       message: 'DUPLICATE_ENVIRONMENT_NAME',
     });
     expect(await serverDB.select().from(environmentInstances)).toHaveLength(1);
@@ -148,7 +170,7 @@ describe('createEnvironment', () => {
 
 describe('removeInstance', () => {
   it('refuses the default instance and keeps its row', async () => {
-    const created = await caller().createEnvironment({ name: 'Keep default' });
+    const created = await createEnvironment({ name: 'Keep default' });
 
     await expect(caller().removeInstance({ id: created.defaultInstance.id })).rejects.toMatchObject(
       { code: 'FORBIDDEN', message: 'DEFAULT_INSTANCE' },
@@ -161,7 +183,7 @@ describe('removeInstance', () => {
   });
 
   it('removes a later copy and leaves the default in place', async () => {
-    const created = await caller().createEnvironment({ name: 'Two copies' });
+    const created = await createEnvironment({ name: 'Two copies' });
     const copy = await caller().createInstanceForEnvironment({ environmentId: created.id });
 
     await caller().removeInstance({ id: copy.id });
@@ -173,7 +195,7 @@ describe('removeInstance', () => {
   });
 
   it('treats the lower id as the default when two instances share a creation time', async () => {
-    const created = await caller().createEnvironment({ name: 'Tied' });
+    const created = await createEnvironment({ name: 'Tied' });
     const copy = await caller().createInstanceForEnvironment({ environmentId: created.id });
     await serverDB
       .update(environmentInstances)
@@ -192,7 +214,7 @@ describe('removeInstance', () => {
 
 describe('copyInstance', () => {
   it('refuses a held source without writing a row', async () => {
-    const created = await caller().createEnvironment({ name: 'Held' });
+    const created = await createEnvironment({ name: 'Held' });
     plane.readOccupancy.mockResolvedValue({
       held: [{ id: created.defaultInstance.id, own: false }],
       unavailable: false,
@@ -211,7 +233,7 @@ describe('copyInstance', () => {
   });
 
   it('refuses when occupancy cannot be read, rather than treating the source as free', async () => {
-    const created = await caller().createEnvironment({ name: 'Unknown' });
+    const created = await createEnvironment({ name: 'Unknown' });
     plane.readOccupancy.mockRejectedValue(new Error('lease store down'));
 
     await expect(
@@ -227,7 +249,7 @@ describe('copyInstance', () => {
   });
 
   it('copies an idle source into a ready instance', async () => {
-    const created = await caller().createEnvironment({ name: 'Idle' });
+    const created = await createEnvironment({ name: 'Idle' });
 
     const copy = await caller().copyInstance({
       id: created.defaultInstance.id,
@@ -242,7 +264,7 @@ describe('copyInstance', () => {
 
 describe('removeEnvironment', () => {
   it('takes the default instance with it', async () => {
-    const created = await caller().createEnvironment({ name: 'Gone' });
+    const created = await createEnvironment({ name: 'Gone' });
 
     await caller().removeEnvironment({ id: created.id });
 
@@ -255,7 +277,7 @@ describe('removeEnvironment', () => {
   });
 
   it('rolls everything back when a run still holds the default instance', async () => {
-    const created = await caller().createEnvironment({ name: 'Held env' });
+    const created = await createEnvironment({ name: 'Held env' });
     plane.deleteInstance.mockRejectedValue(new SandboxStorageFilesError('in use', 409));
 
     await expect(caller().removeEnvironment({ id: created.id })).rejects.toMatchObject({
@@ -267,7 +289,7 @@ describe('removeEnvironment', () => {
   });
 
   it('refuses an environment a project still uses before touching the snapshot', async () => {
-    const created = await caller().createEnvironment({ name: 'Bound' });
+    const created = await createEnvironment({ name: 'Bound' });
     const [agent] = await serverDB.insert(agents).values({ userId }).returning();
     const [project] = await serverDB
       .insert(projects)
@@ -290,7 +312,7 @@ describe('removeEnvironment', () => {
   });
 
   it('refuses while a copy besides the default remains', async () => {
-    const created = await caller().createEnvironment({ name: 'Crowded' });
+    const created = await createEnvironment({ name: 'Crowded' });
     await caller().createInstanceForEnvironment({ environmentId: created.id });
 
     await expect(caller().removeEnvironment({ id: created.id })).rejects.toMatchObject({

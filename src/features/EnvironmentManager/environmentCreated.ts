@@ -20,5 +20,5 @@ export const openCreatedEnvironment = (
   }: { buildInstance: (instanceId: string) => Promise<void>; select: (id: string) => void },
 ) => {
   select(created.id);
-  void buildInstance(created.defaultInstance.id);
+  if (created.defaultInstance) void buildInstance(created.defaultInstance.id);
 };

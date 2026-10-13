@@ -41,7 +41,7 @@ export const useCreateCopy = ({
   const preparing = usePendingIds();
 
   const create = useCallback(
-    /** `onCreateError`: no copy was made, so nothing was bound. */
+    /** `onCreateError`: no copy was made, or it was made and could not be bound. */
     async (environmentId: string, onCreateError: (error: unknown) => void) => {
       preparing.add(environmentId);
       try {
@@ -77,12 +77,17 @@ export const useCreateCopy = ({
             },
           { revalidate: false },
         );
-        await onChange({ instanceId: created.id, mode: 'persistent' });
-
-        void sandboxStorageService
-          .startInstanceBuild({ id: created.id, topicId })
-          .catch(onBuildError)
-          .finally(() => void refreshInstances());
+        try {
+          await onChange({ instanceId: created.id, mode: 'persistent' });
+        } finally {
+          // Whether or not the binding was written: the copy exists by now, and
+          // one whose build never starts reads "Building" for good. A failed
+          // binding is still reported below — the copy is simply left usable.
+          void sandboxStorageService
+            .startInstanceBuild({ id: created.id, topicId })
+            .catch(onBuildError)
+            .finally(() => void refreshInstances());
+        }
       } catch (error) {
         onCreateError(error);
         void refreshInstances();

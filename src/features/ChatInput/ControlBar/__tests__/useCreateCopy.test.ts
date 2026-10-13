@@ -112,6 +112,20 @@ describe('useCreateCopy', () => {
     expect(service.startInstanceBuild).not.toHaveBeenCalled();
   });
 
+  it('still starts the build when binding the conversation fails', async () => {
+    // The copy is already on the server: left unbuilt it would read "Building"
+    // forever, with nothing in the picker to start it.
+    const failure = new Error('offline');
+    const { onChange, onCreateError, result } = setup();
+    onChange.mockRejectedValue(failure);
+
+    await act(() => result.current.create('env', onCreateError));
+    await act(async () => {});
+
+    expect(service.startInstanceBuild).toHaveBeenCalledWith({ id: 'env-2', topicId: 'topic-1' });
+    expect(onCreateError).toHaveBeenCalledWith(failure);
+  });
+
   it('keeps the copy bound when only its build fails to start', async () => {
     const failure = new Error('build');
     service.startInstanceBuild.mockRejectedValue(failure);

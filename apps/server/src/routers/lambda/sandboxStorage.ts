@@ -922,6 +922,12 @@ export const sandboxStorageRouter = router({
    * instance leaves no environment behind either: the caller sees the failure
    * and retries, instead of holding an environment that silently skipped the
    * step.
+   *
+   * Asked for, not assumed. A client from before this follows the call with
+   * its own create-instance dialog, and an instance made here as well would
+   * leave it with two — the unasked one being the default, which cannot be
+   * removed on its own. Such a client gets the environment alone, as it always
+   * did, and its first instance becomes the default.
    */
   createEnvironment: instanceProcedure
     .input(
@@ -930,13 +936,16 @@ export const sandboxStorageRouter = router({
         description: z.string().max(2000).optional(),
         name: nameSchema,
         visibility: visibilitySchema.optional(),
+        withDefaultInstance: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) =>
+    .mutation(async ({ ctx, input: { withDefaultInstance, ...input } }) =>
       inEnvironmentTransaction(ctx, async ({ environmentModel, instanceModel }) => {
         const environment = await environmentModel
           .create(input)
           .catch(rethrowDuplicateEnvironmentName);
+        if (!withDefaultInstance) return { ...environment, defaultInstance: undefined };
+
         const defaultInstance = await createDerivedInstance(
           instanceModel,
           ctx.claim.key,
@@ -1252,8 +1261,10 @@ export const sandboxStorageRouter = router({
    * instance created meanwhile, a run still holding the snapshot — rolls the
    * rows back with the snapshot untouched, so a refused delete costs nothing.
    * The one gap left is a commit that fails after the snapshot is gone, which
-   * leaves rows with nothing built behind them: the same state as a new
-   * instance, and rebuildable.
+   * leaves rows with nothing built behind them. What was lost is what this
+   * call was asked to delete, and the call reports its failure, so deleting
+   * again finishes the job. The other order is the one with no way back: rows
+   * gone and a snapshot nobody can see, name, or reclaim.
    */
   removeEnvironment: instanceProcedure
     .input(z.object({ id: idSchema }))

@@ -543,6 +543,7 @@ describe('sandboxStorageRouter', () => {
       const result = await sandboxStorageRouter.createCaller(ctx).createEnvironment({
         configuration: { bootstrapCommand: 'pip install pandas' },
         name: 'Python 数据分析',
+        withDefaultInstance: true,
       });
 
       expect(mockInstanceCreate).toHaveBeenCalledWith(
@@ -574,13 +575,30 @@ describe('sandboxStorageRouter', () => {
         workingDirectory: 'python-数据分析',
       });
 
-      const result = await sandboxStorageRouter
-        .createCaller(ctx)
-        .createEnvironment({ configuration: { kind: 'files' }, name: 'Python 数据分析' });
+      const result = await sandboxStorageRouter.createCaller(ctx).createEnvironment({
+        configuration: { kind: 'files' },
+        name: 'Python 数据分析',
+        withDefaultInstance: true,
+      });
 
       expect(mockInstanceUpdate).toHaveBeenCalledWith('default-1', { status: 'ready' });
       expect(result.defaultInstance).toMatchObject({ id: 'default-1', status: 'ready' });
       expect(mockBuildInstance).not.toHaveBeenCalled();
+    });
+
+    it('creates no instance for a client that does not ask for one', async () => {
+      // A client from before default instances follows with its own
+      // create-instance dialog; an instance made here too would be a second.
+      mockCreate.mockResolvedValue(created);
+
+      const result = await sandboxStorageRouter
+        .createCaller(ctx)
+        .createEnvironment({ name: 'Python 数据分析' });
+
+      expect(mockCreate).toHaveBeenCalledWith({ name: 'Python 数据分析' });
+      expect(mockInstanceCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ id: environmentId });
+      expect(result.defaultInstance).toBeUndefined();
     });
 
     it('derives the next free directory when the first is taken', async () => {
@@ -591,12 +609,12 @@ describe('sandboxStorageRouter', () => {
 
       const result = await sandboxStorageRouter
         .createCaller(ctx)
-        .createEnvironment({ name: 'Python 数据分析' });
+        .createEnvironment({ name: 'Python 数据分析', withDefaultInstance: true });
 
       expect(mockInstanceCreate).toHaveBeenLastCalledWith(
         expect.objectContaining({ workingDirectory: 'python-数据分析-2' }),
       );
-      expect(result.defaultInstance.workingDirectory).toBe('python-数据分析-2');
+      expect(result.defaultInstance?.workingDirectory).toBe('python-数据分析-2');
     });
 
     it('fails the whole transaction when its default instance cannot be created', async () => {
@@ -605,7 +623,9 @@ describe('sandboxStorageRouter', () => {
       mockInstanceCreate.mockRejectedValueOnce(new Error('db down'));
 
       await expect(
-        sandboxStorageRouter.createCaller(ctx).createEnvironment({ name: 'Python 数据分析' }),
+        sandboxStorageRouter
+          .createCaller(ctx)
+          .createEnvironment({ name: 'Python 数据分析', withDefaultInstance: true }),
       ).rejects.toThrow('db down');
       expect(mockTransaction).toHaveBeenCalledTimes(1);
       expect(mockDelete).not.toHaveBeenCalled();

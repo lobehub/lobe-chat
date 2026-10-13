@@ -48,7 +48,10 @@ class SandboxStorageService {
     description?: string;
     name: string;
     visibility?: EnvironmentVisibility;
-  }) => lambdaClient.sandboxStorage.createEnvironment.mutate(params);
+  }) =>
+    // Always with its default instance: this client has no create-instance
+    // dialog to follow with. The server leaves it out for clients that do.
+    lambdaClient.sandboxStorage.createEnvironment.mutate({ ...params, withDefaultInstance: true });
 
   /**
    * Edits the specification. Existing instances keep the one they were created
