@@ -209,6 +209,8 @@ describe('checkFileSizes', () => {
     'packages/locales/src/default/setting.ts': 5000,
     'packages/locales/src/create.ts': 900,
     'src/types.d.ts': 2000,
+    'packages/sdk/src/generated/types.gen.ts': 12000,
+    'packages/sdk/src/generated/core/client.ts': 900,
     'README.md': 5000,
   };
   const base: Record<string, number | null> = {
@@ -216,6 +218,8 @@ describe('checkFileSizes', () => {
     'packages/locales/src/create.ts': null,
     'packages/locales/src/default/setting.ts': 4000,
     'src/types.d.ts': 1000,
+    'packages/sdk/src/generated/types.gen.ts': null,
+    'packages/sdk/src/generated/core/client.ts': null,
     'src/Crossed.ts': 790,
     'src/Grown.tsx': 1100,
     'src/Shrunk.ts': 1100,

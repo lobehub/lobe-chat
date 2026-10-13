@@ -22,7 +22,7 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 
 A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `constants.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `const.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
-New files use named exports (`export const PlanCard = …`), even when the neighboring files default-export; do not copy the older default-export habit. The exceptions are modules a framework or tool loads by their default export: route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), and `*.config.ts` files. Lint does not enforce this: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`. When moving an existing file, keep its exports unchanged so its callers do not change.
+New files use named exports (`export const PlanCard = …`), even when the neighboring files default-export; do not copy the older default-export habit. The exceptions are modules a framework, tool, or loader imports by their default export: route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), `*.config.ts` files, desktop controllers and services (`*Ctr.ts`, `*Srv.ts`, globbed by `apps/desktop/src/main/core/App.ts`), and locale resource files. Lint does not enforce this: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`. When moving an existing file, keep its exports unchanged so its callers do not change.
 
 ## 2. Tests
 
@@ -36,7 +36,7 @@ One rule for every app and package:
 
 ## 3. File size
 
-Source and test files stay at or below 800 lines:
+Source and test files stay at or below 800 lines. Generated code (`*.gen.ts`, `generated/` directories) and the `locales/default/` tables are exempt:
 
 - A new file over 800 lines, or an existing file that crosses 800 lines in this change, is split in the same change. `bun run check` fails on both.
 - A file already over 800 lines must not grow, including for a bug fix: the change may only keep or reduce its line count. Before adding code, extract the cohesive part the change touches. Put a new test in a scenario test file under the limit (§2), splitting the old test file first when the test belongs to one of its scenarios. Because hundreds of legacy files are over the limit, `bun run check` reports their growth as an advisory instead of failing; it is still a required fix.

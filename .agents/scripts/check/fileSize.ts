@@ -8,8 +8,12 @@ import { mountDir, rootDir } from './paths';
 export const MAX_FILE_LINES = 800;
 
 const SOURCE_PATTERN = /\.[cm]?[jt]sx?$/;
-/** Declarations and default locale tables are data, not code that splits on a module boundary. */
-const EXEMPT_PATTERN = /\.d\.[cm]?ts$|(?:^|\/)locales\/(?:src\/)?default\//;
+/**
+ * Declarations, default locale tables, and generated code are data or tool
+ * output, not hand-written code that splits on a module boundary.
+ */
+const EXEMPT_PATTERN =
+  /\.d\.[cm]?ts$|\.gen\.[cm]?[jt]sx?$|(?:^|\/)generated\/|(?:^|\/)locales\/(?:src\/)?default\//;
 const RULE_REFERENCE = '.agents/skills/source-layout/SKILL.md §3';
 
 /** Line count at the merge base; `null` when the file does not exist there. */
