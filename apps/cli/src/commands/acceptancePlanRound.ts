@@ -81,13 +81,14 @@ export async function ingestIntoPlanRound(
       "report.md is not published into a plan round: its verifier writes the round's report. Keep the narrative in your final response.",
     );
 
-  const run = await client.verify.getRun.query({ verifyRunId: params.state.verifyRunId });
-
   let evidenceCount = 0;
   let inlined = 0;
   const seen = new Set<string>();
   const failedEvidence: (FailedReportEvidence & { checkItemId: string })[] = [];
   const missingEvidence: { checkItemId: string; types: EvidenceType[] }[] = [];
+  // `submitCheckEvidence` lands a check whose failure already spawned a repair
+  // on that live repair round, not on the operation's own (settled) round.
+  const landedRunIds = new Set<string>();
   for (const { case: c, checkItemId } of params.cases) {
     seen.add(checkItemId);
     const observation = c.keyObservation ?? c.observation ?? c.note;
@@ -96,6 +97,7 @@ export async function ingestIntoPlanRound(
       operationId: params.operationId,
       toulmin: typeof observation === 'string' ? { evidence: observation } : undefined,
     });
+    if (checkResult.verifyRunId) landedRunIds.add(checkResult.verifyRunId);
     const uploaded = await uploadReportEvidence(client, {
       checkResultId: checkResult.id,
       dir: params.dir,
@@ -120,6 +122,8 @@ export async function ingestIntoPlanRound(
     missingEvidence.push({ checkItemId: item.id, types });
     log.warn(`${item.id}: no case; required evidence not published: ${types.join(', ')}.`);
   }
+
+  const run = await resolveLandedRun(client, params.state.verifyRunId, landedRunIds);
 
   let proposalPosted = false;
   if (params.proposal && run?.acceptanceId) {
@@ -224,3 +228,26 @@ const coverageGaps = (item: VerifyCheckItem | undefined, published: EvidenceType
     item?.verifierConfig as Record<string, unknown> | undefined,
     published.map((type) => ({ type })),
   ) as EvidenceType[];
+
+/**
+ * The round this publication actually landed on, so the proposal, the links and
+ * the JSON output name the round the reviewer will see. Evidence redirected to a
+ * repair round makes that round the live one; when cases split across rounds,
+ * the newest round is the one still being judged.
+ */
+const resolveLandedRun = async (
+  client: TrpcClient,
+  operationRunId: string,
+  landedRunIds: Set<string>,
+) => {
+  const ids = landedRunIds.size > 0 ? [...landedRunIds] : [operationRunId];
+  const runs = await Promise.all(
+    ids.map((verifyRunId) => client.verify.getRun.query({ verifyRunId })),
+  );
+  return runs
+    .filter((run): run is NonNullable<typeof run> => Boolean(run))
+    .reduce<(typeof runs)[number] | undefined>(
+      (latest, run) => (!latest || (run.roundIndex ?? 0) > (latest.roundIndex ?? 0) ? run : latest),
+      undefined,
+    );
+};

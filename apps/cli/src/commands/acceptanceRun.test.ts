@@ -912,6 +912,31 @@ describe('acceptance publication with missing evidence', () => {
       expect(process.exitCode).toBeUndefined();
     });
 
+    it('posts the proposal on the repair round the evidence was redirected to', async () => {
+      // A check whose failure spawned a repair is answered on the live repair
+      // round; the proposal and the output must name that round, not the old one.
+      client.verify.submitCheckEvidence.mutate.mockImplementation(async (input) => ({
+        checkResult: { id: `result-${input.checkItemId}`, verifyRunId: 'repair-run' },
+        evidence: [],
+      }));
+      client.verify.getRun.query.mockImplementation(async ({ verifyRunId }) =>
+        verifyRunId === 'repair-run'
+          ? { acceptanceId: 'acceptance-task', id: 'repair-run', roundIndex: 2 }
+          : { acceptanceId: 'acceptance-task', id: 'plan-run', roundIndex: 1 },
+      );
+      await writeRound([
+        { evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' },
+        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
+      ]);
+
+      await run('ingest', dir, '--operation', 'op-task', '--json');
+
+      expect(client.acceptanceComment.create.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({ clientId: 'proposal:repair-run', contextRunId: 'repair-run' }),
+      );
+      expect(result()).toMatchObject({ roundIndex: 2, verifyRunId: 'repair-run' });
+    });
+
     it('reports an unattached plan round as blocked, not complete', async () => {
       client.verify.getRun.query.mockResolvedValue({
         acceptanceId: null,
