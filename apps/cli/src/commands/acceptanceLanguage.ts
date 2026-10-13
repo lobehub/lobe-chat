@@ -92,7 +92,8 @@ export async function resolveReportLanguage(client: UserStateClient): Promise<Re
  */
 const stripNonProse = (text: string) =>
   text
-    .replaceAll(/(```|~~~)[\s\S]*?\1/g, ' ')
+    // A fence closes only on the same delimiter run, so a ```` fence can hold a ``` example.
+    .replaceAll(/(`{3,}|~{3,})[\s\S]*?\1/g, ' ')
     .replaceAll(/`[^`\n]*`/g, ' ')
     .replaceAll(/!?\[[^\]]*\]\([^)]*\)/g, (match) => match.replace(/\([^)]*\)$/, ''))
     // A URL may contain non-ASCII path segments (`/中文`, `/café`), so it runs to

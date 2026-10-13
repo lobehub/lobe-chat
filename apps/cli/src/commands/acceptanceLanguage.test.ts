@@ -84,6 +84,18 @@ describe('findLanguageViolations', () => {
     ).toEqual([]);
   });
 
+  it('keeps a longer fence open across a shorter fence inside it', () => {
+    expect(
+      findLanguageViolations(
+        [
+          { path: 'a', text: '````md\n```bash\nnpm test\n```\n````' },
+          { path: 'b', text: '````md\n```\n````\n修复了问题\n```bash\nnpm test\n```' },
+        ],
+        rule,
+      ),
+    ).toEqual([]);
+  });
+
   it('does not count target-script characters inside a URL as prose', () => {
     expect(
       findLanguageViolations(
