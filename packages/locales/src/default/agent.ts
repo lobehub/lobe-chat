@@ -538,7 +538,7 @@ export default {
     'This tool can never be used in a shared run — visitor runs are blocked from your knowledge base and Agent files.',
   'share.settings.tools.onDemandDesc':
     'Not enabled on this Agent. Once granted, the model turns it on in a visitor run only when needed.',
-  'share.settings.tools.onDemandTag': 'On demand',
+  'share.settings.tools.showOnDemand': 'Show on-demand tools',
   'share.settings.tools.title': 'Tools visitors can use',
   'share.settings.updateError': 'Could not save the change. Please try again.',
   'share.visitor.access.backHome': 'Back to home',
