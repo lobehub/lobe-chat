@@ -334,6 +334,7 @@
   "share.settings.link.copy": "复制链接",
   "share.settings.link.desc": "任何拿到链接并已登录的人都能和这个助手对话，运行都发生在你的账户上。",
   "share.settings.link.disableConfirmContent": "访客会立即无法访问。链接本身会保留，之后重新开启分享时仍然是同一个链接。",
+  "share.settings.link.disableConfirmFinalContent": "访客会立即无法访问。分享功能当前未对你的账号开放，关闭后将无法重新开启这个链接。",
   "share.settings.link.disableConfirmOk": "关闭分享",
   "share.settings.link.disableConfirmTitle": "要关闭分享吗？",
   "share.settings.link.modelDisabled": "当前模型由其他服务商提供，暂不支持分享。请切换到由 LobeHub 提供的模型，再开启分享。",

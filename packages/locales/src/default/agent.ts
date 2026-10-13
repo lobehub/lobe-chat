@@ -431,6 +431,8 @@ export default {
     'Anyone signed in who has the link can chat with this Agent. Runs execute on your account.',
   'share.settings.link.disableConfirmContent':
     'Visitors lose access to the link right away. The link itself is kept, so turning sharing back on later republishes the exact same URL.',
+  'share.settings.link.disableConfirmFinalContent':
+    "Visitors lose access to the link right away. Sharing isn't available on your account right now, so you won't be able to turn this link back on after closing it.",
   'share.settings.link.disableConfirmOk': 'Turn off sharing',
   'share.settings.link.disableConfirmTitle': 'Turn off sharing?',
   'share.settings.link.offHint':
