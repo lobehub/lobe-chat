@@ -2,7 +2,7 @@
 name: acceptance
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.8.1"
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -148,10 +148,18 @@ creates a standalone acceptance when it cannot. On the first ingest, always supp
 `--requirement "<one-sentence business goal>"` — the durable goal of the whole
 acceptance, not this round's scope; it is immutable once recorded.
 
-Prerequisites: `lh` is authed (`lh acceptance run list --json` returns `[]` or
-data; an auth error means stop and surface it), and only the UI driver the
-selected surface needs is installed — probe before adding dependencies, and never
-substitute a private agent plugin.
+Prerequisites: run `lh acceptance preflight --json` before writing any plan or
+report text — an auth error means stop and surface it — and install only the UI
+driver the selected surface needs; probe before adding dependencies, and never
+substitute a private agent plugin. Its `language.locale` is the **report
+language**: write every human-readable field (title, plan, case names,
+observations, evidence descriptions, conclusion, `report.md`, `proposal.md`) in
+it, even when the prompt that invoked you is in another language — a delegating
+agent's prompt does not show which language the user reads. The publish commands
+reject text in the wrong script, so run `lh acceptance run ingest <dir> --dry-run`
+as soon as the plan is in `result.json`, before executing it. When
+`language.status` is `unset`, use the language the user converses in. On a CLI
+without `preflight`, check auth with `lh acceptance run list --json`.
 
 ## Optional user-journey flows
 
@@ -366,7 +374,7 @@ safety — are in [evidence.md](references/evidence.md).
 
 ## Keep checklist explanations brief
 
-Write each check's `observation` and inline explanation in the user's language,
+Write each check's `observation` and inline explanation in the report language,
 usually 1–3 short sentences: what was done, what happened, and any limitation
 needed to judge that outcome. Do not paste the execution report into the check.
 Omit repeated titles, verdict labels, SHA/port/ID headers, environment boilerplate,

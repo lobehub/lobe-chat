@@ -155,8 +155,8 @@ supersedes? }`.
    one-paragraph verdict into `summary.conclusion`.
 5. **Write `proposal.md` — the round's own note to the reviewer.** What this
    round delivers and where you want their eyes, the way a person writes a pull
-   request description: a few sentences, in the language the user is conversing
-   in. `ingest` posts it into the acceptance's discussion as a message on this
+   request description: a few sentences, in the
+   [report language](../SKILL.md#two-paths--no-id-is-required). `ingest` posts it into the acceptance's discussion as a message on this
    round, so it is the first thing a reviewer reads and they can answer it in
    place. It is NOT the verification write-up — do not restate the checks or the
    verdict, those are `result.json` and `report.md`. Every round gets one: the
@@ -165,7 +165,7 @@ supersedes? }`.
    checks.
 6. **`report.md` is the narrative tail only** — this-round notes, follow-ups,
    score. Do NOT repeat the scope block or a case table; those double up on the
-   page. Write it in the language the user is conversing in.
+   page. Write it in the report language.
 7. **Review, then publish:** hand the completed plan, report, original evidence,
    and an explicit file list with relevant diff text or prepared diff artifact
    paths (including in-round repairs, base and tested revision, and affected case IDs)
