@@ -52,11 +52,11 @@ const SuccessResult = memo<SuccessResultProps>(({ duration, dataSource, onClickF
           <Flexbox gap={16} width={500}>
             {t('importModal.finish.subTitle', { duration: (duration / 1000).toFixed(2) })}
             <Table
-              bordered
               dataSource={dataSource}
               pagination={false}
               rowKey={'title'}
               size={'small'}
+              variant="outlined"
               columns={[
                 { dataIndex: 'title', render: cellRender, title: t('importModal.result.type') },
                 { dataIndex: 'added', render: cellRender, title: t('importModal.result.added') },
