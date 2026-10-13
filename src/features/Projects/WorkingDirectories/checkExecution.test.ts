@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { deviceService } from '@/services/device';
 import { projectWorkingDirectoryService } from '@/services/projectWorkingDirectory';
+import { type ProjectDirectory, useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 
 import { checkProjectExecution } from './checkExecution';
 
@@ -45,5 +46,47 @@ describe('project send preflight', () => {
 
     expect(resolve).toHaveBeenCalledWith('directory');
     expect(stat).not.toHaveBeenCalled();
+  });
+
+  // Regression: the DB resolve held every project send behind a network round
+  // trip before the composer even cleared. The sidebar's directory replica
+  // already carries the binding, so a loaded row is checked locally.
+  describe('with the directory row in the local replica', () => {
+    const row = {
+      deviceId: 'pinned-device',
+      environmentId: 'env',
+      id: 'directory',
+      instanceId: 'instance',
+      permission: 'readWrite',
+      projectId: 'project',
+    } as ProjectDirectory;
+
+    afterEach(() => useProjectDirectoryStore.setState({ directoriesMap: {} }));
+
+    it('passes without resolving over the network', async () => {
+      useProjectDirectoryStore.setState({ directoriesMap: { all: [row] } });
+      const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
+
+      await expect(checkProjectExecution(topic, true)).resolves.toBeUndefined();
+      expect(resolve).not.toHaveBeenCalled();
+    });
+
+    it('rejects a read-only directory without resolving over the network', async () => {
+      useProjectDirectoryStore.setState({
+        directoriesMap: { all: [{ ...row, permission: 'read' } as ProjectDirectory] },
+      });
+      const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
+
+      await expect(checkProjectExecution(topic, true)).rejects.toThrow();
+      expect(resolve).not.toHaveBeenCalled();
+    });
+
+    it('rejects a directory without a linked environment', async () => {
+      useProjectDirectoryStore.setState({
+        directoriesMap: { all: [{ ...row, environmentId: null } as ProjectDirectory] },
+      });
+
+      await expect(checkProjectExecution(topic, true)).rejects.toThrow();
+    });
   });
 });
