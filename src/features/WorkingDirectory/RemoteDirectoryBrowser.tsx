@@ -3,14 +3,15 @@
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Button, Input, Spin, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
-import { ArrowUpIcon, HouseIcon } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowUpIcon, FolderPlusIcon, HouseIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useFetchDeviceDirectory } from '@/store/device/directoryHooks';
 
 import { getFolderIcon } from './folderIcons';
+import { NewFolderInput } from './NewFolderInput';
+import { useDirectoryBrowserState } from './useDirectoryBrowserState';
 
 interface RemoteDirectoryBrowserProps {
   defaultPath?: string;
@@ -33,16 +34,23 @@ export const RemoteDirectoryBrowser = ({
 }: RemoteDirectoryBrowserProps) => {
   const { t } = useTranslation('device');
   const { t: tCommon } = useTranslation('common');
-  const [path, setPath] = useState(defaultPath);
-  const [draft, setDraft] = useState<string>();
+  const {
+    path,
+    draft,
+    creatingFolder,
+    editPath,
+    isPathConfirmed,
+    navigate: setDirectoryPath,
+    setCreatingFolder,
+  } = useDirectoryBrowserState(defaultPath);
   const { directory, entries, error, hasMore, isLoading, isLoadingMore, loadMore, retry } =
     useFetchDeviceDirectory(deviceId, path);
+  const canUseDirectory = !isLoading && isPathConfirmed(directory?.path);
   const displayedPath = draft ?? directory?.path ?? path ?? '';
 
   const navigate = (nextPath?: string) => {
-    setDraft(undefined);
+    setDirectoryPath(nextPath);
     if (nextPath === path) void retry();
-    else setPath(nextPath);
   };
 
   return (
@@ -64,6 +72,13 @@ export const RemoteDirectoryBrowser = ({
             title={t('workingDirectory.parentFolder')}
             onClick={() => directory?.parentPath && navigate(directory.parentPath)}
           />
+          <ActionIcon
+            aria-label={t('workingDirectory.newFolder')}
+            disabled={loading || !canUseDirectory || !!error}
+            icon={FolderPlusIcon}
+            title={t('workingDirectory.newFolder')}
+            onClick={() => setCreatingFolder(true)}
+          />
         </Flexbox>
         <Input
           aria-label={t('workingDirectory.current')}
@@ -71,7 +86,7 @@ export const RemoteDirectoryBrowser = ({
           placeholder={t('workingDirectory.placeholder')}
           style={{ flex: 1, minWidth: 0 }}
           value={displayedPath}
-          onChange={(event) => setDraft(event.target.value)}
+          onChange={(event) => editPath(event.target.value)}
           onPressEnter={() => navigate(displayedPath.trim() || undefined)}
         />
         <Button disabled={loading} onClick={() => navigate(displayedPath.trim() || undefined)}>
@@ -100,6 +115,19 @@ export const RemoteDirectoryBrowser = ({
           </Flexbox>
         ) : (
           <>
+            {creatingFolder && canUseDirectory && directory && (
+              <NewFolderInput
+                deviceId={deviceId}
+                parentPath={directory.path}
+                onCancel={() => setCreatingFolder(false)}
+                onCreated={(createdPath) => {
+                  // Refresh this listing so the new folder shows when the user
+                  // steps back up, then open it so it can be used directly.
+                  void retry();
+                  navigate(createdPath);
+                }}
+              />
+            )}
             {entries.map((entry) => (
               <NavItem
                 aria-disabled={loading || !entry.readable}
@@ -134,7 +162,7 @@ export const RemoteDirectoryBrowser = ({
                   {tCommon('retry')}
                 </Button>
               </Flexbox>
-            ) : directory && entries.length === 0 ? (
+            ) : directory && entries.length === 0 && !creatingFolder ? (
               <Flexbox align={'center'} flex={1} justify={'center'}>
                 <Text type={'secondary'}>{t('workingDirectory.foldersEmpty')}</Text>
               </Flexbox>
@@ -161,11 +189,9 @@ export const RemoteDirectoryBrowser = ({
             {tCommon('cancel')}
           </Button>
           <Button
+            disabled={!canUseDirectory}
             loading={loading}
             type={'primary'}
-            disabled={
-              !directory || isLoading || (draft !== undefined && draft.trim() !== directory.path)
-            }
             onClick={() => directory && onSelect(directory.path)}
           >
             {t('workingDirectory.useFolder')}

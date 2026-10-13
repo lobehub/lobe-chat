@@ -314,6 +314,7 @@
   "pageList.copySuccess": "Trang đã được sao chép",
   "pageList.copyTitle": "Sao chép trang",
   "pageList.copyTo": "Sao chép vào…",
+  "pageList.createFailed": "Không thể tạo trang",
   "pageList.duplicate": "Sao Chép",
   "pageList.empty": "Chưa có trang nào. Nhấn nút phía trên để tạo trang đầu tiên.",
   "pageList.filter.all": "Tất Cả",

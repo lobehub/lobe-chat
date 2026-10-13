@@ -152,6 +152,42 @@ describe('nightly review source handler', () => {
     );
   });
 
+  /**
+   * Once earlier agents used up the user's 50 nightly topics, a later agent whose topics were
+   * all refused is skipped instead of reviewing an empty context.
+   */
+  it('skips the review when the nightly topic quota refused every topic', async () => {
+    const deps = createDependencies({
+      collectContext: vi.fn(async () => ({
+        ...reviewContext,
+        topicQuota: { admittedTopicCount: 0, reason: 'exhausted' as const, refusedTopicCount: 3 },
+      })),
+    });
+
+    const result = await createNightlyReviewSourceHandler(deps).handle(createReviewSource());
+
+    expect(deps.dispatch).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      detail: 'Nightly review topic limit reached (50 topics per night).',
+      reason: 'topic_quota_exhausted',
+      status: ReviewRunStatus.Skipped,
+    });
+  });
+
+  it('still dispatches when the quota admitted some of the topics', async () => {
+    const deps = createDependencies({
+      collectContext: vi.fn(async () => ({
+        ...reviewContext,
+        topicQuota: { admittedTopicCount: 1, reason: 'exhausted' as const, refusedTopicCount: 2 },
+      })),
+    });
+
+    const result = await createNightlyReviewSourceHandler(deps).handle(createReviewSource());
+
+    expect(deps.dispatch).toHaveBeenCalledOnce();
+    expect(result).toMatchObject({ status: ReviewRunStatus.Dispatched });
+  });
+
   it('returns skipped without acquiring the guard when gates reject the review', async () => {
     const deps = createDependencies({
       canRunReview: vi.fn(async () => false),

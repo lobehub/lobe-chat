@@ -26,7 +26,11 @@ import { UserModel } from '@/database/models/user';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signTunnelAccessToken, signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
-import { type DeviceAttachment, deviceGateway } from '@/server/services/deviceGateway';
+import {
+  type DeviceAttachment,
+  deviceGateway,
+  isValidDirectoryName,
+} from '@/server/services/deviceGateway';
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
 
@@ -64,9 +68,10 @@ const SCAN_TIMEOUT_MS = 10_000;
  * else's enrollment, while shared cleanup remains an owner action.
  */
 /**
- * Gate an action that operates the machine itself — exposing a port, updating
- * its app — the same way `browseDirectory` gates new paths: on a workspace
- * device, only the enrolling member or a workspace owner.
+ * Gate an action that operates the machine itself — browsing folders, a
+ * terminal, exposing a port, updating its app. A public workspace device is
+ * shared infra every member works on, so any member may operate it; a private
+ * one stays limited to the enrolling member or a workspace owner.
  */
 const assertDeviceOperable = async (
   ctx: {
@@ -82,10 +87,13 @@ const assertDeviceOperable = async (
 
   const row = await ctx.deviceModel.findWorkspaceDeviceById(deviceId);
   if (!row) throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-  if (!canEditWorkspaceDevice(ctx.workspaceRole, ctx.userId, row.userId)) {
+  if (!canOperateWorkspaceDevice(ctx.workspaceRole, ctx.userId, row)) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: `Only the enrolling member or a workspace owner can ${action} on this device.`,
+      message:
+        row.visibility === 'public'
+          ? `Workspace viewers cannot ${action} on this device.`
+          : `Only the enrolling member or a workspace owner can ${action} on this private device.`,
     });
   }
 };
@@ -138,6 +146,19 @@ const canEditWorkspaceDevice = (
   actorUserId: string,
   enrollerUserId: string,
 ): boolean => role === 'owner' || enrollerUserId === actorUserId;
+
+/**
+ * Using a workspace device (as opposed to editing its registration) is open to
+ * every member once it is public; read-only viewers never operate a machine.
+ * See {@link assertDeviceOperable}.
+ */
+const canOperateWorkspaceDevice = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  row: { userId: string; visibility: 'private' | 'public' },
+): boolean =>
+  (row.visibility === 'public' && !!role && role !== 'viewer') ||
+  canEditWorkspaceDevice(role, actorUserId, row.userId);
 
 /**
  * Fixed workspace agents promise every member the same execution device. Keep
@@ -817,8 +838,7 @@ export const deviceRouter = router({
 
   /**
    * Browse one directory level on a remote device. Personal devices belong to
-   * the caller. A workspace device may expose new paths only to its enroller or
-   * a workspace owner; other members continue to use its approved recents.
+   * the caller; workspace devices follow {@link assertDeviceOperable}.
    */
   browseDirectory: deviceProcedure
     .input(
@@ -830,19 +850,7 @@ export const deviceRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (ctx.workspaceId) {
-        const row = await ctx.deviceModel.findWorkspaceDeviceById(input.deviceId);
-        if (!row) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
-        }
-        const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
-        if (!canEditWorkspaceDevice(role, ctx.userId, row.userId)) {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Only the enrolling member or a workspace owner can browse this device.',
-          });
-        }
-      }
+      await assertDeviceOperable(ctx, input.deviceId, 'browse folders');
 
       const result = await deviceGateway.browseDirectory({
         cursor: input.cursor,
@@ -853,6 +861,57 @@ export const deviceRouter = router({
         workspaceId: ctx.workspaceId,
       });
       return result ?? null;
+    }),
+
+  /**
+   * Create a folder inside the directory a remote folder picker is browsing, so
+   * a new working directory can be made without leaving the picker. Same access
+   * rule as {@link browseDirectory}; a taken name is reported as `CONFLICT`.
+   */
+  createDirectory: deviceProcedure
+    .input(
+      z.object({
+        deviceId: z.string(),
+        name: z.string().min(1).max(255),
+        parentPath: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'create folders');
+
+      if (
+        !isValidDirectoryName(input.name, input.parentPath) ||
+        !isValidDirectoryName(input.name.trim(), input.parentPath)
+      ) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid folder name.' });
+      }
+
+      let result: Awaited<ReturnType<typeof deviceGateway.createDirectory>>;
+      try {
+        result = await deviceGateway.createDirectory({
+          deviceId: input.deviceId,
+          name: input.name.trim(),
+          parentPath: input.parentPath,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        // A device app predating `createLocalDirectory` needs an update, not a retry.
+        throw new TRPCError({
+          code: /Unknown device RPC method/.test(message) ? 'PRECONDITION_FAILED' : 'BAD_GATEWAY',
+          message,
+        });
+      }
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: /already exists/i.test(result.error ?? '') ? 'CONFLICT' : 'BAD_REQUEST',
+          message: result.error || 'Create folder failed',
+        });
+      }
+
+      return result;
     }),
 
   /**
@@ -1363,8 +1422,9 @@ export const deviceRouter = router({
   //
   // A tunnel makes one loopback port on a device reachable at
   // `https://<port>--<slug>.lobe.sh/`. Creating one is gated exactly like
-  // browsing the device's filesystem: on a workspace device, only the
-  // enrolling member or an owner may expose a port.
+  // browsing the device's filesystem: on a public workspace device any
+  // non-viewer member may expose a port; on a private one, only the enrolling
+  // member or an owner.
 
   /** Open a link to `port` on a device. */
   createTunnel: deviceProcedure

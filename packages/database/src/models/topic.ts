@@ -84,6 +84,21 @@ type TopicMetadataPatch = Omit<Partial<ChatTopicMetadata>, 'onboardingSession'> 
  */
 const LAST_MESSAGE_PREVIEW_LENGTH = 2000;
 const TASK_CALLBACK_RESERVATION_TTL_MS = 5 * 60 * 1000;
+
+/**
+ * Whether a turn start currently holds the topic's short start reservation.
+ * A writer that changes where the topic runs must respect it as it would a
+ * `runningOperation`: the reserving turn may already have resolved its target.
+ */
+export const hasLiveTaskCallbackReservation = (
+  metadata: Pick<ChatTopicMetadata, 'taskCallbackReservation'> | null | undefined,
+  now = Date.now(),
+): boolean => {
+  const reservation = metadata?.taskCallbackReservation;
+  if (!reservation) return false;
+  const reservedAt = Date.parse(reservation.reservedAt);
+  return Number.isFinite(reservedAt) && now - reservedAt < TASK_CALLBACK_RESERVATION_TTL_MS;
+};
 /**
  * How long an operation that still claims `running` / `idle` may hold the topic
  * against a background start before it is treated as abandoned.
@@ -2658,11 +2673,7 @@ export class TopicModel {
       if (!existing) return null;
 
       const reservation = existing.metadata?.taskCallbackReservation;
-      const reservedAt = reservation ? Date.parse(reservation.reservedAt) : 0;
-      const hasLiveReservation =
-        reservation &&
-        Number.isFinite(reservedAt) &&
-        Date.now() - reservedAt < TASK_CALLBACK_RESERVATION_TTL_MS;
+      const hasLiveReservation = hasLiveTaskCallbackReservation(existing.metadata);
 
       if (
         reservation?.messageId === messageId &&
@@ -2737,11 +2748,7 @@ export class TopicModel {
 
       const current = existing.metadata?.runningOperation;
       const reservation = existing.metadata?.taskCallbackReservation;
-      const reservedAt = reservation ? Date.parse(reservation.reservedAt) : 0;
-      const hasLiveReservation =
-        !!reservation &&
-        Number.isFinite(reservedAt) &&
-        Date.now() - reservedAt < TASK_CALLBACK_RESERVATION_TTL_MS;
+      const hasLiveReservation = hasLiveTaskCallbackReservation(existing.metadata);
       const ownsCurrent =
         !current ||
         current.operationId === params.sourceOperationId ||

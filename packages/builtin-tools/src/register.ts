@@ -12,6 +12,7 @@ import {
 } from '@lobechat/builtin-tool-agent-builder/client';
 import {
   AgentDocumentsInspectors,
+  AgentDocumentsInterventions,
   AgentDocumentsManifest,
   AgentDocumentsRenders,
   AgentDocumentsStreamings,
@@ -413,6 +414,10 @@ export const registerBuiltinToolSurfaces = (): void => {
 
   registerBuiltinInterventions({
     [AgentBuilderManifest.identifier]: AgentBuilderInterventions as Record<
+      string,
+      BuiltinIntervention
+    >,
+    [AgentDocumentsManifest.identifier]: AgentDocumentsInterventions as Record<
       string,
       BuiltinIntervention
     >,

@@ -3,7 +3,7 @@ import { Flexbox } from '@lobehub/ui';
 import { Button } from '@lobehub/ui/base-ui';
 import { $getRoot } from 'lexical';
 import { ChevronDownIcon, MessageCirclePlus } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AttachmentUploadButton } from '@/features/AttachmentInput';
@@ -18,6 +18,8 @@ import {
 } from '@/features/EditorCanvas/editorAttachments';
 import { useEnterToSend } from '@/hooks/useEnterToSend';
 
+import { useComposerFocus } from './useComposerFocus';
+
 interface FeedbackInputProps {
   /** Acceptance's in-flow topic rail starts with the composer visible. The
       floating Topic drawer keeps its compact, opt-in default. */
@@ -25,10 +27,14 @@ interface FeedbackInputProps {
   /** Hide the collapse affordance when the hosting surface intentionally pins
       the composer open, as Acceptance's in-flow right rail does. */
   disableCollapse?: boolean;
+  /** Expand and focus the composer whenever this changes — the floating drawer
+      opened by "Continue chat" wants the input hot, while read-first surfaces
+      keep the compact, opt-in default. */
+  focusRequest?: number;
 }
 
 const FeedbackInput = memo<FeedbackInputProps>(
-  ({ defaultExpanded = false, disableCollapse = false }) => {
+  ({ defaultExpanded = false, disableCollapse = false, focusRequest }) => {
     const { t } = useTranslation('chat');
     const editor = useEditor();
     const sendMessage = useConversationStore((s) => s.sendMessage);
@@ -36,7 +42,11 @@ const FeedbackInput = memo<FeedbackInputProps>(
     const [submitting, setSubmitting] = useState(false);
     const [hasContent, setHasContent] = useState(false);
     const [hasAttachments, setHasAttachments] = useState(false);
-    const [expanded, setExpanded] = useState(defaultExpanded);
+    const { collapse, expand, expanded, handleEditorInit } = useComposerFocus({
+      defaultExpanded,
+      editor,
+      focusRequest,
+    });
     const shouldSendOnEnter = useEnterToSend();
     // Task follow-ups send into the shared agent's topic — view-only members
     // can watch the run but get no reply composer.
@@ -51,10 +61,6 @@ const FeedbackInput = memo<FeedbackInputProps>(
     // follow-up was queued rather than started.
     const { placeholderVariant, showSendWhileGenerating, showStopButton } =
       useConversationChatInputUiState({ isInputEmpty: !canSubmit });
-
-    useEffect(() => {
-      if (expanded) editor?.focus?.();
-    }, [expanded, editor]);
 
     const handleContentChange = useCallback(() => {
       const lexicalEditor = editor?.getLexicalEditor?.();
@@ -113,7 +119,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
       return (
         <Flexbox gap={8}>
           <OpStatusTray seamless />
-          <Button block icon={MessageCirclePlus} type={'fill'} onClick={() => setExpanded(true)}>
+          <Button block icon={MessageCirclePlus} type={'fill'} onClick={expand}>
             {t('taskDetail.sendFollowUp')}
           </Button>
         </Flexbox>
@@ -132,12 +138,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
               left={
                 <Flexbox horizontal align={'center'} gap={2}>
                   {!disableCollapse && (
-                    <Button
-                      icon={ChevronDownIcon}
-                      size={'small'}
-                      type={'text'}
-                      onClick={() => setExpanded(false)}
-                    >
+                    <Button icon={ChevronDownIcon} size={'small'} type={'text'} onClick={collapse}>
                       {t('taskDetail.collapseReply')}
                     </Button>
                   )}
@@ -199,6 +200,7 @@ const FeedbackInput = memo<FeedbackInputProps>(
                 : t('taskDetail.replyPlaceholder')
             }
             onContentChange={handleContentChange}
+            onInit={handleEditorInit}
             onPressEnter={({ event }) => {
               if (shouldSendOnEnter(event)) {
                 handleSubmit();

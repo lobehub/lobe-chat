@@ -314,6 +314,7 @@
   "pageList.copySuccess": "تم نسخ الصفحة",
   "pageList.copyTitle": "نسخ الصفحة",
   "pageList.copyTo": "نسخ إلى...",
+  "pageList.createFailed": "فشل في إنشاء الصفحة",
   "pageList.duplicate": "تكرار",
   "pageList.empty": "لا توجد صفحات بعد. انقر على الزر أعلاه لإنشاء أول صفحة.",
   "pageList.filter.all": "الكل",

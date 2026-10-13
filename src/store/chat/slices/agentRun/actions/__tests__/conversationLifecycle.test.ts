@@ -445,6 +445,43 @@ describe('ConversationLifecycle actions', () => {
         expect(setDocument).not.toHaveBeenCalled();
       });
 
+      // Regression: the send adopts its minted topic (clearing the staged
+      // directory) before the gateway transport runs, so the directory a
+      // project group "+" staged never reached the server and the topic was
+      // born outside the project.
+      it('carries the staged project directory into the gateway send of a new topic', async () => {
+        const { projectWorkingDirectoryService } =
+          await import('@/services/projectWorkingDirectory');
+        vi.spyOn(projectWorkingDirectoryService, 'resolve').mockResolvedValue({
+          data: { deviceId: 'device-85', id: 'dir-85', projectId: 'prj-1' },
+        } as any);
+        const { result } = renderHook(() => useChatStore());
+        const executeGatewayAgentSpy = vi.fn().mockResolvedValue({ topicId: 'tpc_new' });
+
+        act(() => {
+          useChatStore.setState({
+            executeGatewayAgent: executeGatewayAgentSpy,
+            isGatewayModeEnabled: () => true,
+            pendingNewTopicDirectory: {
+              agentId: TEST_IDS.SESSION_ID,
+              projectWorkingDirectoryId: 'dir-85',
+            },
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            message: 'Start in the directory',
+          });
+        });
+
+        expect(projectWorkingDirectoryService.resolve).toHaveBeenCalledWith('dir-85');
+        expect(executeGatewayAgentSpy).toHaveBeenCalledWith(
+          expect.objectContaining({ projectWorkingDirectoryId: 'dir-85' }),
+        );
+      });
+
       it('should restore the pre-send editor snapshot when a gateway send fails', async () => {
         // Regression: the composer is cleared the instant Enter is pressed, and
         // only the client-runtime branch put the text back. The gateway branch
@@ -506,6 +543,49 @@ describe('ConversationLifecycle actions', () => {
 
         expect(setJSONState).toHaveBeenCalledWith(inputEditorState);
         expect(sendMessageOperation?.metadata.inputSendErrorMsg).toBeTruthy();
+      });
+
+      it('should fire onPreflightFailure when a gateway send is refused before acceptance', async () => {
+        // Regression: the composer is cleared (text, uploads, context
+        // selections) the instant Enter is pressed. A gateway send the server
+        // refuses before persisting anything — e.g. a project-directory topic
+        // whose bound device is offline, rejected in turn setup — restored
+        // only the editor text via `restoreComposerAfterFailedSend`, so the
+        // cleared attachments and selections vanished. The lifecycle must
+        // also fire `onPreflightFailure`, the callback the composer uses to
+        // restore them.
+        const { result } = renderHook(() => useChatStore());
+        const onPreflightFailure = vi.fn();
+        const executeGatewayAgentSpy = vi
+          .fn()
+          .mockRejectedValue(
+            new TRPCClientError('Device is offline or working directory is unavailable'),
+          );
+
+        act(() => {
+          useChatStore.setState({
+            executeGatewayAgent: executeGatewayAgentSpy,
+            isGatewayModeEnabled: () => true,
+            mainInputEditor: {
+              getJSONState: vi.fn().mockReturnValue({ root: { children: [], type: 'root' } }),
+              setDocument: vi.fn(),
+              setJSONState: vi.fn(),
+            } as any,
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            message: 'Send to an offline device',
+            onPreflightFailure,
+          });
+        });
+
+        // Prove the gateway branch actually ran and failed — otherwise a
+        // silent early bail would satisfy the assertion below by accident.
+        expect(executeGatewayAgentSpy).toHaveBeenCalled();
+        expect(onPreflightFailure).toHaveBeenCalledOnce();
       });
 
       it.each(['unchanged', 'edited', 'cleared'] as const)(
@@ -587,6 +667,7 @@ describe('ConversationLifecycle actions', () => {
 
       it('should not restore the composer when gateway setup fails after message acceptance', async () => {
         const { result } = renderHook(() => useChatStore());
+        const onPreflightFailure = vi.fn();
         const setDocument = vi.fn();
         const setJSONState = vi.fn();
         const executeGatewayAgentSpy = vi.fn().mockImplementation(async (params) => {
@@ -610,6 +691,7 @@ describe('ConversationLifecycle actions', () => {
           await result.current.sendMessage({
             context: createTestContext(),
             message: 'Already persisted',
+            onPreflightFailure,
           });
         });
 
@@ -619,6 +701,9 @@ describe('ConversationLifecycle actions', () => {
         expect(executeGatewayAgentSpy).toHaveBeenCalledOnce();
         expect(setDocument).not.toHaveBeenCalled();
         expect(setJSONState).not.toHaveBeenCalled();
+        // The message was accepted, so nothing the composer cleared is
+        // orphaned — restoring it would duplicate the persisted turn's data.
+        expect(onPreflightFailure).not.toHaveBeenCalled();
         expect(sendMessageOperation?.metadata.inputSendErrorMsg).toBeUndefined();
       });
 

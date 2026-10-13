@@ -61,6 +61,7 @@ import {
   setHeteroSessionBindingKeyForWorkingDirectory,
   setHeteroSessionIdForWorkingDirectory,
 } from '@/helpers/heteroSessionByWorkingDirectory';
+import { createPayloadWithKeyVaults } from '@/services/_auth';
 import { agentQuotaService } from '@/services/agentQuota';
 import { heterogeneousAgentService } from '@/services/electron/heterogeneousAgent';
 import {
@@ -92,7 +93,11 @@ import { getNativeHeteroSessionBindingKey } from './heteroResume';
 import { createMessageWriteBatcher, type ToolMessageUpdateOperation } from './messageWriteBatcher';
 import { createPendingCreateLedger } from './pendingCreateLedger';
 import { resolveQuotaAccountSpawnPlan } from './resolveQuotaAccountEnv';
-import { buildResumeReplayMessages, shouldHydrateResumeReplay } from './resumeReplay';
+import {
+  buildEditedTopicPreviousConversation,
+  buildResumeReplayMessages,
+  shouldHydrateResumeReplay,
+} from './resumeReplay';
 import { buildLobeHubSessionEnv } from './sessionEnv';
 
 /** Mirrors `idGenerator('threads', 16)` on the server so sync-allocated ids have the same shape. */
@@ -268,14 +273,17 @@ const buildLocalHeterogeneousSystemContext = ({
   agentSystemContext,
   contextSelections,
   pageSelections,
+  previousConversation,
 }: {
   agentSystemContext?: string;
   contextSelections?: ContextSelection[];
   pageSelections?: PageSelection[];
+  previousConversation?: string;
 }): string | undefined => {
   const parts: string[] = [];
 
   if (agentSystemContext?.trim()) parts.push(agentSystemContext.trim());
+  if (previousConversation) parts.push(previousConversation);
 
   const selectionContext =
     contextSelections && contextSelections.length > 0
@@ -2007,6 +2015,10 @@ export const executeHeterogeneousAgent = async (
       // over both provenance and account routing.
       ...heterogeneousProvider.env,
     };
+    if (adapterType === 'deepseek-harness' && !sessionEnv.DEEPSEEK_API_KEY) {
+      const deepSeekAuth = createPayloadWithKeyVaults('deepseek');
+      if (deepSeekAuth.apiKey) sessionEnv.DEEPSEEK_API_KEY = deepSeekAuth.apiKey;
+    }
 
     const spawnArgs = buildHeteroSpawnArgs(heterogeneousProvider);
     const providerBinding = serverDefaultBindingActive
@@ -2027,11 +2039,17 @@ export const executeHeterogeneousAgent = async (
     const result = await heterogeneousAgentService.startSession({
       agentType: isLocalHeterogeneousType(adapterType) ? adapterType : undefined,
       args: spawnArgs,
-      command: resolveHeterogeneousAgentCommand(adapterType, heterogeneousProvider.command),
+      command:
+        adapterType === 'deepseek-harness'
+          ? ''
+          : resolveHeterogeneousAgentCommand(adapterType, heterogeneousProvider.command),
       cwd: workingDirectory,
       env: sessionEnv,
       initialModel:
-        (adapterType === 'devin' || adapterType === 'droid' || adapterType === 'trae') &&
+        (adapterType === 'devin' ||
+          adapterType === 'droid' ||
+          adapterType === 'trae' ||
+          adapterType === 'deepseek-harness') &&
         !providerBindingActive &&
         heterogeneousProvider.model &&
         heterogeneousProvider.model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION
@@ -2586,21 +2604,31 @@ export const executeHeterogeneousAgent = async (
       },
     });
 
+    // Raw rows first: the display map collapses history into virtual
+    // `assistantGroup` rows, which carry no replayable turn.
+    const replaySource = (get().dbMessagesMap?.[messageMapKey(context)] ??
+      get().messagesMap?.[messageMapKey(context)]) as UIChatMessage[] | undefined;
+
     const systemContext = buildLocalHeterogeneousSystemContext({
       // `/goal` reaches a hetero agent as instructions, not a tool: it creates
       // and plans the goal through `lh` in this same run.
       agentSystemContext: withConversationGoalPrompt(heterogeneousProvider.systemContext, message),
       contextSelections,
       pageSelections,
+      // Only a topic created by Codex edit-and-resend starts with copied
+      // history but no native session. Every other fresh session (a new
+      // topic, a cwd-change reset) keeps starting without replay.
+      previousConversation:
+        !resumeSessionId &&
+        !replayTranscript &&
+        getTopicMetadataById(get(), context.topicId ?? undefined)?.editedFrom
+          ? buildEditedTopicPreviousConversation(replaySource, assistantMessageId)
+          : undefined,
     });
 
     // When resuming, hand main the prior turns so it can rebuild a Claude Code
     // transcript the CLI already garbage-collected (default 30 days) — without
     // it, `--resume <staleId>` dies with "No conversation found with session ID".
-    // Raw rows first: the display map collapses history into virtual
-    // `assistantGroup` rows, which carry no replayable turn.
-    const replaySource = (get().dbMessagesMap?.[messageMapKey(context)] ??
-      get().messagesMap?.[messageMapKey(context)]) as UIChatMessage[] | undefined;
 
     // Tool bodies the read path projected away are restored first: this
     // transcript is written to disk and resumed from, so an emptied tool result

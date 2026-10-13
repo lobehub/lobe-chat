@@ -13,6 +13,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useBusinessAgentModeSync } from '@/business/client/hooks/useBusinessAgentMode';
+import { SkeletonBar } from '@/components/Skeleton';
 import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
 import { useEffectiveAgentMode } from '@/features/ChatInput/hooks/useEffectiveAgentMode';
@@ -249,7 +250,9 @@ const AgentMode = memo(() => {
     </div>
   );
 
-  if (isAccessLoading || isPreferenceLoading) return null;
+  // Hold the 28px pill's footprint so the action bar does not shift when it resolves.
+  if (isAccessLoading || isPreferenceLoading)
+    return <SkeletonBar height={28} radius={999} width={84} />;
 
   if (disabled)
     return (

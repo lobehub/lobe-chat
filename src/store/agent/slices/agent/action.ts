@@ -89,7 +89,7 @@ interface AgentMetaUpdateOptions {
  * whole and explicitly edited working directory selections are replaced atomically.
  * Returns `current` itself when nothing changed, so readers keep their reference.
  */
-const mergeAgentConfig = (
+export const mergeAgentConfig = (
   current: PartialDeep<AgentItem> | undefined,
   config: PartialDeep<LobeAgentConfig>,
   options?: { replaceWorkingDirDeviceIds?: string[]; workingDirByDeviceSnapshot?: boolean },
@@ -149,11 +149,23 @@ export class AgentSliceActionImpl {
       fetcher: async ({ agentId }) =>
         (await agentService.getAgentConfigById(agentId)) as LobeAgentConfig | null,
       get,
+      // A successful fetch that resolves to null means the agent doesn't
+      // exist or the caller lost access (e.g. a workspace agent switched back
+      // to private) — a settled state, not "still loading". Every path that
+      // fetches the config (the sync hooks and `prefetchAgentConfig`) settles
+      // it the same way.
+      effects: {
+        onApplied: (_data, { agentId }) => this.#clearAgentNotFound(agentId),
+        onMissing: ({ agentId }) => this.#markAgentNotFound(agentId),
+      },
+      // `null` drops the cached config (and its persisted row): surfaces
+      // reading `agentMap` (title/avatar in the sidebar or header) must not
+      // keep showing an agent the viewer lost access to next to the 404.
+      isMissing: (incoming) => !incoming,
       // The endpoint returns a complete, authoritative profile: replace the
       // entry instead of patching it, so fields cleared on the server (e.g.
-      // `editorData: null`) don't survive from an older local copy. `null`
-      // (not found) is settled by the sync hooks; an unchanged profile keeps
-      // its reference.
+      // `editorData: null`) don't survive from an older local copy. An
+      // unchanged profile keeps its reference.
       merge: (incoming, confirmed) =>
         !incoming || isEqual(incoming, confirmed) ? undefined : incoming,
       set,
@@ -169,19 +181,6 @@ export class AgentSliceActionImpl {
     data: PartialDeep<AgentItem>,
   ): void => {
     this.#config.replace({ agentId }, data as LobeAgentConfig, scope);
-  };
-
-  /** Fetch result of `useFetchAgentConfig` / `useHydrateAgentConfig`. */
-  #settleAgentConfigFetch = (agentId: string, data: LobeAgentConfig | null): boolean => {
-    // A successful fetch that resolves to null means the agent doesn't
-    // exist or the caller lost access (e.g. a workspace agent switched
-    // back to private) — a settled state, not "still loading".
-    if (!data) {
-      this.#markAgentNotFound(agentId);
-      return false;
-    }
-    this.#clearAgentNotFound(agentId);
-    return true;
   };
 
   #toAgentConfigSyncResult = (sync: ReplicaSyncResult, agentId: string): AgentConfigSyncResult => ({
@@ -503,7 +502,8 @@ export class AgentSliceActionImpl {
         );
       },
       onSuccess: (data) => {
-        if (!this.#settleAgentConfigFetch(agentId, data)) return;
+        // Not found is settled by the resource effects.
+        if (!data) return;
         // Only adopt the fetched agent as the active one when nothing is
         // active yet. The active agent is owned by the route-level sync
         // (AgentIdSync on desktop/mobile, the popup pages' own setState).
@@ -514,7 +514,7 @@ export class AgentSliceActionImpl {
         // back to the inbox ("Lobe AI") agent. A response of a previous scope
         // never lands in `agentMap`, so it adopts nothing either.
         if (!this.#get().activeAgentId && this.#get().agentMap[agentId]) {
-          this.#set({ activeAgentId: data!.id }, false, 'fetchAgentConfig');
+          this.#set({ activeAgentId: data.id }, false, 'fetchAgentConfig');
         }
         this.#clearAgentConfigError(agentId);
       },
@@ -548,9 +548,9 @@ export class AgentSliceActionImpl {
    */
   prefetchAgentConfig = async (agentId: string): Promise<void> => {
     if (!agentId || this.#get().agentMap[agentId]) return;
-    const scope = getCacheScope();
-    const data = await agentService.getAgentConfigById(agentId);
-    if (data) this.#replaceConfirmedAgentConfig(agentId, scope, data as LobeAgentConfig);
+    // Joins the page's own sync when it is already in flight; the replica
+    // applies the scope / removal / clear guards and the not-found effects.
+    await this.#config.fetch({ agentId });
   };
 
   #markAgentNotFound = (agentId: string) => {
@@ -562,9 +562,9 @@ export class AgentSliceActionImpl {
       false,
       'markAgentNotFound',
     );
-    // Also drop the previously cached config (and its persisted row): surfaces
-    // reading `agentMap` (title/avatar in the sidebar or header) must not keep
-    // showing an agent the viewer lost access to next to the 404 content area.
+    // Also forget the head query of the dropped config (the `null` response
+    // already removed it and its persisted row): a request in flight from
+    // before must not repaint the agent next to the 404 content area.
     this.#config.remove(agentId);
   };
 
@@ -601,9 +601,9 @@ export class AgentSliceActionImpl {
     isLogin: boolean | undefined,
     agentId: string,
   ): AgentConfigSyncResult => {
+    // The not-found state is settled by the resource effects.
     const sync = this.#config.useSync(agentId ? { agentId } : null, {
       enabled: isLogin === true && !isChatGroupSessionId(agentId),
-      onSuccess: (data) => void this.#settleAgentConfigFetch(agentId, data),
     });
 
     return this.#toAgentConfigSyncResult(sync, agentId);

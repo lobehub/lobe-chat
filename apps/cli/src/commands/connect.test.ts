@@ -14,10 +14,17 @@ import { log, setVerbose } from '../utils/logger';
 import { registerConnectCommand } from './connect';
 
 const registerDeviceMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const mintWorkspaceConnectTokenMock = vi.hoisted(() => vi.fn());
+const registerWorkspaceDeviceMock = vi.hoisted(() => vi.fn());
 
 vi.mock('../device/register', async (importOriginal) => {
   const actual = await importOriginal<typeof DeviceRegister>();
-  return { ...actual, registerDevice: registerDeviceMock };
+  return {
+    ...actual,
+    mintWorkspaceConnectToken: mintWorkspaceConnectTokenMock,
+    registerDevice: registerDeviceMock,
+    registerWorkspaceDevice: registerWorkspaceDeviceMock,
+  };
 });
 
 vi.mock('../auth/refresh', async (importOriginal) => ({
@@ -258,6 +265,58 @@ describe('connect command', () => {
     expect(exitSpy).toHaveBeenCalledWith(1);
   });
 
+  it('exits with a retryable code when the workspace token mint fails transiently', async () => {
+    mintWorkspaceConnectTokenMock.mockRejectedValueOnce(new Error('fetch failed'));
+
+    const program = createProgram();
+    await expect(
+      program.parseAsync(['node', 'test', 'connect', '--workspace', 'ws_1']),
+    ).rejects.toThrow('process.exit');
+    expect(exitSpy).toHaveBeenCalledWith(75);
+  });
+
+  it('exits without retry when the server refuses the workspace token mint', async () => {
+    mintWorkspaceConnectTokenMock.mockRejectedValueOnce(
+      Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+    );
+
+    const program = createProgram();
+    await expect(
+      program.parseAsync(['node', 'test', 'connect', '--workspace', 'ws_1']),
+    ).rejects.toThrow('process.exit');
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
+  it.each([
+    { error: new Error('fetch failed'), exitCode: 75, reason: 'fails transiently' },
+    {
+      error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+      exitCode: 1,
+      reason: 'is refused by the server',
+    },
+  ])('exits with $exitCode when workspace registration $reason', async ({ error, exitCode }) => {
+    mintWorkspaceConnectTokenMock.mockResolvedValueOnce({ token: 'workspace-token' });
+    registerWorkspaceDeviceMock.mockRejectedValueOnce(error);
+    exitSpy.mockImplementation(() => {
+      throw new Error('process.exit');
+    });
+
+    await expect(
+      createProgram().parseAsync([
+        'node',
+        'test',
+        'connect',
+        '--service-child',
+        '--workspace',
+        'ws_1',
+      ]),
+    ).rejects.toThrow('process.exit');
+
+    expect(registerWorkspaceDeviceMock).toHaveBeenCalledOnce();
+    expect(exitSpy).toHaveBeenCalledWith(exitCode);
+    expect(connectCalled).toBe(false);
+  });
+
   it('should use explicit gateway for custom login server', async () => {
     vi.mocked(loadSettings).mockReturnValueOnce({ serverUrl: 'https://self-hosted.example.com' });
 
@@ -390,6 +449,38 @@ describe('connect command', () => {
     expect(mockClient.reconnect).toHaveBeenCalled();
     expect(cleanupAllProcesses).not.toHaveBeenCalled();
     expect(exitSpy).not.toHaveBeenCalled();
+  });
+
+  describe.each(['auth_failed', 'auth_expired'] as const)('%s workspace refresh', (event) => {
+    it.each([
+      { error: new Error('fetch failed'), exitCode: 75, reason: 'a transient outage' },
+      {
+        error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+        exitCode: 1,
+        reason: 'a server refusal',
+      },
+    ])('exits with $exitCode after $reason', async ({ error, exitCode }) => {
+      mintWorkspaceConnectTokenMock.mockResolvedValueOnce({ token: 'workspace-token' });
+      registerWorkspaceDeviceMock.mockResolvedValueOnce(undefined);
+      await createProgram().parseAsync([
+        'node',
+        'test',
+        'connect',
+        '--service-child',
+        '--workspace',
+        'ws_1',
+      ]);
+      expect(connectCalled).toBe(true);
+      mintWorkspaceConnectTokenMock.mockRejectedValueOnce(error);
+
+      await clientEventHandlers[event]?.('token expired');
+
+      expect(exitSpy).toHaveBeenCalledWith(exitCode);
+      expect(cleanupAllProcesses).toHaveBeenCalledOnce();
+      const client = vi.mocked(GatewayClient).mock.results[0].value;
+      expect(client.disconnect).toHaveBeenCalledOnce();
+      expect(client.reconnect).not.toHaveBeenCalled();
+    });
   });
 
   it('should ignore auth_expired for api key auth', async () => {

@@ -7,7 +7,10 @@ import { useNavigate, useParams } from 'react-router';
 
 import NotFound from '@/components/404';
 import AsyncBoundary from '@/components/AsyncBoundary';
-import SurfaceSkeleton from '@/components/Skeleton/Surface';
+import {
+  AgentChannelDetailBodySkeleton,
+  AgentChannelListBodySkeleton,
+} from '@/components/Skeleton/AgentChannel';
 import ResourceConfigAccessGate from '@/features/ResourcePermission/ResourceConfigAccessGate';
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
@@ -134,6 +137,8 @@ const ChannelContent = memo(() => {
         currentConfig={currentConfig}
         disabled={!canEdit}
         platformDef={activePlatformDef}
+        platformId={platform}
+        platformsLoading={platformsLoading}
         providers={providers}
         runtimeStatus={
           activePlatformDef ? platformRuntimeStatuses.get(activePlatformDef.id) : undefined
@@ -145,7 +150,9 @@ const ChannelContent = memo(() => {
           error={error}
           errorVariant={'block'}
           isLoading={isLoading}
-          loading={<SurfaceSkeleton header={false} variant={'grid'} />}
+          // Body half of the route skeleton (the real header is already mounted),
+          // so the chunk wait and the platform fetch share one shape.
+          loading={platform ? <AgentChannelDetailBodySkeleton /> : <AgentChannelListBodySkeleton />}
           onRetry={() => {
             mutatePlatforms();
             mutateProviders();

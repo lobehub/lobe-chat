@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ModelIcon } from '@/components/LobeIcons';
+import { AgentModelBreakdownTableSkeleton } from '@/components/Skeleton/AgentStatistics';
 import { type AgentUsageModelRow } from '@/types/usage/usageRecord';
 import { formatNumber, formatUsageValue } from '@/utils/format';
 
@@ -62,14 +63,19 @@ const ModelBreakdown = memo<ModelBreakdownProps>(({ rows, isLoading }) => {
       <Text fontSize={16} weight={500}>
         {t('usageStats.breakdown.title')}
       </Text>
-      <Table<AgentUsageModelRow>
-        columns={columns}
-        dataSource={rows}
-        loading={isLoading}
-        pagination={false}
-        rowKey={'id'}
-        size={'middle'}
-      />
+      {/* First load shows the route skeleton's table rows instead of a spinner over "No data". */}
+      {isLoading && rows.length === 0 ? (
+        <AgentModelBreakdownTableSkeleton />
+      ) : (
+        <Table<AgentUsageModelRow>
+          columns={columns}
+          dataSource={rows}
+          loading={isLoading}
+          pagination={false}
+          rowKey={'id'}
+          size={'middle'}
+        />
+      )}
     </Block>
   );
 });

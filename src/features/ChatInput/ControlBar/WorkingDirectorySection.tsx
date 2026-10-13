@@ -16,6 +16,7 @@ import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import GitStatus from './GitStatus';
+import { useActiveProjectDirectoryTopicId } from './useProjectTopicDirectory';
 import { useRepoType } from './useRepoType';
 import WorkingDirectoryPicker from './WorkingDirectoryPicker';
 
@@ -59,6 +60,9 @@ const WorkingDirectorySectionInner = memo<WorkingDirectorySectionProps>(({ agent
   const topicWorkingDirectoryConfig = useChatStore(
     (s) => topicSelectors.currentTopicMetadata(s)?.workingDirectoryConfig,
   );
+  // The project owns this conversation's directory and the device switcher
+  // already names it, so there is nothing to pick or show here.
+  const projectTopicId = useActiveProjectDirectoryTopicId();
   // Only trust the persisted config when it actually describes the directory we
   // resolved — the topic override wins in `useEffectiveWorkingDirectory`, so this
   // holds whenever the config is what produced `effectiveWorkingDirectory`.
@@ -94,7 +98,7 @@ const WorkingDirectorySectionInner = memo<WorkingDirectorySectionProps>(({ agent
 
   return (
     <>
-      <WorkingDirectoryPicker agentId={agentId} />
+      {!projectTopicId && <WorkingDirectoryPicker agentId={agentId} />}
       {effectiveWorkingDirectory && repoType && (
         <GitStatus
           agentId={agentId}

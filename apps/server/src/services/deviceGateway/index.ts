@@ -19,6 +19,7 @@ import type {
   DeviceAppUpdateInstallResult,
   DeviceAppUpdateState,
   DeviceAppUpdateStateResult,
+  DeviceClient,
   DeviceCliRestartParams,
   DeviceCliUpdateState,
   DeviceCliUpdateStateResult,
@@ -70,10 +71,14 @@ import type {
   ProjectSkillMeta,
   WorkspaceInitResult,
 } from '@lobechat/types';
+import { isValidDirectoryName } from '@lobechat/utils/directoryName';
 import debug from 'debug';
 import { isAbsolute, relative, resolve } from 'pathe';
 
 import { gatewayEnv } from '@/envs/gateway';
+import { redisService } from '@/server/services/redis';
+
+import { resolveDeviceClientKinds } from './clientKinds';
 
 const log = debug('lobe-server:device-gateway');
 
@@ -111,6 +116,18 @@ const assertPathsWithinWorkspace = (
       throw new Error(`Path is outside the approved workspace: ${candidate ?? '(empty)'}`);
     }
   }
+};
+
+export { isValidDirectoryName } from '@lobechat/utils/directoryName';
+
+/**
+ * Append one segment to a device path, keeping the device's own separator. The
+ * folder picker browses Windows devices too (`C:\Users`), and `pathe.join`
+ * would rewrite those to forward slashes.
+ */
+export const joinDevicePath = (parentPath: string, name: string): string => {
+  const separator = /^[A-Z]:\\/i.test(parentPath) || parentPath.startsWith('\\\\') ? '\\' : '/';
+  return `${parentPath.replace(/[\\/]+$/, '')}${separator}${name}`;
 };
 
 /**
@@ -266,13 +283,49 @@ export class DeviceGateway {
     );
   }
 
+  /**
+   * The device's system info, preferring the desktop app's answer: its
+   * `supportedTools` gate desktop-only tools, and when `lh connect` is up on the
+   * same device an unconstrained read is answered by the CLI, which reports
+   * none. When the desktop read fails for any reason, ask whichever client the
+   * device has: a device without the desktop app answers `NO_CAPABLE_CONNECTION`,
+   * and a desktop that timed out or whose socket is closing (`TIMEOUT`,
+   * `DEVICE_OFFLINE`) may still sit beside a live `lh connect`, which is the
+   * answer canary got. A gateway that predates `clientKinds` answers the first
+   * read as before.
+   *
+   * `maxAgeMs` lets a caller accept an answer this device gave within that
+   * window instead of a fresh round trip over its WebSocket. The send path
+   * asks every turn and the answer changes only when the client upgrades or
+   * the user moves the daemon, so a few minutes of staleness there is a
+   * round trip saved per send; callers that need the live answer (an
+   * explicit device inspection) leave it unset. Only successful answers are
+   * remembered — an offline device is asked again next time.
+   */
   async queryDeviceSystemInfo(
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { maxAgeMs?: number },
   ): Promise<DeviceSystemInfo | undefined> {
-    const read = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
-    return read.ok ? read.systemInfo : undefined;
+    const query = async () => {
+      const desktop = await this.readDeviceSystemInfo(userId, deviceId, workspaceId, {
+        clientKinds: ['desktop'],
+      });
+      if (desktop.ok) return desktop.systemInfo;
+
+      const any = await this.readDeviceSystemInfo(userId, deviceId, workspaceId);
+      return any.ok ? any.systemInfo : undefined;
+    };
+
+    const maxAgeMs = options?.maxAgeMs;
+    if (!maxAgeMs || maxAgeMs <= 0) return query();
+
+    return redisService.deviceSystemInfo.remember(
+      { userId, deviceId, workspaceId },
+      query,
+      maxAgeMs,
+    );
   }
 
   /**
@@ -284,12 +337,13 @@ export class DeviceGateway {
     userId: string,
     deviceId: string,
     workspaceId?: string,
+    options?: { clientKinds?: DeviceClient[] },
   ): Promise<DeviceSystemInfoRead> {
     const client = this.getClient();
     if (!client) return { ok: false, reason: 'GATEWAY_NOT_CONFIGURED' };
 
     try {
-      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId);
+      const result = await client.getDeviceSystemInfo(userId, deviceId, workspaceId, options);
       if (result.success && result.systemInfo) return { ok: true, systemInfo: result.systemInfo };
       log(
         'readDeviceSystemInfo: unanswered for userId=%s, deviceId=%s: %s',
@@ -1775,6 +1829,47 @@ export class DeviceGateway {
   }
 
   /**
+   * Create one folder directly inside `parentPath` for the remote folder picker,
+   * via the device's `createLocalDirectory` RPC. `parentPath` doubles as the
+   * device-side workspace root, so the device guard confines the write to a
+   * single new child of the folder being browsed. A device-reported failure
+   * (e.g. the name is taken) is returned as `success: false`, not thrown.
+   */
+  async createDirectory(params: {
+    deviceId: string;
+    name: string;
+    parentPath: string;
+    timeout?: number;
+    userId: string;
+    workspaceId?: string;
+  }): Promise<DeviceCreateProjectEntryResult> {
+    const { deviceId, parentPath, timeout = 30_000, userId, workspaceId } = params;
+    const name = params.name.trim();
+    if (!isValidDirectoryName(params.name, parentPath) || !isValidDirectoryName(name, parentPath))
+      throw new Error(`Invalid folder name: ${params.name}`);
+    if (!isAbsolute(parentPath)) throw new Error(`Parent path must be absolute: ${parentPath}`);
+
+    const client = this.getClient();
+    if (!client) throw new Error('Device gateway not configured');
+
+    const path = joinDevicePath(parentPath, name);
+    assertPathsWithinWorkspace(parentPath, [path]);
+    assertNotWorkspaceRoot(parentPath, [path]);
+
+    const result = await client.invokeRpc<DeviceCreateProjectEntryResult>(
+      { deviceId, timeout, userId, workspaceId },
+      { method: 'createLocalDirectory', params: { path, workspaceRoot: parentPath } },
+    );
+
+    if (!result.success || !result.data) {
+      log('createDirectory: failed for deviceId=%s — %s', deviceId, result.error);
+      throw new Error(result.error || 'Create folder failed');
+    }
+
+    return result.data;
+  }
+
+  /**
    * Copy (or, without `targetPath`, duplicate in place) files/folders on a
    * remote device via the device's `copyLocalFiles` RPC. Both ends of every item
    * must stay inside the workspace. A duplicate lands next to its source, so
@@ -2279,7 +2374,11 @@ export class DeviceGateway {
     if (!url || !token) return null;
 
     if (!this.client) {
-      this.client = new GatewayHttpClient({ gatewayUrl: url, serviceToken: token });
+      this.client = new GatewayHttpClient({
+        gatewayUrl: url,
+        resolveClientKinds: resolveDeviceClientKinds,
+        serviceToken: token,
+      });
     }
     return this.client;
   }

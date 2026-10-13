@@ -314,6 +314,7 @@
   "pageList.copySuccess": "Pagina copiata",
   "pageList.copyTitle": "Copia pagina",
   "pageList.copyTo": "Copia in…",
+  "pageList.createFailed": "Impossibile creare la pagina",
   "pageList.duplicate": "Duplica",
   "pageList.empty": "Nessuna pagina ancora. Clicca sul pulsante sopra per crearne una.",
   "pageList.filter.all": "Tutte",

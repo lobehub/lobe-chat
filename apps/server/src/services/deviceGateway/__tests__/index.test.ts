@@ -2,6 +2,7 @@ import type * as DeviceGatewayClientModule from '@lobechat/device-gateway-client
 import { describe, expect, it, vi } from 'vitest';
 
 // Import after mocks are set up
+import { resolveDeviceClientKinds } from '../clientKinds';
 import { DeviceGateway } from '../index';
 
 const mockEnv = vi.hoisted(() => ({
@@ -25,6 +26,16 @@ const MockGatewayHttpClient = vi.hoisted(() =>
     return mockClient;
   }),
 );
+
+// The send-path cache rides on the Redis service; hand its connection seam a
+// fake client so the test sees which key and TTL the gateway asked for,
+// independent of whether this environment has Redis configured.
+const { cacheRedis, getRedisServiceClient } = vi.hoisted(() => {
+  const cacheRedis = { get: vi.fn(async () => null), set: vi.fn(async () => 'OK') };
+  return { cacheRedis, getRedisServiceClient: vi.fn(async () => cacheRedis) };
+});
+
+vi.mock('@/server/services/redis/client', () => ({ getRedisServiceClient }));
 
 vi.mock('@/envs/gateway', () => ({
   gatewayEnv: mockEnv,
@@ -416,7 +427,9 @@ describe('DeviceGateway', () => {
       const result = await proxy.queryDeviceSystemInfo('user-1', 'dev-1');
 
       expect(result).toEqual(systemInfo);
-      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith('user-1', 'dev-1', undefined);
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith('user-1', 'dev-1', undefined, {
+        clientKinds: ['desktop'],
+      });
     });
 
     it('should return undefined when result is not successful', async () => {
@@ -440,6 +453,113 @@ describe('DeviceGateway', () => {
 
       expect(result).toBeUndefined();
     });
+
+    it('asks the device directly when no maxAge is given', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ success: true, systemInfo: {} });
+
+      await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(getRedisServiceClient).not.toHaveBeenCalled();
+      expect(cacheRedis.get).not.toHaveBeenCalled();
+    });
+
+    it('serves a recent answer through the cache when maxAge is set', async () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+      const systemInfo = { arch: 'arm64' };
+      mockClient.getDeviceSystemInfo.mockResolvedValue({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1', 'ws-1', {
+        maxAgeMs: 180_000,
+      });
+
+      expect(result).toEqual(systemInfo);
+      // The key carries user, pool and device so two principals never share an answer.
+      expect(cacheRedis.get).toHaveBeenCalledWith('device_system_info:v1:user-1:ws-1:dev-1');
+      expect(cacheRedis.set).toHaveBeenCalledWith(
+        'device_system_info:v1:user-1:ws-1:dev-1',
+        JSON.stringify(systemInfo),
+        { px: 180_000 },
+      );
+    });
+  });
+
+  describe('queryDeviceSystemInfo client preference', () => {
+    const configure = () => {
+      mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
+      mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
+    };
+
+    it('falls back to any client when the device has no desktop app', async () => {
+      configure();
+      const systemInfo = { arch: 'arm64', userDataPath: '/home/u/.lobehub' };
+      mockClient.getDeviceSystemInfo
+        .mockResolvedValueOnce({ error: 'NO_CAPABLE_CONNECTION', success: false })
+        .mockResolvedValueOnce({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1', 'ws-1');
+
+      expect(result).toEqual(systemInfo);
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(1, 'user-1', 'dev-1', 'ws-1', {
+        clientKinds: ['desktop'],
+      });
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(
+        2,
+        'user-1',
+        'dev-1',
+        'ws-1',
+        undefined,
+      );
+    });
+
+    it.each(['TIMEOUT', 'DEVICE_OFFLINE'])(
+      'asks any client when the desktop read fails with %s',
+      async (error) => {
+        configure();
+        const systemInfo = { arch: 'arm64', userDataPath: '/home/u/.lobehub' };
+        mockClient.getDeviceSystemInfo
+          .mockResolvedValueOnce({ error, success: false })
+          .mockResolvedValueOnce({ success: true, systemInfo });
+
+        const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+        expect(result).toEqual(systemInfo);
+        expect(mockClient.getDeviceSystemInfo).toHaveBeenNthCalledWith(
+          2,
+          'user-1',
+          'dev-1',
+          undefined,
+          undefined,
+        );
+      },
+    );
+
+    it('asks any client when the desktop read throws', async () => {
+      configure();
+      const systemInfo = { arch: 'arm64' };
+      mockClient.getDeviceSystemInfo
+        .mockRejectedValueOnce(new Error('fetch failed'))
+        .mockResolvedValueOnce({ success: true, systemInfo });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toEqual(systemInfo);
+    });
+
+    it('returns undefined when neither read is answered', async () => {
+      configure();
+      mockClient.getDeviceSystemInfo.mockResolvedValue({
+        error: 'DEVICE_NOT_FOUND',
+        success: false,
+      });
+
+      const result = await new DeviceGateway().queryDeviceSystemInfo('user-1', 'dev-1');
+
+      expect(result).toBeUndefined();
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('readDeviceSystemInfo', () => {
@@ -461,7 +581,12 @@ describe('DeviceGateway', () => {
       const result = await new DeviceGateway().readDeviceSystemInfo('user-1', 'dev-1', 'ws-1');
 
       expect(result).toEqual({ ok: true, systemInfo });
-      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith('user-1', 'dev-1', 'ws-1');
+      expect(mockClient.getDeviceSystemInfo).toHaveBeenCalledWith(
+        'user-1',
+        'dev-1',
+        'ws-1',
+        undefined,
+      );
     });
 
     it("keeps the gateway's reason for an unanswered read", async () => {
@@ -1368,6 +1493,136 @@ describe('DeviceGateway', () => {
       });
     });
 
+    describe('createDirectory', () => {
+      it('creates one child of the browsed folder, scoped to that folder', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: '/home/me/new-project', success: true },
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.createDirectory({
+            deviceId: 'dev-1',
+            name: ' new-project ',
+            parentPath: '/home/me/',
+            userId: 'user-1',
+          }),
+        ).resolves.toEqual({ path: '/home/me/new-project', success: true });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+          {
+            method: 'createLocalDirectory',
+            params: { path: '/home/me/new-project', workspaceRoot: '/home/me/' },
+          },
+        );
+      });
+
+      it.each([
+        ['/', '/new'],
+        ['C:\\Users\\me', 'C:\\Users\\me\\new'],
+        ['C:\\', 'C:\\new'],
+      ])('joins %s with the device separator', async (parentPath, expected) => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: expected, success: true },
+          success: true,
+        });
+
+        await new DeviceGateway().createDirectory({
+          deviceId: 'dev-1',
+          name: 'new',
+          parentPath,
+          userId: 'user-1',
+        });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(expect.anything(), {
+          method: 'createLocalDirectory',
+          params: { path: expected, workspaceRoot: parentPath },
+        });
+      });
+
+      it.each(['', '.', '..', 'a/b', 'a\\b'])(
+        'rejects the folder name %j without invoking the rpc',
+        async (name) => {
+          configure();
+
+          await expect(
+            new DeviceGateway().createDirectory({
+              deviceId: 'dev-1',
+              name,
+              parentPath: '/home/me',
+              userId: 'user-1',
+            }),
+          ).rejects.toThrow(/Invalid folder name/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
+      it.each(['a:b', 'CON.txt', 'project.', 'project '])(
+        'rejects invalid Windows name %j before invoking the device',
+        async (name) => {
+          configure();
+          await expect(
+            new DeviceGateway().createDirectory({
+              deviceId: 'dev-1',
+              name,
+              parentPath: 'C:\\Users\\me',
+              userId: 'user-1',
+            }),
+          ).rejects.toThrow(/Invalid folder name/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
+      it('rejects a relative parent path without invoking the rpc', async () => {
+        configure();
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: 'relative/dir',
+            userId: 'user-1',
+          }),
+        ).rejects.toThrow(/must be absolute/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('returns a device-reported failure instead of throwing', async () => {
+        configure();
+        const failure = {
+          error: 'An item already exists at /home/me/new.',
+          path: '/home/me/new',
+          success: false,
+        };
+        mockClient.invokeRpc.mockResolvedValue({ data: failure, success: true });
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: '/home/me',
+            userId: 'user-1',
+          }),
+        ).resolves.toEqual(failure);
+      });
+
+      it('throws when the rpc itself fails', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({ error: 'Device offline', success: false });
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: '/home/me',
+            userId: 'user-1',
+          }),
+        ).rejects.toThrow('Device offline');
+      });
+    });
+
     describe('copyProjectFiles', () => {
       it('invokes copyLocalFiles when source and target stay inside the workspace', async () => {
         configure();
@@ -1645,6 +1900,7 @@ describe('DeviceGateway', () => {
       expect(MockGatewayHttpClient).toHaveBeenCalledTimes(1);
       expect(MockGatewayHttpClient).toHaveBeenCalledWith({
         gatewayUrl: 'https://gateway.example.com',
+        resolveClientKinds: resolveDeviceClientKinds,
         serviceToken: 'token',
       });
     });

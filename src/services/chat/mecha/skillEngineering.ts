@@ -46,6 +46,8 @@ export const resolveClientSkills = async (
   pluginIds?: string[],
   disabledIds?: string[],
   skillActivateMode?: 'auto' | 'manual',
+  /** Selectable for this turn even in manual mode, without being pinned. */
+  turnSkillIds?: string[],
 ): Promise<OperationSkillSet> => {
   const toolState = getToolStoreState();
   const pinnedIds = new Set(pluginIds ?? []);
@@ -116,6 +118,7 @@ export const resolveClientSkills = async (
       canExecuteOnDevice: isDesktop,
       enabledPluginIds: pluginIds,
       skillActivateMode,
+      turnSkillIds,
     },
   );
 };

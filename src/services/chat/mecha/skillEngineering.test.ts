@@ -197,6 +197,24 @@ describe('resolveClientSkills', () => {
     expect(skill?.activated).toBeFalsy();
   });
 
+  it('keeps a turn skill selectable in manual mode without pinning it', async () => {
+    setToolState({
+      builtinSkills: [
+        {
+          content: '<lh_guide />',
+          description: 'LobeHub CLI',
+          identifier: 'lobehub',
+          name: 'lobehub',
+        },
+      ],
+    });
+
+    const result = await resolveClientSkills([], [], 'manual', ['lobehub']);
+
+    expect(result.enabledPluginIds).toEqual([]);
+    expect(findSkill(result.skills, 'lobehub')).toMatchObject({ activated: false });
+  });
+
   describe('disabled skills', () => {
     it('excludes a disabled DB skill entirely, not just from the pinned set', async () => {
       setToolState({

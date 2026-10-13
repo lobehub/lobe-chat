@@ -59,10 +59,15 @@ export const writeUserDisplaySnapshot = (
   const sanitized = sanitizeSnapshot(snapshot);
   if (!sanitized) return;
 
-  void storage.set(snapshotKey(userId), {
-    data: { ...readUserDisplaySnapshot(userId), ...sanitized },
-    updatedAt: Date.now(),
-  });
+  // Best-effort: a failed write only costs the next cold start its snapshot.
+  storage
+    .set(snapshotKey(userId), {
+      data: { ...readUserDisplaySnapshot(userId), ...sanitized },
+      updatedAt: Date.now(),
+    })
+    .catch((error) => {
+      console.error('[displaySnapshot] failed to persist the display snapshot', error);
+    });
 };
 
 /**
@@ -71,5 +76,7 @@ export const writeUserDisplaySnapshot = (
  */
 export const clearUserDisplaySnapshot = (userId: string | undefined): void => {
   if (!userId) return;
-  void storage.remove(snapshotKey(userId));
+  storage.remove(snapshotKey(userId)).catch((error) => {
+    console.error('[displaySnapshot] failed to clear the display snapshot', error);
+  });
 };

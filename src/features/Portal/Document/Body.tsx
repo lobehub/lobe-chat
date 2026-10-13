@@ -23,7 +23,6 @@ import { getDocumentRenderMode } from '@/utils/documentRenderMode';
 import {
   getSkillMarkdownMetadataError,
   parseSkillMarkdownFrontmatterFields,
-  parseSkillMarkdownMetadata,
 } from '@/utils/skillMarkdown';
 
 import {
@@ -33,6 +32,7 @@ import {
 } from './documentViewContext';
 import EditorCanvas from './EditorCanvas';
 import FooterActions from './FooterActions';
+import SkillFrontmatterCard from './SkillFrontmatterCard';
 import TodoList from './TodoList';
 import { useHighlightSave } from './useHighlightSave';
 
@@ -47,35 +47,6 @@ const styles = createStaticStyles(({ css }) => ({
     overflow: auto;
     flex: 1;
   `,
-  frontmatter: css`
-    margin-block: 16px 12px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: 8px;
-    background: ${cssVar.colorBgContainer};
-  `,
-  metadataKey: css`
-    flex-shrink: 0;
-    width: 112px;
-    font-family: ${cssVar.fontFamilyCode};
-    color: ${cssVar.colorTextSecondary};
-  `,
-  metadataRow: css`
-    padding-block: 10px;
-    padding-inline: 12px;
-
-    &:not(:last-child) {
-      border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-    }
-  `,
-  metadataValue: css`
-    min-width: 0;
-    white-space: pre-wrap;
-  `,
-  sectionHeader: css`
-    padding-block: 10px;
-    padding-inline: 12px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
   textArea: css`
     font-family: ${cssVar.fontFamilyCode};
   `,
@@ -88,7 +59,6 @@ interface SkillFrontmatterBlockProps {
 
 const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, frontmatter }) => {
   const { t } = useTranslation('editor');
-  const metadata = useMemo(() => parseSkillMarkdownMetadata(frontmatter), [frontmatter]);
   const currentName = useMemo(
     () => parseSkillMarkdownFrontmatterFields(frontmatter).name,
     [frontmatter],
@@ -154,10 +124,10 @@ const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, fr
   }, [currentName, documentId, draft, performSave, t, updateSkillFrontmatter]);
 
   return (
-    <Flexbox className={styles.frontmatter}>
-      <Flexbox horizontal align="center" className={styles.sectionHeader} justify="space-between">
-        <Text type="secondary">{t('skillFrontmatter.title')}</Text>
-        {editing ? (
+    <SkillFrontmatterCard
+      frontmatter={frontmatter}
+      extra={
+        editing ? (
           <Flexbox horizontal gap={8}>
             <Button icon={XIcon} size="small" onClick={handleCancel}>
               {t('cancel')}
@@ -179,9 +149,10 @@ const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, fr
             title={t('skillFrontmatter.edit')}
             onClick={handleEdit}
           />
-        )}
-      </Flexbox>
-      {editing ? (
+        )
+      }
+    >
+      {editing && (
         <Flexbox gap={8} padding={12}>
           {/* Raw YAML is only exposed in edit mode so users can keep advanced frontmatter syntax. */}
           <TextArea
@@ -196,19 +167,8 @@ const SkillFrontmatterBlock = memo<SkillFrontmatterBlockProps>(({ documentId, fr
           />
           {error && <Text type="danger">{error}</Text>}
         </Flexbox>
-      ) : metadata.length > 0 ? (
-        metadata.map((item) => (
-          <Flexbox horizontal align="flex-start" className={styles.metadataRow} key={item.key}>
-            <Text className={styles.metadataKey}>{item.key}</Text>
-            <Text className={styles.metadataValue}>{item.value}</Text>
-          </Flexbox>
-        ))
-      ) : (
-        <Flexbox className={styles.metadataRow}>
-          <Text type="secondary">{t('skillFrontmatter.empty')}</Text>
-        </Flexbox>
       )}
-    </Flexbox>
+    </SkillFrontmatterCard>
   );
 });
 

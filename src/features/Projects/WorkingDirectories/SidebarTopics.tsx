@@ -13,7 +13,10 @@ import ByProjectMode from '@/features/AgentSidebar/Topic/TopicListContent/ByProj
 import ByStatusMode from '@/features/AgentSidebar/Topic/TopicListContent/ByStatusMode';
 import ByTimeMode from '@/features/AgentSidebar/Topic/TopicListContent/ByTimeMode';
 import FlatMode from '@/features/AgentSidebar/Topic/TopicListContent/FlatMode';
-import { TopicListScopeContext } from '@/features/AgentSidebar/Topic/TopicListScope';
+import {
+  TopicListRevealContext,
+  TopicListScopeContext,
+} from '@/features/AgentSidebar/Topic/TopicListScope';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import {
   useProjectDirectories,
@@ -22,12 +25,16 @@ import {
 } from '@/store/projectWorkingDirectory';
 
 import { openProjectTopicModal } from './StartDirectoryModal';
+import { useProjectTopicReveal } from './useProjectTopicReveal';
 
 export function ProjectDirectoryTopics(props: { projectId: string; coordinatorAgentId: string }) {
   const scope = useMemo(() => ({ projectId: props.projectId }), [props.projectId]);
+  const reveal = useProjectTopicReveal(props.projectId);
   return (
     <TopicListScopeContext value={scope}>
-      <ProjectTopicList {...props} />
+      <TopicListRevealContext value={reveal}>
+        <ProjectTopicList {...props} />
+      </TopicListRevealContext>
     </TopicListScopeContext>
   );
 }

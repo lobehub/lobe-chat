@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { AccordionRoot } from '@lobehub/ui/base-ui';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TopicListScopeContext } from '../../TopicListScope';
@@ -26,9 +26,34 @@ const directoryRows = vi.hoisted(
       projectId: string;
       projectAvatar: string;
       deviceId?: string;
+      deviceName?: string;
       path?: string;
     }>,
 );
+const subGroupModeMock = vi.hoisted(() => ({ value: 'none' as string }));
+const updateSystemStatusMock = vi.hoisted(() => vi.fn());
+vi.mock('@/store/global', () => ({
+  useGlobalStore: (selector: (state: object) => unknown) =>
+    selector({
+      status: {
+        projectTopicSubGroupModeByGroup: {
+          'project-id:prj-1': subGroupModeMock.value,
+          'project:/tmp/x': subGroupModeMock.value,
+        },
+      },
+      updateSystemStatus: updateSystemStatusMock,
+    }),
+}));
+
+vi.mock('@/store/device', () => ({
+  deviceSelectors: { deviceList: (s: { devices: unknown[] }) => s.devices },
+  useDeviceStore: (selector: (state: object) => unknown) =>
+    selector({
+      devices: [{ deviceId: 'device-2', friendlyName: 'Studio Linux' }],
+      useFetchDevices: () => ({}),
+    }),
+}));
+
 vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectoryStore: (selector: (state: unknown) => unknown) =>
     selector({
@@ -129,9 +154,25 @@ vi.mock('@/store/agent/selectors', () => ({
   },
 }));
 
+const updateTopicStatusMock = vi.hoisted(() => vi.fn());
+const refreshTopicMock = vi.hoisted(() => vi.fn());
+vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
+  useActiveWorkspaceId: () => undefined,
+}));
+vi.mock('@/hooks/usePermission', () => ({ usePermission: () => ({ allowed: true }) }));
+vi.mock('@/store/user', () => ({
+  useUserStore: (selector: (state: object) => unknown) => selector({}),
+}));
+vi.mock('@/store/user/selectors', () => ({
+  preferenceSelectors: { topicSortBy: () => 'updatedAt' },
+  userProfileSelectors: { userId: () => 'user-1' },
+}));
+
 vi.mock('@/store/chat', () => {
   const useChatStore = (selector: (state: object) => unknown) => selector({});
   useChatStore.getState = () => ({
+    refreshTopic: refreshTopicMock,
+    updateTopicStatus: updateTopicStatusMock,
     setPendingNewTopicDirectory: setPendingNewTopicDirectoryMock,
     switchTopic: switchTopicMock,
   });
@@ -160,6 +201,257 @@ describe('Project topic group item', () => {
     routeParamsMock.aid = 'agent-1';
     agentStoreStateMock.activeAgentId = 'agent-1';
     activeWorkspaceSlugMock.value = 'lobehub';
+    subGroupModeMock.value = 'none';
+    updateTopicStatusMock.mockReset();
+    refreshTopicMock.mockReset();
+  });
+
+  it('keeps the sub-group menu when the newest project topic has no working directory', () => {
+    // Without a directory the add-topic actions can't render; the grouping
+    // choice must not disappear with them.
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Conversation only' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    expect(screen.queryByRole('button', { name: 'directories.start' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'topics.subGroup.title' })).toBeTruthy();
+  });
+
+  it('picks a sub-group mode from the row grouping button and remembers it per group', async () => {
+    updateSystemStatusMock.mockReset();
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [{ id: 't1', title: 'Topic' }] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'topics.subGroup.title' }));
+    fireEvent.click(await screen.findByText('topics.subGroup.byDevice'));
+
+    expect(updateSystemStatusMock).toHaveBeenCalledWith({
+      projectTopicSubGroupModeByGroup: { 'project-id:prj-1': 'byDevice' },
+    });
+  });
+
+  it('sections a project group by device when that mode is picked', () => {
+    subGroupModeMock.value = 'byDevice';
+    directoryRows.push(
+      {
+        deviceId: 'device-1',
+        deviceName: 'MacBook',
+        id: 'binding-mac',
+        path: '/Users/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+      {
+        deviceId: 'device-2',
+        id: 'binding-linux',
+        path: '/home/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+    );
+
+    render(
+      <AccordionRoot defaultValue={['project-id:prj-1']}>
+        <GroupItem
+          expanded
+          group={{
+            children: [
+              { id: 't1', projectWorkingDirectoryId: 'binding-linux', title: 'Linux topic' },
+              { id: 't2', title: 'Loose topic' },
+              { id: 't3', projectWorkingDirectoryId: 'binding-mac', title: 'Mac topic' },
+            ] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    const order = ['Studio Linux', 'Linux topic', 'MacBook', 'Mac topic'];
+    const text = document.body.textContent ?? '';
+    order.reduce((from, label) => {
+      const at = text.indexOf(label, from);
+      expect(at, label).toBeGreaterThanOrEqual(from);
+      return at;
+    }, 0);
+    expect(text.indexOf('groupTitle.byDevice.unknown')).toBeLessThan(text.indexOf('Loose topic'));
+    expect(text.indexOf('Mac topic')).toBeLessThan(text.indexOf('groupTitle.byDevice.unknown'));
+  });
+
+  it('offers no device grouping for a plain folder group and ignores a stale byDevice choice', async () => {
+    subGroupModeMock.value = 'byDevice';
+    render(
+      <AccordionRoot defaultValue={['project:/tmp/x']}>
+        <GroupItem
+          expanded
+          group={{
+            // A path-only group: no project id, no bound directory.
+            children: [
+              { id: 't1', metadata: { workingDirectory: '/tmp/x' }, title: 'Folder topic' },
+            ] as any,
+            id: 'project:/tmp/x',
+            title: '/tmp/x',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'topics.subGroup.title' }));
+    expect(await screen.findByText('topics.subGroup.byTime')).toBeTruthy();
+    expect(screen.queryByText('topics.subGroup.byDevice')).toBeNull();
+    expect(document.body.textContent).not.toContain('groupTitle.byDevice.unknown');
+  });
+
+  it('archives only this group\'s merged-PR topics from the group "more" menu', async () => {
+    const merged = { github: { pullRequest: { mergedAt: '2026-10-01', state: 'closed' } } };
+    render(
+      <AccordionRoot>
+        <GroupItem
+          expanded
+          group={{
+            children: [
+              {
+                id: 't-merged',
+                metadata: { workingDirectory: '/tmp/x', workingDirectoryConfig: { git: merged } },
+                title: 'Merged',
+              },
+              {
+                id: 't-done',
+                metadata: { workingDirectory: '/tmp/x', workingDirectoryConfig: { git: merged } },
+                status: 'completed',
+                title: 'Already done',
+              },
+              { id: 't-open', metadata: { workingDirectory: '/tmp/x' }, title: 'Open' },
+            ] as any,
+            id: 'project:/tmp/x',
+            title: '/tmp/x',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'directories.projectBinding' }));
+    fireEvent.click(await screen.findByText('actions.archiveMergedPullRequests'));
+
+    await waitFor(() => expect(refreshTopicMock).toHaveBeenCalled());
+    expect(updateTopicStatusMock).toHaveBeenCalledTimes(1);
+    expect(updateTopicStatusMock).toHaveBeenCalledWith({
+      status: 'completed',
+      topicId: 't-merged',
+    });
+  });
+
+  it('folds a device section from its header without touching the others', async () => {
+    subGroupModeMock.value = 'byDevice';
+    directoryRows.push({
+      deviceId: 'device-2',
+      id: 'binding-linux',
+      path: '/home/me/project',
+      projectAvatar: '',
+      projectId: 'prj-1',
+      projectName: 'LobeHub',
+      projectSlug: 'lobehub',
+    });
+
+    render(
+      <AccordionRoot defaultValue={['project-id:prj-1']}>
+        <GroupItem
+          expanded
+          group={{
+            children: [
+              { id: 't1', projectWorkingDirectoryId: 'binding-linux', title: 'Linux topic' },
+              { id: 't2', title: 'Loose topic' },
+            ] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    expect(screen.getByText('Linux topic')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Studio Linux' }));
+
+    await waitFor(() => expect(screen.queryByText('Linux topic')).toBeNull());
+    expect(screen.getByText('Loose topic')).toBeTruthy();
+  });
+
+  it('starts a new topic in the project directory of a device section from its "+"', () => {
+    subGroupModeMock.value = 'byDevice';
+    directoryRows.push(
+      {
+        deviceId: 'device-1',
+        deviceName: 'MacBook',
+        id: 'binding-mac',
+        path: '/Users/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+      {
+        deviceId: 'device-2',
+        id: 'binding-linux',
+        path: '/home/me/project',
+        projectAvatar: '',
+        projectId: 'prj-1',
+        projectName: 'LobeHub',
+        projectSlug: 'lobehub',
+      },
+    );
+
+    render(
+      <AccordionRoot defaultValue={['project-id:prj-1']}>
+        <GroupItem
+          expanded
+          group={{
+            children: [
+              { id: 't1', projectWorkingDirectoryId: 'binding-linux', title: 'Linux topic' },
+              { id: 't2', title: 'Loose topic' },
+            ] as any,
+            id: 'project-id:prj-1',
+            title: 'LobeHub',
+          }}
+        />
+      </AccordionRoot>,
+    );
+
+    // Only the Linux section gets a "+" — the unknown section has no directory
+    // to start in (and the group header has no path, so it renders none).
+    const starts = screen.getAllByRole('button', { name: 'directories.start' });
+    expect(starts).toHaveLength(1);
+    fireEvent.click(starts[0]);
+
+    expect(commitAgentDefaultMock).not.toHaveBeenCalled();
+    expect(switchTopicMock).toHaveBeenCalledWith(null, { skipRefreshMessage: true });
+    expect(setPendingNewTopicDirectoryMock).toHaveBeenCalledWith({
+      agentId: 'agent-1',
+      projectWorkingDirectoryId: 'binding-linux',
+    });
+    expect(routerPushMock).toHaveBeenCalled();
   });
 
   it('opens the new-topic composer for the project directory without creating a topic', async () => {

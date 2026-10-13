@@ -138,6 +138,19 @@ describe('systemStatusSelectors', () => {
     });
   });
 
+  describe('topicPageSize', () => {
+    it('defaults to 20', () => {
+      expect(systemStatusSelectors.topicPageSize(initialState)).toBe(20);
+    });
+
+    // A value above the server's `getTopics` cap failed every topic list
+    // request; earlier builds could persist one from the project sidebar.
+    it('clamps a persisted value above the server cap', () => {
+      const s: GlobalState = merge(initialState, { status: { topicPageSize: 140 } });
+      expect(systemStatusSelectors.topicPageSize(s)).toBe(100);
+    });
+  });
+
   describe('modelDetailPanelExpandedKeys', () => {
     it('should expand every section by default', () => {
       const s: GlobalState = {
