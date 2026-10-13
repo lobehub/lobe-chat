@@ -214,6 +214,34 @@ describe('findProjectDirectory', () => {
     expect(findProjectDirectory('dir-1')?.permission).toBe('readWrite');
   });
 
+  // Regression: a newer projection that dropped the row (directory deleted) was
+  // skipped, so a stale copy in an older projection still passed the preflight.
+  it('treats a newer covering projection that omits the row as authoritative', () => {
+    useProjectDirectoryStore.setState({
+      directoriesMap: { 'all': [fresh], 'project-1': [] },
+      directoriesReplica: {
+        entries: {
+          'all': { pending: [], source: 'network', updatedAt: 1000 },
+          'project-1': { pending: [], source: 'network', updatedAt: 2000 },
+        },
+      } as any,
+    });
+    expect(findProjectDirectory('dir-1')).toBeUndefined();
+  });
+
+  it('ignores another project projection that would never list the row', () => {
+    useProjectDirectoryStore.setState({
+      directoriesMap: { 'all': [fresh], 'project-2': [] },
+      directoriesReplica: {
+        entries: {
+          'all': { pending: [], source: 'network', updatedAt: 1000 },
+          'project-2': { pending: [], source: 'network', updatedAt: 2000 },
+        },
+      } as any,
+    });
+    expect(findProjectDirectory('dir-1')?.permission).toBe('readWrite');
+  });
+
   it('returns undefined when no projection holds the row', () => {
     seed([['all', fresh, 1000]]);
     expect(findProjectDirectory('missing')).toBeUndefined();
