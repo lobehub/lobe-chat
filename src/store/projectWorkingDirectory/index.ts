@@ -328,13 +328,21 @@ export const useProjectDirectories = (projectId?: string) =>
     rowsOf(state.directoriesMap, projectId ?? ALL_PROJECTS_KEY, EMPTY_DIRECTORIES),
   );
 
-/** One directory row from whichever loaded projection holds it, outside React. */
+/**
+ * One directory row, outside React. The scope-wide (`all`) and per-project
+ * projections revalidate independently, so when both hold the row the most
+ * recently confirmed copy wins rather than whichever was loaded first.
+ */
 export const findProjectDirectory = (id: string): ProjectDirectory | undefined => {
-  for (const rows of Object.values(useProjectDirectoryStore.getState().directoriesMap)) {
+  const { directoriesMap, directoriesReplica } = useProjectDirectoryStore.getState();
+  let freshest: { row: ProjectDirectory; updatedAt: number } | undefined;
+  for (const [key, rows] of Object.entries(directoriesMap)) {
     const row = rows.find((item) => item.id === id);
-    if (row) return row;
+    if (!row) continue;
+    const updatedAt = directoriesReplica.entries[key]?.updatedAt ?? 0;
+    if (!freshest || updatedAt > freshest.updatedAt) freshest = { row, updatedAt };
   }
-  return undefined;
+  return freshest?.row;
 };
 
 /** Environments of one project, or every environment of the scope. */
