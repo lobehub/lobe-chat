@@ -262,7 +262,9 @@ const SchedulerForm = memo<SchedulerFormProps>(({ maxExecutions, onChange, patte
           </Flexbox>
         )}
         {scheduleType === 'hourly' && (
-          <Flexbox flex={1} gap={6}>
+          // minWidth: 0 lets the column shrink below the number input's intrinsic
+          // width; without it the row overflows the popover instead.
+          <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
             <Text className={styles.fieldLabel}>{t('taskSchedule.every')}</Text>
             <Flexbox horizontal align="center" gap={6}>
               <InputNumber
