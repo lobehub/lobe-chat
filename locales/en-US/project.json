@@ -196,6 +196,8 @@
   "topics.chooseTopic": "Choose a topic in the sidebar, or create one to start working",
   "topics.complete": "Mark completed",
   "topics.conversationOnly": "Conversation only, without a working directory",
+  "topics.directoryNotLinked": "Link this directory to an environment before starting work.",
+  "topics.directoryReadOnly": "This directory is read-only.",
   "topics.executionContext": "Work location",
   "topics.gatewayUnavailable": "Enable Agent Gateway before using this project work location.",
   "topics.group.agent": "By agent",

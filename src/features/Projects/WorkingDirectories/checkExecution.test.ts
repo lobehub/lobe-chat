@@ -77,7 +77,7 @@ describe('project send preflight', () => {
       });
       const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
 
-      await expect(checkProjectExecution(topic, true)).rejects.toThrow();
+      await expect(checkProjectExecution(topic, true)).rejects.toThrow('topics.directoryReadOnly');
       expect(resolve).not.toHaveBeenCalled();
     });
 
@@ -85,8 +85,10 @@ describe('project send preflight', () => {
       useProjectDirectoryStore.setState({
         directoriesMap: { all: [{ ...row, environmentId: null } as ProjectDirectory] },
       });
+      const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
 
-      await expect(checkProjectExecution(topic, true)).rejects.toThrow();
+      await expect(checkProjectExecution(topic, true)).rejects.toThrow('topics.directoryNotLinked');
+      expect(resolve).not.toHaveBeenCalled();
     });
   });
 });

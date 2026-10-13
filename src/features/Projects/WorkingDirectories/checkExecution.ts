@@ -28,8 +28,8 @@ export async function checkProjectExecution(topic: ChatTopic | undefined, gatewa
     await projectWorkingDirectoryService.resolve(topic.projectWorkingDirectoryId);
     return;
   }
-  // Same messages as the server-side resolve the cold path surfaces.
   if (!directory.instanceId || !directory.environmentId)
-    throw new Error('Link this directory to an environment before starting work');
-  if (directory.permission !== 'readWrite') throw new Error('This directory is read-only');
+    throw new Error(t('topics.directoryNotLinked', { ns: 'project' }));
+  if (directory.permission !== 'readWrite')
+    throw new Error(t('topics.directoryReadOnly', { ns: 'project' }));
 }

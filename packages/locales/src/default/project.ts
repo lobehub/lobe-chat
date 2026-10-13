@@ -32,6 +32,8 @@ export default {
   'topics.complete': 'Mark completed',
   'topics.resume': 'Resume work',
   'topics.gatewayUnavailable': 'Enable Agent Gateway before using this project work location.',
+  'topics.directoryNotLinked': 'Link this directory to an environment before starting work.',
+  'topics.directoryReadOnly': 'This directory is read-only.',
 
   'settings.deviceOnline': 'Device connected',
   'settings.deviceOffline': 'Device disconnected',
