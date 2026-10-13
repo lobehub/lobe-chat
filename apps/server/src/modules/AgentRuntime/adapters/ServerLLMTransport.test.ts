@@ -171,6 +171,48 @@ describe('ServerLLMTransport.stream · deployment name', () => {
 
     expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
   });
+
+  it('strips the frozen card deployment name for a non-consuming provider (qwen)', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+
+    const ctx = {
+      loadAgentState: vi.fn(async () => ({
+        modelRuntimeConfig: {
+          model: 'qwen3-vl-flash',
+          modelFacts: {
+            cards: [
+              {
+                deploymentName: 'qwen3-vl-flash-prod',
+                id: 'qwen3-vl-flash',
+                providerId: 'qwen',
+              },
+            ],
+            model: 'qwen3-vl-flash',
+            provider: 'qwen',
+          },
+          provider: 'qwen',
+        },
+      })),
+      operationId: 'op-1',
+      stepIndex: 0,
+      topicId: 'topic-1',
+      userId: 'user-1',
+    } as unknown as RuntimeExecutorContext;
+
+    await new ServerLLMTransport(ctx).stream({
+      messages: [],
+      model: 'qwen3-vl-flash',
+      provider: 'qwen',
+    });
+
+    // The qwen adapter leaves the field in `...rest` and the OpenAI-compatible
+    // factory forwards unknown payload fields upstream — the internal mapping
+    // must never reach the wire for providers that don't consume it.
+    expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
+    // ...and the live deployment catalog is not even consulted.
+    expect(resolveServerModel).not.toHaveBeenCalled();
+  });
 });
 
 describe('ServerLLMTransport.createTrace · streaming mode', () => {

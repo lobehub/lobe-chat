@@ -40,6 +40,7 @@ import {
   tracer as agentRuntimeTracer,
 } from '@lobechat/observability-otel/modules/agent-runtime';
 import { RequestTrigger, toAgentShareVisitorIds } from '@lobechat/types';
+import { ModelProvider } from 'model-bank';
 
 import { initModelRuntimeFromDB, resolveServerModel } from '@/server/modules/ModelRuntime';
 
@@ -72,6 +73,19 @@ const getErrorMessage = (error: unknown): string => {
 const SERVER_LLM_RETRY_POLICY = {
   noRetryProviders: [BRANDING_PROVIDER],
 };
+
+/**
+ * Providers that address the request model by the card's
+ * `config.deploymentName` (their adapters read the field and build the final
+ * request model from it). Gating the injected field to this set keeps the
+ * internal mapping from leaking upstream through adapters that don't consume
+ * it (OpenAI-compatible factories forward unknown payload fields).
+ */
+const DEPLOYMENT_NAME_PROVIDERS = new Set<string>([
+  ModelProvider.Azure,
+  ModelProvider.Spark,
+  ModelProvider.Volcengine,
+]);
 
 const NETWORK_EMPTY_COMPLETION_MAX_RETRIES = 3;
 const NETWORK_EMPTY_COMPLETION_MAX_ATTEMPTS = NETWORK_EMPTY_COMPLETION_MAX_RETRIES + 1;
@@ -352,9 +366,10 @@ export class ServerLLMTransport implements LLMTransport {
         card.providerId === payload.provider &&
         (card.id === payload.model || card.deploymentName === payload.model),
     );
-    const deploymentName =
-      frozenCard?.deploymentName ??
-      (await this.resolveStreamDeploymentName(payload.provider, payload.model));
+    const deploymentName = DEPLOYMENT_NAME_PROVIDERS.has(payload.provider)
+      ? (frozenCard?.deploymentName ??
+        (await this.resolveStreamDeploymentName(payload.provider, payload.model)))
+      : undefined;
     const { provider: _provider, ...runtimePayload } = payload;
     let content = '';
     let usage: LLMStreamResult['usage'];
@@ -557,7 +572,10 @@ export class ServerLLMTransport implements LLMTransport {
       ...(typeof input.context.preserveThinking === 'boolean' && {
         preserveThinking: input.context.preserveThinking,
       }),
-      ...(frozenCard?.deploymentName && { deploymentName: frozenCard.deploymentName }),
+      ...(frozenCard?.deploymentName &&
+        DEPLOYMENT_NAME_PROVIDERS.has(input.provider) && {
+          deploymentName: frozenCard.deploymentName,
+        }),
     };
     const operationLogId = `${this.ctx.operationId}:${this.ctx.stepIndex}`;
     const attempt = createServerCallLlmAttempt({
