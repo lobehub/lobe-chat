@@ -415,6 +415,8 @@
   "supportAgent.inspect.hint": "It will be sent to the support assistant and kept with this support conversation.",
   "supportAgent.inspect.request": "The support assistant would like to look at {{target}}.",
   "supportAgent.inspect.shared": "Shared {{target}}",
+  "supportAgent.inspect.target.account": "your plan, credit balance and budget usage",
+  "supportAgent.inspect.target.accountWithWorkspace": "your plan, credit balance and budget usage, including the workspace \"{{title}}\"",
   "supportAgent.inspect.target.agent": "the configuration of the agent \"{{title}}\"",
   "supportAgent.inspect.target.conversation": "the full conversation \"{{title}}\" ({{total}} messages)",
   "supportAgent.inspect.untitled": "Untitled",
