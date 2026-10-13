@@ -238,7 +238,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
         // A building copy settles on a listing, so keep listing while one is
         // building: "Building" has to turn into a usable row on its own.
         refreshInterval: (latest) =>
-          latest?.instances.some((instance) => instance.status === 'pending')
+          (latest?.instances ?? []).some((instance) => instance.status === 'pending')
             ? BUILD_REFRESH_MS
             : 0,
         revalidateOnFocus: false,

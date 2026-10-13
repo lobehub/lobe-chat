@@ -42,7 +42,7 @@ const InstanceSection = memo<InstanceSectionProps>(({ editable, environmentId, k
   // Read here rather than on each row: every instance in this section is built
   // from the one environment, so the checkout is the section's fact, not the
   // row's. The rows carry it because they are what a person points at.
-  const environment = environmentData?.environments.find(
+  const environment = (environmentData?.environments ?? []).find(
     (candidate) => candidate.id === environmentId,
   );
   const repository = repositoryPath(environment?.configuration);
