@@ -53,6 +53,7 @@ import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import type { MessageModel } from '@/database/models/message';
 import type { PluginModel } from '@/database/models/plugin';
+import type { UserConnectorToolItem } from '@/database/schemas';
 import {
   type ExecutionPlan,
   executionPlanToManifestExecutionEnv,
@@ -435,6 +436,7 @@ export const discoverTools = async (
         connectorTools,
         discoverableConnectorManifests: discoverable.manifests,
         discoverableConnectorsMcp: discoverable.connectorsMcp,
+        discoverableConnectorTools: discoverable.tools,
       };
     });
   }
@@ -454,8 +456,13 @@ export const discoverTools = async (
   async function readDiscoverableConnectors(
     candidateIds: string[],
     gateKeeper: KeyVaultsGateKeeper | undefined,
-  ): Promise<{ connectorsMcp: DecryptedConnector[]; manifests: LobeToolManifest[] }> {
-    if (shareGate || exclusivePluginIds || isGoalTurn) return { connectorsMcp: [], manifests: [] };
+  ): Promise<{
+    connectorsMcp: DecryptedConnector[];
+    manifests: LobeToolManifest[];
+    tools: UserConnectorToolItem[];
+  }> {
+    const none = { connectorsMcp: [], manifests: [], tools: [] };
+    if (shareGate || exclusivePluginIds || isGoalTurn) return none;
     try {
       const candidates = new Set(candidateIds);
       const connectorsMcp = (
@@ -463,7 +470,7 @@ export const discoverTools = async (
       ).filter(
         (c) => !candidates.has(c.identifier) && (c.mcpServerUrl || c.mcpConnectionType === 'stdio'),
       );
-      if (connectorsMcp.length === 0) return { connectorsMcp, manifests: [] };
+      if (connectorsMcp.length === 0) return none;
 
       const tools = await deps.connectorToolModel.queryAllByConnectorIds(
         connectorsMcp.map((c) => c.id),
@@ -471,10 +478,11 @@ export const discoverTools = async (
       return {
         connectorsMcp,
         manifests: buildConnectorManifests(connectorsMcp, tools) as LobeToolManifest[],
+        tools,
       };
     } catch (error) {
       log('execAgent: failed to read discoverable connectors: %O', error);
-      return { connectorsMcp: [], manifests: [] };
+      return none;
     }
   }
 
@@ -716,6 +724,7 @@ export const discoverTools = async (
       connectorTools,
       discoverableConnectorManifests,
       discoverableConnectorsMcp,
+      discoverableConnectorTools,
     } = await toolReads.connectors;
 
     // 5a-1b. Model awareness: when the caller runs a shared agent whose tools
@@ -762,10 +771,13 @@ export const discoverTools = async (
       const refreshConnectorModel = connectorGateKeeper
         ? new ConnectorModel(deps.db, deps.userId, deps.workspaceId, connectorGateKeeper)
         : deps.connectorModel;
-      scheduleStaleConnectorToolsRefresh(connectorsMcp, buildLastSyncedAtMap(connectorTools), {
-        connectorModel: refreshConnectorModel,
-        connectorToolModel: deps.connectorToolModel,
-      });
+      // Discoverable (unpinned) connectors are refreshed too: the model can
+      // activate them, so a stale list would offer removed APIs and hide new ones.
+      scheduleStaleConnectorToolsRefresh(
+        [...connectorsMcp, ...discoverableConnectorsMcp],
+        buildLastSyncedAtMap([...connectorTools, ...discoverableConnectorTools]),
+        { connectorModel: refreshConnectorModel, connectorToolModel: deps.connectorToolModel },
+      );
     } catch (err) {
       log('execAgent: failed to schedule connector tool refresh (ignored): %O', err);
     }

@@ -2,6 +2,7 @@ import { type LobeToolManifest, ToolNameResolver } from '@lobechat/context-engin
 import { describe, expect, it, vi } from 'vitest';
 
 import { buildToolDiscoveryConfig } from '@/server/modules/AgentRuntime/executorHelpers';
+import { scheduleStaleConnectorToolsRefresh } from '@/server/services/connector/refresh';
 
 import { discoverTools } from '../toolDiscovery';
 
@@ -175,6 +176,18 @@ describe('discoverTools — unpinned custom MCP connectors', () => {
         name.startsWith(`${YINGMI}____BatchGetFundNavHistory`),
       ),
     ).toBe(true);
+  });
+
+  it('schedules the stale-tool refresh for an unpinned connector too', async () => {
+    vi.mocked(scheduleStaleConnectorToolsRefresh).mockClear();
+
+    await run();
+
+    // An activatable connector whose upstream tools changed must not keep
+    // offering the old list until someone re-syncs it by hand.
+    expect(scheduleStaleConnectorToolsRefresh).toHaveBeenCalledTimes(1);
+    const [connectors] = vi.mocked(scheduleStaleConnectorToolsRefresh).mock.calls[0];
+    expect(connectors.map((c) => c.identifier)).toContain(YINGMI);
   });
 
   it('does not decrypt unpinned connectors for a share visitor run', async () => {
