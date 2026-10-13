@@ -352,6 +352,15 @@ export interface DeviceEnroller {
   username: string | null;
 }
 
+/** What a device is running right now, as the device list summarizes it. */
+export interface DeviceRunningSummary {
+  /** Running topics on the device the caller can see. */
+  count: number;
+  deviceId: string;
+  /** Distinct members who started those runs, most recently active first. */
+  users: DeviceEnroller[];
+}
+
 export interface DeviceListItem {
   architecture?: string | null;
   channels: DeviceChannel[];
