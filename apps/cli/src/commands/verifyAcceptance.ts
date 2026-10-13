@@ -358,6 +358,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
           createdAt?: string;
           fileIds?: string[];
           kind: 'check' | 'group' | 'flow' | 'comment' | 'decision';
+          page?: { locations: string[]; url: string };
           roundIndex: number;
           title?: string;
         }
@@ -507,6 +508,11 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
                     : `group · ${entry.category || 'overall'}`;
           console.log(`${marker} ${label} ${pc.dim(`(r${entry.roundIndex})`)}`);
           if (entry.comment) console.log(`    ${entry.comment}`);
+          if (entry.page) {
+            console.log(`    ${pc.dim('page:')} ${entry.page.url}`);
+            for (const location of entry.page.locations)
+              console.log(`      ${pc.dim(`└ ${location}`)}`);
+          }
           for (const annotation of entry.annotations ?? []) {
             if (annotation.comment && annotation.comment !== entry.comment)
               console.log(`    ${pc.dim('region:')} ${annotation.comment}`);
@@ -523,6 +529,23 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
         }
       },
     );
+
+  acceptance
+    .command('preview <idOrSubject> <url>')
+    .description(
+      'Record where the latest round is deployed, so reviewers can comment on the live page (https or a loopback dev server)',
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(async (idOrSubject: string, url: string, options: { json?: boolean | string }) => {
+      const id = await resolveAcceptanceId(idOrSubject);
+      const client = await getTrpcClient();
+      const result = await client.acceptance.setPreviewUrl.mutate({ id, url });
+      if (options.json !== undefined) {
+        outputJson(result, typeof options.json === 'string' ? options.json : undefined);
+        return;
+      }
+      console.log(`${pc.green('✓')} r${result.roundIndex} preview: ${result.previewUrl}`);
+    });
 
   acceptance
     .command('link-pr <idOrSubject> <url>')

@@ -443,6 +443,15 @@ or a `storage_block:` error. Do not stop at "upload failed" or "noted in the PR"
   verdicts; read back coverage and do not claim the delivery is complete while
   required evidence is missing.
 
+**Record the deployed preview.** When the delivery is deployed somewhere a
+reviewer can open (a pull-request preview, a staging URL, a dev server on this
+machine), run `lh acceptance preview <acceptanceId> <url>` after the round is
+published. The URL must be https, or http on `localhost`/`127.0.0.1`. The
+acceptance page then offers "Review on preview", where reviewers comment on the
+live page; `lh acceptance feedback` lists those comments with the page URL and
+the `file:line` they were pinned to. Skip this when nothing is deployed — never
+invent a URL.
+
 The final response for a completed handoff MUST include the published acceptance
 URL together with the coverage result — never only a check-result id or a prose
 claim. Obtain the links from the path you actually executed:
