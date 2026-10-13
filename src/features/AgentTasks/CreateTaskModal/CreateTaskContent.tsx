@@ -206,7 +206,10 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     const handleTitleKeyDown = useCallback(
       (e: KeyboardEvent<HTMLInputElement>) => {
         // Cmd/Ctrl+Enter submits from the wrapper; an IME Enter only confirms a candidate.
-        if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || e.nativeEvent.isComposing) return;
+        // Safari ends the composition before this keydown, so isComposing is already
+        // false there and only keyCode 229 still marks the confirming Enter.
+        const isImeConfirm = e.nativeEvent.isComposing || e.keyCode === 229;
+        if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || isImeConfirm) return;
 
         e.preventDefault();
         focusEditorStartLine(editor);
