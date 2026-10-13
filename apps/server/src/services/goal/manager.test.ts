@@ -2966,6 +2966,30 @@ describe('planning the system planner hands to the main Agent', () => {
     expect(prompt).toContain('Planner asked for the main Agent: 要先读仓库才能确定有哪些 store');
   });
 
+  /**
+   * Regression: the hand-over started the turn while the system planner still
+   * held its planning lease and released it right after, so the turn's input
+   * snapshot never matched again and every plan the Agent submitted was
+   * refused as stale.
+   */
+  it('accepts the plan the main Agent submits after a hand-over', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库才能确定有哪些 store',
+    });
+    const id = await unmanagedGoal();
+    await service().tick(id);
+    const state = (await model().findById(id))!.config!.managerState!;
+    const op = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+
+    await manager().submit(id, state.token, op!.id, taskPlan);
+
+    expect((await after(id)).tasks.map((n) => n.title)).toEqual(['Audit']);
+  });
+
   it('hands a failed planning pass to the main Agent', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockRejectedValue(
       new Error('model timed out'),

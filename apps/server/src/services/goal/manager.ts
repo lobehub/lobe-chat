@@ -394,8 +394,15 @@ const managerTurnToken = (goalId: string) => `${goalId}_${randomUUID()}`;
  */
 export const managerSnapshot = (graph: GoalGraphSnapshot) => {
   // Coordinator receipts are not planning input: arming a Task's quota wake while a
-  // turn runs must not make that turn's plan stale.
-  const { managerState: _state, quotaRetryWakeAt: _quotaWake, ...config } = graph.goal.config ?? {};
+  // turn runs must not make that turn's plan stale, and neither may the system
+  // planner's lease — a hand-over starts the turn while the lease is still held
+  // and releases it right after.
+  const {
+    managerState: _state,
+    planningCheckpoint: _lease,
+    quotaRetryWakeAt: _quotaWake,
+    ...config
+  } = graph.goal.config ?? {};
   return createHash('sha256')
     .update(
       JSON.stringify({
