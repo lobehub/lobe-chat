@@ -1,4 +1,4 @@
-import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
+import { AGENT_CHAT_TOPIC_URL, GROUP_CHAT_TOPIC_URL } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
 import { Avatar, Text } from '@lobehub/ui/base-ui';
@@ -28,6 +28,18 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+/**
+ * Where a topic opens: its agent's chat, or its group's chat for a group
+ * conversation (which carries no `agentId`). Undefined when it has neither.
+ */
+export const getTopicChatUrl = (
+  topic: Pick<InboxTopic, 'agentId' | 'groupId' | 'id'>,
+): string | undefined => {
+  if (topic.agentId) return AGENT_CHAT_TOPIC_URL(topic.agentId, topic.id);
+  if (topic.groupId) return GROUP_CHAT_TOPIC_URL(topic.groupId, topic.id);
+  return undefined;
+};
+
 interface TopicRowProps {
   /** Rendered last, after the time — e.g. an explicit "open" button. */
   action?: ReactNode;
@@ -42,8 +54,8 @@ const TopicRow = memo<TopicRowProps>(({ action, topic, leading, trailing }) => {
   const agent = useAgentDisplayMeta(topic.agentId);
 
   const open = () => {
-    if (!topic.agentId) return;
-    navigate(AGENT_CHAT_TOPIC_URL(topic.agentId, topic.id));
+    const url = getTopicChatUrl(topic);
+    if (url) navigate(url);
   };
 
   return (

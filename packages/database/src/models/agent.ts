@@ -211,6 +211,17 @@ const RESERVED_AGENT_SLUGS: ReadonlySet<string> = new Set<string>(
 );
 
 /** One chat group an agent belongs to, as surfaced by the transfer guards. */
+/**
+ * A row of {@link AgentModel.queryBoundToDevice}: display fields plus the
+ * stored routing config and ownership needed to resolve the caller's
+ * effective target.
+ */
+export interface DeviceBindingCandidate extends DeviceBoundAgentItem {
+  agencyConfig: LobeAgentAgencyConfig | null;
+  userId: string;
+  workspaceId: string | null;
+}
+
 export interface AgentGroupMembershipRef {
   agentId: string;
   /** `null` when the group is not visible to the caller (see the read below). */
@@ -330,17 +341,22 @@ export class AgentModel {
   };
 
   /**
-   * Agents that run on the given device — their stored agency config routes
-   * execution there (`device`, or a desktop `local` pick, which also records
-   * its own `boundDeviceId`). `extraAgentIds` adds agents bound through a
-   * source this table does not hold (a workspace member's per-agent device
-   * override); they pass the same visibility gate, so an id the caller cannot
-   * see is dropped rather than leaked.
+   * Candidate agents for a device's "bound agents" list: agents whose stored
+   * agency config routes execution there (`device`, or a desktop `local` pick,
+   * which also records its own `boundDeviceId`), plus `extraAgentIds` — agents
+   * a caller's per-agent device override may route there. Candidates pass the
+   * same visibility gate, so an id the caller cannot see is dropped rather
+   * than leaked.
+   *
+   * The routing fields ride along because the stored config is only a
+   * baseline: the caller merges their own override over it (see
+   * `resolveAgentAgencyConfig`) and keeps the agents whose EFFECTIVE target
+   * is still this device.
    */
   queryBoundToDevice = async (
     deviceId: string,
     extraAgentIds: string[] = [],
-  ): Promise<DeviceBoundAgentItem[]> => {
+  ): Promise<DeviceBindingCandidate[]> => {
     const boundHere = and(
       sql`${agents.agencyConfig} ->> 'boundDeviceId' = ${deviceId}`,
       sql`${agents.agencyConfig} ->> 'executionTarget' IN ('device', 'local')`,
@@ -348,13 +364,16 @@ export class AgentModel {
 
     const rows = await this.db
       .select({
+        agencyConfig: agents.agencyConfig,
         avatar: agents.avatar,
         backgroundColor: agents.backgroundColor,
         id: agents.id,
         name: agents.name,
         slug: agents.slug,
         title: agents.title,
+        userId: agents.userId,
         visibility: agents.visibility,
+        workspaceId: agents.workspaceId,
       })
       .from(agents)
       .where(

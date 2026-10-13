@@ -23,11 +23,9 @@ import {
   wsCompatProcedure,
   wsProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { AgentModel } from '@/database/models/agent';
 import { DeviceModel, WorkspaceDevicePrivateConflictError } from '@/database/models/device';
 import { getTopicDeviceId, TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
-import { WorkspaceUserSettingsModel } from '@/database/models/workspaceUserSettings';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signTunnelAccessToken, signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
@@ -39,6 +37,7 @@ import {
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
 
+import { loadDeviceBoundAgents } from './deviceBoundAgents';
 import { preserveWorkspaceCache } from './deviceWorkingDirs';
 import {
   assertWorkspaceDeviceVisible,
@@ -354,36 +353,20 @@ export const deviceRouter = router({
    * scopes, so in a workspace a teammate's private agent (and the topics under
    * it) never surface just because they share the machine.
    *
-   * Agent bindings come from the shared agency config plus the caller's own
-   * per-agent device override in this workspace — the override is how a
-   * member points a shared agent at their machine without touching the row.
+   * Agent bindings are resolved per caller: the stored agency config merged
+   * with the caller's own per-agent device override in this workspace, exactly
+   * as a run would route — see {@link loadDeviceBoundAgents}.
    */
   getDeviceActivity: deviceProcedure
     .input(z.object({ deviceId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const overrideAgentIds = ctx.workspaceId
-        ? Object.entries(
-            (
-              await new WorkspaceUserSettingsModel(
-                ctx.serverDB,
-                ctx.userId,
-                ctx.workspaceId,
-              ).getPreference()
-            ).agentDeviceOverrides ?? {},
-          )
-            .filter(
-              ([, override]) =>
-                override.boundDeviceId === input.deviceId &&
-                (override.executionTarget === 'device' || override.executionTarget === 'local'),
-            )
-            .map(([agentId]) => agentId)
-        : [];
-
       const [agents, runningTopics] = await Promise.all([
-        new AgentModel(ctx.serverDB, ctx.userId, ctx.workspaceId).queryBoundToDevice(
-          input.deviceId,
-          overrideAgentIds,
-        ),
+        loadDeviceBoundAgents({
+          db: ctx.serverDB,
+          deviceId: input.deviceId,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
         new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId).queryTopics({
           deviceId: input.deviceId,
           statuses: ['running'],

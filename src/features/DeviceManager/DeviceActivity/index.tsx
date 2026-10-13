@@ -1,6 +1,6 @@
 'use client';
 
-import { AGENT_CHAT_TOPIC_URL, AGENT_CHAT_URL } from '@lobechat/const';
+import { AGENT_CHAT_URL } from '@lobechat/const';
 import { agentDisplayName, type DeviceBoundAgentItem } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
 import { ActionIcon, Avatar, Tag, Text } from '@lobehub/ui/base-ui';
@@ -10,7 +10,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RunningGlyph from '@/features/Home/components/RunningGlyph';
-import TopicRow from '@/features/HomeInbox/TopicRow';
+import TopicRow, { getTopicChatUrl } from '@/features/HomeInbox/TopicRow';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useClientDataSWR } from '@/libs/swr';
 import { type DeviceRunningTopic, deviceService } from '@/services/device';
@@ -67,8 +67,8 @@ const Placeholder = ({ children }: { children: string }) => (
 const OpenTopicButton = memo<{ topic: DeviceRunningTopic }>(({ topic }) => {
   const { t } = useTranslation('setting');
   const navigate = useWorkspaceAwareNavigate();
-  const { agentId } = topic;
-  if (!agentId) return null;
+  const url = getTopicChatUrl(topic);
+  if (!url) return null;
 
   return (
     <ActionIcon
@@ -79,7 +79,7 @@ const OpenTopicButton = memo<{ topic: DeviceRunningTopic }>(({ topic }) => {
       onClick={(e) => {
         // The row navigates on click as well; open once.
         e.stopPropagation();
-        navigate(AGENT_CHAT_TOPIC_URL(agentId, topic.id));
+        navigate(url);
       }}
     />
   );
