@@ -410,6 +410,7 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
             agentId={currentAgentId!}
             extraMenuItems={archiveMenuItems}
             path={workingDirectory!}
+            pathOnly={!isProjectGroup}
             topics={children}
             onLegacyStart={handleAddTopic}
           />
