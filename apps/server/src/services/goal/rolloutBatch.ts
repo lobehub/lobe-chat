@@ -17,7 +17,7 @@ import type { GoalModel } from '@/database/models/goal';
 import type { GoalGraphModel } from '@/database/models/goalGraph';
 
 import { BatchPlanSkillService, planUnitBrief } from './batchPlanSkill';
-import { containsAxisValue } from './spec';
+import { unitsNamedByProbes } from './spec';
 
 const log = debug('lobe-server:goal-rollout');
 
@@ -35,12 +35,9 @@ export const MAX_ROLLOUT_ROSTER = 60;
  * units the goal promised to deliver.
  *
  * `matchUnitInProbeTitle` is for a model's roster, whose probe titles wrap the
- * unit ("迁移 device store（探针）" for unit `device`): a unit named as a whole
- * word in a probe title is that probe, not a second unit run again in a wave.
- * Each probe stands for one unit only — the longest name its title contains —
- * so `agent` stays queued when the probe is `agent runtime`; at worst a probe
- * covering two units leaves one to run again, never a unit dropped.
- * Rosters a person or Agent wrote keep exact titles only.
+ * unit: a unit a probe title names is that probe, not a second unit run again in
+ * a wave (see `unitsNamedByProbes`). Rosters a person or Agent wrote keep exact
+ * titles only.
  */
 export const normalizeRolloutRoster = (
   units: string[] | undefined,
@@ -51,17 +48,12 @@ export const normalizeRolloutRoster = (
 ): string[] => {
   const probeTitles = probeDrafts.slice(0, canarySize).map((draft) => draft.title);
   const seen = new Set(probeTitles);
-  if (matchUnitInProbeTitle) {
-    const candidates = [...new Set((units ?? []).map((unit) => unit.trim()))].filter(
-      (unit) => unit && !seen.has(unit),
-    );
-    for (const probe of probeTitles) {
-      const named = candidates
-        .filter((unit) => !seen.has(unit) && containsAxisValue(probe, unit))
-        .sort((a, b) => b.length - a.length)[0];
-      if (named) seen.add(named);
-    }
-  }
+  if (matchUnitInProbeTitle)
+    for (const unit of unitsNamedByProbes(
+      probeTitles,
+      (units ?? []).map((unit) => unit.trim()),
+    ))
+      seen.add(unit);
   const rest: string[] = [];
   for (const unit of units ?? []) {
     const title = unit.trim();

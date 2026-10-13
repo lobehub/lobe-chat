@@ -27,95 +27,16 @@ export interface ProbeBrief {
 
 export interface HomogeneityVerdict {
   batch: boolean;
+  /**
+   * The claim is broken, not merely "not a batch": the planner said one mould
+   * but could not lay it out (no recipe, a roster missing units or too large,
+   * probes that are not roster units). One pass was not enough, so the main
+   * Agent plans it instead when the Goal has one.
+   */
+  malformed: boolean;
   /** Why it failed; empty when `batch` is true. Kept for the trace and tests. */
   reasons: string[];
 }
-
-/**
- * R2's executable core, restated as code: "replace the concrete file / module /
- * symbol names with placeholders — are the transformation steps still the same?"
- *
- * The masking is deliberately crude and deterministic. It is not trying to
- * understand the prose; it removes the parts that make two applications of one
- * recipe *look* different (paths, identifiers, numbers, and inline code), so
- * what is left can be compared. A false negative here only costs the batch
- * ceremony — the goal decomposes normally — which is the safe direction.
- */
-export const maskConcreteNames = (text: string): string =>
-  text
-    .replaceAll(/`[^`]*`/g, ' <code> ')
-    // POSIX / URL-ish paths and dotted module specifiers.
-    .replaceAll(/\b[\w.@-]*(?:\/[\w.@-]+)+\b/g, ' <path> ')
-    // camelCase / PascalCase / SCREAMING_CASE symbols. The character classes
-    // after each capital are lowercase/digit/underscore only, so the repeated
-    // group cannot match the same text two ways (no super-linear backtracking).
-    .replaceAll(/\b[a-z][a-z0-9_$]*(?:[A-Z][a-z0-9_$]*)+\b/g, ' <ident> ')
-    .replaceAll(/\b(?:[A-Z][a-z0-9_$]*){2,}\b/g, ' <ident> ')
-    .replaceAll(/\b[A-Z][A-Z0-9_]{2,}\b/g, ' <ident> ')
-    // Bare numbers (counts, indices, thresholds).
-    .replaceAll(/\b\d+(?:\.\d+)?\b/g, ' <n> ')
-    .toLowerCase()
-    .replaceAll(/\s+/g, ' ')
-    .trim();
-
-/** Scripts written without spaces between words. */
-const UNSPACED_SCRIPT = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
-
-/**
- * The word-ish tokens of a masked brief. A run of an unspaced script (Chinese,
- * Japanese, Korean) is one "word" to the splitter — a whole clause — so it is
- * cut into character bigrams instead; otherwise two briefs in one of those
- * languages share almost nothing unless whole clauses repeat verbatim.
- */
-const tokensOf = (text: string): Set<string> => {
-  const tokens = new Set<string>();
-  for (const piece of maskConcreteNames(text).split(/[^\p{L}\p{N}<>]+/u)) {
-    if (!UNSPACED_SCRIPT.test(piece)) {
-      if (piece.length > 1) tokens.add(piece);
-      continue;
-    }
-    const chars = [...piece];
-    if (chars.length === 1) tokens.add(piece);
-    for (let i = 0; i + 1 < chars.length; i += 1) tokens.add(chars[i] + chars[i + 1]);
-  }
-  return tokens;
-};
-
-/**
- * Ochiai similarity: the shared tokens over the geometric mean of both sizes.
- * Probe briefs share the recipe but differ in length — the first often carries
- * the references and deliverables the rest point back to — and Jaccard reads
- * that gap as a different recipe. Ochiai tolerates it while still counting what
- * each brief adds: a brief twice its sibling's size keeps about 0.7, one that
- * piles four times as much other work on top falls below the threshold, and a
- * one-line brief inside a long one does not pass by containment alone.
- */
-const similarity = (a: Set<string>, b: Set<string>): number => {
-  if (a.size === 0 && b.size === 0) return 1;
-  if (a.size === 0 || b.size === 0) return 0;
-  let intersection = 0;
-  for (const token of a) if (b.has(token)) intersection += 1;
-  return intersection / Math.sqrt(a.size * b.size);
-};
-
-/** Lowest pairwise similarity across every pair of probe shapes. */
-export const minPairwiseSimilarity = (briefs: ProbeBrief[]): number => {
-  if (briefs.length < 2) return 1;
-  const shapes = briefs.map((brief) => tokensOf(`${brief.title}\n${brief.instruction}`));
-  let min = 1;
-  for (let i = 0; i < shapes.length; i += 1) {
-    for (let j = i + 1; j < shapes.length; j += 1) {
-      min = Math.min(min, similarity(shapes[i], shapes[j]));
-    }
-  }
-  return min;
-};
-
-/**
- * Below this the probe briefs are describing different work, not one recipe
- * applied to different units.
- */
-export const HOMOGENEITY_MIN_SIMILARITY = 0.5;
 
 const escapeRegExp = (value: string): string => value.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -163,18 +84,18 @@ export const uncoveredAxisValues = (
 /**
  * Validate the planner's batch claim before decomposition acts on it.
  *
- * Every condition must hold: the planner marked it repeatable, named the one
- * reusable transformation, counted at least the threshold of homogeneous units,
- * listed every one of them in the roster, listed more than one probe, and the
- * probes really read as one mould after masking. Any failure keeps the ordinary
- * one-unit-per-task decomposition and records why.
+ * The checks are structural only: the planner marked it repeatable, named the
+ * one reusable transformation, counted at least the threshold of homogeneous
+ * units, listed every one of them in the roster, and listed more than one probe.
+ * Whether the recipe really holds is not judged from the wording here — the
+ * probes prove it by running, and the release gate holds the rest of the roster
+ * until they do. A claim that is not a batch keeps the ordinary decomposition; a
+ * broken one is `malformed`, which the coordinator hands to the main Agent.
  *
  * `maxUnits` is the batch roster's ceiling (the caller's config bound). A claim
  * above it is refused here rather than batched, so the roster a batch carries is
  * always the whole one: the coordinator waves it out unit by unit, and a cap
- * applied at creation would silently leave the tail undelivered. The refused
- * claim falls back to the ordinary decomposition, which materializes every unit
- * the planner listed.
+ * applied at creation would silently leave the tail undelivered.
  */
 export const evaluateHomogeneity = (
   spec: BatchSpecDraft,
@@ -182,27 +103,54 @@ export const evaluateHomogeneity = (
   options: { maxUnits?: number; minUnits?: number } = {},
 ): HomogeneityVerdict => {
   const minUnits = options.minUnits ?? ROLLOUT_MIN_HOMOGENEOUS_UNITS;
-  const reasons: string[] = [];
+  // "Not a batch": the ordinary decomposition is the right plan.
+  const notBatch: string[] = [];
+  // A broken claim: one pass could not lay the mould out.
+  const broken: string[] = [];
 
-  if (!spec.repeatable) reasons.push('planner did not mark the goal repeatable');
-  if (!spec.recipeOutline?.trim()) reasons.push('no reusable recipe outline');
+  if (!spec.repeatable) notBatch.push('planner did not mark the goal repeatable');
   if (!Number.isFinite(spec.unitCount) || spec.unitCount < minUnits)
-    reasons.push(`unitCount ${spec.unitCount} is below the threshold ${minUnits}`);
+    notBatch.push(`unitCount ${spec.unitCount} is below the threshold ${minUnits}`);
+  if (!spec.recipeOutline?.trim()) broken.push('no reusable recipe outline');
   // The roster is what the waves deliver: a claim the roster cannot account for
-  // would exhaust it early and silently drop every unit it left out.
-  const roster = new Set(
-    [...briefs.map((brief) => brief.title), ...(spec.units ?? [])]
-      .map((title) => title.trim())
-      .filter(Boolean),
-  );
+  // would exhaust it early and silently drop every unit it left out. A probe
+  // counts once, as the unit its title names.
+  const probeTitles = briefs.map((brief) => brief.title.trim()).filter(Boolean);
+  const units = (spec.units ?? []).map((unit) => unit.trim()).filter(Boolean);
+  const probed = unitsNamedByProbes(probeTitles, units);
+  const roster = new Set([...probeTitles, ...units.filter((unit) => !probed.has(unit))]);
   if (Number.isFinite(spec.unitCount) && roster.size < spec.unitCount)
-    reasons.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
+    broken.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
   if (options.maxUnits !== undefined && roster.size > options.maxUnits)
-    reasons.push(`roster lists ${roster.size} units, above the batch cap of ${options.maxUnits}`);
-  if (briefs.length < 2) reasons.push('fewer than two probe units');
+    broken.push(`roster lists ${roster.size} units, above the batch cap of ${options.maxUnits}`);
+  if (briefs.length < 2) broken.push('fewer than two probe units');
 
-  if (briefs.length >= 2 && minPairwiseSimilarity(briefs) < HOMOGENEITY_MIN_SIMILARITY)
-    reasons.push('probe briefs do not describe one reusable transformation');
+  // A repeatable claim below the unit threshold is simply not worth a batch;
+  // only a claim that still means to be one is judged broken.
+  const reasons = [...notBatch, ...broken];
+  return {
+    batch: reasons.length === 0,
+    malformed: notBatch.length === 0 && broken.length > 0,
+    reasons,
+  };
+};
 
-  return { batch: reasons.length === 0, reasons };
+/**
+ * The roster units a model's probes stand for. Its probe titles wrap the unit
+ * ("迁移 device store（探针）" for unit `device`), so a unit is the probe when
+ * its title names it — as a whole word, or a substring in scripts without word
+ * boundaries. Each probe stands for one unit only, the longest name its title
+ * holds, so the probe `agent runtime` leaves the separate unit `agent` queued:
+ * a probe covering two units costs a rerun, never a unit that is dropped.
+ */
+export const unitsNamedByProbes = (probeTitles: string[], units: string[]): Set<string> => {
+  const named = new Set<string>();
+  const candidates = [...new Set(units)].filter((unit) => !probeTitles.includes(unit));
+  for (const probe of probeTitles) {
+    const unit = candidates
+      .filter((candidate) => !named.has(candidate) && containsAxisValue(probe, candidate))
+      .sort((a, b) => b.length - a.length)[0];
+    if (unit) named.add(unit);
+  }
+  return named;
 };

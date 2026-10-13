@@ -2107,7 +2107,7 @@ describe('GoalService', () => {
       .from(goalEvents)
       .where(and(eq(goalEvents.entityId, task.id), eq(goalEvents.eventType, 'created')));
     expect(created.reason).toBe(
-      'Planner failed (InsufficientQuota: Insufficient Balance); started from the raw requirement',
+      'Planner failed (InsufficientQuota: Insufficient Balance); no main Agent could take the goal; started from the raw requirement',
     );
   });
 

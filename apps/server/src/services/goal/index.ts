@@ -32,6 +32,7 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
+  GoalRolloutPolicy,
   GoalRolloutState,
   GoalStatus,
   GoalTickResult,
@@ -153,6 +154,32 @@ const GOAL_ENDED_STATUSES = new Set<string>(['achieved', 'canceled']);
 const GOAL_DISPATCH_LOCK_NAMESPACE = 0x67_6f_64_69;
 /** Why a decomposition did or did not become a batch: DEBUG=lobe-server:goal-rollout. */
 const log = debug('lobe-server:goal-rollout');
+
+/**
+ * Why the system planner's one pass should go to the main Agent, or undefined
+ * when its plan can run: the pass failed, the planner said it was not enough,
+ * or it claimed a batch it could not lay out. A goal that is simply not a batch
+ * is not a reason — the ordinary plan is right for it.
+ */
+const planningHandoffReason = (
+  plan: GoalDecompositionDraft | undefined,
+  plannerFailure: string | undefined,
+  rollout: GoalRolloutPolicy | undefined,
+  maxUnits: number,
+): string | undefined => {
+  if (!plan) return `Planner failed (${plannerFailure ?? 'no answer'})`;
+  const asked = plan.escalate?.trim();
+  if (asked) return `Planner asked for the main Agent: ${asked}`;
+  if (!plan.rollout || rollout?.trigger === 'off') return undefined;
+  const verdict = evaluateHomogeneity(
+    plan.rollout,
+    plan.tasks.map((draft) => ({ instruction: draft.instruction, title: draft.title })),
+    { maxUnits, minUnits: rollout?.minHomogeneousUnits },
+  );
+  return verdict.malformed
+    ? `Batch claim could not be laid out (${verdict.reasons.join('; ')})`
+    : undefined;
+};
 
 /**
  * One line for why the planner failed, for the audit trail. Model runtime
@@ -3708,6 +3735,27 @@ export class GoalService {
           )
         : undefined;
 
+      // The system planner does one simple pass. When that pass failed, said it
+      // was not enough, or claimed a batch it could not lay out, the main Agent
+      // — which can inspect the workspace — plans the goal instead. Without one
+      // (no goal agent, or no turn could start) the pass below still runs.
+      const handoff = planningHandoffReason(
+        plan,
+        plannerFailure,
+        graph.goal.config?.rollout,
+        MAX_ROLLOUT_ROSTER,
+      );
+      if (handoff && graph.goal.agentId) {
+        const handed = await this.handPlanningToMainAgent(graph, handoff);
+        if (handed) {
+          effects.push({
+            detail: `planning handed to the main Agent: ${handoff}`,
+            type: 'goal_status',
+          });
+          return handed;
+        }
+      }
+
       const draftTasks: GoalDecompositionDraft['tasks'] = plan?.tasks ?? [
         {
           // The user's answers are authoritative; a planner failure after the
@@ -3828,7 +3876,7 @@ export class GoalService {
                   minUnits: existingRollout?.minHomogeneousUnits,
                 },
               )
-            : { batch: false, reasons: [] as string[] };
+            : { batch: false, malformed: false, reasons: [] as string[] };
 
         log(
           'decomposition rollout: trigger=%s claim=%o tasks=%d verdict=%o',
@@ -3918,11 +3966,16 @@ export class GoalService {
 
         // Why this goal was planned unit by unit, on the first task's `created`
         // event: a planner failure, or a batch claim the checks refused.
+        // A hand-over that did not happen (no main Agent could take the goal)
+        // says so too.
+        const unhanded = handoff ? '; no main Agent could take the goal' : '';
         let fallbackReason = !plan
-          ? `Planner failed (${plannerFailure ?? 'no answer'}); started from the raw requirement`
-          : rolloutClaim && rolloutEnabled && !verdict.batch
-            ? `Batch claim refused (${verdict.reasons.join('; ')}); planned unit by unit`
-            : undefined;
+          ? `Planner failed (${plannerFailure ?? 'no answer'})${unhanded}; started from the raw requirement`
+          : plan.escalate?.trim()
+            ? `Planner asked for the main Agent (${plan.escalate.trim()})${unhanded}; ran its own plan`
+            : rolloutClaim && rolloutEnabled && !verdict.batch
+              ? `Batch claim refused (${verdict.reasons.join('; ')}); planned unit by unit`
+              : undefined;
 
         const createdIds: string[] = [];
         for (const draft of plannedUnits) {
@@ -4006,6 +4059,27 @@ export class GoalService {
     } finally {
       await this.goalModel.releasePlanning(goalId, claim.token);
     }
+  };
+
+  /**
+   * Give the goal's planning to its main Agent, opening one for a goal that had
+   * none. Returns undefined when no turn could start (no eligible agent, turn or
+   * budget limits); a policy opened here is then removed again, so the goal
+   * keeps the system planner and does not gain an uninvited planner later.
+   */
+  private handPlanningToMainAgent = async (graph: GoalGraphSnapshot, reason: string) => {
+    const goalId = graph.goal.id;
+    const opened = !graph.goal.config?.manager;
+    if (opened) await this.goalModel.updateManagerPolicy(goalId, {});
+    const result = await new GoalManagerService(this.db, this.userId, this.workspaceId)
+      .planInstead(await this.requireGraph(goalId), reason)
+      .catch((error: unknown) => {
+        console.error(`[GoalService] goal ${goalId} could not hand planning over:`, error);
+        return null;
+      });
+    if (result) return result;
+    if (opened) await this.goalModel.updateManagerPolicy(goalId, null);
+    return undefined;
   };
 
   /**

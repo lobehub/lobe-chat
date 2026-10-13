@@ -73,6 +73,12 @@ export const GOAL_DECOMPOSE_JSON_SCHEMA = {
     additionalProperties: false,
     properties: {
       assumptions: { items: { maxLength: 280, type: 'string' }, maxItems: 5, type: 'array' },
+      /**
+       * One sentence on why this goal needs more than a single planning pass,
+       * so the main Agent — which can inspect the workspace — plans it instead.
+       * Null when the plan below is good enough to run.
+       */
+      escalate: { maxLength: 280, type: ['string', 'null'] },
       problemStatement: { maxLength: 280, minLength: 1, type: 'string' },
       /**
        * Set only for one repeated mould — many structurally identical units
@@ -138,7 +144,7 @@ export const GOAL_DECOMPOSE_JSON_SCHEMA = {
         type: 'array',
       },
     },
-    required: ['problemStatement', 'questions', 'assumptions', 'tasks', 'rollout'],
+    required: ['problemStatement', 'questions', 'assumptions', 'tasks', 'rollout', 'escalate'],
     type: 'object' as const,
   },
   strict: true,
@@ -169,6 +175,7 @@ export const chainGoalDecompose = ({
     {
       content: [
         'You plan executable tasks for a persistent autonomous goal.',
+        'You plan in one pass, without seeing the workspace. That suits a goal whose shape is clear from its wording. When planning it well needs more — reading the repository or files to know what the units are, ordering a multi-phase change, or you are not sure the work is one repeated mould — set escalate to one sentence saying what, and the main Agent, which can inspect the workspace, plans the goal instead. Still return your best plan below; it runs only if no main Agent can take the goal. Leave escalate null whenever your plan is good enough to run.',
         'Decompose the goal into the outcome it must achieve and the tasks that together deliver it. Preserve the requested action: a request to build, fix, or upgrade requires implementation, not just investigation or verification.',
         'Guidelines:',
         '- problemStatement is 1–2 sentences naming the core question or outcome of the goal, in your own words. Never copy the acceptance-criteria list into it.',

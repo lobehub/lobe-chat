@@ -34,6 +34,7 @@ import { AiAgentService } from '@/server/services/aiAgent';
 import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
 
 import { deviceGateway } from '../deviceGateway';
+import { GoalCriteriaGeneratorService } from './criteriaGenerator';
 import { GoalService } from './index';
 import { decideFailedTurn, GoalManagerService, MAX_FAILED_MANAGER_TURNS } from './manager';
 import * as scheduler from './scheduler';
@@ -2922,5 +2923,131 @@ describe('decideFailedTurn', () => {
     expect(
       decideFailedTurn({ category: 'quota', body: { rateLimitInfo: { resetsAt: past } } }, {}, now),
     ).toMatchObject({ action: 'retry', charged: true });
+  });
+});
+
+/**
+ * The system planner does one simple pass. When that pass fails, says it is not
+ * enough, or claims a batch it cannot lay out, the main Agent plans instead —
+ * rather than the goal starting from one raw-requirement task or a flat fan-out.
+ */
+describe('planning the system planner hands to the main Agent', () => {
+  const units = Array.from({ length: 12 }, (_, i) => `store${i + 1}`);
+  const simplePlan = {
+    problemStatement: '把 12 个 store 迁移到 replica',
+    tasks: [{ dependsOn: [], instruction: '迁移 store1', title: 'store1' }],
+  };
+  const unmanagedGoal = async () => {
+    const graph = await service().create({ createdByAgentId: agentId, title: 'Migrate stores' });
+    await db.update(goals).set({ config: {} }).where(eq(goals.id, graph.goal.id));
+    return graph.goal.id;
+  };
+  const after = async (id: string) => {
+    const goal = (await model().findById(id))!;
+    const tasks = (await service().graph(id)).nodes.filter((n) => n.kind === 'task');
+    return { config: goal.config!, tasks };
+  };
+
+  it('hands a goal the planner says needs more than one pass to the main Agent', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库才能确定有哪些 store',
+    });
+    const id = await unmanagedGoal();
+
+    expect((await service().tick(id)).outcome).toBe('waiting_external');
+
+    const { config, tasks } = await after(id);
+    expect(config.manager).toEqual({});
+    expect(config.managerState?.token).toBeTruthy();
+    // Nothing from the planner's own pass ran.
+    expect(tasks).toHaveLength(0);
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toContain('Planner asked for the main Agent: 要先读仓库才能确定有哪些 store');
+  });
+
+  it('hands a failed planning pass to the main Agent', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockRejectedValue(
+      new Error('model timed out'),
+    );
+    const id = await unmanagedGoal();
+
+    expect((await service().tick(id)).outcome).toBe('waiting_external');
+
+    const { config, tasks } = await after(id);
+    expect(config.managerState?.token).toBeTruthy();
+    expect(tasks).toHaveLength(0);
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toContain('Planner failed (model timed out)');
+  });
+
+  it('hands a batch claim it could not lay out to the main Agent', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      // Twelve units claimed, three listed: the waves would drop the other nine.
+      rollout: {
+        recipeOutline: '定义 replica 并删掉 SWR 持久化',
+        repeatable: true,
+        unitCount: 12,
+        units: units.slice(0, 3),
+        variants: [],
+      },
+      tasks: units.slice(0, 2).map((unit) => ({ dependsOn: [], instruction: unit, title: unit })),
+    });
+    const id = await unmanagedGoal();
+
+    await service().tick(id);
+
+    const { config, tasks } = await after(id);
+    expect(config.managerState?.token).toBeTruthy();
+    expect(tasks).toHaveLength(0);
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toContain('Batch claim could not be laid out (roster lists 3 of the 12');
+  });
+
+  it('keeps a goal that is simply not a batch on the system planner', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      rollout: {
+        recipeOutline: '定义 replica',
+        repeatable: true,
+        unitCount: 3,
+        units: units.slice(0, 3),
+        variants: [],
+      },
+      tasks: units.slice(0, 2).map((unit) => ({ dependsOn: [], instruction: unit, title: unit })),
+    });
+    const id = await unmanagedGoal();
+
+    await service().tick(id);
+
+    const { config, tasks } = await after(id);
+    expect(config.manager).toBeUndefined();
+    expect(tasks.map((n) => n.title)).toEqual(units.slice(0, 3));
+    expect(AiAgentService.prototype.execAgent).not.toHaveBeenCalled();
+  });
+
+  it('runs its own plan, and adds no main Agent, when none can take the goal', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库',
+    });
+    vi.spyOn(GoalManagerService.prototype, 'planInstead').mockResolvedValue(null);
+    const id = await unmanagedGoal();
+
+    await service().tick(id);
+
+    const { config, tasks } = await after(id);
+    // The policy opened for the hand-over is gone again, so no uninvited
+    // planner appears later.
+    expect(config.manager).toBeUndefined();
+    expect(tasks.map((n) => n.title)).toEqual(['store1']);
+    const [created] = await db
+      .select({ reason: goalEvents.reason })
+      .from(goalEvents)
+      .where(eq(goalEvents.entityId, tasks[0].id));
+    expect(created.reason).toBe(
+      'Planner asked for the main Agent (要先读仓库); no main Agent could take the goal; ran its own plan',
+    );
   });
 });

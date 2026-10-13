@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { GOAL_CLARIFICATION_TITLE, type GoalStatus } from '@lobechat/const/goal';
 import type {
   GoalDecisionOption,
+  GoalManagerPolicy,
   GoalNodeStatus,
   GoalRolloutPolicy,
   GoalRolloutState,
@@ -203,6 +204,24 @@ export class GoalModel {
           state === null
             ? sql`COALESCE(${goals.config}, '{}'::jsonb) - 'rolloutState'`
             : sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{rolloutState}', ${JSON.stringify(state)}::jsonb)`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Patch only `config.manager`: set the main Agent policy (keeping one already
+   * there), or remove it with `null`. The coordinator opens one when its own
+   * planner hands a goal over.
+   */
+  updateManagerPolicy = async (id: string, policy: GoalManagerPolicy | null): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config:
+          policy === null
+            ? sql`COALESCE(${goals.config}, '{}'::jsonb) - 'manager'`
+            : sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{manager}', COALESCE(${goals.config}->'manager', ${JSON.stringify(policy)}::jsonb))`,
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()));

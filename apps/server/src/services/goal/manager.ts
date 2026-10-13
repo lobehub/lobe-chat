@@ -964,6 +964,18 @@ export class GoalManagerService {
     return this.startTurn(graph, problem);
   };
 
+  /**
+   * Plan a goal the system planner handed over in its first pass — it failed, or
+   * judged one pass not enough. Nothing runs yet, so this is an ordinary first
+   * turn; the reason reaches the Agent as the turn's continuation.
+   */
+  async planInstead(graph: GoalGraphSnapshot, reason: string): Promise<GoalTickResult | null> {
+    if (!this.eligible(graph)) return null;
+    const settled = await this.settleInFlight(graph);
+    if (settled) return settled;
+    return this.startTurn(graph, undefined, reason);
+  }
+
   /** Return measured shortfalls to planning without weakening acceptance. */
   reconsiderAcceptance = async (
     graph: GoalGraphSnapshot,

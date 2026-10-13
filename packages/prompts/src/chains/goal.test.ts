@@ -68,6 +68,11 @@ describe('chainGoalDecompose', () => {
     // probes stop reading as one mould and the batch is refused.
     expect(prompt).toContain('Each probe is exactly ONE unit from rollout.units');
     expect(prompt).toContain('Do not add tasks that verify, summarize or validate the recipe');
+    // One simple pass; anything harder is the main Agent's to plan.
+    expect(prompt).toContain('You plan in one pass, without seeing the workspace');
+    const schema = GOAL_DECOMPOSE_JSON_SCHEMA.schema as any;
+    expect(schema.properties.escalate.type).toEqual(['string', 'null']);
+    expect(schema.required).toContain('escalate');
     expect(prompt).toContain('full roster of every homogeneous unit');
     expect(prompt).toContain('leave rollout null');
 

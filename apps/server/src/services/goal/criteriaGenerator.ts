@@ -72,6 +72,8 @@ export interface GoalPlanDraft {
 const decompositionSchema = z.object({
   /** Readings the plan relies on that the goal did not state. */
   assumptions: z.array(z.string()).default([]),
+  /** Why one planning pass is not enough; the main Agent plans instead. */
+  escalate: z.string().nullish(),
   problemStatement: z.string().min(1),
   /**
    * The planner's batch claim. Present only when it judged the goal to be one
