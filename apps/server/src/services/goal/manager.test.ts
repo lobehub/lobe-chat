@@ -3074,6 +3074,37 @@ describe('planning the system planner hands to the main Agent', () => {
     expect((await after(id)).config.manager).toEqual({ maxTurns: 7 });
   });
 
+  /**
+   * Regression: a goal whose main Agent had used its turns took the uninvited
+   * limit branch on hand-over, which paused the goal and dropped the system
+   * planner's own plan, though a hand-over that cannot start promises that plan.
+   */
+  it('runs its own plan instead of pausing when the main Agent has no turns left', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库',
+    });
+    const graph = await service().create({ createdByAgentId: agentId, title: 'Migrate stores' });
+    // The system planner leads (exploration on); the main Agent's one turn is spent.
+    await db
+      .update(goals)
+      .set({
+        config: {
+          exploration: { maxExperiments: 2 },
+          manager: { maxTurns: 1 },
+          managerState: { consumed: true, token: 'spent', turns: 1 } as GoalConfig['managerState'],
+        },
+      })
+      .where(eq(goals.id, graph.goal.id));
+
+    await service().tick(graph.goal.id);
+
+    const goal = (await model().findById(graph.goal.id))!;
+    expect(goal.status).not.toBe('paused');
+    expect((await after(graph.goal.id)).tasks.map((n) => n.title)).toEqual(['store1']);
+    expect(AiAgentService.prototype.execAgent).not.toHaveBeenCalled();
+  });
+
   it('runs its own plan, and adds no main Agent, when none can take the goal', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       ...simplePlan,

@@ -980,6 +980,16 @@ export class GoalManagerService {
     if (!this.eligible(graph)) return null;
     const settled = await this.settleInFlight(graph);
     if (settled) return settled;
+    // An offer, not an obligation: with no turn or budget left the hand-over is
+    // declined, and the system planner's own plan runs. Left to `startTurn`, the
+    // limit would pause the goal instead and drop that plan.
+    const policy = graph.goal.config!.manager!;
+    if (
+      (graph.goal.config?.managerState?.turns ?? 0) >=
+        (policy.maxTurns ?? DEFAULT_MANAGER_MAX_TURNS) ||
+      (await this.budgetBlocked(graph))
+    )
+      return null;
     return this.startTurn(graph, undefined, reason);
   }
 
