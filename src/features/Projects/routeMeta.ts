@@ -21,3 +21,9 @@ export const projectConversationRouteMeta = routeMeta({
   Skeleton: ConversationSegmentSkeleton,
   titleKey: 'project:topics.title',
 });
+
+export const projectInviteRouteMeta = routeMeta({
+  icon: FolderClosedIcon,
+  Skeleton: createSurfaceSkeleton('detail'),
+  titleKey: 'project:review.invite.pageTitle',
+});

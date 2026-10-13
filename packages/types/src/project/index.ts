@@ -24,3 +24,11 @@ export type ProjectWorkingDirectoryPermission =
 export const PROJECT_COMPLETION_DECISIONS = ['accepted', 'rejected'] as const;
 
 export type ProjectCompletionDecision = (typeof PROJECT_COMPLETION_DECISIONS)[number];
+
+export const PROJECT_MEMBER_ROLES = ['reviewer', 'maintainer'] as const;
+
+export type ProjectMemberRole = (typeof PROJECT_MEMBER_ROLES)[number];
+
+export const PROJECT_MEMBER_STATUSES = ['pending', 'accepted', 'revoked'] as const;
+
+export type ProjectMemberStatus = (typeof PROJECT_MEMBER_STATUSES)[number];

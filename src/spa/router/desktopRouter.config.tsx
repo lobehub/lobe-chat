@@ -3,6 +3,7 @@
 import type { RouteObject } from 'react-router';
 
 import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
+import { projectInviteRouteMeta } from '@/features/Projects/routeMeta';
 import { dynamicElement, ErrorBoundary } from '@/utils/router';
 
 import { createMainAreaRouteFactory, createSharedDesktopRoutes } from './desktopRouter.shared';
@@ -23,6 +24,16 @@ const webOnlyRoutes: RouteObject[] = [
     element: dynamicElement(() => import('@/routes/verify-im'), 'Desktop > VerifyIm'),
     errorElement: <ErrorBoundary />,
     path: '/verify-im',
+  },
+
+  {
+    element: dynamicElement(
+      () => import('@/routes/invite/project/[token]'),
+      'Desktop > Project Invite',
+    ),
+    errorElement: <ErrorBoundary />,
+    handle: { meta: projectInviteRouteMeta },
+    path: '/invite/project/:token',
   },
 
   {

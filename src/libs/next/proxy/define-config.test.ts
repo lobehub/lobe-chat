@@ -144,17 +144,19 @@ describe('OIDC protocol endpoints', () => {
     return { getSession: vi.mocked(auth.api.getSession), response };
   };
 
-  it.each(['/oidc/.well-known/openid-configuration', '/oidc/jwks', '/oidc/me'])(
-    'serves %s without sending an unauthenticated client to sign-in',
-    async (path) => {
-      const { getSession, response } = await callMiddleware(path);
+  it.each([
+    '/oidc/.well-known/openid-configuration',
+    '/oidc/jwks',
+    '/oidc/me',
+    '/oidc/review/callback?error=invalid_target&state=s',
+  ])('serves %s without sending an unauthenticated client to sign-in', async (path) => {
+    const { getSession, response } = await callMiddleware(path);
 
-      expect(getSession).not.toHaveBeenCalled();
-      expect(response?.headers.get('x-middleware-next')).toBe('1');
-      expect(response?.headers.get('location')).toBeNull();
-      expect(response?.headers.get('x-middleware-rewrite')).toBeNull();
-    },
-  );
+    expect(getSession).not.toHaveBeenCalled();
+    expect(response?.headers.get('x-middleware-next')).toBe('1');
+    expect(response?.headers.get('location')).toBeNull();
+    expect(response?.headers.get('x-middleware-rewrite')).toBeNull();
+  });
 
   it('still gates the authorization endpoint on a session', async () => {
     const { getSession } = await callMiddleware('/oidc/auth?client_id=lca_1&response_type=code');
@@ -164,14 +166,16 @@ describe('OIDC protocol endpoints', () => {
 });
 
 describe('project deep links', () => {
-  it.each(['/projects', '/project/environment-demo', '/project/environment-demo/tasks'])(
-    'routes %s into the SPA on a direct request',
-    async (path) => {
-      expect(
-        createRouteMatcher(proxyConfig.matcher)(new NextRequest(`http://localhost:3010${path}`)),
-      ).toBe(true);
-      const rewrite = await run(`http://localhost:3010${path}`);
-      expect(new URL(rewrite!).pathname).toMatch(new RegExp(`/spa/[^/]+${path}$`));
-    },
-  );
+  it.each([
+    '/projects',
+    '/project/environment-demo',
+    '/project/environment-demo/tasks',
+    '/invite/project/abc123',
+  ])('routes %s into the SPA on a direct request', async (path) => {
+    expect(
+      createRouteMatcher(proxyConfig.matcher)(new NextRequest(`http://localhost:3010${path}`)),
+    ).toBe(true);
+    const rewrite = await run(`http://localhost:3010${path}`);
+    expect(new URL(rewrite!).pathname).toMatch(new RegExp(`/spa/[^/]+${path}$`));
+  });
 });

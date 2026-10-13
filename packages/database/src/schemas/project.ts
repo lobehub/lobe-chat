@@ -51,6 +51,7 @@ export const projects = pgTable(
       .notNull(),
 
     status: text('status').$type<ProjectStatus>().notNull().default('backlog'),
+    reviewWorkspaceMembers: boolean('review_workspace_members').notNull().default(true),
 
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })

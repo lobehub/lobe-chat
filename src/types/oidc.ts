@@ -7,7 +7,16 @@ export interface OidcClientMetadata {
 }
 
 export interface OidcInteractionDetailsResponse {
-  acceptanceReview?: { allowed: boolean; title?: string };
+  acceptanceReview?: {
+    allowed: boolean;
+    kind: 'acceptance' | 'site';
+    origin?: string;
+    projectName?: string;
+    reason?: 'noAccess' | 'unregistered';
+    role?: 'creator' | 'maintainer' | 'reviewer' | 'workspace' | null;
+    siteName?: string;
+    title?: string;
+  };
   clientId: string;
   clientMetadata: OidcClientMetadata;
   prompt: 'consent' | 'login';
