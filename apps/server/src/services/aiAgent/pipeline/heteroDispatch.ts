@@ -3,6 +3,8 @@ import { LOADING_FLAT } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import {
+  appendAttachedFilesToPrompt,
+  collectHeteroAttachedFiles,
   HETEROGENEOUS_PROVIDER_BINDING_LOCAL_ONLY_ERROR,
   isLocalHeterogeneousType,
   isRemoteHeterogeneousType,
@@ -63,6 +65,7 @@ import type {
   InternalExecAgentParams,
 } from '../types';
 import { heteroOperationCapabilities } from './heteroOperationCapabilities';
+import type { RunAttachments } from './turnSetup';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -290,7 +293,7 @@ export interface HeteroDispatchInput {
   pinnedHeterogeneousTopicModel?: HeterogeneousTopicPin;
   requestedDeviceId?: string;
   requestTrigger?: RequestTrigger;
-  runAttachments: { imageList?: Array<{ alt: string; id: string; url: string }> };
+  runAttachments: Pick<RunAttachments, 'audioList' | 'fileList' | 'imageList' | 'videoList'>;
   /** Ids of the rows THIS turn just persisted (excluded from recovery history). */
   selfMessageIds: Set<string>;
   topicStartOwnerOperationId?: string;
@@ -552,7 +555,12 @@ export const dispatchHeteroAgent = async (
     operationId,
     // The CLI receives only the request: `/goal` is already in the system
     // context, and Claude Code's own `/goal` command would otherwise take it.
-    prompt: stripGoalCommand(prompt),
+    // Non-image attachments have no content block a CLI accepts, so they ride
+    // in the prompt as download links — otherwise the agent never sees them.
+    prompt: appendAttachedFilesToPrompt(
+      stripGoalCommand(prompt),
+      collectHeteroAttachedFiles(runAttachments),
+    ),
     repos: topicRepos,
     resumeFallbackSystemContext,
     resumeSessionId,

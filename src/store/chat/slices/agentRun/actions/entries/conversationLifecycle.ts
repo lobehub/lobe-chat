@@ -3,7 +3,10 @@ import { createCallAgentManifest } from '@lobechat/builtin-tool-agent-management
 import { GoalIdentifier, isGoalPrompt } from '@lobechat/builtin-tool-goal';
 import { isDesktop, isHeterogeneousAgentModelId, LOADING_FLAT } from '@lobechat/const';
 import { formatSelectedSkillsContext, formatSelectedToolsContext } from '@lobechat/context-engine';
-import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
+import {
+  collectHeteroAttachedFiles,
+  isRemoteHeterogeneousType,
+} from '@lobechat/heterogeneous-agents';
 import { chainCompressContext } from '@lobechat/prompts';
 import type {
   ChatAudioItem,
@@ -1762,6 +1765,7 @@ export class ConversationLifecycleActionImpl {
         // may already be cleared by this point, so we read from DB instead)
         const userMsg = heteroData.messages.find((m: any) => m.id === heteroData.userMessageId);
         const persistedImageList = userMsg?.imageList;
+        const persistedAttachedFiles = userMsg ? collectHeteroAttachedFiles(userMsg) : [];
         const persistedMetadata = userMsg?.metadata as MessageMetadata | undefined;
         const effectiveContextSelections = contextSelections?.length
           ? contextSelections
@@ -1806,6 +1810,7 @@ export class ConversationLifecycleActionImpl {
 
         await executeHeterogeneousAgent(() => this.#get(), {
           assistantMessageId: heteroExecutionAssistantId,
+          attachedFiles: persistedAttachedFiles.length ? persistedAttachedFiles : undefined,
           context: heteroExecutionContext,
           contextSelections: effectiveContextSelections,
           heterogeneousProvider: effectiveHeterogeneousProvider,
