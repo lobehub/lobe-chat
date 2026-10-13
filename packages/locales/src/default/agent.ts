@@ -514,11 +514,6 @@ export default {
     'Could not load this Agent’s skills. Close and reopen the share settings to try again.',
   'share.settings.skills.loading': 'Loading skills…',
   'share.settings.skills.title': 'Skills visitors can use',
-  'share.settings.tools.activatableDesc':
-    'Not enabled on this Agent. Once granted, the model activates them in a visitor run only when needed.',
-  'share.settings.tools.activatableGroup': 'Activated on demand · {{count}}',
-  'share.settings.tools.activatableTooltip':
-    'Not enabled on this Agent — the model activates it in a visitor run only when needed.',
   'share.settings.tools.apiWritesOwnerDocuments':
     'Visitors can never delete or copy your documents or change their load rules — this action stays off in shared runs.',
   'share.settings.tools.desc':
@@ -541,6 +536,9 @@ export default {
     'Also turn on “Allow reading my memory” above, or this tool stays inert for visitors.',
   'share.settings.tools.notAvailableToVisitors':
     'This tool can never be used in a shared run — visitor runs are blocked from your knowledge base and Agent files.',
+  'share.settings.tools.onDemandDesc':
+    'Not enabled on this Agent. Once granted, the model turns it on in a visitor run only when needed.',
+  'share.settings.tools.onDemandTag': 'On demand',
   'share.settings.tools.title': 'Tools visitors can use',
   'share.settings.updateError': 'Could not save the change. Please try again.',
   'share.visitor.access.backHome': 'Back to home',
