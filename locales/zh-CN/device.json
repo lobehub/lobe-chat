@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "已是最新",
   "workingDirectory.pushSuccess": "推送成功",
   "workingDirectory.recent": "工作目录",
+  "workingDirectory.refreshFolders": "刷新文件夹列表",
   "workingDirectory.refreshGitStatus": "刷新分支与 PR 状态",
   "workingDirectory.removeRecent": "从最近目录中移除",
   "workingDirectory.removeWorktreeAction": "删除 Worktree",
