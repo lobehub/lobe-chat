@@ -949,6 +949,33 @@ describe('acceptance publication with missing evidence', () => {
       );
     });
 
+    it('rejects English captions in `evidence upload --metadata` before uploading', async () => {
+      client.user.getUserState.query.mockResolvedValue({
+        settings: { general: { responseLanguage: 'zh-CN' } },
+      });
+
+      await expect(
+        run(
+          'evidence',
+          'upload',
+          '--check',
+          'result-screen',
+          '--content',
+          '日志',
+          '--type',
+          'text',
+          '--desc',
+          '执行记录',
+          '--metadata',
+          JSON.stringify({
+            chapters: [{ kind: 'step', label: 'Open checkout', t: 0 }],
+            comparison: { id: 'pair', label: '重试前', role: 'before' },
+          }),
+        ),
+      ).rejects.toThrow('--metadata.chapters[0].label');
+      expect(client.verify.uploadEvidence.mutate).not.toHaveBeenCalled();
+    });
+
     it('rejects `run create` with a title in the wrong language', async () => {
       client.user.getUserState.query.mockResolvedValue({
         settings: { general: { responseLanguage: 'zh-CN' } },

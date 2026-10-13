@@ -22,7 +22,12 @@ import {
   uploadAcceptanceFile,
   uploadReportEvidence,
 } from './acceptanceEvidence';
-import { assertReportLanguage, ingestLanguageFields, languageSummary } from './acceptanceLanguage';
+import {
+  assertReportLanguage,
+  evidenceCaptionFields,
+  ingestLanguageFields,
+  languageSummary,
+} from './acceptanceLanguage';
 import {
   type Decision,
   DECISIONS,
@@ -460,7 +465,10 @@ async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<voi
   }
   const metadata: unknown = options.metadata ? JSON.parse(options.metadata) : undefined;
   const client = await getTrpcClient();
-  await assertReportLanguage(client, [{ path: '--desc', text: options.desc }]);
+  await assertReportLanguage(client, [
+    { path: '--desc', text: options.desc },
+    ...evidenceCaptionFields('--metadata', metadata),
+  ]);
   let fileId = options.fileId;
   let inlineContent = options.content;
   if (options.file) {

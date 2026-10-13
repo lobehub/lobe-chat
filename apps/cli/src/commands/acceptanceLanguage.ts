@@ -154,6 +154,22 @@ function checkDefinitionFields(at: string, definition: unknown): LanguageField[]
   ];
 }
 
+/**
+ * Video step/claim captions and the before/after caption band. Shared by
+ * `ingest` and `evidence upload --metadata`, which persist the same shape.
+ */
+export function evidenceCaptionFields(at: string, metadata: unknown): LanguageField[] {
+  const value = (metadata ?? {}) as { chapters?: unknown; comparison?: { label?: unknown } };
+  const chapters = Array.isArray(value.chapters) ? value.chapters : [];
+  return [
+    ...chapters.flatMap((chapter: any, i: number) => [
+      { path: `${at}.chapters[${i}].label`, text: chapter?.label },
+      { path: `${at}.chapters[${i}].note`, text: chapter?.note },
+    ]),
+    { path: `${at}.comparison.label`, text: value.comparison?.label },
+  ];
+}
+
 /** Every `ingest` field that renders as prose on the acceptance page. */
 export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
   const fields: LanguageField[] = [
@@ -198,15 +214,9 @@ export function ingestLanguageFields(input: IngestTextInput): LanguageField[] {
     evidence.forEach((entry: any, index: number) => {
       if (!entry || typeof entry !== 'object') return;
       const at = `cases[${checkItemId}].evidence[${index}]`;
-      const chapters = Array.isArray(entry.chapters) ? entry.chapters : [];
       fields.push(
         { path: `${at}.description`, text: entry.description ?? entry.desc },
-        // Video step/claim captions and the before/after caption band.
-        ...chapters.flatMap((chapter: any, i: number) => [
-          { path: `${at}.chapters[${i}].label`, text: chapter?.label },
-          { path: `${at}.chapters[${i}].note`, text: chapter?.note },
-        ]),
-        { path: `${at}.comparison.label`, text: entry.comparison?.label },
+        ...evidenceCaptionFields(at, entry),
       );
     });
     fields.push(...visualizationFields(`cases[${checkItemId}]`, c));
@@ -234,6 +244,11 @@ function visualizationFields(at: string, c: Record<string, any>): LanguageField[
       return [
         { path: `${at}.visualizations[${v}].title`, text: view?.title },
         { path: `${at}.visualizations[${v}].context`, text: view?.context },
+        // Explicit axis/value captions override the field labels when set.
+        ...['xLabel', 'yLabel', 'valueLabel'].map((key) => ({
+          path: `${at}.visualizations[${v}].encoding.${key}`,
+          text: view?.encoding?.[key],
+        })),
         ...series.map((entry: any, i: number) => ({
           path: `${at}.visualizations[${v}].encoding.series[${i}].label`,
           text: entry?.label,

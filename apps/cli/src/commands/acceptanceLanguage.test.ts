@@ -222,7 +222,12 @@ describe('ingestLanguageFields evidence and visualization captions', () => {
             visualizations: [
               {
                 context: 'ctx',
-                encoding: { series: [{ field: 'v', label: 'Latency' }] },
+                encoding: {
+                  series: [{ field: 'v', label: 'Latency' }],
+                  valueLabel: 'ms',
+                  xLabel: 'Request',
+                  yLabel: 'Latency',
+                },
                 title: 't',
               },
             ],
@@ -241,6 +246,9 @@ describe('ingestLanguageFields evidence and visualization captions', () => {
         'cases[screen].visualizations[0].title',
         'cases[screen].visualizations[0].context',
         'cases[screen].visualizations[0].encoding.series[0].label',
+        'cases[screen].visualizations[0].encoding.xLabel',
+        'cases[screen].visualizations[0].encoding.yLabel',
+        'cases[screen].visualizations[0].encoding.valueLabel',
       ]),
     );
     expect(paths.some((path) => path.includes('rows'))).toBe(false);
