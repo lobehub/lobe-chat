@@ -59,7 +59,7 @@ export const findNewComponentTestAdvisories = async (
     if (!status || status.exists) return [];
 
     return [
-      `${file}: new .test.tsx file relative to ${status.baseRef}. New React component tests are not allowed; extract complex logic into a hook and test it in .test.ts instead. Characterization tests required by split-large-file before splitting a component are the one exception (${TESTING_SKILL_REFERENCE}).`,
+      `${file}: new .test.tsx file relative to ${status.baseRef}. New React component tests are not allowed; extract complex logic into a hook and test it in .test.ts instead (${TESTING_SKILL_REFERENCE}).`,
     ];
   });
 };

@@ -22,21 +22,24 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 
 A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `const.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `constants.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
-New files use named exports (`export const PlanCard = …`), except modules a framework or tool loads by their default export, such as route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), and `*.config.ts` files. Lint does not enforce this everywhere: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`, so follow the rule by hand. Many existing components still default-export; keep an existing file's exports unchanged when moving it, so its callers do not change.
+New files use named exports (`export const PlanCard = …`), even when the neighboring files default-export; do not copy the older default-export habit. The exceptions are modules a framework or tool loads by their default export: route segments under `src/routes` (see `spa-routes`), Next.js special files (`page.tsx`, `layout.tsx`, `not-found.tsx`), and `*.config.ts` files. Lint does not enforce this: this repository's `eslint.config.mjs` overrides `no-restricted-syntax`, which drops the shared `@lobehub/lint` warning on `export default`. When moving an existing file, keep its exports unchanged so its callers do not change.
 
 ## 2. Tests
 
-- `src/**`: colocate `Foo.test.ts(x)` beside `Foo`. A component directory's test is `index.test.ts(x)`.
-- `apps/server/src/**` and `packages/**`: colocate by default. Use the directory's `__tests__/` when the domain requires it (database models and repositories, see `testing`), or when tests need shared fixtures, setup files, or several scenario files for one source (`services/comfyui/__tests__/`).
-- One directory uses one placement. When it already has `__tests__/`, new tests for that directory go there. Do not migrate an existing mixed directory as a side task.
-- Split a large test file by scenario: `Foo.<scenario>.test.ts(x)`, keeping the original extension (`aiAgent/__tests__/execAgent.resume.test.ts`; `index.<scenario>.test.ts(x)` for a directory entry). Put shared mock factories and fixtures in a `testUtils.ts` beside them; each test file keeps its own `vi.mock` calls, because Vitest hoists them per file.
+One rule for every app and package:
+
+- A test of one module sits beside it: `Foo.ts` → `Foo.test.ts`; a directory entry's test is `index.test.ts`.
+- `__tests__/` holds only tests that do not belong to one module: integration tests that run several modules together or real infrastructure (database, Redis, the tRPC or Hono request stack), such as `routers/lambda/__tests__/integration/` and the database model and repository tests in `testing`, plus their shared setup, fixtures, and fakes.
+- New tests follow this rule even in a directory whose existing unit tests sit in `__tests__/`. Move an existing unit test beside its module when you split or rewrite that test file; do not migrate tests as a side task.
+- Split a large test file by scenario: `Foo.<scenario>.test.ts(x)`, keeping the original extension (`index.<scenario>.test.ts(x)` for a directory entry). Put shared mock factories and fixtures in a `testUtils.ts` beside them; each test file keeps its own `vi.mock` calls, because Vitest hoists them per file.
+- Do not add React component tests, including to guard a split. Extract the logic into a hook or pure function and test that in `.test.ts` (`testing`).
 
 ## 3. File size
 
-Source and test files stay at or below 800 lines. Check with `wc -l` before finishing an edit:
+Source and test files stay at or below 800 lines:
 
-- A new or edited file that would exceed 800 lines is split in the same change.
-- A file already over 800 lines must not grow. When a change would add lines to it, first extract the cohesive part the change touches.
+- A new file over 800 lines, or an existing file that crosses 800 lines in this change, is split in the same change. `bun run check` fails on both.
+- A file already over 800 lines must not grow, including for a bug fix: the change may only keep or reduce its line count. Before adding code, extract the cohesive part the change touches. Put a new test in a scenario test file under the limit (§2), splitting the old test file first when the test belongs to one of its scenarios. Because hundreds of legacy files are over the limit, `bun run check` reports their growth as an advisory instead of failing; it is still a required fix.
 
 The limit says when to split, not where. Split on a real boundary (state, reuse, render update, sub-domain, pipeline stage), as `react` requires; never cut a file at an arbitrary line count. When a heavy feature is mounted by several hosts, use `compose-atoms` instead.
 
