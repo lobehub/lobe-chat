@@ -178,8 +178,10 @@ const UsageTable = memo<UsageChartProps>(({ dateStrings }) => {
         rowKey={(record) => record.id || `${record.model}-${record.createdAt}-${record.provider}`}
         size="small"
         onChange={(_pagination, _filters, sorter) => {
-          const field = String(sorter.columnKey ?? '');
-          setSort(sorter.order && SORT_VALUES[field] ? { field, order: sorter.order } : null);
+          // Columns sort one at a time here; the array form is multi-column sort.
+          const { columnKey, order } = (Array.isArray(sorter) ? sorter[0] : sorter) ?? {};
+          const field = String(columnKey ?? '');
+          setSort(order && SORT_VALUES[field] ? { field, order } : null);
           // A re-sort makes the current page a different set of rows; start
           // from the top rather than dropping the reader into the middle.
           setPagination({ current: 1 });
