@@ -16,7 +16,6 @@ import {
   getAttachmentFileIdsFromEditor,
   pickAndInsertAttachments,
 } from '@/features/EditorCanvas/editorAttachments';
-import { focusEditorStartLine } from '@/features/EditorCanvas/focusEditorStartLine';
 import { usePermission } from '@/hooks/usePermission';
 import { useGlobalStore } from '@/store/global';
 import { useTaskStore } from '@/store/task';
@@ -35,6 +34,7 @@ import { UnassignedAssigneeIcon } from '../features/UnassignedAssigneeIcon';
 import { useAgentDisplayMeta } from '../shared/useAgentDisplayMeta';
 import { useAgentVisibility } from '../shared/useAgentVisibility';
 import { useUserDisplayMeta } from '../shared/useUserDisplayMeta';
+import { useTitleEnterToInstruction } from './useTitleEnterToInstruction';
 
 export interface CreateTaskContentProps {
   agentId?: string;
@@ -203,19 +203,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
       }
     }, []);
 
-    const handleTitleKeyDown = useCallback(
-      (e: KeyboardEvent<HTMLInputElement>) => {
-        // Cmd/Ctrl+Enter submits from the wrapper; an IME Enter only confirms a candidate.
-        // Safari ends the composition before this keydown, so isComposing is already
-        // false there and only keyCode 229 still marks the confirming Enter.
-        const isImeConfirm = e.nativeEvent.isComposing || e.keyCode === 229;
-        if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || isImeConfirm) return;
-
-        e.preventDefault();
-        focusEditorStartLine(editor);
-      },
-      [editor],
-    );
+    const handleTitleKeyDown = useTitleEnterToInstruction(editor);
 
     return (
       <Flexbox onKeyDown={handleKeyDown}>
