@@ -415,6 +415,8 @@
   "supportAgent.inspect.hint": "内容会发送给答疑助手，并保存在这次答疑记录中。",
   "supportAgent.inspect.request": "答疑助手想查看{{target}}。",
   "supportAgent.inspect.shared": "已分享{{target}}",
+  "supportAgent.inspect.target.account": "你的套餐、积分余额和预算使用情况",
+  "supportAgent.inspect.target.accountWithWorkspace": "你的套餐、积分余额和预算使用情况（含工作区「{{title}}」）",
   "supportAgent.inspect.target.agent": "助理「{{title}}」的配置",
   "supportAgent.inspect.target.conversation": "对话「{{title}}」的完整内容（{{total}} 条消息）",
   "supportAgent.inspect.untitled": "未命名",
