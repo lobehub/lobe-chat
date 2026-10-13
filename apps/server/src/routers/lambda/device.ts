@@ -250,6 +250,17 @@ const workspaceFileWriteProcedure = workspaceFileProcedure.use(
 );
 
 /**
+ * `workspaceFileProcedure` for the publish-asset routes. Their source path may
+ * lie outside the approved root (the device confines only a copy's
+ * destination), so they can read any file on the device, and a copy also
+ * writes into the workspace. Gate them like writes: a read-only viewer must not
+ * pull arbitrary files off a shared device. Personal mode stays open.
+ */
+const workspacePublishProcedure = workspaceFileProcedure.use(
+  requireWorkspaceRoleWhenScoped('member'),
+);
+
+/**
  * Display info for the members behind a set of running topics. The ids come
  * from topic rows the caller was already allowed to read, so this only adds
  * the public-facing name and avatar.
@@ -1091,7 +1102,7 @@ export const deviceRouter = router({
       });
     }),
 
-  copyAssetForPublish: workspaceFileProcedure
+  copyAssetForPublish: workspacePublishProcedure
     .input(z.object({ from: z.string(), to: z.string() }))
     .mutation(async ({ ctx, input }) =>
       deviceGateway.copyAssetForPublish({
@@ -1104,7 +1115,7 @@ export const deviceRouter = router({
       }),
     ),
 
-  readExternalAssetForPublish: workspaceFileProcedure
+  readExternalAssetForPublish: workspacePublishProcedure
     .input(z.object({ path: z.string() }))
     .query(async ({ ctx, input }) =>
       deviceGateway.readExternalAssetForPublish({
