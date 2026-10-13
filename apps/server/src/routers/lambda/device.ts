@@ -813,6 +813,7 @@ export const deviceRouter = router({
    * directory on a remote device, via the device's `runPullRequestAction` RPC.
    */
   runGitPullRequestAction: deviceProcedure
+    .use(requireWorkspaceRoleWhenScoped('member'))
     .input(
       z.object({
         action: z.discriminatedUnion('type', [
