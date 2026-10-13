@@ -393,6 +393,7 @@
   "duplicateSession.title": "{{title}} 副本",
   "duplicateTitle": "{{title}} 副本",
   "editedFiles.hideChanges": "收起更改",
+  "editedFiles.previewUnavailableInShare": "分享对话中无法预览文件",
   "editedFiles.showLess": "收起文件",
   "editedFiles.showMore_one": "展开另外 {{count}} 个文件",
   "editedFiles.showMore_other": "展开另外 {{count}} 个文件",
