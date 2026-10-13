@@ -34,7 +34,7 @@ vi.mock('@/server/services/document', () => ({
 }));
 
 vi.mock('@/server/services/agentDocuments/headlessEditor', () => ({
-  createMarkdownEditorSnapshot: vi.fn(async (content: string) => ({
+  createAgentMarkdownSnapshot: vi.fn(async (content: string) => ({
     content,
     editorData: { root: { fakeNodeFor: content } },
   })),
@@ -243,5 +243,36 @@ describe('WebBrowsingDocumentService.upsertCrawledDocument ()', () => {
 
     expect(mocks.documentService.updateDocument).toHaveBeenCalled();
     expect(result).toEqual({ id: 'doc-legacy', status: 'updated' });
+  });
+
+  // T-775: upsertCrawledDocument routes through the guarded agent snapshot, so
+  // a body Markdown parsing empties (raw HTML/XML crawl pages) rejects the save
+  // instead of persisting an empty-parse shell (content='' + childless root
+  // editorData) that later reads as Lexical error #38 and blocks cleanup.
+  // The guard's own parsing behavior is covered by headlessEditor tests; here we
+  // verify the service wiring propagates the rejection without touching storage.
+  it('routes create through the guarded agent markdown snapshot and propagates its rejection', async () => {
+    mocks.documentModel.findBySource.mockResolvedValueOnce(undefined);
+    const { createAgentMarkdownSnapshot } =
+      await import('@/server/services/agentDocuments/headlessEditor');
+    vi.mocked(createAgentMarkdownSnapshot).mockRejectedValueOnce(
+      new Error(
+        'Document content produced an empty document after Markdown parsing; nothing was saved. Send the document body as Markdown.',
+      ),
+    );
+
+    await expect(
+      service.upsertCrawledDocument({
+        content: '<html><body>shell-prone body</body></html>',
+        title: 'Shell page',
+        url: 'https://example.com/shell',
+      }),
+    ).rejects.toThrow(/empty document after Markdown parsing/i);
+
+    expect(createAgentMarkdownSnapshot).toHaveBeenCalledWith(
+      '<html><body>shell-prone body</body></html>',
+    );
+    expect(mocks.documentModel.create).not.toHaveBeenCalled();
+    expect(mocks.documentService.updateDocument).not.toHaveBeenCalled();
   });
 });

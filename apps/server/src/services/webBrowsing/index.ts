@@ -3,7 +3,7 @@ import { Md5 } from 'ts-md5';
 
 import { DocumentModel } from '@/database/models/document';
 import { TopicDocumentModel } from '@/database/models/topicDocument';
-import { createMarkdownEditorSnapshot } from '@/server/services/agentDocuments/headlessEditor';
+import { createAgentMarkdownSnapshot } from '@/server/services/agentDocuments/headlessEditor';
 import { DocumentService } from '@/server/services/document';
 
 export interface UpsertCrawledDocumentParams {
@@ -99,7 +99,7 @@ export class WebBrowsingDocumentService {
         documentId = existing.id;
         status = 'unchanged';
       } else {
-        const snapshot = await createMarkdownEditorSnapshot(content);
+        const snapshot = await createAgentMarkdownSnapshot(content);
         // `DocumentService.updateDocument` runs inside a transaction and
         // writes a `document_histories` row when `editorData` differs from
         // the row's current snapshot, so each refresh becomes a revision.
@@ -113,7 +113,7 @@ export class WebBrowsingDocumentService {
         status = 'updated';
       }
     } else {
-      const snapshot = await createMarkdownEditorSnapshot(content);
+      const snapshot = await createAgentMarkdownSnapshot(content);
       const created = await this.documentModel.create({
         content: snapshot.content,
         description,

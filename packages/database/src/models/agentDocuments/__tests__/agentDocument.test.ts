@@ -816,6 +816,32 @@ describe('AgentDocumentModel', () => {
 
       expect(copied?.policyLoad).toBe(PolicyLoad.ALWAYS);
     });
+
+    // T-775: an empty-parse shell (editorData with a childless root and empty
+    // content — what a raw HTML/XML crawl capture used to persist) must not be
+    // duplicated as another shell. The clone reads as Lexical error #38 and
+    // blocks cleanup, so copy stores it as raw text instead.
+    it('should not duplicate an empty-parse shell as editor data when copying', async () => {
+      const created = await agentDocumentModel.create(agentId, 'shell-source.md', '', {
+        editorData: {
+          root: {
+            children: [],
+            direction: 'ltr',
+            format: '',
+            indent: 0,
+            type: 'root',
+            version: 1,
+          },
+        } as any,
+      });
+      expect(created.content).toBe('');
+
+      const copied = await agentDocumentModel.copy(created.id, 'Shell Copy');
+
+      expect(copied).toBeDefined();
+      expect(copied?.fileType).toBe('text/plain');
+      expect(copied?.editorData ?? null).toBeNull();
+    });
   });
 
   describe('convertAgentDocumentToSkillIndex and updateDocumentIdentity', () => {
