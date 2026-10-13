@@ -5,10 +5,14 @@ import type {
   LobeAgentAgencyConfig,
 } from '@lobechat/types';
 import { resolveAgentAgencyConfig } from '@lobechat/types';
+import pMap from 'p-map';
 
 import { AgentModel, type DeviceBindingCandidate } from '@/database/models/agent';
 import { WorkspaceUserSettingsModel } from '@/database/models/workspaceUserSettings';
 import { isResourceAuthorOrAdmin } from '@/server/services/resourcePermission';
+
+/** Permission lookups are DB reads; a caller with many overrides must not open them all at once. */
+const PERMISSION_LOOKUP_CONCURRENCY = 5;
 
 const routesToDevice = (config: LobeAgentAgencyConfig | undefined, deviceId: string) =>
   config?.boundDeviceId === deviceId &&
@@ -85,32 +89,32 @@ export const loadDeviceBoundAgents = async ({
   // decides whether a `fixed` policy may ignore it), so look it up only then —
   // with the same author-or-admin check the run path uses, failing closed.
   const canManage = new Set<string>();
-  await Promise.all(
-    candidates
-      .filter((agent) => overrides[agent.id])
-      .map(async (agent) => {
-        if (agent.userId === userId) {
-          canManage.add(agent.id);
-          return;
-        }
-        if (!agent.workspaceId || agent.visibility === 'private') return;
-        try {
-          const allowed = await isResourceAuthorOrAdmin({
-            db,
-            meta: {
-              userId: agent.userId,
-              visibility: agent.visibility,
-              workspaceId: agent.workspaceId,
-            },
-            resourceType: 'agent',
-            userId,
+  await pMap(
+    candidates.filter((agent) => overrides[agent.id]),
+    async (agent) => {
+      if (agent.userId === userId) {
+        canManage.add(agent.id);
+        return;
+      }
+      if (!agent.workspaceId || agent.visibility === 'private') return;
+      try {
+        const allowed = await isResourceAuthorOrAdmin({
+          db,
+          meta: {
+            userId: agent.userId,
+            visibility: agent.visibility,
             workspaceId: agent.workspaceId,
-          });
-          if (allowed) canManage.add(agent.id);
-        } catch {
-          // Member semantics are the safe default when access can't be resolved.
-        }
-      }),
+          },
+          resourceType: 'agent',
+          userId,
+          workspaceId: agent.workspaceId,
+        });
+        if (allowed) canManage.add(agent.id);
+      } catch {
+        // Member semantics are the safe default when access can't be resolved.
+      }
+    },
+    { concurrency: PERMISSION_LOOKUP_CONCURRENCY },
   );
 
   return selectEffectivelyBoundAgents(candidates, { canManage, deviceId, overrides });
