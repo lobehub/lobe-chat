@@ -105,7 +105,7 @@ When acceptance is required, put its published `https://app.lobehub.com/acceptan
 
 ### Code Style
 
-- When a single file grows beyond \~800 lines, consider splitting it into multiple files (extract sub-components, hooks, helpers, or types). Smaller, focused files are friendly to humans and agents.
+- Source and test files stay at or below 800 lines; a file already over the limit must not grow. Before adding, moving, or splitting files, read the `source-layout` skill for placement, naming, test location, and how a large file becomes a directory.
 
 ### Code Review
 
