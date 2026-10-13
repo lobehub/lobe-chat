@@ -25,6 +25,7 @@ import { collectAutofixDiffs, snapshot, writeFullDiff } from './autofix';
 import { collectFromGit, normalizeArgs } from './collect';
 import { assertCheckRoot } from './delegate';
 import { run } from './exec';
+import { checkFileSizes } from './fileSize';
 import { lintGroup } from './lint';
 import { existsInRepo, setConfig } from './paths';
 import { printReport } from './report';
@@ -143,7 +144,11 @@ export const runCli = async (config: CheckConfig) => {
     tests = await runTestGroups(testFiles);
   }
 
-  const advisories = await findNewComponentTestAdvisories([...new Set([...files, ...testFiles])]);
+  const sizeFindings = await checkFileSizes(files);
+  const advisories = [
+    ...(await findNewComponentTestAdvisories([...new Set([...files, ...testFiles])])),
+    ...sizeFindings.advisories,
+  ];
 
   /* ---- Type check ---- */
   let typeOutput: string | null = null;
@@ -161,6 +166,7 @@ export const runCli = async (config: CheckConfig) => {
     fullDiffPath,
     lintRan: runLint || wantAlint,
     problems,
+    sizeErrors: sizeFindings.errors,
     skipped,
     testFileCount: testFiles.length,
     tests,

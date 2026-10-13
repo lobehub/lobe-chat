@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { findNewComponentTestAdvisories } from './advisories';
 import { alintScopeArgs, keepSelectedFiles, parseAlintJson } from './alint';
 import { diffStat, renderDiffsForStdout } from './autofix';
+import { checkFileSizes, countLines } from './fileSize';
 import { lobehubPipelines } from './pipelines';
 import {
   findVitestConfigDir,
@@ -155,6 +156,64 @@ describe('findNewComponentTestAdvisories', () => {
     await expect(
       findNewComponentTestAdvisories(['src/New.test.tsx'], async () => undefined),
     ).resolves.toEqual([]);
+  });
+});
+
+describe('countLines', () => {
+  it.each([
+    ['', 0],
+    ['a\n', 1],
+    ['a\nb', 2],
+    ['a\nb\n', 2],
+  ])('counts %j as %i lines', (content, expected) => {
+    expect(countLines(content)).toBe(expected);
+  });
+});
+
+describe('checkFileSizes', () => {
+  const current: Record<string, number> = {
+    'src/Big.ts': 801,
+    'src/Crossed.ts': 900,
+    'src/Grown.tsx': 1200,
+    'src/Shrunk.ts': 1000,
+    'src/Small.ts': 800,
+    'src/locales/table.ts': 5000,
+    'src/types.d.ts': 2000,
+    'README.md': 5000,
+  };
+  const base: Record<string, number | null> = {
+    'src/Big.ts': null,
+    'src/Crossed.ts': 790,
+    'src/Grown.tsx': 1100,
+    'src/Shrunk.ts': 1100,
+  };
+  const run = (files: string[]) =>
+    checkFileSizes(
+      files,
+      async (file) => current[file],
+      async (file) => ({ baseRef: 'origin/canary', lines: base[file] }),
+    );
+
+  it('fails new and newly oversized files and only advises on grown legacy files', async () => {
+    const findings = await run(Object.keys(current));
+
+    expect(findings.errors).toEqual([
+      expect.stringContaining('src/Big.ts: new file has 801 lines'),
+      expect.stringContaining('src/Crossed.ts: grew from 790 to 900 lines'),
+    ]);
+    expect(findings.advisories).toEqual([
+      expect.stringContaining('src/Grown.tsx: already over 800 lines and grew from 1100 to 1200'),
+    ]);
+  });
+
+  it('skips oversized files when the base cannot be inspected', async () => {
+    await expect(
+      checkFileSizes(
+        ['src/Big.ts'],
+        async () => 801,
+        async () => undefined,
+      ),
+    ).resolves.toEqual({ advisories: [], errors: [] });
   });
 });
 
