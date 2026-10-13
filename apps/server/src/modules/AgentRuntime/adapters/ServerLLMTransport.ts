@@ -40,8 +40,9 @@ import {
   tracer as agentRuntimeTracer,
 } from '@lobechat/observability-otel/modules/agent-runtime';
 import { RequestTrigger, toAgentShareVisitorIds } from '@lobechat/types';
-import { ModelProvider } from 'model-bank';
+import { type AiModelConfig, ModelProvider } from 'model-bank';
 
+import { AiModelModel } from '@/database/models/aiModel';
 import { initModelRuntimeFromDB, resolveServerModel } from '@/server/modules/ModelRuntime';
 
 import type { RuntimeExecutorContext } from '../context';
@@ -450,6 +451,25 @@ export class ServerLLMTransport implements LLMTransport {
    * model keeps the bare id instead of failing the run.
    */
   private async resolveStreamDeploymentName(provider: string, model: string) {
+    // The user's own model row first — a user-configured deployment alias
+    // (`ai_models.config.deploymentName`) must win over the bundled card, and
+    // a custom model has no bundled card at all. The deployment-owned catalog
+    // behind `resolveServerModel` never sees this row, so without the read a
+    // custom alias is replaced by the bundled alias or dropped, and the
+    // request 404s on the user's endpoint.
+    if (this.ctx.serverDB && this.ctx.userId) {
+      try {
+        const row = await new AiModelModel(
+          this.ctx.serverDB,
+          this.ctx.userId,
+          this.ctx.workspaceId,
+        ).findByIdAndProvider(model, provider);
+        const userAlias = (row?.config as AiModelConfig | null)?.deploymentName;
+        if (userAlias) return userAlias;
+      } catch {
+        // A user-row read failure must not kill the catalog fallback below.
+      }
+    }
     try {
       const resolved = await resolveServerModel(provider, model);
       return resolved.deploymentName;
@@ -597,17 +617,19 @@ export class ServerLLMTransport implements LLMTransport {
     // creation, so the mapping needs no bank or DB read per attempt. Operations
     // without that snapshot (agent-signal memory actions, persisted operations
     // predating `modelFacts`) resolve the deployment catalog live instead —
-    // the same mapping `stream()` applies for compression models.
+    // the same mapping `stream()` applies for compression models. Frozen and
+    // live aliases sit behind the same provider gate: adapters that don't
+    // consume the field (OpenAI-compatible factories forward unknown payload
+    // fields) must never see the internal mapping on the wire.
     const frozenCard = input.state.modelRuntimeConfig?.modelFacts?.cards.find(
       (card) =>
         card.providerId === input.provider &&
         (card.id === input.model || card.deploymentName === input.model),
     );
-    const deploymentName =
-      frozenCard?.deploymentName ??
-      (DEPLOYMENT_NAME_PROVIDERS.has(input.provider)
-        ? await this.resolveAttemptDeploymentName(input.provider, input.model)
-        : undefined);
+    const deploymentName = DEPLOYMENT_NAME_PROVIDERS.has(input.provider)
+      ? (frozenCard?.deploymentName ??
+        (await this.resolveAttemptDeploymentName(input.provider, input.model)))
+      : undefined;
     const chatPayload = {
       messages: input.context.messages as ChatStreamPayload['messages'],
       model: input.model,

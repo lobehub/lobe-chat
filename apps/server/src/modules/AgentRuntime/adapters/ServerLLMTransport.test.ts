@@ -10,9 +10,20 @@ import { initModelRuntimeFromDB, resolveServerModel } from '@/server/modules/Mod
 import type { RuntimeExecutorContext } from '../context';
 import { ServerLLMTransport } from './ServerLLMTransport';
 
+// Hoisted so every `new AiModelModel(...)` inside the transport shares one
+// controllable row lookup; per-test resets keep implementations from leaking
+// across tests the way `mockImplementation` on the constructor would.
+const findByIdAndProviderMock = vi.hoisted(() => vi.fn());
+
 vi.mock('@/server/modules/ModelRuntime', () => ({
   initModelRuntimeFromDB: vi.fn(),
   resolveServerModel: vi.fn(),
+}));
+
+vi.mock('@/database/models/aiModel', () => ({
+  AiModelModel: class {
+    findByIdAndProvider = findByIdAndProviderMock;
+  },
 }));
 
 vi.mock('../llmRelay/resolveLlmExecutionSite', () => ({
@@ -222,6 +233,68 @@ describe('ServerLLMTransport.stream · deployment name', () => {
     // ...and the live deployment catalog is not even consulted.
     expect(resolveServerModel).not.toHaveBeenCalled();
   });
+
+  it('prefers the user-configured alias over the deployment catalog for a custom model', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    findByIdAndProviderMock.mockResolvedValue({
+      config: { deploymentName: 'my-custom-azure-endpoint' },
+      id: 'my-custom-model',
+    });
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'bundled-azure-endpoint',
+      model: 'my-custom-model',
+      provider: 'azure',
+    });
+
+    const ctx = {
+      loadAgentState: vi.fn(async () => undefined),
+      operationId: 'op-1',
+      serverDB: {},
+      stepIndex: 0,
+      topicId: 'topic-1',
+      userId: 'user-1',
+    } as unknown as RuntimeExecutorContext;
+
+    await new ServerLLMTransport(ctx).stream({
+      messages: [],
+      model: 'my-custom-model',
+      provider: 'azure',
+    });
+
+    // The catalog is never consulted — the user row alone names the endpoint.
+    expect(resolveServerModel).not.toHaveBeenCalled();
+    expect(chat.mock.calls[0][0].deploymentName).toBe('my-custom-azure-endpoint');
+  });
+
+  it('falls back to the deployment catalog when the user row has no alias', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    findByIdAndProviderMock.mockResolvedValue(null);
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'bundled-azure-endpoint',
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+    });
+
+    const ctx = {
+      loadAgentState: vi.fn(async () => undefined),
+      operationId: 'op-1',
+      serverDB: {},
+      stepIndex: 0,
+      topicId: 'topic-1',
+      userId: 'user-1',
+    } as unknown as RuntimeExecutorContext;
+
+    await new ServerLLMTransport(ctx).stream({
+      messages: [],
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+    });
+
+    expect(resolveServerModel).toHaveBeenCalledWith('volcengine', 'deepseek-v4-pro-ga');
+    expect(chat.mock.calls[0][0].deploymentName).toBe('bundled-azure-endpoint');
+  });
 });
 
 describe('ServerLLMTransport.runAttempt · deployment name without frozen model facts', () => {
@@ -314,6 +387,59 @@ describe('ServerLLMTransport.runAttempt · deployment name without frozen model 
     await transport.runAttempt(createAttemptInput({}));
 
     expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
+  });
+
+  it('resolves the user-configured alias live when the operation has no modelFacts', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    findByIdAndProviderMock.mockResolvedValue({
+      config: { deploymentName: 'my-custom-azure-endpoint' },
+      id: 'my-custom-model',
+    });
+
+    const input = createAttemptInput({}) as any;
+    input.model = 'my-custom-model';
+    input.provider = 'azure';
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(input);
+
+    expect(chat.mock.calls[0][0].deploymentName).toBe('my-custom-azure-endpoint');
+  });
+
+  it('strips the frozen card deployment name for a non-consuming provider (qwen)', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+
+    const input = createAttemptInput({
+      modelRuntimeConfig: {
+        model: 'qwen3-vl-flash',
+        modelFacts: {
+          cards: [
+            {
+              deploymentName: 'qwen3-vl-flash-prod',
+              id: 'qwen3-vl-flash',
+              providerId: 'qwen',
+            },
+          ],
+          model: 'qwen3-vl-flash',
+          provider: 'qwen',
+        },
+        provider: 'qwen',
+      },
+    }) as any;
+    input.model = 'qwen3-vl-flash';
+    input.provider = 'qwen';
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(input);
+
+    // Codex P2 (4258586588): the frozen alias sits behind the same provider
+    // gate as the live resolution — the qwen adapter forwards unknown payload
+    // fields upstream, so the internal mapping must never reach the wire on
+    // the attempt path either.
+    expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
+    expect(resolveServerModel).not.toHaveBeenCalled();
   });
 });
 
