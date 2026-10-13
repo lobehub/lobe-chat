@@ -470,14 +470,30 @@ export class ServerLLMTransport implements LLMTransport {
         ).findByIdAndProvider(model, provider);
         const userAlias = (row?.config as AiModelConfig | null)?.deploymentName;
         if (userAlias) return userAlias;
-      } catch {
-        // A user-row read failure must not kill the catalog fallback below.
+      } catch (error) {
+        // A user-row read failure must not kill the catalog fallback below,
+        // but the fallback can yield a bundled alias (or fail) and 404
+        // downstream, so the failed lookup must stay diagnosable.
+        log(
+          '[%s] deploymentName user-row lookup failed for %s:%s; falling back to the global catalog: %s',
+          `${this.ctx.operationId}:${this.ctx.stepIndex}`,
+          provider,
+          model,
+          getErrorMessage(error),
+        );
       }
     }
     try {
       const resolved = await resolveServerModel(provider, model);
       return resolved.deploymentName;
-    } catch {
+    } catch (error) {
+      log(
+        '[%s] deploymentName catalog resolution failed for %s:%s; keeping the bare model id: %s',
+        `${this.ctx.operationId}:${this.ctx.stepIndex}`,
+        provider,
+        model,
+        getErrorMessage(error),
+      );
       return undefined;
     }
   }
