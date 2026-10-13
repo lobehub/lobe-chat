@@ -8,6 +8,7 @@ import {
   createLocalFileScopeKey,
   createSandboxLocalFileScopeKey,
   getLocalFileTabId,
+  isRemoteLocalFile,
 } from './helpers';
 import { type OpenLocalFileEntry, type PortalFile, type PortalViewData } from './initialState';
 import { PortalViewType } from './initialState';
@@ -230,10 +231,8 @@ const currentLocalFile = (s: ChatStoreState): OpenLocalFileEntry | undefined => 
   );
 };
 
-const isCurrentLocalFileRemote = (s: ChatStoreState): boolean => {
-  const file = currentLocalFile(s);
-  return !!file?.deviceId || !!file?.sandboxTopicId;
-};
+const isCurrentLocalFileRemote = (s: ChatStoreState): boolean =>
+  isRemoteLocalFile(currentLocalFile(s));
 
 const localFilePath = (s: ChatStoreState) => currentLocalFile(s)?.filePath;
 const localFileWorkingDirectory = (s: ChatStoreState) => currentLocalFile(s)?.workingDirectory;
