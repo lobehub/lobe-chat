@@ -275,4 +275,52 @@ describe('WebBrowsingDocumentService.upsertCrawledDocument ()', () => {
     expect(mocks.documentModel.create).not.toHaveBeenCalled();
     expect(mocks.documentService.updateDocument).not.toHaveBeenCalled();
   });
+
+  // Codex P1 on #20914: the naive crawler returns raw JSON for
+  // `application/json` responses (a supported crawl), but the guarded agent
+  // snapshot rejects raw JSON. The persistence boundary must wrap JSON bodies
+  // in a fenced code block — fenced code is stored byte-exact, so the JSON
+  // stays parseable and the guard's own fence handling covers it.
+  it('wraps a json crawl body in a fenced code block before the snapshot guard', async () => {
+    mocks.documentModel.findBySource.mockResolvedValueOnce(undefined);
+    mocks.documentModel.create.mockResolvedValueOnce({ id: 'doc-json' });
+
+    const raw = '{"url":"https://example.com/data","items":[1,2],"nested":{"a":"b"}}';
+
+    const result = await service.upsertCrawledDocument({
+      content: raw,
+      contentType: 'json',
+      title: 'JSON endpoint',
+      url: 'https://example.com/data.json',
+    });
+
+    const expected = '```json\n' + raw + '\n```';
+    expect(mocks.documentModel.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: expected,
+        editorData: { root: { fakeNodeFor: expected } },
+      }),
+    );
+    expect(result).toEqual({ id: 'doc-json', status: 'created' });
+  });
+
+  it('hashes the fenced json body so an unchanged json re-crawl short-circuits', async () => {
+    const raw = '{"same":true}';
+    const fenced = '```json\n' + raw + '\n```';
+    mocks.documentModel.findBySource.mockResolvedValueOnce({
+      content: fenced,
+      id: 'doc-json',
+    } as any);
+
+    const result = await service.upsertCrawledDocument({
+      content: raw,
+      contentType: 'json',
+      title: 'JSON endpoint',
+      url: 'https://example.com/data.json',
+    });
+
+    expect(result).toEqual({ id: 'doc-json', status: 'unchanged' });
+    expect(mocks.documentModel.create).not.toHaveBeenCalled();
+    expect(mocks.documentService.updateDocument).not.toHaveBeenCalled();
+  });
 });

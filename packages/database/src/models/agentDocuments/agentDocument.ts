@@ -22,6 +22,7 @@ import { AGENT_SKILL_TEMPLATE_ID, agentDocuments, documents } from '../../schema
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { documentMatchesAccessScope } from '../../utils/documentVisibility';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import { buildCopyParams } from './copyDocument';
 import { deriveAgentDocumentFields } from './deriveFields';
 import { buildDocumentFilename } from './filename';
 import {
@@ -983,43 +984,15 @@ export class AgentDocumentModel {
       ? buildDocumentFilename(title)
       : `copy-${Date.now()}-${existing.filename}`;
 
-    // An "empty-parse shell" (invalid or childless root editorData with empty
-    // content, e.g. a crawl capture whose HTML body parsed to nothing) must not
-    // be duplicated as another shell: the clone reads as Lexical error #38 and
-    // blocks cleanup. Copy such a source as raw text instead, so at least the
-    // description/metadata survive and the clone is deletable/editable.
-    const hasRootChildren =
-      Array.isArray(existing.editorData?.root?.children) &&
-      (existing.editorData!.root.children.length ?? 0) > 0;
-    if (existing.editorData && !hasRootChildren && !existing.content) {
-      return this.create(existing.agentId, filename, existing.content, {
-        // 'text/plain' = RAW_TEXT_DOCUMENT_FILE_TYPE (apps/server contentFormat);
-        // kept literal here because the database package cannot import from apps.
-        fileType: 'text/plain',
-        title,
-        loadPosition:
-          (existing.policy?.context?.position as DocumentLoadPosition | undefined) ||
-          DocumentLoadPosition.BEFORE_FIRST_USER,
-        loadRules: parseLoadRules(existing),
-        metadata: existing.metadata || undefined,
-        policy: existing.policy || undefined,
-        policyLoad: existing.policyLoad as PolicyLoad | undefined,
-        templateId: existing.templateId || undefined,
-      });
-    }
-
-    return this.create(existing.agentId, filename, existing.content, {
-      editorData: existing.editorData || undefined,
-      title,
-      loadPosition:
-        (existing.policy?.context?.position as DocumentLoadPosition | undefined) ||
-        DocumentLoadPosition.BEFORE_FIRST_USER,
-      loadRules: parseLoadRules(existing),
-      metadata: existing.metadata || undefined,
-      policy: existing.policy || undefined,
-      policyLoad: existing.policyLoad as PolicyLoad | undefined,
-      templateId: existing.templateId || undefined,
-    });
+    // Empty-parse shells must not be duplicated as another shell (the clone
+    // reads as Lexical error #38 and blocks cleanup); see `copyDocument.ts`
+    // for the shell detection and raw-text downgrade.
+    return this.create(
+      existing.agentId,
+      filename,
+      existing.content,
+      buildCopyParams(existing, title),
+    );
   }
 
   async updateToolLoadRule(
