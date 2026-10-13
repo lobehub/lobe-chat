@@ -4,7 +4,12 @@ import {
   INBOX_SESSION_ID,
   isHeterogeneousAgentModelId,
 } from '@lobechat/const';
-import type { AgentRankItem, AgentTopicShareSubject, LobeAgentAgencyConfig } from '@lobechat/types';
+import type {
+  AgentRankItem,
+  AgentTopicShareSubject,
+  DeviceBoundAgentItem,
+  LobeAgentAgencyConfig,
+} from '@lobechat/types';
 import {
   applyWorkingDirByDevicePatch,
   DEFAULT_WORKSPACE_AGENT_SELECTION_POLICIES,
@@ -320,6 +325,46 @@ export class AgentModel {
       .having(({ count }) => gt(count, 0))
       .orderBy(desc(sql`count`))
       .limit(limit);
+
+    return rows.map(({ slug, ...row }) => normalizeInboxAgentMeta(row, { slug }));
+  };
+
+  /**
+   * Agents that run on the given device — their stored agency config routes
+   * execution there (`device`, or a desktop `local` pick, which also records
+   * its own `boundDeviceId`). `extraAgentIds` adds agents bound through a
+   * source this table does not hold (a workspace member's per-agent device
+   * override); they pass the same visibility gate, so an id the caller cannot
+   * see is dropped rather than leaked.
+   */
+  queryBoundToDevice = async (
+    deviceId: string,
+    extraAgentIds: string[] = [],
+  ): Promise<DeviceBoundAgentItem[]> => {
+    const boundHere = and(
+      sql`${agents.agencyConfig} ->> 'boundDeviceId' = ${deviceId}`,
+      sql`${agents.agencyConfig} ->> 'executionTarget' IN ('device', 'local')`,
+    );
+
+    const rows = await this.db
+      .select({
+        avatar: agents.avatar,
+        backgroundColor: agents.backgroundColor,
+        id: agents.id,
+        name: agents.name,
+        slug: agents.slug,
+        title: agents.title,
+        visibility: agents.visibility,
+      })
+      .from(agents)
+      .where(
+        and(
+          this.ownership(),
+          or(eq(agents.slug, INBOX_SESSION_ID), ne(agents.virtual, true)),
+          extraAgentIds.length > 0 ? or(boundHere, inArray(agents.id, extraAgentIds)) : boundHere,
+        ),
+      )
+      .orderBy(desc(agents.updatedAt));
 
     return rows.map(({ slug, ...row }) => normalizeInboxAgentMeta(row, { slug }));
   };

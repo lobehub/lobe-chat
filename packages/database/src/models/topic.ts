@@ -86,6 +86,17 @@ const LAST_MESSAGE_PREVIEW_LENGTH = 2000;
 const TASK_CALLBACK_RESERVATION_TTL_MS = 5 * 60 * 1000;
 
 /**
+ * The device a topic runs on: the one its in-flight run was dispatched to,
+ * else the one its turns are pinned to. The live dispatch wins because a run
+ * does not always follow the pin — an `auto` target, an explicit request
+ * device or a fixed workspace target can send it elsewhere. The `deviceId`
+ * filter of `TopicModel.queryTopics` applies the same precedence in SQL.
+ */
+export const getTopicDeviceId = (
+  metadata: Pick<ChatTopicMetadata, 'boundDeviceId' | 'runningOperation'> | null | undefined,
+): string | undefined => metadata?.runningOperation?.deviceId ?? metadata?.boundDeviceId;
+
+/**
  * Whether a turn start currently holds the topic's short start reservation.
  * A writer that changes where the topic runs must respect it as it would a
  * `runningOperation`: the reserving turn may already have resolved its target.
@@ -1013,10 +1024,18 @@ export class TopicModel {
    * markdown, and a list only ever renders the head of it.
    */
   queryTopics = async ({
+    deviceId,
     statuses,
     pageSize = 200,
     withLastMessage,
   }: {
+    /**
+     * Only topics on this device — the one its in-flight run was dispatched to
+     * (`metadata.runningOperation.deviceId`), else the one its turns are
+     * pinned to (`metadata.boundDeviceId`). See {@link getTopicDeviceId},
+     * which applies the same precedence in memory.
+     */
+    deviceId?: string;
     pageSize?: number;
     statuses?: string[];
     withLastMessage?: boolean;
@@ -1042,6 +1061,9 @@ export class TopicModel {
       visibleParentWhere,
       statuses && statuses.length > 0
         ? inArray(topics.status, statuses as ChatTopicStatus[])
+        : undefined,
+      deviceId
+        ? sql`COALESCE(${topics.metadata} -> 'runningOperation' ->> 'deviceId', ${topics.metadata} ->> 'boundDeviceId') = ${deviceId}`
         : undefined,
     );
 

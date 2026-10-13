@@ -1,6 +1,14 @@
+import type { DeviceBoundAgentItem, DeviceEnroller, DeviceRunningSummary } from '@lobechat/types';
+
 import { lambdaClient } from '@/libs/trpc/client';
+import { type TopicListItem } from '@/services/topic';
 
 type DeviceClient = typeof lambdaClient.device;
+
+/** A running topic on a device, with the member who started it. */
+export interface DeviceRunningTopic extends TopicListItem {
+  user: DeviceEnroller | null;
+}
 
 /**
  * Single chokepoint for the `device` TRPC router. Components, hooks and stores
@@ -49,6 +57,20 @@ class DeviceService {
   /** Scan a device for every known heterogeneous agent type in one pass. */
   scanAgents(input: Parameters<DeviceClient['scanAgents']['query']>[0]) {
     return lambdaClient.device.scanAgents.query(input);
+  }
+
+  /** Topics running on a device right now, and the agents routed to it. */
+  getDeviceActivity(
+    input: Parameters<DeviceClient['getDeviceActivity']['query']>[0],
+  ): Promise<{ agents: DeviceBoundAgentItem[]; runningTopics: DeviceRunningTopic[] }> {
+    // Same row shape `topicService.queryTopics` serves; its DB-side type differs
+    // only in how timestamps are declared.
+    return lambdaClient.device.getDeviceActivity.query(input) as any;
+  }
+
+  /** Running-topic count and the members behind it, for every device in the list. */
+  getRunningSummary(): Promise<DeviceRunningSummary[]> {
+    return lambdaClient.device.getRunningSummary.query();
   }
 
   /** Live tunnel links, optionally narrowed to one device. */

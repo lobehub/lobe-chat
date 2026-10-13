@@ -5,7 +5,9 @@ import {
 } from '@lobechat/heterogeneous-agents';
 import type {
   DeviceChannel,
+  DeviceEnroller,
   DeviceListItem,
+  DeviceRunningSummary,
   DeviceScope,
   DeviceWorkspaceShare,
   WorkingDirEntry,
@@ -21,8 +23,11 @@ import {
   wsCompatProcedure,
   wsProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { AgentModel } from '@/database/models/agent';
 import { DeviceModel, WorkspaceDevicePrivateConflictError } from '@/database/models/device';
+import { getTopicDeviceId, TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { WorkspaceUserSettingsModel } from '@/database/models/workspaceUserSettings';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signTunnelAccessToken, signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
@@ -240,6 +245,30 @@ const workspaceFileWriteProcedure = workspaceFileProcedure.use(
   requireWorkspaceRoleWhenScoped('member'),
 );
 
+/**
+ * Display info for the members behind a set of running topics. The ids come
+ * from topic rows the caller was already allowed to read, so this only adds
+ * the public-facing name and avatar.
+ */
+const loadTopicUsers = async (
+  db: Parameters<typeof UserModel.getDisplayInfoByIds>[0],
+  userIds: string[],
+): Promise<Map<string, DeviceEnroller>> => {
+  const rows = await UserModel.getDisplayInfoByIds(db, [...new Set(userIds)]);
+  return new Map(
+    rows.map((u) => [
+      u.id,
+      { avatar: u.avatar, fullName: u.fullName, userId: u.id, username: u.username },
+    ]),
+  );
+};
+
+/**
+ * Upper bound on the running topics read for the device-list summary. A real
+ * account runs far fewer at once; the cap only bounds a pathological one.
+ */
+const RUNNING_SUMMARY_LIMIT = 500;
+
 export const deviceRouter = router({
   /**
    * Probe whether a specific agent platform (openclaw / hermes) is available
@@ -318,6 +347,99 @@ export const deviceRouter = router({
         }
       },
     ),
+
+  /**
+   * What the device is doing for the caller: topics running on it right now
+   * and the agents routed to it. Both reads go through the regular content
+   * scopes, so in a workspace a teammate's private agent (and the topics under
+   * it) never surface just because they share the machine.
+   *
+   * Agent bindings come from the shared agency config plus the caller's own
+   * per-agent device override in this workspace — the override is how a
+   * member points a shared agent at their machine without touching the row.
+   */
+  getDeviceActivity: deviceProcedure
+    .input(z.object({ deviceId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const overrideAgentIds = ctx.workspaceId
+        ? Object.entries(
+            (
+              await new WorkspaceUserSettingsModel(
+                ctx.serverDB,
+                ctx.userId,
+                ctx.workspaceId,
+              ).getPreference()
+            ).agentDeviceOverrides ?? {},
+          )
+            .filter(
+              ([, override]) =>
+                override.boundDeviceId === input.deviceId &&
+                (override.executionTarget === 'device' || override.executionTarget === 'local'),
+            )
+            .map(([agentId]) => agentId)
+        : [];
+
+      const [agents, runningTopics] = await Promise.all([
+        new AgentModel(ctx.serverDB, ctx.userId, ctx.workspaceId).queryBoundToDevice(
+          input.deviceId,
+          overrideAgentIds,
+        ),
+        new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId).queryTopics({
+          deviceId: input.deviceId,
+          statuses: ['running'],
+        }),
+      ]);
+
+      const users = await loadTopicUsers(
+        ctx.serverDB,
+        runningTopics.map((topic) => topic.userId),
+      );
+
+      return {
+        agents,
+        runningTopics: runningTopics.map((topic) => ({
+          ...topic,
+          user: users.get(topic.userId) ?? null,
+        })),
+      };
+    }),
+
+  /**
+   * Per-device running-topic counts and the members behind them, for the
+   * device list cards. One read for the whole list instead of a request per
+   * card; the same content scopes as {@link getDeviceActivity} apply, and a
+   * device the caller cannot see simply has no card to render its entry.
+   */
+  getRunningSummary: deviceProcedure.query(async ({ ctx }): Promise<DeviceRunningSummary[]> => {
+    // Most recently active first, so each device's avatar stack leads with
+    // whoever touched it last.
+    const runningTopics = await new TopicModel(
+      ctx.serverDB,
+      ctx.userId,
+      ctx.workspaceId,
+    ).queryTopics({ pageSize: RUNNING_SUMMARY_LIMIT, statuses: ['running'] });
+
+    const byDevice = new Map<string, { count: number; userIds: string[] }>();
+    for (const topic of runningTopics) {
+      const deviceId = getTopicDeviceId(topic.metadata);
+      if (!deviceId) continue;
+      const entry = byDevice.get(deviceId) ?? { count: 0, userIds: [] };
+      entry.count += 1;
+      if (!entry.userIds.includes(topic.userId)) entry.userIds.push(topic.userId);
+      byDevice.set(deviceId, entry);
+    }
+
+    const users = await loadTopicUsers(
+      ctx.serverDB,
+      [...byDevice.values()].flatMap((entry) => entry.userIds),
+    );
+
+    return [...byDevice].map(([deviceId, { count, userIds }]) => ({
+      count,
+      deviceId,
+      users: userIds.flatMap((id) => users.get(id) ?? []),
+    }));
+  }),
 
   /**
    * Granular git reads for a directory on a remote device, each via its own

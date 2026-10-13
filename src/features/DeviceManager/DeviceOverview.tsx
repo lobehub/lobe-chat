@@ -7,6 +7,7 @@ import { createStaticStyles, cssVar } from 'antd-style';
 import dayjs from 'dayjs';
 import {
   ActivityIcon,
+  BotIcon,
   CableIcon,
   CalendarClockIcon,
   CpuIcon,
@@ -17,6 +18,7 @@ import {
   type LucideIcon,
   MemoryStickIcon,
   MonitorIcon,
+  PlayIcon,
   PowerIcon,
   ServerCogIcon,
   ServerIcon,
@@ -32,6 +34,7 @@ import { formatSize } from '@/utils/format';
 
 import Connections from './Connections';
 import { refreshDeviceList } from './const';
+import { BoundAgentList, RunningTopicList } from './DeviceActivity';
 import DeviceHealth, { HealthLegend } from './DeviceHealth';
 import { buildHealthTimeline } from './DeviceHealth/buildHealthTimeline';
 import { formatPercent, usageLevel } from './DeviceHealth/format';
@@ -334,6 +337,21 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
               <Empty />
             )}
           </InfoRow>
+        </DetailCard>
+      </div>
+
+      {/* What the machine is doing for agents — the first thing to check
+          before restarting, updating or unsharing it. */}
+      <div className={styles.infoGrid}>
+        <DetailCard
+          icon={PlayIcon}
+          padded={false}
+          title={t('devices.activity.runningTopics.title')}
+        >
+          <RunningTopicList deviceId={device.deviceId} />
+        </DetailCard>
+        <DetailCard icon={BotIcon} padded={false} title={t('devices.activity.boundAgents.title')}>
+          <BoundAgentList deviceId={device.deviceId} />
         </DetailCard>
       </div>
 

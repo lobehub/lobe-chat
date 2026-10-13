@@ -23,6 +23,7 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { refreshDeviceList } from './const';
+import { DeviceRunningSummaryValue } from './DeviceActivity/RunningUsers';
 import { buildHealthTimeline } from './DeviceHealth/buildHealthTimeline';
 import { useDeviceMetricSeries } from './DeviceHealth/shared';
 import UsageMeter, { UsageMeterGroup } from './DeviceHealth/UsageMeter';
@@ -365,11 +366,9 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
           </Flexbox>
           <Flexbox gap={4} style={{ minWidth: 0 }}>
             <Text fontSize={13} type={'secondary'}>
-              {t('devices.card.workingDir')}
+              {t('devices.card.runningTopics')}
             </Text>
-            <span className={styles.code} title={device.defaultCwd ?? undefined}>
-              {device.defaultCwd || '—'}
-            </span>
+            <DeviceRunningSummaryValue deviceId={device.deviceId} />
           </Flexbox>
         </div>
 

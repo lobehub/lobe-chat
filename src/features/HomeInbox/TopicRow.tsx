@@ -29,13 +29,15 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 interface TopicRowProps {
+  /** Rendered last, after the time — e.g. an explicit "open" button. */
+  action?: ReactNode;
   /** Status glyph or live spinner — supplied by the caller so a running row can spin. */
   leading: ReactNode;
   topic: InboxTopic;
   trailing?: ReactNode;
 }
 
-const TopicRow = memo<TopicRowProps>(({ topic, leading, trailing }) => {
+const TopicRow = memo<TopicRowProps>(({ action, topic, leading, trailing }) => {
   const navigate = useWorkspaceAwareNavigate();
   const agent = useAgentDisplayMeta(topic.agentId);
 
@@ -67,6 +69,7 @@ const TopicRow = memo<TopicRowProps>(({ topic, leading, trailing }) => {
       <Time
         date={resolveTopicTriggerTime(topic.runStartedAt, topic.updatedAt ?? topic.createdAt)}
       />
+      {action}
     </Flexbox>
   );
 });

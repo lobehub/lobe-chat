@@ -15,7 +15,7 @@ import {
   workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { TopicModel } from '../topic';
+import { getTopicDeviceId, TopicModel } from '../topic';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -715,6 +715,76 @@ describe('TopicModel', () => {
 
       const result = await topicModel.queryTopics({ statuses: ['running'] });
       expect(result.map((t) => t.id)).toEqual(['t-running']);
+    });
+
+    it('narrows to topics pinned to or dispatched on the given device', async () => {
+      await serverDB.insert(topics).values([
+        {
+          id: 't-bound',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'running',
+          title: 'bound',
+          userId,
+        },
+        {
+          id: 't-dispatched',
+          metadata: {
+            runningOperation: {
+              assistantMessageId: 'msg-1',
+              deviceId: 'device-a',
+              operationId: 'op-1',
+            },
+          },
+          status: 'running',
+          title: 'dispatched',
+          userId,
+        },
+        {
+          id: 't-other-device',
+          metadata: { boundDeviceId: 'device-b' },
+          status: 'running',
+          title: 'other device',
+          userId,
+        },
+        {
+          id: 't-pinned-a-dispatched-b',
+          metadata: {
+            boundDeviceId: 'device-a',
+            runningOperation: {
+              assistantMessageId: 'msg-2',
+              deviceId: 'device-b',
+              operationId: 'op-2',
+            },
+          },
+          status: 'running',
+          title: 'dispatch wins',
+          userId,
+        },
+        { id: 't-unbound', status: 'running', title: 'unbound', userId },
+        {
+          id: 't-bound-idle',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'active',
+          title: 'idle',
+          userId,
+        },
+        {
+          id: 't-bound-other-user',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'running',
+          title: 'other user',
+          userId: otherUserId,
+        },
+      ]);
+
+      const result = await topicModel.queryTopics({ deviceId: 'device-a', statuses: ['running'] });
+      expect(result.map((t) => t.id).sort()).toEqual(['t-bound', 't-dispatched']);
+      // A run sent away from the topic's pinned device counts where it went,
+      // and only there.
+      const onB = await topicModel.queryTopics({ deviceId: 'device-b', statuses: ['running'] });
+      expect(onB.map((t) => t.id).sort()).toEqual(['t-other-device', 't-pinned-a-dispatched-b']);
+      expect(onB.map((t) => getTopicDeviceId(t.metadata))).toEqual(onB.map(() => 'device-b'));
+      expect(result.map((t) => getTopicDeviceId(t.metadata))).toEqual(result.map(() => 'device-a'));
     });
 
     it('returns all owned topics when no statuses filter is given', async () => {
