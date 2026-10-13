@@ -82,7 +82,10 @@ afterEach(reset);
 
 describe('createEnvironment', () => {
   it('persists exactly one instance with the environment, and returns it as the default', async () => {
-    const created = await caller().createEnvironment({ name: 'Python 数据分析' });
+    const created = await caller().createEnvironment({
+      configuration: { bootstrapCommand: 'pip install pandas' },
+      name: 'Python 数据分析',
+    });
 
     const rows = await instancesOf(created.id);
     expect(rows).toHaveLength(1);
@@ -98,6 +101,31 @@ describe('createEnvironment', () => {
     expect(pickDefaultInstance(rows)?.id).toBe(created.defaultInstance.id);
     // Building is a sandbox cold start, left for the client's next call.
     expect(plane.readOccupancy).not.toHaveBeenCalled();
+  });
+
+  it('stores a default instance with nothing to build as ready', async () => {
+    // No build will ever run for it, and a files environment offers no rebuild:
+    // a row left `pending` here could only be cleared by deleting the environment.
+    const created = await caller().createEnvironment({
+      configuration: { kind: 'files' },
+      name: 'Quarterly reports',
+    });
+
+    expect(created.defaultInstance.status).toBe('ready');
+    expect((await instancesOf(created.id))[0].status).toBe('ready');
+  });
+
+  it('stores a later copy with nothing to build as ready too', async () => {
+    const created = await caller().createEnvironment({
+      configuration: { kind: 'files' },
+      name: 'Quarterly reports',
+    });
+
+    const copy = await caller().createInstanceForEnvironment({ environmentId: created.id });
+
+    expect(copy.status).toBe('ready');
+    const rows = await instancesOf(created.id);
+    expect(rows.find((row) => row.id === copy.id)?.status).toBe('ready');
   });
 
   it('derives the next directory when the slug is already taken in the workspace', async () => {

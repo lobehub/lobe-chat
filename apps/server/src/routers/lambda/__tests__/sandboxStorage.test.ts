@@ -534,14 +534,16 @@ describe('sandboxStorageRouter', () => {
       // The build is a sandbox cold start, so it stays the client's next call.
       mockCreate.mockResolvedValue(created);
       mockInstanceCreate.mockResolvedValue({
+        configurationSnapshot: { bootstrapCommand: 'pip install pandas' },
         id: 'default-1',
         status: 'pending',
         workingDirectory: 'python-数据分析',
       });
 
-      const result = await sandboxStorageRouter
-        .createCaller(ctx)
-        .createEnvironment({ name: 'Python 数据分析' });
+      const result = await sandboxStorageRouter.createCaller(ctx).createEnvironment({
+        configuration: { bootstrapCommand: 'pip install pandas' },
+        name: 'Python 数据分析',
+      });
 
       expect(mockInstanceCreate).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -557,6 +559,27 @@ describe('sandboxStorageRouter', () => {
         id: environmentId,
       });
       expect(mockTransaction).toHaveBeenCalledTimes(1);
+      expect(mockBuildInstance).not.toHaveBeenCalled();
+      expect(mockInstanceUpdate).not.toHaveBeenCalled();
+    });
+
+    it('settles a default instance with nothing to build as ready, without waiting for the client', async () => {
+      // The client's follow-up build call may never arrive — a closed tab is
+      // enough — and nothing else would ever move the row out of `pending`.
+      mockCreate.mockResolvedValue(created);
+      mockInstanceCreate.mockResolvedValue({
+        configurationSnapshot: { kind: 'files' },
+        id: 'default-1',
+        status: 'pending',
+        workingDirectory: 'python-数据分析',
+      });
+
+      const result = await sandboxStorageRouter
+        .createCaller(ctx)
+        .createEnvironment({ configuration: { kind: 'files' }, name: 'Python 数据分析' });
+
+      expect(mockInstanceUpdate).toHaveBeenCalledWith('default-1', { status: 'ready' });
+      expect(result.defaultInstance).toMatchObject({ id: 'default-1', status: 'ready' });
       expect(mockBuildInstance).not.toHaveBeenCalled();
     });
 

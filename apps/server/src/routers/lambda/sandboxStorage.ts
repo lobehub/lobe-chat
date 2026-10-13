@@ -479,7 +479,17 @@ const createDerivedInstance = async (
         throw error;
       });
 
-    if (created) return created;
+    if (!created) continue;
+
+    // Nothing to clone and nothing to install means nothing will ever build
+    // this instance, so it is ready as it is written. Left to the client's
+    // follow-up build call, a tab closed in between would strand it in
+    // `pending` — and a files environment offers no rebuild to get out of it.
+    if (isBuildable(created.configurationSnapshot)) return created;
+
+    await instanceModel.update(created.id, { status: 'ready' });
+
+    return { ...created, status: 'ready' as const };
   }
 
   throw new TRPCError({ code: 'CONFLICT', message: 'DUPLICATE_INSTANCE_DIRECTORY' });
