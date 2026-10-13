@@ -84,12 +84,11 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
         } as ChatStreamPayload;
       }
 
-      const params = resolveVolcengineReasoningParams(
-        requestModel,
-        thinking,
-        reasoning_effort,
-        false,
-      );
+      // Family detection runs on the logical `model`, not `requestModel`:
+      // deploymentName can be a custom alias (e.g. `prod-endpoint`) that hides
+      // the deepseek-v4 / glm-5-2 family and would skip the reasoning-effort
+      // mapping. requestModel stays reserved for the outgoing payload.
+      const params = resolveVolcengineReasoningParams(model, thinking, reasoning_effort, false);
 
       return {
         ...rest,
@@ -112,12 +111,7 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
       const { deploymentName, enabledSearch, model, tools, thinking, reasoning_effort, ...rest } =
         payload;
       const requestModel = deploymentName ?? model;
-      const params = resolveVolcengineReasoningParams(
-        requestModel,
-        thinking,
-        reasoning_effort,
-        true,
-      );
+      const params = resolveVolcengineReasoningParams(model, thinking, reasoning_effort, true);
 
       const volcengineTools = enabledSearch
         ? [

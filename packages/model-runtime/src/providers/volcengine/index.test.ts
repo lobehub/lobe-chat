@@ -186,6 +186,43 @@ describe('LobeVolcengineAI - custom features', () => {
         expect(calledPayload.reasoning_effort).toBe('high');
       });
 
+      // deploymentName can be a custom alias (e.g. `prod-endpoint`) that hides
+      // the deepseek-v4 / glm-5-2 family. Family detection must run on the
+      // logical model, or the reasoning-effort mapping silently disappears
+      // (Codex P2 on PR #20645).
+      it('maps reasoning params for a deepseek-v4 card even when deploymentName is a custom alias (chat path)', async () => {
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'deepseek-v4-pro-ga',
+          deploymentName: 'prod-endpoint',
+          thinking: { type: 'enabled' },
+        });
+
+        const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+        expect(calledPayload.model).toBe('prod-endpoint');
+        expect(calledPayload.reasoning_effort).toBe('high');
+      });
+
+      it('maps reasoning params for a deepseek-v4 card even when deploymentName is a custom alias (responses path)', async () => {
+        vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(
+          new ReadableStream() as any,
+        );
+
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'deepseek-v4-pro-ga',
+          deploymentName: 'prod-endpoint',
+          reasoning_effort: 'max',
+          enabledSearch: true,
+          thinking: { type: 'enabled' },
+        });
+
+        const calledPayload = (instance['client'].responses.create as any).mock.calls[0][0];
+        expect(calledPayload.model).toBe('prod-endpoint');
+        // Responses path converts effort `max` to `high` for the deepseek-v4 family.
+        expect(calledPayload.reasoning.effort).toBe('high');
+      });
+
       it('sends the deployment name on the responses path', async () => {
         vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(
           new ReadableStream() as any,
