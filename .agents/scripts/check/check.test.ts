@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { findNewComponentTestAdvisories } from './advisories';
 import { alintScopeArgs, keepSelectedFiles, parseAlintJson } from './alint';
 import { diffStat, renderDiffsForStdout } from './autofix';
+import { parseRenames } from './base';
 import { checkFileSizes, countLines } from './fileSize';
 import { lobehubPipelines } from './pipelines';
 import {
@@ -159,6 +160,18 @@ describe('findNewComponentTestAdvisories', () => {
   });
 });
 
+describe('parseRenames', () => {
+  it('maps each renamed path to its source path', () => {
+    expect(parseRenames('R098\0src/Foo.tsx\0src/Foo/index.tsx\0R100\0a.ts\0b/a.ts\0')).toEqual(
+      new Map([
+        ['src/Foo/index.tsx', 'src/Foo.tsx'],
+        ['b/a.ts', 'a.ts'],
+      ]),
+    );
+    expect(parseRenames('')).toEqual(new Map());
+  });
+});
+
 describe('countLines', () => {
   it.each([
     ['', 0],
@@ -177,12 +190,14 @@ describe('checkFileSizes', () => {
     'src/Grown.tsx': 1200,
     'src/Shrunk.ts': 1000,
     'src/Small.ts': 800,
-    'src/locales/table.ts': 5000,
+    'packages/locales/src/default/setting.ts': 5000,
+    'packages/locales/src/create.ts': 900,
     'src/types.d.ts': 2000,
     'README.md': 5000,
   };
   const base: Record<string, number | null> = {
     'src/Big.ts': null,
+    'packages/locales/src/create.ts': null,
     'src/Crossed.ts': 790,
     'src/Grown.tsx': 1100,
     'src/Shrunk.ts': 1100,
@@ -200,6 +215,7 @@ describe('checkFileSizes', () => {
     expect(findings.errors).toEqual([
       expect.stringContaining('src/Big.ts: new file has 801 lines'),
       expect.stringContaining('src/Crossed.ts: grew from 790 to 900 lines'),
+      expect.stringContaining('packages/locales/src/create.ts: new file has 900 lines'),
     ]);
     expect(findings.advisories).toEqual([
       expect.stringContaining('src/Grown.tsx: already over 800 lines and grew from 1100 to 1200'),

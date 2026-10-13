@@ -23,7 +23,7 @@ const createBaseFileInspector = (): InspectBaseFile => {
 
     const result = await run(
       'git',
-      ['cat-file', '-e', `${base.baseCommit}:${base.subPath}`],
+      ['cat-file', '-e', `${base.baseCommit}:${base.basePath}`],
       mountDir(base.mount),
     );
 

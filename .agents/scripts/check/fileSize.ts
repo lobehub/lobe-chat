@@ -8,8 +8,8 @@ import { mountDir, rootDir } from './paths';
 export const MAX_FILE_LINES = 800;
 
 const SOURCE_PATTERN = /\.[cm]?[jt]sx?$/;
-/** Declarations and locale tables are data, not code that splits on a module boundary. */
-const EXEMPT_PATTERN = /\.d\.[cm]?ts$|(?:^|\/)locales\//;
+/** Declarations and default locale tables are data, not code that splits on a module boundary. */
+const EXEMPT_PATTERN = /\.d\.[cm]?ts$|(?:^|\/)locales\/default\//;
 const RULE_REFERENCE = '.agents/skills/source-layout/SKILL.md §3';
 
 /** Line count at the merge base; `null` when the file does not exist there. */
@@ -47,7 +47,7 @@ const createBaseLinesReader = (): ReadBaseLines => {
 
     const result = await run(
       'git',
-      ['show', `${base.baseCommit}:${base.subPath}`],
+      ['show', `${base.baseCommit}:${base.basePath}`],
       mountDir(base.mount),
     );
 
