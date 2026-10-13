@@ -1,6 +1,10 @@
 import { isParkedStatus } from '@lobechat/agent-runtime';
 import { readHeterogeneousErrorContext } from '@lobechat/heterogeneous-agents/errors';
-import { RequestTrigger } from '@lobechat/types';
+import {
+  type AgentOperationStatus,
+  isAgentOperationInFlight,
+  RequestTrigger,
+} from '@lobechat/types';
 import { deserializeParts } from '@lobechat/utils';
 import { isRecord } from '@lobechat/utils/object';
 import debug from 'debug';
@@ -442,6 +446,10 @@ export class CompletionLifecycle {
 
     let completionDurable = false;
     let conflictingTerminalOwner = false;
+    // The status the durable row actually carries. Usually this callback's own,
+    // but NOT when a terminal owner got there first with a different one — see
+    // the fallback below.
+    let durableStatus: AgentOperationStatus = status;
     try {
       const accepted = await this.agentOperationModel.recordCompletion(operationId, {
         completedAt,
@@ -484,6 +492,14 @@ export class CompletionLifecycle {
         // Someone else wrote a terminal row: the run is over even though this
         // call is not the one that recorded it.
         completionDurable = conflictingTerminalOwner;
+        // `recordCompletion` only refuses a row that is ALREADY terminal with a
+        // different status than this callback carries (its `where` matches every
+        // in-flight status, plus an equal one). So the row it refused is the
+        // authoritative outcome, and the topic must be settled for what landed —
+        // not for what this late callback is carrying. Two racing terminal
+        // callbacks (`done` vs `error`/`interrupted`) would otherwise write
+        // whichever one arrived second, `unread` and `active` included.
+        if (operation) durableStatus = operation.status;
       }
     } catch (error) {
       log('[%s] Failed to persist operation completion (non-fatal): %O', operationId, error);
@@ -495,7 +511,7 @@ export class CompletionLifecycle {
     // operation's own end unproven, and a mark cleared on an unproven ending
     // reads as settled while `agent_operations` still says `running`.
     if (completionDurable) {
-      await this.settleTopicRunningMark({ operationId, status, topicId });
+      await this.settleTopicRunningMark({ operationId, status: durableStatus, topicId });
     }
 
     if (conflictingTerminalOwner) return false;
@@ -556,16 +572,18 @@ export class CompletionLifecycle {
    */
   private async settleTopicRunningMark(params: {
     operationId: string;
-    status: string;
+    status: AgentOperationStatus;
     topicId?: string;
   }): Promise<void> {
     const { operationId, status, topicId } = params;
 
     // No topic to settle (a sub-agent run, a bot thread, a verify pass).
     if (!topicId) return;
-    // Parked statuses are pauses, not endings — the same operation resumes under
-    // this id and reaches its real terminal state later (see `completedAt`).
-    if (isParkedStatus(status as Parameters<typeof isParkedStatus>[0])) return;
+    // Only an ending may drop the mark. Not merely the parked three: the fallback
+    // above settles for the status read back from the row rather than one this
+    // callback authored, and `idle` / `running` are no more of an ending than a
+    // pause is. `isAgentOperationInFlight` is the shared authority for both.
+    if (isAgentOperationInFlight(status)) return;
     // A lease-expired abandon settles the topic on its own path with its own
     // status (`AbandonOperationService`); leave that one to it.
     if (status === 'abandoned') return;

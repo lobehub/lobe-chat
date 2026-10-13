@@ -1010,6 +1010,58 @@ describe('CompletionLifecycle.dispatchHooks — the topic running mark', () => {
     expect(dispatch).not.toHaveBeenCalled();
   });
 
+  /**
+   * Two terminal callbacks can race for the same operation: `recordCompletion`
+   * accepts the first and refuses the second — its `where` matches every
+   * in-flight status plus an equal one, so a refusal proves the row already
+   * landed and carries a DIFFERENT outcome. The topic must then be settled for
+   * what landed. Settling for the late callback instead would flip `unread`
+   * (a clean finish) to `active` (an interruption) or the other way round,
+   * depending purely on which of the two reached its settle first.
+   */
+  it('settles for a `done` row when a late `interrupted` callback loses the race', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'done' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'interrupted' }), 'interrupted');
+
+    // The run finished cleanly, so the user may not have watched it.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'unread');
+  });
+
+  it('settles for an `interrupted` row when a late `done` callback loses the race', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'interrupted' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'done');
+
+    // The stopping point was a visible interruption, not a clean finish.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'active');
+  });
+
+  it('leaves the mark when the refused row is not an ending either', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      // `idle` is outside `recordCompletion`'s in-flight set, so a row that
+      // never started can refuse a terminal write while still not being over.
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'idle' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'done');
+
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+  });
+
   it('treats losing the race to a newer run as a no-op', async () => {
     const lifecycle = buildLifecycle();
     (lifecycle as any).agentOperationModel = acceptingOperationModel();
