@@ -82,25 +82,20 @@ const tokensOf = (text: string): Set<string> => {
 };
 
 /**
- * Below this many tokens a shape is too small to judge by containment: a
- * one-line brief can sit inside almost any long one.
- */
-const MIN_CONTAINMENT_TOKENS = 8;
-
-/**
- * How much of the smaller shape the larger one covers. Probe briefs share the
- * recipe but differ in length — the first often carries the references and
- * deliverables the rest point back to — and Jaccard reads that length gap as a
- * different recipe. Two small shapes fall back to Jaccard.
+ * Ochiai similarity: the shared tokens over the geometric mean of both sizes.
+ * Probe briefs share the recipe but differ in length — the first often carries
+ * the references and deliverables the rest point back to — and Jaccard reads
+ * that gap as a different recipe. Ochiai tolerates it while still counting what
+ * each brief adds: a brief twice its sibling's size keeps about 0.7, one that
+ * piles four times as much other work on top falls below the threshold, and a
+ * one-line brief inside a long one does not pass by containment alone.
  */
 const similarity = (a: Set<string>, b: Set<string>): number => {
   if (a.size === 0 && b.size === 0) return 1;
+  if (a.size === 0 || b.size === 0) return 0;
   let intersection = 0;
   for (const token of a) if (b.has(token)) intersection += 1;
-  const smaller = Math.min(a.size, b.size);
-  return smaller >= MIN_CONTAINMENT_TOKENS
-    ? intersection / smaller
-    : intersection / (a.size + b.size - intersection);
+  return intersection / Math.sqrt(a.size * b.size);
 };
 
 /** Lowest pairwise similarity across every pair of probe shapes. */

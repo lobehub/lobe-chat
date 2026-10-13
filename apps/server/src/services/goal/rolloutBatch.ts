@@ -37,6 +37,9 @@ export const MAX_ROLLOUT_ROSTER = 60;
  * `matchUnitInProbeTitle` is for a model's roster, whose probe titles wrap the
  * unit ("迁移 device store（探针）" for unit `device`): a unit named as a whole
  * word in a probe title is that probe, not a second unit run again in a wave.
+ * Each probe stands for one unit only — the longest name its title contains —
+ * so `agent` stays queued when the probe is `agent runtime`; at worst a probe
+ * covering two units leaves one to run again, never a unit dropped.
  * Rosters a person or Agent wrote keep exact titles only.
  */
 export const normalizeRolloutRoster = (
@@ -48,12 +51,21 @@ export const normalizeRolloutRoster = (
 ): string[] => {
   const probeTitles = probeDrafts.slice(0, canarySize).map((draft) => draft.title);
   const seen = new Set(probeTitles);
-  const probedByName = (title: string) =>
-    matchUnitInProbeTitle && probeTitles.some((probe) => containsAxisValue(probe, title));
+  if (matchUnitInProbeTitle) {
+    const candidates = [...new Set((units ?? []).map((unit) => unit.trim()))].filter(
+      (unit) => unit && !seen.has(unit),
+    );
+    for (const probe of probeTitles) {
+      const named = candidates
+        .filter((unit) => !seen.has(unit) && containsAxisValue(probe, unit))
+        .sort((a, b) => b.length - a.length)[0];
+      if (named) seen.add(named);
+    }
+  }
   const rest: string[] = [];
   for (const unit of units ?? []) {
     const title = unit.trim();
-    if (!title || seen.has(title) || probedByName(title)) continue;
+    if (!title || seen.has(title)) continue;
     seen.add(title);
     rest.push(title);
     if (probeTitles.length + rest.length >= limit) break;

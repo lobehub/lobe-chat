@@ -73,6 +73,23 @@ describe('minPairwiseSimilarity on real planner briefs', () => {
     expect(similarity).toBeLessThan(HOMOGENEITY_MIN_SIMILARITY);
   });
 
+  /**
+   * Regression: the score only measured how much of the shorter brief the
+   * longer one covered, so a probe that piled other work on top of the shared
+   * recipe still read as the same mould.
+   */
+  it('counts the other work a longer brief piles on top of the shared recipe', () => {
+    const recipe = '对该 store 执行：定义 replica；组件改为从 selector 读取；删除 SWR 持久化条目。';
+    const similarity = minPairwiseSimilarity([
+      { instruction: recipe, title: '迁移 device' },
+      {
+        instruction: `${recipe}另外把服务端接口从 REST 改成 tRPC，重写鉴权中间件，新增数据库迁移把表拆成两张并回填历史数据，更新管理后台的导出报表，补齐运维告警与值班手册，再给支付回调加上幂等校验和重试队列。`,
+        title: '迁移 brief',
+      },
+    ]);
+    expect(similarity).toBeLessThan(HOMOGENEITY_MIN_SIMILARITY);
+  });
+
   it('does not let a one-line brief pass by sitting inside a long one', () => {
     const similarity = minPairwiseSimilarity([
       { instruction: 'Fix the tests', title: 'Fix' },
