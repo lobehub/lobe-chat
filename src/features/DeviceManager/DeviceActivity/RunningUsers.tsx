@@ -92,8 +92,10 @@ export const DeviceRunningSummaryValue = memo<{ deviceId: string }>(({ deviceId 
   const summary = data?.find((entry) => entry.deviceId === deviceId);
   if (!summary || summary.count === 0) return <Text type={'secondary'}>—</Text>;
 
-  const shown = summary.users.slice(0, MAX_STACKED);
-  const overflow = summary.users.length - shown.length;
+  // A server that predates per-user attribution sends no `users`.
+  const users = summary.users ?? [];
+  const shown = users.slice(0, MAX_STACKED);
+  const overflow = users.length - shown.length;
 
   return (
     <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
