@@ -79,7 +79,7 @@ find <dir> -type f -exec wc -l {} + | sort -rn   # every file ≤ 800, nested fo
 bun run check <every changed source file> <every guard test file> --lint --test --type
 ```
 
-Pass the test files explicitly: related-test discovery only finds `<name>.test.*`, so `index.tsx` does not run `index.<scenario>.test.ts`. Confirm the reported test count matches the suites you expect.
+Pass the test files explicitly: related-test discovery finds only `<name>.test.*` and `<name>.<scenario>.test.*` of each changed file, so tests that guard an extracted sibling through the entry (`index.*.test.ts` for `usePlanActions.ts`) run only when passed. Confirm the reported test count matches the suites you expect.
 
 Then follow the normal task lifecycle: a light `deep-review` (suggest Deep when the file is on a high-risk surface such as billing or auth), `commit`, and `pr`. A pure split needs no product acceptance; state that reason in the PR body together with:
 

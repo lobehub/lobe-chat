@@ -16,6 +16,7 @@ import {
   pipelineFor,
   relatedTestCandidates,
   resolveMount,
+  scenarioTestLookup,
   stylelintApplies,
 } from './routing';
 import type { RepoMount } from './types';
@@ -129,6 +130,21 @@ describe('relatedTestCandidates', () => {
     ]);
   });
 
+  it('matches scenario suites split from the source test', () => {
+    const lookup = scenarioTestLookup('src/Foo/index.tsx');
+    expect(lookup?.dirs).toEqual(['src/Foo', 'src/Foo/__tests__']);
+    expect(
+      [
+        'index.cta.test.ts',
+        'index.render.test.tsx',
+        'index.test.ts',
+        'indexer.cta.test.ts',
+        'index.a.b.test.ts',
+      ].filter((name) => lookup?.matches(name)),
+    ).toEqual(['index.cta.test.ts', 'index.render.test.tsx']);
+    expect(scenarioTestLookup('src/Foo/index.test.ts')).toBeNull();
+  });
+
   it('returns nothing for non-source files', () => {
     expect(relatedTestCandidates('AGENTS.md')).toEqual([]);
     expect(relatedTestCandidates('image.png')).toEqual([]);
@@ -198,6 +214,8 @@ describe('checkFileSizes', () => {
   const base: Record<string, number | null> = {
     'src/Big.ts': null,
     'packages/locales/src/create.ts': null,
+    'packages/locales/src/default/setting.ts': 4000,
+    'src/types.d.ts': 1000,
     'src/Crossed.ts': 790,
     'src/Grown.tsx': 1100,
     'src/Shrunk.ts': 1100,

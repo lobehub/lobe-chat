@@ -62,4 +62,4 @@ A split keeps the public import path: `Foo.tsx` becomes `Foo/index.tsx`, so `imp
   - Shared across features: `src/utils`, `src/hooks`, `src/components`, or a `packages/*` package.
   - Do not create `helpers/`; name the module by its content or use `utils`.
 - A split moves code without changing behavior. Collapsing duplicated branches that become one component is in scope when existing tests cover each branch; any other behavior change belongs in a separate commit.
-- Move the matching tests with the code they cover, then run `bun run check` with the test files passed explicitly: related-test discovery only finds `<name>.test.*`, so `index.tsx` does not pick up `index.<scenario>.test.ts`.
+- Move the matching tests with the code they cover, then run `bun run check` with the test files passed explicitly: related-test discovery finds only `<name>.test.*` and `<name>.<scenario>.test.*` of each changed file, so the entry's tests do not run for an extracted sibling such as `usePlanActions.ts`.
