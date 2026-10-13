@@ -234,6 +234,46 @@ describe('ServerLLMTransport.stream · deployment name', () => {
     expect(resolveServerModel).not.toHaveBeenCalled();
   });
 
+  it('freezes the absence of an alias when the frozen card has no deploymentName', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'bundled-azure-endpoint',
+      model: 'my-custom-model',
+      provider: 'azure',
+    });
+
+    const ctx = {
+      loadAgentState: vi.fn(async () => ({
+        modelRuntimeConfig: {
+          model: 'my-custom-model',
+          modelFacts: {
+            cards: [{ id: 'my-custom-model', providerId: 'azure' }],
+            model: 'my-custom-model',
+            provider: 'azure',
+          },
+          provider: 'azure',
+        },
+      })),
+      operationId: 'op-1',
+      stepIndex: 0,
+      topicId: 'topic-1',
+      userId: 'user-1',
+    } as unknown as RuntimeExecutorContext;
+
+    await new ServerLLMTransport(ctx).stream({
+      messages: [],
+      model: 'my-custom-model',
+      provider: 'azure',
+    });
+
+    // Codex P2 (4259967307): the snapshot is authoritative — a matching card
+    // without an alias freezes that absence, so the catalog (possibly changed
+    // since the snapshot) is never consulted and the payload keeps the bare id.
+    expect(resolveServerModel).not.toHaveBeenCalled();
+    expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
+  });
+
   it('prefers the user-configured alias over the deployment catalog for a custom model', async () => {
     const chat = vi.fn().mockImplementation(async () => new Response(''));
     vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
@@ -405,6 +445,37 @@ describe('ServerLLMTransport.runAttempt · deployment name without frozen model 
     await transport.runAttempt(input);
 
     expect(chat.mock.calls[0][0].deploymentName).toBe('my-custom-azure-endpoint');
+  });
+
+  it('freezes the absence of an alias on the attempt path too', async () => {
+    const chat = vi.fn().mockImplementation(async () => new Response(''));
+    vi.mocked(initModelRuntimeFromDB).mockImplementation(async () => new ModelRuntime({ chat }));
+    vi.mocked(resolveServerModel).mockResolvedValue({
+      deploymentName: 'deepseek-v4-pro-ga-260813',
+      model: 'deepseek-v4-pro-ga',
+      provider: 'volcengine',
+    });
+
+    const transport = new ServerLLMTransport(createAttemptCtx());
+    await transport.runAttempt(
+      createAttemptInput({
+        modelRuntimeConfig: {
+          model: 'deepseek-v4-pro-ga',
+          modelFacts: {
+            cards: [{ id: 'deepseek-v4-pro-ga', providerId: 'volcengine' }],
+            model: 'deepseek-v4-pro-ga',
+            provider: 'volcengine',
+          },
+          provider: 'volcengine',
+        },
+      }),
+    );
+
+    // Codex P2 (4259967307): same contract as `stream()` — a matching frozen
+    // card without an alias freezes the absence, the live catalog is not
+    // consulted, and the attempt payload keeps the bare model id.
+    expect(resolveServerModel).not.toHaveBeenCalled();
+    expect(chat.mock.calls[0][0].deploymentName).toBeUndefined();
   });
 
   it('strips the frozen card deployment name for a non-consuming provider (qwen)', async () => {

@@ -367,18 +367,22 @@ export class ServerLLMTransport implements LLMTransport {
     // `stream()` only serves context compression. Deployment-catalog providers
     // (Azure, Volcengine Ark, Spark) address the request model by the card's
     // `config.deploymentName` — the same mapping `runAttemptWithRuntime`
-    // applies from the run's frozen cards. A compression model equal to the
-    // run's model is answered from that snapshot; any other model resolves the
+    // applies from the run's frozen cards. The snapshot is authoritative once
+    // it applies: a frozen card without a `deploymentName` freezes that
+    // absence, so steps in the same run never disagree about the endpoint
+    // (`readFrozenModelFacts` already merged the user alias into the card at
+    // freeze time). Only a snapshot with no matching card resolves the
     // deployment catalog live, and an unresolvable one keeps the bare id.
     const frozenCard = state?.modelRuntimeConfig?.modelFacts?.cards.find(
       (card) =>
         card.providerId === payload.provider &&
         (card.id === payload.model || card.deploymentName === payload.model),
     );
-    const deploymentName = DEPLOYMENT_NAME_PROVIDERS.has(payload.provider)
-      ? (frozenCard?.deploymentName ??
-        (await this.resolveStreamDeploymentName(payload.provider, payload.model)))
-      : undefined;
+    const deploymentName = !DEPLOYMENT_NAME_PROVIDERS.has(payload.provider)
+      ? undefined
+      : frozenCard
+        ? frozenCard.deploymentName
+        : await this.resolveStreamDeploymentName(payload.provider, payload.model);
     const { provider: _provider, ...runtimePayload } = payload;
     let content = '';
     let usage: LLMStreamResult['usage'];
@@ -614,22 +618,26 @@ export class ServerLLMTransport implements LLMTransport {
     // Providers that address models by a deployment/catalog name (Azure,
     // Volcengine Ark, Spark) resolve the request model from the card's
     // `config.deploymentName`. The run froze the matching card at operation
-    // creation, so the mapping needs no bank or DB read per attempt. Operations
-    // without that snapshot (agent-signal memory actions, persisted operations
-    // predating `modelFacts`) resolve the deployment catalog live instead —
-    // the same mapping `stream()` applies for compression models. Frozen and
-    // live aliases sit behind the same provider gate: adapters that don't
-    // consume the field (OpenAI-compatible factories forward unknown payload
-    // fields) must never see the internal mapping on the wire.
+    // creation, so the mapping needs no bank or DB read per attempt. The
+    // snapshot is authoritative once it applies: a frozen card without a
+    // `deploymentName` freezes that absence, so attempts in the same run
+    // never disagree about the endpoint. Live resolution serves only
+    // operations whose snapshot has no matching card (agent-signal memory
+    // actions, persisted operations predating `modelFacts`) — the same
+    // mapping `stream()` applies for compression models. Frozen and live
+    // aliases sit behind the same provider gate: adapters that don't consume
+    // the field (OpenAI-compatible factories forward unknown payload fields)
+    // must never see the internal mapping on the wire.
     const frozenCard = input.state.modelRuntimeConfig?.modelFacts?.cards.find(
       (card) =>
         card.providerId === input.provider &&
         (card.id === input.model || card.deploymentName === input.model),
     );
-    const deploymentName = DEPLOYMENT_NAME_PROVIDERS.has(input.provider)
-      ? (frozenCard?.deploymentName ??
-        (await this.resolveAttemptDeploymentName(input.provider, input.model)))
-      : undefined;
+    const deploymentName = !DEPLOYMENT_NAME_PROVIDERS.has(input.provider)
+      ? undefined
+      : frozenCard
+        ? frozenCard.deploymentName
+        : await this.resolveAttemptDeploymentName(input.provider, input.model);
     const chatPayload = {
       messages: input.context.messages as ChatStreamPayload['messages'],
       model: input.model,
