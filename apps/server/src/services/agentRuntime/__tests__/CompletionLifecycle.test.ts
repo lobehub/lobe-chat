@@ -28,6 +28,7 @@ const {
   mockNotifyAgentInterventionRequired,
   mockNotifyAgentRunCompleted,
   mockListWorks,
+  mockSettleRunningOperation,
 } = vi.hoisted(() => ({
   mockBuildRuntimeInterventionNotification: vi.fn<
     () => Promise<NotifyAgentInterventionRequiredParams | undefined>
@@ -35,11 +36,22 @@ const {
   mockNotifyAgentInterventionRequired: vi.fn(async () => {}),
   mockNotifyAgentRunCompleted: vi.fn(async () => {}),
   mockListWorks: vi.fn(async (): Promise<{ id: string }[]> => []),
+  mockSettleRunningOperation: vi.fn(async () => ({ status: 'settled' as const })),
 }));
 
 vi.mock('@/database/models/work', () => ({
   WorkModel: vi.fn(function () {
     return { listByRootOperation: mockListWorks };
+  }),
+}));
+
+// `TopicModel.settleRunningOperation` is a class FIELD (bound per instance, not
+// on the prototype), so observing it means swapping the class. This is the only
+// TopicModel use in the lifecycle, and the tests below assert both that it runs
+// for a finished run and that it is deliberately skipped otherwise.
+vi.mock('@/database/models/topic', () => ({
+  TopicModel: vi.fn(function () {
+    return { settleRunningOperation: mockSettleRunningOperation };
   }),
 }));
 
@@ -848,6 +860,224 @@ describe('CompletionLifecycle.dispatchHooks — error persistence', () => {
 
       expect(dispatch).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe('CompletionLifecycle.dispatchHooks — the topic running mark', () => {
+  /**
+   * `recordCompletion` must land for the mark to be converged: the lifecycle
+   * treats an ending whose own row write failed as unproven, and a mark cleared
+   * on an unproven ending reads settled while `agent_operations` still says
+   * `running`.
+   */
+  const acceptingOperationModel = () => ({
+    findById: vi.fn(async () => null),
+    recordCompletion: vi.fn(async () => true),
+    sumChildUsage: vi.fn(async () => undefined),
+  });
+
+  const state = (overrides: Record<string, unknown> = {}) => ({
+    host: { hooks: [] },
+    messages: [{ content: 'final reply', role: 'assistant' }],
+    origin: { agentId: 'agt_1', topicId: 'tpc_1' },
+    status: 'interrupted',
+    ...overrides,
+  });
+
+  beforeEach(() => {
+    mockSettleRunningOperation.mockReset().mockResolvedValue({ status: 'settled' });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('drops the mark when an interrupted run reaches its terminal row', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+
+    await lifecycle.dispatchHooks('op-1', state(), 'interrupted');
+
+    // A Stop is a visible ending the user already saw: `active`, the same status
+    // the client writes for an interrupted run.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'active');
+  });
+
+  it('drops the mark for a clean finish, as unread', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'done');
+
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'unread');
+  });
+
+  it('drops the mark for a run the step cap stopped, which never runs `finish`', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'max_steps');
+
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'unread');
+  });
+
+  it.each(['waiting_for_async_tool', 'waiting_for_client', 'waiting_for_human'])(
+    'leaves the mark while the same operation is parked in %s',
+    async (reason) => {
+      const lifecycle = buildLifecycle();
+      (lifecycle as any).agentOperationModel = acceptingOperationModel();
+
+      await lifecycle.dispatchHooks('op-1', state({ status: reason }), reason);
+
+      expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+    },
+  );
+
+  it('does nothing for a run with no topic', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+
+    await lifecycle.dispatchHooks('op-1', state({ origin: { agentId: 'agt_1' } }), 'interrupted');
+
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+  });
+
+  it('leaves a lease-expired abandon to the path that settles it', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'abandoned' })),
+      recordCompletion: vi.fn(
+        async (_id: string, params: { status: string }) => params.status === 'abandoned',
+      ),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'error' }), 'error', {
+      settledAsAbandoned: true,
+      skipErrorMessageWrite: true,
+    });
+
+    // `AbandonOperationService` owns the topic there, with its own status.
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+  });
+
+  it('leaves the mark when the terminal row could not be written', async () => {
+    const lifecycle = buildLifecycle();
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => null),
+      recordCompletion: vi.fn(async () => {
+        throw new Error('db is down');
+      }),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state(), 'interrupted');
+
+    // The operation's own end is unproven, so the topic must keep saying so.
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
+  it('leaves the mark when no durable row exists to prove the ending', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => null),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state(), 'interrupted');
+
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+  });
+
+  it('still converges when another owner already wrote the terminal row', async () => {
+    const lifecycle = buildLifecycle();
+    const dispatch = vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'interrupted' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state(), 'interrupted');
+
+    // The run is over — someone else just recorded it — and hooks still stay
+    // parked with that owner.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'active');
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Two terminal callbacks can race for the same operation: `recordCompletion`
+   * accepts the first and refuses the second — its `where` matches every
+   * in-flight status plus an equal one, so a refusal proves the row already
+   * landed and carries a DIFFERENT outcome. The topic must then be settled for
+   * what landed. Settling for the late callback instead would flip `unread`
+   * (a clean finish) to `active` (an interruption) or the other way round,
+   * depending purely on which of the two reached its settle first.
+   */
+  it('settles for a `done` row when a late `interrupted` callback loses the race', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'done' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'interrupted' }), 'interrupted');
+
+    // The run finished cleanly, so the user may not have watched it.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'unread');
+  });
+
+  it('settles for an `interrupted` row when a late `done` callback loses the race', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'interrupted' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'done');
+
+    // The stopping point was a visible interruption, not a clean finish.
+    expect(mockSettleRunningOperation).toHaveBeenCalledWith('tpc_1', 'op-1', 'active');
+  });
+
+  it('leaves the mark when the refused row is not an ending either', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = {
+      // `idle` is outside `recordCompletion`'s in-flight set, so a row that
+      // never started can refuse a terminal write while still not being over.
+      findById: vi.fn(async () => ({ id: 'op-1', status: 'idle' })),
+      recordCompletion: vi.fn(async () => false),
+      sumChildUsage: vi.fn(async () => undefined),
+    };
+
+    await lifecycle.dispatchHooks('op-1', state({ status: 'done' }), 'done');
+
+    expect(mockSettleRunningOperation).not.toHaveBeenCalled();
+  });
+
+  it('treats losing the race to a newer run as a no-op', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+    mockSettleRunningOperation.mockResolvedValue({ status: 'conflict' });
+
+    await expect(lifecycle.dispatchHooks('op-1', state(), 'interrupted')).resolves.toBeUndefined();
+
+    expect(mockSettleRunningOperation).toHaveBeenCalledTimes(1);
+  });
+
+  it('never fails the completion when the topic cannot be settled', async () => {
+    const lifecycle = buildLifecycle();
+    (lifecycle as any).agentOperationModel = acceptingOperationModel();
+    mockSettleRunningOperation.mockRejectedValue(new Error('topic row is locked'));
+
+    await expect(lifecycle.dispatchHooks('op-1', state(), 'interrupted')).resolves.toBeUndefined();
   });
 });
 
