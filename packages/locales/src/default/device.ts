@@ -24,6 +24,7 @@ export default {
     'This device’s app doesn’t support creating folders yet. Update it and try again.',
   'workingDirectory.openPath': 'Open',
   'workingDirectory.parentFolder': 'Parent folder',
+  'workingDirectory.refreshFolders': 'Refresh folders',
   'workingDirectory.useFolder': 'Use this folder',
   'workingDirectory.addFolder': 'Add folder…',
   'workingDirectory.addFolderDesc':

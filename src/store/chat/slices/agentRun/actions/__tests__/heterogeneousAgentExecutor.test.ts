@@ -2219,6 +2219,24 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
       expect(outcome).toBeUndefined();
     });
 
+    // regression: non-image attachments were dropped on the way to the CLI.
+    it('should append non-image attachments to the prompt as download links', async () => {
+      const store = createMockStore();
+      const get = vi.fn(() => store);
+      setupIpcCapture();
+
+      await executeHeterogeneousAgent(get, {
+        ...defaultParams,
+        attachedFiles: [
+          { fileType: 'text/markdown', name: 'svg.md', size: 2048, url: 'https://signed/svg.md' },
+        ],
+      });
+
+      const { prompt } = mockSendPrompt.mock.calls[0][0];
+      expect(prompt).toMatch(/^test prompt\n\n<attached_files>/);
+      expect(prompt).toContain('- svg.md (text/markdown, 2.0 KB): https://signed/svg.md');
+    });
+
     it('should forward imageList to heterogeneousAgentService.sendPrompt for Codex runs', async () => {
       const store = createMockStore();
       const get = vi.fn(() => store);

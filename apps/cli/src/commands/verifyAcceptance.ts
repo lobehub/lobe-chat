@@ -13,6 +13,13 @@ import { outputJson, printTable, timeAgo, truncate } from '../utils/format';
 import { log } from '../utils/logger';
 import { collectCommentFeedback } from './acceptanceCommentFeedback';
 import { attachAcceptanceFlowCommands } from './acceptanceFlow';
+import {
+  assertReportLanguage,
+  languageSummary,
+  resolveReportLanguage,
+  responseLanguageSettingsUrl,
+  unsetLanguageWarning,
+} from './acceptanceLanguage';
 import { attachAcceptanceRunCommands } from './acceptanceRun';
 import type { ReviewAnnotationRegion } from './verifyHelpers';
 import { formatAnnotationRegion, formatDisputedChapter, parseSubjectRef } from './verifyHelpers';
@@ -78,6 +85,41 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
   attachAcceptanceFlowCommands(acceptance);
 
   acceptance
+    .command('preflight')
+    .description(
+      'Check that the CLI is authenticated and print the language every acceptance text must be written in. ' +
+        'Run it before authoring anything, and pass the language to any subagent you delegate to.',
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(async (options: { json?: boolean | string }) => {
+      const client = await getTrpcClient();
+      // An auth failure throws here, which is the signal to stop before authoring.
+      const language = await resolveReportLanguage(client);
+      const instruction =
+        language.status === 'unset'
+          ? 'No response language is set on this account, so the language is not checked. Write in the language the user converses in.'
+          : `Write every human-readable acceptance field (title, plan, case names and observations, evidence descriptions, conclusion, report.md, proposal.md) in ${language.locale}${language.status === 'enforced' ? `, i.e. ${language.rule.languageName}` : ''}. Pass this language explicitly to any subagent you delegate to.`;
+      if (options.json !== undefined) {
+        outputJson(
+          {
+            authenticated: true,
+            instruction,
+            language: languageSummary(language),
+            settingsUrl: responseLanguageSettingsUrl(),
+          },
+          typeof options.json === 'string' ? options.json : undefined,
+        );
+        return;
+      }
+      if (language.status === 'unset') log.warn(unsetLanguageWarning());
+      console.log(`${pc.green('✓')} Authenticated`);
+      console.log(
+        `${pc.bold('report language')}: ${language.status === 'unset' ? pc.yellow('not set') : language.locale}${language.status === 'unchecked' ? pc.dim(' (not script-checked)') : ''}`,
+      );
+      console.log(instruction);
+    });
+
+  acceptance
     .command('create')
     .summary('Create or reuse an acceptance without creating a verification round or results')
     .description(
@@ -125,6 +167,10 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
         }
 
         const client = await getTrpcClient();
+        await assertReportLanguage(client, [
+          { path: '--requirement', text: requirement },
+          { path: '--title', text: title },
+        ]);
         const result = await client.acceptance.ensure.mutate({ ...subject, requirement, title });
         const acceptanceUrl = new URL(
           `/acceptance/${encodeURIComponent(result.id)}`,
@@ -312,6 +358,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
           createdAt?: string;
           fileIds?: string[];
           kind: 'check' | 'group' | 'flow' | 'comment' | 'decision';
+          page?: { locations: string[]; url: string };
           roundIndex: number;
           title?: string;
         }
@@ -461,6 +508,11 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
                     : `group · ${entry.category || 'overall'}`;
           console.log(`${marker} ${label} ${pc.dim(`(r${entry.roundIndex})`)}`);
           if (entry.comment) console.log(`    ${entry.comment}`);
+          if (entry.page) {
+            console.log(`    ${pc.dim('page:')} ${entry.page.url}`);
+            for (const location of entry.page.locations)
+              console.log(`      ${pc.dim(`└ ${location}`)}`);
+          }
           for (const annotation of entry.annotations ?? []) {
             if (annotation.comment && annotation.comment !== entry.comment)
               console.log(`    ${pc.dim('region:')} ${annotation.comment}`);
@@ -477,6 +529,23 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
         }
       },
     );
+
+  acceptance
+    .command('preview <idOrSubject> <url>')
+    .description(
+      'Record where the latest round is deployed, so reviewers can comment on the live page (https or a loopback dev server)',
+    )
+    .option('--json [fields]', 'Output JSON')
+    .action(async (idOrSubject: string, url: string, options: { json?: boolean | string }) => {
+      const id = await resolveAcceptanceId(idOrSubject);
+      const client = await getTrpcClient();
+      const result = await client.acceptance.setPreviewUrl.mutate({ id, url });
+      if (options.json !== undefined) {
+        outputJson(result, typeof options.json === 'string' ? options.json : undefined);
+        return;
+      }
+      console.log(`${pc.green('✓')} r${result.roundIndex} preview: ${result.previewUrl}`);
+    });
 
   acceptance
     .command('link-pr <idOrSubject> <url>')

@@ -676,6 +676,7 @@ export interface VerifyRunMetadata {
    * run that *authored* the report — and is many-to-one.
    */
   origin?: VerifyRunOrigin;
+  previewUrl?: string;
   /**
    * The round this one replays (`flow plan --from-run`). A replay is pinned to
    * the source round's frozen definition, so it never follows later graph edits

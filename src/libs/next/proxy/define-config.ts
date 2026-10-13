@@ -215,6 +215,7 @@ export function defineConfig() {
     '/api/webhooks(.*)',
     '/api/workflows(.*)',
     '/api/agent(.*)',
+    '/api/acceptance-review(.*)',
     '/api/dev(.*)',
     '/webapi(.*)',
     '/trpc(.*)',

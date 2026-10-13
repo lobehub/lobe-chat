@@ -40,11 +40,16 @@ const isWithinSkillRoots = (deviceId: string, workingDirectory: string): boolean
  * RPC is forwarded. The picker upserts every chosen directory into `workingDirs`
  * (see `useCommitWorkingDirectory`) and run start upserts the bound cwd, so a
  * legitimately-selected workspace is always present here.
+ *
+ * Use the request's authorized workspace scope for shared devices: their
+ * `userId` is the enroller, not necessarily the caller. Never fall back to a
+ * personal row, whose approved directories belong to a different device scope.
  */
 export const assertWorkspaceRootApproved = async (
   deviceModel: DeviceModel,
   deviceId: string,
   workingDirectory: string,
+  workspaceId?: string,
 ): Promise<void> => {
   if (!workingDirectory) {
     throw new TRPCError({
@@ -53,7 +58,9 @@ export const assertWorkspaceRootApproved = async (
     });
   }
 
-  const device = await deviceModel.findByDeviceId(deviceId);
+  const device = workspaceId
+    ? await deviceModel.findWorkspaceDeviceById(deviceId)
+    : await deviceModel.findByDeviceId(deviceId);
 
   const approvedRoots = (device?.workingDirs ?? [])
     .flatMap((dir) => [dir.path, dir.git?.activeWorktree])

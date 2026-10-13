@@ -15,7 +15,7 @@ import {
   workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { TopicModel } from '../topic';
+import { getTopicDeviceId, TopicModel } from '../topic';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -705,6 +705,55 @@ describe('TopicModel', () => {
     });
   });
 
+  describe('findRunInitiators', () => {
+    it("returns the member who started each topic's current run", async () => {
+      await serverDB.insert(topics).values([
+        { id: 'ri-run', status: 'running', title: 'run', userId },
+        { id: 'ri-client', status: 'running', title: 'client run', userId },
+        { id: 'ri-done', status: 'active', title: 'done', userId },
+      ]);
+      await serverDB.insert(agentOperations).values([
+        // A crashed earlier run by the creator; the live, later one wins.
+        {
+          id: 'ri-op-stale',
+          startedAt: new Date('2026-01-01T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId,
+        },
+        // A teammate continued the topic the creator started.
+        {
+          id: 'ri-op-live',
+          startedAt: new Date('2026-01-02T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId: otherUserId,
+        },
+        // A sub-operation never names the run's initiator.
+        {
+          id: 'ri-op-sub',
+          parentOperationId: 'ri-op-live',
+          startedAt: new Date('2026-01-03T00:00:00Z'),
+          status: 'running',
+          topicId: 'ri-run',
+          userId,
+        },
+        {
+          id: 'ri-op-done',
+          startedAt: new Date('2026-01-02T00:00:00Z'),
+          status: 'completed',
+          topicId: 'ri-done',
+          userId: otherUserId,
+        },
+      ]);
+
+      const initiators = await topicModel.findRunInitiators(['ri-run', 'ri-client', 'ri-done']);
+
+      expect([...initiators]).toEqual([['ri-run', otherUserId]]);
+      expect(await topicModel.findRunInitiators([])).toEqual(new Map());
+    });
+  });
+
   describe('queryTopics', () => {
     it('filters by the given statuses and is scoped to the owner', async () => {
       await serverDB.insert(topics).values([
@@ -715,6 +764,76 @@ describe('TopicModel', () => {
 
       const result = await topicModel.queryTopics({ statuses: ['running'] });
       expect(result.map((t) => t.id)).toEqual(['t-running']);
+    });
+
+    it('narrows to topics pinned to or dispatched on the given device', async () => {
+      await serverDB.insert(topics).values([
+        {
+          id: 't-bound',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'running',
+          title: 'bound',
+          userId,
+        },
+        {
+          id: 't-dispatched',
+          metadata: {
+            runningOperation: {
+              assistantMessageId: 'msg-1',
+              deviceId: 'device-a',
+              operationId: 'op-1',
+            },
+          },
+          status: 'running',
+          title: 'dispatched',
+          userId,
+        },
+        {
+          id: 't-other-device',
+          metadata: { boundDeviceId: 'device-b' },
+          status: 'running',
+          title: 'other device',
+          userId,
+        },
+        {
+          id: 't-pinned-a-dispatched-b',
+          metadata: {
+            boundDeviceId: 'device-a',
+            runningOperation: {
+              assistantMessageId: 'msg-2',
+              deviceId: 'device-b',
+              operationId: 'op-2',
+            },
+          },
+          status: 'running',
+          title: 'dispatch wins',
+          userId,
+        },
+        { id: 't-unbound', status: 'running', title: 'unbound', userId },
+        {
+          id: 't-bound-idle',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'active',
+          title: 'idle',
+          userId,
+        },
+        {
+          id: 't-bound-other-user',
+          metadata: { boundDeviceId: 'device-a' },
+          status: 'running',
+          title: 'other user',
+          userId: otherUserId,
+        },
+      ]);
+
+      const result = await topicModel.queryTopics({ deviceId: 'device-a', statuses: ['running'] });
+      expect(result.map((t) => t.id).sort()).toEqual(['t-bound', 't-dispatched']);
+      // A run sent away from the topic's pinned device counts where it went,
+      // and only there.
+      const onB = await topicModel.queryTopics({ deviceId: 'device-b', statuses: ['running'] });
+      expect(onB.map((t) => t.id).sort()).toEqual(['t-other-device', 't-pinned-a-dispatched-b']);
+      expect(onB.map((t) => getTopicDeviceId(t.metadata))).toEqual(onB.map(() => 'device-b'));
+      expect(result.map((t) => getTopicDeviceId(t.metadata))).toEqual(result.map(() => 'device-a'));
     });
 
     it('returns all owned topics when no statuses filter is given', async () => {

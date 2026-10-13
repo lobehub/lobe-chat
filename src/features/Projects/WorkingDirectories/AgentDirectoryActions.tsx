@@ -25,6 +25,7 @@ export function AgentDirectoryActions({
   topics,
   onLegacyStart,
   hideStartAction = false,
+  pathOnly = false,
   extraMenuItems,
 }: {
   agentId: string;
@@ -33,6 +34,12 @@ export function AgentDirectoryActions({
   onLegacyStart: (projectWorkingDirectoryId?: string) => Promise<void>;
   /** Render only the binding/menu affordance; the caller provides its own start action. */
   hideStartAction?: boolean;
+  /**
+   * A plain path group: never resolve a project directory by path. A project
+   * that registered the same path must not adopt new topics started here; the
+   * menu offers binding instead so the user files the group explicitly.
+   */
+  pathOnly?: boolean;
   /** Group-level actions appended to the "more" menu after a divider. */
   extraMenuItems?: DropdownItem[];
 }) {
@@ -49,12 +56,14 @@ export function AgentDirectoryActions({
   useProjectDirectoryStore((s) => s.useFetchDirectories)();
   const directories = useProjectDirectories();
   const bindingId = topics[0]?.projectWorkingDirectoryId;
-  const bindings = directories.filter((directory) =>
-    bindingId
-      ? directory.id === bindingId
-      : directory.deviceId === deviceId &&
-        directory.path.replace(/[\\/]+$/, '') === path.replace(/[\\/]+$/, ''),
-  );
+  const bindings = pathOnly
+    ? []
+    : directories.filter((directory) =>
+        bindingId
+          ? directory.id === bindingId
+          : directory.deviceId === deviceId &&
+            directory.path.replace(/[\\/]+$/, '') === path.replace(/[\\/]+$/, ''),
+      );
   const [pending, setPending] = useState(false);
   // "+" opens the new-topic composer for this group; it must never create a
   // topic. The row is persisted on the first message, which is also when the
