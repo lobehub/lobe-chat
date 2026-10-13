@@ -17,6 +17,7 @@ import type { GoalModel } from '@/database/models/goal';
 import type { GoalGraphModel } from '@/database/models/goalGraph';
 
 import { BatchPlanSkillService, planUnitBrief } from './batchPlanSkill';
+import { containsAxisValue } from './spec';
 
 const log = debug('lobe-server:goal-rollout');
 
@@ -32,19 +33,27 @@ export const MAX_ROLLOUT_ROSTER = 60;
  * `limit` bounds the roster a *batch* carries (its config safety valve); the
  * ordinary fallback passes no limit, because trimming there would silently drop
  * units the goal promised to deliver.
+ *
+ * `matchUnitInProbeTitle` is for a model's roster, whose probe titles wrap the
+ * unit ("迁移 device store（探针）" for unit `device`): a unit named as a whole
+ * word in a probe title is that probe, not a second unit run again in a wave.
+ * Rosters a person or Agent wrote keep exact titles only.
  */
 export const normalizeRolloutRoster = (
   units: string[] | undefined,
   probeDrafts: { title: string }[],
   canarySize: number,
   limit: number = MAX_ROLLOUT_ROSTER,
+  { matchUnitInProbeTitle = false }: { matchUnitInProbeTitle?: boolean } = {},
 ): string[] => {
   const probeTitles = probeDrafts.slice(0, canarySize).map((draft) => draft.title);
   const seen = new Set(probeTitles);
+  const probedByName = (title: string) =>
+    matchUnitInProbeTitle && probeTitles.some((probe) => containsAxisValue(probe, title));
   const rest: string[] = [];
   for (const unit of units ?? []) {
     const title = unit.trim();
-    if (!title || seen.has(title)) continue;
+    if (!title || seen.has(title) || probedByName(title)) continue;
     seen.add(title);
     rest.push(title);
     if (probeTitles.length + rest.length >= limit) break;

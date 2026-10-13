@@ -2144,6 +2144,38 @@ describe('GoalService', () => {
     expect(reasonOf(tasks[1].id)).toBeNull();
   });
 
+  /**
+   * Regression: a model titles its probes around the unit — "迁移 device store
+   * （探针）" for unit `device` — and the roster de-duplicated on exact titles,
+   * so every probed unit was queued again and would run twice.
+   */
+  it('does not queue a probed unit again when the probe title wraps its name', async () => {
+    const units = Array.from({ length: 12 }, (_, i) => `store${i + 1}`);
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 12 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 12,
+        units,
+        variants: [],
+      },
+      tasks: units.slice(0, 3).map((unit) => ({
+        dependsOn: [],
+        instruction: `把 src/store/${unit}.ts 换成 replica 实现，并补冷启动回归测试`,
+        title: `迁移 ${unit} store（探针）`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate 12 stores' });
+    await service.tick(graph.goal.id);
+
+    const roster = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.unitTitles!;
+    expect(roster).toHaveLength(12);
+    expect(roster.slice(0, 3)).toEqual(units.slice(0, 3).map((u) => `迁移 ${u} store（探针）`));
+    expect(roster.slice(3)).toEqual(units.slice(3));
+  });
+
   it('materializes a fallback roster above the batch cap without trimming it', async () => {
     const units = Array.from({ length: 64 }, (_, i) => `Unit ${i + 1}`);
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({

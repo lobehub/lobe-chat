@@ -3839,7 +3839,13 @@ export class GoalService {
         );
 
         if (rolloutClaim && rolloutEnabled && verdict.batch && currentProblem) {
-          const roster = normalizeRolloutRoster(rolloutClaim.units, draftTasks, draftTasks.length);
+          const roster = normalizeRolloutRoster(
+            rolloutClaim.units,
+            draftTasks,
+            draftTasks.length,
+            undefined,
+            { matchUnitInProbeTitle: true },
+          );
           const canarySize =
             rolloutTrigger === 'full'
               ? roster.length
@@ -3896,6 +3902,7 @@ export class GoalService {
               draftTasks,
               draftTasks.length,
               Number.POSITIVE_INFINITY,
+              { matchUnitInProbeTitle: true },
             ).map((title, index) => {
               const draft = draftTasks[index];
               return {
