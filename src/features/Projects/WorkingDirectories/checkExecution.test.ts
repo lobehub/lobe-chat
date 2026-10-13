@@ -71,24 +71,35 @@ describe('project send preflight', () => {
       expect(resolve).not.toHaveBeenCalled();
     });
 
-    it('rejects a read-only directory without resolving over the network', async () => {
+    // Regression: a cached unlinked/read-only row was rejected locally, but the
+    // replica can lag a change (`attachEnvironment` refreshes only environments),
+    // so a send the server would accept was blocked. Negative states re-resolve.
+    it.each([
+      ['unlinked', { environmentId: null, instanceId: null }],
+      ['read-only', { permission: 'read' }],
+    ])('re-resolves a cached %s row and passes when the server accepts it', async (_, patch) => {
+      useProjectDirectoryStore.setState({
+        directoriesMap: { all: [{ ...row, ...patch } as ProjectDirectory] },
+      });
+      const resolve = vi
+        .spyOn(projectWorkingDirectoryService, 'resolve')
+        .mockResolvedValue({ data: row, success: true } as any);
+
+      await expect(checkProjectExecution(topic, true)).resolves.toBeUndefined();
+      expect(resolve).toHaveBeenCalledWith('directory');
+    });
+
+    it('rejects a cached negative row the server still refuses', async () => {
       useProjectDirectoryStore.setState({
         directoriesMap: { all: [{ ...row, permission: 'read' } as ProjectDirectory] },
       });
-      const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
+      vi.spyOn(projectWorkingDirectoryService, 'resolve').mockRejectedValue(
+        new Error('This directory is read-only'),
+      );
 
-      await expect(checkProjectExecution(topic, true)).rejects.toThrow('topics.directoryReadOnly');
-      expect(resolve).not.toHaveBeenCalled();
-    });
-
-    it('rejects a directory without a linked environment', async () => {
-      useProjectDirectoryStore.setState({
-        directoriesMap: { all: [{ ...row, environmentId: null } as ProjectDirectory] },
-      });
-      const resolve = vi.spyOn(projectWorkingDirectoryService, 'resolve');
-
-      await expect(checkProjectExecution(topic, true)).rejects.toThrow('topics.directoryNotLinked');
-      expect(resolve).not.toHaveBeenCalled();
+      await expect(checkProjectExecution(topic, true)).rejects.toThrow(
+        'This directory is read-only',
+      );
     });
   });
 });

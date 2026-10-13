@@ -9,27 +9,23 @@ import { findProjectDirectory } from '@/store/projectWorkingDirectory';
  * cleared so a rejected send keeps the user's text and uploads.
  *
  * Checks the binding so a directory that was deleted, unlinked or made
- * read-only while the conversation was open still rejects up front. The row is
- * read from the sidebar's directory replica when it is loaded — a network
- * resolve here sat in front of every send — and only a cold replica resolves
- * from the DB. The replica does not carry the environment's enabled state;
- * the runtime revalidates the full binding before every execution, and a
- * rejected dispatch restores the composer itself. It deliberately does NOT
- * probe the device with `deviceService.statPath`: whether the directory still
- * exists on the device is discovered by the dispatch that follows.
+ * read-only while the conversation was open still rejects up front. A usable
+ * row in the sidebar's directory replica passes without a network round trip —
+ * a resolve here sat in front of every send. The replica only ever lets a send
+ * through: it can lag a change (linking an environment refreshes environments,
+ * not directories), so a missing or negative cached row asks the server, which
+ * throws for a missing, disabled or read-only directory. The runtime still
+ * revalidates the full binding before every execution, and a rejected dispatch
+ * restores the composer itself. It deliberately does NOT probe the device with
+ * `deviceService.statPath`: whether the directory still exists on the device
+ * is discovered by the dispatch that follows.
  */
 export async function checkProjectExecution(topic: ChatTopic | undefined, gatewayEnabled: boolean) {
   if (!topic?.projectWorkingDirectoryId) return;
   if (!gatewayEnabled) throw new Error(t('topics.gatewayUnavailable', { ns: 'project' }));
 
   const directory = findProjectDirectory(topic.projectWorkingDirectoryId);
-  if (!directory) {
-    // Throws for a missing, disabled or read-only directory.
-    await projectWorkingDirectoryService.resolve(topic.projectWorkingDirectoryId);
+  if (directory?.instanceId && directory.environmentId && directory.permission === 'readWrite')
     return;
-  }
-  if (!directory.instanceId || !directory.environmentId)
-    throw new Error(t('topics.directoryNotLinked', { ns: 'project' }));
-  if (directory.permission !== 'readWrite')
-    throw new Error(t('topics.directoryReadOnly', { ns: 'project' }));
+  await projectWorkingDirectoryService.resolve(topic.projectWorkingDirectoryId);
 }
