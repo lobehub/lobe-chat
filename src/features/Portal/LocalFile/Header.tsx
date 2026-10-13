@@ -16,11 +16,8 @@ import TabStrip from './TabStrip';
 const Header = memo<{ onClose?: () => void }>(({ onClose }) => {
   const { t } = useTranslation('chat');
   const activeLocalFilePath = useChatStore(chatPortalSelectors.activeLocalFilePath);
-  // Sandbox-backed tabs point at paths inside the cloud sandbox, not the local
-  // filesystem — "show in system" would open an unrelated folder or fail.
-  const isSandboxFile = useChatStore(
-    (s) => !!chatPortalSelectors.currentLocalFile(s)?.sandboxTopicId,
-  );
+  // Remote device and sandbox paths cannot be revealed in the local filesystem.
+  const isRemoteFile = useChatStore(chatPortalSelectors.isCurrentLocalFileRemote);
   const handleOpenFileFolder = useCallback(() => {
     if (!activeLocalFilePath) return;
 
@@ -36,7 +33,7 @@ const Header = memo<{ onClose?: () => void }>(({ onClose }) => {
       rightExtra={
         isDesktop &&
         activeLocalFilePath &&
-        !isSandboxFile && (
+        !isRemoteFile && (
           <ActionIcon
             aria-label={t('workingPanel.files.showInSystem')}
             icon={FolderOpen}

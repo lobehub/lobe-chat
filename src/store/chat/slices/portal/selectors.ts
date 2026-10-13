@@ -230,6 +230,11 @@ const currentLocalFile = (s: ChatStoreState): OpenLocalFileEntry | undefined => 
   );
 };
 
+const isCurrentLocalFileRemote = (s: ChatStoreState): boolean => {
+  const file = currentLocalFile(s);
+  return !!file?.deviceId || !!file?.sandboxTopicId;
+};
+
 const localFilePath = (s: ChatStoreState) => currentLocalFile(s)?.filePath;
 const localFileWorkingDirectory = (s: ChatStoreState) => currentLocalFile(s)?.workingDirectory;
 
@@ -369,6 +374,7 @@ export const chatPortalSelectors = {
   activeLocalFileId,
   activeLocalFilePath,
   currentLocalFile,
+  isCurrentLocalFileRemote,
   dirtyLocalFileContents,
   isLocalFileDirty,
   localFileBuffer,
