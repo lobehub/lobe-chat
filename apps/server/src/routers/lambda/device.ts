@@ -231,7 +231,12 @@ const workspaceFileInput = z.object({
  */
 const workspaceFileProcedure = deviceProcedure.input(workspaceFileInput).use(async (opts) => {
   const { deviceId, workingDirectory } = workspaceFileInput.parse(await opts.getRawInput());
-  await assertWorkspaceRootApproved(opts.ctx.deviceModel, deviceId, workingDirectory);
+  await assertWorkspaceRootApproved(
+    opts.ctx.deviceModel,
+    deviceId,
+    workingDirectory,
+    opts.ctx.workspaceId,
+  );
   return opts.next();
 });
 
@@ -838,7 +843,12 @@ export const deviceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await assertWorkspaceRootApproved(ctx.deviceModel, input.deviceId, input.path);
+      await assertWorkspaceRootApproved(
+        ctx.deviceModel,
+        input.deviceId,
+        input.path,
+        ctx.workspaceId,
+      );
       return deviceGateway.runGitPullRequestAction({
         action: input.action,
         deviceId: input.deviceId,

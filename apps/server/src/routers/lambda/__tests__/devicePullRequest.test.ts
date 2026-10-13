@@ -5,6 +5,7 @@ import { deviceRouter } from '../device';
 
 const mocks = vi.hoisted(() => ({
   findByDeviceId: vi.fn(),
+  findWorkspaceDeviceById: vi.fn(),
   runGitPullRequestAction: vi.fn(),
 }));
 
@@ -12,7 +13,7 @@ vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: vi.fn() }));
 vi.mock('@/database/models/device', () => ({
   DeviceModel: class {
     findByDeviceId = mocks.findByDeviceId;
-    findWorkspaceDeviceById = async () => ({ deviceId: 'device' });
+    findWorkspaceDeviceById = mocks.findWorkspaceDeviceById;
   },
 }));
 vi.mock('@/server/services/deviceGateway', async (importOriginal) => ({
@@ -24,7 +25,12 @@ describe('PR mutation workspace boundary', () => {
   const caller = deviceRouter.createCaller({ userId: 'member', workspaceId: 'workspace' } as never);
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.findByDeviceId.mockResolvedValue({ workingDirs: [{ path: '/approved' }] });
+    mocks.findByDeviceId.mockResolvedValue(undefined);
+    mocks.findWorkspaceDeviceById.mockResolvedValue({
+      deviceId: 'device',
+      userId: 'enroller',
+      workingDirs: [{ path: '/approved' }],
+    });
     mocks.runGitPullRequestAction.mockResolvedValue({ success: true });
   });
 
