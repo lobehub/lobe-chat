@@ -1,11 +1,12 @@
 import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Avatar, Button, confirmModal, Select, Tag, Text } from '@lobehub/ui/base-ui';
-import dayjs from 'dayjs';
 import { XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import type { ProjectMemberItem } from '@/services/projectReview';
+
+import { inviteDaysLeft } from './siteSnippet';
 
 interface MemberRowProps {
   busy: boolean;
@@ -60,7 +61,7 @@ export function MemberRow({ busy, member, onResend, onRevoke, onRoleChange }: Me
     });
 
   if (member.status === 'pending') {
-    const days = member.expiresAt ? Math.max(0, dayjs(member.expiresAt).diff(dayjs(), 'day')) : 0;
+    const days = inviteDaysLeft(member.expiresAt, Date.now());
     return (
       <Flexbox horizontal align="center" gap={12} paddingBlock={12} paddingInline={16} wrap="wrap">
         <Flexbox flex={1} style={{ minWidth: 0 }}>

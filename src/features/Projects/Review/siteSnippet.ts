@@ -27,3 +27,8 @@ export const originErrorFromServer = (error: unknown) => {
   const match = error instanceof Error ? SERVER_ORIGIN_ERROR.exec(error.message) : null;
   return match ? { index: Number(match[1]), reason: match[2] as SiteOriginError } : undefined;
 };
+
+const DAY_MS = 86_400_000;
+
+export const inviteDaysLeft = (expiresAt: Date | string | null, now: number) =>
+  expiresAt ? Math.max(0, Math.ceil((new Date(expiresAt).getTime() - now) / DAY_MS)) : 0;

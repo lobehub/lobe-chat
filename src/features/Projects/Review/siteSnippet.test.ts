@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { checkOrigins, originErrorFromServer, reviewLink, siteSnippet } from './siteSnippet';
+import {
+  checkOrigins,
+  inviteDaysLeft,
+  originErrorFromServer,
+  reviewLink,
+  siteSnippet,
+} from './siteSnippet';
 
 describe('siteSnippet', () => {
   it('omits the server for LobeHub cloud', () => {
@@ -48,5 +54,19 @@ describe('originErrorFromServer', () => {
       reason: 'path',
     });
     expect(originErrorFromServer(new Error('Cannot manage review access'))).toBeUndefined();
+  });
+});
+
+describe('inviteDaysLeft', () => {
+  const now = Date.parse('2026-10-14T00:00:00Z');
+
+  it('counts a part day as a whole one, so a fresh 7-day invite reads 7', () => {
+    expect(inviteDaysLeft(new Date(now + 7 * 86_400_000 - 60_000), now)).toBe(7);
+    expect(inviteDaysLeft(new Date(now + 3_600_000), now)).toBe(1);
+  });
+
+  it('never goes below zero', () => {
+    expect(inviteDaysLeft(new Date(now - 86_400_000), now)).toBe(0);
+    expect(inviteDaysLeft(null, now)).toBe(0);
   });
 });

@@ -90,7 +90,7 @@ export default {
   'consent.acceptanceReview.siteDenied':
     'You’re not a member of this project, so you can’t review this site. Ask a project maintainer to invite you, or switch accounts.',
   'consent.acceptanceReview.siteProject': 'Project {{project}}',
-  'consent.acceptanceReview.siteProjectRole': 'Project {{project}} · you are a {{role}}',
+  'consent.acceptanceReview.siteProjectRole': 'Project {{project}} · Your role: {{role}}',
   'consent.acceptanceReview.siteTarget': 'Review the site: {{site}}',
   'consent.acceptanceReview.unregisteredHint':
     'Nothing was shared. If this address is yours, add it under Project settings › Sites.',

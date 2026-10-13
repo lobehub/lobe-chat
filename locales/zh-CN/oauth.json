@@ -18,7 +18,7 @@
   "consent.acceptanceReview.role.workspace": "工作区成员",
   "consent.acceptanceReview.siteDenied": "你不是该项目的成员，无法评审这个站点。请联系项目维护者邀请你，或切换账号。",
   "consent.acceptanceReview.siteProject": "项目 {{project}}",
-  "consent.acceptanceReview.siteProjectRole": "项目 {{project}} · 你是{{role}}",
+  "consent.acceptanceReview.siteProjectRole": "项目 {{project}} · 你的角色：{{role}}",
   "consent.acceptanceReview.siteTarget": "评审站点：{{site}}",
   "consent.acceptanceReview.target": "评审验收单：{{title}}",
   "consent.acceptanceReview.unregisteredHint": "没有共享任何信息。如果这是你的地址，请在项目设置 › 站点中添加。",
