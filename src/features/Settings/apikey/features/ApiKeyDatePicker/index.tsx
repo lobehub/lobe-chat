@@ -1,7 +1,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { DatePicker, type DatePickerProps } from '@lobehub/ui/base-ui';
-import { type Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,21 +28,21 @@ const ApiKeyDatePicker: FC<ApiKeyDatePickerProps> = ({
 }) => {
   const { t } = useTranslation('auth');
 
-  const handleOnChange = (date: Date | null) => {
+  const handleOnChange = (date: Dayjs | null) => {
     // If a date is selected, set it to 23:59:59 of that day
-    const submitData = date ? dayjs(date).hour(23).minute(59).second(59).millisecond(999) : null;
+    const submitData = date ? date.hour(23).minute(59).second(59).millisecond(999) : null;
 
     onChange?.(submitData);
   };
 
   return (
     <DatePicker
-      defaultValue={defaultValue?.toDate() ?? null}
+      defaultValue={defaultValue ?? null}
       format="YYYY-MM-DD"
       key={value?.valueOf() || 'EMPTY'}
-      value={value === null ? null : value?.toDate()}
+      value={value}
       {...props}
-      min={new Date()}
+      min={dayjs()}
       placeholder={t('apikey.form.fields.expiresAt.placeholder')}
       footer={
         showNeverExpiresFooter && (
