@@ -1,14 +1,15 @@
 import { ClipboardCheckIcon, FolderClosedIcon } from 'lucide-react';
+import { lazy } from 'react';
 
 import ConversationSegmentSkeleton from '@/components/Skeleton/Conversation/Segment';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
-import { usePublishDynamicRouteMeta } from '@/features/RouteMeta/usePublishDynamicRouteMeta';
-import { matchesRouteWorkspace, useRouteWorkspaceId } from '@/features/RouteMeta/workspaceScope';
-import type { DynamicRouteMetaProps, RouteMetaParams } from '@/spa/router/routeMeta';
 import { routeMeta } from '@/spa/router/routeMeta';
-import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
-import { useProjectStore } from '@/store/project';
+
+// Route metas load with the router on first paint; the runner reads the chat
+// and project stores, so keep it out of the entry graph.
+const ProjectConversationDynamicMeta = lazy(
+  () => import('@/features/RouteMeta/ProjectDynamicMeta'),
+);
 
 export const projectsRouteMeta = routeMeta({
   icon: FolderClosedIcon,
@@ -21,28 +22,6 @@ export const projectDirectoriesRouteMeta = routeMeta({
   Skeleton: createSurfaceSkeleton('list'),
   titleKey: 'project:settings.title',
 });
-
-export const useProjectConversationTitle = (params: RouteMetaParams): string | undefined => {
-  const routeWorkspaceId = useRouteWorkspaceId(params);
-  const projectName = useProjectStore((state) => {
-    const detail = params.projectId ? state.projectDetailMap[params.projectId] : undefined;
-    if (!matchesRouteWorkspace(detail?.project.workspaceId, routeWorkspaceId)) return undefined;
-    return detail?.project.name || undefined;
-  });
-  const topicTitle = useChatStore((state) =>
-    params.topicId ? topicSelectors.getTopicById(params.topicId)(state)?.title : undefined,
-  );
-
-  return [topicTitle, projectName].filter(Boolean).join(' · ') || undefined;
-};
-
-const ProjectConversationDynamicMeta = ({ onResolve, params }: DynamicRouteMetaProps) => {
-  const title = useProjectConversationTitle(params);
-
-  usePublishDynamicRouteMeta({ title }, onResolve);
-
-  return null;
-};
 
 export const projectConversationRouteMeta = routeMeta({
   DynamicMeta: ProjectConversationDynamicMeta,
