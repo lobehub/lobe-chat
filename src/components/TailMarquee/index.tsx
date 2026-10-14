@@ -32,6 +32,10 @@ const scrollToHead = keyframes`
 
 const styles = createStaticStyles(({ css }) => ({
   container: css`
+    /* Paths read left to right in every locale; the alignment, fade and
+       translate below all assume LTR, so pin it even inside an RTL page. */
+    direction: ltr;
+    unicode-bidi: isolate;
     overflow: hidden;
     display: flex;
     flex: 1;
