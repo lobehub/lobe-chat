@@ -12,6 +12,7 @@ import { resolveServerUrl } from '../../settings';
 import { outputJson, printTable, timeAgo, truncate } from '../../utils/format';
 import { log } from '../../utils/logger';
 import { collectCommentFeedback } from './commentFeedback';
+import { attachCriterionCommands } from './criterion';
 import { attachAcceptanceFlowCommands } from './flow';
 import {
   assertReportLanguage,
@@ -20,6 +21,8 @@ import {
   responseLanguageSettingsUrl,
   unsetLanguageWarning,
 } from './language';
+import { attachPlanCommands } from './plan';
+import { attachRubricCommands } from './rubric';
 import { attachAcceptanceRunCommands } from './run';
 import type { ReviewAnnotationRegion } from './utils';
 import { formatAnnotationRegion, formatDisputedChapter, parseSubjectRef } from './utils';
@@ -658,8 +661,12 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
       }
     });
 
-  // The canonical `lh acceptance init` + `lh acceptance run …` tree hangs off the
-  // first-class command only; the legacy `lh verify acceptance` alias stays a thin
-  // decision surface (its run commands keep their old `lh verify …` spellings).
-  if (!options?.deprecated) attachAcceptanceRunCommands(acceptance);
+  // The canonical `lh acceptance install` + `run` / `plan` / `criterion` / `rubric`
+  // trees hang off the first-class command only; the legacy `lh verify acceptance`
+  // alias stays a thin decision surface (the rest keep their `lh verify …` aliases).
+  if (options?.deprecated) return;
+  attachAcceptanceRunCommands(acceptance);
+  attachPlanCommands(acceptance);
+  attachCriterionCommands(acceptance);
+  attachRubricCommands(acceptance);
 }

@@ -779,7 +779,7 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
       '  Run the Acceptance inside this Task, not after it: drive the real product surface, capture each artifact as soon as the criterion it proves is provable, and publish before you finish.',
     );
     taskLines.push(
-      '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh verify plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
+      '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh acceptance plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
     );
     // Two builder shapes, two toolchains. The portable `acceptance` skill is
     // pulled to disk by CLI builders and absent from `builtinSkills`, so only a
