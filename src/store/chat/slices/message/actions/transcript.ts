@@ -1,6 +1,6 @@
 import { type ConversationContext } from '@lobechat/types';
 import debug from 'debug';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { type StoreApi, useStore } from 'zustand';
 
 import {
@@ -162,17 +162,6 @@ export class MessageTranscriptActionImpl {
       !context.agentShareId &&
       !context.topicShareId &&
       !context.threadId;
-    // Stable identity: the poll timer restarts whenever the interval option
-    // changes, so a fresh function per render would postpone every tick.
-    const pollInterval = useMemo(
-      () =>
-        syncContinuation
-          ? () =>
-              pendingInterventions.has(syncKey) ? INTERVENTION_REFRESH_INTERVAL : refreshInterval
-          : refreshInterval,
-      [syncContinuation, syncKey, refreshInterval],
-    );
-
     const result = slice.useSync(
       { ...context, syncInterventions: syncContinuation },
       {
@@ -217,12 +206,51 @@ export class MessageTranscriptActionImpl {
             });
           }
         },
-        refreshInterval: pollInterval,
         refreshWhenHidden: false,
         refreshWhenOffline: false,
         ...(revalidateOnFocus !== undefined && { revalidateOnFocus }),
       },
     );
+
+    // Poll on our own timer rather than SWR's `refreshInterval`: SWR clears a
+    // request's dedupe record after the `dedupingInterval` of the key's FIRST
+    // render, so a poll that starts after the conversation's first read (a
+    // card that arrived over the stream) was deduped for the whole 30s list
+    // window and another device's answer showed up that late. Each tick
+    // re-reads the interval: the pending set changes without a render.
+    const revalidateRef = useRef(result.revalidate);
+    revalidateRef.current = result.revalidate;
+    const validatingRef = useRef(result.isValidating);
+    validatingRef.current = result.isValidating;
+    useEffect(() => {
+      if (!shouldFetch) return;
+      const intervalOf = () =>
+        syncContinuation && pendingInterventions.has(syncKey)
+          ? INTERVENTION_REFRESH_INTERVAL
+          : refreshInterval;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let cancelled = false;
+      const next = () => {
+        // A read still in flight when the effect re-ran must not restart this chain.
+        if (cancelled) return;
+        const interval = intervalOf();
+        if (interval > 0) timer = setTimeout(tick, interval);
+      };
+      const tick = () => {
+        const visible = typeof document === 'undefined' || document.visibilityState !== 'hidden';
+        const online = typeof navigator === 'undefined' || navigator.onLine !== false;
+        if (visible && online && !validatingRef.current) {
+          void Promise.resolve(revalidateRef.current()).finally(next);
+          return;
+        }
+        next();
+      };
+      next();
+      return () => {
+        cancelled = true;
+        clearTimeout(timer);
+      };
+    }, [shouldFetch, syncContinuation, syncKey, refreshInterval]);
 
     // Streamed chunks stay in memory; the transcript is persisted once the
     // run settles, so a reload restores the finished reply.

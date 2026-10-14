@@ -312,4 +312,57 @@ describe('pending approval message polling', () => {
       expect(messageService.getMessages).toHaveBeenCalledTimes(requests);
     },
   );
+
+  it('polls a card a stream delivered after the first read, within the poll interval', async () => {
+    // Regression: the topic's first read ran under the 30s list dedupe window.
+    // A card that arrived over the stream afterwards switched the sync to the
+    // 2s poll, but every tick was deduped against that first read, so another
+    // device's answer only showed up ~30s later.
+    useChatStore.setState({
+      dbMessagesMap: {},
+      messagePagingMap: {},
+      messageReplica: createReplicaState(),
+      messagesMap: {},
+    });
+    vi.mocked(messageService.getMessages).mockResolvedValue([]);
+    const cache = new Map();
+    renderHook(
+      () => {
+        const hasPending = useChatStore((state) =>
+          hasPendingInterventions(state.dbMessagesMap[key] ?? []),
+        );
+        useChatStore.getState().useFetchMessages(context, {
+          refreshInterval: hasPending ? INTERVENTION_REFRESH_INTERVAL : 0,
+          syncInterventions: true,
+        });
+      },
+      {
+        wrapper: ({ children }: PropsWithChildren) =>
+          createElement(SWRConfig, { value: { provider: () => cache } }, children),
+      },
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(messageService.getMessages).toHaveBeenCalledTimes(1);
+
+    // The run parks on a question: the card arrives over the stream, and the
+    // server still reports it pending for a while.
+    vi.mocked(messageService.getMessages).mockResolvedValue([pending]);
+    await act(async () => {
+      useChatStore.getState().replaceMessages([pending], { context });
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(INTERVENTION_REFRESH_INTERVAL + 500);
+    });
+
+    // Another device answers; the next poll picks it up.
+    const answered = { ...pending, pluginIntervention: { status: 'approved' as const } };
+    vi.mocked(messageService.getMessages).mockResolvedValue([answered]);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2 * INTERVENTION_REFRESH_INTERVAL + 500);
+    });
+
+    expect(rows()[0].pluginIntervention?.status).toBe('approved');
+  });
 });

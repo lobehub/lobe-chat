@@ -104,9 +104,9 @@ describe('useFetchMessages', () => {
       expect(useClientDataSWR).toHaveBeenCalledWith(
         expect.any(Array),
         expect.any(Function),
+        // Polling runs on the hook's own timer (see transcript.approvalSync).
         expect.objectContaining({
           dedupingInterval: 1000,
-          refreshInterval: 2000,
           refreshWhenHidden: false,
           refreshWhenOffline: false,
         }),
