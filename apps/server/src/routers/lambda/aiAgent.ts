@@ -2849,6 +2849,10 @@ export const aiAgentRouter = router({
           prompt,
           // When parentMessageId is provided, this is a regeneration/continue — skip user message creation
           resume: !!parentMessageId,
+          // NOTICE: the batch route forwards only a subset of `ExecAgentSchema`;
+          // other per-turn picks (`selectedToolIds`, `mentionedAgents`, `fileIds`)
+          // are still dropped here, as before this field was added.
+          selectedSkillIds: task.selectedSkillIds,
           slug,
           trigger: trigger ?? RequestTrigger.Chat,
         });
