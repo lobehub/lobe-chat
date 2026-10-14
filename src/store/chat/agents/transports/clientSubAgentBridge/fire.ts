@@ -29,10 +29,14 @@ const log = debug('lobe-store:client-subagent-bridge');
 const reconstructRegistrationFromThread = async (
   childThreadId: string,
   childTopicId: string | undefined,
+  // P2 (round-8): the sibling-rebuild loop already holds the full topic
+  // thread list — pass it through instead of re-fetching the whole topic
+  // once per sibling (N serial round-trips before the parent can resume).
+  knownThreads?: Awaited<ReturnType<typeof threadService.getThreads>>,
 ): Promise<ClientSubAgentBridgeRegistration | undefined> => {
   if (!childTopicId) return undefined;
   try {
-    const threads = await threadService.getThreads(childTopicId);
+    const threads = knownThreads ?? (await threadService.getThreads(childTopicId));
     const thread = threads.find((t) => t.id === childThreadId);
     if (!thread || thread.status !== 'processing') return undefined;
 
@@ -95,7 +99,7 @@ const reconstructRegistrationFromThread = async (
           siblingBridge.parentOperationId !== bridge.parentOperationId
         )
           continue;
-        await reconstructRegistrationFromThread(sibling.id, childTopicId);
+        await reconstructRegistrationFromThread(sibling.id, childTopicId, threads);
         log('bridge sibling reconstructed from thread row: key=%s', sibling.id);
       }
     }
@@ -257,9 +261,17 @@ const fireRegistration = async (
   // this the thread list / sidebar shows processing forever.
   try {
     await aiAgentService.updateClientTaskThreadStatus({
-      completionReason: succeeded ? 'done' : 'error',
+      // P2 (round-8): pass the terminal outcome verbatim — the server maps
+      // `interrupted` to ThreadStatus.Cancel; recording it as `error`
+      // persisted a cancelled child as failed.
+      completionReason: outcome.status,
       error: succeeded ? undefined : resultContent,
       metadata: {
+        // P2 (round-8): include the child's final cost — the settlement
+        // overwrites thread.metadata.totalCost, so omitting it zeroed the
+        // parked child's spend on refresh (ordinary completion paths
+        // persist it).
+        totalCost: outcome.cost,
         totalMessages: threadMessages.length,
         totalTokens: metrics.totalTokens,
         totalToolCalls: metrics.toolCalls,
@@ -351,9 +363,16 @@ const fireSubAgentBridge = async (
   //    onRunParked; the async-tool park keeps it running by design, so the
   //    bridge retires it at resume time) and re-enter the runtime from the
   //    tool message position under a new operation.
-  get().completeOperation(parentOperationId);
-
+  // P1 (round-8): complete the parked parent op only AFTER re-entry
+  // succeeds. Completing it first meant a resumeClientSubAgentParent throw
+  // left the parent permanently unresumable: the outer catch restored the
+  // claim + barrier slot, but every retry hit the `parentOp.status ===
+  // 'running'` guard — actually `!parentParked` — and skipped the resume,
+  // so no re-fire (automatic or manual) could recover. Keeping the op
+  // running until re-entry succeeds makes every retry retryable.
   await resumeClientSubAgentParent(get, parentContext, toolMessageId);
+
+  get().completeOperation(parentOperationId);
 
   log('parent %s resumed with child result (%d chars)', parentOperationId, resultContent.length);
 };
@@ -450,8 +469,11 @@ const fireGroupOrchestrationBridge = async (
   // the module-level pendingByParentOp set stays reachable without this).
   releasePending(registration);
 
-  get().completeOperation(orchestrationOperationId);
-
+  // P1 (round-8): retire the parked orchestration op only AFTER the re-entry
+  // succeeds — same recovery hole as the sub-agent kind: completing it first
+  // let an internal_execGroupOrchestration throw leave the parked op
+  // permanently unresumable, since every retry then failed the
+  // `orchestrationParked` guard. Retiring after keeps the retry path alive.
   await get().internal_execGroupOrchestration({
     groupId: messageContext.groupId,
     initialResult: {
@@ -472,6 +494,8 @@ const fireGroupOrchestrationBridge = async (
     supervisorAgentId,
     topicId: messageContext.topicId,
   });
+
+  get().completeOperation(orchestrationOperationId);
 
   log(
     'orchestration %s re-entered after member %s settled (status=%s)',
