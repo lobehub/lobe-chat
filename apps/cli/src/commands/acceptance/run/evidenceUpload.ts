@@ -1,19 +1,19 @@
 import { access } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { TrpcClient } from '../api/client';
-import { resolveWorkspaceId } from '../api/workspace';
-import { resolveServerUrl } from '../settings';
-import { outputJson } from '../utils/format';
-import { log } from '../utils/logger';
-import { uploadLocalFile } from '../utils/uploadLocalFile';
-import type { EvidenceType } from './verifyHelpers';
+import type { TrpcClient } from '../../../api/client';
+import { resolveWorkspaceId } from '../../../api/workspace';
+import { resolveServerUrl } from '../../../settings';
+import { outputJson } from '../../../utils/format';
+import { log } from '../../../utils/logger';
+import { uploadLocalFile } from '../../../utils/uploadLocalFile';
+import type { EvidenceType } from '../utils';
 import {
   evidenceDescriptionForFile,
   evidenceTypeForFile,
   inlineTextEvidenceForFile,
   reportEvidence,
-} from './verifyHelpers';
+} from '../utils';
 
 export async function storageQuotaRecovery(client: TrpcClient) {
   const serverUrl = new URL(resolveServerUrl());

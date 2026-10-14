@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { log } from '../utils/logger';
+import { log } from '../../utils/logger';
 import {
   assertReportLanguage,
   findLanguageViolations,
@@ -8,9 +8,9 @@ import {
   ingestLanguageFields,
   ReportLanguageError,
   reportLanguageFor,
-} from './acceptanceLanguage';
+} from './language';
 
-vi.mock('../settings', () => ({
+vi.mock('../../settings', () => ({
   resolveServerUrl: () => 'https://user:secret@app.lobehub.com',
 }));
 

@@ -7,20 +7,20 @@ import { promisify } from 'node:util';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTrpcClient } from '../api/client';
-import { resolveWorkspaceId } from '../api/workspace';
-import { resolveServerUrl } from '../settings';
-import { log } from '../utils/logger';
-import { uploadLocalFile } from '../utils/uploadLocalFile';
-import { attachAcceptanceRunCommands } from './acceptanceRun';
-import type * as VerifyHelpers from './verifyHelpers';
-import { pullRequestFromBranch } from './verifyHelpers';
+import { getTrpcClient } from '../../../api/client';
+import { resolveWorkspaceId } from '../../../api/workspace';
+import { resolveServerUrl } from '../../../settings';
+import { log } from '../../../utils/logger';
+import { uploadLocalFile } from '../../../utils/uploadLocalFile';
+import type * as VerifyHelpers from '../utils';
+import { pullRequestFromBranch } from '../utils';
+import { attachAcceptanceRunCommands } from '.';
 
-vi.mock('../api/client', () => ({ getTrpcClient: vi.fn() }));
-vi.mock('../api/workspace', () => ({ resolveWorkspaceId: vi.fn() }));
-vi.mock('../settings', () => ({ resolveServerUrl: vi.fn() }));
-vi.mock('../utils/uploadLocalFile', () => ({ uploadLocalFile: vi.fn() }));
-vi.mock('./verifyHelpers', async (importOriginal) => ({
+vi.mock('../../../api/client', () => ({ getTrpcClient: vi.fn() }));
+vi.mock('../../../api/workspace', () => ({ resolveWorkspaceId: vi.fn() }));
+vi.mock('../../../settings', () => ({ resolveServerUrl: vi.fn() }));
+vi.mock('../../../utils/uploadLocalFile', () => ({ uploadLocalFile: vi.fn() }));
+vi.mock('../utils', async (importOriginal) => ({
   ...(await importOriginal<typeof VerifyHelpers>()),
   pullRequestFromBranch: vi.fn(),
 }));

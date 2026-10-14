@@ -2,8 +2,8 @@ import type { AcceptanceCommentItem } from '@lobechat/types';
 import { Command } from 'commander';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
-import type * as Format from '../utils/format';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import type * as Format from '../../utils/format';
+import { registerAcceptanceCommands } from '.';
 
 const { getBundle, listComments, outputJson, setPreviewUrl } = vi.hoisted(() => ({
   getBundle: vi.fn(),
@@ -11,13 +11,13 @@ const { getBundle, listComments, outputJson, setPreviewUrl } = vi.hoisted(() => 
   outputJson: vi.fn(),
   setPreviewUrl: vi.fn(),
 }));
-vi.mock('../api/client', () => ({
+vi.mock('../../api/client', () => ({
   getTrpcClient: async () => ({
     acceptance: { getBundle: { query: getBundle }, setPreviewUrl: { mutate: setPreviewUrl } },
     acceptanceComment: { list: { query: listComments } },
   }),
 }));
-vi.mock('../utils/format', async (original) => ({
+vi.mock('../../utils/format', async (original) => ({
   ...(await original<typeof Format>()),
   outputJson,
 }));

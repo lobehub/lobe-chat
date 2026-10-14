@@ -1,17 +1,17 @@
 import { Command } from 'commander';
 import { expect, it, vi } from 'vitest';
 
-import type * as Format from '../utils/format';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import type * as Format from '../../utils/format';
+import { registerAcceptanceCommands } from '.';
 
 const { getBundle, outputJson } = vi.hoisted(() => ({ getBundle: vi.fn(), outputJson: vi.fn() }));
-vi.mock('../api/client', () => ({
+vi.mock('../../api/client', () => ({
   getTrpcClient: async () => ({
     acceptance: { getBundle: { query: getBundle } },
     acceptanceComment: { list: { query: async () => ({ items: [] }) } },
   }),
 }));
-vi.mock('../utils/format', async (original) => ({
+vi.mock('../../utils/format', async (original) => ({
   ...(await original<typeof Format>()),
   outputJson,
 }));

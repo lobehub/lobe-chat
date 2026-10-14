@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { expect, it, vi } from 'vitest';
 
-import { attachAcceptanceFlowCommands } from './acceptanceFlow';
+import { attachAcceptanceFlowCommands } from './flow';
 
 const { startFlow, deleteFlow, confirm, outputJson } = vi.hoisted(() => ({
   startFlow: vi.fn().mockResolvedValue({ id: 'flow-run' }),
@@ -10,12 +10,12 @@ const { startFlow, deleteFlow, confirm, outputJson } = vi.hoisted(() => ({
   outputJson: vi.fn(),
 }));
 
-vi.mock('../api/client', () => ({
+vi.mock('../../api/client', () => ({
   getTrpcClient: async () => ({
     acceptance: { startFlow: { mutate: startFlow }, deleteFlow: { mutate: deleteFlow } },
   }),
 }));
-vi.mock('../utils/format', () => ({ confirm, outputJson }));
+vi.mock('../../utils/format', () => ({ confirm, outputJson }));
 
 it('starts the requested flow version without triggering the root CLI version option', async () => {
   const program = new Command().version('0.0.52').exitOverride();

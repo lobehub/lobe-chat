@@ -3,9 +3,9 @@ import { readFile } from 'node:fs/promises';
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
-import { getTrpcClient } from '../api/client';
-import { confirm, outputJson } from '../utils/format';
-import { assertReportLanguage, flowLanguageFields } from './acceptanceLanguage';
+import { getTrpcClient } from '../../api/client';
+import { confirm, outputJson } from '../../utils/format';
+import { assertReportLanguage, flowLanguageFields } from './language';
 
 /** Agent entry point: author a graph before exercising the product, then append real visits. */
 export function attachAcceptanceFlowCommands(acceptance: Command) {

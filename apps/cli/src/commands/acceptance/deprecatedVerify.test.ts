@@ -5,7 +5,8 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { log } from '../utils/logger';
+import { log } from '../../utils/logger';
+import { registerAcceptanceCommands } from '.';
 import {
   deriveReportVerdict,
   evidenceTypeForFile,
@@ -24,9 +25,8 @@ import {
   subjectFromResult,
   surfacesFromResult,
   visualizationMetadata,
-} from './verify';
-import { registerAcceptanceCommands } from './verifyAcceptance';
-import { evidenceDescriptionForFile } from './verifyHelpers';
+} from './deprecatedVerify';
+import { evidenceDescriptionForFile } from './utils';
 
 const { mockTrpcClient } = vi.hoisted(() => ({
   mockTrpcClient: {
@@ -48,8 +48,8 @@ const { getTrpcClient: mockGetTrpcClient } = vi.hoisted(() => ({
   getTrpcClient: vi.fn(),
 }));
 
-vi.mock('../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
-vi.mock('../settings', () => ({
+vi.mock('../../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
+vi.mock('../../settings', () => ({
   loadActiveWorkspace: () => undefined,
   resolveServerUrl: () => 'https://app.lobehub.com',
 }));

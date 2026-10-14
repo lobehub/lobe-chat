@@ -1,5 +1,5 @@
-import { resolveServerUrl } from '../settings';
-import { log } from '../utils/logger';
+import { resolveServerUrl } from '../../settings';
+import { log } from '../../utils/logger';
 
 /**
  * Acceptance pages are read by the account owner, so every human-readable

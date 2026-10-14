@@ -36,8 +36,8 @@ import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { parseKlmTrace, summarizeKlmTrace } from '@lobechat/utils/verify/interactionCost';
 import pc from 'picocolors';
 
-import { printTable, truncate } from '../utils/format';
-import { log } from '../utils/logger';
+import { printTable, truncate } from '../../../utils/format';
+import { log } from '../../../utils/logger';
 
 export type VerifierType = 'agent' | 'llm' | 'program';
 export type OnFail = 'auto_repair' | 'manual';

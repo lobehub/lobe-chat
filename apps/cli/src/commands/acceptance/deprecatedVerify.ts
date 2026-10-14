@@ -1,11 +1,11 @@
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
-import { getTrpcClient } from '../api/client';
-import { confirm, outputJson, printTable, timeAgo, truncate } from '../utils/format';
-import { log } from '../utils/logger';
-import { attachDeprecatedVerifyRunAliases } from './acceptanceRun';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import { getTrpcClient } from '../../api/client';
+import { confirm, outputJson, printTable, timeAgo, truncate } from '../../utils/format';
+import { log } from '../../utils/logger';
+import { registerAcceptanceCommands } from '.';
+import { attachDeprecatedVerifyRunAliases } from './run';
 import {
   assertEnum,
   ON_FAIL,
@@ -14,11 +14,11 @@ import {
   printResults,
   VERIFIER_TYPES,
   type VerifierType,
-} from './verifyHelpers';
+} from './utils';
 
 // Re-export the report/ingest helpers so existing importers keep resolving them
-// from './verify' (tests, and callers predating the verifyHelpers split).
-export * from './verifyHelpers';
+// from './deprecatedVerify' (tests, and callers predating the verifyHelpers split).
+export * from './utils';
 
 // ── Command Registration ───────────────────────────────────
 

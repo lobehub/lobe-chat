@@ -5,16 +5,16 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { afterEach, expect, it, vi } from 'vitest';
 
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import { registerAcceptanceCommands } from '.';
 
 const { regroup, outputJson } = vi.hoisted(() => ({
   regroup: vi.fn().mockResolvedValue({ version: 2 }),
   outputJson: vi.fn(),
 }));
-vi.mock('../api/client', () => ({
+vi.mock('../../api/client', () => ({
   getTrpcClient: async () => ({ acceptance: { regroupChecks: { mutate: regroup } } }),
 }));
-vi.mock('../utils/format', () => ({ outputJson }));
+vi.mock('../../utils/format', () => ({ outputJson }));
 afterEach(() => vi.clearAllMocks());
 
 it('submits only the requested grouping and version, without starting a verification round', async () => {

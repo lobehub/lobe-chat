@@ -7,22 +7,22 @@ import type { Command } from 'commander';
 import { InvalidArgumentError } from 'commander';
 import pc from 'picocolors';
 
-import { getTrpcClient } from '../api/client';
-import { resolveServerUrl } from '../settings';
-import { outputJson, printTable, timeAgo, truncate } from '../utils/format';
-import { log } from '../utils/logger';
-import { collectCommentFeedback } from './acceptanceCommentFeedback';
-import { attachAcceptanceFlowCommands } from './acceptanceFlow';
+import { getTrpcClient } from '../../api/client';
+import { resolveServerUrl } from '../../settings';
+import { outputJson, printTable, timeAgo, truncate } from '../../utils/format';
+import { log } from '../../utils/logger';
+import { collectCommentFeedback } from './commentFeedback';
+import { attachAcceptanceFlowCommands } from './flow';
 import {
   assertReportLanguage,
   languageSummary,
   resolveReportLanguage,
   responseLanguageSettingsUrl,
   unsetLanguageWarning,
-} from './acceptanceLanguage';
-import { attachAcceptanceRunCommands } from './acceptanceRun';
-import type { ReviewAnnotationRegion } from './verifyHelpers';
-import { formatAnnotationRegion, formatDisputedChapter, parseSubjectRef } from './verifyHelpers';
+} from './language';
+import { attachAcceptanceRunCommands } from './run';
+import type { ReviewAnnotationRegion } from './utils';
+import { formatAnnotationRegion, formatDisputedChapter, parseSubjectRef } from './utils';
 
 /**
  * Resolve an acceptance from either its uuid or a `type:id` subject reference —

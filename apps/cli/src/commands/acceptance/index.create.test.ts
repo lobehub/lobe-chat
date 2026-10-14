@@ -5,11 +5,11 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTrpcClient } from '../api/client';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import { getTrpcClient } from '../../api/client';
+import { registerAcceptanceCommands } from '.';
 
-vi.mock('../api/client', () => ({ getTrpcClient: vi.fn() }));
-vi.mock('../settings', () => ({ resolveServerUrl: () => 'https://self-hosted.example/base/' }));
+vi.mock('../../api/client', () => ({ getTrpcClient: vi.fn() }));
+vi.mock('../../settings', () => ({ resolveServerUrl: () => 'https://self-hosted.example/base/' }));
 
 const acceptanceId = 'd8391b91-60bb-49be-a5b7-f14f0c52876a';
 const acceptanceUrl = `https://self-hosted.example/acceptance/${acceptanceId}`;

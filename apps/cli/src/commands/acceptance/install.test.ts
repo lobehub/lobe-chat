@@ -5,11 +5,11 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createPublicLambdaClient, getTrpcClient } from '../api/client';
-import { registerVerifyCommand } from './verify';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import { createPublicLambdaClient, getTrpcClient } from '../../api/client';
+import { registerAcceptanceCommands } from '.';
+import { registerVerifyCommand } from './deprecatedVerify';
 
-vi.mock('../api/client', () => ({
+vi.mock('../../api/client', () => ({
   createPublicLambdaClient: vi.fn(),
   getTrpcClient: vi.fn(),
 }));

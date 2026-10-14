@@ -1,6 +1,6 @@
 import type { AcceptanceCommentItem } from '@lobechat/types';
 
-import { formatAnnotationRegion } from './verifyHelpers';
+import { formatAnnotationRegion } from './utils';
 
 interface FeedbackCheck {
   id: string;

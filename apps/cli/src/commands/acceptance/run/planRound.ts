@@ -2,13 +2,13 @@ import { runEvidenceGaps } from '@lobechat/const/verify';
 import type { VerifyCheckItem } from '@lobechat/types';
 import pc from 'picocolors';
 
-import type { TrpcClient } from '../api/client';
-import { resolveServerUrl } from '../settings';
-import { outputJson } from '../utils/format';
-import { log } from '../utils/logger';
-import type { FailedReportEvidence } from './acceptanceEvidence';
-import { storageQuotaRecovery, uploadReportEvidence } from './acceptanceEvidence';
-import type { EvidenceType } from './verifyHelpers';
+import type { TrpcClient } from '../../../api/client';
+import { resolveServerUrl } from '../../../settings';
+import { outputJson } from '../../../utils/format';
+import { log } from '../../../utils/logger';
+import type { EvidenceType } from '../utils';
+import type { FailedReportEvidence } from './evidenceUpload';
+import { storageQuotaRecovery, uploadReportEvidence } from './evidenceUpload';
 
 interface PlanRoundCase {
   case: any;

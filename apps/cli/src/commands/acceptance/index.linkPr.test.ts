@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTrpcClient } from '../api/client';
-import { registerAcceptanceCommands } from './verifyAcceptance';
+import { getTrpcClient } from '../../api/client';
+import { registerAcceptanceCommands } from '.';
 
-vi.mock('../api/client', () => ({ getTrpcClient: vi.fn() }));
+vi.mock('../../api/client', () => ({ getTrpcClient: vi.fn() }));
 
 const acceptanceId = '598ebab1-74a3-4a7f-9bcb-9bfa71c654cb';
 const prUrl = 'https://github.com/lobehub/lobehub/pull/20171';
