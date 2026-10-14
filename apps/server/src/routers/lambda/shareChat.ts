@@ -15,7 +15,6 @@ import {
   agentShareFileAccessScope,
   agentShareWorkAccessScope,
   ChatErrorType,
-  entityIdPattern,
   RequestTrigger,
   UserInterventionConfigSchema,
 } from '@lobechat/types';
@@ -52,6 +51,7 @@ import { reserveUpload } from '@/server/services/fileUploadReservation';
 
 import { mapAgentInterventionTRPCError } from './_helpers/agentInterventionError';
 import { assertAgentShareVisitorEnabled } from './_helpers/agentShareFeatureGate';
+import { execAgentClientIdsSchema } from './_helpers/execAgentClientIds';
 import { toClientExecAgentResult } from './_helpers/groupMemberContinuationResult';
 import { ResolveAgentInterventionBySourceSchema } from './_schema/agentIntervention';
 import {
@@ -649,14 +649,8 @@ export const shareChatRouter = router({
     .input(
       z
         .object({
-          /** Client-minted row ids, honoured verbatim (see aiAgent.execAgent). */
-          clientIds: z
-            .object({
-              assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-              topicId: z.string().regex(entityIdPattern('topics')).optional(),
-              userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-            })
-            .optional(),
+          /** Client-minted row ids, honoured verbatim (see `execAgentClientIdsSchema`). */
+          clientIds: execAgentClientIdsSchema,
           /**
            * Ids of files the VISITOR uploaded through `shareChat.createFile`.
            * Re-checked below against the file rows' share provenance — see

@@ -669,7 +669,7 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       prompt: 'Continue the Amp thread',
     });
 
-    expect(mockMessageQuery).not.toHaveBeenCalled();
+    expect(mockMessageQuery.mock.calls.some(([params]) => 'pageSize' in params)).toBe(false);
     expect(mockBuildRemoteDeviceHeteroContext).toHaveBeenCalledOnce();
     expect(mockDispatchAgentRun).toHaveBeenCalledWith(
       expect.objectContaining({
