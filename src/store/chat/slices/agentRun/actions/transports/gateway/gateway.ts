@@ -19,6 +19,7 @@ import type {
   ChatTopicMetadata,
   ChatTopicStatus,
   ConversationContext,
+  ExecAgentClientIds,
   ExecAgentResult,
   MessageMetadata,
   RuntimeMentionedAgent,
@@ -1032,11 +1033,10 @@ export class GatewayActionImpl {
    */
   executeGatewayAgent = async (params: {
     /**
-     * Client-minted ids for the rows this run creates (fresh sends only). The
-     * server honours them verbatim, so the optimistic topic / message rows keep
-     * their ids instead of diverging from the server-minted ones.
+     * Client-minted ids for the rows this run creates (fresh sends only), honoured
+     * verbatim so optimistic rows keep their ids — see `ExecAgentClientIds`.
      */
-    clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+    clientIds?: ExecAgentClientIds;
     /** Agent/runtime context used to execute the server operation. */
     context: ConversationContext;
     /** File IDs of already-uploaded attachments to attach to the new user message */

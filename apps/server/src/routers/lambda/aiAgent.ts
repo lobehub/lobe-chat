@@ -15,7 +15,6 @@ import type {
 } from '@lobechat/types';
 import {
   CreateThreadWithMessageSchema,
-  entityIdPattern,
   initialTopicMetadataSchema,
   isServerDefaultHeterogeneousRelayInvocation,
   LocalExecutionHeterogeneousAgentTypeSchema,
@@ -84,6 +83,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
 } from '@/server/routers/lambda/_helpers/conversationResourceGuard';
+import { execAgentClientIdsSchema } from '@/server/routers/lambda/_helpers/execAgentClientIds';
 import { toClientExecAgentResult } from '@/server/routers/lambda/_helpers/groupMemberContinuationResult';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 import {
@@ -1247,20 +1247,8 @@ const ExecAgentSchema = z
       .optional(),
     /** Whether to auto-start execution after creating operation */
     autoStart: z.boolean().optional().default(true),
-    /**
-     * Client-minted ids for the rows this run creates, honoured verbatim —
-     * the gateway counterpart of `sendMessageInServer`'s `newTopic.id` /
-     * `newUserMessage.id` / `newAssistantMessage.id`. Validated per namespace:
-     * an unvalidated client primary key would let a caller submit look-alike
-     * ids, wrong namespaces, or strings that leak into logs and URLs.
-     */
-    clientIds: z
-      .object({
-        assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-        topicId: z.string().regex(entityIdPattern('topics')).optional(),
-        userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-      })
-      .optional(),
+    /** Client-minted row ids, honoured verbatim (see `execAgentClientIdsSchema`). */
+    clientIds: execAgentClientIdsSchema,
     /** Explicit device ID to bind to the topic and activate for this run */
     deviceId: z.string().optional(),
     /** Current desktop device hint, honored only for an effective local target */
