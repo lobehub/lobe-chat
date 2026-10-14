@@ -3,19 +3,19 @@
 import { environmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
 import {
-  DropdownMenu,
-  Flexbox,
-  Icon,
-  Tooltip,
   Avatar,
   Button,
   confirmModal,
-  Tag,
-  Text,
-  toast,
   createStaticStyles,
   cssVar,
   cx,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  toast,
+  Tooltip,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {

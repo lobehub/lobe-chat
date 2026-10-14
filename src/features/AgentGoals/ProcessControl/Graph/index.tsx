@@ -5,14 +5,14 @@ import '@xyflow/react/dist/style.css';
 import type { GoalGraphEdge } from '@lobechat/types';
 import { experimentMembers } from '@lobechat/utils/goalGraph';
 import {
-  Flexbox,
   ActionIcon,
   Button,
-  Segmented,
-  Text,
   createStaticStyles,
   cssVar,
   cx,
+  Flexbox,
+  Segmented,
+  Text,
 } from '@lobehub/ui';
 import {
   Background,

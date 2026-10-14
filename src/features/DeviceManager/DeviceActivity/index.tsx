@@ -3,14 +3,14 @@
 import { AGENT_CHAT_URL } from '@lobechat/const';
 import { agentDisplayName, type DeviceBoundAgentItem } from '@lobechat/types';
 import {
-  Flexbox,
-  Icon,
   ActionIcon,
   Avatar,
-  Tag,
-  Text,
   createStaticStyles,
   cssVar,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
 } from '@lobehub/ui';
 import { ArrowUpRightIcon, LockIcon } from 'lucide-react';
 import { memo } from 'react';

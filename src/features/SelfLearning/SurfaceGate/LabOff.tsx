@@ -1,6 +1,6 @@
 'use client';
 
-import { Empty, Flexbox, Button } from '@lobehub/ui';
+import { Button, Empty, Flexbox } from '@lobehub/ui';
 import { FlaskConicalIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Icon, Tooltip, Button, createStaticStyles, cssVar, cx } from '@lobehub/ui';
+import { Button, createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import {
   CircleCheck,

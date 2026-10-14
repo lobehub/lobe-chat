@@ -1,7 +1,7 @@
 'use client';
 
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@lobechat/const';
-import { type DropdownItem, DropdownMenu, Flexbox, Icon, ActionIcon, Button } from '@lobehub/ui';
+import { ActionIcon, Button, type DropdownItem, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { Check, ChevronDown, GitCompareArrows } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

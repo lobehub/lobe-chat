@@ -14,21 +14,21 @@ import type {
   HeterogeneousProviderConfig,
 } from '@lobechat/types';
 import {
-  CopyButton,
-  Flexbox,
-  Icon,
-  Tooltip,
-  TooltipGroup,
   ActionIcon,
   Button,
+  CopyButton,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
   Input,
   Segmented,
   Select,
   Spin,
   Tag,
   Text,
-  createStaticStyles,
-  cssVar,
+  Tooltip,
+  TooltipGroup,
 } from '@lobehub/ui';
 import { CheckCircle2, KeyRound, PencilLine, RefreshCw, XCircle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';

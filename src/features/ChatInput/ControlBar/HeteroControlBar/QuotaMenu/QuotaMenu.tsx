@@ -2,17 +2,17 @@
 
 import type { HeteroQuotaWindow } from '@lobechat/electron-client-ipc';
 import {
-  Flexbox,
-  Icon,
-  Popover,
-  Tooltip,
   ActionIcon,
   Alert,
-  Skeleton,
-  Text,
   createStaticStyles,
   cssVar,
   cx,
+  Flexbox,
+  Icon,
+  Popover,
+  Skeleton,
+  Text,
+  Tooltip,
 } from '@lobehub/ui';
 import { ChevronDownIcon, GaugeIcon, RefreshCwIcon } from 'lucide-react';
 import type { ReactNode } from 'react';

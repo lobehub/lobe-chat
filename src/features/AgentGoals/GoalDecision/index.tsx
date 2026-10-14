@@ -3,14 +3,14 @@
 import { GOAL_BATCH_BREAK_OPTION } from '@lobechat/const/goal';
 import type { GoalDecisionOption } from '@lobechat/types';
 import {
-  Center,
-  Flexbox,
-  Icon,
   Avatar,
-  Text,
-  toast,
+  Center,
   createStaticStyles,
   cssVar,
+  Flexbox,
+  Icon,
+  Text,
+  toast,
 } from '@lobehub/ui';
 import { MonitorCog } from 'lucide-react';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';

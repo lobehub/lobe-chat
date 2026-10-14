@@ -1,10 +1,10 @@
 import {
-  copyToClipboard,
-  Icon,
   ActionIcon,
   confirmModal,
+  copyToClipboard,
   type DropdownItem,
   DropdownMenu,
+  Icon,
   toast,
 } from '@lobehub/ui';
 import { CircleDashedIcon, CopyIcon, LinkIcon, MoreHorizontalIcon, TrashIcon } from 'lucide-react';

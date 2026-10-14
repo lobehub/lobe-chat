@@ -1,22 +1,22 @@
 import { AGENT_CHAT_URL } from '@lobechat/const';
 import {
-  Center,
-  Flexbox,
-  Icon,
-  Tooltip,
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
-  type DropdownItem,
-  DropdownMenu,
-  Text,
-  toast,
+  Center,
   createStaticStyles,
   cssVar,
   cx,
+  type DropdownItem,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Text,
+  toast,
+  Tooltip,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import {

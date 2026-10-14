@@ -1,5 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { type DropdownItem, confirmModal, css, cx, Icon, toast, Upload } from '@lobehub/ui';
+import { confirmModal, css, cx, type DropdownItem, Icon, toast, Upload } from '@lobehub/ui';
 import { Archive, HardDriveDownload, Hash, Import, LucideCheck, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

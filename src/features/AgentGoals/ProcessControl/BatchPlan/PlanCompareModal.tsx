@@ -2,13 +2,13 @@
 
 import {
   CodeDiff,
-  Flexbox,
   createModal,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
   type ModalInstance,
   Select,
   Text,
-  createStaticStyles,
-  cssVar,
 } from '@lobehub/ui';
 import { t } from 'i18next';
 import { memo, useState } from 'react';

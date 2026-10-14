@@ -3,7 +3,7 @@ import {
   getSelfReviewBriefLead,
   type SelfReviewBriefDetails as SelfReviewBriefDetailsModel,
 } from '@lobechat/agent-signal/brief';
-import { Flexbox, Button, Text, createStaticStyles } from '@lobehub/ui';
+import { Button, createStaticStyles, Flexbox, Text } from '@lobehub/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

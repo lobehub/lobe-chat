@@ -1,6 +1,6 @@
 'use client';
 
-import { Center, Flexbox, Tooltip, Badge, Text, cssVar } from '@lobehub/ui';
+import { Badge, Center, cssVar, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

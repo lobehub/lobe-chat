@@ -1,14 +1,14 @@
 'use client';
 
 import {
+  confirmModal,
+  createStaticStyles,
+  cssVar,
   Flexbox,
   Icon,
   Popover,
-  Tooltip,
-  confirmModal,
   toast,
-  createStaticStyles,
-  cssVar,
+  Tooltip,
 } from '@lobehub/ui';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';

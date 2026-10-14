@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, createStaticStyles, cssVar } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import SkeletonBar from '@/components/Skeleton/Bar';

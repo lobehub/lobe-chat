@@ -1,7 +1,4 @@
 import {
-  Center,
-  Flexbox,
-  Icon,
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
@@ -9,9 +6,12 @@ import {
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
-  Text,
+  Center,
   cssVar,
   cx,
+  Flexbox,
+  Icon,
+  Text,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { LaptopIcon, PlusIcon } from 'lucide-react';

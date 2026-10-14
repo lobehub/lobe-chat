@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Icon, createStaticStyles, cssVar } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Icon } from '@lobehub/ui';
 import { ArrowUpRight, MonitorSmartphone } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

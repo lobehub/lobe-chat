@@ -1,4 +1,4 @@
-import { Icon, Text, createStaticStyles, cssVar } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Icon, Text } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import {
   Boxes,

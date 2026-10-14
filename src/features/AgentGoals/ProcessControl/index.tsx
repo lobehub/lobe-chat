@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Accordion, type AccordionItemType, Tag, Text } from '@lobehub/ui';
+import { Accordion, type AccordionItemType, Flexbox, Tag, Text } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

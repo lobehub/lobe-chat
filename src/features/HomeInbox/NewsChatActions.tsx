@@ -1,4 +1,4 @@
-import { Flexbox, Button, cssVar } from '@lobehub/ui';
+import { Button, cssVar, Flexbox } from '@lobehub/ui';
 import { MessageSquarePlus, Workflow } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

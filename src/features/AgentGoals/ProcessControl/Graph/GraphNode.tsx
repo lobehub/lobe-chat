@@ -1,7 +1,7 @@
 'use client';
 
 import type { GoalNodeStatus } from '@lobechat/types';
-import { Flexbox, Icon, Tooltip, createStaticStyles, cssVar, cx } from '@lobehub/ui';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import { FileBox, Info, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
 import { memo, type ReactNode } from 'react';

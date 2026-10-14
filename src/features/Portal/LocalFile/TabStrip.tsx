@@ -2,11 +2,11 @@
 
 import { isDesktop } from '@lobechat/const';
 import {
+  confirmModal,
   ContextMenuTrigger,
+  createStaticStyles,
   type DropdownItem,
   Icon,
-  confirmModal,
-  createStaticStyles,
   ScrollArea,
 } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';

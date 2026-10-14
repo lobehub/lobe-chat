@@ -3,14 +3,14 @@
 import { type EnvironmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
 import {
-  Flexbox,
-  Icon,
-  Tooltip,
   ActionIcon,
-  DropdownMenu,
-  Popover,
   createStaticStyles,
   cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Popover,
+  Tooltip,
 } from '@lobehub/ui';
 import {
   ChevronDownIcon,

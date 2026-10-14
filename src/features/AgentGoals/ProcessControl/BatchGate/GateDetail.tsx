@@ -1,4 +1,4 @@
-import { Flexbox, Icon, Text, createStaticStyles, cssVar } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { CircleCheck, CircleDashed, CircleX, GraduationCap } from 'lucide-react';
 import { memo, type ReactNode } from 'react';

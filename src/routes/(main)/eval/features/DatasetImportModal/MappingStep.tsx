@@ -1,9 +1,9 @@
 'use client';
 
 import {
+  Checkbox,
   cssVar,
   Flexbox,
-  Checkbox,
   Input,
   Select,
   Table,

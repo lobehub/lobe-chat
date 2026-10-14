@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Text, createStaticStyles, cssVar } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { type ReactNode, useRef } from 'react';
 

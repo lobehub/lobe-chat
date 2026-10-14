@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Flexbox, Icon, Text, createStaticStyles } from '@lobehub/ui';
+import { Block, createStaticStyles, Flexbox, Icon, Text } from '@lobehub/ui';
 import { BotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

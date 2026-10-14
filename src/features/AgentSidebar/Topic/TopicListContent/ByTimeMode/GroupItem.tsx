@@ -1,9 +1,9 @@
 import {
-  Flexbox,
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
   AccordionTrigger,
+  Flexbox,
   Text,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';

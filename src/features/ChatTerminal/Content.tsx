@@ -2,12 +2,12 @@
 
 import { isDesktop } from '@lobechat/const';
 import {
-  createStaticStyles,
-  Flexbox,
   ActionIcon,
   Button,
   type ContextMenuItem,
   ContextMenuTrigger,
+  createStaticStyles,
+  Flexbox,
   Select,
   TabsIndicator,
   TabsList,

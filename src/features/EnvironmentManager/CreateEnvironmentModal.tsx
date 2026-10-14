@@ -2,18 +2,18 @@
 
 import type { EnvironmentKind, EnvironmentVisibility } from '@lobechat/types';
 import {
-  Flexbox,
-  Icon,
   Button,
   confirmModal,
   createModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
   Input,
   ModalFooter,
   Text,
   useModalContext,
-  createStaticStyles,
-  cssVar,
-  cx,
 } from '@lobehub/ui';
 import { t as translate } from 'i18next';
 import { CodeXmlIcon, FolderIcon, type LucideIcon } from 'lucide-react';

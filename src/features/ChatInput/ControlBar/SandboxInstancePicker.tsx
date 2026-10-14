@@ -3,17 +3,17 @@
 import { environmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
 import {
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  cx,
   Flexbox,
   Icon,
-  Tooltip,
-  confirmModal,
   Popover,
   Skeleton,
   Text,
   toast,
-  createStaticStyles,
-  cssVar,
-  cx,
+  Tooltip,
 } from '@lobehub/ui';
 import {
   ChevronDownIcon,

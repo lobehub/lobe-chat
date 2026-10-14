@@ -1,7 +1,7 @@
 'use client';
 
 import { LayersEnum } from '@lobechat/types';
-import { Icon, toast, createStaticStyles } from '@lobehub/ui';
+import { createStaticStyles, Icon, toast } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import type { LucideIcon } from 'lucide-react';
 import { Brain, ClipboardCheck } from 'lucide-react';

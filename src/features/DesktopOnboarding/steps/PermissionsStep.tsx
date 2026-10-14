@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Flexbox, Icon, Button, Text, cssVar } from '@lobehub/ui';
+import { Block, Button, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import type { LucideIcon } from 'lucide-react';
 import {
   Bell,
