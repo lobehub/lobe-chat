@@ -30,6 +30,24 @@ export const pendingByParentOp = new Map<string, Set<string>>();
 export const heldCompletions = new Map<string, SubAgentBridgeOutcome>();
 
 /**
+ * Scheduled automatic re-fires after a failed fire (P1 round-10): the child's
+ * terminal boundary was the only production caller, so a restored claim with
+ * no driver left the parent parked forever. Keyed by child threadId; the
+ * timer consumes its own entry before re-firing, so a later failure can
+ * schedule the next attempt. Cleared per thread when the timer fires; the
+ * test reset clears (and cancels) everything.
+ */
+export const scheduledBridgeRetries = new Map<
+  string,
+  { attempt: number; timer: ReturnType<typeof setTimeout> }
+>();
+
+export const clearScheduledBridgeRetries = (): void => {
+  for (const { timer } of scheduledBridgeRetries.values()) clearTimeout(timer);
+  scheduledBridgeRetries.clear();
+};
+
+/**
  * Test-only reset: the registry is module-level shared state, and a restored
  * claim (retry semantics) must not leak across test cases. Not exported from
  * the package index.
@@ -38,6 +56,7 @@ export const __resetBridgeForTests = (): void => {
   heldCompletions.clear();
   registry.clear();
   pendingByParentOp.clear();
+  clearScheduledBridgeRetries();
 };
 
 export const trackPending = (registration: ClientSubAgentBridgeRegistration) => {

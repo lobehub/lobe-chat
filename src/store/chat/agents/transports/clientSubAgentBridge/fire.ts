@@ -6,7 +6,13 @@ import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
 
-import { heldCompletions, registry, releasePending, trackPending } from './registry';
+import {
+  heldCompletions,
+  registry,
+  releasePending,
+  scheduledBridgeRetries,
+  trackPending,
+} from './registry';
 import {
   type ClientSubAgentBridgeRegistration,
   type GroupOrchestrationBridgeRegistration,
@@ -172,6 +178,13 @@ export const fireClientSubAgentBridge = async (
     // child run has no natural re-fire, so a dropped claim would leave the
     // parent parked forever with an unsettled placeholder.
     registry.delete(key);
+    // A scheduled automatic retry (P1 round-10) is now obsolete — the bridge
+    // settled through this fire. Cancel it so it doesn't re-fire pointlessly.
+    const pendingRetry = scheduledBridgeRetries.get(key);
+    if (pendingRetry) {
+      clearTimeout(pendingRetry.timer);
+      scheduledBridgeRetries.delete(key);
+    }
     // Clear the persisted lifeline too — a settled bridge must never re-fire
     // after a reload. Best-effort: the `processing` status check on
     // reconstruction is the real guard (the settle path flips it).
@@ -195,6 +208,35 @@ export const fireClientSubAgentBridge = async (
     registry.set(key, registration);
     trackPending(registration);
     log('bridge failed for key %s (claim + barrier slot restored for retry): %O', key, error);
+    // P1 (round-10): a restored claim has no driver — the child's terminal
+    // boundary was the only production caller and has already completed, so
+    // without a scheduled re-fire the parent stays parked forever. Schedule a
+    // bounded automatic retry (clearing any earlier timer for this key first,
+    // so a re-fire that failed again doesn't stack timers). Exhausting the
+    // budget leaves the claim + persisted coordinates in place: a reload
+    // reconstruction or a manual re-fire can still settle it.
+    const previous = scheduledBridgeRetries.get(key);
+    if (previous) clearTimeout(previous.timer);
+    const attempt = (previous?.attempt ?? 0) + 1;
+    if (attempt > 4) {
+      scheduledBridgeRetries.delete(key);
+      log(
+        'bridge retry budget exhausted for key %s after %d attempts — leaving claim for reload reconstruction',
+        key,
+        attempt - 1,
+      );
+      return;
+    }
+    const timer = setTimeout(() => {
+      // Do NOT delete the entry here: the catch below reads it to increment
+      // the attempt counter. Deleting first reset the counter to 1 on every
+      // retry and turned the bound into an infinite loop. The success path
+      // cancels + deletes the entry; the budget cap deletes it.
+      log('bridge scheduled retry %d firing for key %s', previous?.attempt ?? 0, key);
+      void fireClientSubAgentBridge(get, context, outcome);
+    }, 5000 * attempt);
+    scheduledBridgeRetries.set(key, { attempt, timer });
+    log('bridge retry %d scheduled in %dms for key %s', attempt, 5000 * attempt, key);
   }
 };
 
