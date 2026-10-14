@@ -21,7 +21,7 @@ import {
   type GroupAsyncTaskResultContentItem,
   toGroupAsyncTaskResultPayload,
 } from '@/store/chat/agents/GroupOrchestration/groupAsyncTaskResult';
-import { registerGroupBridgeFromParkExit } from '@/store/chat/agents/transports/clientSubAgentBridge';
+import { handleMemberRunParkExit } from '@/store/chat/agents/GroupOrchestration/memberRunParkExit';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -727,62 +727,19 @@ export const createGroupOrchestrationExecutors = (
         // resumes through the park's own continuation (approval / async-tool
         // callback), not through a supervisor decision.
         if (runtimeResult?.parked) {
-          log(`[${sessionLogId}] Member run parked (human approval / async tool), not completed`);
-
-          // Register the client completion bridge: when the member's run
-          // eventually reaches a terminal state, the bridge backfills THIS
-          // tool message with the member's final answer and re-enters the
-          // orchestration loop with a `task_completed` result — the supervisor
-          // then drives the next round. The old park-exit (`result: undefined`)
-          // left the orchestration parked forever: nothing re-entered the
-          // loop, so the supervisor never saw the member's result.
-          registerGroupBridgeFromParkExit({
-            childContext: subContext,
-            childOperationId: taskOperationId,
-            memberAgentId: agentId,
+          return handleMemberRunParkExit({
+            agentId,
+            get: () => get(),
             messageContext,
             orchestrationOperationId,
+            sessionLogId,
+            snapshotSupervisor,
+            state,
+            subContext,
+            taskOperationId,
             supervisorAgentId,
-            // Supervisor state machine at the park point: the bridge's
-            // re-entry restores it so the resumed loop continues from the
-            // original decision point (round counter / skip flag preserved).
-            supervisorSnapshot: snapshotSupervisor?.(),
             toolMessageId: resultMessageId,
           });
-
-          await get().optimisticUpdateMessageContent(
-            resultMessageId,
-            'Member agent is still running: it paused for human approval or an async tool and has not finished yet.',
-            undefined,
-            { operationId: state.operationId },
-          );
-
-          // P1 (round-11): persist a durable park marker on the group tool
-          // row. The executor-created state carries no `status`, so after a
-          // reload the bridge's `isDeferredPlaceholderStillRunning` fallback
-          // (the orchestration operation is gone) always saw a non-`running`
-          // row and skipped the supervisor re-entry — the child settled but
-          // the orchestration stayed parked. Mirror the sub-agent deferred
-          // placeholder shape (`{ status: 'running', threadId }`), merging
-          // over the current state: the bridge reads this same row to gate
-          // the re-entry and overwrites it with terminal status on settle.
-          await get().optimisticUpdatePluginState(resultMessageId, {
-            ...(get().dbMessagesMap[messageMapKey(messageContext)] || []).find(
-              (m) => m.id === resultMessageId,
-            )?.pluginState,
-            status: 'running',
-            threadId: subContext.threadId,
-          });
-
-          return {
-            events: [] as GroupOrchestrationEvent[],
-            newState: state,
-            // End the loop without a terminal decision: `undefined` stops the
-            // orchestration `while` and the non-done status keeps the
-            // orchestration operation alive instead of completing it. The
-            // completion bridge re-enters the loop when the member settles.
-            result: undefined,
-          };
         }
 
         const subMessageKey = messageMapKey(subContext);
