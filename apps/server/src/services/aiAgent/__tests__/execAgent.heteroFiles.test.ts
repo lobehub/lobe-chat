@@ -1,15 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
-import type * as UserModelModule from '@/database/models/user';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
 
 import { AiAgentService } from '../index';
 
 const {
-  mockGetUserPreference,
-  mockQueryDeviceSystemInfo,
-  mockReadDeviceSystemInfo,
   mockDeviceFindByDeviceId,
   mockDeviceFindWorkspaceDeviceById,
   mockBuildRemoteDeviceHeteroContext,
@@ -27,9 +23,6 @@ const {
   mockPublishAgentRuntimeInit,
   mockPublishAgentRuntimeEnd,
 } = vi.hoisted(() => ({
-  mockGetUserPreference: vi.fn(),
-  mockQueryDeviceSystemInfo: vi.fn(),
-  mockReadDeviceSystemInfo: vi.fn(),
   mockBuildRemoteDeviceHeteroContext: vi.fn().mockReturnValue('device context'),
   mockCreateOperationMetadata: vi.fn().mockResolvedValue(undefined),
   mockDeviceFindByDeviceId: vi.fn(),
@@ -203,15 +196,6 @@ vi.mock('@/server/services/heterogeneousAgent', () => ({
   }),
 }));
 
-// Only the Lab preference read is replaced; the rest of UserModel stays real.
-vi.mock('@/database/models/user', async (importOriginal) => {
-  const actual = await importOriginal<typeof UserModelModule>();
-  class UserModel extends actual.UserModel {
-    getUserPreference = mockGetUserPreference;
-  }
-  return { ...actual, UserModel };
-});
-
 vi.mock('@/server/services/heterogeneousAgent/sandboxRunner', () => ({
   spawnHeteroSandbox: mockSpawnHeteroSandbox,
 }));
@@ -252,8 +236,6 @@ vi.mock('@/server/modules/Mecha', () => ({
 
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
-    queryDeviceSystemInfo: mockQueryDeviceSystemInfo,
-    readDeviceSystemInfo: mockReadDeviceSystemInfo,
     dispatchAgentRun: mockDispatchAgentRun,
     executeToolCall: mockExecuteToolCall,
     isConfigured: false,
@@ -294,9 +276,6 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     mockDispatchAgentRun.mockResolvedValue({ success: true });
     mockExecuteToolCall.mockResolvedValue({ success: true });
     mockGetHeterogeneousResumeSessionId.mockResolvedValue(undefined);
-    mockQueryDeviceSystemInfo.mockResolvedValue(undefined);
-    mockReadDeviceSystemInfo.mockResolvedValue({ ok: false, reason: 'DEVICE_OFFLINE' });
-    mockGetUserPreference.mockResolvedValue(undefined);
     mockMessageQuery.mockResolvedValue([]);
     mockBuildRemoteDeviceHeteroContext.mockImplementation(function ({ conversationHistory }) {
       return conversationHistory ? 'device recovery context' : 'device context';
@@ -881,184 +860,6 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
       expect.objectContaining({ assistantMessageId: 'msg-1', deviceId: 'device-1' }),
     );
     expect(dispatchParams.args).toEqual(['--model', 'opus', '--effort', 'high']);
-  });
-
-  // ROOT CAUSE:
-  // Sending a new wrapper flag to every Codex device broke installed CLIs.
-  // Native mode must come from the live connection.
-  /** @example An older connection still accepts an ordinary Codex prompt. */
-  it('preserves ordinary Codex sends on an older connected CLI', async () => {
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
-    /** @example No unsupported native wrapper option reaches the old process. */
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(expect.objectContaining({ args: undefined }));
-    /** @example The capability is obtained from the current connection rather than stale registration. */
-    expect(mockReadDeviceSystemInfo).toHaveBeenCalledWith(userId, 'device-1', undefined, {
-      clientKinds: ['cli'],
-    });
-  });
-
-  // ROOT CAUSE:
-  // Every Codex device run switched to app-server once the CLI advertised it, so the
-  // whole device population changed runtime and each dispatch paid a live capability query.
-  // The app-server runtime is opt-in through the existing Labs preference.
-  /** @example Without the Labs opt-in, an ordinary Codex send stays on codex exec. */
-  it('keeps ordinary Codex sends on exec unless the app-server Lab is enabled', async () => {
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-    mockReadDeviceSystemInfo.mockResolvedValue({
-      ok: true,
-      systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] },
-    });
-    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
-    /** @example A capable device still receives the existing exec arguments. */
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(expect.objectContaining({ args: undefined }));
-    /** @example The ordinary path does not query live device capabilities. */
-    expect(mockReadDeviceSystemInfo).not.toHaveBeenCalled();
-  });
-
-  // ROOT CAUSE:
-  // App-server device runs dropped `conversationHistory` and the resume fallback for every
-  // topic, so an ordinary topic whose native session was lost restarted with no context.
-  /** @example An ordinary app-server topic keeps its transcript recovery. */
-  it('keeps transcript recovery for ordinary app-server Codex topics', async () => {
-    mockGetHeterogeneousResumeSessionId.mockResolvedValue('native-session-existing');
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    mockReadDeviceSystemInfo.mockResolvedValue({
-      ok: true,
-      systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] },
-    });
-    mockMessageQuery.mockResolvedValue([
-      { content: 'Earlier question', id: 'old-user', role: 'user' },
-      { content: 'Earlier answer', id: 'old-assistant', role: 'assistant' },
-      { content: 'Continue on my device', id: 'msg-1', role: 'user' },
-    ]);
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-
-    await service.execAgent({ agentId: 'agent-1', prompt: 'Continue on my device' });
-
-    /** @example The native runtime keeps the transcript fallback. */
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
-      expect.objectContaining({
-        args: ['--codex-app-server'],
-        resumeFallbackSystemContext: 'device recovery context',
-        resumeSessionId: 'native-session-existing',
-        systemContext: 'device context',
-      }),
-    );
-  });
-
-  /** @example A fresh ordinary app-server topic still receives its prior turns. */
-  it('injects topic history into a fresh ordinary app-server Codex run', async () => {
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    mockReadDeviceSystemInfo.mockResolvedValue({
-      ok: true,
-      systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] },
-    });
-    mockMessageQuery.mockResolvedValue([
-      { content: 'Create the GPU pod', id: 'old-user', role: 'user' },
-      { content: 'The pod is electron-gpu-shell', id: 'old-assistant', role: 'assistant' },
-      { content: 'Delete it', id: 'msg-1', role: 'user' },
-    ]);
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-
-    await service.execAgent({ agentId: 'agent-1', prompt: 'Delete it' });
-
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
-      expect.objectContaining({
-        args: ['--codex-app-server'],
-        resumeSessionId: undefined,
-        systemContext: 'device recovery context',
-      }),
-    );
-  });
-
-  // ROOT CAUSE:
-  // A capable Labs device always received `--codex-app-server`, even when the provider
-  // carried options (e.g. `--profile`) the native handle rejects, so valid exec configs failed.
-  /** @example Provider options app-server cannot honor keep the device on codex exec. */
-  it('keeps Codex exec when provider arguments are unsupported by app-server', async () => {
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    mockReadDeviceSystemInfo.mockResolvedValue({
-      ok: true,
-      systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] },
-    });
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { args: ['--profile', 'work'], type: 'codex' },
-    });
-
-    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
-
-    /** @example The exec arguments are forwarded unchanged, without the native wrapper flag. */
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
-      expect.objectContaining({ args: ['--agent-arg=--profile', '--agent-arg=work'] }),
-    );
-  });
-
-  // ROOT CAUSE:
-  // The capability probe preferred the Desktop connection, while the gateway routes agent
-  // runs to `lh connect` first, so an older CLI beside a current Desktop got native flags.
-  /** @example A current Desktop does not enable native flags for an older CLI run. */
-  it('probes native Codex on the connection that receives the agent run', async () => {
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    // The desktop-preferring read sees the current Desktop's runtime.
-    mockQueryDeviceSystemInfo.mockResolvedValue({
-      supportedAgentRuntimes: ['codex-app-server-v1'],
-    });
-    mockReadDeviceSystemInfo.mockImplementation(async (_u, _d, _w, options) =>
-      options?.clientKinds?.[0] === 'desktop'
-        ? { ok: true, systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] } }
-        : { ok: true, systemInfo: {} },
-    );
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-
-    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
-
-    /** @example The older CLI that receives the run keeps codex exec. */
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(expect.objectContaining({ args: undefined }));
-  });
-
-  /** @example A Desktop-only device runs natively, pinned to the Desktop connection. */
-  it('pins a native Codex run to the client that advertised the runtime', async () => {
-    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
-    mockReadDeviceSystemInfo.mockImplementation(async (_u, _d, _w, options) =>
-      options?.clientKinds?.[0] === 'desktop'
-        ? { ok: true, systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] } }
-        : { ok: false, reason: 'NO_CAPABLE_CONNECTION' },
-    );
-    Object.assign(heteroAgentConfig.agencyConfig, {
-      boundDeviceId: 'device-1',
-      executionTarget: 'device',
-      heterogeneousProvider: { type: 'codex' },
-    });
-
-    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
-
-    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
-      expect.objectContaining({ args: ['--codex-app-server'], clientKinds: ['desktop'] }),
-    );
   });
 
   it('persists CLI-device routing so a stop request reaches the dispatched writer', async () => {

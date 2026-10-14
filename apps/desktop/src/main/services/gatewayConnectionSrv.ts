@@ -1,8 +1,6 @@
-import { execFile } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
-import { promisify } from 'node:util';
 
 import { OFFICIAL_DEVICE_GATEWAY_URL } from '@lobechat/const/url';
 import type {
@@ -10,11 +8,9 @@ import type {
   EnrollWorkspaceResult,
   UnenrollWorkspaceParams,
 } from '@lobechat/device-control';
-import { COMPUTER_USE_IDENTIFIER } from '@lobechat/device-control/computer-use';
 import type { DeviceMetricsSampler } from '@lobechat/device-control/metrics';
 import type {
   AgentRunRequestMessage,
-  DeviceSystemInfo,
   GatewayClient,
   GatewayMcpParams,
   MessageApiRequestMessage,
@@ -26,16 +22,15 @@ import type {
 import type { IdentitySource } from '@lobechat/device-identity';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import { createRuntimeProbeCache } from '@lobechat/heterogeneous-agents/runtimeProbeCache';
-import { isRecord } from '@lobechat/utils/object';
 import { app, powerSaveBlocker } from 'electron';
 
 import { isDev } from '@/const/env';
 import { getDesktopEnv } from '@/env';
-import { resolveCliScript } from '@/modules/cliEmbedding';
 import { createLogger } from '@/utils/logger';
 import { getDesktopUserAgent } from '@/utils/user-agent';
 import { safeGetPath } from '@/utils/user-path';
 
+import { collectBundledCliAgentRuntimes, collectGatewaySystemInfo } from './gatewaySystemInfo';
 import { ServiceModule } from './index';
 
 const logger = createLogger('services:GatewayConnectionSrv');
@@ -171,7 +166,7 @@ export default class GatewayConnectionService extends ServiceModule {
    * app-server handshake, while system info is requested during ordinary runs, so it is
    * probed once per connection (and refreshed after the cache lifetime).
    */
-  private readonly agentRuntimes = createRuntimeProbeCache(() => this.collectAgentRuntimes());
+  private readonly agentRuntimes = createRuntimeProbeCache(collectBundledCliAgentRuntimes);
 
   private tokenProvider: (() => Promise<string | null>) | null = null;
   private tokenRefresher: (() => Promise<{ error?: string; success: boolean }>) | null = null;
@@ -867,7 +862,7 @@ export default class GatewayConnectionService extends ServiceModule {
     try {
       client.sendSystemInfoResponse({
         requestId: request.requestId,
-        result: { success: true, systemInfo: await this.collectSystemInfo() },
+        result: { success: true, systemInfo: await collectGatewaySystemInfo(this.agentRuntimes) },
       });
     } catch (error) {
       // The gateway keeps the agent run parked until a correlated reply arrives,
@@ -875,64 +870,6 @@ export default class GatewayConnectionService extends ServiceModule {
       logger.error(`system_info_request failed: requestId=${request.requestId}`, error);
       client.sendSystemInfoResponse({ requestId: request.requestId, result: { success: false } });
     }
-  }
-
-  /**
-   * Reports only native capabilities confirmed by the CLI bundled with this Desktop.
-   *
-   * Use when: the gateway requests live execution capabilities for a bound device.
-   * Expects: the same embedded script and Electron Node runtime used for agent runs.
-   * Returns: an empty capability list if the CLI is absent, incompatible, or unresponsive.
-   *
-   * Call stack:
-   * handleSystemInfoRequest -> {@link collectSystemInfo} -> agentRuntimes.get
-   *   -> {@link collectAgentRuntimes} -> {@link resolveCliScript}
-   *     -> lh connect capabilities -> supportsNativeCodex -> Codex initialize
-   */
-  private async collectAgentRuntimes(): Promise<string[]> {
-    try {
-      // Use the bundled entrypoint rather than a global lh that may lag this build.
-      // The CLI bounds its native handshake to 6 seconds; this outer deadline also
-      // bounds process startup while staying within the gateway's 10-second budget.
-      const { stdout } = await promisify(execFile)(
-        process.execPath,
-        [resolveCliScript(), 'connect', 'capabilities'],
-        {
-          env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
-          maxBuffer: 64 * 1024,
-          timeout: 9000,
-          windowsHide: true,
-        },
-      );
-      const result: unknown = JSON.parse(stdout);
-      if (!isRecord(result) || !Array.isArray(result.supportedAgentRuntimes)) return [];
-      return result.supportedAgentRuntimes.includes('codex-app-server-v1')
-        ? ['codex-app-server-v1']
-        : [];
-    } catch (error) {
-      logger.debug('Bundled CLI native capability probe unavailable', error);
-      return [];
-    }
-  }
-
-  private async collectSystemInfo(): Promise<DeviceSystemInfo> {
-    const { getShellInfo } = await import('@lobechat/local-file-shell/shell');
-    return {
-      supportedTools: [COMPUTER_USE_IDENTIFIER],
-      supportedAgentRuntimes: await this.agentRuntimes.get(),
-      arch: os.arch(),
-      // Tell the server-side prompt builder which shell runCommand spawns here.
-      defaultShell: (await getShellInfo()).displayName,
-      desktopPath: app.getPath('desktop'),
-      documentsPath: app.getPath('documents'),
-      downloadsPath: safeGetPath('downloads'),
-      homePath: app.getPath('home'),
-      musicPath: safeGetPath('music'),
-      picturesPath: safeGetPath('pictures'),
-      userDataPath: app.getPath('userData'),
-      videosPath: safeGetPath('videos'),
-      workingDirectory: process.cwd(),
-    };
   }
 
   // ─── Generic Device RPC ───
