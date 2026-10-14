@@ -21,7 +21,11 @@ import NewsChatActions from './NewsChatActions';
 const Markdown = lazy(() => import('@lobehub/ui/es/Markdown/index'));
 
 const AVATAR_SIZE = 20;
+/** The leading priority glyph (BriefPriorityIcon's default size). */
+const PRIORITY_SIZE = 14;
 const ROW_GAP = 10;
+/** How far the headline sits from the row's inline start: priority glyph, avatar, two gaps. */
+const HEADLINE_INSET = PRIORITY_SIZE + AVATAR_SIZE + ROW_GAP * 2;
 const ROW_PADDING_INLINE = 14;
 
 const BARE_PADDING_INLINE = 8;
@@ -29,10 +33,10 @@ const BARE_PADDING_INLINE = 8;
 const RAIL_COLLAPSED_COUNT = 6;
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
-  // Line the content up under the headline, past the leading avatar.
+  // Line the content up under the headline, past the leading priority glyph and avatar.
   bareBody: css`
     padding-block-end: 8px;
-    padding-inline: ${BARE_PADDING_INLINE + AVATAR_SIZE + ROW_GAP}px ${BARE_PADDING_INLINE}px;
+    padding-inline: ${BARE_PADDING_INLINE + HEADLINE_INSET}px ${BARE_PADDING_INLINE}px;
   `,
   // Inside a rail card the shell is already drawn; only the hover bleed remains.
   bareList: css`
@@ -45,7 +49,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   body: css`
     padding-block-end: 12px;
-    padding-inline: ${ROW_PADDING_INLINE + AVATAR_SIZE + ROW_GAP}px ${ROW_PADDING_INLINE}px;
+    padding-inline: ${ROW_PADDING_INLINE + HEADLINE_INSET}px ${ROW_PADDING_INLINE}px;
   `,
   list: css`
     overflow: hidden;
@@ -122,6 +126,8 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
     <Flexbox className={bare ? undefined : styles.section}>
       <Button className={cx(styles.row, bare && styles.bareRow)} type={'text'} onClick={toggle}>
         <Flexbox horizontal align={'center'} gap={ROW_GAP} style={{ width: '100%' }}>
+          {/* Priority leads the row, so a scan down the list reads levels first. */}
+          <BriefPriorityIcon muted={read} priority={brief.priority} />
           {brief.agent?.avatar ? (
             <Avatar
               avatar={brief.agent.avatar}
@@ -148,7 +154,6 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
           >
             {selfReview?.title ?? brief.title}
           </Text>
-          <BriefPriorityIcon muted={read} priority={brief.priority} />
           {showTime && <Time date={brief.createdAt} />}
           <Icon
             color={cssVar.colorTextQuaternary}

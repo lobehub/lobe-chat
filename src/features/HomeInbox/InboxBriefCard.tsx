@@ -85,6 +85,10 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
     navigate(taskDetailPath(brief.taskId, brief.agentId ?? undefined, brief.taskName));
   };
 
+  // Priority leads the card's first line — ahead of the goal / task glyph, or of
+  // the title when the card has no meta row — so it is read before anything else.
+  const priorityIcon = <BriefPriorityIcon priority={brief.priority} />;
+
   const content = (
     <>
       {/* A brief raised outside a task has no status / ref / name to show, which
@@ -92,6 +96,7 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
           entirely in that case and let the title line carry the time. */}
       {!hasTaskMeta && goal && (
         <Flexbox horizontal align={'center'} className={styles.meta} gap={7} onClick={openGoal}>
+          {priorityIcon}
           <Icon color={cssVar.colorTextTertiary} icon={Target} size={14} />
           <span className={cx(homeType.meta, styles.taskName)}>{goal.goalTitle}</span>
           <Flexbox flex={1} />
@@ -111,6 +116,7 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
               failed. Show the topic-failed alert (red TriangleAlert) so the row
               reads as an error at a glance — the one true failure glyph, no extra
               icon on the headline. */}
+          {priorityIcon}
           {isError ? (
             <StatusGlyph status={'failed'} variant={'topic'} />
           ) : (
@@ -140,10 +146,10 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
         )}
         <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={8}>
+            {!hasTaskMeta && !goal && priorityIcon}
             <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
               {selfReview?.title ?? brief.title}
             </Text>
-            <BriefPriorityIcon priority={brief.priority} />
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
           {selfReview ? (
