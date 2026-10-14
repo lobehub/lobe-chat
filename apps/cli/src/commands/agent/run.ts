@@ -35,6 +35,16 @@ export function registerAgentRunCommand(agent: Command) {
       '--no-headless',
       "Disable headless mode: tool calls that need approval park the run for a human (default: headless — tools auto-run, matching the CLI's non-interactive nature). The CLI does not wait for that approval; it returns with exit code 2 and the run continues once it is answered in LobeHub",
     )
+    .option(
+      '--tool <id>',
+      "Enable a tool for this run on top of the agent's own, like @-mentioning it in chat (repeatable)",
+      collectId,
+    )
+    .option(
+      '--skill <id>',
+      'Load a skill for this run and the rest of its topic, like selecting it in chat (repeatable)',
+      collectId,
+    )
     .option('--json', 'Output full JSON event stream')
     .option('--detach', 'Start the operation and return its IDs without waiting for events')
     .option('-v, --verbose', 'Show detailed tool call info')
@@ -64,9 +74,11 @@ Exit codes:
         json?: boolean;
         prompt?: string;
         replay?: string;
+        skill?: string[];
         slug?: string;
         sse?: boolean;
         timeout?: number;
+        tool?: string[];
         topicId?: string;
         verbose?: boolean;
       }) => {
@@ -141,6 +153,8 @@ Exit codes:
         if (options.slug) input.slug = options.slug;
         if (options.topicId) input.appContext = { topicId: options.topicId };
         if (options.autoStart === false) input.autoStart = false;
+        if (options.tool?.length) input.selectedToolIds = options.tool;
+        if (options.skill?.length) input.selectedSkillIds = options.skill;
         // commander's --no-headless sets `headless` to false. Anything else
         // (undefined, true) → headless mode is on and tool calls auto-execute.
         if (options.headless !== false) {
@@ -245,6 +259,8 @@ Exit codes:
       },
     );
 }
+
+const collectId = (value: string, previous: string[] = []): string[] => [...previous, value];
 
 function parsePositiveSeconds(value: string): number {
   const seconds = Number(value);
