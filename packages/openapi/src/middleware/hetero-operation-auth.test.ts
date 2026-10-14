@@ -137,6 +137,24 @@ describe('heterogeneous operation auth middleware', () => {
     expect(mockValidateHeteroOperationJWT).not.toHaveBeenCalled();
   });
 
+  it('accepts CodeBuddy identical headers only on its Chat Completions ingress', async () => {
+    mockResolveActiveHeteroOperationPrincipal.mockResolvedValue({
+      agentType: 'codebuddy',
+      userId: 'user-1',
+    });
+    const headers = { 'Authorization': 'Bearer operation-token', 'x-api-key': 'operation-token' };
+    expect(
+      (await createApp('openai-chat-completions').request('/invoke', { headers })).status,
+    ).toBe(200);
+    expect(mockValidateHeteroOperationJWT).toHaveBeenCalledWith('operation-token');
+    expect((await createApp('openai-responses').request('/invoke', { headers })).status).toBe(403);
+    mockResolveActiveHeteroOperationPrincipal.mockResolvedValue({
+      agentType: 'claude-code',
+      userId: 'user-1',
+    });
+    expect((await createApp().request('/invoke', { headers })).status).toBe(403);
+  });
+
   it.each([
     ['kimi-code', 'anthropic-messages', 'Bearer operation-token'],
     ['pi', 'anthropic-messages', 'Bearer operation-token'],

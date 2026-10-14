@@ -321,7 +321,7 @@ interface ProtocolEvent {
   type: string;
 }
 
-const parseProtocolStream = (stream: ReadableStream<Uint8Array>) => {
+export const parseProtocolStream = (stream: ReadableStream<Uint8Array>) => {
   let buffer = '';
   let eventId = '';
   let eventType = '';

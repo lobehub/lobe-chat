@@ -1,10 +1,11 @@
 import type { LocalHeterogeneousAgentType } from '../config';
 
-export type ServerDefaultHeterogeneousIngress = 'anthropic-messages' | 'openai-responses';
+export type ServerDefaultHeterogeneousIngress =
+  'anthropic-messages' | 'openai-responses' | 'openai-chat-completions';
 
 export type ServerDefaultHeterogeneousModelPolicy = 'codex' | 'tool-capable';
 
-export type ServerDefaultHeterogeneousTokenHeader = 'bearer' | 'x-api-key';
+export type ServerDefaultHeterogeneousTokenHeader = 'bearer' | 'x-api-key' | 'bearer-and-x-api-key';
 
 interface ServerDefaultHeterogeneousAgentConfig {
   ingress: ServerDefaultHeterogeneousIngress;
@@ -13,6 +14,11 @@ interface ServerDefaultHeterogeneousAgentConfig {
 }
 
 export const SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG = {
+  'codebuddy': {
+    ingress: 'openai-chat-completions',
+    modelPolicy: 'tool-capable',
+    tokenHeader: 'bearer-and-x-api-key',
+  },
   'claude-code': {
     ingress: 'anthropic-messages',
     modelPolicy: 'tool-capable',

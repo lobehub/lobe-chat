@@ -22,11 +22,18 @@ export const requireHeteroModelInvocation =
 
     const bearerToken = extractBearerToken(c.req.header('Authorization'));
     const apiKeyToken = c.req.header('x-api-key')?.trim() || undefined;
-    if (bearerToken && apiKeyToken) {
+    if (bearerToken && apiKeyToken && bearerToken !== apiKeyToken) {
       throw new HTTPException(401, { message: 'Multiple operation credentials are not allowed' });
     }
     const token = bearerToken ?? apiKeyToken;
-    const tokenHeader = bearerToken ? 'bearer' : apiKeyToken ? 'x-api-key' : undefined;
+    const tokenHeader =
+      bearerToken && apiKeyToken
+        ? 'bearer-and-x-api-key'
+        : bearerToken
+          ? 'bearer'
+          : apiKeyToken
+            ? 'x-api-key'
+            : undefined;
     const claims = token ? await validateHeteroOperationJWT(token) : null;
     if (!claims || !tokenHeader) {
       throw new HTTPException(401, { message: 'Invalid operation token' });

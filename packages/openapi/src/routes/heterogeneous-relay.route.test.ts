@@ -16,7 +16,9 @@ vi.mock('@/server/modules/ModelRuntime', () => ({
 }));
 vi.mock('../middleware/hetero-operation-auth', () => {
   const requireHeteroModelInvocation =
-    (ingress: 'anthropic-messages' | 'openai-responses'): MiddlewareHandler =>
+    (
+      ingress: 'anthropic-messages' | 'openai-responses' | 'openai-chat-completions',
+    ): MiddlewareHandler =>
     async (c, next) => {
       c.set(
         'heteroOperationClaims' as never,
@@ -26,7 +28,9 @@ vi.mock('../middleware/hetero-operation-auth', () => {
         'heteroAgentType' as never,
         (ingress === 'anthropic-messages'
           ? relayContext.anthropicAgentType
-          : 'grok-build') as never,
+          : ingress === 'openai-chat-completions'
+            ? 'codebuddy'
+            : 'grok-build') as never,
       );
       c.set('userId' as never, 'user-1' as never);
       await next();
@@ -63,7 +67,7 @@ describe('heterogeneous relay route failures', () => {
     invokeServerDefaultModel.mockRejectedValue(runtimeFailure);
   });
 
-  it.each(['/anthropic/v1/messages', '/openai/v1/responses'])(
+  it.each(['/anthropic/v1/messages', '/openai/v1/responses', '/openai/v1/chat/completions'])(
     'preserves terminal and retryable errors at %s',
     async (path) => {
       for (const [errorType, status, retryable] of [
@@ -78,7 +82,7 @@ describe('heterogeneous relay route failures', () => {
         const response = await app.request(path, {
           body: JSON.stringify({
             input: 'hello',
-            messages: [],
+            messages: [{ role: 'user', content: 'hello' }],
             model: 'lobehub/deepseek-v4-pro',
             stream: true,
           }),
@@ -96,7 +100,7 @@ describe('heterogeneous relay route failures', () => {
     },
   );
 
-  it.each(['/anthropic/v1/messages', '/openai/v1/responses'])(
+  it.each(['/anthropic/v1/messages', '/openai/v1/responses', '/openai/v1/chat/completions'])(
     'preserves transient statuses despite coarse or conflicting messages at %s',
     async (path) => {
       for (const status of [408, 409, 429, 503]) {
@@ -110,7 +114,7 @@ describe('heterogeneous relay route failures', () => {
           const response = await app.request(path, {
             body: JSON.stringify({
               input: 'hello',
-              messages: [],
+              messages: [{ role: 'user', content: 'hello' }],
               model: 'lobehub/deepseek-v4-pro',
               stream: true,
             }),
@@ -124,7 +128,7 @@ describe('heterogeneous relay route failures', () => {
     },
   );
 
-  it.each(['/anthropic/v1/messages', '/openai/v1/responses'])(
+  it.each(['/anthropic/v1/messages', '/openai/v1/responses', '/openai/v1/chat/completions'])(
     'keeps quota and explicitly typed request failures terminal at %s',
     async (path) => {
       for (const [errorType, message] of [
@@ -135,7 +139,7 @@ describe('heterogeneous relay route failures', () => {
         const response = await app.request(path, {
           body: JSON.stringify({
             input: 'hello',
-            messages: [],
+            messages: [{ role: 'user', content: 'hello' }],
             model: 'lobehub/deepseek-v4-pro',
             stream: true,
           }),
@@ -239,6 +243,68 @@ describe('heterogeneous relay route failures', () => {
     });
     expect(invokeServerDefaultModel).toHaveBeenCalledWith(
       expect.objectContaining({ agentType: 'grok-build' }),
+    );
+  });
+});
+
+describe('CodeBuddy Chat Completions ingress', () => {
+  const request = (body: unknown) =>
+    app.request('/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    relayContext.model = 'deepseek-v4-pro';
+  });
+  it.each([
+    {},
+    { messages: [] },
+    { messages: [{ role: 'user', content: 'hello' }], model: 'lobehub/other', stream: true },
+    {
+      messages: [{ role: 'user', content: 'hello' }],
+      model: 'lobehub/deepseek-v4-pro',
+      stream: false,
+    },
+  ])('rejects invalid request bodies before invoking the model: %j', async (body) => {
+    expect((await request(body)).status).toBe(400);
+    expect(invokeServerDefaultModel).not.toHaveBeenCalled();
+  });
+  it('routes native tool history with the operation user and model and returns Chat Completions chunks', async () => {
+    const messages = [
+      {
+        role: 'assistant',
+        content: null,
+        tool_calls: [
+          { id: 'call-1', type: 'function', function: { name: 'read', arguments: '{}' } },
+        ],
+      },
+      { role: 'tool', tool_call_id: 'call-1', content: 'proof' },
+    ];
+    invokeServerDefaultModel.mockResolvedValue({
+      response: new Response(
+        'event: text\ndata: "verified proof"\n\nevent: stop\ndata: "stop"\n\n',
+      ),
+    });
+    const response = await request({
+      messages,
+      model: 'lobehub/deepseek-v4-pro',
+      stream: true,
+      userId: 'spoofed',
+    });
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toBe('text/event-stream');
+    const output = await response.text();
+    expect(output).toContain('verified proof');
+    expect(output).toContain('data: [DONE]');
+    expect(invokeServerDefaultModel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'codebuddy',
+        userId: 'user-1',
+        model: 'deepseek-v4-pro',
+        payload: { messages, model: 'lobehub-default', stream: true },
+      }),
     );
   });
 });
