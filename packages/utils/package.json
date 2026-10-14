@@ -45,7 +45,6 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
-    "jsdom": "^30.1.2",
     "vitest-canvas-mock": "^1.1.4"
   }
 }
