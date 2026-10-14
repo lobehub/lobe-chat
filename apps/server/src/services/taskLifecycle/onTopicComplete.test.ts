@@ -773,6 +773,40 @@ describe('TaskLifecycleService.onTopicComplete', () => {
       expect(notifyRunFailed).not.toHaveBeenCalled();
       expect(notifyFailed).not.toHaveBeenCalled();
     });
+
+    // Only the coordinator's own runs are recovered by it: a manual rerun of a
+    // Task kept under a paused or finished goal has nobody watching it.
+    it('still notifies for a manual rerun of a Goal Task', async () => {
+      findById.mockResolvedValue(baseTask({ automationMode: null }));
+
+      await service.onTopicComplete({
+        errorMessage: 'boom',
+        operationId: 'op-1',
+        reason: 'error',
+        runTrigger: 'manual',
+        taskId: 'task-1',
+        taskIdentifier: 'TASK-1',
+        topicId: 'topic-1',
+      });
+
+      expect(notifyRunFailed).toHaveBeenCalledOnce();
+    });
+
+    it('does not notify for a task deleted mid-run', async () => {
+      findById.mockResolvedValue(null);
+
+      await service.onTopicComplete({
+        errorMessage: 'boom',
+        operationId: 'op-1',
+        reason: 'error',
+        runTrigger: 'manual',
+        taskId: 'task-1',
+        taskIdentifier: 'TASK-1',
+        topicId: 'topic-1',
+      });
+
+      expect(notifyRunFailed).not.toHaveBeenCalled();
+    });
   });
 
   describe('reason=done recovery audit ', () => {

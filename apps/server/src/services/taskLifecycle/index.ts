@@ -420,9 +420,10 @@ export class TaskLifecycleService {
       //    low-frequency scheduled ticks notify on every failure.
       //  - Everything else (manual runs, ad-hoc tasks) notifies once per run.
       const coordinatedByGoal = runTrigger === 'goal';
-      if (coordinatedByGoal) {
-        // The goal coordinator owns recovery and the user-facing decision.
-      } else if (currentTask?.automationMode && isAutomationTick) {
+      if (coordinatedByGoal || !currentTask) {
+        // The goal coordinator owns recovery and the user-facing decision; a
+        // task deleted mid-run has no page left to link to.
+      } else if (currentTask.automationMode && isAutomationTick) {
         if (runTrigger === 'schedule' || pausedByFuse) {
           void notifyScheduledTaskFailed({
             agentId: currentTask.assigneeAgentId ?? undefined,
@@ -447,13 +448,13 @@ export class TaskLifecycleService {
         }
       } else {
         void notifyTaskRunFailed({
-          agentId: currentTask?.assigneeAgentId ?? undefined,
+          agentId: currentTask.assigneeAgentId ?? undefined,
           errorCode,
           operationId: params.operationId,
           reason: 'error',
           taskId,
           taskIdentifier,
-          taskName: currentTask?.name ?? undefined,
+          taskName: currentTask.name ?? undefined,
           topicId,
           userId: this.userId,
           workspaceId: this.workspaceId,

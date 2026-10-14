@@ -31,10 +31,6 @@ export default {
   'brief.agentSignal.selfReview.applied.summary': '{{count}} dream update was applied.',
   'brief.agentSignal.selfReview.applied.summary_plural': '{{count}} dream updates were applied.',
   'brief.agentSignal.selfReview.applied.title': 'Dream updated resources',
-  'brief.agentSignal.selfReview.error.heading': 'Issue',
-  'brief.agentSignal.selfReview.error.summary':
-    'Some work could not be completed during this dream.',
-  'brief.agentSignal.selfReview.error.title': 'Dream ran into an issue',
   'brief.agentSignal.selfReview.detail.body': 'Skill content',
   'brief.agentSignal.selfReview.detail.description': 'Description',
   'brief.agentSignal.selfReview.detail.memory': 'Memory to save',

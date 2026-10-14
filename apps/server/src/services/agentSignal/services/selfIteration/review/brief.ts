@@ -53,7 +53,7 @@ export interface SelfReviewBriefMetadata {
   /** User-local review date in YYYY-MM-DD form. */
   localDate: string;
   /** Coarse user-visible outcome selected by the projection service. */
-  outcome: 'applied' | 'error' | 'ideas' | 'proposal';
+  outcome: 'applied' | 'ideas' | 'proposal';
   /** Durable receipt ids linked to this brief. */
   receiptIds: string[];
   /** Frozen self-review proposal state for approve/dismiss flows. */
