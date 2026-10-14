@@ -672,8 +672,8 @@ export async function ingestReportAction(
       : `${subject!.ref.subjectType}:${subject!.ref.subjectId}`;
   console.log(`${pc.bold('acceptance')}: ${acceptanceId} ${pc.dim(`(${subjectLabel})`)}`);
   if (options.open || partial) {
-    // The acceptance page is the only link surfaced to users — the raw /verify
-    // page stays internal. `?r=<roundIndex>` is this round's fixed snapshot.
+    // The acceptance page is the only report page — an old /verify link only
+    // redirects here. `?r=<roundIndex>` is this round's fixed snapshot.
     console.log(`${pc.bold('open acceptance')}: ${acceptanceUrl}`);
     if (roundUrl) {
       console.log(`${pc.bold('round snapshot')}: ${roundUrl}`);
