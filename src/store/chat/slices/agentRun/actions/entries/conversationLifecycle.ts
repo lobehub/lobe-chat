@@ -110,6 +110,7 @@ import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { findProjectDirectory } from '@/store/projectWorkingDirectory';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { getUserStoreState } from '@/store/user';
@@ -512,7 +513,13 @@ export class ConversationLifecycleActionImpl {
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
     let stagedDirectory: { id: string; projectId: string } | undefined;
     if (projectDirectoryId) {
-      const { data: directory } = await projectWorkingDirectoryService.resolve(projectDirectoryId);
+      // The sidebar's directory replica already holds the row; read it locally
+      // so the optimistic pair is not held behind a network round trip. The
+      // server re-validates the directory (environment link, enabled state,
+      // permission) when it starts the run. Only a cold replica pays for resolve.
+      const directory =
+        findProjectDirectory(projectDirectoryId) ??
+        (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');

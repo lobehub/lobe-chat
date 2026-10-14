@@ -428,7 +428,7 @@ describe('countContextTokens', () => {
       url: `https://example.com/${id}.pdf`,
     });
 
-    // Regression: LOBE-14165. Parsed attachment text is re-sent on every turn
+    // Regression: Parsed attachment text is re-sent on every turn
     // but was ignored, so a topic with ~2M chars of history attachments never
     // reached the compression threshold and failed the context preflight.
     it('counts the <files_info> block shipped for history attachments', () => {

@@ -13,7 +13,7 @@ import FileIcon from '@/components/FileIcon';
 import { localFileService } from '@/services/electron/localFileService';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
-import { getLocalFileTabId } from '@/store/chat/slices/portal/helpers';
+import { getLocalFileTabId, isRemoteLocalFile } from '@/store/chat/slices/portal/helpers';
 
 const SKILL_PATH_RE = /\/\.(?:agents|claude)\/skills\/([^/]+)\/SKILL\.md$/;
 
@@ -209,10 +209,9 @@ const TabStrip = memo(() => {
         label: t('workingPanel.localFile.closeOther'),
         onClick: () => closeOtherLocalFileTabs(id),
       },
-      // Sandbox-backed tabs point at paths inside the cloud sandbox — a local
-      // "show in system" would open an unrelated folder or fail.
+      // Remote device and sandbox paths cannot be revealed in the local filesystem.
       ...(isDesktop &&
-      !openLocalFiles.find((file) => getLocalFileTabId(file) === id)?.sandboxTopicId
+      !isRemoteLocalFile(openLocalFiles.find((file) => getLocalFileTabId(file) === id))
         ? [
             {
               key: 'showInSystem',

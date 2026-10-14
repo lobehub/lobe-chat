@@ -68,10 +68,20 @@ const getInterventionSync = (get: () => ConversationStore) => {
   return sync;
 };
 
+/**
+ * Merge an idle head fetch into the shown transcript.
+ *
+ * A fetch can be issued before a send persists its rows and resolve while
+ * `sendMessage` is still waiting for the server. That window is not a running
+ * agent runtime, so the optimistic user and assistant rows must be kept
+ * explicitly until the server returns them; otherwise the just-sent message
+ * vanishes until the run settles and refetches.
+ */
 const mergeFetchedMessagesWithLocalState = (
   fetchedMessages: UIChatMessage[],
   localMessages: UIChatMessage[],
   activeVoiceMessageIds: ReadonlySet<string>,
+  creatingMessageIds: ReadonlySet<string>,
 ): UIChatMessage[] => {
   if (localMessages.length === 0) return fetchedMessages;
 
@@ -93,16 +103,16 @@ const mergeFetchedMessagesWithLocalState = (
     return localMessage;
   });
 
-  const missingLocalOnlyMessages = localMessages.filter(
+  const missingLocalMessages = localMessages.filter(
     (message) =>
-      isLocalOnlyMessage(message) &&
-      activeVoiceMessageIds.has(message.id) &&
-      !fetchedIds.has(message.id),
+      !fetchedIds.has(message.id) &&
+      ((isLocalOnlyMessage(message) && activeVoiceMessageIds.has(message.id)) ||
+        creatingMessageIds.has(message.id)),
   );
 
-  if (missingLocalOnlyMessages.length === 0) return changed ? mergedMessages : fetchedMessages;
+  if (missingLocalMessages.length === 0) return changed ? mergedMessages : fetchedMessages;
 
-  return mergeLocalMessagesByCreatedAt(mergedMessages, missingLocalOnlyMessages);
+  return mergeLocalMessagesByCreatedAt(mergedMessages, missingLocalMessages);
 };
 
 /**
@@ -348,9 +358,19 @@ export const dataSlice: StateCreator<
       operationSelectors.isAgentRuntimeRunningByContext(context)(chat) &&
       !(completed && snapshot!.dbMessages === prevDbMessages);
     const activeVoiceMessageIds = new Set(Object.keys(chat.voiceMessageUploadMap));
+    const creatingMessageIds = new Set(
+      prevDbMessages
+        .filter((message) => operationSelectors.isMessageCreating(message.id)(chat))
+        .map((message) => message.id),
+    );
     const mergedMessages = isStreaming
       ? reconcileStreamingInterventions(prevDbMessages, incoming)
-      : mergeFetchedMessagesWithLocalState(incoming, prevDbMessages, activeVoiceMessageIds);
+      : mergeFetchedMessagesWithLocalState(
+          incoming,
+          prevDbMessages,
+          activeVoiceMessageIds,
+          creatingMessageIds,
+        );
     const dropped = isStreaming && mergedMessages === prevDbMessages;
 
     headResolutions.set(incoming, {

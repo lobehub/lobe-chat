@@ -31,6 +31,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { isUuid } from '@/database/utils/uuid';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { FileService } from '@/server/services/file';
 import { GoalBriefService } from '@/server/services/goal/goalBriefs';
 import { parseChangeRequestUrl } from '@/server/services/scm/changeRequestUrl';
@@ -56,6 +57,7 @@ import {
 } from '@/server/services/verify/acceptancePullRequests';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
+import { previewUrlSchema, recordPreviewUrl } from './_helpers/acceptancePreviewUrl';
 import {
   type AcceptanceRepairDispatch,
   dispatchAcceptanceRepair,
@@ -287,6 +289,7 @@ const applyAcceptanceStatus = async (
 
   if (status === 'closed') {
     await service.acceptanceModel.updateStatus(acceptance.id, 'closed');
+    notifyAcceptance(acceptance.id, 'session');
     await settleGoalSignOff(db, acceptance, 'closed');
     return;
   }
@@ -311,6 +314,7 @@ const applyAcceptanceStatus = async (
   }
 
   await service.acceptanceModel.updateStatus(acceptance.id, 'delivered');
+  notifyAcceptance(acceptance.id, 'session');
 };
 
 export const acceptanceRouter = router({
@@ -1336,7 +1340,8 @@ export const acceptanceRouter = router({
           message: `Only a settled acceptance can be sent back (status: ${acceptance.status})`,
         });
       }
-      return service.acceptanceModel.updateStatus(acceptance.id, 'repairing');
+      await service.acceptanceModel.updateStatus(acceptance.id, 'repairing');
+      notifyAcceptance(acceptance.id, 'session', ctx.userId);
     }),
 
   /**
@@ -1415,6 +1420,20 @@ export const acceptanceRouter = router({
    * project the caller can see — the same set the list already groups by — so
    * a workspace member is not blocked from filing under a teammate's project.
    */
+  setPreviewUrl: acceptanceWriteProcedure
+    .input(z.object({ id: z.string(), url: previewUrlSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance } = await resolveAcceptanceForWrite(ctx, input.id);
+      const run = await recordPreviewUrl(ctx.serverDB, acceptance.id, input.url);
+      if (run) notifyAcceptance(acceptance.id, 'session', ctx.userId);
+      if (!run)
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'The acceptance has no round to attach a preview to yet',
+        });
+      return { previewUrl: input.url, roundIndex: run.roundIndex };
+    }),
+
   setProject: acceptanceWriteProcedure
     .input(z.object({ id: z.string(), projectId: z.string().nullable() }))
     .mutation(async ({ ctx, input }) => {

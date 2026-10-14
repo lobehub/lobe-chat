@@ -231,7 +231,12 @@ const workspaceFileInput = z.object({
  */
 const workspaceFileProcedure = deviceProcedure.input(workspaceFileInput).use(async (opts) => {
   const { deviceId, workingDirectory } = workspaceFileInput.parse(await opts.getRawInput());
-  await assertWorkspaceRootApproved(opts.ctx.deviceModel, deviceId, workingDirectory);
+  await assertWorkspaceRootApproved(
+    opts.ctx.deviceModel,
+    deviceId,
+    workingDirectory,
+    opts.ctx.workspaceId,
+  );
   return opts.next();
 });
 
@@ -241,6 +246,17 @@ const workspaceFileProcedure = deviceProcedure.input(workspaceFileInput).use(asy
  * writes also need at least the `member` role; personal mode stays open.
  */
 const workspaceFileWriteProcedure = workspaceFileProcedure.use(
+  requireWorkspaceRoleWhenScoped('member'),
+);
+
+/**
+ * `workspaceFileProcedure` for the publish-asset routes. Their source path may
+ * lie outside the approved root (the device confines only a copy's
+ * destination), so they can read any file on the device, and a copy also
+ * writes into the workspace. Gate them like writes: a read-only viewer must not
+ * pull arbitrary files off a shared device. Personal mode stays open.
+ */
+const workspacePublishProcedure = workspaceFileProcedure.use(
   requireWorkspaceRoleWhenScoped('member'),
 );
 
@@ -808,6 +824,7 @@ export const deviceRouter = router({
    * directory on a remote device, via the device's `runPullRequestAction` RPC.
    */
   runGitPullRequestAction: deviceProcedure
+    .use(requireWorkspaceRoleWhenScoped('member'))
     .input(
       z.object({
         action: z.discriminatedUnion('type', [
@@ -838,7 +855,12 @@ export const deviceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await assertWorkspaceRootApproved(ctx.deviceModel, input.deviceId, input.path);
+      await assertWorkspaceRootApproved(
+        ctx.deviceModel,
+        input.deviceId,
+        input.path,
+        ctx.workspaceId,
+      );
       return deviceGateway.runGitPullRequestAction({
         action: input.action,
         deviceId: input.deviceId,
@@ -1080,7 +1102,7 @@ export const deviceRouter = router({
       });
     }),
 
-  copyAssetForPublish: workspaceFileProcedure
+  copyAssetForPublish: workspacePublishProcedure
     .input(z.object({ from: z.string(), to: z.string() }))
     .mutation(async ({ ctx, input }) =>
       deviceGateway.copyAssetForPublish({
@@ -1093,7 +1115,7 @@ export const deviceRouter = router({
       }),
     ),
 
-  readExternalAssetForPublish: workspaceFileProcedure
+  readExternalAssetForPublish: workspacePublishProcedure
     .input(z.object({ path: z.string() }))
     .query(async ({ ctx, input }) =>
       deviceGateway.readExternalAssetForPublish({

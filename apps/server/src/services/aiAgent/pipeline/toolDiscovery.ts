@@ -47,12 +47,13 @@ import { loadModels } from '@/business/client/model-bank/loadModels';
 import { AiModelModel } from '@/database/models/aiModel';
 import { AiProviderModel } from '@/database/models/aiProvider';
 import { ChatGroupModel } from '@/database/models/chatGroup';
-import { ConnectorModel } from '@/database/models/connector';
+import { ConnectorModel, type DecryptedConnector } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import type { MessageModel } from '@/database/models/message';
 import type { PluginModel } from '@/database/models/plugin';
+import type { UserConnectorToolItem } from '@/database/schemas';
 import {
   type ExecutionPlan,
   executionPlanToManifestExecutionEnv,
@@ -426,8 +427,63 @@ export const discoverTools = async (
           ? await deps.connectorToolModel.queryAllByConnectorIds(connectorsMcp.map((c) => c.id))
           : [];
 
-      return { connectorGateKeeper, connectors, connectorsMcp, connectorTools };
+      const discoverable = await readDiscoverableConnectors(candidateIds, connectorGateKeeper);
+
+      return {
+        connectorGateKeeper,
+        connectors,
+        connectorsMcp,
+        connectorTools,
+        discoverableConnectorManifests: discoverable.manifests,
+        discoverableConnectorsMcp: discoverable.connectorsMcp,
+        discoverableConnectorTools: discoverable.tools,
+      };
     });
+  }
+
+  /**
+   * Connectors the agent has not pinned — `auto` in the three-state plugin
+   * config, which is simply "absent from `plugins`". A custom MCP is stored as
+   * a connector, so without this source an unpinned one is resolvable only on
+   * the turn that @-mentions it: the next turn's activator answers
+   * "Not found" and the model's direct call is rejected as an unknown name.
+   * Like installed plugins they are discoverable but never enabled.
+   *
+   * Share runs skip it: the early allowlist above exists so ungranted creator
+   * connectors never get their credentials decrypted for a visitor turn.
+   * Degrades to nothing on failure — widening discovery must not fail the run.
+   */
+  async function readDiscoverableConnectors(
+    candidateIds: string[],
+    gateKeeper: KeyVaultsGateKeeper | undefined,
+  ): Promise<{
+    connectorsMcp: DecryptedConnector[];
+    manifests: LobeToolManifest[];
+    tools: UserConnectorToolItem[];
+  }> {
+    const none = { connectorsMcp: [], manifests: [], tools: [] };
+    if (shareGate || exclusivePluginIds || isGoalTurn) return none;
+    try {
+      const candidates = new Set(candidateIds);
+      const connectorsMcp = (
+        await deps.connectorModel.resolveAll(resolvedAgentId, gateKeeper)
+      ).filter(
+        (c) => !candidates.has(c.identifier) && (c.mcpServerUrl || c.mcpConnectionType === 'stdio'),
+      );
+      if (connectorsMcp.length === 0) return none;
+
+      const tools = await deps.connectorToolModel.queryAllByConnectorIds(
+        connectorsMcp.map((c) => c.id),
+      );
+      return {
+        connectorsMcp,
+        manifests: buildConnectorManifests(connectorsMcp, tools) as LobeToolManifest[],
+        tools,
+      };
+    } catch (error) {
+      log('execAgent: failed to read discoverable connectors: %O', error);
+      return none;
+    }
   }
 
   async function readLobehubSkillManifests(): Promise<LobeToolManifest[]> {
@@ -469,30 +525,45 @@ export const discoverTools = async (
         )
       ).filter((d) => d.online);
 
-      // A workspace agent whose caller pinned this desktop's personal
-      // deviceId via `users.preference.agentDeviceOverrides` (
-      // the `local` code path in `useSelectExecutionTarget`) needs its
-      // personal device to be visible in this run's device pool — otherwise
-      // `resolveExecutionPlan` treats the bound device as offline and the
-      // run stays unrouted. The workspace pool never includes personal
-      // devices by design (`getScopedOnlineDevices` enforces the strict
-      // scope), so union the specific personal device in here. The device
-      // is dispatchable because the gateway routes it by
+      // A workspace run that targets one of the caller's PERSONAL devices
+      // needs that device visible in this run's pool — otherwise
+      // `resolveExecutionPlan` treats it as offline (`bound-device-offline`)
+      // and the run stays unrouted. The workspace pool never includes
+      // personal devices by design (`getScopedOnlineDevices` enforces the
+      // strict scope), so union the specific personal device in here. The
+      // device is dispatchable because the gateway routes it by
       // `(userId, deviceId)` — the caller owns it.
-      if (deps.workspaceId && agentConfig.agencyConfig?.boundDeviceId) {
-        const boundId = agentConfig.agencyConfig.boundDeviceId;
-        if (!devices.some((d) => d.deviceId === boundId)) {
-          const personalPool = await getScopedOnlineDevices(deps.db, deps.userId).catch(
-            () => [] as DeviceAttachment[],
+      //
+      // Candidates mirror the ids `resolveExecutionPlan` routes by:
+      // - `agencyConfig.boundDeviceId`: the per-user override written by the
+      //   `local` code path in `useSelectExecutionTarget`;
+      // - `requestedDeviceId`: the desktop's own id sent with a `local` run
+      //   (or the topic's pinned device, folded in by `turnSetup`). Without
+      //   it, an agent whose stored target is `local` but which has no
+      //   override is told the user's online desktop is offline. A `fixed`
+      //   selection policy ignores it, as the resolver does.
+      const isFixedSelection = agentConfig.agencyConfig?.executionTargetSelectionPolicy === 'fixed';
+      const personalCandidateIds = [
+        ...new Set(
+          [
+            agentConfig.agencyConfig?.boundDeviceId,
+            isFixedSelection ? undefined : requestedDeviceId,
+          ].filter((id): id is string => !!id && !devices.some((d) => d.deviceId === id)),
+        ),
+      ];
+      if (deps.workspaceId && personalCandidateIds.length > 0) {
+        const personalPool = await getScopedOnlineDevices(deps.db, deps.userId).catch(
+          () => [] as DeviceAttachment[],
+        );
+        const personalMatches = personalPool.filter(
+          (d) => d.online && personalCandidateIds.includes(d.deviceId),
+        );
+        if (personalMatches.length > 0) {
+          devices = [...devices, ...personalMatches];
+          log(
+            'execAgent: augmented device pool with caller personal device(s) %o',
+            personalMatches.map((d) => d.deviceId),
           );
-          const personalMatch = personalPool.find((d) => d.deviceId === boundId && d.online);
-          if (personalMatch) {
-            devices = [...devices, personalMatch];
-            log(
-              'execAgent: augmented device pool with caller personal device %s (per-user override)',
-              boundId,
-            );
-          }
         }
       }
       log('execAgent: found %d online device(s)', devices.length);
@@ -661,8 +732,15 @@ export const discoverTools = async (
     );
 
     // 5a-1. Resolve connectors — connector identifier takes priority over plugin.
-    const { connectorGateKeeper, connectors, connectorsMcp, connectorTools } =
-      await toolReads.connectors;
+    const {
+      connectorGateKeeper,
+      connectors,
+      connectorsMcp,
+      connectorTools,
+      discoverableConnectorManifests,
+      discoverableConnectorsMcp,
+      discoverableConnectorTools,
+    } = await toolReads.connectors;
 
     // 5a-1b. Model awareness: when the caller runs a shared agent whose tools
     // were authorized by OTHER members (workspace dimension), tell the model
@@ -708,10 +786,13 @@ export const discoverTools = async (
       const refreshConnectorModel = connectorGateKeeper
         ? new ConnectorModel(deps.db, deps.userId, deps.workspaceId, connectorGateKeeper)
         : deps.connectorModel;
-      scheduleStaleConnectorToolsRefresh(connectorsMcp, buildLastSyncedAtMap(connectorTools), {
-        connectorModel: refreshConnectorModel,
-        connectorToolModel: deps.connectorToolModel,
-      });
+      // Discoverable (unpinned) connectors are refreshed too: the model can
+      // activate them, so a stale list would offer removed APIs and hide new ones.
+      scheduleStaleConnectorToolsRefresh(
+        [...connectorsMcp, ...discoverableConnectorsMcp],
+        buildLastSyncedAtMap([...connectorTools, ...discoverableConnectorTools]),
+        { connectorModel: refreshConnectorModel, connectorToolModel: deps.connectorToolModel },
+      );
     } catch (err) {
       log('execAgent: failed to schedule connector tool refresh (ignored): %O', err);
     }
@@ -720,7 +801,10 @@ export const discoverTools = async (
     // tools) replace a same-named plugin. Deriving the set from connectorsMcp
     // instead would let a disabled / not-yet-synced connector evict the plugin
     // while contributing no tools — leaving the runtime with nothing to call.
-    const connectorIdentifierSet = new Set(connectorManifests.map((m) => m.identifier));
+    // Unpinned connectors supersede a leftover plugin row the same way.
+    const connectorIdentifierSet = new Set(
+      [...connectorManifests, ...discoverableConnectorManifests].map((m) => m.identifier),
+    );
 
     // Filter out plugin entries that are now handled by real MCP connectors.
     // `let` because community-MCP plugins may be patched with connector
@@ -1066,6 +1150,9 @@ export const discoverTools = async (
     const activeLobehubSkillManifests = dropDisabledManifests(lobehubSkillManifests);
     const activeComposioManifests = dropDisabledManifests(composioManifests);
     const activeConnectorManifests = dropDisabledManifests(connectorManifests);
+    const activeDiscoverableConnectorManifests = dropDisabledManifests(
+      discoverableConnectorManifests,
+    );
 
     // Context-aware builtin manifests: inside a sub-agent (or group) run,
     // lobe-agent drops `callSubAgent` so the model can't recurse into nested
@@ -1104,6 +1191,11 @@ export const discoverTools = async (
         ...activeLobehubSkillManifests,
         ...activeComposioManifests,
         ...activeConnectorManifests,
+        // Known to the engine but never invocation candidates (they stay out of
+        // `connectorIds` below), so they are not enabled by default — this only
+        // lets a previous turn's activation pass the explicit-activation
+        // re-check when the next operation restores it.
+        ...activeDiscoverableConnectorManifests,
       ],
       agentConfig: {
         chatConfig: isGoalTurn
@@ -1198,10 +1290,14 @@ export const discoverTools = async (
       // wall re-checks them; a connector / Composio / LobeHub skill manifest
       // of the same identifier still wins, because the pool seeds this source
       // last.
-      installedManifests: dropInvalidManifests(
-        pluginsWithoutConnectors.map((plugin) => plugin.manifest as LobeToolManifest | undefined),
-        'installedPlugins(auto)',
-      ),
+      // Unpinned connectors join them on the same terms.
+      installedManifests: [
+        ...activeDiscoverableConnectorManifests,
+        ...dropInvalidManifests(
+          pluginsWithoutConnectors.map((plugin) => plugin.manifest as LobeToolManifest | undefined),
+          'installedPlugins(auto)',
+        ),
+      ],
       lobehubSkills: activeLobehubSkillManifests,
       manifestContext,
     });
@@ -1216,7 +1312,7 @@ export const discoverTools = async (
           ...installedPlugins
             .filter((plugin) => plugin.customParams?.mcp?.type === 'stdio')
             .map((plugin) => plugin.identifier),
-          ...connectorsMcp
+          ...[...connectorsMcp, ...discoverableConnectorsMcp]
             .filter((connector) => connector.mcpConnectionType === 'stdio')
             .map((connector) => connector.identifier),
         ],

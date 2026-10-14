@@ -5,14 +5,15 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type * as Format from '../utils/format';
 import { registerAcceptanceCommands } from './verifyAcceptance';
 
-const { getBundle, listComments, outputJson } = vi.hoisted(() => ({
+const { getBundle, listComments, outputJson, setPreviewUrl } = vi.hoisted(() => ({
   getBundle: vi.fn(),
   listComments: vi.fn(),
   outputJson: vi.fn(),
+  setPreviewUrl: vi.fn(),
 }));
 vi.mock('../api/client', () => ({
   getTrpcClient: async () => ({
-    acceptance: { getBundle: { query: getBundle } },
+    acceptance: { getBundle: { query: getBundle }, setPreviewUrl: { mutate: setPreviewUrl } },
     acceptanceComment: { list: { query: listComments } },
   }),
 }));
@@ -56,6 +57,7 @@ const comment = (
   rect,
   resolvedAt: null,
   resolvedByUserId: null,
+  source: null,
   updatedAt: new Date('2026-09-22T14:09:00Z'),
   ...overrides,
 });
@@ -263,4 +265,72 @@ it('retains historical rejection notes without treating them or approval notes a
   expect((await feedback('--json')).entries).toEqual([
     expect.objectContaining({ kind: 'decision', comment: 'Read my comments', actionable: false }),
   ]);
+});
+
+const pageSource = {
+  intent: 'change' as const,
+  scroll: { x: 0, y: 0 },
+  targets: [
+    {
+      code: { chain: [], column: 7, file: 'src/Pay.tsx', line: 42 },
+      label: 'Pay',
+      rect: { height: 40, width: 120, x: 10, y: 20 },
+      selector: '#pay',
+    },
+    { label: 'Total', rect: { height: 20, width: 80, x: 0, y: 0 }, selector: '.total' },
+  ],
+  url: 'https://pr-12.preview.example.com/checkout',
+  v: 1 as const,
+  viewport: { dpr: 2, height: 800, width: 1280 },
+};
+const pageComment = (id: string, overrides: Partial<AcceptanceCommentItem> = {}) =>
+  comment(id, {
+    anchorType: 'acceptance',
+    checkItemId: null,
+    evidenceId: null,
+    rect: null,
+    ...overrides,
+  });
+
+it('points product-page comments and their replies at the page and source location', async () => {
+  listComments.mockResolvedValue({
+    items: [
+      pageComment('root', { source: pageSource }),
+      pageComment('reply', { parentCommentId: 'root' }),
+    ],
+  });
+  const { entries } = await feedback('--json');
+  const page = { locations: ['src/Pay.tsx:42'], url: pageSource.url };
+  expect(entries.filter((entry: { kind: string }) => entry.kind === 'comment')).toEqual([
+    expect.objectContaining({ commentId: 'root', page }),
+    expect.objectContaining({ commentId: 'reply', page }),
+  ]);
+});
+
+it('prints the page and source location of a product-page comment', async () => {
+  const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+  listComments.mockResolvedValue({ items: [pageComment('root', { source: pageSource })] });
+  await feedback();
+  const printed = log.mock.calls.map((call) => String(call[0])).join('\n');
+  expect(printed).toContain(pageSource.url);
+  expect(printed).toContain('src/Pay.tsx:42');
+});
+
+it('records where the delivery is deployed for preview review', async () => {
+  vi.spyOn(console, 'log').mockImplementation(() => {});
+  setPreviewUrl.mockResolvedValue({ previewUrl: 'https://pr-12.example.com/', roundIndex: 3 });
+  const program = new Command().exitOverride();
+  registerAcceptanceCommands(program);
+  await program.parseAsync([
+    'node',
+    'lh',
+    'acceptance',
+    'preview',
+    'acceptance-id',
+    'https://pr-12.example.com/',
+  ]);
+  expect(setPreviewUrl).toHaveBeenCalledWith({
+    id: 'acceptance-id',
+    url: 'https://pr-12.example.com/',
+  });
 });
