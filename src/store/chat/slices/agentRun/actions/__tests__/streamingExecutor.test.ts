@@ -3084,6 +3084,68 @@ describe('StreamingExecutor actions', () => {
       expect(markTopicUnread).not.toHaveBeenCalled();
     });
 
+    it('on parked: resolves with parked=true so callers can tell the run is not finished', async () => {
+      const { result } = renderHook(() => useChatStore());
+      restoreExecutor();
+
+      let operationId!: string;
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+        }).operationId;
+      });
+
+      driveTerminal(operationId, 'waiting_for_async_tool');
+      pinStep(operationId, 'waiting_for_async_tool');
+
+      let resolved: Awaited<ReturnType<typeof realExecAgentRuntime>> | undefined;
+      await act(async () => {
+        resolved = await result.current.executeClientAgent({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+          messages: [],
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
+          parentMessageType: 'user',
+          operationId,
+        });
+      });
+
+      // The run is alive and resumes out-of-band: the caller must be able to
+      // distinguish this from a real completion (`runClientSubAgent` relies on
+      // this flag to avoid backfilling a false "Task completed" success).
+      expect(resolved).toEqual({ parked: true });
+    });
+
+    it('on done: resolves without a parked flag', async () => {
+      const { result } = renderHook(() => useChatStore());
+      restoreExecutor();
+
+      let operationId!: string;
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+        }).operationId;
+      });
+
+      driveTerminal(operationId, 'done');
+      pinStep(operationId, 'done');
+
+      let resolved: Awaited<ReturnType<typeof realExecAgentRuntime>> | undefined;
+      await act(async () => {
+        resolved = await result.current.executeClientAgent({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+          messages: [],
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
+          parentMessageType: 'user',
+          operationId,
+        });
+      });
+
+      expect(resolved).toBeDefined();
+      expect((resolved as { parked?: boolean }).parked).toBeUndefined();
+    });
+
     describe('desktop notification gating', () => {
       afterEach(() => {
         desktopFlag.value = false;

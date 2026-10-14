@@ -727,6 +727,28 @@ export const createGroupOrchestrationExecutors = (
         log(`[${sessionLogId}] Client-side AgentRuntime execution completed`);
 
         // 7. Get execution result from the isolated thread messages
+        // A parked member run (client tools / human approval / async tool) has
+        // NOT finished — the old code backfilled a false "Task completed" and
+        // reported success, so the supervisor settled the member while it was
+        // still executing. Surface the park instead and keep the thread open.
+        if (runtimeResult?.parked) {
+          log(`[${sessionLogId}] Member run parked (human approval / async tool), not completed`);
+
+          return {
+            events: [] as GroupOrchestrationEvent[],
+            newState: state,
+            result: {
+              payload: {
+                agentId,
+                result:
+                  'Member agent is still running: it paused for human approval or an async tool and has not finished yet. Do not treat this as done.',
+                success: false,
+              },
+              type: 'task_completed',
+            },
+          };
+        }
+
         const subMessageKey = messageMapKey(subContext);
         const subTaskMessages = get().dbMessagesMap[subMessageKey] || [];
         const lastAssistant = subTaskMessages.findLast((m) => m.role === 'assistant');

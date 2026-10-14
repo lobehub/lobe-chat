@@ -558,7 +558,19 @@ export class StreamingExecutorActionImpl {
      */
     chatConfigOverride?: Partial<LobeAgentChatConfig> | null;
     userMessageId?: string;
-  }): Promise<{ cost?: Cost; model?: string; provider?: string; usage?: Usage } | void> => {
+  }): Promise<{
+    cost?: Cost;
+    /**
+     * True when the run parked (`waiting_for_human` / `waiting_for_async_tool` /
+     * `waiting_for_client`) instead of reaching a terminal state. The caller MUST
+     * NOT treat this as completion: the run is still alive and resumes out-of-band
+     * (user approval or async-tool callback), so there is no final output yet.
+     */
+    parked?: boolean;
+    model?: string;
+    provider?: string;
+    usage?: Usage;
+  } | void> => {
     const {
       disableTools,
       messages: originalMessages,
@@ -1008,7 +1020,11 @@ export class StreamingExecutorActionImpl {
         ...lifecycleEventBase,
         reason: state.status as RunParkedReason,
       });
-      return;
+      // Signal the parked state to programmatic callers (e.g. `runClientSubAgent`):
+      // returning bare `void` here made a parked sub-agent read as a successful
+      // empty run, so the spawner backfilled `Task completed` while the child was
+      // still executing.
+      return { parked: true };
     }
 
     const completeEvent = { ...lifecycleEventBase, runtimeStatus: state.status };
@@ -1150,6 +1166,23 @@ export class StreamingExecutorActionImpl {
       });
 
       // 7. Extract the sub-agent's final assistant output as the tool result
+      // A parked child (client tools / human approval / async tool) never
+      // reached a terminal state: the thread stays `processing` and the child
+      // resumes out-of-band. Report that honestly instead of backfilling a
+      // false "Task completed" success — the old behavior made the parent
+      // re-dispatch the same work while the child was still running.
+      if (runtimeResult?.parked) {
+        log('[%s] Parked (waiting for human / async tool), not completed', logId);
+
+        return {
+          error: undefined,
+          result:
+            'Sub-agent is still running: it paused for human approval or an async tool and has not finished yet. Do not treat this as done — check the thread later or continue it via callSubAgent({ subAgentId }).',
+          success: false,
+          threadId,
+        };
+      }
+
       const subMessageKey = messageMapKey(subContext);
       const subTaskMessages = this.#get().dbMessagesMap[subMessageKey] || [];
       const lastAssistant = subTaskMessages.findLast((m) => m.role === 'assistant');
