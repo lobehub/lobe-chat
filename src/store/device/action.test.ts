@@ -37,6 +37,7 @@ describe('DeviceAction', () => {
     vi.clearAllMocks();
     vi.mocked(mutate).mockResolvedValue(undefined);
     vi.spyOn(deviceService, 'updateDevice').mockResolvedValue({ success: true });
+    vi.spyOn(deviceService, 'updateWorkspaceDevice').mockResolvedValue({ success: true });
     useDeviceStore.setState({ devices: [], isDevicesInit: true });
   });
 
@@ -109,6 +110,55 @@ describe('DeviceAction', () => {
       expect(deviceSelectors.getDeviceDefaultCwd('dev-1')(state)).toBe('/repo');
       expect(deviceSelectors.getDeviceWorkingDirs('dev-1')(state)).toEqual(workingDirs);
       expect(mutate).toHaveBeenCalledWith(deviceKeys.listDevices());
+    });
+  });
+
+  // Workspace devices are stored under `workspace_id`; the personal mutation is
+  // userId-scoped and would silently drop the write, so removed dirs came back.
+  describe('workspace devices', () => {
+    const workspaceDevice = () =>
+      buildDevice({
+        deviceId: 'ws-dev',
+        scope: 'workspace',
+        workingDirs: [{ path: '/a' }, { path: '/b' }],
+      });
+
+    it('removes a recent dir through the workspace-scoped mutation', async () => {
+      useDeviceStore.setState({ devices: [workspaceDevice()] });
+
+      await useDeviceStore.getState().removeDeviceWorkingDir('ws-dev', '/a');
+
+      expect(deviceService.updateWorkspaceDevice).toHaveBeenCalledWith({
+        deviceId: 'ws-dev',
+        workingDirs: [{ path: '/b' }],
+      });
+      expect(deviceService.updateDevice).not.toHaveBeenCalled();
+    });
+
+    it('adds a picked dir through the workspace-scoped mutation', async () => {
+      useDeviceStore.setState({ devices: [workspaceDevice()] });
+
+      await useDeviceStore
+        .getState()
+        .updateDeviceCwd('ws-dev', { path: '/c' }, { setDefault: false });
+
+      expect(deviceService.updateWorkspaceDevice).toHaveBeenCalledWith({
+        deviceId: 'ws-dev',
+        workingDirs: [{ path: '/c' }, { path: '/a' }, { path: '/b' }],
+      });
+      expect(deviceService.updateDevice).not.toHaveBeenCalled();
+    });
+
+    it('keeps personal devices on the personal mutation', async () => {
+      useDeviceStore.setState({ devices: [buildDevice({ workingDirs: [{ path: '/a' }] })] });
+
+      await useDeviceStore.getState().removeDeviceWorkingDir('dev-1', '/a');
+
+      expect(deviceService.updateDevice).toHaveBeenCalledWith({
+        deviceId: 'dev-1',
+        workingDirs: [],
+      });
+      expect(deviceService.updateWorkspaceDevice).not.toHaveBeenCalled();
     });
   });
 });

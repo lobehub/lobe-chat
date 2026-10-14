@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
+import type { WorkspaceRole } from '@/business/server/trpc-middlewares/workspaceAuth';
 import type { DeviceModel } from '@/database/models/device';
 import { isPathWithinRoot } from '@/server/services/deviceGateway';
 
@@ -9,6 +10,48 @@ import { isPathWithinRoot } from '@/server/services/deviceGateway';
  * authorize read-only file previews without persisting skill paths into
  * the DB (which would leak into the UI's working-directory list).
  */
+export const canEditWorkspaceDevice = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  enrollerUserId: string,
+): boolean => role === 'owner' || enrollerUserId === actorUserId;
+
+/**
+ * Using a workspace device (as opposed to editing its registration) is open to
+ * every member once it is public; read-only viewers never operate a machine.
+ */
+export const canOperateWorkspaceDevice = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  row: { userId: string; visibility: 'private' | 'public' },
+): boolean =>
+  (row.visibility === 'public' && !!role && role !== 'viewer') ||
+  canEditWorkspaceDevice(role, actorUserId, row.userId);
+
+/**
+ * Gate `updateWorkspaceDevice`. The recent-dir list is part of using a device —
+ * picking, adding or removing a folder there — so it follows the operate rule.
+ * The name and the device-wide default cwd are registration settings that
+ * change every member's fallback, so they stay with the enroller or an owner.
+ */
+export const assertWorkspaceDeviceUpdatable = (
+  role: WorkspaceRole | undefined,
+  actorUserId: string,
+  row: { userId: string; visibility: 'private' | 'public' },
+  registration: { defaultCwd?: string | null; friendlyName?: string | null },
+): void => {
+  if (canEditWorkspaceDevice(role, actorUserId, row.userId)) return;
+
+  const touchesRegistration =
+    registration.defaultCwd !== undefined || registration.friendlyName !== undefined;
+  if (!touchesRegistration && canOperateWorkspaceDevice(role, actorUserId, row)) return;
+
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message: 'Only the enrolling member or a workspace owner can modify this device.',
+  });
+};
+
 const deviceSkillRoots = new Map<string, Set<string>>();
 
 export const registerDeviceSkillRoots = (deviceId: string, roots: string[]) => {

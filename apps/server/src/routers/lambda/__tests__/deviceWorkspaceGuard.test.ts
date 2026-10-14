@@ -3,7 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { DeviceModel } from '@/database/models/device';
 
-import { assertWorkspaceDeviceVisible, assertWorkspaceRootApproved } from '../deviceWorkspaceGuard';
+import {
+  assertWorkspaceDeviceUpdatable,
+  assertWorkspaceDeviceVisible,
+  assertWorkspaceRootApproved,
+} from '../deviceWorkspaceGuard';
 
 const mockModel = (
   row: {
@@ -109,5 +113,42 @@ describe('assertWorkspaceDeviceVisible', () => {
     await expect(
       assertWorkspaceDeviceVisible(model, 'someone-elses-private'),
     ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+  });
+});
+
+describe('assertWorkspaceDeviceUpdatable', () => {
+  const device = (visibility: 'private' | 'public') => ({ userId: 'enroller', visibility });
+
+  it('lets a member edit the recent-dir list of a public device', () => {
+    expect(() =>
+      assertWorkspaceDeviceUpdatable('member', 'member', device('public'), {}),
+    ).not.toThrow();
+  });
+
+  it.each([
+    ['defaultCwd', { defaultCwd: '/srv/repo' }],
+    ['friendlyName', { friendlyName: 'Renamed' }],
+  ])('keeps %s with the enroller or an owner on a public device', (_field, registration) => {
+    expect(() =>
+      assertWorkspaceDeviceUpdatable('member', 'member', device('public'), registration),
+    ).toThrow(TRPCError);
+    expect(() =>
+      assertWorkspaceDeviceUpdatable('owner', 'owner', device('public'), registration),
+    ).not.toThrow();
+    expect(() =>
+      assertWorkspaceDeviceUpdatable('member', 'enroller', device('public'), registration),
+    ).not.toThrow();
+  });
+
+  it("rejects a member editing someone else's private device", () => {
+    expect(() => assertWorkspaceDeviceUpdatable('member', 'member', device('private'), {})).toThrow(
+      TRPCError,
+    );
+  });
+
+  it('rejects a read-only viewer even on a public device', () => {
+    expect(() => assertWorkspaceDeviceUpdatable('viewer', 'viewer', device('public'), {})).toThrow(
+      TRPCError,
+    );
   });
 });

@@ -25,6 +25,11 @@ class DeviceService {
     return lambdaClient.device.updateDevice.mutate(input);
   }
 
+  /** Update user-editable fields of a workspace-enrolled device (workspace-scoped write). */
+  updateWorkspaceDevice(input: Parameters<DeviceClient['updateWorkspaceDevice']['mutate']>[0]) {
+    return lambdaClient.device.updateWorkspaceDevice.mutate(input);
+  }
+
   /**
    * Check whether a path exists on a device and is a directory (via the device's
    * `statPath` RPC). Returns `null` when the device is unreachable — callers

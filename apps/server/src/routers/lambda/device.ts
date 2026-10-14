@@ -40,8 +40,11 @@ import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceG
 import { loadDeviceBoundAgents } from './deviceBoundAgents';
 import { preserveWorkspaceCache } from './deviceWorkingDirs';
 import {
+  assertWorkspaceDeviceUpdatable,
   assertWorkspaceDeviceVisible,
   assertWorkspaceRootApproved,
+  canEditWorkspaceDevice,
+  canOperateWorkspaceDevice,
   registerDeviceSkillRoots,
 } from './deviceWorkspaceGuard';
 
@@ -144,25 +147,6 @@ const buildTunnelOpenUrl = async (
   // (Vite's HMR socket authenticates with it).
   return `${url}?${TUNNEL_TOKEN_PARAM}=${encodeURIComponent(token)}`;
 };
-
-const canEditWorkspaceDevice = (
-  role: WorkspaceRole | undefined,
-  actorUserId: string,
-  enrollerUserId: string,
-): boolean => role === 'owner' || enrollerUserId === actorUserId;
-
-/**
- * Using a workspace device (as opposed to editing its registration) is open to
- * every member once it is public; read-only viewers never operate a machine.
- * See {@link assertDeviceOperable}.
- */
-const canOperateWorkspaceDevice = (
-  role: WorkspaceRole | undefined,
-  actorUserId: string,
-  row: { userId: string; visibility: 'private' | 'public' },
-): boolean =>
-  (row.visibility === 'public' && !!role && role !== 'viewer') ||
-  canEditWorkspaceDevice(role, actorUserId, row.userId);
 
 /**
  * Fixed workspace agents promise every member the same execution device. Keep
@@ -2099,9 +2083,9 @@ export const deviceRouter = router({
 
   /**
    * Rename / set working dirs of a WORKSPACE device. Scoped by `workspace_id`
-   * and gated by {@link canEditWorkspaceDevice}: owners may edit any device in
-   * the pool; members may edit only devices they enrolled themselves. Mirrors
-   * {@link deviceRouter.updateDevice} but for the workspace pool.
+   * and gated by {@link assertWorkspaceDeviceUpdatable}: registration fields stay
+   * with the enroller or an owner; the recent-dir list follows the operate rule.
+   * Mirrors {@link deviceRouter.updateDevice} but for the workspace pool.
    */
   updateWorkspaceDevice: wsWritableProcedure
     .use(serverDatabase)
@@ -2121,12 +2105,7 @@ export const deviceRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
       }
       const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
-      if (!canEditWorkspaceDevice(role, ctx.userId, row.userId)) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Only the enrolling member or a workspace owner can modify this device.',
-        });
-      }
+      assertWorkspaceDeviceUpdatable(role, ctx.userId, row, value);
       const nextWorkingDirs = workingDirs
         ? preserveWorkspaceCache(workingDirs, row.workingDirs ?? [])
         : undefined;
