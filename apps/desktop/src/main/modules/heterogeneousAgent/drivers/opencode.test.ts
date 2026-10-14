@@ -23,6 +23,85 @@ const buildParams = (
 });
 
 describe('opencodeDriver', () => {
+  it('binds a private OpenCode server to the selected relay model without storing credentials', async () => {
+    const plan = await opencodeDriver.prepareServerDefaultBinding!({
+      args: [
+        '--model=other/model',
+        '-m',
+        'wrong/model',
+        '--server',
+        'https://other.test',
+        '--continue',
+        '--session',
+        'other-session',
+        '--agent',
+        'custom',
+        '--title',
+        'Keep title',
+      ],
+      endpoint: 'https://example.test',
+      env: {
+        LOBEHUB_OPENCODE_API_KEY: 'stale-token',
+        OPENCODE_CONFIG_CONTENT: '{"model":"other/model"}',
+        KEEP: 'yes',
+      },
+      model: 'vendor/model',
+      modelDescriptor: {
+        abilities: { reasoning: true, vision: true },
+        contextWindowTokens: 200_000,
+        maxOutput: 16_000,
+        model: 'vendor/model',
+        nativeResponses: false,
+      },
+      profileDir: '/managed/opencode',
+    });
+    expect(plan.args).toEqual([
+      '--standalone',
+      '--model',
+      'lobehub-server-default/lobehub/vendor/model',
+      '--title',
+      'Keep title',
+    ]);
+    expect(plan.operationTokenEnvKey).toBe('LOBEHUB_OPENCODE_API_KEY');
+    expect(plan.env.LOBEHUB_OPENCODE_API_KEY).toBeUndefined();
+    expect(plan.env.KEEP).toBe('yes');
+    expect(plan.env.OPENCODE_DISABLE_PROJECT_CONFIG).toBe('true');
+    const config = JSON.parse(plan.env.OPENCODE_CONFIG_CONTENT);
+    expect(config.model).toBe('lobehub-server-default/lobehub/vendor/model');
+    expect(config.small_model).toBe(config.model);
+    expect(config.enabled_providers).toEqual(['lobehub-server-default']);
+    expect(config.provider['lobehub-server-default']).toMatchObject({
+      npm: '@ai-sdk/openai',
+      options: {
+        apiKey: '{env:LOBEHUB_OPENCODE_API_KEY}',
+        baseURL: 'https://example.test/api/v1/openai/v1',
+      },
+      models: {
+        'lobehub/vendor/model': {
+          limit: { context: 200_000, output: 16_000 },
+          modalities: { input: ['text', 'image'], output: ['text'] },
+          reasoning: true,
+        },
+      },
+    });
+    expect(JSON.stringify(plan)).not.toContain('stale-token');
+  });
+
+  it('uses conservative model capabilities when the deployment has no model card', async () => {
+    const plan = await opencodeDriver.prepareServerDefaultBinding!({
+      args: [],
+      endpoint: 'https://example.test',
+      model: 'model',
+      profileDir: '/managed/opencode',
+    });
+    const config = JSON.parse(plan.env.OPENCODE_CONFIG_CONTENT);
+    expect(config.provider['lobehub-server-default'].models['lobehub/model']).toMatchObject({
+      limit: { context: 128_000, output: 16_384 },
+      modalities: { input: ['text'], output: ['text'] },
+      reasoning: false,
+    });
+  });
+
   it('is registered and composes base, resume, configured, and input args in order', async () => {
     expect(getHeterogeneousAgentDriver('opencode')).toBe(opencodeDriver);
 

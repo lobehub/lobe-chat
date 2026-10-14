@@ -1588,7 +1588,7 @@ export default class HeterogeneousAgentCtr {
       // a model described without its card still runs (on default window and
       // modalities), and the operation begin re-validates the model.
       const modelDescriptor =
-        agentType === 'codex' || agentType === 'pi'
+        agentType === 'codex' || agentType === 'pi' || agentType === 'opencode'
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);
