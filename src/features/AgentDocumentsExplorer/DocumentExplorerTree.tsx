@@ -36,6 +36,9 @@ import {
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 import { agentDocumentService } from '@/services/agentDocument';
+import { useGlobalStore } from '@/store/global';
+import type { AgentDocumentSort } from '@/store/global/initialState';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { openConvertToSkillModal, slugifySkillName } from './ConvertToSkillModal';
 import DocumentExplorerToolbar from './DocumentExplorerToolbar';
@@ -43,6 +46,7 @@ import { useDocumentTreeOps } from './hooks/useDocumentTreeOps';
 import type { AgentDocumentItem } from './types';
 import { isOrphanSkillBundleItem } from './types';
 import { canDropDocument } from './utils/canDrop';
+import { createDocumentComparator } from './utils/sortDocuments';
 
 const SKILL_INDEX_FILENAME = 'SKILL.md';
 const FILE_TREE_HOST_TAG = 'file-tree-container';
@@ -118,7 +122,7 @@ interface Props {
 }
 
 const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocument, style }) => {
-  const { t } = useTranslation(['chat', 'common']);
+  const { i18n, t } = useTranslation(['chat', 'common']);
   const navigate = useWorkspaceAwareNavigate();
   const treeRef = useRef<ExplorerTreeHandle | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -195,6 +199,17 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
         };
       }),
     [documents, parentDocumentIds, resolveNodeName, resolveParentRowId],
+  );
+
+  const sort = useGlobalStore(systemStatusSelectors.agentDocumentSort);
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const handleSortChange = useCallback(
+    (agentDocumentSort: AgentDocumentSort) => updateSystemStatus({ agentDocumentSort }),
+    [updateSystemStatus],
+  );
+  const compareNodes = useMemo(
+    () => createDocumentComparator(sort, i18n.language),
+    [i18n.language, sort],
   );
 
   const treeStyleVars = useMemo(
@@ -503,8 +518,10 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
 
   const toolbar = (
     <DocumentExplorerToolbar
+      sort={sort}
       onCreateDocument={() => handleCreateDocument(null)}
       onCreateFolder={() => handleCreateFolder(null)}
+      onSortChange={handleSortChange}
       onUploadFiles={(files) => void ops.uploadFiles(null, files)}
     />
   );
@@ -540,6 +557,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
           itemHeight={DOCUMENT_TREE_LAYOUT.itemHeight}
           nodes={nodes}
           ref={treeRef}
+          sort={compareNodes}
           style={{ height: '100%' }}
           unsafeCSS={DOCUMENT_TREE_UNSAFE_CSS}
           onCommitRename={handleCommitRename}
