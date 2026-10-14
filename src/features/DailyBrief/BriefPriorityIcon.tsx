@@ -17,7 +17,7 @@ const PRIORITY_ICON = {
 } satisfies Record<BriefPriority, unknown>;
 
 interface BriefPriorityIconProps {
-  /** Read rows recede as one; urgent keeps its color so a handled alarm still reads as one. */
+  /** A read or handled row recedes as one — urgent included: once handled it no longer needs you. */
   muted?: boolean;
   priority: string | null | undefined;
   size?: number;
@@ -27,12 +27,11 @@ const BriefPriorityIcon = memo<BriefPriorityIconProps>(({ muted, priority, size 
   const { t } = useTranslation('home');
   const level = resolveBriefPriority(priority);
   const PriorityIcon = PRIORITY_ICON[level];
-  const color =
-    level === 'urgent'
+  const color = muted
+    ? cssVar.colorTextQuaternary
+    : level === 'urgent'
       ? cssVar.orange
-      : muted
-        ? cssVar.colorTextQuaternary
-        : cssVar.colorTextDescription;
+      : cssVar.colorTextDescription;
 
   return (
     <Tooltip title={t(`inbox.priority.${level}`)}>
