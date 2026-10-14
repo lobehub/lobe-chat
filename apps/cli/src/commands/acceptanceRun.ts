@@ -434,9 +434,20 @@ async function submitAction(options: SubmitOptions): Promise<void> {
     log.error('Submitted result did not resolve to a verification run');
     process.exit(1);
   }
-  const url = new URL(`/verify/${verifyRunId}`, resolveServerUrl()).toString();
+  // The acceptance page is the only report surface; a round not attached to one
+  // has no link to hand off (the plan handoff lookup reports it as blocked).
+  const round = await client.verify.getRun.query({ verifyRunId }).catch(() => null);
+  const acceptanceUrl = round?.acceptanceId
+    ? new URL(
+        `/acceptance/${encodeURIComponent(round.acceptanceId)}`,
+        resolveServerUrl(),
+      ).toString()
+    : null;
   if (options.json !== undefined) {
-    outputJson({ ...res, url }, typeof options.json === 'string' ? options.json : undefined);
+    outputJson(
+      { ...res, acceptanceUrl, roundIndex: round?.roundIndex ?? null },
+      typeof options.json === 'string' ? options.json : undefined,
+    );
     return;
   }
   console.log(
@@ -444,7 +455,11 @@ async function submitAction(options: SubmitOptions): Promise<void> {
       `${res.checkResult.verdict ? ` (${res.checkResult.verdict})` : ''}` +
       `${res.evidence.length > 0 ? ` +${res.evidence.length} evidence` : ''}`,
   );
-  console.log(`${pc.bold('report')}: ${url}`);
+  console.log(
+    acceptanceUrl
+      ? `${pc.bold('acceptance')}: ${acceptanceUrl}`
+      : pc.dim('round not attached to an acceptance yet — no link to hand off'),
+  );
 }
 
 async function decisionAction(resultId: string, decision: Decision): Promise<void> {

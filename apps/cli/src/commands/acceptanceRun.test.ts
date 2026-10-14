@@ -1014,6 +1014,7 @@ describe('acceptance publication with missing evidence', () => {
         checkResult: { id: 'result-reload', verifyRunId: 'run-1' },
         evidence: [{ id: 'evidence-1' }],
       });
+      client.verify.getRun.query.mockResolvedValue({ acceptanceId: 'acceptance-1', id: 'run-1' });
       vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
         throw new Error(`exit ${code}`);
       }) as never);

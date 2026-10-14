@@ -1460,7 +1460,10 @@ describe('lh acceptance — canonical run tree', () => {
     expect(mockTrpcClient.verify.deleteRun.mutate).toHaveBeenCalledWith({ verifyRunId: 'run_1' });
   });
 
-  it('prints the full verification report URL after submitting evidence', async () => {
+  it('prints the acceptance link, never a /verify link, after submitting evidence', async () => {
+    mockTrpcClient.verify.getRun = {
+      query: vi.fn().mockResolvedValue({ acceptanceId: 'acc_1', id: 'run_1', roundIndex: 2 }),
+    };
     await run([
       'run',
       'result',
@@ -1476,10 +1479,14 @@ describe('lh acceptance — canonical run tree', () => {
     ]);
 
     const lines = consoleSpy.mock.calls.map((call) => String(call[0]));
-    expect(lines).toContain('report: https://app.lobehub.com/verify/run_1');
+    expect(lines).toContain('acceptance: https://app.lobehub.com/acceptance/acc_1');
+    expect(lines.some((line) => line.includes('/verify/'))).toBe(false);
   });
 
-  it('includes the verification report URL in JSON output', async () => {
+  it('reports no link for a round outside any acceptance', async () => {
+    mockTrpcClient.verify.getRun = {
+      query: vi.fn().mockResolvedValue({ acceptanceId: null, id: 'run_1', roundIndex: null }),
+    };
     await run([
       'run',
       'result',
@@ -1496,7 +1503,35 @@ describe('lh acceptance — canonical run tree', () => {
     ]);
 
     const output = JSON.parse(consoleSpy.mock.calls.map((call) => String(call[0])).join(''));
-    expect(output.url).toBe('https://app.lobehub.com/verify/run_1');
+    expect(output).toMatchObject({ acceptanceUrl: null, roundIndex: null });
+    expect(output).not.toHaveProperty('url');
+  });
+
+  it('includes the acceptance URL in JSON output', async () => {
+    mockTrpcClient.verify.getRun = {
+      query: vi.fn().mockResolvedValue({ acceptanceId: 'acc_1', id: 'run_1', roundIndex: 2 }),
+    };
+    await run([
+      'run',
+      'result',
+      'submit',
+      '--operation',
+      'op_1',
+      '--item',
+      'check_1',
+      '--type',
+      'text',
+      '--content',
+      'passed',
+      '--json',
+    ]);
+
+    const output = JSON.parse(consoleSpy.mock.calls.map((call) => String(call[0])).join(''));
+    expect(output).toMatchObject({
+      acceptanceUrl: 'https://app.lobehub.com/acceptance/acc_1',
+      roundIndex: 2,
+    });
+    expect(output).not.toHaveProperty('url');
   });
 
   it('does NOT attach the run subtree to the deprecated `verify acceptance` alias', async () => {
