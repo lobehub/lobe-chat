@@ -31,6 +31,11 @@ vi.mock('../hooks/useAgentId', () => ({
   useAgentId: () => tokenMocks.agentId,
 }));
 
+// The host publishes no topic of its own, so the composer follows the global active topic.
+vi.mock('../store', () => ({
+  useChatInputStore: (selector: (state: object) => unknown) => selector({ topicId: undefined }),
+}));
+
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: object) => unknown) =>
     selector({

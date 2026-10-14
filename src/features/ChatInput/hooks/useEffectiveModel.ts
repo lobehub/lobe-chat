@@ -8,13 +8,26 @@ import { useChatStore } from '@/store/chat';
 // controls, and the barrel drags in unrelated slice selectors.
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
+import { useTopicId } from './useTopicId';
+
 interface ModelAndProvider {
   model: string;
   provider: string;
 }
 
 /**
- * The effective model/provider for ChatInput: the active topic's pinned model
+ * The model pinned to this composer's own topic (see `useTopicId`), never the
+ * global active topic's: a page copilot embedded beside another chat has
+ * `topicId: null` and must not pick up the outer chat's pin.
+ */
+export const useTopicModel = (): ModelAndProvider | undefined => {
+  const topicId = useTopicId();
+
+  return useChatStore((s) => (topicId ? topicSelectors.getTopicModelById(topicId)(s) : undefined));
+};
+
+/**
+ * The effective model/provider for ChatInput: the composer topic's pinned model
  * when one exists, otherwise the agent default.
  *
  * Use this everywhere a capability is gated on the model that will actually run
@@ -29,7 +42,7 @@ export const useEffectiveModel = (agentId: string): ModelAndProvider => {
     agentByIdSelectors.getAgentModelProviderById(agentId)(s),
   ]);
 
-  const topicModel = useChatStore(topicSelectors.activeTopicModel);
+  const topicModel = useTopicModel();
 
   return {
     model: topicModel?.model || agentModel,

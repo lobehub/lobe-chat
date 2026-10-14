@@ -9,13 +9,14 @@ import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
 import SelectorTrigger from '../../components/SelectorTrigger';
 import { useAgentId } from '../../hooks/useAgentId';
 import { useAgentModelSelection } from '../../hooks/useAgentModelSelection';
+import { useTopicModel } from '../../hooks/useEffectiveModel';
 import { useModelLockTooltip } from '../../hooks/useModelLockTooltip';
 import { useReasoningEffortControl } from '../../hooks/useReasoningEffortControl';
+import { useTopicId } from '../../hooks/useTopicId';
 import { useActionBarContext } from '../context';
 import SelectorMenu from './SelectorMenu';
 
@@ -33,13 +34,14 @@ const ModelSwitch = memo(() => {
   } = useAgentModelSelection(agentId);
   // Topic-scoped model: a topic pins its own model (top-level `topics.model`
   // column). Display the topic's pinned model when present, else the agent
-  // default; a switch pins to the active topic, otherwise updates the agent
-  // (via selectModel, which honors workspace member overrides).
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  // default; a switch pins to this composer's topic (see `useTopicId`),
+  // otherwise updates the agent (via selectModel, which honors workspace member
+  // overrides).
+  const topicId = useTopicId();
   const { isShared } = useAgentShareSupported(agentId);
   const chatModels = useEnabledChatModels();
   const enabledList =
-    !activeTopicId && isShared && AGENT_SHARE_ALLOWED_PROVIDERS
+    !topicId && isShared && AGENT_SHARE_ALLOWED_PROVIDERS
       ? chatModels.filter((item) => AGENT_SHARE_ALLOWED_PROVIDERS?.includes(item.id))
       : undefined;
   const modelNotice = enabledList ? (
@@ -50,7 +52,7 @@ const ModelSwitch = memo(() => {
       type={'info'}
     />
   ) : undefined;
-  const topicModel = useChatStore(topicSelectors.activeTopicModel);
+  const topicModel = useTopicModel();
   const updateTopicModel = useChatStore((s) => s.updateTopicModel);
   const model = topicModel?.model ?? agentModel;
   const provider = topicModel?.model ? topicModel.provider : agentProvider;
@@ -59,9 +61,9 @@ const ModelSwitch = memo(() => {
   const displayName = enabledModel?.displayName || model;
   const lockTooltip = useModelLockTooltip(displayName, selectionLockReason);
   // Reasoning effort rides along with the model trigger instead of claiming a
-  // second action slot. Like the model, it pins to the active topic when there
-  // is one and edits the user's per-model default otherwise.
-  const effort = useReasoningEffortControl(model, provider, activeTopicId ?? undefined);
+  // second action slot. Like the model, it pins to the composer's topic when
+  // there is one and edits the user's per-model default otherwise.
+  const effort = useReasoningEffortControl(model, provider, topicId ?? undefined);
   // A pinned model still opens the menu when there is an effort to pick there.
   const interactive = canSelectModel || effort.hasReasoningParams;
 
@@ -69,10 +71,10 @@ const ModelSwitch = memo(() => {
     async (params: { model: string; provider: string }) => {
       if (!canSelectModel) return;
 
-      if (activeTopicId) await updateTopicModel(activeTopicId, params);
+      if (topicId) await updateTopicModel(topicId, params);
       else await selectModel(params);
     },
-    [activeTopicId, canSelectModel, selectModel, updateTopicModel],
+    [canSelectModel, selectModel, topicId, updateTopicModel],
   );
 
   // Both current values on one chip, the way the heterogeneous selector reads:
