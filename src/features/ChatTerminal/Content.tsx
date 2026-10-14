@@ -36,11 +36,9 @@ import { useGlobalStore } from '@/store/global';
 import SplitView from './SplitView';
 import type { TerminalTab } from './store';
 import { useChatTerminalStore } from './store';
+import { buildTargetOptions, LOCAL_TARGET } from './targetOptions';
 
 const EMPTY_TABS: TerminalTab[] = [];
-
-/** Sentinel for "run on this machine"; device ids are never empty strings. */
-const LOCAL_TARGET = '';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -188,13 +186,10 @@ const Content = memo(() => {
     void createTab(topicKey, cwd);
   };
 
-  const targetOptions = [
-    ...(isDesktop ? [{ label: t('terminalPanel.targetLocal'), value: LOCAL_TARGET }] : []),
-    ...targets.map((device) => ({
-      label: device.friendlyName || device.hostname || device.deviceId,
-      value: device.deviceId,
-    })),
-  ];
+  const targetOptions = buildTargetOptions(
+    targets,
+    isDesktop ? t('terminalPanel.targetLocal') : undefined,
+  );
 
   return (
     <Flexbox className={styles.container}>
@@ -235,14 +230,15 @@ const Content = memo(() => {
           title={t('terminalPanel.newTab')}
           onClick={() => createTab(topicKey, cwd)}
         />
+        <Flexbox flex={1} />
         <Select
           options={targetOptions}
           size={'small'}
-          style={{ minWidth: 120 }}
+          // The trigger defaults to `width: 100%`, which fills the whole tab bar.
+          style={{ flex: 'none', maxWidth: 240, minWidth: 120, width: 'auto' }}
           value={targetDeviceId ?? LOCAL_TARGET}
           onChange={(value) => selectTarget(String(value))}
         />
-        <Flexbox flex={1} />
         <ActionIcon
           disabled={!activeTab || creating}
           icon={SquareSplitHorizontalIcon}
