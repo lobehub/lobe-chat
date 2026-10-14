@@ -1105,6 +1105,8 @@ export class GatewayActionImpl {
      * `phase: 'tool_result'` WITHOUT re-executing the tool.
      */
     resumeToolResult?: ResumeToolResultParam;
+    /** Skills the user selected in this message; forwarded as `selectedSkillIds`. */
+    selectedSkillIds?: string[];
     /**
      * Tool identifiers the user @-mentioned in this message. Forwarded to the
      * server as `selectedToolIds` so the server runtime enables them for this
@@ -1150,6 +1152,7 @@ export class GatewayActionImpl {
       resumeApproval,
       resumeApprovals,
       resumeToolResult,
+      selectedSkillIds,
       selectedToolIds,
       mentionedAgents,
       tempMessageIds,
@@ -1343,6 +1346,7 @@ export class GatewayActionImpl {
               resumeApproval,
               resumeApprovals,
               resumeToolResult,
+              selectedSkillIds,
               selectedToolIds,
               // A queued follow-up keeps its continuation mark on the row the
               // server persists, which replaces the optimistic one.
