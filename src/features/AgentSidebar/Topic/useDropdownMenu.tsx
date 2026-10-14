@@ -27,8 +27,8 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
 import { useAddFolderAction } from './useAddFolderAction';
+import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
 
 const hotArea = css`
   &::before {
