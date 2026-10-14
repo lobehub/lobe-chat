@@ -520,6 +520,8 @@ export default {
   'acceptance.gate.unitCount': '{{count}} units',
   'acceptance.gate.resultsWave': 'Last wave',
   'acceptance.gate.resultsProbes': 'Experiment results',
+  'acceptance.gate.hideFiles': 'Hide files',
+  'acceptance.gate.showFiles': 'Show the skill files',
   'acceptance.gate.planTitle': 'Execution plan',
   'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
   'acceptance.gate.unitBrief': 'What this unit does',

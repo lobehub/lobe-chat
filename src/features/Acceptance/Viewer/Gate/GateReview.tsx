@@ -4,7 +4,14 @@ import type { GoalReleaseGateDossier, GoalReleaseGateUnit } from '@lobechat/type
 import { Flexbox, Icon, Markdown } from '@lobehub/ui';
 import { ActionIcon, Button, Text, TextArea, toast } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { CircleCheck, CircleDashed, TriangleAlert, X } from 'lucide-react';
+import {
+  CircleCheck,
+  CircleDashed,
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -165,14 +172,20 @@ const Section = ({
   children,
   extra,
   title,
+  titleExtra,
 }: {
   children: ReactNode;
   extra?: ReactNode;
   title: string;
+  /** A control that belongs to the title itself, set right after it. */
+  titleExtra?: ReactNode;
 }) => (
   <Flexbox gap={12}>
-    <Flexbox horizontal align={'baseline'} justify={'space-between'}>
-      <span className={styles.section}>{title}</span>
+    <Flexbox horizontal align={'center'} justify={'space-between'}>
+      <Flexbox horizontal align={'center'} gap={4}>
+        <span className={styles.section}>{title}</span>
+        {titleExtra}
+      </Flexbox>
       {extra}
     </Flexbox>
     {children}
@@ -432,6 +445,8 @@ interface GateReviewProps {
 const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided }) => {
   const { t } = useTranslation('verify');
   const [selected, setSelected] = useState<Selection>();
+  // The plan reads as a document first; its other files are a click away.
+  const [filesOpen, setFilesOpen] = useState(false);
   const average =
     dossier.units.reduce((sum, unit) => sum + unit.tokens, 0) / Math.max(1, dossier.units.length);
   const probes = dossier.kind === 'probes';
@@ -480,10 +495,21 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
             </span>
           )
         }
+        titleExtra={
+          dossier.plan.skillId && (
+            <ActionIcon
+              icon={filesOpen ? PanelLeftCloseIcon : PanelLeftOpenIcon}
+              size={'small'}
+              title={t(filesOpen ? 'acceptance.gate.hideFiles' : 'acceptance.gate.showFiles')}
+              onClick={() => setFilesOpen((open) => !open)}
+            />
+          )
+        }
       >
         {dossier.plan.skillId ? (
           <SkillDirectory
             fallbackContent={dossier.plan.content}
+            filesOpen={filesOpen}
             revision={dossier.plan.revision}
             skillId={dossier.plan.skillId}
           />
