@@ -89,6 +89,46 @@ describe('acceptance report authoring contract', () => {
     expect(await validateAcceptanceReport(reportDir)).toMatchObject({ valid: true, draft: false });
   });
 
+  it('rejects a declared screenshot type when ingest will infer text from the filename', async () => {
+    const reportDir = await setup({
+      title: 'Mismatched evidence',
+      plan: [
+        {
+          id: 'proof',
+          title: 'Image evidence',
+          method: 'Capture the page',
+          expected: 'A screenshot is saved',
+          requiredEvidence: ['screenshot'],
+        },
+      ],
+      cases: [
+        {
+          id: 'proof',
+          surface: 'web',
+          status: 'pass',
+          observation: 'The page appeared.',
+          evidence: [
+            { type: 'screenshot', description: 'Incorrectly typed text file', path: 'proof.txt' },
+          ],
+        },
+      ],
+    });
+    await writeFile(path.join(reportDir, 'proof.txt'), 'not a screenshot');
+    const result = await validateAcceptanceReport(reportDir);
+    expect(
+      result.errors.some(
+        ({ path: issuePath, message }) =>
+          issuePath.endsWith('.type') &&
+          message.includes('Ingest infers the type from the file suffix'),
+      ),
+    ).toBe(true);
+    expect(
+      result.errors.some(({ message }) =>
+        message.includes('missing required evidence "screenshot"'),
+      ),
+    ).toBe(true);
+  });
+
   it('rejects duplicate plan ids and orphan case ids', async () => {
     const result = await validateAcceptanceReport(
       await setup({
@@ -334,7 +374,7 @@ describe('acceptance report authoring contract', () => {
     ).toBe(true);
   });
 
-  it('rejects evidence descriptors without a usable payload', async () => {
+  it('rejects content-only evidence even when it satisfies a required text type', async () => {
     const result = await validateAcceptanceReport(
       await setup({
         title: 'Report',
@@ -344,16 +384,18 @@ describe('acceptance report authoring contract', () => {
             title: 'Text evidence',
             method: 'Read output',
             expected: 'Output is useful',
-            requiredEvidence: [],
+            requiredEvidence: ['text'],
           },
         ],
         cases: [
           {
             id: 'text',
             surface: 'cli',
-            status: 'fail',
-            observation: 'No artifact was captured.',
-            evidence: [{ type: 'text', description: 'Empty', content: '   ' }],
+            status: 'pass',
+            observation: 'Text was attached inline.',
+            evidence: [
+              { type: 'text', description: 'Inline text', content: 'This is ignored by ingest.' },
+            ],
           },
         ],
       }),

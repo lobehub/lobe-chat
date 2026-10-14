@@ -13,24 +13,14 @@ const evidenceDescriptorFields = {
   description: z.string().min(1),
 };
 
-const evidenceSchema = z.union([
-  z
-    .object({
-      ...evidenceDescriptorFields,
-      type: z.enum(verifyEvidenceTypes).optional(),
-      path: z.string().min(1),
-      content: z.string().trim().min(1).optional(),
-    })
-    .passthrough(),
-  z
-    .object({
-      ...evidenceDescriptorFields,
-      type: z.enum(verifyEvidenceTypes),
-      path: z.string().min(1).optional(),
-      content: z.string().trim().min(1),
-    })
-    .passthrough(),
-]);
+const evidenceSchema = z
+  .object({
+    ...evidenceDescriptorFields,
+    type: z.enum(verifyEvidenceTypes).optional(),
+    path: z.string().min(1),
+    content: z.never().optional(),
+  })
+  .passthrough();
 
 const requiredEvidenceSchema = z.union([
   z.enum(verifyEvidenceTypes),
@@ -185,49 +175,54 @@ export async function validateAcceptanceReport(
     }
 
     for (const [evidenceIndex, evidence] of item.evidence.entries()) {
-      if (evidence.path) {
-        const absoluteReportDir = path.resolve(reportDir);
-        const absoluteEvidencePath = path.resolve(absoluteReportDir, evidence.path);
-        const relativePath = path.relative(absoluteReportDir, absoluteEvidencePath);
-        const escapesReportDir =
-          relativePath === '..' ||
-          relativePath.startsWith(`..${path.sep}`) ||
-          path.isAbsolute(relativePath);
-        if (path.isAbsolute(evidence.path) || escapesReportDir) {
-          errors.push({
-            path: `cases[${index}].evidence[${evidenceIndex}].path`,
-            message: 'Evidence path must stay within the report directory.',
-          });
-        } else {
-          try {
-            await access(absoluteEvidencePath, constants.R_OK);
-            const realEvidencePath = await realpath(absoluteEvidencePath);
-            const realRelativePath = path.relative(realReportDir, realEvidencePath);
-            const realPathEscapes =
-              realRelativePath === '..' ||
-              realRelativePath.startsWith(`..${path.sep}`) ||
-              path.isAbsolute(realRelativePath);
-            if (realPathEscapes) {
-              errors.push({
-                path: `cases[${index}].evidence[${evidenceIndex}].path`,
-                message: 'Evidence path resolves outside the report directory.',
-              });
-            } else if (!(await stat(realEvidencePath)).isFile()) {
-              errors.push({
-                path: `cases[${index}].evidence[${evidenceIndex}].path`,
-                message: `Referenced evidence path "${evidence.path}" is not a regular file.`,
-              });
-            }
-          } catch {
-            errors.push({
-              path: `cases[${index}].evidence[${evidenceIndex}].path`,
-              message: `Referenced evidence file "${evidence.path}" does not exist or cannot be read.`,
-            });
-          }
-        }
+      const inferredType = evidenceTypeForFile(evidence.path);
+      if (evidence.type && evidence.type !== inferredType) {
+        errors.push({
+          path: `cases[${index}].evidence[${evidenceIndex}].type`,
+          message: `Evidence type "${evidence.type}" conflicts with filename inference ("${inferredType}"). Ingest infers the type from the file suffix.`,
+        });
       }
 
-      if (evidence.path && 'chapters' in evidence && evidence.chapters !== undefined) {
+      const absoluteReportDir = path.resolve(reportDir);
+      const absoluteEvidencePath = path.resolve(absoluteReportDir, evidence.path);
+      const relativePath = path.relative(absoluteReportDir, absoluteEvidencePath);
+      const escapesReportDir =
+        relativePath === '..' ||
+        relativePath.startsWith(`..${path.sep}`) ||
+        path.isAbsolute(relativePath);
+      if (path.isAbsolute(evidence.path) || escapesReportDir) {
+        errors.push({
+          path: `cases[${index}].evidence[${evidenceIndex}].path`,
+          message: 'Evidence path must stay within the report directory.',
+        });
+      } else {
+        try {
+          await access(absoluteEvidencePath, constants.R_OK);
+          const realEvidencePath = await realpath(absoluteEvidencePath);
+          const realRelativePath = path.relative(realReportDir, realEvidencePath);
+          const realPathEscapes =
+            realRelativePath === '..' ||
+            realRelativePath.startsWith(`..${path.sep}`) ||
+            path.isAbsolute(realRelativePath);
+          if (realPathEscapes) {
+            errors.push({
+              path: `cases[${index}].evidence[${evidenceIndex}].path`,
+              message: 'Evidence path resolves outside the report directory.',
+            });
+          } else if (!(await stat(realEvidencePath)).isFile()) {
+            errors.push({
+              path: `cases[${index}].evidence[${evidenceIndex}].path`,
+              message: `Referenced evidence path "${evidence.path}" is not a regular file.`,
+            });
+          }
+        } catch {
+          errors.push({
+            path: `cases[${index}].evidence[${evidenceIndex}].path`,
+            message: `Referenced evidence file "${evidence.path}" does not exist or cannot be read.`,
+          });
+        }
+      }
+      if ('chapters' in evidence && evidence.chapters !== undefined) {
         const rawChapters = evidence.chapters;
         const parsedChapters = reportEvidence([evidence])[0]?.chapters;
         if (
@@ -248,14 +243,7 @@ export async function validateAcceptanceReport(
       if (planItem) {
         for (const [requiredIndex, required] of planItem.requiredEvidence.entries()) {
           const type = typeof required === 'string' ? required : required.type;
-          if (
-            !item.evidence.some(
-              (evidence) =>
-                (evidence.type ??
-                  (evidence.path ? evidenceTypeForFile(evidence.path) : undefined)) === type &&
-                (evidence.path || evidence.content),
-            )
-          ) {
+          if (!item.evidence.some((evidence) => evidenceTypeForFile(evidence.path) === type)) {
             errors.push({
               path: `cases[${index}].evidence`,
               message: `Claimed pass is missing required evidence "${type}" (plan[${planItemIndex}].requiredEvidence[${requiredIndex}]).`,
