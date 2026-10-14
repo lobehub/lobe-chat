@@ -1289,6 +1289,40 @@ describe('acceptance publication with missing evidence', () => {
       expect(client.verify.uploadEvidence.mutate).not.toHaveBeenCalled();
     });
 
+    it('rejects English chapter captions in `result submit --chapters` before uploading', async () => {
+      client.user.getUserState.query.mockResolvedValue({
+        settings: { general: { responseLanguage: 'zh-CN' } },
+      });
+      await writeFile(
+        path.join(dir, 'chapters.json'),
+        JSON.stringify([
+          { kind: 'step', label: '刷新页面', t: 0 },
+          { kind: 'check', note: 'Device chip shows on the first frame', t: 1.5 },
+        ]),
+      );
+
+      await expect(
+        run(
+          'result',
+          'submit',
+          '--operation',
+          'op-1',
+          '--item',
+          'reload',
+          '--file',
+          path.join(dir, 'scroll.mp4'),
+          '--type',
+          'video',
+          '--desc',
+          '刷新后的录屏',
+          '--chapters',
+          path.join(dir, 'chapters.json'),
+        ),
+      ).rejects.toThrow('--chapters.chapters[1].note');
+      expect(uploadLocalFile).not.toHaveBeenCalled();
+      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
+    });
+
     it('rejects `run create` with a title in the wrong language', async () => {
       client.user.getUserState.query.mockResolvedValue({
         settings: { general: { responseLanguage: 'zh-CN' } },

@@ -396,6 +396,8 @@ async function submitAction(options: SubmitOptions): Promise<void> {
   await assertReportLanguage(client, [
     { path: '--title', text: options.title },
     { path: '--desc', text: options.desc },
+    // Chapter labels/notes and comparison labels render on the page as prose too.
+    ...evidenceCaptionFields(options.chapters ? '--chapters' : '--metadata', metadata),
   ]);
   let fileId: string | undefined;
   let inlineContent = options.content;
@@ -479,7 +481,7 @@ async function evidenceUploadAction(options: EvidenceUploadOptions): Promise<voi
   const client = await getTrpcClient();
   await assertReportLanguage(client, [
     { path: '--desc', text: options.desc },
-    ...evidenceCaptionFields('--metadata', metadata),
+    ...evidenceCaptionFields(options.chapters ? '--chapters' : '--metadata', metadata),
   ]);
   let fileId = options.fileId;
   let inlineContent = options.content;
