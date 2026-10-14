@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "Chat maximieren",
   "followUpPlaceholder": "Folgen Sie nach. @, um Aufgaben anderen Agenten zuzuweisen.",
   "followUpPlaceholderHeterogeneous": "Weiter ausführen.",
-  "gateway.notConfigured": "Für diese Bereitstellung ist kein Agent Gateway konfiguriert, daher können keine Agenten ausgeführt werden. Bitte deinen Administrator, das Agent Gateway zu aktivieren.",
+  "gateway.notConfigured": "Für diese Bereitstellung ist kein Agent Gateway konfiguriert, daher können keine Agenten ausgeführt werden. Bitte deinen Administrator, das Agent Gateway zu aktivieren",
   "globalApproval.collapse": "Einklappen",
   "globalApproval.dismiss": "Schließen",
   "globalApproval.dismissHint": "Hier ausblenden; es bleibt auf der Startseite",

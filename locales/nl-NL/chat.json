@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "Chat uitvouwen",
   "followUpPlaceholder": "Vervolgen. @ om taken toe te wijzen aan andere agenten.",
   "followUpPlaceholderHeterogeneous": "Vervolgbericht.",
-  "gateway.notConfigured": "Voor deze implementatie is geen Agent Gateway geconfigureerd, dus agents kunnen niet worden uitgevoerd. Vraag je beheerder de Agent Gateway in te schakelen.",
+  "gateway.notConfigured": "Voor deze implementatie is geen Agent Gateway geconfigureerd, dus agents kunnen niet worden uitgevoerd. Vraag je beheerder de Agent Gateway in te schakelen",
   "globalApproval.collapse": "Inklappen",
   "globalApproval.dismiss": "Sluiten",
   "globalApproval.dismissHint": "Verberg het hier; het blijft op Home",

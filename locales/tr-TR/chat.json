@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "Sohbeti Genişlet",
   "followUpPlaceholder": "Takip edin. Diğer ajanlara görev atamak için @ kullanın.",
   "followUpPlaceholderHeterogeneous": "Devam edin.",
-  "gateway.notConfigured": "Bu dağıtımda Agent Gateway yapılandırılmamış, bu nedenle ajanlar çalıştırılamaz. Yöneticinizden Agent Gateway'i etkinleştirmesini isteyin.",
+  "gateway.notConfigured": "Bu dağıtımda Agent Gateway yapılandırılmamış, bu nedenle ajanlar çalıştırılamaz. Yöneticinizden Agent Gateway'i etkinleştirmesini isteyin",
   "globalApproval.collapse": "Daralt",
   "globalApproval.dismiss": "Kapat",
   "globalApproval.dismissHint": "Burada gizle; Ana Sayfa'da kalır",

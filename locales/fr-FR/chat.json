@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "Agrandir le chat",
   "followUpPlaceholder": "Donner suite. @ pour attribuer des tâches à d’autres agents.",
   "followUpPlaceholderHeterogeneous": "Poursuivre.",
-  "gateway.notConfigured": "Aucun Agent Gateway n'est configuré pour ce déploiement : les agents ne peuvent pas s'exécuter. Demandez à votre administrateur d'activer l'Agent Gateway.",
+  "gateway.notConfigured": "Aucun Agent Gateway n'est configuré pour ce déploiement : les agents ne peuvent pas s'exécuter. Demandez à votre administrateur d'activer l'Agent Gateway",
   "globalApproval.collapse": "Réduire",
   "globalApproval.dismiss": "Ignorer",
   "globalApproval.dismissHint": "Masquez-le ici ; il reste sur l'accueil",

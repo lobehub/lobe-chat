@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "توسيع الدردشة",
   "followUpPlaceholder": "متابعة. @ لإسناد مهام لوكلاء آخرين.",
   "followUpPlaceholderHeterogeneous": "تابع.",
-  "gateway.notConfigured": "لم يتم إعداد Agent Gateway في هذا النشر، لذا لا يمكن تشغيل الوكلاء. اطلب من المسؤول تفعيل Agent Gateway.",
+  "gateway.notConfigured": "لم يتم إعداد Agent Gateway في هذا النشر، لذا لا يمكن تشغيل الوكلاء. اطلب من المسؤول تفعيل Agent Gateway",
   "globalApproval.collapse": "طي",
   "globalApproval.dismiss": "رفض",
   "globalApproval.dismissHint": "اخفِه هنا؛ سيبقى في الصفحة الرئيسية",

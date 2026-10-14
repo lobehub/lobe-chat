@@ -445,7 +445,7 @@
   "floatingChatPanel.expand": "Expand chat",
   "followUpPlaceholder": "Follow up.",
   "followUpPlaceholderHeterogeneous": "Follow up.",
-  "gateway.notConfigured": "This deployment has no Agent Gateway configured, so agents can't run. Ask your administrator to enable the Agent Gateway.",
+  "gateway.notConfigured": "This deployment has no Agent Gateway configured, so agents can't run. Ask your administrator to enable the Agent Gateway",
   "globalApproval.collapse": "Collapse",
   "globalApproval.dismiss": "Dismiss",
   "globalApproval.dismissHint": "Hide it here; it stays on Home",

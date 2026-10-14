@@ -445,7 +445,7 @@
   "floatingChatPanel.expand": "展开聊天",
   "followUpPlaceholder": "继续跟进。",
   "followUpPlaceholderHeterogeneous": "继续跟进。",
-  "gateway.notConfigured": "当前部署未配置 Agent Gateway，无法运行助理。请联系管理员启用 Agent Gateway。",
+  "gateway.notConfigured": "当前部署未配置 Agent Gateway，无法运行助理。请联系管理员启用 Agent Gateway",
   "globalApproval.collapse": "收起",
   "globalApproval.dismiss": "忽略",
   "globalApproval.dismissHint": "只在这里隐藏，首页仍保留",

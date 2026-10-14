@@ -442,7 +442,7 @@
   "floatingChatPanel.expand": "チャットを展開",
   "followUpPlaceholder": "フォローアップ。@で他のエージェントにタスクを割り当てできます。",
   "followUpPlaceholderHeterogeneous": "フォローアップ。",
-  "gateway.notConfigured": "このデプロイには Agent Gateway が設定されていないため、アシスタントを実行できません。管理者に Agent Gateway の有効化を依頼してください。",
+  "gateway.notConfigured": "このデプロイには Agent Gateway が設定されていないため、アシスタントを実行できません。管理者に Agent Gateway の有効化を依頼してください",
   "globalApproval.collapse": "折りたたむ",
   "globalApproval.dismiss": "閉じる",
   "globalApproval.dismissHint": "ここで非表示にします。ホームには残ります。",

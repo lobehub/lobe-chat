@@ -1579,7 +1579,7 @@ export default {
   'memory.on.title': 'Enable Memory Tool',
   'memory.title': 'Memory',
   'gateway.notConfigured':
-    "This deployment has no Agent Gateway configured, so agents can't run. Ask your administrator to enable the Agent Gateway.",
+    "This deployment has no Agent Gateway configured, so agents can't run. Ask your administrator to enable the Agent Gateway",
   'sandboxStorage.ephemeral': 'Temporary working directory',
   'sandboxStorage.ephemeralDesc': 'Cleaned up when the sandbox is recycled',
   'sandboxStorage.persistentUpsell': 'Persistent working directory',
