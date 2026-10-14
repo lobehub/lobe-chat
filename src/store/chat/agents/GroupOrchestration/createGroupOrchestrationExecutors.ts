@@ -15,7 +15,7 @@ import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
-import { registerClientSubAgentBridge } from '@/store/chat/agents/transports/clientSubAgentBridge';
+import { registerGroupBridgeFromParkExit } from '@/store/chat/agents/transports/clientSubAgentBridge';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -751,10 +751,9 @@ export const createGroupOrchestrationExecutors = (
           // then drives the next round. The old park-exit (`result: undefined`)
           // left the orchestration parked forever: nothing re-entered the
           // loop, so the supervisor never saw the member's result.
-          registerClientSubAgentBridge({
+          registerGroupBridgeFromParkExit({
             childContext: subContext,
             childOperationId: taskOperationId,
-            kind: 'group-orchestration',
             memberAgentId: agentId,
             messageContext,
             orchestrationOperationId,

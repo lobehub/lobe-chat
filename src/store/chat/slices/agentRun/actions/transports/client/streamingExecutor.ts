@@ -56,7 +56,7 @@ import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import {
   fireClientSubAgentBridge,
-  registerClientSubAgentBridge,
+  registerSubAgentBridgeFromSpawner,
 } from '@/store/chat/agents/transports/clientSubAgentBridge';
 import { createClientRuntimeExecutors } from '@/store/chat/agents/transports/createClientRuntimeExecutors';
 import { topicSelectors } from '@/store/chat/selectors';
@@ -1043,8 +1043,13 @@ export class StreamingExecutorActionImpl {
     // Terminal boundary of a client run: settle any completion bridge parked
     // on this run's thread (a parent parked on THIS run as its sub-agent /
     // group member). Parked runs exit earlier — only terminal states fire.
+    // The terminal disposition travels with the fire so a failed/interrupted
+    // continuation reaches the parent as a failure, never as a success.
     if (context.threadId) {
-      await fireClientSubAgentBridge(this.#get, context);
+      await fireClientSubAgentBridge(this.#get, context, {
+        error: state.status !== 'done' ? (state.error as string | undefined) : undefined,
+        status: state.status as 'done' | 'error' | 'interrupted',
+      });
     }
 
     await runLifecycle.afterRunComplete(completeEvent);
@@ -1193,24 +1198,15 @@ export class StreamingExecutorActionImpl {
       if (runtimeResult?.parked) {
         log('[%s] Parked (waiting for human / async tool), not completed', logId);
 
-        // `taskOperationId` is the parked child op; the parent's tool
-        // operation id is the toolMessageId row itself. The bridge resumes
-        // the PARENT run through its parent op chain once the child settles.
-        // No parent op id (legacy spawner) → no bridge to hang the resume on.
-        const parentOp = parentOperationId ? this.#get().operations[parentOperationId] : undefined;
-        if (parentOp && parentOperationId) {
-          registerClientSubAgentBridge({
-            childContext: subContext,
-            childOperationId: taskOperationId,
-            kind: 'sub-agent',
-            parentContext: {
-              agentId,
-              ...(topicId ? { topicId } : {}),
-            },
-            parentOperationId,
-            toolMessageId,
-          });
-        }
+        registerSubAgentBridgeFromSpawner({
+          childContext: subContext,
+          childOperationId: taskOperationId,
+          getParentOperation: (id) => this.#get().operations[id],
+          parentAgentId: agentId,
+          parentOperationId,
+          parentTopicId: topicId,
+          toolMessageId,
+        });
 
         return {
           error: undefined,
@@ -1274,69 +1270,6 @@ export class StreamingExecutorActionImpl {
         threadId: '',
       };
     }
-  };
-
-  /**
-   * Completion-bridge resume entry: continue a parent run parked on a
-   * deferred tool (a sub-agent / group member that finished after parking
-   * the parent). Re-enters the runtime from the tool message position with
-   * phase `tool_result` — the same re-entry shape the human-approval resume
-   * uses, minus the approval payload. The backfilled tool message is already
-   * persisted by the bridge; the resumed turn consumes it as the LLM's tool
-   * result.
-   */
-  internal_resumeClientSubAgentParent = async (params: {
-    context: ConversationContext;
-    parentMessageId: string;
-  }): Promise<void> => {
-    const { context, parentMessageId } = params;
-    const { agentId, topicId, threadId } = context;
-
-    const resumeOperationParams = {
-      context: {
-        ...context,
-        messageId: parentMessageId,
-      },
-      type: 'execAgentRuntime',
-    } as const;
-
-    const { operationId } = this.#get().startOperation({
-      ...resumeOperationParams,
-      label: 'Sub-agent completion resume',
-    } as any);
-
-    this.#get().associateMessageWithOperation(parentMessageId, operationId);
-
-    const chatKey = messageMapKey({ agentId, topicId, threadId });
-    const currentMessages = this.#get().dbMessagesMap[chatKey] || [];
-
-    const { context: initialContext, state } = this.#get().internal_createAgentState({
-      messages: currentMessages,
-      parentMessageId,
-      agentId,
-      topicId,
-      threadId: threadId ?? undefined,
-      operationId,
-    });
-
-    await this.executeClientAgent({
-      context,
-      messages: currentMessages,
-      parentMessageId,
-      parentMessageType: 'tool',
-      // The new operation owns the continuation; chain it to the settled
-      // parent op for cancellation propagation and the operation tree.
-      parentOperationId: operationId,
-      skipCreateFirstMessage: true,
-      initialState: state,
-      initialContext: {
-        ...initialContext,
-        phase: 'tool_result',
-        payload: { parentMessageId },
-      },
-    });
-
-    this.#get().completeOperation(operationId);
   };
 }
 
