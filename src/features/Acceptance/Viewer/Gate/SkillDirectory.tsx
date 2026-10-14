@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
+import { Flexbox, Highlighter, Markdown } from '@lobehub/ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { memo, useMemo, useState } from 'react';
 
@@ -9,36 +9,34 @@ import {
   skillFileTree,
   skillVersionContent,
 } from '@/features/AgentGoals/ProcessControl/BatchPlan/skillVersions';
-import ContentViewer from '@/features/AgentSkillDetail/ContentViewer';
+import { getLanguage } from '@/features/AgentSkillDetail/ContentViewer';
 import FileTree from '@/features/FileTree';
 import { useClientDataSWR } from '@/libs/swr';
 import { userSkillService } from '@/services/userSkill';
 import { parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 
 const SKILL_INDEX = 'SKILL.md';
+const MARKDOWN_FILE = /\.mdx?$/i;
 
 const styles = createStaticStyles(({ css }) => ({
-  frame: css`
-    overflow: hidden;
-    height: 480px;
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadiusLG};
-  `,
+  // Kept open, the tree stays beside the file being read while it scrolls.
   tree: css`
+    position: sticky;
+    inset-block-start: 0;
+
     overflow-y: auto;
     flex: none;
+    align-self: flex-start;
 
     width: 240px;
-    padding: 8px;
+    max-height: 480px;
+    padding-block: 4px;
+    padding-inline: 0 8px;
     border-inline-end: 1px solid ${cssVar.colorBorder};
   `,
   viewer: css`
-    overflow: auto;
     flex: 1;
-
     min-width: 0;
-    padding-block: 4px;
-    padding-inline: 20px;
   `,
 }));
 
@@ -76,8 +74,10 @@ const SkillDirectory = memo<SkillDirectoryProps>(
     // Folded, the tree can't switch files: the viewer is back on `SKILL.md`.
     const shown = filesOpen ? selectedFile : SKILL_INDEX;
 
+    const content = shown === SKILL_INDEX ? index : contentMap[shown];
+
     return (
-      <Flexbox horizontal className={styles.frame}>
+      <Flexbox horizontal gap={20}>
         {filesOpen && (
           <div className={styles.tree}>
             <FileTree
@@ -89,12 +89,16 @@ const SkillDirectory = memo<SkillDirectoryProps>(
           </div>
         )}
         <div className={styles.viewer}>
-          <ContentViewer
-            contentMap={contentMap}
-            key={shown}
-            liveContent={parseSkillMarkdownFrontmatter(index).body}
-            selectedFile={shown}
-          />
+          {/* Flush with the section, no frame of their own: documents as prose, the rest as code. */}
+          {MARKDOWN_FILE.test(shown) ? (
+            <Markdown fontSize={14} key={shown} variant={'chat'}>
+              {parseSkillMarkdownFrontmatter(content).body}
+            </Markdown>
+          ) : (
+            <Highlighter key={shown} language={getLanguage(shown)} variant={'filled'}>
+              {content ?? ''}
+            </Highlighter>
+          )}
         </div>
       </Flexbox>
     );
