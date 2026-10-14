@@ -34,6 +34,8 @@ export interface LLMMockReply extends LLMMockReplyConfig {
 
 interface Registry {
   defaultReply: LLMMockReplyConfig & { response: string };
+  /** Workers holding each reply; a reply is dropped once the last one clears it. */
+  owners: Map<string, Set<string>>;
   replies: Map<string, LLMMockReply>;
 }
 
@@ -44,8 +46,12 @@ const registry: Registry = {
     streamChunkSize: 10,
     streamDelay: 20,
   },
+  owners: new Map(),
   replies: new Map(),
 };
+
+/** This Cucumber worker; registrations and clears are scoped to it. */
+const WORKER_ID = process.env.CUCUMBER_WORKER_ID ?? '0';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -161,12 +167,25 @@ const handleRegister = async (req: IncomingMessage, res: ServerResponse) => {
   const payload = JSON.parse((await readBody(req)) || '{}') as {
     clear?: string[];
     defaultReply?: Registry['defaultReply'];
+    owner?: string;
     replies?: LLMMockReply[];
   };
-  for (const key of payload.clear ?? []) registry.replies.delete(key);
+  const owner = payload.owner ?? WORKER_ID;
+  // Workers share this endpoint: a clear only releases the caller's hold, so
+  // one worker's cleanup cannot drop a reply another worker is still using.
+  for (const key of payload.clear ?? []) {
+    const owners = registry.owners.get(key);
+    owners?.delete(owner);
+    if (!owners?.size) {
+      registry.owners.delete(key);
+      registry.replies.delete(key);
+    }
+  }
   if (payload.defaultReply) registry.defaultReply = payload.defaultReply;
   for (const reply of payload.replies ?? []) {
-    registry.replies.set(`${reply.match}:${reply.key}`, reply);
+    const key = `${reply.match}:${reply.key}`;
+    registry.replies.set(key, reply);
+    registry.owners.set(key, (registry.owners.get(key) ?? new Set()).add(owner));
   }
   res.writeHead(204);
   res.end();
@@ -230,7 +249,7 @@ export const registerLLMReplies = async (payload: {
 }) => {
   await ensureLLMMockServer();
   const res = await fetch(`${LLM_MOCK_URL}/__e2e/llm/replies`, {
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, owner: WORKER_ID }),
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
   });

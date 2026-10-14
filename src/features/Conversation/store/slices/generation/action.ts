@@ -176,6 +176,10 @@ const regenerateUserMessageFromSource = async (
 
     // ── Gateway: trigger server-side regeneration ──
     if (runtimeType === 'gateway' || !heterogeneousProvider) {
+      // Gateway mode switched off (ENABLE_AGENT_GATEWAY=0): no runtime for a plain agent.
+      if (!heterogeneousProvider && !context.agentShareId && !chatStore.isGatewayModeEnabled())
+        throw new Error(t('gateway.notConfigured', { ns: 'chat' }));
+
       // Hand the wrapper op off at phase-1 (`executeGatewayAgent` completes
       // `parentOperationId` once the child `execServerAgentRuntime` op is
       // running) — the documented interim-op contract this branch used to
@@ -685,6 +689,13 @@ export const generationSlice: StateCreator<
     });
 
     try {
+      if (
+        !agencyConfig?.heterogeneousProvider &&
+        !context.agentShareId &&
+        !chatStore.isGatewayModeEnabled()
+      )
+        throw new Error(t('gateway.notConfigured', { ns: 'chat' }));
+
       // Branch a server-side run from the cut-off message. `parentMessageId`
       // triggers `resume: true` on the router, so the server skips
       // user-message creation and continues from the existing chain. Empty

@@ -1825,6 +1825,12 @@ export class ConversationLifecycleActionImpl {
     // ── Gateway: skip sendMessageInServer, let execAgentTask handle everything ──
     if (!directMentionRoute) {
       try {
+        // A plain agent only runs on the Agent Gateway. A deployment that keeps
+        // `AGENT_GATEWAY_URL` but turned Gateway mode off (ENABLE_AGENT_GATEWAY=0)
+        // has no runtime for it; hetero device / remote dispatch still goes out.
+        if (!heterogeneousProvider && !isGatewayMode)
+          throw new Error(t('gateway.notConfigured', { ns: 'chat' }));
+
         // Pass `sendMessage` as `parentOperationId` so executeGatewayAgent
         // completes it the instant phase-1 init finishes (after the child
         // `execServerAgentRuntime` op starts). Without this hand-off the

@@ -58,6 +58,7 @@ vi.mock('@/store/chat', () => ({
       completeOperation: mockCompleteOperation,
       failOperation: mockFailOperation,
       executeGatewayAgent: mockExecuteGatewayAgent,
+      isGatewayModeEnabled: () => true,
       internal_dispatchTopic: vi.fn(),
       openThreadCreator: mockOpenThreadCreator,
       updateTopicMetadata: mockUpdateTopicMetadata,
@@ -91,6 +92,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         executeGatewayAgent: mockExecuteGatewayAgent,
+        isGatewayModeEnabled: () => true,
       } as any);
 
       const context: ConversationContext = {
@@ -154,6 +156,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         executeGatewayAgent: mockExecuteGatewayAgent,
+        isGatewayModeEnabled: () => true,
       } as any);
 
       const context: ConversationContext = {
@@ -193,6 +196,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         executeGatewayAgent: mockExecuteGatewayAgent,
+        isGatewayModeEnabled: () => true,
       } as any);
 
       const context: ConversationContext = {
@@ -234,6 +238,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         executeGatewayAgent: mockExecuteGatewayAgent,
+        isGatewayModeEnabled: () => true,
       } as any);
 
       const onBeforeContinue = vi.fn().mockResolvedValue(false);
@@ -283,6 +288,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         // The gateway fires onComplete when the server session ends
+        isGatewayModeEnabled: () => true,
         executeGatewayAgent: mockExecuteGatewayAgent.mockImplementationOnce(
           async ({ onComplete }: { onComplete?: () => void }) => {
             onComplete?.();
@@ -335,6 +341,7 @@ describe('Generation Actions', () => {
         completeOperation: mockCompleteOperation,
         failOperation: mockFailOperation,
         executeGatewayAgent: mockExecuteGatewayAgent,
+        isGatewayModeEnabled: () => true,
       } as any);
 
       const context: ConversationContext = {

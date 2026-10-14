@@ -1,6 +1,7 @@
 import type * as LobechatConstModule from '@lobechat/const';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { TRPCClientError } from '@trpc/client';
+import { t } from 'i18next';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getDraft, removeDraft } from '@/features/ChatInput/draftStorage';
@@ -1538,9 +1539,10 @@ describe('ConversationLifecycle actions', () => {
       });
 
       // Regression: the browser client runtime is gone. A deployment without an
-      // Agent Gateway must not silently fall back to running the agent locally;
-      // the send still goes to the gateway transport, which reports the error.
-      it('should route a normal send to the gateway even when gateway mode is off', async () => {
+      // Agent Gateway (or with Gateway mode switched off) must not silently fall
+      // back to running the agent locally, nor push the run to a disabled
+      // gateway: the send fails with the "not configured" error instead.
+      it('should fail a normal send when gateway mode is off, without any local fallback', async () => {
         const { result } = renderHook(() => useChatStore());
         // serverConfig carries no agentGatewayUrl in tests
         expect(result.current.isGatewayModeEnabled()).toBe(false);
@@ -1566,11 +1568,15 @@ describe('ConversationLifecycle actions', () => {
           });
         });
 
-        expect(executeGatewayAgent).toHaveBeenCalledOnce();
-        expect(executeGatewayAgent).toHaveBeenCalledWith(
-          expect.objectContaining({ message: TEST_CONTENT.USER_MESSAGE }),
-        );
+        expect(executeGatewayAgent).not.toHaveBeenCalled();
         expect(sendMessageInServerSpy).not.toHaveBeenCalled();
+        const failedSend = Object.values(useChatStore.getState().operations).find(
+          (op) => op.type === 'sendMessage',
+        );
+        expect(failedSend?.status).toBe('failed');
+        expect(failedSend?.metadata.error?.message).toBe(
+          t('gateway.notConfigured', { ns: 'chat' }),
+        );
       });
 
       it('should adopt the minted topic id and move context added during preflight', async () => {

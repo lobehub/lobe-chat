@@ -19,6 +19,36 @@ describe('LLM mock endpoint', () => {
     await registerLLMReplies({ clear: ['exact:hello server', 'contains:fragment'] });
   });
 
+  it('keeps a reply another worker still holds when one worker clears it', async () => {
+    const reply = {
+      key: 'shared prompt',
+      match: 'exact' as const,
+      response: 'shared reply',
+      responseDelay: 0,
+      streamChunkSize: 5,
+      streamDelay: 0,
+    };
+    await ensureLLMMockServer();
+    await registerLLMReplies({ replies: [reply] });
+    await fetch(`${LLM_MOCK_URL}/__e2e/llm/replies`, {
+      body: JSON.stringify({ owner: 'other-worker', replies: [reply] }),
+      method: 'POST',
+    });
+
+    await registerLLMReplies({ clear: ['exact:shared prompt'] });
+    expect(resolveReply([{ content: 'shared prompt', role: 'user' }]).response).toBe(
+      'shared reply',
+    );
+
+    await fetch(`${LLM_MOCK_URL}/__e2e/llm/replies`, {
+      body: JSON.stringify({ clear: ['exact:shared prompt'], owner: 'other-worker' }),
+      method: 'POST',
+    });
+    expect(resolveReply([{ content: 'shared prompt', role: 'user' }]).response).not.toBe(
+      'shared reply',
+    );
+  });
+
   it('streams the reply as OpenAI chat-completion chunks ending with [DONE]', () => {
     const chunks = buildOpenAIChunks('Hello, mock world!', 4, 'deepseek-v4-flash');
 
