@@ -126,18 +126,19 @@ export const evaluateHomogeneity = (
   if (stray.length)
     broken.push(`probe ${stray.map((title) => `"${title}"`).join(', ')} is not a roster unit`);
   const roster = new Set(units);
-  if (Number.isFinite(spec.unitCount) && roster.size < spec.unitCount)
-    broken.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
+  const lostUnits = Number.isFinite(spec.unitCount) && roster.size < spec.unitCount;
+  if (lostUnits) broken.push(`roster lists ${roster.size} of the ${spec.unitCount} claimed units`);
   if (options.maxUnits !== undefined && roster.size > options.maxUnits)
     broken.push(`roster lists ${roster.size} units, above the batch cap of ${options.maxUnits}`);
   if (briefs.length < 2) broken.push('fewer than two probe units');
 
-  // A repeatable claim below the unit threshold is simply not worth a batch;
-  // only a claim that still means to be one is judged broken.
+  // A claim that is not worth a batch (not repeatable, too few units) plans
+  // ordinarily, where probes and a recipe do not matter — but a roster missing
+  // units would drop them there too, so that stays broken either way.
   const reasons = [...notBatch, ...broken];
   return {
     batch: reasons.length === 0,
-    malformed: notBatch.length === 0 && broken.length > 0,
+    malformed: broken.length > 0 && (notBatch.length === 0 || lostUnits),
     reasons,
   };
 };
@@ -150,13 +151,37 @@ export const evaluateHomogeneity = (
  * holds, so the probe `agent runtime` leaves the separate unit `agent` queued:
  * a probe covering two units costs a rerun, never a unit that is dropped.
  */
+/** Scripts written without spaces between words, where a name has no boundary. */
+const UNSPACED_SCRIPT = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+
+/**
+ * Whether a probe title names a unit. A unit in an unspaced script is matched
+ * as a substring; any other — a word, a path like `src/a.ts`, a dotted module —
+ * only where neither side continues it, so `src/a.tsx` and `src/a.ts.bak` do not
+ * name `src/a.ts`, and `agentic` does not name `agent`.
+ */
+const titleNamesUnit = (title: string, unit: string): boolean => {
+  const name = unit.trim().toLowerCase();
+  if (!name) return false;
+  const text = title.toLowerCase();
+  if (UNSPACED_SCRIPT.test(name)) return text.includes(name);
+  // A name continues through a separator into more name — `src/a.ts.bak`,
+  // `lib/src/a.ts`, `@scope/pkg.v2` are other units — while a full stop or a
+  // space after it does not.
+  const word = '[\\p{L}\\p{N}_]';
+  return new RegExp(
+    `(?<!${word})(?<!${word}[./-])${escapeRegExp(name)}(?!${word})(?![./-]${word})`,
+    'u',
+  ).test(text);
+};
+
 export const unitsNamedByProbes = (probeTitles: string[], units: string[]): Map<string, string> => {
   // unit → the probe title that stands for it
   const named = new Map<string, string>();
   const candidates = [...new Set(units)].filter((unit) => !probeTitles.includes(unit));
   for (const probe of probeTitles) {
     const unit = candidates
-      .filter((candidate) => !named.has(candidate) && containsAxisValue(probe, candidate))
+      .filter((candidate) => !named.has(candidate) && titleNamesUnit(probe, candidate))
       .sort((a, b) => b.length - a.length)[0];
     if (unit) named.set(unit, probe);
   }

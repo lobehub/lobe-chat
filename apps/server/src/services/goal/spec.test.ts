@@ -58,6 +58,26 @@ describe('evaluateHomogeneity', () => {
     expect(verdict.reasons.join(' ')).toContain('roster lists 9 of the 12 claimed units');
   });
 
+  /**
+   * Regression: a claim below the batch threshold was never malformed, so a
+   * roster missing a unit planned ordinarily and silently dropped that unit.
+   */
+  it('hands over a small claim whose roster misses units, though it is no batch', () => {
+    const verdict = evaluateHomogeneity(
+      { ...spec, unitCount: 3, units: ['Migrate 1', 'Migrate 2'] },
+      probes,
+    );
+    expect(verdict).toMatchObject({ batch: false, malformed: true });
+    expect(verdict.reasons.join(' ')).toContain('roster lists 2 of the 3 claimed units');
+    // A complete small claim is just an ordinary plan, one probe or not.
+    expect(
+      evaluateHomogeneity(
+        { ...spec, unitCount: 3, units: ['Migrate 1', 'Migrate 2', 'Migrate 3'] },
+        probes.slice(0, 1),
+      ),
+    ).toMatchObject({ batch: false, malformed: false });
+  });
+
   it('keeps a goal that is simply not a batch on the ordinary plan', () => {
     expect(evaluateHomogeneity({ ...spec, repeatable: false }, probes)).toMatchObject({
       batch: false,
@@ -102,6 +122,30 @@ describe('evaluateHomogeneity', () => {
 });
 
 describe('unitsNamedByProbes', () => {
+  /**
+   * Regression: a unit with `/` or `.` fell back to substring matching, so the
+   * probe `Migrate src/a.tsx` stood for the unit `src/a.ts`, which was then
+   * dropped from the roster and never processed.
+   */
+  it('matches path and dotted unit names only on their boundaries', () => {
+    expect([
+      ...unitsNamedByProbes(
+        ['Migrate src/a.tsx', 'Move @scope/pkg.v2'],
+        ['src/a.ts', '@scope/pkg'],
+      ).keys(),
+    ]).toEqual([]);
+    expect([
+      ...unitsNamedByProbes(
+        ['Migrate src/a.ts (probe)', '迁移 store.device'],
+        ['src/a.ts', 'store.device'],
+      ).keys(),
+    ]).toEqual(['src/a.ts', 'store.device']);
+    // A full stop ending the title is not more name.
+    expect([...unitsNamedByProbes(['Migrate src/a.ts.'], ['src/a.ts']).keys()]).toEqual([
+      'src/a.ts',
+    ]);
+  });
+
   /**
    * Regression: every unit named inside a probe title was taken as probed, so
    * the probe `agent runtime` also swallowed the separate unit `agent`.
