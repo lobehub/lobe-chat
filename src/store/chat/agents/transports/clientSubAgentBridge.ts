@@ -89,6 +89,16 @@ const registry = new Map<string, ClientSubAgentBridgeRegistration>();
  */
 const pendingByParentOp = new Map<string, Set<string>>();
 
+/**
+ * Test-only reset: the registry is module-level shared state, and a restored
+ * claim (retry semantics) must not leak across test cases. Not exported from
+ * the package index.
+ */
+export const __resetBridgeForTests = (): void => {
+  registry.clear();
+  pendingByParentOp.clear();
+};
+
 const trackPending = (registration: ClientSubAgentBridgeRegistration) => {
   const parentOpId =
     registration.kind === 'sub-agent'
@@ -145,6 +155,8 @@ export const registerClientSubAgentBridge = (registration: ClientSubAgentBridgeR
 export const registerSubAgentBridgeFromSpawner = (params: {
   childContext: ConversationContext;
   childOperationId: string;
+  /** Extra parent context fields preserved across the resume (P2: workspaceSlug). */
+  parentContextExtras?: Partial<ConversationContext>;
   getParentOperation: (parentOperationId: string) => { status: string } | undefined;
   parentAgentId: string;
   parentOperationId?: string;
@@ -156,6 +168,7 @@ export const registerSubAgentBridgeFromSpawner = (params: {
     childOperationId,
     getParentOperation,
     parentAgentId,
+    parentContextExtras,
     parentOperationId,
     parentTopicId,
     toolMessageId,
@@ -173,6 +186,11 @@ export const registerSubAgentBridgeFromSpawner = (params: {
     parentContext: {
       agentId: parentAgentId,
       ...(parentTopicId ? { topicId: parentTopicId } : {}),
+      // Workspace scope must survive the bridge: without it the resumed run's
+      // notifications and any further sub-agents lose the workspace prefix.
+      ...(parentContextExtras?.workspaceSlug
+        ? { workspaceSlug: parentContextExtras.workspaceSlug }
+        : {}),
     },
     parentOperationId,
     toolMessageId,
@@ -222,7 +240,6 @@ export const fireClientSubAgentBridge = async (
 
   const registration = registry.get(key);
   if (!registration) return;
-  registry.delete(key);
 
   try {
     // The barrier slot MUST be released no matter how this fire ends — a
@@ -230,11 +247,20 @@ export const fireClientSubAgentBridge = async (
     // parent's resume (the slot only empties via releasePending).
     try {
       await fireRegistration(get, registration, outcome);
+      // Settlement fully succeeded — only now is the claim final. On failure
+      // the registration is put back below: a terminal child run has no
+      // natural re-fire, so a dropped claim would leave the parent parked
+      // forever with an unsettled placeholder. Re-registered (idempotent for
+      // the settled pieces — backfills overwrite the same rows).
+      registry.delete(key);
     } finally {
       releasePending(registration);
     }
   } catch (error) {
-    log('bridge failed for key %s: %O', key, error);
+    // Put the claim back so a later run in the same thread can retry — the
+    // next terminal boundary re-fires the bridge with fresh outcome data.
+    registry.set(key, registration);
+    log('bridge failed for key %s (claim restored for retry): %O', key, error);
   }
 };
 
@@ -501,7 +527,11 @@ const resumeClientSubAgentParent = async (
     topicId,
   });
 
-  await get().executeClientAgent({
+  // The resumed parent may park AGAIN (another deferred tool / callSubAgent in
+  // its continuation). Completing the fresh operation unconditionally would
+  // leave a parked run holding a completed op — when that child settles, the
+  // bridge's parent-op guard rejects the resume. Only complete on terminal.
+  const resumed = await get().executeClientAgent({
     context: parentContext,
     // The new operation owns the continuation; chain it to the settled parent
     // op for cancellation propagation and the operation tree.
@@ -518,5 +548,12 @@ const resumeClientSubAgentParent = async (
     skipCreateFirstMessage: true,
   });
 
-  get().completeOperation(operationId);
+  if (!resumed?.parked) {
+    get().completeOperation(operationId);
+  } else {
+    log(
+      'resumed parent parked again (op %s stays running); its next completion fires the bridge',
+      operationId,
+    );
+  }
 };

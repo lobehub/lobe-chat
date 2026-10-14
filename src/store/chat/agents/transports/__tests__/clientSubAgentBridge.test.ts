@@ -1,6 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fireClientSubAgentBridge, registerClientSubAgentBridge } from '../clientSubAgentBridge';
+import {
+  __resetBridgeForTests,
+  fireClientSubAgentBridge,
+  registerClientSubAgentBridge,
+} from '../clientSubAgentBridge';
+
+beforeEach(() => {
+  // The registry is module-level; a restored claim (retry semantics) from one
+  // case must never leak into the next.
+  __resetBridgeForTests();
+});
 
 const childContext = { agentId: 'agent-a', threadId: 'thd_child', topicId: 'topic-1' } as any;
 

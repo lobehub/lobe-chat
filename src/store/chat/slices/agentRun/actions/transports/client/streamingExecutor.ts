@@ -1201,6 +1201,13 @@ export class StreamingExecutorActionImpl {
         registerSubAgentBridgeFromSpawner({
           childContext: subContext,
           childOperationId: taskOperationId,
+          // Workspace scope survives the bridge → the resumed run's
+          // notifications and further sub-agents keep the workspace prefix.
+          parentContextExtras: {
+            ...(parentOperationId
+              ? { workspaceSlug: this.#get().operations[parentOperationId]?.context.workspaceSlug }
+              : {}),
+          },
           getParentOperation: (id) => this.#get().operations[id],
           parentAgentId: agentId,
           parentOperationId,
