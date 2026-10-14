@@ -12,19 +12,25 @@ import { useTreeStore } from '@/store/tree';
  * it reads the route first: waiting for the store kept the persisted tree behind
  * a skeleton for as long as the page took to load.
  *
+ * The same pre-paint effect copies the route's library into the store: the
+ * sidebar's row actions (navigate, create, upload) read it from there, and must
+ * not act on the previous library while this one's cached rows are on screen.
+ *
  * `init` runs in a layout effect, so the tree it seeds from the persisted
  * snapshot is already in the first painted frame.
  */
 export const useInitLibraryTree = (): string | undefined => {
   const { id: routeLibraryId } = useParams<{ id: string }>();
   const storeLibraryId = useResourceManagerStore((s) => s.libraryId);
+  const setLibraryId = useResourceManagerStore((s) => s.setLibraryId);
   const init = useTreeStore((s) => s.init);
   const libraryId = routeLibraryId ?? storeLibraryId;
 
   useLayoutEffect(() => {
     if (!libraryId) return;
+    if (routeLibraryId) setLibraryId(routeLibraryId);
     init(libraryId);
-  }, [libraryId, init]);
+  }, [libraryId, routeLibraryId, init, setLibraryId]);
 
   return libraryId;
 };

@@ -148,6 +148,28 @@ describe('TreeActionImpl.init — keep the tree across remounts', () => {
     expect(state.expanded[last]).toBeFalsy();
   });
 
+  it('drops a folder loaded but collapsed before leaving, so expanding it after the return refetches', async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('folder-a', true)] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(1));
+    // Loaded once, then collapsed before the user left the library.
+    state.children['folder-a'] = [file('stale-doc')];
+    state.expanded = { 'folder-a': false };
+
+    mockGetKnowledgeItems.mockReset().mockResolvedValue({ items: [] });
+    actions.init('kb-1');
+    expect(state.children['folder-a']).toBeUndefined();
+
+    mockGetKnowledgeItems.mockClear().mockResolvedValue({ items: [serverRow('fresh-doc')] });
+    actions.toggle('folder-a');
+
+    expect(mockGetKnowledgeItems.mock.calls.map(([args]) => args.parentId)).toEqual(['folder-a']);
+    await vi.waitFor(() =>
+      expect(state.children['folder-a'].map((i) => i.id)).toEqual(['fresh-doc']),
+    );
+  });
+
   it('still resets when a different library mounts', () => {
     const { actions, state } = setup();
     mockGetKnowledgeItems.mockReturnValue(new Promise(() => {}));

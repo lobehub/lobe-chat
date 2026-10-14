@@ -5,10 +5,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useInitLibraryTree } from './useInitLibraryTree';
 
-const { mockInit, resourceManagerState } = vi.hoisted(() => ({
-  mockInit: vi.fn(),
-  resourceManagerState: { libraryId: undefined as string | undefined },
-}));
+const { mockInit, resourceManagerState } = vi.hoisted(() => {
+  const state = {
+    libraryId: undefined as string | undefined,
+    setLibraryId: (id?: string) => {
+      state.libraryId = id;
+    },
+  };
+  return { mockInit: vi.fn(), resourceManagerState: state };
+});
 
 vi.mock('@/store/tree', () => ({
   useTreeStore: (selector: (s: { init: typeof mockInit }) => unknown) =>
@@ -59,6 +64,20 @@ describe('useInitLibraryTree', () => {
     );
 
     expect(order).toEqual(['init', 'passive effect']);
+  });
+
+  it('points the store at the route library before paint, so row actions never target the previous one', () => {
+    // Coming from library A: the page segment that syncs the store has not mounted yet.
+    resourceManagerState.libraryId = 'kb-a';
+    let storeAtInit: string | undefined;
+    mockInit.mockImplementation(() => {
+      storeAtInit = resourceManagerState.libraryId;
+    });
+
+    renderHook(() => useInitLibraryTree(), { wrapper: routeWrapper('/resource/library/kb-b') });
+
+    expect(storeAtInit).toBe('kb-b');
+    expect(resourceManagerState.libraryId).toBe('kb-b');
   });
 
   it('falls back to the store outside a library route', () => {

@@ -311,15 +311,20 @@ export class TreeActionImpl {
    */
   #revalidateOnRemount = () => {
     const visible = this.#loadedVisibleFolders();
-    const overflow = visible.slice(MAX_PERSISTED_FOLDERS);
-    if (overflow.length > 0) {
+    const kept = new Set(visible.slice(0, MAX_PERSISTED_FOLDERS));
+    // Everything else loaded is dropped: open folders past the cap, and folders
+    // loaded earlier but collapsed (or under a collapsed parent). Their rows
+    // would not be refreshed here, and expanding a folder that still has rows
+    // skips the fetch, so they would stay stale for the rest of the session.
+    const dropped = Object.keys(this.#get().children).filter((id) => !kept.has(id));
+    if (dropped.length > 0) {
       const children = { ...this.#get().children };
       const expanded = { ...this.#get().expanded };
-      for (const folderId of overflow) {
+      for (const folderId of dropped) {
         delete children[folderId];
-        expanded[folderId] = false;
+        if (expanded[folderId]) expanded[folderId] = false;
       }
-      this.#set({ children, expanded }, false, 'tree/collapseOverflow');
+      this.#set({ children, expanded }, false, 'tree/dropUnrefreshed');
     }
 
     for (const folderId of visible.slice(0, MAX_PERSISTED_FOLDERS)) {
