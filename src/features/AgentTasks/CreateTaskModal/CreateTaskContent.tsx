@@ -34,6 +34,7 @@ import { UnassignedAssigneeIcon } from '../features/UnassignedAssigneeIcon';
 import { useAgentDisplayMeta } from '../shared/useAgentDisplayMeta';
 import { useAgentVisibility } from '../shared/useAgentVisibility';
 import { useUserDisplayMeta } from '../shared/useUserDisplayMeta';
+import { useTitleEnterToInstruction } from './useTitleEnterToInstruction';
 
 export interface CreateTaskContentProps {
   agentId?: string;
@@ -202,6 +203,8 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
       }
     }, []);
 
+    const handleTitleKeyDown = useTitleEnterToInstruction(editor);
+
     return (
       <Flexbox onKeyDown={handleKeyDown}>
         <Flexbox horizontal style={{ padding: '16px 24px 0' }}>
@@ -224,6 +227,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
                 width: '100%',
               }}
               onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={handleTitleKeyDown}
             />
             <EditorCanvas
               disabled={!canCreateTask}
