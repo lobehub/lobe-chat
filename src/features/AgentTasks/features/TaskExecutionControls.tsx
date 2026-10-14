@@ -13,7 +13,7 @@ import { FolderIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useEffectiveAgentMode } from '@/features/ChatInput/hooks/useEffectiveAgentMode';
+import { useAgentDefaultModelAgentMode } from '@/features/ChatInput/hooks/useEffectiveAgentMode';
 import {
   getWorkingDirectoryName,
   getWorkingDirectoryPathString,
@@ -66,7 +66,10 @@ const TaskExecutionControlsInner = memo<
 >(({ assigneeAgentId, disabled, onChange, value }) => {
   const { t } = useTranslation('chat');
   const isHetero = useAgentStore(agentByIdSelectors.isAgentHeterogeneousById(assigneeAgentId));
-  const { isAgentRuntimeMode, isPreferenceLoading } = useEffectiveAgentMode(assigneeAgentId);
+  // No topic context here: judge the assignee by its own default model, never the
+  // chat page's active topic pin.
+  const { isAgentRuntimeMode, isPreferenceLoading } =
+    useAgentDefaultModelAgentMode(assigneeAgentId);
   // Heterogeneous agents always execute somewhere; a plain agent only has an
   // execution environment in agent mode (chat mode means "no tools, no device").
   // Same gate the chat composer uses for this cluster.
