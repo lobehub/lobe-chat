@@ -782,11 +782,9 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
       '  Criterion ids are minted when this run starts, so they are not listed above. Read them at runtime with `listCriteria`, or `lh verify plan state "$LOBEHUB_OPERATION_ID" --json` if you have a shell.',
     );
     // Two builder shapes, two toolchains. The portable `acceptance` skill is
-    // pulled to disk by external CLI builders and is deliberately absent from
-    // `builtinSkills`, so naming it unconditionally hands the in-product agent
-    // an instruction it cannot act on. A shell builder gets no commands here:
-    // the skill owns capture (recordings carry chapters), the round report and
-    // publishing, and an inline command list let builders skip all of that.
+    // pulled to disk by CLI builders and absent from `builtinSkills`, so only a
+    // shell builder is pointed at it — and given no inline commands, which let
+    // builders skip the skill's capture (chapters) and publishing rules.
     taskLines.push(
       "  With a shell: load the `acceptance` skill (`lh acceptance install` if it is not available) and follow its plan path for operation `$LOBEHUB_OPERATION_ID`. It owns reading the criteria, capturing evidence — chapters on every recording included — writing the round report, and publishing it into this run's round.",
     );
