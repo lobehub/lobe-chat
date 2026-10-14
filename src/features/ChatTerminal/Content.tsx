@@ -230,6 +230,7 @@ const Content = memo(() => {
           title={t('terminalPanel.newTab')}
           onClick={() => createTab(topicKey, cwd)}
         />
+        <Flexbox flex={1} />
         <Select
           options={targetOptions}
           size={'small'}
@@ -238,7 +239,6 @@ const Content = memo(() => {
           value={targetDeviceId ?? LOCAL_TARGET}
           onChange={(value) => selectTarget(String(value))}
         />
-        <Flexbox flex={1} />
         <ActionIcon
           disabled={!activeTab || creating}
           icon={SquareSplitHorizontalIcon}
