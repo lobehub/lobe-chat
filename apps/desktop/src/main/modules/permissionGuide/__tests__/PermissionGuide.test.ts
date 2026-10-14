@@ -51,9 +51,11 @@ vi.mock('@/utils/permissions', () => ({
 }));
 
 const showMainWindow = vi.fn();
+const broadcastToAllWindows = vi.fn();
 const mainWindowBounds = { height: 800, width: 1200, x: 100, y: 100 };
 const mockApp = {
   browserManager: {
+    broadcastToAllWindows,
     getMainWindow: () => ({ browserWindow: { getBounds: () => mainWindowBounds } }),
     showMainWindow,
   },
@@ -138,6 +140,38 @@ describe('PermissionGuide', () => {
     vi.advanceTimersByTime(GRANTED_DISMISS_MS);
     expect(addonMock.hideGuide).toHaveBeenCalled();
     expect(showMainWindow).toHaveBeenCalled();
+  });
+
+  it('tells the renderer when the guide opens and when it is granted', async () => {
+    await guide.open('screen');
+    expect(broadcastToAllWindows).toHaveBeenCalledWith('permissionGuideChanged', {
+      permission: 'screen',
+      status: 'active',
+    });
+
+    statusMock.mockReturnValue('granted');
+    vi.advanceTimersByTime(POLL_INTERVAL_MS);
+    expect(broadcastToAllWindows).toHaveBeenLastCalledWith('permissionGuideChanged', {
+      permission: 'screen',
+      status: 'granted',
+    });
+
+    guide.close();
+    expect(broadcastToAllWindows).not.toHaveBeenCalledWith('permissionGuideChanged', {
+      permission: 'screen',
+      status: 'dismissed',
+    });
+  });
+
+  it('tells the renderer when the guide is closed before granting', async () => {
+    await guide.open('accessibility');
+
+    fire({ type: 'close' });
+
+    expect(broadcastToAllWindows).toHaveBeenLastCalledWith('permissionGuideChanged', {
+      permission: 'accessibility',
+      status: 'dismissed',
+    });
   });
 
   it('asks to relaunch after Screen Recording is granted', async () => {

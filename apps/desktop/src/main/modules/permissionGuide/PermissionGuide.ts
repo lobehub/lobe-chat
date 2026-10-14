@@ -1,3 +1,4 @@
+import type { PermissionGuideStatus } from '@lobechat/electron-client-ipc';
 import type * as GuideAddonModule from '@lobechat/electron-mac-permission-guide';
 import type { PermissionGuideEvent } from '@lobechat/electron-mac-permission-guide';
 import { app as electronApp, screen, shell } from 'electron';
@@ -43,6 +44,7 @@ const ACCEPTS_DROP = new Set<GuidePhase>(['retry', 'waiting']);
 
 interface ActiveGuide {
   appPath: string;
+  granted: boolean;
   lastTitle?: string;
   launchOrigin: { x: number; y: number };
   paneTitle?: string;
@@ -74,6 +76,7 @@ export class PermissionGuide {
     this.close();
     this.active = {
       appPath,
+      granted: false,
       launchOrigin: this.resolveLaunchOrigin(),
       permission,
       phase: 'waiting',
@@ -83,6 +86,7 @@ export class PermissionGuide {
     this.unsubscribe = addon.onGuideEvent((event) => this.handleEvent(event));
     this.pollTimer = setInterval(() => this.poll(), POLL_INTERVAL_MS);
 
+    this.notify(permission, 'active');
     await this.openSettings(permission);
     this.render();
     logger.info(`[PermissionGuide] opened for ${permission}`);
@@ -98,8 +102,15 @@ export class PermissionGuide {
     this.titleTimer = undefined;
     this.unsubscribe?.();
     this.unsubscribe = undefined;
-    if (this.active) this.addon?.hideGuide();
+    const active = this.active;
     this.active = undefined;
+    if (!active) return;
+    this.addon?.hideGuide();
+    if (!active.granted) this.notify(active.permission, 'dismissed');
+  }
+
+  private notify(permission: GuidedPermission, status: PermissionGuideStatus) {
+    this.app.browserManager.broadcastToAllWindows('permissionGuideChanged', { permission, status });
   }
 
   // The panel flies out of the control the user just clicked; a request that
@@ -157,6 +168,8 @@ export class PermissionGuide {
 
     clearInterval(this.pollTimer);
     this.pollTimer = undefined;
+    active.granted = true;
+    this.notify(active.permission, 'granted');
     logger.info(`[PermissionGuide] ${active.permission} granted`);
 
     if (RELAUNCH_REQUIRED.has(active.permission)) {

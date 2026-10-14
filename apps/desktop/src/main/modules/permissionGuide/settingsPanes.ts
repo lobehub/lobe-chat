@@ -1,4 +1,6 @@
-export type GuidedPermission = 'accessibility' | 'fullDisk' | 'inputMonitoring' | 'screen';
+import type { GuidedPermission } from '@lobechat/electron-client-ipc';
+
+export type { GuidedPermission } from '@lobechat/electron-client-ipc';
 
 const PANE_ANCHORS: Record<GuidedPermission, string> = {
   accessibility: 'Privacy_Accessibility',
