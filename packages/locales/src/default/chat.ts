@@ -213,7 +213,6 @@ export default {
   'agentDocument.openAsPage': 'Open as full page',
   'agentDocument.portal.viewAll': 'View all documents',
   'agentDocument.portal.titlePlaceholder': 'Untitled document',
-  'agentDocument.portal.chatWithDocument': 'Chat to edit',
   'agentDocument.portal.export': 'Export',
   'agentNotFound.desc':
     'This agent does not exist or is no longer accessible — it may have been deleted or set to private by its owner.',
