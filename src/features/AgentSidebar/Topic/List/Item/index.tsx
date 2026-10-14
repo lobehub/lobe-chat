@@ -281,7 +281,10 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const activeWorkspaceSlug = useActiveWorkspaceSlug();
     // Creator of the topic — resolves only inside an active workspace; drives
     // the identity-first icon layout below.
-    const author = useTopicCreator(isSharedAgent ? userId : undefined);
+    const author = useTopicCreator(
+      isSharedAgent && !metadata?.bot ? userId : undefined,
+      metadata?.botCreator,
+    );
 
     const loadingRingColor = isDarkMode
       ? cssVar.colorWarningBorder
@@ -572,7 +575,11 @@ const TopicItemRow = memo<TopicItemRowProps>(
           }
         />
       ) : author ? (
-        <TopicCreatorAvatar corner={ownIconNode} userId={userId} />
+        <TopicCreatorAvatar
+          botCreator={metadata?.botCreator}
+          corner={ownIconNode}
+          userId={userId}
+        />
       ) : (
         (ownIconNode ?? idleIconPlaceholder)
       );
