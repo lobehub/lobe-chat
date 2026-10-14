@@ -122,7 +122,7 @@ interface Props {
 }
 
 const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocument, style }) => {
-  const { i18n, t } = useTranslation(['chat', 'common']);
+  const { t } = useTranslation(['chat', 'common']);
   const navigate = useWorkspaceAwareNavigate();
   const treeRef = useRef<ExplorerTreeHandle | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -207,10 +207,7 @@ const DocumentExplorerTree = memo<Props>(({ agentId, data, mutate, onOpenDocumen
     (agentDocumentSort: AgentDocumentSort) => updateSystemStatus({ agentDocumentSort }),
     [updateSystemStatus],
   );
-  const compareNodes = useMemo(
-    () => createDocumentComparator(sort, i18n.language),
-    [i18n.language, sort],
-  );
+  const compareNodes = useMemo(() => createDocumentComparator(sort), [sort]);
 
   const treeStyleVars = useMemo(
     () =>

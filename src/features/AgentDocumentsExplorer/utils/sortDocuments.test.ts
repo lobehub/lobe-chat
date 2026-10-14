@@ -27,14 +27,10 @@ const node = (
   name,
 });
 
-const order = (
-  sort: AgentDocumentSort,
-  nodes: ExplorerTreeNode<AgentDocumentItem>[],
-  locale = 'en-US',
-) =>
+const order = (sort: AgentDocumentSort, nodes: ExplorerTreeNode<AgentDocumentItem>[]) =>
   nodes
     .slice()
-    .sort(createDocumentComparator(sort, locale))
+    .sort(createDocumentComparator(sort))
     .map((n) => n.name);
 
 describe('createDocumentComparator', () => {
@@ -49,6 +45,22 @@ describe('createDocumentComparator', () => {
       'Week 10',
       'week 2',
       'Archive',
+    ]);
+  });
+
+  // The default sort must draw what the tree drew before the sort menu existed.
+  it('keeps the tree default name order across scripts: Latin, then CJK, then emoji', () => {
+    const nodes = [
+      node('📔 每日日记.md'),
+      node('周报.md'),
+      node('alpha 方案.md'),
+      node('Week 2.md'),
+    ];
+    expect(order({ by: 'name', foldersFirst: true, order: 'asc' }, nodes)).toEqual([
+      'alpha 方案.md',
+      'Week 2.md',
+      '周报.md',
+      '📔 每日日记.md',
     ]);
   });
 

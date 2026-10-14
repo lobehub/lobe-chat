@@ -21,15 +21,41 @@ const timeOf = (node: DocumentNode, by: 'createdAt' | 'updatedAt'): number => {
 // sorts with the files, not the folders.
 const isFolderRow = (node: DocumentNode) => !!node.isFolder && node.appearance !== 'file';
 
+// Lower-cased text runs and numeric runs, so `week 2` sorts before `Week 10`.
+const toNaturalTokens = (value: string): (number | string)[] =>
+  value
+    .toLowerCase()
+    .split(/(\d+)/)
+    .filter(Boolean)
+    .map((token) => (/^\d+$/.test(token) ? Number(token) : token));
+
 /**
- * Orders document tree siblings. Names compare the way people read them
- * (locale-aware, `2` before `10`); time sorts fall back to the name on ties.
+ * The tree's own default name order (@pierre/trees): case-insensitive, numbers
+ * by value, everything else by code unit. Keeping it means the default sort
+ * draws exactly what the tree drew before a sort menu existed.
+ */
+export const compareNames = (a: string, b: string): number => {
+  const left = toNaturalTokens(a);
+  const right = toNaturalTokens(b);
+  for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
+    const l = left[index];
+    const r = right[index];
+    if (l === r) continue;
+    if (typeof l === 'number' && typeof r === 'number') return l - r;
+    return String(l) < String(r) ? -1 : 1;
+  }
+  if (left.length !== right.length) return left.length - right.length;
+  if (a === b) return 0;
+  return a < b ? -1 : 1;
+};
+
+/**
+ * Orders document tree siblings. Names use the tree's default order; time sorts
+ * fall back to the name on ties.
  */
 export const createDocumentComparator = (
   sort: AgentDocumentSort,
-  locale?: string,
 ): ExplorerTreeNodeComparator<AgentDocumentItem> => {
-  const collator = new Intl.Collator(locale, { numeric: true, sensitivity: 'base' });
   const direction = sort.order === 'asc' ? 1 : -1;
 
   return (a, b) => {
@@ -37,7 +63,7 @@ export const createDocumentComparator = (
       const aFolder = isFolderRow(a);
       if (aFolder !== isFolderRow(b)) return aFolder ? -1 : 1;
     }
-    const byName = collator.compare(a.name, b.name);
+    const byName = compareNames(a.name, b.name);
     const field = sort.by;
     if (field === 'name') return byName * direction;
     const byTime = timeOf(a, field) - timeOf(b, field);
