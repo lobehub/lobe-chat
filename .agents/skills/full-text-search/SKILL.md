@@ -41,8 +41,9 @@ router/service -> createFtsSearchRepo -> FtsSearchRepo -> selected backend -> ex
   only when its provider covers all entities in `FTS_SEARCH_BACKEND_ENTITIES` end to end, including
   `mode: 'candidates'` when the provider enables `ftsSearchCandidateEnabled`.
 - Provider errors, missing configuration, and unsupported candidate behavior must remain visible.
-  Never silently retry through another provider. `pg_like` is an explicitly selected lightweight
-  provider, not an implicit fallback: a missing extension or unreachable service must still fail.
+  Never silently retry through another provider. `pg_like` is the self-host default when
+  `FTS_SEARCH_PROVIDER` is unset, not an implicit fallback: when `pg_search` or `elasticsearch` is
+  selected, a missing extension or unreachable service must still fail.
 - `packages/database/src/repositories/ftsSearch/postgres/` owns the query, permission, pagination,
   and hydration layer shared by PostgreSQL providers. `pgSearch/` and `pgLike/` own only their
   provider adapter, dialect, and provider-specific candidate behavior. Neither provider directory
@@ -59,12 +60,12 @@ router/service -> createFtsSearchRepo -> FtsSearchRepo -> selected backend -> ex
 
 ## Changing a Searchable Entity
 
-### Scope for pg\_like
+### Scope for pg_like
 
 `pg_like` primarily serves individual users with small datasets. Review it for correct matching,
 permissions, and usable result ordering at that scale. For richer search quality or larger datasets,
 recommend self-hosted Elasticsearch or Elastic Cloud. Do not add indexes or change the database
-schema as part of pg\_like optimization. Keep repairs bounded; distinguish new implementation bugs
+schema as part of pg_like optimization. Keep repairs bounded; distinguish new implementation bugs
 from shared provider limitations and deliberate lightweight-search trade-offs. Do not infer a
 personal-user performance problem from large shared development datasets without representative
 measurements.

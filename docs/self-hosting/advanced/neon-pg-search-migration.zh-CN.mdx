@@ -17,17 +17,19 @@ tags:
 
 ## 1. 确认是否需要迁移
 
-| 当前情况                                                | 是否需要迁移                  |
-| --------------------------------------------------- | ----------------------- |
-| Neon 或其他数据库服务已通知将停用 `pg_search`                     | 需要，继续下一步                |
-| PostgreSQL 仍支持 `pg_search`                          | 不需要，可以继续使用              |
-| 已设置 `FTS_SEARCH_PROVIDER=pg_like` 或 `elasticsearch` | 不需要，当前搜索不依赖 `pg_search` |
+| 当前情况                                                    | 是否需要迁移                           |
+| ------------------------------------------------------- | -------------------------------- |
+| Neon 或其他数据库服务已通知将停用 `pg_search`                         | 需要，继续下一步                         |
+| PostgreSQL 仍支持 `pg_search`                              | 不需要，可以继续使用                       |
+| 已设置 `FTS_SEARCH_PROVIDER` 为 `pg_like` 或 `elasticsearch` | 不需要，当前搜索不依赖 `pg_search`          |
+| 未设置 `FTS_SEARCH_PROVIDER`，且已运行默认值为 `pg_like` 的版本        | 不需要，当前已使用 `pg_like` 搜索           |
+| 未设置 `FTS_SEARCH_PROVIDER`，且仍运行旧版本（默认值为 `pg_search`）     | 搜索仍依赖 `pg_search`；如数据库将停用它，继续下一步 |
 
 <Callout type="info">
   Docker 和 Vercel 是 LobeHub 的部署方式，不决定数据库是否支持 `pg_search`。Docker 部署也可能连接 Neon；通过 GitHub 构建并上传到 Vercel 的部署也可以更换搜索后端。请以 `DATABASE_URL` 指向的数据库为准。
 </Callout>
 
-官方 Docker Compose 默认使用支持 `pg_search` 的 ParadeDB。如果你使用这套内置数据库，并且数据库服务没有要求停用扩展，可以保持默认配置，不需要迁移。
+官方 Docker Compose 默认使用支持 `pg_search` 的 ParadeDB。如果你使用这套内置数据库，并且数据库服务没有要求停用扩展，不需要执行本迁移。
 
 ## 2. 选择迁移方案
 

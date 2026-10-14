@@ -15,53 +15,31 @@ bases, chat groups, and memories. This is separate from the web-search tools tha
 
 LobeHub supports three product-search backends:
 
-| Backend         | Best fit                                                                                                              | Additional operations                                                                                                                                                                                                    |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `pg_search`     | A deployment that already runs PostgreSQL with the ParadeDB `pg_search` extension and wants the simplest topology     | PostgreSQL maintains the BM25 indexes; no separate search-sync worker is required                                                                                                                                        |
-| `elasticsearch` | A larger deployment that needs BM25 search quality and can operate a dedicated search service and persistent sync job | Requires an Elasticsearch service (external, or the optional single-node service in the official Docker Compose file), an initial backfill, PostgreSQL change capture, and a continuously scheduled incremental consumer |
-| `pg_like`       | A personal or small deployment on plain PostgreSQL that does not want to run Elasticsearch                            | None; substring matching runs directly against the existing tables without extensions, indexes, or sync workers                                                                                                          |
+| Backend         | Best fit                                                                                                               | Additional operations                                                                                                                                                                                                    |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pg_like`       | Default. A personal or small deployment on any PostgreSQL                                                              | None; substring matching runs directly against the existing tables without extensions, indexes, or sync workers                                                                                                          |
+| `pg_search`     | A larger deployment whose PostgreSQL runs the ParadeDB `pg_search` extension and wants BM25 without a separate service | PostgreSQL maintains the BM25 indexes; no separate search-sync worker is required                                                                                                                                        |
+| `elasticsearch` | A larger deployment that needs BM25 search quality and can operate a dedicated search service and persistent sync job  | Requires an Elasticsearch service (external, or the optional single-node service in the official Docker Compose file), an initial backfill, PostgreSQL change capture, and a continuously scheduled incremental consumer |
 
 `FTS_SEARCH_PROVIDER` selects one backend for the whole deployment. The accepted values are
-`pg_search`, `elasticsearch`, and `pg_like`; the default is `pg_search`. LobeHub does not silently
-fall back to another backend when the selected provider is unavailable.
+`pg_like`, `pg_search`, and `elasticsearch`; the default is `pg_like`, which works on any
+PostgreSQL. LobeHub does not silently fall back to another backend when the selected provider is
+unavailable.
 
 <Callout type="warning">
-  Database migrations install `pg_search` and its BM25 indexes only when the database provides the
-  extension, and skip that step otherwise. On PostgreSQL without `pg_search`, set
-  `FTS_SEARCH_PROVIDER=pg_like` or `elasticsearch` before starting LobeHub: the default
-  `pg_search` provider fails on the first search.
+  Before this release the default was `pg_search`. If you upgrade a deployment that never set
+  `FTS_SEARCH_PROVIDER` and want to keep BM25 search, set `FTS_SEARCH_PROVIDER=pg_search` before
+  upgrading; otherwise search switches to `pg_like`.
 </Callout>
 
 ## Choose a backend
 
-### Keep `pg_search`
+### Use `pg_like` (default)
 
-Keep the default provider when your PostgreSQL service supports `pg_search`, its BM25 indexes fit
-comfortably with the rest of the database workload, and you prefer not to operate a separate search
-service.
-
-For a self-managed database, the LobeHub Docker examples use the
-`paradedb/paradedb:latest-pg17` image and preload `pg_search`. Apply the normal LobeHub database
-migrations to install the extension and the LobeHub-managed BM25 indexes, then keep:
-
-```bash
-FTS_SEARCH_PROVIDER=pg_search
-```
-
-If you install `pg_search` on a database that ran the LobeHub migrations without it, create the
-extension and the BM25 indexes from a LobeHub source checkout before selecting this provider:
-
-```bash
-psql "$DATABASE_URL" -c 'CREATE EXTENSION IF NOT EXISTS pg_search'
-psql "$DATABASE_URL" -f packages/database/migrations/0093_add_bm25_indexes_with_icu.sql
-```
-
-### Use `pg_like` on plain PostgreSQL
-
-Choose `pg_like` when your PostgreSQL service cannot install `pg_search` (many managed providers) and
-the deployment is small enough that a dedicated search service is not worth operating. It needs no
-extension, no additional index, and no sync worker: every search runs as case-insensitive substring
-matching (`ILIKE`) over the same tables and permission scopes as `pg_search`.
+`pg_like` fits personal and small deployments on any PostgreSQL, including managed services that
+cannot install `pg_search`. It needs no extension, no additional index, and no sync worker: every
+search runs as case-insensitive substring matching (`ILIKE`) over the same tables and permission
+scopes as `pg_search`. Leave `FTS_SEARCH_PROVIDER` unset, or set it explicitly:
 
 ```bash
 FTS_SEARCH_PROVIDER=pg_like
@@ -79,10 +57,32 @@ What to expect compared with the other backends:
   personal and small-team instances; for large message or memory tables, prefer `pg_search` or
   Elasticsearch.
 
-New databases and upgrades both work on PostgreSQL without `pg_search`: the migrations skip the
-extension and BM25 indexes there. If you previously replaced the `0090_enable_pg_search.sql` or
-`0093_add_bm25_indexes_with_icu.sql` migration files to get past a failed upgrade, remove that
-override.
+Database migrations install `pg_search` and its BM25 indexes only when the database provides the
+extension, so new databases and upgrades both work on plain PostgreSQL. If you previously replaced
+the `0090_enable_pg_search.sql` or `0093_add_bm25_indexes_with_icu.sql` migration files to get past a
+failed upgrade, remove that override.
+
+### Use `pg_search`
+
+Choose `pg_search` when your PostgreSQL service supports the ParadeDB extension, the dataset is large
+enough that substring matching becomes slow or imprecise, and you prefer not to operate a separate
+search service. PostgreSQL maintains the BM25 indexes.
+
+The LobeHub Docker examples use the `paradedb/paradedb:latest-pg17` image and preload `pg_search`;
+the normal database migrations then install the extension and the LobeHub-managed BM25 indexes.
+Select the provider explicitly:
+
+```bash
+FTS_SEARCH_PROVIDER=pg_search
+```
+
+If you install `pg_search` on a database that ran the LobeHub migrations without it, create the
+extension and the BM25 indexes from a LobeHub source checkout before selecting this provider:
+
+```bash
+psql "$DATABASE_URL" -c 'CREATE EXTENSION IF NOT EXISTS pg_search'
+psql "$DATABASE_URL" -f packages/database/migrations/0093_add_bm25_indexes_with_icu.sql
+```
 
 ### Use Elasticsearch
 
@@ -184,7 +184,7 @@ and run `docker compose up -d --build`.
    ES_URL=http://elasticsearch:9200
    ES_ALLOW_INSECURE_HTTP=true
    ES_INDEX_NAMESPACE=lobehub
-   # FTS_SEARCH_PROVIDER stays pg_search (the default) until the last step
+   # FTS_SEARCH_PROVIDER keeps its current PostgreSQL provider until the last step
    ```
 
    Then start the stack and wait for every service, including the new node, to become healthy;
