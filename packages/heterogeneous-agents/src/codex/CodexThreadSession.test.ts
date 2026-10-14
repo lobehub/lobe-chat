@@ -171,7 +171,12 @@ const createClientHarness = (
 
 const createSession = (
   harness: ClientHarness,
-  options: { initialThreadId?: string; onEventsError?: Error; threadName?: string } = {},
+  options: {
+    ephemeral?: boolean;
+    initialThreadId?: string;
+    onEventsError?: Error;
+    threadName?: string;
+  } = {},
 ) => {
   const events: any[] = [];
   const statuses: string[] = [];
@@ -190,6 +195,7 @@ const createSession = (
     threadParams: {
       approvalPolicy: 'never',
       cwd: '/workspace',
+      ...(options.ephemeral ? { ephemeral: true } : {}),
       sandbox: 'danger-full-access',
     },
   });
@@ -425,6 +431,22 @@ describe('CodexThreadSession', () => {
         type: 'step_complete',
       }),
     );
+  });
+
+  // ROOT CAUSE:
+  // stream_start carried the thread id as `sessionId` even for `--ephemeral` threads, so the
+  // server saved it as the topic resume binding and the next turn resumed an ephemeral thread.
+  /** @example An ephemeral native thread is never reported as a resumable session. */
+  it('does not report an ephemeral thread as the stream session', async () => {
+    const { events, onSessionId, run, session } = createSession(createClientHarness(), {
+      ephemeral: true,
+    });
+    await run('ephemeral-op', 'hello');
+    session.close();
+    const streamStart = events.find((event) => event.type === 'stream_start');
+    /** @example The turn still starts, without a session id the server would persist. */
+    expect(streamStart?.data).not.toHaveProperty('sessionId');
+    expect(onSessionId).not.toHaveBeenCalled();
   });
 
   it('sets the original prompt as the name of a new persisted thread', async () => {
