@@ -1,3 +1,8 @@
+/**
+ * @vitest-environment jsdom
+ * DOMPurify's SVG filtering is unreliable under the package's default happy-dom: attribute hooks
+ * never run and disallowed SVG tags survive, so assertions here would pass whatever the config.
+ */
 import { describe, expect, it } from 'vitest';
 
 import { sanitizeSVGContent } from './sanitize';
@@ -68,16 +73,18 @@ describe('sanitizeSVGContent', () => {
   it('should remove dangerous embed and object tags', () => {
     const maliciousSvg = `
       <svg xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="red" />
         <object data="malicious.swf"></object>
         <embed src="malicious.swf"></embed>
-        <circle cx="50" cy="50" r="40" fill="red" />
       </svg>
     `;
 
     const sanitized = sanitizeSVGContent(maliciousSvg);
 
-    // Note: DOMPurify with SVG profile may still allow some elements
-    // The key security protection is removing script and event handlers
+    // The circle comes first: per the HTML parsing spec `<embed>` breaks out of SVG content, so
+    // any SVG element after it is parsed as HTML and removed, in browsers as well as jsdom.
+    expect(sanitized).not.toContain('<object');
+    expect(sanitized).not.toContain('<embed');
     expect(sanitized).toContain('<circle');
     expect(sanitized).toContain('fill="red"');
   });
@@ -121,5 +128,62 @@ describe('sanitizeSVGContent', () => {
     expect(sanitized).not.toContain('onload');
     expect(sanitized).not.toContain('hack()');
     expect(sanitized).not.toContain('evil()');
+  });
+
+  it('should preserve SMIL animations and same-document <use> references', () => {
+    const animatedSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+        <defs><circle id="dot" r="5" /></defs>
+        <use href="#dot" x="10" y="10" />
+        <use xlink:href="#dot" x="20" y="20" />
+        <circle r="4">
+          <animate attributeName="r" values="4;6;4" calcMode="linear" dur="1s" repeatCount="indefinite" />
+        </circle>
+        <g>
+          <animateTransform attributeName="transform" type="translate" from="0 0" to="-100 0" dur="2s" />
+        </g>
+      </svg>
+    `;
+
+    const sanitized = sanitizeSVGContent(animatedSvg);
+
+    expect(sanitized).toContain('<use href="#dot"');
+    expect(sanitized).toContain('xlink:href="#dot"');
+    expect(sanitized).toContain('<animate attributeName="r" values="4;6;4" calcMode="linear"');
+    expect(sanitized).toContain('from="0 0"');
+    expect(sanitized).toContain('to="-100 0"');
+  });
+
+  it('should neutralize animations that rewrite href or event handlers', () => {
+    const maliciousSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <a href="#safe">
+          <text>click</text>
+          <animate attributeName="href" values="javascript:alert(1)" />
+          <animate attributeName="xlink:href" to="javascript:alert(2)" />
+          <animate attributeName=" ONCLICK " to="alert(3)" />
+        </a>
+      </svg>
+    `;
+
+    const sanitized = sanitizeSVGContent(maliciousSvg);
+
+    expect(sanitized).toContain('<animate');
+    expect(sanitized).not.toMatch(/attributeName/i);
+  });
+
+  it('should drop <use> references to external or data documents', () => {
+    const maliciousSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <use href="https://evil.example/x.svg#a" />
+        <use xlink:href="data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=#a" />
+      </svg>
+    `;
+
+    const sanitized = sanitizeSVGContent(maliciousSvg);
+
+    expect(sanitized).toContain('<use');
+    expect(sanitized).not.toContain('evil.example');
+    expect(sanitized).not.toContain('data:');
   });
 });
