@@ -7,18 +7,20 @@ const {
   mockFindMessageById,
   mockGetLatestNonToolMessageId,
   mockGetLatestSpineMessageId,
-  mockIsMessageDescendantOf,
   mockMessageCreate,
+  mockMessageQuery,
   mockReleaseReservation,
   mockTryReserve,
+  mockUpdateMetadata,
 } = vi.hoisted(() => ({
   mockFindMessageById: vi.fn(),
   mockGetLatestNonToolMessageId: vi.fn(),
   mockGetLatestSpineMessageId: vi.fn(),
-  mockIsMessageDescendantOf: vi.fn(),
   mockMessageCreate: vi.fn(),
+  mockMessageQuery: vi.fn(),
   mockReleaseReservation: vi.fn(),
   mockTryReserve: vi.fn(),
+  mockUpdateMetadata: vi.fn(),
 }));
 
 vi.mock('@/libs/trusted-client', () => ({
@@ -34,9 +36,9 @@ vi.mock('@/database/models/message', () => ({
       findById: mockFindMessageById,
       getLatestNonToolMessageId: mockGetLatestNonToolMessageId,
       getLatestSpineMessageId: mockGetLatestSpineMessageId,
-      isMessageDescendantOf: mockIsMessageDescendantOf,
-      query: vi.fn().mockResolvedValue([]),
+      query: mockMessageQuery,
       update: vi.fn().mockResolvedValue({}),
+      updateMetadata: mockUpdateMetadata,
     };
   }),
 }));
@@ -207,6 +209,7 @@ describe('AiAgentService.execAgent - user turn spine anchoring', () => {
     }));
     mockGetLatestSpineMessageId.mockResolvedValue(undefined);
     mockGetLatestNonToolMessageId.mockResolvedValue(undefined);
+    mockMessageQuery.mockResolvedValue([]);
     mockTryReserve.mockResolvedValue(true);
     mockReleaseReservation.mockResolvedValue(undefined);
 
@@ -306,27 +309,67 @@ describe('AiAgentService.execAgent - user turn spine anchoring', () => {
     });
   });
 
-  // LOBE-14875: after a regenerate the branch on screen can be older than the
-  // newest row. Anchoring on the newest row hid the turn from the UI and from
-  // the model's context, which follows the active branch.
-  it('keeps the user turn on the branch the client renders', async () => {
-    mockGetLatestSpineMessageId.mockResolvedValue('hidden-branch-head');
-    mockIsMessageDescendantOf.mockResolvedValue(false);
-    mockFindMessageById.mockResolvedValue({
-      id: 'visible-tail',
-      role: 'assistant',
-      threadId: null,
-      topicId: 'topic-1',
+  // LOBE-14875: after a regenerate the user can switch back to the earlier
+  // reply. Anchoring on the newest row hid every new turn from the UI and from
+  // the model's context, which both follow the selected branch.
+  describe('after switching back to an earlier reply', () => {
+    const regeneratedTopic = (activeBranchIndex: number) => [
+      {
+        createdAt: new Date('2026-10-14T12:01:00Z'),
+        id: 'question',
+        metadata: { activeBranchIndex },
+        parentId: null,
+        role: 'user',
+        topicId: 'topic-1',
+      },
+      {
+        createdAt: new Date('2026-10-14T12:02:00Z'),
+        id: 'earlier-reply',
+        parentId: 'question',
+        role: 'assistant',
+        topicId: 'topic-1',
+      },
+      {
+        createdAt: new Date('2026-10-14T12:03:00Z'),
+        id: 'regenerated-reply',
+        parentId: 'question',
+        role: 'assistant',
+        topicId: 'topic-1',
+      },
+    ];
+
+    it('continues the selected reply even when the caller sends no tail', async () => {
+      mockGetLatestSpineMessageId.mockResolvedValue('regenerated-reply');
+      mockMessageQuery.mockResolvedValue(regeneratedTopic(0));
+
+      await service.execAgent({
+        agentId: 'agent-1',
+        appContext: { topicId: 'topic-1' },
+        prompt: 'Test prompt',
+      });
+
+      expect(userMessageCall()![0]).toMatchObject({ parentId: 'earlier-reply', role: 'user' });
+      expect(mockUpdateMetadata).not.toHaveBeenCalled();
     });
 
-    await service.execAgent({
-      agentId: 'agent-1',
-      appContext: { topicId: 'topic-1' },
-      clientIds: { userMessageParentId: 'visible-tail' },
-      prompt: 'Test prompt',
-    });
+    it('follows the tail on screen and stores that selection when it was not saved yet', async () => {
+      mockMessageQuery.mockResolvedValue(regeneratedTopic(1));
+      mockMessageCreate.mockImplementation(async (payload: any) => ({
+        ...payload,
+        createdAt: new Date('2026-10-14T12:04:00Z'),
+        id: payload.role === 'user' ? 'user-msg-1' : 'assistant-msg-1',
+      }));
 
-    expect(userMessageCall()![0]).toMatchObject({ parentId: 'visible-tail', role: 'user' });
+      await service.execAgent({
+        agentId: 'agent-1',
+        appContext: { topicId: 'topic-1' },
+        clientIds: { userMessageParentId: 'earlier-reply' },
+        prompt: 'Test prompt',
+      });
+
+      expect(userMessageCall()![0]).toMatchObject({ parentId: 'earlier-reply', role: 'user' });
+      expect(mockUpdateMetadata).toHaveBeenCalledWith('question', { activeBranchIndex: 0 });
+    });
   });
 
   it('scopes the anchor lookup to the thread when one is active', async () => {
@@ -342,6 +385,10 @@ describe('AiAgentService.execAgent - user turn spine anchoring', () => {
       threadId: 'thread-123',
       topicId: 'topic-1',
     });
+    expect(mockMessageQuery).toHaveBeenCalledWith(
+      expect.objectContaining({ threadId: 'thread-123', topicId: 'topic-1' }),
+      { allowShareVisitor: false },
+    );
     expect(userMessageCall()![0]).toMatchObject({ parentId: 'thread-spine-1' });
   });
 });

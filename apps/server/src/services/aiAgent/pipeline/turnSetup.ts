@@ -40,7 +40,7 @@ import { ingestAttachment } from '../ingestAttachment';
 import type { AgentShareGate } from '../shareGate';
 import { reserveShareVisitorTopic, reserveShareVisitorTurn } from '../shareVisitorAbuseGuards';
 import type { InternalExecAgentParams } from '../types';
-import { resolveUserMessageParentId } from './resolveUserMessageParentId';
+import { createUserTurnAnchor } from './resolveUserMessageParentId';
 import { createStageTracer, openStageMark } from './sendTracing';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -841,8 +841,16 @@ export const setupTurn = async (
     'messages',
     async () => {
       const selfMessageIds = new Set<string>();
-      // Anchor the new user turn on the conversation tail (see
-      // `resolveUserMessageParentId` for why it is never left undefined).
+      // Anchor the new user turn on the selected branch's tail (see
+      // `createUserTurnAnchor` for why it is never left undefined).
+      const anchor = createUserTurnAnchor(deps.messageModel, {
+        allowShareVisitor: !!shareGate,
+        clientParentId: clientIds?.userMessageParentId,
+        groupId: appContext?.groupId ?? undefined,
+        sessionId: appContext?.sessionId,
+        threadId: appContext?.threadId ?? null,
+        topicId,
+      });
       const resolveParentId = async () => {
         if (runFromHistory) return undefined;
         if (parentMessageId) return parentMessageId;
@@ -853,11 +861,7 @@ export const setupTurn = async (
         // of order.
         if (createdThreadId) return appContext?.newThread?.sourceMessageId;
 
-        return resolveUserMessageParentId(deps.messageModel, {
-          clientParentId: clientIds?.userMessageParentId,
-          threadId: appContext?.threadId ?? null,
-          topicId,
-        });
+        return anchor.resolveParentId();
       };
       const userMessageParentId = await resolveParentId();
       const userMessageParams = {
@@ -904,6 +908,7 @@ export const setupTurn = async (
       if (userMessageRecord) {
         selfMessageIds.add(userMessageRecord.id);
         log('execAgent: created user message %s', userMessageRecord.id);
+        await anchor.selectBranchOf(userMessageRecord);
       }
 
       // Snapshot the author's group orchestration role onto the assistant message

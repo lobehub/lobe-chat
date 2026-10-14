@@ -1,96 +1,200 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { resolveUserMessageParentId } from '../resolveUserMessageParentId';
+import type { ConversationMessage } from '../resolveUserMessageParentId';
+import { resolveUserMessageParentId, selectBranchOfMessage } from '../resolveUserMessageParentId';
 
 const messageModel = {
   findById: vi.fn(),
   getLatestNonToolMessageId: vi.fn(),
   getLatestSpineMessageId: vi.fn(),
-  isMessageDescendantOf: vi.fn(),
+  updateMetadata: vi.fn(),
 };
 
-const resolve = (clientParentId?: string, threadId: string | null = null) =>
-  resolveUserMessageParentId(messageModel as any, { clientParentId, threadId, topicId: 'tpc_1' });
+const msg = (
+  id: string,
+  role: string,
+  parentId: string | null,
+  minute: number,
+  extra: Partial<ConversationMessage> = {},
+): ConversationMessage =>
+  ({
+    content: id,
+    createdAt: new Date(Date.UTC(2026, 9, 14, 12, minute)),
+    id,
+    parentId,
+    role,
+    threadId: null,
+    topicId: 'tpc_1',
+    updatedAt: new Date(Date.UTC(2026, 9, 14, 12, minute)),
+    ...extra,
+  }) as ConversationMessage;
+
+/**
+ * u1 was answered by a1, then regenerated into a2 (newest row). The switcher on
+ * u1 selects `activeBranchIndex`.
+ */
+const regenerated = (activeBranchIndex: number) => [
+  msg('u1', 'user', null, 1, { metadata: { activeBranchIndex } }),
+  msg('a1', 'assistant', 'u1', 2),
+  msg('a2', 'assistant', 'u1', 3),
+];
+
+const resolve = (messages: ConversationMessage[], clientParentId?: string) =>
+  resolveUserMessageParentId(messageModel as any, {
+    clientParentId,
+    messages,
+    threadId: null,
+    topicId: 'tpc_1',
+  });
 
 describe('resolveUserMessageParentId', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    messageModel.getLatestSpineMessageId.mockResolvedValue('msg_spine');
-    messageModel.getLatestNonToolMessageId.mockResolvedValue(undefined);
-    messageModel.isMessageDescendantOf.mockResolvedValue(false);
     messageModel.findById.mockResolvedValue(undefined);
+    messageModel.getLatestSpineMessageId.mockResolvedValue(undefined);
+    messageModel.getLatestNonToolMessageId.mockResolvedValue(undefined);
   });
 
-  it('anchors on the spine head when the caller renders no conversation', async () => {
-    await expect(resolve()).resolves.toBe('msg_spine');
-    expect(messageModel.isMessageDescendantOf).not.toHaveBeenCalled();
+  it('continues the earlier reply the switcher selects, not the newest regenerated one', async () => {
+    // LOBE-14875: the newest row a2 is on the branch the user switched away from.
+    await expect(resolve(regenerated(0))).resolves.toBe('a1');
+    await expect(resolve(regenerated(0), 'a1')).resolves.toBe('a1');
   });
 
-  it('keeps the turn on the visible branch when the newest row sits on a hidden sibling', async () => {
-    // LOBE-14875: after a regenerate, `activeBranchIndex` selected the older
-    // branch while the newest row lived on the regenerated one.
-    messageModel.findById.mockResolvedValue({
-      id: 'msg_visible_tail',
-      role: 'assistant',
-      threadId: null,
-      topicId: 'tpc_1',
-    });
-
-    await expect(resolve('msg_visible_tail')).resolves.toBe('msg_visible_tail');
-    expect(messageModel.isMessageDescendantOf).toHaveBeenCalledWith({
-      ancestorId: 'msg_visible_tail',
-      descendantId: 'msg_spine',
-      topicId: 'tpc_1',
-    });
+  it('continues the newest reply when it is the selected one', async () => {
+    await expect(resolve(regenerated(1))).resolves.toBe('a2');
   });
 
-  it('advances a stale tail to the spine head that extends the same branch', async () => {
-    messageModel.isMessageDescendantOf.mockResolvedValue(true);
-
-    await expect(resolve('msg_stale_tail')).resolves.toBe('msg_spine');
-    expect(messageModel.findById).not.toHaveBeenCalled();
+  it('keeps the client tail when the switch to it is not persisted yet', async () => {
+    // The stored selection still points at a2, but the user already sees a1.
+    await expect(resolve(regenerated(1), 'a1')).resolves.toBe('a1');
   });
 
-  it('skips the branch check when the tail already is the spine head', async () => {
-    await expect(resolve('msg_spine')).resolves.toBe('msg_spine');
-    expect(messageModel.isMessageDescendantOf).not.toHaveBeenCalled();
+  it('advances a stale client tail along the selected branch', async () => {
+    // Another device continued a1 while this client still rendered a1 as tail.
+    const messages = [
+      ...regenerated(0),
+      msg('u2', 'user', 'a1', 4),
+      msg('a3', 'assistant', 'u2', 5),
+    ];
+
+    await expect(resolve(messages, 'a1')).resolves.toBe('a3');
   });
 
-  it('ignores a tail from another topic or thread', async () => {
-    messageModel.findById.mockResolvedValueOnce({
-      role: 'assistant',
-      threadId: null,
-      topicId: 'x',
-    });
-    await expect(resolve('msg_foreign')).resolves.toBe('msg_spine');
+  it('does not advance into a newer turn on a hidden branch', async () => {
+    const messages = [
+      ...regenerated(0),
+      msg('u3', 'user', 'a2', 4),
+      msg('a4', 'assistant', 'u3', 5),
+    ];
 
-    messageModel.findById.mockResolvedValueOnce({
-      role: 'assistant',
-      threadId: 'thd_1',
-      topicId: 'tpc_1',
-    });
-    await expect(resolve('msg_in_thread')).resolves.toBe('msg_spine');
+    await expect(resolve(messages, 'a1')).resolves.toBe('a1');
+    await expect(resolve(messages)).resolves.toBe('a1');
   });
 
   it('parents off the assistant that owns a tool-result tail', async () => {
-    messageModel.findById.mockResolvedValue({
-      parentId: 'msg_tool_owner',
-      role: 'tool',
-      threadId: null,
-      topicId: 'tpc_1',
-    });
+    const messages = [
+      msg('u1', 'user', null, 1),
+      msg('a1', 'assistant', 'u1', 2, {
+        tools: [
+          { apiName: 'run', arguments: '{}', id: 'call_1', identifier: 'demo', type: 'default' },
+        ] as any,
+      }),
+      msg('t1', 'tool', 'a1', 3, { tool_call_id: 'call_1' } as any),
+    ];
 
-    await expect(resolve('msg_tool_result')).resolves.toBe('msg_tool_owner');
+    await expect(resolve(messages, 't1')).resolves.toBe('a1');
+    await expect(resolve(messages)).resolves.toBe('a1');
   });
 
-  it('falls back to the latest non-tool row when there is no spine head or valid tail', async () => {
-    messageModel.getLatestSpineMessageId.mockResolvedValue(undefined);
-    messageModel.getLatestNonToolMessageId.mockResolvedValue('msg_signal_turn');
+  it('skips a toolless signal turn as the conversation head', async () => {
+    const messages = [
+      msg('u1', 'user', null, 1),
+      msg('a1', 'assistant', 'u1', 2),
+      msg('s1', 'assistant', 'a1', 3, { metadata: { signal: { type: 'feedback' } } as any }),
+    ];
 
-    await expect(resolve('msg_missing')).resolves.toBe('msg_signal_turn');
-    expect(messageModel.getLatestNonToolMessageId).toHaveBeenCalledWith({
-      threadId: null,
-      topicId: 'tpc_1',
-    });
+    await expect(resolve(messages)).resolves.toBe('a1');
+  });
+
+  it('never returns the id of a synthetic message-group row', async () => {
+    // `MessageModel.query` folds groups into rows keyed by the group id, which is
+    // not a `messages` row and would break the parentId foreign key.
+    const compare = msg('mg_compare', 'compareGroup', null, 3, {
+      children: [{ id: 'col_1' }, { id: 'col_2' }],
+    } as any);
+    await expect(
+      resolve([msg('u1', 'user', null, 1, { metadata: { compare: true } } as any), compare]),
+    ).resolves.toBe('col_2');
+    await expect(
+      resolve(
+        [msg('u1', 'user', null, 1, { metadata: { compare: true } } as any), compare],
+        'mg_compare',
+      ),
+    ).resolves.toBe('col_2');
+
+    const compressed = msg('mg_compressed', 'compressedGroup', null, 1, {
+      lastMessageId: 'msg_last_compressed',
+    } as any);
+    await expect(resolve([compressed])).resolves.toBe('msg_last_compressed');
+  });
+
+  it('ignores a client tail from another topic or thread', async () => {
+    messageModel.findById.mockResolvedValueOnce({ id: 'foreign', topicId: 'tpc_other' });
+
+    await expect(resolve(regenerated(0), 'foreign')).resolves.toBe('a1');
+  });
+
+  it('keeps the spine fallbacks when the conversation could not be loaded', async () => {
+    messageModel.getLatestSpineMessageId.mockResolvedValueOnce('msg_spine');
+    await expect(resolve([])).resolves.toBe('msg_spine');
+
+    messageModel.getLatestNonToolMessageId.mockResolvedValueOnce('msg_signal');
+    await expect(resolve([])).resolves.toBe('msg_signal');
+  });
+});
+
+describe('selectBranchOfMessage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const select = (messages: ConversationMessage[], message: ConversationMessage) =>
+    selectBranchOfMessage(messageModel as any, { message, messages, threadId: null });
+
+  it('switches the stored selection to the branch that received the turn', async () => {
+    // The turn went under a1 while u1 still selects a2 (unsaved switch / other tab).
+    await select(regenerated(1), msg('u2', 'user', 'a1', 4));
+
+    expect(messageModel.updateMetadata).toHaveBeenCalledTimes(1);
+    expect(messageModel.updateMetadata).toHaveBeenCalledWith('u1', { activeBranchIndex: 0 });
+  });
+
+  it('updates every branch point on the path', async () => {
+    const messages = [
+      msg('u1', 'user', null, 1, { metadata: { activeBranchIndex: 1 } }),
+      msg('a1', 'assistant', 'u1', 2),
+      msg('a2', 'assistant', 'u1', 3),
+      msg('u2', 'user', 'a1', 4),
+      msg('b1', 'assistant', 'u2', 5),
+      msg('b2', 'assistant', 'u2', 6),
+    ];
+    // u2 was never switched explicitly; its newest-user fallback would not pick b1.
+    messages[3] = msg('u2', 'user', 'a1', 4, { metadata: { activeBranchIndex: 1 } });
+
+    await select(messages, msg('u3', 'user', 'b1', 7));
+
+    expect(messageModel.updateMetadata).toHaveBeenCalledWith('u1', { activeBranchIndex: 0 });
+    expect(messageModel.updateMetadata).toHaveBeenCalledWith('u2', { activeBranchIndex: 0 });
+  });
+
+  it('leaves the selection alone when the turn is already on the selected branch', async () => {
+    await select(regenerated(0), msg('u2', 'user', 'a1', 4));
+    await select(
+      [msg('u1', 'user', null, 1), msg('a1', 'assistant', 'u1', 2)],
+      msg('u2', 'user', 'a1', 3),
+    );
+
+    expect(messageModel.updateMetadata).not.toHaveBeenCalled();
   });
 });

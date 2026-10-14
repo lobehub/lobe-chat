@@ -16,7 +16,12 @@ export const execAgentClientIdsSchema = z
     assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
     topicId: z.string().regex(entityIdPattern('topics')).optional(),
     userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-    /** Tail of the branch the client renders the new user turn under. */
-    userMessageParentId: z.string().regex(entityIdPattern('messages')).optional(),
+    /**
+     * Tail of the branch the client renders the new user turn under. A reference
+     * to an existing row, not a minted id: rows written in client mode carry bare
+     * nanoid ids, so only bound the length and let the resolver check that it
+     * belongs to this topic and thread.
+     */
+    userMessageParentId: z.string().min(1).max(255).optional(),
   })
   .optional();
