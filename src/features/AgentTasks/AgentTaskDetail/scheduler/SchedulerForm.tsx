@@ -256,20 +256,20 @@ const SchedulerForm = memo<SchedulerFormProps>(({ maxExecutions, onChange, patte
           </Flexbox>
         )}
         {scheduleType === 'hourly' && (
-          <Flexbox flex={1} gap={6}>
+          <Flexbox flex={1.5} gap={6} style={{ minWidth: 0 }}>
             <Text className={styles.fieldLabel}>{t('taskSchedule.every')}</Text>
             <Flexbox horizontal align="center" gap={6}>
               <InputNumber
                 max={24}
                 min={1}
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 0 }}
+                suffix={<Text type="secondary">{t('taskSchedule.hours')}</Text>}
                 value={hourlyInterval}
                 variant="filled"
                 onChange={handleHourlyIntervalChange}
               />
-              <Text type="secondary">{t('taskSchedule.hours')}</Text>
               <Select
-                style={{ width: 80 }}
+                style={{ flexShrink: 0, width: 80 }}
                 value={triggerTime.minute()}
                 variant="filled"
                 options={[
