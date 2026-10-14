@@ -4,6 +4,7 @@ import { type StateCreator } from 'zustand';
 
 import { aiAgentService } from '@/services/aiAgent';
 import { useChatStore } from '@/store/chat';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type State } from '../../initialState';
 
@@ -25,7 +26,11 @@ export interface InputAction {
    * chosen time may have just gone past, the request may fail) and — unlike a
    * normal send — there is no message row to recover the text from afterwards.
    */
-  commitScheduledSend: (message: string, files?: { id: string }[]) => Promise<boolean>;
+  commitScheduledSend: (
+    message: string,
+    files?: { id: string }[],
+    target?: { context: State['context']; scheduledSendAt: string },
+  ) => Promise<boolean>;
 
   /**
    * Fill the composer with editable text and move focus to the editor.
@@ -64,8 +69,8 @@ export const inputSlice: StateCreator<State & InputAction, [], [], InputAction> 
     useChatStore.setState({ mainInputEditor: null });
   },
 
-  commitScheduledSend: async (message, files) => {
-    const { context, scheduledSendAt } = get();
+  commitScheduledSend: async (message, files, target) => {
+    const { context, scheduledSendAt } = target ?? get();
     const agentId = context.agentId;
     if (!scheduledSendAt || !agentId || !message.trim()) return false;
 
@@ -90,7 +95,12 @@ export const inputSlice: StateCreator<State & InputAction, [], [], InputAction> 
 
     // Disarm only now that the turn is parked: a live chip would otherwise claim
     // the NEXT message is scheduled too.
-    set({ scheduledSendAt: undefined });
+    if (
+      messageMapKey(get().context) === messageMapKey(context) &&
+      get().scheduledSendAt === scheduledSendAt
+    ) {
+      set({ scheduledSendAt: undefined });
+    }
 
     // Surface the new topic in the sidebar, where it renders with a clock.
     await useChatStore.getState().refreshTopic();

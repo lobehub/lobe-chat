@@ -1,5 +1,7 @@
 import { type ConversationContext, type SendMessageParams } from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
 
+import { readDocument } from '@/features/ChatInput/editorDocument';
 import { useChatStore } from '@/store/chat';
 import { isLocalOnlyMessage } from '@/store/chat/utils/localMessages';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -40,10 +42,11 @@ export const sendMessage = (
     const state = get();
     const { context, editor, hooks, displayMessages } = state;
     const targetContext = conversationContext ?? context;
-    const { preserveComposer } = sendParams;
 
     // ===== Hook: onBeforeSendMessage =====
     if (hooks.onBeforeSendMessage) {
+      const inputBeforeHook = state.inputMessage;
+      const documentBeforeHook = readDocument(editor, 'json');
       let result: boolean | void;
       try {
         result = await hooks.onBeforeSendMessage(sendParams);
@@ -58,12 +61,24 @@ export const sendMessage = (
       }
 
       throwIfAborted(sendParams.signal);
+
+      const live = get();
+      if (
+        messageMapKey(live.context) !== messageMapKey(context) ||
+        live.editor !== editor ||
+        (live.inputMessage !== inputBeforeHook && !!live.inputMessage) ||
+        !isEqual(readDocument(editor, 'json'), documentBeforeHook)
+      ) {
+        // A before-send hook can yield after the composer was cleared. Its
+        // continuation must neither reset a newer draft nor recover over it.
+        sendParams.preserveComposer = true;
+      }
     }
 
     // Keep ConversationStore in sync with the editor, which is cleared immediately on send.
     // Do this before awaiting the full streaming lifecycle so drafts typed during generation
     // are not overwritten when the request completes.
-    if (!preserveComposer) set({ inputMessage: '' });
+    if (!sendParams.preserveComposer) set({ inputMessage: '' });
 
     // Get global chat store
     const chatStore = useChatStore.getState();

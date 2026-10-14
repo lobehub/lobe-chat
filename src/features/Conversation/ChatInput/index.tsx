@@ -4,7 +4,7 @@ import { type VoiceMessageRecording } from '@lobechat/types';
 import { type SlashOptions } from '@lobehub/editor';
 import { type ChatInputActionsProps } from '@lobehub/editor/react';
 import { Flexbox, type MenuProps } from '@lobehub/ui';
-import { Alert, toast } from '@lobehub/ui/base-ui';
+import { Alert } from '@lobehub/ui/base-ui';
 import { type ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,20 +15,15 @@ import {
 } from '@/business/client/hooks/useBusinessChatInputSendAreaPrefix';
 import type { ActionKeys, ChatInputFeature } from '@/features/ChatInput';
 import { ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
-import {
-  type SendButtonHandler,
-  type SendButtonProps,
-} from '@/features/ChatInput/store/initialState';
-import { checkProjectExecution } from '@/features/Projects/WorkingDirectories/checkExecution';
+import { type SendButtonProps } from '@/features/ChatInput/store/initialState';
 import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { operationSelectors, topicSelectors } from '@/store/chat/selectors';
+import { operationSelectors } from '@/store/chat/selectors';
 import { selectCurrentTurnTodosFromMessages } from '@/store/chat/slices/message/selectors/dbMessage';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
-import { buildMessageContextSelections } from '../../ChatInput/utils/contextSelections';
 import WideScreenContainer from '../../WideScreenContainer';
 import { usePendingInterventions } from '../hooks/usePendingInterventions';
 import InterventionBar from '../InterventionBar';
@@ -46,6 +41,7 @@ import QueueTray from './QueueTray';
 import { sendVoiceMessage } from './sendVoiceMessage';
 import { transcribeVoiceMessage } from './transcribeVoiceMessage';
 import { useConversationChatInputUiState } from './useConversationChatInputUiState';
+import { useSendMessage } from './useSendMessage';
 import {
   getContextWindowMessages,
   getConversationSendButtonProps,
@@ -315,8 +311,13 @@ const ChatInput = memo<ChatInputProps>(
     // Input stays enabled during agent execution — messages are queued.
     // When disableQueue is set (e.g. onboarding), block sending while loading.
     // disableSend hard-blocks regardless of content (host surface is read-only).
+    const { handleSend, isSubmitting } = useSendMessage({ disableQueue, disableSend });
     const disabled =
-      isInputEmpty || isUploadingFiles || (!!disableQueue && isInputQueueBlocked) || !!disableSend;
+      isInputEmpty ||
+      isUploadingFiles ||
+      isSubmitting ||
+      (!!disableQueue && isInputQueueBlocked) ||
+      !!disableSend;
 
     // `disabled` above lags the editor: `inputMessage` mirrors content through
     // the editor's debounced onChange, so a fast type→Enter arrives while the
@@ -325,7 +326,7 @@ const ChatInput = memo<ChatInputProps>(
     // at trigger time, so this only mirrors the visual disabled semantics.
     const customDisabled = customSendButtonProps?.disabled;
     const resolveSendBlocked = useCallback(() => {
-      if (disableSend) return true;
+      if (disableSend || isSubmitting) return true;
 
       const fileStore = useFileStore.getState();
       if (fileChatSelectors.isUploadingFiles(fileStore)) return true;
@@ -343,99 +344,10 @@ const ChatInput = memo<ChatInputProps>(
       const hasContextSelections =
         fileChatSelectors.chatContextSelections(messageMapKey(liveContext))(fileStore).length > 0;
       return !hasText && !hasFiles && !hasContextSelections;
-    }, [customDisabled, disableQueue, disableSend, storeApi]);
+    }, [customDisabled, disableQueue, disableSend, isSubmitting, storeApi]);
     const shouldUsePlainSendButton = !showSendMenu && !!sendMenu;
     const businessAlerts = useBusinessChatInputAlerts();
     const businessSendAreaPrefix = getBusinessChatInputSendAreaPrefix(sendAreaPrefix);
-
-    // Send handler - gets message, clears editor immediately, then sends
-    const handleSend: SendButtonHandler = useCallback(
-      async ({ clearContent, getMarkdownContent, getEditorData }) => {
-        // Host surface is read-only (e.g. page locked) — block Enter too, not
-        // just the grayed-out button.
-        if (disableSend) return;
-
-        // Get instant values from stores at trigger time
-        const fileStore = useFileStore.getState();
-        const currentFileList = fileChatSelectors.chatUploadFileList(fileStore);
-        const currentIsUploading = fileChatSelectors.isUploadingFiles(fileStore);
-        const currentContextList = fileChatSelectors.chatContextSelections(contextKey)(fileStore);
-
-        if (currentIsUploading) return;
-
-        // Onboarding-style surfaces opt out of message queuing — pressing Enter
-        // while the agent is streaming should be a no-op rather than enqueue.
-        if (disableQueue && isInputQueueBlocked) return;
-
-        // Get content before clearing
-        const message = getMarkdownContent();
-        if (!message.trim() && currentFileList.length === 0 && currentContextList.length === 0)
-          return;
-
-        // A rejected preflight has no persisted message to recover from. Keep
-        // the composer and attachments intact until the target is usable.
-        const chatState = useChatStore.getState();
-        const sendContext = storeApi.getState().context;
-        const topic = sendContext.topicId
-          ? topicSelectors.getTopicById(sendContext.topicId)(chatState)
-          : undefined;
-        try {
-          await checkProjectExecution(topic, chatState.isGatewayModeEnabled(sendContext.agentId));
-        } catch (error) {
-          console.error('Project execution preflight failed', error);
-          toast.error(error instanceof Error ? error.message : String(error));
-          return;
-        }
-
-        // Capture editor JSON state before clearing for rich text rendering
-        const editorData = getEditorData();
-
-        const clearComposer = () => {
-          clearContent();
-          fileStore.clearChatUploadFileList();
-          fileStore.clearChatContextSelections(contextKey);
-        };
-
-        // A deferred send was armed from the composer (see `scheduledSendAt`):
-        // park the turn as a `scheduled` topic instead of running it. Send stays
-        // the single commit action — picking a time never dispatches by itself.
-        //
-        // The composer is cleared only once the schedule is persisted, unlike the
-        // normal path below: a rejected schedule (the picked time just went past,
-        // the request failed) leaves no message row to recover the text from, so
-        // an up-front clear would simply lose it.
-        if (storeApi.getState().scheduledSendAt) {
-          const scheduled = await storeApi.getState().commitScheduledSend(message, currentFileList);
-          if (scheduled) clearComposer();
-          return;
-        }
-
-        // Clear content immediately for responsive UX
-        clearComposer();
-
-        const { contextSelections, pageSelections } =
-          buildMessageContextSelections(currentContextList);
-
-        // Fire and forget - send with captured message
-        await sendMessage({
-          contextSelections,
-          editorData,
-          files: currentFileList,
-          message,
-          onPreflightFailure: () => {
-            const store = useFileStore.getState();
-            // The composer was cleared up front; a send rejected before any
-            // message owned the content must hand every part of it back —
-            // uploads and context selections, not just the editor text the
-            // lifecycle restores on its own.
-            store.restoreChatUploadFileList(currentFileList);
-            store.restoreChatContextSelections(contextKey, currentContextList);
-          },
-          pageSelections,
-        });
-      },
-      [contextKey, sendMessage, storeApi, disableQueue, disableSend, isInputQueueBlocked],
-    );
 
     const sendButtonProps: SendButtonProps = {
       ...getConversationSendButtonProps(
