@@ -262,11 +262,13 @@ const MembersCard = memo<{ canManage: boolean }>(({ canManage }) => {
         pagination={false}
         rowKey={'accountId'}
         size={'middle'}
-        emptyText={
-          <Text style={{ fontSize: 13 }} type="secondary">
-            {t('user.workspaceProfile.settings.members.empty')}
-          </Text>
-        }
+        locale={{
+          emptyText: (
+            <Text style={{ fontSize: 13 }} type="secondary">
+              {t('user.workspaceProfile.settings.members.empty')}
+            </Text>
+          ),
+        }}
       />
     </SettingCard>
   );

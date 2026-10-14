@@ -67,9 +67,8 @@ const StatsSetting = memo<StatsSettingProps>(
       }
     }, [dateStrings]);
 
-    const handleDateChange = (date: Date | null) => {
-      if (!date) return;
-      const month = dayjs(date);
+    const handleDateChange = (month: dayjs.Dayjs | null) => {
+      if (!month) return;
       setDateRange(month);
       setDateStrings(month.format('YYYY-MM'));
     };
@@ -113,8 +112,8 @@ const StatsSetting = memo<StatsSettingProps>(
             <>
               <DatePicker
                 format="YYYY-MM"
-                mode="month"
-                value={dateRange.toDate()}
+                picker="month"
+                value={dateRange}
                 onChange={handleDateChange}
               />
               <Tabs

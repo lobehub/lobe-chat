@@ -364,7 +364,7 @@ const TestCaseTable = memo<TestCaseTableProps>(
         </div>
         <div className={styles.table}>
           <Table
-            classNames={{ header: styles.tableHeader }}
+            classNames={{ header: { cell: styles.tableHeader } }}
             columns={columns}
             dataSource={testCases}
             pagination={false}
