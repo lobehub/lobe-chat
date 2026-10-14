@@ -54,6 +54,10 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra/store';
+import {
+  fireClientSubAgentBridge,
+  registerClientSubAgentBridge,
+} from '@/store/chat/agents/transports/clientSubAgentBridge';
 import { createClientRuntimeExecutors } from '@/store/chat/agents/transports/createClientRuntimeExecutors';
 import { topicSelectors } from '@/store/chat/selectors';
 import { emitClientAgentSignalSourceEvent } from '@/store/chat/slices/agentRun/actions/lifecycle/agentSignalBridge';
@@ -1031,7 +1035,17 @@ export class StreamingExecutorActionImpl {
 
     const { requeued } = await runLifecycle.completeRun(completeEvent);
     // A queued follow-up sendMessage was scheduled — skip the post-run notification.
+    // The completion bridge also waits: the queued follow-up's own terminal
+    // boundary will fire it (the registry key is the thread, which survives
+    // across operations of the same child).
     if (requeued) return;
+
+    // Terminal boundary of a client run: settle any completion bridge parked
+    // on this run's thread (a parent parked on THIS run as its sub-agent /
+    // group member). Parked runs exit earlier — only terminal states fire.
+    if (context.threadId) {
+      await fireClientSubAgentBridge(this.#get, context);
+    }
 
     await runLifecycle.afterRunComplete(completeEvent);
 
@@ -1168,11 +1182,35 @@ export class StreamingExecutorActionImpl {
       // 7. Extract the sub-agent's final assistant output as the tool result
       // A parked child (client tools / human approval / async tool) never
       // reached a terminal state: the thread stays `processing` and the child
-      // resumes out-of-band. Report that honestly instead of backfilling a
-      // false "Task completed" success — the old behavior made the parent
-      // re-dispatch the same work while the child was still running.
+      // resumes out-of-band. Register the client completion bridge so the
+      // child's eventual terminal run settles the parent's deferred tool
+      // message and resumes the parent run — then report the park honestly.
+      // The old behavior backfilled a false "Task completed" success, which
+      // made the parent re-dispatch the same work while the child was still
+      // running; the intermediate behavior returned a settled failure, which
+      // made the parent treat the call as done and never consume the child's
+      // real result.
       if (runtimeResult?.parked) {
         log('[%s] Parked (waiting for human / async tool), not completed', logId);
+
+        // `taskOperationId` is the parked child op; the parent's tool
+        // operation id is the toolMessageId row itself. The bridge resumes
+        // the PARENT run through its parent op chain once the child settles.
+        // No parent op id (legacy spawner) → no bridge to hang the resume on.
+        const parentOp = parentOperationId ? this.#get().operations[parentOperationId] : undefined;
+        if (parentOp && parentOperationId) {
+          registerClientSubAgentBridge({
+            childContext: subContext,
+            childOperationId: taskOperationId,
+            kind: 'sub-agent',
+            parentContext: {
+              agentId,
+              ...(topicId ? { topicId } : {}),
+            },
+            parentOperationId,
+            toolMessageId,
+          });
+        }
 
         return {
           error: undefined,
@@ -1236,6 +1274,69 @@ export class StreamingExecutorActionImpl {
         threadId: '',
       };
     }
+  };
+
+  /**
+   * Completion-bridge resume entry: continue a parent run parked on a
+   * deferred tool (a sub-agent / group member that finished after parking
+   * the parent). Re-enters the runtime from the tool message position with
+   * phase `tool_result` — the same re-entry shape the human-approval resume
+   * uses, minus the approval payload. The backfilled tool message is already
+   * persisted by the bridge; the resumed turn consumes it as the LLM's tool
+   * result.
+   */
+  internal_resumeClientSubAgentParent = async (params: {
+    context: ConversationContext;
+    parentMessageId: string;
+  }): Promise<void> => {
+    const { context, parentMessageId } = params;
+    const { agentId, topicId, threadId } = context;
+
+    const resumeOperationParams = {
+      context: {
+        ...context,
+        messageId: parentMessageId,
+      },
+      type: 'execAgentRuntime',
+    } as const;
+
+    const { operationId } = this.#get().startOperation({
+      ...resumeOperationParams,
+      label: 'Sub-agent completion resume',
+    } as any);
+
+    this.#get().associateMessageWithOperation(parentMessageId, operationId);
+
+    const chatKey = messageMapKey({ agentId, topicId, threadId });
+    const currentMessages = this.#get().dbMessagesMap[chatKey] || [];
+
+    const { context: initialContext, state } = this.#get().internal_createAgentState({
+      messages: currentMessages,
+      parentMessageId,
+      agentId,
+      topicId,
+      threadId: threadId ?? undefined,
+      operationId,
+    });
+
+    await this.executeClientAgent({
+      context,
+      messages: currentMessages,
+      parentMessageId,
+      parentMessageType: 'tool',
+      // The new operation owns the continuation; chain it to the settled
+      // parent op for cancellation propagation and the operation tree.
+      parentOperationId: operationId,
+      skipCreateFirstMessage: true,
+      initialState: state,
+      initialContext: {
+        ...initialContext,
+        phase: 'tool_result',
+        payload: { parentMessageId },
+      },
+    });
+
+    this.#get().completeOperation(operationId);
   };
 }
 

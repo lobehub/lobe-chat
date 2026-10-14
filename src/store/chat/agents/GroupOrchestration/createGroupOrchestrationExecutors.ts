@@ -15,6 +15,7 @@ import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
+import { registerClientSubAgentBridge } from '@/store/chat/agents/transports/clientSubAgentBridge';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -743,6 +744,24 @@ export const createGroupOrchestrationExecutors = (
         if (runtimeResult?.parked) {
           log(`[${sessionLogId}] Member run parked (human approval / async tool), not completed`);
 
+          // Register the client completion bridge: when the member's run
+          // eventually reaches a terminal state, the bridge backfills THIS
+          // tool message with the member's final answer and re-enters the
+          // orchestration loop with a `task_completed` result — the supervisor
+          // then drives the next round. The old park-exit (`result: undefined`)
+          // left the orchestration parked forever: nothing re-entered the
+          // loop, so the supervisor never saw the member's result.
+          registerClientSubAgentBridge({
+            childContext: subContext,
+            childOperationId: taskOperationId,
+            kind: 'group-orchestration',
+            memberAgentId: agentId,
+            messageContext,
+            orchestrationOperationId,
+            supervisorAgentId,
+            toolMessageId: resultMessageId,
+          });
+
           await get().optimisticUpdateMessageContent(
             resultMessageId,
             'Member agent is still running: it paused for human approval or an async tool and has not finished yet.',
@@ -755,7 +774,8 @@ export const createGroupOrchestrationExecutors = (
             newState: state,
             // End the loop without a terminal decision: `undefined` stops the
             // orchestration `while` and the non-done status keeps the
-            // orchestration operation alive instead of completing it.
+            // orchestration operation alive instead of completing it. The
+            // completion bridge re-enters the loop when the member settles.
             result: undefined,
           };
         }
