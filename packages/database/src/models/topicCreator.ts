@@ -14,7 +14,7 @@ export const topicMetadataWithCreator = (db: LobeChatDatabase, ownership?: SQL) 
     .limit(1);
 
   return sql<ChatTopicMetadata | null>`CASE
-    WHEN ${topics.metadata}->'bot' IS NOT NULL
+    WHEN jsonb_exists(${topics.metadata}, 'bot')
     THEN ${topics.metadata} || jsonb_build_object('botCreator', (${firstSender}))
     ELSE ${topics.metadata}
   END`;
