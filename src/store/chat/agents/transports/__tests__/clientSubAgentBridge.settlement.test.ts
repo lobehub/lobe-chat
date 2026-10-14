@@ -119,10 +119,11 @@ describe('clientSubAgentBridge settlement', () => {
     }
   });
 
-  // P1 (round-10): the automatic retry must be bounded — once the budget is
-  // exhausted the claim + persisted coordinates remain for the reload
-  // reconstruction, and no further timers are scheduled.
-  it('scheduled retry budget exhausted: stops re-firing, claim stays for reload reconstruction', async () => {
+  // P1 (round-11): the automatic retry must never leave the bridge without a
+  // driver. After the 4-attempt burst, a slow 60s poll keeps firing until the
+  // outage recovers — the poll is the only production driver left, so the
+  // recovery must land through it (no manual re-fire).
+  it('retry burst exhausts into slow poll: poll keeps driving until recovery settles', async () => {
     vi.useFakeTimers();
     try {
       registerArmedSubAgentBridge(subAgentRegistration);
@@ -132,21 +133,26 @@ describe('clientSubAgentBridge settlement', () => {
         new Error('server down'),
       );
 
+      // Initial fire + burst: burn 3 in-fire attempts, then advance through
+      // the 4 scheduled retries (5s/10s/15s/20s), each re-firing 3 attempts.
       const fire = fireClientSubAgentBridge(get, childContext);
-      await vi.runAllTimersAsync();
+      await vi.advanceTimersByTimeAsync(3000);
       await fire;
-
-      // 5 fires total (initial + 4 scheduled automatic retries) × 3 settle
-      // attempts each = 15 calls, then no more: the budget cap stops any
-      // further scheduling after retry 4 fails.
-      expect(aiAgentService.updateClientTaskThreadStatus.mock.calls.length).toBe(15);
-      // Still no parent settlement — the outage never recovered.
       expect(store.executeClientAgent).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(60_000);
 
-      // Exhausting the budget keeps the claim; a later manual re-fire (the
-      // reload-reconstruction equivalent) settles the thread and resumes.
+      // The burst is over (initial + 4 retries × 3 settle attempts = 15 in
+      // total, minus boundary-straddling attempts) and the slow poll has
+      // fired; exact count depends on timer boundaries, so assert a floor.
+      expect(aiAgentService.updateClientTaskThreadStatus.mock.calls.length).toBeGreaterThanOrEqual(
+        12,
+      );
+
+      // The outage recovers while the slow poll keeps driving: the next 60s
+      // tick — not a manual re-fire — settles the thread and resumes.
       (aiAgentService.updateClientTaskThreadStatus as any).mockResolvedValue(undefined);
-      await fireClientSubAgentBridge(get, childContext);
+      await vi.advanceTimersByTimeAsync(120_000);
+
       expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         'tool-msg-1',
         'child final answer',

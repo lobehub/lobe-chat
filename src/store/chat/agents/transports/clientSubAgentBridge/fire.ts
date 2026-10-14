@@ -208,35 +208,26 @@ export const fireClientSubAgentBridge = async (
     registry.set(key, registration);
     trackPending(registration);
     log('bridge failed for key %s (claim + barrier slot restored for retry): %O', key, error);
-    // P1 (round-10): a restored claim has no driver — the child's terminal
+    // P1 (round-10/11): a restored claim has no driver — the child's terminal
     // boundary was the only production caller and has already completed, so
     // without a scheduled re-fire the parent stays parked forever. Schedule a
-    // bounded automatic retry (clearing any earlier timer for this key first,
-    // so a re-fire that failed again doesn't stack timers). Exhausting the
-    // budget leaves the claim + persisted coordinates in place: a reload
-    // reconstruction or a manual re-fire can still settle it.
+    // bounded burst of automatic retries first (4 × 5s×attempt), then fall
+    // back to a slow 60s poll that never stops (clearing any earlier timer
+    // for this key first, so failures don't stack timers). The poll IS the
+    // production driver after exhaustion: reconstruction only runs inside a
+    // fire, so a restored claim + persisted coordinates alone cannot initiate
+    // recovery. Every exit from the fire path cancels the timer (success) or
+    // reschedules it (failure) — no entry is ever left without a driver.
     const previous = scheduledBridgeRetries.get(key);
     if (previous) clearTimeout(previous.timer);
     const attempt = (previous?.attempt ?? 0) + 1;
-    if (attempt > 4) {
-      scheduledBridgeRetries.delete(key);
-      log(
-        'bridge retry budget exhausted for key %s after %d attempts — leaving claim for reload reconstruction',
-        key,
-        attempt - 1,
-      );
-      return;
-    }
+    const delay = attempt <= 4 ? 5000 * attempt : 60_000;
     const timer = setTimeout(() => {
-      // Do NOT delete the entry here: the catch below reads it to increment
-      // the attempt counter. Deleting first reset the counter to 1 on every
-      // retry and turned the bound into an infinite loop. The success path
-      // cancels + deletes the entry; the budget cap deletes it.
-      log('bridge scheduled retry %d firing for key %s', previous?.attempt ?? 0, key);
+      log('bridge scheduled retry %d firing for key %s (delay %dms)', attempt, key, delay);
       void fireClientSubAgentBridge(get, context, outcome);
-    }, 5000 * attempt);
+    }, delay);
     scheduledBridgeRetries.set(key, { attempt, timer });
-    log('bridge retry %d scheduled in %dms for key %s', attempt, 5000 * attempt, key);
+    log('bridge retry %d scheduled in %dms for key %s', attempt, delay, key);
   }
 };
 

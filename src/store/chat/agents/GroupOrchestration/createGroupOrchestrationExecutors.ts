@@ -757,6 +757,23 @@ export const createGroupOrchestrationExecutors = (
             { operationId: state.operationId },
           );
 
+          // P1 (round-11): persist a durable park marker on the group tool
+          // row. The executor-created state carries no `status`, so after a
+          // reload the bridge's `isDeferredPlaceholderStillRunning` fallback
+          // (the orchestration operation is gone) always saw a non-`running`
+          // row and skipped the supervisor re-entry — the child settled but
+          // the orchestration stayed parked. Mirror the sub-agent deferred
+          // placeholder shape (`{ status: 'running', threadId }`), merging
+          // over the current state: the bridge reads this same row to gate
+          // the re-entry and overwrites it with terminal status on settle.
+          await get().optimisticUpdatePluginState(resultMessageId, {
+            ...(get().dbMessagesMap[messageMapKey(messageContext)] || []).find(
+              (m) => m.id === resultMessageId,
+            )?.pluginState,
+            status: 'running',
+            threadId: subContext.threadId,
+          });
+
           return {
             events: [] as GroupOrchestrationEvent[],
             newState: state,
