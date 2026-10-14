@@ -9,6 +9,7 @@ import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 import { pickTrimmedString, toRecord } from '@lobechat/utils/object';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
@@ -60,6 +61,9 @@ const MAX_VISUALS = 3;
  * check; twelve covers that with room while still bounding the request.
  */
 export const GATE_REVIEW_MAX_VISUALS = 12;
+
+/** GIF frame sheets rendered at once for one review request. */
+const GIF_SHEET_CONCURRENCY = 2;
 
 /**
  * How many checks may be judged at once when a whole acceptance is requested.
@@ -385,12 +389,14 @@ export class VerifyReviewPredictorService {
     // are resolved first and spend the budget at their own size; the remaining
     // frames then spend what is left in evidence order, and later ones are
     // linked so a many-frame check cannot push the body past provider limits.
-    const gifSheets = await Promise.all(
-      files.map((file) =>
+    // Each sheet downloads and decodes a whole recording, so only two at a time.
+    const gifSheets = await pMap(
+      files,
+      (file) =>
         file && isGifStoredFrame(file)
           ? resolveModelReadableFrameUrl(this.fileService, file)
           : undefined,
-      ),
+      { concurrency: GIF_SHEET_CONCURRENCY },
     );
     let inlineBytes = gifSheets.reduce((sum, url) => sum + (url ? inlinedFrameBytes(url) : 0), 0);
     const inline = files.map((file) => {
