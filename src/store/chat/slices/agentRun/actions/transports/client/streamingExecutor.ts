@@ -55,6 +55,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import {
+  armClientSubAgentBridgesForContext,
   fireClientSubAgentBridge,
   registerSubAgentBridgeFromSpawner,
 } from '@/store/chat/agents/transports/clientSubAgentBridge';
@@ -1020,6 +1021,13 @@ export class StreamingExecutorActionImpl {
     // complete signal). The run resumes under a new operation when the user
     // approves / rejects / submits / skips.
     if (isParkedStatus(state.status)) {
+      // Two-phase bridge activation (round-6): registrations are created
+      // unarmed by the spawner / group park-exit — BEFORE this run's deferred
+      // pause assembles (parallel tool lanes can still be running). Only now,
+      // at the actual park, are they armed: from here on the deferred
+      // placeholder is authoritative and resuming the parent cannot race this
+      // run's own deferred path.
+      armClientSubAgentBridgesForContext(this.#get, context);
       await runLifecycle.onRunParked({
         ...lifecycleEventBase,
         reason: state.status as RunParkedReason,

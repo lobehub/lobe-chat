@@ -1,243 +1,85 @@
-import type { GroupOrchestrationSupervisorSnapshot as SupervisorSnapshot } from '@lobechat/agent-runtime';
-import { type ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
+import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
+
+import { registry, releasePending, trackPending } from './registry';
+import {
+  type ClientSubAgentBridgeRegistration,
+  type GroupOrchestrationBridgeRegistration,
+  type PersistedBridgeCoordinates,
+  type SubAgentBridgeOutcome,
+  type SubAgentBridgeRegistration,
+} from './types';
 
 const log = debug('lobe-store:client-subagent-bridge');
 
 /**
- * Client-side completion bridge for parked sub-agent / group-member parents —
- * the mirror of the server's `completeSubAgentBridge` (AgentRuntimeService).
- *
- * Why this exists: when a client-executed child (a `callSubAgent` run or a
- * group-orchestration member) parks on human approval / an async tool, the
- * parent's tool call must NOT settle. The parent parks in
- * `waiting_for_async_tool` holding a deferred placeholder tool message, and
- * this bridge is what settles it later:
- *
- *   1. The child's run reaches a terminal state → `fireClientSubAgentBridge`
- *      is invoked at the run boundary (streamingExecutor).
- *   2. The bridge backfills the parent's placeholder tool message with the
- *      child's final output (so the parent conversation rebuilds with a real
- *      tool result).
- *   3. The bridge resumes the parked parent:
- *      - `sub-agent` kind: re-enters `executeClientAgent` from the tool
- *        message position (phase `tool_result`), the same re-entry shape the
- *        human-approval resume path uses.
- *      - `group-orchestration` kind: re-enters
- *        `internal_execGroupOrchestration` with the member's `task_completed`
- *        result as the initial result, so the supervisor sees the member's
- *        final answer and decides the next round.
- *
- * Registry keys are the CHILD's isolation threadId: the parked child resumes
- * out-of-band under a DIFFERENT operation (user approval / queued follow-up),
- * so an operation-id key would never fire — but every continuation of the
- * child runs in the same thread, whose terminal run boundary claims the
- * bridge. Claiming removes the entry (CAS single-fire): a later terminal run
- * in the same thread is a no-op, so an already-resumed parent's tool message
- * is never rewritten.
+ * Post-reload reconstruction: the in-memory registry has no claim for this
+ * child thread, but a parked child outlives a reload — its isolation thread
+ * row still carries the persisted bridge coordinates and is still
+ * `processing` (settling the child clears it). Rebuild an ARMED registration
+ * from the coordinates and re-arm the barrier slot. Armed because the
+ * persisted coordinates only exist once the parent parked; the `processing`
+ * status check is what prevents a settled bridge from re-firing.
  */
+const reconstructRegistrationFromThread = async (
+  childThreadId: string,
+  childTopicId: string | undefined,
+): Promise<ClientSubAgentBridgeRegistration | undefined> => {
+  if (!childTopicId) return undefined;
+  try {
+    const threads = await threadService.getThreads(childTopicId);
+    const thread = threads.find((t) => t.id === childThreadId);
+    if (!thread || thread.status !== 'processing') return undefined;
 
-interface SubAgentBridgeRegistration {
-  /** The child's isolation context — supplies the registry key (threadId). */
-  childContext: ConversationContext;
-  /** The parked child run's operation (cleaned up once the bridge fires). */
-  childOperationId: string;
-  kind: 'sub-agent';
-  /** Conversation context of the parked parent run (resume target). */
-  parentContext: ConversationContext;
-  /** The parked parent run's operation id (completed, then resumed). */
-  parentOperationId: string;
-  /** Message id of the parent's deferred placeholder tool message. */
-  toolMessageId: string;
-}
-interface GroupOrchestrationBridgeRegistration {
-  childContext: ConversationContext;
-  childOperationId: string;
-  kind: 'group-orchestration';
-  /** AgentId of the member whose parked run this bridge settles. */
-  memberAgentId: string;
-  /** Conversation context of the orchestration (messageContext). */
-  messageContext: ConversationContext;
-  /** The parked orchestration operation id (completed before re-entry). */
-  orchestrationOperationId: string;
-  supervisorAgentId: string;
-  /**
-   * Supervisor state machine counters at the park point (round /
-   * skip-call-supervisor). Carried into the re-entry's task_completed payload
-   * so the resumed loop continues from the original decision point instead of
-   * resetting to a fresh supervisor machine.
-   */
-  supervisorSnapshot?: SupervisorSnapshot;
-  /** Message id of the supervisor's group task tool message. */
-  toolMessageId: string;
-}
+    const bridge = (thread.metadata as { bridge?: PersistedBridgeCoordinates } | undefined)?.bridge;
+    if (!bridge) return undefined;
 
-export type ClientSubAgentBridgeRegistration =
-  GroupOrchestrationBridgeRegistration | SubAgentBridgeRegistration;
+    const childContext = {
+      agentId: thread.agentId ?? undefined,
+      ...(thread.groupId ? { groupId: thread.groupId } : {}),
+      scope: 'thread',
+      threadId: childThreadId,
+      topicId: childTopicId,
+    } as ClientSubAgentBridgeRegistration['childContext'];
 
-/** Terminal disposition of the child run, captured at the run boundary. */
-export interface SubAgentBridgeOutcome {
-  /** Cost of the child run (`AgentState.cost.total`), for the parent ledger. */
-  cost?: number;
-  error?: string;
-  /** Terminal AgentState.status of the child run: done | error | interrupted. */
-  status: 'done' | 'error' | 'interrupted';
-  /** Token split of the child run (`AgentState.usage.llm.tokens`). */
-  usage?: { input?: number; output?: number; total?: number };
-}
+    const registration: ClientSubAgentBridgeRegistration | undefined =
+      bridge.kind === 'sub-agent'
+        ? {
+            armed: true,
+            childContext,
+            childOperationId: '',
+            kind: 'sub-agent',
+            parentContext:
+              bridge.parentContext ?? ({} as ClientSubAgentBridgeRegistration['childContext']),
+            parentOperationId: bridge.parentOperationId ?? '',
+            toolMessageId: bridge.toolMessageId,
+          }
+        : {
+            armed: true,
+            childContext,
+            childOperationId: '',
+            kind: 'group-orchestration',
+            memberAgentId: bridge.memberAgentId ?? childContext.agentId ?? '',
+            messageContext:
+              bridge.messageContext ?? ({} as ClientSubAgentBridgeRegistration['childContext']),
+            orchestrationOperationId: bridge.orchestrationOperationId ?? '',
+            supervisorAgentId: bridge.supervisorAgentId ?? '',
+            supervisorSnapshot: bridge.supervisorSnapshot,
+            toolMessageId: bridge.toolMessageId,
+          };
 
-const registry = new Map<string, ClientSubAgentBridgeRegistration>();
-
-/**
- * Parallel-call barrier: one parent turn may emit several `callSubAgent`
- * calls (systemRole documents parallel dispatch). All of them park the same
- * parent op, so the parent may only resume after the LAST child settles.
- * Keyed by the shared parked parent op id; each registration carries its own
- * tool message, so backfills stay per-child while the resume is barriered.
- */
-const pendingByParentOp = new Map<string, Set<string>>();
-
-/**
- * Test-only reset: the registry is module-level shared state, and a restored
- * claim (retry semantics) must not leak across test cases. Not exported from
- * the package index.
- */
-export const __resetBridgeForTests = (): void => {
-  registry.clear();
-  pendingByParentOp.clear();
-};
-
-const trackPending = (registration: ClientSubAgentBridgeRegistration) => {
-  const parentOpId =
-    registration.kind === 'sub-agent'
-      ? registration.parentOperationId
-      : registration.orchestrationOperationId;
-  let pending = pendingByParentOp.get(parentOpId);
-  if (!pending) {
-    pending = new Set<string>();
-    pendingByParentOp.set(parentOpId, pending);
+    trackPending(registration);
+    registry.set(childThreadId, registration);
+    log('bridge reconstructed from thread row (armed): key=%s kind=%s', childThreadId, bridge.kind);
+    return registration;
+  } catch (error) {
+    log('bridge: failed to reconstruct registration for %s: %O', childThreadId, error);
+    return undefined;
   }
-  pending.add(registration.toolMessageId);
-};
-
-const releasePending = (registration: ClientSubAgentBridgeRegistration): boolean => {
-  const parentOpId =
-    registration.kind === 'sub-agent'
-      ? registration.parentOperationId
-      : registration.orchestrationOperationId;
-  const pending = pendingByParentOp.get(parentOpId);
-  if (!pending) return true;
-  pending.delete(registration.toolMessageId);
-  if (pending.size === 0) {
-    pendingByParentOp.delete(parentOpId);
-    return true;
-  }
-  return false;
-};
-
-const registryKey = (childContext: ConversationContext): string | undefined =>
-  childContext.threadId ?? undefined;
-
-export const registerClientSubAgentBridge = (registration: ClientSubAgentBridgeRegistration) => {
-  const key = registryKey(registration.childContext);
-  if (!key) {
-    log('bridge registration skipped: child context has no threadId');
-    return;
-  }
-  registry.set(key, registration);
-  trackPending(registration);
-  log(
-    'bridge registered: key=%s kind=%s toolMessage=%s',
-    key,
-    registration.kind,
-    registration.toolMessageId,
-  );
-};
-
-/**
- * Spawner-side registration for `runClientSubAgent` (streamingExecutor): the
- * parked child's context + the parent run's coordinates. Kept here so the
- * oversized streamingExecutor file only carries a one-line call — AGENTS.md
- * forbids growing files already over the 800-line limit.
- */
-export const registerSubAgentBridgeFromSpawner = (params: {
-  childContext: ConversationContext;
-  childOperationId: string;
-  /**
-   * Operation lookup — the bridge reads the FULL parent context
-   * (threadId / scope / documentId / workspaceSlug / groupId …) from
-   * `getParentOperation(parentOperationId)?.context` itself, so the resume
-   * reconstructs the parent's message bucket in the original scope. A
-   * spawner-side trimmed context made thread- and page-scoped parents resume
-   * into the main-topic bucket (messageMapKey isolation).
-   */
-  getParentOperation: (
-    parentOperationId: string,
-  ) => { context?: unknown; status: string } | undefined;
-  parentAgentId: string;
-  parentOperationId?: string;
-  toolMessageId: string;
-}): void => {
-  const {
-    childContext,
-    childOperationId,
-    getParentOperation,
-    parentAgentId,
-    parentOperationId,
-    toolMessageId,
-  } = params;
-
-  // No parent op id (legacy spawner) → no bridge to hang the resume on.
-  if (!parentOperationId) return;
-  const parentOp = getParentOperation(parentOperationId);
-  if (!parentOp) return;
-
-  registerClientSubAgentBridge({
-    childContext,
-    childOperationId,
-    kind: 'sub-agent',
-    parentContext: {
-      // Full parent context (see doc above); agentId pinned to the spawner's
-      // value. The operation context extends ConversationContext.
-      ...(parentOp.context as ConversationContext | undefined),
-      agentId: parentAgentId,
-    },
-    parentOperationId,
-    toolMessageId,
-  });
-};
-
-/**
- * Member-side registration for the group-orchestration park-exit: the parked
- * member's context + the orchestration's coordinates. Same size rationale as
- * the spawner-side helper above.
- */
-export const registerGroupBridgeFromParkExit = (params: {
-  childContext: ConversationContext;
-  childOperationId: string;
-  memberAgentId: string;
-  messageContext: ConversationContext;
-  orchestrationOperationId: string;
-  supervisorAgentId: string;
-  /** Supervisor counters at the park point, restored by the re-entry. */
-  supervisorSnapshot?: SupervisorSnapshot;
-  toolMessageId: string;
-}): void => {
-  registerClientSubAgentBridge({
-    childContext: params.childContext,
-    childOperationId: params.childOperationId,
-    kind: 'group-orchestration',
-    memberAgentId: params.memberAgentId,
-    messageContext: params.messageContext,
-    orchestrationOperationId: params.orchestrationOperationId,
-    supervisorAgentId: params.supervisorAgentId,
-    supervisorSnapshot: params.supervisorSnapshot,
-    toolMessageId: params.toolMessageId,
-  });
 };
 
 /**
@@ -256,14 +98,37 @@ export const registerGroupBridgeFromParkExit = (params: {
  */
 export const fireClientSubAgentBridge = async (
   get: () => any,
-  context: ConversationContext,
+  context: ClientSubAgentBridgeRegistration['childContext'],
   outcome: SubAgentBridgeOutcome = { status: 'done' },
 ): Promise<void> => {
   const key = context.threadId;
   if (!key) return;
 
-  const registration = registry.get(key);
+  let registration = registry.get(key);
+  if (!registration) {
+    // Post-reload path: the registry died with the renderer. The child
+    // thread row still carries the persisted coordinates.
+    registration = (await reconstructRegistrationFromThread(key, context.topicId)) ?? undefined;
+  }
   if (!registration) return;
+
+  // Two-phase activation (round-6): the spawner registers BEFORE the parent's
+  // runtime assembles its deferred pause — with parallel tool lanes that gap
+  // can span the whole sibling execution. A fire against an unarmed
+  // registration means the child reached a terminal state while the parent
+  // was still actively executing, so resuming now would race the parent's own
+  // deferred path (which would overwrite the resumed turn with the "still
+  // running" placeholder) and would count the barrier before every parallel
+  // child has even registered. Hold the claim and the slot: arming happens
+  // when the parent actually parks, and the claim stays live for the retry.
+  if (!registration.armed) {
+    log(
+      'bridge fire deferred (not armed yet): key=%s kind=%s — waiting for the parent park',
+      key,
+      registration.kind,
+    );
+    return;
+  }
 
   try {
     await fireRegistration(get, registration, outcome);
@@ -272,6 +137,20 @@ export const fireClientSubAgentBridge = async (
     // child run has no natural re-fire, so a dropped claim would leave the
     // parent parked forever with an unsettled placeholder.
     registry.delete(key);
+    // Clear the persisted lifeline too — a settled bridge must never re-fire
+    // after a reload. Best-effort: the `processing` status check on
+    // reconstruction is the real guard (the settle path flips it).
+    if (registration.childContext.topicId) {
+      void threadService
+        .getThreads(registration.childContext.topicId)
+        .then((threads) => {
+          const thread = threads.find((t) => t.id === key);
+          if (!thread?.metadata || !('bridge' in thread.metadata)) return;
+          const { bridge: _cleared, ...rest } = thread.metadata as Record<string, unknown>;
+          return threadService.updateThread(key, { metadata: rest as any });
+        })
+        .catch((error) => log('bridge: failed to clear persisted coordinates: %O', error));
+    }
   } catch (error) {
     // Restore BOTH pieces (registry claim + barrier slot) so the retry sees
     // the exact pre-fire state. Asymmetric restore made sibling B resume the
@@ -367,6 +246,7 @@ const fireRegistration = async (
     await fireGroupOrchestrationBridge(get, registration, resultContent, succeeded, stats);
   }
 };
+
 /**
  * Sub-agent kind: backfill the parent's placeholder tool message, persist the
  * authoritative completion state + thread settlement (the normal completion
@@ -383,17 +263,23 @@ const fireSubAgentBridge = async (
 ): Promise<void> => {
   const { parentContext, parentOperationId, toolMessageId } = registration;
 
-  // Guard: the parent must still be parked on this tool (its op stays
-  // `running` across an async-tool park). If it was settled out-of-band
-  // (user stopped the run, a newer run took over), a phantom continuation
-  // would be worse than none — backfill only, no resume. The barrier slot
-  // is released so sibling children are not blocked by a dead parent.
+  // Guard: the parent must still be parked on this tool. In-session the op
+  // stays `running` across an async-tool park; after a reload the op is gone,
+  // but the parent's tool row still carries the deferred `running` plugin
+  // state — that is the durable equivalent. If either signal says the parent
+  // settled out-of-band (user stopped the run, a newer run took over), a
+  // phantom continuation would be worse than none — backfill only, no
+  // resume. The barrier slot is released so sibling children are not blocked
+  // by a dead parent.
   const parentOp = get().operations[parentOperationId];
-  if (!parentOp || parentOp.status !== 'running') {
+  const parentParked = parentOp
+    ? parentOp.status === 'running'
+    : isDeferredPlaceholderStillRunning(get, registration.parentContext, toolMessageId);
+  if (!parentParked) {
     log(
-      'parent %s no longer parked (status: %s), skipping resume',
+      'parent %s no longer parked (op status: %s), skipping resume',
       parentOperationId,
-      parentOp?.status,
+      parentOp?.status ?? 'missing',
     );
     releasePending(registration);
     return;
@@ -435,6 +321,24 @@ const fireSubAgentBridge = async (
 };
 
 /**
+ * Durable park signal for the post-reload path: the parent operation is gone,
+ * but the deferred placeholder's plugin state (`{ status: 'running', threadId
+ * }`) is persisted on the tool row. `running` means the parent never settled
+ * — still parked. Anything else (completed / error) means it settled
+ * out-of-band and a resume would be a phantom.
+ */
+const isDeferredPlaceholderStillRunning = (
+  get: () => any,
+  parentContext: ClientSubAgentBridgeRegistration['childContext'],
+  toolMessageId: string,
+): boolean => {
+  const messages: Array<{ id?: string; pluginState?: { status?: string } }> =
+    get().dbMessagesMap[messageMapKey(parentContext)] || [];
+  const toolRow = messages.find((m) => m.id === toolMessageId);
+  return toolRow?.pluginState?.status === 'running';
+};
+
+/**
  * Group-orchestration kind: deliver the member's final result into a fresh
  * `internal_execGroupOrchestration` re-entry seeded with the member's
  * `task_completed` result. The supervisor's next `decide()` then sees the
@@ -461,14 +365,21 @@ const fireGroupOrchestrationBridge = async (
   // The orchestration loop exited with a non-done state but its operation
   // stayed `running`; the re-entry mints a fresh operation, so retire the
   // parked one first (the human-approval "new op resumes the run" pattern).
+  // After a reload the op is gone — the group tool row's deferred `running`
+  // plugin state is the durable park signal (same rule as the sub-agent
+  // kind). If either signal says the orchestration settled out-of-band, the
+  // re-entry would double-drive the supervisor: backfill only.
   // The barrier slot is released too — the re-entry carries the whole
   // decision, so pending siblings of this parent op must not block it.
   const parkedOp = get().operations[orchestrationOperationId];
-  if (!parkedOp || parkedOp.status !== 'running') {
+  const orchestrationParked = parkedOp
+    ? parkedOp.status === 'running'
+    : isDeferredPlaceholderStillRunning(get, messageContext, toolMessageId);
+  if (!orchestrationParked) {
     log(
       'orchestration op %s not running (status: %s), skipping re-entry',
       orchestrationOperationId,
-      parkedOp?.status,
+      parkedOp?.status ?? 'missing',
     );
     releasePending(registration);
     return;
@@ -541,7 +452,7 @@ const fireGroupOrchestrationBridge = async (
  */
 const resumeClientSubAgentParent = async (
   get: () => any,
-  parentContext: ConversationContext,
+  parentContext: ClientSubAgentBridgeRegistration['childContext'],
   parentMessageId: string,
 ): Promise<void> => {
   const { agentId, topicId, threadId } = parentContext;
