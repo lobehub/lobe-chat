@@ -1794,6 +1794,34 @@ export class ConversationLifecycleActionImpl {
       };
     }
 
+    // Persist selected skill/tool context into user message content so it
+    // survives across turns. Both the gateway run (the server persists the user
+    // row from `message`) and the direct-mention persist path use it.
+    // Deduplicate: skip skills/tools already @mentioned in earlier messages (via editorData).
+    const previouslyMentionedSkills = new Set<string>();
+    const previouslyMentionedTools = new Set<string>();
+
+    for (const m of messages) {
+      if (m.role !== 'user') continue;
+      for (const s of parseSelectedSkillsFromEditorData(m.editorData ?? undefined)) {
+        previouslyMentionedSkills.add(s.identifier);
+      }
+      for (const t of parseSelectedToolsFromEditorData(m.editorData ?? undefined)) {
+        previouslyMentionedTools.add(t.identifier);
+      }
+    }
+    const contextSuffix = [
+      formatSelectedSkillsContext(
+        enrichedSelectedSkills.filter((s) => !previouslyMentionedSkills.has(s.identifier)),
+      ),
+      formatSelectedToolsContext(
+        enrichedSelectedTools.filter((t) => !previouslyMentionedTools.has(t.identifier)),
+      ),
+    ]
+      .filter(Boolean)
+      .join('\n');
+    const persistedContent = contextSuffix ? `${message}\n\n${contextSuffix}` : message;
+
     // ── Gateway: skip sendMessageInServer, let execAgentTask handle everything ──
     if (!directMentionRoute) {
       try {
@@ -1821,7 +1849,7 @@ export class ConversationLifecycleActionImpl {
             : operationContext,
           messageContext: operationContext,
           fileIds: fileIdList,
-          message,
+          message: persistedContent,
           // The server persists the user row on this path, so a queued
           // follow-up's steer mark must travel with the request.
           metadata: (metadata as Pick<MessageMetadata, 'steer'> | undefined)?.steer
@@ -1958,31 +1986,6 @@ export class ConversationLifecycleActionImpl {
 
       const topicId = operationContext.topicId;
 
-      // Persist selected skill/tool context into user message content so it survives across turns.
-      // Deduplicate: skip skills/tools already @mentioned in earlier messages (via editorData).
-      const previouslyMentionedSkills = new Set<string>();
-      const previouslyMentionedTools = new Set<string>();
-
-      for (const m of messages) {
-        if (m.role !== 'user') continue;
-        for (const s of parseSelectedSkillsFromEditorData(m.editorData ?? undefined)) {
-          previouslyMentionedSkills.add(s.identifier);
-        }
-        for (const t of parseSelectedToolsFromEditorData(m.editorData ?? undefined)) {
-          previouslyMentionedTools.add(t.identifier);
-        }
-      }
-      const dedupedSkills = enrichedSelectedSkills.filter(
-        (s) => !previouslyMentionedSkills.has(s.identifier),
-      );
-      const dedupedTools = enrichedSelectedTools.filter(
-        (t) => !previouslyMentionedTools.has(t.identifier),
-      );
-
-      const skillContext = formatSelectedSkillsContext(dedupedSkills);
-      const toolContext = formatSelectedToolsContext(dedupedTools);
-      const contextSuffix = [skillContext, toolContext].filter(Boolean).join('\n');
-      const persistedContent = contextSuffix ? `${message}\n\n${contextSuffix}` : message;
       data = await aiChatService.sendMessageInServer(
         {
           newUserMessage: {

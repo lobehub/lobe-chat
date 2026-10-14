@@ -128,9 +128,10 @@ describe('ChatService', () => {
     });
 
     // Regression: the browser model runtime is gone. A fetchOnClient provider
-    // with no relay available must still go through the server chat endpoint.
+    // with no relay available must still go through the server chat endpoint,
+    // and the provider still reaches `run`, which only decides once a
+    // late-loading (custom) provider's state is known.
     it('posts a fetchOnClient provider without relay to the server instead of a browser runtime', async () => {
-      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
       vi.spyOn(oneShotRelay, 'needsRelay').mockReturnValue(false);
       const run = vi.spyOn(oneShotRelay, 'run');
       const initializeWithClientStore = vi.spyOn(mechaModule, 'initializeWithClientStore');
@@ -141,7 +142,9 @@ describe('ChatService', () => {
       );
 
       expect(initializeWithClientStore).not.toHaveBeenCalled();
-      expect(run).toHaveBeenCalledWith(undefined, expect.any(Function), { signal: undefined });
+      expect(run).toHaveBeenCalledWith(ModelProvider.OpenCodeCodingPlan, expect.any(Function), {
+        signal: undefined,
+      });
       const [url, options] = mockFetchSSE.mock.calls[0];
       expect(url).toBe(`/webapi/chat/${ModelProvider.OpenCodeCodingPlan}`);
       expect(options.method).toBe('POST');

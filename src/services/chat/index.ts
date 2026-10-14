@@ -28,7 +28,7 @@ import { createTraceHeader } from '@/utils/trace';
 
 import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
-import { findDeploymentName, isEnableFetchOnClient } from './helper';
+import { findDeploymentName } from './helper';
 import { type FetchOptions } from './types';
 
 const providersWithDeploymentName = new Set<string>([
@@ -142,13 +142,6 @@ class ChatService {
     if (payload.presence_penalty === null) payload.presence_penalty = undefined;
     if (payload.frequency_penalty === null) payload.frequency_penalty = undefined;
 
-    /**
-     * A provider only this device reaches: the server makes the call and
-     * relays it back to this tab (one-shot relay), so the browser never dials
-     * the provider on its own.
-     */
-    const relayToThisTab = isEnableFetchOnClient(provider) && oneShotRelay.needsRelay(provider);
-
     const traceHeader = createTraceHeader({ ...options?.trace });
 
     const headers = await createHeaderWithAuth({
@@ -178,7 +171,11 @@ class ChatService {
     ].reduce((acc, cur) => merge(acc, standardizeAnimationStyle(cur)), {});
 
     return oneShotRelay.run(
-      relayToThisTab ? provider : undefined,
+      // A provider only this device reaches: the server makes the call and
+      // relays it back to this tab (one-shot relay), so the browser never dials
+      // the provider on its own. `run` decides once the provider state is
+      // loaded — a custom provider is device-only by settings that arrive late.
+      provider,
       (relay) =>
         fetchSSE(API_ENDPOINTS.chat(provider), {
           body: JSON.stringify(payload),

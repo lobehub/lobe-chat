@@ -1452,6 +1452,58 @@ describe('ConversationLifecycle actions', () => {
         );
       });
 
+      // Regression: every non-mention send now runs on the gateway, which only
+      // forwarded `selectedToolIds` — an explicitly selected skill was dropped.
+      it('should carry selected skill context in the gateway run message', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const executeGatewayAgent = mockGatewayAgent();
+        vi.spyOn(toolStoreModule, 'getToolStoreState').mockReturnValue({
+          agentSkillDetailMap: {},
+          agentSkills: [],
+          builtinSkills: [
+            {
+              content: 'Use the user memory skill content.',
+              description: 'Load user memory',
+              identifier: 'user_memory',
+              name: 'User Memory',
+              source: 'builtin',
+            },
+          ],
+        } as any);
+
+        await act(async () => {
+          await result.current.sendMessage({
+            context: createTestContext(),
+            editorData: {
+              root: {
+                children: [
+                  {
+                    children: [
+                      {
+                        actionCategory: 'skill',
+                        actionLabel: 'User Memory',
+                        actionType: 'user_memory',
+                        type: 'action-tag',
+                      },
+                      { text: ` ${TEST_CONTENT.USER_MESSAGE}`, type: 'text' },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'root',
+              },
+            } as any,
+            message: '<action type="user_memory" category="skill" /> ' + TEST_CONTENT.USER_MESSAGE,
+          });
+        });
+
+        expect(executeGatewayAgent).toHaveBeenCalledTimes(1);
+        const { message } = executeGatewayAgent.mock.calls[0][0];
+        expect(message).toContain(TEST_CONTENT.USER_MESSAGE);
+        expect(message).toContain('<selected_skill_context>');
+        expect(message).toContain('identifier="user_memory"');
+      });
+
       it('should work when sending from home page (activeAgentId is empty but context.agentId exists)', async () => {
         const { result } = renderHook(() => useChatStore());
 
@@ -2934,7 +2986,8 @@ describe('ConversationLifecycle actions', () => {
 
         expect(executeGatewayAgent).toHaveBeenCalledWith(
           expect.objectContaining({
-            message: TEST_CONTENT.USER_MESSAGE,
+            // The selected-tool context rides along in the persisted user message.
+            message: expect.stringContaining(TEST_CONTENT.USER_MESSAGE),
             selectedToolIds: ['lobe-notebook', 'lobe-artifacts'],
           }),
         );

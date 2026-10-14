@@ -166,7 +166,7 @@ describe('ModelsService', () => {
 
       await modelsService.getModels('openai');
 
-      expect(oneShotRelay.run).toHaveBeenLastCalledWith(undefined, expect.any(Function));
+      expect(oneShotRelay.run).toHaveBeenLastCalledWith('openai', expect.any(Function));
       expect(fetch).toHaveBeenCalledWith('/webapi/models/openai', { headers: {} });
       expect(mockedInitializeWithClientStore).not.toHaveBeenCalled();
     });
@@ -197,7 +197,9 @@ describe('ModelsService', () => {
       const result = await modelsService.getModels('openai');
 
       expect(mockedInitializeWithClientStore).not.toHaveBeenCalled();
-      expect(oneShotRelay.run).toHaveBeenLastCalledWith(undefined, expect.any(Function));
+      // Regression: the provider reaches `run` even before it is known as
+      // device-only, so a late-loading custom provider can still be relayed.
+      expect(oneShotRelay.run).toHaveBeenLastCalledWith('openai', expect.any(Function));
       expect(fetch).toHaveBeenCalledWith('/webapi/models/openai', { headers: {} });
       expect(result).toEqual([{ id: 'model1' }]);
 
@@ -268,7 +270,7 @@ describe('ModelsService', () => {
       await modelsService.downloadModel({ model: 'qwen3:1.7b', provider: 'ollama' });
 
       expect(mockedInitializeWithClientStore).not.toHaveBeenCalled();
-      expect(oneShotRelay.run).toHaveBeenLastCalledWith(undefined, expect.any(Function), {
+      expect(oneShotRelay.run).toHaveBeenLastCalledWith('ollama', expect.any(Function), {
         signal: expect.any(AbortSignal),
       });
       expect(fetch).toHaveBeenCalledWith(

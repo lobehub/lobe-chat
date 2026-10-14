@@ -2,14 +2,10 @@ import { getMessageError } from '@lobechat/fetch-sse';
 
 import { getBusinessTrpcHeaders } from '@/business/client/trpc-headers';
 import { createHeaderWithAuth } from '@/services/_auth';
-import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { type ChatModelCard } from '@/types/llm';
 
 import { API_ENDPOINTS } from './_url';
 import { oneShotRelay } from './llmRelay';
-
-const isEnableFetchOnClient = (provider: string) =>
-  aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
 
 /**
  * Auth headers plus the business ones (the cloud build's `X-Workspace-Id`): the
@@ -45,10 +41,9 @@ export class ModelsService {
     /**
      * A provider only this device reaches: the server lists its models through
      * this tab (one-shot relay), so the browser never dials the provider itself.
+     * `run` decides once the provider state is loaded (custom providers arrive late).
      */
-    const relayToThisTab = isEnableFetchOnClient(provider) && oneShotRelay.needsRelay(provider);
-
-    const res = await oneShotRelay.run(relayToThisTab ? provider : undefined, (relay) =>
+    const res = await oneShotRelay.run(provider, (relay) =>
       fetch(API_ENDPOINTS.models(provider), {
         headers: relay ? { ...headers, ...relay.headers } : headers,
       }),
@@ -79,12 +74,10 @@ export class ModelsService {
 
       const headers = await createServerHeaders(provider);
 
-      // The server downloads through this tab (see `getModels`).
-      const relayToThisTab = isEnableFetchOnClient(provider) && oneShotRelay.needsRelay(provider);
-
-      // The relay channel must stay open until the whole progress stream is read.
+      // The server downloads through this tab (see `getModels`); the relay
+      // channel must stay open until the whole progress stream is read.
       await oneShotRelay.run(
-        relayToThisTab ? provider : undefined,
+        provider,
         async (relay) => {
           const res = await fetch(API_ENDPOINTS.modelPull(provider), {
             body: JSON.stringify({ model }),
