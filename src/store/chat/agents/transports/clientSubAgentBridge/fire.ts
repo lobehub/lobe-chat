@@ -44,7 +44,24 @@ const reconstructRegistrationFromThread = async (
   try {
     const threads = knownThreads ?? (await threadService.getThreads(childTopicId));
     const thread = threads.find((t) => t.id === childThreadId);
-    if (!thread || thread.status !== 'processing') return undefined;
+    if (!thread) return undefined;
+
+    // P1 (round-12): a settled child with SURVIVING coordinates is the
+    // signature of a fire that crashed AFTER settlement (backfill / plugin
+    // state / re-entry throw) — the success path clears the coordinates
+    // right after `fireRegistration` resolves. A reload in that window used
+    // to strand the parent forever, because this check rejected every
+    // non-`processing` thread. Allow the continuation: re-firing settles an
+    // already-settled child idempotently, and the parentParked guard (op
+    // status / deferred placeholder) blocks phantom resumes of a parent that
+    // already settled out-of-band.
+    if (thread.status !== 'processing') {
+      log(
+        'bridge reconstruction on settled child %s (status=%s) — fire crashed after settlement, continuing the parent resume',
+        childThreadId,
+        thread.status,
+      );
+    }
 
     const bridge = (thread.metadata as { bridge?: PersistedBridgeCoordinates } | undefined)?.bridge;
     if (!bridge) return undefined;
@@ -89,14 +106,12 @@ const reconstructRegistrationFromThread = async (
     // parallel sibling parked on the same parent op too, or the first child
     // to finish tracks only itself and the barrier releases the parent while
     // its siblings are still running.
+    // P1 (round-12): settled siblings with surviving coordinates are the
+    // post-settlement-crash signature (see the top-of-function note) — they
+    // must also reconstruct, or the barrier never releases for them.
     if (bridge.kind === 'sub-agent' && bridge.parentOperationId) {
       for (const sibling of threads) {
-        if (
-          sibling.id === childThreadId ||
-          sibling.status !== 'processing' ||
-          registry.has(sibling.id)
-        )
-          continue;
+        if (sibling.id === childThreadId || registry.has(sibling.id)) continue;
         const siblingBridge = (
           sibling.metadata as { bridge?: PersistedBridgeCoordinates } | undefined
         )?.bridge;

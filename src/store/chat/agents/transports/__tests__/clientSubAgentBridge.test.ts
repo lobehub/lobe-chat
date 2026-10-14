@@ -613,26 +613,89 @@ describe('clientSubAgentBridge', () => {
     expect(store.executeClientAgent).toHaveBeenCalledTimes(1);
   });
 
-  // A settled thread (status flipped by the settle path) must NOT re-fire:
-  // the persisted coordinates exist only for mid-run children.
-  it('reload reconstruction skips a settled (non-processing) thread', async () => {
+  // A settled child with surviving coordinates reconstructs as a
+  // post-settlement-crash continuation (round-12), but a parent that settled
+  // out-of-band still cannot be phantom-resumed: the parentParked guard
+  // (op status / durable placeholder state) is the real gate, not the
+  // child's thread status.
+  it('reload reconstruction on a settled child cannot resume a parent that settled out-of-band', async () => {
     const { threadService } = await import('@/services/thread');
     (threadService.getThreads as any).mockResolvedValue([
       {
         id: 'thd_child',
         metadata: {
-          bridge: { kind: 'sub-agent', toolMessageId: 'tool-msg-1' },
+          bridge: {
+            kind: 'sub-agent',
+            parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+            parentOperationId: 'op_parent',
+            toolMessageId: 'tool-msg-1',
+          },
         },
         status: 'completed',
         topicId: 'topic-1',
       },
     ]);
-    const { get, store } = makeGet({ operations: {} });
+    const { get, store } = makeGet({ operations: {} }); // reload: no ops, no parked placeholder
 
     await fireClientSubAgentBridge(get, childContext);
 
     expect(store.optimisticUpdateMessageContent).not.toHaveBeenCalled();
     expect(store.executeClientAgent).not.toHaveBeenCalled();
+  });
+
+  // Round-12 P1: a fire that crashed AFTER child settlement (backfill /
+  // plugin state / re-entry throw) left the child marked completed with the
+  // bridge coordinates still persisted. A reload used to reject the
+  // reconstruction (thread no longer `processing`) and strand the parked
+  // parent forever. Reconstruction now continues the parent resume — the
+  // re-settle is idempotent and the parentParked guard still blocks phantom
+  // resumes of an out-of-band-settled parent.
+  it('reloads: continues the parent resume when a fire crashed after child settlement', async () => {
+    const { threadService } = await import('@/services/thread');
+    (threadService.getThreads as any).mockResolvedValue([
+      {
+        agentId: 'agent-child',
+        id: 'thd_child',
+        metadata: {
+          bridge: {
+            kind: 'sub-agent',
+            parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+            parentOperationId: 'op_parent',
+            toolMessageId: 'tool-msg-1',
+          },
+        },
+        status: 'completed', // settled by the crashed fire
+        topicId: 'topic-1',
+      },
+    ]);
+    const { get, store } = makeGet({
+      dbMessagesMap: {
+        'thread_agent-child_topic-1_thd_child': [
+          { content: 'child final answer', role: 'user' },
+          { content: 'child final answer', role: 'assistant' },
+        ],
+        // Reload: the durable park signal on the parent's tool row is still
+        // `running` — the parent never settled out-of-band.
+        'main_agent-parent_topic-1': [
+          {
+            id: 'tool-msg-1',
+            pluginState: { status: 'running', threadId: 'thd_child' },
+            role: 'tool',
+          },
+        ],
+      },
+      operations: {}, // reload: no in-memory operations
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-1',
+      'child final answer',
+      undefined,
+      { operationId: 'op_parent' },
+    );
+    expect(store.executeClientAgent).toHaveBeenCalledTimes(1);
   });
 
   // Registration persists the coordinates as the post-reload lifeline.
