@@ -20,7 +20,7 @@ import { registerDocCommands } from './doc';
 import { briefIcon, priorityLabel, statusBadge } from './helpers';
 import { registerLifecycleCommands } from './lifecycle';
 import { registerReviewCommands } from './review';
-import { buildScheduleInput, formatSchedule } from './schedule';
+import { buildScheduleInput, formatSchedule, planScheduleEdit } from './schedule';
 import { registerTopicCommands } from './topic';
 import { resolveAppUrl, resolveAppUrlBuilder, taskPath } from './url';
 
@@ -566,11 +566,21 @@ export function registerTaskCommand(program: Command) {
         if (assigneeUserId) input.assigneeUserId = assigneeUserId;
         if (options.parent) input.parentTaskId = options.parent;
         if (options.priority) input.priority = Number.parseInt(options.priority, 10);
-        if (schedule.automationMode) input.automationMode = schedule.automationMode;
+        // The pattern is stored now, but the task only becomes dispatchable in the
+        // update below, which sets the mode and arms it (`scheduled`) in one transaction.
+        // Creating it in schedule mode directly would let the dispatcher fire an
+        // occurrence that passed just before (its grace window) with nothing armed.
         if (schedule.schedulePattern) input.schedulePattern = schedule.schedulePattern;
         if (schedule.scheduleTimezone) input.scheduleTimezone = schedule.scheduleTimezone;
 
-        const result = await client.task.create.mutate(input);
+        let result = await client.task.create.mutate(input);
+        if (schedule.automationMode === 'schedule') {
+          result = await client.task.update.mutate({
+            automationMode: 'schedule',
+            id: result.data.id,
+            status: 'scheduled',
+          });
+        }
         const url = buildUrl(taskPath(result.data.identifier, result.data.name));
 
         if (options.json !== undefined) {
@@ -653,52 +663,55 @@ export function registerTaskCommand(program: Command) {
           input.heartbeatTimeout = val === 0 ? null : val;
         }
         Object.assign(input, schedule);
+
+        const valid = [
+          'backlog',
+          'running',
+          'scheduled',
+          'paused',
+          'completed',
+          'failed',
+          'canceled',
+        ];
+        if (options.status && !valid.includes(options.status)) {
+          log.error(`Invalid status "${options.status}". Must be one of: ${valid.join(', ')}`);
+          return;
+        }
+
+        // Schedule edits and `--status scheduled` depend on the task's current state:
+        // arming a new schedule, sending a scheduled task back to the backlog, or
+        // refusing to park a task that has nothing to run on.
+        let status = options.status;
+        if (schedule.automationMode !== undefined || options.status === 'scheduled') {
+          const current = (await client.task.find.query({ id })).data;
+          const plan = planScheduleEdit(current, schedule, options.status);
+          if ('error' in plan) {
+            log.error(plan.error);
+            return;
+          }
+          status = plan.status;
+        }
+
         const hasFieldEdits = Object.keys(input).length > 1;
 
         // Status-only edits use the lifecycle API. Combined edits go through
-        // task.update so the server can apply the fields and lifecycle change
-        // atomically.
-        if (options.status) {
-          const valid = [
-            'backlog',
-            'running',
-            'scheduled',
-            'paused',
-            'completed',
-            'failed',
-            'canceled',
-          ];
-          if (!valid.includes(options.status)) {
-            log.error(`Invalid status "${options.status}". Must be one of: ${valid.join(', ')}`);
-            return;
-          }
-          if (!hasFieldEdits) {
-            const result = await client.task.updateStatus.mutate({ id, status: options.status });
-            log.info(`${pc.bold(result.data.identifier)} → ${options.status}`);
-            return;
-          }
-
-          input.status = options.status;
+        // task.update so the server applies the fields and the lifecycle change in one
+        // transaction (for a new schedule that also stamps when it was armed).
+        if (status && !hasFieldEdits) {
+          const result = await client.task.updateStatus.mutate({ id, status });
+          log.info(`${pc.bold(result.data.identifier)} → ${status}`);
+          return;
         }
+        if (status) input.status = status;
 
-        let result = await client.task.update.mutate(input as any);
-
-        // Like "Cancel schedule" in the app: a task parked in `scheduled` goes back to
-        // the backlog once automation is off, unless this edit set a status itself.
-        if (
-          schedule.automationMode === null &&
-          !options.status &&
-          result.data.status === 'scheduled'
-        ) {
-          result = await client.task.updateStatus.mutate({ id, status: 'backlog' });
-        }
+        const result = await client.task.update.mutate(input as any);
 
         if (options.json !== undefined) {
           outputJson(result.data, typeof options.json === 'string' ? options.json : undefined);
           return;
         }
 
-        const statusSuffix = options.status ? ` → ${options.status}` : '';
+        const statusSuffix = status ? ` → ${status}` : '';
         log.info(`Task updated: ${pc.bold(result.data.identifier)}${statusSuffix}`);
       },
     );
