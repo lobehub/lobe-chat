@@ -182,8 +182,9 @@ export const getServerGlobalConfig = async () => {
     // Expose Agent Gateway URL to client (used by hetero agents; also required for queue mode)
     ...(appEnv.AGENT_GATEWAY_URL ? { agentGatewayUrl: appEnv.AGENT_GATEWAY_URL } : undefined),
     agentGatewayProtocol: resolveAgentGatewayProtocol(),
-    // Whether the server can relay an LLM call to a tab (gateway + Redis): only
-    // then does the browser drop its own provider fallback for the one-shot relay.
+    // Whether the server can relay an LLM call to a tab (gateway + Redis). The
+    // browser has no provider fallback of its own: without the relay the server
+    // calls a device-only provider itself.
     llmRelayAvailable: isLlmRelayDeploymentReady(),
 
     image: cleanObject({
