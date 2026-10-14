@@ -674,6 +674,7 @@ const googleChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'audioInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'videoInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
