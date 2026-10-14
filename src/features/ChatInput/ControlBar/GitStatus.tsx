@@ -154,7 +154,26 @@ const GitStatus = memo<GitStatusProps>(
       (s) => !!deviceSelectors.getDeviceById(deviceId)(s)?.online,
     );
     const probeReachedDirectory = !deviceId || deviceOnline;
-    const isStale = !branch && probeSettled && probeReachedDirectory && !!fallbackGit?.branch;
+    const probeFoundNothing = !branch && probeSettled && probeReachedDirectory;
+    // Worktrees picked from the bar were persisted without a branch, so the
+    // recorded worktree is all such a snapshot has. An empty probe alone can't
+    // condemn it: a remote read that fails in transit on a device still marked
+    // online comes back just as empty. Ask the source repo instead — the worktree
+    // is gone only when the source answers (a real listing always includes the
+    // source itself; a failed RPC is `[]`) and no longer lists it as live.
+    const recordedWorktree =
+      !fallbackGit?.branch && sourcePath && sourcePath !== path
+        ? fallbackGit?.activeWorktree
+        : undefined;
+    const { data: sourceWorktrees } = useFetchGitWorktrees(
+      deviceId,
+      probeFoundNothing && recordedWorktree ? sourcePath : undefined,
+    );
+    const recordedWorktreeGone =
+      !!sourceWorktrees?.length &&
+      !sourceWorktrees.some((worktree) => worktree.path === path && !worktree.prunable);
+    const isStale =
+      probeFoundNothing && (!!fallbackGit?.branch || (!!recordedWorktree && recordedWorktreeGone));
     const { data: prData, mutate: mutatePR } = useFetchGitLinkedPR(
       deviceId,
       path,
