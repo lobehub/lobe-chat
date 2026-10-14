@@ -129,12 +129,14 @@ describe('Generation Actions', () => {
         type: 'continue',
       });
 
-      // Should branch a server-side run from the last child, with an empty prompt
+      // Should branch a server-side run from the last child, with an empty prompt,
+      // and hand the wrapper op to the gateway so a Stop during startup aborts it.
       expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
         expect.objectContaining({
           context,
           message: '',
           parentMessageId: 'child-2', // last child's id
+          parentOperationId: 'test-op-id',
         }),
       );
     });

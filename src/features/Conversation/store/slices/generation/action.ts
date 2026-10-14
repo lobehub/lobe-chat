@@ -689,6 +689,8 @@ export const generationSlice: StateCreator<
       // triggers `resume: true` on the router, so the server skips
       // user-message creation and continues from the existing chain. Empty
       // prompt is intentional and matches the approve/reject resume path.
+      // Forward the wrapper op (as regenerate does) so a Stop during startup
+      // aborts the request and the wrapper is handed off once the run starts.
       await chatStore.executeGatewayAgent({
         context,
         message: '',
@@ -697,6 +699,7 @@ export const generationSlice: StateCreator<
             hooks.onContinueComplete?.(displayMessageId),
           ),
         parentMessageId: dbMessageId,
+        parentOperationId: operationId,
       });
       return true;
     } catch (error) {
