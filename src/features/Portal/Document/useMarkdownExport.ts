@@ -35,7 +35,9 @@ export const useMarkdownExport = (documentId: string | undefined) => {
 
   return async () => {
     const content = storeContent ?? documentMeta.content ?? '';
-    const fileName = `${documentMeta.title || documentMeta.filename || 'Untitled'}.md`;
+    const baseName = documentMeta.title || documentMeta.filename || 'Untitled';
+    // Agent-written titles often carry the extension already (`notes.md`).
+    const fileName = /\.md$/i.test(baseName) ? baseName : `${baseName}.md`;
     try {
       if (isDesktop) {
         const { desktopExportService } = await import('@/services/electron/desktopExportService');

@@ -64,4 +64,16 @@ describe('useMarkdownExport', () => {
     expect(mocks.toastSuccess).toHaveBeenCalledOnce();
     vi.unstubAllGlobals();
   });
+
+  it('does not double the extension of a title that already ends in .md', async () => {
+    mocks.documentMeta = { content: 'saved', filename: 'notes.md', title: 'Week 10 notes.md' };
+    vi.stubGlobal('URL', { createObjectURL: vi.fn(() => 'blob:doc'), revokeObjectURL: vi.fn() });
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+
+    const { result } = renderHook(() => useMarkdownExport('doc_1'));
+    await act(() => result.current!());
+
+    expect((click.mock.contexts.at(-1) as HTMLAnchorElement).download).toBe('Week 10 notes.md');
+    vi.unstubAllGlobals();
+  });
 });
