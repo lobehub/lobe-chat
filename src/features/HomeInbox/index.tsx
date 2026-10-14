@@ -84,9 +84,8 @@ interface InboxSection {
  * - **Goals** — the standing exception to "while you were away": goals run for
  *   days, so the ones still open (waiting on you, or working) are listed here
  *   rather than left to the agent page nobody visits mid-flight.
- * - **Needs you** — briefs blocking an agent (decide / fix). Errors sink to the
- *   bottom: a stuck decision blocks work right now, a failed run has already
- *   stopped.
+ * - **Needs you** — decision briefs blocking an agent. Run failures are not
+ *   decisions; they go to the notification center instead.
  * - **Unread** — runs that finished while you were away, each showing the agent's
  *   last reply so the answer is right there.
  * - **Running** — collapsed to one line, showing who is working; a healthy run

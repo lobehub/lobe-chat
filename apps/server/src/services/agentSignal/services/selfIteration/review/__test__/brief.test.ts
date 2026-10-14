@@ -576,9 +576,10 @@ describe('briefSelfReviewService', () => {
 
   /**
    * @example
-   * Failed nightly runs produce an error brief when there is a user-actionable failure.
+   * Failed nightly runs stay silent: a run failure is not something the user
+   * can decide on, so it must not land in "Needs you".
    */
-  it('projects failed nightly outcomes to error briefs', () => {
+  it('does not project failed nightly outcomes to error briefs', () => {
     const service = createBriefSelfReviewService();
 
     const brief = service.projectNightlyReviewBrief({
@@ -600,17 +601,7 @@ describe('briefSelfReviewService', () => {
       userId: 'user-1',
     });
 
-    expect(brief).toMatchObject({
-      priority: 'normal',
-      type: 'error',
-    });
-    expect(brief?.metadata).toMatchObject({
-      agentSignal: {
-        nightlySelfReview: {
-          outcome: 'error',
-        },
-      },
-    });
+    expect(brief).toBeUndefined();
   });
 
   /**

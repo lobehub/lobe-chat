@@ -992,6 +992,7 @@ export default {
   'notification.category.workspace.title': 'Workspace',
   'notification.item.agent_cron_job_completed': 'Scheduled task completed',
   'notification.item.agent_cron_job_failed': 'Scheduled task failed',
+  'notification.item.agent_task_run_failed': 'Task failed',
   'notification.item.agent_run_completed': 'Agent task completed',
   'notification.item.agent_transfer_result': 'Transfer request result',
   'notification.item.checkout_abandoned': 'Unfinished checkout reminders',

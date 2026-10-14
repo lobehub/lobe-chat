@@ -1,18 +1,9 @@
-import { NEWS_BRIEF_TYPES } from '@lobechat/types';
+import { HOME_FEED_EXCLUDED_BRIEF_TYPES, NEWS_BRIEF_TYPES } from '@lobechat/types';
 
 import { type BriefItem } from '@/features/DailyBrief/types';
 
-/**
- * Within "Needs you", failures sink to the bottom: a stuck decision blocks the
- * agent right now, while a failed run has already stopped and can wait.
- */
-const NEEDS_YOU_ORDER: Record<string, number> = {
-  decision: 0,
-  error: 9,
-};
-
 export interface SplitBriefs {
-  /** Briefs the user must act on — grouped as "Needs you", errors last. */
+  /** Briefs the user must decide on — grouped as "Needs you". */
   needsYou: BriefItem[];
   /** `insight` + `result` briefs: nothing to decide, just worth a glance. */
   news: BriefItem[];
@@ -28,19 +19,24 @@ export interface SplitBriefs {
 const isNewsBrief = (brief: BriefItem): boolean => NEWS_BRIEF_TYPES.includes(brief.type);
 
 /**
- * Splits the unresolved brief feed by whether the user has to *do* something.
- * `decision` / `error` block an agent until answered; `insight` and `result`
- * are pure knowledge and belong in a scannable list, not in a to-do pile.
+ * Splits the unresolved brief feed by whether the user has to *decide*
+ * something. `decision` briefs block an agent until answered; `insight` and
+ * `result` are pure knowledge and belong in a scannable list, not in a to-do
+ * pile. Run failures are not decisions — they live in the notification center,
+ * so legacy `error` briefs are dropped here too (the server already filters
+ * them; this keeps stale caches from showing them).
  *
- * The server already sorts by priority then recency, so we only re-order within
- * "Needs you" — a stable sort keeps that ordering inside each rank.
+ * The server already sorts by priority then recency; the filter keeps that order.
  */
 export const splitBriefs = (briefs: BriefItem[]): SplitBriefs => ({
-  needsYou: briefs
-    // A successful optimistic resolve stamps the row before the unresolved-list
-    // SWR cache revalidates. Hide it immediately so "Ignore" actually closes the
-    // card instead of leaving a resolved tombstone in the queue until remount.
-    .filter((brief) => !brief.resolvedAt && !isNewsBrief(brief))
-    .sort((a, b) => (NEEDS_YOU_ORDER[a.type] ?? 5) - (NEEDS_YOU_ORDER[b.type] ?? 5)),
+  needsYou: briefs.filter(
+    (brief) =>
+      // A successful optimistic resolve stamps the row before the unresolved-list
+      // SWR cache revalidates. Hide it immediately so "Ignore" actually closes the
+      // card instead of leaving a resolved tombstone in the queue until remount.
+      !brief.resolvedAt &&
+      !isNewsBrief(brief) &&
+      !HOME_FEED_EXCLUDED_BRIEF_TYPES.includes(brief.type),
+  ),
   news: briefs.filter(isNewsBrief),
 });
