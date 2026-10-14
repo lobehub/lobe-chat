@@ -1,13 +1,9 @@
-/**
- * @vitest-environment happy-dom
- */
-import { fireEvent, render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getPendingTopicRepos, setPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 
-import CloudRepoSwitcher from '../CloudRepoSwitcher';
+import { useTopicRepoSelection } from './useTopicRepoSelection';
 
 const REPO = 'https://github.com/lobehub/lobehub';
 
@@ -19,41 +15,9 @@ const state = vi.hoisted(() => ({
   updateTopicMetadata: vi.fn(),
 }));
 
-vi.mock('@lobehub/ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  // Render the menu inline so its rows are clickable without opening it.
-  Popover: ({ children, content }: { children: ReactNode; content: ReactNode }) => (
-    <>
-      {children}
-      {content}
-    </>
-  ),
-}));
-
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
-}));
-
-vi.mock('@/hooks/usePermission', () => ({
-  usePermission: () => ({ allowed: true }),
-}));
-
-vi.mock('../../store', () => ({
+vi.mock('../store', () => ({
   useChatInputStore: (selector: (s: object) => unknown) =>
     selector({ topicId: state.composerTopicId }),
-}));
-
-vi.mock('@/store/agent', () => ({
-  useAgentStore: (selector: (s: object) => unknown) =>
-    selector({
-      agentMap: {
-        'agent-1': {
-          agencyConfig: {
-            heterogeneousProvider: { env: { GITHUB_REPOS: JSON.stringify([REPO]) } },
-          },
-        },
-      },
-    }),
 }));
 
 // Store boundary: the real topic selectors run against this state.
@@ -81,12 +45,13 @@ beforeEach(() => {
   setPendingTopicRepos('agent-1', []);
 });
 
-describe('CloudRepoSwitcher', () => {
-  it("toggles repos on the composer's own topic rather than the global active topic", () => {
+describe('useTopicRepoSelection', () => {
+  it("toggles repos on the composer's own topic rather than the global active topic", async () => {
     state.composerTopicId = 'pane-topic';
+    const { result } = renderHook(() => useTopicRepoSelection('agent-1', true));
 
-    render(<CloudRepoSwitcher agentId="agent-1" />);
-    fireEvent.click(screen.getByText(REPO));
+    expect(result.current.displayRepos).toEqual([]);
+    await act(() => result.current.toggleRepo(REPO));
 
     expect(state.updateTopicMetadata).toHaveBeenCalledWith('pane-topic', {
       repos: [REPO],
@@ -95,13 +60,23 @@ describe('CloudRepoSwitcher', () => {
     });
   });
 
-  it('buffers the selection when the composer conversation has no topic, even with an active topic', () => {
+  it('buffers the selection when the composer conversation has no topic, even with an active topic', async () => {
     state.composerTopicId = null;
+    const { result } = renderHook(() => useTopicRepoSelection('agent-1', true));
 
-    render(<CloudRepoSwitcher agentId="agent-1" />);
-    fireEvent.click(screen.getByText(REPO));
+    await act(() => result.current.toggleRepo(REPO));
 
     expect(state.updateTopicMetadata).not.toHaveBeenCalled();
     expect(getPendingTopicRepos('agent-1')).toEqual([REPO]);
+    expect(result.current.displayRepos).toEqual([REPO]);
+  });
+
+  it('ignores toggles without edit permission', async () => {
+    state.composerTopicId = 'pane-topic';
+    const { result } = renderHook(() => useTopicRepoSelection('agent-1', false));
+
+    await act(() => result.current.toggleRepo(REPO));
+
+    expect(state.updateTopicMetadata).not.toHaveBeenCalled();
   });
 });

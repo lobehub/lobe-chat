@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
 
-import { useSandboxMode } from '../useSandboxMode';
+import { useSandboxMode } from './useSandboxMode';
 
 interface TopicSandbox {
   sandboxInstanceId?: string;
