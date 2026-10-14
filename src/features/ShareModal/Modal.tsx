@@ -57,23 +57,27 @@ const ShareModalContent = memo(() => {
   const tabItems = useMemo(
     () => [
       {
-        icon: <Icon icon={ImageIcon} size={14} />,
+        icon: isMobile ? undefined : <Icon icon={ImageIcon} size={14} />,
         key: ShareTab.Screenshot,
         label: t('shareModal.format.image'),
       },
       {
-        icon: <Icon icon={FileTextIcon} size={14} />,
+        icon: isMobile ? undefined : <Icon icon={FileTextIcon} size={14} />,
         key: ShareTab.Text,
         label: t('shareModal.format.markdown'),
       },
       {
-        icon: <Icon icon={FileDownIcon} size={14} />,
+        icon: isMobile ? undefined : <Icon icon={FileDownIcon} size={14} />,
         key: ShareTab.PDF,
         label: t('shareModal.pdf'),
       },
-      { icon: <Icon icon={BracesIcon} size={14} />, key: ShareTab.JSON, label: 'JSON' },
+      {
+        icon: isMobile ? undefined : <Icon icon={BracesIcon} size={14} />,
+        key: ShareTab.JSON,
+        label: 'JSON',
+      },
     ],
-    [t],
+    [isMobile, t],
   );
 
   const loadingFallback = (

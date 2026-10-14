@@ -70,6 +70,12 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     ::-webkit-scrollbar {
       display: none;
     }
+
+    ${responsive.sm} {
+      flex-wrap: wrap;
+      padding-block: 8px;
+      white-space: normal;
+    }
   `,
   toolbarDivider: css`
     flex: none;
@@ -79,5 +85,9 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     margin-inline: 6px;
 
     background: ${cssVar.colorBorder};
+
+    ${responsive.sm} {
+      display: none;
+    }
   `,
 }));
