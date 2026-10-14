@@ -2738,21 +2738,27 @@ describe('GoalService', () => {
       expect(state.releaseApproval).toBeUndefined();
     });
 
-    it('opens a new probe round when the owner revises the recipe at the release gate', async () => {
+    it('hands a plan the owner sends back to the main Agent, never applying it alone', async () => {
       const { goalId, service } = await passedProbes();
       await service.tick(goalId);
-      const before = (await service.graph(goalId)).goal.config!.rolloutState!;
+      const before = (await service.graph(goalId)).goal.config!;
       const pending = await pendingRelease(service, goalId);
 
       await service.answerReleaseGate(pending!.nodeId, 'revise', '先补上 SSR 播种');
 
-      const after = await service.graph(goalId);
-      const next = after.goal.config!.rolloutState!;
-      expect(next.phase).toBe('probe');
-      expect(next.templateRevision).toBe(before.templateRevision + 1);
-      expect(next.assayNodeId).not.toBe(before.assayNodeId);
-      expect(after.goal.config!.rollout!.spec?.recipeOutline).toContain('先补上 SSR 播种');
-      expect(after.goal.config!.pausedBy).toBeUndefined();
+      let after = (await service.graph(goalId)).goal.config!;
+      expect(after.rolloutState).toMatchObject({
+        pendingRevision: { correction: '先补上 SSR 播种' },
+        phase: 'plan_revision',
+      });
+      // This goal has no main Agent to rewrite the plan: it waits, and says so,
+      // instead of pasting the correction under the plan.
+      const result = await service.tick(goalId);
+      after = (await service.graph(goalId)).goal.config!;
+      expect(result.outcome).toBe('waiting_human');
+      expect((await service.graph(goalId)).goal.status).toBe('paused');
+      expect(after.rolloutState!.templateRevision).toBe(before.rolloutState!.templateRevision);
+      expect(after.rollout!.spec?.recipeOutline).toBe(before.rollout!.spec?.recipeOutline);
     });
 
     /** The first wave approved and delivered, so the gate passes for the second. */

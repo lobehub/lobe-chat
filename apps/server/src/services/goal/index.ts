@@ -4502,7 +4502,8 @@ export class GoalService {
     );
     if (!decision)
       throw new TRPCError({ code: 'CONFLICT', message: 'This release was already decided' });
-    if (optionId === GOAL_BATCH_RELEASE_OPTION.revise && goal.config?.manager && goal.agentId)
+    // The plan is the main Agent's: a correction always goes to it to rewrite.
+    if (optionId === GOAL_BATCH_RELEASE_OPTION.revise)
       await this.sendRevisionToAgent(goal.id, gateNodeId, decision.id, resolution);
     else await this.decide(goal.id, decision.id, optionId, resolution, { fromReleaseGate: true });
     // The inbox asked the same release; it is answered now.
@@ -4575,42 +4576,44 @@ export class GoalService {
   };
 
   /**
-   * Drive a sent-back plan to its next probe round. The main Agent's rewrite,
-   * once submitted, becomes the new recipe; an Agent that declines (escalates),
-   * cannot take the turn, or never answers falls back to the correction as
-   * written — the owner's answer is never left hanging.
+   * Drive a sent-back plan to its next probe round. The plan is the main
+   * Agent's to write: its submitted rewrite becomes the new recipe. A turn that
+   * ended without one is handed over again; when no turn can be started (no
+   * main Agent, turn budget spent) the goal pauses and says so — the correction
+   * is never pasted under the plan in the Agent's place.
    */
   private routeRolloutRevision = async (graph: GoalGraphSnapshot): Promise<GoalTickResult> => {
     const goalId = graph.goal.id;
     const state = graph.goal.config!.rolloutState!;
     const pending = state.pendingRevision ?? { correction: '' };
-    const restart = async (outline?: string) => {
+    if (pending.revisedRecipe) {
       const restarted = await this.restartRolloutRound(goalId, {
         correction: pending.correction,
         optionId: GOAL_BATCH_RELEASE_OPTION.revise,
-        outline,
+        outline: pending.revisedRecipe,
       });
       return {
         goalId,
         message: restarted
-          ? `Opened probe round v${state.templateRevision + 1} on the ${outline ? 'revised' : 'corrected'} plan`
+          ? `Opened probe round v${state.templateRevision + 1} on the main Agent's revised plan`
           : 'The plan revision was already applied',
-        outcome: restarted ? ('advanced' as const) : ('no_progress' as const),
+        outcome: restarted ? 'advanced' : 'no_progress',
       };
-    };
-    if (pending.revisedRecipe) return restart(pending.revisedRecipe);
+    }
 
     const problem = {
       kind: 'rollout_revise' as const,
       reason: `The owner reviewed the experiments of plan v${state.templateRevision} and sent the plan back with this correction:\n${pending.correction}\nRewrite the plan so every remaining unit follows it, and answer revise_plan with the full revised plan.`,
     };
-    const answered = answeredProblem(graph.goal.config?.managerState);
-    if (answered?.key === problemKey(problem)) return restart();
     const takeover = await new GoalManagerService(this.db, this.userId, this.workspaceId).takeOver(
       graph,
       problem,
     );
-    return takeover ?? restart();
+    if (takeover) return takeover;
+    const message =
+      'The main Agent could not take the plan revision; resume the goal once it can, and the correction goes to it again';
+    await this.transitionStatus(graph.goal, 'paused', message);
+    return { goalId, message, outcome: 'waiting_human' };
   };
 
   /**

@@ -238,7 +238,7 @@ const admissionHint: Record<string, string> = {
     'this turn was handed a batch release; answer with release, or escalate without ask for the owner',
   release_unsolicited: 'release only answers a batch release handed to this turn',
   revise_turn_only:
-    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe), or escalate without ask',
+    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe)',
   revise_unsolicited: 'revise_plan only answers a plan the owner sent back to this turn',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',

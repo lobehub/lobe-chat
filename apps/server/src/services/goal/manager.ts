@@ -240,7 +240,7 @@ const PLAN_REJECTION = {
   },
   revise_turn_only: {
     message:
-      'This turn was handed a plan the owner sent back; answer it with revise_plan carrying the full revised recipe, or escalate (without ask)',
+      'This turn was handed a plan the owner sent back; answer it with revise_plan carrying the full revised recipe',
     trpc: 'BAD_REQUEST',
   },
   revise_unsolicited: {
@@ -1575,17 +1575,12 @@ export class GoalManagerService {
       (plan.action !== 'escalate' || plan.ask !== undefined)
     )
       return rejectPlan('release_turn_only', op?.status);
-    // A plan the owner sent back has two answers too: the rewritten recipe, or a
-    // plain escalation that falls back to applying the correction as written.
+    // A plan the owner sent back has one answer: the Agent rewrites it. The
+    // plan is the Agent's, so nobody else applies the correction in its place.
     const reviseTurn = state.problemKind === 'rollout_revise';
     if (plan?.action === 'revise_plan' && !reviseTurn)
       return rejectPlan('revise_unsolicited', op?.status);
-    if (
-      plan &&
-      reviseTurn &&
-      plan.action !== 'revise_plan' &&
-      (plan.action !== 'escalate' || plan.ask !== undefined)
-    )
+    if (plan && reviseTurn && plan.action !== 'revise_plan')
       return rejectPlan('revise_turn_only', op?.status);
     // A takeover of the terminal acceptance can only be answered with `escalate`.
     // The acceptance task is matched by TITLE regardless of status, so a corrective

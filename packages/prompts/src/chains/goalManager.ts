@@ -18,7 +18,7 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * first wave arrives as a `rollout_release` takeover, answered with `release`
  * or an `escalate` that asks the owner to approve it.
  * v11 hands a plan the owner sent back to the agent as a `rollout_revise`
- * takeover, answered with `revise_plan` (the rewritten recipe) or `escalate`.
+ * takeover, answered only with `revise_plan` (the rewritten recipe).
  */
 export const GOAL_MANAGER_PROMPT_VERSION = 'v11';
 
@@ -164,7 +164,7 @@ export const GOAL_BATCH_RELEASE_RULE =
 
 /** A takeover whose problem is a plan the owner sent back: rewrite it, or fall back. */
 export const GOAL_BATCH_REVISE_RULE =
-  'Plan revision: the owner reviewed the batch\'s experiments and sent the plan back with the correction in <problem>. Read the current plan skill and the experiment results with lh goal show, then rewrite the whole plan so every remaining unit follows the correction — fold it into the steps it changes instead of appending a note. Answer {"action":"revise_plan","reason":"what changed and why it answers the correction","recipe":"the full revised plan, in the language of the Goal requirement"}; the next round of experiments runs on it. If the correction cannot be applied, escalate with the reason (no "ask"), and the correction is appended to the plan as written. No other action is accepted on this turn.';
+  'Plan revision: the owner reviewed the batch\'s experiments and sent the plan back with the correction in <problem>. Read the current plan skill and the experiment results with lh goal show, then rewrite the whole plan so every remaining unit follows the correction — fold it into the steps it changes instead of appending a note. Answer {"action":"revise_plan","reason":"what changed and why it answers the correction","recipe":"the full revised plan, in the language of the Goal requirement"}; the next round of experiments runs on it. Where the correction conflicts with the plan, resolve it in the rewrite and say how in reason. No other action is accepted on this turn.';
 
 /**
  * When to declare a batch, and how. The judgement is the planning agent's; the

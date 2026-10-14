@@ -2118,24 +2118,30 @@ describe('a batch the main Agent declares', () => {
     expect(after.rollout!.spec!.recipeOutline).toBe(recipe);
   });
 
-  it('applies the correction as written when the main Agent declines to rewrite', async () => {
+  it('takes only a rewrite on a revise turn, and hands the revision over again when none came', async () => {
     const { id } = await probesPassed();
     const pending = await pendingRelease(id);
     await service().answerReleaseGate(pending!.nodeId, 'revise', '冷启动验证必须逐帧取证');
     await service().tick(id);
-    const { op, state } = await reviseTurn(id);
+    const first = await reviseTurn(id);
 
-    await manager().submit(id, state.token, op.id, {
-      action: 'escalate',
-      reason: 'The correction contradicts step 2',
-    });
-    await ops().recordCompletion(op.id, { status: 'done' });
+    // Nobody applies the correction in the Agent's place.
+    await expect(
+      manager().submit(id, first.state.token, first.op.id, {
+        action: 'escalate',
+        reason: 'The correction contradicts step 2',
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+
+    // The turn ends without a rewrite: the revision is handed over again.
+    await ops().recordCompletion(first.op.id, { status: 'done' });
     await service().tick(id);
     await service().tick(id);
-
+    const second = await reviseTurn(id);
+    expect(second.state.token).not.toBe(first.state.token);
     const after = (await model().findById(id))!.config!;
-    expect(after.rolloutState).toMatchObject({ phase: 'probe', templateRevision: 2 });
-    expect(after.rollout!.spec!.recipeOutline).toContain('冷启动验证必须逐帧取证');
+    expect(after.rolloutState!.phase).toBe('plan_revision');
+    expect(after.rollout!.spec!.recipeOutline).not.toContain('冷启动验证必须逐帧取证');
   });
 
   it('refuses revise_plan on a turn no plan was sent back to', async () => {
