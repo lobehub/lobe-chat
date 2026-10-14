@@ -4,6 +4,7 @@ import type {
   UserMessageContentPart,
 } from '@lobechat/model-runtime';
 import { isRecord } from '@lobechat/utils/object';
+import type OpenAI from 'openai';
 
 const textFromParts = (content: unknown, transformFirst = (text: string) => text): string => {
   if (typeof content === 'string') return transformFirst(content);
@@ -208,17 +209,36 @@ export const normalizeResponsesRequest = (request: Record<string, unknown>, mode
   } else if (Array.isArray(request.input)) {
     for (const item of request.input) {
       if (!isRecord(item)) continue;
-      if (item.type === 'reasoning' && typeof item.id === 'string' && Array.isArray(item.summary)) {
+      if (item.type === 'additional_tools' && Array.isArray(item.tools)) {
+        messages.push({
+          content: '',
+          role: 'system',
+          responsesTools: item.tools as OpenAI.Responses.Tool[],
+        });
+      } else if (
+        item.type === 'reasoning' &&
+        typeof item.id === 'string' &&
+        Array.isArray(item.summary)
+      ) {
         pendingReasoningItems?.push(
           item as unknown as NonNullable<
             NonNullable<OpenAIChatMessage['reasoning']>['responseItems']
           >[number],
         );
-      } else if (item.type === 'function_call' && typeof item.call_id === 'string') {
+      } else if (
+        ['function_call', 'custom_tool_call'].includes(String(item.type)) &&
+        typeof item.call_id === 'string'
+      ) {
         const toolCall = {
-          function: { arguments: String(item.arguments || ''), name: String(item.name || '') },
+          function: {
+            arguments: String(
+              (item.type === 'custom_tool_call' ? item.input : item.arguments) ?? '',
+            ),
+            name: String(item.name || ''),
+          },
           id: item.call_id,
-          type: 'function' as const,
+          ...(typeof item.namespace === 'string' ? { namespace: item.namespace } : {}),
+          type: item.type === 'custom_tool_call' ? 'custom' : 'function',
         };
         const previousMessage = messages.at(-1);
 
@@ -239,9 +259,18 @@ export const normalizeResponsesRequest = (request: Record<string, unknown>, mode
             tool_calls: [toolCall],
           });
         }
-      } else if (item.type === 'function_call_output' && typeof item.call_id === 'string') {
+      } else if (
+        ['function_call_output', 'custom_tool_call_output'].includes(String(item.type)) &&
+        typeof item.call_id === 'string'
+      ) {
         messages.push({
-          content: String(item.output || ''),
+          content: contentWithImages(item.output),
+          ...(Array.isArray(item.output)
+            ? {
+                responsesOutput:
+                  item.output as OpenAI.Responses.ResponseCustomToolCallOutput['output'],
+              }
+            : {}),
           role: 'tool',
           tool_call_id: item.call_id,
         });
@@ -282,6 +311,13 @@ export const normalizeResponsesRequest = (request: Record<string, unknown>, mode
     messages,
     model,
     reasoning: isRecord(request.reasoning) ? request.reasoning : undefined,
+    responsesTools:
+      Array.isArray(request.tools) &&
+      request.tools.some(
+        (tool) => isRecord(tool) && ['custom', 'namespace'].includes(String(tool.type)),
+      )
+        ? (request.tools as OpenAI.Responses.Tool[])
+        : undefined,
     stream: true,
     temperature: typeof request.temperature === 'number' ? request.temperature : undefined,
     tools,

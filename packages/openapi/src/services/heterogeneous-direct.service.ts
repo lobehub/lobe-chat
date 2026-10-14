@@ -4,7 +4,9 @@ import {
   getErrorCodeSpec,
   refineErrorCode,
 } from '@lobechat/model-runtime/errors';
+import { parseClaudeModelId } from '@lobechat/model-runtime/providers/anthropic/modelId';
 import { isResponsesAPIModel } from '@lobechat/model-runtime/providers/openai/modelId';
+import { normalizeAnthropicToolSchema } from '@lobechat/model-runtime/utils/anthropicToolSchema';
 import type { CodexReasoningEffort } from '@lobechat/types';
 import {
   AgentRuntimeErrorType,
@@ -49,6 +51,17 @@ export const invokeServerDefaultModel = async (params: {
     workspaceId: params.workspaceId,
   });
   const normalizedPayload = { ...params.payload };
+  // OpenAI-compatible routers can also select Claude. Normalize before routing,
+  // using the logical model rather than an opaque provider deployment alias.
+  if (parseClaudeModelId(resolvedModel.model) || parseClaudeModelId(params.model)) {
+    normalizedPayload.tools = normalizedPayload.tools?.map((tool) => ({
+      ...tool,
+      function: {
+        ...tool.function,
+        parameters: normalizeAnthropicToolSchema(tool.function.parameters),
+      },
+    }));
+  }
   // Kimi can use its context window as the output budget for an unknown model.
   // Bound that budget by the selected deployment model, including for older clients.
   if (params.agentType === 'kimi-code' && maxOutput !== undefined && maxOutput > 0) {

@@ -25,7 +25,15 @@ export const encodeResponsesStream = (source: ReadableStream<Uint8Array>, model:
   let usage: ResponseUsage | undefined;
   const toolItems = new Map<
     number,
-    { arguments: string; callId: string; id: string; name: string; outputIndex: number }
+    {
+      arguments: string;
+      callId: string;
+      id: string;
+      name: string;
+      namespace?: string;
+      outputIndex: number;
+      type: 'custom' | 'function';
+    }
   >();
   const response = {
     created_at: Math.floor(Date.now() / 1000),
@@ -149,20 +157,25 @@ export const encodeResponsesStream = (source: ReadableStream<Uint8Array>, model:
     }
     for (const tool of toolItems.values()) {
       const item = {
-        arguments: tool.arguments,
+        ...(tool.type === 'custom' ? { input: tool.arguments } : { arguments: tool.arguments }),
+        ...(tool.namespace ? { namespace: tool.namespace } : {}),
         call_id: tool.callId,
         id: tool.id,
         name: tool.name,
         status: 'completed',
-        type: 'function_call',
+        type: tool.type === 'custom' ? 'custom_tool_call' : 'function_call',
       };
       outputItems[tool.outputIndex] = item;
+      const doneType =
+        tool.type === 'custom'
+          ? 'response.custom_tool_call_input.done'
+          : 'response.function_call_arguments.done';
       controller.enqueue(
-        responseSse('response.function_call_arguments.done', {
-          arguments: tool.arguments,
+        responseSse(doneType, {
+          ...(tool.type === 'custom' ? { input: tool.arguments } : { arguments: tool.arguments }),
           item_id: tool.id,
           output_index: tool.outputIndex,
-          type: 'response.function_call_arguments.done',
+          type: doneType,
         }),
       );
       controller.enqueue(
@@ -290,18 +303,21 @@ export const encodeResponsesStream = (source: ReadableStream<Uint8Array>, model:
                   callId: String(chunk.id || `call_${randomUUID()}`),
                   id: `fc_${randomUUID()}`,
                   name: String(fn.name || ''),
+                  namespace: typeof chunk.namespace === 'string' ? chunk.namespace : undefined,
                   outputIndex: nextOutputIndex++,
+                  type: chunk.type === 'custom' ? 'custom' : 'function',
                 };
                 toolItems.set(chunk.index, tool);
                 controller.enqueue(
                   responseSse('response.output_item.added', {
                     item: {
-                      arguments: '',
+                      ...(tool.type === 'custom' ? { input: '' } : { arguments: '' }),
+                      ...(tool.namespace ? { namespace: tool.namespace } : {}),
                       call_id: tool.callId,
                       id: tool.id,
                       name: tool.name,
                       status: 'in_progress',
-                      type: 'function_call',
+                      type: tool.type === 'custom' ? 'custom_tool_call' : 'function_call',
                     },
                     output_index: tool.outputIndex,
                     type: 'response.output_item.added',
@@ -310,12 +326,16 @@ export const encodeResponsesStream = (source: ReadableStream<Uint8Array>, model:
               }
               if (typeof fn.arguments === 'string') {
                 tool.arguments += fn.arguments;
+                const deltaType =
+                  tool.type === 'custom'
+                    ? 'response.custom_tool_call_input.delta'
+                    : 'response.function_call_arguments.delta';
                 controller.enqueue(
-                  responseSse('response.function_call_arguments.delta', {
+                  responseSse(deltaType, {
                     delta: fn.arguments,
                     item_id: tool.id,
                     output_index: tool.outputIndex,
-                    type: 'response.function_call_arguments.delta',
+                    type: deltaType,
                   }),
                 );
               }
