@@ -34,6 +34,7 @@ import {
   scheduleTimezoneSchema,
 } from '@/server/services/task/scheduleValidation';
 import { TaskLifecycleService } from '@/server/services/taskLifecycle';
+import { failStuckTasks } from '@/server/services/taskLifecycle/failStuckTasks';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 import { AcceptanceService } from '@/server/services/verify/acceptanceService';
 import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptance';
@@ -890,34 +891,10 @@ export const taskRouter = router({
 
   watchdog: taskProcedureWrite.mutation(async ({ ctx }) => {
     try {
-      const stuckTasks = await TaskModel.findStuckTasks(ctx.serverDB);
-      const failed: string[] = [];
-
-      for (const task of stuckTasks) {
-        const wsId = task.workspaceId ?? undefined;
-        const model = new TaskModel(ctx.serverDB, task.createdByUserId, wsId);
-        await model.updateStatus(task.id, 'failed', {
-          completedAt: new Date(),
-          error: 'Heartbeat timeout',
-        });
-
-        // Create error brief
-        const briefModel = new BriefModel(ctx.serverDB, task.createdByUserId, wsId);
-        await briefModel.create({
-          agentId: task.assigneeAgentId || undefined,
-          priority: 'urgent',
-          summary: `Task has been running without heartbeat update for more than ${task.heartbeatTimeout} seconds.`,
-          taskId: task.id,
-          title: `${task.identifier} heartbeat timeout`,
-          trigger: 'task',
-          type: 'error',
-        });
-
-        failed.push(task.identifier);
-      }
+      const { checked, failed } = await failStuckTasks(ctx.serverDB);
 
       return {
-        checked: stuckTasks.length,
+        checked,
         failed,
         message:
           failed.length > 0

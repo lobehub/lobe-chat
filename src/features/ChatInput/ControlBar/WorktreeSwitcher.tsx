@@ -501,7 +501,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
           return;
         }
 
-        await switchWorktree(worktree.path);
+        await switchWorktree(worktree.path, worktree.detached ? undefined : worktree.branch);
         setOpen(false);
       },
       [switchWorktree],
@@ -572,7 +572,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
 
         // Point the conversation at the freshly created worktree, then reconcile
         // the list so the new row (now `current`) appears.
-        await switchWorktree(result.worktreePath ?? worktreePath);
+        await switchWorktree(result.worktreePath ?? worktreePath, branch);
         await onWorktreesChange?.();
         return undefined;
       },

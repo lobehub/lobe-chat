@@ -525,30 +525,45 @@ export const discoverTools = async (
         )
       ).filter((d) => d.online);
 
-      // A workspace agent whose caller pinned this desktop's personal
-      // deviceId via `users.preference.agentDeviceOverrides` (
-      // the `local` code path in `useSelectExecutionTarget`) needs its
-      // personal device to be visible in this run's device pool — otherwise
-      // `resolveExecutionPlan` treats the bound device as offline and the
-      // run stays unrouted. The workspace pool never includes personal
-      // devices by design (`getScopedOnlineDevices` enforces the strict
-      // scope), so union the specific personal device in here. The device
-      // is dispatchable because the gateway routes it by
+      // A workspace run that targets one of the caller's PERSONAL devices
+      // needs that device visible in this run's pool — otherwise
+      // `resolveExecutionPlan` treats it as offline (`bound-device-offline`)
+      // and the run stays unrouted. The workspace pool never includes
+      // personal devices by design (`getScopedOnlineDevices` enforces the
+      // strict scope), so union the specific personal device in here. The
+      // device is dispatchable because the gateway routes it by
       // `(userId, deviceId)` — the caller owns it.
-      if (deps.workspaceId && agentConfig.agencyConfig?.boundDeviceId) {
-        const boundId = agentConfig.agencyConfig.boundDeviceId;
-        if (!devices.some((d) => d.deviceId === boundId)) {
-          const personalPool = await getScopedOnlineDevices(deps.db, deps.userId).catch(
-            () => [] as DeviceAttachment[],
+      //
+      // Candidates mirror the ids `resolveExecutionPlan` routes by:
+      // - `agencyConfig.boundDeviceId`: the per-user override written by the
+      //   `local` code path in `useSelectExecutionTarget`;
+      // - `requestedDeviceId`: the desktop's own id sent with a `local` run
+      //   (or the topic's pinned device, folded in by `turnSetup`). Without
+      //   it, an agent whose stored target is `local` but which has no
+      //   override is told the user's online desktop is offline. A `fixed`
+      //   selection policy ignores it, as the resolver does.
+      const isFixedSelection = agentConfig.agencyConfig?.executionTargetSelectionPolicy === 'fixed';
+      const personalCandidateIds = [
+        ...new Set(
+          [
+            agentConfig.agencyConfig?.boundDeviceId,
+            isFixedSelection ? undefined : requestedDeviceId,
+          ].filter((id): id is string => !!id && !devices.some((d) => d.deviceId === id)),
+        ),
+      ];
+      if (deps.workspaceId && personalCandidateIds.length > 0) {
+        const personalPool = await getScopedOnlineDevices(deps.db, deps.userId).catch(
+          () => [] as DeviceAttachment[],
+        );
+        const personalMatches = personalPool.filter(
+          (d) => d.online && personalCandidateIds.includes(d.deviceId),
+        );
+        if (personalMatches.length > 0) {
+          devices = [...devices, ...personalMatches];
+          log(
+            'execAgent: augmented device pool with caller personal device(s) %o',
+            personalMatches.map((d) => d.deviceId),
           );
-          const personalMatch = personalPool.find((d) => d.deviceId === boundId && d.online);
-          if (personalMatch) {
-            devices = [...devices, personalMatch];
-            log(
-              'execAgent: augmented device pool with caller personal device %s (per-user override)',
-              boundId,
-            );
-          }
         }
       }
       log('execAgent: found %d online device(s)', devices.length);

@@ -18,11 +18,16 @@ export const readRequiredEvidence = (
  * is the judge's call. Without this, a recording uploaded as `video` against a
  * `gif` requirement, or a CLI log uploaded as `text` against `transcript`,
  * failed every repair round on a label while the judge never saw the artifact.
- * `screenshot`, `dom_snapshot` and `audio` have no substitute.
+ * A GIF is a run of screenshots, and judges receive it as a frame sheet (see
+ * `renderGifFrameSheet`), so it also answers a `screenshot` requirement — a GIF
+ * uploaded as `screenshot` is stored as `gif`, which otherwise failed the gate
+ * on the very artifact it asked for. `dom_snapshot` and `audio` have no
+ * substitute.
  */
 const SATISFIED_BY: Partial<Record<VerifyEvidenceType, VerifyEvidenceType[]>> = {
   gif: ['video'],
   markdown: ['text', 'transcript'],
+  screenshot: ['gif'],
   text: ['markdown', 'transcript'],
   transcript: ['text', 'markdown'],
   video: ['gif'],

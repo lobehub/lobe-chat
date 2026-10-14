@@ -418,7 +418,8 @@ describe('WorktreeSwitcher', () => {
     expect(screen.getAllByLabelText('workingDirectory.removeWorktreeAction')).toHaveLength(1);
   });
 
-  it('commits the selected worktree path as the working directory', () => {
+  // The branch is the only label left once the worktree directory is deleted.
+  it('commits the selected worktree path and its branch as the working directory', () => {
     render(
       <WorktreeSwitcher
         isGithub
@@ -446,7 +447,7 @@ describe('WorktreeSwitcher', () => {
     fireEvent.click(screen.getByText('/repo-canary'));
 
     expect(commitMock).toHaveBeenCalledWith({
-      git: { activeWorktree: '/repo-canary' },
+      git: { activeWorktree: '/repo-canary', branch: 'canary' },
       path: '/repo',
       repoType: 'github',
     });

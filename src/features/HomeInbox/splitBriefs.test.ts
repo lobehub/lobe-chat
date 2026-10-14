@@ -8,7 +8,7 @@ const brief = (id: string, type: BriefItem['type']): BriefItem =>
   ({ id, summary: '', title: id, type }) as BriefItem;
 
 describe('splitBriefs', () => {
-  it('routes insight and result briefs to news, decision and error to needsYou', () => {
+  it('routes insight and result briefs to news and only decisions to needsYou', () => {
     const { needsYou, news } = splitBriefs([
       brief('a', 'decision'),
       brief('b', 'insight'),
@@ -16,7 +16,7 @@ describe('splitBriefs', () => {
       brief('d', 'error'),
     ]);
 
-    expect(needsYou.map((b) => b.id)).toEqual(['a', 'd']);
+    expect(needsYou.map((b) => b.id)).toEqual(['a']);
     expect(news.map((b) => b.id)).toEqual(['b', 'c']);
   });
 
@@ -39,10 +39,12 @@ describe('splitBriefs', () => {
     ]);
   });
 
-  it('sinks errors to the bottom of needsYou', () => {
-    const { needsYou } = splitBriefs([brief('err', 'error'), brief('dec', 'decision')]);
+  // Failures belong in the notification center, not in the decision queue.
+  it('keeps legacy error briefs out of needsYou and news', () => {
+    const { needsYou, news } = splitBriefs([brief('err', 'error'), brief('dec', 'decision')]);
 
-    expect(needsYou.map((b) => b.id)).toEqual(['dec', 'err']);
+    expect(needsYou.map((b) => b.id)).toEqual(['dec']);
+    expect(news).toEqual([]);
   });
 
   it('removes an optimistically resolved decision from needsYou immediately', () => {

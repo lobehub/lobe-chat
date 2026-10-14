@@ -812,6 +812,12 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     taskLines.push(
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
+    taskLines.push(
+      '  This round is verified on its own: evidence from earlier rounds does not carry over. Submit evidence to this run for every required criterion, not only the unresolved ones; re-upload an earlier artifact when it still shows the current behavior.',
+    );
+    taskLines.push(
+      '  Your final response is read as the deliverable. Describe the complete delivery as it now stands, not only what changed in this round — "no code changed this round" without that context reads as missing work.',
+    );
     const reviewFeedback = [
       goalLoop.rejectComment,
       goalLoop.automaticReviewFeedback &&

@@ -159,7 +159,7 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
       {expanded && (brief.summary || brief.artifacts || hasTopicChat) && (
         <Flexbox className={bare ? styles.bareBody : styles.body} gap={8}>
           {selfReview ? (
-            <SelfReviewBriefDetails details={selfReview.details} />
+            <SelfReviewBriefDetails content={selfReview.content} details={selfReview.details} />
           ) : (
             brief.summary && (
               <Suspense fallback={null}>

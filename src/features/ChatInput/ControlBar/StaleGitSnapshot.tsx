@@ -82,7 +82,7 @@ const StaleGitSnapshot = memo<StaleGitSnapshotProps>(
     const [resetting, setResetting] = useState(false);
     const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath: sourcePath ?? path });
 
-    const { branch, explanation, isWorktree, pullRequest, reset, worktreePath } =
+    const { explanation, isWorktree, label, pullRequest, reset, worktreePath } =
       resolveStaleSnapshot({ git, path, sourcePath });
 
     const handleOpenPr = useCallback(() => {
@@ -108,7 +108,7 @@ const StaleGitSnapshot = memo<StaleGitSnapshotProps>(
     const trigger = (
       <div className={gitChipStyles.staleTrigger}>
         <Icon icon={isWorktree ? GitForkIcon : GitBranchIcon} size={12} />
-        <span className={styles.triggerLabel}>{branch}</span>
+        <span className={styles.triggerLabel}>{label}</span>
       </div>
     );
 

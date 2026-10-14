@@ -47,7 +47,8 @@ describe('JinaImpl', () => {
 
     const result = await impl.query('test query');
 
-    expect(fetch).toHaveBeenCalledWith('https://s.jina.ai/', {
+    // url-join >= 5.1 drops the trailing '/' segment; fetch still requests the origin root
+    expect(fetch).toHaveBeenCalledWith('https://s.jina.ai', {
       body: JSON.stringify({ q: 'test query' }),
       headers: {
         'Accept': 'application/json',
@@ -87,7 +88,7 @@ describe('JinaImpl', () => {
     await impl.query('test query');
 
     expect(fetch).toHaveBeenCalledWith(
-      'https://s.jinaai.cn/',
+      'https://s.jinaai.cn',
       expect.objectContaining({
         method: 'POST',
       }),

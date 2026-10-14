@@ -184,7 +184,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
 
       expect(routers).toHaveLength(5);
       expect(routers[0].options.baseURL).toBe('');
-      expect(routers[4].options.baseURL).toBe('v1'); // urlJoin('', '/v1') returns 'v1'
+      expect(routers[4].options.baseURL).toBe('/v1'); // url-join >= 5.1 keeps the leading slash
     });
   });
 

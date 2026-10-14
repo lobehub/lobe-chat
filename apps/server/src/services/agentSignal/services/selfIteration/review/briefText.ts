@@ -55,7 +55,7 @@ export interface SelfReviewBriefTextInput {
    */
   details?: SelfReviewBriefDetails;
   /** Coarse outcome selected by the projection service. */
-  outcome: 'applied' | 'error' | 'ideas' | 'proposal';
+  outcome: 'applied' | 'ideas' | 'proposal';
   /** Locale-aware translator for the `home` namespace. Defaults to English resources. */
   t?: SelfReviewBriefTextTranslator;
 }
@@ -71,7 +71,7 @@ export interface SelfReviewBriefText {
   /** User-visible Daily Brief title. */
   title: string;
   /** Daily Brief display type. */
-  type: 'decision' | 'error' | 'insight';
+  type: 'decision' | 'insight';
 }
 
 const defaultTranslate: SelfReviewBriefTextTranslator = (key, options = {}) => {
@@ -153,21 +153,6 @@ export const createSelfReviewBriefText = (input: SelfReviewBriefTextInput): Self
       ),
       title: t('brief.agentSignal.selfReview.proposal.title'),
       type: 'decision',
-    };
-  }
-
-  if (input.outcome === 'error') {
-    const summary = t('brief.agentSignal.selfReview.error.summary');
-
-    return {
-      priority: 'normal',
-      summary: withDetails(
-        summary,
-        t('brief.agentSignal.selfReview.error.heading'),
-        input.actionSummaries.failed,
-      ),
-      title: t('brief.agentSignal.selfReview.error.title'),
-      type: 'error',
     };
   }
 

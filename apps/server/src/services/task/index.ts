@@ -400,19 +400,50 @@ export class TaskService {
     // seen here and wins; a run that records later finds the task gone and
     // stops its own execution. Compare-and-delete on the status as well, so a
     // run that moved the task on in the meantime is never deleted under.
+    //
+    // The tool contract ("dependencies/topics/comments cascade-delete") is
+    // honored here for topics themselves: `task_topics` rows go via FK
+    // cascade, but the underlying `topics` rows have no FK back to `tasks`
+    // and would otherwise survive as orphans that keep showing up in the
+    // sidebar. Collect their ids before the task row goes (the cascade wipes
+    // the links with it), then delete the topic rows in the same transaction.
+    // The kept operation's own topic is excluded — it must survive with its
+    // run (see the snapshot below).
     const handled = new Set(runningTopics.map((topic) => topic.operationId));
     const outcome = await this.db.transaction(async (tx) => {
       const taskModel = new TaskModel(tx, this.userId, this.workspaceId);
       if (!(await taskModel.lockForUpdate(task.id))) return 'gone' as const;
-      const nowRunning = await new TaskTopicModel(
-        tx,
-        this.userId,
-        this.workspaceId,
-      ).findRunningByTaskIds([task.id]);
+      const taskTopicModel = new TaskTopicModel(tx, this.userId, this.workspaceId);
+      const nowRunning = await taskTopicModel.findRunningByTaskIds([task.id]);
       if (nowRunning.some((topic) => !handled.has(topic.operationId))) return 'conflict' as const;
-      return (await taskModel.deleteIfStatus(task.id, task.status))
-        ? ('deleted' as const)
-        : ('conflict' as const);
+
+      // The row lock guarantees no run can record a topic between here and
+      // the status CAS below, so this snapshot is the complete topic set.
+      // `keepOperationId` spares the caller's own run: its topic must survive
+      // with the operation, or the messages ON DELETE CASCADE would pull the
+      // conversation out from under the still-running tool call.
+      const allTopics = await taskTopicModel.findByTaskId(task.id);
+      const topicIds = allTopics
+        .filter(
+          (topic) =>
+            !topic.topicId ||
+            !options.keepOperationId ||
+            topic.operationId !== options.keepOperationId,
+        )
+        .map((topic) => topic.topicId)
+        .filter((topicId): topicId is string => !!topicId);
+
+      if (!(await taskModel.deleteIfStatus(task.id, task.status))) return 'conflict' as const;
+
+      if (topicIds.length > 0) {
+        // trashScope variant: a linked topic already sitting in the recycle
+        // bin must go too, or restoring it later resurrects the sidebar
+        // orphan this cascade exists to eliminate.
+        await new TopicModel(tx, this.userId, this.workspaceId).batchDeleteIncludingTrashed(
+          topicIds,
+        );
+      }
+      return 'deleted' as const;
     });
     if (outcome === 'conflict') {
       throw new TRPCError({

@@ -39,6 +39,11 @@ export type IFeatureFlagsState = {
    * `GlobalServerConfig.agentGatewayProtocol === 2`.
    */
   enableGatewayMux: boolean | undefined;
+  /**
+   * LobeHub Mobile rollout gate for the multiplexed gateway socket and
+   * protocol-v2 payloads; independent from `enableGatewayMux`.
+   */
+  enableGatewayMuxMobile: boolean | undefined;
   enableKnowledgeBase: boolean | undefined;
   /**
    * Rollout gate for relaying LLM calls of device-only model providers to the
