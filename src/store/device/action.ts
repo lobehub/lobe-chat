@@ -77,11 +77,22 @@ export class DeviceActionImpl {
     );
 
     try {
-      await persistDevice(device, {
-        deviceId,
-        ...(setDefault ? { defaultCwd: trimmed } : {}),
-        workingDirs: updatedDirs,
-      });
+      if (device?.scope === 'workspace') {
+        // Members share this list: add the one entry server-side instead of
+        // replacing the list with this client's possibly stale snapshot.
+        await deviceService.addWorkspaceDeviceWorkingDir({
+          deviceId,
+          entry: { ...entry, path: trimmed },
+        });
+        if (setDefault)
+          await deviceService.updateWorkspaceDevice({ defaultCwd: trimmed, deviceId });
+      } else {
+        await deviceService.updateDevice({
+          deviceId,
+          ...(setDefault ? { defaultCwd: trimmed } : {}),
+          workingDirs: updatedDirs,
+        });
+      }
     } finally {
       // Re-fetch the truth (self-corrects a failed optimistic write).
       await revalidateDeviceLists();
@@ -178,7 +189,9 @@ export class DeviceActionImpl {
     );
 
     try {
-      await persistDevice(device, { deviceId, workingDirs: updated });
+      await (device.scope === 'workspace'
+        ? deviceService.removeWorkspaceDeviceWorkingDir({ deviceId, path })
+        : deviceService.updateDevice({ deviceId, workingDirs: updated }));
     } finally {
       await revalidateDeviceLists();
     }

@@ -40,13 +40,14 @@ import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceG
 import { loadDeviceBoundAgents } from './deviceBoundAgents';
 import { preserveWorkspaceCache } from './deviceWorkingDirs';
 import {
-  assertWorkspaceDeviceUpdatable,
+  assertWorkspaceDeviceEditable,
   assertWorkspaceDeviceVisible,
   assertWorkspaceRootApproved,
   canEditWorkspaceDevice,
   canOperateWorkspaceDevice,
   registerDeviceSkillRoots,
 } from './deviceWorkspaceGuard';
+import { workspaceDeviceWorkingDirProcedures } from './deviceWorkspaceWorkingDirs';
 
 // Derive the zod enum from the canonical config so new platforms are
 // automatically covered without touching this file.
@@ -283,6 +284,7 @@ const resolveRunUserIds = async (
 const RUNNING_SUMMARY_LIMIT = 500;
 
 export const deviceRouter = router({
+  ...workspaceDeviceWorkingDirProcedures,
   /**
    * Probe whether a specific agent platform (openclaw / hermes) is available
    * on the given device. Dispatches a `checkPlatformCapability` tool call to
@@ -2082,10 +2084,8 @@ export const deviceRouter = router({
     }),
 
   /**
-   * Rename / set working dirs of a WORKSPACE device. Scoped by `workspace_id`
-   * and gated by {@link assertWorkspaceDeviceUpdatable}: registration fields stay
-   * with the enroller or an owner; the recent-dir list follows the operate rule.
-   * Mirrors {@link deviceRouter.updateDevice} but for the workspace pool.
+   * Rename / replace the working dirs of a WORKSPACE device (enroller or owner only).
+   * Members edit one recent dir via `workspaceDeviceWorkingDirProcedures`.
    */
   updateWorkspaceDevice: wsWritableProcedure
     .use(serverDatabase)
@@ -2105,7 +2105,7 @@ export const deviceRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
       }
       const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
-      assertWorkspaceDeviceUpdatable(role, ctx.userId, row, value);
+      assertWorkspaceDeviceEditable(role, ctx.userId, row.userId);
       const nextWorkingDirs = workingDirs
         ? preserveWorkspaceCache(workingDirs, row.workingDirs ?? [])
         : undefined;

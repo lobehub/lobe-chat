@@ -38,6 +38,10 @@ describe('DeviceAction', () => {
     vi.mocked(mutate).mockResolvedValue(undefined);
     vi.spyOn(deviceService, 'updateDevice').mockResolvedValue({ success: true });
     vi.spyOn(deviceService, 'updateWorkspaceDevice').mockResolvedValue({ success: true });
+    vi.spyOn(deviceService, 'addWorkspaceDeviceWorkingDir').mockResolvedValue({ success: true });
+    vi.spyOn(deviceService, 'removeWorkspaceDeviceWorkingDir').mockResolvedValue({
+      success: true,
+    });
     useDeviceStore.setState({ devices: [], isDevicesInit: true });
   });
 
@@ -123,30 +127,52 @@ describe('DeviceAction', () => {
         workingDirs: [{ path: '/a' }, { path: '/b' }],
       });
 
-    it('removes a recent dir through the workspace-scoped mutation', async () => {
+    // Members share the list, so only the touched entry is sent — never this
+    // client's whole (possibly stale) snapshot.
+    it('removes one recent dir through the workspace entry mutation', async () => {
       useDeviceStore.setState({ devices: [workspaceDevice()] });
 
       await useDeviceStore.getState().removeDeviceWorkingDir('ws-dev', '/a');
 
-      expect(deviceService.updateWorkspaceDevice).toHaveBeenCalledWith({
+      expect(deviceService.removeWorkspaceDeviceWorkingDir).toHaveBeenCalledWith({
         deviceId: 'ws-dev',
-        workingDirs: [{ path: '/b' }],
+        path: '/a',
       });
+      expect(deviceService.updateWorkspaceDevice).not.toHaveBeenCalled();
       expect(deviceService.updateDevice).not.toHaveBeenCalled();
+      expect(deviceSelectors.getDeviceWorkingDirs('ws-dev')(useDeviceStore.getState())).toEqual([
+        { path: '/b' },
+      ]);
     });
 
-    it('adds a picked dir through the workspace-scoped mutation', async () => {
+    it('adds one picked dir through the workspace entry mutation', async () => {
       useDeviceStore.setState({ devices: [workspaceDevice()] });
 
       await useDeviceStore
         .getState()
-        .updateDeviceCwd('ws-dev', { path: '/c' }, { setDefault: false });
+        .updateDeviceCwd('ws-dev', { path: ' /c ' }, { setDefault: false });
 
-      expect(deviceService.updateWorkspaceDevice).toHaveBeenCalledWith({
+      expect(deviceService.addWorkspaceDeviceWorkingDir).toHaveBeenCalledWith({
         deviceId: 'ws-dev',
-        workingDirs: [{ path: '/c' }, { path: '/a' }, { path: '/b' }],
+        entry: { path: '/c' },
       });
+      expect(deviceService.updateWorkspaceDevice).not.toHaveBeenCalled();
       expect(deviceService.updateDevice).not.toHaveBeenCalled();
+    });
+
+    it('sets the device default separately from the entry add', async () => {
+      useDeviceStore.setState({ devices: [workspaceDevice()] });
+
+      await useDeviceStore.getState().updateDeviceCwd('ws-dev', { path: '/c' });
+
+      expect(deviceService.addWorkspaceDeviceWorkingDir).toHaveBeenCalledWith({
+        deviceId: 'ws-dev',
+        entry: { path: '/c' },
+      });
+      expect(deviceService.updateWorkspaceDevice).toHaveBeenCalledWith({
+        defaultCwd: '/c',
+        deviceId: 'ws-dev',
+      });
     });
 
     it('keeps personal devices on the personal mutation', async () => {

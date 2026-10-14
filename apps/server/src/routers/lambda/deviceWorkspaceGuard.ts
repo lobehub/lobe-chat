@@ -4,12 +4,6 @@ import type { WorkspaceRole } from '@/business/server/trpc-middlewares/workspace
 import type { DeviceModel } from '@/database/models/device';
 import { isPathWithinRoot } from '@/server/services/deviceGateway';
 
-/**
- * In-memory cache of device-scoped skill preview roots, populated by
- * `listProjectSkills` and consumed by `assertWorkspaceRootApproved` to
- * authorize read-only file previews without persisting skill paths into
- * the DB (which would leak into the UI's working-directory list).
- */
 export const canEditWorkspaceDevice = (
   role: WorkspaceRole | undefined,
   actorUserId: string,
@@ -28,30 +22,25 @@ export const canOperateWorkspaceDevice = (
   (row.visibility === 'public' && !!role && role !== 'viewer') ||
   canEditWorkspaceDevice(role, actorUserId, row.userId);
 
-/**
- * Gate `updateWorkspaceDevice`. The recent-dir list is part of using a device —
- * picking, adding or removing a folder there — so it follows the operate rule.
- * The name and the device-wide default cwd are registration settings that
- * change every member's fallback, so they stay with the enroller or an owner.
- */
-export const assertWorkspaceDeviceUpdatable = (
+/** Throw unless the caller may edit this workspace device's registration. */
+export const assertWorkspaceDeviceEditable = (
   role: WorkspaceRole | undefined,
   actorUserId: string,
-  row: { userId: string; visibility: 'private' | 'public' },
-  registration: { defaultCwd?: string | null; friendlyName?: string | null },
+  enrollerUserId: string,
 ): void => {
-  if (canEditWorkspaceDevice(role, actorUserId, row.userId)) return;
-
-  const touchesRegistration =
-    registration.defaultCwd !== undefined || registration.friendlyName !== undefined;
-  if (!touchesRegistration && canOperateWorkspaceDevice(role, actorUserId, row)) return;
-
+  if (canEditWorkspaceDevice(role, actorUserId, enrollerUserId)) return;
   throw new TRPCError({
     code: 'FORBIDDEN',
     message: 'Only the enrolling member or a workspace owner can modify this device.',
   });
 };
 
+/**
+ * In-memory cache of device-scoped skill preview roots, populated by
+ * `listProjectSkills` and consumed by `assertWorkspaceRootApproved` to
+ * authorize read-only file previews without persisting skill paths into
+ * the DB (which would leak into the UI's working-directory list).
+ */
 const deviceSkillRoots = new Map<string, Set<string>>();
 
 export const registerDeviceSkillRoots = (deviceId: string, roots: string[]) => {
