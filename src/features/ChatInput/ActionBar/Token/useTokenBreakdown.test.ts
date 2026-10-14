@@ -8,6 +8,7 @@ const state = vi.hoisted(() => ({
   /** `undefined`: the host publishes no topic; `null`: its conversation has none. */
   composerTopicId: undefined as string | null | undefined,
   summaries: {} as Record<string, string>,
+  useFetchTopicDetail: vi.fn(),
 }));
 
 // One token per character, so a count names the text it was taken from.
@@ -73,6 +74,7 @@ vi.mock('@/store/chat', () => ({
     selector({
       activeTopicId: state.activeTopicId,
       topicDataMap: {},
+      useFetchTopicDetail: state.useFetchTopicDetail,
       topicDetailMap: Object.fromEntries(
         Object.entries(state.summaries).map(([id, historySummary]) => [id, { historySummary, id }]),
       ),
@@ -84,6 +86,7 @@ beforeEach(() => {
   state.activeTopicId = 'main-topic';
   state.composerTopicId = undefined;
   state.summaries = { 'main-topic': 'main column summary', 'pane-topic': 'pane' };
+  state.useFetchTopicDetail.mockReset();
 });
 
 describe('useTokenBreakdown', () => {
@@ -107,5 +110,29 @@ describe('useTokenBreakdown', () => {
     const { result } = renderHook(() => useTokenBreakdown());
 
     expect(result.current.historySummaryToken).toBe('main column summary'.length);
+  });
+
+  // A document's chat panel runs on a `trigger='document'` system topic that
+  // never reaches the loaded lists, yet the run includes its persisted summary.
+  it('loads an unlisted composer topic by id and counts its summary once it arrives', () => {
+    state.composerTopicId = 'doc-topic';
+
+    const { rerender, result } = renderHook(() => useTokenBreakdown());
+
+    expect(state.useFetchTopicDetail).toHaveBeenLastCalledWith('doc-topic');
+
+    state.summaries['doc-topic'] = 'doc summary';
+    rerender();
+
+    expect(result.current.historySummaryToken).toBe('doc summary'.length);
+  });
+
+  it('leaves loading the global active topic to the active-topic detail fetch', () => {
+    state.composerTopicId = 'main-topic';
+    delete state.summaries['main-topic'];
+
+    renderHook(() => useTokenBreakdown());
+
+    expect(state.useFetchTopicDetail).not.toHaveBeenCalledWith('main-topic');
   });
 });

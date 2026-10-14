@@ -87,9 +87,19 @@ export const useTokenBreakdown = (): TokenBreakdown => {
   // the global active topic's: an embedded composer would otherwise count the
   // outer chat's history against its context window.
   const topicId = useTopicId();
-  const historySummary = useChatStore((s) =>
-    topicId ? topicSelectors.getTopicById(topicId)(s)?.historySummary || '' : '',
-  );
+  const [historySummary, isUnlistedTopic, useFetchTopicDetail] = useChatStore((s) => {
+    const topic = topicId ? topicSelectors.getTopicById(topicId)(s) : undefined;
+    return [
+      topic?.historySummary || '',
+      // The global active topic's detail is loaded by `useFetchActiveTopicDetail`.
+      !!topicId && !topic && topicId !== s.activeTopicId,
+      s.useFetchTopicDetail,
+    ] as const;
+  });
+  // A host-owned topic that never reaches the loaded lists (a document's chat
+  // panel runs on a `trigger='document'` system topic) still has a persisted
+  // summary the run includes, so load it by id instead of counting it as empty.
+  useFetchTopicDetail(isUnlistedTopic ? topicId : undefined);
 
   const agentId = useAgentId();
   const { model, provider } = useEffectiveModel(agentId);
