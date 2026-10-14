@@ -39,9 +39,9 @@
  */
 
 export { fireClientSubAgentBridge } from './fire';
+export { armClientSubAgentBridgesForContext } from './fire';
 export { __resetBridgeForTests } from './registry';
 export {
-  armClientSubAgentBridgesForContext,
   registerClientSubAgentBridge,
   registerGroupBridgeFromParkExit,
   registerSubAgentBridgeFromSpawner,

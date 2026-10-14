@@ -596,7 +596,8 @@ describe('clientSubAgentBridge', () => {
       agentId: 'agent-parent',
       topicId: 'topic-1',
     } as any);
-    await fireClientSubAgentBridge(get2, childContext);
+    // Round-7 P1: arming replays the held completion — no explicit re-fire.
+    await vi.waitFor(() => expect(store2.executeClientAgent).toHaveBeenCalledTimes(1));
     expect(store2.optimisticUpdateMessageContent).toHaveBeenCalledWith(
       'tool-msg-1',
       'child final answer',

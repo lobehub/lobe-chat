@@ -2,9 +2,12 @@ import { type ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
 import { threadService } from '@/services/thread';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
-import { type ClientSubAgentBridgeRegistration, type PersistedBridgeCoordinates } from './types';
+import {
+  type ClientSubAgentBridgeRegistration,
+  type PersistedBridgeCoordinates,
+  type SubAgentBridgeOutcome,
+} from './types';
 
 const log = debug('lobe-store:client-subagent-bridge');
 
@@ -20,11 +23,19 @@ export const registry = new Map<string, ClientSubAgentBridgeRegistration>();
 export const pendingByParentOp = new Map<string, Set<string>>();
 
 /**
+ * Terminal outcomes held while a registration was still unarmed — replayed by
+ * arming at the parent park (the child has no second terminal boundary). Cleared
+ * per thread on replay; the test reset clears everything.
+ */
+export const heldCompletions = new Map<string, SubAgentBridgeOutcome>();
+
+/**
  * Test-only reset: the registry is module-level shared state, and a restored
  * claim (retry semantics) must not leak across test cases. Not exported from
  * the package index.
  */
 export const __resetBridgeForTests = (): void => {
+  heldCompletions.clear();
   registry.clear();
   pendingByParentOp.clear();
 };
@@ -225,42 +236,4 @@ export const registerGroupBridgeFromParkExit = (params: {
     supervisorSnapshot: params.supervisorSnapshot,
     toolMessageId: params.toolMessageId,
   });
-};
-
-/**
- * Arm every bridge registration parked on THIS run: the run just entered
- * `waiting_for_async_tool`, which is the point where the deferred placeholder
- * is authoritative and the parent will not settle on its own anymore. Called
- * from the parked branch of the client run boundary — BEFORE this point a
- * registration must stay unarmed because the parent may still be executing
- * other tool lanes (the deferred pause only assembles after ALL lanes of the
- * step settle), and resuming early would let the parent's own deferred path
- * overwrite the resumed turn with the "still running" placeholder.
- *
- * Scanning the run's own message bucket for tool rows whose plugin state
- * carries a child threadId (the deferred callSubAgent shape) is what makes
- * the ordering explicit: a parallel lane's callSubAgent that has NOT returned
- * its deferred result yet has no `running` plugin state row here, so its
- * registration (if it registers later) waits for ITS park — the barrier only
- * counts armed siblings.
- */
-export const armClientSubAgentBridgesForContext = (
-  get: () => any,
-  context: ConversationContext,
-): void => {
-  const chatKey = messageMapKey(context);
-  const messages: Array<{ pluginState?: { status?: string; threadId?: string }; role?: string }> =
-    get().dbMessagesMap[chatKey] || [];
-
-  for (const message of messages) {
-    if (message.role !== 'tool') continue;
-    const state = message.pluginState;
-    if (state?.status !== 'running' || !state.threadId) continue;
-
-    const registration = registry.get(state.threadId);
-    if (!registration || registration.armed) continue;
-
-    registry.set(state.threadId, { ...registration, armed: true });
-    log('bridge armed: key=%s kind=%s', state.threadId, registration.kind);
-  }
 };

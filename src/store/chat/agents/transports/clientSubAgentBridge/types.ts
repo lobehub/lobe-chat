@@ -1,7 +1,7 @@
 import type { GroupOrchestrationSupervisorSnapshot as SupervisorSnapshot } from '@lobechat/agent-runtime';
 import { type ConversationContext } from '@lobechat/types';
 
-interface SubAgentBridgeRegistration {
+export interface SubAgentBridgeRegistration {
   /**
    * Whether the parent has actually parked. Registrations are created when
    * the child's spawner exits (the parent's tool lane just returned
@@ -24,7 +24,7 @@ interface SubAgentBridgeRegistration {
   /** Message id of the parent's deferred placeholder tool message. */
   toolMessageId: string;
 }
-interface GroupOrchestrationBridgeRegistration {
+export interface GroupOrchestrationBridgeRegistration {
   /**
    * Same two-phase activation as the sub-agent kind: the group park-exit
    * registers BEFORE the orchestration loop has processed the member's

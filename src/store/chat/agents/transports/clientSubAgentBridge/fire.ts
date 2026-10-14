@@ -1,3 +1,4 @@
+import type { ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
@@ -5,7 +6,7 @@ import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
 
-import { registry, releasePending, trackPending } from './registry';
+import { heldCompletions, registry, releasePending, trackPending } from './registry';
 import {
   type ClientSubAgentBridgeRegistration,
   type GroupOrchestrationBridgeRegistration,
@@ -74,6 +75,30 @@ const reconstructRegistrationFromThread = async (
 
     trackPending(registration);
     registry.set(childThreadId, registration);
+    // P1 (round-7): a reload wipes the whole registry — reconstruct EVERY
+    // parallel sibling parked on the same parent op too, or the first child
+    // to finish tracks only itself and the barrier releases the parent while
+    // its siblings are still running.
+    if (bridge.kind === 'sub-agent' && bridge.parentOperationId) {
+      for (const sibling of threads) {
+        if (
+          sibling.id === childThreadId ||
+          sibling.status !== 'processing' ||
+          registry.has(sibling.id)
+        )
+          continue;
+        const siblingBridge = (
+          sibling.metadata as { bridge?: PersistedBridgeCoordinates } | undefined
+        )?.bridge;
+        if (
+          siblingBridge?.kind !== 'sub-agent' ||
+          siblingBridge.parentOperationId !== bridge.parentOperationId
+        )
+          continue;
+        await reconstructRegistrationFromThread(sibling.id, childTopicId);
+        log('bridge sibling reconstructed from thread row: key=%s', sibling.id);
+      }
+    }
     log('bridge reconstructed from thread row (armed): key=%s kind=%s', childThreadId, bridge.kind);
     return registration;
   } catch (error) {
@@ -108,7 +133,8 @@ export const fireClientSubAgentBridge = async (
   if (!registration) {
     // Post-reload path: the registry died with the renderer. The child
     // thread row still carries the persisted coordinates.
-    registration = (await reconstructRegistrationFromThread(key, context.topicId)) ?? undefined;
+    registration =
+      (await reconstructRegistrationFromThread(key, context.topicId ?? undefined)) ?? undefined;
   }
   if (!registration) return;
 
@@ -122,6 +148,11 @@ export const fireClientSubAgentBridge = async (
   // child has even registered. Hold the claim and the slot: arming happens
   // when the parent actually parks, and the claim stays live for the retry.
   if (!registration.armed) {
+    // P1 (round-7): a parallel sibling lane can keep the parent from parking
+    // past this child's terminal boundary. Hold the outcome — arming replays
+    // it at the park; without this the parent parks forever (the child never
+    // reaches a second terminal boundary).
+    heldCompletions.set(key, outcome);
     log(
       'bridge fire deferred (not armed yet): key=%s kind=%s — waiting for the parent park',
       key,
@@ -296,7 +327,14 @@ const fireSubAgentBridge = async (
   //    state, feeds the Inspector row, and mirrors the normal path's write.
   //    Flat stats ride on the SAME state object (CallSubAgentState contract:
   //    the completion bridge is the authoritative stats writer).
+  // P2 (round-7): MERGE over the current plugin state — the deferred state's
+  // threadId carries the Open Thread coordinates; a blind replace drops it
+  // the moment the child settles.
+  const parentToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
+    get().dbMessagesMap[messageMapKey(registration.parentContext)] || [];
+  const parentToolRow = parentToolRows.find((m) => m.id === toolMessageId);
   await get().optimisticUpdatePluginState(toolMessageId, {
+    ...parentToolRow?.pluginState,
     status: succeeded ? 'completed' : 'error',
     ...stats,
   });
@@ -395,7 +433,13 @@ const fireGroupOrchestrationBridge = async (
   // Persist the authoritative completion state on the tool message (the
   // member's card) — same contract as the sub-agent kind, including the
   // flat spend stats the usage tray reads.
+  // P2 (round-7): MERGE over the current plugin state — same contract as the
+  // sub-agent kind (see above).
+  const groupToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
+    get().dbMessagesMap[messageMapKey(registration.messageContext)] || [];
+  const groupToolRow = groupToolRows.find((m) => m.id === toolMessageId);
   await get().optimisticUpdatePluginState(toolMessageId, {
+    ...groupToolRow?.pluginState,
     status: succeeded ? 'completed' : 'error',
     ...stats,
   });
@@ -512,5 +556,57 @@ const resumeClientSubAgentParent = async (
     });
   } finally {
     get().completeOperation(operationId);
+  }
+};
+
+/**
+ * Arm every bridge registration parked on THIS run: the run just entered
+ * `waiting_for_async_tool`, which is the point where the deferred placeholder
+ * is authoritative and the parent will not settle on its own anymore. Called
+ * from the parked branch of the client run boundary — BEFORE this point a
+ * registration must stay unarmed because the parent may still be executing
+ * other tool lanes (the deferred pause only assembles after ALL lanes of the
+ * step settle), and resuming early would let the parent's own deferred path
+ * overwrite the resumed turn with the "still running" placeholder.
+ *
+ * Scanning the run's own message bucket for tool rows whose plugin state
+ * carries a child threadId (the deferred callSubAgent shape) is what makes
+ * the ordering explicit: a parallel lane's callSubAgent that has NOT returned
+ * its deferred result yet has no `running` plugin state row here, so its
+ * registration (if it registers later) waits for ITS park — the barrier only
+ * counts armed siblings.
+ *
+ * P1 fix (round-7): arming also replays completions HELD at the child's
+ * terminal boundary because a parallel lane still kept the parent from
+ * parking — the child has no second terminal boundary, so without the replay
+ * the parent would park forever.
+ */
+export const armClientSubAgentBridgesForContext = (
+  get: () => any,
+  context: ConversationContext,
+): void => {
+  const chatKey = messageMapKey(context);
+  const messages: Array<{ pluginState?: { status?: string; threadId?: string }; role?: string }> =
+    get().dbMessagesMap[chatKey] || [];
+
+  for (const message of messages) {
+    if (message.role !== 'tool') continue;
+    const state = message.pluginState;
+    if (state?.status !== 'running' || !state.threadId) continue;
+
+    const registration = registry.get(state.threadId);
+    if (!registration || registration.armed) continue;
+
+    registry.set(state.threadId, { ...registration, armed: true });
+    log('bridge armed: key=%s kind=%s', state.threadId, registration.kind);
+
+    // Replay the completion that arrived before the park (P1 round-7). The
+    // fire's own CAS deletes the claim on success; a failure restores both
+    // claim and slot for the retry.
+    const held = heldCompletions.get(state.threadId);
+    if (!held) continue;
+    heldCompletions.delete(state.threadId);
+    log('bridge replaying held completion at park: key=%s', state.threadId);
+    void fireClientSubAgentBridge(get, registration.childContext, held);
   }
 };
