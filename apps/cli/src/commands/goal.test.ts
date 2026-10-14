@@ -380,6 +380,7 @@ describe('goal show command', () => {
           node('task', 'Ask vendor A'),
           node('finding', 'Vendor A quoted 1200'),
           node('decision', 'Retry or retire?'),
+          node('batch', 'Migrate 50 stores'),
         ],
         workVersions: [],
       },
@@ -390,6 +391,7 @@ describe('goal show command', () => {
     expect(output).toContain('▣ task');
     expect(output).toContain('◇ problem');
     expect(output).toContain('● finding');
+    expect(output).toContain('▦ batch');
     expect(output).toContain('◆ decision');
     expect(output).not.toContain('undefined');
   });
@@ -556,6 +558,8 @@ describe('goal create command', () => {
           agentId: 'agent-1',
           conversationOperationId: 'op-1',
           conversationTopicId: 'tpc-1',
+          // The server opens a draft only for a CLI that can start it.
+          draft: true,
         }),
       );
     },

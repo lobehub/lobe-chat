@@ -27,6 +27,7 @@ import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import TasksSkeleton from '@/components/Skeleton/Tasks';
 import TopicsSkeleton from '@/components/Skeleton/Topics';
 import TaskDetailSkeleton from '@/features/AgentTasks/AgentTaskDetail/TaskDetailSkeleton';
+import DevicesPageSkeleton from '@/features/DeviceManager/Skeleton';
 import { WORKSPACE_SETTINGS_TABS } from '@/features/Workspace/workspaceAwarePath';
 import AppShellSkeleton from '@/spa/BootShell/AppShellSkeleton';
 import { createTabRouter } from '@/spa/router/tabRouter';
@@ -649,6 +650,19 @@ describe('desktop router shared definition', () => {
         providerId: 'lobehub',
         workspaceSlug: 'acme',
       });
+    },
+  );
+
+  it.each(mainAreaVariants)(
+    '%s gives the workspace devices list the page skeleton DeviceManager hands over to',
+    (_, factory) => {
+      const matches = matchRoutes(createMainAreaRoutes(factory), '/acme/settings/devices');
+      const handle = matches?.at(-1)?.route.handle as { meta?: { Skeleton?: unknown } };
+
+      // A generic surface skeleton here swapped to DeviceManager's own card
+      // skeleton once the chunk loaded — two different skeletons on reload.
+      expect(matches?.at(-1)?.route.path).toBe('devices');
+      expect(handle.meta?.Skeleton).toBe(DevicesPageSkeleton);
     },
   );
 

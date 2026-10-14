@@ -1,8 +1,7 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { cx, Flexbox } from '@lobehub/ui';
-import { ActionIcon, type DropdownItem, DropdownMenu } from '@lobehub/ui';
+import { cx, Flexbox, ActionIcon, type DropdownItem, DropdownMenu } from '@lobehub/ui';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useMotionValue, useSpring } from 'motion/react';
 import * as m from 'motion/react-m';
@@ -246,11 +245,14 @@ const TabBar = () => {
   // row would visibly widen from compact to full once the measurement lands.
   const measured = stripWidth > 0;
 
+  // The strip is flex: 1, so it owns the empty titlebar space after the last tab. It
+  // declares the drag region itself instead of relying on the TitleBar's — only the tabs
+  // and controls inside opt out with nodrag.
   return (
     <Flexbox
       horizontal
       align={'center'}
-      className={styles.container}
+      className={cx(electronStylish.draggable, styles.container)}
       gap={TAB_GAP}
       ref={stripRef}
       onPointerEnter={captureVisibleTabPreviews}

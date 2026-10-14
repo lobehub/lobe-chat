@@ -110,6 +110,10 @@ export default {
   'document_mentioned_title': 'You were mentioned in a document',
   'document_liked': '{{actorLabel}} liked your document "{{documentTitle}}".',
   'document_liked_title': 'Someone liked your document',
+  'subscription_one_time_expired':
+    'Your one-time {{plan}} plan has ended and your account is now on the Free plan. Renew {{plan}} to get your benefits back.',
+  'subscription_one_time_expired_action': 'Renew {{plan}}',
+  'subscription_one_time_expired_title': 'Your {{plan}} plan has ended',
   'subscription_payment_failed':
     'Your subscription renewal payment failed. Please update your payment method to keep your subscription active.',
   'subscription_payment_failed_action': 'Update payment method',

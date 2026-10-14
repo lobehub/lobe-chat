@@ -71,6 +71,8 @@ export interface OperationInitRequest {
   resumeToolResult?: InternalExecAgentParams['resumeToolResult'];
   runAttachments: RunAttachments;
   selectedToolIds?: string[];
+  /** The Task this run executes, when it runs inside the Task system. */
+  taskId?: string;
   topicBoundDeviceId?: string | null;
 }
 
@@ -213,6 +215,7 @@ export const runOperationInit = async (
         operationId: request.operationId,
         runAttachments: request.runAttachments,
         runFromHistory: request.resumeFromHistory,
+        taskId: request.taskId,
         throwIfExecutionAborted: deps.throwIfExecutionAborted,
       },
     ),

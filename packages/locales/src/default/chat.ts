@@ -32,6 +32,105 @@ export default {
 
   'response.contentSafetyNotice':
     'This reply was limited for content safety reasons. If this happens often, you may temporarily lose access to this model.',
+  'goalBatch.cell.backlog': 'Not run',
+  'goalBatch.cell.done': 'Done',
+  'goalBatch.cell.human': 'Needs you',
+  'goalBatch.cell.reopened': 'Reopened in v{{revision}}',
+  'goalBatch.cell.runIn': 'Runs in v{{revision}}',
+  'goalBatch.cell.running': 'Running',
+  'goalBatch.cell.stale': 'Superseded',
+  'goalBatch.cell.tooltip': 'Wave {{wave}} · item {{index}} · {{title}} · {{state}}',
+  'goalBatch.enter': 'Open',
+  'goalBatch.planPanel.compare': 'Compare versions',
+  'goalBatch.planPanel.compareTitle': 'Compare plan versions',
+  'goalBatch.planPanel.files': 'Files',
+  'goalBatch.planPanel.foldFiles': 'Hide files',
+  'goalBatch.planPanel.forked':
+    'A forked plan: it starts again from the batch’s original outline instead of revising the previous version',
+  'goalBatch.planPanel.latest': 'v{{revision}} · latest',
+  'goalBatch.planPanel.same': 'Same as v{{base}}',
+  'goalBatch.planPanel.unfoldFiles': 'Show files',
+  'goalBatch.probes.cell.backlog': 'Not started',
+  'goalBatch.probes.cell.done': 'Done',
+  'goalBatch.probes.cell.human': 'Needs you',
+  'goalBatch.probes.cell.running': 'In progress',
+  'goalBatch.probes.cell.stale': 'Superseded',
+  'goalBatch.gateCheck.axes_covered': 'The trials covered every declared variant',
+  'goalBatch.gateCheck.count': '{{count}} / {{total}}',
+  'goalBatch.gateCheck.no_open_decision': 'No decision in the batch is waiting on a person',
+  'goalBatch.gateCheck.plan_written': 'The batch plan is written',
+  'goalBatch.gateCheck.uncovered': 'Not covered: {{values}}',
+  'goalBatch.gateCheck.units_settled': 'Every unit this round finished',
+  'goalBatch.gateCheck.units_succeeded':
+    'Every unit this round ran through on its own — none failed or was sent back',
+  'goalBatch.gatePanel.learned': 'What this gate taught',
+  'goalBatch.gatePanel.learnedHint':
+    'Written into the plan every later unit loads, and added to the acceptance each of them must pass.',
+  'goalBatch.gatePanel.checks': 'Checks',
+  'goalBatch.gatePanel.checksAt': 'Verdict {{index}} · {{time}}',
+  'goalBatch.gatePanel.checksPlanned': 'Not judged yet — these will be checked',
+  'goalBatch.gatePanel.question':
+    'Revise the plan and re-probe, or fork a fresh one for the units that broke?',
+  'goalBatch.gatePanel.history': 'Verdicts',
+  'goalBatch.gatePanel.history.blocked': 'Held: {{checks}}',
+  'goalBatch.gatePanel.history.empty': 'No verdict yet',
+  'goalBatch.gatePanel.history.released': 'Released wave {{wave}} ({{count}} units)',
+  'goalBatch.gatePanel.history.unrecorded': 'Judged before verdicts were recorded — no detail kept',
+  'goalBatch.gatePanel.history.unit':
+    '“{{title}}” failed its own check — the batch was held at once',
+  'goalBatch.gatePanel.next.checking':
+    'Every unit finished — judged on the coordinator’s next step',
+  'goalBatch.gatePanel.next.human':
+    'Waiting on you: revise the plan, or fork a fresh one for the units that broke',
+  'goalBatch.gatePanel.next.locked':
+    'Judged automatically once this round’s {{count}} units finish',
+  'goalBatch.gatePanel.next.passed':
+    'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
+  'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
+  'goalBatch.gatePanel.verdict': 'Verdict',
+  'goalBatch.gate.checkCount': '{{count}} checks',
+  'goalBatch.gate.hintTitle': 'Checked before the rest are released:',
+  'goalBatch.gate.status.checking': 'Judging',
+  'goalBatch.gate.status.human': 'Needs your decision',
+  'goalBatch.gate.status.locked': 'Not judged',
+  'goalBatch.gate.status.passed': 'Passed',
+  'goalBatch.gate.status.rejected': 'Sent back',
+  'goalBatch.gate.title': 'Release gate',
+  'goalBatch.gate.titleRound': 'Release gate · v{{revision}}',
+  'goalBatch.overviewCount': 'Total: {{count}} batches · {{nodes}} nodes',
+  'goalBatch.probes.hint':
+    '{{count}} representative units run first — the most different ones and the hardest. The rest are released only once every one of them runs through automatically.',
+  'goalBatch.probes.status.done': 'Trials done',
+  'goalBatch.probes.status.pending': 'Not started',
+  'goalBatch.probes.status.running': 'Trials running',
+  'goalBatch.probes.title': 'Cold start · trials',
+  'goalBatch.probes.rowLabel': 'Trials',
+  'goalBatch.redispatch.foot': '{{count}} units · on v{{revision}}',
+  'goalBatch.redispatch.fromProbe': 'Reopened from trial {{index}}',
+  'goalBatch.redispatch.fromRound': 'Reopened from v{{revision}}',
+  'goalBatch.redispatch.fromWave': 'Reopened from wave {{wave}}, item {{index}}',
+  'goalBatch.redispatch.title': 'Waves · v{{revision}}',
+  'goalBatch.redispatch.labelRound': 'v{{revision}}',
+  'goalBatch.redispatch.reopenedRow': 'Reopened',
+  'goalBatch.round.foot': '{{count}} units',
+  'goalBatch.round.reviseEdge': 'Sent back · revise',
+  'goalBatch.round.title': 'Round {{revision}}',
+  'goalBatch.status.done': 'All done',
+  'goalBatch.status.human': '{{count}} need you',
+  'goalBatch.status.pending': 'Not started',
+  'goalBatch.status.running': 'In progress',
+  'goalBatch.status.stale': '{{count}} superseded',
+  'goalBatch.skill.forked': 'Plan skill v{{revision}} · new class',
+  'goalBatch.skill.title': 'Plan skill v{{revision}}',
+  'goalBatch.template.forked': 'Plan v{{revision}} · new class',
+  'goalBatch.template.title': 'Plan v{{revision}}',
+  'goalBatch.templatePlain': 'Batch plan',
+  'goalBatch.title': 'Repeated batch',
+  'goalBatch.waves.foot': '{{count}} units / {{waves}} waves',
+  'goalBatch.waves.row': 'W{{number}}',
+  'goalBatch.waves.title': 'Waves',
+
   'goalExperiment.continuedFrom': 'Continued exploration',
   'goalExperiment.drill': 'Explore inside',
   'goalExperiment.drillNamed': 'Explore inside: {{title}}',
@@ -144,14 +243,21 @@ export default {
   'agentProfile.skills_other': '{{count}} skills',
   'agentSignal.receipts.agentSignalLabel': 'Agent Signal',
   'agentSignal.receipts.memory.detail': 'Saved this for future replies',
+  'agentSignal.receipts.memory.openInMemory': 'Open in Memory',
   'agentSignal.receipts.memory.title': 'Memory saved',
   'agentSignal.receipts.recentActivity': 'Recent activity',
   'agentSignal.receipts.revert.conflict': 'Newer version',
+  'agentSignal.receipts.revert.error.conflict': "Can't undo: it was changed after this update",
+  'agentSignal.receipts.revert.error.failed': 'Undo failed: {{reason}}',
+  'agentSignal.receipts.revert.error.generic': 'Undo failed. Please try again later',
+  'agentSignal.receipts.revert.error.not_found': "Can't undo: it no longer exists",
+  'agentSignal.receipts.revert.error.unsupported': "This change can't be undone",
   'agentSignal.receipts.revert.failed': 'Failed',
   'agentSignal.receipts.revert.not_found': 'Cannot undo',
   'agentSignal.receipts.revert.pending': 'Rolling back',
   'agentSignal.receipts.revert.rolled_back': 'Reverted',
   'agentSignal.receipts.revert.undo': 'Undo',
+  'agentSignal.receipts.revert.undone': 'Undone',
   'agentSignal.receipts.revert.unsupported': 'Unsupported',
   'agentSignal.receipts.skill.detail': 'Self-refined how this agent handles similar requests',
   'agentSignal.receipts.skill.title': 'Auto-learned a new skill',
@@ -526,6 +632,8 @@ export default {
     'This agent uses an API key / custom endpoint, so subscription quota does not apply.',
   'heteroAgent.claudeQuota.unavailableNotFound':
     'No Claude Code login found. Run claude in a terminal to sign in first.',
+  'heteroAgent.claudeQuota.unavailableRequestBlocked':
+    "Anthropic refused the quota request from this machine's network (usually a region restriction). Check the machine's network proxy, then refresh.",
   'heteroAgent.claudeSdkRuntime.state.closed': 'SDK closed',
   'heteroAgent.claudeSdkRuntime.state.closing': 'SDK closing',
   'heteroAgent.claudeSdkRuntime.state.error': 'SDK error',
@@ -848,6 +956,16 @@ export default {
   'mention.category.topics': 'Topics',
   'mention.category.workspaceAgents': 'Workspace',
   'mention.title': 'Mention Members',
+  'messageAction.codexEdit.alreadySubmitting': 'This edit is already being submitted',
+  'messageAction.codexEdit.branchFailed':
+    'Could not create the new topic. Your edit is kept; try sending again.',
+  'messageAction.codexEdit.branchNotice':
+    'Sends in a new topic; the original stays as it is. Files Codex already changed are not reverted.',
+  'messageAction.codexEdit.cannotSubmit':
+    'This conversation cannot accept an edited message right now',
+  'messageAction.codexEdit.prepareFailed':
+    'Could not load the new topic. Your edit is kept; try sending again.',
+  'messageAction.codexEdit.sourceUnavailable': 'The source conversation or agent is unavailable',
   'messageAction.collapse': 'Collapse Message',
   'messageAction.continueGeneration': 'Continue Generating',
   'messageAction.continueGenerationUnsupported':
@@ -1294,6 +1412,8 @@ export default {
   'connectAgent.create.openChat': 'Open Chat',
   'connectAgent.create.done': 'Done',
   'connectAgent.providerDesc.claude-code': 'Anthropic coding agent CLI',
+  'connectAgent.providerDesc.deepseek-harness':
+    'DeepSeek Harness agent (dsh CLI) with tools and subagents',
   'connectAgent.providerDesc.codebuddy': 'Tencent coding agent CLI',
   'connectAgent.providerDesc.codex': 'OpenAI coding agent CLI',
   'connectAgent.providerDesc.cursor': 'Cursor coding agent CLI',
@@ -1385,18 +1505,31 @@ export default {
   'sandboxStorage.persistentUpsellDesc': 'Keep files across runs and topics',
   'sandboxStorage.setUpEnvironmentDesc': 'A persistent directory lives in an environment',
   'sandboxStorage.setUpEnvironment': 'Set up an environment',
-  // The other empty state: environments exist, none has been materialized
-  // into a working copy yet. Naming the environment page rather than opening
-  // a dialog here — this menu picks between instances, it does not make them.
-  'sandboxStorage.noInstances': 'Create an instance',
-  'sandboxStorage.noInstancesDesc': 'Your environments have no working copy yet',
   'sandboxStorage.manage': 'Manage',
-  // The menu names the thing it picks — an instance of an environment —
-  // rather than the slot it fills. The explainer carries the distinction,
-  // because "environment" and "instance of one" is the whole model.
-  'sandboxStorage.pickerTitle': 'Environment Instance',
+  // The menu lists environments: a person picks the environment, and which
+  // copy (instance) of it the conversation lands in is only asked about when
+  // there is more than one. "Copy" is the product's word for an instance.
+  'sandboxStorage.pickerTitle': 'Environment',
   'sandboxStorage.pickerInfoTooltip':
-    'An environment describes what a run needs around it — repositories, setup, variables. An instance is one working copy of it, with its own folder and its own installed packages; conversations run inside an instance and keep what they leave there.',
+    'An environment describes what a run needs around it — files, or repositories, setup and variables. Conversations run inside one of its copies and keep what they leave there; a second copy only appears when two conversations need the same environment at once.',
+  'sandboxStorage.kind.files': 'Files',
+  'sandboxStorage.kind.code': 'Code',
+  'sandboxStorage.copies': 'Copies',
+  'sandboxStorage.copyCount_one': '{{count}} copy',
+  'sandboxStorage.copyCount_other': '{{count}} copies',
+  'sandboxStorage.defaultCopy': 'Default',
+  'sandboxStorage.showCopies': 'Show copies',
+  'sandboxStorage.allCopiesBusy': 'Every copy is in use',
+  // An environment from before every environment got a default copy. Its
+  // creator gets the copy made on first pick; a colleague cannot make one.
+  'sandboxStorage.noCopyYetDesc': 'A copy is created the first time you pick it',
+  'sandboxStorage.noCopyColleagueDesc': 'Its creator has not set it up yet',
+  'sandboxStorage.createCopyFailed': 'This environment could not be prepared',
+  // Built from the environment's specification rather than copied from the
+  // copy that is busy: that one is held by a run, and its state is that run's.
+  'sandboxStorage.reopenCopy': 'Open another copy',
+  'sandboxStorage.reopenCopyDesc': 'Rebuilt from the environment configuration',
+  'sandboxStorage.reopenCopyFailed': 'Another copy could not be opened',
   'sandboxStorage.environmentsUnavailable': 'Environments could not be loaded',
   // One conversation at a time per instance: the execution plane takes a
   // lease and answers the second writer with 409 INSTANCE_IN_USE, because
@@ -1405,10 +1538,10 @@ export default {
   // the first message meets the refusal.
   'sandboxStorage.running': 'Running',
   'sandboxStorage.runningHint':
-    'Something else is still running in this instance, so it cannot be picked here. It is released on its own roughly 15 minutes after that run goes quiet.',
-  'sandboxStorage.runningOwnHint': "This conversation's own run is using this instance.",
+    'Something else is still running in this copy, so it cannot be picked here. It is released on its own roughly 15 minutes after that run goes quiet.',
+  'sandboxStorage.runningOwnHint': "This conversation's own run is using this copy.",
   'sandboxStorage.runningHintStoppable':
-    'Something else is still running in this instance, so it cannot be picked here. It is released on its own roughly 15 minutes after that run goes quiet, or you can stop it now.',
+    'Something else is still running in this copy, so it cannot be picked here. It is released on its own roughly 15 minutes after that run goes quiet, or you can stop it now.',
   'sandboxStorage.stop': 'Stop',
   // A build holds the same single-writer lease a run does, so it is refused
   // for the same reason — but it is not a conversation, and saying "running"
@@ -2043,6 +2176,7 @@ export default {
   'goalList.roundProgress': 'Round {{current}}/{{total}}',
   'goalList.status.achieved': 'Achieved',
   'goalList.status.canceled': 'Canceled',
+  'goalList.status.draft': 'Not started',
   'goalList.status.error': 'Needs attention',
   'goalList.status.paused': 'Paused',
   'goalList.status.planning': 'Planning',
@@ -2056,6 +2190,7 @@ export default {
   'goalTask.tasksDone': '{{passed}}/{{total}} tasks done',
   'goalTask.status.achieved': 'Achieved',
   'goalTask.status.canceled': 'Canceled',
+  'goalTask.status.draft': 'Not started',
   'goalTask.status.error': 'Needs attention',
   'goalTask.status.paused': 'Paused',
   'goalTask.status.planning': 'Planning',
@@ -2229,6 +2364,7 @@ export default {
   'goalProcess.gate.title.recoverTask': 'Decide what happens to the failed task',
   'goalProcess.gate.title.goalAcceptance': 'Decide the goal acceptance outcome',
   'goalProcess.gate.title.fixSetup': 'Fix the setup, then retry',
+  'goalProcess.gate.title.batchPatternBreak': 'Decide how the failed batch proceeds',
   'goalProcess.clarify.title': 'Clarify the goal before work starts',
   'goalProcess.clarify.description':
     'Answer these once and the agent plans with them. Skip to let it proceed on its own assumptions.',
@@ -2263,14 +2399,24 @@ export default {
   'goalProcess.gate.reason.transientRetriesSpent':
     'The run failed the same way {{count}} times over {{duration}} ({{error}}). Check the device, its network and the agent gateway.',
   'goalProcess.gate.reason.runError': 'The run stopped with an error ({{code}})',
+  'goalProcess.gate.reason.batchUnsettled': '{{count}} unit(s) have not settled',
+  'goalProcess.gate.reason.batchBroken': '{{count}} unit(s) did not succeed',
+  'goalProcess.gate.reason.batchOpenDecision': 'a human decision is still open in this batch',
+  'goalProcess.gate.reason.batchTemplateIncomplete': 'the batch template is incomplete',
+  'goalProcess.gate.reason.batchUntestedAxes': 'untested axes: {{axes}}',
   'goalProcess.gate.recommended': 'recommended',
   'goalProcess.gate.noteLabel': 'Extra guidance',
+  'goalProcess.gate.batchCorrectionPlaceholder':
+    'What to change in the recipe — required to revise it; it becomes the next version',
+  'goalProcess.gate.batchCorrectionRequired': 'Write the correction before revising the recipe',
   'goalProcess.gate.notePlaceholder': 'Optional — goes into the next attempt instructions',
   'goalProcess.gate.option.retry': 'Retry work',
   'goalProcess.gate.option.fixedRetry': 'I fixed it — retry',
   'goalProcess.gate.option.retire': 'Retire work',
   'goalProcess.gate.option.fail': 'Fail goal',
   'goalProcess.gate.option.assume': 'Go with the assumption',
+  'goalProcess.gate.option.reviseBatch': 'Revise the recipe and re-probe',
+  'goalProcess.gate.option.newClassBatch': 'Fork a fresh recipe',
   'goalProcess.decision.effect.fixedRetry': 'Run the task again once the setup is fixed.',
   'goalProcess.decision.asks.judgment': 'needs your review on a stuck task',
   'goalProcess.decision.asks.goalAcceptance': 'needs your review on the goal acceptance',
@@ -2299,6 +2445,10 @@ export default {
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',
   'goalProcess.decision.effect.abandonAcceptance':
     'Stop acceptance and end the goal without a verdict.',
+  'goalProcess.decision.effect.reviseBatch':
+    'Revise the recipe from this failure, then re-probe this batch.',
+  'goalProcess.decision.effect.newClassBatch':
+    'Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.',
   'goalProcess.signOff.islandSubtitle': 'is done and waiting for your sign-off',
   'goalProcess.signOff.question': 'Do you accept what this goal delivered?',
   'goalProcess.signOff.description': 'Goal-level acceptance passed. Your sign-off closes the goal.',
@@ -2466,6 +2616,7 @@ export default {
   'goalProcess.kind.experiment': 'Experiment',
   'goalProcess.kind.finding': 'Finding',
   'goalProcess.kind.decision': 'Decision',
+  'goalProcess.kind.batch': 'Batch',
   'goalProcess.node.running': 'Running',
   'goalProcess.node.stopped': 'Stopped',
   'goalProcess.node.done': 'Done',
@@ -2498,6 +2649,7 @@ export default {
   'goalProcess.lifecycle.action.work.produced': 'produced',
   'goalProcess.lifecycle.action.work.supports': 'added evidence',
   'goalProcess.lifecycle.kind.decision': 'decision',
+  'goalProcess.lifecycle.kind.batch': 'batch',
   'goalProcess.lifecycle.kind.experiment': 'experiment',
   'goalProcess.lifecycle.kind.finding': 'finding',
   'goalProcess.lifecycle.kind.goal': 'goal',
@@ -2587,6 +2739,9 @@ export default {
   'goalProcess.pause': 'Pause',
   'goalProcess.resume': 'Resume',
   'goalProcess.paused': 'Paused — no new work will start',
+  'goalProcess.draft':
+    'Not started — nothing runs until you start it. Check the tasks below first.',
+  'goalProcess.start': 'Start',
   'goalPage.allGoals': 'All goals',
   'goalPage.activeGoals': 'Open goals',
   'goalPage.description':

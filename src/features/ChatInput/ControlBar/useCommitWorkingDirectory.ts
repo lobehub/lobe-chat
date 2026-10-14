@@ -14,7 +14,7 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
-export interface CommitWorkingDirectoryOptions {
+export interface CommitWorkingDirectoryOptions extends CommitAgentDefaultOptions {
   /**
    * Persist against the `local` execution target on this machine, regardless of
    * what the agent's config currently says. For callers that select the local
@@ -209,7 +209,11 @@ export const useCommitWorkingDirectory = (agentId: string, routeTopicId?: string
                 },
               },
             },
-            { replaceWorkingDirDeviceIds: [writeDeviceId] },
+            {
+              replaceWorkingDirDeviceIds: [writeDeviceId],
+              rethrow: options?.rethrow,
+              showErrorMessage: options?.showErrorMessage,
+            },
           );
         }
         // Clearing the agent default must also drop the legacy per-agent value —

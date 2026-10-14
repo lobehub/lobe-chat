@@ -1,13 +1,19 @@
 import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 
+import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
 import {
   defineReplica,
+  REPLICA_INDEX_KEY,
   type ReplicaPagedData,
   type ReplicaPageResult,
   type ReplicaPagingConfig,
+  type ReplicaRow,
+  type ReplicaRowKey,
+  type ReplicaStorage,
   ReplicaWriteQueue,
 } from '@/libs/replica';
 import { normalizeMessageListQueryContext } from '@/libs/swr/keys';
+import type { MessageService } from '@/services/message';
 import {
   getMessageListWindowOlderCursor,
   messageListKey,
@@ -174,3 +180,84 @@ export const persistSettledTranscript = (
     return { data: toPersistedTranscript(data), updatedAt: Date.now() };
   });
 };
+
+// ---- tool result payloads ------------------------------------------------
+
+/**
+ * The stored body of one tool message the conversation read projected away
+ * (`payloadOmitted`), fetched back when the user opens the card. `value` is
+ * wrapped so an answered-but-empty payload still replaces a stale row.
+ */
+export interface ToolResultPayloadRead {
+  value?: ToolResultPayload;
+}
+
+export type ToolResultPayload = Awaited<ReturnType<MessageService['getToolResultPayload']>>;
+
+/**
+ * Rows larger than this stay in memory only: a single tool result can be
+ * megabytes (a page scrape, a long log), and a reload refetching that one is
+ * cheaper than keeping it on disk.
+ */
+export const TOOL_RESULT_PAYLOAD_MAX_PERSISTED_CHARS = 128 * 1024;
+
+/** Recently opened payloads that survive a reload; older rows are evicted LRU. */
+export const TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES = 200;
+
+const TOOL_RESULT_PAYLOAD_NAME = 'toolResultPayload';
+const TOOL_RESULT_PAYLOAD_VERSION = 1;
+
+const serializedLength = (value: unknown) => {
+  try {
+    return JSON.stringify(value)?.length ?? 0;
+  } catch {
+    return Infinity;
+  }
+};
+
+/**
+ * IndexedDB storage that refuses oversized payload rows: the write becomes a
+ * delete, so neither the large body nor an older copy of it hydrates later.
+ * The engine's own index row passes through untouched.
+ */
+export class SizeCappedPayloadStorage implements ReplicaStorage<ToolResultPayloadRead> {
+  readonly #inner: ReplicaStorage<ToolResultPayloadRead>;
+  readonly #maxChars: number;
+
+  constructor(inner: ReplicaStorage<ToolResultPayloadRead>, maxChars: number) {
+    this.#inner = inner;
+    this.#maxChars = maxChars;
+  }
+
+  get = (key: ReplicaRowKey) => this.#inner.get(key);
+
+  getStrict = (key: ReplicaRowKey) =>
+    this.#inner.getStrict ? this.#inner.getStrict(key) : this.#inner.get(key);
+
+  remove = (key: ReplicaRowKey) => this.#inner.remove(key);
+
+  set = (key: ReplicaRowKey, row: ReplicaRow<ToolResultPayloadRead>) => {
+    if (key.queryKey !== REPLICA_INDEX_KEY && serializedLength(row.data) > this.#maxChars)
+      return this.#inner.remove(key);
+    return this.#inner.set(key, row);
+  };
+}
+
+/**
+ * Projected tool payloads by message id. Immutable per message, so after a
+ * reload the card paints the persisted copy and the read only confirms it.
+ * Partitioned by the cache scope (user + workspace), bounded by count and by
+ * row size.
+ */
+export const toolResultPayloadResource = defineReplica<string, ToolResultPayloadRead>({
+  key: (messageId) => messageId,
+  name: TOOL_RESULT_PAYLOAD_NAME,
+  persist: { maxEntries: TOOL_RESULT_PAYLOAD_MAX_PERSISTED_ENTRIES },
+  storage: new SizeCappedPayloadStorage(
+    new IndexedDBQueryProjectionStorage<ToolResultPayloadRead>({
+      namespace: `replica:${TOOL_RESULT_PAYLOAD_NAME}:v${TOOL_RESULT_PAYLOAD_VERSION}`,
+    }),
+    TOOL_RESULT_PAYLOAD_MAX_PERSISTED_CHARS,
+  ),
+  version: TOOL_RESULT_PAYLOAD_VERSION,
+});

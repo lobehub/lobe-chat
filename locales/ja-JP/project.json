@@ -213,6 +213,11 @@
   "topics.status.scheduled": "スケジュール済み",
   "topics.status.unread": "新しい結果",
   "topics.status.waitingForHuman": "入力が必要",
+  "topics.subGroup.byDevice": "デバイス別",
+  "topics.subGroup.byStatus": "ステータス別",
+  "topics.subGroup.byTime": "時間別",
+  "topics.subGroup.none": "グループ化なし",
+  "topics.subGroup.title": "トピックをグループ化",
   "topics.title": "トピック",
   "topics.viewProject": "プロジェクトを見る"
 }

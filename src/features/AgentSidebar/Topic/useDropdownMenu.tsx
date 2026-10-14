@@ -1,6 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { type DropdownItem } from '@lobehub/ui';
-import { confirmModal, css, cx,Icon, toast, Upload   } from '@lobehub/ui';
+import { type DropdownItem, confirmModal, css, cx, Icon, toast, Upload } from '@lobehub/ui';
 import { Archive, HardDriveDownload, Hash, Import, LucideCheck, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +15,8 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
+
+import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
 
 const hotArea = css`
   &::before {
@@ -62,25 +63,10 @@ export const useTopicActionsDropdownMenu = (
 
   const handleArchiveMergedPullRequests = useCallback(
     async (scope: TopicMaintenanceScope = 'own') => {
-      const mergedTopics = (topics ?? []).filter((topic) => {
-        if (
-          activeWorkspaceId &&
-          scope === 'own' &&
-          (!currentUserId || topic.userId !== currentUserId)
-        ) {
-          return false;
-        }
-
-        const pullRequest = topic.metadata?.workingDirectoryConfig?.git?.github?.pullRequest;
-        const isMerged = !!pullRequest?.mergedAt || pullRequest?.state?.toLowerCase() === 'merged';
-
-        return (
-          isMerged &&
-          topic.status !== 'completed' &&
-          topic.status !== 'archived' &&
-          topic.status !== 'unread'
-        );
-      });
+      const mergedTopics = getMergedPullRequestTopics(
+        topics ?? [],
+        activeWorkspaceId && scope === 'own' ? (currentUserId ?? null) : undefined,
+      );
 
       if (mergedTopics.length === 0) {
         toast.info(t('actions.archiveMergedPullRequestsNone'));

@@ -26,12 +26,12 @@ const APIs = memo<{
   return (
     <Flexbox paddingBlock={16} width={'100%'}>
       <Table
-        bordered
         dataSource={pluginManifest.api}
         pagination={false}
         rowKey={'name'}
         size={'small'}
         tableLayout="fixed"
+        variant="outlined"
         columns={[
           {
             dataIndex: 'name',

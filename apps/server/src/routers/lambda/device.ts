@@ -5,7 +5,9 @@ import {
 } from '@lobechat/heterogeneous-agents';
 import type {
   DeviceChannel,
+  DeviceEnroller,
   DeviceListItem,
+  DeviceRunningSummary,
   DeviceScope,
   DeviceWorkspaceShare,
   WorkingDirEntry,
@@ -22,14 +24,20 @@ import {
   wsProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { DeviceModel, WorkspaceDevicePrivateConflictError } from '@/database/models/device';
+import { getTopicDeviceId, TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signTunnelAccessToken, signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
-import { type DeviceAttachment, deviceGateway } from '@/server/services/deviceGateway';
+import {
+  type DeviceAttachment,
+  deviceGateway,
+  isValidDirectoryName,
+} from '@/server/services/deviceGateway';
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
 
+import { loadDeviceBoundAgents } from './deviceBoundAgents';
 import { preserveWorkspaceCache } from './deviceWorkingDirs';
 import {
   assertWorkspaceDeviceVisible,
@@ -223,7 +231,12 @@ const workspaceFileInput = z.object({
  */
 const workspaceFileProcedure = deviceProcedure.input(workspaceFileInput).use(async (opts) => {
   const { deviceId, workingDirectory } = workspaceFileInput.parse(await opts.getRawInput());
-  await assertWorkspaceRootApproved(opts.ctx.deviceModel, deviceId, workingDirectory);
+  await assertWorkspaceRootApproved(
+    opts.ctx.deviceModel,
+    deviceId,
+    workingDirectory,
+    opts.ctx.workspaceId,
+  );
   return opts.next();
 });
 
@@ -235,6 +248,55 @@ const workspaceFileProcedure = deviceProcedure.input(workspaceFileInput).use(asy
 const workspaceFileWriteProcedure = workspaceFileProcedure.use(
   requireWorkspaceRoleWhenScoped('member'),
 );
+
+/**
+ * `workspaceFileProcedure` for the publish-asset routes. Their source path may
+ * lie outside the approved root (the device confines only a copy's
+ * destination), so they can read any file on the device, and a copy also
+ * writes into the workspace. Gate them like writes: a read-only viewer must not
+ * pull arbitrary files off a shared device. Personal mode stays open.
+ */
+const workspacePublishProcedure = workspaceFileProcedure.use(
+  requireWorkspaceRoleWhenScoped('member'),
+);
+
+/**
+ * Display info for the members behind a set of running topics. The ids come
+ * from topic rows the caller was already allowed to read, so this only adds
+ * the public-facing name and avatar.
+ */
+const loadTopicUsers = async (
+  db: Parameters<typeof UserModel.getDisplayInfoByIds>[0],
+  userIds: string[],
+): Promise<Map<string, DeviceEnroller>> => {
+  const rows = await UserModel.getDisplayInfoByIds(db, [...new Set(userIds)]);
+  return new Map(
+    rows.map((u) => [
+      u.id,
+      { avatar: u.avatar, fullName: u.fullName, userId: u.id, username: u.username },
+    ]),
+  );
+};
+
+/**
+ * The member running each topic now: the initiator of its current run, else
+ * its creator (a client-executed run writes no operation row). In a workspace
+ * a teammate can continue someone else's topic, so the creator alone would
+ * name the wrong person as using the device.
+ */
+const resolveRunUserIds = async (
+  topicModel: TopicModel,
+  topics: { id: string; userId: string }[],
+): Promise<Map<string, string>> => {
+  const initiators = await topicModel.findRunInitiators(topics.map((topic) => topic.id));
+  return new Map(topics.map((topic) => [topic.id, initiators.get(topic.id) ?? topic.userId]));
+};
+
+/**
+ * Upper bound on the running topics read for the device-list summary. A real
+ * account runs far fewer at once; the cap only bounds a pathological one.
+ */
+const RUNNING_SUMMARY_LIMIT = 500;
 
 export const deviceRouter = router({
   /**
@@ -314,6 +376,79 @@ export const deviceRouter = router({
         }
       },
     ),
+
+  /**
+   * What the device is doing for the caller: topics running on it right now
+   * and the agents routed to it. Both reads go through the regular content
+   * scopes, so in a workspace a teammate's private agent (and the topics under
+   * it) never surface just because they share the machine.
+   *
+   * Agent bindings are resolved per caller: the stored agency config merged
+   * with the caller's own per-agent device override in this workspace, exactly
+   * as a run would route — see {@link loadDeviceBoundAgents}.
+   */
+  getDeviceActivity: deviceProcedure
+    .input(z.object({ deviceId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const topicModel = new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
+      const [agents, runningTopics] = await Promise.all([
+        loadDeviceBoundAgents({
+          db: ctx.serverDB,
+          deviceId: input.deviceId,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
+        topicModel.queryTopics({ deviceId: input.deviceId, statuses: ['running'] }),
+      ]);
+
+      const runUserIds = await resolveRunUserIds(topicModel, runningTopics);
+      const users = await loadTopicUsers(ctx.serverDB, [...runUserIds.values()]);
+
+      return {
+        agents,
+        runningTopics: runningTopics.map((topic) => ({
+          ...topic,
+          user: users.get(runUserIds.get(topic.id) ?? topic.userId) ?? null,
+        })),
+      };
+    }),
+
+  /**
+   * Per-device running-topic counts and the members behind them, for the
+   * device list cards. One read for the whole list instead of a request per
+   * card; the same content scopes as {@link getDeviceActivity} apply, and a
+   * device the caller cannot see simply has no card to render its entry.
+   */
+  getRunningSummary: deviceProcedure.query(async ({ ctx }): Promise<DeviceRunningSummary[]> => {
+    // Most recently active first, so each device's avatar stack leads with
+    // whoever touched it last.
+    const topicModel = new TopicModel(ctx.serverDB, ctx.userId, ctx.workspaceId);
+    const runningTopics = (
+      await topicModel.queryTopics({ pageSize: RUNNING_SUMMARY_LIMIT, statuses: ['running'] })
+    ).filter((topic) => getTopicDeviceId(topic.metadata));
+    const runUserIds = await resolveRunUserIds(topicModel, runningTopics);
+
+    const byDevice = new Map<string, { count: number; userIds: string[] }>();
+    for (const topic of runningTopics) {
+      const deviceId = getTopicDeviceId(topic.metadata)!;
+      const runUserId = runUserIds.get(topic.id) ?? topic.userId;
+      const entry = byDevice.get(deviceId) ?? { count: 0, userIds: [] };
+      entry.count += 1;
+      if (!entry.userIds.includes(runUserId)) entry.userIds.push(runUserId);
+      byDevice.set(deviceId, entry);
+    }
+
+    const users = await loadTopicUsers(
+      ctx.serverDB,
+      [...byDevice.values()].flatMap((entry) => entry.userIds),
+    );
+
+    return [...byDevice].map(([deviceId, { count, userIds }]) => ({
+      count,
+      deviceId,
+      users: userIds.flatMap((id) => users.get(id) ?? []),
+    }));
+  }),
 
   /**
    * Granular git reads for a directory on a remote device, each via its own
@@ -689,6 +824,7 @@ export const deviceRouter = router({
    * directory on a remote device, via the device's `runPullRequestAction` RPC.
    */
   runGitPullRequestAction: deviceProcedure
+    .use(requireWorkspaceRoleWhenScoped('member'))
     .input(
       z.object({
         action: z.discriminatedUnion('type', [
@@ -719,7 +855,12 @@ export const deviceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await assertWorkspaceRootApproved(ctx.deviceModel, input.deviceId, input.path);
+      await assertWorkspaceRootApproved(
+        ctx.deviceModel,
+        input.deviceId,
+        input.path,
+        ctx.workspaceId,
+      );
       return deviceGateway.runGitPullRequestAction({
         action: input.action,
         deviceId: input.deviceId,
@@ -860,6 +1001,57 @@ export const deviceRouter = router({
     }),
 
   /**
+   * Create a folder inside the directory a remote folder picker is browsing, so
+   * a new working directory can be made without leaving the picker. Same access
+   * rule as {@link browseDirectory}; a taken name is reported as `CONFLICT`.
+   */
+  createDirectory: deviceProcedure
+    .input(
+      z.object({
+        deviceId: z.string(),
+        name: z.string().min(1).max(255),
+        parentPath: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await assertDeviceOperable(ctx, input.deviceId, 'create folders');
+
+      if (
+        !isValidDirectoryName(input.name, input.parentPath) ||
+        !isValidDirectoryName(input.name.trim(), input.parentPath)
+      ) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid folder name.' });
+      }
+
+      let result: Awaited<ReturnType<typeof deviceGateway.createDirectory>>;
+      try {
+        result = await deviceGateway.createDirectory({
+          deviceId: input.deviceId,
+          name: input.name.trim(),
+          parentPath: input.parentPath,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        // A device app predating `createLocalDirectory` needs an update, not a retry.
+        throw new TRPCError({
+          code: /Unknown device RPC method/.test(message) ? 'PRECONDITION_FAILED' : 'BAD_GATEWAY',
+          message,
+        });
+      }
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: /already exists/i.test(result.error ?? '') ? 'CONFLICT' : 'BAD_REQUEST',
+          message: result.error || 'Create folder failed',
+        });
+      }
+
+      return result;
+    }),
+
+  /**
    * Search project files on a remote device. The device performs the match and
    * returns only the result subtree needed by the UI.
    */
@@ -910,7 +1102,7 @@ export const deviceRouter = router({
       });
     }),
 
-  copyAssetForPublish: workspaceFileProcedure
+  copyAssetForPublish: workspacePublishProcedure
     .input(z.object({ from: z.string(), to: z.string() }))
     .mutation(async ({ ctx, input }) =>
       deviceGateway.copyAssetForPublish({
@@ -923,7 +1115,7 @@ export const deviceRouter = router({
       }),
     ),
 
-  readExternalAssetForPublish: workspaceFileProcedure
+  readExternalAssetForPublish: workspacePublishProcedure
     .input(z.object({ path: z.string() }))
     .query(async ({ ctx, input }) =>
       deviceGateway.readExternalAssetForPublish({
@@ -1367,8 +1559,9 @@ export const deviceRouter = router({
   //
   // A tunnel makes one loopback port on a device reachable at
   // `https://<port>--<slug>.lobe.sh/`. Creating one is gated exactly like
-  // browsing the device's filesystem: on a workspace device, only the
-  // enrolling member or an owner may expose a port.
+  // browsing the device's filesystem: on a public workspace device any
+  // non-viewer member may expose a port; on a private one, only the enrolling
+  // member or an owner.
 
   /** Open a link to `port` on a device. */
   createTunnel: deviceProcedure

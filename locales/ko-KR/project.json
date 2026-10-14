@@ -213,6 +213,11 @@
   "topics.status.scheduled": "예약됨",
   "topics.status.unread": "새 결과",
   "topics.status.waitingForHuman": "사용자 입력 필요",
+  "topics.subGroup.byDevice": "장치별",
+  "topics.subGroup.byStatus": "상태별",
+  "topics.subGroup.byTime": "시간별",
+  "topics.subGroup.none": "그룹 없음",
+  "topics.subGroup.title": "주제 그룹화",
   "topics.title": "주제",
   "topics.viewProject": "프로젝트 보기"
 }

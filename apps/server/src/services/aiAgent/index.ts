@@ -1373,7 +1373,7 @@ export class AiAgentService {
         log('execAgent: failed to fetch user settings: %O', error);
       }
       try {
-        const preference = await new UserModel(this.db, this.userId).getUserPreference();
+        const preference = await runFacts.userPreference();
         enableExpertise = preference?.lab?.enableSelfLearning === true;
       } catch (error) {
         console.error('Failed to resolve expertise injection Lab preference:', error);
@@ -1430,6 +1430,7 @@ export class AiAgentService {
     // instead of on the send path.
     const initRequest = buildOperationInitRequest({
       additionalPluginIds,
+      taskId: operationTaskId,
       agentSlug,
       approvalOwnerAssistantId,
       approvedToolEntries,

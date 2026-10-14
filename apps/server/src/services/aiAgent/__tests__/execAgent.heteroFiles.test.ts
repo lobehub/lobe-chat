@@ -61,6 +61,7 @@ vi.mock('@/server/modules/AgentRuntime/factory', () => ({
 }));
 
 const emptyResolvedAttachments = {
+  audioList: [],
   fileList: [],
   imageList: [],
   orderedFileIds: [],
@@ -1223,6 +1224,56 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
 
       expect(mockSpawnHeteroSandbox).toHaveBeenCalledWith(
         expect.objectContaining({ imageList: undefined }),
+      );
+    });
+
+    // regression: the upload whitelist is off for hetero agents, so any file
+    // type can be attached — but only images were forwarded, and the CLI was
+    // never told a document had been attached at all.
+    it('should tell the CLI where to download non-image attachments', async () => {
+      mockResolveAttachmentsByFileIds.mockResolvedValue({
+        ...emptyResolvedAttachments,
+        fileList: [
+          {
+            content: '# icons',
+            fileType: 'text/markdown',
+            id: 'file-2',
+            name: 'svg.md',
+            size: 2048,
+            url: 'https://signed/file-2.md',
+          },
+        ],
+        orderedFileIds: ['file-2', 'file-3'],
+        videoList: [{ alt: 'demo.mp4', id: 'file-3', url: 'https://signed/file-3.mp4' }],
+      });
+
+      await service.execAgent({
+        agentId: 'agent-1',
+        fileIds: ['file-2', 'file-3'],
+        prompt: 'Replace the icons with the ones in svg.md',
+      });
+
+      const { prompt } = mockSpawnHeteroSandbox.mock.calls[0][0];
+      expect(prompt).toMatch(/^Replace the icons with the ones in svg\.md\n\n<attached_files>/);
+      expect(prompt).toContain('- svg.md (text/markdown, 2.0 KB): https://signed/file-2.md');
+      expect(prompt).toContain('- demo.mp4: https://signed/file-3.mp4');
+    });
+
+    it('should leave the prompt untouched when only images are attached', async () => {
+      mockResolveAttachmentsByFileIds.mockResolvedValue({
+        ...emptyResolvedAttachments,
+        imageList: [{ alt: 'screenshot.png', id: 'file-1', url: 'https://signed/file-1.png' }],
+        orderedFileIds: ['file-1'],
+      });
+
+      await service.execAgent({
+        agentId: 'agent-1',
+        fileIds: ['file-1'],
+        prompt: 'Look at this image',
+      });
+
+      expect(mockSpawnHeteroSandbox).toHaveBeenCalledWith(
+        expect.objectContaining({ prompt: 'Look at this image' }),
       );
     });
 

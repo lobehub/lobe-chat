@@ -37,6 +37,7 @@ const mocks = vi.hoisted(() => ({
   },
   taskState: {
     activeTaskId: 'T-1',
+    activeTopicDrawerFocusRequest: undefined as number | undefined,
     activeTopicDrawerTopicId: 'topic-1',
     closeTopicDrawer: vi.fn(),
     useFetchTaskDetail: vi.fn(),
@@ -66,113 +67,105 @@ const mocks = vi.hoisted(() => ({
 const serializeSize = (size: unknown) =>
   size === undefined ? '' : typeof size === 'string' ? size : JSON.stringify(size);
 
-vi.mock('@lobehub/ui', async (importOriginal) => {
-  const actual = await importOriginal<Record<string, unknown>>();
-  const factories: ((original: typeof importOriginal) => unknown)[] = [
-    async (importOriginal) => ({
-      ...(await importOriginal<object>()),
-      copyToClipboard: vi.fn(),
-      DropdownMenu: ({
-        children,
-        items,
-      }: {
-        children?: ReactNode;
-        items?: { key: string; label?: ReactNode; onClick?: () => void; type?: string }[];
-      }) => (
-        <>
-          {children}
-          {items?.map((item) =>
-            item.type === 'divider' ? null : (
-              <button key={item.key} onClick={item.onClick}>
-                {item.label}
-              </button>
-            ),
-          )}
-        </>
-      ),
-    }),
-    async (importOriginal) => ({
-      ...(await importOriginal<object>()),
-      ActionIcon: ({
-        disabled,
-        icon,
-        onClick,
-        size,
-        title,
-      }: {
-        disabled?: boolean;
-        icon?: { name?: string };
-        onClick?: () => void;
-        size?: unknown;
-        title?: string;
-      }) => (
-        <button
-          data-icon={icon?.name}
-          data-size={serializeSize(size)}
-          data-testid="header-action-icon"
-          disabled={disabled}
-          title={title}
-          onClick={onClick}
-        >
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  copyToClipboard: vi.fn(),
+  DropdownMenu: ({
+    children,
+    items,
+  }: {
+    children?: ReactNode;
+    items?: { key: string; label?: ReactNode; onClick?: () => void; type?: string }[];
+  }) => (
+    <>
+      {children}
+      {items?.map((item) =>
+        item.type === 'divider' ? null : (
+          <button key={item.key} onClick={item.onClick}>
+            {item.label}
+          </button>
+        ),
+      )}
+    </>
+  ),
+}));
+
+vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ActionIcon: ({
+    disabled,
+    icon,
+    onClick,
+    size,
+    title,
+  }: {
+    disabled?: boolean;
+    icon?: { name?: string };
+    onClick?: () => void;
+    size?: unknown;
+    title?: string;
+  }) => (
+    <button
+      data-icon={icon?.name}
+      data-size={serializeSize(size)}
+      data-testid="header-action-icon"
+      disabled={disabled}
+      title={title}
+      onClick={onClick}
+    >
+      {title}
+    </button>
+  ),
+  FloatingPanel: ({
+    actions,
+    children,
+    height,
+    minHeight,
+    minWidth,
+    onClose,
+    open,
+    placement,
+    resizable = true,
+    styles,
+    title,
+    width,
+  }: {
+    actions?: ReactNode;
+    children?: ReactNode;
+    height?: unknown;
+    minHeight?: number;
+    minWidth?: number;
+    onClose?: () => void;
+    open?: boolean;
+    placement?: string;
+    resizable?: boolean;
+    styles?: { body?: CSSProperties; panel?: CSSProperties; title?: CSSProperties };
+    title?: ReactNode;
+    width?: unknown;
+  }) =>
+    open ? (
+      <div
+        data-height={serializeSize(height)}
+        data-min-height={serializeSize(minHeight)}
+        data-min-width={serializeSize(minWidth)}
+        data-panel-background={serializeSize(styles?.panel?.background)}
+        data-placement={placement}
+        data-resizable={String(resizable)}
+        data-testid="topic-panel"
+        data-width={serializeSize(width)}
+        style={styles?.panel}
+      >
+        <div data-testid="panel-title-slot" style={styles?.title}>
           {title}
-        </button>
-      ),
-      FloatingPanel: ({
-        actions,
-        children,
-        height,
-        minHeight,
-        minWidth,
-        open,
-        placement,
-        resizable = true,
-        styles,
-        title,
-        width,
-      }: {
-        actions?: ReactNode;
-        children?: ReactNode;
-        height?: unknown;
-        minHeight?: number;
-        minWidth?: number;
-        open?: boolean;
-        placement?: string;
-        resizable?: boolean;
-        styles?: { body?: CSSProperties; panel?: CSSProperties; title?: CSSProperties };
-        title?: ReactNode;
-        width?: unknown;
-      }) =>
-        open ? (
-          <div
-            data-height={serializeSize(height)}
-            data-min-height={serializeSize(minHeight)}
-            data-min-width={serializeSize(minWidth)}
-            data-panel-background={serializeSize(styles?.panel?.background)}
-            data-placement={placement}
-            data-resizable={String(resizable)}
-            data-testid="topic-panel"
-            data-width={serializeSize(width)}
-            style={styles?.panel}
-          >
-            <div data-testid="panel-title-slot" style={styles?.title}>
-              {title}
-            </div>
-            <div data-testid="panel-actions-slot">{actions}</div>
-            <button data-testid="panel-close-icon" />
-            <div data-testid="panel-body-slot" style={styles?.body}>
-              {children}
-            </div>
-          </div>
-        ) : null,
-    }),
-  ];
-  const merged: Record<string, unknown> = { ...actual };
-  for (const factory of factories) {
-    const part = (await factory(importOriginal)) as Record<string, unknown>;
-    for (const [key, value] of Object.entries(part)) if (value !== actual[key]) merged[key] = value;
-  }
-  return merged;
-});
+        </div>
+        <div data-testid="panel-actions-slot">{actions}</div>
+        <button data-testid="panel-close-icon" onClick={onClose} />
+        <div data-testid="panel-body-slot" style={styles?.body}>
+          {children}
+        </div>
+      </div>
+    ) : null,
+}));
 
 vi.mock('next/dynamic', () => ({
   default: () =>
@@ -292,6 +285,7 @@ describe('TopicChatDrawer', () => {
     });
     mocks.navigate.mockClear();
     mocks.taskState.closeTopicDrawer.mockClear();
+    mocks.taskState.activeTopicDrawerFocusRequest = undefined;
     mocks.taskState.activeTopicDrawerTopicId = 'topic-1';
     mocks.taskState.taskDetailMap['T-1'].activities[0] = {
       id: 'topic-1',
@@ -379,7 +373,7 @@ describe('TopicChatDrawer', () => {
 
     expect(getByTestId('topic-panel')).toHaveAttribute(
       'data-panel-background',
-      'var(--lobe-color-bg-container)',
+      'var(--ant-color-bg-container)',
     );
   });
 
@@ -448,6 +442,60 @@ describe('TopicChatDrawer', () => {
     expect(conversationView.getByTestId('chat-list')).toBeInTheDocument();
     expect(conversationView.queryByTestId('artifact-portal')).not.toBeInTheDocument();
     expect(mocks.taskState.closeTopicDrawer).not.toHaveBeenCalled();
+  });
+
+  it('closes its artifact together with the drawer so the topic reopens on the conversation', () => {
+    mocks.chatState.portalStack = [{ artifact: { id: 'message-1' }, type: 'artifact' }];
+    mocks.chatState.showPortal = true;
+
+    const view = render(<TopicChatDrawer />);
+    expect(view.getByTestId('artifact-portal')).toBeInTheDocument();
+
+    fireEvent.click(view.getByTestId('panel-close-icon'));
+
+    expect(mocks.chatState.closeArtifact).toHaveBeenCalledOnce();
+    expect(mocks.taskState.closeTopicDrawer).toHaveBeenCalledOnce();
+  });
+
+  it('leaves another conversation’s artifact open when the drawer closes', () => {
+    mocks.chatState.portalStack = [{ artifact: { id: 'another-message' }, type: 'artifact' }];
+    mocks.chatState.showPortal = true;
+
+    const view = render(<TopicChatDrawer />);
+    fireEvent.click(view.getByTestId('panel-close-icon'));
+
+    expect(mocks.chatState.closeArtifact).not.toHaveBeenCalled();
+    expect(mocks.taskState.closeTopicDrawer).toHaveBeenCalledOnce();
+  });
+
+  it('switches from its artifact to the conversation on each new focus request', () => {
+    // The store mock is not reactive and the drawer is a prop-less memo, so a
+    // throwaway prop forces each re-render after the mocked state changes.
+    const renderAt = (revision: number) => (
+      <TopicChatDrawer {...({ 'data-revision': revision } as object)} />
+    );
+    mocks.chatState.portalStack = [{ artifact: { id: 'message-1' }, type: 'artifact' }];
+    mocks.chatState.showPortal = true;
+
+    const view = render(renderAt(0));
+    expect(mocks.chatState.closeArtifact).not.toHaveBeenCalled();
+
+    mocks.taskState.activeTopicDrawerFocusRequest = 1;
+    view.rerender(renderAt(1));
+    expect(mocks.chatState.closeArtifact).toHaveBeenCalledOnce();
+    view.rerender(renderAt(2));
+    expect(view.getByTestId('chat-list')).toBeInTheDocument();
+
+    // An artifact opened later from inside the conversation stays open until
+    // another request arrives.
+    mocks.chatState.portalStack = [{ artifact: { id: 'message-1' }, type: 'artifact' }];
+    view.rerender(renderAt(3));
+    expect(view.getByTestId('artifact-portal')).toBeInTheDocument();
+    expect(mocks.chatState.closeArtifact).toHaveBeenCalledOnce();
+
+    mocks.taskState.activeTopicDrawerFocusRequest = 2;
+    view.rerender(renderAt(4));
+    expect(mocks.chatState.closeArtifact).toHaveBeenCalledTimes(2);
   });
 
   it('does not take over an artifact opened by another conversation', () => {

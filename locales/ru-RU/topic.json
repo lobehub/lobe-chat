@@ -85,6 +85,7 @@
   "forkSuccess": "Разветвлено в новую тему",
   "forkTitle": "{{title}} (Ветка)",
   "groupTitle.byAgent.unknown": "Неизвестный агент",
+  "groupTitle.byDevice.unknown": "Неизвестное устройство",
   "groupTitle.byProject.noProject": "Без каталога",
   "groupTitle.byStatus.active": "Активные",
   "groupTitle.byStatus.archived": "Архивированные",

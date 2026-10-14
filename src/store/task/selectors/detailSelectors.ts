@@ -128,6 +128,8 @@ const topicDrawerAgentId = (s: TaskStoreState) =>
 
 const topicDrawerTitle = (s: TaskStoreState) => s.activeTopicDrawerTitle;
 
+const topicDrawerFocusRequest = (s: TaskStoreState) => s.activeTopicDrawerFocusRequest;
+
 export const taskDetailSelectors = {
   activeTaskAgentId,
   activeTaskAssigneeUserId,
@@ -169,5 +171,6 @@ export const taskDetailSelectors = {
   taskDetailById,
   taskSaveStatus,
   topicDrawerAgentId,
+  topicDrawerFocusRequest,
   topicDrawerTitle,
 };

@@ -85,6 +85,7 @@
   "forkSuccess": "Đã sao chép sang một chủ đề mới",
   "forkTitle": "{{title}} (Nhánh)",
   "groupTitle.byAgent.unknown": "Tác nhân không xác định",
+  "groupTitle.byDevice.unknown": "Thiết bị không xác định",
   "groupTitle.byProject.noProject": "Không có thư mục",
   "groupTitle.byStatus.active": "Đang hoạt động",
   "groupTitle.byStatus.archived": "Đã lưu trữ",

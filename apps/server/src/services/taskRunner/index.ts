@@ -17,6 +17,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { resolveFailedRunStatus } from '@/server/services/goal/recoveryPolicy';
 import { createTaskRunHooks } from '@/server/services/task/runHooks';
+import { readTaskSkillIds } from '@/server/services/userSkill';
 
 import { buildTaskPrompt } from './buildTaskPrompt';
 import {
@@ -244,6 +245,9 @@ export class TaskRunnerService {
       if (additionalPluginIds) pluginIds.push(...additionalPluginIds);
 
       const taskConfig = (task.config ?? {}) as Record<string, unknown>;
+      // Skills the task itself names for every run — a goal batch's units name
+      // the batch's plan skill — so a re-run or a manual run loads them too.
+      pluginIds.push(...readTaskSkillIds(taskConfig));
 
       // Backfill model snapshot for tasks created before the snapshot logic
       // landed, or whose assignee was set after creation. Once written, the

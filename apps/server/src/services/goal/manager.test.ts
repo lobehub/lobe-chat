@@ -4,6 +4,7 @@ import {
   GOAL_COORDINATOR_ACTOR_ID,
   GOAL_MANAGER_QUESTION_TITLE,
 } from '@lobechat/const/goal';
+import type { GoalConfig } from '@lobechat/types';
 import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -36,6 +37,7 @@ import { deviceGateway } from '../deviceGateway';
 import { GoalService } from './index';
 import { decideFailedTurn, GoalManagerService, MAX_FAILED_MANAGER_TURNS } from './manager';
 import * as scheduler from './scheduler';
+import { GoalStartService } from './start';
 import { GoalWaitService } from './wait';
 
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => db }));
@@ -54,6 +56,7 @@ const service = () => new GoalService(db, userId);
 const manager = () => new GoalManagerService(db, userId);
 const model = () => new GoalModel(db, userId);
 const ops = () => new AgentOperationModel(db, userId);
+const starter = () => new GoalStartService(db, userId);
 const taskPlan = {
   action: 'tasks' as const,
   reason: 'Audit before comparing',
@@ -108,7 +111,7 @@ afterEach(async () => {
     await db.delete(table);
 });
 
-async function start(maxTurns = 4) {
+async function start(maxTurns = 4, extraConfig: Partial<GoalConfig> = {}) {
   const graph = await service().create({
     title: 'Managed research',
     createdByAgentId: agentId,
@@ -121,7 +124,7 @@ async function start(maxTurns = 4) {
   // `failure_decision` ordering in GoalService).
   await db
     .update(goals)
-    .set({ config: { manager: { maxTurns } } })
+    .set({ config: { manager: { maxTurns }, ...extraConfig } })
     .where(eq(goals.id, graph.goal.id));
   expect((await service().tick(graph.goal.id)).outcome).toBe('waiting_external');
   const state = (await model().findById(graph.goal.id))!.config!.managerState!;
@@ -314,6 +317,7 @@ describe('CLI main Agent planning', () => {
 
       const { graph, turnToken } = await service().createFromConversation(conversationOpId, {
         criteria: [{ title: 'Report delivered' }],
+        draft: true,
         title: 'Ship the report',
       });
 
@@ -336,14 +340,302 @@ describe('CLI main Agent planning', () => {
         action: 'tasks',
         recorded: true,
       });
-      expect((await service().tick(graph.goal.id)).outcome).toBe('waiting_external');
-      await ops().recordCompletion(conversationOpId, { status: 'done' });
-      expect((await service().tick(graph.goal.id)).outcome).toBe('advanced');
+      // Planned but still a draft: nothing runs until the run starts it.
+      expect((await service().tick(graph.goal.id)).outcome).toBe('no_progress');
+      await starter().start(graph.goal.id, { operationId: conversationOpId });
       expect((await service().tick(graph.goal.id)).taskId).toBeTruthy();
       expect(vi.mocked(AiAgentService.prototype.execAgent)).not.toHaveBeenCalled();
       expect(
         (await model().list({ topicId: conversationTopicId })).goals.map((item) => item.goal.id),
       ).toEqual([graph.goal.id]);
+    });
+
+    describe('draft until started', () => {
+      const seeds = [
+        { title: 'Device list', description: 'src/store/device/action.ts:175' },
+        { title: 'Tool payload', description: 'src/hooks/useToolResultPayload.ts:14' },
+        { title: 'Project skills', description: 'src/hooks/useFetchProjectSkills.ts:17' },
+        { title: 'Home inbox', description: 'HomeInbox/useHomeInboxTopics.ts:39' },
+      ];
+      const seedId = (graph: { nodes: { id: string; title: string }[] }, title: string) =>
+        graph.nodes.find((node) => node.title === title)!.id;
+
+      /**
+       * Regression: a conversation goal seeded with -t went live at once, so its
+       * agent arranged the graph while the coordinator was already dispatching.
+       */
+      it('dispatches nothing from a seeded draft until it is started', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        expect(graph.goal.status).toBe('draft');
+
+        expect((await service().tick(graph.goal.id)).outcome).toBe('no_progress');
+        expect((await service().graph(graph.goal.id)).nodes.some((n) => n.taskId)).toBe(false);
+
+        await starter().start(graph.goal.id, { operationId: conversationOpId });
+        // Started from inside the still-running conversation: the arrangement is
+        // the turn's answer, so the coordinator does not wait for the run to exit.
+        expect((await model().findById(graph.goal.id))!.status).toBe('running');
+        expect((await model().findById(graph.goal.id))!.config!.managerState).toMatchObject({
+          consumed: true,
+          submitted: { action: 'tasks' },
+        });
+        expect((await service().tick(graph.goal.id)).taskId).toBeTruthy();
+      });
+
+      it('folds the seeds into a batch when started with a rollout', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        await starter().start(graph.goal.id, {
+          operationId: conversationOpId,
+          rollout: {
+            probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+            recipe: 'Persist the resource and show stale data first',
+          },
+        });
+
+        const after = await service().graph(graph.goal.id);
+        const batch = after.nodes.find((n) => n.kind === 'batch')!;
+        const inBatch = new Set(
+          after.edges
+            .filter((edge) => edge.kind === 'contains' && edge.sourceNodeId === batch.id)
+            .map((edge) => edge.targetNodeId),
+        );
+        const tasks = after.nodes.filter((n) => n.kind === 'task');
+        expect(tasks.map((n) => n.title)).toEqual(['Device list', 'Tool payload']);
+        expect(tasks.every((n) => inBatch.has(n.id))).toBe(true);
+        expect(tasks[0].description).toBe('src/store/device/action.ts:175');
+        const config = (await model().findById(graph.goal.id))!.config!;
+        expect(config.rolloutState).toMatchObject({
+          phase: 'probe',
+          unitTitles: ['Device list', 'Tool payload', 'Project skills', 'Home inbox'],
+        });
+        expect(config.rollout?.unitBriefs).toEqual({
+          'Home inbox': 'HomeInbox/useHomeInboxTopics.ts:39',
+          'Project skills': 'src/hooks/useFetchProjectSkills.ts:17',
+        });
+      });
+
+      /**
+       * Regression: probes listed after the probe that builds on them lost the
+       * link (only earlier probes were kept), so the two ran at once.
+       */
+      it('keeps a probe prerequisite whatever order the probes are listed in', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Tool payload'),
+          seedId(graph, 'Device list'),
+          'depends_on',
+        );
+
+        await starter().start(graph.goal.id, {
+          rollout: {
+            // The dependent first: it must still wait for its prerequisite.
+            probeNodeIds: [seedId(graph, 'Tool payload'), seedId(graph, 'Device list')],
+            recipe: 'Persist the resource',
+          },
+        });
+
+        const after = await service().graph(graph.goal.id);
+        const task = (title: string) =>
+          after.nodes.find((n) => n.kind === 'task' && n.title === title)!.id;
+        expect(
+          after.edges.some(
+            (edge) =>
+              edge.kind === 'depends_on' &&
+              edge.sourceNodeId === task('Tool payload') &&
+              edge.targetNodeId === task('Device list'),
+          ),
+        ).toBe(true);
+      });
+
+      it('refuses to fold a seed another kept node depends on, changing nothing', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Home inbox'),
+          seedId(graph, 'Project skills'),
+          'depends_on',
+        );
+
+        await expect(
+          starter().start(graph.goal.id, {
+            rollout: {
+              probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+              recipe: 'Persist the resource',
+              unitNodeIds: [seedId(graph, 'Project skills')],
+            },
+          }),
+        ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+        expect(
+          (await service().graph(graph.goal.id)).nodes.filter((n) => n.kind === 'task'),
+        ).toHaveLength(4);
+      });
+
+      /**
+       * Regression: a CLI released before `lh goal start` existed created a draft
+       * it could never start, and nothing noticed the goal sat there.
+       */
+      it('opens a running goal when the caller does not ask for a draft', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        expect(graph.goal.status).toBe('running');
+      });
+
+      /**
+       * Regression: a probe's link to a unit or to a node left behind was dropped
+       * without a word, so the probe ran before the work it needed.
+       */
+      it.each([
+        ['a unit', 'Project skills'],
+        ['a seed kept out of the batch', 'Home inbox'],
+      ])('refuses a probe that depends on %s, changing nothing', async (_, prerequisite) => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Device list'),
+          seedId(graph, prerequisite),
+          'depends_on',
+        );
+
+        await expect(
+          starter().start(graph.goal.id, {
+            rollout: {
+              probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+              recipe: 'Persist the resource',
+              unitNodeIds: [seedId(graph, 'Project skills')],
+            },
+          }),
+        ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+        expect(
+          (await service().graph(graph.goal.id)).nodes.filter((n) => n.kind === 'task'),
+        ).toHaveLength(4);
+      });
+
+      it('keeps a unit that depends on a probe, which the gate already orders', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await new GoalGraphModel(db, userId).createEdge(
+          graph.goal.id,
+          seedId(graph, 'Home inbox'),
+          seedId(graph, 'Device list'),
+          'depends_on',
+        );
+
+        await starter().start(graph.goal.id, {
+          rollout: {
+            probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+            recipe: 'Persist the resource',
+          },
+        });
+
+        expect((await model().findById(graph.goal.id))!.status).toBe('running');
+      });
+
+      /** Regression: the roster is keyed by title, so a second seed of one title vanished. */
+      it('refuses to fold two seeds that share a title', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: [...seeds, { title: 'Home inbox', description: 'HomeInbox/index.tsx:12' }],
+          title: 'Cache the resources',
+        });
+
+        await expect(
+          starter().start(graph.goal.id, {
+            rollout: {
+              probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+              recipe: 'Persist the resource',
+            },
+          }),
+        ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+      });
+
+      /**
+       * Regression: after `start` settled the turn, `lh goal plan` on it read as a
+       * duplicate and printed "Plan recorded" while writing nothing.
+       */
+      it('refuses a plan submitted after start settled the turn', async () => {
+        await startConversationRun();
+        const { graph, turnToken } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await starter().start(graph.goal.id, { operationId: conversationOpId });
+
+        await expect(
+          manager().submit(graph.goal.id, turnToken, conversationOpId, taskPlan),
+        ).rejects.toMatchObject({ code: 'CONFLICT' });
+        expect((await service().graph(graph.goal.id)).nodes.some((n) => n.title === 'Audit')).toBe(
+          false,
+        );
+      });
+
+      /**
+       * Regression: resume (or pause then resume) moved a draft to running
+       * without `start`, so the creating run's turn stayed open and nothing
+       * dispatched until that run exited.
+       */
+      it('leaves launching a draft to start, refusing pause and resume', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        await expect(service().resume(graph.goal.id)).rejects.toMatchObject({ code: 'CONFLICT' });
+        await expect(service().pause(graph.goal.id)).rejects.toMatchObject({ code: 'CONFLICT' });
+        expect((await model().findById(graph.goal.id))!.status).toBe('draft');
+      });
+
+      it('starts a draft only once', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+        await starter().start(graph.goal.id);
+        await expect(starter().start(graph.goal.id)).rejects.toMatchObject({ code: 'CONFLICT' });
+      });
     });
 
     it('counts only planning turns, not the rest of the conversation, as management spend', async () => {
@@ -409,7 +701,7 @@ describe('CLI main Agent planning', () => {
 
       const { graph, turnToken } = await service().createFromConversation(
         'op_client_only_local_run',
-        { title: 'Local goal' },
+        { draft: true, title: 'Local goal' },
         localRun,
       );
       expect(graph.goal).toMatchObject({ agentId, subjectId: conversationTopicId });
@@ -417,8 +709,8 @@ describe('CLI main Agent planning', () => {
       expect(
         await manager().submit(graph.goal.id, turnToken, 'op_client_only_local_run', taskPlan),
       ).toEqual({ action: 'tasks', recorded: true });
-      // No run to watch exit: the submitted plan settles the turn.
-      expect((await service().tick(graph.goal.id)).outcome).toBe('advanced');
+      // No run to watch exit: starting the planned draft settles the turn.
+      await starter().start(graph.goal.id);
       expect((await service().tick(graph.goal.id)).taskId).toBeTruthy();
       expect(vi.mocked(AiAgentService.prototype.execAgent)).not.toHaveBeenCalled();
 
@@ -665,8 +957,10 @@ describe('CLI main Agent planning', () => {
       topicId: shared,
     });
     const { graph: b } = await service().createFromConversation(sharedRunId, {
+      draft: true,
       title: 'Second goal',
     });
+    await starter().start(b.goal.id);
     await ops().recordCompletion(sharedRunId, { status: 'done' });
     expect((await service().tick(b.goal.id)).outcome).toBe('advanced');
     expect((await service().tick(b.goal.id)).outcome).toBe('waiting_external');
@@ -734,7 +1028,12 @@ describe('CLI main Agent planning', () => {
     const { id, state, op } = await start();
     // No-op writes to the very rows the snapshot covers, mid-turn.
     for (const node of (await service().graph(id)).nodes) {
-      await new GoalGraphModel(db, userId).updateNodeStatus(id, node.id, node.status, 'retry churn');
+      await new GoalGraphModel(db, userId).updateNodeStatus(
+        id,
+        node.id,
+        node.status,
+        'retry churn',
+      );
     }
     await expect(manager().submit(id, state.token, op.id, taskPlan)).resolves.toBeTruthy();
   });
@@ -1616,6 +1915,98 @@ describe('CLI main Agent planning', () => {
  * whitelist, which is why a Goal could park on a person for hours with a main
  * Agent configured and idle.
  */
+describe('a batch the main Agent declares', () => {
+  const batchPlan = {
+    action: 'tasks' as const,
+    reason: 'Twelve resources share one caching recipe',
+    tasks: [
+      { title: 'Device list', description: 'Persist device:listDevices; online state unknown' },
+      { title: 'Tool payload', description: 'Persist toolResultPayload in IndexedDB, capped' },
+    ],
+    rollout: {
+      recipe: 'Persist the resource, show stale data first, revalidate, add a regression test',
+      units: [
+        { title: 'Project skills', description: 'src/hooks/useFetchProjectSkills.ts:17' },
+        'Home inbox',
+        'Device list',
+      ],
+    },
+  };
+
+  const settle = async (ids: string[]) => {
+    for (const id of ids)
+      await db.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, id));
+  };
+
+  it('lays the probes into a batch and keeps the rest of the roster waiting', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, batchPlan);
+
+    const graph = await service().graph(id);
+    const batch = graph.nodes.find((n) => n.kind === 'batch')!;
+    const tasksInGraph = graph.nodes.filter((n) => n.kind === 'task');
+    expect(tasksInGraph.map((n) => n.title)).toEqual(['Device list', 'Tool payload']);
+    const contained = graph.edges
+      .filter((edge) => edge.kind === 'contains' && edge.sourceNodeId === batch.id)
+      .map((edge) => edge.targetNodeId);
+    expect(tasksInGraph.every((n) => contained.includes(n.id))).toBe(true);
+    const config = (await model().findById(id))!.config!;
+    expect(config.rolloutState).toMatchObject({
+      phase: 'probe',
+      releasedCount: 2,
+      unitTitles: ['Device list', 'Tool payload', 'Project skills', 'Home inbox'],
+    });
+    expect(config.rollout).toMatchObject({
+      canarySize: 2,
+      trigger: 'canary',
+      unitBriefs: { 'Project skills': 'src/hooks/useFetchProjectSkills.ts:17' },
+    });
+  });
+
+  it('lets the gate release the next wave instead of starting a planning turn', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, batchPlan);
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    const probes = (await service().graph(id)).nodes.filter((n) => n.kind === 'task');
+    await settle(probes.map((n) => n.id));
+
+    await service().tick(id);
+
+    const after = await service().graph(id);
+    const released = after.nodes.find((n) => n.title === 'Project skills');
+    expect(released?.description).toContain('src/hooks/useFetchProjectSkills.ts:17');
+    expect(released?.description).toContain('show stale data first');
+    expect((await model().findById(id))!.config!.managerState!.token).toBe(state.token);
+  });
+
+  it.each([
+    {
+      label: 'rollout is turned off for the goal',
+      config: { rollout: { trigger: 'off' as const } },
+      plan: batchPlan,
+    },
+    {
+      label: 'it names a single probe',
+      config: {},
+      plan: { ...batchPlan, tasks: batchPlan.tasks.slice(0, 1) },
+    },
+    {
+      label: 'its roster holds nothing beyond the probes',
+      config: {},
+      plan: { ...batchPlan, rollout: { ...batchPlan.rollout, units: ['Device list'] } },
+    },
+  ])('refuses a batch when $label, writing nothing', async ({ config, plan }) => {
+    const { id, state, op } = await start(4, config);
+
+    await expect(manager().submit(id, state.token, op.id, plan)).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+    });
+    expect((await service().graph(id)).nodes.filter((n) => n.kind !== 'problem')).toHaveLength(0);
+    expect((await model().findById(id))!.config!.managerState!.submitted).toBeUndefined();
+  });
+});
+
 describe('planner precedence', () => {
   const explored = (maxTurns = 4) =>
     service().create({

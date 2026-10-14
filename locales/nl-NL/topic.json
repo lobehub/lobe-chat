@@ -85,6 +85,7 @@
   "forkSuccess": "Vertakt naar een nieuw onderwerp",
   "forkTitle": "{{title}} (Vertakking)",
   "groupTitle.byAgent.unknown": "Onbekende agent",
+  "groupTitle.byDevice.unknown": "Onbekend apparaat",
   "groupTitle.byProject.noProject": "Geen map",
   "groupTitle.byStatus.active": "Actief",
   "groupTitle.byStatus.archived": "Gearchiveerd",

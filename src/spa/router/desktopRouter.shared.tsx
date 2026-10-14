@@ -50,6 +50,7 @@ import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/route
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
 import { agentsRouteMeta } from '@/features/AgentViewAll/routeMeta';
 import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/routeMeta';
+import DevicesPageSkeleton from '@/features/DeviceManager/Skeleton';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import {
   projectConversationRouteMeta,
@@ -78,8 +79,10 @@ import {
 } from '@/routes/(main)/group/features/routeMeta';
 import AppShellSkeleton, { APP_SHELL_FALLBACK_ID } from '@/spa/BootShell/AppShellSkeleton';
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
+import { activityListLoader } from '@/spa/router/activityListLoader';
 import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
+import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
@@ -793,6 +796,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
         handle: {
           meta: routeMeta({ icon: BrainCircuit, titleKey: 'navigation.memoryContexts' }),
         },
+        // Seed the persisted head page before the page paints (see `contextListLoader`).
+        loader: contextListLoader,
         path: 'contexts',
       },
       {
@@ -825,6 +830,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
         handle: {
           meta: routeMeta({ icon: BrainCircuit, titleKey: 'navigation.memory' }),
         },
+        // Seed the persisted head page before the page paints (see `activityListLoader`).
+        loader: activityListLoader,
         path: 'activities',
       },
     ],
@@ -1612,7 +1619,7 @@ const createMainAreaChildrenDefinition = (options: MainAreaRouteOptions = {}): R
                   () => import('@/routes/(main)/[workspaceSlug]/settings/devices'),
                   'Desktop > Workspace > Settings > Devices',
                 ),
-                handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('grid') }) },
+                handle: { meta: routeMeta({ Skeleton: DevicesPageSkeleton }) },
                 path: 'devices',
               },
               // Device detail level — the page reads the device id from `sub`.

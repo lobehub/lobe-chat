@@ -85,6 +85,7 @@
   "forkSuccess": "새 주제로 포크되었습니다",
   "forkTitle": "{{title}} (분기)",
   "groupTitle.byAgent.unknown": "알 수 없는 에이전트",
+  "groupTitle.byDevice.unknown": "알 수 없는 장치",
   "groupTitle.byProject.noProject": "디렉터리 없음",
   "groupTitle.byStatus.active": "활성",
   "groupTitle.byStatus.archived": "보관됨",

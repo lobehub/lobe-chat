@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Планирано",
   "topics.status.unread": "Нови резултати",
   "topics.status.waitingForHuman": "Изисква вашия отговор",
+  "topics.subGroup.byDevice": "По устройство",
+  "topics.subGroup.byStatus": "По статус",
+  "topics.subGroup.byTime": "По време",
+  "topics.subGroup.none": "Без групиране",
+  "topics.subGroup.title": "Групиране на теми",
   "topics.title": "Теми",
   "topics.viewProject": "Преглед на проект"
 }

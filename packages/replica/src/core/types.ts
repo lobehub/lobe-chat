@@ -15,9 +15,10 @@ export interface ReplicaRow<T> {
 
 /**
  * Where a replica keeps its rows between sessions (IndexedDB, localStorage …).
- * Reads and writes are best-effort: the server stays the durable source of
- * truth, so `get` and `set` should swallow their own I/O failures (a failed
- * read is a cache miss, a failed write is retried by the next one).
+ * The server stays the durable source of truth, so `get` is best-effort: it
+ * swallows its own I/O failures and reports a miss. Writes are not: `set` and
+ * `remove` must reject when they did not land (see each method), so the
+ * engine can retry them instead of treating a dropped row as persisted.
  */
 export interface ReplicaStorage<T> {
   get: (key: ReplicaRowKey) => Promise<ReplicaRow<T> | undefined>;
@@ -41,6 +42,13 @@ export interface ReplicaStorage<T> {
    * of letting a row the user deleted hydrate again. A missing row is a success.
    */
   remove: (key: ReplicaRowKey) => Promise<void>;
+  /**
+   * Write a row. Should **reject** when the write did not land: the engine only
+   * treats a row as holding a value after `set` resolved, so a rejected write is
+   * retried by the next persist rather than skipped as redundant. A storage that
+   * swallows failures still works, but a dropped write then survives until the
+   * value changes or the next session.
+   */
   set: (key: ReplicaRowKey, row: ReplicaRow<T>) => Promise<void>;
 }
 
@@ -49,8 +57,12 @@ export interface ReplicaStorage<T> {
  * - `storage`: hydrated from the persisted projection (may be stale)
  * - `server`: confirmed by a network response
  * - `local`: written locally before any hydrate/replace landed
+ * - `seed`: a provisional local row (e.g. a list row standing in for a detail so
+ *   an object stays resolvable). Unlike `local` it is *not* authoritative: a
+ *   persisted `storage` value may replace it on hydrate, and it never persists —
+ *   so it cannot overwrite the detail it is only standing in for.
  */
-export type ReplicaSource = 'local' | 'server' | 'storage';
+export type ReplicaSource = 'local' | 'seed' | 'server' | 'storage';
 
 /**
  * Identity partition of the persisted projection (user + workspace by default).
@@ -94,8 +106,32 @@ export interface ReplicaEntryMeta<T> {
   pending: ReplicaPendingMutation<T>[];
   /** Stable query identity beyond the key (filters, page size). */
   query?: string;
+  /**
+   * Every write made while the entry is still a `seed`, in order — the seed
+   * writes themselves and the confirmed writes made over them. A hydrate that
+   * replaces the seed replays them onto the stored value: the seed's fresher
+   * fields (a list row's renamed title) and a confirmed edit made before
+   * storage answered both survive, instead of storage painting older values.
+   */
+  seedPatches?: ReplicaSeedPatch<T>[];
   source: ReplicaSource;
   updatedAt: number;
+}
+
+export interface ReplicaSeedPatch<T> {
+  /**
+   * Replayed onto the stored value, so a seed write must merge the fields it
+   * owns into its input rather than ignore it (its first run sees `undefined`).
+   */
+  apply: (data: T | undefined) => T | undefined;
+  persist: boolean;
+  /** A provisional seed write: replayed, but never makes the result confirmed. */
+  seed?: boolean;
+  /**
+   * Source of a seed write. A later seed of the same tag supersedes this one
+   * (since the last confirmed write), so it must carry every field this one set.
+   */
+  tag?: string;
 }
 
 /** Bookkeeping slot a replica keeps inside its domain store. */

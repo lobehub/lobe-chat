@@ -19,7 +19,6 @@ import type {
  */
 export type IFeatureFlagsState = {
   enableAgentOnboarding: boolean | undefined;
-  enableAgentSelfIteration: boolean | undefined;
   /**
    * Agent Share capability: may this user publish an Agent as a shared link AND
    * open/chat on an already-live shared agent. One allowlist gates both sides.

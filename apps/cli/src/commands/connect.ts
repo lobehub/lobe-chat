@@ -58,6 +58,8 @@ import {
 } from '../device/register';
 import { TerminalSessionManager } from '../device/terminal';
 import {
+  CONNECT_RETRYABLE_EXIT_CODE,
+  getWorkspaceFailureExitCode,
   installConnectService,
   readConnectServiceStatus,
   restartConnectService,
@@ -94,7 +96,7 @@ interface ConnectOptions {
   serviceChild?: boolean;
   token?: string;
   verbose?: boolean;
-  /** Enroll this machine as a device of the given workspace (admin only). */
+  /** Enroll this machine as a device of the given workspace (workspace members). */
   workspace?: string;
 }
 
@@ -105,7 +107,7 @@ export function registerConnectCommand(program: Command) {
     .option('--token <jwt>', 'JWT access token')
     .option('--gateway <url>', 'Device gateway URL')
     .option('--device-id <id>', 'Device ID (auto-generated if not provided)')
-    .option('--workspace <id>', 'Enroll as a device of this workspace (admin only)')
+    .option('--workspace <id>', 'Enroll as a device of this workspace (workspace members)')
     .option(
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
@@ -202,9 +204,18 @@ export function registerConnectCommand(program: Command) {
   serviceCmd
     .command('install')
     .description('Install and start the Linux user systemd connect service')
-    .action(() => {
-      installConnectService();
-      log.info(`Installed and started ${CONNECT_SERVICE_NAME}.`);
+    .option('--workspace <id>', 'Enroll as a device of this workspace (workspace members)')
+    .option(
+      '--public',
+      'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
+    )
+    .action((options: Pick<ConnectOptions, 'public' | 'workspace'>) => {
+      installConnectService({ public: options.public, workspace: options.workspace });
+      log.info(
+        options.workspace
+          ? `Installed and started ${CONNECT_SERVICE_NAME} for workspace ${options.workspace}.`
+          : `Installed and started ${CONNECT_SERVICE_NAME}.`,
+      );
       log.info("Run 'lh connect service status' to inspect the service.");
     });
 
@@ -327,7 +338,8 @@ function buildDaemonArgs(options: ConnectOptions): string[] {
 }
 
 async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
-  let auth = await resolveToken(options);
+  const unavailableExitCode = options.workspace ? CONNECT_RETRYABLE_EXIT_CODE : undefined;
+  let auth = await resolveToken({ ...options, unavailableExitCode });
   const settings = loadSettings();
   const gatewayUrl = normalizeUrl(options.gateway) || settings?.gatewayUrl;
 
@@ -364,14 +376,20 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   let connectToken = auth.token;
   let connectTokenType: 'apiKey' | 'jwt' | 'serviceToken' = auth.tokenType;
   if (workspaceId) {
-    const minted = await mintWorkspaceConnectToken(auth, workspaceId);
-    connectToken = minted.token;
+    try {
+      const minted = await mintWorkspaceConnectToken(auth, workspaceId);
+      connectToken = minted.token;
+    } catch (err) {
+      log.error(`Workspace connect token mint failed: ${(err as Error).message}`);
+      process.exit(getWorkspaceFailureExitCode(err));
+      throw new Error('process.exit', { cause: err });
+    }
     connectTokenType = 'jwt';
   }
 
   // Re-resolve the admin auth and, for workspace mode, re-mint the connect token.
   const refreshConnectToken = async (): Promise<string | undefined> => {
-    const refreshed = await resolveToken({});
+    const refreshed = await resolveToken({ unavailableExitCode });
     if (!refreshed) return undefined;
     auth = refreshed;
     if (workspaceId) {
@@ -763,6 +781,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   // (e.g., auto-reconnect may send an expired JWT before proactive refresh fires)
   let authFailedRefreshAttempted = false;
   client.on('auth_failed', async (reason) => {
+    let exitCode = 1;
     if (connectTokenType === 'jwt' && !authFailedRefreshAttempted) {
       authFailedRefreshAttempted = true;
       info(`Authentication failed (${reason}). Attempting token refresh...`);
@@ -777,8 +796,9 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
           await client.reconnect();
           return;
         }
-      } catch {
-        // fall through
+      } catch (err) {
+        error(`Token refresh failed: ${(err as Error).message}`);
+        if (workspaceId) exitCode = getWorkspaceFailureExitCode(err);
       }
     }
 
@@ -787,7 +807,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       `Run '${CLI_PRIMARY_BIN} login', or set ${CLI_API_KEY_ENV} and run '${CLI_PRIMARY_BIN} login --server <url>' to configure API key authentication.`,
     );
     cleanup();
-    process.exit(1);
+    process.exit(exitCode);
   });
 
   // Handle auth expired — refresh token and reconnect automatically
@@ -798,6 +818,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     }
 
     info('Authentication expired. Attempting to refresh token...');
+    let exitCode = 1;
 
     try {
       const newToken = await refreshConnectToken();
@@ -808,13 +829,14 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
         await client.reconnect();
         return;
       }
-    } catch {
-      // refresh failed — fall through
+    } catch (err) {
+      error(`Token refresh failed: ${(err as Error).message}`);
+      if (workspaceId) exitCode = getWorkspaceFailureExitCode(err);
     }
 
     error("Could not refresh token. Run 'lh login' to re-authenticate.");
     cleanup();
-    process.exit(1);
+    process.exit(exitCode);
   });
 
   // Another `lh connect` of this install (same persisted connection id) took
@@ -892,7 +914,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
       if (workspaceId) {
         error(`Workspace device registration failed: ${(err as Error).message}`);
         cleanup();
-        process.exit(1);
+        process.exit(getWorkspaceFailureExitCode(err));
       }
       error(`Device registration failed (non-fatal): ${(err as Error).message}`);
     }

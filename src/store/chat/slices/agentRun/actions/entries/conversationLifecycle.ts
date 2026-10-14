@@ -3,7 +3,10 @@ import { createCallAgentManifest } from '@lobechat/builtin-tool-agent-management
 import { GoalIdentifier, isGoalPrompt } from '@lobechat/builtin-tool-goal';
 import { isDesktop, isHeterogeneousAgentModelId, LOADING_FLAT } from '@lobechat/const';
 import { formatSelectedSkillsContext, formatSelectedToolsContext } from '@lobechat/context-engine';
-import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
+import {
+  collectHeteroAttachedFiles,
+  isRemoteHeterogeneousType,
+} from '@lobechat/heterogeneous-agents';
 import { chainCompressContext } from '@lobechat/prompts';
 import type {
   ChatAudioItem,
@@ -107,6 +110,7 @@ import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { findProjectDirectory } from '@/store/projectWorkingDirectory';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { getUserStoreState } from '@/store/user';
@@ -495,10 +499,28 @@ export class ConversationLifecycleActionImpl {
     const boundTopic = context.topicId
       ? topicSelectors.getTopicById(context.topicId)(this.#get())
       : undefined;
-    if (boundTopic?.projectWorkingDirectoryId) {
-      const { data: directory } = await projectWorkingDirectoryService.resolve(
-        boundTopic.projectWorkingDirectoryId,
-      );
+    // A blank conversation opened from a project group's "+" runs in the
+    // directory it staged; the gateway transport has the server bind the topic.
+    const pendingDirectory = this.#get().pendingNewTopicDirectory;
+    const stagedDirectoryId =
+      !context.topicId &&
+      !context.isolatedTopic &&
+      !context.groupId &&
+      !directMentionRoute &&
+      pendingDirectory?.agentId === ownerAgentId
+        ? pendingDirectory.projectWorkingDirectoryId
+        : undefined;
+    const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
+    let stagedDirectory: { id: string; projectId: string } | undefined;
+    if (projectDirectoryId) {
+      // The sidebar's directory replica already holds the row; read it locally
+      // so the optimistic pair is not held behind a network round trip. The
+      // server re-validates the directory (environment link, enabled state,
+      // permission) when it starts the run. Only a cold replica pays for resolve.
+      const directory =
+        findProjectDirectory(projectDirectoryId) ??
+        (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
+      if (stagedDirectoryId) stagedDirectory = directory;
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1168,6 +1190,11 @@ export class ConversationLifecycleActionImpl {
           value: {
             id: mintedTopicId,
             ...newTopicModelSnapshot,
+            // Shown under its project group from the first frame.
+            ...(stagedDirectory && {
+              projectId: stagedDirectory.projectId,
+              projectWorkingDirectoryId: stagedDirectory.id,
+            }),
             ...(operationContext.groupId ? {} : { sessionId: operationContext.agentId }),
             title: newTopicTitle,
           },
@@ -1745,6 +1772,7 @@ export class ConversationLifecycleActionImpl {
         // may already be cleared by this point, so we read from DB instead)
         const userMsg = heteroData.messages.find((m: any) => m.id === heteroData.userMessageId);
         const persistedImageList = userMsg?.imageList;
+        const persistedAttachedFiles = userMsg ? collectHeteroAttachedFiles(userMsg) : [];
         const persistedMetadata = userMsg?.metadata as MessageMetadata | undefined;
         const effectiveContextSelections = contextSelections?.length
           ? contextSelections
@@ -1789,6 +1817,7 @@ export class ConversationLifecycleActionImpl {
 
         await executeHeterogeneousAgent(() => this.#get(), {
           assistantMessageId: heteroExecutionAssistantId,
+          attachedFiles: persistedAttachedFiles.length ? persistedAttachedFiles : undefined,
           context: heteroExecutionContext,
           contextSelections: effectiveContextSelections,
           heterogeneousProvider: effectiveHeterogeneousProvider,
@@ -1886,6 +1915,7 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
+          projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention
           // selection (only the client runtime did). Omit when empty.

@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Accordion, type AccordionItemType, Tag, Text } from '@lobehub/ui';
+import { Flexbox, Accordion, type AccordionItemType, Tag, Text } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -88,7 +87,9 @@ const ProcessControl = memo<ProcessControlProps>(
     // advances entirely on its own — the only legitimate human control over its
     // pace is pause/resume.
     const canAct = canEdit && !isGoalClosed(graph);
-    const hasExperiments = graph.nodes.some((view) => view.node.kind === 'experiment');
+    const hasContainers = graph.nodes.some(
+      (view) => view.node.kind === 'experiment' || view.node.kind === 'batch',
+    );
 
     const map = (
       <Graph
@@ -104,7 +105,7 @@ const ProcessControl = memo<ProcessControlProps>(
 
     const process = (
       <Flexbox gap={20}>
-        {hasExperiments && map}
+        {hasContainers && map}
         <Flexbox gap={12}>
           <Frontier
             actions={actions}
@@ -115,7 +116,7 @@ const ProcessControl = memo<ProcessControlProps>(
           />
         </Flexbox>
 
-        {!hasExperiments && map}
+        {!hasContainers && map}
 
         <Accordion
           defaultValue={['deliverables', 'findings', 'activity']}

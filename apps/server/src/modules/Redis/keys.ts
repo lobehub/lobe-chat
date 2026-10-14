@@ -16,6 +16,11 @@
  */
 export const RedisKeyNamespace = {
   /**
+   * Agent Signal keys — the same `agent-signal` keyspace the Agent Signal runtime
+   * stores (receipts, dedupe, policy state) already use.
+   */
+  AGENT_SIGNAL: 'agent-signal',
+  /**
    * AI generation related keys (agent welcome, placeholders, etc.)
    */
   AI_GENERATION: 'aiGeneration',
@@ -46,6 +51,34 @@ export const RedisKeyNamespace = {
  * ```
  */
 export const RedisKeys = {
+  /**
+   * Agent Signal spend bounds — see {@link RedisKeyNamespace.AGENT_SIGNAL}. Per-user
+   * counters and quotas that keep background self-iteration work within its limits.
+   */
+  agentSignal: {
+    /**
+     * Feedback-classifier calls one user made on one UTC day.
+     * Full key: agent-signal:classifier_calls:v1:{userId}:{utcDay}
+     */
+    classifierCalls: (userId: string, utcDay: string): string =>
+      `classifier_calls:v1:${userId}:${utcDay}`,
+    /**
+     * Self-feedback declarations accepted in one topic scope.
+     * Full key: agent-signal:declaration_slots:v1:{scopeKey}
+     */
+    declarationSlots: (scopeKey: string): string => `declaration_slots:v1:${scopeKey}`,
+    /**
+     * Manual Agent Signal triggers one user sent in the current hourly window.
+     * Full key: agent-signal:manual_triggers:v1:{userId}
+     */
+    manualTriggers: (userId: string): string => `manual_triggers:v1:${userId}`,
+    /**
+     * Distinct topics one user's nightly review covered on one local night.
+     * Full key: agent-signal:nightly_topics:v1:{userId}:{localDate}
+     */
+    nightlyTopics: (userId: string, localDate: string): string =>
+      `nightly_topics:v1:${userId}:${localDate}`,
+  },
   /**
    * AI generation scope - for AI-generated content like welcome messages
    */
@@ -93,3 +126,21 @@ export const RedisKeys = {
       `workspace_rescan_claim:v1:${userId}:${pool}:${deviceId}:${cwd}`,
   },
 } as const;
+
+/**
+ * The namespace (key prefix) each {@link RedisKeys} scope lives under. A scope's keys are
+ * only read and written through a client prefixed with its namespace, so a key can never
+ * land under another scope's prefix. Every scope must be mapped.
+ */
+export const RedisKeyScopeNamespace = {
+  agentSignal: RedisKeyNamespace.AGENT_SIGNAL,
+  aiGeneration: RedisKeyNamespace.AI_GENERATION,
+  lobechat: RedisKeyNamespace.LOBEHUB,
+  sendPathCache: RedisKeyNamespace.SEND_PATH_CACHE,
+} as const satisfies Record<
+  keyof typeof RedisKeys,
+  (typeof RedisKeyNamespace)[keyof typeof RedisKeyNamespace]
+>;
+
+/** A {@link RedisKeys} scope, e.g. `sendPathCache` or `agentSignal`. */
+export type RedisKeyScope = keyof typeof RedisKeyScopeNamespace;

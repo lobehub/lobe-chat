@@ -8,6 +8,7 @@ import { useAcceptanceScope } from '../AcceptanceScope';
 import { acceptanceCodingScope } from '../History/codingScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import AcceptanceStatusPill from './AcceptanceStatusPill';
+import PreviewReviewLink from './PreviewReviewLink';
 import PullRequestLinks from './PullRequestLinks';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -123,6 +124,7 @@ const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIden
           fallback={acceptanceCodingScope(rounds)?.pullRequest}
           pullRequests={pullRequests}
         />
+        <PreviewReviewLink acceptanceId={acceptance.id} rounds={rounds} />
       </Flexbox>
     </Flexbox>
   );

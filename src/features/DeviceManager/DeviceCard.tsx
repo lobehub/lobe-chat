@@ -33,9 +33,10 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { refreshDeviceList } from './const';
-import { buildHealthTimeline } from './DeviceHealth/buildHealthTimeline';
+import { DeviceRunningSummaryValue } from './DeviceActivity/RunningUsers';
 import { useDeviceMetricSeries } from './DeviceHealth/shared';
-import UsageMeter, { UsageMeterGroup } from './DeviceHealth/UsageMeter';
+import UsageMeter, { UsageMeterGroup, UsageMeterSkeleton } from './DeviceHealth/UsageMeter';
+import { latestUsageView } from './DeviceHealth/viewState';
 import { getDeviceIcon, getPlatformLabel } from './getDeviceIcon';
 import { openShareDeviceModal } from './ShareDeviceModal';
 import { useCanEditDevice } from './useCanEditDevice';
@@ -131,7 +132,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // Cards are not virtualized; only cards on screen keep their usage meters polling.
   const cardRef = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(cardRef);
-  const { data } = useDeviceMetricSeries(device.deviceId, !!inViewport);
+  const { data, error } = useDeviceMetricSeries(device.deviceId, !!inViewport);
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
   const canEdit = useCanEditDevice()(device);
@@ -273,7 +274,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
     device.enroller?.username ||
     t('workspaceSetting.devices.unknownEnroller');
   const platformLabel = getPlatformLabel(device.platform, device.architecture);
-  const latest = data && data.points.length > 0 ? buildHealthTimeline(data).latest : null;
+  const usage = latestUsageView({ data, error });
 
   return (
     <div
@@ -375,18 +376,23 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
           </Flexbox>
           <Flexbox gap={4} style={{ minWidth: 0 }}>
             <Text fontSize={13} type={'secondary'}>
-              {t('devices.card.workingDir')}
+              {t('devices.card.runningTopics')}
             </Text>
-            <span className={styles.code} title={device.defaultCwd ?? undefined}>
-              {device.defaultCwd || '—'}
-            </span>
+            <DeviceRunningSummaryValue deviceId={device.deviceId} />
           </Flexbox>
         </div>
 
-        <UsageMeterGroup>
-          <UsageMeter label={t('devices.card.cpuUsage')} value={latest?.cpuPercent} />
-          <UsageMeter label={t('devices.card.memoryUsage')} value={latest?.memoryPercent} />
-        </UsageMeterGroup>
+        {usage.loading ? (
+          <UsageMeterGroup loading>
+            <UsageMeterSkeleton />
+            <UsageMeterSkeleton />
+          </UsageMeterGroup>
+        ) : (
+          <UsageMeterGroup>
+            <UsageMeter label={t('devices.card.cpuUsage')} value={usage.latest?.cpuPercent} />
+            <UsageMeter label={t('devices.card.memoryUsage')} value={usage.latest?.memoryPercent} />
+          </UsageMeterGroup>
+        )}
       </Flexbox>
 
       <Flexbox horizontal align={'center'} className={styles.footer} gap={8}>

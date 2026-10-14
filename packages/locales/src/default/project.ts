@@ -55,6 +55,11 @@ export default {
   'topics.status.completed': 'Completed',
   'topics.status.archived': 'Archived',
   'topics.status.unread': 'New results',
+  'topics.subGroup.title': 'Group topics',
+  'topics.subGroup.none': 'No grouping',
+  'topics.subGroup.byDevice': 'By device',
+  'topics.subGroup.byTime': 'By time',
+  'topics.subGroup.byStatus': 'By status',
   'settings.addDirectory': 'Add folder',
   'settings.addDirectoryDescription':
     'Select an environment and a connected device, then enter the full path of an existing folder. Files stay on that device.',

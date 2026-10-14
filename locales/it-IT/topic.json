@@ -85,6 +85,7 @@
   "forkSuccess": "Biforcato in un nuovo argomento",
   "forkTitle": "{{title}} (Ramo)",
   "groupTitle.byAgent.unknown": "Agente sconosciuto",
+  "groupTitle.byDevice.unknown": "Dispositivo sconosciuto",
   "groupTitle.byProject.noProject": "Nessuna directory",
   "groupTitle.byStatus.active": "Attivo",
   "groupTitle.byStatus.archived": "Archiviato",

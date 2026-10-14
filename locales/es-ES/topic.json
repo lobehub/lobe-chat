@@ -85,6 +85,7 @@
   "forkSuccess": "Bifurcado a un nuevo tema",
   "forkTitle": "{{title}} (Rama)",
   "groupTitle.byAgent.unknown": "Agente desconocido",
+  "groupTitle.byDevice.unknown": "Dispositivo desconocido",
   "groupTitle.byProject.noProject": "Sin directorio",
   "groupTitle.byStatus.active": "Activo",
   "groupTitle.byStatus.archived": "Archivado",

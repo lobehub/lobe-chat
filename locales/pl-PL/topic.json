@@ -85,6 +85,7 @@
   "forkSuccess": "Rozgałęziono do nowego tematu",
   "forkTitle": "{{title}} (Gałąź)",
   "groupTitle.byAgent.unknown": "Nieznany agent",
+  "groupTitle.byDevice.unknown": "Nieznane urządzenie",
   "groupTitle.byProject.noProject": "Brak katalogu",
   "groupTitle.byStatus.active": "Aktywne",
   "groupTitle.byStatus.archived": "Zarchiwizowane",

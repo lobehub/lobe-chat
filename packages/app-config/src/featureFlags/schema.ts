@@ -69,7 +69,6 @@ export const FeatureFlagsSchema = z.object({
   dashboard: FeatureFlagValue.optional(),
 
   // internal flag
-  agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
   dev_dock: FeatureFlagValue.optional(),
   dev_dock_workspaces: z.array(z.string()).optional(),
@@ -141,7 +140,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   // Off until an admin publishes a user allowlist or flips it to true.
   dashboard: false,
 
-  agent_self_iteration: isDev,
   agent_onboarding: isDev,
   dev_dock: isDev,
   auth_captcha: true,
@@ -191,7 +189,6 @@ export const mapFeatureFlagsEnvToState = (
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
-    enableAgentSelfIteration: evaluateFeatureFlag(config.agent_self_iteration, userId),
     enableAgentOnboarding: evaluateFeatureFlag(config.agent_onboarding, userId),
     enableDevDock: evaluateFeatureFlag(config.dev_dock, userId),
     enableAuthCaptcha: evaluateFeatureFlag(config.auth_captcha, userId),

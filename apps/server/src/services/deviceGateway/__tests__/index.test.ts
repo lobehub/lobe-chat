@@ -1493,6 +1493,136 @@ describe('DeviceGateway', () => {
       });
     });
 
+    describe('createDirectory', () => {
+      it('creates one child of the browsed folder, scoped to that folder', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: '/home/me/new-project', success: true },
+          success: true,
+        });
+
+        const proxy = new DeviceGateway();
+        await expect(
+          proxy.createDirectory({
+            deviceId: 'dev-1',
+            name: ' new-project ',
+            parentPath: '/home/me/',
+            userId: 'user-1',
+          }),
+        ).resolves.toEqual({ path: '/home/me/new-project', success: true });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(
+          { deviceId: 'dev-1', timeout: 30_000, userId: 'user-1' },
+          {
+            method: 'createLocalDirectory',
+            params: { path: '/home/me/new-project', workspaceRoot: '/home/me/' },
+          },
+        );
+      });
+
+      it.each([
+        ['/', '/new'],
+        ['C:\\Users\\me', 'C:\\Users\\me\\new'],
+        ['C:\\', 'C:\\new'],
+      ])('joins %s with the device separator', async (parentPath, expected) => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({
+          data: { path: expected, success: true },
+          success: true,
+        });
+
+        await new DeviceGateway().createDirectory({
+          deviceId: 'dev-1',
+          name: 'new',
+          parentPath,
+          userId: 'user-1',
+        });
+        expect(mockClient.invokeRpc).toHaveBeenCalledWith(expect.anything(), {
+          method: 'createLocalDirectory',
+          params: { path: expected, workspaceRoot: parentPath },
+        });
+      });
+
+      it.each(['', '.', '..', 'a/b', 'a\\b'])(
+        'rejects the folder name %j without invoking the rpc',
+        async (name) => {
+          configure();
+
+          await expect(
+            new DeviceGateway().createDirectory({
+              deviceId: 'dev-1',
+              name,
+              parentPath: '/home/me',
+              userId: 'user-1',
+            }),
+          ).rejects.toThrow(/Invalid folder name/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
+      it.each(['a:b', 'CON.txt', 'project.', 'project '])(
+        'rejects invalid Windows name %j before invoking the device',
+        async (name) => {
+          configure();
+          await expect(
+            new DeviceGateway().createDirectory({
+              deviceId: 'dev-1',
+              name,
+              parentPath: 'C:\\Users\\me',
+              userId: 'user-1',
+            }),
+          ).rejects.toThrow(/Invalid folder name/);
+          expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+        },
+      );
+
+      it('rejects a relative parent path without invoking the rpc', async () => {
+        configure();
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: 'relative/dir',
+            userId: 'user-1',
+          }),
+        ).rejects.toThrow(/must be absolute/);
+        expect(mockClient.invokeRpc).not.toHaveBeenCalled();
+      });
+
+      it('returns a device-reported failure instead of throwing', async () => {
+        configure();
+        const failure = {
+          error: 'An item already exists at /home/me/new.',
+          path: '/home/me/new',
+          success: false,
+        };
+        mockClient.invokeRpc.mockResolvedValue({ data: failure, success: true });
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: '/home/me',
+            userId: 'user-1',
+          }),
+        ).resolves.toEqual(failure);
+      });
+
+      it('throws when the rpc itself fails', async () => {
+        configure();
+        mockClient.invokeRpc.mockResolvedValue({ error: 'Device offline', success: false });
+
+        await expect(
+          new DeviceGateway().createDirectory({
+            deviceId: 'dev-1',
+            name: 'new',
+            parentPath: '/home/me',
+            userId: 'user-1',
+          }),
+        ).rejects.toThrow('Device offline');
+      });
+    });
+
     describe('copyProjectFiles', () => {
       it('invokes copyLocalFiles when source and target stay inside the workspace', async () => {
         configure();

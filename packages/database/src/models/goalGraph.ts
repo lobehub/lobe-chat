@@ -653,8 +653,14 @@ export class GoalGraphModel {
         const target = nodes.find((node) => node.id === targetNodeId);
         if (!source || !target || source.id === target.id)
           throw new Error('Invalid experiment relationship');
-        if (source.kind !== 'experiment')
-          throw new Error('Only an experiment can contain nodes or answer a question');
+        // Two kinds are containers: an `experiment` (a candidate answer under
+        // test) and a `batch` (one repeated mould delivered as a class). The
+        // single-owner and cycle rules below are about containment itself, so
+        // they hold for both; only the question-scope rules are experiment-only.
+        if (source.kind !== 'experiment' && source.kind !== 'batch')
+          throw new Error('Only a container can contain nodes or answer a question');
+        if (kind === 'answers' && source.kind !== 'experiment')
+          throw new Error('Only an experiment can answer a question');
         if (kind === 'contains') {
           const owner = experimentOwner(graph, target.id);
           if (owner && owner !== source.id)
@@ -665,6 +671,7 @@ export class GoalGraphModel {
             (edge) => edge.kind === 'answers' && edge.sourceNodeId === target.id,
           )?.targetNodeId;
           if (
+            source.kind === 'experiment' &&
             edges.some(
               (edge) =>
                 edge.kind === 'answers' &&
@@ -673,7 +680,11 @@ export class GoalGraphModel {
             )
           )
             throw new Error('A question must share its answer scope');
-          if (questionId && experimentOwner(graph, questionId) !== source.id)
+          if (
+            source.kind === 'experiment' &&
+            questionId &&
+            experimentOwner(graph, questionId) !== source.id
+          )
             throw new Error('An answer must share its question scope');
         } else {
           if (target.kind !== 'problem') throw new Error('An experiment must answer a question');
@@ -700,6 +711,41 @@ export class GoalGraphModel {
         eventType: 'linked',
       });
       return edge;
+    });
+
+  /**
+   * Take nodes back off a draft Goal's graph, with every edge touching them.
+   *
+   * Only a `draft` can lose nodes, and only ones never bound to a Task: nothing
+   * has run, so no history goes with them. A started Goal retires nodes instead.
+   */
+  removeDraftNodes = async (goalId: string, nodeIds: string[], reason: string) =>
+    this.db.transaction(async (tx) => {
+      const goal = await this.ownedGoal(goalId, tx);
+      if (!goal) return 0;
+      if (goal.status !== 'draft') throw new Error('Only a draft Goal can remove nodes');
+      if (!nodeIds.length) return 0;
+      const removed = await tx
+        .delete(goalNodes)
+        .where(
+          and(
+            eq(goalNodes.goalId, goalId),
+            inArray(goalNodes.id, nodeIds),
+            isNull(goalNodes.taskId),
+          ),
+        )
+        .returning({ id: goalNodes.id });
+      if (removed.length !== nodeIds.length)
+        throw new Error('Only unbound nodes of this Goal can be removed');
+      for (const { id } of removed) {
+        await this.appendEvent(tx, goalId, {
+          entityId: id,
+          entityType: 'node',
+          eventType: 'unlinked',
+          reason,
+        });
+      }
+      return removed.length;
     });
 
   bindTask = async (goalId: string, nodeId: string, taskId: string) =>

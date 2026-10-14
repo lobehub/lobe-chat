@@ -85,6 +85,7 @@
   "forkSuccess": "به یک موضوع جدید شاخه شد",
   "forkTitle": "{{title}} (شاخه)",
   "groupTitle.byAgent.unknown": "عامل ناشناخته",
+  "groupTitle.byDevice.unknown": "دستگاه ناشناخته",
   "groupTitle.byProject.noProject": "بدون پوشه",
   "groupTitle.byStatus.active": "فعال",
   "groupTitle.byStatus.archived": "بایگانی‌شده",

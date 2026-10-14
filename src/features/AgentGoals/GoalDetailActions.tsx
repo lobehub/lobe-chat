@@ -1,5 +1,6 @@
-import { copyToClipboard, Icon } from '@lobehub/ui';
 import {
+  copyToClipboard,
+  Icon,
   ActionIcon,
   confirmModal,
   type DropdownItem,
@@ -44,6 +45,7 @@ const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, proje
   const canClose = useResourceManageable(creatorUserId);
   const pauseGoal = useGoalStore((s) => s.pauseGoal);
   const resumeGoal = useGoalStore((s) => s.resumeGoal);
+  const startGoal = useGoalStore((s) => s.startGoal);
   const closeGoal = useGoalStore((s) => s.closeGoal);
 
   const current = toManualStatus(status);
@@ -51,7 +53,7 @@ const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, proje
   const changeStatus = useCallback(
     (next: ManualGoalStatus) => {
       if (next === current) return;
-      if (next === 'running') return void resumeGoal(goalId);
+      if (next === 'running') return void (status === 'draft' ? startGoal : resumeGoal)(goalId);
       if (next === 'paused') return void pauseGoal(goalId);
       // Closing interrupts live runs, so it asks first.
       confirmModal({
@@ -63,7 +65,7 @@ const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, proje
         title: t(`goalDetail.closeConfirm.${next}.title`),
       });
     },
-    [closeGoal, current, goalId, pauseGoal, resumeGoal, t],
+    [closeGoal, current, goalId, pauseGoal, resumeGoal, startGoal, status, t],
   );
 
   const items = useMemo<DropdownItem[]>(

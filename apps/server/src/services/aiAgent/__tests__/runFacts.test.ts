@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createRunFacts, DEVICE_SYSTEM_INFO_MAX_AGE_MS } from '../runFacts';
 
-const { getUserSettings, queryDeviceSystemInfo } = vi.hoisted(() => ({
+const { getUserPreference, getUserSettings, queryDeviceSystemInfo } = vi.hoisted(() => ({
+  getUserPreference: vi.fn(),
   getUserSettings: vi.fn(),
   queryDeviceSystemInfo: vi.fn(),
 }));
@@ -14,6 +15,7 @@ vi.mock('@/database/models/user', () => ({
       _db: unknown,
       readonly userId: string,
     ) {}
+    getUserPreference = () => getUserPreference(this.userId);
     getUserSettings = () => getUserSettings(this.userId);
   },
 }));
@@ -31,6 +33,21 @@ beforeEach(() => {
 });
 
 describe('createRunFacts', () => {
+  /**
+   * The Labs → Self-evolving switch gates both expertise injection and the self-feedback intent
+   * tool of one turn; both read it through this fact so the turn pays one `users` read.
+   */
+  it('reads the run user preference once per turn', async () => {
+    getUserPreference.mockResolvedValue({ lab: { enableSelfLearning: true } });
+    const runFacts = facts();
+
+    const [a, b] = await Promise.all([runFacts.userPreference(), runFacts.userPreference()]);
+
+    expect(getUserPreference).toHaveBeenCalledOnce();
+    expect(getUserPreference).toHaveBeenCalledWith('owner-1');
+    expect(a).toBe(b);
+  });
+
   it('asks a routed device for its system info once per turn', async () => {
     const runFacts = facts();
 

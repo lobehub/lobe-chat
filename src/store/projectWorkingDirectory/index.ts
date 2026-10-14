@@ -328,6 +328,27 @@ export const useProjectDirectories = (projectId?: string) =>
     rowsOf(state.directoriesMap, projectId ?? ALL_PROJECTS_KEY, EMPTY_DIRECTORIES),
   );
 
+/**
+ * One directory row, outside React. Only the scope-wide (`all`) projection and
+ * the row's own project projection would list it; they revalidate
+ * independently, so the most recently confirmed of them decides — including
+ * when it no longer lists the row (the directory was deleted), which returns
+ * `undefined` so callers fall back to the server.
+ */
+export const findProjectDirectory = (id: string): ProjectDirectory | undefined => {
+  const { directoriesMap, directoriesReplica } = useProjectDirectoryStore.getState();
+  const projectId = Object.values(directoriesMap)
+    .flat()
+    .find((row) => row.id === id)?.projectId;
+  if (!projectId) return undefined;
+
+  const freshness = (key: string) => directoriesReplica.entries[key]?.updatedAt ?? 0;
+  const newestKey = [ALL_PROJECTS_KEY, projectId]
+    .filter((key) => directoriesMap[key])
+    .reduce((newest, key) => (freshness(key) > freshness(newest) ? key : newest));
+  return directoriesMap[newestKey].find((row) => row.id === id);
+};
+
 /** Environments of one project, or every environment of the scope. */
 export const useProjectEnvironments = (projectId?: string) =>
   useProjectDirectoryStore((state) =>

@@ -85,6 +85,7 @@
   "forkSuccess": "新しいトピックにフォークしました",
   "forkTitle": "{{title}}（ブランチ）",
   "groupTitle.byAgent.unknown": "不明なエージェント",
+  "groupTitle.byDevice.unknown": "不明なデバイス",
   "groupTitle.byProject.noProject": "ディレクトリなし",
   "groupTitle.byStatus.active": "アクティブ",
   "groupTitle.byStatus.archived": "アーカイブ済み",

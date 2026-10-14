@@ -213,6 +213,11 @@
   "topics.status.scheduled": "已排程",
   "topics.status.unread": "新結果",
   "topics.status.waitingForHuman": "需要您的輸入",
+  "topics.subGroup.byDevice": "按設備",
+  "topics.subGroup.byStatus": "按狀態",
+  "topics.subGroup.byTime": "按時間",
+  "topics.subGroup.none": "無分組",
+  "topics.subGroup.title": "分組主題",
   "topics.title": "主題",
   "topics.viewProject": "查看專案"
 }

@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Gepland",
   "topics.status.unread": "Nieuwe resultaten",
   "topics.status.waitingForHuman": "Wacht op jouw input",
+  "topics.subGroup.byDevice": "Per apparaat",
+  "topics.subGroup.byStatus": "Per status",
+  "topics.subGroup.byTime": "Per tijd",
+  "topics.subGroup.none": "Geen groepering",
+  "topics.subGroup.title": "Groepeer onderwerpen",
   "topics.title": "Onderwerpen",
   "topics.viewProject": "Bekijk project"
 }

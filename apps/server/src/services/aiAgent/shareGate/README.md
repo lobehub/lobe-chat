@@ -63,19 +63,6 @@ Confirmed leak paths (a concrete visitor→creator-data route was found):
   with no share-run scoping designed in — same risk class as
   `lobe-agent-management`.
 
-- `lobe-topic-reference`: `topicReferenceRuntime.getTopicContext`
-  (`apps/server/src/services/toolExecution/serverRuntimes/topicReference.ts`)
-  resolves a free-form model-supplied `topicId` via
-  `TopicModel.findOwnTopicById`, scoped only to the creator's `userId` — not
-  to this share or agent — letting a visitor's model read the summary or
-  recent messages of ANY other topic the creator owns by guessing/enumerating
-  ids. `DATA_TOOL_ACCESS_RULES` has no entry for it (it isn't a
-  memory/knowledge-base/agent-documents style store), so nothing narrows the
-  allowlist grant. The automatic `<refer_topic>` injection path
-  (`serverCallLlmContextBuilder.ts`) is separately share-scoped via
-  `isTopicVisibleToRun` and is unaffected by this denial — only the
-  model-invokable tool-call path is unsafe.
-
 Denied for lack of positive safety evidence (no confirmed exploit was
 required to withhold access — the point of default-deny is that an unproven
 tool does not ship):

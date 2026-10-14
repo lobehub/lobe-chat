@@ -213,6 +213,11 @@
   "topics.status.scheduled": "Scheduled",
   "topics.status.unread": "New results",
   "topics.status.waitingForHuman": "Needs your input",
+  "topics.subGroup.byDevice": "By device",
+  "topics.subGroup.byStatus": "By status",
+  "topics.subGroup.byTime": "By time",
+  "topics.subGroup.none": "No grouping",
+  "topics.subGroup.title": "Group topics",
   "topics.title": "Topics",
   "topics.viewProject": "View project"
 }

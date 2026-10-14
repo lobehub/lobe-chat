@@ -22,7 +22,36 @@ import { resolveAppUrlBuilder } from './task/url';
 // Typed rather than inferred: an `as const` map is indexable by a widened
 // `any` node kind, which is how a renamed kind silently printed `undefined`
 // here after the type checker had signed off everywhere else.
+
+/** `--task-file`: a JSON array of seed tasks, each a title or {"title","description"}. */
+const parseTaskFile = (raw: string): Array<string | { description?: string; title: string }> => {
+  const parsed: unknown = JSON.parse(raw);
+  if (!Array.isArray(parsed)) throw new Error('--task-file must hold a JSON array');
+  return parsed.map((item, index) => {
+    if (typeof item === 'string' && item.trim()) return item.trim();
+    if (item && typeof item === 'object' && typeof item.title === 'string' && item.title.trim())
+      return {
+        description: typeof item.description === 'string' ? item.description : undefined,
+        title: item.title.trim(),
+      };
+    throw new Error(`--task-file entry ${index} needs a title`);
+  });
+};
+
+/** `--variant mechanism=replica,swr` → one axis and its values. */
+const parseVariant = (raw: string) => {
+  const separator = raw.indexOf('=');
+  const axis = separator > 0 ? raw.slice(0, separator).trim() : '';
+  const values = (separator > 0 ? raw.slice(separator + 1) : '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  if (!axis || !values.length) throw new Error(`--variant expects axis=value1,value2; got ${raw}`);
+  return { axis, values };
+};
+
 const nodeIcon: Record<GoalNodeKind, string> = {
+  batch: '▦',
   decision: '◆',
   experiment: '⚗',
   finding: '●',
@@ -207,6 +236,8 @@ const admissionHint: Record<string, string> = {
   pending_decision: 'a decision gate is still waiting on an answer',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
+  started_from_draft:
+    'the Goal was started from its draft, which settled this turn; the next turn plans further work',
   turn_owner: 'this Goal has no matching planning turn',
   turn_settled: "this turn's run is no longer running",
   wait_unsettled: 'unfinished work must be settled before waiting',
@@ -473,10 +504,24 @@ export function registerGoalCommand(program: Command) {
     );
   goal
     .command('plan <id>')
-    .description('Atomically submit the current main Agent plan')
+    .summary('Atomically submit the current main Agent plan')
+    .description(
+      [
+        'Atomically submit the current main Agent plan.',
+        '',
+        'A tasks plan lists 1-10 tasks, each a title, a self-contained description and an optional dependsOn.',
+        'When the work applies one recipe to many units (migrate N stores to one mechanism, give N resources',
+        'the same caching, update N callers), declare a batch instead of listing every unit: add "rollout" with',
+        '"recipe" (the procedure every unit follows), "units" (every unit beyond the probes, as a title or',
+        '{"title","description"}) and optional "variants" ([{"axis","values"}]); "tasks" then hold 2-5',
+        'representative probes. The probes run first and the rest are released wave by wave only after the',
+        'probes ran through without a person; a rejection revises the recipe and re-probes. Units that differ',
+        'only in names, files or details are still one mould; work whose steps differ per task is not.',
+      ].join('\n'),
+    )
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/wait/verify/retry/escalate, reason and action fields',
+      'JSON plan: action tasks/wait/verify/retry/escalate, reason and action fields; a tasks plan may add "rollout" to run its units as a batch',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
@@ -561,13 +606,37 @@ export function registerGoalCommand(program: Command) {
       '--max-manager-turns <n>',
       'Add a main Agent with this turn limit; it takes over problems the system planner cannot route',
     )
-    .description('Create a standalone goal and seed its graph')
+    .summary('Create a goal and seed its graph')
+    .description(
+      [
+        'Create a goal and seed its graph.',
+        '',
+        'From a chat, create it with --topic. The goal opens as a draft bound to this topic: nothing is',
+        'dispatched until it is started, so arrange it first:',
+        '  1. Place the tasks: -t <titles...>, --task-file <json> for titles with descriptions, or later',
+        '     `lh goal add-node <id> task <title> -d <brief>` and `lh goal add-edge` for prerequisites.',
+        '  2. Check the graph the command prints (or `lh goal show <id>`).',
+        '  3. Start it: `lh goal start <id>` (see `lh man goal start`). The owner can also start it from the',
+        '     goal page.',
+        '',
+        'Many tasks that apply one recipe to different units (migrate N stores, cache N resources, update N',
+        'callers) should run as a batch: seed every unit as a task, then start with',
+        '`--rollout canary --recipe-file <md> --probes <2-5 node ids>`. The probes run first; the other units',
+        'are released wave by wave only after the probes ran through without a person.',
+        '',
+        'Without --topic the goal is standalone and starts at once; omit -t to let the planner decompose it.',
+      ].join('\n'),
+    )
     .option('-r, --requirement <text>', 'Acceptance requirement')
     .option(
       '-i, --instruction <text>',
       "The ask in the user's own words, shown on the problem node",
     )
-    .option('-t, --task <title...>', 'Initial task node titles (omit to let the planner decompose)')
+    .option('-t, --task <title...>', 'Seed task node titles (omit to let the planner decompose)')
+    .option(
+      '--task-file <path>',
+      'Seed tasks from a JSON array of {"title","description"}; use it when each task needs its own brief',
+    )
     .option(
       '--agent <id>',
       'Goal agent: supervises and plans the goal (defaults to the current agent)',
@@ -590,6 +659,12 @@ export function registerGoalCommand(program: Command) {
       '--max-concurrent-tasks <n>',
       "How many of this goal's tasks may run at once (default 3)",
     )
+    .option(
+      '--rollout <mode>',
+      'Batch roll-out policy: canary (probe first, then waves), full, or off to forbid a batch. Omit to decide when starting (lh goal start --rollout) or let the planner decide',
+    )
+    .option('--canary-size <n>', 'Probe size K for --rollout canary (default 5, maximum 5)')
+    .option('--wave-size <n>', 'Units released per wave after the gate passes (default 5)')
 
     .option('--max-steps-per-run <n>', 'Optional agent step cap per Task run (for example 500)')
     .option(
@@ -598,7 +673,7 @@ export function registerGoalCommand(program: Command) {
     )
     .option(
       '--topic',
-      "Link the goal to the current topic. Use it whenever you create a goal for the user from a chat, not only for /goal: without it the goal is standalone and never shows on this topic's goal tray. This agent supervises the goal from this topic; the output carries a turnToken, so submit the first plan with `lh goal plan <id> --token <turnToken> --file <plan.json>`",
+      "Link the goal to the current topic. Use it whenever you create a goal for the user from a chat, not only for /goal: without it the goal is standalone and never shows on this topic's goal tray. This agent supervises the goal from this topic. The goal opens as a draft: arrange its tasks, then run `lh goal start <id>`",
     )
     // Former name of --topic, kept so existing prompts and scripts keep working.
     .addOption(new Option('--conversation').hideHelp())
@@ -608,6 +683,13 @@ export function registerGoalCommand(program: Command) {
       if (options.maxExperiments && !options.explore) {
         throw new Error('--max-experiments requires --explore');
       }
+      if (options.rollout && !['canary', 'full', 'off'].includes(options.rollout)) {
+        throw new Error('--rollout must be one of: canary, full, off');
+      }
+      const seedTasks = [
+        ...((options.task as string[] | undefined) ?? []),
+        ...(options.taskFile ? parseTaskFile(await readFile(options.taskFile, 'utf8')) : []),
+      ];
       const operationId = process.env.LOBEHUB_OPERATION_ID;
       const fromTopic = Boolean(options.topic || options.conversation);
       if (fromTopic && !operationId) {
@@ -650,6 +732,17 @@ export function registerGoalCommand(program: Command) {
               ? { maxIncidents: Number.parseInt(options.maxSupervisionIncidents, 10) }
               : {}),
           },
+          // Auto-detection is the default: with no `--rollout`, the planner's
+          // homogeneity claim decides. `off` forbids a batch outright.
+          rollout: options.rollout
+            ? {
+                canarySize: options.canarySize
+                  ? Number.parseInt(options.canarySize, 10)
+                  : undefined,
+                trigger: options.rollout,
+                waveSize: options.waveSize ? Number.parseInt(options.waveSize, 10) : undefined,
+              }
+            : undefined,
           taskAgentId: options.taskAgent,
         },
         criteria: (options.criterion as string[] | undefined)?.map((criterion) => ({
@@ -661,7 +754,7 @@ export function registerGoalCommand(program: Command) {
         projectId: options.project,
         requirement: options.requirement,
         title,
-        tasks: options.task,
+        tasks: seedTasks.length ? seedTasks : undefined,
       };
       // A topic goal takes its agent and topic from the running
       // operation on the server; the CLI only names the run. Device and gateway
@@ -672,11 +765,13 @@ export function registerGoalCommand(program: Command) {
         ? hasOperationToken()
           ? await client.goal.createConversationGoal.mutate({
               ...goalInput,
+              draft: true,
               operationId: operationId!,
             })
           : await client.goal.create.mutate({
               ...goalInput,
               agentId: process.env.LOBEHUB_AGENT_ID,
+              draft: true,
               conversationOperationId: operationId,
               conversationTopicId: process.env.LOBEHUB_TOPIC_ID,
             })
@@ -694,12 +789,97 @@ export function registerGoalCommand(program: Command) {
         return outputJson({ ...result.data, turnToken, url }, options.json);
       printGraph(result.data!);
       console.log(`${pc.bold('goal')}: ${url}`);
+      if (result.data!.goal.status === 'draft')
+        console.log(
+          `${pc.bold('draft')}: nothing runs yet. Arrange the tasks, then start it: lh goal start ${result.data!.goal.id}`,
+        );
       if (turnToken) {
         console.log(
           `${pc.bold('planning turn')}: lh goal plan ${result.data!.goal.id} --token ${turnToken} --file <plan.json>`,
         );
       }
     });
+
+  goal
+    .command('start <id>')
+    .summary('Start a draft goal')
+    .description(
+      [
+        'Start a draft goal. Until now nothing was dispatched; from here the coordinator runs its tasks.',
+        '',
+        'Plain start dispatches the arranged tasks under the goal budget. To run many tasks of one recipe as a',
+        'batch, pass --rollout with the recipe and 2-5 probe node ids: the probes move into a batch and run',
+        'first; every other seed task (or only --units) leaves the graph as a roster unit, its description',
+        "kept as that unit's note, and is released wave by wave once the probes ran through without a person.",
+        'A rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are',
+        'one recipe; tasks whose steps differ are not, so start those without --rollout.',
+        'Inside a batch a seed may depend only on a probe, and folded seeds need distinct titles.',
+        '',
+        'Starting a draft that holds tasks settles the planning turn that created it: submit any plan with',
+        'lh goal plan before starting, not after.',
+      ].join('\n'),
+    )
+    .option('--rollout <mode>', 'Fold the seed tasks into a batch: canary or full')
+    .option('--probes <nodeIds...>', 'Seed task node ids that run first (2-5 for canary)')
+    .option(
+      '--units <nodeIds...>',
+      'Seed task node ids that become batch units (default: every other seed)',
+    )
+    .option('--recipe <text>', 'The procedure every unit follows')
+    .option('--recipe-file <path>', 'Read the recipe from a markdown file')
+    .option(
+      '--variant <axis=values...>',
+      'An axis the units differ along, e.g. mechanism=replica,swr (repeatable); the gate holds until the probes cover each value',
+    )
+    .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
+    .option('--json', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: {
+          json?: boolean;
+          operation?: string;
+          probes?: string[];
+          recipe?: string;
+          recipeFile?: string;
+          rollout?: string;
+          units?: string[];
+          variant?: string[];
+        },
+      ) => {
+        let rollout;
+        if (options.rollout) {
+          if (!['canary', 'full'].includes(options.rollout))
+            throw new Error('--rollout must be canary or full');
+          const recipe = options.recipeFile
+            ? await readFile(options.recipeFile, 'utf8')
+            : options.recipe;
+          if (!recipe?.trim()) throw new Error('--rollout needs --recipe or --recipe-file');
+          if (!options.probes?.length) throw new Error('--rollout needs --probes <nodeIds...>');
+          rollout = {
+            probeNodeIds: options.probes,
+            recipe,
+            trigger: options.rollout as 'canary' | 'full',
+            unitNodeIds: options.units,
+            variants: options.variant?.map(parseVariant),
+          };
+        } else if (options.probes || options.units || options.recipe || options.recipeFile) {
+          throw new Error('--probes, --units and --recipe only apply with --rollout');
+        }
+        const client = await getTrpcClient();
+        const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
+        const result =
+          hasOperationToken() && operationId
+            ? await client.goal.startOperation.mutate({ id, operationId, rollout })
+            : await client.goal.start.mutate({ id, rollout });
+        if (options.json) return outputJson(result.data);
+        log.info(
+          rollout
+            ? `${result.message}: ${rollout.probeNodeIds.length} probes run first, the rest wait behind the batch gate`
+            : result.message,
+        );
+      },
+    );
 
   goal
     .command('list')

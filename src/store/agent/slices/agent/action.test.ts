@@ -1569,6 +1569,39 @@ describe('AgentSlice Actions', () => {
       });
       expect(agentService.getAgentConfigById).toHaveBeenCalledTimes(1);
     });
+
+    it('settles a prefetched "not found" the way the page sync does', async () => {
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValue(null as any);
+
+      await act(async () => {
+        await useAgentStore.getState().prefetchAgentConfig('agent-prefetch-gone');
+      });
+
+      expect(useAgentStore.getState().agentNotFoundMap['agent-prefetch-gone']).toBe(true);
+      expect(useAgentStore.getState().agentMap['agent-prefetch-gone']).toBeUndefined();
+    });
+
+    it('does not let a late prefetch resurrect an agent the page settled as not found', async () => {
+      const agentId = 'agent-prefetch-late';
+      let resolvePrefetch!: (value: unknown) => void;
+      vi.mocked(agentService.getAgentConfigById)
+        .mockImplementationOnce(() => new Promise((resolve) => (resolvePrefetch = resolve)) as any)
+        .mockResolvedValue(null as any);
+
+      const prefetch = useAgentStore.getState().prefetchAgentConfig(agentId);
+      // Navigation mounts the page's own sync, which learns the agent is gone.
+      renderHook(() => useAgentStore().useFetchAgentConfig(true, agentId), { wrapper: withSWR });
+      await waitFor(() => expect(useAgentStore.getState().agentNotFoundMap[agentId]).toBe(true));
+
+      // The hover prefetch started earlier and answers last, with the old config.
+      await act(async () => {
+        resolvePrefetch({ id: agentId, title: 'Stale' });
+        await prefetch;
+      });
+
+      expect(useAgentStore.getState().agentMap[agentId]).toBeUndefined();
+      expect(useAgentStore.getState().agentNotFoundMap[agentId]).toBe(true);
+    });
   });
 
   describe('useHydrateAgentConfig', () => {

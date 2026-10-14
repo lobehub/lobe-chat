@@ -65,6 +65,14 @@ const HOME_GOAL_FETCH_LIMIT = 100;
  */
 const SERVER_ADVANCING_STATUSES = new Set<GoalStatus>(['planning', 'running', 'verifying']);
 
+/**
+ * Whether an open view must keep re-reading a goal in this status. A draft is
+ * arranged and usually started by its agent from the conversation, never from
+ * this view, so no local action would refresh its "Not started".
+ */
+const goalStatusPolled = (status: GoalStatus) =>
+  SERVER_ADVANCING_STATUSES.has(status) || status === 'draft';
+
 /** Kept coarse on purpose — this is liveness, not a progress bar. */
 const GOAL_GRAPH_POLL_INTERVAL = 5000;
 const PENDING_CLARIFICATIONS_POLL_INTERVAL = 30_000;
@@ -113,7 +121,7 @@ const goalAcceptanceUnsettled = (graph: GoalGraphSnapshot): boolean => {
  * for the graph snapshot itself.
  */
 const goalGraphShouldPoll = (graph: GoalGraphSnapshot): boolean =>
-  SERVER_ADVANCING_STATUSES.has(graph.goal.status) ||
+  goalStatusPolled(graph.goal.status) ||
   graph.report?.status === 'running' ||
   (graph.goal.status === 'achieved' && goalAcceptanceUnsettled(graph));
 
@@ -148,7 +156,7 @@ const topicGoalsRefreshInterval = (
   result: { goals: { goal: { status: GoalStatus } }[] } | undefined,
   generating?: boolean,
 ) =>
-  generating || result?.goals.some(({ goal }) => SERVER_ADVANCING_STATUSES.has(goal.status))
+  generating || result?.goals.some(({ goal }) => goalStatusPolled(goal.status))
     ? GOAL_GRAPH_POLL_INTERVAL
     : 0;
 
@@ -303,6 +311,11 @@ export class GoalActionImpl {
 
   resumeGoal = async (goalId: string): Promise<void> => {
     await goalService.resume(goalId);
+    await this.refreshGoalGraph(goalId);
+  };
+
+  startGoal = async (goalId: string): Promise<void> => {
+    await goalService.start(goalId);
     await this.refreshGoalGraph(goalId);
   };
 

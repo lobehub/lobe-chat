@@ -1,25 +1,37 @@
 import { AGENT_CHAT_URL } from '@lobechat/const';
 import {
+  Center,
+  Flexbox,
+  Icon,
+  Tooltip,
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
-  Center,
+  type DropdownItem,
+  DropdownMenu,
+  Text,
+  toast,
   createStaticStyles,
   cssVar,
   cx,
-  Flexbox,
-  Icon,
-  Text,
-  Tooltip,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { FolderClosedIcon, FolderOpenIcon, type LucideIcon, PlusIcon } from 'lucide-react';
+import {
+  Archive,
+  FolderClosedIcon,
+  FolderOpenIcon,
+  ListFilter,
+  LucideCheck,
+  type LucideIcon,
+  PlusIcon,
+} from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import Avatar from '@/components/Avatar';
 import { TOPIC_STATUS_VISUALS } from '@/components/ExecutionStatus';
@@ -31,17 +43,24 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
+import { usePermission } from '@/hooks/usePermission';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { type ProjectTopicSubGroupMode } from '@/store/global/initialState';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useProjectDirectories, useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { getTopicWorkingDirectorySourcePath } from '@/utils/client/topic';
 
 import { buildPrefixedAgentRoutePath, parseAgentPathname } from '../../../utils/agentPathname';
-import TopicItem from '../../List/Item';
 import { useTopicListScope } from '../../TopicListScope';
+import { getMergedPullRequestTopics } from '../../utils/mergedPullRequestTopics';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
+import ProjectTopicList from './ProjectTopicList';
 import {
   getProjectTopicStatusCounts,
   hasProjectTopicStatusCounts,
@@ -50,6 +69,9 @@ import {
 
 const PROJECT_GROUP_PREFIX = 'project:';
 const PROJECT_ID_GROUP_PREFIX = 'project-id:';
+const SUB_GROUP_MODES: ProjectTopicSubGroupMode[] = ['none', 'byDevice', 'byTime', 'byStatus'];
+// A plain folder lives on one machine, so sectioning it by device says nothing.
+const FOLDER_SUB_GROUP_MODES = SUB_GROUP_MODES.filter((mode) => mode !== 'byDevice');
 
 const styles = createStaticStyles(({ css }) => ({
   statusBadge: css`
@@ -95,11 +117,11 @@ const styles = createStaticStyles(({ css }) => ({
       max-width 150ms ${cssVar.motionEaseOut},
       opacity 150ms ${cssVar.motionEaseOut};
 
-    /* Holds the "more" menu plus the start "+" (2 × 24px), not a single icon */
+    /* Holds the grouping menu, the "more" menu and the start "+" (3 × 24px) */
     &:focus-within,
     .accordion-header:hover & {
       pointer-events: auto;
-      max-width: 48px;
+      max-width: 72px;
       opacity: 1;
     }
   `,
@@ -263,9 +285,85 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
     );
   }, [currentAgentId, targetAgentId, router, agentRoute, activeWorkspaceSlug]);
 
+  // Start on one specific project directory — the device sub-group "+". The
+  // directory pins the device, so nothing is committed to the agent default.
+  const handleStartInDirectory = useCallback(
+    (projectWorkingDirectoryId: string) => {
+      if (!targetAgentId) return;
+      useChatStore.getState().switchTopic(null, { skipRefreshMessage: true });
+      useChatStore
+        .getState()
+        .setPendingNewTopicDirectory({ agentId: targetAgentId, projectWorkingDirectoryId });
+      router.push(
+        buildPrefixedAgentRoutePath(AGENT_CHAT_URL(targetAgentId), agentRoute, activeWorkspaceSlug),
+      );
+    },
+    [targetAgentId, router, agentRoute, activeWorkspaceSlug],
+  );
+
   const canAddTopic = !scope && !!currentAgentId && !!workingDirectory;
   const needsPlainStart = !!projectId && projectDirectories.length > 1;
   const { t: tProject } = useTranslation('project');
+
+  const isProjectGroup = !!projectId || !!children[0]?.projectWorkingDirectoryId;
+  const subGroupModes = isProjectGroup ? SUB_GROUP_MODES : FOLDER_SUB_GROUP_MODES;
+  const storedSubGroupMode = useGlobalStore(systemStatusSelectors.projectTopicSubGroupMode(id));
+  const subGroupMode = subGroupModes.includes(storedSubGroupMode) ? storedSubGroupMode : 'none';
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const subGroupMenuItems = useMemo<DropdownItem[]>(
+    () => [
+      {
+        children: subGroupModes.map((mode) => ({
+          icon: subGroupMode === mode ? <Icon icon={LucideCheck} /> : <div />,
+          key: `sub-group-${mode}`,
+          label: tProject(`topics.subGroup.${mode}`),
+          onClick: () => updateSystemStatus({ projectTopicSubGroupModeByGroup: { [id]: mode } }),
+        })),
+        key: 'sub-group',
+        label: tProject('topics.subGroup.title'),
+        type: 'group',
+      },
+    ],
+    [id, subGroupModes, subGroupMode, tProject, updateSystemStatus],
+  );
+
+  // "Archive merged PR topics", scoped to this group — a workspace member only
+  // archives their own topics, same as the sidebar-wide action.
+  const { t } = useTranslation('topic');
+  const activeWorkspaceId = useActiveWorkspaceId();
+  const currentUserId = useUserStore(userProfileSelectors.userId);
+  const { allowed: canEditTopic } = usePermission('edit_own_content');
+  const archiveMenuItems = useMemo<DropdownItem[]>(
+    () => [
+      {
+        disabled: !canEditTopic,
+        icon: <Icon icon={Archive} />,
+        key: 'archiveMergedPullRequests',
+        label: t(
+          activeWorkspaceId
+            ? 'actions.archiveMergedPullRequestsOwn'
+            : 'actions.archiveMergedPullRequests',
+        ),
+        onClick: async () => {
+          const merged = getMergedPullRequestTopics(
+            children,
+            activeWorkspaceId ? (currentUserId ?? null) : undefined,
+          );
+          if (merged.length === 0) {
+            toast.info(t('actions.archiveMergedPullRequestsNone'));
+            return;
+          }
+          const { refreshTopic, updateTopicStatus } = useChatStore.getState();
+          await Promise.all(
+            merged.map(({ id }) => updateTopicStatus({ status: 'completed', topicId: id })),
+          );
+          await refreshTopic();
+          toast.success(t('actions.archiveMergedPullRequestsSuccess', { count: merged.length }));
+        },
+      },
+    ],
+    [activeWorkspaceId, canEditTopic, children, currentUserId, t],
+  );
 
   const statusCounts = useChatStore(
     (s) => getProjectTopicStatusCounts(children, operationSelectors.visiblyRunningTopicIds(s)),
@@ -277,44 +375,54 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
   const hasCollapsedUnread = !expanded && unreadCount > 0;
   const hasCollapsedIndicators = hasCollapsedStatus || hasCollapsedUnread;
   const ProjectFolderIcon = expanded ? FolderOpenIcon : FolderClosedIcon;
-  const action =
-    canAddTopic || hasCollapsedIndicators ? (
-      <Flexbox horizontal align={'center'} gap={4}>
-        {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
-        {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
-        {canAddTopic && (
-          <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
-            {needsPlainStart ? (
-              <>
-                <AgentDirectoryActions
-                  hideStartAction
-                  agentId={currentAgentId!}
-                  path={workingDirectory!}
-                  topics={children}
-                  onLegacyStart={handleAddTopic}
-                />
-                <ActionIcon
-                  icon={PlusIcon}
-                  size={'small'}
-                  title={tProject('directories.start')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStartPlain();
-                  }}
-                />
-              </>
-            ) : (
-              <AgentDirectoryActions
-                agentId={currentAgentId!}
-                path={workingDirectory!}
-                topics={children}
-                onLegacyStart={handleAddTopic}
-              />
-            )}
-          </span>
+  // Sub-grouping is its own row action: it needs no directory, so it stays
+  // available even when the directory actions below can't render.
+  const action = (
+    <Flexbox horizontal align={'center'} gap={4}>
+      {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
+      {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
+      <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
+        <DropdownMenu items={subGroupMenuItems}>
+          <ActionIcon
+            icon={ListFilter}
+            size={'small'}
+            title={tProject('topics.subGroup.title')}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </DropdownMenu>
+        {!canAddTopic ? null : needsPlainStart ? (
+          <>
+            <AgentDirectoryActions
+              hideStartAction
+              agentId={currentAgentId!}
+              extraMenuItems={archiveMenuItems}
+              path={workingDirectory!}
+              topics={children}
+              onLegacyStart={handleAddTopic}
+            />
+            <ActionIcon
+              icon={PlusIcon}
+              size={'small'}
+              title={tProject('directories.start')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStartPlain();
+              }}
+            />
+          </>
+        ) : (
+          <AgentDirectoryActions
+            agentId={currentAgentId!}
+            extraMenuItems={archiveMenuItems}
+            path={workingDirectory!}
+            pathOnly={!isProjectGroup}
+            topics={children}
+            onLegacyStart={handleAddTopic}
+          />
         )}
-      </Flexbox>
-    ) : undefined;
+      </span>
+    </Flexbox>
+  );
 
   return (
     <AccordionItem value={id}>
@@ -372,34 +480,24 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
             </Text>
           </Flexbox>
         </AccordionTrigger>
-        {action && (
-          <div
-            className={cx(
-              'accordion-action',
-              accordionStyles.action,
-              accordionStyles.actionBorderless,
-              hasCollapsedIndicators && accordionStyles.actionAlwaysVisible,
-            )}
-          >
-            {action}
-          </div>
-        )}
+        <div
+          className={cx(
+            'accordion-action',
+            accordionStyles.action,
+            accordionStyles.actionBorderless,
+            hasCollapsedIndicators && accordionStyles.actionAlwaysVisible,
+          )}
+        >
+          {action}
+        </div>
       </AccordionHeader>
       <AccordionPanel contentStyle={{ padding: 0 }}>
-        <Flexbox gap={1} paddingBlock={1}>
-          {children.map((topic) => (
-            <TopicItem
-              fav={topic.favorite}
-              id={topic.id}
-              key={topic.id}
-              metadata={topic.metadata}
-              runStartedAt={topic.runStartedAt}
-              status={topic.status}
-              title={topic.title}
-              userId={topic.userId}
-            />
-          ))}
-        </Flexbox>
+        <ProjectTopicList
+          mode={subGroupMode}
+          startDirectories={projectId ? projectDirectories : project ? [project] : undefined}
+          topics={children}
+          onStartInDirectory={!scope && targetAgentId ? handleStartInDirectory : undefined}
+        />
       </AccordionPanel>
     </AccordionItem>
   );

@@ -2,23 +2,27 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceScope, DeviceVisibility } from '@lobechat/types';
-import { Button, createStaticStyles, cssVar, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Button, Text, createStaticStyles, cssVar } from '@lobehub/ui';
 import {
   ChevronRightIcon,
   FolderCogIcon,
   type LucideIcon,
   MonitorDownIcon,
+  MonitorUpIcon,
+  RefreshCwIcon,
   ServerIcon,
   TerminalIcon,
   ZapIcon,
 } from 'lucide-react';
-import { memo } from 'react';
+import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceCard from './DeviceCard';
+import DeviceGrid from './DeviceGrid';
+import { DeviceGridSkeleton } from './Skeleton';
 import { useDeviceList } from './useDeviceList';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -58,13 +62,6 @@ const styles = createStaticStyles(({ css }) => ({
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
     background: ${cssVar.colorBgContainer};
-  `,
-  // The personal page renders inside a settings form card, so the onboarding
-  // state drops its own card chrome — one frame, not two nested.
-  plainCol: css`
-    overflow: hidden;
-    min-width: 0;
-    border-radius: ${cssVar.borderRadiusLG};
   `,
   emptyHero: css`
     padding-block: 40px;
@@ -126,39 +123,6 @@ const styles = createStaticStyles(({ css }) => ({
     color: ${cssVar.colorTextSecondary};
 
     background: ${cssVar.colorFillTertiary};
-  `,
-  // ─── Card grid ───
-  // Cards carry their own frame, so the grid sits bare in its host. The page
-  // is full width, so columns step by the host's own width — one on a phone,
-  // then two, three and four — keeping every card at least ~270px wide.
-  skeletonCard: css`
-    padding: 20px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorBgContainer};
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-    min-width: 0;
-
-    @container device-grid (min-width: 560px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    @container device-grid (min-width: 880px) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    @container device-grid (min-width: 1200px) {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  `,
-  // Query container for the grid's column steps (a grid can't query itself).
-  gridHost: css`
-    container: device-grid / inline-size;
-    min-width: 0;
   `,
 }));
 
@@ -245,28 +209,6 @@ const Capabilities = memo(() => {
   );
 });
 
-// Loading placeholder in the card grid's shape — loading → loaded is a content
-// swap, not a relayout (ux §4.1).
-const GridSkeleton = memo(() => (
-  <div className={styles.gridHost}>
-    <div className={styles.grid}>
-      {Array.from({ length: 2 }, (_, index) => (
-        <Flexbox className={styles.skeletonCard} gap={20} key={index}>
-          <Flexbox horizontal align={'center'} gap={16}>
-            <Skeleton.Avatar shape={'square'} size={48} />
-            <Flexbox flex={1} gap={8}>
-              <Skeleton height={16} width={160} />
-              <Skeleton height={12} width={100} />
-            </Flexbox>
-          </Flexbox>
-          <Skeleton height={36} width={'100%'} />
-          <Skeleton height={32} width={'100%'} />
-        </Flexbox>
-      ))}
-    </div>
-  </div>
-));
-
 interface DeviceManagerProps {
   /** Open the enrollment wizard (the modal is owned by the route). */
   onConnect: (tab?: 'cli' | 'desktop') => void;
@@ -274,6 +216,11 @@ interface DeviceManagerProps {
   onOpenDevice: (deviceId: string) => void;
   /** Which device pool this surface manages. */
   scope: DeviceScope;
+  /**
+   * Left side of the toolbar — the workspace page puts its visibility tabs
+   * here; the personal page has a single pool and leaves it empty.
+   */
+  toolbarLeading?: ReactNode;
   /**
    * Workspace scope only: narrow the list to one visibility tab — 'public'
    * (shared pool) or 'private' (the caller's own private enrollments). Omitted
@@ -283,19 +230,20 @@ interface DeviceManagerProps {
 }
 
 /**
- * Device card grid shared by the personal (`/settings/devices`) and workspace
- * (`/:slug/settings/devices`) pages — cards + onboarding empty state, filtered
- * to the given `scope` (and, for workspace, the active visibility tab). A card
- * opens the device's detail page; the host owns that route.
+ * Device list shared by the personal (`/settings/devices`) and workspace
+ * (`/:slug/settings/devices`) pages — toolbar (refresh + connect) above the
+ * card grid / onboarding empty state, filtered to the given `scope` (and, for
+ * workspace, the active visibility tab). A card opens the device's detail
+ * page; the host owns that route.
  */
 const DeviceManager = memo<DeviceManagerProps>((props) => {
-  const { onConnect, onOpenDevice, scope, visibility } = props;
+  const { onConnect, onOpenDevice, scope, toolbarLeading, visibility } = props;
   const { t } = useTranslation('setting');
   const isWorkspace = scope === 'workspace';
 
   // Workspace-keyed SWR fetch — the shared hook every device-listing surface
   // uses (see `useDeviceList` for why the raw TRPC React Query path is wrong).
-  const { data, isLoading, error, mutate } = useDeviceList();
+  const { data, isLoading, isValidating, error, mutate } = useDeviceList();
   // `listDevices` is workspace-aware and returns both pools — keep each surface
   // to its own scope (and visibility tab). Ghost rows (`visibility: null`,
   // online but unregistered) belong to the shared pool: the server already
@@ -323,7 +271,7 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
   const isPrivatePool = isWorkspace && visibility === 'private';
   const emptyState = (
     <Flexbox gap={32}>
-      <Flexbox className={isWorkspace ? styles.emptyCard : styles.plainCol}>
+      <Flexbox className={styles.emptyCard}>
         <Flexbox align={'center'} className={styles.emptyHero} gap={12}>
           <span className={styles.heroIcon}>
             <Icon icon={isWorkspace && !isPrivatePool ? ServerIcon : MonitorDownIcon} size={28} />
@@ -371,7 +319,36 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
 
   const isCurrent = (id: string) => !!currentDeviceId && id === currentDeviceId;
 
-  return (
+  // Workspace machines are headless, so that pool enrolls through the CLI
+  // only; the personal wizard also offers the desktop app.
+  const toolbar = (
+    <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>
+      <div style={{ minWidth: 0 }}>{toolbarLeading}</div>
+      <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
+        <Button
+          icon={<Icon icon={RefreshCwIcon} />}
+          loading={isValidating}
+          title={t('devices.actions.refresh')}
+          onClick={() => mutate()}
+        />
+        {isWorkspace ? (
+          <Button
+            icon={<Icon icon={TerminalIcon} />}
+            type={'primary'}
+            onClick={() => onConnect('cli')}
+          >
+            {t('devices.empty.methodCli.title')}
+          </Button>
+        ) : (
+          <Button icon={<Icon icon={MonitorUpIcon} />} type={'primary'} onClick={() => onConnect()}>
+            {t('devices.connectWizard.button')}
+          </Button>
+        )}
+      </Flexbox>
+    </Flexbox>
+  );
+
+  const list = (
     <AsyncBoundary
       data={data}
       empty={emptyState}
@@ -379,22 +356,27 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
       errorVariant={'block'}
       isEmpty={devices.length === 0}
       isLoading={isLoading}
-      loading={<GridSkeleton />}
+      loading={<DeviceGridSkeleton />}
       onRetry={() => mutate()}
     >
-      <div className={styles.gridHost}>
-        <div className={styles.grid}>
-          {devices.map((device) => (
-            <DeviceCard
-              device={device}
-              isCurrent={isCurrent(device.deviceId)}
-              key={device.deviceId}
-              onOpen={() => onOpenDevice(device.deviceId)}
-            />
-          ))}
-        </div>
-      </div>
+      <DeviceGrid>
+        {devices.map((device) => (
+          <DeviceCard
+            device={device}
+            isCurrent={isCurrent(device.deviceId)}
+            key={device.deviceId}
+            onOpen={() => onOpenDevice(device.deviceId)}
+          />
+        ))}
+      </DeviceGrid>
     </AsyncBoundary>
+  );
+
+  return (
+    <Flexbox gap={16}>
+      {toolbar}
+      {list}
+    </Flexbox>
   );
 });
 
