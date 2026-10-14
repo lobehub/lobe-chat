@@ -187,7 +187,8 @@
     "fast-xml-parser": "5.4.2",
     "lexical": "0.42.0",
     "pdfjs-dist": "5.4.530",
-    "stylelint-config-clean-order": "7.0.0"
+    "stylelint-config-clean-order": "7.0.0",
+    "url-join": "5.0.0"
   },
   "dependencies": {
     "@aiden0z/pptx-renderer": "^1.2.4",

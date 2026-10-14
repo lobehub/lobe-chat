@@ -33,6 +33,7 @@ import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { FileService } from '@/server/services/file';
+import { GoalService } from '@/server/services/goal';
 import { GoalBriefService } from '@/server/services/goal/goalBriefs';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
 import { parseChangeRequestUrl } from '@/server/services/scm/changeRequestUrl';
@@ -265,8 +266,6 @@ const answerGoalGate = async (
   comment?: string,
 ) => {
   if (acceptance.subjectType !== 'goal_gate') return;
-  // Loaded lazily: the goal service reaches the verify layer that imports this router's helpers.
-  const { GoalService } = await import('@/server/services/goal');
   const workspaceId = acceptance.workspaceId ?? undefined;
   const goalId = await new GoalService(db, acceptance.userId, workspaceId).answerReleaseGate(
     acceptance.subjectId,
