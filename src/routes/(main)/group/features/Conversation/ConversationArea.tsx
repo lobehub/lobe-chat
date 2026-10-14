@@ -17,8 +17,6 @@ import {
   MessageForwardFooter,
 } from '@/features/Conversation/MessageForward';
 import { useOperationState } from '@/hooks/useOperationState';
-import { useChatStore } from '@/store/chat';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
@@ -45,9 +43,6 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
 
   // Get raw dbMessages from ChatStore for this context
   // ConversationStore will parse them internally to generate displayMessages
-  const chatKey = messageMapKey(context);
-  const replaceMessages = useChatStore((s) => s.replaceMessages);
-  const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
 
   // Get operation state from ChatStore for reactive updates
   const operationState = useOperationState(context);
@@ -67,12 +62,7 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
     <ConversationProvider
       actionsBar={actionsBarConfig}
       context={context}
-      hasInitMessages={!!messages}
-      messages={messages}
       operationState={operationState}
-      onMessagesChange={(messages, ctx, meta) => {
-        replaceMessages(messages, { context: ctx, source: meta?.source });
-      }}
     >
       <Flexbox
         flex={1}

@@ -53,8 +53,6 @@ const TopicChat = memo(() => {
   );
 
   const chatKey = useMemo(() => messageMapKey(context), [context]);
-  const replaceMessages = useChatStore((s) => s.replaceMessages);
-  const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
 
   const operationState = useOperationState(context);
 
@@ -88,16 +86,7 @@ const TopicChat = memo(() => {
   if (!portalTopicId) return null;
 
   return (
-    <ConversationProvider
-      context={context}
-      hasInitMessages={!!messages}
-      hooks={hooks}
-      messages={messages}
-      operationState={operationState}
-      onMessagesChange={(msgs, ctx, meta) => {
-        replaceMessages(msgs, { context: ctx, source: meta?.source });
-      }}
-    >
+    <ConversationProvider context={context} hooks={hooks} operationState={operationState}>
       <Suspense
         fallback={
           <Flexbox flex={1} height={'100%'}>
