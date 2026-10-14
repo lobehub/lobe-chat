@@ -1,6 +1,7 @@
 import type { Message } from '@lobechat/conversation-flow';
 import { parse } from '@lobechat/conversation-flow';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import type { MessageModel } from '@/database/models/message';
 
@@ -255,10 +256,10 @@ export const selectBranchOfMessage = async (
     return;
   }
 
-  await Promise.all(
-    [...updates].map(([id, activeBranchIndex]) =>
-      messageModel.updateMetadata(id, { activeBranchIndex }),
-    ),
+  await pMap(
+    [...updates],
+    ([id, activeBranchIndex]) => messageModel.updateMetadata(id, { activeBranchIndex }),
+    { concurrency: 5 },
   );
 };
 
