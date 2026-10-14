@@ -92,6 +92,19 @@ describe('resolveUserMessageParentId', () => {
     await expect(resolve(messages)).resolves.toBe('a1');
   });
 
+  it('keeps the query order when a turn and its reply share a millisecond', async () => {
+    // The DB orders by microsecond createdAt; JS Dates collapse u2 and a2 into
+    // one millisecond, and the reply must still win over its own user row.
+    const messages = [
+      msg('u1', 'user', null, 1),
+      msg('a1', 'assistant', 'u1', 2),
+      msg('u2', 'user', 'a1', 3),
+      msg('a2', 'assistant', 'u2', 3),
+    ];
+
+    await expect(resolve(messages)).resolves.toBe('a2');
+  });
+
   it('parents off the assistant that owns a tool-result tail', async () => {
     const messages = [
       msg('u1', 'user', null, 1),

@@ -150,10 +150,17 @@ export const resolveUserMessageParentId = async (
 
   if (messages.length > 0) {
     const activeIds = collectActiveBranchIds(messages, threadId);
+    // Newest first. Rows from one turn can share a JS millisecond while the DB
+    // orders them by microsecond `createdAt` then id, so ties fall back to the
+    // query position; otherwise a user row could outrank its own reply.
     const headId = messages
-      .filter((message) => isSpineCandidate(message, threadId) && activeIds.has(message.id))
-      .sort((a, b) => toTime(b.createdAt) - toTime(a.createdAt))
-      .map(toMessageRowId)
+      .map((message, position) => ({ message, position }))
+      .filter(({ message }) => isSpineCandidate(message, threadId) && activeIds.has(message.id))
+      .sort(
+        (a, b) =>
+          toTime(b.message.createdAt) - toTime(a.message.createdAt) || b.position - a.position,
+      )
+      .map(({ message }) => toMessageRowId(message))
       .find(
         (id): id is string => !!id && (!clientTailId || isDescendantOrSelf(byId, id, clientTailId)),
       );
@@ -302,8 +309,15 @@ export const createUserTurnAnchor = (
 
   return {
     resolveParentId: async () => {
+      // `parse()` never reads Work summaries, so skip their join on the send path.
       messages = await messageModel.query(
-        { groupId, sessionId: sessionId ?? undefined, threadId: threadId ?? undefined, topicId },
+        {
+          groupId,
+          sessionId: sessionId ?? undefined,
+          skipWorks: true,
+          threadId: threadId ?? undefined,
+          topicId,
+        },
         { allowShareVisitor },
       );
       return resolveUserMessageParentId(messageModel, {
