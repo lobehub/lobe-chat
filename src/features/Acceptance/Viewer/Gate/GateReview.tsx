@@ -29,7 +29,7 @@ const styles = createStaticStyles(({ css }) => ({
   footer: css`
     padding-block: 12px;
     padding-inline: 24px;
-    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+    border-block-start: 1px solid ${cssVar.colorBorder};
     background: color-mix(in srgb, ${cssVar.colorBgElevated} 92%, ${cssVar.colorFillSecondary});
   `,
   footerOnPage: css`
@@ -54,7 +54,7 @@ const styles = createStaticStyles(({ css }) => ({
 
     padding-block: 12px;
     padding-inline: 24px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
+    border-block-end: 1px solid ${cssVar.colorBorder};
   `,
   link: css`
     font-size: ${cssVar.fontSizeSM};
@@ -66,7 +66,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   list: css`
     overflow: hidden;
-    border: 1px solid ${cssVar.colorBorderSecondary};
+    border: 1px solid ${cssVar.colorBorder};
     border-radius: ${cssVar.borderRadiusLG};
   `,
   meta: css`
@@ -81,12 +81,12 @@ const styles = createStaticStyles(({ css }) => ({
     width: 340px;
     padding-block: 20px;
     padding-inline: 20px;
-    border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
+    border-inline-start: 1px solid ${cssVar.colorBorder};
   `,
   plan: css`
     padding-block: 4px;
     padding-inline: 20px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
+    border: 1px solid ${cssVar.colorBorder};
     border-radius: ${cssVar.borderRadiusLG};
   `,
   row: css`
@@ -95,7 +95,7 @@ const styles = createStaticStyles(({ css }) => ({
     padding-inline: 16px;
 
     & + & {
-      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+      border-block-start: 1px solid ${cssVar.colorBorder};
     }
 
     &:hover {

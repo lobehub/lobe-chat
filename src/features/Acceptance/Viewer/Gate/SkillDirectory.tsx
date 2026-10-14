@@ -20,7 +20,7 @@ const styles = createStaticStyles(({ css }) => ({
   frame: css`
     overflow: hidden;
     height: 480px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
+    border: 1px solid ${cssVar.colorBorder};
     border-radius: ${cssVar.borderRadiusLG};
   `,
   tree: css`
@@ -29,7 +29,7 @@ const styles = createStaticStyles(({ css }) => ({
 
     width: 240px;
     padding: 8px;
-    border-inline-end: 1px solid ${cssVar.colorBorderSecondary};
+    border-inline-end: 1px solid ${cssVar.colorBorder};
   `,
   viewer: css`
     overflow: auto;
