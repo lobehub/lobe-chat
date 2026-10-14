@@ -1,13 +1,11 @@
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
 import { Command } from 'commander';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTrpcClient } from '../../../api/client';
 import { resolveWorkspaceId } from '../../../api/workspace';
 import { resolveServerUrl } from '../../../settings';
 import { log } from '../../../utils/logger';
@@ -15,6 +13,7 @@ import { uploadLocalFile } from '../../../utils/uploadLocalFile';
 import type * as VerifyHelpers from '../utils';
 import { pullRequestFromBranch } from '../utils';
 import { attachAcceptanceRunCommands } from '.';
+import { usePublicationHarness } from './testUtils';
 
 vi.mock('../../../api/client', () => ({ getTrpcClient: vi.fn() }));
 vi.mock('../../../api/workspace', () => ({ resolveWorkspaceId: vi.fn() }));
@@ -26,94 +25,15 @@ vi.mock('../utils', async (importOriginal) => ({
 }));
 
 describe('acceptance publication with missing evidence', () => {
-  const client = {
-    acceptanceComment: { create: { mutate: vi.fn() } },
-    acceptance: {
-      attachRun: { mutate: vi.fn() },
-      ensure: { mutate: vi.fn() },
-      getBundle: { query: vi.fn() },
-      linkPullRequest: { mutate: vi.fn() },
-    },
-    verify: {
-      createRun: { mutate: vi.fn() },
-      getRun: { query: vi.fn() },
-      getVerifyState: { query: vi.fn() },
-      ingestResult: { mutate: vi.fn() },
-      submitCheckEvidence: { mutate: vi.fn() },
-      uploadEvidence: { mutate: vi.fn() },
-      upsertReport: { mutate: vi.fn() },
-    },
-    user: { getUserState: { query: vi.fn() } },
-    workspace: { getById: { query: vi.fn() } },
-  };
-  let dir: string;
-  let printed: string[];
-  let originalExitCode: typeof process.exitCode;
-
-  beforeEach(async () => {
-    vi.resetAllMocks();
-    originalExitCode = process.exitCode;
-    process.exitCode = undefined;
-    printed = [];
-    vi.spyOn(console, 'log').mockImplementation((line) => printed.push(String(line)));
-    vi.spyOn(log, 'warn').mockImplementation(() => {});
-    vi.mocked(resolveServerUrl).mockReturnValue('https://app.lobehub.com');
-    vi.mocked(getTrpcClient).mockResolvedValue(
-      client as unknown as Awaited<ReturnType<typeof getTrpcClient>>,
-    );
-    vi.mocked(uploadLocalFile).mockResolvedValue({ id: 'file-1', url: 'https://files.test/1' });
-    client.acceptance.ensure.mutate.mockResolvedValue({ id: 'acceptance-1' });
-    client.acceptance.getBundle.query.mockResolvedValue({});
-    client.acceptance.attachRun.mutate.mockResolvedValue({ id: 'run-1', roundIndex: 2 });
-    client.verify.createRun.mutate.mockResolvedValue({ id: 'run-1' });
-    client.verify.ingestResult.mutate.mockImplementation(async (input) => ({
-      id: `result-${input.checkItemId}`,
-    }));
-    client.verify.uploadEvidence.mutate.mockResolvedValue({ id: 'evidence-1' });
-    client.user.getUserState.query.mockResolvedValue({
-      settings: { general: { responseLanguage: 'en-US' } },
-    });
-    dir = await mkdtemp(path.join(tmpdir(), 'lh-evidence-'));
-    await writeFile(path.join(dir, "screen's shot.png"), 'image fixture');
-    await writeFile(path.join(dir, 'scroll.mp4'), 'video fixture');
-    await writeFile(path.join(dir, 'output.txt'), 'Observed the expected response.');
-  });
-
-  afterEach(async () => {
-    process.exitCode = originalExitCode;
-    vi.restoreAllMocks();
-    await rm(dir, { force: true, recursive: true });
-  });
-
-  const run = async (...args: string[]) => {
-    const program = new Command();
-    program.exitOverride();
-    attachAcceptanceRunCommands(program.command('acceptance'));
-    await program.parseAsync(['node', 'lh', 'acceptance', 'run', ...args]);
-  };
-
-  const report = async (requiredEvidence: string[], evidence: string[], verdict = 'passed') => {
-    await writeFile(
-      path.join(dir, 'result.json'),
-      JSON.stringify({
-        cases: [{ evidence, id: 'screen', name: '用户能看到处理结果', status: verdict }],
-        plan: [{ id: 'screen', requiredEvidence, title: '用户能看到处理结果' }],
-        summary: { passed: 1, total: 1, verdict },
-        title: '处理结果展示',
-      }),
-    );
-  };
-
-  const result = () => JSON.parse(printed.at(-1)!);
-  const finalCheck = () => client.verify.ingestResult.mutate.mock.calls.at(-1)![0];
-  const finalReport = () => client.verify.upsertReport.mutate.mock.calls.at(-1)![0];
+  const h = usePublicationHarness();
+  const { client, finalCheck, finalReport, report, result, run } = h;
 
   it('publishes partial JSON and downgrades a pass when quota blocks required screenshots', async () => {
     vi.mocked(uploadLocalFile).mockRejectedValue(new Error('storage_block:upgrade_required'));
     await report(['screenshot', 'text'], ["screen's shot.png", 'output.txt']);
-    const original = await readFile(path.join(dir, 'result.json'), 'utf8');
+    const original = await readFile(path.join(h.dir, 'result.json'), 'utf8');
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(process.exitCode).toBe(1);
     expect(result()).toMatchObject({
@@ -143,7 +63,7 @@ describe('acceptance publication with missing evidence', () => {
       uncertainChecks: 1,
       verdict: 'uncertain',
     });
-    expect(await readFile(path.join(dir, 'result.json'), 'utf8')).toBe(original);
+    expect(await readFile(path.join(h.dir, 'result.json'), 'utf8')).toBe(original);
   });
 
   it('links the reported pull request to the acceptance, and survives a failed link', async () => {
@@ -153,7 +73,7 @@ describe('acceptance publication with missing evidence', () => {
       url: 'https://github.com/lobehub/lobehub/pull/20171',
     };
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           { evidence: ['output.txt'], id: 'screen', name: '用户能看到处理结果', status: 'passed' },
@@ -166,7 +86,7 @@ describe('acceptance publication with missing evidence', () => {
     );
     client.acceptance.linkPullRequest.mutate.mockRejectedValue(new Error('CONFLICT'));
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(client.acceptance.linkPullRequest.mutate).toHaveBeenCalledExactlyOnceWith({
       id: 'acceptance-1',
@@ -181,7 +101,7 @@ describe('acceptance publication with missing evidence', () => {
     const inferred = { number: 7, url: 'https://github.com/lobehub/lobehub/pull/7' };
     vi.mocked(pullRequestFromBranch).mockReturnValue(inferred);
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         branch: 'canary',
         cases: [
@@ -193,7 +113,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(pullRequestFromBranch).toHaveBeenCalledWith('canary');
     expect(result()).toMatchObject({ pullRequest: inferred });
@@ -204,7 +124,7 @@ describe('acceptance publication with missing evidence', () => {
     vi.mocked(uploadLocalFile).mockRejectedValue(new Error('storage_block:upgrade_required'));
     await report(['text'], ['output.txt', "screen's shot.png"]);
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(process.exitCode).toBe(1);
     expect(result()).toMatchObject({ missingEvidence: [], publicationStatus: 'partial' });
@@ -213,11 +133,11 @@ describe('acceptance publication with missing evidence', () => {
   });
 
   it('counts only attached evidence, but accepts another successful file of the same required type', async () => {
-    await writeFile(path.join(dir, 'second.png'), 'another image');
+    await writeFile(path.join(h.dir, 'second.png'), 'another image');
     vi.mocked(uploadLocalFile).mockRejectedValueOnce(new Error('storage_block:upgrade_required'));
     await report(['screenshot'], ["screen's shot.png", 'second.png']);
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({
       evidence: 1,
@@ -232,7 +152,7 @@ describe('acceptance publication with missing evidence', () => {
     async (verdict) => {
       await report(['screenshot'], ['missing.png'], verdict);
 
-      await run('ingest', dir, '--json');
+      await run('ingest', h.dir, '--json');
 
       expect(result().failedEvidence[0].reason).toBe('file_missing');
       expect(finalCheck().verdict).toBe(verdict);
@@ -244,7 +164,7 @@ describe('acceptance publication with missing evidence', () => {
   it('reports missing required evidence even when no upload was attempted', async () => {
     await report(['screenshot'], []);
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({
       failedEvidence: [],
@@ -259,13 +179,13 @@ describe('acceptance publication with missing evidence', () => {
     vi.mocked(uploadLocalFile).mockRejectedValue(new Error('storage_block:upgrade_required'));
     await report(['screenshot'], ["screen's shot.png"]);
 
-    await run('ingest', dir);
+    await run('ingest', h.dir);
 
-    expect(printed.join('\n')).toContain('Partially published');
-    expect(printed.join('\n')).toContain('https://app.lobehub.com/acceptance/acceptance-1?r=2');
-    expect(printed.join('\n')).toContain('evidence upload');
-    expect(printed.join('\n')).toContain('POSIX shell');
-    expect(printed.join('\n')).toContain('retryArgs');
+    expect(h.printed.join('\n')).toContain('Partially published');
+    expect(h.printed.join('\n')).toContain('https://app.lobehub.com/acceptance/acceptance-1?r=2');
+    expect(h.printed.join('\n')).toContain('evidence upload');
+    expect(h.printed.join('\n')).toContain('POSIX shell');
+    expect(h.printed.join('\n')).toContain('retryArgs');
     expect(log.warn).toHaveBeenCalledWith(
       expect.stringContaining('https://lobehub.com/acceptance'),
     );
@@ -285,7 +205,7 @@ describe('acceptance publication with missing evidence', () => {
     vi.mocked(uploadLocalFile).mockRejectedValue(new Error('storage_block:upgrade_required'));
     await report(['screenshot'], ["screen's shot.png"]);
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result().recovery).toMatchObject({
       cleanupUrl: 'https://lobe.example.test:8443/acceptance',
@@ -305,7 +225,7 @@ describe('acceptance publication with missing evidence', () => {
       if (error) vi.mocked(uploadLocalFile).mockRejectedValue(new Error(error));
       await report(['screenshot'], ["screen's shot.png"]);
 
-      await run('ingest', dir, '--json');
+      await run('ingest', h.dir, '--json');
 
       expect(result()).not.toHaveProperty('recovery');
       expect(result().publicationStatus).toBe(error ? 'partial' : 'complete');
@@ -319,13 +239,13 @@ describe('acceptance publication with missing evidence', () => {
       await report(['screenshot'], ["screen's shot.png"]);
       const args =
         command === 'ingest'
-          ? ['ingest', dir]
+          ? ['ingest', h.dir]
           : [
               ...(command === 'evidence'
                 ? ['evidence', 'upload', '--check', 'result-screen']
                 : ['result', 'submit', '--run', 'run-1', '--item', 'screen']),
               '--file',
-              path.join(dir, "screen's shot.png"),
+              path.join(h.dir, "screen's shot.png"),
               '--type',
               'screenshot',
               '--desc',
@@ -431,7 +351,7 @@ describe('acceptance publication with missing evidence', () => {
         await run(
           ...command,
           '--file',
-          path.join(dir, "screen's shot.png"),
+          path.join(h.dir, "screen's shot.png"),
           '--type',
           'screenshot',
           '--desc',
@@ -452,7 +372,7 @@ describe('acceptance publication with missing evidence', () => {
         expect(JSON.stringify(vi.mocked(log.warn).mock.calls)).not.toMatch(
           /quota-user|quota%40password|quota@password/,
         );
-        expect(printed.join('\n')).not.toMatch(/quota-user|quota%40password|quota@password/);
+        expect(h.printed.join('\n')).not.toMatch(/quota-user|quota%40password|quota@password/);
         if (json) {
           expect(result()).toMatchObject({
             error: 'storage_block:upgrade_required',
@@ -474,7 +394,7 @@ describe('acceptance publication with missing evidence', () => {
         run(
           ...command,
           '--file',
-          path.join(dir, "screen's shot.png"),
+          path.join(h.dir, "screen's shot.png"),
           '--type',
           'screenshot',
           '--desc',
@@ -483,7 +403,7 @@ describe('acceptance publication with missing evidence', () => {
         ),
       ).rejects.toBe(error);
 
-      expect(printed).toEqual([]);
+      expect(h.printed).toEqual([]);
       expect(log.warn).not.toHaveBeenCalled();
     });
   });
@@ -492,7 +412,7 @@ describe('acceptance publication with missing evidence', () => {
     'accounts for an unexecuted check alongside a %s case',
     async (verdict) => {
       await writeFile(
-        path.join(dir, 'result.json'),
+        path.join(h.dir, 'result.json'),
         JSON.stringify({
           cases: [{ id: 'response', name: '收到回复', status: verdict, evidence: ['output.txt'] }],
           plan: [
@@ -507,7 +427,7 @@ describe('acceptance publication with missing evidence', () => {
         }),
       );
 
-      await run('ingest', dir, '--json');
+      await run('ingest', h.dir, '--json');
 
       expect(result()).toMatchObject({
         cases: 1,
@@ -530,7 +450,7 @@ describe('acceptance publication with missing evidence', () => {
 
   it('keeps an entirely unexecuted required-evidence plan uncertain', async () => {
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [],
         plan: [{ id: 'screen', title: '画面展示', requiredEvidence: ['screenshot'] }],
@@ -538,7 +458,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({ publicationStatus: 'partial', unexecuted: ['screen'] });
     expect(finalReport()).toMatchObject({
@@ -558,7 +478,7 @@ describe('acceptance publication with missing evidence', () => {
       unresolvedSupersedes: ['typo-id'],
     });
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
         plan: [{ id: 'response', supersedes: ['typo-id'], title: '收到回复' }],
@@ -566,7 +486,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({ unresolvedSupersedes: ['typo-id'] });
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('typo-id'));
@@ -574,7 +494,7 @@ describe('acceptance publication with missing evidence', () => {
 
   it('reports no unresolved supersedes when an older server omits the field', async () => {
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [{ evidence: ['output.txt'], id: 'response', name: '收到回复', status: 'passed' }],
         plan: [{ id: 'response', title: '收到回复' }],
@@ -582,7 +502,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({ unresolvedSupersedes: [] });
   });
@@ -604,7 +524,7 @@ describe('acceptance publication with missing evidence', () => {
       roundIndex: 1,
     });
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           { evidence: ['output.txt'], id: 'draft-response', name: '草稿回复', status: 'passed' },
@@ -615,7 +535,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({
       cases: 2,
@@ -651,7 +571,7 @@ describe('acceptance publication with missing evidence', () => {
       });
       await report(['text'], hasScreenshot ? ["screen's shot.png"] : ['output.txt']);
 
-      await run('ingest', dir, '--json');
+      await run('ingest', h.dir, '--json');
 
       expect(result()).toMatchObject({
         missingEvidence: hasScreenshot ? [] : [{ checkItemId: 'screen', types: ['screenshot'] }],
@@ -676,7 +596,7 @@ describe('acceptance publication with missing evidence', () => {
   it('exposes shell-independent upload arguments without escaping path or description', async () => {
     const description = `User's "input" $HOME %TEMP% & | \`literal\``;
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           {
@@ -690,7 +610,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
     vi.mocked(uploadLocalFile).mockRejectedValueOnce(new Error('storage_block:upgrade_required'));
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
     const failure = result().failedEvidence[0];
     expect(failure.retryCommandShell).toBe('posix');
     expect(failure.retryArgs).toEqual([
@@ -703,7 +623,7 @@ describe('acceptance publication with missing evidence', () => {
       '--type',
       'screenshot',
       '--file',
-      path.join(dir, "screen's shot.png"),
+      path.join(h.dir, "screen's shot.png"),
       '--desc',
       description,
     ]);
@@ -714,13 +634,13 @@ describe('acceptance publication with missing evidence', () => {
     expect(client.verify.uploadEvidence.mutate).toHaveBeenCalledWith(
       expect.objectContaining({ description, fileId: 'file-1' }),
     );
-    expect(uploadLocalFile).toHaveBeenLastCalledWith(client, path.join(dir, "screen's shot.png"));
+    expect(uploadLocalFile).toHaveBeenLastCalledWith(client, path.join(h.dir, "screen's shot.png"));
   });
 
   it('finishes a complete publication with no failure exit code', async () => {
     await report(['screenshot', 'text'], ["screen's shot.png", 'output.txt']);
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(result()).toMatchObject({
       evidence: 2,
@@ -739,7 +659,7 @@ describe('acceptance publication with missing evidence', () => {
       { kind: 'check', note: 'no skeleton after scroll #3', t: 7.9 },
     ];
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           {
@@ -754,328 +674,18 @@ describe('acceptance publication with missing evidence', () => {
         ],
       }),
     );
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(client.verify.uploadEvidence.mutate).toHaveBeenCalledWith(
       expect.objectContaining({ metadata: { chapters }, type: 'video' }),
     );
   });
 
-  describe('ingest into an operation that already owns a plan round', () => {
-    const chapters = [
-      { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
-      { kind: 'check', note: 'First frame already shows the cached device', t: 2.4 },
-    ];
-    const frozenPlan = [
-      {
-        id: 'vci_reload',
-        index: 0,
-        required: true,
-        title: '刷新后首屏直接显示设备',
-        verifierConfig: { requiredEvidence: [{ type: 'video' }] },
-        verifierType: 'llm',
-      },
-      {
-        id: 'vci_code',
-        index: 1,
-        required: true,
-        title: '持久化改用 replica',
-        verifierConfig: {},
-        verifierType: 'llm',
-      },
-    ];
-    const writeRound = (cases: unknown[]) =>
-      writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          cases,
-          plan: [{ id: 'authored', title: 'ignored when the plan is frozen' }],
-          summary: { verdict: 'passed' },
-          title: '设备列表首屏',
-        }),
-      );
-
-    beforeEach(async () => {
-      client.verify.getVerifyState.query.mockResolvedValue({
-        verifyPlan: frozenPlan,
-        verifyPlanConfirmedAt: '2026-10-12T17:35:52.000Z',
-        verifyRunId: 'plan-run',
-      });
-      client.verify.getRun.query.mockResolvedValue({
-        acceptanceId: 'acceptance-task',
-        id: 'plan-run',
-        roundIndex: 1,
-      });
-      client.verify.submitCheckEvidence.mutate.mockImplementation(async (input) => ({
-        checkResult: { id: `result-${input.checkItemId}`, verifyRunId: 'plan-run' },
-        evidence: [],
-      }));
-      vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
-        throw new Error(`exit ${code}`);
-      }) as never);
-      vi.spyOn(log, 'error').mockImplementation(() => {});
-      await writeFile(path.join(dir, 'report.md'), '# builder narrative');
-      await writeFile(path.join(dir, 'proposal.md'), '刷新后设备芯片首帧即显示。');
-    });
-
-    it('publishes cases and chaptered videos into the plan round without creating a round or judging it', async () => {
-      await writeRound([
-        {
-          evidence: [{ chapters, description: 'warm reload', path: 'scroll.mp4' }],
-          id: 'vci_reload',
-          observation: 'device chip renders on the first frame',
-          status: 'passed',
-        },
-        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
-      ]);
-
-      await run('ingest', dir, '--operation', 'op-task', '--json');
-
-      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
-      expect(client.acceptance.attachRun.mutate).not.toHaveBeenCalled();
-      expect(client.acceptance.ensure.mutate).not.toHaveBeenCalled();
-      expect(client.verify.ingestResult.mutate).not.toHaveBeenCalled();
-      // The round's verifier writes the report and the verdicts.
-      expect(client.verify.upsertReport.mutate).not.toHaveBeenCalled();
-      expect(client.verify.submitCheckEvidence.mutate).toHaveBeenCalledWith({
-        checkItemId: 'vci_reload',
-        operationId: 'op-task',
-        toulmin: { evidence: 'device chip renders on the first frame' },
-      });
-      expect(client.verify.uploadEvidence.mutate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          checkResultId: 'result-vci_reload',
-          metadata: { chapters },
-          type: 'video',
-        }),
-      );
-      expect(client.acceptanceComment.create.mutate).toHaveBeenCalledWith(
-        expect.objectContaining({ acceptanceId: 'acceptance-task', contextRunId: 'plan-run' }),
-      );
-      expect(result()).toMatchObject({
-        acceptanceUrl: 'https://app.lobehub.com/acceptance/acceptance-task',
-        missingEvidence: [],
-        mode: 'plan-round',
-        publicationStatus: 'complete',
-        roundIndex: 1,
-        verifyRunId: 'plan-run',
-      });
-      expect(process.exitCode).toBeUndefined();
-    });
-
-    it('rejects a case id outside the frozen plan before writing anything', async () => {
-      await writeRound([{ evidence: ['scroll.mp4'], id: 'reload', status: 'passed' }]);
-
-      await expect(run('ingest', dir, '--operation', 'op-task')).rejects.toThrow('exit 1');
-      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('vci_reload'));
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-      expect(uploadLocalFile).not.toHaveBeenCalled();
-    });
-
-    it('reports a planned video that never got a case as missing', async () => {
-      await writeRound([{ evidence: ['output.txt'], id: 'vci_code', status: 'passed' }]);
-
-      await run('ingest', dir, '--operation', 'op-task', '--json');
-
-      expect(process.exitCode).toBe(1);
-      expect(result()).toMatchObject({
-        missingEvidence: [{ checkItemId: 'vci_reload', types: ['video'] }],
-        publicationStatus: 'partial',
-        unexecuted: ['vci_reload'],
-      });
-    });
-
-    it('applies the verifier gate: deliverable scopes and same-medium substitutes are covered', async () => {
-      client.verify.getVerifyState.query.mockResolvedValue({
-        verifyPlan: [
-          {
-            ...frozenPlan[0],
-            verifierConfig: {
-              requiredEvidence: [{ type: 'gif' }, { scope: 'deliverable', type: 'markdown' }],
-            },
-          },
-          {
-            ...frozenPlan[1],
-            verifierConfig: { requiredEvidence: [{ scope: 'task_artifacts', type: 'text' }] },
-          },
-        ],
-        verifyPlanConfirmedAt: '2026-10-12T17:35:52.000Z',
-        verifyRunId: 'plan-run',
-      });
-      // A recording uploaded as video satisfies a gif requirement; the deliverable
-      // markdown and the unexecuted item's task artifact are the verifier's to resolve.
-      await writeRound([{ evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' }]);
-
-      await run('ingest', dir, '--operation', 'op-task', '--json');
-
-      expect(result()).toMatchObject({ missingEvidence: [], publicationStatus: 'complete' });
-      expect(process.exitCode).toBeUndefined();
-    });
-
-    it('posts the proposal on the repair round the evidence was redirected to', async () => {
-      // A check whose failure spawned a repair is answered on the live repair
-      // round; the proposal and the output must name that round, not the old one.
-      client.verify.submitCheckEvidence.mutate.mockImplementation(async (input) => ({
-        checkResult: { id: `result-${input.checkItemId}`, verifyRunId: 'repair-run' },
-        evidence: [],
-      }));
-      client.verify.getRun.query.mockImplementation(async ({ verifyRunId }) =>
-        verifyRunId === 'repair-run'
-          ? { acceptanceId: 'acceptance-task', id: 'repair-run', roundIndex: 2 }
-          : { acceptanceId: 'acceptance-task', id: 'plan-run', roundIndex: 1 },
-      );
-      await writeRound([
-        { evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' },
-        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
-      ]);
-
-      await run('ingest', dir, '--operation', 'op-task', '--json');
-
-      expect(client.acceptanceComment.create.mutate).toHaveBeenCalledWith(
-        expect.objectContaining({ clientId: 'proposal:repair-run', contextRunId: 'repair-run' }),
-      );
-      expect(result()).toMatchObject({ roundIndex: 2, verifyRunId: 'repair-run' });
-    });
-
-    it('reports an unattached plan round as blocked, not complete', async () => {
-      client.verify.getRun.query.mockResolvedValue({
-        acceptanceId: null,
-        id: 'plan-run',
-        roundIndex: null,
-      });
-      await writeRound([
-        { evidence: ['scroll.mp4'], id: 'vci_reload', status: 'passed' },
-        { evidence: ['output.txt'], id: 'vci_code', status: 'passed' },
-      ]);
-
-      await run('ingest', dir, '--operation', 'op-task', '--json');
-
-      expect(result()).toMatchObject({
-        acceptanceUrl: null,
-        missingEvidence: [],
-        publicationStatus: 'blocked',
-      });
-      expect(process.exitCode).toBe(1);
-    });
-
-    it('refuses to fold a retry into an earlier authored round under the same operation', async () => {
-      // An authored ingest with --operation leaves a run whose plan was never
-      // confirmed; it is not a plan round, and its verdicts and report are final.
-      client.verify.getVerifyState.query.mockResolvedValue({
-        verifyPlan: [{ id: 'screen', title: '用户能看到处理结果' }],
-        verifyPlanConfirmedAt: null,
-        verifyRunId: 'authored-run',
-      });
-      await report([], ['output.txt']);
-
-      await expect(run('ingest', dir, '--operation', 'op-authored')).rejects.toThrow('exit 1');
-
-      expect(log.error).toHaveBeenCalledWith(expect.stringContaining('authored-run'));
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
-      expect(client.verify.uploadEvidence.mutate).not.toHaveBeenCalled();
-    });
-
-    it('keeps creating a round for an operation with no verification run', async () => {
-      client.verify.getVerifyState.query.mockResolvedValue(null);
-      await report([], ['output.txt']);
-
-      await run('ingest', dir, '--operation', 'op-free', '--json');
-
-      expect(client.verify.createRun.mutate).toHaveBeenCalledWith(
-        expect.objectContaining({ operationId: 'op-free' }),
-      );
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('result submit chapters', () => {
-    const chapters = [
-      { kind: 'step', label: 'Reload with listDevices held', t: 1.2 },
-      { kind: 'check', note: 'First frame already shows the cached device', t: 2.4 },
-    ];
-    const submit = (...extra: string[]) =>
-      run(
-        'result',
-        'submit',
-        '--operation',
-        'op-1',
-        '--item',
-        'reload',
-        '--file',
-        path.join(dir, 'scroll.mp4'),
-        '--type',
-        'video',
-        ...extra,
-      );
-
-    beforeEach(() => {
-      client.verify.submitCheckEvidence.mutate.mockResolvedValue({
-        checkResult: { id: 'result-reload', verifyRunId: 'run-1' },
-        evidence: [{ id: 'evidence-1' }],
-      });
-      client.verify.getRun.query.mockResolvedValue({ acceptanceId: 'acceptance-1', id: 'run-1' });
-      vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
-        throw new Error(`exit ${code}`);
-      }) as never);
-      vi.spyOn(log, 'error').mockImplementation(() => {});
-    });
-
-    it('attaches a plan-round video with its chapters', async () => {
-      await writeFile(path.join(dir, 'chapters.json'), JSON.stringify(chapters));
-
-      await submit('--chapters', path.join(dir, 'chapters.json'));
-
-      expect(client.verify.submitCheckEvidence.mutate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          checkItemId: 'reload',
-          evidence: [expect.objectContaining({ metadata: { chapters }, type: 'video' })],
-          operationId: 'op-1',
-        }),
-      );
-    });
-
-    it('rejects a malformed marker before uploading anything', async () => {
-      await writeFile(
-        path.join(dir, 'chapters.json'),
-        JSON.stringify([...chapters, { kind: 'check', t: 3 }]),
-      );
-
-      await expect(submit('--chapters', path.join(dir, 'chapters.json'))).rejects.toThrow(
-        '1 of 3 chapters are malformed',
-      );
-      expect(uploadLocalFile).not.toHaveBeenCalled();
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-    });
-
-    it('rejects chapters on evidence that has no timeline', async () => {
-      await writeFile(path.join(dir, 'chapters.json'), JSON.stringify(chapters));
-
-      await expect(
-        run(
-          'result',
-          'submit',
-          '--operation',
-          'op-1',
-          '--item',
-          'reload',
-          '--file',
-          path.join(dir, "screen's shot.png"),
-          '--type',
-          'screenshot',
-          '--chapters',
-          path.join(dir, 'chapters.json'),
-        ),
-      ).rejects.toThrow('--chapters only applies to --type video evidence');
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-    });
-  });
-
   it('retries only the failed attachment, reusing its file and preserving its caption and comparison', async () => {
     const description = "Before: user's input $(printf should-not-expand)";
     const comparison = { id: 'input', role: 'before' };
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           {
@@ -1091,7 +701,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
     client.verify.uploadEvidence.mutate.mockRejectedValueOnce(new Error('attachment unavailable'));
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
     const failure = result().failedEvidence[0];
     expect(failure).toMatchObject({ fileId: 'file-1', reason: 'upload_failed' });
     expect(failure.retryArgs).toEqual([
@@ -1140,7 +750,7 @@ describe('acceptance publication with missing evidence', () => {
   it('recounts mixed checks without converting an observed failure into uncertainty', async () => {
     vi.mocked(uploadLocalFile).mockRejectedValue(new Error('storage_block:upgrade_required'));
     await writeFile(
-      path.join(dir, 'result.json'),
+      path.join(h.dir, 'result.json'),
       JSON.stringify({
         cases: [
           { evidence: ["screen's shot.png"], id: 'screen', name: '画面展示', status: 'passed' },
@@ -1152,7 +762,7 @@ describe('acceptance publication with missing evidence', () => {
       }),
     );
 
-    await run('ingest', dir, '--json');
+    await run('ingest', h.dir, '--json');
 
     expect(finalReport()).toMatchObject({
       failedChecks: 1,
@@ -1160,189 +770,6 @@ describe('acceptance publication with missing evidence', () => {
       totalChecks: 3,
       uncertainChecks: 1,
       verdict: 'failed',
-    });
-  });
-
-  describe('report language', () => {
-    const englishReport = async () => {
-      await writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          cases: [{ id: 'screen', name: '用户能看到处理结果', observation: 'The page shows it.' }],
-          plan: [{ expected: '页面显示结果', id: 'screen', title: '用户能看到处理结果' }],
-          summary: { conclusion: '通过', verdict: 'passed' },
-          title: '处理结果展示',
-        }),
-      );
-      await writeFile(path.join(dir, 'report.md'), 'All checks passed.');
-    };
-
-    it('rejects a report in the wrong language before any remote write', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-      await englishReport();
-
-      const error = await run('ingest', dir).catch((e: unknown) => e);
-
-      expect(String(error)).toContain('responseLanguage) is "zh-CN"');
-      expect(String(error)).toContain('cases[screen].observation');
-      expect(String(error)).toContain('report.md');
-      expect(String(error)).not.toContain('plan[screen].title');
-      expect(client.acceptance.ensure.mutate).not.toHaveBeenCalled();
-      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
-    });
-
-    it('validates a plan-only report with --dry-run without publishing', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-      await writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          plan: [{ id: 'screen', method: 'Open the page', title: '用户能看到处理结果' }],
-          title: '处理结果展示',
-        }),
-      );
-
-      await expect(run('ingest', dir, '--dry-run')).rejects.toThrow('plan[screen].method');
-
-      await writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          plan: [{ id: 'screen', method: '打开页面', title: '用户能看到处理结果' }],
-          title: '处理结果展示',
-        }),
-      );
-      await run('ingest', dir, '--dry-run', '--json');
-
-      expect(result()).toMatchObject({
-        dryRun: true,
-        language: { enforced: true, locale: 'zh-CN', status: 'enforced' },
-        planItems: 1,
-      });
-      expect(client.acceptance.ensure.mutate).not.toHaveBeenCalled();
-      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
-    });
-
-    it('rejects an English category, which renders as the checklist group heading', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-      await writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          plan: [{ category: 'Task hierarchy', id: 'screen', title: '用户能看到处理结果' }],
-          title: '处理结果展示',
-        }),
-      );
-
-      await expect(run('ingest', dir, '--dry-run')).rejects.toThrow('plan[screen].category');
-    });
-
-    it('rejects an English required-evidence hint, shown as the evidence tooltip', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-      await writeFile(
-        path.join(dir, 'result.json'),
-        JSON.stringify({
-          plan: [
-            {
-              id: 'screen',
-              requiredEvidence: [{ hint: 'Capture checkout result', type: 'screenshot' }],
-              title: '用户能看到处理结果',
-            },
-          ],
-          title: '处理结果展示',
-        }),
-      );
-
-      await expect(run('ingest', dir, '--dry-run')).rejects.toThrow(
-        'plan[screen].requiredEvidence[0].hint',
-      );
-    });
-
-    it('rejects English captions in `evidence upload --metadata` before uploading', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-
-      await expect(
-        run(
-          'evidence',
-          'upload',
-          '--check',
-          'result-screen',
-          '--content',
-          '日志',
-          '--type',
-          'text',
-          '--desc',
-          '执行记录',
-          '--metadata',
-          JSON.stringify({
-            chapters: [{ kind: 'step', label: 'Open checkout', t: 0 }],
-            comparison: { id: 'pair', label: '重试前', role: 'before' },
-          }),
-        ),
-      ).rejects.toThrow('--metadata.chapters[0].label');
-      expect(client.verify.uploadEvidence.mutate).not.toHaveBeenCalled();
-    });
-
-    it('rejects English chapter captions in `result submit --chapters` before uploading', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-      await writeFile(
-        path.join(dir, 'chapters.json'),
-        JSON.stringify([
-          { kind: 'step', label: '刷新页面', t: 0 },
-          { kind: 'check', note: 'Device chip shows on the first frame', t: 1.5 },
-        ]),
-      );
-
-      await expect(
-        run(
-          'result',
-          'submit',
-          '--operation',
-          'op-1',
-          '--item',
-          'reload',
-          '--file',
-          path.join(dir, 'scroll.mp4'),
-          '--type',
-          'video',
-          '--desc',
-          '刷新后的录屏',
-          '--chapters',
-          path.join(dir, 'chapters.json'),
-        ),
-      ).rejects.toThrow('--chapters.chapters[1].note');
-      expect(uploadLocalFile).not.toHaveBeenCalled();
-      expect(client.verify.submitCheckEvidence.mutate).not.toHaveBeenCalled();
-    });
-
-    it('rejects `run create` with a title in the wrong language', async () => {
-      client.user.getUserState.query.mockResolvedValue({
-        settings: { general: { responseLanguage: 'zh-CN' } },
-      });
-
-      await expect(
-        run('create', '--title', 'Checkout recovery', '--goal', '验证重试'),
-      ).rejects.toThrow('--title');
-      expect(client.verify.createRun.mutate).not.toHaveBeenCalled();
-    });
-
-    it('warns and still publishes when the account has no response language', async () => {
-      client.user.getUserState.query.mockResolvedValue({ settings: { general: {} } });
-      await englishReport();
-
-      await run('ingest', dir, '--json');
-
-      expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('no response language set'));
-      expect(client.verify.createRun.mutate).toHaveBeenCalledOnce();
     });
   });
 });
