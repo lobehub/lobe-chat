@@ -10,6 +10,7 @@ import {
   isRemoteHeterogeneousType,
 } from '@lobechat/heterogeneous-agents';
 import type {
+  DeviceClient,
   DeviceUnavailableErrorData,
   ErrorType,
   ExecAgentResult,
@@ -65,7 +66,11 @@ import type {
   ExecRunContext,
   InternalExecAgentParams,
 } from '../types';
-import { type CodexDeviceRuntime, resolveCodexDeviceRuntime } from './codexDeviceRuntime';
+import {
+  type CodexDeviceRuntime,
+  probeAgentRunRuntimes,
+  resolveCodexDeviceRuntime,
+} from './codexDeviceRuntime';
 import { heteroOperationCapabilities } from './heteroOperationCapabilities';
 import type { RunAttachments } from './turnSetup';
 
@@ -1010,6 +1015,8 @@ export const dispatchHeteroAgent = async (
         };
       }
       let codexRuntime: CodexDeviceRuntime;
+      // The client that advertised the native runtime; the native dispatch is pinned to it.
+      let nativeClientKinds: DeviceClient[] | undefined;
       try {
         codexRuntime = await resolveCodexDeviceRuntime({
           agentArgs:
@@ -1025,15 +1032,20 @@ export const dispatchHeteroAgent = async (
               return false;
             }
           },
-          // Query the live connection, not merged DB metadata: downgrade/reconnect must revoke it.
-          querySupportedRuntimes: async () =>
-            (
-              await deviceGateway.queryDeviceSystemInfo(
+          // Query the live connection that receives the run, not merged DB metadata:
+          // downgrade/reconnect must revoke it, and another client may differ.
+          querySupportedRuntimes: async () => {
+            const probe = await probeAgentRunRuntimes((clientKinds) =>
+              deviceGateway.readDeviceSystemInfo(
                 deps.userId,
                 dispatchDeviceId,
                 cliDeviceWorkspaceId,
-              )
-            )?.supportedAgentRuntimes,
+                { clientKinds },
+              ),
+            );
+            nativeClientKinds = probe.clientKinds;
+            return probe.runtimes;
+          },
           resume: Boolean(resumeSessionId),
         });
       } catch (err) {
@@ -1139,6 +1151,7 @@ export const dispatchHeteroAgent = async (
             agentId: resolvedAgentId,
             // Only a live client advertising the native protocol receives these wrapper flags.
             args: nativeCodex ? [...(heteroExecArgs ?? []), ...nativeCodex.args] : heteroExecArgs,
+            clientKinds: nativeCodex ? nativeClientKinds : undefined,
             cwd: deviceCwd,
             deviceId: dispatchDeviceId,
             resumeFallbackSystemContext: deviceResumeFallbackSystemContext,

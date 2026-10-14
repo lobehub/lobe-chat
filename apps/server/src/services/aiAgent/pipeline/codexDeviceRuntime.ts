@@ -1,7 +1,55 @@
 import { getCodexAppServerUnsupportedArgs } from '@lobechat/heterogeneous-agents/codexAppServerParams';
+import type { DeviceClient } from '@lobechat/types';
 
 /** Device capability advertised by a CLI that can run `lh hetero exec --codex-app-server`. */
 export const CODEX_APP_SERVER_RUNTIME = 'codex-app-server-v1';
+
+/**
+ * Clients in the order the device gateway routes an agent run among one device's
+ * connections: `lh connect` ranks ahead of the Desktop app.
+ */
+const AGENT_RUN_CLIENT_ORDER: readonly DeviceClient[][] = [['cli'], ['desktop']];
+
+/** A system-info read of one client's connection; a failure keeps the gateway's reason. */
+export type AgentRunSystemInfoRead =
+  | { ok: true; systemInfo: { supportedAgentRuntimes?: readonly string[] } }
+  | { ok: false; reason: string };
+
+export interface AgentRunRuntimeProbe {
+  /** The client whose connection answered; pin the native dispatch to it. */
+  clientKinds?: DeviceClient[];
+  runtimes?: readonly string[];
+}
+
+/**
+ * Reads native runtimes from the connection an agent run will actually reach.
+ *
+ * Use when:
+ * - Deciding whether a device run may carry native wrapper flags.
+ * Expects:
+ * - `read` restricts the system-info request to the given clients.
+ * Returns:
+ * - The runtimes of the first client in agent-run routing order that is connected,
+ *   with that client so the dispatch can be pinned to the same connection; no
+ *   runtimes when that client did not answer.
+ *
+ * Call stack:
+ *
+ * dispatchHeteroAgent
+ *   -> {@link probeAgentRunRuntimes}
+ *     -> deviceGateway.readDeviceSystemInfo
+ */
+export const probeAgentRunRuntimes = async (
+  read: (clientKinds: DeviceClient[]) => Promise<AgentRunSystemInfoRead>,
+): Promise<AgentRunRuntimeProbe> => {
+  for (const clientKinds of AGENT_RUN_CLIENT_ORDER) {
+    const result = await read(clientKinds);
+    if (result.ok) return { clientKinds, runtimes: result.systemInfo.supportedAgentRuntimes };
+    // Only "no connection of this client" moves on; an unanswered read is not a capability.
+    if (result.reason !== 'NO_CAPABLE_CONNECTION') return {};
+  }
+  return {};
+};
 
 /** How a connected device runs one Codex turn. */
 export type CodexDeviceRuntime =
