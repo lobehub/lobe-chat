@@ -1080,6 +1080,63 @@ describe('Generation Actions', () => {
       expect(mockExecuteGatewayAgent).not.toHaveBeenCalled();
     });
 
+    // Regression: the removed client retry path re-derived the turn's tool picks
+    // and @-mentions from its editor state; the gateway request dropped them.
+    it('re-sends the turn tool picks and mentioned agents when regenerating', async () => {
+      const { useChatStore } = await import('@/store/chat');
+      vi.mocked(useChatStore.getState).mockReturnValue({
+        messagesMap: {},
+        operations: {},
+        operationsByMessage: {},
+        topicDataMap: {},
+        startOperation: mockStartOperation,
+        associateMessageWithOperation: mockAssociateMessageWithOperation,
+        completeOperation: mockCompleteOperation,
+        failOperation: mockFailOperation,
+        executeGatewayAgent: mockExecuteGatewayAgent,
+        switchMessageBranch: mockSwitchMessageBranch,
+      } as any);
+      const editorData = {
+        root: {
+          children: [
+            {
+              children: [
+                { label: 'Writer', metadata: { id: 'agt-writer', type: 'agent' }, type: 'mention' },
+                { text: ' and ', type: 'text' },
+                {
+                  actionCategory: 'tool',
+                  actionLabel: 'Notebook',
+                  actionType: 'lobe-notebook',
+                  type: 'action-tag',
+                },
+              ],
+              type: 'paragraph',
+            },
+          ],
+          type: 'root',
+        },
+      };
+      const store = createStore({
+        context: { agentId: 'session-1', threadId: null, topicId: 'topic-1' },
+      });
+      act(() => {
+        store.setState({
+          displayMessages: [{ content: 'Hello', editorData, id: 'msg-1', role: 'user' }],
+        } as any);
+      });
+
+      await act(async () => {
+        await store.getState().regenerateUserMessage('msg-1');
+      });
+
+      expect(mockExecuteGatewayAgent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mentionedAgents: [expect.objectContaining({ id: 'agt-writer' })],
+          selectedToolIds: ['lobe-notebook'],
+        }),
+      );
+    });
+
     it('regenerates through executeGatewayAgent', async () => {
       const { useChatStore } = await import('@/store/chat');
       vi.mocked(useChatStore.getState).mockReturnValue({

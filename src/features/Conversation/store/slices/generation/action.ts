@@ -14,6 +14,10 @@ import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { selectRuntimeType } from '@/store/chat/slices/agentRun/actions/dispatch/agentDispatcher';
+import {
+  parseMentionedAgentsFromEditorData,
+  parseSelectedToolsFromEditorData,
+} from '@/store/chat/slices/agentRun/actions/entries/commandBus';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { INPUT_LOADING_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -184,8 +188,16 @@ const regenerateUserMessageFromSource = async (
       // actually aborts the request instead of being swallowed.
       // `onComplete` still fires at session end for the UI hook; re-completing
       // the already-settled wrapper is an idempotent no-op.
+      // The turn's tool picks and @-mentioned agents live in its editor state;
+      // the server enables them per run, so a retry has to send them again.
+      const editorData = item.editorData ?? undefined;
+      const selectedToolIds = parseSelectedToolsFromEditorData(editorData).map(
+        (tool) => tool.identifier,
+      );
+      const mentionedAgents = context.groupId ? [] : parseMentionedAgentsFromEditorData(editorData);
       await chatStore.executeGatewayAgent({
         context,
+        mentionedAgents: mentionedAgents.length > 0 ? mentionedAgents : undefined,
         message: item.content,
         onComplete: () =>
           settleGenerationEntry(chatStore, operationId, () =>
@@ -193,6 +205,7 @@ const regenerateUserMessageFromSource = async (
           ),
         parentMessageId: messageId,
         parentOperationId: operationId,
+        selectedToolIds: selectedToolIds.length > 0 ? selectedToolIds : undefined,
       });
 
       return;
