@@ -46,6 +46,7 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useElectronStore } from '@/store/electron';
 
+import { useTopicId } from '../hooks/useTopicId';
 import { formatLockedControlTooltip } from '../utils/lockedControlTooltip';
 import { moveTopicToTarget } from './moveTopicToTarget';
 import OptionRow from './OptionRow';
@@ -266,6 +267,9 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
   const navigate = useWorkspaceAwareNavigate();
   const { canUseResource } = useChatInputResourceAccess();
 
+  // This composer's conversation (see `useTopicId`): a side-by-side pane must
+  // resolve, and re-pin, its own topic rather than the main column's.
+  const topicId = useTopicId();
   const agentWorkspaceId = useAgentStore((s) => s.agentMap[agentId]?.workspaceId);
   const isWorkspaceAgent = Boolean(agentWorkspaceId);
 
@@ -278,7 +282,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     canSelectExecutionTarget,
     isPreferenceLoading: isWorkspacePreferenceLoading,
     workspaceScoped,
-  } = useEffectiveAgencyConfig(agentId);
+  } = useEffectiveAgencyConfig(agentId, { topicId });
   const canShowExecutionTarget = canUseResource && canDisplayExecutionTarget;
   const canShowExecutionTargetSelector = canShowExecutionTarget && canSelectExecutionTarget;
 
@@ -390,8 +394,11 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
 
   // `homeFallback: false` on purpose — this must reflect whether the user has
   // actually chosen a directory, not the runtime's convenience fallback.
-  const configuredWorkingDirectory = useEffectiveWorkingDirectory(agentId, { homeFallback: false });
-  const { commit: commitWorkingDirectory } = useCommitWorkingDirectory(agentId);
+  const configuredWorkingDirectory = useEffectiveWorkingDirectory(agentId, {
+    homeFallback: false,
+    topicId,
+  });
+  const { commit: commitWorkingDirectory } = useCommitWorkingDirectory(agentId, topicId);
 
   /**
    * Give a sandboxed agent somewhere to work when the user has not picked a
@@ -427,9 +434,8 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
   // The machine the open topic already ran on. Its cwd and CLI session live
   // there, so the picker shows it (tagged) instead of the agent default, and
   // moving the topic elsewhere is an explicit, confirmed re-pin.
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
   const topicDeviceId = useChatStore((s) =>
-    getTopicBoundDeviceId(topicSelectors.currentActiveTopic(s), agentId),
+    getTopicBoundDeviceId(topicId ? topicSelectors.getTopicById(topicId)(s) : undefined, agentId),
   );
   const updateTopicMetadata = useChatStore((s) => s.updateTopicMetadata);
 
@@ -446,7 +452,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
       // `local` before this desktop's id resolved cannot say which machine it
       // is — leave the topic pin alone rather than unbinding it.
       const machineKnown = target !== 'local' || !!currentDeviceId;
-      if (!activeTopicId || !topicDeviceId || !machineKnown || nextMachineId === topicDeviceId) {
+      if (!topicId || !topicDeviceId || !machineKnown || nextMachineId === topicDeviceId) {
         await apply();
         return;
       }
@@ -470,7 +476,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
             // machine — drop them with the pin so the next turn resolves fresh
             // ones where it now runs.
             repinTopic: () =>
-              updateTopicMetadata(activeTopicId, {
+              updateTopicMetadata(topicId, {
                 boundDeviceId: nextMachineId,
                 heteroSessionBindingKey: undefined,
                 heteroSessionBindingKeyByWorkingDirectory: undefined,
@@ -488,13 +494,13 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
       });
     },
     [
-      activeTopicId,
       currentDeviceId,
       devices,
       ensureSandboxWorkingDirectory,
       selectExecutionTarget,
       t,
       topicDeviceId,
+      topicId,
       updateTopicMetadata,
     ],
   );

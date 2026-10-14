@@ -49,6 +49,7 @@ import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import { useTopicId } from '../../hooks/useTopicId';
 import { useMenuContentLifecycle } from '../useMenuContentLifecycle';
 import { useModelCatalog } from './useModelCatalog';
 import { useModelCatalogView } from './useModelCatalogView';
@@ -181,13 +182,16 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
       handleOpenChangeComplete: completeOpenChange,
       open,
     } = useMenuContentLifecycle(onSelect);
-    const { agencyConfig, isPreferenceLoading, workspaceScoped } =
-      useEffectiveAgencyConfig(agentId);
+    const topicId = useTopicId();
+    const { agencyConfig, isPreferenceLoading, workspaceScoped } = useEffectiveAgencyConfig(
+      agentId,
+      { topicId },
+    );
     const isLogin = useUserStore(authSelectors.isLogin);
     const { isLoading: isDeviceListLoading } = useDeviceStore((s) => s.useFetchDevices)(
       isLogin || isDesktop,
     );
-    const cwd = useEffectiveWorkingDirectory(agentId);
+    const cwd = useEffectiveWorkingDirectory(agentId, { topicId });
     const provider = agencyConfig?.heterogeneousProvider;
     useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
     const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);

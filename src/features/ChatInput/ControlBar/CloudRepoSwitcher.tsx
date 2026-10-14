@@ -14,6 +14,8 @@ import { useChatStore } from '@/store/chat';
 import { getPendingTopicRepos, setPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
 
+import { useTopicId } from '../hooks/useTopicId';
+
 const styles = createStaticStyles(({ css }) => ({
   button: css`
     cursor: pointer;
@@ -122,24 +124,23 @@ const CloudRepoSwitcher = memo<CloudRepoSwitcherProps>(({ agentId }) => {
     }
   });
 
-  // Repos persisted to the current topic (empty when no topic or none set)
-  const topicRepos: string[] = useChatStore((s) => {
-    const meta = topicSelectors.currentTopicMetadata(s);
-    return meta?.repos ?? [];
-  });
-
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
-  const updateTopicMetadata = useChatStore((s) => s.updateTopicMetadata);
-
-  const currentWorkingDirectory = useChatStore(
-    (s) => topicSelectors.currentTopicMetadata(s)?.workingDirectory,
+  // This composer's conversation (see `useTopicId`), never the global active
+  // topic: a side-by-side pane must not toggle the main column's repos.
+  const topicId = useTopicId();
+  // Repos persisted to the topic (empty when no topic or none set)
+  const topicRepos: string[] = useChatStore(
+    (s) => (topicId ? topicSelectors.getTopicById(topicId)(s)?.metadata?.repos : undefined) ?? [],
   );
+  const currentWorkingDirectory = useChatStore((s) =>
+    topicId ? topicSelectors.getTopicById(topicId)(s)?.metadata?.workingDirectory : undefined,
+  );
+  const updateTopicMetadata = useChatStore((s) => s.updateTopicMetadata);
 
   const toggleRepo = useCallback(
     async (repo: string) => {
       if (!canCreateContent) return;
 
-      if (!activeTopicId) {
+      if (!topicId) {
         // No topic yet — buffer in the module singleton keyed by agentId.
         // gateway.ts will read and consume this when the first message creates a topic.
         const prev = getPendingTopicRepos(agentId);
@@ -165,16 +166,9 @@ const CloudRepoSwitcher = memo<CloudRepoSwitcherProps>(({ agentId }) => {
         patch.workingDirectoryConfig = { path: nextRepos[0], repoType: 'github' };
       }
 
-      await updateTopicMetadata(activeTopicId, patch);
+      await updateTopicMetadata(topicId, patch);
     },
-    [
-      agentId,
-      activeTopicId,
-      canCreateContent,
-      currentWorkingDirectory,
-      topicRepos,
-      updateTopicMetadata,
-    ],
+    [agentId, canCreateContent, currentWorkingDirectory, topicId, topicRepos, updateTopicMetadata],
   );
 
   const handleOpenChange = useCallback(
@@ -190,7 +184,7 @@ const CloudRepoSwitcher = memo<CloudRepoSwitcherProps>(({ agentId }) => {
 
   // When a topic exists, show its persisted repos.
   // When no topic exists yet, show the pending selection from the module singleton.
-  const displayRepos = activeTopicId ? topicRepos : getPendingTopicRepos(agentId);
+  const displayRepos = topicId ? topicRepos : getPendingTopicRepos(agentId);
 
   // Button label
   const buttonLabel =

@@ -421,6 +421,8 @@ interface WorktreeSwitcherProps {
   /** Dropdown placement — the runtime bar opens upward, embedding panels open downward. */
   placement?: 'topLeft' | 'bottomLeft' | 'bottomRight';
   sourcePath: string;
+  /** The conversation the switch is recorded on; omitted, the global active topic. */
+  topicId?: string | null;
   worktrees: DeviceGitWorktreeListItem[];
 }
 
@@ -436,6 +438,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     path,
     placement = 'topLeft',
     sourcePath,
+    topicId,
     worktrees,
   }) => {
     const { t } = useTranslation('device');
@@ -449,7 +452,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     // duplicate delete if the dropdown is reopened mid-removal.
     const [removingPaths, setRemovingPaths] = useState<Set<string>>(() => new Set());
     const currentRowRef = useRef<HTMLDivElement>(null);
-    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath });
+    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath, topicId });
 
     // Clear the query each time the dropdown closes so it reopens unfiltered.
     useEffect(() => {

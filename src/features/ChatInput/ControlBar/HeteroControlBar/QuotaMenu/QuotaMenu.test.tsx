@@ -62,6 +62,7 @@ vi.mock('@/features/AgentQuotaCalendar', () => ({
 }));
 
 vi.mock('@/features/ChatInput/hooks/useAgentId', () => ({ useAgentId: () => 'agent-1' }));
+vi.mock('@/features/ChatInput/hooks/useTopicId', () => ({ useTopicId: () => 'topic-1' }));
 
 // Resource-access gating is out of scope for quota tests — keep it permissive
 // so HeteroControlBar renders its full quota UI without the ChatInput store.

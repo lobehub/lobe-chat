@@ -21,6 +21,7 @@ import { agentDocumentSkillsSelectors } from '@/store/tool/selectors';
 import type { AgentDocumentSkillItem } from '@/store/tool/slices/agentDocumentSkills/initialState';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useTopicId } from '../../hooks/useTopicId';
 import { useChatInputStore } from '../../store';
 import { INSERT_ACTION_TAG_COMMAND, type InsertActionTagPayload } from './command';
 import { insertGoalTag } from './goalTag';
@@ -55,7 +56,8 @@ export const useSlashActionItems = (): SlashOptions['items'] => {
   // Unified cwd: topic > agent's per-device choice > device default > home.
   // This is what makes project skills load even when only a device default is
   // set (and for local-device runs), not just an explicit agent/topic pick.
-  const workingDirectory = useEffectiveWorkingDirectory(agentId);
+  // Scoped to this composer's topic (see `useTopicId`), not the global one.
+  const workingDirectory = useEffectiveWorkingDirectory(agentId, { topicId: useTopicId() });
 
   // Device-bound (remote) runs scan filesystem skills on that device over the
   // `device.listProjectSkills` RPC; the local desktop reads over Electron IPC.
