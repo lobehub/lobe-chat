@@ -17,8 +17,8 @@ const svgFrame = css`
   height: 100%;
   border: none;
 
-  /* Matching the srcdoc's default light scheme keeps the frame transparent in dark mode;
-     mismatched color schemes make browsers paint an opaque backdrop behind the document. */
+  /* Matches the srcdoc's light scheme so prefers-color-scheme inside the SVG resolves to light,
+     consistent with the white preview canvas, even when the app runs in dark mode. */
   color-scheme: light;
 `;
 

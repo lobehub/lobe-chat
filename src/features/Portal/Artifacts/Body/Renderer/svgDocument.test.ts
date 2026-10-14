@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getSvgFrameProps, toStandaloneSvg } from './svgDocument';
+import { getSvgFrameProps, SVG_PREVIEW_BACKGROUND, toStandaloneSvg } from './svgDocument';
 
 const ANIMATED_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <style>@keyframes spin { to { transform: rotate(360deg); } } .wheel { fill: red; animation: spin 2s infinite; }</style>
@@ -16,6 +16,13 @@ describe('getSvgFrameProps', () => {
     // An empty sandbox disables scripts, so the <script> above can stay in the document
     expect(sandbox).toBe('');
     expect(srcDoc).toContain(ANIMATED_SVG);
+  });
+
+  it('paints a white canvas regardless of the app theme', () => {
+    const { srcDoc } = getSvgFrameProps('<svg viewBox="0 0 10 10"></svg>');
+
+    expect(srcDoc).toContain(`background:${SVG_PREVIEW_BACKGROUND}`);
+    expect(srcDoc).toContain('color-scheme:light');
   });
 });
 

@@ -1,7 +1,15 @@
+/**
+ * The preview canvas is always white, whatever the app theme, like a browser opening an `.svg`
+ * file: generated SVGs routinely rely on the default black fill and text, which would vanish on a
+ * dark, transparent backdrop.
+ */
+export const SVG_PREVIEW_BACKGROUND = '#fff';
+
 const buildSvgSrcDoc = (content: string): string =>
   [
     '<!doctype html><html><head><meta charset="utf-8"><style>',
-    'html,body{margin:0;width:100%;height:100%;overflow:hidden;}',
+    ':root{color-scheme:light;}',
+    `html,body{margin:0;width:100%;height:100%;overflow:hidden;background:${SVG_PREVIEW_BACKGROUND};}`,
     'body{display:flex;align-items:center;justify-content:center;}',
     'body>svg{width:100%;height:100%;}',
     '</style></head><body>',
