@@ -3,9 +3,9 @@ import {
   nanoBanana2Parameters,
   nanoBananaParameters,
   nanoBananaProParameters,
-} from '../const/imageParameters';
-import type { ModelParamsSchema } from '../standard-parameters';
-import type { AIChatModelCard, AIImageModelCard, AIVideoModelCard } from '../types';
+} from '../../const/imageParameters';
+import type { ModelParamsSchema } from '../../standard-parameters';
+import type { AIChatModelCard, AIImageModelCard, AIVideoModelCard } from '../../types';
 
 /**
  * gemini implicit caching not extra cost
