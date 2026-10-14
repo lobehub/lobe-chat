@@ -202,6 +202,13 @@ export const GOAL_GRAPH_CAPABILITY = {
  */
 export const GOAL_BATCH_ASSAY_TITLE = 'Prove the batch runs automatically';
 
+/**
+ * Fixed title of the decision node a passed batch gate opens when the next wave
+ * waits on a person's approval. Each hold gets its own node: a node carries one
+ * decision, and the Assay keeps its own for a pattern break.
+ */
+export const GOAL_BATCH_RELEASE_TITLE = 'Approve releasing the next wave';
+
 /** Fixed title of the Template (recipe) finding node a batch distills. */
 export const GOAL_BATCH_TEMPLATE_TITLE = 'Batch recipe';
 
@@ -231,6 +238,21 @@ export const GOAL_BATCH_BREAK_OPTION = {
   newClass: 'new_class',
   revise: 'revise',
 } as const;
+
+/** Prefix of the reason recorded while a passed batch gate waits on a person to approve the release. */
+export const RELEASE_REVIEW_PAUSE_REASON = 'Batch release needs approval';
+
+/**
+ * The release-approval gate's option ids. `revise` is the pattern break's own
+ * option and has the same consequence: a correction opens a new probe round.
+ */
+export const GOAL_BATCH_RELEASE_OPTION = {
+  release: 'release',
+  revise: GOAL_BATCH_BREAK_OPTION.revise,
+} as const;
+
+/** The release-approval question's fixed English tail, localized on the client. */
+export const GOAL_BATCH_RELEASE_QUESTION_TAIL = 'Release the next wave?';
 
 /**
  * The batch pattern-break question's fixed English tail. The client strips it to

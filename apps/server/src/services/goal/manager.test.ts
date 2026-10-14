@@ -1964,21 +1964,121 @@ describe('a batch the main Agent declares', () => {
     });
   });
 
-  it('lets the gate release the next wave instead of starting a planning turn', async () => {
-    const { id, state, op } = await start();
-    await manager().submit(id, state.token, op.id, batchPlan);
-    await ops().recordCompletion(op.id, { status: 'done' });
-    await service().tick(id);
-    const probes = (await service().graph(id)).nodes.filter((n) => n.kind === 'task');
+  /** Declare the batch, settle the probes, and let the gate pass for the first wave. */
+  const probesPassed = async (config: Partial<GoalConfig> = {}) => {
+    const started = await start(4, config);
+    await manager().submit(started.id, started.state.token, started.op.id, batchPlan);
+    await ops().recordCompletion(started.op.id, { status: 'done' });
+    await service().tick(started.id);
+    const probes = (await service().graph(started.id)).nodes.filter((n) => n.kind === 'task');
     await settle(probes.map((n) => n.id));
-
+    await service().tick(started.id);
+    return started;
+  };
+  const pendingRelease = async (id: string) =>
+    (await service().graph(id)).decisions.find(
+      (d) => d.status === 'pending' && d.options?.some((option) => option.id === 'release'),
+    );
+  const approve = async (id: string) => {
+    const pending = await pendingRelease(id);
+    expect(pending).toBeDefined();
+    await service().answerReleaseGate(pending!.nodeId, 'release');
     await service().tick(id);
+  };
+  /** The release turn the coordinator handed to the main Agent. */
+  const releaseTurn = async (id: string) => {
+    const state = (await model().findById(id))!.config!.managerState!;
+    expect(state.problemKind).toBe('rollout_release');
+    const op = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    return { op: op!, state };
+  };
 
-    const after = await service().graph(id);
-    const released = after.nodes.find((n) => n.title === 'Project skills');
+  it('holds the first wave for the owner, without starting a planning turn', async () => {
+    const { id, state } = await probesPassed();
+
+    expect((await service().graph(id)).nodes.some((n) => n.title === 'Project skills')).toBe(false);
+    expect(await pendingRelease(id)).toBeDefined();
+    expect((await model().findById(id))!.config!.managerState!.token).toBe(state.token);
+
+    await approve(id);
+
+    const released = (await service().graph(id)).nodes.find((n) => n.title === 'Project skills');
     expect(released?.description).toContain('src/hooks/useFetchProjectSkills.ts:17');
     expect(released?.description).toContain('show stale data first');
-    expect((await model().findById(id))!.config!.managerState!.token).toBe(state.token);
+  });
+
+  it('hands every later wave to the main Agent, which releases it', async () => {
+    const { id } = await probesPassed({ rollout: { trigger: 'canary', waveSize: 1 } });
+    await approve(id);
+    const first = (await service().graph(id)).nodes.find((n) => n.title === 'Project skills')!;
+    await settle([first.id]);
+
+    // The gate passed again: the main Agent is asked, the owner is not.
+    await service().tick(id);
+    expect(await pendingRelease(id)).toBeUndefined();
+    const { op, state } = await releaseTurn(id);
+    expect((await service().graph(id)).nodes.some((n) => n.title === 'Home inbox')).toBe(false);
+
+    await manager().submit(id, state.token, op.id, {
+      action: 'release',
+      reason: 'Project skills delivered with a passing acceptance',
+    });
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+
+    expect((await service().graph(id)).nodes.some((n) => n.title === 'Home inbox')).toBe(true);
+    expect((await model().findById(id))!.config!.rolloutState!.gateLog!.at(-1)).toMatchObject({
+      approvedBy: 'agent',
+      outcome: 'released',
+    });
+  });
+
+  it('asks the owner when the main Agent escalates a later release', async () => {
+    const { id } = await probesPassed({ rollout: { trigger: 'canary', waveSize: 1 } });
+    await approve(id);
+    const first = (await service().graph(id)).nodes.find((n) => n.title === 'Project skills')!;
+    await settle([first.id]);
+    await service().tick(id);
+    const { op, state } = await releaseTurn(id);
+
+    await manager().submit(id, state.token, op.id, {
+      action: 'escalate',
+      reason: 'The acceptance only checked screenshots; the owner should look first',
+    });
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+
+    const pending = await pendingRelease(id);
+    expect(pending?.question).toContain('The main Agent asked you to approve releasing wave 2');
+    const node = (await service().graph(id)).nodes.find((n) => n.id === pending!.nodeId)!;
+    expect(node.description).toContain('the owner should look first');
+    expect((await service().graph(id)).nodes.some((n) => n.title === 'Home inbox')).toBe(false);
+  });
+
+  it('refuses anything but release or a plain escalation on a release turn', async () => {
+    const { id } = await probesPassed({ rollout: { trigger: 'canary', waveSize: 1 } });
+    await approve(id);
+    const first = (await service().graph(id)).nodes.find((n) => n.title === 'Project skills')!;
+    await settle([first.id]);
+    await service().tick(id);
+    const { op, state } = await releaseTurn(id);
+
+    await expect(manager().submit(id, state.token, op.id, taskPlan)).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+    });
+  });
+
+  it('refuses a release no gate handed to the turn', async () => {
+    const { id, state, op } = await start();
+
+    await expect(
+      manager().submit(id, state.token, op.id, { action: 'release', reason: 'go' }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
   });
 
   it.each([

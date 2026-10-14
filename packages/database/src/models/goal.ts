@@ -106,6 +106,17 @@ export class GoalModel {
     return row?.goal;
   };
 
+  /** The Goal that owns a graph node, or undefined when the node is not in the caller's scope. */
+  findByNode = async (nodeId: string): Promise<GoalItem | undefined> => {
+    const [row] = await this.db
+      .select({ goal: goals })
+      .from(goalNodes)
+      .innerJoin(goals, eq(goalNodes.goalId, goals.id))
+      .where(and(eq(goalNodes.id, nodeId), this.ownership()))
+      .limit(1);
+    return row?.goal;
+  };
+
   /**
    * Patch only `config.pausedBy`, leaving every other key in the column alone.
    *
@@ -457,6 +468,11 @@ export class GoalModel {
         options: goalNodeDecisions.options,
         question: goalNodeDecisions.question,
         recommendedOptionId: goalNodeDecisions.recommendedOptionId,
+        // A held batch release is reviewed in its own report; the gate row
+        // carries where that report lives.
+        releaseGateAcceptanceId: sql<
+          string | null
+        >`case when ${goals.config} -> 'rolloutState' ->> 'releaseReviewNodeId' = ${goalNodes.id}::text then ${goals.config} -> 'rolloutState' ->> 'releaseGateAcceptanceId' end`,
         sourceTaskId: source.taskId,
         sourceTitle: source.title,
       })
@@ -471,7 +487,15 @@ export class GoalModel {
       .where(
         and(
           this.ownership(),
-          notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+          // A goal parked on its own batch gate is paused exactly because it
+          // waits on this answer, so its gate is still asked.
+          or(
+            notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+            and(
+              eq(goals.status, 'paused'),
+              sql`${goals.config} ->> 'pausedBy' in ('release_review', 'pattern_break')`,
+            ),
+          ),
           eq(goalNodeDecisions.status, 'pending'),
           eq(goalNodeDecisions.authority, 'user'),
           // In a workspace every member can see the goal, but a gate is asked
@@ -726,6 +750,8 @@ export interface PendingGoalDecisionRow {
   options: GoalDecisionOption[] | null;
   question: string;
   recommendedOptionId: string | null;
+  /** The review report of a held batch release; null for every other gate. */
+  releaseGateAcceptanceId: string | null;
   /** The Task the gate was opened for; null for a goal-level question. */
   sourceTaskId: string | null;
   sourceTitle: string | null;

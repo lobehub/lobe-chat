@@ -578,6 +578,12 @@ export class AcceptanceService {
         );
         return doc ? { title: doc.title ?? null } : null;
       }
+      case 'goal_gate': {
+        const goal = await new GoalModel(this.db, this.userId, this.workspaceId).findByNode(
+          subjectId,
+        );
+        return goal ? { title: goal.title } : null;
+      }
       case 'standalone': {
         return null;
       }
@@ -644,6 +650,12 @@ export class AcceptanceService {
     if (subjectType === 'task') {
       return (
         (await new TaskModel(this.db, this.userId, this.workspaceId).resolve(subjectId))
+          ?.projectId ?? null
+      );
+    }
+    if (subjectType === 'goal_gate') {
+      return (
+        (await new GoalModel(this.db, this.userId, this.workspaceId).findByNode(subjectId))
           ?.projectId ?? null
       );
     }

@@ -34,6 +34,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { FileService } from '@/server/services/file';
 import { GoalBriefService } from '@/server/services/goal/goalBriefs';
+import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
 import { parseChangeRequestUrl } from '@/server/services/scm/changeRequestUrl';
 import {
   AcceptanceService,
@@ -251,6 +252,30 @@ const acceptanceStatusOverrideSchema = z.enum(['delivered', 'accepted', 'closed'
  * A decided acceptance has nothing left to sign: whichever control decided it,
  * the inbox and the island stop asking for the goal sign-off it carried.
  */
+/**
+ * A Goal decision gate is decided by its acceptance: accepting releases the
+ * held wave, rejecting revises the recipe with the reviewer's comment as the
+ * correction. Answered on the goal first, so a refused answer (a revision
+ * without a correction, a gate already decided) leaves the acceptance open.
+ */
+const answerGoalGate = async (
+  db: LobeChatDatabase,
+  acceptance: AcceptanceItem,
+  optionId: 'release' | 'revise',
+  comment?: string,
+) => {
+  if (acceptance.subjectType !== 'goal_gate') return;
+  // Loaded lazily: the goal service reaches the verify layer that imports this router's helpers.
+  const { GoalService } = await import('@/server/services/goal');
+  const workspaceId = acceptance.workspaceId ?? undefined;
+  const goalId = await new GoalService(db, acceptance.userId, workspaceId).answerReleaseGate(
+    acceptance.subjectId,
+    optionId,
+    comment,
+  );
+  await scheduleGoalAdvance({ goalId, trigger: 'decide', userId: acceptance.userId, workspaceId });
+};
+
 const settleGoalSignOff = (
   db: LobeChatDatabase,
   acceptance: AcceptanceItem,
@@ -445,6 +470,7 @@ export const acceptanceRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
 
+      await answerGoalGate(ctx.serverDB, acceptance, 'release', input.comment);
       const accepted = await service.accept(acceptance.id, input.comment);
       // Signed where it lives — the inbox stops asking for the same sign-off.
       await settleGoalSignOff(ctx.serverDB, acceptance, 'signOff', input.comment);
@@ -1373,6 +1399,7 @@ export const acceptanceRouter = router({
       }): Promise<AcceptanceItem & { repairDispatch: AcceptanceRepairDispatch }> => {
         const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
 
+        await answerGoalGate(ctx.serverDB, acceptance, 'revise', input.comment || undefined);
         const rejected = await service.reject(acceptance.id, input.comment || undefined);
         await settleGoalSignOff(
           ctx.serverDB,
@@ -1380,7 +1407,8 @@ export const acceptanceRouter = router({
           'requestChanges',
           input.comment || undefined,
         );
-        if (input.dispatch === false) {
+        // A gate's revision is carried out by the goal itself — a new probe round.
+        if (input.dispatch === false || acceptance.subjectType === 'goal_gate') {
           return { ...rejected, repairDispatch: { dispatched: false, reason: 'skipped' } };
         }
 

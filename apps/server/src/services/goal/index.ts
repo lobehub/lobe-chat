@@ -7,12 +7,16 @@ import {
   GOAL_BATCH_ASSAY_TITLE,
   GOAL_BATCH_BREAK_OPTION,
   GOAL_BATCH_BREAK_QUESTION_TAIL,
+  GOAL_BATCH_RELEASE_OPTION,
+  GOAL_BATCH_RELEASE_QUESTION_TAIL,
+  GOAL_BATCH_RELEASE_TITLE,
   GOAL_BATCH_TEMPLATE_TITLE,
   GOAL_CLARIFICATION_OPTION,
   GOAL_CLARIFICATION_TITLE,
   GOAL_COORDINATOR_ACTOR_ID,
   GOAL_MACHINE_GATE_TITLE,
   PATTERN_BREAK_PAUSE_REASON,
+  RELEASE_REVIEW_PAUSE_REASON,
   ROLLOUT_CANARY_SIZE_DEFAULT,
   ROLLOUT_MAX_CANARY_SIZE,
   ROLLOUT_WAVE_SIZE_DEFAULT,
@@ -34,6 +38,7 @@ import type {
   GoalNodeKind,
   GoalNodeStatus,
   GoalPauseReason,
+  GoalReleaseGateDossier,
   GoalRolloutPolicy,
   GoalRolloutState,
   GoalStatus,
@@ -104,6 +109,7 @@ import {
   resolveTaskMaxSteps,
   VERIFY_SETTLE_GRACE_MS,
 } from './recoveryPolicy';
+import { buildReleaseGateDossier, openReleaseGateAcceptance } from './releaseGate';
 import { isGoalReportNode, withoutGoalReport } from './report';
 import { GoalReportService } from './reportService';
 import { GoalReportStore } from './reportStore';
@@ -114,7 +120,12 @@ import {
   MAX_ROLLOUT_ROSTER,
   normalizeRolloutRoster,
 } from './rolloutBatch';
-import { evaluateRolloutGate, type RolloutGateResult, withGateVerdict } from './rolloutGate';
+import {
+  describeGateChecks,
+  evaluateRolloutGate,
+  type RolloutGateResult,
+  withGateVerdict,
+} from './rolloutGate';
 import { scheduleGoalAdvance } from './scheduler';
 import { evaluateHomogeneity } from './spec';
 import { GoalSupervisorService } from './supervisor';
@@ -2099,7 +2110,13 @@ export class GoalService {
     return goal;
   };
 
-  decide = async (goalId: string, decisionId: string, optionId: string, resolution?: string) => {
+  decide = async (
+    goalId: string,
+    decisionId: string,
+    optionId: string,
+    resolution?: string,
+    options?: { fromReleaseGate?: boolean },
+  ) => {
     const graph = await this.requireGraph(goalId);
     // A goal a person ended stays ended: a gate another tab still shows must
     // not reopen it. Checked again under the lock before the status moves.
@@ -2112,6 +2129,19 @@ export class GoalService {
     }
     if (decision.options?.length && !decision.options.some((option) => option.id === optionId)) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unknown decision option' });
+    }
+    // A held release with a review page is decided there, with its evidence —
+    // not by a one-click answer from a surface that never showed it.
+    const heldRelease = graph.goal.config?.rolloutState;
+    if (
+      !options?.fromReleaseGate &&
+      heldRelease?.releaseGateAcceptanceId &&
+      heldRelease.releaseReviewNodeId === decision.nodeId
+    ) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'This release is decided on its review page',
+      });
     }
     // The note *is* the answer for this option; an empty one would re-plan the
     // goal on nothing and the question could never be asked again.
@@ -2135,14 +2165,20 @@ export class GoalService {
     // falling back to the batch node for any gate opened elsewhere. The restart
     // consumes the answer itself, atomically with the round it opens.
     const rolloutState = graph.goal.config?.rolloutState;
-    const patternBreakNodeId = rolloutState?.assayNodeId ?? rolloutState?.batchNodeId;
-    const answersBatchBreak =
-      rolloutState?.phase === 'pattern_break' &&
-      patternBreakNodeId !== undefined &&
-      decision.nodeId === patternBreakNodeId;
-    const resolved = answersBatchBreak
-      ? await this.restartRolloutLoop(goalId, decisionId, optionId, resolution)
-      : await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
+    const batchGateNodeId =
+      rolloutState?.phase === 'release_review'
+        ? rolloutState.releaseReviewNodeId
+        : rolloutState?.phase === 'pattern_break'
+          ? (rolloutState.assayNodeId ?? rolloutState.batchNodeId)
+          : undefined;
+    const answersBatchGate = batchGateNodeId !== undefined && decision.nodeId === batchGateNodeId;
+    // Approving a release is the one answer that keeps the round: the wave goes
+    // out on the recipe the probes proved. Every other answer is an intervention.
+    const resolved = !answersBatchGate
+      ? await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution)
+      : optionId === GOAL_BATCH_RELEASE_OPTION.release
+        ? await this.approveRolloutRelease(goalId, decisionId, optionId, resolution)
+        : await this.restartRolloutLoop(goalId, decisionId, optionId, resolution);
     if (!resolved)
       throw new TRPCError({ code: 'CONFLICT', message: 'Decision was already resolved' });
 
@@ -2540,7 +2576,7 @@ export class GoalService {
       }
 
       case 'rollout_gate': {
-        return observe(await this.releaseRolloutWave(graph, effects, rolloutGate));
+        return observe(await this.routeRolloutRelease(graph, effects, rolloutGate));
       }
 
       case 'pattern_break': {
@@ -4096,7 +4132,13 @@ export class GoalService {
   private collectRolloutGate = (graph: GoalGraphSnapshot): RolloutGateResult | undefined => {
     const policy = graph.goal.config?.rollout;
     const state = graph.goal.config?.rolloutState;
-    if (!policy || !state || state.phase === 'done' || state.phase === 'pattern_break')
+    if (
+      !policy ||
+      !state ||
+      state.phase === 'done' ||
+      state.phase === 'pattern_break' ||
+      state.phase === 'release_review'
+    )
       return undefined;
     const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
     const materialized = graph.nodes.filter((node) => materializedIds.has(node.id));
@@ -4185,11 +4227,14 @@ export class GoalService {
           ...state,
           massNodeIds: [...(state.massNodeIds ?? []), ...newIds],
           phase: 'mass',
+          // Spent on this wave; the next one needs its own.
+          releaseApproval: undefined,
           releasedCount: released + newIds.length,
           waveIndex: state.waveIndex + 1,
           wavesReleased: waveNumber,
         },
         {
+          approvedBy: state.releaseApproval?.by,
           checks: gate?.checks ?? [],
           message,
           outcome: 'released',
@@ -4214,6 +4259,293 @@ export class GoalService {
       };
     effects.push(...created);
     return { goalId, message, outcome: 'advanced' };
+  };
+
+  /**
+   * Decide who releases the wave a passed gate has earned.
+   *
+   * The gate's checks only prove the units ran through; putting the next wave
+   * out is a decision. A round's first mass wave — the move from probes to the
+   * class — always waits on a person, who sees the probes' deliveries and the
+   * recipe before anything fans out. Every later wave is reported to the main
+   * Agent, which releases it or escalates it to the person. A Goal without a
+   * main Agent that can take the turn asks the person instead of releasing on
+   * its own. The final pass with the roster exhausted closes the batch directly:
+   * there is nothing left to release.
+   */
+  private routeRolloutRelease = async (
+    graph: GoalGraphSnapshot,
+    effects: GoalAdvanceEffect[],
+    gate?: RolloutGateResult,
+  ): Promise<GoalTickResult> => {
+    const policy = graph.goal.config?.rollout;
+    const state = graph.goal.config?.rolloutState;
+    if (!policy || !state) return this.releaseRolloutWave(graph, effects, gate);
+
+    const released = state.releasedCount ?? state.probeNodeIds.length;
+    const waveSize = Math.max(1, policy.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
+    const waveCount = (state.unitTitles ?? []).slice(released, released + waveSize).length;
+    if (!waveCount) return this.releaseRolloutWave(graph, effects, gate);
+
+    const approval = state.releaseApproval;
+    if (
+      approval &&
+      approval.revision === state.templateRevision &&
+      approval.waveIndex === state.waveIndex
+    )
+      return this.releaseRolloutWave(graph, effects, gate);
+
+    const wave = `wave ${state.waveIndex + 1} (${waveCount} unit${waveCount === 1 ? '' : 's'})`;
+    if (state.waveIndex === 0)
+      return this.openReleaseReview(
+        graph,
+        `Experiments of v${state.templateRevision} finished; start batch execution with ${wave}`,
+        effects,
+        { gate, kind: 'probes' },
+      );
+
+    // The key names the round and the wave, so an answer for one wave is never
+    // read as the answer for the next.
+    const problem = {
+      kind: 'rollout_release' as const,
+      reason: `Batch gate passed for v${state.templateRevision} after wave ${state.waveIndex}: ${describeGateChecks(gate)}. Decide whether ${wave} goes out — release it, or escalate it for the owner to approve.`,
+    };
+    const answered = answeredProblem(graph.goal.config?.managerState);
+    // A `release` answer recorded its approval when it was submitted, so reaching
+    // here with this problem answered means the Agent did not release it.
+    if (answered?.key === problemKey(problem))
+      return this.openReleaseReview(
+        graph,
+        `The main Agent asked you to approve releasing ${wave}`,
+        effects,
+        { diagnosis: answered.reason, gate, kind: 'escalated' },
+      );
+    const takeover = await new GoalManagerService(this.db, this.userId, this.workspaceId).takeOver(
+      graph,
+      problem,
+    );
+    if (takeover) return takeover;
+    return this.openReleaseReview(
+      graph,
+      `Batch gate passed and no main Agent could review the release; approve releasing ${wave}`,
+      effects,
+      { gate, kind: 'unattended' },
+    );
+  };
+
+  /**
+   * Hold a passed batch gate for a person's approval.
+   *
+   * Parks the goal like a pattern break, but on a decision node of its own: a
+   * node carries one decision, and the Assay keeps its for a break later in the
+   * round. `release` sends the wave out on the proven recipe; `revise` takes a
+   * correction and opens a new probe round, exactly like a break's revision.
+   */
+  private openReleaseReview = async (
+    graph: GoalGraphSnapshot,
+    message: string,
+    effects: GoalAdvanceEffect[],
+    review: {
+      /** The main Agent's reasoning when it escalated the release. */
+      diagnosis?: string;
+      gate?: RolloutGateResult;
+      kind: GoalReleaseGateDossier['kind'];
+    },
+  ): Promise<GoalTickResult> => {
+    const { diagnosis } = review;
+    const goalId = graph.goal.id;
+    const question = `${message}\n\n${GOAL_BATCH_RELEASE_QUESTION_TAIL}`;
+    const reason = `${RELEASE_REVIEW_PAUSE_REASON}: ${message}`;
+    // Same claim as the pattern break: overlapping advances can both see the
+    // passed gate, and only the first may open the question.
+    const claim = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const locked = await goalModel.lockById(goalId);
+      const current = locked?.config?.rolloutState;
+      if (!locked || !current) return undefined;
+      if (current.phase === 'release_review')
+        return { gateNodeId: current.releaseReviewNodeId, opened: false as const };
+      if (
+        current.phase !== graph.goal.config?.rolloutState?.phase ||
+        current.waveIndex !== graph.goal.config?.rolloutState?.waveIndex
+      )
+        return undefined;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+      const node = await writer.createNode(goalId, {
+        // What the person decides on: the coordinator's reason, and the main
+        // Agent's own when it brought the release back.
+        description: diagnosis ? `${message}\n\nMain Agent: ${diagnosis}` : message,
+        kind: 'decision',
+        scopeId: current.batchNodeId,
+        status: 'waiting',
+        title: GOAL_BATCH_RELEASE_TITLE,
+      });
+      if (!node) return undefined;
+      if (current.assayNodeId)
+        await writer.createEdge(goalId, current.assayNodeId, node.id, 'leads_to');
+      const decision = await writer.createDecision(goalId, node.id, {
+        authority: 'user',
+        options: [
+          { id: GOAL_BATCH_RELEASE_OPTION.release, label: 'Release the next wave' },
+          { id: GOAL_BATCH_RELEASE_OPTION.revise, label: 'Revise the recipe and re-probe' },
+        ],
+        question,
+        recommendedOptionId: GOAL_BATCH_RELEASE_OPTION.release,
+        requestedUserId: this.userId,
+      });
+      await goalModel.updateRolloutState(goalId, {
+        ...current,
+        phase: 'release_review',
+        releaseApproval: undefined,
+        releaseReviewNodeId: node.id,
+      });
+      await goalModel.updatePauseReason(goalId, 'release_review');
+      if (locked.status !== 'paused' && !GOAL_ENDED_STATUSES.has(locked.status)) {
+        await goalModel.updateStatus(goalId, 'paused');
+        await writer
+          .recordGoalStatus(goalId, locked.status, 'paused', reason)
+          .catch((error) => console.error('[GoalService] failed to record goal status:', error));
+      }
+      return { decisionId: decision?.id, gateNodeId: node.id, opened: true as const };
+    });
+    if (!claim) return { goalId, message, outcome: 'waiting_human' };
+    if (!claim.opened)
+      return { goalId, message, nodeId: claim.gateNodeId, outcome: 'waiting_human' };
+    effects.push({
+      detail: message,
+      nodeId: claim.gateNodeId,
+      targetId: claim.decisionId ?? claim.gateNodeId,
+      type: 'opened_decision',
+    });
+    // The review report first, so the brief can open it: approving the class
+    // is a full review, not a one-click answer from Home.
+    const reviewAcceptanceId = claim.gateNodeId
+      ? await this.openReleaseGate(goalId, claim.gateNodeId, review)
+      : undefined;
+    if (claim.decisionId)
+      await this.briefs.openDecision(graph.goal, {
+        decisionId: claim.decisionId,
+        options: [],
+        question,
+        reviewAcceptanceId,
+      });
+    effects.push({ type: 'goal_status', detail: 'paused: release_review' });
+    return { goalId, message, nodeId: claim.gateNodeId, outcome: 'waiting_human' };
+  };
+
+  /**
+   * Give a held release its review page: an acceptance carrying what the owner
+   * decides on. Best-effort — without it the gate still holds the goal and the
+   * owner answers it on the goal page.
+   */
+  private openReleaseGate = async (
+    goalId: string,
+    gateNodeId: string,
+    review: { diagnosis?: string; gate?: RolloutGateResult; kind: GoalReleaseGateDossier['kind'] },
+  ): Promise<string | undefined> => {
+    try {
+      const graph = await this.graph(goalId);
+      const dossier = buildReleaseGateDossier(graph, {
+        diagnosis: review.diagnosis,
+        gate: review.gate,
+        kind: review.kind,
+        waveSize: Math.max(1, graph.goal.config?.rollout?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT),
+      });
+      if (!dossier) return undefined;
+      const acceptanceId = await openReleaseGateAcceptance(
+        this.db,
+        { userId: this.userId, workspaceId: this.workspaceId },
+        gateNodeId,
+        dossier,
+      );
+      await this.db.transaction(async (tx) => {
+        const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+        const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+        if (current?.phase !== 'release_review' || current.releaseReviewNodeId !== gateNodeId)
+          return;
+        await goalModel.updateRolloutState(goalId, {
+          ...current,
+          releaseGateAcceptanceId: acceptanceId,
+        });
+      });
+      return acceptanceId;
+    } catch (error) {
+      console.error('[GoalService] failed to open the release gate review:', error);
+      return undefined;
+    }
+  };
+
+  /**
+   * Answer a held release from its review page. The acceptance's decision is
+   * the owner's: `release` sends the wave out, `revise` takes the correction
+   * and opens a new probe round. Returns the goal it moved.
+   */
+  answerReleaseGate = async (
+    gateNodeId: string,
+    optionId: (typeof GOAL_BATCH_RELEASE_OPTION)[keyof typeof GOAL_BATCH_RELEASE_OPTION],
+    resolution?: string,
+  ): Promise<string> => {
+    const goal = await this.goalModel.findByNode(gateNodeId);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    const graph = await this.requireGraph(goal.id);
+    const decision = graph.decisions.find(
+      (item) => item.nodeId === gateNodeId && item.status === 'pending',
+    );
+    if (!decision)
+      throw new TRPCError({ code: 'CONFLICT', message: 'This release was already decided' });
+    await this.decide(goal.id, decision.id, optionId, resolution, { fromReleaseGate: true });
+    // The inbox asked the same release; it is answered now.
+    await this.briefs.settleDecision(decision.id, optionId, resolution);
+    return goal.id;
+  };
+
+  /**
+   * A person approved the release a passed gate was held for. The answer and
+   * the approval commit together under the goal row's lock; the next advance
+   * releases the wave on it.
+   */
+  private approveRolloutRelease = async (
+    goalId: string,
+    decisionId: string,
+    optionId: string,
+    resolution: string | undefined,
+  ) => {
+    const resolved = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (current?.phase !== 'release_review') return undefined;
+      const answered = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
+        goalId,
+        decisionId,
+        optionId,
+        resolution,
+      );
+      if (!answered) return undefined;
+      if (current.releaseReviewNodeId)
+        await new GoalGraphModel(tx, this.userId, this.workspaceId, {
+          id: GOAL_COORDINATOR_ACTOR_ID,
+          type: 'system',
+        }).updateNodeStatus(goalId, current.releaseReviewNodeId, 'resolved', 'Release approved');
+      await goalModel.updateRolloutState(goalId, {
+        ...current,
+        phase: current.waveIndex === 0 ? 'probe' : 'mass',
+        releaseGateAcceptanceId: undefined,
+        releaseReviewNodeId: undefined,
+        releaseApproval: {
+          at: new Date().toISOString(),
+          by: 'user',
+          ...(resolution?.trim() && { reason: resolution.trim() }),
+          revision: current.templateRevision,
+          waveIndex: current.waveIndex,
+        },
+      });
+      return answered;
+    });
+    if (resolved) await this.setPauseReason(goalId, undefined);
+    return resolved;
   };
 
   /**
@@ -4412,7 +4744,8 @@ export class GoalService {
     const committed = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
-      if (current?.phase !== 'pattern_break') return undefined;
+      if (current?.phase !== 'pattern_break' && current?.phase !== 'release_review')
+        return undefined;
       const resolved = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
         goalId,
         decisionId,
@@ -4424,6 +4757,15 @@ export class GoalService {
         id: GOAL_COORDINATOR_ACTOR_ID,
         type: 'system',
       });
+      // A release sent back is answered: its node must not keep the new round's
+      // `no_open_decision` check failing.
+      if (current.phase === 'release_review' && current.releaseReviewNodeId)
+        await writer.updateNodeStatus(
+          goalId,
+          current.releaseReviewNodeId,
+          'resolved',
+          'Recipe sent back for revision',
+        );
 
       // 1. A new recipe revision, or a forked new class (no `revises` chain).
       const template = await writer.createNode(goalId, {
@@ -4506,10 +4848,12 @@ export class GoalService {
                 domainId: state.learningDomainId,
                 // What the gate found: this round's latest hold, in its own words.
                 found:
-                  state.gateLog?.findLast(
-                    (entry) =>
-                      entry.outcome === 'blocked' && entry.revision === state.templateRevision,
-                  )?.message ?? 'the release gate held',
+                  state.phase === 'release_review'
+                    ? 'the owner sent the recipe back before the next wave was released'
+                    : (state.gateLog?.findLast(
+                        (entry) =>
+                          entry.outcome === 'blocked' && entry.revision === state.templateRevision,
+                      )?.message ?? 'the release gate held'),
                 goalTitle: graph.goal.title,
                 guidance: correction,
                 planSkill,
@@ -4639,6 +4983,9 @@ export class GoalService {
       await goalModel.updateRolloutState(goalId, {
         ...state,
         assayNodeId: assay.id,
+        releaseApproval: undefined,
+        releaseGateAcceptanceId: undefined,
+        releaseReviewNodeId: undefined,
         // The new canary is a fresh round: the old waves' members — the broken
         // ones now retired — must not count against its gate.
         massNodeIds: undefined,
