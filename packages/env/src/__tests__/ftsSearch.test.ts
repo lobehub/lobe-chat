@@ -36,7 +36,7 @@ describe('getFtsSearchConfig', () => {
       FTS_SEARCH_SYNC_ENABLED: undefined,
       ES_INDEX_NAMESPACE: undefined,
       ES_URL: undefined,
-      FTS_SEARCH_PROVIDER: 'pg_like',
+      FTS_SEARCH_PROVIDER: 'pg_search',
     });
   });
 

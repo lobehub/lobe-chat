@@ -17,19 +17,17 @@ This guide is for an existing LobeHub instance. A new database without `pg_searc
 
 ## 1. Check whether you need to migrate
 
-| Current setup                                                                           | Action                                                                                        |
-| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Neon or another database provider has told you that it will retire `pg_search`          | Continue to the next step                                                                     |
-| PostgreSQL still supports `pg_search`                                                   | Keep the current provider; no migration is required                                           |
-| `FTS_SEARCH_PROVIDER` is set to `pg_like` or `elasticsearch`                            | No migration is required because search no longer depends on `pg_search`                      |
-| `FTS_SEARCH_PROVIDER` is unset and you already run a version whose default is `pg_like` | No migration is required; the deployment already searches with `pg_like`                      |
-| `FTS_SEARCH_PROVIDER` is unset on an older version (the default was `pg_search`)        | Search still depends on `pg_search`; continue to the next step if the database will retire it |
+| Current setup                                                                  | Action                                                                   |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Neon or another database provider has told you that it will retire `pg_search` | Continue to the next step                                                |
+| PostgreSQL still supports `pg_search`                                          | Keep the current provider; no migration is required                      |
+| `FTS_SEARCH_PROVIDER=pg_like` or `elasticsearch` is already set                | No migration is required because search no longer depends on `pg_search` |
 
 <Callout type="info">
   Docker and Vercel describe how the LobeHub application is deployed; they do not determine whether the database supports `pg_search`. A Docker deployment can still use Neon, and a deployment built on GitHub and uploaded to Vercel can still change its search backend. Check the database referenced by `DATABASE_URL`.
 </Callout>
 
-The official Docker Compose setup uses a ParadeDB database that supports `pg_search`. If you use that bundled database and have not been asked to retire the extension, you do not need this migration.
+The official Docker Compose setup uses a ParadeDB database that supports `pg_search`. If you use that bundled database and have not been asked to retire the extension, keep the default configuration and do not migrate.
 
 ## 2. Choose a migration path
 

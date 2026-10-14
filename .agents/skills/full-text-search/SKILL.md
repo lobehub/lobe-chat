@@ -41,9 +41,8 @@ router/service -> createFtsSearchRepo -> FtsSearchRepo -> selected backend -> ex
   only when its provider covers all entities in `FTS_SEARCH_BACKEND_ENTITIES` end to end, including
   `mode: 'candidates'` when the provider enables `ftsSearchCandidateEnabled`.
 - Provider errors, missing configuration, and unsupported candidate behavior must remain visible.
-  Never silently retry through another provider. `pg_like` is the self-host default when
-  `FTS_SEARCH_PROVIDER` is unset, not an implicit fallback: when `pg_search` or `elasticsearch` is
-  selected, a missing extension or unreachable service must still fail.
+  Never silently retry through another provider. `pg_like` is an explicitly selected lightweight
+  provider, not an implicit fallback: a missing extension or unreachable service must still fail.
 - `packages/database/src/repositories/ftsSearch/postgres/` owns the query, permission, pagination,
   and hydration layer shared by PostgreSQL providers. `pgSearch/` and `pgLike/` own only their
   provider adapter, dialect, and provider-specific candidate behavior. Neither provider directory

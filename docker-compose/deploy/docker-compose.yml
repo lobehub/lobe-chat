@@ -177,7 +177,7 @@ services:
 
   # ---------------------------------------------------------------------------
   # Optional: self-hosted single-node Elasticsearch for LobeHub full-text search.
-  # Disabled by default; LobeHub keeps searching PostgreSQL (pg_like) unless you opt in.
+  # Disabled by default; LobeHub keeps using PostgreSQL pg_search unless you opt in.
   # Enable with COMPOSE_PROFILES in .env and follow the docs:
   # https://lobehub.com/docs/self-hosting/advanced/full-text-search
   #
