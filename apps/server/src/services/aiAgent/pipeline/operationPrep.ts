@@ -33,7 +33,7 @@ import type {
   ResolvedWorkspaceInit,
 } from '../types';
 import { isWorkspaceCacheFresh, upsertWorkspaceScan } from '../workspaceInitCache';
-import { buildOperationSkillSet } from './operationSkillSet';
+import { buildOperationSkillSet, collectSelectedSkillIds } from './operationSkillSet';
 import type { ToolDiscoveryResult } from './toolDiscovery';
 import type { RunAttachments } from './turnSetup';
 
@@ -189,6 +189,8 @@ export interface OperationPrepInput {
   operationId: string;
   runAttachments: RunAttachments;
   runFromHistory: boolean;
+  /** Skills this turn's request selected; earlier turns' come from history. */
+  selectedSkillIds?: string[];
   /** The Task this run executes; the skills it names are trusted for this run. */
   taskId?: string;
   throwIfExecutionAborted: (stage: string) => Promise<void>;
@@ -794,6 +796,7 @@ export const prepareOperation = async (
     executionPlan,
     prompt,
     resolvedAgentId,
+    selectedSkillIds: collectSelectedSkillIds(historyMessages, input.selectedSkillIds),
     shareGate,
     taskId: input.taskId,
     workspaceInit,

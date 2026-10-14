@@ -37,11 +37,42 @@ export interface OperationSkillSetInput {
   executionPlan: ToolDiscoveryResult['executionPlan'];
   prompt: ExecRunContext['prompt'];
   resolvedAgentId: ExecRunContext['resolvedAgentId'];
+  /**
+   * Skills the user selected in this topic, from this turn's request and the
+   * `metadata.selectedSkillIds` of earlier user turns (see
+   * {@link collectSelectedSkillIds}). Injected with their bodies like pinned skills.
+   */
+  selectedSkillIds: string[];
   shareGate: ExecRunContext['shareGate'];
   /** The Task this run executes; the skills it names are trusted for this run. */
   taskId?: string;
   workspaceInit: ResolvedWorkspaceInit;
 }
+
+/**
+ * The skills the user selected anywhere in this topic so far: the current
+ * request's selection plus every earlier user turn's persisted
+ * `metadata.selectedSkillIds`. Deduplicated, in first-selected order.
+ *
+ * Reading the history keeps a selected skill injected on later turns, which
+ * the client runtime achieves by persisting the skill body into the message.
+ */
+export const collectSelectedSkillIds = (
+  historyMessages: ReadonlyArray<{
+    metadata?: { selectedSkillIds?: unknown } | null;
+    role: string;
+  }>,
+  current: readonly string[] = [],
+): string[] => {
+  const ids: string[] = [];
+  for (const message of historyMessages) {
+    if (message.role !== 'user') continue;
+    const persisted = message.metadata?.selectedSkillIds;
+    if (!Array.isArray(persisted)) continue;
+    for (const id of persisted) if (typeof id === 'string') ids.push(id);
+  }
+  return [...new Set([...ids, ...current])];
+};
 
 /**
  * Stage 18 of {@link AiAgentService.execAgent}: build the OperationSkillSet via SkillEngine.
@@ -65,6 +96,7 @@ export const buildOperationSkillSet = async (
     executionPlan,
     prompt,
     resolvedAgentId,
+    selectedSkillIds,
     shareGate,
     taskId,
     workspaceInit,
@@ -92,9 +124,13 @@ export const buildOperationSkillSet = async (
     // Content lives in the DB `content` column already (SKILL.md body), so no
     // zip unpack is needed; mirror `activateSkill` by appending the resource
     // tree so pinned ZIP/GitHub skills keep their `readReference` paths.
+    //
+    // Skills the user explicitly selected in this topic are injected the same
+    // way: the selection names them directly, so no tool id can collide into it.
     const pinnedSkillIds = new Set(getActivePluginIds(agentConfig.plugins));
+    const injectedSkillIds = new Set([...pinnedSkillIds, ...selectedSkillIds]);
     const pinnedDbSkillIds = dbSkills
-      .filter((s) => pinnedSkillIds.has(s.identifier))
+      .filter((s) => injectedSkillIds.has(s.identifier))
       .map((s) => s.id);
     const pinnedDbContent = new Map(
       (await skillModel.findByIds(pinnedDbSkillIds)).map((s) => {
@@ -125,7 +161,7 @@ export const buildOperationSkillSet = async (
       // `getAgentSkills` already resolves the bundle body, so pinned
       // agent-document skills inject directly without an extra fetch; only
       // attach it for the pinned subset to keep the payload lean.
-      content: pinnedSkillIds.has(skill.identifier) ? skill.content : undefined,
+      content: injectedSkillIds.has(skill.identifier) ? skill.content : undefined,
       description: skill.description,
       identifier: skill.identifier,
       name: skill.name,
@@ -153,7 +189,7 @@ export const buildOperationSkillSet = async (
         )
       : [];
     const namedUserSkills = await userSkills.loadRuntimeSkills(
-      [...pinnedSkillIds, ...(agentPlugins ?? []), ...taskSkillIds],
+      [...injectedSkillIds, ...(agentPlugins ?? []), ...taskSkillIds],
       { trustedGenerated: taskSkillIds },
     );
     // Skills the system generated for one job (a goal batch's plan) are not
@@ -245,7 +281,11 @@ export const buildOperationSkillSet = async (
       {
         canExecuteOnDevice: executionPlan ? isDeviceCapablePlan(executionPlan) : false,
         disabledIds: disabledPluginIds,
-        enabledPluginIds: [...new Set([...(agentPlugins ?? []), ...shareEnabledSkillIds])],
+        // Selected skills join the enabled set so the resolver auto-activates
+        // them; a share allowlist or a disabled entry still drops them above.
+        enabledPluginIds: [
+          ...new Set([...(agentPlugins ?? []), ...shareEnabledSkillIds, ...selectedSkillIds]),
+        ],
         shareAllowedIds: shareAllowedSkillIds,
         skillActivateMode: agentConfig.chatConfig?.skillActivateMode,
         // Reading another topic (`<refer_topic>` or a raw `tpc_` id) goes through `lh topic view`,
