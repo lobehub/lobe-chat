@@ -147,7 +147,7 @@ export const registerClientSubAgentBridge = (registration: ClientSubAgentBridgeR
   // Post-reload lifeline: the in-memory registry dies with the renderer, the
   // parked child does not. Fire-and-forget — a persistence failure must not
   // break the park.
-  void persistBridgeCoordinates(key, registration.childContext.topicId, registration);
+  void persistBridgeCoordinates(key, registration.childContext.topicId ?? undefined, registration);
 };
 
 /**
