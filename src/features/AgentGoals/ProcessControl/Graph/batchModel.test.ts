@@ -1,4 +1,8 @@
-import { GOAL_BATCH_ASSAY_TITLE, GOAL_BATCH_TEMPLATE_TITLE } from '@lobechat/const/goal';
+import {
+  GOAL_BATCH_ASSAY_TITLE,
+  GOAL_BATCH_RELEASE_TITLE,
+  GOAL_BATCH_TEMPLATE_TITLE,
+} from '@lobechat/const/goal';
 import type {
   GoalGraphDecision,
   GoalGraphEdge,
@@ -185,6 +189,24 @@ describe('buildBatchModel', () => {
       'backlog',
     ]);
     expect(model.waves[1].every((cell) => cell.state === 'backlog' && !cell.nodeId)).toBe(true);
+  });
+
+  it('puts a held release on the round gate, not among the batch decisions', () => {
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        extraNodes: [
+          node('r0', 'decision', 6, { status: 'resolved', title: GOAL_BATCH_RELEASE_TITLE }),
+          node('r1', 'decision', 7, { status: 'waiting', title: GOAL_BATCH_RELEASE_TITLE }),
+        ],
+        state: { phase: 'release_review', releaseReviewNodeId: 'r1' },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+
+    expect(model.rounds[0].gate).toBe('human');
+    expect(model.rounds[0].releaseId).toBe('r1');
+    expect(model.decisionIds).toEqual([]);
   });
 
   it('keeps the gate locked until every probe settled', () => {

@@ -17,6 +17,7 @@ import AcceptanceResources from './Evidence/AcceptanceResources';
 import { AcceptanceFlow } from './Flow/AcceptanceFlow';
 import { getFlowNodeCount, resolveAcceptanceTab } from './Flow/flowNavigation';
 import AcceptanceEnterFocus from './Focus/AcceptanceEnterFocus';
+import GateReview from './Gate/GateReview';
 import AcceptanceGoal from './Header/AcceptanceGoal';
 import AcceptanceGoalEdit from './Header/AcceptanceGoalEdit';
 import AcceptanceIdentity from './Header/AcceptanceIdentity';
@@ -76,6 +77,9 @@ export const AcceptanceOverview = ({
     md,
   );
   const checks = data ? checksForTurn(data, turn) : [];
+  // A Goal decision gate reviews its own frozen dossier, not a checklist.
+  const gateDossier =
+    data?.subject.type === 'goal_gate' ? data.rounds.at(-1)?.run.metadata?.releaseGate : undefined;
   const resourceCount = new Set(
     checks.flatMap((check) =>
       (check.evidence ?? [])
@@ -93,7 +97,7 @@ export const AcceptanceOverview = ({
             statusSlot={<AcceptanceStatusControl />}
             topicSlot={<AcceptanceOriginTopic />}
           />
-          <AcceptanceGoal editSlot={<AcceptanceGoalEdit />} />
+          {!gateDossier && <AcceptanceGoal editSlot={<AcceptanceGoalEdit />} />}
           {/* The requirement needs room to land before the tabs start a new
               thought — at the band's uniform gap it read as another row of
               the same list. */}
@@ -135,6 +139,8 @@ export const AcceptanceOverview = ({
             <AcceptanceFlow />
             <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
           </>
+        ) : tab === 'checks' && gateDossier ? (
+          <GateReview dossier={gateDossier} />
         ) : tab === 'checks' ? (
           <>
             <AcceptanceCheckInventory toolbar={<AcceptanceCheckOwnerToolbar />} />

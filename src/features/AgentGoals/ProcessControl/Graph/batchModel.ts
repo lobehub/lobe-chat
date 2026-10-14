@@ -1,5 +1,6 @@
 import {
   GOAL_BATCH_ASSAY_TITLE,
+  GOAL_BATCH_RELEASE_TITLE,
   GOAL_BATCH_TEMPLATE_TITLE,
   ROLLOUT_WAVE_SIZE_DEFAULT,
 } from '@lobechat/const/goal';
@@ -83,6 +84,8 @@ export interface BatchRound {
     /** `wave`: the 0-based roster wave the re-opened units ran in. */
     | { kind: 'waves'; wave: number };
   probes: BatchProbe[];
+  /** The release this round's passed gate is holding for a person, while it waits. */
+  releaseId?: string;
   /** 1-based recipe revision. */
   revision: number;
   templateId?: string;
@@ -180,6 +183,12 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
       .filter((edge) => edge.kind === 'depends_on' && edge.sourceNodeId === assayId)
       .map((edge) => edge.targetNodeId)
       .filter((id) => memberIds.has(id));
+  // Each held release is a decision node of its own; only an open one belongs
+  // on the gate, the answered ones are its history.
+  const releaseReviews = members.filter(
+    (view) => view.node.kind === 'decision' && view.node.title === GOAL_BATCH_RELEASE_TITLE,
+  );
+  const openRelease = releaseReviews.find((view) => view.node.status === 'waiting');
   const roundCount = Math.max(templates.length, assays.length, 1);
   const probeIdsByRound = Array.from({ length: roundCount }, (_, r) => {
     const assay = assays[r];
@@ -315,15 +324,19 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
       assayId: assay?.node.id,
       evaluations: verdicts.filter((entry) => entry.revision === r + 1),
       forked,
-      gate: gateState(assay, r === roundCount - 1, state?.phase, probes),
+      gate:
+        r === roundCount - 1 && openRelease
+          ? 'human'
+          : gateState(assay, r === roundCount - 1, state?.phase, probes),
       origin: r > 0 ? roundOrigin(probes, r) : undefined,
       probes,
+      releaseId: r === roundCount - 1 ? openRelease?.node.id : undefined,
       revision: r + 1,
       templateId: template?.node.id,
     };
   });
 
-  const assayIds = new Set(assays.map((view) => view.node.id));
+  const assayIds = new Set([...assays, ...releaseReviews].map((view) => view.node.id));
   const decisionIds = members
     .filter((view) => view.node.kind === 'decision' && !assayIds.has(view.node.id))
     .map((view) => view.node.id);
@@ -360,7 +373,7 @@ const gateState = (
   if (assay && (assay.decision || assay.node.status === 'waiting')) return 'human';
   if (!current) return assay?.humanTouches.length ? 'rejected' : 'passed';
   if (phase === 'mass' || phase === 'done') return 'passed';
-  if (phase === 'pattern_break') return 'human';
+  if (phase === 'pattern_break' || phase === 'release_review') return 'human';
   const settled = probes.length > 0 && probes.every((probe) => probe.state === 'done');
   return settled ? 'checking' : 'locked';
 };

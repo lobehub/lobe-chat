@@ -2,6 +2,8 @@ import {
   GOAL_ACCEPTANCE_TASK_TITLE,
   GOAL_BATCH_ASSAY_TITLE,
   GOAL_BATCH_BREAK_OPTION,
+  GOAL_BATCH_RELEASE_OPTION,
+  GOAL_BATCH_RELEASE_TITLE,
   GOAL_BATCH_TEMPLATE_TITLE,
   GOAL_BATCH_TITLE,
   GOAL_CLARIFICATION_OPTION,
@@ -24,6 +26,7 @@ import type { GoalNodeView } from './goalGraphViewModel';
 export type CoordinatorGateKind =
   | 'agentQuestion'
   | 'batchPatternBreak'
+  | 'batchRelease'
   | 'clarifyGoal'
   | 'fixSetup'
   | 'goalAcceptance'
@@ -48,6 +51,9 @@ export const coordinatorGateKind = (
   // A batch's pattern break: revise the recipe, or fork it as a new class.
   if (ids.has(GOAL_BATCH_BREAK_OPTION.revise) && ids.has(GOAL_BATCH_BREAK_OPTION.newClass))
     return 'batchPatternBreak';
+  // A passed batch gate held for a person to approve the next wave.
+  if (ids.has(GOAL_BATCH_RELEASE_OPTION.release) && ids.has(GOAL_BATCH_RELEASE_OPTION.revise))
+    return 'batchRelease';
   return undefined;
 };
 
@@ -84,6 +90,9 @@ export const gateOptionLabelKey = (
     case GOAL_BATCH_BREAK_OPTION.newClass: {
       return 'goalProcess.gate.option.newClassBatch';
     }
+    case GOAL_BATCH_RELEASE_OPTION.release: {
+      return 'goalProcess.gate.option.releaseBatch';
+    }
     default: {
       return undefined;
     }
@@ -107,6 +116,8 @@ export const coordinatorNodeTitleKey = (view: GoalNodeView): string | undefined 
     return 'goalBatch.templatePlain';
   if (node.kind === 'decision' && node.title === GOAL_BATCH_ASSAY_TITLE)
     return 'goalBatch.gate.title';
+  if (node.kind === 'decision' && node.title === GOAL_BATCH_RELEASE_TITLE)
+    return gateTitleKey('batchRelease');
   if (node.kind === 'decision' && node.title === GOAL_MANAGER_QUESTION_TITLE)
     return gateTitleKey('agentQuestion');
   if (node.kind === 'decision') {
