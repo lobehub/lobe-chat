@@ -489,6 +489,12 @@ const fireGroupOrchestrationBridge = async (
     ...stats,
   });
 
+  // Release this member's barrier slot BEFORE re-entering: the re-entry
+  // carries the whole decision, so a surviving slot would leak for the
+  // lifetime of the tab (the registry claim is deleted by the caller, but
+  // the module-level pendingByParentOp set stays reachable without this).
+  releasePending(registration);
+
   get().completeOperation(orchestrationOperationId);
 
   await get().internal_execGroupOrchestration({
@@ -551,7 +557,12 @@ const resumeClientSubAgentParent = async (
 
   get().associateMessageWithOperation(parentMessageId, operationId);
 
-  const chatKey = messageMapKey({ agentId, topicId, threadId });
+  // Select the resumed messages from the FULL parent context — the bucket key
+  // must be rebuilt from the same fields the registration preserved (scope /
+  // documentId / groupId / threadId). A reduced { agentId, topicId, threadId }
+  // key collapsed page- and group-scoped parents into the main bucket, so the
+  // resumed state lost the parent history and the backfilled tool result.
+  const chatKey = messageMapKey(parentContext);
   const currentMessages = get().dbMessagesMap[chatKey] || [];
 
   const { context: initialContext, state } = get().internal_createAgentState({
@@ -564,32 +575,31 @@ const resumeClientSubAgentParent = async (
   });
 
   // The resumed parent may park AGAIN (another deferred tool / callSubAgent in
-  // its continuation). Completing the fresh operation unconditionally would
-  // leave a parked run holding a completed op — when that child settles, the
-  // bridge's parent-op guard rejects the resume. Only complete on terminal.
-  const resumed = await get().executeClientAgent({
-    context: parentContext,
-    // The new operation owns the continuation; chain it to the settled parent
-    // op for cancellation propagation and the operation tree.
-    parentOperationId: operationId,
-    initialContext: {
-      ...initialContext,
-      payload: { parentMessageId },
-      phase: 'tool_result',
-    },
-    initialState: state,
-    messages: currentMessages,
-    parentMessageId,
-    parentMessageType: 'tool',
-    skipCreateFirstMessage: true,
-  });
-
-  if (!resumed?.parked) {
+  // its continuation). The wrapper operation's job ends once the runtime child
+  // operation owns the continuation: executeClientAgent mints that child
+  // (chained to the wrapper) and the next bridge registration references the
+  // child, which stays `running` across the park. Completing the wrapper in
+  // BOTH cases (terminal and re-park, success or throw) keeps operation
+  // selectors from treating the conversation as busy forever.
+  try {
+    await get().executeClientAgent({
+      context: parentContext,
+      parentOperationId: operationId,
+      initialContext: {
+        ...initialContext,
+        payload: { parentMessageId },
+        phase: 'tool_result',
+      },
+      initialState: state,
+      messages: currentMessages,
+      parentMessageId,
+      parentMessageType: 'tool',
+      // No `skipCreateFirstMessage`: seeding the tool row as the assistant
+      // placeholder made the resumed LLM answer stream INTO the tool row,
+      // overwriting the child result just backfilled. Let the runtime create
+      // a fresh assistant row (the human-approval resume path does the same).
+    });
+  } finally {
     get().completeOperation(operationId);
-  } else {
-    log(
-      'resumed parent parked again (op %s stays running); its next completion fires the bridge',
-      operationId,
-    );
   }
 };

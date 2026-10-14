@@ -96,8 +96,14 @@ describe('clientSubAgentBridge', () => {
       expect.objectContaining({
         parentMessageId: 'tool-msg-1',
         parentMessageType: 'tool',
-        skipCreateFirstMessage: true,
       }),
+    );
+    // The runtime creates a FRESH assistant row for the resumed answer —
+    // seeding the tool row as the placeholder would stream the LLM answer
+    // into the tool row and overwrite the backfilled child result.
+    expect(store.executeClientAgent.mock.calls[0][0]).not.toHaveProperty(
+      'skipCreateFirstMessage',
+      true,
     );
   });
 
@@ -439,5 +445,72 @@ describe('clientSubAgentBridge', () => {
     expect(stateCall).toMatchObject({ agentId: 'agent-parent' });
     const startCall = store.startOperation.mock.calls[0]?.[0];
     expect(startCall.context).toMatchObject({ documentId: 'doc-1', workspaceSlug: 'team-x' });
+  });
+
+  // Round-5 fix: the resumed messages must be selected from the FULL parent
+  // context bucket — a reduced { agentId, topicId, threadId } key collapsed
+  // page- and group-scoped parents into the main bucket, so the resumed state
+  // lost the parent history and the backfilled tool result.
+  it('resume selects messages from the full parent-context bucket', async () => {
+    registerClientSubAgentBridge({
+      ...subAgentRegistration,
+      parentContext: {
+        agentId: 'agent-parent',
+        documentId: 'doc-1',
+        scope: 'page',
+      } as any,
+    });
+    const { get, store } = makeGet({
+      dbMessagesMap: {
+        // The page-scoped bucket the full context resolves to.
+        'page_agent-parent_doc-1': [{ content: 'parent history', role: 'user' }],
+      },
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    const createStateCall = store.internal_createAgentState.mock.calls[0]?.[0];
+    expect(createStateCall.messages).toEqual([{ content: 'parent history', role: 'user' }]);
+  });
+
+  // Round-5 fix: the wrapper operation must be retired in BOTH cases — a
+  // re-park leaves the runtime child operation running (the next bridge
+  // retires it), but an orphaned wrapper kept the conversation marked busy
+  // and sending permanently disabled.
+  it('resume retires the wrapper operation even when the parent parks again', async () => {
+    registerClientSubAgentBridge(subAgentRegistration);
+    const { get, store } = makeGet({
+      executeClientAgent: vi.fn().mockResolvedValue({ parked: true }),
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    expect(store.completeOperation).toHaveBeenCalledWith('op_resume');
+  });
+
+  // Round-5 fix: the successful group path must release its barrier slot —
+  // the caller deletes the registry claim, but the module-level
+  // pendingByParentOp set stayed reachable and leaked per parked member.
+  it('group success releases the barrier slot (no pendingByParentOp leak)', async () => {
+    registerClientSubAgentBridge(groupRegistration);
+    const { get } = makeGet();
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    // The leak is observable through the retry path: a second fire for the
+    // same parent op must NOT find a surviving slot (no way to assert the
+    // private map directly, so assert via the barrier helper's effect — a
+    // fresh registration for the same op then immediately resumes).
+    const reg2 = {
+      ...groupRegistration,
+      childContext: { ...childContext, threadId: 'thd2' } as any,
+      toolMessageId: 'tool-msg-2',
+    };
+    registerClientSubAgentBridge(reg2);
+    const { get: get2, store: store2 } = makeGet();
+    await fireClientSubAgentBridge(get2, { ...childContext, threadId: 'thd2' } as any);
+    // Single pending child on a fresh op → resumes immediately (no leftover
+    // sibling slot from the earlier group fire).
+    expect(store2.internal_execGroupOrchestration).toHaveBeenCalledTimes(1);
   });
 });
