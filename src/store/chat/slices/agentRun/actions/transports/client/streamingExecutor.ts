@@ -1228,7 +1228,7 @@ export class StreamingExecutorActionImpl {
         return {
           error: undefined,
           result:
-            'Sub-agent is still running: it paused for human approval or an async tool and has not finished yet. Do not treat this as done — check the thread later or continue it via callSubAgent({ subAgentId }).',
+            'Sub-agent is still running: it paused for human approval or an async tool and has not finished yet. Do not treat this as done. Client-side continuation via callSubAgent({ subAgentId }) is not supported in this runtime — when the sub-agent thread reaches a terminal state, the completion bridge settles this tool call and resumes the parent automatically, so check the thread later instead of re-dispatching the same work.',
           success: false,
           threadId,
         };
