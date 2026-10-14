@@ -1,3 +1,4 @@
+import type { GroupOrchestrationSupervisorSnapshot as SupervisorSnapshot } from '@lobechat/agent-runtime';
 import { type ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
@@ -64,6 +65,13 @@ interface GroupOrchestrationBridgeRegistration {
   /** The parked orchestration operation id (completed before re-entry). */
   orchestrationOperationId: string;
   supervisorAgentId: string;
+  /**
+   * Supervisor state machine counters at the park point (round /
+   * skip-call-supervisor). Carried into the re-entry's task_completed payload
+   * so the resumed loop continues from the original decision point instead of
+   * resetting to a fresh supervisor machine.
+   */
+  supervisorSnapshot?: SupervisorSnapshot;
   /** Message id of the supervisor's group task tool message. */
   toolMessageId: string;
 }
@@ -73,9 +81,13 @@ export type ClientSubAgentBridgeRegistration =
 
 /** Terminal disposition of the child run, captured at the run boundary. */
 export interface SubAgentBridgeOutcome {
+  /** Cost of the child run (`AgentState.cost.total`), for the parent ledger. */
+  cost?: number;
   error?: string;
   /** Terminal AgentState.status of the child run: done | error | interrupted. */
   status: 'done' | 'error' | 'interrupted';
+  /** Token split of the child run (`AgentState.usage.llm.tokens`). */
+  usage?: { input?: number; output?: number; total?: number };
 }
 
 const registry = new Map<string, ClientSubAgentBridgeRegistration>();
@@ -155,12 +167,19 @@ export const registerClientSubAgentBridge = (registration: ClientSubAgentBridgeR
 export const registerSubAgentBridgeFromSpawner = (params: {
   childContext: ConversationContext;
   childOperationId: string;
-  /** Extra parent context fields preserved across the resume (P2: workspaceSlug). */
-  parentContextExtras?: Partial<ConversationContext>;
-  getParentOperation: (parentOperationId: string) => { status: string } | undefined;
+  /**
+   * Operation lookup — the bridge reads the FULL parent context
+   * (threadId / scope / documentId / workspaceSlug / groupId …) from
+   * `getParentOperation(parentOperationId)?.context` itself, so the resume
+   * reconstructs the parent's message bucket in the original scope. A
+   * spawner-side trimmed context made thread- and page-scoped parents resume
+   * into the main-topic bucket (messageMapKey isolation).
+   */
+  getParentOperation: (
+    parentOperationId: string,
+  ) => { context?: unknown; status: string } | undefined;
   parentAgentId: string;
   parentOperationId?: string;
-  parentTopicId?: string;
   toolMessageId: string;
 }): void => {
   const {
@@ -168,9 +187,7 @@ export const registerSubAgentBridgeFromSpawner = (params: {
     childOperationId,
     getParentOperation,
     parentAgentId,
-    parentContextExtras,
     parentOperationId,
-    parentTopicId,
     toolMessageId,
   } = params;
 
@@ -184,13 +201,10 @@ export const registerSubAgentBridgeFromSpawner = (params: {
     childOperationId,
     kind: 'sub-agent',
     parentContext: {
+      // Full parent context (see doc above); agentId pinned to the spawner's
+      // value. The operation context extends ConversationContext.
+      ...(parentOp.context as ConversationContext | undefined),
       agentId: parentAgentId,
-      ...(parentTopicId ? { topicId: parentTopicId } : {}),
-      // Workspace scope must survive the bridge: without it the resumed run's
-      // notifications and any further sub-agents lose the workspace prefix.
-      ...(parentContextExtras?.workspaceSlug
-        ? { workspaceSlug: parentContextExtras.workspaceSlug }
-        : {}),
     },
     parentOperationId,
     toolMessageId,
@@ -209,6 +223,8 @@ export const registerGroupBridgeFromParkExit = (params: {
   messageContext: ConversationContext;
   orchestrationOperationId: string;
   supervisorAgentId: string;
+  /** Supervisor counters at the park point, restored by the re-entry. */
+  supervisorSnapshot?: SupervisorSnapshot;
   toolMessageId: string;
 }): void => {
   registerClientSubAgentBridge({
@@ -219,6 +235,7 @@ export const registerGroupBridgeFromParkExit = (params: {
     messageContext: params.messageContext,
     orchestrationOperationId: params.orchestrationOperationId,
     supervisorAgentId: params.supervisorAgentId,
+    supervisorSnapshot: params.supervisorSnapshot,
     toolMessageId: params.toolMessageId,
   });
 };
@@ -229,6 +246,13 @@ export const registerGroupBridgeFromParkExit = (params: {
  * must not fail the child's own completion. Without the server bridge's
  * queue redelivery a failed claim is dropped, but a bridge only exists after
  * a park, and the failure is logged loudly for diagnosis.
+ *
+ * Barrier-slot lifecycle: the slot is released exactly once per registration
+ * — by the settle path, only after settlement actually succeeded (or the
+ * parent was found settled out-of-band, where no retry can help). The outer
+ * catch restores BOTH the registry claim and the barrier slot, so the retry
+ * sees the exact pre-fire state and sibling children cannot resume the
+ * parent ahead of a still-pending child.
  */
 export const fireClientSubAgentBridge = async (
   get: () => any,
@@ -242,25 +266,21 @@ export const fireClientSubAgentBridge = async (
   if (!registration) return;
 
   try {
-    // The barrier slot MUST be released no matter how this fire ends — a
-    // mid-fire failure that skips releasePending would permanently block the
-    // parent's resume (the slot only empties via releasePending).
-    try {
-      await fireRegistration(get, registration, outcome);
-      // Settlement fully succeeded — only now is the claim final. On failure
-      // the registration is put back below: a terminal child run has no
-      // natural re-fire, so a dropped claim would leave the parent parked
-      // forever with an unsettled placeholder. Re-registered (idempotent for
-      // the settled pieces — backfills overwrite the same rows).
-      registry.delete(key);
-    } finally {
-      releasePending(registration);
-    }
+    await fireRegistration(get, registration, outcome);
+    // Settlement fully succeeded — only now is the claim final. On failure
+    // the registration AND its barrier slot are put back below: a terminal
+    // child run has no natural re-fire, so a dropped claim would leave the
+    // parent parked forever with an unsettled placeholder.
+    registry.delete(key);
   } catch (error) {
-    // Put the claim back so a later run in the same thread can retry — the
-    // next terminal boundary re-fires the bridge with fresh outcome data.
+    // Restore BOTH pieces (registry claim + barrier slot) so the retry sees
+    // the exact pre-fire state. Asymmetric restore made sibling B resume the
+    // parent while A's backfill was still pending: B appeared to be the last
+    // child, resumed and completed the parent, and A's later retry was then
+    // rejected by the non-running-parent guard before it could backfill.
     registry.set(key, registration);
-    log('bridge failed for key %s (claim restored for retry): %O', key, error);
+    trackPending(registration);
+    log('bridge failed for key %s (claim + barrier slot restored for retry): %O', key, error);
   }
 };
 
@@ -292,12 +312,19 @@ const fireRegistration = async (
   // Terminal stats from the child's own thread messages — the same
   // aggregation the normal completion path and the inspector chip use, so
   // the bridge (the authoritative stats writer per the CallSubAgentState
-  // contract) can't diverge from the live projection.
+  // contract) can't diverge from the live projection. Token split and cost
+  // come from the run boundary's AgentState (the per-message aggregation
+  // can't see cost), matching the normal path's flat stats exactly — once
+  // flat totals exist, calculateOperationUsageMetrics stops falling back to
+  // the live progress object, so a missing split would report zero cost.
   const metrics = aggregateSubagentMetrics(threadMessages);
   const stats = {
     model: metrics.model,
+    totalCost: outcome.cost,
+    totalInputTokens: outcome.usage?.input,
+    totalOutputTokens: outcome.usage?.output,
+    totalTokens: (outcome.usage?.total ?? metrics.totalTokens) || undefined,
     totalToolCalls: metrics.toolCalls,
-    totalTokens: metrics.totalTokens || undefined,
   };
 
   log(
@@ -337,7 +364,7 @@ const fireRegistration = async (
   if (registration.kind === 'sub-agent') {
     await fireSubAgentBridge(get, registration, resultContent, succeeded, stats);
   } else {
-    await fireGroupOrchestrationBridge(get, registration, resultContent, succeeded);
+    await fireGroupOrchestrationBridge(get, registration, resultContent, succeeded, stats);
   }
 };
 /**
@@ -352,7 +379,7 @@ const fireSubAgentBridge = async (
   registration: SubAgentBridgeRegistration,
   resultContent: string,
   succeeded: boolean,
-  stats: Record<string, number | undefined>,
+  stats: Record<string, number | string | undefined>,
 ): Promise<void> => {
   const { parentContext, parentOperationId, toolMessageId } = registration;
 
@@ -420,12 +447,14 @@ const fireGroupOrchestrationBridge = async (
   registration: GroupOrchestrationBridgeRegistration,
   resultContent: string,
   succeeded: boolean,
+  stats: Record<string, number | string | undefined>,
 ): Promise<void> => {
   const {
     memberAgentId,
     messageContext,
     orchestrationOperationId,
     supervisorAgentId,
+    supervisorSnapshot,
     toolMessageId,
   } = registration;
 
@@ -453,9 +482,11 @@ const fireGroupOrchestrationBridge = async (
   });
 
   // Persist the authoritative completion state on the tool message (the
-  // member's card) — same contract as the sub-agent kind.
+  // member's card) — same contract as the sub-agent kind, including the
+  // flat spend stats the usage tray reads.
   await get().optimisticUpdatePluginState(toolMessageId, {
     status: succeeded ? 'completed' : 'error',
+    ...stats,
   });
 
   get().completeOperation(orchestrationOperationId);
@@ -469,6 +500,11 @@ const fireGroupOrchestrationBridge = async (
         // A failed/interrupted member must not drive the supervisor forward
         // as a success — the supervisor decides how to react to the failure.
         success: succeeded,
+        // Restore the supervisor machine to its pre-park decision point: a
+        // fresh machine would replay the consumed `supervisor_decided`
+        // (deterministically re-calling the supervisor the original run had
+        // already driven) and restart the round budget.
+        ...(supervisorSnapshot ? { supervisorSnapshot } : {}),
       },
       type: 'task_completed',
     },

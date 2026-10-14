@@ -1047,8 +1047,16 @@ export class StreamingExecutorActionImpl {
     // continuation reaches the parent as a failure, never as a success.
     if (context.threadId) {
       await fireClientSubAgentBridge(this.#get, context, {
+        cost: state.cost?.total,
         error: state.status !== 'done' ? (state.error as string | undefined) : undefined,
         status: state.status as 'done' | 'error' | 'interrupted',
+        usage: state.usage?.llm?.tokens
+          ? {
+              input: state.usage.llm.tokens.input,
+              output: state.usage.llm.tokens.output,
+              total: state.usage.llm.tokens.total,
+            }
+          : undefined,
       });
     }
 
@@ -1198,20 +1206,14 @@ export class StreamingExecutorActionImpl {
       if (runtimeResult?.parked) {
         log('[%s] Parked (waiting for human / async tool), not completed', logId);
 
+        // The bridge reads the FULL parent context from the parent operation
+        // itself (threadId / scope / documentId must survive the park).
         registerSubAgentBridgeFromSpawner({
           childContext: subContext,
           childOperationId: taskOperationId,
-          // Workspace scope survives the bridge → the resumed run's
-          // notifications and further sub-agents keep the workspace prefix.
-          parentContextExtras: {
-            ...(parentOperationId
-              ? { workspaceSlug: this.#get().operations[parentOperationId]?.context.workspaceSlug }
-              : {}),
-          },
           getParentOperation: (id) => this.#get().operations[id],
           parentAgentId: agentId,
           parentOperationId,
-          parentTopicId: topicId,
           toolMessageId,
         });
 

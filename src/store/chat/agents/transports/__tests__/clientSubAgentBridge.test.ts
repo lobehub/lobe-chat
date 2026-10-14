@@ -309,4 +309,135 @@ describe('clientSubAgentBridge', () => {
       }),
     );
   });
+
+  // Round-4 fix: with parallel children, a mid-fire failure of child A must
+  // restore BOTH its registry claim and its barrier slot. Otherwise sibling B
+  // appears to be the last child, resumes the parent early, and A's later
+  // retry is rejected by the non-running-parent guard before it backfills.
+  it('barrier failure: slot restored, sibling cannot resume early, retry completes the barrier', async () => {
+    const childA = { ...childContext, threadId: 'thd_child_a' } as any;
+    const childB = { ...childContext, threadId: 'thd_child_b' } as any;
+    const regA = { ...subAgentRegistration, childContext: childA, toolMessageId: 'tool-msg-a' };
+    const regB = { ...subAgentRegistration, childContext: childB, toolMessageId: 'tool-msg-b' };
+    registerClientSubAgentBridge(regA);
+    registerClientSubAgentBridge(regB);
+    let aBackfillAttempts = 0;
+    const { get, store } = makeGet({
+      dbMessagesMap: {
+        'thread_agent-a_topic-1_thd_child_a': [{ content: 'answer a', role: 'assistant' }],
+        'thread_agent-a_topic-1_thd_child_b': [{ content: 'answer b', role: 'assistant' }],
+      },
+      // A's backfill rejects on its first fire, succeeds on the retry.
+      optimisticUpdateMessageContent: vi.fn().mockImplementation(async (id: string) => {
+        if (id === 'tool-msg-a' && aBackfillAttempts++ === 0) throw new Error('db down');
+        return undefined;
+      }),
+    });
+
+    await fireClientSubAgentBridge(get, childA);
+    // A failed: backfill rejected, parent NOT resumed, claim + slot restored.
+    expect(store.executeClientAgent).not.toHaveBeenCalled();
+
+    await fireClientSubAgentBridge(get, childB);
+    // B succeeds but A's slot was RESTORED — B is NOT the last pending child,
+    // so the parent must NOT resume early (this is the exact bug the fix
+    // closes: the old finally-release let B resume while A was still pending).
+    expect(store.executeClientAgent).not.toHaveBeenCalled();
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-b',
+      'answer b',
+      undefined,
+      { operationId: 'op_parent' },
+    );
+
+    // A's retry on a fresh terminal boundary (claim was restored, so the fire
+    // finds it): backfill succeeds this time, A is the last pending child →
+    // the barrier empties and the parent resumes exactly once.
+    await fireClientSubAgentBridge(get, childA);
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-a',
+      'answer a',
+      undefined,
+      { operationId: 'op_parent' },
+    );
+    expect(store.executeClientAgent).toHaveBeenCalledTimes(1);
+    expect(store.executeClientAgent).toHaveBeenCalledWith(
+      expect.objectContaining({ parentMessageId: 'tool-msg-a' }),
+    );
+  });
+
+  // Round-4 fix: the outcome's cost/token split must land on the tool
+  // message's plugin state — once flat totals exist the parent ledger stops
+  // falling back to the live progress object, so a missing split reports zero
+  // cost and loses the input/output breakdown.
+  it('persists cost and token split from the outcome on the plugin state', async () => {
+    registerClientSubAgentBridge(subAgentRegistration);
+    const { get, store } = makeGet();
+
+    await fireClientSubAgentBridge(get, childContext, {
+      cost: 0.42,
+      status: 'done',
+      usage: { input: 1100, output: 220, total: 1320 },
+    });
+
+    expect(store.optimisticUpdatePluginState).toHaveBeenCalledWith(
+      'tool-msg-1',
+      expect.objectContaining({
+        status: 'completed',
+        totalCost: 0.42,
+        totalInputTokens: 1100,
+        totalOutputTokens: 220,
+        totalTokens: 1320,
+      }),
+    );
+  });
+
+  // Round-4 fix: the group re-entry must carry the supervisor snapshot so the
+  // resumed loop continues from the pre-park decision point instead of
+  // resetting to a fresh machine (replaying consumed decisions + restarting
+  // the round budget).
+  it('group re-entry carries the supervisor snapshot from registration', async () => {
+    registerClientSubAgentBridge({
+      ...groupRegistration,
+      supervisorSnapshot: { round: 3, skipCallSupervisor: true },
+    });
+    const { get, store } = makeGet();
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    expect(store.internal_execGroupOrchestration).toHaveBeenCalledWith(
+      expect.objectContaining({
+        initialResult: expect.objectContaining({
+          payload: expect.objectContaining({
+            supervisorSnapshot: { round: 3, skipCallSupervisor: true },
+          }),
+        }),
+      }),
+    );
+  });
+
+  // Round-4 fix: the spawner registers the FULL parent context — threadId /
+  // scope / documentId must survive so the resume rebuilds the parent's
+  // message bucket in the original scope, not the main-topic bucket.
+  it('spawner registration preserves the full parent context', async () => {
+    registerClientSubAgentBridge({
+      ...subAgentRegistration,
+      parentContext: {
+        agentId: 'agent-parent',
+        documentId: 'doc-1',
+        scope: 'page',
+        workspaceSlug: 'team-x',
+      } as any,
+    });
+    const { get, store } = makeGet();
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    // The resume re-created the agent state from the preserved context — the
+    // page-scoped parent's message bucket key includes the documentId.
+    const stateCall = store.internal_createAgentState.mock.calls[0]?.[0];
+    expect(stateCall).toMatchObject({ agentId: 'agent-parent' });
+    const startCall = store.startOperation.mock.calls[0]?.[0];
+    expect(startCall.context).toMatchObject({ documentId: 'doc-1', workspaceSlug: 'team-x' });
+  });
 });

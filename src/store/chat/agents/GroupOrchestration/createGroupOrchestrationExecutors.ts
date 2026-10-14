@@ -2,6 +2,7 @@ import {
   type GroupOrchestrationEvent,
   type GroupOrchestrationExecutor,
   type GroupOrchestrationExecutorOutput,
+  type GroupOrchestrationSupervisorSnapshot,
   type SupervisorInstruction,
   type SupervisorInstructionBatchExecAsyncTasks,
   type SupervisorInstructionCallAgent,
@@ -15,6 +16,11 @@ import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
+import {
+  formatGroupAsyncTaskResultContent,
+  type GroupAsyncTaskResultContentItem,
+  toGroupAsyncTaskResultPayload,
+} from '@/store/chat/agents/GroupOrchestration/groupAsyncTaskResult';
 import { registerGroupBridgeFromParkExit } from '@/store/chat/agents/transports/clientSubAgentBridge';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { type ChatStore } from '@/store/chat/store';
@@ -27,37 +33,7 @@ const sleep = (ms: number) =>
     setTimeout(resolve, ms);
   });
 
-interface GroupAsyncTaskResultContentItem {
-  agentId: string;
-  error?: string;
-  result?: string;
-  success: boolean;
-  title?: string;
-}
-
-const formatGroupAsyncTaskResultContent = (items: GroupAsyncTaskResultContentItem[]) =>
-  items
-    .map((item, index) => {
-      const title = item.title ?? item.agentId;
-      const content = item.success
-        ? (item.result ?? 'Completed successfully.')
-        : `Failed: ${item.error ?? 'Unknown error'}`;
-
-      return `${index + 1}. ${title}\n${content}`;
-    })
-    .join('\n\n');
-
-const toGroupAsyncTaskResultPayload = ({
-  agentId,
-  error,
-  result,
-  success,
-}: GroupAsyncTaskResultContentItem) => ({
-  agentId,
-  ...(error === undefined ? {} : { error }),
-  ...(result === undefined ? {} : { result }),
-  success,
-});
+type SupervisorSnapshot = GroupOrchestrationSupervisorSnapshot;
 
 export interface GroupOrchestrationExecutorsContext {
   get: () => ChatStore;
@@ -67,6 +43,14 @@ export interface GroupOrchestrationExecutorsContext {
    */
   messageContext: ConversationContext;
   orchestrationOperationId: string;
+  /**
+   * Capture the supervisor state machine's counters. The member-run park exit
+   * snapshots them into the completion-bridge registration so the bridge's
+   * re-entry can restore the machine to its pre-park decision point instead
+   * of resetting to a fresh supervisor (which would replay consumed decisions
+   * and restart the round budget).
+   */
+  snapshotSupervisor?: () => SupervisorSnapshot | undefined;
   supervisorAgentId: string;
 }
 
@@ -111,7 +95,8 @@ export interface GroupOrchestrationExecutorsContext {
 export const createGroupOrchestrationExecutors = (
   context: GroupOrchestrationExecutorsContext,
 ): Partial<Record<SupervisorInstruction['type'], GroupOrchestrationExecutor>> => {
-  const { get, messageContext, orchestrationOperationId, supervisorAgentId } = context;
+  const { get, messageContext, orchestrationOperationId, snapshotSupervisor, supervisorAgentId } =
+    context;
 
   // Pre-compute the chat key for message fetching
   const chatKey = messageMapKey(messageContext);
@@ -758,6 +743,10 @@ export const createGroupOrchestrationExecutors = (
             messageContext,
             orchestrationOperationId,
             supervisorAgentId,
+            // Supervisor state machine at the park point: the bridge's
+            // re-entry restores it so the resumed loop continues from the
+            // original decision point (round counter / skip flag preserved).
+            supervisorSnapshot: snapshotSupervisor?.(),
             toolMessageId: resultMessageId,
           });
 
