@@ -10,6 +10,7 @@ import {
 describe('server-default heterogeneous agent matrix', () => {
   it('declares the native relay ingress and credential contract for every supported agent', () => {
     expect(SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES).toEqual([
+      'droid',
       'claude-code',
       'codex',
       'grok-build',
@@ -19,6 +20,11 @@ describe('server-default heterogeneous agent matrix', () => {
       'trae',
     ]);
     expect(SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG).toEqual({
+      'droid': {
+        ingress: 'anthropic-messages',
+        modelPolicy: 'tool-capable',
+        tokenHeader: 'x-api-key',
+      },
       'claude-code': {
         ingress: 'anthropic-messages',
         tokenHeader: 'bearer',
