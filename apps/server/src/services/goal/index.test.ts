@@ -20,7 +20,6 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 import { MetricModel } from '@/database/models/metric';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
-import { VerifyRunModel } from '@/database/models/verifyRun';
 import { WorkModel } from '@/database/models/work';
 import {
   acceptances,
@@ -65,6 +64,7 @@ import * as scheduler from './scheduler';
 import { LocalGoalScheduler } from './scheduler/impls';
 import { uncoveredAxisValues } from './spec';
 import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
+import { approveRelease } from './testUtils';
 import type { GoalTickObservation } from './traceObservation';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -95,21 +95,6 @@ afterEach(async () => {
   await serverDB.delete(agents);
   await serverDB.delete(users);
 });
-
-/** The release a passed batch gate is held for, still waiting on the owner. */
-const pendingRelease = async (service: GoalService, goalId: string) =>
-  (await service.graph(goalId)).decisions.find(
-    (decision) =>
-      decision.status === 'pending' && decision.options?.some((option) => option.id === 'release'),
-  );
-
-/** Approve the release a passed batch gate is held for, as the owner would, and advance. */
-const approveRelease = async (service: GoalService, goalId: string) => {
-  const pending = await pendingRelease(service, goalId);
-  expect(pending).toBeDefined();
-  await service.answerReleaseGate(pending!.nodeId, 'release');
-  return service.tick(goalId);
-};
 
 describe('GoalService', () => {
   it('supervises every Goal it creates, even when the caller omits the policy', async () => {
@@ -2623,231 +2608,6 @@ describe('GoalService', () => {
     expect((await service.graph(clean.goalId)).goal.config!.rolloutState!.phase).toBe('done');
   });
 
-  describe('approving a batch release', () => {
-    /** A 50-unit batch whose five probes all settled clean. */
-    const passedProbes = async (config?: Parameters<GoalService['create']>[0]['config']) => {
-      vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
-        problemStatement: '把 50 个同构的 store 迁移到 replica',
-        rollout: {
-          recipeOutline: '把 store 换成 replica 支撑的实现',
-          repeatable: true,
-          unitCount: 50,
-          units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
-          variants: [],
-        },
-        tasks: Array.from({ length: 5 }, (_, i) => ({
-          dependsOn: [],
-          instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
-          title: `Unit ${i + 1}`,
-        })),
-      });
-      const service = new GoalService(serverDB, userId);
-      const graph = await service.create({ config, title: 'Migrate stores' });
-      await service.tick(graph.goal.id);
-      const graphModel = new GoalGraphModel(serverDB, userId);
-      const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
-      for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
-      return { goalId: graph.goal.id, graphModel, probeIds, service };
-    };
-    const unitsBeyondProbes = async (service: GoalService, goalId: string) =>
-      (await service.graph(goalId)).nodes.filter(
-        (n) => n.kind === 'task' && /^Unit \d+$/.test(n.title) && Number(n.title.slice(5)) > 5,
-      );
-
-    it('holds the first wave for the owner instead of releasing it on its own', async () => {
-      const { goalId, service } = await passedProbes();
-
-      const result = await service.tick(goalId);
-
-      expect(result.outcome).toBe('waiting_human');
-      // Nothing fans out before the owner has looked at the probes.
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(0);
-      const after = await service.graph(goalId);
-      const state = after.goal.config!.rolloutState!;
-      expect(state.phase).toBe('release_review');
-      expect(after.goal.status).toBe('paused');
-      expect(after.goal.config!.pausedBy).toBe('release_review');
-      const pending = await pendingRelease(service, goalId);
-      expect(pending).toMatchObject({ authority: 'user', nodeId: state.releaseReviewNodeId });
-      expect(pending!.options!.map((option) => option.id)).toEqual(['release', 'revise']);
-      expect(pending!.question).toContain('start batch execution with wave 1 (5 units)');
-
-      // The release is reviewed as a delivery: an acceptance on the gate node,
-      // carrying the plan, every probe and the wave it would start.
-      const acceptanceId = state.releaseGateAcceptanceId!;
-      expect(acceptanceId).toBeDefined();
-      const acceptance = await serverDB.query.acceptances.findFirst({
-        where: eq(acceptances.id, acceptanceId),
-      });
-      expect(acceptance).toMatchObject({
-        status: 'delivered',
-        subjectId: state.releaseReviewNodeId,
-        subjectType: 'goal_gate',
-      });
-      const [round] = await new VerifyRunModel(serverDB, userId).listByAcceptance(acceptanceId);
-      const dossier = round.metadata!.releaseGate!;
-      expect(dossier.kind).toBe('probes');
-      expect(dossier.plan.content).toContain('把 store 换成 replica 支撑的实现');
-      expect(dossier.units).toHaveLength(5);
-      expect(dossier.nextWave.map((unit) => unit.title)).toEqual([
-        'Unit 6',
-        'Unit 7',
-        'Unit 8',
-        'Unit 9',
-        'Unit 10',
-      ]);
-      // The goal is paused on this gate, yet the island still asks it — and
-      // points at the report rather than offering a one-click answer.
-      const island = await service.pendingForIsland();
-      expect(
-        island.decisions.find((row) => row.nodeId === state.releaseReviewNodeId),
-      ).toMatchObject({ releaseGateAcceptanceId: acceptanceId });
-      // …and decided there, not by a one-click answer elsewhere.
-      await expect(service.decide(goalId, pending!.id, 'release')).rejects.toMatchObject({
-        code: 'BAD_REQUEST',
-      });
-    });
-
-    it('releases the wave the owner approved, and records who approved it', async () => {
-      const { goalId, service } = await passedProbes();
-      await service.tick(goalId);
-      const asked = await serverDB.query.briefs.findMany({
-        where: (row, { isNull }) => isNull(row.resolvedAt),
-      });
-      expect(asked.filter((row) => (row.metadata as any)?.goal?.reviewAcceptanceId)).toHaveLength(
-        1,
-      );
-
-      await approveRelease(service, goalId);
-
-      const after = await service.graph(goalId);
-      const state = after.goal.config!.rolloutState!;
-      expect(after.goal.status).toBe('running');
-      expect(after.goal.config!.pausedBy).toBeUndefined();
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(5);
-      expect(state.phase).toBe('mass');
-      expect(state.gateLog!.at(-1)).toMatchObject({ approvedBy: 'user', outcome: 'released' });
-      // The inbox's copy of the release is settled with it, not left asking.
-      const open = await serverDB.query.briefs.findMany({
-        where: (row, { isNull }) => isNull(row.resolvedAt),
-      });
-      expect(open.filter((row) => (row.metadata as any)?.goal?.kind === 'decision')).toHaveLength(
-        0,
-      );
-      // Spent on that wave: the next one needs its own approval.
-      expect(state.releaseApproval).toBeUndefined();
-    });
-
-    it('hands a plan the owner sends back to the main Agent, never applying it alone', async () => {
-      const { goalId, service } = await passedProbes();
-      await service.tick(goalId);
-      const before = (await service.graph(goalId)).goal.config!;
-      const pending = await pendingRelease(service, goalId);
-
-      await service.answerReleaseGate(pending!.nodeId, 'revise', '先补上 SSR 播种');
-
-      let after = (await service.graph(goalId)).goal.config!;
-      expect(after.rolloutState).toMatchObject({
-        pendingRevision: { correction: '先补上 SSR 播种' },
-        phase: 'plan_revision',
-      });
-      // This goal has no main Agent to rewrite the plan: it waits, and says so,
-      // instead of pasting the correction under the plan.
-      const result = await service.tick(goalId);
-      after = (await service.graph(goalId)).goal.config!;
-      expect(result.outcome).toBe('waiting_human');
-      expect((await service.graph(goalId)).goal.status).toBe('paused');
-      expect(after.rolloutState!.templateRevision).toBe(before.rolloutState!.templateRevision);
-      expect(after.rollout!.spec?.recipeOutline).toBe(before.rollout!.spec?.recipeOutline);
-    });
-
-    /** The first wave approved and delivered, so the gate passes for the second. */
-    const firstWaveDelivered = async (config?: Parameters<GoalService['create']>[0]['config']) => {
-      const setup = await passedProbes(config);
-      await setup.service.tick(setup.goalId);
-      await approveRelease(setup.service, setup.goalId);
-      const state = (await setup.service.graph(setup.goalId)).goal.config!.rolloutState!;
-      for (const id of state.massNodeIds!)
-        await setup.graphModel.updateNodeStatus(setup.goalId, id, 'resolved');
-      return setup;
-    };
-
-    it('hands a later wave to the main Agent instead of releasing it', async () => {
-      const { goalId, service } = await firstWaveDelivered();
-      const agentId = 'goal-release-agent';
-      await serverDB.insert(agents).values({ id: agentId, userId });
-      const config = (await service.graph(goalId)).goal.config!;
-      await serverDB
-        .update(goals)
-        .set({ agentId, config: { ...config, manager: { maxTurns: 4 } } })
-        .where(eq(goals.id, goalId));
-      const execAgent = vi.spyOn(AiAgentService.prototype, 'execAgent').mockResolvedValue({
-        operationId: 'op-release-turn',
-      } as Awaited<ReturnType<AiAgentService['execAgent']>>);
-
-      await service.tick(goalId);
-
-      expect(execAgent).toHaveBeenCalledTimes(1);
-      const managerState = (await service.graph(goalId)).goal.config!.managerState!;
-      expect(managerState.problemKind).toBe('rollout_release');
-      expect(managerState.problem).toContain('wave 2 (5 units)');
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(5);
-      expect(await pendingRelease(service, goalId)).toBeUndefined();
-    });
-
-    it('releases a later wave on the main Agent approval for that wave', async () => {
-      const { goalId, service } = await firstWaveDelivered();
-      const state = (await service.graph(goalId)).goal.config!.rolloutState!;
-      await new GoalModel(serverDB, userId).updateRolloutState(goalId, {
-        ...state,
-        releaseApproval: {
-          at: new Date().toISOString(),
-          by: 'agent',
-          revision: state.templateRevision,
-          waveIndex: state.waveIndex,
-        },
-      });
-
-      await service.tick(goalId);
-
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(10);
-      expect(
-        (await service.graph(goalId)).goal.config!.rolloutState!.gateLog!.at(-1),
-      ).toMatchObject({ approvedBy: 'agent', outcome: 'released', wave: 2 });
-    });
-
-    it('does not release a later wave on an approval left from an earlier one', async () => {
-      const { goalId, service } = await firstWaveDelivered();
-      const state = (await service.graph(goalId)).goal.config!.rolloutState!;
-      await new GoalModel(serverDB, userId).updateRolloutState(goalId, {
-        ...state,
-        releaseApproval: {
-          at: new Date().toISOString(),
-          by: 'agent',
-          revision: state.templateRevision,
-          waveIndex: state.waveIndex - 1,
-        },
-      });
-
-      await service.tick(goalId);
-
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(5);
-      expect(await pendingRelease(service, goalId)).toBeDefined();
-    });
-
-    it('asks the owner for a later wave when no main Agent can take it', async () => {
-      const { goalId, service } = await firstWaveDelivered();
-
-      const result = await service.tick(goalId);
-
-      expect(result.outcome).toBe('waiting_human');
-      expect(await unitsBeyondProbes(service, goalId)).toHaveLength(5);
-      const pending = await pendingRelease(service, goalId);
-      expect(pending!.question).toContain('no main Agent could review the release');
-      expect(pending!.question).toContain('wave 2 (5 units)');
-    });
-  });
-
   describe('answering a batch break', () => {
     const decompose = (variants: { axis: string; values: string[] }[] = []) =>
       vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
@@ -3187,53 +2947,6 @@ describe('GoalService', () => {
       outcome: 'blocked',
       trigger: 'unit',
     });
-  });
-
-  it('releases a wave once when two advances pass the gate together', async () => {
-    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
-      problemStatement: '把 50 个同构的 store 迁移到 replica',
-      rollout: {
-        recipeOutline: '把 store 换成 replica 支撑的实现',
-        repeatable: true,
-        unitCount: 50,
-        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
-        variants: [],
-      },
-      tasks: Array.from({ length: 5 }, (_, i) => ({
-        dependsOn: [],
-        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
-        title: `Unit ${i + 1}`,
-      })),
-    });
-    const service = new GoalService(serverDB, userId);
-    const graph = await service.create({ title: 'Migrate stores' });
-    await service.tick(graph.goal.id);
-    const graphModel = new GoalGraphModel(serverDB, userId);
-    const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
-    for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
-
-    // Two settled tasks each queued an advance; both see the gate pass, and the
-    // owner is asked once.
-    await Promise.all([service.tick(graph.goal.id), service.tick(graph.goal.id)]);
-    expect(
-      (await service.graph(graph.goal.id)).decisions.filter((d) => d.status === 'pending'),
-    ).toHaveLength(1);
-    const pending = await pendingRelease(service, graph.goal.id);
-    await service.answerReleaseGate(pending!.nodeId, 'release');
-    await Promise.all([service.tick(graph.goal.id), service.tick(graph.goal.id)]);
-
-    const after = await service.graph(graph.goal.id);
-    const state = after.goal.config!.rolloutState!;
-    const released = after.nodes.filter(
-      (n) => n.kind === 'task' && !probeIds.includes(n.id) && /^Unit \d+$/.test(n.title),
-    );
-    // One wave, once: no duplicate units and the cursor counts it once.
-    expect(released.map((n) => n.title).sort()).toEqual(
-      [...new Set(released.map((n) => n.title))].sort(),
-    );
-    expect(state.massNodeIds).toHaveLength(released.length);
-    expect(state.releasedCount).toBe(probeIds.length + released.length);
-    expect(state.gateLog?.filter((entry) => entry.outcome === 'released')).toHaveLength(1);
   });
 
   it('stops the running Tasks of the members a restart retires', async () => {
