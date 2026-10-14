@@ -104,8 +104,9 @@ const HeterogeneousChatInput = memo(() => {
   // While the preference is loading, the merged config may still reflect only
   // the shared row — hold the input closed (below) instead of gating device
   // runs off a value that can flip once the override arrives.
+  const scopeTopicId = topicId ?? null;
   const { agencyConfig, isPreferenceLoading, workspaceScoped } = useEffectiveAgencyConfig(agentId, {
-    topicId: topicId ?? null,
+    topicId: scopeTopicId,
   });
   const heterogeneousProvider = agencyConfig?.heterogeneousProvider;
   const providerType = heterogeneousProvider?.type;
@@ -177,7 +178,11 @@ const HeterogeneousChatInput = memo(() => {
   // instead of failing at dispatch time.
   const isDeviceExecution = executionTarget === 'device' && !!agencyConfig?.boundDeviceId;
 
-  const { status, refresh } = useRemoteAgentDeviceGuard({ agentId, enabled: isDeviceExecution });
+  const { status, refresh } = useRemoteAgentDeviceGuard({
+    agentId,
+    enabled: isDeviceExecution,
+    topicId: scopeTopicId,
+  });
 
   const goToAgentProfile = () => {
     if (agentId) navigate(`/agent/${agentId}/profile`);
