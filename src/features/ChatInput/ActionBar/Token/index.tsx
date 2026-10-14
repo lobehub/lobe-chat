@@ -1,13 +1,18 @@
 import { type PropsWithChildren } from 'react';
 import { memo } from 'react';
 
-import { useModelHasContextWindowToken } from '@/hooks/useModelHasContextWindowToken';
 import dynamic from '@/libs/next/dynamic';
+import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
+
+import { useAgentId } from '../../hooks/useAgentId';
+import { useEffectiveModel } from '../../hooks/useEffectiveModel';
 
 const LargeTokenContent = dynamic(() => import('./TokenTag'), { ssr: false });
 
 const Token = memo<PropsWithChildren>(({ children }) => {
-  const showTag = useModelHasContextWindowToken();
+  const agentId = useAgentId();
+  const { model, provider } = useEffectiveModel(agentId);
+  const showTag = useAiInfraStore(aiModelSelectors.isModelHasContextWindowToken(model, provider));
 
   return showTag && children;
 });

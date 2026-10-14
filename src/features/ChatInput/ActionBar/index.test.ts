@@ -6,10 +6,65 @@ import { createElement, type ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { filterChatOnlyActions } from './filterChatOnlyActions';
+import ContextWindow from './Token';
 import Token from './Token/TokenTag';
 
+interface ModelPin {
+  model: string;
+  provider: string;
+}
+
+interface EnabledAiModel extends ModelPin {
+  contextWindowTokens?: number;
+}
+
 const tokenMocks = vi.hoisted(() => ({
+  agentId: 'agent-1',
+  agentModel: { model: 'agent-model', provider: 'agent-provider' } as ModelPin,
+  enabledAiModels: [] as { contextWindowTokens?: number; id: string; providerId: string }[],
+  topicModel: undefined as ModelPin | undefined,
   useTokenBreakdown: vi.fn(),
+}));
+
+// Store boundary: the real `useEffectiveModel` and `aiModelSelectors` run against these states.
+vi.mock('../hooks/useAgentId', () => ({
+  useAgentId: () => tokenMocks.agentId,
+}));
+
+vi.mock('@/store/agent', () => ({
+  useAgentStore: (selector: (state: object) => unknown) =>
+    selector({
+      activeAgentId: tokenMocks.agentId,
+      agentMap: {
+        [tokenMocks.agentId]: {
+          model: tokenMocks.agentModel.model,
+          provider: tokenMocks.agentModel.provider,
+        },
+      },
+    }),
+}));
+
+vi.mock('@/store/chat', () => ({
+  useChatStore: (selector: (state: object) => unknown) =>
+    selector({
+      activeTopicId: tokenMocks.topicModel ? 'topic-1' : undefined,
+      topicDataMap: {},
+      topicDetailMap: tokenMocks.topicModel
+        ? {
+            'topic-1': {
+              id: 'topic-1',
+              model: tokenMocks.topicModel.model,
+              provider: tokenMocks.topicModel.provider,
+            },
+          }
+        : {},
+    }),
+}));
+
+vi.mock('@/store/aiInfra', async () => ({
+  aiModelSelectors: (await import('@/store/aiInfra/selectors')).aiModelSelectors,
+  useAiInfraStore: (selector: (state: object) => unknown) =>
+    selector({ enabledAiModels: tokenMocks.enabledAiModels }),
 }));
 
 vi.mock('@lobehub/ui/chat', () => ({
@@ -43,7 +98,19 @@ vi.mock('./Token/useTokenBreakdown', () => ({
   useTokenBreakdown: tokenMocks.useTokenBreakdown,
 }));
 
+const setEnabledModels = (...models: EnabledAiModel[]) => {
+  tokenMocks.enabledAiModels = models.map(({ contextWindowTokens, model, provider }) => ({
+    contextWindowTokens,
+    id: model,
+    providerId: provider,
+  }));
+};
+
 beforeEach(() => {
+  tokenMocks.agentId = 'agent-1';
+  tokenMocks.agentModel = { model: 'agent-model', provider: 'agent-provider' };
+  tokenMocks.topicModel = undefined;
+  setEnabledModels({ contextWindowTokens: 8000, model: 'agent-model', provider: 'agent-provider' });
   tokenMocks.useTokenBreakdown.mockReset();
 });
 
@@ -70,6 +137,58 @@ describe('filterChatOnlyActions', () => {
 });
 
 describe('Context window token', () => {
+  const breakdown = {
+    chatsToken: 3000,
+    historySummaryToken: 500,
+    maxTokens: 8000,
+    systemRoleToken: 1500,
+    toolsToken: 1000,
+    totalToken: 6000,
+  };
+
+  it('shows the token tag when the agent default model has a context window', async () => {
+    tokenMocks.useTokenBreakdown.mockReturnValue(breakdown);
+
+    render(createElement(ContextWindow));
+
+    expect(await screen.findByTestId('token-tag')).toHaveTextContent('6000');
+  });
+
+  it('keeps the token tag hidden for models without a context window', () => {
+    setEnabledModels({ model: 'agent-model', provider: 'agent-provider' });
+    tokenMocks.useTokenBreakdown.mockReturnValue(breakdown);
+
+    render(createElement(ContextWindow));
+
+    expect(screen.queryByTestId('token-tag')).not.toBeInTheDocument();
+  });
+
+  it('shows the token tag when the topic pinned model has a context window but the agent default does not', async () => {
+    tokenMocks.topicModel = { model: 'topic-model', provider: 'topic-provider' };
+    setEnabledModels(
+      { model: 'agent-model', provider: 'agent-provider' },
+      { contextWindowTokens: 16_000, model: 'topic-model', provider: 'topic-provider' },
+    );
+    tokenMocks.useTokenBreakdown.mockReturnValue(breakdown);
+
+    render(createElement(ContextWindow));
+
+    expect(await screen.findByTestId('token-tag')).toHaveTextContent('6000');
+  });
+
+  it('hides the token tag when the agent default has a context window but the topic pinned model does not', () => {
+    tokenMocks.topicModel = { model: 'topic-model', provider: 'topic-provider' };
+    setEnabledModels(
+      { contextWindowTokens: 8000, model: 'agent-model', provider: 'agent-provider' },
+      { model: 'topic-model', provider: 'topic-provider' },
+    );
+    tokenMocks.useTokenBreakdown.mockReturnValue(breakdown);
+
+    render(createElement(ContextWindow));
+
+    expect(screen.queryByTestId('token-tag')).not.toBeInTheDocument();
+  });
+
   it('reuses the settled tag breakdown when rendering details', () => {
     tokenMocks.useTokenBreakdown
       .mockReturnValueOnce({
