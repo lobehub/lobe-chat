@@ -505,6 +505,19 @@ class LobeAgentExecutor extends BaseExecutor<typeof LobeAgentApiName> {
     });
 
     if (!success) {
+      // A parked child ("still running" note from `runClientSubAgent`) is NOT a
+      // real failure: surface the explanation and keep the thread handle so the
+      // parent can follow up, instead of collapsing everything into a generic
+      // "Sub-agent execution failed." that loses both the reason and threadId.
+      const isParked =
+        typeof result === 'string' && result.startsWith('Sub-agent is still running');
+      if (isParked && threadId) {
+        return {
+          content: result,
+          state: { status: 'running', threadId },
+          success: false,
+        };
+      }
       return { content: error ?? 'Sub-agent execution failed.', success: false };
     }
 

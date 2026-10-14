@@ -730,22 +730,33 @@ export const createGroupOrchestrationExecutors = (
         // A parked member run (client tools / human approval / async tool) has
         // NOT finished — the old code backfilled a false "Task completed" and
         // reported success, so the supervisor settled the member while it was
-        // still executing. Surface the park instead and keep the thread open.
+        // still executing.
+        //
+        // Persist the explanation onto the source tool message: the supervisor
+        // conversation is rebuilt from persisted messages, so a result payload
+        // alone would be invisible to it. Then END the orchestration loop with
+        // `result: undefined` WITHOUT marking the state done — emitting
+        // `task_completed` here would schedule `call_supervisor` and have it
+        // drive the group forward while the member is still active. The loop
+        // resumes through the park's own continuation (approval / async-tool
+        // callback), not through a supervisor decision.
         if (runtimeResult?.parked) {
           log(`[${sessionLogId}] Member run parked (human approval / async tool), not completed`);
+
+          await get().optimisticUpdateMessageContent(
+            resultMessageId,
+            'Member agent is still running: it paused for human approval or an async tool and has not finished yet.',
+            undefined,
+            { operationId: state.operationId },
+          );
 
           return {
             events: [] as GroupOrchestrationEvent[],
             newState: state,
-            result: {
-              payload: {
-                agentId,
-                result:
-                  'Member agent is still running: it paused for human approval or an async tool and has not finished yet. Do not treat this as done.',
-                success: false,
-              },
-              type: 'task_completed',
-            },
+            // End the loop without a terminal decision: `undefined` stops the
+            // orchestration `while` and the non-done status keeps the
+            // orchestration operation alive instead of completing it.
+            result: undefined,
           };
         }
 
