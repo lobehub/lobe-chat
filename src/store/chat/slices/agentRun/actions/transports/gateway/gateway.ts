@@ -798,11 +798,6 @@ export class GatewayActionImpl {
   };
 
   /**
-   * Check if Gateway mode is available and enabled.
-   * Returns true when the server supports Gateway mode and the agent config
-   * has not disabled it. `disableGatewayMode: undefined` means enabled.
-   */
-  /**
    * Dial the page-wide mux as soon as the user is in the app, so the session's
    * first run never pays the WebSocket handshake on its critical path —
    * `connectToGateway` then only sends a `subscribe` frame on the already-open
@@ -827,22 +822,15 @@ export class GatewayActionImpl {
     });
   };
 
-  isGatewayModeEnabled = (agentId?: string): boolean => {
+  /**
+   * Whether the deployment runs agents through the Agent Gateway. Mirrors
+   * `resolveGatewayModeEnabled` (`helpers/gatewayMode`). There is no per-agent
+   * opt-out: the browser has no agent runtime of its own to fall back to.
+   */
+  isGatewayModeEnabled = (): boolean => {
     const serverConfig = getGatewayServerConfig();
-    const agentState = getAgentStoreState();
-    const resolvedAgentId = agentId ?? agentState.activeAgentId;
-    const agentDisableGatewayMode = resolvedAgentId
-      ? chatConfigByIdSelectors.getChatConfigById(resolvedAgentId)(agentState).disableGatewayMode
-      : undefined;
-    const defaultDisableGatewayMode = settingsSelectors.defaultAgentConfig(useUserStore.getState())
-      .chatConfig?.disableGatewayMode;
-    const disableGatewayMode = agentDisableGatewayMode ?? defaultDisableGatewayMode;
 
-    return (
-      !!serverConfig?.agentGatewayUrl &&
-      !!serverConfig.enableGatewayMode &&
-      disableGatewayMode !== true
-    );
+    return !!serverConfig?.agentGatewayUrl && !!serverConfig.enableGatewayMode;
   };
 
   /**
@@ -995,7 +983,9 @@ export class GatewayActionImpl {
 
     const agentGatewayUrl = getGatewayServerConfig()?.agentGatewayUrl;
     if (!agentGatewayUrl) {
-      throw new Error('[Gateway] Cannot execute agent: serverConfig.agentGatewayUrl is missing');
+      // Agents only run on the server and stream over the Agent Gateway; the
+      // browser has no runtime of its own to fall back to.
+      throw new Error(t('gateway.notConfigured', { ns: 'chat' }));
     }
 
     // The EXECUTION context decides whether the server creates a topic. The

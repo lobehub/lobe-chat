@@ -1,4 +1,3 @@
-import { AgentManagementIdentifier } from '@lobechat/builtin-tool-agent-management';
 import { collectHeteroAttachedFiles } from '@lobechat/heterogeneous-agents';
 import { shouldDropUnsupportedClaudeAssistantPrefill } from '@lobechat/model-runtime/providers/anthropic/modelId';
 import type { ConversationContext } from '@lobechat/types';
@@ -15,17 +14,8 @@ import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { selectRuntimeType } from '@/store/chat/slices/agentRun/actions/dispatch/agentDispatcher';
-import {
-  parseMentionedAgentsFromEditorData,
-  parseSelectedSkillsFromEditorData,
-  parseSelectedToolsFromEditorData,
-} from '@/store/chat/slices/agentRun/actions/entries/commandBus';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { INPUT_LOADING_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
-import {
-  mergeAgentRuntimeInitialContexts,
-  resolveActiveTopicDocumentInitialContext,
-} from '@/store/chat/utils/activeTopicDocumentContext';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type Store as ConversationStore } from '../../action';
@@ -39,33 +29,6 @@ import {
   settleGenerationEntry,
 } from './heteroRun';
 
-const buildRetryInitialContext = (editorData: Record<string, any> | null | undefined) => {
-  const normalizedEditorData = editorData ?? undefined;
-  const selectedSkills = parseSelectedSkillsFromEditorData(normalizedEditorData);
-  const selectedTools = parseSelectedToolsFromEditorData(normalizedEditorData);
-  const mentionedAgents = parseMentionedAgentsFromEditorData(normalizedEditorData);
-
-  const effectiveSelectedTools =
-    mentionedAgents.length > 0 &&
-    !selectedTools.some((tool) => tool.identifier === AgentManagementIdentifier)
-      ? [...selectedTools, { identifier: AgentManagementIdentifier, name: 'Agent Management' }]
-      : selectedTools;
-
-  const hasInitialContext =
-    effectiveSelectedTools.length > 0 || selectedSkills.length > 0 || mentionedAgents.length > 0;
-
-  if (!hasInitialContext) return undefined;
-
-  return {
-    initialContext: {
-      ...(selectedSkills.length > 0 ? { selectedSkills } : undefined),
-      ...(effectiveSelectedTools.length > 0
-        ? { selectedTools: effectiveSelectedTools }
-        : undefined),
-      ...(mentionedAgents.length > 0 ? { mentionedAgents } : undefined),
-    },
-    phase: 'init' as const,
-  };
 };
 
 export {
@@ -147,11 +110,6 @@ const regenerateUserMessageFromSource = async (
   });
 
   try {
-    const initialContext = mergeAgentRuntimeInitialContexts(
-      await resolveActiveTopicDocumentInitialContext(context),
-      buildRetryInitialContext(item.editorData),
-    );
-
     // Get context messages up to and including the target message
     const contextMessages = displayMessages.slice(0, currentIndex + 1);
     if (contextMessages.length <= 0) {
@@ -208,13 +166,12 @@ const regenerateUserMessageFromSource = async (
       boundDeviceId: agencyConfig?.boundDeviceId,
       executionTarget: agencyConfig?.executionTarget,
       heterogeneousProvider,
-      isGatewayMode: chatStore.isGatewayModeEnabled(context.agentId),
       isWorkspaceAgent,
       workspaceScoped,
     });
 
-    // ── Gateway mode: trigger server-side regeneration ──
-    if (runtimeType === 'gateway') {
+    // ── Gateway: trigger server-side regeneration ──
+    if (runtimeType === 'gateway' || !heterogeneousProvider) {
       // Hand the wrapper op off at phase-1 (`executeGatewayAgent` completes
       // `parentOperationId` once the child `execServerAgentRuntime` op is
       // running) — the documented interim-op contract this branch used to
@@ -246,7 +203,7 @@ const regenerateUserMessageFromSource = async (
     // the CC / Codex turn replaces the previous attempt without rewriting
     // history, and resumes the same session id (when the cwd still matches)
     // so prior context is preserved.
-    if (runtimeType === 'hetero' && heterogeneousProvider) {
+    {
       await runHeterogeneousFromExistingMessage(chatStore, {
         attachedFiles: collectHeteroAttachedFiles(item),
         context,
@@ -261,20 +218,7 @@ const regenerateUserMessageFromSource = async (
         prompt: item.content,
       });
       settleGenerationEntry(chatStore, operationId, () => hooks.onRegenerateComplete?.(messageId));
-      return;
     }
-
-    // ── Client mode: run agent locally ──
-    await chatStore.executeClientAgent({
-      context,
-      initialContext,
-      messages: contextMessages,
-      parentMessageId: messageId,
-      parentMessageType: 'user',
-      parentOperationId: operationId,
-    });
-
-    settleGenerationEntry(chatStore, operationId, () => hooks.onRegenerateComplete?.(messageId));
   } catch (error) {
     chatStore.failOperation(operationId, {
       message: error instanceof Error ? error.message : String(error),
@@ -699,7 +643,6 @@ export const generationSlice: StateCreator<
       boundDeviceId: agencyConfig?.boundDeviceId,
       executionTarget: agencyConfig?.executionTarget,
       heterogeneousProvider: agencyConfig?.heterogeneousProvider,
-      isGatewayMode: chatStore.isGatewayModeEnabled(context.agentId),
       isWorkspaceAgent,
       workspaceScoped,
     });
@@ -729,36 +672,19 @@ export const generationSlice: StateCreator<
     });
 
     try {
-      // ── Gateway mode: branch a server-side run from the cut-off message ──
-      // `parentMessageId` triggers `resume: true` on the router, so the server
-      // skips user-message creation and continues from the existing chain.
-      // Empty prompt is intentional and matches the approve/reject resume path.
-      if (runtimeType === 'gateway') {
-        await chatStore.executeGatewayAgent({
-          context,
-          message: '',
-          onComplete: () =>
-            settleGenerationEntry(chatStore, operationId, () =>
-              hooks.onContinueComplete?.(displayMessageId),
-            ),
-          parentMessageId: dbMessageId,
-        });
-        return true;
-      }
-
-      // ── Client mode: run agent locally ──
-      await chatStore.executeClientAgent({
+      // Branch a server-side run from the cut-off message. `parentMessageId`
+      // triggers `resume: true` on the router, so the server skips
+      // user-message creation and continues from the existing chain. Empty
+      // prompt is intentional and matches the approve/reject resume path.
+      await chatStore.executeGatewayAgent({
         context,
-        messages: displayMessages,
+        message: '',
+        onComplete: () =>
+          settleGenerationEntry(chatStore, operationId, () =>
+            hooks.onContinueComplete?.(displayMessageId),
+          ),
         parentMessageId: dbMessageId,
-        parentMessageType: message.role as 'assistant' | 'tool' | 'user',
-        parentOperationId: operationId,
       });
-
-      settleGenerationEntry(chatStore, operationId, () =>
-        hooks.onContinueComplete?.(displayMessageId),
-      );
-
       return true;
     } catch (error) {
       chatStore.failOperation(operationId, {

@@ -120,12 +120,12 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 - Default: `0`
 - Example: `1`
 
-Business builds enable Gateway Mode automatically. Self-hosted deployments can set `ENABLE_AGENT_GATEWAY=1` together with `AGENT_GATEWAY_URL` to expose Gateway Mode to clients.
+Business builds enable Gateway Mode automatically. Self-hosted deployments can set `ENABLE_AGENT_GATEWAY=1` together with `AGENT_GATEWAY_URL` to expose Gateway Mode to clients. Agents only run through the Agent Gateway, so a deployment without both values cannot run agents.
 
 ### `AGENT_GATEWAY_URL`
 
 - Type: Optional
-- Description: Agent Gateway endpoint used by Gateway Mode to run supported agent tasks through the backend. Browsers open their WebSocket connection to this address, so it must be reachable from the browser.
+- Description: Agent Gateway endpoint used by Gateway Mode to run agents on the backend. Browsers open their WebSocket connection to this address, so it must be reachable from the browser.
 - Default: -
 - Example: `https://agent-gateway.example.com`
 

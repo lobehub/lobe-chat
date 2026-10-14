@@ -6,8 +6,6 @@ import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { type ChatModelCard } from '@/types/llm';
 
 import { API_ENDPOINTS } from './_url';
-import { resolveRuntimeProvider } from './chat/helper';
-import { initializeWithClientStore } from './chat/mecha';
 import { oneShotRelay } from './llmRelay';
 
 const isEnableFetchOnClient = (provider: string) =>
@@ -44,21 +42,11 @@ export class ModelsService {
   getModels = async (provider: string): Promise<ChatModelCard[] | undefined> => {
     const headers = await createServerHeaders(provider);
 
-    const runtimeProvider = resolveRuntimeProvider(provider);
     /**
-     * A provider only this device reaches: within the LLM relay the server
-     * lists its models through this tab (one-shot relay); outside it, the
-     * legacy browser runtime asks the provider directly.
+     * A provider only this device reaches: the server lists its models through
+     * this tab (one-shot relay), so the browser never dials the provider itself.
      */
-    const enableFetchOnClient = isEnableFetchOnClient(provider);
-    const relayToThisTab = enableFetchOnClient && oneShotRelay.needsRelay(provider);
-    if (enableFetchOnClient && !relayToThisTab) {
-      const agentRuntime = await initializeWithClientStore({
-        provider,
-        runtimeProvider,
-      });
-      return agentRuntime.models();
-    }
+    const relayToThisTab = isEnableFetchOnClient(provider) && oneShotRelay.needsRelay(provider);
 
     const res = await oneShotRelay.run(relayToThisTab ? provider : undefined, (relay) =>
       fetch(API_ENDPOINTS.models(provider), {
@@ -91,21 +79,8 @@ export class ModelsService {
 
       const headers = await createServerHeaders(provider);
 
-      const runtimeProvider = resolveRuntimeProvider(provider);
-      const enableFetchOnClient = isEnableFetchOnClient(provider);
-      // Within the LLM relay the server downloads through this tab (see `getModels`).
-      const relayToThisTab = enableFetchOnClient && oneShotRelay.needsRelay(provider);
-
-      if (enableFetchOnClient && !relayToThisTab) {
-        const agentRuntime = await initializeWithClientStore({
-          provider,
-          runtimeProvider,
-        });
-        const res = (await agentRuntime.pullModel({ model }, { signal }))!;
-        if (!res.ok) throw await getMessageError(res);
-        if (res.body) await this.processModelPullStream(res, { onProgress });
-        return;
-      }
+      // The server downloads through this tab (see `getModels`).
+      const relayToThisTab = isEnableFetchOnClient(provider) && oneShotRelay.needsRelay(provider);
 
       // The relay channel must stay open until the whole progress stream is read.
       await oneShotRelay.run(
