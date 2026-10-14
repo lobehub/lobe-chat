@@ -4,8 +4,8 @@ import { Flexbox } from '@lobehub/ui';
 import {
   Button,
   createModal,
-  DateRangePicker,
-  type DateRangeValue,
+  DayjsDateRangePicker as DateRangePicker,
+  type DayjsDateRangeValue,
   type ModalInstance,
   Text,
   toast,
@@ -24,7 +24,7 @@ const DateRangeContent = memo(() => {
   const { close } = useModalContext();
 
   const { refresh } = useMemoryAnalysisAsyncTask();
-  const [range, setRange] = useState<DateRangeValue<Dayjs> | null>(null);
+  const [range, setRange] = useState<DayjsDateRangeValue | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const disabledDate = useCallback((current: Dayjs) => current.isAfter(dayjs(), 'day'), []);
