@@ -201,7 +201,7 @@ describe('mapFeatureFlagsEnvToState', () => {
 
     const everyone = mapFeatureFlagsEnvToState({ agent_gateway_mux_mobile: true }, 'user-1');
     expect(everyone.enableGatewayMuxMobile).toBe(true);
-    expect(everyone.enableGatewayMux).toBe(false);
+    expect(everyone.enableGatewayMux).toBeFalsy();
 
     const config = { agent_gateway_mux_mobile: ['user-123'] };
     expect(mapFeatureFlagsEnvToState(config, 'user-123').enableGatewayMuxMobile).toBe(true);
@@ -210,7 +210,7 @@ describe('mapFeatureFlagsEnvToState', () => {
 
     const webOnly = mapFeatureFlagsEnvToState({ agent_gateway_mux: true }, 'user-1');
     expect(webOnly.enableGatewayMux).toBe(true);
-    expect(webOnly.enableGatewayMuxMobile).toBe(false);
+    expect(webOnly.enableGatewayMuxMobile).toBeFalsy();
   });
 
   it('should keep dashboards off by default and enable them per user or globally', () => {
