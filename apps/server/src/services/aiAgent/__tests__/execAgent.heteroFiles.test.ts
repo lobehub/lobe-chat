@@ -980,6 +980,29 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     );
   });
 
+  // ROOT CAUSE:
+  // A capable Labs device always received `--codex-app-server`, even when the provider
+  // carried options (e.g. `--profile`) the native handle rejects, so valid exec configs failed.
+  /** @example Provider options app-server cannot honor keep the device on codex exec. */
+  it('keeps Codex exec when provider arguments are unsupported by app-server', async () => {
+    mockGetUserPreference.mockResolvedValue({ lab: { enableCodexAppServer: true } });
+    mockQueryDeviceSystemInfo.mockResolvedValue({
+      supportedAgentRuntimes: ['codex-app-server-v1'],
+    });
+    Object.assign(heteroAgentConfig.agencyConfig, {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { args: ['--profile', 'work'], type: 'codex' },
+    });
+
+    await service.execAgent({ agentId: 'agent-1', prompt: 'ordinary device turn' });
+
+    /** @example The exec arguments are forwarded unchanged, without the native wrapper flag. */
+    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
+      expect.objectContaining({ args: ['--agent-arg=--profile', '--agent-arg=work'] }),
+    );
+  });
+
   it('persists CLI-device routing so a stop request reaches the dispatched writer', async () => {
     heteroAgentConfig.agencyConfig = {
       boundDeviceId: 'device-1',

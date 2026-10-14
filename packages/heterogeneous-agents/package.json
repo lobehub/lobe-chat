@@ -9,6 +9,7 @@
     "./builtinMcp": "./src/builtinMcp/index.ts",
     "./errors": "./src/errors/index.ts",
     "./client": "./src/client/index.ts",
+    "./codexAppServerParams": "./src/codex/appServerParams.ts",
     "./models": "./src/models/index.ts",
     "./processFailure": "./src/spawn/classifyProcessFailure.ts",
     "./protocol": "./src/protocol/index.ts",

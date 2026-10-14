@@ -1,3 +1,5 @@
+import { getCodexAppServerUnsupportedArgs } from '@lobechat/heterogeneous-agents/codexAppServerParams';
+
 /** Device capability advertised by a CLI that can run `lh hetero exec --codex-app-server`. */
 export const CODEX_APP_SERVER_RUNTIME = 'codex-app-server-v1';
 
@@ -14,6 +16,8 @@ export type CodexDeviceRuntime =
     };
 
 export interface ResolveCodexDeviceRuntimeParams {
+  /** Raw Codex provider arguments forwarded to the agent; native mode must honor all of them. */
+  agentArgs?: readonly string[];
   /** `api` auth uses the hosted provider binding, which has no native app-server session. */
   authMode?: string;
   heteroType: string;
@@ -21,6 +25,8 @@ export interface ResolveCodexDeviceRuntimeParams {
   isAppServerLabEnabled: () => Promise<boolean>;
   /** Reads the live connection's advertised runtimes, never merged DB metadata. */
   querySupportedRuntimes: () => Promise<readonly string[] | undefined>;
+  /** Whether this turn resumes a saved native session. */
+  resume?: boolean;
 }
 
 /**
@@ -31,8 +37,9 @@ export interface ResolveCodexDeviceRuntimeParams {
  * Expects:
  * - The live connection reports `codex-app-server-v1` only after a native handshake.
  * Returns:
- * - `exec` for every run unless the user enabled the Labs app-server runtime and the
- *   device supports it; native runs keep transcript recovery.
+ * - `exec` for every run unless the user enabled the Labs app-server runtime, the
+ *   device supports it, and app-server can honor every provider argument; native runs
+ *   keep transcript recovery.
  *
  * Call stack:
  *
@@ -48,6 +55,12 @@ export const resolveCodexDeviceRuntime = async (
   // Codex topics keep `codex exec` by default. The app-server runtime is opt-in through
   // the same Labs preference Desktop local runs use; it records native turn IDs.
   if (!nativeAuth || !(await params.isAppServerLabEnabled())) return { kind: 'exec' };
+  // `codex exec` accepts options (e.g. `--profile`) the native thread contract cannot
+  // represent; the device handle rejects them, so keep those configurations on exec.
+  const unsupported = getCodexAppServerUnsupportedArgs([...(params.agentArgs ?? [])], {
+    resume: params.resume,
+  });
+  if (unsupported.length > 0) return { kind: 'exec' };
   const runtimes = await params.querySupportedRuntimes();
   if (!runtimes?.includes(CODEX_APP_SERVER_RUNTIME)) return { kind: 'exec' };
   return { args: ['--codex-app-server'], kind: 'native' };

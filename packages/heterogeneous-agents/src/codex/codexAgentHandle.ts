@@ -83,6 +83,9 @@ export const createCodexAgentHandle = async (
   });
   let nativeSessionId: string | undefined;
   let cancelledSignal: NodeJS.Signals | undefined;
+  // The session ends a turn lost to a transport crash with an interrupted runtime end and
+  // resolves; without a Stop from this operation that is a truncated run, not a success.
+  let nativeTurnInterrupted = false;
   const provenance = {
     LOBEHUB_AGENT_ID: options.env.LOBEHUB_AGENT_ID ?? '',
     LOBEHUB_OPERATION_ID: options.operationId,
@@ -100,7 +103,18 @@ export const createCodexAgentHandle = async (
   const session = new CodexThreadSession({
     client,
     initialThreadId: options.resumeSessionId,
-    onEvents: (batch) => events.push(batch),
+    onEvents: (batch) => {
+      if (
+        batch.some(
+          (event) =>
+            event.type === 'agent_runtime_end' &&
+            (event.data as { reason?: unknown } | undefined)?.reason === 'interrupted',
+        )
+      ) {
+        nativeTurnInterrupted = true;
+      }
+      events.push(batch);
+    },
     onRuntimeStatus: () => {},
     onSessionId: (id) => {
       nativeSessionId = id;
@@ -128,7 +142,12 @@ export const createCodexAgentHandle = async (
   const execution = cancelledSignal ? Promise.resolve() : session.run(turnOptions);
   const exit = execution
     .then(
-      () => ({ code: cancelledSignal ? null : 0, signal: cancelledSignal ?? null }),
+      () => {
+        if (cancelledSignal) return { code: null, signal: cancelledSignal };
+        if (!nativeTurnInterrupted) return { code: 0, signal: null };
+        stderr.write('Codex app-server interrupted the turn before it completed\n');
+        return { code: 1, signal: null };
+      },
       (error: unknown) => {
         const detail = error instanceof Error ? error.message : String(error);
         stderr.write(`${detail}\n`);

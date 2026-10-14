@@ -1012,6 +1012,8 @@ export const dispatchHeteroAgent = async (
       let codexRuntime: CodexDeviceRuntime;
       try {
         codexRuntime = await resolveCodexDeviceRuntime({
+          agentArgs:
+            heterogeneousProvider?.type === heteroType ? heterogeneousProvider.args : undefined,
           authMode: heterogeneousProvider?.authMode,
           heteroType,
           isAppServerLabEnabled: async () => {
@@ -1032,6 +1034,7 @@ export const dispatchHeteroAgent = async (
                 cliDeviceWorkspaceId,
               )
             )?.supportedAgentRuntimes,
+          resume: Boolean(resumeSessionId),
         });
       } catch (err) {
         codexRuntime = {

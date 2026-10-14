@@ -110,6 +110,56 @@ describe('createCodexAgentHandle', () => {
     expect(stderr).toContain('no rollout found');
   });
 
+  const interruptedEnd: AgentStreamEvent = {
+    data: { reason: 'interrupted' },
+    operationId: 'op-device',
+    stepIndex: 0,
+    timestamp: 1,
+    type: 'agent_runtime_end',
+  };
+
+  // ROOT CAUSE:
+  // A transport crash ends the native turn with an interrupted runtime end while run()
+  // resolves, so the handle exited 0 and `lh hetero exec` finished a truncated run as success.
+  /** @example A turn lost to transport failure exits as a failure, not a success. */
+  it('fails a native turn interrupted by transport loss', async () => {
+    mocks.run.mockImplementation(async (_turn, session) => {
+      await session.onEvents([interruptedEnd]);
+    });
+    const handle = await createCodexAgentHandle(options);
+    let stderr = '';
+    handle.stderr.on('data', (chunk: Buffer) => {
+      stderr += chunk.toString();
+    });
+    for await (const _event of handle.events) {
+      /* Drain the actual async event contract. */
+    }
+    /** @example A nonzero exit makes the CLI report the operation as failed. */
+    expect(await handle.exit).toEqual({ code: 1, signal: null });
+    /** @example The failure detail explains the truncated turn. */
+    expect(stderr).toContain('interrupted the turn');
+  });
+
+  /** @example A user Stop keeps its cancellation outcome even though the turn ends interrupted. */
+  it('keeps a user Stop as cancellation', async () => {
+    let releaseTurn!: () => void;
+    const stopped = new Promise<void>((resolve) => {
+      releaseTurn = resolve;
+    });
+    mocks.interrupt.mockImplementation(async () => releaseTurn());
+    mocks.run.mockImplementation(async (_turn, session) => {
+      await stopped;
+      await session.onEvents([interruptedEnd]);
+    });
+    const handle = await createCodexAgentHandle(options);
+    handle.kill('SIGINT');
+    for await (const _event of handle.events) {
+      /* Drain the actual async event contract. */
+    }
+    /** @example Stop is reported as a signal-driven cancellation, never as a failure. */
+    expect(await handle.exit).toEqual({ code: null, signal: 'SIGINT' });
+  });
+
   /** @example Unsupported approval policy is refused before executing any native request. */
   it('does not downgrade an unsupported native permission policy', async () => {
     /** @example The Full access-only base must reject Ask until its permission bridge is available. */
