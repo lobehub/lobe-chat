@@ -1,12 +1,14 @@
 import { createStaticStyles, cx, keyframes } from 'antd-style';
-import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type PointerEvent,
+  type ReactNode,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
-// Scroll speed of the hover marquee, in px per second.
-const SCROLL_SPEED = 40;
-// Share of one loop spent on each of the three holds (tail, head, tail), so
-// both ends stay readable.
-const HOLD_RATIO = 0.2;
-const MIN_DURATION = 3;
+import { getMarqueeDuration, HOLD_RATIO, shouldRevealOnPointerDown } from './utils';
 
 const HOLD = HOLD_RATIO * 100;
 
@@ -40,17 +42,28 @@ const styles = createStaticStyles(({ css }) => ({
   overflowing: css`
     mask-image: linear-gradient(to right, transparent, #000 16px);
 
-    &:hover {
+    /* Pointer hover, keyboard focus on the enclosing control (e.g. an
+       accordion trigger), or one loop after a tap on touch screens. */
+    &:hover,
+    *:focus-visible > &,
+    *:focus-visible > * > &,
+    &[data-revealing] {
       mask-image: none;
     }
 
-    &:hover > span {
+    &:hover > span,
+    *:focus-visible > & > span,
+    *:focus-visible > * > & > span {
       animation: ${scrollToHead} var(--tail-marquee-duration) ease-in-out infinite;
     }
 
+    &[data-revealing] > span {
+      animation: ${scrollToHead} var(--tail-marquee-duration) ease-in-out 1;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      &:hover > span {
-        animation: none;
+      & > span {
+        animation: none !important;
       }
     }
   `,
@@ -68,19 +81,26 @@ interface TailMarqueeProps {
 
 /**
  * Single-line text that keeps its tail visible when it overflows (paths read
- * from the end), and scrolls back to the head on hover to reveal the rest.
+ * from the end), and scrolls back to the head on hover, on keyboard focus of
+ * the enclosing control, or once per tap on touch screens. The full text is
+ * also exposed as a native tooltip.
  */
 const TailMarquee = ({ children, className, style }: TailMarqueeProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLSpanElement>(null);
   const [overflow, setOverflow] = useState(0);
+  const [fullText, setFullText] = useState<string>();
+  const [revealing, setRevealing] = useState(false);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const measure = () => setOverflow(Math.max(0, content.offsetWidth - container.clientWidth));
+    const measure = () => {
+      setOverflow(Math.max(0, content.offsetWidth - container.clientWidth));
+      setFullText(content.textContent ?? undefined);
+    };
     measure();
 
     const observer = new ResizeObserver(measure);
@@ -89,12 +109,20 @@ const TailMarquee = ({ children, className, style }: TailMarqueeProps) => {
     return () => observer.disconnect();
   }, []);
 
-  const duration = Math.max(MIN_DURATION, (overflow * 2) / SCROLL_SPEED / (1 - HOLD_RATIO * 3));
+  const handlePointerDown = (event: PointerEvent) => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (shouldRevealOnPointerDown({ overflow, pointerType: event.pointerType, reducedMotion }))
+      setRevealing(true);
+  };
+
+  const duration = getMarqueeDuration(overflow);
 
   return (
     <div
       className={cx(styles.container, overflow > 0 && styles.overflowing, className)}
+      data-revealing={revealing || undefined}
       ref={containerRef}
+      title={overflow > 0 ? fullText : undefined}
       style={
         {
           ...style,
@@ -102,6 +130,8 @@ const TailMarquee = ({ children, className, style }: TailMarqueeProps) => {
           '--tail-marquee-offset': `${overflow}px`,
         } as CSSProperties
       }
+      onAnimationEnd={() => setRevealing(false)}
+      onPointerDown={handlePointerDown}
     >
       <span className={styles.content} ref={contentRef}>
         {children}
