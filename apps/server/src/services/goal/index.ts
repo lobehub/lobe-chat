@@ -4461,11 +4461,14 @@ export class GoalService {
         waveSize: Math.max(1, graph.goal.config?.rollout?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT),
       });
       if (!dossier) return undefined;
+      // A plan rewritten after a send-back is reviewed on the same report, as
+      // its next round: the owner sees the send-back and the rewrite together.
       const acceptanceId = await openReleaseGateAcceptance(
         this.db,
         { userId: this.userId, workspaceId: this.workspaceId },
         gateNodeId,
         dossier,
+        graph.goal.config?.rolloutState?.releaseGateAcceptanceId,
       );
       await this.db.transaction(async (tx) => {
         const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
@@ -4490,18 +4493,22 @@ export class GoalService {
    * and opens a new probe round. Returns the goal it moved.
    */
   answerReleaseGate = async (
-    gateNodeId: string,
+    subjectNodeId: string,
     optionId: (typeof GOAL_BATCH_RELEASE_OPTION)[keyof typeof GOAL_BATCH_RELEASE_OPTION],
     resolution?: string,
   ): Promise<string> => {
-    const goal = await this.goalModel.findByNode(gateNodeId);
+    const goal = await this.goalModel.findByNode(subjectNodeId);
     if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
     const graph = await this.requireGraph(goal.id);
-    const decision = graph.decisions.find(
-      (item) => item.nodeId === gateNodeId && item.status === 'pending',
-    );
+    // A plan rewritten after a send-back is reviewed again on the same report,
+    // whose subject is still the first review's node: answer the one now held.
+    const heldNodeId = graph.goal.config?.rolloutState?.releaseReviewNodeId;
+    const decision =
+      graph.decisions.find((item) => item.nodeId === subjectNodeId && item.status === 'pending') ??
+      graph.decisions.find((item) => item.nodeId === heldNodeId && item.status === 'pending');
     if (!decision)
       throw new TRPCError({ code: 'CONFLICT', message: 'This release was already decided' });
+    const gateNodeId = decision.nodeId;
     // The plan is the main Agent's: a correction always goes to it to rewrite.
     if (optionId === GOAL_BATCH_RELEASE_OPTION.revise)
       await this.sendRevisionToAgent(goal.id, gateNodeId, decision.id, resolution);
@@ -4576,8 +4583,8 @@ export class GoalService {
   };
 
   /**
-   * Drive a sent-back plan to its next probe round. The plan is the main
-   * Agent's to write: its submitted rewrite becomes the new recipe. A turn that
+   * Drive a sent-back plan to its rewrite. The plan is the main Agent's to
+   * write: its submitted rewrite becomes the new version of the plan. A turn that
    * ended without one is handed over again; when no turn can be started (no
    * main Agent, turn budget spent) the goal pauses and says so — the correction
    * is never pasted under the plan in the Agent's place.
@@ -4586,20 +4593,7 @@ export class GoalService {
     const goalId = graph.goal.id;
     const state = graph.goal.config!.rolloutState!;
     const pending = state.pendingRevision ?? { correction: '' };
-    if (pending.revisedRecipe) {
-      const restarted = await this.restartRolloutRound(goalId, {
-        correction: pending.correction,
-        optionId: GOAL_BATCH_RELEASE_OPTION.revise,
-        outline: pending.revisedRecipe,
-      });
-      return {
-        goalId,
-        message: restarted
-          ? `Opened probe round v${state.templateRevision + 1} on the main Agent's revised plan`
-          : 'The plan revision was already applied',
-        outcome: restarted ? 'advanced' : 'no_progress',
-      };
-    }
+    if (pending.revisedRecipe) return this.applyPlanRevision(graph);
 
     const problem = {
       kind: 'rollout_revise' as const,
@@ -4614,6 +4608,82 @@ export class GoalService {
       'The main Agent could not take the plan revision; resume the goal once it can, and the correction goes to it again';
     await this.transitionStatus(graph.goal, 'paused', message);
     return { goalId, message, outcome: 'waiting_human' };
+  };
+
+  /**
+   * Land the main Agent's rewrite in the round it was asked for. Sending a plan
+   * back revises the plan skill — a new version of the same round — not the
+   * experiments: they already ran, and the owner judged them. The rewritten
+   * plan then returns to the owner on the same release review, as its next
+   * round, so the decision is made on the plan the batch will actually copy.
+   */
+  private applyPlanRevision = async (graph: GoalGraphSnapshot): Promise<GoalTickResult> => {
+    const goalId = graph.goal.id;
+    const policy = graph.goal.config?.rollout;
+    const state = graph.goal.config!.rolloutState!;
+    const pending = state.pendingRevision!;
+    const recipe = pending.revisedRecipe!.trim();
+    const round = String(state.templateRevision);
+    const version = state.planSkill
+      ? await new BatchPlanSkillService(this.db, this.userId, this.workspaceId)
+          .revise(state.planSkill, {
+            goalId,
+            guidance: pending.correction,
+            plan: recipe,
+            revision: state.templateRevision,
+          })
+          .catch((error) => {
+            log('applyPlanRevision: plan skill revision failed: %O', error);
+            return undefined;
+          })
+      : undefined;
+    const applied = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
+      if (current?.phase !== 'plan_revision' || !current.pendingRevision?.revisedRecipe)
+        return false;
+      if (policy)
+        await goalModel.updateRolloutPolicy(goalId, {
+          ...policy,
+          spec: {
+            ...policy.spec,
+            recipeOutline: recipe,
+            repeatable: policy.spec?.repeatable ?? true,
+          },
+        });
+      if (current.templateNodeId)
+        await new GoalGraphModel(tx, this.userId, this.workspaceId, {
+          id: GOAL_COORDINATOR_ACTOR_ID,
+          type: 'system',
+        }).updateNodeDescription(goalId, current.templateNodeId, recipe);
+      await goalModel.updateRolloutState(goalId, {
+        ...current,
+        pendingRevision: undefined,
+        phase: current.waveIndex === 0 ? 'probe' : 'mass',
+        planVersions: version
+          ? { ...current.planVersions, [round]: version }
+          : current.planVersions,
+      });
+      return true;
+    });
+    if (!applied)
+      return { goalId, message: 'The plan revision was already applied', outcome: 'no_progress' };
+
+    const fresh = await this.requireGraph(goalId);
+    const freshState = fresh.goal.config!.rolloutState!;
+    const released = freshState.releasedCount ?? freshState.probeNodeIds.length;
+    const waveSize = Math.max(1, policy?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
+    const count = (freshState.unitTitles ?? []).slice(released, released + waveSize).length;
+    const wave = `wave ${freshState.waveIndex + 1} (${count} unit${count === 1 ? '' : 's'})`;
+    return this.openReleaseReview(
+      fresh,
+      `The main Agent revised the plan to v${version ?? freshState.templateRevision} from your correction; approve releasing ${wave}`,
+      [],
+      {
+        diagnosis: pending.revisedReason,
+        kind: freshState.waveIndex === 0 ? 'probes' : 'escalated',
+      },
+    );
   };
 
   /**
@@ -4924,6 +4994,7 @@ export class GoalService {
           return undefined;
         });
       let planSkill = state.planSkill;
+      let planVersion: number | undefined;
       if (planSkill && revisedOutline) {
         const skill = planSkill;
         const version = await inSavepoint('plan skill revision', (db) =>
@@ -4938,6 +5009,7 @@ export class GoalService {
         // failed): units must not load a skill that lacks it. They fall back to
         // copying the revised plan, and the batch drops the stale reference.
         if (version === undefined) planSkill = undefined;
+        else planVersion = version;
       } else if (!planSkill && revisedOutline) {
         // A batch from before plans were skills moves into one now, carrying
         // every earlier version of its plan.
@@ -5118,6 +5190,9 @@ export class GoalService {
         ...state,
         assayNodeId: assay.id,
         pendingRevision: undefined,
+        planVersions: planVersion
+          ? { ...state.planVersions, [String(revision)]: planVersion }
+          : state.planVersions,
         releaseApproval: undefined,
         releaseGateAcceptanceId: undefined,
         releaseReviewNodeId: undefined,

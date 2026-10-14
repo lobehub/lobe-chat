@@ -239,6 +239,13 @@ describe('buildBatchModel', () => {
     expect(model.rounds[0].probes.map((probe) => probe.state)).toEqual(['done', 'running']);
   });
 
+  it('names the plan skill version a round runs on, past its number once rewritten in place', () => {
+    const graph = buildGoalGraphView(batchSnapshot({ state: { planVersions: { '1': 3 } } }), NOW);
+    const model = buildBatchModel(graph, 'batch');
+
+    expect(model.rounds[0]).toMatchObject({ planVersion: 3, revision: 1 });
+  });
+
   it('opens a v2 round for a unit re-opened after a person sent the gate back', () => {
     const graph = buildGoalGraphView(
       batchSnapshot({

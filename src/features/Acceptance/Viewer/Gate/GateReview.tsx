@@ -83,22 +83,6 @@ const styles = createStaticStyles(({ css }) => ({
     padding-inline: 20px;
     border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
   `,
-  // A skill reads like a document: wider than a unit's detail, and long code
-  // lines wrap instead of running past the dialog's edge.
-  panelWide: css`
-    width: 440px;
-
-    * {
-      min-width: 0;
-      max-width: 100%;
-    }
-
-    pre,
-    code {
-      word-break: break-all;
-      white-space: pre-wrap !important;
-    }
-  `,
   plan: css`
     padding-block: 4px;
     padding-inline: 20px;
@@ -157,9 +141,7 @@ const isException = (unit: GoalReleaseGateUnit) => unit.runs > 1 || unit.status 
 
 /** What the side panel shows: a unit that ran, or one the next wave would start. */
 type Selection =
-  | { kind: 'result'; unit: GoalReleaseGateUnit }
-  | { brief?: string; kind: 'next'; title: string }
-  | { kind: 'skill'; skillId: string; title: string };
+  { kind: 'result'; unit: GoalReleaseGateUnit } | { brief?: string; kind: 'next'; title: string };
 
 const UnitTitle = ({ title }: { title: string }) => {
   const { code, name } = splitUnitTitle(title);
@@ -270,18 +252,6 @@ const DetailPanel = memo<{ onClose: () => void; selection: Selection }>(
   ({ onClose, selection }) => {
     const { t } = useTranslation('verify');
     const title = selection.kind === 'result' ? selection.unit.title : selection.title;
-    if (selection.kind === 'skill')
-      return (
-        <Flexbox className={cx(styles.panel, styles.panelWide)} gap={16}>
-          <Flexbox horizontal align={'flex-start'} gap={8}>
-            <Text strong style={{ flex: 1, minWidth: 0 }}>
-              {title}
-            </Text>
-            <ActionIcon icon={X} size={'small'} onClick={onClose} />
-          </Flexbox>
-          <SkillDirectory skillId={selection.skillId} />
-        </Flexbox>
-      );
     const brief = selection.kind === 'result' ? selection.unit.brief : selection.brief;
     return (
       <Flexbox className={styles.panel} gap={16}>
@@ -505,32 +475,25 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
         title={t('acceptance.gate.planTitle')}
         extra={
           dossier.plan.skillName && (
-            <Flexbox horizontal align={'center'} gap={12}>
-              <span className={styles.meta}>{dossier.plan.skillName}</span>
-              {dossier.plan.skillId && (
-                <span
-                  className={styles.link}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                    setSelected({
-                      kind: 'skill',
-                      skillId: dossier.plan.skillId!,
-                      title: dossier.plan.skillName!,
-                    })
-                  }
-                >
-                  {t('acceptance.gate.skillDirectory')}
-                </span>
-              )}
-            </Flexbox>
+            <span className={styles.meta}>
+              {dossier.plan.skillName} · v{dossier.plan.revision}
+            </span>
           )
         }
       >
-        <div className={styles.plan}>
-          <Markdown fontSize={14} variant={'chat'}>
-            {dossier.plan.content}
-          </Markdown>
-        </div>
+        {dossier.plan.skillId ? (
+          <SkillDirectory
+            fallbackContent={dossier.plan.content}
+            revision={dossier.plan.revision}
+            skillId={dossier.plan.skillId}
+          />
+        ) : (
+          <div className={styles.plan}>
+            <Markdown fontSize={14} variant={'chat'}>
+              {dossier.plan.content}
+            </Markdown>
+          </div>
+        )}
       </Section>
 
       <Section

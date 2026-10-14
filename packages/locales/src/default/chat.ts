@@ -72,7 +72,7 @@ export default {
   'goalBatch.gatePanel.question':
     'Revise the plan and re-probe, or fork a fresh one for the units that broke?',
   'goalBatch.gatePanel.releaseQuestion':
-    'Every check passed. Review the deliveries and the plan — release the next wave, or revise the plan and re-probe?',
+    'Every check passed. Review the deliveries and the plan — release the next wave, or send the plan back to revise?',
   'goalBatch.gatePanel.history': 'Verdicts',
   'goalBatch.gatePanel.history.blocked': 'Held: {{checks}}',
   'goalBatch.gatePanel.history.empty': 'No verdict yet',
@@ -2430,6 +2430,8 @@ export default {
   'goalProcess.gate.reason.recoveryFailed': 'Automatic recovery could not start the next attempt',
   'goalProcess.gate.reason.batchReleaseProbes':
     'The v{{revision}} experiments finished; start batch execution with wave {{wave}} ({{count}} units)',
+  'goalProcess.gate.reason.batchReleaseRevised':
+    'The main Agent revised the plan to v{{version}} from your correction; start batch execution with wave {{wave}} ({{count}} units)?',
   'goalProcess.gate.reason.batchReleaseEscalated':
     'The main Agent asked you to approve releasing wave {{wave}} ({{count}} units)',
   'goalProcess.gate.reason.batchReleaseNoAgent':

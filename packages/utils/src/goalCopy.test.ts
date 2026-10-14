@@ -64,6 +64,19 @@ describe('batch gate reasons', () => {
     ]);
   });
 
+  it('localizes a release held again on a plan the main Agent rewrote', () => {
+    expect(
+      reasonOf(
+        'The main Agent revised the plan to v2 from your correction; approve releasing wave 1 (5 units)\n\nRelease the next wave?',
+      ),
+    ).toEqual([
+      {
+        key: 'goalProcess.gate.reason.batchReleaseRevised',
+        params: { count: '5', version: '2', wave: '1' },
+      },
+    ]);
+  });
+
   it('localizes a passed gate held for the owner to approve the release', () => {
     expect(
       reasonOf(

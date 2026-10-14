@@ -2084,7 +2084,7 @@ describe('a batch the main Agent declares', () => {
     return { op: op!, state };
   };
 
-  it('sends a plan the owner sent back to the main Agent, and reruns on its rewrite', async () => {
+  it('sends a plan the owner sent back to the main Agent, and reviews its rewrite in the same round', async () => {
     const { id } = await probesPassed();
     const pending = await pendingRelease(id);
 
@@ -2112,10 +2112,19 @@ describe('a batch the main Agent declares', () => {
     await service().tick(id);
 
     const after = (await model().findById(id))!.config!;
-    expect(after.rolloutState).toMatchObject({ phase: 'probe', templateRevision: 2 });
+    // A rewrite revises the plan, not the experiments: still round 1, no new probes.
+    expect(after.rolloutState).toMatchObject({
+      phase: 'release_review',
+      probeNodeIds: held.config!.rolloutState!.probeNodeIds,
+      templateRevision: 1,
+    });
     expect(after.rolloutState!.pendingRevision).toBeUndefined();
     // The rewrite replaces the plan; the correction is not pasted under it.
     expect(after.rollout!.spec!.recipeOutline).toBe(recipe);
+    // The rewritten plan goes back to the owner for the same release.
+    const again = await pendingRelease(id);
+    expect(again).toBeDefined();
+    expect(again!.nodeId).not.toBe(pending!.nodeId);
   });
 
   it('takes only a rewrite on a revise turn, and hands the revision over again when none came', async () => {

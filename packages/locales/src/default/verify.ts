@@ -493,19 +493,19 @@ export default {
   'acceptance.status.closed': 'Acceptance closed',
   'acceptance.status.delivered': 'Ready for your decision',
   'acceptance.gate.decidedRevise':
-    'Sent back. The main Agent is rewriting the plan from your correction, then the experiments run again.',
+    'Sent back. The main Agent is rewriting the plan from your correction; the new version comes back here for your review.',
   'acceptance.gate.decidedRelease': 'Started. Wave {{wave}} is running.',
   'acceptance.gate.cancel': 'Cancel',
-  'acceptance.gate.reviseSubmit': 'Revise and rerun experiments',
+  'acceptance.gate.reviseSubmit': 'Send back to revise',
   'acceptance.gate.reviseHint':
-    'Your correction goes to the main Agent, which rewrites the plan before the next round of experiments. This round stays in the history.',
+    'Your correction goes to the main Agent, which writes a new version of the plan skill. The results above stand; you review the new version before anything is released.',
   'acceptance.gate.revisePlaceholder':
-    'Write the correction. The plan gets a new version and the experiments run again under it.',
+    'Write the correction. The main Agent writes it into a new version of the plan.',
   'acceptance.gate.revise': 'Revise plan',
   'acceptance.gate.releaseWave': 'Approve and release wave {{wave}} ({{count}})',
   'acceptance.gate.startBatch': 'Approve and start ({{count}})',
   'acceptance.gate.decisionHint':
-    'Start runs the plan on the next wave. Revise sends it back for a new round of experiments.',
+    'Start runs the plan on the next wave. Revise has the main Agent rewrite the plan, then it comes back to you.',
   'acceptance.gate.checks':
     'Gate checks {{passed}}/{{total}} passed. They show the experiments finished, not that the plan carries over.',
   'acceptance.gate.remaining':
@@ -522,7 +522,6 @@ export default {
   'acceptance.gate.resultsProbes': 'Experiment results',
   'acceptance.gate.planTitle': 'Execution plan',
   'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
-  'acceptance.gate.skillDirectory': 'View files',
   'acceptance.gate.unitBrief': 'What this unit does',
   'acceptance.gate.unitWaitingHint': 'Not started yet. It runs the plan above once you approve.',
   'acceptance.gate.unitWaiting': 'Starts on approval',

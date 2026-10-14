@@ -122,6 +122,12 @@ const REASON_PATTERNS: Array<{
       /^Experiments of v(\d+) finished; start batch execution with wave (\d+) \((\d+) units?\)$/,
   },
   {
+    key: 'goalProcess.gate.reason.batchReleaseRevised',
+    params: ['version', 'wave', 'count'],
+    pattern:
+      /^The main Agent revised the plan to v(\d+) from your correction; approve releasing wave (\d+) \((\d+) units?\)$/,
+  },
+  {
     key: 'goalProcess.gate.reason.batchReleaseEscalated',
     params: ['wave', 'count'],
     pattern: /^The main Agent asked you to approve releasing wave (\d+) \((\d+) units?\)$/,

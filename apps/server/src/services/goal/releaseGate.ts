@@ -107,7 +107,7 @@ export const buildReleaseGateDossier = (
     nextWave,
     plan: {
       content: policy.spec?.recipeOutline ?? '',
-      revision: state.templateRevision,
+      revision: state.planVersions?.[String(state.templateRevision)] ?? state.templateRevision,
       ...(state.planSkill && { skillId: state.planSkill.id, skillName: state.planSkill.name }),
     },
     remainingAfter: Math.max(0, roster.length - released - nextWave.length),
@@ -154,14 +154,21 @@ export const openReleaseGateAcceptance = async (
   scope: { userId: string; workspaceId?: string },
   gateNodeId: string,
   dossier: GoalReleaseGateDossier,
+  /** The review a rewritten plan returns to; a first review opens its own. */
+  existingAcceptanceId?: string,
 ): Promise<string> => {
   const service = new AcceptanceService(db, scope.userId, scope.workspaceId);
   const requirement =
     dossier.kind === 'probes'
       ? `Decide whether "${dossier.goalTitle}" moves from its experiments to batch execution`
       : `Decide whether "${dossier.goalTitle}" releases wave ${dossier.wave}`;
-  const acceptance = await service.ensureForSubject('goal_gate', gateNodeId, { requirement });
-  await service.acceptanceModel.patchMetadata(acceptance.id, { title: dossier.goalTitle });
+  const existing = existingAcceptanceId
+    ? await service.acceptanceModel.findById(existingAcceptanceId)
+    : undefined;
+  const acceptance =
+    existing ?? (await service.ensureForSubject('goal_gate', gateNodeId, { requirement }));
+  if (!existing)
+    await service.acceptanceModel.patchMetadata(acceptance.id, { title: dossier.goalTitle });
 
   const plan = gatePlan(dossier);
   const run = await new VerifyRunModel(db, scope.userId, scope.workspaceId).create({

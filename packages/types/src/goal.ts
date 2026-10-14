@@ -708,6 +708,13 @@ export interface GoalRolloutState {
   phase: GoalRolloutPhase;
   /** The execution plan as a user skill; each Template revision is one of its versions. */
   planSkill?: GoalRolloutPlanSkill;
+  /**
+   * The plan skill version each round runs on, by round (`templateRevision`).
+   * A round's plan can be rewritten in place — the owner sends it back at its
+   * release gate and the main Agent rewrites it — so a round is not always on
+   * the version numbered after it. Absent entries mean version = round.
+   */
+  planVersions?: Record<string, number>;
   /** Node ids of the probe tasks that must run before the gate passes. */
   probeNodeIds: string[];
   /**

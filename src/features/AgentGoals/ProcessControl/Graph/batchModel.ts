@@ -83,6 +83,8 @@ export interface BatchRound {
     | { kind: 'round'; revision: number }
     /** `wave`: the 0-based roster wave the re-opened units ran in. */
     | { kind: 'waves'; wave: number };
+  /** The plan skill version this round runs on; a rewritten plan moves it past `revision`. */
+  planVersion: number;
   probes: BatchProbe[];
   /** The release this round's passed gate is holding for a person, while it waits. */
   releaseId?: string;
@@ -342,6 +344,7 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
             ? 'rejected'
             : gateState(assay, r === roundCount - 1, state?.phase, probes),
       origin: r > 0 ? roundOrigin(probes, r) : undefined,
+      planVersion: state?.planVersions?.[String(r + 1)] ?? r + 1,
       probes,
       releaseId: r === roundCount - 1 ? openRelease?.node.id : undefined,
       revision: r + 1,
