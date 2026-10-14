@@ -13,6 +13,33 @@ static const NSRect kAccessoryFrame = {{16, 12}, {kAccessorySize, kAccessorySize
 static const NSRect kHintFrame = {{8, 2}, {52, 52}};
 static const CGFloat kTextX = 64;
 
+// Closed-form damped spring from 0 to 1 (unit mass), parameterized the way
+// SwiftUI's spring(response:dampingFraction:) is, so values can be tuned
+// against familiar system motion.
+typedef struct {
+  double omega;
+  double zeta;
+  double velocity;
+} LobeSpring;
+
+static LobeSpring SpringMake(double response, double dampingFraction, double velocity) {
+  return (LobeSpring){2 * M_PI / response, dampingFraction, velocity};
+}
+
+static double SpringValue(LobeSpring spring, double t) {
+  double decay = spring.zeta * spring.omega;
+  if (spring.zeta < 1) {
+    double damped = spring.omega * sqrt(1 - spring.zeta * spring.zeta);
+    double sine = (spring.velocity - decay) / damped;
+    return 1 + exp(-decay * t) * (-cos(damped * t) + sine * sin(damped * t));
+  }
+  return 1 + exp(-spring.omega * t) * (-1 + (spring.velocity - spring.omega) * t);
+}
+
+static double SpringSettleTime(LobeSpring spring, double tolerance) {
+  return log(1 / tolerance) / (spring.zeta * spring.omega);
+}
+
 static Napi::ThreadSafeFunction gEventTsfn;
 static bool gEventTsfnActive = false;
 
@@ -318,7 +345,9 @@ static BOOL ShouldShowAlongside(NSRunningApplication *front) {
 @property (nonatomic, assign) NSRect targetFrame;
 @property (nonatomic, strong) NSTimer *flightTimer;
 @property (nonatomic, assign) CFTimeInterval flightStartedAt;
-@property (nonatomic, assign) NSTimeInterval flightDuration;
+@property (nonatomic, assign) LobeSpring positionSpring;
+@property (nonatomic, assign) LobeSpring scaleSpring;
+@property (nonatomic, assign) CFTimeInterval flightSettleTime;
 @end
 
 @implementation LobeGuideController
@@ -651,18 +680,7 @@ static BOOL ShouldShowAlongside(NSRunningApplication *front) {
   if (inSidebar || inNavigation) EmitEvent(@{@"type" : @"navigationClicked"});
 }
 
-static const CGFloat kFlightStartScale = 0.25;
-
-static CGFloat EaseFlight(CGFloat t) {
-  // Mostly linear so the arc reads as a throw, with a soft landing.
-  return 0.35 * t + 0.65 * (1 - pow(1 - t, 3));
-}
-
-static CGFloat EaseOutBack(CGFloat t) {
-  const CGFloat c1 = 1.2;
-  const CGFloat c3 = c1 + 1;
-  return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
-}
+static const CGFloat kFlightStartScale = 0.3;
 
 - (void)applyFlightScale:(CGFloat)scale {
   CGFloat cx = kPanelWidth / 2, cy = kPanelHeight / 2;
@@ -678,10 +696,17 @@ static CGFloat EaseOutBack(CGFloat t) {
 - (void)beginFlight {
   NSPoint end = NSMakePoint(NSMidX(self.targetFrame), NSMidY(self.targetFrame));
   CGFloat distance = hypot(end.x - self.launchOrigin.x, end.y - self.launchOrigin.y);
-  self.flightDuration = MIN(MAX(0.45 + distance / 3000, 0.5), 0.8);
+
+  // Position starts at rest and lands with a small overshoot; scale shares the
+  // response but is bouncier, so its pop peaks right as the panel touches down.
+  double response = MIN(MAX(0.5 + distance / 5000, 0.5), 0.68);
+  self.positionSpring = SpringMake(response, 0.82, 0);
+  self.scaleSpring = SpringMake(response, 0.6, 0);
+  double tolerance = MAX(0.5 / MAX(distance, 1), 0.0005);
+  self.flightSettleTime = MAX(SpringSettleTime(self.positionSpring, tolerance),
+                              SpringSettleTime(self.scaleSpring, 0.002));
   self.flightStartedAt = CACurrentMediaTime();
 
-  self.panel.hasShadow = NO;
   self.panel.alphaValue = 0;
   [self applyFlightScale:kFlightStartScale];
   [self.panel setFrameOrigin:NSMakePoint(round(self.launchOrigin.x - kPanelWidth / 2),
@@ -698,31 +723,34 @@ static CGFloat EaseOutBack(CGFloat t) {
 }
 
 - (void)stepFlight {
-  CGFloat t = MIN((CACurrentMediaTime() - self.flightStartedAt) / self.flightDuration, 1);
-  CGFloat e = EaseFlight(t);
+  double elapsed = CACurrentMediaTime() - self.flightStartedAt;
+  if (elapsed >= self.flightSettleTime) {
+    [self.flightTimer invalidate];
+    self.flightTimer = nil;
+    [self applyFlightScale:1];
+    self.panel.alphaValue = 1;
+    [self.panel setFrame:self.targetFrame display:YES];
+    [self.panel invalidateShadow];
+    return;
+  }
 
   // A quadratic curve whose control point sits above both ends traces the
-  // parabola of a thrown object; the end tracks Settings if it moves mid-air.
+  // parabola of a thrown object; past 1 the spring overshoot continues along
+  // the same arc before settling back. The end tracks Settings if it moves.
+  CGFloat p = SpringValue(self.positionSpring, elapsed);
   NSPoint start = self.launchOrigin;
   NSPoint end = NSMakePoint(NSMidX(self.targetFrame), NSMidY(self.targetFrame));
   CGFloat distance = hypot(end.x - start.x, end.y - start.y);
   CGFloat lift = MIN(MAX(distance * 0.35, 80), 320);
   NSPoint control = NSMakePoint((start.x + end.x) / 2, MAX(start.y, end.y) + lift);
-  CGFloat u = 1 - e;
-  CGFloat x = u * u * start.x + 2 * u * e * control.x + e * e * end.x;
-  CGFloat y = u * u * start.y + 2 * u * e * control.y + e * e * end.y;
+  CGFloat u = 1 - p;
+  CGFloat x = u * u * start.x + 2 * u * p * control.x + p * p * end.x;
+  CGFloat y = u * u * start.y + 2 * u * p * control.y + p * p * end.y;
 
   [self.panel setFrameOrigin:NSMakePoint(round(x - kPanelWidth / 2), round(y - kPanelHeight / 2))];
-  [self applyFlightScale:kFlightStartScale + (1 - kFlightStartScale) * EaseOutBack(t)];
-  self.panel.alphaValue = MIN(t / 0.15, 1);
-
-  if (t < 1) return;
-  [self.flightTimer invalidate];
-  self.flightTimer = nil;
-  [self applyFlightScale:1];
-  self.panel.alphaValue = 1;
-  self.panel.hasShadow = YES;
-  [self.panel setFrame:self.targetFrame display:YES];
+  CGFloat scale = kFlightStartScale + (1 - kFlightStartScale) * SpringValue(self.scaleSpring, elapsed);
+  [self applyFlightScale:scale];
+  self.panel.alphaValue = MIN(elapsed / 0.08, 1);
   [self.panel invalidateShadow];
 }
 
