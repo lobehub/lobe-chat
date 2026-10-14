@@ -151,6 +151,7 @@ import {
   gcHostedProviderBindingProfiles,
   prepareHostedProviderBinding,
   prepareHostedServerDefaultBinding,
+  resolveHostedBindingSession,
 } from '@/modules/heterogeneousAgent/providerBindingHost';
 import {
   beginServerDefaultOperation,
@@ -1584,11 +1585,9 @@ export default class HeterogeneousAgentCtr {
         .catch((error) => logger.warn('Provider-binding profile GC failed:', error));
     } else if (driver && params.providerBinding?.kind === 'server-default') {
       const model = params.providerBinding.apiConfig.model;
-      // Describe the model to CLIs with managed catalogs. Best-effort:
-      // a model described without its card still runs (on default window and
-      // modalities), and the operation begin re-validates the model.
+      // Model-card lookup is best-effort; operation begin validates the selection.
       const modelDescriptor =
-        agentType === 'codex' || agentType === 'pi' || agentType === 'opencode'
+        ['codex', 'pi', 'opencode', 'droid'].includes(agentType)
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);
@@ -1609,11 +1608,12 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    const resumeSessionId =
-      !hostedProviderBinding ||
-      params.providerBinding?.resumeBindingKey === hostedProviderBinding.bindingKey
-        ? params.resumeSessionId
-        : undefined;
+    const { model, resumeSessionId } = resolveHostedBindingSession({
+      ...params,
+      agentType,
+      binding: hostedProviderBinding,
+      resumeBindingKey: params.providerBinding?.resumeBindingKey,
+    });
 
     this.sessions.set(sessionId, {
       // If resuming, pre-set the agent session ID so sendPrompt adds --resume
@@ -1628,7 +1628,7 @@ export default class HeterogeneousAgentCtr {
         params.providerBinding?.kind === 'server-default'
           ? params.providerBinding.apiConfig
           : undefined,
-      model: agentType === 'trae' && hostedProviderBinding ? undefined : params.initialModel,
+      model,
       sessionId,
       resumeSessionId,
       useClaudeCodeSdk: params.useClaudeCodeSdk,
