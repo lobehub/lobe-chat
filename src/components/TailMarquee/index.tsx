@@ -42,16 +42,14 @@ const styles = createStaticStyles(({ css }) => ({
   overflowing: css`
     mask-image: linear-gradient(to right, transparent, #000 16px);
 
-    /* Pointer hover, keyboard focus on the enclosing control (e.g. an
-       accordion trigger), or one loop after a tap on touch screens. */
-    &:hover,
+    /* Keyboard focus on the enclosing control (e.g. an accordion trigger)
+       loops; a tap on a touch screen plays one loop. */
     *:focus-visible > &,
     *:focus-visible > * > &,
     &[data-revealing] {
       mask-image: none;
     }
 
-    &:hover > span,
     *:focus-visible > & > span,
     *:focus-visible > * > & > span {
       animation: ${scrollToHead} var(--tail-marquee-duration) ease-in-out infinite;
@@ -59,6 +57,18 @@ const styles = createStaticStyles(({ css }) => ({
 
     &[data-revealing] > span {
       animation: ${scrollToHead} var(--tail-marquee-duration) ease-in-out 1;
+    }
+
+    /* Only real hover loops: touch browsers keep a sticky :hover after a tap,
+       which would otherwise turn the one-loop tap reveal into an endless one. */
+    @media (hover: hover) {
+      &:hover {
+        mask-image: none;
+      }
+
+      &:hover > span {
+        animation: ${scrollToHead} var(--tail-marquee-duration) ease-in-out infinite;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {

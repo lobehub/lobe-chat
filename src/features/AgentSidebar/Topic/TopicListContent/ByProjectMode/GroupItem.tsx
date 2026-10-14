@@ -122,6 +122,14 @@ const styles = createStaticStyles(({ css }) => ({
       max-width: 72px;
       opacity: 1;
     }
+
+    /* Touch-only screens have no hover to reveal the actions with, so they
+       keep their width there, as before the actions collapsed at rest. */
+    @media (hover: none) {
+      pointer-events: auto;
+      max-width: 72px;
+      opacity: 1;
+    }
   `,
 }));
 
