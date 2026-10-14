@@ -56,6 +56,57 @@ describe('Responses native tool payload', () => {
     },
   );
 
+  it('preserves a custom-tool-only response when streaming is disabled', async () => {
+    const input = 'read("probe.txt")\n';
+    const create = vi.fn().mockResolvedValue({
+      id: 'resp-custom',
+      status: 'completed',
+      output: [
+        {
+          id: 'ct-1',
+          type: 'custom_tool_call',
+          call_id: 'call-1',
+          namespace: 'functions',
+          name: 'exec',
+          input,
+        },
+      ],
+    });
+    const Runtime = createOpenAICompatibleRuntime({
+      provider: 'test',
+      customClient: { createClient: () => ({ responses: { create } }) as unknown as OpenAI },
+    });
+    const response = await new Runtime({ apiKey: 'test' }).chat({
+      model: 'gpt-5.6-sol',
+      apiMode: 'responses',
+      stream: false,
+      responsesTools: tools,
+      messages: [{ role: 'user', content: 'Read the file.' }],
+    });
+    const raw = await response.text();
+    const calls = raw
+      .split('\n\n')
+      .filter((block) => block.includes('event: tool_calls'))
+      .flatMap((block) =>
+        JSON.parse(
+          block
+            .split('\n')
+            .find((line) => line.startsWith('data: '))!
+            .slice(6),
+        ),
+      );
+    expect(calls).toEqual([
+      {
+        id: 'call-1',
+        index: 0,
+        namespace: 'functions',
+        type: 'custom',
+        function: { name: 'exec', arguments: input },
+      },
+    ]);
+    expect(create.mock.calls[0][0].stream).toBeUndefined();
+  });
+
   it('does not prepend an empty tool update to existing Responses Lite tool updates', async () => {
     const runtime = new LobeChatGPTAI({ apiKey: 'test', chatgptAccountId: 'test' });
     const create = vi
