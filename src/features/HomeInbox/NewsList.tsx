@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefIcon from '@/features/DailyBrief/BriefIcon';
+import BriefPriorityIcon from '@/features/DailyBrief/BriefPriorityIcon';
 import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { type BriefItem } from '@/features/DailyBrief/types';
 import { useSelfReviewBriefView } from '@/features/DailyBrief/useSelfReviewBriefView';
@@ -147,6 +148,7 @@ const NewsItem = memo<NewsItemProps>(({ bare, brief, showTime }) => {
           >
             {selfReview?.title ?? brief.title}
           </Text>
+          <BriefPriorityIcon muted={read} priority={brief.priority} />
           {showTime && <Time date={brief.createdAt} />}
           <Icon
             color={cssVar.colorTextQuaternary}

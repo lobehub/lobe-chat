@@ -12,6 +12,7 @@ import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefCardSummary from '@/features/DailyBrief/BriefCardSummary';
+import BriefPriorityIcon from '@/features/DailyBrief/BriefPriorityIcon';
 import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { styles as briefStyles } from '@/features/DailyBrief/style';
 import { type BriefItem } from '@/features/DailyBrief/types';
@@ -142,6 +143,7 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
             <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
               {selfReview?.title ?? brief.title}
             </Text>
+            <BriefPriorityIcon priority={brief.priority} />
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
           {selfReview ? (
