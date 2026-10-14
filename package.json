@@ -483,7 +483,7 @@
     "ua-parser-js": "^1.0.41",
     "undici": "^7.29.0",
     "unist-builder": "^4.0.0",
-    "url-join": "^5.0.0",
+    "url-join": "^5.1.1",
     "use-merge-value": "^1.2.0",
     "uuid": "^14.0.1",
     "virtua": "^0.48.8",
