@@ -4,14 +4,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AiAgentService } from '../index';
 
 const {
+  mockFindMessageById,
   mockGetLatestNonToolMessageId,
   mockGetLatestSpineMessageId,
+  mockIsMessageDescendantOf,
   mockMessageCreate,
   mockReleaseReservation,
   mockTryReserve,
 } = vi.hoisted(() => ({
+  mockFindMessageById: vi.fn(),
   mockGetLatestNonToolMessageId: vi.fn(),
   mockGetLatestSpineMessageId: vi.fn(),
+  mockIsMessageDescendantOf: vi.fn(),
   mockMessageCreate: vi.fn(),
   mockReleaseReservation: vi.fn(),
   mockTryReserve: vi.fn(),
@@ -27,8 +31,10 @@ vi.mock('@/database/models/message', () => ({
   MessageModel: vi.fn().mockImplementation(function () {
     return {
       create: mockMessageCreate,
+      findById: mockFindMessageById,
       getLatestNonToolMessageId: mockGetLatestNonToolMessageId,
       getLatestSpineMessageId: mockGetLatestSpineMessageId,
+      isMessageDescendantOf: mockIsMessageDescendantOf,
       query: vi.fn().mockResolvedValue([]),
       update: vi.fn().mockResolvedValue({}),
     };
@@ -298,6 +304,29 @@ describe('AiAgentService.execAgent - user turn spine anchoring', () => {
       parentId: 'user-msg-1',
       role: 'assistant',
     });
+  });
+
+  // LOBE-14875: after a regenerate the branch on screen can be older than the
+  // newest row. Anchoring on the newest row hid the turn from the UI and from
+  // the model's context, which follows the active branch.
+  it('keeps the user turn on the branch the client renders', async () => {
+    mockGetLatestSpineMessageId.mockResolvedValue('hidden-branch-head');
+    mockIsMessageDescendantOf.mockResolvedValue(false);
+    mockFindMessageById.mockResolvedValue({
+      id: 'visible-tail',
+      role: 'assistant',
+      threadId: null,
+      topicId: 'topic-1',
+    });
+
+    await service.execAgent({
+      agentId: 'agent-1',
+      appContext: { topicId: 'topic-1' },
+      clientIds: { userMessageParentId: 'visible-tail' },
+      prompt: 'Test prompt',
+    });
+
+    expect(userMessageCall()![0]).toMatchObject({ parentId: 'visible-tail', role: 'user' });
   });
 
   it('scopes the anchor lookup to the thread when one is active', async () => {

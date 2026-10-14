@@ -3,6 +3,7 @@ import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
   ExecAgentAppContext,
+  ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
   ResumeClientLlmWaitResult,
@@ -138,7 +139,7 @@ export interface ExecAgentTaskParams {
    * `newTopic.id` / `newUserMessage.id` / `newAssistantMessage.id`. Fresh
    * sends only; resume / regeneration must not replay them.
    */
-  clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+  clientIds?: ExecAgentClientIds;
   /**
    * Server runs the composer tracked on this conversation at send time. The
    * server records them only when this send has to stop a run the client left

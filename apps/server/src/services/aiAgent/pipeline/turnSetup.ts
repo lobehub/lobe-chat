@@ -40,6 +40,7 @@ import { ingestAttachment } from '../ingestAttachment';
 import type { AgentShareGate } from '../shareGate';
 import { reserveShareVisitorTopic, reserveShareVisitorTurn } from '../shareVisitorAbuseGuards';
 import type { InternalExecAgentParams } from '../types';
+import { resolveUserMessageParentId } from './resolveUserMessageParentId';
 import { createStageTracer, openStageMark } from './sendTracing';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -840,16 +841,9 @@ export const setupTurn = async (
     'messages',
     async () => {
       const selfMessageIds = new Set<string>();
-      // Anchor the new user turn on the conversation tail. Never leave it
-      // undefined for a topic that already has messages: `parentId: undefined`
-      // persists a second ROOT, and the renderer walks the parentId forest
-      // depth-first — an earlier root's still-growing subtree is emitted before a
-      // later root, so the newest reply lands ABOVE older messages.
-      //
-      // `getLatestSpineMessageId` skips tool rows and toolless signal turns, so it
-      // can come back empty on a topic built entirely from signal callbacks; fall
-      // back to the latest non-tool row rather than orphaning the turn.
-      const resolveUserMessageParentId = async () => {
+      // Anchor the new user turn on the conversation tail (see
+      // `resolveUserMessageParentId` for why it is never left undefined).
+      const resolveParentId = async () => {
         if (runFromHistory) return undefined;
         if (parentMessageId) return parentMessageId;
         // A thread created for THIS turn is empty, so there is no spine head to
@@ -859,21 +853,13 @@ export const setupTurn = async (
         // of order.
         if (createdThreadId) return appContext?.newThread?.sourceMessageId;
 
-        const threadId = appContext?.threadId ?? null;
-        const spineId = await deps.messageModel.getLatestSpineMessageId({ threadId, topicId });
-        if (spineId) return spineId;
-
-        const fallbackId = await deps.messageModel.getLatestNonToolMessageId({ threadId, topicId });
-        if (fallbackId) {
-          log(
-            'execAgent: no spine head for topic %s, anchoring user turn on latest non-tool message %s',
-            topicId,
-            fallbackId,
-          );
-        }
-        return fallbackId;
+        return resolveUserMessageParentId(deps.messageModel, {
+          clientParentId: clientIds?.userMessageParentId,
+          threadId: appContext?.threadId ?? null,
+          topicId,
+        });
       };
-      const userMessageParentId = await resolveUserMessageParentId();
+      const userMessageParentId = await resolveParentId();
       const userMessageParams = {
         agentId: conversationAgentId,
         content: prompt,
