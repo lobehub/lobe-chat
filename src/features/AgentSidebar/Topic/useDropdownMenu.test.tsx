@@ -26,6 +26,17 @@ const chatStoreMock = vi.hoisted(() => ({
 
 const messageMock = vi.hoisted(() => ({ info: vi.fn(), success: vi.fn() }));
 
+const addFolderMock = vi.hoisted(() => ({
+  canAddFolder: true,
+  disabled: false,
+  label: 'workingDirectory.addFolder',
+  run: vi.fn(),
+}));
+
+vi.mock('./useAddFolderAction', () => ({
+  useAddFolderAction: () => addFolderMock,
+}));
+
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   useActiveWorkspaceId: () => workspaceMock.activeWorkspaceId,
 }));
@@ -118,6 +129,9 @@ describe('useTopicActionsDropdownMenu', () => {
     chatStoreMock.refreshTopic.mockReset();
     chatStoreMock.updateTopicStatus.mockReset();
     messageMock.info.mockReset();
+    addFolderMock.canAddFolder = true;
+    addFolderMock.disabled = false;
+    addFolderMock.run.mockReset();
     messageMock.success.mockReset();
   });
 
@@ -309,5 +323,37 @@ describe('useTopicActionsDropdownMenu', () => {
     });
     expect(chatStoreMock.refreshTopic).toHaveBeenCalledOnce();
     expect(messageMock.success).toHaveBeenCalledWith('actions.archiveMergedPullRequestsSuccess');
+  });
+
+  it('offers the folder action only when the agent can start a conversation in a folder', () => {
+    addFolderMock.canAddFolder = false;
+
+    const { result } = renderHook(() => useTopicActionsDropdownMenu());
+
+    expect(getMenuItem(result.current()!, 'addFolder')).toBeUndefined();
+  });
+
+  it('runs the folder picker from the topic menu and mirrors its disabled state', () => {
+    addFolderMock.disabled = true;
+
+    const { result } = renderHook(() => useTopicActionsDropdownMenu());
+    const item = getMenuItem(result.current()!, 'addFolder');
+
+    expect(item).toMatchObject({
+      disabled: true,
+      label: 'workingDirectory.addFolder',
+    });
+
+    if (item && 'onClick' in item) item.onClick?.({} as never);
+    expect(addFolderMock.run).toHaveBeenCalledOnce();
+  });
+
+  it('keeps the folder action available for topic write viewers, since it is not a topic write', () => {
+    permissionMock.create_content = false;
+    permissionMock.edit_own_content = false;
+
+    const { result } = renderHook(() => useTopicActionsDropdownMenu());
+
+    expect(getMenuItem(result.current()!, 'addFolder')).toMatchObject({ disabled: false });
   });
 });
