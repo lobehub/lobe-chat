@@ -14,8 +14,11 @@ export interface SplitBriefs {
  * A `result` brief is a completion report: the work already happened, reading
  * it is enough. Splitting on the parent task's *runtime* status proved fragile
  * (a paused/completed recurring task flipped its whole report history back
- * into the to-do pile), so results are news unconditionally — accepting a
- * one-off delivery stays available from the task page.
+ * into the to-do pile), so results are news by *type*, never by task status.
+ * The one exception is the brief's own priority: an unresolved `urgent` result
+ * is promoted into "Needs you" (see `isPromotedNews`), where its card offers the
+ * same approve action as the task page — approving it there completes a
+ * one-off task, while a recurring run's occurrence is only dismissed.
  */
 const isNewsBrief = (brief: BriefItem): boolean => NEWS_BRIEF_TYPES.includes(brief.type);
 
