@@ -334,7 +334,7 @@ export interface GoalManagerState {
    * and the main Agent decides whether the next wave goes out (`release`) or a
    * person approves it (`escalate`); no other answer applies to it.
    */
-  problemKind?: 'rollout_release';
+  problemKind?: 'rollout_release' | 'rollout_revise';
   /** The blocked task that problem belongs to, so accepting a plan that replaces
    *  it can retire exactly that node without parsing the key. */
   problemTaskId?: string;
@@ -357,7 +357,7 @@ export interface GoalManagerState {
    */
   startedFromDraft?: boolean;
   submitted?: {
-    action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait' | 'release';
+    action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait' | 'release' | 'revise_plan';
     /**
      * The question an `escalate` puts to the owner, with the answers it offers.
      * Without it the gate could only ask "retry or retire?" while the real
@@ -572,7 +572,14 @@ export interface GoalRolloutGateEvaluation {
  * mass wave, and later whenever the main Agent escalates a release.
  */
 export type GoalRolloutPhase =
-  'probe' | 'assay' | 'mass' | 'pattern_break' | 'release_review' | 'done';
+  | 'probe'
+  | 'assay'
+  | 'mass'
+  | 'pattern_break'
+  | 'release_review'
+  /** The owner sent the plan back; the main Agent is rewriting it before a new probe round. */
+  | 'plan_revision'
+  | 'done';
 
 /**
  * Who approved releasing one wave. A passed gate only proves the checks held;
@@ -663,7 +670,7 @@ export interface GoalReleaseGateDossier {
   /** The units the next wave releases, with their own notes. */
   nextWave: { brief?: string; title: string }[];
   /** The recipe every unit follows: the plan skill's current version. */
-  plan: { content: string; revision: number; skillName?: string };
+  plan: { content: string; revision: number; skillId?: string; skillName?: string };
   /** Units still owed after the next wave. */
   remainingAfter: number;
   /** Units the decision is judged on, in display order. */
@@ -691,6 +698,12 @@ export interface GoalRolloutState {
    * A restarted canary starts a new round and clears it.
    */
   massNodeIds?: string[];
+  /**
+   * The owner's correction a sent-back release waits on, while the phase is
+   * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`);
+   * the coordinator opens the new probe round once it lands.
+   */
+  pendingRevision?: { correction: string; revisedReason?: string; revisedRecipe?: string };
   /** Phase the rollout is in; the coordinator reads this to pick its move. */
   phase: GoalRolloutPhase;
   /** The execution plan as a user skill; each Template revision is one of its versions. */

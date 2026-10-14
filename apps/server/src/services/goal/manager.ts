@@ -188,6 +188,11 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('escalate'), reason, ask: goalAskSchema.optional() }).strict(),
   /** Answers a batch release handed over by the coordinator: the next wave goes out. */
   z.object({ action: z.literal('release'), reason }).strict(),
+  /**
+   * Answers a plan the owner sent back: the whole revised recipe the next probe
+   * round follows, rewritten from the owner's correction.
+   */
+  z.object({ action: z.literal('revise_plan'), reason, recipe: reason }).strict(),
 ]);
 type GoalPlan = z.infer<typeof goalPlanSchema>;
 const activeStatuses = new Set(['planning', 'running']);
@@ -231,6 +236,15 @@ const PLAN_REJECTION = {
   release_turn_only: {
     message:
       'This turn was handed a batch release; answer it with release, or escalate (without ask) for the owner to approve it',
+    trpc: 'BAD_REQUEST',
+  },
+  revise_turn_only: {
+    message:
+      'This turn was handed a plan the owner sent back; answer it with revise_plan carrying the full revised recipe, or escalate (without ask)',
+    trpc: 'BAD_REQUEST',
+  },
+  revise_unsolicited: {
+    message: 'revise_plan only answers a plan the owner sent back to this turn',
     trpc: 'BAD_REQUEST',
   },
   release_unsolicited: {
@@ -1561,6 +1575,18 @@ export class GoalManagerService {
       (plan.action !== 'escalate' || plan.ask !== undefined)
     )
       return rejectPlan('release_turn_only', op?.status);
+    // A plan the owner sent back has two answers too: the rewritten recipe, or a
+    // plain escalation that falls back to applying the correction as written.
+    const reviseTurn = state.problemKind === 'rollout_revise';
+    if (plan?.action === 'revise_plan' && !reviseTurn)
+      return rejectPlan('revise_unsolicited', op?.status);
+    if (
+      plan &&
+      reviseTurn &&
+      plan.action !== 'revise_plan' &&
+      (plan.action !== 'escalate' || plan.ask !== undefined)
+    )
+      return rejectPlan('revise_turn_only', op?.status);
     // A takeover of the terminal acceptance can only be answered with `escalate`.
     // The acceptance task is matched by TITLE regardless of status, so a corrective
     // task returns to that same failed node and `verify` sets `readyForAcceptance`
@@ -1951,6 +1977,23 @@ export class GoalManagerService {
             reason: plan.reason,
             revision: rollout.templateRevision,
             waveIndex: rollout.waveIndex,
+          },
+        });
+      } else if (plan.action === 'revise_plan') {
+        // The rewrite lands with the plan; the coordinator opens the new probe
+        // round from it on its next advance.
+        const rollout = goal.config?.rolloutState;
+        if (rollout?.phase !== 'plan_revision' || !rollout.pendingRevision)
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'The batch is no longer waiting on a plan revision',
+          });
+        await model.updateRolloutState(goalId, {
+          ...rollout,
+          pendingRevision: {
+            ...rollout.pendingRevision,
+            revisedReason: plan.reason,
+            revisedRecipe: plan.recipe,
           },
         });
       } else if (plan.action === 'escalate' && state.problem && plan.ask) {

@@ -28,6 +28,7 @@ export const batchContainerStatus = (phase?: GoalRolloutPhase): GoalNodeStatus |
     case 'release_review': {
       return 'waiting';
     }
+    case 'plan_revision':
     case 'probe':
     case 'mass': {
       return 'active';

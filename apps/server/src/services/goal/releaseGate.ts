@@ -108,7 +108,7 @@ export const buildReleaseGateDossier = (
     plan: {
       content: policy.spec?.recipeOutline ?? '',
       revision: state.templateRevision,
-      ...(state.planSkill && { skillName: state.planSkill.name }),
+      ...(state.planSkill && { skillId: state.planSkill.id, skillName: state.planSkill.name }),
     },
     remainingAfter: Math.max(0, roster.length - released - nextWave.length),
     units,

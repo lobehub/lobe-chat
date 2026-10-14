@@ -189,6 +189,17 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     (view) => view.node.kind === 'decision' && view.node.title === GOAL_BATCH_RELEASE_TITLE,
   );
   const openRelease = releaseReviews.find((view) => view.node.status === 'waiting');
+  // A round whose held release the owner sent back ended rejected, though its
+  // Assay itself was never answered: the decision lives on the release node,
+  // opened between this round's Assay and the next one.
+  const sentBack = (assay?: GoalNodeView, nextAssay?: GoalNodeView) =>
+    !!assay &&
+    releaseReviews.some(
+      (view) =>
+        byCreatedAt(view, assay) >= 0 &&
+        (!nextAssay || byCreatedAt(view, nextAssay) < 0) &&
+        view.humanTouches.some((touch) => touch.resolvedOptionId === 'revise'),
+    );
   const roundCount = Math.max(templates.length, assays.length, 1);
   const probeIdsByRound = Array.from({ length: roundCount }, (_, r) => {
     const assay = assays[r];
@@ -327,7 +338,9 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
       gate:
         r === roundCount - 1 && openRelease
           ? 'human'
-          : gateState(assay, r === roundCount - 1, state?.phase, probes),
+          : r < roundCount - 1 && sentBack(assay, assays[r + 1])
+            ? 'rejected'
+            : gateState(assay, r === roundCount - 1, state?.phase, probes),
       origin: r > 0 ? roundOrigin(probes, r) : undefined,
       probes,
       releaseId: r === roundCount - 1 ? openRelease?.node.id : undefined,

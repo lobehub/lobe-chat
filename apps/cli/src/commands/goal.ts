@@ -237,6 +237,9 @@ const admissionHint: Record<string, string> = {
   release_turn_only:
     'this turn was handed a batch release; answer with release, or escalate without ask for the owner',
   release_unsolicited: 'release only answers a batch release handed to this turn',
+  revise_turn_only:
+    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe), or escalate without ask',
+  revise_unsolicited: 'revise_plan only answers a plan the owner sent back to this turn',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
   started_from_draft:
@@ -525,7 +528,7 @@ export function registerGoalCommand(program: Command) {
     )
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/wait/verify/retry/escalate/release, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn',
+      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')

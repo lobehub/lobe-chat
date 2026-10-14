@@ -497,6 +497,7 @@
   "goalBatch.gatePanel.next.passedDone": "花名册已全部放行",
   "goalBatch.gatePanel.next.rejected": "已按你的决定开出 v{{revision}}",
   "goalBatch.gatePanel.next.release": "等你确认：看过交付和方案后，放行下一批，或修订方案重探",
+  "goalBatch.gatePanel.next.revising": "主 Agent 正在按你的修正改写方案",
   "goalBatch.gatePanel.question": "修订方案重探，还是为出问题的几项另起一份方案？",
   "goalBatch.gatePanel.releaseQuestion": "闸门检查已全部通过。看过交付和方案后：放行下一批，还是修订方案重探？",
   "goalBatch.gatePanel.verdict": "结论",

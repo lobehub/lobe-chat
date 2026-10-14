@@ -91,6 +91,7 @@ export default {
   'goalBatch.gatePanel.next.passed':
     'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
   'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.revising': 'The main Agent is rewriting the plan from your correction',
   'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
   'goalBatch.gatePanel.verdict': 'Verdict',
   'goalBatch.gate.checkCount': '{{count}} checks',

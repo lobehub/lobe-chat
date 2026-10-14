@@ -126,11 +126,13 @@ const GateDetail = memo<GateDetailProps>(({ decide, graph, model, onOpenNode, ro
 
   const next = (() => {
     switch (round.gate) {
+      case 'checking': {
+        if (isCurrent && model.phase === 'plan_revision')
+          return t('goalBatch.gatePanel.next.revising');
+        return t('goalBatch.gatePanel.next.checking');
+      }
       case 'locked': {
         return t('goalBatch.gatePanel.next.locked', { count: round.probes.length });
-      }
-      case 'checking': {
-        return t('goalBatch.gatePanel.next.checking');
       }
       case 'human': {
         return isCurrent && model.phase === 'release_review'

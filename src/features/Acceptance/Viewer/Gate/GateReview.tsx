@@ -17,6 +17,7 @@ import { useAcceptanceScope } from '../AcceptanceScope';
 import { acceptanceOverviewPath } from '../routes';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { canReviewAcceptance } from '../visibility';
+import SkillDirectory from './SkillDirectory';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -74,13 +75,29 @@ const styles = createStaticStyles(({ css }) => ({
     color: ${cssVar.colorTextTertiary};
   `,
   panel: css`
-    overflow-y: auto;
+    overflow: hidden auto;
     flex: none;
 
     width: 340px;
     padding-block: 20px;
     padding-inline: 20px;
     border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
+  `,
+  // A skill reads like a document: wider than a unit's detail, and long code
+  // lines wrap instead of running past the dialog's edge.
+  panelWide: css`
+    width: 440px;
+
+    * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    pre,
+    code {
+      word-break: break-all;
+      white-space: pre-wrap !important;
+    }
   `,
   plan: css`
     padding-block: 4px;
@@ -131,15 +148,18 @@ const splitUnitTitle = (title: string) => {
   return rest.length > 0 && code.length <= 6 ? { code, name: rest.join(' ') } : { name: title };
 };
 
-const formatTokens = (tokens: number, locale: string) =>
-  new Intl.NumberFormat(locale, { maximumFractionDigits: 1, notation: 'compact' }).format(tokens);
+/** Token counts read as 50.4M / 1.2B in every language — the unit models are quoted in. */
+const formatTokens = (tokens: number) =>
+  new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, notation: 'compact' }).format(tokens);
 
 /** A unit the owner has to look at: it was reworked, or did not settle cleanly. */
 const isException = (unit: GoalReleaseGateUnit) => unit.runs > 1 || unit.status !== 'resolved';
 
 /** What the side panel shows: a unit that ran, or one the next wave would start. */
 type Selection =
-  { kind: 'result'; unit: GoalReleaseGateUnit } | { brief?: string; kind: 'next'; title: string };
+  | { kind: 'result'; unit: GoalReleaseGateUnit }
+  | { brief?: string; kind: 'next'; title: string }
+  | { kind: 'skill'; skillId: string; title: string };
 
 const UnitTitle = ({ title }: { title: string }) => {
   const { code, name } = splitUnitTitle(title);
@@ -183,7 +203,7 @@ const ResultRow = memo<{
   onSelect: () => void;
   unit: GoalReleaseGateUnit;
 }>(({ active, average, onSelect, unit }) => {
-  const { t, i18n } = useTranslation('verify');
+  const { t } = useTranslation('verify');
   const exception = isException(unit);
   const ratio = average > 0 ? unit.tokens / average : 0;
   return (
@@ -204,7 +224,7 @@ const ResultRow = memo<{
               }),
             t('acceptance.gate.unitMeta', {
               runs: unit.runs,
-              tokens: formatTokens(unit.tokens, i18n.language),
+              tokens: formatTokens(unit.tokens),
             }),
           ]
             .filter(Boolean)
@@ -248,8 +268,20 @@ const NextRow = memo<{ active: boolean; onSelect: () => void; title: string }>(
 
 const DetailPanel = memo<{ onClose: () => void; selection: Selection }>(
   ({ onClose, selection }) => {
-    const { t, i18n } = useTranslation('verify');
+    const { t } = useTranslation('verify');
     const title = selection.kind === 'result' ? selection.unit.title : selection.title;
+    if (selection.kind === 'skill')
+      return (
+        <Flexbox className={cx(styles.panel, styles.panelWide)} gap={16}>
+          <Flexbox horizontal align={'flex-start'} gap={8}>
+            <Text strong style={{ flex: 1, minWidth: 0 }}>
+              {title}
+            </Text>
+            <ActionIcon icon={X} size={'small'} onClick={onClose} />
+          </Flexbox>
+          <SkillDirectory skillId={selection.skillId} />
+        </Flexbox>
+      );
     const brief = selection.kind === 'result' ? selection.unit.brief : selection.brief;
     return (
       <Flexbox className={styles.panel} gap={16}>
@@ -264,7 +296,7 @@ const DetailPanel = memo<{ onClose: () => void; selection: Selection }>(
             <span className={styles.meta}>
               {t('acceptance.gate.unitMeta', {
                 runs: selection.unit.runs,
-                tokens: formatTokens(selection.unit.tokens, i18n.language),
+                tokens: formatTokens(selection.unit.tokens),
               })}
             </span>
             {selection.unit.acceptance && (
@@ -428,7 +460,7 @@ interface GateReviewProps {
  * what starts on approval. Any row opens its detail beside the report.
  */
 const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided }) => {
-  const { t, i18n } = useTranslation('verify');
+  const { t } = useTranslation('verify');
   const [selected, setSelected] = useState<Selection>();
   const average =
     dossier.units.reduce((sum, unit) => sum + unit.tokens, 0) / Math.max(1, dossier.units.length);
@@ -472,7 +504,26 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
       <Section
         title={t('acceptance.gate.planTitle')}
         extra={
-          dossier.plan.skillName && <span className={styles.meta}>{dossier.plan.skillName}</span>
+          dossier.plan.skillName && (
+            <Flexbox horizontal align={'center'} gap={12}>
+              <span className={styles.meta}>{dossier.plan.skillName}</span>
+              {dossier.plan.skillId && (
+                <span
+                  className={styles.link}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    setSelected({
+                      kind: 'skill',
+                      skillId: dossier.plan.skillId!,
+                      title: dossier.plan.skillName!,
+                    })
+                  }
+                >
+                  {t('acceptance.gate.skillDirectory')}
+                </span>
+              )}
+            </Flexbox>
+          )
         }
       >
         <div className={styles.plan}>
@@ -524,7 +575,7 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
         <span className={styles.meta}>
           {t('acceptance.gate.remaining', {
             count: dossier.remainingAfter,
-            estimate: formatTokens(estimate, i18n.language),
+            estimate: formatTokens(estimate),
           })}
         </span>
       </Section>

@@ -2436,6 +2436,11 @@ export class GoalService {
       );
       if (result) return result;
     }
+    // A plan the owner sent back waits on the main Agent's rewrite, not on the
+    // frontier: every probe has settled and nothing else is ready to run.
+    if (graph.goal.config?.rolloutState?.phase === 'plan_revision')
+      return this.routeRolloutRevision(graph);
+
     const frontier = selectFrontier(graph);
 
     // Every candidate's task, not just the head's: the scheduler has to know
@@ -4137,7 +4142,8 @@ export class GoalService {
       !state ||
       state.phase === 'done' ||
       state.phase === 'pattern_break' ||
-      state.phase === 'release_review'
+      state.phase === 'release_review' ||
+      state.phase === 'plan_revision'
     )
       return undefined;
     const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
@@ -4496,10 +4502,115 @@ export class GoalService {
     );
     if (!decision)
       throw new TRPCError({ code: 'CONFLICT', message: 'This release was already decided' });
-    await this.decide(goal.id, decision.id, optionId, resolution, { fromReleaseGate: true });
+    if (optionId === GOAL_BATCH_RELEASE_OPTION.revise && goal.config?.manager && goal.agentId)
+      await this.sendRevisionToAgent(goal.id, gateNodeId, decision.id, resolution);
+    else await this.decide(goal.id, decision.id, optionId, resolution, { fromReleaseGate: true });
     // The inbox asked the same release; it is answered now.
     await this.briefs.settleDecision(decision.id, optionId, resolution);
     return goal.id;
+  };
+
+  /**
+   * The owner sent the plan back. The correction goes to the main Agent, which
+   * rewrites the plan before the next probe round runs on it — a correction is
+   * an instruction to the planner, not a note to paste under the plan. The
+   * answer, the hand-off and the resumed goal commit together.
+   */
+  private sendRevisionToAgent = async (
+    goalId: string,
+    gateNodeId: string,
+    decisionId: string,
+    resolution: string | undefined,
+  ) => {
+    const correction = resolution?.trim();
+    if (!correction)
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Revising the recipe needs a correction',
+      });
+    const moved = await this.db.transaction(async (tx) => {
+      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+      const locked = await goalModel.lockById(goalId);
+      const current = locked?.config?.rolloutState;
+      if (
+        !locked ||
+        current?.phase !== 'release_review' ||
+        current.releaseReviewNodeId !== gateNodeId
+      )
+        return false;
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
+      const resolved = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
+        goalId,
+        decisionId,
+        GOAL_BATCH_RELEASE_OPTION.revise,
+        correction,
+      );
+      if (!resolved) return false;
+      await writer.updateNodeStatus(
+        goalId,
+        gateNodeId,
+        'resolved',
+        'Plan sent back to the main Agent',
+      );
+      await goalModel.updateRolloutState(goalId, {
+        ...current,
+        pendingRevision: { correction },
+        phase: 'plan_revision',
+        releaseApproval: undefined,
+      });
+      await goalModel.updatePauseReason(goalId, undefined);
+      if (locked.status === 'paused') {
+        await goalModel.updateStatus(goalId, 'running');
+        await writer
+          .recordGoalStatus(goalId, 'paused', 'running', 'Plan sent back to the main Agent')
+          .catch((error) => console.error('[GoalService] failed to record goal status:', error));
+      }
+      return true;
+    });
+    if (!moved)
+      throw new TRPCError({ code: 'CONFLICT', message: 'This release was already decided' });
+  };
+
+  /**
+   * Drive a sent-back plan to its next probe round. The main Agent's rewrite,
+   * once submitted, becomes the new recipe; an Agent that declines (escalates),
+   * cannot take the turn, or never answers falls back to the correction as
+   * written — the owner's answer is never left hanging.
+   */
+  private routeRolloutRevision = async (graph: GoalGraphSnapshot): Promise<GoalTickResult> => {
+    const goalId = graph.goal.id;
+    const state = graph.goal.config!.rolloutState!;
+    const pending = state.pendingRevision ?? { correction: '' };
+    const restart = async (outline?: string) => {
+      const restarted = await this.restartRolloutRound(goalId, {
+        correction: pending.correction,
+        optionId: GOAL_BATCH_RELEASE_OPTION.revise,
+        outline,
+      });
+      return {
+        goalId,
+        message: restarted
+          ? `Opened probe round v${state.templateRevision + 1} on the ${outline ? 'revised' : 'corrected'} plan`
+          : 'The plan revision was already applied',
+        outcome: restarted ? ('advanced' as const) : ('no_progress' as const),
+      };
+    };
+    if (pending.revisedRecipe) return restart(pending.revisedRecipe);
+
+    const problem = {
+      kind: 'rollout_revise' as const,
+      reason: `The owner reviewed the experiments of plan v${state.templateRevision} and sent the plan back with this correction:\n${pending.correction}\nRewrite the plan so every remaining unit follows it, and answer revise_plan with the full revised plan.`,
+    };
+    const answered = answeredProblem(graph.goal.config?.managerState);
+    if (answered?.key === problemKey(problem)) return restart();
+    const takeover = await new GoalManagerService(this.db, this.userId, this.workspaceId).takeOver(
+      graph,
+      problem,
+    );
+    return takeover ?? restart();
   };
 
   /**
@@ -4690,17 +4801,31 @@ export class GoalService {
    * on the Template, so the re-opened probes and every later wave are briefed
    * from the revised transformation — not from the outline that just failed.
    */
-  private restartRolloutLoop = async (
+  private restartRolloutLoop = (
     goalId: string,
     decisionId: string,
     optionId: string,
     resolution: string | undefined,
+  ) => this.restartRolloutRound(goalId, { correction: resolution, decisionId, optionId });
+
+  /**
+   * Open the next recipe round. Answering a gate passes its decision, resolved
+   * in the same transaction; a plan the main Agent rewrote passes `outline`,
+   * which replaces the correction-appended recipe.
+   */
+  private restartRolloutRound = async (
+    goalId: string,
+    input: { correction?: string; decisionId?: string; optionId: string; outline?: string },
   ) => {
+    const { decisionId, optionId } = input;
+    const resolution = input.correction;
     const graph = await this.requireGraph(goalId);
     const policy = graph.goal.config?.rollout;
     const state = graph.goal.config?.rolloutState;
     if (!policy || !state)
-      return this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
+      return decisionId
+        ? this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution)
+        : undefined;
 
     const batchId = state.batchNodeId;
     const roster = state.unitTitles ?? [];
@@ -4722,9 +4847,9 @@ export class GoalService {
     const originalOutline =
       graph.nodes.find((node) => node.id === batchId)?.description?.trim() || baseOutline;
     const basePlan = optionId === 'new_class' ? originalOutline : previousPlan || baseOutline;
-    const revisedOutline = [basePlan, correction && `### v${revision}\n${correction}`]
-      .filter(Boolean)
-      .join('\n\n');
+    const revisedOutline =
+      input.outline?.trim() ||
+      [basePlan, correction && `### v${revision}\n${correction}`].filter(Boolean).join('\n\n');
 
     // The answer and the round it opens land together. Every write below —
     // resolving the question included — commits in one transaction under the
@@ -4744,14 +4869,20 @@ export class GoalService {
     const committed = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
-      if (current?.phase !== 'pattern_break' && current?.phase !== 'release_review')
+      if (
+        current?.phase !== 'pattern_break' &&
+        current?.phase !== 'release_review' &&
+        current?.phase !== 'plan_revision'
+      )
         return undefined;
-      const resolved = await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
-        goalId,
-        decisionId,
-        optionId,
-        resolution,
-      );
+      const resolved = decisionId
+        ? await new GoalGraphModel(tx, this.userId, this.workspaceId).resolveDecision(
+            goalId,
+            decisionId,
+            optionId,
+            resolution,
+          )
+        : true;
       if (!resolved) return undefined;
       const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
         id: GOAL_COORDINATOR_ACTOR_ID,
@@ -4848,7 +4979,7 @@ export class GoalService {
                 domainId: state.learningDomainId,
                 // What the gate found: this round's latest hold, in its own words.
                 found:
-                  state.phase === 'release_review'
+                  state.phase === 'release_review' || state.phase === 'plan_revision'
                     ? 'the owner sent the recipe back before the next wave was released'
                     : (state.gateLog?.findLast(
                         (entry) =>
@@ -4983,6 +5114,7 @@ export class GoalService {
       await goalModel.updateRolloutState(goalId, {
         ...state,
         assayNodeId: assay.id,
+        pendingRevision: undefined,
         releaseApproval: undefined,
         releaseGateAcceptanceId: undefined,
         releaseReviewNodeId: undefined,

@@ -209,6 +209,25 @@ describe('buildBatchModel', () => {
     expect(model.decisionIds).toEqual([]);
   });
 
+  it('reads a round whose held release the owner sent back as sent back, not passed', () => {
+    const graph = buildGoalGraphView(
+      batchSnapshot({
+        decisions: [humanAnswer('r0')],
+        extraNodes: [
+          node('r0', 'decision', 10, { status: 'resolved', title: GOAL_BATCH_RELEASE_TITLE }),
+          node('t2', 'finding', 20, { title: GOAL_BATCH_TEMPLATE_TITLE }),
+          node('a2', 'decision', 21, { title: GOAL_BATCH_ASSAY_TITLE }),
+        ],
+        state: { assayNodeId: 'a2', phase: 'probe', templateNodeId: 't2', templateRevision: 2 },
+      }),
+      NOW,
+    );
+    const model = buildBatchModel(graph, 'batch');
+
+    expect(model.rounds).toHaveLength(2);
+    expect(model.rounds[0].gate).toBe('rejected');
+  });
+
   it('keeps the gate locked until every probe settled', () => {
     const snapshot = batchSnapshot({ state: {} });
     snapshot.nodes = snapshot.nodes.map((n) =>

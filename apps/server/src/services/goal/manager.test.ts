@@ -2073,6 +2073,79 @@ describe('a batch the main Agent declares', () => {
     });
   });
 
+  /** The turn a plan the owner sent back was handed to. */
+  const reviseTurn = async (id: string) => {
+    const state = (await model().findById(id))!.config!.managerState!;
+    expect(state.problemKind).toBe('rollout_revise');
+    const op = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    return { op: op!, state };
+  };
+
+  it('sends a plan the owner sent back to the main Agent, and reruns on its rewrite', async () => {
+    const { id } = await probesPassed();
+    const pending = await pendingRelease(id);
+
+    await service().answerReleaseGate(pending!.nodeId, 'revise', '冷启动验证必须逐帧取证');
+
+    // The correction is the Agent's to apply; the goal resumes to hand it over.
+    const held = (await model().findById(id))!;
+    expect(held.status).toBe('running');
+    expect(held.config!.rolloutState).toMatchObject({
+      pendingRevision: { correction: '冷启动验证必须逐帧取证' },
+      phase: 'plan_revision',
+    });
+    await service().tick(id);
+    const { op, state } = await reviseTurn(id);
+    expect(state.problem).toContain('冷启动验证必须逐帧取证');
+
+    const recipe = '# 方案 v2\n\n## 4. 真实产品验收\n- 刷新后第一帧截图，证明首屏直接是持久化数据';
+    await manager().submit(id, state.token, op.id, {
+      action: 'revise_plan',
+      reason: '把逐帧取证写进第 4 步',
+      recipe,
+    });
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+
+    const after = (await model().findById(id))!.config!;
+    expect(after.rolloutState).toMatchObject({ phase: 'probe', templateRevision: 2 });
+    expect(after.rolloutState!.pendingRevision).toBeUndefined();
+    // The rewrite replaces the plan; the correction is not pasted under it.
+    expect(after.rollout!.spec!.recipeOutline).toBe(recipe);
+  });
+
+  it('applies the correction as written when the main Agent declines to rewrite', async () => {
+    const { id } = await probesPassed();
+    const pending = await pendingRelease(id);
+    await service().answerReleaseGate(pending!.nodeId, 'revise', '冷启动验证必须逐帧取证');
+    await service().tick(id);
+    const { op, state } = await reviseTurn(id);
+
+    await manager().submit(id, state.token, op.id, {
+      action: 'escalate',
+      reason: 'The correction contradicts step 2',
+    });
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+
+    const after = (await model().findById(id))!.config!;
+    expect(after.rolloutState).toMatchObject({ phase: 'probe', templateRevision: 2 });
+    expect(after.rollout!.spec!.recipeOutline).toContain('冷启动验证必须逐帧取证');
+  });
+
+  it('refuses revise_plan on a turn no plan was sent back to', async () => {
+    const { id, state, op } = await start();
+
+    await expect(
+      manager().submit(id, state.token, op.id, { action: 'revise_plan', reason: 'x', recipe: 'y' }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+  });
+
   it('refuses a release no gate handed to the turn', async () => {
     const { id, state, op } = await start();
 

@@ -493,11 +493,12 @@ export default {
   'acceptance.status.closed': 'Acceptance closed',
   'acceptance.status.delivered': 'Ready for your decision',
   'acceptance.gate.decidedRevise':
-    'Sent back. A new round of experiments runs under the revised plan.',
+    'Sent back. The main Agent is rewriting the plan from your correction, then the experiments run again.',
   'acceptance.gate.decidedRelease': 'Started. Wave {{wave}} is running.',
   'acceptance.gate.cancel': 'Cancel',
   'acceptance.gate.reviseSubmit': 'Revise and rerun experiments',
-  'acceptance.gate.reviseHint': 'This round is set aside; its results stay in the history.',
+  'acceptance.gate.reviseHint':
+    'Your correction goes to the main Agent, which rewrites the plan before the next round of experiments. This round stays in the history.',
   'acceptance.gate.revisePlaceholder':
     'Write the correction. The plan gets a new version and the experiments run again under it.',
   'acceptance.gate.revise': 'Revise plan',
@@ -521,6 +522,7 @@ export default {
   'acceptance.gate.resultsProbes': 'Experiment results',
   'acceptance.gate.planTitle': 'Execution plan',
   'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
+  'acceptance.gate.skillDirectory': 'View files',
   'acceptance.gate.unitBrief': 'What this unit does',
   'acceptance.gate.unitWaitingHint': 'Not started yet. It runs the plan above once you approve.',
   'acceptance.gate.unitWaiting': 'Starts on approval',
