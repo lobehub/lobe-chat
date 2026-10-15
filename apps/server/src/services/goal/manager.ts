@@ -990,7 +990,7 @@ export class GoalManagerService {
       (await this.budgetBlocked(graph))
     )
       return null;
-    return this.startTurn(graph, undefined, reason);
+    return this.startTurn(graph, undefined, reason, { declineRefused: true });
   }
 
   /** Return measured shortfalls to planning without weakening acceptance. */
@@ -1197,6 +1197,9 @@ export class GoalManagerService {
     graph: GoalGraphSnapshot,
     problem?: { reason: string; taskId?: string },
     continuation?: string,
+    // A hand-over has the system planner's plan to fall back on, so a dispatch
+    // proven never started declines instead of waiting out the turn.
+    { declineRefused = false }: { declineRefused?: boolean } = {},
   ): Promise<GoalTickResult | null> => {
     const { goal } = graph;
     const policy = goal.config!.manager!;
@@ -1410,10 +1413,17 @@ export class GoalManagerService {
       // call has returned. Any other failure may come after a run went live, so
       // it stays unconfirmed. Decided from the error, never from rows the owner
       // can edit or delete.
-      if (error instanceof TopicStartReservationError)
-        await this.recordUnstartedDispatch(goal.id, claimed.token).catch((saveError) =>
-          console.error('[goal:manager] failed to record the refused dispatch', saveError),
-        );
+      if (error instanceof TopicStartReservationError) {
+        const recorded = await this.recordUnstartedDispatch(
+          goal.id,
+          claimed.token,
+          declineRefused,
+        ).catch((saveError) => {
+          console.error('[goal:manager] failed to record the refused dispatch', saveError);
+          return false;
+        });
+        if (recorded && declineRefused) return null;
+      }
     }
     return this.wait(goal.id, 'Main Agent dispatched with CLI planning access');
   };
@@ -1443,12 +1453,20 @@ export class GoalManagerService {
       return true;
     });
 
-  /** Mark a turn whose dispatch was refused its topic reservation as never started. */
-  private recordUnstartedDispatch = async (goalId: string, token: string) =>
+  /**
+   * Mark a turn whose dispatch was refused its topic reservation as never
+   * started; `settle` also consumes it, for a caller that will not wait it out.
+   */
+  private recordUnstartedDispatch = async (goalId: string, token: string, settle: boolean) =>
     this.db.transaction(async (db) => {
       const fresh = await new GoalModel(db, this.userId, this.workspaceId).lockById(goalId);
-      if (fresh?.config?.managerState?.token === token)
-        await this.save(db, goalId, { ...fresh.config.managerState, dispatchNeverStarted: true });
+      if (fresh?.config?.managerState?.token !== token) return false;
+      await this.save(db, goalId, {
+        ...fresh.config.managerState,
+        dispatchNeverStarted: true,
+        ...(settle && { consumed: true }),
+      });
+      return true;
     });
 
   /**

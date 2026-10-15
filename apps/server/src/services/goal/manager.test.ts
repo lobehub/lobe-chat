@@ -3105,6 +3105,29 @@ describe('planning the system planner hands to the main Agent', () => {
     expect(AiAgentService.prototype.execAgent).not.toHaveBeenCalled();
   });
 
+  /**
+   * Regression: a hand-over whose dispatch was refused its topic reservation
+   * still reported a started turn, so the system planner's plan was dropped and
+   * the goal waited out a turn that never ran.
+   */
+  it('runs its own plan when the hand-over dispatch is refused', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      ...simplePlan,
+      escalate: '要先读仓库',
+    });
+    vi.mocked(AiAgentService.prototype.execAgent).mockImplementationOnce(async () => {
+      throw new TopicStartReservationError('Topic tpc remained busy while starting operation x');
+    });
+    const id = await unmanagedGoal();
+
+    expect((await service().tick(id)).outcome).toBe('advanced');
+
+    const { config, tasks } = await after(id);
+    expect(tasks.map((n) => n.title)).toEqual(['store1']);
+    expect(config.manager).toBeUndefined();
+    expect(config.managerState).toMatchObject({ consumed: true, dispatchNeverStarted: true });
+  });
+
   it('runs its own plan, and adds no main Agent, when none can take the goal', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       ...simplePlan,
