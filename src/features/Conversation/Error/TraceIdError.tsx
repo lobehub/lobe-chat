@@ -1,5 +1,5 @@
 import { SOCIAL_URL } from '@lobechat/business-const';
-import { copyToClipboard, Icon } from '@lobehub/ui';
+import { copyToClipboard, Flexbox, Icon } from '@lobehub/ui';
 import { Button, toast } from '@lobehub/ui/base-ui';
 import { DiscordIcon } from '@lobehub/ui/icons';
 import { cssVar } from 'antd-style';
@@ -7,7 +7,9 @@ import { AlertTriangle, Copy, RotateCw } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ChatErrorSupportAction } from '@/business/client/features/ChatErrorSupportAction';
 import BaseErrorForm from '@/features/Conversation/Error/BaseErrorForm';
+import { useConversationStore } from '@/features/Conversation/store';
 
 import { useRetryParentMessage } from './useRetryParentMessage';
 
@@ -21,6 +23,8 @@ interface TraceIdErrorProps {
 const TraceIdError = memo<TraceIdErrorProps>(({ id, onRetry, showRetry = true, traceId }) => {
   const { t } = useTranslation('error');
   const { disabled, loading, retryParentMessage } = useRetryParentMessage(id);
+  const context = useConversationStore((s) => s.context);
+  const message = useConversationStore((s) => s.displayMessages.find((m) => m.id === id));
 
   const handleCopyTraceId = useCallback(async () => {
     if (!traceId) return;
@@ -48,16 +52,29 @@ const TraceIdError = memo<TraceIdErrorProps>(({ id, onRetry, showRetry = true, t
       title={t(showRetry ? 'unknownError.title' : 'unknownError.sharedTitle')}
       action={
         showRetry ? (
-          <Button
-            disabled={!onRetry && disabled}
-            icon={<Icon icon={RotateCw} />}
-            loading={!onRetry && loading}
-            size={'small'}
-            type={'primary'}
-            onClick={handleRetry}
-          >
-            {t('unknownError.retry')}
-          </Button>
+          <Flexbox horizontal gap={8}>
+            <ChatErrorSupportAction
+              agentId={context.agentId}
+              error={message?.error}
+              groupId={context.groupId ?? undefined}
+              messageId={id}
+              model={message?.model ?? undefined}
+              provider={message?.provider ?? undefined}
+              threadId={context.threadId ?? undefined}
+              topicId={context.topicId ?? undefined}
+              traceId={traceId}
+            />
+            <Button
+              disabled={!onRetry && disabled}
+              icon={<Icon icon={RotateCw} />}
+              loading={!onRetry && loading}
+              size={'small'}
+              type={'primary'}
+              onClick={handleRetry}
+            >
+              {t('unknownError.retry')}
+            </Button>
+          </Flexbox>
         ) : undefined
       }
       desc={
