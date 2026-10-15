@@ -3,6 +3,7 @@ import { parseToolNameMaxLength } from '@lobechat/const/plugin';
 import { ModelProvider } from 'model-bank';
 import urlJoin from 'url-join';
 
+import { loadModels } from '@/business/client/model-bank/loadModels';
 import { composioEnv } from '@/config/composio';
 import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
@@ -56,9 +57,7 @@ const resolveAgentGatewayProtocol = (): 1 | 2 => {
   return ENABLE_BUSINESS_FEATURES ? 2 : 1;
 };
 
-export const getServerGlobalConfig = async () => {
-  const { DEFAULT_AGENT_CONFIG } = getAppConfig();
-
+const getAiProviderSpecificConfig = () => {
   const aiProviderSpecificConfig: Record<string, ProviderSpecificConfig> = {
     azure: {
       enabledKey: 'ENABLED_AZURE_OPENAI',
@@ -124,8 +123,31 @@ export const getServerGlobalConfig = async () => {
     }
   }
 
+  return aiProviderSpecificConfig;
+};
+
+/** Resolve one provider without rebuilding the global config or reloading its catalog. */
+export const getServerAiProviderConfig = async (provider: ModelProvider) => {
+  const models = await loadModels();
+  const configs = await genServerAiProvidersConfig(
+    getAiProviderSpecificConfig(),
+    [provider],
+    models,
+  );
+  const config = configs[provider];
+
+  return {
+    ...config,
+    serverModelLists:
+      config.serverModelLists ?? models.filter((model) => model.providerId === provider),
+  };
+};
+
+export const getServerGlobalConfig = async () => {
+  const { DEFAULT_AGENT_CONFIG } = getAppConfig();
+
   const config: GlobalServerConfig = {
-    aiProvider: await genServerAiProvidersConfig(aiProviderSpecificConfig),
+    aiProvider: await genServerAiProvidersConfig(getAiProviderSpecificConfig()),
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
