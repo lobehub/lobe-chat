@@ -171,7 +171,6 @@ describe('clientSubAgentBridge persist queue (round-21)', () => {
     registerClientSubAgentBridge(subAgentRegistration);
     await vi.waitFor(() => expect(readQueue()).toHaveLength(1));
 
-    const flush = flushPendingBridgeCoordinates;
     await flushPendingBridgeCoordinates();
     // Rejected = stale coordinates, correctly NOT resurrected on a settled
     // row — the entry is drained, not retried.
