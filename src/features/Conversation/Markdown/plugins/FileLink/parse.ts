@@ -49,3 +49,39 @@ export const parseFileLinkHref = (
     return null;
   }
 };
+
+// A link label that names a file, e.g. `report.md` or `action-items.csv`.
+const FILE_NAME_WITH_EXTENSION_REGEX = /\.[\da-z]{1,10}$/i;
+
+export type FileLinkOpenAction =
+  | { kind: 'preview'; params: { fileId: string; source?: { name: string; url: string } } }
+  | { kind: 'newTab'; url: string };
+
+/**
+ * What a file link click opens.
+ *
+ * The agent-share visitor does not own the creator's files, so the portal's
+ * owner-scoped fetch by id finds nothing and shows "file unavailable"; the
+ * `/f/:id` link itself is public by id, so the visitor previews straight from
+ * it. That preview only knows the file through the link label (the FileViewer
+ * picks its renderer from the name's extension), so a label such as
+ * "Download the deck" opens the public link in a new tab instead of a preview
+ * that would render the file with the wrong viewer.
+ */
+export const getFileLinkOpenAction = ({
+  fileId,
+  isAgentShareVisitor,
+  label,
+  linkHref,
+}: {
+  fileId: string;
+  isAgentShareVisitor: boolean;
+  label: string;
+  linkHref?: string;
+}): FileLinkOpenAction => {
+  if (!isAgentShareVisitor || !linkHref) return { kind: 'preview', params: { fileId } };
+
+  if (!FILE_NAME_WITH_EXTENSION_REGEX.test(label.trim())) return { kind: 'newTab', url: linkHref };
+
+  return { kind: 'preview', params: { fileId, source: { name: label.trim(), url: linkHref } } };
+};

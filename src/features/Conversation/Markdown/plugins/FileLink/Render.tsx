@@ -9,7 +9,9 @@ import { memo, useCallback } from 'react';
 import FileIcon from '@/components/FileIcon';
 import { useChatStore } from '@/store/chat';
 
+import { useConversationStore } from '../../../store';
 import type { MarkdownElementProps } from '../type';
+import { getFileLinkOpenAction } from './parse';
 
 interface FileLinkProperties {
   fileId?: string;
@@ -66,6 +68,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 const Render = memo<MarkdownElementProps<FileLinkProperties>>(({ node }) => {
   const { fileId, linkHref, linkLabel } = node?.properties || {};
   const openFilePreview = useChatStore((s) => s.openFilePreview);
+  const isAgentShareVisitor = useConversationStore((s) => !!s.context.agentShareId);
   const label = linkLabel || linkHref || '';
 
   const handleClick = useCallback(
@@ -77,9 +80,14 @@ const Render = memo<MarkdownElementProps<FileLinkProperties>>(({ node }) => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
       event.preventDefault();
-      openFilePreview({ fileId });
+      const action = getFileLinkOpenAction({ fileId, isAgentShareVisitor, label, linkHref });
+      if (action.kind === 'newTab') {
+        window.open(action.url, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      openFilePreview(action.params);
     },
-    [fileId, openFilePreview],
+    [fileId, isAgentShareVisitor, label, linkHref, openFilePreview],
   );
 
   return (
