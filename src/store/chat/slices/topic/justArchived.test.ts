@@ -98,6 +98,26 @@ describe('justArchivedTopicId', () => {
     ).toEqual(['other', 'current']);
   });
 
+  it('stays hidden while the refreshed list drops the row until its detail loads', () => {
+    seed([topic('current', 'active', 2), topic('other', 'active', 1)], 'current');
+    setStatus('current', 'completed');
+
+    // The list refresh excludes completed topics, so the active row goes missing
+    const bucket = useChatStore.getState().topicDataMap[bucketKey];
+    useChatStore.setState({
+      topicDataMap: { [bucketKey]: { ...bucket, items: [topic('other', 'active', 1)] } },
+    });
+    expect(useChatStore.getState().justArchivedTopicId).toBe('current');
+
+    // ...then the active-topic detail fetch loads it back as completed
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'completed', 2) },
+    });
+
+    expect(useChatStore.getState().justArchivedTopicId).toBe('current');
+    expect(sidebarIds()).toEqual(['other']);
+  });
+
   it('clears when the topic is restored, so it is pinned again', () => {
     useChatStore.setState({
       topicDetailMap: { current: topic('current', 'active', 1) },

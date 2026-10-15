@@ -33,8 +33,10 @@ export const subscribeJustArchivedTopic = (store: SelectorSubscribableStore): ((
         return;
       }
 
-      // Restored (or an optimistic archive rolled back): pin it again.
-      if (justArchivedTopicId === topicId && status !== 'completed') {
+      // Restored (or an optimistic archive rolled back): pin it again. An
+      // unknown status is not a restore — the list refresh after archiving
+      // drops the row until its detail loads back as `completed`.
+      if (justArchivedTopicId === topicId && status && status !== 'completed') {
         store.setState({ justArchivedTopicId: undefined }, false, 'clearJustArchivedTopic');
         return;
       }
