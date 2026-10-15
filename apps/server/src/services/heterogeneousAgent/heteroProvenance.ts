@@ -1,4 +1,5 @@
 import type { MessageModel } from '@/database/models/message';
+import type { ThreadModel } from '@/database/models/thread';
 
 /** Native provenance an operation has learned so far. */
 export interface HeteroProvenanceState {
@@ -91,4 +92,35 @@ export const persistCodexTurnProvenance = async (
     const userWrite = await messageModel.update(user.id, { metadata });
     if (!userWrite.success) throw new Error('Native user provenance could not be saved');
   }
+};
+
+/**
+ * Binds a native session to the Codex Fork thread that owns it.
+ *
+ * Use when:
+ * - A run reports its native session id and may belong to a Codex Fork thread.
+ * Expects:
+ * - Only a Codex Fork thread owns a native session; every other run (including other
+ *   thread runs) keeps the caller's topic-scoped, non-fatal binding.
+ * Returns:
+ * - `true` once the Fork thread holds the session; `false` for any other run.
+ * - Throws on a foreign or failed binding so the next ingest retries the handoff.
+ *
+ * Call stack:
+ *
+ * HeterogeneousPersistenceHandler.persistSessionId
+ *   -> {@link persistCodexForkSessionId}
+ */
+export const persistCodexForkSessionId = async (
+  threadModel: Pick<ThreadModel, 'findById' | 'updateMetadata'>,
+  state: { threadId: string | undefined; topicId: string },
+  sessionId: string,
+): Promise<boolean> => {
+  const thread = state.threadId ? await threadModel.findById(state.threadId) : undefined;
+  if (!thread?.metadata?.codexForkTarget) return false;
+  if (thread.topicId !== state.topicId) throw new Error('Native branch is unavailable');
+  // The child handoff must be durable: a failed write is retried by the next ingest.
+  const updated = await threadModel.updateMetadata(thread.id, { heteroSessionId: sessionId });
+  if (updated.length === 0) throw new Error('Native child binding could not be saved');
+  return true;
 };

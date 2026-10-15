@@ -136,11 +136,27 @@ timed-out binaries do not advertise native support.
 
 Codex topics run through `codex exec` unless the user enables the
 **Codex App Server Runtime** Lab. With the Lab on and a capable connection, the server
-runs them through app-server and persists each message's native session and turn IDs.
-These topics keep the `codex exec` recovery: a missing native session is retried fresh
-with the topic transcript.
+runs them through app-server and persists each message's native session and turn IDs,
+which is what makes a message forkable. These topics keep the `codex exec` recovery: a
+missing native session is retried fresh with the topic transcript.
 
 The internal `lh hetero exec --codex-app-server` transport uses a per-operation process
 that owns cancellation and shell identity. This transport rejects unsupported approval
 or sandbox arguments instead of weakening permissions. The richer permission bridge is
 maintained separately.
+
+### Native Codex Fork on a connected device
+
+Fork branches always use app-server, require a capable connection, and never silently
+replay history as text. In the product, select that device and use Fork on a user or
+assistant message. User Fork resends the selected user input and its attachments
+before that native turn; assistant Fork continues after the selected turn when the next
+prompt is sent. Each branch receives an independent native session and can resume after
+refresh or device reconnection. A missing child session is an error: restore that
+device's native history before retrying. Branching shares the working directory and
+does not roll files back.
+
+`lh hetero exec --codex-app-server` accepts an optional `--codex-fork-target` JSON object
+with `threadId`, `turnId`, and `position` (`before` or `after`). `--codex-strict-history`
+(implied by `--codex-fork-target`) marks a Fork branch: a missing native session fails
+instead of restarting fresh.

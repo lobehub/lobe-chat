@@ -71,6 +71,8 @@ describe('useActionsBarConfig', () => {
     expect(result.current.user?.bar).toEqual(['edit', 'copy']);
     /** @example Historical user prompts also expose Edit in the overflow menu. */
     expect(result.current.user?.menu).toContain('edit');
+    /** @example Fork is available through overflow. */
+    expect(result.current.user?.menu).toEqual(expect.arrayContaining(['branching']));
   });
 
   /** @example Only executable local or bound-device targets advertise Edit. */

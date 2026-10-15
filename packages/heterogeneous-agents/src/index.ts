@@ -11,6 +11,11 @@ export {
   collectHeteroAttachedFiles,
   type HeteroAttachedFileRef,
 } from './attachedFiles';
+export {
+  type CodexBranchRun,
+  resolveCodexBranchRun,
+  resolveCodexForkTarget,
+} from './codexForkTarget';
 export type {
   HeterogeneousAgentCliError,
   HeterogeneousAgentDescriptor,

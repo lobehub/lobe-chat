@@ -10,6 +10,8 @@ const {
   mockGetUserPreference,
   mockQueryDeviceSystemInfo,
   mockReadDeviceSystemInfo,
+  mockGetCodexBranchRun,
+  mockThreadFindById,
   mockDeviceFindByDeviceId,
   mockDeviceFindWorkspaceDeviceById,
   mockBuildRemoteDeviceHeteroContext,
@@ -30,6 +32,8 @@ const {
   mockGetUserPreference: vi.fn(),
   mockQueryDeviceSystemInfo: vi.fn(),
   mockReadDeviceSystemInfo: vi.fn(),
+  mockGetCodexBranchRun: vi.fn(),
+  mockThreadFindById: vi.fn(),
   mockBuildRemoteDeviceHeteroContext: vi.fn().mockReturnValue('device context'),
   mockCreateOperationMetadata: vi.fn().mockResolvedValue(undefined),
   mockDeviceFindByDeviceId: vi.fn(),
@@ -175,7 +179,7 @@ vi.mock('@/database/models/thread', () => ({
   ThreadModel: vi.fn().mockImplementation(function () {
     return {
       create: vi.fn(),
-      findById: vi.fn(),
+      findById: mockThreadFindById,
       update: vi.fn(),
     };
   }),
@@ -198,6 +202,12 @@ vi.mock('@/server/services/market', () => ({
 vi.mock('@/server/services/heterogeneousAgent', () => ({
   HeterogeneousAgentService: vi.fn().mockImplementation(function () {
     return {
+      getCodexBranchRun: mockGetCodexBranchRun,
+      // Mirrors the real lookup: only a Codex Fork thread of this topic owns its session.
+      getCodexForkThread: async (topicId: string, threadId: string) => {
+        const thread = await mockThreadFindById(threadId);
+        return thread?.topicId === topicId && thread.metadata?.codexForkTarget ? thread : undefined;
+      },
       getHeterogeneousResumeSessionId: mockGetHeterogeneousResumeSessionId,
     };
   }),
@@ -297,6 +307,8 @@ describe('AiAgentService.execAgent - Codex device runtime', () => {
     mockQueryDeviceSystemInfo.mockResolvedValue(undefined);
     mockReadDeviceSystemInfo.mockResolvedValue({ ok: false, reason: 'DEVICE_OFFLINE' });
     mockGetUserPreference.mockResolvedValue(undefined);
+    mockGetCodexBranchRun.mockResolvedValue({});
+    mockThreadFindById.mockResolvedValue(undefined);
     mockMessageQuery.mockResolvedValue([]);
     mockBuildRemoteDeviceHeteroContext.mockImplementation(function ({ conversationHistory }) {
       return conversationHistory ? 'device recovery context' : 'device context';
@@ -496,5 +508,112 @@ describe('AiAgentService.execAgent - Codex device runtime', () => {
     expect(mockDispatchAgentRun).toHaveBeenCalledWith(
       expect.objectContaining({ args: ['--codex-app-server'], clientKinds: ['desktop'] }),
     );
+  });
+
+  /** @example Native turn/branch parameters only reach a connection advertising their protocol. */
+  // The Labs preference stays unset here: a Fork branch always runs natively.
+  it('dispatches the exact native Fork boundary to a capable connection', async () => {
+    Object.assign(heteroAgentConfig.agencyConfig, {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { type: 'codex' },
+    });
+    const target = { position: 'before', threadId: 'source-native', turnId: 'turn-2' };
+    mockReadDeviceSystemInfo.mockResolvedValue({
+      ok: true,
+      systemInfo: { supportedAgentRuntimes: ['codex-app-server-v1'] },
+    });
+    mockMessageQuery.mockResolvedValue([
+      { content: 'Earlier question', id: 'old-user', role: 'user' },
+      { content: 'Earlier answer', id: 'old-assistant', role: 'assistant' },
+    ]);
+    mockThreadFindById.mockResolvedValue({
+      id: 'branch',
+      topicId: 'topic-1',
+      type: 'continuation',
+      metadata: { codexForkTarget: target },
+    });
+    mockGetCodexBranchRun.mockResolvedValue({
+      codexForkTarget: target,
+      resumeSessionId: 'source-native',
+    });
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'replayed user',
+      appContext: { topicId: 'topic-1', threadId: 'branch' },
+    });
+    /** @example The protocol carries the original native boundary, without a text replay fallback. */
+    expect(mockDispatchAgentRun).toHaveBeenCalledWith(
+      expect.objectContaining({
+        args: [
+          '--codex-app-server',
+          '--codex-strict-history',
+          '--codex-fork-target',
+          JSON.stringify(target),
+        ],
+        resumeSessionId: 'source-native',
+        resumeFallbackSystemContext: undefined,
+        systemContext: 'device context',
+      }),
+    );
+  });
+
+  /** @example Reconnecting an older CLI cannot silently continue a native branch as legacy exec. */
+  it('rejects an established native child on an older connected CLI', async () => {
+    Object.assign(heteroAgentConfig.agencyConfig, {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { type: 'codex' },
+    });
+    mockThreadFindById.mockResolvedValue({
+      id: 'branch',
+      topicId: 'topic-1',
+      type: 'continuation',
+      metadata: {
+        codexForkTarget: { position: 'after', threadId: 'source-native', turnId: 'turn-1' },
+        heteroSessionId: 'child-native',
+      },
+    });
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'continue child',
+      appContext: { topicId: 'topic-1', threadId: 'branch' },
+    });
+    /** @example The saved child cannot be rebound by an unsupported legacy process. */
+    expect(mockDispatchAgentRun).not.toHaveBeenCalled();
+    /** @example The failed operation publishes an actionable protocol requirement. */
+    expect(mockMessageUpdate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        error: expect.objectContaining({
+          body: expect.objectContaining({ detail: expect.stringContaining('codex-app-server-v1') }),
+        }),
+      }),
+    );
+  });
+
+  /** @example Cloud selection cannot replace an established device child with text-replayed history. */
+  it('rejects sandbox routing for an established native Codex child', async () => {
+    Object.assign(heteroAgentConfig.agencyConfig, {
+      executionTarget: 'sandbox',
+      heterogeneousProvider: { type: 'codex' },
+    });
+    mockThreadFindById.mockResolvedValue({
+      id: 'branch',
+      topicId: 'topic-1',
+      type: 'continuation',
+      metadata: {
+        codexForkTarget: { position: 'after', threadId: 'source-native', turnId: 'turn-1' },
+        heteroSessionId: 'child-native',
+      },
+    });
+    mockGetCodexBranchRun.mockResolvedValue({ resumeSessionId: 'child-native' });
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'continue child',
+      appContext: { topicId: 'topic-1', threadId: 'branch' },
+    });
+    /** @example Legacy sandbox exec is never started for a persisted native branch. */
+    expect(mockSpawnHeteroSandbox).not.toHaveBeenCalled();
   });
 });

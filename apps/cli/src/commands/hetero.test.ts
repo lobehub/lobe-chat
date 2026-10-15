@@ -1220,10 +1220,73 @@ describe('hetero exec command', () => {
     );
   });
 
+  /** @example A device fork carries a native turn boundary without invoking codex exec. */
+  it('routes an explicit Codex fork through the native app-server handle', async () => {
+    // ROOT CAUSE:
+    // Device dispatch previously had only codex exec, so it could neither fork
+    // at lastTurnId nor report Codex turn provenance. Explicit native flags
+    // select the shared app-server state machine instead of text replay.
+    const forkTarget = { position: 'before', threadId: 'source-native', turnId: 'turn-2' };
+    mockCreateCodexAgentHandle.mockResolvedValue(createFakeHandle());
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'codex',
+      '--prompt',
+      'selected prompt',
+      '--codex-app-server',
+      '--codex-fork-target',
+      JSON.stringify(forkTarget),
+      '--resume',
+      'source-native',
+    ]);
+    /** @example The exact native boundary reaches the driver. */
+    expect(mockCreateCodexAgentHandle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        forkTarget,
+        prompt: 'selected prompt',
+        resumeSessionId: 'source-native',
+        strictHistory: true,
+      }),
+    );
+    /** @example Native forks must never become one-shot text-history runs. */
+    expect(mockSpawnAgent).not.toHaveBeenCalled();
+  });
+
+  /** @example A deleted child returns an error, preserving the saved native binding. */
+  it('does not retry a Fork branch history as a fresh text replay', async () => {
+    mockCreateCodexAgentHandle.mockResolvedValue(
+      createFakeHandle({
+        exitCode: 1,
+        stderrChunks: ['thread/resume failed: no rollout found for thread id child-native'],
+      }),
+    );
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'codex',
+      '--prompt',
+      'follow up',
+      '--codex-app-server',
+      '--codex-strict-history',
+      '--resume',
+      'child-native',
+    ]);
+    /** @example Exactly one native attempt is made even when stderr matches the legacy fallback. */
+    expect(mockCreateCodexAgentHandle).toHaveBeenCalledTimes(1);
+    /** @example No fallback can create an unrelated native session. */
+    expect(mockSpawnAgent).not.toHaveBeenCalled();
+    /** @example Missing native history is terminal. */
+    expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+
   // ROOT CAUSE:
   // An app-server device run whose native session was lost must keep the `codex exec`
   // recovery: Codex reports the missing thread as "no rollout found", and the run
-  // continues from its transcript instead of failing every later turn.
+  // continues from its transcript instead of failing every later turn. Only Fork
+  // branches (`--codex-strict-history`) must refuse to restart.
   /** @example An ordinary app-server topic recovers from a missing native session. */
   it('retries an ordinary app-server Codex topic with its transcript fallback', async () => {
     const dir = await mkdtemp(`${tmpdir()}/hetero-native-fallback-`);
@@ -1269,6 +1332,7 @@ describe('hetero exec command', () => {
     expect(mockCreateCodexAgentHandle).toHaveBeenCalledTimes(2);
     expect(mockCreateCodexAgentHandle.mock.calls[0][0]).toMatchObject({
       resumeSessionId: 'stale-native',
+      strictHistory: false,
     });
     expect(mockCreateCodexAgentHandle.mock.calls[1][0].resumeSessionId).toBeUndefined();
     expect(mockCreateCodexAgentHandle.mock.calls[1][0].prompt).toEqual(fallbackPrompt);

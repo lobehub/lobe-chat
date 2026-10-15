@@ -99,24 +99,29 @@ export async function sendPromptWithCodexAppServer(
   // One app-server serves multiple topics; ownership belongs to each thread, not its process.
   const spawnEnv = host.buildSessionSpawnEnv(session, false);
   const commandPath = session.resolvedCommandPath ?? host.resolveSessionCommand(session);
-  const promptInput = buildHeterogeneousPrompt({
-    imageList: params.imageList,
-    isNewSession: host.needsSessionIntroduction(session),
-    prompt: params.prompt,
-    systemContext: params.systemContext,
-  });
-  let inputPlan;
-  try {
-    inputPlan = await buildAgentInput('codex', promptInput, { cacheDir: host.fileCacheDir });
-  } catch (error) {
-    logger.error('Failed to prepare Codex app-server input:', error);
-    throw new Error(
-      `Failed to attach image(s) to Codex app-server: ${host.getErrorMessage(error) || 'Unknown error'}`,
-      { cause: error },
-    );
-  }
-
-  const input = buildCodexAppServerInput(inputPlan);
+  const needsIntroduction = host.needsSessionIntroduction(session);
+  /** Prepare the prompt after determining whether the native fork retained any history. */
+  const prepareInput = async (isNewSession: boolean) => {
+    const promptInput = buildHeterogeneousPrompt({
+      imageList: params.imageList,
+      isNewSession,
+      prompt: params.prompt,
+      systemContext: params.systemContext,
+    });
+    try {
+      const inputPlan = await buildAgentInput('codex', promptInput, {
+        cacheDir: host.fileCacheDir,
+      });
+      return buildCodexAppServerInput(inputPlan);
+    } catch (error) {
+      logger.error('Failed to prepare Codex app-server input:', error);
+      throw new Error(
+        `Failed to attach image(s) to Codex app-server: ${host.getErrorMessage(error) || 'Unknown error'}`,
+        { cause: error },
+      );
+    }
+  };
+  const input = await prepareInput(needsIntroduction);
   const appServerArgs = buildCodexAppServerArgs(session.args);
   const initialModel = await resolveCodexInitialModel({ args: session.args, env: spawnEnv });
   if (initialModel?.model) {
@@ -178,6 +183,7 @@ export async function sendPromptWithCodexAppServer(
     session.appServerSession ??
     new CodexThreadSession({
       client,
+      forkTarget: session.codexForkTarget,
       initialCumulativeUsage,
       initialModel: session.model,
       initialThreadId: session.agentSessionId,
@@ -218,7 +224,13 @@ export async function sendPromptWithCodexAppServer(
 
   try {
     await appServerSession.run({
-      input,
+      input: async (isNewSession) => {
+        if (!isNewSession || needsIntroduction) return input;
+        // Forking before the first turn starts a fresh native thread even though the UI supplied a resume ID.
+        const freshInput = await prepareInput(true);
+        await host.writeCliTraceFile(traceSession, 'stdin.txt', `${JSON.stringify(freshInput)}\n`);
+        return freshInput;
+      },
       onRawMessage: (line) => host.appendCliTraceFile(traceSession, 'stdout.jsonl', line),
       operationId: params.operationId,
       provenance: pickCodexRunProvenance({

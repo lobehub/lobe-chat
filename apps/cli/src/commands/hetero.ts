@@ -35,6 +35,7 @@ import {
   spawnAgent,
   spawnDshAcpSession,
 } from '@lobechat/heterogeneous-agents/spawn';
+import { type CodexForkTarget, CodexForkTargetSchema } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
 import type { Command } from 'commander';
 
@@ -134,7 +135,7 @@ const spawnAgentOrRuntime = (
   spawnOpts: Parameters<typeof spawnAgent>[0],
   onRawStdout?: (chunk: Buffer) => void,
   onStartupControl?: (control: PiRpcStartupControl) => void,
-  nativeCodex?: boolean,
+  nativeCodex?: { forkTarget?: CodexForkTarget; strictHistory: boolean },
 ): Promise<Awaited<ReturnType<typeof spawnAgent>>> => {
   if (nativeCodex)
     return createCodexAgentHandle({
@@ -143,11 +144,13 @@ const spawnAgentOrRuntime = (
       commandPath: spawnOpts.command!,
       cwd: spawnOpts.cwd ?? process.cwd(),
       env: { ...process.env, ...spawnOpts.env },
+      forkTarget: nativeCodex.forkTarget,
       onRawStdout,
       onStartupControl,
       operationId: spawnOpts.operationId,
       prompt: spawnOpts.prompt,
       resumeSessionId: spawnOpts.resumeSessionId,
+      strictHistory: nativeCodex.strictHistory,
     });
   const runtimeFactory = spawnRuntimeRegistry[spawnOpts.agentType as LocalHeterogeneousAgentType];
   if (runtimeFactory) return runtimeFactory(spawnOpts, { onRawStdout, onStartupControl });
@@ -202,6 +205,10 @@ interface ExecOptions {
   agentArg?: string[];
   /** Explicit device protocol capability; unsupported native options fail closed. */
   codexAppServer?: boolean;
+  /** JSON-encoded, persisted native history boundary. */
+  codexForkTarget?: string;
+  /** Fork branches: a missing native session fails instead of restarting fresh. */
+  codexStrictHistory?: boolean;
   command?: string;
   cwd?: string;
   effort?: string;
@@ -501,9 +508,21 @@ const exec = async (options: ExecOptions): Promise<void> => {
     process.exit(2);
   }
 
-  if (options.codexAppServer && options.type !== 'codex') {
+  if (
+    (options.codexAppServer || options.codexForkTarget || options.codexStrictHistory) &&
+    options.type !== 'codex'
+  ) {
     throw new Error('Native Codex options require --type codex');
   }
+  if ((options.codexForkTarget || options.codexStrictHistory) && !options.codexAppServer) {
+    throw new Error('Native Fork requires --codex-app-server');
+  }
+  // A Fork branch's history exists only natively. Ordinary app-server topics keep the
+  // same transcript recovery as `codex exec`: retry fresh with the fallback prompt.
+  const strictNativeHistory = Boolean(options.codexStrictHistory || options.codexForkTarget);
+  const codexForkTarget = options.codexForkTarget
+    ? CodexForkTargetSchema.parse(JSON.parse(options.codexForkTarget))
+    : undefined;
   let resolved: ResolvedPrompt;
   try {
     resolved = await resolvePrompt(options);
@@ -1034,7 +1053,9 @@ const exec = async (options: ExecOptions): Promise<void> => {
           // when the process group already delivered the signal itself.
           if (cancellationSignal) cancelStartup(control, cancellationSignal);
         },
-        options.codexAppServer,
+        options.codexAppServer
+          ? { forkTarget: codexForkTarget, strictHistory: strictNativeHistory }
+          : undefined,
       );
       if (cancellationSignal && !startupControl) {
         // Same split as `applyCancellation`: when the wrapper does not own
@@ -1235,7 +1256,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
 
   // ─── First run (with --resume if provided) ───────────────────────────────
 
-  const interceptResume = !!options.resume;
+  const interceptResume = !!options.resume && !strictNativeHistory;
   const extraArgs = [
     ...(buildExtraArgs(options) ?? []),
     // Point the supported CLI at the lobe_cc AskUserQuestion MCP server we just mounted.
@@ -1299,7 +1320,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
   // fresh session.  The server's `heteroSessionId` is updated with the new id,
   // breaking the stale-session loop.
   let result = first;
-  if (!first.cancelled && !first.ingestError && first.resumeNotFound) {
+  if (!strictNativeHistory && !first.cancelled && !first.ingestError && first.resumeNotFound) {
     log.info('Resume failed (session not found or context overflow) — retrying without --resume');
     result = await runOneAgent(
       {
@@ -1454,6 +1475,11 @@ export function registerHeteroCommand(program: Command) {
       'Read full multimodal prompt as JSON content blocks from a file. Use `-` for stdin.',
     )
     .option('--codex-app-server', 'Run Codex through its native app-server protocol')
+    .option('--codex-fork-target <json>', 'Fork at the saved native Codex thread/turn boundary')
+    .option(
+      '--codex-strict-history',
+      'Fail instead of starting a fresh session when the native Codex history is missing',
+    )
     .option('-r, --resume <sessionId>', 'Resume an existing agent session by its native id')
     .option('-d, --cwd <path>', 'Working directory for the spawned agent (default: process.cwd())')
     .option('--mode <mode>', 'Forward a resolved Amp agent mode selection to the agent CLI')
