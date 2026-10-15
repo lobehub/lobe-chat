@@ -41,7 +41,7 @@ import {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
-import type { ModelAbilities } from 'model-bank';
+import type { AiModelConfig, ModelAbilities } from 'model-bank';
 
 import { loadModels } from '@/business/client/model-bank/loadModels';
 import { AiModelModel } from '@/database/models/aiModel';
@@ -695,6 +695,11 @@ export const discoverTools = async (
         activeModelMetadata
           ? {
               abilities: activeModelMetadata.abilities,
+              // Deployment-catalog providers resolve the request model by the
+              // user-configured alias when present (merged over the bundled
+              // card when the facts freeze).
+              deploymentName:
+                (activeModelMetadata.config as AiModelConfig | null)?.deploymentName ?? null,
               displayName: activeModelMetadata.displayName,
               extendParams: activeModelMetadata.settings?.extendParams ?? undefined,
             }
