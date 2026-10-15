@@ -55,15 +55,21 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 /**
- * Error body of a result banner: the readable hint first, the raw platform
- * message below it in a muted tone so it stays available for diagnosis.
+ * Error body of a result banner: one readable sentence, with the raw platform
+ * message folded behind a "show details" toggle so it stays available for
+ * diagnosis without being dumped into the banner.
  */
-const ResultDetail = memo<{ detail?: string; hint?: string }>(({ detail, hint }) => {
-  if (!hint) return <>{detail}</>;
+const ResultDetail = memo<{ detail?: string; hint: string }>(({ detail, hint }) => {
+  const { t } = useTranslation('agent');
+  const [open, setOpen] = useState(false);
+  if (!detail || detail === hint) return <>{hint}</>;
   return (
-    <Flexbox gap={4}>
+    <Flexbox align={'flex-start'} gap={4}>
       <span>{hint}</span>
-      {detail && <span className={styles.resultDetail}>{detail}</span>}
+      <Button size={'small'} type={'text'} onClick={() => setOpen((value) => !value)}>
+        {open ? t('channel.resultDetail.hide') : t('channel.resultDetail.show')}
+      </Button>
+      {open && <span className={styles.resultDetail}>{detail}</span>}
     </Flexbox>
   );
 });
@@ -198,9 +204,16 @@ const Footer = memo<FooterProps>(
           <Alert
             closable
             showIcon
-            description={saveResult.type === 'error' ? saveResult.errorDetail : undefined}
             title={saveResult.type === 'success' ? t('channel.saved') : t('channel.saveFailed')}
             type={saveResult.type}
+            description={
+              saveResult.type === 'error' ? (
+                <ResultDetail
+                  detail={saveResult.errorDetail}
+                  hint={saveResult.hint || t('channel.saveFailedHint')}
+                />
+              ) : undefined
+            }
           />
         )}
 
@@ -208,8 +221,15 @@ const Footer = memo<FooterProps>(
           <Alert
             closable
             showIcon
-            description={connectResult.type === 'error' ? connectResult.errorDetail : undefined}
             type={connectResult.type}
+            description={
+              connectResult.type === 'error' ? (
+                <ResultDetail
+                  detail={connectResult.errorDetail}
+                  hint={connectResult.hint || t('channel.connectFailedHint')}
+                />
+              ) : undefined
+            }
             title={
               connectResult.title ||
               (connectResult.type === 'success'
@@ -226,7 +246,10 @@ const Footer = memo<FooterProps>(
             type={testResult.type}
             description={
               testResult.type === 'error' ? (
-                <ResultDetail detail={testResult.errorDetail} hint={testResult.hint} />
+                <ResultDetail
+                  detail={testResult.errorDetail}
+                  hint={testResult.hint || t('channel.testFailedHint')}
+                />
               ) : undefined
             }
             title={
