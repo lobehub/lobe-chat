@@ -23,8 +23,16 @@ export const styles = createStaticStyles(({ css }) => ({
   `,
   frame: css`
     position: relative;
+
     width: 100%;
+    max-width: var(--acceptance-video-frame-width, 100%);
+    margin-inline: auto;
+
     background: #000;
+
+    :fullscreen > & {
+      max-width: 100%;
+    }
 
     video {
       display: block;

@@ -4,7 +4,7 @@ import { isFullFrameRect } from '@lobechat/const/verify';
 import type { AcceptanceReviewAnnotation, VerifyEvidenceChapter } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Play } from 'lucide-react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { memo, useRef, useState } from 'react';
 
 import { styles } from './styles';
@@ -22,6 +22,8 @@ import { VideoTimeline } from './VideoTimeline';
 
 /** Matches the plain `<video>` this replaces, so rows keep their rhythm. */
 const MAX_HEIGHT = 360;
+/** Leave room for the controls even when the recording is portrait. */
+const MIN_PLAYER_WIDTH = 480;
 
 interface VideoEvidencePlayerProps {
   /** The evidence description — laid out under the player, at the player's width. */
@@ -51,12 +53,17 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
     const timed = notes.flatMap((note) => (note.time ? [{ ...note, time: note.time }] : []));
     const claims = captions ? claimsAt(chapters, time) : [];
     const aspect = size ? size.width / size.height : 16 / 9;
+    const frameWidth = Math.round(MAX_HEIGHT * aspect);
 
     return (
-      <Flexbox gap={8} style={{ maxWidth: `min(100%, ${Math.round(MAX_HEIGHT * aspect)}px)` }}>
+      <Flexbox
+        gap={8}
+        style={{ maxWidth: `min(100%, ${Math.max(MIN_PLAYER_WIDTH, frameWidth)}px)` }}
+      >
         <div
           className={styles.player}
           ref={rootRef}
+          style={{ '--acceptance-video-frame-width': `${frameWidth}px` } as CSSProperties}
           tabIndex={0}
           onKeyDown={(event) => {
             if (status === 'ready' && handlePlaybackKey(event, clock)) event.preventDefault();

@@ -132,7 +132,7 @@ export const VideoControlBar = ({
   const step = stepAt(chapters, time);
 
   return (
-    <Flexbox horizontal align={'center'} gap={2}>
+    <Flexbox horizontal align={'center'} gap={2} wrap={'wrap'}>
       <button
         aria-label={paused ? t('acceptance.video.play') : t('acceptance.video.pause')}
         className={styles.barButton}
