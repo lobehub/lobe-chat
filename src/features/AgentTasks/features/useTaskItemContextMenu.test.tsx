@@ -8,6 +8,7 @@ import { useTaskItemContextMenu } from './useTaskItemContextMenu';
 
 const mocks = vi.hoisted(() => ({
   archiveTask: vi.fn(),
+  manageable: true,
   closeContextMenu: vi.fn(),
   copyToClipboard: vi.fn(),
   deleteTask: vi.fn(),
@@ -37,6 +38,10 @@ vi.mock('@lobehub/ui/base-ui', async (importOriginal) => {
     toast: { ...actual.toast, error: mocks.toastError, info: mocks.toastInfo, success: vi.fn() },
   };
 });
+
+vi.mock('@/hooks/useResourceManageable', () => ({
+  useResourceManageableChecker: () => () => mocks.manageable,
+}));
 
 vi.mock('@/libs/contextMenu', () => ({
   closeContextMenu: mocks.closeContextMenu,
@@ -102,6 +107,7 @@ vi.mock('react-i18next', () => ({
 describe('useTaskItemContextMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.manageable = true;
   });
 
   it('does not render adjacent dividers around transfer actions', () => {
@@ -180,6 +186,18 @@ describe('useTaskItemContextMenu', () => {
       await click(item);
 
       expect(mocks.toastError).toHaveBeenCalledWith('taskList.contextMenu.archiveFailed');
+    });
+
+    it("disables archiving someone else's shared task", async () => {
+      mocks.manageable = false;
+      const item = findArchiveItem(null) as unknown as {
+        disabled: boolean;
+        onClick: (info: unknown) => Promise<void>;
+      };
+
+      expect(item.disabled).toBe(true);
+      await click(item);
+      expect(mocks.archiveTask).not.toHaveBeenCalled();
     });
 
     it('offers no Run now on an archived task', () => {

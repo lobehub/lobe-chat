@@ -21,6 +21,7 @@ import { useTaskTransferMenuItem } from '@/business/client/hooks/useTaskTransfer
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { useAppOrigin } from '@/hooks/useAppOrigin';
 import { usePermission } from '@/hooks/usePermission';
+import { useResourceManageableChecker } from '@/hooks/useResourceManageable';
 import { closeContextMenu } from '@/libs/contextMenu';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
 import { useAgentStore } from '@/store/agent';
@@ -49,6 +50,8 @@ export interface TaskContextMenuTarget {
   assigneeAgentId?: string | null;
   assigneeUserId?: string | null;
   automationMode?: string | null;
+  /** Archive follows the creator-or-owner rule the server enforces. */
+  createdByUserId?: string | null;
   heartbeatInterval?: number | null;
   identifier: string;
   /** Only feeds the copied link's readable slug tail. */
@@ -79,6 +82,7 @@ export const useTaskContextMenuActions = (
   const refreshTaskList = useTaskStore((s) => s.refreshTaskList);
   const deleteTask = useTaskStore((s) => s.deleteTask);
   const archiveTask = useTaskStore((s) => s.archiveTask);
+  const checkManageable = useResourceManageableChecker();
   const runTask = useTaskStore((s) => s.runTask);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
 
@@ -157,13 +161,14 @@ export const useTaskContextMenuActions = (
       // An archived task must be restored first; the runner refuses it.
       const canRunNow = RUN_NOW_STATUSES.has(currentStatus) && !task.archivedAt;
       const isArchived = !!task.archivedAt;
+      const canArchive = canEditTask && checkManageable(task.createdByUserId);
       const archiveItems: NativeContextMenuItem[] =
         task.archivedAt === undefined
           ? []
           : [
               { type: 'divider' },
               {
-                disabled: !canEditTask,
+                disabled: !canArchive,
                 icon: <Icon icon={isArchived ? ArchiveRestoreIcon : ArchiveIcon} />,
                 key: 'archive',
                 label: t(
@@ -171,7 +176,7 @@ export const useTaskContextMenuActions = (
                 ),
                 onClick: async ({ domEvent }: MenuInfo) => {
                   domEvent.stopPropagation();
-                  if (!canEditTask) return;
+                  if (!canArchive) return;
                   // Archiving hides the task, so live work must stop first.
                   if (!isArchived && isTaskArchiveBlocked(task)) {
                     toast.info(t('taskList.contextMenu.archiveBlocked'));
@@ -361,6 +366,7 @@ export const useTaskContextMenuActions = (
     refreshTaskList,
     deleteTask,
     archiveTask,
+    checkManageable,
     runTask,
     inboxAgentId,
     routeScope,

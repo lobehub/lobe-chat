@@ -18,6 +18,7 @@ import { useTaskTransferMenuItem } from '@/business/client/hooks/useTaskTransfer
 import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
+import { useResourceManageable } from '@/hooks/useResourceManageable';
 import { useTaskStore } from '@/store/task';
 import { taskDetailSelectors } from '@/store/task/selectors';
 import { useUserStore } from '@/store/user';
@@ -39,6 +40,8 @@ const TaskDetailHeaderActions = memo(() => {
   const archiveTask = useTaskStore((s) => s.archiveTask);
   const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
   const isArchiveBlocked = useTaskStore(taskDetailSelectors.isActiveTaskArchiveBlocked);
+  const canManageTask = useResourceManageable(createdByUserId);
+  const canArchive = canEditTask && canManageTask;
   const updateTaskVisibility = useTaskStore((s) => s.updateTaskVisibility);
   const transferItems = useTaskTransferMenuItem(taskId) as DropdownItem[] | null;
 
@@ -58,7 +61,7 @@ const TaskDetailHeaderActions = memo(() => {
   }, [canEditTask, taskId, t, deleteTask, navigate]);
 
   const toggleArchive = useCallback(async () => {
-    if (!canEditTask || !taskId) return;
+    if (!canArchive || !taskId) return;
     if (!isArchived && isArchiveBlocked) {
       toast.info(t('taskList.contextMenu.archiveBlocked'));
       return;
@@ -76,7 +79,7 @@ const TaskDetailHeaderActions = memo(() => {
           : 'taskList.contextMenu.archiveSuccess',
       ),
     );
-  }, [archiveTask, canEditTask, isArchiveBlocked, isArchived, t, taskId]);
+  }, [archiveTask, canArchive, isArchiveBlocked, isArchived, t, taskId]);
 
   const triggerPublish = useCallback(() => {
     if (!canEditTask) return;
@@ -143,7 +146,7 @@ const TaskDetailHeaderActions = memo(() => {
       },
       { type: 'divider' },
       {
-        disabled: !canEditTask,
+        disabled: !canArchive,
         icon: <Icon icon={isArchived ? ArchiveRestoreIcon : ArchiveIcon} />,
         key: 'archive',
         label: t(isArchived ? 'taskList.contextMenu.unarchive' : 'taskList.contextMenu.archive'),
@@ -214,6 +217,7 @@ const TaskDetailHeaderActions = memo(() => {
     triggerDelete,
     toggleArchive,
     isArchived,
+    canArchive,
     triggerPublish,
     triggerMakePrivate,
     canEditTask,
