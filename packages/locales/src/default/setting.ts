@@ -518,6 +518,8 @@ export default {
   'heterogeneousStatus.cloud.tokenLabel': 'Claude Code Token',
   'heterogeneousStatus.cloud.tokenDesc':
     'Your Claude Code OAuth token. Saved securely to Credentials once submitted. Run `claude setup-token` in your terminal to generate one.',
+  'heterogeneousStatus.cloud.tokenNotShared':
+    'Your personal Claude Code token is not shared to this workspace, so cloud runs here cannot use it. Save a token to share it to this workspace.',
   'heterogeneousStatus.cloud.tokenPlaceholder': 'Paste your OAuth token here',
   'heterogeneousStatus.cloud.tokenChange': 'Change',
   'heterogeneousStatus.cloud.tokenSave': 'Save',

@@ -822,6 +822,7 @@
   "heterogeneousStatus.cloud.tokenChange": "修改",
   "heterogeneousStatus.cloud.tokenDesc": "你的 Claude Code OAuth Token，提交后将安全保存到凭证管理。在终端运行 `claude setup-token` 即可获取。",
   "heterogeneousStatus.cloud.tokenLabel": "Claude Code Token",
+  "heterogeneousStatus.cloud.tokenNotShared": "你的个人 Claude Code Token 尚未共享到当前工作区，这里的云端运行无法使用它。保存 Token 后会自动共享到当前工作区。",
   "heterogeneousStatus.cloud.tokenPlaceholder": "粘贴你的 OAuth Token",
   "heterogeneousStatus.cloud.tokenSave": "保存",
   "heterogeneousStatus.command.edit": "编辑指令",
