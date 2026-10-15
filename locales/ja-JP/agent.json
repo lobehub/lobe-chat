@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "ツールを読み込み中…",
   "share.settings.tools.needsMemoryPermission": "上記の「メモリの読み取りを許可」をオンにしてください。そうでない場合、このツールは訪問者に対して無効になります。",
   "share.settings.tools.notAvailableToVisitors": "このツールは共有実行では使用できません — 訪問者の実行は知識ベースやエージェントファイルへのアクセスがブロックされます。",
+  "share.settings.tools.onDemandDesc": "このエージェントでは有効になっていません。許可されると、モデルは必要に応じて訪問者の実行中にこれを有効にします。",
+  "share.settings.tools.showOnDemand": "オンデマンドツールを表示",
   "share.settings.tools.title": "訪問者が使用できるツール",
   "share.settings.updateError": "変更を保存できませんでした。再試行してください。",
   "share.settings.usage.conversations": "会話",

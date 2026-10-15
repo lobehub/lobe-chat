@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Araçlar yükleniyor…",
   "share.settings.tools.needsMemoryPermission": "Yukarıdaki “Hafızamı okumaya izin ver” seçeneğini de açın, aksi takdirde bu araç ziyaretçiler için etkisiz kalır.",
   "share.settings.tools.notAvailableToVisitors": "Bu araç hiçbir zaman paylaşılan bir çalıştırmada kullanılamaz — ziyaretçi çalıştırmaları bilgi tabanınıza ve Ajan dosyalarınıza erişemez.",
+  "share.settings.tools.onDemandDesc": "Bu Ajan üzerinde etkinleştirilmedi. İzin verildiğinde, model bunu yalnızca gerektiğinde bir ziyaretçi çalıştırmasında etkinleştirir.",
+  "share.settings.tools.showOnDemand": "İhtiyaç halinde araçları göster",
   "share.settings.tools.title": "Ziyaretçilerin kullanabileceği araçlar",
   "share.settings.updateError": "Değişiklik kaydedilemedi. Lütfen tekrar deneyin.",
   "share.settings.usage.conversations": "Konuşmalar",

@@ -33,12 +33,11 @@ import { isAiModelVisible, ModelProvider } from 'model-bank';
 import { AiProviderBaseURLSchema } from 'model-bank/aiProvider';
 import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 
-import { loadModels } from '@/business/client/model-bank/loadModels';
 import { getBusinessModelRuntimeHooks } from '@/business/server/model-runtime';
 import { AiProviderModel } from '@/database/models/aiProvider';
 import { type LobeChatDatabase } from '@/database/type';
 import { getLLMConfig } from '@/envs/llm';
-import { getServerGlobalConfig } from '@/server/globalConfig';
+import { getServerAiProviderConfig } from '@/server/globalConfig';
 import { createLLMGenerationTracingHook } from '@/server/services/llmGenerationTracing/hook';
 import { ensureFreshOAuthToken } from '@/server/services/oauthDeviceFlow/refresh';
 
@@ -573,14 +572,10 @@ const supportsServerDefaultHeterogeneousAgent = (
 };
 
 const getEnabledServerChatModels = async (provider: ModelProvider) => {
-  const providerConfig = (await getServerGlobalConfig()).aiProvider[provider];
+  const providerConfig = await getServerAiProviderConfig(provider);
   if (!providerConfig?.enabled) return [];
 
-  const models =
-    providerConfig.serverModelLists ??
-    (await loadModels()).filter((model) => model.providerId === provider);
-
-  return models.filter((model) => model.enabled && model.type === 'chat');
+  return providerConfig.serverModelLists.filter((model) => model.enabled && model.type === 'chat');
 };
 
 const findEnabledServerChatModel = async (provider: string, model: string) => {

@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { ChatStreamPayload } from '@lobechat/model-runtime';
 import { isRecord } from '@lobechat/utils/object';
 
-import { parseProtocolStream } from './heterogeneous-direct.service';
+import { parseProtocolStream } from './heterogeneous-direct.stream';
 
 /** Only inference fields cross the relay; the operation owns model and identity. */
 export const normalizeChatCompletionsRequest = (

@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "جارٍ تحميل الأدوات…",
   "share.settings.tools.needsMemoryPermission": "قم أيضًا بتشغيل “السماح بقراءة ذاكرتي” أعلاه، أو ستظل هذه الأداة غير نشطة للزوار.",
   "share.settings.tools.notAvailableToVisitors": "لا يمكن أبدًا استخدام هذه الأداة في تشغيل مشترك — يتم حظر تشغيلات الزوار من قاعدة معرفتك وملفات الوكيل.",
+  "share.settings.tools.onDemandDesc": "غير مفعّل على هذا الوكيل. بمجرد منحه، يقوم النموذج بتشغيله في تشغيل الزائر فقط عند الحاجة.",
+  "share.settings.tools.showOnDemand": "عرض الأدوات عند الطلب",
   "share.settings.tools.title": "الأدوات التي يمكن للزوار استخدامها",
   "share.settings.updateError": "تعذر حفظ التغيير. يرجى المحاولة مرة أخرى.",
   "share.settings.usage.conversations": "المحادثات",

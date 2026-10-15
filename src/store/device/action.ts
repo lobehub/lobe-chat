@@ -19,6 +19,18 @@ type Setter = StoreSetter<DeviceStore>;
 const revalidateDeviceLists = () =>
   Promise.all([mutate(deviceKeys.listDevices()), refreshDeviceList()]);
 
+type UpdateDeviceInput = Parameters<typeof deviceService.updateDevice>[0];
+
+/**
+ * Persist user-editable fields, routed by the device's own scope. Workspace
+ * devices live under `workspace_id`, so the userId-scoped personal mutation
+ * would match no row and the write would be silently dropped.
+ */
+const persistDevice = (device: DeviceListItem | undefined, input: UpdateDeviceInput) =>
+  device?.scope === 'workspace'
+    ? deviceService.updateWorkspaceDevice(input)
+    : deviceService.updateDevice(input);
+
 export const deviceSlice = (set: Setter, get: () => DeviceStore, _api?: unknown) =>
   new DeviceActionImpl(set, get, _api);
 
@@ -65,11 +77,22 @@ export class DeviceActionImpl {
     );
 
     try {
-      await deviceService.updateDevice({
-        deviceId,
-        ...(setDefault ? { defaultCwd: trimmed } : {}),
-        workingDirs: updatedDirs,
-      });
+      if (device?.scope === 'workspace') {
+        // Members share this list: add the one entry server-side instead of
+        // replacing the list with this client's possibly stale snapshot.
+        await deviceService.addWorkspaceDeviceWorkingDir({
+          deviceId,
+          entry: { ...entry, path: trimmed },
+        });
+        if (setDefault)
+          await deviceService.updateWorkspaceDevice({ defaultCwd: trimmed, deviceId });
+      } else {
+        await deviceService.updateDevice({
+          deviceId,
+          ...(setDefault ? { defaultCwd: trimmed } : {}),
+          workingDirs: updatedDirs,
+        });
+      }
     } finally {
       // Re-fetch the truth (self-corrects a failed optimistic write).
       await revalidateDeviceLists();
@@ -94,7 +117,7 @@ export class DeviceActionImpl {
     );
 
     try {
-      await deviceService.updateDevice({ defaultCwd: null, deviceId });
+      await persistDevice(device, { defaultCwd: null, deviceId });
     } catch (error) {
       // Preserve the prior default if the optimistic write cannot be persisted.
       this.#set(
@@ -143,7 +166,7 @@ export class DeviceActionImpl {
     );
 
     try {
-      await deviceService.updateDevice({ deviceId, workingDirs: merged });
+      await persistDevice(device, { deviceId, workingDirs: merged });
     } finally {
       await revalidateDeviceLists();
     }
@@ -166,7 +189,9 @@ export class DeviceActionImpl {
     );
 
     try {
-      await deviceService.updateDevice({ deviceId, workingDirs: updated });
+      await (device.scope === 'workspace'
+        ? deviceService.removeWorkspaceDeviceWorkingDir({ deviceId, path })
+        : deviceService.updateDevice({ deviceId, workingDirs: updated }));
     } finally {
       await revalidateDeviceLists();
     }

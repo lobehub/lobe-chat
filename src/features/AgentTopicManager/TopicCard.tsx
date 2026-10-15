@@ -9,9 +9,9 @@ import { CircleDollarSign, FolderIcon, MessageSquare, Star, Zap } from 'lucide-r
 import { memo, type MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActivityTime } from '@/hooks/useActivityTime';
-import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
 import type { ChatTopic } from '@/types/topic';
 
 import StatusDot from './StatusDot';

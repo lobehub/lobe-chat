@@ -24,7 +24,7 @@ import {
 import { memo, type ReactNode, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 

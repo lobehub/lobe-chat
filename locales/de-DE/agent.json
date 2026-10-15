@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Werkzeuge werden geladen…",
   "share.settings.tools.needsMemoryPermission": "Aktivieren Sie auch „Lesen meines Speichers erlauben“ oben, oder dieses Werkzeug bleibt für Besucher inaktiv.",
   "share.settings.tools.notAvailableToVisitors": "Dieses Werkzeug kann niemals in einem freigegebenen Besuch verwendet werden – Besucherbesuche sind von Ihrer Wissensdatenbank und Agentendateien ausgeschlossen.",
+  "share.settings.tools.onDemandDesc": "Nicht bei diesem Agenten aktiviert. Sobald die Berechtigung erteilt ist, wird das Modell es in einem Besucherlauf nur bei Bedarf aktivieren.",
+  "share.settings.tools.showOnDemand": "Bedarfswerkzeuge anzeigen",
   "share.settings.tools.title": "Werkzeuge, die Besucher verwenden können",
   "share.settings.updateError": "Die Änderung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
   "share.settings.usage.conversations": "Gespräche",

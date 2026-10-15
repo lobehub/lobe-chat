@@ -62,6 +62,8 @@ interface StaleGitSnapshotProps {
   path: string;
   /** The source repo the worktree was linked from, when the topic recorded one. */
   sourcePath?: string;
+  /** The conversation the switch is recorded on; omitted, the global active topic. */
+  topicId?: string | null;
 }
 
 /**
@@ -76,11 +78,16 @@ interface StaleGitSnapshotProps {
  * explains why the branch is frozen but leaves no way out of it.
  */
 const StaleGitSnapshot = memo<StaleGitSnapshotProps>(
-  ({ agentId, git, isGithub, path, sourcePath }) => {
+  ({ agentId, git, isGithub, path, sourcePath, topicId }) => {
     const { t } = useTranslation('device');
     const [open, setOpen] = useState(false);
     const [resetting, setResetting] = useState(false);
-    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath: sourcePath ?? path });
+    const switchWorktree = useSwitchWorktree({
+      agentId,
+      isGithub,
+      sourcePath: sourcePath ?? path,
+      topicId,
+    });
 
     const { explanation, isWorktree, label, pullRequest, reset, worktreePath } =
       resolveStaleSnapshot({ git, path, sourcePath });

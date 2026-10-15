@@ -17,6 +17,7 @@ import {
   parsePluginEntry,
   upsertPluginMode,
 } from '@lobechat/types';
+import debug from 'debug';
 
 import { AgentModel } from '@/database/models/agent';
 import { ConnectorModel } from '@/database/models/connector';
@@ -39,6 +40,8 @@ const handleError = (error: unknown, message: string): ToolExecutionResult => {
 
 /** Max results per searchAgent call (mirrored in the tool manifest: "max: 20") */
 const MAX_SEARCH_AGENT_LIMIT = 20;
+
+const log = debug('lobe-server:agent-management-runtime');
 
 export const agentManagementRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
@@ -195,7 +198,15 @@ export const agentManagementRuntime: ServerRuntimeRegistration = {
       getAgentDetail: async (params: GetAgentDetailParams): Promise<ToolExecutionResult> => {
         try {
           const agent = await agentModel.getAgentConfigById(params.agentId);
+
           if (!agent) {
+            // searchAgent can surface marketplace agents (short-code ids) that
+            // have no local agents row; read their detail through the market
+            // fallback instead of reporting a false "not found" (same behavior
+            // as the client AgentManagerRuntime).
+            const marketDetail = await getMarketAgentDetail(discoverService, params.agentId);
+            if (marketDetail) return marketDetail;
+
             return { content: `Agent "${params.agentId}" not found.`, success: false };
           }
 
@@ -476,4 +487,92 @@ export const agentManagementRuntime: ServerRuntimeRegistration = {
     };
   },
   identifier: AgentManagementIdentifier,
+};
+
+/**
+ * Best-effort marketplace detail lookup for ids that have no local agents row.
+ * Mirrors the client `AgentManagerRuntime.getMarketAgentDetail`; market config
+ * almost never carries `agencyConfig`, so the hetero runtime descriptor is
+ * intentionally not mirrored here (apps/server does not depend on
+ * `@lobechat/agent-manager-runtime`).
+ */
+const getMarketAgentDetail = async (
+  discoverService: DiscoverService,
+  agentId: string,
+): Promise<ToolExecutionResult | null> => {
+  let detail: Awaited<ReturnType<DiscoverService['getAssistantDetail']>>;
+  try {
+    detail = await discoverService.getAssistantDetail({
+      identifier: agentId,
+      source: 'new',
+    });
+  } catch (error) {
+    // Market lookup is best-effort: fall through to the local "not found",
+    // but keep the failure observable instead of silent.
+    log(
+      'getAgentDetail: market fallback lookup failed for identifier=%s: %s',
+      agentId,
+      error instanceof Error ? error.message : error,
+    );
+    return null;
+  }
+
+  const config = detail?.config as Record<string, any> | undefined;
+  if (!detail || !config) return null;
+
+  const plugins = config.plugins?.map((entry: any) => {
+    const { identifier, mode } = parsePluginEntry(entry);
+    return mode === 'pinned' ? identifier : `${identifier} (${mode})`;
+  }) as string[] | undefined;
+
+  // Marketplace configs can carry the model as an object
+  // ({ model, provider, parameters }) — extract the nested model/provider so
+  // the LLM-facing summary and GetAgentDetailRender never see "[object
+  // Object]" (same normalization as src/services/agent.ts).
+  let provider = config.provider as string | undefined;
+  let model = config.model as string | undefined;
+  if (model !== null && typeof model === 'object') {
+    const { model: modelName, provider: modelProvider } = model as {
+      model?: string;
+      provider?: string;
+    };
+    model = modelName;
+    provider = provider ?? modelProvider;
+  }
+  const systemRole = config.systemRole as string | undefined;
+
+  const parts: string[] = [];
+  if (detail.title) parts.push(`**${detail.title}**`);
+  if (detail.description) parts.push(detail.description);
+  if (model) parts.push(`Model: ${provider ? `${provider}/` : ''}${model}`);
+  if (plugins?.length) parts.push(`Plugins: ${plugins.join(', ')}`);
+  if (systemRole) parts.push(`System Prompt: ${systemRole}`);
+  parts.push(
+    'ℹ️ This is a marketplace agent (read-only). Install it into a workspace before editing.',
+  );
+
+  return {
+    content: parts.join('\n'),
+    state: {
+      agentId,
+      config: {
+        model,
+        openingMessage: config.openingMessage as string | undefined,
+        openingQuestions: config.openingQuestions as string[] | undefined,
+        plugins,
+        provider,
+        systemRole,
+      },
+      isMarket: true,
+      meta: {
+        avatar: detail.avatar,
+        backgroundColor: detail.backgroundColor,
+        description: detail.description,
+        tags: detail.tags,
+        title: detail.title,
+      },
+      success: true,
+    },
+    success: true,
+  };
 };

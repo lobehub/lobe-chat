@@ -41,7 +41,7 @@ import NewsList from './NewsList';
 import { ownsRailSections } from './railSectionPlacement';
 import RunningTasksCard from './RunningTasksCard';
 import { filterTopicsForInboxScope, resolveInboxScopeToggleSection } from './scopeTogglePlacement';
-import { splitBriefs } from './splitBriefs';
+import { arrangeDayNews, splitBriefs } from './splitBriefs';
 import UnreadTopicList from './UnreadTopicList';
 import { useHomeInboxTopics } from './useHomeInboxTopics';
 
@@ -213,6 +213,9 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   const teamView = isTeam && scope === 'team';
 
   const { needsYou } = useMemo(() => splitBriefs(briefs), [briefs]);
+  // Urgent briefs already waiting in "Needs you" leave the digest; the rest
+  // lead with urgent, then normal, then info.
+  const news = useMemo(() => arrangeDayNews(dayNews ?? [], briefs), [dayNews, briefs]);
 
   // Topics are already workspace-wide from the server; "mine" is the viewer's
   // own runs, "team" is everyone's. Personal mode has only the viewer's, so the
@@ -434,7 +437,6 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   // Everything below renders from `shownNewsOffset` / the payload's own day —
   // see the comment at `shownNewsOffset` for why `newsDayOffset` must not be
   // used for display.
-  const news = dayNews ?? [];
   const unresolvedNews = news.filter((brief) => !brief.resolvedAt);
   const showNewsSection =
     showRailSections && !!dayNews && (news.length > 0 || shownNewsOffset > 0 || hasEarlierNews);

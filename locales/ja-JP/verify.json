@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "レビューするものはありません — すべてのチェックにすでに判定が付いています。",
   "acceptance.predict.proposals": "AIレビュー完了: {{count}}件のチェックがフラグ付けされました。",
   "acceptance.predict.stillRunning": "AIレビューはまだ進行中です — 結果を見るには少し待ってリフレッシュしてください。",
+  "acceptance.preview.review": "プレビューでレビュー",
+  "acceptance.preview.reviewHint": "レビュー用ツールバーを使用してデプロイされたプレビューを開き、ライブページにコメントを追加します",
   "acceptance.proposal.confirm": "確認して送り返す",
   "acceptance.proposal.misidentified": "実際の問題だが、場所が違う",
   "acceptance.proposal.notAnIssue": "問題ではない",

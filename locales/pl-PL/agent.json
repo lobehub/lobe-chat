@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Ładowanie narzędzi…",
   "share.settings.tools.needsMemoryPermission": "Włącz również „Zezwól na odczyt mojej pamięci” powyżej, w przeciwnym razie to narzędzie pozostanie nieaktywne dla odwiedzających.",
   "share.settings.tools.notAvailableToVisitors": "To narzędzie nigdy nie może być używane w udostępnionym uruchomieniu — uruchomienia odwiedzających są zablokowane przed Twoją bazą wiedzy i plikami Agenta.",
+  "share.settings.tools.onDemandDesc": "Nie włączono w tym Agencie. Po przyznaniu model włącza to w trybie odwiedzającego tylko wtedy, gdy jest to potrzebne.",
+  "share.settings.tools.showOnDemand": "Pokaż narzędzia na żądanie",
   "share.settings.tools.title": "Narzędzia, z których mogą korzystać odwiedzający",
   "share.settings.updateError": "Nie udało się zapisać zmiany. Spróbuj ponownie.",
   "share.settings.usage.conversations": "Rozmowy",
