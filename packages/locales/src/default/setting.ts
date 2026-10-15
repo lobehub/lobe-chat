@@ -3638,10 +3638,8 @@ When I am ___, I need ___
   'workspace.onboarding.flow.devices.title': 'Connect team devices',
   'workspace.onboarding.flow.devices.subtitle':
     'Enroll the team’s computers so the assistant can use Claude Code, Codex and other local agents on them.',
-  'workspace.onboarding.flow.devices.connect': 'Connect device',
   'workspace.onboarding.flow.devices.count': '{{online}} of {{count}} online',
-  'workspace.onboarding.flow.devices.empty':
-    'No team devices yet. Install the desktop app or run lh connect on a team computer to add one.',
+  'workspace.onboarding.flow.devices.viewAll': 'View all devices',
   'workspace.onboarding.step4.heading': '{{name}} is ready!',
   'workspace.onboarding.step4.subtitle':
     'Your workspace is set up. Jump in and start collaborating with your team.',
