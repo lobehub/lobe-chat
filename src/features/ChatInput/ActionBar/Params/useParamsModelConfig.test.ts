@@ -44,6 +44,7 @@ vi.mock('@/store/chat', () => ({
     selector({
       activeTopicId: testState.chat.activeTopicId,
       topicDataMap: {},
+      useFetchTopicDetail: () => {},
       topicDetailMap: Object.fromEntries(
         Object.entries(testState.chat.topicModels).map(([id, pin]) => [id, { id, ...pin }]),
       ),

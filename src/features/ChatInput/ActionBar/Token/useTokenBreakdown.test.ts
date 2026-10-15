@@ -8,7 +8,6 @@ const state = vi.hoisted(() => ({
   /** `undefined`: the host publishes no topic; `null`: its conversation has none. */
   composerTopicId: undefined as string | null | undefined,
   summaries: {} as Record<string, string>,
-  useFetchTopicDetail: vi.fn(),
 }));
 
 // One token per character, so a count names the text it was taken from.
@@ -22,6 +21,8 @@ vi.mock('@/helpers/toolEngineering', () => ({
 }));
 
 vi.mock('../../hooks/useAgentId', () => ({ useAgentId: () => 'agent-1' }));
+// `useEffectiveModel` owns loading the composer topic by id (see `useTopicModel`);
+// here the topic lands in `topicDetailMap` the way that fetch would put it.
 vi.mock('../../hooks/useEffectiveModel', () => ({
   useEffectiveModel: () => ({ model: 'model-1', provider: 'provider-1' }),
 }));
@@ -74,7 +75,6 @@ vi.mock('@/store/chat', () => ({
     selector({
       activeTopicId: state.activeTopicId,
       topicDataMap: {},
-      useFetchTopicDetail: state.useFetchTopicDetail,
       topicDetailMap: Object.fromEntries(
         Object.entries(state.summaries).map(([id, historySummary]) => [id, { historySummary, id }]),
       ),
@@ -86,7 +86,6 @@ beforeEach(() => {
   state.activeTopicId = 'main-topic';
   state.composerTopicId = undefined;
   state.summaries = { 'main-topic': 'main column summary', 'pane-topic': 'pane' };
-  state.useFetchTopicDetail.mockReset();
 });
 
 describe('useTokenBreakdown', () => {
@@ -114,12 +113,12 @@ describe('useTokenBreakdown', () => {
 
   // A document's chat panel runs on a `trigger='document'` system topic that
   // never reaches the loaded lists, yet the run includes its persisted summary.
-  it('loads an unlisted composer topic by id and counts its summary once it arrives', () => {
+  it('counts an unlisted composer topic summary once its detail arrives', () => {
     state.composerTopicId = 'doc-topic';
 
     const { rerender, result } = renderHook(() => useTokenBreakdown());
 
-    expect(state.useFetchTopicDetail).toHaveBeenLastCalledWith('doc-topic');
+    expect(result.current.historySummaryToken).toBe(0);
 
     state.summaries['doc-topic'] = 'doc summary';
     rerender();
@@ -128,32 +127,18 @@ describe('useTokenBreakdown', () => {
   });
 
   // `/goal/:goalId` makes a sidebar-excluded supervision topic globally active
-  // with no `useFetchActiveTopicDetail` mounted, so the composer must load it.
-  it('loads the global active topic by id when no list or detail holds it', () => {
+  // with no `useFetchActiveTopicDetail` mounted.
+  it('counts the global active topic summary once its detail arrives', () => {
     state.composerTopicId = 'main-topic';
     delete state.summaries['main-topic'];
 
     const { rerender, result } = renderHook(() => useTokenBreakdown());
 
-    expect(state.useFetchTopicDetail).toHaveBeenLastCalledWith('main-topic');
     expect(result.current.historySummaryToken).toBe(0);
 
     state.summaries['main-topic'] = 'goal summary';
     rerender();
 
     expect(result.current.historySummaryToken).toBe('goal summary'.length);
-  });
-
-  it('requests no detail for a topic that is already loaded or when there is none', () => {
-    state.composerTopicId = 'pane-topic';
-    const { rerender } = renderHook(() => useTokenBreakdown());
-
-    state.composerTopicId = null;
-    rerender();
-
-    state.composerTopicId = undefined;
-    rerender();
-
-    for (const [id] of state.useFetchTopicDetail.mock.calls) expect(id).toBeUndefined();
   });
 });
