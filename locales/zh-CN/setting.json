@@ -3166,6 +3166,7 @@
   "workspace.onboarding.skipConfirm.description": "您可以随时在工作区设置中自定义 LobeAI 并添加代理。",
   "workspace.onboarding.skipConfirm.ok": "跳过",
   "workspace.onboarding.skipConfirm.title": "跳过工作区设置？",
+  "workspace.onboarding.skipFailed": "跳过设置失败，请重试。",
   "workspace.onboarding.step1.avatarHint": "选择一个表情符号或上传一张图片。",
   "workspace.onboarding.step1.avatarLabel": "头像",
   "workspace.onboarding.step1.avatarTooLarge": "头像文件必须小于 5MB。",

@@ -3454,6 +3454,7 @@ When I am ___, I need ___
     'You can always customize LobeAI and add agents later in Workspace settings.',
   'workspace.onboarding.skipConfirm.ok': 'Skip',
   'workspace.onboarding.skipConfirm.cancel': 'Continue setup',
+  'workspace.onboarding.skipFailed': "Couldn't skip setup. Please try again.",
   'workspace.onboarding.toast.saved': 'Saved',
   'workspace.onboarding.toast.failed': 'Could not save. Please try again.',
   'workspace.onboarding.toast.installAgentsFailed':

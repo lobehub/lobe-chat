@@ -3166,6 +3166,7 @@
   "workspace.onboarding.skipConfirm.description": "You can always customize LobeAI and add agents later in Workspace settings.",
   "workspace.onboarding.skipConfirm.ok": "Skip",
   "workspace.onboarding.skipConfirm.title": "Skip workspace setup?",
+  "workspace.onboarding.skipFailed": "Couldn't skip setup. Please try again.",
   "workspace.onboarding.step1.avatarHint": "Pick an emoji or upload an image.",
   "workspace.onboarding.step1.avatarLabel": "Avatar",
   "workspace.onboarding.step1.avatarTooLarge": "Avatar file must be smaller than 5MB.",
