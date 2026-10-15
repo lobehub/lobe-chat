@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "下载桌面端，登录后设备自动连接。",
   "devices.empty.methodDesktop.title": "使用桌面端连接",
   "devices.empty.title": "连接你的第一台设备",
+  "devices.errors.boundToFixedAgent": "该设备已被一个或多个工作区智能体设为固定运行设备，请先修改这些智能体的运行设备设置。",
   "devices.fallbackBadge": "身份不稳定",
   "devices.fallbackTooltip": "未能通过机器 ID 识别此设备，重装应用可能会产生重复条目。",
   "devices.health.cpu": "CPU",

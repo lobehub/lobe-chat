@@ -2,7 +2,7 @@
 
 import type { DeviceListItem } from '@lobechat/types';
 import { DropdownMenu, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Avatar, confirmModal, Tag, Text, toast } from '@lobehub/ui/base-ui';
 import { useInViewport } from 'ahooks';
 import { createStaticStyles, cssVar } from 'antd-style';
 import dayjs from 'dayjs';
@@ -23,6 +23,7 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { refreshDeviceList } from './const';
+import { getDeviceActionErrorMessage } from './deviceActionError';
 import { DeviceRunningSummaryValue } from './DeviceActivity/RunningUsers';
 import { useDeviceMetricSeries } from './DeviceHealth/shared';
 import UsageMeter, { UsageMeterGroup, UsageMeterSkeleton } from './DeviceHealth/UsageMeter';
@@ -132,10 +133,16 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // server; personal devices stay userId-scoped. Route by the device's own
   // scope.
   const onRemoveSuccess = () => refreshDeviceList();
+  // The confirm modal stays open on a rejected `onOk` but shows nothing, so
+  // every mutation behind one must surface its own failure (e.g. a device
+  // still pinned by a workspace agent can be neither hidden nor removed).
+  const onActionError = (error: unknown) => toast.error(getDeviceActionErrorMessage(error));
   const removePersonal = lambdaQuery.device.removeDevice.useMutation({
+    onError: onActionError,
     onSuccess: onRemoveSuccess,
   });
   const removeWorkspace = lambdaQuery.device.removeWorkspaceDevice.useMutation({
+    onError: onActionError,
     onSuccess: onRemoveSuccess,
   });
   const removeDevice = device.scope === 'workspace' ? removeWorkspace : removePersonal;
@@ -178,6 +185,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // files. Success feedback is the row itself moving to the other tab after
   // the list refresh.
   const setVisibility = lambdaQuery.device.setWorkspaceDeviceVisibility.useMutation({
+    onError: onActionError,
     onSuccess: () => refreshDeviceList(),
   });
 
