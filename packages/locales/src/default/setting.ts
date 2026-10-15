@@ -3597,6 +3597,8 @@ When I am ___, I need ___
     'Connect a bot your team owns to {{name}}. Everyone in the group can @{{name}} to hand off work — nobody has to link an account.',
   'workspace.onboarding.flow.channels.quote': "Add me to your team's group chats,",
   'workspace.onboarding.flow.channels.highlight': 'and anyone can hand me work.',
+  'workspace.onboarding.flow.channels.showMore': 'More channels ({{count}})',
+  'workspace.onboarding.flow.channels.showLess': 'Show less',
   'workspace.onboarding.flow.channels.more': 'You can change channels anytime in Agent → Channels.',
   'workspace.onboarding.flow.channels.connect.back': 'Back to list',
   'workspace.onboarding.flow.channels.connect.category': 'Bot channel',

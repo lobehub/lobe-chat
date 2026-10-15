@@ -3143,6 +3143,8 @@
   "workspace.onboarding.flow.channels.highlight": "大家 @ 我就能派活。",
   "workspace.onboarding.flow.channels.more": "之后可以随时在「Agent → 渠道」里修改。",
   "workspace.onboarding.flow.channels.quote": "把我接进团队的群聊，",
+  "workspace.onboarding.flow.channels.showLess": "收起",
+  "workspace.onboarding.flow.channels.showMore": "更多渠道（{{count}}）",
   "workspace.onboarding.flow.channels.title": "把助手接入团队的聊天群",
   "workspace.onboarding.flow.connectApps.description": "连接团队在用的应用，助手会据此了解团队的项目和分工。授权对整个 Workspace 生效。",
   "workspace.onboarding.flow.connectApps.more": "更多应用可以随时在「设置 → 连接器」中接入。",

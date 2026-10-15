@@ -3143,6 +3143,8 @@
   "workspace.onboarding.flow.channels.highlight": "and anyone can hand me work.",
   "workspace.onboarding.flow.channels.more": "You can change channels anytime in Agent → Channels.",
   "workspace.onboarding.flow.channels.quote": "Add me to your team's group chats,",
+  "workspace.onboarding.flow.channels.showLess": "Show less",
+  "workspace.onboarding.flow.channels.showMore": "More channels ({{count}})",
   "workspace.onboarding.flow.channels.title": "Bring the assistant into your team's chats",
   "workspace.onboarding.flow.connectApps.description": "Connect the apps your team uses so the assistant can learn its projects and who does what. Authorization applies to the whole workspace.",
   "workspace.onboarding.flow.connectApps.more": "You can connect more apps anytime in Settings → Connectors.",
