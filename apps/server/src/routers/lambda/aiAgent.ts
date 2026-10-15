@@ -1316,6 +1316,13 @@ const ExecAgentSchema = z
      */
     selectedToolIds: z.array(z.string()).optional(),
     /**
+     * Skill identifiers the user selected for this message. Their bodies are
+     * injected directly for this turn and every later turn of the topic, the
+     * same way a pinned skill is, instead of waiting for `activateSkill`.
+     * Persisted on the user message as `metadata.selectedSkillIds`.
+     */
+    selectedSkillIds: z.array(z.string()).optional(),
+    /**
      * Agents the user @-mentioned in this message (multi-mention). When present
      * (and non-group), the run enables the callAgent tool and injects the
      * mentioned-agents delegation context so the supervisor delegates to them
@@ -2520,6 +2527,7 @@ export const aiAgentRouter = router({
       resumeApproval,
       resumeApprovals,
       resumeToolResult,
+      selectedSkillIds,
       selectedToolIds,
       steer,
       trigger,
@@ -2651,6 +2659,7 @@ export const aiAgentRouter = router({
         resumeApproval,
         resumeApprovals,
         resumeToolResult,
+        selectedSkillIds,
         selectedToolIds,
         slug,
         steer,
@@ -2828,6 +2837,10 @@ export const aiAgentRouter = router({
           prompt,
           // When parentMessageId is provided, this is a regeneration/continue — skip user message creation
           resume: !!parentMessageId,
+          // NOTICE: the batch route forwards only a subset of `ExecAgentSchema`;
+          // other per-turn picks (`selectedToolIds`, `mentionedAgents`, `fileIds`)
+          // are still dropped here, as before this field was added.
+          selectedSkillIds: task.selectedSkillIds,
           slug,
           trigger: trigger ?? RequestTrigger.Chat,
         });

@@ -9,12 +9,12 @@ import type {
   FileAccessScope,
   HeterogeneousProviderConfig,
   HeterogeneousTopicPin,
+  RequestTrigger,
 } from '@lobechat/types';
 import {
   agentShareFileAccessScope,
   ChatErrorType,
   ordinaryFileAccessScope,
-  RequestTrigger,
   resolveHeterogeneousProviderTopicModel,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
@@ -42,6 +42,7 @@ import { reserveShareVisitorTopic, reserveShareVisitorTurn } from '../shareVisit
 import type { InternalExecAgentParams } from '../types';
 import { createUserTurnAnchor } from './resolveUserMessageParentId';
 import { createStageTracer, openStageMark } from './sendTracing';
+import { buildUserTurnMetadata } from './userTurnMetadata';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -350,6 +351,8 @@ export interface TurnSetupInput {
   /** Raw resume flag — a resume run must land on an existing topic. */
   resume?: boolean;
   runFromHistory: boolean;
+  /** Skills the user selected for this turn; see `ExecAgentParams.selectedSkillIds`. */
+  selectedSkillIds?: string[];
   /** Shared-agent visitor gate — set only by the shareChat router. */
   shareGate?: AgentShareGate;
   /** The prompt was queued behind a running turn; see `ExecAgentParams.steer`. */
@@ -438,6 +441,7 @@ export const setupTurn = async (
     resolvedAgentId,
     resume,
     runFromHistory,
+    selectedSkillIds,
     shareGate,
     steer,
     throwIfExecutionAborted,
@@ -799,22 +803,14 @@ export const setupTurn = async (
   const heteroType = (heteroProviderType ?? model) as HeterogeneousAgentType;
 
   // ── Shared turn setup (runs for BOTH hetero and normal agents) ──────────
-  const requestTriggerMetadata = {
-    ...(trigger && Object.values(RequestTrigger).includes(trigger as RequestTrigger)
-      ? { trigger: trigger as RequestTrigger }
-      : undefined),
-    ...(appContext?.conversationAgentId && appContext.scope === 'sub_agent'
-      ? { agentDispatch: { kind: 'callAgent' as const, visibility: 'internal' as const } }
-      : undefined),
-    // Bot-channel turns are inserted under the OWNER's userId; keep the real
-    // platform author alongside so the UI can attribute the bubble correctly.
-    ...(botSender ? { botSender } : undefined),
-    // A provider event that injected this turn keeps its source on the row.
-    ...(externalOrigin ? { externalOrigin } : undefined),
-    // A follow-up queued behind a running turn renders as that turn's
-    // continuation; the client's optimistic row is replaced by this one.
-    ...(steer ? { steer: true as const } : undefined),
-  };
+  const requestTriggerMetadata = buildUserTurnMetadata({
+    appContext,
+    botSender,
+    externalOrigin,
+    selectedSkillIds,
+    steer,
+    trigger,
+  });
 
   // Attachment ingestion: raw bot/IM `files` → S3, pre-uploaded
   // `attachedFileIds` → signed URLs + classification.

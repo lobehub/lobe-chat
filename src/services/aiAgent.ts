@@ -172,6 +172,8 @@ export interface ExecAgentTaskParams {
   resumeApprovals?: ResumeApprovalParam[];
   /** Resume a previous op paused on a human-intervention tool by carrying the human answer as the tool result. */
   resumeToolResult?: ResumeToolResultParam;
+  /** Skill identifiers the user selected in this message; the server injects their bodies. */
+  selectedSkillIds?: string[];
   /** Tool identifiers the user @-mentioned in this message; the server enables them for this run. */
   selectedToolIds?: string[];
   slug?: string;

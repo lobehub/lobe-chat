@@ -958,6 +958,7 @@ export class AiAgentService {
       resumeToolResult,
       approvalResolutionRequestId: providedApprovalResolutionRequestId,
       approvalSourceOperationId: providedApprovalSourceOperationId,
+      selectedSkillIds,
       selectedToolIds,
       shareGate,
       mentionedAgents,
@@ -1251,6 +1252,7 @@ export class AiAgentService {
           resolvedAgentId,
           resume,
           runFromHistory,
+          selectedSkillIds,
           shareGate,
           steer,
           throwIfExecutionAborted,
@@ -1464,6 +1466,7 @@ export class AiAgentService {
       resumeFromHistory: runFromHistory,
       resumeToolResult: resolvedToolResult,
       runAttachments,
+      selectedSkillIds,
       selectedToolIds,
       topicBoundDeviceId: turn.topicBoundDeviceId,
     });
