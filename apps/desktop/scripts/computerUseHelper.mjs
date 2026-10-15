@@ -72,13 +72,19 @@ const sleepSync = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),
  * runners intermittently lose that connection (exit 68, NSURLErrorDomain).
  * Retry before failing the build; a missing or invalid ticket fails every try.
  */
-const validateStapledTicket = (execute, appPath, sleep) => {
+const validateStapledTicket = (execute, appPath, { logger, sleep }) => {
+  const attempts = STAPLER_VALIDATE_RETRY_DELAYS_MS.length + 1;
   for (let attempt = 0; ; attempt++) {
     try {
       return run(execute, 'xcrun', ['stapler', 'validate', appPath]);
     } catch (error) {
       const delay = STAPLER_VALIDATE_RETRY_DELAYS_MS[attempt];
       if (delay === undefined) throw error;
+      // Logged so a build that only passes on retry stays visible in CI output.
+      const reason = String(error.message).split('\n')[0].slice(0, 200);
+      logger.warn(
+        `⚠️ stapler validate failed (attempt ${attempt + 1}/${attempts}), retrying in ${delay / 1000}s: ${reason}`,
+      );
       sleep(delay);
     }
   }
@@ -99,7 +105,7 @@ const download = async (fetchImpl, url) => {
  */
 export const verifyComputerUseHelper = (
   appPath,
-  { execute = spawnSync, sleep = sleepSync, version } = {},
+  { execute = spawnSync, logger = console, sleep = sleepSync, version } = {},
 ) => {
   run(execute, 'codesign', ['--verify', '--strict', '--deep', '--verbose=2', appPath]);
 
@@ -113,7 +119,7 @@ export const verifyComputerUseHelper = (
     );
   }
 
-  validateStapledTicket(execute, appPath, sleep);
+  validateStapledTicket(execute, appPath, { logger, sleep });
 
   if (version) {
     const infoPlist = path.join(appPath, 'Contents', 'Info.plist');
