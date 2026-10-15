@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "검토할 것이 없습니다 — 모든 검사가 이미 판결을 받았습니다.",
   "acceptance.predict.proposals": "AI 검토 완료: {{count}}개의 검사가 플래그로 표시되었습니다.",
   "acceptance.predict.stillRunning": "AI 검토가 아직 진행 중입니다 — 결과를 보려면 잠시 후 새로고침하세요.",
+  "acceptance.preview.review": "미리보기 검토",
+  "acceptance.preview.reviewHint": "검토 도구 모음으로 배포된 미리보기를 열어 라이브 페이지에 댓글을 남기세요",
   "acceptance.proposal.confirm": "확인하고 되돌려보내기",
   "acceptance.proposal.misidentified": "실제 문제, 잘못된 위치",
   "acceptance.proposal.notAnIssue": "문제가 아님",

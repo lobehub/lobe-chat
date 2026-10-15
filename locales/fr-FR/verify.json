@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Rien à examiner — chaque vérification a déjà un verdict.",
   "acceptance.predict.proposals": "Examen par l'IA terminé : {{count}} vérification(s) signalée(s) pour vous.",
   "acceptance.predict.stillRunning": "L'examen par l'IA est toujours en cours — actualisez dans un instant pour voir les résultats.",
+  "acceptance.preview.review": "Revoir l'aperçu",
+  "acceptance.preview.reviewHint": "Ouvrez l'aperçu déployé avec la barre d'outils de révision pour commenter la page en direct",
   "acceptance.proposal.confirm": "Confirmer et renvoyer",
   "acceptance.proposal.misidentified": "Problème réel, mauvais emplacement",
   "acceptance.proposal.notAnIssue": "Pas un problème",

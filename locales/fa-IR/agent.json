@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "در حال بارگذاری ابزارها…",
   "share.settings.tools.needsMemoryPermission": "همچنین گزینه «اجازه خواندن حافظه من» را در بالا فعال کنید، وگرنه این ابزار برای بازدیدکنندگان غیرفعال باقی می‌ماند.",
   "share.settings.tools.notAvailableToVisitors": "این ابزار هرگز نمی‌تواند در اجرای مشترک استفاده شود — اجرای بازدیدکنندگان از پایگاه دانش و فایل‌های عامل شما مسدود شده است.",
+  "share.settings.tools.onDemandDesc": "در این عامل فعال نیست. پس از اعطا، مدل آن را فقط در صورت نیاز در یک اجرای بازدیدکننده فعال می‌کند.",
+  "share.settings.tools.showOnDemand": "نمایش ابزارهای در صورت نیاز",
   "share.settings.tools.title": "ابزارهایی که بازدیدکنندگان می‌توانند استفاده کنند",
   "share.settings.updateError": "تغییر ذخیره نشد. لطفاً دوباره تلاش کنید.",
   "share.settings.usage.conversations": "مکالمات",

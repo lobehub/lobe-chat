@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "도구 불러오는 중…",
   "share.settings.tools.needsMemoryPermission": "위에서 '내 메모리 읽기 허용'을 켜십시오. 그렇지 않으면 이 도구는 방문자에게 비활성화됩니다.",
   "share.settings.tools.notAvailableToVisitors": "이 도구는 공유 실행에서 절대 사용할 수 없습니다 — 방문자 실행은 귀하의 지식 기반 및 에이전트 파일에서 차단됩니다.",
+  "share.settings.tools.onDemandDesc": "이 에이전트에서 활성화되지 않았습니다. 권한이 부여되면 모델이 필요할 때만 방문자 실행 중에 이를 활성화합니다.",
+  "share.settings.tools.showOnDemand": "요청 시 도구 표시",
   "share.settings.tools.title": "방문자가 사용할 수 있는 도구",
   "share.settings.updateError": "변경 사항을 저장할 수 없습니다. 다시 시도하십시오.",
   "share.settings.usage.conversations": "대화",
