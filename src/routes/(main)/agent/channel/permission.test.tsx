@@ -31,27 +31,6 @@ vi.mock('react-router', async (importOriginal) => ({
   Link: ({ children }: { children?: ReactNode }) => <a>{children}</a>,
 }));
 
-vi.mock('antd', async (importOriginal) => {
-  const actual = (await importOriginal()) as { App: Record<string, unknown> } & Record<
-    string,
-    unknown
-  >;
-
-  return {
-    ...actual,
-    App: {
-      ...actual.App,
-      useApp: () => ({
-        message: {
-          error: vi.fn(),
-          success: vi.fn(),
-          warning: vi.fn(),
-        },
-      }),
-    },
-  };
-});
-
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   useActiveWorkspaceId: () => mocks.activeWorkspaceId,
 }));

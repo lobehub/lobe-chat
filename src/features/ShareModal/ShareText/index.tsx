@@ -1,7 +1,6 @@
 import { exportFile } from '@lobechat/utils/client';
 import { formatSize } from '@lobechat/utils/format';
-import { copyToClipboard } from '@lobehub/ui';
-import { Button, toast } from '@lobehub/ui/base-ui';
+import { Button, copyToClipboard, toast } from '@lobehub/ui';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -3,8 +3,18 @@
 import { AGENT_CHAT_URL, DEFAULT_AVATAR, GROUP_CHAT_URL } from '@lobechat/const';
 import type { SidebarAgentItem } from '@lobechat/types';
 import { agentDisplayName, agentSecondaryDisplayName } from '@lobechat/types';
-import { Block, ContextMenuTrigger, type DropdownItem, Flexbox, Tooltip } from '@lobehub/ui';
-import { Avatar, createStaticStyles, responsive,Tag, Text  } from '@lobehub/ui';
+import {
+  Avatar,
+  Block,
+  ContextMenuTrigger,
+  createStaticStyles,
+  type DropdownItem,
+  Flexbox,
+  responsive,
+  Tag,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

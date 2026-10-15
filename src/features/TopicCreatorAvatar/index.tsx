@@ -1,8 +1,7 @@
 'use client';
 
 import type { BotSenderMetadata } from '@lobechat/types';
-import { Tooltip } from '@lobehub/ui';
-import { cssVar } from 'antd-style';
+import { cssVar, Tooltip } from '@lobehub/ui';
 import { memo, type ReactNode } from 'react';
 
 import { useAuthorInfo } from '@/business/client/hooks/useAuthorInfo';
