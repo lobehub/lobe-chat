@@ -28,6 +28,13 @@ describe('coordinatorGateKind', () => {
     expect(gateOptionLabelKey({ id: 'release' }, 'batchRelease')).toBe(
       'goalProcess.gate.option.releaseBatch',
     );
+    // A sent-back release is rewritten by the main Agent, not re-probed.
+    expect(gateOptionLabelKey({ id: 'revise' }, 'batchRelease')).toBe(
+      'goalProcess.gate.option.sendBackBatch',
+    );
+    expect(gateOptionLabelKey({ id: 'revise' }, 'batchPatternBreak')).toBe(
+      'goalProcess.gate.option.reviseBatch',
+    );
   });
 });
 

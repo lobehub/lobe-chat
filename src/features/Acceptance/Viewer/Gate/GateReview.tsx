@@ -370,6 +370,10 @@ const GateDecision = memo<{
     }
   };
 
+  // The dossier on screen is the latest round's; a revised plan arriving in
+  // the meantime makes the server refuse this decision rather than approve it.
+  const roundId = data.rounds.at(-1)?.run.id;
+
   const releaseLabel =
     dossier.kind === 'probes'
       ? t('acceptance.gate.startBatch', { count: dossier.nextWave.length })
@@ -403,6 +407,7 @@ const GateDecision = memo<{
                 run(() =>
                   verifyService.rejectDelivery(data.acceptance.id, correction.trim(), {
                     dispatch: false,
+                    roundId,
                   }),
                 )
               }
@@ -418,7 +423,9 @@ const GateDecision = memo<{
             <Button
               loading={pending}
               type={'primary'}
-              onClick={() => run(() => verifyService.acceptDelivery(data.acceptance.id))}
+              onClick={() =>
+                run(() => verifyService.acceptDelivery(data.acceptance.id, undefined, { roundId }))
+              }
             >
               {releaseLabel}
             </Button>

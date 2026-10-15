@@ -184,6 +184,30 @@ describe('approving a batch release', () => {
     expect(after.rollout!.spec?.recipeOutline).toBe(before.rollout!.spec?.recipeOutline);
   });
 
+  it('drops the plan skill when the rewrite cannot land in it', async () => {
+    const { goalId, service } = await passedProbes();
+    await service.tick(goalId);
+    const pending = await pendingRelease(service, goalId);
+    await service.answerReleaseGate(pending!.nodeId, 'revise', '先补上 SSR 播种');
+    const goalModel = new GoalModel(serverDB, userId);
+    const state = (await service.graph(goalId)).goal.config!.rolloutState!;
+    // The main Agent submitted its rewrite, but the plan skill it would land in
+    // is gone, so no new version can be written.
+    await goalModel.updateRolloutState(goalId, {
+      ...state,
+      pendingRevision: { ...state.pendingRevision!, revisedRecipe: '先播种，再换 replica' },
+      planSkill: { id: 'doc_deleted_plan', name: 'migrate-stores-plan' },
+    });
+
+    await service.tick(goalId);
+
+    const after = (await service.graph(goalId)).goal.config!;
+    // Units copy the revised plan instead of loading the skill the owner sent back.
+    expect(after.rolloutState!.planSkill).toBeUndefined();
+    expect(after.rollout!.spec?.recipeOutline).toBe('先播种，再换 replica');
+    expect(after.rolloutState!.phase).toBe('release_review');
+  });
+
   it('takes a retry of the answer it recorded, and refuses a different one', async () => {
     const { goalId, service } = await passedProbes();
     await service.tick(goalId);

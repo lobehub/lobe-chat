@@ -2472,6 +2472,7 @@ export default {
   'goalProcess.gate.option.fail': 'Fail goal',
   'goalProcess.gate.option.assume': 'Go with the assumption',
   'goalProcess.gate.option.reviseBatch': 'Revise the recipe and re-probe',
+  'goalProcess.gate.option.sendBackBatch': 'Send the plan back to the main Agent',
   'goalProcess.gate.option.newClassBatch': 'Fork a fresh recipe',
   'goalProcess.gate.option.releaseBatch': 'Release the next wave',
   'goalProcess.decision.effect.fixedRetry': 'Run the task again once the setup is fixed.',
@@ -2504,6 +2505,8 @@ export default {
     'Stop acceptance and end the goal without a verdict.',
   'goalProcess.decision.effect.reviseBatch':
     'Write a correction to the recipe, then re-probe this batch under it.',
+  'goalProcess.decision.effect.sendBackBatch':
+    'Write a correction; the main Agent rewrites the plan from it and brings it back for your review. The probes are not run again.',
   'goalProcess.decision.effect.newClassBatch':
     'Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.',
   'goalProcess.decision.effect.releaseBatch':

@@ -22,6 +22,8 @@ import ClarificationQuestions, {
 } from '@/features/ClarificationQuestions';
 
 import {
+  type CoordinatorGateKind,
+  coordinatorGateKind,
   coordinatorGateReason,
   gateOptionLabelKey,
   localizedCoordinatorReason,
@@ -111,7 +113,11 @@ export const useGateOptionCopy = () => {
   const { t } = useTranslation('chat');
   return useMemo(
     () => ({
-      describe: (option: GoalDecisionOption, category: GoalGateCategory) => {
+      describe: (
+        option: GoalDecisionOption,
+        category: GoalGateCategory,
+        gateKind?: CoordinatorGateKind,
+      ) => {
         const terminalAcceptance = category === 'goalAcceptance';
         switch (option.id) {
           case 'retry': {
@@ -132,7 +138,9 @@ export const useGateOptionCopy = () => {
           // consequences are written here, in the reader's language, rather than
           // persisted as English copy the server cannot translate.
           case GOAL_BATCH_BREAK_OPTION.revise: {
-            return t('goalProcess.decision.effect.reviseBatch');
+            return gateKind === 'batchRelease'
+              ? t('goalProcess.decision.effect.sendBackBatch')
+              : t('goalProcess.decision.effect.reviseBatch');
           }
           case GOAL_BATCH_BREAK_OPTION.newClass: {
             return t('goalProcess.decision.effect.newClassBatch');
@@ -145,8 +153,12 @@ export const useGateOptionCopy = () => {
           }
         }
       },
-      label: (option: GoalDecisionOption, category: GoalGateCategory) => {
-        const key = gateOptionLabelKey(option, category === 'machine' ? 'fixSetup' : undefined);
+      label: (
+        option: GoalDecisionOption,
+        category: GoalGateCategory,
+        gateKind?: CoordinatorGateKind,
+      ) => {
+        const key = gateOptionLabelKey(option, category === 'machine' ? 'fixSetup' : gateKind);
         return key ? t(key as any) : option.label;
       },
     }),
@@ -314,17 +326,17 @@ const GoalDecisionCase = ({
   const questionText = localizedCoordinatorReason(rawReason, t as any);
   const basisText = basis && basis.trim() !== rawReason.trim() ? basis.trim() : undefined;
 
-  const questions = useMemo(
-    () => [
+  const questions = useMemo(() => {
+    const gateKind = coordinatorGateKind(decision);
+    return [
       toGateQuestion(decision, {
         basis: basisText,
-        describe: (option) => optionCopy.describe(option, category),
-        label: (option) => optionCopy.label(option, category),
+        describe: (option) => optionCopy.describe(option, category, gateKind),
+        label: (option) => optionCopy.label(option, category, gateKind),
         question: questionText,
       }),
-    ],
-    [basisText, category, decision, optionCopy, questionText],
-  );
+    ];
+  }, [basisText, category, decision, optionCopy, questionText]);
 
   // A batch break revises the recipe with the correction written here; without
   // one the "revision" would re-run the plan that just failed.

@@ -577,7 +577,7 @@ export type GoalRolloutPhase =
   | 'mass'
   | 'pattern_break'
   | 'release_review'
-  /** The owner sent the plan back; the main Agent is rewriting it before a new probe round. */
+  /** The owner sent the plan back; the main Agent is rewriting it for the owner to review again. */
   | 'plan_revision'
   | 'done';
 
@@ -701,7 +701,7 @@ export interface GoalRolloutState {
   /**
    * The owner's correction a sent-back release waits on, while the phase is
    * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`);
-   * the coordinator opens the new probe round once it lands.
+   * once it lands the rewrite returns to the owner's release review.
    */
   pendingRevision?: { correction: string; revisedReason?: string; revisedRecipe?: string };
   /** Phase the rollout is in; the coordinator reads this to pick its move. */

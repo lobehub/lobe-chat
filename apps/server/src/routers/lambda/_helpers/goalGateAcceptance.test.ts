@@ -6,10 +6,16 @@ import { assertNotHoldingRelease, withGoalGateAnswer } from './goalGateAcceptanc
 const findByNode = vi.hoisted(() => vi.fn());
 const answerReleaseGate = vi.hoisted(() => vi.fn());
 const scheduleGoalAdvance = vi.hoisted(() => vi.fn());
+const listByAcceptance = vi.hoisted(() => vi.fn());
 
 vi.mock('@/database/models/goal', () => ({
   GoalModel: class {
     findByNode = findByNode;
+  },
+}));
+vi.mock('@/database/models/verifyRun', () => ({
+  VerifyRunModel: class {
+    listByAcceptance = listByAcceptance;
   },
 }));
 vi.mock('@/server/services/goal', () => ({
@@ -36,6 +42,7 @@ beforeEach(() => {
   findByNode.mockReset();
   answerReleaseGate.mockReset();
   scheduleGoalAdvance.mockReset();
+  listByAcceptance.mockReset();
 });
 
 describe('assertNotHoldingRelease', () => {
@@ -78,7 +85,7 @@ describe('withGoalGateAnswer', () => {
     const write = vi.fn();
 
     await expect(
-      withGoalGateAnswer(db, service(false), gate(), 'release', undefined, write),
+      withGoalGateAnswer(db, service(false), gate(), 'release', {}, write),
     ).rejects.toThrow('closed');
     expect(answerReleaseGate).not.toHaveBeenCalled();
     expect(write).not.toHaveBeenCalled();
@@ -92,7 +99,7 @@ describe('withGoalGateAnswer', () => {
     });
 
     await expect(
-      withGoalGateAnswer(db, service(true), gate(), 'revise', '补上播种', write),
+      withGoalGateAnswer(db, service(true), gate(), 'revise', { comment: '补上播种' }, write),
     ).resolves.toBe('written');
     expect(answerReleaseGate).toHaveBeenCalledWith('node_release', 'revise', '补上播种');
     expect(scheduleGoalAdvance).toHaveBeenCalledWith(
@@ -100,11 +107,29 @@ describe('withGoalGateAnswer', () => {
     );
   });
 
+  it('refuses a decision made on a round the rewritten plan replaced', async () => {
+    answerReleaseGate.mockResolvedValue('goal_1');
+    listByAcceptance.mockResolvedValue([{ id: 'round_1' }, { id: 'round_2' }]);
+    const write = vi.fn(async () => 'written');
+
+    // A tab still showing the first plan approves after the rewrite arrived.
+    await expect(
+      withGoalGateAnswer(db, service(true), gate(), 'release', { roundId: 'round_1' }, write),
+    ).rejects.toMatchObject({ code: 'CONFLICT' });
+    expect(answerReleaseGate).not.toHaveBeenCalled();
+    expect(write).not.toHaveBeenCalled();
+
+    await expect(
+      withGoalGateAnswer(db, service(true), gate(), 'release', { roundId: 'round_2' }, write),
+    ).resolves.toBe('written');
+    expect(answerReleaseGate).toHaveBeenCalledWith('node_release', 'release', undefined);
+  });
+
   it('does not advance a goal when the report write failed', async () => {
     answerReleaseGate.mockResolvedValue('goal_1');
 
     await expect(
-      withGoalGateAnswer(db, service(true), gate(), 'release', undefined, async () => {
+      withGoalGateAnswer(db, service(true), gate(), 'release', {}, async () => {
         throw new Error('write failed');
       }),
     ).rejects.toThrow('write failed');

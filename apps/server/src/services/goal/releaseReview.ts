@@ -143,7 +143,8 @@ export class GoalReleaseReview {
    * Parks the goal like a pattern break, but on a decision node of its own: a
    * node carries one decision, and the Assay keeps its for a break later in the
    * round. `release` sends the wave out on the proven recipe; `revise` takes a
-   * correction and opens a new probe round, exactly like a break's revision.
+   * correction for the main Agent, whose rewritten plan comes back to this
+   * review — the probes already ran and are not run again.
    */
   private openReleaseReview = async (
     graph: GoalGraphSnapshot,
@@ -194,7 +195,7 @@ export class GoalReleaseReview {
         authority: 'user',
         options: [
           { id: GOAL_BATCH_RELEASE_OPTION.release, label: 'Release the next wave' },
-          { id: GOAL_BATCH_RELEASE_OPTION.revise, label: 'Revise the recipe and re-probe' },
+          { id: GOAL_BATCH_RELEASE_OPTION.revise, label: 'Send the plan back to the main Agent' },
         ],
         question,
         recommendedOptionId: GOAL_BATCH_RELEASE_OPTION.release,
@@ -289,8 +290,8 @@ export class GoalReleaseReview {
 
   /**
    * Answer a held release from its review page. The acceptance's decision is
-   * the owner's: `release` sends the wave out, `revise` takes the correction
-   * and opens a new probe round. Returns the goal it moved.
+   * the owner's: `release` sends the wave out, `revise` sends the plan back to
+   * the main Agent with the correction. Returns the goal it moved.
    */
   answerReleaseGate = async (
     subjectNodeId: string,
@@ -492,6 +493,9 @@ export class GoalReleaseReview {
         ...current,
         pendingRevision: undefined,
         phase: current.waveIndex === 0 ? 'probe' : 'mass',
+        // A revision that did not land leaves the skill on the plan the owner
+        // sent back: units drop it and copy the revised plan instead.
+        planSkill: version === undefined ? undefined : current.planSkill,
         planVersions: version
           ? { ...current.planVersions, [round]: version }
           : current.planVersions,

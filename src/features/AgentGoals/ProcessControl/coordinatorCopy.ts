@@ -10,7 +10,7 @@ import {
   GOAL_MACHINE_GATE_TITLE,
   GOAL_MANAGER_QUESTION_TITLE,
 } from '@lobechat/const/goal';
-import type { GoalDecisionOption, GoalGraphDecision } from '@lobechat/types';
+import type { GoalDecisionOption } from '@lobechat/types';
 import { coordinatorReasonCopies } from '@lobechat/utils/goalCopy';
 
 import type { GoalNodeView } from './goalGraphViewModel';
@@ -32,11 +32,14 @@ export type CoordinatorGateKind =
   | 'goalAcceptance'
   | 'recoverTask';
 
-const idsOf = (decision?: GoalGraphDecision | null): Set<string> =>
+/** Only the options name a gate, so any decision shape that carries them will do. */
+type GateOptions = { options?: GoalDecisionOption[] | null };
+
+const idsOf = (decision?: GateOptions | null): Set<string> =>
   new Set((decision?.options ?? []).map((option) => option.id));
 
 export const coordinatorGateKind = (
-  decision?: GoalGraphDecision | null,
+  decision?: GateOptions | null,
   /** The gate node's title; the machine gate shares its options with `recoverTask`. */
   nodeTitle?: string | null,
 ): CoordinatorGateKind | undefined => {
@@ -84,8 +87,11 @@ export const gateOptionLabelKey = (
         ? 'goalProcess.gate.option.fixedRetry'
         : 'goalProcess.gate.option.retry';
     }
+    // The release gate shares the id, but sends the plan back without re-probing.
     case GOAL_BATCH_BREAK_OPTION.revise: {
-      return 'goalProcess.gate.option.reviseBatch';
+      return kind === 'batchRelease'
+        ? 'goalProcess.gate.option.sendBackBatch'
+        : 'goalProcess.gate.option.reviseBatch';
     }
     case GOAL_BATCH_BREAK_OPTION.newClass: {
       return 'goalProcess.gate.option.newClassBatch';

@@ -68,7 +68,7 @@ import {
 } from './_helpers/acceptanceStatus';
 import { canManageAcceptance, filterManageableAcceptances } from './_helpers/acceptanceWriteScope';
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
-import { assertNotHoldingRelease, withGoalGateAnswer } from './_helpers/goalGateAcceptance';
+import * as goalGate from './_helpers/goalGateAcceptance';
 
 /**
  * A reviewer's circled region. On video evidence it also carries the frame
@@ -374,16 +374,16 @@ export const acceptanceRouter = router({
    * means the user knowingly takes it with its exceptions).
    */
   accept: acceptanceWriteProcedure
-    .input(z.object({ comment: z.string().max(2000).optional(), id: z.string() }))
+    .input(goalGate.gateDecisionInput.extend({ comment: z.string().max(2000).optional() }))
     .mutation(async ({ ctx, input }) => {
       const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
 
-      const accepted = await withGoalGateAnswer(
+      const accepted = await goalGate.withGoalGateAnswer(
         ctx.serverDB,
         service,
         acceptance,
         'release',
-        input.comment,
+        { comment: input.comment, roundId: input.roundId },
         () => service.accept(acceptance.id, input.comment),
       );
       // Signed where it lives — the inbox stops asking for the same sign-off.
@@ -976,7 +976,8 @@ export const acceptanceRouter = router({
       // owns the rows that move, so its scope is the one the write runs in.
       const { acceptance: source, service } = await resolveAcceptanceForWrite(ctx, input.sourceId);
       const { acceptance: target } = await resolveAcceptanceForWrite(ctx, input.targetId);
-      await assertNotHoldingRelease(ctx.serverDB, source);
+      await goalGate.assertNotHoldingRelease(ctx.serverDB, source);
+      await goalGate.assertNotHoldingRelease(ctx.serverDB, target);
 
       try {
         return await service.merge(source.id, target.id);
@@ -1296,7 +1297,7 @@ export const acceptanceRouter = router({
    */
   reject: acceptanceWriteProcedure
     .input(
-      z.object({
+      goalGate.gateDecisionInput.extend({
         comment: z.string().trim().max(2000).optional(),
         /**
          * Send the delivery back to the agent that authored it (default). Pass
@@ -1304,7 +1305,6 @@ export const acceptanceRouter = router({
          * prompt over itself.
          */
         dispatch: z.boolean().optional(),
-        id: z.string(),
       }),
     )
     .mutation(
@@ -1315,12 +1315,12 @@ export const acceptanceRouter = router({
         const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
 
         const comment = input.comment || undefined;
-        const rejected = await withGoalGateAnswer(
+        const rejected = await goalGate.withGoalGateAnswer(
           ctx.serverDB,
           service,
           acceptance,
           'revise',
-          comment,
+          { comment, roundId: input.roundId },
           () => service.reject(acceptance.id, comment),
         );
         await settleGoalSignOff(
@@ -1570,7 +1570,7 @@ export const acceptanceRouter = router({
     .input(z.object({ id: z.string(), purge: z.boolean().optional() }))
     .mutation(async ({ ctx, input }) => {
       const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
-      await assertNotHoldingRelease(ctx.serverDB, acceptance);
+      await goalGate.assertNotHoldingRelease(ctx.serverDB, acceptance);
 
       if (input.purge) {
         await purgeAcceptance(
@@ -1606,7 +1606,7 @@ export const acceptanceRouter = router({
       await mapWithConcurrency([...new Set(input.ids)], PURGE_BATCH_CONCURRENCY, async (id) => {
         try {
           const { acceptance, service } = await resolveAcceptanceForWrite(ctx, id);
-          await assertNotHoldingRelease(ctx.serverDB, acceptance);
+          await goalGate.assertNotHoldingRelease(ctx.serverDB, acceptance);
           if (input.purge) {
             await purgeAcceptance(
               ctx.serverDB,

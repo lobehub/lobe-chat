@@ -243,8 +243,9 @@ export const GOAL_BATCH_BREAK_OPTION = {
 export const RELEASE_REVIEW_PAUSE_REASON = 'Batch release needs approval';
 
 /**
- * The release-approval gate's option ids. `revise` is the pattern break's own
- * option and has the same consequence: a correction opens a new probe round.
+ * The release-approval gate's option ids. `revise` shares the pattern break's
+ * id, but here the correction goes to the main Agent, whose rewritten plan
+ * returns to the same review; the probes are not run again.
  */
 export const GOAL_BATCH_RELEASE_OPTION = {
   release: 'release',
