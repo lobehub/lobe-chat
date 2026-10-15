@@ -11,14 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
+import { useClientDataSWR } from '@/libs/swr';
 import type { SerializedPlatformDefinition } from '@/server/services/bot/platforms/types';
 import { agentBotProviderService } from '@/services/agentBotProvider';
 import { useAgentStore } from '@/store/agent';
+import { BOT_RUNTIME_STATUSES, type BotRuntimeStatusSnapshot } from '@/types/botRuntimeStatus';
 
-import {
-  BOT_RUNTIME_STATUSES,
-  type BotRuntimeStatusSnapshot,
-} from '../../../../../types/botRuntimeStatus';
 import { keepPendingConnectResult, toTestResult } from './actionResults';
 import Body from './Body';
 import Footer from './Footer';
@@ -132,10 +130,14 @@ const PlatformDetail = memo<PlatformDetailProps>(
     const [saving, setSaving] = useState(false);
     const [connecting, setConnecting] = useState(false);
     const [saveResult, setSaveResult] = useState<TestResult>();
-    const [connectResult, setConnectResult] = useState<TestResult>();
+    // Connect banner: a notice from an explicit connect action wins; otherwise
+    // the banner is derived from the bot's live runtime status. Saving or testing
+    // hides a settled runtime banner until the next connect.
+    const [connectNotice, setConnectNotice] = useState<TestResult>();
+    const [runtimeHidden, setRuntimeHidden] = useState(false);
+    const [showConnected, setShowConnected] = useState(false);
     const [testing, setTesting] = useState(false);
     const [testResult, setTestResult] = useState<TestResult>();
-    const connectPollingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Platform-specific extras (e.g. iMessage's BlueBubbles bridge) register a
     // side-effect here so it runs as part of the single "Save Configuration"
@@ -150,12 +152,6 @@ const PlatformDetail = memo<PlatformDetailProps>(
       [],
     );
 
-    const stopConnectPolling = useCallback(() => {
-      if (!connectPollingTimerRef.current) return;
-      clearTimeout(connectPollingTimerRef.current);
-      connectPollingTimerRef.current = null;
-    }, []);
-
     const mapRuntimeStatusToResult = useCallback(
       (
         runtimeStatus: BotRuntimeStatusSnapshot,
@@ -168,11 +164,11 @@ const PlatformDetail = memo<PlatformDetailProps>(
           }
           case BOT_RUNTIME_STATUSES.failed: {
             return {
-              errorDetail: runtimeStatus.errorCode
-                ? t(`channel.connectionError.${runtimeStatus.errorCode}`, {
-                    defaultValue: runtimeStatus.errorMessage || t('channel.connectFailed'),
-                  })
-                : runtimeStatus.errorMessage,
+              errorDetail: runtimeStatus.errorMessage,
+              hint: runtimeStatus.errorCode
+                ? t(`channel.connectionError.${runtimeStatus.errorCode}`, { defaultValue: '' }) ||
+                  undefined
+                : undefined,
               title: t('channel.connectFailed'),
               type: 'error',
             };
@@ -191,60 +187,57 @@ const PlatformDetail = memo<PlatformDetailProps>(
       [t],
     );
 
-    const syncRuntimeStatus = useCallback(
-      async (
-        params: {
-          applicationId: string;
-          platform: string;
+    // Live runtime status of the saved bot, polled while it is still starting.
+    const { data: runtimeSnapshot, mutate: refreshRuntimeStatus } =
+      useClientDataSWR<BotRuntimeStatusSnapshot>(
+        currentConfig?.enabled
+          ? ['agentChannel/runtimeStatus', currentConfig.platform, currentConfig.applicationId]
+          : null,
+        () =>
+          agentBotProviderService.getRuntimeStatus({
+            applicationId: currentConfig!.applicationId,
+            platform: currentConfig!.platform,
+          }),
+        {
+          refreshInterval: (snapshot) =>
+            snapshot?.status === BOT_RUNTIME_STATUSES.queued ||
+            snapshot?.status === BOT_RUNTIME_STATUSES.starting
+              ? 2000
+              : 0,
+          revalidateOnFocus: false,
         },
-        options?: { poll?: boolean; showConnected?: boolean },
-      ) => {
-        stopConnectPolling();
+      );
 
-        const snapshot = await agentBotProviderService.getRuntimeStatus(params);
-        const nextResult = mapRuntimeStatusToResult(snapshot, {
-          showConnected: options?.showConnected,
-        });
-
-        if (nextResult) {
-          setConnectResult(nextResult);
-        } else if (snapshot.status === BOT_RUNTIME_STATUSES.disconnected) {
-          setConnectResult(undefined);
-        }
-
-        if (
-          options?.poll &&
-          (snapshot.status === BOT_RUNTIME_STATUSES.queued ||
-            snapshot.status === BOT_RUNTIME_STATUSES.starting)
-        ) {
-          connectPollingTimerRef.current = setTimeout(() => {
-            void syncRuntimeStatus(params, options);
-          }, 2000);
-        }
-      },
-      [mapRuntimeStatusToResult, stopConnectPolling],
+    const runtimeResult = useMemo(
+      () =>
+        currentConfig?.enabled && runtimeSnapshot
+          ? mapRuntimeStatusToResult(runtimeSnapshot, { showConnected })
+          : undefined,
+      [currentConfig?.enabled, mapRuntimeStatusToResult, runtimeSnapshot, showConnected],
     );
+    const connectResult = connectNotice ?? (runtimeHidden ? undefined : runtimeResult);
 
     const connectCurrentBot = useCallback(
       async (applicationId: string) => {
         setConnecting(true);
         try {
           const { status } = await connectBot({ agentId, applicationId, platform: platformDef.id });
-          setConnectResult({
+          setConnectNotice({
             title: status === 'queued' ? t('channel.connectQueued') : t('channel.connectStarting'),
             type: 'info',
           });
-          await syncRuntimeStatus(
-            { applicationId, platform: platformDef.id },
-            { poll: true, showConnected: true },
-          );
+          setShowConnected(true);
+          setRuntimeHidden(false);
+          await refreshRuntimeStatus();
+          // The live status takes over from here (and keeps polling while starting).
+          setConnectNotice(undefined);
         } catch (e: any) {
-          setConnectResult({ errorDetail: e?.message || String(e), type: 'error' });
+          setConnectNotice({ errorDetail: e?.message || String(e), type: 'error' });
         } finally {
           setConnecting(false);
         }
       },
-      [agentId, connectBot, platformDef.id, syncRuntimeStatus, t],
+      [agentId, connectBot, platformDef.id, refreshRuntimeStatus, t],
     );
 
     // Reset form and status when switching platforms. Must NOT depend on
@@ -252,10 +245,11 @@ const PlatformDetail = memo<PlatformDetailProps>(
     // in-progress form edits and cancel the connect-status polling loop.
     useEffect(() => {
       setSaveResult(undefined);
-      setConnectResult(undefined);
+      setConnectNotice(undefined);
+      setRuntimeHidden(false);
+      setShowConnected(false);
       setTestResult(undefined);
-      stopConnectPolling();
-    }, [platformDef.id, stopConnectPolling]);
+    }, [platformDef.id]);
 
     // Sync form with saved config. The provider list is replica-backed, so on a
     // revisit the form paints the persisted config first and the live fetch
@@ -274,26 +268,6 @@ const PlatformDetail = memo<PlatformDetailProps>(
       setIsDirty(false);
     }, [currentConfig, form, platformDef.schema, isDirty]);
 
-    useEffect(() => {
-      if (!currentConfig?.enabled) {
-        stopConnectPolling();
-        setConnectResult(undefined);
-        return;
-      }
-
-      void syncRuntimeStatus(
-        {
-          applicationId: currentConfig.applicationId,
-          platform: currentConfig.platform,
-        },
-        { poll: true, showConnected: false },
-      );
-
-      return () => {
-        stopConnectPolling();
-      };
-    }, [currentConfig, stopConnectPolling, syncRuntimeStatus]);
-
     const handleSave = useCallback(async () => {
       if (writeDisabled) return;
 
@@ -304,7 +278,8 @@ const PlatformDetail = memo<PlatformDetailProps>(
 
         setSaving(true);
         setSaveResult(undefined);
-        setConnectResult(undefined);
+        setConnectNotice(undefined);
+        setRuntimeHidden(true);
         setTestResult(undefined);
 
         const {
@@ -380,7 +355,8 @@ const PlatformDetail = memo<PlatformDetailProps>(
 
         setSaving(true);
         setSaveResult(undefined);
-        setConnectResult(undefined);
+        setConnectNotice(undefined);
+        setRuntimeHidden(true);
         setTestResult(undefined);
 
         try {
@@ -462,7 +438,9 @@ const PlatformDetail = memo<PlatformDetailProps>(
       setTesting(true);
       setSaveResult(undefined);
       setTestResult(undefined);
-      setConnectResult(keepPendingConnectResult);
+      // An in-progress connect notice stays; a settled banner gives way to the test result.
+      setConnectNotice(keepPendingConnectResult);
+      if (connectResult?.type !== 'info') setRuntimeHidden(true);
       try {
         const result = await testConnection({
           applicationId: currentConfig.applicationId,
@@ -481,7 +459,7 @@ const PlatformDetail = memo<PlatformDetailProps>(
       } finally {
         setTesting(false);
       }
-    }, [writeDisabled, currentConfig, platformDef.id, testConnection, t]);
+    }, [writeDisabled, currentConfig, connectResult, platformDef.id, testConnection, t]);
 
     const handleDiscard = useCallback(() => {
       form.reset(getFormValues(platformDef.schema, currentConfig));
