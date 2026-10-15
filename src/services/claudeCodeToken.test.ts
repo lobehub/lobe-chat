@@ -39,7 +39,7 @@ describe('saveClaudeCodeToken', () => {
   it('updates the existing token and shares it to the active workspace', async () => {
     const result = await saveClaudeCodeToken({
       inWorkspace: true,
-      personalCredId: 7,
+      personalCred: { id: 7, type: 'kv-env' },
       token: 'sk-ant-test',
     });
 
@@ -60,7 +60,7 @@ describe('saveClaudeCodeToken', () => {
 
     const result = await saveClaudeCodeToken({
       inWorkspace: true,
-      personalCredId: 7,
+      personalCred: { id: 7, type: 'kv-env' },
       token: 'sk-ant-test',
     });
 
@@ -68,12 +68,24 @@ describe('saveClaudeCodeToken', () => {
     expect(mockCreds.update).toHaveBeenCalled();
   });
 
+  it('leaves a same-key credential of another type untouched', async () => {
+    const result = await saveClaudeCodeToken({
+      inWorkspace: true,
+      personalCred: { id: 7, type: 'kv-header' },
+      token: 'sk-ant-test',
+    });
+
+    expect(result).toEqual({ failedStep: 'type', ok: false });
+    expect(mockCreds.update).not.toHaveBeenCalled();
+    expect(mockCreds.share).not.toHaveBeenCalled();
+  });
+
   it('reports a failed save without sharing', async () => {
     mockCreds.update.mockRejectedValue(new Error('market unavailable'));
 
     const result = await saveClaudeCodeToken({
       inWorkspace: true,
-      personalCredId: 7,
+      personalCred: { id: 7, type: 'kv-env' },
       token: 'sk-ant-test',
     });
 

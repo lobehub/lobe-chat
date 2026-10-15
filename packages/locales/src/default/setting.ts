@@ -523,6 +523,8 @@ export default {
   'heterogeneousStatus.cloud.tokenRetry': 'Retry',
   'heterogeneousStatus.cloud.tokenSharedElsewhere':
     'Your personal Claude Code token is shared to another workspace. Saving a token here moves it to this workspace, and cloud runs in the other workspace will no longer be able to use it.',
+  'heterogeneousStatus.cloud.tokenTypeMismatch':
+    'A credential with the key CLAUDE_CODE_OAUTH_TOKEN already exists with a different type. Remove or rename it in Credentials, then save again.',
   'heterogeneousStatus.cloud.tokenNotShared':
     'Your personal Claude Code token is not shared to this workspace, so cloud runs here cannot use it. Save a token to share it to this workspace.',
   'heterogeneousStatus.cloud.tokenSaveError':

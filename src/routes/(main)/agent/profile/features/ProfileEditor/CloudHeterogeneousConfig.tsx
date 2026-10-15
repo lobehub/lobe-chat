@@ -131,12 +131,12 @@ interface TokenSectionProps {
   onEnvChange: (patch: Record<string, string>) => void;
   onSaved: () => void;
   /** The caller's own token, if any — saving updates it instead of adding a duplicate key. */
-  personalCredId?: number;
+  personalCred?: { id: number; type?: string };
   tokenStatus: ClaudeCodeTokenStatus;
 }
 
 const TokenSection = memo<TokenSectionProps>(
-  ({ inWorkspace, onEnvChange, onSaved, personalCredId, tokenStatus }) => {
+  ({ inWorkspace, onEnvChange, onSaved, personalCred, tokenStatus }) => {
     const { t } = useTranslation('setting');
     const { allowed: canEdit } = usePermission('edit_own_content');
     const configured = tokenStatus.status === 'configured';
@@ -169,7 +169,7 @@ const TokenSection = memo<TokenSectionProps>(
       const token = tokenInput.trim();
       if (!token) return;
       setSaving(true);
-      const result = await saveClaudeCodeToken({ inWorkspace, personalCredId, token });
+      const result = await saveClaudeCodeToken({ inWorkspace, personalCred, token });
       setSaving(false);
       // Refetch either way: a failed share leaves the token saved but unusable
       // here, which the refreshed status shows as the "not shared" warning.
@@ -178,9 +178,13 @@ const TokenSection = memo<TokenSectionProps>(
       if (!result.ok) {
         toast.error(
           t(
-            result.failedStep === 'share'
-              ? 'creds.share.error'
-              : 'heterogeneousStatus.cloud.tokenSaveError',
+            (
+              {
+                save: 'heterogeneousStatus.cloud.tokenSaveError',
+                share: 'creds.share.error',
+                type: 'heterogeneousStatus.cloud.tokenTypeMismatch',
+              } as const
+            )[result.failedStep],
           ),
         );
         return;
@@ -373,7 +377,7 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
             inWorkspace,
             personalCreds: allCreds,
           });
-    const personalTokenCredId = allCreds.find((c) => c.key === CLAUDE_CODE_TOKEN_CRED_KEY)?.id;
+    const personalTokenCred = allCreds.find((c) => c.key === CLAUDE_CODE_TOKEN_CRED_KEY);
     const githubCreds = allCreds.filter(
       (c) => c.type === 'oauth' && c.oauthProvider?.toLowerCase().includes('github'),
     );
@@ -417,7 +421,7 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
           {/* ── Claude Code OAuth Token ── */}
           <TokenSection
             inWorkspace={inWorkspace}
-            personalCredId={personalTokenCredId}
+            personalCred={personalTokenCred}
             tokenStatus={tokenStatus}
             onEnvChange={saveEnv}
             onSaved={() => void refreshScopedCreds()}
