@@ -9,6 +9,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 
+import { useConversationStore } from '../../store';
 import type { OperationEditedFile } from './deriveEditedFiles';
 
 // Home-relative paths are already anchored: the file tools expand exactly `~`,
@@ -141,6 +142,15 @@ export const planFilesystemOpen = ({
 };
 
 /**
+ * Whether the conversation is a share surface (topic share or agent-share
+ * visitor). The viewer does not own it: sandbox reads are owner-scoped, the
+ * visitor portal does not host the LocalFile view, and the filesystem leg would
+ * resolve against the VIEWER's own agent config and machine.
+ */
+export const useIsShareConversation = () =>
+  useConversationStore((s) => !!s.context.topicShareId || !!s.context.agentShareId);
+
+/**
  * Resolve a per-entry "open in portal" action for the edited-files card.
  *
  * Returns `undefined` when the entry has no reachable content — sandbox files
@@ -151,9 +161,15 @@ export const planFilesystemOpen = ({
  * Context is resolved from the CURRENT agent config, not the round that ran:
  * best effort, matching how the files sidebar targets "where the agent works
  * now".
+ *
+ * Share surfaces ({@link useIsShareConversation}) never get an open action:
+ * opening there pushed a view nothing renders — a dead click (LOBE-14831) — so
+ * rows stay diff-only like the read-only LocalFile chip, and the card explains
+ * why instead.
  */
 export const useOpenEditedFile = () => {
   const [openLocalFile, activeTopicId] = useChatStore((s) => [s.openLocalFile, s.activeTopicId]);
+  const isSharePage = useIsShareConversation();
   const activeAgentId = useAgentStore((s) => s.activeAgentId);
   const isHetero = useAgentStore(agentSelectors.isCurrentAgentHeterogeneous);
   const workingDirectory = useEffectiveWorkingDirectory(activeAgentId);
@@ -174,7 +190,7 @@ export const useOpenEditedFile = () => {
     (
       entry: Pick<OperationEditedFile, 'kind' | 'path' | 'sandboxBacked'>,
     ): (() => void) | undefined => {
-      if (!canPreviewEditedFile(entry)) return undefined;
+      if (isSharePage || !canPreviewEditedFile(entry)) return undefined;
       if (entry.sandboxBacked) {
         if (!activeTopicId) return undefined;
         return () =>
@@ -205,6 +221,13 @@ export const useOpenEditedFile = () => {
           workingDirectory,
         });
     },
-    [activeTopicId, filesystemAvailable, openLocalFile, remoteDeviceId, workingDirectory],
+    [
+      activeTopicId,
+      filesystemAvailable,
+      isSharePage,
+      openLocalFile,
+      remoteDeviceId,
+      workingDirectory,
+    ],
   );
 };

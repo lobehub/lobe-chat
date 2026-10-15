@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 import FileIcon from '@/components/FileIcon';
 
 import { type OperationEditedFile, summarizeEditedFilesTotals } from './deriveEditedFiles';
-import { useOpenEditedFile } from './useOpenEditedFile';
+import { useIsShareConversation, useOpenEditedFile } from './useOpenEditedFile';
 
 export const SINGLE_EDITED_FILE_ICON_SIZE = 40;
 export const AGGREGATE_EDITED_FILE_ICON_SIZE = 40;
@@ -141,6 +141,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   stats: css`
     font-weight: 500;
+  `,
+  previewHint: css`
+    font-size: 12px;
+    color: ${cssVar.colorTextTertiary};
   `,
   list: css`
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
@@ -293,6 +297,20 @@ export const getEditedFilesCardMode = (fileCount: number) => {
 
 export const getEditedFileIconName = (filePath: string) => getFileName(filePath);
 
+/**
+ * Share viewers can't open any edited file (see useOpenEditedFile), so the card
+ * says why instead of leaving a file that silently can't be opened (LOBE-14831).
+ */
+const SharePreviewHint = () => {
+  const { t } = useTranslation('chat');
+  if (!useIsShareConversation()) return null;
+  return (
+    <Text ellipsis className={styles.previewHint}>
+      {t('editedFiles.previewUnavailableInShare')}
+    </Text>
+  );
+};
+
 const SingleEditedFileCard = memo<{ entry: EditedFileEntry; onOpen?: () => void }>(
   ({ entry, onOpen }) => {
     const { t } = useTranslation('chat');
@@ -328,6 +346,7 @@ const SingleEditedFileCard = memo<{ entry: EditedFileEntry; onOpen?: () => void 
               linesAdded={entry.linesAdded}
               linesDeleted={entry.linesDeleted}
             />
+            <SharePreviewHint />
           </Flexbox>
           {hasDiff && (
             <div
@@ -413,6 +432,7 @@ const EditedFilesCard = memo<EditedFilesCardProps>(({ entries }) => {
             linesAdded={totals.linesAdded}
             linesDeleted={totals.linesDeleted}
           />
+          <SharePreviewHint />
         </Flexbox>
       </Flexbox>
       <Flexbox className={styles.list}>

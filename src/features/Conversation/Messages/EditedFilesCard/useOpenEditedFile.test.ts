@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   canPreviewEditedFile,
@@ -6,7 +7,73 @@ import {
   isWithinWorkingDirectory,
   planFilesystemOpen,
   resolveEntryPath,
+  useOpenEditedFile,
 } from './useOpenEditedFile';
+
+const mocks = vi.hoisted(() => ({
+  conversationContext: {} as { agentShareId?: string; topicShareId?: string },
+  openLocalFile: vi.fn(),
+}));
+
+vi.mock('@/const/version', () => ({ isDesktop: true }));
+vi.mock('@/helpers/gatewayMode', () => ({ useIsGatewayModeEnabled: () => false }));
+vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
+  useEffectiveAgencyConfig: () => ({ agencyConfig: undefined, workspaceScoped: false }),
+}));
+vi.mock('@/hooks/useEffectiveWorkingDirectory', () => ({
+  useEffectiveWorkingDirectory: () => '/repo',
+}));
+vi.mock('@/helpers/executionTarget', () => ({ resolveExecutionTarget: () => 'local' }));
+vi.mock('@/store/agent', () => ({
+  useAgentStore: (selector: (s: unknown) => unknown) => selector({ activeAgentId: 'agt_1' }),
+}));
+vi.mock('@/store/agent/selectors', () => ({
+  agentSelectors: { isCurrentAgentHeterogeneous: () => false },
+}));
+vi.mock('@/store/chat', () => ({
+  useChatStore: (selector: (s: unknown) => unknown) =>
+    selector({ activeTopicId: 'tpc_1', openLocalFile: mocks.openLocalFile }),
+}));
+vi.mock('../../store', () => ({
+  useConversationStore: (selector: (s: unknown) => unknown) =>
+    selector({ context: mocks.conversationContext }),
+}));
+
+const sandboxEntry = { kind: 'created' as const, path: 'index.html', sandboxBacked: true };
+const filesystemEntry = { kind: 'modified' as const, path: 'index.html', sandboxBacked: false };
+
+describe('useOpenEditedFile', () => {
+  beforeEach(() => {
+    mocks.conversationContext = {};
+    mocks.openLocalFile.mockReset();
+  });
+
+  it('opens sandbox files in the topic sandbox on the owner chat page', () => {
+    const { result } = renderHook(() => useOpenEditedFile());
+
+    result.current(sandboxEntry)?.();
+
+    expect(mocks.openLocalFile).toHaveBeenCalledWith({
+      filePath: 'index.html',
+      sandboxTopicId: 'tpc_1',
+      workingDirectory: '',
+    });
+  });
+
+  // Regression (LOBE-14831): on the agent-share visitor page the click pushed a
+  // LocalFile view the visitor portal does not host, so nothing opened. Share
+  // surfaces keep every row diff-only instead.
+  it.each([
+    ['agent-share visitor', { agentShareId: 'share_1' }],
+    ['topic share', { topicShareId: 'tshare_1' }],
+  ])('gives no open action on the %s page', (_, context) => {
+    mocks.conversationContext = context;
+    const { result } = renderHook(() => useOpenEditedFile());
+
+    expect(result.current(sandboxEntry)).toBeUndefined();
+    expect(result.current(filesystemEntry)).toBeUndefined();
+  });
+});
 
 describe('resolveEntryPath', () => {
   it('anchors relative paths to the working directory', () => {

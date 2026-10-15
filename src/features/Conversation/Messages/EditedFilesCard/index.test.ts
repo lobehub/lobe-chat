@@ -1,7 +1,7 @@
 import { getFilePathDisplayInfo } from '@lobechat/shared-tool-ui/components';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createElement } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import EditedFilesCard, {
   AGGREGATE_EDITED_FILE_ICON_SIZE,
@@ -15,6 +15,14 @@ vi.mock('react-i18next', () => ({
     t: (key: string, options?: { path?: string }) =>
       options?.path ? `${key}:${options.path}` : key,
   }),
+}));
+
+const conversation = vi.hoisted(() => ({ context: {} as { agentShareId?: string } }));
+
+// The card always mounts inside a ConversationProvider (via AssistantGroup);
+// tests default to the owner chat page and opt into a share surface.
+vi.mock('../../store', () => ({
+  useConversationStore: (selector: (s: unknown) => unknown) => selector(conversation),
 }));
 
 const singleEntry = {
@@ -92,5 +100,38 @@ describe('SingleEditedFileCard', () => {
     fireEvent.click(action);
     expect(action).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('button', { name: 'editedFiles.hideChanges' })).toBeInTheDocument();
+  });
+});
+
+describe('EditedFilesCard on a share surface', () => {
+  afterEach(() => {
+    conversation.context = {};
+  });
+
+  // Regression (LOBE-14831): a sandbox-written file looked clickable on the
+  // agent-share visitor page but opened nothing. It now renders static and says
+  // why it can't be previewed.
+  it('explains that the file cannot be previewed instead of offering a dead click', () => {
+    conversation.context = { agentShareId: 'share_1' };
+    const sandboxWrite = {
+      ...singleEntry,
+      diffTexts: [],
+      kind: 'added' as const,
+      linesAdded: 0,
+      linesDeleted: 0,
+      path: '/workspace/index.html',
+      sandboxBacked: true,
+    };
+
+    render(createElement(EditedFilesCard, { entries: [sandboxWrite] }));
+
+    expect(screen.getByText('editedFiles.previewUnavailableInShare')).toBeInTheDocument();
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('shows no hint on the owner chat page', () => {
+    render(createElement(EditedFilesCard, { entries: [singleEntry] }));
+
+    expect(screen.queryByText('editedFiles.previewUnavailableInShare')).toBeNull();
   });
 });
