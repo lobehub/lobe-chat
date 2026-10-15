@@ -2876,6 +2876,8 @@ export default {
   'taskList.assigneeSelector.agentGroup': 'Agents',
   'taskList.assigneeSelector.workspaceMemberGroup': 'Workspace members',
   'taskList.contextMenu.archive': 'Archive',
+  'taskList.contextMenu.archiveFailed':
+    "Couldn't update the archive state. Refresh the task and try again.",
   'taskList.contextMenu.archiveBlocked':
     'Stop the running task or its schedule/heartbeat before archiving it',
   'taskList.contextMenu.archiveSuccess': 'Task archived',

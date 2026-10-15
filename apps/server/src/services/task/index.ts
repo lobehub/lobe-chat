@@ -1170,6 +1170,7 @@ export class TaskService {
                 },
               }
             : {}),
+          ...(s.archivedAt ? { archivedAt: new Date(s.archivedAt).toISOString() } : {}),
           assigneeUserId: s.assigneeUserId,
           automationMode: s.automationMode,
           blockedBy: depMap.get(s.id),

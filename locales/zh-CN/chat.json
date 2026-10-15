@@ -2382,6 +2382,7 @@
   "taskList.breadcrumb.task": "任务",
   "taskList.contextMenu.archive": "归档",
   "taskList.contextMenu.archiveBlocked": "请先停止正在运行的任务，或暂停其定时/心跳，再进行归档",
+  "taskList.contextMenu.archiveFailed": "归档状态更新失败，请刷新任务后重试",
   "taskList.contextMenu.archiveSuccess": "任务已归档",
   "taskList.contextMenu.copyConfirm": "复制",
   "taskList.contextMenu.copyDescription": "将此任务（及其所有子任务）克隆到另一个工作区。状态将重置为待办。",

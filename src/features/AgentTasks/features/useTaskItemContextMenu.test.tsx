@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   copyToClipboard: vi.fn(),
   deleteTask: vi.fn(),
   messageSuccess: vi.fn(),
+  toastError: vi.fn(),
   toastInfo: vi.fn(),
   modalConfirm: vi.fn(),
   refreshTaskList: vi.fn(),
@@ -31,7 +32,10 @@ vi.mock('@lobehub/ui', async (importOriginal) => ({
 
 vi.mock('@lobehub/ui/base-ui', async (importOriginal) => {
   const actual = await importOriginal<{ toast: Record<string, unknown> }>();
-  return { ...actual, toast: { ...actual.toast, info: mocks.toastInfo, success: vi.fn() } };
+  return {
+    ...actual,
+    toast: { ...actual.toast, error: mocks.toastError, info: mocks.toastInfo, success: vi.fn() },
+  };
 });
 
 vi.mock('@/libs/contextMenu', () => ({
@@ -167,6 +171,15 @@ describe('useTaskItemContextMenu', () => {
 
       expect(mocks.archiveTask).not.toHaveBeenCalled();
       expect(mocks.toastInfo).toHaveBeenCalledWith('taskList.contextMenu.archiveBlocked');
+    });
+
+    it('tells the user when the archive request fails', async () => {
+      mocks.archiveTask.mockRejectedValueOnce(new Error('BAD_REQUEST'));
+      const item = findArchiveItem(null);
+
+      await click(item);
+
+      expect(mocks.toastError).toHaveBeenCalledWith('taskList.contextMenu.archiveFailed');
     });
 
     it('offers no Run now on an archived task', () => {

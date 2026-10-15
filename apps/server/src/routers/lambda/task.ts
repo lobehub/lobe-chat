@@ -704,6 +704,9 @@ export const taskRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const task = await resolveOrThrow(ctx.taskModel, input.id);
+        // Archiving hides a shared task from every member's lists: same
+        // creator-or-owner scope as delete.
+        assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task');
         const archiveModel = new TaskArchiveModel(
           ctx.serverDB,
           ctx.userId,

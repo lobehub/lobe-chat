@@ -177,7 +177,12 @@ export const useTaskContextMenuActions = (
                     toast.info(t('taskList.contextMenu.archiveBlocked'));
                     return;
                   }
-                  await archiveTask(task.identifier, !isArchived);
+                  try {
+                    await archiveTask(task.identifier, !isArchived);
+                  } catch {
+                    toast.error(t('taskList.contextMenu.archiveFailed'));
+                    return;
+                  }
                   toast.success(
                     t(
                       isArchived

@@ -431,6 +431,8 @@ export interface TaskDetailSubtaskRunningTopic {
 }
 
 export interface TaskDetailSubtask {
+  /** ISO time the subtask was archived; null when it is not archived. */
+  archivedAt?: string | null;
   assignee?: TaskDetailSubtaskAssignee | null;
   /** Human assignee (workspace member). Coexists with `assignee` (agent). */
   assigneeUserId?: string | null;

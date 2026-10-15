@@ -41,8 +41,9 @@ export class TaskLifecycleSliceActionImpl {
   archiveTask = async (id: string, archived: boolean): Promise<void> => {
     await taskService.archive(id, archived);
     const { activeTaskId, internal_refreshTaskDetail, refreshTaskList } = this.#get();
+    // The open detail may be the task itself or a parent listing it as a subtask.
     await Promise.all([
-      activeTaskId === id ? internal_refreshTaskDetail(id) : undefined,
+      activeTaskId ? internal_refreshTaskDetail(activeTaskId) : undefined,
       refreshTaskList(),
     ]);
   };

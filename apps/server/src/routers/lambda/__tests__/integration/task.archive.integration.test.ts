@@ -101,6 +101,63 @@ describe('Task Router archive', () => {
     expect(stored.status).toBe('backlog');
   });
 
+  it('marks an archived subtask in its parent detail instead of dropping it', async () => {
+    const parent = await caller.create({ instruction: 'Parent' });
+    const child = await caller.create({ instruction: 'Child', parentTaskId: parent.data.id });
+    await caller.archive({ archived: true, id: child.data.id });
+
+    const detail = await caller.detail({ id: parent.data.id });
+    const [subtask] = detail.data.subtasks ?? [];
+    expect(subtask.identifier).toBe(child.data.identifier);
+    expect(subtask.archivedAt).toEqual(expect.any(String));
+  });
+
+  it('limits archiving a shared task to its creator or a workspace owner', async () => {
+    const memberId = await createTestUser(serverDB);
+    const workspaceId = 'task-archive-scope-workspace';
+    const { workspaces, workspaceMembers } = await import('@/database/schemas');
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Task Archive Scope',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    await serverDB.insert(workspaceMembers).values([
+      { role: 'owner', userId, workspaceId },
+      { role: 'member', userId: memberId, workspaceId },
+    ]);
+    // The Cloud workspace middleware derives `workspaceRole` from membership;
+    // the OSS test context has to state it.
+    const ownerCaller = taskRouter.createCaller({
+      ...createTestContext(userId),
+      workspaceId,
+      workspaceRole: 'owner',
+    } as any);
+    const memberCaller = taskRouter.createCaller({
+      ...createTestContext(memberId),
+      workspaceId,
+      workspaceRole: 'member',
+    } as any);
+
+    try {
+      const ownersTask = await ownerCaller.create({ instruction: "Owner's task" });
+      const membersTask = await memberCaller.create({ instruction: "Member's task" });
+
+      await expect(
+        memberCaller.archive({ archived: true, id: ownersTask.data.id }),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+      // The member still manages their own task, and the owner manages every task.
+      await expect(
+        memberCaller.archive({ archived: true, id: membersTask.data.id }),
+      ).resolves.toMatchObject({ success: true });
+      await expect(
+        ownerCaller.archive({ archived: false, id: membersTask.data.id }),
+      ).resolves.toMatchObject({ success: true });
+    } finally {
+      await cleanupTestUser(serverDB, memberId);
+    }
+  });
+
   it('rejects an unknown task', async () => {
     await expect(caller.archive({ archived: true, id: 'T-404' })).rejects.toMatchObject({
       code: 'NOT_FOUND',

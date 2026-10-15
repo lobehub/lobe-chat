@@ -63,7 +63,12 @@ const TaskDetailHeaderActions = memo(() => {
       toast.info(t('taskList.contextMenu.archiveBlocked'));
       return;
     }
-    await archiveTask(taskId, !isArchived);
+    try {
+      await archiveTask(taskId, !isArchived);
+    } catch {
+      toast.error(t('taskList.contextMenu.archiveFailed'));
+      return;
+    }
     toast.success(
       t(
         isArchived
