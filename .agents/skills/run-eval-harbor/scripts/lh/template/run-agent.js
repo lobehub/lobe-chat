@@ -15,7 +15,7 @@ const TERMINAL_STATUSES = new Set([
   'aborted',
 ]);
 const DEFAULTS = {
-  idleMs: 5 * 60 * 1000,
+  idleMs: 20 * 60 * 1000,
   interruptGraceMs: 30 * 1000,
   pollMs: 60 * 1000,
   snapshotMs: 5 * 60 * 1000,
@@ -40,6 +40,8 @@ function parseArgs(argv) {
     agentId: undefined,
     agentSlug: undefined,
     runMode: 'agent',
+    evalRunId: undefined,
+    evalCaseId: undefined,
     prompt: undefined,
     deviceReady: '/tmp/lh-device-ready',
     logDir: '/logs/agent',
@@ -59,6 +61,8 @@ function parseArgs(argv) {
     '--log-dir',
     '--prompt',
     '--run-mode',
+    '--eval-run-id',
+    '--eval-case-id',
     '--status-path',
     '--supervisor-config',
   ]);
@@ -96,6 +100,14 @@ function parseArgs(argv) {
         options.runMode = value;
         break;
       }
+      case '--eval-run-id': {
+        options.evalRunId = value;
+        break;
+      }
+      case '--eval-case-id': {
+        options.evalCaseId = value;
+        break;
+      }
       case '--status-path': {
         options.statusPath = value;
         break;
@@ -107,17 +119,16 @@ function parseArgs(argv) {
     }
   }
 
-  for (const [name, value] of [
-    ['--cli', options.cli],
-    ['--prompt', options.prompt],
-  ]) {
-    if (!value) throw new RunnerError(`Missing required option: ${name}`);
+  if (!options.cli) throw new RunnerError('Missing required option: --cli');
+  if (options.runMode === 'eval') {
+    if (!options.evalRunId || !options.evalCaseId) {
+      throw new RunnerError('eval mode requires --eval-run-id and --eval-case-id');
+    }
+  } else if (!options.prompt || (!options.agentId && !options.agentSlug)) {
+    throw new RunnerError('agent/task mode requires --prompt and --agent-id or --agent-slug');
   }
-  if (!options.agentId && !options.agentSlug) {
-    throw new RunnerError('Missing required option: --agent-id or --agent-slug');
-  }
-  if (!['agent', 'task'].includes(options.runMode)) {
-    throw new RunnerError('--run-mode must be agent or task');
+  if (!['agent', 'task', 'eval'].includes(options.runMode)) {
+    throw new RunnerError('--run-mode must be agent, task or eval');
   }
   return options;
 }
@@ -275,6 +286,26 @@ class AgentRunner {
   }
 
   async startRun() {
+    if (this.options.runMode === 'eval') {
+      const response = await this.runCli([
+        'eval',
+        'agent',
+        'run',
+        '--run-id',
+        this.options.evalRunId,
+        '--case-id',
+        this.options.evalCaseId,
+        '--device',
+        'local',
+        '--json',
+      ]);
+      if (!response.ok || response.data?.success !== true) {
+        throw new RunnerError(
+          response.error?.message || response.data?.error || 'Eval failed to start',
+        );
+      }
+      return response.data;
+    }
     if (this.options.runMode === 'agent') {
       return this.runCli([
         'agent',
@@ -308,6 +339,7 @@ class AgentRunner {
   }
 
   async resolveAgentId() {
+    if (this.options.runMode === 'eval') return;
     if (this.options.agentId) return;
     const agent = await this.runCli([
       'agent',
@@ -340,6 +372,11 @@ class AgentRunner {
       }
       this.operationId = started.operationId;
       this.topicId = started.topicId;
+      await fs.promises.mkdir(this.options.logDir, { recursive: true });
+      await fs.promises.writeFile(
+        path.join(this.options.logDir, 'run-start.json'),
+        JSON.stringify(started),
+      );
       this.log(`Operation: ${this.operationId} Topic: ${this.topicId}`);
 
       const startedAt = Date.now();
@@ -361,7 +398,7 @@ class AgentRunner {
             this.operationTerminal = true;
             await this.captureSnapshot();
             if (polled.status === 'done') {
-              await this.collectTopicOutput();
+              if (this.options.runMode === 'eval') await this.waitForEvalCompletion();
               this.log('Agent finished');
             }
             if (polled.status !== 'done') {
@@ -377,10 +414,13 @@ class AgentRunner {
         if (isIdle(readJson(this.options.statusPath), startedAt, now, this.options.idleMs)) {
           const confirmed = await this.interruptAndWait();
           if (confirmed) {
-            throw new RunnerError('No device request for 5 minutes; agent interrupted', 124);
+            throw new RunnerError(
+              `No device request for ${this.options.idleMs / 60_000} minutes; agent interrupted`,
+              124,
+            );
           }
           throw new RunnerError(
-            'No device request for 5 minutes; interrupt was not acknowledged',
+            `No device request for ${this.options.idleMs / 60_000} minutes; interrupt was not acknowledged`,
             124,
           );
         }
@@ -407,6 +447,31 @@ class AgentRunner {
       if (error instanceof RunnerError && this.signalCode) throw error;
       appendLine(this.statusErrorsLog, error.message);
       return { kind: 'unavailable', error: error.message };
+    }
+  }
+
+  async waitForEvalCompletion() {
+    // Operation completion can precede the eval hook. Do not start the verifier
+    // until the server has handed this topic to the external scorer.
+    const deadline = Date.now() + Math.max(this.options.interruptGraceMs, this.options.pollMs * 2);
+    while (true) {
+      const response = await this.runCli([
+        'eval',
+        'run-topic',
+        'list',
+        '--run-id',
+        this.options.evalRunId,
+        '--json',
+      ]);
+      if (!response.ok) throw new RunnerError(response.error?.message || 'Eval topic query failed');
+      const topic = response.data.find((item) => item.topicId === this.topicId);
+      if (topic?.status === 'external') return;
+      if (['error', 'timeout', 'aborted', 'passed', 'failed'].includes(topic?.status)) {
+        throw new RunnerError(`Expected external scoring; eval topic ended as ${topic.status}`);
+      }
+      if (Date.now() >= deadline)
+        throw new RunnerError('Eval completion hook did not finish in time');
+      await this.wait(Math.min(this.options.pollMs, deadline - Date.now()));
     }
   }
 
@@ -472,37 +537,6 @@ class AgentRunner {
     return false;
   }
 
-  async collectTopicOutput() {
-    const pageSize = 100;
-    const messages = [];
-    for (let page = 1; page <= 100; page += 1) {
-      const result = await this.runCli([
-        'message',
-        'list',
-        '--topic-id',
-        this.topicId,
-        '--role',
-        'assistant',
-        '--limit',
-        String(pageSize),
-        '--page',
-        String(page),
-        '--json',
-      ]);
-      if (!Array.isArray(result))
-        throw new RunnerError('message list returned a non-array response');
-      messages.push(...result);
-      if (result.length < pageSize) break;
-    }
-    for (const message of messages.reverse()) {
-      if (message?.content) {
-        fs.mkdirSync(path.dirname(this.agentLog), { recursive: true });
-        fs.appendFileSync(this.agentLog, `${message.content}\n`);
-        process.stdout.write(`${message.content}\n`);
-      }
-    }
-  }
-
   async cleanup() {
     await this.captureSnapshot();
     if (this.operationId && !this.operationTerminal && !this.interruptAttempted) {
@@ -515,6 +549,8 @@ class AgentRunner {
           'topic',
           'export',
           this.topicId,
+          '--format',
+          'atif',
           '--output',
           path.join(this.options.logDir, 'trajectory.json'),
         ]);

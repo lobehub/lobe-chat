@@ -93,9 +93,15 @@ workflow; do not substitute a normal Harbor job for it.
 
 Harbor and Pier default to `LH_RUN_MODE=agent`. Set `LH_RUN_MODE=task` to create
 one persistent LobeHub Task per trial and run it on the connected eval device;
-operation polling, output collection, and device cleanup remain the same. Task
+operation polling, trajectory export, and device cleanup remain the same. Task
 mode records usage with `lh task usage`; agent mode keeps the existing usage
 evidence flow scoped to the operation.
+
+To publish Harbor/Pier prompts as a LobeHub dataset and execute trials linked
+to an external eval run, read [references/eval.md](references/eval.md). Both
+adapters support `LH_RUN_MODE=eval` with `LH_EVAL_RUN_ID` and a per-trial
+`LH_EVAL_CASE_ID`. The server supplies the case prompt and run's target agent;
+the outer scheduler claims the run and reports verifier results.
 
 The runner exports persisted topic interactions to `agent/trajectory.json` with
 `lh topic export` during cleanup, including interrupted runs. This requires a

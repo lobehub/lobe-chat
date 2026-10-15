@@ -18,6 +18,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lh.eval import EvalClient
+
 SUITES = {
     "terminal-bench": ("harbor", "lh.agent:LhInstalledAgent"),
     "datacurve": ("pier", "lh.pier_agent:LhPierInstalledAgent"),
@@ -102,18 +104,26 @@ def start(args: argparse.Namespace) -> None:
     if run_dir.exists():
         raise FileExistsError(f"run already exists: {run_dir}")
     run_dir.mkdir(parents=True)
+    eval_manifest = json.loads(args.eval_manifest.read_text()) if args.eval_manifest else None
+    if eval_manifest and not {task["id"] for task in tasks} <= eval_manifest["cases"].keys():
+        raise ValueError("Selected tasks are missing from the eval dataset manifest")
     for task in tasks:
         suite, name = task["suite"], task["dir"]
         target = run_dir / "tasks" / suite / name
         shutil.copytree(sources[suite] / name, target)
         subprocess.run([sys.executable, str(network_script), str(target / "task.toml"), "public"], check=True)
+        if eval_manifest:
+            prompt_hash = hashlib.sha256((target / "instruction.md").read_text().strip().encode()).hexdigest()
+            if prompt_hash != eval_manifest["cases"][task["id"]]["inputSha256"]:
+                raise ValueError(f"Task prompt differs from the published dataset: {task['id']}")
         runner, adapter = SUITES[suite]
         agent = {
             "model_name": args.model,
             "env": {
                 **{key: "${" + key + "}" for key in creds},
                 "LH_CLI_SOURCE": f"host-dir:{cli_dir}",
-                "LH_RUN_MODE": "agent",
+                "LH_RUN_MODE": "eval" if eval_manifest else "agent",
+                **({"LH_EVAL_RUN_ID": "${LH_EVAL_RUN_ID}", "LH_EVAL_CASE_ID": task["id"]} if eval_manifest else {}),
             },
         }
         agent["name" if runner == "harbor" else "import_path"] = adapter
@@ -137,10 +147,13 @@ def start(args: argparse.Namespace) -> None:
         "eval_commit": subprocess.check_output(["git", "-C", str(eval_dir), "rev-parse", "HEAD"], text=True).strip(),
         "deep_swe_commit": subprocess.check_output(["git", "-C", str(args.deep_swe), "rev-parse", "HEAD"], text=True).strip(),
         "cli_sha256": hashlib.sha256((cli_dir / "dist/index.js").read_bytes()).hexdigest(),
+        "cli_dir": str(cli_dir),
         "env_file": str(env_file),
         "agent_id": creds["LH_AGENT_ID"],
         "tasks": tasks,
     }
+    if eval_manifest:
+        record["eval_dataset_id"] = eval_manifest["datasetId"]
     if args.after_run:
         record["after_run"] = str(args.after_run.resolve())
         record["after_pid"] = args.after_pid
@@ -205,6 +218,15 @@ def worker(args: argparse.Namespace) -> None:
     env.update(credentials(Path(record["env_file"])))
     env["PYTHONPATH"] = str(SCRIPT_DIR) + (":" + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    if record.get("eval_dataset_id"):
+        client = EvalClient(Path(record["cli_dir"]), env)
+        if not record.get("eval_run_id"):
+            run = client.create_run(record["eval_dataset_id"], record["agent_id"], record["run_id"],
+                                    [task["id"] for task in record["tasks"]])
+            record.update({"eval_run_id": run["id"], "eval_url": run.get("url")})
+            save(run_dir / "run.json", record)
+            client.call("eval", "run", "claim", "--id", run["id"])
+        env["LH_EVAL_RUN_ID"] = record["eval_run_id"]
     completed = 0
     failure = None
     save(run_dir / "status.json", {"state": "running", "completed": completed, "total": len(record["tasks"]), "concurrency": record["concurrency"]})
@@ -219,6 +241,9 @@ def worker(args: argparse.Namespace) -> None:
                 exit_code, result_path, log_path = future.result()
                 if exit_code or not result_path.is_file():
                     raise RuntimeError(f"runner exit={exit_code}; result={result_path}; log={log_path}")
+                if record.get("eval_run_id"):
+                    receipt = client.report_job(record["eval_run_id"], task["id"], result_path.parent)
+                    save(result_path.parent / "eval-report.json", receipt)
                 completed += 1
                 print(f"{completed}/{len(record['tasks'])}: {task['id']} -> {result_path}", flush=True)
             except Exception as error:
@@ -343,6 +368,7 @@ def main() -> None:
     start_parser.add_argument("--terminal-bench", type=Path, required=True)
     start_parser.add_argument("--deep-swe", type=Path, required=True)
     start_parser.add_argument("--env-file", type=Path, required=True)
+    start_parser.add_argument("--eval-manifest", type=Path, help="published dataset manifest; use lh eval agent run")
     start_parser.add_argument("--cli-dir", type=Path, default=SCRIPT_DIR.parents[3] / "apps/cli")
     start_parser.add_argument("--out", type=Path, default=Path("runs"))
     start_parser.add_argument("--model", default="kimi-k3")

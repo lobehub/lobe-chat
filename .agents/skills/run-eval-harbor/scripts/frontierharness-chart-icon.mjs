@@ -22,14 +22,15 @@ const candidate =
 const match = source.match(candidate);
 if (!match) throw new Error('LobeHub candidate label is missing from the chart');
 const [, rawX, rawY, anchor] = match;
-const x = Number(rawX) + (anchor === 'end' ? -88 : -23);
+const x = Number(rawX) + (anchor === 'end' ? -18 : 0);
+const labelX = Number(rawX) + (anchor === 'end' ? -24 : 24);
 const y = Number(rawY) - 14;
 const image = `<image x="${x}" y="${y}" width="18" height="18" href="data:image/png;base64,${png.toString('base64')}"/>`;
 const chart = source
-  .replace(candidate, `${image}${match[0]}`)
+  .replace(candidate, `${image}${match[0].replaceAll(`x="${rawX}"`, `x="${labelX}"`)}`)
   .replace(
     'Provisional comparison · Cost coverage: see report data',
-    'LobeHub · local Docker run · shown for context, not ranked',
+    'LobeHub · shared Docker host · provisional comparison',
   )
   .replace('>Third-party harness</text>', '>LobeHub</text>');
 await writeFile(chartPath, chart);

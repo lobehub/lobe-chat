@@ -1441,8 +1441,13 @@ export class AgentEvalRunService {
     deviceId?: string;
     prompt?: string;
     runId: string;
+    workingDirectory?: string;
   }) {
     const { runId, caseId } = params;
+
+    if (params.workingDirectory && !params.deviceId) {
+      throw new Error('A working directory requires a target device');
+    }
 
     const run = await this.runModel.findById(runId);
     if (!run) throw new Error('Run not found');
@@ -1481,6 +1486,13 @@ export class AgentEvalRunService {
         { content: testCase.content, id: testCaseId, sortOrder: testCase.sortOrder },
       ])
     )[0]!;
+
+    if (params.workingDirectory) {
+      await this.topicModel.updateMetadata(topicId, {
+        boundDeviceId: params.deviceId,
+        workingDirectory: params.workingDirectory,
+      });
+    }
 
     const result = await this.executeTrajectoryCore({
       deviceId: params.deviceId,
