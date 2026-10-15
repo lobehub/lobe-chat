@@ -18,14 +18,14 @@ const styles = createStaticStyles(({ css }) => ({
   container: css`
     padding-block-start: 32px;
 
-    background-image: url('/app-images/community_header_light.webp');
+    background-image: url('/static/app-images/community_header_light.webp');
     background-repeat: no-repeat;
     background-position: 400% 0;
     background-size: 400px auto;
     background-blend-mode: multiply;
   `,
   container_dark: css`
-    background-image: url('/app-images/community_header_dark.webp');
+    background-image: url('/static/app-images/community_header_dark.webp');
     background-blend-mode: screen;
   `,
 }));

@@ -336,7 +336,9 @@ const usePlusMenuItems = ({ close }: { close: () => void }): ActionDropdownMenuI
           alt=""
           className="cover"
           src={
-            isDark ? '/app-images/agent_gateway_dark.webp' : '/app-images/agent_gateway_light.webp'
+            isDark
+              ? '/static/app-images/agent_gateway_dark.webp'
+              : '/static/app-images/agent_gateway_light.webp'
           }
         />
         <div className="body">
