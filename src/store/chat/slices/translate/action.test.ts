@@ -23,6 +23,13 @@ vi.mock('@/services/chat', () => ({
   },
 }));
 
+// Message writes go through the transcript replica, which reads the cache scope.
+vi.mock('@/libs/swr/useCacheScope', () => ({
+  getCacheScope: () => 'test-scope',
+  isScopeTrusted: () => false,
+  useCacheScope: () => 'test-scope',
+}));
+
 vi.mock('@/store/user', () => ({
   useUserStore: {
     getState: vi.fn(() => ({})),

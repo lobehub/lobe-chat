@@ -1,8 +1,5 @@
 import { type UIChatMessage } from '@lobechat/types';
 
-import { createReplicaState, type ReplicaState } from '@/libs/replica';
-import { type ConversationMessagePage } from '@/services/message/replica';
-
 export interface DataState {
   /**
    * Raw messages from DB (before parsing)
@@ -30,18 +27,6 @@ export interface DataState {
   isLoadingEarlierMessages: boolean;
 
   /**
-   * Paging bookkeeping of the transcript in `dbMessages` (cursor of the next
-   * older page, loaded depth). Absent until a fetch or hydration lands.
-   */
-  messagePaging?: Omit<ConversationMessagePage, 'items'>;
-
-  /**
-   * Replica bookkeeping of this conversation's transcript (`dbMessages` +
-   * `messagePaging` are its view).
-   */
-  messageReplica: ReplicaState<ConversationMessagePage>;
-
-  /**
    * Whether messages have been initialized
    */
   messagesInit: boolean;
@@ -54,15 +39,22 @@ export interface DataState {
   refreshingRowId?: string;
 
   /**
-   * Skip internal message fetching (when external messages are provided)
+   * Do not sync the transcript (a static transcript, or a surface that must
+   * not read while another flow owns the rows)
    */
   skipFetch?: boolean;
+
+  /**
+   * Where the rows live: `chat` mirrors the chat store bucket of `context`
+   * (the default); `static` holds a transcript handed to the provider.
+   */
+  transcriptSource: 'chat' | 'static';
 }
 
 export const dataInitialState: DataState = {
   dbMessages: [],
   displayMessages: [],
   isLoadingEarlierMessages: false,
-  messageReplica: createReplicaState(),
   messagesInit: false,
+  transcriptSource: 'chat',
 };
