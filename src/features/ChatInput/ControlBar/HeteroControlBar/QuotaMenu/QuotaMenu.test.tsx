@@ -3,36 +3,22 @@
  */
 import type * as LobechatConstModule from '@lobechat/const';
 import type * as ElectronClientIpcModule from '@lobechat/electron-client-ipc';
-import type { KimiCodeQuotaSnapshot } from '@lobechat/heterogeneous-agents/quota';
-import type { HeterogeneousProviderConfig } from '@lobechat/types';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { openQuotaCalendarModal } from '@/features/AgentQuotaCalendar';
 
-import HeteroControlBar from '..';
 import ClaudeCodeQuotaMenu from './ClaudeCodeQuotaMenu';
 import CodexQuotaMenu from './CodexQuotaMenu';
 import KimiCodeQuotaMenu from './KimiCodeQuotaMenu';
+import { codexSnapshot, kimiCodeSnapshot } from './testUtils';
 
 const mockService = vi.hoisted(() => ({
   consumeCodexRateLimitResetCredit: vi.fn(),
   getClaudeCodeQuota: vi.fn(),
   getCodexQuota: vi.fn(),
   getKimiCodeQuota: vi.fn(),
-}));
-
-const effectiveAgencyConfig = vi.hoisted(() => ({
-  current: {
-    boundDeviceId: 'personal-device' as string | undefined,
-    executionTarget: 'local' as 'local' | 'device',
-    heterogeneousProvider: {
-      command: 'codex',
-      type: 'codex',
-    } as HeterogeneousProviderConfig,
-  },
-  workspaceScoped: false,
 }));
 
 vi.mock('@lobechat/const', async (importOriginal) => ({
@@ -45,52 +31,11 @@ vi.mock('@lobechat/electron-client-ipc', async (importOriginal) => ({
   useWatchBroadcast: vi.fn(),
 }));
 
-vi.mock('@/business/client/features/ChatInputCredits', () => ({
-  default: () => <div data-testid="api-credits" />,
-}));
-
-vi.mock('@/features/ChatInput/ControlBar/WorkspaceControls', () => ({
-  default: () => <div data-testid="workspace-controls" />,
-}));
-
-vi.mock('@/features/ChatInput/ControlBar/HeteroDeviceSwitcher', () => ({
-  default: () => <div data-testid="hetero-device-switcher" />,
-}));
-
 vi.mock('@/features/AgentQuotaCalendar', () => ({
   openQuotaCalendarModal: vi.fn(),
 }));
 
 vi.mock('@/features/ChatInput/hooks/useAgentId', () => ({ useAgentId: () => 'agent-1' }));
-
-// Resource-access gating is out of scope for quota tests — keep it permissive
-// so HeteroControlBar renders its full quota UI without the ChatInput store.
-vi.mock('@/features/ChatInput/hooks/useChatInputResourceAccess', () => ({
-  useChatInputResourceAccess: () => ({
-    canConfigureResource: true,
-    canSendMessage: true,
-    canUseResource: true,
-    isAccessLoading: false,
-  }),
-}));
-
-vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
-  useEffectiveAgencyConfig: () => ({
-    agencyConfig: effectiveAgencyConfig.current,
-    workspaceScoped: effectiveAgencyConfig.workspaceScoped,
-  }),
-}));
-
-vi.mock('@/store/agent', () => ({
-  useAgentStore: (selector: (state: Record<string, unknown>) => unknown) => selector({}),
-}));
-
-vi.mock('@/store/agent/selectors', () => ({
-  agentByIdSelectors: {
-    isAgentConfigLoadingById: () => () => false,
-    isWorkspaceAgentById: () => () => true,
-  },
-}));
 
 const { confirmModalMock, toastErrorMock, toastSuccessMock } = vi.hoisted(() => ({
   confirmModalMock: vi.fn(),
@@ -273,41 +218,7 @@ const waitForQuotaIdle = async () => {
   });
 };
 
-const codexSnapshot = (
-  overrides: Partial<ElectronClientIpcModule.CodexQuotaSnapshot> = {},
-): ElectronClientIpcModule.CodexQuotaSnapshot => ({
-  error: null,
-  provider: 'codex',
-  rateLimitResetCredits: null,
-  session: null,
-  status: 'ok',
-  updatedAt: Date.now(),
-  weekly: null,
-  ...overrides,
-});
-
-const kimiCodeSnapshot = (
-  overrides: Partial<KimiCodeQuotaSnapshot> = {},
-): KimiCodeQuotaSnapshot => ({
-  error: null,
-  extraUsage: null,
-  monthly: null,
-  monthlyCode: null,
-  provider: 'kimi-code',
-  session: null,
-  status: 'ok',
-  updatedAt: Date.now(),
-  weekly: null,
-  ...overrides,
-});
-
 beforeEach(() => {
-  effectiveAgencyConfig.current = {
-    boundDeviceId: 'personal-device',
-    executionTarget: 'local',
-    heterogeneousProvider: { command: 'codex', type: 'codex' },
-  };
-  effectiveAgencyConfig.workspaceScoped = false;
   confirmModalMock.mockReset();
   mockService.consumeCodexRateLimitResetCredit.mockReset();
   mockService.getClaudeCodeQuota.mockReset();
@@ -326,138 +237,6 @@ beforeEach(() => {
   mockQuotaService.listAccounts.mockResolvedValue([]);
   mockQuotaService.listBindings.mockResolvedValue([]);
   vi.mocked(openQuotaCalendarModal).mockClear();
-});
-
-describe('HeteroControlBar', () => {
-  it('shows local Codex quota for a workspace member local-device override', async () => {
-    mockService.getCodexQuota.mockResolvedValue(
-      codexSnapshot({ session: { resetsAt: null, usedPercent: 20, windowMinutes: 300 } }),
-    );
-
-    render(<HeteroControlBar />);
-
-    expect(
-      await screen.findByRole('button', { name: 'heteroAgent.codexQuota.tooltip' }),
-    ).toBeTruthy();
-    expect(screen.queryByTestId('api-credits')).toBeNull();
-    expect(mockService.getCodexQuota).toHaveBeenCalledWith({ command: 'codex', env: undefined });
-  });
-
-  it('shows Codex quota sampled by a bound remote device', async () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'remote-device',
-      executionTarget: 'device',
-      heterogeneousProvider: { command: 'codex', type: 'codex' },
-    };
-    mockLambdaCodexQuota.mockResolvedValue(
-      codexSnapshot({ session: { resetsAt: null, usedPercent: 20, windowMinutes: 300 } }),
-    );
-
-    render(<HeteroControlBar />);
-
-    expect(
-      await screen.findByRole('button', { name: 'heteroAgent.codexQuota.tooltip' }),
-    ).toBeTruthy();
-    expect(mockLambdaCodexQuota).toHaveBeenCalledWith({
-      command: 'codex',
-      deviceId: 'remote-device',
-      env: undefined,
-    });
-    expect(mockService.getCodexQuota).not.toHaveBeenCalled();
-  });
-
-  it('shows remote quota for a workspace shared-device fallback', async () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'workspace-device',
-      executionTarget: 'local',
-      heterogeneousProvider: { command: 'codex', type: 'codex' },
-    };
-    effectiveAgencyConfig.workspaceScoped = true;
-    mockLambdaCodexQuota.mockResolvedValue(
-      codexSnapshot({ session: { resetsAt: null, usedPercent: 20, windowMinutes: 300 } }),
-    );
-
-    render(<HeteroControlBar />);
-
-    expect(
-      await screen.findByRole('button', { name: 'heteroAgent.codexQuota.tooltip' }),
-    ).toBeTruthy();
-    expect(mockLambdaCodexQuota).toHaveBeenCalledWith({
-      command: 'codex',
-      deviceId: 'workspace-device',
-      env: undefined,
-    });
-    expect(mockService.getCodexQuota).not.toHaveBeenCalled();
-  });
-
-  it('shows platform credits instead of Codex quota in API mode', () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'personal-device',
-      executionTarget: 'local',
-      heterogeneousProvider: { authMode: 'api', command: 'codex', type: 'codex' },
-    };
-
-    render(<HeteroControlBar />);
-
-    expect(screen.getByTestId('api-credits')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'heteroAgent.codexQuota.tooltip' })).toBeNull();
-    expect(mockService.getCodexQuota).not.toHaveBeenCalled();
-  });
-
-  it('shows platform credits instead of Claude Code quota in API mode', () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'personal-device',
-      executionTarget: 'local',
-      heterogeneousProvider: { authMode: 'api', type: 'claude-code' },
-    };
-
-    render(<HeteroControlBar />);
-
-    expect(screen.getByTestId('api-credits')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'heteroAgent.claudeQuota.tooltip' })).toBeNull();
-    expect(mockService.getClaudeCodeQuota).not.toHaveBeenCalled();
-  });
-
-  it('shows local Kimi Code quota for a local execution target', async () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'personal-device',
-      executionTarget: 'local',
-      heterogeneousProvider: { command: 'kimi', type: 'kimi-code' },
-    };
-    mockService.getKimiCodeQuota.mockResolvedValue(
-      kimiCodeSnapshot({ session: { resetsAt: null, usedPercent: 20, windowMinutes: 300 } }),
-    );
-
-    render(<HeteroControlBar />);
-
-    expect(
-      await screen.findByRole('button', { name: 'heteroAgent.kimiCodeQuota.tooltip' }),
-    ).toBeTruthy();
-    expect(mockService.getKimiCodeQuota).toHaveBeenCalledWith({ env: undefined });
-    expect(mockService.getCodexQuota).not.toHaveBeenCalled();
-  });
-
-  it('shows Kimi Code quota sampled by a bound remote device', async () => {
-    effectiveAgencyConfig.current = {
-      boundDeviceId: 'remote-device',
-      executionTarget: 'device',
-      heterogeneousProvider: { command: 'kimi', type: 'kimi-code' },
-    };
-    mockLambdaKimiCodeQuota.mockResolvedValue(
-      kimiCodeSnapshot({ session: { resetsAt: null, usedPercent: 20, windowMinutes: 300 } }),
-    );
-
-    render(<HeteroControlBar />);
-
-    expect(
-      await screen.findByRole('button', { name: 'heteroAgent.kimiCodeQuota.tooltip' }),
-    ).toBeTruthy();
-    expect(mockLambdaKimiCodeQuota).toHaveBeenCalledWith({
-      deviceId: 'remote-device',
-      env: undefined,
-    });
-    expect(mockService.getKimiCodeQuota).not.toHaveBeenCalled();
-  });
 });
 
 describe('KimiCodeQuotaMenu', () => {
