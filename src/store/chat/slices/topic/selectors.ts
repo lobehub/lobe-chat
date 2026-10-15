@@ -303,9 +303,13 @@ const sortTopics = (topics: ChatTopic[], sortBy: TopicSortBy): ChatTopic[] => {
 
 // The active topic the sidebar pins into its list — except one the user just
 // archived while on it, which must hide at once (see `justArchivedTopicId`).
-const sidebarActiveTopic = (s: ChatStoreState): ChatTopic | undefined => {
+// With archived topics shown, it keeps its pin so it survives the page slice.
+const sidebarActiveTopic = (
+  s: ChatStoreState,
+  includeCompleted: boolean,
+): ChatTopic | undefined => {
   const topic = currentActiveTopic(s);
-  return topic && topic.id === s.justArchivedTopicId ? undefined : topic;
+  return !includeCompleted && topic && topic.id === s.justArchivedTopicId ? undefined : topic;
 };
 
 // Limit topics for sidebar display based on user's page size preference
@@ -315,7 +319,13 @@ const displayTopicsForSidebar =
     const topics = currentTopicsWithoutSystemTriggers(s);
     if (!topics) return undefined;
 
-    return selectSidebarTopics(topics, pageSize, sortBy, includeCompleted, sidebarActiveTopic(s));
+    return selectSidebarTopics(
+      topics,
+      pageSize,
+      sortBy,
+      includeCompleted,
+      sidebarActiveTopic(s, includeCompleted),
+    );
   };
 
 export const selectSidebarTopics = (

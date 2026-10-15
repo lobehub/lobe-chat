@@ -77,6 +77,45 @@ describe('justArchivedTopicId', () => {
     ).toEqual(['current', 'other']);
   });
 
+  it('keeps the just-archived topic pinned past the page when "show archived" is on', () => {
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'active', 1) },
+    });
+    seed([topic('other', 'active', 2)], 'current');
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'completed', 1) },
+    });
+    expect(useChatStore.getState().justArchivedTopicId).toBe('current');
+
+    expect(
+      topicSelectors
+        .displayTopicsForSidebar(
+          1,
+          'updatedAt',
+          true,
+        )(useChatStore.getState())
+        ?.map(({ id }) => id),
+    ).toEqual(['other', 'current']);
+  });
+
+  it('clears when the topic is restored, so it is pinned again', () => {
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'active', 1) },
+    });
+    seed([topic('other', 'active', 2)], 'current');
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'completed', 1) },
+    });
+    expect(sidebarIds()).toEqual(['other']);
+
+    useChatStore.setState({
+      topicDetailMap: { current: topic('current', 'active', 1) },
+    });
+
+    expect(useChatStore.getState().justArchivedTopicId).toBeUndefined();
+    expect(sidebarIds()).toEqual(['other', 'current']);
+  });
+
   it('clears once the user moves to another topic, so reopening pins it again', () => {
     seed([topic('current', 'active', 2), topic('other', 'active', 1)], 'current');
     setStatus('current', 'completed');
