@@ -171,7 +171,12 @@ const createClientHarness = (
 
 const createSession = (
   harness: ClientHarness,
-  options: { initialThreadId?: string; onEventsError?: Error; threadName?: string } = {},
+  options: {
+    ephemeral?: boolean;
+    initialThreadId?: string;
+    onEventsError?: Error;
+    threadName?: string;
+  } = {},
 ) => {
   const events: any[] = [];
   const statuses: string[] = [];
@@ -190,6 +195,7 @@ const createSession = (
     threadParams: {
       approvalPolicy: 'never',
       cwd: '/workspace',
+      ...(options.ephemeral ? { ephemeral: true } : {}),
       sandbox: 'danger-full-access',
     },
   });
@@ -370,6 +376,77 @@ describe('CodexThreadSession', () => {
     } finally {
       session.close();
     }
+  });
+
+  // ROOT CAUSE:
+  // A connected device resumes a native thread without the rollout usage that Desktop
+  // reads locally. Without a baseline, the first turn reported the thread's entire
+  // cumulative usage as its own. Rebase from the first native total/last pair instead.
+  /** @example A resumed device turn reports only its own native steps. */
+  it('rebases usage on a resumed thread that has no saved cumulative usage', async () => {
+    const harness = createClientHarness({ autoComplete: false, initialThreadId: 'thread-1' });
+    const { events, session } = createSession(harness, { initialThreadId: 'thread-1' });
+    const run = session.run({
+      input: [{ text: 'continue', text_elements: [], type: 'text' }],
+      operationId: 'resumed-usage',
+      onRawMessage: vi.fn(),
+    });
+    await vi.waitFor(() => {
+      /** @example Usage is observed only after the resumed turn starts. */
+      expect(harness.requests.some((request) => request.method === 'turn/start')).toBe(true);
+    });
+    await harness.notify('turn/started', {
+      threadId: 'thread-1',
+      turn: turn('turn-1', 'inProgress'),
+    });
+    for (const [total, last] of [
+      [350, 250],
+      [370, 20],
+    ]) {
+      const usage = (tokens: number) => ({
+        cachedInputTokens: 0,
+        inputTokens: tokens,
+        outputTokens: 0,
+        reasoningOutputTokens: 0,
+        totalTokens: tokens,
+      });
+      await harness.notify('thread/tokenUsage/updated', {
+        threadId: 'thread-1',
+        tokenUsage: { last: usage(last), total: usage(total) },
+        turnId: 'turn-1',
+      });
+    }
+    await harness.notify('turn/completed', {
+      threadId: 'thread-1',
+      turn: turn('turn-1', 'completed'),
+    });
+    await run;
+    session.close();
+    /** @example Both new steps count once; the 100 earlier thread tokens are excluded. */
+    expect(events).toContainEqual(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          usage: expect.objectContaining({ totalInputTokens: 270 }),
+        }),
+        type: 'step_complete',
+      }),
+    );
+  });
+
+  // ROOT CAUSE:
+  // stream_start carried the thread id as `sessionId` even for `--ephemeral` threads, so the
+  // server saved it as the topic resume binding and the next turn resumed an ephemeral thread.
+  /** @example An ephemeral native thread is never reported as a resumable session. */
+  it('does not report an ephemeral thread as the stream session', async () => {
+    const { events, onSessionId, run, session } = createSession(createClientHarness(), {
+      ephemeral: true,
+    });
+    await run('ephemeral-op', 'hello');
+    session.close();
+    const streamStart = events.find((event) => event.type === 'stream_start');
+    /** @example The turn still starts, without a session id the server would persist. */
+    expect(streamStart?.data).not.toHaveProperty('sessionId');
+    expect(onSessionId).not.toHaveBeenCalled();
   });
 
   it('sets the original prompt as the name of a new persisted thread', async () => {
