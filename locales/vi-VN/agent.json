@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Đang tải công cụ…",
   "share.settings.tools.needsMemoryPermission": "Cũng bật “Cho phép đọc bộ nhớ của tôi” ở trên, nếu không công cụ này sẽ không hoạt động với khách truy cập.",
   "share.settings.tools.notAvailableToVisitors": "Công cụ này không bao giờ có thể được sử dụng trong lần chạy chia sẻ — các lần chạy của khách truy cập bị chặn khỏi cơ sở kiến thức và tệp của Agent.",
+  "share.settings.tools.onDemandDesc": "Không được kích hoạt trên Ajan này. Khi được cấp quyền, mô hình sẽ bật nó trong một lần chạy của khách truy cập chỉ khi cần thiết.",
+  "share.settings.tools.showOnDemand": "Hiển thị các công cụ theo yêu cầu",
   "share.settings.tools.title": "Công cụ khách truy cập có thể sử dụng",
   "share.settings.updateError": "Không thể lưu thay đổi. Vui lòng thử lại.",
   "share.settings.usage.conversations": "Cuộc trò chuyện",

@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Chargement des outils…",
   "share.settings.tools.needsMemoryPermission": "Activez également « Autoriser la lecture de ma mémoire » ci-dessus, ou cet outil restera inactif pour les visiteurs.",
   "share.settings.tools.notAvailableToVisitors": "Cet outil ne peut jamais être utilisé dans une exécution partagée — les exécutions des visiteurs sont bloquées de votre base de connaissances et des fichiers de l'Agent.",
+  "share.settings.tools.onDemandDesc": "Non activé sur cet Agent. Une fois accordé, le modèle l'active lors d'une exécution visiteur uniquement lorsque nécessaire.",
+  "share.settings.tools.showOnDemand": "Afficher les outils à la demande",
   "share.settings.tools.title": "Outils que les visiteurs peuvent utiliser",
   "share.settings.updateError": "Impossible de sauvegarder la modification. Veuillez réessayer.",
   "share.settings.usage.conversations": "Conversations",

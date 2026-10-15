@@ -1659,6 +1659,19 @@ describe('TopicModel', () => {
       expect(remaining.map((t) => t.id)).toEqual(['b3']);
     });
 
+    it('batchDeleteIncludingTrashed also removes topics sitting in the recycle bin', async () => {
+      await serverDB.insert(topics).values([
+        { id: 'bt-live', title: 'live', userId },
+        { id: 'bt-trash', isDeleted: true, title: 'trashed', userId },
+        { id: 'bt-other', title: 'keep', userId },
+      ]);
+
+      await topicModel.batchDeleteIncludingTrashed(['bt-live', 'bt-trash']);
+
+      const remaining = await serverDB.select().from(topics);
+      expect(remaining.map((t) => t.id)).toEqual(['bt-other']);
+    });
+
     it('deleteAll removes only the calling user rows', async () => {
       await serverDB.insert(topics).values([
         { id: 'mine-1', title: '1', userId },

@@ -5,6 +5,8 @@ import { useCallback } from 'react';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 
+import { useTopicId } from '../../hooks/useTopicId';
+
 export const useHeteroProviderPatch = ({
   agentId,
   enabled,
@@ -15,7 +17,8 @@ export const useHeteroProviderPatch = ({
   provider: HeterogeneousProviderConfig | undefined;
 }) => {
   const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  // This composer's conversation (see `useTopicId`), never the global active topic.
+  const topicId = useTopicId();
   const updateTopicHeteroPin = useChatStore((s) => s.updateTopicHeteroPin);
 
   return useCallback(
@@ -26,9 +29,9 @@ export const useHeteroProviderPatch = ({
       // its own pins, see `ChatTopic.model` / `ChatTopicMetadata.heteroEffort`);
       // the remaining dimensions (mode, speed) still write the shared agent config.
       const { effort, model, ...agentSelection } = selection;
-      if (activeTopicId) {
+      if (topicId) {
         if (model !== undefined || effort !== undefined) {
-          await updateTopicHeteroPin(activeTopicId, { effort, model, provider: provider.type });
+          await updateTopicHeteroPin(topicId, { effort, model, provider: provider.type });
         }
         if (Object.keys(agentSelection).length === 0) return;
       }
@@ -36,11 +39,11 @@ export const useHeteroProviderPatch = ({
         agencyConfig: {
           heterogeneousProvider: applyHeteroSelection(
             provider,
-            activeTopicId ? agentSelection : selection,
+            topicId ? agentSelection : selection,
           ),
         },
       });
     },
-    [activeTopicId, agentId, enabled, provider, updateAgentConfigById, updateTopicHeteroPin],
+    [agentId, enabled, provider, topicId, updateAgentConfigById, updateTopicHeteroPin],
   );
 };

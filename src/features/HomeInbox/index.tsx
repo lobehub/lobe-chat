@@ -39,7 +39,7 @@ import NewsList from './NewsList';
 import { ownsRailSections } from './railSectionPlacement';
 import RunningTasksCard from './RunningTasksCard';
 import { filterTopicsForInboxScope, resolveInboxScopeToggleSection } from './scopeTogglePlacement';
-import { splitBriefs } from './splitBriefs';
+import { arrangeDayNews, splitBriefs } from './splitBriefs';
 import UnreadTopicList from './UnreadTopicList';
 import { useHomeInboxTopics } from './useHomeInboxTopics';
 
@@ -82,9 +82,8 @@ interface InboxSection {
  * - **Goals** — the standing exception to "while you were away": goals run for
  *   days, so the ones still open (waiting on you, or working) are listed here
  *   rather than left to the agent page nobody visits mid-flight.
- * - **Needs you** — briefs blocking an agent (decide / fix). Errors sink to the
- *   bottom: a stuck decision blocks work right now, a failed run has already
- *   stopped.
+ * - **Needs you** — decision briefs blocking an agent. Run failures are not
+ *   decisions; they go to the notification center instead.
  * - **Unread** — runs that finished while you were away, each showing the agent's
  *   last reply so the answer is right there.
  * - **Running** — collapsed to one line, showing who is working; a healthy run
@@ -212,6 +211,9 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   const teamView = isTeam && scope === 'team';
 
   const { needsYou } = useMemo(() => splitBriefs(briefs), [briefs]);
+  // Urgent briefs already waiting in "Needs you" leave the digest; the rest
+  // lead with urgent, then normal, then info.
+  const news = useMemo(() => arrangeDayNews(dayNews ?? [], briefs), [dayNews, briefs]);
 
   // Topics are already workspace-wide from the server; "mine" is the viewer's
   // own runs, "team" is everyone's. Personal mode has only the viewer's, so the
@@ -433,7 +435,6 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
   // Everything below renders from `shownNewsOffset` / the payload's own day —
   // see the comment at `shownNewsOffset` for why `newsDayOffset` must not be
   // used for display.
-  const news = dayNews ?? [];
   const unresolvedNews = news.filter((brief) => !brief.resolvedAt);
   const showNewsSection =
     showRailSections && !!dayNews && (news.length > 0 || shownNewsOffset > 0 || hasEarlierNews);

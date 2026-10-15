@@ -13,6 +13,7 @@ import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import { useChatInputResourceAccess } from '../../hooks/useChatInputResourceAccess';
+import { useTopicId } from '../../hooks/useTopicId';
 import { ModelCatalogSelector } from './ModelCatalogSelector';
 import SelectorMenu from './SelectorMenu';
 import { resolveSelectorShape } from './selectorView';
@@ -30,8 +31,13 @@ const HeteroModel = memo(() => {
   const { canConfigureResource } = useChatInputResourceAccess();
   const enabled = canCreateContent && canConfigureResource;
   const patch = useHeteroProviderPatch({ agentId, enabled, provider });
-  // Model AND effort pins: both follow the active topic once one exists.
-  const topicPin = useChatStore(topicSelectors.activeTopicHeteroPin, isEqual);
+  // Model AND effort pins: both follow this composer's topic once one exists
+  // (see `useTopicId`), never the global active topic.
+  const topicId = useTopicId();
+  const topicPin = useChatStore(
+    (s) => (topicId ? topicSelectors.getTopicHeteroPinById(topicId)(s) : undefined),
+    isEqual,
+  );
   const effectiveProvider = provider
     ? applyTopicModelToHeterogeneousProvider(provider, topicPin)
     : undefined;

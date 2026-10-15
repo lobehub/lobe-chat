@@ -353,7 +353,13 @@ describe('connect command', () => {
       type: 'tool_call_request',
     });
 
-    expect(executeToolCall).toHaveBeenCalledWith('readLocalFile', '{"path":"/test"}', undefined);
+    // The connected device's credentials ride along so `readFile` can upload images.
+    expect(executeToolCall).toHaveBeenCalledWith(
+      'readLocalFile',
+      '{"path":"/test"}',
+      undefined,
+      expect.objectContaining({ token: 'test-token' }),
+    );
     expect(lastSentToolResponse).toEqual({
       requestId: 'req-1',
       result: {

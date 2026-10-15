@@ -3,12 +3,12 @@ import { ActionIcon, cssVar, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { FileTextIcon, HashIcon, MoreHorizontalIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import TaskStatusIcon from '@/features/AgentTasks/features/TaskStatusIcon';
 import RunningGlyph from '@/features/Home/components/RunningGlyph';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { usePrefetchAgent } from '@/hooks/usePrefetchAgent';
 import { usePrefetchPage } from '@/hooks/usePrefetchPage';
-import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
 
 import { useRecentItemDropdownMenu } from './useDropdownMenu';
 

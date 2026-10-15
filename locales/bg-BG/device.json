@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "Всичко е актуално",
   "workingDirectory.pushSuccess": "Успешно изпратено",
   "workingDirectory.recent": "Скорошни",
+  "workingDirectory.refreshFolders": "Обновяване на папките",
   "workingDirectory.refreshGitStatus": "Обновяване на статус на клона и PR",
   "workingDirectory.removeRecent": "Премахване от скорошни",
   "workingDirectory.removeWorktreeAction": "Изтриване на работно дърво",

@@ -15,7 +15,6 @@ import type {
 } from '@lobechat/types';
 import {
   CreateThreadWithMessageSchema,
-  entityIdPattern,
   initialTopicMetadataSchema,
   isServerDefaultHeterogeneousRelayInvocation,
   LocalExecutionHeterogeneousAgentTypeSchema,
@@ -84,6 +83,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
 } from '@/server/routers/lambda/_helpers/conversationResourceGuard';
+import { execAgentClientIdsSchema } from '@/server/routers/lambda/_helpers/execAgentClientIds';
 import { toClientExecAgentResult } from '@/server/routers/lambda/_helpers/groupMemberContinuationResult';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 import {
@@ -1247,20 +1247,8 @@ const ExecAgentSchema = z
       .optional(),
     /** Whether to auto-start execution after creating operation */
     autoStart: z.boolean().optional().default(true),
-    /**
-     * Client-minted ids for the rows this run creates, honoured verbatim —
-     * the gateway counterpart of `sendMessageInServer`'s `newTopic.id` /
-     * `newUserMessage.id` / `newAssistantMessage.id`. Validated per namespace:
-     * an unvalidated client primary key would let a caller submit look-alike
-     * ids, wrong namespaces, or strings that leak into logs and URLs.
-     */
-    clientIds: z
-      .object({
-        assistantMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-        topicId: z.string().regex(entityIdPattern('topics')).optional(),
-        userMessageId: z.string().regex(entityIdPattern('messages')).optional(),
-      })
-      .optional(),
+    /** Client-minted row ids, honoured verbatim (see `execAgentClientIdsSchema`). */
+    clientIds: execAgentClientIdsSchema,
     /** Explicit device ID to bind to the topic and activate for this run */
     deviceId: z.string().optional(),
     /** Current desktop device hint, honored only for an effective local target */
@@ -1608,6 +1596,13 @@ const ExecSubAgentTaskSchema = z.object({
   groupId: z.string().optional(),
   /** Task instruction/prompt for the SubAgent */
   instruction: z.string(),
+  /**
+   * The dispatching tab runs the sub-agent's device-only LLM calls: its
+   * executor declaration and the one-shot relay channel it subscribed to for
+   * them. Both or neither.
+   */
+  llmExecutor: LlmExecutorSchema.optional(),
+  llmRelayChannel: z.string().min(1).max(256).optional(),
   /** The parent message ID (Supervisor's tool call message or task message) */
   parentMessageId: z.string(),
   /** Parent operation ID for dispatching callAgent hooks */
@@ -2960,6 +2955,8 @@ export const aiAgentRouter = router({
         agentId,
         groupId,
         instruction,
+        llmExecutor,
+        llmRelayChannel,
         parentMessageId,
         parentOperationId,
         title,
@@ -2986,16 +2983,24 @@ export const aiAgentRouter = router({
         });
 
         // External procedure name stays `execSubAgentTask`; the service method is `execSubAgent`.
-        return await ctx.aiAgentService.execSubAgent({
-          agentId,
-          groupId,
-          instruction,
-          parentMessageId,
-          ...(parentOperationId && { parentOperationId }),
-          timeout,
-          title,
-          topicId,
-        });
+        return await ctx.aiAgentService.execSubAgent(
+          {
+            agentId,
+            groupId,
+            instruction,
+            parentMessageId,
+            ...(parentOperationId && { parentOperationId }),
+            timeout,
+            title,
+            topicId,
+          },
+          {
+            llmRelay:
+              llmExecutor && llmRelayChannel
+                ? { channel: llmRelayChannel, executor: llmExecutor }
+                : undefined,
+          },
+        );
       } catch (error: any) {
         log('execSubAgentTask failed: %O', error);
 
@@ -3430,6 +3435,16 @@ export const aiAgentRouter = router({
     .input(z.object({ llmExecutor: LlmExecutorSchema, operationId: z.string().min(1) }))
     .mutation(async ({ input, ctx }) => {
       return ctx.aiAgentService.resumeFromClientLlmWait(input);
+    }),
+
+  /**
+   * The tab stopped standing by on the relay channel it named in
+   * `execSubAgentTask` (the sub-agent finished or was given up): end it.
+   */
+  releaseSubAgentLlmRelay: aiAgentWriteProcedure
+    .input(z.object({ channel: z.string().min(1).max(256) }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.aiAgentService.releaseSubAgentLlmRelay(input.channel);
     }),
 
   interruptTask: aiAgentWriteProcedure

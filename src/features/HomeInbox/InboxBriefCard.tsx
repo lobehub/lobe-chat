@@ -10,6 +10,7 @@ import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefCardSummary from '@/features/DailyBrief/BriefCardSummary';
+import BriefPriorityIcon from '@/features/DailyBrief/BriefPriorityIcon';
 import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { styles as briefStyles } from '@/features/DailyBrief/style';
 import { type BriefItem } from '@/features/DailyBrief/types';
@@ -137,13 +138,20 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
         )}
         <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={8}>
+            {/* Priority sits in one place on every card — right before the title — so
+                a scan down the queue reads levels in a single column. */}
+            <BriefPriorityIcon priority={brief.priority} />
             <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
               {selfReview?.title ?? brief.title}
             </Text>
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
           {selfReview ? (
-            <SelfReviewBriefDetails agentName={agentName} details={selfReview.details} />
+            <SelfReviewBriefDetails
+              agentName={agentName}
+              content={selfReview.content}
+              details={selfReview.details}
+            />
           ) : (
             <BriefCardSummary summary={brief.summary} />
           )}

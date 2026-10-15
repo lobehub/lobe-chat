@@ -6,12 +6,12 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import PlatformDetail, { type ChannelFormValues } from '@/features/AgentChannel/PlatformDetail';
+import Body from '@/features/AgentChannel/PlatformDetail/Body';
+import Footer from '@/features/AgentChannel/PlatformDetail/Footer';
 import type { SerializedPlatformDefinition } from '@/server/services/bot/platforms/types';
 
-import Header from '../Header';
-import Body from './Body';
-import Footer from './Footer';
-import PlatformDetail, { type ChannelFormValues } from './index';
+import Header from './Header';
 
 const mocks = vi.hoisted(() => ({
   activeWorkspaceId: null as string | null,
@@ -172,7 +172,7 @@ vi.mock('@/components/InfoTooltip', () => ({
   ),
 }));
 
-vi.mock('../const', () => ({
+vi.mock('@/features/AgentChannel/const', () => ({
   getPlatformIcon: () => null,
 }));
 
