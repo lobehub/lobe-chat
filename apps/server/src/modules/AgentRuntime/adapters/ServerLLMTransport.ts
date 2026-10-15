@@ -411,6 +411,7 @@ export class ServerLLMTransport implements LLMTransport {
 
     return new RelayModelRuntime({
       ...call,
+      channelOperationId: site.channelOperationId,
       operationId: this.ctx.operationId,
       preferredClientId: site.preferredClientId,
       provider,

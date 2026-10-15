@@ -46,7 +46,9 @@ const ShareMessageModalContent = memo<ShareMessageModalContentProps>(({ message 
       {
         children: (
           <ShareDataProvider context={context}>
-            <SharePdf message={message} />
+            <Flexbox style={{ height: 'min(70vh, 720px)' }}>
+              <SharePdf message={message} />
+            </Flexbox>
           </ShareDataProvider>
         ),
         key: Tab.PDF,

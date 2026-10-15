@@ -3,6 +3,7 @@ import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
   ExecAgentAppContext,
+  ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
   ResumeClientLlmWaitResult,
@@ -138,7 +139,7 @@ export interface ExecAgentTaskParams {
    * `newTopic.id` / `newUserMessage.id` / `newAssistantMessage.id`. Fresh
    * sends only; resume / regeneration must not replay them.
    */
-  clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+  clientIds?: ExecAgentClientIds;
   /**
    * Server runs the composer tracked on this conversation at send time. The
    * server records them only when this send has to stop a run the client left
@@ -194,6 +195,10 @@ export interface ExecSubAgentTaskParams {
   /** Optional for Single Agent mode, required for Group mode */
   groupId?: string;
   instruction: string;
+  /** This tab runs the sub-agent's device-only LLM calls (with {@link llmRelayChannel}). */
+  llmExecutor?: ExecAgentLlmExecutor;
+  /** The one-shot relay channel this tab stands by on for the sub-agent's LLM calls. */
+  llmRelayChannel?: string;
   parentMessageId: string;
   /** Parent operation ID for dispatching callAgent hooks */
   parentOperationId?: string;
@@ -333,6 +338,11 @@ class AiAgentService {
 
   async execSubAgentTask(params: ExecSubAgentTaskParams) {
     return await lambdaClient.aiAgent.execSubAgentTask.mutate(params);
+  }
+
+  /** This tab stopped standing by on the relay channel it named in `execSubAgentTask`. */
+  async releaseSubAgentLlmRelay(params: { channel: string }) {
+    return await lambdaClient.aiAgent.releaseSubAgentLlmRelay.mutate(params);
   }
 
   /**

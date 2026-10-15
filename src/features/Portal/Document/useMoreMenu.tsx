@@ -1,4 +1,6 @@
+import { Icon } from '@lobehub/ui';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
+import { DownloadIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { openRenameModal } from '@/components/RenameModal';
@@ -7,6 +9,7 @@ import { agentDocumentService } from '@/services/agentDocument';
 import { useChatStore } from '@/store/chat';
 
 import { usePortalDocumentTitleState } from './titleContext';
+import { useMarkdownExport } from './useMarkdownExport';
 import { TITLE_MAX_LENGTH, usePortalDocumentHeaderActions } from './usePortalDocumentHeader';
 
 export const useDocumentMoreMenu = (): PortalMoreMenuConfig | undefined => {
@@ -14,6 +17,7 @@ export const useDocumentMoreMenu = (): PortalMoreMenuConfig | undefined => {
   const { isLoading, metaLocked, savedTitle, saveTitle } = usePortalDocumentTitleState();
   const { agentDocumentId, agentId, documentId, refresh, url } = usePortalDocumentHeaderActions();
   const closeDocument = useChatStore((s) => s.closeDocument);
+  const exportMarkdown = useMarkdownExport(documentId);
 
   if (!documentId || isLoading) return;
 
@@ -59,6 +63,16 @@ export const useDocumentMoreMenu = (): PortalMoreMenuConfig | undefined => {
     copyId: documentId,
     copyLink: url,
     delete: agentDocumentId ? deleteDocument : undefined,
+    extraItems: exportMarkdown
+      ? [
+          {
+            icon: <Icon icon={DownloadIcon} />,
+            key: 'export',
+            label: t('agentDocument.portal.export', { ns: 'chat' }),
+            onClick: () => void exportMarkdown(),
+          },
+        ]
+      : undefined,
     refresh,
     // A dialog, like every other portal's rename — flipping the header title
     // into an input from a menu reads as a stray focused text field.

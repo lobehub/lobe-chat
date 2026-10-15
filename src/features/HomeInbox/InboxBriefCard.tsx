@@ -145,7 +145,11 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
           {selfReview ? (
-            <SelfReviewBriefDetails agentName={agentName} details={selfReview.details} />
+            <SelfReviewBriefDetails
+              agentName={agentName}
+              content={selfReview.content}
+              details={selfReview.details}
+            />
           ) : (
             <BriefCardSummary summary={brief.summary} />
           )}
