@@ -127,12 +127,33 @@ describe('useTokenBreakdown', () => {
     expect(result.current.historySummaryToken).toBe('doc summary'.length);
   });
 
-  it('leaves loading the global active topic to the active-topic detail fetch', () => {
+  // `/goal/:goalId` makes a sidebar-excluded supervision topic globally active
+  // with no `useFetchActiveTopicDetail` mounted, so the composer must load it.
+  it('loads the global active topic by id when no list or detail holds it', () => {
     state.composerTopicId = 'main-topic';
     delete state.summaries['main-topic'];
 
-    renderHook(() => useTokenBreakdown());
+    const { rerender, result } = renderHook(() => useTokenBreakdown());
 
-    expect(state.useFetchTopicDetail).not.toHaveBeenCalledWith('main-topic');
+    expect(state.useFetchTopicDetail).toHaveBeenLastCalledWith('main-topic');
+    expect(result.current.historySummaryToken).toBe(0);
+
+    state.summaries['main-topic'] = 'goal summary';
+    rerender();
+
+    expect(result.current.historySummaryToken).toBe('goal summary'.length);
+  });
+
+  it('requests no detail for a topic that is already loaded or when there is none', () => {
+    state.composerTopicId = 'pane-topic';
+    const { rerender } = renderHook(() => useTokenBreakdown());
+
+    state.composerTopicId = null;
+    rerender();
+
+    state.composerTopicId = undefined;
+    rerender();
+
+    for (const [id] of state.useFetchTopicDetail.mock.calls) expect(id).toBeUndefined();
   });
 });
