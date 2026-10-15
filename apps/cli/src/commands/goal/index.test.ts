@@ -3,10 +3,10 @@ import { Buffer } from 'node:buffer';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type * as FormatModule from '../utils/format';
-import { confirm } from '../utils/format';
-import { log } from '../utils/logger';
-import { registerGoalCommand } from './goal';
+import type * as FormatModule from '../../utils/format';
+import { confirm } from '../../utils/format';
+import { log } from '../../utils/logger';
+import { registerGoalCommand } from '.';
 
 const { mockClient } = vi.hoisted(() => ({
   mockClient: {
@@ -44,15 +44,15 @@ vi.mock('node:fs/promises', () => ({
   },
 }));
 
-vi.mock('../utils/format', async (importOriginal) => ({
+vi.mock('../../utils/format', async (importOriginal) => ({
   ...(await importOriginal<typeof FormatModule>()),
   confirm: vi.fn(),
 }));
 
-vi.mock('../api/client', () => ({ getTrpcClient: vi.fn().mockResolvedValue(mockClient) }));
+vi.mock('../../api/client', () => ({ getTrpcClient: vi.fn().mockResolvedValue(mockClient) }));
 // Building the app URL otherwise resolves a workspace and a server, which needs
 // a real login; the link's shape is what this file is asserting, not its host.
-vi.mock('./task/url', () => ({
+vi.mock('../task/url', () => ({
   resolveAppUrlBuilder: vi
     .fn()
     .mockResolvedValue((pathname: string) => `https://app.lobehub.com${pathname}`),
