@@ -1,0 +1,1194 @@
+[
+  {
+    "mode": "before",
+    "orientation": "portrait",
+    "width": null,
+    "clipped": [
+      "Hide captions",
+      "Playback speed (J / L)",
+      "Fullscreen"
+    ],
+    "controls": [
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Play",
+        "right": 225,
+        "width": 28,
+        "x": 197,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 255,
+        "width": 28,
+        "x": 227,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Next frame",
+        "right": 285,
+        "width": 28,
+        "x": 257,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 447.28125,
+        "width": 28,
+        "x": 419.28125,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 477.28125,
+        "width": 28,
+        "x": 449.28125,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 507.28125,
+        "width": 28,
+        "x": 479.28125,
+        "y": 554.859375
+      }
+    ],
+    "frame": {
+      "bottom": 510.859375,
+      "height": 360.3125,
+      "right": 388,
+      "width": 203,
+      "x": 185,
+      "y": 150.546875
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 590.859375,
+      "height": 440.3125,
+      "right": 388,
+      "width": 203,
+      "x": 185,
+      "y": 150.546875
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 578.28125,
+      "height": 18.84375,
+      "right": 405.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 293,
+      "y": 559.4375
+    },
+    "video": {
+      "bottom": 510.859375,
+      "height": 360.3125,
+      "right": 388,
+      "width": 203,
+      "x": 185,
+      "y": 150.546875
+    },
+    "viewport": 1180
+  },
+  {
+    "mode": "before",
+    "orientation": "portrait",
+    "width": 375,
+    "clipped": [
+      "Hide captions",
+      "Playback speed (J / L)",
+      "Fullscreen"
+    ],
+    "controls": [
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 278.28125,
+        "width": 28,
+        "x": 250.28125,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 308.28125,
+        "width": 28,
+        "x": 280.28125,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 338.28125,
+        "width": 28,
+        "x": 310.28125,
+        "y": 559.421875
+      }
+    ],
+    "frame": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 595.421875,
+      "height": 440.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 582.84375,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 564
+    },
+    "video": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "viewport": 375
+  },
+  {
+    "mode": "before",
+    "orientation": "portrait",
+    "width": 320,
+    "clipped": [
+      "Hide captions",
+      "Playback speed (J / L)",
+      "Fullscreen"
+    ],
+    "controls": [
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 278.28125,
+        "width": 28,
+        "x": 250.28125,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 308.28125,
+        "width": 28,
+        "x": 280.28125,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 338.28125,
+        "width": 28,
+        "x": 310.28125,
+        "y": 559.421875
+      }
+    ],
+    "frame": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 595.421875,
+      "height": 440.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 582.84375,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 564
+    },
+    "video": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 155.109375
+    },
+    "viewport": 320
+  },
+  {
+    "mode": "before",
+    "orientation": "landscape",
+    "width": null,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Play",
+        "right": 230,
+        "width": 28,
+        "x": 202,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 260,
+        "width": 28,
+        "x": 232,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 290,
+        "width": 28,
+        "x": 262,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 758,
+        "width": 28,
+        "x": 730,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 788,
+        "width": 28,
+        "x": 760,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 818,
+        "width": 28,
+        "x": 790,
+        "y": 554.546875
+      }
+    ],
+    "frame": {
+      "bottom": 510.546875,
+      "height": 360,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 590.546875,
+      "height": 440,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "ratio": 1.7777777777777777,
+    "time": {
+      "bottom": 577.96875,
+      "height": 18.84375,
+      "right": 410.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 298,
+      "y": 559.125
+    },
+    "video": {
+      "bottom": 510.546875,
+      "height": 360,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "viewport": 1180
+  },
+  {
+    "mode": "before",
+    "orientation": "landscape",
+    "width": 375,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 287,
+        "width": 28,
+        "x": 259,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 317,
+        "width": 28,
+        "x": 289,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 347,
+        "width": 28,
+        "x": 319,
+        "y": 392.046875
+      }
+    ],
+    "frame": {
+      "bottom": 348.046875,
+      "height": 192.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 428.046875,
+      "height": 272.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 1.7777777777777777,
+    "time": {
+      "bottom": 415.46875,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 396.625
+    },
+    "video": {
+      "bottom": 348.046875,
+      "height": 192.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "viewport": 375
+  },
+  {
+    "mode": "before",
+    "orientation": "portrait",
+    "width": 240,
+    "clipped": [
+      "Hide captions",
+      "Playback speed (J / L)",
+      "Fullscreen"
+    ],
+    "controls": [
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 278.28125,
+        "width": 28,
+        "x": 250.28125,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 308.28125,
+        "width": 28,
+        "x": 280.28125,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 338.28125,
+        "width": 28,
+        "x": 310.28125,
+        "y": 609.6875
+      }
+    ],
+    "frame": {
+      "bottom": 565.6875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 205.375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 645.6875,
+      "height": 440.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 205.375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 633.109375,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 614.265625
+    },
+    "video": {
+      "bottom": 565.6875,
+      "height": 360.3125,
+      "right": 219,
+      "width": 203,
+      "x": 16,
+      "y": 205.375
+    },
+    "viewport": 240
+  },
+  {
+    "mode": "after",
+    "orientation": "portrait",
+    "width": null,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Play",
+        "right": 230,
+        "width": 28,
+        "x": 202,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 260,
+        "width": 28,
+        "x": 232,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Next frame",
+        "right": 290,
+        "width": 28,
+        "x": 262,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 598,
+        "width": 28,
+        "x": 570,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 628,
+        "width": 28,
+        "x": 600,
+        "y": 554.859375
+      },
+      {
+        "bottom": 582.859375,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 658,
+        "width": 28,
+        "x": 630,
+        "y": 554.859375
+      }
+    ],
+    "frame": {
+      "bottom": 510.859375,
+      "height": 360.3125,
+      "right": 531.5,
+      "width": 203,
+      "x": 328.5,
+      "y": 150.546875
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 590.859375,
+      "height": 440.3125,
+      "right": 670,
+      "width": 480,
+      "x": 190,
+      "y": 150.546875
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 578.28125,
+      "height": 18.84375,
+      "right": 410.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 298,
+      "y": 559.4375
+    },
+    "video": {
+      "bottom": 510.859375,
+      "height": 360.3125,
+      "right": 531.5,
+      "width": 203,
+      "x": 328.5,
+      "y": 150.546875
+    },
+    "viewport": 1180
+  },
+  {
+    "mode": "after",
+    "orientation": "portrait",
+    "width": 375,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 287,
+        "width": 28,
+        "x": 259,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 317,
+        "width": 28,
+        "x": 289,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 347,
+        "width": 28,
+        "x": 319,
+        "y": 559.421875
+      }
+    ],
+    "frame": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 289,
+      "width": 203,
+      "x": 86,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 595.421875,
+      "height": 440.3125,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 582.84375,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 564
+    },
+    "video": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 289,
+      "width": 203,
+      "x": 86,
+      "y": 155.109375
+    },
+    "viewport": 375
+  },
+  {
+    "mode": "after",
+    "orientation": "portrait",
+    "width": 320,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 559.421875
+      },
+      {
+        "bottom": 587.421875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 292,
+        "width": 28,
+        "x": 264,
+        "y": 559.421875
+      },
+      {
+        "bottom": 617.421875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 589.421875
+      },
+      {
+        "bottom": 617.421875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 589.421875
+      }
+    ],
+    "frame": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 261.5,
+      "width": 203,
+      "x": 58.5,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 625.421875,
+      "height": 470.3125,
+      "right": 304,
+      "width": 288,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 582.84375,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 564
+    },
+    "video": {
+      "bottom": 515.421875,
+      "height": 360.3125,
+      "right": 261.5,
+      "width": 203,
+      "x": 58.5,
+      "y": 155.109375
+    },
+    "viewport": 320
+  },
+  {
+    "mode": "after",
+    "orientation": "landscape",
+    "width": null,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Play",
+        "right": 230,
+        "width": 28,
+        "x": 202,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 260,
+        "width": 28,
+        "x": 232,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 290,
+        "width": 28,
+        "x": 262,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 758,
+        "width": 28,
+        "x": 730,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 788,
+        "width": 28,
+        "x": 760,
+        "y": 554.546875
+      },
+      {
+        "bottom": 582.546875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 818,
+        "width": 28,
+        "x": 790,
+        "y": 554.546875
+      }
+    ],
+    "frame": {
+      "bottom": 510.546875,
+      "height": 360,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 590.546875,
+      "height": 440,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "ratio": 1.7777777777777777,
+    "time": {
+      "bottom": 577.96875,
+      "height": 18.84375,
+      "right": 410.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 298,
+      "y": 559.125
+    },
+    "video": {
+      "bottom": 510.546875,
+      "height": 360,
+      "right": 830,
+      "width": 640,
+      "x": 190,
+      "y": 150.546875
+    },
+    "viewport": 1180
+  },
+  {
+    "mode": "after",
+    "orientation": "landscape",
+    "width": 375,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 287,
+        "width": 28,
+        "x": 259,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 317,
+        "width": 28,
+        "x": 289,
+        "y": 392.046875
+      },
+      {
+        "bottom": 420.046875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 347,
+        "width": 28,
+        "x": 319,
+        "y": 392.046875
+      }
+    ],
+    "frame": {
+      "bottom": 348.046875,
+      "height": 192.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 428.046875,
+      "height": 272.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "ratio": 1.7777777777777777,
+    "time": {
+      "bottom": 415.46875,
+      "height": 18.84375,
+      "right": 236.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 124,
+      "y": 396.625
+    },
+    "video": {
+      "bottom": 348.046875,
+      "height": 192.9375,
+      "right": 359,
+      "width": 343,
+      "x": 16,
+      "y": 155.109375
+    },
+    "viewport": 375
+  },
+  {
+    "mode": "after",
+    "orientation": "portrait",
+    "width": 240,
+    "clipped": [],
+    "controls": [
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Play",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Previous frame",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 609.6875
+      },
+      {
+        "bottom": 637.6875,
+        "height": 28,
+        "name": "Next frame",
+        "right": 116,
+        "width": 28,
+        "x": 88,
+        "y": 609.6875
+      },
+      {
+        "bottom": 667.6875,
+        "height": 28,
+        "name": "Hide captions",
+        "right": 212,
+        "width": 28,
+        "x": 184,
+        "y": 639.6875
+      },
+      {
+        "bottom": 697.6875,
+        "height": 28,
+        "name": "Playback speed (J / L)",
+        "right": 56,
+        "width": 28,
+        "x": 28,
+        "y": 669.6875
+      },
+      {
+        "bottom": 697.6875,
+        "height": 28,
+        "name": "Fullscreen",
+        "right": 86,
+        "width": 28,
+        "x": 58,
+        "y": 669.6875
+      }
+    ],
+    "frame": {
+      "bottom": 565.6875,
+      "height": 360.3125,
+      "right": 221.5,
+      "width": 203,
+      "x": 18.5,
+      "y": 205.375
+    },
+    "overflow": false,
+    "player": {
+      "bottom": 705.6875,
+      "height": 500.3125,
+      "right": 224,
+      "width": 208,
+      "x": 16,
+      "y": 205.375
+    },
+    "ratio": 0.5633802816901409,
+    "time": {
+      "bottom": 663.109375,
+      "height": 18.84375,
+      "right": 146.28125,
+      "text": "0:00.00 / 5:14.00",
+      "width": 112.28125,
+      "x": 34,
+      "y": 644.265625
+    },
+    "video": {
+      "bottom": 565.6875,
+      "height": 360.3125,
+      "right": 221.5,
+      "width": 203,
+      "x": 18.5,
+      "y": 205.375
+    },
+    "viewport": 240
+  }
+]

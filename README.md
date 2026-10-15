@@ -14,3 +14,14 @@ These images are real browser captures of the repository's `VideoEvidencePlayer`
 - `narrow-results.json` records eight real-DOM measurements covering 320px and 390px iframe viewports, portrait and landscape clips, and ordinary text and long unbroken references. Description blocks match content width; no iframe document overflows horizontally.
 
 The portrait control-bar clipping visible in the caption-only images is a separate issue handled by the controls PR, not part of the caption change.
+
+## Portrait controls
+
+- Patched source: `f91308c7c70b0d44712e4e5194c95635edaa2e44` (`fix/acceptance-video-controls-width`).
+- Before source: `e76d208a62b5feac5b0fd7ec44edb6d52845c5be`.
+- Browser: cloud Chromium, captured through the supported cloud browser API on 2026-10-15.
+- These captures use the actual repository component, a generated five-minute video, and synthetic descriptions/chapter labels. They are local component fixtures, not deployed-report screenshots.
+- `controls/after-portrait-desktop.jpg` shows the widened 480px player while its portrait picture remains 203px wide and centered.
+- `controls/after-portrait-375.jpg` and `controls/after-portrait-320.jpg` use real embedded browser viewports at the named widths, not device emulation.
+- `controls/layout-results.json` records six baseline and six patched cases: portrait at desktop/375px/320px/240px and landscape at desktop/375px. All patched control buttons remain inside the player, and documents have no horizontal overflow.
+- The caption-only and controls-only fixes are rendered separately. Combining them requires the small overlapping player-width hunk to be rebased as described in the PRs.
