@@ -517,7 +517,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     deps: deviceControlDeps,
     error,
     // Read at dispatch time — `auth` may be refreshed mid-session.
-    getServerUrl: () => auth.serverUrl,
+    getAuth: () => auth,
     info,
     isDaemonChild,
     maintenance,
@@ -937,7 +937,7 @@ interface GatewayHandlerContext {
   deps: DeviceControlDeps;
   error: (msg: string) => void;
   /** Read at dispatch time — the underlying auth may be refreshed mid-session. */
-  getServerUrl: () => string;
+  getAuth: () => Awaited<ReturnType<typeof resolveToken>>;
   info: (msg: string) => void;
   isDaemonChild: boolean;
   maintenance: CliMaintenance;
@@ -955,7 +955,7 @@ function bindGatewayClientHandlers(
   ctx: GatewayHandlerContext,
   connectionWorkspaceId?: string,
 ) {
-  const { deps, error, getServerUrl, info, isDaemonChild, maintenance, recordRequest } = ctx;
+  const { deps, error, getAuth, info, isDaemonChild, maintenance, recordRequest } = ctx;
 
   // Handle system info requests
   client.on('system_info_request', (request: SystemInfoRequestMessage) => {
@@ -984,7 +984,7 @@ function bindGatewayClientHandlers(
     // slow transport.
     const startedAt = performance.now();
     const result = await maintenance
-      .run(() => executeToolCall(toolCall.apiName, toolCall.arguments, timeout))
+      .run(() => executeToolCall(toolCall.apiName, toolCall.arguments, timeout, getAuth()))
       .catch((err: Error) => ({
         content: '',
         error: err.message,
@@ -1060,7 +1060,7 @@ function bindGatewayClientHandlers(
             prompt: request.prompt,
             resumeFallbackSystemContext: request.resumeFallbackSystemContext,
             resumeSessionId: request.resumeSessionId,
-            serverUrl: getServerUrl(),
+            serverUrl: getAuth().serverUrl,
             systemContext: request.systemContext,
             topicId: request.topicId,
             workspaceId: request.ingestWorkspaceId ?? request.workspaceId ?? connectionWorkspaceId,
