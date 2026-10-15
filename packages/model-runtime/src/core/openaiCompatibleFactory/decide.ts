@@ -1,5 +1,6 @@
 import type { ModelUsage } from '@lobechat/types';
 import { AgentRuntimeErrorType } from '@lobechat/types';
+import { isRecord } from '@lobechat/utils/object';
 import createDebug from 'debug';
 import type OpenAI from 'openai';
 import { z } from 'zod';
@@ -13,6 +14,8 @@ import type {
 } from '../../types';
 import { AgentRuntimeError } from '../../utils/createError';
 import { getModelPricing } from '../../utils/getModelPricing';
+import type { ModelIdMappingOptions } from '../../utils/modelIdMapping';
+import { resolveMappedModelId } from '../../utils/modelIdMapping';
 import { withUsageCost } from '../usageConverters/utils/withUsageCost';
 
 const log = createDebug('lobe-model-runtime:decide');
@@ -112,19 +115,26 @@ const toDecisionAnswer = (
   );
 };
 
-interface CreateSystemOneDecisionParams {
+/**
+ * Serves decision models through a System One endpoint. Only providers that set this expose
+ * `decide`, so callers can tell decision support apart from plain chat compatibility.
+ */
+export interface SystemOneDecideConfig {
   /** Endpoint path relative to the client base URL, e.g. `/systemone`. */
   path: string;
+}
+
+interface RequestSystemOneDecisionParams extends SystemOneDecideConfig {
   provider: string;
   /** Model id sent upstream; may differ from `payload.model` after id mapping. */
   requestModel: string;
 }
 
-export const createSystemOneDecision = async (
+const requestSystemOneDecision = async (
   client: OpenAI,
   payload: DecisionPayload,
   options: DecisionOptions | undefined,
-  { path, provider, requestModel }: CreateSystemOneDecisionParams,
+  { path, provider, requestModel }: RequestSystemOneDecisionParams,
 ): Promise<DecisionResponse> => {
   const questionEntries = Object.entries(payload.questions);
   if (questionEntries.length === 0) {
@@ -195,4 +205,29 @@ export const createSystemOneDecision = async (
   }
 
   return response;
+};
+
+interface CreateSystemOneDecisionParams extends SystemOneDecideConfig {
+  /** Maps transport failures (HTTP, network) to the provider's runtime error payload. */
+  handleError: (error: unknown) => unknown;
+  modelIdMappingOptions?: ModelIdMappingOptions;
+  provider: string;
+}
+
+export const createSystemOneDecision = async (
+  client: OpenAI,
+  payload: DecisionPayload,
+  options: DecisionOptions | undefined,
+  { handleError, modelIdMappingOptions, ...params }: CreateSystemOneDecisionParams,
+): Promise<DecisionResponse> => {
+  try {
+    return await requestSystemOneDecision(client, payload, options, {
+      ...params,
+      requestModel: resolveMappedModelId(payload.model, modelIdMappingOptions),
+    });
+  } catch (error) {
+    // Validation failures are already runtime error payloads; only map transport errors.
+    if (isRecord(error) && 'errorType' in error) throw error;
+    throw handleError(error);
+  }
 };
