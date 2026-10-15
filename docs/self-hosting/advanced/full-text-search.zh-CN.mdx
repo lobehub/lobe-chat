@@ -26,7 +26,8 @@ LobeHub 支持三种产品搜索后端：
 <Callout type="warning">
   数据库迁移只在数据库提供 `pg_search` 扩展时安装它和 BM25 索引，否则跳过这一步。在没有
   `pg_search` 的 PostgreSQL 上，请在启动 LobeHub 前设置 `FTS_SEARCH_PROVIDER=pg_like` 或
-  `elasticsearch`：默认的 `pg_search` 后端会在第一次搜索时报错。
+  `elasticsearch`。后端为 `pg_search`（包括未设置时的默认值）而数据库缺少该扩展或任一 LobeHub
+  BM25 索引时，数据库迁移步骤会报错并给出修复方法：Docker 容器不会启动，Vercel 构建会失败。
 </Callout>
 
 ## 如何选择

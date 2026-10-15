@@ -28,8 +28,10 @@ fall back to another backend when the selected provider is unavailable.
 <Callout type="warning">
   Database migrations install `pg_search` and its BM25 indexes only when the database provides the
   extension, and skip that step otherwise. On PostgreSQL without `pg_search`, set
-  `FTS_SEARCH_PROVIDER=pg_like` or `elasticsearch` before starting LobeHub: the default
-  `pg_search` provider fails on the first search.
+  `FTS_SEARCH_PROVIDER=pg_like` or `elasticsearch` before starting LobeHub. While the provider is
+  `pg_search`, including when it is unset, the database migration step stops with an error naming
+  the fix if the extension or any LobeHub BM25 index is missing, so the Docker container does not
+  start and a Vercel build fails.
 </Callout>
 
 ## Choose a backend
