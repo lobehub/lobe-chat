@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Загрузка инструментов…",
   "share.settings.tools.needsMemoryPermission": "Также включите «Разрешить чтение моей памяти» выше, иначе этот инструмент останется неактивным для посетителей.",
   "share.settings.tools.notAvailableToVisitors": "Этот инструмент никогда не может быть использован в общем запуске — запуски посетителей заблокированы для вашей базы знаний и файлов агента.",
+  "share.settings.tools.onDemandDesc": "Не включено для этого Агента. После предоставления модель включает это только при необходимости во время сеанса посетителя.",
+  "share.settings.tools.showOnDemand": "Показать инструменты по запросу",
   "share.settings.tools.title": "Инструменты, доступные посетителям",
   "share.settings.updateError": "Не удалось сохранить изменения. Пожалуйста, попробуйте снова.",
   "share.settings.usage.conversations": "Беседы",
