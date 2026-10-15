@@ -45,6 +45,7 @@ import { useElectronStore } from '@/store/electron';
 import { useTopicId } from '../hooks/useTopicId';
 import { formatLockedControlTooltip } from '../utils/lockedControlTooltip';
 import OptionRow from './OptionRow';
+import { useSandboxNetworkToggle } from './useSandboxNetworkToggle';
 import { useTopicAwareTargetSelect } from './useTopicAwareTargetSelect';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -425,15 +426,13 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
   // Toggling the network does NOT change which environment is selected — same
   // dormant semantics the sandbox flag itself has when another environment is
   // active, so the popover stays open and nothing is switched behind the user.
-  const handleToggleSandboxNetwork = useCallback(
-    async (enabled: boolean) => {
-      await selectExecutionTarget(executionTarget, boundDeviceId, {
-        localSandbox: localSandboxEnabled,
-        localSandboxNetwork: enabled,
-      });
-    },
-    [selectExecutionTarget, executionTarget, boundDeviceId, localSandboxEnabled],
-  );
+  // Saved on the unpinned default, never the open topic's machine.
+  const handleToggleSandboxNetwork = useSandboxNetworkToggle({
+    agentId,
+    deviceRoutingAvailable,
+    isHetero,
+    selectExecutionTarget,
+  });
 
   // Auto-default to THIS desktop's local execution on first open, for both
   // personal and workspace agents (workspace behaviour used to be a hostname
