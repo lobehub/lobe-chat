@@ -162,11 +162,23 @@ export const fireClientSubAgentBridge = async (
   let settledSiblings: SettledSiblingReplay[] = [];
   if (!registration) {
     // Post-reload path: the registry died with the renderer. The child
-    // thread row still carries the persisted coordinates.
+    // thread row still carries the persisted coordinates. A reconstruction
+    // failure THROWS (P1 round-20) — it must not be conflated with "no
+    // bridge on this thread": the child's terminal boundary is the only
+    // production trigger for this fire, so a silent exit here would leave
+    // the parent parked forever with no retry driver.
     const reconstructed = await reconstructRegistrationFromThread(
       key,
       context.topicId ?? undefined,
-    );
+    ).catch((error) => {
+      scheduleBridgeRetry(
+        key,
+        error,
+        () => void fireClientSubAgentBridge(get, context, outcome, options),
+      );
+      return undefined;
+    });
+    if (!reconstructed) return;
     registration = reconstructed.registration;
     settledSiblings = reconstructed.settledSiblings;
   }

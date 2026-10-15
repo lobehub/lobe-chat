@@ -433,6 +433,67 @@ describe('clientSubAgentBridge reconstruction', () => {
     }
   });
 
+  // P1 (round-20): a reconstruction failure (e.g. threadService.getThreads
+  // rejecting after a reload) must not exit the fire path silently — the
+  // retry driver is scheduled so the WHOLE fire re-runs and the parent
+  // eventually resumes, instead of staying parked forever with no driver.
+  it('schedules a retry when the reconstruction itself fails', async () => {
+    vi.useFakeTimers();
+    try {
+      const { threadService } = await import('@/services/thread');
+      (threadService.getThreads as any)
+        .mockRejectedValueOnce(new Error('network glitch'))
+        .mockResolvedValue([
+          {
+            agentId: 'agent-child',
+            id: 'thd_child',
+            metadata: {
+              bridge: {
+                kind: 'sub-agent',
+                parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+                parentOperationId: 'op_parent',
+                toolMessageId: 'tool-msg-1',
+              },
+            },
+            status: 'processing',
+            topicId: 'topic-1',
+          },
+        ]);
+      const { get, store } = makeGet({
+        dbMessagesMap: {
+          'thread_agent-child_topic-1_thd_child': [
+            { content: 'child final answer', role: 'assistant' },
+          ],
+          'main_agent-parent_topic-1': [
+            {
+              id: 'tool-msg-1',
+              pluginState: { status: 'running', threadId: 'thd_child' },
+              role: 'tool',
+            },
+          ],
+        },
+        operations: {}, // reload: no in-memory operations
+      });
+
+      await fireClientSubAgentBridge(get, childContext);
+
+      // The failed reconstruction never backfilled anything.
+      expect(store.optimisticUpdateMessageContent).not.toHaveBeenCalled();
+
+      // The scheduled retry (5s × attempt 1) re-runs the whole fire —
+      // reconstruction included — and backfills the tool message.
+      await vi.advanceTimersByTimeAsync(5_000);
+      expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+        'tool-msg-1',
+        'child final answer',
+        undefined,
+        { operationId: 'op_parent' },
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   // P2 (round-19): a FAILED sibling's replay must not resurrect a stale
   // pre-failure assistant answer as the tool result — the failure formatting
   // (persisted error text) reaches the parent instead.

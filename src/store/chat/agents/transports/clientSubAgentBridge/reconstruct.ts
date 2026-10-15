@@ -218,7 +218,14 @@ export const reconstructRegistrationFromThread = async (
     );
     return { registration, settledSiblings };
   } catch (error) {
+    // P1 (round-20): propagate instead of swallowing. The fire path
+    // distinguishes "no bridge on this thread" (`registration: undefined` —
+    // silent no-op) from "reconstruction itself failed" (throw): a swallowed
+    // transient failure (threadService.getThreads rejecting…) used to exit
+    // the fire path BEFORE its retry try/catch, leaving the parent parked
+    // forever with no retry driver — the child's terminal boundary is the
+    // only production trigger for that fire.
     log('bridge: failed to reconstruct registration for %s: %O', childThreadId, error);
-    return { registration: undefined, settledSiblings };
+    throw error;
   }
 };
