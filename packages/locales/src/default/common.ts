@@ -53,6 +53,7 @@ export default {
     'Current topic is not saved, please save it first to use subtopic feature',
   'forkRequiresSavedTopic': 'Current topic is not saved. Save it first to fork a new topic',
   'forkTopic': 'Continue in new topic',
+  'supportAgent.troubleshoot.question': 'This message failed. Please help me troubleshoot it.',
   'viewExecutionDetails': 'View execution details',
   'cancel': 'Cancel',
   'changelog': 'Changelog',
