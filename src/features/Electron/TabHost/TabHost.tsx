@@ -9,6 +9,7 @@ import {
   type ReactNode,
   useDeferredValue,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -21,6 +22,7 @@ import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
+import { useDisplayedTabStore } from './displayedTab';
 import { flushHiddenTabRestores } from './hiddenTabRestore';
 import { useLiveTabRouterCap } from './liveTabRouterCap';
 import { resolveLiveTabIds } from './resolveLiveTabIds';
@@ -190,6 +192,15 @@ const TabHost = ({ createRouter = createTabRouter }: TabHostProps) => {
       retainedTabIds,
     );
   }, [tabs, activeTabId, liveTabCap, visibleTabIds, displayedTabIds]);
+
+  const displayedActiveTabId =
+    activeTabId && displayedTabIds.includes(activeTabId)
+      ? activeTabId
+      : (displayedTabIds[0] ?? null);
+
+  useLayoutEffect(() => {
+    useDisplayedTabStore.setState({ tabId: displayedActiveTabId });
+  }, [displayedActiveTabId]);
 
   useEffect(() => {
     flushHiddenTabRestores(displayedTabIds);

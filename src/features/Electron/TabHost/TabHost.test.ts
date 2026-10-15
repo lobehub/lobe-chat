@@ -8,6 +8,7 @@ import { useElectronStore } from '@/store/electron';
 import { initialState } from '@/store/electron/initialState';
 import { useUserStore } from '@/store/user';
 
+import { useDisplayedTabStore } from './displayedTab';
 import { restoreTabWhenHidden } from './hiddenTabRestore';
 import { useLiveTabRouterCap } from './liveTabRouterCap';
 import TabHost from './TabHost';
@@ -522,6 +523,7 @@ describe('TabHost', () => {
     await vi.waitFor(() => expect(getTabRouter('cold')).toBeDefined());
 
     expect(screen.getByTestId('param-warm')).toBeVisible();
+    expect(useDisplayedTabStore.getState().tabId).toBe('warm');
 
     await act(async () => {
       releaseColdLoader();
@@ -530,6 +532,7 @@ describe('TabHost', () => {
 
     expect(await screen.findByTestId('param-cold')).toBeVisible();
     expect(screen.getByTestId('param-warm')).not.toBeVisible();
+    expect(useDisplayedTabStore.getState().tabId).toBe('cold');
   });
 
   it('restores a tab to its earlier location once another tab takes its slot', async () => {
