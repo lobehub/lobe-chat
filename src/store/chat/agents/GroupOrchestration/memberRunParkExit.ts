@@ -3,7 +3,7 @@ import type {
   GroupOrchestrationEvent,
   GroupOrchestrationSupervisorSnapshot,
 } from '@lobechat/agent-runtime';
-import type { ConversationContext } from '@lobechat/types';
+import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 import { debug } from 'debug';
 
 import { registerGroupBridgeFromParkExit } from '@/store/chat/agents/transports/clientSubAgentBridge';
@@ -91,7 +91,7 @@ export const handleMemberRunParkExit = async ({
   // the re-entry and overwrites it with terminal status on settle.
   await get().optimisticUpdatePluginState(toolMessageId, {
     ...(get().dbMessagesMap[messageMapKey(messageContext)] || []).find(
-      (m) => m.id === toolMessageId,
+      (m: UIChatMessage) => m.id === toolMessageId,
     )?.pluginState,
     status: 'running',
     threadId: subContext.threadId,
