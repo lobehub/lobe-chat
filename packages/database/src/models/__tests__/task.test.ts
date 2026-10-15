@@ -2555,6 +2555,29 @@ describe('TaskModel', () => {
       await expect(model.getUnlockedTasksForMany([done.id])).resolves.toEqual([]);
     });
 
+    it('keeps dependents of a completed task whose dependents are held locked', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const held = await model.create({ instruction: 'Completed on a failed verification' });
+      const other = await model.create({ instruction: 'Other blocker' });
+      const dependent = await model.create({ instruction: 'Dependent' });
+      await model.addDependency(dependent.id, held.id);
+      await model.addDependency(dependent.id, other.id);
+
+      await model.updateContext(held.id, { completion: { dependentsHeld: true } });
+      await model.updateStatus(held.id, 'completed');
+      await model.updateStatus(other.id, 'completed');
+
+      // Neither the held task nor the other blocker finishing unlocks it.
+      await expect(model.getUnlockedTasksForMany([held.id, other.id])).resolves.toEqual([]);
+      await expect(model.areAllDependenciesCompleted(dependent.id)).resolves.toBe(false);
+
+      // Released on accept → the dependent unlocks.
+      await model.updateContext(held.id, { completion: { dependentsHeld: false } });
+      const unlocked = await model.getUnlockedTasksForMany([held.id]);
+      expect(unlocked.map(({ id }) => id)).toEqual([dependent.id]);
+      await expect(model.areAllDependenciesCompleted(dependent.id)).resolves.toBe(true);
+    });
+
     it('returns an empty list for an empty id set', async () => {
       const model = new TaskModel(serverDB, userId);
       await expect(model.getUnlockedTasksForMany([])).resolves.toEqual([]);

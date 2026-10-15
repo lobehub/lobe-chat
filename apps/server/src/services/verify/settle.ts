@@ -270,14 +270,20 @@ export const driveTaskFromVerify = async (
         !goal &&
         // A failed round still delivers the Acceptance — the verdict is advice and
         // the user's accept / reject decides, so the task follows the Acceptance
-        // and completes. A reject that already landed (or lands mid-write) keeps
+        // and completes. Its `blocks` dependents stay locked until the user
+        // accepts: an unaccepted failed delivery must not start the work that
+        // depends on it. A reject that already landed (or lands mid-write) keeps
         // the task open instead, falling through to the pause below.
         (await new AcceptanceService(db, userId, workspaceId).completeTaskForDelivery(
           run.acceptanceId,
           taskOperation.taskId,
+          { holdDependents: true },
         )) === 'completed'
       ) {
-        log('verify failed → acceptance delivered → task %s completed', taskOperation.taskId);
+        log(
+          'verify failed → acceptance delivered → task %s completed, dependents held',
+          taskOperation.taskId,
+        );
       } else {
         // Verification outcomes belong to the task itself. Do not create an inbox
         // brief here: a verifier rejection/error is not a separate user todo.

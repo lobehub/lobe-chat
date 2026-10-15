@@ -59,6 +59,10 @@ const TASK_DETAIL_DESCENDANT_TOPIC_LIMIT = 300;
 /** How long after a run starts a task may have no recorded operation yet. */
 const TASK_RUN_STARTING_GRACE_MS = 2 * 60 * 1000;
 
+/** Whether the task's `blocks` dependents are held until its delivery is accepted. */
+const isDependentsHeld = (task: { context: unknown }): boolean =>
+  (task.context as TaskContext | null)?.completion?.dependentsHeld === true;
+
 type DirectTaskTopicActivityRow = Awaited<ReturnType<TaskTopicModel['findWithHandoff']>>[number];
 type DescendantTaskTopicActivityRow = Awaited<
   ReturnType<TaskTopicModel['findWithHandoffByTaskIds']>
@@ -530,6 +534,13 @@ export class TaskService {
        */
       operationId?: string;
       status: TaskStatus;
+      /**
+       * Complete the task without unlocking its `blocks` dependents: a delivery
+       * whose verification did not pass completes so the user's accept /
+       * reject decides, and only an accept releases its dependents (see
+       * {@link releaseHeldDependents}). Ignored for any other status.
+       */
+      holdDependents?: boolean;
     },
     /**
      * Present only for a change a person or their agent made; its absence is
@@ -594,6 +605,15 @@ export class TaskService {
     if (status === 'completed' || status === 'failed' || status === 'canceled')
       extra.completedAt = new Date();
     if (errorMsg) extra.error = errorMsg;
+
+    // Written before the status so the hold is in place the moment the task
+    // reads completed (another blocker finishing concurrently must not unlock
+    // the dependents). Any other transition drops a stale hold.
+    const holdDependents = status === 'completed' && input.holdDependents === true;
+    if (holdDependents !== isDependentsHeld(resolved))
+      await this.taskModel.updateContext(resolved.id, {
+        completion: { dependentsHeld: holdDependents },
+      });
 
     const task = actor
       ? await this.taskModel.updateWithLog(resolved.id, { status, ...extra }, actor)
@@ -689,11 +709,14 @@ export class TaskService {
         allSubtasksDone = await this.taskModel.areAllSubtasksCompleted(task.parentTaskId);
       }
 
-      // Unlock blocked tasks and actually kick them off via the runner.
-      const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
-      const cascade = await runner.cascadeOnCompletion(task.id);
-      unlocked.push(...cascade.started);
-      paused.push(...cascade.paused);
+      // Unlock blocked tasks and actually kick them off via the runner — unless
+      // the completion holds them until the user accepts the delivery.
+      if (!holdDependents) {
+        const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
+        const cascade = await runner.cascadeOnCompletion(task.id);
+        unlocked.push(...cascade.started);
+        paused.push(...cascade.paused);
+      }
     }
 
     return {
@@ -703,6 +726,25 @@ export class TaskService {
       ...(checkpointTriggered && { checkpointTriggered: true }),
       ...(allSubtasksDone && { allSubtasksDone: true, parentTaskId: task.parentTaskId }),
     };
+  }
+
+  /**
+   * Release the `blocks` dependents a completion held (see `holdDependents` on
+   * {@link updateStatus}) — the user accepted the delivery — and kick off the
+   * ones that are now unlocked. A no-op for a task that holds nothing.
+   *
+   * @returns identifiers of the dependents that were started.
+   */
+  async releaseHeldDependents(id: string): Promise<string[]> {
+    const task = await this.resolveOrThrow(id);
+    if (!isDependentsHeld(task)) return [];
+
+    await this.taskModel.updateContext(task.id, { completion: { dependentsHeld: false } });
+    if (task.status !== 'completed') return [];
+
+    const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
+    const cascade = await runner.cascadeOnCompletion(task.id);
+    return cascade.started;
   }
 
   /**

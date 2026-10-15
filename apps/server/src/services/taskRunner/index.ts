@@ -2,7 +2,7 @@ import { TaskIdentifier as TaskSkillIdentifier } from '@lobechat/builtin-skills'
 import { AcceptanceEvidenceIdentifier } from '@lobechat/builtin-tool-acceptance-evidence';
 import { BriefIdentifier } from '@lobechat/builtin-tool-brief';
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import type { ExecAgentResult, TaskItem, TaskRunTrigger } from '@lobechat/types';
+import type { ExecAgentResult, TaskContext, TaskItem, TaskRunTrigger } from '@lobechat/types';
 import { readTaskExecutionConfig } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
@@ -208,6 +208,10 @@ export class TaskRunnerService {
           });
         }
         weSetRunning = true;
+        // A new run supersedes the delivery that held its dependents; its own
+        // completion decides whether they are held again.
+        if ((task.context as TaskContext | null)?.completion?.dependentsHeld)
+          await this.taskModel.updateContext(task.id, { completion: { dependentsHeld: false } });
       } else if (task.error) {
         await this.taskModel.update(task.id, { error: null });
       }

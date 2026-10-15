@@ -574,7 +574,12 @@ describe('driveTaskFromVerify', () => {
       status: 'failed',
     });
     await driveTaskFromVerify(db, 'u1', 'op-1');
-    expect(completeTaskForDelivery).toHaveBeenCalledWith('acceptance-1', 'task-1');
+    // Completes for the user's decision, but holds the `blocks` dependents:
+    // an unaccepted failed delivery must not start the work that depends on it.
+    expect(completeTaskForDelivery).toHaveBeenCalledWith('acceptance-1', 'task-1', {
+      holdDependents: true,
+    });
+    expect(serviceUpdateStatus).not.toHaveBeenCalled();
     expect(taskUpdateStatus).not.toHaveBeenCalled();
     // The creator still hears the verdict: the round did not pass.
     expect(deliverMock.mock.calls[0][0]).toMatchObject({ reason: 'error', taskId: 'task-1' });
