@@ -111,8 +111,9 @@ export const encodeChatCompletionsStream = (source: ReadableStream<Uint8Array>, 
             };
           } else if (event.type === 'stop') {
             stopped = true;
+            // Providers report raw reasons, e.g. Gemini emits `MAX_TOKENS`.
             if (!stopReason && typeof event.data === 'string' && event.data !== 'message_stop')
-              stopReason = event.data;
+              stopReason = event.data.toLowerCase();
           } else if (event.type === 'error') {
             failed = true;
             controller.enqueue(

@@ -148,6 +148,14 @@ describe('Chat Completions heterogeneous relay', () => {
     },
   );
 
+  it('maps the uppercase Gemini MAX_TOKENS stop reason to length, even after tool calls', async () => {
+    const chunks = await encode([
+      ['tool_calls', [{ function: { arguments: '{"a"', name: 'Read' }, id: 'call_1', index: 0 }]],
+      ['stop', 'MAX_TOKENS'],
+    ]);
+    expect(chunks.at(-1).choices[0].finish_reason).toBe('length');
+  });
+
   it('does not convert failures or a truncated stream into successful completion', async () => {
     for (const events of [
       [['error', { message: 'upstream rejected' }]],
