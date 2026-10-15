@@ -3598,7 +3598,6 @@ When I am ___, I need ___
   'workspace.onboarding.flow.channels.quote': "Add me to your team's group chats,",
   'workspace.onboarding.flow.channels.highlight': 'and anyone can hand me work.',
   'workspace.onboarding.flow.channels.more': 'You can change channels anytime in Agent → Channels.',
-  'workspace.onboarding.flow.channels.configTitle': 'Connect {{platform}}',
   'workspace.onboarding.flow.channels.connect.back': 'Back to list',
   'workspace.onboarding.flow.channels.connect.category': 'Bot channel',
   'workspace.onboarding.flow.channels.connect.description':

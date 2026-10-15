@@ -3111,7 +3111,6 @@
   "workspace.newWorkspace": "New Workspace",
   "workspace.onboarding.finish": "Finish",
   "workspace.onboarding.flow.assistant.hint": "💡 This assistant is shared by the whole team. Members can @ it in chats and group chats.",
-  "workspace.onboarding.flow.channels.configTitle": "Connect {{platform}}",
   "workspace.onboarding.flow.channels.connect.attempt": "Attempt {{count}}",
   "workspace.onboarding.flow.channels.connect.back": "Back to list",
   "workspace.onboarding.flow.channels.connect.category": "Bot channel",
