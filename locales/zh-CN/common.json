@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "我想反馈一个问题或提个建议",
   "supportAgent.starter.modelError": "模型调用报错了，该怎么排查？",
   "supportAgent.title": "Lobe 答疑助手",
+  "supportAgent.troubleshoot.question": "这条消息报错了，帮我排查一下",
   "supportAgent.welcome": "你好，我是 Lobe 答疑助手。功能怎么用、哪里报错了、想给团队提建议，都可以直接告诉我。我是 AI，重要信息请再核实一下。",
   "supportAgent.working": "正在查找相关信息…",
   "switch": "切换",

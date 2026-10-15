@@ -1921,6 +1921,10 @@ export class ConversationLifecycleActionImpl {
           // selection (only the client runtime did). Omit when empty.
           selectedToolIds:
             selectedTools.length > 0 ? selectedTools.map((tool) => tool.identifier) : undefined,
+          // Forward selected skills so the server injects their bodies, as the
+          // client runtime does by persisting them into the message content.
+          selectedSkillIds:
+            selectedSkills.length > 0 ? selectedSkills.map((skill) => skill.identifier) : undefined,
           // Forward @-mentioned agents so the server supervisor can delegate to
           // them (multi-mention). Mirrors the client runtime's `initialContext`
           // injection: the server enables the callAgent tool and injects the

@@ -2,45 +2,36 @@ import type { LocalHeterogeneousAgentType } from '../config';
 
 export type ServerDefaultHeterogeneousIngress = 'anthropic-messages' | 'openai-responses';
 
-export type ServerDefaultHeterogeneousModelPolicy = 'codex' | 'tool-capable';
-
 export type ServerDefaultHeterogeneousTokenHeader = 'bearer' | 'x-api-key';
 
 interface ServerDefaultHeterogeneousAgentConfig {
   ingress: ServerDefaultHeterogeneousIngress;
-  modelPolicy: ServerDefaultHeterogeneousModelPolicy;
   tokenHeader: ServerDefaultHeterogeneousTokenHeader;
 }
 
 export const SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG = {
   'claude-code': {
     ingress: 'anthropic-messages',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'bearer',
   },
   'codex': {
     ingress: 'openai-responses',
-    modelPolicy: 'codex',
     tokenHeader: 'bearer',
   },
   'grok-build': {
     ingress: 'openai-responses',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'bearer',
   },
   'kimi-code': {
     ingress: 'anthropic-messages',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'x-api-key',
   },
   'pi': {
     ingress: 'openai-responses',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'bearer',
   },
   'trae': {
     ingress: 'openai-responses',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'bearer',
   },
 } as const satisfies Partial<

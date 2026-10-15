@@ -105,7 +105,6 @@ export type {
   ResolveHeterogeneousProviderBindingResult,
   ServerDefaultHeterogeneousAgentType,
   ServerDefaultHeterogeneousIngress,
-  ServerDefaultHeterogeneousModelPolicy,
   ServerDefaultHeterogeneousTokenHeader,
 } from './providerBinding';
 export {

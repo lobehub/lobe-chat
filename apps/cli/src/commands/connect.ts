@@ -11,27 +11,21 @@ import {
   executeDeviceRpc,
   pushMetrics,
 } from '@lobechat/device-control';
+import { COMPUTER_USE_IDENTIFIER } from '@lobechat/device-control/computer-use';
 import type {
   AgentRunRequestMessage,
-  DeviceSystemInfo,
   RpcRequestMessage,
   SystemInfoRequestMessage,
   ToolCallRequestMessage,
 } from '@lobechat/device-gateway-client';
 import { GatewayClient } from '@lobechat/device-gateway-client';
 import { listHeterogeneousAgentModels } from '@lobechat/heterogeneous-agents/models';
-import { getShellInfo } from '@lobechat/local-file-shell';
 import type { Command } from 'commander';
 
 import { createLambdaClient } from '../api/client';
 import { resolveToken } from '../auth/resolveToken';
 import { CLI_API_KEY_ENV } from '../constants/auth';
-import {
-  CLI_CONFIG_DIR_NAME,
-  CLI_CONNECT_SERVICE_NAME,
-  CLI_DISPLAY_NAME,
-  CLI_PRIMARY_BIN,
-} from '../constants/identity';
+import { CLI_CONNECT_SERVICE_NAME, CLI_DISPLAY_NAME, CLI_PRIMARY_BIN } from '../constants/identity';
 import { OFFICIAL_GATEWAY_URL } from '../constants/urls';
 import { CliMaintenance } from '../daemon/maintenance';
 import {
@@ -56,6 +50,7 @@ import {
   resolveDeviceIdentity,
   resolveWorkspaceDeviceIdentity,
 } from '../device/register';
+import { collectSystemInfo } from '../device/systemInfo';
 import { TerminalSessionManager } from '../device/terminal';
 import {
   CONNECT_RETRYABLE_EXIT_CODE,
@@ -78,6 +73,7 @@ import {
   saveSettings,
 } from '../settings';
 import { executeToolCall } from '../tools';
+import { executeComputerUseCall, resolveComputerUseDevice } from '../tools/computerUse';
 import { cleanupAllProcesses, getActiveShellCount } from '../tools/shell';
 import { log, setVerbose } from '../utils/logger';
 import { sweepLocalTraces } from '../utils/traceMaintenance';
@@ -87,6 +83,8 @@ const SHUTDOWN_METRICS_FLUSH_MS = 3000;
 const CONNECT_SERVICE_NAME = CLI_CONNECT_SERVICE_NAME;
 
 interface ConnectOptions {
+  /** `auv` binary that runs Computer Use on this device; see `resolveComputerUseDevice`. */
+  auv?: string;
   daemon?: boolean;
   daemonChild?: boolean;
   deviceId?: string;
@@ -112,6 +110,7 @@ export function registerConnectCommand(program: Command) {
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
     )
+    .option('--auv <binary>', 'Offer Computer Use by running this AUV binary (`auv invoke`)')
     .option('-v, --verbose', 'Enable verbose logging')
     .option('-d, --daemon', 'Run as a background daemon process')
     .option('--daemon-child', 'Internal: runs as the daemon child process')
@@ -188,6 +187,7 @@ export function registerConnectCommand(program: Command) {
     .option('--token <jwt>', 'JWT access token')
     .option('--gateway <url>', 'Device gateway URL')
     .option('--device-id <id>', 'Device ID')
+    .option('--auv <binary>', 'Offer Computer Use by running this AUV binary (`auv invoke`)')
     .option('-v, --verbose', 'Enable verbose logging')
     .action(async (options: ConnectOptions) => {
       const wasStopped = stopDaemon();
@@ -209,6 +209,7 @@ export function registerConnectCommand(program: Command) {
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
     )
+    // TODO: `--auv` is not forwarded to the service unit; add it when a service-mode device needs Computer Use.
     .action((options: Pick<ConnectOptions, 'public' | 'workspace'>) => {
       installConnectService({ public: options.public, workspace: options.workspace });
       log.info(
@@ -332,6 +333,7 @@ function buildDaemonArgs(options: ConnectOptions): string[] {
   if (options.deviceId) args.push('--device-id', options.deviceId);
   if (options.workspace) args.push('--workspace', options.workspace);
   if (options.public) args.push('--public');
+  if (options.auv) args.push('--auv', path.resolve(options.auv));
   if (options.verbose) args.push('--verbose');
 
   return args;
@@ -356,6 +358,13 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   }
 
   const resolvedGatewayUrl = gatewayUrl || OFFICIAL_GATEWAY_URL;
+
+  // Fail before connecting rather than advertise a tool this device cannot run.
+  const computerUse = await resolveComputerUseDevice(options.auv).catch((err: Error) => {
+    log.error(err.message);
+    process.exit(1);
+    throw err;
+  });
 
   // Workspace enrollment: the device joins a workspace pool (reachable by all
   // members) instead of the personal pool. It authenticates with a minted
@@ -514,6 +523,7 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   };
 
   const handlerContext: GatewayHandlerContext = {
+    computerUse,
     deps: deviceControlDeps,
     error,
     // Read at dispatch time — `auth` may be refreshed mid-session.
@@ -934,6 +944,8 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
 
 /** Everything a gateway connection's request handlers need from the host process. */
 interface GatewayHandlerContext {
+  /** Present when `--auv` enabled Computer Use on this device. */
+  computerUse?: Awaited<ReturnType<typeof resolveComputerUseDevice>>;
   deps: DeviceControlDeps;
   error: (msg: string) => void;
   /** Read at dispatch time — the underlying auth may be refreshed mid-session. */
@@ -955,12 +967,13 @@ function bindGatewayClientHandlers(
   ctx: GatewayHandlerContext,
   connectionWorkspaceId?: string,
 ) {
-  const { deps, error, getAuth, info, isDaemonChild, maintenance, recordRequest } = ctx;
+  const { computerUse, deps, error, getAuth, info, isDaemonChild, maintenance, recordRequest } =
+    ctx;
 
   // Handle system info requests
-  client.on('system_info_request', (request: SystemInfoRequestMessage) => {
+  client.on('system_info_request', async (request: SystemInfoRequestMessage) => {
     info(`Received system_info_request: requestId=${request.requestId}`);
-    const systemInfo = collectSystemInfo();
+    const systemInfo = await collectSystemInfo(computerUse);
     client.sendSystemInfoResponse({
       requestId: request.requestId,
       result: { success: true, systemInfo },
@@ -984,7 +997,12 @@ function bindGatewayClientHandlers(
     // slow transport.
     const startedAt = performance.now();
     const result = await maintenance
-      .run(() => executeToolCall(toolCall.apiName, toolCall.arguments, timeout, getAuth()))
+      .run(() =>
+        // Computer Use's `runCommand` shares its apiName with the shell tool.
+        toolCall.identifier === COMPUTER_USE_IDENTIFIER
+          ? executeComputerUseCall(computerUse, toolCall.apiName, toolCall.arguments, timeout)
+          : executeToolCall(toolCall.apiName, toolCall.arguments, timeout, getAuth()),
+      )
       .catch((err: Error) => ({
         content: '',
         error: err.message,
@@ -1162,25 +1180,4 @@ function scheduleProactiveRefresh(
       error('Proactive token refresh failed.');
     }
   }
-}
-
-function collectSystemInfo(): DeviceSystemInfo {
-  const home = os.homedir();
-  const platform = process.platform;
-  const videosDir = platform === 'linux' ? 'Videos' : 'Movies';
-
-  return {
-    arch: os.arch(),
-    // Tell the server-side prompt builder which shell runCommand spawns here.
-    defaultShell: getShellInfo().displayName,
-    desktopPath: path.join(home, 'Desktop'),
-    documentsPath: path.join(home, 'Documents'),
-    downloadsPath: path.join(home, 'Downloads'),
-    homePath: home,
-    musicPath: path.join(home, 'Music'),
-    picturesPath: path.join(home, 'Pictures'),
-    userDataPath: path.join(home, CLI_CONFIG_DIR_NAME),
-    videosPath: path.join(home, videosDir),
-    workingDirectory: process.cwd(),
-  };
 }

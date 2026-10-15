@@ -8,11 +8,16 @@ import { resolveDeviceClientKinds } from '../clientKinds';
 describe('resolveDeviceClientKinds', () => {
   it('keeps desktop-only builtin tools off `lh connect`', () => {
     expect(
-      resolveDeviceClientKinds({ identifier: AuvIdentifier, kind: 'tool', type: 'tool' }),
-    ).toEqual(['desktop']);
-    expect(
       resolveDeviceClientKinds({ identifier: BrowserIdentifier, kind: 'tool', type: 'tool' }),
     ).toEqual(['desktop']);
+  });
+
+  // Which of the two serves a call is chosen per device by `auvRuntime`, from
+  // the client that reports the capability.
+  it('lets both clients run Computer Use', () => {
+    expect(
+      resolveDeviceClientKinds({ identifier: AuvIdentifier, kind: 'tool', type: 'tool' }),
+    ).toEqual(['desktop', 'cli']);
   });
 
   it('lets any client run tools both clients implement', () => {

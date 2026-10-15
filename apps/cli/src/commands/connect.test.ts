@@ -1,3 +1,7 @@
+import { chmod, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+
 import type * as DeviceControlModule from '@lobechat/device-control';
 import { GatewayClient } from '@lobechat/device-gateway-client';
 import { Command } from 'commander';
@@ -381,7 +385,7 @@ describe('connect command', () => {
     const program = createProgram();
     await program.parseAsync(['node', 'test', 'connect']);
 
-    clientEventHandlers['system_info_request']?.({
+    await clientEventHandlers['system_info_request']?.({
       requestId: 'req-2',
       type: 'system_info_request',
     });
@@ -391,6 +395,8 @@ describe('connect command', () => {
     expect(lastSentSystemInfoResponse.result.success).toBe(true);
     expect(lastSentSystemInfoResponse.result.systemInfo).toHaveProperty('homePath');
     expect(lastSentSystemInfoResponse.result.systemInfo).toHaveProperty('arch');
+    // `getShellInfo` is async; reading `displayName` off the promise sent nothing.
+    expect(lastSentSystemInfoResponse.result.systemInfo.defaultShell).toEqual(expect.any(String));
   });
 
   it('should handle auth_failed', async () => {
@@ -583,7 +589,7 @@ describe('connect command', () => {
     const program = createProgram();
     await program.parseAsync(['node', 'test', 'connect']);
 
-    clientEventHandlers['system_info_request']?.({
+    await clientEventHandlers['system_info_request']?.({
       requestId: 'req-3',
       type: 'system_info_request',
     });
@@ -595,6 +601,78 @@ describe('connect command', () => {
     } else {
       expect(sysInfo.videosPath).toContain('Videos');
     }
+  });
+
+  describe.skipIf(process.platform === 'win32')('--auv', () => {
+    let auvDir: string;
+    let auvBinary: string;
+
+    beforeEach(async () => {
+      auvDir = await mkdtemp(path.join(os.tmpdir(), 'lh-connect-auv-'));
+      auvBinary = path.join(auvDir, 'auv');
+      await writeFile(auvBinary, `#!/bin/sh\nprintf '{"ok":true}'\n`);
+      await chmod(auvBinary, 0o755);
+    });
+
+    afterEach(async () => {
+      await rm(auvDir, { force: true, recursive: true });
+    });
+
+    const computerUseCall = {
+      requestId: 'req-cu',
+      toolCall: {
+        apiName: 'runCommand',
+        arguments: JSON.stringify({ argv: ['invoke', 'display.list'] }),
+        identifier: 'lobe-computer-use',
+      },
+      type: 'tool_call_request',
+    };
+
+    it('advertises Computer Use and runs it with the given binary', async () => {
+      await createProgram().parseAsync(['node', 'test', 'connect', '--auv', auvBinary]);
+
+      await clientEventHandlers['system_info_request']?.({
+        requestId: 'r',
+        type: 'system_info_request',
+      });
+      expect(lastSentSystemInfoResponse.result.systemInfo.supportedTools).toEqual([
+        'lobe-computer-use',
+      ]);
+
+      // `runCommand` is also the shell tool's apiName; the identifier decides.
+      await clientEventHandlers['tool_call_request']?.(computerUseCall);
+      expect(executeToolCall).not.toHaveBeenCalled();
+      expect(lastSentToolResponse.result).toMatchObject({
+        state: { exitCode: 0, output: { ok: true } },
+        success: true,
+      });
+    });
+
+    it('does not advertise or run Computer Use without --auv', async () => {
+      await createProgram().parseAsync(['node', 'test', 'connect']);
+
+      await clientEventHandlers['system_info_request']?.({
+        requestId: 'r',
+        type: 'system_info_request',
+      });
+      expect(lastSentSystemInfoResponse.result.systemInfo).not.toHaveProperty('supportedTools');
+
+      await clientEventHandlers['tool_call_request']?.(computerUseCall);
+      expect(executeToolCall).not.toHaveBeenCalled();
+      expect(lastSentToolResponse.result).toMatchObject({
+        error: expect.stringContaining('--auv'),
+        success: false,
+      });
+    });
+
+    it('passes the absolute binary path to the daemon child', async () => {
+      const relative = path.relative(process.cwd(), auvBinary);
+      await createProgram().parseAsync(['node', 'test', 'connect', '--daemon', '--auv', relative]);
+
+      expect(vi.mocked(spawnDaemon).mock.calls[0]?.[0]).toEqual(
+        expect.arrayContaining(['--auv', auvBinary]),
+      );
+    });
   });
 
   describe('--daemon flag', () => {

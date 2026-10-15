@@ -571,6 +571,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
 
       return (
         <TraceIdError
+          error={error}
           id={data.id}
           showRetry={!isSharedTopic}
           traceId={traceId}
