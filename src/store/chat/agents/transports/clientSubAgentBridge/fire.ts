@@ -6,6 +6,7 @@ import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
 
+import { backfillChildResult } from './backfill';
 import {
   heldCompletions,
   registry,
@@ -397,36 +398,45 @@ const fireSubAgentBridge = async (
       parentOperationId,
       parentOp?.status ?? 'missing',
     );
+    // P2 (round-16): a cancelled parent (user stopped the run) still owns the
+    // live deferred placeholder — `cancelOperation` recursively cancels the
+    // child, whose interrupted terminal boundary fires this bridge. The early
+    // return used to skip BOTH backfills, leaving the rendered tool card
+    // permanently `status: 'running'` with the "Sub-agent is still running"
+    // placeholder even though the child thread is settled. Backfill the
+    // child's terminal result WITHOUT the `resumePending` marker: the parent
+    // is settled out-of-band, so nobody will ever consume that marker (and a
+    // stale one would read as a phantom resume target to reconstruction).
+    // A MISSING op with an already-consumed placeholder (the post-reload
+    // shape — the parent settled normally long ago) stays a no-op:
+    // backfilling would overwrite the settled row with stale child output.
+    if (parentOp || isParentResumable(get, registration.parentContext, toolMessageId)) {
+      await backfillChildResult(get, registration.parentContext, toolMessageId, {
+        context: registration.parentContext,
+        resultContent,
+        stats,
+        succeeded,
+      });
+    }
     releasePending(registration);
     return;
   }
 
-  // 1. Backfill the placeholder so the parent's conversation (rebuilt from
-  //    persisted messages) sees the child's final output.
-  await get().optimisticUpdateMessageContent(toolMessageId, resultContent, undefined, {
-    operationId: parentOperationId,
-  });
-
-  // 2. Persist the authoritative completion state on the tool message —
-  //    replaces the deferred `{ status: 'running', threadId }` placeholder
-  //    state, feeds the Inspector row, and mirrors the normal path's write.
-  //    Flat stats ride on the SAME state object (CallSubAgentState contract:
-  //    the completion bridge is the authoritative stats writer).
-  // P2 (round-7): MERGE over the current plugin state — the deferred state's
-  // threadId carries the Open Thread coordinates; a blind replace drops it
-  // the moment the child settles.
+  // 1-2. Backfill the placeholder + persist the authoritative completion
+  //      state (shared with the out-of-band path — see backfillChildResult).
+  // P2 (round-7): plugin state MERGEs over the current state — the deferred
+  // state's threadId carries the Open Thread coordinates; a blind replace
+  // drops it the moment the child settles.
   // P1 (round-15): `resumePending: true` rides along — once the backfill
   // overwrites the `running` placeholder, this marker is the ONLY durable
   // park signal left. `optimisticUpdatePluginState` replaces the whole state
   // object, so the merged value below preserves every surviving key.
-  const parentToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
-    get().dbMessagesMap[messageMapKey(registration.parentContext)] || [];
-  const parentToolRow = parentToolRows.find((m) => m.id === toolMessageId);
-  await get().optimisticUpdatePluginState(toolMessageId, {
-    ...parentToolRow?.pluginState,
+  await backfillChildResult(get, registration.parentContext, toolMessageId, {
+    operationId: parentOperationId,
+    resultContent,
     resumePending: true,
-    status: succeeded ? 'completed' : 'error',
-    ...stats,
+    stats,
+    succeeded,
   });
 
   // 4. Parallel-call barrier: resume the parent only after the LAST pending
@@ -570,6 +580,20 @@ const fireGroupOrchestrationBridge = async (
       orchestrationOperationId,
       parkedOp?.status ?? 'missing',
     );
+    // P2 (round-16): same contract as the sub-agent kind — a cancelled
+    // orchestration still owns the live deferred placeholder, and skipping
+    // BOTH backfills left the member's tool card permanently `running`.
+    // Backfill WITHOUT the `resumePending` marker (same phantom-marker
+    // reasoning — see the sub-agent kind); a missing op with an
+    // already-consumed placeholder stays a no-op.
+    if (parkedOp || isParentResumable(get, messageContext, toolMessageId)) {
+      await backfillChildResult(get, messageContext, toolMessageId, {
+        context: messageContext,
+        resultContent,
+        stats,
+        succeeded,
+      });
+    }
     releasePending(registration);
     return;
   }
@@ -577,25 +601,19 @@ const fireGroupOrchestrationBridge = async (
   // Backfill the supervisor's group tool message BEFORE re-entering — the
   // re-entered orchestration rebuilds the supervisor conversation from
   // persisted messages, so the supervisor LLM call must see the result.
-  await get().optimisticUpdateMessageContent(toolMessageId, resultContent, undefined, {
-    operationId: orchestrationOperationId,
-  });
-
   // Persist the authoritative completion state on the tool message (the
   // member's card) — same contract as the sub-agent kind, including the
   // flat spend stats the usage tray reads.
-  // P2 (round-7): MERGE over the current plugin state — same contract as the
-  // sub-agent kind (see above).
+  // P2 (round-7): plugin state MERGEs over the current state — same contract
+  // as the sub-agent kind (see above).
   // P1 (round-15): `resumePending: true` — the durable park signal after the
   // backfill overwrites the `running` placeholder (see the sub-agent kind).
-  const groupToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
-    get().dbMessagesMap[messageMapKey(registration.messageContext)] || [];
-  const groupToolRow = groupToolRows.find((m) => m.id === toolMessageId);
-  await get().optimisticUpdatePluginState(toolMessageId, {
-    ...groupToolRow?.pluginState,
+  await backfillChildResult(get, messageContext, toolMessageId, {
+    operationId: orchestrationOperationId,
+    resultContent,
     resumePending: true,
-    status: succeeded ? 'completed' : 'error',
-    ...stats,
+    stats,
+    succeeded,
   });
 
   // Release this member's barrier slot BEFORE re-entering: the re-entry

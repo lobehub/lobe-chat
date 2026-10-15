@@ -113,7 +113,13 @@ describe('clientSubAgentBridge', () => {
     expect(store2.optimisticUpdateMessageContent).not.toHaveBeenCalled();
   });
 
-  it('skips the parent resume when the parent op is no longer running', async () => {
+  // P2 (round-16): a parent settled out-of-band (user stopped the run →
+  // `cancelOperation` recursively cancelled the child, whose interrupted
+  // terminal boundary fired this bridge) must still receive the child's
+  // terminal result — the tool card used to stay `running` forever with the
+  // "Sub-agent is still running" placeholder. No resume, no `resumePending`
+  // marker (nobody will consume it), but both backfills happen.
+  it('backfills the child result without resuming when the parent op is cancelled', async () => {
     registerArmedSubAgentBridge(subAgentRegistration);
     const { get, store } = makeGet({
       operations: {
@@ -124,8 +130,48 @@ describe('clientSubAgentBridge', () => {
 
     await fireClientSubAgentBridge(get, childContext);
 
-    expect(store.optimisticUpdateMessageContent).not.toHaveBeenCalled();
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-1',
+      'child final answer',
+      undefined,
+      { context: subAgentRegistration.parentContext },
+    );
+    expect(store.optimisticUpdatePluginState).toHaveBeenCalledWith(
+      'tool-msg-1',
+      expect.objectContaining({ status: 'completed' }),
+      { context: subAgentRegistration.parentContext },
+    );
+    expect(
+      (store.optimisticUpdatePluginState as any).mock.calls.every(
+        ([, value]) => value.resumePending !== true,
+      ),
+    ).toBe(true);
     expect(store.executeClientAgent).not.toHaveBeenCalled();
+  });
+
+  it('group-orchestration kind: backfills without re-entry when the orchestration op is cancelled', async () => {
+    registerClientSubAgentBridge({ ...groupRegistration, armed: true });
+    const { get, store } = makeGet({
+      operations: {
+        op_child: { status: 'running' },
+        op_orch: { status: 'cancelled' },
+      },
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-1',
+      'child final answer',
+      undefined,
+      { context: groupRegistration.messageContext },
+    );
+    expect(store.optimisticUpdatePluginState).toHaveBeenCalledWith(
+      'tool-msg-1',
+      expect.objectContaining({ status: 'completed' }),
+      { context: groupRegistration.messageContext },
+    );
+    expect(store.internal_execGroupOrchestration).not.toHaveBeenCalled();
   });
 
   it('is a no-op when no bridge was registered for the thread (normal terminal runs)', async () => {

@@ -34,6 +34,8 @@
  * - `types.ts` — registration / outcome / persisted-coordinate shapes.
  * - `registry.ts` — registration + two-phase activation (arm) + the
  *   post-reload coordinate persistence.
+ * - `backfill.ts` — shared placeholder backfill (content + plugin state) for
+ *   the resume path and the parent-settled-out-of-band path.
  * - `fire.ts` — terminal-boundary fire: settlement, parent guards, barrier,
  *   resume / re-entry.
  */
