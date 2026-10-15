@@ -43,6 +43,7 @@ import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
 import { createTaskSchedulerModule } from '../taskScheduler';
 import { resolveTaskAcceptance } from '../verify/taskAcceptance';
+import { assertArchivedTaskStaysIdle } from './archiveGuard';
 import { collapseActivityLog } from './collapseActivityLog';
 import { projectTaskDetailState } from './detailProjection';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
@@ -559,6 +560,7 @@ export class TaskService {
     }
 
     const resolved = await this.resolveOrThrow(id);
+    assertArchivedTaskStaysIdle(resolved, { status });
 
     if (resolved.status === 'running' && status !== 'running') {
       const topics = await this.taskTopicModel.findByTaskId(resolved.id);

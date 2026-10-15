@@ -35,7 +35,7 @@ export class TaskArchiveModel {
 
   /**
    * Archive a task unless it is running or its schedule / heartbeat can still
-   * fire. Returns null when the task is missing or blocked; an already archived
+   * fire (mirrors `isTaskArchiveBlocked` in `@lobechat/types`). Returns null when the task is missing or blocked; an already archived
    * task keeps its original `archived_at`.
    */
   async archive(id: string) {
@@ -47,7 +47,9 @@ export class TaskArchiveModel {
           eq(tasks.id, id),
           this.ownership(),
           ne(tasks.status, 'running'),
-          sql`${RUNNABLE_AUTOMATION} IS NOT TRUE`,
+          // A paused schedule can't fire (dispatcher and tick skip paused);
+          // a paused heartbeat still ticks, so it stays blocked.
+          sql`(${RUNNABLE_AUTOMATION} AND NOT (${tasks.automationMode} = 'schedule' AND ${tasks.status} = 'paused')) IS NOT TRUE`,
         ),
       )
       .returning();

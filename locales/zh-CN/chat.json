@@ -2397,6 +2397,7 @@
   "taskList.contextMenu.priority": "优先级",
   "taskList.contextMenu.runArchivedBlocked": "请先取消归档，再运行此任务",
   "taskList.contextMenu.runNow": "立即运行",
+  "taskList.contextMenu.scheduleArchivedBlocked": "请先取消归档，再设置定时",
   "taskList.contextMenu.status": "状态",
   "taskList.contextMenu.transferConfirm": "移动",
   "taskList.contextMenu.transferDescription": "将此任务（及其所有子任务）移动到另一个工作区。标识符将重新分配。",

@@ -101,6 +101,22 @@ describe('Task Router archive', () => {
     expect(stored.status).toBe('backlog');
   });
 
+  it('refuses to turn automation back on for an archived task', async () => {
+    const created = await caller.create({ instruction: 'Weekly digest' });
+    await caller.archive({ archived: true, id: created.data.id });
+
+    await expect(
+      caller.update({ automationMode: 'heartbeat', heartbeatInterval: 600, id: created.data.id }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' });
+    await expect(
+      caller.updateStatus({ id: created.data.id, status: 'running' }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' });
+    // Edits that keep it idle still go through.
+    await expect(caller.update({ id: created.data.id, name: 'Renamed' })).resolves.toMatchObject({
+      success: true,
+    });
+  });
+
   it('marks an archived subtask in its parent detail instead of dropping it', async () => {
     const parent = await caller.create({ instruction: 'Parent' });
     const child = await caller.create({ instruction: 'Child', parentTaskId: parent.data.id });

@@ -40,6 +40,23 @@ describe('isTaskArchiveBlocked', () => {
     ).toBe(false);
   });
 
+  it('allows a paused schedule, which cannot fire, but not a paused heartbeat', () => {
+    expect(
+      isTaskArchiveBlocked({
+        automationMode: 'schedule',
+        schedulePattern: '0 9 * * *',
+        status: 'paused',
+      }),
+    ).toBe(false);
+    expect(
+      isTaskArchiveBlocked({
+        automationMode: 'heartbeat',
+        heartbeatInterval: 600,
+        status: 'paused',
+      }),
+    ).toBe(true);
+  });
+
   it('allows ordinary idle or finished tasks', () => {
     for (const status of ['backlog', 'paused', 'completed', 'canceled', 'failed']) {
       expect(isTaskArchiveBlocked({ status })).toBe(false);

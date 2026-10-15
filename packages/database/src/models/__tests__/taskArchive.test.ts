@@ -64,6 +64,26 @@ describe('TaskArchiveModel', () => {
     expect((await model.archive(done.id))?.archivedAt).toBeInstanceOf(Date);
   });
 
+  it('archives a paused schedule but not a paused heartbeat', async () => {
+    const tasks = new TaskModel(serverDB, userId);
+    const model = new TaskArchiveModel(serverDB, userId);
+    const schedule = await tasks.create({
+      automationMode: 'schedule',
+      instruction: 'Paused schedule',
+      schedulePattern: '0 9 * * *',
+    });
+    const heartbeat = await tasks.create({
+      automationMode: 'heartbeat',
+      heartbeatInterval: 600,
+      instruction: 'Paused heartbeat',
+    });
+    await tasks.updateStatus(schedule.id, 'paused');
+    await tasks.updateStatus(heartbeat.id, 'paused');
+
+    expect((await model.archive(schedule.id))?.archivedAt).toBeInstanceOf(Date);
+    expect(await model.archive(heartbeat.id)).toBeNull();
+  });
+
   it('unarchives regardless of state', async () => {
     const tasks = new TaskModel(serverDB, userId);
     const model = new TaskArchiveModel(serverDB, userId);

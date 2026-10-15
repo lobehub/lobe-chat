@@ -2397,6 +2397,7 @@
   "taskList.contextMenu.priority": "Priority",
   "taskList.contextMenu.runArchivedBlocked": "Unarchive this task before running it",
   "taskList.contextMenu.runNow": "Run now",
+  "taskList.contextMenu.scheduleArchivedBlocked": "Unarchive this task before scheduling it",
   "taskList.contextMenu.status": "Status",
   "taskList.contextMenu.transferConfirm": "Move",
   "taskList.contextMenu.transferDescription": "Move this task (and all its subtasks) to another workspace. Identifiers will be re-assigned.",
