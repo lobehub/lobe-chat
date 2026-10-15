@@ -23,6 +23,12 @@ beforeEach(() => {
 
 vi.mock('@/services/aiAgent', () => ({
   aiAgentService: {
+    // P1 (round-23): the fire path routes the child result through the
+    // server result-control review before any backfill — tests default to
+    // "not blocked, unchanged".
+    controlClientSubAgentToolResult: vi
+      .fn()
+      .mockResolvedValue({ blocked: false, content: undefined }),
     updateClientTaskThreadStatus: vi.fn().mockResolvedValue(undefined),
   },
 }));

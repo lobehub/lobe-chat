@@ -1,7 +1,6 @@
 import type { ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
-import { aiAgentService } from '@/services/aiAgent';
 import { messageService } from '@/services/message';
 import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -14,9 +13,12 @@ import {
   heldCompletions,
   registry,
   releasePending,
+  removeQueuedBridgePersist,
   scheduledBridgeRetries,
   trackPending,
 } from './registry';
+import { reviewChildResultBeforePublish } from './resultControl';
+import { settleChildThread } from './settlement';
 import {
   type ClientSubAgentBridgeRegistration,
   type GroupOrchestrationBridgeRegistration,
@@ -223,6 +225,12 @@ export const fireClientSubAgentBridge = async (
     // child run has no natural re-fire, so a dropped claim would leave the
     // parent parked forever with an unsettled placeholder.
     registry.delete(key);
+    // P1 (round-23): the queue entry's lifecycle also ends HERE — the
+    // backfill + parent re-entry launched successfully, so a reload can no
+    // longer need the coordinates. Draining only at this boundary keeps the
+    // lifeline through every earlier failure ordering (persistence lost to
+    // the processing guard, flush retries, in-flight cancellations).
+    removeQueuedBridgePersist(key);
     // A scheduled automatic retry (P1 round-10) is now obsolete — the bridge
     // settled through this fire. Cancel it so it doesn't re-fire pointlessly.
     const pendingRetry = scheduledBridgeRetries.get(key);
@@ -335,55 +343,15 @@ const fireRegistration = async (
     get().completeOperation(registration.childOperationId);
   }
 
-  // Settle the child thread (status + metadata) — the parked child skipped
-  // the normal completion path's updateClientTaskThreadStatus, so without
-  // this the thread list / sidebar shows processing forever.
-  // P2 (round-9): the settlement is the ONLY path that clears the child's
-  // `processing` status. Swallowing a transient rejection here left the
-  // thread permanently displayed and polled as running while the fire
-  // continued into the parent resume and the success path deleted the
-  // registration + persisted coordinates — no retry could ever settle it.
-  // Bounded retry (3 attempts, linear backoff), then rethrow so the outer
-  // catch restores the registry claim + barrier slot and keeps the persisted
-  // coordinates — the next terminal boundary or a post-reload reconstruction
-  // can re-fire the bridge and settle the thread.
-  const settleThread = async (): Promise<void> => {
-    const maxAttempts = 3;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      try {
-        await aiAgentService.updateClientTaskThreadStatus({
-          // P2 (round-8): pass the terminal outcome verbatim — the server maps
-          // `interrupted` to ThreadStatus.Cancel; recording it as `error`
-          // persisted a cancelled child as failed.
-          completionReason: outcome.status,
-          error: succeeded ? undefined : resultContent,
-          metadata: {
-            // P2 (round-8): include the child's final cost — the settlement
-            // overwrites thread.metadata.totalCost, so omitting it zeroed the
-            // parked child's spend on refresh (ordinary completion paths
-            // persist it).
-            totalCost: outcome.cost,
-            totalMessages: threadMessages.length,
-            totalTokens: metrics.totalTokens,
-            totalToolCalls: metrics.toolCalls,
-          },
-          resultContent,
-          threadId: childThreadId!,
-        });
-        return;
-      } catch (error) {
-        if (attempt === maxAttempts) throw error;
-        log(
-          'bridge: thread settlement attempt %d/%d failed for %s, retrying: %O',
-          attempt,
-          maxAttempts,
-          childThreadId,
-          error,
-        );
-        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
-      }
-    }
-  };
+  const settleThread = (): Promise<void> =>
+    settleChildThread({
+      childThreadId: childThreadId!,
+      metrics,
+      outcome,
+      resultContent,
+      succeeded,
+      threadMessageCount: threadMessages.length,
+    });
 
   // P1 (round-18): a replayed settled sibling was already settled by the
   // original fire — skip the settlement so the persisted result / error /
@@ -392,10 +360,32 @@ const fireRegistration = async (
     await settleThread();
   }
 
+  // P1 (round-23): run the parent's `afterToolCall` result-control BEFORE
+  // any content is published (see resultControl.ts for the full contract —
+  // the review failure rethrows into this fire's retry driver, fail-closed).
+  const controlled = await reviewChildResultBeforePublish(
+    registration,
+    childThreadId,
+    resultContent,
+    succeeded,
+    stats,
+  );
   if (registration.kind === 'sub-agent') {
-    await fireSubAgentBridge(get, registration, resultContent, succeeded, stats);
+    await fireSubAgentBridge(
+      get,
+      registration,
+      controlled.content,
+      controlled.succeeded,
+      controlled.stats,
+    );
   } else {
-    await fireGroupOrchestrationBridge(get, registration, resultContent, succeeded, stats);
+    await fireGroupOrchestrationBridge(
+      get,
+      registration,
+      controlled.content,
+      controlled.succeeded,
+      controlled.stats,
+    );
   }
 };
 

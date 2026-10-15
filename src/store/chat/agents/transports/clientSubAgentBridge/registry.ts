@@ -216,6 +216,10 @@ export const removeQueuedBridgePersist = (childThreadId: string, enqueuedAt?: nu
   );
 };
 
+/** Read the queued entry for one child thread (reconstruction's fallback source). */
+export const readQueuedBridgePersist = (childThreadId: string): QueuedBridgePersist | undefined =>
+  readPersistQueue().find((entry) => entry.childThreadId === childThreadId);
+
 /**
  * Durably increment one entry's attempt counter (matched on `enqueuedAt`).
  * Returns the new count, or 0 when the entry was replaced / removed
@@ -292,13 +296,24 @@ export const flushPendingBridgeCoordinates = async (): Promise<void> => {
       if (applied) log('bridge: queued coordinates flushed to thread %s', entry.childThreadId);
       else
         log(
-          'bridge: queued coordinates flush skipped for %s (thread settled or gone)',
+          'bridge: queued coordinates flush rejected for %s (processing guard) — entry retained',
           entry.childThreadId,
         );
-      // Success AND stale-rejection both drain: the row's coordinates are
-      // either persisted or correctly absent — nothing left to retry. The
-      // enqueuedAt guard keeps a same-thread re-registration (fresh
-      // enqueue) that landed during the await intact.
+      // P1 (round-23): a `false` here is NOT proof the coordinates are stale —
+      // the guard can reject because the child settled BEFORE this merge
+      // arrived, while the row never received the bridge at all (the write
+      // that raced settlement lost). Draining on `false` discarded the only
+      // lifeline in that ordering (settlement-before-persistence + reload
+      // stranded the parent). The entry is retained until the fire's success
+      // path drains it explicitly (`removeQueuedBridgePersist` after the
+      // parent re-entry is launched) or the attempt cap expires.
+      if (!applied) {
+        failed = true;
+        continue;
+      }
+      // An APPLIED flush means the row now carries the coordinates — the
+      // entry is drained (the enqueuedAt guard keeps a same-thread
+      // re-registration that landed during the await intact).
       removeQueuedBridgePersist(entry.childThreadId, entry.enqueuedAt);
     } catch (error) {
       log('bridge: queued coordinates flush failed for %s: %O', entry.childThreadId, error);
@@ -324,11 +339,15 @@ const persistBridgeCoordinates = async (
       bridge: toPersistedCoordinates(registration),
     });
     // Skipped = the thread already settled (the `processing` guard) — the
-    // coordinates are stale and were correctly NOT resurrected on a settled
-    // row.
+    // coordinates may be stale OR the row may have settled before any bridge
+    // write landed (P1 round-23: settlement-before-persistence). Draining on
+    // `false` discarded the only lifeline in the latter ordering; the entry
+    // is retained for the fire's success path / attempt cap instead.
     if (!applied) {
-      log('bridge coordinates persistence skipped for %s (thread already settled)', childThreadId);
-      removeQueuedBridgePersist(childThreadId, enqueuedAt);
+      log(
+        'bridge coordinates persistence skipped for %s (thread already settled) — queue entry retained',
+        childThreadId,
+      );
       return;
     }
     removeQueuedBridgePersist(childThreadId, enqueuedAt);

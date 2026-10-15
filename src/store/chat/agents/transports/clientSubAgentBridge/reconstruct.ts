@@ -3,7 +3,12 @@ import debug from 'debug';
 import { threadService } from '@/services/thread';
 import { type ThreadItem } from '@/types/topic';
 
-import { flushPendingBridgeCoordinates, registry, trackPending } from './registry';
+import {
+  flushPendingBridgeCoordinates,
+  readQueuedBridgePersist,
+  registry,
+  trackPending,
+} from './registry';
 import {
   type ClientSubAgentBridgeRegistration,
   type PersistedBridgeCoordinates,
@@ -181,7 +186,18 @@ export const reconstructRegistrationFromThread = async (
     }
 
     const bridge = (thread.metadata as { bridge?: PersistedBridgeCoordinates } | undefined)?.bridge;
-    const registration = bridge ? buildRegistrationFromRow(thread, bridge) : undefined;
+    // P1 (round-23): the queue is a SECOND durable source. The `processing`
+    // guard can reject the coordinate merge when the child settled before the
+    // merge arrived — the row then never carries a `bridge`, and draining the
+    // entry would strand the parent after a reload. Reconstruction reads the
+    // queue entry (kept until the fire's success path drains it) before
+    // concluding "no coordinates".
+    const registration = bridge
+      ? buildRegistrationFromRow(thread, bridge)
+      : buildRegistrationFromRow(
+          thread,
+          readQueuedBridgePersist(childThreadId)?.registration as PersistedBridgeCoordinates,
+        );
 
     // P1 (round-7): a reload wipes the whole registry — reconstruct EVERY
     // parallel sibling parked on the same parent op too, or the first child
