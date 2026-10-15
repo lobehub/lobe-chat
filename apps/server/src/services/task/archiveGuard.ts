@@ -1,6 +1,8 @@
 import { isTaskArchiveBlocked } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
+import type { LobeChatDatabase } from '@/database/type';
+
 interface ArchiveGuardTask {
   archivedAt?: Date | string | null;
   automationMode?: string | null;
@@ -37,3 +39,19 @@ export const assertArchivedTaskStaysIdle = (
     });
   }
 };
+
+/**
+ * Run a task write in a transaction and check the row it returns. Postgres
+ * serializes UPDATEs on one row: an archive that committed first is visible on
+ * the returned row and the throw rolls this write back; a write that lands
+ * first holds the row lock, and the archive's own guard then matches nothing.
+ */
+export const writeKeepingArchivedIdle = <T extends ArchiveGuardTask | null>(
+  db: LobeChatDatabase,
+  write: (tx: LobeChatDatabase) => Promise<T>,
+): Promise<T> =>
+  db.transaction(async (tx) => {
+    const row = await write(tx as LobeChatDatabase);
+    if (row) assertArchivedTaskStaysIdle(row, {});
+    return row;
+  });

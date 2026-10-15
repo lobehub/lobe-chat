@@ -1,6 +1,17 @@
-import { isOfficialCloudServer } from '@lobechat/const';
+import { OFFICIAL_CLOUD_URL, OFFICIAL_URL } from '@lobechat/const';
 
 export const LOBE_FILE_LINK_TAG = 'lobeFileLink';
+
+/**
+ * The hosts that serve the same cloud app: the `lobehub.com` gateway apex and
+ * `app.lobehub.com`. File links keep whichever one was current when they were
+ * written. Other `*.lobehub.com` hosts (staging, gateways) are different
+ * backends and must not be treated as this app.
+ */
+const OFFICIAL_APP_ORIGINS = new Set([
+  new URL(OFFICIAL_URL).origin,
+  new URL(OFFICIAL_CLOUD_URL).origin,
+]);
 
 // Matches this app's own file proxy path, e.g. `${APP_URL}/f/:fileId`
 // (see server/routers/lambda/file.ts -> getFileProxyUrl). This is deliberately
@@ -36,12 +47,10 @@ export const parseFileLinkHref = (
     if (!currentOrigin) return null;
 
     try {
-      // The official cloud answers on several hosts (the `lobehub.com` gateway
-      // apex and `app.lobehub.com`), and file links keep whichever host was
-      // current when they were written, so any two of them count as the app.
+      const current = new URL(currentOrigin).origin;
       const sameApp =
-        url.origin === new URL(currentOrigin).origin ||
-        (isOfficialCloudServer(url.href) && isOfficialCloudServer(currentOrigin));
+        url.origin === current ||
+        (OFFICIAL_APP_ORIGINS.has(url.origin) && OFFICIAL_APP_ORIGINS.has(current));
       if (!sameApp) return null;
     } catch {
       return null;

@@ -41,6 +41,18 @@ describe('parseFileLinkHref', () => {
     ).toEqual({ fileId: 'file_abc123' });
   });
 
+  it('does not treat other official subdomains as the app', () => {
+    expect(
+      parseFileLinkHref('https://staging.app.lobehub.com/f/file_abc123', 'https://lobehub.com'),
+    ).toBeNull();
+    expect(
+      parseFileLinkHref(
+        'https://device-gateway.lobehub.com/f/file_abc123',
+        'https://app.lobehub.com',
+      ),
+    ).toBeNull();
+  });
+
   it('does not treat a look-alike host as the official cloud', () => {
     expect(
       parseFileLinkHref('https://lobehub.com.evil.example/f/file_abc123', 'https://lobehub.com'),

@@ -84,6 +84,23 @@ describe('TaskArchiveModel', () => {
     expect(await model.archive(heartbeat.id)).toBeNull();
   });
 
+  it('lists an archived paused schedule with the ordinary tasks, not the scheduled ones', async () => {
+    const tasks = new TaskModel(serverDB, userId);
+    const model = new TaskArchiveModel(serverDB, userId);
+    const schedule = await tasks.create({
+      automationMode: 'schedule',
+      instruction: 'Paused schedule',
+      schedulePattern: '0 9 * * *',
+    });
+    await tasks.updateStatus(schedule.id, 'paused');
+    await model.archive(schedule.id);
+
+    const ordinary = await tasks.list({ automated: false, includeArchived: true });
+    expect(ordinary.tasks.map((task) => task.id)).toEqual([schedule.id]);
+    const scheduled = await tasks.list({ automated: true, includeArchived: true });
+    expect(scheduled.tasks).toEqual([]);
+  });
+
   it('unarchives regardless of state', async () => {
     const tasks = new TaskModel(serverDB, userId);
     const model = new TaskArchiveModel(serverDB, userId);

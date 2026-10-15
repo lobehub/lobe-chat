@@ -43,7 +43,7 @@ import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
 import { createTaskSchedulerModule } from '../taskScheduler';
 import { resolveTaskAcceptance } from '../verify/taskAcceptance';
-import { assertArchivedTaskStaysIdle } from './archiveGuard';
+import { assertArchivedTaskStaysIdle, writeKeepingArchivedIdle } from './archiveGuard';
 import { collapseActivityLog } from './collapseActivityLog';
 import { projectTaskDetailState } from './detailProjection';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
@@ -608,9 +608,12 @@ export class TaskService {
       extra.completedAt = new Date();
     if (errorMsg) extra.error = errorMsg;
 
-    const task = actor
-      ? await this.taskModel.updateWithLog(resolved.id, { status, ...extra }, actor)
-      : await this.taskModel.updateStatus(resolved.id, status, extra);
+    const task = await writeKeepingArchivedIdle(this.db, (tx) => {
+      const model = new TaskModel(tx, this.userId, this.workspaceId);
+      return actor
+        ? model.updateWithLog(resolved.id, { status, ...extra }, actor)
+        : model.updateStatus(resolved.id, status, extra);
+    });
     if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
 
     // Stamp the schedule run-count window each time the user (re)starts a
@@ -1003,7 +1006,14 @@ export class TaskService {
     options: Parameters<TaskModel['updateWithLog']>[3] = {},
   ): Promise<TaskItem | null> {
     return this.withAssigneeUserLock(data.assigneeUserId, (db) =>
-      new TaskModel(db, this.userId, this.workspaceId).updateWithLog(taskId, data, actor, options),
+      writeKeepingArchivedIdle(db, (tx) =>
+        new TaskModel(tx, this.userId, this.workspaceId).updateWithLog(
+          taskId,
+          data,
+          actor,
+          options,
+        ),
+      ),
     );
   }
 

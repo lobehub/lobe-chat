@@ -29,6 +29,13 @@ export const RUNNABLE_AUTOMATION = and(
   ),
 )!;
 
+/**
+ * The `automated` filter's notion of live automation. An archived task never
+ * fires (the runner refuses it), so it belongs with the ordinary tasks, where
+ * "Show archived" can reach it, not in the scheduled roll-up.
+ */
+const LIVE_AUTOMATION = and(RUNNABLE_AUTOMATION, isNull(tasks.archivedAt))!;
+
 export interface TaskListFilterOptions {
   assigneeAgentId?: string;
   /** Only tasks assigned to this workspace member. */
@@ -74,10 +81,10 @@ export const buildTaskListFilters = ({
   if (assigneeAgentId) conditions.push(eq(tasks.assigneeAgentId, assigneeAgentId));
   if (assigneeUserId) conditions.push(eq(tasks.assigneeUserId, assigneeUserId));
   if (createdByUserId) conditions.push(eq(tasks.createdByUserId, createdByUserId));
-  if (automated === true) conditions.push(RUNNABLE_AUTOMATION);
+  if (automated === true) conditions.push(LIVE_AUTOMATION);
   // `IS NOT TRUE`, not `NOT (…)`: nullable automation fields make the
   // runnable expression NULL for manual tasks, and WHERE would drop them.
-  if (automated === false) conditions.push(sql`${RUNNABLE_AUTOMATION} IS NOT TRUE`);
+  if (automated === false) conditions.push(sql`${LIVE_AUTOMATION} IS NOT TRUE`);
   if (!includeArchived) conditions.push(isNull(tasks.archivedAt));
   if (projectId) conditions.push(eq(tasks.projectId, projectId));
   if (visibility) conditions.push(eq(tasks.visibility, visibility));
