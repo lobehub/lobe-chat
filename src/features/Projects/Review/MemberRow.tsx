@@ -1,17 +1,14 @@
 import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Avatar, Button, confirmModal, Select, Tag, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, Avatar, confirmModal, Select, Text } from '@lobehub/ui/base-ui';
 import { XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import type { ProjectMemberItem } from '@/services/projectReview';
 
-import { inviteDaysLeft } from './siteSnippet';
-
 interface MemberRowProps {
   busy: boolean;
   member: ProjectMemberItem;
-  onResend: () => void;
   onRevoke: () => void;
   onRoleChange: (role: ProjectMemberRole) => void;
 }
@@ -46,9 +43,9 @@ export function OwnerRow({
   );
 }
 
-export function MemberRow({ busy, member, onResend, onRevoke, onRoleChange }: MemberRowProps) {
+export function MemberRow({ busy, member, onRevoke, onRoleChange }: MemberRowProps) {
   const { t } = useTranslation('project');
-  const name = member.user?.name ?? member.email;
+  const name = member.user?.name ?? member.userId;
   const roleLabel = (role: ProjectMemberRole) => t(`review.role.${role}`);
   const confirmRevoke = () =>
     confirmModal({
@@ -60,39 +57,16 @@ export function MemberRow({ busy, member, onResend, onRevoke, onRoleChange }: Me
       title: t('review.members.revokeTitle', { name }),
     });
 
-  if (member.status === 'pending') {
-    const days = inviteDaysLeft(member.expiresAt, Date.now());
-    return (
-      <Flexbox horizontal align="center" gap={12} paddingBlock={12} paddingInline={16} wrap="wrap">
-        <Flexbox flex={1} style={{ minWidth: 0 }}>
-          <Text ellipsis>{member.email}</Text>
-          <Text fontSize={12} type="secondary">
-            {roleLabel(member.role)} · {t('review.members.invited', { count: days })}
-          </Text>
-        </Flexbox>
-        <Flexbox horizontal gap={6}>
-          <Button disabled={busy} size="small" onClick={onResend}>
-            {t('review.members.resend')}
-          </Button>
-          <Button disabled={busy} size="small" onClick={confirmRevoke}>
-            {t('review.members.revokeInvite')}
-          </Button>
-        </Flexbox>
-      </Flexbox>
-    );
-  }
-
   return (
     <Flexbox horizontal align="center" gap={12} paddingBlock={12} paddingInline={16}>
       <Avatar avatar={member.user?.avatar || undefined} size={28} title={name} />
       <Flexbox flex={1} style={{ minWidth: 0 }}>
         <Flexbox horizontal align="center" gap={6}>
           <Text ellipsis>{name}</Text>
-          {member.guest && <Tag size="small">{t('review.members.guest')}</Tag>}
         </Flexbox>
-        {name !== member.email && (
+        {member.user?.email && name !== member.user.email && (
           <Text ellipsis fontSize={12} type="secondary">
-            {member.email}
+            {member.user?.email}
           </Text>
         )}
       </Flexbox>

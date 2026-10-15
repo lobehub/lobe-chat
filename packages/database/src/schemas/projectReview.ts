@@ -1,13 +1,22 @@
-import type { ProjectMemberRole, ProjectMemberStatus } from '@lobechat/types';
+import type { ProjectMemberRole } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
-import { check, index, pgTable, text, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  check,
+  foreignKey,
+  index,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core';
 
 import { idGenerator } from '../utils/idGenerator';
-import { timestamps, timestamptz } from './_helpers';
+import { timestamps } from './_helpers';
 import { projects } from './project';
 import { users } from './user';
 import { acceptances } from './verify';
-import { workspaces } from './workspace';
+import { workspaceMembers, workspaces } from './workspace';
 
 export const projectSites = pgTable(
   'project_sites',
@@ -48,33 +57,31 @@ export type ProjectSiteItem = typeof projectSites.$inferSelect;
 export const projectMembers = pgTable(
   'project_members',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('projectMembers'))
-      .notNull(),
-    projectId: text('project_id')
-      .references(() => projects.id, { onDelete: 'cascade' })
-      .notNull(),
-    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-    invitedByUserId: text('invited_by_user_id').references(() => users.id, {
+    id: uuid('id').defaultRandom().notNull().primaryKey(),
+    projectId: text('project_id').notNull(),
+    workspaceId: text('workspace_id').notNull(),
+    userId: text('user_id').notNull(),
+    addedByUserId: text('added_by_user_id').references(() => users.id, {
       onDelete: 'set null',
     }),
 
-    email: varchar('email', { length: 320 }).notNull(),
     role: text('role').$type<ProjectMemberRole>().notNull().default('reviewer'),
-    status: text('status').$type<ProjectMemberStatus>().notNull().default('pending'),
-    inviteToken: text('invite_token'),
-    expiresAt: timestamptz('expires_at'),
-    acceptedAt: timestamptz('accepted_at'),
 
     ...timestamps,
   },
   (t) => [
-    uniqueIndex('project_members_project_email_active_unique')
-      .on(t.projectId, t.email)
-      .where(sql`${t.status} <> 'revoked'`),
-    uniqueIndex('project_members_invite_token_unique').on(t.inviteToken),
-    index('project_members_project_id_idx').on(t.projectId),
+    foreignKey({
+      columns: [t.projectId, t.workspaceId],
+      foreignColumns: [projects.id, projects.workspaceId],
+      name: 'project_members_project_workspace_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [t.workspaceId, t.userId],
+      foreignColumns: [workspaceMembers.workspaceId, workspaceMembers.userId],
+      name: 'project_members_workspace_member_fk',
+    }).onDelete('cascade'),
+    uniqueIndex('project_members_project_user_unique').on(t.projectId, t.userId),
+    index('project_members_workspace_id_idx').on(t.workspaceId),
     index('project_members_user_id_idx').on(t.userId),
   ],
 );

@@ -114,12 +114,11 @@ async function resolveSiteReviewAccess(
   if (!role) throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
 
   const canApprove = role === 'creator' || role === 'maintainer';
-  const inWorkspace = role === 'creator' || role === 'workspace';
   return {
     acceptance,
     canApprove,
     canComment: true,
     isOwner: role === 'creator',
-    memberOfWorkspaceId: inWorkspace ? (acceptance.workspaceId ?? undefined) : undefined,
+    memberOfWorkspaceId: project?.workspaceId ?? undefined,
   };
 }

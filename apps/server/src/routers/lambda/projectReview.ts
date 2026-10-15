@@ -19,9 +19,11 @@ const siteFields = {
 };
 
 export const projectReviewRouter = router({
-  acceptInvite: procedure
-    .input(z.object({ token: z.string().min(1) }))
-    .mutation(({ ctx, input }) => ctx.reviewService.acceptInvite(input.token)),
+  addMember: procedure
+    .input(projectInput.extend({ userId: z.string().min(1), role: roleSchema }))
+    .mutation(({ ctx, input }) =>
+      ctx.reviewService.addMember(input.projectId, { userId: input.userId, role: input.role }),
+    ),
 
   createSite: procedure
     .input(projectInput.extend(siteFields))
@@ -33,16 +35,6 @@ export const projectReviewRouter = router({
     .input(z.object({ id: z.string().min(1) }))
     .mutation(({ ctx, input }) => ctx.reviewService.deleteSite(input.id)),
 
-  getInvite: procedure
-    .input(z.object({ token: z.string().min(1) }))
-    .query(({ ctx, input }) => ctx.reviewService.getInvite(input.token)),
-
-  inviteMember: procedure
-    .input(projectInput.extend({ email: z.string().trim().email(), role: roleSchema }))
-    .mutation(({ ctx, input }) =>
-      ctx.reviewService.inviteMember(input.projectId, { email: input.email, role: input.role }),
-    ),
-
   listMembers: procedure
     .input(projectInput)
     .query(({ ctx, input }) => ctx.reviewService.listMembers(input.projectId)),
@@ -51,18 +43,12 @@ export const projectReviewRouter = router({
     .input(projectInput)
     .query(({ ctx, input }) => ctx.reviewService.listSites(input.projectId)),
 
-  revokeMember: procedure
-    .input(z.object({ id: z.string().min(1) }))
-    .mutation(({ ctx, input }) => ctx.reviewService.revokeMember(input.id)),
-
-  setReviewWorkspaceMembers: procedure
-    .input(projectInput.extend({ enabled: z.boolean() }))
-    .mutation(({ ctx, input }) =>
-      ctx.reviewService.setReviewWorkspaceMembers(input.projectId, input.enabled),
-    ),
+  removeMember: procedure
+    .input(z.object({ id: z.uuid() }))
+    .mutation(({ ctx, input }) => ctx.reviewService.removeMember(input.id)),
 
   updateMemberRole: procedure
-    .input(z.object({ id: z.string().min(1), role: roleSchema }))
+    .input(z.object({ id: z.uuid(), role: roleSchema }))
     .mutation(({ ctx, input }) => ctx.reviewService.updateMemberRole(input.id, input.role)),
 
   updateSite: procedure

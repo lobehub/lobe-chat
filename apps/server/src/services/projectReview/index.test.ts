@@ -10,7 +10,7 @@ import {
 import { getTestDB } from '@lobechat/database/test-utils';
 import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ProjectModel } from '@/database/models/project';
 import {
@@ -19,13 +19,6 @@ import {
 } from '@/server/routers/lambda/__tests__/integration/setup';
 
 import { ProjectReviewService } from './index';
-
-const sendMail = vi.hoisted(() => vi.fn());
-vi.mock('@/server/services/email', () => ({
-  EmailService: class {
-    sendMail = sendMail;
-  },
-}));
 
 describe('ProjectReviewService', () => {
   let db: LobeChatDatabase;
@@ -39,7 +32,6 @@ describe('ProjectReviewService', () => {
   const as = (userId: string) => new ProjectReviewService(db, userId);
 
   beforeEach(async () => {
-    sendMail.mockReset().mockResolvedValue({ messageId: 'm1' });
     db = await getTestDB();
     ownerId = await createTestUser(db);
     adminId = await createTestUser(db);
@@ -163,117 +155,75 @@ describe('ProjectReviewService', () => {
   });
 
   describe('members', () => {
-    it('invites by email, mails a link and returns it', async () => {
-      const result = await as(ownerId).inviteMember(projectId, {
-        email: 'alex@studio-north.co',
-        role: 'reviewer',
-      });
-
-      expect(result.inviteUrl).toMatch(/\/invite\/project\/[\w-]{32,}$/);
-      expect(sendMail).toHaveBeenCalledWith(
-        expect.objectContaining({
-          html: expect.stringContaining(result.inviteUrl),
-          subject: expect.stringContaining('Fieldnotes 官网'),
-          to: 'alex@studio-north.co',
-        }),
-      );
-    });
-
-    it('still returns the link when mail delivery fails', async () => {
-      sendMail.mockRejectedValueOnce(new Error('smtp down'));
-      await expect(
-        as(ownerId).inviteMember(projectId, { email: 'x@y.co', role: 'reviewer' }),
-      ).resolves.toMatchObject({ inviteUrl: expect.any(String) });
-    });
-
-    it('shows and accepts an invitation for the signed-in invitee', async () => {
-      const { inviteUrl } = await as(ownerId).inviteMember(projectId, {
-        email: 'alex@studio-north.co',
-        role: 'maintainer',
-      });
-      const token = inviteUrl.split('/').pop()!;
-
-      expect(await as(guestId).getInvite(token)).toEqual({
-        email: 'alex@studio-north.co',
-        emailMatches: true,
-        inviterName: 'Innei',
-        projectName: 'Fieldnotes 官网',
-        role: 'maintainer',
-        status: 'valid',
-      });
-      expect(await as(memberId).getInvite(token)).toMatchObject({ emailMatches: false });
-
-      await expect(as(guestId).acceptInvite(token)).resolves.toMatchObject({ projectId });
-      expect(await as(guestId).getInvite(token)).toEqual({ status: 'notFound' });
-    });
-
-    it('lists members with the workspace switch and lets the owner change roles and revoke', async () => {
+    it('links an existing workspace member and lists available members', async () => {
       const service = as(ownerId);
-      const { member } = await service.inviteMember(projectId, {
-        email: 'r@x.co',
-        role: 'reviewer',
-      });
-
-      expect(await service.listMembers(projectId)).toMatchObject({
-        members: [
-          expect.objectContaining({ email: 'r@x.co', role: 'reviewer', status: 'pending' }),
-        ],
-        reviewWorkspaceMembers: true,
-      });
-
+      const member = await service.addMember(projectId, { userId: memberId, role: 'reviewer' });
+      const result = await service.listMembers(projectId);
+      expect(result.workspaceId).toBe(workspaceId);
+      expect(result.owner).toMatchObject({ name: 'Innei' });
+      expect(result.members).toEqual([
+        expect.objectContaining({ id: member.id, userId: memberId, role: 'reviewer' }),
+      ]);
+      expect(result.availableMembers.map((person) => person.userId)).toEqual([adminId]);
+      expect(result.members[0]).not.toHaveProperty('inviteToken');
       await service.updateMemberRole(member.id, 'maintainer');
-      await service.setReviewWorkspaceMembers(projectId, false);
-      expect(await service.listMembers(projectId)).toMatchObject({
-        members: [expect.objectContaining({ role: 'maintainer' })],
-        reviewWorkspaceMembers: false,
-      });
-
-      await service.revokeMember(member.id);
+      expect((await service.listMembers(projectId)).members[0].role).toBe('maintainer');
+      await service.removeMember(member.id);
       expect((await service.listMembers(projectId)).members).toEqual([]);
     });
 
-    it('names the owner and accepted members, flags guests and never exposes invite tokens', async () => {
-      const service = as(ownerId);
-      const guestInvite = await service.inviteMember(projectId, {
-        email: 'alex@studio-north.co',
-        role: 'reviewer',
-      });
-      await as(guestId).acceptInvite(guestInvite.inviteUrl.split('/').pop()!);
-      await db.update(users).set({ email: 'm@fieldnotes.app' }).where(eq(users.id, memberId));
-      const teammateInvite = await service.inviteMember(projectId, {
-        email: 'm@fieldnotes.app',
-        role: 'maintainer',
-      });
-      await as(memberId).acceptInvite(teammateInvite.inviteUrl.split('/').pop()!);
-      await service.inviteMember(projectId, { email: 'sam@x.co', role: 'reviewer' });
+    it('rejects outsiders and soft-deleted workspace members', async () => {
+      await expect(
+        as(ownerId).addMember(projectId, { userId: guestId, role: 'reviewer' }),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      await db
+        .update(workspaceMembers)
+        .set({ deletedAt: new Date() })
+        .where(eq(workspaceMembers.userId, memberId));
+      await expect(
+        as(ownerId).addMember(projectId, { userId: memberId, role: 'reviewer' }),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      expect(
+        (await as(ownerId).listMembers(projectId)).availableMembers.map((person) => person.userId),
+      ).not.toContain(memberId);
+    });
 
-      const { members, owner } = await service.listMembers(projectId);
-
-      expect(owner).toMatchObject({ name: 'Innei' });
-      expect(members).toEqual([
-        expect.objectContaining({
-          email: 'alex@studio-north.co',
-          guest: true,
-          status: 'accepted',
-          user: expect.objectContaining({ name: 'Alex' }),
-        }),
-        expect.objectContaining({ email: 'm@fieldnotes.app', guest: false, status: 'accepted' }),
-        expect.objectContaining({
-          email: 'sam@x.co',
-          expiresAt: expect.any(Date),
-          guest: false,
-          status: 'pending',
-          user: null,
-        }),
-      ]);
-      for (const member of members) expect(member).not.toHaveProperty('inviteToken');
+    it('does not offer member management on a personal project', async () => {
+      const personal = await new ProjectModel(db, ownerId).create({
+        identifier: 'MEP',
+        name: 'Personal',
+      });
+      expect(await as(ownerId).listMembers(personal.id)).toMatchObject({
+        workspaceId: null,
+        members: [],
+        availableMembers: [],
+      });
+      await expect(
+        as(ownerId).addMember(personal.id, { userId: memberId, role: 'reviewer' }),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
 
     it('refuses member management to people who cannot manage the project', async () => {
       await expect(as(memberId).listMembers(projectId)).rejects.toBeInstanceOf(TRPCError);
       await expect(
-        as(guestId).inviteMember(projectId, { email: 'z@z.co', role: 'reviewer' }),
+        as(guestId).addMember(projectId, { userId: memberId, role: 'reviewer' }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    });
+
+    it('does not let a maintainer change a member of a different project', async () => {
+      const service = as(ownerId);
+      await service.addMember(projectId, { userId: memberId, role: 'maintainer' });
+      const other = await new ProjectModel(db, ownerId, workspaceId).create({
+        identifier: 'OTH',
+        name: 'Other',
+      });
+      const otherMember = await service.addMember(other.id, { userId: adminId, role: 'reviewer' });
+      await expect(
+        as(memberId).updateMemberRole(otherMember.id, 'maintainer'),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+      await expect(as(memberId).removeMember(otherMember.id)).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
     });
   });
 });

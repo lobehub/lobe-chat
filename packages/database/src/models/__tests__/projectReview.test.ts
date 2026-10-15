@@ -1,10 +1,12 @@
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import { projectMembers, users } from '../../schemas';
+import { projectMembers, users, workspaceMembers, workspaces } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { ProjectModel } from '../project';
 import { ProjectMemberModel, ProjectSiteModel } from '../projectReview';
+import { WorkspaceMemberModel } from '../workspaceMember';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const ownerId = 'project-review-owner';
@@ -71,123 +73,79 @@ describe('ProjectSiteModel', () => {
 
 describe('ProjectMemberModel', () => {
   const members = new ProjectMemberModel(serverDB);
+  let projectId: string;
+  let workspaceId: string;
 
-  it('invites by normalized email with an unguessable token that expires in 7 days', async () => {
-    const project = await createProject();
-    const invite = await members.invite({
-      email: ' Alex@Studio-North.co ',
-      invitedByUserId: ownerId,
-      projectId: project.id,
-      role: 'reviewer',
-    });
-
-    expect(invite).toEqual(
-      expect.objectContaining({
-        email: 'alex@studio-north.co',
-        role: 'reviewer',
-        status: 'pending',
-      }),
-    );
-    expect(invite.inviteToken).toMatch(/^[\w-]{32,}$/);
-    const days = (invite.expiresAt!.getTime() - Date.now()) / 86_400_000;
-    expect(days).toBeGreaterThan(6.9);
-    expect(days).toBeLessThanOrEqual(7);
+  beforeEach(async () => {
+    const [workspace] = await serverDB
+      .insert(workspaces)
+      .values({
+        name: 'Fieldnotes',
+        primaryOwnerId: ownerId,
+        slug: 'fieldnotes',
+      })
+      .returning();
+    workspaceId = workspace.id;
+    await serverDB.insert(workspaceMembers).values([
+      { workspaceId, userId: ownerId, role: 'owner' },
+      { workspaceId, userId: guestId },
+    ]);
+    projectId = (
+      await new ProjectModel(serverDB, ownerId, workspaceId).create({
+        identifier: 'SITE',
+        name: 'Fieldnotes',
+      })
+    ).id;
   });
 
-  it('re-inviting a pending email refreshes the same row instead of duplicating it', async () => {
-    const project = await createProject();
-    const first = await members.invite({
-      email: 'a@x.co',
-      projectId: project.id,
-      role: 'reviewer',
-    });
-    const second = await members.invite({
-      email: 'A@x.co',
-      projectId: project.id,
-      role: 'maintainer',
-    });
-
-    expect(second.id).toBe(first.id);
-    expect(second.role).toBe('maintainer');
-    expect(second.inviteToken).not.toBe(first.inviteToken);
-    expect(await members.listByProject(project.id)).toHaveLength(1);
+  it('links an existing workspace member once and updates the project role', async () => {
+    const first = await members.add({ projectId, userId: guestId, role: 'reviewer' });
+    const second = await members.add({ projectId, userId: guestId, role: 'maintainer' });
+    expect(second!.id).toBe(first!.id);
+    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'maintainer' });
+    expect(await members.listByProject(projectId)).toHaveLength(1);
+    await members.updateRole(first!.id, 'reviewer');
+    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'reviewer' });
+    await members.remove(first!.id);
+    expect(await members.findActive(projectId, guestId)).toBeNull();
   });
 
-  it('accepts an invite only for the invited email, once, before it expires', async () => {
-    const project = await createProject();
-    const invite = await members.invite({
-      email: 'alex@studio-north.co',
-      projectId: project.id,
-      role: 'reviewer',
-    });
-
-    expect(
-      await members.accept(invite.inviteToken!, { email: 'someone@else.co', userId: ownerId }),
-    ).toEqual({ ok: false, reason: 'emailMismatch' });
-
-    const accepted = await members.accept(invite.inviteToken!, {
-      email: 'ALEX@studio-north.co',
-      userId: guestId,
-    });
-    expect(accepted).toEqual({
-      member: expect.objectContaining({ status: 'accepted', userId: guestId }),
-      ok: true,
-    });
-    expect(await members.findActive(project.id, guestId)).toEqual(
-      expect.objectContaining({ role: 'reviewer' }),
-    );
-    expect(
-      await members.accept(invite.inviteToken!, { email: 'alex@studio-north.co', userId: guestId }),
-    ).toEqual({ ok: false, reason: 'notFound' });
+  it('rejects a personal project and an inactive workspace member', async () => {
+    const personal = await createProject();
+    await expect(
+      members.add({ projectId: personal.id, userId: guestId, role: 'reviewer' }),
+    ).resolves.toBeNull();
+    await serverDB
+      .update(workspaceMembers)
+      .set({ deletedAt: new Date() })
+      .where(eq(workspaceMembers.userId, guestId));
+    await expect(members.add({ projectId, userId: guestId, role: 'reviewer' })).resolves.toBeNull();
   });
 
-  it('refuses an expired invite', async () => {
-    const project = await createProject();
-    const invite = await members.invite({
-      email: 'late@x.co',
-      projectId: project.id,
-      role: 'reviewer',
-    });
-    await serverDB.update(projectMembers).set({ expiresAt: new Date(Date.now() - 1000) });
-
-    expect(
-      await members.accept(invite.inviteToken!, { email: 'late@x.co', userId: guestId }),
-    ).toEqual({
-      ok: false,
-      reason: 'expired',
-    });
+  it('rejects a member of another workspace, including a direct insert', async () => {
+    const [other] = await serverDB
+      .insert(workspaces)
+      .values({
+        name: 'Other',
+        primaryOwnerId: ownerId,
+        slug: 'other',
+      })
+      .returning();
+    await serverDB.insert(workspaceMembers).values({ workspaceId: other.id, userId: guestId });
+    await serverDB.delete(workspaceMembers).where(eq(workspaceMembers.workspaceId, workspaceId));
+    await expect(members.add({ projectId, userId: guestId, role: 'reviewer' })).resolves.toBeNull();
+    await expect(
+      serverDB.insert(projectMembers).values({ projectId, workspaceId: other.id, userId: guestId }),
+    ).rejects.toThrow();
   });
 
-  it('revoking removes access and frees the email for a new invite', async () => {
-    const project = await createProject();
-    const invite = await members.invite({
-      email: 'alex@studio-north.co',
-      projectId: project.id,
-      role: 'maintainer',
-    });
-    await members.accept(invite.inviteToken!, { email: 'alex@studio-north.co', userId: guestId });
-
-    await members.revoke(invite.id);
-    expect(await members.findActive(project.id, guestId)).toBeNull();
-    expect(await members.listByProject(project.id)).toEqual([]);
-
-    const again = await members.invite({
-      email: 'alex@studio-north.co',
-      projectId: project.id,
-      role: 'reviewer',
-    });
-    expect(again.id).not.toBe(invite.id);
-  });
-
-  it('changes a member role', async () => {
-    const project = await createProject();
-    const invite = await members.invite({
-      email: 'r@x.co',
-      projectId: project.id,
-      role: 'reviewer',
-    });
-    expect(await members.updateRole(invite.id, 'maintainer')).toEqual(
-      expect.objectContaining({ role: 'maintainer' }),
-    );
+  it('revokes project access on workspace departure and does not restore it on rejoin', async () => {
+    await members.add({ projectId, userId: guestId, role: 'maintainer' });
+    const workspace = new WorkspaceMemberModel(serverDB, ownerId);
+    await workspace.removeMember(workspaceId, guestId);
+    expect(await members.findActive(projectId, guestId)).toBeNull();
+    await workspace.addMember({ workspaceId, userId: guestId });
+    expect(await members.findActive(projectId, guestId)).toBeNull();
+    expect(await members.listByProject(projectId)).toEqual([]);
   });
 });

@@ -2917,7 +2917,6 @@ table projects {
   avatar text
   coordinator_agent_id text [not null]
   status text [not null, default: 'backlog']
-  review_workspace_members boolean [not null, default: true]
   user_id text [not null]
   workspace_id text
   visibility text [not null, default: 'public']
@@ -2932,6 +2931,7 @@ table projects {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
+    (id, workspace_id) [name: 'projects_id_workspace_id_unique', unique]
     (slug, user_id) [name: 'projects_slug_user_id_unique', unique]
     (workspace_id, slug) [name: 'projects_slug_workspace_id_unique', unique]
     (identifier, user_id) [name: 'projects_identifier_user_id_unique', unique]
@@ -2973,24 +2973,19 @@ table project_environments {
 }
 
 table project_members {
-  id text [pk, not null]
+  id uuid [pk, not null, default: `gen_random_uuid()`]
   project_id text [not null]
-  user_id text
-  invited_by_user_id text
-  email varchar(320) [not null]
+  workspace_id text [not null]
+  user_id text [not null]
+  added_by_user_id text
   role text [not null, default: 'reviewer']
-  status text [not null, default: 'pending']
-  invite_token text
-  expires_at "timestamp with time zone"
-  accepted_at "timestamp with time zone"
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    (project_id, email) [name: 'project_members_project_email_active_unique', unique]
-    invite_token [name: 'project_members_invite_token_unique', unique]
-    project_id [name: 'project_members_project_id_idx']
+    (project_id, user_id) [name: 'project_members_project_user_unique', unique]
+    workspace_id [name: 'project_members_workspace_id_idx']
     user_id [name: 'project_members_user_id_idx']
   }
 }

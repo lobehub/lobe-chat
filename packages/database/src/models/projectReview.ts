@@ -1,14 +1,10 @@
 import type { ProjectMemberRole } from '@lobechat/types';
-import { and, asc, eq, ne } from 'drizzle-orm';
-import { nanoid } from 'nanoid';
+import { and, asc, eq, isNull } from 'drizzle-orm';
 
-import type { NewProjectSite, ProjectMemberItem } from '../schemas';
-import { projectMembers, projectSites } from '../schemas';
+import type { NewProjectMember, NewProjectSite } from '../schemas';
+import { projectMembers, projects, projectSites, workspaceMembers } from '../schemas';
 import type { LobeChatDatabase } from '../type';
-
-const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-
-const normalizeEmail = (email: string) => email.trim().toLowerCase();
+import { WorkspaceMemberModel } from './workspaceMember';
 
 export type CreateProjectSiteInput = Pick<
   NewProjectSite,
@@ -67,64 +63,48 @@ export class ProjectSiteModel {
   }
 }
 
-export interface InviteProjectMemberInput {
-  email: string;
-  invitedByUserId?: string | null;
-  projectId: string;
-  role: ProjectMemberRole;
-}
-
-export type AcceptProjectInviteResult =
-  | { member: ProjectMemberItem; ok: true }
-  | { ok: false; reason: 'emailMismatch' | 'expired' | 'notFound' };
-
 export class ProjectMemberModel {
   constructor(private db: LobeChatDatabase) {}
 
-  async invite(input: InviteProjectMemberInput) {
-    const email = normalizeEmail(input.email);
-    const invite = {
-      expiresAt: new Date(Date.now() + INVITE_TTL_MS),
-      inviteToken: nanoid(32),
-      invitedByUserId: input.invitedByUserId ?? null,
-      role: input.role,
-    };
-
-    const [existing] = await this.db
-      .select()
-      .from(projectMembers)
-      .where(
-        and(
-          eq(projectMembers.projectId, input.projectId),
-          eq(projectMembers.email, email),
-          ne(projectMembers.status, 'revoked'),
-        ),
-      )
-      .limit(1);
-
-    if (existing?.status === 'accepted') return existing;
-    if (existing) {
-      const [refreshed] = await this.db
-        .update(projectMembers)
-        .set({ ...invite, updatedAt: new Date() })
-        .where(eq(projectMembers.id, existing.id))
+  async add(input: Pick<NewProjectMember, 'addedByUserId' | 'projectId' | 'role' | 'userId'>) {
+    return this.db.transaction(async (tx) => {
+      const [project] = await tx
+        .select({ workspaceId: projects.workspaceId })
+        .from(projects)
+        .where(eq(projects.id, input.projectId))
+        .limit(1);
+      if (!project?.workspaceId) return null;
+      const member = await new WorkspaceMemberModel(tx, input.userId).getMemberForUpdate(
+        project.workspaceId,
+        input.userId,
+      );
+      if (!member) return null;
+      const [added] = await tx
+        .insert(projectMembers)
+        .values({ ...input, workspaceId: project.workspaceId })
+        .onConflictDoUpdate({
+          target: [projectMembers.projectId, projectMembers.userId],
+          set: { role: input.role, updatedAt: new Date() },
+        })
         .returning();
-      return refreshed;
-    }
-
-    const [member] = await this.db
-      .insert(projectMembers)
-      .values({ ...invite, email, projectId: input.projectId, status: 'pending' })
-      .returning();
-    return member;
+      return added;
+    });
   }
 
-  listByProject(projectId: string) {
-    return this.db
-      .select()
+  async listByProject(projectId: string) {
+    const rows = await this.db
+      .select({ member: projectMembers })
       .from(projectMembers)
-      .where(and(eq(projectMembers.projectId, projectId), ne(projectMembers.status, 'revoked')))
+      .innerJoin(
+        workspaceMembers,
+        and(
+          eq(workspaceMembers.workspaceId, projectMembers.workspaceId),
+          eq(workspaceMembers.userId, projectMembers.userId),
+        ),
+      )
+      .where(and(eq(projectMembers.projectId, projectId), isNull(workspaceMembers.deletedAt)))
       .orderBy(asc(projectMembers.createdAt));
+    return rows.map(({ member }) => member);
   }
 
   async findById(id: string) {
@@ -136,55 +116,26 @@ export class ProjectMemberModel {
     return member ?? null;
   }
 
-  async findByToken(token: string) {
-    const [member] = await this.db
-      .select()
-      .from(projectMembers)
-      .where(and(eq(projectMembers.inviteToken, token), eq(projectMembers.status, 'pending')))
-      .limit(1);
-    return member ?? null;
-  }
-
   async findActive(projectId: string, userId: string) {
-    const [member] = await this.db
-      .select()
+    const [row] = await this.db
+      .select({ member: projectMembers })
       .from(projectMembers)
+      .innerJoin(
+        workspaceMembers,
+        and(
+          eq(workspaceMembers.workspaceId, projectMembers.workspaceId),
+          eq(workspaceMembers.userId, projectMembers.userId),
+        ),
+      )
       .where(
         and(
           eq(projectMembers.projectId, projectId),
           eq(projectMembers.userId, userId),
-          eq(projectMembers.status, 'accepted'),
+          isNull(workspaceMembers.deletedAt),
         ),
       )
       .limit(1);
-    return member ?? null;
-  }
-
-  async accept(
-    token: string,
-    account: { email: string | null | undefined; userId: string },
-  ): Promise<AcceptProjectInviteResult> {
-    const invite = await this.findByToken(token);
-    if (!invite) return { ok: false, reason: 'notFound' };
-    if (invite.expiresAt && invite.expiresAt.getTime() < Date.now()) {
-      return { ok: false, reason: 'expired' };
-    }
-    if (!account.email || normalizeEmail(account.email) !== invite.email) {
-      return { ok: false, reason: 'emailMismatch' };
-    }
-
-    const [member] = await this.db
-      .update(projectMembers)
-      .set({
-        acceptedAt: new Date(),
-        inviteToken: null,
-        status: 'accepted',
-        updatedAt: new Date(),
-        userId: account.userId,
-      })
-      .where(and(eq(projectMembers.id, invite.id), eq(projectMembers.status, 'pending')))
-      .returning();
-    return member ? { member, ok: true } : { ok: false, reason: 'notFound' };
+    return row?.member ?? null;
   }
 
   async updateRole(id: string, role: ProjectMemberRole) {
@@ -196,10 +147,9 @@ export class ProjectMemberModel {
     return member ?? null;
   }
 
-  async revoke(id: string) {
+  async remove(id: string) {
     const [member] = await this.db
-      .update(projectMembers)
-      .set({ inviteToken: null, status: 'revoked', updatedAt: new Date() })
+      .delete(projectMembers)
       .where(eq(projectMembers.id, id))
       .returning();
     return member ?? null;

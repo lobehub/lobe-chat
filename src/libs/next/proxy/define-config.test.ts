@@ -166,16 +166,14 @@ describe('OIDC protocol endpoints', () => {
 });
 
 describe('project deep links', () => {
-  it.each([
-    '/projects',
-    '/project/environment-demo',
-    '/project/environment-demo/tasks',
-    '/invite/project/abc123',
-  ])('routes %s into the SPA on a direct request', async (path) => {
-    expect(
-      createRouteMatcher(proxyConfig.matcher)(new NextRequest(`http://localhost:3010${path}`)),
-    ).toBe(true);
-    const rewrite = await run(`http://localhost:3010${path}`);
-    expect(new URL(rewrite!).pathname).toMatch(new RegExp(`/spa/[^/]+${path}$`));
-  });
+  it.each(['/projects', '/project/environment-demo', '/project/environment-demo/tasks'])(
+    'routes %s into the SPA on a direct request',
+    async (path) => {
+      expect(
+        createRouteMatcher(proxyConfig.matcher)(new NextRequest(`http://localhost:3010${path}`)),
+      ).toBe(true);
+      const rewrite = await run(`http://localhost:3010${path}`);
+      expect(new URL(rewrite!).pathname).toMatch(new RegExp(`/spa/[^/]+${path}$`));
+    },
+  );
 });

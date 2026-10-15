@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "b174d1a7-f2f0-4b91-aebb-7351c17f8d8a",
+  "id": "7343f0ce-b7e6-4cd2-8328-b5c0b730e70b",
   "policies": {},
   "prevId": "dbf79f35-6ecf-4aa8-a6fc-e27f2e665a71",
   "roles": {},
@@ -24477,13 +24477,6 @@
           "notNull": true,
           "default": "'backlog'"
         },
-        "review_workspace_members": {
-          "name": "review_workspace_members",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -24733,6 +24726,27 @@
           "columns": [
             {
               "expression": "coordinator_agent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "projects_id_workspace_id_unique": {
+          "name": "projects_id_workspace_id_unique",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "workspace_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -25052,9 +25066,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "project_id": {
           "name": "project_id",
@@ -25066,18 +25081,6 @@
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "invited_by_user_id": {
-          "name": "invited_by_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(320)",
-          "primaryKey": false,
           "notNull": true
         },
         "role": {
@@ -25086,31 +25089,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'reviewer'"
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'pending'"
-        },
-        "invite_token": {
-          "name": "invite_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "accepted_at": {
-          "name": "accepted_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         },
         "accessed_at": {
           "name": "accessed_at",
@@ -25132,61 +25110,21 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "added_by_user_id": {
+          "name": "added_by_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "project_members_project_email_active_unique": {
-          "name": "project_members_project_email_active_unique",
-          "columns": [
-            {
-              "expression": "project_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "email",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"project_members\".\"status\" <> 'revoked'",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "project_members_invite_token_unique": {
-          "name": "project_members_invite_token_unique",
-          "columns": [
-            {
-              "expression": "invite_token",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "project_members_project_id_idx": {
-          "name": "project_members_project_id_idx",
-          "columns": [
-            {
-              "expression": "project_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "project_members_user_id_idx": {
           "name": "project_members_user_id_idx",
           "columns": [
@@ -25201,34 +25139,70 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "project_members_project_user_unique": {
+          "name": "project_members_project_user_unique",
+          "columns": [
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "project_members_workspace_id_idx": {
+          "name": "project_members_workspace_id_idx",
+          "columns": [
+            {
+              "expression": "workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "project_members_project_id_projects_id_fk": {
-          "name": "project_members_project_id_projects_id_fk",
-          "tableFrom": "project_members",
-          "tableTo": "projects",
-          "columnsFrom": ["project_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "project_members_user_id_users_id_fk": {
-          "name": "project_members_user_id_users_id_fk",
+        "project_members_added_by_user_id_users_id_fk": {
+          "name": "project_members_added_by_user_id_users_id_fk",
           "tableFrom": "project_members",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "project_members_invited_by_user_id_users_id_fk": {
-          "name": "project_members_invited_by_user_id_users_id_fk",
-          "tableFrom": "project_members",
-          "tableTo": "users",
-          "columnsFrom": ["invited_by_user_id"],
+          "columnsFrom": ["added_by_user_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "project_members_project_workspace_fk": {
+          "name": "project_members_project_workspace_fk",
+          "tableFrom": "project_members",
+          "tableTo": "projects",
+          "columnsFrom": ["project_id", "workspace_id"],
+          "columnsTo": ["id", "workspace_id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "project_members_workspace_member_fk": {
+          "name": "project_members_workspace_member_fk",
+          "tableFrom": "project_members",
+          "tableTo": "workspace_members",
+          "columnsFrom": ["workspace_id", "user_id"],
+          "columnsTo": ["workspace_id", "user_id"],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

@@ -34,7 +34,6 @@ const prefixes = {
   metrics: 'mtr',
   plugins: 'plg',
   projects: 'prj',
-  projectMembers: 'pmem',
   projectSiteKeys: 'site',
   projectSites: 'psite',
   scmChangeRequests: 'scr',

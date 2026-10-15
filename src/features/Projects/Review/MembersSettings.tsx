@@ -1,6 +1,6 @@
 import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
-import { Block, CopyButton, Empty, Flexbox } from '@lobehub/ui';
-import { Alert, Button, Input, Select, Switch, Text, toast } from '@lobehub/ui/base-ui';
+import { Block, Empty, Flexbox } from '@lobehub/ui';
+import { Button, Select, Text, toast } from '@lobehub/ui/base-ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,13 +14,15 @@ import { isForbidden, useProjectMembers } from './useProjectReview';
 export function MembersSettings({ projectId }: { projectId: string }) {
   const { t } = useTranslation('project');
   const { data, error, mutate } = useProjectMembers(projectId);
-  const [email, setEmail] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<ProjectMemberRole>('reviewer');
   const [busyId, setBusyId] = useState<string>();
-  const [inviting, setInviting] = useState(false);
-  const [lastInvite, setLastInvite] = useState<{ email: string; url: string }>();
+  const [adding, setAdding] = useState(false);
 
   if (isForbidden(error)) return <Empty description={t('review.manageForbidden')} />;
+  if (error) return <AsyncError error={error} onRetry={() => mutate()} />;
+  if (!data) return <SkeletonBar height={120} />;
+  if (!data.workspaceId) return <Empty description={t('review.members.workspaceOnly')} />;
 
   const run = async (id: string, action: () => Promise<unknown>) => {
     setBusyId(id);
@@ -35,23 +37,18 @@ export function MembersSettings({ projectId }: { projectId: string }) {
     }
   };
 
-  const invite = async (to: string, inviteRole: ProjectMemberRole) => {
-    const result = await projectReviewService.inviteMember(projectId, to, inviteRole);
-    setLastInvite({ email: result.member.email, url: result.inviteUrl });
-    toast.success(t('review.members.invitedToast', { email: result.member.email }));
-  };
-
   const submit = async () => {
-    setInviting(true);
+    if (!userId) return;
+    setAdding(true);
     try {
-      await invite(email.trim(), role);
-      setEmail('');
+      await projectReviewService.addMember(projectId, userId, role);
+      setUserId(null);
       await mutate();
     } catch (error) {
-      console.error('Failed to invite project member', error);
-      toast.error(t('review.members.inviteError'));
+      console.error('Failed to add project member', error);
+      toast.error(t('review.members.addError'));
     } finally {
-      setInviting(false);
+      setAdding(false);
     }
   };
 
@@ -61,7 +58,7 @@ export function MembersSettings({ projectId }: { projectId: string }) {
         <Text fontSize={16} weight={600}>
           {t('review.members.title')}
         </Text>
-        <Text type="secondary">{t('review.members.description')}</Text>
+        <Text type="secondary">{t('review.members.workspaceMembersDescription')}</Text>
       </Flexbox>
       <Block variant="outlined">
         <form
@@ -71,17 +68,25 @@ export function MembersSettings({ projectId }: { projectId: string }) {
             void submit();
           }}
         >
-          <Input
-            aria-label={t('review.members.email')}
-            disabled={inviting}
-            placeholder="name@company.com"
+          <Select
+            showSearch
+            aria-label={t('review.members.selectMember')}
+            disabled={adding}
+            placeholder={t('review.members.selectMember')}
             style={{ flex: '1 1 240px', minWidth: 0 }}
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            value={userId}
+            options={data.availableMembers.map((member) => ({
+              label:
+                member.email && member.email !== member.name
+                  ? `${member.name} (${member.email})`
+                  : member.name,
+              value: member.userId,
+            }))}
+            onChange={(value) => setUserId(typeof value === 'string' ? value : null)}
           />
           <Select
             aria-label={t('review.members.role')}
+            disabled={adding}
             style={{ width: 140 }}
             value={role}
             options={PROJECT_MEMBER_ROLES.map((item) => ({
@@ -90,82 +95,22 @@ export function MembersSettings({ projectId }: { projectId: string }) {
             }))}
             onChange={(value) => value && setRole(value as ProjectMemberRole)}
           />
-          <Button
-            disabled={!email.includes('@')}
-            htmlType="submit"
-            loading={inviting}
-            type="primary"
-          >
-            {t('review.members.invite')}
+          <Button disabled={!userId} htmlType="submit" loading={adding} type="primary">
+            {t('review.members.add')}
           </Button>
         </form>
-        {lastInvite?.url ? (
-          <Flexbox paddingBlock={0} paddingInline={16} style={{ paddingBottom: 14 }}>
-            <Alert
-              showIcon
-              title={t('review.members.linkHint', { email: lastInvite.email })}
-              type="info"
-              description={
-                <Flexbox horizontal align="center" gap={8}>
-                  <Text code ellipsis style={{ flex: 1, minWidth: 0 }}>
-                    {lastInvite.url}
-                  </Text>
-                  <CopyButton content={lastInvite.url} size="small" />
-                </Flexbox>
-              }
-            />
-          </Flexbox>
-        ) : null}
-        {error ? (
-          <Flexbox padding={16}>
-            <AsyncError error={error} onRetry={() => mutate()} />
-          </Flexbox>
-        ) : !data ? (
-          <Flexbox padding={16}>
-            <SkeletonBar height={120} />
-          </Flexbox>
-        ) : (
-          <>
-            {data.owner && <OwnerRow owner={data.owner} />}
-            {data.members.map((member) => (
-              <MemberRow
-                busy={busyId === member.id}
-                key={member.id}
-                member={member}
-                onResend={() => run(member.id, () => invite(member.email, member.role))}
-                onRevoke={() => run(member.id, () => projectReviewService.revokeMember(member.id))}
-                onRoleChange={(next) =>
-                  run(member.id, () => projectReviewService.updateMemberRole(member.id, next))
-                }
-              />
-            ))}
-          </>
-        )}
-      </Block>
-      <Block
-        horizontal
-        align="center"
-        gap={16}
-        justify="space-between"
-        padding={16}
-        variant="outlined"
-      >
-        <Flexbox gap={4}>
-          <Text weight={600}>{t('review.members.workspaceTitle')}</Text>
-          <Text fontSize={12} type="secondary">
-            {t('review.members.workspaceDescription')}
-          </Text>
-        </Flexbox>
-        <Switch
-          aria-label={t('review.members.workspaceTitle')}
-          checked={data?.reviewWorkspaceMembers ?? true}
-          loading={!data || busyId === 'workspace'}
-          onChange={(enabled: boolean) =>
-            run('workspace', () =>
-              projectReviewService.setReviewWorkspaceMembers(projectId, enabled),
-            )
-          }
-        />
+        {data.owner && <OwnerRow owner={data.owner} />}
+        {data.members.map((member) => (
+          <MemberRow
+            busy={busyId === member.id}
+            key={member.id}
+            member={member}
+            onRevoke={() => run(member.id, () => projectReviewService.removeMember(member.id))}
+            onRoleChange={(next) =>
+              run(member.id, () => projectReviewService.updateMemberRole(member.id, next))
+            }
+          />
+        ))}
       </Block>
     </Flexbox>
   );

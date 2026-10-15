@@ -7,10 +7,10 @@ import type { LobeChatDatabase } from '@/database/type';
 
 export type ProjectReviewScope = Pick<
   typeof projects.$inferSelect,
-  'id' | 'name' | 'reviewWorkspaceMembers' | 'userId' | 'workspaceId'
+  'id' | 'name' | 'userId' | 'workspaceId'
 >;
 
-export type ProjectReviewRole = 'creator' | 'maintainer' | 'reviewer' | 'workspace';
+export type ProjectReviewRole = 'creator' | 'maintainer' | 'reviewer';
 
 export async function findProjectReviewScope(
   db: LobeChatDatabase,
@@ -20,7 +20,6 @@ export async function findProjectReviewScope(
     .select({
       id: projects.id,
       name: projects.name,
-      reviewWorkspaceMembers: projects.reviewWorkspaceMembers,
       userId: projects.userId,
       workspaceId: projects.workspaceId,
     })
@@ -36,17 +35,17 @@ export async function resolveProjectReviewRole(
   project: ProjectReviewScope,
 ): Promise<ProjectReviewRole | null> {
   if (!userId) return null;
+  if (project.workspaceId) {
+    const teammate = await new WorkspaceMemberModel(db, userId).getMember(
+      project.workspaceId,
+      userId,
+    );
+    if (!teammate) return null;
+  }
   if (project.userId === userId) return 'creator';
-
+  if (!project.workspaceId) return null;
   const member = await new ProjectMemberModel(db).findActive(project.id, userId);
-  if (member) return member.role;
-
-  if (!project.workspaceId || !project.reviewWorkspaceMembers) return null;
-  const teammate = await new WorkspaceMemberModel(db, userId).getMember(
-    project.workspaceId,
-    userId,
-  );
-  return teammate && teammate.role !== 'viewer' ? 'workspace' : null;
+  return member?.role ?? null;
 }
 
 export const canManageProjectReview = async (

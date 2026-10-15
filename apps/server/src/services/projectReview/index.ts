@@ -1,49 +1,23 @@
 import type { ProjectMemberRole } from '@lobechat/types';
 import { normalizeSiteOrigin } from '@lobechat/utils/siteOrigin';
 import { TRPCError } from '@trpc/server';
-import debug from 'debug';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, isNull } from 'drizzle-orm';
 
 import { ProjectMemberModel, ProjectSiteModel } from '@/database/models/projectReview';
-import {
-  acceptances,
-  projects,
-  projectSites,
-  users,
-  verifyRuns,
-  workspaceMembers,
-} from '@/database/schemas';
+import { acceptances, projectSites, users, verifyRuns, workspaceMembers } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
-import { appEnv } from '@/envs/app';
 import {
   canManageProjectReview,
   findProjectReviewScope,
   type ProjectReviewScope,
 } from '@/server/services/acceptanceReview/projectAccess';
-import { EmailService } from '@/server/services/email';
-
-const log = debug('lobe-server:project-review');
 
 const siteReviewTitle = (name: string) => `Site review · ${name}`;
-
-const escapeHtml = (value: string) =>
-  value.replaceAll(/["&'<>]/g, (char) => `&#${char.charCodeAt(0)};`);
 
 export interface SiteInput {
   name: string;
   origins: string[];
 }
-
-export type ProjectInviteView =
-  | { status: 'expired' | 'notFound' }
-  | {
-      email: string;
-      emailMatches: boolean;
-      inviterName: string | null;
-      projectName: string;
-      role: ProjectMemberRole;
-      status: 'valid';
-    };
 
 export class ProjectReviewService {
   private sites: ProjectSiteModel;
@@ -141,71 +115,50 @@ export class ProjectReviewService {
   async listMembers(projectId: string) {
     const project = await this.assertManager(projectId);
     const rows = await this.members.listByProject(projectId);
-    const userIds = [project.userId, ...rows.map((row) => row.userId)].filter((id): id is string =>
-      Boolean(id),
-    );
-    const people = userIds.length
+    const people = project.workspaceId
       ? await this.db
           .select({
             avatar: users.avatar,
             email: users.email,
             fullName: users.fullName,
-            id: users.id,
+            userId: users.id,
             username: users.username,
           })
-          .from(users)
-          .where(inArray(users.id, userIds))
+          .from(workspaceMembers)
+          .innerJoin(users, eq(users.id, workspaceMembers.userId))
+          .where(
+            and(
+              eq(workspaceMembers.workspaceId, project.workspaceId),
+              isNull(workspaceMembers.deletedAt),
+            ),
+          )
+          .orderBy(asc(users.fullName), asc(users.username), asc(users.id))
       : [];
-    const teammates = new Set(
-      project.workspaceId && userIds.length
-        ? (
-            await this.db
-              .select({ userId: workspaceMembers.userId })
-              .from(workspaceMembers)
-              .where(
-                and(
-                  eq(workspaceMembers.workspaceId, project.workspaceId),
-                  inArray(workspaceMembers.userId, userIds),
-                ),
-              )
-          ).map((row) => row.userId)
-        : [],
-    );
-    const personOf = (id: string | null) => {
-      const person = id ? people.find((item) => item.id === id) : undefined;
-      return person
-        ? {
-            avatar: person.avatar,
-            email: person.email,
-            name: person.fullName || person.username || person.email,
-          }
-        : null;
-    };
-
+    const profiles = people.map(({ fullName, username, ...person }) => ({
+      ...person,
+      name: fullName || username || person.email || person.userId,
+    }));
+    const peopleById = new Map(profiles.map((person) => [person.userId, person]));
+    const assigned = new Set([project.userId, ...rows.map((row) => row.userId)]);
     return {
-      members: rows.map(({ inviteToken: _token, ...row }) => ({
-        ...row,
-        guest: Boolean(project.workspaceId && row.userId && !teammates.has(row.userId)),
-        user: personOf(row.userId),
-      })),
-      owner: personOf(project.userId),
-      reviewWorkspaceMembers: project.reviewWorkspaceMembers,
+      availableMembers: profiles.filter((person) => !assigned.has(person.userId)),
+      members: rows.map((row) => ({ ...row, user: peopleById.get(row.userId) ?? null })),
+      owner: peopleById.get(project.userId) ?? null,
+      workspaceId: project.workspaceId,
     };
   }
 
-  async inviteMember(projectId: string, input: { email: string; role: ProjectMemberRole }) {
+  async addMember(projectId: string, input: { userId: string; role: ProjectMemberRole }) {
     const project = await this.assertManager(projectId);
-    const member = await this.members.invite({
-      email: input.email,
-      invitedByUserId: this.userId,
-      projectId,
-      role: input.role,
-    });
-    const inviteUrl = member.inviteToken
-      ? new URL(`/invite/project/${member.inviteToken}`, appEnv.APP_URL).toString()
-      : '';
-    if (inviteUrl) await this.mailInvite(member.email, project, inviteUrl);
-    return { inviteUrl, member };
+    if (!project.workspaceId)
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Project members require a workspace' });
+    const member = await this.members.add({ ...input, addedByUserId: this.userId, projectId });
+    if (!member)
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Select an active member of this project workspace',
+      });
+    return member;
   }
 
   async updateMemberRole(memberId: string, role: ProjectMemberRole) {
@@ -214,52 +167,10 @@ export class ProjectReviewService {
     return this.members.updateRole(memberId, role);
   }
 
-  async revokeMember(memberId: string) {
+  async removeMember(memberId: string) {
     const member = await this.findMember(memberId);
     await this.assertManager(member.projectId);
-    return this.members.revoke(memberId);
-  }
-
-  async setReviewWorkspaceMembers(projectId: string, enabled: boolean) {
-    await this.assertManager(projectId);
-    await this.db
-      .update(projects)
-      .set({ reviewWorkspaceMembers: enabled })
-      .where(eq(projects.id, projectId));
-  }
-
-  async getInvite(token: string): Promise<ProjectInviteView> {
-    const invite = await this.members.findByToken(token);
-    if (!invite) return { status: 'notFound' };
-    if (invite.expiresAt && invite.expiresAt.getTime() < Date.now()) return { status: 'expired' };
-
-    const project = await findProjectReviewScope(this.db, invite.projectId);
-    if (!project) return { status: 'notFound' };
-    const [me] = await this.db
-      .select({ email: users.email })
-      .from(users)
-      .where(eq(users.id, this.userId));
-    const inviter = invite.invitedByUserId ? await this.displayName(invite.invitedByUserId) : null;
-
-    return {
-      email: invite.email,
-      emailMatches: me?.email?.trim().toLowerCase() === invite.email,
-      inviterName: inviter,
-      projectName: project.name,
-      role: invite.role,
-      status: 'valid',
-    };
-  }
-
-  async acceptInvite(token: string) {
-    const [me] = await this.db
-      .select({ email: users.email })
-      .from(users)
-      .where(eq(users.id, this.userId));
-    const result = await this.members.accept(token, { email: me?.email, userId: this.userId });
-    if (!result.ok)
-      throw new TRPCError({ code: 'BAD_REQUEST', message: `invite:${result.reason}` });
-    return result.member;
+    return this.members.remove(memberId);
   }
 
   private normalizeOrigins(input: string[]) {
@@ -297,28 +208,5 @@ export class ProjectReviewService {
     const member = await this.members.findById(memberId);
     if (!member) throw new TRPCError({ code: 'NOT_FOUND', message: 'Member not found' });
     return member;
-  }
-
-  private async displayName(userId: string) {
-    const [user] = await this.db
-      .select({ email: users.email, fullName: users.fullName, username: users.username })
-      .from(users)
-      .where(eq(users.id, userId));
-    return user?.fullName || user?.username || user?.email || null;
-  }
-
-  private async mailInvite(email: string, project: ProjectReviewScope, inviteUrl: string) {
-    const inviter = (await this.displayName(this.userId)) ?? 'A LobeHub user';
-    const projectName = escapeHtml(project.name);
-    try {
-      await new EmailService().sendMail({
-        html: `<p>${escapeHtml(inviter)} invited you to review <strong>${projectName}</strong> on LobeHub.</p><p><a href="${inviteUrl}">Accept the invitation</a></p><p>This link expires in 7 days.</p>`,
-        subject: `Review ${project.name} on LobeHub`,
-        text: `${inviter} invited you to review ${project.name} on LobeHub: ${inviteUrl} (expires in 7 days)`,
-        to: email,
-      });
-    } catch (error) {
-      log('invite email failed: %O', error);
-    }
   }
 }

@@ -1,8 +1,7 @@
 // @vitest-environment node
 import type { LobeChatDatabase } from '@lobechat/database';
-import { projects, workspaceMembers, workspaces } from '@lobechat/database/schemas';
+import { workspaceMembers, workspaces } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
-import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ProjectModel } from '@/database/models/project';
@@ -13,12 +12,6 @@ import { cleanupTestUser, createTestUser } from './integration/setup';
 
 let serverDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => serverDB }));
-vi.mock('@/server/services/email', () => ({
-  EmailService: class {
-    sendMail = vi.fn();
-  },
-}));
-
 describe('acceptanceRouter on a site review', () => {
   let ownerId: string;
   let adminId: string;
@@ -76,12 +69,14 @@ describe('acceptanceRouter on a site review', () => {
     });
   });
 
-  it('follows the project switch when reading', async () => {
+  it('reads only while the user has a project association', async () => {
+    const service = new ProjectReviewService(serverDB, ownerId);
+    await expect(caller(memberId).getBundle({ id: acceptanceId })).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+    const member = await service.addMember(projectId, { userId: memberId, role: 'reviewer' });
     await expect(caller(memberId).getBundle({ id: acceptanceId })).resolves.toBeTruthy();
-    await serverDB
-      .update(projects)
-      .set({ reviewWorkspaceMembers: false })
-      .where(eq(projects.id, projectId));
+    await service.removeMember(member.id);
     await expect(caller(memberId).getBundle({ id: acceptanceId })).rejects.toMatchObject({
       code: 'NOT_FOUND',
     });

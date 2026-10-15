@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { type LobeChatDatabase } from '@lobechat/database';
+import { workspaceMembers, workspaces } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,15 +13,10 @@ let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
-vi.mock('@/server/services/email', () => ({
-  EmailService: class {
-    sendMail = vi.fn().mockResolvedValue({});
-  },
-}));
-
 describe('projectReviewRouter', () => {
   let ownerId: string;
   let strangerId: string;
+  let memberId: string;
   let projectId: string;
 
   const caller = (userId: string) =>
@@ -30,12 +26,25 @@ describe('projectReviewRouter', () => {
     testDB = await getTestDB();
     ownerId = await createTestUser(testDB);
     strangerId = await createTestUser(testDB);
+    memberId = await createTestUser(testDB);
+    const [workspace] = await testDB
+      .insert(workspaces)
+      .values({ name: 'Fieldnotes', primaryOwnerId: ownerId, slug: ownerId })
+      .returning();
+    await testDB.insert(workspaceMembers).values([
+      { workspaceId: workspace.id, userId: ownerId, role: 'owner' },
+      { workspaceId: workspace.id, userId: memberId },
+    ]);
     projectId = (
-      await new ProjectModel(testDB, ownerId).create({ identifier: 'SITE', name: 'Fieldnotes' })
+      await new ProjectModel(testDB, ownerId, workspace.id).create({
+        identifier: 'SITE',
+        name: 'Fieldnotes',
+      })
     ).id;
   });
 
   afterEach(async () => {
+    await cleanupTestUser(testDB, memberId);
     await cleanupTestUser(testDB, strangerId);
     await cleanupTestUser(testDB, ownerId);
   });
@@ -52,18 +61,24 @@ describe('projectReviewRouter', () => {
     ]);
   });
 
-  it('invites a member and toggles workspace access', async () => {
-    const { member } = await caller(ownerId).inviteMember({
-      email: 'alex@studio-north.co',
+  it('adds a workspace member, changes the project role and removes the association', async () => {
+    const member = await caller(ownerId).addMember({
+      userId: memberId,
       projectId,
       role: 'reviewer',
     });
     await caller(ownerId).updateMemberRole({ id: member.id, role: 'maintainer' });
-    await caller(ownerId).setReviewWorkspaceMembers({ enabled: false, projectId });
     expect(await caller(ownerId).listMembers({ projectId })).toMatchObject({
-      members: [expect.objectContaining({ role: 'maintainer' })],
-      reviewWorkspaceMembers: false,
+      members: [expect.objectContaining({ userId: memberId, role: 'maintainer' })],
     });
+    await caller(ownerId).removeMember({ id: member.id });
+    expect((await caller(ownerId).listMembers({ projectId })).members).toEqual([]);
+  });
+
+  it('rejects a user outside the project workspace', async () => {
+    await expect(
+      caller(ownerId).addMember({ userId: strangerId, projectId, role: 'reviewer' }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
   });
 
   it('refuses a stranger', async () => {
@@ -74,7 +89,7 @@ describe('projectReviewRouter', () => {
 
   it('rejects an unknown role', async () => {
     await expect(
-      caller(ownerId).inviteMember({ email: 'a@b.co', projectId, role: 'owner' as any }),
+      caller(ownerId).addMember({ userId: memberId, projectId, role: 'owner' as any }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
   });
 });

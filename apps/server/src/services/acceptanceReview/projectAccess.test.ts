@@ -2,16 +2,10 @@
 import { randomUUID } from 'node:crypto';
 
 import { type LobeChatDatabase } from '@lobechat/database';
-import {
-  acceptances,
-  projects,
-  users,
-  workspaceMembers,
-  workspaces,
-} from '@lobechat/database/schemas';
+import { acceptances, projects, workspaceMembers, workspaces } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ProjectModel } from '@/database/models/project';
@@ -36,13 +30,8 @@ describe('site review access', () => {
   let workspaceId: string;
   let siteAcceptanceId: string;
 
-  const invite = async (userId: string, email: string, role: 'maintainer' | 'reviewer') => {
-    await db.update(users).set({ email }).where(eq(users.id, userId));
-    const members = new ProjectMemberModel(db);
-    const pending = await members.invite({ email, projectId, role });
-    await members.accept(pending.inviteToken!, { email, userId });
-    return pending;
-  };
+  const add = (userId: string, role: 'maintainer' | 'reviewer') =>
+    new ProjectMemberModel(db).add({ projectId, userId, role });
 
   const notFound = (userId: string) =>
     expect(resolveAcceptanceCommentAccess(db, userId, siteAcceptanceId)).rejects.toThrow(TRPCError);
@@ -97,53 +86,46 @@ describe('site review access', () => {
     expect(access).toMatchObject({ canApprove: true, canComment: true });
   });
 
-  it('lets an invited reviewer outside the workspace comment but not moderate', async () => {
-    await invite(guestId, 'alex@studio-north.co', 'reviewer');
-    const access = await resolveAcceptanceCommentAccess(db, guestId, siteAcceptanceId);
-    expect(access).toMatchObject({ canApprove: false, canComment: true });
+  it('lets a linked workspace reviewer comment but not moderate', async () => {
+    await add(teammateId, 'reviewer');
+    expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
+      canApprove: false,
+      canComment: true,
+      memberOfWorkspaceId: workspaceId,
+    });
   });
 
-  it('lets an invited maintainer moderate', async () => {
-    await invite(guestId, 'alex@studio-north.co', 'maintainer');
-    const access = await resolveAcceptanceCommentAccess(db, guestId, siteAcceptanceId);
-    expect(access).toMatchObject({ canApprove: true, canComment: true });
+  it('lets a linked maintainer moderate', async () => {
+    await add(teammateId, 'maintainer');
+    expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
+      canApprove: true,
+      canComment: true,
+    });
   });
 
-  it('treats pending and revoked invites as no access', async () => {
-    const members = new ProjectMemberModel(db);
-    await members.invite({ email: 'pending@x.co', projectId, role: 'reviewer' });
-    await notFound(strangerId);
-
-    const accepted = await invite(guestId, 'alex@studio-north.co', 'reviewer');
-    await members.revoke(accepted.id);
-    await notFound(guestId);
-  });
-
-  it('lets non-viewer workspace members review only while the project switch is on', async () => {
-    const access = await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId);
-    expect(access.canComment).toBe(true);
-
-    const other = await createTestUser(db);
-    await db.insert(workspaceMembers).values({ role: 'member', userId: other, workspaceId });
-    await db
-      .update(projects)
-      .set({ reviewWorkspaceMembers: false })
-      .where(eq(projects.id, projectId));
-    await notFound(other);
-    await cleanupTestUser(db, other);
-  });
-
-  it('keeps a workspace viewer out of a site review', async () => {
-    await notFound(viewerId);
-  });
-
-  it('takes access away from the person who created the site once the switch is off', async () => {
-    await db
-      .update(projects)
-      .set({ reviewWorkspaceMembers: false })
-      .where(eq(projects.id, projectId));
+  it('revokes access when the project association is removed', async () => {
+    const member = await add(teammateId, 'reviewer');
+    await new ProjectMemberModel(db).remove(member!.id);
     await notFound(teammateId);
+  });
+
+  it('requires an explicit project association for workspace members', async () => {
+    await notFound(teammateId);
+    await notFound(viewerId);
     await expect(resolveReviewAccess(db, teammateId, siteAcceptanceId)).resolves.toBeNull();
+  });
+
+  it('rejects departed workspace members, including the project creator', async () => {
+    await add(teammateId, 'maintainer');
+    for (const userId of [teammateId, ownerId]) {
+      await db
+        .update(workspaceMembers)
+        .set({ deletedAt: new Date() })
+        .where(
+          and(eq(workspaceMembers.workspaceId, workspaceId), eq(workspaceMembers.userId, userId)),
+        );
+      await notFound(userId);
+    }
   });
 
   it('never opens a site review to strangers, even when it is marked public', async () => {
@@ -165,11 +147,10 @@ describe('site review access', () => {
 
   it('names the role each person holds on the project', async () => {
     const project = (await db.select().from(projects).where(eq(projects.id, projectId)))[0];
-    await invite(guestId, 'alex@studio-north.co', 'maintainer');
+    await add(teammateId, 'maintainer');
 
     expect(await resolveProjectReviewRole(db, ownerId, project)).toBe('creator');
-    expect(await resolveProjectReviewRole(db, guestId, project)).toBe('maintainer');
-    expect(await resolveProjectReviewRole(db, teammateId, project)).toBe('workspace');
+    expect(await resolveProjectReviewRole(db, teammateId, project)).toBe('maintainer');
     expect(await resolveProjectReviewRole(db, viewerId, project)).toBeNull();
     expect(await resolveProjectReviewRole(db, strangerId, project)).toBeNull();
   });
