@@ -518,6 +518,17 @@ export default {
   'heterogeneousStatus.cloud.tokenLabel': 'Claude Code Token',
   'heterogeneousStatus.cloud.tokenDesc':
     'Your Claude Code OAuth token. Saved securely to Credentials once submitted. Run `claude setup-token` in your terminal to generate one.',
+  'heterogeneousStatus.cloud.tokenLookupError':
+    "Couldn't check whether this token is available here. Retry to load it again.",
+  'heterogeneousStatus.cloud.tokenRetry': 'Retry',
+  'heterogeneousStatus.cloud.tokenSharedElsewhere':
+    'Your personal Claude Code token is shared to another workspace. Saving a token here moves it to this workspace, and cloud runs in the other workspace will no longer be able to use it.',
+  'heterogeneousStatus.cloud.tokenTypeMismatch':
+    'A credential with the key CLAUDE_CODE_OAUTH_TOKEN already exists with a different type. Remove or rename it in Credentials, then save again.',
+  'heterogeneousStatus.cloud.tokenNotShared':
+    'Your personal Claude Code token is not shared to this workspace, so cloud runs here cannot use it. Save a token to share it to this workspace.',
+  'heterogeneousStatus.cloud.tokenSaveError':
+    'Failed to save the Claude Code token. Please try again.',
   'heterogeneousStatus.cloud.tokenPlaceholder': 'Paste your OAuth token here',
   'heterogeneousStatus.cloud.tokenChange': 'Change',
   'heterogeneousStatus.cloud.tokenSave': 'Save',
