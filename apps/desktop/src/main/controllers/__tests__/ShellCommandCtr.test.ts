@@ -611,7 +611,7 @@ describe('ShellCommandCtr (thin wrapper)', () => {
         const result = await ctr.ensureSandboxWorkspace({ agentId: 'agt_abc123' });
 
         expect(result.path).toBeDefined();
-        expect(result.path).toContain('LobeHub');
+        expect(result.path).toContain('TiTuWork');
         expect(result.path).toContain('agt_abc123');
         // The policy layer resolves fence roots with realpath and rejects a
         // path that does not exist, so the directory must be real by now.
@@ -624,7 +624,7 @@ describe('ShellCommandCtr (thin wrapper)', () => {
         // The id becomes a path segment and is opaque to this process, so a
         // traversal attempt must land inside the sandbox root like any other
         // name — this directory is about to become a writable fence root.
-        const root = join(homedir(), 'LobeHub', 'sandbox');
+        const root = join(homedir(), 'TiTuWork', 'sandbox');
         const result = await ctr.ensureSandboxWorkspace({ agentId: '../../Windows/System32' });
 
         expect(result.path).toBeDefined();

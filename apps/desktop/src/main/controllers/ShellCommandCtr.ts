@@ -198,7 +198,7 @@ export default class ShellCommandCtr extends ControllerModule {
   async ensureSandboxWorkspace({
     agentId,
   }: EnsureSandboxWorkspaceParams): Promise<EnsureSandboxWorkspaceResult> {
-    const target = path.join(os.homedir(), 'LobeHub', 'sandbox', safeSegment(agentId));
+    const target = path.join(os.homedir(), 'TiTuWork', 'sandbox', safeSegment(agentId));
     try {
       fs.mkdirSync(target, { recursive: true });
       // Resolve symlinks now: this exact string becomes the fence root, and the
