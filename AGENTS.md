@@ -73,11 +73,6 @@ This proxy is a **development convenience, not a verification surface**: it runs
 - `bun` to run npm scripts
 - `bunx` for executable npm packages
 
-### Static Image Ownership
-
-- Fixed product images live under `public/static/app-images/` and use `imageUrl()` or `/static/app-images/...`. Cloud mirrors these files to the Landing static origin before callers ship.
-- `/app-images` is an App-owned request namespace. Do not add fixed files under `public/app-images/` or use it for new static image references. Legacy image URLs are handled only by the App's fallback rewrite.
-
 ### Quality Check
 
 Use `bun run check [changed-files...]`.
