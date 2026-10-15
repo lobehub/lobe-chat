@@ -3635,11 +3635,24 @@ When I am ___, I need ___
   'workspace.onboarding.flow.channels.connect.retry': 'Retry',
   'workspace.onboarding.flow.channels.connect.footer':
     'Each one can be retried or skipped on its own',
-  'workspace.onboarding.flow.devices.title': 'Connect team devices',
-  'workspace.onboarding.flow.devices.subtitle':
-    'Enroll the team’s computers so the assistant can use Claude Code, Codex and other local agents on them.',
+  'workspace.onboarding.flow.devices.title': "Put the team's computers to work",
+  'workspace.onboarding.flow.devices.description':
+    'Once a team computer is connected, {{name}} can run Claude Code, Codex and other coding agents on it to write code and run commands.',
+  'workspace.onboarding.flow.devices.quote': 'Lend me a computer, ',
+  'workspace.onboarding.flow.devices.highlight': "and I'll write the code.",
+  'workspace.onboarding.flow.devices.installStep': '1. Install and sign in to the LobeHub CLI',
+  'workspace.onboarding.flow.devices.connectStep':
+    '2. Connect the computer to the workspace for every member',
+  'workspace.onboarding.flow.devices.listTitle': 'Team devices',
   'workspace.onboarding.flow.devices.count': '{{online}} of {{count}} online',
   'workspace.onboarding.flow.devices.viewAll': 'View all devices',
+  'workspace.onboarding.flow.devices.waiting': 'Waiting for a device to come online…',
+  'workspace.onboarding.flow.devices.waitingHint':
+    'Run the commands above and the device shows up here.',
+  'workspace.onboarding.flow.devices.agentsScanning': 'Detecting coding agents…',
+  'workspace.onboarding.flow.devices.agentsNone': 'No coding agents found',
+  'workspace.onboarding.flow.devices.skip': 'Skip for now',
+  'workspace.onboarding.flow.devices.later': 'You can connect devices later in Settings → Devices.',
   'workspace.onboarding.step4.heading': '{{name}} is ready!',
   'workspace.onboarding.step4.subtitle':
     'Your workspace is set up. Jump in and start collaborating with your team.',
