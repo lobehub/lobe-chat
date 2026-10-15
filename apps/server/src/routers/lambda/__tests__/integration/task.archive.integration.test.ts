@@ -71,6 +71,25 @@ describe('Task Router archive', () => {
     expect(shownBoard.data[0].total).toBe(2);
   });
 
+  it('refuses to archive a schedule that can still fire, but allows restoring', async () => {
+    const scheduled = await caller.create({
+      automationMode: 'schedule',
+      instruction: 'Daily digest',
+      schedulePattern: '0 9 * * *',
+    });
+
+    await expect(caller.archive({ archived: true, id: scheduled.data.id })).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+    });
+
+    const listed = await caller.list({ includeArchived: true });
+    expect(listed.data.find((task) => task.id === scheduled.data.id)?.archivedAt).toBeNull();
+
+    // Unarchiving never hides work, so it is always allowed.
+    const restored = await caller.archive({ archived: false, id: scheduled.data.id });
+    expect(restored.data.archivedAt).toBeNull();
+  });
+
   it('rejects an unknown task', async () => {
     await expect(caller.archive({ archived: true, id: 'T-404' })).rejects.toMatchObject({
       code: 'NOT_FOUND',

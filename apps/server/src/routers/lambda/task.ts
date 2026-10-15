@@ -1,6 +1,7 @@
 import { TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type { TaskListItem, TaskParticipant, TaskVerifyConfig } from '@lobechat/types';
+import { isTaskArchiveBlocked } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -703,6 +704,13 @@ export const taskRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const task = await resolveOrThrow(ctx.taskModel, input.id);
+        // Archived rows leave every list, so live work would run out of sight.
+        if (input.archived && isTaskArchiveBlocked(task)) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Stop the running task or its schedule/heartbeat before archiving it',
+          });
+        }
         const archivedAt = input.archived ? (task.archivedAt ?? new Date()) : null;
         const updated = await ctx.taskModel.update(task.id, { archivedAt });
         if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });

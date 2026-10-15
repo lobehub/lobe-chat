@@ -38,6 +38,7 @@ const TaskDetailHeaderActions = memo(() => {
   const deleteTask = useTaskStore((s) => s.deleteTask);
   const archiveTask = useTaskStore((s) => s.archiveTask);
   const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
+  const isArchiveBlocked = useTaskStore(taskDetailSelectors.isActiveTaskArchiveBlocked);
   const updateTaskVisibility = useTaskStore((s) => s.updateTaskVisibility);
   const transferItems = useTaskTransferMenuItem(taskId) as DropdownItem[] | null;
 
@@ -58,6 +59,10 @@ const TaskDetailHeaderActions = memo(() => {
 
   const toggleArchive = useCallback(async () => {
     if (!canEditTask || !taskId) return;
+    if (!isArchived && isArchiveBlocked) {
+      toast.info(t('taskList.contextMenu.archiveBlocked'));
+      return;
+    }
     await archiveTask(taskId, !isArchived);
     toast.success(
       t(
@@ -66,7 +71,7 @@ const TaskDetailHeaderActions = memo(() => {
           : 'taskList.contextMenu.archiveSuccess',
       ),
     );
-  }, [archiveTask, canEditTask, isArchived, t, taskId]);
+  }, [archiveTask, canEditTask, isArchiveBlocked, isArchived, t, taskId]);
 
   const triggerPublish = useCallback(() => {
     if (!canEditTask) return;

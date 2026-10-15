@@ -14,7 +14,8 @@ import { tasks } from '../schemas/task';
  * ones out of a bounded roll-up.
  *
  * Kept as one expression so the `automated` filter's two sides stay exact
- * complements and no row falls into neither bucket.
+ * complements and no row falls into neither bucket. `isTaskArchiveBlocked`
+ * in `@lobechat/types` mirrors it in JS; keep the two in step.
  */
 const RUNNABLE_AUTOMATION = and(
   notInArray(tasks.status, ['canceled', 'completed', 'failed']),

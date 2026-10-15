@@ -1,4 +1,5 @@
 import type { TaskStatus } from '@lobechat/types';
+import { isTaskArchiveBlocked } from '@lobechat/types';
 import { type ContextMenuItem, copyToClipboard, Icon, type MenuInfo } from '@lobehub/ui';
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
@@ -47,10 +48,13 @@ export interface TaskContextMenuTarget {
   archivedAt?: Date | string | null;
   assigneeAgentId?: string | null;
   assigneeUserId?: string | null;
+  automationMode?: string | null;
+  heartbeatInterval?: number | null;
   identifier: string;
   /** Only feeds the copied link's readable slug tail. */
   name?: string | null;
   priority?: number | null;
+  schedulePattern?: string | null;
   status: string;
 }
 
@@ -167,6 +171,11 @@ export const useTaskContextMenuActions = (
                 onClick: async ({ domEvent }: MenuInfo) => {
                   domEvent.stopPropagation();
                   if (!canEditTask) return;
+                  // Archiving hides the task, so live work must stop first.
+                  if (!isArchived && isTaskArchiveBlocked(task)) {
+                    toast.info(t('taskList.contextMenu.archiveBlocked'));
+                    return;
+                  }
                   await archiveTask(task.identifier, !isArchived);
                   toast.success(
                     t(

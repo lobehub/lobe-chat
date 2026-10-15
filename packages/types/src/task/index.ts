@@ -1,6 +1,7 @@
 import type { BriefArtifacts } from '../brief';
 import type { ChatFileItem } from '../message/ui/chat';
 
+export * from './archive';
 export * from './execution';
 
 // ── Task type aliases ──

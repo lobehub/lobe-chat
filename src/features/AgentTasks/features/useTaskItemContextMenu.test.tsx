@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   copyToClipboard: vi.fn(),
   deleteTask: vi.fn(),
   messageSuccess: vi.fn(),
+  toastInfo: vi.fn(),
   modalConfirm: vi.fn(),
   refreshTaskList: vi.fn(),
   runTask: vi.fn(),
@@ -27,6 +28,11 @@ vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   copyToClipboard: mocks.copyToClipboard,
 }));
+
+vi.mock('@lobehub/ui/base-ui', async (importOriginal) => {
+  const actual = await importOriginal<{ toast: Record<string, unknown> }>();
+  return { ...actual, toast: { ...actual.toast, info: mocks.toastInfo, success: vi.fn() } };
+});
 
 vi.mock('@/libs/contextMenu', () => ({
   closeContextMenu: mocks.closeContextMenu,
@@ -140,6 +146,27 @@ describe('useTaskItemContextMenu', () => {
       await click(item);
 
       expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', false);
+    });
+
+    it('warns instead of archiving work that can still run', async () => {
+      const { result } = renderHook(() =>
+        useTaskItemContextMenu({
+          archivedAt: null,
+          automationMode: 'heartbeat',
+          heartbeatInterval: 600,
+          identifier: 'T-1',
+          priority: 0,
+          status: 'backlog',
+        }),
+      );
+      const item = result.current.items.find(
+        (entry) => entry && typeof entry === 'object' && 'key' in entry && entry.key === 'archive',
+      ) as { onClick: (info: unknown) => Promise<void> };
+
+      await item.onClick({ domEvent: { stopPropagation: vi.fn() } });
+
+      expect(mocks.archiveTask).not.toHaveBeenCalled();
+      expect(mocks.toastInfo).toHaveBeenCalledWith('taskList.contextMenu.archiveBlocked');
     });
 
     it('leaves the action out when the caller does not know the archive state', () => {
