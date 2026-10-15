@@ -1,0 +1,138 @@
+[
+  {
+    "width": 320,
+    "orientation": "portrait",
+    "long": false,
+    "bodyScrollWidth": 320,
+    "bodyWidth": 320,
+    "captionContainer": 288,
+    "content": 288,
+    "natural": [
+      240,
+      426
+    ],
+    "video": [
+      203,
+      360.3125
+    ]
+  },
+  {
+    "width": 320,
+    "orientation": "portrait",
+    "long": true,
+    "bodyScrollWidth": 320,
+    "bodyWidth": 320,
+    "captionContainer": 288,
+    "content": 288,
+    "natural": [
+      240,
+      426
+    ],
+    "video": [
+      203,
+      360.3125
+    ]
+  },
+  {
+    "width": 320,
+    "orientation": "landscape",
+    "long": false,
+    "bodyScrollWidth": 320,
+    "bodyWidth": 320,
+    "captionContainer": 288,
+    "content": 288,
+    "natural": [
+      640,
+      360
+    ],
+    "video": [
+      288,
+      162
+    ]
+  },
+  {
+    "width": 320,
+    "orientation": "landscape",
+    "long": true,
+    "bodyScrollWidth": 320,
+    "bodyWidth": 320,
+    "captionContainer": 288,
+    "content": 288,
+    "natural": [
+      640,
+      360
+    ],
+    "video": [
+      288,
+      162
+    ]
+  },
+  {
+    "width": 390,
+    "orientation": "portrait",
+    "long": false,
+    "bodyScrollWidth": 390,
+    "bodyWidth": 390,
+    "captionContainer": 358,
+    "content": 358,
+    "natural": [
+      240,
+      426
+    ],
+    "video": [
+      203,
+      360.3125
+    ]
+  },
+  {
+    "width": 390,
+    "orientation": "portrait",
+    "long": true,
+    "bodyScrollWidth": 390,
+    "bodyWidth": 390,
+    "captionContainer": 358,
+    "content": 358,
+    "natural": [
+      240,
+      426
+    ],
+    "video": [
+      203,
+      360.3125
+    ]
+  },
+  {
+    "width": 390,
+    "orientation": "landscape",
+    "long": false,
+    "bodyScrollWidth": 390,
+    "bodyWidth": 390,
+    "captionContainer": 358,
+    "content": 358,
+    "natural": [
+      640,
+      360
+    ],
+    "video": [
+      358,
+      201.375
+    ]
+  },
+  {
+    "width": 390,
+    "orientation": "landscape",
+    "long": true,
+    "bodyScrollWidth": 390,
+    "bodyWidth": 390,
+    "captionContainer": 358,
+    "content": 358,
+    "natural": [
+      640,
+      360
+    ],
+    "video": [
+      358,
+      201.375
+    ]
+  }
+]
