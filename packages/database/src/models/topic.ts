@@ -67,6 +67,7 @@ import {
   trashStamp,
 } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
+import { topicMetadataWithCreator } from './topicCreator';
 import { recomputeTopicUsage } from './topicUsage';
 
 type OnboardingSessionMetadataPatch = Partial<NonNullable<ChatTopicMetadata['onboardingSession']>>;
@@ -538,7 +539,6 @@ export class TopicModel {
    * it — and use {@link mine} (which skips this helper).
    */
   private notShareVisitor = () => (this.includeShareVisitor ? undefined : notShareVisitorTopic());
-  // **************** Query *************** //
 
   query = async ({
     agentId,
@@ -613,7 +613,6 @@ export class TopicModel {
     // abandoned `running` row from a crashed earlier run sorts below the live
     // one. Not scoped by `ownership()` — in a workspace the run may have been
     // started by another member, and the topic join is already ownership-gated.
-    // Same shape as the `queryTopics` feed's column of the same name.
     const runStartedAtSubquery = this.db
       .select({ value: agentOperations.startedAt })
       .from(agentOperations)
@@ -675,7 +674,6 @@ export class TopicModel {
       editingGroupId ? sql`${topics.metadata}->>'editingGroupId' = ${editingGroupId}` : undefined,
     );
 
-    // If groupId is provided, query topics by groupId directly
     if (groupId) {
       const whereCondition = and(
         this.ownership(),
@@ -703,7 +701,7 @@ export class TopicModel {
                 favorite: topics.favorite,
                 historySummary: topics.historySummary,
                 id: topics.id,
-                metadata: topics.metadata,
+                metadata: topicMetadataWithCreator(this.db, this.messageOwnership()),
                 projectId: topics.projectId,
                 projectWorkingDirectoryId: topics.projectWorkingDirectoryId,
                 model: topics.model,
@@ -784,7 +782,7 @@ export class TopicModel {
                 favorite: topics.favorite,
                 historySummary: topics.historySummary,
                 id: topics.id,
-                metadata: topics.metadata,
+                metadata: topicMetadataWithCreator(this.db, this.messageOwnership()),
                 projectId: topics.projectId,
                 projectWorkingDirectoryId: topics.projectWorkingDirectoryId,
                 model: topics.model,
@@ -859,7 +857,7 @@ export class TopicModel {
               favorite: topics.favorite,
               historySummary: topics.historySummary,
               id: topics.id,
-              metadata: topics.metadata,
+              metadata: topicMetadataWithCreator(this.db, this.messageOwnership()),
               projectId: topics.projectId,
               projectWorkingDirectoryId: topics.projectWorkingDirectoryId,
               model: topics.model,
@@ -1116,6 +1114,7 @@ export class TopicModel {
       return this.db
         .select({
           ...getTableColumns(topics),
+          metadata: topicMetadataWithCreator(this.db, this.messageOwnership()),
           parentVisibility: parentVisibilityColumn,
           runStartedAt: runStartedAtColumn,
         })
@@ -1154,6 +1153,7 @@ export class TopicModel {
     const rows = await this.db
       .select({
         ...getTableColumns(topics),
+        metadata: topicMetadataWithCreator(this.db, this.messageOwnership()),
         lastAssistantMessage: sql<string | null>`(${lastAssistantMessageSubquery})`.as(
           'last_assistant_message',
         ),

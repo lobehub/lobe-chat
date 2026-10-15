@@ -37,6 +37,35 @@ vi.mock('@/components/Avatar', () => ({
 }));
 
 describe('TopicCreatorAvatar', () => {
+  it('shows the bot conversation initiator instead of the workspace bot owner', () => {
+    useAuthorInfoMock.mockReturnValue({ avatar: 'owner.png', fullName: 'Bot owner' });
+    const { getByTestId } = render(
+      <TopicCreatorAvatar
+        userId="owner"
+        botCreator={{
+          id: '123',
+          platform: 'discord',
+          avatar: 'sender.png',
+          fullName: 'LobehubBot',
+        }}
+      />,
+    );
+    expect(getByTestId('avatar').getAttribute('data-avatar')).toBe('sender.png');
+    expect(getByTestId('avatar').getAttribute('data-title')).toBe('LobehubBot');
+  });
+
+  it('uses sender initials without borrowing the owner avatar', () => {
+    useAuthorInfoMock.mockReturnValue({ avatar: 'owner.png', fullName: 'Bot owner' });
+    const { getByTestId } = render(
+      <TopicCreatorAvatar
+        botCreator={{ id: '123', platform: 'discord', username: 'LobehubBot' }}
+        userId="owner"
+      />,
+    );
+    expect(getByTestId('avatar').getAttribute('data-avatar')).toBe('');
+    expect(getByTestId('avatar').getAttribute('data-name')).toBe('LobehubBot');
+  });
+
   it("renders a workspace member's round avatar (any member, including self)", () => {
     useAuthorInfoMock.mockReturnValue({ avatar: 'https://x/y.png', fullName: 'Alice' });
 
