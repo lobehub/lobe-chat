@@ -159,6 +159,7 @@ export default {
   'cmdk.newLibrary': 'Create New Library',
 
   'cmdk.newPage': 'Create New Page',
+  'cmdk.newTask': 'Create New Task',
 
   'cmdk.newTopic': 'New Topic in Current Agent',
 
@@ -215,6 +216,8 @@ export default {
   'cmdk.search.plugins': 'Skills',
   'cmdk.search.searchMore': 'Search more {{type}}',
   'cmdk.search.searching': 'Search Results',
+  'cmdk.search.task': 'Task',
+  'cmdk.search.tasks': 'Tasks',
   'cmdk.search.topic': 'Topic',
   'cmdk.search.topics': 'Topics',
   'cmdk.searchPlaceholder': 'Enter a command or search...',
