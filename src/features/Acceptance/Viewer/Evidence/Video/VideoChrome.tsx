@@ -167,7 +167,6 @@ export const VideoControlBar = ({
         {t('acceptance.video.frame', { frame: frameOf(time) })}
         {step?.label ? ` · ${step.label}` : ''}
       </span>
-      <div style={{ flex: 1 }} />
       {onToggleCaptions && claimsOf(chapters).length > 0 && (
         <button
           aria-pressed={captions}
