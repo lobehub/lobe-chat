@@ -17,7 +17,7 @@ import { imessageKeys } from '@/libs/swr/keys';
 import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
 import { imessageBridgeService } from '@/services/electron/imessageBridge';
 
-import { ChannelPostSaveContext } from '../../detail/postSaveContext';
+import { ChannelPostSaveContext } from '../../PlatformDetail/postSaveContext';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`

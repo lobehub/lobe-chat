@@ -17,7 +17,7 @@ import ItemActions from './ItemActions';
 import LabelTags from './LabelTags';
 
 // Card layout mirrors the agent channel platform cards
-// (src/routes/(main)/agent/channel/list.tsx): icon + title + trailing state on
+// (src/features/AgentChannel/PlatformGrid.tsx): icon + title + trailing state on
 // one row, a two-line description below, hover lift on the whole card.
 export const cardStyles = createStaticStyles(({ css, cssVar }) => ({
   card: css`

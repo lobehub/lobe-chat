@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Нечего больше проверять — у каждой проверки уже есть вердикт.",
   "acceptance.predict.proposals": "Проверка ИИ завершена: {{count}} проверок отмечены для вас.",
   "acceptance.predict.stillRunning": "Проверка ИИ все еще выполняется — обновите страницу через мгновение, чтобы увидеть результаты.",
+  "acceptance.preview.review": "Обзор предварительного просмотра",
+  "acceptance.preview.reviewHint": "Откройте развернутый предварительный просмотр с панелью обзора, чтобы оставить комментарии на живой странице",
   "acceptance.proposal.confirm": "Подтвердить и отправить обратно",
   "acceptance.proposal.misidentified": "Реальная проблема, но не в том месте",
   "acceptance.proposal.notAnIssue": "Не проблема",

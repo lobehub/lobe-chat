@@ -359,6 +359,33 @@ export class DeviceModel {
   };
 
   /**
+   * Read-modify-write a WORKSPACE device's `workingDirs` under a row lock, so
+   * concurrent members adding or removing one directory each cannot overwrite
+   * the other's change with a stale client snapshot. Returns the stored list,
+   * or `undefined` when the device is not in the current workspace.
+   */
+  mutateWorkspaceDeviceWorkingDirs = async (
+    deviceId: string,
+    mutate: (current: WorkingDirEntry[]) => WorkingDirEntry[],
+  ): Promise<WorkingDirEntry[] | undefined> => {
+    if (!this.workspaceId) return undefined;
+    const where = and(eq(devices.workspaceId, this.workspaceId), eq(devices.deviceId, deviceId));
+
+    return this.db.transaction(async (tx) => {
+      const [row] = await tx
+        .select({ workingDirs: devices.workingDirs })
+        .from(devices)
+        .where(where)
+        .for('update');
+      if (!row) return undefined;
+
+      const next = mutate(row.workingDirs ?? []);
+      await tx.update(devices).set({ updatedAt: new Date(), workingDirs: next }).where(where);
+      return next;
+    });
+  };
+
+  /**
    * Remove a WORKSPACE device, scoped by `workspace_id`. Permission
    * (workspace owner, or the enroller acting on their own device) is enforced
    * at the router via `canEditWorkspaceDevice`.
