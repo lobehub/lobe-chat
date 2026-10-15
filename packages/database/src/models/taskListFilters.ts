@@ -17,7 +17,7 @@ import { tasks } from '../schemas/task';
  * complements and no row falls into neither bucket. `isTaskArchiveBlocked`
  * in `@lobechat/types` mirrors it in JS; keep the two in step.
  */
-const RUNNABLE_AUTOMATION = and(
+export const RUNNABLE_AUTOMATION = and(
   notInArray(tasks.status, ['canceled', 'completed', 'failed']),
   or(
     and(

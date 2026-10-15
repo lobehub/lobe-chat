@@ -216,6 +216,17 @@ export class TaskRunnerService {
             message: 'The task changed or was deleted before its run could start.',
           });
         }
+        // An archive that committed between the read above and this write is
+        // visible on the returned row: hand the status back and refuse the run.
+        if (started.archivedAt) {
+          await this.taskModel.updateStatusIfCurrent(task.id, 'running', task.status, {
+            error: task.error ?? null,
+          });
+          throw new TRPCError({
+            code: 'PRECONDITION_FAILED',
+            message: 'Restore this archived task before running it',
+          });
+        }
         weSetRunning = true;
       } else if (task.error) {
         await this.taskModel.update(task.id, { error: null });

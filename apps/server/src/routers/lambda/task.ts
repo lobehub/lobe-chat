@@ -1,7 +1,6 @@
 import { TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type { TaskListItem, TaskParticipant, TaskVerifyConfig } from '@lobechat/types';
-import { isTaskArchiveBlocked } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -12,6 +11,7 @@ import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceA
 import { AgentModel } from '@/database/models/agent';
 import { BriefModel } from '@/database/models/brief';
 import { TaskModel } from '@/database/models/task';
+import { TaskArchiveModel } from '@/database/models/taskArchive';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
@@ -704,16 +704,22 @@ export const taskRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const task = await resolveOrThrow(ctx.taskModel, input.id);
+        const archiveModel = new TaskArchiveModel(
+          ctx.serverDB,
+          ctx.userId,
+          ctx.workspaceId ?? undefined,
+        );
         // Archived rows leave every list, so live work would run out of sight.
-        if (input.archived && isTaskArchiveBlocked(task)) {
+        // The guard is part of the UPDATE, so a run starting concurrently can't slip past.
+        const updated = input.archived
+          ? await archiveModel.archive(task.id)
+          : await archiveModel.unarchive(task.id);
+        if (!updated) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'Stop the running task or its schedule/heartbeat before archiving it',
           });
         }
-        const archivedAt = input.archived ? (task.archivedAt ?? new Date()) : null;
-        const updated = await ctx.taskModel.update(task.id, { archivedAt });
-        if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
         return { data: updated, success: true };
       } catch (error) {
         if (error instanceof TRPCError) throw error;

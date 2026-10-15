@@ -83,6 +83,21 @@ export const getTaskPageHeaderVisibility = ({
   };
 };
 
+/**
+ * Whether the header treats the page as empty (hiding the view options). A list
+ * that is empty only because its tasks are archived is not: the view options
+ * carry "Show archived", the one way back to those tasks.
+ */
+export const resolveHeaderEmptyHero = ({
+  hasOnlyArchivedTasks,
+  isEmptyHero,
+  isOrdinaryCollection,
+}: {
+  hasOnlyArchivedTasks: boolean;
+  isEmptyHero: boolean;
+  isOrdinaryCollection: boolean;
+}) => isOrdinaryCollection && isEmptyHero && !hasOnlyArchivedTasks;
+
 interface AgentTasksPageProps {
   /**
    * When provided, the page is scoped to a single agent's tasks; otherwise it
@@ -208,12 +223,13 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   // gated to the ordinary tab; and the kanban view fetches its own server
   // groups, so there only the single page behind the empty-hero decision runs.
   const isListView = !isBoardView;
+  const listScope = projectId
+    ? { projectId, visibility: 'all' as const }
+    : agentId
+      ? { agentId }
+      : { allAgents: true };
   const { error, isLoading, mutate, queryKey } = useFetchTaskList({
-    ...(projectId
-      ? { projectId, visibility: 'all' as const }
-      : agentId
-        ? { agentId }
-        : { allAgents: true }),
+    ...listScope,
     automated: false,
     complete: isListView,
     enabled: isOrdinaryCollection,
@@ -230,6 +246,20 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
     return () => setActiveTaskListKey(undefined);
   }, [queryKey, setActiveTaskListKey]);
   const isEmptyHero = useTaskStore(taskListSelectors.isListEmpty(queryKey));
+  // The empty hero hides the view options, and with them "Show archived". When
+  // only archived tasks remain, keep the options reachable so they can come back.
+  const { queryKey: archivedProbeKey } = useFetchTaskList({
+    ...listScope,
+    automated: false,
+    enabled: isOrdinaryCollection && isEmptyHero && !viewOptions.showArchived,
+    includeArchived: true,
+  });
+  const hasOnlyArchivedTasks = useTaskStore(
+    (s) =>
+      !!archivedProbeKey &&
+      taskListSelectors.isTaskListInit(archivedProbeKey)(s) &&
+      !taskListSelectors.isListEmpty(archivedProbeKey)(s),
+  );
   const useFetchScheduledTaskList = useTaskStore((s) => s.useFetchScheduledTaskList);
   const scheduledSWR = useFetchScheduledTaskList({
     agentId,
@@ -346,7 +376,11 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
 
   const headerVisibility = getTaskPageHeaderVisibility({
     agentId,
-    isEmptyHero: isOrdinaryCollection ? isEmptyHero : false,
+    isEmptyHero: resolveHeaderEmptyHero({
+      hasOnlyArchivedTasks,
+      isEmptyHero,
+      isOrdinaryCollection,
+    }),
     isMobile,
     projectId,
   });
