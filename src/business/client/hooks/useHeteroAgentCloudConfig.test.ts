@@ -56,6 +56,18 @@ describe('useHeteroAgentCloudConfig', () => {
     expect(result.current.isConfigured).toBe(true);
   });
 
+  it('does not block sending when the credential lookup fails', () => {
+    mockListForContext.mockReturnValue({
+      data: undefined,
+      error: new Error('market unavailable'),
+      isLoading: false,
+    });
+
+    const { result } = renderHook(() => useHeteroAgentCloudConfig('agt_1'));
+
+    expect(result.current.isConfigured).toBe(true);
+  });
+
   it('does not query credentials for non claude-code providers', () => {
     mockProvider.current = { type: 'codex' };
     mockListForContext.mockReturnValue({ data: undefined, isLoading: false });
