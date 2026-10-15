@@ -22,7 +22,11 @@ export type ClaudeCodeTokenStatus =
    */
   | { display: string; editable: boolean; status: 'configured' }
   /** The caller owns a token, but runs in the active workspace can't read it. */
-  | { personalCred: UserCredSummary; status: 'personalNotShared' }
+  /**
+   * `sharedElsewhere`: the token is linked to another workspace. A personal
+   * credential links to one workspace at a time, so sharing it here moves it.
+   */
+  | { personalCred: UserCredSummary; sharedElsewhere: boolean; status: 'personalNotShared' }
   | { status: 'missing' }
   /** The credential lookup failed; whether the run can read a token is unknown. */
   | { status: 'unknown' };
@@ -62,7 +66,13 @@ export const resolveClaudeCodeTokenStatus = ({
     };
   }
 
-  if (personalCred) return { personalCred, status: 'personalNotShared' };
+  if (personalCred) {
+    return {
+      personalCred,
+      sharedElsewhere: personalCred.organizationAccountId != null,
+      status: 'personalNotShared',
+    };
+  }
 
   return { status: 'missing' };
 };

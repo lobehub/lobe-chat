@@ -828,6 +828,7 @@
   "heterogeneousStatus.cloud.tokenRetry": "重试",
   "heterogeneousStatus.cloud.tokenSave": "保存",
   "heterogeneousStatus.cloud.tokenSaveError": "Claude Code Token 保存失败，请重试。",
+  "heterogeneousStatus.cloud.tokenSharedElsewhere": "你的个人 Claude Code Token 已共享到另一个工作区。在这里保存 Token 会把它移到当前工作区，另一个工作区的云端运行将无法再使用它。",
   "heterogeneousStatus.command.edit": "编辑指令",
   "heterogeneousStatus.command.label": "启动指令",
   "heterogeneousStatus.command.placeholder": "指令名称或绝对路径",

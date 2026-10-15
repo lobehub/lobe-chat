@@ -828,6 +828,7 @@
   "heterogeneousStatus.cloud.tokenRetry": "Retry",
   "heterogeneousStatus.cloud.tokenSave": "Save",
   "heterogeneousStatus.cloud.tokenSaveError": "Failed to save the Claude Code token. Please try again.",
+  "heterogeneousStatus.cloud.tokenSharedElsewhere": "Your personal Claude Code token is shared to another workspace. Saving a token here moves it to this workspace, and cloud runs in the other workspace will no longer be able to use it.",
   "heterogeneousStatus.command.edit": "Edit command",
   "heterogeneousStatus.command.label": "Launch Command",
   "heterogeneousStatus.command.placeholder": "Command name or absolute path",
