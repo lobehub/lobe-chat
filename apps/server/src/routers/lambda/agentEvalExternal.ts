@@ -134,6 +134,7 @@ export const agentEvalExternalRouter = router({
         deviceId: z.string().optional(),
         prompt: z.string().optional(),
         runId: z.string(),
+        workingDirectory: z.string().min(1).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

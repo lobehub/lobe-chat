@@ -1158,6 +1158,7 @@ export function registerEvalCommand(program: Command) {
               deviceId,
               prompt: options.prompt,
               runId: options.runId,
+              ...(options.device === 'local' && { workingDirectory: process.cwd() }),
             });
           },
           `Started case ${pc.bold(options.caseId)} for run ${pc.bold(options.runId)}`,

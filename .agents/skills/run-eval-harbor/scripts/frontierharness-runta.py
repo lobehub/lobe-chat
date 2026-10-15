@@ -507,6 +507,52 @@ def collect_usage(run_dir: Path, record: dict[str, Any], env_file: Path | None) 
             except json.JSONDecodeError:
                 continue
     write_json(run_dir / "operation-ids.json", sorted(operation_ids))
+
+    task_usage: dict[str, dict[str, Any]] = {}
+    for snapshot in run_dir.glob("suites/*/final/**/task-usage.jsonl"):
+        for line in snapshot.read_text(errors="replace").splitlines():
+            try:
+                value = json.loads(line)
+                task_id = value.get("taskId")
+                previous = task_usage.get(task_id)
+                if isinstance(task_id, str) and (
+                    previous is None
+                    or value.get("capturedAt", "") > previous.get("capturedAt", "")
+                ):
+                    task_usage[task_id] = value
+            except (AttributeError, json.JSONDecodeError):
+                continue
+    write_json(run_dir / "task-ids.json", sorted(task_usage))
+
+    process_env = os.environ.copy()
+    if env_file and env_file.is_file():
+        process_env.update(read_env(env_file))
+    if task_usage:
+        rows: list[dict[str, Any]] = []
+        for task_id, fallback in sorted(task_usage.items()):
+            if shutil.which("lh") is None:
+                rows.append(fallback)
+                continue
+            result = subprocess.run(
+                ["lh", "task", "usage", task_id, "--json"],
+                check=False,
+                text=True,
+                capture_output=True,
+                env=process_env,
+            )
+            if result.returncode:
+                print(
+                    f"Warning: lh task usage failed for {task_id}: {result.stderr.strip()}",
+                    file=sys.stderr,
+                )
+                rows.append(fallback)
+                continue
+            value = json.loads(result.stdout)
+            rows.append(value if isinstance(value, dict) else fallback)
+        write_json(run_dir / "lh-task-usage.json", rows)
+        write_json(run_dir / "lh-usage.json", rows)
+        return
+
     if not operation_ids or shutil.which("lh") is None:
         print(
             "Warning: operation IDs or local lh CLI unavailable; usage was not collected",
@@ -521,9 +567,6 @@ def collect_usage(run_dir: Path, record: dict[str, Any], env_file: Path | None) 
     while (year, month) <= (now.year, now.month):
         months.append(f"{year:04d}-{month:02d}")
         year, month = (year + 1, 1) if month == 12 else (year, month + 1)
-    process_env = os.environ.copy()
-    if env_file and env_file.is_file():
-        process_env.update(read_env(env_file))
     rows: list[dict[str, Any]] = []
     for month_value in months:
         result = subprocess.run(

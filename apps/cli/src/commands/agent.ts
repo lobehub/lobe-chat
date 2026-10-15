@@ -488,6 +488,9 @@ Exit codes:
         if (deviceId) input.deviceId = deviceId;
         if (options.slug) input.slug = options.slug;
         if (options.topicId) input.appContext = { topicId: options.topicId };
+        else if (options.device === 'local') {
+          input.appContext = { initialTopicMetadata: { workingDirectory: process.cwd() } };
+        }
         if (options.autoStart === false) input.autoStart = false;
         // commander's --no-headless sets `headless` to false. Anything else
         // (undefined, true) → headless mode is on and tool calls auto-execute.

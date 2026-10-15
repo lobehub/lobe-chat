@@ -21,6 +21,8 @@ class LhInstalledAgent(BaseInstalledAgent):
         cli_source: str | None = None,
         run_mode: str | None = None,
         workspace_id: str | None = None,
+        eval_run_id: str | None = None,
+        eval_case_id: str | None = None,
         *args,
         **kwargs,
     ):
@@ -40,6 +42,8 @@ class LhInstalledAgent(BaseInstalledAgent):
             gateway_url=gateway_url,
             cli_source=cli_source,
             run_mode=run_mode,
+            eval_run_id=eval_run_id,
+            eval_case_id=eval_case_id,
         )
 
     @staticmethod

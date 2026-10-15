@@ -24,6 +24,8 @@ class LhPierInstalledAgent(BaseInstalledAgent):
         cli_source: str | None = None,
         run_mode: str | None = None,
         workspace_id: str | None = None,
+        eval_run_id: str | None = None,
+        eval_case_id: str | None = None,
         *args,
         **kwargs,
     ):
@@ -43,6 +45,8 @@ class LhPierInstalledAgent(BaseInstalledAgent):
             gateway_url=gateway_url,
             cli_source=cli_source,
             run_mode=run_mode,
+            eval_run_id=eval_run_id,
+            eval_case_id=eval_case_id,
         )
 
     @staticmethod
@@ -100,6 +104,10 @@ class LhPierInstalledAgent(BaseInstalledAgent):
             "/logs/agent/operation-status.jsonl", downloaded
         )
         downloaded.replace(status_log)
+        if self._lh.run_mode == "eval":
+            await environment.download_file(
+                "/logs/agent/run-start.json", self.logs_dir / "run-start.json"
+            )
         if self._lh.run_mode == "task":
             usage_log = self.logs_dir / "task-usage.jsonl"
             downloaded_usage = usage_log.with_suffix(".jsonl.download")

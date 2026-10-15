@@ -153,15 +153,21 @@ python3 "$RUNTA" collect \
   /absolute/path/to/frontierharness-eval/.env < run-id > --env-file
 ```
 
-The collector extracts operation IDs from the final agent logs and invokes
-`lh usage --month ... --agent-id ... --json`. It retains the complete queried
-rows as `lh-usage-raw.json` and exact-operation matches as `lh-usage.json`.
-`spend` from this command is the actual LobeHub bill. Any FrontierHarness cost
-computed by repricing the recorded tokens is a normalized comparison metric;
-report the two separately.
+For agent-mode runs, the collector extracts operation IDs from the final logs
+and invokes `lh usage --month ... --agent-id ... --json`. It retains the
+complete queried rows as `lh-usage-raw.json` and exact-operation matches as
+`lh-usage.json`.
+
+For task-mode runs, `run-agent.js` snapshots `lh task usage <task-id> --json`
+every five minutes and at termination. The collector queries each preserved
+Task ID once more for the final value, writes `lh-task-usage.json`, and mirrors
+it to `lh-usage.json`; if that final query fails, it keeps the newest snapshot.
+The reported cost is LobeHub's persisted Task/topic rollup. Any
+FrontierHarness cost computed by repricing recorded tokens is a normalized
+comparison metric; report the two separately.
 
 Do not treat a running snapshot as final evidence. Final evidence consists of
 the verified suite archives, `run.json`, final unit status, operation IDs, and
 usage records. If usage collection fails, the runtimes are still paused because
 billing lookup does not depend on them; repair authentication and collect usage
-from the preserved operation IDs.
+from the preserved operation or Task IDs.

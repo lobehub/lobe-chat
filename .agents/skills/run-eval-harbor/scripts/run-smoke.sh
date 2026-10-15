@@ -16,7 +16,7 @@ JOB_NAME="smoke-$(date +%Y%m%d-%H%M%S)-$$"
 JOB_DIR="$JOBS_DIR/$JOB_NAME"
 
 usage() {
-  printf 'Usage: %s <local|cloud> <checkout|npm> [absolute-eval-repository] [agent|task]\n' "$0"
+  printf 'Usage: %s <local|cloud> <checkout|npm> [absolute-eval-repository] [agent|task|eval]\n' "$0"
 }
 
 if [[ "$TARGET" == '-h' || "$TARGET" == '--help' ]]; then
@@ -25,7 +25,7 @@ if [[ "$TARGET" == '-h' || "$TARGET" == '--help' ]]; then
 fi
 [[ "$TARGET" == 'local' || "$TARGET" == 'cloud' ]] || { usage >&2; exit 2; }
 [[ "$CLI_MODE" == 'checkout' || "$CLI_MODE" == 'npm' ]] || { usage >&2; exit 2; }
-[[ "$RUN_MODE" == 'agent' || "$RUN_MODE" == 'task' ]] || { usage >&2; exit 2; }
+[[ "$RUN_MODE" == 'agent' || "$RUN_MODE" == 'task' || "$RUN_MODE" == 'eval' ]] || { usage >&2; exit 2; }
 if [[ -n "$EVAL_REPO" ]]; then
   [[ -d "$EVAL_REPO" ]] || { printf 'Eval repository does not exist: %s\n' "$EVAL_REPO" >&2; exit 2; }
   EVAL_REPO="$(cd -- "$EVAL_REPO" && pwd)"
@@ -104,7 +104,13 @@ harbor_args=(
   --agent-env 'LH_RUN_MODE=${LH_RUN_MODE}'
 )
 export LH_RUN_MODE="$RUN_MODE"
-for key in LH_AGENT_ID LH_AGENT_SLUG LH_SERVER_URL LH_GATEWAY_URL AGENT_GATEWAY_URL LOBEHUB_SERVER LOBEHUB_WORKSPACE_ID; do
+if [[ "$RUN_MODE" == 'eval' ]]; then
+  [[ -n "${LH_EVAL_RUN_ID:-}" && -n "${LH_EVAL_CASE_ID:-}" ]] || {
+    printf 'Eval smoke requires LH_EVAL_RUN_ID and LH_EVAL_CASE_ID from a claimed hello-world run.\n' >&2
+    exit 2
+  }
+fi
+for key in LH_AGENT_ID LH_AGENT_SLUG LH_SERVER_URL LH_GATEWAY_URL AGENT_GATEWAY_URL LOBEHUB_SERVER LOBEHUB_WORKSPACE_ID LH_EVAL_RUN_ID LH_EVAL_CASE_ID; do
   [[ -n "${!key:-}" ]] && harbor_args+=(--agent-env "$key=\${$key}")
 done
 uv run --with 'harbor==0.23.0' harbor "${harbor_args[@]}"
@@ -133,8 +139,13 @@ if (agentLogs.length !== 1) {
   throw new Error(`Expected one Harbor smoke agent log, found ${agentLogs.length}; inspect ${jobDir}`);
 }
 const agentLog = fs.readFileSync(agentLogs[0], 'utf8');
-if (!/^hello world\r?$/m.test(agentLog) || !/Agent finished/.test(agentLog)) {
-  throw new Error(`Harbor smoke did not complete the hello-world agent run; inspect ${agentLogs[0]}`);
+const trajectoryPath = pathModule.join(pathModule.dirname(agentLogs[0]), 'trajectory.json');
+const trajectory = JSON.parse(fs.readFileSync(trajectoryPath, 'utf8'));
+const hasHelloWorld = trajectory.steps.some(
+  (step) => step.source === 'agent' && /^hello world\r?$/m.test(step.message),
+);
+if (!hasHelloWorld || !/Agent finished/.test(agentLog)) {
+  throw new Error(`Harbor smoke did not complete the hello-world agent run; inspect ${trajectoryPath} and ${agentLogs[0]}`);
 }
 console.log(`Harbor smoke passed: ${path}`);
 NODE
