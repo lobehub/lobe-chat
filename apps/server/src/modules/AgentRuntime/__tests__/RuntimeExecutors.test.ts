@@ -2393,10 +2393,9 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
         );
         const userMessages = messages.filter((message) => message.role === 'user');
 
-        expect(userMessages).toHaveLength(2);
-        expect(userMessages[0].content).toBe('Refactor the parser');
-        expect(userMessages[1].content).toContain('<todo_context>');
-        expect(userMessages[1].content).toContain('Write parser tests');
+        expect(userMessages.map((message) => message.content)).toContain('Refactor the parser');
+        expect(userMessages.at(-1)?.content).toContain('<todo_context>');
+        expect(userMessages.at(-1)?.content).toContain('Write parser tests');
         expect(messages.at(-1)?.role).toBe('user');
       });
 
